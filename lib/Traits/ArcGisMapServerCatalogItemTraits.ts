@@ -1,7 +1,6 @@
 import { JsonObject } from "../Core/Json";
 import anyTrait from "./anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import DataCustodianTraits from "./DataCustodianTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import MappableTraits from "./MappableTraits";
 import mixTraits from "./mixTraits";
@@ -9,12 +8,13 @@ import primitiveTrait from "./primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
 import SplitterTraits from "./SplitterTraits";
 import UrlTraits from "./UrlTraits";
+import LayerOrderingTraits from "./LayerOrderingTraits";
 
 export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
   FeatureInfoTraits,
   SplitterTraits,
-  DataCustodianTraits,
   RasterLayerTraits,
+  LayerOrderingTraits,
   MappableTraits,
   UrlTraits,
   CatalogMemberTraits
@@ -22,7 +22,8 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
   @primitiveTrait({
     type: "string",
     name: "Layer(s)",
-    description: "The layer or layers to display."
+    description:
+      "The layer or layers to display. This can be a comma seperated string of layer IDs or names."
   })
   layers?: string;
 

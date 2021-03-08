@@ -26,6 +26,7 @@ import JsonValue, {
   isJsonNumber,
   isJsonObject,
   isJsonString,
+  JsonArray,
   JsonObject
 } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
@@ -56,7 +57,12 @@ import CommonStrata from "./CommonStrata";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import hasTraits from "./hasTraits";
-import InitSource, { isInitOptions, isInitUrl } from "./InitSource";
+import InitSource, {
+  isInitData,
+  isInitDataPromise,
+  isInitOptions,
+  isInitUrl
+} from "./InitSource";
 import Internationalization, {
   I18nStartOptions,
   LanguageConfiguration
@@ -76,80 +82,132 @@ import ViewerMode from "./ViewerMode";
 import Workbench from "./Workbench";
 // import overrides from "../Overrides/defaults.jsx";
 
-interface InitModels {
-  [key: string]: {
-    [key: string]: JsonValue;
-    knownContainerUniqueIds: string[];
-  };
-}
-/**
- * This is a short term gap to addresing the issue of old share links being
- * generated with a record similar to `map-config` in its share data, but
- * newer-Terria forcing the root record to an ID of `/` for a consistent
- * approach to the root record
- *
- * The hardcode approach - it will check for any `knownContainerUniqueIds` for
- * each model, and add an entry for `/` if it detects `map-config-*`
- */
-export function makeModelsMagdaCompatible(models: InitModels) {
-  return Object.entries(models).reduce((acc: any, current) => {
-    const key = current[0];
-    const value = current[1];
-    const hasMapConfig =
-      value.knownContainerUniqueIds &&
-      value.knownContainerUniqueIds.find(
-        value => value.indexOf("map-config") !== -1
-      );
-    const improvedKnownContainerUniqueIds = hasMapConfig
-      ? [...value.knownContainerUniqueIds, "/"]
-      : value.knownContainerUniqueIds;
-
-    acc[key] = {
-      ...value,
-      knownContainerUniqueIds: improvedKnownContainerUniqueIds
-    };
-
-    return acc;
-  }, {});
-}
-
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
+  /**
+   * TerriaJS uses this name whenever it needs to display the name of the application.
+   */
   appName?: string;
+  /**
+   * The email address shown when things go wrong.
+   */
   supportEmail?: string;
+  /**
+   * The maximum number of "feature info" boxes that can be displayed when clicking a point.
+   */
   defaultMaximumShownFeatureInfos?: number;
+  /**
+   * URL of the JSON file that defines region mapping for CSV files.
+   */
   regionMappingDefinitionsUrl: string;
+  /**
+   * URL of OGR2OGR conversion service (part of TerriaJS-Server).
+   */
   conversionServiceBaseUrl?: string;
+  /**
+   * URL of Proj4 projection lookup service (part of TerriaJS-Server).
+   */
   proj4ServiceBaseUrl?: string;
+  /**
+   * URL of CORS proxy service (part of TerriaJS-Server)
+   */
   corsProxyBaseUrl?: string;
+  /**
+   * @deprecated
+   */
   proxyableDomainsUrl?: string;
   serverConfigUrl?: string;
   shareUrl?: string;
+  /**
+   * URL of the service used to send feedback.  If not specified, the "Give Feedback" button will not appear.
+   */
   feedbackUrl?: string;
+  /**
+   * An array of base paths to use to try to use to resolve init fragments in the URL.  For example, if this property is `[ "init/", "http://example.com/init/"]`, then a URL with `#test` will first try to load `init/test.json` and, if that fails, next try to load `http://example.com/init/test.json`.
+   */
   initFragmentPaths: string[];
+  /**
+   * Whether the story is enabled. If false story function button won't be available.
+   */
   storyEnabled: boolean;
+  /**
+   * True (the default) to intercept the browser's print feature and use a custom one accessible through the Share panel.
+   */
   interceptBrowserPrint?: boolean;
+  /**
+   * True to create a separate explorer panel tab for each top-level catalog group to list its items in.
+   */
   tabbedCatalog?: boolean;
+  /**
+   * True to use Cesium World Terrain from Cesium ion. False to use terrain from the URL specified with the `"cesiumTerrainUrl"` property. If this property is false and `"cesiumTerrainUrl"` is not specified, the 3D view will use a smooth ellipsoid instead of a terrain surface. Defaults to true.
+   */
   useCesiumIonTerrain?: boolean;
+  /**
+   * The URL to use for Cesium terrain in the 3D Terrain viewer, in quantized mesh format. This property is ignored if "useCesiumIonTerrain" is set to true.
+   */
+  cesiumTerrainUrl?: string;
+  /**
+   * The access token to use with Cesium ion. If `"useCesiumIonTerrain"` is true and this property is not specified, the Cesium default Ion key will be used. It is a violation of the Ion terms of use to use the default key in a deployed application.
+   */
   cesiumIonAccessToken?: string;
-  hideTerriaLogo?: boolean;
+  /**
+   * True to use Bing Maps from Cesium ion (Cesium World Imagery). By default, Ion will be used, unless the `bingMapsKey` property is specified, in which case that will be used instead. To disable the Bing Maps layers entirely, set this property to false and set `bingMapsKey` to null.
+   */
   useCesiumIonBingImagery?: boolean;
+  /**
+   * A [Bing Maps API key](https://msdn.microsoft.com/en-us/library/ff428642.aspx) used for requesting Bing Maps base maps and using the Bing Maps geocoder for searching. It is your responsibility to request a key and comply with all terms and conditions.
+   */
   bingMapsKey?: string;
+  hideTerriaLogo?: boolean;
+  /**
+   * An array of strings of HTML that fill up the top left logo space.
+   */
   brandBarElements?: string[];
+  /**
+   * Index of which brandBarElements to show for mobile header.
+   */
+  displayOneBrand?: number;
+  /**
+   * True to disable the "Centre map at your current location" button.
+   */
   disableMyLocation?: boolean;
+  disableSplitter?: boolean;
+
+  disablePedestrianMode?: boolean;
+
   experimentalFeatures?: boolean;
   magdaReferenceHeaders?: MagdaReferenceHeaders;
   locationSearchBoundingBox?: number[];
+  /**
+   * A Google API key for [Google Analytics](https://analytics.google.com).  If specified, TerriaJS will send various events about how it's used to Google Analytics.
+   */
   googleAnalyticsKey?: string;
+  /**
+   * Your `post_client_item` from Rollbar - as of right now, TerriaMap also needs to be modified such that you construct `RollbarErrorProvider` in `index.js`
+   */
   rollbarAccessToken?: string;
   globalDisclaimer?: any;
+  /**
+   * True to display welcome message on startup.
+   */
   showWelcomeMessage?: boolean;
+  /**
+   * Video to show in welcome message.
+   */
   welcomeMessageVideo?: any;
+  /**
+   * True to display in-app guides.
+   */
   showInAppGuides?: boolean;
+  /**
+   * The content to be displayed in the help panel.
+   */
   helpContent?: HelpContentItem[];
   helpContentTerms?: Term[];
+  /**
+   *
+   */
   languageConfiguration?: LanguageConfiguration;
-  displayOneBrand?: number;
 }
 
 interface StartOptions {
@@ -192,8 +250,10 @@ interface HomeCameraInit {
 
 export default class Terria {
   private models = observable.map<string, BaseModel>();
-  // Map from share key -> id
-  private shareKeysMap = observable.map<string, string>();
+  /** Map from share key -> id */
+  readonly shareKeysMap = observable.map<string, string>();
+  /** Map from id -> share keys */
+  readonly modelIdShareKeysMap = observable.map<string, string[]>();
 
   readonly baseUrl: string = "build/TerriaJS/";
   readonly notification = new CesiumEvent();
@@ -260,12 +320,16 @@ export default class Terria {
     interceptBrowserPrint: true,
     tabbedCatalog: false,
     useCesiumIonTerrain: true,
+    cesiumTerrainUrl: undefined,
     cesiumIonAccessToken: undefined,
-    hideTerriaLogo: false,
     useCesiumIonBingImagery: undefined,
     bingMapsKey: undefined,
+    hideTerriaLogo: false,
     brandBarElements: undefined,
+    displayOneBrand: 0, // index of which brandBarElements to show for mobile header
     disableMyLocation: undefined,
+    disableSplitter: undefined,
+    disablePedestrianMode: false,
     experimentalFeatures: undefined,
     magdaReferenceHeaders: undefined,
     locationSearchBoundingBox: undefined,
@@ -275,15 +339,14 @@ export default class Terria {
     showWelcomeMessage: false,
     welcomeMessageVideo: {
       videoTitle: "Getting started with the map",
-      videoUrl: "https://www.youtube.com/embed/FjSxaviSLhc",
+      videoUrl: "https://www.youtube-nocookie.com/embed/FjSxaviSLhc",
       placeholderImage:
         "https://img.youtube.com/vi/FjSxaviSLhc/maxresdefault.jpg"
     },
     showInAppGuides: false,
     helpContent: [],
     helpContentTerms: defaultTerms,
-    languageConfiguration: undefined,
-    displayOneBrand: 0 // index of which brandBarElements to show for mobile header
+    languageConfiguration: undefined
   };
 
   @observable
@@ -441,18 +504,25 @@ export default class Terria {
    */
   @action
   removeModelReferences(model: BaseModel) {
+    this.removeSelectedFeaturesForModel(model);
+    this.workbench.remove(model);
+    if (model.uniqueId) {
+      this.models.delete(model.uniqueId);
+    }
+  }
+
+  @action
+  removeSelectedFeaturesForModel(model: BaseModel) {
     const pickedFeatures = this.pickedFeatures;
     if (pickedFeatures) {
       // Remove picked features that belong to the catalog item
       pickedFeatures.features.forEach((feature, i) => {
         if (featureBelongsToCatalogItem(<Feature>feature, model)) {
           pickedFeatures?.features.splice(i, 1);
+          if (this.selectedFeature === feature)
+            this.selectedFeature = undefined;
         }
       });
-    }
-    this.workbench.remove(model);
-    if (model.uniqueId) {
-      this.models.delete(model.uniqueId);
     }
   }
 
@@ -477,7 +547,10 @@ export default class Terria {
 
   @action
   addShareKey(id: string, shareKey: string) {
+    if (id === shareKey || this.shareKeysMap.has(shareKey)) return;
     this.shareKeysMap.set(shareKey, id);
+    this.modelIdShareKeysMap.get(id)?.push(shareKey) ??
+      this.modelIdShareKeysMap.set(id, [shareKey]);
   }
 
   setupInitializationUrls(baseUri: uri.URI, config: any) {
@@ -489,6 +562,28 @@ export default class Terria {
         url
       )
     );
+
+    // look for v7 catalogs -> push v7-v8 conversion to initSources
+    if (Array.isArray(config?.v7initializationUrls)) {
+      this.initSources.push(
+        ...(config.v7initializationUrls as JsonArray)
+          .filter(isJsonString)
+          .map(async (v7initUrl: string) => {
+            const [{ convertCatalog }, catalog] = await Promise.all([
+              import("catalog-converter"),
+              loadJson5(v7initUrl)
+            ]);
+            const convert = convertCatalog(catalog, { generateIds: false });
+            console.log(
+              `WARNING: ${v7initUrl} is a v7 catalog - it has been upgraded to v8\nMessages:\n`
+            );
+            convert.messages.forEach(message =>
+              console.log(`- ${message.path.join(".")}: ${message.message}`)
+            );
+            return { data: (convert.result as JsonObject | null) || {} };
+          })
+      );
+    }
     this.initSources.push(...initSources);
   }
 
@@ -500,28 +595,24 @@ export default class Terria {
     const launchUrlForAnalytics =
       options.applicationUrl?.href || getUriWithoutPath(baseUri);
     return loadJson5(options.configUrl, options.configUrlHeaders)
-      .then((config: any) => {
-        return runInAction(() => {
-          // If it's a magda config, we only load magda config and parameters should never be a property on the direct
-          // config aspect (it would be under the `terria-config` aspect)
-          if (config.aspects) {
-            return this.loadMagdaConfig(
-              options.configUrl,
-              config,
-              baseUri
-            ).then(() => {
-              Internationalization.initLanguage(
-                this.configParameters.languageConfiguration,
-                options.i18nOptions
-              );
-            });
-          }
-
+      .then(async (config: any) => {
+        // If it's a magda config, we only load magda config and parameters should never be a property on the direct
+        // config aspect (it would be under the `terria-config` aspect)
+        let languageConfiguration: LanguageConfiguration | undefined;
+        if (config.aspects) {
+          await this.loadMagdaConfig(options.configUrl, config, baseUri);
+          languageConfiguration = this.configParameters.languageConfiguration;
+        }
+        runInAction(() => {
           // If it's a regular config.json, continue on with parsing remaining init sources
           if (config.parameters) {
             this.updateParameters(config.parameters);
+            languageConfiguration = config.parameters.languageConfiguration;
+          }
+
+          if (!options.i18nOptions?.skipInit) {
             Internationalization.initLanguage(
-              config.parameters.languageConfiguration,
+              languageConfiguration,
               options.i18nOptions
             );
           }
@@ -890,10 +981,8 @@ export default class Terria {
 
     const models = initData.models;
     if (isJsonObject(models)) {
-      const modelsTyped = <InitModels>models;
-      const magdaCompatibleModels = makeModelsMagdaCompatible(modelsTyped);
       promise = Promise.all(
-        Object.keys(magdaCompatibleModels).map(modelId => {
+        Object.keys(models).map(modelId => {
           return this.loadModelStratum(
             modelId,
             stratumId,
@@ -1024,15 +1113,15 @@ export default class Terria {
     }
 
     if (aspects.group && aspects.group.members) {
-      // const id = config.id;
-      // force config id to be `/`, purely to emulate regular terria behaviour
+      // force config (root group) id to be `/`
       const id = "/";
       this.removeModelReferences(this.catalog.group);
 
       let existingReference = this.getModelById(MagdaReference, id);
       if (existingReference === undefined) {
         existingReference = new MagdaReference(id, this);
-        this.addModel(existingReference);
+        // Add model with terria aspects shareKeys
+        this.addModel(existingReference, aspects?.terria?.shareKeys);
       }
 
       const reference = existingReference;
@@ -1212,34 +1301,31 @@ function generateInitializationUrl(
 }
 
 const loadInitSource = createTransformer(
-  (initSource: InitSource): Promise<JsonObject | undefined> => {
-    let promise: Promise<JsonValue | undefined>;
-
+  async (initSource: InitSource): Promise<JsonObject | undefined> => {
+    let jsonValue: JsonValue | undefined;
     if (isInitUrl(initSource)) {
-      promise = loadJson5(initSource.initUrl);
+      jsonValue = await loadJson5(initSource.initUrl);
     } else if (isInitOptions(initSource)) {
-      promise = initSource.options.reduce((previousOptionPromise, option) => {
-        return previousOptionPromise
-          .then(json => {
-            if (json === undefined) {
-              return loadInitSource(option);
-            }
-            return json;
-          })
-          .catch(_ => {
-            return loadInitSource(option);
-          });
-      }, Promise.resolve<JsonObject | undefined>(undefined));
-    } else {
-      promise = Promise.resolve(initSource.data);
+      let error: any;
+      for (const option of initSource.options) {
+        try {
+          jsonValue = await loadInitSource(option);
+          if (jsonValue !== undefined) break;
+        } catch (err) {
+          error = err;
+        }
+      }
+      if (jsonValue === undefined && error !== undefined) throw error;
+    } else if (isInitData(initSource)) {
+      jsonValue = initSource.data;
+    } else if (isInitDataPromise(initSource)) {
+      jsonValue = (await initSource).data;
     }
 
-    return promise.then(jsonValue => {
-      if (isJsonObject(jsonValue)) {
-        return jsonValue;
-      }
-      return undefined;
-    });
+    if (jsonValue && isJsonObject(jsonValue)) {
+      return jsonValue;
+    }
+    return undefined;
   }
 );
 
@@ -1279,14 +1365,24 @@ function interpretHash(
         }
       });
 
-      if (shareProps) {
-        if (shareProps.converted) {
-          terria.notification.raiseEvent({
-            title: i18next.t("share.convertNotificationTitle"),
-            message: shareConvertNotification(shareProps)
-          } as Notification);
-        }
-        interpretStartData(terria, shareProps);
+      if (isDefined(shareProps) && shareProps !== {}) {
+        // Convert shareProps to v8 if neccessary
+        return import("catalog-converter").then(
+          action(({ convertShare }) => {
+            const result = convertShare(shareProps);
+            // Show warning messages if converted
+            if (result.converted) {
+              terria.notification.raiseEvent({
+                title: i18next.t("share.convertNotificationTitle"),
+                message: shareConvertNotification(result.messages)
+              } as Notification);
+            }
+
+            if (result.result !== null) {
+              interpretStartData(terria, result.result);
+            }
+          })
+        );
       }
     });
   });

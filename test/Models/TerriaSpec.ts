@@ -1,4 +1,4 @@
-import { runInAction } from "mobx";
+import { action, runInAction } from "mobx";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
@@ -9,11 +9,15 @@ import Cesium from "../../lib/Models/Cesium";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
 import Feature from "../../lib/Models/Feature";
-import { isInitData, isInitUrl } from "../../lib/Models/InitSource";
+import {
+  isInitData,
+  isInitDataPromise,
+  isInitUrl
+} from "../../lib/Models/InitSource";
 import MagdaReference from "../../lib/Models/MagdaReference";
 import { BaseModel } from "../../lib/Models/Model";
 import openGroup from "../../lib/Models/openGroup";
-import Terria, { makeModelsMagdaCompatible } from "../../lib/Models/Terria";
+import Terria from "../../lib/Models/Terria";
 import UrlReference, {
   UrlToCatalogMemberMapping
 } from "../../lib/Models/UrlReference";
@@ -26,11 +30,20 @@ import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
 const mapConfigBasicJson = require("../../wwwroot/test/Magda/map-config-basic.json");
 const mapConfigBasicString = JSON.stringify(mapConfigBasicJson);
 
+const mapConfigV7Json = require("../../wwwroot/test/Magda/map-config-v7.json");
+const mapConfigV7String = JSON.stringify(mapConfigV7Json);
+
 const mapConfigInlineInitJson = require("../../wwwroot/test/Magda/map-config-inline-init.json");
 const mapConfigInlineInitString = JSON.stringify(mapConfigInlineInitJson);
 
 const mapConfigDereferencedJson = require("../../wwwroot/test/Magda/map-config-dereferenced.json");
 const mapConfigDereferencedString = JSON.stringify(mapConfigDereferencedJson);
+
+// i18nOptions for CI
+const i18nOptions = {
+  // Skip calling i18next.init in specs
+  skipInit: true
+};
 
 describe("Terria", function() {
   let terria: Terria;
@@ -38,49 +51,6 @@ describe("Terria", function() {
   beforeEach(function() {
     terria = new Terria({
       baseUrl: "./"
-    });
-  });
-
-  describe("makeModelsMagdaCompatible", function() {
-    it("should return models", function() {
-      const models = {
-        foo: {
-          knownContainerUniqueIds: ["mochi-is-fluffy"]
-        },
-        bar: {
-          knownContainerUniqueIds: ["neko-is-hungry"]
-        },
-        cat: {
-          knownContainerUniqueIds: [""]
-        }
-      };
-      expect(makeModelsMagdaCompatible(models)).toEqual(models);
-    });
-
-    it("should inject `/` to `knownContainerUniqueIds` if map-config exists", function() {
-      const models = {
-        foo: {
-          knownContainerUniqueIds: ["map-config"]
-        },
-        bar: {
-          knownContainerUniqueIds: ["map-config-another"]
-        },
-        cat: {
-          knownContainerUniqueIds: ["bar"]
-        }
-      };
-      const expected = {
-        foo: {
-          knownContainerUniqueIds: ["map-config", "/"]
-        },
-        bar: {
-          knownContainerUniqueIds: ["map-config-another", "/"]
-        },
-        cat: {
-          knownContainerUniqueIds: ["bar"]
-        }
-      };
-      expect(makeModelsMagdaCompatible(models)).toEqual(expected);
     });
   });
 
@@ -99,6 +69,10 @@ describe("Terria", function() {
       // from `terria.start()`
       jasmine.Ajax.stubRequest("test/Magda/map-config-basic.json").andReturn({
         responseText: mapConfigBasicString
+      });
+
+      jasmine.Ajax.stubRequest("test/Magda/map-config-v7.json").andReturn({
+        responseText: mapConfigV7String
       });
 
       // terria's "Magda derived url"
@@ -133,7 +107,8 @@ describe("Terria", function() {
 
         terria
           .start({
-            configUrl: "test/Magda/map-config-basic.json"
+            configUrl: "test/Magda/map-config-basic.json",
+            i18nOptions
           })
           .then(function() {
             expect(terria.catalog.group.uniqueId).toEqual("/");
@@ -153,7 +128,8 @@ describe("Terria", function() {
 
         terria
           .start({
-            configUrl: "test/Magda/map-config-basic.json"
+            configUrl: "test/Magda/map-config-basic.json",
+            i18nOptions
           })
           .then(function() {
             expect(terria.initSources.length).toEqual(1);
@@ -172,6 +148,46 @@ describe("Terria", function() {
             done.fail(error);
           });
       });
+      it("works with v7initializationUrls", async function() {
+        jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
+          // terria's "Magda derived url"
+          responseText: mapConfigBasicString
+        });
+        const groupName = "Simple converter test";
+        jasmine.Ajax.stubRequest(
+          "https://example.foo.bar/initv7.json"
+        ).andReturn({
+          // terria's "Magda derived url"
+          responseText: JSON.stringify({
+            catalog: [{ name: groupName, type: "group", items: [] }]
+          })
+        });
+        // no init sources before starting
+        expect(terria.initSources.length).toBe(0);
+
+        await terria.start({
+          configUrl: "test/Magda/map-config-v7.json",
+          i18nOptions
+        });
+
+        expect(terria.initSources.length).toBe(1);
+        expect(isInitDataPromise(terria.initSources[0])).toBeTruthy(
+          "Expected initSources[0] to be an InitDataPromise"
+        );
+        if (isInitDataPromise(terria.initSources[0])) {
+          const data = await terria.initSources[0];
+          // JSON parse & stringify to avoid a problem where I think catalog-converter
+          //  can return {"id": undefined} instead of no "id"
+          expect(JSON.parse(JSON.stringify(data.data.catalog))).toEqual([
+            {
+              name: groupName,
+              type: "group",
+              members: [],
+              shareKeys: [`Root Group/${groupName}`]
+            }
+          ]);
+        }
+      });
       it("works with inline init", async function() {
         // inline init
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
@@ -180,7 +196,8 @@ describe("Terria", function() {
         // no init sources before starting
         expect(terria.initSources.length).toEqual(0);
         await terria.start({
-          configUrl: "test/Magda/map-config-inline-init.json"
+          configUrl: "test/Magda/map-config-inline-init.json",
+          i18nOptions
         });
 
         const inlineInit = mapConfigInlineInitJson.aspects["terria-init"];
@@ -209,7 +226,8 @@ describe("Terria", function() {
         });
         terria
           .start({
-            configUrl: "test/Magda/map-config-dereferenced.json"
+            configUrl: "test/Magda/map-config-dereferenced.json",
+            i18nOptions
           })
           .then(function() {
             const groupAspect = mapConfigDereferencedJson.aspects["group"];
@@ -406,7 +424,9 @@ describe("Terria", function() {
           locationSearchProviders: []
         });
 
-        await Promise.all([terria, newTerria].map(t => t.start({ configUrl })));
+        await Promise.all(
+          [terria, newTerria].map(t => t.start({ configUrl, i18nOptions }))
+        );
 
         terria.catalog.group.addMembersFromJson(CommonStrata.definition, [
           {
@@ -560,7 +580,8 @@ describe("Terria", function() {
         });
 
         await terria.start({
-          configUrl
+          configUrl,
+          i18nOptions
         });
         jasmine.Ajax.stubRequest(configUrl).andReturn({
           responseText: JSON.stringify(
@@ -569,7 +590,8 @@ describe("Terria", function() {
         });
 
         await newTerria.start({
-          configUrl
+          configUrl,
+          i18nOptions
         });
         // Don't allow more requests to configUrl once Terrias are set up
         jasmine.Ajax.stubRequest(configUrl).andError({});
@@ -729,7 +751,8 @@ describe("Terria", function() {
     it("initializes proxy with parameters from config file", function(done) {
       terria
         .start({
-          configUrl: "test/init/configProxy.json"
+          configUrl: "test/init/configProxy.json",
+          i18nOptions
         })
         .then(function() {
           expect(terria.corsProxy.baseProxyUrl).toBe("/myproxy/");
@@ -758,14 +781,19 @@ describe("Terria", function() {
       expect(terria.workbench).not.toContain(model);
     });
 
-    it("it removes picked features that contain the model", function() {
-      terria.pickedFeatures = new PickedFeatures();
-      const feature = new Feature({});
-      feature._catalogItem = model;
-      terria.pickedFeatures.features.push(feature);
-      terria.removeModelReferences(model);
-      expect(terria.pickedFeatures.features.length).toBe(0);
-    });
+    it(
+      "it removes picked features & selected feature for the model",
+      action(function() {
+        terria.pickedFeatures = new PickedFeatures();
+        const feature = new Feature({});
+        terria.selectedFeature = feature;
+        feature._catalogItem = model;
+        terria.pickedFeatures.features.push(feature);
+        terria.removeModelReferences(model);
+        expect(terria.pickedFeatures.features.length).toBe(0);
+        expect(terria.selectedFeature).toBeUndefined();
+      })
+    );
 
     it("unregisters the model from Terria", function() {
       terria.removeModelReferences(model);
@@ -776,7 +804,8 @@ describe("Terria", function() {
   //   it("tells us there's a time enabled WMS with `checkNowViewingForTimeWms()`", function(done) {
   //     terria
   //       .start({
-  //         configUrl: "test/init/configProxy.json"
+  //         configUrl: "test/init/configProxy.json",
+  //         i18nOptions
   //       })
   //       .then(function() {
   //         expect(terria.checkNowViewingForTimeWms()).toEqual(false);

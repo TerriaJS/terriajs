@@ -1,6 +1,5 @@
 'use strict';
 
-/*global require*/
 var createKarmaBaseConfig = require('./createKarmaBaseConfig');
 
 module.exports = function(config) {

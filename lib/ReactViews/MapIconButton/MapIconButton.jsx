@@ -91,6 +91,7 @@ MapIconButton.propTypes = {
   roundRight: PropTypes.bool,
   title: PropTypes.string,
   iconElement: PropTypes.func.isRequired,
+  closeIconElement: PropTypes.func,
   onClick: PropTypes.func,
   handleClick: PropTypes.func,
   children: PropTypes.node,
@@ -149,6 +150,15 @@ function MapIconButton(props) {
     >
       <ButtonWrapper>
         {/* only spans are valid html for buttons (even though divs work) */}
+        {primary && props.closeIconElement && (
+          <span
+            css={`
+              display: block;
+            `}
+          >
+            {props.closeIconElement()}
+          </span>
+        )}
         {children && (
           <Text
             as="span"

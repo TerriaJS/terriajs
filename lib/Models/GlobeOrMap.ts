@@ -24,7 +24,7 @@ import Feature from "./Feature";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import Mappable from "./Mappable";
 import Terria from "./Terria";
-import { observable } from "mobx";
+import { observable, runInAction } from "mobx";
 import MouseCoords from "../ReactViewModels/MouseCoords";
 
 require("./ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureDescriptionFromProperties
@@ -35,7 +35,7 @@ export default abstract class GlobeOrMap {
   abstract readonly canShowSplitter: boolean;
   protected static _featureHighlightName = "___$FeatureHighlight&__";
 
-  private _removeHighlightCallback?: () => void;
+  private _removeHighlightCallback?: () => Promise<void> | void;
   private _highlightPromise: Promise<void> | undefined;
   private _tilesLoadingCountMax: number = 0;
   protected supportsPolylinesOnTerrain?: boolean;
@@ -159,9 +159,9 @@ export default abstract class GlobeOrMap {
     rectangle: Rectangle
   ): () => void;
 
-  _highlightFeature(feature: Feature | undefined) {
+  async _highlightFeature(feature: Feature | undefined) {
     if (isDefined(this._removeHighlightCallback)) {
-      this._removeHighlightCallback();
+      await this._removeHighlightCallback();
       this._removeHighlightCallback = undefined;
       this._highlightPromise = undefined;
     }
@@ -171,19 +171,20 @@ export default abstract class GlobeOrMap {
 
       if (isDefined(feature._cesium3DTileFeature)) {
         const originalColor = feature._cesium3DTileFeature.color;
+        const defaultColor = Color.fromCssColorString("#fffffe");
 
         // Get the highlight color from the catalogItem trait or default to baseMapContrastColor
         const catalogItem = feature._catalogItem;
         let highlightColor;
-        if (
-          catalogItem instanceof Cesium3DTilesCatalogItem &&
-          catalogItem.highlightColor
-        ) {
-          highlightColor = Color.fromCssColorString(catalogItem.highlightColor);
+        if (catalogItem instanceof Cesium3DTilesCatalogItem) {
+          highlightColor =
+            Color.fromCssColorString(
+              runInAction(() => catalogItem.highlightColor)
+            ) ?? defaultColor;
         } else {
-          highlightColor = Color.fromCssColorString(
-            this.terria.baseMapContrastColor
-          );
+          highlightColor =
+            Color.fromCssColorString(this.terria.baseMapContrastColor) ??
+            defaultColor;
         }
 
         // highlighting doesn't work if the highlight colour is full white
@@ -192,7 +193,7 @@ export default abstract class GlobeOrMap {
           highlightColor,
           Color.WHITE
         )
-          ? Color.fromCssColorString("#fffffe")
+          ? defaultColor
           : highlightColor;
 
         this._removeHighlightCallback = function() {
@@ -214,12 +215,14 @@ export default abstract class GlobeOrMap {
 
         cesiumPolygon.polygon!.outline = new ConstantProperty(true);
         cesiumPolygon.polygon!.outlineColor = new ConstantProperty(
-          Color.fromCssColorString(this.terria.baseMapContrastColor)
+          Color.fromCssColorString(this.terria.baseMapContrastColor) ??
+            Color.GRAY
         );
         cesiumPolygon.polygon!.material = new ColorMaterialProperty(
           new ConstantProperty(
-            Color.fromCssColorString(
-              this.terria.baseMapContrastColor
+            (
+              Color.fromCssColorString(this.terria.baseMapContrastColor) ??
+              Color.LIGHTGRAY
             ).withAlpha(0.75)
           )
         );
@@ -239,9 +242,9 @@ export default abstract class GlobeOrMap {
         const polylineMaterial = cesiumPolyline.polyline!.material;
         const polylineWidth = cesiumPolyline.polyline!.width;
 
-        (<any>cesiumPolyline).polyline.material = Color.fromCssColorString(
-          this.terria.baseMapContrastColor
-        );
+        (<any>cesiumPolyline).polyline.material =
+          Color.fromCssColorString(this.terria.baseMapContrastColor) ??
+          Color.LIGHTGRAY;
         cesiumPolyline.polyline!.width = new ConstantProperty(2);
 
         this._removeHighlightCallback = function() {
@@ -332,12 +335,13 @@ export default abstract class GlobeOrMap {
               if (!isDefined(this._highlightPromise)) {
                 return;
               }
-              this._highlightPromise
+              return this._highlightPromise
                 .then(() => {
                   if (removeCallback !== this._removeHighlightCallback) {
                     return;
                   }
                   catalogItem.setTrait(CommonStrata.user, "show", false);
+                  this.terria.overlays.remove(catalogItem);
                 })
                 .catch(function() {});
             });
@@ -347,6 +351,7 @@ export default abstract class GlobeOrMap {
                 return;
               }
               catalogItem.setTrait(CommonStrata.user, "show", true);
+              this.terria.overlays.add(catalogItem);
             });
           }
         }

@@ -1,13 +1,14 @@
 import countBy from "lodash-es/countBy";
 import { computed } from "mobx";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import JSRegionProvider from "../Map/RegionProvider";
 import JSRegionProviderList from "../Map/RegionProviderList";
+import { applyReplacements } from "../Map/RegionProviderTs";
 import createCombinedModel from "../Models/createCombinedModel";
 import Model from "../Models/Model";
 import TableColumnTraits from "../Traits/TableColumnTraits";
 import TableTraits from "../Traits/TableTraits";
 import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
@@ -157,47 +158,162 @@ export default class TableColumn {
     // http://ecma-international.org/ecma-262/5.1/#sec-15.9.1.1
     const maxDate = new Date(8.64e15);
     const minDate = new Date(-8.64e15);
-
-    const dates: (Date | null)[] = [];
-    let minimum = maxDate;
-    let maximum = minDate;
-    let numberOfValidDates = 0;
-    let numberOfNonDates = 0;
-
     const replaceWithNull = this.traits.replaceWithNullValues;
 
-    const values = this.values;
-    for (let i = 0; i < values.length; ++i) {
-      const value = values[i];
+    // Approach:
+    // * See how dd/mm/yyyy parsing goes
+    // * If mm/dd/yyyy parsing could work instead use that
+    // * Otherwise try `new Date` for everything
 
-      let d: Date | null;
-      if (replaceWithNull && replaceWithNull.indexOf(value) >= 0) {
-        d = null;
-      } else if (value.length === 0) {
-        d = null;
-      } else {
-        d = toDate(values[i]);
-        if (d === null) {
-          ++numberOfNonDates;
+    // Try dd/mm/yyyy, but look out for errors that would also make mm/dd/yyyy impossible
+    let skipMmddyyyy = false;
+    let parsingFailed = false;
+
+    const separators = ["/", "-"];
+
+    type StringToDateFunction = (str: string) => Date | null;
+
+    const centuryFix = (y: number) =>
+      y < 50 ? 2000 + y : y < 100 ? 1900 + y : y;
+
+    const ddmmyyyy: StringToDateFunction = value => {
+      // Try dd/mm/yyyy and watch out for failures that would also cross out mm/dd/yyyy
+      for (let separator of separators) {
+        const sep1 = value.indexOf(separator);
+        if (sep1 === -1) continue; // Try next separator
+        const sep2 = value.indexOf(separator, sep1 + 1);
+        if (sep2 === -1) {
+          // Neither ddmmyyyy nor mmddyyyy
+          parsingFailed = true;
+          skipMmddyyyy = true;
+          return null;
+        }
+        let dayString = value.slice(0, sep1);
+        let monthString = value.slice(sep1 + 1, sep2);
+        let yearString = value.slice(sep2 + 1);
+        const d = +dayString;
+        const m = +monthString;
+        const y = +yearString;
+        if (Number.isInteger(d) && Number.isInteger(m) && Number.isInteger(y)) {
+          if (d > 31 || y > 9999) {
+            // Neither ddmmyyyy nor mmddyyyy
+            parsingFailed = true;
+            skipMmddyyyy = true;
+            return null;
+          }
+          if (m > 12) {
+            // Probably mmddyyyy
+            parsingFailed = true;
+            return null;
+          }
+          return new Date(centuryFix(y), m - 1, d);
+        } else {
+          // Neither ddmmyyyy nor mmddyyyy
+          parsingFailed = true;
+          skipMmddyyyy = true;
+          return null;
         }
       }
+      // Neither ddmmyyyy nor mmddyyyy
+      parsingFailed = true;
+      skipMmddyyyy = true;
+      return null;
+    };
 
-      if (d !== null) {
-        ++numberOfValidDates;
-        minimum = d < minimum ? d : minimum;
-        maximum = d > maximum ? d : maximum;
+    let mmddyyyy: StringToDateFunction = value => {
+      // This function only exists to allow mm-dd-yyyy dates
+      // mm/dd/yyyy dates could be picked up by `new Date`
+      const separator = "-";
+      const sep1 = value.indexOf(separator);
+      if (sep1 === -1) {
+        parsingFailed = true;
+        return null;
       }
+      const sep2 = value.indexOf(separator, sep1 + 1);
+      if (sep2 === -1) {
+        parsingFailed = true;
+        return null;
+      }
+      let monthString = value.slice(0, sep1);
+      let dayString = value.slice(sep1 + 1, sep2);
+      let yearString = value.slice(sep2 + 1);
+      const d = +dayString;
+      const m = +monthString;
+      const y = +yearString;
+      if (Number.isInteger(d) && Number.isInteger(m) && Number.isInteger(y)) {
+        if (d > 31 || m > 12 || y > 9999) {
+          parsingFailed = true;
+          return null;
+        }
+        return new Date(centuryFix(y), m - 1, d);
+      } else {
+        parsingFailed = true;
+        return null;
+      }
+    };
 
-      dates.push(d);
+    let dateConstructor: StringToDateFunction = value => {
+      const ms = Date.parse(value);
+      if (!Number.isNaN(ms)) {
+        return new Date(ms);
+      }
+      return null;
+    };
+
+    function convertValuesToDates(
+      values: readonly string[],
+      toDate: StringToDateFunction
+    ): ColumnValuesAsDates {
+      let minimum = maxDate;
+      let maximum = minDate;
+      let numberOfValidDates = 0;
+      let numberOfNonDates = 0;
+      const dates: (Date | null)[] = [];
+
+      for (let i = 0; i < values.length; ++i) {
+        const value = values[i];
+        let d: Date | null;
+        if (
+          (replaceWithNull && replaceWithNull.indexOf(value) >= 0) ||
+          value.length === 0
+        ) {
+          dates.push(null);
+        } else {
+          d = toDate(values[i]);
+          if (d === null) {
+            ++numberOfNonDates;
+          }
+
+          if (d !== null) {
+            ++numberOfValidDates;
+            minimum = d < minimum ? d : minimum;
+            maximum = d > maximum ? d : maximum;
+          }
+
+          dates.push(d);
+        }
+        if (parsingFailed) {
+          break;
+        }
+      }
+      return {
+        values: dates,
+        minimum: minimum === maxDate ? undefined : minimum,
+        maximum: maximum === minDate ? undefined : maximum,
+        numberOfValidDates: numberOfValidDates,
+        numberOfNonDates: numberOfNonDates
+      };
     }
 
-    return {
-      values: dates,
-      minimum: minimum === maxDate ? undefined : minimum,
-      maximum: maximum === minDate ? undefined : maximum,
-      numberOfValidDates: numberOfValidDates,
-      numberOfNonDates: numberOfNonDates
-    };
+    let result = convertValuesToDates(this.values, ddmmyyyy);
+    if (!parsingFailed) return result;
+    parsingFailed = false;
+    if (!skipMmddyyyy) {
+      result = convertValuesToDates(this.values, mmddyyyy);
+      if (!parsingFailed) return result;
+      parsingFailed = false;
+    }
+    return convertValuesToDates(this.values, dateConstructor);
   }
 
   @computed
@@ -312,8 +428,11 @@ export default class TableColumn {
     rowValue: string
   ): string | null {
     // TODO: validate that the rowValue is actually a valid region, if possible.
-    // TODO: implement replacements
-    return rowValue.length > 0 ? rowValue.toLowerCase() : null;
+    // TODO: implement serverReplacements and disambigDataReplacements replacements
+
+    return rowValue.length > 0
+      ? applyReplacements(regionType, rowValue, "dataReplacements") ?? null
+      : null;
   }
 
   /**

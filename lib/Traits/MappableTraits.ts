@@ -1,8 +1,9 @@
-import ShowableTraits from "./ShowableTraits";
+import AttributionTraits from "./AttributionTraits";
+import mixTraits from "./mixTraits";
 import ModelTraits from "./ModelTraits";
 import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
-import mixTraits from "./mixTraits";
+import ShowableTraits from "./ShowableTraits";
 
 export class RectangleTraits extends ModelTraits {
   @primitiveTrait({
@@ -34,7 +35,10 @@ export class RectangleTraits extends ModelTraits {
   north?: number;
 }
 
-export default class MappableTraits extends mixTraits(ShowableTraits) {
+export default class MappableTraits extends mixTraits(
+  ShowableTraits,
+  AttributionTraits
+) {
   @objectTrait({
     type: RectangleTraits,
     name: "Rectangle",
