@@ -32,15 +32,6 @@ module.exports = function(hot, dev) {
                     // in Jasmine via a script tag instead.
                     test: require.resolve('jasmine-ajax'),
                     loader: 'imports-loader?require=>false'
-                },
-
-                {
-                  test: /\.(ts|js)x?$/,
-                  include: [path.resolve(terriaJSBasePath, "lib")],
-                  use: {
-                    loader: "istanbul-instrumenter-loader"
-                  },
-                  enforce: "post"
                 }
             ]
         },

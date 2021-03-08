@@ -102,27 +102,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
             {
                 loader: 'babel-loader',
                 options: {
-                    cacheDirectory: true,
-                    presets: [
-                      [
-                        '@babel/preset-env',
-                        {
-                          corejs: 3,
-                          useBuiltIns: "usage"
-                        }
-                      ],
-                      '@babel/preset-react',
-                      ['@babel/typescript', {allowNamespaces: true}]
-                    ],
-                    plugins: [
-                        'babel-plugin-jsx-control-statements',
-                        '@babel/plugin-transform-modules-commonjs',
-                        ["@babel/plugin-proposal-decorators", { "legacy": true }],
-                        '@babel/proposal-class-properties',
-                        '@babel/proposal-object-rest-spread',
-                        'babel-plugin-styled-components',
-                        require.resolve('@babel/plugin-syntax-dynamic-import')
-                    ]
+                    cacheDirectory: true
                 }
             },
             // Re-enable this if we need to observe any differences in the

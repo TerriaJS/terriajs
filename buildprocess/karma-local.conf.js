@@ -11,9 +11,14 @@ module.exports = function(config) {
     });
 
     options.frameworks.push('detectBrowsers');
-    options.reporters.push('coverage-istanbul');
-    options.coverageIstanbulReporter = {
-      reports: ["html", "text-summary", "lcovonly"]
-    };
+
+    // Dependency removed:
+    // "karma-coverage-istanbul-reporter": "^2.0.5",
+
+    // options.reporters.push('coverage-istanbul');
+    // options.coverageIstanbulReporter = {
+    //   reports: ["html", "text-summary", "lcovonly"]
+    // };
+
     config.set(options);
 };
