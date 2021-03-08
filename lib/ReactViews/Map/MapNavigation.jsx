@@ -10,7 +10,7 @@ import ToggleSplitterTool from "./Navigation/ToggleSplitterTool";
 import ViewerMode from "../../Models/ViewerMode";
 import ZoomControl from "./Navigation/ZoomControl";
 
-import visibilitySwitch from "../StandardUserInterface/customizable/VisibilitySwitch.jsx";
+import withControlledVisibility from "../../ReactViews/HOCs/withControlledVisibility";
 
 import classNames from "classnames";
 import { observer } from "mobx-react";
@@ -46,7 +46,7 @@ const StyledMapNavigation = styled.div`
   `}
 `;
 
-const HelpIcon = visibilitySwitch(props => {
+const HelpIcon = withControlledVisibility(props => {
   return (
     <MapIconButton
       expandInPlace
@@ -97,14 +97,14 @@ class MapNavigation extends React.Component {
                     <Compass
                       terria={this.props.terria}
                       viewState={this.props.viewState}
-                      elementConfig={this.props.terria.elements["compass"]}
+                      elementConfig={this.props.terria.elements.get("compass")}
                     />
                   </div>
                 </If>
                 <div className={Styles.control}>
                   <ZoomControl
                     terria={this.props.terria}
-                    elementConfig={this.props.terria.elements["zoom"]}
+                    elementConfig={this.props.terria.elements.get("zoom")}
                   />
                 </div>
               </div>
@@ -118,7 +118,9 @@ class MapNavigation extends React.Component {
                 <div className={Styles.control}>
                   <MyLocation
                     terria={this.props.terria}
-                    elementConfig={this.props.terria.elements["my-location"]}
+                    elementConfig={this.props.terria.elements.get(
+                      "my-location"
+                    )}
                   />
                 </div>
               </If>
@@ -129,7 +131,7 @@ class MapNavigation extends React.Component {
                   <ToggleSplitterTool
                     terria={this.props.terria}
                     viewState={this.props.viewState}
-                    elementConfig={this.props.terria.elements["split-tool"]}
+                    elementConfig={this.props.terria.elements.get("split-tool")}
                   />
                 </div>
               </If>
@@ -157,7 +159,7 @@ class MapNavigation extends React.Component {
                     <FeedbackButton
                       terria={this.props.terria}
                       viewState={this.props.viewState}
-                      elementConfig={this.props.terria.elements["feedback"]}
+                      elementConfig={this.props.terria.elements.get("feedback")}
                     />
                   </div>
                 )}
@@ -165,7 +167,7 @@ class MapNavigation extends React.Component {
                 <div className={Styles.control}>
                   <HelpIcon
                     viewState={this.props.viewState}
-                    elementConfig={this.props.terria.elements["help"]}
+                    elementConfig={this.props.terria.elements.get("help")}
                   />
                 </div>
                 <Prompt
@@ -206,4 +208,6 @@ class MapNavigation extends React.Component {
   }
 }
 
-export default withTranslation()(withTheme(visibilitySwitch(MapNavigation)));
+export default withTranslation()(
+  withTheme(withControlledVisibility(MapNavigation))
+);

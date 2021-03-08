@@ -121,13 +121,15 @@ const MapColumn = observer(
                     menuItems={customElements.menu}
                     menuLeftItems={customElements.menuLeft}
                     animationDuration={this.props.animationDuration}
-                    elementConfig={this.props.terria.elements["menu-bar"]}
+                    elementConfig={this.props.terria.elements.get("menu-bar")}
                   />
                   <MapNavigation
                     terria={this.props.terria}
                     viewState={this.props.viewState}
                     navItems={customElements.nav}
-                    elementConfig={this.props.terria.elements["map-navigation"]}
+                    elementConfig={this.props.terria.elements.get(
+                      "map-navigation"
+                    )}
                   />
                 </div>
               </If>
@@ -146,7 +148,9 @@ const MapColumn = observer(
                 <MapDataCount
                   terria={this.props.terria}
                   viewState={this.props.viewState}
-                  elementConfig={this.props.terria.elements["map-data-count"]}
+                  elementConfig={this.props.terria.elements.get(
+                    "map-data-count"
+                  )}
                 />
                 <div className={Styles.locationDistance}>
                   <LocationBar

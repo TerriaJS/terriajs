@@ -1,8 +1,10 @@
 import MenuButton from "../../Map/MenuButton";
 import responsiveSwitch from "./ResponsiveSwitch";
-import visibilitySwitch from "./VisibilitySwitch";
+import withControlledVisibility from "../../HOCs/withControlledVisibility";
 import MobileMenuItem from "../../Mobile/MobileMenuItem";
 
-const MenuItem = visibilitySwitch(responsiveSwitch(MenuButton, MobileMenuItem));
+const MenuItem = withControlledVisibility(
+  responsiveSwitch(MenuButton, MobileMenuItem)
+);
 
 export default MenuItem;

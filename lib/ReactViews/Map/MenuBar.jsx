@@ -16,7 +16,7 @@ import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import Text from "../../Styled/Text";
 
-import visibilitySwitch from "../StandardUserInterface/customizable/VisibilitySwitch.jsx";
+import withControlledVisibility from "../../ReactViews/HOCs/withControlledVisibility";
 
 import { useRefForTerria } from "../Hooks/useRefForTerria";
 
@@ -205,4 +205,4 @@ MenuBar.propTypes = {
   t: PropTypes.func.isRequired
 };
 
-export default withTranslation()(visibilitySwitch(MenuBar));
+export default withTranslation()(withControlledVisibility(MenuBar));

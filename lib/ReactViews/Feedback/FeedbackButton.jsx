@@ -10,7 +10,7 @@ import Icon from "../Icon";
 // import Styles from "./feedback-button.scss";
 import { runInAction } from "mobx";
 import MapIconButton from "../MapIconButton/MapIconButton";
-import visibilitySwitch from "../StandardUserInterface/customizable/VisibilitySwitch.jsx";
+import withControlledVisibility from "../HOCs/withControlledVisibility";
 
 const FeedbackButton = observer(
   createReactClass({
@@ -42,4 +42,4 @@ const FeedbackButton = observer(
   })
 );
 
-export default withTranslation()(visibilitySwitch(FeedbackButton));
+export default withTranslation()(withControlledVisibility(FeedbackButton));
