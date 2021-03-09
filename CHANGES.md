@@ -6,6 +6,8 @@ Change Log
 #### next release (8.0.0-alpha.68)
 * Remove points from rectangle `UserDrawing`
 * Fix clipboard typing error. 
+* Add CSW Group support
+* Revert "remove wmts interfaces from ows interfaces" (873aa70)
 * [The next improvement]
 
 #### 8.0.0-alpha.67
