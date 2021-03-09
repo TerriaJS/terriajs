@@ -147,8 +147,8 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
   static async load(catalogGroup: CswCatalogGroup): Promise<CswStratum> {
     if (catalogGroup.url === undefined) {
       throw new TerriaError({
-        title: i18next.t("models.CswCatalogGroup.missingUrlTitle"),
-        message: i18next.t("models.CswCatalogGroup.missingUrlMessage")
+        title: i18next.t("models.csw.missingUrlTitle"),
+        message: i18next.t("models.csw.missingUrlMessage")
       });
     }
 

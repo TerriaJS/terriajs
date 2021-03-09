@@ -964,6 +964,7 @@
       "name": "Catalogue Service (CSW)",
       "unknownError": "The CSW server reported an unknown error.",
       "exceptionMessage": "The CSW server reported an error:\n\n {{exceptionText}}",
+      "errorLoadingTitle": "Could not load CSW",
       "notUseableTitle": "Catalogue service is not useable",
       "notUseableMessage": "Invalid response obtained when invoking GetDomain on the CSW server. <p>This error may indicate that the catalogue server you specified is temporarily unavailable or there is a problem with your internet connection.  Try opening the processing server again, and if the problem persists, please report it by sending an email to ",
       "errorLoadingRecordsTitle": "Failed to load CSW records.",
