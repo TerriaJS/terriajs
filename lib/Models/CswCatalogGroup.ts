@@ -31,7 +31,7 @@ import StratumOrder from "./StratumOrder";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
 
 const defaultGetRecordsTemplate = require("./CswGetRecordsTemplate.xml");
-const wpsGetRecordsTemplate = require("./CswGetRecordsWPSTemplate.xml");
+// const wpsGetRecordsTemplate = require("./CswGetRecordsWPSTemplate.xml");
 
 // Source files:
 // http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd
@@ -43,7 +43,8 @@ export type Record = BriefRecord & Partial<FullRecord>;
 export type Records = Record[];
 
 type ArrayOrPrimitive<T> = T | T[];
-function toArray<T>(val: ArrayOrPrimitive<T>): T[] | undefined {
+function toArray<T>(val: ArrayOrPrimitive<T>): T[];
+function toArray<T>(val: ArrayOrPrimitive<T> | undefined): T[] | undefined {
   if (!isDefined(val)) return undefined;
   return Array.isArray(val) ? val : [val];
 }
@@ -73,11 +74,11 @@ export interface SummaryRecord extends BriefRecord {
   URI?: ArrayOrPrimitive<CswURI>;
 }
 export interface FullRecord extends SummaryRecord {
-  contributor?: string;
-  creator?: string;
-  language?: string;
-  publisher?: string;
-  source?: string;
+  contributor?: ArrayOrPrimitive<string>;
+  creator?: ArrayOrPrimitive<string>;
+  language?: ArrayOrPrimitive<string>;
+  publisher?: ArrayOrPrimitive<string>;
+  source?: ArrayOrPrimitive<string>;
   description?: ArrayOrPrimitive<string>;
 }
 
@@ -151,97 +152,93 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
       });
     }
 
-    if (catalogGroup.domainSpecification.hierarchySeparator === undefined) {
-      throw new TerriaError({
-        title: i18next.t(
-          "models.CswCatalogGroup.missingHierarchySeparatorTitle"
-        ),
-        message: i18next.t(
-          "models.CswCatalogGroup.missingHierarchySeparatorMessage"
-        )
+    const metadataGroups: MetadataGroup[] = [];
+
+    if (
+      !catalogGroup.flatten &&
+      catalogGroup.domainSpecification.domainPropertyName &&
+      catalogGroup.domainSpecification.hierarchySeparator &&
+      catalogGroup.domainSpecification.queryPropertyName
+    ) {
+      // Call GetDomain (contains a list of all items)
+
+      const getDomainUrl = new URI(
+        proxyCatalogItemUrl(catalogGroup, catalogGroup.url)
+      ).query({
+        service: "CSW",
+        version: "2.0.2",
+        request: "GetDomain",
+        propertyname: catalogGroup.domainSpecification.domainPropertyName
       });
-    }
 
-    // Call GetDomain (contains a list of all items)
+      let domainResponse: GetDomainResponseType | undefined;
+      try {
+        const xml = await loadXML(getDomainUrl.toString());
 
-    const getDomainUrl = new URI(
-      proxyCatalogItemUrl(catalogGroup, catalogGroup.url)
-    ).query({
-      service: "CSW",
-      version: "2.0.2",
-      request: "GetDomain",
-      propertyname: catalogGroup.domainSpecification.domainPropertyName
-    });
+        if (
+          !xml ||
+          !xml.documentElement ||
+          xml.documentElement.localName !== "GetDomainResponse"
+        ) {
+          throw `Invalid XML response`;
+        }
 
-    let domainResponse: GetDomainResponseType | undefined;
-    try {
-      const xml = await loadXML(getDomainUrl.toString());
-
-      if (
-        !xml ||
-        !xml.documentElement ||
-        xml.documentElement.localName !== "GetDomainResponse"
-      ) {
-        throw `Invalid XML response`;
-      }
-
-      domainResponse = xml2json(xml) as GetDomainResponseType;
-    } catch (error) {
-      console.log(error);
-      throw new TerriaError({
-        sender: catalogGroup,
-        title: i18next.t("models.csw.notUseableTitle"),
-        message:
-          i18next.t("models.csw.notUseableMessage") +
-          '<a href="mailto:' +
-          catalogGroup.terria.supportEmail +
-          '">' +
-          catalogGroup.terria.supportEmail +
-          "</a>."
-      });
-    }
-
-    if (!domainResponse) {
-      throw new TerriaError({
-        sender: catalogGroup,
-        title: i18next.t("models.csw.errorLoadingTitle"),
-        message: i18next.t("models.csw.checkCORSDomain", {
-          cors:
-            '<a href="http://enable-cors.org/" target="_blank">' +
-            i18next.t("models.csw.cors") +
-            "</a>",
-          email:
+        domainResponse = xml2json(xml) as GetDomainResponseType;
+      } catch (error) {
+        console.log(error);
+        throw new TerriaError({
+          sender: catalogGroup,
+          title: i18next.t("models.csw.notUseableTitle"),
+          message:
+            i18next.t("models.csw.notUseableMessage") +
             '<a href="mailto:' +
             catalogGroup.terria.supportEmail +
             '">' +
             catalogGroup.terria.supportEmail +
             "</a>."
-        })
+        });
+      }
+
+      if (!domainResponse) {
+        throw new TerriaError({
+          sender: catalogGroup,
+          title: i18next.t("models.csw.errorLoadingTitle"),
+          message: i18next.t("models.csw.checkCORSDomain", {
+            cors:
+              '<a href="http://enable-cors.org/" target="_blank">' +
+              i18next.t("models.csw.cors") +
+              "</a>",
+            email:
+              '<a href="mailto:' +
+              catalogGroup.terria.supportEmail +
+              '">' +
+              catalogGroup.terria.supportEmail +
+              "</a>."
+          })
+        });
+      }
+
+      // Get list of items
+      const listOfValues: string[] = flatten(
+        toArray(domainResponse.DomainValues)?.map(d =>
+          toArray(d?.ListOfValues?.Value)
+        )
+      ).filter(v => typeof v === "string");
+
+      listOfValues.forEach(value => {
+        const keys = value.split(
+          catalogGroup.domainSpecification.hierarchySeparator!
+        );
+        // recursively find the group that the last key in keys should belong to and add that key
+        addMetadataGroups(
+          keys,
+          0,
+          metadataGroups,
+          catalogGroup.domainSpecification.hierarchySeparator!,
+          catalogGroup.domainSpecification.queryPropertyName
+        );
       });
     }
-
-    const metadataGroups: MetadataGroup[] = [];
-
-    // Get list of items
-    const listOfValues: string[] = flatten(
-      toArray(domainResponse.DomainValues)?.map(d =>
-        toArray(d?.ListOfValues?.Value)
-      )
-    ).filter(v => typeof v === "string");
-
-    listOfValues.forEach(value => {
-      const keys = value.split(
-        catalogGroup.domainSpecification.hierarchySeparator!
-      );
-      // recursively find the group that the last key in keys should belong to and add that key
-      addMetadataGroups(
-        keys,
-        0,
-        metadataGroups,
-        catalogGroup.domainSpecification.hierarchySeparator!,
-        catalogGroup.domainSpecification.queryPropertyName
-      );
-    });
 
     // Get Records
 
@@ -252,10 +249,9 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
 
     // We have to paginate through Records
     while (pageing) {
-      const postData = defaultGetRecordsTemplate.replace(
-        "{startPosition}",
-        startPosition
-      );
+      const postData = (
+        catalogGroup.getRecordsTemplate ?? defaultGetRecordsTemplate
+      ).replace("{startPosition}", startPosition);
 
       const xml = await loadWithXhr({
         url: proxyCatalogItemUrl(
@@ -316,21 +312,17 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
       }
     }
 
-    records.forEach(record => {
-      findGroup(metadataGroups, record)?.records.push(record);
-    });
+    if (metadataGroups.length > 0) {
+      records.forEach(record => {
+        findGroup(metadataGroups, record)?.records.push(record);
+      });
+    }
 
-    return new CswStratum(
-      catalogGroup,
-      domainResponse,
-      metadataGroups,
-      records
-    );
+    return new CswStratum(catalogGroup, metadataGroups, records);
   }
 
   constructor(
     readonly catalogGroup: CswCatalogGroup,
-    readonly domain: GetDomainResponseType,
     readonly metadataGroups: MetadataGroup[],
     readonly records: Records
   ) {
@@ -340,7 +332,6 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
   duplicateLoadableStratum(model: BaseModel): this {
     return new CswStratum(
       model as CswCatalogGroup,
-      this.domain,
       this.metadataGroups,
       this.records
     ) as this;
@@ -348,6 +339,11 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
 
   @computed
   get members(): ModelReference[] {
+    if (this.metadataGroups.length === 0) {
+      return this.records.map(
+        r => `${this.catalogGroup.uniqueId}/${r.identifier}`
+      );
+    }
     return this.metadataGroups.map(
       g => `${this.catalogGroup.uniqueId}/${g.groupName}`
     );
@@ -357,9 +353,18 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
 
   @action
   createMembersFromLayers() {
-    this.metadataGroups.forEach(metadataGroup =>
-      this.createMetadataGroup(this.catalogGroup.uniqueId, metadataGroup)
-    );
+    // If no metadata groups -> just create all records
+    if (this.metadataGroups.length === 0) {
+      this.records.forEach(record =>
+        this.createRecord(this.catalogGroup.uniqueId, record)
+      );
+
+      // If metadata groups -> create them (records will then be created for each group)
+    } else {
+      this.metadataGroups.forEach(metadataGroup =>
+        this.createMetadataGroup(this.catalogGroup.uniqueId, metadataGroup)
+      );
+    }
   }
 
   @action
@@ -510,12 +515,19 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
 
       const infoSections: InfoSectionTraits[] = [];
 
-      if (record.contributor) {
+      if (record.contributor && toArray(record.contributor).length > 0) {
         infoSections.push({
           name: i18next.t("models.csw.dataResponsibility"),
-          content: record.contributor
+          content: toArray(record.contributor)?.join("\n\n")
         });
       }
+
+      infoSections.push({
+        name: i18next.t("models.csw.links"),
+        content: downloadUrls
+          .map(d => `[${d.description}](${d.url})`)
+          .join("\n\n")
+      });
 
       model.setTrait(stratum, "info", infoSections);
 
@@ -541,20 +553,6 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
         model.setTrait(stratum, "legends", [{ url: legendUri.toString() }]);
       }
 
-      // catalogItem.info.push({
-      //   name: i18next.t("models.csw.links"),
-      //   content: downloadUrls.reduce(function(previousValue, downloadUrl) {
-      //     return (
-      //       previousValue +
-      //       "[" +
-      //       downloadUrl.description +
-      //       "](" +
-      //       downloadUrl.url +
-      //       ")\n\n"
-      //     );
-      //   }, "")
-      // });
-
       // If this is a WMS item, we MUST set `layers` trait to `uri.name`
       if (model instanceof WebMapServiceCatalogItem) {
         if (!uri.name) {
@@ -569,6 +567,12 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
           return;
         }
         model.setTrait(stratum, "layers", uri.name);
+      }
+
+      if (this.catalogGroup.itemProperties !== undefined) {
+        Object.keys(this.catalogGroup.itemProperties).map((k: any) =>
+          model.setTrait(stratum, k, this.catalogGroup.itemProperties![k])
+        );
       }
 
       return model;

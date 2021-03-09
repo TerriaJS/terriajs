@@ -53,7 +53,7 @@ export default class CswCatalogGroupTraits extends mixTraits(
     description:
       "True to flatten the layers into a single list; false to use the layer hierarchy."
   })
-  flatten?: boolean;
+  flatten?: boolean = false;
 
   @anyTrait({
     name: "Item Properties",
@@ -147,4 +147,20 @@ export default class CswCatalogGroupTraits extends mixTraits(
       "Gets or sets a regular expression that, when it matches the protocol attribute of a URI element of a record, indicates that the URI is a GeoJSON resource."
   })
   geoJsonResourceFormat = "\\bgeojson\\b";
+
+  @primitiveTrait({
+    type: "string",
+    name: "GetRecords Template",
+    description:
+      "Gets or sets the template XML string to POST to the CSW server to query for catalog items.  If this property is undefined,`lib/Models/CswGetRecordsTemplate.xml` is used.  The XML string should have a `{startPosition}` placeholder to be replaced with the next start position in order to allow incremental paging of results.."
+  })
+  getRecordsTemplate?: string;
+
+  // @primitiveTrait({
+  //   type: "string",
+  //   name: "WPS GetRecords Template",
+  //   description:
+  //     "Gets or sets the template XML string to POST to the CSW server to query for catalog items.  If this property is undefined,`lib/Models/CswGetRecordsTemplate.xml` is used.  The XML string should have a `{startPosition}` placeholder to be replaced with the next start position in order to allow incremental paging of results.."
+  // })
+  // wpsGetRecordsTemplate?: string;
 }

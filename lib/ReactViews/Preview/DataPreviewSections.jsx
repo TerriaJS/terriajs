@@ -58,13 +58,17 @@ const DataPreviewSections = observer(
         ? metadataItem.infoWithoutSources
         : metadataItem.info.slice();
 
-      const renderSection = content => {
+      const renderSection = item => {
+        let content = item.content;
         try {
           (content = Mustache.render(content, metadataItem)),
             {
               catalogItem: metadataItem
             };
         } catch (error) {
+          console.log(
+            `FAILED to parse info section ${item.name} for ${metadataItem.name}`
+          );
           console.log(error);
         }
         return parseCustomMarkdownToReact(content);
@@ -77,7 +81,7 @@ const DataPreviewSections = observer(
               <When condition={item.content?.length > 0}>
                 <div key={i}>
                   <h4 className={Styles.h4}>{item.name}</h4>
-                  {renderSection(item.content)}
+                  {renderSection(item)}
                 </div>
               </When>
               <When condition={item.contentAsObject !== undefined}>
