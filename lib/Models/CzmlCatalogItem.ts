@@ -8,6 +8,7 @@ import { JsonObject } from "../Core/Json";
 import readJson from "../Core/readJson";
 import TerriaError from "../Core/TerriaError";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -66,9 +67,11 @@ class CzmlTimeVaryingStratum extends LoadableStratum(CzmlCatalogItemTraits) {
 StratumOrder.addLoadStratum(CzmlTimeVaryingStratum.stratumName);
 
 export default class CzmlCatalogItem
-  extends AsyncMappableMixin(
-    DiscretelyTimeVaryingMixin(
-      UrlMixin(CatalogMemberMixin(CreateModel(CzmlCatalogItemTraits)))
+  extends AutoRefreshingMixin(
+    AsyncMappableMixin(
+      DiscretelyTimeVaryingMixin(
+        UrlMixin(CatalogMemberMixin(CreateModel(CzmlCatalogItemTraits)))
+      )
     )
   )
   implements Mappable {
@@ -100,7 +103,7 @@ export default class CzmlCatalogItem
       } else if (isDefined(this._czmlFile)) {
         resolve(readJson(this._czmlFile));
       } else if (isDefined(this.url)) {
-        resolve(proxyCatalogItemUrl(this, this.url));
+        resolve(proxyCatalogItemUrl(this, this.url, this.cacheDuration));
       } else {
         throw new TerriaError({
           sender: this,
@@ -165,5 +168,15 @@ export default class CzmlCatalogItem
    */
   get discreteTimes() {
     return undefined;
+  }
+
+  /**
+   * Reloads CzmlDataSource if the source is a URL
+   * Required for AutoRefreshingMixin
+   */
+  refreshData() {
+    if (this.url === undefined) return;
+    const url = proxyCatalogItemUrl(this, this.url, this.cacheDuration);
+    this._dataSource?.process(url);
   }
 }

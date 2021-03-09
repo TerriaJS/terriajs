@@ -144,4 +144,16 @@ describe("CzmlCatalogItem", function() {
       expect(error instanceof TerriaError).toBe(true);
     });
   });
+
+  describe("auto refreshing", async function() {
+    it("reloads the datasource when refreshed", async function() {
+      czml.setTrait(CommonStrata.user, "url", "test/CZML/Vehicle.czml");
+      await czml.loadMapItems();
+      const [dataSource] = czml.mapItems as [CzmlDataSource];
+      expect(dataSource).toBeDefined("Expected datasource to be defined");
+      spyOn(dataSource, "process");
+      czml.refreshData();
+      expect(dataSource.process).toHaveBeenCalledWith("test/CZML/Vehicle.czml");
+    });
+  });
 });
