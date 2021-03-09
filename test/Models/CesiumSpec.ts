@@ -1,11 +1,9 @@
-import { computed, configure } from "mobx";
+import { computed } from "mobx";
 import { CustomDataSource } from "terriajs-cesium";
-import TimeVarying from "../../lib/ModelMixins/TimeVarying";
 import Cesium from "../../lib/Models/Cesium";
 import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
-import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
 
 const supportsWebGL = require("../../lib/Core/supportsWebGL");
 
@@ -19,7 +17,6 @@ describeIfSupported("Cesium Model", function() {
   let terriaProgressEvt: jasmine.Spy;
 
   beforeEach(function() {
-    configure({ computedConfigurable: true }); // so that we can spy on computed items
     terria = new Terria({
       baseUrl: "./"
     });

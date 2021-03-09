@@ -1,10 +1,10 @@
-import { computed } from "mobx";
-import Terria from "../../lib/Models/Terria";
-import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
-import Leaflet from "../../lib/Models/Leaflet";
 import L from "leaflet";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import { computed } from "mobx";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import Leaflet from "../../lib/Models/Leaflet";
+import Terria from "../../lib/Models/Terria";
+import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 
 describe("Leaflet Model", function() {
   let terria: Terria;
