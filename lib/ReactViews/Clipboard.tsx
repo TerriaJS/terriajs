@@ -46,11 +46,12 @@ const Clipboard: React.FC<ClipboardProps> = props => {
         setStatus(CopyStatus.NotCopiedOrWaiting);
       }, 3000);
     }
-    clipboardBtn.on("success", () => {
+    // Cast to any as temporary fix for a clipboardjs typing bug - https://github.com/zenorocha/clipboard.js/issues/737
+    (clipboardBtn as any).on("success", () => {
       setStatus(CopyStatus.Success);
       resetTooltipLater();
     });
-    clipboardBtn.on("error", () => {
+    (clipboardBtn as any).on("error", () => {
       setStatus(CopyStatus.Error);
       resetTooltipLater();
     });
