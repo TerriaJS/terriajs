@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.68)
+* Remove points from rectangle `UserDrawing`
 * [The next improvement]
 
 #### 8.0.0-alpha.67
