@@ -139,4 +139,104 @@ describe("TableColumn", function() {
       ]);
     });
   });
+
+  describe("colum transformation", function() {
+    beforeEach(function() {
+      jasmine.Ajax.install();
+      jasmine.Ajax.stubRequest(
+        "build/TerriaJS/data/regionMapping.json"
+      ).andReturn({ responseText: regionMapping });
+    });
+
+    afterEach(function() {
+      jasmine.Ajax.uninstall();
+    });
+
+    it("simple expression", async function() {
+      tableModel.setTrait(CommonStrata.user, "csvString", "num\n1\n2\n3\n4\n");
+      tableModel.setTrait(CommonStrata.user, "columns", [
+        createStratumInstance(TableColumnTraits, {
+          name: "num",
+          transformation: {
+            expression: `x+10`,
+            dependencies: []
+          }
+        })
+      ]);
+      await tableModel.loadChartItems();
+      const tableColumn1 = new TableColumn(tableModel, 0);
+      expect(tableColumn1.values).toEqual(["1", "2", "3", "4"]);
+      expect(tableColumn1.valuesAsNumbers.values).toEqual([11, 12, 13, 14]);
+    });
+
+    it("expression with dependency", async function() {
+      tableModel.setTrait(
+        CommonStrata.user,
+        "csvString",
+        "num,num2,num3\n1,11,21\n2,12,22\n3,13,23\n4,14,24\n"
+      );
+      tableModel.setTrait(CommonStrata.user, "columns", [
+        createStratumInstance(TableColumnTraits, {
+          name: "num",
+          transformation: {
+            expression: `x*num2`,
+            dependencies: ["num2"]
+          }
+        })
+      ]);
+      await tableModel.loadChartItems();
+      const tableColumn1 = new TableColumn(tableModel, 0);
+      expect(tableColumn1.values).toEqual(["1", "2", "3", "4"]);
+      const tableColumn2 = new TableColumn(tableModel, 1);
+      expect(tableColumn2.values).toEqual(["11", "12", "13", "14"]);
+      expect(tableColumn1.valuesAsNumbers.values).toEqual([
+        1 * 11,
+        2 * 12,
+        3 * 13,
+        4 * 14
+      ]);
+    });
+
+    it("expressions with dependencies (nested)", async function() {
+      tableModel.setTrait(
+        CommonStrata.user,
+        "csvString",
+        "num,num2,num3\n1,11,21\n2,12,22\n3,13,23\n4,14,24\n"
+      );
+      tableModel.setTrait(CommonStrata.user, "columns", [
+        createStratumInstance(TableColumnTraits, {
+          name: "num",
+          transformation: {
+            expression: `x*num2`,
+            dependencies: ["num2"]
+          }
+        }),
+        createStratumInstance(TableColumnTraits, {
+          name: "num2",
+          transformation: {
+            expression: `x*10`,
+            dependencies: [""]
+          }
+        }),
+        createStratumInstance(TableColumnTraits, {
+          name: "num3",
+          transformation: {
+            // Note this would make num3 = x * [num * (num2*10)] * (num2*10)
+            expression: `x*num*num2`,
+            dependencies: ["num", "num2"]
+          }
+        })
+      ]);
+      await tableModel.loadChartItems();
+      const tableColumn3 = new TableColumn(tableModel, 2);
+      expect(tableColumn3.values).toEqual(["21", "22", "23", "24"]);
+
+      expect(tableColumn3.valuesAsNumbers.values).toEqual([
+        1 * 11 * 10 * 11 * 10 * 21,
+        2 * 12 * 10 * 12 * 10 * 22,
+        3 * 13 * 10 * 13 * 10 * 23,
+        4 * 14 * 10 * 14 * 10 * 24
+      ]);
+    });
+  });
 });
