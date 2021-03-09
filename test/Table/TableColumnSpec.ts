@@ -140,7 +140,7 @@ describe("TableColumn", function() {
     });
   });
 
-  describe("colum transformation", function() {
+  describe("column transformation", function() {
     beforeEach(function() {
       jasmine.Ajax.install();
       jasmine.Ajax.stubRequest(
