@@ -1,6 +1,5 @@
 import styled from "styled-components";
-
-const Loader: any = require("../../Loader");
+import Loader from "../../Loader";
 
 const Loading = styled(Loader).attrs(props => ({
   light: true,

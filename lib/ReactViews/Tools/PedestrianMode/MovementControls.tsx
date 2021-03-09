@@ -30,8 +30,8 @@ const MovementControls: React.FC<MovementControlsProps> = props => {
       props.cesium,
       props.onMove
     );
-    movementsController.attach();
-    return () => movementsController.detach();
+    const detach = movementsController.activate();
+    return detach;
   }, [props.cesium]);
 
   return (

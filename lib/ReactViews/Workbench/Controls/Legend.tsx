@@ -6,10 +6,12 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
+import AsyncMappableMixin from "../../../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import Model from "../../../Models/Model";
 import proxyCatalogItemUrl from "../../../Models/proxyCatalogItemUrl";
 import LegendTraits, { LegendItemTraits } from "../../../Traits/LegendTraits";
+import Loader from "../../Loader";
 import Styles from "./legend.scss";
 
 /* A lookup map for displayable mime types */
@@ -27,11 +29,10 @@ const DISPLAYABLE_MIME_TYPES = [
 const IMAGE_URL_REGEX = /[.\/](png|jpg|jpeg|gif|svg)/i;
 
 function checkMimeType(legend: Model<LegendTraits>) {
-  if (legend.urlMimeType) {
-    return !!DISPLAYABLE_MIME_TYPES[legend.urlMimeType];
-  }
-
-  return !!legend.url?.match(IMAGE_URL_REGEX);
+  return (
+    (legend.urlMimeType && !!DISPLAYABLE_MIME_TYPES[legend.urlMimeType]) ||
+    !!legend.url?.match(IMAGE_URL_REGEX)
+  );
 }
 
 @observer
