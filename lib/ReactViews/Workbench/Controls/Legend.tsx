@@ -6,12 +6,10 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
-import AsyncMappableMixin from "../../../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import Model from "../../../Models/Model";
 import proxyCatalogItemUrl from "../../../Models/proxyCatalogItemUrl";
 import LegendTraits, { LegendItemTraits } from "../../../Traits/LegendTraits";
-import Loader from "../../Loader";
 import Styles from "./legend.scss";
 
 /* A lookup map for displayable mime types */
