@@ -7,6 +7,7 @@ Change Log
 * Remove points from rectangle `UserDrawing`
 * Add `isLoading` to `CatalogMemberMixin` placeholder until `AsyncLoader` loading problems are sorted (https://github.com/TerriaJS/terriajs/issues/5233)
 * Move `Loader` (spinner) from `Legend` to `WorkbenchItem`.
+* Fix clipboard typing error. 
 * [The next improvement]
 
 #### 8.0.0-alpha.67
