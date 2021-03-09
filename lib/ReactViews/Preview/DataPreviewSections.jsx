@@ -61,17 +61,16 @@ const DataPreviewSections = observer(
       const renderSection = item => {
         let content = item.content;
         try {
-          (content = Mustache.render(content, metadataItem)),
-            {
-              catalogItem: metadataItem
-            };
+          content = Mustache.render(content, metadataItem);
         } catch (error) {
           console.log(
             `FAILED to parse info section ${item.name} for ${metadataItem.name}`
           );
           console.log(error);
         }
-        return parseCustomMarkdownToReact(content);
+        return parseCustomMarkdownToReact(content, {
+          catalogItem: metadataItem
+        });
       };
 
       return (
