@@ -19,13 +19,11 @@ import { isLatLonHeight } from "../Core/LatLonHeight";
 import makeRealPromise from "../Core/makeRealPromise";
 import TerriaError from "../Core/TerriaError";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
-import RegionProvider from "../Map/RegionProvider";
 import JSRegionProviderList from "../Map/RegionProviderList";
 import { calculateDomain, ChartAxis, ChartItem } from "../Models/Chartable";
 import CommonStrata from "../Models/CommonStrata";
 import { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
-import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import SelectableDimensions, {
   SelectableDimension
 } from "../Models/SelectableDimensions";
@@ -34,9 +32,9 @@ import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitu
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
-import LegendTraits from "../Traits/LegendTraits";
 import TableTraits from "../Traits/TableTraits";
 import AsyncMappableMixin from "./AsyncMappableMixin";
+import CatalogMemberMixin from "./CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin, {
   DiscreteTimeAsJS
 } from "./DiscretelyTimeVaryingMixin";
@@ -221,7 +219,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      *
      */
     @computed
-    get chartItems(): ChartItem[] {
+    private get tableChartItems(): ChartItem[] {
       const style = this.activeTableStyle;
       if (style === undefined || !style.isChart()) {
         return [];
@@ -263,11 +261,13 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
             points.push({ x, y });
           }
 
+          if (points.length <= 1) return;
+
           const colorId = `color-${this.uniqueId}-${this.name}-${yColumn.name}`;
 
           return {
             item: this,
-            name: yColumn.title,
+            name: line.name ?? yColumn.title,
             categoryName: this.name,
             key: `key${this.uniqueId}-${this.name}-${yColumn.name}`,
             type: this.chartType ?? "line",
@@ -298,6 +298,17 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     @computed
+    get chartItems() {
+      return filterOutUndefined([
+        // If time-series region mapping - show time points chart
+        this.activeTableStyle.isRegions() && this.discreteTimes?.length
+          ? this.momentChart
+          : undefined,
+        ...this.tableChartItems
+      ]);
+    }
+
+    @computed
     get selectableDimensions(): SelectableDimension[] {
       return filterOutUndefined([
         this.regionColumnDimensions,
@@ -321,10 +332,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         options: this.tableStyles.map(style => {
           return {
             id: style.id,
-            name:
-              style.styleTraits.title ??
-              this.tableColumns.find(col => col.name === style.id)?.title ??
-              style.id
+            name: style.title
           };
         }),
         selectedId: this.activeStyle,
@@ -657,6 +665,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
                 featureRegion !== undefined && featureRegion !== null
                   ? featureRegion.toString()
                   : "";
+
               let rowNumber = filterRows(
                 valuesAsRegions.regionIdToRowNumbersMap.get(
                   regionIdString.toLowerCase()
@@ -703,24 +712,65 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
                 if (!isDefined(regionType)) return undefined;
 
-                const regionId = filterRows(
+                const regionIds =
                   regionColumn.valuesAsRegions.regionIdToRowNumbersMap.get(
                     feature.properties[regionType.regionProp].toLowerCase()
-                  )
-                );
+                  ) ?? [];
 
-                let d: JsonObject | null = isDefined(regionId)
-                  ? this.getRowValues(regionId)
+                const filteredRegionId = filterRows(regionIds);
+
+                let d: JsonObject | null = isDefined(filteredRegionId)
+                  ? this.getRowValues(filteredRegionId)
                   : null;
 
                 if (d === null) return;
 
-                return this.featureInfoFromFeature(
-                  regionType,
-                  // Preserve values from d and insert feature properties after entries from d
-                  Object.assign({}, d, feature.properties, d),
-                  feature.properties[regionType.uniqueIdProp]
-                );
+                // Preserve values from d and insert feature properties after entries from d
+                const featureData = Object.assign({}, d, feature.properties, d);
+
+                const featureInfo = new ImageryLayerFeatureInfo();
+                if (isDefined(regionType.nameProp)) {
+                  featureInfo.name = featureData[regionType.nameProp] as string;
+                }
+
+                featureData.id = feature.properties[regionType.uniqueIdProp];
+                featureInfo.properties = featureData;
+
+                featureInfo.configureDescriptionFromProperties(featureData);
+                featureInfo.configureNameFromProperties(featureData);
+
+                // If time-series region-mapping - show timeseries chart
+                if (
+                  !isDefined(featureData._terria_getChartDetails) &&
+                  this.discreteTimes &&
+                  this.discreteTimes.length > 1 &&
+                  this.activeTableStyle.timeColumn &&
+                  this.activeTableStyle.colorColumn?.type ===
+                    TableColumnType.scalar &&
+                  Array.isArray(regionIds) &&
+                  regionIds.length > 1
+                ) {
+                  const chartColumns = [
+                    this.activeTableStyle.timeColumn,
+                    this.activeTableStyle.colorColumn
+                  ];
+                  featureInfo.properties._terria_getChartDetails = () => ({
+                    title: this.activeTableStyle.colorColumn?.title,
+                    xName: this.activeTableStyle.timeColumn?.title,
+                    yName: this.activeTableStyle.colorColumn?.title,
+                    units: chartColumns.map(column => column.units || ""),
+                    csvData: [
+                      chartColumns.map(col => col!.title).join(","),
+                      ...regionIds.map(i =>
+                        chartColumns
+                          .map(col => col.valueFunctionForType(i))
+                          .join(",")
+                      )
+                    ].join("\n")
+                  });
+                }
+
+                return featureInfo;
               }
 
               return undefined;
@@ -731,29 +781,11 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       }
     );
 
-    private featureInfoFromFeature(
-      region: RegionProvider,
-      data: JsonObject,
-      regionId: any
-    ) {
-      const featureInfo = new ImageryLayerFeatureInfo();
-      if (isDefined(region.nameProp)) {
-        featureInfo.name = data[region.nameProp] as string;
-      }
-
-      data.id = regionId;
-      featureInfo.properties = data;
-
-      featureInfo.configureDescriptionFromProperties(data);
-      featureInfo.configureNameFromProperties(data);
-      return featureInfo;
-    }
-
     private getRowValues(index: number): JsonObject {
       const result: JsonObject = {};
 
       this.tableColumns.forEach(column => {
-        result[column.name] = column.values[index];
+        result[column.title] = column.valueFunctionForType(index);
       });
 
       return result;
