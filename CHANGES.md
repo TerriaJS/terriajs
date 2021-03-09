@@ -6,6 +6,10 @@ Change Log
 #### next release (8.0.0-alpha.68)
 * Remove points from rectangle `UserDrawing`
 * Fix clipboard typing error. 
+* Added `momentChart` to region-mapped timeseries
+* Add time-series chart (in FeatureInfo) for region-mapped timeseries
+* Only show `TableMixin` chart if it has more than one
+* Add `TableChartStyle` name trait.
 * [The next improvement]
 
 #### 8.0.0-alpha.67
