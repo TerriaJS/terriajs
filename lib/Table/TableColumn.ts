@@ -220,7 +220,7 @@ export default class TableColumn {
 
       if (n !== null) {
         // If we have a `math-expression-evaluator` - use it to transform value
-        if (this.mexpPostfix) {
+        if (isDefined(this.mexpPostfix)) {
           const columnPairs = this.mexpColumnPairs(i, n);
 
           // Only transform value if all columnPairs have been set
