@@ -130,6 +130,7 @@ export default class TableColumn {
               value: colName
             };
           } else {
+            // TODO: deal with error handling when we have it
             console.log(
               `Failed to add column token - column "${colName}" doesn't exist.\nWith expression: ${
                 this.traits.transformation.expression
@@ -183,6 +184,7 @@ export default class TableColumn {
         // Converts to postfix notation
         return lexed.toPostfix();
       } catch (error) {
+        // TODO: deal with error handling when we have it
         console.log(
           `Failed to setup column transformation: \n${
             this.traits.transformation.expression
