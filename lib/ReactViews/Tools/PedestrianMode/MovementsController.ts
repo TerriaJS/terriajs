@@ -5,6 +5,9 @@ import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
 import KeyboardEventModifier from "terriajs-cesium/Source/Core/KeyboardEventModifier";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
+import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
 import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
@@ -36,6 +39,9 @@ const KeyMap: Record<KeyboardEvent["code"], Movement> = {
 
 // The desired camera height measured from the surface in metres
 const PEDESTRIAN_HEIGHT = 1.7;
+
+// Maximum up/down look angle in degrees
+const MAX_VERTICAL_LOOK_ANGLE = 20;
 
 export default class MovementsController {
   // Current mode
@@ -163,10 +169,6 @@ export default class MovementsController {
     this.camera.move(surfaceNormal, -this.moveAmount);
   }
 
-  /**
-   * Look left/right or up/down by an amount proportional to the mouse drag distance
-   * and without tilting the camera.
-   */
   look() {
     if (
       this.startMousePosition === undefined ||
@@ -197,9 +199,45 @@ export default class MovementsController {
       this.scene.globe.ellipsoid
     );
 
-    // To avoid camera tilt, look along surface normal or tangent
+    // Look left/right about the surface normal
     camera.look(surfaceNormal, x * lookFactor);
-    camera.look(surfaceTangent, y * lookFactor);
+
+    // Look up/down about the surface tangent
+    this.lookVertical(
+      surfaceTangent,
+      surfaceNormal,
+      y * lookFactor,
+      MAX_VERTICAL_LOOK_ANGLE
+    );
+  }
+
+  /**
+   * Look up/down limiting the maximum look angle to MAX_VERTICAL_LOOK_ANGLE
+   *
+   */
+  lookVertical(
+    lookAxis: Cartesian3,
+    surfaceNormal: Cartesian3,
+    lookAmount: number,
+    maxLookAngle: number
+  ) {
+    const camera = this.camera;
+    const currentAngle = CesiumMath.toDegrees(
+      Cartesian3.angleBetween(surfaceNormal, camera.up)
+    );
+    const upAfterLook = rotateVectorAboutAxis(camera.up, lookAxis, lookAmount);
+    const angleAfterLook = CesiumMath.toDegrees(
+      Cartesian3.angleBetween(surfaceNormal, upAfterLook)
+    );
+
+    // We apply NO friction when the camera angle with surface normal is decreasing
+    // When the camera angle is increasing, we apply a friction which peaks as we approach
+    // the maxLookAngle
+    const friction =
+      angleAfterLook < currentAngle
+        ? 1
+        : (maxLookAngle - currentAngle) / maxLookAngle;
+    camera.look(lookAxis, lookAmount * friction);
   }
 
   /**
@@ -512,4 +550,29 @@ function projectVectorToSurface(
     new Cartesian3()
   );
   return projectionOnSurface;
+}
+
+const rotateScratchQuaternion = new Quaternion();
+const rotateScratchMatrix = new Matrix3();
+
+/**
+ * Rotates a vector about rotateAxis by rotateAmount
+ */
+function rotateVectorAboutAxis(
+  vector: Cartesian3,
+  rotateAxis: Cartesian3,
+  rotateAmount: number
+) {
+  const quaternion = Quaternion.fromAxisAngle(
+    rotateAxis,
+    -rotateAmount,
+    rotateScratchQuaternion
+  );
+  const rotation = Matrix3.fromQuaternion(quaternion, rotateScratchMatrix);
+  const rotatedVector = Matrix3.multiplyByVector(
+    rotation,
+    vector,
+    vector.clone()
+  );
+  return rotatedVector;
 }
