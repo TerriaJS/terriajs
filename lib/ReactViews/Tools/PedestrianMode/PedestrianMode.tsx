@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Cesium from "../../../Models/Cesium";
 import ViewState from "../../../ReactViewModels/ViewState";
@@ -22,6 +22,10 @@ const PedestrianMode: React.FC<PedestrianModeProps> = observer(props => {
 
   const onDropCancelled = () => viewState.closeTool();
   const updateView = () => setView(getViewFromScene(cesium.scene));
+
+  useEffect(function onZoomTo() {
+    cesium.zoomToEvent.addEventListener(() => setIsDropped(false));
+  }, []);
 
   return (
     <>
