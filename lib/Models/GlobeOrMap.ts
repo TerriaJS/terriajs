@@ -26,6 +26,8 @@ import Mappable from "./Mappable";
 import Terria from "./Terria";
 import { observable, runInAction } from "mobx";
 import MouseCoords from "../ReactViewModels/MouseCoords";
+import CesiumEvent from "terriajs-cesium/Source/Core/Event";
+import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 
 require("./ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureDescriptionFromProperties
 
@@ -39,6 +41,9 @@ export default abstract class GlobeOrMap {
   private _tilesLoadingCountMax: number = 0;
   protected supportsPolylinesOnTerrain?: boolean;
 
+  // Fired when zoomTo is called
+  zoomToEvent: CesiumEvent = new CesiumEvent();
+
   // This is updated by Leaflet and Cesium objects.
   // Avoid duplicate mousemove events.  Why would we get duplicate mousemove events?  I'm glad you asked:
   // http://stackoverflow.com/questions/17818493/mousemove-event-repeating-every-second/17819113
@@ -46,10 +51,20 @@ export default abstract class GlobeOrMap {
   @observable mouseCoords: MouseCoords = new MouseCoords();
 
   abstract destroy(): void;
-  abstract zoomTo(
+
+  abstract doZoomTo(
     viewOrExtent: CameraView | Rectangle | Mappable,
     flightDurationSeconds: number
   ): void;
+
+  zoomTo(
+    viewOrExtent: CameraView | Rectangle | Mappable,
+    flightDurationSeconds: number
+  ): void {
+    this.zoomToEvent.raiseEvent();
+    this.doZoomTo(viewOrExtent, flightDurationSeconds);
+  }
+
   abstract getCurrentCameraView(): CameraView;
 
   /* Gets the current container element.

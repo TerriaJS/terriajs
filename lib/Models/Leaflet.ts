@@ -427,7 +427,7 @@ export default class Leaflet extends GlobeOrMap {
     });
   }
 
-  zoomTo(
+  doZoomTo(
     target: CameraView | Rectangle | DataSource | Mappable | any,
     flightDurationSeconds: number
   ): void {
@@ -467,7 +467,7 @@ export default class Leaflet extends GlobeOrMap {
           }
           if (!isDefined(extent)) {
             // Zoom to the first item!
-            return that.zoomTo(target.mapItems[0], flightDurationSeconds);
+            return that.doZoomTo(target.mapItems[0], flightDurationSeconds);
           }
         } else {
           extent = target.rectangle;
