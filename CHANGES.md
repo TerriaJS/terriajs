@@ -8,6 +8,7 @@ Change Log
 * Fix clipboard typing error. 
 * Add CSW Group support
 * Revert "remove wmts interfaces from ows interfaces" (873aa70)
+* Fix region mapping feature highlighting.
 * [The next improvement]
 
 #### 8.0.0-alpha.67
