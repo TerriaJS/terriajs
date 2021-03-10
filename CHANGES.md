@@ -8,6 +8,7 @@ Change Log
 * Fix clipboard typing error. 
 * Add `math-expression-evaluator` library and `ColumnTransformationTraits`. This allows expressions to be used to transform column values (for example `x+10` to add 10 to all values).
 * Fix bug in `TableColumn.title` getter.
+* Fix region mapping feature highlighting.
 * [The next improvement]
 
 #### 8.0.0-alpha.67
