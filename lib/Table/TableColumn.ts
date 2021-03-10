@@ -254,10 +254,14 @@ export default class TableColumn {
 
     let yyyyQQ: StringToDateFunction = value => {
       // Is it quarterly data in the format yyyy-Qx ? (Ignoring null values, and failing on any purely numeric values)
-      if (value.indexOf("-Q") === 4) {
-        var year = value.slice(0, 4);
-        var quarter = value.slice(6);
-        var monthString;
+      if (value[4] === "-" && value[5] === "Q") {
+        const year = +value.slice(0, 4);
+        if (!Number.isInteger(year)) {
+          parsingFailed = true;
+          return null;
+        }
+        const quarter = value.slice(6);
+        let monthString: string;
         if (quarter === "1") {
           monthString = "01/01";
         } else if (quarter === "2") {
@@ -270,7 +274,7 @@ export default class TableColumn {
           parsingFailed = true;
           return null;
         }
-        return new Date(year + "/" + monthString);
+        return new Date(centuryFix(year) + "/" + monthString);
       }
       parsingFailed = true;
       return null;
