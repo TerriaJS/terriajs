@@ -1,18 +1,20 @@
-import { observable, runInAction } from "mobx";
-import React, { useRef } from "react";
+import { runInAction } from "mobx";
+import React from "react";
 import isDefined from "../../../Core/isDefined";
 import ViewerMode from "../../../Models/ViewerMode";
 import ViewState from "../../../ReactViewModels/ViewState";
 import { GLYPHS } from "../../Icon";
+import { ToolButton } from "../../Tool";
+import PedestrianMode, {
+  PEDESTRIAN_MODE_ID
+} from "../../Tools/PedestrianMode/PedestrianMode";
 import Compass from "./Items/Compass";
+import MeasureTool from "./Items/MeasureTool";
 import MyLocation from "./Items/MyLocation";
 import ToggleSplitterTool, {
   splitterNavigationName
 } from "./Items/ToggleSplitterTool";
-import { ToolButton } from "./Items/ToolButton";
 import ZoomControl from "./Items/ZoomControl";
-import MeasureTool from "./Items/MeasureTool";
-const Text = require("../../../Styled/Text").default;
 
 export const registerMapNavigations = (viewState: ViewState) => {
   const terria = viewState.terria;
@@ -25,7 +27,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     name: "compass",
     render: <Compass terria={terria} viewState={viewState} />,
     location: "TOP",
-    hideItem: false,
+    hidden: false,
     pinned: true,
     order: 1,
     viewerMode: ViewerMode.Cesium,
@@ -34,12 +36,13 @@ export const registerMapNavigations = (viewState: ViewState) => {
     width: 56,
     itemRef: React.createRef()
   });
+
   mapNavigationModel.addItem({
     id: "zoomTool",
     name: "zoom",
     render: <ZoomControl terria={terria} />,
     location: "TOP",
-    hideItem: false,
+    hidden: false,
     pinned: true,
     order: 2,
     screenSize: "medium",
@@ -56,7 +59,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     title: "location.centreMap",
     glyph: GLYPHS.geolocationThick,
     location: "TOP",
-    hideItem: false,
+    hidden: false,
     pinned: false,
     onClick: () => {
       myLocation.handleClick();
@@ -81,7 +84,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     glyph:
       terria.showSplitter && !isDiffMode ? GLYPHS.splitterOn : GLYPHS.compare,
     location: "TOP",
-    hideItem: false,
+    hidden: false,
     mapIconButtonProps: {
       get disabled() {
         return isDiffMode;
@@ -113,15 +116,15 @@ export const registerMapNavigations = (viewState: ViewState) => {
     title: "measure.measureDistance",
     glyph: GLYPHS.measure,
     location: "TOP",
-    hideItem: false,
+    hidden: false,
     pinned: false,
     onClick: () => {
       measureTool.handleClick();
-      /* runInAction(() => {
-        viewState.panel = (
-          <ResultPanel measureTool={measureToolSmall}></ResultPanel>
-        );
-      }); */
+    },
+    mapIconButtonProps: {
+      get disabled() {
+        return pedestrianModeTool.isThisToolOpen;
+      }
     },
     order: 5,
     height: 42,
@@ -135,7 +138,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     title: "feedback.feedbackBtnText",
     glyph: GLYPHS.feedback,
     location: "BOTTOM",
-    hideItem:
+    hidden:
       isDefined(terria.configParameters.feedbackUrl) && viewState.hideMapUi()!,
     pinned: false,
     onClick: () =>
@@ -154,10 +157,9 @@ export const registerMapNavigations = (viewState: ViewState) => {
     title: "helpPanel.button",
     glyph: GLYPHS.helpThick,
     location: "BOTTOM",
-    hideItem: false,
+    hidden: false,
     pinned: false,
     onClick: () => viewState.showHelpPanel(),
-
     mapIconButtonProps: {
       get expanded() {
         return viewState.featurePrompts.indexOf("help") >= 0;
@@ -166,6 +168,35 @@ export const registerMapNavigations = (viewState: ViewState) => {
     screenSize: "medium",
     height: 42,
     width: 32,
+    itemRef: React.createRef()
+  });
+
+  const pedestrianModeTool = new ToolButton({
+    toolName: PEDESTRIAN_MODE_ID,
+    viewState: viewState,
+    //@ts-ignore
+    getToolComponent: () => Promise.resolve(PedestrianMode)
+  });
+
+  mapNavigationModel.addItem({
+    id: PEDESTRIAN_MODE_ID,
+    name: "pedestrianMode.toolButtonTitle",
+    title: "pedestrianMode.toolButtonTitle",
+    glyph: GLYPHS.pedestrian,
+    onClick: () => pedestrianModeTool.toggleOpen(),
+    mapIconButtonProps: {
+      get primary() {
+        return pedestrianModeTool.isThisToolOpen;
+      }
+    },
+    location: "TOP",
+    hidden: false,
+    pinned: false,
+    order: 5,
+    screenSize: "medium",
+    viewerMode: ViewerMode.Cesium,
+    height: 42,
+    width: 42,
     itemRef: React.createRef()
   });
 };

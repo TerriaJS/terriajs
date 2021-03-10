@@ -1,82 +1,31 @@
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, IObservableArray } from "mobx";
 import isDefined from "../../../Core/isDefined";
-import ViewerMode from "./../../../Models/ViewerMode";
-
-type Location = "TOP" | "BOTTOM";
-type ScreenSize = "small" | "medium";
+import {
+  MapNavigationItemExtendedType,
+  MapNavigationItemType
+} from "./MapNavigationItem";
 
 export const OverflowItemId = "overflowItem";
 
-type MapNavigationItemBase = {
-  /** Unique identifier of navigation item. */
-  id: string;
-  /** Name of the navigation item. */
-  name: string;
-  /** Title of the navigation item. */
-  title?: string;
-  /** Glyph icon for the navigation item. */
-  glyph?: any;
-  /** The location of the item. */
-  location: Location;
-  /** Wheter item is visible at all. */
-  hideItem: boolean;
-  /** Custom renderer. */
-  render?: React.ReactNode;
-  order?: number;
-  /** Set the viewer this navigation item should be available.
-   * Leave undefined if it should be visible in both viewers.
-   */
-  viewerMode?: ViewerMode;
-  /** On which screen size this navigation item should be available.
-   * Leave undefined if it should be visible on all screen sizes. */
-  screenSize?: ScreenSize;
-  /** MapIconButton props.*/
-  mapIconButtonProps?: { [spread: string]: any };
-  /** Height of the element. This is only a fallback if we can't determine the height. The height should be correctly calculated for all non collapsed items on initial render. */
-  height: number;
-  /** Width of the element. This is only a fallback if we can't determine the width. The height should be correctly calculated for all non collapsed items on initial render. */
-  width: number;
-  /** ReactRef for the navigation item. */
-  itemRef: React.RefObject<HTMLDivElement>;
-};
-
-export type MapNavigationItem =
-  | (MapNavigationItemBase & {
-      /** If true item won't be collapsed. */
-      pinned: true;
-      /** If true item will be shown as collapsed by default. */
-      forceCollapsed?: false;
-      /** On click action for the button */
-      onClick?: (props?: { [sprad: string]: any }) => void;
-    })
-  | (MapNavigationItemBase & {
-      /** If true item won't be collapsed. */
-      pinned: false;
-      /** If true item will be shown as collapsed by default. */
-      forceCollapsed?: boolean;
-      /** On click action for the button */
-      onClick: (props?: { [sprad: string]: any }) => void;
-    });
-
-export type MapNavigationItemExtended = MapNavigationItem & {
-  collapsed?: boolean;
-};
-
 export default class MapNavigationModel {
   @observable
-  activeItem?: MapNavigationItemExtended;
+  activeItem?: MapNavigationItemExtendedType;
 
+  /**
+   * List of navigation items.
+   * @private
+   */
   @observable
-  private _items: MapNavigationItemExtended[] = [];
+  private _items: MapNavigationItemExtendedType[] = [];
 
-  constructor(items?: MapNavigationItem[]) {
+  constructor(items?: MapNavigationItemType[]) {
     if (items) {
       this.setItems(items);
     }
   }
 
   @computed
-  get items(): MapNavigationItemExtended[] {
+  get items(): MapNavigationItemExtendedType[] {
     return this._items;
   }
 
@@ -88,17 +37,17 @@ export default class MapNavigationModel {
    *
    * @param items[] array of navigation items
    */
-  setItems(items: MapNavigationItem[]) {
-    const result: MapNavigationItemExtended[] = [];
+  setItems(items: MapNavigationItemType[]) {
+    const result: MapNavigationItemExtendedType[] = [];
     if (!this.items || this.items.length === 0) {
-      this._items = items.map((item: MapNavigationItemExtended) => {
+      this._items = items.map((item: MapNavigationItemExtendedType) => {
         item.collapsed = item.forceCollapsed || false;
         return item;
       });
     } else {
       const existingItems = this.items;
       for (let index = 0; index < items.length; index++) {
-        const newItem: MapNavigationItemExtended = items[index];
+        const newItem: MapNavigationItemExtendedType = items[index];
         const existingItem = existingItems.filter(
           ({ id }) => id === newItem.id
         )[0];
@@ -106,7 +55,7 @@ export default class MapNavigationModel {
           existingItem.pinned = newItem.pinned;
           existingItem.forceCollapsed = newItem.forceCollapsed;
           existingItem.glyph = newItem.glyph;
-          existingItem.hideItem = newItem.hideItem;
+          existingItem.hidden = newItem.hidden;
           existingItem.height = newItem.height;
           existingItem.width = newItem.width;
           existingItem.mapIconButtonProps = newItem.mapIconButtonProps;
@@ -124,57 +73,57 @@ export default class MapNavigationModel {
 
   /**
    * Filters the list of the items for pinned items.
-   * @returns {MapNavigationItemExtended[]} List of navigation items that won't be collapsed.
+   * @returns {MapNavigationItemExtendedType[]} List of navigation items that won't be collapsed.
    */
   @computed
-  get pinnedItems(): MapNavigationItemExtended[] {
-    return this.items.filter(item => !item.hideItem && item.pinned);
+  get pinnedItems(): MapNavigationItemExtendedType[] {
+    return this.items.filter(item => !item.hidden && item.pinned);
   }
 
   /**
    * Filters list of the items for items that should be shown in navigation bar.
-   * @returns {MapNavigationItemExtended[]} List of navigation items that should be visible
+   * @returns {MapNavigationItemExtendedType[]} List of navigation items that should be visible
    */
   @computed
-  get enabledItems(): MapNavigationItemExtended[] {
-    return this.items.filter(item => !item.hideItem && !item.forceCollapsed);
+  get enabledItems(): MapNavigationItemExtendedType[] {
+    return this.items.filter(item => !item.hidden && !item.forceCollapsed);
   }
 
   /**
    * Filters the list of the items and remove, hidden and collapsed items.
-   * @returns {MapNavigationItemExtended[]} List of navigation items to show in navigation bar.
+   * @returns {MapNavigationItemExtendedType[]} List of navigation items to show in navigation bar.
    */
   @computed
-  get visibleItems(): MapNavigationItemExtended[] {
+  get visibleItems(): MapNavigationItemExtendedType[] {
     return this.items.filter(
-      item => !item.hideItem && !item.forceCollapsed && !item.collapsed
+      item => !item.hidden && !item.forceCollapsed && !item.collapsed
     );
   }
 
   /**
    * Filters the list of the items and returns the list of items to show as collapsed.
-   * @returns {MapNavigationItemExtended[]} List of collapsed navigation items.
+   * @returns {MapNavigationItemExtendedType[]} List of collapsed navigation items.
    */
   @computed
-  get collapsedItems(): MapNavigationItemExtended[] {
+  get collapsedItems(): MapNavigationItemExtendedType[] {
     return this.items.filter(
-      item => !item.hideItem && (item.collapsed || item.forceCollapsed)
+      item => !item.hidden && (item.collapsed || item.forceCollapsed)
     );
   }
 
   /**
    * Add a new navigation item to the list of items.
    * If there is an navigation item with same ID we update it, otherwise we add it to requested position or at the end of the list
-   * @param {MapNavigationItem} itemToAdd A navigation item that should be added.
+   * @param {MapNavigationItemType} itemToAdd A navigation item that should be added.
    * @param {number} requestedIndex A position that navigation item should be added.
    */
   @action.bound
-  addItem(itemToAdd: MapNavigationItem, requestedIndex?: number): void {
-    let item: MapNavigationItemExtended = this.findItem(itemToAdd.id);
+  addItem(itemToAdd: MapNavigationItemType, requestedIndex?: number): void {
+    let item: MapNavigationItemExtendedType = this.findItem(itemToAdd.id);
     // item found update it with new props
     if (item) {
       item.name = itemToAdd.name;
-      item.hideItem = itemToAdd.hideItem || true;
+      item.hidden = itemToAdd.hidden || true;
       item.pinned = itemToAdd.pinned || false;
       item.glyph = itemToAdd.glyph;
       item.location = itemToAdd.location;
@@ -196,7 +145,7 @@ export default class MapNavigationModel {
         let index = 0;
         let rIndex = requestedIndex;
         while (rIndex > 0 && index < this.items.length) {
-          if (!this.items[index++].hideItem) {
+          if (!this.items[index++].hidden) {
             rIndex--;
           }
         }
@@ -239,7 +188,7 @@ export default class MapNavigationModel {
   @action.bound
   hideItem(id: string) {
     const item = this.findItem(id);
-    if (item) item.hideItem = true;
+    if (item) item.hidden = true;
   }
 
   /**
@@ -319,9 +268,9 @@ export default class MapNavigationModel {
   /**
    * Finds the navigation item by id.
    * @param {string} id - ID of the navigation item
-   * @returns {MapNavigationItemExtended}
+   * @returns {MapNavigationItemExtendedType}
    */
-  private findItem(id: string): MapNavigationItemExtended {
+  private findItem(id: string): MapNavigationItemExtendedType {
     return this.items.filter(item => item.id === id)[0];
   }
 

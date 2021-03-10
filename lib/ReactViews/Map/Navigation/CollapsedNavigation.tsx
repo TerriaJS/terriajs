@@ -7,9 +7,9 @@ import ViewState from "../../../ReactViewModels/ViewState";
 import CloseButton from "../../Generic/CloseButton";
 import { PrefaceBox } from "../../Generic/PrefaceBox";
 import { StyledIcon } from "../../Icon";
-import { MapNavigationItemExtended } from "../Navigation/MapNavigationModel";
 import { useTranslationIfExists } from "./../../../Language/languageHelpers";
-import { filterViewerScreenSize } from "./MapNavigation";
+import { filterViewerAndScreenSize } from "./MapNavigation";
+import { MapNavigationItemExtendedType } from "./MapNavigationItem";
 const Box = require("../../../Styled/Box").default;
 const BoxSpan = require("../../../Styled/Box").BoxSpan;
 
@@ -18,7 +18,7 @@ const Spacing = require("../../../Styled/Spacing").default;
 
 interface PropTypes {
   viewState: ViewState;
-  items: MapNavigationItemExtended[];
+  items: MapNavigationItemExtendedType[];
 }
 
 const CollapsedNavigationBox = styled(Box).attrs({
@@ -131,7 +131,7 @@ const CollapsedNavigation: React.FC<{ viewState: ViewState }> = observer(
     );
 
     let items = viewState.terria.mapNavigationModel.collapsedItems;
-    items = items.filter(item => filterViewerScreenSize(item, viewState));
+    items = items.filter(item => filterViewerAndScreenSize(item, viewState));
 
     if (!viewState.showCollapsedNavigation || items.length === 0) {
       viewState.closeCollapsedNavigation();

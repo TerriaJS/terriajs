@@ -13,17 +13,17 @@ import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import isDefined from "../../../Core/isDefined";
-import { useTranslationIfExists } from "../../../Language/languageHelpers";
-import Terria from "../../../Models/Terria";
 import ViewState from "../../../ReactViewModels/ViewState";
 import Prompt from "../../Generic/Prompt";
 import { Medium } from "../../Generic/Responsive";
 import Icon, { GLYPHS } from "../../Icon";
 import MapIconButton from "../../MapIconButton/MapIconButton";
-import MapNavigationModel, {
+import {
+  Control,
   MapNavigationItem,
-  MapNavigationItemExtended
-} from "./MapNavigationModel";
+  MapNavigationItemExtendedType
+} from "./MapNavigationItem";
+import MapNavigationModel, { OverflowItemId } from "./MapNavigationModel";
 import { registerMapNavigations } from "./registerMapNavigations";
 
 const Box = require("../../../Styled/Box").default;
@@ -66,23 +66,6 @@ const StyledMapNavigation = styled.div<StyledMapNavigationProps>`
   `}
 `;
 
-export const Control = styled(Box).attrs({
-  centered: true,
-  column: true
-})`
-  pointer-events: auto;
-  @media (min-width: ${props => props.theme.sm}px) {
-    margin: 0;
-    padding-top: 10px;
-    height: auto;
-  }
-  @media (max-width: ${props => props.theme.mobile}px) {
-    padding-right: 10px;
-    margin-bottom: 5px;
-  }
-  text-align: center;
-`;
-
 const ControlWrapper = styled(Box)`
   @media (min-width: ${props => props.theme.sm}px) {
     & > :first-child {
@@ -114,6 +97,7 @@ class MapNavigation extends React.Component<PropTypes> {
   @observable private model: MapNavigationModel;
   @observable private overflows: boolean;
   private activeItemDisposer: IReactionDisposer | undefined;
+  private viewerModeReactionDisposer: IReactionDisposer | undefined;
   constructor(props: PropTypes) {
     super(props);
     registerMapNavigations(props.viewState);
@@ -129,6 +113,15 @@ class MapNavigation extends React.Component<PropTypes> {
         this.updateNavigation();
       }
     );
+    this.viewerModeReactionDisposer = reaction(
+      () => this.viewState.terria.currentViewer,
+      () => this.updateNavigation(),
+      {
+        equals: (a, b) => {
+          return a === b;
+        }
+      }
+    );
   }
 
   componentDidMount() {
@@ -142,6 +135,9 @@ class MapNavigation extends React.Component<PropTypes> {
     if (this.activeItemDisposer) {
       this.activeItemDisposer();
     }
+    if (this.viewerModeReactionDisposer) {
+      this.viewerModeReactionDisposer();
+    }
   }
 
   @computed
@@ -151,7 +147,7 @@ class MapNavigation extends React.Component<PropTypes> {
       : Orientation.VERTICAL;
   }
 
-  private computeSizes(items: MapNavigationItemExtended[]): void {
+  private computeSizes(items: MapNavigationItemExtendedType[]): void {
     items.forEach(item => {
       if (this.orientation === Orientation.VERTICAL) {
         if (item.itemRef && item.itemRef.current) {
@@ -182,11 +178,11 @@ class MapNavigation extends React.Component<PropTypes> {
       this.computeSizes(this.model.enabledItems);
     }
     let itemsToShowId = this.model.enabledItems
-      .filter(item => filterViewerScreenSize(item, this.viewState))
+      .filter(item => filterViewerAndScreenSize(item, this.viewState))
       .map(item => item.id);
     // items we have to show in the navigation bar
     let pinnedItemsId = this.model.pinnedItems
-      .filter(item => filterViewerScreenSize(item, this.viewState))
+      .filter(item => filterViewerAndScreenSize(item, this.viewState))
       .map(item => item.id);
     // items that are possible to be collapsed
     let possibleToCollapseId = itemsToShowId.filter(
@@ -278,9 +274,9 @@ class MapNavigation extends React.Component<PropTypes> {
     const { viewState, t } = this.props;
     const terria = viewState.terria;
     let items = terria.mapNavigationModel.visibleItems.filter(item =>
-      filterViewerScreenSize(item, this.viewState)
+      filterViewerAndScreenSize(item, this.viewState)
     );
-    let bottomItems: MapNavigationItemExtended[] | undefined;
+    let bottomItems: MapNavigationItemExtendedType[] | undefined;
     if (!this.overflows && this.orientation !== Orientation.HORIZONTAL) {
       bottomItems = items.filter(item => item.location === "BOTTOM");
       items = items.filter(item => item.location === "TOP");
@@ -302,19 +298,11 @@ class MapNavigation extends React.Component<PropTypes> {
                 `margin-bottom: 5px;`}
             `}
           >
-            {items.map(item =>
-              item.render ? (
-                <Control key={item.id}>{item.render}</Control>
-              ) : (
-                <MapNavigationItemRender
-                  key={item.id}
-                  item={item}
-                  terria={terria}
-                />
-              )
-            )}
+            {items.map(item => (
+              <MapNavigationItem item={item} terria={terria} />
+            ))}
             {this.overflows && (
-              <Control key={"asdd"}>
+              <Control key={OverflowItemId}>
                 <MapIconButton
                   expandInPlace
                   iconElement={() => <Icon glyph={GLYPHS.add} />}
@@ -331,17 +319,9 @@ class MapNavigation extends React.Component<PropTypes> {
             )}
           </ControlWrapper>
           <ControlWrapper column={this.orientation === Orientation.VERTICAL}>
-            {bottomItems?.map(item =>
-              item.render ? (
-                <Control key={item.id}>{item.render}</Control>
-              ) : (
-                <MapNavigationItemRender
-                  key={item.id}
-                  item={item}
-                  terria={terria}
-                />
-              )
-            )}
+            {bottomItems?.map(item => (
+              <MapNavigationItem item={item} terria={terria} />
+            ))}
             <Medium>
               <Prompt
                 content={
@@ -376,43 +356,8 @@ class MapNavigation extends React.Component<PropTypes> {
 
 export default withTranslation()(withTheme(MapNavigation));
 
-interface ItemPropTypes {
-  item: MapNavigationItem;
-  terria: Terria;
-}
-
-@observer
-class MapNavigationItemRender extends React.Component<ItemPropTypes> {
-  constructor(props: ItemPropTypes) {
-    super(props);
-  }
-  render() {
-    const { item } = this.props;
-    return (
-      <Control ref={item.itemRef}>
-        <MapIconButton
-          expandInPlace
-          iconElement={() => <Icon glyph={item.glyph} />}
-          title={useTranslationIfExists(item.title || item.name)}
-          onClick={() => {
-            if (item.onClick) {
-              this.props.terria.mapNavigationModel.activateItem(item.id);
-              item.onClick();
-            }
-          }}
-          disabled={item.mapIconButtonProps?.disabled}
-          primary={item.mapIconButtonProps?.primary}
-          splitter={item.mapIconButtonProps?.splitter}
-        >
-          {useTranslationIfExists(item.name)}
-        </MapIconButton>
-      </Control>
-    );
-  }
-}
-
-export function filterViewerScreenSize(
-  item: MapNavigationItemExtended,
+export function filterViewerAndScreenSize(
+  item: MapNavigationItemExtendedType,
   viewState: ViewState
 ) {
   const currentViewer = viewState.terria.mainViewer.viewerMode;

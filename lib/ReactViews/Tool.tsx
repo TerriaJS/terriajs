@@ -5,6 +5,7 @@ import { default as React, Suspense, useEffect, useState } from "react";
 import { useTranslation, WithTranslation } from "react-i18next";
 import Terria from "../Models/Terria";
 import ViewState from "../ReactViewModels/ViewState";
+import { useTranslationIfExists } from "./../Language/languageHelpers";
 import Icon from "./Icon";
 import MapIconButton from "./MapIconButton/MapIconButton";
 const Box = require("./../Styled/Box").default;
@@ -80,26 +81,25 @@ export class ToolButton extends React.Component<ToolButtonProps> {
     }
   }
 
-  componentWillUnmount() {
-    // Close tool when if tool button unmounts
-    if (this.isThisToolOpen) this.props.viewState.closeTool();
-  }
-
   render() {
     const { toolName, icon } = this.props;
     const buttonState = this.isThisToolOpen ? "open" : "closed";
+    const name = useTranslationIfExists(toolName);
     const buttonTitle = this.props.t // We need this check because some jsx files do not pass `t` prop
       ? this.props.t(`tool.button.${buttonState}`, {
-          toolName,
-          toolNameLowerCase: toolName.toLowerCase()
+          toolName: name,
+          toolNameLowerCase: name.toLowerCase()
         })
-      : toolName;
+      : useTranslationIfExists(`tool.button.${buttonState}`, {
+          toolName: name,
+          toolNameLowerCase: name.toLowerCase()
+        });
     return (
       <Box displayInlineBlock>
         <MapIconButton
           primary={this.isThisToolOpen}
           expandInPlace
-          title={toolName}
+          title={name}
           onClick={() => this.toggleOpen()}
           iconElement={() => <Icon glyph={icon} />}
           closeIconElement={() => <Icon glyph={Icon.GLYPHS.closeTool} />}

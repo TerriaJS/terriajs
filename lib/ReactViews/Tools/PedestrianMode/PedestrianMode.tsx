@@ -12,44 +12,54 @@ const PEDESTRIAN_HEIGHT_IN_METRES = 1.5;
 
 type PedestrianModeProps = {
   viewState: ViewState;
-  cesium: Cesium;
 };
+export const PEDESTRIAN_MODE_ID = "pedestrianMode";
 
-const PedestrianMode: React.FC<PedestrianModeProps> = observer(props => {
-  const { viewState, cesium } = props;
-  const [isDropped, setIsDropped] = useState<boolean>(false);
-  const [view, setView] = useState<MiniMapView | undefined>();
+const PedestrianMode: React.FC<PedestrianModeProps> = observer(
+  (props: PedestrianModeProps) => {
+    const { viewState } = props;
 
-  const onDropCancelled = () => viewState.closeTool();
-  const updateView = () => setView(getViewFromScene(cesium.scene));
+    const cesium = viewState.terria.currentViewer;
+    const [isDropped, setIsDropped] = useState<boolean>(false);
+    const [view, setView] = useState<MiniMapView | undefined>();
 
-  return (
-    <>
-      {!isDropped && (
-        <DropPedestrianToGround
-          cesium={cesium}
-          afterDrop={() => setIsDropped(true)}
-          onDropCancelled={onDropCancelled}
-          minHeightFromGround={PEDESTRIAN_HEIGHT_IN_METRES}
-        />
-      )}
-      {isDropped && (
-        <>
-          <ControlsContainer viewState={viewState}>
-            <MovementControls cesium={cesium} onMove={updateView} />
-          </ControlsContainer>
-          <MiniMapContainer viewState={viewState}>
-            <MiniMap
-              terria={viewState.terria}
-              baseMap={viewState.terria.mainViewer.baseMap!}
-              view={view || getViewFromScene(cesium.scene)}
-            />
-          </MiniMapContainer>
-        </>
-      )}
-    </>
-  );
-});
+    const onDropCancelled = () => viewState.closeTool();
+
+    //if viewer is not cesium close tool.
+    if (!(cesium instanceof Cesium)) {
+      viewState.closeTool();
+      return null;
+    }
+    const updateView = () => setView(getViewFromScene(cesium.scene));
+
+    return (
+      <>
+        {!isDropped && (
+          <DropPedestrianToGround
+            cesium={cesium}
+            afterDrop={() => setIsDropped(true)}
+            onDropCancelled={onDropCancelled}
+            minHeightFromGround={PEDESTRIAN_HEIGHT_IN_METRES}
+          />
+        )}
+        {isDropped && (
+          <>
+            <ControlsContainer viewState={viewState}>
+              <MovementControls cesium={cesium} onMove={updateView} />
+            </ControlsContainer>
+            <MiniMapContainer viewState={viewState}>
+              <MiniMap
+                terria={viewState.terria}
+                baseMap={viewState.terria.mainViewer.baseMap!}
+                view={view || getViewFromScene(cesium.scene)}
+              />
+            </MiniMapContainer>
+          </>
+        )}
+      </>
+    );
+  }
+);
 
 const ControlsContainer = styled(PositionRightOfWorkbench)`
   width: 140px;
