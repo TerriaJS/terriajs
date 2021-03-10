@@ -6,6 +6,7 @@ Change Log
 #### next release (8.0.0-alpha.68)
 * Remove points from rectangle `UserDrawing`
 * Fix clipboard typing error. 
+* Limit up/down look angle in pedestrian mode.
 * [The next improvement]
 
 #### 8.0.0-alpha.67
