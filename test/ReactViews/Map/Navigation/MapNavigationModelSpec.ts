@@ -2,20 +2,21 @@ import React from "react";
 import Terria from "../../../../lib/Models/Terria";
 import ViewState from "../../../../lib/ReactViewModels/ViewState";
 import { GLYPHS } from "../../../../lib/ReactViews/Icon";
-import MapNavigationModel, {
-  MapNavigationItem,
-  MapNavigationItemExtended
-} from "../../../../lib/ReactViews/Map/Navigation/MapNavigationModel";
+import MapNavigationModel from "../../../../lib/ReactViews/Map/Navigation/MapNavigationModel";
+import {
+  MapNavigationItemType,
+  MapNavigationItemExtendedType
+} from "../../../../lib/ReactViews/Map/Navigation/MapNavigationItem";
 
 describe("MapNavigationModel", function() {
   let terria: Terria;
   let viewState: ViewState;
-  let item1: MapNavigationItem;
-  let item2: MapNavigationItem;
-  let item3: MapNavigationItem;
-  let item4: MapNavigationItem;
-  let item5: MapNavigationItemExtended;
-  let item2Duplicate: MapNavigationItem;
+  let item1: MapNavigationItemType;
+  let item2: MapNavigationItemType;
+  let item3: MapNavigationItemType;
+  let item4: MapNavigationItemType;
+  let item5: MapNavigationItemExtendedType;
+  let item2Duplicate: MapNavigationItemType;
   beforeEach(function() {
     terria = new Terria({
       baseUrl: "./"
@@ -31,7 +32,7 @@ describe("MapNavigationModel", function() {
       title: "item1",
       glyph: "item1",
       location: "TOP",
-      hideItem: false,
+      hidden: false,
       pinned: false,
       onClick: () => {},
       mapIconButtonProps: {},
@@ -47,7 +48,7 @@ describe("MapNavigationModel", function() {
       title: "item2",
       glyph: "item2",
       location: "TOP",
-      hideItem: false,
+      hidden: false,
       mapIconButtonProps: {},
       pinned: true,
       onClick: () => {},
@@ -63,7 +64,7 @@ describe("MapNavigationModel", function() {
       title: "item3",
       glyph: "item3",
       location: "TOP",
-      hideItem: true,
+      hidden: true,
       mapIconButtonProps: {},
       pinned: false,
       onClick: () => {},
@@ -78,7 +79,7 @@ describe("MapNavigationModel", function() {
       title: "item4",
       glyph: "item4",
       location: "TOP",
-      hideItem: false,
+      hidden: false,
       mapIconButtonProps: {},
       pinned: false,
       forceCollapsed: true,
@@ -95,7 +96,7 @@ describe("MapNavigationModel", function() {
       title: "item5",
       glyph: "item5",
       location: "TOP",
-      hideItem: false,
+      hidden: false,
       mapIconButtonProps: {},
       pinned: false,
       forceCollapsed: false,
@@ -113,7 +114,7 @@ describe("MapNavigationModel", function() {
       title: "item2",
       glyph: "item2",
       location: "TOP",
-      hideItem: true,
+      hidden: true,
       mapIconButtonProps: {},
       pinned: false,
       onClick: () => {},
