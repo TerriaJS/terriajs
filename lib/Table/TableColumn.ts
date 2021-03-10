@@ -556,9 +556,11 @@ export default class TableColumn {
 
   @computed
   get title(): string {
-    return this.tableModel.columnTitles.length > this.columnNumber
-      ? this.tableModel.columnTitles[this.columnNumber]
-      : this.traits.title ?? this.name;
+    return (
+      this.tableModel.columnTitles[this.columnNumber] ??
+      this.traits.title ??
+      this.name
+    );
   }
 
   @computed
