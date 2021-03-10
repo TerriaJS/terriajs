@@ -17,6 +17,8 @@ const heightControlsImage = require("../../../../wwwroot/images/height-controls.
 type MovementControlsProps = {
   cesium: Cesium;
   onMove: () => void;
+  pedestrianHeight: number;
+  maxVerticalLookAngle: number;
 };
 
 const MovementControls: React.FC<MovementControlsProps> = props => {
@@ -28,7 +30,9 @@ const MovementControls: React.FC<MovementControlsProps> = props => {
   useEffect(() => {
     const movementsController = new MovementsController(
       props.cesium,
-      props.onMove
+      props.onMove,
+      props.pedestrianHeight,
+      props.maxVerticalLookAngle
     );
     const detach = movementsController.activate();
     return detach;

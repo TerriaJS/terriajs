@@ -37,12 +37,6 @@ const KeyMap: Record<KeyboardEvent["code"], Movement> = {
   ShiftRight: "down"
 };
 
-// The desired camera height measured from the surface in metres
-const PEDESTRIAN_HEIGHT = 1.7;
-
-// Maximum up/down look angle in degrees
-const MAX_VERTICAL_LOOK_ANGLE = 40;
-
 export default class MovementsController {
   // Current mode
   mode: Mode = "walk";
@@ -65,7 +59,12 @@ export default class MovementsController {
   // The latest position of the mouse while the action is active
   private currentMousePosition?: Cartesian2;
 
-  constructor(readonly cesium: Cesium, readonly onMove: () => void) {
+  constructor(
+    readonly cesium: Cesium,
+    readonly onMove: () => void,
+    readonly pedestrianHeight: number,
+    readonly maxVerticalLookAngle: number
+  ) {
     this.currentSurfaceHeightEstimate = this.camera.positionCartographic.height;
     this.updateSurfaceHeightEstimate();
   }
@@ -203,12 +202,7 @@ export default class MovementsController {
     camera.look(surfaceNormal, x * lookFactor);
 
     // Look up/down about the surface tangent
-    this.lookVertical(
-      surfaceTangent,
-      surfaceNormal,
-      y * lookFactor,
-      MAX_VERTICAL_LOOK_ANGLE
-    );
+    this.lookVertical(surfaceTangent, surfaceNormal, y * lookFactor);
   }
 
   /**
@@ -218,8 +212,7 @@ export default class MovementsController {
   lookVertical(
     lookAxis: Cartesian3,
     surfaceNormal: Cartesian3,
-    lookAmount: number,
-    maxLookAngle: number
+    lookAmount: number
   ) {
     const camera = this.camera;
     const currentAngle = CesiumMath.toDegrees(
@@ -233,6 +226,7 @@ export default class MovementsController {
     // We apply NO friction when the camera angle with surface normal is decreasing
     // When the camera angle is increasing, we apply a friction which peaks as we approach
     // the maxLookAngle
+    const maxLookAngle = this.maxVerticalLookAngle;
     const friction =
       angleAfterLook < currentAngle
         ? 1
@@ -304,15 +298,15 @@ export default class MovementsController {
 
     const hasReachedDesiredHeight =
       this.mode === "walk"
-        ? heightFromSurface === PEDESTRIAN_HEIGHT
-        : heightFromSurface >= PEDESTRIAN_HEIGHT;
+        ? heightFromSurface === this.pedestrianHeight
+        : heightFromSurface >= this.pedestrianHeight;
 
     if (hasReachedDesiredHeight) {
       this.isAnimatingSurfaceHeightChange = false;
       return;
     }
 
-    const gapHeight = PEDESTRIAN_HEIGHT - heightFromSurface;
+    const gapHeight = this.pedestrianHeight - heightFromSurface;
     // If climbRate is atleast equal to moveAmount
     // we can ensure that going up an inclined slope of 45deg will
     // not result in the camera going underground.
@@ -336,7 +330,7 @@ export default class MovementsController {
 
       if (
         this.activeMovements.has("down") &&
-        this.currentPedestrianHeightFromSurface < PEDESTRIAN_HEIGHT &&
+        this.currentPedestrianHeightFromSurface < this.pedestrianHeight &&
         this.mode !== "walk"
       ) {
         // Switch to walk mode when moving down and height is below the pedestrian height

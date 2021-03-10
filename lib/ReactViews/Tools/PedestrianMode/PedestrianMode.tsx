@@ -8,7 +8,11 @@ import DropPedestrianToGround from "./DropPedestrianToGround";
 import MiniMap, { getViewFromScene, MiniMapView } from "./MiniMap";
 import MovementControls from "./MovementControls";
 
-const PEDESTRIAN_HEIGHT_IN_METRES = 1.5;
+// The desired camera height measured from the surface in metres
+export const PEDESTRIAN_HEIGHT = 1.7;
+
+// Maximum up/down look angle in degrees
+export const MAX_VERTICAL_LOOK_ANGLE = 40;
 
 type PedestrianModeProps = {
   viewState: ViewState;
@@ -34,13 +38,18 @@ const PedestrianMode: React.FC<PedestrianModeProps> = observer(props => {
           cesium={cesium}
           afterDrop={() => setIsDropped(true)}
           onDropCancelled={onDropCancelled}
-          minHeightFromGround={PEDESTRIAN_HEIGHT_IN_METRES}
+          pedestrianHeight={PEDESTRIAN_HEIGHT}
         />
       )}
       {isDropped && (
         <>
           <ControlsContainer viewState={viewState}>
-            <MovementControls cesium={cesium} onMove={updateView} />
+            <MovementControls
+              cesium={cesium}
+              onMove={updateView}
+              pedestrianHeight={PEDESTRIAN_HEIGHT}
+              maxVerticalLookAngle={MAX_VERTICAL_LOOK_ANGLE}
+            />
           </ControlsContainer>
           <MiniMapContainer viewState={viewState}>
             <MiniMap
