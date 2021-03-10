@@ -27,8 +27,8 @@ const PedestrianMode: React.FC<PedestrianModeProps> = observer(props => {
   const onDropCancelled = () => viewState.closeTool();
   const updateView = () => setView(getViewFromScene(cesium.scene));
 
-  useEffect(function onZoomTo() {
-    cesium.zoomToEvent.addEventListener(() => setIsDropped(false));
+  useEffect(function closeOnZoomTo() {
+    cesium.zoomToEvent.addEventListener(() => viewState.closeTool());
   }, []);
 
   return (
