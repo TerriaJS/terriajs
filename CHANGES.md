@@ -5,6 +5,8 @@ Change Log
 
 #### next release (8.0.0-alpha.68)
 * Remove points from rectangle `UserDrawing`
+* Fix clipboard typing error. 
+* Fix region mapping feature highlighting.
 * [The next improvement]
 
 #### 8.0.0-alpha.67
