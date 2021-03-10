@@ -206,7 +206,7 @@ export default class MovementsController {
   }
 
   /**
-   * Look up/down limiting the maximum look angle to MAX_VERTICAL_LOOK_ANGLE
+   * Look up/down limiting the maximum look angle to {@maxLookangle}
    *
    */
   lookVertical(
