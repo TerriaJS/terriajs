@@ -31,16 +31,8 @@ import StratumOrder from "./StratumOrder";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
 
 const defaultGetRecordsTemplate = require("./CswGetRecordsTemplate.xml");
+// WPS is disabled until wps-group support
 // const wpsGetRecordsTemplate = require("./CswGetRecordsWPSTemplate.xml");
-
-// Source files:
-// http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd
-// http://schemas.opengis.net/csw/2.0.2/CSW-publication.xsd
-// http://schemas.opengis.net/csw/2.0.2/csw.xsd
-// http://schemas.opengis.net/csw/2.0.2/record.xsd
-export type Record = BriefRecord & Partial<FullRecord>;
-
-export type Records = Record[];
 
 type ArrayOrPrimitive<T> = T | T[];
 function toArray<T>(val: ArrayOrPrimitive<T>): T[];
@@ -49,6 +41,17 @@ function toArray<T>(val: ArrayOrPrimitive<T> | undefined): T[] | undefined {
   return Array.isArray(val) ? val : [val];
 }
 
+// CSW Record types source files:
+// http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd
+// http://schemas.opengis.net/csw/2.0.2/CSW-publication.xsd
+// http://schemas.opengis.net/csw/2.0.2/csw.xsd
+// http://schemas.opengis.net/csw/2.0.2/record.xsd
+
+// Records have three types: Brief, Summary and Full
+// We don't really deal with these, we just assume we have Brief and Partial<Full>
+export type Record = BriefRecord & Partial<FullRecord>;
+
+export type Records = Record[];
 export interface BriefRecord {
   BoundingBox?: BoundingBox[];
   identifier: ArrayOrPrimitive<string>;
@@ -82,6 +85,14 @@ export interface FullRecord extends SummaryRecord {
   description?: ArrayOrPrimitive<string>;
 }
 
+/** GetDomain request is used to get actual values for some property. In general this is a
+ * subset of the value domain (that is, set of permissible values),
+ * although in some cases these may be the same.
+ * */
+export interface GetDomainResponseType {
+  DomainValues: ArrayOrPrimitive<DomainValuesType>;
+}
+
 export interface DomainValuesType {
   type: string;
   uom?: string;
@@ -99,11 +110,17 @@ export interface DomainValuesType {
   };
 }
 
-/** Returns the actual values for some property. In general this is a
- * subset of the value domain (that is, set of permissible values),
- * although in some cases these may be the same. */
-export interface GetDomainResponseType {
-  DomainValues: ArrayOrPrimitive<DomainValuesType>;
+/**
+ * GetRecords request is used to get a subset of records
+ */
+export interface GetRecordsResponse {
+  version?: string;
+  RequestId?: string;
+  SearchResults: SearchResultsType;
+  SearchStatus: {
+    timestamp?: Date;
+  };
+  Exception?: any;
 }
 
 export interface SearchResultsType {
@@ -121,19 +138,9 @@ export interface SearchResultsType {
   Record?: Records;
 }
 
-export interface GetRecordsResponse {
-  version?: string;
-  RequestId?: string;
-  SearchResults: SearchResultsType;
-  SearchStatus: {
-    timestamp?: Date;
-  };
-  Exception?: any;
-}
-
-export interface GetRecordByIdResponse {
-  Record?: Record;
-}
+/**
+ * MetadataGroups are used to represent groups generated from GetDomain request. Most important bits are `groupName`, `children`, and `records` - which are used to create catalog structure tree.
+ */
 export interface MetadataGroup {
   field: QueryPropertyName | undefined;
   value: string;
@@ -154,14 +161,28 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
 
     const metadataGroups: MetadataGroup[] = [];
 
+    /**
+     * If domainSpecification properties are set (and we aren't flattening the catalog) - we will try to create MetadataGroups * from a GetDomain response (using the specified domainPropertyName).
+     *
+     * An example GetDomain response (see wwwroot\test\csw\Example1GetDomain.xml):
+     * ...
+     * <csw:Value>Multiple Use | Fisheries Effort</csw:Value>
+     * <csw:Value>Multiple Use | Pollution</csw:Value>
+     * <csw:Value>Multiple Use | Sea Surface Temperature</csw:Value>
+     * <csw:Value>Multiple Use | Seismic Surveys</csw:Value>
+     * <csw:Value>Multiple Use | Shipping</csw:Value>
+     * ...
+     *
+     * These strings are used to generate MetadataGroups with:
+     * - Hierarchy separator used to split strings into pieces (domainSpecification.hierarchySeparator = " | ")
+     * - Query property name used to match values to Records (domainSpecification.queryPropertyName = "subject"). That is to say, we will search through Record["subject"] to add Records to sepcific MetadataGroups
+     */
     if (
       !catalogGroup.flatten &&
       catalogGroup.domainSpecification.domainPropertyName &&
       catalogGroup.domainSpecification.hierarchySeparator &&
       catalogGroup.domainSpecification.queryPropertyName
     ) {
-      // Call GetDomain (contains a list of all items)
-
       const getDomainUrl = new URI(
         proxyCatalogItemUrl(catalogGroup, catalogGroup.url)
       ).query({
@@ -218,13 +239,14 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
         });
       }
 
-      // Get list of items
+      // Get flat listOfValues
       const listOfValues: string[] = flatten(
         toArray(domainResponse.DomainValues)?.map(d =>
           toArray(d?.ListOfValues?.Value)
         )
       ).filter(v => typeof v === "string");
 
+      // Create metadataGroups from listOfValues
       listOfValues.forEach(value => {
         const keys = value.split(
           catalogGroup.domainSpecification.hierarchySeparator!
@@ -241,7 +263,6 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
     }
 
     // Get Records
-
     let pageing = true;
     let startPosition = 1;
 
@@ -249,6 +270,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
 
     // We have to paginate through Records
     while (pageing) {
+      // Replace {startPosition}
       const postData = (
         catalogGroup.getRecordsTemplate ?? defaultGetRecordsTemplate
       ).replace("{startPosition}", startPosition);
@@ -300,6 +322,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
 
       records.push(...(json?.SearchResults?.Record ?? []));
 
+      // Get next start position - or stop pageing
       const nextRecord = json?.SearchResults?.nextRecord;
       if (
         !isDefined(nextRecord) ||
@@ -312,6 +335,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
       }
     }
 
+    // If we have metadataGroups, add records to them
     if (metadataGroups.length > 0) {
       records.forEach(record => {
         findGroup(metadataGroups, record)?.records.push(record);
@@ -339,6 +363,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
 
   @computed
   get members(): ModelReference[] {
+    // If no metadataGroups - return flat list of record ids
     if (this.metadataGroups.length === 0) {
       return this.records.map(
         r => `${this.catalogGroup.uniqueId}/${r.identifier}`
@@ -348,8 +373,6 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
       g => `${this.catalogGroup.uniqueId}/${g.groupName}`
     );
   }
-
-  getLayerId(layer: MetadataGroup | Record) {}
 
   @action
   createMembersFromLayers() {
@@ -410,56 +433,32 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
     parentId: string | undefined,
     record: Record
   ): BaseModel | undefined {
-    const resourceFormats: [boolean, RegExp, ModelConstructor<BaseModel>][] = [
-      [
-        this.catalogGroup.includeWms,
-        new RegExp(this.catalogGroup.wmsResourceFormat, "i"),
-        WebMapServiceCatalogItem
-      ],
-      [
-        this.catalogGroup.includeEsriMapServer,
-        new RegExp(this.catalogGroup.esriMapServerResourceFormat, "i"),
-        ArcGisMapServerCatalogItem
-      ],
-      [
-        this.catalogGroup.includeKml,
-        new RegExp(this.catalogGroup.kmlResourceFormat, "i"),
-        KmlCatalogItem
-      ],
-      [
-        this.catalogGroup.includeGeoJson,
-        new RegExp(this.catalogGroup.geoJsonResourceFormat, "i"),
-        GeoJsonCatalogItem
-      ],
-      [
-        this.catalogGroup.includeCsv,
-        new RegExp(this.catalogGroup.csvResourceFormat, "i"),
-        CsvCatalogItem
-      ]
-    ];
-
     const uris = toArray(record.URI ?? record.references);
     if (!isDefined(uris)) {
       return;
     }
-    // maybe more than one url that results in a data layer here - so check for
-    // the acceptable ones, store the others as downloadUrls that can be
-    // displayed in the metadata summary for the layer
-    const downloadUrls: { url: string; description?: string }[] = [];
     /**
      * Array of acceptable URLS for catalog item. It indecies map to resourceFormats index.
-     * For example - if `acceptableUrls[1]` is defined, it maps to `resourceFormats[1]`
+     * For example - if `acceptableUrls[1]` is defined, it maps to `resourceFormats[1]` - which is a ArcGisMapServerCatalogItem
      */
     const acceptableUris: CswURI[] = [];
 
-    const filteredResourceFormats = resourceFormats.filter(f => f[0]);
+    /**
+     * There may be more than one url that results in a data layer here - so check for
+     * the acceptable ones, store the others as downloadUrls that can be
+     * displayed in the metadata summary for the layer
+     */
+    const downloadUrls: { url: string; description?: string }[] = [];
 
     let legendUri: CswURI | undefined = undefined;
+
+    const filteredResourceFormats = this.resourceFormats.filter(f => f.enabled);
+
     for (var m = 0; m < uris.length; m++) {
       var uri = uris[m];
       if (!uri) return;
       const resourceIndex = filteredResourceFormats.findIndex(f =>
-        (uri!.protocol ?? uri!.scheme)?.match(f[1])
+        (uri!.protocol ?? uri!.scheme)?.match(f.regex)
       );
 
       // If matching resource is found, and an acceptable URL hasn't been set for it -> add it
@@ -480,7 +479,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
     const urlIndex = acceptableUris.findIndex(url => isDefined(url));
 
     if (urlIndex !== -1) {
-      const modelConstructor = resourceFormats[urlIndex][2];
+      const modelConstructor = this.resourceFormats[urlIndex].contructor;
       const existingModel = this.catalogGroup.terria.getModelById(
         modelConstructor,
         layerId
@@ -569,6 +568,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
         model.setTrait(stratum, "layers", uri.name);
       }
 
+      // Copy over itemProperties
       if (this.catalogGroup.itemProperties !== undefined) {
         Object.keys(this.catalogGroup.itemProperties).map((k: any) =>
           model.setTrait(stratum, k, this.catalogGroup.itemProperties![k])
@@ -578,8 +578,48 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
       return model;
     }
   }
+
+  /**
+   * These are used to match URLs to model constructors
+   */
+  @computed get resourceFormats(): {
+    enabled: boolean;
+    regex: RegExp;
+    contructor: ModelConstructor<BaseModel>;
+  }[] {
+    return [
+      {
+        enabled: this.catalogGroup.includeWms,
+        regex: new RegExp(this.catalogGroup.wmsResourceFormat, "i"),
+        contructor: WebMapServiceCatalogItem
+      },
+      {
+        enabled: this.catalogGroup.includeEsriMapServer,
+        regex: new RegExp(this.catalogGroup.esriMapServerResourceFormat, "i"),
+        contructor: ArcGisMapServerCatalogItem
+      },
+      {
+        enabled: this.catalogGroup.includeKml,
+        regex: new RegExp(this.catalogGroup.kmlResourceFormat, "i"),
+        contructor: KmlCatalogItem
+      },
+      {
+        enabled: this.catalogGroup.includeGeoJson,
+        regex: new RegExp(this.catalogGroup.geoJsonResourceFormat, "i"),
+        contructor: GeoJsonCatalogItem
+      },
+      {
+        enabled: this.catalogGroup.includeCsv,
+        regex: new RegExp(this.catalogGroup.csvResourceFormat, "i"),
+        contructor: CsvCatalogItem
+      }
+    ];
+  }
 }
 
+/**
+ * Recursively add MetadataGroups from keys (which are split DomainValue)
+ */
 function addMetadataGroups(
   keys: string[],
   index: number,
