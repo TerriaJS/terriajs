@@ -41,7 +41,7 @@ const KeyMap: Record<KeyboardEvent["code"], Movement> = {
 const PEDESTRIAN_HEIGHT = 1.7;
 
 // Maximum up/down look angle in degrees
-const MAX_VERTICAL_LOOK_ANGLE = 45;
+const MAX_VERTICAL_LOOK_ANGLE = 40;
 
 export default class MovementsController {
   // Current mode
