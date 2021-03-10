@@ -127,6 +127,14 @@ export default class TableColumn {
               show: colName,
               value: colName
             };
+          } else {
+            console.log(
+              `Failed to add column token - column "${colName}" doesn't exist.\nWith expression: ${
+                this.traits.transformation.expression
+              }\nWith dependencies: ${this.traits.transformation.dependencies?.join(
+                ", "
+              )}`
+            );
           }
         }) ?? []
       )
@@ -176,7 +184,7 @@ export default class TableColumn {
         console.log(
           `Failed to setup column transformation: \n${
             this.traits.transformation.expression
-          }\nWith dependencies: ${this.traits.transformation.dependencies.join(
+          }\nWith dependencies: ${this.traits.transformation.dependencies?.join(
             ", "
           )}`
         );
