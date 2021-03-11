@@ -50,7 +50,7 @@ export class InfoSectionTraits extends ModelTraits {
   @primitiveTrait({
     type: "boolean",
     name: "Show",
-    description: "Indicates if this info section showing (collapsed)."
+    description: "Indicates if this info section showing (not collapsed)."
   })
   show? = true;
 
