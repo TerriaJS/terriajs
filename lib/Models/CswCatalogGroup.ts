@@ -438,7 +438,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
       return;
     }
     /**
-     * Array of acceptable URLS for catalog item. It indecies map to resourceFormats index.
+     * Array of acceptable URLS for catalog item. Its indices map to resourceFormats' index.
      * For example - if `acceptableUrls[1]` is defined, it maps to `resourceFormats[1]` - which is a ArcGisMapServerCatalogItem
      */
     const acceptableUris: CswURI[] = [];
