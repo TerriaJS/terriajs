@@ -1,24 +1,19 @@
-import React from "react";
-import Mustache from "mustache";
-
 import createReactClass from "create-react-class";
-
-import PropTypes from "prop-types";
-
 import naturalSort from "javascript-natural-sort";
-import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
+import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-
-import Styles from "./data-preview.scss";
+import Mustache from "mustache";
+import PropTypes from "prop-types";
+import React from "react";
+import { withTranslation } from "react-i18next";
+import isDefined from "../../Core/isDefined";
+import CommonStrata from "../../Models/CommonStrata";
+import { item } from "../Custom/Chart/tooltip.scss";
+import Collapsible from "../Custom/Collapsible/Collapsible";
+import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import MetadataTable from "./MetadataTable";
 
 naturalSort.insensitive = true;
-import { withTranslation } from "react-i18next";
-import { item } from "../Custom/Chart/tooltip.scss";
-import { runInAction } from "mobx";
-import isDefined from "../../Core/isDefined";
-import CommonStrata from "../../Models/CommonStrata";
-import Collapsible from "../Custom/Collapsible/Collapsible";
 
 const Box = require("../../Styled/Box").default;
 
