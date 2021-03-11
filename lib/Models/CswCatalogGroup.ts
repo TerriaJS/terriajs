@@ -149,6 +149,7 @@ export interface MetadataGroup {
   children: MetadataGroup[];
   records: Records;
 }
+
 class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
   static stratumName = "CswStratum";
   static async load(catalogGroup: CswCatalogGroup): Promise<CswStratum> {
@@ -438,7 +439,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
       return;
     }
     /**
-     * Array of acceptable URLS for catalog item. It indecies map to resourceFormats index.
+     * Array of acceptable URLS for catalog item. Its indices map to resourceFormats' index.
      * For example - if `acceptableUrls[1]` is defined, it maps to `resourceFormats[1]` - which is a ArcGisMapServerCatalogItem
      */
     const acceptableUris: CswURI[] = [];
@@ -454,8 +455,8 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
 
     const filteredResourceFormats = this.resourceFormats.filter(f => f.enabled);
 
-    for (var m = 0; m < uris.length; m++) {
-      var uri = uris[m];
+    for (let m = 0; m < uris.length; m++) {
+      const uri = uris[m];
       if (!uri) return;
       const resourceIndex = filteredResourceFormats.findIndex(f =>
         (uri!.protocol ?? uri!.scheme)?.match(f.regex)
@@ -560,7 +561,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
         model.setTrait(stratum, "layers", uri.name);
       }
 
-      // Same with ArgGis MapServer
+      // Same with ArcGis MapServer
       if (model instanceof ArcGisMapServerCatalogItem) {
         if (!uri.name) {
           return;
