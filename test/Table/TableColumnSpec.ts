@@ -121,6 +121,30 @@ describe("TableColumn", function() {
       );
     });
 
+    it("can convert yyyy-Qx dates", async function() {
+      tableModel.setTrait(
+        CommonStrata.user,
+        "csvString",
+        "TIME_PERIOD,OBS_VALUE\n1983-Q2,-0.6\n1983-Q3,-3.2\n1983-Q4,0.9\n1984-Q1,-1.7\n1984-Q2,3.6\n1984-Q3,-1.1\n1984-Q4,3\n1985-Q1,1.1"
+      );
+      await tableModel.loadChartItems();
+      const tableColumn1 = new TableColumn(tableModel, 0);
+      expect(
+        tableColumn1.valuesAsDates.values.map(d => d && d.toISOString())
+      ).toEqual(
+        [
+          new Date("1983/04/01"),
+          new Date("1983/07/01"),
+          new Date("1983/10/01"),
+          new Date("1984/01/01"),
+          new Date("1984/04/01"),
+          new Date("1984/07/01"),
+          new Date("1984/10/01"),
+          new Date("1985/01/01")
+        ].map(d => d.toISOString())
+      );
+    });
+
     it("attempts to convert all dates using new Date if one date fails parsing with dd/mm/yyyy and mm/dd/yyyy", async function() {
       tableModel.setTrait(
         CommonStrata.user,

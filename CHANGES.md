@@ -8,6 +8,7 @@ Change Log
 * Fix clipboard typing error. 
 * Add CSW Group support
 * Revert "remove wmts interfaces from ows interfaces" (873aa70)
+* Add support for TableColumn quarterly dates in the format yyyy-Qx (eg 2020-Q1).
 * Fix region mapping feature highlighting.
 * [The next improvement]
 
