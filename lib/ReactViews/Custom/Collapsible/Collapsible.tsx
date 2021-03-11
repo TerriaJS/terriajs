@@ -10,24 +10,45 @@ const TextSpan: any = require("../../../Styled/Text").TextSpan;
 const Box: any = require("../../../Styled/Box").default;
 const SpacingSpan: any = require("../../../Styled/Spacing").SpacingSpan;
 
-interface CollapsibleProps {
-  title: string;
+interface CollapsibleIconProps {
   isOpen?: boolean;
-  isInverse?: boolean;
-  onToggle?: (isOpen: boolean) => void;
-  btnRight?: boolean;
-  /**
-   * caret is default style
-   */
-  btnStyle?: "plus" | "caret";
-  titleTextProps?: any;
-  bodyBoxProps?: any;
-  bodyTextProps?: any;
   /**
    * caret is light coloured (default is true)
    */
   light?: boolean;
+  /**
+   * caret is default style
+   */
+  btnStyle?: "plus" | "caret";
 }
+
+interface CollapsibleProps extends CollapsibleIconProps {
+  title: string;
+
+  onToggle?: (isOpen: boolean) => void;
+  btnRight?: boolean;
+
+  titleTextProps?: any;
+  bodyBoxProps?: any;
+  bodyTextProps?: any;
+}
+
+export const CollapseIcon: React.FC<CollapsibleIconProps> = props => (
+  <StyledIcon
+    displayInline
+    styledWidth={"8px"}
+    light={props.light ?? true}
+    glyph={
+      props.btnStyle === "plus"
+        ? props.isOpen
+          ? GLYPHS.minusThick
+          : GLYPHS.plusThick
+        : GLYPHS.opened
+    }
+    opacity={props.isOpen ? 1 : 0.4}
+    rotation={props.isOpen ? 0 : -90}
+  />
+);
 
 @observer
 export default class Collapsible extends React.Component<
@@ -45,23 +66,6 @@ export default class Collapsible extends React.Component<
   }
 
   render() {
-    const CollapseIcon = (
-      <StyledIcon
-        displayInline
-        styledWidth={"8px"}
-        light={this.props.light ?? true}
-        glyph={
-          this.props.btnStyle === "plus"
-            ? this.state.isOpen
-              ? GLYPHS.minusThick
-              : GLYPHS.plusThick
-            : this.state.isOpen
-            ? GLYPHS.opened
-            : GLYPHS.closed
-        }
-      />
-    );
-
     return (
       <React.Fragment>
         <RawButton
@@ -73,7 +77,9 @@ export default class Collapsible extends React.Component<
           aria-expanded={this.state.isOpen}
           aria-controls={`${this.props.title}`}
         >
-          {!this.props.btnRight && CollapseIcon}
+          {!this.props.btnRight && (
+            <CollapseIcon {...this.props} isOpen={this.state.isOpen} />
+          )}
           {!this.props.btnRight && <SpacingSpan right={2} />}
           <TextSpan
             textLight={this.props.light ?? true}
@@ -84,7 +90,9 @@ export default class Collapsible extends React.Component<
             {this.props.title}
           </TextSpan>
           {this.props.btnRight && <SpacingSpan right={2} />}
-          {this.props.btnRight && CollapseIcon}
+          {this.props.btnRight && (
+            <CollapseIcon {...this.props} isOpen={this.state.isOpen} />
+          )}
         </RawButton>
         <Box {...this.props.bodyBoxProps}>
           {this.state.isOpen && (

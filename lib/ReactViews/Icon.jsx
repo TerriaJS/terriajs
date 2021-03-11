@@ -133,7 +133,8 @@ export const Icon = createReactClass({
   propTypes: {
     glyph: PropTypes.object,
     style: PropTypes.object,
-    className: PropTypes.string
+    className: PropTypes.string,
+    rotation: PropTypes.number
   },
   render() {
     const glyph = this.props.glyph;
@@ -142,6 +143,7 @@ export const Icon = createReactClass({
         viewBox="0 0 100 100"
         className={classNames("icon", this.props.className, Styles.svg)}
         style={this.props.style}
+        transform={`rotate(${this.props.rotation ?? 0})`}
       >
         <use xlinkHref={"#" + glyph.id} />
       </svg>

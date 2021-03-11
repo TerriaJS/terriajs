@@ -82,7 +82,6 @@ const DataPreviewSections = observer(
             <Box paddedVertically displayInlineBlock fullWidth>
               <Collapsible
                 key={i}
-                btnRight
                 light={false}
                 title={item.name}
                 isOpen={item.show}
@@ -90,7 +89,6 @@ const DataPreviewSections = observer(
                   this.clickInfoSection.bind(this, item.name, show)()
                 }
                 bodyTextProps={{ medium: true }}
-                btnStyle="plus"
               >
                 <Choose>
                   <When condition={item.content?.length > 0}>
