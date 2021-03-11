@@ -598,10 +598,9 @@ export default class Terria {
     }
     runInAction(() => {
       // If it's a regular config.json, continue on with parsing remaining init sources
-      if (isJsonObject(config) && config.parameters) {
-        this.updateParameters(config.parameters as any);
-        languageConfiguration = (config.parameters as any)
-          .languageConfiguration;
+      if (isJsonObject(config) && isJsonObject(config.parameters)) {
+        this.updateParameters(config.parameters);
+        languageConfiguration = this.configParameters.languageConfiguration;
       }
 
       if (!options.i18nOptions?.skipInit) {
@@ -717,7 +716,7 @@ export default class Terria {
   }
 
   @action
-  updateParameters(parameters: ConfigParameters): void {
+  updateParameters(parameters: ConfigParameters | JsonObject): void {
     Object.keys(parameters).forEach((key: string) => {
       if (this.configParameters.hasOwnProperty(key)) {
         this.configParameters[key] = parameters[key];
@@ -1067,7 +1066,7 @@ export default class Terria {
       /** Load the init data without the catalog yet, as we'll push the catalog
        * source up as an init source later */
       await this.applyInitData({
-        initData: initObjWithoutCatalog as any
+        initData: initObjWithoutCatalog
       });
     }
 
