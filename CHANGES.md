@@ -6,6 +6,7 @@ Change Log
 #### next release (8.0.0-alpha.68)
 * Remove points from rectangle `UserDrawing`
 * Fix clipboard typing error. 
+* Add support for TableColumn quarterly dates in the format yyyy-Qx (eg 2020-Q1).
 * Fix region mapping feature highlighting.
 * [The next improvement]
 
