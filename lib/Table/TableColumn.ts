@@ -366,6 +366,34 @@ export default class TableColumn {
       }
     };
 
+    let yyyyQQ: StringToDateFunction = value => {
+      // Is it quarterly data in the format yyyy-Qx ? (Ignoring null values, and failing on any purely numeric values)
+      if (value[4] === "-" && value[5] === "Q") {
+        const year = +value.slice(0, 4);
+        if (!Number.isInteger(year)) {
+          parsingFailed = true;
+          return null;
+        }
+        const quarter = value.slice(6);
+        let monthString: string;
+        if (quarter === "1") {
+          monthString = "01/01";
+        } else if (quarter === "2") {
+          monthString = "04/01";
+        } else if (quarter === "3") {
+          monthString = "07/01";
+        } else if (quarter === "4") {
+          monthString = "10/01";
+        } else {
+          parsingFailed = true;
+          return null;
+        }
+        return new Date(centuryFix(year) + "/" + monthString);
+      }
+      parsingFailed = true;
+      return null;
+    };
+
     let dateConstructor: StringToDateFunction = value => {
       const ms = Date.parse(value);
       if (!Number.isNaN(ms)) {
@@ -427,6 +455,10 @@ export default class TableColumn {
       if (!parsingFailed) return result;
       parsingFailed = false;
     }
+    result = convertValuesToDates(this.values, yyyyQQ);
+    if (!parsingFailed) return result;
+    parsingFailed = false;
+
     return convertValuesToDates(this.values, dateConstructor);
   }
 
