@@ -1168,29 +1168,29 @@ export default class Terria {
     if (this.pickedFeatures?.allFeaturesAvailablePromise) {
       // When feature picking is done, set the selected feature
       await this.pickedFeatures?.allFeaturesAvailablePromise;
-
-      action(() => {
-        this.pickedFeatures?.features.forEach((entity: Entity) => {
-          const hash = hashEntity(entity, this.timelineClock);
-          const feature = entity;
-          featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
-        });
-
-        const current = pickedFeatures.current;
-        if (
-          isJsonObject(current) &&
-          typeof current.hash === "number" &&
-          typeof current.name === "string"
-        ) {
-          const selectedFeature = (featureIndex[current.hash] || []).find(
-            feature => feature.name === current.name
-          );
-          if (selectedFeature) {
-            this.selectedFeature = selectedFeature as Feature;
-          }
-        }
-      });
     }
+
+    runInAction(() => {
+      this.pickedFeatures?.features.forEach((entity: Entity) => {
+        const hash = hashEntity(entity, this.timelineClock);
+        const feature = entity;
+        featureIndex[hash] = (featureIndex[hash] || []).concat([feature]);
+      });
+
+      const current = pickedFeatures.current;
+      if (
+        isJsonObject(current) &&
+        typeof current.hash === "number" &&
+        typeof current.name === "string"
+      ) {
+        const selectedFeature = (featureIndex[current.hash] || []).find(
+          feature => feature.name === current.name
+        );
+        if (selectedFeature) {
+          this.selectedFeature = selectedFeature as Feature;
+        }
+      }
+    });
   }
 
   async initCorsProxy(config: ConfigParameters, serverConfig: any) {
