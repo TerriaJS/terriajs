@@ -7,6 +7,7 @@ Change Log
 * Remove points from rectangle `UserDrawing`
 * Fix clipboard typing error. 
 * Fix region mapping feature highlighting.
+* Update clipboard and revert "Fix clipboard typing error".
 * [The next improvement]
 
 #### 8.0.0-alpha.67
