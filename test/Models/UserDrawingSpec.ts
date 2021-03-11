@@ -56,7 +56,11 @@ describe("UserDrawing", function() {
     var userDrawing = new UserDrawing(options);
 
     expect(userDrawing.getDialogMessage()).toEqual(
-      "<div><strong>models.userDrawing.messageHeader</strong></br><i>models.userDrawing.clickToAddFirstPoint</i></div>"
+      `<div><strong>${i18next.t(
+        "models.userDrawing.messageHeader"
+      )}</strong></br><i>${i18next.t(
+        "models.userDrawing.clickToAddFirstPoint"
+      )}</i></div>`
     );
   });
 
@@ -70,7 +74,11 @@ describe("UserDrawing", function() {
     var userDrawing = new UserDrawing(options);
 
     expect(userDrawing.getDialogMessage()).toEqual(
-      "<div><strong>models.userDrawing.messageHeader</strong></br>HELLO</br><i>models.userDrawing.clickToAddFirstPoint</i></div>"
+      `<div><strong>${i18next.t(
+        "models.userDrawing.messageHeader"
+      )}</strong></br>HELLO</br><i>${i18next.t(
+        "models.userDrawing.clickToAddFirstPoint"
+      )}</i></div>`
     );
   });
 
@@ -544,6 +552,7 @@ describe("UserDrawing", function() {
     });
 
     expect(userDrawing.pointEntities.entities.values.length).toEqual(2);
+    expect(userDrawing.mapItems.length).toBe(2);
   });
 
   it("draws rectangle", function() {
@@ -604,5 +613,7 @@ describe("UserDrawing", function() {
     expect(rectangle.west).toBeCloseTo(CesiumMath.toRadians(149.121));
     expect(rectangle.north).toBeCloseTo(CesiumMath.toRadians(-35.309));
     expect(rectangle.south).toBeCloseTo(CesiumMath.toRadians(-35.311));
+
+    expect(userDrawing.mapItems.length).toBe(1);
   });
 });

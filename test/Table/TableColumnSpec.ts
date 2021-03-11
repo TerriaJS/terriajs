@@ -5,6 +5,10 @@ import Terria from "../../lib/Models/Terria";
 import TableColumn from "../../lib/Table/TableColumn";
 import TableColumnTraits from "../../lib/Traits/TableColumnTraits";
 
+const regionMapping = JSON.stringify(
+  require("../../wwwroot/data/regionMapping.json")
+);
+
 describe("TableColumn", function() {
   let tableModel: CsvCatalogItem;
 
@@ -51,6 +55,112 @@ describe("TableColumn", function() {
       const tableColumn2 = new TableColumn(tableModel, 1);
       expect(tableColumn1.units).toBe("ms");
       expect(tableColumn2.units).toBe("kmph");
+    });
+  });
+
+  describe("valuesAsDates", function() {
+    beforeEach(function() {
+      jasmine.Ajax.install();
+      jasmine.Ajax.stubRequest(
+        "build/TerriaJS/data/regionMapping.json"
+      ).andReturn({ responseText: regionMapping });
+    });
+
+    afterEach(function() {
+      jasmine.Ajax.uninstall();
+    });
+
+    it("defaults to dd/mm/yyyy dates", async function() {
+      tableModel.setTrait(
+        CommonStrata.user,
+        "csvString",
+        "date\n01/03/2004\n12/12/1999\n"
+      );
+      await tableModel.loadChartItems();
+      const tableColumn1 = new TableColumn(tableModel, 0);
+      expect(
+        tableColumn1.valuesAsDates.values.map(d => d && d.toISOString())
+      ).toEqual(
+        [new Date("2004/03/01"), new Date("1999/12/12")].map(d =>
+          d.toISOString()
+        )
+      );
+    });
+
+    it("can convert d-m-yy dates", async function() {
+      tableModel.setTrait(
+        CommonStrata.user,
+        "csvString",
+        "date\n15-7-95\n3-7-20\n"
+      );
+      await tableModel.loadChartItems();
+      const tableColumn1 = new TableColumn(tableModel, 0);
+      expect(
+        tableColumn1.valuesAsDates.values.map(d => d && d.toISOString())
+      ).toEqual(
+        [new Date("1995/07/15"), new Date("2020/07/03")].map(d =>
+          d.toISOString()
+        )
+      );
+    });
+
+    it("converts all dates to mm/dd/yyyy in a column if one doesn't fit dd/mm/yyyy", async function() {
+      tableModel.setTrait(
+        CommonStrata.user,
+        "csvString",
+        "date\n06/20/2004\n03/10/1999\n"
+      );
+      await tableModel.loadChartItems();
+      const tableColumn1 = new TableColumn(tableModel, 0);
+      expect(
+        tableColumn1.valuesAsDates.values.map(d => d && d.toISOString())
+      ).toEqual(
+        [new Date("2004/06/20"), new Date("1999/03/10")].map(d =>
+          d.toISOString()
+        )
+      );
+    });
+
+    it("can convert yyyy-Qx dates", async function() {
+      tableModel.setTrait(
+        CommonStrata.user,
+        "csvString",
+        "TIME_PERIOD,OBS_VALUE\n1983-Q2,-0.6\n1983-Q3,-3.2\n1983-Q4,0.9\n1984-Q1,-1.7\n1984-Q2,3.6\n1984-Q3,-1.1\n1984-Q4,3\n1985-Q1,1.1"
+      );
+      await tableModel.loadChartItems();
+      const tableColumn1 = new TableColumn(tableModel, 0);
+      expect(
+        tableColumn1.valuesAsDates.values.map(d => d && d.toISOString())
+      ).toEqual(
+        [
+          new Date("1983/04/01"),
+          new Date("1983/07/01"),
+          new Date("1983/10/01"),
+          new Date("1984/01/01"),
+          new Date("1984/04/01"),
+          new Date("1984/07/01"),
+          new Date("1984/10/01"),
+          new Date("1985/01/01")
+        ].map(d => d.toISOString())
+      );
+    });
+
+    it("attempts to convert all dates using new Date if one date fails parsing with dd/mm/yyyy and mm/dd/yyyy", async function() {
+      tableModel.setTrait(
+        CommonStrata.user,
+        "csvString",
+        "date\n06/06/2004\n03/10/1999\nNot a date"
+      );
+      await tableModel.loadChartItems();
+      const tableColumn1 = new TableColumn(tableModel, 0);
+      expect(
+        tableColumn1.valuesAsDates.values.map(d => d && d.toISOString())
+      ).toEqual([
+        ...[new Date("2004/06/06"), new Date("1999/03/10")].map(d =>
+          d.toISOString()
+        ),
+        null
+      ]);
     });
   });
 });

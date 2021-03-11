@@ -3,6 +3,8 @@ import Terria from "../../lib/Models/Terria";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import { runInAction } from "mobx";
+import createStratumInstance from "../../lib/Models/createStratumInstance";
+import updateModelFromJson from "../../lib/Models/updateModelFromJson";
 
 const LatLonValCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_val.csv");
 const LatLonEnumDateIdCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum_date_id.csv");
@@ -67,6 +69,24 @@ describe("TableMixin", function() {
         ]);
       });
     });
+
+    describe("when timeColumn is `null`", function() {
+      it("returns an empty `discreteTimes`", async function() {
+        expect(item.discreteTimes?.length).toBe(6);
+        item.defaultStyle.time.setTrait(CommonStrata.user, "timeColumn", null);
+        expect(item.discreteTimes).toBe(undefined);
+      });
+
+      it("creates entities for all times", async function() {
+        item.defaultStyle.time.setTrait(CommonStrata.user, "timeColumn", null);
+        await item.loadMapItems();
+        const mapItem = item.mapItems[0];
+        expect(mapItem instanceof CustomDataSource).toBe(true);
+        if (mapItem instanceof CustomDataSource) {
+          expect(mapItem.entities.values.length).toBe(13);
+        }
+      });
+    });
   });
 
   describe("when the table has lat/lon columns but no time & id columns", function() {
@@ -81,6 +101,49 @@ describe("TableMixin", function() {
       if (mapItem instanceof CustomDataSource) {
         expect(mapItem.entities.values.length).toBe(5);
       }
+    });
+  });
+
+  describe("when the table has a few styles", function() {
+    it("creates all styleDimensions", async function() {
+      runInAction(() => {
+        item.setTrait(CommonStrata.user, "csvString", LatLonEnumDateIdCsv);
+      });
+
+      await item.loadMapItems();
+
+      expect(item.styleDimensions?.options?.length).toBe(4);
+      expect(item.styleDimensions?.options?.[2].id).toBe("value");
+      expect(item.styleDimensions?.options?.[2].name).toBe("value");
+    });
+
+    it("uses TableColumnTraits for style title", async function() {
+      runInAction(() => {
+        item.setTrait(CommonStrata.user, "csvString", LatLonEnumDateIdCsv);
+        updateModelFromJson(item, CommonStrata.definition, {
+          columns: [{ name: "value", title: "Some Title" }]
+        });
+      });
+
+      await item.loadMapItems();
+
+      expect(item.styleDimensions?.options?.[2].id).toBe("value");
+      expect(item.styleDimensions?.options?.[2].name).toBe("Some Title");
+    });
+
+    it("uses TableStyleTraits for style title", async function() {
+      runInAction(() => {
+        item.setTrait(CommonStrata.user, "csvString", LatLonEnumDateIdCsv);
+        updateModelFromJson(item, CommonStrata.definition, {
+          columns: [{ name: "value", title: "Some Title" }],
+          styles: [{ id: "value", title: "Some Style Title" }]
+        });
+      });
+
+      await item.loadMapItems();
+
+      expect(item.styleDimensions?.options?.[0].id).toBe("value");
+      expect(item.styleDimensions?.options?.[0].name).toBe("Some Style Title");
     });
   });
 });
