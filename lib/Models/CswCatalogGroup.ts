@@ -455,7 +455,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
 
     const filteredResourceFormats = this.resourceFormats.filter(f => f.enabled);
 
-    for (var m = 0; m < uris.length; m++) {
+    for (let m = 0; m < uris.length; m++) {
       const uri = uris[m];
       if (!uri) return;
       const resourceIndex = filteredResourceFormats.findIndex(f =>
