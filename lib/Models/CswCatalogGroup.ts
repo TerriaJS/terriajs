@@ -561,7 +561,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
         model.setTrait(stratum, "layers", uri.name);
       }
 
-      // Same with ArgGis MapServer
+      // Same with ArcGis MapServer
       if (model instanceof ArcGisMapServerCatalogItem) {
         if (!uri.name) {
           return;
