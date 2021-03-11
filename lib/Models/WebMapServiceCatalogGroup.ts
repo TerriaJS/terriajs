@@ -276,10 +276,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
     );
 
     if (this.catalogGroup.itemProperties !== undefined) {
-      Object.keys(this.catalogGroup.itemProperties).map((k: any) => {
-        if (this.catalogGroup.itemProperties !== undefined)
-          model.setTrait(stratum, k, this.catalogGroup.itemProperties[k]);
-      });
+      Object.keys(this.catalogGroup.itemProperties).map((k: any) =>
+        model.setTrait(stratum, k, this.catalogGroup.itemProperties![k])
+      );
     }
     model.createGetCapabilitiesStratumFromParent(this.capabilities);
   }
