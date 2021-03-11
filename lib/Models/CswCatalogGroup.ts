@@ -149,6 +149,7 @@ export interface MetadataGroup {
   children: MetadataGroup[];
   records: Records;
 }
+
 class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
   static stratumName = "CswStratum";
   static async load(catalogGroup: CswCatalogGroup): Promise<CswStratum> {
