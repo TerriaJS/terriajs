@@ -753,7 +753,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       const result: JsonObject = {};
 
       this.tableColumns.forEach(column => {
-        result[column.name] = column.values[index];
+        result[column.name] = column.valueFunctionForType(index);
       });
 
       return result;
