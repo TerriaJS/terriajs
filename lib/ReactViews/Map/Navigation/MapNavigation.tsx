@@ -305,7 +305,7 @@ class MapNavigation extends React.Component<PropTypes> {
               <Control key={OverflowItemId}>
                 <MapIconButton
                   expandInPlace
-                  iconElement={() => <Icon glyph={GLYPHS.add} />}
+                  iconElement={() => <Icon glyph={GLYPHS.moreItems} />}
                   title={t("mapNavigation.additionalToolsTitle")}
                   onClick={() =>
                     runInAction(() => {
