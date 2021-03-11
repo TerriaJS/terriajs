@@ -30,9 +30,9 @@ import WebMapTileServiceCapabilities, {
   ResourceUrl,
   TileMatrixSetLink,
   WmtsCapabilitiesLegend,
-  WmtsLayer,
-  ServiceProvider
+  WmtsLayer
 } from "./WebMapTileServiceCapabilities";
+import { ServiceProvider } from "./OwsInterfaces";
 
 interface UsableTileMatrixSets {
   identifiers: string[];
