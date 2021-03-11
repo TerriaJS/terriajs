@@ -263,13 +263,13 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
     }
 
     // Get Records
-    let pageing = true;
+    let paging = true;
     let startPosition = 1;
 
     const records: Records = [];
 
     // We have to paginate through Records
-    while (pageing) {
+    while (paging) {
       // Replace {startPosition}
       const postData = (
         catalogGroup.getRecordsTemplate ?? defaultGetRecordsTemplate
@@ -329,7 +329,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
         nextRecord === 0 ||
         nextRecord >= json?.SearchResults?.numberOfRecordsMatched
       ) {
-        pageing = false;
+        paging = false;
       } else {
         startPosition = nextRecord;
       }
