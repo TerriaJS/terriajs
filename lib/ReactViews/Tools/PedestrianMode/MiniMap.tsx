@@ -10,6 +10,8 @@ import ViewerMode from "../../../Models/ViewerMode";
 import TerriaViewer from "../../../ViewModels/TerriaViewer";
 import Marker from "./Marker";
 
+const minimapNavIcon = require("../../../../wwwroot/images/minimap-nav.svg");
+
 type MiniMapProps = {
   terria: Terria;
   baseMap: Mappable;
@@ -17,8 +19,12 @@ type MiniMapProps = {
 };
 
 export type MiniMapView = {
+  // The 2d rectangle view
   rectangle: Rectangle;
+  // Minimap marker position
   position: Cartesian3;
+  // Minimap marker heading in radians
+  heading: number;
 };
 
 const MiniMap: React.FC<MiniMapProps> = props => {
@@ -31,7 +37,12 @@ const MiniMap: React.FC<MiniMapProps> = props => {
 
   useEffect(
     action(() => {
-      const marker = new Marker(terria, view.position);
+      const marker = new Marker(
+        terria,
+        minimapNavIcon,
+        view.position,
+        view.heading
+      );
       const viewer = new TerriaViewer(
         terria,
         computed(() => [marker])
@@ -54,7 +65,10 @@ const MiniMap: React.FC<MiniMapProps> = props => {
   useEffect(() => {
     const disposer = autorun(() => {
       if (miniMapViewer) miniMapViewer.currentViewer.zoomTo(view.rectangle, 0);
-      if (locationMarker) locationMarker.position = view.position;
+      if (locationMarker) {
+        locationMarker.position = view.position;
+        locationMarker.rotation = view.heading;
+      }
     });
     return disposer;
   }, [miniMapViewer, locationMarker, view]);
@@ -85,7 +99,8 @@ export function getViewFromScene(scene: Scene): MiniMapView {
   );
   return {
     rectangle,
-    position: camera.position
+    position: camera.position,
+    heading: camera.heading
   };
 }
 
