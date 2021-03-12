@@ -420,23 +420,6 @@ export default class ArcGisMapServerCatalogItem
   }
 
   @computed
-  get mapItems() {
-    const result = [];
-
-    const current = this._currentImageryParts;
-    if (current) {
-      result.push(current);
-    }
-
-    const next = this._nextImageryParts;
-    if (next) {
-      result.push(next);
-    }
-
-    return result;
-  }
-
-  @computed
   private get _currentImageryParts(): ImageryParts | undefined {
     const dateAsUnix: string | undefined =
       this.currentDiscreteTimeTag === undefined
@@ -464,6 +447,9 @@ export default class ArcGisMapServerCatalogItem
       if (imageryProvider === undefined) {
         return undefined;
       }
+
+      imageryProvider.enablePickFeatures = false;
+
       return {
         imageryProvider,
         alpha: 0.0,
@@ -566,18 +552,22 @@ export default class ArcGisMapServerCatalogItem
     }
   );
 
-  // @computed get mapItems() {
-  //   if (isDefined(this.imageryProvider)) {
-  //     return [
-  //       {
-  //         alpha: this.opacity,
-  //         show: this.show,
-  //         imageryProvider: this.imageryProvider
-  //       }
-  //     ];
-  //   }
-  //   return [];
-  // }
+  @computed
+  get mapItems() {
+    const result = [];
+
+    const current = this._currentImageryParts;
+    if (current) {
+      result.push(current);
+    }
+
+    const next = this._nextImageryParts;
+    if (next) {
+      result.push(next);
+    }
+
+    return result;
+  }
 
   @computed get layers() {
     if (super.layers) {

@@ -163,7 +163,7 @@ describe("ArcGisMapServerCatalogItem", function() {
       });
 
       describe("imageryProvider", function() {
-        let imageryProvider: any;
+        let imageryProvider: ArcGisMapServerImageryProvider;
 
         beforeEach(function() {
           runInAction(() => {
@@ -172,7 +172,8 @@ describe("ArcGisMapServerCatalogItem", function() {
             item.setTrait("definition", "maximumScaleBeforeMessage", 1);
           });
 
-          imageryProvider = item.mapItems[0].imageryProvider;
+          imageryProvider = item.mapItems[0]
+            .imageryProvider as ArcGisMapServerImageryProvider;
         });
 
         it("should be an ArcGisMapServerImageryProvider", function() {
@@ -191,7 +192,8 @@ describe("ArcGisMapServerCatalogItem", function() {
 
         it("converts layer names to layer ids when constructing imagery provider", function() {
           item.setTrait("definition", "layers", "Offshore_Rocks_And_Wrecks");
-          const imageryProvider = item.mapItems[0].imageryProvider;
+          const imageryProvider = item.mapItems[0]
+            .imageryProvider as ArcGisMapServerImageryProvider;
           expect(imageryProvider.layers).toBe("31");
         });
 
