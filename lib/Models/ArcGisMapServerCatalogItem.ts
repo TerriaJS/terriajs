@@ -7,6 +7,7 @@ import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTili
 import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import URI from "urijs";
+import createDiscreteTimesFromIsoSegments from "../Core/createDiscreteTimes";
 import createTransformerAllowUndefined from "../Core/createTransformerAllowUndefined";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
@@ -30,7 +31,7 @@ import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
-import createDiscreteTimesFromIsoSegments from "../Core/createDiscreteTimes";
+import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
 
 const proj4 = require("proj4").default;
 
@@ -278,11 +279,12 @@ class MapServerStratum extends LoadableStratum(
     return createStratumInstance(RectangleTraits, rectangle);
   }
 
-  @computed get discreteTimes():
-    | { time: string; tag: string | undefined }[]
-    | undefined {
+  @computed get discreteTimes() {
     if (this._mapServer.timeInfo === undefined) return undefined;
-    const result: any = [];
+    // Add union type - as `time` is always defined
+    const result: (StratumFromTraits<DiscreteTimeTraits> & {
+      time: string;
+    })[] = [];
 
     createDiscreteTimesFromIsoSegments(
       result,
@@ -391,13 +393,6 @@ export default class ArcGisMapServerCatalogItem
         this.strata.set(MapServerStratum.stratumName, stratum);
       });
     });
-  }
-
-  @computed
-  get mapServerStratum(): MapServerStratum | undefined {
-    return this.strata.get(MapServerStratum.stratumName) as
-      | MapServerStratum
-      | undefined;
   }
 
   loadMapItems() {
@@ -584,7 +579,9 @@ export default class ArcGisMapServerCatalogItem
 
   @computed
   get layerIds(): string | undefined {
-    const stratum = this.mapServerStratum;
+    const stratum = <MapServerStratum>(
+      this.strata.get(MapServerStratum.stratumName)
+    );
     const ids = stratum ? stratum.allLayers.map(l => l.id) : [];
     return ids.length === 0 ? undefined : ids.join(",");
   }
