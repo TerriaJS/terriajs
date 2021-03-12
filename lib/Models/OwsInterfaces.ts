@@ -68,6 +68,7 @@ export function parseOnlineResource(json: any): OnlineResource | undefined {
     "xlink:type": type,
     "xlink:href": href
   };
+}
 
 export interface ServiceIdentification {
   /** Title of the service. */
