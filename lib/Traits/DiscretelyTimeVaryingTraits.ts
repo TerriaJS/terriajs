@@ -34,7 +34,7 @@ export default class DiscretelyTimeVaryingTraits extends mixTraits(
     description:
       "Type determines how the data availibility will be plotted on chart. eg: momentLines, momentPoints"
   })
-  chartType: ChartItemType = "momentLines";
+  chartType?: ChartItemType;
 
   // This trait proabably doesn't belong here and should instead be on a new
   //  trait class ChartTraits, however there are complexities to changing
@@ -60,4 +60,12 @@ export default class DiscretelyTimeVaryingTraits extends mixTraits(
     description: "When true, disables the date time selector in the workbench"
   })
   disableDateTimeSelector = false;
+
+  @primitiveTrait({
+    name: "Time Multiplier",
+    description:
+      "The multiplierDefaultDeltaStep is used to set the default multiplier (see `TimeVaryingTraits.multiplier` trait) - it represents the average number of (real-time) seconds between (dataset) time steps. For example, a value of five would set the `multiplier` so that a new time step (of this dataset) would appear every five seconds (on average) if the timeline is playing. This trait will only take effect if `multiplier` is **not** explicitly set.",
+    type: "number"
+  })
+  multiplierDefaultDeltaStep?: number = 2;
 }

@@ -244,6 +244,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
     model.setTrait(stratum, "name", layer.Title);
     model.setTrait(stratum, "url", this.catalogGroup.url);
+    model._webMapServiceCatalogGroup = this.catalogGroup;
     model.setTrait(
       stratum,
       "getCapabilitiesUrl",
@@ -275,10 +276,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
     );
 
     if (this.catalogGroup.itemProperties !== undefined) {
-      Object.keys(this.catalogGroup.itemProperties).map((k: any) => {
-        if (this.catalogGroup.itemProperties !== undefined)
-          model.setTrait(stratum, k, this.catalogGroup.itemProperties[k]);
-      });
+      Object.keys(this.catalogGroup.itemProperties).map((k: any) =>
+        model.setTrait(stratum, k, this.catalogGroup.itemProperties![k])
+      );
     }
     model.createGetCapabilitiesStratumFromParent(this.capabilities);
   }
@@ -287,7 +287,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     if (!isDefined(this.catalogGroup.uniqueId)) {
       return;
     }
-    return `${this.catalogGroup.uniqueId}/${layer.Name || layer.Title}`;
+    return `${this.catalogGroup.uniqueId}/${layer.Title}`;
   }
 }
 

@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { action, computed, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import URI from "urijs";
 import isDefined from "../Core/isDefined";
@@ -10,10 +10,13 @@ import UrlMixin from "../ModelMixins/UrlMixin";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import CkanItemReferenceTraits from "../Traits/CkanItemReferenceTraits";
 import CkanResourceFormatTraits from "../Traits/CkanResourceFormatTraits";
+import CkanSharedTraits from "../Traits/CkanSharedTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
 import ModelTraits from "../Traits/ModelTraits";
 import CatalogMemberFactory from "./CatalogMemberFactory";
-import CkanCatalogGroup from "./CkanCatalogGroup";
+import CkanCatalogGroup, {
+  createInheritedCkanSharedTraitsStratum
+} from "./CkanCatalogGroup";
 import {
   CkanDataset,
   CkanDatasetServerResponse,
@@ -30,6 +33,7 @@ import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
+import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
 
 export class CkanDatasetStratum extends LoadableStratum(
   CkanItemReferenceTraits
@@ -122,18 +126,24 @@ export class CkanDatasetStratum extends LoadableStratum(
   @computed get name() {
     if (this.ckanResource === undefined) return this.ckanItemReference.name;
     if (this.ckanItemReference.useResourceName) return this.ckanResource.name;
+    // via @steve9164
+    /** Switched the order [check `useCombinationNameWhereMultipleResources`
+     * first ] that these are checked so the default is checked last. Otherwise
+     * setting useCombinationNameWhereMultipleResources without setting
+     * useDatasetNameAndFormatWhereMultipleResources to false doesn't do
+     * anything */
     if (this.ckanDataset) {
-      if (
-        this.ckanItemReference.useDatasetNameAndFormatWhereMultipleResources &&
-        this.ckanDataset.resources.length > 1
-      ) {
-        return this.ckanDataset.title + " - " + this.ckanResource.format;
-      }
       if (
         this.ckanItemReference.useCombinationNameWhereMultipleResources &&
         this.ckanDataset.resources.length > 1
       ) {
         return this.ckanDataset.title + " - " + this.ckanResource.name;
+      }
+      if (
+        this.ckanItemReference.useDatasetNameAndFormatWhereMultipleResources &&
+        this.ckanDataset.resources.length > 1
+      ) {
+        return this.ckanDataset.title + " - " + this.ckanResource.format;
       }
       return this.ckanDataset.title;
     }
@@ -171,7 +181,10 @@ export class CkanDatasetStratum extends LoadableStratum(
         });
       }
     }
-    if (this.ckanDataset.spatial !== undefined) {
+    if (
+      isDefined(this.ckanDataset.spatial) &&
+      this.ckanDataset.spatial !== ""
+    ) {
       var gj = JSON.parse(this.ckanDataset.spatial);
       if (gj.type === "Polygon" && gj.coordinates[0].length === 5) {
         return createStratumInstance(RectangleTraits, {
@@ -417,10 +430,16 @@ export default class CkanItemReference extends UrlMixin(
     });
   }
 
-  setItemProperties(model: BaseModel, itemProperties: any) {
-    runInAction(() => {
-      model.setTrait(CommonStrata.override, "itemProperties", itemProperties);
-    });
+  @action
+  setSharedStratum(
+    inheritedPropertiesStratum: Readonly<StratumFromTraits<CkanSharedTraits>>
+  ) {
+    // The values in this stratum should not be updated as the same object is used
+    //  in all CkanItemReferences
+    this.strata.set(
+      createInheritedCkanSharedTraitsStratum.stratumName,
+      inheritedPropertiesStratum
+    );
   }
 
   async forceLoadReference(
@@ -445,6 +464,18 @@ export default class CkanItemReference extends UrlMixin(
     if (defintionStratum) {
       model.strata.set(CommonStrata.definition, defintionStratum);
       model.setTrait(CommonStrata.definition, "url", undefined);
+    }
+
+    // Overrides for specific catalog types
+    if (
+      model instanceof WebMapServiceCatalogItem &&
+      this._ckanResource?.wms_layer
+    ) {
+      model.setTrait(
+        CommonStrata.definition,
+        "layers",
+        this._ckanResource.wms_layer
+      );
     }
 
     // Tried to make this sequence an updateModelFromJson but wouldn't work?

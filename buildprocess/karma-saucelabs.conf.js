@@ -1,6 +1,5 @@
 'use strict';
 
-/*global require*/
 var createKarmaBaseConfig = require('./createKarmaBaseConfig');
 
 module.exports = function(config) {
@@ -9,7 +8,7 @@ module.exports = function(config) {
             sl_chrome: {
                 base: 'SauceLabs',
                 browserName: 'chrome',
-                platform: 'Windows 7'
+                platform: 'Windows 10'
             },
             sl_safari: {
                 base: 'SauceLabs',
@@ -25,18 +24,19 @@ module.exports = function(config) {
             sl_firefox: {
                 base: 'SauceLabs',
                 browserName: 'firefox',
-                platform: 'Windows 7'
+                platform: 'Windows 10'
             },
             sl_firefox_esr: {
                 base: 'SauceLabs',
                 browserName: 'firefox',
                 platform: 'Windows 7',
-                version: '52.0'
+                version: '60.0'
             }
         },
 
         // start these browsers
-        browsers: ['sl_chrome', /*'sl_safari',*/ 'sl_firefox', 'sl_firefox_esr', 'sl_ie11'],
+        // browsers: ['sl_chrome', /*'sl_safari',*/ 'sl_firefox', 'sl_firefox_esr', 'sl_ie11'],
+        browsers: ['sl_chrome', 'sl_firefox', 'sl_firefox_esr'],
 
         sauceLabels: {
             testName: 'TerriaJS Unit Tests',

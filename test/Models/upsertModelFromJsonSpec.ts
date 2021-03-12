@@ -1,5 +1,6 @@
 import { runInAction } from "mobx";
 import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
+import CommonStrata from "../../lib/Models/CommonStrata";
 import Terria from "../../lib/Models/Terria";
 import upsertModelFromJson from "../../lib/Models/upsertModelFromJson";
 import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
@@ -20,9 +21,9 @@ describe("upsertModelFromJson", function() {
       CatalogMemberFactory,
       terria,
       "",
-      undefined,
       "definition",
-      json
+      json,
+      {}
     );
     expect(model instanceof WebMapServiceCatalogItem).toBe(true);
     expect(model.type).toBe("wms");
@@ -44,8 +45,7 @@ describe("upsertModelFromJson", function() {
       members: [
         {
           type: "wms",
-          localId:
-            "mobile-black-spot-programme:funded-base-stations-round4-group",
+          localId: "Funded Base Stations with Ineligible Areas",
           name: "Override"
         }
       ]
@@ -56,9 +56,9 @@ describe("upsertModelFromJson", function() {
         CatalogMemberFactory,
         terria,
         "",
-        undefined,
         "definition",
-        json
+        json,
+        {}
       );
       expect(model instanceof WebMapServiceCatalogGroup).toBe(true);
       expect(model.type).toBe("wms-group");
@@ -68,7 +68,7 @@ describe("upsertModelFromJson", function() {
     const group = <WebMapServiceCatalogGroup>model;
     const item = terria.getModelById(
       WebMapServiceCatalogItem,
-      "/Test/mobile-black-spot-programme:funded-base-stations-round4-group"
+      "/Test/Funded Base Stations with Ineligible Areas"
     );
     expect(item).toBeDefined();
     if (!item) {
@@ -103,5 +103,48 @@ describe("upsertModelFromJson", function() {
     await item.loadMetadata();
 
     expect(item.isGeoServer).toBe(true);
+  });
+
+  it("can update a model by shareKey", function() {
+    const terria = new Terria();
+
+    const json = {
+      type: "wms",
+      name: "Test",
+      id: "89afyowhf",
+      url: "foo.bar.baz",
+      layers: "mybroadband:MyBroadband_ADSL_Availability",
+      shareKeys: ["Root Group/Communications/Broadband Availability"]
+    };
+
+    const model = upsertModelFromJson(
+      CatalogMemberFactory,
+      terria,
+      "",
+      "definition",
+      json,
+      {}
+    );
+    expect(model instanceof WebMapServiceCatalogItem).toBe(true);
+    expect(model.type).toBe("wms");
+
+    const model2 = upsertModelFromJson(
+      CatalogMemberFactory,
+      terria,
+      "",
+      CommonStrata.user,
+      {
+        id: "Root Group/Communications/Broadband Availability",
+        opacity: 0.5
+      },
+      {
+        replaceStratum: false,
+        matchByShareKey: true
+      }
+    );
+    expect(model).toBe(model2, "Failed to match model by shareKey");
+
+    const wms = <WebMapServiceCatalogItem>model;
+    expect(wms.opacity).toBe(0.5);
   });
 });

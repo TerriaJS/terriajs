@@ -1,5 +1,6 @@
 import maxBy from "lodash-es/maxBy";
 import minBy from "lodash-es/minBy";
+import LatLonHeight from "../Core/LatLonHeight";
 import ModelTraits from "../Traits/ModelTraits";
 import Model, { BaseModel } from "./Model";
 
@@ -31,7 +32,11 @@ export function axesMatch(a1: ChartAxis, a2: ChartAxis) {
   else return a1.scale === a2.scale && a1.units === a2.units;
 }
 
-export type ChartItemType = "line" | "momentLines" | "momentPoints";
+export type ChartItemType =
+  | "line"
+  | "momentLines"
+  | "momentPoints"
+  | "lineAndPoint";
 
 export interface ChartPoint {
   x: number | Date;
@@ -53,6 +58,7 @@ export interface ChartItem {
   getColor: () => string; // Gets the color representing the chart item
   updateIsSelectedInWorkbench: (isSelected: boolean) => void; // Unselect the chart item in workbench
   onClick?: any;
+  pointOnMap?: LatLonHeight;
 }
 
 interface Chartable extends Model<ModelTraits> {

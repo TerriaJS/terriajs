@@ -102,9 +102,10 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
       return createStratumInstance(TableStyleTraits, {
         chart: createStratumInstance(TableChartStyleTraits, {
           xAxisColumn: scalarColumns[0].name,
-          lines: scalarColumns.slice(1).map(column =>
+          lines: scalarColumns.slice(1).map((column, i) =>
             createStratumInstance(TableChartLineStyleTraits, {
-              yAxisColumn: column.name
+              yAxisColumn: column.name,
+              isSelectedInWorkbench: i === 0 // activate only the first chart line by default
             })
           )
         })
@@ -207,11 +208,9 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
             })
           ]
         : [];
-    let numberFormatOptions: JsonObject | undefined = undefined;
-    if (colorColumn !== undefined) {
-      numberFormatOptions = colorColumn.traits.format
-        ? colorColumn.traits.format
-        : undefined;
+    let numberFormatOptions: Intl.NumberFormatOptions | JsonObject | undefined;
+    if (colorColumn?.traits?.format !== undefined) {
+      numberFormatOptions = colorColumn.traits.format;
     }
     return colorMap.maximums
       .map((maximum, i) => {
@@ -282,7 +281,10 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
     ];
   }
 
-  private _formatValue(value: number, format: JsonObject | undefined): string {
+  private _formatValue(
+    value: number,
+    format: Intl.NumberFormatOptions | JsonObject | undefined
+  ): string {
     return Math.round(value).toLocaleString(undefined, format);
   }
 }

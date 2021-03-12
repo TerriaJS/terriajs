@@ -105,6 +105,11 @@
     "loadingError": {
       "title": "Error Loading {{toolName}} Tool",
       "message": "An error occurred while trying to load the this tool from the server. Please try again."
+    },
+    "exitBtnTitle": "Exit",
+    "button": {
+      "open": "Exit {{toolNameLowerCase}}",
+      "closed": "{{toolName}}"
     }
   },
   "diffTool": {
@@ -194,11 +199,11 @@
     "btnCatalogShareTitle": "Share your catalogue with others",
     "btnStoryShareTitle": "Share your story with others",
     "btnMapShareTitle": "Share your map with others",
-    "convertNotificationTitle": "Warning: share link upgraded",
+    "convertNotificationTitle": "Notice: share link upgraded",
     "convertNotificationMessage": "This share link is based on an older version of TerriaJS - the software powering this web map. While best efforts are made to preserve the link, you might encounter issues with visualising the data.  \n\nIf you're a user of the share link, click OK to make the warning message disappear and continue with accessing the data.",
     "convertNotificationHelp": "If you have created the share link, check the Help menu to see tips on updating the share link.",
     "convertNotificationFeedback": "For questions or feedback, click here.",
-    "convertNotificationWarningsTitle": "Warnings"
+    "convertNotificationWarningsTitle": "Technical details"
   },
   "countDatasets": {
     "btnText": "Start",
@@ -242,7 +247,21 @@
     "nativeResolutionHeader": "Use native device resolution",
     "mapQuality": "Raster Map Quality:",
     "qualityLabel": "Quality",
-    "performanceLabel": "Performance"
+    "performanceLabel": "Performance",
+    "timeline": {
+      "alwaysShowLabel": "Press to start only showing the timeline when there are time-varying datasets on the workbench",
+      "hideLabel": "Press to start always showing the timeline, even when no time-varying datasets are on the workbench",
+      "alwaysShow": "Always show"
+    },
+    "terrain": {
+      "hideUnderground": "Terrain hides underground features",
+      "showUndergroundFeatures": "Press to start showing features that are underneath the terrain surface",
+      "hideUndergroundFeatures": "Press to start hiding features that are underneath the terrain surface",
+      "sideLabel": "Show Terrain on the",
+      "left": "Left",
+      "both": "Both",
+      "right": "Right"
+    }
   },
   "feedback": {
     "feedbackPreamble": "We would love to hear from you!",
@@ -452,7 +471,7 @@
     "wfs": "This is a <1>WFS service</1>, which transfers raw spatial data on request. It can be used in GIS software with this URL:",
     "layerName": "Layer name",
     "typeName": "Type name",
-    "metadataUrl": "Metadata URL",
+    "metadataUrls": "Metadata Links",
     "dataUrl": "Data URL",
     "useLinkBelow": "Use the link below to download the data. See the {{link}} for more information on customising URL query parameters.",
     "downloadInFormat": "Download the currently selected data in {{format}} format",
@@ -495,7 +514,12 @@
     "expandAll": "Expand All",
     "toggleVisibility": "Data show/hide",
     "addItemErrorTitle": "Catalog item could not be added to workbench.",
-    "addItemErrorMessage": "An error occurred while loading the catalog item."
+    "addItemErrorMessage": "An error occurred while loading the catalog item.",
+    "dimensionsSelector": {
+      "undefinedLabel": "Not specified"
+    },
+    "searchItem": "Search",
+    "searchItemTitle": "Search"
   },
   "dateTime": {
     "back": "Go back",
@@ -639,6 +663,7 @@
       "esri-group": "Esri ArcGIS Server",
       "esri-mapServer": "Esri ArcGIS MapServer (single layer)",
       "esri-featureServer": "Esri ArcGIS FeatureServer (single layer)",
+      "3d-tiles": "3D Tiles",
       "open-street-map": "Open Street Map Server",
       "geojson": "GeoJSON",
       "geoRss": "GeoRSS",
@@ -649,6 +674,7 @@
       "json": "JSON",
       "carto": "Carto",
       "gltf": "GLTF",
+      "shp": "Shapefile (zip)",
       "other": "Other (use conversion service)"
     },
     "printWindow": {
@@ -759,8 +785,9 @@
       "addingDataErrorTitle": "Data could not be added",
       "addingDataErrorMessage": "The specified data could not be added because it is invalid or does not have the expected format.",
       "fileApiNotSupportedTitle": "File API not supported",
-      "fileApiNotSupportedMessage": "Sorry, your web browser does not support the File API, which {{appName}} requires in order to add data from a file on your system.  Please upgrade your web browser.  For the best experience, we recommend {{internetExplorer}} or the latest version of {{chrome}} or {{firefox}}.",
+      "fileApiNotSupportedMessage": "Sorry, your web browser does not support the File API, which {{appName}} requires in order to add data from a file on your system.  Please upgrade your web browser.  For the best experience, we recommend the latest version of {{chrome}}, {{firefox}} or {{edge}}.",
       "internetExplorer": "Internet Explorer 11",
+      "edge": "Microsoft Edge",
       "chrome": "Google Chrome",
       "firefox": "Mozilla Firefox"
     },
@@ -777,7 +804,7 @@
       "invalidServiceTitle": "Invalid ArcGIS Feature Service",
       "invalidServiceMessage": "An error occurred while invoking the ArcGIS Feature Service.  The server's response does not appear to be a valid Feature Service document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
       "groupNotAvailableTitle": "Group is not available",
-      "groupNotAvailableMessage": "An error occurred while invoking the ArcGIS Feature Service. <p>If you entered the link manually, please verify that the link is correct.</p> <p>This error may also indicate that the server does not support {{cors}}.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the {{appName}} team by emailing {email} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by {{appName}} itself. <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>"
+      "groupNotAvailableMessage": "An error occurred while invoking the ArcGIS Feature Service. <p>If you entered the link manually, please verify that the link is correct.</p> <p>This error may also indicate that the server does not support {{cors}}.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the {{appName}} team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by {{appName}} itself. <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>"
     },
     "arcGisFeatureServerCatalogGroup": {
       "name": "ArcGIS Feature Server Group",
@@ -822,7 +849,9 @@
       "invalidUrlTitle": "Unable to load MapServer",
       "invalidUrlMessage": "Could not load the ArcGis MapServer endpoint because the catalog item does not have a `url`.",
       "unusableMetadataTitle": "ArcGIS Mapserver Error",
-      "unusableMetadataDefaultMessage": "This dataset returned unusable metadata."
+      "unusableMetadataDefaultMessage": "This dataset returned unusable metadata.",
+      "noLayersFoundTitle": "Could not load ArcGIS MapServer.",
+      "noLayersFoundMessage": "The Esri ArcGIS MapServer '{{name}}' has no layers to show."
     },
     "bing": {
       "name": "Bing Maps"
@@ -843,7 +872,7 @@
       "name": "Cesium Terrain",
       "name3D": "Cesium 3D Tiles",
       "notSupportedErrorTitle": "Not supported in 2D",
-      "notSupportedErrorMessage": "\"{{name}}\" cannot be show in the 2D view.  Switch to 3D and try again.",
+      "notSupportedErrorMessage": "\"{{name}}\" cannot be show in the 2D view. Switch to 3D and try again.",
       "errorRenderingTitle": "Error rendering in 3D",
       "errorRenderingMessage": "<p>An error occurred while rendering in 3D.  This probably indicates a bug in {{appName}} or an incompatibility with your system or web browser.  We'll now switch you to 2D so that you can continue your work. We would appreciate it if you report this error by sending an email to {{email}} with the technical details below.  Thank you!</p>"
     },
@@ -935,15 +964,20 @@
       "name": "Catalogue Service (CSW)",
       "unknownError": "The CSW server reported an unknown error.",
       "exceptionMessage": "The CSW server reported an error:\n\n {{exceptionText}}",
+      "errorLoadingTitle": "Could not load CSW",
       "notUseableTitle": "Catalogue service is not useable",
       "notUseableMessage": "Invalid response obtained when invoking GetDomain on the CSW server. <p>This error may indicate that the catalogue server you specified is temporarily unavailable or there is a problem with your internet connection.  Try opening the processing server again, and if the problem persists, please report it by sending an email to ",
+      "errorLoadingRecordsTitle": "Failed to load CSW records.",
+      "errorLoadingRecordsMessage": "Invalid response obtained when invoking GetRecords on the CSW server. <p>This error may indicate that the catalogue server you specified is temporarily unavailable or there is a problem with your internet connection.  Try opening the processing server again, and if the problem persists, please report it by sending an email to ",
       "checkCORSDomain": "Couldn't execute GetDomain on this CSW server.<br/><br/> If you entered the URL manually, please double-check it.<br/><br/> If it's your server, make sure <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a> is enabled.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}} with the technical details below.  Thank you!",
       "checkCORSRecords": "Couldn't execute GetRecords on this CSW server.<br/><br/> If it's your server, make sure <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a> is enabled.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}} with the technical details below.  Thank you!",
       "dataResponsibility": "Data Responsibility",
       "links": "Links",
       "metadataURL": "Metadata Record URL",
       "checkCORS": "Couldn't execute GetRecords on this CSW server.<br/><br/> If you entered the URL manually, please double-check it.<br/><br/> If it's your server, make sure {{cors}} is enabled.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}}",
-      "cors": "CORS"
+      "cors": "CORS",
+      "missingUrlTitle": "Unable to load Catalogue Service (CSW)",
+      "missingUrlMessage": "Could not load the Catalogue Service (CSW) because the catalog group does not have a `url`."
     },
     "czml": {
       "name": "Cesium Language (CZML)",
@@ -974,6 +1008,9 @@
       "internetExplorer": "Internet Explorer 11",
       "chrome": "Google Chrome",
       "firefox": "Mozilla Firefox"
+    },
+    "shapefile": {
+      "name": "Shapefile"
     },
     "getToken": {
       "errorTitle": "Token Error",
@@ -1056,8 +1093,8 @@
       "dataSourceErrorMessage": "This data source does not have any details available.",
       "serviceErrorMessage": "This service does not have any details available.",
       "distributionDesc": "Distribution Description",
-      "idsNotSpecifiedTitle": "distributionId or datasetId must be specified",
-      "idsNotSpecifiedMessage": "MagdaCatalogItem requires that either distributionId or datasetId be specified.",
+      "idsNotSpecifiedTitle": "recordId must be specified",
+      "idsNotSpecifiedMessage": "MagdaCatalogItem requires that recordId be specified.",
       "retrieveErrorTitle": "Error retrieving MAGDA record",
       "retrieveErrorMessage": "No distribution or dataset ID provided",
       "notCompatibleTitle": "No compatible distributions found",
@@ -1229,7 +1266,7 @@
     },
     "terrainCatalog": {
       "notSupportedErrorTitle": "Not supported in 2D",
-      "notSupportedErrorMessage": "{{name}} cannot be show in the 2D view.  Switch to 3D and try again"
+      "notSupportedErrorMessage": "{{name}} cannot be shown in the 2D view. Switch to 3D and try again"
     },
     "terria": {
       "proxyableDomainsDeprecation": "`proxyableDomainsUrl` is no longer supported in v8",
@@ -1258,6 +1295,12 @@
       "loadingInitSourceError2Message": "An error occurred while loading initialization information from {{loadSource}}. This may indicate that you followed an invalid link or that there is a problem with your Internet connection.",
       "disclaimer": "Disclaimer",
       "buttonTitleConfirm": "I Agree"
+    },
+    "thredds": {
+      "nameGroup": "THREDDS Catalog Group"
+    },
+    "threddsItem": {
+      "name": "THREDDS Item Reference"
     },
     "urlTemplateMapServer": {
       "name": "URL Template Map Server"
@@ -1323,6 +1366,7 @@
       "accessConstraints": "Access Constraints",
       "serviceContact": "Service Contact",
       "getCapabilitiesUrl": "GetCapabilities URL",
+      "defaultStyleLabel": "Default style",
       "noLayerFoundTitle": "No layer found",
       "noLayerFoundMessage": "The WMS dataset '{{name}}' has no layers matching '{{layers}}'. {{suggested}} {{line}}{{line}}Either the catalog file has been set up incorrectly, or the WMS server has changed.{{line}}{{line}}Please report this error by sending an email to {{email}}.",
       "datasetScaleErrorTitle": "Dataset will not be shown at this scale",
@@ -1391,6 +1435,7 @@
       "groupNotAvailableMessage": "An error occurred while invoking GetFeature on the WFS server. <p>If you entered the link manually, please verify that the link is correct.</p><p>This error may also indicate that the server does not support <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  If this is your server, verify that CORS is enabled and enable it if it is not. If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' Map team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by '{{appName}}' itself.</p><p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>"
     },
     "commonModelErrors": {
+      "3dTypeIn2dMode": "**Note:** This dataset can not be displayed in the 2D viewer. Switch to one of the 3D map modes.",
       "datasetScaleErrorTitle": "Dataset will not be shown at this scale",
       "datasetScaleErrorMessage": "The {{name}} dataset will not be shown when zoomed in this close to the map because the data custodian has indicated that the data is not intended or suitable for display at this scale.  Click the dataset's Info button on the Now Viewing tab for more information about the dataset and the data custodian."
     }
@@ -1419,5 +1464,37 @@
   },
   "term": {
     "missingContent": "missing content"
+  },
+  "itemSearchTool": {
+    "title": "Search {{itemName}}",
+    "loading": "Loading search parameters",
+    "loadError": "Error loading search parameters. Check console for detailed errors.",
+    "noParameters": "No searchable parameters found",
+    "searching": "Searching",
+    "searchError": "Search failed. Check console for detailed errors.",
+    "numericParameter": {
+      "minimum": "Minimum",
+      "maximum": "Maximum"
+    },
+    "searchBtnText": "Search",
+    "resetBtnText": "Clear input",
+    "backBtnText": "Search again",
+    "resultsCount": "{{count}} match found",
+    "resultsCount_plural": "{{count}} matches found",
+    "actions": {
+      "highlightAll": "Highlight all",
+      "showMatchingOnly": "Show matching only"
+    }
+  },
+  "indexedItemSearchProvider": {
+    "missingOptionIndexRootUrl": "Option `indexRootUrl` is missing in the item's search configuration.",
+    "errorParsingIndexRoot": "Error parsing indexRoot file: {{indexRootUrl}}."
+  },
+  "pedestrianMode": {
+    "toolButtonTitle": "Pedestrian Mode",
+    "dropPedestrianTooltipMessage": "<b>Left click</b> to select drop location<br /><b>Right click / Esc</b> to cancel",
+    "controls": {
+      "title": "Controls"
+    }
   }
 }

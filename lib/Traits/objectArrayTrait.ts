@@ -19,6 +19,10 @@ export interface ObjectArrayTraitOptions<T extends ModelTraits>
   type: TraitsConstructorWithRemoval<T>;
   idProperty: keyof T | "index";
   modelClass?: ModelConstructor<Model<T>>;
+  /**
+   * Merge array elements across strata (if merge is false, each element will only be the top-most strata's object). Default is `true`
+   */
+  merge?: boolean;
 }
 
 export default function objectArrayTrait<T extends ModelTraits>(
@@ -41,12 +45,14 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
   readonly idProperty: keyof T | "index";
   readonly decoratorForFlattened = computed.struct;
   readonly modelClass: ModelConstructor<Model<T>>;
+  readonly merge: boolean;
 
   constructor(id: string, options: ObjectArrayTraitOptions<T>) {
     super(id, options);
     this.type = options.type;
     this.idProperty = options.idProperty;
     this.modelClass = options.modelClass || traitsClassToModelClass(this.type);
+    this.merge = options.merge ?? true;
   }
 
   private readonly createObject: (
@@ -62,7 +68,8 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
         this.id,
         this.type,
         this.idProperty,
-        objectId
+        objectId,
+        this.merge
       )
     );
   });

@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import URI from "urijs";
 import isDefined from "../Core/isDefined";
 import loadJson from "../Core/loadJson";
@@ -8,6 +8,7 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import CkanCatalogGroupTraits from "../Traits/CkanCatalogGroupTraits";
+import CkanSharedTraits from "../Traits/CkanSharedTraits";
 import ModelReference from "../Traits/ModelReference";
 import CatalogGroup from "./CatalogGroupNew";
 import { CkanDataset, CkanServerResponse } from "./CkanDefinitions";
@@ -15,10 +16,34 @@ import CkanItemReference from "./CkanItemReference";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import LoadableStratum from "./LoadableStratum";
-import { BaseModel } from "./Model";
+import Model, { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
+
+export function createInheritedCkanSharedTraitsStratum(
+  model: Model<CkanSharedTraits>
+): Readonly<StratumFromTraits<CkanSharedTraits>> {
+  const propertyNames = Object.keys(CkanSharedTraits.traits);
+  const reduced: any = propertyNames.reduce(
+    (p, c) => ({
+      ...p,
+      get [c]() {
+        return (model as any)[c];
+      }
+    }),
+    {}
+  );
+  return observable(reduced);
+}
+
+createInheritedCkanSharedTraitsStratum.stratumName =
+  "ckanItemReferenceInheritedPropertiesStratum";
+
+StratumOrder.addDefinitionStratum(
+  createInheritedCkanSharedTraitsStratum.stratumName
+);
 
 export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
   static stratumName = "ckanServer";
@@ -80,7 +105,10 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
   get members(): ModelReference[] {
     // When data is grouped (most circumstances) return group id's
     // for those which have content
-    if (this.filteredGroups !== undefined) {
+    if (
+      this.filteredGroups !== undefined &&
+      this._catalogGroup.groupBy !== "none"
+    ) {
       const groupIds: ModelReference[] = [];
       this.filteredGroups.forEach(g => {
         if (g.members.length > 0) {
@@ -199,8 +227,12 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
       return;
     }
 
-    const id = this._catalogGroup.uniqueId;
-    const datasetId = id + "/" + ckanDataset.id;
+    const datasetId = this._catalogGroup.uniqueId + "/" + ckanDataset.id;
+
+    // Create a computed stratum to pass shared configuration down to items
+    const inheritedPropertiesStratum = createInheritedCkanSharedTraitsStratum(
+      this._catalogGroup
+    );
 
     for (var i = 0; i < ckanDataset.resources.length; ++i) {
       const resource = ckanDataset.resources[i];
@@ -222,9 +254,8 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
         item.setCkanStrata(item);
         item.terria.addModel(item);
 
-        if (this._catalogGroup.itemProperties !== undefined) {
-          item.setItemProperties(item, this._catalogGroup.itemProperties);
-        }
+        item.setSharedStratum(inheritedPropertiesStratum);
+
         if (this._catalogGroup.groupBy === "organization") {
           const groupId = ckanDataset.organization
             ? this._catalogGroup.uniqueId + "/" + ckanDataset.organization.id

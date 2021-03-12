@@ -11,6 +11,7 @@ import CatalogItem from "../DataCatalog/CatalogItem";
 import CatalogGroup from "../DataCatalog/CatalogGroup";
 
 import Styles from "./parameter-editors.scss";
+import CommonStrata from "../../Models/CommonStrata";
 
 const RegionDataParameterEditor = createReactClass({
   displayName: "RegionDataParameterEditor",
@@ -35,7 +36,7 @@ const RegionDataParameterEditor = createReactClass({
   },
 
   setValue(value) {
-    this.props.parameter.value = value;
+    this.props.parameter.setValue(CommonStrata.user, value);
   },
 
   regionProvider() {
@@ -62,7 +63,10 @@ const RegionDataParameterEditor = createReactClass({
       // If only one dataset can be active at a time, deactivate all others.
       if (this.props.parameter.singleSelect) {
         for (const columnName in value) {
-          if (value.hasOwnProperty(columnName) && columnName !== column.name) {
+          if (
+            Object.prototype.hasOwnProperty.call(value, columnName) &&
+            columnName !== column.name
+          ) {
             value[columnName] = false;
           }
         }

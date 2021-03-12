@@ -15,6 +15,7 @@ import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
+import { isLatLonHeight } from "../Core/LatLonHeight";
 import makeRealPromise from "../Core/makeRealPromise";
 import TerriaError from "../Core/TerriaError";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
@@ -239,7 +240,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
       const xAxis: ChartAxis = {
         scale: xColumn.type === TableColumnType.time ? "time" : "linear",
-        units: xColumn.traits.units
+        units: xColumn.units
       };
 
       return filterOutUndefined(
@@ -266,14 +267,14 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
           return {
             item: this,
-            name: yColumn.traits.title || yColumn.name,
+            name: yColumn.title,
             categoryName: this.name,
             key: `key${this.uniqueId}-${this.name}-${yColumn.name}`,
-            type: "line",
+            type: this.chartType ?? "line",
             xAxis,
             points,
             domain: calculateDomain(points),
-            units: yColumn.traits.units,
+            units: yColumn.units,
             isSelectedInWorkbench: line.isSelectedInWorkbench,
             showInChartPanel: this.show && line.isSelectedInWorkbench,
             updateIsSelectedInWorkbench: (isSelected: boolean) => {
@@ -287,7 +288,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
             },
             getColor: () => {
               return line.color || getChartColorForId(colorId);
-            }
+            },
+            pointOnMap: isLatLonHeight(this.chartPointOnMap)
+              ? this.chartPointOnMap
+              : undefined
           };
         })
       );
@@ -317,7 +321,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         options: this.tableStyles.map(style => {
           return {
             id: style.id,
-            name: style.styleTraits.title || style.id
+            name:
+              style.styleTraits.title ??
+              this.tableColumns.find(col => col.name === style.id)?.title ??
+              style.id
           };
         }),
         selectedId: this.activeStyle,
@@ -446,7 +453,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return times;
     }
 
-    get legends(): readonly ModelPropertiesFromTraits<LegendTraits>[] {
+    @computed
+    get legends() {
       if (this.mapItems.length > 0) {
         const colorLegend = this.activeTableStyle.colorTraits.legend;
         return filterOutUndefined([colorLegend]);
@@ -697,7 +705,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
                 const regionId = filterRows(
                   regionColumn.valuesAsRegions.regionIdToRowNumbersMap.get(
-                    feature.properties[regionType.regionProp]
+                    feature.properties[regionType.regionProp].toLowerCase()
                   )
                 );
 
@@ -709,7 +717,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
                 return this.featureInfoFromFeature(
                   regionType,
-                  d,
+                  // Preserve values from d and insert feature properties after entries from d
+                  Object.assign({}, d, feature.properties, d),
                   feature.properties[regionType.uniqueIdProp]
                 );
               }
@@ -733,7 +742,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       }
 
       data.id = regionId;
-      featureInfo.data = data;
+      featureInfo.properties = data;
 
       featureInfo.configureDescriptionFromProperties(data);
       featureInfo.configureNameFromProperties(data);
@@ -744,7 +753,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       const result: JsonObject = {};
 
       this.tableColumns.forEach(column => {
-        result[column.name] = column.values[index];
+        result[column.name] = column.valueFunctionForType(index);
       });
 
       return result;

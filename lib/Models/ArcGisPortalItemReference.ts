@@ -6,6 +6,7 @@ import URI from "urijs";
 import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import loadJson from "../Core/loadJson";
+import AccessControlMixin from "../ModelMixins/AccessControlMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import ArcGisPortalItemFormatTraits from "../Traits/ArcGisPortalItemFormatTraits";
@@ -141,8 +142,8 @@ export class ArcGisPortalItemStratum extends LoadableStratum(
 
 StratumOrder.addLoadStratum(ArcGisPortalItemStratum.stratumName);
 
-export default class ArcGisPortalItemReference extends UrlMixin(
-  ReferenceMixin(CreateModel(ArcGisPortalItemTraits))
+export default class ArcGisPortalItemReference extends AccessControlMixin(
+  UrlMixin(ReferenceMixin(CreateModel(ArcGisPortalItemTraits)))
 ) {
   static readonly defaultSupportedFormats: StratumFromTraits<
     ArcGisPortalItemFormatTraits

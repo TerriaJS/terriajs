@@ -1,15 +1,11 @@
+import i18next from "i18next";
 import { configure, runInAction } from "mobx";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
-import when from "terriajs-cesium/Source/ThirdParty/when";
 import isDefined from "../../lib/Core/isDefined";
 import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import ArcGisMapServerCatalogItem from "../../lib/Models/ArcGisMapServerCatalogItem";
 import Terria from "../../lib/Models/Terria";
-import { RectangleTraits } from "../../lib/Traits/MappableTraits";
-import createStratumInstance from "../../lib/Models/createStratumInstance";
-import i18next from "i18next";
 
 configure({
   enforceActions: "observed",
@@ -193,6 +189,12 @@ describe("ArcGisMapServerCatalogItem", function() {
           expect(imageryProvider.layers).toBe("31");
         });
 
+        it("converts layer names to layer ids when constructing imagery provider", function() {
+          item.setTrait("definition", "layers", "Offshore_Rocks_And_Wrecks");
+          const imageryProvider = item.mapItems[0].imageryProvider;
+          expect(imageryProvider.layers).toBe("31");
+        });
+
         it("tilingScheme should be a WebMercatorTilingScheme", function() {
           expect(
             imageryProvider.tilingScheme instanceof WebMercatorTilingScheme
@@ -231,10 +233,10 @@ describe("ArcGisMapServerCatalogItem", function() {
 
     it("defines a rectangle", function() {
       expect(item.rectangle).toBeDefined();
-      expect(item.rectangle.west).toEqual(97.90759300700006);
-      expect(item.rectangle.south).toEqual(-54.25906877199998);
-      expect(item.rectangle.east).toEqual(167.2820957260001);
-      expect(item.rectangle.north).toEqual(0.9835908000000587);
+      expect(item.rectangle.west).toEqual(100.14442693296783);
+      expect(item.rectangle.south).toEqual(-49.98407725285527);
+      expect(item.rectangle.east).toEqual(169.16154003177758);
+      expect(item.rectangle.north).toEqual(-2.3882536190571813);
     });
 
     it("defines info", function() {

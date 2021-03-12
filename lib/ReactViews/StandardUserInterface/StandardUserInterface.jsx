@@ -387,8 +387,9 @@ const StandardUserInterface = observer(
                 {/* I think this does what the previous boolean condition does, but without the console error */}
                 <If condition={this.props.viewState.isToolOpen}>
                   <Tool
-                    viewState={this.props.viewState}
                     {...this.props.viewState.currentTool}
+                    viewState={this.props.viewState}
+                    t={t}
                   />
                 </If>
               </Medium>

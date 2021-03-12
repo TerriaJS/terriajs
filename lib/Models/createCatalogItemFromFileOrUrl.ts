@@ -72,9 +72,9 @@ function createCatalogMember(
     CatalogMemberFactory,
     terria,
     "",
-    undefined,
     CommonStrata.definition,
-    json
+    json,
+    {}
   );
 }
 
@@ -98,9 +98,7 @@ function tryConversionService(
     );
     return undefined;
   } else if (
-    name.match(
-      /\.(shp|jpg|jpeg|pdf|xlsx|xls|tif|tiff|png|txt|doc|docx|xml|json)$/
-    )
+    name.match(/\.(jpg|jpeg|pdf|xlsx|xls|tif|tiff|png|txt|doc|docx|xml|json)$/)
   ) {
     terria.error.raiseEvent(
       new TerriaError({

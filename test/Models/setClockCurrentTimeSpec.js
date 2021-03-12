@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require,beforeEach*/
 var JulianDate = require("terriajs-cesium/Source/Core/JulianDate").default;
 var DataSourceClock = require("terriajs-cesium/Source/DataSources/DataSourceClock")
   .default;
