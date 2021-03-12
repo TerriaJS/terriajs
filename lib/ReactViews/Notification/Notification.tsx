@@ -2,7 +2,8 @@ import { observer } from "mobx-react";
 import React from "react";
 import triggerResize from "../../Core/triggerResize";
 import ViewState from "../../ReactViewModels/ViewState";
-const NotificationWindow = require("./NotificationWindow");
+// Avoid type error caused by importing untyped jsx
+const NotificationWindow = require("./NotificationWindow").default;
 
 const Notification = observer((props: { viewState?: ViewState }) => {
   const viewState = props.viewState;

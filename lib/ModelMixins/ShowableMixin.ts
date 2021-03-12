@@ -28,6 +28,7 @@ function ShowableMixin<T extends Constructor<ShowableModel>>(Base: T) {
               ? this.initialMessage.confirmText
               : undefined,
             message: this.initialMessage.content,
+            key: "initialMessage:" + this.initialMessage.key,
             confirmAction: () => resolve()
           } as Notification);
           this.initialMessageShown = true;

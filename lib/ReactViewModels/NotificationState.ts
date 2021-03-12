@@ -17,7 +17,7 @@ export interface Notification {
 }
 
 export default class NotificationState {
-  @observable notifications: Notification[] = [];
+  @observable protected notifications: Notification[] = [];
   protected alreadyNotifiedKeys: Set<string> = new Set();
 
   @action
@@ -28,11 +28,11 @@ export default class NotificationState {
           item.title === notification.title &&
           item.message === notification.message
       ).length !== 0;
-    const keyIsUnused =
+    const keyNotSeenBefore =
       notification.key === undefined ||
       !this.alreadyNotifiedKeys.has(notification.key);
 
-    if (!alreadyQueued && keyIsUnused) {
+    if (!alreadyQueued && keyNotSeenBefore) {
       this.notifications.push(notification);
     }
 
@@ -48,6 +48,6 @@ export default class NotificationState {
 
   @computed
   get currentNotification(): Notification | undefined {
-    return this.notifications[0];
+    return this.notifications.length > 0 ? this.notifications[0] : undefined;
   }
 }
