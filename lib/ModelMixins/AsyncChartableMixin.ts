@@ -1,14 +1,15 @@
-import ChartData from "../Charts/ChartData";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
-import Chartable, { ChartAxis, ChartItem } from "../Models/Chartable";
+import Chartable, { ChartItem } from "../Models/Chartable";
 import Model from "../Models/Model";
 import MappableTraits from "../Traits/MappableTraits";
+import ShowableMixin from "./ShowableMixin";
 
 function AsyncChartableMixin<T extends Constructor<Model<MappableTraits>>>(
   Base: T
 ) {
-  abstract class AsyncChartableMixin extends Base implements Chartable {
+  abstract class AsyncChartableMixin extends ShowableMixin(Base)
+    implements Chartable {
     get isChartable() {
       return true;
     }
@@ -29,7 +30,8 @@ function AsyncChartableMixin<T extends Constructor<Model<MappableTraits>>>(
      * If the chart items are already loaded or already loading, it will
      * return the existing promise.
      */
-    loadChartItems(): Promise<void> {
+    async loadChartItems(): Promise<void> {
+      await this.showInitialMessageIfRequired();
       return this._chartItemsLoader.load();
     }
 

@@ -141,7 +141,7 @@ function getConfirmation(
 
   return new Promise(resolve => {
     runInAction(() => {
-      viewState.notifications.push({
+      viewState.notificationState.addNotificationToQueue({
         confirmText: i18next.t("models.catalog.upload"),
         denyText: i18next.t("models.catalog.cancel"),
         title: i18next.t("models.catalog.useConversion"),

@@ -1,14 +1,15 @@
-import { computed, observable, runInAction } from "mobx";
+import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import Mappable, { MapItem } from "../Models/Mappable";
 import Model from "../Models/Model";
 import MappableTraits from "../Traits/MappableTraits";
-import AsyncLoader from "../Core/AsyncLoader";
+import ShowableMixin from "./ShowableMixin";
 
 function AsyncMappableMixin<T extends Constructor<Model<MappableTraits>>>(
   Base: T
 ) {
-  abstract class AsyncMappableMixin extends Base implements Mappable {
+  abstract class AsyncMappableMixin extends ShowableMixin(Base)
+    implements Mappable {
     get isMappable() {
       return true;
     }
@@ -29,7 +30,8 @@ function AsyncMappableMixin<T extends Constructor<Model<MappableTraits>>>(
      * If the map items are already loaded or already loading, it will
      * return the existing promise.
      */
-    loadMapItems(): Promise<void> {
+    async loadMapItems(): Promise<void> {
+      await this.showInitialMessageIfRequired();
       return this._mapItemsLoader.load();
     }
 

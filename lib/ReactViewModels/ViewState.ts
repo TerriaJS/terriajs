@@ -24,6 +24,7 @@ import {
   TourPoint
 } from "./defaultTourPoints";
 import DisclaimerHandler from "./DisclaimerHandler";
+import NotificationState from "./NotificationState";
 import SearchState from "./SearchState";
 
 export const DATA_CATALOG_NAME = "data-catalog";
@@ -66,6 +67,7 @@ export default class ViewState {
     locationSearchResults: "locationSearchResults"
   });
   readonly searchState: SearchState;
+  readonly notificationState: NotificationState = new NotificationState();
   readonly terria: Terria;
   readonly relativePosition = RelativePosition;
 
@@ -77,7 +79,6 @@ export default class ViewState {
   @observable isDraggingDroppingFile: boolean = false;
   @observable mobileView: string | null = null;
   @observable isMapFullScreen: boolean = false;
-  @observable readonly notifications: Notification[] = [];
   @observable myDataIsUploadView: boolean = true;
   @observable mobileMenuVisible: boolean = false;
   @observable explorerPanelAnimating: boolean = false;
@@ -319,37 +320,15 @@ export default class ViewState {
     this.terria = terria;
 
     this._unsubscribeNotificationListener = terria.notification.addEventListener(
-      (notification: Notification) => {
-        // Only add this notification if an identical one doesn't already exist.
-        if (
-          this.notifications.filter(
-            item =>
-              item.title === notification.title &&
-              item.message === notification.message
-          ).length === 0
-        ) {
-          runInAction(() => {
-            this.notifications.push(clone(notification));
-          });
-        }
-      }
+      notification =>
+        this.notificationState.addNotificationToQueue(notification)
     );
 
     // Show errors to the user as notifications.
-    this._unsubscribeErrorListener = terria.error.addEventListener(<any>((
-      e: any
-    ) => {
-      // Only add this error if an identical one doesn't already exist.
-      if (
-        this.notifications.filter(
-          item => item.title === e.title && item.message === e.message
-        ).length === 0
-      ) {
-        runInAction(() => {
-          this.notifications.push(clone(e));
-        });
-      }
-    }));
+    this._unsubscribeErrorListener = terria.error.addEventListener(
+      notification =>
+        this.notificationState.addNotificationToQueue(notification)
+    );
 
     // When features are picked, show the feature info panel.
     this._pickedFeaturesSubscription = reaction(
@@ -639,14 +618,10 @@ export default class ViewState {
       this.userDataPreviewedItem = undefined;
   }
 
-  getNextNotification() {
-    return this.notifications.length > 0 ? this.notifications[0] : undefined;
-  }
-
   hideMapUi() {
     return (
-      isDefined(this.getNextNotification()) &&
-      this.getNextNotification()!.hideUi
+      this.notificationState.currentNotification !== undefined &&
+      this.notificationState.currentNotification!.hideUi
     );
   }
 
