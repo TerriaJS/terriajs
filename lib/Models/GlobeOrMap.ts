@@ -24,7 +24,7 @@ import Feature from "./Feature";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import Mappable from "./Mappable";
 import Terria from "./Terria";
-import { observable } from "mobx";
+import { observable, runInAction } from "mobx";
 import MouseCoords from "../ReactViewModels/MouseCoords";
 
 require("./ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureDescriptionFromProperties
@@ -175,13 +175,11 @@ export default abstract class GlobeOrMap {
         // Get the highlight color from the catalogItem trait or default to baseMapContrastColor
         const catalogItem = feature._catalogItem;
         let highlightColor;
-        if (
-          catalogItem instanceof Cesium3DTilesCatalogItem &&
-          catalogItem.highlightColor
-        ) {
+        if (catalogItem instanceof Cesium3DTilesCatalogItem) {
           highlightColor =
-            Color.fromCssColorString(catalogItem.highlightColor) ??
-            defaultColor;
+            Color.fromCssColorString(
+              runInAction(() => catalogItem.highlightColor)
+            ) ?? defaultColor;
         } else {
           highlightColor =
             Color.fromCssColorString(this.terria.baseMapContrastColor) ??
@@ -262,13 +260,17 @@ export default abstract class GlobeOrMap {
           feature.imageryLayer.imageryProvider instanceof
             MapboxVectorTileImageryProvider
         ) {
-          const highlightImageryProvider = feature.imageryLayer.imageryProvider.createHighlightImageryProvider(
-            feature.data.id
-          );
-          this._removeHighlightCallback = this.terria.currentViewer._addVectorTileHighlight(
-            highlightImageryProvider,
-            feature.imageryLayer.imageryProvider.rectangle
-          );
+          const featureId =
+            feature.data?.id ?? feature.properties?.id?.getValue?.();
+          if (isDefined(featureId)) {
+            const highlightImageryProvider = feature.imageryLayer.imageryProvider.createHighlightImageryProvider(
+              featureId
+            );
+            this._removeHighlightCallback = this.terria.currentViewer._addVectorTileHighlight(
+              highlightImageryProvider,
+              feature.imageryLayer.imageryProvider.rectangle
+            );
+          }
         } else if (
           !isDefined(this.supportsPolylinesOnTerrain) ||
           this.supportsPolylinesOnTerrain
