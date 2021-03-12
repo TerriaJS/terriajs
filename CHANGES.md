@@ -14,6 +14,8 @@ Change Log
 * Add support for TableColumn quarterly dates in the format yyyy-Qx (eg 2020-Q1).
 * Fix region mapping feature highlighting.
 * Update clipboard to fix clipboard typing error.
+* Added direction indicator to the pedestrian mode minimap.
+* Limit up/down look angle in pedestrian mode.
 * [The next improvement]
 
 #### 8.0.0-alpha.67
