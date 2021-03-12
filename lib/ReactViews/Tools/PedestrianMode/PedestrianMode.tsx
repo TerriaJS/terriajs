@@ -77,7 +77,6 @@ const MiniMapContainer = styled(PositionRightOfWorkbench)`
   top: unset;
   left: 0px;
   bottom: 100px;
-  border: 1px solid white;
 `;
 
 export default PedestrianMode;

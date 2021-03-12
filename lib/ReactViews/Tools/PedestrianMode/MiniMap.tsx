@@ -78,6 +78,11 @@ const MiniMap: React.FC<MiniMapProps> = props => {
 
 const MapContainer = styled.div`
   height: 180px;
+  box-sizing: border;
+  border: 2px solid white;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px 4px rgb(0 0 0 / 5%);
+
   & .leaflet-control-attribution {
     display: none;
   }
