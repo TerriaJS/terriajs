@@ -841,7 +841,6 @@ describe("Terria", function() {
         });
         expect(terria.pickedFeatures).toBeUndefined();
         expect(terria.selectedFeature).toBeUndefined();
-        console.log("end test");
       });
 
       it("otherwise, should not unset feature picking state", async function() {
