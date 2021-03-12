@@ -7,11 +7,9 @@ import {
   runInAction
 } from "mobx";
 import { Ref } from "react";
-import clone from "terriajs-cesium/Source/Core/clone";
 import defined from "terriajs-cesium/Source/Core/defined";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import addedByUser from "../Core/addedByUser";
-import isDefined from "../Core/isDefined";
 import triggerResize from "../Core/triggerResize";
 import PickedFeatures from "../Map/PickedFeatures";
 import getAncestors from "../Models/getAncestors";

@@ -1,6 +1,7 @@
 import { action, computed, observable, runInAction } from "mobx";
-import ViewState from "./ViewState";
 import { ReactNode } from "react";
+
+import ViewState from "./ViewState";
 
 export interface Notification {
   title: string;
@@ -16,6 +17,11 @@ export interface Notification {
   key?: string;
 }
 
+/**
+ * Tracks pending notifications, and provides and interface for adding and removing them.
+ * Notification queue is first-in, first-out.
+ * Notifications with the same key will only be added once.
+ */
 export default class NotificationState {
   @observable protected notifications: Notification[] = [];
   protected alreadyNotifiedKeys: Set<string> = new Set();
