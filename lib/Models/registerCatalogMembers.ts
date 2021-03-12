@@ -47,6 +47,7 @@ import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalo
 import WebProcessingServiceCatalogGroup from "./WebProcessingServiceCatalogGroup";
 import YDYRCatalogFunction from "./YDYRCatalogFunction";
 import YDYRCatalogFunctionJob from "./YDYRCatalogFunctionJob";
+import CswCatalogGroup from "./CswCatalogGroup";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -179,6 +180,7 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CkanCatalogGroup.type, CkanCatalogGroup);
   CatalogMemberFactory.register(CkanItemReference.type, CkanItemReference);
   CatalogMemberFactory.register(ThreddsCatalogGroup.type, ThreddsCatalogGroup);
+  CatalogMemberFactory.register(CswCatalogGroup.type, CswCatalogGroup);
 
   UrlToCatalogMemberMapping.register(
     matchesExtension("csv"),
