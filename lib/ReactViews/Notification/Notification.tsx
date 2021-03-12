@@ -7,7 +7,7 @@ const NotificationWindow = require("./NotificationWindow");
 const Notification = observer((props: { viewState?: ViewState }) => {
   const viewState = props.viewState;
   const notificationState = viewState?.notificationState;
-  const notification = notificationState?.notifications[0];
+  const notification = notificationState?.currentNotification;
 
   if (
     viewState === undefined ||
