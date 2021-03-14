@@ -4,7 +4,6 @@ import anyTrait from "./anyTrait";
 import LegendTraits from "./LegendTraits";
 import ModelTraits from "./ModelTraits";
 import objectArrayTrait from "./objectArrayTrait";
-import objectTrait from "./objectTrait";
 import primitiveArrayTrait from "./primitiveArrayTrait";
 import primitiveTrait from "./primitiveTrait";
 
