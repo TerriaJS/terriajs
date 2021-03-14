@@ -616,13 +616,6 @@ export default class ViewState {
       this.userDataPreviewedItem = undefined;
   }
 
-  hideMapUi() {
-    return (
-      this.notificationState.currentNotification !== undefined &&
-      this.notificationState.currentNotification!.hideUi
-    );
-  }
-
   @action
   toggleFeaturePrompt(
     feature: string,
@@ -680,6 +673,14 @@ export default class ViewState {
   @computed
   get isToolOpen() {
     return this.currentTool !== undefined;
+  }
+
+  @computed
+  get hideMapUi() {
+    return (
+      this.notificationState.currentNotification !== undefined &&
+      this.notificationState.currentNotification!.hideUi
+    );
   }
 }
 
