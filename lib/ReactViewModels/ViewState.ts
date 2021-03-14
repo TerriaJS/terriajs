@@ -346,7 +346,7 @@ export default class ViewState {
         ).length === 0
       ) {
         runInAction(() => {
-          this.notifications.push(clone(e));
+          this.notifications.push(e);
         });
       }
     }));
