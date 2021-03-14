@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 
 import DataPreviewSections from "./DataPreviewSections";
+import MagdaSearch from "../Search/MagdaSearch";
 import DataPreviewUrl from "./DataPreviewUrl";
 import measureElement from "../HOCs/measureElement";
 import Styles from "./mappable-preview.scss";
@@ -90,6 +91,11 @@ const GroupPreview = observer(
                 }
               >
                 <DataPreviewUrl metadataItem={metadataItem} />
+              </If>
+              <If condition={metadataItem.canSearch}>
+                <div>
+                  <MagdaSearch previewed={this.props.previewed} />
+                </div>
               </If>
             </div>
           </div>
