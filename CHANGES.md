@@ -12,6 +12,7 @@ Change Log
 * Add support for TableColumn quarterly dates in the format yyyy-Qx (eg 2020-Q1).
 * Fix region mapping feature highlighting.
 * Update clipboard to fix clipboard typing error.
+* Add support for time on `ArcGisMapServerCatalogItem`
 * [The next improvement]
 
 #### 8.0.0-alpha.67
