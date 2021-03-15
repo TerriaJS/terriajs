@@ -1,7 +1,6 @@
 import {
   action,
   IReactionDisposer,
-  IReactionPublic,
   observable,
   reaction,
   runInAction
@@ -25,13 +24,10 @@ export default class AsyncLoader<T> {
 
   load(forceReload: boolean = false): Promise<void> {
     if (!this.dependencyDisposer) {
-      reaction(
+      this.dependencyDisposer = reaction(
         () => this.loadCallbackFn(),
         (loadCallback, effect) => {
           this.loadCallback = loadCallback;
-          console.log(`updated loadcallback`);
-          console.log(effect.trace());
-          console.log(loadCallback);
           this.dependenciesChanged = true;
         },
         { fireImmediately: true }
@@ -39,7 +35,6 @@ export default class AsyncLoader<T> {
     }
 
     if (!this.loadCallback) {
-      console.log(`loadCallback doesn't exist!!`);
       return Promise.resolve();
     }
 
@@ -52,9 +47,6 @@ export default class AsyncLoader<T> {
     runInAction(() => {
       this._isLoading = true;
     });
-
-    console.log("loading");
-    console.log(this);
 
     this._promise = this.loadCallback();
 

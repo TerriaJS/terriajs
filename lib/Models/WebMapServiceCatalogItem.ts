@@ -811,19 +811,10 @@ class WebMapServiceCatalogItem
       this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
     });
   }
-
-  loadMapItemDependencies = () => {
-    const s = this.strata.get(
-      GetCapabilitiesMixin.getCapabilitiesStratumName
-    ) as GetCapabilitiesStratum;
-    return s?.getCapabilitiesUrl;
-  };
-
   protected forceLoadMetadata(): () => Promise<void> {
     if (
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
-        undefined ||
-      this.getCapabilitiesUrl === undefined
+      undefined
     )
       return async () => {};
 
