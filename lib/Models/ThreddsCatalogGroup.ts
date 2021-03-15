@@ -200,24 +200,25 @@ export default class ThreddsCatalogGroup extends UrlMixin(
     return "1d";
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return Promise.resolve();
+  protected forceLoadMetadata() {
+    return () => Promise.resolve();
   }
 
-  protected forceLoadMembers(): Promise<void> {
+  protected forceLoadMembers() {
     const threddsStratum = <ThreddsStratum | undefined>(
       this.strata.get(ThreddsStratum.stratumName)
     );
     if (!threddsStratum) {
-      return ThreddsStratum.load(this).then(async stratum => {
-        if (stratum === undefined) return;
-        await stratum.createMembers();
-        runInAction(() => {
-          this.strata.set(ThreddsStratum.stratumName, stratum);
+      return () =>
+        ThreddsStratum.load(this).then(async stratum => {
+          if (stratum === undefined) return;
+          await stratum.createMembers();
+          runInAction(() => {
+            this.strata.set(ThreddsStratum.stratumName, stratum);
+          });
         });
-      });
     } else {
-      return Promise.resolve();
+      return () => Promise.resolve();
     }
   }
 }

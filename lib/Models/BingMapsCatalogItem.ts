@@ -26,8 +26,8 @@ export default class BingMapsCatalogItem
     ];
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return Promise.resolve();
+  protected forceLoadMetadata() {
+    return () => Promise.resolve();
   }
 
   loadMapItems() {

@@ -19,7 +19,7 @@ export default class OpenStreetMapCatalogItem
   }
 
   forceLoadMetadata() {
-    return Promise.resolve();
+    return () => Promise.resolve();
   }
 
   loadMapItems() {

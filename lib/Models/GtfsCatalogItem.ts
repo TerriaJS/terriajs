@@ -247,7 +247,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   }
 
   refreshData() {
-    this.forceLoadMapItems();
+    this.forceLoadMapItems()();
   }
 
   @computed
@@ -303,11 +303,11 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     super(id, terria, sourceReference);
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return Promise.resolve();
+  protected forceLoadMetadata() {
+    return () => Promise.resolve();
   }
 
-  protected forceLoadMapItems(): Promise<void> {
+  protected forceLoadMapItems() {
     if (this.strata.get(GtfsStratum.stratumName) === undefined) {
       GtfsStratum.load(this).then(stratum => {
         runInAction(() => {
@@ -315,24 +315,23 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
         });
       });
     }
-    const promise: Promise<void> = this.retrieveData()
-      .then((data: FeedMessage) => {
-        runInAction(() => {
-          if (data.entity !== undefined && data.entity !== null) {
-            this.gtfsFeedEntities = data.entity;
-            this.terria.currentViewer.notifyRepaintRequired();
-          }
+    return () =>
+      this.retrieveData()
+        .then((data: FeedMessage) => {
+          runInAction(() => {
+            if (data.entity !== undefined && data.entity !== null) {
+              this.gtfsFeedEntities = data.entity;
+              this.terria.currentViewer.notifyRepaintRequired();
+            }
+          });
+        })
+        .catch((e: Error) => {
+          throw new TerriaError({
+            title: `Could not load ${this.nameInCatalog}.`,
+            sender: this,
+            message: `There was an error loading the data for ${this.nameInCatalog}.`
+          });
         });
-      })
-      .catch((e: Error) => {
-        throw new TerriaError({
-          title: `Could not load ${this.nameInCatalog}.`,
-          sender: this,
-          message: `There was an error loading the data for ${this.nameInCatalog}.`
-        });
-      });
-
-    return promise;
   }
 
   protected retrieveData(): Promise<FeedMessage> {

@@ -812,22 +812,36 @@ class WebMapServiceCatalogItem
     });
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  loadMapItemDependencies = () => {
+    const s = this.strata.get(
+      GetCapabilitiesMixin.getCapabilitiesStratumName
+    ) as GetCapabilitiesStratum;
+    return s?.getCapabilitiesUrl;
+  };
+
+  protected forceLoadMetadata(): () => Promise<void> {
     if (
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
-      undefined
+        undefined ||
+      this.getCapabilitiesUrl === undefined
     )
-      return;
-    const stratum = await GetCapabilitiesStratum.load(this);
-    runInAction(() => {
-      this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
+      return async () => {};
 
-      const diffStratum = new DiffStratum(this);
-      this.strata.set(DiffableMixin.diffStratumName, diffStratum);
-    });
+    return async () => {
+      const stratum = await GetCapabilitiesStratum.load(this);
+      runInAction(() => {
+        this.strata.set(
+          GetCapabilitiesMixin.getCapabilitiesStratumName,
+          stratum
+        );
+
+        const diffStratum = new DiffStratum(this);
+        this.strata.set(DiffableMixin.diffStratumName, diffStratum);
+      });
+    };
   }
 
-  protected forceLoadChartItems(): Promise<void> {
+  protected forceLoadChartItems(): () => Promise<void> {
     return this.forceLoadMetadata();
   }
 

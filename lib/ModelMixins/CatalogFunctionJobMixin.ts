@@ -288,15 +288,21 @@ function CatalogFunctionJobMixin<
     get mapItems(): MapItem[] {
       return [];
     }
-    protected async forceLoadMapItems() {}
-
-    protected async forceLoadMetadata() {
-      if (this.jobStatus === "finished" && !this.downloadedResults) {
-        await this.onJobFinish();
-      }
+    protected forceLoadMapItems() {
+      return async () => {};
     }
 
-    protected async forceLoadMembers() {}
+    protected forceLoadMetadata() {
+      return async () => {
+        if (this.jobStatus === "finished" && !this.downloadedResults) {
+          await this.onJobFinish();
+        }
+      };
+    }
+
+    protected forceLoadMembers() {
+      return async () => {};
+    }
 
     get hasCatalogFunctionJobMixin() {
       return true;

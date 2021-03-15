@@ -105,8 +105,8 @@ export default class GltfCatalogItem
     return orientation;
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return Promise.resolve();
+  protected forceLoadMetadata() {
+    return () => Promise.resolve();
   }
 
   @action

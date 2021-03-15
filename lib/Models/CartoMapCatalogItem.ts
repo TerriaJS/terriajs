@@ -138,16 +138,17 @@ export default class CartoMapCatalogItem
     return [];
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return Promise.resolve();
+  protected forceLoadMetadata() {
+    return () => Promise.resolve();
   }
 
-  protected forceLoadMapItems(): Promise<void> {
-    return CartoLoadableStratum.load(this).then(stratum => {
-      runInAction(() => {
-        this.strata.set(CartoLoadableStratum.stratumName, stratum);
+  protected forceLoadMapItems() {
+    return () =>
+      CartoLoadableStratum.load(this).then(stratum => {
+        runInAction(() => {
+          this.strata.set(CartoLoadableStratum.stratumName, stratum);
+        });
       });
-    });
   }
 
   @computed get cacheDuration(): string {

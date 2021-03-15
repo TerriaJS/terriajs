@@ -709,19 +709,26 @@ export default class CswCatalogGroup extends UrlMixin(
     return CswCatalogGroup.type;
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
-    if (this.strata.get(CswStratum.name) !== undefined) return;
-    const stratum = await CswStratum.load(this);
-    runInAction(() => {
-      this.strata.set(CswStratum.name, stratum);
-    });
+  protected forceLoadMetadata() {
+    if (this.strata.get(CswStratum.name) !== undefined)
+      return () => Promise.resolve();
+    return async () => {
+      const stratum = await CswStratum.load(this);
+      runInAction(() => {
+        this.strata.set(CswStratum.name, stratum);
+      });
+    };
   }
 
-  protected async forceLoadMembers(): Promise<void> {
-    await this.loadMetadata();
-    const cswStratum = <CswStratum | undefined>this.strata.get(CswStratum.name);
-    if (cswStratum) {
-      cswStratum.createMembersFromLayers();
-    }
+  protected forceLoadMembers() {
+    return async () => {
+      await this.loadMetadata();
+      const cswStratum = <CswStratum | undefined>(
+        this.strata.get(CswStratum.name)
+      );
+      if (cswStratum) {
+        cswStratum.createMembersFromLayers();
+      }
+    };
   }
 }

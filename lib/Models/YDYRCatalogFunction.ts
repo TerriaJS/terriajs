@@ -189,8 +189,9 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
     return new YDYRCatalogFunctionJob(id, this.terria);
   }
 
-  async forceLoadMetadata() {
-    return super.loadMetadata();
+  forceLoadMetadata() {
+    return () => Promise.resolve();
+    // return super.loadMetadata();
     // TODO: load capabilities from https://ydyr.info/api/v1/capability?format=json
     // https://github.com/TerriaJS/terriajs/issues/4943
   }

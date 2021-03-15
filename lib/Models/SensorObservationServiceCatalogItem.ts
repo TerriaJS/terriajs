@@ -330,7 +330,9 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     return "sos";
   }
 
-  protected async forceLoadMetadata() {}
+  protected forceLoadMetadata() {
+    return () => Promise.resolve();
+  }
 
   @action
   protected async forceLoadTableData() {

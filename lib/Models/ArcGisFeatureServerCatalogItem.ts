@@ -409,80 +409,82 @@ export default class ArcGisFeatureServerCatalogItem
     return true;
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return FeatureServerStratum.load(this).then(stratum => {
-      runInAction(() => {
-        this.strata.set(FeatureServerStratum.stratumName, stratum);
+  protected forceLoadMetadata() {
+    return () =>
+      FeatureServerStratum.load(this).then(stratum => {
+        runInAction(() => {
+          this.strata.set(FeatureServerStratum.stratumName, stratum);
+        });
       });
-    });
   }
 
-  protected forceLoadMapItems(): Promise<void> {
+  protected forceLoadMapItems() {
     const that = this;
-    return that.loadMetadata().then(() => {
-      if (isDefined(that.geoJsonItem)) {
-        return that.geoJsonItem.loadMapItems().then(() => {
-          const featureServerData = that.featureServerData;
-          if (
-            that.useStyleInformationFromService &&
-            featureServerData &&
-            featureServerData.drawingInfo
-          ) {
-            const renderer = featureServerData.drawingInfo.renderer;
-            const rendererType = renderer.type;
-            that.mapItems.forEach(mapItem => {
-              const entities = mapItem.entities;
-              entities.suspendEvents();
+    return () =>
+      that.loadMetadata().then(() => {
+        if (isDefined(that.geoJsonItem)) {
+          return that.geoJsonItem.loadMapItems().then(() => {
+            const featureServerData = that.featureServerData;
+            if (
+              that.useStyleInformationFromService &&
+              featureServerData &&
+              featureServerData.drawingInfo
+            ) {
+              const renderer = featureServerData.drawingInfo.renderer;
+              const rendererType = renderer.type;
+              that.mapItems.forEach(mapItem => {
+                const entities = mapItem.entities;
+                entities.suspendEvents();
 
-              // A 'simple' renderer only applies a single style to all features
-              if (rendererType === "simple") {
-                const simpleRenderer = <SimpleRenderer>renderer;
-                const symbol = simpleRenderer.symbol;
-                if (symbol) {
+                // A 'simple' renderer only applies a single style to all features
+                if (rendererType === "simple") {
+                  const simpleRenderer = <SimpleRenderer>renderer;
+                  const symbol = simpleRenderer.symbol;
+                  if (symbol) {
+                    entities.values.forEach(function(entity) {
+                      updateEntityWithEsriStyle(entity, symbol, that);
+                    });
+                  }
+
+                  // For a 'uniqueValue' renderer symbology gets applied via feature properties.
+                } else if (renderer.type === "uniqueValue") {
+                  const uniqueValueRenderer = <UniqueValueRenderer>renderer;
+                  const rendererObj = setupUniqueValueRenderer(
+                    uniqueValueRenderer
+                  );
                   entities.values.forEach(function(entity) {
-                    updateEntityWithEsriStyle(entity, symbol, that);
+                    const symbol = getUniqueValueSymbol(
+                      entity,
+                      uniqueValueRenderer,
+                      rendererObj
+                    );
+                    if (symbol) {
+                      updateEntityWithEsriStyle(entity, symbol, that);
+                    }
+                  });
+
+                  // For a 'classBreaks' renderer symbology gets applied via classes or ranges of data.
+                } else if (renderer.type === "classBreaks") {
+                  const classBreaksRenderer = <ClassBreaksRenderer>renderer;
+                  entities.values.forEach(function(entity) {
+                    const symbol = getClassBreaksSymbol(
+                      entity,
+                      classBreaksRenderer
+                    );
+                    if (symbol) {
+                      updateEntityWithEsriStyle(entity, symbol, that);
+                    }
                   });
                 }
 
-                // For a 'uniqueValue' renderer symbology gets applied via feature properties.
-              } else if (renderer.type === "uniqueValue") {
-                const uniqueValueRenderer = <UniqueValueRenderer>renderer;
-                const rendererObj = setupUniqueValueRenderer(
-                  uniqueValueRenderer
-                );
-                entities.values.forEach(function(entity) {
-                  const symbol = getUniqueValueSymbol(
-                    entity,
-                    uniqueValueRenderer,
-                    rendererObj
-                  );
-                  if (symbol) {
-                    updateEntityWithEsriStyle(entity, symbol, that);
-                  }
-                });
+                entities.resumeEvents();
+              });
+            }
 
-                // For a 'classBreaks' renderer symbology gets applied via classes or ranges of data.
-              } else if (renderer.type === "classBreaks") {
-                const classBreaksRenderer = <ClassBreaksRenderer>renderer;
-                entities.values.forEach(function(entity) {
-                  const symbol = getClassBreaksSymbol(
-                    entity,
-                    classBreaksRenderer
-                  );
-                  if (symbol) {
-                    updateEntityWithEsriStyle(entity, symbol, that);
-                  }
-                });
-              }
-
-              entities.resumeEvents();
-            });
-          }
-
-          return Promise.resolve();
-        });
-      }
-    });
+            return Promise.resolve();
+          });
+        }
+      });
   }
 
   @computed get cacheDuration(): string {

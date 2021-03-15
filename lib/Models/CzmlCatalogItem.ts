@@ -36,54 +36,57 @@ export default class CzmlCatalogItem
     return isDefined(this._czmlFile);
   }
 
-  protected forceLoadMapItems(): Promise<void> {
-    return new Promise<string | readonly JsonObject[]>(resolve => {
-      if (isDefined(this.czmlData)) {
-        resolve(toJS(this.czmlData));
-      } else if (isDefined(this.czmlString)) {
-        resolve(JSON.parse(this.czmlString));
-      } else if (isDefined(this._czmlFile)) {
-        resolve(readJson(this._czmlFile));
-      } else if (isDefined(this.url)) {
-        resolve(this.url);
-      } else {
-        throw new TerriaError({
-          sender: this,
-          title: i18next.t("models.czml.unableToLoadItemTitle"),
-          message: i18next.t("models.czml.unableToLoadItemMessage")
-        });
-      }
-    })
-      .then(czmlLoadInput => {
-        return CzmlDataSource.load(czmlLoadInput, { credit: this.attribution });
-      })
-      .then(czml => {
-        this._dataSource = czml;
-      })
-      .catch(e => {
-        if (e instanceof TerriaError) {
-          throw e;
+  protected forceLoadMapItems() {
+    return () =>
+      new Promise<string | readonly JsonObject[]>(resolve => {
+        if (isDefined(this.czmlData)) {
+          resolve(toJS(this.czmlData));
+        } else if (isDefined(this.czmlString)) {
+          resolve(JSON.parse(this.czmlString));
+        } else if (isDefined(this._czmlFile)) {
+          resolve(readJson(this._czmlFile));
+        } else if (isDefined(this.url)) {
+          resolve(this.url);
         } else {
           throw new TerriaError({
             sender: this,
-            title: i18next.t("models.czml.errorLoadingTitle"),
-            message: i18next.t("models.czml.errorLoadingMessage", {
-              appName: this.terria.appName,
-              email:
-                '<a href="mailto:' +
-                this.terria.supportEmail +
-                '">' +
-                this.terria.supportEmail +
-                "</a>.",
-              stackTrace: e.stack || e.toString()
-            })
+            title: i18next.t("models.czml.unableToLoadItemTitle"),
+            message: i18next.t("models.czml.unableToLoadItemMessage")
           });
         }
-      });
+      })
+        .then(czmlLoadInput => {
+          return CzmlDataSource.load(czmlLoadInput, {
+            credit: this.attribution
+          });
+        })
+        .then(czml => {
+          this._dataSource = czml;
+        })
+        .catch(e => {
+          if (e instanceof TerriaError) {
+            throw e;
+          } else {
+            throw new TerriaError({
+              sender: this,
+              title: i18next.t("models.czml.errorLoadingTitle"),
+              message: i18next.t("models.czml.errorLoadingMessage", {
+                appName: this.terria.appName,
+                email:
+                  '<a href="mailto:' +
+                  this.terria.supportEmail +
+                  '">' +
+                  this.terria.supportEmail +
+                  "</a>.",
+                stackTrace: e.stack || e.toString()
+              })
+            });
+          }
+        });
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return Promise.resolve();
+  protected forceLoadMetadata() {
+    return () => Promise.resolve();
   }
 
   @computed

@@ -301,141 +301,150 @@ class WebFeatureServiceCatalogItem extends ExportableMixin(
     });
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
-    if (
-      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
-      undefined
-    )
-      return;
-    const stratum = await GetCapabilitiesStratum.load(this);
-    runInAction(() => {
-      this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
-    });
+  protected forceLoadMetadata() {
+    return async () => {
+      if (
+        this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
+        undefined
+      )
+        return;
+      const stratum = await GetCapabilitiesStratum.load(this);
+      runInAction(() => {
+        this.strata.set(
+          GetCapabilitiesMixin.getCapabilitiesStratumName,
+          stratum
+        );
+      });
+    };
   }
 
-  async forceLoadMapItems(): Promise<void> {
-    await this.loadMetadata();
-    const getCapabilitiesStratum:
-      | GetCapabilitiesStratum
-      | undefined = this.strata.get(
-      GetCapabilitiesMixin.getCapabilitiesStratumName
-    ) as GetCapabilitiesStratum;
+  forceLoadMapItems() {
+    return async () => {
+      await this.loadMetadata();
+      const getCapabilitiesStratum:
+        | GetCapabilitiesStratum
+        | undefined = this.strata.get(
+        GetCapabilitiesMixin.getCapabilitiesStratumName
+      ) as GetCapabilitiesStratum;
 
-    if (!this.uri) {
-      throw new TerriaError({
-        sender: this,
-        title: i18next.t("models.webFeatureServiceCatalogItem.missingUrlTitle"),
-        message: i18next.t(
-          "models.webFeatureServiceCatalogItem.missingUrlMessage",
+      if (!this.uri) {
+        throw new TerriaError({
+          sender: this,
+          title: i18next.t(
+            "models.webFeatureServiceCatalogItem.missingUrlTitle"
+          ),
+          message: i18next.t(
+            "models.webFeatureServiceCatalogItem.missingUrlMessage",
+            this
+          )
+        });
+      }
+
+      // Check if layers exist
+      const missingLayers = this.typeNamesArray.filter(
+        layer => !getCapabilitiesStratum.capabilitiesFeatureTypes.has(layer)
+      );
+      if (missingLayers.length > 0) {
+        throw new TerriaError({
+          sender: this,
+          title: i18next.t(
+            "models.webFeatureServiceCatalogItem.noLayerFoundTitle"
+          ),
+          message: i18next.t(
+            "models.webFeatureServiceCatalogItem.noLayerFoundMessage",
+            this
+          )
+        });
+      }
+
+      // Check if geojson output is supported (by checking GetCapabilities OutputTypes OR FeatureType OutputTypes)
+      const hasOutputFormat = (outputFormats: string[] | undefined) => {
+        return isDefined(
+          outputFormats?.find(format =>
+            ["json", "JSON", "application/json"].includes(format)
+          )
+        );
+      };
+
+      const supportsGeojson =
+        hasOutputFormat(getCapabilitiesStratum.capabilities.outputTypes) ||
+        [...getCapabilitiesStratum.capabilitiesFeatureTypes.values()].reduce<
+          boolean
+        >(
+          (hasGeojson, current) =>
+            hasGeojson && hasOutputFormat(current?.OutputFormats),
+          true
+        );
+
+      const url = this.uri
+        .clone()
+        .setSearch(
+          combine(
+            {
+              service: "WFS",
+              request: "GetFeature",
+              typeName: this.typeNames,
+              version: "1.1.0",
+              outputFormat: supportsGeojson ? "JSON" : "gml3",
+              srsName: "urn:ogc:def:crs:EPSG::4326", // srsName must be formatted like this for correct lat/long order  >:(
+              maxFeatures: this.maxFeatures
+            },
+            this.parameters
+          )
+        )
+        .toString();
+
+      const getFeatureResponse = await loadText(proxyCatalogItemUrl(this, url));
+
+      // Check for errors (if supportsGeojson and the request returns XML, OR the response includes ExceptionReport)
+      if (
+        (supportsGeojson && getFeatureResponse.startsWith("<")) ||
+        getFeatureResponse.includes("ExceptionReport")
+      ) {
+        let errorMessage: string | undefined;
+        try {
+          errorMessage = xml2json(getFeatureResponse).Exception?.ExceptionText;
+        } catch {}
+
+        throw new TerriaError({
+          sender: this,
+          title: i18next.t(
+            "models.webFeatureServiceCatalogItem.missingDataTitle"
+          ),
+          message: `${i18next.t(
+            "models.webFeatureServiceCatalogItem.missingDataMessage",
+            this
+          )} ${isDefined(errorMessage) ? `<br/>Error: ${errorMessage}` : ""}`
+        });
+      }
+
+      let geojsonData = supportsGeojson
+        ? JSON.parse(getFeatureResponse)
+        : gmlToGeoJson(getFeatureResponse);
+
+      runInAction(() => {
+        this.geojsonCatalogItem = new GeoJsonCatalogItem(
+          createGuid(),
+          this.terria,
           this
-        )
-      });
-    }
+        );
 
-    // Check if layers exist
-    const missingLayers = this.typeNamesArray.filter(
-      layer => !getCapabilitiesStratum.capabilitiesFeatureTypes.has(layer)
-    );
-    if (missingLayers.length > 0) {
-      throw new TerriaError({
-        sender: this,
-        title: i18next.t(
-          "models.webFeatureServiceCatalogItem.noLayerFoundTitle"
-        ),
-        message: i18next.t(
-          "models.webFeatureServiceCatalogItem.noLayerFoundMessage",
-          this
-        )
-      });
-    }
-
-    // Check if geojson output is supported (by checking GetCapabilities OutputTypes OR FeatureType OutputTypes)
-    const hasOutputFormat = (outputFormats: string[] | undefined) => {
-      return isDefined(
-        outputFormats?.find(format =>
-          ["json", "JSON", "application/json"].includes(format)
-        )
-      );
-    };
-
-    const supportsGeojson =
-      hasOutputFormat(getCapabilitiesStratum.capabilities.outputTypes) ||
-      [...getCapabilitiesStratum.capabilitiesFeatureTypes.values()].reduce<
-        boolean
-      >(
-        (hasGeojson, current) =>
-          hasGeojson && hasOutputFormat(current?.OutputFormats),
-        true
-      );
-
-    const url = this.uri
-      .clone()
-      .setSearch(
-        combine(
-          {
-            service: "WFS",
-            request: "GetFeature",
-            typeName: this.typeNames,
-            version: "1.1.0",
-            outputFormat: supportsGeojson ? "JSON" : "gml3",
-            srsName: "urn:ogc:def:crs:EPSG::4326", // srsName must be formatted like this for correct lat/long order  >:(
-            maxFeatures: this.maxFeatures
-          },
-          this.parameters
-        )
-      )
-      .toString();
-
-    const getFeatureResponse = await loadText(proxyCatalogItemUrl(this, url));
-
-    // Check for errors (if supportsGeojson and the request returns XML, OR the response includes ExceptionReport)
-    if (
-      (supportsGeojson && getFeatureResponse.startsWith("<")) ||
-      getFeatureResponse.includes("ExceptionReport")
-    ) {
-      let errorMessage: string | undefined;
-      try {
-        errorMessage = xml2json(getFeatureResponse).Exception?.ExceptionText;
-      } catch {}
-
-      throw new TerriaError({
-        sender: this,
-        title: i18next.t(
-          "models.webFeatureServiceCatalogItem.missingDataTitle"
-        ),
-        message: `${i18next.t(
-          "models.webFeatureServiceCatalogItem.missingDataMessage",
-          this
-        )} ${isDefined(errorMessage) ? `<br/>Error: ${errorMessage}` : ""}`
-      });
-    }
-
-    let geojsonData = supportsGeojson
-      ? JSON.parse(getFeatureResponse)
-      : gmlToGeoJson(getFeatureResponse);
-
-    runInAction(() => {
-      this.geojsonCatalogItem = new GeoJsonCatalogItem(
-        createGuid(),
-        this.terria,
-        this
-      );
-
-      this.geojsonCatalogItem.setTrait(
-        CommonStrata.definition,
-        "geoJsonData",
-        geojsonData
-      );
-
-      if (isDefined(this.style))
         this.geojsonCatalogItem.setTrait(
           CommonStrata.definition,
-          "style",
-          this.style
+          "geoJsonData",
+          geojsonData
         );
-    });
 
-    await this.geojsonCatalogItem!.loadMapItems();
+        if (isDefined(this.style))
+          this.geojsonCatalogItem.setTrait(
+            CommonStrata.definition,
+            "style",
+            this.style
+          );
+      });
+
+      await this.geojsonCatalogItem!.loadMapItems();
+    };
   }
 
   @computed

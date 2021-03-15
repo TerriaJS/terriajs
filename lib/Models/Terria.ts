@@ -376,8 +376,8 @@ export default class Terria {
 
   @observable
   readonly initSources: InitSource[] = [];
-  private _initSourceLoader = new AsyncLoader(
-    this.forceLoadInitSources.bind(this)
+  private _initSourceLoader = new AsyncLoader(() => () =>
+    this.forceLoadInitSources()
   );
 
   @observable serverConfig: any; // TODO

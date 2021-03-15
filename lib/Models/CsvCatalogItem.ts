@@ -156,8 +156,8 @@ export default class CsvCatalogItem extends AsyncChartableMixin(
     });
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return Promise.resolve();
+  protected forceLoadMetadata() {
+    return () => Promise.resolve();
   }
 
   protected forceLoadTableData(): Promise<string[][]> {

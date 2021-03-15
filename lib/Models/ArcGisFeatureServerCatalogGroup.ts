@@ -245,22 +245,24 @@ export default class ArcGisFeatureServerCatalogGroup extends UrlMixin(
     return i18next.t("models.arcGisFeatureServerCatalogGroup.name");
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return FeatureServerStratum.load(this).then(stratum => {
-      runInAction(() => {
-        this.strata.set(FeatureServerStratum.stratumName, stratum);
+  protected forceLoadMetadata() {
+    return () =>
+      FeatureServerStratum.load(this).then(stratum => {
+        runInAction(() => {
+          this.strata.set(FeatureServerStratum.stratumName, stratum);
+        });
       });
-    });
   }
 
-  protected forceLoadMembers(): Promise<void> {
-    return this.loadMetadata().then(() => {
-      const featureServerStratum = <FeatureServerStratum | undefined>(
-        this.strata.get(FeatureServerStratum.stratumName)
-      );
-      if (featureServerStratum) {
-        featureServerStratum.createMembersFromLayers();
-      }
-    });
+  protected forceLoadMembers() {
+    return () =>
+      this.loadMetadata().then(() => {
+        const featureServerStratum = <FeatureServerStratum | undefined>(
+          this.strata.get(FeatureServerStratum.stratumName)
+        );
+        if (featureServerStratum) {
+          featureServerStratum.createMembersFromLayers();
+        }
+      });
   }
 }

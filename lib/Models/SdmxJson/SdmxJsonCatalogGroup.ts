@@ -15,23 +15,27 @@ export default class SdmxCatalogGroup extends UrlMixin(
     return SdmxCatalogGroup.type;
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  protected forceLoadMetadata() {
     if (!this.strata.has(SdmxServerStratum.stratumName)) {
-      const stratum = await SdmxServerStratum.load(this);
-      runInAction(() => {
-        this.strata.set(SdmxServerStratum.stratumName, stratum);
-      });
+      return async () => {
+        const stratum = await SdmxServerStratum.load(this);
+        runInAction(() => {
+          this.strata.set(SdmxServerStratum.stratumName, stratum);
+        });
+      };
     }
+    return () => Promise.resolve();
   }
 
-  protected forceLoadMembers(): Promise<void> {
-    return this.loadMetadata().then(() => {
-      const sdmxServerStratum = <SdmxServerStratum | undefined>(
-        this.strata.get(SdmxServerStratum.stratumName)
-      );
-      if (sdmxServerStratum) {
-        sdmxServerStratum.createMembers();
-      }
-    });
+  protected forceLoadMembers() {
+    return () =>
+      this.loadMetadata().then(() => {
+        const sdmxServerStratum = <SdmxServerStratum | undefined>(
+          this.strata.get(SdmxServerStratum.stratumName)
+        );
+        if (sdmxServerStratum) {
+          sdmxServerStratum.createMembers();
+        }
+      });
   }
 }

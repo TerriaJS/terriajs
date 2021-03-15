@@ -40,8 +40,8 @@ export default class CompositeCatalogItem
     );
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return Promise.resolve();
+  protected forceLoadMetadata() {
+    return () => Promise.resolve();
   }
 
   loadMapItems(): Promise<void> {

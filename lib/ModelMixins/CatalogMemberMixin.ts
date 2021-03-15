@@ -39,7 +39,7 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
      * Forces load of the metadata. This method does _not_ need to consider
      * whether the metadata is already loaded.
      */
-    protected abstract forceLoadMetadata(): Promise<void>;
+    protected abstract forceLoadMetadata(): () => Promise<void>;
 
     get hasCatalogMemberMixin() {
       return true;

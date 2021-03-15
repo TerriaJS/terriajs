@@ -387,12 +387,13 @@ export default class ArcGisMapServerCatalogItem
     return ArcGisMapServerCatalogItem.type;
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return MapServerStratum.load(this).then(stratum => {
-      runInAction(() => {
-        this.strata.set(MapServerStratum.stratumName, stratum);
+  protected forceLoadMetadata() {
+    return () =>
+      MapServerStratum.load(this).then(stratum => {
+        runInAction(() => {
+          this.strata.set(MapServerStratum.stratumName, stratum);
+        });
       });
-    });
   }
 
   loadMapItems() {

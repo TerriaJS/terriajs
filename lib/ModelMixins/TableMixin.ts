@@ -487,21 +487,23 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       runInAction(() => (this.regionProviderList = regionProvidersPromise));
     }
 
-    private async forceLoadTableMixin(): Promise<void> {
-      await this.loadRegionProviderList();
-
-      const dataColumnMajor = await this.forceLoadTableData();
-      runInAction(() => {
-        this.dataColumnMajor = dataColumnMajor;
-      });
+    private forceLoadTableMixin(): () => Promise<void> {
+      return () =>
+        this.loadRegionProviderList().then(() => {
+          this.forceLoadTableData().then(
+            action(dataColumnMajor => {
+              this.dataColumnMajor = dataColumnMajor;
+            })
+          );
+        });
     }
 
     protected forceLoadChartItems(force?: boolean) {
-      return this._dataLoader.load(force);
+      return () => this._dataLoader.load(force);
     }
 
     protected forceLoadMapItems(force?: boolean) {
-      return this._dataLoader.load(force);
+      return () => this._dataLoader.load(force);
     }
 
     dispose() {

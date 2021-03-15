@@ -371,31 +371,33 @@ export default class ArcGisPortalCatalogGroup extends UrlMixin(
     return "0d";
   }
 
-  protected forceLoadMetadata(): Promise<void> {
+  protected forceLoadMetadata() {
     const portalStratum = <ArcGisPortalStratum | undefined>(
       this.strata.get(ArcGisPortalStratum.stratumName)
     );
     if (!portalStratum) {
-      return ArcGisPortalStratum.load(this).then(stratum => {
-        if (stratum === undefined) return;
-        runInAction(() => {
-          this.strata.set(ArcGisPortalStratum.stratumName, stratum);
+      return () =>
+        ArcGisPortalStratum.load(this).then(stratum => {
+          if (stratum === undefined) return;
+          runInAction(() => {
+            this.strata.set(ArcGisPortalStratum.stratumName, stratum);
+          });
         });
-      });
     } else {
-      return Promise.resolve();
+      return () => Promise.resolve();
     }
   }
 
-  protected forceLoadMembers(): Promise<void> {
-    return this.loadMetadata().then(() => {
-      const portalStratum = <ArcGisPortalStratum | undefined>(
-        this.strata.get(ArcGisPortalStratum.stratumName)
-      );
-      if (portalStratum) {
-        portalStratum.createMembersFromDatasets();
-      }
-    });
+  protected forceLoadMembers() {
+    return () =>
+      this.loadMetadata().then(() => {
+        const portalStratum = <ArcGisPortalStratum | undefined>(
+          this.strata.get(ArcGisPortalStratum.stratumName)
+        );
+        if (portalStratum) {
+          portalStratum.createMembersFromDatasets();
+        }
+      });
   }
 }
 

@@ -25,7 +25,7 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
     @observable
     private _target: BaseModel | undefined;
 
-    private _referenceLoader = new AsyncLoader(() => {
+    private _referenceLoader = new AsyncLoader(() => () => {
       const previousTarget = untracked(() => this._target);
       return this.forceLoadReference(previousTarget).then(target => {
         if (

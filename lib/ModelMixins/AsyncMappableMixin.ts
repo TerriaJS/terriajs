@@ -1,4 +1,4 @@
-import { computed, observable, runInAction } from "mobx";
+import { computed, observable, runInAction, IReactionPublic } from "mobx";
 import Constructor from "../Core/Constructor";
 import Mappable, { MapItem } from "../Models/Mappable";
 import Model from "../Models/Model";
@@ -14,7 +14,8 @@ function AsyncMappableMixin<T extends Constructor<Model<MappableTraits>>>(
     }
 
     private _mapItemsLoader = new AsyncLoader(
-      this.forceLoadMapItems.bind(this)
+      this.forceLoadMapItems.bind(this),
+      undefined
     );
 
     /**
@@ -39,7 +40,7 @@ function AsyncMappableMixin<T extends Constructor<Model<MappableTraits>>>(
      * Forces load of the maps items. This method does _not_ need to consider
      * whether the map items are already loaded.
      */
-    protected abstract forceLoadMapItems(): Promise<void>;
+    protected abstract forceLoadMapItems(): () => Promise<void>;
 
     dispose() {
       super.dispose();

@@ -22,7 +22,7 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
      * and `GroupMixin#memberModels` should be complete, but the individual
      * members will not necessarily be loaded themselves.
      */
-    protected abstract forceLoadMembers(): Promise<void>;
+    protected abstract forceLoadMembers(): () => Promise<void>;
 
     get isGroup() {
       return true;

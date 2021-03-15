@@ -55,42 +55,43 @@ class GpxCatalogItem extends AsyncMappableMixin(
     return toGeoJSON.gpx(dom);
   }
 
-  protected forceLoadMapItems(): Promise<void> {
-    return new Promise<string>(resolve => {
-      if (isDefined(this.gpxString)) {
-        resolve(this.gpxString);
-      } else if (isDefined(this._gpxFile)) {
-        resolve(readText(this._gpxFile));
-      } else if (isDefined(this.url)) {
-        resolve(loadText(proxyCatalogItemUrl(this, this.url)));
-      } else {
-        throw new TerriaError({
-          sender: this,
-          title: i18next.t("models.gpx.errorLoadingTitle"),
-          message: i18next.t("models.gpx.errorLoadingMessage")
-        });
-      }
-    })
-      .then(data => {
-        return this.loadGpxText(data);
+  protected forceLoadMapItems() {
+    return () =>
+      new Promise<string>(resolve => {
+        if (isDefined(this.gpxString)) {
+          resolve(this.gpxString);
+        } else if (isDefined(this._gpxFile)) {
+          resolve(readText(this._gpxFile));
+        } else if (isDefined(this.url)) {
+          resolve(loadText(proxyCatalogItemUrl(this, this.url)));
+        } else {
+          throw new TerriaError({
+            sender: this,
+            title: i18next.t("models.gpx.errorLoadingTitle"),
+            message: i18next.t("models.gpx.errorLoadingMessage")
+          });
+        }
       })
-      .then(geoJsonData => {
-        this._geoJsonItem.setTrait(
-          CommonStrata.definition,
-          "geoJsonData",
-          geoJsonData
-        );
-        this._geoJsonItem.setTrait(
-          CommonStrata.definition,
-          "attribution",
-          this.attribution
-        );
-        return this._geoJsonItem.loadMapItems();
-      });
+        .then(data => {
+          return this.loadGpxText(data);
+        })
+        .then(geoJsonData => {
+          this._geoJsonItem.setTrait(
+            CommonStrata.definition,
+            "geoJsonData",
+            geoJsonData
+          );
+          this._geoJsonItem.setTrait(
+            CommonStrata.definition,
+            "attribution",
+            this.attribution
+          );
+          return this._geoJsonItem.loadMapItems();
+        });
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return Promise.resolve();
+  protected forceLoadMetadata() {
+    return () => Promise.resolve();
   }
 
   get mapItems() {

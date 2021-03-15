@@ -47,14 +47,16 @@ export default class SdmxJsonCatalogItem
     );
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
-    // Load SdmxJsonDataflowStratum if needed
-    if (!this.strata.has(SdmxJsonDataflowStratum.stratumName)) {
-      const stratum = await SdmxJsonDataflowStratum.load(this);
-      runInAction(() => {
-        this.strata.set(SdmxJsonDataflowStratum.stratumName, stratum);
-      });
-    }
+  protected forceLoadMetadata(): () => Promise<void> {
+    return async () => {
+      // Load SdmxJsonDataflowStratum if needed
+      if (!this.strata.has(SdmxJsonDataflowStratum.stratumName)) {
+        const stratum = await SdmxJsonDataflowStratum.load(this);
+        runInAction(() => {
+          this.strata.set(SdmxJsonDataflowStratum.stratumName, stratum);
+        });
+      }
+    };
   }
 
   get type() {
@@ -105,8 +107,8 @@ export default class SdmxJsonCatalogItem
         this.regionMappedDimensionIds.length === 0,
       setDimensionValue: (stratumId: string, value: "time" | "region") => {
         this.setTrait(stratumId, "viewBy", value);
-        this.forceLoadMapItems(true);
-        this.forceLoadChartItems(true);
+        this.forceLoadMapItems(true)();
+        this.forceLoadChartItems(true)();
       }
     };
   }

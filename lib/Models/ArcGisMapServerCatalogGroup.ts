@@ -283,22 +283,24 @@ export default class ArcGisMapServerCatalogGroup extends UrlMixin(
     return "1d";
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return MapServerStratum.load(this).then(stratum => {
-      runInAction(() => {
-        this.strata.set(MapServerStratum.stratumName, stratum);
+  protected forceLoadMetadata() {
+    return () =>
+      MapServerStratum.load(this).then(stratum => {
+        runInAction(() => {
+          this.strata.set(MapServerStratum.stratumName, stratum);
+        });
       });
-    });
   }
 
-  protected forceLoadMembers(): Promise<void> {
-    return this.loadMetadata().then(() => {
-      const mapServerStratum = <MapServerStratum | undefined>(
-        this.strata.get(MapServerStratum.stratumName)
-      );
-      if (mapServerStratum) {
-        mapServerStratum.createMembersFromLayers();
-      }
-    });
+  protected forceLoadMembers() {
+    return () =>
+      this.loadMetadata().then(() => {
+        const mapServerStratum = <MapServerStratum | undefined>(
+          this.strata.get(MapServerStratum.stratumName)
+        );
+        if (mapServerStratum) {
+          mapServerStratum.createMembersFromLayers();
+        }
+      });
   }
 }

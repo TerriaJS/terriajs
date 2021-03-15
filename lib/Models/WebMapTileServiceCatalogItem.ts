@@ -454,20 +454,26 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
     });
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  protected forceLoadMetadata() {
     if (
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
       undefined
     )
-      return;
-    const stratum = await GetCapabilitiesStratum.load(this);
-    runInAction(() => {
-      this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
-    });
+      return () => Promise.resolve();
+
+    return async () => {
+      const stratum = await GetCapabilitiesStratum.load(this);
+      runInAction(() => {
+        this.strata.set(
+          GetCapabilitiesMixin.getCapabilitiesStratumName,
+          stratum
+        );
+      });
+    };
   }
 
-  forceLoadMapItems(): Promise<void> {
-    return this.loadMetadata();
+  forceLoadMapItems() {
+    return () => this.loadMetadata();
   }
 
   @computed get cacheDuration(): string {

@@ -71,15 +71,17 @@ class MapboxVectorTileCatalogItem extends AsyncMappableMixin(
   }
   readonly canZoomTo = true;
 
-  async forceLoadMetadata() {
-    const stratum = await MapboxVectorTileLoadableStratum.load(this);
-    runInAction(() => {
-      this.strata.set(MapboxVectorTileLoadableStratum.stratumName, stratum);
-    });
+  forceLoadMetadata() {
+    return async () => {
+      const stratum = await MapboxVectorTileLoadableStratum.load(this);
+      runInAction(() => {
+        this.strata.set(MapboxVectorTileLoadableStratum.stratumName, stratum);
+      });
+    };
   }
 
-  protected async forceLoadMapItems(): Promise<void> {
-    await this.loadMetadata();
+  protected forceLoadMapItems() {
+    return () => this.loadMetadata();
   }
 
   @computed

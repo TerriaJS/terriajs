@@ -214,21 +214,23 @@ export default class GeoRssCatalogItem
     return true;
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return GeoRssStratum.load(this).then(stratum => {
-      runInAction(() => {
-        this.strata.set(GeoRssStratum.stratumName, stratum);
+  protected forceLoadMetadata() {
+    return () =>
+      GeoRssStratum.load(this).then(stratum => {
+        runInAction(() => {
+          this.strata.set(GeoRssStratum.stratumName, stratum);
+        });
       });
-    });
   }
 
-  protected forceLoadMapItems(): Promise<void> {
+  protected forceLoadMapItems() {
     const that = this;
-    return that.loadMetadata().then(() => {
-      if (isDefined(that.geoJsonItem)) {
-        return that.geoJsonItem.loadMapItems();
-      }
-    });
+    return () =>
+      that.loadMetadata().then(() => {
+        if (isDefined(that.geoJsonItem)) {
+          return that.geoJsonItem.loadMapItems();
+        }
+      });
   }
 
   @computed get cacheDuration(): string {

@@ -293,31 +293,33 @@ export default class CkanCatalogGroup extends UrlMixin(
     return "1d";
   }
 
-  protected forceLoadMetadata(): Promise<void> {
+  protected forceLoadMetadata() {
     const ckanServerStratum = <CkanServerStratum | undefined>(
       this.strata.get(CkanServerStratum.stratumName)
     );
     if (!ckanServerStratum) {
-      return CkanServerStratum.load(this).then(stratum => {
-        if (stratum === undefined) return;
-        runInAction(() => {
-          this.strata.set(CkanServerStratum.stratumName, stratum);
+      return () =>
+        CkanServerStratum.load(this).then(stratum => {
+          if (stratum === undefined) return;
+          runInAction(() => {
+            this.strata.set(CkanServerStratum.stratumName, stratum);
+          });
         });
-      });
     } else {
-      return Promise.resolve();
+      return () => Promise.resolve();
     }
   }
 
-  protected forceLoadMembers(): Promise<void> {
-    return this.loadMetadata().then(() => {
-      const ckanServerStratum = <CkanServerStratum | undefined>(
-        this.strata.get(CkanServerStratum.stratumName)
-      );
-      if (ckanServerStratum) {
-        ckanServerStratum.createMembersFromDatasets();
-      }
-    });
+  protected forceLoadMembers() {
+    return () =>
+      this.loadMetadata().then(() => {
+        const ckanServerStratum = <CkanServerStratum | undefined>(
+          this.strata.get(CkanServerStratum.stratumName)
+        );
+        if (ckanServerStratum) {
+          ckanServerStratum.createMembersFromDatasets();
+        }
+      });
   }
 }
 

@@ -273,49 +273,53 @@ export default class ArcGisCatalogGroup extends UrlMixin(
     return "1d";
   }
 
-  protected forceLoadMetadata(): Promise<void> {
+  protected forceLoadMetadata() {
     const url = this.url || "";
     if (/\/MapServer(\/?.*)?$/i.test(url)) {
-      return MapServerStratum.load(this).then(stratum => {
-        runInAction(() => {
-          this.strata.set(MapServerStratum.stratumName, stratum);
+      return () =>
+        MapServerStratum.load(this).then(stratum => {
+          runInAction(() => {
+            this.strata.set(MapServerStratum.stratumName, stratum);
+          });
         });
-      });
     } else if (/\/FeatureServer(\/.*)?$/i.test(url)) {
-      return FeatureServerStratum.load(this).then(stratum => {
-        runInAction(() => {
-          this.strata.set(FeatureServerStratum.stratumName, stratum);
+      return () =>
+        FeatureServerStratum.load(this).then(stratum => {
+          runInAction(() => {
+            this.strata.set(FeatureServerStratum.stratumName, stratum);
+          });
         });
-      });
     } else {
-      return ArcGisServerStratum.load(this).then(stratum => {
-        runInAction(() => {
-          this.strata.set(ArcGisServerStratum.stratumName, stratum);
+      return () =>
+        ArcGisServerStratum.load(this).then(stratum => {
+          runInAction(() => {
+            this.strata.set(ArcGisServerStratum.stratumName, stratum);
+          });
         });
-      });
     }
   }
 
-  protected forceLoadMembers(): Promise<void> {
-    return this.loadMetadata().then(() => {
-      const arcgisServerStratum = <
-        | ArcGisServerStratum
-        | MapServerStratum
-        | FeatureServerStratum
-        | undefined
-      >(this.strata.get(ArcGisServerStratum.stratumName) ||
-        this.strata.get(MapServerStratum.stratumName) ||
-        this.strata.get(FeatureServerStratum.stratumName));
-      if (arcgisServerStratum instanceof ArcGisServerStratum) {
-        arcgisServerStratum.createMembersFromFolders();
-        arcgisServerStratum.createMembersFromServices();
-      } else if (
-        arcgisServerStratum instanceof MapServerStratum ||
-        arcgisServerStratum instanceof FeatureServerStratum
-      ) {
-        arcgisServerStratum.createMembersFromLayers();
-      }
-    });
+  protected forceLoadMembers() {
+    return () =>
+      this.loadMetadata().then(() => {
+        const arcgisServerStratum = <
+          | ArcGisServerStratum
+          | MapServerStratum
+          | FeatureServerStratum
+          | undefined
+        >(this.strata.get(ArcGisServerStratum.stratumName) ||
+          this.strata.get(MapServerStratum.stratumName) ||
+          this.strata.get(FeatureServerStratum.stratumName));
+        if (arcgisServerStratum instanceof ArcGisServerStratum) {
+          arcgisServerStratum.createMembersFromFolders();
+          arcgisServerStratum.createMembersFromServices();
+        } else if (
+          arcgisServerStratum instanceof MapServerStratum ||
+          arcgisServerStratum instanceof FeatureServerStratum
+        ) {
+          arcgisServerStratum.createMembersFromLayers();
+        }
+      });
   }
 }
 

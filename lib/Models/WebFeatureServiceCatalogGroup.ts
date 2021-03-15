@@ -223,26 +223,34 @@ export default class WebFeatureServiceCatalogGroup extends GetCapabilitiesMixin(
     return WebFeatureServiceCatalogGroup.type;
   }
 
-  protected async forceLoadMetadata(): Promise<void> {
+  protected forceLoadMetadata() {
     if (
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
       undefined
     )
-      return;
-    const stratum = await GetCapabilitiesStratum.load(this);
-    runInAction(() => {
-      this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
-    });
+      return () => Promise.resolve();
+
+    return async () => {
+      const stratum = await GetCapabilitiesStratum.load(this);
+      runInAction(() => {
+        this.strata.set(
+          GetCapabilitiesMixin.getCapabilitiesStratumName,
+          stratum
+        );
+      });
+    };
   }
 
-  protected async forceLoadMembers(): Promise<void> {
-    await this.loadMetadata();
-    const getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
-      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
-    );
-    if (getCapabilitiesStratum) {
-      getCapabilitiesStratum.createMembersFromLayers();
-    }
+  protected forceLoadMembers() {
+    return async () => {
+      await this.loadMetadata();
+      const getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
+        this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
+      );
+      if (getCapabilitiesStratum) {
+        getCapabilitiesStratum.createMembersFromLayers();
+      }
+    };
   }
 
   protected get defaultGetCapabilitiesUrl(): string | undefined {

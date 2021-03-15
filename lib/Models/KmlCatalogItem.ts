@@ -52,7 +52,7 @@ class KmlCatalogItem extends AsyncMappableMixin(
     return "1d";
   }
 
-  protected forceLoadMapItems(): Promise<void> {
+  protected forceLoadMapItems() {
     const createLoadError = () =>
       new TerriaError({
         sender: this,
@@ -68,40 +68,41 @@ class KmlCatalogItem extends AsyncMappableMixin(
         })
       });
 
-    return new Promise<string | Resource | Document | Blob>(resolve => {
-      if (isDefined(this.kmlString)) {
-        const parser = new DOMParser();
-        resolve(parser.parseFromString(this.kmlString, "text/xml"));
-      } else if (isDefined(this._kmlFile)) {
-        if (this._kmlFile.name && this._kmlFile.name.match(kmzRegex)) {
-          resolve(this._kmlFile);
+    return () =>
+      new Promise<string | Resource | Document | Blob>(resolve => {
+        if (isDefined(this.kmlString)) {
+          const parser = new DOMParser();
+          resolve(parser.parseFromString(this.kmlString, "text/xml"));
+        } else if (isDefined(this._kmlFile)) {
+          if (this._kmlFile.name && this._kmlFile.name.match(kmzRegex)) {
+            resolve(this._kmlFile);
+          } else {
+            resolve(readXml(this._kmlFile));
+          }
+        } else if (isDefined(this.url)) {
+          resolve(proxyCatalogItemUrl(this, this.url));
         } else {
-          resolve(readXml(this._kmlFile));
+          throw new TerriaError({
+            sender: this,
+            title: i18next.t("models.kml.unableToLoadItemTitle"),
+            message: i18next.t("models.kml.unableToLoadItemMessage")
+          });
         }
-      } else if (isDefined(this.url)) {
-        resolve(proxyCatalogItemUrl(this, this.url));
-      } else {
-        throw new TerriaError({
-          sender: this,
-          title: i18next.t("models.kml.unableToLoadItemTitle"),
-          message: i18next.t("models.kml.unableToLoadItemMessage")
+      })
+        .then(kmlLoadInput => {
+          return KmlDataSource.load(kmlLoadInput);
+        })
+        .then(dataSource => {
+          this._dataSource = dataSource;
+          this.doneLoading(dataSource); // Unsure if this is necessary
+        })
+        .catch(e => {
+          if (e instanceof TerriaError) {
+            throw e;
+          } else {
+            throw createLoadError();
+          }
         });
-      }
-    })
-      .then(kmlLoadInput => {
-        return KmlDataSource.load(kmlLoadInput);
-      })
-      .then(dataSource => {
-        this._dataSource = dataSource;
-        this.doneLoading(dataSource); // Unsure if this is necessary
-      })
-      .catch(e => {
-        if (e instanceof TerriaError) {
-          throw e;
-        } else {
-          throw createLoadError();
-        }
-      });
   }
 
   @computed
@@ -113,8 +114,8 @@ class KmlCatalogItem extends AsyncMappableMixin(
     return [this._dataSource];
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return Promise.resolve();
+  protected forceLoadMetadata() {
+    return () => Promise.resolve();
   }
 
   private doneLoading(kmlDataSource: KmlDataSource) {

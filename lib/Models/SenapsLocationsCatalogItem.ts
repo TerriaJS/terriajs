@@ -247,13 +247,14 @@ class SenapsLocationsCatalogItem extends AsyncMappableMixin(
 
   readonly canZoomTo = true;
 
-  protected forceLoadMapItems(): Promise<void> {
-    return SenapsLocationsStratum.load(this).then(stratum => {
-      if (stratum === undefined) return;
-      runInAction(() => {
-        this.strata.set(SenapsLocationsStratum.stratumName, stratum);
+  protected forceLoadMapItems() {
+    return () =>
+      SenapsLocationsStratum.load(this).then(stratum => {
+        if (stratum === undefined) return;
+        runInAction(() => {
+          this.strata.set(SenapsLocationsStratum.stratumName, stratum);
+        });
       });
-    });
   }
 
   @computed get geoJsonItem() {
@@ -273,8 +274,8 @@ class SenapsLocationsCatalogItem extends AsyncMappableMixin(
     return [];
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return Promise.resolve();
+  protected forceLoadMetadata() {
+    return () => Promise.resolve();
   }
 
   _constructLocationsUrl() {

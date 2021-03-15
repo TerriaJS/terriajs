@@ -42,7 +42,7 @@ function AsyncChartableMixin<T extends Constructor<Model<MappableTraits>>>(
      * Forces load of the chart items. This method does _not_ need to consider
      * whether the chart items are already loaded.
      */
-    protected abstract forceLoadChartItems(): Promise<void>;
+    protected abstract forceLoadChartItems(): () => Promise<void>;
 
     dispose() {
       super.dispose();

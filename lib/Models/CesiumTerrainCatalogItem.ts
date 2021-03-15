@@ -22,11 +22,11 @@ export default class CesiumTerrainCatalogItem
   }
 
   protected forceLoadMetadata() {
-    return Promise.resolve();
+    return () => Promise.resolve();
   }
 
   protected forceLoadMapItems() {
-    return Promise.resolve();
+    return () => Promise.resolve();
   }
 
   @computed

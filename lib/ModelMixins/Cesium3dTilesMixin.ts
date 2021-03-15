@@ -82,31 +82,32 @@ export default function Cesium3dTilesMixin<
     }
 
     protected forceLoadMetadata() {
-      return Promise.resolve();
+      return () => Promise.resolve();
     }
 
     protected forceLoadMapItems() {
       this.loadTileset();
       if (this.tileset) {
-        return makeRealPromise<Cesium3DTileset>(this.tileset.readyPromise)
-          .then(tileset => {
-            if (
-              tileset.extras !== undefined &&
-              tileset.extras.style !== undefined
-            ) {
-              runInAction(() => {
-                this.strata.set(
-                  CommonStrata.defaults,
-                  createStratumInstance(Cesium3DTilesCatalogItemTraits, {
-                    style: tileset.extras.style
-                  })
-                );
-              });
-            }
-          }) // TODO: What should handle this error?
-          .catch(e => console.error(e));
+        return () =>
+          makeRealPromise<Cesium3DTileset>(this.tileset!.readyPromise)
+            .then(tileset => {
+              if (
+                tileset.extras !== undefined &&
+                tileset.extras.style !== undefined
+              ) {
+                runInAction(() => {
+                  this.strata.set(
+                    CommonStrata.defaults,
+                    createStratumInstance(Cesium3DTilesCatalogItemTraits, {
+                      style: tileset.extras.style
+                    })
+                  );
+                });
+              }
+            }) // TODO: What should handle this error?
+            .catch(e => console.error(e));
       } else {
-        return Promise.resolve();
+        return () => Promise.resolve();
       }
     }
 

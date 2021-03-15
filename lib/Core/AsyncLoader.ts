@@ -1,80 +1,88 @@
-import { observable, computed, runInAction, toJS, action } from "mobx";
+import {
+  action,
+  IReactionDisposer,
+  IReactionPublic,
+  observable,
+  reaction,
+  runInAction
+} from "mobx";
 
-export default class AsyncLoader {
+export default class AsyncLoader<T> {
   @observable
   private _isLoading: boolean = false;
 
-  @observable
-  private _forceReloadCount: number = 0;
-
   private _promise: Promise<void> | undefined = undefined;
 
-  @computed({ keepAlive: true })
-  private get loadKeepAlive(): Promise<void> {
-    // We don't do much with _forceReloadCount directly, but by accessing it
-    // we will cause a new load to be triggered when it changes. If it's value
-    // is -1, we don't call the `loadCallback` at all, so this keepAlive'd
-    // observable will no longer depend on anything, which avoids creating
-    // a memory leak when this loader is no longer needed.
-    if (this._forceReloadCount < 0) {
-      if (this.disposeCallback) {
-        return this.disposeCallback();
-      } else {
-        return Promise.resolve();
-      }
-    }
+  private dependencyDisposer?: IReactionDisposer;
 
-    return this.loadCallback();
-  }
+  private loadCallback: (() => Promise<void>) | undefined;
+  private dependenciesChanged = false;
 
   constructor(
-    readonly loadCallback: () => Promise<void>,
+    readonly loadCallbackFn: () => () => Promise<void>,
     readonly disposeCallback?: () => Promise<void>
   ) {}
+
+  load(forceReload: boolean = false): Promise<void> {
+    if (!this.dependencyDisposer) {
+      reaction(
+        () => this.loadCallbackFn(),
+        (loadCallback, effect) => {
+          this.loadCallback = loadCallback;
+          console.log(`updated loadcallback`);
+          console.log(effect.trace());
+          console.log(loadCallback);
+          this.dependenciesChanged = true;
+        },
+        { fireImmediately: true }
+      );
+    }
+
+    if (!this.loadCallback) {
+      console.log(`loadCallback doesn't exist!!`);
+      return Promise.resolve();
+    }
+
+    if (this._promise) return this._promise;
+
+    if (forceReload || this.dependenciesChanged) {
+      this.dependenciesChanged = false;
+    }
+
+    runInAction(() => {
+      this._isLoading = true;
+    });
+
+    console.log("loading");
+    console.log(this);
+
+    this._promise = this.loadCallback();
+
+    this._promise
+      .then(result => {
+        runInAction(() => {
+          this._isLoading = false;
+        });
+        return result;
+      })
+      .catch(e => {
+        runInAction(() => {
+          this._isLoading = false;
+        });
+
+        // Do not re-throw the exception because it's guaranteed to be
+        // unhandled. We're returning the original `newPromise`, not the
+        // result of the `.then` and `.catch` above.
+      });
+
+    return this._promise;
+  }
 
   /**
    * Gets a value indicating whether we are currently loading.
    */
   get isLoading(): boolean {
     return this._isLoading;
-  }
-
-  load(forceReload: boolean = false): Promise<void> {
-    if (forceReload) {
-      ++this._forceReloadCount;
-    }
-
-    const newPromise = this.loadKeepAlive;
-    if (newPromise !== this._promise) {
-      if (this._promise) {
-        // TODO - cancel old promise
-        //this._metadataPromise.cancel();
-      }
-
-      this._promise = newPromise;
-
-      runInAction(() => {
-        this._isLoading = true;
-      });
-      newPromise
-        .then(result => {
-          runInAction(() => {
-            this._isLoading = false;
-          });
-          return result;
-        })
-        .catch(e => {
-          runInAction(() => {
-            this._isLoading = false;
-          });
-
-          // Do not re-throw the exception because it's guaranteed to be
-          // unhandled. We're returning the original `newPromise`, not the
-          // result of the `.then` and `.catch` above.
-        });
-    }
-
-    return newPromise;
   }
 
   /**
@@ -84,7 +92,7 @@ export default class AsyncLoader {
    */
   @action
   dispose() {
-    this._forceReloadCount = -1;
-    this.load();
+    this._promise = undefined;
+    if (this.dependencyDisposer) this.dependencyDisposer();
   }
 }

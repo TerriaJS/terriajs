@@ -210,15 +210,18 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     return proxyCatalogItemUrl(this, uri.toString());
   }
 
-  async forceLoadMetadata() {
+  forceLoadMetadata() {
     if (!this.strata.has(WpsLoadableStratum.stratumName)) {
-      const stratum = await WpsLoadableStratum.load(this);
-      if (isDefined(stratum)) {
-        runInAction(() => {
-          this.strata.set(WpsLoadableStratum.stratumName, stratum);
-        });
-      }
+      return async () => {
+        const stratum = await WpsLoadableStratum.load(this);
+        if (isDefined(stratum)) {
+          runInAction(() => {
+            this.strata.set(WpsLoadableStratum.stratumName, stratum);
+          });
+        }
+      };
     }
+    return () => Promise.resolve();
   }
 
   /**

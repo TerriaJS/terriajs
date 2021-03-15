@@ -30,6 +30,6 @@ export default class StubCatalogItem extends CatalogMemberMixin(
   }
 
   forceLoadMetadata() {
-    return Promise.resolve();
+    return () => Promise.resolve();
   }
 }

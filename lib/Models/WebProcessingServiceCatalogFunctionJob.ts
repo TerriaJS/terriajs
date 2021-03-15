@@ -400,21 +400,25 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     return [];
   }
 
-  protected async forceLoadMetadata() {
-    await super.forceLoadMetadata();
-    const stratum = await WpsLoadableStratum.load(this);
-    runInAction(() => {
-      this.strata.set(WpsLoadableStratum.stratumName, stratum);
-    });
+  protected forceLoadMetadata() {
+    return async () => {
+      await super.forceLoadMetadata()();
+      const stratum = await WpsLoadableStratum.load(this);
+      runInAction(() => {
+        this.strata.set(WpsLoadableStratum.stratumName, stratum);
+      });
+    };
   }
 
-  protected async forceLoadMapItems(): Promise<void> {
-    await this.loadMetadata();
-    await super.forceLoadMapItems();
-    if (isDefined(this.geoJsonItem)) {
-      const geoJsonItem = this.geoJsonItem;
-      await runInAction(() => geoJsonItem.loadMapItems());
-    }
+  protected forceLoadMapItems() {
+    return async () => {
+      await this.loadMetadata();
+      await super.forceLoadMapItems()();
+      if (isDefined(this.geoJsonItem)) {
+        const geoJsonItem = this.geoJsonItem;
+        await runInAction(() => geoJsonItem.loadMapItems());
+      }
+    };
   }
 
   /**
