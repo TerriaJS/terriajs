@@ -31,6 +31,22 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       return this._metadataLoader.isLoading;
     }
 
+    /**
+     * We can't use this until AsyncLoader.isLoading (https://github.com/TerriaJS/terriajs/issues/5233) is fixed
+     */
+    @computed
+    get isLoading() {
+      return false;
+
+      // return (
+      //   this.isLoadingMetadata ||
+      //   (AsyncMappableMixin.isMixedInto(this) && this.isLoadingMapItems) ||
+      //   (AsyncChartableMixin.isMixedInto(this) && this.isLoadingChartItems) ||
+      //   (ReferenceMixin.is(this) && this.isLoadingReference) ||
+      //   (GroupMixin.isMixedInto(this) && this.isLoadingMembers)
+      // );
+    }
+
     loadMetadata(): Promise<void> {
       return this._metadataLoader.load();
     }

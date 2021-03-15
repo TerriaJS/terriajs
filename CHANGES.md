@@ -13,6 +13,9 @@ Change Log
 * Fix region mapping feature highlighting.
 * Update clipboard to fix clipboard typing error.
 * Add support for time on `ArcGisMapServerCatalogItem`
+* Add `isLoading` to `CatalogMemberMixin` placeholder until `AsyncLoader` loading problems are sorted (https://github.com/TerriaJS/terriajs/issues/5233)
+* Move `Loader` (spinner) from `Legend` to `WorkbenchItem`.
+* Fix clipboard typing error. 
 * [The next improvement]
 
 #### 8.0.0-alpha.67
