@@ -92,6 +92,11 @@ export default class TerriaViewer {
       newViewer = untracked(
         () => new CesiumOrNoViewer(this, this.mapContainer!)
       );
+    } else if (this.attached && this.viewerMode === ViewerMode.Mapbox) {
+      const MapboxOrNoViewer = this._getMapboxIfLoaded();
+      newViewer = untracked(
+        () => new MapboxOrNoViewer(this, this.mapContainer!)
+      );
     } else {
       newViewer = untracked(() => new NoViewer(this));
     }
@@ -118,6 +123,26 @@ export default class TerriaViewer {
       return this._cesiumPromise.value;
     } else {
       // TODO: Handle error loading Cesium. What do you do if a bundle doesn't load?
+      return NoViewer;
+    }
+  }
+
+  @computed({
+    keepAlive: true
+  })
+  private get _mapboxPromise() {
+    return fromPromise(
+      import("../Models/MapboxGL").then(Mapbox => Mapbox.default)
+    );
+  }
+
+  private _getMapboxIfLoaded():
+    | typeof import("../Models/MapboxGL").default
+    | typeof NoViewer {
+    if (this._mapboxPromise.state === FULFILLED) {
+      return this._mapboxPromise.value;
+    } else {
+      // TODO: Handle error loading Leaflet. What do you do if a bundle doesn't load?
       return NoViewer;
     }
   }

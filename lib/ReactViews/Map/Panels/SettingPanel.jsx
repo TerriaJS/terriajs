@@ -101,6 +101,8 @@ class SettingPanel extends React.Component {
       mainViewer.viewerOptions.useTerrain = viewer === "3d";
     } else if (viewer === "2d") {
       mainViewer.viewerMode = "leaflet";
+    } else if (viewer === "mapbox") {
+      mainViewer.viewerMode = "mapbox";
     } else {
       console.error(`Trying to select ViewerMode ${viewer} that doesn't exist`);
     }
@@ -146,6 +148,7 @@ class SettingPanel extends React.Component {
     const viewerModeLabels = {
       "3d": t("settingPanel.viewerModeLabels.CesiumTerrain"),
       "3dsmooth": t("settingPanel.viewerModeLabels.CesiumEllipsoid"),
+      mapbox: t("settingPanel.viewerModeLabels.Mapbox"),
       "2d": t("settingPanel.viewerModeLabels.Leaflet")
     };
     const qualityLabels = {
@@ -201,7 +204,7 @@ class SettingPanel extends React.Component {
       viewerModes.push("3d");
     }
 
-    viewerModes.push("3dsmooth", "2d");
+    viewerModes.push("3dsmooth", "mapbox", "2d");
 
     const supportsSide = isCesiumWithTerrain;
 

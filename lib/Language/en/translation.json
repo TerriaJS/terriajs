@@ -229,6 +229,7 @@
     "viewerModeLabels": {
       "CesiumTerrain": "3D Terrain",
       "CesiumEllipsoid": "3D Smooth",
+      "Mapbox": "Mapbox",
       "Leaflet": "2D"
     },
     "qualityLabels": {

@@ -2,6 +2,7 @@
 
 enum ViewerMode {
   Cesium = "cesium",
-  Leaflet = "leaflet"
+  Leaflet = "leaflet",
+  Mapbox = "mapbox"
 }
 export default ViewerMode;
