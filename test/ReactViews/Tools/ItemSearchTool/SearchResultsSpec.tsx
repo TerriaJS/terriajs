@@ -3,16 +3,18 @@ import { act, create, ReactTestRenderer } from "react-test-renderer";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import { ItemSearchResult } from "../../../../lib/Models/ItemSearchProvider";
+import Terria from "../../../../lib/Models/Terria";
 import SearchResults, {
   ResultsCount,
   SearchResultsProps
 } from "../../../../lib/ReactViews/Tools/ItemSearchTool/SearchResults";
+import MockSearchableItem from "./MockSearchableItem";
 
 describe("SearchResults", function() {
   it("shows the results count", async function() {
     const { root } = await render({
-      results: sampleResults(20),
-      onSelectResult: () => {}
+      item: new MockSearchableItem(undefined, new Terria()),
+      results: sampleResults(20)
     });
     const resultsCount = root.findByType(ResultsCount);
     expect(resultsCount.props).toEqual(
@@ -40,9 +42,7 @@ function sampleResults(count: number): ItemSearchResult[] {
   return [...Array(count)].map(i => ({
     id: `building-${i}`,
     idPropertyName: "building-id",
-    zoomToTarget: {
-      boundingSphere: new BoundingSphere(center, radius)
-    },
+    zoomToTarget: new BoundingSphere(center, radius),
     properties: {
       name: `bldg-${i}`
     }

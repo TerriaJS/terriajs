@@ -106,7 +106,11 @@
       "title": "Error Loading {{toolName}} Tool",
       "message": "An error occurred while trying to load the this tool from the server. Please try again."
     },
-    "exitBtnTitle": "Exit"
+    "exitBtnTitle": "Exit",
+    "button": {
+      "open": "Exit {{toolNameLowerCase}}",
+      "closed": "{{toolName}}"
+    }
   },
   "diffTool": {
     "title": "Difference",
@@ -243,7 +247,21 @@
     "nativeResolutionHeader": "Use native device resolution",
     "mapQuality": "Raster Map Quality:",
     "qualityLabel": "Quality",
-    "performanceLabel": "Performance"
+    "performanceLabel": "Performance",
+    "timeline": {
+      "alwaysShowLabel": "Press to start only showing the timeline when there are time-varying datasets on the workbench",
+      "hideLabel": "Press to start always showing the timeline, even when no time-varying datasets are on the workbench",
+      "alwaysShow": "Always show"
+    },
+    "terrain": {
+      "hideUnderground": "Terrain hides underground features",
+      "showUndergroundFeatures": "Press to start showing features that are underneath the terrain surface",
+      "hideUndergroundFeatures": "Press to start hiding features that are underneath the terrain surface",
+      "sideLabel": "Show Terrain on the",
+      "left": "Left",
+      "both": "Both",
+      "right": "Right"
+    }
   },
   "feedback": {
     "feedbackPreamble": "We would love to hear from you!",
@@ -453,7 +471,7 @@
     "wfs": "This is a <1>WFS service</1>, which transfers raw spatial data on request. It can be used in GIS software with this URL:",
     "layerName": "Layer name",
     "typeName": "Type name",
-    "metadataUrl": "Metadata URL",
+    "metadataUrls": "Metadata Links",
     "dataUrl": "Data URL",
     "useLinkBelow": "Use the link below to download the data. See the {{link}} for more information on customising URL query parameters.",
     "downloadInFormat": "Download the currently selected data in {{format}} format",
@@ -946,15 +964,20 @@
       "name": "Catalogue Service (CSW)",
       "unknownError": "The CSW server reported an unknown error.",
       "exceptionMessage": "The CSW server reported an error:\n\n {{exceptionText}}",
+      "errorLoadingTitle": "Could not load CSW",
       "notUseableTitle": "Catalogue service is not useable",
       "notUseableMessage": "Invalid response obtained when invoking GetDomain on the CSW server. <p>This error may indicate that the catalogue server you specified is temporarily unavailable or there is a problem with your internet connection.  Try opening the processing server again, and if the problem persists, please report it by sending an email to ",
+      "errorLoadingRecordsTitle": "Failed to load CSW records.",
+      "errorLoadingRecordsMessage": "Invalid response obtained when invoking GetRecords on the CSW server. <p>This error may indicate that the catalogue server you specified is temporarily unavailable or there is a problem with your internet connection.  Try opening the processing server again, and if the problem persists, please report it by sending an email to ",
       "checkCORSDomain": "Couldn't execute GetDomain on this CSW server.<br/><br/> If you entered the URL manually, please double-check it.<br/><br/> If it's your server, make sure <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a> is enabled.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}} with the technical details below.  Thank you!",
       "checkCORSRecords": "Couldn't execute GetRecords on this CSW server.<br/><br/> If it's your server, make sure <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a> is enabled.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}} with the technical details below.  Thank you!",
       "dataResponsibility": "Data Responsibility",
       "links": "Links",
       "metadataURL": "Metadata Record URL",
       "checkCORS": "Couldn't execute GetRecords on this CSW server.<br/><br/> If you entered the URL manually, please double-check it.<br/><br/> If it's your server, make sure {{cors}} is enabled.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}}",
-      "cors": "CORS"
+      "cors": "CORS",
+      "missingUrlTitle": "Unable to load Catalogue Service (CSW)",
+      "missingUrlMessage": "Could not load the Catalogue Service (CSW) because the catalog group does not have a `url`."
     },
     "czml": {
       "name": "Cesium Language (CZML)",
@@ -1457,10 +1480,21 @@
     "resetBtnText": "Clear input",
     "backBtnText": "Search again",
     "resultsCount": "{{count}} match found",
-    "resultsCount_plural": "{{count}} matches found"
+    "resultsCount_plural": "{{count}} matches found",
+    "actions": {
+      "highlightAll": "Highlight all",
+      "showMatchingOnly": "Show matching only"
+    }
   },
   "indexedItemSearchProvider": {
     "missingOptionIndexRootUrl": "Option `indexRootUrl` is missing in the item's search configuration.",
     "errorParsingIndexRoot": "Error parsing indexRoot file: {{indexRootUrl}}."
+  },
+  "pedestrianMode": {
+    "toolButtonTitle": "Pedestrian Mode",
+    "dropPedestrianTooltipMessage": "<b>Left click</b> to select drop location<br /><b>Right click / Esc</b> to cancel",
+    "controls": {
+      "title": "Controls"
+    }
   }
 }

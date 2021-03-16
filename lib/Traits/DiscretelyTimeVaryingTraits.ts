@@ -34,7 +34,7 @@ export default class DiscretelyTimeVaryingTraits extends mixTraits(
     description:
       "Type determines how the data availibility will be plotted on chart. eg: momentLines, momentPoints"
   })
-  chartType: ChartItemType = "momentLines";
+  chartType?: ChartItemType;
 
   // This trait proabably doesn't belong here and should instead be on a new
   //  trait class ChartTraits, however there are complexities to changing

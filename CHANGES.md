@@ -3,13 +3,73 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.66)
+#### next release (8.0.0-alpha.68)
+* Remove points from rectangle `UserDrawing`
+* Add CSW Group support
+* Revert "remove wmts interfaces from ows interfaces" (873aa70)
+* Add `math-expression-evaluator` library and `ColumnTransformationTraits`. This allows expressions to be used to transform column values (for example `x+10` to add 10 to all values).
+* Fix bug in `TableColumn.title` getter.
+* Add support for TableColumn quarterly dates in the format yyyy-Qx (eg 2020-Q1).
+* Fix region mapping feature highlighting.
+* Update clipboard to fix clipboard typing error.
+* Add support for time on `ArcGisMapServerCatalogItem`
+* [The next improvement]
+
+#### 8.0.0-alpha.67
+* TSify `Loader` function.
+* Added walking mode to pedestrian mode which clamps the pedestrain to a fixed height above the surface.
+* Upgraded catalog-converter to fix dependency version problem and ensure that all imports are async to reduce main bundle size.
+
+#### 8.0.0-alpha.66
+
+- **Breaking changes**: 
+  - Changed merging behaviour of Trait legends (of type `LegendTraits`) in `CatalogMemberTraits`. This affects legends on all `CatalogMember` models. Legend objects in higher strata now replace values in lower strata that match by index, rather than merging properties with them.
+
+* Add `MetadataUrlTraits` to `CatalogMemberTraits.metadataUrls`. It contains an array of metadata URLS (with optional `title` which will render a button)
+* Restore `cesiumTerrainUrl` config parameter. [#5124](https://github.com/TerriaJS/terriajs/pull/5124)
+* I18n-ify strings in settings panel. [#5124](https://github.com/TerriaJS/terriajs/pull/5124)
+* Moved `DataCustodianTraits` into `CatalogMemberTraits` and `CatalogMemberReferenceTraits`.
+* `TableMixin` styles ("Display variables") will now look for column title if style title is undefined
+* Add fallback colours when Color.fromCssColorString is used.
 * Allow nullable `timeColumn` in table styles. Useful for turning off auto-detection of time columns.
 * Added tool for searching inside catalog items. Initial implementation works for indexed 3d tilesets.
 * Added support for shapefile with `ShapefileCatalogItem`
 * Added `GeoJsonMixin` for handling the loading of geojson data.
 * Extended the `GeoJsonCatalogItem` to support loading of zip files.
-* [The next improvement]
+* Fixed broken feature highlighting for raster layers.
+* Show a top angle view when zooming to a small feature/building from the item search result.
+* Fix `TableTimeStyleTraits.idColumns` trait type.
+* Added a new `lineAndPoint` chart type
+* CustomChartComponent now has a "chart-type" attribute
+* Fix `ArcGisMapServerCatalogItem` layer ID and legends bug
+* Re-add region mapping `applyReplacements`.
+* Added `SearchParameterTraits` to item search for setting a human readable `name` or passing index specific `queryOptions` for each parameter through the catalog.
+* Added `AttributionTraits` to mappable and send it as property when creating Cesium's data sources and imagery providers. [#5167](https://github.com/TerriaJS/terriajs/pull/5167)
+* Fixed an issue where a TerriaMap sometimes doesn't build because of typing issues with styled-components.
+* Renamed `options` to `providerOptions` in `SearchableItemTraits`.
+* Fix `CkanCatalogGroup.groupBy = "none"` members
+* Fix `TableMixin` region mapping feature props and make Long/Lat features use column titles (if it exists) to match v7 behaviour.
+* Add support for `CkanItemReference` `wms_layer` property
+* Add support for `ArcGisMapServerCatalogGroup` to use `sublayerIds`.
+* Added Pedestrian mode for easily navigating the map at street level.
+* Clean up `LayerOrderingTraits`, remove `WorkbenchItem` interface, fix `keepOnTop` layer insert/re-ordering.
+* Remove `wordBreak="break-all"` from Box surrounding DataPreview
+* Re-added merging of csv row properties and vector tile feature properties for feature info (to match v7 behaviour).
+* Fixes a bug in pedestrian mode where dropping the pedestrian in northern hemisphere will position the camera underground.
+* Implement highlight/hide all actions for results of item search.
+* Disable pickFeatures for WMS `_nextImageryParts`.
+* Fix Leaflet `ImageryLayer` feature info sorting
+* Fix hard-coded colour value in Story
+* Use `configParameters.cesiumIonAccessToken` in `IonImageryCatalogItem`
+* Added support for skipping comments in CSV files
+* Fix WMS GetLegendGraphics request `style` parameter
+* Loosen Legend `mimeType` check - so now it will treat the Legend URL as an image if the `mimeType` matches **OR** the file extension matches (previously, if `mimeType` was defined, then it wouldn't look at filetype extension)
+* Fix `DiffTool` date-picker label `dateComparisonB`
+* Fix app crash when switching different tools.
+* Create `merge` `TraitsOption` for `objectArrayTrait`
+* Move `Description` `metadataUrls` above `infoSections`.
+* Upgraded i18next and i18next-http-backend to fix incompatibility.
+* Added support for dd/mm/yyyy, dd-mm-yyyy and mm-dd-yyyy date formats.
 
 #### 8.0.0-alpha.65
 * Fixed SDMX-group nested categories

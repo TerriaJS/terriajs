@@ -30,9 +30,9 @@ import WebMapTileServiceCapabilities, {
   ResourceUrl,
   TileMatrixSetLink,
   WmtsCapabilitiesLegend,
-  WmtsLayer,
-  ServiceProvider
+  WmtsLayer
 } from "./WebMapTileServiceCapabilities";
+import { ServiceProvider } from "./OwsInterfaces";
 
 interface UsableTileMatrixSets {
   identifiers: string[];
@@ -82,11 +82,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
       model as WebMapTileServiceCatalogItem,
       this.capabilities
     ) as this;
-  }
-
-  @computed
-  get supportsReordering() {
-    return !this.keepOnTop;
   }
 
   @computed
@@ -575,7 +570,8 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
       tileHeight: tileMatrixSet.tileHeight,
       tilingScheme: new WebMercatorTilingScheme(),
       format,
-      rectangle
+      rectangle,
+      credit: this.attribution
     });
     return imageryProvider;
   }

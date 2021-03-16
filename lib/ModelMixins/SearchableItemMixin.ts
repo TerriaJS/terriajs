@@ -1,13 +1,16 @@
 import { action, computed } from "mobx";
 import Constructor from "../Core/Constructor";
-import { ItemSearchProviders } from "../Models/ItemSearchProviders";
 import ItemSearchProvider, {
   ItemSearchResult
 } from "../Models/ItemSearchProvider";
+import { ItemSearchProviders } from "../Models/ItemSearchProviders";
 import Model from "../Models/Model";
 import SearchableItemTraits from "../Traits/SearchableItemTraits";
+import ShowableTraits from "../Traits/ShowableTraits";
 
-type MixinModel = Model<SearchableItemTraits>;
+type MixinModel = Model<SearchableItemTraits & ShowableTraits>;
+
+export type ItemSelectionDisposer = () => void;
 
 /**
  * This mixin adds capability for searching a catalog item using an {@link
@@ -18,23 +21,29 @@ function SearchableItemMixin<T extends Constructor<MixinModel>>(Base: T) {
     readonly hasSearchableItemMixin = true;
 
     /**
-     * Callback when a search result is selected by the user.
+     * A hook for highlighting features in item search results.
      *
-     * The implementation can decide how to highlight the search result.
-     *
-     * @param result The selected search result.
+     * @param results The search results to be highlighted.
      */
-    abstract selectItemSearchResult(result: ItemSearchResult): void;
+    abstract highlightFeaturesFromItemSearchResults(
+      results: ItemSearchResult[]
+    ): ItemSelectionDisposer;
 
     /**
-     * Callback when user un-selects a search result.
+     * A hook for hiding features not in item search results.
      *
-     * This provides a chance to reverse the highlighting and changes made
-     * during the call to {@selectItemSearchResult}
-     *
-     * @param result The un-selected search result.
+     * @param results The search results to be hidden.
      */
-    abstract unselectItemSearchResult(result: ItemSearchResult): void;
+    abstract hideFeaturesNotInItemSearchResults(
+      results: ItemSearchResult[]
+    ): ItemSelectionDisposer;
+
+    /**
+     * An optional implementation for zooming in to results.
+     *
+     * @param result The search result to zoom to.
+     */
+    zoomToItemSearchResult?: (result: ItemSearchResult) => void;
 
     /**
      * Returns true if this item is searchable and has a valid item search provider defined.
@@ -55,7 +64,7 @@ function SearchableItemMixin<T extends Constructor<MixinModel>>(Base: T) {
         this.search.providerType &&
         ItemSearchProviders.get(this.search.providerType);
       if (!klass) return;
-      return new klass(this.search.options);
+      return new klass(this.search.providerOptions, this.search.parameters);
     }
   }
   return Klass;

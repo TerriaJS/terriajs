@@ -1,5 +1,5 @@
 import React from "react";
-import { create, act, ReactTestRenderer } from "react-test-renderer";
+import { act, create, ReactTestRenderer } from "react-test-renderer";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import timeout from "../../../../lib/Core/timeout";
 import ItemSearchProvider from "../../../../lib/Models/ItemSearchProvider";
@@ -17,7 +17,7 @@ class TestItemSearchProvider extends ItemSearchProvider {
       {
         id: "1",
         idPropertyName: "building-id",
-        zoomToTarget: { boundingSphere: new BoundingSphere() },
+        zoomToTarget: new BoundingSphere(),
         properties: { foo: "bar" }
       }
     ];
@@ -26,7 +26,7 @@ class TestItemSearchProvider extends ItemSearchProvider {
 
 describe("SearchForm", function() {
   it("calls `onResults` after searching", async function() {
-    const itemSearchProvider = new TestItemSearchProvider({});
+    const itemSearchProvider = new TestItemSearchProvider({}, []);
     const onResults = jasmine.createSpy("onResults");
     const { root } = render({
       itemSearchProvider,
@@ -39,7 +39,7 @@ describe("SearchForm", function() {
           range: { min: 10, max: 200 }
         }
       ],
-      values: {}
+      query: {}
     });
     const form = root.findByType("form");
     form.props.onSubmit({ preventDefault: () => {} });

@@ -1,10 +1,9 @@
 import { computed } from "mobx";
 import IonImageryProvider from "terriajs-cesium/Source/Scene/IonImageryProvider";
+import isDefined from "../Core/isDefined";
 import IonImageryCatalogItemTraits from "../Traits/IonImageryCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import Mappable from "./Mappable";
-import isDefined from "../Core/isDefined";
-import { result } from "lodash-es";
 
 export default class IonImageryCatalogItem
   extends CreateModel(IonImageryCatalogItemTraits)
@@ -34,11 +33,17 @@ export default class IonImageryCatalogItem
 
   @computed get imageryProvider() {
     if (isDefined(this.ionAssetId)) {
-      return new IonImageryProvider({
+      const provider = new IonImageryProvider({
         assetId: this.ionAssetId,
-        accessToken: this.ionAccessToken,
+        accessToken:
+          this.ionAccessToken ||
+          this.terria.configParameters.cesiumIonAccessToken,
         server: this.ionServer
       });
+      if (this.attribution) {
+        (<any>provider)._credit = this.attribution;
+      }
+      return provider;
     }
   }
 }
