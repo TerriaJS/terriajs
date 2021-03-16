@@ -824,7 +824,7 @@ class WebMapServiceCatalogItem
     ) {
       return i18next.t("map.cesium.notWebMercatorTilingScheme", this);
     }
-    return undefined;
+    return super.shortReport;
   }
 
   // TODO
