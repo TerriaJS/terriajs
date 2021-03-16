@@ -381,7 +381,6 @@ export default class ArcGisMapServerCatalogItem extends MappableMixin(
 
   readonly supportsSplitting = true;
   readonly canZoomTo = true;
-  readonly isMappable = true;
 
   get type() {
     return ArcGisMapServerCatalogItem.type;

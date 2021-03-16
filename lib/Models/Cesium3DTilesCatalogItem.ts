@@ -35,7 +35,6 @@ export default class Cesium3DTilesCatalogItem extends MappableMixin(
 ) {
   static readonly type = "3d-tiles";
   readonly type = Cesium3DTilesCatalogItem.type;
-  readonly isMappable = true;
   get typeName() {
     return i18next.t("models.cesiumTerrain.name3D");
   }

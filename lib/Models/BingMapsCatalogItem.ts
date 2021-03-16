@@ -11,8 +11,6 @@ export default class BingMapsCatalogItem extends MappableMixin(
 ) {
   static readonly type = "bing-maps";
 
-  readonly isMappable = true;
-
   get type() {
     return BingMapsCatalogItem.type;
   }

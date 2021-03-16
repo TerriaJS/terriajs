@@ -40,8 +40,6 @@ interface Options {
 export default class UserDrawing extends MappableMixin(
   CreateModel(MappableTraits)
 ) {
-  readonly isMappable = true;
-
   private readonly messageHeader: string;
   private readonly allowPolygon: boolean;
   private readonly onMakeDialogMessage?: () => string;

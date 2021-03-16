@@ -14,7 +14,6 @@ export default class CompositeCatalogItem extends MappableMixin(
   CatalogMemberMixin(CreateModel(CompositeCatalogItemTraits))
 ) {
   static readonly type = "composite";
-  readonly isMappable = true;
 
   get type() {
     return CompositeCatalogItem.type;

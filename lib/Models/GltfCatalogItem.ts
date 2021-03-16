@@ -33,10 +33,6 @@ export default class GltfCatalogItem extends MappableMixin(
     return GltfCatalogItem.type;
   }
 
-  get isMappable() {
-    return true;
-  }
-
   get canZoomTo() {
     return true;
   }
