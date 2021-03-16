@@ -111,8 +111,6 @@ Change Log
 * Fixed mobx warnings when loading geojson catalog items.
 * Add `multiplierDefaultDeltaStep` Trait, which tries to calculate sensible multiplier for `DistrectelyTimeVarying` datasets. By default it is set to 2, which results in a new timestep being displayed every 2 seconds (on average) if timeline is playing.
 * Hide info sections with empty content in the explorer preview.
-* Add `isMappble` to `Mappable` interface + clean up Models which didn't implement interface correctly.
-* [The next improvement]
 * Port `shareKeys` from version 7
 * Update/re-enable `GeoJsonCatalogItemSpec` for v8.
 * add `DataCustodianTraits` to `WebMapServiceCatalogGroupTraits`
