@@ -13,6 +13,7 @@ Change Log
 * Fix region mapping feature highlighting.
 * Update clipboard to fix clipboard typing error.
 * Add support for time on `ArcGisMapServerCatalogItem`
+* Fix `CswCatalogGroup` XML types
 * [The next improvement]
 
 #### 8.0.0-alpha.67
