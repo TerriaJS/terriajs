@@ -14,6 +14,10 @@ export default class OpenStreetMapCatalogItem
   implements Mappable {
   static readonly type = "open-street-map";
 
+  get type() {
+    return OpenStreetMapCatalogItem.type;
+  }
+
   get isMappable() {
     return true;
   }
