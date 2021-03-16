@@ -326,7 +326,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
       // Get next start position - or stop pageing
       const nextRecord =
         typeof json?.SearchResults?.nextRecord === "string"
-          ? parseInt(json?.SearchResults?.nextRecord)
+          ? parseInt(json?.SearchResults?.nextRecord ?? "0")
           : json?.SearchResults?.nextRecord;
       if (
         !isDefined(nextRecord) ||
