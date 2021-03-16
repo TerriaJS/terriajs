@@ -22,7 +22,7 @@ const ConceptViewer = createReactClass({
     const nonSummaryConcept = this.props.item.concepts.filter(
       concept =>
         concept.isVisible &&
-        !SummaryConceptModel.prototype.isPrototypeOf(concept)
+        Object.prototype.isPrototypeOf.call(!SummaryConceptModel, concept)
     );
 
     return (
@@ -47,7 +47,7 @@ const ConceptViewer = createReactClass({
           of={this.props.item.concepts.filter(
             concept =>
               concept.isVisible &&
-              SummaryConceptModel.prototype.isPrototypeOf(concept)
+              Object.prototype.isPrototypeOf.call(SummaryConceptModel, concept)
           )}
         >
           <div className={Styles.section} key={i}>

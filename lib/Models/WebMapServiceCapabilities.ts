@@ -5,7 +5,11 @@ import loadXML from "../Core/loadXML";
 import TerriaError from "../Core/TerriaError";
 import xml2json from "../ThirdParty/xml2json";
 import { RectangleTraits } from "../Traits/MappableTraits";
-import { CapabilitiesStyle, OwsKeywordList } from "./OwsInterfaces";
+import {
+  CapabilitiesStyle,
+  OnlineResource,
+  OwsKeywordList
+} from "./OwsInterfaces";
 import StratumFromTraits from "./StratumFromTraits";
 
 export interface CapabilitiesGeographicBoundingBox {
@@ -41,11 +45,17 @@ export type CapabilitiesExtent = string & {
   readonly current?: boolean;
 };
 
+export interface MetadataURL {
+  readonly OnlineResource?: OnlineResource;
+  readonly type?: string;
+}
+
 export interface CapabilitiesLayer {
   readonly _parent?: CapabilitiesLayer;
   readonly Name?: string;
   readonly Title: string;
   readonly Abstract?: string;
+  readonly MetadataURL?: MetadataURL | ReadonlyArray<MetadataURL>;
   readonly EX_GeographicBoundingBox?: CapabilitiesGeographicBoundingBox; // WMS 1.3.0
   readonly LatLonBoundingBox?: CapabilitiesLatLonBoundingBox; // WMS 1.0.0-1.1.1
   readonly Style?: CapabilitiesStyle | ReadonlyArray<CapabilitiesStyle>;

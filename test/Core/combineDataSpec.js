@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require,describe,it,expect*/
 var combineData = require("../../lib/Core/combineData");
 
 describe("combineData", function() {

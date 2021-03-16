@@ -1,6 +1,6 @@
+/* eslint-disable no-native-reassign */
 "use strict";
 
-/*global require,Intl:true*/
 var formatNumberForLocale = require("../../lib/Core/formatNumberForLocale");
 
 describe("formatNumberForLocale", function() {
@@ -111,12 +111,14 @@ describe("formatNumberForLocale", function() {
     beforeEach(function() {
       if (typeof Intl === "object") {
         realIntl = Intl;
+        // eslint-disable-next-line no-global-assign
         Intl = undefined;
       }
     });
 
     afterEach(function() {
       if (realIntl) {
+        // eslint-disable-next-line no-global-assign
         Intl = realIntl;
       }
     });
