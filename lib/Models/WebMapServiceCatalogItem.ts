@@ -26,6 +26,7 @@ import isReadOnlyArray from "../Core/isReadOnlyArray";
 import { JsonObject } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";
 import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import DiffableMixin from "../ModelMixins/DiffableMixin";
 import ExportableMixin from "../ModelMixins/ExportableMixin";
@@ -48,12 +49,12 @@ import WebMapServiceCatalogItemTraits, {
   WebMapServiceAvailableLayerStylesTraits,
   WebMapServiceAvailableStyleTraits
 } from "../Traits/WebMapServiceCatalogItemTraits";
+import { ImageryParts } from "../ModelMixins/MappableMixin";
 import { callWebCoverageService } from "./callWebCoverageService";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
-import { ImageryParts } from "./Mappable";
 import Model, { BaseModel } from "./Model";
 import { CapabilitiesStyle } from "./OwsInterfaces";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
@@ -748,10 +749,14 @@ class WebMapServiceCatalogItem
     ExportableMixin(
       DiffableMixin(
         TimeFilterMixin(
-          AsyncChartableMixin(
-            GetCapabilitiesMixin(
-              UrlMixin(
-                CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
+          MappableMixin(
+            AsyncChartableMixin(
+              GetCapabilitiesMixin(
+                UrlMixin(
+                  CatalogMemberMixin(
+                    CreateModel(WebMapServiceCatalogItemTraits)
+                  )
+                )
               )
             )
           )
@@ -790,11 +795,6 @@ class WebMapServiceCatalogItem
     return WebMapServiceCatalogItem.type;
   }
 
-  // TODO
-  get isMappable() {
-    return true;
-  }
-
   @computed
   get colorScaleRange(): string | undefined {
     if (this.supportsColorScaleRange) {
@@ -831,7 +831,7 @@ class WebMapServiceCatalogItem
     return this.forceLoadMetadata();
   }
 
-  loadMapItems(): Promise<void> {
+  forceLoadMapItems(): Promise<void> {
     return this.loadMetadata();
   }
 

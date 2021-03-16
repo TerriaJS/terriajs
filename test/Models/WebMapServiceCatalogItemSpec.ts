@@ -1,9 +1,9 @@
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-import { autorun, runInAction, observable } from "mobx";
-import Terria from "../../lib/Models/Terria";
-import { ImageryParts } from "../../lib/Models/Mappable";
+import { autorun, runInAction } from "mobx";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
+import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
 import CommonStrata from "../../lib/Models/CommonStrata";
+import Terria from "../../lib/Models/Terria";
+import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
 
 describe("WebMapServiceCatalogItem", function() {
   it("derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specified", function() {

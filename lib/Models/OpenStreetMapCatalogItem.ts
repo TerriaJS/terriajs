@@ -1,28 +1,24 @@
 import { computed } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplateImageryProvider";
-import isDefined from "../Core/isDefined";
-import OpenStreetMapCatalogItemTraits from "../Traits/OpenStreetMapCatalogItemTraits";
-import CreateModel from "./CreateModel";
-import Mappable from "./Mappable";
-import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import URI from "urijs";
+import isDefined from "../Core/isDefined";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import OpenStreetMapCatalogItemTraits from "../Traits/OpenStreetMapCatalogItemTraits";
+import MappableMixin from "../ModelMixins/MappableMixin";
+import CreateModel from "./CreateModel";
+import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 
-export default class OpenStreetMapCatalogItem
-  extends CatalogMemberMixin(CreateModel(OpenStreetMapCatalogItemTraits))
-  implements Mappable {
+export default class OpenStreetMapCatalogItem extends MappableMixin(
+  CatalogMemberMixin(CreateModel(OpenStreetMapCatalogItemTraits))
+) {
   static readonly type = "open-street-map";
-
-  get isMappable() {
-    return true;
-  }
 
   forceLoadMetadata() {
     return Promise.resolve();
   }
 
-  loadMapItems() {
+  forceLoadMapItems() {
     return Promise.resolve();
   }
 

@@ -1,50 +1,44 @@
 "use strict";
 
 import classNames from "classnames";
-import { autorun, computed, observable, runInAction, action } from "mobx";
+import { action, autorun, computed, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import filterOutUndefined from "../../Core/filterOutUndefined";
+// eslint-disable-next-line no-unused-vars
+import MappableMixin, { ImageryParts } from "../../ModelMixins/MappableMixin";
 import CommonStrata from "../../Models/CommonStrata";
+import CreateModel from "../../Models/CreateModel";
 import GeoJsonCatalogItem from "../../Models/GeoJsonCatalogItem";
 // eslint-disable-next-line no-unused-vars
-import Mappable, { ImageryParts } from "../../Models/Mappable";
-// eslint-disable-next-line no-unused-vars
 import Terria from "../../Models/Terria";
-import TerriaViewer from "../../ViewModels/TerriaViewer";
-import { POSITRON_BASE_MAP_ID } from "../../ViewModels/createGlobalBaseMapOptions";
 import ViewerMode from "../../Models/ViewerMode";
+import MappableTraits from "../../Traits/MappableTraits";
+import { POSITRON_BASE_MAP_ID } from "../../ViewModels/createGlobalBaseMapOptions";
+import TerriaViewer from "../../ViewModels/TerriaViewer";
 import Styles from "./data-preview-map.scss";
 
-/**
- * @implements {Mappable}
- */
-class AdaptForPreviewMap {
-  /**
-   *
-   * @param {Mappable} mappable
-   */
-  constructor(mappable) {
-    this._mappable = mappable;
-  }
+class AdaptForPreviewMap extends MappableMixin(CreateModel(MappableTraits)) {
+  previewed;
 
-  loadMapItems() {
-    return this._mappable.loadMapItems();
-  }
+  async forceLoadMapItems() {}
 
+  // Make all imagery 0 or 100% opacity
   @computed
   get mapItems() {
-    return this._mappable.mapItems.map(m =>
-      ImageryParts.is(m)
-        ? {
-            ...m,
-            alpha: m.alpha !== 0.0 ? 1.0 : 0.0,
-            show: true
-          }
-        : m
+    return (
+      this.previewed?.mapItems.map(m =>
+        ImageryParts.is(m)
+          ? {
+              ...m,
+              alpha: m.alpha !== 0.0 ? 1.0 : 0.0,
+              show: true
+            }
+          : m
+      ) ?? []
     );
   }
 }
@@ -110,9 +104,11 @@ class DataPreviewMap extends React.Component {
     this.previewViewer = new TerriaViewer(
       this.props.terria,
       computed(() => {
+        const previewItem = new AdaptForPreviewMap();
+        previewItem.previewed = this.props.previewed;
         // Can previewed be undefined?
         return filterOutUndefined([
-          new AdaptForPreviewMap(this.props.previewed),
+          previewItem,
           this.boundingRectangleCatalogItem
         ]);
       })

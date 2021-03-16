@@ -6,7 +6,7 @@ import isDefined from "../Core/isDefined";
 import loadText from "../Core/loadText";
 import readText from "../Core/readText";
 import TerriaError from "../Core/TerriaError";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import GpxCatalogItemTraits from "../Traits/GpxCatalogItemTraits";
@@ -16,7 +16,7 @@ import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 const toGeoJSON = require("@mapbox/togeojson");
 
-class GpxCatalogItem extends AsyncMappableMixin(
+class GpxCatalogItem extends MappableMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(GpxCatalogItemTraits)))
 ) {
   static readonly type = "gpx";

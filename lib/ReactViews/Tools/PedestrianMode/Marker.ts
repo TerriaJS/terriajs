@@ -4,13 +4,12 @@ import CallbackProperty from "terriajs-cesium/Source/DataSources/CallbackPropert
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
+import MappableMixin from "../../../ModelMixins/MappableMixin";
 import CreateModel from "../../../Models/CreateModel";
-import Mappable from "../../../Models/Mappable";
 import Terria from "../../../Models/Terria";
 import MappableTraits from "../../../Traits/MappableTraits";
 
-export default class Marker extends CreateModel(MappableTraits)
-  implements Mappable {
+export default class Marker extends MappableMixin(CreateModel(MappableTraits)) {
   private dataSource: CustomDataSource;
   position: Cartesian3;
 
@@ -32,7 +31,7 @@ export default class Marker extends CreateModel(MappableTraits)
     this.dataSource.entities.add(entity);
   }
 
-  async loadMapItems() {}
+  async forceLoadMapItems() {}
 
   get mapItems() {
     return [this.dataSource];
