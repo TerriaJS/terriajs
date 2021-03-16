@@ -26,6 +26,7 @@ import isReadOnlyArray from "../Core/isReadOnlyArray";
 import { JsonObject } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";
 import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import DiffableMixin from "../ModelMixins/DiffableMixin";
 import ExportableMixin from "../ModelMixins/ExportableMixin";
@@ -48,12 +49,12 @@ import WebMapServiceCatalogItemTraits, {
   WebMapServiceAvailableLayerStylesTraits,
   WebMapServiceAvailableStyleTraits
 } from "../Traits/WebMapServiceCatalogItemTraits";
+import { ImageryParts } from "../ModelMixins/MappableMixin";
 import { callWebCoverageService } from "./callWebCoverageService";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
-import { ImageryParts } from "./Mappable";
 import Model, { BaseModel } from "./Model";
 import { CapabilitiesStyle } from "./OwsInterfaces";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
@@ -66,7 +67,6 @@ import WebMapServiceCapabilities, {
   MetadataURL
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 
 const dateFormat = require("dateformat");
 
@@ -749,7 +749,7 @@ class WebMapServiceCatalogItem
     ExportableMixin(
       DiffableMixin(
         TimeFilterMixin(
-          AsyncMappableMixin(
+          MappableMixin(
             AsyncChartableMixin(
               GetCapabilitiesMixin(
                 UrlMixin(

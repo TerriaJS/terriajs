@@ -20,18 +20,18 @@ import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixi
 import UrlMixin from "../ModelMixins/UrlMixin";
 import ArcGisMapServerCatalogItemTraits from "../Traits/ArcGisMapServerCatalogItemTraits";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
+import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
 import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
+import MappableMixin, { ImageryParts } from "../ModelMixins/MappableMixin";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import getToken from "./getToken";
 import LoadableStratum from "./LoadableStratum";
-import Mappable, { ImageryParts } from "./Mappable";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
-import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
 
 const proj4 = require("proj4").default;
 
@@ -367,13 +367,13 @@ class MapServerStratum extends LoadableStratum(
 
 StratumOrder.addLoadStratum(MapServerStratum.stratumName);
 
-export default class ArcGisMapServerCatalogItem
-  extends UrlMixin(
+export default class ArcGisMapServerCatalogItem extends MappableMixin(
+  UrlMixin(
     DiscretelyTimeVaryingMixin(
       CatalogMemberMixin(CreateModel(ArcGisMapServerCatalogItemTraits))
     )
   )
-  implements Mappable {
+) {
   static readonly type = "esri-mapServer";
   get typeName() {
     return i18next.t("models.arcGisMapServerCatalogItem.name");
@@ -395,7 +395,7 @@ export default class ArcGisMapServerCatalogItem
     });
   }
 
-  loadMapItems() {
+  forceLoadMapItems() {
     return this.loadMetadata();
   }
 

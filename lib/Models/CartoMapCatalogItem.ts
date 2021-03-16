@@ -4,7 +4,7 @@ import Resource from "terriajs-cesium/Source/Core/Resource";
 import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplateImageryProvider";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import CartoMapCatalogItemTraits from "../Traits/CartoMapCatalogItemTraits";
@@ -101,7 +101,7 @@ export class CartoLoadableStratum extends LoadableStratum(
 
 StratumOrder.addLoadStratum(CartoLoadableStratum.stratumName);
 
-export default class CartoMapCatalogItem extends AsyncMappableMixin(
+export default class CartoMapCatalogItem extends MappableMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(CartoMapCatalogItemTraits)))
 ) {
   static readonly type = "carto";

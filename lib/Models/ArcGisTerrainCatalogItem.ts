@@ -1,16 +1,14 @@
 import { computed } from "mobx";
 import ArcGISTiledElevationTerrainProvider from "terriajs-cesium/Source/Core/ArcGISTiledElevationTerrainProvider";
 import Credit from "terriajs-cesium/Source/Core/Credit";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import ArcGisTerrainCatalogItemTraits from "../Traits/ArcGisTerrainCatalogItemTraits";
 import CreateModel from "./CreateModel";
 
 export default class ArcGisTerrainCatalogItem extends UrlMixin(
-  AsyncMappableMixin(
-    CatalogMemberMixin(CreateModel(ArcGisTerrainCatalogItemTraits))
-  )
+  MappableMixin(CatalogMemberMixin(CreateModel(ArcGisTerrainCatalogItemTraits)))
 ) {
   static type = "arcgis-terrain";
 

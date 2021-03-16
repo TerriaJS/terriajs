@@ -8,7 +8,7 @@ import isReadOnlyArray from "../Core/isReadOnlyArray";
 import loadText from "../Core/loadText";
 import TerriaError from "../Core/TerriaError";
 import gmlToGeoJson from "../Map/gmlToGeoJson";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import ExportableMixin from "../ModelMixins/ExportableMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
@@ -243,7 +243,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
 }
 
 class WebFeatureServiceCatalogItem extends ExportableMixin(
-  AsyncMappableMixin(
+  MappableMixin(
     GetCapabilitiesMixin(
       UrlMixin(
         CatalogMemberMixin(CreateModel(WebFeatureServiceCatalogItemTraits))

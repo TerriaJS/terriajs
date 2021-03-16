@@ -8,7 +8,7 @@ import loadXML from "../Core/loadXML";
 import replaceUnderscores from "../Core/replaceUnderscores";
 import TerriaError from "../Core/TerriaError";
 import { geoRss2ToGeoJson, geoRssAtomToGeoJson } from "../Map/geoRssConvertor";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
@@ -187,7 +187,7 @@ class GeoRssStratum extends LoadableStratum(GeoRssCatalogItemTraits) {
 
 StratumOrder.addLoadStratum(GeoRssStratum.stratumName);
 
-export default class GeoRssCatalogItem extends AsyncMappableMixin(
+export default class GeoRssCatalogItem extends MappableMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(GeoRssCatalogItemTraits)))
 ) {
   static readonly type = "georss";

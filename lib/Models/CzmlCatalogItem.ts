@@ -5,13 +5,13 @@ import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import readJson from "../Core/readJson";
 import TerriaError from "../Core/TerriaError";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import CzmlCatalogItemTraits from "../Traits/CzmlCatalogItemTraits";
 import CreateModel from "./CreateModel";
 
-export default class CzmlCatalogItem extends AsyncMappableMixin(
+export default class CzmlCatalogItem extends MappableMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(CzmlCatalogItemTraits)))
 ) {
   static readonly type = "czml";

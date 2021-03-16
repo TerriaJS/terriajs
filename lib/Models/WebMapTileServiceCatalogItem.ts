@@ -8,7 +8,7 @@ import URI from "urijs";
 import containsAny from "../Core/containsAny";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -415,7 +415,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 }
 
-class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
+class WebMapTileServiceCatalogItem extends MappableMixin(
   GetCapabilitiesMixin(
     UrlMixin(
       CatalogMemberMixin(CreateModel(WebMapTileServiceCatalogItemTraits))
