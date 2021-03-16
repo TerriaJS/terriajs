@@ -290,6 +290,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed get crs() {
+    // Get set of supported CRS from layer hierarchy
     const layerCrs = new Set<string>();
     this.capabilitiesLayers.forEach(layer => {
       if (layer) {
@@ -302,14 +303,10 @@ class GetCapabilitiesStratum extends LoadableStratum(
       }
     });
 
-    const supportedCrs = [
-      "EPSG:3857",
-      "EPSG:900913",
-      "EPSG:4326",
-      "CRS:84",
-      "EPSG:4283"
-    ];
+    // Note order is important here, the first one found will be used
+    const supportedCrs = [...SUPPORTED_CRS_3857, ...SUPPORTED_CRS_4326];
 
+    // If nothing is supported, ask for EPSG:3857, and hope for the best.
     return supportedCrs.find(crs => layerCrs.has(crs)) ?? "EPSG:3857";
   }
 
