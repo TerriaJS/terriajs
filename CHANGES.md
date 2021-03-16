@@ -7,7 +7,6 @@ Change Log
 * Remove points from rectangle `UserDrawing`
 * Add `isLoading` to `CatalogMemberMixin` placeholder until `AsyncLoader` loading problems are sorted (https://github.com/TerriaJS/terriajs/issues/5233)
 * Move `Loader` (spinner) from `Legend` to `WorkbenchItem`.
-* Fix clipboard typing error. 
 * Add CSW Group support
 * Revert "remove wmts interfaces from ows interfaces" (873aa70)
 * Add `math-expression-evaluator` library and `ColumnTransformationTraits`. This allows expressions to be used to transform column values (for example `x+10` to add 10 to all values).
@@ -17,6 +16,7 @@ Change Log
 * Update clipboard to fix clipboard typing error.
 * Add support for time on `ArcGisMapServerCatalogItem`
 * Merge `Mappable` and `AsyncMappableMixin` into **`MappableMixin`**.
+* remove interactions between AsyncLoaders + make forceLoad** optional
 * [The next improvement]
 
 #### 8.0.0-alpha.67

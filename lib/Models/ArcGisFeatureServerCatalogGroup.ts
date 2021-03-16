@@ -253,14 +253,12 @@ export default class ArcGisFeatureServerCatalogGroup extends UrlMixin(
     });
   }
 
-  protected forceLoadMembers(): Promise<void> {
-    return this.loadMetadata().then(() => {
-      const featureServerStratum = <FeatureServerStratum | undefined>(
-        this.strata.get(FeatureServerStratum.stratumName)
-      );
-      if (featureServerStratum) {
-        featureServerStratum.createMembersFromLayers();
-      }
-    });
+  protected async forceLoadMembers() {
+    const featureServerStratum = <FeatureServerStratum | undefined>(
+      this.strata.get(FeatureServerStratum.stratumName)
+    );
+    if (featureServerStratum) {
+      featureServerStratum.createMembersFromLayers();
+    }
   }
 }

@@ -37,7 +37,6 @@ export default function createGlobalBaseMapOptions(
     // };
     naturalEarthII.setTrait(CommonStrata.user, "opacity", 1.0);
     // naturalEarthII.isRequiredForRendering = true;
-    naturalEarthII.loadMapItems();
   });
 
   result.push(
@@ -64,7 +63,6 @@ export default function createGlobalBaseMapOptions(
       "nasa-black-marble:dnb_land_ocean_ice.2012.54000x27000_geo"
     );
     blackMarble.setTrait(CommonStrata.user, "opacity", 1.0);
-    blackMarble.loadMapItems();
   });
   result.push(
     new BaseMapViewModel(

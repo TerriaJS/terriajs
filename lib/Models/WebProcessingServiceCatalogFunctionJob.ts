@@ -338,16 +338,8 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
           const json = JSON.parse(output.Data.ComplexData.text);
           const catalogItem = await this.createCatalogItemFromJson(json);
           if (isDefined(catalogItem)) {
-            if (CatalogMemberMixin.isMixedInto(catalogItem)) {
+            if (CatalogMemberMixin.isMixedInto(catalogItem))
               results.push(catalogItem);
-              await catalogItem.loadMetadata();
-            }
-            if (MappableMixin.isMixedInto(catalogItem)) {
-              await catalogItem.loadMapItems();
-            }
-            if (AsyncChartableMixin.isMixedInto(catalogItem)) {
-              await catalogItem.loadChartItems();
-            }
             reportContent = "Chart " + output.Title + " generated.";
           }
         }
@@ -409,7 +401,6 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
   }
 
   protected async forceLoadMapItems(): Promise<void> {
-    await this.loadMetadata();
     await super.forceLoadMapItems();
     if (isDefined(this.geoJsonItem)) {
       const geoJsonItem = this.geoJsonItem;

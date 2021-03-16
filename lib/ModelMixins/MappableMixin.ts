@@ -78,7 +78,7 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
      * Forces load of the maps items. This method does _not_ need to consider
      * whether the map items are already loaded.
      */
-    protected abstract forceLoadMapItems(): Promise<void>;
+    protected async forceLoadMapItems() {}
 
     dispose() {
       super.dispose();

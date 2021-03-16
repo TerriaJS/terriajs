@@ -11,6 +11,7 @@ import LayerOrderingTraits from "../Traits/LayerOrderingTraits";
 import Chartable from "./Chartable";
 import hasTraits from "./hasTraits";
 import { BaseModel } from "./Model";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 
 const keepOnTop = (model: BaseModel) =>
   hasTraits(model, LayerOrderingTraits, "keepOnTop") && model.keepOnTop;
@@ -191,6 +192,8 @@ export default class Workbench {
           return this.add(target);
         }
       }
+
+      if (CatalogMemberMixin.isMixedInto(item)) await item.loadMetadata();
 
       if (MappableMixin.isMixedInto(item)) {
         await item.loadMapItems();

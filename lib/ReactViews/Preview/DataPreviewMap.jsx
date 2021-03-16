@@ -24,8 +24,6 @@ import Styles from "./data-preview-map.scss";
 class AdaptForPreviewMap extends MappableMixin(CreateModel(MappableTraits)) {
   previewed;
 
-  async forceLoadMapItems() {}
-
   // Make all imagery 0 or 100% opacity
   @computed
   get mapItems() {
@@ -139,12 +137,13 @@ class DataPreviewMap extends React.Component {
       baseMap => baseMap.mappable.uniqueId === POSITRON_BASE_MAP_ID
     );
     if (positronBaseMap !== undefined) {
-      this.previewViewer.baseMap = positronBaseMap.mappable;
+      this.previewViewer.setBaseMap(positronBaseMap.mappable);
     } else {
-      this.previewViewer.baseMap =
+      this.previewViewer.setBaseMap(
         this.props.terria.baseMaps.length > 0
           ? this.props.terria.baseMaps[0].mappable
-          : undefined;
+          : undefined
+      );
     }
 
     this.previewViewer.attach(container);

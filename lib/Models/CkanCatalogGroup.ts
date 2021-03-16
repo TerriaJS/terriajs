@@ -309,15 +309,13 @@ export default class CkanCatalogGroup extends UrlMixin(
     }
   }
 
-  protected forceLoadMembers(): Promise<void> {
-    return this.loadMetadata().then(() => {
-      const ckanServerStratum = <CkanServerStratum | undefined>(
-        this.strata.get(CkanServerStratum.stratumName)
-      );
-      if (ckanServerStratum) {
-        ckanServerStratum.createMembersFromDatasets();
-      }
-    });
+  protected async forceLoadMembers() {
+    const ckanServerStratum = <CkanServerStratum | undefined>(
+      this.strata.get(CkanServerStratum.stratumName)
+    );
+    if (ckanServerStratum) {
+      ckanServerStratum.createMembersFromDatasets();
+    }
   }
 }
 

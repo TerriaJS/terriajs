@@ -34,25 +34,6 @@ class TerriaViewerWrapper extends React.Component {
     }
   };
 
-  componentDidMount() {
-    // Create the map/globe.
-    // this.terriaViewer = TerriaViewer.create(this.props.terria, {
-    //     terrain: this.props.terria.configParameters.cesiumTerrainUrl,
-    //     developerAttribution: {
-    //         text: 'Data61',
-    //         link: 'http://www.csiro.au/en/Research/D61'
-    //     }
-    // });
-    if (
-      this.props.terria.baseMaps.length > 0 &&
-      !this.props.terria.mainViewer.baseMap
-    ) {
-      runInAction(() => {
-        this.props.terria.mainViewer.baseMap = this.props.terria.baseMaps[0].mappable;
-      });
-    }
-  }
-
   componentWillUnmount() {
     this.props.terria.mainViewer.attached &&
       this.props.terria.mainViewer.detach();

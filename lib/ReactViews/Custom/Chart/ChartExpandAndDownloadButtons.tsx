@@ -71,12 +71,10 @@ class ChartExpandAndDownloadButtons extends React.Component<PropsType> {
           });
         });
 
-        workbench.add(itemToExpand);
-
         try {
           terria.addModel(itemToExpand);
         } catch {}
-        return itemToExpand.loadChartItems();
+        return workbench.add(itemToExpand);
       })
     );
   }

@@ -24,14 +24,12 @@ export default class SdmxCatalogGroup extends UrlMixin(
     }
   }
 
-  protected forceLoadMembers(): Promise<void> {
-    return this.loadMetadata().then(() => {
-      const sdmxServerStratum = <SdmxServerStratum | undefined>(
-        this.strata.get(SdmxServerStratum.stratumName)
-      );
-      if (sdmxServerStratum) {
-        sdmxServerStratum.createMembers();
-      }
-    });
+  protected async forceLoadMembers() {
+    const sdmxServerStratum = <SdmxServerStratum | undefined>(
+      this.strata.get(SdmxServerStratum.stratumName)
+    );
+    if (sdmxServerStratum) {
+      sdmxServerStratum.createMembers();
+    }
   }
 }

@@ -387,15 +387,13 @@ export default class ArcGisPortalCatalogGroup extends UrlMixin(
     }
   }
 
-  protected forceLoadMembers(): Promise<void> {
-    return this.loadMetadata().then(() => {
-      const portalStratum = <ArcGisPortalStratum | undefined>(
-        this.strata.get(ArcGisPortalStratum.stratumName)
-      );
-      if (portalStratum) {
-        portalStratum.createMembersFromDatasets();
-      }
-    });
+  protected async forceLoadMembers() {
+    const portalStratum = <ArcGisPortalStratum | undefined>(
+      this.strata.get(ArcGisPortalStratum.stratumName)
+    );
+    if (portalStratum) {
+      portalStratum.createMembersFromDatasets();
+    }
   }
 }
 

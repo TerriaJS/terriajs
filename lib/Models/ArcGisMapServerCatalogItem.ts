@@ -394,10 +394,6 @@ export default class ArcGisMapServerCatalogItem extends MappableMixin(
     });
   }
 
-  forceLoadMapItems() {
-    return this.loadMetadata();
-  }
-
   @computed get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;

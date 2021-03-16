@@ -236,7 +236,6 @@ export default class WebFeatureServiceCatalogGroup extends GetCapabilitiesMixin(
   }
 
   protected async forceLoadMembers(): Promise<void> {
-    await this.loadMetadata();
     const getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
     );

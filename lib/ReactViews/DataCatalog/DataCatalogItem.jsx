@@ -81,15 +81,13 @@ export const DataCatalogItem = observer(
       }
     },
 
-    setPreviewedItem() {
+    async setPreviewedItem() {
       // raiseErrorOnRejectedPromise(this.props.item.terria, this.props.item.load());
       if (this.props.item.loadMetadata) {
-        runInAction(() => {
-          this.props.item.loadMetadata();
-        });
+        await this.props.item.loadMetadata();
       }
       if (this.props.item.loadReference) {
-        this.props.item.loadReference();
+        await this.props.item.loadReference();
       }
       this.props.viewState.viewCatalogMember(this.props.item);
       // mobile switch to nowvewing

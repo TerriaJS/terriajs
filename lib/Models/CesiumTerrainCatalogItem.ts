@@ -16,14 +16,6 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
     return CesiumTerrainCatalogItem.type;
   }
 
-  protected forceLoadMetadata() {
-    return Promise.resolve();
-  }
-
-  protected forceLoadMapItems() {
-    return Promise.resolve();
-  }
-
   @computed
   get mapItems() {
     let resource: string | Promise<IonResource> = this.url!;

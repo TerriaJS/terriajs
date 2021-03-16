@@ -105,8 +105,7 @@ export default class SdmxJsonCatalogItem
         this.regionMappedDimensionIds.length === 0,
       setDimensionValue: (stratumId: string, value: "time" | "region") => {
         this.setTrait(stratumId, "viewBy", value);
-        this.forceLoadMapItems(true);
-        this.forceLoadChartItems(true);
+        this.loadMapItems();
       }
     };
   }
@@ -133,8 +132,7 @@ export default class SdmxJsonCatalogItem
           }
 
           dimensionTraits.setTrait(stratumId, "selectedId", value);
-          this.forceLoadMapItems(true);
-          this.forceLoadChartItems(true);
+          this.loadMapItems();
         }
       };
     });
@@ -261,8 +259,6 @@ export default class SdmxJsonCatalogItem
     }
   }
   protected async forceLoadTableData(): Promise<string[][]> {
-    await this.loadMetadata();
-
     return (await this.downloadData()) || [];
   }
 }

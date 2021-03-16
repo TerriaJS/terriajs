@@ -466,10 +466,6 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     });
   }
 
-  forceLoadMapItems(): Promise<void> {
-    return this.loadMetadata();
-  }
-
   @computed get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;

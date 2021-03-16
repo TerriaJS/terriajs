@@ -296,26 +296,21 @@ export default class ArcGisCatalogGroup extends UrlMixin(
     }
   }
 
-  protected forceLoadMembers(): Promise<void> {
-    return this.loadMetadata().then(() => {
-      const arcgisServerStratum = <
-        | ArcGisServerStratum
-        | MapServerStratum
-        | FeatureServerStratum
-        | undefined
-      >(this.strata.get(ArcGisServerStratum.stratumName) ||
-        this.strata.get(MapServerStratum.stratumName) ||
-        this.strata.get(FeatureServerStratum.stratumName));
-      if (arcgisServerStratum instanceof ArcGisServerStratum) {
-        arcgisServerStratum.createMembersFromFolders();
-        arcgisServerStratum.createMembersFromServices();
-      } else if (
-        arcgisServerStratum instanceof MapServerStratum ||
-        arcgisServerStratum instanceof FeatureServerStratum
-      ) {
-        arcgisServerStratum.createMembersFromLayers();
-      }
-    });
+  protected async forceLoadMembers() {
+    const arcgisServerStratum = <
+      ArcGisServerStratum | MapServerStratum | FeatureServerStratum | undefined
+    >(this.strata.get(ArcGisServerStratum.stratumName) ||
+      this.strata.get(MapServerStratum.stratumName) ||
+      this.strata.get(FeatureServerStratum.stratumName));
+    if (arcgisServerStratum instanceof ArcGisServerStratum) {
+      arcgisServerStratum.createMembersFromFolders();
+      arcgisServerStratum.createMembersFromServices();
+    } else if (
+      arcgisServerStratum instanceof MapServerStratum ||
+      arcgisServerStratum instanceof FeatureServerStratum
+    ) {
+      arcgisServerStratum.createMembersFromLayers();
+    }
   }
 }
 

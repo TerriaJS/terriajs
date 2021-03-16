@@ -291,14 +291,12 @@ export default class ArcGisMapServerCatalogGroup extends UrlMixin(
     });
   }
 
-  protected forceLoadMembers(): Promise<void> {
-    return this.loadMetadata().then(() => {
-      const mapServerStratum = <MapServerStratum | undefined>(
-        this.strata.get(MapServerStratum.stratumName)
-      );
-      if (mapServerStratum) {
-        mapServerStratum.createMembersFromLayers();
-      }
-    });
+  protected async forceLoadMembers() {
+    const mapServerStratum = <MapServerStratum | undefined>(
+      this.strata.get(MapServerStratum.stratumName)
+    );
+    if (mapServerStratum) {
+      mapServerStratum.createMembersFromLayers();
+    }
   }
 }

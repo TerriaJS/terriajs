@@ -26,14 +26,6 @@ export default class BingMapsCatalogItem extends MappableMixin(
     ];
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return Promise.resolve();
-  }
-
-  forceLoadMapItems() {
-    return Promise.resolve();
-  }
-
   _createImageryProvider() {
     const result = new BingMapsImageryProvider({
       url: "//dev.virtualearth.net",

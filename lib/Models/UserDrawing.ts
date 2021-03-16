@@ -125,8 +125,6 @@ export default class UserDrawing extends MappableMixin(
     });
   }
 
-  async forceLoadMapItems() {}
-
   @computed get mapItems() {
     // Don't show points if drawing rectangle
     return this.drawRectangle

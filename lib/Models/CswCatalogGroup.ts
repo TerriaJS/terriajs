@@ -718,7 +718,6 @@ export default class CswCatalogGroup extends UrlMixin(
   }
 
   protected async forceLoadMembers(): Promise<void> {
-    await this.loadMetadata();
     const cswStratum = <CswStratum | undefined>this.strata.get(CswStratum.name);
     if (cswStratum) {
       cswStratum.createMembersFromLayers();

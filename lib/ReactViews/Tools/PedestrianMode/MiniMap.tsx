@@ -41,7 +41,7 @@ const MiniMap: React.FC<MiniMapProps> = props => {
       viewer.disableInteraction = true;
       if (container.current) viewer.attach(container.current);
 
-      viewer.baseMap = baseMap;
+      viewer.setBaseMap(baseMap);
 
       setMiniMapViewer(viewer);
       setLocationMarker(marker);

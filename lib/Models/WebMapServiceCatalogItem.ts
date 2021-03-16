@@ -827,14 +827,6 @@ class WebMapServiceCatalogItem
     });
   }
 
-  protected forceLoadChartItems(): Promise<void> {
-    return this.forceLoadMetadata();
-  }
-
-  forceLoadMapItems(): Promise<void> {
-    return this.loadMetadata();
-  }
-
   @computed get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;

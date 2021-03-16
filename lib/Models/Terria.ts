@@ -79,6 +79,8 @@ import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
 import ViewerMode from "./ViewerMode";
 import Workbench from "./Workbench";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import Chartable from "./Chartable";
 // import overrides from "../Overrides/defaults.jsx";
 
 interface ConfigParameters {
@@ -665,14 +667,15 @@ export default class Terria {
     }
   }
 
-  @action
-  loadPersistedOrInitBaseMap(): void {
+  async loadPersistedOrInitBaseMap() {
+    // Set baseMap fallback to first option
+    let baseMap = this.baseMaps[0].mappable;
     const persistedBaseMapId = this.getLocalProperty("basemap");
     const baseMapSearch = this.baseMaps.find(
       baseMap => baseMap.mappable.uniqueId === persistedBaseMapId
     );
     if (baseMapSearch) {
-      this.mainViewer.baseMap = baseMapSearch.mappable;
+      baseMap = baseMapSearch.mappable;
     } else {
       console.error(
         `Couldn't find a basemap for unique id ${persistedBaseMapId}. Trying to load init base map.`
@@ -681,9 +684,11 @@ export default class Terria {
         baseMap => baseMap.mappable.uniqueId === this.initBaseMapId
       );
       if (baseMapSearch) {
-        this.mainViewer.baseMap = baseMapSearch.mappable;
+        baseMap = baseMapSearch.mappable;
       }
     }
+
+    await this.mainViewer.setBaseMap(baseMap);
   }
 
   get isLoadingInitSources(): boolean {
@@ -1054,8 +1059,15 @@ export default class Terria {
               model = model.target || model;
             }
 
+            if (CatalogMemberMixin.isMixedInto(model))
+              await model.loadMetadata();
+
             if (MappableMixin.isMixedInto(model)) {
               await model.loadMapItems();
+            }
+
+            if (Chartable.is(model)) {
+              await model.loadChartItems();
             }
           })
         ).then(() => undefined);

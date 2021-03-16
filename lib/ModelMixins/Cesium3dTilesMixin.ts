@@ -75,10 +75,6 @@ export default function Cesium3dTilesMixin<
     @observable
     private originalRootTransform: Matrix4 = Matrix4.IDENTITY.clone();
 
-    protected forceLoadMetadata() {
-      return Promise.resolve();
-    }
-
     protected forceLoadMapItems() {
       this.loadTileset();
       if (this.tileset) {
