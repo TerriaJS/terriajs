@@ -10,6 +10,10 @@ export default class IonImageryCatalogItem
   implements Mappable {
   static readonly type = "ion-imagery";
 
+  get type() {
+    return IonImageryCatalogItem.type;
+  }
+
   loadMapItems() {
     return Promise.resolve();
   }

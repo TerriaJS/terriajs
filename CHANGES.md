@@ -15,6 +15,7 @@ Change Log
 * Update clipboard to fix clipboard typing error.
 * Added direction indicator to the pedestrian mode minimap.
 * Limit up/down look angle in pedestrian mode.
+* Add support for time on `ArcGisMapServerCatalogItem`
 * [The next improvement]
 
 #### 8.0.0-alpha.67
@@ -611,6 +612,10 @@ Change Log
 
 
 ### Next Release
+### v7.11.14
+
+* Update CARTO Basemaps CDN URL and attribution.
+
 ### v7.11.13
 
 * Upgraded to Cesium v1.73.
