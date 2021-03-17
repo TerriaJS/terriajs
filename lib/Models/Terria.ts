@@ -48,6 +48,7 @@ import { shareConvertNotification } from "../ReactViews/Notification/shareConver
 import ShowableTraits from "../Traits/ShowableTraits";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
+import MappableMixin, { isDataSource } from "../ModelMixins/MappableMixin";
 import CameraView from "./CameraView";
 import CatalogGroup from "./CatalogGroupNew";
 import CatalogMemberFactory from "./CatalogMemberFactory";
@@ -68,7 +69,6 @@ import Internationalization, {
 } from "./Internationalization";
 import MagdaReference, { MagdaReferenceHeaders } from "./MagdaReference";
 import MapInteractionMode from "./MapInteractionMode";
-import Mappable, { isDataSource } from "./Mappable";
 import { BaseModel } from "./Model";
 import NoViewer from "./NoViewer";
 import openGroup from "./openGroup";
@@ -271,10 +271,10 @@ export default class Terria {
     computed(() =>
       filterOutUndefined(
         this.overlays.items
-          .map(item => (Mappable.is(item) ? item : undefined))
+          .map(item => (MappableMixin.isMixedInto(item) ? item : undefined))
           .concat(
             this.workbench.items.map(item =>
-              Mappable.is(item) ? item : undefined
+              MappableMixin.isMixedInto(item) ? item : undefined
             )
           )
       )
@@ -1042,7 +1042,7 @@ export default class Terria {
           model = model.target || model;
         }
 
-        if (Mappable.is(model)) {
+        if (MappableMixin.isMixedInto(model)) {
           await model.loadMapItems();
         }
       })
@@ -1133,13 +1133,12 @@ export default class Terria {
 
     if (Array.isArray(pickedFeatures.entities)) {
       // Build index of terria features by a hash of their properties.
-      const relevantItems: Mappable[] = this.workbench.items.filter(item => {
-        return (
+      const relevantItems = this.workbench.items.filter(
+        item =>
           hasTraits(item, ShowableTraits, "show") &&
           item.show &&
-          Mappable.is(item)
-        );
-      }) as Mappable[];
+          MappableMixin.isMixedInto(item)
+      ) as MappableMixin.MappableMixin[];
 
       relevantItems.forEach(item => {
         const entities: Entity[] = item.mapItems

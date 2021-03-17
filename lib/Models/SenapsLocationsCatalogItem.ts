@@ -5,7 +5,7 @@ import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import loadJson from "../Core/loadJson";
 import TerriaError from "../Core/TerriaError";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import { FeatureInfoTemplateTraits } from "../Traits/FeatureInfoTraits";
@@ -230,7 +230,7 @@ export class SenapsLocationsStratum extends LoadableStratum(
 
 StratumOrder.addLoadStratum(SenapsLocationsStratum.stratumName);
 
-class SenapsLocationsCatalogItem extends AsyncMappableMixin(
+class SenapsLocationsCatalogItem extends MappableMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(SenapsLocationsCatalogItemTraits)))
 ) {
   static readonly type = "senaps-locations";

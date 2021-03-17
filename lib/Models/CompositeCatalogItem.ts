@@ -1,20 +1,19 @@
-import CompositeCatalogItemTraits from "../Traits/CompositeCatalogItemTraits";
-import CreateModel from "./CreateModel";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import { computed, action } from "mobx";
-import Mappable, { MapItem } from "./Mappable";
 import i18next from "i18next";
-import { BaseModel } from "./Model";
-import filterOutUndefined from "../Core/filterOutUndefined";
-import ModelReference from "../Traits/ModelReference";
-import isDefined from "../Core/isDefined";
+import { action, computed } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import filterOutUndefined from "../Core/filterOutUndefined";
+import isDefined from "../Core/isDefined";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import CompositeCatalogItemTraits from "../Traits/CompositeCatalogItemTraits";
+import ModelReference from "../Traits/ModelReference";
+import MappableMixin, { MapItem } from "../ModelMixins/MappableMixin";
+import CreateModel from "./CreateModel";
+import { BaseModel } from "./Model";
 
-export default class CompositeCatalogItem
-  extends CatalogMemberMixin(CreateModel(CompositeCatalogItemTraits))
-  implements Mappable {
+export default class CompositeCatalogItem extends MappableMixin(
+  CatalogMemberMixin(CreateModel(CompositeCatalogItemTraits))
+) {
   static readonly type = "composite";
-  readonly isMappable = true;
 
   get type() {
     return CompositeCatalogItem.type;
@@ -44,10 +43,12 @@ export default class CompositeCatalogItem
     return Promise.resolve();
   }
 
-  loadMapItems(): Promise<void> {
-    return Promise.all(
-      this.memberModels.filter(Mappable.is).map(model => model.loadMapItems())
-    ).then(() => {});
+  async forceLoadMapItems(): Promise<void> {
+    await Promise.all(
+      this.memberModels
+        .filter(MappableMixin.isMixedInto)
+        .map(model => model.loadMapItems())
+    );
   }
 
   @computed get mapItems() {
@@ -58,7 +59,7 @@ export default class CompositeCatalogItem
     // });
 
     const result: MapItem[] = [];
-    this.memberModels.filter(Mappable.is).forEach(model => {
+    this.memberModels.filter(MappableMixin.isMixedInto).forEach(model => {
       result.push(...model.mapItems);
     });
     return result;

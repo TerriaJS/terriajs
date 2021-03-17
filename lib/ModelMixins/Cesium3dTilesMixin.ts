@@ -38,7 +38,7 @@ import Cesium3DTilesCatalogItemTraits from "../Traits/Cesium3DTilesCatalogItemTr
 import Cesium3dTilesTraits, {
   OptionsTraits
 } from "../Traits/Cesium3dTilesTraits";
-import AsyncMappableMixin from "./AsyncMappableMixin";
+import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
 
 const DEFAULT_HIGHLIGHT_COLOR = "#ff3f00";
@@ -66,9 +66,7 @@ class ObservableCesium3DTileset extends Cesium3DTileset {
 export default function Cesium3dTilesMixin<
   T extends Constructor<Model<Cesium3dTilesTraits>>
 >(Base: T) {
-  abstract class Cesium3dTilesMixin extends ShadowMixin(
-    AsyncMappableMixin(Base)
-  ) {
+  abstract class Cesium3dTilesMixin extends ShadowMixin(MappableMixin(Base)) {
     readonly canZoomTo = true;
 
     protected tileset?: ObservableCesium3DTileset;
@@ -76,10 +74,6 @@ export default function Cesium3dTilesMixin<
     // Just a variable to save the original tileset.root.transform if it exists
     @observable
     private originalRootTransform: Matrix4 = Matrix4.IDENTITY.clone();
-
-    get isMappable() {
-      return true;
-    }
 
     protected forceLoadMetadata() {
       return Promise.resolve();
