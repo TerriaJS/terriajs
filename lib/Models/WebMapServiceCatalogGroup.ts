@@ -291,6 +291,17 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 }
 
+/**
+ * Creates an item in the catalog for each available WMS layer.
+ * Note: To present a single layer in the catalog you can also use `WebMapServiceCatalogItem`.
+ * @public
+ * @example
+ * {
+ *   "type": "wms-group",
+ *   "name": "Digital Earth Australia",
+ *   "url": "https://ows.services.dea.ga.gov.au",
+ * }
+ */
 export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(
   UrlMixin(
     GroupMixin(CatalogMemberMixin(CreateModel(WebMapServiceCatalogGroupTraits)))
