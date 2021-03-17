@@ -1158,7 +1158,7 @@
     },
     "raiseError": {
       "errorTitle": "An error occurred",
-      "errorMessage": "{{appName}}  experienced an error.  Please report this by emailing {{email}}. Details of the error are below."
+      "errorMessage": "<p>{{appName}} experienced an error.  Please report this by emailing {{email}}. Details of the error are below.</p><p><pre>{{error}}</pre></p>"
     },
     "regionMapping": {
       "noDataForDate": "No data for the selected date.",
@@ -1270,6 +1270,7 @@
       "notSupportedErrorMessage": "{{name}} cannot be shown in the 2D view. Switch to 3D and try again"
     },
     "terria": {
+      "loadConfigErrorTitle": "Failed to load Terria Map config",
       "proxyableDomainsDeprecation": "`proxyableDomainsUrl` is no longer supported in v8",
       "initErrorTitle": "Failed to initialize services",
       "initErrorMessage": "A problem occurred with the Terria server. This may cause some layers or the conversion service to be unavailable.",
