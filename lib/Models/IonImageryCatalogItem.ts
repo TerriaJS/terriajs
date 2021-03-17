@@ -10,7 +10,7 @@ export default class IonImageryCatalogItem extends MappableMixin(
 ) {
   static readonly type = "ion-imagery";
 
-  forceLoadMapItems() {
+  forceLoadMapItems() {}
   
   get type() {
     return IonImageryCatalogItem.type;
