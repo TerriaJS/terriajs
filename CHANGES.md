@@ -15,6 +15,7 @@ Change Log
 * Update clipboard to fix clipboard typing error.
 * Added direction indicator to the pedestrian mode minimap.
 * Limit up/down look angle in pedestrian mode.
+* Automatically disable pedestrian mode when map zooms to a different location.
 * Add support for time on `ArcGisMapServerCatalogItem`
 * [The next improvement]
 
