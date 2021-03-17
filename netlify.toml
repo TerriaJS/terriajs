@@ -1,0 +1,4 @@
+[build]
+  command = "gulp docs"
+  publish = "wwwroot/doc"
+  environment = { NETLIFY_USE_YARN = "true", PYTHON_VERSION = "3.7" }
