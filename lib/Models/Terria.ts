@@ -590,8 +590,6 @@ export default class Terria {
     const launchUrlForAnalytics =
       options.applicationUrl?.href || getUriWithoutPath(baseUri);
 
-    // We have to catch the load error and throw it AFTER initalising Internationalization
-    let loadConfigError: unknown;
     try {
       const config = await loadJson5(
         options.configUrl,
@@ -609,31 +607,30 @@ export default class Terria {
         this.setupInitializationUrls(baseUri, config);
       });
     } catch (error) {
-      loadConfigError = error;
-    }
-
-    if (!options.i18nOptions?.skipInit) {
-      Internationalization.initLanguage(
-        this.configParameters.languageConfiguration,
-        options.i18nOptions
+      this.error.raiseEvent(
+        new TerriaError({
+          sender: this,
+          title: { key: "models.terria.loadConfigErrorTitle" },
+          message: wrapErrorMessage(
+            this,
+            `Couldn't load ${options.configUrl}:\n${
+              error instanceof TerriaError
+                ? error.message
+                : typeof error === "object"
+                ? error?.toString()
+                : undefined
+            }`
+          )
+        })
       );
+    } finally {
+      if (!options.i18nOptions?.skipInit) {
+        Internationalization.initLanguage(
+          this.configParameters.languageConfiguration,
+          options.i18nOptions
+        );
+      }
     }
-
-    if (loadConfigError)
-      throw new TerriaError({
-        sender: this,
-        title: i18next.t("models.terria.loadConfigErrorTitle"),
-        message: wrapErrorMessage(
-          this,
-          `Couldn't load ${options.configUrl}:\n${
-            loadConfigError instanceof TerriaError
-              ? loadConfigError.message
-              : typeof loadConfigError === "object"
-              ? loadConfigError?.toString()
-              : undefined
-          }`
-        )
-      });
 
     this.analytics?.start(this.configParameters);
     this.analytics?.logEvent("launch", "url", launchUrlForAnalytics);

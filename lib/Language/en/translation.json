@@ -1157,7 +1157,7 @@
     },
     "raiseError": {
       "errorTitle": "An error occurred",
-      "errorMessage": "{{appName}}  experienced an error.  Please report this by emailing {{email}}. Details of the error are below."
+      "errorMessage": "<p>{{appName}} experienced an error.  Please report this by emailing {{email}}. Details of the error are below.</p><p><pre>{{error}}</pre></p>"
     },
     "regionMapping": {
       "noDataForDate": "No data for the selected date.",
