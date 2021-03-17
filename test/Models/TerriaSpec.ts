@@ -832,10 +832,10 @@ describe("Terria", function() {
 
   describe("applyInitData", function() {
     describe("when pickedFeatures is not present in initData", function() {
-      it("unsets the feature picking state if `canUnsetFeaturePickingState` is `true`", function() {
+      it("unsets the feature picking state if `canUnsetFeaturePickingState` is `true`", async function() {
         terria.pickedFeatures = new PickedFeatures();
         terria.selectedFeature = new Entity({ name: "selected" }) as Feature;
-        terria.applyInitData({
+        await terria.applyInitData({
           initData: {},
           canUnsetFeaturePickingState: true
         });
@@ -843,10 +843,10 @@ describe("Terria", function() {
         expect(terria.selectedFeature).toBeUndefined();
       });
 
-      it("otherwise, should not unset feature picking state", function() {
+      it("otherwise, should not unset feature picking state", async function() {
         terria.pickedFeatures = new PickedFeatures();
         terria.selectedFeature = new Entity({ name: "selected" }) as Feature;
-        terria.applyInitData({
+        await terria.applyInitData({
           initData: {}
         });
         expect(terria.pickedFeatures).toBeDefined();

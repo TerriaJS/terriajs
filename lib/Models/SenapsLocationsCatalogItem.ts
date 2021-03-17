@@ -65,11 +65,6 @@ interface LocationsData {
   };
 }
 
-const missingUrlError = new TerriaError({
-  title: i18next.t("models.senaps.retrieveErrorTitle"),
-  message: i18next.t("models.senaps.missingSenapsBaseUrl")
-});
-
 export class SenapsLocationsStratum extends LoadableStratum(
   SenapsLocationsCatalogItemTraits
 ) {
@@ -167,7 +162,10 @@ export class SenapsLocationsStratum extends LoadableStratum(
       }
 
       if (!senapsLocationsCatalogItem.url) {
-        throw missingUrlError;
+        throw new TerriaError({
+          title: i18next.t("models.senaps.retrieveErrorTitle"),
+          message: i18next.t("models.senaps.missingSenapsBaseUrl")
+        });
       }
       const proxiedBaseUrl = proxyCatalogItemUrl(
         senapsLocationsCatalogItem,
@@ -279,7 +277,10 @@ class SenapsLocationsCatalogItem extends MappableMixin(
 
   _constructLocationsUrl() {
     if (!this.url) {
-      throw missingUrlError;
+      throw new TerriaError({
+        title: i18next.t("models.senaps.retrieveErrorTitle"),
+        message: i18next.t("models.senaps.missingSenapsBaseUrl")
+      });
     }
     var uri = new URI(`${this.url}/locations`);
     if (this.locationIdFilter !== undefined) {
@@ -292,7 +293,10 @@ class SenapsLocationsCatalogItem extends MappableMixin(
 
   _constructStreamsUrl(locationId: string) {
     if (!this.url) {
-      throw missingUrlError;
+      throw new TerriaError({
+        title: i18next.t("models.senaps.retrieveErrorTitle"),
+        message: i18next.t("models.senaps.missingSenapsBaseUrl")
+      });
     }
     var uri = new URI(`${this.url}/streams`);
     if (this.streamIdFilter !== undefined) {

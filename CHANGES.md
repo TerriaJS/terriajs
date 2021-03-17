@@ -18,6 +18,10 @@ Change Log
 * Add support for time on `ArcGisMapServerCatalogItem`
 * Merge `Mappable` and `AsyncMappableMixin` into **`MappableMixin`**.
 * remove interactions between AsyncLoaders + make forceLoad** optional
+* Fixed a issue when multiple filters are set to Cesium3DTilesCatalogItem
+* Async/Awaitify `Terria.ts` + fix share links loading after `loadInitSources`.
+* Tsified `TerriaError` + added support for "un-rendered" `I18nTranslateString`
+* Tsified `raiseErrorToUser` + added `wrapErrorMessage()` to wrap error message in something more user friendly (using `models.raiseError.errorMessage` translation string).
 * [The next improvement]
 
 #### 8.0.0-alpha.67
