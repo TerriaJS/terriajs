@@ -7,6 +7,7 @@ Change Log
 * Remove points from rectangle `UserDrawing`
 * Add `isLoading` to `CatalogMemberMixin` placeholder until `AsyncLoader` loading problems are sorted (https://github.com/TerriaJS/terriajs/issues/5233)
 * Move `Loader` (spinner) from `Legend` to `WorkbenchItem`.
+* Ported `WebProcessingServiceCatalogGroup`.
 * Add CSW Group support
 * Revert "remove wmts interfaces from ows interfaces" (873aa70)
 * Add `math-expression-evaluator` library and `ColumnTransformationTraits`. This allows expressions to be used to transform column values (for example `x+10` to add 10 to all values).
@@ -613,6 +614,10 @@ Change Log
 
 
 ### Next Release
+### v7.11.14
+
+* Update CARTO Basemaps CDN URL and attribution.
+
 ### v7.11.13
 
 * Upgraded to Cesium v1.73.

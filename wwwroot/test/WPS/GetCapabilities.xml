@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PyWPS 4.2.2 -->
+<wps:Capabilities service="WPS" version="1.0.0" xml:lang="en-CA" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 ../wpsGetCapabilities_response.xsd" updateSequence="1">
+    <ows:ServiceIdentification>
+        <ows:Title>AWAVEA WPS service</ows:Title>
+        <ows:Abstract></ows:Abstract>
+        <ows:Keywords>
+        <ows:Keyword>WPS</ows:Keyword>
+        <ows:Keyword>OGC</ows:Keyword>
+        <ows:Keyword>OceanData</ows:Keyword>
+            <ows:Type codeSpace="ISOTC211/19115"></ows:Type>
+        </ows:Keywords>
+        <ows:ServiceType>WPS</ows:ServiceType>
+        <ows:ServiceTypeVersion>1.0.0</ows:ServiceTypeVersion>
+        <ows:ServiceTypeVersion>2.0.0</ows:ServiceTypeVersion>
+        <ows:Fees>None</ows:Fees>
+        <ows:AccessConstraints>
+        None
+        </ows:AccessConstraints>
+    </ows:ServiceIdentification>
+    <ows:ServiceProvider>
+        <ows:ProviderName>CSIRO Ocean &amp; Atmosphere</ows:ProviderName>
+        <ows:ProviderSite xlink:href="http://research.csiro.au/slrwavescoast/"/>
+        <ows:ServiceContact>
+            <ows:IndividualName>Uwe Rosebrock</ows:IndividualName>
+            <ows:PositionName></ows:PositionName>
+            <ows:ContactInfo>
+                <ows:Phone>
+                    <ows:Voice></ows:Voice>
+                    <ows:Facsimile></ows:Facsimile>
+                </ows:Phone>
+                <ows:Address>
+                    <ows:DeliveryPoint></ows:DeliveryPoint>
+                    <ows:City></ows:City>
+                    <ows:AdministrativeArea></ows:AdministrativeArea>
+                    <ows:PostalCode>7000</ows:PostalCode>
+                    <ows:Country>au</ows:Country>
+                    <ows:ElectronicMailAddress>awavea@csiro.au</ows:ElectronicMailAddress>
+                </ows:Address>
+            </ows:ContactInfo>
+        </ows:ServiceContact>
+    </ows:ServiceProvider>
+    <ows:OperationsMetadata>
+        <ows:Operation name="GetCapabilities">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:href="http://localhost/wps"/>
+                </ows:HTTP>
+            </ows:DCP>
+        </ows:Operation>
+        <ows:Operation name="DescribeProcess">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:href="http://localhost/wps"/>
+                    <ows:Post xlink:href="http://localhost/wps"/>
+                </ows:HTTP>
+            </ows:DCP>
+        </ows:Operation>
+        <ows:Operation name="Execute">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:href="http://localhost/wps"/>
+                    <ows:Post xlink:href="http://localhost/wps"/>
+                </ows:HTTP>
+            </ows:DCP>
+        </ows:Operation>
+    </ows:OperationsMetadata>
+    <wps:ProcessOfferings>
+        <wps:Process wps:processVersion="1.0">
+            <ows:Identifier>monthly-variations</ows:Identifier>
+            <ows:Title>Wave: Monthly Mean [hs,t0m1]</ows:Title>
+            <ows:Abstract>This process operates on the variables Mean Wave Direction (dir [deg]), Significant Wave Height (hs [m]) and Mean Wave Period (t0m1 [s]). Details can be found under http://dx.doi.org/10.4225/08/523168703DCC5
+The Use of the process and any of its results is governed by the Creative Commons Attribution ShareAlike 3.0 Unported Licence. Reference must be given to the source and authors as stated in the relevant metadata.</ows:Abstract>
+        </wps:Process>
+        <wps:Process wps:processVersion="1.0">
+            <ows:Identifier>monthly-waverose</ows:Identifier>
+            <ows:Title>Wave: Monthly Waverose</ows:Title>
+            <ows:Abstract>This process operates on the variables Mean Wave Direction (dir [deg]) and Significant Wave Height (hs [m]). Details can be found under http://dx.doi.org/10.4225/08/523168703DCC5
+The Use of the process and any of its results is governed by the Creative Commons Attribution ShareAlike 3.0 Unported Licence. Reference must be given to the source and authors as stated in the relevant metadata.</ows:Abstract>
+        </wps:Process>
+        <wps:Process wps:processVersion="1.0">
+            <ows:Identifier>annual-waverose</ows:Identifier>
+            <ows:Title>Wave: Annual Waverose</ows:Title>
+            <ows:Abstract>This process operates on the variables Mean Wave Direction (dir [deg]) and Significant Wave Height (hs [m]). Details can be found under http://dx.doi.org/10.4225/08/523168703DCC5
+The Use of the process and any of its results is governed by the Creative Commons Attribution ShareAlike 3.0 Unported Licence. Reference must be given to the source and authors as stated in the relevant metadata.</ows:Abstract>
+        </wps:Process>
+        <wps:Process wps:processVersion="1.0">
+            <ows:Identifier>monthly-power-distribution</ows:Identifier>
+            <ows:Title>Wave: Monthly Bivariate Probability Distribution</ows:Title>
+            <ows:Abstract>This process operates on the variables Significant Wave Height (hs [m]) and Wave Energy Period (tm0m1 [s]). It further employs a static matrix of energy distribution to calculate a probability map. Details can be found under http://dx.doi.org/10.4225/08/523168703DCC5
+The Use of the process and any of its results is governed by the Creative Commons Attribution ShareAlike 3.0 Unported Licence. Reference must be given to the source and authors as stated in the relevant metadata.</ows:Abstract>
+        </wps:Process>
+        <wps:Process wps:processVersion="1.0">
+            <ows:Identifier>annual-power-distribution</ows:Identifier>
+            <ows:Title>Wave: Annual Bivariate Probability Distribution</ows:Title>
+            <ows:Abstract>This process operates on the variables Significant Wave Height (hs [m]) and Wave Energy Period (tm0m1 [s]). It further employs a static matrix of energy distribution to calculate a probability map. Details can be found under http://dx.doi.org/10.4225/08/523168703DCC5
+The Use of the process and any of its results is governed by the Creative Commons Attribution ShareAlike 3.0 Unported Licence. Reference must be given to the source and authors as stated in the relevant metadata.</ows:Abstract>
+        </wps:Process>
+        <wps:Process wps:processVersion="1.0">
+            <ows:Identifier>return-period-level</ows:Identifier>
+            <ows:Title>Wave: Return Period Level</ows:Title>
+            <ows:Abstract>The Use of the process and any of its results is governed by the Creative Commons Attribution ShareAlike 3.0 Unported Licence. Reference must be given to the source and authors as stated in the relevant metadata.</ows:Abstract>
+        </wps:Process>
+        <wps:Process wps:processVersion="1.0">
+            <ows:Identifier>extract_data_atPoint</ows:Identifier>
+            <ows:Title>Wave: Extract Time-series data</ows:Title>
+            <ows:Abstract>The Use of the process and any of its results is governed by the Creative Commons Attribution ShareAlike 3.0 Unported Licence. Reference must be given to the source and authors as stated in the relevant metadata.</ows:Abstract>
+        </wps:Process>
+        <wps:Process wps:processVersion="1.0">
+            <ows:Identifier>spectra_referenceBB</ows:Identifier>
+            <ows:Title>Wave: Extract Time-series of 2D Wave Spectra</ows:Title>
+            <ows:Abstract>The Use of the process and any of its results is governed by the Creative Commons Attribution ShareAlike 3.0 Unported Licence. Reference must be given to the source and authors as stated in the relevant metadata.</ows:Abstract>
+        </wps:Process>
+        <wps:Process wps:processVersion="1.0">
+            <ows:Identifier>tidal-data-point</ows:Identifier>
+            <ows:Title>Tidal: Time-Series of 2D Tidal Data (Elevation / Velocity)</ows:Title>
+            <ows:Abstract>None</ows:Abstract>
+        </wps:Process>
+        <wps:Process wps:processVersion="1.0">
+            <ows:Identifier>tidal-rose-vel</ows:Identifier>
+            <ows:Title>Tidal: Tidal Rose of 2D Tidal Velocity</ows:Title>
+            <ows:Abstract>The Use of the process and any of its results is governed by the Creative Commons Attribution ShareAlike 3.0 Unported Licence. Reference must be given to the source and authors as stated in the relevant metadata.</ows:Abstract>
+        </wps:Process>
+        <wps:Process wps:processVersion="1.0">
+            <ows:Identifier>tidal-pdf-vel</ows:Identifier>
+            <ows:Title>Tidal: Tidal current speed distribution</ows:Title>
+            <ows:Abstract>The Use of the process and any of its results is governed by the Creative Commons Attribution ShareAlike 3.0 Unported Licence. Reference must be given to the source and authors as stated in the relevant metadata.</ows:Abstract>
+        </wps:Process>
+        <wps:Process wps:processVersion="1.0">
+            <ows:Identifier>tidal-pdf-kef</ows:Identifier>
+            <ows:Title>Tidal: Tidal stream kinetic energy flux distribution</ows:Title>
+            <ows:Abstract>The Use of the process and any of its results is governed by the Creative Commons Attribution ShareAlike 3.0 Unported Licence. Reference must be given to the source and authors as stated in the relevant metadata.</ows:Abstract>
+        </wps:Process>
+    </wps:ProcessOfferings>
+    <wps:Languages>
+        <wps:Default>
+            <ows:Language>en-US</ows:Language>
+        </wps:Default>
+        <wps:Supported>
+            <ows:Language>lang</ows:Language>
+        </wps:Supported>
+    </wps:Languages>
+</wps:Capabilities>
