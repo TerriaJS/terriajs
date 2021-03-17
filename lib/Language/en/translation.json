@@ -660,6 +660,7 @@
       "wms-group": "Web Map Service (WMS) Server",
       "wmts-group": "Web Map Tile Service (WMTS) Server",
       "wfs-group": "Web Feature Service (WFS) Server",
+      "wps-getCapabilities": "Web Processing Service (WPS) Server",
       "esri-group": "Esri ArcGIS Server",
       "esri-mapServer": "Esri ArcGIS MapServer (single layer)",
       "esri-featureServer": "Esri ArcGIS FeatureServer (single layer)",
@@ -1426,6 +1427,20 @@
       "regionParameterName": "Region Parameter",
       "wpsServer": "Web Processing Service (WPS) Server",
       "wpsResult": "Web Processing Service Result"
+    },
+    "webProcessingServiceCatalogGroup": {
+      "typeName": "Web Processing Service (WPS) Server",
+      "missingUrlTitle": "Unable to load GetCapabilities",
+      "missingUrlMessage": "Could not load the Web Processing Service (WPS) GetCapabilities document because the catalog item does not have a `url`.",
+      "invalidCapabilitiesTitle": "Invalid GetCapabilities",
+      "invalidCapabilitiesMessage": "The URL {{url}} was retrieved successfully but it does not appear to be a valid Web Processing Service (WPS) GetCapabilities document. \n\nEither the catalog file has been set up incorrectly, or the server address has changed.",
+      "invalidServerTitle": "Invalid WPS server",
+      "invalidServerMessage": "An error occurred while invoking GetCapabilities on the WPS server. The server's response does not appear to be a valid GetCapabilities document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "abstract": "Web Processing Service Description",
+      "accessConstraints": "Web Processing Service Access Constraints",
+      "fees": "Web Processing Service Fees",
+      "providerName": "Web Processing Service Provider Name",
+      "providerSite": "Web Processing Service Provider Site"
     },
     "wfsFeatures": {
       "featuresGroup": "Group of features in a Web Feature Service (WFS) Server",

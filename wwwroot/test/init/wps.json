@@ -1,17 +1,21 @@
 {
-    "catalog": [
+  "catalog": [
+    {
+      "name": "Web Processing Service (WPS)",
+      "type": "group",
+      "isOpen": true,
+      "members": [
         {
-            "name": "Web Processing Service (WPS)",
-            "type": "group",
-            "isOpen": true,
-            "items": [
-                {
-                    "name": "Australian Wave Energy Atlas PyWPS Server",
-                    "type": "wps-getCapabilities",
-                    "url": "http://oa-gis.csiro.au/wps",
-                    "isOpen": true
-                }
-            ]
+          "name": "Australian Wave Energy Atlas PyWPS Server",
+          "type": "wps-getCapabilities",
+          "url": "http://oa-gis.csiro.au/wps"
+        },
+        {
+          "name": "geoglam",
+          "type": "wps-getCapabilities",
+          "url": "http://gsky.nci.org.au/ows/geoglam"
         }
-    ]
+      ]
+    }
+  ]
 }
