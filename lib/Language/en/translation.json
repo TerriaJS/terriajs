@@ -660,6 +660,7 @@
       "wms-group": "Web Map Service (WMS) Server",
       "wmts-group": "Web Map Tile Service (WMTS) Server",
       "wfs-group": "Web Feature Service (WFS) Server",
+      "wps-getCapabilities": "Web Processing Service (WPS) Server",
       "esri-group": "Esri ArcGIS Server",
       "esri-mapServer": "Esri ArcGIS MapServer (single layer)",
       "esri-featureServer": "Esri ArcGIS FeatureServer (single layer)",
