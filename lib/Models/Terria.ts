@@ -72,6 +72,7 @@ import Mappable, { isDataSource } from "./Mappable";
 import { BaseModel } from "./Model";
 import NoViewer from "./NoViewer";
 import openGroup from "./openGroup";
+import { wrapErrorMessage } from "./raiseErrorToUser";
 import ShareDataService from "./ShareDataService";
 import SplitItemReference from "./SplitItemReference";
 import TimelineStack from "./TimelineStack";
@@ -588,30 +589,49 @@ export default class Terria {
 
     const launchUrlForAnalytics =
       options.applicationUrl?.href || getUriWithoutPath(baseUri);
-    const config = await loadJson5(options.configUrl, options.configUrlHeaders);
-    // If it's a magda config, we only load magda config and parameters should never be a property on the direct
-    // config aspect (it would be under the `terria-config` aspect)
-    let languageConfiguration: LanguageConfiguration | undefined;
-    if (isJsonObject(config) && config.aspects) {
-      await this.loadMagdaConfig(options.configUrl, config, baseUri);
-      languageConfiguration = this.configParameters.languageConfiguration;
-    }
-    runInAction(() => {
-      // If it's a regular config.json, continue on with parsing remaining init sources
-      if (isJsonObject(config) && isJsonObject(config.parameters)) {
-        this.updateParameters(config.parameters);
-        languageConfiguration = this.configParameters.languageConfiguration;
-      }
 
+    try {
+      const config = await loadJson5(
+        options.configUrl,
+        options.configUrlHeaders
+      );
+      // If it's a magda config, we only load magda config and parameters should never be a property on the direct
+      // config aspect (it would be under the `terria-config` aspect)
+      if (isJsonObject(config) && config.aspects) {
+        await this.loadMagdaConfig(options.configUrl, config, baseUri);
+      }
+      runInAction(() => {
+        if (isJsonObject(config) && isJsonObject(config.parameters)) {
+          this.updateParameters(config.parameters);
+        }
+        this.setupInitializationUrls(baseUri, config);
+      });
+    } catch (error) {
+      this.error.raiseEvent(
+        new TerriaError({
+          sender: this,
+          title: { key: "models.terria.loadConfigErrorTitle" },
+          message: wrapErrorMessage(
+            this,
+            `Couldn't load ${options.configUrl}:\n${
+              error instanceof TerriaError
+                ? error.message
+                : typeof error === "object"
+                ? error?.toString()
+                : undefined
+            }`
+          )
+        })
+      );
+    } finally {
       if (!options.i18nOptions?.skipInit) {
         Internationalization.initLanguage(
-          languageConfiguration,
+          this.configParameters.languageConfiguration,
           options.i18nOptions
         );
       }
+    }
 
-      this.setupInitializationUrls(baseUri, config);
-    });
     this.analytics?.start(this.configParameters);
     this.analytics?.logEvent("launch", "url", launchUrlForAnalytics);
     this.serverConfig = new ServerConfig();
