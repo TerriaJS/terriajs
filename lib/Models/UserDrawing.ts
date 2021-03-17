@@ -1,5 +1,11 @@
 import i18next from "i18next";
-import { computed, IReactionDisposer, reaction, runInAction } from "mobx";
+import {
+  computed,
+  IReactionDisposer,
+  reaction,
+  runInAction,
+  observable
+} from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -54,6 +60,7 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
   otherEntities: CustomDataSource;
   polygon?: Entity;
 
+  @observable
   private inDrawMode: boolean;
   closeLoop: boolean;
   private disposePickedFeatureSubscription?: () => void;
@@ -161,7 +168,9 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
       return;
     }
 
-    this.inDrawMode = true;
+    runInAction(() => {
+      this.inDrawMode = true;
+    });
 
     if (isDefined(this.terria.cesium)) {
       this.terria.cesium.cesiumWidget.canvas.setAttribute(
@@ -295,6 +304,16 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
     }
   }
 
+  endDrawing() {
+    if (this.disposePickedFeatureSubscription) {
+      this.disposePickedFeatureSubscription();
+    }
+    runInAction(() => {
+      this.terria.mapInteractionModeStack.pop();
+      this.cleanUp();
+    });
+  }
+
   /**
    * Updates the MapInteractionModeStack with a listener for a new point.
    */
@@ -303,13 +322,7 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
       message: this.getDialogMessage(),
       buttonText: this.getButtonText(),
       onCancel: () => {
-        if (this.disposePickedFeatureSubscription) {
-          this.disposePickedFeatureSubscription();
-        }
-        runInAction(() => {
-          this.terria.mapInteractionModeStack.pop();
-          this.cleanUp();
-        });
+        this.endDrawing();
       },
       onEnable: (viewState: ViewState) => {
         runInAction(() => (viewState.explorerPanelIsVisible = false));
@@ -460,7 +473,9 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
 
     this.terria.allowFeatureInfoRequests = true;
 
-    this.inDrawMode = false;
+    runInAction(() => {
+      this.inDrawMode = false;
+    });
     this.closeLoop = false;
 
     // Return cursor to original state

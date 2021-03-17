@@ -3,7 +3,7 @@ import { act } from "react-dom/test-utils";
 import TestRenderer from "react-test-renderer";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
-import Tool from "../../lib/ReactViews/Tool";
+import Tool from "../../lib/ReactViews/Tools/Tool";
 
 const TestComponent = () => <div>Test hello</div>;
 

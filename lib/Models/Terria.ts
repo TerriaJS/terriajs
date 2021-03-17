@@ -44,7 +44,7 @@ import TimeVarying from "../ModelMixins/TimeVarying";
 import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
 import { defaultTerms, Term } from "../ReactViewModels/defaultTerms";
 import { Notification } from "../ReactViewModels/ViewState";
-import MapNavigationModel from "../ReactViews/Map/Navigation/MapNavigationModel";
+import MapNavigationModel from "./MapNavigation/MapNavigationModel";
 import { shareConvertNotification } from "../ReactViews/Notification/shareConvertNotification";
 import ShowableTraits from "../Traits/ShowableTraits";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";

@@ -12,6 +12,7 @@ import parseCustomMarkdownToReact from "../../../Custom/parseCustomMarkdownToRea
 import HelpPanelItem from "./HelpPanelItem";
 import Button, { RawButton } from "../../../../Styled/Button.jsx";
 
+export const HELP_PANEL_ID = "help-panel";
 @observer
 class HelpPanel extends React.Component {
   static displayName = "HelpPanel";

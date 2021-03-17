@@ -1,20 +1,74 @@
-import { TFunction } from "i18next";
-import { runInAction } from "mobx";
-import { observer } from "mobx-react";
-import React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
-import { DefaultTheme, withTheme } from "styled-components";
+import { action, computed } from "mobx";
+import MapNavigationItemController from "../../../../Models/MapNavigation/MapNavigationItemController";
+import ViewerMode from "../../../../Models/ViewerMode";
 import ViewState from "../../../../ReactViewModels/ViewState";
-import { useRefForTerria } from "../../../Hooks/useRefForTerria";
 import Icon from "../../../Icon";
-import MapIconButton from "../../../MapIconButton/MapIconButton";
-import Terria from "./../../../../Models/Terria";
 
 export const SPLITTER_ICON_NAME = "MapNavigationSplitterIcon";
 
+export class ToggleSplitterController extends MapNavigationItemController {
+  static id = "splitter-tool";
+  constructor(private viewState: ViewState) {
+    super();
+  }
+
+  get glyph(): any {
+    if (this.active) {
+      return Icon.GLYPHS.splitterOn;
+    }
+    return Icon.GLYPHS.compare;
+  }
+  get viewerMode(): ViewerMode | undefined {
+    return undefined;
+  }
+
+  @action
+  handleClick(): void {
+    const terria = this.viewState.terria;
+    if (terria.showSplitter) {
+      this.deactivate();
+    } else {
+      this.activate();
+    }
+  }
+
+  @action
+  activate() {
+    const terria = this.viewState.terria;
+    terria.showSplitter = true;
+    this._active = true;
+  }
+
+  @action
+  deactivate() {
+    const terria = this.viewState.terria;
+    terria.showSplitter = false;
+    this._active = false;
+  }
+
+  @computed
+  get visible() {
+    return super.visible || this.viewState.terria.currentViewer.canShowSplitter;
+  }
+
+  @computed
+  get disabled() {
+    const toolIsDifference =
+      this.viewState.currentTool?.toolName === "Difference";
+    const isDiffMode = this.viewState.isToolOpen && toolIsDifference;
+    return isDiffMode;
+  }
+
+  @computed
+  get active(): boolean {
+    return super.active;
+  }
+}
+/* 
 interface PropTypes extends WithTranslation {
   viewState: ViewState;
   terria: Terria;
+  controller: ToggleSplitterController;
   theme: DefaultTheme;
   t: TFunction;
 }
@@ -79,4 +133,5 @@ const ToggleSplitterToolWrapper: React.FC<PropTypes> = observer(function(
   }
 });
 
-export default withTranslation()(withTheme(ToggleSplitterToolWrapper));
+export default withTranslation()(withTheme(ToggleSplitterTool));
+ */

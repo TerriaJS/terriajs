@@ -18,16 +18,17 @@ import Prompt from "../../Generic/Prompt";
 import { Medium } from "../../Generic/Responsive";
 import Icon, { GLYPHS } from "../../Icon";
 import MapIconButton from "../../MapIconButton/MapIconButton";
-import {
-  Control,
-  MapNavigationItem,
-  MapNavigationItemExtendedType
-} from "./MapNavigationItem";
-import MapNavigationModel, { OverflowItemId } from "./MapNavigationModel";
+import { Control, MapNavigationItem } from "./Items/MapNavigationItem";
+import MapNavigationModel, {
+  IMapNavigationItem,
+  OVERFLOW_ITEM_ID
+} from "../../../Models/MapNavigation/MapNavigationModel";
 import { registerMapNavigations } from "./registerMapNavigations";
 
 const Box = require("../../../Styled/Box").default;
 const Text = require("../../../Styled/Text").default;
+
+const OVERFLOW_ACTION_SIZE = 42;
 
 interface StyledMapNavigationProps {
   trainerBarVisible: boolean;
@@ -105,14 +106,16 @@ class MapNavigation extends React.Component<PropTypes> {
     this.model = props.viewState.terria.mapNavigationModel;
     this.resizeListener = debounce(() => this.updateNavigation(), 250);
     this.itemSizeInBar = new Map<string, number>();
-    this.computeSizes(this.model.enabledItems);
-    this.overflows = this.model.enabledItems.some(item => item.forceCollapsed);
-    this.activeItemDisposer = reaction(
+    this.computeSizes(this.model.visibleItems);
+    this.overflows = this.model.visibleItems.some(
+      item => item.controller.collapsed
+    );
+    /* this.activeItemDisposer = reaction(
       () => this.model.activeItem,
       () => {
         this.updateNavigation();
       }
-    );
+    ); */
     this.viewerModeReactionDisposer = reaction(
       () => this.viewState.terria.currentViewer,
       () => this.updateNavigation(),
@@ -125,7 +128,7 @@ class MapNavigation extends React.Component<PropTypes> {
   }
 
   componentDidMount() {
-    this.computeSizes(this.model.enabledItems);
+    this.computeSizes(this.model.visibleItems);
     this.updateNavigation();
     window.addEventListener("resize", this.resizeListener, false);
   }
@@ -147,19 +150,17 @@ class MapNavigation extends React.Component<PropTypes> {
       : Orientation.VERTICAL;
   }
 
-  private computeSizes(items: MapNavigationItemExtendedType[]): void {
+  private computeSizes(items: IMapNavigationItem[]): void {
     items.forEach(item => {
+      /* const currentSize = this.itemSizeInBar.get(item.id);
+      if((currentSize === undefined || currentSize <= 0)) */
       if (this.orientation === Orientation.VERTICAL) {
-        if (item.itemRef && item.itemRef.current) {
-          this.itemSizeInBar.set(item.id, item.itemRef.current.offsetHeight);
-        } else {
-          this.itemSizeInBar.set(item.id, item.height);
+        if (item.controller.height && item.controller.height > 0) {
+          this.itemSizeInBar.set(item.id, item.controller.height || 42);
         }
       } else {
-        if (item.itemRef && item.itemRef.current) {
-          this.itemSizeInBar.set(item.id, item.itemRef.current.offsetWidth);
-        } else {
-          this.itemSizeInBar.set(item.id, item.width);
+        if (item.controller.width && item.controller.width > 0) {
+          this.itemSizeInBar.set(item.id, item.controller.width || 42);
         }
       }
     });
@@ -174,25 +175,29 @@ class MapNavigation extends React.Component<PropTypes> {
       // navigation bar has not been rendered yet so there is nothing to update.
       return;
     }
-    if (this.computeSizes.length !== this.model.enabledItems.length) {
-      this.computeSizes(this.model.enabledItems);
+    if (this.computeSizes.length !== this.model.visibleItems.length) {
+      this.computeSizes(this.model.visibleItems);
     }
-    let itemsToShowId = this.model.enabledItems
-      .filter(item => filterViewerAndScreenSize(item, this.viewState))
-      .map(item => item.id);
-    // items we have to show in the navigation bar
-    let pinnedItemsId = this.model.pinnedItems
-      .filter(item => filterViewerAndScreenSize(item, this.viewState))
-      .map(item => item.id);
-    // items that are possible to be collapsed
-    let possibleToCollapseId = itemsToShowId.filter(
-      itemId => !pinnedItemsId.includes(itemId)
+    let itemsToShow = this.model.visibleItems.filter(item =>
+      filterViewerAndScreenSize(item, this.viewState)
     );
+    // items we have to show in the navigation bar
+    let pinnedItems = this.model.pinnedItems.filter(item =>
+      filterViewerAndScreenSize(item, this.viewState)
+    );
+    // items that are possible to be collapsed
+    let possibleToCollapse = itemsToShow
+      .filter(
+        item => !pinnedItems.some(pinnedItem => pinnedItem.id === item.id)
+      )
+      .reverse();
+
+    // Ensure we are not showing more composites than we have height for
     let overflows = false;
-    let maxVisible = itemsToShowId.length;
+    let maxVisible = itemsToShow.length;
     let size = 0;
     if (this.overflows) {
-      size += 42; //this.options.overflowActionSize;
+      size += OVERFLOW_ACTION_SIZE;
     }
     const limit =
       this.orientation === Orientation.VERTICAL
@@ -202,70 +207,62 @@ class MapNavigation extends React.Component<PropTypes> {
           100
         : this.navigationRef.current.clientWidth;
 
-    for (let i = 0; i < itemsToShowId.length && size <= limit; i++) {
-      size += this.itemSizeInBar.get(itemsToShowId[i]) || 0;
-      if (size > limit) {
-        maxVisible = i;
+    for (let i = 0; i < itemsToShow.length; i++) {
+      size += this.itemSizeInBar.get(itemsToShow[i].id) || 0;
+      if (size <= limit) {
+        maxVisible = i + 1;
       }
     }
-    if (pinnedItemsId.length > maxVisible) {
-      possibleToCollapseId.forEach(id => {
-        this.model.collapseItem(id);
+
+    if (pinnedItems.length > maxVisible) {
+      possibleToCollapse.forEach(item => {
+        this.model.setCollapsed(item.id, true);
       });
-      //there is nothing else we can do, we have to show all items as it is.
+      //there is nothing else we can do, we have to show the rest of items as it is.
       return;
     }
-    overflows = itemsToShowId.length > maxVisible;
-
+    overflows = itemsToShow.length > maxVisible;
+    const itemsToCollapseId: string[] = [];
+    const activeCollapsible: string[] = [];
     if (overflows) {
-      maxVisible = maxVisible - pinnedItemsId.length;
-      size -= this.itemSizeInBar.get(possibleToCollapseId[maxVisible]) || 0;
-      possibleToCollapseId = possibleToCollapseId.slice(0, maxVisible);
       if (!this.overflows) {
         // overflow is not currently visible so add its height here
-        size += 42; //this.options.overflowActionSize;
+        size += OVERFLOW_ACTION_SIZE;
+        this.overflows = true;
       }
-    }
-
-    // Check if we need to make extra room for the overflow action
-    if (size > limit) {
-      size -= this.itemSizeInBar.get(possibleToCollapseId.pop()!)!;
-    }
-
-    if (
-      this.model.activeItem &&
-      possibleToCollapseId.every(
-        itemId => !!this.model.activeItem && itemId !== this.model.activeItem.id
-      )
-    ) {
-      const removedItem = possibleToCollapseId.pop()!;
-      size =
-        size -
-        this.itemSizeInBar.get(removedItem)! +
-        this.itemSizeInBar.get(this.model.activeItem.id)!;
-      possibleToCollapseId.push(this.model.activeItem.id);
-    }
-
-    // The active composite might have bigger size than the removed composite, check for overflow again
-    if (size > limit) {
-      possibleToCollapseId.length
-        ? possibleToCollapseId.splice(possibleToCollapseId.length - 2, 1)
-        : possibleToCollapseId.pop();
-    }
-
-    if (overflows) {
-      this.overflows = true;
+      maxVisible = maxVisible - pinnedItems.length;
+      // first try to collapse inactive items and then active ones if needed
+      for (let i = 0; i < possibleToCollapse.length; i++) {
+        const item = possibleToCollapse[i];
+        if (item.controller.active) {
+          activeCollapsible.push(item.id);
+          continue;
+        }
+        itemsToCollapseId.push(item.id);
+        size -= this.itemSizeInBar.get(item.id) || 0;
+        if (size <= limit) {
+          break;
+        }
+      }
+      if (size > limit) {
+        for (let i = 0; i < activeCollapsible.length; i++) {
+          const itemId = activeCollapsible[i];
+          itemsToCollapseId.push(itemId);
+          size -= this.itemSizeInBar.get(itemId) || 0;
+          if (size <= limit) {
+            break;
+          }
+        }
+      }
     } else {
-      this.overflows = this.model.enabledItems.some(
-        item => item.forceCollapsed
-      );
+      this.overflows = false;
     }
-    itemsToShowId = [...pinnedItemsId, ...possibleToCollapseId];
-    this.model.enabledItems.forEach(item => {
-      if (!itemsToShowId.includes(item.id)) {
-        this.model.collapseItem(item.id);
+
+    this.model.visibleItems.forEach(item => {
+      if (itemsToCollapseId.includes(item.id)) {
+        this.model.setCollapsed(item.id, true);
       } else {
-        this.model.uncollapseItem(item.id);
+        this.model.setCollapsed(item.id, false);
       }
     });
   }
@@ -273,10 +270,12 @@ class MapNavigation extends React.Component<PropTypes> {
   render() {
     const { viewState, t } = this.props;
     const terria = viewState.terria;
-    let items = terria.mapNavigationModel.visibleItems.filter(item =>
-      filterViewerAndScreenSize(item, this.viewState)
+    let items = terria.mapNavigationModel.visibleItems.filter(
+      item =>
+        !item.controller.collapsed &&
+        filterViewerAndScreenSize(item, this.viewState)
     );
-    let bottomItems: MapNavigationItemExtendedType[] | undefined;
+    let bottomItems: IMapNavigationItem[] | undefined;
     if (!this.overflows && this.orientation !== Orientation.HORIZONTAL) {
       bottomItems = items.filter(item => item.location === "BOTTOM");
       items = items.filter(item => item.location === "TOP");
@@ -302,7 +301,7 @@ class MapNavigation extends React.Component<PropTypes> {
               <MapNavigationItem item={item} terria={terria} />
             ))}
             {this.overflows && (
-              <Control key={OverflowItemId}>
+              <Control key={OVERFLOW_ITEM_ID}>
                 <MapIconButton
                   expandInPlace
                   iconElement={() => <Icon glyph={GLYPHS.moreItems} />}
@@ -357,18 +356,20 @@ class MapNavigation extends React.Component<PropTypes> {
 export default withTranslation()(withTheme(MapNavigation));
 
 export function filterViewerAndScreenSize(
-  item: MapNavigationItemExtendedType,
+  item: IMapNavigationItem,
   viewState: ViewState
 ) {
   const currentViewer = viewState.terria.mainViewer.viewerMode;
   if (viewState.useSmallScreenInterface) {
     return (
-      (!isDefined(item.viewerMode) || item.viewerMode === currentViewer) &&
+      (!isDefined(item.controller.viewerMode) ||
+        item.controller.viewerMode === currentViewer) &&
       (!isDefined(item.screenSize) || item.screenSize === "small")
     );
   } else {
     return (
-      (!isDefined(item.viewerMode) || item.viewerMode === currentViewer) &&
+      (!isDefined(item.controller.viewerMode) ||
+        item.controller.viewerMode === currentViewer) &&
       (!isDefined(item.screenSize) || item.screenSize === "medium")
     );
   }

@@ -1,0 +1,64 @@
+import { observer } from "mobx-react";
+import React from "react";
+import styled from "styled-components";
+import { useTranslationIfExists } from "../../../../Language/languageHelpers";
+import { IMapNavigationItem } from "../../../../Models/MapNavigation/MapNavigationModel";
+import Terria from "../../../../Models/Terria";
+import Icon, { GLYPHS } from "../../../Icon";
+import MapIconButton from "../../../MapIconButton/MapIconButton";
+const Box = require("../../../../Styled/Box").default;
+
+interface PropTypes {
+  item: IMapNavigationItem;
+  terria: Terria;
+}
+
+@observer
+export class MapNavigationItem extends React.Component<PropTypes> {
+  constructor(props: PropTypes) {
+    super(props);
+  }
+  render() {
+    const { item } = this.props;
+    if (item.render)
+      return (
+        <Control key={item.id} ref={item.controller.itemRef}>
+          {item.render}
+        </Control>
+      );
+    return (
+      <Control ref={item.controller.itemRef}>
+        <MapIconButton
+          expandInPlace
+          iconElement={() => <Icon glyph={item.controller.glyph} />}
+          title={useTranslationIfExists(item.title || item.name)}
+          onClick={() => {
+            item.controller.handleClick();
+          }}
+          disabled={item.controller.disabled}
+          primary={item.controller.active}
+          closeIconElement={() => <Icon glyph={GLYPHS.closeTool} />}
+        >
+          {useTranslationIfExists(item.name)}
+        </MapIconButton>
+      </Control>
+    );
+  }
+}
+
+export const Control = styled(Box).attrs({
+  centered: true,
+  column: true
+})`
+  pointer-events: auto;
+  @media (min-width: ${props => props.theme.sm}px) {
+    margin: 0;
+    padding-top: 10px;
+    height: auto;
+  }
+  @media (max-width: ${props => props.theme.mobile}px) {
+    padding-right: 10px;
+    margin-bottom: 5px;
+  }
+  text-align: center;
+`;

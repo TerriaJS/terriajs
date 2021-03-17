@@ -41,9 +41,9 @@ import Styles from "./standard-user-interface.scss";
 import { observer } from "mobx-react";
 import { action, runInAction } from "mobx";
 import HelpPanel from "../Map/Panels/HelpPanel/HelpPanel";
-import Tool from "../Tool";
+import Tool from "../Tools/Tool";
 import Disclaimer from "../Disclaimer";
-import CollapsedNavigation from "../Map/Navigation/CollapsedNavigation";
+import CollapsedNavigation from "../Map/Navigation/Items/OverflowNavigationItem";
 
 export const showStoryPrompt = (viewState, terria) => {
   terria.configParameters.showFeaturePrompts &&

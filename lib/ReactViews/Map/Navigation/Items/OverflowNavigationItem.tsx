@@ -3,22 +3,22 @@ import { observer } from "mobx-react";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
-import ViewState from "../../../ReactViewModels/ViewState";
-import CloseButton from "../../Generic/CloseButton";
-import { PrefaceBox } from "../../Generic/PrefaceBox";
-import { StyledIcon } from "../../Icon";
-import { useTranslationIfExists } from "./../../../Language/languageHelpers";
-import { filterViewerAndScreenSize } from "./MapNavigation";
-import { MapNavigationItemExtendedType } from "./MapNavigationItem";
-const Box = require("../../../Styled/Box").default;
-const BoxSpan = require("../../../Styled/Box").BoxSpan;
+import ViewState from "../../../../ReactViewModels/ViewState";
+import CloseButton from "../../../Generic/CloseButton";
+import { PrefaceBox } from "../../../Generic/PrefaceBox";
+import { StyledIcon } from "../../../Icon";
+import { useTranslationIfExists } from "../../../../Language/languageHelpers";
+import { filterViewerAndScreenSize } from "../MapNavigation";
+import { IMapNavigationItem } from "../../../../Models/MapNavigation/MapNavigationModel";
 
-const Text = require("../../../Styled/Text").default;
-const Spacing = require("../../../Styled/Spacing").default;
+const Box = require("../../../../Styled/Box").default;
+const BoxSpan = require("../../../../Styled/Box").BoxSpan;
+const Text = require("../../../../Styled/Text").default;
+const Spacing = require("../../../../Styled/Spacing").default;
 
 interface PropTypes {
   viewState: ViewState;
-  items: MapNavigationItemExtendedType[];
+  items: IMapNavigationItem[];
 }
 
 const CollapsedNavigationBox = styled(Box).attrs({
@@ -94,20 +94,18 @@ const CollapsedNavigationPanel: React.FC<PropTypes> = observer(
               title={useTranslationIfExists(item.name)}
               onClick={() => {
                 viewState.closeCollapsedNavigation();
-                viewState.terria.mapNavigationModel.activateItem(item.id);
-                if (item.onClick) {
-                  item.onClick();
-                }
+                item.controller.handleClick();
               }}
-              css={
-                item.mapIconButtonProps &&
-                item.mapIconButtonProps.primary &&
-                `
-                border: 2px solid ${theme.colorPrimary};
-              `
-              }
+              css={`
+                ${item.controller.active &&
+                  `border: 2px solid ${theme.colorPrimary};`}
+              `}
             >
-              <StyledIcon glyph={item.glyph} styledWidth="22px" dark />
+              <StyledIcon
+                glyph={item.controller.glyph}
+                styledWidth="22px"
+                dark
+              />
             </NavigationButton>
           ))}
         </ButtonsBox>
@@ -130,7 +128,9 @@ const CollapsedNavigation: React.FC<{ viewState: ViewState }> = observer(
       })
     );
 
-    let items = viewState.terria.mapNavigationModel.collapsedItems;
+    let items = viewState.terria.mapNavigationModel.items.filter(
+      item => item.controller.collapsed
+    );
     items = items.filter(item => filterViewerAndScreenSize(item, viewState));
 
     if (!viewState.showCollapsedNavigation || items.length === 0) {

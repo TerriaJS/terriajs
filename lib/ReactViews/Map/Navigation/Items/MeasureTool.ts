@@ -1,6 +1,6 @@
 "use strict";
 import i18next from "i18next";
-import { action, observable } from "mobx";
+import { action, observable, computed } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -12,6 +12,9 @@ import VertexFormat from "terriajs-cesium/Source/Core/VertexFormat";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Terria from "../../../../Models/Terria";
 import UserDrawing from "../../../../Models/UserDrawing";
+import MapNavigationItemController from "../../../../Models/MapNavigation/MapNavigationItemController";
+import { GLYPHS } from "../../../Icon";
+import ViewerMode from "../../../../Models/ViewerMode";
 
 const EllipsoidTangentPlane = require("terriajs-cesium/Source/Core/EllipsoidTangentPlane");
 const PolygonGeometryLibrary = require("terriajs-cesium/Source/Core/PolygonGeometryLibrary");
@@ -21,7 +24,8 @@ interface PropTypes {
   onClose(): void;
 }
 
-export default class MeasureTool {
+export default class MeasureTool extends MapNavigationItemController {
+  static id = "measure-tool";
   readonly terria: Terria;
   @observable
   totalDistanceMetres: number = 0;
@@ -35,6 +39,7 @@ export default class MeasureTool {
   static displayName = "MeasureTool";
   onClose: () => void;
   constructor(props: PropTypes) {
+    super();
     const t = i18next.t.bind(i18next);
     this.terria = props.terria;
     this.userDrawing = new UserDrawing({
@@ -47,6 +52,14 @@ export default class MeasureTool {
       onMakeDialogMessage: this.onMakeDialogMessage
     });
     this.onClose = props.onClose;
+  }
+
+  itemRef: React.RefObject<HTMLDivElement> = React.createRef();
+  get glyph(): any {
+    return GLYPHS.measure;
+  }
+  get viewerMode(): ViewerMode | undefined {
+    return undefined;
   }
 
   prettifyNumber(number: number, squared: boolean) {
@@ -205,6 +218,7 @@ export default class MeasureTool {
   onCleanUp() {
     this.totalDistanceMetres = 0;
     this.totalAreaMetresSquared = 0;
+    this.deactivate();
   }
 
   @action.bound
@@ -229,8 +243,19 @@ export default class MeasureTool {
     return message;
   };
 
+  /* @computed
+  get active() {
+    return this.userDrawing.isDrawing;
+  } */
+
   @action.bound
   handleClick() {
-    this.userDrawing.enterDrawMode();
+    if (this.active) {
+      this.userDrawing.endDrawing();
+      this.deactivate();
+    } else {
+      this.userDrawing.enterDrawMode();
+      this.activate();
+    }
   }
 }

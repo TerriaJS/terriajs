@@ -21,9 +21,11 @@ interface PropTypes extends WithTranslation {
   theme: DefaultTheme;
   t: TFunction;
 }
+export const ZOOM_CONTROL_ID = "zoom-control";
 
 class ZoomControl extends React.Component<PropTypes> {
   static displayName = "ZoomControl";
+  static id = ZOOM_CONTROL_ID;
 
   constructor(props: PropTypes) {
     super(props);

@@ -13,7 +13,7 @@ const PEDESTRIAN_HEIGHT_IN_METRES = 1.5;
 type PedestrianModeProps = {
   viewState: ViewState;
 };
-export const PEDESTRIAN_MODE_ID = "pedestrianMode";
+export const PEDESTRIAN_MODE_ID = "pedestrian-mode";
 
 const PedestrianMode: React.FC<PedestrianModeProps> = observer(
   (props: PedestrianModeProps) => {

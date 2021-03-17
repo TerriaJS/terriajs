@@ -1,31 +1,30 @@
-import i18next, { TFunction } from "i18next";
+import i18next from "i18next";
 import { action, observable, runInAction } from "mobx";
 import React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
-import { DefaultTheme, withTheme } from "styled-components";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import isDefined from "../../../../Core/isDefined";
 import TerriaError from "../../../../Core/TerriaError";
 import CommonStrata from "../../../../Models/CommonStrata";
-import Icon from "../../../Icon";
-import MapIconButton from "../../../MapIconButton/MapIconButton";
 import GeoJsonCatalogItem from "../../../../Models/GeoJsonCatalogItem";
+import MapNavigationItemController from "../../../../Models/MapNavigation/MapNavigationItemController";
 import Terria from "../../../../Models/Terria";
-const Tween = require("terriajs-cesium/Source/ThirdParty/Tween").default;
-const Box = require("../../../../Styled/Box").default;
+import ViewerMode from "../../../../Models/ViewerMode";
+import { GLYPHS } from "../../../Icon";
 
 interface PropTypes {
   terria: Terria;
 }
 
-class MyLocation {
+class MyLocation extends MapNavigationItemController {
+  static id = "my-location";
   static displayName = "MyLocation";
   private _marker: GeoJsonCatalogItem;
   @observable private watchId: number | undefined;
   @observable private flown: boolean | undefined;
   readonly terria: Terria;
   constructor(props: PropTypes) {
+    super();
     this.terria = props.terria;
     this._marker = new GeoJsonCatalogItem(createGuid(), props.terria);
     this.zoomToMyLocation = this.zoomToMyLocation.bind(this);
@@ -34,6 +33,14 @@ class MyLocation {
       this
     );
     this.followMeEnabled = this.followMeEnabled.bind(this);
+  }
+
+  itemRef: React.RefObject<HTMLDivElement> = React.createRef();
+  get glyph(): any {
+    return GLYPHS.geolocationThick;
+  }
+  get viewerMode(): ViewerMode | undefined {
+    return undefined;
   }
 
   @action.bound
