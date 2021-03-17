@@ -86,8 +86,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
 
       if (filterQuery.toString().includes("fq=")) {
         uri.query(uri.query() + "&" + filterQuery.toString());
-      }
-      else {
+      } else {
         Object.keys(filterQuery).forEach((key: string) =>
           uri.addQuery(key, filterQuery[key])
         );
