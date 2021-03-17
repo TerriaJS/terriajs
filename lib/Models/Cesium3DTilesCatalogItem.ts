@@ -17,7 +17,7 @@ import FeatureInfoMixin from "../ModelMixins/FeatureInfoMixin";
 import SearchableItemMixin, {
   ItemSelectionDisposer
 } from "../ModelMixins/SearchableItemMixin";
-import Cesium3DTilesCatalogItemTraits from "../Traits/Cesium3DCatalogItemTraits";
+import Cesium3DTilesCatalogItemTraits from "../Traits/Cesium3DTilesCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import { ItemSearchResult } from "./ItemSearchProvider";
 

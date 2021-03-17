@@ -34,7 +34,7 @@ import createStratumInstance from "../Models/createStratumInstance";
 import Feature from "../Models/Feature";
 import Model from "../Models/Model";
 import proxyCatalogItemUrl from "../Models/proxyCatalogItemUrl";
-import Cesium3DTilesCatalogItemTraits from "../Traits/Cesium3DCatalogItemTraits";
+import Cesium3DTilesCatalogItemTraits from "../Traits/Cesium3DTilesCatalogItemTraits";
 import Cesium3dTilesTraits, {
   OptionsTraits
 } from "../Traits/Cesium3dTilesTraits";
@@ -326,7 +326,7 @@ export default function Cesium3dTilesMixin<
         return [min, max].filter(x => x.length > 0).join(" && ");
       });
 
-      const showExpression = terms.join("&&");
+      const showExpression = terms.filter(x => x.length > 0).join("&&");
       if (showExpression.length > 0) {
         return showExpression;
       }

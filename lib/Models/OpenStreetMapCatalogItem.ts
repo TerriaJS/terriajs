@@ -14,6 +14,10 @@ export default class OpenStreetMapCatalogItem extends MappableMixin(
 ) {
   static readonly type = "open-street-map";
 
+  get type() {
+    return OpenStreetMapCatalogItem.type;
+  }
+
   forceLoadMetadata() {
     return Promise.resolve();
   }
