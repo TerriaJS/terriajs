@@ -6,6 +6,8 @@ import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
 import MappableTraits from "../Traits/MappableTraits";
+import CatalogMemberFactory from "../Models/CatalogMemberFactory";
+import CatalogMemberMixin from "./CatalogMemberMixin";
 
 export type MapItem =
   | ImageryParts
@@ -68,8 +70,9 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
      * If the map items are already loaded or already loading, it will
      * return the existing promise.
      */
-    loadMapItems(): Promise<void> {
-      return this._mapItemsLoader.load();
+    async loadMapItems() {
+      if (CatalogMemberMixin.isMixedInto(this)) await this.loadMetadata();
+      await this._mapItemsLoader.load();
     }
 
     abstract get mapItems(): MapItem[];

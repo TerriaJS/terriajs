@@ -291,7 +291,7 @@ export default class ArcGisMapServerCatalogGroup extends UrlMixin(
     });
   }
 
-  protected async forceLoadMembers() {
+  protected forceLoadMembers() {
     const mapServerStratum = <MapServerStratum | undefined>(
       this.strata.get(MapServerStratum.stratumName)
     );

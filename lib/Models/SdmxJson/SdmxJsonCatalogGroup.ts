@@ -24,7 +24,7 @@ export default class SdmxCatalogGroup extends UrlMixin(
     }
   }
 
-  protected async forceLoadMembers() {
+  protected forceLoadMembers() {
     const sdmxServerStratum = <SdmxServerStratum | undefined>(
       this.strata.get(SdmxServerStratum.stratumName)
     );

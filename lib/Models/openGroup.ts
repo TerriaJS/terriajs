@@ -3,6 +3,7 @@ import { BaseModel } from "./Model";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import CommonStrata from "./CommonStrata";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 
 /**
  * Opens or closes a model, which is likely to include a {@link GroupMixin}.
@@ -30,7 +31,10 @@ export default function openGroup(
   } else if (GroupMixin.isMixedInto(group)) {
     group.setTrait(stratum, "isOpen", isOpen);
     if (group.isOpen) {
-      return group.loadMembers();
+      return (CatalogMemberMixin.isMixedInto(group)
+        ? group.loadMetadata()
+        : Promise.resolve()
+      ).then(() => group.loadMembers());
     }
   }
 

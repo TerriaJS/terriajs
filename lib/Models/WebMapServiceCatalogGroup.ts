@@ -302,9 +302,7 @@ export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(
     return WebMapServiceCatalogGroup.type;
   }
 
-  protected async forceLoadMetadata(): Promise<void> {}
-
-  protected async forceLoadMembers(): Promise<void> {
+  protected async forceLoadMetadata(): Promise<void> {
     let getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
     );
@@ -317,8 +315,15 @@ export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(
         );
       });
     }
+  }
 
-    getCapabilitiesStratum.createMembersFromLayers();
+  protected forceLoadMembers() {
+    let getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
+      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
+    );
+    if (getCapabilitiesStratum !== undefined) {
+      getCapabilitiesStratum.createMembersFromLayers();
+    }
   }
 
   protected get defaultGetCapabilitiesUrl(): string | undefined {
