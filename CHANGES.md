@@ -14,6 +14,7 @@ Change Log
 * Fix region mapping feature highlighting.
 * Update clipboard to fix clipboard typing error.
 * Add support for time on `ArcGisMapServerCatalogItem`
+* Fixed a issue when multiple filters are set to Cesium3DTilesCatalogItem
 * [The next improvement]
 
 #### 8.0.0-alpha.67
