@@ -1,7 +1,7 @@
 import {
   ICompositeBarItem,
   CompositeBarModel
-} from "../CompositeBar/CompositeBarmodel";
+} from "../CompositeBar/CompositeBarModel";
 import MapNavigationItemController from "./MapNavigationItemController";
 
 export const OVERFLOW_ITEM_ID = "overflow-item";

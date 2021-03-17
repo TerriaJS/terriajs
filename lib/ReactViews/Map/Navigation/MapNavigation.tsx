@@ -97,7 +97,6 @@ class MapNavigation extends React.Component<PropTypes> {
   private itemSizeInBar: Map<string, number>;
   @observable private model: MapNavigationModel;
   @observable private overflows: boolean;
-  private activeItemDisposer: IReactionDisposer | undefined;
   private viewerModeReactionDisposer: IReactionDisposer | undefined;
   constructor(props: PropTypes) {
     super(props);
@@ -110,12 +109,6 @@ class MapNavigation extends React.Component<PropTypes> {
     this.overflows = this.model.visibleItems.some(
       item => item.controller.collapsed
     );
-    /* this.activeItemDisposer = reaction(
-      () => this.model.activeItem,
-      () => {
-        this.updateNavigation();
-      }
-    ); */
     this.viewerModeReactionDisposer = reaction(
       () => this.viewState.terria.currentViewer,
       () => this.updateNavigation(),
@@ -135,9 +128,6 @@ class MapNavigation extends React.Component<PropTypes> {
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.resizeListener);
-    if (this.activeItemDisposer) {
-      this.activeItemDisposer();
-    }
     if (this.viewerModeReactionDisposer) {
       this.viewerModeReactionDisposer();
     }
@@ -152,8 +142,6 @@ class MapNavigation extends React.Component<PropTypes> {
 
   private computeSizes(items: IMapNavigationItem[]): void {
     items.forEach(item => {
-      /* const currentSize = this.itemSizeInBar.get(item.id);
-      if((currentSize === undefined || currentSize <= 0)) */
       if (this.orientation === Orientation.VERTICAL) {
         if (item.controller.height && item.controller.height > 0) {
           this.itemSizeInBar.set(item.id, item.controller.height || 42);
