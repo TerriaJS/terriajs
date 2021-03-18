@@ -1,4 +1,4 @@
-import { JsonObject } from "../Core/Json";
+import JsonValue, { JsonObject } from "../Core/Json";
 import anyTrait from "./anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import CkanSharedTraits from "./CkanSharedTraits";
@@ -35,7 +35,7 @@ export default class CkanCatalogGroupTraits extends mixTraits(
          *   To get all datasets with no filter, you can use ['']
        `
   })
-  filterQuery?: JsonObject[] = [
+  filterQuery?: { [key: string]: JsonValue | string }[] = [
     {
       fq:
         '(res_format:(czml OR CZML OR geojson OR GeoJSON OR WMS OR wms OR kml OR KML OR kmz OR KMZ OR WFS OR wfs OR CSV-GEO-AU OR csv-geo-au OR "Esri REST"))'
