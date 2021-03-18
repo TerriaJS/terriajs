@@ -16,7 +16,7 @@ import replaceUnderscores from "../Core/replaceUnderscores";
 import TerriaError from "../Core/TerriaError";
 import featureDataToGeoJson from "../Map/featureDataToGeoJson";
 import proj4definitions from "../Map/Proj4Definitions";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import ArcGisFeatureServerCatalogItemTraits from "../Traits/ArcGisFeatureServerCatalogItemTraits";
@@ -29,7 +29,6 @@ import createStratumInstance from "./createStratumInstance";
 import { getLineStyleCesium } from "./esriLineStyle";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import LoadableStratum from "./LoadableStratum";
-import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
@@ -380,13 +379,11 @@ class FeatureServerStratum extends LoadableStratum(
 
 StratumOrder.addLoadStratum(FeatureServerStratum.stratumName);
 
-export default class ArcGisFeatureServerCatalogItem
-  extends AsyncMappableMixin(
-    UrlMixin(
-      CatalogMemberMixin(CreateModel(ArcGisFeatureServerCatalogItemTraits))
-    )
+export default class ArcGisFeatureServerCatalogItem extends MappableMixin(
+  UrlMixin(
+    CatalogMemberMixin(CreateModel(ArcGisFeatureServerCatalogItemTraits))
   )
-  implements Mappable {
+) {
   static readonly type = "esri-featureServer";
 
   get type(): string {
@@ -395,10 +392,6 @@ export default class ArcGisFeatureServerCatalogItem
 
   get typeName(): string {
     return i18next.t("models.arcGisFeatureServerCatalogItem.name");
-  }
-
-  get isMappable(): boolean {
-    return true;
   }
 
   get canZoomTo(): boolean {

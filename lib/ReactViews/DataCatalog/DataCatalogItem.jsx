@@ -10,6 +10,7 @@ import getPath from "../../Core/getPath";
 import removeUserAddedData from "../../Models/removeUserAddedData";
 import CatalogItem from "./CatalogItem";
 import raiseErrorToUser from "../../Models/raiseErrorToUser";
+import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 
 // Individual dataset
 export const DataCatalogItem = observer(
@@ -38,7 +39,7 @@ export const DataCatalogItem = observer(
         }
 
         if (
-          defined(this.props.item.invoke) ||
+          CatalogFunctionMixin.isMixedInto(this.props.item) ||
           this.props.viewState.useSmallScreenInterface
         ) {
           this.setPreviewedItem();
@@ -146,10 +147,10 @@ export const DataCatalogItem = observer(
         return "preview";
       } else if (this.props.item.terria.workbench.contains(this.props.item)) {
         return "remove";
-      } else if (!defined(this.props.item.invoke)) {
-        return "add";
-      } else {
+      } else if (CatalogFunctionMixin.isMixedInto(this.props.item)) {
         return "stats";
+      } else {
+        return "add";
       }
     }
   })

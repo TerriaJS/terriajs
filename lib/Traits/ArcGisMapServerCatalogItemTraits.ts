@@ -12,6 +12,7 @@ import SplitterTraits from "./SplitterTraits";
 import UrlTraits from "./UrlTraits";
 
 export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
+  MappableTraits,
   FeatureInfoTraits,
   SplitterTraits,
   RasterLayerTraits,
