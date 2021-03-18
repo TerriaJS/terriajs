@@ -1,10 +1,8 @@
-import React from "react";
-import Terria from "../../../../lib/Models/Terria";
-import ViewState from "../../../../lib/ReactViewModels/ViewState";
-import { GLYPHS } from "../../../../lib/ReactViews/Icon";
-import MapNavigationModel from "../../../../lib/Models/MapNavigation/MapNavigationModel";
-import { IMapNavigationItem } from "./../../../../lib/Models/MapNavigation/MapNavigationModel";
-import { GenericMapNavigationItemController } from "../../../../lib/Models/MapNavigation/MapNavigationItemController";
+import Terria from "../../../lib/Models/Terria";
+import ViewState from "../../../lib/ReactViewModels/ViewState";
+import MapNavigationModel from "../../../lib/Models/MapNavigation/MapNavigationModel";
+import { IMapNavigationItem } from "./../../../lib/Models/MapNavigation/MapNavigationModel";
+import { GenericMapNavigationItemController } from "../../../lib/Models/MapNavigation/MapNavigationItemController";
 
 describe("MapNavigationModel", function() {
   let terria: Terria;
@@ -30,7 +28,9 @@ describe("MapNavigationModel", function() {
       name: "item1",
       title: "item1",
       order: 1,
-      controller: new GenericMapNavigationItemController(),
+      controller: new GenericMapNavigationItemController({
+        icon: { id: "test" }
+      }),
       screenSize: undefined,
       location: "TOP"
     };
@@ -40,7 +40,9 @@ describe("MapNavigationModel", function() {
       name: "item2",
       title: "item2",
       order: 2,
-      controller: new GenericMapNavigationItemController(),
+      controller: new GenericMapNavigationItemController({
+        icon: { id: "test" }
+      }),
       screenSize: undefined,
       location: "TOP"
     };
@@ -51,7 +53,9 @@ describe("MapNavigationModel", function() {
       name: "item3",
       title: "item3",
       order: 3,
-      controller: new GenericMapNavigationItemController(),
+      controller: new GenericMapNavigationItemController({
+        icon: { id: "test" }
+      }),
       screenSize: undefined,
       location: "TOP"
     };
@@ -62,7 +66,9 @@ describe("MapNavigationModel", function() {
       name: "item4",
       title: "item4",
       order: 4,
-      controller: new GenericMapNavigationItemController(),
+      controller: new GenericMapNavigationItemController({
+        icon: { id: "test" }
+      }),
       screenSize: undefined,
       location: "TOP"
     };
@@ -73,7 +79,9 @@ describe("MapNavigationModel", function() {
       name: "item5",
       title: "item5",
       order: 5,
-      controller: new GenericMapNavigationItemController(),
+      controller: new GenericMapNavigationItemController({
+        icon: { id: "test" }
+      }),
       screenSize: undefined,
       location: "TOP"
     };
@@ -84,7 +92,9 @@ describe("MapNavigationModel", function() {
       name: "item2",
       title: "item2",
       order: 2,
-      controller: new GenericMapNavigationItemController(),
+      controller: new GenericMapNavigationItemController({
+        icon: { id: "test" }
+      }),
       screenSize: undefined,
       location: "TOP"
     };
