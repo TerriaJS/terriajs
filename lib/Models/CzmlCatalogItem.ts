@@ -92,6 +92,7 @@ export default class CzmlCatalogItem extends AutoRefreshingMixin(
   }
 
   protected forceLoadMapItems(): Promise<void> {
+    const attribution = this.attribution;
     return new Promise<string | readonly JsonObject[]>(resolve => {
       if (isDefined(this.czmlData)) {
         resolve(toJS(this.czmlData));
@@ -109,11 +110,9 @@ export default class CzmlCatalogItem extends AutoRefreshingMixin(
         });
       }
     })
-      .then(
-        action(czmlLoadInput => {
-          return CzmlDataSource.load(czmlLoadInput, {
-            credit: this.attribution
-          });
+      .then(czmlLoadInput =>
+        CzmlDataSource.load(czmlLoadInput, {
+          credit: attribution
         })
       )
       .then(
