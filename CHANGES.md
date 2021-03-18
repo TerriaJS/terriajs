@@ -3,7 +3,10 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.68)
+#### next release (8.0.0-alpha.69)
+* [The next improvement]
+
+#### 8.0.0-alpha.68
 * Remove points from rectangle `UserDrawing`
 * Fix clipboard typing error. 
 * Ported `WebProcessingServiceCatalogGroup`.
@@ -23,7 +26,6 @@ Change Log
 * Async/Awaitify `Terria.ts` + fix share links loading after `loadInitSources`.
 * Tsified `TerriaError` + added support for "un-rendered" `I18nTranslateString`
 * Tsified `raiseErrorToUser` + added `wrapErrorMessage()` to wrap error message in something more user friendly (using `models.raiseError.errorMessage` translation string).
-* [The next improvement]
 
 #### 8.0.0-alpha.67
 * TSify `Loader` function.
