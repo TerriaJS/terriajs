@@ -1,4 +1,4 @@
-import JsonValue, { JsonObject } from "../Core/Json";
+import { JsonObject } from "../Core/Json";
 import anyTrait from "./anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import CkanSharedTraits from "./CkanSharedTraits";
