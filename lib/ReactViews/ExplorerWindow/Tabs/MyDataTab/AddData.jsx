@@ -15,6 +15,7 @@ import Styles from "./add-data.scss";
 import Loader from "../../../Loader";
 import TerriaError from "../../../../Core/TerriaError";
 import addUserFiles from "../../../../Models/addUserFiles";
+import TimeVarying from "../../../../ModelMixins/TimeVarying";
 
 // Local and remote data have different dataType options
 const defaultRemoteDataTypes = getDataType().remoteDataType;
@@ -115,6 +116,9 @@ const AddData = createReactClass({
     addUserCatalogMember(this.props.terria, promise).then(addedItem => {
       if (addedItem && !(addedItem instanceof TerriaError)) {
         this.props.onFileAddFinished([addedItem]);
+      }
+      if (TimeVarying.is(addedItem)) {
+        this.props.terria.timelineStack.addToTop(addedItem);
       }
       // FIXME: Setting state here might result in a react warning if the
       // component unmounts before the promise finishes

@@ -91,6 +91,7 @@ export default class CzmlCatalogItem extends AutoRefreshingMixin(
     return isDefined(this._czmlFile);
   }
 
+  @action
   protected forceLoadMapItems(): Promise<void> {
     const attribution = this.attribution;
     return new Promise<string | readonly JsonObject[]>(resolve => {

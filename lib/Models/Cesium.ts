@@ -722,7 +722,6 @@ export default class Cesium extends GlobeOrMap {
               isDefined(east) &&
               isDefined(north)
             ) {
-              if (TimeVarying.is(target)) that.setAsTimelineClockSource(target);
               return that.scene.camera.flyTo({
                 duration: flightDurationSeconds,
                 destination: Rectangle.fromDegrees(west, south, east, north)
