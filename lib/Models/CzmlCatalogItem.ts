@@ -9,8 +9,8 @@ import readJson from "../Core/readJson";
 import TerriaError from "../Core/TerriaError";
 import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
+import TimeVarying from "../ModelMixins/TimeVarying";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import CzmlCatalogItemTraits from "../Traits/CzmlCatalogItemTraits";
 import CreateModel from "./CreateModel";
@@ -65,13 +65,13 @@ class CzmlTimeVaryingStratum extends LoadableStratum(CzmlCatalogItemTraits) {
 
 StratumOrder.addLoadStratum(CzmlTimeVaryingStratum.stratumName);
 
-export default class CzmlCatalogItem extends AutoRefreshingMixin(
-  DiscretelyTimeVaryingMixin(
+export default class CzmlCatalogItem
+  extends AutoRefreshingMixin(
     MappableMixin(
       UrlMixin(CatalogMemberMixin(CreateModel(CzmlCatalogItemTraits)))
     )
   )
-) {
+  implements TimeVarying {
   static readonly type = "czml";
   get type() {
     return CzmlCatalogItem.type;
@@ -160,11 +160,19 @@ export default class CzmlCatalogItem extends AutoRefreshingMixin(
     return [this._dataSource];
   }
 
-  /**
-   * Required by DiscretelyTimeVaryingMixin
-   */
-  get discreteTimes() {
-    return undefined;
+  @computed({ equals: JulianDate.equals })
+  get currentTimeAsJulianDate() {
+    return toJulianDate(this.currentTime);
+  }
+
+  @computed({ equals: JulianDate.equals })
+  get startTimeAsJulianDate(): JulianDate | undefined {
+    return toJulianDate(this.startTime);
+  }
+
+  @computed({ equals: JulianDate.equals })
+  get stopTimeAsJulianDate(): JulianDate | undefined {
+    return toJulianDate(this.stopTime);
   }
 
   /**
@@ -176,4 +184,8 @@ export default class CzmlCatalogItem extends AutoRefreshingMixin(
     const url = proxyCatalogItemUrl(this, this.url, this.cacheDuration);
     this._dataSource?.process(url);
   }
+}
+
+function toJulianDate(time: string | undefined): JulianDate | undefined {
+  return time === undefined ? undefined : JulianDate.fromIso8601(time);
 }
