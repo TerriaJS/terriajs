@@ -1,7 +1,10 @@
 import { computed, runInAction } from "mobx";
+import { DataSource } from "terriajs-cesium";
 import loadJson from "../Core/loadJson";
 import TerriaError from "../Core/TerriaError";
+import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import { MapItem, ImageryParts } from "../ModelMixins/MappableMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 import ApiTableCatalogItemTraits from "../Traits/ApiTableCatalogItemTraits";
@@ -13,18 +16,8 @@ import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
 
 const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
-
-class ApiTableStratum extends LoadableStratum(ApiTableCatalogItemTraits) {
-  static stratumName = "apiTable";
-  duplicateLoadableStratum(newModel: BaseModel): this {
-    return new ApiTableStratum(newModel as ApiTableCatalogItem) as this;
-  }
-
-  static async load(item: ApiTableCatalogItem) {}
-}
-
-export class ApiTableCatalogItem extends TableMixin(
-  CatalogMemberMixin(CreateModel(ApiTableCatalogItemTraits))
+export class ApiTableCatalogItem extends AutoRefreshingMixin(
+  TableMixin(CatalogMemberMixin(CreateModel(ApiTableCatalogItemTraits)))
 ) {
   static readonly type = "api-table";
 
@@ -37,44 +30,57 @@ export class ApiTableCatalogItem extends TableMixin(
   }
 
   protected async forceLoadMetadata(): Promise<void> {
-    const stratum = ApiTableStratum.load(this);
-    runInAction(() => this.strata.set(ApiTableStratum.stratumName, stratum));
+    return Promise.resolve();
   }
+
   protected async forceLoadTableData(): Promise<string[][]> {
     // TODO: enforce required traits
-    if (this.positionStep.apiUrl === undefined) {
-      throw new TerriaError({
-        sender: this,
-        title: "Error getting positions", // TODO: i18n
-        message: "Error getting positions"
+
+    const positionApiResponse: any[] = await loadJson(
+      proxyCatalogItemUrl(this, this.positionStep.apiUrl!)
+    );
+    const valueApiResponse: any[] = await loadJson(
+      proxyCatalogItemUrl(this, this.valueStep.apiUrl!)
+    );
+
+    const positionForId: Map<
+      string,
+      { latitude: string; longitude: string }
+    > = new Map();
+
+    positionApiResponse.forEach(position => {
+      positionForId.set(position[this.idKey!], {
+        latitude: position[this.positionStep.latitudeKey!],
+        longitude: position[this.positionStep.longitudeKey!]
+      });
+    });
+
+    const values: string[][] = this.valueStep.keyToColumnMapping.map(
+      mapping => [mapping.columnName!]
+    );
+    const latitudeColumnIdx = values.push(["latitude"]) - 1;
+    const longitudeColumnIdx = values.push(["longitude"]) - 1;
+
+    for (let valueResponse of valueApiResponse) {
+      this.valueStep.keyToColumnMapping.forEach((mapping, columnIdx) => {
+        let cellValue = valueResponse[mapping.keyInApiResponse!];
+        if (cellValue === undefined) {
+          cellValue = "";
+        }
+        values[columnIdx].push(`${cellValue}`);
+
+        const id = valueResponse[this.idKey!];
+        const position = positionForId.get(id);
+        values[latitudeColumnIdx].push(position?.latitude ?? "");
+        values[longitudeColumnIdx].push(position?.longitude ?? "");
       });
     }
 
-    // TODO: construct a map from id property and match lats and longs to their actual values
-    const positionApiResponse = await loadJson(
-      proxyCatalogItemUrl(this, this.positionStep.apiUrl)
-    );
-    const latitudeColumn = positionApiResponse.map(
-      (position: any) => position[this.positionStep.latitudeKey!]
-    );
-    latitudeColumn.unshift("lat");
-    const longitudeColumn = positionApiResponse.map(
-      (position: any) => position[this.positionStep.longitudeKey!]
-    );
-    longitudeColumn.unshift("lon");
+    return values;
+  }
 
-    const valueApiResponse = await loadJson(
-      proxyCatalogItemUrl(this, this.valueStep.apiUrl!)
-    );
-    const values: string[] = [];
-    for (let mapping of this.valueStep.keyToColumnMapping) {
-      const column = valueApiResponse.map(
-        (o: any) => o[mapping.keyInApiResponse!]
-      );
-      column.unshift(mapping.columnName!);
-      values.push(column);
-    }
-    return Promise.resolve([latitudeColumn, longitudeColumn, ...values]);
+  refreshData(): void {
+    this.forceLoadTableData();
   }
 }
 

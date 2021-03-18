@@ -1,3 +1,4 @@
+import AutoRefreshingTraits from "./AutoRefreshingTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import mixTraits from "./mixTraits";
 import ModelTraits from "./ModelTraits";
@@ -49,14 +50,6 @@ class PositionStepTraits extends ApiStepTraits {
       "The key in the API response's JSON to get the longitude column of the table from"
   })
   longitudeKey?: string;
-
-  @primitiveTrait({
-    name: "Id Key",
-    type: "string",
-    description:
-      "The key in the API response's JSON to get the id from. This id will be used to determine which positions are associated with which value."
-  })
-  idKey?: string;
 }
 
 class ValueStepTraits extends ApiStepTraits {
@@ -72,7 +65,8 @@ class ValueStepTraits extends ApiStepTraits {
 
 export default class ApiTableCatalogItemTraits extends mixTraits(
   TableTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  AutoRefreshingTraits
 ) {
   @objectTrait({
     name: "Value step",
@@ -88,4 +82,12 @@ export default class ApiTableCatalogItemTraits extends mixTraits(
       "Describes how to get the position column of the table from the API"
   })
   positionStep?: PositionStepTraits;
+
+  @primitiveTrait({
+    name: "Id Key",
+    type: "string",
+    description:
+      "The key in the API response's JSON to get the id from. This id will be used to determine which positions are associated with which value."
+  })
+  idKey?: string;
 }
