@@ -7,15 +7,14 @@ import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import readJson from "../Core/readJson";
 import TerriaError from "../Core/TerriaError";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import CzmlCatalogItemTraits from "../Traits/CzmlCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import LoadableStratum from "./LoadableStratum";
-import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumOrder from "./StratumOrder";
@@ -66,15 +65,13 @@ class CzmlTimeVaryingStratum extends LoadableStratum(CzmlCatalogItemTraits) {
 
 StratumOrder.addLoadStratum(CzmlTimeVaryingStratum.stratumName);
 
-export default class CzmlCatalogItem
-  extends AutoRefreshingMixin(
-    AsyncMappableMixin(
-      DiscretelyTimeVaryingMixin(
-        UrlMixin(CatalogMemberMixin(CreateModel(CzmlCatalogItemTraits)))
-      )
+export default class CzmlCatalogItem extends AutoRefreshingMixin(
+  DiscretelyTimeVaryingMixin(
+    MappableMixin(
+      UrlMixin(CatalogMemberMixin(CreateModel(CzmlCatalogItemTraits)))
     )
   )
-  implements Mappable {
+) {
   static readonly type = "czml";
   get type() {
     return CzmlCatalogItem.type;

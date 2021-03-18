@@ -18,7 +18,7 @@ import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import URI from "urijs";
 import loadArrayBuffer from "../Core/loadArrayBuffer";
 import TerriaError from "../Core/TerriaError";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -81,7 +81,7 @@ StratumOrder.addLoadStratum(GtfsStratum.stratumName);
  * For displaying realtime transport data. See [here](https://developers.google.com/transit/gtfs-realtime/reference/)
  * for the spec.
  */
-export default class GtfsCatalogItem extends AsyncMappableMixin(
+export default class GtfsCatalogItem extends MappableMixin(
   UrlMixin(
     AutoRefreshingMixin(CatalogMemberMixin(CreateModel(GtfsCatalogItemTraits)))
   )

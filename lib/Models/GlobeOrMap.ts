@@ -1,4 +1,5 @@
 import { Feature as GeoJSONFeature, Position } from "geojson";
+import { observable, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
@@ -17,16 +18,15 @@ import LatLonHeight from "../Core/LatLonHeight";
 import featureDataToGeoJson from "../Map/featureDataToGeoJson";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import { ProviderCoordsMap } from "../Map/PickedFeatures";
+import MappableMixin from "../ModelMixins/MappableMixin";
+import TimeVarying from "../ModelMixins/TimeVarying";
+import MouseCoords from "../ReactViewModels/MouseCoords";
 import CameraView from "./CameraView";
 import Cesium3DTilesCatalogItem from "./Cesium3DTilesCatalogItem";
 import CommonStrata from "./CommonStrata";
 import Feature from "./Feature";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
-import Mappable from "./Mappable";
 import Terria from "./Terria";
-import { observable, runInAction } from "mobx";
-import MouseCoords from "../ReactViewModels/MouseCoords";
-import TimeVarying from "../ModelMixins/TimeVarying";
 
 require("./ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureDescriptionFromProperties
 
@@ -48,7 +48,7 @@ export default abstract class GlobeOrMap {
 
   abstract destroy(): void;
   abstract zoomTo(
-    viewOrExtent: CameraView | Rectangle | Mappable,
+    viewOrExtent: CameraView | Rectangle | MappableMixin.MappableMixin,
     flightDurationSeconds: number
   ): void;
   abstract getCurrentCameraView(): CameraView;
@@ -261,13 +261,17 @@ export default abstract class GlobeOrMap {
           feature.imageryLayer.imageryProvider instanceof
             MapboxVectorTileImageryProvider
         ) {
-          const highlightImageryProvider = feature.imageryLayer.imageryProvider.createHighlightImageryProvider(
-            feature.data.id
-          );
-          this._removeHighlightCallback = this.terria.currentViewer._addVectorTileHighlight(
-            highlightImageryProvider,
-            feature.imageryLayer.imageryProvider.rectangle
-          );
+          const featureId =
+            feature.data?.id ?? feature.properties?.id?.getValue?.();
+          if (isDefined(featureId)) {
+            const highlightImageryProvider = feature.imageryLayer.imageryProvider.createHighlightImageryProvider(
+              featureId
+            );
+            this._removeHighlightCallback = this.terria.currentViewer._addVectorTileHighlight(
+              highlightImageryProvider,
+              feature.imageryLayer.imageryProvider.rectangle
+            );
+          }
         } else if (
           !isDefined(this.supportsPolylinesOnTerrain) ||
           this.supportsPolylinesOnTerrain
