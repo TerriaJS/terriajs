@@ -2,11 +2,11 @@ import MapNavigationItemController from "../../Models/MapNavigation/MapNavigatio
 import ViewState from "../../ReactViewModels/ViewState";
 import { computed, action } from "mobx";
 import isDefined from "../../Core/isDefined";
-import { GLYPHS } from "./../Icon";
+import { GLYPHS } from "../Icon";
 
 export const FEEDBACK_TOOL_ID = "feedback-tool";
 
-export class FeedbackNavigationItemController extends MapNavigationItemController {
+export class FeedbackButtonController extends MapNavigationItemController {
   constructor(private viewState: ViewState) {
     super();
   }

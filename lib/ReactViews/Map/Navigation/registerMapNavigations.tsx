@@ -8,9 +8,9 @@ import PedestrianMode, {
   PEDESTRIAN_MODE_ID
 } from "../../Tools/PedestrianMode/PedestrianMode";
 import {
-  FeedbackNavigationItemController,
+  FeedbackButtonController,
   FEEDBACK_TOOL_ID
-} from "./../../Feedback/FeedbackController";
+} from "../../Feedback/FeedbackButtonController";
 import { ToolButtonController } from "./../../Tools/Tool";
 import Compass, { COMPASS_TOOL_ID } from "./Items/Compass";
 import MeasureTool from "./Items/MeasureTool";
@@ -114,7 +114,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     order: 6
   });
 
-  const feedbackController = new FeedbackNavigationItemController(viewState);
+  const feedbackController = new FeedbackButtonController(viewState);
   mapNavigationModel.add({
     id: FEEDBACK_TOOL_ID,
     name: "feedback.feedbackBtnText",
@@ -122,7 +122,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     location: "BOTTOM",
     screenSize: "medium",
     controller: feedbackController,
-    order: 7
+    order: 8
   });
 
   const helpController = new GenericMapNavigationItemController({
