@@ -79,7 +79,7 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
 
     /**
      * Forces load of the maps items. This method does _not_ need to consider
-     * whether the map items are already loaded.
+     * whether the map items are already loaded. It is guaranteed that `loadMetadata` has finished before this is called.
      */
     protected async forceLoadMapItems() {}
 

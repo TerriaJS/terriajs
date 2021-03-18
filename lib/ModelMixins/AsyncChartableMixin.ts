@@ -1,9 +1,9 @@
-import ChartData from "../Charts/ChartData";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
-import Chartable, { ChartAxis, ChartItem } from "../Models/Chartable";
+import Chartable, { ChartItem } from "../Models/Chartable";
 import Model from "../Models/Model";
 import MappableTraits from "../Traits/MappableTraits";
+import CatalogMemberMixin from "./CatalogMemberMixin";
 
 function AsyncChartableMixin<T extends Constructor<Model<MappableTraits>>>(
   Base: T
@@ -29,8 +29,9 @@ function AsyncChartableMixin<T extends Constructor<Model<MappableTraits>>>(
      * If the chart items are already loaded or already loading, it will
      * return the existing promise.
      */
-    loadChartItems(): Promise<void> {
-      return this._chartItemsLoader.load();
+    async loadChartItems() {
+      if (CatalogMemberMixin.isMixedInto(this)) await this.loadMetadata();
+      await this._chartItemsLoader.load();
     }
 
     /**
@@ -40,7 +41,7 @@ function AsyncChartableMixin<T extends Constructor<Model<MappableTraits>>>(
 
     /**
      * Forces load of the chart items. This method does _not_ need to consider
-     * whether the chart items are already loaded.
+     * whether the chart items are already loaded. It is guaranteed that `loadMetadata` has finished before this is called.
      */
     protected async forceLoadChartItems() {}
 
