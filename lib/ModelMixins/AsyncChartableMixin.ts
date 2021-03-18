@@ -41,7 +41,11 @@ function AsyncChartableMixin<T extends Constructor<Model<MappableTraits>>>(
 
     /**
      * Forces load of the chart items. This method does _not_ need to consider
-     * whether the chart items are already loaded. It is guaranteed that `loadMetadata` has finished before this is called.
+     * whether the chart items are already loaded.
+     *
+     * It is guaranteed that `loadMetadata` has finished before this is called.
+     *
+     * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}. If there are no async calls - it can be simulated using `await Promise.resolve()` or `await runLater(() => )`
      */
     protected async forceLoadChartItems() {}
 

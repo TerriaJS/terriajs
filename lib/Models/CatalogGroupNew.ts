@@ -11,8 +11,4 @@ export default class CatalogGroup extends GroupMixin(
   get type() {
     return CatalogGroup.type;
   }
-
-  protected forceLoadMembers(): Promise<void> {
-    return Promise.resolve();
-  }
 }

@@ -3,6 +3,7 @@ import { action, computed, observable, runInAction } from "mobx";
 import URI from "urijs";
 import isDefined from "../Core/isDefined";
 import loadJson from "../Core/loadJson";
+import runLater from "../Core/runLater";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
@@ -314,7 +315,7 @@ export default class CkanCatalogGroup extends UrlMixin(
       this.strata.get(CkanServerStratum.stratumName)
     );
     if (ckanServerStratum) {
-      ckanServerStratum.createMembersFromDatasets();
+      await runLater(() => ckanServerStratum.createMembersFromDatasets());
     }
   }
 }

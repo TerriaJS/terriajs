@@ -3,6 +3,7 @@ import { action, computed, runInAction } from "mobx";
 import URI from "urijs";
 import isDefined from "../Core/isDefined";
 import loadJson from "../Core/loadJson";
+import runLater from "../Core/runLater";
 import TerriaError from "../Core/TerriaError";
 import AccessControlMixin from "../ModelMixins/AccessControlMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
@@ -392,7 +393,7 @@ export default class ArcGisPortalCatalogGroup extends UrlMixin(
       this.strata.get(ArcGisPortalStratum.stratumName)
     );
     if (portalStratum) {
-      portalStratum.createMembersFromDatasets();
+      await runLater(() => portalStratum.createMembersFromDatasets());
     }
   }
 }

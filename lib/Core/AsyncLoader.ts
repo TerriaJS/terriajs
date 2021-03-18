@@ -1,5 +1,53 @@
 import { observable, computed, runInAction, toJS, action } from "mobx";
 
+/**
+ * The AsyncLoader class provides a way to memoize (of sorts) async requests. It works by calling `loadCallback` in `@computed loadKeepAlive`. This `@computed` will update if observables change that were used in `loadCallback()`.
+ *
+ * Because we are using a `@computed` in this way - it is **very important** that no changes to `observables` are made **before an async call**.
+ *
+ * A **correct** example:
+ * ```ts
+ * async function loadX() {
+ *    const url = this.someObservableUrl
+ *    const someData = await loadText(url)
+ *    runInAction(() => this.someOtherObservable = someData)
+ * }
+ * ```
+ *
+ * Will only be triggered *again* when `someObservableUrl` changes.
+ *
+ * ------------------------
+ *
+ * An **incorrect** example:
+ * ```ts
+ * async function loadX() {
+ *    const arg = this.someObservable
+ *    const someData = someSynchronousFn(arg)
+ *    runInAction(() => this.someOtherObservable = someData)
+ * }
+ * ```
+ *
+ * As we are calling `loadX` in a `@computed` (`loadKeepAlive`), we can't make changes to `observables` *directly* - we must have an async call before we make any changes - this "escapes" the `@computed`.
+ *
+ * To fix this, we have to simulate an async call - we can add a `await Promise.resolve()` or use something like `runLater()`
+ *
+ * While this approach is not ideal, it will allow us to "memoize" everything before the async call (eg `this.someObservable`)
+ *
+ * An **correct** example:
+ * ```ts
+ * async function loadX() {
+ *    const arg = this.someObservable
+ *    const someData = await runLater(() => someSynchronousFn(arg))
+ *    runInAction(() => this.someOtherObservable = someData)
+ * }
+ * ```
+ *
+ * ------------------------
+ *
+ * **Other tips**:
+ *
+ * - You can not nest together `AsyncLoaders`.
+ */
 export default class AsyncLoader {
   @observable
   private _isLoading: boolean = false;
@@ -28,6 +76,7 @@ export default class AsyncLoader {
   }
 
   constructor(
+    /** {@see AsyncLoader} */
     readonly loadCallback: () => Promise<void>,
     readonly disposeCallback?: () => Promise<void>
   ) {}

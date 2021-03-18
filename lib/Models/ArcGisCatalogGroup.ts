@@ -5,6 +5,7 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import loadJson from "../Core/loadJson";
 import replaceUnderscores from "../Core/replaceUnderscores";
+import runLater from "../Core/runLater";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
@@ -302,15 +303,18 @@ export default class ArcGisCatalogGroup extends UrlMixin(
     >(this.strata.get(ArcGisServerStratum.stratumName) ||
       this.strata.get(MapServerStratum.stratumName) ||
       this.strata.get(FeatureServerStratum.stratumName));
-    if (arcgisServerStratum instanceof ArcGisServerStratum) {
-      arcgisServerStratum.createMembersFromFolders();
-      arcgisServerStratum.createMembersFromServices();
-    } else if (
-      arcgisServerStratum instanceof MapServerStratum ||
-      arcgisServerStratum instanceof FeatureServerStratum
-    ) {
-      arcgisServerStratum.createMembersFromLayers();
-    }
+
+    await runLater(() => {
+      if (arcgisServerStratum instanceof ArcGisServerStratum) {
+        arcgisServerStratum.createMembersFromFolders();
+        arcgisServerStratum.createMembersFromServices();
+      } else if (
+        arcgisServerStratum instanceof MapServerStratum ||
+        arcgisServerStratum instanceof FeatureServerStratum
+      ) {
+        arcgisServerStratum.createMembersFromLayers();
+      }
+    });
   }
 }
 

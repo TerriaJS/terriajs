@@ -5,6 +5,7 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import loadJson from "../Core/loadJson";
 import replaceUnderscores from "../Core/replaceUnderscores";
+import runLater from "../Core/runLater";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
@@ -296,7 +297,7 @@ export default class ArcGisMapServerCatalogGroup extends UrlMixin(
       this.strata.get(MapServerStratum.stratumName)
     );
     if (mapServerStratum) {
-      mapServerStratum.createMembersFromLayers();
+      await runLater(() => mapServerStratum.createMembersFromLayers());
     }
   }
 }

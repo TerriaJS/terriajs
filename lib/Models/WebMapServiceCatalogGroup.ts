@@ -5,6 +5,7 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import isReadOnlyArray from "../Core/isReadOnlyArray";
 import replaceUnderscores from "../Core/replaceUnderscores";
+import runLater from "../Core/runLater";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
@@ -313,9 +314,7 @@ export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(
     return WebMapServiceCatalogGroup.type;
   }
 
-  protected async forceLoadMetadata(): Promise<void> {}
-
-  protected async forceLoadMembers(): Promise<void> {
+  protected async forceLoadMetadata(): Promise<void> {
     let getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
     );
@@ -328,8 +327,15 @@ export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(
         );
       });
     }
+  }
 
-    getCapabilitiesStratum.createMembersFromLayers();
+  protected async forceLoadMembers(): Promise<void> {
+    let getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
+      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
+    );
+    if (getCapabilitiesStratum !== undefined) {
+      await runLater(() => getCapabilitiesStratum!.createMembersFromLayers());
+    }
   }
 
   protected get defaultGetCapabilitiesUrl(): string | undefined {

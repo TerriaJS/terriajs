@@ -4,6 +4,7 @@ import containsAny from "../Core/containsAny";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import replaceUnderscores from "../Core/replaceUnderscores";
+import runLater from "../Core/runLater";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
@@ -239,7 +240,7 @@ export default class WebMapTileServiceCatalogGroup extends GetCapabilitiesMixin(
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
     );
     if (getCapabilitiesStratum) {
-      getCapabilitiesStratum.createMembersFromLayers();
+      await runLater(() => getCapabilitiesStratum.createMembersFromLayers());
     }
   }
 

@@ -21,8 +21,12 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
      * by this function resolves, the list of members in `GroupMixin#members`
      * and `GroupMixin#memberModels` should be complete, but the individual
      * members will not necessarily be loaded themselves.
+     *
+     * It is guaranteed that `loadMetadata` has finished before this is called.
+     *
+     * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}. If there are no async calls - it can be simulated using `await Promise.resolve()` or `await runLater(() => )`
      */
-    protected abstract forceLoadMembers(): Promise<void>;
+    protected async forceLoadMembers() {}
 
     get isGroup() {
       return true;
@@ -64,11 +68,14 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
      * should be complete, but the individual members will not necessarily be
      * loaded themselves.
      */
-    loadMembers(): Promise<void> {
-      return this._memberLoader.load().finally(() => {
+    async loadMembers(): Promise<void> {
+      try {
+        if (CatalogMemberMixin.isMixedInto(this)) await this.loadMetadata();
+        await this._memberLoader.load();
+      } finally {
         this.refreshKnownContainerUniqueIds(this.uniqueId);
         this.addShareKeysToMembers();
-      });
+      }
     }
 
     @action
