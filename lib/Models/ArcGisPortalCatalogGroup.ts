@@ -387,7 +387,7 @@ export default class ArcGisPortalCatalogGroup extends UrlMixin(
     }
   }
 
-  protected forceLoadMembers() {
+  protected async forceLoadMembers() {
     const portalStratum = <ArcGisPortalStratum | undefined>(
       this.strata.get(ArcGisPortalStratum.stratumName)
     );

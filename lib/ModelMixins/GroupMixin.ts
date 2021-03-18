@@ -13,7 +13,7 @@ import CatalogMemberMixin from "./CatalogMemberMixin";
 
 function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
   abstract class GroupMixin extends Base implements Group {
-    // private _memberLoader = new AsyncLoader(this.forceLoadMembers.bind(this));
+    private _memberLoader = new AsyncLoader(this.forceLoadMembers.bind(this));
 
     /**
      * Forces load of the group members. This method does _not_ need to consider
@@ -22,7 +22,7 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
      * and `GroupMixin#memberModels` should be complete, but the individual
      * members will not necessarily be loaded themselves.
      */
-    protected abstract forceLoadMembers(): void;
+    protected abstract forceLoadMembers(): Promise<void>;
 
     get isGroup() {
       return true;
@@ -32,7 +32,7 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
      * Gets a value indicating whether the set of members is currently loading.
      */
     get isLoadingMembers(): boolean {
-      return false;
+      return this._memberLoader.isLoading;
     }
 
     @computed
@@ -64,10 +64,11 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
      * should be complete, but the individual members will not necessarily be
      * loaded themselves.
      */
-    loadMembers() {
-      this.forceLoadMembers();
-      this.refreshKnownContainerUniqueIds(this.uniqueId);
-      this.addShareKeysToMembers();
+    loadMembers(): Promise<void> {
+      return this._memberLoader.load().finally(() => {
+        this.refreshKnownContainerUniqueIds(this.uniqueId);
+        this.addShareKeysToMembers();
+      });
     }
 
     @action
@@ -203,7 +204,7 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
 
     dispose() {
       super.dispose();
-      // this._memberLoader.dispose();
+      this._memberLoader.dispose();
     }
   }
 

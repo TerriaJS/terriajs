@@ -309,7 +309,7 @@ export default class CkanCatalogGroup extends UrlMixin(
     }
   }
 
-  protected forceLoadMembers() {
+  protected async forceLoadMembers() {
     const ckanServerStratum = <CkanServerStratum | undefined>(
       this.strata.get(CkanServerStratum.stratumName)
     );

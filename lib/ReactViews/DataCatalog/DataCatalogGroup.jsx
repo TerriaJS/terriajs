@@ -65,10 +65,7 @@ const DataCatalogGroup = observer(
 
     clickGroup() {
       this.toggleOpen();
-      this.props.group
-        .loadMetadata()
-        .then(() => this.props.group.loadMembers());
-
+      this.props.group.loadMembers();
       this.props.viewState.viewCatalogMember(this.props.group);
     },
 
@@ -93,17 +90,13 @@ const DataCatalogGroup = observer(
 
     componentDidMount() {
       if (this.props.group.isOpen) {
-        this.props.group
-          .loadMetadata()
-          .then(() => this.props.group.loadMembers());
+        this.props.group.loadMembers();
       }
     },
 
     componentDidUpdate() {
       if (this.props.group.isOpen) {
-        this.props.group
-          .loadMetadata()
-          .then(() => this.props.group.loadMembers());
+        this.props.group.loadMembers();
       }
     },
 
