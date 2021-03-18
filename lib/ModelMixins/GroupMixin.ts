@@ -26,7 +26,7 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
      *
      * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}. If there are no async calls - it can be simulated using `await Promise.resolve()` or `await runLater(() => )`
      */
-    protected async forceLoadMembers() {}
+    protected abstract async forceLoadMembers(): Promise<void>;
 
     get isGroup() {
       return true;
@@ -72,6 +72,8 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
       try {
         if (CatalogMemberMixin.isMixedInto(this)) await this.loadMetadata();
         await this._memberLoader.load();
+      } catch (e) {
+        console.log(e);
       } finally {
         this.refreshKnownContainerUniqueIds(this.uniqueId);
         this.addShareKeysToMembers();

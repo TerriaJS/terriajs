@@ -25,4 +25,8 @@ export default class ArcGisTerrainCatalogItem extends UrlMixin(
     if (this.attribution) item.credit = new Credit(this.attribution);
     return [];
   }
+
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
+  }
 }

@@ -39,6 +39,10 @@ class AdaptForPreviewMap extends MappableMixin(CreateModel(MappableTraits)) {
       ) ?? []
     );
   }
+
+  forceLoadMapItems() {
+    return Promise.resolve();
+  }
 }
 
 /**

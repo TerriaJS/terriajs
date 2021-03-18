@@ -646,6 +646,10 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     };
   }
 
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
+  }
+
   @computed
   get mapItems() {
     if (isDefined(this.imageryProvider)) {

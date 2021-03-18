@@ -748,14 +748,10 @@ class WebMapServiceCatalogItem
     ExportableMixin(
       DiffableMixin(
         TimeFilterMixin(
-          MappableMixin(
-            ChartableMixin(
-              GetCapabilitiesMixin(
-                UrlMixin(
-                  CatalogMemberMixin(
-                    CreateModel(WebMapServiceCatalogItemTraits)
-                  )
-                )
+          ChartableMixin(
+            GetCapabilitiesMixin(
+              UrlMixin(
+                CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
               )
             )
           )
@@ -944,6 +940,10 @@ class WebMapServiceCatalogItem
       uri.addQuery("time", time);
     }
     return uri.toString();
+  }
+
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
   }
 
   @computed

@@ -13,6 +13,8 @@ import ChartCustomComponent, {
 } from "../../../../lib/ReactViews/Custom/ChartCustomComponent";
 import { ProcessNodeContext } from "../../../../lib/ReactViews/Custom/CustomComponent";
 import UrlTraits from "../../../../lib/Traits/UrlTraits";
+import mixTraits from "../../../../lib/Traits/mixTraits";
+import MappableTraits from "../../../../lib/Traits/MappableTraits";
 
 const isComponentOfType: any = require("react-shallow-testutils")
   .isComponentOfType;
@@ -108,7 +110,15 @@ class TestChartCustomComponent extends ChartCustomComponent<
   }
 }
 
-class TestCatalogItem extends ChartableMixin(CreateModel(UrlTraits)) {
+class TestCatalogItem extends ChartableMixin(
+  CreateModel(mixTraits(UrlTraits, MappableTraits))
+) {
+  get mapItems() {
+    return [];
+  }
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
+  }
   get chartItems() {
     return [];
   }

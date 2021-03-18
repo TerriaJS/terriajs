@@ -107,6 +107,10 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
     });
   }
 
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
+  }
+
   @computed
   get mapItems() {
     if (this.isLoadingMapItems || this.imageryProvider === undefined) {

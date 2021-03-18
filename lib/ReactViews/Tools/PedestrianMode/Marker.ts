@@ -31,6 +31,10 @@ export default class Marker extends MappableMixin(CreateModel(MappableTraits)) {
     this.dataSource.entities.add(entity);
   }
 
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
+  }
+
   get mapItems() {
     return [this.dataSource];
   }

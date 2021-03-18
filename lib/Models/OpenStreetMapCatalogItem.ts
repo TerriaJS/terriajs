@@ -18,6 +18,10 @@ export default class OpenStreetMapCatalogItem extends MappableMixin(
     return OpenStreetMapCatalogItem.type;
   }
 
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
+  }
+
   @computed get mapItems() {
     const imageryProvider = this.imageryProvider;
     if (!isDefined(imageryProvider)) {

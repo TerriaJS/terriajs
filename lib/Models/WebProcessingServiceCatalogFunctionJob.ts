@@ -394,7 +394,6 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
   }
 
   protected async forceLoadMapItems(): Promise<void> {
-    await super.forceLoadMapItems();
     if (isDefined(this.geoJsonItem)) {
       const geoJsonItem = this.geoJsonItem;
       await runInAction(() => geoJsonItem.loadMapItems());

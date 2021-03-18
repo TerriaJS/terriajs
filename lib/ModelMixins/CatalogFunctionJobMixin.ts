@@ -284,11 +284,6 @@ function CatalogFunctionJobMixin<
       }
     }
 
-    @computed
-    get mapItems(): MapItem[] {
-      return [];
-    }
-
     protected async forceLoadMetadata() {
       if (this.jobStatus === "finished" && !this.downloadedResults) {
         await this.onJobFinish();
@@ -296,6 +291,13 @@ function CatalogFunctionJobMixin<
     }
 
     protected async forceLoadMembers() {}
+
+    get mapItems(): MapItem[] {
+      return [];
+    }
+    protected forceLoadMapItems(): Promise<void> {
+      return Promise.resolve();
+    }
 
     get hasCatalogFunctionJobMixin() {
       return true;

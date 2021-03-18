@@ -15,6 +15,10 @@ export default class BingMapsCatalogItem extends MappableMixin(
     return BingMapsCatalogItem.type;
   }
 
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
+  }
+
   @computed get mapItems() {
     const imageryProvider = this._createImageryProvider();
     return [

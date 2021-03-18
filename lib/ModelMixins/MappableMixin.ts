@@ -70,7 +70,6 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
      * return the existing promise.
      */
     async loadMapItems() {
-      console.log("loadmapitems??");
       if (CatalogMemberMixin.isMixedInto(this)) await this.loadMetadata();
       await this._mapItemsLoader.load();
     }
@@ -85,7 +84,7 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
      *
      * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}. If there are no async calls - it can be simulated using `await Promise.resolve()` or `await runLater(() => )`
      */
-    protected async forceLoadMapItems() {}
+    protected abstract async forceLoadMapItems(): Promise<void>;
 
     dispose() {
       super.dispose();

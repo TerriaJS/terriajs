@@ -126,6 +126,10 @@ export default class GltfCatalogItem extends MappableMixin(
     return new ModelGraphics(options);
   }
 
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
+  }
+
   @computed
   get mapItems() {
     if (this.model === undefined) {
