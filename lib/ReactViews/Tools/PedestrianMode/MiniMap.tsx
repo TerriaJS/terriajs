@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
-import Mappable from "../../../Models/Mappable";
+import MappableMixin from "../../../ModelMixins/MappableMixin";
 import Terria from "../../../Models/Terria";
 import ViewerMode from "../../../Models/ViewerMode";
 import TerriaViewer from "../../../ViewModels/TerriaViewer";
@@ -14,7 +14,7 @@ const minimapNavIcon = require("../../../../wwwroot/images/minimap-nav.svg");
 
 type MiniMapProps = {
   terria: Terria;
-  baseMap: Mappable;
+  baseMap: MappableMixin.MappableMixin;
   view: MiniMapView;
 };
 

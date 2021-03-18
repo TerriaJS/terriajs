@@ -1,10 +1,12 @@
 import { Feature as GeoJSONFeature, Position } from "geojson";
+import { observable, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
 import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
@@ -17,17 +19,14 @@ import LatLonHeight from "../Core/LatLonHeight";
 import featureDataToGeoJson from "../Map/featureDataToGeoJson";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import { ProviderCoordsMap } from "../Map/PickedFeatures";
+import MappableMixin from "../ModelMixins/MappableMixin";
+import MouseCoords from "../ReactViewModels/MouseCoords";
 import CameraView from "./CameraView";
 import Cesium3DTilesCatalogItem from "./Cesium3DTilesCatalogItem";
 import CommonStrata from "./CommonStrata";
 import Feature from "./Feature";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
-import Mappable from "./Mappable";
 import Terria from "./Terria";
-import { observable, runInAction } from "mobx";
-import MouseCoords from "../ReactViewModels/MouseCoords";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
-import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 
 require("./ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureDescriptionFromProperties
 
@@ -53,12 +52,12 @@ export default abstract class GlobeOrMap {
   abstract destroy(): void;
 
   abstract doZoomTo(
-    viewOrExtent: CameraView | Rectangle | Mappable,
+    viewOrExtent: CameraView | Rectangle | MappableMixin.MappableMixin,
     flightDurationSeconds: number
   ): void;
 
   zoomTo(
-    viewOrExtent: CameraView | Rectangle | Mappable,
+    viewOrExtent: CameraView | Rectangle | MappableMixin.MappableMixin,
     flightDurationSeconds: number
   ): void {
     this.zoomToEvent.raiseEvent();

@@ -1,8 +1,5 @@
 import i18next from "i18next";
 import { autorun, runInAction } from "mobx";
-import WebMapTileServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapTileServiceImageryProvider";
-import URI from "urijs";
-import { ImageryParts } from "../../lib/Models/Mappable";
 import WebMapTileServiceCatalogItem from "../../lib/Models/WebMapTileServiceCatalogItem";
 import Terria from "./../../lib/Models/Terria";
 

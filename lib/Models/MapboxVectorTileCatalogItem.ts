@@ -1,13 +1,12 @@
 import { VectorTileFeature } from "@mapbox/vector-tile";
 import i18next from "i18next";
 import { clone } from "lodash-es";
-import { action, autorun, computed, observable, runInAction } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import isDefined from "../Core/isDefined";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
@@ -54,7 +53,7 @@ class MapboxVectorTileLoadableStratum extends LoadableStratum(
 
 StratumOrder.addLoadStratum(MapboxVectorTileLoadableStratum.stratumName);
 
-class MapboxVectorTileCatalogItem extends AsyncMappableMixin(
+class MapboxVectorTileCatalogItem extends MappableMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(MapboxVectorTileCatalogItemTraits)))
 ) {
   @observable

@@ -13,7 +13,7 @@ import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";
 import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogFunctionJobMixin from "../ModelMixins/CatalogFunctionJobMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import XmlRequestMixin from "../ModelMixins/XmlRequestMixin";
@@ -342,7 +342,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
               results.push(catalogItem);
               await catalogItem.loadMetadata();
             }
-            if (AsyncMappableMixin.isMixedInto(catalogItem)) {
+            if (MappableMixin.isMixedInto(catalogItem)) {
               await catalogItem.loadMapItems();
             }
             if (AsyncChartableMixin.isMixedInto(catalogItem)) {

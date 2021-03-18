@@ -3,13 +3,12 @@ import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraph
 import CallbackProperty from "terriajs-cesium/Source/DataSources/CallbackProperty";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import MappableMixin from "../../../ModelMixins/MappableMixin";
 import CreateModel from "../../../Models/CreateModel";
-import Mappable from "../../../Models/Mappable";
 import Terria from "../../../Models/Terria";
 import MappableTraits from "../../../Traits/MappableTraits";
 
-export default class Marker extends CreateModel(MappableTraits)
-  implements Mappable {
+export default class Marker extends MappableMixin(CreateModel(MappableTraits)) {
   private dataSource: CustomDataSource;
   private icon: RotatableIcon;
 
@@ -57,7 +56,7 @@ export default class Marker extends CreateModel(MappableTraits)
     }
   }
 
-  async loadMapItems() {}
+  async forceLoadMapItems() {}
 
   get mapItems() {
     return [this.dataSource];
