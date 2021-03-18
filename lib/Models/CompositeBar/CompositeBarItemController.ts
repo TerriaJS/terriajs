@@ -34,7 +34,7 @@ export abstract class CompositeBarItemController
   @observable
   private _visible: boolean = true;
 
-  abstract get glyph(): any;
+  abstract get glyph(): { id: string };
   abstract get viewerMode(): ViewerMode | undefined;
 
   @computed

@@ -156,6 +156,19 @@ export abstract class CompositeBarModel<
     }
   }
 
+  @action.bound
+  show(id: string): void {
+    for (const item of this.items) {
+      if (item.id === id) {
+        if (!item.controller.visible) {
+          item.controller.visible = true;
+          return;
+        }
+        return;
+      }
+    }
+  }
+
   @action
   move(compositeId: string, toCompositeId: string): void {
     const fromIndex = this.findIndex(compositeId);

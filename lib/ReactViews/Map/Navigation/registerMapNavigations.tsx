@@ -18,13 +18,17 @@ import MyLocation from "./Items/MyLocation";
 import { ToggleSplitterController } from "./Items/ToggleSplitterTool";
 import ZoomControl, { ZOOM_CONTROL_ID } from "./Items/ZoomControl";
 import { HELP_PANEL_ID } from "./../Panels/HelpPanel/HelpPanel";
+import CloseToolButton from "./Items/CloseToolButton";
+
+export const CLOSE_TOOL_ID = "close-tool";
 
 export const registerMapNavigations = (viewState: ViewState) => {
   const terria = viewState.terria;
   const mapNavigationModel = terria.mapNavigationModel;
 
   const compassController = new GenericMapNavigationItemController({
-    viewerMode: ViewerMode.Cesium
+    viewerMode: ViewerMode.Cesium,
+    icon: GLYPHS.compassInnerArrows
   });
   compassController.pinned = true;
   mapNavigationModel.add({
@@ -38,7 +42,8 @@ export const registerMapNavigations = (viewState: ViewState) => {
   });
 
   const zoomToolController = new GenericMapNavigationItemController({
-    viewerMode: undefined
+    viewerMode: undefined,
+    icon: GLYPHS.plusThick
   });
   zoomToolController.pinned = true;
   mapNavigationModel.add({
@@ -93,7 +98,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     location: "TOP",
     controller: measureTool,
     screenSize: undefined,
-    order: 5
+    order: 6
   });
 
   const pedestrianModeToolController = new ToolButtonController({
@@ -111,8 +116,25 @@ export const registerMapNavigations = (viewState: ViewState) => {
     location: "TOP",
     screenSize: "medium",
     controller: pedestrianModeToolController,
-    order: 6
+    order: 5
   });
+
+  const closeToolButtonController = new GenericMapNavigationItemController({
+    handleClick: () => {
+      viewState.closeTool();
+    },
+    icon: GLYPHS.closeLight
+  });
+  mapNavigationModel.add({
+    id: CLOSE_TOOL_ID,
+    name: "close",
+    location: "TOP",
+    screenSize: undefined,
+    controller: closeToolButtonController,
+    render: <CloseToolButton viewState={viewState} />,
+    order: 7
+  });
+  closeToolButtonController.visible = false;
 
   const feedbackController = new FeedbackButtonController(viewState);
   mapNavigationModel.add({
@@ -137,7 +159,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     location: "BOTTOM",
     screenSize: "medium",
     controller: helpController,
-    order: 8
+    order: 9
   });
 };
 

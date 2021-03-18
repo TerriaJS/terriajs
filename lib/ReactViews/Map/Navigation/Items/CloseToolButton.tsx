@@ -3,18 +3,19 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import ViewState from "../../../../ReactViewModels/ViewState";
 import Icon from "../../../Icon";
 
-const MapIconButton: any = require("../../MapIconButton/MapIconButton").default;
+const MapIconButton: any = require("../../../MapIconButton/MapIconButton")
+  .default;
 
 interface PropsType extends WithTranslation {
   viewState: ViewState;
   t: any;
-  toolIsDifference?: boolean;
 }
 
-function CloseToolButton({ viewState, t, toolIsDifference }: PropsType) {
+function CloseToolButton({ viewState, t }: PropsType) {
   const closeText = t("tool.closeButtonTitle", {
     toolName: viewState.currentTool?.toolName
   });
+  const toolIsDifference = viewState.currentTool?.toolName === "Difference";
   return (
     <MapIconButton
       css={`
