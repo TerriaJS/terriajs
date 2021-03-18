@@ -19,6 +19,9 @@ import LatLonHeight from "../../../Core/LatLonHeight";
 import PickedFeatures from "../../../Map/PickedFeatures";
 import prettifyCoordinates from "../../../Map/prettifyCoordinates";
 import DiffableMixin from "../../../ModelMixins/DiffableMixin";
+import MappableMixin, {
+  ImageryParts
+} from "../../../ModelMixins/MappableMixin";
 import CommonStrata from "../../../Models/CommonStrata";
 import Feature from "../../../Models/Feature";
 import hasTraits, { HasTrait } from "../../../Models/hasTraits";
@@ -26,7 +29,6 @@ import {
   getMarkerLocation,
   removeMarker
 } from "../../../Models/LocationMarkerUtils";
-import Mappable, { ImageryParts } from "../../../Models/Mappable";
 import { DimensionOption } from "../../../Models/SelectableDimensions";
 import SplitItemReference from "../../../Models/SplitItemReference";
 import Terria from "../../../Models/Terria";
@@ -424,7 +426,7 @@ class Main extends React.Component<MainPropsType> {
     // imagery at that location
     const markerLocation = getMarkerLocation(this.props.terria);
     const sourceItem = this.props.sourceItem;
-    if (markerLocation && Mappable.is(sourceItem)) {
+    if (markerLocation && MappableMixin.isMixedInto(sourceItem)) {
       const part = sourceItem.mapItems.find(p => ImageryParts.is(p));
       const imageryProvider =
         part && ImageryParts.is(part) && part.imageryProvider;
@@ -1031,7 +1033,7 @@ function doesFeatureBelongToItem(
   feature: Feature,
   item: DiffableItem
 ): Boolean {
-  if (!Mappable.is(item)) return false;
+  if (!MappableMixin.isMixedInto(item)) return false;
   const imageryProvider = feature.imageryLayer?.imageryProvider;
   if (imageryProvider === undefined) return false;
   return (

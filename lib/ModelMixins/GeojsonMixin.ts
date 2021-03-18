@@ -23,7 +23,7 @@ import JsonValue, { isJsonObject, JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
 import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError from "../Core/TerriaError";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import MappableMixin from "./MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import Model from "../Models/Model";
@@ -52,7 +52,7 @@ type Coordinates = number[];
 export default function GeoJsonMixin<
   T extends Constructor<Model<GeoJsonTraits>>
 >(Base: T) {
-  abstract class GeoJsonMixin extends AsyncMappableMixin(UrlMixin(Base)) {
+  abstract class GeoJsonMixin extends MappableMixin(UrlMixin(Base)) {
     protected readonly zipFileRegex = /(\.zip\b)/i;
 
     readonly canZoomTo = true;

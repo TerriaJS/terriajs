@@ -8,7 +8,7 @@ import isDefined from "../Core/isDefined";
 import loadWithXhr from "../Core/loadWithXhr";
 import TerriaError from "../Core/TerriaError";
 import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import TableAutomaticStylesStratum, {
@@ -306,7 +306,7 @@ class GetObservationRequest {
 
 export default class SensorObservationServiceCatalogItem extends TableMixin(
   AsyncChartableMixin(
-    AsyncMappableMixin(
+    MappableMixin(
       CatalogMemberMixin(CreateModel(SensorObservationServiceCatalogItemTraits))
     )
   )

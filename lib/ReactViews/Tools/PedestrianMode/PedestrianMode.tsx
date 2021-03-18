@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Cesium from "../../../Models/Cesium";
 import ViewState from "../../../ReactViewModels/ViewState";
@@ -8,7 +8,11 @@ import DropPedestrianToGround from "./DropPedestrianToGround";
 import MiniMap, { getViewFromScene, MiniMapView } from "./MiniMap";
 import MovementControls from "./MovementControls";
 
-const PEDESTRIAN_HEIGHT_IN_METRES = 1.5;
+// The desired camera height measured from the surface in metres
+export const PEDESTRIAN_HEIGHT = 1.7;
+
+// Maximum up/down look angle in degrees
+export const MAX_VERTICAL_LOOK_ANGLE = 40;
 
 type PedestrianModeProps = {
   viewState: ViewState;
@@ -24,13 +28,19 @@ const PedestrianMode: React.FC<PedestrianModeProps> = observer(
     const [view, setView] = useState<MiniMapView | undefined>();
 
     const onDropCancelled = () => viewState.closeTool();
-
     //if viewer is not cesium close tool.
     if (!(cesium instanceof Cesium)) {
       viewState.closeTool();
       return null;
     }
     const updateView = () => setView(getViewFromScene(cesium.scene));
+
+    useEffect(function closeOnZoomTo() {
+      const disposer = cesium.zoomToEvent.addEventListener(() =>
+        viewState.closeTool()
+      );
+      return disposer;
+    }, []);
 
     return (
       <>
@@ -39,13 +49,18 @@ const PedestrianMode: React.FC<PedestrianModeProps> = observer(
             cesium={cesium}
             afterDrop={() => setIsDropped(true)}
             onDropCancelled={onDropCancelled}
-            minHeightFromGround={PEDESTRIAN_HEIGHT_IN_METRES}
+            pedestrianHeight={PEDESTRIAN_HEIGHT}
           />
         )}
         {isDropped && (
           <>
             <ControlsContainer viewState={viewState}>
-              <MovementControls cesium={cesium} onMove={updateView} />
+              <MovementControls
+                cesium={cesium}
+                onMove={updateView}
+                pedestrianHeight={PEDESTRIAN_HEIGHT}
+                maxVerticalLookAngle={MAX_VERTICAL_LOOK_ANGLE}
+              />
             </ControlsContainer>
             <MiniMapContainer viewState={viewState}>
               <MiniMap
@@ -74,7 +89,6 @@ const MiniMapContainer = styled(PositionRightOfWorkbench)`
   top: unset;
   left: 0px;
   bottom: 100px;
-  border: 1px solid white;
 `;
 
 export default PedestrianMode;

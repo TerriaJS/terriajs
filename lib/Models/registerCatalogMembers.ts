@@ -44,6 +44,7 @@ import WebMapTileServiceCatalogGroup from "./WebMapTileServiceCatalogGroup";
 import WebMapTileServiceCatalogItem from "./WebMapTileServiceCatalogItem";
 import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
 import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalogFunctionJob";
+import WebProcessingServiceCatalogGroup from "./WebProcessingServiceCatalogGroup";
 import YDYRCatalogFunction from "./YDYRCatalogFunction";
 import YDYRCatalogFunctionJob from "./YDYRCatalogFunctionJob";
 import CswCatalogGroup from "./CswCatalogGroup";
@@ -159,6 +160,10 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(
     WebProcessingServiceCatalogFunction.type,
     WebProcessingServiceCatalogFunction
+  );
+  CatalogMemberFactory.register(
+    WebProcessingServiceCatalogGroup.type,
+    WebProcessingServiceCatalogGroup
   );
   CatalogMemberFactory.register(
     SensorObservationServiceCatalogItem.type,

@@ -14,7 +14,7 @@ import MouseTooltip from "./MouseTooltip";
 
 type DropPedestrianToGroundProps = {
   cesium: Cesium;
-  minHeightFromGround: number;
+  pedestrianHeight: number;
   onDropCancelled: () => void;
   afterDrop: () => void;
 };
@@ -43,7 +43,7 @@ const DropPedestrianToGround: React.FC<DropPedestrianToGroundProps> = props => {
       setShowMouseTooltip(false);
       // Get the precise position and fly to it.
       getPrecisePosition(scene, pickPosition).then(cartographic => {
-        cartographic.height += props.minHeightFromGround;
+        cartographic.height += props.pedestrianHeight;
         const position = Cartographic.toCartesian(cartographic);
         flyTo(scene, position, {
           orientation: {
