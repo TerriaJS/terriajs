@@ -138,7 +138,7 @@ describe("Workbench", function() {
 
     spyOn(wmsItem, "loadMetadata");
     spyOn(wmsItem, "loadMapItems");
-    spyOn(wmsItem, "loadChartItems");
+    spyOn(wmsItem, "loadMapItems");
 
     await workbench.add(item4);
     expect(workbench.items).toEqual([item4, item1, item2, item3]);
@@ -146,7 +146,7 @@ describe("Workbench", function() {
 
     expect(wmsItem.loadMetadata).toHaveBeenCalledTimes(0);
     expect(wmsItem.loadMapItems).toHaveBeenCalledTimes(1);
-    expect(wmsItem.loadChartItems).toHaveBeenCalledTimes(1);
+    expect(wmsItem.loadMapItems).toHaveBeenCalledTimes(1);
   });
 
   it("doesn't add duplicate model", async function() {

@@ -22,6 +22,8 @@ Change Log
 * remove interactions between AsyncLoaders + make forceLoad** optional
 * Add `isLoading` to `CatalogMemberMixin` placeholder until `AsyncLoader` loading problems are sorted (https://github.com/TerriaJS/terriajs/issues/5233)
 * Move `Loader` (spinner) from `Legend` to `WorkbenchItem`.
+* Merge `Chartable` and `AsyncChartableMixin` into **`ChartableMixin`** + remove `AsyncLoader` functionality from `ChartableMixin` - it is now all handled by `loadMapItems`.
+* Removed `AsyncLoader` functionality from `TableMixin` - it is now handled by `loadMapItems`.
 * [The next improvement]
 
 #### 8.0.0-alpha.67

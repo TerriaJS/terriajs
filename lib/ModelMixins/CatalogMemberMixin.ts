@@ -5,7 +5,7 @@ import isDefined from "../Core/isDefined";
 import Model from "../Models/Model";
 import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
 import AccessControlMixin from "./AccessControlMixin";
-import AsyncChartableMixin from "./AsyncChartableMixin";
+import ChartableMixin from "./ChartableMixin";
 import GroupMixin from "./GroupMixin";
 import MappableMixin from "./MappableMixin";
 import ReferenceMixin from "./ReferenceMixin";
@@ -40,7 +40,6 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       return (
         this.isLoadingMetadata ||
         (MappableMixin.isMixedInto(this) && this.isLoadingMapItems) ||
-        (AsyncChartableMixin.isMixedInto(this) && this.isLoadingChartItems) ||
         (ReferenceMixin.is(this) && this.isLoadingReference) ||
         (GroupMixin.isMixedInto(this) && this.isLoadingMembers)
       );

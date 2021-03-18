@@ -39,6 +39,7 @@ import PickedFeatures, {
   isProviderCoordsMap
 } from "../Map/PickedFeatures";
 import GroupMixin from "../ModelMixins/GroupMixin";
+import MappableMixin, { isDataSource } from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
@@ -48,7 +49,6 @@ import { shareConvertNotification } from "../ReactViews/Notification/shareConver
 import ShowableTraits from "../Traits/ShowableTraits";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
-import MappableMixin, { isDataSource } from "../ModelMixins/MappableMixin";
 import CameraView from "./CameraView";
 import CatalogGroup from "./CatalogGroupNew";
 import CatalogMemberFactory from "./CatalogMemberFactory";
@@ -80,8 +80,6 @@ import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
 import ViewerMode from "./ViewerMode";
 import Workbench from "./Workbench";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import Chartable from "./Chartable";
 // import overrides from "../Overrides/defaults.jsx";
 
 interface ConfigParameters {

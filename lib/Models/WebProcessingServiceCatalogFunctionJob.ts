@@ -12,8 +12,6 @@ import URI from "urijs";
 import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";
-import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
-import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogFunctionJobMixin from "../ModelMixins/CatalogFunctionJobMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import XmlRequestMixin from "../ModelMixins/XmlRequestMixin";
@@ -22,7 +20,6 @@ import { ShortReportTraits } from "../Traits/CatalogMemberTraits";
 import { FeatureInfoTemplateTraits } from "../Traits/FeatureInfoTraits";
 import WebProcessingServiceCatalogFunctionJobTraits from "../Traits/WebProcessingServiceCatalogFunctionJobTraits";
 import CatalogMemberFactory from "./CatalogMemberFactory";
-import { ChartItem } from "./Chartable";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
@@ -385,10 +382,6 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
         return mapItem;
       });
     }
-    return [];
-  }
-
-  get chartItems(): ChartItem[] {
     return [];
   }
 

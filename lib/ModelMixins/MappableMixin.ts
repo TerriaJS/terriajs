@@ -70,6 +70,7 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
      * return the existing promise.
      */
     async loadMapItems() {
+      console.log("loadmapitems??");
       if (CatalogMemberMixin.isMixedInto(this)) await this.loadMetadata();
       await this._mapItemsLoader.load();
     }

@@ -1,18 +1,17 @@
+import { DomElement } from "domhandler";
+import { ReactChild } from "react";
+import ChartableMixin from "../../../../lib/ModelMixins/ChartableMixin";
+import CreateModel from "../../../../lib/Models/CreateModel";
+import Feature from "../../../../lib/Models/Feature";
+import { BaseModel } from "../../../../lib/Models/Model";
+import StubCatalogItem from "../../../../lib/Models/StubCatalogItem";
+import Terria from "../../../../lib/Models/Terria";
+import ChartExpandAndDownloadButtons from "../../../../lib/ReactViews/Custom/Chart/ChartExpandAndDownloadButtons";
+import Chart from "../../../../lib/ReactViews/Custom/Chart/FeatureInfoPanelChart";
 import ChartCustomComponent, {
   ChartCustomComponentAttributes
 } from "../../../../lib/ReactViews/Custom/ChartCustomComponent";
-import Model, { BaseModel } from "../../../../lib/Models/Model";
-import CatalogMemberTraits from "../../../../lib/Traits/CatalogMemberTraits";
 import { ProcessNodeContext } from "../../../../lib/ReactViews/Custom/CustomComponent";
-import StubCatalogItem from "../../../../lib/Models/StubCatalogItem";
-import Terria from "../../../../lib/Models/Terria";
-import Feature from "../../../../lib/Models/Feature";
-import { DomElement } from "domhandler";
-import Chart from "../../../../lib/ReactViews/Custom/Chart/FeatureInfoPanelChart";
-import React, { ReactChild } from "react";
-import ChartExpandAndDownloadButtons from "../../../../lib/ReactViews/Custom/Chart/ChartExpandAndDownloadButtons";
-import Chartable from "../../../../lib/Models/Chartable";
-import CreateModel from "../../../../lib/Models/CreateModel";
 import UrlTraits from "../../../../lib/Traits/UrlTraits";
 
 const isComponentOfType: any = require("react-shallow-testutils")
@@ -85,7 +84,9 @@ describe("ChartCustomComponent", function() {
   });
 });
 
-class TestChartCustomComponent extends ChartCustomComponent<Chartable> {
+class TestChartCustomComponent extends ChartCustomComponent<
+  ChartableMixin.ChartableMixin
+> {
   get name(): string {
     return "test";
   }
@@ -107,8 +108,7 @@ class TestChartCustomComponent extends ChartCustomComponent<Chartable> {
   }
 }
 
-class TestCatalogItem extends CreateModel(UrlTraits) implements Chartable {
-  async loadChartItems() {}
+class TestCatalogItem extends ChartableMixin(CreateModel(UrlTraits)) {
   get chartItems() {
     return [];
   }

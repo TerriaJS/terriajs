@@ -4,7 +4,7 @@ import Resource from "terriajs-cesium/Source/Core/Resource";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
 import TerriaError from "../../Core/TerriaError";
-import AsyncChartableMixin from "../../ModelMixins/AsyncChartableMixin";
+import ChartableMixin from "../../ModelMixins/ChartableMixin";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../../ModelMixins/TableMixin";
 import UrlMixin from "../../ModelMixins/UrlMixin";
@@ -25,7 +25,7 @@ import { SdmxJsonDataflowStratum } from "./SdmxJsonDataflowStratum";
 const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
 
 export default class SdmxJsonCatalogItem
-  extends AsyncChartableMixin(
+  extends ChartableMixin(
     TableMixin(UrlMixin(CatalogMemberMixin(CreateModel(SdmxCatalogItemTraits))))
   )
   implements SelectableDimensions {
@@ -179,12 +179,7 @@ export default class SdmxJsonCatalogItem
 
   @computed
   get shortReport() {
-    if (
-      !isDefined(this.dataColumnMajor) ||
-      this.isLoadingMapItems ||
-      this.isLoadingChartItems
-    )
-      return;
+    if (!isDefined(this.dataColumnMajor) || this.isLoading) return;
 
     return this.dataColumnMajor.length === 0
       ? i18next.t("models.sdmxCatalogItem.noData")
