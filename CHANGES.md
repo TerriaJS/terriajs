@@ -5,8 +5,6 @@ Change Log
 
 #### next release (8.0.0-alpha.68)
 * Remove points from rectangle `UserDrawing`
-* Add `isLoading` to `CatalogMemberMixin` placeholder until `AsyncLoader` loading problems are sorted (https://github.com/TerriaJS/terriajs/issues/5233)
-* Move `Loader` (spinner) from `Legend` to `WorkbenchItem`.
 * Ported `WebProcessingServiceCatalogGroup`.
 * Add CSW Group support
 * Revert "remove wmts interfaces from ows interfaces" (873aa70)
@@ -17,11 +15,13 @@ Change Log
 * Update clipboard to fix clipboard typing error.
 * Add support for time on `ArcGisMapServerCatalogItem`
 * Merge `Mappable` and `AsyncMappableMixin` into **`MappableMixin`**.
-* remove interactions between AsyncLoaders + make forceLoad** optional
 * Fixed a issue when multiple filters are set to Cesium3DTilesCatalogItem
 * Async/Awaitify `Terria.ts` + fix share links loading after `loadInitSources`.
 * Tsified `TerriaError` + added support for "un-rendered" `I18nTranslateString`
 * Tsified `raiseErrorToUser` + added `wrapErrorMessage()` to wrap error message in something more user friendly (using `models.raiseError.errorMessage` translation string).
+* remove interactions between AsyncLoaders + make forceLoad** optional
+* Add `isLoading` to `CatalogMemberMixin` placeholder until `AsyncLoader` loading problems are sorted (https://github.com/TerriaJS/terriajs/issues/5233)
+* Move `Loader` (spinner) from `Legend` to `WorkbenchItem`.
 * [The next improvement]
 
 #### 8.0.0-alpha.67
