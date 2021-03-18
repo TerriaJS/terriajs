@@ -776,6 +776,7 @@ function viewerChange(viewModel: Compass) {
 }
 
 export const COMPASS_NAME = "MapNavigationCompassOuterRing";
+export const COMPASS_TOOL_ID = "compass-tool";
 export default withTranslation()(
   withTheme(withTerriaRef(Compass, COMPASS_NAME))
 );

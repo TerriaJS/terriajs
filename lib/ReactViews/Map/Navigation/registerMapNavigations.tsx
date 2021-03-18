@@ -12,7 +12,7 @@ import {
   FEEDBACK_TOOL_ID
 } from "./../../Feedback/FeedbackController";
 import { ToolButtonController } from "./../../Tools/Tool";
-import Compass from "./Items/Compass";
+import Compass, { COMPASS_TOOL_ID } from "./Items/Compass";
 import MeasureTool from "./Items/MeasureTool";
 import MyLocation from "./Items/MyLocation";
 import { ToggleSplitterController } from "./Items/ToggleSplitterTool";
@@ -28,7 +28,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
   });
   compassController.pinned = true;
   mapNavigationModel.add({
-    id: "compassTool",
+    id: COMPASS_TOOL_ID,
     name: "compass",
     controller: compassController,
     location: "TOP",
