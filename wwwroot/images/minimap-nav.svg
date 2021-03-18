@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Artboard</title>
+    <defs>
+        <filter x="-30.0%" y="-21.4%" width="160.0%" height="140.5%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.7 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Artboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" filter="url(#filter-1)" transform="translate(9.000000, 4.000000)">
+            <polygon id="Path-10" stroke="#FFFFFF" stroke-width="2" fill-opacity="0.803005832" fill="#3D8BFF" stroke-linejoin="round" transform="translate(15.000000, 13.000000) rotate(-360.000000) translate(-15.000000, -13.000000) " points="15 26 2.66453526e-14 0 30 -2.66453526e-14"></polygon>
+            <circle id="Oval" fill="#FFFFFF" cx="15" cy="30" r="12"></circle>
+            <circle id="Oval-Copy" fill="#3D8BFF" cx="15" cy="30" r="10"></circle>
+            <circle id="Oval-Copy-2" fill="#FFFFFF" cx="15" cy="30" r="6"></circle>
+        </g>
+    </g>
+</svg>

@@ -6,6 +6,7 @@ import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
 import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
@@ -40,6 +41,9 @@ export default abstract class GlobeOrMap {
   private _tilesLoadingCountMax: number = 0;
   protected supportsPolylinesOnTerrain?: boolean;
 
+  // Fired when zoomTo is called
+  zoomToEvent: CesiumEvent = new CesiumEvent();
+
   // This is updated by Leaflet and Cesium objects.
   // Avoid duplicate mousemove events.  Why would we get duplicate mousemove events?  I'm glad you asked:
   // http://stackoverflow.com/questions/17818493/mousemove-event-repeating-every-second/17819113
@@ -47,10 +51,24 @@ export default abstract class GlobeOrMap {
   @observable mouseCoords: MouseCoords = new MouseCoords();
 
   abstract destroy(): void;
-  abstract zoomTo(
-    viewOrExtent: CameraView | Rectangle | MappableMixin.MappableMixin,
+
+  abstract doZoomTo(
+    target: CameraView | Rectangle | MappableMixin.MappableMixin,
     flightDurationSeconds: number
   ): void;
+
+  zoomTo(
+    target: CameraView | Rectangle | MappableMixin.MappableMixin,
+    flightDurationSeconds: number
+  ): void {
+    this.zoomToEvent.raiseEvent();
+    this.doZoomTo(target, flightDurationSeconds);
+    if (MappableMixin.isMixedInto(target) && TimeVarying.is(target)) {
+      // Set the target as the source for timeline
+      this.terria.timelineStack.promoteToTop(target);
+    }
+  }
+
   abstract getCurrentCameraView(): CameraView;
 
   /* Gets the current container element.
@@ -371,13 +389,5 @@ export default abstract class GlobeOrMap {
     throw new DeveloperError(
       "captureScreenshot must be implemented in the derived class."
     );
-  }
-
-  /**
-   * If item is a time varying, then set the timeline clock to match the items
-   * time line.
-   */
-  protected setAsTimelineClockSource(item: TimeVarying) {
-    this.terria.timelineStack.promoteToTop(item);
   }
 }

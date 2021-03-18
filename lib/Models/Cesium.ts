@@ -51,10 +51,6 @@ import CesiumRenderLoopPauser from "../Map/CesiumRenderLoopPauser";
 import CesiumSelectionIndicator from "../Map/CesiumSelectionIndicator";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import PickedFeatures, { ProviderCoordsMap } from "../Map/PickedFeatures";
-import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
-import TimeVarying from "../ModelMixins/TimeVarying";
-import SplitterTraits from "../Traits/SplitterTraits";
-import TerriaViewer from "../ViewModels/TerriaViewer";
 import MappableMixin, {
   ImageryParts,
   isCesium3DTileset,
@@ -62,6 +58,10 @@ import MappableMixin, {
   isTerrainProvider,
   MapItem
 } from "../ModelMixins/MappableMixin";
+import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
+import TimeVarying from "../ModelMixins/TimeVarying";
+import SplitterTraits from "../Traits/SplitterTraits";
+import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
@@ -624,7 +624,7 @@ export default class Cesium extends GlobeOrMap {
     }
   }
 
-  zoomTo(
+  doZoomTo(
     target:
       | CameraView
       | Rectangle
@@ -731,9 +731,8 @@ export default class Cesium extends GlobeOrMap {
           }
 
           if (target.mapItems.length > 0) {
-            // Zoom to the first item after setting the timeline to use the target.
-            if (TimeVarying.is(target)) that.setAsTimelineClockSource(target);
-            return that.zoomTo(target.mapItems[0], flightDurationSeconds);
+            // Zoom to the first item!
+            return that.doZoomTo(target.mapItems[0], flightDurationSeconds);
           }
         } else if (defined(target.rectangle)) {
           that.scene.camera.flyTo({

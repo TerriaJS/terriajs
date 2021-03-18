@@ -42,7 +42,6 @@ import MappableMixin, {
   MapItem
 } from "../ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
-import TimeVarying from "../ModelMixins/TimeVarying";
 import RasterLayerTraits from "../Traits/RasterLayerTraits";
 import SplitterTraits from "../Traits/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
@@ -434,7 +433,7 @@ export default class Leaflet extends GlobeOrMap {
     });
   }
 
-  zoomTo(
+  doZoomTo(
     target:
       | CameraView
       | Rectangle
@@ -475,13 +474,11 @@ export default class Leaflet extends GlobeOrMap {
               isDefined(north)
             ) {
               extent = Rectangle.fromDegrees(west, south, east, north);
-              if (TimeVarying.is(target)) that.setAsTimelineClockSource(target);
             }
           }
           if (!isDefined(extent)) {
-            // Zoom to the first item after setting the timeline to use the target.
-            if (TimeVarying.is(target)) that.setAsTimelineClockSource(target);
-            return that.zoomTo(target.mapItems[0], flightDurationSeconds);
+            // Zoom to the first item!
+            return that.doZoomTo(target.mapItems[0], flightDurationSeconds);
           }
         } else {
           extent = target.rectangle;
