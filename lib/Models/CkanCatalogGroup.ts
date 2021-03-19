@@ -2,6 +2,7 @@ import i18next from "i18next";
 import { action, computed, observable, runInAction } from "mobx";
 import URI from "urijs";
 import isDefined from "../Core/isDefined";
+import { JsonObject } from "../Core/Json";
 import loadJson from "../Core/loadJson";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
@@ -84,11 +85,11 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
         .segment("api/3/action/package_search")
         .addQuery({ start: 0, rows: 1000, sort: "metadata_created asc" });
 
-      if (filterQuery.toString().includes("fq=")) {
+      if (typeof filterQuery === "string") {
         uri.query(uri.query() + "&" + filterQuery.toString());
       } else {
         Object.keys(filterQuery).forEach((key: string) =>
-          uri.addQuery(key, filterQuery[key])
+          uri.addQuery(key, (filterQuery as JsonObject)[key])
         );
       }
 
