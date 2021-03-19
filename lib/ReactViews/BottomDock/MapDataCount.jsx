@@ -37,7 +37,7 @@ const MapDataCount = observer(function(props) {
     // components as they stand come with their own "wrapper" via scss
     // <Box styledMinHeight="72px">
     <Box positionAbsolute css={"bottom: 40px;"}>
-      <ButtonAsLabel light={hasMapData} dark={!hasMapData}>
+      <ButtonAsLabel light={hasMapData}>
         <Spacing right={1} />
         <StyledIcon
           glyph={

@@ -1,15 +1,14 @@
 import { TFunction } from "i18next";
 import { observer } from "mobx-react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
 import ViewState from "../../ReactViewModels/ViewState";
+import Box from "../../Styled/Box";
+import { RawButton } from "../../Styled/Button";
+import Spacing from "../../Styled/Spacing";
+import Text from "../../Styled/Text";
 import { GLYPHS, StyledIcon } from "../Icon";
-
-const Box = require("../../Styled/Box").default;
-const RawButton: any = require("../../Styled/Button").RawButton;
-const Spacing: any = require("../../Styled/Spacing").default;
-const Text: any = require("../../Styled/Text").default;
 
 export interface FrameProps {
   title: string;
@@ -68,7 +67,7 @@ const Wrapper = styled(Box).attrs({
   positionAbsolute: true,
   styledWidth: "340px"
   // charcoalGreyBg: true
-})`
+})<{ isMapFullScreen: boolean }>`
   top: 70px;
   left: 0px;
   min-height: 220px;

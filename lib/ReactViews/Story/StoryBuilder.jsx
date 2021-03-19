@@ -11,8 +11,10 @@ import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import defined from "terriajs-cesium/Source/Core/defined";
 import dataStoriesImg from "../../../wwwroot/images/data-stories-getting-started.jpg";
 import triggerResize from "../../Core/triggerResize";
-import { RawButton } from "../../Styled/Button";
-import { TextSpan } from "../../Styled/Text";
+import Box from "../../Styled/Box";
+import Button, { RawButton } from "../../Styled/Button";
+import Spacing from "../../Styled/Spacing";
+import Text, { TextSpan } from "../../Styled/Text";
 import BadgeBar from "../BadgeBar.jsx";
 import measureElement from "../HOCs/measureElement";
 import Icon, { StyledIcon } from "../Icon";
@@ -22,11 +24,6 @@ import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
 import Styles from "./story-builder.scss";
 import Story from "./Story.jsx";
 import StoryEditor from "./StoryEditor.jsx";
-
-const Spacing = require("../../Styled/Spacing").default;
-const Box = require("../../Styled/Box").default;
-const Text = require("../../Styled/Text").default;
-const Button = require("../../Styled/Button").default;
 
 const STORY_VIDEO = "storyVideo";
 

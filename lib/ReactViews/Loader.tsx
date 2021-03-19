@@ -4,7 +4,7 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import { StyledIcon, GLYPHS } from "./Icon";
 import { TextSpan } from "../Styled/Text";
 import styled from "styled-components";
-const Box: any = require("../Styled/Box").default;
+import Box from "../Styled/Box";
 
 interface PropsType extends WithTranslation {
   message?: string;

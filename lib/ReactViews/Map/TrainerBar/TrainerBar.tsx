@@ -15,18 +15,16 @@ import Select from "../../../Styled/Select";
 import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact";
 import measureElement from "../../HOCs/measureElement";
 import { GLYPHS, StyledIcon } from "../../Icon";
+import Text from "../../../Styled/Text";
+import Box from "../../../Styled/Box";
+import Button, { RawButton } from "../../../Styled/Button";
+import Spacing from "../../../Styled/Spacing";
 
 const StyledHtml: any = require("../../Map/Panels/HelpPanel/StyledHtml")
   .default;
 const CloseButton: any = require("../../Generic/CloseButton").default;
 
-const Box: any = require("../../../Styled/Box").default;
-const Button: any = require("../../../Styled/Button").default;
-const RawButton: any = require("../../../Styled/Button").RawButton;
-const Text: any = require("../../../Styled/Text").default;
-const Spacing: any = require("../../../Styled/Spacing").default;
-
-const TrainerBarWrapper = styled(Box)`
+const TrainerBarWrapper = styled(Box)<{ isMapFullScreen: boolean }>`
   top: 0;
   left: ${p => (p.isMapFullScreen ? 0 : Number(p.theme.workbenchWidth))}px;
   z-index: ${p => Number(p.theme.frontComponentZIndex) + 100};
@@ -46,7 +44,7 @@ const getSelectedTrainerFromHelpContent = (
 };
 
 // Ripped from StyledHtml.jsx
-const Numbers = styled(Text)`
+const Numbers = styled(Text)<{ darkBg: boolean }>`
   width: 22px;
   height: 22px;
   line-height: 22px;

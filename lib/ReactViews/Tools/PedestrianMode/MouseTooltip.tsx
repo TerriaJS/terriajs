@@ -2,8 +2,7 @@ import React, { createRef, useEffect } from "react";
 import styled from "styled-components";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
-
-const Text: any = require("../../../Styled/Text").default;
+import Text from "../../../Styled/Text";
 
 type MouseTooltipProps = {
   scene: Scene;
@@ -19,8 +18,10 @@ const MouseTooltip: React.FC<MouseTooltipProps> = props => {
       if (tooltipText.current) {
         const width = tooltipText.current.clientWidth;
         const height = tooltipText.current.clientHeight;
-        tooltipText.current.style.left = `${position.x - width / 2}px`;
-        tooltipText.current.style.top = `${position.y - height - 10}px`;
+        (tooltipText.current.style as any).left = `${position.x - width / 2}px`;
+        (tooltipText.current.style as any).top = `${position.y -
+          height -
+          10}px`;
       }
     };
     setTooltipPosition({
@@ -48,7 +49,7 @@ const TooltipText = styled(Text).attrs({
   small: true,
   textDarker: true,
   textAlignCenter: true
-})<{ position: Cartesian2 }>`
+})<{ position?: Cartesian2; ref: any }>`
   position: absolute;
   width: 200px;
   padding: 0.7em;

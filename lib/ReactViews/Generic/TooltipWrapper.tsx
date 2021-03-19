@@ -5,9 +5,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { withTheme, DefaultTheme } from "styled-components";
 import { useUID } from "react-uid";
-const BoxSpan: any = require("../../Styled/Box").BoxSpan;
-const TextSpan: any = require("../../Styled/Text").TextSpan;
-const RawButton: any = require("../../Styled/Button").RawButton;
+import { BoxSpan } from "../../Styled/Box";
+import { RawButton } from "../../Styled/Button";
+import { TextSpan } from "../../Styled/Text";
 
 type Props = {
   theme: DefaultTheme;
