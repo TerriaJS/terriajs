@@ -367,7 +367,8 @@
       "togglePlay": "Play",
       "playSlower": "Play Slower",
       "playFaster": "Play Faster"
-    }
+    },
+    "time": "Time" 
   },
   "satellite": {
     "pickPoint": "Select a point by clicking on the map.",
