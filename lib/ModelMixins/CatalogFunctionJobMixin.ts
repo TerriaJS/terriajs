@@ -292,6 +292,7 @@ function CatalogFunctionJobMixin<
 
     protected async forceLoadMembers() {}
 
+    @computed
     get mapItems(): MapItem[] {
       return [];
     }

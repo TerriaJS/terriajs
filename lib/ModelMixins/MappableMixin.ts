@@ -69,9 +69,9 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
      * If the map items are already loaded or already loading, it will
      * return the existing promise.
      */
-    async loadMapItems() {
+    async loadMapItems(force?: boolean) {
       if (CatalogMemberMixin.isMixedInto(this)) await this.loadMetadata();
-      await this._mapItemsLoader.load();
+      await this._mapItemsLoader.load(force);
     }
 
     abstract get mapItems(): MapItem[];

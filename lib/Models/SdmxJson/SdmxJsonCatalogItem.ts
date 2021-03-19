@@ -191,11 +191,7 @@ export default class SdmxJsonCatalogItem
    */
   private async downloadData(): Promise<string[][] | undefined> {
     // FIXME: This is a bad way of handling re-loading the same data
-    if (
-      !isDefined(this.regionProviderList) ||
-      this._currentCsvUrl === this.csvUrl
-    )
-      return this.dataColumnMajor;
+    if (this._currentCsvUrl === this.csvUrl) return this.dataColumnMajor;
 
     this._currentCsvUrl = this.csvUrl;
 

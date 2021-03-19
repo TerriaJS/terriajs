@@ -138,14 +138,12 @@ describe("Workbench", function() {
 
     spyOn(wmsItem, "loadMetadata");
     spyOn(wmsItem, "loadMapItems");
-    spyOn(wmsItem, "loadMapItems");
 
     await workbench.add(item4);
     expect(workbench.items).toEqual([item4, item1, item2, item3]);
     expect(workbench.itemIds).toEqual(["D", "A", "B", "C"]);
 
-    expect(wmsItem.loadMetadata).toHaveBeenCalledTimes(0);
-    expect(wmsItem.loadMapItems).toHaveBeenCalledTimes(1);
+    expect(wmsItem.loadMetadata).toHaveBeenCalledTimes(1);
     expect(wmsItem.loadMapItems).toHaveBeenCalledTimes(1);
   });
 

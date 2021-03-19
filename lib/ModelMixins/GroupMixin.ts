@@ -72,8 +72,6 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
       try {
         if (CatalogMemberMixin.isMixedInto(this)) await this.loadMetadata();
         await this._memberLoader.load();
-      } catch (e) {
-        console.log(e);
       } finally {
         this.refreshKnownContainerUniqueIds(this.uniqueId);
         this.addShareKeysToMembers();

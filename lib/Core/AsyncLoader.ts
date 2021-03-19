@@ -90,7 +90,7 @@ export default class AsyncLoader {
 
   load(forceReload: boolean = false): Promise<void> {
     if (forceReload) {
-      ++this._forceReloadCount;
+      runInAction(() => ++this._forceReloadCount);
     }
 
     const newPromise = this.loadKeepAlive;
