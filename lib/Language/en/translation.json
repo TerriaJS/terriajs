@@ -175,7 +175,9 @@
     "locationMarker": "Location Marker",
     "noInfoAvailable": "No information available",
     "siteData": "Site Data",
-    "latLon": "Lat / Lon "
+    "latLon": "Lat / Lon ",
+    "showCuratedData": "Show Curated Data",
+    "showRawData": "Show Raw Data"
   },
   "welcomeMessage": {
     "title": "Spatial data made <2>easy.</2>",
@@ -365,7 +367,8 @@
       "togglePlay": "Play",
       "playSlower": "Play Slower",
       "playFaster": "Play Faster"
-    }
+    },
+    "time": "Time" 
   },
   "satellite": {
     "pickPoint": "Select a point by clicking on the map.",

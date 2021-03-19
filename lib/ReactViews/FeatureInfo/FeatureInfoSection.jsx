@@ -12,18 +12,19 @@ import classNames from "classnames";
 import dateFormat from "dateformat";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import isArray from "terriajs-cesium/Source/Core/isArray";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 
-import CustomComponents from "../Custom/CustomComponents";
-import FeatureInfoDownload from "./FeatureInfoDownload";
-import formatNumberForLocale from "../../Core/formatNumberForLocale";
-import Icon from "../Icon.jsx";
-import ObserveModelMixin from "../ObserveModelMixin";
-import propertyGetTimeValues from "../../Core/propertyGetTimeValues";
-import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
+import CustomComponents from "terriajs/lib/ReactViews/Custom/CustomComponents";
+import FeatureInfoDownload from "terriajs/lib/ReactViews/FeatureInfo/FeatureInfoDownload";
+import formatNumberForLocale from "terriajs/lib/Core/formatNumberForLocale";
+import Icon from "terriajs/lib/ReactViews/Icon.jsx";
+import ObserveModelMixin from "terriajs/lib/ReactViews/ObserveModelMixin";
+import propertyGetTimeValues from "terriajs/lib/Core/propertyGetTimeValues";
+import parseCustomMarkdownToReact from "terriajs/lib/ReactViews/Custom/parseCustomMarkdownToReact";
 import { withTranslation } from "react-i18next";
 
-import Styles from "./feature-info-section.scss";
+import Styles from "terriajs/lib/ReactViews/FeatureInfo/feature-info-section.scss";
 
 // We use Mustache templates inside React views, where React does the escaping; don't escape twice, or eg. " => &quot;
 Mustache.escape = function(string) {
@@ -257,7 +258,7 @@ export const FeatureInfoSection = createReactClass({
                 className={Styles.rawDataButton}
                 onClick={this.toggleRawData}
               >
-                {this.state.showRawData ? "Show Curated Data" : "Show Raw Data"}
+                {this.state.showRawData ? t("featureInfo.showCuratedData") : t("featureInfo.showRawData")}
               </button>
             </If>
             <div>
@@ -470,11 +471,7 @@ function applyFormatsInPlace(properties, formats) {
  */
 function replaceBadKeyCharacters(properties) {
   // if properties is anything other than an Object type, return it. Otherwise recurse through its properties.
-  if (
-    !properties ||
-    typeof properties !== "object" ||
-    Array.isArray(properties)
-  ) {
+  if (!properties || typeof properties !== "object" || isArray(properties)) {
     return properties;
   }
   const result = {};
