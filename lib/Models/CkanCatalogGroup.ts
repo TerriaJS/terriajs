@@ -71,6 +71,25 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     ) as this;
   }
 
+  static addfilterQuery(
+    uri: uri.URI,
+    filterQuery: JsonObject | string
+  ): uri.URI {
+    if (typeof filterQuery === "string") {
+      // An encoded filterQuery may look like "fq=+(res_format%3Awms%20OR%20res_format%3AWMS)".
+      // An unencoded filterQuery may look like "fq=(res_format:wms OR res_format:WMS)".
+      // In both cases, don't use addQuery(filterQuery) as "=" will be escaped too, which will
+      // cause unexpected result (e.g. empty query result).
+      uri.query(uri.query() + "&" + filterQuery.toString());
+    } else {
+      Object.keys(filterQuery).forEach((key: string) =>
+        uri.addQuery(key, (filterQuery as JsonObject)[key])
+      );
+    }
+    uri.normalize();
+    return uri;
+  }
+
   static async load(
     catalogGroup: CkanCatalogGroup
   ): Promise<CkanServerStratum | undefined> {
@@ -85,13 +104,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
         .segment("api/3/action/package_search")
         .addQuery({ start: 0, rows: 1000, sort: "metadata_created asc" });
 
-      if (typeof filterQuery === "string") {
-        uri.query(uri.query() + "&" + filterQuery.toString());
-      } else {
-        Object.keys(filterQuery).forEach((key: string) =>
-          uri.addQuery(key, (filterQuery as JsonObject)[key])
-        );
-      }
+      CkanServerStratum.addfilterQuery(uri, filterQuery as JsonObject | string);
 
       const result = await paginateThroughResults(uri, catalogGroup);
       if (ckanServerResponse === undefined) {
