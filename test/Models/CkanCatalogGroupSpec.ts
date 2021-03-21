@@ -9,6 +9,7 @@ import CkanItemReference from "../../lib/Models/CkanItemReference";
 import CatalogGroup from "../../lib/Models/CatalogGroupNew";
 import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
 import { JsonObject } from "../../lib/Core/Json";
+import URI from "urijs";
 
 configure({
   enforceActions: "observed",
