@@ -1,7 +1,45 @@
 import styled from "styled-components";
 
+interface ITextProps {
+  displayBlock?: boolean;
+  isLink?: boolean;
+  nunito?: boolean;
+  openSans?: boolean;
+  breakWord?: boolean;
+  light?: boolean;
+  bold?: boolean;
+  semiBold?: boolean;
+  extraBold?: boolean;
+  uppercase?: boolean;
+  textAlignLeft?: boolean;
+  textAlignCenter?: boolean;
+  primary?: boolean;
+  textLight?: boolean;
+  textLightDimmed?: boolean;
+  textDark?: boolean;
+  textDarker?: boolean;
+  fullWidth?: boolean;
+  noWrap?: boolean;
+  noFontSize?: boolean;
+  small?: boolean;
+  medium?: boolean;
+  large?: boolean;
+  as?: "h1" | "h2" | "h3" | "h4" | "span";
+  extraLarge?: boolean;
+  extraExtraLarge?: boolean;
+  subHeading?: boolean;
+  heading?: boolean;
+  styledSize?: string;
+  styledLineHeight?: string;
+  styledFontSize?: string;
+  highlightLinks?: boolean;
+  overflowHide?: boolean;
+  overflowEllipsis?: boolean;
+  style?: any;
+}
+
 // should it be a span or inline-block-div? - leaning to div
-export const Text = styled.div`
+export const Text = styled.div<ITextProps>`
   ${props => props.displayBlock && `display: block;`}
 
   // Unsure about this one, as we don't have react-router / "actual links" at
@@ -144,8 +182,10 @@ export const Text = styled.div`
 
 `;
 
-export const TextSpan = styled(Text).attrs({
-  as: "span"
-})``;
+export const TextSpan = styled(Text).attrs(
+  (props: { as?: React.ElementType | keyof JSX.IntrinsicElements }) => {
+    as: "span";
+  }
+)``;
 
 export default Text;

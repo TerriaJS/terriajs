@@ -10,7 +10,7 @@ import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import parseCustomMarkdownToReact from "../../../Custom/parseCustomMarkdownToReact";
 import HelpPanelItem from "./HelpPanelItem";
-import Button, { RawButton } from "../../../../Styled/Button.jsx";
+import Button, { RawButton } from "../../../../Styled/Button";
 
 @observer
 class HelpPanel extends React.Component {

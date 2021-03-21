@@ -1,6 +1,95 @@
 import styled from "styled-components";
 
-export const Box = styled.div`
+type Overflow =
+  | "visible"
+  | "hidden"
+  | "scroll"
+  | "auto"
+  | "initial"
+  | "inherit";
+
+/* 
+we can use this after upgrade to typescript 4
+
+type StyledSizePx = `${number}px`
+type StyledSizePercent = `${number}%`
+export type StyledSize = StyledSizePx | StyledSizePercent | `calc(${string})`;
+type Color = `#${string}` | `rgb(${number},${number},${number})` | `rgba(${number}, ${number}, ${number}, ${number})` | `hsl(${number}, ${number}%, ${number}%)` | `hsla(${number}, ${number}%, ${number}%, ${number}%)` | string;
+
+type FlexGrow = number | "initial" | "inherit";
+type FlexShrink = number | "initial" | "inherit";
+type FlexBasis = StyledSize | "auto" | "initial" | "inherit";
+type Flex = FlexGrow | FlexShrink | FlexBasis | `${FlexGrow} ${FlexShrink} ${FlexBasis}`;
+ */
+type OneKeyFrom<T, K extends keyof T = keyof T> = K extends any
+  ? Pick<T, K> & Partial<Record<Exclude<keyof T, K>, never>> extends infer O
+    ? { [P in keyof O]: O[P] }
+    : never
+  : never;
+
+interface Column {
+  col1?: boolean;
+  col2?: boolean;
+  col3?: boolean;
+  col4?: boolean;
+  col5?: boolean;
+  col6?: boolean;
+  col7?: boolean;
+  col8?: boolean;
+  col9?: boolean;
+  col10?: boolean;
+  col11?: boolean;
+  col12?: boolean;
+}
+
+interface IBoxPropsBase {
+  relative?: boolean;
+  positionAbsolute?: boolean;
+  static?: boolean;
+  topRight?: boolean;
+  displayInlineBlock?: boolean;
+  rounded?: boolean;
+  fullHeight?: boolean;
+  fullWidth?: boolean;
+  styledWidth?: string;
+  styledHeight?: string;
+  styledMinWidth?: string;
+  styledMinHeight?: string;
+  styledMaxHeight?: string;
+  col?: boolean;
+  verticalCenter?: boolean;
+  centered?: boolean;
+  justifyContentSpaceAround?: boolean;
+  justifySpaceBetween?: boolean;
+  left?: boolean;
+  alignItemsFlexStart?: boolean;
+  leftSelf?: boolean;
+  right?: boolean;
+  alignItemsFlexEnd?: boolean;
+  rightSelf?: boolean;
+  column?: boolean;
+  wrap?: boolean;
+  flex?: any;
+  flexShrinkZero?: boolean;
+  boxShadow?: boolean;
+  charcoalGreyBg?: boolean;
+  backgroundColor?: any;
+  padded?: boolean;
+  paddedRatio?: number;
+  paddedHorizontally?: number | boolean;
+  paddedVertically?: number | boolean;
+  backgroundImage?: any;
+  backgroundBlackOverlay?: number;
+  wordBreak?: any;
+  overflow?: Overflow;
+  overflowY?: Overflow;
+  scroll?: boolean;
+  style?: any;
+  as?: React.ElementType | keyof JSX.IntrinsicElements;
+}
+type IBoxProps = IBoxPropsBase & OneKeyFrom<Column>;
+
+export const Box = styled.div<IBoxProps>`
   ${props => props.relative && `position:relative;`}
 
   display: flex;
@@ -160,8 +249,10 @@ export const Box = styled.div`
   `}
 `;
 
-export const BoxSpan = styled(Box).attrs({
-  as: "span"
-})``;
+export const BoxSpan = styled(Box).attrs(
+  (props: { as?: React.ElementType | keyof JSX.IntrinsicElements }) => {
+    as: "span";
+  }
+)``;
 
 export default Box;

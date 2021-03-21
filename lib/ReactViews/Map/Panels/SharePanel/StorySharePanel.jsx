@@ -5,7 +5,7 @@
 
 import createReactClass from "create-react-class";
 import React from "react";
-import Button from "../../../../Styled/Button.jsx";
+import Button from "../../../../Styled/Button";
 import Icon from "../../../Icon.jsx";
 import BaseOuterPanel from "../BaseOuterPanel";
 import InnerPanel from "../InnerPanel";
