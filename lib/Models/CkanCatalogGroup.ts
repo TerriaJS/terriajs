@@ -80,7 +80,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
       // An unencoded filterQuery may look like "fq=(res_format:wms OR res_format:WMS)".
       // In both cases, don't use addQuery(filterQuery) as "=" will be escaped too, which will
       // cause unexpected result (e.g. empty query result).
-      uri.query(uri.query() + "&" + filterQuery.toString());
+      uri.query(uri.query() + "&" + filterQuery);
     } else {
       Object.keys(filterQuery).forEach((key: string) =>
         uri.addQuery(key, (filterQuery as JsonObject)[key])
