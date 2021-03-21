@@ -71,7 +71,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     ) as this;
   }
 
-  static addfilterQuery(
+  static addFilterQuery(
     uri: uri.URI,
     filterQuery: JsonObject | string
   ): uri.URI {
@@ -104,7 +104,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
         .segment("api/3/action/package_search")
         .addQuery({ start: 0, rows: 1000, sort: "metadata_created asc" });
 
-      CkanServerStratum.addfilterQuery(uri, filterQuery as JsonObject | string);
+      CkanServerStratum.addFilterQuery(uri, filterQuery as JsonObject | string);
 
       const result = await paginateThroughResults(uri, catalogGroup);
       if (ckanServerResponse === undefined) {

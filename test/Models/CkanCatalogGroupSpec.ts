@@ -63,14 +63,14 @@ describe("CkanCatalogGroup", function() {
 
     filterQueries.forEach((filterQuery, i) => {
       const uri = new URI("https://somewhere.com");
-      CkanServerStratum.addfilterQuery(uri, filterQuery);
+      CkanServerStratum.addFilterQuery(uri, filterQuery);
       expect(uri.query() === expectedQueryStrings[i]);
     });
 
     filterQueries.forEach((filterQuery, i) => {
       const uri = new URI("https://somewhere.com");
       uri.addQuery({ start: 0 });
-      CkanServerStratum.addfilterQuery(uri, filterQuery);
+      CkanServerStratum.addFilterQuery(uri, filterQuery);
       expect(uri.query() === "start=0&" + expectedQueryStrings[i]);
     });
   });
