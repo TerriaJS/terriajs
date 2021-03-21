@@ -1,11 +1,9 @@
 "use strict";
 import React from "react";
-import PropTypes from "prop-types";
 import styled from "styled-components";
-
 import Box from "../../Styled/Box";
-import { RawButton } from "../../Styled/Button";
-import Text from "../../Styled/Text";
+const Text = require("../../Styled/Text").default;
+const RawButton = require("../../Styled/Button").RawButton;
 
 // only spans are valid html for buttons (even though divs work)
 const ButtonWrapper = styled(Box).attrs({
@@ -76,25 +74,23 @@ const StyledWorkbenchButton = styled(RawButton)`
     }
   `}
 `;
-WorkbenchButton.propTypes = {
-  className: PropTypes.string,
-  children: PropTypes.any,
-  primary: PropTypes.bool,
-  disabled: PropTypes.bool,
-  inverted: PropTypes.bool,
-  iconOnly: PropTypes.bool,
-  title: PropTypes.string,
-  iconElement: PropTypes.func.isRequired,
-  onClick: PropTypes.func,
-  handleClick: PropTypes.func
-};
 
-function WorkbenchButton(props) {
+interface IProps {
+  children?: any;
+  primary?: boolean;
+  disabled?: boolean;
+  inverted?: boolean;
+  iconOnly?: boolean;
+  title?: string;
+  iconElement(): any;
+  onClick?: () => void;
+}
+
+const WorkbenchButton: React.FC<IProps> = (props: IProps) => {
   const { children, title, primary, inverted, disabled, iconOnly } = props;
 
   return (
     <StyledWorkbenchButton
-      className={props.className}
       primary={primary}
       disabled={disabled}
       iconOnly={iconOnly}
@@ -131,5 +127,5 @@ function WorkbenchButton(props) {
       </ButtonWrapper>
     </StyledWorkbenchButton>
   );
-}
+};
 export default WorkbenchButton;

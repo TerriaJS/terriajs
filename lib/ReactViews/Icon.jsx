@@ -151,6 +151,7 @@ export const Icon = createReactClass({
 
 export const StyledIcon = styled(Icon)`
   display: ${props => (props.displayInline ? `inline` : `block`)};
+  vertical-align: middle;
   flex-shrink: 0;
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
   ${props => props.styledHeight && `height: ${props.styledHeight};`}

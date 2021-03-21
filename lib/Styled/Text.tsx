@@ -182,10 +182,8 @@ export const Text = styled.div<ITextProps>`
 
 `;
 
-export const TextSpan = styled(Text).attrs(
-  (props: { as?: React.ElementType | keyof JSX.IntrinsicElements }) => {
-    as: "span";
-  }
-)``;
+export const TextSpan = styled(Text).attrs({
+  as: "span"
+})``;
 
 export default Text;

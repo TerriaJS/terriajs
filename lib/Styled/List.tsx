@@ -1,9 +1,20 @@
 import styled from "styled-components";
+import Box from "./Box";
 
-export const Ul = styled.ul`
+interface IUlProps {
+  overflowX?: string;
+}
+
+export const Ul = styled(Box).attrs({
+  as: "ul"
+})<IUlProps>`
   list-style: none;
-  padding: 0;
   margin: 0;
+  ${props =>
+    props.overflowX &&
+    `
+        overflow-x: ${props.overflowX};
+      `}
 `;
 
 export const Li = styled.li``;

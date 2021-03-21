@@ -86,6 +86,7 @@ interface IBoxPropsBase {
   scroll?: boolean;
   style?: any;
   as?: React.ElementType | keyof JSX.IntrinsicElements;
+  ref?: any;
 }
 type IBoxProps = IBoxPropsBase & OneKeyFrom<Column>;
 
@@ -249,10 +250,8 @@ export const Box = styled.div<IBoxProps>`
   `}
 `;
 
-export const BoxSpan = styled(Box).attrs(
-  (props: { as?: React.ElementType | keyof JSX.IntrinsicElements }) => {
-    as: "span";
-  }
-)``;
+export const BoxSpan = styled(Box).attrs({
+  as: "span"
+})``;
 
 export default Box;

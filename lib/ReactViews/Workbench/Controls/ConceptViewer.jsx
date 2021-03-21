@@ -64,4 +64,4 @@ const ConceptViewer = createReactClass({
   }
 });
 
-module.exports = ConceptViewer;
+export default ConceptViewer;

@@ -46,4 +46,4 @@ const DisplayAsPercentSection = createReactClass({
     );
   }
 });
-module.exports = withTranslation()(DisplayAsPercentSection);
+export default withTranslation()(DisplayAsPercentSection);

@@ -4,17 +4,14 @@ import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import styled, { withTheme } from "styled-components";
+import Box from "../../Styled/Box";
+import Button from "../../Styled/Button";
+import Spacing from "../../Styled/Spacing";
+import Text from "../../Styled/Text";
+import { useRefForTerria } from "../Hooks/useRefForTerria";
 import Icon, { StyledIcon } from "../Icon";
 import SearchBoxAndResults from "../Search/SearchBoxAndResults";
 import Workbench from "../Workbench/Workbench";
-import FullScreenButton from "./FullScreenButton";
-
-import { useRefForTerria } from "../Hooks/useRefForTerria";
-
-import Box from "../../Styled/Box";
-import Spacing from "../../Styled/Spacing";
-import Text from "../../Styled/Text";
-import Button from "../../Styled/Button";
 
 const BoxHelpfulHints = styled(Box)``;
 
@@ -154,20 +151,15 @@ const SidePanel = observer(
       const addData = t("addData.addDataBtnText");
       const uploadText = t("models.catalog.upload");
       return (
-        <div>
+        <Box column styledMinHeight={"0"}
+        flex={1}>
           <div
             css={`
               padding: 0 5px;
               background: ${this.props.theme.dark};
             `}
           >
-            <FullScreenButton
-              terria={this.props.terria}
-              viewState={this.props.viewState}
-              minified={true}
-              animationDuration={250}
-              btnText={t("addData.btnHide")}
-            />
+            
             <SearchBoxAndResults
               viewState={this.props.viewState}
               terria={this.props.terria}
@@ -204,7 +196,9 @@ const SidePanel = observer(
             </Box>
             <Spacing bottom={1} />
           </div>
-          <div
+          <Box
+            styledMinHeight={"0"}
+            flex={1}
             css={`
               overflow: hidden;
             `}
@@ -225,8 +219,8 @@ const SidePanel = observer(
                 <EmptyWorkbench t={t} theme={theme} />
               </Otherwise>
             </Choose>
-          </div>
-        </div>
+          </Box>
+        </Box>
       );
     }
   })
