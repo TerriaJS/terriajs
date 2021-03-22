@@ -855,6 +855,54 @@ describe("Terria", function() {
     });
   });
 
+  describe("basemaps", function() {
+    it("when no base maps are specified load defaultBaseMaps", async function() {
+      terria.applyInitData({
+        initData: {}
+      });
+      await terria.loadInitSources();
+      expect(terria.baseMaps).toBeDefined();
+      expect(terria.baseMaps.length).toBeGreaterThan(1);
+    });
+
+    it("propperly loads base maps", function() {
+      terria.applyInitData({
+        initData: {
+          baseMaps: [
+            {
+              item: {
+                id: "basemap-positron",
+                name: "Positron (Light)",
+                type: "open-street-map",
+                url: "https://basemaps.cartocdn.com/light_all/",
+                attribution:
+                  "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
+                subdomains: ["a", "b", "c", "d"],
+                opacity: 1.0
+              },
+              image: "/images/positron.png"
+            },
+            {
+              item: {
+                id: "basemap-darkmatter",
+                name: "Dark Matter",
+                type: "open-street-map",
+                url: "https://basemaps.cartocdn.com/dark_all/",
+                attribution:
+                  "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
+                subdomains: ["a", "b", "c", "d"],
+                opacity: 1.0
+              },
+              image: "/images/dark-matter.png"
+            }
+          ]
+        }
+      });
+      expect(terria.baseMaps).toBeDefined();
+      expect(terria.baseMaps.length).toEqual(2);
+    });
+  });
+
   describe("loadPickedFeatures", function() {
     beforeEach(async function() {
       // Attach cesium viewer and wait for it to be loaded
