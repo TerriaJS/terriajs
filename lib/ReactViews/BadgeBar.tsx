@@ -1,6 +1,6 @@
 import React from "react";
 import { TextSpan } from "../styled/Text";
-const Box = require("../styled/Box").default;
+const Box = require("../Styled/Box").default;
 
 interface IProps {
   label: string;
