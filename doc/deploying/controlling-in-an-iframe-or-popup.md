@@ -35,18 +35,17 @@ Then, the parent window can send messages like this:
                                 "south": -33.907,
                                 "west": 151.165
                             },
+                            workbench: ["my-data"]
                             catalog: [
                                 {
                                     type: "group",
                                     name: "Foo",
-                                    isPromoted: true,
-                                    isOpen: true,
-                                    items: [
+                                    members: [
                                         {
                                             type: "csv",
                                             name: "My Data",
-                                            data: "POA,Some Value\n2000,1\n2205,2",
-                                            isEnabled: true
+                                            id: "my-data",
+                                            data: "POA,Some Value\n2000,1\n2205,2"
                                         }
                                     ]
                                 }

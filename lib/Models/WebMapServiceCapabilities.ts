@@ -7,8 +7,8 @@ import xml2json from "../ThirdParty/xml2json";
 import { RectangleTraits } from "../Traits/MappableTraits";
 import {
   CapabilitiesStyle,
-  OwsKeywordList,
-  OnlineResource
+  OnlineResource,
+  OwsKeywordList
 } from "./OwsInterfaces";
 import StratumFromTraits from "./StratumFromTraits";
 

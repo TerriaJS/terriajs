@@ -5,7 +5,7 @@ import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import loadJson from "../Core/loadJson";
 import TerriaError from "../Core/TerriaError";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import { FeatureInfoTemplateTraits } from "../Traits/FeatureInfoTraits";
@@ -64,11 +64,6 @@ interface LocationsData {
     locations: SenapsLocation[];
   };
 }
-
-const missingUrlError = new TerriaError({
-  title: i18next.t("models.senaps.retrieveErrorTitle"),
-  message: i18next.t("models.senaps.missingSenapsBaseUrl")
-});
 
 export class SenapsLocationsStratum extends LoadableStratum(
   SenapsLocationsCatalogItemTraits
@@ -167,7 +162,10 @@ export class SenapsLocationsStratum extends LoadableStratum(
       }
 
       if (!senapsLocationsCatalogItem.url) {
-        throw missingUrlError;
+        throw new TerriaError({
+          title: i18next.t("models.senaps.retrieveErrorTitle"),
+          message: i18next.t("models.senaps.missingSenapsBaseUrl")
+        });
       }
       const proxiedBaseUrl = proxyCatalogItemUrl(
         senapsLocationsCatalogItem,
@@ -232,7 +230,7 @@ export class SenapsLocationsStratum extends LoadableStratum(
 
 StratumOrder.addLoadStratum(SenapsLocationsStratum.stratumName);
 
-class SenapsLocationsCatalogItem extends AsyncMappableMixin(
+class SenapsLocationsCatalogItem extends MappableMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(SenapsLocationsCatalogItemTraits)))
 ) {
   static readonly type = "senaps-locations";
@@ -279,7 +277,10 @@ class SenapsLocationsCatalogItem extends AsyncMappableMixin(
 
   _constructLocationsUrl() {
     if (!this.url) {
-      throw missingUrlError;
+      throw new TerriaError({
+        title: i18next.t("models.senaps.retrieveErrorTitle"),
+        message: i18next.t("models.senaps.missingSenapsBaseUrl")
+      });
     }
     var uri = new URI(`${this.url}/locations`);
     if (this.locationIdFilter !== undefined) {
@@ -292,7 +293,10 @@ class SenapsLocationsCatalogItem extends AsyncMappableMixin(
 
   _constructStreamsUrl(locationId: string) {
     if (!this.url) {
-      throw missingUrlError;
+      throw new TerriaError({
+        title: i18next.t("models.senaps.retrieveErrorTitle"),
+        message: i18next.t("models.senaps.missingSenapsBaseUrl")
+      });
     }
     var uri = new URI(`${this.url}/streams`);
     if (this.streamIdFilter !== undefined) {

@@ -148,30 +148,45 @@ describe("Terria", function() {
             done.fail(error);
           });
       });
-      it("works with v7initializationUrls", function(done) {
+      it("works with v7initializationUrls", async function() {
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
           // terria's "Magda derived url"
           responseText: mapConfigBasicString
         });
+        const groupName = "Simple converter test";
+        jasmine.Ajax.stubRequest(
+          "https://example.foo.bar/initv7.json"
+        ).andReturn({
+          // terria's "Magda derived url"
+          responseText: JSON.stringify({
+            catalog: [{ name: groupName, type: "group", items: [] }]
+          })
+        });
         // no init sources before starting
-        expect(terria.initSources.length).toEqual(0);
+        expect(terria.initSources.length).toBe(0);
 
-        terria
-          .start({
-            configUrl: "test/Magda/map-config-v7.json",
-            i18nOptions
-          })
-          .then(function() {
-            console.log(terria);
-            console.log(mapConfigV7Json);
-            expect(terria.initSources.length).toEqual(1);
-            expect(isInitDataPromise(terria.initSources[0])).toEqual(true);
+        await terria.start({
+          configUrl: "test/Magda/map-config-v7.json",
+          i18nOptions
+        });
 
-            done();
-          })
-          .catch(error => {
-            done.fail(error);
-          });
+        expect(terria.initSources.length).toBe(1);
+        expect(isInitDataPromise(terria.initSources[0])).toBeTruthy(
+          "Expected initSources[0] to be an InitDataPromise"
+        );
+        if (isInitDataPromise(terria.initSources[0])) {
+          const data = await terria.initSources[0];
+          // JSON parse & stringify to avoid a problem where I think catalog-converter
+          //  can return {"id": undefined} instead of no "id"
+          expect(JSON.parse(JSON.stringify(data.data.catalog))).toEqual([
+            {
+              name: groupName,
+              type: "group",
+              members: [],
+              shareKeys: [`Root Group/${groupName}`]
+            }
+          ]);
+        }
       });
       it("works with inline init", async function() {
         // inline init
@@ -817,10 +832,10 @@ describe("Terria", function() {
 
   describe("applyInitData", function() {
     describe("when pickedFeatures is not present in initData", function() {
-      it("unsets the feature picking state if `canUnsetFeaturePickingState` is `true`", function() {
+      it("unsets the feature picking state if `canUnsetFeaturePickingState` is `true`", async function() {
         terria.pickedFeatures = new PickedFeatures();
         terria.selectedFeature = new Entity({ name: "selected" }) as Feature;
-        terria.applyInitData({
+        await terria.applyInitData({
           initData: {},
           canUnsetFeaturePickingState: true
         });
@@ -828,10 +843,10 @@ describe("Terria", function() {
         expect(terria.selectedFeature).toBeUndefined();
       });
 
-      it("otherwise, should not unset feature picking state", function() {
+      it("otherwise, should not unset feature picking state", async function() {
         terria.pickedFeatures = new PickedFeatures();
         terria.selectedFeature = new Entity({ name: "selected" }) as Feature;
-        terria.applyInitData({
+        await terria.applyInitData({
           initData: {}
         });
         expect(terria.pickedFeatures).toBeDefined();

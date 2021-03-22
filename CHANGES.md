@@ -3,9 +3,38 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.66)
+#### next release (8.0.0-alpha.69)
+* [The next improvement]
 
-- **Potentially Breaking changes**: 
+#### 8.0.0-alpha.68
+* Remove points from rectangle `UserDrawing`
+* Fix clipboard typing error. 
+* Ported `WebProcessingServiceCatalogGroup`.
+* Add CSW Group support
+* Revert "remove wmts interfaces from ows interfaces" (873aa70)
+* Add `math-expression-evaluator` library and `ColumnTransformationTraits`. This allows expressions to be used to transform column values (for example `x+10` to add 10 to all values).
+* Fix bug in `TableColumn.title` getter.
+* Add support for TableColumn quarterly dates in the format yyyy-Qx (eg 2020-Q1).
+* Fix region mapping feature highlighting.
+* Update clipboard to fix clipboard typing error.
+* Added direction indicator to the pedestrian mode minimap.
+* Limit up/down look angle in pedestrian mode.
+* Automatically disable pedestrian mode when map zooms to a different location.
+* Add support for time on `ArcGisMapServerCatalogItem`
+* Merge `Mappable` and `AsyncMappableMixin` into **`MappableMixin`**.
+* Fixed a issue when multiple filters are set to Cesium3DTilesCatalogItem
+* Async/Awaitify `Terria.ts` + fix share links loading after `loadInitSources`.
+* Tsified `TerriaError` + added support for "un-rendered" `I18nTranslateString`
+* Tsified `raiseErrorToUser` + added `wrapErrorMessage()` to wrap error message in something more user friendly (using `models.raiseError.errorMessage` translation string).
+
+#### 8.0.0-alpha.67
+* TSify `Loader` function.
+* Added walking mode to pedestrian mode which clamps the pedestrain to a fixed height above the surface.
+* Upgraded catalog-converter to fix dependency version problem and ensure that all imports are async to reduce main bundle size.
+
+#### 8.0.0-alpha.66
+
+- **Breaking changes**: 
   - Changed merging behaviour of Trait legends (of type `LegendTraits`) in `CatalogMemberTraits`. This affects legends on all `CatalogMember` models. Legend objects in higher strata now replace values in lower strata that match by index, rather than merging properties with them.
 
 * Add `MetadataUrlTraits` to `CatalogMemberTraits.metadataUrls`. It contains an array of metadata URLS (with optional `title` which will render a button)
@@ -46,11 +75,14 @@ Change Log
 * Fix hard-coded colour value in Story
 * Use `configParameters.cesiumIonAccessToken` in `IonImageryCatalogItem`
 * Added support for skipping comments in CSV files
+* Fix WMS GetLegendGraphics request `style` parameter
+* Loosen Legend `mimeType` check - so now it will treat the Legend URL as an image if the `mimeType` matches **OR** the file extension matches (previously, if `mimeType` was defined, then it wouldn't look at filetype extension)
 * Fix `DiffTool` date-picker label `dateComparisonB`
 * Fix app crash when switching different tools.
 * Create `merge` `TraitsOption` for `objectArrayTrait`
-* Lock the version of i18next to 19.8.9 till new version of i18next-http-backend is available.
-* [The next improvement]
+* Move `Description` `metadataUrls` above `infoSections`.
+* Upgraded i18next and i18next-http-backend to fix incompatibility.
+* Added support for dd/mm/yyyy, dd-mm-yyyy and mm-dd-yyyy date formats.
 
 #### 8.0.0-alpha.65
 * Fixed SDMX-group nested categories
@@ -590,6 +622,10 @@ Change Log
 
 
 ### Next Release
+### v7.11.14
+
+* Update CARTO Basemaps CDN URL and attribution.
+
 ### v7.11.13
 
 * Upgraded to Cesium v1.73.

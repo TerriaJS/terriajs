@@ -17,6 +17,8 @@ const heightControlsImage = require("../../../../wwwroot/images/height-controls.
 type MovementControlsProps = {
   cesium: Cesium;
   onMove: () => void;
+  pedestrianHeight: number;
+  maxVerticalLookAngle: number;
 };
 
 const MovementControls: React.FC<MovementControlsProps> = props => {
@@ -28,10 +30,12 @@ const MovementControls: React.FC<MovementControlsProps> = props => {
   useEffect(() => {
     const movementsController = new MovementsController(
       props.cesium,
-      props.onMove
+      props.onMove,
+      props.pedestrianHeight,
+      props.maxVerticalLookAngle
     );
-    movementsController.attach();
-    return () => movementsController.detach();
+    const detach = movementsController.activate();
+    return detach;
   }, [props.cesium]);
 
   return (
@@ -57,8 +61,12 @@ const MovementControls: React.FC<MovementControlsProps> = props => {
   );
 };
 
+const backgroundColor = "#ffffff";
+
 const Container = styled.div`
-  background-color: #f0f0f0;
+  background-color: ${backgroundColor};
+  box-shadow: 0 4px 8px 4px rgb(0 0 0 / 5%);
+  border-radius: 3px;
 `;
 
 const Title = styled(Box).attrs({
@@ -80,6 +88,7 @@ const MinimizeMaximizeButton = styled(Button).attrs(props => ({
   padding: 0;
   margin: 0;
   border: 0;
+  background-color: ${backgroundColor};
 `;
 
 const ButtonIcon = styled(StyledIcon)`

@@ -13,7 +13,7 @@ import Property from "terriajs-cesium/Source/DataSources/Property";
 import isDefined from "../Core/isDefined";
 import readXml from "../Core/readXml";
 import TerriaError from "../Core/TerriaError";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import KmlCatalogItemTraits from "../Traits/KmlCatalogItemTraits";
@@ -22,7 +22,7 @@ import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 
 const kmzRegex = /\.kmz$/i;
 
-class KmlCatalogItem extends AsyncMappableMixin(
+class KmlCatalogItem extends MappableMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(KmlCatalogItemTraits)))
 ) {
   static readonly type = "kml";

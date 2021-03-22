@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<csw:GetDomainResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2">
+  <csw:DomainValues type="csw:Record">
+    <csw:PropertyName>awavea</csw:PropertyName>
+    <csw:ListOfValues>
+      <csw:Value>Multiple Use | Fisheries Effort</csw:Value>
+      <csw:Value>Multiple Use | Pollution</csw:Value>
+      <csw:Value>Multiple Use | Sea Surface Temperature</csw:Value>
+      <csw:Value>Multiple Use | Seismic Surveys</csw:Value>
+      <csw:Value>Multiple Use | Shipping</csw:Value>
+      <csw:Value>Tidal Energy | Context Layers</csw:Value>
+      <csw:Value>Tidal Energy | Tidal Current Speed | Daily Average Current Speed | National</csw:Value>
+      <csw:Value>Tidal Energy | Tidal Current Speed | Percentile Tidal Current Speed | Banks Strait</csw:Value>
+      <csw:Value>Tidal Energy | Tidal Current Speed | Percentile Tidal Current Speed | Clarence Strait</csw:Value>
+      <csw:Value>Tidal Energy | Tidal Current Speed | Percentile Tidal Current Speed | National</csw:Value>
+      <csw:Value>Tidal Energy | Tidal Current Speed | Tidal Currant Exceeds | National</csw:Value>
+      <csw:Value>Tidal Energy | Tidal Range | Percentile Tidal Range | Banks Strait</csw:Value>
+      <csw:Value>Tidal Energy | Tidal Range | Percentile Tidal Range | Clarence Strait</csw:Value>
+      <csw:Value>Tidal Energy | Tidal Range | Percentile Tidal Range | National</csw:Value>
+      <csw:Value>Tidal Energy | Tidal Range | Tidal Range Power Density | National</csw:Value>
+      <csw:Value>Tidal Energy | Tidal Stream Kinetic Energy | Daily average Tidal Stream | National</csw:Value>
+      <csw:Value>Tidal Energy | Tidal Stream Kinetic Energy | Tidal Stream Kinetic Energy Flux | Banks Strait</csw:Value>
+      <csw:Value>Tidal Energy | Tidal Stream Kinetic Energy | Tidal Stream Kinetic Energy Flux | Clarence Strait</csw:Value>
+      <csw:Value>Tidal Energy | Tidal Stream Kinetic Energy | Tidal Stream Kinetic Energy Flux | National</csw:Value>
+      <csw:Value>Wave Energy Resource | Direction of Maximum Directionally Resolved Wave Power | Monthly Means</csw:Value>
+      <csw:Value>Wave Energy Resource | Direction of Maximum Directionally Resolved Wave Power | Statistics</csw:Value>
+      <csw:Value>Wave Energy Resource | Maximum Directionally Resolved Wave Power | Monthly Means</csw:Value>
+      <csw:Value>Wave Energy Resource | Maximum Directionally Resolved Wave Power | Statistics</csw:Value>
+      <csw:Value>Wave Energy Resource | Wave Direction | Monthly Means</csw:Value>
+      <csw:Value>Wave Energy Resource | Wave Direction | Statistics</csw:Value>
+      <csw:Value>Wave Energy Resource | Wave Directionality Coefficient | Monthly Means</csw:Value>
+      <csw:Value>Wave Energy Resource | Wave Directionality Coefficient | Statistics</csw:Value>
+      <csw:Value>Wave Energy Resource | Wave Energy Flux | Monthly Means</csw:Value>
+      <csw:Value>Wave Energy Resource | Wave Energy Flux | Statistics</csw:Value>
+      <csw:Value>Wave Energy Resource | Wave Height | Monthly Means</csw:Value>
+      <csw:Value>Wave Energy Resource | Wave Height | Statistics</csw:Value>
+      <csw:Value>Wave Energy Resource | Wave Period | Monthly Means</csw:Value>
+      <csw:Value>Wave Energy Resource | Wave Period | Statistics</csw:Value>
+      <csw:Value>Wave Energy Resource | Wave Spectral Width | Statistics</csw:Value>
+    </csw:ListOfValues>
+  </csw:DomainValues>
+</csw:GetDomainResponse>
+
