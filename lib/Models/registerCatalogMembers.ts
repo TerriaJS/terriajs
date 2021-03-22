@@ -25,11 +25,13 @@ import GtfsCatalogItem from "./GtfsCatalogItem";
 import IonImageryCatalogItem from "./IonImageryCatalogItem";
 import KmlCatalogItem from "./KmlCatalogItem";
 import MagdaReference from "./MagdaReference";
+import MapboxVectorTileCatalogItem from "./MapboxVectorTileCatalogItem";
 import OpenStreetMapCatalogItem from "./OpenStreetMapCatalogItem";
 import SdmxJsonCatalogGroup from "./SdmxJson/SdmxJsonCatalogGroup";
 import SdmxJsonCatalogItem from "./SdmxJson/SdmxJsonCatalogItem";
 import SenapsLocationsCatalogItem from "./SenapsLocationsCatalogItem";
 import SensorObservationServiceCatalogItem from "./SensorObservationServiceCatalogItem";
+import ShapefileCatalogItem from "./ShapefileCatalogItem";
 import SplitItemReference from "./SplitItemReference";
 import StubCatalogItem from "./StubCatalogItem";
 import ThreddsCatalogGroup from "./ThreddsCatalogGroup";
@@ -38,13 +40,14 @@ import WebFeatureServiceCatalogGroup from "./WebFeatureServiceCatalogGroup";
 import WebFeatureServiceCatalogItem from "./WebFeatureServiceCatalogItem";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
-import MapboxVectorTileCatalogItem from "./MapboxVectorTileCatalogItem";
 import WebMapTileServiceCatalogGroup from "./WebMapTileServiceCatalogGroup";
 import WebMapTileServiceCatalogItem from "./WebMapTileServiceCatalogItem";
 import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
 import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalogFunctionJob";
+import WebProcessingServiceCatalogGroup from "./WebProcessingServiceCatalogGroup";
 import YDYRCatalogFunction from "./YDYRCatalogFunction";
 import YDYRCatalogFunctionJob from "./YDYRCatalogFunctionJob";
+import CswCatalogGroup from "./CswCatalogGroup";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -79,6 +82,10 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(GeoRssCatalogItem.type, GeoRssCatalogItem);
   CatalogMemberFactory.register(CsvCatalogItem.type, CsvCatalogItem);
   CatalogMemberFactory.register(CzmlCatalogItem.type, CzmlCatalogItem);
+  CatalogMemberFactory.register(
+    ShapefileCatalogItem.type,
+    ShapefileCatalogItem
+  );
   CatalogMemberFactory.register(ArcGisCatalogGroup.type, ArcGisCatalogGroup);
   CatalogMemberFactory.register(
     ArcGisMapServerCatalogItem.type,
@@ -155,6 +162,10 @@ export default function registerCatalogMembers() {
     WebProcessingServiceCatalogFunction
   );
   CatalogMemberFactory.register(
+    WebProcessingServiceCatalogGroup.type,
+    WebProcessingServiceCatalogGroup
+  );
+  CatalogMemberFactory.register(
     SensorObservationServiceCatalogItem.type,
     SensorObservationServiceCatalogItem
   );
@@ -169,6 +180,7 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CkanCatalogGroup.type, CkanCatalogGroup);
   CatalogMemberFactory.register(CkanItemReference.type, CkanItemReference);
   CatalogMemberFactory.register(ThreddsCatalogGroup.type, ThreddsCatalogGroup);
+  CatalogMemberFactory.register(CswCatalogGroup.type, CswCatalogGroup);
 
   UrlToCatalogMemberMapping.register(
     matchesExtension("csv"),
@@ -209,6 +221,11 @@ export default function registerCatalogMembers() {
   UrlToCatalogMemberMapping.register(
     matchesExtension("georss"),
     GeoRssCatalogItem.type
+  );
+  // We try to convert zipped shapefiles to geojson
+  UrlToCatalogMemberMapping.register(
+    matchesExtension("zip"),
+    ShapefileCatalogItem.type
   );
 
   // These items work by trying to match a URL, then loading the data. If it fails, they move on.

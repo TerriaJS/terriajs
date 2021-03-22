@@ -148,7 +148,7 @@ describe("DimensionSelectorSection", function() {
 
         expect(selects[4].props.name).toContain(`${wmsItem.uniqueId}-B-styles`);
         expect(selects[4].props.value).toBe("shadefill/alg2");
-        expect(selects[4].findAllByType("option").length).toBe(41);
+        expect(selects[4].findAllByType("option").length).toBe(40);
       })
       .then(done)
       .catch(done.fail);

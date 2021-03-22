@@ -19,6 +19,7 @@ import getPath from "../../../Core/getPath";
 import TerriaError from "../../../Core/TerriaError";
 import PickedFeatures from "../../../Map/PickedFeatures";
 import ExportableMixin from "../../../ModelMixins/ExportableMixin";
+import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
 import addUserCatalogMember from "../../../Models/addUserCatalogMember";
 import CommonStrata from "../../../Models/CommonStrata";
 import getAncestors from "../../../Models/getAncestors";
@@ -29,6 +30,7 @@ import Icon, { StyledIcon } from "../../Icon";
 import { exportData } from "../../Preview/ExportData";
 import WorkbenchButton from "../WorkbenchButton";
 import Styles from "./viewing-controls.scss";
+import raiseErrorToUser from "../../../Models/raiseErrorToUser";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -99,8 +101,9 @@ const ViewingControls = observer(
     },
 
     removeFromMap() {
-      const workbench = this.props.viewState.terria.workbench;
-      workbench.remove(this.props.item);
+      const terria = this.props.viewState.terria;
+      terria.workbench.remove(this.props.item);
+      terria.removeSelectedFeaturesForModel(this.props.item);
       this.props.viewState.terria.timelineStack.remove(this.props.item);
       this.props.viewState.terria.analytics?.logEvent(
         "dataSource",
@@ -218,6 +221,30 @@ const ViewingControls = observer(
       });
     },
 
+    searchItem() {
+      const { item, viewState } = this.props;
+      let itemSearchProvider;
+      try {
+        itemSearchProvider = item.createItemSearchProvider();
+      } catch (error) {
+        raiseErrorToUser(viewState.terria, error);
+        return;
+      }
+      this.props.viewState.openTool({
+        toolName: "Search Item",
+        getToolComponent: () =>
+          import("../../Tools/ItemSearchTool/ItemSearchTool").then(
+            m => m.default
+          ),
+        showCloseButton: false,
+        params: {
+          item,
+          itemSearchProvider,
+          viewState
+        }
+      });
+    },
+
     previewItem() {
       let item = this.props.item;
       // If this is a chartable item opened from another catalog item, get the info of the original item.
@@ -315,6 +342,21 @@ const ViewingControls = observer(
                 <BoxViewingControl>
                   <StyledIcon glyph={Icon.GLYPHS.upload} />
                   <span>{t("workbench.exportData")}</span>
+                </BoxViewingControl>
+              </ViewingControlMenuButton>
+            </li>
+          </If>
+          <If
+            condition={SearchableItemMixin.isMixedInto(item) && item.canSearch}
+          >
+            <li className={classNames(Styles.info)}>
+              <ViewingControlMenuButton
+                onClick={() => runInAction(() => this.searchItem())}
+                title={t("workbench.searchItemTitle")}
+              >
+                <BoxViewingControl>
+                  <StyledIcon glyph={Icon.GLYPHS.search} />
+                  <span>{t("workbench.searchItem")}</span>
                 </BoxViewingControl>
               </ViewingControlMenuButton>
             </li>

@@ -21,11 +21,10 @@ import TerriaError from "../Core/TerriaError";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import RegionProvider from "../Map/RegionProvider";
 import JSRegionProviderList from "../Map/RegionProviderList";
+import { ImageryParts } from "./MappableMixin";
 import { calculateDomain, ChartAxis, ChartItem } from "../Models/Chartable";
 import CommonStrata from "../Models/CommonStrata";
-import { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
-import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import SelectableDimensions, {
   SelectableDimension
 } from "../Models/SelectableDimensions";
@@ -34,9 +33,8 @@ import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitu
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
-import LegendTraits from "../Traits/LegendTraits";
 import TableTraits from "../Traits/TableTraits";
-import AsyncMappableMixin from "./AsyncMappableMixin";
+import MappableMixin from "./MappableMixin";
 import DiscretelyTimeVaryingMixin, {
   DiscreteTimeAsJS
 } from "./DiscretelyTimeVaryingMixin";
@@ -49,9 +47,7 @@ import TimeVarying from "./TimeVarying";
 class RegionProviderList extends JSRegionProviderList {}
 function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
   abstract class TableMixin
-    extends ExportableMixin(
-      AsyncMappableMixin(DiscretelyTimeVaryingMixin(Base))
-    )
+    extends ExportableMixin(MappableMixin(DiscretelyTimeVaryingMixin(Base)))
     implements SelectableDimensions, TimeVarying {
     get hasTableMixin() {
       return true;
@@ -270,7 +266,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
             name: yColumn.title,
             categoryName: this.name,
             key: `key${this.uniqueId}-${this.name}-${yColumn.name}`,
-            type: "line",
+            type: this.chartType ?? "line",
             xAxis,
             points,
             domain: calculateDomain(points),
@@ -321,7 +317,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         options: this.tableStyles.map(style => {
           return {
             id: style.id,
-            name: style.styleTraits.title || style.id
+            name:
+              style.styleTraits.title ??
+              this.tableColumns.find(col => col.name === style.id)?.title ??
+              style.id
           };
         }),
         selectedId: this.activeStyle,
@@ -450,7 +449,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return times;
     }
 
-    get legends(): readonly ModelPropertiesFromTraits<LegendTraits>[] {
+    @computed
+    get legends() {
       if (this.mapItems.length > 0) {
         const colorLegend = this.activeTableStyle.colorTraits.legend;
         return filterOutUndefined([colorLegend]);
@@ -701,7 +701,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
                 const regionId = filterRows(
                   regionColumn.valuesAsRegions.regionIdToRowNumbersMap.get(
-                    feature.properties[regionType.regionProp]
+                    feature.properties[regionType.regionProp].toLowerCase()
                   )
                 );
 
@@ -713,7 +713,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
                 return this.featureInfoFromFeature(
                   regionType,
-                  d,
+                  // Preserve values from d and insert feature properties after entries from d
+                  Object.assign({}, d, feature.properties, d),
                   feature.properties[regionType.uniqueIdProp]
                 );
               }
@@ -737,7 +738,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       }
 
       data.id = regionId;
-      featureInfo.data = data;
+      featureInfo.properties = data;
 
       featureInfo.configureDescriptionFromProperties(data);
       featureInfo.configureNameFromProperties(data);
@@ -748,7 +749,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       const result: JsonObject = {};
 
       this.tableColumns.forEach(column => {
-        result[column.name] = column.values[index];
+        result[column.name] = column.valueFunctionForType(index);
       });
 
       return result;

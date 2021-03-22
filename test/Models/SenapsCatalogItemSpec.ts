@@ -103,11 +103,6 @@ describe("SenapsLocationsCatalogItem", function() {
       });
     });
 
-    const expectedError = new TerriaError({
-      title: i18next.t("models.senaps.retrieveErrorTitle"),
-      message: i18next.t("models.senaps.missingSenapsBaseUrl")
-    });
-
     it("- fail to construct locations url", async function() {
       async function foundError() {
         let errorMessage: string = "";
@@ -116,7 +111,7 @@ describe("SenapsLocationsCatalogItem", function() {
         } catch (e) {
           errorMessage = e.message;
         }
-        return errorMessage === expectedError.message;
+        return errorMessage === i18next.t("models.senaps.missingSenapsBaseUrl");
       }
 
       expect(await foundError()).toBe(true);
@@ -130,7 +125,7 @@ describe("SenapsLocationsCatalogItem", function() {
         } catch (e) {
           errorMessage = e.message;
         }
-        return errorMessage === expectedError.message;
+        return errorMessage === i18next.t("models.senaps.missingSenapsBaseUrl");
       }
 
       expect(await foundError()).toBe(true);

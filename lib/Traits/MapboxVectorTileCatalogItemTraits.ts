@@ -1,18 +1,14 @@
-import mixTraits from "./mixTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
-import UrlTraits from "./UrlTraits";
-import MappableTraits from "./MappableTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import RasterLayerTraits from "./RasterLayerTraits";
-import primitiveTrait from "./primitiveTrait";
-import LegendTraits from "./LegendTraits";
-import objectArrayTrait from "./objectArrayTrait";
-import DataCustodianTraits from "./DataCustodianTraits";
+import FeatureInfoTraits from "./FeatureInfoTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
+import MappableTraits from "./MappableTraits";
+import mixTraits from "./mixTraits";
+import primitiveTrait from "./primitiveTrait";
+import RasterLayerTraits from "./RasterLayerTraits";
+import UrlTraits from "./UrlTraits";
 
 export default class MapboxVectorTileCatalogItemTraits extends mixTraits(
   LayerOrderingTraits,
-  DataCustodianTraits,
   FeatureInfoTraits,
   UrlTraits,
   MappableTraits,
@@ -78,12 +74,4 @@ export default class MapboxVectorTileCatalogItemTraits extends mixTraits(
     description: "The minimum zoom level for which tile files exist."
   })
   minimumZoom = 0;
-
-  @objectArrayTrait({
-    name: "legends",
-    description: "The legend to display on the workbench.",
-    type: LegendTraits,
-    idProperty: "index"
-  })
-  legends: LegendTraits[] = [];
 }

@@ -1,9 +1,9 @@
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-import { autorun, runInAction, observable } from "mobx";
-import Terria from "../../lib/Models/Terria";
-import { ImageryParts } from "../../lib/Models/Mappable";
+import { autorun, runInAction } from "mobx";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
+import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
 import CommonStrata from "../../lib/Models/CommonStrata";
+import Terria from "../../lib/Models/Terria";
+import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
 
 describe("WebMapServiceCatalogItem", function() {
   it("derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specified", function() {
@@ -153,12 +153,12 @@ describe("WebMapServiceCatalogItem", function() {
         expect(wmsItem.styleSelectableDimensions[0].selectedId).toBe(
           "contour/ferret"
         );
-        expect(wmsItem.styleSelectableDimensions[0].options!.length).toBe(40);
+        expect(wmsItem.styleSelectableDimensions[0].options!.length).toBe(41);
 
         expect(wmsItem.styleSelectableDimensions[1].selectedId).toBe(
           "shadefill/alg2"
         );
-        expect(wmsItem.styleSelectableDimensions[0].options!.length).toBe(40);
+        expect(wmsItem.styleSelectableDimensions[1].options!.length).toBe(40);
 
         expect(wmsItem.wmsDimensionSelectableDimensions[0].name).toBe(
           "elevation"
@@ -190,10 +190,10 @@ describe("WebMapServiceCatalogItem", function() {
 
         expect(wmsItem.legends.length).toBe(2);
         expect(wmsItem.legends[0].url).toBe(
-          "http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&LAYER=v&PALETTE=ferret&transparent=true"
+          "http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&LAYER=v&PALETTE=ferret"
         );
         expect(wmsItem.legends[1].url).toBe(
-          "http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&LAYER=wetdry_mask_u&PALETTE=alg2&transparent=true"
+          "http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&LAYER=wetdry_mask_u&PALETTE=alg2"
         );
       })
       .then(done)
@@ -218,7 +218,7 @@ describe("WebMapServiceCatalogItem", function() {
       .then(function() {
         expect(wmsItem.legends.length).toBe(1);
         expect(wmsItem.legends[0].url).toBe(
-          "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A&transparent=true"
+          "http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&LAYER=v&PALETTE=rainbow"
         );
       })
       .then(done)
@@ -243,8 +243,44 @@ describe("WebMapServiceCatalogItem", function() {
       .loadMetadata()
       .then(function() {
         expect(wmsItem.legends.length).toBe(1);
+
+        // Match for fontColour = 0xffffff || 0xfff
+        expect(
+          wmsItem.legends[0].url ===
+            "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A&LEGEND_OPTIONS=fontName%3ACourier%3BfontStyle%3Abold%3BfontSize%3A12%3BforceLabels%3Aon%3BfontAntiAliasing%3Atrue%3BlabelMargin%3A5%3BfontColor%3A0xffffff%3Bdpi%3A182&transparent=true" ||
+            wmsItem.legends[0].url ===
+              "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A&LEGEND_OPTIONS=fontName%3ACourier%3BfontStyle%3Abold%3BfontSize%3A12%3BforceLabels%3Aon%3BfontAntiAliasing%3Atrue%3BlabelMargin%3A5%3BfontColor%3A0xfff%3Bdpi%3A182&transparent=true"
+        ).toBeTruthy();
+      })
+      .then(done)
+      .catch(done.fail);
+  });
+
+  it("fetches GetLegendGraphic", function(done) {
+    const terria = new Terria();
+    const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
+    runInAction(() => {
+      wmsItem.setTrait(CommonStrata.definition, "url", "http://example.com");
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "getCapabilitiesUrl",
+        "test/WMS/styles_and_dimensions.xml"
+      );
+      wmsItem.setTrait(CommonStrata.definition, "layers", "A");
+      wmsItem.setTrait(CommonStrata.definition, "styles", "no-legend");
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "supportsGetLegendGraphic",
+        true
+      );
+    });
+
+    wmsItem
+      .loadMetadata()
+      .then(function() {
+        expect(wmsItem.legends.length).toBe(1);
         expect(wmsItem.legends[0].url).toBe(
-          "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A&transparent=true&LEGEND_OPTIONS=fontSize%3A14%3BforceLabels%3Aon%3BfontAntiAliasing%3Atrue%3BfontColor%3A0xDDDDDD"
+          "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A&style=no-legend"
         );
       })
       .then(done)
@@ -255,7 +291,11 @@ describe("WebMapServiceCatalogItem", function() {
     const terria = new Terria();
     const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
     runInAction(() => {
-      wmsItem.setTrait(CommonStrata.definition, "url", "http://example.com");
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "url",
+        "http://geoport-dev.whoi.edu/thredds/wms/"
+      );
       wmsItem.setTrait(
         CommonStrata.definition,
         "getCapabilitiesUrl",
@@ -274,9 +314,10 @@ describe("WebMapServiceCatalogItem", function() {
     wmsItem
       .loadMetadata()
       .then(function() {
+        expect(wmsItem.isThredds).toBeTruthy();
         expect(wmsItem.legends.length).toBe(1);
         expect(wmsItem.legends[0].url).toBe(
-          "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A&transparent=true&colorscalerange=0%2C1"
+          "http://geoport-dev.whoi.edu/thredds/wms/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A&colorscalerange=0%2C1"
         );
       })
       .then(done)

@@ -33,7 +33,9 @@ const MetadataTable = createReactClass({
                     metadataItem.length > 0 && isJoinable(metadataItem)
                   }
                 >
-                  {metadataItem.join(", ")}
+                  <tr>
+                    <td>{metadataItem.join(", ")}</td>
+                  </tr>
                 </If>
               </When>
               <When condition={keys.length > 0 && !isArr}>

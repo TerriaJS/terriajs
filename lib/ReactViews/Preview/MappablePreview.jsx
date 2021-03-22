@@ -5,7 +5,7 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import getPath from "../../Core/getPath";
-import Mappable from "../../Models/Mappable";
+import MappableMixin from "../../ModelMixins/MappableMixin";
 import raiseErrorToUser from "../../Models/raiseErrorToUser";
 import measureElement from "../HOCs/measureElement";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
@@ -16,7 +16,7 @@ import Styles from "./mappable-preview.scss";
 /**
  * @typedef {object} Props
  * @prop {Terria} terria
- * @prop {Mappable} previewed
+ * @prop {MappableMixin.MappableMixin} previewed
  * @prop {ViewState} viewState
  *
  */
@@ -77,7 +77,12 @@ class MappablePreview extends React.Component {
     const catalogItem = this.props.previewed;
     return (
       <div className={Styles.root}>
-        <If condition={Mappable.is(catalogItem) && !catalogItem.disablePreview}>
+        <If
+          condition={
+            MappableMixin.isMixedInto(catalogItem) &&
+            !catalogItem.disablePreview
+          }
+        >
           <DataPreviewMap
             terria={this.props.terria}
             previewed={catalogItem}
@@ -89,7 +94,7 @@ class MappablePreview extends React.Component {
         </If>
         <button
           type="button"
-          onClick={this.toggleOnMap}
+          onClick={this.toggleOnMap.bind(this)}
           className={Styles.btnAdd}
         >
           {this.props.terria.workbench.contains(catalogItem)

@@ -1,4 +1,4 @@
-import { runInAction } from "mobx";
+import { runInAction, isObservableArray } from "mobx";
 import TerriaError from "../Core/TerriaError";
 import createStratumInstance from "./createStratumInstance";
 import { BaseModel } from "./Model";
@@ -20,7 +20,8 @@ export default function updateModelFromJson(
       if (
         propertyName === "id" ||
         propertyName === "type" ||
-        propertyName === "localId"
+        propertyName === "localId" ||
+        propertyName === "shareKeys"
       ) {
         return;
       }
@@ -37,12 +38,32 @@ export default function updateModelFromJson(
       if (jsonValue === undefined) {
         model.setTrait(stratumName, propertyName, undefined);
       } else {
-        model.setTrait(
-          stratumName,
-          propertyName,
-          trait.fromJson(model, stratumName, jsonValue)
-        );
+        let newTrait = trait.fromJson(model, stratumName, jsonValue);
+        // We want to merge members of groups with the same name/id
+        if (propertyName === "members") {
+          newTrait = mergeWithExistingMembers(
+            model,
+            stratumName,
+            propertyName,
+            newTrait
+          );
+        }
+        model.setTrait(stratumName, propertyName, newTrait);
       }
     });
   });
+}
+
+function mergeWithExistingMembers(
+  model: BaseModel,
+  stratumName: string,
+  propertyName: string,
+  newTrait: string[]
+) {
+  const existingTrait = model.getTrait(stratumName, propertyName);
+  if (existingTrait !== undefined && isObservableArray(existingTrait)) {
+    existingTrait.push(...newTrait);
+    return existingTrait;
+  }
+  return newTrait;
 }

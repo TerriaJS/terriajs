@@ -5,18 +5,15 @@ import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import readJson from "../Core/readJson";
 import TerriaError from "../Core/TerriaError";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import CzmlCatalogItemTraits from "../Traits/CzmlCatalogItemTraits";
 import CreateModel from "./CreateModel";
-import Mappable from "./Mappable";
 
-export default class CzmlCatalogItem
-  extends AsyncMappableMixin(
-    UrlMixin(CatalogMemberMixin(CreateModel(CzmlCatalogItemTraits)))
-  )
-  implements Mappable {
+export default class CzmlCatalogItem extends MappableMixin(
+  UrlMixin(CatalogMemberMixin(CreateModel(CzmlCatalogItemTraits)))
+) {
   static readonly type = "czml";
   get type() {
     return CzmlCatalogItem.type;
@@ -55,7 +52,7 @@ export default class CzmlCatalogItem
       }
     })
       .then(czmlLoadInput => {
-        return CzmlDataSource.load(czmlLoadInput);
+        return CzmlDataSource.load(czmlLoadInput, { credit: this.attribution });
       })
       .then(czml => {
         this._dataSource = czml;

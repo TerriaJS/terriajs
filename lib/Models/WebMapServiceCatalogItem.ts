@@ -9,7 +9,6 @@
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
 import i18next from "i18next";
 import { computed, runInAction } from "mobx";
-import moment from "moment";
 import combine from "terriajs-cesium/Source/Core/combine";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -19,6 +18,7 @@ import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
 import URI from "urijs";
 import containsAny from "../Core/containsAny";
+import createDiscreteTimesFromIsoSegments from "../Core/createDiscreteTimes";
 import createTransformerAllowUndefined from "../Core/createTransformerAllowUndefined";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
@@ -26,6 +26,7 @@ import isReadOnlyArray from "../Core/isReadOnlyArray";
 import { JsonObject } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";
 import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import DiffableMixin from "../ModelMixins/DiffableMixin";
 import ExportableMixin from "../ModelMixins/ExportableMixin";
@@ -36,21 +37,25 @@ import UrlMixin from "../ModelMixins/UrlMixin";
 import SelectableDimensions, {
   SelectableDimension
 } from "../Models/SelectableDimensions";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
-import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
+import { terriaTheme } from "../ReactViews/StandardUserInterface/StandardTheme";
+import {
+  InfoSectionTraits,
+  MetadataUrlTraits
+} from "../Traits/CatalogMemberTraits";
 import LegendTraits from "../Traits/LegendTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
 import WebMapServiceCatalogItemTraits, {
   WebMapServiceAvailableLayerDimensionsTraits,
-  WebMapServiceAvailableLayerStylesTraits
+  WebMapServiceAvailableLayerStylesTraits,
+  WebMapServiceAvailableStyleTraits
 } from "../Traits/WebMapServiceCatalogItemTraits";
+import { ImageryParts } from "../ModelMixins/MappableMixin";
 import { callWebCoverageService } from "./callWebCoverageService";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
-import { ImageryParts } from "./Mappable";
-import { BaseModel } from "./Model";
+import Model, { BaseModel } from "./Model";
 import { CapabilitiesStyle } from "./OwsInterfaces";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
@@ -58,7 +63,8 @@ import WebMapServiceCapabilities, {
   CapabilitiesContactInformation,
   CapabilitiesDimension,
   CapabilitiesLayer,
-  getRectangleFromLayer
+  getRectangleFromLayer,
+  MetadataURL
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 
@@ -104,9 +110,23 @@ class GetCapabilitiesStratum extends LoadableStratum(
     ) as this;
   }
 
-  @computed
-  get supportsReordering() {
-    return !this.keepOnTop;
+  @computed get metadataUrls() {
+    const metadataUrls: MetadataURL[] = [];
+
+    Array.from(this.capabilitiesLayers.values()).forEach(layer => {
+      if (!layer?.MetadataURL) return;
+      Array.isArray(layer?.MetadataURL)
+        ? metadataUrls.push(...layer?.MetadataURL)
+        : metadataUrls.push(layer?.MetadataURL as MetadataURL);
+    });
+
+    return metadataUrls
+      .filter(m => m.OnlineResource?.["xlink:href"])
+      .map(m =>
+        createStratumInstance(MetadataUrlTraits, {
+          url: m.OnlineResource!["xlink:href"]
+        })
+      );
   }
 
   @computed
@@ -129,6 +149,13 @@ class GetCapabilitiesStratum extends LoadableStratum(
     return layers;
   }
 
+  /**
+ * **How we determine WMS legends (in order)**
+  1. Defined manually in catalog JSON
+  2. If `style` is undefined, and server doesn't support `GetLegendGraphic`, we must select first style as default - as there is no way to know what the default style is, and to request a legend for it
+  3. If `style` is is set and it has a `legendUrl` -> use it!
+  4. If server supports `GetLegendGraphic`, we can request a legend (with or without `style` parameter)
+ */
   @computed
   get legends(): StratumFromTraits<LegendTraits>[] | undefined {
     const availableStyles = this.catalogItem.availableStyles || [];
@@ -143,14 +170,27 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
       let legendUri: uri.URI | undefined;
       let legendUrlMimeType: string | undefined;
+      let legendScaling: number | undefined;
 
-      // Attempt to find layer style based on AvailableStyleTraits
-      const layerStyle =
-        style === undefined
-          ? undefined
-          : availableStyles
-              .find(candidate => candidate.layerName === layer)
-              ?.styles?.find(candidate => candidate.name === style);
+      const layerAvailableStyles = availableStyles.find(
+        candidate => candidate.layerName === layer
+      )?.styles;
+
+      let layerStyle: Model<WebMapServiceAvailableStyleTraits> | undefined;
+
+      if (isDefined(style)) {
+        // Attempt to find layer style based on AvailableStyleTraits
+        layerStyle = layerAvailableStyles?.find(
+          candidate => candidate.name === style
+        );
+      }
+
+      // If no style is selected and this WMS doesn't support GetLegendGraphics - we must use the first style if none is explicitly specified.
+      // (If WMS supports GetLegendGraphics we can use it and omit style parameter to get the "default" style's legend)
+      if (!isDefined(layerStyle) && !this.catalogItem.supportsGetLegendGraphic)
+        layerStyle = layerAvailableStyles?.[0];
+
+      // If legend found - proxy URL and set mimetype
       if (layerStyle?.legend?.url) {
         legendUri = URI(
           proxyCatalogItemUrl(this.catalogItem, layerStyle.legend.url)
@@ -159,10 +199,12 @@ class GetCapabilitiesStratum extends LoadableStratum(
         legendUrlMimeType = layerStyle.legend.urlMimeType;
       }
 
-      // If no legends found - make one up!
-      // From OGC — about style property for GetLegendGraphic request:
-      // If not present, the default style is selected. The style may be any valid style available for a layer, including non-SLD internally-defined styles.
-      if (!isDefined(legendUri) && isDefined(this.catalogItem.url)) {
+      // If no legends found and WMS supports GetLegendGraphics - make one up!
+      if (
+        !isDefined(legendUri) &&
+        isDefined(this.catalogItem.url) &&
+        this.catalogItem.supportsGetLegendGraphic
+      ) {
         legendUri = URI(
           proxyCatalogItemUrl(
             this.catalogItem,
@@ -176,20 +218,40 @@ class GetCapabilitiesStratum extends LoadableStratum(
           .setQuery("format", "image/png")
           .setQuery("layer", layer);
 
+        // From OGC — about style property for GetLegendGraphic request:
+        // If not present, the default style is selected. The style may be any valid style available for a layer, including non-SLD internally-defined styles.
+        if (style) {
+          legendUri.setQuery("style", style);
+        }
         legendUrlMimeType = "image/png";
       }
 
       if (isDefined(legendUri)) {
-        legendUri.setQuery("transparent", "true");
-
-        // Add geoserver related LEGEND_OPTIONS to match terria styling
-        if (this.catalogItem.isGeoServer) {
+        // Add geoserver related LEGEND_OPTIONS to match terria styling (if supported)
+        if (
+          this.catalogItem.isGeoServer &&
+          legendUri.hasQuery("request", "GetLegendGraphic")
+        ) {
           let legendOptions =
-            "fontSize:14;forceLabels:on;fontAntiAliasing:true";
-          legendOptions += ";fontColor:0xDDDDDD"; // enable if we can ensure a dark background
-          //legendOptions += ";dpi:182"; // enable if we can scale the image back down by 50%.
+            "fontName:Courier;fontStyle:bold;fontSize:12;forceLabels:on;fontAntiAliasing:true;labelMargin:5";
+
+          // Geoserver fontColor must be a hex value - use `textLight` theme colour
+          let fontColor = terriaTheme.textLight.split("#")?.[1];
+          if (isDefined(fontColor)) {
+            // If fontColor is a 3-character hex -> turn into 6
+            if (fontColor.length === 3) {
+              fontColor = `${fontColor[0]}${fontColor[0]}${fontColor[1]}${fontColor[1]}${fontColor[2]}${fontColor[2]}`;
+            }
+            legendOptions += `;fontColor:0x${fontColor}`;
+          }
+
+          legendOptions += ";dpi:182"; // enable if we can scale the image back down by 50%.
+          legendScaling = 0.5;
           legendUri.setQuery("LEGEND_OPTIONS", legendOptions);
+          legendUri.setQuery("transparent", "true");
         }
+
+        // Add colour scale range params if supported
         if (
           this.catalogItem.supportsColorScaleRange &&
           this.catalogItem.colorScaleRange
@@ -202,7 +264,8 @@ class GetCapabilitiesStratum extends LoadableStratum(
         result.push(
           createStratumInstance(LegendTraits, {
             url: legendUri.toString(),
-            urlMimeType: legendUrlMimeType
+            urlMimeType: legendUrlMimeType,
+            imageScaling: legendScaling
           })
         );
       }
@@ -521,24 +584,12 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
   @computed
   get isGeoServer(): boolean | undefined {
-    if (!this.capabilities) {
-      return undefined;
-    }
-
-    if (
-      !this.capabilities.Service ||
-      !this.capabilities.Service.KeywordList ||
-      !this.capabilities.Service.KeywordList.Keyword
-    ) {
-      return false;
-    }
-
-    const keyword = this.capabilities.Service.KeywordList.Keyword;
-    if (isReadOnlyArray(keyword)) {
-      return keyword.indexOf("GEOSERVER") >= 0;
-    } else {
-      return keyword === "GEOSERVER";
-    }
+    const keyword = this.capabilities?.Service?.KeywordList?.Keyword;
+    return (
+      (isReadOnlyArray(keyword) && keyword.indexOf("GEOSERVER") >= 0) ||
+      keyword === "GEOSERVER" ||
+      this.catalogItem.url?.toLowerCase().includes("geoserver")
+    );
   }
 
   // TODO - There is possibly a better way to do this
@@ -566,6 +617,18 @@ class GetCapabilitiesStratum extends LoadableStratum(
     if (this.catalogItem.url !== undefined)
       return this.catalogItem.url.indexOf("MapServer/WMSServer") > -1;
     return false;
+  }
+
+  @computed
+  get supportsGetLegendGraphic(): boolean {
+    return (
+      isDefined(this.capabilities?.json?.["xmlns:sld"]) ||
+      isDefined(
+        this.capabilities?.json?.Capability?.Request?.GetLegendGraphic
+      ) ||
+      (this.catalogItem.isGeoServer ?? false) ||
+      (this.catalogItem.isNcWMS ?? false)
+    );
   }
 
   @computed
@@ -623,7 +686,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
         } else {
           createDiscreteTimesFromIsoSegments(
             result,
-            isoSegments,
+            isoSegments[0],
+            isoSegments[1],
+            isoSegments[2],
             this.catalogItem.maxRefreshIntervals
           );
         }
@@ -684,10 +749,14 @@ class WebMapServiceCatalogItem
     ExportableMixin(
       DiffableMixin(
         TimeFilterMixin(
-          AsyncChartableMixin(
-            GetCapabilitiesMixin(
-              UrlMixin(
-                CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
+          MappableMixin(
+            AsyncChartableMixin(
+              GetCapabilitiesMixin(
+                UrlMixin(
+                  CatalogMemberMixin(
+                    CreateModel(WebMapServiceCatalogItemTraits)
+                  )
+                )
               )
             )
           )
@@ -726,11 +795,6 @@ class WebMapServiceCatalogItem
     return WebMapServiceCatalogItem.type;
   }
 
-  // TODO
-  get isMappable() {
-    return true;
-  }
-
   @computed
   get colorScaleRange(): string | undefined {
     if (this.supportsColorScaleRange) {
@@ -767,7 +831,7 @@ class WebMapServiceCatalogItem
     return this.forceLoadMetadata();
   }
 
-  loadMapItems(): Promise<void> {
+  forceLoadMapItems(): Promise<void> {
     return this.loadMetadata();
   }
 
@@ -920,6 +984,9 @@ class WebMapServiceCatalogItem
     if (imageryProvider === undefined) {
       return undefined;
     }
+
+    imageryProvider.enablePickFeatures = true;
+
     return {
       imageryProvider,
       alpha: this.opacity,
@@ -936,6 +1003,9 @@ class WebMapServiceCatalogItem
       if (imageryProvider === undefined) {
         return undefined;
       }
+
+      imageryProvider.enablePickFeatures = false;
+
       return {
         imageryProvider,
         alpha: 0.0,
@@ -1081,7 +1151,8 @@ class WebMapServiceCatalogItem
         },
         tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
         maximumLevel: maximumLevel,
-        rectangle: rectangle
+        rectangle: rectangle,
+        credit: this.attribution
       };
 
       if (
@@ -1165,16 +1236,25 @@ class WebMapServiceCatalogItem
         })
       );
 
+      // Try to set selectedId to value stored in `styles` trait for this `layerIndex`
+      // The `styles` parameter is CSV, a style for each layer
+      let selectedId = this.styles?.split(",")?.[layerIndex];
+
+      // There is no way of finding out default style if no style has been selected :(
+      // If !supportsGetLegendGraphic - we have to just use the first available style
+      if (
+        !isDefined(selectedId) &&
+        options.length > 0 &&
+        !this.supportsGetLegendGraphic
+      ) {
+        selectedId = options[0].id;
+      }
+
       return {
         name,
         id: `${this.uniqueId}-${layer.layerName}-styles`,
         options,
-
-        // Set selectedId to value stored in `styles` trait for this `layerIndex` or the first available style value
-        // The `styles` parameter is CSV, a style for each layer
-        // Note: there is no way of finding out default style if no style has been selected :(
-        selectedId: this.styles?.split(",")?.[layerIndex],
-
+        selectedId,
         setDimensionValue: (stratumId: string, newStyle: string) => {
           runInAction(() => {
             const styles = this.styleSelectableDimensions.map(
@@ -1184,8 +1264,8 @@ class WebMapServiceCatalogItem
             this.setTrait(stratumId, "styles", styles.join(","));
           });
         },
-        // Only allow undefined if more then one style (if there is only one style then it is the default style!)
-        allowUndefined: options.length > 1,
+        // Only allow undefined if more then one style (if there is only one style then it is the default style!) - and WMS server supports GetLegendGraphic (otherwise we can't request default styles!)
+        allowUndefined: this.supportsGetLegendGraphic && options.length > 1,
         undefinedLabel: i18next.t(
           "models.webMapServiceCatalogItem.defaultStyleLabel"
         ),
@@ -1285,125 +1365,6 @@ function scaleDenominatorToLevel(
   var ratio = level0ScaleDenominator / (minScaleDenominator - 1e-6);
   var levelAtMinScaleDenominator = Math.log(ratio) / Math.log(2);
   return levelAtMinScaleDenominator | 0;
-}
-
-function createDiscreteTimesFromIsoSegments(
-  result: StratumFromTraits<DiscreteTimeTraits>[],
-  isoSegments: string[],
-  maxRefreshIntervals: number
-) {
-  // Note parseZone will create a moment with the original specified UTC offset if there is one,
-  // but if not, it will create a moment in UTC.
-  const start = moment.parseZone(isoSegments[0]);
-  const stop = moment.parseZone(isoSegments[1]);
-
-  // Note WMS uses extension ISO19128 of ISO8601; ISO 19128 allows start/end/periodicity
-  // and does not use the "R[n]/" prefix for repeated intervals
-  // eg. Data refreshed every 30 min: 2000-06-18T14:30Z/2000-06-18T14:30Z/PT30M
-  // See 06-042_OpenGIS_Web_Map_Service_WMS_Implementation_Specification.pdf section D.4
-  let duration: moment.Duration | undefined;
-  if (isoSegments[2] && isoSegments[2].length > 0) {
-    duration = moment.duration(isoSegments[2]);
-  }
-
-  // If we don't have a duration, or the duration is zero, then assume this is
-  // a continuous interval for which it's valid to request _any_ time. But
-  // we need to generate some discrete times, so choose an appropriate
-  // periodicity.
-  if (
-    duration === undefined ||
-    !duration.isValid() ||
-    duration.asSeconds() === 0.0
-  ) {
-    const spanMilliseconds = stop.diff(start);
-
-    // These times, in milliseconds, are approximate;
-    const second = 1000;
-    const minute = 60 * second;
-    const hour = 60 * minute;
-    const day = 24 * hour;
-    const week = 7 * day;
-    const month = 31 * day;
-    const year = 366 * day;
-    const decade = 10 * year;
-
-    if (spanMilliseconds <= 1000) {
-      duration = moment.duration(1, "millisecond");
-    } else if (spanMilliseconds <= 1000 * second) {
-      duration = moment.duration(1, "second");
-    } else if (spanMilliseconds <= 1000 * minute) {
-      duration = moment.duration(1, "minute");
-    } else if (spanMilliseconds <= 1000 * hour) {
-      duration = moment.duration(1, "hour");
-    } else if (spanMilliseconds <= 1000 * day) {
-      duration = moment.duration(1, "day");
-    } else if (spanMilliseconds <= 1000 * week) {
-      duration = moment.duration(1, "week");
-    } else if (spanMilliseconds <= 1000 * month) {
-      duration = moment.duration(1, "month");
-    } else if (spanMilliseconds <= 1000 * year) {
-      duration = moment.duration(1, "year");
-    } else if (spanMilliseconds <= 1000 * decade) {
-      duration = moment.duration(10, "year");
-    } else {
-      duration = moment.duration(100, "year");
-    }
-  }
-
-  let current = start.clone();
-  let count = 0;
-
-  // Add intervals starting at start until:
-  //    we go past the stop date, or
-  //    we go past the max limit
-  while (
-    current &&
-    current.isSameOrBefore(stop) &&
-    count < maxRefreshIntervals
-  ) {
-    result.push({
-      time: formatMomentForWms(current, duration),
-      tag: undefined
-    });
-    current.add(duration);
-    ++count;
-  }
-
-  if (count >= maxRefreshIntervals) {
-    console.warn(
-      "Interval has more than the allowed number of discrete times. Consider setting `maxRefreshIntervals`."
-    );
-  } else if (!current.isSame(stop)) {
-    result.push({
-      time: formatMomentForWms(stop, duration),
-      tag: undefined
-    });
-  }
-}
-
-function formatMomentForWms(m: moment.Moment, duration: moment.Duration) {
-  // If the original moment only contained a date (not a time), and the
-  // duration doesn't include hours, minutes, or seconds, format as a date
-  // only instead of a date+time.  Some WMS servers get confused when
-  // you add a time on them.
-  if (
-    duration.hours() > 0 ||
-    duration.minutes() > 0 ||
-    duration.seconds() > 0 ||
-    duration.milliseconds() > 0
-  ) {
-    return m.format();
-  } else {
-    const creationData = m.creationData();
-    if (creationData) {
-      const format = creationData.format;
-      if (typeof format === "string" && format.indexOf("T") < 0) {
-        return m.format(format);
-      }
-    }
-  }
-
-  return m.format();
 }
 
 /**

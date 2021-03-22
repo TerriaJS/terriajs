@@ -1,22 +1,18 @@
-import Mappable from "./Mappable";
-import CreateModel from "./CreateModel";
-import BingMapsCatalogItemTraits from "../Traits/BingMapsCatalogItemTraits";
-import BingMapsImageryProvider from "terriajs-cesium/Source/Scene/BingMapsImageryProvider";
-import Credit from "terriajs-cesium/Source/Core/Credit";
 import { computed } from "mobx";
+import Credit from "terriajs-cesium/Source/Core/Credit";
+import BingMapsImageryProvider from "terriajs-cesium/Source/Scene/BingMapsImageryProvider";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import BingMapsCatalogItemTraits from "../Traits/BingMapsCatalogItemTraits";
+import CreateModel from "./CreateModel";
 
-export default class BingMapsCatalogItem
-  extends CatalogMemberMixin(CreateModel(BingMapsCatalogItemTraits))
-  implements Mappable {
+export default class BingMapsCatalogItem extends MappableMixin(
+  CatalogMemberMixin(CreateModel(BingMapsCatalogItemTraits))
+) {
   static readonly type = "bing-maps";
 
   get type() {
     return BingMapsCatalogItem.type;
-  }
-
-  @computed get supportsReordering() {
-    return !this.keepOnTop;
   }
 
   @computed get mapItems() {
@@ -34,7 +30,7 @@ export default class BingMapsCatalogItem
     return Promise.resolve();
   }
 
-  loadMapItems() {
+  forceLoadMapItems() {
     return Promise.resolve();
   }
 
@@ -45,10 +41,14 @@ export default class BingMapsCatalogItem
       key: this.key!
     });
 
-    // open in a new window
-    (<any>result)._credit = new Credit(
-      '<a href="http://www.bing.com" target="_blank">Bing</a>'
-    );
+    if (this.attribution) {
+      (<any>result)._credit = this.attribution;
+    } else {
+      // open in a new window
+      (<any>result)._credit = new Credit(
+        '<a href="http://www.bing.com" target="_blank">Bing</a>'
+      );
+    }
     result.defaultGamma = 1.0;
 
     return result;
