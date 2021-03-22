@@ -5,7 +5,7 @@ import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import styled from "styled-components";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
@@ -23,6 +23,7 @@ import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
 import addUserCatalogMember from "../../../Models/addUserCatalogMember";
 import CommonStrata from "../../../Models/CommonStrata";
 import getAncestors from "../../../Models/getAncestors";
+import raiseErrorToUser from "../../../Models/raiseErrorToUser";
 import SplitItemReference from "../../../Models/SplitItemReference";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
@@ -30,7 +31,6 @@ import Icon, { StyledIcon } from "../../Icon";
 import { exportData } from "../../Preview/ExportData";
 import WorkbenchButton from "../WorkbenchButton";
 import Styles from "./viewing-controls.scss";
-import raiseErrorToUser from "../../../Models/raiseErrorToUser";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
