@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.69)
+* Updated terriajs-cesium to version 1.79.1
 * [The next improvement]
 
 #### 8.0.0-alpha.68
