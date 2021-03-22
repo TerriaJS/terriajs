@@ -290,7 +290,8 @@ const StandardUserInterface = observer(
                       />
                     </Small>
                     <Medium>
-                      <Box column
+                      <Box
+                        column
                         className={classNames(
                           Styles.sidePanel,
                           this.props.viewState.topElement === "SidePanel"

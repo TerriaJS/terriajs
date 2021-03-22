@@ -57,8 +57,8 @@ const ChartItemSelector = observer(function({ item }) {
     .filter(c => c.item === item)
     .filter(c => c.type !== "momentPoints" && c.type !== "momentLines")
     .sort((a, b) => (a.name >= b.name ? 1 : -1));
-    
-  if(chartItems && chartItems.length ===0) return null;
+
+  if (chartItems && chartItems.length === 0) return null;
 
   return (
     <ul className={Styles.root}>

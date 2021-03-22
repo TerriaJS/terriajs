@@ -151,15 +151,13 @@ const SidePanel = observer(
       const addData = t("addData.addDataBtnText");
       const uploadText = t("models.catalog.upload");
       return (
-        <Box column styledMinHeight={"0"}
-        flex={1}>
+        <Box column styledMinHeight={"0"} flex={1}>
           <div
             css={`
               padding: 0 5px;
               background: ${this.props.theme.dark};
             `}
           >
-            
             <SearchBoxAndResults
               viewState={this.props.viewState}
               terria={this.props.terria}
