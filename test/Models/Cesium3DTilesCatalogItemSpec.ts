@@ -180,7 +180,7 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
 
         describe("the tileset", function() {
           it("has the correct url", function() {
-            expect(item.mapItems[0].url).toBe((<any>item).url);
+            expect((item.mapItems[0] as any).url).toBe((<any>item).url);
           });
 
           it("sets `show`", function() {
