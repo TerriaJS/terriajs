@@ -126,14 +126,15 @@ const SettingPanel = createReactClass({
 
     const viewerModes = [];
 
-    if (
-      this.props.terria.configParameters.useCesiumIonTerrain ||
-      this.props.terria.configParameters.cesiumTerrainUrl
-    ) {
-      viewerModes.push(ViewerMode.CesiumTerrain);
-    }
+    // if (
+    //   this.props.terria.configParameters.useCesiumIonTerrain ||
+    //   this.props.terria.configParameters.cesiumTerrainUrl
+    // ) {
+    //   viewerModes.push(ViewerMode.CesiumTerrain);
+    // }
 
-    viewerModes.push(ViewerMode.CesiumEllipsoid, ViewerMode.Leaflet);
+    // viewerModes.push(ViewerMode.CesiumEllipsoid, ViewerMode.Leaflet);
+    viewerModes.push(ViewerMode.Leaflet);
 
     return (
       <MenuPanel
