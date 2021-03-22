@@ -44,7 +44,7 @@ export function defaultBaseMaps(terria: Terria): any[] {
         id: "basemap-bing-aerial-with-labels",
         name: "Bing Maps Aerial with Labels",
         type: "ion-imagery",
-        assetId: 3,
+        ionAssetId: 3,
         opacity: 1.0
       },
       image: "/images/basemaps/bing-aerial-labels.png"
@@ -55,7 +55,7 @@ export function defaultBaseMaps(terria: Terria): any[] {
         id: "basemap-bing-aerial",
         name: "Bing Maps Aerial",
         type: "ion-imagery",
-        assetId: 2,
+        ionAssetId: 2,
         opacity: 1.0
       },
       image: "/images/basemaps/bing-aerial.png"
@@ -65,7 +65,7 @@ export function defaultBaseMaps(terria: Terria): any[] {
         id: "basemap-bing-roads",
         name: "Bing Maps Roads",
         type: "ion-imagery",
-        assetId: 4,
+        ionAssetId: 4,
         opacity: 1.0
       },
       image: "/images/basemaps/bing-maps-roads.png"
