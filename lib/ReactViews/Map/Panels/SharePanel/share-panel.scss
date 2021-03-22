@@ -14,6 +14,10 @@
   text-align: center;
   width: 50%;
   margin-left: $padding-small;
+  [dir="rtl"] & {
+    margin-left: unset;
+    margin-right: 5px;
+  }
 }
 
 .catalog-share-inner {
@@ -31,6 +35,17 @@
 .dropdown-inner {
   width: $share-panel-width;
   @include transform-origin(50%, top);
+  [dir="rtl"] & {
+    right: -373px;
+  }
+}
+
+@media (max-width: 420px) {
+  .dropdown-inner {
+    [dir="rtl"] & {
+      right: 0px;
+    }
+  }
 }
 
 .btn--catalogShare {

@@ -6,6 +6,17 @@
 
 .dropdown-inner {
   width: $setting-panel;
+  [dir="rtl"] & {
+    right: -232px;
+  }
+}
+
+@media (max-width: 420px) {
+  .dropdown-inner {
+    [dir="rtl"] & {
+      right: 0px;
+    }
+  }
 }
 
 .viewer-selector,

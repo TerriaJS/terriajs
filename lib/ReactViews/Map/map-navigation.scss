@@ -10,6 +10,10 @@
     top: 80px;
     bottom: auto;
     right: 16px;
+    [dir="rtl"] & {
+      right: auto;
+      left: 16px;
+    }
   }
 }
 
@@ -31,6 +35,9 @@
 .navs {
   display: flex;
   flex-direction: column;
+  [dir="rtl"] & {
+    direction: initial;
+  }
 }
 
 .controls {

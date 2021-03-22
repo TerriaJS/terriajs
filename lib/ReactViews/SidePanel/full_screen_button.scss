@@ -15,6 +15,13 @@
   left: 350px;
 }
 
+.minifiedFullscreenBtnWrapper {
+  [dir="rtl"] & {
+    right: 348px;
+    left: 0;
+  }
+}
+
 .btn {
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn--map from "../../Sass/common/_buttons.scss";
@@ -24,6 +31,17 @@
   span {
     display: flex;
     line-height: 1;
+  }
+  span svg {
+    [dir="rtl"] & {
+      margin-right: 5px;
+      margin-left: unset;
+    }
+  }
+  svg {
+    [dir="rtl"] & {
+      transform: rotate(180deg);
+    }
   }
 }
 
@@ -38,6 +56,11 @@
     border-right: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 0 $radius-small $radius-small 0;
     transform: perspective(10px) rotateY(10deg);
+  }
+  svg {
+    [dir="rtl"] & {
+      transform: rotate(180deg);
+    }
   }
 }
 

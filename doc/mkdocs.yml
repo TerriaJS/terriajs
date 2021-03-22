@@ -18,6 +18,7 @@ nav:
     - Initialization Files: 'customizing/initialization-files.md'
     - Server-side Config: 'customizing/server-side-config.md'
     - Skinning: 'customizing/skinning.md'
+    - Add new language: 'customizing/add-new-language'
 - Connecting to Data:
     - Overview: 'connecting-to-data/README.md'
     - Cross-Origin Resource Sharing: 'connecting-to-data/cross-origin-resource-sharing.md'

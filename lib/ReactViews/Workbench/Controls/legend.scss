@@ -12,6 +12,9 @@
   .legendImagehasError {
     display: none;
   }
+  [dir="rtl"] & {
+    padding: 0;
+  }
 }
 
 .legend__inner {

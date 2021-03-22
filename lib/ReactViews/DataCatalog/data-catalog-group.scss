@@ -53,12 +53,20 @@
     background: $modal-highlight;
     color: #fff;
   }
+
+  [dir="rtl"] & {
+    text-align: right;
+  }
 }
 
 .btnCatalogTopLevel {
   font-weight: 600;
   border-bottom: 1px solid $grey-lighter;
   padding-left: $padding;
+  [dir="rtl"] & {
+    padding-left: 0;
+    padding-right: 10px;
+  }
 }
 
 .isPreviewed {
@@ -83,6 +91,10 @@
       width: 25px;
     }
   }
+  [dir="rtl"] & {
+    left: unset;
+    right: 8px;
+  }
 }
 
 .caret {
@@ -106,6 +118,18 @@
   &.offsetRight {
     right: 25px;
   }
+  [dir="rtl"] & {
+    right: unset;
+  }
+}
+
+@media (min-width: 768px) {
+  .caret {
+    [dir="rtl"] & {
+      left: 5px;
+      right: unset;
+    }
+  }
 }
 
 .catalog-group {
@@ -115,6 +139,14 @@
   &--lower-level {
     margin-left: 20px;
     border-left: 1px solid $grey-lighter;
+  }
+  [dir="rtl"] & {
+    padding-left: 0;
+    padding-right: 10px;
+    margin-left: unset;
+    margin-right: 20px;
+    border-left: 0;
+    border-right: 1px solid #ddd;
   }
 }
 

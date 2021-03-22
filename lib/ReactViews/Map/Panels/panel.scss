@@ -59,6 +59,7 @@
   z-index: 10;
   top: $padding-small;
   right: $padding-small;
+  left: 5px;
 
   &:hover,
   &:focus {
@@ -88,6 +89,26 @@
   top: -10px;
   z-index: -1;
   @include transform(rotate(45deg));
+}
+
+.caret:first-child {
+  [dir="rtl"] & {
+    right: 267px;
+  }
+}
+
+.caret:nth-of-type(2) {
+  [dir="rtl"] & {
+    right: 412.5px;
+  }
+}
+
+@media (max-width: 420px) {
+  .caret {
+    [dir="rtl"] & {
+      right: 15px;
+    }
+  }
 }
 
 .label {
@@ -142,6 +163,13 @@
     svg {
       fill: #ffffff;
     }
+  }
+}
+
+.selectLanguage {
+  &:hover,
+  &:focus {
+    background-color: #58606a;
   }
 }
 

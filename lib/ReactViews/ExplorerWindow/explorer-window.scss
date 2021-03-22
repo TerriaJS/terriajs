@@ -23,6 +23,15 @@
   }
 }
 
+@media (min-width: 992px) {
+  .modal-wrapper {
+    [dir="rtl"] & {
+      padding-right: 380px;
+      padding-left: 30px;
+    }
+  }
+}
+
 .explorer-panel {
   position: relative;
   background: $modal-bg;
@@ -77,5 +86,10 @@
     color: $text-light;
     border: 2px solid rgba(#ffffff, 0.7);
     border-radius: 3px;
+  }
+
+  [dir="rtl"] & {
+    left: 0;
+    right: unset;
   }
 }

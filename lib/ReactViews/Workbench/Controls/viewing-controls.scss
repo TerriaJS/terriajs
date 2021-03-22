@@ -12,6 +12,10 @@
     float: left;
     box-sizing: border-box;
   }
+
+  [dir="rtl"] & {
+    padding: 0;
+  }
 }
 
 .separator {

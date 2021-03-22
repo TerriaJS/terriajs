@@ -5,6 +5,10 @@
   top: 20px;
   right: $padding;
   z-index: 108;
+  [dir="rtl"] & {
+    right: auto;
+    left: 20px;
+  }
 }
 
 .menu {

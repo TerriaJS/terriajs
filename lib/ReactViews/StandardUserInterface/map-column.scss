@@ -74,6 +74,15 @@
   margin: 4px 0;
 }
 
+@media (min-width: 768px) {
+  .feedback-button-wrapper {
+    [dir="rtl"] & {
+      left: 20px;
+      right: unset;
+    }
+  }
+}
+
 .with-time-series-controls {
   bottom: 58px;
 }
