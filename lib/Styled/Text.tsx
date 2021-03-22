@@ -1,42 +1,56 @@
 import styled from "styled-components";
+import { OneKeyFrom } from "./Styled.types";
 
-interface ITextProps {
+interface ITextSize {
+  noFontSize?: boolean;
+  small?: boolean;
+  medium?: boolean;
+  large?: boolean;
+  extraLarge?: boolean;
+  extraExtraLarge?: boolean;
+  subHeading?: boolean;
+  heading?: boolean;
+  styledFontSize?: string;
+}
+
+interface ITextColor {
+  textLight?: boolean;
+  textLightDimmed?: boolean;
+  textDark?: boolean;
+  textDarker?: boolean;
+}
+
+interface ITextWeight {
+  light?: boolean;
+  bold?: boolean;
+  semiBold?: boolean;
+  extraBold?: boolean;
+}
+
+interface ITextPropsBase {
   displayBlock?: boolean;
   isLink?: boolean;
   nunito?: boolean;
   openSans?: boolean;
   breakWord?: boolean;
-  light?: boolean;
-  bold?: boolean;
-  semiBold?: boolean;
-  extraBold?: boolean;
   uppercase?: boolean;
   textAlignLeft?: boolean;
   textAlignCenter?: boolean;
   primary?: boolean;
-  textLight?: boolean;
-  textLightDimmed?: boolean;
-  textDark?: boolean;
-  textDarker?: boolean;
   fullWidth?: boolean;
   noWrap?: boolean;
-  noFontSize?: boolean;
-  small?: boolean;
-  medium?: boolean;
-  large?: boolean;
   as?: "h1" | "h2" | "h3" | "h4" | "span";
-  extraLarge?: boolean;
-  extraExtraLarge?: boolean;
-  subHeading?: boolean;
-  heading?: boolean;
-  styledSize?: string;
   styledLineHeight?: string;
-  styledFontSize?: string;
   highlightLinks?: boolean;
   overflowHide?: boolean;
   overflowEllipsis?: boolean;
   style?: any;
 }
+
+type ITextProps = ITextPropsBase &
+  OneKeyFrom<ITextSize> &
+  OneKeyFrom<ITextColor> &
+  OneKeyFrom<ITextWeight>;
 
 // should it be a span or inline-block-div? - leaning to div
 export const Text = styled.div<ITextProps>`
@@ -153,8 +167,6 @@ export const Text = styled.div<ITextProps>`
     font-size: 26px;
     line-height: 32px;
   `}
-
-  ${props => props.styledSize && `font-size: ${props.styledSize}`};
   ${props =>
     props.styledLineHeight && `line-height: ${props.styledLineHeight}`};
 
@@ -183,9 +195,9 @@ export const Text = styled.div<ITextProps>`
 `;
 
 export const TextSpan = styled(Text).attrs(
-  (props: { as?: React.ElementType | keyof JSX.IntrinsicElements }) => {
-    as: "span";
-  }
+  (props: { as?: React.ElementType | keyof JSX.IntrinsicElements }) => ({
+    as: props.as || "span"
+  })
 )``;
 
 export default Text;

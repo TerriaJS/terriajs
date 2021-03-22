@@ -202,7 +202,7 @@ export const WelcomeMessagePure = props => {
                 <Text
                   bold
                   textLight
-                  styledSize={"36px"}
+                  styledFontSize={"36px"}
                   styledLineHeight={"49px"}
                 >
                   {t("welcomeMessage.title")}
