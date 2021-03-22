@@ -290,7 +290,7 @@ export default function GeoJsonMixin<
               pixelSize: new ConstantProperty(
                 defaultValue(
                   parseMarkerSize(
-                    properties && properties["marker-size"]?.getValue(),
+                    properties && properties["marker-size"]?.getValue()
                   ),
                   options.markerSize / 2
                 )
@@ -322,7 +322,9 @@ export default function GeoJsonMixin<
             ) {
               // not part of SimpleStyle spec, but why not?
               const color: Color = entity.point.color.getValue(now);
-              color.alpha = parseFloat(properties["marker-opacity"]?.getValue());
+              color.alpha = parseFloat(
+                properties["marker-opacity"]?.getValue()
+              );
             }
 
             entity.billboard = undefined;
@@ -333,7 +335,12 @@ export default function GeoJsonMixin<
             isDefined(properties["marker-opacity"]?.getValue())
           ) {
             entity.billboard.color = new ConstantProperty(
-              new Color(1.0, 1.0, 1.0, parseFloat(properties["marker-opacity"]?.getValue()))
+              new Color(
+                1.0,
+                1.0,
+                1.0,
+                parseFloat(properties["marker-opacity"]?.getValue())
+              )
             );
           }
 
