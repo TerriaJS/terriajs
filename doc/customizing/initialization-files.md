@@ -70,13 +70,13 @@ Catalog files can be edited two ways:
 ## Catalog file properties
 |Name|Required|Type|Default|Description|
 |----|--------|----|-------|-----------|
-|corsDomains|no|**string[]**||By default, TerriaJS proxies all requests within the proxy whitelist specified in the [Server-side Config](server-side-config.md), making the assumption that the servers do not support CORS. You can add hosts that are known to support CORS to this property to avoid proxying them. You can add hosts that are known to support CORS to this property to avoid proxying them.|
-|catalog|no|[**CatalogItem[]**](https://github.com/TerriaJS/terriajs/blob/90e9ade32f537fbe48b0737cfbed3a1e8187870a/doc/connecting-to-data/catalog-items.md), [**CatalogGroup[]**](https://github.com/TerriaJS/terriajs/blob/90e9ade32f537fbe48b0737cfbed3a1e8187870a/doc/connecting-to-data/catalog-groups.md), [**CatalogFunction[]**](https://github.com/TerriaJS/terriajs/blob/90e9ade32f537fbe48b0737cfbed3a1e8187870a/doc/connecting-to-data/catalog-functions.md)||An array of catalog items, groups and functions. Check example above.|
+|corsDomains|no|**string[]**||By default, TerriaJS proxies all requests within the proxy whitelist specified in the [Server-side Config](server-side-config.md), making the assumption that the servers do not support CORS. You can add hosts that are known to support CORS to this property to avoid proxying them.|
+|catalog|no|[**CatalogItem[]**](../connecting-to-data/catalog-items.md), [**CatalogGroup[]**](../connecting-to-data/catalog-groups.md), [**CatalogFunction[]**](../connecting-to-data/catalog-functions.md)||An array of catalog items, groups and functions. Check example above.|
 |initialCamera|no|[**CameraPosition**](#CameraPosition)||The location when the map first displays.|
 |stories|no|[**Story[]**](#story)||An array of stories to be loaded.|
 |viewerMode|no|**"3d"** or **"3dSmooth"** or **"2D"** |"3d"|The id of the viewer mode to be shown initialy.|
 |homeCamera|yes|[**CameraPosition**](#CameraPosition)||Where the camera goes when you click the "home" button between the zoom-in and zoom-out buttons.|
-|<a id="base-maps"></a>baseMaps|no|[**`baseMaps`**](#baseMaps)|*default list of basemaps*|The array of the base maps to be shown to the user.|
+|<a id="base-maps"></a>baseMaps|no|[**`baseMaps`**](#baseMaps)|[default list of basemaps](../../lib/Models/BaseMaps/defaultBaseMaps.ts)|The array of the base maps to be shown to the user.|
 |<a id="base-map-id"></a>baseMapId|no|**string**||The id of the baseMap user will see on the first mapLoad. The value must be an id of the catalog item from the [`baseMaps`](#base-maps) array|
 |previewBaseMapId|no|**string**|[`baseMapId`](#base-map-id)|The id of the baseMap to be used as the base map in data preview. The value must be an id of the catalog item from the [`baseMaps`](#base-maps) array.|
 |showSplitter|no|**boolean**|false|Show splitter initally.|
@@ -212,7 +212,9 @@ map, and overrides Options 1, 2, and 3.
 ``` 
 
 ### Story
-Definition of the story. This can be pretty complex do define for standard user, the easiest way is to generate share url without url sho
+
+Definition of the story. This can be pretty complex to define for the standard user, the easiest way is to generate share url without url shortener.
+
 |Name|Required|Type|Default|Description|
 |----|--------|----|-------|-----------|
 |id|yes|**string**||Id of the story.|
