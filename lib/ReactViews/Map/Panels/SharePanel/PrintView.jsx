@@ -111,7 +111,7 @@ const PrintView = createReactClass({
 
   render() {
     if (!this.state.mapImageDataUrl) {
-      return <div>Creating print view...</div>;
+      return <div>Creando vista de impresión...</div>;
     }
 
     return (
@@ -123,19 +123,19 @@ const PrintView = createReactClass({
             alt="Map snapshot"
           />
         </p>
-        <h1>Legends</h1>
+        <h1>Leyendas</h1>
         {this.props.terria.nowViewing.items.map(this.renderLegend)}
         {this.renderFeatureInfo()}
-        <h1>Dataset Details</h1>
+        <h1>Detalles del conjunto de datos</h1>
         {this.props.terria.nowViewing.items.map(this.renderDetails)}
-        <h1>Map Credits</h1>
+        <h1>Créditos del Mapa</h1>
         <ul>
           {this.props.terria.currentViewer
             .getAllAttribution()
             .map(this.renderAttribution)}
         </ul>
         <If condition={this.props.terria.configParameters.printDisclaimer}>
-          <h1>Print Disclaimer</h1>
+          <h1>Descargo de responsabilidad de Impresión</h1>
           <p>{this.props.terria.configParameters.printDisclaimer.text}</p>
         </If>
       </div>
@@ -160,7 +160,7 @@ const PrintView = createReactClass({
         <div className="layer-title">{catalogItem.name}</div>
         {catalogItem.discreteTime && (
           <div className="layer-time">
-            Time: {formatDateTime(catalogItem.discreteTime)}
+            Tiempo: {formatDateTime(catalogItem.discreteTime)}
           </div>
         )}
         <Legend item={catalogItem} />
@@ -194,7 +194,7 @@ const PrintView = createReactClass({
 
     return (
       <div className="feature-info">
-        <h1>Feature Information</h1>
+        <h1>Información de Funcionalidades</h1>
         <FeatureInfoPanel
           terria={this.props.terria}
           viewState={this.props.viewState}
