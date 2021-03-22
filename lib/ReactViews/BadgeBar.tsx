@@ -1,5 +1,5 @@
 import React from "react";
-import { TextSpan } from "../styled/Text";
+import { TextSpan } from "../Styled/Text";
 const Box = require("../Styled/Box").default;
 
 interface IProps {
