@@ -3,10 +3,10 @@ import { BaseMapViewModel } from "../../ViewModels/BaseMapViewModel";
 import BingMapsCatalogItem from "../BingMapsCatalogItem";
 import CatalogMemberFactory from "../CatalogMemberFactory";
 import CommonStrata from "../CommonStrata";
-import Mappable from "../Mappable";
 import { BaseModel } from "../Model";
 import Terria from "../Terria";
 import upsertModelFromJson from "../upsertModelFromJson";
+import MappableMixin from "../../ModelMixins/MappableMixin";
 
 export interface BaseMapModel {
   image: string;
@@ -41,7 +41,7 @@ export function processBaseMaps(newBaseMaps: BaseMapModel[], terria: Terria) {
         addModelToTerria: true
       }
     );
-    if (Mappable.is(model)) {
+    if (MappableMixin.isMixedInto(model)) {
       if (CatalogMemberMixin.isMixedInto(model)) model.loadMetadata();
       terria.baseMaps.push(new BaseMapViewModel(model, newBaseMap.image));
     }
