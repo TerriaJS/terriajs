@@ -130,7 +130,7 @@ class DataPreviewMap extends React.Component {
     );
     this.isZoomedToExtent = false;
 
-    // Choose positron if it's available
+    // Find preview basemap using `terria.previewBaseMapId`
     const initPreviewBaseMap = this.props.terria.baseMaps.find(
       baseMap =>
         baseMap.mappable.uniqueId === this.props.terria.previewBaseMapId
