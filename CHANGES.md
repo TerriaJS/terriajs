@@ -4,6 +4,8 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.70)
+* Fix load of persisted basemap
+* Fix sharing of base map
 * [The next improvement]
 
 #### 8.0.0-alpha.69
