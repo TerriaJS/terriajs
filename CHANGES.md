@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.69)
+* Make base maps configurable from init files and update documentation for init files [#5140](https://github.com/TerriaJS/terriajs/pull/5140).
 * [The next improvement]
 
 #### 8.0.0-alpha.68
@@ -48,7 +49,6 @@ Change Log
 * Added support for shapefile with `ShapefileCatalogItem`
 * Added `GeoJsonMixin` for handling the loading of geojson data.
 * Extended the `GeoJsonCatalogItem` to support loading of zip files.
-* Make base maps configurable from init files and update documentation for init files [#5140](https://github.com/TerriaJS/terriajs/pull/5140).
 * Fixed broken feature highlighting for raster layers.
 * Show a top angle view when zooming to a small feature/building from the item search result.
 * Fix `TableTimeStyleTraits.idColumns` trait type.
