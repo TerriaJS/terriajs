@@ -680,23 +680,44 @@ export default class Terria {
     }
   }
 
+  /**
+   * Loading of basemap is done in the following order
+   * - first try to load basemap set in the URL parameter `baseMapId`
+   * - if it is not defined try to load persisted basemap
+   * - lastly try to load init basemap
+   */
   @action
   loadPersistedOrInitBaseMap(): void {
-    const persistedBaseMapId = this.getLocalProperty("basemap");
-    const baseMapSearch = this.baseMaps.find(
-      baseMap => baseMap.mappable.uniqueId === persistedBaseMapId
-    );
-    if (baseMapSearch) {
-      this.mainViewer.baseMap = baseMapSearch.mappable;
-    } else {
-      console.error(
-        `Couldn't find a basemap for unique id ${persistedBaseMapId}. Trying to load init base map.`
-      );
+    const baseMapId = this.userProperties.get("baseMapId");
+    if (baseMapId) {
       const baseMapSearch = this.baseMaps.find(
-        baseMap => baseMap.mappable.uniqueId === this.initBaseMapId
+        baseMap => baseMap.mappable.uniqueId === baseMapId
       );
       if (baseMapSearch) {
         this.mainViewer.baseMap = baseMapSearch.mappable;
+      } else {
+        console.error(
+          `Couldn't find a basemap for unique id ${baseMapId}. Trying to load persisted base map.`
+        );
+      }
+    }
+    if (!isDefined(this.mainViewer.baseMap)) {
+      const persistedBaseMapId = this.getLocalProperty("basemap");
+      const baseMapSearch = this.baseMaps.find(
+        baseMap => baseMap.mappable.uniqueId === persistedBaseMapId
+      );
+      if (baseMapSearch) {
+        this.mainViewer.baseMap = baseMapSearch.mappable;
+      } else {
+        console.error(
+          `Couldn't find a basemap for unique id ${persistedBaseMapId}. Trying to load init base map.`
+        );
+        const baseMapSearch = this.baseMaps.find(
+          baseMap => baseMap.mappable.uniqueId === this.initBaseMapId
+        );
+        if (baseMapSearch) {
+          this.mainViewer.baseMap = baseMapSearch.mappable;
+        }
       }
     }
   }
