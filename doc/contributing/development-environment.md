@@ -37,7 +37,7 @@ git clone https://github.com/TerriaJS/terriajs.git
 cd ..
 ```
 
-This will give you the `master` branch of TerriaJS.  While we strive to keep `master` stable and usable at all times, you must be aware that `master` is less tested than actual releases, and it may not be commpatible with the `master` branch of TerriaMap.  So, you may want to check out the actual version of TerriaJS that you're using before you start making changes.  To do that:
+This will give you the `master` branch of TerriaJS.  While we strive to keep `master` stable and usable at all times, you must be aware that `master` is less tested than actual releases, and it may not be compatible with the `master` branch of TerriaMap.  So, you may want to check out the actual version of TerriaJS that you're using before you start making changes.  To do that:
 
 ```
 grep terriajs package.json
