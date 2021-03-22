@@ -4,7 +4,12 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.69)
+
+- **Breaking changes**: 
+  - Basemaps are now configured through catalog JSON instead of TerriaMap - see https://github.com/TerriaJS/terriajs/blob/next/doc/customizing/initialization-files.md#base-maps 
+  
 * Updated terriajs-cesium to version 1.79.1
+* Make base maps configurable from init files and update documentation for init files [#5140](https://github.com/TerriaJS/terriajs/pull/5140).
 * [The next improvement]
 
 #### 8.0.0-alpha.68
