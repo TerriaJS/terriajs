@@ -673,13 +673,6 @@ export default class Terria {
     }
   }
 
-  setBaseMaps(baseMaps: BaseMapModel[]): void {
-    processBaseMaps(baseMaps, this);
-    if (!this.mainViewer.baseMap) {
-      this.loadPersistedOrInitBaseMap();
-    }
-  }
-
   @action
   loadPersistedOrInitBaseMap(): void {
     const persistedBaseMapId = this.getLocalProperty("basemap");
@@ -775,6 +768,10 @@ export default class Terria {
 
     if (this.baseMaps.length === 0) {
       processBaseMaps(defaultBaseMaps(this), this);
+    }
+
+    if (!this.mainViewer.baseMap) {
+      this.loadPersistedOrInitBaseMap();
     }
   }
 
@@ -952,7 +949,7 @@ export default class Terria {
       Array.isArray(initData.baseMaps) &&
       initData.baseMaps.length > 0
     ) {
-      this.setBaseMaps(<BaseMapModel[]>(<unknown>initData.baseMaps));
+      processBaseMaps(<BaseMapModel[]>(<unknown>initData.baseMaps), this);
     }
 
     if (isJsonObject(initData.homeCamera)) {
