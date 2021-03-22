@@ -94,7 +94,6 @@ describe("OpenStreetMapCatalogItem", function() {
             tileHeight: imageryProvider.tileHeight,
             minimumLevel: imageryProvider.minimumLevel,
             maximumLevel: imageryProvider.maximumLevel,
-            rectangle: imageryProvider.rectangle,
             subdomains: (<any>imageryProvider)._subdomains
           }).toEqual({
             url: "https://{s}.example.com/ooo/{z}/{x}/{y}.png",
@@ -104,14 +103,25 @@ describe("OpenStreetMapCatalogItem", function() {
             tileHeight: 256,
             minimumLevel: 0,
             maximumLevel: item.maximumLevel,
-            subdomains: ["a"],
-            rectangle: new Rectangle(
-              0,
-              -0.5235987755982988,
-              0.5235987755982983,
-              0.5235987755982988
-            )
+            subdomains: ["a"]
           });
+
+          expect(imageryProvider.rectangle.west).toBeCloseTo(0, 8);
+
+          expect(imageryProvider.rectangle.south).toBeCloseTo(
+            -0.5235987755982988,
+            8
+          );
+
+          expect(imageryProvider.rectangle.east).toBeCloseTo(
+            0.5235987755982983,
+            8
+          );
+
+          expect(imageryProvider.rectangle.north).toBeCloseTo(
+            0.5235987755982988,
+            8
+          );
         });
       });
     });
