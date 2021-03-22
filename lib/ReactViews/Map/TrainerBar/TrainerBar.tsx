@@ -190,7 +190,7 @@ class StepAccordionRaw extends React.Component<
           <Box
             paddedHorizontally={4}
             column
-            positionAbsolute
+            position="absolute"
             fullWidth
             css={`
               top: 0;
@@ -258,7 +258,7 @@ class StepAccordionRaw extends React.Component<
         {isShowingAllSteps && (
           <BoxTrainerExpandedSteps
             column
-            positionAbsolute
+            position="absolute"
             backgroundColor={theme.textBlack}
             fullWidth
             paddedRatio={4}
@@ -335,7 +335,7 @@ export const TrainerBar = observer((props: TrainerBarProps) => {
   return (
     <TrainerBarWrapper
       centered
-      positionAbsolute
+      position="absolute"
       styledWidth={
         isMapFullScreen
           ? "100%"

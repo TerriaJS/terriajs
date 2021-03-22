@@ -16,7 +16,7 @@ class Prompt extends React.PureComponent {
         <Box
           displayInlineBlock
           rounded
-          positionAbsolute
+          position="absolute"
           backgroundColor={this.props.theme.colorPrimary}
           paddedRatio={3}
           styledWidth={`${this.props.promptWidth || 200}px`}

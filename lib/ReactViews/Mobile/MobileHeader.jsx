@@ -164,7 +164,7 @@ const MobileHeader = observer(
                 }
               >
                 <Box
-                  positionAbsolute
+                  position="absolute"
                   css={`
                     left: 5px;
                   `}

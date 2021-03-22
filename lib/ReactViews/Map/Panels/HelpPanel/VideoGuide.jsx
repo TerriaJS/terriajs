@@ -35,7 +35,7 @@ const VideoWrapperBox = props => {
         background: rgba(0, 0, 0, 0.75);
       `}
     >
-      <Box paddedRatio={4} positionAbsolute topRight>
+      <Box paddedRatio={4} position="absolute" topRight>
         <RawButton onClick={handleClose.bind(null)}>
           <StyledIcon
             styledWidth={"22px"}

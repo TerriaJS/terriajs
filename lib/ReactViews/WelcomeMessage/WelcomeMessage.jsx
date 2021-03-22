@@ -150,7 +150,7 @@ export const WelcomeMessagePure = props => {
       <WelcomeModalWrapper
         fullWidth
         fullHeight
-        positionAbsolute
+        position="absolute"
         right
         onClick={() => handleClose(false)}
       >

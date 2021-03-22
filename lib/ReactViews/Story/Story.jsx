@@ -214,11 +214,11 @@ class Story extends React.Component {
           className={classNames(this.props.className)}
           onMouseDown={this.props.onMouseDown}
           onTouchStart={this.props.onTouchStart}
-          static
+          position="static"
         >
           <Box
             fullWidth
-            static
+            position="static"
             justifySpaceBetween
             padded
             verticalCenter

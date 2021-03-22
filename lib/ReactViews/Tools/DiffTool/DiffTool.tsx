@@ -790,7 +790,7 @@ const DiffAccordion: React.FC<DiffAccordionProps> = props => {
 
 const DiffAccordionWrapper = styled(Box).attrs({
   column: true,
-  positionAbsolute: true,
+  position: "absolute",
   styledWidth: "340px"
   // charcoalGreyBg: true
 })<{ isMapFullScreen: boolean }>`

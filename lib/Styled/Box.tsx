@@ -8,6 +8,14 @@ type Overflow =
   | "initial"
   | "inherit";
 
+type WordBreak =
+  | "normal"
+  | "break-all"
+  | "keep-all"
+  | "break-word"
+  | "initial"
+  | "inherit";
+
 /* 
 we can use this after upgrade to typescript 4
 
@@ -43,9 +51,7 @@ interface Column {
 }
 
 interface IBoxPropsBase {
-  relative?: boolean;
-  positionAbsolute?: boolean;
-  static?: boolean;
+  position?: "relative" | "absolute" | "static";
   topRight?: boolean;
   displayInlineBlock?: boolean;
   rounded?: boolean;
@@ -80,7 +86,7 @@ interface IBoxPropsBase {
   paddedVertically?: number | boolean;
   backgroundImage?: any;
   backgroundBlackOverlay?: number;
-  wordBreak?: any;
+  wordBreak?: WordBreak;
   overflow?: Overflow;
   overflowY?: Overflow;
   scroll?: boolean;
@@ -90,25 +96,18 @@ interface IBoxPropsBase {
 type IBoxProps = IBoxPropsBase & OneKeyFrom<Column>;
 
 export const Box = styled.div<IBoxProps>`
-  ${props => props.relative && `position:relative;`}
-
   display: flex;
-  position: relative;
-  ${props =>
-    props.positionAbsolute &&
-    `
-    position:absolute;
-    z-index:1;
-   `}
-  ${props => props.static && `position: static;`}
+  box-sizing: border-box;
+  ${props => props.position && `position: ${props.position};`}
+  ${props => props.position === "absolute" && `z-index:1;`}
+  ${props => !props.position && `position: relative;`}
+  
   ${props =>
     props.topRight &&
     `
     right: 0px;
     top: 0px;
   `}
-
-  box-sizing: border-box;
 
   ${props => props.displayInlineBlock && `display: inline-block;`}
 
@@ -151,13 +150,13 @@ export const Box = styled.div<IBoxProps>`
   ${props => props.justifySpaceBetween && `justify-content: space-between;`}
 
   ${props => props.left && `align-items: center;`}
-  ${props => props.alignItemsFlexStart && `align-items: flex-start;`}
   ${props => props.left && `justify-content: flex-start;`}
+  ${props => props.alignItemsFlexStart && `align-items: flex-start;`}
   ${props => props.leftSelf && `align-self: flex-start;`}
 
   ${props => props.right && `align-items: center;`}
-  ${props => props.alignItemsFlexEnd && `align-items: flex-end;`}
   ${props => props.right && `justify-content: flex-end;`}
+  ${props => props.alignItemsFlexEnd && `align-items: flex-end;`}
   ${props => props.rightSelf && `align-self: flex-end;`}
 
   ${props => props.column && `flex-direction: column;`}

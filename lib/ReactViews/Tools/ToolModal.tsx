@@ -64,7 +64,7 @@ export const Main = styled(Text)`
 
 const Wrapper = styled(Box).attrs({
   column: true,
-  positionAbsolute: true,
+  position: "absolute",
   styledWidth: "340px"
   // charcoalGreyBg: true
 })<{ isMapFullScreen: boolean }>`

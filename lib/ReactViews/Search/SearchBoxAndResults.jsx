@@ -167,7 +167,7 @@ export class SearchBoxAndResultsRaw extends React.Component {
           {/* Results */}
           <If condition={shouldShowResults}>
             <Box
-              positionAbsolute
+              position="absolute"
               fullWidth
               column
               css={`
