@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.70)
+* Add `WebMapService` support for WGS84 tiling scheme
 * [The next improvement]
 
 #### 8.0.0-alpha.69
@@ -29,7 +30,6 @@ Change Log
 * Limit up/down look angle in pedestrian mode.
 * Automatically disable pedestrian mode when map zooms to a different location.
 * Add support for time on `ArcGisMapServerCatalogItem`
-* Add `WebMapService` support for WGS84 tiling scheme
 * Merge `Mappable` and `AsyncMappableMixin` into **`MappableMixin`**.
 * Fixed a issue when multiple filters are set to Cesium3DTilesCatalogItem
 * Async/Awaitify `Terria.ts` + fix share links loading after `loadInitSources`.
