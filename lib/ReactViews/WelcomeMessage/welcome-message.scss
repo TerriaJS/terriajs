@@ -1,7 +1,46 @@
 @import "~terriajs-variables";
 @import "~terriajs-mixins";
-@import url("https://fonts.googleapis.com/css?family=Montserrat:700&display=swap");
-@import url("https://fonts.googleapis.com/css?family=Nunito:600,600i&display=swap");
+
+/* montserrat-700 - vietnamese_latin-ext_latin_cyrillic-ext_cyrillic */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  src: url('../../fonts/montserrat-v15-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-700.eot'); /* IE9 Compat Modes */
+  src: local(''),
+       url('../../fonts/montserrat-v15-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-700.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../../fonts/montserrat-v15-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-700.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../../fonts/montserrat-v15-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-700.woff') format('woff'), /* Modern Browsers */
+       url('../../fonts/montserrat-v15-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-700.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('../../fonts/montserrat-v15-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-700.svg#Montserrat') format('svg'); /* Legacy iOS */
+}
+
+/* nunito-600 - vietnamese_latin-ext_latin_cyrillic-ext_cyrillic */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 600;
+  src: url('../../fonts/nunito-v16-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-600.eot'); /* IE9 Compat Modes */
+  src: local(''),
+       url('../../fonts/nunito-v16-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-600.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../../fonts/nunito-v16-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-600.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../../fonts/nunito-v16-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-600.woff') format('woff'), /* Modern Browsers */
+       url('../../fonts/nunito-v16-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-600.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('../../fonts/nunito-v16-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-600.svg#Nunito') format('svg'); /* Legacy iOS */
+}
+/* nunito-600italic - vietnamese_latin-ext_latin_cyrillic-ext_cyrillic */
+@font-face {
+  font-family: 'Nunito';
+  font-style: italic;
+  font-weight: 600;
+  src: url('../../fonts/nunito-v16-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-600italic.eot'); /* IE9 Compat Modes */
+  src: local(''),
+       url('../../fonts/nunito-v16-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-600italic.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../../fonts/nunito-v16-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-600italic.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../../fonts/nunito-v16-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-600italic.woff') format('woff'), /* Modern Browsers */
+       url('../../fonts/nunito-v16-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-600italic.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('../../fonts/nunito-v16-vietnamese_latin-ext_latin_cyrillic-ext_cyrillic-600italic.svg#Nunito') format('svg'); /* Legacy iOS */
+}
 
 .WelcomeModalWrapper {
   color: $dark;
