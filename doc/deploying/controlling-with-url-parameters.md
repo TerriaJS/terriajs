@@ -22,6 +22,7 @@ Parameter      | Meaning
 `start=`...      | Load a map view previously saved without URL shortening. The argument is a URL-encoded JSON structure defined using an internal format described below.
 `<initfile>`     | Load catalog file as described below.
 `hideWelcomeMessage` | Forces the welcome message not to be displayed.
+`baseMapId`=...  | Use the specified basemap, instead of the default.
 
 ### Catalog files (init files)
 
@@ -73,7 +74,7 @@ The `start=` parameter essentially embeds an entire catalog file in the URL. The
                 "east": ...,
                 "north": -...
             },
-            "baseMapName": "Positron (Light)",
+            "baseMapId": "basemap-positron",
             "viewerMode": "3d"
         }
     ]
