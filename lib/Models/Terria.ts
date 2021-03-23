@@ -39,6 +39,7 @@ import PickedFeatures, {
   isProviderCoordsMap
 } from "../Map/PickedFeatures";
 import GroupMixin from "../ModelMixins/GroupMixin";
+import MappableMixin, { isDataSource } from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
@@ -48,7 +49,8 @@ import { shareConvertNotification } from "../ReactViews/Notification/shareConver
 import ShowableTraits from "../Traits/ShowableTraits";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
-import MappableMixin, { isDataSource } from "../ModelMixins/MappableMixin";
+import { BaseMapModel, processBaseMaps } from "./BaseMaps/BaseMapModel";
+import { defaultBaseMaps } from "./BaseMaps/defaultBaseMaps";
 import CameraView from "./CameraView";
 import CatalogGroup from "./CatalogGroupNew";
 import CatalogMemberFactory from "./CatalogMemberFactory";
@@ -353,6 +355,8 @@ export default class Terria {
   baseMaps: BaseMapViewModel[] = [];
 
   initBaseMapId: string | undefined;
+
+  previewBaseMapId: string = "basemap-positron";
 
   @observable
   pickedFeatures: PickedFeatures | undefined;
@@ -669,9 +673,8 @@ export default class Terria {
     }
   }
 
-  @action
-  updateBaseMaps(baseMaps: BaseMapViewModel[]): void {
-    this.baseMaps.push(...baseMaps);
+  setBaseMaps(baseMaps: BaseMapModel[]): void {
+    processBaseMaps(baseMaps, this);
     if (!this.mainViewer.baseMap) {
       this.loadPersistedOrInitBaseMap();
     }
@@ -769,6 +772,10 @@ export default class Terria {
         })
       )
     );
+
+    if (this.baseMaps.length === 0) {
+      processBaseMaps(defaultBaseMaps(this), this);
+    }
   }
 
   private async loadModelStratum(
@@ -932,6 +939,20 @@ export default class Terria {
 
     if (isJsonString(initData.baseMapId)) {
       this.initBaseMapId = initData.baseMapId;
+    }
+
+    if (isJsonString(initData.previewBaseMapId)) {
+      this.previewBaseMapId = initData.previewBaseMapId;
+    } else if (this.initBaseMapId) {
+      this.previewBaseMapId = this.initBaseMapId;
+    }
+
+    if (
+      initData.baseMaps &&
+      Array.isArray(initData.baseMaps) &&
+      initData.baseMaps.length > 0
+    ) {
+      this.setBaseMaps(<BaseMapModel[]>(<unknown>initData.baseMaps));
     }
 
     if (isJsonObject(initData.homeCamera)) {

@@ -3,7 +3,18 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.68)
+#### next release (8.0.0-alpha.70)
+* [The next improvement]
+
+#### 8.0.0-alpha.69
+
+- **Breaking changes**: 
+  - Basemaps are now configured through catalog JSON instead of TerriaMap - see https://github.com/TerriaJS/terriajs/blob/next/doc/customizing/initialization-files.md#base-maps 
+  
+* Updated terriajs-cesium to version 1.79.1
+* Make base maps configurable from init files and update documentation for init files [#5140](https://github.com/TerriaJS/terriajs/pull/5140).
+
+#### 8.0.0-alpha.68
 * Remove points from rectangle `UserDrawing`
 * Fix clipboard typing error. 
 * Ported `WebProcessingServiceCatalogGroup`.
@@ -24,7 +35,6 @@ Change Log
 * Async/Awaitify `Terria.ts` + fix share links loading after `loadInitSources`.
 * Tsified `TerriaError` + added support for "un-rendered" `I18nTranslateString`
 * Tsified `raiseErrorToUser` + added `wrapErrorMessage()` to wrap error message in something more user friendly (using `models.raiseError.errorMessage` translation string).
-* [The next improvement]
 
 #### 8.0.0-alpha.67
 * TSify `Loader` function.
