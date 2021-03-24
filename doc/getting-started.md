@@ -13,7 +13,7 @@ git clone https://github.com/TerriaJS/TerriaMap.git --branch next
 
 cd TerriaMap
 
-npm install && npm run gulp && npm start
+npm install && npm run build && npm start
 
 # Open at http://localhost:3001
 ```

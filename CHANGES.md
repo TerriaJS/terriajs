@@ -13,7 +13,7 @@ Change Log
   
 * Updated terriajs-cesium to version 1.79.1
 * Make base maps configurable from init files and update documentation for init files [#5140](https://github.com/TerriaJS/terriajs/pull/5140).
-* Fixed missing dependency issue for a fresh build
+* Updated getting-started guide with npm build task
 
 #### 8.0.0-alpha.68
 * Remove points from rectangle `UserDrawing`
