@@ -52,12 +52,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     get hasTableMixin() {
       return true;
     }
-    /**
-     * The raw data table in column-major format, i.e. the outer array is an
-     * array of columns.
-     */
+
+    // Always use the getter and setter for this
     @observable
-    dataColumnMajor: string[][] | undefined;
+    protected _dataColumnMajor: string[][] | undefined;
 
     /**
      * The list of region providers to be used with this table.
@@ -66,6 +64,48 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     regionProviderList: RegionProviderList | undefined;
 
     private _dataLoader = new AsyncLoader(this.forceLoadTableMixin.bind(this));
+
+    /**
+     * The raw data table in column-major format, i.e. the outer array is an
+     * array of columns.
+     */
+    @computed
+    get dataColumnMajor(): string[][] | undefined {
+      return this._dataColumnMajor;
+    }
+
+    set dataColumnMajor(newDataColumnMajor: string[][] | undefined) {
+      if (
+        this.removeDuplicateRows &&
+        newDataColumnMajor !== undefined &&
+        newDataColumnMajor.length >= 1
+      ) {
+        // De-duplication is slow and memory expensive, so should be avoided if possible.
+        const duplicateString = "TERRIAJS:DUPLICATE";
+        const seenRows = new Set();
+        let hasDuplicates = false;
+        for (let i = 0; i < newDataColumnMajor[0].length; i++) {
+          const row = newDataColumnMajor.map(col => col[i]).join();
+          if (seenRows.has(row)) {
+            // Mark all the cells in this row for deletion
+            newDataColumnMajor.forEach(col => (col[i] = duplicateString));
+            hasDuplicates = true;
+          } else {
+            seenRows.add(row);
+          }
+        }
+        if (hasDuplicates) {
+          newDataColumnMajor.forEach(
+            // Remove all the cells marked as duplicates
+            (col, idx) =>
+              (newDataColumnMajor[idx] = col.filter(
+                cell => cell !== duplicateString
+              ))
+          );
+        }
+      }
+      this._dataColumnMajor = newDataColumnMajor;
+    }
 
     /**
      * Gets a {@link TableColumn} for each of the columns in the raw data.
@@ -467,7 +507,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return this.tableColumns.find(column => column.name === name);
     }
 
-    protected abstract forceLoadTableData(): Promise<string[][]>;
+    /**
+     * If the your implementation of forceLoadTableData sets dataColumnMajor directly, return undefined.
+     */
+    protected abstract forceLoadTableData(): Promise<string[][] | undefined>;
 
     protected async loadRegionProviderList() {
       if (isDefined(this.regionProviderList)) return;
@@ -487,9 +530,11 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       await this.loadRegionProviderList();
 
       const dataColumnMajor = await this.forceLoadTableData();
-      runInAction(() => {
-        this.dataColumnMajor = dataColumnMajor;
-      });
+      if (dataColumnMajor !== undefined && dataColumnMajor !== null) {
+        runInAction(() => {
+          this.dataColumnMajor = dataColumnMajor;
+        });
+      }
     }
 
     protected forceLoadChartItems(force?: boolean) {
@@ -507,7 +552,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     /*
      * Appends new table data in column major format to this table.
-     * It is assumed that thhe column order is the same for both the tables.
+     * It is assumed that the column order is the same for both the tables.
      */
     @action
     append(dataColumnMajor2: string[][]) {

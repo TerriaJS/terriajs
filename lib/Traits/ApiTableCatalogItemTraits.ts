@@ -4,19 +4,27 @@ import mixTraits from "./mixTraits";
 import ModelTraits from "./ModelTraits";
 import objectArrayTrait from "./objectArrayTrait";
 import objectTrait from "./objectTrait";
+import primitiveArrayTrait from "./primitiveArrayTrait";
 import primitiveTrait from "./primitiveTrait";
 import TableTraits from "./TableTraits";
 
-class ApiStepTraits extends ModelTraits {
+export class QueryParamTraits extends ModelTraits {
   @primitiveTrait({
+    name: "Parameter name",
     type: "string",
-    name: "API url",
-    description: "The url of the api endpoint to call"
+    description: "The name of the query parameter"
   })
-  apiUrl?: string;
+  name?: string;
+
+  @primitiveTrait({
+    name: "Parameter value",
+    type: "string",
+    description: "The value of the query parameter"
+  })
+  value?: string;
 }
 
-class KeyToColumnMapping extends ModelTraits {
+class KeyToColumnMappingTraits extends ModelTraits {
   @primitiveTrait({
     name: "Key in API response",
     type: "string",
@@ -34,7 +42,33 @@ class KeyToColumnMapping extends ModelTraits {
   columnName?: string;
 }
 
-class PositionStepTraits extends ApiStepTraits {
+class ApiStepTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "API url",
+    description: "The url of the api endpoint to call"
+  })
+  apiUrl?: string;
+
+  @objectArrayTrait({
+    name: "Query parameters",
+    type: QueryParamTraits,
+    description: "Query parameters to supply to the API",
+    idProperty: "name"
+  })
+  queryParameters: QueryParamTraits[] = [];
+
+  @objectArrayTrait({
+    name: "Query parameters for updates",
+    type: QueryParamTraits,
+    description:
+      "Query parameters to supply to the API on subsequent calls after the first call.",
+    idProperty: "name"
+  })
+  updateQueryParameters: QueryParamTraits[] = [];
+}
+
+class PositionApiTraits extends ApiStepTraits {
   @primitiveTrait({
     name: "Latitude key",
     type: "string",
@@ -52,15 +86,15 @@ class PositionStepTraits extends ApiStepTraits {
   longitudeKey?: string;
 }
 
-class ValueStepTraits extends ApiStepTraits {
+export class ValueApiTraits extends ApiStepTraits {
   @objectArrayTrait({
     name: "Key to column name mapping",
-    type: KeyToColumnMapping,
+    type: KeyToColumnMappingTraits,
     description:
       "A list of mappings from a key in the API response's JSON to the name of a column in the table that this catalog item generates.",
     idProperty: "columnName"
   })
-  keyToColumnMapping: KeyToColumnMapping[] = [];
+  keyToColumnMapping: KeyToColumnMappingTraits[] = [];
 }
 
 export default class ApiTableCatalogItemTraits extends mixTraits(
@@ -68,20 +102,21 @@ export default class ApiTableCatalogItemTraits extends mixTraits(
   CatalogMemberTraits,
   AutoRefreshingTraits
 ) {
-  @objectTrait({
-    name: "Value step",
-    type: ValueStepTraits,
-    description: "Describes how to get the values of the table from the API"
+  @objectArrayTrait({
+    name: "APIs",
+    type: ValueApiTraits,
+    description: "The apis to use to retrieve the columns of the table.",
+    idProperty: "apiUrl"
   })
-  valueStep?: ValueStepTraits;
+  valueApis: ValueApiTraits[] = [];
 
   @objectTrait({
     name: "Position step",
-    type: PositionStepTraits,
+    type: PositionApiTraits,
     description:
       "Describes how to get the position column of the table from the API"
   })
-  positionStep?: PositionStepTraits;
+  positionApi?: PositionApiTraits;
 
   @primitiveTrait({
     name: "Id Key",
@@ -90,4 +125,21 @@ export default class ApiTableCatalogItemTraits extends mixTraits(
       "The key in the API response's JSON to get the id from. This id will be used to determine which positions are associated with which value."
   })
   idKey?: string;
+
+  @objectArrayTrait({
+    name: "Query parameters",
+    type: QueryParamTraits,
+    description: "Query parameters to supply to the API",
+    idProperty: "name"
+  })
+  queryParameters: QueryParamTraits[] = [];
+
+  @objectArrayTrait({
+    name: "Query parameters for updates",
+    type: QueryParamTraits,
+    description:
+      "Query parameters to supply to the API on subsequent calls after the first call.",
+    idProperty: "name"
+  })
+  updateQueryParameters: QueryParamTraits[] = [];
 }

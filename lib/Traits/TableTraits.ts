@@ -94,4 +94,12 @@ export default class TableTraits extends mixTraits(
     type: "string"
   })
   columnUnits: string[] = [];
+
+  @primitiveTrait({
+    name: "Remove duplicate rows",
+    type: "boolean",
+    description:
+      "If two rows in the table are identical, only retain one copy. This could cause performance issues, and so should be used only when absolutely necessary."
+  })
+  removeDuplicateRows: boolean = false;
 }
