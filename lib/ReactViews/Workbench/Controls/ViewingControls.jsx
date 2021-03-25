@@ -26,7 +26,7 @@ import getAncestors from "../../../Models/getAncestors";
 import SplitItemReference from "../../../Models/SplitItemReference";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
-import Icon, { StyledIcon } from "../../Icon";
+import Icon, { StyledIcon } from "../../../Styled/Icon";
 import { exportData } from "../../Preview/ExportData";
 import WorkbenchButton from "../WorkbenchButton";
 import Styles from "./viewing-controls.scss";

@@ -7,7 +7,7 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import clone from "terriajs-cesium/Source/Core/clone";
 import raiseErrorOnRejectedPromise from "../../../Models/raiseErrorOnRejectedPromise";
 import Styles from "./chart-expand-and-download-buttons.scss";
-import Icon from "../../Icon";
+import Icon from "../../../Styled/Icon";
 import defined from "terriajs-cesium/Source/Core/defined";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import Chartable from "../../../Models/Chartable";

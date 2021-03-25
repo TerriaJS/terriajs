@@ -7,7 +7,7 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import CommonStrata from "../../../Models/CommonStrata";
 import { formatDateTime } from "../../BottomDock/Timeline/DateFormats";
-import Icon, { StyledIcon } from "../../Icon";
+import Icon, { StyledIcon } from "../../../Styled/Icon";
 import DateTimePicker from "../../BottomDock/Timeline/DateTimePicker";
 import Text, { TextSpan } from "../../../Styled/Text";
 import Box from "../../../Styled/Box";

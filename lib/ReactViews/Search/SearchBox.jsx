@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
 import debounce from "lodash-es/debounce";
-import Icon, { StyledIcon } from "../Icon";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import styled, { withTheme } from "styled-components";
 import Box, { BoxSpan } from "../../Styled/Box";
 import Text from "../../Styled/Text";

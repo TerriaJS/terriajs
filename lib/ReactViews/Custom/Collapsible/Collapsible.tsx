@@ -6,7 +6,7 @@ import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import { SpacingSpan } from "../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../Styled/Text";
-import { GLYPHS, StyledIcon } from "../../Icon";
+import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 
 interface CollapsibleProps {
   title: string;

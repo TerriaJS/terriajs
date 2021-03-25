@@ -3,7 +3,7 @@ import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
 import PropTypes from "prop-types";
 
-import Icon, { StyledIcon } from "../Icon.jsx";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import FadeIn from "../Transitions/FadeIn/FadeIn";
 import SlideUpFadeIn from "../Transitions/SlideUpFadeIn/SlideUpFadeIn";
 

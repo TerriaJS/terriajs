@@ -8,7 +8,7 @@ import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
 import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
-import { GLYPHS, StyledIcon } from "../Icon";
+import { GLYPHS, StyledIcon } from "../../Styled/Icon";
 
 export interface FrameProps {
   title: string;
@@ -98,7 +98,7 @@ const ToolCloseButton: React.FC<ToolCloseButtonProps> = props => {
 
 interface TitleProps {
   title: string;
-  icon?: string;
+  icon?: { id: string };
 }
 
 const Title: React.FC<TitleProps> = props => {

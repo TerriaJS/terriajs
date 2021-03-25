@@ -12,7 +12,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import getPath from "../../Core/getPath";
 import CommonStrata from "../../Models/CommonStrata";
 import Box from "../../Styled/Box";
-import Icon from "../Icon";
+import Icon from "../../Styled/Icon";
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
 import ChartItemSelector from "./Controls/ChartItemSelector";
 import ColorScaleRangeSection from "./Controls/ColorScaleRangeSection";

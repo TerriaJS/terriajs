@@ -1,4 +1,4 @@
-import Icon from "../../Icon";
+import Icon from "../../../Styled/Icon";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import Styles from "./chart-item-selector.scss";

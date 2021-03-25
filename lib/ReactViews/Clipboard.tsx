@@ -6,7 +6,7 @@ import Box from "../Styled/Box";
 import Button from "../Styled/Button";
 import { verticalAlign } from "../Styled/mixins";
 import Spacing from "../Styled/Spacing";
-import Icon, { StyledIcon } from "./Icon";
+import Icon, { StyledIcon } from "../Styled/Icon";
 
 enum CopyStatus {
   Success,

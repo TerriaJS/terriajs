@@ -1,11 +1,8 @@
 import React from "react";
-import PropTypes from "prop-types";
-import createReactClass from "create-react-class";
 import styled from "styled-components";
 import classNames from "classnames";
-import Styles from "./icon.scss";
 
-// icon.jsx
+// Icon
 export const GLYPHS = {
   calendar: require("../../wwwroot/images/icons/calendar.svg"),
   calendar2: require("../../wwwroot/images/icons/calendar2.svg"),
@@ -129,27 +126,39 @@ export const GLYPHS = {
   closeTool: require("../../wwwroot/images/icons/close-tool.svg")
 };
 
-export const Icon = createReactClass({
-  propTypes: {
-    glyph: PropTypes.object,
-    style: PropTypes.object,
-    className: PropTypes.string
-  },
-  render() {
-    const glyph = this.props.glyph;
-    return (
-      <svg
-        viewBox="0 0 100 100"
-        className={classNames("icon", this.props.className, Styles.svg)}
-        style={this.props.style}
-      >
-        <use xlinkHref={"#" + glyph.id} />
-      </svg>
-    );
-  }
-});
+interface IconProps {
+  glyph: { id: string };
+  style?: any;
+  className?: string;
+}
 
-export const StyledIcon = styled(Icon)`
+export const Icon: React.FC<IconProps> = (props: IconProps) => {
+  return (
+    <svg
+      viewBox="0 0 100 100"
+      className={classNames("icon", props.className)}
+      style={props.style}
+      css={`
+        display: block;
+      `}
+    >
+      <use xlinkHref={"#" + props.glyph.id} />
+    </svg>
+  );
+};
+
+interface IStyledIconProps {
+  displayInline?: boolean;
+  styledWidth?: string;
+  styledHeight?: string;
+  light?: boolean;
+  dark?: boolean;
+  realDark?: boolean;
+  fillColor?: boolean;
+  opacity?: number;
+}
+
+export const StyledIcon = styled(Icon)<IStyledIconProps>`
   display: ${props => (props.displayInline ? `inline` : `block`)};
   flex-shrink: 0;
   ${props => props.styledWidth && `width: ${props.styledWidth};`}

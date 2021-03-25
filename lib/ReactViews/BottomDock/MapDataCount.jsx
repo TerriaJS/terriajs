@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 
-import Icon, { StyledIcon } from "../Icon";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import ButtonAsLabel from "../../Styled/ButtonAsLabel";
 import Box from "../../Styled/Box";
 import Text from "../../Styled/Text";

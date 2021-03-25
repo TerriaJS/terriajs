@@ -40,7 +40,7 @@ import Spacing from "../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../Styled/Text";
 import RasterLayerTraits from "../../../Traits/RasterLayerTraits";
 import { parseCustomMarkdownToReactWithOptions } from "../../Custom/parseCustomMarkdownToReact";
-import { GLYPHS, StyledIcon } from "../../Icon";
+import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Loader from "../../Loader";
 import DatePicker from "./DatePicker";
 import LocationPicker from "./LocationPicker";

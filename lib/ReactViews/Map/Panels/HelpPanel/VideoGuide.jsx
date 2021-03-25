@@ -8,7 +8,7 @@ import FadeIn from "../../../Transitions/FadeIn/FadeIn";
 import Loader from "../../../Loader";
 import { useKeyPress } from "../../../Hooks/useKeyPress.js";
 import { RawButton } from "../../../../Styled/Button";
-import Icon, { StyledIcon } from "../../../Icon";
+import Icon, { StyledIcon } from "../../../../Styled/Icon";
 
 const VideoWrapperBox = props => {
   const { viewState } = props;

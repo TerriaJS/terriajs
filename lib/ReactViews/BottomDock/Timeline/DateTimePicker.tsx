@@ -18,7 +18,7 @@ import {
 import Button, { RawButton } from "../../../Styled/Button";
 import { scrollBars } from "../../../Styled/mixins";
 import Spacing from "../../../Styled/Spacing";
-import Icon from "../../Icon";
+import Icon from "../../../Styled/Icon";
 import { formatDateTime } from "./DateFormats";
 
 const dateFormat = require("dateformat");

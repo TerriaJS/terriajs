@@ -2,7 +2,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import Icon from "./Icon.jsx";
+import Icon from "../Styled/Icon";
 import Styles from "./drag-drop-notification.scss";
 
 import { observer } from "mobx-react";

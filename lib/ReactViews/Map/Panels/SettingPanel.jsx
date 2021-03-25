@@ -14,7 +14,7 @@ import Terria from "../../../Models/Terria";
 import ViewerMode from "../../../Models/ViewerMode";
 // eslint-disable-next-line no-unused-vars
 import ViewState from "../../../ReactViewModels/ViewState";
-import Icon from "../../Icon";
+import Icon from "../../../Styled/Icon";
 import MenuPanel from "../../StandardUserInterface/customizable/MenuPanel";
 // import { provideRef } from "../../HOCs/provideRef";
 import withTerriaRef from "../../HOCs/withTerriaRef";

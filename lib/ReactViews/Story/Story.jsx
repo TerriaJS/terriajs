@@ -9,7 +9,7 @@ import Ul from "../../Styled/List";
 import Text from "../../Styled/Text";
 import Spacing from "../../Styled/Spacing";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
-import Icon, { StyledIcon } from "../Icon.jsx";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import classNames from "classnames";
 
 const findTextContent = content => {

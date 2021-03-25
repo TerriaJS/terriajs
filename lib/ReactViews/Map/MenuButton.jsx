@@ -1,6 +1,6 @@
 import React from "react";
 import classNames from "classnames";
-import Icon from "../Icon.jsx";
+import Icon from "../../Styled/Icon";
 import PropTypes from "prop-types";
 import Styles from "./menu-button.scss";
 
