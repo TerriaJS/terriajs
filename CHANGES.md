@@ -6,6 +6,7 @@ Change Log
 #### next release (8.0.0-alpha.70)
 * Change default basemap images to relative paths.
 * Add `tileWidth` and `tileHeight` traits to `WebMapServiceCatalogItem`.
+* Added z-index to right button group in mobile header menu
 * [The next improvement]
 
 #### 8.0.0-alpha.69
