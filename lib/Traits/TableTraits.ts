@@ -90,7 +90,7 @@ export default class TableTraits extends mixTraits(
   @primitiveArrayTrait({
     name: "Column units",
     description:
-      "An optional array of column units that override the inidividual `TableColumnTraits.unit` setting.",
+      "An optional array of column units that override the individual `TableColumnTraits.unit` setting.",
     type: "string"
   })
   columnUnits: string[] = [];
