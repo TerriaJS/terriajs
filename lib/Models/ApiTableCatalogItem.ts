@@ -1,31 +1,39 @@
+import dateFormat from "dateformat";
+import { groupBy } from "lodash";
+import { computed, observable, runInAction } from "mobx";
+import { createTransformer } from "mobx-utils";
+import URI from "urijs";
 import loadJson from "../Core/loadJson";
 import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 import ApiTableCatalogItemTraits, {
-  QueryParamTraits,
-  ValueApiTraits
+  ApiTraits
 } from "../Traits/ApiTableCatalogItemTraits";
 import CreateModel from "./CreateModel";
+import Model from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
-import URI from "urijs";
-import Mustache from "mustache";
-import { action, computed, observable, runInAction } from "mobx";
-import dateFormat from "dateformat";
-import { createTransformer } from "mobx-utils";
-import { cloneDeep } from "lodash-es";
 
 type PositionForIdMap = Map<string, { latitude: string; longitude: string }>;
 
 const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
+/**
+ * THE API AND TRAITS OF THIS EXPERIMENTAL CATALOG ITEM SHOULD BE CONSIDERED IN
+ * ALPHA. EXPECT BREAKING CHANGES.
+ *
+ * This is a generic, one-size-fits-most catalog item for deriving tables from
+ * external APIs. Currently only supports JSON APIs, and doesn't support region
+ * mapping. Also currently only supports a single API to get values from, and a
+ * single API to get positions from.
+ */
 export class ApiTableCatalogItem extends AutoRefreshingMixin(
   TableMixin(CatalogMemberMixin(CreateModel(ApiTableCatalogItemTraits)))
 ) {
   static readonly type = "api-table";
-  @observable protected positionApiResponse: any[] = [];
+  @observable protected positionApisResponses: any[] = [];
   @observable protected valueApisResponses: any[][] = [];
   @observable protected hasData: boolean = false;
 
@@ -37,37 +45,86 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     );
   }
 
-  @computed get positionApiUrl(): string {
-    return this.addQueryParams("position");
+  @computed get latitudeApi(): Model<ApiTraits> | undefined {
+    return this.apis.find(
+      api =>
+        api.keyToColumnMapping.find(mapping => {
+          let name = mapping.columnName?.toLowerCase().trim();
+          return (
+            name === "latitude" ||
+            name === "lat" ||
+            // TODO: this.activeTableStyle.latitudeColumn? changes whenever
+            // data changes, which causes a lot of recomputes. See if this can
+            // be avoided. Use raw version from json rather than TableColumn?
+            name === this.activeTableStyle.latitudeColumn?.name
+          );
+        }) !== undefined
+    );
+  }
+
+  @computed get longitudeApi(): Model<ApiTraits> | undefined {
+    return this.apis.find(
+      api =>
+        api.keyToColumnMapping.find(mapping => {
+          let name = mapping.columnName?.toLowerCase().trim();
+          return (
+            name === "longitude" ||
+            name === "lon" ||
+            name === this.activeTableStyle.longitudeColumn?.name
+          );
+        }) !== undefined
+    );
+  }
+
+  @computed get latitudeKey(): string {
+    return (
+      this.latitudeApi?.keyToColumnMapping.find(mapping => {
+        let name = mapping.columnName?.toLowerCase().trim();
+        return (
+          name === "latitude" ||
+          name === "lat" ||
+          name === this.activeTableStyle.latitudeColumn?.name
+        );
+      })?.keyInApiResponse ?? "latitude"
+    );
+  }
+
+  @computed get longitudeKey(): string {
+    return (
+      this.longitudeApi?.keyToColumnMapping.find(mapping => {
+        let name = mapping.columnName?.toLowerCase().trim();
+        return (
+          name === "longitude" ||
+          name === "lon" ||
+          name === this.activeTableStyle.longitudeColumn?.name
+        );
+      })?.keyInApiResponse ?? "longitude"
+    );
+  }
+
+  @computed get valueApis(): Model<ApiTraits>[] {
+    return this.apis.filter(
+      api =>
+        api.apiUrl !== this.latitudeApi?.apiUrl &&
+        api.apiUrl !== this.longitudeApi?.apiUrl
+    );
+  }
+
+  @computed get positionApis(): Model<ApiTraits>[] {
+    return Array.from(new Set([this.latitudeApi!, this.longitudeApi!]));
   }
 
   @computed get valueApiUrls(): string[] {
-    return this.valueApis.map((api, idx) => this.addQueryParams("value", idx));
+    return this.valueApis.map(api => this.addQueryParams(api));
   }
 
-  loadDataFromValueApis() {
-    return Promise.all(
-      this.valueApiUrls.map(url => loadJson(proxyCatalogItemUrl(this, url)))
-    ).then((data: any[][]) => {
-      runInAction(() => {
-        this.valueApisResponses = data;
-      });
-    });
-  }
-
-  loadDataFromPositionApi() {
-    return loadJson(proxyCatalogItemUrl(this, this.positionApiUrl)).then(
-      data => {
-        runInAction(() => {
-          this.positionApiResponse = data;
-        });
-      }
-    );
+  @computed get positionApiUrls(): string[] {
+    return this.positionApis.map(api => this.addQueryParams(api));
   }
 
   @computed
   get positionApiResponseIsLoaded(): boolean {
-    return this.positionApiResponse.length > 0;
+    return this.positionApisResponses.length > 0;
   }
 
   @computed
@@ -77,51 +134,142 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
 
   @computed
   get positionForId(): PositionForIdMap {
-    const positionForId: Map<
-      string,
-      { latitude: string; longitude: string }
-    > = new Map();
-    this.positionApiResponse.forEach(position => {
-      positionForId.set(position[this.idKey!], {
-        latitude: position[this.positionApi.latitudeKey!],
-        longitude: position[this.positionApi.longitudeKey!]
+    const positionForId: PositionForIdMap = new Map();
+    if (this.positionApis.length === 1) {
+      const response = this.positionApisResponses[0];
+      response.forEach((position: any) => {
+        positionForId.set(position[this.idKey!], {
+          latitude: position[this.latitudeKey],
+          longitude: position[this.longitudeKey]
+        });
       });
-    });
+    } else if (this.positionApis.length === 2) {
+      if (
+        this.positionApisResponses[0].length !==
+        this.positionApisResponses[1].length
+      ) {
+        throw new Error(
+          "Error reading responses from position APIs: responses from " +
+            "latitude and longitude APIs must be the same length"
+        );
+      }
+      for (let i = 0; i < this.positionApisResponses[0].length; i++) {
+        // These correspond to the same position because each element of
+        // positionApisResponses is sorted by id key
+        const latitudeResponse = this.positionApisResponses[0][i];
+        const longitudeResponse = this.positionApisResponses[1][i];
+
+        if (latitudeResponse[this.idKey!] !== longitudeResponse[this.idKey!]) {
+          throw new Error(
+            "Error reading responses from position APIs: latitude and " +
+              "longitude API responses with the same index have different keys"
+          );
+        }
+
+        positionForId.set(latitudeResponse[this.idKey!], {
+          latitude: latitudeResponse[this.latitudeKey],
+          longitude: longitudeResponse[this.longitudeKey]
+        });
+      }
+    } else {
+      throw new Error(
+        "Error reading responses from position APIs: there must be exactly 1 " +
+          "or 2 position APIs, but there were " +
+          this.positionApis.length
+      );
+    }
+
     return positionForId;
   }
 
+  @computed
+  get apiDataColumnMajor() {
+    return this.apiResponseToTable({
+      hasData: this.hasData,
+      valueApis: (this.valueApis as unknown) as ApiTraits[],
+      valueApiResponses: this.valueApisResponses,
+      positionForId: this.positionForId
+    });
+  }
+
+  loadDataFromValueApis() {
+    return Promise.all(
+      this.valueApiUrls.map(url => loadJson(proxyCatalogItemUrl(this, url)))
+    ).then((data: any[]) => {
+      runInAction(() => {
+        // Merge all responses with the same id (and timestamp, if applicable).
+        // Each of these merged responses will become a row in the table.
+
+        // First, group all responses wth the same id
+        const flatData = data.reduce((curr, prev) => curr.concat(prev), []);
+        const groupedData = groupBy(flatData, obj => {
+          const keyArgs = [obj[this.idKey!], obj[this.dateTimeKey!]];
+          return keyArgs.join(".");
+        });
+        this.valueApisResponses = Object.keys(groupedData).map(key => {
+          // Then, merge all responses with that key into a single object
+          const mergedResponse = groupedData[key].reduce(
+            (prev, curr) => Object.assign(prev, curr),
+            {}
+          );
+          return mergedResponse;
+        });
+      });
+    });
+  }
+
+  loadDataFromPositionApis() {
+    return Promise.all(
+      this.positionApiUrls.map(url => loadJson(proxyCatalogItemUrl(this, url)))
+    ).then((data: any[][]) => {
+      runInAction(() => {
+        for (let i = 0; i < data.length; i++) {
+          // We sort the position API responses by id key so it's easier to find
+          // the latitude and longitude with the same id
+          data[i] = data[i].sort((a, b) => {
+            const keyA = new Date(a[this.idKey!]);
+            const keyB = new Date(b[this.idKey!]);
+            if (keyA < keyB) return -1;
+            if (keyA > keyB) return 1;
+            return 0;
+          });
+        }
+        this.positionApisResponses = data;
+      });
+    });
+  }
+
+  // TODO: memoized version is never being used. either fix that, or get rid of
+  // createTransformer
   protected makeTableStructure = createTransformer(
-    (options: { valueApis: ValueApiTraits[]; addHeaders: boolean }) => {
+    (options: { valueApis: ApiTraits[]; addHeaders: boolean }) => {
       const { valueApis, addHeaders } = options;
       // Add an array for each column
       let values: string[][];
       let latitudeColumnIdx: number;
       let longitudeColumnIdx: number;
-      if (addHeaders) {
-        values = valueApis
-          .map(api =>
-            api.keyToColumnMapping.map(mapping => [mapping.columnName!])
+
+      values = valueApis
+        .map(api =>
+          api.keyToColumnMapping.map(mapping =>
+            addHeaders ? [mapping.columnName!] : []
           )
-          .reduce((prev, curr) => prev.concat(curr), []);
-        latitudeColumnIdx = values.push(["latitude"]) - 1;
-        longitudeColumnIdx = values.push(["longitude"]) - 1;
-      } else {
-        values = valueApis
-          .map(api => api.keyToColumnMapping.map(mapping => []))
-          .reduce((prev, curr) => prev.concat(curr), []);
-        latitudeColumnIdx = values.push([]) - 1;
-        longitudeColumnIdx = values.push([]) - 1;
-      }
+        )
+        .reduce((prev, curr) => prev.concat(curr), []);
+      latitudeColumnIdx = values.push(addHeaders ? ["latitude"] : []) - 1;
+      longitudeColumnIdx = values.push(addHeaders ? ["longitude"] : []) - 1;
       return { values, latitudeColumnIdx, longitudeColumnIdx };
     }
   );
 
+  // TODO: memoized version is never being used. either fix that, or get rid of
+  // createTransformer
   protected apiResponseToTable = createTransformer(
     (options: {
-      valueApiResponses: any[][];
+      valueApiResponses: any[];
       positionForId: PositionForIdMap;
       hasData: boolean;
-      readonly valueApis: ValueApiTraits[];
+      readonly valueApis: ApiTraits[];
     }) => {
       const { valueApiResponses, positionForId, hasData, valueApis } = options;
       const {
@@ -140,15 +288,21 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
         return values;
       }
 
-      this.valueApis.forEach((api, idx) => {
-        valueApiResponses[idx].forEach(response => {
-          api.keyToColumnMapping.forEach((mapping, columnIdx) => {
+      // Fill in column values from the API response
+      // Store where the columns for each API start
+      let startColumnIdx = 0;
+      this.valueApis.forEach(api => {
+        valueApiResponses.forEach(response => {
+          api.keyToColumnMapping.forEach((mapping, mappingIdx) => {
+            // Append the new value to the correct column
+            const columnIdx = startColumnIdx + mappingIdx;
             let cellValue = response[mapping.keyInApiResponse!];
             if (cellValue === undefined) {
               cellValue = "";
             }
             values[columnIdx].push(`${cellValue}`);
 
+            // Add the latitude and longitude columns if we haven't already
             if (values[longitudeColumnIdx].length < values[columnIdx].length) {
               const id = response[this.idKey!];
               const position = positionForId.get(id);
@@ -157,28 +311,21 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
             }
           });
         });
+        startColumnIdx += api.keyToColumnMapping.length;
       });
       return values;
     }
   );
-
-  @computed
-  get apiDataColumnMajor() {
-    return this.apiResponseToTable({
-      hasData: this.hasData,
-      valueApis: (this.valueApis as unknown) as ValueApiTraits[],
-      valueApiResponses: this.valueApisResponses,
-      positionForId: this.positionForId
-    });
-  }
 
   protected async forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 
   protected async forceLoadTableData(): Promise<string[][] | undefined> {
+    // TODO: this isn't a reactive context, and so this will trigger a full
+    // recompute. Fix this.
     Promise.all([
-      this.loadDataFromPositionApi(),
+      this.loadDataFromPositionApis(),
       this.loadDataFromValueApis()
     ]).then(() => {
       runInAction(() => {
@@ -197,15 +344,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     });
   }
 
-  protected addQueryParams(
-    whichApi: "position" | "value",
-    index: number = -1
-  ): string {
-    if (whichApi === "value" && index < 0) {
-      throw new Error("Value API index not specified");
-    }
-    const api =
-      whichApi === "position" ? this.positionApi : this.valueApis[index];
+  protected addQueryParams(api: Model<ApiTraits>): string {
     const uri = new URI(api.apiUrl);
 
     const substituteDateTimesInQueryParam = (param: string) => {

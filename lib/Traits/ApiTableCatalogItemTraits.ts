@@ -24,7 +24,7 @@ export class QueryParamTraits extends ModelTraits {
   value?: string;
 }
 
-class KeyToColumnMappingTraits extends ModelTraits {
+export class KeyToColumnMappingTraits extends ModelTraits {
   @primitiveTrait({
     name: "Key in API response",
     type: "string",
@@ -42,7 +42,7 @@ class KeyToColumnMappingTraits extends ModelTraits {
   columnName?: string;
 }
 
-class ApiStepTraits extends ModelTraits {
+export class ApiTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
     name: "API url",
@@ -66,27 +66,7 @@ class ApiStepTraits extends ModelTraits {
     idProperty: "name"
   })
   updateQueryParameters: QueryParamTraits[] = [];
-}
 
-class PositionApiTraits extends ApiStepTraits {
-  @primitiveTrait({
-    name: "Latitude key",
-    type: "string",
-    description:
-      "The key in the API response's JSON to get the latitude column of the table from"
-  })
-  latitudeKey?: string;
-
-  @primitiveTrait({
-    name: "Longitude key",
-    type: "string",
-    description:
-      "The key in the API response's JSON to get the longitude column of the table from"
-  })
-  longitudeKey?: string;
-}
-
-export class ValueApiTraits extends ApiStepTraits {
   @objectArrayTrait({
     name: "Key to column name mapping",
     type: KeyToColumnMappingTraits,
@@ -104,27 +84,11 @@ export default class ApiTableCatalogItemTraits extends mixTraits(
 ) {
   @objectArrayTrait({
     name: "APIs",
-    type: ValueApiTraits,
+    type: ApiTraits,
     description: "The apis to use to retrieve the columns of the table.",
     idProperty: "apiUrl"
   })
-  valueApis: ValueApiTraits[] = [];
-
-  @objectTrait({
-    name: "Position step",
-    type: PositionApiTraits,
-    description:
-      "Describes how to get the position column of the table from the API"
-  })
-  positionApi?: PositionApiTraits;
-
-  @primitiveTrait({
-    name: "Id Key",
-    type: "string",
-    description:
-      "The key in the API response's JSON to get the id from. This id will be used to determine which positions are associated with which value."
-  })
-  idKey?: string;
+  apis: ApiTraits[] = [];
 
   @objectArrayTrait({
     name: "Query parameters",
@@ -142,4 +106,19 @@ export default class ApiTableCatalogItemTraits extends mixTraits(
     idProperty: "name"
   })
   updateQueryParameters: QueryParamTraits[] = [];
+
+  @primitiveTrait({
+    name: "Id key",
+    type: "string",
+    description: "The name of the id property shared between all APIs"
+  })
+  idKey?: string;
+
+  @primitiveTrait({
+    name: "Date time key",
+    type: "string",
+    description:
+      "The name of the property recording the date and time associated with a value."
+  })
+  dateTimeKey?: string;
 }
