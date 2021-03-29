@@ -7,6 +7,15 @@ Change Log
 * Add `hideInBaseMapMenu` option to `BaseMapModel`.
 * Change default basemap images to relative paths.
 * Add `tileWidth` and `tileHeight` traits to `WebMapServiceCatalogItem`.
+* Add docs about `AsyncLoader`
+* Remove interactions between AsyncLoaders (eg calling `loadMetadata` from `forceLoadMapItems`)
+* ... Instead, `loadMapItems` will call `loadMetadata` before triggering its own `AsyncLoader`
+* Add `isLoading` to `CatalogMemberMixin` (combines `isLoading` from all the different `AsyncLoader`)
+* Move `Loader` (spinner) from `Legend` to `WorkbenchItem`.
+* Merge `Chartable` and `AsyncChartableMixin` into **`ChartableMixin`** + remove `AsyncLoader` functionality from `ChartableMixin` - it is now all handled by `loadMapItems`.
+* Removed `AsyncLoader` functionality from `TableMixin` - it is now handled by `loadMapItems`.
+  * `TableMixin.loadRegionProviderList()` is now called in `MappableMixin.loadMapItems()`
+* Added `TerriaViewer.setBaseMap()` function, this now calls `loadMapItems` on basemaps
 * [The next improvement]
 
 #### 8.0.0-alpha.69
@@ -37,12 +46,6 @@ Change Log
 * Async/Awaitify `Terria.ts` + fix share links loading after `loadInitSources`.
 * Tsified `TerriaError` + added support for "un-rendered" `I18nTranslateString`
 * Tsified `raiseErrorToUser` + added `wrapErrorMessage()` to wrap error message in something more user friendly (using `models.raiseError.errorMessage` translation string).
-* remove interactions between AsyncLoaders + make forceLoad** optional
-* Add `isLoading` to `CatalogMemberMixin` placeholder until `AsyncLoader` loading problems are sorted (https://github.com/TerriaJS/terriajs/issues/5233)
-* Move `Loader` (spinner) from `Legend` to `WorkbenchItem`.
-* Merge `Chartable` and `AsyncChartableMixin` into **`ChartableMixin`** + remove `AsyncLoader` functionality from `ChartableMixin` - it is now all handled by `loadMapItems`.
-* Removed `AsyncLoader` functionality from `TableMixin` - it is now handled by `loadMapItems`.
-* [The next improvement]
 
 #### 8.0.0-alpha.67
 * TSify `Loader` function.

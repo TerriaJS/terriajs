@@ -7,6 +7,7 @@ import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
 import MappableTraits from "../Traits/MappableTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
+import TableMixin from "./TableMixin";
 
 export type MapItem =
   | ImageryParts
@@ -71,6 +72,7 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
      */
     async loadMapItems(force?: boolean) {
       if (CatalogMemberMixin.isMixedInto(this)) await this.loadMetadata();
+      if (TableMixin.isMixedInto(this)) await this.loadRegionProviderList();
       await this._mapItemsLoader.load(force);
     }
 

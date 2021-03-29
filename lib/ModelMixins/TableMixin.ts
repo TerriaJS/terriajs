@@ -467,12 +467,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     protected async forceLoadMapItems() {
-      /* Note order is important here - we want to use AsyncLoader to memoise synchronous part of `forceLoadTableData`-  so we call it first, then loadRegionProviders, then set `dataColumnMajor`.
-      For more info - see `AsyncLoader`
-      */
       const dataColumnMajor = await this.forceLoadTableData();
-
-      await this.loadRegionProviderList();
 
       runInAction(() => {
         this.dataColumnMajor = dataColumnMajor;
@@ -489,7 +484,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      */
     protected abstract forceLoadTableData(): Promise<string[][]>;
 
-    protected async loadRegionProviderList() {
+    async loadRegionProviderList() {
       if (isDefined(this.regionProviderList)) return;
 
       const regionProvidersPromise:

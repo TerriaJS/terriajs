@@ -96,7 +96,8 @@ export default function Cesium3dTilesMixin<
             });
           }
         } catch (e) {
-          return console.error(e);
+          // TODO: What should handle this error?
+          console.error(e);
         }
       } else {
         return Promise.resolve();

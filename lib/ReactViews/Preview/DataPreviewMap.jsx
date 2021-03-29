@@ -20,6 +20,8 @@ import Styles from "./data-preview-map.scss";
 class AdaptForPreviewMap extends MappableMixin(CreateModel(MappableTraits)) {
   previewed;
 
+  async forceLoadMapItems() {}
+
   // Make all imagery 0 or 100% opacity
   @computed
   get mapItems() {
@@ -34,10 +36,6 @@ class AdaptForPreviewMap extends MappableMixin(CreateModel(MappableTraits)) {
           : m
       ) ?? []
     );
-  }
-
-  forceLoadMapItems() {
-    return Promise.resolve();
   }
 }
 
