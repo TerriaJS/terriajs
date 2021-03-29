@@ -508,7 +508,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     /**
-     * If the your implementation of forceLoadTableData sets dataColumnMajor directly, return undefined.
+     * If your implementation of forceLoadTableData sets dataColumnMajor directly, return undefined.
      */
     protected abstract forceLoadTableData(): Promise<string[][] | undefined>;
 

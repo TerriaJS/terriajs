@@ -45,60 +45,49 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     );
   }
 
+  @computed get possibleLatitudeColumns() {
+    return ["latitude", "lat", this.activeTableStyle.latitudeColumn?.name];
+  }
+
+  @computed get possibleLongitudeColumns() {
+    return ["longitude", "lon", this.activeTableStyle.longitudeColumn?.name];
+  }
+
   @computed get latitudeApi(): Model<ApiTraits> | undefined {
     return this.apis.find(
       api =>
-        api.keyToColumnMapping.find(mapping => {
-          let name = mapping.columnName?.toLowerCase().trim();
-          return (
-            name === "latitude" ||
-            name === "lat" ||
-            // TODO: this.activeTableStyle.latitudeColumn? changes whenever
-            // data changes, which causes a lot of recomputes. See if this can
-            // be avoided. Use raw version from json rather than TableColumn?
-            name === this.activeTableStyle.latitudeColumn?.name
-          );
-        }) !== undefined
+        this.findKeyToColumnMappingForColumn(
+          api,
+          this.possibleLatitudeColumns
+        ) !== undefined
     );
   }
 
   @computed get longitudeApi(): Model<ApiTraits> | undefined {
     return this.apis.find(
       api =>
-        api.keyToColumnMapping.find(mapping => {
-          let name = mapping.columnName?.toLowerCase().trim();
-          return (
-            name === "longitude" ||
-            name === "lon" ||
-            name === this.activeTableStyle.longitudeColumn?.name
-          );
-        }) !== undefined
+        this.findKeyToColumnMappingForColumn(
+          api,
+          this.possibleLongitudeColumns
+        ) !== undefined
     );
   }
 
   @computed get latitudeKey(): string {
     return (
-      this.latitudeApi?.keyToColumnMapping.find(mapping => {
-        let name = mapping.columnName?.toLowerCase().trim();
-        return (
-          name === "latitude" ||
-          name === "lat" ||
-          name === this.activeTableStyle.latitudeColumn?.name
-        );
-      })?.keyInApiResponse ?? "latitude"
+      this.findKeyToColumnMappingForColumn(
+        this.latitudeApi!,
+        this.possibleLatitudeColumns
+      )?.keyInApiResponse ?? "latitude"
     );
   }
 
   @computed get longitudeKey(): string {
     return (
-      this.longitudeApi?.keyToColumnMapping.find(mapping => {
-        let name = mapping.columnName?.toLowerCase().trim();
-        return (
-          name === "longitude" ||
-          name === "lon" ||
-          name === this.activeTableStyle.longitudeColumn?.name
-        );
-      })?.keyInApiResponse ?? "longitude"
+      this.findKeyToColumnMappingForColumn(
+        this.longitudeApi!,
+        this.possibleLongitudeColumns
+      )?.keyInApiResponse ?? "longitude"
     );
   }
 
@@ -316,6 +305,16 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
       return values;
     }
   );
+
+  protected findKeyToColumnMappingForColumn(
+    api: Model<ApiTraits>,
+    possibleColumnNames: (string | undefined)[]
+  ) {
+    return api.keyToColumnMapping.find(mapping => {
+      let name = mapping.columnName?.toLowerCase().trim();
+      return name === undefined ? false : possibleColumnNames.includes(name);
+    });
+  }
 
   protected async forceLoadMetadata(): Promise<void> {
     return Promise.resolve();

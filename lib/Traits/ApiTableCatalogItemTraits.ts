@@ -3,8 +3,6 @@ import CatalogMemberTraits from "./CatalogMemberTraits";
 import mixTraits from "./mixTraits";
 import ModelTraits from "./ModelTraits";
 import objectArrayTrait from "./objectArrayTrait";
-import objectTrait from "./objectTrait";
-import primitiveArrayTrait from "./primitiveArrayTrait";
 import primitiveTrait from "./primitiveTrait";
 import TableTraits from "./TableTraits";
 
@@ -12,14 +10,19 @@ export class QueryParamTraits extends ModelTraits {
   @primitiveTrait({
     name: "Parameter name",
     type: "string",
-    description: "The name of the query parameter"
+    description: "The name of the query parameter."
   })
   name?: string;
 
   @primitiveTrait({
     name: "Parameter value",
     type: "string",
-    description: "The value of the query parameter"
+    description:
+      "The value of the query parameter. Parameter values starting with" +
+      " `DATE!`, eg. `DATE!HH:MM`, will be replaced wih the current date and" +
+      " time, formatted according to the format string following the `!`." +
+      " For more information on the format string format, see the " +
+      " [dateformat](https://github.com/felixge/node-dateformat) library."
   })
   value?: string;
 }
@@ -93,7 +96,7 @@ export default class ApiTableCatalogItemTraits extends mixTraits(
   @objectArrayTrait({
     name: "Query parameters",
     type: QueryParamTraits,
-    description: "Query parameters to supply to the API",
+    description: "Query parameters to supply to the API.",
     idProperty: "name"
   })
   queryParameters: QueryParamTraits[] = [];
@@ -118,7 +121,7 @@ export default class ApiTableCatalogItemTraits extends mixTraits(
     name: "Date time key",
     type: "string",
     description:
-      "The name of the property recording the date and time associated with a value."
+      "The name of the property storing the date and time associated with a value."
   })
   dateTimeKey?: string;
 }
