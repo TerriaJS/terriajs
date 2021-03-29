@@ -3,8 +3,22 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.68)
+#### next release (8.0.0-alpha.70)
+* Change default basemap images to relative paths.
+* Add `tileWidth` and `tileHeight` traits to `WebMapServiceCatalogItem`.
+* [The next improvement]
+
+#### 8.0.0-alpha.69
+
+- **Breaking changes**: 
+  - Basemaps are now configured through catalog JSON instead of TerriaMap - see https://github.com/TerriaJS/terriajs/blob/next/doc/customizing/initialization-files.md#base-maps 
+  
+* Updated terriajs-cesium to version 1.79.1
+* Make base maps configurable from init files and update documentation for init files [#5140](https://github.com/TerriaJS/terriajs/pull/5140).
+
+#### 8.0.0-alpha.68
 * Remove points from rectangle `UserDrawing`
+* Fix clipboard typing error. 
 * Ported `WebProcessingServiceCatalogGroup`.
 * Add CSW Group support
 * Revert "remove wmts interfaces from ows interfaces" (873aa70)
@@ -13,6 +27,9 @@ Change Log
 * Add support for TableColumn quarterly dates in the format yyyy-Qx (eg 2020-Q1).
 * Fix region mapping feature highlighting.
 * Update clipboard to fix clipboard typing error.
+* Added direction indicator to the pedestrian mode minimap.
+* Limit up/down look angle in pedestrian mode.
+* Automatically disable pedestrian mode when map zooms to a different location.
 * Add support for time on `ArcGisMapServerCatalogItem`
 * Merge `Mappable` and `AsyncMappableMixin` into **`MappableMixin`**.
 * Fixed a issue when multiple filters are set to Cesium3DTilesCatalogItem

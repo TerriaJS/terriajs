@@ -1140,6 +1140,8 @@ class WebMapServiceCatalogItem
           ...dimensionParameters,
           styles: this.styles === undefined ? "" : this.styles
         },
+        tileWidth: this.tileWidth,
+        tileHeight: this.tileHeight,
         tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
         maximumLevel: maximumLevel,
         rectangle: rectangle,
