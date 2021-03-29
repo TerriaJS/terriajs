@@ -11,6 +11,9 @@ import MappableMixin from "../../ModelMixins/MappableMixin";
 export interface BaseMapModel {
   image: string;
   item: BaseModel;
+  // Useful for eg, when a basemap entry is only meant to be used as a member
+  // of a composite basemap and must be hidden from the basemap listing
+  hideInBaseMapMenu?: boolean;
 }
 
 export function processBaseMaps(newBaseMaps: BaseMapModel[], terria: Terria) {
@@ -43,7 +46,9 @@ export function processBaseMaps(newBaseMaps: BaseMapModel[], terria: Terria) {
     );
     if (MappableMixin.isMixedInto(model)) {
       if (CatalogMemberMixin.isMixedInto(model)) model.loadMetadata();
-      terria.baseMaps.push(new BaseMapViewModel(model, newBaseMap.image));
+      if (newBaseMap.hideInBaseMapMenu !== true) {
+        terria.baseMaps.push(new BaseMapViewModel(model, newBaseMap.image));
+      }
     }
   });
 }
