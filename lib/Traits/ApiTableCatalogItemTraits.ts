@@ -78,6 +78,16 @@ export class ApiTraits extends ModelTraits {
     idProperty: "columnName"
   })
   keyToColumnMapping: KeyToColumnMappingTraits[] = [];
+
+  @primitiveTrait({
+    name: "Kind",
+    type: "string",
+    description:
+      "Determines how table rows are constructed from this API.\n" +
+      "* PER_ROW: values are specific to a row in the table\n" +
+      "* PER_ID: values are the same for all objects with the same id\n"
+  })
+  kind?: "PER_ROW" | "PER_ID" = "PER_ROW";
 }
 
 export default class ApiTableCatalogItemTraits extends mixTraits(
