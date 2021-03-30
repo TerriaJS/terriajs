@@ -17,7 +17,7 @@ const Dropdown = require("../../Generic/Dropdown");
 
 interface PropsType extends WithTranslation {
   terria: Terria;
-  sourceItems: Promise<ChartableMixin.ChartableMixin | undefined>[]; // Array of items or Promise returning item
+  sourceItems: Promise<ChartableMixin.Instance | undefined>[]; // Array of items or Promise returning item
   sourceNames?: string[];
   canDownload: boolean;
   downloads?: string[];
@@ -28,7 +28,7 @@ interface PropsType extends WithTranslation {
 
 @observer
 class ChartExpandAndDownloadButtons extends React.Component<PropsType> {
-  @observable sourceItems: ChartableMixin.ChartableMixin[] = [];
+  @observable sourceItems: ChartableMixin.Instance[] = [];
 
   @action.bound
   private expandButton() {

@@ -114,7 +114,7 @@ export interface ChartCustomComponentAttributes {
  */
 
 export default abstract class ChartCustomComponent<
-  CatalogItemType extends ChartableMixin.ChartableMixin
+  CatalogItemType extends ChartableMixin.Instance
 > extends CustomComponent {
   get attributes(): Array<string> {
     return [

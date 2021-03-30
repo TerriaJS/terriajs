@@ -87,7 +87,7 @@ describe("ChartCustomComponent", function() {
 });
 
 class TestChartCustomComponent extends ChartCustomComponent<
-  ChartableMixin.ChartableMixin
+  ChartableMixin.Instance
 > {
   get name(): string {
     return "test";

@@ -81,9 +81,9 @@ function ChartableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
 }
 
 namespace ChartableMixin {
-  export interface ChartableMixin
+  export interface Instance
     extends InstanceType<ReturnType<typeof ChartableMixin>> {}
-  export function isMixedInto(model: any): model is ChartableMixin {
+  export function isMixedInto(model: any): model is Instance {
     return model && model.isChartable;
   }
 }

@@ -13,7 +13,7 @@ export default class ChartView {
   constructor(readonly terria: Terria) {}
 
   @computed
-  get chartableItems(): ChartableMixin.ChartableMixin[] {
+  get chartableItems(): ChartableMixin.Instance[] {
     return <any>(
       this.terria.workbench.items.filter(
         item => ChartableMixin.isMixedInto(item) && item.chartItems.length > 0
