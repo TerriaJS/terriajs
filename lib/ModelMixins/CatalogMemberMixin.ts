@@ -53,7 +53,7 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
      * Forces load of the metadata. This method does _not_ need to consider
      * whether the metadata is already loaded.
      *
-     * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}. If there are no async calls - it can be simulated using `await Promise.resolve()` or `await runLater(() => )`
+     * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
      */
     protected async forceLoadMetadata() {}
 

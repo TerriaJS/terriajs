@@ -124,11 +124,12 @@ Some rules:
 
 # AsyncLoader
 
-The AsyncLoader class provides a way to memoize (of sorts) async requests. It works by calling `loadCallback` in `@computed loadKeepAlive`. This `@computed` will update if observables change that were used in *the synchronous part of* `loadCallback()`.
+The AsyncLoader class provides a way to memoize (of sorts) async requests. In a `forceLoadX` function you should load from an asynchronous service, transform the data into something that can be stored in 1 or multiple observables and then set those observables.
 
-Because we are using a `@computed` in this way - it is **very important** that no changes to `observables` are made **before an async call**.
+It works by calling `loadCallback` in `@computed loadKeepAlive`. This `@computed` will update if observables change that were used in `loadCallback()`.Because we are using a `@computed` in this way - it is **very important** that no changes to `observables` are made **before an async call**.
 
 A **correct** example:
+
 ```ts
 async function loadX() {
   const url = this.someObservableUrl
@@ -137,11 +138,14 @@ async function loadX() {
 }
 ```
 
-Will only be triggered *again* when `someObservableUrl` changes.
+This function will only be called *again* when `someObservableUrl` changes.
 
 ------------------------
 
+If there is any synchronous processing present it should be pulled out of forceLoadX and placed into 1 or multiple computeds.
+
 An **incorrect** example:
+
 ```ts
 async function loadX() {
   const arg = this.someObservable
@@ -150,18 +154,12 @@ async function loadX() {
 }
 ```
 
-As we are calling `loadX` in a `@computed` (`loadKeepAlive`), we can't make changes to `observables` *directly* - we must have an async call before we make any changes - this "escapes" the `@computed`.
+Instead this should be in a `@computed`:
 
-To fix this, we have to simulate an async call - we can add a `await Promise.resolve()` or use something like `runLater()`
-
-While this approach is not ideal, it will allow us to "memoize" everything before the async call (eg `this.someObservable`)
-
-An **correct** example:
 ```ts
-async function loadX() {
-  const arg = this.someObservable
-  const someData = await runLater(() => someSynchronousFn(arg))
-  runInAction(() => this.someOtherObservable = someData)
+@computed 
+get newComputed {
+  return someSynchronousFn(this.someObservable);
 }
 ```
 
@@ -169,7 +167,7 @@ async function loadX() {
 
 **Other tips**:
 
-- You can not nest together `AsyncLoaders`.  
+- You can not nest together `AsyncLoaders`.
   Eg.
   ```ts
   async function loadX() {

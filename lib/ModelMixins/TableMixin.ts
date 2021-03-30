@@ -480,7 +480,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      *
      * It is guaranteed that `loadMetadata` has finished before this is called.
      *
-     * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}. If there are no async calls - it can be simulated using `await Promise.resolve()` or `await runLater(() => )`
+     * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
      */
     protected abstract forceLoadTableData(): Promise<string[][]>;
 
