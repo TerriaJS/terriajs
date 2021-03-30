@@ -142,13 +142,14 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
   }
 
   protected async forceLoadTableData(): Promise<string[][] | undefined> {
-    this.loadDataFromApis().then(() => {
-      runInAction(() => {
-        this.append(this.apiDataColumnMajor);
-        this.hasData = true;
-      });
-    });
-    return undefined;
+    return this.loadDataFromApis()
+      .then(() => {
+        runInAction(() => {
+          this.append(this.apiDataColumnMajor);
+          this.hasData = true;
+        });
+      })
+      .then(() => undefined);
   }
 
   refreshData(): void {
