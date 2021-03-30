@@ -45,7 +45,6 @@ export function processBaseMaps(newBaseMaps: BaseMapModel[], terria: Terria) {
       }
     );
     if (MappableMixin.isMixedInto(model)) {
-      if (CatalogMemberMixin.isMixedInto(model)) model.loadMetadata();
       if (newBaseMap.hideInBaseMapMenu !== true) {
         terria.baseMaps.push(new BaseMapViewModel(model, newBaseMap.image));
       }
