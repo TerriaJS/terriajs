@@ -4,6 +4,9 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.70)
+* Add `hideInBaseMapMenu` option to `BaseMapModel`.
+* Change default basemap images to relative paths.
+* Add `tileWidth` and `tileHeight` traits to `WebMapServiceCatalogItem`.
 * Add `WebMapService` support for WGS84 tiling scheme
 * [The next improvement]
 

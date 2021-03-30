@@ -1202,6 +1202,8 @@ class WebMapServiceCatalogItem
           ...dimensionParameters,
           styles: this.styles === undefined ? "" : this.styles
         },
+        tileWidth: this.tileWidth,
+        tileHeight: this.tileHeight,
         tilingScheme: this.tilingScheme,
         maximumLevel: maximumLevel,
         rectangle: rectangle,

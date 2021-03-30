@@ -121,6 +121,8 @@ describe("WebMapServiceCatalogItem", function() {
         expect(mapItems[0].imageryProvider.url).toBe(
           "test/WMS/single_metadata_url.xml"
         );
+        expect(mapItems[0].imageryProvider.tileHeight).toBe(256);
+        expect(mapItems[0].imageryProvider.tileWidth).toBe(256);
       }
     } finally {
       cleanup();
@@ -147,6 +149,38 @@ describe("WebMapServiceCatalogItem", function() {
       await wms.loadMetadata();
       //@ts-ignore
       expect(mapItems[0].imageryProvider.layers).toBe("landsat_barest_earth");
+    } finally {
+      cleanup();
+    }
+  });
+
+  it("uses tileWidth and tileHeight", async function() {
+    let wms: WebMapServiceCatalogItem;
+    const terria = new Terria();
+    wms = new WebMapServiceCatalogItem("test", terria);
+    runInAction(() => {
+      wms.setTrait("definition", "url", "test/WMS/single_metadata_url.xml");
+      wms.setTrait(
+        "definition",
+        "layers",
+        "mobile-black-spot-programme:funded-base-stations-group"
+      );
+      wms.setTrait("definition", "tileWidth", 512);
+      wms.setTrait("definition", "tileHeight", 512);
+    });
+    let mapItems: ImageryParts[] = [];
+    const cleanup = autorun(() => {
+      mapItems = wms.mapItems.slice();
+    });
+    try {
+      await wms.loadMetadata();
+      expect(
+        mapItems[0].imageryProvider instanceof WebMapServiceImageryProvider
+      ).toBeTruthy();
+      if (mapItems[0].imageryProvider instanceof WebMapServiceImageryProvider) {
+        expect(mapItems[0].imageryProvider.tileHeight).toBe(512);
+        expect(mapItems[0].imageryProvider.tileWidth).toBe(512);
+      }
     } finally {
       cleanup();
     }
