@@ -19,6 +19,7 @@ Change Log
 * Async/Awaitify `Terria.ts` + fix share links loading after `loadInitSources`.
 * Tsified `TerriaError` + added support for "un-rendered" `I18nTranslateString`
 * Tsified `raiseErrorToUser` + added `wrapErrorMessage()` to wrap error message in something more user friendly (using `models.raiseError.errorMessage` translation string).
+* Adds ApiTableCatalogItem.
 * [The next improvement]
 
 #### 8.0.0-alpha.67
