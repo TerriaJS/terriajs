@@ -33,8 +33,6 @@ export default class SdmxJsonCatalogItem
     return "sdmx-json";
   }
 
-  private _currentCsvUrl: string | undefined;
-
   constructor(
     id: string | undefined,
     terria: Terria,
@@ -190,11 +188,8 @@ export default class SdmxJsonCatalogItem
    * Even though this is Sdmx**Json**CatalogItem, we download sdmx-csv.
    */
   private async downloadData(): Promise<string[][] | undefined> {
-    // FIXME: This is a bad way of handling re-loading the same data
-    if (this._currentCsvUrl === this.csvUrl || !this.regionProviderList)
-      return this.dataColumnMajor;
-
-    this._currentCsvUrl = this.csvUrl;
+    // Only download data if regionProviderList is defined
+    if (!this.regionProviderList) return;
 
     let columns: string[][] = [];
 
