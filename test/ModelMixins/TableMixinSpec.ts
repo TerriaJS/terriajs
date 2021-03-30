@@ -5,8 +5,10 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
 import { runInAction } from "mobx";
 import createStratumInstance from "../../lib/Models/createStratumInstance";
 import updateModelFromJson from "../../lib/Models/updateModelFromJson";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 
 const LatLonValCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_val.csv");
+const LatLonValCsvDuplicate = require("raw-loader!../../wwwroot/test/csv/lat_lon_val_with_duplicate_row.csv");
 const LatLonEnumDateIdCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum_date_id.csv");
 const regionMapping = JSON.stringify(
   require("../../wwwroot/data/regionMapping.json")
@@ -100,6 +102,30 @@ describe("TableMixin", function() {
       expect(mapItem instanceof CustomDataSource).toBe(true);
       if (mapItem instanceof CustomDataSource) {
         expect(mapItem.entities.values.length).toBe(5);
+      }
+    });
+
+    it("removes duplicate rows when requested", async function() {
+      runInAction(() => {
+        item.setTrait(CommonStrata.user, "csvString", LatLonValCsvDuplicate);
+        item.setTrait(CommonStrata.user, "removeDuplicateRows", true);
+      });
+
+      await item.loadMapItems();
+      const mapItem = item.mapItems[0];
+      expect(mapItem instanceof CustomDataSource).toBe(true);
+      if (mapItem instanceof CustomDataSource) {
+        expect(mapItem.entities.values.length).toBe(5);
+
+        const duplicateValue = 7;
+        let occurrences = 0;
+        for (let entity of mapItem.entities.values) {
+          const val = entity.properties?.getValue(JulianDate.now()).value;
+          if (val === duplicateValue) {
+            occurrences++;
+          }
+        }
+        expect(occurrences).toBe(1);
       }
     });
   });
