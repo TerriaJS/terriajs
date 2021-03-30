@@ -478,7 +478,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      * Forces load of the table data. This method does _not_ need to consider
      * whether the table data is already loaded.
      *
-     * It is guaranteed that `loadMetadata` has finished before this is called.
+     * It is guaranteed that `loadMetadata` has finished before this is called, and `regionProviderList` is set.
      *
      * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
      */

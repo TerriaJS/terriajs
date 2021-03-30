@@ -184,13 +184,7 @@ export default class SdmxJsonCatalogItem
       : undefined;
   }
 
-  /**
-   * Even though this is Sdmx**Json**CatalogItem, we download sdmx-csv.
-   */
-  private async downloadData(): Promise<string[][] | undefined> {
-    // Only download data if regionProviderList is defined
-    if (!this.regionProviderList) return;
-
+  protected async forceLoadTableData() {
     let columns: string[][] = [];
 
     try {
@@ -244,9 +238,6 @@ export default class SdmxJsonCatalogItem
       );
       return columns;
     }
-  }
-  protected async forceLoadTableData(): Promise<string[][]> {
-    return (await this.downloadData()) || [];
   }
 }
 
