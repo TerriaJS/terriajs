@@ -136,7 +136,7 @@ class DataPreviewMap extends React.Component {
         baseMap.mappable.uniqueId === this.props.terria.previewBaseMapId
     );
     if (initPreviewBaseMap !== undefined) {
-      this.previewViewer.baseMap = initPreviewBaseMap.mappable;
+      this.previewViewer.setBaseMap(initPreviewBaseMap.mappable);
     } else {
       this.previewViewer.setBaseMap(
         this.props.terria.baseMaps.length > 0
