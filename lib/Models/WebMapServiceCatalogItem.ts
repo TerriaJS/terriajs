@@ -425,12 +425,21 @@ class GetCapabilitiesStratum extends LoadableStratum(
         // remove a circular reference to the parent
         delete out._parent;
 
-        result.push(
-          createStratumInstance(InfoSectionTraits, {
-            name: i18next.t("models.webMapServiceCatalogItem.dataDescription"),
-            contentAsObject: out as JsonObject
-          })
-        );
+        try {
+          result.push(
+            createStratumInstance(InfoSectionTraits, {
+              name: i18next.t(
+                "models.webMapServiceCatalogItem.dataDescription"
+              ),
+              contentAsObject: out as JsonObject
+            })
+          );
+        } catch (e) {
+          console.log(
+            `FAILED to create InfoSection with WMS layer Capabilities`
+          );
+          console.log(e);
+        }
       }
     }
 
