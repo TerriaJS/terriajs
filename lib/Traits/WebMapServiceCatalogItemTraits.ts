@@ -205,6 +205,22 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
 
   @primitiveTrait({
     type: "number",
+    name: "Tile width (in pixels)",
+    description:
+      "Tile width in pixels. This will be added to `GetMap` requests for map tiles using the `width` parameter. Default value is 256 pixels"
+  })
+  tileWidth: number = 256;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Tile height (in pixels)",
+    description:
+      "Tile height in pixels. This will be added to `GetMap` requests for map tiles using the `height` parameter. Default value is 256 pixels"
+  })
+  tileHeight: number = 256;
+
+  @primitiveTrait({
+    type: "number",
     name: "Minimum Scale Denominator",
     description:
       "The denominator of the largest scale (smallest denominator) for which tiles should be requested. " +

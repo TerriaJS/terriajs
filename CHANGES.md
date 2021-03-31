@@ -6,6 +6,9 @@ Change Log
 #### next release (8.0.0-alpha.70)
 * Fix load of persisted basemap
 * Fix sharing of base map
+* Add `hideInBaseMapMenu` option to `BaseMapModel`.
+* Change default basemap images to relative paths.
+* Add `tileWidth` and `tileHeight` traits to `WebMapServiceCatalogItem`.
 * [The next improvement]
 
 #### 8.0.0-alpha.69
