@@ -18,6 +18,7 @@ Change Log
 * Added `TerriaViewer.setBaseMap()` function, this now calls `loadMapItems` on basemaps
 * Fix load of persisted basemap
 * Fix sharing of base map
+* Added backward compatibility for `baseMapName` in `initData` (eg share links)
 * [The next improvement]
 
 #### 8.0.0-alpha.69
