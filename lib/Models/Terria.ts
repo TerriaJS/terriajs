@@ -777,7 +777,7 @@ export default class Terria {
     );
 
     if (this.baseMaps.length === 0) {
-      this.setBaseMaps(defaultBaseMaps(this));
+      processBaseMaps(defaultBaseMaps(this), this);
     }
   }
 
