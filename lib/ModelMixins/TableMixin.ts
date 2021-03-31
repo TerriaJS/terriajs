@@ -21,11 +21,10 @@ import TerriaError from "../Core/TerriaError";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import RegionProvider from "../Map/RegionProvider";
 import JSRegionProviderList from "../Map/RegionProviderList";
+import { ImageryParts } from "./MappableMixin";
 import { calculateDomain, ChartAxis, ChartItem } from "../Models/Chartable";
 import CommonStrata from "../Models/CommonStrata";
-import { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
-import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import SelectableDimensions, {
   SelectableDimension
 } from "../Models/SelectableDimensions";
@@ -34,9 +33,8 @@ import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitu
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
-import LegendTraits from "../Traits/LegendTraits";
 import TableTraits from "../Traits/TableTraits";
-import AsyncMappableMixin from "./AsyncMappableMixin";
+import MappableMixin from "./MappableMixin";
 import DiscretelyTimeVaryingMixin, {
   DiscreteTimeAsJS
 } from "./DiscretelyTimeVaryingMixin";
@@ -49,9 +47,7 @@ import TimeVarying from "./TimeVarying";
 class RegionProviderList extends JSRegionProviderList {}
 function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
   abstract class TableMixin
-    extends ExportableMixin(
-      AsyncMappableMixin(DiscretelyTimeVaryingMixin(Base))
-    )
+    extends ExportableMixin(MappableMixin(DiscretelyTimeVaryingMixin(Base)))
     implements SelectableDimensions, TimeVarying {
     get hasTableMixin() {
       return true;
@@ -753,7 +749,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       const result: JsonObject = {};
 
       this.tableColumns.forEach(column => {
-        result[column.name] = column.values[index];
+        result[column.name] = column.valueFunctionForType(index);
       });
 
       return result;

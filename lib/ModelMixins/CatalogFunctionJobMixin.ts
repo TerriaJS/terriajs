@@ -1,10 +1,13 @@
 import { action, computed, observable, runInAction } from "mobx";
+import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Constructor from "../Core/Constructor";
+import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
+import TerriaError from "../Core/TerriaError";
+import MappableMixin, { MapItem } from "./MappableMixin";
 import CommonStrata from "../Models/CommonStrata";
 import createStratumInstance from "../Models/createStratumInstance";
 import LoadableStratum from "../Models/LoadableStratum";
-import Mappable, { MapItem } from "../Models/Mappable";
 import Model, { BaseModel } from "../Models/Model";
 import StratumOrder from "../Models/StratumOrder";
 import CatalogFunctionJobTraits from "../Traits/CatalogFunctionJobTraits";
@@ -12,9 +15,6 @@ import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import AutoRefreshingMixin from "./AutoRefreshingMixin";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import GroupMixin from "./GroupMixin";
-import filterOutUndefined from "../Core/filterOutUndefined";
-import TerriaError from "../Core/TerriaError";
-import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 
 class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
   constructor(
@@ -212,7 +212,7 @@ function CatalogFunctionJobMixin<
         this.downloadingResults = true;
         this.results = (await this.downloadResults()) || [];
         this.results.forEach(result => {
-          if (Mappable.is(result))
+          if (MappableMixin.isMixedInto(result))
             result.setTrait(CommonStrata.user, "show", true);
           if (addResultsToWorkbench) this.terria.workbench.add(result);
 

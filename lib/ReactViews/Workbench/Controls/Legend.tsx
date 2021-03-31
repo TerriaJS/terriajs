@@ -6,14 +6,13 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
-import AsyncMappableMixin from "../../../ModelMixins/AsyncMappableMixin";
+import MappableMixin from "../../../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import Model from "../../../Models/Model";
 import proxyCatalogItemUrl from "../../../Models/proxyCatalogItemUrl";
 import LegendTraits, { LegendItemTraits } from "../../../Traits/LegendTraits";
+import Loader from "../../Loader";
 import Styles from "./legend.scss";
-
-const Loader = require("../../Loader");
 
 /* A lookup map for displayable mime types */
 const DISPLAYABLE_MIME_TYPES = [
@@ -254,7 +253,7 @@ export default class Legend extends React.Component<{
     if (this.props.item.hideLegendInWorkbench) return null;
 
     if (
-      AsyncMappableMixin.isMixedInto(this.props.item) &&
+      MappableMixin.isMixedInto(this.props.item) &&
       this.props.item.isLoadingMapItems
     ) {
       return (

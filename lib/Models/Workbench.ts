@@ -2,6 +2,7 @@ import i18next from "i18next";
 import { action, computed, observable } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import TerriaError from "../Core/TerriaError";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
@@ -9,7 +10,6 @@ import CommonStrata from "../Models/CommonStrata";
 import LayerOrderingTraits from "../Traits/LayerOrderingTraits";
 import Chartable from "./Chartable";
 import hasTraits from "./hasTraits";
-import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 
 const keepOnTop = (model: BaseModel) =>
@@ -161,7 +161,7 @@ export default class Workbench {
   /**
    * Adds or removes a model to/from the workbench. If the model is a reference,
    * it will also be dereferenced. If, after dereferencing, the item turns out not to
-   * be {@link Mappable} or {@link Chartable} but it is a {@link GroupMixin}, it will
+   * be {@link AsyncMappableMixin} or {@link Chartable} but it is a {@link GroupMixin}, it will
    * be removed from the workbench. If it is mappable, `loadMapItems` will be called.
    * If it is chartable, `loadChartItems` will be called.
    *
@@ -183,7 +183,7 @@ export default class Workbench {
         if (
           target &&
           GroupMixin.isMixedInto(target) &&
-          !Mappable.is(target) &&
+          !MappableMixin.isMixedInto(target) &&
           !Chartable.is(target)
         ) {
           this.remove(item);
@@ -192,7 +192,7 @@ export default class Workbench {
         }
       }
 
-      if (Mappable.is(item)) {
+      if (MappableMixin.isMixedInto(item)) {
         await item.loadMapItems();
       }
 

@@ -43,6 +43,7 @@ import when from "terriajs-cesium/Source/ThirdParty/when";
 import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
 import getElement from "terriajs-cesium/Source/Widgets/getElement";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
 import LatLonHeight from "../Core/LatLonHeight";
 import pollToPromise from "../Core/pollToPromise";
@@ -53,17 +54,17 @@ import PickedFeatures, { ProviderCoordsMap } from "../Map/PickedFeatures";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
 import SplitterTraits from "../Traits/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
-import CameraView from "./CameraView";
-import Feature from "./Feature";
-import GlobeOrMap from "./GlobeOrMap";
-import hasTraits from "./hasTraits";
-import Mappable, {
+import MappableMixin, {
   ImageryParts,
   isCesium3DTileset,
   isDataSource,
   isTerrainProvider,
   MapItem
-} from "./Mappable";
+} from "../ModelMixins/MappableMixin";
+import CameraView from "./CameraView";
+import Feature from "./Feature";
+import GlobeOrMap from "./GlobeOrMap";
+import hasTraits from "./hasTraits";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
 
@@ -97,7 +98,7 @@ export default class Cesium extends GlobeOrMap {
     | CameraView
     | Rectangle
     | DataSource
-    | Mappable
+    | MappableMixin.MappableMixin
     | /*TODO Cesium.Cesium3DTileset*/ any;
 
   // When true, feature picking is paused. This is useful for temporarily
@@ -511,11 +512,13 @@ export default class Cesium extends GlobeOrMap {
       ...this.terriaViewer.items.get(),
       this.terriaViewer.baseMap
     ];
-    // Flatmap
-    return ([] as { item: Mappable; mapItem: MapItem }[]).concat(
-      ...catalogItems
-        .filter(isDefined)
-        .map(item => item.mapItems.map(mapItem => ({ mapItem, item })))
+    return flatten(
+      filterOutUndefined(
+        catalogItems.map(item => {
+          if (isDefined(item) && MappableMixin.isMixedInto(item))
+            return item.mapItems.map(mapItem => ({ mapItem, item }));
+        })
+      )
     );
   }
 
@@ -620,12 +623,12 @@ export default class Cesium extends GlobeOrMap {
     }
   }
 
-  zoomTo(
+  doZoomTo(
     target:
       | CameraView
       | Rectangle
       | DataSource
-      | Mappable
+      | MappableMixin.MappableMixin
       | /*TODO Cesium.Cesium3DTileset*/ any,
     flightDurationSeconds?: number
   ): void {
@@ -709,7 +712,7 @@ export default class Cesium extends GlobeOrMap {
               up: target.up
             }
           });
-        } else if (Mappable.is(target)) {
+        } else if (MappableMixin.isMixedInto(target)) {
           if (isDefined(target.rectangle)) {
             const { west, south, east, north } = target.rectangle;
             if (
@@ -727,7 +730,7 @@ export default class Cesium extends GlobeOrMap {
 
           if (target.mapItems.length > 0) {
             // Zoom to the first item!
-            return that.zoomTo(target.mapItems[0], flightDurationSeconds);
+            return that.doZoomTo(target.mapItems[0], flightDurationSeconds);
           }
         } else if (defined(target.rectangle)) {
           that.scene.camera.flyTo({
@@ -757,7 +760,10 @@ export default class Cesium extends GlobeOrMap {
       const items = this.terria.mainViewer.items.get();
       const showSplitter = this.terria.showSplitter;
       items.forEach(item => {
-        if (hasTraits(item, SplitterTraits, "splitDirection")) {
+        if (
+          MappableMixin.isMixedInto(item) &&
+          hasTraits(item, SplitterTraits, "splitDirection")
+        ) {
           const layers = this.getImageryLayersForItem(item);
           const splitDirection = item.splitDirection;
 
@@ -1349,7 +1355,7 @@ export default class Cesium extends GlobeOrMap {
     return result;
   }
 
-  getImageryLayersForItem(item: Mappable): ImageryLayer[] {
+  getImageryLayersForItem(item: MappableMixin.MappableMixin): ImageryLayer[] {
     return filterOutUndefined(
       item.mapItems.map(m => {
         if (ImageryParts.is(m)) {
@@ -1361,7 +1367,7 @@ export default class Cesium extends GlobeOrMap {
 
   private _makeImageryLayerFromParts(
     parts: ImageryParts,
-    item: Mappable
+    item: MappableMixin.MappableMixin
   ): ImageryLayer {
     const layer = this._createImageryLayer(parts.imageryProvider);
     if (TileErrorHandlerMixin.isMixedInto(item)) {

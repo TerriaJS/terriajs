@@ -5,7 +5,7 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import getPath from "../../Core/getPath";
-import Mappable from "../../Models/Mappable";
+import MappableMixin from "../../ModelMixins/MappableMixin";
 import raiseErrorToUser from "../../Models/raiseErrorToUser";
 import measureElement from "../HOCs/measureElement";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
@@ -17,7 +17,7 @@ import ErrorBoundary from "../ErrorBoundary/ErrorBoundary.jsx";
 /**
  * @typedef {object} Props
  * @prop {Terria} terria
- * @prop {Mappable} previewed
+ * @prop {MappableMixin.MappableMixin} previewed
  * @prop {ViewState} viewState
  *
  */
@@ -80,7 +80,7 @@ class MappablePreview extends React.Component {
       <div className={Styles.root}>
         <If
           condition={
-            Mappable.is(catalogItem) &&
+            MappableMixin.isMixedInto(catalogItem) &&
             !catalogItem.disablePreview &&
             this.props.viewState.explorerPanelIsVisible
           }

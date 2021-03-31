@@ -9,9 +9,9 @@ import {
 import { fromPromise, FULFILLED } from "mobx-utils";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import CameraView from "../Models/CameraView";
 import GlobeOrMap from "../Models/GlobeOrMap";
-import Mappable from "../Models/Mappable";
 import NoViewer from "../Models/NoViewer";
 import Terria from "../Models/Terria";
 import ViewerMode from "../Models/ViewerMode";
@@ -33,10 +33,12 @@ export default class TerriaViewer {
   readonly terria: Terria;
 
   @observable
-  baseMap: Mappable | undefined;
+  baseMap: MappableMixin.MappableMixin | undefined;
 
   // This is a "view" of a workbench/other
-  readonly items: IComputedValue<Mappable[]> | IObservableValue<Mappable[]>;
+  readonly items:
+    | IComputedValue<MappableMixin.MappableMixin[]>
+    | IObservableValue<MappableMixin.MappableMixin[]>;
 
   @observable
   viewerMode: ViewerMode | undefined = ViewerMode.Cesium;
@@ -59,7 +61,10 @@ export default class TerriaViewer {
   readonly beforeViewerChanged = new CesiumEvent();
   readonly afterViewerChanged = new CesiumEvent();
 
-  constructor(terria: Terria, items: IComputedValue<Mappable[]>) {
+  constructor(
+    terria: Terria,
+    items: IComputedValue<MappableMixin.MappableMixin[]>
+  ) {
     this.terria = terria;
     this.items = items;
   }
