@@ -7,6 +7,7 @@ import { BaseModel } from "../Model";
 import Terria from "../Terria";
 import upsertModelFromJson from "../upsertModelFromJson";
 import MappableMixin from "../../ModelMixins/MappableMixin";
+import { runInAction } from "mobx";
 
 export interface BaseMapModel {
   image: string;
@@ -45,9 +46,10 @@ export function processBaseMaps(newBaseMaps: BaseMapModel[], terria: Terria) {
       }
     );
     if (MappableMixin.isMixedInto(model)) {
-      if (CatalogMemberMixin.isMixedInto(model)) model.loadMetadata();
       if (newBaseMap.hideInBaseMapMenu !== true) {
-        terria.baseMaps.push(new BaseMapViewModel(model, newBaseMap.image));
+        runInAction(() =>
+          terria.baseMaps.push(new BaseMapViewModel(model, newBaseMap.image))
+        );
       }
     }
   });

@@ -10,16 +10,12 @@ export default class IonImageryCatalogItem extends MappableMixin(
 ) {
   static readonly type = "ion-imagery";
 
-  forceLoadMapItems() {
-    return Promise.resolve();
-  }
-
   get type() {
     return IonImageryCatalogItem.type;
   }
 
-  loadMapItems() {
-    return this.forceLoadMapItems();
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
   }
 
   @computed get mapItems() {

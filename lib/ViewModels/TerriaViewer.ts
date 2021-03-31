@@ -4,7 +4,8 @@ import {
   IComputedValue,
   IObservableValue,
   observable,
-  untracked
+  untracked,
+  runInAction
 } from "mobx";
 import { fromPromise, FULFILLED } from "mobx-utils";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
@@ -15,6 +16,7 @@ import GlobeOrMap from "../Models/GlobeOrMap";
 import NoViewer from "../Models/NoViewer";
 import Terria from "../Models/Terria";
 import ViewerMode from "../Models/ViewerMode";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 
 // A class that deals with initialising, destroying and switching between viewers
 // Each map-view should have it's own TerriaViewer
@@ -33,7 +35,19 @@ export default class TerriaViewer {
   readonly terria: Terria;
 
   @observable
-  baseMap: MappableMixin.MappableMixin | undefined;
+  private _baseMap: MappableMixin.MappableMixin | undefined;
+
+  get baseMap() {
+    return this._baseMap;
+  }
+
+  async setBaseMap(baseMap?: MappableMixin.MappableMixin) {
+    if (CatalogMemberMixin.isMixedInto(baseMap)) await baseMap.loadMetadata();
+
+    if (baseMap) await baseMap.loadMapItems();
+
+    runInAction(() => (this._baseMap = baseMap));
+  }
 
   // This is a "view" of a workbench/other
   readonly items:
