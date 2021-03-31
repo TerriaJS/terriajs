@@ -16,6 +16,8 @@ Change Log
 * Removed `AsyncLoader` functionality from `TableMixin` - it is now handled by `loadMapItems`.
   * `TableMixin.loadRegionProviderList()` is now called in `MappableMixin.loadMapItems()`
 * Added `TerriaViewer.setBaseMap()` function, this now calls `loadMapItems` on basemaps
+* Fix load of persisted basemap
+* Fix sharing of base map
 * [The next improvement]
 
 #### 8.0.0-alpha.69
