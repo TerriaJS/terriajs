@@ -7,12 +7,13 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import getPath from "../../Core/getPath";
 import MappableMixin from "../../ModelMixins/MappableMixin";
 import raiseErrorToUser from "../../Models/raiseErrorToUser";
+import { ROOT_ROUTE } from "../../ReactViewModels/TerriaRouting";
+import ErrorBoundary from "../ErrorBoundary/ErrorBoundary.jsx";
 import measureElement from "../HOCs/measureElement";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
 import DataPreviewMap from "./DataPreviewMap";
 import Description from "./Description";
 import Styles from "./mappable-preview.scss";
-import ErrorBoundary from "../ErrorBoundary/ErrorBoundary.jsx";
 
 /**
  * @typedef {object} Props
@@ -58,6 +59,7 @@ class MappablePreview extends React.Component {
         !keepCatalogOpen
       ) {
         this.props.viewState.closeCatalog();
+        this.props.viewState.history?.push(ROOT_ROUTE);
         this.props.terria.analytics?.logEvent(
           "dataSource",
           toAdd ? "addFromPreviewButton" : "removeFromPreviewButton",
@@ -81,16 +83,12 @@ class MappablePreview extends React.Component {
         <If
           condition={
             MappableMixin.isMixedInto(catalogItem) &&
-            !catalogItem.disablePreview &&
-            this.props.viewState.explorerPanelIsVisible
+            !catalogItem.disablePreview
           }
         >
           <ErrorBoundary terria={this.props.terria}>
             <DataPreviewMap
-              key={[
-                catalogItem.uniqueId,
-                this.props.viewState.explorerPanelIsVisible
-              ]}
+              key={catalogItem.uniqueId}
               terria={this.props.terria}
               previewed={catalogItem}
               showMap={

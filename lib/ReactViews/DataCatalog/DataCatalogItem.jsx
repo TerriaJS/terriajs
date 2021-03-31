@@ -4,16 +4,17 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import defined from "terriajs-cesium/Source/Core/defined";
-// import addedByUser from "../../Core/addedByUser";
-import getPath from "../../Core/getPath";
 import { withRouter } from "react-router-dom";
+import defined from "terriajs-cesium/Source/Core/defined";
 import URI from "urijs";
 // import addedByUser from "../../Core/addedByUser";
-import removeUserAddedData from "../../Models/removeUserAddedData";
-import CatalogItem from "./CatalogItem";
-import raiseErrorToUser from "../../Models/raiseErrorToUser";
+import getPath from "../../Core/getPath";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
+import raiseErrorToUser from "../../Models/raiseErrorToUser";
+// import addedByUser from "../../Core/addedByUser";
+import removeUserAddedData from "../../Models/removeUserAddedData";
+import { ROOT_ROUTE } from "../../ReactViewModels/TerriaRouting";
+import CatalogItem from "./CatalogItem";
 
 // Individual dataset
 export const DataCatalogItem = observer(
@@ -75,6 +76,7 @@ export const DataCatalogItem = observer(
           !keepCatalogOpen
         ) {
           this.props.viewState.closeCatalog();
+          this.props.viewState.history?.push(ROOT_ROUTE);
           this.props.terria.analytics?.logEvent(
             "dataSource",
             toAdd ? "addFromCatalogue" : "removeFromCatalogue",

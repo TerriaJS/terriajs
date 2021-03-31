@@ -8,9 +8,10 @@ import getPath from "../../Core/getPath";
 import CommonStrata from "../../Models/CommonStrata";
 import openGroup from "../../Models/openGroup";
 import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
+import raiseErrorToUser from "../../Models/raiseErrorToUser";
+import { ROOT_ROUTE } from "../../ReactViewModels/TerriaRouting";
 import CatalogGroup from "./CatalogGroup";
 import CatalogItem from "./CatalogItem";
-import raiseErrorToUser from "../../Models/raiseErrorToUser";
 
 const DataCatalogReference = observer(
   createReactClass({
@@ -83,6 +84,7 @@ const DataCatalogReference = observer(
             !keepCatalogOpen
           ) {
             this.props.viewState.closeCatalog();
+            this.props.viewState.history?.push(ROOT_ROUTE);
           }
         } catch (e) {
           raiseErrorToUser(this.props.terria, e);
