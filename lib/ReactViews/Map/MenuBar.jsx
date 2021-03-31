@@ -87,6 +87,7 @@ const MenuBar = observer(props => {
   );
   const delayTime =
     storyEnabled && props.terria.stories.length > 0 ? 1000 : 2000;
+  const stripLangLocale = (lang = "") => lang.split("-")[0];
   return (
     <StyledMenuBar
       className={classNames(
@@ -188,6 +189,14 @@ const MenuBar = observer(props => {
             </li>
           </For>
         </If>
+      </ul>
+      <ul className={classNames(Styles.menu)}>
+        <li className={Styles.menuItem}>
+          <button className={classNames(Styles.langBtn)}>
+            <Icon glyph={Icon.GLYPHS.globe} />
+            <span>{stripLangLocale(props.i18n.language)}</span>
+          </button>
+        </li>
       </ul>
     </StyledMenuBar>
   );
