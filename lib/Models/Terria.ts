@@ -38,6 +38,7 @@ import PickedFeatures, {
   featureBelongsToCatalogItem,
   isProviderCoordsMap
 } from "../Map/PickedFeatures";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import MappableMixin, { isDataSource } from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
@@ -354,7 +355,11 @@ export default class Terria {
   @observable
   baseMaps: BaseMapViewModel[] = [];
 
+  /** ID of basemap pulled from initData - this wil be used **before** `initBaseMapName` */
   initBaseMapId: string | undefined;
+
+  /** Name of basemap pulled from initData - this is for compatibility with sharelinks which use baseMapName instead of baseMapId. This will be used if `initBaseMapId` can't be resolved */
+  initBaseMapName: string | undefined;
 
   previewBaseMapId: string = "basemap-positron";
 
@@ -673,25 +678,33 @@ export default class Terria {
     }
   }
 
-  @action
-  loadPersistedOrInitBaseMap(): void {
+
+  async loadPersistedOrInitBaseMap() {
+    // Set baseMap fallback to first option
+    let baseMap = this.baseMaps[0].mappable;
     const persistedBaseMapId = this.getLocalProperty("basemap");
     const baseMapSearch = this.baseMaps.find(
       baseMap => baseMap.mappable.uniqueId === persistedBaseMapId
     );
     if (baseMapSearch) {
-      this.mainViewer.baseMap = baseMapSearch.mappable;
+      baseMap = baseMapSearch.mappable;
     } else {
-      console.error(
-        `Couldn't find a basemap for unique id ${persistedBaseMapId}. Trying to load init base map.`
-      );
-      const baseMapSearch = this.baseMaps.find(
-        baseMap => baseMap.mappable.uniqueId === this.initBaseMapId
-      );
+      // Try to find basemap using initBaseMapId and initBaseMapName
+      const baseMapSearch =
+        this.baseMaps.find(
+          baseMap => baseMap.mappable.uniqueId === this.initBaseMapId
+        ) ??
+        this.baseMaps.find(
+          baseMap =>
+            CatalogMemberMixin.isMixedInto(baseMap.mappable) &&
+            baseMap.mappable.name === this.initBaseMapName
+        );
       if (baseMapSearch) {
-        this.mainViewer.baseMap = baseMapSearch.mappable;
+        baseMap = baseMapSearch.mappable;
       }
     }
+
+    await this.mainViewer.setBaseMap(baseMap);
   }
 
   get isLoadingInitSources(): boolean {
@@ -936,6 +949,10 @@ export default class Terria {
 
     if (isJsonString(initData.baseMapId)) {
       this.initBaseMapId = initData.baseMapId;
+    }
+
+    if (isJsonString(initData.baseMapName)) {
+      this.initBaseMapName = initData.baseMapName;
     }
 
     if (isJsonString(initData.previewBaseMapId)) {

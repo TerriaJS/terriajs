@@ -77,10 +77,6 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
     });
   }
 
-  protected async forceLoadMapItems(): Promise<void> {
-    await this.loadMetadata();
-  }
-
   @computed
   get imageryProvider(): MapboxVectorTileImageryProvider | undefined {
     if (this.url === undefined || this.layer === undefined) {
@@ -109,6 +105,10 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
       featureInfoFunc: this.featureInfoFromFeature,
       credit: this.attribution
     });
+  }
+
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
   }
 
   @computed
