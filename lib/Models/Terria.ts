@@ -678,7 +678,6 @@ export default class Terria {
     }
   }
 
-
   async loadPersistedOrInitBaseMap() {
     // Set baseMap fallback to first option
     let baseMap = this.baseMaps[0].mappable;
