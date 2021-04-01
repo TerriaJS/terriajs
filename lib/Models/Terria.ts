@@ -79,7 +79,7 @@ import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
 import ViewerMode from "./ViewerMode";
 import Workbench from "./Workbench";
-import IElementsConfig from "./IElementsConfig";
+import IElementConfig from "./IElementConfig";
 // import overrides from "../Overrides/defaults.jsx";
 
 interface ConfigParameters {

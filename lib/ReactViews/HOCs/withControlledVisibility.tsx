@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import IElementConfig from "../../Models/IElementsConfig";
+import IElementConfig from "../../Models/IElementConfig";
 
 interface WithControlledVisibilityProps {
   elementConfig: IElementConfig;
