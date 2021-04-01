@@ -7,6 +7,7 @@ Change Log
 * Add `hideInBaseMapMenu` option to `BaseMapModel`.
 * Change default basemap images to relative paths.
 * Add `tileWidth` and `tileHeight` traits to `WebMapServiceCatalogItem`.
+* Add `WebMapService` support for WGS84 tiling scheme
 * [The next improvement]
 
 #### 8.0.0-alpha.69
