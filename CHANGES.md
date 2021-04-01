@@ -19,6 +19,7 @@ Change Log
 * Fix load of persisted basemap
 * Fix sharing of base map
 * Added backward compatibility for `baseMapName` in `initData` (eg share links)
+* Add `WebMapService` support for WGS84 tiling scheme
 * [The next improvement]
 
 #### 8.0.0-alpha.69
