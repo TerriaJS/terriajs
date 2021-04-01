@@ -27,12 +27,12 @@ import isReadOnlyArray from "../Core/isReadOnlyArray";
 import { JsonObject } from "../Core/Json";
 import loadJson from "../Core/loadJson";
 import TerriaError from "../Core/TerriaError";
-import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
-import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import ChartableMixin from "../ModelMixins/ChartableMixin";
 import DiffableMixin from "../ModelMixins/DiffableMixin";
 import ExportableMixin from "../ModelMixins/ExportableMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
+import MappableMixin, { ImageryParts } from "../ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
 import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -54,7 +54,6 @@ import WebMapServiceCatalogItemTraits, {
   WebMapServiceAvailableLayerStylesTraits,
   WebMapServiceAvailableStyleTraits
 } from "../Traits/WebMapServiceCatalogItemTraits";
-import { ImageryParts } from "../ModelMixins/MappableMixin";
 import { callWebCoverageService } from "./callWebCoverageService";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
@@ -452,12 +451,21 @@ class GetCapabilitiesStratum extends LoadableStratum(
         // remove a circular reference to the parent
         delete out._parent;
 
-        result.push(
-          createStratumInstance(InfoSectionTraits, {
-            name: i18next.t("models.webMapServiceCatalogItem.dataDescription"),
-            contentAsObject: out as JsonObject
-          })
-        );
+        try {
+          result.push(
+            createStratumInstance(InfoSectionTraits, {
+              name: i18next.t(
+                "models.webMapServiceCatalogItem.dataDescription"
+              ),
+              contentAsObject: out as JsonObject
+            })
+          );
+        } catch (e) {
+          console.log(
+            `FAILED to create InfoSection with WMS layer Capabilities`
+          );
+          console.log(e);
+        }
       }
     }
 
@@ -775,14 +783,10 @@ class WebMapServiceCatalogItem
     ExportableMixin(
       DiffableMixin(
         TimeFilterMixin(
-          MappableMixin(
-            AsyncChartableMixin(
-              GetCapabilitiesMixin(
-                UrlMixin(
-                  CatalogMemberMixin(
-                    CreateModel(WebMapServiceCatalogItemTraits)
-                  )
-                )
+          ChartableMixin(
+            GetCapabilitiesMixin(
+              UrlMixin(
+                CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
               )
             )
           )
@@ -862,14 +866,6 @@ class WebMapServiceCatalogItem
       const diffStratum = new DiffStratum(this);
       this.strata.set(DiffableMixin.diffStratumName, diffStratum);
     });
-  }
-
-  protected forceLoadChartItems(): Promise<void> {
-    return this.forceLoadMetadata();
-  }
-
-  forceLoadMapItems(): Promise<void> {
-    return this.loadMetadata();
   }
 
   @computed get cacheDuration(): string {
@@ -990,6 +986,10 @@ class WebMapServiceCatalogItem
       uri.addQuery("time", time);
     }
     return uri.toString();
+  }
+
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
   }
 
   @computed

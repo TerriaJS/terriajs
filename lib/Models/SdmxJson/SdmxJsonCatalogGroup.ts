@@ -1,4 +1,5 @@
 import { runInAction } from "mobx";
+import runLater from "../../Core/runLater";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../ModelMixins/GroupMixin";
 import UrlMixin from "../../ModelMixins/UrlMixin";
@@ -24,14 +25,12 @@ export default class SdmxCatalogGroup extends UrlMixin(
     }
   }
 
-  protected forceLoadMembers(): Promise<void> {
-    return this.loadMetadata().then(() => {
-      const sdmxServerStratum = <SdmxServerStratum | undefined>(
-        this.strata.get(SdmxServerStratum.stratumName)
-      );
-      if (sdmxServerStratum) {
-        sdmxServerStratum.createMembers();
-      }
-    });
+  protected async forceLoadMembers() {
+    const sdmxServerStratum = <SdmxServerStratum | undefined>(
+      this.strata.get(SdmxServerStratum.stratumName)
+    );
+    if (sdmxServerStratum) {
+      await runLater(() => sdmxServerStratum.createMembers());
+    }
   }
 }

@@ -6,6 +6,8 @@ import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
 import MappableTraits from "../Traits/MappableTraits";
+import CatalogMemberMixin from "./CatalogMemberMixin";
+import TableMixin from "./TableMixin";
 
 export type MapItem =
   | ImageryParts
@@ -68,8 +70,10 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
      * If the map items are already loaded or already loading, it will
      * return the existing promise.
      */
-    loadMapItems(): Promise<void> {
-      return this._mapItemsLoader.load();
+    async loadMapItems(force?: boolean) {
+      if (CatalogMemberMixin.isMixedInto(this)) await this.loadMetadata();
+      if (TableMixin.isMixedInto(this)) await this.loadRegionProviderList();
+      await this._mapItemsLoader.load(force);
     }
 
     abstract get mapItems(): MapItem[];
@@ -77,8 +81,12 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
     /**
      * Forces load of the maps items. This method does _not_ need to consider
      * whether the map items are already loaded.
+     *
+     * It is guaranteed that `loadMetadata` has finished before this is called.
+     *
+     * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
      */
-    protected abstract forceLoadMapItems(): Promise<void>;
+    protected abstract async forceLoadMapItems(): Promise<void>;
 
     dispose() {
       super.dispose();

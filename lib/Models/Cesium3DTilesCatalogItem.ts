@@ -24,12 +24,10 @@ import { ItemSearchResult } from "./ItemSearchProvider";
 // A property name used for tagging a search result feature for highlighting/hiding.
 const SEARCH_RESULT_TAG = "terriajs_search_result";
 
-export default class Cesium3DTilesCatalogItem extends MappableMixin(
-  SearchableItemMixin(
-    FeatureInfoMixin(
-      Cesium3dTilesMixin(
-        CatalogMemberMixin(CreateModel(Cesium3DTilesCatalogItemTraits))
-      )
+export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
+  FeatureInfoMixin(
+    Cesium3dTilesMixin(
+      CatalogMemberMixin(CreateModel(Cesium3DTilesCatalogItemTraits))
     )
   )
 ) {
