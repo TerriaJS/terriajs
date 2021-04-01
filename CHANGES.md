@@ -3,9 +3,11 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.71)
-
+#### next release (8.0.0-alpha.72)
 * [The next improvement]
+
+#### 8.0.0-alpha.71
+* Fix accidental translation string change in 8.0.0-alpha.70
 
 #### 8.0.0-alpha.70
 
