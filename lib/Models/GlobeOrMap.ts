@@ -6,6 +6,7 @@ import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
 import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
@@ -39,6 +40,9 @@ export default abstract class GlobeOrMap {
   private _tilesLoadingCountMax: number = 0;
   protected supportsPolylinesOnTerrain?: boolean;
 
+  // Fired when zoomTo is called
+  zoomToEvent: CesiumEvent = new CesiumEvent();
+
   // This is updated by Leaflet and Cesium objects.
   // Avoid duplicate mousemove events.  Why would we get duplicate mousemove events?  I'm glad you asked:
   // http://stackoverflow.com/questions/17818493/mousemove-event-repeating-every-second/17819113
@@ -46,10 +50,20 @@ export default abstract class GlobeOrMap {
   @observable mouseCoords: MouseCoords = new MouseCoords();
 
   abstract destroy(): void;
-  abstract zoomTo(
+
+  abstract doZoomTo(
     viewOrExtent: CameraView | Rectangle | MappableMixin.MappableMixin,
     flightDurationSeconds: number
   ): void;
+
+  zoomTo(
+    viewOrExtent: CameraView | Rectangle | MappableMixin.MappableMixin,
+    flightDurationSeconds: number
+  ): void {
+    this.zoomToEvent.raiseEvent();
+    this.doZoomTo(viewOrExtent, flightDurationSeconds);
+  }
+
   abstract getCurrentCameraView(): CameraView;
 
   /* Gets the current container element.
@@ -349,13 +363,9 @@ export default abstract class GlobeOrMap {
                 .catch(function() {});
             });
 
-            this._highlightPromise = catalogItem.loadMapItems().then(() => {
-              if (removeCallback !== this._removeHighlightCallback) {
-                return;
-              }
-              catalogItem.setTrait(CommonStrata.user, "show", true);
-              this.terria.overlays.add(catalogItem);
-            });
+            catalogItem.setTrait(CommonStrata.user, "show", true);
+
+            this._highlightPromise = this.terria.overlays.add(catalogItem);
           }
         }
       }

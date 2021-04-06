@@ -11,6 +11,7 @@ import i18next from "i18next";
 import { computed, runInAction } from "mobx";
 import combine from "terriajs-cesium/Source/Core/combine";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
@@ -24,13 +25,14 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import isReadOnlyArray from "../Core/isReadOnlyArray";
 import { JsonObject } from "../Core/Json";
+import loadJson from "../Core/loadJson";
 import TerriaError from "../Core/TerriaError";
-import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
-import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import ChartableMixin from "../ModelMixins/ChartableMixin";
 import DiffableMixin from "../ModelMixins/DiffableMixin";
 import ExportableMixin from "../ModelMixins/ExportableMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
+import MappableMixin, { ImageryParts } from "../ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
 import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -45,11 +47,13 @@ import {
 import LegendTraits from "../Traits/LegendTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
 import WebMapServiceCatalogItemTraits, {
+  SUPPORTED_CRS_3857,
+  SUPPORTED_CRS_4326,
+  WebMapServiceAvailableDimensionTraits,
   WebMapServiceAvailableLayerDimensionsTraits,
   WebMapServiceAvailableLayerStylesTraits,
   WebMapServiceAvailableStyleTraits
 } from "../Traits/WebMapServiceCatalogItemTraits";
-import { ImageryParts } from "../ModelMixins/MappableMixin";
 import { callWebCoverageService } from "./callWebCoverageService";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
@@ -59,6 +63,7 @@ import Model, { BaseModel } from "./Model";
 import { CapabilitiesStyle } from "./OwsInterfaces";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
+import StratumOrder from "./StratumOrder";
 import WebMapServiceCapabilities, {
   CapabilitiesContactInformation,
   CapabilitiesDimension,
@@ -69,7 +74,6 @@ import WebMapServiceCapabilities, {
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 
 const dateFormat = require("dateformat");
-
 class GetCapabilitiesStratum extends LoadableStratum(
   WebMapServiceCatalogItemTraits
 ) {
@@ -285,6 +289,27 @@ class GetCapabilitiesStratum extends LoadableStratum(
     return new Map(this.catalogItem.layersArray.map(lookup));
   }
 
+  @computed get crs() {
+    // Get set of supported CRS from layer hierarchy
+    const layerCrs = new Set<string>();
+    this.capabilitiesLayers.forEach(layer => {
+      if (layer) {
+        const srs = this.capabilities.getInheritedValues(layer, "SRS");
+        const crs = this.capabilities.getInheritedValues(layer, "CRS");
+        [
+          ...(Array.isArray(srs) ? srs : [srs]),
+          ...(Array.isArray(crs) ? crs : [crs])
+        ].forEach(c => layerCrs.add(c));
+      }
+    });
+
+    // Note order is important here, the first one found will be used
+    const supportedCrs = [...SUPPORTED_CRS_3857, ...SUPPORTED_CRS_4326];
+
+    // If nothing is supported, ask for EPSG:3857, and hope for the best.
+    return supportedCrs.find(crs => layerCrs.has(crs)) ?? "EPSG:3857";
+  }
+
   @computed
   get availableDimensions(): StratumFromTraits<
     WebMapServiceAvailableLayerDimensionsTraits
@@ -426,12 +451,21 @@ class GetCapabilitiesStratum extends LoadableStratum(
         // remove a circular reference to the parent
         delete out._parent;
 
-        result.push(
-          createStratumInstance(InfoSectionTraits, {
-            name: i18next.t("models.webMapServiceCatalogItem.dataDescription"),
-            contentAsObject: out as JsonObject
-          })
-        );
+        try {
+          result.push(
+            createStratumInstance(InfoSectionTraits, {
+              name: i18next.t(
+                "models.webMapServiceCatalogItem.dataDescription"
+              ),
+              contentAsObject: out as JsonObject
+            })
+          );
+        } catch (e) {
+          console.log(
+            `FAILED to create InfoSection with WMS layer Capabilities`
+          );
+          console.log(e);
+        }
       }
     }
 
@@ -749,14 +783,10 @@ class WebMapServiceCatalogItem
     ExportableMixin(
       DiffableMixin(
         TimeFilterMixin(
-          MappableMixin(
-            AsyncChartableMixin(
-              GetCapabilitiesMixin(
-                UrlMixin(
-                  CatalogMemberMixin(
-                    CreateModel(WebMapServiceCatalogItemTraits)
-                  )
-                )
+          ChartableMixin(
+            GetCapabilitiesMixin(
+              UrlMixin(
+                CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
               )
             )
           )
@@ -796,6 +826,17 @@ class WebMapServiceCatalogItem
   }
 
   @computed
+  get shortReport(): string | undefined {
+    if (
+      this.tilingScheme instanceof GeographicTilingScheme &&
+      this.terria.currentViewer.type === "Leaflet"
+    ) {
+      return i18next.t("map.cesium.notWebMercatorTilingScheme", this);
+    }
+    return super.shortReport;
+  }
+
+  @computed
   get colorScaleRange(): string | undefined {
     if (this.supportsColorScaleRange) {
       return `${this.colorScaleMinimum},${this.colorScaleMaximum}`;
@@ -825,14 +866,6 @@ class WebMapServiceCatalogItem
       const diffStratum = new DiffStratum(this);
       this.strata.set(DiffableMixin.diffStratumName, diffStratum);
     });
-  }
-
-  protected forceLoadChartItems(): Promise<void> {
-    return this.forceLoadMetadata();
-  }
-
-  forceLoadMapItems(): Promise<void> {
-    return this.loadMetadata();
   }
 
   @computed get cacheDuration(): string {
@@ -955,6 +988,10 @@ class WebMapServiceCatalogItem
     return uri.toString();
   }
 
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
+  }
+
   @computed
   get mapItems() {
     if (this.isShowingDiff === true) {
@@ -974,6 +1011,18 @@ class WebMapServiceCatalogItem
     }
 
     return result;
+  }
+
+  @computed
+  get tilingScheme() {
+    if (this.crs) {
+      if (SUPPORTED_CRS_3857.includes(this.crs))
+        return new WebMercatorTilingScheme();
+      if (SUPPORTED_CRS_4326.includes(this.crs))
+        return new GeographicTilingScheme();
+    }
+
+    return new WebMercatorTilingScheme();
   }
 
   @computed
@@ -1079,6 +1128,10 @@ class WebMapServiceCatalogItem
         ...dimensionParameters
       };
 
+      if (this.crs) {
+        parameters.crs = this.crs;
+      }
+
       if (this.supportsColorScaleRange) {
         parameters.COLORSCALERANGE = this.colorScaleRange;
       }
@@ -1141,7 +1194,7 @@ class WebMapServiceCatalogItem
         });
       }
 
-      const imageryOptions = {
+      const imageryOptions: WebMapServiceImageryProvider.ConstructorOptions = {
         url: proxyCatalogItemUrl(this, baseUrl.toString()),
         layers: lyrs.length > 0 ? lyrs.join(",") : "",
         parameters: parameters,
@@ -1149,7 +1202,9 @@ class WebMapServiceCatalogItem
           ...dimensionParameters,
           styles: this.styles === undefined ? "" : this.styles
         },
-        tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
+        tileWidth: this.tileWidth,
+        tileHeight: this.tileHeight,
+        tilingScheme: this.tilingScheme,
         maximumLevel: maximumLevel,
         rectangle: rectangle,
         credit: this.attribution

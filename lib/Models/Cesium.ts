@@ -623,7 +623,7 @@ export default class Cesium extends GlobeOrMap {
     }
   }
 
-  zoomTo(
+  doZoomTo(
     target:
       | CameraView
       | Rectangle
@@ -730,7 +730,7 @@ export default class Cesium extends GlobeOrMap {
 
           if (target.mapItems.length > 0) {
             // Zoom to the first item!
-            return that.zoomTo(target.mapItems[0], flightDurationSeconds);
+            return that.doZoomTo(target.mapItems[0], flightDurationSeconds);
           }
         } else if (defined(target.rectangle)) {
           that.scene.camera.flyTo({

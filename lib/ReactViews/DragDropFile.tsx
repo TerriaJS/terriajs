@@ -50,9 +50,7 @@ class DragDropFile extends React.Component<PropsType> {
           MappableMixin.isMixedInto
         );
 
-        yield Promise.all(
-          mappableItems.map(f => f.loadMapItems()).filter(p => isDefined(p))
-        );
+        yield Promise.all(mappableItems.map(f => f.loadMapItems()));
 
         // Zoom to first item
         const firstZoomableItem = mappableItems.find(i =>

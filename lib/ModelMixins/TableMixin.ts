@@ -10,7 +10,6 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
-import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
@@ -21,8 +20,6 @@ import TerriaError from "../Core/TerriaError";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import RegionProvider from "../Map/RegionProvider";
 import JSRegionProviderList from "../Map/RegionProviderList";
-import { ImageryParts } from "./MappableMixin";
-import { calculateDomain, ChartAxis, ChartItem } from "../Models/Chartable";
 import CommonStrata from "../Models/CommonStrata";
 import Model from "../Models/Model";
 import SelectableDimensions, {
@@ -34,12 +31,16 @@ import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
 import TableTraits from "../Traits/TableTraits";
-import MappableMixin from "./MappableMixin";
+import ChartableMixin, {
+  calculateDomain,
+  ChartAxis,
+  ChartItem
+} from "./ChartableMixin";
 import DiscretelyTimeVaryingMixin, {
   DiscreteTimeAsJS
 } from "./DiscretelyTimeVaryingMixin";
 import ExportableMixin, { ExportData } from "./ExportableMixin";
-import TimeVarying from "./TimeVarying";
+import MappableMixin, { ImageryParts } from "./MappableMixin";
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
@@ -47,8 +48,8 @@ import TimeVarying from "./TimeVarying";
 class RegionProviderList extends JSRegionProviderList {}
 function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
   abstract class TableMixin
-    extends ExportableMixin(MappableMixin(DiscretelyTimeVaryingMixin(Base)))
-    implements SelectableDimensions, TimeVarying {
+    extends ExportableMixin(ChartableMixin(DiscretelyTimeVaryingMixin(Base)))
+    implements SelectableDimensions {
     get hasTableMixin() {
       return true;
     }
@@ -62,8 +63,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      */
     @observable
     regionProviderList: RegionProviderList | undefined;
-
-    private _dataLoader = new AsyncLoader(this.forceLoadTableMixin.bind(this));
 
     /**
      * The raw data table in column-major format, i.e. the outer array is an
@@ -507,12 +506,27 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return this.tableColumns.find(column => column.name === name);
     }
 
-    /**
-     * If your implementation of forceLoadTableData sets dataColumnMajor directly, return undefined.
-     */
-    protected abstract forceLoadTableData(): Promise<string[][] | undefined>;
+    protected async forceLoadMapItems() {
+      const dataColumnMajor = await this.forceLoadTableData();
 
-    protected async loadRegionProviderList() {
+      if (dataColumnMajor !== undefined && dataColumnMajor !== null) {
+        runInAction(() => {
+          this.dataColumnMajor = dataColumnMajor;
+        });
+      }
+    }
+
+    /**
+     * Forces load of the table data. This method does _not_ need to consider
+     * whether the table data is already loaded.
+     *
+     * It is guaranteed that `loadMetadata` has finished before this is called, and `regionProviderList` is set.
+     *
+     * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
+     */
+    protected abstract forceLoadTableData(): Promise<string[][]>;
+
+    async loadRegionProviderList() {
       if (isDefined(this.regionProviderList)) return;
 
       const regionProvidersPromise:
@@ -524,30 +538,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         )
       );
       runInAction(() => (this.regionProviderList = regionProvidersPromise));
-    }
-
-    private async forceLoadTableMixin(): Promise<void> {
-      await this.loadRegionProviderList();
-
-      const dataColumnMajor = await this.forceLoadTableData();
-      if (dataColumnMajor !== undefined && dataColumnMajor !== null) {
-        runInAction(() => {
-          this.dataColumnMajor = dataColumnMajor;
-        });
-      }
-    }
-
-    protected forceLoadChartItems(force?: boolean) {
-      return this._dataLoader.load(force);
-    }
-
-    protected forceLoadMapItems(force?: boolean) {
-      return this._dataLoader.load(force);
-    }
-
-    dispose() {
-      super.dispose();
-      this._dataLoader.dispose();
     }
 
     /*

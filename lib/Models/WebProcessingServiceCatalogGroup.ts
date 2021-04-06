@@ -4,6 +4,7 @@ import URI from "urijs";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import { isJsonObject } from "../Core/Json";
 import replaceUnderscores from "../Core/replaceUnderscores";
+import runLater from "../Core/runLater";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
@@ -233,12 +234,11 @@ export default class WebProcessingServiceCatalogGroup extends GroupMixin(
   }
 
   async forceLoadMembers(): Promise<void> {
-    await this.loadMetadata();
     const getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
     );
     if (getCapabilitiesStratum) {
-      getCapabilitiesStratum.createMembersForProcesses();
+      await runLater(() => getCapabilitiesStratum.createMembersForProcesses());
     }
   }
 

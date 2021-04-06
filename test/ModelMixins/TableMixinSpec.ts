@@ -171,5 +171,17 @@ describe("TableMixin", function() {
       expect(item.styleDimensions?.options?.[0].id).toBe("value");
       expect(item.styleDimensions?.options?.[0].name).toBe("Some Style Title");
     });
+
+    it("loads regionProviderList on loadMapItems", async function() {
+      item.setTrait(CommonStrata.user, "csvString", LatLonEnumDateIdCsv);
+
+      await item.loadMetadata();
+
+      expect(item.regionProviderList).toBeUndefined();
+
+      await item.loadMapItems();
+
+      expect(item.regionProviderList?.regionProviders.length).toBe(102);
+    });
   });
 });
