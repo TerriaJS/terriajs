@@ -3,11 +3,22 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.70)
+#### next release (8.0.0-alpha.72)
+* [The next improvement]
+
+#### 8.0.0-alpha.71
+* Fix accidental translation string change in 8.0.0-alpha.70
+
+#### 8.0.0-alpha.70
+
+- **Breaking changes**: 
+  - Merge `Chartable` and `AsyncChartableMixin` into new **`ChartableMixin`** + `loadChartItems` has been replaced by `loadMapItems`.
+  - To set base map use `terriaViewer.setBaseMap()` instead of `terriaViewer.basemap = ...`
+  - Incorrect usage of `AsyncLoader` **will now throw errors**
+
 * Add `hideInBaseMapMenu` option to `BaseMapModel`.
 * Change default basemap images to relative paths.
 * Add `tileWidth` and `tileHeight` traits to `WebMapServiceCatalogItem`.
-* Add `WebMapService` support for WGS84 tiling scheme
 * Add docs about `AsyncLoader`
 * Remove interactions between AsyncLoaders (eg calling `loadMetadata` from `forceLoadMapItems`)
 * ... Instead, `loadMapItems` will call `loadMetadata` before triggering its own `AsyncLoader`
@@ -20,7 +31,7 @@ Change Log
 * Fix load of persisted basemap
 * Fix sharing of base map
 * Added backward compatibility for `baseMapName` in `initData` (eg share links)
-* [The next improvement]
+* Add `WebMapService` support for WGS84 tiling scheme
 
 #### 8.0.0-alpha.69
 
