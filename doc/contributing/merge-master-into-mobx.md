@@ -1,4 +1,4 @@
-# Merging master into mobx
+# Merging master (v7) into mobx (v8)
 
 * Pull and checkout the latest mobx branch.
 * Find the common ancestor between that and master: `git merge-base origin/master mobx`

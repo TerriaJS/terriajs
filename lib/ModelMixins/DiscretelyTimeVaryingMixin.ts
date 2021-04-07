@@ -7,7 +7,7 @@ import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
-import { calculateDomain, ChartItem } from "../Models/Chartable";
+import { calculateDomain, ChartItem } from "../ModelMixins/ChartableMixin";
 import CommonStrata from "../Models/CommonStrata";
 import Model from "../Models/Model";
 import DiscretelyTimeVaryingTraits from "../Traits/DiscretelyTimeVaryingTraits";

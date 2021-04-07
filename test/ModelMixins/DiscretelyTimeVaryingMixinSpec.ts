@@ -40,7 +40,7 @@ describe("DiscretelyTimeVaryingMixin", () => {
     wmsItem.setTrait(CommonStrata.definition, "layers", "single_period");
     wmsItem.setTrait(CommonStrata.user, "showInChartPanel", true);
     wmsItem.setTrait(CommonStrata.user, "chartColor", "#efefef");
-    await wmsItem.loadChartItems();
+    await wmsItem.loadMapItems();
     expect(wmsItem.chartItems[0].getColor()).toBe("#efefef");
   });
 

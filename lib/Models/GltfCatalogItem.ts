@@ -1,42 +1,36 @@
-import { computed, action, observable } from "mobx";
+import { action, computed, observable } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
+import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
+import Transforms from "terriajs-cesium/Source/Core/Transforms";
+import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import UrlMixin from "../ModelMixins/UrlMixin";
-import CreateModel from "./CreateModel";
-import Mappable from "./Mappable";
-import GltfCatalogItemTraits from "../Traits/GltfCatalogItemTraits";
-import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
-import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
-import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
-import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
-import CommonStrata from "./CommonStrata";
+import MappableMixin from "../ModelMixins/MappableMixin";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import ShadowMixin from "../ModelMixins/ShadowMixin";
+import UrlMixin from "../ModelMixins/UrlMixin";
+import GltfCatalogItemTraits from "../Traits/GltfCatalogItemTraits";
+import CommonStrata from "./CommonStrata";
+import CreateModel from "./CreateModel";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
 // we still maintain the type checking, without TS screaming with errors
 const Axis: Axis = require("terriajs-cesium/Source/Scene/Axis").default;
 
-export default class GltfCatalogItem
-  extends ShadowMixin(
-    UrlMixin(CatalogMemberMixin(CreateModel(GltfCatalogItemTraits)))
-  )
-  implements Mappable {
+export default class GltfCatalogItem extends MappableMixin(
+  ShadowMixin(UrlMixin(CatalogMemberMixin(CreateModel(GltfCatalogItemTraits))))
+) {
   static readonly type = "gltf";
 
   @observable hasLocalData = false;
 
   get type() {
     return GltfCatalogItem.type;
-  }
-
-  get isMappable() {
-    return true;
   }
 
   get canZoomTo() {
@@ -116,10 +110,6 @@ export default class GltfCatalogItem
     this.hasLocalData = true;
   }
 
-  loadMapItems(): Promise<void> {
-    return Promise.resolve();
-  }
-
   @computed
   private get model() {
     if (this.url === undefined) {
@@ -134,6 +124,10 @@ export default class GltfCatalogItem
       heightReference: new ConstantProperty(this.cesiumHeightReference)
     };
     return new ModelGraphics(options);
+  }
+
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
   }
 
   @computed

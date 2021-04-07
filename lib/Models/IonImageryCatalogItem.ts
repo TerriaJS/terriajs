@@ -1,16 +1,20 @@
 import { computed } from "mobx";
 import IonImageryProvider from "terriajs-cesium/Source/Scene/IonImageryProvider";
 import isDefined from "../Core/isDefined";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import IonImageryCatalogItemTraits from "../Traits/IonImageryCatalogItemTraits";
 import CreateModel from "./CreateModel";
-import Mappable from "./Mappable";
 
-export default class IonImageryCatalogItem
-  extends CreateModel(IonImageryCatalogItemTraits)
-  implements Mappable {
+export default class IonImageryCatalogItem extends MappableMixin(
+  CreateModel(IonImageryCatalogItemTraits)
+) {
   static readonly type = "ion-imagery";
 
-  loadMapItems() {
+  get type() {
+    return IonImageryCatalogItem.type;
+  }
+
+  protected forceLoadMapItems(): Promise<void> {
     return Promise.resolve();
   }
 

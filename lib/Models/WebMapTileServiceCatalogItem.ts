@@ -8,7 +8,7 @@ import URI from "urijs";
 import containsAny from "../Core/containsAny";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -415,7 +415,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 }
 
-class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
+class WebMapTileServiceCatalogItem extends MappableMixin(
   GetCapabilitiesMixin(
     UrlMixin(
       CatalogMemberMixin(CreateModel(WebMapTileServiceCatalogItemTraits))
@@ -464,10 +464,6 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
     runInAction(() => {
       this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
     });
-  }
-
-  forceLoadMapItems(): Promise<void> {
-    return this.loadMetadata();
   }
 
   @computed get cacheDuration(): string {
@@ -648,6 +644,10 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
       tileWidth: tileWidth,
       tileHeight: tileHeight
     };
+  }
+
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
   }
 
   @computed
