@@ -19,6 +19,9 @@ import SplitterTraits from "./SplitterTraits";
 import TimeFilterTraits from "./TimeFilterTraits";
 import UrlTraits from "./UrlTraits";
 
+export const SUPPORTED_CRS_3857 = ["EPSG:3857", "EPSG:900913"];
+export const SUPPORTED_CRS_4326 = ["EPSG:4326", "CRS:84", "EPSG:4283"];
+
 export class WebMapServiceAvailableStyleTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
@@ -172,6 +175,15 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       "The styles to use with each of the `Layer(s)` (comma separated values). This maps one-to-one with `Layer(s)`"
   })
   styles?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Style(s)",
+    description: `CRS to use with WMS layers. We support Web Mercator (${SUPPORTED_CRS_3857.join(
+      ", "
+    )}) and WGS 84 (${SUPPORTED_CRS_4326.join(", ")})`
+  })
+  crs?: string;
 
   @anyTrait({
     name: "Dimensions",

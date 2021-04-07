@@ -4,7 +4,7 @@ import Resource from "terriajs-cesium/Source/Core/Resource";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
 import TerriaError from "../../Core/TerriaError";
-import AsyncChartableMixin from "../../ModelMixins/AsyncChartableMixin";
+import ChartableMixin from "../../ModelMixins/ChartableMixin";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../../ModelMixins/TableMixin";
 import UrlMixin from "../../ModelMixins/UrlMixin";
@@ -25,15 +25,13 @@ import { SdmxJsonDataflowStratum } from "./SdmxJsonDataflowStratum";
 const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
 
 export default class SdmxJsonCatalogItem
-  extends AsyncChartableMixin(
+  extends ChartableMixin(
     TableMixin(UrlMixin(CatalogMemberMixin(CreateModel(SdmxCatalogItemTraits))))
   )
   implements SelectableDimensions {
   static get type() {
     return "sdmx-json";
   }
-
-  private _currentCsvUrl: string | undefined;
 
   constructor(
     id: string | undefined,
@@ -105,8 +103,7 @@ export default class SdmxJsonCatalogItem
         this.regionMappedDimensionIds.length === 0,
       setDimensionValue: (stratumId: string, value: "time" | "region") => {
         this.setTrait(stratumId, "viewBy", value);
-        this.forceLoadMapItems(true);
-        this.forceLoadChartItems(true);
+        this.loadMapItems();
       }
     };
   }
@@ -133,8 +130,7 @@ export default class SdmxJsonCatalogItem
           }
 
           dimensionTraits.setTrait(stratumId, "selectedId", value);
-          this.forceLoadMapItems(true);
-          this.forceLoadChartItems(true);
+          this.loadMapItems();
         }
       };
     });
@@ -181,31 +177,14 @@ export default class SdmxJsonCatalogItem
 
   @computed
   get shortReport() {
-    if (
-      !isDefined(this.dataColumnMajor) ||
-      this.isLoadingMapItems ||
-      this.isLoadingChartItems
-    )
-      return;
+    if (!isDefined(this.dataColumnMajor) || this.isLoading) return;
 
     return this.dataColumnMajor.length === 0
       ? i18next.t("models.sdmxCatalogItem.noData")
       : undefined;
   }
 
-  /**
-   * Even though this is Sdmx**Json**CatalogItem, we download sdmx-csv.
-   */
-  private async downloadData(): Promise<string[][] | undefined> {
-    // FIXME: This is a bad way of handling re-loading the same data
-    if (
-      !isDefined(this.regionProviderList) ||
-      this._currentCsvUrl === this.csvUrl
-    )
-      return this.dataColumnMajor;
-
-    this._currentCsvUrl = this.csvUrl;
-
+  protected async forceLoadTableData() {
     let columns: string[][] = [];
 
     try {
@@ -259,11 +238,6 @@ export default class SdmxJsonCatalogItem
       );
       return columns;
     }
-  }
-  protected async forceLoadTableData(): Promise<string[][]> {
-    await this.loadMetadata();
-
-    return (await this.downloadData()) || [];
   }
 }
 

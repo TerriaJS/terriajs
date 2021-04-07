@@ -466,10 +466,6 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     });
   }
 
-  forceLoadMapItems(): Promise<void> {
-    return this.loadMetadata();
-  }
-
   @computed get cacheDuration(): string {
     if (isDefined(super.cacheDuration)) {
       return super.cacheDuration;
@@ -648,6 +644,10 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
       tileWidth: tileWidth,
       tileHeight: tileHeight
     };
+  }
+
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
   }
 
   @computed
