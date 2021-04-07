@@ -4,8 +4,16 @@ import CommonStrata from "../../lib/Models/CommonStrata";
 import proxyCatalogItemUrl from "../../lib/Models/proxyCatalogItemUrl";
 import Terria from "../../lib/Models/Terria";
 
-const positionApiResponse = require("../../wwwroot/test/JSON-api/position_api_response.json");
-const valueApiResponse = require("../../wwwroot/test/JSON-api/value_api_response.json");
+const regionMapping = JSON.stringify(
+  require("../../wwwroot/data/regionMapping.json")
+);
+
+const positionApiResponse = JSON.stringify(
+  require("../../wwwroot/test/JSON-api/position_api_response.json")
+);
+const valueApiResponse = JSON.stringify(
+  require("../../wwwroot/test/JSON-api/value_api_response.json")
+);
 
 describe("ApiTableCatalogItem", function() {
   let terria: Terria;
@@ -66,17 +74,21 @@ describe("ApiTableCatalogItem", function() {
     });
 
     jasmine.Ajax.stubRequest(
+      "build/TerriaJS/data/regionMapping.json"
+    ).andReturn({ responseText: regionMapping });
+
+    jasmine.Ajax.stubRequest(
       proxyCatalogItemUrl(
         apiCatalogItem,
         catalogJson.apis[positionApiIdx].apiUrl
       )
     ).andReturn({
-      responseJSON: positionApiResponse
+      responseText: positionApiResponse
     });
     jasmine.Ajax.stubRequest(
       proxyCatalogItemUrl(apiCatalogItem, catalogJson.apis[valueApiIdx].apiUrl)
     ).andReturn({
-      responseJSON: valueApiResponse
+      responseText: valueApiResponse
     });
 
     await apiCatalogItem.loadMapItems();

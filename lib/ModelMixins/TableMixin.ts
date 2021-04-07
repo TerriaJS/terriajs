@@ -524,7 +524,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      *
      * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
      */
-    protected abstract forceLoadTableData(): Promise<string[][]>;
+    protected abstract forceLoadTableData(): Promise<string[][] | undefined>;
 
     async loadRegionProviderList() {
       if (isDefined(this.regionProviderList)) return;
