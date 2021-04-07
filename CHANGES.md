@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.72)
 * Fix sharing preview item.
+* Added z-index to right button group in mobile header menu
 * [The next improvement]
 
 #### 8.0.0-alpha.71
