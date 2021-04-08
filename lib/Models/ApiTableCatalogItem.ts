@@ -30,8 +30,8 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
   TableMixin(CatalogMemberMixin(CreateModel(ApiTableCatalogItemTraits)))
 ) {
   static readonly type = "api-table";
-  @observable protected apiResponses: any[] = [];
-  @observable protected hasData: boolean = false;
+  @observable private apiResponses: any[] = [];
+  @observable private hasData: boolean = false;
 
   constructor(id: string | undefined, terria: Terria) {
     super(id, terria);
@@ -46,13 +46,8 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     return this.apiResponses.length > 0;
   }
 
-  @computed
-  get apiDataColumnMajor() {
-    return this.apiResponseToTable();
-  }
-
   protected loadDataFromApis() {
-    const apisWithUrl = this.apis.filter(api => api.apiUrl)
+    const apisWithUrl = this.apis.filter(api => api.apiUrl);
     const apiUrls = apisWithUrl.map(api =>
       proxyCatalogItemUrl(this, api.apiUrl!)
     );
@@ -149,7 +144,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     return this.loadDataFromApis()
       .then(() => {
         runInAction(() => {
-          this.append(this.apiDataColumnMajor);
+          this.append(this.apiResponseToTable());
           this.hasData = true;
         });
       })
@@ -159,7 +154,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
   refreshData(): void {
     this.loadDataFromApis().then(() => {
       runInAction(() => {
-        this.append(this.apiDataColumnMajor);
+        this.append(this.apiResponseToTable());
       });
     });
   }

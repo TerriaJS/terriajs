@@ -1,4 +1,4 @@
-import { action, computed, observable, runInAction } from "mobx";
+import { action, computed, observable, runInAction, toJS } from "mobx";
 import { createTransformer } from "mobx-utils";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -40,7 +40,7 @@ import DiscretelyTimeVaryingMixin, {
   DiscreteTimeAsJS
 } from "./DiscretelyTimeVaryingMixin";
 import ExportableMixin, { ExportData } from "./ExportableMixin";
-import MappableMixin, { ImageryParts } from "./MappableMixin";
+import { ImageryParts } from "./MappableMixin";
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
@@ -70,39 +70,43 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      */
     @computed
     get dataColumnMajor(): string[][] | undefined {
-      return this._dataColumnMajor;
-    }
-
-    set dataColumnMajor(newDataColumnMajor: string[][] | undefined) {
+      const dataColumnMajor =
+        this._dataColumnMajor === undefined
+          ? this._dataColumnMajor
+          : toJS(this._dataColumnMajor); // clone it so we can modify it without breaking observable rules
       if (
         this.removeDuplicateRows &&
-        newDataColumnMajor !== undefined &&
-        newDataColumnMajor.length >= 1
+        dataColumnMajor !== undefined &&
+        dataColumnMajor.length >= 1
       ) {
         // De-duplication is slow and memory expensive, so should be avoided if possible.
         const duplicateString = "TERRIAJS:DUPLICATE";
         const seenRows = new Set();
         let hasDuplicates = false;
-        for (let i = 0; i < newDataColumnMajor[0].length; i++) {
-          const row = newDataColumnMajor.map(col => col[i]).join();
+        for (let i = 0; i < dataColumnMajor[0].length; i++) {
+          const row = dataColumnMajor.map(col => col[i]).join();
           if (seenRows.has(row)) {
             // Mark all the cells in this row for deletion
-            newDataColumnMajor.forEach(col => (col[i] = duplicateString));
+            dataColumnMajor.forEach(col => (col[i] = duplicateString));
             hasDuplicates = true;
           } else {
             seenRows.add(row);
           }
         }
         if (hasDuplicates) {
-          newDataColumnMajor.forEach(
+          dataColumnMajor.forEach(
             // Remove all the cells marked as duplicates
             (col, idx) =>
-              (newDataColumnMajor[idx] = col.filter(
+              (dataColumnMajor[idx] = col.filter(
                 cell => cell !== duplicateString
               ))
           );
         }
       }
+      return dataColumnMajor;
+    }
+
+    set dataColumnMajor(newDataColumnMajor: string[][] | undefined) {
       this._dataColumnMajor = newDataColumnMajor;
     }
 
