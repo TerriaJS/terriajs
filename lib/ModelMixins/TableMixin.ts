@@ -70,36 +70,28 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      */
     @computed
     get dataColumnMajor(): string[][] | undefined {
-      const dataColumnMajor =
-        this._dataColumnMajor === undefined
-          ? this._dataColumnMajor
-          : toJS(this._dataColumnMajor); // clone it so we can modify it without breaking observable rules
+      const dataColumnMajor = this._dataColumnMajor;
       if (
         this.removeDuplicateRows &&
         dataColumnMajor !== undefined &&
         dataColumnMajor.length >= 1
       ) {
         // De-duplication is slow and memory expensive, so should be avoided if possible.
-        const duplicateString = "TERRIAJS:DUPLICATE";
+        const rowsToRemove = new Set();
         const seenRows = new Set();
-        let hasDuplicates = false;
         for (let i = 0; i < dataColumnMajor[0].length; i++) {
           const row = dataColumnMajor.map(col => col[i]).join();
           if (seenRows.has(row)) {
-            // Mark all the cells in this row for deletion
-            dataColumnMajor.forEach(col => (col[i] = duplicateString));
-            hasDuplicates = true;
+            // Mark row for deletion
+            rowsToRemove.add(i);
           } else {
             seenRows.add(row);
           }
         }
-        if (hasDuplicates) {
-          dataColumnMajor.forEach(
-            // Remove all the cells marked as duplicates
-            (col, idx) =>
-              (dataColumnMajor[idx] = col.filter(
-                cell => cell !== duplicateString
-              ))
+
+        if (rowsToRemove.size > 0) {
+          return dataColumnMajor.map(col =>
+            col.filter((cell, idx) => !rowsToRemove.has(idx))
           );
         }
       }
