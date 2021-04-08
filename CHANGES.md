@@ -4,6 +4,10 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.72)
+* Adds experimental ApiTableCatalogItem.
+* Fixes a bug where FeatureInfoDownload tries to serialize a circular object
+* Added `removeDuplicateRows` to `TableTraits`
+* `forceLoadTableData` can now return undefined - which will leave `dataColumnMajor` unchanged
 * Fix sharing preview item.
 * Added z-index to right button group in mobile header menu
 * [The next improvement]
