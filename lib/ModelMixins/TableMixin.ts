@@ -40,7 +40,7 @@ import DiscretelyTimeVaryingMixin, {
   DiscreteTimeAsJS
 } from "./DiscretelyTimeVaryingMixin";
 import ExportableMixin, { ExportData } from "./ExportableMixin";
-import MappableMixin, { ImageryParts } from "./MappableMixin";
+import { ImageryParts } from "./MappableMixin";
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
@@ -715,7 +715,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
               return undefined;
             }
           }),
-          show: this.show
+          show: this.show,
+          clippingRectangle: this.clipToRectangle
+            ? this.cesiumRectangle
+            : undefined
         };
       }
     );
