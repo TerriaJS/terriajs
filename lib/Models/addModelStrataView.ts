@@ -35,7 +35,7 @@ export default function addModelStrataView<
     const defaultValue = traitsInstance[traitName];
     Object.defineProperty(propertyTarget, traitName, {
       get: function() {
-        const value = trait.getValue(this);
+        const value = trait.getValueAndCheckIfRequired(this);
         return value === undefined ? defaultValue : value;
       },
       enumerable: true,

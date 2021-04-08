@@ -199,7 +199,7 @@ function createCombinedStratum<T extends ModelTraits>(
     const trait = traits[traitName];
     Object.defineProperty(result, traitName, {
       get: function() {
-        const traitValue = trait.getValue(this);
+        const traitValue = trait.getValueAndCheckIfRequired(this);
 
         // The value may be a model (from ObjectTrait) or an array of models
         // (from ObjectArrayTrait). In either case the models will have two
