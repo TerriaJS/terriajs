@@ -994,6 +994,7 @@ export default class Terria {
       ? initData.timeline.slice()
       : [];
 
+    // NOTE: after this Promise, this function is no longer an `@action`
     const models = initData.models;
     if (isJsonObject(models)) {
       await Promise.all(
@@ -1014,9 +1015,11 @@ export default class Terria {
       );
     }
 
-    if (isJsonString(initData.previewedItemId)) {
-      this.previewedItemId = initData.previewedItemId;
-    }
+    runInAction(() => {
+      if (isJsonString(initData.previewedItemId)) {
+        this.previewedItemId = initData.previewedItemId;
+      }
+    });
 
     // Set the new contents of the workbench.
     const newItems = filterOutUndefined(
