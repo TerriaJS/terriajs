@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import L, { GridLayer } from "leaflet";
 import { action, autorun, runInAction } from "mobx";
-import { createTransformer } from "mobx-utils";
+import { computedFn } from "mobx-utils";
 import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -37,14 +37,14 @@ import PickedFeatures, {
   ProviderCoordsMap
 } from "../Map/PickedFeatures";
 import rectangleToLatLngBounds from "../Map/rectangleToLatLngBounds";
-import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
-import RasterLayerTraits from "../Traits/RasterLayerTraits";
-import SplitterTraits from "../Traits/SplitterTraits";
-import TerriaViewer from "../ViewModels/TerriaViewer";
 import MappableMixin, {
   ImageryParts,
   MapItem
 } from "../ModelMixins/MappableMixin";
+import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
+import RasterLayerTraits from "../Traits/RasterLayerTraits";
+import SplitterTraits from "../Traits/SplitterTraits";
+import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
@@ -105,12 +105,16 @@ export default class Leaflet extends GlobeOrMap {
   private _disposeSplitterReaction: () => void;
 
   private _createImageryLayer: (
-    ip: ImageryProvider
-  ) => GridLayer = createTransformer((ip: ImageryProvider) => {
+    ip: ImageryProvider,
+    clippingRectangle: Rectangle | undefined
+  ) => GridLayer = computedFn((ip, clippingRectangle) => {
+    const layerOptions = {
+      bounds: clippingRectangle && rectangleToLatLngBounds(clippingRectangle)
+    };
     if (ip instanceof MapboxVectorTileImageryProvider) {
-      return new MapboxVectorCanvasTileLayer(ip, {});
+      return new MapboxVectorCanvasTileLayer(ip, layerOptions);
     } else {
-      return new CesiumTileLayer(ip);
+      return new CesiumTileLayer(ip, layerOptions);
     }
   });
 
@@ -130,7 +134,10 @@ export default class Leaflet extends GlobeOrMap {
         item
       );
     }
-    return this._createImageryLayer(parts.imageryProvider);
+    return this._createImageryLayer(
+      parts.imageryProvider,
+      parts.clippingRectangle
+    );
   }
 
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
@@ -465,16 +472,8 @@ export default class Leaflet extends GlobeOrMap {
         } else if (target instanceof CameraView) {
           extent = target.rectangle;
         } else if (MappableMixin.isMixedInto(target)) {
-          if (isDefined(target.rectangle)) {
-            const { west, south, east, north } = target.rectangle;
-            if (
-              isDefined(west) &&
-              isDefined(south) &&
-              isDefined(east) &&
-              isDefined(north)
-            ) {
-              extent = Rectangle.fromDegrees(west, south, east, north);
-            }
+          if (isDefined(target.cesiumRectangle)) {
+            extent = target.cesiumRectangle;
           }
           if (!isDefined(extent)) {
             // Zoom to the first item!

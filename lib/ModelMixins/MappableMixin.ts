@@ -1,3 +1,5 @@
+import { computed } from "mobx";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
@@ -17,12 +19,10 @@ export type MapItem =
 
 // Shouldn't this be a class?
 export interface ImageryParts {
-  // TODO
   alpha: number;
-  // wms: boolean;
-  // isGeoServer: boolean;
-  show: boolean;
+  clippingRectangle: Rectangle | undefined;
   imageryProvider: ImageryProvider;
+  show: boolean;
 }
 
 // This discriminator only discriminates between ImageryParts and DataSource
@@ -52,6 +52,25 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
   abstract class MappableMixin extends Base {
     get isMappable() {
       return true;
+    }
+
+    @computed
+    get cesiumRectangle() {
+      if (
+        this.rectangle !== undefined &&
+        this.rectangle.east !== undefined &&
+        this.rectangle.west !== undefined &&
+        this.rectangle.north !== undefined &&
+        this.rectangle.south !== undefined
+      ) {
+        return Rectangle.fromDegrees(
+          this.rectangle.west,
+          this.rectangle.south,
+          this.rectangle.east,
+          this.rectangle.north
+        );
+      }
+      return undefined;
     }
 
     private _mapItemsLoader = new AsyncLoader(

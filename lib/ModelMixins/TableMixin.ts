@@ -753,7 +753,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
               return undefined;
             }
           }),
-          show: this.show
+          show: this.show,
+          clippingRectangle: this.clipToRectangle
+            ? this.cesiumRectangle
+            : undefined
         };
       }
     );
