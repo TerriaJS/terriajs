@@ -1279,6 +1279,10 @@
       "loadingInitSourceErrorTitle": "Error loading initialization source",
       "loadingInitSourceErrorMessage": "Could not load initialization information from {{fragment}} because no initFragmentPaths are defined.",
       "loadingInitSourceError2Message": "An error occurred while loading initialization information from {{loadSource}}.  This may indicate that you followed an invalid link or that there is a problem with your Internet connection.",
+      "loadingBaseMapsErrorTitle": "Error loading basemaps",
+      "loadingBaseMapErrorTitle": "Error loading basemap: {{name}}",
+      "loadingShareDataErrorTitle": "Error loading share data",
+      "loadingWorkbenchItemErrorTitle": "Error loading item in workbench: {{name}}",
       "disclaimer": "Disclaimer",
       "buttonTitleConfirm": "I Agree"
     },
