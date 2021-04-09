@@ -294,10 +294,19 @@ class FeatureInfoPanel extends React.Component {
 
       // If there is a selected feature then use the feature location.
       position = terria.selectedFeature.position.getValue(clock);
+      if (position === undefined) {
+        // For discretely time varying features, we'll only have values for integer values of clock
+        position = terria.selectedFeature.position.getValue(Math.floor(clock));
+      }
 
       // If position is invalid then don't use it.
       // This seems to be fixing the symptom rather then the cause, but don't know what is the true cause this ATM.
-      if (isNaN(position.x) || isNaN(position.y) || isNaN(position.z)) {
+      if (
+        position === undefined ||
+        isNaN(position.x) ||
+        isNaN(position.y) ||
+        isNaN(position.z)
+      ) {
         position = undefined;
       }
     }

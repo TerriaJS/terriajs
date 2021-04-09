@@ -13,7 +13,6 @@ import combine from "terriajs-cesium/Source/Core/combine";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
@@ -25,14 +24,13 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import isReadOnlyArray from "../Core/isReadOnlyArray";
 import { JsonObject } from "../Core/Json";
-import loadJson from "../Core/loadJson";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import ChartableMixin from "../ModelMixins/ChartableMixin";
 import DiffableMixin from "../ModelMixins/DiffableMixin";
 import ExportableMixin from "../ModelMixins/ExportableMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
-import MappableMixin, { ImageryParts } from "../ModelMixins/MappableMixin";
+import { ImageryParts } from "../ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
 import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -49,7 +47,6 @@ import { RectangleTraits } from "../Traits/MappableTraits";
 import WebMapServiceCatalogItemTraits, {
   SUPPORTED_CRS_3857,
   SUPPORTED_CRS_4326,
-  WebMapServiceAvailableDimensionTraits,
   WebMapServiceAvailableLayerDimensionsTraits,
   WebMapServiceAvailableLayerStylesTraits,
   WebMapServiceAvailableStyleTraits
@@ -63,7 +60,6 @@ import Model, { BaseModel } from "./Model";
 import { CapabilitiesStyle } from "./OwsInterfaces";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
-import StratumOrder from "./StratumOrder";
 import WebMapServiceCapabilities, {
   CapabilitiesContactInformation,
   CapabilitiesDimension,
@@ -1039,7 +1035,8 @@ class WebMapServiceCatalogItem
     return {
       imageryProvider,
       alpha: this.opacity,
-      show: this.show !== undefined ? this.show : true
+      show: this.show,
+      clippingRectangle: this.clipToRectangle ? this.cesiumRectangle : undefined
     };
   }
 
@@ -1058,7 +1055,10 @@ class WebMapServiceCatalogItem
       return {
         imageryProvider,
         alpha: 0.0,
-        show: true
+        show: true,
+        clippingRectangle: this.clipToRectangle
+          ? this.cesiumRectangle
+          : undefined
       };
     } else {
       return undefined;
@@ -1081,7 +1081,10 @@ class WebMapServiceCatalogItem
       return {
         imageryProvider,
         alpha: this.opacity,
-        show: this.show !== undefined ? this.show : true
+        show: this.show,
+        clippingRectangle: this.clipToRectangle
+          ? this.cesiumRectangle
+          : undefined
       };
     }
     return undefined;
@@ -1162,26 +1165,6 @@ class WebMapServiceCatalogItem
         new URI(this.url)
       );
 
-      let rectangle;
-
-      if (
-        this.clipToRectangle &&
-        this.rectangle !== undefined &&
-        this.rectangle.east !== undefined &&
-        this.rectangle.west !== undefined &&
-        this.rectangle.north !== undefined &&
-        this.rectangle.south !== undefined
-      ) {
-        rectangle = Rectangle.fromDegrees(
-          this.rectangle.west,
-          this.rectangle.south,
-          this.rectangle.east,
-          this.rectangle.north
-        );
-      } else {
-        rectangle = undefined;
-      }
-
       const gcStratum: GetCapabilitiesStratum | undefined = this.strata.get(
         GetCapabilitiesMixin.getCapabilitiesStratumName
       ) as GetCapabilitiesStratum;
@@ -1206,7 +1189,6 @@ class WebMapServiceCatalogItem
         tileHeight: this.tileHeight,
         tilingScheme: this.tilingScheme,
         maximumLevel: maximumLevel,
-        rectangle: rectangle,
         credit: this.attribution
       };
 
