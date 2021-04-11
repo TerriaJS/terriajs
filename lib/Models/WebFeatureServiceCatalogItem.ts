@@ -313,7 +313,6 @@ class WebFeatureServiceCatalogItem extends ExportableMixin(
   }
 
   async forceLoadMapItems(): Promise<void> {
-    await this.loadMetadata();
     const getCapabilitiesStratum:
       | GetCapabilitiesStratum
       | undefined = this.strata.get(

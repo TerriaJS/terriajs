@@ -6,7 +6,7 @@ import getChartColorForId from "../Charts/getChartColorForId";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
-import { calculateDomain, ChartItem } from "../Models/Chartable";
+import { calculateDomain, ChartItem } from "../ModelMixins/ChartableMixin";
 import CommonStrata from "../Models/CommonStrata";
 import Model from "../Models/Model";
 import DiscretelyTimeVaryingTraits from "../Traits/DiscretelyTimeVaryingTraits";
@@ -118,16 +118,19 @@ function DiscretelyTimeVaryingMixin<
         return undefined;
       }
 
+      // Where does `time` fit in our sequence of discrete times?
       const exactIndex = binarySearch(
         discreteTimes,
         time,
         (candidate, currentTime) =>
           JulianDate.compare(candidate.time, currentTime)
       );
+      // We have this exact time in our discrete times
       if (exactIndex >= 0) {
         return exactIndex;
       }
 
+      // This is where `time` could be inserted into the discrete times list so that they're all in sorted order
       const nextIndex = ~exactIndex;
       if (nextIndex === 0 || this.fromContinuous === "next") {
         // Before the first, or we want the next time no matter which is closest
@@ -139,6 +142,7 @@ function DiscretelyTimeVaryingMixin<
         // After the last, or we want the previous time no matter which is closest
         return nextIndex - 1;
       } else {
+        // Get the closest discrete time
         const previousTime = discreteTimes[nextIndex - 1].time;
         const nextTime = discreteTimes[nextIndex].time;
 

@@ -3,10 +3,52 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.70)
+#### next release (8.0.0-alpha.73)
+* [The next improvement]
+
+#### 8.0.0-alpha.72
+
+- **Breaking changes**:
+  - Added clippingRectangle to ImageryParts.
+  - Any item that produces ImageryParts in mapItems (any raster items) must now also provide a clippingRectangle.
+  - This clippingRectangle should be derived from this.cesiumRectangle (a new computed property) & this.clipToRectangle as demonstrated in many raster catalog items (e.g. OpenStreetMapCatalogItem.ts).
+
+* Adds experimental ApiTableCatalogItem.
+* Fixes a bug where FeatureInfoDownload tries to serialize a circular object
+* Added `removeDuplicateRows` to `TableTraits`
+* `forceLoadTableData` can now return undefined - which will leave `dataColumnMajor` unchanged
+* Fix sharing preview item.
+* Added z-index to right button group in mobile header menu
+* Added cesiumRectangle computed property to MappableMixin. This is computed from the `rectangle` Trait.
+* Fixed a Cesium render crash that occured when a capabilities document specified larger bounds than the tiling scheme's supported extent (bug occured with esri-mapServer but wms was probably also affected).
+* In fixing Cesium render crash above clipping rectangles are now added to Cesium ImageryLayer (or Leaflet CesiumTileLayer) rather than being included in the ImageryProvider. ImageryParts has been updated to allow passing the clipping rectangle through to Cesium.ts and Leaflet.ts where ImageryLayer/CesiumTileLayer objects are created.
+
+#### 8.0.0-alpha.71
+* Fix accidental translation string change in 8.0.0-alpha.70
+
+#### 8.0.0-alpha.70
+
+- **Breaking changes**: 
+  - Merge `Chartable` and `AsyncChartableMixin` into new **`ChartableMixin`** + `loadChartItems` has been replaced by `loadMapItems`.
+  - To set base map use `terriaViewer.setBaseMap()` instead of `terriaViewer.basemap = ...`
+  - Incorrect usage of `AsyncLoader` **will now throw errors**
+
+* Add `hideInBaseMapMenu` option to `BaseMapModel`.
 * Change default basemap images to relative paths.
 * Add `tileWidth` and `tileHeight` traits to `WebMapServiceCatalogItem`.
-* [The next improvement]
+* Add docs about `AsyncLoader`
+* Remove interactions between AsyncLoaders (eg calling `loadMetadata` from `forceLoadMapItems`)
+* ... Instead, `loadMapItems` will call `loadMetadata` before triggering its own `AsyncLoader`
+* Add `isLoading` to `CatalogMemberMixin` (combines `isLoading` from all the different `AsyncLoader`)
+* Move `Loader` (spinner) from `Legend` to `WorkbenchItem`.
+* Merge `Chartable` and `AsyncChartableMixin` into **`ChartableMixin`** + remove `AsyncLoader` functionality from `ChartableMixin` - it is now all handled by `loadMapItems`.
+* Removed `AsyncLoader` functionality from `TableMixin` - it is now handled by `loadMapItems`.
+  * `TableMixin.loadRegionProviderList()` is now called in `MappableMixin.loadMapItems()`
+* Added `TerriaViewer.setBaseMap()` function, this now calls `loadMapItems` on basemaps
+* Fix load of persisted basemap
+* Fix sharing of base map
+* Added backward compatibility for `baseMapName` in `initData` (eg share links)
+* Add `WebMapService` support for WGS84 tiling scheme
 
 #### 8.0.0-alpha.69
 

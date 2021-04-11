@@ -1,7 +1,7 @@
 import { configure, runInAction } from "mobx";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplateImageryProvider";
+import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
 import OpenStreetMapCatalogItem from "../../lib/Models/OpenStreetMapCatalogItem";
 import Terria from "../../lib/Models/Terria";
 
@@ -54,19 +54,63 @@ describe("OpenStreetMapCatalogItem", function() {
 
     describe("the mapItem", function() {
       it("correctly sets the `alpha` value", function() {
+        if (!ImageryParts.is(item.mapItems[0]))
+          throw new Error("Expected MapItem to be an ImageryParts");
         runInAction(() => item.setTrait("definition", "opacity", 0.42));
         expect(item.mapItems[0].alpha).toBe(0.42);
       });
 
       it("correctly sets `show`", function() {
+        if (!ImageryParts.is(item.mapItems[0]))
+          throw new Error("Expected MapItem to be an ImageryParts");
         runInAction(() => item.setTrait("definition", "show", false));
         expect(item.mapItems[0].show).toBe(false);
         runInAction(() => item.setTrait("definition", "show", true));
         expect(item.mapItems[0].show).toBe(true);
       });
 
+      it("correctly sets the `clippingRectangle` value", function() {
+        item.setTrait("definition", "rectangle", {
+          west: 0,
+          south: -30,
+          east: 30,
+          north: 30
+        });
+
+        if (!ImageryParts.is(item.mapItems[0]))
+          throw new Error("Expected MapItem to be an ImageryParts");
+        expect(item.mapItems[0].clippingRectangle).toBeDefined();
+
+        if (item.mapItems[0].clippingRectangle !== undefined) {
+          expect(item.mapItems[0].clippingRectangle.west).toBeCloseTo(0, 8);
+
+          expect(item.mapItems[0].clippingRectangle.south).toBeCloseTo(
+            -0.5235987755982988,
+            8
+          );
+
+          expect(item.mapItems[0].clippingRectangle.east).toBeCloseTo(
+            0.5235987755982983,
+            8
+          );
+
+          expect(item.mapItems[0].clippingRectangle.north).toBeCloseTo(
+            0.5235987755982988,
+            8
+          );
+        }
+
+        runInAction(() =>
+          item.setTrait("definition", "clipToRectangle", false)
+        );
+        expect(item.mapItems[0].clippingRectangle).toBe(undefined);
+      });
+
       describe("imageryProvider", function() {
         it("should be a UrlTemplateImageryProvider", function() {
+          if (!ImageryParts.is(item.mapItems[0]))
+            throw new Error("Expected MapItem to be an ImageryParts");
+
           let imageryProvider = item.mapItems[0].imageryProvider;
           expect(
             imageryProvider instanceof UrlTemplateImageryProvider
@@ -77,17 +121,13 @@ describe("OpenStreetMapCatalogItem", function() {
           runInAction(() => {
             item.setTrait("definition", "attribution", "foo bar baz");
             item.setTrait("definition", "subdomains", ["a"]);
-            item.setTrait("definition", "rectangle", {
-              west: 0,
-              south: -30,
-              east: 30,
-              north: 30
-            });
           });
 
+          if (!ImageryParts.is(item.mapItems[0]))
+            throw new Error("MapItem is not an ImageryParts");
           let imageryProvider = item.mapItems[0].imageryProvider;
           expect({
-            url: imageryProvider.url,
+            url: (imageryProvider as any).url,
             attribution: imageryProvider.credit.html,
             tilingScheme: imageryProvider.tilingScheme,
             tileWidth: imageryProvider.tileWidth,
@@ -105,23 +145,6 @@ describe("OpenStreetMapCatalogItem", function() {
             maximumLevel: item.maximumLevel,
             subdomains: ["a"]
           });
-
-          expect(imageryProvider.rectangle.west).toBeCloseTo(0, 8);
-
-          expect(imageryProvider.rectangle.south).toBeCloseTo(
-            -0.5235987755982988,
-            8
-          );
-
-          expect(imageryProvider.rectangle.east).toBeCloseTo(
-            0.5235987755982983,
-            8
-          );
-
-          expect(imageryProvider.rectangle.north).toBeCloseTo(
-            0.5235987755982988,
-            8
-          );
         });
       });
     });

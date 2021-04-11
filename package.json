@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "8.0.0-alpha.69",
+  "version": "8.0.0-alpha.72",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
@@ -31,6 +31,7 @@
     "@types/d3-axis": "^1.0.12",
     "@types/d3-selection": "^1.4.1",
     "@types/d3-transition": "^1.1.4",
+    "@types/dateformat": "^3.0.1",
     "@types/domhandler": "^2.4.1",
     "@types/dompurify": "^2.0.2",
     "@types/geojson": "^7946.0.7",
@@ -158,6 +159,7 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.12.16",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@types/dateformat": "^3.0.1",
     "babel-plugin-styled-components": "^1.10.7",
     "documentation": "12.3.0",
     "eslint": "^7.20.0",

@@ -1,8 +1,12 @@
-import maxBy from "lodash-es/maxBy";
-import minBy from "lodash-es/minBy";
+import { maxBy, minBy } from "lodash-es";
+import AsyncLoader from "../Core/AsyncLoader";
+import Constructor from "../Core/Constructor";
 import LatLonHeight from "../Core/LatLonHeight";
+import Model from "../Models/Model";
 import ModelTraits from "../Traits/ModelTraits";
-import Model, { BaseModel } from "./Model";
+import CatalogMemberMixin from "./CatalogMemberMixin";
+import MappableMixin from "./MappableMixin";
+import MappableTraits from "../Traits/MappableTraits";
 
 type Scale = "linear" | "time";
 
@@ -61,15 +65,27 @@ export interface ChartItem {
   pointOnMap?: LatLonHeight;
 }
 
-interface Chartable extends Model<ModelTraits> {
-  readonly chartItems: ReadonlyArray<ChartItem>;
-  loadChartItems(): Promise<void>;
+function ChartableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
+  abstract class ChartableMixin extends MappableMixin(Base) {
+    get isChartable() {
+      return true;
+    }
+
+    /**
+     * Gets the items to show on a chart.
+     */
+    abstract get chartItems(): ChartItem[];
+  }
+
+  return ChartableMixin;
 }
 
-namespace Chartable {
-  export function is(model: BaseModel | Chartable): model is Chartable {
-    return "loadChartItems" in model;
+namespace ChartableMixin {
+  export interface Instance
+    extends InstanceType<ReturnType<typeof ChartableMixin>> {}
+  export function isMixedInto(model: any): model is Instance {
+    return model && model.isChartable;
   }
 }
 
-export default Chartable;
+export default ChartableMixin;
