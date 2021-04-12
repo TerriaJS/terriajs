@@ -3,9 +3,14 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.74)
+#### next release (8.0.0-alpha.75)
 
 * [The next improvement]
+
+
+#### 8.0.0-alpha.74
+
+* Fix JS imports of `TerriaError`
 
 #### 8.0.0-alpha.73
 
