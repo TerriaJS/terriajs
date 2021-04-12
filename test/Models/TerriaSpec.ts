@@ -305,6 +305,7 @@ describe("Terria", function() {
 
       const shareLink = buildShareLink(terria, viewState);
       await newTerria.updateApplicationUrl(shareLink);
+      await newTerria.loadInitSources();
       expect(newTerria.catalog.userAddedDataGroup.members).toContain("itemABC");
       expect(newTerria.catalog.userAddedDataGroup.members).toContain(
         "groupABC"
@@ -323,6 +324,7 @@ describe("Terria", function() {
 
       const shareLink = buildShareLink(terria, viewState);
       await newTerria.updateApplicationUrl(shareLink);
+      await newTerria.loadInitSources();
       expect(newTerria.catalog.userAddedDataGroup.members).toContain(
         "url_test"
       );
@@ -351,6 +353,7 @@ describe("Terria", function() {
 
       const shareLink = buildShareLink(terria, viewState);
       await newTerria.updateApplicationUrl(shareLink);
+      await newTerria.loadInitSources();
       expect(newTerria.workbench.itemIds).toEqual(terria.workbench.itemIds);
     });
 
@@ -372,6 +375,7 @@ describe("Terria", function() {
 
       const shareLink = buildShareLink(terria, viewState);
       await newTerria.updateApplicationUrl(shareLink);
+      await newTerria.loadInitSources();
       expect(newTerria.showSplitter).toEqual(true);
       expect(newTerria.splitPosition).toEqual(0.7);
       expect(newTerria.workbench.itemIds).toEqual(["itemABC"]);
@@ -394,6 +398,7 @@ describe("Terria", function() {
       expect(group.members.length).toBeGreaterThan(0);
       const shareLink = await buildShareLink(terria, viewState);
       await newTerria.updateApplicationUrl(shareLink);
+      await newTerria.loadInitSources();
       const newGroup = <WebMapServiceCatalogGroup>(
         newTerria.getModelById(BaseModel, "groupABC")
       );
@@ -475,6 +480,7 @@ describe("Terria", function() {
         csv?.setTrait(CommonStrata.user, "opacity", 0.5);
         const shareLink = buildShareLink(terria, viewState);
         await newTerria.updateApplicationUrl(shareLink);
+        await newTerria.loadInitSources();
 
         const newCsv = newTerria.getModelById(
           CsvCatalogItem,
@@ -497,6 +503,7 @@ describe("Terria", function() {
         terria.timelineStack.addToTop(csv);
         const shareLink = buildShareLink(terria, viewState);
         await newTerria.updateApplicationUrl(shareLink);
+        await newTerria.loadInitSources();
 
         const newCsv = newTerria.getModelById(
           CsvCatalogItem,
@@ -639,6 +646,7 @@ describe("Terria", function() {
         await newGroupRef.loadReference();
 
         await newTerria.updateApplicationUrl(shareLink);
+        await newTerria.loadInitSources();
 
         // Why does this return a CSV item (when above hack isn't added)? It returns a brand new csv item without data or URL
         // Does serialisation save enough attributes that upsertModelFromJson thinks it can create a new model?
@@ -700,6 +708,7 @@ describe("Terria", function() {
         await newGroupRef.loadReference();
 
         await newTerria.updateApplicationUrl(shareLink);
+        await newTerria.loadInitSources();
 
         // Why does this return a CSV item (when above hack isn't added)? It returns a brand new csv item without data or URL
         // Does serialisation save enough attributes that upsertModelFromJson thinks it can create a new model?

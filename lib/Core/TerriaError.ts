@@ -51,4 +51,16 @@ export default class TerriaError {
   toNotification(): Notification {
     return { title: () => this.title, message: () => this.message };
   }
+
+  clone(overrides: Partial<TerriaErrorOptions>): TerriaError {
+    return new TerriaError({
+      ...{
+        message: this._message,
+        title: this._title,
+        sender: this.sender,
+        raisedToUser: this.raisedToUser
+      },
+      ...overrides
+    });
+  }
 }
