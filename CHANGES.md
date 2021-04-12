@@ -5,7 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.75)
 
-* Fix `NotificationWindow` bug with 
+* Fix `NotificationWindow` bug with `message`.
 * [The next improvement]
 
 
