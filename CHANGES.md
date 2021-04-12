@@ -7,6 +7,7 @@ Change Log
 
 * Add `title` parameter in `raiseErrorToUser` to overwrite error title.
 * Added some error handling in `Terria.ts` to deal with loading init sources.
+* TSify `updateApplicationOnHashChange` + remove `loadInitSources` from `Terria.updateApplicationUrl()`
 * [The next improvement]
 
 #### 8.0.0-alpha.72
