@@ -806,20 +806,19 @@ export default class Terria {
     const initSources = await Promise.all(
       this.initSources.map(async initSource => {
         try {
-          return loadInitSource(initSource);
+          return await loadInitSource(initSource);
         } catch (e) {
           raiseErrorToUser(this, e, {
             key: "models.terria.loadingInitSourceErrorTitle"
           });
-          return undefined;
         }
       })
     );
 
     await Promise.all(
-      filterOutUndefined(initSources).map(initSource => {
+      filterOutUndefined(initSources).map(async initSource => {
         try {
-          this.applyInitData({
+          await this.applyInitData({
             initData: initSource
           });
         } catch (e) {
