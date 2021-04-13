@@ -4,7 +4,9 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.75)
-
+* Added support for `elements` object in catalogue files (aka init files).
+  * Using this object you can hide/show most UI elements individually.
+  * See https://github.com/TerriaJS/terriajs/pull/5131. More in-depth docs to come.
 * [The next improvement]
 
 
