@@ -3,9 +3,97 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.68)
-* Remove points from rectangle `UserDrawing`
+#### next release (8.0.0-alpha.75)
+
+* Added `momentChart` to region-mapped timeseries
+* Add time-series chart (in FeatureInfo) for region-mapped timeseries
+* Only show `TableMixin` chart if it has more than one
+* Add `TableChartStyle` name trait.
 * [The next improvement]
+
+
+#### 8.0.0-alpha.74
+
+* Fix JS imports of `TerriaError`
+
+#### 8.0.0-alpha.73
+
+* Add `title` parameter in `raiseErrorToUser` to overwrite error title.
+* Added some error handling in `Terria.ts` to deal with loading init sources.
+* TSify `updateApplicationOnHashChange` + remove `loadInitSources` from `Terria.updateApplicationUrl()`
+
+#### 8.0.0-alpha.72
+
+- **Breaking changes**:
+  - Added clippingRectangle to ImageryParts.
+  - Any item that produces ImageryParts in mapItems (any raster items) must now also provide a clippingRectangle.
+  - This clippingRectangle should be derived from this.cesiumRectangle (a new computed property) & this.clipToRectangle as demonstrated in many raster catalog items (e.g. OpenStreetMapCatalogItem.ts).
+
+* Adds experimental ApiTableCatalogItem.
+* Fixes a bug where FeatureInfoDownload tries to serialize a circular object
+* Added `removeDuplicateRows` to `TableTraits`
+* `forceLoadTableData` can now return undefined - which will leave `dataColumnMajor` unchanged
+* Fix sharing preview item.
+* Added z-index to right button group in mobile header menu
+* Added cesiumRectangle computed property to MappableMixin. This is computed from the `rectangle` Trait.
+* Fixed a Cesium render crash that occured when a capabilities document specified larger bounds than the tiling scheme's supported extent (bug occured with esri-mapServer but wms was probably also affected).
+* In fixing Cesium render crash above clipping rectangles are now added to Cesium ImageryLayer (or Leaflet CesiumTileLayer) rather than being included in the ImageryProvider. ImageryParts has been updated to allow passing the clipping rectangle through to Cesium.ts and Leaflet.ts where ImageryLayer/CesiumTileLayer objects are created.
+
+#### 8.0.0-alpha.71
+* Fix accidental translation string change in 8.0.0-alpha.70
+
+#### 8.0.0-alpha.70
+
+- **Breaking changes**: 
+  - Merge `Chartable` and `AsyncChartableMixin` into new **`ChartableMixin`** + `loadChartItems` has been replaced by `loadMapItems`.
+  - To set base map use `terriaViewer.setBaseMap()` instead of `terriaViewer.basemap = ...`
+  - Incorrect usage of `AsyncLoader` **will now throw errors**
+
+* Add `hideInBaseMapMenu` option to `BaseMapModel`.
+* Change default basemap images to relative paths.
+* Add `tileWidth` and `tileHeight` traits to `WebMapServiceCatalogItem`.
+* Add docs about `AsyncLoader`
+* Remove interactions between AsyncLoaders (eg calling `loadMetadata` from `forceLoadMapItems`)
+* ... Instead, `loadMapItems` will call `loadMetadata` before triggering its own `AsyncLoader`
+* Add `isLoading` to `CatalogMemberMixin` (combines `isLoading` from all the different `AsyncLoader`)
+* Move `Loader` (spinner) from `Legend` to `WorkbenchItem`.
+* Merge `Chartable` and `AsyncChartableMixin` into **`ChartableMixin`** + remove `AsyncLoader` functionality from `ChartableMixin` - it is now all handled by `loadMapItems`.
+* Removed `AsyncLoader` functionality from `TableMixin` - it is now handled by `loadMapItems`.
+  * `TableMixin.loadRegionProviderList()` is now called in `MappableMixin.loadMapItems()`
+* Added `TerriaViewer.setBaseMap()` function, this now calls `loadMapItems` on basemaps
+* Fix load of persisted basemap
+* Fix sharing of base map
+* Added backward compatibility for `baseMapName` in `initData` (eg share links)
+* Add `WebMapService` support for WGS84 tiling scheme
+
+#### 8.0.0-alpha.69
+
+- **Breaking changes**: 
+  - Basemaps are now configured through catalog JSON instead of TerriaMap - see https://github.com/TerriaJS/terriajs/blob/next/doc/customizing/initialization-files.md#base-maps 
+  
+* Updated terriajs-cesium to version 1.79.1
+* Make base maps configurable from init files and update documentation for init files [#5140](https://github.com/TerriaJS/terriajs/pull/5140).
+
+#### 8.0.0-alpha.68
+* Remove points from rectangle `UserDrawing`
+* Fix clipboard typing error. 
+* Ported `WebProcessingServiceCatalogGroup`.
+* Add CSW Group support
+* Revert "remove wmts interfaces from ows interfaces" (873aa70)
+* Add `math-expression-evaluator` library and `ColumnTransformationTraits`. This allows expressions to be used to transform column values (for example `x+10` to add 10 to all values).
+* Fix bug in `TableColumn.title` getter.
+* Add support for TableColumn quarterly dates in the format yyyy-Qx (eg 2020-Q1).
+* Fix region mapping feature highlighting.
+* Update clipboard to fix clipboard typing error.
+* Added direction indicator to the pedestrian mode minimap.
+* Limit up/down look angle in pedestrian mode.
+* Automatically disable pedestrian mode when map zooms to a different location.
+* Add support for time on `ArcGisMapServerCatalogItem`
+* Merge `Mappable` and `AsyncMappableMixin` into **`MappableMixin`**.
+* Fixed a issue when multiple filters are set to Cesium3DTilesCatalogItem
+* Async/Awaitify `Terria.ts` + fix share links loading after `loadInitSources`.
+* Tsified `TerriaError` + added support for "un-rendered" `I18nTranslateString`
+* Tsified `raiseErrorToUser` + added `wrapErrorMessage()` to wrap error message in something more user friendly (using `models.raiseError.errorMessage` translation string).
 
 #### 8.0.0-alpha.67
 * TSify `Loader` function.
@@ -601,6 +689,10 @@ Change Log
 
 
 ### Next Release
+### v7.11.14
+
+* Update CARTO Basemaps CDN URL and attribution.
+
 ### v7.11.13
 
 * Upgraded to Cesium v1.73.

@@ -1,10 +1,14 @@
 import { computed } from "mobx";
+import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
+import isDefined from "../Core/isDefined";
 import Model from "../Models/Model";
 import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
-import AsyncLoader from "../Core/AsyncLoader";
 import AccessControlMixin from "./AccessControlMixin";
-import isDefined from "../Core/isDefined";
+import ChartableMixin from "./ChartableMixin";
+import GroupMixin from "./GroupMixin";
+import MappableMixin from "./MappableMixin";
+import ReferenceMixin from "./ReferenceMixin";
 
 type CatalogMember = Model<CatalogMemberTraits>;
 
@@ -31,20 +35,14 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       return this._metadataLoader.isLoading;
     }
 
-    /**
-     * We can't use this until AsyncLoader.isLoading (https://github.com/TerriaJS/terriajs/issues/5233) is fixed
-     */
     @computed
     get isLoading() {
-      return false;
-
-      // return (
-      //   this.isLoadingMetadata ||
-      //   (AsyncMappableMixin.isMixedInto(this) && this.isLoadingMapItems) ||
-      //   (AsyncChartableMixin.isMixedInto(this) && this.isLoadingChartItems) ||
-      //   (ReferenceMixin.is(this) && this.isLoadingReference) ||
-      //   (GroupMixin.isMixedInto(this) && this.isLoadingMembers)
-      // );
+      return (
+        this.isLoadingMetadata ||
+        (MappableMixin.isMixedInto(this) && this.isLoadingMapItems) ||
+        (ReferenceMixin.is(this) && this.isLoadingReference) ||
+        (GroupMixin.isMixedInto(this) && this.isLoadingMembers)
+      );
     }
 
     loadMetadata(): Promise<void> {
@@ -54,8 +52,10 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
     /**
      * Forces load of the metadata. This method does _not_ need to consider
      * whether the metadata is already loaded.
+     *
+     * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
      */
-    protected abstract forceLoadMetadata(): Promise<void>;
+    protected async forceLoadMetadata() {}
 
     get hasCatalogMemberMixin() {
       return true;

@@ -23,7 +23,7 @@ import JsonValue, { isJsonObject, JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
 import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError from "../Core/TerriaError";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import MappableMixin from "./MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import Model from "../Models/Model";
@@ -52,7 +52,7 @@ type Coordinates = number[];
 export default function GeoJsonMixin<
   T extends Constructor<Model<GeoJsonTraits>>
 >(Base: T) {
-  abstract class GeoJsonMixin extends AsyncMappableMixin(UrlMixin(Base)) {
+  abstract class GeoJsonMixin extends MappableMixin(UrlMixin(Base)) {
     protected readonly zipFileRegex = /(\.zip\b)/i;
 
     readonly canZoomTo = true;
@@ -282,27 +282,29 @@ export default function GeoJsonMixin<
               color: new ConstantProperty(
                 getColor(
                   defaultValue(
-                    properties && properties["marker-color"],
+                    properties && properties["marker-color"]?.getValue(),
                     options.markerColor
                   )
                 )
               ),
               pixelSize: new ConstantProperty(
                 defaultValue(
-                  properties && properties["marker-size"],
+                  parseMarkerSize(
+                    properties && properties["marker-size"]?.getValue()
+                  ),
                   options.markerSize / 2
                 )
               ),
               outlineWidth: new ConstantProperty(
                 defaultValue(
-                  properties && properties["stroke-width"],
+                  properties && properties["stroke-width"]?.getValue(),
                   options.strokeWidth
                 )
               ),
               outlineColor: new ConstantProperty(
                 getColor(
                   defaultValue(
-                    properties && properties.stroke,
+                    properties && properties.stroke?.getValue(),
                     options.polygonStroke
                   )
                 )
@@ -320,7 +322,9 @@ export default function GeoJsonMixin<
             ) {
               // not part of SimpleStyle spec, but why not?
               const color: Color = entity.point.color.getValue(now);
-              color.alpha = parseFloat(properties["marker-opacity"]);
+              color.alpha = parseFloat(
+                properties["marker-opacity"]?.getValue()
+              );
             }
 
             entity.billboard = undefined;
@@ -328,10 +332,15 @@ export default function GeoJsonMixin<
           if (
             isDefined(entity.billboard) &&
             properties &&
-            isDefined(properties["marker-opacity"])
+            isDefined(properties["marker-opacity"]?.getValue())
           ) {
             entity.billboard.color = new ConstantProperty(
-              new Color(1.0, 1.0, 1.0, parseFloat(properties["marker-opacity"]))
+              new Color(
+                1.0,
+                1.0,
+                1.0,
+                parseFloat(properties["marker-opacity"]?.getValue())
+              )
             );
           }
 

@@ -6,18 +6,19 @@ import { JsonObject } from "../Core/Json";
 import TableColumnType from "../Table/TableColumnType";
 import objectTrait from "./objectTrait";
 
+export const THIS_COLUMN_EXPRESSION_TOKEN = "x";
+
 export class ColumnTransformationTraits extends ModelTraits {
   @primitiveTrait({
     name: "Expression",
-    description:
-      "Transformation expression used to change column values (row-by-row). This uses http://bugwheels94.github.io/math-expression-evaluator . For example `x*3` will multiply all column values by 3, `x*columnA` will multiple this column with columnA.",
+    description: `Transformation expression used to change column values (row-by-row). This uses http://bugwheels94.github.io/math-expression-evaluator . For example  \`${THIS_COLUMN_EXPRESSION_TOKEN}*3\` will multiply all column values by 3, \`${THIS_COLUMN_EXPRESSION_TOKEN}*columnA\` will multiple this column with \`columnA\` (note - \`columnA\` must be in \`dependencies\` array).`,
     type: "string"
   })
   expression?: string;
 
   @primitiveArrayTrait({
     name: "Dependencies",
-    description: ".....",
+    description: `Array of column names which are 'injected' in to the expression. For example, to use the expression \`${THIS_COLUMN_EXPRESSION_TOKEN}*columnA\` (where \`columnA\` is the name of another column), \`dependencies\` must include \`'columnA'\``,
     type: "string"
   })
   dependencies?: string[];

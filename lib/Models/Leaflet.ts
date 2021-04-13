@@ -1,6 +1,7 @@
+import i18next from "i18next";
 import L, { GridLayer } from "leaflet";
-import { autorun, action, runInAction } from "mobx";
-import { createTransformer } from "mobx-utils";
+import { action, autorun, runInAction } from "mobx";
+import { computedFn } from "mobx-utils";
 import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -8,46 +9,48 @@ import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import cesiumRequestAnimationFrame from "terriajs-cesium/Source/Core/requestAnimationFrame";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import html2canvas from "terriajs-html2canvas";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
+import LatLonHeight from "../Core/LatLonHeight";
 import runLater from "../Core/runLater";
 import CesiumTileLayer from "../Map/CesiumTileLayer";
 import LeafletDataSourceDisplay from "../Map/LeafletDataSourceDisplay";
 import LeafletScene from "../Map/LeafletScene";
 import LeafletSelectionIndicator from "../Map/LeafletSelectionIndicator";
 import LeafletVisualizer from "../Map/LeafletVisualizer";
+import MapboxVectorCanvasTileLayer from "../Map/MapboxVectorCanvasTileLayer";
+import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import PickedFeatures, {
   ProviderCoords,
   ProviderCoordsMap
 } from "../Map/PickedFeatures";
 import rectangleToLatLngBounds from "../Map/rectangleToLatLngBounds";
+import MappableMixin, {
+  ImageryParts,
+  MapItem
+} from "../ModelMixins/MappableMixin";
+import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
+import RasterLayerTraits from "../Traits/RasterLayerTraits";
 import SplitterTraits from "../Traits/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import hasTraits from "./hasTraits";
-import Mappable, { ImageryParts, MapItem } from "./Mappable";
-import Terria from "./Terria";
-import MapboxVectorCanvasTileLayer from "../Map/MapboxVectorCanvasTileLayer";
-import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
-import LatLonHeight from "../Core/LatLonHeight";
 import MapInteractionMode from "./MapInteractionMode";
-import i18next from "i18next";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import RasterLayerTraits from "../Traits/RasterLayerTraits";
-import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
+import Terria from "./Terria";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
@@ -102,16 +105,23 @@ export default class Leaflet extends GlobeOrMap {
   private _disposeSplitterReaction: () => void;
 
   private _createImageryLayer: (
-    ip: ImageryProvider
-  ) => GridLayer = createTransformer((ip: ImageryProvider) => {
+    ip: ImageryProvider,
+    clippingRectangle: Rectangle | undefined
+  ) => GridLayer = computedFn((ip, clippingRectangle) => {
+    const layerOptions = {
+      bounds: clippingRectangle && rectangleToLatLngBounds(clippingRectangle)
+    };
     if (ip instanceof MapboxVectorTileImageryProvider) {
-      return new MapboxVectorCanvasTileLayer(ip, {});
+      return new MapboxVectorCanvasTileLayer(ip, layerOptions);
     } else {
-      return new CesiumTileLayer(ip);
+      return new CesiumTileLayer(ip, layerOptions);
     }
   });
 
-  private _makeImageryLayerFromParts(parts: ImageryParts, item: Mappable) {
+  private _makeImageryLayerFromParts(
+    parts: ImageryParts,
+    item: MappableMixin.MappableMixin
+  ) {
     if (TileErrorHandlerMixin.isMixedInto(item)) {
       // because this code path can run multiple times, make sure we remove the
       // handler if it is already registered
@@ -124,7 +134,10 @@ export default class Leaflet extends GlobeOrMap {
         item
       );
     }
-    return this._createImageryLayer(parts.imageryProvider);
+    return this._createImageryLayer(
+      parts.imageryProvider,
+      parts.clippingRectangle
+    );
   }
 
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
@@ -343,7 +356,7 @@ export default class Leaflet extends GlobeOrMap {
       ];
       // Flatmap
       const allImageryMapItems = ([] as {
-        item: Mappable;
+        item: MappableMixin.MappableMixin;
         parts: ImageryParts;
       }[]).concat(
         ...catalogItems
@@ -351,7 +364,7 @@ export default class Leaflet extends GlobeOrMap {
           .map(item =>
             item.mapItems
               .filter(ImageryParts.is)
-              .map(parts => ({ item, parts }))
+              .map((parts: ImageryParts) => ({ item, parts }))
           )
       );
 
@@ -427,8 +440,13 @@ export default class Leaflet extends GlobeOrMap {
     });
   }
 
-  zoomTo(
-    target: CameraView | Rectangle | DataSource | Mappable | any,
+  doZoomTo(
+    target:
+      | CameraView
+      | Rectangle
+      | DataSource
+      | MappableMixin.MappableMixin
+      | any,
     flightDurationSeconds: number
   ): void {
     if (!isDefined(target)) {
@@ -453,21 +471,13 @@ export default class Leaflet extends GlobeOrMap {
           extent = target;
         } else if (target instanceof CameraView) {
           extent = target.rectangle;
-        } else if (Mappable.is(target)) {
-          if (isDefined(target.rectangle)) {
-            const { west, south, east, north } = target.rectangle;
-            if (
-              isDefined(west) &&
-              isDefined(south) &&
-              isDefined(east) &&
-              isDefined(north)
-            ) {
-              extent = Rectangle.fromDegrees(west, south, east, north);
-            }
+        } else if (MappableMixin.isMixedInto(target)) {
+          if (isDefined(target.cesiumRectangle)) {
+            extent = target.cesiumRectangle;
           }
           if (!isDefined(extent)) {
             // Zoom to the first item!
-            return that.zoomTo(target.mapItems[0], flightDurationSeconds);
+            return that.doZoomTo(target.mapItems[0], flightDurationSeconds);
           }
         } else {
           extent = target.rectangle;
@@ -818,7 +828,10 @@ export default class Leaflet extends GlobeOrMap {
       const showSplitter = this.terria.showSplitter;
       const splitPosition = this.terria.splitPosition;
       items.forEach(item => {
-        if (hasTraits(item, SplitterTraits, "splitDirection")) {
+        if (
+          MappableMixin.isMixedInto(item) &&
+          hasTraits(item, SplitterTraits, "splitDirection")
+        ) {
           const layers = this.getImageryLayersForItem(item);
           const splitDirection = item.splitDirection;
 
@@ -839,7 +852,9 @@ export default class Leaflet extends GlobeOrMap {
     });
   }
 
-  getImageryLayersForItem(item: Mappable): CesiumTileLayer[] {
+  getImageryLayersForItem(
+    item: MappableMixin.MappableMixin
+  ): CesiumTileLayer[] {
     return filterOutUndefined(
       item.mapItems.map(m => {
         if (ImageryParts.is(m)) {

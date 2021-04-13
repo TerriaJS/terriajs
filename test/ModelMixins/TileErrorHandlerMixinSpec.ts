@@ -4,6 +4,7 @@ import Resource from "terriajs-cesium/Source/Core/Resource";
 import TileProviderError from "terriajs-cesium/Source/Core/TileProviderError";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
+import MappableMixin, { MapItem } from "../../lib/ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../../lib/ModelMixins/TileErrorHandlerMixin";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import CreateModel from "../../lib/Models/CreateModel";
@@ -16,13 +17,15 @@ import ShowableTraits from "../../lib/Traits/ShowableTraits";
 import UrlTraits from "../../lib/Traits/UrlTraits";
 
 class TestCatalogItem extends TileErrorHandlerMixin(
-  CreateModel(
-    mixTraits(
-      UrlTraits,
-      ShowableTraits,
-      RasterLayerTraits,
-      MappableTraits,
-      CatalogMemberTraits
+  MappableMixin(
+    CreateModel(
+      mixTraits(
+        UrlTraits,
+        ShowableTraits,
+        RasterLayerTraits,
+        MappableTraits,
+        CatalogMemberTraits
+      )
     )
   )
 ) {
@@ -41,8 +44,19 @@ class TestCatalogItem extends TileErrorHandlerMixin(
     };
   }
 
-  get mapItems() {
-    return [{ imageryProvider: this.imageryProvider }];
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
+  }
+
+  get mapItems(): MapItem[] {
+    return [
+      {
+        imageryProvider: this.imageryProvider,
+        show: true,
+        alpha: 1,
+        clippingRectangle: undefined
+      }
+    ];
   }
 }
 

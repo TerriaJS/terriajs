@@ -1,19 +1,17 @@
-import CreateModel from "./CreateModel";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import UrlMixin from "../ModelMixins/UrlMixin";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
-import CartoMapCatalogItemTraits from "../Traits/CartoMapCatalogItemTraits";
-import Mappable from "./Mappable";
-import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import { computed, runInAction } from "mobx";
-import TerriaError from "../Core/TerriaError";
-import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplateImageryProvider";
 import Resource from "terriajs-cesium/Source/Core/Resource";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplateImageryProvider";
 import isDefined from "../Core/isDefined";
+import TerriaError from "../Core/TerriaError";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import MappableMixin, { MapItem } from "../ModelMixins/MappableMixin";
+import UrlMixin from "../ModelMixins/UrlMixin";
+import CartoMapCatalogItemTraits from "../Traits/CartoMapCatalogItemTraits";
+import CreateModel from "./CreateModel";
 import LoadableStratum from "./LoadableStratum";
-import StratumOrder from "./StratumOrder";
 import { BaseModel } from "./Model";
+import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import StratumOrder from "./StratumOrder";
 
 export class CartoLoadableStratum extends LoadableStratum(
   CartoMapCatalogItemTraits
@@ -102,19 +100,13 @@ export class CartoLoadableStratum extends LoadableStratum(
 
 StratumOrder.addLoadStratum(CartoLoadableStratum.stratumName);
 
-export default class CartoMapCatalogItem
-  extends AsyncMappableMixin(
-    UrlMixin(CatalogMemberMixin(CreateModel(CartoMapCatalogItemTraits)))
-  )
-  implements Mappable {
+export default class CartoMapCatalogItem extends MappableMixin(
+  UrlMixin(CatalogMemberMixin(CreateModel(CartoMapCatalogItemTraits)))
+) {
   static readonly type = "carto";
 
   get type() {
     return CartoMapCatalogItem.type;
-  }
-
-  get isMappable() {
-    return true;
   }
 
   get canZoomTo() {
@@ -125,21 +117,20 @@ export default class CartoMapCatalogItem
     return true;
   }
 
-  @computed get mapItems() {
+  @computed get mapItems(): MapItem[] {
     if (isDefined(this.imageryProvider)) {
       return [
         {
           alpha: this.opacity,
           show: this.show,
-          imageryProvider: this.imageryProvider
+          imageryProvider: this.imageryProvider,
+          clippingRectangle: this.clipToRectangle
+            ? this.cesiumRectangle
+            : undefined
         }
       ];
     }
     return [];
-  }
-
-  protected forceLoadMetadata(): Promise<void> {
-    return Promise.resolve();
   }
 
   protected forceLoadMapItems(): Promise<void> {
@@ -166,19 +157,6 @@ export default class CartoMapCatalogItem
       return;
     }
 
-    let rectangle: Rectangle | undefined;
-    if (isDefined(this.rectangle) && this.clipToRectangle) {
-      const { west, south, east, north } = this.rectangle;
-      if (
-        isDefined(west) &&
-        isDefined(south) &&
-        isDefined(east) &&
-        isDefined(north)
-      ) {
-        rectangle = Rectangle.fromDegrees(west, south, east, north);
-      }
-    }
-
     let subdomains: string[] | undefined;
     if (isDefined(stratum.tileSubdomains)) {
       subdomains = stratum.tileSubdomains.slice();
@@ -189,8 +167,7 @@ export default class CartoMapCatalogItem
       maximumLevel: this.maximumLevel,
       minimumLevel: this.minimumLevel,
       credit: this.attribution,
-      subdomains: subdomains,
-      rectangle: rectangle
+      subdomains: subdomains
     });
   }
 }

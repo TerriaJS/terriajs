@@ -1,0 +1,625 @@
+<?xml version='1.0' encoding="UTF-8"?>
+<!-- Stolen from https://ows.services.dea.ga.gov.au/wms?request=GetCapabilities&service=WMS&version=1.3.0 on 21/07/2020 -->
+<WMS_Capabilities version="1.3.0"
+  xmlns="http://www.opengis.net/wms"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wms
+http://schemas.opengis.net/wms/1.3.0/capabilities_1_3_0.xsd">
+  <Service>
+    <Name>WMS</Name>
+    <Title>Digital Earth Australia - OGC Web Services</Title>
+    <Abstract>
+        Digital Earth Australia OGC Web Services
+    </Abstract>
+    <KeywordList>
+      <Keyword>geomedian</Keyword>
+      <Keyword>WOfS</Keyword>
+      <Keyword>mangrove</Keyword>
+      <Keyword>bare-earth</Keyword>
+      <Keyword>NIDEM</Keyword>
+      <Keyword>HLTC</Keyword>
+      <Keyword>landsat</Keyword>
+      <Keyword>australia</Keyword>
+      <Keyword>time-series</Keyword>
+      <Keyword>fractional-cover</Keyword>
+    </KeywordList>
+    <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="dea.ga.gov.au//" />
+    <ContactInformation>
+      <ContactPersonPrimary>
+        <ContactPerson>Digital Earth Australia</ContactPerson>
+        <ContactOrganization>Geoscience Australia</ContactOrganization>
+      </ContactPersonPrimary>
+      <ContactAddress>
+        <AddressType>postal</AddressType>
+        <Address>GPO Box 378</Address>
+        <City>Canberra</City>
+        <StateOrProvince>ACT</StateOrProvince>
+        <PostCode>2609</PostCode>
+        <Country>Australia</Country>
+      </ContactAddress>
+      <ContactVoiceTelephone>+61 2 6249 9111</ContactVoiceTelephone>
+      <ContactElectronicMailAddress>earth.observation@ga.gov.au</ContactElectronicMailAddress>
+    </ContactInformation>
+    <Fees>none</Fees>
+    <AccessConstraints>© Commonwealth of Australia (Geoscience Australia) 2018. This product is released under the Creative Commons Attribution 4.0 International Licence. http://creativecommons.org/licenses/by/4.0/legalcode</AccessConstraints>
+    <LayerLimit>1</LayerLimit>
+    <MaxWidth>512</MaxWidth>
+    <MaxHeight>512</MaxHeight>
+  </Service>
+  <Capability>
+    <Request>
+      <GetCapabilities>
+        <Format>text/xml</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ows.services.dea.ga.gov.au/wms?" />
+            </Get>
+          </HTTP>
+        </DCPType>
+      </GetCapabilities>
+      <GetMap>
+        <Format>image/png</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ows.services.dea.ga.gov.au/wms?" />
+            </Get>
+          </HTTP>
+        </DCPType>
+      </GetMap>
+      <GetFeatureInfo>
+        <Format>application/json</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ows.services.dea.ga.gov.au/wms?" />
+            </Get>
+          </HTTP>
+        </DCPType>
+      </GetFeatureInfo>
+    </Request>
+    <Exception>
+      <Format>XML</Format>
+    </Exception>
+    <Layer>
+      <Title>Digital Earth Australia - OGC Web Services</Title>
+      <Abstract>
+            Digital Earth Australia OGC Web Services
+      </Abstract>
+      <CRS>EPSG:4326</CRS>
+      <CRS>EPSG:3577</CRS>
+      <CRS>EPSG:3111</CRS>
+      <Layer>
+        <Title>Surface Reflectance</Title>
+        <Abstract>
+        </Abstract>
+        <Layer queryable="1">
+          <Name>ls8_nbart_geomedian_annual</Name>
+          <Title>Surface Reflectance 25m Annual Geomedian (Landsat 8)</Title>
+          <Abstract>
+Data is only visible at higher resolutions; when zoomed-out the available area will be displayed
+as a shaded region. The surface reflectance geometric median (geomedian) is a pixel composite
+mosaic of a time series of earth observations. The value of a pixel in a an annual geomedian
+image is the statistical median of all observations for that pixel from a calendar year.
+Annual mosaics are available for the following years:
+Landsat 8: 2013 to 2017;
+For more information, see http://pid.geoscience.gov.au/dataset/ga/120374
+For service status information, see https://status.dea.ga.gov.au
+          </Abstract>
+          <KeywordList>
+            <Keyword>WOfS</Keyword>
+            <Keyword>HLTC</Keyword>
+            <Keyword>landsat</Keyword>
+            <Keyword>time-series</Keyword>
+            <Keyword>mangrove</Keyword>
+            <Keyword>bare-earth</Keyword>
+            <Keyword>australia</Keyword>
+            <Keyword>geomedian</Keyword>
+            <Keyword>NIDEM</Keyword>
+            <Keyword>fractional-cover</Keyword>
+          </KeywordList>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>109.989859933428</westBoundLongitude>
+            <eastBoundLongitude>156.101505058599</eastBoundLongitude>
+            <southBoundLatitude>-45.2413329418709</southBoundLatitude>
+            <northBoundLatitude>-9.02727104242042</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="EPSG:3111" minx="-1623290.9363679164" maxx="3983581.4498637905" miny="1042109.9920098714" maxy="5725855.407866031" />
+          <BoundingBox CRS="EPSG:3577" minx="-2407984.8524649167" maxx="2834259.110253389" miny="-5195512.771063175" maxy="-936228.5063655999" />
+          <BoundingBox CRS="EPSG:3857" minx="12324052.57369671" maxx="17488921.644948885" miny="-5742240.963567747" maxy="-1001009.9542990683" />
+          <BoundingBox CRS="EPSG:4326" minx="-45.76168492731699" maxx="-8.955535935066568" miny="110.70884789244278" maxy="157.10565616426302" />
+          <Dimension name="time" units="ISO8601">
+            2013-01-01,2014-01-01,2015-01-01,2016-01-01,2017-01-01,2018-01-01
+          </Dimension>
+          <Style>
+            <Name>simple_rgb</Name>
+            <Title>Simple RGB</Title>
+            <Abstract>Simple true-colour image, using the red, green and blue bands</Abstract>
+          </Style>
+          <Style>
+            <Name>infrared_green</Name>
+            <Title>False colour - Green, SWIR, NIR</Title>
+            <Abstract>False Colour image with SWIR1-&gt;Red, NIR-&gt;Green, and Green-&gt;Blue</Abstract>
+          </Style>
+          <Style>
+            <Name>ndvi</Name>
+            <Title>NDVI - Red, NIR</Title>
+            <Abstract>Normalised Difference Vegetation Index - a derived index that correlates well with the existence of vegetation</Abstract>
+            <LegendURL>
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ows.services.dea.ga.gov.au/legend/ls8_nbart_geomedian_annual/ndvi/legend.png"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ndwi</Name>
+            <Title>NDWI - Green, NIR</Title>
+            <Abstract>Normalised Difference Water Index - a derived index that correlates well with the existence of water (McFeeters 1996)</Abstract>
+            <LegendURL>
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ows.services.dea.ga.gov.au/legend/ls8_nbart_geomedian_annual/ndwi/legend.png"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>mndwi</Name>
+            <Title>MNDWI - Green, SWIR</Title>
+            <Abstract>Modified Normalised Difference Water Index - a derived index that correlates well with the existence of water (Xu 2006)</Abstract>
+            <LegendURL>
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ows.services.dea.ga.gov.au/legend/ls8_nbart_geomedian_annual/mndwi/legend.png"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>blue</Name>
+            <Title>Blue - 480</Title>
+            <Abstract>Blue band, centered on 480nm</Abstract>
+          </Style>
+          <Style>
+            <Name>green</Name>
+            <Title>Green - 560</Title>
+            <Abstract>Green band, centered on 560nm</Abstract>
+          </Style>
+          <Style>
+            <Name>red</Name>
+            <Title>Red - 660</Title>
+            <Abstract>Red band, centered on 660nm</Abstract>
+          </Style>
+          <Style>
+            <Name>nir</Name>
+            <Title>Near Infrared (NIR) - 870</Title>
+            <Abstract>Near infra-red band, centered on 870nm</Abstract>
+          </Style>
+          <Style>
+            <Name>swir1</Name>
+            <Title>Shortwave Infrared (SWIR) - 1610</Title>
+            <Abstract>Short wave infra-red band 1, centered on 1610nm</Abstract>
+          </Style>
+          <Style>
+            <Name>swir2</Name>
+            <Title>Shortwave Infrared (SWIR) - 2200</Title>
+            <Abstract>Short wave infra-red band 2, centered on 2200nm</Abstract>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ls7_nbart_geomedian_annual</Name>
+          <Title>Surface Reflectance 25m Annual Geomedian (Landsat 7)</Title>
+          <Abstract>
+Data is only visible at higher resolutions; when zoomed-out the available area will be displayed
+as a shaded region. The surface reflectance geometric median (geomedian) is a pixel composite
+mosaic of a time series of earth observations. The value of a pixel in a an annual geomedian
+image is the statistical median of all observations for that pixel from a calendar year.
+Annual mosaics are available for the following years:
+Landsat 7: 2000 to 2017;
+For more information, see http://pid.geoscience.gov.au/dataset/ga/120374
+For service status information, see https://status.dea.ga.gov.au
+          </Abstract>
+          <KeywordList>
+            <Keyword>WOfS</Keyword>
+            <Keyword>HLTC</Keyword>
+            <Keyword>landsat</Keyword>
+            <Keyword>time-series</Keyword>
+            <Keyword>mangrove</Keyword>
+            <Keyword>bare-earth</Keyword>
+            <Keyword>australia</Keyword>
+            <Keyword>geomedian</Keyword>
+            <Keyword>NIDEM</Keyword>
+            <Keyword>fractional-cover</Keyword>
+          </KeywordList>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>109.989859933428</westBoundLongitude>
+            <eastBoundLongitude>156.101505058599</eastBoundLongitude>
+            <southBoundLatitude>-45.2413329418709</southBoundLatitude>
+            <northBoundLatitude>-9.02727104242042</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="EPSG:3111" minx="-1614513.398487167" maxx="3828775.365506721" miny="1201296.0110271887" maxy="5713912.61734973" />
+          <BoundingBox CRS="EPSG:3577" minx="-2401823.8596444223" maxx="2692028.8588069757" miny="-5018869.977260729" maxy="-946578.5838419227" />
+          <BoundingBox CRS="EPSG:3857" minx="12328464.82063089" maxx="17348900.909345247" miny="-5505301.89142628" maxy="-1011942.9098975399" />
+          <BoundingBox CRS="EPSG:4326" minx="-44.25701187652486" maxx="-9.052538093529602" miny="110.74848378102561" maxy="155.84782849539894" />
+          <Dimension name="time" units="ISO8601">
+            2000-01-01,2001-01-01,2002-01-01,2003-01-01,2004-01-01,2005-01-01,2006-01-01,2007-01-01,2008-01-01,2009-01-01,2010-01-01,2011-01-01,2012-01-01,2013-01-01,2014-01-01,2015-01-01,2016-01-01,2017-01-01,2018-01-01
+          </Dimension>
+          <Style>
+            <Name>simple_rgb</Name>
+            <Title>Simple RGB</Title>
+            <Abstract>Simple true-colour image, using the red, green and blue bands</Abstract>
+          </Style>
+          <Style>
+            <Name>infrared_green</Name>
+            <Title>False colour - Green, SWIR, NIR</Title>
+            <Abstract>False Colour image with SWIR1-&gt;Red, NIR-&gt;Green, and Green-&gt;Blue</Abstract>
+          </Style>
+          <Style>
+            <Name>ndvi</Name>
+            <Title>NDVI - Red, NIR</Title>
+            <Abstract>Normalised Difference Vegetation Index - a derived index that correlates well with the existence of vegetation</Abstract>
+            <LegendURL>
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ows.services.dea.ga.gov.au/legend/ls7_nbart_geomedian_annual/ndvi/legend.png"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ndwi</Name>
+            <Title>NDWI - Green, NIR</Title>
+            <Abstract>Normalised Difference Water Index - a derived index that correlates well with the existence of water (McFeeters 1996)</Abstract>
+            <LegendURL>
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ows.services.dea.ga.gov.au/legend/ls7_nbart_geomedian_annual/ndwi/legend.png"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>mndwi</Name>
+            <Title>MNDWI - Green, SWIR</Title>
+            <Abstract>Modified Normalised Difference Water Index - a derived index that correlates well with the existence of water (Xu 2006)</Abstract>
+            <LegendURL>
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ows.services.dea.ga.gov.au/legend/ls7_nbart_geomedian_annual/mndwi/legend.png"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>blue</Name>
+            <Title>Blue - 490</Title>
+            <Abstract>Blue band, centered on 490nm</Abstract>
+          </Style>
+          <Style>
+            <Name>green</Name>
+            <Title>Green - 560</Title>
+            <Abstract>Green band, centered on 560nm</Abstract>
+          </Style>
+          <Style>
+            <Name>red</Name>
+            <Title>Red - 660</Title>
+            <Abstract>Red band, centered on 660nm</Abstract>
+          </Style>
+          <Style>
+            <Name>nir</Name>
+            <Title>Near Infrared (NIR) - 840</Title>
+            <Abstract>Near infra-red band, centered on 840nm</Abstract>
+          </Style>
+          <Style>
+            <Name>swir1</Name>
+            <Title>Shortwave Infrared (SWIR) - 1650</Title>
+            <Abstract>Short wave infra-red band 1, centered on 1650nm</Abstract>
+          </Style>
+          <Style>
+            <Name>swir2</Name>
+            <Title>Shortwave Infrared (SWIR) - 2220</Title>
+            <Abstract>Short wave infra-red band 2, centered on 2220nm</Abstract>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ls5_nbart_geomedian_annual</Name>
+          <Title>Surface Reflectance 25m Annual Geomedian (Landsat 5)</Title>
+          <Abstract>
+Data is only visible at higher resolutions; when zoomed-out the available area will be displayed
+as a shaded region. The surface reflectance geometric median (geomedian) is a pixel composite
+mosaic of a time series of earth observations. The value of a pixel in a an annual geomedian
+image is the statistical median of all observations for that pixel from a calendar year.
+Annual mosaics are available for the following years:
+Landsat 5: 1988 to 1999, 2004 to 2007, 2009 to 2011;
+For more information, see http://pid.geoscience.gov.au/dataset/ga/120374
+For service status information, see https://status.dea.ga.gov.au
+          </Abstract>
+          <KeywordList>
+            <Keyword>WOfS</Keyword>
+            <Keyword>HLTC</Keyword>
+            <Keyword>landsat</Keyword>
+            <Keyword>time-series</Keyword>
+            <Keyword>mangrove</Keyword>
+            <Keyword>bare-earth</Keyword>
+            <Keyword>australia</Keyword>
+            <Keyword>geomedian</Keyword>
+            <Keyword>NIDEM</Keyword>
+            <Keyword>fractional-cover</Keyword>
+          </KeywordList>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>109.989859933428</westBoundLongitude>
+            <eastBoundLongitude>156.101505058599</eastBoundLongitude>
+            <southBoundLatitude>-45.2413329418709</southBoundLatitude>
+            <northBoundLatitude>-9.02727104242042</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="EPSG:3111" minx="-1646633.1192815872" maxx="3837873.7120569656" miny="1200610.246069884" maxy="5805403.642769216" />
+          <BoundingBox CRS="EPSG:3577" minx="-2414811.288752546" maxx="2705495.016073416" miny="-5019414.956077986" maxy="-867603.3200807131" />
+          <BoundingBox CRS="EPSG:3857" minx="12328552.842236876" maxx="17347719.73487454" miny="-5506351.706178795" maxy="-928756.1378317596" />
+          <BoundingBox CRS="EPSG:4326" minx="-44.26376587353231" maxx="-8.31382909931054" miny="110.74927449256552" maxy="155.83721782459648" />
+          <Dimension name="time" units="ISO8601">
+            1988-01-01,1989-01-01,1990-01-01,1991-01-01,1992-01-01,1993-01-01,1994-01-01,1995-01-01,1996-01-01,1997-01-01,1998-01-01,1999-01-01,2004-01-01,2005-01-01,2006-01-01,2007-01-01,2009-01-01,2010-01-01,2011-01-01
+          </Dimension>
+          <Style>
+            <Name>simple_rgb</Name>
+            <Title>Simple RGB</Title>
+            <Abstract>Simple true-colour image, using the red, green and blue bands</Abstract>
+          </Style>
+          <Style>
+            <Name>infrared_green</Name>
+            <Title>False colour - Green, SWIR, NIR</Title>
+            <Abstract>False Colour image with SWIR1-&gt;Red, NIR-&gt;Green, and Green-&gt;Blue</Abstract>
+          </Style>
+          <Style>
+            <Name>ndvi</Name>
+            <Title>NDVI - Red, NIR</Title>
+            <Abstract>Normalised Difference Vegetation Index - a derived index that correlates well with the existence of vegetation</Abstract>
+            <LegendURL>
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ows.services.dea.ga.gov.au/legend/ls5_nbart_geomedian_annual/ndvi/legend.png"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ndwi</Name>
+            <Title>NDWI - Green, NIR</Title>
+            <Abstract>Normalised Difference Water Index - a derived index that correlates well with the existence of water (McFeeters 1996)</Abstract>
+            <LegendURL>
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ows.services.dea.ga.gov.au/legend/ls5_nbart_geomedian_annual/ndwi/legend.png"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>mndwi</Name>
+            <Title>MNDWI - Green, SWIR</Title>
+            <Abstract>Modified Normalised Difference Water Index - a derived index that correlates well with the existence of water (Xu 2006)</Abstract>
+            <LegendURL>
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ows.services.dea.ga.gov.au/legend/ls5_nbart_geomedian_annual/mndwi/legend.png"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>blue</Name>
+            <Title>Blue - 490</Title>
+            <Abstract>Blue band, centered on 490nm</Abstract>
+          </Style>
+          <Style>
+            <Name>green</Name>
+            <Title>Green - 560</Title>
+            <Abstract>Green band, centered on 560nm</Abstract>
+          </Style>
+          <Style>
+            <Name>red</Name>
+            <Title>Red - 660</Title>
+            <Abstract>Red band, centered on 660nm</Abstract>
+          </Style>
+          <Style>
+            <Name>nir</Name>
+            <Title>Near Infrared (NIR) - 840</Title>
+            <Abstract>Near infra-red band, centered on 840nm</Abstract>
+          </Style>
+          <Style>
+            <Name>swir1</Name>
+            <Title>Shortwave Infrared (SWIR) - 1650</Title>
+            <Abstract>Short wave infra-red band 1, centered on 1650nm</Abstract>
+          </Style>
+          <Style>
+            <Name>swir2</Name>
+            <Title>Shortwave Infrared (SWIR) - 2220</Title>
+            <Abstract>Short wave infra-red band 2, centered on 2220nm</Abstract>
+          </Style>
+        </Layer>
+      </Layer>
+      <Layer>
+        <Title>Landsat-8 Barest Earth</Title>
+        <Abstract>
+A `weighted geometric median’ approach has been used to estimate the median surface reflectance of the barest state (i.e., least vegetation) observed through Landsat-8 OLI observations from 2013 to September 2018 to generate a six-band Landsat-8 Barest Earth pixel composite mosaic over the Australian continent.
+The bands include BLUE (0.452 - 0.512), GREEN (0.533 - 0.590), RED, (0.636 - 0.673) NIR (0.851 - 0.879), SWIR1 (1.566 - 1.651) and SWIR2 (2.107 - 2.294) wavelength regions. The weighted median approach is robust to outliers (such as cloud, shadows, saturation, corrupted pixels) and also maintains the relationship between all the spectral wavelengths in the spectra observed through time. The product reduces the influence of vegetation and allows for more direct mapping of soil and rock mineralogy.
+Reference: Dale Roberts, John Wilford, and Omar Ghattas (2018). Revealing the Australian Continent at its Barest, submitted.
+Mosaics are available for the following years:
+    Landsat 8: 2013 to 2017;
+        </Abstract>
+        <Layer queryable="1">
+          <Name>ls8_barest_earth_mosaic</Name>
+          <Title>Landsat-8 Barest Earth 25m albers (Landsat-8)</Title>
+          <Abstract>
+A `weighted geometric median’ approach has been used to estimate the median surface reflectance of the barest state (i.e., least vegetation) observed through Landsat-8 OLI observations from 2013 to September 2018 to generate a six-band Landsat-8 Barest Earth pixel composite mosaic over the Australian continent.
+The bands include BLUE (0.452 - 0.512), GREEN (0.533 - 0.590), RED, (0.636 - 0.673) NIR (0.851 - 0.879), SWIR1 (1.566 - 1.651) and SWIR2 (2.107 - 2.294) wavelength regions. The weighted median approach is robust to outliers (such as cloud, shadows, saturation, corrupted pixels) and also maintains the relationship between all the spectral wavelengths in the spectra observed through time. The product reduces the influence of vegetation and allows for more direct mapping of soil and rock mineralogy.
+Reference: Dale Roberts, John Wilford, and Omar Ghattas (2018). Revealing the Australian Continent at its Barest, submitted.
+Mosaics are available for the following years:
+    Landsat 8: 2013 to 2017;
+For service status information, see https://status.dea.ga.gov.au
+          </Abstract>
+          <KeywordList>
+            <Keyword>WOfS</Keyword>
+            <Keyword>HLTC</Keyword>
+            <Keyword>landsat</Keyword>
+            <Keyword>time-series</Keyword>
+            <Keyword>mangrove</Keyword>
+            <Keyword>bare-earth</Keyword>
+            <Keyword>australia</Keyword>
+            <Keyword>geomedian</Keyword>
+            <Keyword>NIDEM</Keyword>
+            <Keyword>fractional-cover</Keyword>
+          </KeywordList>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>109.989859933428</westBoundLongitude>
+            <eastBoundLongitude>156.101505058599</eastBoundLongitude>
+            <southBoundLatitude>-45.2413329418709</southBoundLatitude>
+            <northBoundLatitude>-9.02727104242042</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="EPSG:3111" minx="-1538535.5423613843" maxx="3736392.910862661" miny="1213887.5722279912" maxy="5741806.244008627" />
+          <BoundingBox CRS="EPSG:3577" minx="-2322346.7853942416" maxx="2609153.7890951317" miny="-5015278.537805046" maxy="-922402.6998122379" />
+          <BoundingBox CRS="EPSG:3857" minx="12411277.20868436" maxx="17261930.93705351" miny="-5517541.371057281" maxy="-986498.9691338822" />
+          <BoundingBox CRS="EPSG:4326" minx="-44.335706521509756" maxx="-8.826747933980428" miny="111.4924001200543" maxy="155.06656394170778" />
+          <Style>
+            <Name>simple_rgb</Name>
+            <Title>Simple RGB</Title>
+            <Abstract>Simple true-colour image, using the red, green and blue bands</Abstract>
+          </Style>
+          <Style>
+            <Name>infrared_green</Name>
+            <Title>False colour - Green, SWIR, NIR</Title>
+            <Abstract>False Colour image with SWIR1-&gt;Red, NIR-&gt;Green, and Green-&gt;Blue</Abstract>
+          </Style>
+          <Style>
+            <Name>ndvi</Name>
+            <Title>NDVI - Red, NIR</Title>
+            <Abstract>Normalised Difference Vegetation Index - a derived index that correlates well with the existence of vegetation</Abstract>
+            <LegendURL>
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ows.services.dea.ga.gov.au/legend/ls8_barest_earth_mosaic/ndvi/legend.png"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>blue</Name>
+            <Title>Blue - 480</Title>
+            <Abstract>Blue band, centered on 480nm</Abstract>
+          </Style>
+          <Style>
+            <Name>green</Name>
+            <Title>Green - 560</Title>
+            <Abstract>Green band, centered on 560nm</Abstract>
+          </Style>
+          <Style>
+            <Name>red</Name>
+            <Title>Red - 660</Title>
+            <Abstract>Red band, centered on 660nm</Abstract>
+          </Style>
+          <Style>
+            <Name>nir</Name>
+            <Title>Near Infrared (NIR) - 870</Title>
+            <Abstract>Near infra-red band, centered on 870nm</Abstract>
+          </Style>
+          <Style>
+            <Name>swir1</Name>
+            <Title>Shortwave Infrared (SWIR) - 1610</Title>
+            <Abstract>Short wave infra-red band 1, centered on 1610nm</Abstract>
+          </Style>
+          <Style>
+            <Name>swir2</Name>
+            <Title>Shortwave Infrared (SWIR) - 2200</Title>
+            <Abstract>Short wave infra-red band 2, centered on 2200nm</Abstract>
+          </Style>
+        </Layer>
+      </Layer>
+      <Layer>
+        <Title>Landsat 30+ Barest Earth</Title>
+        <Abstract>
+An estimate of the spectra of the barest state (i.e., least vegetation) observed from imagery of the Australian continent collected by the Landsat 5, 7, and 8 satellites over a period of more than 30 years (1983 - 2018). The bands include BLUE (0.452 - 0.512), GREEN (0.533 - 0.590), RED, (0.636 - 0.673) NIR (0.851 - 0.879), SWIR1 (1.566 - 1.651) and SWIR2 (2.107 - 2.294) wavelength regions. The approach is robust to outliers (such as cloud, shadows, saturation, corrupted pixels) and also maintains the relationship between all the spectral wavelengths in the spectra observed through time. The product reduces the influence of vegetation and allows for more direct mapping of soil and rock mineralogy. This product complements the Landsat-8 Barest Earth which is based on the same algorithm but just uses Landsat8 satellite imagery from 2013-2108. Landsat-8&#39;s OLI sensor provides improved signal-to-noise radiometric (SNR) performance quantised over a 12-bit dynamic range compared to the 8-bit dynamic range of Landsat-5 and Landsat-7 data. However the Landsat 30+ Barest Earth has a greater capacity to find the barest ground due to the greater temporal depth. Reference: Roberts, D., Wilford, J., Ghattas, O. (2019). Exposed Soil and Mineral Map of the Australian Continent Revealing the Land at its Barest. Nature Communications. Mosaics are available for the following years: Landsat 5 / Landsat 7 / Landsat 8 - 1983 to 2018;
+        </Abstract>
+        <Layer queryable="1">
+          <Name>landsat_barest_earth</Name>
+          <Title>Landsat 30+ Barest Earth 25m albers (Combined Landsat)</Title>
+          <Abstract>
+An estimate of the spectra of the barest state (i.e., least vegetation) observed from imagery of the Australian continent collected by the Landsat 5, 7, and 8 satellites over a period of more than 30 years (1983 - 2018).
+The bands include BLUE (0.452 - 0.512), GREEN (0.533 - 0.590), RED, (0.636 - 0.673) NIR (0.851 - 0.879), SWIR1 (1.566 - 1.651) and SWIR2 (2.107 - 2.294) wavelength regions. The approach is robust to outliers (such as cloud, shadows, saturation, corrupted pixels) and also maintains the relationship between all the spectral wavelengths in the spectra observed through time. The product reduces the influence of vegetation and allows for more direct mapping of soil and rock mineralogy.
+This product complements the Landsat-8 Barest Earth which is based on the same algorithm but just uses Landsat8 satellite imagery from 2013-2108. Landsat-8&#39;s OLI sensor provides improved signal-to-noise radiometric (SNR) performance quantised over a 12-bit dynamic range compared to the 8-bit dynamic range of Landsat-5 and Landsat-7 data. However the Landsat 30+ Barest Earth has a greater capacity to find the barest ground due to the greater temporal depth.
+Reference: Roberts, D., Wilford, J., Ghattas, O. (2019). Exposed Soil and Mineral Map of the Australian Continent Revealing the Land at its Barest. Nature Communications. Mosaics are available for the following years: Landsat 5 / Landsat 7 / Landsat 8 - 1983 to 2018; For service status information, see https://status.dea.ga.gov.au
+          </Abstract>
+          <KeywordList>
+            <Keyword>WOfS</Keyword>
+            <Keyword>HLTC</Keyword>
+            <Keyword>landsat</Keyword>
+            <Keyword>time-series</Keyword>
+            <Keyword>mangrove</Keyword>
+            <Keyword>bare-earth</Keyword>
+            <Keyword>australia</Keyword>
+            <Keyword>geomedian</Keyword>
+            <Keyword>NIDEM</Keyword>
+            <Keyword>fractional-cover</Keyword>
+          </KeywordList>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>109.989859933428</westBoundLongitude>
+            <eastBoundLongitude>156.101505058599</eastBoundLongitude>
+            <southBoundLatitude>-45.2413329418709</southBoundLatitude>
+            <northBoundLatitude>-9.02727104242042</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="EPSG:3111" minx="-1605846.2384071546" maxx="3829602.9024653286" miny="1191340.9360146995" maxy="5782960.629469741" />
+          <BoundingBox CRS="EPSG:3577" minx="-2379632.91177491" maxx="2696689.9814184457" miny="-5035973.152982588" maxy="-886856.0545368894" />
+          <BoundingBox CRS="EPSG:3857" minx="12360213.386852946" maxx="17342527.079881962" miny="-5531998.060761959" maxy="-949091.0158087222" />
+          <BoundingBox CRS="EPSG:4326" minx="-44.42852102810618" maxx="-8.49453875182811" miny="111.03368600388714" maxy="155.79057141114657" />
+          <Style>
+            <Name>simple_rgb</Name>
+            <Title>Simple RGB</Title>
+            <Abstract>Simple true-colour image, using the red, green and blue bands</Abstract>
+          </Style>
+          <Style>
+            <Name>infrared_green</Name>
+            <Title>False colour - Green, SWIR, NIR</Title>
+            <Abstract>False Colour image with SWIR1-&gt;Red, NIR-&gt;Green, and Green-&gt;Blue</Abstract>
+          </Style>
+          <Style>
+            <Name>ndvi</Name>
+            <Title>NDVI - Red, NIR</Title>
+            <Abstract>Normalised Difference Vegetation Index - a derived index that correlates well with the existence of vegetation</Abstract>
+            <LegendURL>
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ows.services.dea.ga.gov.au/legend/landsat_barest_earth/ndvi/legend.png"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>blue</Name>
+            <Title>Blue - 480</Title>
+            <Abstract>Blue band, centered on 480nm</Abstract>
+          </Style>
+          <Style>
+            <Name>green</Name>
+            <Title>Green - 560</Title>
+            <Abstract>Green band, centered on 560nm</Abstract>
+          </Style>
+          <Style>
+            <Name>red</Name>
+            <Title>Red - 660</Title>
+            <Abstract>Red band, centered on 660nm</Abstract>
+          </Style>
+          <Style>
+            <Name>nir</Name>
+            <Title>Near Infrared (NIR) - 870</Title>
+            <Abstract>Near infra-red band, centered on 870nm</Abstract>
+          </Style>
+          <Style>
+            <Name>swir1</Name>
+            <Title>Shortwave Infrared (SWIR) - 1610</Title>
+            <Abstract>Short wave infra-red band 1, centered on 1610nm</Abstract>
+          </Style>
+          <Style>
+            <Name>swir2</Name>
+            <Title>Shortwave Infrared (SWIR) - 2200</Title>
+            <Abstract>Short wave infra-red band 2, centered on 2200nm</Abstract>
+          </Style>
+          <Style>
+            <Name>nd_ferric_iron</Name>
+            <Title>Ferric Iron</Title>
+            <Abstract>Normalised Difference Ferric Iron Index - a derived index that correlates well with the existence of Ferric Iron Content</Abstract>
+            <LegendURL>
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ows.services.dea.ga.gov.au/legend/landsat_barest_earth/nd_ferric_iron/legend.png"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>nd_soil</Name>
+            <Title>Normalised Difference Soil Index</Title>
+            <Abstract>Normalised Difference Soil Index - a derived index that correlates well with the existence of bare Soil/Rock</Abstract>
+            <LegendURL>
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ows.services.dea.ga.gov.au/legend/landsat_barest_earth/nd_soil/legend.png"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>nd_clay_mica</Name>
+            <Title>Clay and Mica Minerals</Title>
+            <Abstract>Normalised Difference Clay and Mica Minerals Index - a derived index that correlates well with the existence of hydroxyl bearing minerals (clay and mica minerals)</Abstract>
+            <LegendURL>
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://ows.services.dea.ga.gov.au/legend/landsat_barest_earth/nd_clay_mica/legend.png"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+      </Layer>
+    </Layer>
+  </Capability>
+</WMS_Capabilities>

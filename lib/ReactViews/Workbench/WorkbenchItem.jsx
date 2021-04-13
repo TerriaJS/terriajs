@@ -10,8 +10,6 @@ import { sortable } from "react-anything-sortable";
 import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import getPath from "../../Core/getPath";
-import AsyncChartableMixin from "../../ModelMixins/AsyncChartableMixin";
-import AsyncMappableMixin from "../../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
 import CommonStrata from "../../Models/CommonStrata";
 import Box from "../../Styled/Box";
@@ -212,11 +210,6 @@ export const WorkbenchItemRaw = observer(
               </If>
               {CatalogMemberMixin.isMixedInto(this.props.item) &&
               this.props.item.isLoading ? (
-                // These are disabled until AsyncLoader.isLoading is fixed https://github.com/TerriaJS/terriajs/issues/5233
-                //   || (AsyncMappableMixin.isMixedInto(this.props.item) &&
-                //   this.props.item.isLoadingMapItems) ||
-                // (AsyncChartableMixin.isMixedInto(this.props.item) &&
-                //   this.props.item.isLoadingChartItems)
                 <Box paddedVertically>
                   <Loader light />
                 </Box>

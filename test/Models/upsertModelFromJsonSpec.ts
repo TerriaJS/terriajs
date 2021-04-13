@@ -83,13 +83,11 @@ describe("upsertModelFromJson", function() {
     expect(item.layers).toBeUndefined();
     expect(item.isGeoServer).toBe(false);
 
-    const loadMetadataPromise = group.loadMetadata();
+    // loadMembers will call loadMetadata first, so check isLoadingMetadata and then await loadMetadata
     const loadMembersPromise = group.loadMembers();
-
     expect(group.isLoadingMetadata).toBe(true);
+    await group.loadMetadata();
     expect(group.isLoadingMembers).toBe(true);
-
-    await loadMetadataPromise;
     await loadMembersPromise;
 
     expect(group.isLoadingMetadata).toBe(false);

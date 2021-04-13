@@ -257,7 +257,6 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
       );
       csvResult.setTrait(CommonStrata.user, "enableManualRegionMapping", true);
     });
-    await csvResult.loadMapItems();
 
     return [csvResult];
   }
