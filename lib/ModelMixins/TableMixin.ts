@@ -620,6 +620,25 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           .colorMap;
         const valuesAsRegions = regionColumn.valuesAsRegions;
 
+        let currentTimeRows: number[] | undefined;
+
+        // TODO: this is already implemented in RegionProvider.prototype.mapRegionsToIndicesInto, but regionTypes require "loading" for this to work. I think the whole RegionProvider thing needs to be re-done in TypeScript at some point and then we can move stuff into that.
+        // If time varying, get row indices which match
+        if (input.currentTime && input.style.timeIntervals) {
+          currentTimeRows = input.style.timeIntervals.reduce<number[]>(
+            (rows, timeInterval, index) => {
+              if (
+                timeInterval &&
+                TimeInterval.contains(timeInterval, input.currentTime!)
+              ) {
+                rows.push(index);
+              }
+              return rows;
+            },
+            []
+          );
+        }
+
         const catalogItem = this;
 
         return {
@@ -636,6 +655,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
               let rowNumber = catalogItem.getImageryLayerFilteredRows(
                 input,
+                currentTimeRows,
                 valuesAsRegions.regionIdToRowNumbersMap.get(
                   regionIdString.toLowerCase()
                 )
@@ -671,7 +691,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
             maximumZoom: regionType.serverMaxZoom,
             uniqueIdProp: regionType.uniqueIdProp,
             featureInfoFunc: (feature: any) =>
-              this.getImageryLayerFeatureInfo(input, feature)
+              this.getImageryLayerFeatureInfo(input, feature, currentTimeRows)
           }),
           show: this.show,
           clippingRectangle: this.clipToRectangle
@@ -689,28 +709,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         style: TableStyle;
         currentTime: JulianDate | undefined;
       },
+      currentTimeRows: number[] | undefined,
       rowNumbers: number | readonly number[] | undefined
     ): number | undefined {
       if (!isDefined(rowNumbers)) return;
-
-      let currentTimeRows: number[] | undefined;
-
-      // TODO: this is already implemented in RegionProvider.prototype.mapRegionsToIndicesInto, but regionTypes require "loading" for this to work. I think the whole RegionProvider thing needs to be re-done in TypeScript at some point and then we can move stuff into that.
-      // If time varying, get row indices which match
-      if (input.currentTime && input.style.timeIntervals) {
-        currentTimeRows = input.style.timeIntervals.reduce<number[]>(
-          (rows, timeInterval, index) => {
-            if (
-              timeInterval &&
-              TimeInterval.contains(timeInterval, input.currentTime!)
-            ) {
-              rows.push(index);
-            }
-            return rows;
-          },
-          []
-        );
-      }
 
       if (!isDefined(currentTimeRows)) {
         return Array.isArray(rowNumbers) ? rowNumbers[0] : rowNumbers;
@@ -754,7 +756,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         style: TableStyle;
         currentTime: JulianDate | undefined;
       },
-      feature: VectorTileFeature
+      feature: VectorTileFeature,
+      currentTimeRows: number[] | undefined
     ) {
       if (
         isDefined(input.style.regionColumn) &&
@@ -772,6 +775,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
         const filteredRegionId = this.getImageryLayerFilteredRows(
           input,
+          currentTimeRows,
           regionIds
         );
 
