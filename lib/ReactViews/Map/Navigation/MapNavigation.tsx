@@ -286,7 +286,7 @@ class MapNavigation extends React.Component<PropTypes> {
             `}
           >
             {items.map(item => (
-              <MapNavigationItem item={item} terria={terria} />
+              <MapNavigationItem key={item.id} item={item} terria={terria} />
             ))}
             {this.overflows && (
               <Control key={OVERFLOW_ITEM_ID}>
@@ -307,7 +307,7 @@ class MapNavigation extends React.Component<PropTypes> {
           </ControlWrapper>
           <ControlWrapper column={this.orientation === Orientation.VERTICAL}>
             {bottomItems?.map(item => (
-              <MapNavigationItem item={item} terria={terria} />
+              <MapNavigationItem key={item.id} item={item} terria={terria} />
             ))}
             <Medium>
               <Prompt
