@@ -9,7 +9,7 @@ import { PrefaceBox } from "../../../Generic/PrefaceBox";
 import { StyledIcon } from "../../../Icon";
 import { useTranslationIfExists } from "../../../../Language/languageHelpers";
 import { filterViewerAndScreenSize } from "../MapNavigation";
-import { IMapNavigationItem } from "../../../../Models/MapNavigation/MapNavigationModel";
+import { IMapNavigationItem } from "../../../../ViewModels/MapNavigation/MapNavigationModel";
 
 const Box = require("../../../../Styled/Box").default;
 const BoxSpan = require("../../../../Styled/Box").BoxSpan;

@@ -1,5 +1,5 @@
 import { action, computed } from "mobx";
-import MapNavigationItemController from "../../../../Models/MapNavigation/MapNavigationItemController";
+import MapNavigationItemController from "../../../../ViewModels/MapNavigation/MapNavigationItemController";
 import ViewerMode from "../../../../Models/ViewerMode";
 import ViewState from "../../../../ReactViewModels/ViewState";
 import Icon from "../../../Icon";
@@ -64,7 +64,7 @@ export class ToggleSplitterController extends MapNavigationItemController {
     return super.active;
   }
 }
-/* 
+/*
 interface PropTypes extends WithTranslation {
   viewState: ViewState;
   terria: Terria;

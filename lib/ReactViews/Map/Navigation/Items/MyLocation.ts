@@ -7,7 +7,7 @@ import isDefined from "../../../../Core/isDefined";
 import TerriaError from "../../../../Core/TerriaError";
 import CommonStrata from "../../../../Models/CommonStrata";
 import GeoJsonCatalogItem from "../../../../Models/GeoJsonCatalogItem";
-import MapNavigationItemController from "../../../../Models/MapNavigation/MapNavigationItemController";
+import MapNavigationItemController from "../../../../ViewModels/MapNavigation/MapNavigationItemController";
 import Terria from "../../../../Models/Terria";
 import ViewerMode from "../../../../Models/ViewerMode";
 import { GLYPHS } from "../../../Icon";

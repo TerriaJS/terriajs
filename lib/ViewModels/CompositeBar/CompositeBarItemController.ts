@@ -1,5 +1,5 @@
 import { computed, observable } from "mobx";
-import ViewerMode from "../ViewerMode";
+import ViewerMode from "../../Models/ViewerMode";
 import React from "react";
 
 export interface ICompositeBarItemController {

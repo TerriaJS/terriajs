@@ -22,7 +22,7 @@ import { Control, MapNavigationItem } from "./Items/MapNavigationItem";
 import MapNavigationModel, {
   IMapNavigationItem,
   OVERFLOW_ITEM_ID
-} from "../../../Models/MapNavigation/MapNavigationModel";
+} from "../../../ViewModels/MapNavigation/MapNavigationModel";
 import { registerMapNavigations } from "./registerMapNavigations";
 
 const Box = require("../../../Styled/Box").default;

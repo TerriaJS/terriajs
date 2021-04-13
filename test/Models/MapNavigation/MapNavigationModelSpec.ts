@@ -1,8 +1,8 @@
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
-import MapNavigationModel from "../../../lib/Models/MapNavigation/MapNavigationModel";
-import { IMapNavigationItem } from "./../../../lib/Models/MapNavigation/MapNavigationModel";
-import { GenericMapNavigationItemController } from "../../../lib/Models/MapNavigation/MapNavigationItemController";
+import MapNavigationModel from "../../../lib/ViewModels/MapNavigation/MapNavigationModel";
+import { IMapNavigationItem } from "../../../lib/ViewModels/MapNavigation/MapNavigationModel";
+import { GenericMapNavigationItemController } from "../../../lib/ViewModels/MapNavigation/MapNavigationItemController";
 
 describe("MapNavigationModel", function() {
   let terria: Terria;

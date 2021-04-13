@@ -2,7 +2,7 @@ import {
   CompositeBarItemController,
   ICompositeBarItemController
 } from "../CompositeBar/CompositeBarItemController";
-import ViewerMode from "../ViewerMode";
+import ViewerMode from "../../Models/ViewerMode";
 import { action } from "mobx";
 
 export interface IMapNavigationItemController

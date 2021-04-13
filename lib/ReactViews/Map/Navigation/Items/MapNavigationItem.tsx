@@ -2,7 +2,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import styled from "styled-components";
 import { useTranslationIfExists } from "../../../../Language/languageHelpers";
-import { IMapNavigationItem } from "../../../../Models/MapNavigation/MapNavigationModel";
+import { IMapNavigationItem } from "../../../../ViewModels/MapNavigation/MapNavigationModel";
 import Terria from "../../../../Models/Terria";
 import Icon, { GLYPHS } from "../../../Icon";
 import MapIconButton from "../../../MapIconButton/MapIconButton";

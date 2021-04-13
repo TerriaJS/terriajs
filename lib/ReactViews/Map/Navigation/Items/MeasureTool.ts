@@ -12,7 +12,7 @@ import VertexFormat from "terriajs-cesium/Source/Core/VertexFormat";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Terria from "../../../../Models/Terria";
 import UserDrawing from "../../../../Models/UserDrawing";
-import MapNavigationItemController from "../../../../Models/MapNavigation/MapNavigationItemController";
+import MapNavigationItemController from "../../../../ViewModels/MapNavigation/MapNavigationItemController";
 import { GLYPHS } from "../../../Icon";
 import ViewerMode from "../../../../Models/ViewerMode";
 

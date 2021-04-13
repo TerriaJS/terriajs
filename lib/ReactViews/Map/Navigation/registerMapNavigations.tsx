@@ -1,6 +1,6 @@
 import { runInAction } from "mobx";
 import React from "react";
-import { GenericMapNavigationItemController } from "../../../Models/MapNavigation/MapNavigationItemController";
+import { GenericMapNavigationItemController } from "../../../ViewModels/MapNavigation/MapNavigationItemController";
 import ViewerMode from "../../../Models/ViewerMode";
 import ViewState from "../../../ReactViewModels/ViewState";
 import { GLYPHS } from "../../Icon";

@@ -1,7 +1,7 @@
 import { action, computed, observable } from "mobx";
 import React from "react";
 import isDefined from "../../Core/isDefined";
-import CommonStrata from "../CommonStrata";
+import CommonStrata from "../../Models/CommonStrata";
 import {
   CompositeBarItemController,
   ICompositeBarItemController

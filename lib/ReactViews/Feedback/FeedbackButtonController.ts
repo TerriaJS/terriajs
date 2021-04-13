@@ -1,4 +1,4 @@
-import MapNavigationItemController from "../../Models/MapNavigation/MapNavigationItemController";
+import MapNavigationItemController from "../../ViewModels/MapNavigation/MapNavigationItemController";
 import ViewState from "../../ReactViewModels/ViewState";
 import { computed, action } from "mobx";
 import isDefined from "../../Core/isDefined";

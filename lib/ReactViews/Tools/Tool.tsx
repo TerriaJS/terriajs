@@ -3,7 +3,7 @@ import { computed } from "mobx";
 import { default as React, Suspense, useEffect, useState } from "react";
 import { useTranslation, WithTranslation } from "react-i18next";
 import { useTranslationIfExists } from "../../Language/languageHelpers";
-import MapNavigationItemController from "../../Models/MapNavigation/MapNavigationItemController";
+import MapNavigationItemController from "../../ViewModels/MapNavigation/MapNavigationItemController";
 import Terria from "../../Models/Terria";
 import ViewerMode from "../../Models/ViewerMode";
 import ViewState from "../../ReactViewModels/ViewState";
