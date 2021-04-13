@@ -1,4 +1,5 @@
-import { action, computed, observable, runInAction, toJS } from "mobx";
+import { VectorTileFeature } from "@mapbox/vector-tile";
+import { action, computed, observable, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -619,68 +620,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           .colorMap;
         const valuesAsRegions = regionColumn.valuesAsRegions;
 
-        let currentTimeRows: number[];
-
-        // TODO: this is already implemented in RegionProvider.prototype.mapRegionsToIndicesInto, but regionTypes require "loading" for this to work. I think the whole RegionProvider thing needs to be re-done in TypeScript at some point and then we can move stuff into that.
-        // If time varying, get row indices which match
-        if (input.currentTime && input.style.timeIntervals) {
-          currentTimeRows = input.style.timeIntervals.reduce<number[]>(
-            (rows, timeInterval, index) => {
-              if (
-                timeInterval &&
-                TimeInterval.contains(timeInterval, input.currentTime!)
-              ) {
-                rows.push(index);
-              }
-              return rows;
-            },
-            []
-          );
-        }
-
-        /**
-         * Filters row numbers by time (if applicable)
-         */
-        function filterRows(
-          rowNumbers: number | readonly number[] | undefined
-        ): number | undefined {
-          if (!isDefined(rowNumbers)) return;
-
-          if (!isDefined(currentTimeRows)) {
-            return Array.isArray(rowNumbers) ? rowNumbers[0] : rowNumbers;
-          }
-
-          if (
-            typeof rowNumbers === "number" &&
-            currentTimeRows.includes(rowNumbers)
-          ) {
-            return rowNumbers;
-          } else if (Array.isArray(rowNumbers)) {
-            const matchingTimeRows: number[] = rowNumbers.filter(row =>
-              currentTimeRows.includes(row)
-            );
-            if (matchingTimeRows.length <= 1) {
-              return matchingTimeRows[0];
-            }
-            //In a time-varying dataset, intervals may
-            // overlap at their endpoints (i.e. the end of one interval is the start of the next).
-            // In that case, we want the later interval to apply.
-            return matchingTimeRows.reduce((latestRow, currentRow) => {
-              const currentInterval =
-                input.style.timeIntervals?.[currentRow]?.stop;
-              const latestInterval =
-                input.style.timeIntervals?.[latestRow]?.stop;
-              if (
-                currentInterval &&
-                latestInterval &&
-                JulianDate.lessThan(latestInterval, currentInterval)
-              ) {
-                return currentRow;
-              }
-              return latestRow;
-            }, matchingTimeRows[0]);
-          }
-        }
+        const catalogItem = this;
 
         return {
           alpha: this.opacity,
@@ -694,7 +634,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
                   ? featureRegion.toString()
                   : "";
 
-              let rowNumber = filterRows(
+              let rowNumber = catalogItem.getImageryLayerFilteredRows(
+                input,
                 valuesAsRegions.regionIdToRowNumbersMap.get(
                   regionIdString.toLowerCase()
                 )
@@ -729,80 +670,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
             maximumNativeZoom: regionType.serverMaxNativeZoom,
             maximumZoom: regionType.serverMaxZoom,
             uniqueIdProp: regionType.uniqueIdProp,
-            featureInfoFunc: (feature: any) => {
-              if (
-                isDefined(input.style.regionColumn) &&
-                isDefined(input.style.regionColumn.regionType) &&
-                isDefined(input.style.regionColumn.regionType.regionProp)
-              ) {
-                const regionColumn = input.style.regionColumn;
-                const regionType = regionColumn.regionType;
-
-                if (!isDefined(regionType)) return undefined;
-
-                const regionIds =
-                  regionColumn.valuesAsRegions.regionIdToRowNumbersMap.get(
-                    feature.properties[regionType.regionProp].toLowerCase()
-                  ) ?? [];
-
-                const filteredRegionId = filterRows(regionIds);
-
-                let d: JsonObject | null = isDefined(filteredRegionId)
-                  ? this.getRowValues(filteredRegionId)
-                  : null;
-
-                if (d === null) return;
-
-                // Preserve values from d and insert feature properties after entries from d
-                const featureData = Object.assign({}, d, feature.properties, d);
-
-                const featureInfo = new ImageryLayerFeatureInfo();
-                if (isDefined(regionType.nameProp)) {
-                  featureInfo.name = featureData[regionType.nameProp] as string;
-                }
-
-                featureData.id = feature.properties[regionType.uniqueIdProp];
-                featureInfo.properties = featureData;
-
-                featureInfo.configureDescriptionFromProperties(featureData);
-                featureInfo.configureNameFromProperties(featureData);
-
-                // If time-series region-mapping - show timeseries chart
-                if (
-                  !isDefined(featureData._terria_getChartDetails) &&
-                  this.discreteTimes &&
-                  this.discreteTimes.length > 1 &&
-                  this.activeTableStyle.timeColumn &&
-                  this.activeTableStyle.colorColumn?.type ===
-                    TableColumnType.scalar &&
-                  Array.isArray(regionIds) &&
-                  regionIds.length > 1
-                ) {
-                  const chartColumns = [
-                    this.activeTableStyle.timeColumn,
-                    this.activeTableStyle.colorColumn
-                  ];
-                  featureInfo.properties._terria_getChartDetails = () => ({
-                    title: this.activeTableStyle.colorColumn?.title,
-                    xName: this.activeTableStyle.timeColumn?.title,
-                    yName: this.activeTableStyle.colorColumn?.title,
-                    units: chartColumns.map(column => column.units || ""),
-                    csvData: [
-                      chartColumns.map(col => col!.title).join(","),
-                      ...regionIds.map(i =>
-                        chartColumns
-                          .map(col => col.valueFunctionForType(i))
-                          .join(",")
-                      )
-                    ].join("\n")
-                  });
-                }
-
-                return featureInfo;
-              }
-
-              return undefined;
-            }
+            featureInfoFunc: (feature: any) =>
+              this.getImageryLayerFeatureInfo(input, feature)
           }),
           show: this.show,
           clippingRectangle: this.clipToRectangle
@@ -811,6 +680,154 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         };
       }
     );
+
+    /**
+     * Filters row numbers by time (if applicable) - for a given region mapped ImageryLayer
+     */
+    private getImageryLayerFilteredRows(
+      input: {
+        style: TableStyle;
+        currentTime: JulianDate | undefined;
+      },
+      rowNumbers: number | readonly number[] | undefined
+    ): number | undefined {
+      if (!isDefined(rowNumbers)) return;
+
+      let currentTimeRows: number[] | undefined;
+
+      // TODO: this is already implemented in RegionProvider.prototype.mapRegionsToIndicesInto, but regionTypes require "loading" for this to work. I think the whole RegionProvider thing needs to be re-done in TypeScript at some point and then we can move stuff into that.
+      // If time varying, get row indices which match
+      if (input.currentTime && input.style.timeIntervals) {
+        currentTimeRows = input.style.timeIntervals.reduce<number[]>(
+          (rows, timeInterval, index) => {
+            if (
+              timeInterval &&
+              TimeInterval.contains(timeInterval, input.currentTime!)
+            ) {
+              rows.push(index);
+            }
+            return rows;
+          },
+          []
+        );
+      }
+
+      if (!isDefined(currentTimeRows)) {
+        return Array.isArray(rowNumbers) ? rowNumbers[0] : rowNumbers;
+      }
+
+      if (
+        typeof rowNumbers === "number" &&
+        currentTimeRows.includes(rowNumbers)
+      ) {
+        return rowNumbers;
+      } else if (Array.isArray(rowNumbers)) {
+        const matchingTimeRows: number[] = rowNumbers.filter(row =>
+          currentTimeRows!.includes(row)
+        );
+        if (matchingTimeRows.length <= 1) {
+          return matchingTimeRows[0];
+        }
+        //In a time-varying dataset, intervals may
+        // overlap at their endpoints (i.e. the end of one interval is the start of the next).
+        // In that case, we want the later interval to apply.
+        return matchingTimeRows.reduce((latestRow, currentRow) => {
+          const currentInterval = input.style.timeIntervals?.[currentRow]?.stop;
+          const latestInterval = input.style.timeIntervals?.[latestRow]?.stop;
+          if (
+            currentInterval &&
+            latestInterval &&
+            JulianDate.lessThan(latestInterval, currentInterval)
+          ) {
+            return currentRow;
+          }
+          return latestRow;
+        }, matchingTimeRows[0]);
+      }
+    }
+
+    /**
+     * Get ImageryLayerFeatureInfo for a given ImageryLayer input and feature.
+     */
+    private getImageryLayerFeatureInfo(
+      input: {
+        style: TableStyle;
+        currentTime: JulianDate | undefined;
+      },
+      feature: VectorTileFeature
+    ) {
+      if (
+        isDefined(input.style.regionColumn) &&
+        isDefined(input.style.regionColumn.regionType) &&
+        isDefined(input.style.regionColumn.regionType.regionProp)
+      ) {
+        const regionType = input.style.regionColumn.regionType;
+
+        if (!isDefined(regionType)) return undefined;
+
+        const regionIds =
+          input.style.regionColumn.valuesAsRegions.regionIdToRowNumbersMap.get(
+            feature.properties[regionType.regionProp].toLowerCase()
+          ) ?? [];
+
+        const filteredRegionId = this.getImageryLayerFilteredRows(
+          input,
+          regionIds
+        );
+
+        let d: JsonObject | null = isDefined(filteredRegionId)
+          ? this.getRowValues(filteredRegionId)
+          : null;
+
+        if (d === null) return;
+
+        // Preserve values from d and insert feature properties after entries from d
+        const featureData = Object.assign({}, d, feature.properties, d);
+
+        const featureInfo = new ImageryLayerFeatureInfo();
+        if (isDefined(regionType.nameProp)) {
+          featureInfo.name = featureData[regionType.nameProp] as string;
+        }
+
+        featureData.id = feature.properties[regionType.uniqueIdProp];
+        featureInfo.properties = featureData;
+
+        featureInfo.configureDescriptionFromProperties(featureData);
+        featureInfo.configureNameFromProperties(featureData);
+
+        // If time-series region-mapping - show timeseries chart
+        if (
+          !isDefined(featureData._terria_getChartDetails) &&
+          this.discreteTimes &&
+          this.discreteTimes.length > 1 &&
+          this.activeTableStyle.timeColumn &&
+          this.activeTableStyle.colorColumn?.type === TableColumnType.scalar &&
+          Array.isArray(regionIds) &&
+          regionIds.length > 1
+        ) {
+          const chartColumns = [
+            this.activeTableStyle.timeColumn,
+            this.activeTableStyle.colorColumn
+          ];
+          featureInfo.properties._terria_getChartDetails = () => ({
+            title: this.activeTableStyle.colorColumn?.title,
+            xName: this.activeTableStyle.timeColumn?.title,
+            yName: this.activeTableStyle.colorColumn?.title,
+            units: chartColumns.map(column => column.units || ""),
+            csvData: [
+              chartColumns.map(col => col!.title).join(","),
+              ...regionIds.map(i =>
+                chartColumns.map(col => col.valueFunctionForType(i)).join(",")
+              )
+            ].join("\n")
+          });
+        }
+
+        return featureInfo;
+      }
+
+      return undefined;
+    }
 
     private getRowValues(index: number): JsonObject {
       const result: JsonObject = {};
