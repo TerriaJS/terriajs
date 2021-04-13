@@ -132,7 +132,9 @@ export default class UserDrawing extends MappableMixin(
     });
   }
 
-  async forceLoadMapItems() {}
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
+  }
 
   @computed get mapItems() {
     // Don't show points if drawing rectangle

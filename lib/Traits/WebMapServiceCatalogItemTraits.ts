@@ -19,6 +19,9 @@ import SplitterTraits from "./SplitterTraits";
 import TimeFilterTraits from "./TimeFilterTraits";
 import UrlTraits from "./UrlTraits";
 
+export const SUPPORTED_CRS_3857 = ["EPSG:3857", "EPSG:900913"];
+export const SUPPORTED_CRS_4326 = ["EPSG:4326", "CRS:84", "EPSG:4283"];
+
 export class WebMapServiceAvailableStyleTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
@@ -173,6 +176,15 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   })
   styles?: string;
 
+  @primitiveTrait({
+    type: "string",
+    name: "Style(s)",
+    description: `CRS to use with WMS layers. We support Web Mercator (${SUPPORTED_CRS_3857.join(
+      ", "
+    )}) and WGS 84 (${SUPPORTED_CRS_4326.join(", ")})`
+  })
+  crs?: string;
+
   @anyTrait({
     name: "Dimensions",
     description:
@@ -202,6 +214,22 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       "Additional parameters to pass to the MapServer when requesting images. Style parameters are stored as CSV in `styles`, dimension parameters are stored in `dimensions`."
   })
   parameters?: JsonObject;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Tile width (in pixels)",
+    description:
+      "Tile width in pixels. This will be added to `GetMap` requests for map tiles using the `width` parameter. Default value is 256 pixels"
+  })
+  tileWidth: number = 256;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Tile height (in pixels)",
+    description:
+      "Tile height in pixels. This will be added to `GetMap` requests for map tiles using the `height` parameter. Default value is 256 pixels"
+  })
+  tileHeight: number = 256;
 
   @primitiveTrait({
     type: "number",

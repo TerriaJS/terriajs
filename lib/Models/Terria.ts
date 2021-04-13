@@ -38,7 +38,9 @@ import PickedFeatures, {
   featureBelongsToCatalogItem,
   isProviderCoordsMap
 } from "../Map/PickedFeatures";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
+import MappableMixin, { isDataSource } from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
@@ -49,7 +51,8 @@ import { shareConvertNotification } from "../ReactViews/Notification/shareConver
 import ShowableTraits from "../Traits/ShowableTraits";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
-import MappableMixin, { isDataSource } from "../ModelMixins/MappableMixin";
+import { BaseMapModel, processBaseMaps } from "./BaseMaps/BaseMapModel";
+import { defaultBaseMaps } from "./BaseMaps/defaultBaseMaps";
 import CameraView from "./CameraView";
 import CatalogGroup from "./CatalogGroupNew";
 import CatalogMemberFactory from "./CatalogMemberFactory";
@@ -73,7 +76,7 @@ import MapInteractionMode from "./MapInteractionMode";
 import { BaseModel } from "./Model";
 import NoViewer from "./NoViewer";
 import openGroup from "./openGroup";
-import { wrapErrorMessage } from "./raiseErrorToUser";
+import raiseErrorToUser, { wrapErrorMessage } from "./raiseErrorToUser";
 import ShareDataService from "./ShareDataService";
 import SplitItemReference from "./SplitItemReference";
 import TimelineStack from "./TimelineStack";
@@ -353,7 +356,13 @@ export default class Terria {
   @observable
   baseMaps: BaseMapViewModel[] = [];
 
+  /** ID of basemap pulled from initData - this wil be used **before** `initBaseMapName` */
   initBaseMapId: string | undefined;
+
+  /** Name of basemap pulled from initData - this is for compatibility with sharelinks which use baseMapName instead of baseMapId. This will be used if `initBaseMapId` can't be resolved */
+  initBaseMapName: string | undefined;
+
+  previewBaseMapId: string = "basemap-positron";
 
   @observable
   pickedFeatures: PickedFeatures | undefined;
@@ -613,7 +622,8 @@ export default class Terria {
         this.setupInitializationUrls(baseUri, config);
       });
     } catch (error) {
-      this.error.raiseEvent(
+      raiseErrorToUser(
+        this,
         new TerriaError({
           sender: this,
           title: { key: "models.terria.loadConfigErrorTitle" },
@@ -675,33 +685,32 @@ export default class Terria {
     }
   }
 
-  @action
-  updateBaseMaps(baseMaps: BaseMapViewModel[]): void {
-    this.baseMaps.push(...baseMaps);
-    if (!this.mainViewer.baseMap) {
-      this.loadPersistedOrInitBaseMap();
-    }
-  }
-
-  @action
-  loadPersistedOrInitBaseMap(): void {
+  async loadPersistedOrInitBaseMap() {
+    // Set baseMap fallback to first option
+    let baseMap = this.baseMaps[0].mappable;
     const persistedBaseMapId = this.getLocalProperty("basemap");
     const baseMapSearch = this.baseMaps.find(
       baseMap => baseMap.mappable.uniqueId === persistedBaseMapId
     );
     if (baseMapSearch) {
-      this.mainViewer.baseMap = baseMapSearch.mappable;
+      baseMap = baseMapSearch.mappable;
     } else {
-      console.error(
-        `Couldn't find a basemap for unique id ${persistedBaseMapId}. Trying to load init base map.`
-      );
-      const baseMapSearch = this.baseMaps.find(
-        baseMap => baseMap.mappable.uniqueId === this.initBaseMapId
-      );
+      // Try to find basemap using initBaseMapId and initBaseMapName
+      const baseMapSearch =
+        this.baseMaps.find(
+          baseMap => baseMap.mappable.uniqueId === this.initBaseMapId
+        ) ??
+        this.baseMaps.find(
+          baseMap =>
+            CatalogMemberMixin.isMixedInto(baseMap.mappable) &&
+            baseMap.mappable.name === this.initBaseMapName
+        );
       if (baseMapSearch) {
-        this.mainViewer.baseMap = baseMapSearch.mappable;
+        baseMap = baseMapSearch.mappable;
       }
     }
+
+    await this.mainViewer.setBaseMap(baseMap);
   }
 
   get isLoadingInitSources(): boolean {
@@ -738,7 +747,6 @@ export default class Terria {
         .query("")
         .hash("")
     );
-    await this.loadInitSources();
   }
 
   @action
@@ -757,24 +765,83 @@ export default class Terria {
   }
 
   protected async forceLoadInitSources(): Promise<void> {
+    const loadInitSource = createTransformer(
+      async (initSource: InitSource): Promise<JsonObject | undefined> => {
+        let jsonValue: JsonValue | undefined;
+        if (isInitUrl(initSource)) {
+          try {
+            jsonValue = await loadJson5(initSource.initUrl);
+          } catch (e) {
+            raiseErrorToUser(
+              this,
+              new TerriaError({
+                sender: this,
+                title: { key: "models.terria.loadingInitSourceErrorTitle" },
+                message: {
+                  key: "models.terria.loadingInitSourceError2Message",
+                  parameters: { loadSource: initSource.initUrl }
+                }
+              })
+            );
+          }
+        } else if (isInitOptions(initSource)) {
+          let error: any;
+          for (const option of initSource.options) {
+            try {
+              jsonValue = await loadInitSource(option);
+              if (jsonValue !== undefined) break;
+            } catch (err) {
+              error = err;
+            }
+          }
+          if (jsonValue === undefined && error !== undefined) throw error;
+        } else if (isInitData(initSource)) {
+          jsonValue = initSource.data;
+        } else if (isInitDataPromise(initSource)) {
+          jsonValue = (await initSource).data;
+        }
+
+        if (jsonValue && isJsonObject(jsonValue)) {
+          return jsonValue;
+        }
+        return undefined;
+      }
+    );
+
     const initSources = await Promise.all(
       this.initSources.map(async initSource => {
         try {
-          return loadInitSource(initSource);
+          return await loadInitSource(initSource);
         } catch (e) {
-          this.error.raiseEvent(e);
-          return undefined;
+          raiseErrorToUser(this, e, {
+            key: "models.terria.loadingInitSourceErrorTitle"
+          });
         }
       })
     );
 
     await Promise.all(
-      filterOutUndefined(initSources).map(initSource =>
-        this.applyInitData({
-          initData: initSource
-        })
-      )
+      filterOutUndefined(initSources).map(async initSource => {
+        try {
+          await this.applyInitData({
+            initData: initSource
+          });
+        } catch (e) {
+          raiseErrorToUser(this, e, {
+            key: "models.terria.loadingInitSourceErrorTitle"
+          });
+        }
+      })
     );
+
+    if (this.baseMaps.length === 0) {
+      processBaseMaps(defaultBaseMaps(this), this);
+    }
+
+    if (!this.mainViewer.baseMap) {
+      // Note: there is no "await" here - as basemaps can take a while to load and there is no need to wait for them to load before rendering Terria
+      this.loadPersistedOrInitBaseMap();
+    }
   }
 
   private async loadModelStratum(
@@ -940,6 +1007,30 @@ export default class Terria {
       this.initBaseMapId = initData.baseMapId;
     }
 
+    if (isJsonString(initData.baseMapName)) {
+      this.initBaseMapName = initData.baseMapName;
+    }
+
+    if (isJsonString(initData.previewBaseMapId)) {
+      this.previewBaseMapId = initData.previewBaseMapId;
+    } else if (this.initBaseMapId) {
+      this.previewBaseMapId = this.initBaseMapId;
+    }
+
+    if (
+      initData.baseMaps &&
+      Array.isArray(initData.baseMaps) &&
+      initData.baseMaps.length > 0
+    ) {
+      try {
+        processBaseMaps(<BaseMapModel[]>(<unknown>initData.baseMaps), this);
+      } catch (e) {
+        raiseErrorToUser(this, e, {
+          key: "models.terria.loadingBaseMapsErrorTitle"
+        });
+      }
+    }
+
     if (isJsonObject(initData.homeCamera)) {
       this.loadHomeCamera(initData.homeCamera);
     }
@@ -966,6 +1057,7 @@ export default class Terria {
       ? initData.timeline.slice()
       : [];
 
+    // NOTE: after this Promise, this function is no longer an `@action`
     const models = initData.models;
     if (isJsonObject(models)) {
       await Promise.all(
@@ -978,6 +1070,9 @@ export default class Terria {
               replaceStratum
             );
           } catch (e) {
+            raiseErrorToUser(this, e, {
+              key: "models.terria.loadingShareDataErrorTitle"
+            });
             // TODO: deal with shared models that can't be loaded because, e.g. because they are private
             console.log(e);
             return Promise.resolve();
@@ -986,9 +1081,11 @@ export default class Terria {
       );
     }
 
-    if (isJsonString(initData.previewedItemId)) {
-      this.previewedItemId = initData.previewedItemId;
-    }
+    runInAction(() => {
+      if (isJsonString(initData.previewedItemId)) {
+        this.previewedItemId = initData.previewedItemId;
+      }
+    });
 
     // Set the new contents of the workbench.
     const newItems = filterOutUndefined(
@@ -1043,13 +1140,25 @@ export default class Terria {
     // Load the items on the workbench
     await Promise.all(
       newItems.map(async model => {
-        if (ReferenceMixin.is(model)) {
-          await model.loadReference();
-          model = model.target || model;
-        }
+        try {
+          if (ReferenceMixin.is(model)) {
+            await model.loadReference();
+            model = model.target || model;
+          }
 
-        if (MappableMixin.isMixedInto(model)) {
-          await model.loadMapItems();
+          if (MappableMixin.isMixedInto(model)) {
+            await model.loadMapItems();
+          }
+        } catch (e) {
+          raiseErrorToUser(this, e, {
+            key: "models.terria.loadingWorkbenchItemErrorTitle",
+            parameters: {
+              name:
+                (CatalogMemberMixin.isMixedInto(model)
+                  ? model.name
+                  : model.uniqueId) ?? "Unknown item"
+            }
+          });
         }
       })
     );
@@ -1283,35 +1392,6 @@ function generateInitializationUrl(
     initUrl: new URI(url).absoluteTo(baseUri).toString()
   };
 }
-
-const loadInitSource = createTransformer(
-  async (initSource: InitSource): Promise<JsonObject | undefined> => {
-    let jsonValue: JsonValue | undefined;
-    if (isInitUrl(initSource)) {
-      jsonValue = await loadJson5(initSource.initUrl);
-    } else if (isInitOptions(initSource)) {
-      let error: any;
-      for (const option of initSource.options) {
-        try {
-          jsonValue = await loadInitSource(option);
-          if (jsonValue !== undefined) break;
-        } catch (err) {
-          error = err;
-        }
-      }
-      if (jsonValue === undefined && error !== undefined) throw error;
-    } else if (isInitData(initSource)) {
-      jsonValue = initSource.data;
-    } else if (isInitDataPromise(initSource)) {
-      jsonValue = (await initSource).data;
-    }
-
-    if (jsonValue && isJsonObject(jsonValue)) {
-      return jsonValue;
-    }
-    return undefined;
-  }
-);
 
 async function interpretHash(
   terria: Terria,

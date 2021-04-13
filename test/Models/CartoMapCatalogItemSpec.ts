@@ -1,10 +1,11 @@
 import { configure, runInAction } from "mobx";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplateImageryProvider";
+import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
 import CartoMapCatalogItem, {
   CartoLoadableStratum
 } from "../../lib/Models/CartoMapCatalogItem";
 import Terria from "../../lib/Models/Terria";
-import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplateImageryProvider";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 
 configure({
   enforceActions: "observed",
@@ -39,16 +40,6 @@ describe("CartoMapCatalogItem", function() {
       ).toBeTruthy();
 
       runInAction(() => {
-        item.setTrait(
-          "definition",
-          "rectangle",
-          item.traits["rectangle"].fromJson(item, "definition", {
-            west: 10,
-            south: -15,
-            east: 20,
-            north: 20
-          })
-        );
         item.setTrait("definition", "attribution", "foo bar baz");
       });
 
@@ -62,17 +53,13 @@ describe("CartoMapCatalogItem", function() {
         expect((<any>imageryProvider)._subdomains).toEqual(
           stratum.tileSubdomains
         );
-        const { west, south, east, north } = item.rectangle;
-        let rectangle = Rectangle.fromDegrees(west, south, east, north);
-        expect(imageryProvider.rectangle.west).toBeCloseTo(rectangle.west);
-        expect(imageryProvider.rectangle.south).toBeCloseTo(rectangle.south);
-        expect(imageryProvider.rectangle.east).toBeCloseTo(rectangle.east);
-        expect(imageryProvider.rectangle.north).toBeCloseTo(rectangle.north);
       }
     });
 
     describe("mapItem", function() {
       it("has the correct `alpha` value", function() {
+        if (!ImageryParts.is(item.mapItems[0]))
+          throw new Error("Expected MapItem to be an ImageryParts");
         runInAction(() => item.setTrait("definition", "opacity", 0.42));
         expect(item.mapItems[0].alpha).toBe(0.42);
         runInAction(() => item.setTrait("definition", "opacity", 0.9));
@@ -80,10 +67,50 @@ describe("CartoMapCatalogItem", function() {
       });
 
       it("has the correct `show` value", function() {
+        if (!ImageryParts.is(item.mapItems[0]))
+          throw new Error("Expected MapItem to be an ImageryParts");
         runInAction(() => item.setTrait("definition", "show", false));
         expect(item.mapItems[0].show).toBe(false);
         runInAction(() => item.setTrait("definition", "show", true));
         expect(item.mapItems[0].show).toBe(true);
+      });
+
+      it("has the correct `clippingRectangle` value", function() {
+        const rectangleDegrees = {
+          west: 10,
+          south: -15,
+          east: 20,
+          north: 20
+        };
+        item.setTrait("definition", "rectangle", rectangleDegrees);
+        if (!ImageryParts.is(item.mapItems[0]))
+          throw new Error("Expected MapItem to be an ImageryParts");
+        expect(item.mapItems[0].clippingRectangle).toBeDefined();
+
+        if (item.mapItems[0].clippingRectangle !== undefined) {
+          const rectangleRadians = Rectangle.fromDegrees(
+            rectangleDegrees.west,
+            rectangleDegrees.south,
+            rectangleDegrees.east,
+            rectangleDegrees.north
+          );
+          expect(item.mapItems[0].clippingRectangle.west).toBeCloseTo(
+            rectangleRadians.west
+          );
+          expect(item.mapItems[0].clippingRectangle.south).toBeCloseTo(
+            rectangleRadians.south
+          );
+          expect(item.mapItems[0].clippingRectangle.east).toBeCloseTo(
+            rectangleRadians.east
+          );
+          expect(item.mapItems[0].clippingRectangle.north).toBeCloseTo(
+            rectangleRadians.north
+          );
+        }
+        runInAction(() =>
+          item.setTrait("definition", "clipToRectangle", false)
+        );
+        expect(item.mapItems[0].clippingRectangle).toBe(undefined);
       });
     });
   });
