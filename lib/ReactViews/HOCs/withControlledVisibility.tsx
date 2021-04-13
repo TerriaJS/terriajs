@@ -12,16 +12,14 @@ interface WithControlledVisibilityProps {
  * element is available inside either "hidden" or "shown" lists passed
  * as prop
  */
-export default <P extends React.ComponentProps<any>>(
-  WrappedComponent: React.ComponentClass<P> | React.FunctionComponent<P>
-) => {
+export default <P extends object>(WrappedComponent: React.ComponentType<P>) => {
   // eslint-disable-next-line require-jsdoc
   function WithControlledVisibility({
     elementConfig,
     ...props
-  }: P & WithControlledVisibilityProps & any) {
+  }: P & WithControlledVisibilityProps) {
     const isVisible = elementConfig ? elementConfig.visible : true;
-    return isVisible ? <WrappedComponent {...props} /> : null;
+    return isVisible ? <WrappedComponent {...(props as P)} /> : null;
   }
 
   WithControlledVisibility.propTypes = {
