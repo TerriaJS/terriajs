@@ -5,7 +5,6 @@ import isDefined from "../Core/isDefined";
 import Model from "../Models/Model";
 import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
 import AccessControlMixin from "./AccessControlMixin";
-import ChartableMixin from "./ChartableMixin";
 import GroupMixin from "./GroupMixin";
 import MappableMixin from "./MappableMixin";
 import ReferenceMixin from "./ReferenceMixin";
