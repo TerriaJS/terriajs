@@ -1,4 +1,4 @@
-import { action, computed, observable, runInAction } from "mobx";
+import { action, computed, observable, runInAction, toJS } from "mobx";
 import { createTransformer } from "mobx-utils";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -52,18 +52,54 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     get hasTableMixin() {
       return true;
     }
-    /**
-     * The raw data table in column-major format, i.e. the outer array is an
-     * array of columns.
-     */
+
+    // Always use the getter and setter for this
     @observable
-    dataColumnMajor: string[][] | undefined;
+    protected _dataColumnMajor: string[][] | undefined;
 
     /**
      * The list of region providers to be used with this table.
      */
     @observable
     regionProviderList: RegionProviderList | undefined;
+
+    /**
+     * The raw data table in column-major format, i.e. the outer array is an
+     * array of columns.
+     */
+    @computed
+    get dataColumnMajor(): string[][] | undefined {
+      const dataColumnMajor = this._dataColumnMajor;
+      if (
+        this.removeDuplicateRows &&
+        dataColumnMajor !== undefined &&
+        dataColumnMajor.length >= 1
+      ) {
+        // De-duplication is slow and memory expensive, so should be avoided if possible.
+        const rowsToRemove = new Set();
+        const seenRows = new Set();
+        for (let i = 0; i < dataColumnMajor[0].length; i++) {
+          const row = dataColumnMajor.map(col => col[i]).join();
+          if (seenRows.has(row)) {
+            // Mark row for deletion
+            rowsToRemove.add(i);
+          } else {
+            seenRows.add(row);
+          }
+        }
+
+        if (rowsToRemove.size > 0) {
+          return dataColumnMajor.map(col =>
+            col.filter((cell, idx) => !rowsToRemove.has(idx))
+          );
+        }
+      }
+      return dataColumnMajor;
+    }
+
+    set dataColumnMajor(newDataColumnMajor: string[][] | undefined) {
+      this._dataColumnMajor = newDataColumnMajor;
+    }
 
     /**
      * Gets a {@link TableColumn} for each of the columns in the raw data.
@@ -478,9 +514,11 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     protected async forceLoadMapItems() {
       const dataColumnMajor = await this.forceLoadTableData();
 
-      runInAction(() => {
-        this.dataColumnMajor = dataColumnMajor;
-      });
+      if (dataColumnMajor !== undefined && dataColumnMajor !== null) {
+        runInAction(() => {
+          this.dataColumnMajor = dataColumnMajor;
+        });
+      }
     }
 
     /**
@@ -491,7 +529,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      *
      * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
      */
-    protected abstract forceLoadTableData(): Promise<string[][]>;
+    protected abstract forceLoadTableData(): Promise<string[][] | undefined>;
 
     async loadRegionProviderList() {
       if (isDefined(this.regionProviderList)) return;
@@ -509,7 +547,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     /*
      * Appends new table data in column major format to this table.
-     * It is assumed that thhe column order is the same for both the tables.
+     * It is assumed that the column order is the same for both the tables.
      */
     @action
     append(dataColumnMajor2: string[][]) {
@@ -766,7 +804,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
               return undefined;
             }
           }),
-          show: this.show
+          show: this.show,
+          clippingRectangle: this.clipToRectangle
+            ? this.cesiumRectangle
+            : undefined
         };
       }
     );

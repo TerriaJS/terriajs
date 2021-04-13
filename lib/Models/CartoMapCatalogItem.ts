@@ -1,11 +1,10 @@
 import { computed, runInAction } from "mobx";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplateImageryProvider";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
-import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import MappableMixin, { MapItem } from "../ModelMixins/MappableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import CartoMapCatalogItemTraits from "../Traits/CartoMapCatalogItemTraits";
 import CreateModel from "./CreateModel";
@@ -118,13 +117,16 @@ export default class CartoMapCatalogItem extends MappableMixin(
     return true;
   }
 
-  @computed get mapItems() {
+  @computed get mapItems(): MapItem[] {
     if (isDefined(this.imageryProvider)) {
       return [
         {
           alpha: this.opacity,
           show: this.show,
-          imageryProvider: this.imageryProvider
+          imageryProvider: this.imageryProvider,
+          clippingRectangle: this.clipToRectangle
+            ? this.cesiumRectangle
+            : undefined
         }
       ];
     }
@@ -155,19 +157,6 @@ export default class CartoMapCatalogItem extends MappableMixin(
       return;
     }
 
-    let rectangle: Rectangle | undefined;
-    if (isDefined(this.rectangle) && this.clipToRectangle) {
-      const { west, south, east, north } = this.rectangle;
-      if (
-        isDefined(west) &&
-        isDefined(south) &&
-        isDefined(east) &&
-        isDefined(north)
-      ) {
-        rectangle = Rectangle.fromDegrees(west, south, east, north);
-      }
-    }
-
     let subdomains: string[] | undefined;
     if (isDefined(stratum.tileSubdomains)) {
       subdomains = stratum.tileSubdomains.slice();
@@ -178,8 +167,7 @@ export default class CartoMapCatalogItem extends MappableMixin(
       maximumLevel: this.maximumLevel,
       minimumLevel: this.minimumLevel,
       credit: this.attribution,
-      subdomains: subdomains,
-      rectangle: rectangle
+      subdomains: subdomains
     });
   }
 }
