@@ -83,7 +83,7 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
     );
 
     const data = {
-      ids: regionColumn?.valuesForType,
+      ids: regionColumn?.values,
       values: dataColumn?.valuesAsNumbers.values
     };
 

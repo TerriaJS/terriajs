@@ -73,11 +73,15 @@ describe("SdmxJsonCatalogItem", function() {
     expect(sdmxItem.description).toBe(
       "Nominal prices in USD for selected key international commodity prices relevant to Pacific Island Countries and Territories, extracted from World bank Commodity Prices (« pink sheets ») and from FAO GLOBEFISH European Fish Price Report."
     );
-    expect(sdmxItem.regionMappedDimensionIds.length).toBe(0);
-    expect(sdmxItem.timeDimensionIds.length).toBe(1);
-    expect(sdmxItem.timeDimensionIds[0]).toBe("TIME_PERIOD");
-    expect(sdmxItem.primaryMeasureDimensionId).toBe("OBS_VALUE");
-    expect(sdmxItem.viewBy).toBe("time");
+
+    expect(sdmxItem.columns.filter(col => col.type === "region").length).toBe(
+      0
+    );
+    expect(sdmxItem.columns.filter(col => col.type === "time").length).toBe(1);
+    expect(sdmxItem.columns.filter(col => col.type === "time")[0]?.name).toBe(
+      "TIME_PERIOD"
+    );
+    expect(sdmxItem.activeStyle).toBe("OBS_VALUE");
 
     expect(sdmxItem.dimensions.length).toBe(3);
     expect(sdmxItem.dimensions[0].name).toBe("Frequency");
@@ -85,7 +89,7 @@ describe("SdmxJsonCatalogItem", function() {
     expect(sdmxItem.dimensions[1].options.length).toBe(28);
     expect(sdmxItem.dimensions[2].name).toBe("Indicator");
 
-    expect(sdmxItem.columns.length).toBe(4);
+    expect(sdmxItem.columns.length).toBe(8);
     expect(sdmxItem.columns[0].name).toBe("OBS_VALUE");
   });
 
@@ -108,8 +112,12 @@ describe("SdmxJsonCatalogItem", function() {
       "Inflation rates for the Pacific island countries and territories per year."
     );
 
-    expect(sdmxItem.regionMappedDimensionIds.length).toBe(1);
-    expect(sdmxItem.regionMappedDimensionIds[0]).toBe("GEO_PICT");
+    expect(sdmxItem.columns.filter(col => col.type === "region").length).toBe(
+      1
+    );
+    expect(sdmxItem.columns.filter(col => col.type === "region")[0].name).toBe(
+      "GEO_PICT"
+    );
     expect(sdmxItem.activeTableStyle.regionColumn).toBeDefined();
     expect(sdmxItem.activeTableStyle.regionColumn?.regionType).toBeTruthy(
       "CNT2"
@@ -118,10 +126,11 @@ describe("SdmxJsonCatalogItem", function() {
       sdmxItem.selectableDimensions.find(dim => dim.id === "GEO_PICT")?.disable
     ).toBeTruthy();
 
-    expect(sdmxItem.timeDimensionIds.length).toBe(1);
-    expect(sdmxItem.timeDimensionIds[0]).toBe("TIME_PERIOD");
-    expect(sdmxItem.primaryMeasureDimensionId).toBe("OBS_VALUE");
-    expect(sdmxItem.viewBy).toBe("region");
+    expect(sdmxItem.columns.filter(col => col.type === "time").length).toBe(1);
+    expect(sdmxItem.columns.filter(col => col.type === "time")[0]?.name).toBe(
+      "TIME_PERIOD"
+    );
+    expect(sdmxItem.activeStyle).toBe("OBS_VALUE");
 
     expect(sdmxItem.dimensions.length).toBe(4);
     expect(sdmxItem.dimensions[0].name).toBe("Frequency");
@@ -131,7 +140,7 @@ describe("SdmxJsonCatalogItem", function() {
     expect(sdmxItem.dimensions[2].name).toBe("Indicator");
     expect(sdmxItem.dimensions[3].name).toBe("Commodity");
 
-    expect(sdmxItem.columns.length).toBe(5);
+    expect(sdmxItem.columns.length).toBe(11);
     expect(sdmxItem.columns[0].name).toBe("OBS_VALUE");
   });
 });
