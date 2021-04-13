@@ -845,35 +845,6 @@ function toNumber(value: string): number | null {
   return null;
 }
 
-function toDate(value: string): Date | null {
-  // TODO: Add much more sophisticated date parsing from old TableColumn.convertToDates.
-  const ms = Date.parse(value);
-  if (!Number.isNaN(ms)) {
-    return new Date(ms);
-  }
-
-  // Is it quarterly data in the format yyyy-Qx ? (Ignoring null values, and failing on any purely numeric values)
-  if (value.indexOf("-Q") === 4) {
-    var year = value.slice(0, 4);
-    var quarter = value.slice(6);
-    var monthString;
-    if (quarter === "1") {
-      monthString = "01/01";
-    } else if (quarter === "2") {
-      monthString = "04/01";
-    } else if (quarter === "3") {
-      monthString = "07/01";
-    } else if (quarter === "4") {
-      monthString = "10/01";
-    } else {
-      return null;
-    }
-    return new Date(year + "/" + monthString);
-  }
-
-  return null;
-}
-
 function nullFunction(rowIndex: number) {
   return null;
 }
