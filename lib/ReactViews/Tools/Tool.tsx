@@ -54,7 +54,7 @@ const Tool: React.FC<ToolProps> = props => {
   );
 };
 
-interface ToolButtonProps extends ToolProps, WithTranslation {
+interface ToolButtonProps extends ToolProps {
   icon: { id: string };
 }
 

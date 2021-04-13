@@ -104,8 +104,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
   const pedestrianModeToolController = new ToolButtonController({
     toolName: PEDESTRIAN_MODE_ID,
     viewState: viewState,
-    //@ts-ignore
-    getToolComponent: () => Promise.resolve(PedestrianMode),
+    getToolComponent: () => PedestrianMode as any,
     icon: GLYPHS.pedestrian
   });
 
