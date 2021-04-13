@@ -1,12 +1,12 @@
 import i18next from "i18next";
-import { computed, observable, runInAction } from "mobx";
+import { computed, runInAction } from "mobx";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
 import TerriaError from "../../Core/TerriaError";
-import ChartableMixin from "../../ModelMixins/ChartableMixin";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
+import ChartableMixin from "../../ModelMixins/ChartableMixin";
 import TableMixin from "../../ModelMixins/TableMixin";
 import UrlMixin from "../../ModelMixins/UrlMixin";
 import Csv from "../../Table/Csv";
@@ -17,7 +17,6 @@ import { BaseModel } from "../Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import raiseErrorToUser from "../raiseErrorToUser";
 import SelectableDimensions, {
-  Dimension,
   SelectableDimension
 } from "../SelectableDimensions";
 import StratumOrder from "../StratumOrder";
@@ -144,20 +143,14 @@ export default class SdmxJsonCatalogItem
     return super.url;
   }
 
-  /**
-   * SdmxJsonCatalogItem data request URL, this overrides `traits.url` (if you need `baseUrl` - use `SdmxJsonCatalogItem.baseUrl`)
-   */
   @computed
-  get shortReport() {
-    if (!isDefined(this.dataColumnMajor) || this.isLoading) return;
-
-    return this.dataColumnMajor.length === 0
-      ? i18next.t("models.sdmxCatalogItem.noData")
-      : undefined;
+  get url() {
+    if (!super.url) return;
+    return `${super.url}/data/${this.dataflowId}/${this.dataKey}`;
   }
 
   protected async forceLoadTableData() {
-    let columns: string[][] = [];
+    if (!this.url) return;
 
     try {
       const csvString = await new Resource({
@@ -174,9 +167,7 @@ export default class SdmxJsonCatalogItem
         });
       }
 
-      this._currentCsvString = csvString;
-
-      columns = await Csv.parseString(csvString, true);
+      return await Csv.parseString(csvString, true);
     } catch (error) {
       if (
         error instanceof RequestErrorEvent &&
@@ -202,8 +193,6 @@ export default class SdmxJsonCatalogItem
         );
       }
     }
-
-    return columns;
   }
 }
 
