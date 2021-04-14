@@ -3,6 +3,7 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
 import HttpApi from "i18next-http-backend";
 import translationEN from "../Language/en/translation.json";
+import translationFR from "../Language/fr/translation.json";
 
 export interface I18nBackendOptions {
   /**
@@ -76,6 +77,7 @@ class Internationalization {
      * @param {String} languageConfiguration.fallbackLanguage the language to be used on startup
      * @param {Array} languageConfiguration.changeLanguageOnStartWhen
      */
+
     i18next
       .use(HttpApi)
       .use(LanguageDetector)
@@ -122,6 +124,9 @@ class Internationalization {
         resources: {
           en: {
             translation: translationEN
+          },
+          fr: {
+            translation: translationFR
           }
         },
 

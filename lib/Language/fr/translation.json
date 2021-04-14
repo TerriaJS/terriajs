@@ -1,0 +1,1516 @@
+{
+  "general": {
+    "close": "FR-Close",
+    "open": "FR-Open",
+    "prev": "FR-Prev",
+    "next": "FR-Next",
+    "skip": "FR-Skip",
+    "back": "FR-Back",
+    "delete": "FR-Delete",
+    "cancel": "FR-Cancel",
+    "confirm": "FR-Confirm"
+  },
+  "trainer": {
+    "expandTrainer": "FR-Show more step detail",
+    "collapseTrainer": "FR-Hide step detail",
+    "showAllSteps": "FR-Show all steps",
+    "hideAllSteps": "FR-Hide all steps"
+  },
+  "tour": {
+    "preface": {
+      "title": "FR-Take the tour",
+      "content": "FR-Unsure of where to begin? Take a quick tour of the main features of our software, and learn about some of the key functions to help you get on your way.",
+      "close": "FR-Maybe later",
+      "start": "FR-Start tour"
+    },
+    "end": "FR-End tour",
+    "finish": "FR-Finish",
+    "previous": "FR-Previous",
+    "locationSearchInput": {
+      "content": "FR-## Location search\n\nEnter a locality or address to easily locate a point of interest on the map."
+    },
+    "exploreMapDataButton": {
+      "content": "FR-## Explore map data\n\nBrowse the catalogue of available data and add it to the map here. You can add multiple datasets at any one time, and you’ll see them listed down below in the Workbench."
+    },
+    "sidePanelUploadButton": {
+      "content": "FR-## Upload Data\n\nYou can upload your own data to the map to view it with other data sets. Upload a file or link to an existing online data set or data service. Supported data formats include CSV, GeoJSON, KML, GPX and CZML."
+    },
+    "menuBarMapSettingsButton": {
+      "content": "FR-## Map Settings\n\nCustomise map options such as base maps, map image quality or remove the ground (terrain) to interrogate underground datasets."
+    },
+    "menuBarStoryButton": {
+      "content": "FR-## Stories\n\nStories allow you to add contextual information to a dataset to bring a narrative to life. Create your own data story using the Story Editor, and share it via the ‘Share’ panel once you’re done."
+    },
+    "mapNavigationCompassOuterRing": {
+      "content": "FR-## View controls\n\nHere you can change the view of the map. You can change the orientation of your view by using the outer ring, and you can tilt the camera angle using the inner ring. Double click to reset the view."
+    },
+    "mapNavigationSplitterIcon": {
+      "content": "FR-## Compare\n\nA powerful feature of Terria is the ability to compare datasets using a split screen view. For datasets with a time-series/4D component, you can compare dates backwards and forwards in time using the date picker."
+    }
+  },
+  "measure": {
+    "measureTool": "FR-Measure Tool",
+    "measureToolTitle": "FR-Line Measure",
+    "measureDistance": "FR-Measure distance between locations"
+  },
+  "location": {
+    "errorGettingLocation": "FR-Error getting location",
+    "browserCannotProvide": "FR-Your browser cannot provide your location.",
+    "myLocation": "FR-My Location",
+    "location": "FR-Location",
+    "originError": "FR-Your browser can only provide your location when using https. You may be able to use {{secureUrl}} instead.",
+    "centreMap": "FR-Centre map at your current location"
+  },
+  "splitterTool": {
+    "toggleSplitterToolTitle": "FR-Compare",
+    "toggleSplitterTool": "FR-Enable side-by-side comparison between two different sets of data",
+    "toggleSplitterToolDisabled": "FR-Please disable other side-by-side comparison features in order to enable standard compare",
+    "title": "FR-Drag left or right to adjust views",
+    "workbench": {
+      "goleftTitle": "FR-Show on the left side",
+      "goleft": "FR-Left",
+      "bothTitle": "FR-Show on both sides",
+      "both": "FR-Both",
+      "gorightTitle": "FR-Show on the right side",
+      "goright": "FR-Right",
+      "copyName": "FR-{{name}} (copy)"
+    }
+  },
+  "zoomCotrol": {
+    "zoomIn": "FR-Zoom in",
+    "zoomReset": "FR-Reset zoom",
+    "zoomOut": "FR-Zoom out"
+  },
+  "compass": {
+    "description": "FR-Drag outer ring: rotate view.\nDrag inner gyroscope: free orbit.\nDouble-click: reset view.\nTIP: You can also free orbit by holding the CTRL key and dragging the map.",
+    "title": "FR-Click and drag to rotate the camera",
+    "guidanceBtnTitle": "FR-Gyroscope Guidance",
+    "guidanceBtnText": "FR-View detailed instructions on how to use the compass"
+  },
+  "AR": {
+    "title": "FR-Experimental Feature: Augmented Reality",
+    "experimentalFeatureMessage": "FR-Augmented Reality mode is currently in beta. This mode is only designed for use on the latest high end mobile devices. <br /><br />WARNING: This mode can consume a lot of data, please be mindful of data usage charges from your network provider. <br /><br />The accuracy of this mode depends on the accuracy of your mobile devices internal compass.",
+    "confirmText": "FR-Got it",
+    "manualAlignmentTitle": "FR-Manual Alignment",
+    "manualAlignmentMessage": "FR-Align your mobile device so that it corresponds with the maps current alignment, then click the blinking compass. If no landmarks to align with are currently visible on the map, you can move the map using drag and pinch actions until a recognisable landmark is visible before aligning the device with the map. <br /><div>{{img}}</div> <br />Tip: The sun or moon are often good landmarks to align with if you are in a location you aren't familiar with (be careful not to look at the sun - it can hurt your eyes).",
+    "resetAlignmentTitle": "FR-Reset Alignment",
+    "resetAlignmentMessage": "FR-Resetting to compass alignment. If the alignment doesn't match the real world try waving your device in a figure 8 motion to recalibrate device. This can be done at any time.<br /> <br />Avoid locations with magnetic fields or metal objects as these may disorient the devices compass.",
+    "arTool": "FR-augmented reality tool",
+    "btnHover": "FR-toggle hover height",
+    "btnRealign": "FR-toggle manual alignment",
+    "btnResetRealign": "FR-reset compass alignment"
+  },
+  "tool": {
+    "closeButtonTitle": "FR-Close {{toolName}} Tool",
+    "loadingError": {
+      "title": "FR-Error Loading {{toolName}} Tool",
+      "message": "FR-An error occurred while trying to load the this tool from the server. Please try again."
+    },
+    "exitBtnTitle": "FR-Exit",
+    "button": {
+      "open": "FR-Exit {{toolNameLowerCase}}",
+      "closed": "FR-{{toolName}}"
+    }
+  },
+  "diffTool": {
+    "title": "FR-Difference",
+    "exit": "FR-Exit",
+    "instructions": {
+      "setDateA": "FR-Set date A",
+      "setDateB": "FR-Set date B",
+      "changeDates": "FR-Change dates",
+      "paneDescription": "FR-Visualise and compare the difference of data between two dates at one location."
+    },
+    "choosePreview": "FR-Choose a preview style",
+    "chooseDifference": "FR-Choose a difference output",
+    "differenceResultsTitle": "FR-Change detection results",
+    "labels": {
+      "area": "FR-Area",
+      "dates": "FR-Dates",
+      "dateComparisonA": "FR-Date Comparison A",
+      "dateComparisonB": "FR-Date Comparison B",
+      "sourceDataset": "FR-Source dataset",
+      "previewStyle": "FR-Preview style",
+      "differenceOutput": "FR-Difference output",
+      "generateDiffButtonText": "FR-Generate change detection",
+      "disabledButtonPrompt": "FR-Please note: A location and dates must be selected to proceed with change detection",
+      "areaFilterSelection": "FR-Area filter selection"
+    },
+    "locationDisplay": {
+      "noLocationSelected": {
+        "title": "FR-No location selected",
+        "description": "FR-To filter image date picker by location, please select a point on the map"
+      },
+      "locationSelected": {
+        "title": "FR-Location selected & dates filtered",
+        "description": "FR-To change, click another point on the map"
+      }
+    },
+    "locationPicker": {
+      "initialMessages": {
+        "title": "FR-Select a precise location",
+        "beforePick": "FR-We need this to run our change detection process.",
+        "afterPick": "FR-Click another point to change the selected region"
+      },
+      "nextMessages": {
+        "title": "FR-You have selected the location {{latitude}} {{longitude}}",
+        "beforePick": "FR-Click another point to change the selection",
+        "afterPick": "FR-Click another point to change the selection"
+      },
+      "errorMessages": {
+        "title": "FR-Select a precise location",
+        "beforePick": "FR-Failed to resolve imagery at location! Please choose a different location or zoom-level.",
+        "afterPick": "FR-Click another point to change the selection"
+      }
+    },
+    "datePicker": {
+      "back": "FR-Go back",
+      "previousDateTitle": "FR-Previous date",
+      "nextDateTitle": "FR-Next date",
+      "dateButtonTitle": "FR-Select a date",
+      "dateOutOfRange": "FR-Currently out of range"
+    }
+  },
+  "legend": {
+    "lat": "FR-Lat",
+    "lon": "FR-Lon",
+    "zone": "FR-ZONE",
+    "e": "FR-E",
+    "n": "FR-N",
+    "elev": "FR-Elev"
+  },
+  "share": {
+    "browserPrint": "FR-For better printed results, please use {{appName}}'s Print button instead of your web browser's print feature.",
+    "shortLinkShortening": "FR-Shortening...",
+    "shortLinkError": "FR-An error occurred while attempting to shorten the URL.  Please check your internet connection and try again.",
+    "localDataNote": "FR-<0><0>Note:</0></0><1>The following data sources will NOT be shared because they include data from this local system. To share these data sources, publish their data on a web server and <2>add them using a url</2>.</1>",
+    "generatingUrl": "FR-Generating share URL...",
+    "printTitle": "FR-Print Map",
+    "printExplanation": "FR-Open a printable version of this map.",
+    "printButton": "FR-Print",
+    "printViewButton": "FR-Show Print View",
+    "creatingPrintView": "FR-Creating print view...",
+    "btnAdvanced": "FR-Advanced options",
+    "embedTitle": "FR-To embed, copy this code to embed this map into an HTML page:",
+    "shortenUsingService": "FR-Shorten the share URL using a web service",
+    "btnCatalogShareText": "FR-Share",
+    "btnStoryShareText": "FR-Share",
+    "btnMapShareText": "FR-Share / Print",
+    "btnCatalogShareTitle": "FR-Share your catalogue with others",
+    "btnStoryShareTitle": "FR-Share your story with others",
+    "btnMapShareTitle": "FR-Share your map with others",
+    "convertNotificationTitle": "FR-Notice: share link upgraded",
+    "convertNotificationMessage": "FR-This share link is based on an older version of TerriaJS - the software powering this web map. While best efforts are made to preserve the link, you might encounter issues with visualising the data.  \n\nIf you're a user of the share link, click OK to make the warning message disappear and continue with accessing the data.",
+    "convertNotificationHelp": "FR-If you have created the share link, check the Help menu to see tips on updating the share link.",
+    "convertNotificationFeedback": "FR-For questions or feedback, click here.",
+    "convertNotificationWarningsTitle": "FR-Technical details"
+  },
+  "countDatasets": {
+    "btnText": "FR-Start",
+    "loadError": "FR-failed to load.",
+    "countingMessage": "FR-Counting, please wait...",
+    "totals": "FR-<div>The catalog contains {{items}} items in {{groups}} groups.</div>",
+    "subTotals": "FR-<div> {{name}}: {{items}} items / {{groups}} groups</div>",
+    "recount": "FR-Recount",
+    "title": "FR-Count Datasets",
+    "btnCount": "FR-Count datasets",
+    "enabledOnMap": "FR-enabled on map",
+    "noMapDataEnabled": "FR-No map data enabled",
+    "datasetSingular": "FR-dataset",
+    "datasetPlural": "FR-datasets",
+    "mapDataState": "FR-{{numberOfDatasets}} {{singularOrPlural}} $t(countDatasets.enabledOnMap)"
+  },
+  "toolsPanel": {
+    "btnText": "FR-Tool",
+    "btnTitle": "FR-Advanced toolbox"
+  },
+  "settingPanel": {
+    "none": "FR-(None)",
+    "viewerModeLabels": {
+      "CesiumTerrain": "FR-3D Terrain",
+      "CesiumEllipsoid": "FR-3D Smooth",
+      "Leaflet": "FR-2D"
+    },
+    "qualityLabels": {
+      "maximumPerformance": "FR-Maximum performance, lower quality",
+      "balancedPerformance": "FR-Balanced performance & quality",
+      "lowerPerformance": "FR-Maximum quality, lower performance"
+    },
+    "nativeResolutionLabel": "FR-Press to stop using {{resolution1}} resolution and start using {{resolution2}} resolution",
+    "native": "FR-native",
+    "screen": "FR-screen",
+    "btnTitle": "FR-Change view",
+    "btnText": "FR-Map Settings",
+    "mapView": "FR-Map View",
+    "baseMap": "FR-Base Map",
+    "imageOptimisation": "FR-Image Optimisation",
+    "nativeResolutionHeader": "FR-Use native device resolution",
+    "mapQuality": "FR-Raster Map Quality:",
+    "qualityLabel": "FR-Quality",
+    "performanceLabel": "FR-Performance",
+    "timeline": {
+      "alwaysShowLabel": "FR-Press to start only showing the timeline when there are time-varying datasets on the workbench",
+      "hideLabel": "FR-Press to start always showing the timeline, even when no time-varying datasets are on the workbench",
+      "alwaysShow": "FR-Always show"
+    },
+    "terrain": {
+      "hideUnderground": "FR-Terrain hides underground features",
+      "showUndergroundFeatures": "FR-Press to start showing features that are underneath the terrain surface",
+      "hideUndergroundFeatures": "FR-Press to start hiding features that are underneath the terrain surface",
+      "sideLabel": "FR-Show Terrain on the",
+      "left": "FR-Left",
+      "both": "FR-Both",
+      "right": "FR-Right"
+    }
+  },
+  "feedback": {
+    "feedbackPreamble": "FR-We would love to hear from you!",
+    "title": "FR-Feedback",
+    "close": "FR-close feedback",
+    "yourName": "FR-Your name (optional)",
+    "email": "FR-Email address (optional)<br/><2>We can't follow up without it!</2>",
+    "commentQuestion": "FR-Comment or question",
+    "shareWithDevelopers": "FR-Share my map view with {{appName}} developers",
+    "captionText": "FR-This helps us to troubleshoot issues by letting us see what you're seeing",
+    "cancel": "FR-Cancel",
+    "sending": "FR-Sending...",
+    "send": "FR-Send",
+    "feedbackBtnText": "FR-Give Feedback"
+  },
+  "helpPanel": {
+    "menuPaneTitle": "FR-We're here to help",
+    "menuPaneBody": "FR-Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [info@terria.io](mailto:info@terria.io)",
+    "promptMessage": "FR-Find the Tour, how-to videos & other help content here",
+    "dismissText": "FR-Got it, thanks!",
+    "takeTour": "FR-Take the tour"
+  },
+  "helpMenu": {
+    "btnText": "FR-Help",
+    "btnTitle": "FR-get help",
+    "helpMenuHeader": "FR-What would you like to do?",
+    "helpMenuOpenWelcome": "FR-Show welcome message",
+    "helpMenuSatelliteGuideTitle": "FR-View satellite imagery guide",
+    "helpMenuMoreHelpTitle": "FR-More help",
+    "done": "FR-DONE",
+    "next": "FR-NEXT"
+  },
+  "sui": {
+    "notifications": {
+      "title": "FR-This map contains a story",
+      "message": "FR-Would you like to view it now?",
+      "confirmText": "FR-Yes",
+      "denyText": "FR-Maybe later"
+    },
+    "showWorkbench": "FR-Show Workbench",
+    "hideWorkbench": "FR-Hide Workbench"
+  },
+  "featureInfo": {
+    "catalogItem": {
+      "moreThanMax": "FR-More than {{maximum}} {{catalogItemName}} features were found.",
+      "featuresFound": "FR-{{featCount}} {catalogItemName} features were found.",
+      "featureInfoShown": "FR-The first {{maximum}} are shown below."
+    },
+    "download": "FR-Download this Table",
+    "pickLocation": "FR-Pick Location",
+    "clickMap": "FR-Click on the map to learn more about a location",
+    "noDataAvailable": "FR-No data is available here - try another location.",
+    "clickToAddData": "FR-Click '$t(addData.addDataBtnText)' to add data to the map.",
+    "userSelection": "FR-User Selection",
+    "panelHeading": "FR-Feature Information",
+    "btnCloseFeature": "FR-Close data panel",
+    "satelliteSuggestionBtn": "FR-Show {{catalogItemName}} at this location",
+    "locationMarker": "FR-Location Marker",
+    "noInfoAvailable": "FR-No information available",
+    "siteData": "FR-Site Data",
+    "latLon": "FR-Lat / Lon "
+  },
+  "welcomeMessage": {
+    "title": "FR-Let's get you started",
+    "welcomeMessage": "FR-Interested in data discovery and exploration?<br/>Dive right in and get started or check the following help guide options.",
+    "tourBtnText": "FR-Take the tour",
+    "helpBtnText": "FR-I'll need some help",
+    "exploreDataBtnText": "FR-Explore map data",
+    "dismissText": "FR-Close message and don't show me this again"
+  },
+  "story": {
+    "panelTitle": "FR-Story editor",
+    "panelBody": "FR-Create and share interactive stories directly from your map",
+    "gettingStarted": "FR-Getting started",
+    "gettingStartedTitle": "FR-Getting started",
+    "badgeBarLabel": "FR-Scenes",
+    "share": "FR-Share",
+    "shareTitle": "FR-share stories",
+    "viewStory": "FR-view",
+    "view": "FR-View",
+    "editStory": "FR-edit",
+    "edit": "FR-Edit",
+    "recaptureStory": "FR-re-capture",
+    "recapture": "FR-Recapture",
+    "deleteStory": "FR-delete",
+    "delete": "FR-Delete",
+    "untitledScene": "FR-untitled scene",
+    "doesNotExist": "FR-Story does not exist",
+    "message": "FR-<2>This is your story editor</2><1>Create and share interactive stories directly from your map<1><0><0></0>Getting Started </0></1></1>",
+    "removeAllStories": "FR-Remove All",
+    "removeAllStoriesDialog": "FR-Are you sure you wish to delete {{ count }} scene?",
+    "removeAllStoriesDialog_plural": "FR-Are you sure you wish to delete {{ count }} scenes?",
+    "removeStoryDialog": "FR-Are you sure you wish to delete '<1>{{storyName}}</1>'?",
+    "preview": "FR-preview stories",
+    "play": "FR-Play",
+    "captureSceneTitle": "FR-capture current scene",
+    "captureScene": "FR-Capture Scene",
+    "editor": {
+      "placeholder": "FR-Enter a title here",
+      "cancelBtn": "FR-cancel",
+      "cancelEditing": "FR-Cancel",
+      "saveBtn": "FR-save",
+      "saveStory": "FR-Save"
+    },
+    "locationBtn": "FR-center scene",
+    "exitBtn": "FR-exit story",
+    "previousBtn": "FR-go to previous scene",
+    "untitled": "FR-untitled scene",
+    "navBtn": "FR-go to story {{title}}",
+    "nextBtn": "FR-go to next scene",
+    "navBtnMobile": "FR-go to story {{title}}",
+    "promptHtml1": "FR-<0>You can view and create stories at any time by clicking here.</0>",
+    "promptHtml2": "FR-<0><0>INTRODUCING</0><1>Data Stories</1><2>Create and share interactive stories directly from your map.</2></0>",
+    "story": "FR-Story",
+    "dismissText": "FR-Got it, thanks!",
+    "mobileViewStory": "FR-View Stories {{storiesLength}}",
+    "storyEditor": "FR-Story Editor",
+    "hideStoryPanel": "FR-hide story builder"
+  },
+  "satelliteGuidance": {
+    "menuTitle": "FR-You can access map guides at any time by looking in the <2>help menu</2>.",
+    "dismissText": "FR-Got it, thanks!",
+    "titleI": "FR-Satellite Imagery: How do I…?",
+    "bodyI": "FR-A super-quick guide to getting the most out of historical satellite imagery.",
+    "prevI": "FR-No thanks",
+    "nextI": "FR-View guide",
+    "titleII": "FR-Where is my satellite imagery?",
+    "bodyII": "FR-You may need to adjust your zoom level to make satellite imagery visible on the map.",
+    "titleIII": "FR-Loading historical imagery",
+    "bodyIII": "FR-In your data workbench, click on the capture date dropdown and select from available times to load historical imagery.",
+    "titleIV": "FR-Filtering imagery by location",
+    "bodyIV": "FR-Satellite imagery may not always be available at your preferred time and location. If you only want to view imagery for a particular location, click ‘filter by location’ in your data workbench.",
+    "titleV": "FR-How do I view false-colour imagery?",
+    "bodyV": "FR-You can apply a range of styles, such as false-colour, to satellite imagery by clicking on the styles dropdown in your data workbench."
+  },
+  "addData": {
+    "addDataBtnText": "FR-Explore map data",
+    "btnHide": "FR-Hide",
+    "load": "FR-Load local/web data",
+    "closeDataPanel": "FR-Close data panel",
+    "done": "FR-Done",
+    "myData": "FR-My Data",
+    "dataCatalogue": "FR-Data Catalogue",
+    "searchPlaceholderWhole": "FR-Search whole catalogue",
+    "searchPlaceholder": "FR-Search the catalogue",
+    "localAdd": "FR-Add local file",
+    "localFileType": "FR-<0>Step 1:</0> Select file type (optional)",
+    "localFile": "FR-<0>Step 2:</0> Select file",
+    "webAdd": "FR-Add web data",
+    "webFileType": "FR-<0>Step 1:</0> Select file type (optional)",
+    "webFile": "FR-<0>Step 2:</0> Enter the URL of the data file or web service",
+    "urlInputBtn": "FR-Add",
+    "browse": "FR-Browse...",
+    "localTitle": "FR-Add Local Data",
+    "webTitle": "FR-Add Web Data",
+    "dragDrop": "FR-Drag and Drop",
+    "infoText": "FR-<0>Drag and drop a file here to view it locally on the map</0><1>(it won’t be saved or uploaded to the internet)</1>",
+    "back": "FR-Back",
+    "note": "FR-<0>Note: </0>Data added in this way is not saved or made visible to others."
+  },
+  "search": {
+    "resultsLabel": "FR-Search Results",
+    "done": "FR-Done",
+    "data": "FR-Data",
+    "searchInDataCatalog": "FR-Search <1>'{{locationSearchText}}'</1> in the Data Catalogue",
+    "search": "FR-Search '{{searchText}}' in the Data Catalogue",
+    "viewLess": "FR-View less {{name}} results",
+    "viewMore": "FR-View more {{name}} results",
+    "placeholder": "FR-Search for locations",
+    "searchCatalogue": "FR-Search the catalogue"
+  },
+  "mobile": {
+    "toggleNavigation": "FR-toggle navigation"
+  },
+  "preview": {
+    "doesNotContainGeospatialData": "FR-This file does not contain geospatial data.",
+    "selectToPreview": "FR-<0>Select a dataset to see a preview </0><1>- OR -</1><2>Go to the map</2>",
+    "loading": "FR-PREVIEW LOADING...",
+    "preview": "FR-{{appName}} preview",
+    "noPreviewAvailable": "FR-NO PREVIEW AVAILABLE",
+    "dataPreviewLoading": "FR-DATA PREVIEW LOADING...",
+    "dataPreview": "FR-DATA PREVIEW",
+    "dataPreviewError": "FR-DATA PREVIEW ERROR",
+    "removeFromMap": "FR-Remove from the map",
+    "addToMap": "FR-Add to the map",
+    "disclaimer": "FR-Disclaimer",
+    "dataDescription": "FR-Data Description",
+    "datasetDescription": "FR-Dataset Description",
+    "serviceDescription": "FR-Service Description",
+    "resourceDescription": "FR-Resource Description",
+    "licence": "FR-Licence",
+    "accessConstraints": "FR-Access Constraints",
+    "fees": "FR-Fees",
+    "author": "FR-Author",
+    "contact": "FR-Contact",
+    "created": "FR-Created",
+    "modified": "FR-Modified",
+    "updateFrequency": "FR-Update Frequency",
+    "dataCustodian": "FR-Data Custodian",
+    "mayBeExperiencingIssues": "FR-This dataset may currently be experiencing issues"
+  },
+  "description": {
+    "name": "FR-Description",
+    "dataLocal": "FR-This file only exists in your browser. To share it, you must load it onto a public web server.",
+    "dataNotLocal": "FR-Please contact the provider of this data for more information, including information about usage rights and constraints.",
+    "wms": "FR-This is a <1>WMS service</1>, which generates map images on request. It can be used in GIS software with this URL:",
+    "wfs": "FR-This is a <1>WFS service</1>, which transfers raw spatial data on request. It can be used in GIS software with this URL:",
+    "layerName": "FR-Layer name",
+    "typeName": "FR-Type name",
+    "metadataUrls": "FR-Metadata Links",
+    "dataUrl": "FR-Data URL",
+    "useLinkBelow": "FR-Use the link below to download the data. See the {{link}} for more information on customising URL query parameters.",
+    "downloadInFormat": "FR-Download the currently selected data in {{format}} format",
+    "downloadNotSupported": "FR-Unfortunately your browser does not support the functionality needed to download this data as a file. Please use Chrome, Firefox or Safari to download this data.",
+    "useTheLinkToDownload": "FR-Use the link below to download the data directly.",
+    "downloadData": "FR-Download Data",
+    "dataSourceDetails": "FR-Data Source Details",
+    "dataServiceDetails": "FR-Data Service Details",
+    "dataCustodian": "FR-Data Custodian"
+  },
+  "workbench": {
+    "colorScaleRangeTitle": "FR-Invalid color scale range",
+    "colorScaleRangeMin": "FR-The minimum value must be a number.",
+    "colorScaleRangeMax": "FR-The maximum value must be a number.",
+    "colorScaleRangeMinSmallerThanMax": "FR-The minimum value of the color scale range must be less than the maximum value.",
+    "colorScaleRange": "FR-Color Scale Range",
+    "rangeMax": "FR-Maximum:",
+    "rangeMin": "FR-Minimum:",
+    "colorScaleUpdateRange": "FR-Update Range",
+    "displayPercent": "FR-Display as a percentage of regional total",
+    "opacity": "FR-Opacity: {{opacity}} %",
+    "zoomToTitle": "FR-Zoom to extent",
+    "zoomTo": "FR-Ideal Zoom",
+    "openFeatureTitle": "FR-Zoom to data",
+    "openFeature": "FR-Zoom to",
+    "previewItemTitle": "FR-About this data",
+    "showMoreActionsTitle": "FR-Show more actions",
+    "previewItem": "FR-About Data",
+    "splitItemTitle": "FR-Duplicate and show splitter",
+    "splitItem": "FR-Compare",
+    "diffImageTitle": "FR-View image differences between two dates",
+    "diffImage": "FR-Difference",
+    "exportDataTitle": "FR-Export map data",
+    "exportData": "FR-Export",
+    "removeFromMapTitle": "FR-Remove this data",
+    "removeFromMap": "FR-Remove",
+    "label": "FR-Data sets",
+    "removeAll": "FR-Remove All",
+    "collapseAll": "FR-Collapse All",
+    "expandAll": "FR-Expand All",
+    "toggleVisibility": "FR-Data show/hide",
+    "addItemErrorTitle": "FR-Catalog item could not be added to workbench.",
+    "addItemErrorMessage": "FR-An error occurred while loading the catalog item.",
+    "dimensionsSelector": {
+      "undefinedLabel": "FR-Not specified"
+    },
+    "searchItem": "FR-Search",
+    "searchItemTitle": "FR-Search"
+  },
+  "dateTime": {
+    "back": "FR-Go back",
+    "previous": "FR-Previous time",
+    "selectTime": "FR-Select a time",
+    "outOfRange": "FR-Currently out of range.",
+    "next": "FR-Next time",
+    "useTimeline": "FR-Use timeline",
+    "availableTimeChart": "FR-Show available times on chart",
+    "timeline": {
+      "textCell": "FR-Name of the dataset whose time range is shown",
+      "gotoStart": "FR-Go to beginning",
+      "togglePlay": "FR-Play",
+      "playSlower": "FR-Play Slower",
+      "playFaster": "FR-Play Faster"
+    }
+  },
+  "satellite": {
+    "pickPoint": "FR-Select a point by clicking on the map.",
+    "querying": "FR-Querying position...",
+    "filterByLocation": "FR-Filter by location",
+    "infoGroup": "FR-Only showing available capture times for:",
+    "removeFilter": "FR-Remove filter",
+    "zoomTo": "FR-Zoom to",
+    "newLocation": "FR-New location"
+  },
+  "timer": {
+    "nextScheduledUpdateTime": "FR-Next data update at {{scheduledUpdateTime}}",
+    "nextScheduledUpdateCountdown": "FR-Next data update in {{timeCountdown}}"
+  },
+  "concept": {
+    "active": {
+      "edit": "FR-Edit condition",
+      "remove": "FR-Remove condition"
+    },
+    "inactive": {
+      "cancel": "FR-Cancel",
+      "newText": "FR-New condition"
+    },
+    "summary": {
+      "addMoreText": "FR-Add a condition",
+      "addFirstText": "FR-Add new condition"
+    }
+  },
+  "clipboard": {
+    "success": "FR-Copied to clipboard",
+    "unsuccessful": "FR-Copy unsuccessful...",
+    "shareURL": "FR-Share URL",
+    "shareExplanation": "FR-Anyone with this URL will be able to access this map.",
+    "copy": "FR-Copy"
+  },
+  "dragDrop": {
+    "text": "FR-<0>Drag & Drop</0><1>Your data anywhere to view on the map<1>",
+    "not": "FR-<0>bbbb</0>"
+  },
+  "loader": {
+    "loadingMessage": "FR-Loading"
+  },
+  "emptyWorkbenchMessage": "FR-<0><0>Your workbench is empty</0><1><strong>Click '$t(addData.addDataBtnText)' above to </strong></1><2><0>Browse the Data Catalogue</0><1>Load your own data onto the map</1></2><3><0></0><strong>TIP.</strong><2>All your active data sets will be listed here</2></3></0>",
+  "emptyWorkbench": {
+    "emptyArea": "FR-Your workbench is empty",
+    "helpfulHints": "FR-Helpful hints",
+    "helpfulHintsOne": "FR-Browse available data by selecting ‘Explore map data’ or click ‘Upload’ to add your own data to the map.",
+    "helpfulHintsTwo": "FR-Once you’ve added data to the map, your active data sets are listed here in your workbench. The workbench will help you to interact with the data.",
+    "helpfulHintsThree": "FR-In the workbench you can toggle data sets on and off, change their opacity, activate the split screen comparison, change styles, and navigate through dates and times, if the data supports this functionality."
+  },
+  "dataCatalog": {
+    "groupRemove": "FR-remove this group",
+    "groupEmpty": "FR-This group is empty"
+  },
+  "catalogItem": {
+    "privateIndicatorTitle": "FR-Private Dataset",
+    "loading": "FR-Loading...",
+    "remove": "FR-Remove",
+    "add": "FR-Add",
+    "trash": "FR-Remove from catalogue",
+    "removeFromMap": "FR-Remove from map"
+  },
+  "chart": {
+    "sectionLabel": "FR-Charts",
+    "closePanel": "FR-Close Panel",
+    "expand": "FR-Expand",
+    "download": "FR-Download"
+  },
+  "viewModels": {
+    "searchNoLocations": "FR-Sorry, no locations match your search query.",
+    "searchErrorOccurred": "FR-An error occurred while searching.  Please check your internet connection or try again later.",
+    "searchAddresses": "FR-Addresses",
+    "searchPlaceNames": "FR-Official Place Names",
+    "searchNoPlaceNames": "FR-Sorry, no official place names match your search query.",
+    "searchLocations": "FR-Locations",
+    "searchCatalogueItem": "FR-Catalogue Items",
+    "searchNoCatalogueItem": "FR-Sorry, no catalogue items match your search query.",
+    "inMultipleLocations": "FR-In multiple locations including:  ",
+    "inDataCatalogue": "FR-In Data Catalogue"
+  },
+  "terriaViewer": {
+    "slowWebGLAvailableTitle": "FR-Poor WebGL performance",
+    "slowWebGLAvailableMessage": "FR-Your web browser reports that it has performance issues displaying {{appName}} in 3D, so you will see a limited, 2D-only experience. For the full 3D experience, please try using a different web browser, upgrading your video drivers, or upgrading your operating system.",
+    "slowWebGLAvailableMessageII": "FR-{{appName}}  works best with a web browser that supports {{webGL}} including the latest versions of {{chrome}}, {{firefox}}, {{safari}} , and {{internetExplorer}}. Your web browser does not appear to support WebGL, so you will see a limited, 2D-only experience.",
+    "internetExplorer": "FR-Internet Explorer 11",
+    "chrome": "FR-Google Chrome",
+    "firefox": "FR-Mozilla Firefox",
+    "safari": "FR-Apple Safari",
+    "webGLNotSupportedTitle": "FR-WebGL not supported",
+    "webGLNotSupportedOrSlowTitle": "FR-WebGL not supported or too slow",
+    "webGLNotSupportedOrSlowMessage": "FR-Your web browser cannot display the map in 3D, either because it does not support WebGL or because your web browser has reported that WebGL will be extremely slow. Please try a different web browser, such as the latest version of {{chrome}}, {{firefox}}, {{safari}}, {{internetExplorer}}.In some cases, you may need to upgrade your computer's video driver or operating system in order to get the 3D view in {{appName}}."
+  },
+  "analytics": {
+    "selectLocation": "FR-Select Location",
+    "point": "FR-Point (lat/lon)",
+    "polygon": "FR-Polygon",
+    "existingPolygon": "FR-Existing Polygon",
+    "nothingSelected": "FR-Nothing has been selected, please use the buttons above to make a selection.",
+    "runAnalysis": "FR-Run Analysis",
+    "clickToDrawLine": "FR-Click to draw line",
+    "enterValidCoords": "FR-Please enter valid coordinates (e.g. 131.0361, -25.3450).",
+    "selectPoint": "FR-Select a point by clicking on the map.",
+    "clickToDrawPolygon": "FR-Click to draw polygon",
+    "shiftToDrawRectangle": "FR-Press the SHIFT key and hold down the left mouse button to draw a rectangle",
+    "clickToDrawRectangle": "FR-Click to draw rectangle",
+    "selectedPolygon": "FR-Selected Polygon",
+    "regionName": "FR-Region name",
+    "selectExistingPolygon": "FR-Select existing polygon"
+  },
+  "core": {
+    "errors": {
+      "tooDeepAddedByUser": "FR-Reached 100 catalog items when checking addedByUser and landing on ID: \"{{memberId}}\"? Check that you haven't got a recursive catalog group."
+    },
+    "userAddedData": "FR-User-Added Data",
+    "chartData": "FR-Chart Data",
+    "dataUri": {
+      "errorTitle": "FR-Browser Does Not Support Data Download",
+      "errorMessage": "FR-Unfortunately Microsoft browsers (including all versions of Internet Explorer and Edge) do not support the data uri functionality needed to download data as a file. To download, copy the following uri into another browser such as Chrome, Firefox or Safari: {{href}}"
+    },
+    "dataType": {
+      "auto": "FR-Auto-detect (recommended)",
+      "wms-group": "FR-Web Map Service (WMS) Server",
+      "wmts-group": "FR-Web Map Tile Service (WMTS) Server",
+      "wfs-group": "FR-Web Feature Service (WFS) Server",
+      "wps-getCapabilities": "FR-Web Processing Service (WPS) Server",
+      "esri-group": "FR-Esri ArcGIS Server",
+      "esri-mapServer": "FR-Esri ArcGIS MapServer (single layer)",
+      "esri-featureServer": "FR-Esri ArcGIS FeatureServer (single layer)",
+      "3d-tiles": "FR-3D Tiles",
+      "open-street-map": "FR-Open Street Map Server",
+      "geojson": "FR-GeoJSON",
+      "geoRss": "FR-GeoRSS",
+      "kml": "FR-KML or KMZ",
+      "csv": "FR-CSV",
+      "czml": "FR-CZML",
+      "gpx": "FR-GPX",
+      "json": "FR-JSON",
+      "carto": "FR-Carto",
+      "gltf": "FR-GLTF",
+      "shp": "FR-Shapefile (zip)",
+      "other": "FR-Other (use conversion service)"
+    },
+    "printWindow": {
+      "errorTitle": "FR-Error printing",
+      "errorMessage": "FR-Printing did not start within 10 seconds. Maybe this web browser does not support printing?",
+      "printMediaStart": "FR-print media start",
+      "printMediaEnd": "FR-print media end",
+      "onbeforeprint": "FR-onbeforeprint",
+      "onafterprint": "FR-onafterprint"
+    },
+    "consoleAnalytics": {
+      "started": "FR-ConsoleAnalytics was started.",
+      "startedNoLogToConsole": "FR-ConsoleAnalytics was started, however `userParameters.logToConsole` was not defined or set to false.",
+      "logStartedWithGAParameters": "FR-ConsoleAnalytics was started but a `googleAnalyticsKey` or `googleAnalyticsOptions` key was observed on `userParameters`"
+    },
+    "googleAnalytics": {
+      "log": "FR-Google Analytics tracking is disabled because terria.configParameters.googleAnalyticsKey is not specified",
+      "logEnabledOnDevelopment": "FR-Google Analytics was initialised in a `development` environment"
+    },
+    "readText": {
+      "fileRequired": "FR-file is require"
+    },
+    "readXml": {
+      "xmlError": "FR-The file does not contain valid XML."
+    },
+    "serverConfig": {
+      "failedToGet": "FR-Failed to get server config from {{serverConfigUrl}}. This means services such as proxy, convert and URL shortening may not work."
+    },
+    "terriaError": {
+      "defaultValue": "FR-An error occurred"
+    }
+  },
+  "map": {
+    "addressGeocoder": {
+      "devError": "FR-bulkConvertAddresses must be implemented in the derived class."
+    },
+    "cesium": {
+      "devError": "FR-cesium is required.",
+      "failedToObtain": "FR-Failed to obtain image tile X: {{x}} Y: {{y}} Level: {{level}}.",
+      "notWebMercatorTilingScheme": "FR-This dataset cannot be displayed on the 2D map because it does not support the Web Mercator (EPSG:3857) projection.",
+      "unusalTilingScheme": "FR-This dataset cannot be displayed on the 2D map because it uses an unusual tiling scheme that is not supported."
+    },
+    "computeRingWindingOrder": {
+      "devError": "FR-Expected points of type {x:number, y:number}"
+    },
+    "displayVariablesConcept": {
+      "defaultName": "FR-Display Variable"
+    },
+    "drawExtentHelper": {
+      "drawExtent": "FR-Draw Extent",
+      "extent": "FR-Extent"
+    },
+    "gmlToGeoJson": {
+      "missingPos": "FR-GML point element is missing a pos element.",
+      "missingExteriorRing": "FR-GML polygon is missing its exterior ring.",
+      "missingPosList": "FR-GML polygon's exterior ring is missing a posList.",
+      "containsUnsupportedFeatureType": "FR-GML contains unsupported feature type: {{type}}"
+    },
+    "geoRssToGeoJson": {
+      "containsUnsupportedFeatureType": "FR-GeoRSS contains unsupported feature type: {{type}}"
+    },
+    "w3cToGeoJson": {
+      "containsUnsupportedFeatureType": "FR-GeoRSS with W3C geometry contains unsupported feature type: {{type}}"
+    },
+    "gnafAddressGeocoder": {
+      "noAddresses": "FR-This tableStructure has no addresses!",
+      "noAddresses2": "FR-Even though the tableStructure reports it has an address column, it has no addresses",
+      "suburb": "FR-Suburb",
+      "state": "FR-State",
+      "postcode": "FR-Postcode",
+      "matchedAddresses": "FR-Matched Address",
+      "lon": "FR-Lon",
+      "lat": "FR-Lat",
+      "score": "FR-Score",
+      "poBox": "FR-po box",
+      "postOfficeBox": "FR-post office box"
+    },
+    "imageryProviderHooks": {
+      "devError": "FR-No context for image recoloring."
+    },
+    "mapboxVectorTileImageryProvider": {
+      "requireLayerName": "FR-MapboxVectorTileImageryProvider requires a layer name passed as options.layerName",
+      "requireStyles": "FR-MapboxVectorTileImageryProvider requires a styling function passed as options.styleFunc",
+      "moreThanFourTiles": "FR-The imagery provider's rectangle and minimumLevel indicate that there are {{tileCount}} tiles at the minimum level. Imagery providers with more than four tiles at the minimum level are not supported.",
+      "maxLevelError": "FR-Maximum level too high for data set"
+    },
+    "regionProvider": {
+      "csvRegionMappingTitle": "FR-CSV region mapping",
+      "csvRegionMappingMessageZeroFound": "FR-Zero region names found for region type {{regionType}}",
+      "csvRegionMappingMessageZeroBoundariesFound": "FR-Zero region boundaries found for region {{regionName}}",
+      "csvRegionMappingMessageLoadError": "FR-Couldn't load region boundaries for region {{regionName}} {{exception}}"
+    }
+  },
+  "models": {
+    "abs": {
+      "name": "FR-ABS.Stat",
+      "nameGroup": "FR-ABS.Stat Dataset List",
+      "itemNotAvailableTitle": "FR-Item is not available",
+      "itemNotAvailableMessage": "FR-An error occurred while invoking {{methodName}} on the ABS ITT server. <p>This error may indicate that the item you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "unexpectedFormatTitle": "FR-Unexpected data format",
+      "unexpectedFormtMessage": "FR-An error occurred while invoking GetGenericData on the ABS ITT server: the data format has changed. <p>Please report this error by sending an email to {{email}}.</p>",
+      "dataMergeErrorTitle": "FR-Data cannot be merged",
+      "dataMergeErrorMessage": "FR-An error occurred while invoking GetGenericData on the ABS ITT server: the individual data files cannot be merged. <p>Please report this error by sending an email to {{email}}.</p>",
+      "groupNotAvailableTitle": "FR-Group is not available",
+      "groupNotAvailableMessage": "FR-An error occurred while invoking GetCodeListValue on the ABS ITT server. <p>This error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>"
+    },
+    "userData": {
+      "addingDataErrorTitle": "FR-Data could not be added",
+      "addingDataErrorMessage": "FR-The specified data could not be added because it is invalid or does not have the expected format.",
+      "fileApiNotSupportedTitle": "FR-File API not supported",
+      "fileApiNotSupportedMessage": "FR-Sorry, your web browser does not support the File API, which {{appName}} requires in order to add data from a file on your system.  Please upgrade your web browser.  For the best experience, we recommend the latest version of {{chrome}}, {{firefox}} or {{edge}}.",
+      "internetExplorer": "FR-Internet Explorer 11",
+      "edge": "FR-Microsoft Edge",
+      "chrome": "FR-Google Chrome",
+      "firefox": "FR-Mozilla Firefox"
+    },
+    "arcGisService": {
+      "name": "FR-ArcGIS Service Group",
+      "invalidServerTitle": "FR-Invalid ArcGIS Server",
+      "invalidServerMessage": "FR-An error occurred while invoking the ArcGIS REST service.  The server's response does not appear to be a valid ArcGIS REST document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "groupNotAvailableTitle": "FR-Group is not available",
+      "groupNotAvailableMessage": "FR-An error occurred while invoking the ArcGIS REST service. <p>If you entered the link manually, please verify that the link is correct.</p><p>This error may also indicate that the server does not support {{cors}} .  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the {{appName}} team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by {{appName}} itself. <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>"
+    },
+    "arcGisFeatureServer": {
+      "name": "FR-ArcGIS Feature Server",
+      "nameGroup": "FR-ArcGIS Feature Server Group",
+      "invalidServiceTitle": "FR-Invalid ArcGIS Feature Service",
+      "invalidServiceMessage": "FR-An error occurred while invoking the ArcGIS Feature Service.  The server's response does not appear to be a valid Feature Service document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "groupNotAvailableTitle": "FR-Group is not available",
+      "groupNotAvailableMessage": "FR-An error occurred while invoking the ArcGIS Feature Service. <p>If you entered the link manually, please verify that the link is correct.</p> <p>This error may also indicate that the server does not support {{cors}}.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the {{appName}} team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by {{appName}} itself. <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>"
+    },
+    "arcGisFeatureServerCatalogGroup": {
+      "name": "FR-ArcGIS Feature Server Group",
+      "dataDescription": "FR-Data Description",
+      "serviceDescription": "FR-Service Description",
+      "copyrightText": "FR-Copyright Text",
+      "invalidServiceTitle": "FR-Invalid ArcGIS Feature Service",
+      "invalidServiceMessage": "FR-An error occurred while invoking the ArcGIS Feature Service.  The server's response does not appear to be a valid Feature Service document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "groupNotAvailableTitle": "FR-Group is not available",
+      "groupNotAvailableMessage": "FR-An error occurred while invoking the ArcGIS Feature Service. <p>If you entered the link manually, please verify that the link is correct.</p> <p>This error may also indicate that the server does not support {{cors}}. If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the {{appName}} team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by {{appName}} itself. <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "cors": "FR-CORS"
+    },
+    "arcGisFeatureServerCatalogItem": {
+      "name": "FR-Esri ArcGIS FeatureServer",
+      "dataDescription": "FR-Data Description",
+      "serviceDescription": "FR-Service Description",
+      "copyrightText": "FR-Copyright Text",
+      "missingUrlTitle": "FR-Unable to load FeatureServer",
+      "missingUrlMessage": "FR-Could not load the ArcGis FeatureServer endpoint because the catalog item does not have a `url`.",
+      "invalidServiceTitle": "FR-Invalid ArcGIS Feature Service layer",
+      "invalidServiceMessage": "FR-An error occurred while invoking the ArcGIS Feature Service.  The server's response does not appear to be a valid Feature Service layer.",
+      "reachedMaxFeatureLimit": "FR-Warning: This layer has reached the FeatureService feature limit.",
+      "unusableMetadataTitle": "FR-ArcGIS FeatureServer Error",
+      "unusableMetadataDefaultMessage": "FR-This dataset returned unusable metadata."
+    },
+    "arcGisMapServerCatalogGroup": {
+      "name": "FR-ArcGIS Map Server Group",
+      "dataDescription": "FR-Data Description",
+      "serviceDescription": "FR-Service Description",
+      "copyrightText": "FR-Copyright Text",
+      "invalidServiceTitle": "FR-Invalid ArcGIS Map Service",
+      "invalidServiceMessage": "FR-An error occurred while invoking the ArcGIS Map Service.  The server's response does not appear to be a valid Map Service document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "groupNotAvailableTitle": "FR-Group is not available",
+      "groupNotAvailableMessage": "FR-An error occurred while invoking the ArcGIS Map Service. <p>If you entered the link manually, please verify that the link is correct.</p> <p>This error may also indicate that the server does not support {{cors}}. If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the {{appName}} team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by {{appName}} itself. <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "cors": "FR-CORS"
+    },
+    "arcGisMapServerCatalogItem": {
+      "name": "FR-Esri ArcGIS MapServer",
+      "dataDescription": "FR-Data Description",
+      "serviceDescription": "FR-Service Description",
+      "copyrightText": "FR-Copyright Text",
+      "invalidUrlTitle": "FR-Unable to load MapServer",
+      "invalidUrlMessage": "FR-Could not load the ArcGis MapServer endpoint because the catalog item does not have a `url`.",
+      "unusableMetadataTitle": "FR-ArcGIS Mapserver Error",
+      "unusableMetadataDefaultMessage": "FR-This dataset returned unusable metadata.",
+      "noLayersFoundTitle": "FR-Could not load ArcGIS MapServer.",
+      "noLayersFoundMessage": "FR-The Esri ArcGIS MapServer '{{name}}' has no layers to show."
+    },
+    "bing": {
+      "name": "FR-Bing Maps"
+    },
+    "wcs": {
+      "asyncResultDescription": "FR-This is the result of exporting data from {{name}} service at {{timestamp}} with the input parameters below.",
+      "asyncPendingDescription": "FR-WCS loading:<br/>{{name}} service at {{timestamp}}.",
+      "exportFailedTitle": "FR-Data export failed",
+      "exportFailedMessage": "FR-The Web Coverage Service failed",
+      "exportFailedMessageII": "FR-The Web Coverage Service failed: {{error}}"
+    },
+    "cartoMap": {
+      "name": "FR-Carto Map",
+      "noUrlTitle": "FR-No URL",
+      "noUrlMessage": "FR-Unable to find a usable URL for the Carto Map layer."
+    },
+    "cesiumTerrain": {
+      "name": "FR-Cesium Terrain",
+      "name3D": "FR-Cesium 3D Tiles",
+      "notSupportedErrorTitle": "FR-Not supported in 2D",
+      "notSupportedErrorMessage": "FR-\"{{name}}\" cannot be show in the 2D view. Switch to 3D and try again.",
+      "errorRenderingTitle": "FR-Error rendering in 3D",
+      "errorRenderingMessage": "FR-<p>An error occurred while rendering in 3D.  This probably indicates a bug in {{appName}} or an incompatibility with your system or web browser.  We'll now switch you to 2D so that you can continue your work. We would appreciate it if you report this error by sending an email to {{email}} with the technical details below.  Thank you!</p>"
+    },
+    "ckan": {
+      "nameServer": "FR-CKAN Server",
+      "errorLoadingTitle": "FR-Error loading CKAN catalogue",
+      "errorLoadingMessage": "FR-The definition for this CKAN catalogue does not have a valid filter query.",
+      "corsErrorMessage": "FR-Couldn't retrieve packages from this CKAN server.<br/><br/>If you entered the URL manually, please double-check it.<br/><br/>If it's your server, make sure {{corsLink}} is enabled.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}} with the technical details below.  Thank you!<br/><br/>",
+      "name": "FR-CKAN Resource",
+      "dataSourceErrorMessage": "FR-This data source does not have any details available.",
+      "serviceErrorMessage": "FR-This service does not have any details available.",
+      "datasetDescription": "FR-Dataset Description",
+      "dataDescription": "FR-Data Description",
+      "resourceDescription": "FR-Resource Description",
+      "datasetCustodian": "FR-Dataset Custodian",
+      "licence": "FR-Licence",
+      "author": "FR-Author",
+      "contact_point": "FR-Contact",
+      "metadata_created": "FR-Created",
+      "metadata_modified": "FR-Modified",
+      "update_freq": "FR-Update Frequency",
+      "idsNotSpecifiedTitle": "FR-resourceId or datasetId must be specified",
+      "idsNotSpecifiedMessage": "FR-CkanCatalogItem requires that either resourceId or datasetId be specified.",
+      "errorRetrievingUrlTitle": "FR-Error retrieving CKAN URL",
+      "errorRetrievingUrlMessage": "FR-Could not retrieve URL as JSON: {{url}}.",
+      "invalidCkanTitle": "FR-Invalid CKAN resource JSON",
+      "invalidCkanMessage": "FR-The resource returned from the CKAN server does not appear to have a package_id.",
+      "notCompatibleTitle": "FR-No compatible resources found",
+      "notCompatibleMessageI": "FR-The CKAN dataset does not have a resource with the ID {{resourceId}} or it does not have a supported format.",
+      "notCompatibleMessageII": "FR-The CKAN dataset does not have any resources with a supported format."
+    },
+    "arcgisPortal": {
+      "nameGroup": "FR-ArcGIS Portal Group",
+      "errorLoadingTitle": "FR-Error loading ArcGIS Portal catalogue",
+      "errorLoadingMessage": "FR-The definition for this ArcGIS Portal catalogue does not have a valid filter query.",
+      "corsErrorMessage": "FR-Couldn't retrieve packages from this ArcGIS Portal server.<br/><br/>If you entered the URL manually, please double-check it.<br/><br/>If it's your server, make sure {{corsLink}} is enabled.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}} with the technical details below.  Thank you!<br/><br/>",
+      "name": "FR-ArcGIS Portal Item",
+      "dataSourceErrorMessage": "FR-This data source does not have any details available.",
+      "serviceErrorMessage": "FR-This service does not have any details available.",
+      "datasetDescription": "FR-Dataset Description",
+      "licence": "FR-Licence",
+      "openInPortal": "FR-Open in ArcGIS Portal",
+      "idsNotSpecifiedTitle": "FR-resourceId or datasetId must be specified",
+      "idsNotSpecifiedMessage": "FR-ArcGIS Portal Item requires an itemId to be specified.",
+      "errorRetrievingUrlTitle": "FR-Error retrieving ArcGIS Portal URL",
+      "errorRetrievingUrlMessage": "FR-Could not retrieve URL as JSON: {{url}}."
+    },
+    "catalog": {
+      "name": "FR-Unnamed Item",
+      "group": "FR-Group",
+      "idForMatchingErrorTitle": "FR-Missing property",
+      "idForMatchingErrorMessage": "FR-Model objects must have an `id`, `localId`, or `name` property.",
+      "catalogMemberMustHaveName": "FR-A newly created catalog member must have a name.",
+      "catalogMemberMustHaveType": "FR-A catalog member must have a type.",
+      "userAddedDataGroup": "FR-The group for data that was added by the user via the Add Data panel.",
+      "chartDataGroup": "FR-A group for chart data.",
+      "dataSourceErrorMessage": "FR-This data source does not have any details available.",
+      "serviceErrorMessage": "FR-This service does not have any details available.",
+      "stubCreationFailure": "FR-Could not stub out catalog item {{item}}",
+      "unsupportedTypeTitle": "FR-Unknown type",
+      "unsupportedTypeMessage": "FR-Could not create unknown model type {{type}}.",
+      "unsupportedFileTypeTitle": "FR-Unsupported file type",
+      "unsupportedFileTypeMessage": "FR-This file format is not supported by {{appName}}. Supported file formats include: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>",
+      "unsupportedFileTypeMessageII": "FR-This file format is not supported by {{appName}}. Directly supported file formats include: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>  File formats supported through the online conversion service include: <ul><li>Shapefile (.zip)</li><li>MapInfo TAB (.zip)</li><li>Possibly other {{linkII}}</li></ul>",
+      "getConfirmationMessage": "FR-This file is not directly supported by {{appName}}.\n\nDo you want to try uploading it to the {{appName}} conversion service? This may work for small, zipped Esri Shapefiles or MapInfo TAB files.",
+      "readyToUpload": "FR-Ready to upload your file to the {{appName}} conversion service?",
+      "upload": "FR-Upload",
+      "cancel": "FR-Cancel",
+      "useConversion": "FR-Use conversion service?",
+      "mustHaveType": "FR-Each item must have a type.",
+      "compositesError": "FR-Composites cannot include composite items."
+    },
+    "createParameter": {
+      "unsupportedErrorTitle": "FR-Unsupported function parameter type",
+      "unsupportedErrorMessage": "FR-Unknown function parameter type: {{type}}."
+    },
+    "csv": {
+      "name": "FR-Comma-Separated Values (CSV)",
+      "dataSourceErrorMessage": "FR-This data source does not have any details available.",
+      "serviceErrorMessage": "FR-This service does not have any details available.",
+      "unexpectedTypeTitle": "FR-Unexpected type of CSV data",
+      "unexpectedTypeMessage": "FR-CsvCatalogItem data is expected to be a Blob, File, or String, but it was not any of these. This may indicate a bug in terriajs or incorrect use of the terriajs API. If you believe it is a bug in {{appName}} please report it by emailing ",
+      "unableToLoadTitle": "FR-Unable to load CSV file",
+      "unableToLoadMessage": "FR-See the <a href=\"https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au\">csv-geo-au</a> specification for supported CSV formats.\n\n {{message}}",
+      "unableToLoadItemTitle": "FR-No CSV available",
+      "unableToLoadItemMessage": "FR-The CSV catalog item cannot be loaded because it was not configured with a `url` or `csvString` property."
+    },
+    "csw": {
+      "name": "FR-Catalogue Service (CSW)",
+      "unknownError": "FR-The CSW server reported an unknown error.",
+      "exceptionMessage": "FR-The CSW server reported an error:\n\n {{exceptionText}}",
+      "errorLoadingTitle": "FR-Could not load CSW",
+      "notUseableTitle": "FR-Catalogue service is not useable",
+      "notUseableMessage": "FR-Invalid response obtained when invoking GetDomain on the CSW server. <p>This error may indicate that the catalogue server you specified is temporarily unavailable or there is a problem with your internet connection.  Try opening the processing server again, and if the problem persists, please report it by sending an email to ",
+      "errorLoadingRecordsTitle": "FR-Failed to load CSW records.",
+      "errorLoadingRecordsMessage": "FR-Invalid response obtained when invoking GetRecords on the CSW server. <p>This error may indicate that the catalogue server you specified is temporarily unavailable or there is a problem with your internet connection.  Try opening the processing server again, and if the problem persists, please report it by sending an email to ",
+      "checkCORSDomain": "FR-Couldn't execute GetDomain on this CSW server.<br/><br/> If you entered the URL manually, please double-check it.<br/><br/> If it's your server, make sure <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a> is enabled.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}} with the technical details below.  Thank you!",
+      "checkCORSRecords": "FR-Couldn't execute GetRecords on this CSW server.<br/><br/> If it's your server, make sure <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a> is enabled.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}} with the technical details below.  Thank you!",
+      "dataResponsibility": "FR-Data Responsibility",
+      "links": "FR-Links",
+      "metadataURL": "FR-Metadata Record URL",
+      "checkCORS": "FR-Couldn't execute GetRecords on this CSW server.<br/><br/> If you entered the URL manually, please double-check it.<br/><br/> If it's your server, make sure {{cors}} is enabled.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}}",
+      "cors": "FR-CORS",
+      "missingUrlTitle": "FR-Unable to load Catalogue Service (CSW)",
+      "missingUrlMessage": "FR-Could not load the Catalogue Service (CSW) because the catalog group does not have a `url`."
+    },
+    "czml": {
+      "name": "FR-Cesium Language (CZML)",
+      "dataSourceErrorMessage": "FR-This data source does not have any details available.",
+      "serviceErrorMessage": "FR-This service does not have any details available.",
+      "errorLoadingTitle": "FR-Could not load CZML",
+      "errorLoadingMessage": "FR-An error occurred while loading a CZML file. <p>If you entered the link manually, please verify that the link is correct.</p><p>This error may also indicate that the server does not support {{cors}}.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by 'appName' itself. <p>If you did not enter this link manually, this error may indicate that the data source you're trying to add is temporarily unavailable or there is a problem with your internet connection.  Try adding the data source again, and if the problem persists, please report it by sending an email to {{email}}. See the technical details below.</p>\n<pre>${stackTrace}</pre>",
+      "unableToLoadItemTitle": "FR-No CZML available",
+      "unableToLoadItemMessage": "FR-The CZML catalog item cannot be loaded because it was not configured with a `url`, `czmlData`, or `czmlString` property."
+    },
+    "function": {
+      "unknownFormaterTitle": "FR-Unknown formatter",
+      "unknownFormaterMessage": "FR-The function parameter formatter {{formatter}} is unknown.\n\nValid formatters are:\n\n"
+    },
+    "geoJson": {
+      "name": "FR-GeoJSON",
+      "dataSourceErrorMessage": "FR-This data source does not have any details available.",
+      "serviceErrorMessage": "FR-This service does not have any details available.",
+      "errorLoadingTitle": "FR-Error loading GeoJSON",
+      "errorParsingMessage": "FR-An error occurred parsing the provided data as JSON.  This may indicate that the file is invalid or that it is not supported by {{appName}}. If you would like assistance or further information, please email us at {{email}}",
+      "errorLoadingMessage": "FR-An error occurred while loading a GeoJSON file.  This may indicate that the file is invalid or that it is not supported by {{appName}}. If you would like assistance or further information, please email us at {{email}}",
+      "couldNotLoadTitle": "FR-Could not load JSON",
+      "couldNotLoadMessage": "FR-An error occurred while retrieving JSON data from the provided link. <p>If you entered the link manually, please verify that the link is correct.</p><p>This error may also indicate that the server does not support {{cors}}.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by 'appName' itself. <p>If you did not enter this link manually, this error may indicate that the data source you're trying to add is temporarily unavailable or there is a problem with your internet connection.  Try adding the data source again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "unableToLoadItemTitle": "FR-No GeoJSON available",
+      "unableToLoadItemMessage": "FR-The GeoJSON catalog item cannot be loaded because it was not configured with a `url`, `geoJsonData`, or `geoJsonString` property.",
+      "unsupportedBrowserTitle": "FR-Unsupported web browser",
+      "unsupportedBrowserMessage": "FR-Sorry, your web browser does not support the File API, which {{appName}} requires in order to load this dataset.  Please upgrade your web browser.  For the best experience, we recommend the latest versions of {{chrome}} or {{firefox}} or {{internetExplorer}}.",
+      "internetExplorer": "FR-Internet Explorer 11",
+      "chrome": "FR-Google Chrome",
+      "firefox": "FR-Mozilla Firefox"
+    },
+    "shapefile": {
+      "name": "FR-Shapefile"
+    },
+    "getToken": {
+      "errorTitle": "FR-Token Error",
+      "invalidToken": "FR-<p>The token server responded with an invalid token.</p><p>Please report it by sending an email to {{email}}</p>",
+      "unableToRequest": "FR-<p>Unable to request a token from the token server.</p><p>Please report it by sending an email to {{email}}</p>"
+    },
+    "gltf": {
+      "name": "FR-GL Transmission Format (glTF)",
+      "dataSourceErrorMessage": "FR-This data source does not have any details available.",
+      "serviceErrorMessage": "FR-This service does not have any details available.",
+      "notSupportedErrorTitle": "FR-Not supported in 2D",
+      "notSupportedErrorMessage": "FR-\"{{name}}\" cannot be show in the 2D view.  Switch to 3D and try again.",
+      "error": "FR-Error",
+      "unableToRetrieve": "FR-Unable to retrieve feature details from:\n\n{{url}}"
+    },
+    "googleUrlShortener": {
+      "unexpectedResult": "FR-Unexpected url shortening result",
+      "urlNotLocatedTitle": "FR-Shortened start URL was not located",
+      "urlNotLocatedMessage": "FR-The shortened share URL used to launch {{appName}} was not located. This may indicate an error in the link or that the shortening service is unavailable at this time. If you believe it is a bug in {{appName}} , please report it by emailing {{email}}"
+    },
+    "gpx": {
+      "name": "FR-GPX",
+      "dataSourceErrorMessage": "FR-This data source does not have any details available.",
+      "serviceErrorMessage": "FR-This service does not have any details available.",
+      "errorLoadingTitle": "FR-Error loading GPX",
+      "errorLoadingMessage": "FR-An error occurred while loading a GPX file.  This may indicate that the file is invalid or that it is not supported by {{appName}}. If you would like assistance or further information, please email us at {{email}}"
+    },
+    "georss": {
+      "name": "FR-GeoRSS",
+      "subtitle": "FR-Subtitle",
+      "updated": "FR-Updated",
+      "category": "FR-Category",
+      "description": "FR-Description",
+      "copyrightText": "FR-Copyright Text",
+      "link": "FR-Link",
+      "author": "FR-Author",
+      "errorLoadingTitle": "FR-Could not load GeoRSS",
+      "errorLoadingMessage": "FR-An error occurred while loading a GeoRSS file. <p>If you entered the link manually, please verify that the link is correct.</p><p>This error may also indicate that the server does not support {{cors}}.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by 'appName' itself. <p>If you did not enter this link manually, this error may indicate that the data source you're trying to add is temporarily unavailable or there is a problem with your internet connection.  Try adding the data source again, and if the problem persists, please report it by sending an email to {{email}}.",
+      "unableToLoadItemTitle": "FR-No GeoRSS available",
+      "unableToLoadItemMessage": "FR-The GeoRSS catalog item cannot be loaded because it was not configured with a `url`, or `geoRss` property."
+    },
+    "imageryLayer": {
+      "intervalSupportErrorTitle": "FR-Intervals not supported",
+      "intervalSupportErrorMessage": "FR-Sorry, {{typeName}} ({{type}}) catalog items cannot currently be made time-varying by specifying the \"intervals\" property.",
+      "resolvingAvailability": "FR-Resolving availability at a location...",
+      "accessingBaseMapErrorTitle": "FR-Error accessing base map",
+      "accessingBaseMapErrorMessage": "FR-An error occurred while attempting to download tiles for base map:<p><center>{{name}} </center></p> This may indicate that there is a problem with your internet connection, that the base map is temporarily unavailable, or that the base map is invalid.  Please select a different base map using the Map button in the top-right corner.  Further technical details may be found below.<br/><br/>",
+      "accessingCatalogItemErrorTitle": "FR-Error accessing catalogue item",
+      "accessingCatalogItemErrorMessage": "FR-An error occurred while attempting to download tiles for catalogue item:<p><center>{{name}}</center></p> This may indicate that there is a problem with your internet connection, that the catalogue item is temporarily unavailable, or that the catalogue item is invalid.  The catalogue item has been hidden from the map.  You may re-show it in the Now Viewing panel to try again.  Further technical details may be found below.<br/><br/>",
+      "tileErrorTitle": "FR-Tile Error",
+      "tileErrorMessage": "FR-The tile with the URL:\n{{url}}\n succeeded when loaded with XMLHttpRequest but failed multiple times when loaded directly by Cesium or Leaflet.\n This may indicate that the server is very sensitive to the request headers provided or is simply unreliable.",
+      "tileErrorMessageII": "FR-Got a 200 (OK) response from URL:\n{{url}}\nbut it could not be loaded as an image.",
+      "unknownTileErrorTitle": "FR-Unknown Tile Error",
+      "unknownTileErrorMessage": "FR-While accessing URL:\n{{url}}\nThis probably indicates one of the following:\n* The server hostname could not be resolved,\n* The server did not respond to the request, or\n* The server denied Cross-Origin Resource Sharing (CORS) access to this URL (See https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/).",
+      "unableToDisplayTitle": "FR-Unable to display dataset",
+      "unableToDisplayMessage": "FR-{{name}} cannot be shown in 2D because it does not support the standard Web Mercator (EPSG:3857) projection. Please switch to 3D if it is supported on your system, update the dataset to support the projection, or use a different dataset.",
+      "unableToShowLocTitle": "FR-Unable to show at this location",
+      "unableToShowLocMessage": "FR-{{name}} cannot be shown at this location because the available capture times are unknown. The {{featureTimesProperty}} property was not found."
+    },
+    "invokeAnalyticsService": {
+      "invocationFailedTitle": "FR-Service invocation failed",
+      "invocationFailedMessage": "FR-An error occurred on the server while computing {{invocationName}}."
+    },
+    "ionImagery": {
+      "name": "FR-Cesium Ion Imagery"
+    },
+    "kml": {
+      "name": "FR-KML or KMZ",
+      "dataSourceErrorMessage": "FR-This data source does not have any details available.",
+      "serviceErrorMessage": "FR-This service does not have any details available.",
+      "unexpectedTypeTitle": "FR-Unexpected type of KML data",
+      "unexpectedTypeMessage": "FR-KmlCatalogItem.data is expected to be an XML Document, Blob, or File, but it was none of these. This may indicate a bug in {{appName}} or incorrect use of the {{appName}} API. If you believe it is a bug in {{appName}}, please report it by emailing {{email}}.",
+      "errorLoadingTitle": "FR-Error loading KML or KMZ",
+      "errorLoadingMessage": "FR-An error occurred while loading a KML or KMZ file.  This may indicate that the file is invalid or that it is not supported by {{appName}}. If you would like assistance or further information, please email us at {{email}}.",
+      "unableToLoadItemTitle": "FR-No KML available",
+      "unableToLoadItemMessage": "FR-The KML/KMZ catalog item cannot be loaded because it was not configured with a `url`, `kmlData` or `kmlString` property."
+    },
+    "magda": {
+      "name": "FR-MAGDA Distribution",
+      "dataSourceErrorMessage": "FR-This data source does not have any details available.",
+      "serviceErrorMessage": "FR-This service does not have any details available.",
+      "distributionDesc": "FR-Distribution Description",
+      "idsNotSpecifiedTitle": "FR-recordId must be specified",
+      "idsNotSpecifiedMessage": "FR-MagdaCatalogItem requires that recordId be specified.",
+      "retrieveErrorTitle": "FR-Error retrieving MAGDA record",
+      "retrieveErrorMessage": "FR-No distribution or dataset ID provided",
+      "notCompatibleTitle": "FR-No compatible distributions found",
+      "notCompatibleMessageI": "FR-The MAGDA dataset does not have a distribution with the ID {{distributionId}} or it does not have a supported format.",
+      "notCompatibleMessageII": "FR-The MAGDA dataset does not have any distributions with a supported format."
+    },
+    "mapboxMap": {
+      "name": "FR-Mapbox Map"
+    },
+    "mapboxVectorTile": {
+      "name": "FR-Mapbox Vector Tile"
+    },
+    "mapboxStyle": {
+      "name": "FR-Mapbox Style"
+    },
+    "senaps": {
+      "name": "FR-Senaps Locations",
+      "retrieveErrorTitle": "FR-Error processing Senaps Catalog Item",
+      "generalErrorMessage": "FR-Encountered an error processing Senaps data",
+      "missingKeyErrorMessage": "FR-A Senaps API Key should be added to the terriajs-server config using the appendParamToQueryString option",
+      "locationHeadingFeatureInfo": "FR-Location",
+      "availableStreamsHeadingFeatureInfo": "FR-Available Streams",
+      "noStreamsMessageFeatureInfo": "FR-No streams at this location.",
+      "missingSenapsBaseUrl": "FR-Senaps base url not provided. Have you logged in?"
+    },
+    "ogr": {
+      "name": "FR-Unknown / Converted to GeoJSON",
+      "dataSourceErrorMessage": "FR-This data source does not have any details available.",
+      "serviceErrorMessage": "FR-This service does not have any details available.",
+      "legacyBrowserTitle": "FR-Legacy browser not supported",
+      "legacyBrowserMessage": "FR-Sorry, your web browser does not support the \"FormData\" type, which is required by the '{{appName}}' conversion service.  We recommend you upgrade to the latest version of {{chrome}}, {{firefox}}, {{safari}} or {{internetExplorer}}.",
+      "internetExplorer": "FR-Internet Explorer 11",
+      "chrome": "FR-Google Chrome",
+      "firefox": "FR-Mozilla Firefox",
+      "safari": "FR-Apple Safari",
+      "unsupportedFileTzpe": "FR-Unsupported file type",
+      "loadError": "FR-The file size is greater than the {{maxConversionSizeMB}} MB limit of the {{appName}} conversion service",
+      "invalidFile": "FR-This may indicate that the file is invalid or that it is not supported by the {{appName}} conversion service.",
+      "errorConvertingToGeoJsonTitle": "FR-Error converting file to GeoJson",
+      "errorConvertingToGeoJsonMessage": "FR-An error occurred while attempting to convert this file to GeoJson. ",
+      "emailUs": "FR-If you would like assistance or further information, please email us at {{email}}"
+    },
+    "openStreetMap": {
+      "name": "FR-Open Street Map"
+    },
+    "placesLikeMe": {
+      "regionsLikeThisName": "FR-Regions like this",
+      "regionsLikeThisDescription": "FR-Identifies regions that are _most like_ a given region according to a given set of characteristics.",
+      "regionTypeName": "FR-Region Type",
+      "regionTypeDescription": "FR-The type of region to analyze.",
+      "regionName": "FR-Region",
+      "regionDescription": "FR-The region to analyze.  The analysis will determine which regions are most similar to this one.",
+      "characteristics": "FR-Characteristics",
+      "characteristicsDescription": "FR-The region characteristics to include in the analysis.",
+      "name": "FR-Places Like Me",
+      "regioNotSelectedName": "FR-Region not selected",
+      "regioNotSelectedDescription": "FR-You must select a Region.",
+      "placesLike": "FR-Places like {{regionName}}",
+      "likenessesError": "FR-The list of likenesses and the list of region codes do not contain the same number of elements."
+    },
+    "raiseError": {
+      "errorTitle": "FR-An error occurred",
+      "errorMessage": "FR-<p>{{appName}} experienced an error.  Please report this by emailing {{email}}. Details of the error are below.</p><p><pre>{{error}}</pre></p>"
+    },
+    "regionMapping": {
+      "noDataForDate": "FR-No data for the selected date.",
+      "noDataForRegion": "FR-No data for the selected region.",
+      "outdatedBrowserTitle": "FR-Outdated Web Browser",
+      "outdatedBrowserMessage": "FR-You are using a very old web browser that cannot display \"region mapped\" datasets such as this one.  Please upgrade to the latest version of Google Chrome, Mozilla Firefox, Microsoft Edge, Microsoft Internet Explorer 11, or Apple Safari as soon as possible.  Please contact us at {{email}} if you have any concerns.",
+      "invalidServerTypeTitle": "FR-Invalid serverType {{serverType}} in regionMapping.json",
+      "invalidServerTypeMessage": "FR-Expected serverType to be \"WMS\" or \"vector\" but got \"{{serverType}}\"",
+      "notRecognised": "FR-These region names were {{notRecognisedText}} ",
+      "notRecognisedText": "FR-not recognised",
+      "moreThanOneValue": "FR-These regions had {{moreThanOneValueText}}",
+      "moreThanOneValueText": "FR-more than one value",
+      "msg": "FR-Consult the {{link}} to see how to format the file.",
+      "csvSpecification": "FR-CSV-geo-au specification",
+      "issuesLoadingTitle": "FR-Issues loading {{name}}"
+    },
+    "feedback": {
+      "thanksTitle": "FR-Thank you for your feedback!",
+      "thanksMessage": "FR-Your feedback helps make {{appName}} better",
+      "unableToSendTitle": "FR-Unable to send feedback",
+      "unableToSendMessage": "FR-This is really embarrassing, but an error occurred while attempting to send your feedback.  Please email it to {{email}} instead."
+    },
+    "resultPending": {
+      "name": "FR-Result Pending"
+    },
+    "sensorObservationService": {
+      "procedure": "FR-Procedure",
+      "property": "FR-Property",
+      "sos": "FR-SOS",
+      "alreadyLoadingTitle": "FR-Data already loading",
+      "alreadyLoadingMessage": "FR-Your data is still loading. You will be able to change the display once it has loaded",
+      "unknownError": "FR-The server reported an unknown error.",
+      "exceptionMessage": "FR-The server reported an error: \n\n {{exceptionText}}",
+      "missingBody": "FR-The server responded with missing body.",
+      "noFeatures": "FR-There are no features matching your query.",
+      "unknownFormat": "FR-The server responded with an unknown feature format.",
+      "noMatchingFeatures": "FR-The Sensor Observation Service did not return any features matching your query."
+    },
+    "sdmxServerStratum": {
+      "sdmxStructureLoadErrorTitle": "FR-SDMX structure request failed",
+      "loadDataErrorTitle": "FR-Failed to load SDMX group",
+      "loadDataErrorMessage": "FR-The server has no dataflows"
+    },
+    "sdmxJsonDataflowStratum": {
+      "loadDataErrorTitle": "FR-Could not load SDMX dataflow",
+      "loadDataErrorMessage": {
+        "invalidResponse": "FR-Invalid JSON object",
+        "noDatastructure": "FR-No data structures could be found for dataflow {{catalogItem.dataflowId}}",
+        "noDataflow": "FR-Dataflow {{catalogItem.dataflowId}} is invalid"
+      }
+    },
+    "sdmxCatalogItem": {
+      "viewBy": {
+        "title": "FR-View by",
+        "time": "FR-Time-series",
+        "region": "FR-Region"
+      },
+      "noData": "FR-No data available",
+      "loadDataErrorTitle": "FR-Could not load SDMX CSV",
+      "loadDataErrorMessage": "FR-Invalid response from {{csvUrl}}"
+    },
+    "time": {
+      "invalidDate": "FR-Invalid Date",
+      "invalidInitialTimeSource": "FR-Invalid initialTimeSource specified in config file: {{initialTimeSource}}"
+    },
+    "shareData": {
+      "generateErrorTitle": "FR-Couldn't generate short URL.",
+      "generateErrorMessage": "FR-Something went wrong when trying to use the share data service to generate a short URL. If you believe it is a bug in {{appName}}, please report it by emailing {{email}}.",
+      "expandErrorTitle": "FR-Couldn't expand URL",
+      "expandErrorMessage": "FR-The share data service used to launch {{appName}} was not located. This may indicate an error in the link or that the service is unavailable at this time. If you believe it is a bug in {{appName}}, please report it by emailing {{email}}"
+    },
+    "socrataServer": {
+      "name": "FR-Socrata Server",
+      "retrieveErrorMessage": "FR-Couldn't retrieve packages from this Socrata server.<br/><br/>If you entered the URL manually, please double-check it.<br/><br/> Otherwise, if reloading doesn't fix it, please report the problem by sending an email to {{email}} with the technical details below.  Thank you!<br/><br/><pre> {{formatError}}</pre>",
+      "description": "FR-Description",
+      "licence": "FR-Licence",
+      "attributes": "FR-Attributes",
+      "tags": "FR-Tags"
+    },
+    "spatialDetailing": {
+      "name": "FR-Spatial Detailing",
+      "description": "FR-Predicts the characteristics of fine-grained regions by learning and exploiting correlations of coarse-grained data with Census characteristics.",
+      "regionTypeToPredictName": "FR-Region Type to Predict",
+      "regionTypeToPredictDescription": "FR-The type of region for which to predict characteristics.",
+      "coarseDataRegionTypeName": "FR-Coarse Data Region Type",
+      "coarseDataRegionTypeDescription": "FR-The type of region with which the coarse-grained input characteristics are associated.",
+      "aggregationName": "FR-Aggregation",
+      "aggregationDescription": "FR-Specifies how coarse region values were aggregated.  True if the value is the mean of the values across the region, or False if the value is the sum of the values across the region.",
+      "aggregationTrueName": "FR-Mean Aggregation",
+      "aggregationTrueDescription": "FR-Coarse region values are the mean of samples in the region.  For example, average household income.",
+      "aggregationFalseName": "FR-Sum Aggregation",
+      "aggregationFalseDescription": "FR-Coarse region values are the sum of samples in the region.  For example, total population.",
+      "characteristicToPredictName": "FR-Characteristic to Predict",
+      "characteristicToPredictDescription": "FR-The characteristic to predict for each region.",
+      "spatialDetailingOf": "FR-Spatial detailing of {{of}} at {{at}}",
+      "wrongNumberOfElements": "FR-The list of values and the list of region codes do not contain the same number of elements"
+    },
+    "tableData": {
+      "unsupportedCharactersTitle": "FR-Invalid characters in latitude and longitude columns",
+      "unsupportedCharactersMessage": "FR-Could not interpret latitude and longitude pair {{longitude}}, {{latitude}}",
+      "bulkGeocoderInfoTitle": "FR-Bulk Geocoder Information",
+      "bulkGeocoderInfoMessage": "FR-The CSV contains addresses, but {{number}} can't be located on the map:  ",
+      "bulkGeocoderInfo2Message": "FR-{{nullAddresses}} addresses are missing from the CSV.",
+      "bulkGeocoderErrorTitle": "FR-Bulk Geocoder Error",
+      "bulkGeocoderErrorMessage": "FR-Unable to map addresses to lat-long coordinates, as an error occurred while retrieving address coordinates. Please check your internet connection or try again later."
+    },
+    "terrainCatalog": {
+      "notSupportedErrorTitle": "FR-Not supported in 2D",
+      "notSupportedErrorMessage": "FR-{{name}} cannot be shown in the 2D view. Switch to 3D and try again"
+    },
+    "terria": {
+      "loadConfigErrorTitle": "FR-Failed to load Terria Map config",
+      "proxyableDomainsDeprecation": "FR-`proxyableDomainsUrl` is no longer supported in v8",
+      "initErrorTitle": "FR-Failed to initialize services",
+      "initErrorMessage": "FR-A problem occurred with the Terria server. This may cause some layers or the conversion service to be unavailable.",
+      "urlLoadErrorTitle": "FR-Problem loading URL",
+      "urlLoadErrorMessage": "FR-A problem occurred while initialising Terria with URL parameters.",
+      "loadingInitSourceErrorTitle": "FR-Error loading initialization source",
+      "loadingInitSourceErrorMessage": "FR-Could not load initialization information from {{fragment}} because no initFragmentPaths are defined.",
+      "loadingInitSourceError2Message": "FR-An error occurred while loading initialization information from {{loadSource}}.  This may indicate that you followed an invalid link or that there is a problem with your Internet connection.",
+      "disclaimer": "FR-Disclaimer",
+      "buttonTitleConfirm": "FR-I Agree"
+    },
+    "terriaJSONcatalog": {
+      "name": "FR-Terria JSON Catalog Function",
+      "misconfiguredErrorTitle": "FR-Misconfigured init file",
+      "misconfiguredErrorMessage": "FR-Service not configured for TerriaJsonCatalogFunction HTTP 202.",
+      "misconfiguredError2Message": "FR-HTTP 202 configuration {{url}} not present in response {{xhr}}",
+      "serviceResponseErrorTitle": "FR-Service response not JSON string",
+      "serviceResponseErrorMessage": "FR-TerriaJsonCatalogFunction was supposed to receive a JSON string, received {{xhr}}",
+      "requestFailedTitle": "FR-Request Failed",
+      "requestFailedMessage": "FR-Request failed with status code {{status}}.",
+      "asyncResultDescription": "FR-This is the result of invoking the {{name}} process or service at {{timestamp}} with the input parameters below.",
+      "loadingInitSourceErrorTitle": "FR-Error loading initialization source",
+      "loadingInitSourceErrorMessage": "FR-Error loading initialization source {{fragment}} because no initFragmentPaths are defined.",
+      "loadingInitSourceError2Message": "FR-An error occurred while loading initialization information from {{loadSource}}. This may indicate that you followed an invalid link or that there is a problem with your Internet connection.",
+      "disclaimer": "FR-Disclaimer",
+      "buttonTitleConfirm": "FR-I Agree"
+    },
+    "thredds": {
+      "nameGroup": "FR-THREDDS Catalog Group"
+    },
+    "threddsItem": {
+      "name": "FR-THREDDS Item Reference"
+    },
+    "urlTemplateMapServer": {
+      "name": "FR-URL Template Map Server"
+    },
+    "userDrawing": {
+      "devError": "FR-Terria instance is required.",
+      "messageHeader": "FR-Draw on Map",
+      "pointEntities": "FR-Points",
+      "otherEntities": "FR-Lines and polygons",
+      "line": "FR-Line",
+      "firstPoint": "FR-First Point",
+      "btnCancel": "FR-Cancel",
+      "btnDone": "FR-Done",
+      "clickToAddFirstPoint": "FR-Click to add a point",
+      "clickToAddAnotherPoint": "FR-Click to add another point",
+      "anotherPoint": "FR-Another Point",
+      "userPolygon": "FR-User polygon"
+    },
+    "webFeatureServiceCatalogGroup": {
+      "wfsServer": "FR-Web Feature Service (WFS) Server",
+      "invalidWFSServerTitle": "FR-Invalid WFS server",
+      "invalidWFSServerMessage": "FR-An error occurred while invoking GetCapabilities on the WFS server.  The server's response does not appear to be a valid GetCapabilities document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection. Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "groupNotAvailableTitle": "FR-Group is not available",
+      "groupNotAvailableMessage": "FR-An error occurred while invoking GetCapabilities on the WFS server. <p>If you entered the link manually, please verify that the link is correct.</p> <p>This error may also indicate that the server does not support <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' Map team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by '{{appName}}' itself.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection. Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "abstract": "FR-Web Feature Service Description",
+      "accessConstraints": "FR-Web Feature Service Access Constraints",
+      "fees": "FR-Web Feature Service Fees"
+    },
+    "webFeatureServiceCatalogItem": {
+      "wfs": "FR-Web Feature Service (WFS)",
+      "dataDescription": "FR-Data Description",
+      "abstract": "FR-Web Feature Service Description",
+      "serviceDescription": "FR-Service Description",
+      "metadataUrls": "FR-Metadata Links",
+      "accessConstraints": "FR-Access Constraints",
+      "serviceContact": "FR-Service Contact",
+      "getCapabilitiesUrl": "FR-GetCapabilities URL",
+      "noLayerFoundTitle": "FR-No layer found",
+      "noLayerFoundMessage": "FR-The WFS dataset '{{name}}' has no layers matching '{{typeNames}}'. {{suggested}} {{line}}{{line}}Either the catalog file has been set up incorrectly, or the WFS server has changed.{{line}}{{line}}Please report this error by sending an email to {{email}}.",
+      "missingDataTitle": "FR-Missing data",
+      "missingDataMessage": "FR-The WFS dataset '{{name}}' did not return any data.{{line}}{{line}}Either the catalog file has been set up incorrectly, or the server address has changed.{{line}}{{line}}Please report this error by emailing {{email}}.",
+      "missingUrlTitle": "FR-Unable to load GetCapabilities",
+      "missingUrlMessage": "FR-Could not load the Web Feature Service (WFS) GetCapabilities document because the catalog item does not have a `url`.",
+      "reachedMaxFeatureLimit": "FR-Warning: This layer has reached the WFS feature limit ({{maxFeatures}})"
+    },
+    "webMapServiceCatalogGroup": {
+      "wmsServer": "FR-Web Map Service (WMS) Server",
+      "invalidWMSServerTitle": "FR-Invalid WMS server",
+      "invalidWMSServerMessage": "FR-An error occurred while invoking GetCapabilities on the WMS server. The server's response does not appear to be a valid GetCapabilities document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "groupNotAvailableTitle": "FR-Group is not available",
+      "groupNotAvailableMessage": "FR-An error occurred while invoking GetCapabilities on the WMS server. <p>If you entered the link manually, please verify that the link is correct.</p> <p>This error may also indicate that the server does not support <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' Map team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by '{{appName}}' itself.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection. Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "missingUrlTitle": "FR-Unable to load GetCapabilities",
+      "missingUrlMessage": "FR-Could not load the Web Map Service (WMS) GetCapabilities document because the catalog item does not have a `url`.",
+      "abstract": "FR-Web Map Service Description",
+      "accessConstraints": "FR-Web Map Service Access Constraints",
+      "fees": "FR-Web Map Service Fees"
+    },
+    "webMapServiceCatalogItem": {
+      "wms": "FR-Web Map Service (WMS)",
+      "dataDescription": "FR-Data Description",
+      "serviceDescription": "FR-Service Description",
+      "metadataUrls": "FR-Metadata Links",
+      "accessConstraints": "FR-Access Constraints",
+      "serviceContact": "FR-Service Contact",
+      "getCapabilitiesUrl": "FR-GetCapabilities URL",
+      "defaultStyleLabel": "FR-Default style",
+      "noLayerFoundTitle": "FR-No layer found",
+      "noLayerFoundMessage": "FR-The WMS dataset '{{name}}' has no layers matching '{{layers}}'. {{suggested}} {{line}}{{line}}Either the catalog file has been set up incorrectly, or the WMS server has changed.{{line}}{{line}}Please report this error by sending an email to {{email}}.",
+      "datasetScaleErrorTitle": "FR-Dataset will not be shown at this scale",
+      "datasetScaleErrorMessage": "FR-The {{name}} dataset will not be shown when zoomed in this close to the map because the data custodian has indicated that the data is not intended or suitable for display at this scale.  Click the dataset's Info button on the Now Viewing tab for more information about the dataset and the data custodian.",
+      "badlyFormatedTitle": "FR-Badly formatted periodicity",
+      "badlyFormatedMessage": "FR-The '{{name}}' dataset has a badly formed periodicity, '{{isoSegments}}'. Click the dataset's Info button for more information about the dataset and the data custodian.",
+      "missingDataTitle": "FR-Missing data",
+      "missingDataMessage": "FR-The WMS dataset '{{name}}' did not return any data.{{line}}{{line}}Either the catalog file has been set up incorrectly, or the server address has changed.{{line}}{{line}}Please report this error by emailing {{email}}.",
+      "missingUrlTitle": "FR-Unable to load GetCapabilities",
+      "missingUrlMessage": "FR-Could not load the Web Map Service (WMS) GetCapabilities document because the catalog item does not have a `url`."
+    },
+    "webMapTileServiceCatalogGroup": {
+      "wmtsServer": "FR-Web Map Tile Service (WMTS) Server",
+      "invalidWMTSServerTitle": "FR-Invalid WMTS server",
+      "invalidWMTSServerMessage": "FR-An error occurred while invoking GetCapabilities on the WMTS server. The server's response does not appear to be a valid GetCapabilities document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "groupNotAvailableTitle": "FR-Group is not available",
+      "groupNotAvailableMessage": "FR-An error occurred while invoking GetCapabilities on the WMTS server. <p>If you entered the link manually, please verify that the link is correct.</p> <p>This error may also indicate that the server does not support <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' Map team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by '{{appName}}' itself.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection. Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "abstract": "FR-Web Map Service Description",
+      "accessConstraints": "FR-Web Map Service Access Constraints",
+      "fees": "FR-Web Map Service Fees",
+      "invalidCapabilitiesTitle": "FR-Invalid GetCapabilities",
+      "invalidCapabilitiesMessage": "FR-The URL {{url}} was retrieved successfully but it does not appear to be a valid Web Map Tile Service (WMTS) GetCapabilities document. \n\nEither the catalog file has been set up incorrectly, or the server address has changed."
+    },
+    "webMapTileServiceCatalogItem": {
+      "wmts": "FR-Web Map Tile Service (WMTS)",
+      "dataDescription": "FR-Data Description",
+      "serviceDescription": "FR-Service Description",
+      "accessConstraints": "FR-Access Constraints",
+      "fees": "FR-Web Map Tile Service Fees",
+      "serviceContact": "FR-Service Contact",
+      "getCapabilitiesUrl": "FR-GetCapabilities URL",
+      "missingUrlTitle": "FR-Unable to load GetCapabilities",
+      "missingUrlMessage": "FR-Could not load the Web Map Tile Service (WMTS) GetCapabilities document because the catalog item does not have a `url`.",
+      "noUsableTileMatrixTitle": "FR-Warning",
+      "noUsableTileMatrixMessage": "FR-This WMTS layer has no Web Mercator tile matrix set - it may not display correctly"
+    },
+    "webProcessingService": {
+      "wps": "FR-Web Processing Service (WPS)",
+      "invalidWPSServerTitle": "FR-Invalid WPS server",
+      "invalidWPSServerMessage": "FR-An error occurred while invoking {{endpoint}} on the WPS server for process name {{name}}. The server's response does not appear to be a valid {{endpoint}} document. <p>This error may also indicate that the processing server you specified is temporarily unavailable or there is a problem with your internet connection.  Try opening the processing server again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "processDescriptionErrorTitle": "FR-Process does not have a process description",
+      "processDescriptionErrorMessage": "FR-The WPS DescribeProcess for this process does not include a ProcessDescription.",
+      "processInputErrorTitle": "FR-Process does not have any inputs",
+      "processInputErrorMessage": "FR-This WPS process does not specify any inputs.",
+      "unsupportedParameterErrorTitle": "FR-Unsupported parameter type",
+      "unsupportedParameterErrorMessage": "FR-The parameter {{identifier}} is not a supported type of parameter.",
+      "invalidResponseErrorTitle": "FR-Invalid WPS server response",
+      "invalidResponseErrorMessage": "FR-An error occurred while accessing the status location on the WPS server for process name {{name}}.  The server's response does not appear to be a valid ExecuteResponse document. <p>This error may also indicate that the processing server you specified is temporarily unavailable or there is a problem with your internet connection.  If the problem persists, please report it by sending an email to {{email}}.</p>",
+      "invalidResponseError2Title": "FR-Invalid response from WPS server",
+      "invalidResponseError2Message": "FR-The response from the WPS server does not include a Status element.",
+      "failureReasonUnknowError": "FR-The reason for failure is unknown.",
+      "asyncShortReportFailed": "FR-Web Processing Service invocation failed.  More details are available on the Info panel.",
+      "errorDetails": "FR-Error Details",
+      "resultPendingDescription": "FR-This is the result of invoking the {{name}} process or service at {{timestamp}} with the input parameters below.",
+      "regionTypeDescription": "FR-The type of region to analyze.",
+      "regionTypeName": "FR-Region Type",
+      "regionParameterName": "FR-Region Parameter",
+      "wpsServer": "FR-Web Processing Service (WPS) Server",
+      "wpsResult": "FR-Web Processing Service Result"
+    },
+    "webProcessingServiceCatalogGroup": {
+      "typeName": "FR-Web Processing Service (WPS) Server",
+      "missingUrlTitle": "FR-Unable to load GetCapabilities",
+      "missingUrlMessage": "FR-Could not load the Web Processing Service (WPS) GetCapabilities document because the catalog item does not have a `url`.",
+      "invalidCapabilitiesTitle": "FR-Invalid GetCapabilities",
+      "invalidCapabilitiesMessage": "FR-The URL {{url}} was retrieved successfully but it does not appear to be a valid Web Processing Service (WPS) GetCapabilities document. \n\nEither the catalog file has been set up incorrectly, or the server address has changed.",
+      "invalidServerTitle": "FR-Invalid WPS server",
+      "invalidServerMessage": "FR-An error occurred while invoking GetCapabilities on the WPS server. The server's response does not appear to be a valid GetCapabilities document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "abstract": "FR-Web Processing Service Description",
+      "accessConstraints": "FR-Web Processing Service Access Constraints",
+      "fees": "FR-Web Processing Service Fees",
+      "providerName": "FR-Web Processing Service Provider Name",
+      "providerSite": "FR-Web Processing Service Provider Site"
+    },
+    "wfsFeatures": {
+      "featuresGroup": "FR-Group of features in a Web Feature Service (WFS) Server",
+      "queryErrorTitle": "FR-Error querying WFS server",
+      "queryErrorMessage": "FR-An error occurred while invoking GetFeature on the WFS server. The server's response does not appear to be a valid GeoJSON document. <p>If you entered the link manually, please verify that the link is correct.</p><p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "groupNotAvailableTitle": "FR-Group is not available",
+      "groupNotAvailableMessage": "FR-An error occurred while invoking GetFeature on the WFS server. <p>If you entered the link manually, please verify that the link is correct.</p><p>This error may also indicate that the server does not support <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  If this is your server, verify that CORS is enabled and enable it if it is not. If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' Map team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by '{{appName}}' itself.</p><p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>"
+    },
+    "commonModelErrors": {
+      "3dTypeIn2dMode": "FR-**Note:** This dataset can not be displayed in the 2D viewer. Switch to one of the 3D map modes.",
+      "datasetScaleErrorTitle": "FR-Dataset will not be shown at this scale",
+      "datasetScaleErrorMessage": "FR-The {{name}} dataset will not be shown when zoomed in this close to the map because the data custodian has indicated that the data is not intended or suitable for display at this scale.  Click the dataset's Info button on the Now Viewing tab for more information about the dataset and the data custodian."
+    }
+  },
+  "deltaTool": {
+    "titlePrefix": "FR-Change Detection",
+    "description": "FR-This tool visualizes the difference between imagery captured at two discrete points in time.",
+    "pickLocation": "FR-To view available imagery, please select your location of interest on the map opposite.",
+    "cancelBtn": "FR-Cancel",
+    "generateDeltaBtn": "FR-Generate Difference Map",
+    "selectedLocation": "FR-Selected Location",
+    "primaryImage": "FR-Primary Image",
+    "secondaryImage": "FR-Secondary Image",
+    "pickerMessage": {
+      "pickFirst": "FR-Select a point by clicking on the map",
+      "pickAnother": "FR-Click another point to change the selection",
+      "pickError": "FR-Error when trying to resolve imagery at location! Please select a point again by clicking on the map."
+    },
+    "catalogItem": {
+      "description": "FR-This layer visualizes the difference between imagery captured at two discrete points in time"
+    },
+    "loadingError": {
+      "title": "FR-Error loading Delta Tool",
+      "message": "FR-An error occurred while trying to load the delta tool from the server. Please try again."
+    }
+  },
+  "term": {
+    "missingContent": "FR-missing content"
+  },
+  "itemSearchTool": {
+    "title": "FR-Search {{itemName}}",
+    "loading": "FR-Loading search parameters",
+    "loadError": "FR-Error loading search parameters. Check console for detailed errors.",
+    "noParameters": "FR-No searchable parameters found",
+    "searching": "FR-Searching",
+    "searchError": "FR-Search failed. Check console for detailed errors.",
+    "numericParameter": {
+      "minimum": "FR-Minimum",
+      "maximum": "FR-Maximum"
+    },
+    "searchBtnText": "FR-Search",
+    "resetBtnText": "FR-Clear input",
+    "backBtnText": "FR-Search again",
+    "resultsCount": "FR-{{count}} match found",
+    "resultsCount_plural": "FR-{{count}} matches found",
+    "actions": {
+      "highlightAll": "FR-Highlight all",
+      "showMatchingOnly": "FR-Show matching only"
+    }
+  },
+  "indexedItemSearchProvider": {
+    "missingOptionIndexRootUrl": "FR-Option `indexRootUrl` is missing in the item's search configuration.",
+    "errorParsingIndexRoot": "FR-Error parsing indexRoot file: {{indexRootUrl}}."
+  },
+  "pedestrianMode": {
+    "toolButtonTitle": "FR-Pedestrian Mode",
+    "dropPedestrianTooltipMessage": "FR-<b>Left click</b> to select drop location<br /><b>Right click / Esc</b> to cancel",
+    "controls": {
+      "title": "FR-Controls"
+    }
+  }
+}

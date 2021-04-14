@@ -109,6 +109,7 @@ export const Box = styled.div`
       padding-bottom: ${5 *
         (props.paddedVertically === true ? 1 : props.paddedVertically)}px;
     `}
+  ${props => props.padding && `padding: ${props.padding};`}
 
   ${props =>
     props.backgroundImage &&

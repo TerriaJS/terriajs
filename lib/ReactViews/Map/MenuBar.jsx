@@ -10,6 +10,7 @@ import SharePanel from "./Panels/SharePanel/SharePanel";
 import ToolsPanel from "./Panels/ToolsPanel/ToolsPanel";
 import Icon from "../Icon";
 import Prompt from "../Generic/Prompt";
+import i18n from "i18next";
 import { withTranslation, Trans } from "react-i18next";
 import Styles from "./menu-bar.scss";
 import { runInAction } from "mobx";
@@ -17,6 +18,10 @@ import { observer } from "mobx-react";
 import Text from "../../Styled/Text";
 
 import { useRefForTerria } from "../Hooks/useRefForTerria";
+import MenuPanel from "../StandardUserInterface/customizable/MenuPanel";
+import Box from "../../Styled/Box";
+import Ul, { Li } from "../../Styled/List";
+import { RawButton } from "../../Styled/Button";
 
 const StyledMenuBar = styled.div`
   pointer-events: none;
@@ -101,30 +106,6 @@ const MenuBar = observer(props => {
       trainerBarVisible={props.viewState.trainerBarVisible}
     >
       <ul className={classNames(Styles.menu)}>
-        {/* <li className={Styles.menuItem}>
-            <HelpMenuPanelBasic
-              terria={props.terria}
-              viewState={props.viewState}
-            />
-            {props.terria.configParameters.showFeaturePrompts &&
-              satelliteGuidancePrompted &&
-              !mapGuidesLocationPrompted &&
-              !props.viewState.showSatelliteGuidance && (
-                <Prompt
-                  content={
-                    <div>
-                      <Trans i18nKey="satelliteGuidance.menuTitle">
-                        You can access map guides at any time by looking in the{" "}
-                        <strong>help menu</strong>.
-                      </Trans>
-                    </div>
-                  }
-                  displayDelay={1000}
-                  dismissText={t("satelliteGuidance.dismissText")}
-                  dismissAction={dismissSatelliteGuidanceAction}
-                />
-              )}
-          </li> */}
         {enableTools && (
           <li className={Styles.menuItem}>
             <ToolsPanel terria={props.terria} viewState={props.viewState} />
@@ -190,14 +171,35 @@ const MenuBar = observer(props => {
           </For>
         </If>
       </ul>
-      <ul className={classNames(Styles.menu)}>
-        <li className={Styles.menuItem}>
-          <button className={classNames(Styles.langBtn)}>
-            <Icon glyph={Icon.GLYPHS.globe} />
-            <span>{stripLangLocale(props.i18n.language)}</span>
-          </button>
-        </li>
-      </ul>
+      {props.terria.configParameters.languageConfiguration.enabled ? (
+        <ul className={classNames(Styles.menu)}>
+          <li className={Styles.menuItem}>
+            <MenuPanel
+              theme={{
+                btn: Styles.langBtn,
+                inner: Styles.dropdownInner,
+                icon: Icon.GLYPHS.globe
+              }}
+              btnText={stripLangLocale(props.i18n.language)}
+            >
+              <Box static padding={"20px 10px 10px 10px"}>
+                <Ul spaced lined>
+                  {Object.entries(
+                    props.terria.configParameters.languageConfiguration
+                      .languages
+                  ).map(([key, value]) => (
+                    <Li key={key}>
+                      <RawButton onClick={() => i18n.changeLanguage(key)}>
+                        {value}
+                      </RawButton>
+                    </Li>
+                  ))}
+                </Ul>
+              </Box>
+            </MenuPanel>
+          </li>
+        </ul>
+      ) : null}
     </StyledMenuBar>
   );
 });
