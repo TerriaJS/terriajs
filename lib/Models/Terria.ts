@@ -741,6 +741,8 @@ export default class Terria {
         .query("")
         .hash("")
     );
+
+    await this.loadInitSources();
   }
 
   @action
