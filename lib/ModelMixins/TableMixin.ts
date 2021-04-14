@@ -199,8 +199,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     @computed
     get disableOpacityControl() {
-      // disable opacity control for point tables
-      return this.activeTableStyle.isPoints();
+      // disable opacity control for point tables - or if no mapItems
+      return this.activeTableStyle.isPoints() || this.mapItems.length === 0;
     }
 
     @computed
@@ -463,6 +463,11 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     @computed
     get isSampled(): boolean {
       return this.activeTableStyle.timeTraits.isSampled;
+    }
+
+    @computed
+    get disableDateTimeSelector() {
+      return this.mapItems.length === 0;
     }
 
     @computed
