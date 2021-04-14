@@ -4,16 +4,23 @@ import i18next from "i18next";
 import TerriaError, { I18nTranslateString } from "../Core/TerriaError";
 import Terria from "./Terria";
 
-export default function raiseErrorToUser(terria: Terria, error: unknown) {
+export default function raiseErrorToUser(
+  terria: Terria,
+  error: unknown,
+  title?: string | I18nTranslateString
+) {
   if (error instanceof TerriaError) {
     if (!error.raisedToUser) {
       error.raisedToUser = true;
+      if (title) {
+        error = error.clone({ title });
+      }
       terria.error.raiseEvent(error);
     }
   } else {
     terria.error.raiseEvent(
       new TerriaError({
-        title: i18next.t("models.raiseError.errorTitle"),
+        title: title ?? i18next.t("models.raiseError.errorTitle"),
         message: wrapErrorMessage(terria, error)
       })
     );

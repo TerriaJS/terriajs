@@ -17,6 +17,8 @@ import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import Text from "../../Styled/Text";
 
+import withControlledVisibility from "../../ReactViews/HOCs/withControlledVisibility";
+
 import { useRefForTerria } from "../Hooks/useRefForTerria";
 import MenuPanel from "../StandardUserInterface/customizable/MenuPanel";
 import Box from "../../Styled/Box";
@@ -214,4 +216,4 @@ MenuBar.propTypes = {
   t: PropTypes.func.isRequired
 };
 
-export default withTranslation()(MenuBar);
+export default withTranslation()(withControlledVisibility(MenuBar));

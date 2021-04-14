@@ -8,6 +8,7 @@ import Box from "../../Styled/Box";
 import Text from "../../Styled/Text";
 import Spacing from "../../Styled/Spacing";
 import { useTranslation } from "react-i18next";
+import withControlledVisibility from "../HOCs/withControlledVisibility";
 
 const MapDataCount = observer(function(props) {
   const { t } = useTranslation();
@@ -59,4 +60,4 @@ MapDataCount.propTypes = {
   viewState: PropTypes.object.isRequired
 };
 
-export default MapDataCount;
+export default withControlledVisibility(MapDataCount);
