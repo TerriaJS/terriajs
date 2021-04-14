@@ -7,6 +7,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
+import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
@@ -60,6 +61,7 @@ import CommonStrata from "./CommonStrata";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import hasTraits from "./hasTraits";
+import IElementConfig from "./IElementConfig";
 import InitSource, {
   isInitData,
   isInitDataPromise,
@@ -83,11 +85,9 @@ import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
 import ViewerMode from "./ViewerMode";
 import Workbench from "./Workbench";
-import IElementConfig from "./IElementConfig";
 // import overrides from "../Overrides/defaults.jsx";
 
 interface ConfigParameters {
-  [key: string]: ConfigParameters[keyof ConfigParameters];
   /**
    * TerriaJS uses this name whenever it needs to display the name of the application.
    */
@@ -212,6 +212,20 @@ interface ConfigParameters {
    *
    */
   languageConfiguration?: LanguageConfiguration;
+  /**
+   * Custom concurrent request limits for domains in Cesium's RequestScheduler. Cesium's default is 6 per domain (the maximum allowed by browsers unless the server supports http2). For servers supporting http2 try 12-24 to have more parallel requests. Setting this too high will undermine Cesium's prioritised request scheduling and important data may load slower. Format is {"domain_without_protocol:port": number}
+   */
+  customRequestSchedulerLimits?: Record<string, number>;
+
+  /**
+   * Whether to load persisted viewer mode from local storage
+   */
+  persistViewerMode?: boolean;
+
+  /**
+   * Whether to open the add data explorer panel on load
+   */
+  openAddData?: boolean;
 }
 
 interface StartOptions {
@@ -352,7 +366,10 @@ export default class Terria {
     showInAppGuides: false,
     helpContent: [],
     helpContentTerms: defaultTerms,
-    languageConfiguration: undefined
+    languageConfiguration: undefined,
+    customRequestSchedulerLimits: undefined,
+    persistViewerMode: true,
+    openAddData: false
   };
 
   @observable
@@ -644,6 +661,9 @@ export default class Terria {
         );
       }
     }
+    setCustomRequestSchedulerDomainLimits(
+      this.configParameters.customRequestSchedulerLimits
+    );
 
     this.analytics?.start(this.configParameters);
     this.analytics?.logEvent("launch", "url", launchUrlForAnalytics);
@@ -662,10 +682,7 @@ export default class Terria {
   }
 
   loadPersistedMapSettings(): void {
-    const persistViewerMode = defaultValue(
-      this.configParameters.persistViewerMode,
-      true
-    );
+    const persistViewerMode = this.configParameters.persistViewerMode;
     const mainViewer = this.mainViewer;
     const viewerMode = this.getLocalProperty("viewermode");
     if (persistViewerMode && defined(viewerMode)) {
@@ -750,9 +767,9 @@ export default class Terria {
 
   @action
   updateParameters(parameters: ConfigParameters | JsonObject): void {
-    Object.keys(parameters).forEach((key: string) => {
+    Object.entries(parameters).forEach(([key, value]) => {
       if (this.configParameters.hasOwnProperty(key)) {
-        this.configParameters[key] = parameters[key];
+        (this.configParameters as any)[key] = value;
       }
     });
 
@@ -1497,4 +1514,14 @@ function interpretStartData(terria: Terria, startData: any) {
   //     }
   //   }
   // }
+}
+
+function setCustomRequestSchedulerDomainLimits(
+  customDomainLimits: ConfigParameters["customRequestSchedulerLimits"]
+) {
+  if (isDefined(customDomainLimits)) {
+    Object.entries(customDomainLimits).forEach(([domain, limit]) => {
+      RequestScheduler.requestsByServer[domain] = limit;
+    });
+  }
 }
