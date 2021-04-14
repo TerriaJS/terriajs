@@ -10,6 +10,7 @@ import isDefined from "../Core/isDefined";
 import ColorMap from "../Map/ColorMap";
 import ConstantColorMap from "../Map/ConstantColorMap";
 import ConstantPointSizeMap from "../Map/ConstantPointSizeMap";
+import ContinuousColorMap from "../Map/ContinuousColorMap";
 import DiscreteColorMap from "../Map/DiscreteColorMap";
 import EnumColorMap from "../Map/EnumColorMap";
 import PointSizeMap from "../Map/PointSizeMap";
@@ -243,15 +244,14 @@ export default class TableStyle {
   }
 
   @computed
-  get colorPalette(): ColorPalette {
+  get paletteName() {
     const colorColumn = this.colorColumn;
 
     if (colorColumn === undefined) {
-      return new ColorPalette([]);
+      return;
     }
 
     let paletteName = this.colorTraits.colorPalette;
-    const numberOfBins = this.numberOfBins;
 
     if (
       colorColumn.type === TableColumnType.enum ||
@@ -272,13 +272,24 @@ export default class TableStyle {
           paletteName = "PuOr";
         } else {
           // Values do not cross zero so use a sequential palette.
-          paletteName = "YlOrRd";
+          paletteName = "Viridis";
         }
       }
     }
 
-    if (paletteName !== undefined && numberOfBins !== undefined) {
-      return ColorPalette.fromString(paletteName, numberOfBins);
+    return paletteName;
+  }
+
+  @computed
+  get colorPalette(): ColorPalette {
+    const numberOfBins = this.numberOfBins;
+
+    if (
+      this.paletteName !== undefined &&
+      numberOfBins !== undefined &&
+      numberOfBins !== 0
+    ) {
+      return ColorPalette.fromString(this.paletteName, numberOfBins);
     } else {
       return new ColorPalette([]);
     }
@@ -345,6 +356,8 @@ export default class TableStyle {
         return binMaximums.concat([colorColumn.valuesAsNumbers.maximum]);
       }
       return binMaximums;
+    } else if (this.colorTraits.numberOfBins === 0) {
+      return [];
     } else {
       // TODO: compute maximums according to ckmeans, quantile, etc.
       const asNumbers = colorColumn.valuesAsNumbers;
@@ -403,20 +416,34 @@ export default class TableStyle {
     const colorColumn = this.colorColumn;
     const colorTraits = this.colorTraits;
 
+    const nullColor = colorTraits.nullColor
+      ? Color.fromCssColorString(colorTraits.nullColor) ?? Color.TRANSPARENT
+      : Color.TRANSPARENT;
+
     if (colorColumn && colorColumn.type === TableColumnType.scalar) {
-      const maximums = this.binMaximums;
-      return new DiscreteColorMap({
-        bins: this.binColors.map((color, i) => {
-          return {
-            color: color,
-            maximum: maximums[i],
-            includeMinimumInThisBin: false
-          };
-        }),
-        nullColor: colorTraits.nullColor
-          ? Color.fromCssColorString(colorTraits.nullColor) ?? Color.TRANSPARENT
-          : Color.TRANSPARENT
-      });
+      if (this.binMaximums.length > 0) {
+        return new DiscreteColorMap({
+          bins: this.binColors.map((color, i) => {
+            return {
+              color: color,
+              maximum: this.binMaximums[i],
+              includeMinimumInThisBin: false
+            };
+          }),
+          nullColor
+        });
+      } else if (
+        this.paletteName &&
+        isDefined(colorColumn.valuesAsNumbers.minimum) &&
+        isDefined(colorColumn.valuesAsNumbers.maximum)
+      ) {
+        return new ContinuousColorMap({
+          palette: this.paletteName,
+          minValue: colorColumn.valuesAsNumbers.minimum,
+          maxValue: colorColumn.valuesAsNumbers.maximum,
+          nullColor
+        });
+      }
     } else if (
       colorColumn &&
       (colorColumn.type === TableColumnType.enum ||
@@ -441,23 +468,21 @@ export default class TableStyle {
             };
           })
         ),
-        nullColor: colorTraits.nullColor
-          ? Color.fromCssColorString(colorTraits.nullColor) ?? Color.TRANSPARENT
-          : Color.TRANSPARENT
+        nullColor
       });
-    } else {
-      // No column to color by, so use the same color for everything.
-      let color = Color.fromCssColorString(defaultColor);
-      const colorId = this.tableModel.uniqueId || this.tableModel.name;
-      if (colorTraits.nullColor) {
-        color = Color.fromCssColorString(colorTraits.nullColor);
-      } else if (this.binColors.length > 0) {
-        color = this.binColors[0];
-      } else if (colorId) {
-        color = Color.fromCssColorString(getColorForId(colorId));
-      }
-      return new ConstantColorMap(color, this.tableModel.name);
     }
+
+    // No column to color by, so use the same color for everything.
+    let color = Color.fromCssColorString(defaultColor);
+    const colorId = this.tableModel.uniqueId || this.tableModel.name;
+    if (colorTraits.nullColor) {
+      color = Color.fromCssColorString(colorTraits.nullColor);
+    } else if (this.binColors.length > 0) {
+      color = this.binColors[0];
+    } else if (colorId) {
+      color = Color.fromCssColorString(getColorForId(colorId));
+    }
+    return new ConstantColorMap(color, this.tableModel.name);
   }
 
   @computed

@@ -1,9 +1,9 @@
 import { computed } from "mobx";
 import { createTransformer } from "mobx-utils";
-import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import ConstantColorMap from "../Map/ConstantColorMap";
+import ContinuousColorMap from "../Map/ContinuousColorMap";
 import DiscreteColorMap from "../Map/DiscreteColorMap";
 import EnumColorMap from "../Map/EnumColorMap";
 import TableMixin from "../ModelMixins/TableMixin";
@@ -178,12 +178,53 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
     const colorMap = activeStyle.colorMap;
     if (colorMap instanceof DiscreteColorMap) {
       return this._createLegendItemsFromDiscreteColorMap(activeStyle, colorMap);
+    } else if (colorMap instanceof ContinuousColorMap) {
+      return this._createLegendItemsFromContinuousColorMap(
+        activeStyle,
+        colorMap
+      );
     } else if (colorMap instanceof EnumColorMap) {
       return this._createLegendItemsFromEnumColorMap(activeStyle, colorMap);
     } else if (colorMap instanceof ConstantColorMap) {
       return this._createLegendItemsFromConstantColorMap(activeStyle, colorMap);
     }
     return [];
+  }
+
+  private _createLegendItemsFromContinuousColorMap(
+    activeStyle: TableStyle,
+    colorMap: ContinuousColorMap
+  ): StratumFromTraits<LegendItemTraits>[] {
+    const colorColumn = activeStyle.colorColumn;
+
+    const nullBin =
+      colorColumn &&
+      colorColumn.valuesAsNumbers.numberOfValidNumbers <
+        colorColumn.valuesAsNumbers.values.length
+        ? [
+            createStratumInstance(LegendItemTraits, {
+              color: activeStyle.colorTraits.nullColor || "rgba(0, 0, 0, 0)",
+              addSpacingAbove: true,
+              title: activeStyle.colorTraits.nullLabel || "(No value)"
+            })
+          ]
+        : [];
+    let numberFormatOptions: Intl.NumberFormatOptions | JsonObject | undefined;
+    if (colorColumn?.traits?.format !== undefined) {
+      numberFormatOptions = colorColumn.traits.format;
+    }
+    return new Array(7)
+      .fill(0)
+      .map((_, i) => {
+        const value =
+          colorMap.minValue + (colorMap.maxValue - colorMap.minValue) * (i / 6);
+        return createStratumInstance(LegendItemTraits, {
+          color: colorMap.mapValueToColor(value).toCssColorString(),
+          title: this._formatValue(value, numberFormatOptions)
+        });
+      })
+      .reverse()
+      .concat(nullBin);
   }
 
   private _createLegendItemsFromDiscreteColorMap(

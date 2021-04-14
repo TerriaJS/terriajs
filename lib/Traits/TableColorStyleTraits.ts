@@ -92,7 +92,7 @@ export default class TableColorStyleTraits extends ModelTraits {
       "`Enum Colors` is specified for an `enum` column.",
     type: "number"
   })
-  numberOfBins: number = 7;
+  numberOfBins: number = 0;
 
   @primitiveArrayTrait({
     name: "Bin Maximums",
