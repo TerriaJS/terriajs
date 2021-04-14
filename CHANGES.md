@@ -6,6 +6,7 @@ Change Log
 #### next release (8.0.0-alpha.75)
 
 * Fix `NotificationWindow` bug with `message`.
+* Re-add `loadInitSources` to `Terria.updateApplicationUrl()`
 * [The next improvement]
 
 
