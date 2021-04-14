@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.76)
 
+* Added support for setting custom concurrent request limits per domain through `configParameters.customRequestSchedulerLimits`.
 * [The next improvement]
 
 #### 8.0.0-alpha.75
