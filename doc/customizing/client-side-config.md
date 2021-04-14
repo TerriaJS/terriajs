@@ -5,6 +5,7 @@ It has following structure:
 |Name|Required|Type|Default|Description|
 |----|--------|----|-------|-----------|
 |[initializationUrls](#intializationurls)|yes|**string[]**|[]|The list of initialization files which define the catalog content, for more details check [below](#intializationurls).|
+|[v7initializationUrls](#v7initializationUrls)|yes|**string[]**|[]|The list of v7 initialization files &mdash; these will be converted to v8 on the fly using [`catalog-converter`](https://github.com/TerriaJS/catalog-converter). For more details check [below](#v7initializationUrls).|
 |parameters|yes|**[Parameters](#parameters)**||TerriaJS configuration options|
 
 **Example**
@@ -29,7 +30,7 @@ If a string ends with `.json`, it is assumed to be a complete relative or absolu
 
 If the string does not end with `.json`, such as `"foo"`, it refers to an init file on the same web server at `init/foo.json`.  In a TerriaMap directory on your computer, it can be found at `wwwroot/init/foo.json`.
 
-### v7intializationUrls
+### v7initializationUrls
 
 It is also possible to add version 7 init files &mdash; these will be converted on-the-fly in `terriajs` when a map is loaded. See [`catalog-converter`](https://github.com/TerriaJS/catalog-converter) repo for more information.
 
