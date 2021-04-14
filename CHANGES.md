@@ -3,15 +3,17 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.75)
+#### next release (8.0.0-alpha.76)
+
+* [The next improvement]
+
+#### 8.0.0-alpha.75
 
 * Fix `NotificationWindow` bug with `message`.
 * Re-add `loadInitSources` to `Terria.updateApplicationUrl()`
 * Added support for `elements` object in catalogue files (aka init files).
   * Using this object you can hide/show most UI elements individually.
   * See https://github.com/TerriaJS/terriajs/pull/5131. More in-depth docs to come.
-* [The next improvement]
-
 
 #### 8.0.0-alpha.74
 
