@@ -29,6 +29,7 @@ const MobileMenu = observer(
       viewState: PropTypes.instanceOf(ViewState).isRequired,
       showFeedback: PropTypes.bool,
       terria: PropTypes.instanceOf(Terria).isRequired,
+      i18n: PropTypes.object,
       allBaseMaps: PropTypes.array.isRequired,
       t: PropTypes.func.isRequired
     },
