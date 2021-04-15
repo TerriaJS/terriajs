@@ -34,6 +34,7 @@ import { isLatLonHeight } from "../Core/LatLonHeight";
 import loadJson5 from "../Core/loadJson5";
 import ServerConfig from "../Core/ServerConfig";
 import TerriaError from "../Core/TerriaError";
+import { Complete } from "../Core/TypeModifiers";
 import { getUriWithoutPath } from "../Core/uriHelpers";
 import PickedFeatures, {
   featureBelongsToCatalogItem,
@@ -213,17 +214,17 @@ interface ConfigParameters {
    */
   languageConfiguration?: LanguageConfiguration;
   /**
-   * Custom concurrent request limits for domains in Cesium's RequestScheduler. Cesium's default is 6 per domain (the maximum allowed by browsers unless the server supports http2). For servers supporting http2 try 12-24 to have more parallel requests. Setting this too high will undermine Cesium's prioritised request scheduling and important data may load slower. Format is {"domain_without_protocol:port": number}
+   * Custom concurrent request limits for domains in Cesium's RequestScheduler. Cesium's default is 6 per domain (the maximum allowed by browsers unless the server supports http2). For servers supporting http2 try 12-24 to have more parallel requests. Setting this too high will undermine Cesium's prioritised request scheduling and important data may load slower. Format is {"domain_without_protocol:port": number}.
    */
   customRequestSchedulerLimits?: Record<string, number>;
 
   /**
-   * Whether to load persisted viewer mode from local storage
+   * Whether to load persisted viewer mode from local storage.
    */
   persistViewerMode?: boolean;
 
   /**
-   * Whether to open the add data explorer panel on load
+   * Whether to open the add data explorer panel on load.
    */
   openAddData?: boolean;
 }
@@ -323,7 +324,7 @@ export default class Terria {
   readonly timelineStack = new TimelineStack(this.timelineClock);
 
   @observable
-  readonly configParameters: ConfigParameters = {
+  readonly configParameters: Complete<ConfigParameters> = {
     appName: "TerriaJS App",
     supportEmail: "info@terria.io",
     defaultMaximumShownFeatureInfos: 100,

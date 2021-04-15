@@ -78,6 +78,9 @@ Specifies various options for configuring TerriaJS:
 |`helpContent`|no|**[HelpContentItem](#HelpContentItem)**|`[]`|The content to be displayed in the help panel.|
 |`helpContentTerms`|no|**[Term](#Term)**|||
 |`languageConfiguration`|no|**[LanguageConfiguration](#LanguageConfiguration)**|undefined|Language configuration of TerriaJS.|
+|`customRequestSchedulerLimits`|no|**object**|undefined|Custom concurrent request limits for domains in Cesium's RequestScheduler.|
+|`persistViewerMode`|no|**boolean**|`true`|Whether to load persisted viewer mode from local storage.|
+|`openAddData`|no|**boolean**|`false`|Whether to open the add data explorer panel on load.|
 
 ### MagdaReferenceHeaders
 
