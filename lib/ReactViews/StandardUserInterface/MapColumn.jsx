@@ -153,6 +153,18 @@ const MapColumn = observer(
                     "map-data-count"
                   )}
                 />
+                <If condition={this.props.viewState.isMapZooming}>
+                  <Toast>
+                    <Loader
+                      message={this.props.t("toast.mapIsZooming")}
+                      textProps={{
+                        style: {
+                          padding: "0 5px"
+                        }
+                      }}
+                    />
+                  </Toast>
+                </If>
                 <div className={Styles.locationDistance}>
                   <LocationBar
                     terria={this.props.terria}
@@ -220,18 +232,6 @@ const MapColumn = observer(
                 />
               </div>
             </div>
-          </If>
-          <If condition={this.props.viewState.isMapZooming}>
-            <Toast>
-              <Loader
-                message={this.props.t("toast.mapIsZooming")}
-                textProps={{
-                  style: {
-                    padding: "0 5px"
-                  }
-                }}
-              />
-            </Toast>
           </If>
         </div>
       );
