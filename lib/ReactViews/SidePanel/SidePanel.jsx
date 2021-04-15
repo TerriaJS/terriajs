@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import styled, { withTheme } from "styled-components";
-import Icon, { StyledIcon } from "../Icon";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import SearchBoxAndResults from "../Search/SearchBoxAndResults";
 import Workbench from "../Workbench/Workbench";
 import FullScreenButton from "./FullScreenButton";

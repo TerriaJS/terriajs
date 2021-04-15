@@ -9,8 +9,8 @@ import ChartableMixin from "../../../ModelMixins/ChartableMixin";
 import hasTraits from "../../../Models/hasTraits";
 import raiseErrorOnRejectedPromise from "../../../Models/raiseErrorOnRejectedPromise";
 import Terria from "../../../Models/Terria";
+import Icon from "../../../Styled/Icon";
 import UrlTraits from "../../../Traits/UrlTraits";
-import Icon from "../../Icon";
 import Styles from "./chart-expand-and-download-buttons.scss";
 
 const Dropdown = require("../../Generic/Dropdown");

@@ -13,7 +13,7 @@ import HelpVideoPanel from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/H
 import Text from "../../../../../lib/Styled/Text";
 import StyledHtml from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/StyledHtml";
 import { runInAction } from "mobx";
-import Icon, { StyledIcon } from "../../../../../lib/ReactViews/Icon";
+import Icon, { StyledIcon } from "../../../../../lib/Styled/Icon";
 
 describe("HelpPanel", function() {
   let terria: Terria;

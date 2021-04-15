@@ -8,7 +8,7 @@ import FadeIn from "../../../Transitions/FadeIn/FadeIn";
 import Loader from "../../../Loader";
 import { useKeyPress } from "../../../Hooks/useKeyPress.js";
 import { RawButton } from "../../../../Styled/Button";
-import Icon, { StyledIcon } from "../../../Icon";
+import Icon, { StyledIcon } from "../../../../Styled/Icon";
 
 const VideoWrapperBox = props => {
   const { viewState } = props;
@@ -35,7 +35,7 @@ const VideoWrapperBox = props => {
         background: rgba(0, 0, 0, 0.75);
       `}
     >
-      <Box paddedRatio={4} positionAbsolute topRight>
+      <Box paddedRatio={4} position="absolute" topRight>
         <RawButton onClick={handleClose.bind(null)}>
           <StyledIcon
             styledWidth={"22px"}

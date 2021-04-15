@@ -4,7 +4,7 @@ const createReactClass = require("create-react-class");
 const PropTypes = require("prop-types");
 import Styles from "./full_screen_button.scss";
 import classNames from "classnames";
-import Icon from "../../Icon";
+import Icon from "../../../Styled/Icon";
 
 // The button to make the map full screen and hide the workbench.
 const FullScreenButton = createReactClass({
