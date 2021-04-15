@@ -1,7 +1,7 @@
 "use strict";
 
 var CzmlCatalogItem = require("../../lib/Models/CzmlCatalogItem");
-var TerriaError = require("../../lib/Core/TerriaError");
+var TerriaError = require("../../lib/Core/TerriaError").default;
 var Terria = require("../../lib/Models/Terria");
 
 var loadBlob = require("../../lib/Core/loadBlob");

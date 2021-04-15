@@ -215,13 +215,10 @@ export default class GeoRssCatalogItem extends MappableMixin(
     });
   }
 
-  protected forceLoadMapItems(): Promise<void> {
-    const that = this;
-    return that.loadMetadata().then(() => {
-      if (isDefined(that.geoJsonItem)) {
-        return that.geoJsonItem.loadMapItems();
-      }
-    });
+  protected async forceLoadMapItems() {
+    if (isDefined(this.geoJsonItem)) {
+      return this.geoJsonItem.loadMapItems();
+    }
   }
 
   @computed get cacheDuration(): string {

@@ -39,8 +39,12 @@ export default class CompositeCatalogItem extends MappableMixin(
     );
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return Promise.resolve();
+  protected async forceLoadMetadata(): Promise<void> {
+    await Promise.all(
+      this.memberModels
+        .filter(CatalogMemberMixin.isMixedInto)
+        .map(model => model.loadMetadata())
+    );
   }
 
   async forceLoadMapItems(): Promise<void> {
