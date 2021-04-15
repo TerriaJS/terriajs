@@ -45,7 +45,7 @@ class Workbench extends React.Component<IProps> {
       );
     });
     this.props.terria.workbench.removeAll();
-    /* this.props.terria.timelineStack.items.clear(); */
+    (this.props.terria.timelineStack.items as any).clear();
   }
 
   render() {
@@ -105,7 +105,6 @@ class Workbench extends React.Component<IProps> {
         <WorkbenchList
           viewState={this.props.viewState}
           terria={this.props.terria}
-          workbench={this.props.terria.workbench}
         />
       </Box>
     );

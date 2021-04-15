@@ -23,7 +23,6 @@ const StyledUl = styled(Ul)`
 
 interface IProps {
   terria: Terria;
-  workbench: Workbench;
   viewState: ViewState;
 }
 
@@ -35,7 +34,7 @@ class WorkbenchList extends React.Component<IProps> {
     currentDraggingSortData: any,
     currentDraggingIndex: any
   ) {
-    this.props.workbench.moveItemToIndex(
+    this.props.terria.workbench.moveItemToIndex(
       currentDraggingSortData,
       currentDraggingIndex
     );
@@ -62,7 +61,7 @@ class WorkbenchList extends React.Component<IProps> {
             width: 100%;
           `}
         >
-          {this.props.workbench.items.map(item => {
+          {this.props.terria.workbench.items.map(item => {
             return (
               <WorkbenchItem
                 item={item}
