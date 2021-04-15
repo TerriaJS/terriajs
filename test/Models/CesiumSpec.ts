@@ -1,7 +1,10 @@
 import { computed } from "mobx";
-import Terria from "../../lib/Models/Terria";
-import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Cesium from "../../lib/Models/Cesium";
+import Terria from "../../lib/Models/Terria";
+import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 
 const supportsWebGL = require("../../lib/Core/supportsWebGL");
 
@@ -62,5 +65,21 @@ describeIfSupported("Cesium Model", function() {
     cesium.scene.globe.tileLoadProgressEvent.raiseEvent(2);
 
     expect(terriaProgressEvt.calls.mostRecent().args).toEqual([2, 2]);
+  });
+
+  describe("doZoomTo", function() {
+    let initialCameraPosition: Cartesian3;
+
+    beforeEach(function() {
+      initialCameraPosition = cesium.scene.camera.position.clone();
+    });
+
+    it("can zoomTo a rectangle", async function() {
+      const [west, south, east, north] = [0, 0, 0, 0];
+      await cesium.doZoomTo(Rectangle.fromDegrees(west, south, east, north));
+      expect(initialCameraPosition.equals(cesium.scene.camera.position)).toBe(
+        false
+      );
+    });
   });
 });
