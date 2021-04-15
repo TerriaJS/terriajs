@@ -6,6 +6,10 @@ Change Log
 #### next release (8.0.0-alpha.76)
 
 * Added support for setting custom concurrent request limits per domain through `configParameters.customRequestSchedulerLimits`.
+* Added `momentChart` to region-mapped timeseries
+* Add time-series chart (in FeatureInfo) for region-mapped timeseries
+* Only show `TableMixin` chart if it has more than one
+* Add `TableChartStyle` name trait.
 * [The next improvement]
 
 #### 8.0.0-alpha.75
