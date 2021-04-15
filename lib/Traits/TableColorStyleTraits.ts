@@ -68,21 +68,37 @@ export default class TableColorStyleTraits extends ModelTraits {
   })
   nullLabel?: string;
 
+  // @primitiveTrait({
+  //   name: "Bin Method",
+  //   description:
+  //     "The method for quantizing color. For numeric columns, valid values are:\n\n" +
+  //     "  * `auto` (default)\n" +
+  //     "  * `ckmeans`\n" +
+  //     "  * `quantile`\n" +
+  //     "  * `none` (equivalent to `Number of Bins`=0)\n\n" +
+  //     "For enumerated columns, valid values are:\n\n" +
+  //     "  * `auto` (default)\n" +
+  //     "  * `top`\n" +
+  //     "  * `cycle`",
+  //   type: "string"
+  // })
+  // binMethod: string = "auto";
+
   @primitiveTrait({
-    name: "Bin Method",
+    name: "Minimum value",
     description:
-      "The method for quantizing color. For numeric columns, valid values are:\n\n" +
-      "  * `auto` (default)\n" +
-      "  * `ckmeans`\n" +
-      "  * `quantile`\n" +
-      "  * `none` (equivalent to `Number of Bins`=0)\n\n" +
-      "For enumerated columns, valid values are:\n\n" +
-      "  * `auto` (default)\n" +
-      "  * `top`\n" +
-      "  * `cycle`",
-    type: "string"
+      "The minimum value to use when creating ColorMaps. This is only applied for `scalar` columns.",
+    type: "number"
   })
-  binMethod: string = "auto";
+  minimumValue?: number;
+
+  @primitiveTrait({
+    name: "Maximum value",
+    description:
+      "The maximum value to use when creating ColorMaps. This is only applied for `scalar` columns.",
+    type: "number"
+  })
+  maximumValue?: number;
 
   @primitiveTrait({
     name: "Number of Bins",

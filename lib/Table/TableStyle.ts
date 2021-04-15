@@ -420,6 +420,11 @@ export default class TableStyle {
       ? Color.fromCssColorString(colorTraits.nullColor) ?? Color.TRANSPARENT
       : Color.TRANSPARENT;
 
+    const minValue =
+      colorTraits.minimumValue ?? colorColumn?.valuesAsNumbers.minimum;
+    const maxValue =
+      colorTraits.maximumValue ?? colorColumn?.valuesAsNumbers.maximum;
+
     if (colorColumn && colorColumn.type === TableColumnType.scalar) {
       if (this.binMaximums.length > 0) {
         return new DiscreteColorMap({
@@ -434,13 +439,13 @@ export default class TableStyle {
         });
       } else if (
         this.paletteName &&
-        isDefined(colorColumn.valuesAsNumbers.minimum) &&
-        isDefined(colorColumn.valuesAsNumbers.maximum)
+        isDefined(minValue) &&
+        isDefined(maxValue)
       ) {
         return new ContinuousColorMap({
           palette: this.paletteName,
-          minValue: colorColumn.valuesAsNumbers.minimum,
-          maxValue: colorColumn.valuesAsNumbers.maximum,
+          minValue,
+          maxValue,
           nullColor
         });
       }
