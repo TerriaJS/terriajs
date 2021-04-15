@@ -5,6 +5,8 @@ Change Log
 
 #### next release (8.0.0-alpha.75)
 
+* Show a toast and spinner icon in the "Ideal zoom" button when the map is zooming.
+* `zoomTo()` will return a promise that resolves when the zoom animation is complete.
 * [The next improvement]
 
 
