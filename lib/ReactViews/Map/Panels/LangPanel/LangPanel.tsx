@@ -9,15 +9,19 @@ import Terria from "../../../../Models/Terria";
 
 import Styles from "../../menu-bar.scss";
 import Icon from "../../../Icon";
+import { useTranslation } from "react-i18next";
 
 const stripLangLocale = (lang: string = ""): string => lang.split("-")[0];
 
 type Props = {
   i18n: typeof i18n;
   terria: Terria;
+  smallScreen: boolean;
 };
 
 export default (props: Props) => {
+  const { t } = useTranslation();
+
   if (!props.terria.configParameters.languageConfiguration?.languages) {
     return null;
   }
@@ -29,10 +33,16 @@ export default (props: Props) => {
         btn: Styles.langBtn,
         icon: Icon.GLYPHS.globe
       }}
-      btnText={stripLangLocale(props.i18n.language)}
+      btnText={
+        props.smallScreen
+          ? t("languagePanel.changeLanguage")
+          : stripLangLocale(props.i18n.language)
+      }
+      smallScreen={props.smallScreen}
+      forceClosed={true}
     >
       <Box static styledPadding={"20px 10px 10px 10px"}>
-        <Ul spaced lined>
+        <Ul spaced lined fullWidth>
           {Object.entries(
             props.terria.configParameters.languageConfiguration.languages
           ).map(([key, value]) => (

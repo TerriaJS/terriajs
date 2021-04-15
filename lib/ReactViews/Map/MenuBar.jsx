@@ -171,7 +171,11 @@ const MenuBar = observer(props => {
       {props.terria.configParameters.languageConfiguration.enabled ? (
         <ul className={classNames(Styles.menu)}>
           <li className={Styles.menuItem}>
-            <LangPanel i18n={props.i18n} terria={props.terria} />
+            <LangPanel
+              i18n={props.i18n}
+              terria={props.terria}
+              smallScreen={props.viewState.useSmallScreenInterface}
+            />
           </li>
         </ul>
       ) : null}

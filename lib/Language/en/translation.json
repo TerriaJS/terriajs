@@ -179,6 +179,9 @@
     "n": "N",
     "elev": "Elev"
   },
+  "languagePanel": {
+    "changeLanguage": "Change Language"
+  },
   "share": {
     "browserPrint": "For better printed results, please use {{appName}}'s Print button instead of your web browser's print feature.",
     "shortLinkShortening": "Shortening...",

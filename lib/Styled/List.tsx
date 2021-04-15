@@ -5,12 +5,14 @@ export const Li = styled.li``;
 type ListProps = Partial<{
   spaced: boolean;
   lined: boolean;
+  fullWidth: boolean;
 }>;
 
 export const Ul = styled.ul<ListProps>`
   list-style: none;
   padding: 0;
   margin: 0;
+  ${props => props.fullWidth && "width: 100%;"}
   ${props =>
     props.spaced &&
     css`

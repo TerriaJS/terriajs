@@ -17,6 +17,7 @@ import ViewState from "../../ReactViewModels/ViewState";
 
 import Styles from "./mobile-menu.scss";
 import { runInAction } from "mobx";
+import LangPanel from "../Map/Panels/LangPanel/LangPanel";
 
 const MobileMenu = observer(
   createReactClass({
@@ -137,7 +138,20 @@ const MobileMenu = observer(
                   storiesLength: this.props.terria.stories.length
                 })}
               />
-            </If>{" "}
+            </If>
+            <If
+              condition={
+                this.props.terria.configParameters.languageConfiguration.enabled
+              }
+            >
+              <div onClick={this.hideMenu}>
+                <LangPanel
+                  terria={this.props.terria}
+                  i18n={this.props.i18n}
+                  smallScreen={this.props.viewState.useSmallScreenInterface}
+                />
+              </div>
+            </If>
           </div>
         </div>
       );
