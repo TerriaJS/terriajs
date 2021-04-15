@@ -8,6 +8,7 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme } from "styled-components";
 import getPath from "../../Core/getPath";
 import isDefined from "../../Core/isDefined";
+import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
 import CommonStrata from "../../Models/CommonStrata";
 import ViewState from "../../ReactViewModels/ViewState";
 import Box, { BoxSpan } from "../../Styled/Box";
@@ -15,6 +16,7 @@ import { RawButton } from "../../Styled/Button";
 import { Li } from "../../Styled/List";
 import { TextSpan } from "../../Styled/Text";
 import Icon, { StyledIcon } from "../Icon";
+import Loader from "../Loader";
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
 import ChartItemSelector from "./Controls/ChartItemSelector";
 import ColorScaleRangeSection from "./Controls/ColorScaleRangeSection";
@@ -71,11 +73,7 @@ class WorkbenchItemRaw extends React.Component<IProps> {
 
   conceptViewer() {
     const item = this.props.item;
-    if (
-      isDefined(item.concepts) &&
-      item.concepts.length > 0 &&
-      item.displayChoicesBeforeLegend
-    ) {
+    if (isDefined(item.concepts) && item.concepts.length > 0) {
       <ConceptViewer item={item} />;
     }
   }
@@ -171,7 +169,7 @@ class WorkbenchItemRaw extends React.Component<IProps> {
             <OpacitySection item={item} />
             <LeftRightSection item={item} />
             <TimerSection item={item} />
-            {this.conceptViewer()}
+            {item.displayChoicesBeforeLegend && this.conceptViewer()}
             <ChartItemSelector item={item} />
             <FilterSection item={item} />
             <DateTimeSelectorSection item={item} />
@@ -189,9 +187,13 @@ class WorkbenchItemRaw extends React.Component<IProps> {
               <ShortReport item={item} />
             )}
             <Legend item={item} />
-            {/* {defined(item.concepts) &&
-              item.concepts.length > 0 &&
-              !item.displayChoicesBeforeLegend && <ConceptViewer item={item} />} */}
+            {!item.displayChoicesBeforeLegend && this.conceptViewer()}
+            {CatalogMemberMixin.isMixedInto(this.props.item) &&
+            this.props.item.isLoading ? (
+              <Box paddedVertically>
+                <Loader light />
+              </Box>
+            ) : null}
           </Box>
         )}
       </StyledLi>
