@@ -2,7 +2,12 @@ import styled, { css } from "styled-components";
 
 export const Li = styled.li``;
 
-export const Ul = styled.ul`
+type ListProps = Partial<{
+  spaced: boolean;
+  lined: boolean;
+}>;
+
+export const Ul = styled.ul<ListProps>`
   list-style: none;
   padding: 0;
   margin: 0;

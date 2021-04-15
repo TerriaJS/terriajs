@@ -1,6 +1,63 @@
 import styled from "styled-components";
 
-export const Box = styled.div`
+type Props = Partial<{
+  relative: boolean;
+  positionAbsolute: boolean;
+  static: boolean;
+  topRight: boolean;
+  displayInlineBlock: boolean;
+  rounded: boolean;
+  fullHeight: boolean;
+  fullWidth: boolean;
+  styledWidth: string;
+  styledHeight: string;
+  styledMinWidth: string;
+  styledMinHeight: string;
+  styledMaxHeight: string;
+  col: boolean;
+  col1: boolean;
+  col2: boolean;
+  col3: boolean;
+  col4: boolean;
+  col5: boolean;
+  col6: boolean;
+  col7: boolean;
+  col8: boolean;
+  col9: boolean;
+  col10: boolean;
+  col11: boolean;
+  col12: boolean;
+  verticalCenter: boolean;
+  centered: boolean;
+  justifyContentSpaceAround: boolean;
+  justifySpaceBetween: boolean;
+  left: boolean;
+  leftSelf: boolean;
+  right: boolean;
+  rightSelf: boolean;
+  alignItemsFlexStart: boolean;
+  alignItemsFlexEnd: boolean;
+  column: boolean;
+  wrap: boolean;
+  flex: boolean;
+  flexShrinkZero: boolean;
+  boxShadow: boolean;
+  charcoalGreyBg: string;
+  backgroundColor: string;
+  padded: boolean;
+  paddedRatio: number;
+  paddedHorizontally: boolean | number;
+  paddedVertically: boolean | number;
+  styledPadding: string;
+  backgroundImage: string;
+  backgroundBlackOverlay: number;
+  wordBreak: string;
+  overflow: string;
+  overflowY: string;
+  scroll: boolean;
+}>;
+
+export const Box = styled.div<Props>`
   ${props => props.relative && `position:relative;`}
 
   display: flex;
@@ -109,7 +166,7 @@ export const Box = styled.div`
       padding-bottom: ${5 *
         (props.paddedVertically === true ? 1 : props.paddedVertically)}px;
     `}
-  ${props => props.padding && `padding: ${props.padding};`}
+  ${props => props.styledPadding && `padding: ${props.styledPadding};`}
 
   ${props =>
     props.backgroundImage &&

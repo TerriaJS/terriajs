@@ -10,7 +10,6 @@ import SharePanel from "./Panels/SharePanel/SharePanel";
 import ToolsPanel from "./Panels/ToolsPanel/ToolsPanel";
 import Icon from "../Icon";
 import Prompt from "../Generic/Prompt";
-import i18n from "i18next";
 import { withTranslation, Trans } from "react-i18next";
 import Styles from "./menu-bar.scss";
 import { runInAction } from "mobx";
@@ -20,10 +19,7 @@ import Text from "../../Styled/Text";
 import withControlledVisibility from "../../ReactViews/HOCs/withControlledVisibility";
 
 import { useRefForTerria } from "../Hooks/useRefForTerria";
-import MenuPanel from "../StandardUserInterface/customizable/MenuPanel";
-import Box from "../../Styled/Box";
-import Ul, { Li } from "../../Styled/List";
-import { RawButton } from "../../Styled/Button";
+import LangPanel from "./Panels/LangPanel/LangPanel";
 
 const StyledMenuBar = styled.div`
   pointer-events: none;
@@ -94,7 +90,6 @@ const MenuBar = observer(props => {
   );
   const delayTime =
     storyEnabled && props.terria.stories.length > 0 ? 1000 : 2000;
-  const stripLangLocale = (lang = "") => lang.split("-")[0];
   return (
     <StyledMenuBar
       className={classNames(
@@ -176,29 +171,7 @@ const MenuBar = observer(props => {
       {props.terria.configParameters.languageConfiguration.enabled ? (
         <ul className={classNames(Styles.menu)}>
           <li className={Styles.menuItem}>
-            <MenuPanel
-              theme={{
-                btn: Styles.langBtn,
-                inner: Styles.dropdownInner,
-                icon: Icon.GLYPHS.globe
-              }}
-              btnText={stripLangLocale(props.i18n.language)}
-            >
-              <Box static padding={"20px 10px 10px 10px"}>
-                <Ul spaced lined>
-                  {Object.entries(
-                    props.terria.configParameters.languageConfiguration
-                      .languages
-                  ).map(([key, value]) => (
-                    <Li key={key}>
-                      <RawButton onClick={() => i18n.changeLanguage(key)}>
-                        {value}
-                      </RawButton>
-                    </Li>
-                  ))}
-                </Ul>
-              </Box>
-            </MenuPanel>
+            <LangPanel i18n={props.i18n} terria={props.terria} />
           </li>
         </ul>
       ) : null}
