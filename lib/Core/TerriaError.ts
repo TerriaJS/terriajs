@@ -2,6 +2,7 @@
 
 import i18next from "i18next";
 import { Notification } from "../ReactViewModels/ViewState";
+import { terriaErrorNotification } from "../ReactViews/Notification/terriaErrorNotification";
 
 export interface I18nTranslateString {
   key: string;
@@ -21,6 +22,10 @@ export interface TerriaErrorOptions {
   sender?: unknown;
   /** True if the user has seen this error; otherwise, false. */
   raisedToUser?: boolean;
+
+  originalError?: TerriaError | Error;
+
+  useTerriaErrorNotification?: boolean;
 }
 
 /**
@@ -31,13 +36,41 @@ export default class TerriaError {
   readonly sender: unknown;
   private readonly _message: string | I18nTranslateString;
   private readonly _title: string | I18nTranslateString;
-  raisedToUser: boolean = false;
+  private readonly originalError?: TerriaError | Error;
+
+  private readonly useTerriaErrorNotification: boolean;
+
+  private _raisedToUser: boolean = false;
+
+  static from(
+    error: unknown,
+    overrides?: Partial<TerriaErrorOptions>
+  ): TerriaError {
+    if (error instanceof TerriaError) {
+      return error.clone(overrides);
+    }
+    return new TerriaError({
+      title: i18next.t("models.raiseError.errorTitle"),
+      message:
+        typeof error === "string"
+          ? (error as string)
+          : (error instanceof Error
+              ? error.message
+              : typeof error === "object"
+              ? error?.toString()
+              : undefined) ?? "Unknown error",
+      originalError: error instanceof Error ? error : undefined
+    });
+  }
 
   constructor(options: TerriaErrorOptions) {
     this._message = options.message;
     this._title = options.title ?? { key: "core.terriaError.defaultValue" };
     this.sender = options.sender;
-    this.raisedToUser = options.raisedToUser ?? false;
+    this._raisedToUser = options.raisedToUser ?? false;
+    this.originalError = options.originalError;
+    this.useTerriaErrorNotification =
+      options.useTerriaErrorNotification ?? true;
   }
 
   get message() {
@@ -48,17 +81,42 @@ export default class TerriaError {
     return resolveI18n(this._title);
   }
 
-  toNotification(): Notification {
-    return { title: () => this.title, message: () => this.message };
+  get raisedToUser() {
+    return this._raisedToUser;
   }
 
-  clone(overrides: Partial<TerriaErrorOptions>): TerriaError {
+  set raisedToUser(r: boolean) {
+    this._raisedToUser = r;
+    if (this.originalError instanceof TerriaError) {
+      this.originalError.raisedToUser = r;
+    }
+  }
+
+  get stackTrace(): string | undefined {
+    return this.originalError instanceof TerriaError
+      ? this.originalError.stackTrace
+      : this.originalError instanceof Error
+      ? this.originalError.stack
+      : undefined;
+  }
+
+  toNotification(): Notification {
+    return {
+      title: () => this.title,
+      message: this.useTerriaErrorNotification
+        ? terriaErrorNotification(this)
+        : () => this.message
+    };
+  }
+
+  clone(overrides?: Partial<TerriaErrorOptions>): TerriaError {
     return new TerriaError({
       ...{
         message: this._message,
         title: this._title,
         sender: this.sender,
-        raisedToUser: this.raisedToUser
+        raisedToUser: this._raisedToUser,
+        originalError: this
       },
       ...overrides
     });

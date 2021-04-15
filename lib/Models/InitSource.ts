@@ -11,7 +11,7 @@ interface InitData {
   data: JsonObject;
 }
 
-type InitDataPromise = Promise<InitData>;
+type InitDataPromise = Promise<InitData | undefined>;
 
 interface InitOptions {
   options: InitSource[];

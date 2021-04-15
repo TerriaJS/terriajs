@@ -203,7 +203,9 @@
     "convertNotificationMessage": "This share link is based on an older version of TerriaJS - the software powering this web map. While best efforts are made to preserve the link, you might encounter issues with visualising the data.  \n\nIf you're a user of the share link, click OK to make the warning message disappear and continue with accessing the data.",
     "convertNotificationHelp": "If you have created the share link, check the Help menu to see tips on updating the share link.",
     "convertNotificationFeedback": "For questions or feedback, click here.",
-    "convertNotificationWarningsTitle": "Technical details"
+    "convertNotificationWarningsTitle": "Technical details",
+    "convertErrorTitle": "Could not upgrade share link to V8",
+    "convertErrorMessage": "<p>This share link is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the share data. Details of the error are below.</p><p><pre>{{error}}</pre></p><p><details><summary>Stack trace:</summary><pre>{{stackTrace}}</pre></details></p><p>Please report it by sending an email to {{email}}.</p>"
   },
   "countDatasets": {
     "btnText": "Start",
@@ -944,7 +946,9 @@
       "cancel": "Cancel",
       "useConversion": "Use conversion service?",
       "mustHaveType": "Each item must have a type.",
-      "compositesError": "Composites cannot include composite items."
+      "compositesError": "Composites cannot include composite items.",
+      "convertErrorTitle": "Could not upgrade catalog to V8",
+      "convertErrorMessage": "<p>This catalog file is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the catalog data. Details of the error are below.</p><p><pre>Failed to parse catalog from {{url}}\n\n{{error}}</pre></p><p><details><summary>Stack trace:</summary><pre>{{stackTrace}}</pre></details></p><p>Please report it by sending an email to {{email}}.</p>"
     },
     "createParameter": {
       "unsupportedErrorTitle": "Unsupported function parameter type",
@@ -1158,7 +1162,9 @@
     },
     "raiseError": {
       "errorTitle": "An error occurred",
-      "errorMessage": "<p>{{appName}} experienced an error.  Please report this by emailing {{email}}. Details of the error are below.</p><p><pre>{{error}}</pre></p>"
+      "errorMessage": "<p>{{appName}} experienced an error.  Please report this by emailing {{email}}. Details of the error are below.</p><p><pre>{{error}}</pre></p>",
+      "errorMessageDetailed": "<p>{{message}}. Details of the error are below.</p><p><pre>{{error}}</pre></p><p><details><summary>Stack trace:</summary><pre>{{stackTrace}}</pre></details></p><p>Please report it by sending an email to {{email}}.</p>",
+      "errorMessageDetailedStackTrace": "<p>{{message}}. Details of the error are below.</p><p><pre>{{error}}</pre></p><p><details><summary>Stack trace:</summary><pre>{{stackTrace}}</pre></details></p><p>Please report it by sending an email to {{email}}.</p>"
     },
     "regionMapping": {
       "noDataForDate": "No data for the selected date.",

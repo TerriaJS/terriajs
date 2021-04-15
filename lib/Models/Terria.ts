@@ -594,18 +594,33 @@ export default class Terria {
         ...(config.v7initializationUrls as JsonArray)
           .filter(isJsonString)
           .map(async (v7initUrl: string) => {
-            const [{ convertCatalog }, catalog] = await Promise.all([
-              import("catalog-converter"),
-              loadJson5(v7initUrl)
-            ]);
-            const convert = convertCatalog(catalog, { generateIds: false });
-            console.log(
-              `WARNING: ${v7initUrl} is a v7 catalog - it has been upgraded to v8\nMessages:\n`
-            );
-            convert.messages.forEach(message =>
-              console.log(`- ${message.path.join(".")}: ${message.message}`)
-            );
-            return { data: (convert.result as JsonObject | null) || {} };
+            try {
+              const [{ convertCatalog }, catalog] = await Promise.all([
+                import("catalog-converter"),
+                loadJson5(v7initUrl)
+              ]);
+              const convert = convertCatalog(catalog, { generateIds: false });
+              console.log(
+                `WARNING: ${v7initUrl} is a v7 catalog - it has been upgraded to v8\nMessages:\n`
+              );
+              convert.messages.forEach(message =>
+                console.log(`- ${message.path.join(".")}: ${message.message}`)
+              );
+              return { data: (convert.result as JsonObject | null) || {} };
+            } catch (error) {
+              raiseErrorToUser(
+                this,
+                TerriaError.from(error, {
+                  title: { key: "models.catalog.convertErrorTitle" },
+                  message: wrapErrorMessage(
+                    this,
+                    error,
+                    "models.catalog.convertErrorMessage",
+                    { url: v7initUrl }
+                  )
+                })
+              );
+            }
           })
       );
     }
@@ -639,7 +654,7 @@ export default class Terria {
     } catch (error) {
       raiseErrorToUser(
         this,
-        new TerriaError({
+        TerriaError.from(error, {
           sender: this,
           title: { key: "models.terria.loadConfigErrorTitle" },
           message: wrapErrorMessage(
@@ -791,7 +806,7 @@ export default class Terria {
           } catch (e) {
             raiseErrorToUser(
               this,
-              new TerriaError({
+              TerriaError.from(e, {
                 sender: this,
                 title: { key: "models.terria.loadingInitSourceErrorTitle" },
                 message: {
@@ -815,7 +830,7 @@ export default class Terria {
         } else if (isInitData(initSource)) {
           jsonValue = initSource.data;
         } else if (isInitDataPromise(initSource)) {
-          jsonValue = (await initSource).data;
+          jsonValue = (await initSource)?.data;
         }
 
         if (jsonValue && isJsonObject(jsonValue)) {
@@ -830,8 +845,10 @@ export default class Terria {
         try {
           return await loadInitSource(initSource);
         } catch (e) {
-          raiseErrorToUser(this, e, {
-            key: "models.terria.loadingInitSourceErrorTitle"
+          throw TerriaError.from(e, {
+            title: {
+              key: "models.terria.loadingInitSourceErrorTitle"
+            }
           });
         }
       })
@@ -844,8 +861,10 @@ export default class Terria {
             initData: initSource
           });
         } catch (e) {
-          raiseErrorToUser(this, e, {
-            key: "models.terria.loadingInitSourceErrorTitle"
+          throw TerriaError.from(e, {
+            title: {
+              key: "models.terria.loadingInitSourceErrorTitle"
+            }
           });
         }
       })
@@ -1046,9 +1065,14 @@ export default class Terria {
       try {
         processBaseMaps(<BaseMapModel[]>(<unknown>initData.baseMaps), this);
       } catch (e) {
-        raiseErrorToUser(this, e, {
-          key: "models.terria.loadingBaseMapsErrorTitle"
-        });
+        raiseErrorToUser(
+          this,
+          TerriaError.from(e, {
+            title: {
+              key: "models.terria.loadingInitSourceErrorTitle"
+            }
+          })
+        );
       }
     }
 
@@ -1091,9 +1115,14 @@ export default class Terria {
               replaceStratum
             );
           } catch (e) {
-            raiseErrorToUser(this, e, {
-              key: "models.terria.loadingShareDataErrorTitle"
-            });
+            raiseErrorToUser(
+              this,
+              TerriaError.from(e, {
+                title: {
+                  key: "models.terria.loadingShareDataErrorTitle"
+                }
+              })
+            );
             // TODO: deal with shared models that can't be loaded because, e.g. because they are private
             console.log(e);
             return Promise.resolve();
@@ -1171,15 +1200,20 @@ export default class Terria {
             await model.loadMapItems();
           }
         } catch (e) {
-          raiseErrorToUser(this, e, {
-            key: "models.terria.loadingWorkbenchItemErrorTitle",
-            parameters: {
-              name:
-                (CatalogMemberMixin.isMixedInto(model)
-                  ? model.name
-                  : model.uniqueId) ?? "Unknown item"
-            }
-          });
+          raiseErrorToUser(
+            this,
+            TerriaError.from(e, {
+              title: {
+                key: "models.terria.loadingWorkbenchItemErrorTitle",
+                parameters: {
+                  name:
+                    (CatalogMemberMixin.isMixedInto(model)
+                      ? model.name
+                      : model.uniqueId) ?? "Unknown item"
+                }
+              }
+            })
+          );
         }
       })
     );
@@ -1455,18 +1489,33 @@ async function interpretHash(
     if (isDefined(shareProps) && shareProps !== {}) {
       // Convert shareProps to v8 if neccessary
       const { convertShare } = await import("catalog-converter");
-      const result = convertShare(shareProps);
 
-      // Show warning messages if converted
-      if (result.converted) {
-        terria.notification.raiseEvent({
-          title: i18next.t("share.convertNotificationTitle"),
-          message: shareConvertNotification(result.messages)
-        } as Notification);
-      }
+      try {
+        const result = convertShare(shareProps);
 
-      if (result.result !== null) {
-        interpretStartData(terria, result.result);
+        // Show warning messages if converted
+        if (result.converted) {
+          terria.notification.raiseEvent({
+            title: i18next.t("share.convertNotificationTitle"),
+            message: shareConvertNotification(result.messages)
+          } as Notification);
+        }
+
+        if (result.result !== null) {
+          interpretStartData(terria, result.result);
+        }
+      } catch (error) {
+        raiseErrorToUser(
+          terria,
+          TerriaError.from(error, {
+            title: { key: "share.convertErrorTitle" },
+            message: wrapErrorMessage(
+              terria,
+              error,
+              "share.convertErrorMessage"
+            )
+          })
+        );
       }
     }
   }
