@@ -801,6 +801,7 @@ function getTimeSeriesChartContext(catalogItem, feature, getChartDetails) {
       : feature.id;
     if (chartDetails) {
       const result = {
+        ...chartDetails,
         id: featureId.replace(/\"/g, ""),
         data: csvData.replace(/\\n/g, "\\n")
       };
