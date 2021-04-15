@@ -522,6 +522,7 @@
     "searchItemTitle": "Search"
   },
   "dateTime": {
+    "time": "Time:",
     "back": "Go back",
     "previous": "Previous time",
     "selectTime": "Select a time",

@@ -12,6 +12,7 @@ import Icon from "../Icon";
 
 import Styles from "./mobile-modal-window.scss";
 import { runInAction } from "mobx";
+import Box from "../../Styled/Box";
 
 const MobileModalWindow = observer(
   createReactClass({
@@ -111,7 +112,7 @@ const MobileModalWindow = observer(
 
       return (
         <div className={modalClass}>
-          <div className={Styles.modalBg}>
+          <Box column className={Styles.modalBg}>
             <div className={Styles.modalTop}>
               <If
                 condition={
@@ -143,7 +144,7 @@ const MobileModalWindow = observer(
             </div>
 
             {this.renderModalContent()}
-          </div>
+          </Box>
         </div>
       );
     }

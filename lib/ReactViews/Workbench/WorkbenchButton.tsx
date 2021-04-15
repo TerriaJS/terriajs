@@ -98,6 +98,7 @@ const WorkbenchButton: React.FC<IProps> = (props: IProps) => {
       type="button"
       title={title}
       onClick={props.onClick}
+      {...props}
     >
       <ButtonWrapper>
         {/* only spans are valid html for buttons (even though divs work) */}

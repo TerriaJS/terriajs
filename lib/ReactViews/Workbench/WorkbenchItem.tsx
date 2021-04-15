@@ -13,6 +13,7 @@ import ViewState from "../../ReactViewModels/ViewState";
 import Box, { BoxSpan } from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
 import { Li } from "../../Styled/List";
+import { TextSpan } from "../../Styled/Text";
 import Icon, { StyledIcon } from "../Icon";
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
 import ChartItemSelector from "./Controls/ChartItemSelector";
@@ -58,14 +59,6 @@ class WorkbenchItemRaw extends React.Component<IProps> {
     );
   }
 
-  openModal() {
-    this.props.setWrapperState({
-      modalWindowIsOpen: true,
-      activeTab: 1,
-      previewed: this.props.item
-    });
-  }
-
   @action.bound
   toggleVisibility() {
     this.props.item.setTrait(CommonStrata.user, "show", !this.props.item.show);
@@ -90,11 +83,7 @@ class WorkbenchItemRaw extends React.Component<IProps> {
   render() {
     const { item, t } = this.props;
     return (
-      <StyledLi
-        style={this.props.style}
-        isOpen={this.isOpen}
-        className={this.props.className}
-      >
+      <StyledLi style={this.props.style} className={this.props.className}>
         <Box fullWidth justifySpaceBetween padded>
           <Box fullWidth>
             {(true || item.supportsToggleShown) && (
@@ -103,19 +92,21 @@ class WorkbenchItemRaw extends React.Component<IProps> {
                   onClick={() => this.toggleVisibility()}
                   title={t("workbench.toggleVisibility")}
                 >
-                  {item.show ? (
-                    <StyledIcon
-                      light
-                      styledHeight={"14px"}
-                      glyph={Icon.GLYPHS.checkboxOn}
-                    />
-                  ) : (
-                    <StyledIcon
-                      light
-                      styledHeight={"14px"}
-                      glyph={Icon.GLYPHS.checkboxOff}
-                    />
-                  )}
+                  <Box padded>
+                    {item.show ? (
+                      <StyledIcon
+                        light
+                        styledHeight={"14px"}
+                        glyph={Icon.GLYPHS.checkboxOn}
+                      />
+                    ) : (
+                      <StyledIcon
+                        light
+                        styledHeight={"14px"}
+                        glyph={Icon.GLYPHS.checkboxOff}
+                      />
+                    )}
+                  </Box>
                 </RawButton>
               </Box>
             )}
@@ -128,14 +119,24 @@ class WorkbenchItemRaw extends React.Component<IProps> {
               >
                 {!(item as any).isMappable && (
                   <BoxSpan paddedHorizontally displayInlineBlock>
-                    <StyledIcon
-                      styledHeight={"18px"}
-                      light
-                      glyph={Icon.GLYPHS.lineChart}
-                    />
+                    <Box padded>
+                      <StyledIcon
+                        styledHeight={"18px"}
+                        light
+                        glyph={Icon.GLYPHS.lineChart}
+                      />
+                    </Box>
                   </BoxSpan>
                 )}
-                {item.name}
+                <TextSpan
+                  large
+                  textLight
+                  css={`
+                    overflow-wrap: anywhere;
+                  `}
+                >
+                  {item.name}
+                </TextSpan>
               </DraggableBox>
             </Box>
           </Box>
@@ -146,11 +147,21 @@ class WorkbenchItemRaw extends React.Component<IProps> {
                   <PrivateIndicator inWorkbench />
                 </Box>
               )}
-              {item.isOpenInWorkbench ? (
-                <StyledIcon styledHeight={"8px"} glyph={Icon.GLYPHS.opened} />
-              ) : (
-                <StyledIcon styledHeight={"8px"} glyph={Icon.GLYPHS.closed} />
-              )}
+              <Box padded>
+                {item.isOpenInWorkbench ? (
+                  <StyledIcon
+                    styledHeight={"8px"}
+                    light
+                    glyph={Icon.GLYPHS.opened}
+                  />
+                ) : (
+                  <StyledIcon
+                    styledHeight={"8px"}
+                    light
+                    glyph={Icon.GLYPHS.closed}
+                  />
+                )}
+              </Box>
             </RawButton>
           </Box>
         </Box>
@@ -192,10 +203,10 @@ const DraggableBox = styled(Box)`
   cursor: move;
 `;
 
-const StyledLi = styled(Li)<{ isOpen: boolean }>`
+const StyledLi = styled(Li)`
   background: ${p => p.theme.darkWithOverlay};
   color: ${p => p.theme.textLight};
-  border: 1px solid ${p => p.theme.overlay};
+  border-radius: 2px;
   margin-bottom: 5px;
   width: 100%;
 `;
