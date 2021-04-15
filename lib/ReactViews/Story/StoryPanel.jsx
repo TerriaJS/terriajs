@@ -13,6 +13,7 @@ import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import { Medium, Small } from "../Generic/Responsive";
 import Icon from "../Icon.jsx";
 import Styles from "./story-panel.scss";
+import TerriaError from "../../Core/TerriaError";
 
 /**
  *

@@ -122,10 +122,10 @@ describe("TerrainCatalogItem", function() {
 
     when(item.load())
       .then(function() {
-        expect(terria.error.raiseEvent).toHaveBeenCalled();
+        expect(terria.raiseErrorToUser).toHaveBeenCalled();
         expect(item.isShown).toBe(false);
         item.isShown = true;
-        expect(terria.error.raiseEvent.calls.count()).toBe(2);
+        expect(terria.raiseErrorToUser.calls.count()).toBe(2);
       })
       .then(done)
       .otherwise(done.fail);

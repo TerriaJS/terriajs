@@ -9,7 +9,6 @@ import addedByUser from "../../Core/addedByUser";
 import getPath from "../../Core/getPath";
 import removeUserAddedData from "../../Models/removeUserAddedData";
 import CatalogItem from "./CatalogItem";
-import raiseErrorToUser from "../../Models/raiseErrorToUser";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 
 // Individual dataset
@@ -78,7 +77,7 @@ export const DataCatalogItem = observer(
           );
         }
       } catch (e) {
-        raiseErrorToUser(this.props.terria, e);
+        this.props.terria.raiseErrorToUser(e);
       }
     },
 

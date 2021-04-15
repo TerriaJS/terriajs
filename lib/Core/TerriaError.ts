@@ -3,6 +3,7 @@
 import i18next from "i18next";
 import { Notification } from "../ReactViewModels/ViewState";
 import { terriaErrorNotification } from "../ReactViews/Notification/terriaErrorNotification";
+import isDefined from "./isDefined";
 
 export interface I18nTranslateString {
   key: string;
@@ -18,12 +19,13 @@ export interface TerriaErrorOptions {
   message: string | I18nTranslateString;
   /** A short title describing the error. */
   title?: string | I18nTranslateString;
+
   /** The object that raised the error. */
   sender?: unknown;
   /** True if the user has seen this error; otherwise, false. */
   raisedToUser?: boolean;
 
-  originalError?: TerriaError | Error;
+  originalError?: TerriaError | Error | (TerriaError | Error)[];
 
   useTerriaErrorNotification?: boolean;
 }
@@ -36,7 +38,7 @@ export default class TerriaError {
   readonly sender: unknown;
   private readonly _message: string | I18nTranslateString;
   private readonly _title: string | I18nTranslateString;
-  private readonly originalError?: TerriaError | Error;
+  readonly originalError?: (TerriaError | Error)[];
 
   private readonly useTerriaErrorNotification: boolean;
 
@@ -50,7 +52,7 @@ export default class TerriaError {
       return error.clone(overrides);
     }
     return new TerriaError({
-      title: i18next.t("models.raiseError.errorTitle"),
+      title: { key: "models.raiseError.errorTitle" },
       message:
         typeof error === "string"
           ? (error as string)
@@ -59,7 +61,20 @@ export default class TerriaError {
               : typeof error === "object"
               ? error?.toString()
               : undefined) ?? "Unknown error",
-      originalError: error instanceof Error ? error : undefined
+      originalError: error instanceof Error ? error : undefined,
+      ...overrides
+    });
+  }
+
+  static combine(
+    errors: TerriaError[],
+    overrides?: Partial<TerriaErrorOptions>
+  ): TerriaError {
+    return new TerriaError({
+      title: { key: "models.raiseError.errorMultipleTitle" },
+      message: { key: "models.raiseError.errorMultipleMessage" },
+      originalError: errors,
+      ...overrides
     });
   }
 
@@ -68,7 +83,11 @@ export default class TerriaError {
     this._title = options.title ?? { key: "core.terriaError.defaultValue" };
     this.sender = options.sender;
     this._raisedToUser = options.raisedToUser ?? false;
-    this.originalError = options.originalError;
+    this.originalError = isDefined(options.originalError)
+      ? Array.isArray(options.originalError)
+        ? options.originalError
+        : [options.originalError]
+      : [];
     this.useTerriaErrorNotification =
       options.useTerriaErrorNotification ?? true;
   }
@@ -90,14 +109,6 @@ export default class TerriaError {
     if (this.originalError instanceof TerriaError) {
       this.originalError.raisedToUser = r;
     }
-  }
-
-  get stackTrace(): string | undefined {
-    return this.originalError instanceof TerriaError
-      ? this.originalError.stackTrace
-      : this.originalError instanceof Error
-      ? this.originalError.stack
-      : undefined;
   }
 
   toNotification(): Notification {

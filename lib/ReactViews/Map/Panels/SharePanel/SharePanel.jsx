@@ -232,7 +232,7 @@ const SharePanel = observer(
             printWindow(windowToPrint)
               .then(null, e => {
                 // If the print promise rejects, raise an error
-                this.props.terria.error.raiseEvent(e);
+                this.props.terria.raiseErrorToUser(e);
               })
               .then(() => {
                 // whether there was an error or not, clean up

@@ -68,7 +68,7 @@ export default function addUserCatalogMember(
         });
       }
 
-      terria.error.raiseEvent(e);
+      terria.raiseErrorToUser(e);
       return e;
     });
 }

@@ -290,7 +290,7 @@ describe("TileErrorHandlerMixin", function() {
         await onTileLoadError(item, newError(undefined, 1));
       } catch {}
       expect(item.tileFailures).toBe(2);
-      expect(item.terria.error.raiseEvent).toHaveBeenCalled();
+      expect(item.terria.raiseErrorToUser).toHaveBeenCalled();
     });
 
     it("disables the catalog item", async function() {

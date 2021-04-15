@@ -499,7 +499,7 @@ export default class ArcGisMapServerCatalogItem extends MappableMixin(
         imageryProvider.requestImage = (x, y, level) => {
           if (level > maximumLevelBeforeMessage) {
             if (!messageDisplayed) {
-              this.terria.error.raiseEvent(
+              this.terria.raiseErrorToUser(
                 new TerriaError({
                   title: "Dataset will not be shown at this scale",
                   message:

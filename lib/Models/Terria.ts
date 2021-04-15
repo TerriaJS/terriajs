@@ -78,7 +78,6 @@ import MapInteractionMode from "./MapInteractionMode";
 import { BaseModel } from "./Model";
 import NoViewer from "./NoViewer";
 import openGroup from "./openGroup";
-import raiseErrorToUser, { wrapErrorMessage } from "./raiseErrorToUser";
 import ShareDataService from "./ShareDataService";
 import SplitItemReference from "./SplitItemReference";
 import TimelineStack from "./TimelineStack";
@@ -470,6 +469,13 @@ export default class Terria {
     }
   }
 
+  raiseErrorToUser(error: unknown) {
+    const terriaError =
+      error instanceof TerriaError ? error : TerriaError.from(error);
+    terriaError.raisedToUser = true;
+    this.error.raiseEvent(terriaError);
+  }
+
   @computed
   get currentViewer(): GlobeOrMap {
     return this.mainViewer.currentViewer;
@@ -608,16 +614,10 @@ export default class Terria {
               );
               return { data: (convert.result as JsonObject | null) || {} };
             } catch (error) {
-              raiseErrorToUser(
-                this,
+              this.raiseErrorToUser(
                 TerriaError.from(error, {
                   title: { key: "models.catalog.convertErrorTitle" },
-                  message: wrapErrorMessage(
-                    this,
-                    error,
-                    "models.catalog.convertErrorMessage",
-                    { url: v7initUrl }
-                  )
+                  message: { key: "models.catalog.convertErrorMessage" }
                 })
               );
             }
@@ -652,21 +652,11 @@ export default class Terria {
         this.setupInitializationUrls(baseUri, config);
       });
     } catch (error) {
-      raiseErrorToUser(
-        this,
+      this.raiseErrorToUser(
         TerriaError.from(error, {
           sender: this,
           title: { key: "models.terria.loadConfigErrorTitle" },
-          message: wrapErrorMessage(
-            this,
-            `Couldn't load ${options.configUrl}:\n${
-              error instanceof TerriaError
-                ? error.message
-                : typeof error === "object"
-                ? error?.toString()
-                : undefined
-            }`
-          )
+          message: `Couldn't load ${options.configUrl}`
         })
       );
     } finally {
@@ -768,15 +758,19 @@ export default class Terria {
     const hash = uri.fragment();
     const hashProperties = queryToObject(hash);
 
-    await interpretHash(
-      this,
-      hashProperties,
-      this.userProperties,
-      new URI(newUrl)
-        .filename("")
-        .query("")
-        .hash("")
-    );
+    try {
+      await interpretHash(
+        this,
+        hashProperties,
+        this.userProperties,
+        new URI(newUrl)
+          .filename("")
+          .query("")
+          .hash("")
+      );
+    } catch (e) {
+      this.raiseErrorToUser(e);
+    }
 
     await this.loadInitSources();
   }
@@ -804,17 +798,14 @@ export default class Terria {
           try {
             jsonValue = await loadJson5(initSource.initUrl);
           } catch (e) {
-            raiseErrorToUser(
-              this,
-              TerriaError.from(e, {
-                sender: this,
-                title: { key: "models.terria.loadingInitSourceErrorTitle" },
-                message: {
-                  key: "models.terria.loadingInitSourceError2Message",
-                  parameters: { loadSource: initSource.initUrl }
-                }
-              })
-            );
+            throw TerriaError.from(e, {
+              sender: this,
+              title: { key: "models.terria.loadingInitSourceErrorTitle" },
+              message: {
+                key: "models.terria.loadingInitSourceError2Message",
+                parameters: { loadSource: initSource.initUrl }
+              }
+            });
           }
         } else if (isInitOptions(initSource)) {
           let error: any;
@@ -840,16 +831,20 @@ export default class Terria {
       }
     );
 
+    const errors: TerriaError[] = [];
+
     const initSources = await Promise.all(
       this.initSources.map(async initSource => {
         try {
           return await loadInitSource(initSource);
         } catch (e) {
-          throw TerriaError.from(e, {
-            title: {
-              key: "models.terria.loadingInitSourceErrorTitle"
-            }
-          });
+          errors.push(
+            TerriaError.from(e, {
+              title: {
+                key: "models.terria.loadingInitSourceErrorTitle"
+              }
+            })
+          );
         }
       })
     );
@@ -861,22 +856,42 @@ export default class Terria {
             initData: initSource
           });
         } catch (e) {
-          throw TerriaError.from(e, {
-            title: {
-              key: "models.terria.loadingInitSourceErrorTitle"
-            }
-          });
+          errors.push(
+            TerriaError.from(e, {
+              title: {
+                key: "models.terria.loadingInitSourceErrorTitle"
+              }
+            })
+          );
         }
       })
     );
 
     if (this.baseMaps.length === 0) {
-      processBaseMaps(defaultBaseMaps(this), this);
+      try {
+        processBaseMaps(defaultBaseMaps(this), this);
+      } catch (e) {
+        errors.push(
+          TerriaError.from(e, {
+            title: {
+              key: "models.terria.loadingBaseMapsErrorTitle"
+            }
+          })
+        );
+      }
     }
 
     if (!this.mainViewer.baseMap) {
       // Note: there is no "await" here - as basemaps can take a while to load and there is no need to wait for them to load before rendering Terria
       this.loadPersistedOrInitBaseMap();
+    }
+
+    if (errors.length > 0) {
+      this.raiseErrorToUser(
+        TerriaError.combine(errors, {
+          title: { key: "models.terria.loadingInitSourcesErrorTitle" }
+        })
+      );
     }
   }
 
@@ -1065,14 +1080,11 @@ export default class Terria {
       try {
         processBaseMaps(<BaseMapModel[]>(<unknown>initData.baseMaps), this);
       } catch (e) {
-        raiseErrorToUser(
-          this,
-          TerriaError.from(e, {
-            title: {
-              key: "models.terria.loadingInitSourceErrorTitle"
-            }
-          })
-        );
+        throw TerriaError.from(e, {
+          title: {
+            key: "models.terria.loadingInitSourceErrorTitle"
+          }
+        });
       }
     }
 
@@ -1115,17 +1127,12 @@ export default class Terria {
               replaceStratum
             );
           } catch (e) {
-            raiseErrorToUser(
-              this,
-              TerriaError.from(e, {
-                title: {
-                  key: "models.terria.loadingShareDataErrorTitle"
-                }
-              })
-            );
-            // TODO: deal with shared models that can't be loaded because, e.g. because they are private
-            console.log(e);
-            return Promise.resolve();
+            throw TerriaError.from(e, {
+              message: {
+                key: "models.terria.loadModelErrorMessage",
+                parameters: { model: modelId }
+              }
+            });
           }
         })
       );
@@ -1200,8 +1207,7 @@ export default class Terria {
             await model.loadMapItems();
           }
         } catch (e) {
-          raiseErrorToUser(
-            this,
+          this.raiseErrorToUser(
             TerriaError.from(e, {
               title: {
                 key: "models.terria.loadingWorkbenchItemErrorTitle",
@@ -1255,9 +1261,21 @@ export default class Terria {
       const { catalog, ...initObjWithoutCatalog } = initObj;
       /** Load the init data without the catalog yet, as we'll push the catalog
        * source up as an init source later */
-      await this.applyInitData({
-        initData: initObjWithoutCatalog
-      });
+      try {
+        await this.applyInitData({
+          initData: initObjWithoutCatalog
+        });
+      } catch (e) {
+        this.raiseErrorToUser(
+          TerriaError.from(e, {
+            title: { key: "models.terria.loadingMagdaInitSourceErrorMessage" },
+            message: {
+              key: "models.terria.loadingMagdaInitSourceErrorMessage",
+              parameters: { url: configUrl }
+            }
+          })
+        );
+      }
     }
 
     if (aspects.group && aspects.group.members) {
@@ -1462,9 +1480,15 @@ async function interpretHash(
       } else if (property === "hideWelcomeMessage") {
         terria.configParameters.showWelcomeMessage = false;
       } else if (property === "start") {
-        // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
-        const startData = JSON.parse(propertyValue);
-        interpretStartData(terria, startData);
+        try {
+          // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
+          const startData = JSON.parse(propertyValue);
+          interpretStartData(terria, startData);
+        } catch (e) {
+          throw TerriaError.from(e, {
+            message: { key: "parsingStartDataErrorMessage" }
+          });
+        }
       } else if (defined(propertyValue) && propertyValue.length > 0) {
         userProperties.set(property, propertyValue);
       } else {
@@ -1505,17 +1529,10 @@ async function interpretHash(
           interpretStartData(terria, result.result);
         }
       } catch (error) {
-        raiseErrorToUser(
-          terria,
-          TerriaError.from(error, {
-            title: { key: "share.convertErrorTitle" },
-            message: wrapErrorMessage(
-              terria,
-              error,
-              "share.convertErrorMessage"
-            )
-          })
-        );
+        throw TerriaError.from(error, {
+          title: { key: "share.convertErrorTitle" },
+          message: { key: "share.convertErrorMessage" }
+        });
       }
     }
   }

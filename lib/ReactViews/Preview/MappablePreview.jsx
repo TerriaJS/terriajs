@@ -6,7 +6,6 @@ import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import getPath from "../../Core/getPath";
 import MappableMixin from "../../ModelMixins/MappableMixin";
-import raiseErrorToUser from "../../Models/raiseErrorToUser";
 import measureElement from "../HOCs/measureElement";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
 import DataPreviewMap from "./DataPreviewMap";
@@ -64,7 +63,7 @@ class MappablePreview extends React.Component {
         );
       }
     } catch (e) {
-      raiseErrorToUser(this.props.terria, e);
+      this.props.terria.raiseErrorToUser(e);
     }
   }
 

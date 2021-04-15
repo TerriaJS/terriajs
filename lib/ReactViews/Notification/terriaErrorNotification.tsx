@@ -11,6 +11,43 @@ const Spacing: any = require("../../Styled/Spacing").Spacing;
 const RawButton: any = require("../../Styled/Button").RawButton;
 const TextSpan: any = require("../../Styled/Text").TextSpan;
 
+const ErrorsBox = (props: { errors: (Error | TerriaError)[] }) => {
+  return (
+    <React.Fragment>
+      {props.errors.map(error => (
+        <Collapsible
+          btnRight={true}
+          title={error instanceof Error ? "Stacktrace" : error.title}
+          titleTextProps={{ large: true }}
+          bodyBoxProps={{ padded: true }}
+        >
+          {error instanceof Error ? (
+            <pre>{error.stack ?? error.message}</pre>
+          ) : (
+            <TerriaErrorBox error={error}></TerriaErrorBox>
+          )}
+        </Collapsible>
+      ))}
+    </React.Fragment>
+  );
+};
+
+const TerriaErrorBox = (props: { error: TerriaError }) => {
+  return (
+    <React.Fragment>
+      <Text>{parseCustomMarkdownToReact(props.error.message)}</Text>
+
+      <Spacing bottom={2} />
+
+      {props.error.originalError ? (
+        <ErrorsBox errors={props.error.originalError}></ErrorsBox>
+      ) : null}
+
+      <Spacing bottom={2} />
+    </React.Fragment>
+  );
+};
+
 export const terriaErrorNotification = (error: TerriaError) => (
   viewState: ViewState
 ) => {
@@ -23,24 +60,7 @@ export const terriaErrorNotification = (error: TerriaError) => (
 
   return (
     <React.Fragment>
-      <Text>Details of the error are below.</Text>
-
-      <Text>{parseCustomMarkdownToReact(error.message)}</Text>
-
-      <Spacing bottom={2} />
-
-      {error.stackTrace ? (
-        <Collapsible
-          btnRight={true}
-          title={"Stacktrace"}
-          titleTextProps={{ large: true }}
-          bodyBoxProps={{ padded: true }}
-        >
-          <pre>{error.stackTrace}</pre>
-        </Collapsible>
-      ) : null}
-
-      <Spacing bottom={2} />
+      <TerriaErrorBox error={error}></TerriaErrorBox>
 
       {viewState.terria.configParameters.feedbackUrl ? (
         <RawButton

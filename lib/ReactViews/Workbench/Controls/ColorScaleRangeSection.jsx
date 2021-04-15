@@ -45,7 +45,7 @@ const ColorScaleRangeSection = createReactClass({
     const min = parseFloat(this.state.minRange);
     if (min !== min) {
       // is NaN?
-      this.props.item.terria.error.raiseEvent({
+      this.props.item.terria.raiseErrorToUser({
         sender: this.props.item,
         title: t("workbench.colorScaleRangeTitle"),
         message: t("workbench.colorScaleRangeMin")
@@ -56,7 +56,7 @@ const ColorScaleRangeSection = createReactClass({
     const max = parseFloat(this.state.maxRange);
     if (max !== max) {
       // is NaN?
-      this.props.item.terria.error.raiseEvent({
+      this.props.item.terria.raiseErrorToUser({
         sender: this.props.item,
         title: t("workbench.colorScaleRangeTitle"),
         message: t("workbench.colorScaleRangeMax")
@@ -65,7 +65,7 @@ const ColorScaleRangeSection = createReactClass({
     }
 
     if (max <= min) {
-      this.props.item.terria.error.raiseEvent({
+      this.props.item.terria.raiseErrorToUser({
         sender: this.props.item,
         title: t("workbench.colorScaleRangeTitle"),
         message: t("workbench.colorScaleRangeMinSmallerThanMax")
