@@ -15,7 +15,8 @@ import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import BottomDock from "../BottomDock/BottomDock";
 import classNames from "classnames";
 import { withTranslation } from "react-i18next";
-
+import Toast from "./Toast";
+import Loader from "../Loader";
 import Styles from "./map-column.scss";
 import { observer } from "mobx-react";
 
@@ -212,6 +213,18 @@ const MapColumn = observer(
                 />
               </div>
             </div>
+          </If>
+          <If condition={this.props.viewState.isMapZooming}>
+            <Toast>
+              <Loader
+                message={this.props.t("toast.mapIsZooming")}
+                textProps={{
+                  style: {
+                    padding: "0 5px"
+                  }
+                }}
+              />
+            </Toast>
           </If>
         </div>
       );
