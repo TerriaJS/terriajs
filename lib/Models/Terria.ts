@@ -862,7 +862,9 @@ export default class Terria {
     );
 
     if (this.baseMaps.length === 0) {
-      processBaseMaps(defaultBaseMaps(this), this).catch(e => errors.push(e));
+      processBaseMaps(defaultBaseMaps(this), this).catchError(e =>
+        errors.push(e)
+      );
     }
 
     if (!this.mainViewer.baseMap) {
@@ -884,7 +886,7 @@ export default class Terria {
     stratumId: string,
     allModelStratumData: JsonObject,
     replaceStratum: boolean
-  ): Promise<Result<BaseModel>> {
+  ): Promise<Result<BaseModel | undefined>> {
     const thisModelStratumData = allModelStratumData[modelId] || {};
     if (!isJsonObject(thisModelStratumData)) {
       throw new TerriaError({
@@ -915,27 +917,29 @@ export default class Terria {
               allModelStratumData,
               replaceStratum
             )
-          ).catch(error =>
+          ).catchError(error =>
             errors.push(
               error.clone({
                 message: `Failed to load container ${containerId}`
               })
             )
-          ).result;
+          );
 
-          const dereferenced = ReferenceMixin.is(container)
-            ? container.target
-            : container;
-          if (GroupMixin.isMixedInto(dereferenced)) {
-            try {
-              await dereferenced.loadMembers();
-            } catch (error) {
-              errors.push(
-                TerriaError.from(
-                  error,
-                  `Failed to load group ${dereferenced.uniqueId}`
-                )
-              );
+          if (container) {
+            const dereferenced = ReferenceMixin.is(container)
+              ? container.target
+              : container;
+            if (GroupMixin.isMixedInto(dereferenced)) {
+              try {
+                await dereferenced.loadMembers();
+              } catch (error) {
+                errors.push(
+                  TerriaError.from(
+                    error,
+                    `Failed to load group ${dereferenced.uniqueId}`
+                  )
+                );
+              }
             }
           }
         })
@@ -955,7 +959,7 @@ export default class Terria {
           allModelStratumData,
           replaceStratum
         )
-      ).catch(error =>
+      ).catchError(error =>
         errors.push(
           error.clone({
             message: `Failed to load SplitItemReference ${splitSourceId}`
@@ -976,11 +980,9 @@ export default class Terria {
         replaceStratum,
         matchByShareKey: true
       }
-    )
-      .required()
-      .catch(error => errors.push(error)).result;
+    ).catchError(error => errors.push(error));
 
-    if (Array.isArray(containerIds)) {
+    if (loadedModel && Array.isArray(containerIds)) {
       containerIds.forEach(containerId => {
         if (
           typeof containerId === "string" &&
@@ -995,6 +997,7 @@ export default class Terria {
     // even if there's no trace of it in the load data.
     let dereferenced = thisModelStratumData.dereferenced;
     if (
+      loadedModel &&
       replaceStratum &&
       dereferenced === undefined &&
       ReferenceMixin.is(loadedModel) &&
@@ -1002,7 +1005,7 @@ export default class Terria {
     ) {
       dereferenced = {};
     }
-    if (ReferenceMixin.is(loadedModel)) {
+    if (loadedModel && ReferenceMixin.is(loadedModel)) {
       try {
         await loadedModel.loadReference();
       } catch (e) {
@@ -1039,17 +1042,20 @@ export default class Terria {
           "The stratum has a `dereferenced` property, but the model cannot be dereferenced."
       });
     }
-    const dereferencedGroup = getDereferencedIfExists(loadedModel);
-    if (GroupMixin.isMixedInto(dereferencedGroup)) {
-      try {
-        await openGroup(dereferencedGroup, dereferencedGroup.isOpen);
-      } catch (error) {
-        errors.push(
-          TerriaError.from(
-            error,
-            `Failed to open group ${dereferencedGroup.uniqueId}`
-          )
-        );
+
+    if (loadedModel) {
+      const dereferencedGroup = getDereferencedIfExists(loadedModel);
+      if (GroupMixin.isMixedInto(dereferencedGroup)) {
+        try {
+          await openGroup(dereferencedGroup, dereferencedGroup.isOpen);
+        } catch (error) {
+          errors.push(
+            TerriaError.from(
+              error,
+              `Failed to open group ${dereferencedGroup.uniqueId}`
+            )
+          );
+        }
       }
     }
 
@@ -1134,7 +1140,7 @@ export default class Terria {
       processBaseMaps(
         <BaseMapModel[]>(<unknown>initData.baseMaps),
         this
-      ).catch(e => errors.push(e));
+      ).catchError(e => errors.push(e));
     }
 
     if (isJsonObject(initData.homeCamera)) {
@@ -1175,7 +1181,7 @@ export default class Terria {
               models,
               replaceStratum
             )
-          ).catch(error => {
+          ).catchError(error => {
             errors.push(error);
           });
         })

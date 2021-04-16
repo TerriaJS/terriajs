@@ -23,8 +23,9 @@ export default async function createUrlReferenceFromUrl(
       allowLoad: allowLoad
     },
     {}
-  ).required({ message: `Could not create UrlReference for URL: ${url}` })
-    .result;
+  ).throwIfUndefined({
+    message: `Could not create UrlReference for URL: ${url}`
+  });
 
   if (!(item instanceof UrlReference)) {
     throw new TerriaError({

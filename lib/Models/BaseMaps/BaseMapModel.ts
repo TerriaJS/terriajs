@@ -47,7 +47,7 @@ export function processBaseMaps(newBaseMaps: BaseMapModel[], terria: Terria) {
       {
         addModelToTerria: true
       }
-    ).catch(error => errors.push(error)).result;
+    ).catchError(error => errors.push(error));
     if (MappableMixin.isMixedInto(model)) {
       if (newBaseMap.hideInBaseMapMenu !== true) {
         runInAction(() =>

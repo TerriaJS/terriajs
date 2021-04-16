@@ -29,25 +29,29 @@ export class Result<T> {
     return new Result(result, new TerriaError(errorOptions));
   }
 
-  constructor(readonly result: T, readonly error?: TerriaError) {}
+  constructor(
+    private readonly result: T,
+    private readonly error?: TerriaError
+  ) {}
 
-  catch(callback: (error: TerriaError) => void) {
-    if (this.error) callback(this.error);
-    return this;
+  ignoreError(): T {
+    return this.result;
   }
 
-  // Rename to throwIfError
-  throw(errorOverrides?: TerriaErrorOverrides) {
+  catchError(callback: (error: TerriaError) => void): T {
+    if (this.error) callback(this.error);
+    return this.result;
+  }
+
+  throwIfError(errorOverrides?: TerriaErrorOverrides): T {
     if (this.error) {
       throw this.error.clone(errorOverrides);
     }
-    return this;
+    return this.result;
   }
 
-  // Rename to throwIfUndefined
-  required(errorOverrides?: TerriaErrorOverrides) {
-    if (isDefined(this.result))
-      return (this as unknown) as Result<NotUndefined<T>>;
+  throwIfUndefined(errorOverrides?: TerriaErrorOverrides): NotUndefined<T> {
+    if (isDefined(this.result)) return this.result as NotUndefined<T>;
     if (this.error) {
       throw this.error.clone(errorOverrides);
     }

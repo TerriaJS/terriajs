@@ -75,9 +75,9 @@ function createCatalogMember(
     CommonStrata.definition,
     json,
     {}
-  ).required({
+  ).throwIfUndefined({
     message: `Failed to create catalog member from JSON: ${json.name}`
-  }).result;
+  });
 }
 
 function tryConversionService(

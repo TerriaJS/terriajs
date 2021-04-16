@@ -105,7 +105,7 @@ const AddData = createReactClass({
           CommonStrata.defaults,
           { type: this.state.remoteDataType.value, name: url },
           {}
-        ).required({
+        ).throwIfUndefined({
           message: `An error occurred trying to add data from URL: ${url}`
         });
         newItem.setTrait(CommonStrata.user, "url", url);

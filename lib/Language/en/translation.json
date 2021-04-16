@@ -948,7 +948,7 @@
       "mustHaveType": "Each item must have a type.",
       "compositesError": "Composites cannot include composite items.",
       "convertErrorTitle": "Could not upgrade catalog to V8",
-      "convertErrorMessage": "<p>This catalog file is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the catalog data. Details of the error are below.</p><p><pre>Failed to parse catalog from {{url}}\n\n{{error}}</pre></p><p><details><summary>Stack trace:</summary><pre>{{stackTrace}}</pre></details></p><p>Please report it by sending an email to {{email}}.</p>"
+      "convertErrorMessage": "This catalog file is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the catalog data. Details of the error are below."
     },
     "createParameter": {
       "unsupportedErrorTitle": "Unsupported function parameter type",
@@ -1166,7 +1166,8 @@
       "errorMultipleTitle": "Multiple errors occurred",
       "errorMultipleMessage": "Details of the errors are below",
       "errorMessageDetailed": "<p>{{message}}. Details of the error are below.</p><p><pre>{{error}}</pre></p><p><details><summary>Stack trace:</summary><pre>{{stackTrace}}</pre></details></p><p>Please report it by sending an email to {{email}}.</p>",
-      "errorMessageDetailedStackTrace": "<p>{{message}}. Details of the error are below.</p><p><pre>{{error}}</pre></p><p><details><summary>Stack trace:</summary><pre>{{stackTrace}}</pre></details></p><p>Please report it by sending an email to {{email}}.</p>"
+      "errorMessageDetailedStackTrace": "<p>{{message}}. Details of the error are below.</p><p><pre>{{error}}</pre></p><p><details><summary>Stack trace:</summary><pre>{{stackTrace}}</pre></details></p><p>Please report it by sending an email to {{email}}.</p>",
+      "notificationFeedback": "To send error to the developers, click here."
     },
     "regionMapping": {
       "noDataForDate": "No data for the selected date.",

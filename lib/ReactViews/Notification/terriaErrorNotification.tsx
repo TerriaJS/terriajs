@@ -26,13 +26,13 @@ const ErrorsBox = (props: {
             borderLeft: "solid 1px rgba(255,255,255,.1)"
           }}
         >
-          {error instanceof Error ? (
-            <pre>{error.stack ?? error.message}</pre>
-          ) : (
+          {error instanceof TerriaError ? (
             <TerriaErrorBox
               error={error}
               depth={props.depth + 1}
             ></TerriaErrorBox>
+          ) : (
+            <pre>{error.stack ?? error.message ?? error.toString()}</pre>
           )}
         </Box>
       ))}
@@ -47,7 +47,8 @@ const TerriaErrorBox = (props: { error: TerriaError; depth: number }) => {
 
       <Spacing bottom={2} />
 
-      {props.error.originalError ? (
+      {Array.isArray(props.error.originalError) &&
+      props.error.originalError.length > 0 ? (
         props.depth === 0 ? (
           <Collapsible
             btnRight={true}
@@ -95,7 +96,7 @@ export const terriaErrorNotification = (error: TerriaError) => (
         >
           <TextSpan textLight bold medium>
             {parseCustomMarkdownToReact(
-              i18next.t("share.convertNotificationFeedback")
+              i18next.t("models.raiseError.notificationFeedback")
             )}
           </TextSpan>
         </RawButton>
