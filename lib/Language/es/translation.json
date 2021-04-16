@@ -1,1 +1,234 @@
-{}
+{
+    "legend": {
+        "elev": "Elev",
+        "n": "N",
+        "e": "E",
+        "zone": "ZONA",
+        "lon": "Lon",
+        "lat": "Lat"
+    },
+    "splitterTool": {
+        "workbench": {
+            "copyName": "{{name}}(copia)",
+            "goright": "Derecha",
+            "both": "Ambos",
+            "goleft": "Izquierda"
+        }
+    },
+    "viewModels": {
+        "searchCatalogueItem": "Elementos del catálogo",
+        "searchLocations": "Localizaciones",
+        "searchAddresses": "Direcciones"
+    },
+    "catalogItem": {
+        "trash": "Quitar del catálogo",
+        "removeFromMap": "Quitar del mapa",
+        "add": "Añadir",
+        "remove": "Quitar",
+        "loading": "Cargando…"
+    },
+    "dataCatalog": {
+        "groupRemove": "quitar este grupo",
+        "groupEmpty": "Este grupo esta vacío"
+    },
+    "concept": {
+        "summary": {
+            "addFirstText": "Añadir nueva condición",
+            "addMoreText": "Añadir una condición"
+        },
+        "active": {
+            "remove": "Quitar condición",
+            "edit": "Editar condición"
+        },
+        "inactive": {
+            "newText": "Nueva condición",
+            "cancel": "Cancelar"
+        }
+    },
+    "satellite": {
+        "filterByLocation": "Filtrar por localización",
+        "newLocation": "Nueva localización",
+        "removeFilter": "Quitar filtro"
+    },
+    "models": {
+        "ogr": {
+            "safari": "Apple Safari",
+            "unsupportedFileTzpe": "Tipo de archivo no soportado"
+        },
+        "userData": {
+            "firefox": "Mozilla Firefox",
+            "chrome": "Google Chrome",
+            "internetExplorer": "Internet Explorer 11"
+        },
+        "socrataServer": {
+            "tags": "Etiquetas",
+            "attributes": "Atributos",
+            "licence": "Licencia",
+            "description": "Descripción"
+        },
+        "gltf": {
+            "error": "Error"
+        },
+        "geoJson": {
+            "firefox": "Mozilla Firefox"
+        },
+        "csw": {
+            "links": "Enlaces"
+        },
+        "catalog": {
+            "cancel": "Cancelar",
+            "upload": "Subir",
+            "unsupportedFileTypeTitle": "Tipo de archivo no soportado",
+            "group": "Grupo"
+        },
+        "ckan": {
+            "update_freq": "Frecuencia de actualización",
+            "metadata_modified": "Modificado",
+            "metadata_created": "Creado",
+            "contact_point": "Contacto",
+            "author": "Autor",
+            "licence": "Licencia"
+        }
+    },
+    "analytics": {
+        "selectLocation": "Seleccionar Localización"
+    },
+    "helpMenu": {
+        "helpMenuMoreHelpTitle": "Más ayuda",
+        "btnTitle": "Ayuda",
+        "next": "SIGUIENTE",
+        "done": "HECHO",
+        "helpMenuOpenWelcome": "Mostrar mensaje de bienvenida",
+        "helpMenuHeader": "¿Qué le gustaría hacer?",
+        "btnText": "Ayuda"
+    },
+    "sui": {
+        "notifications": {
+            "denyText": "Tal vez más tarde",
+            "confirmText": "Sí"
+        }
+    },
+    "chart": {
+        "download": "Descargar",
+        "expand": "Expandir",
+        "closePanel": "Cerrar panel",
+        "sectionLabel": "Gráficos"
+    },
+    "loader": {
+        "loadingMessage": "Cargando"
+    },
+    "clipboard": {
+        "copy": "Copiar",
+        "shareURL": "Compartir URL",
+        "success": "Copiado al portapapeles"
+    },
+    "dateTime": {
+        "timeline": {
+            "togglePlay": "Iniciar",
+            "gotoStart": "Ir al principio"
+        }
+    },
+    "workbench": {
+        "removeAll": "Quitar Todos",
+        "removeFromMap": "Quitar",
+        "exportData": "Exportar",
+        "splitItem": "Dividir",
+        "previewItemTitle": "info",
+        "openFeature": "Zoom a"
+    },
+    "search": {
+        "data": "Datos",
+        "resultsLabel": "Resultados de búsqueda"
+    },
+    "addData": {
+        "back": "Atrás",
+        "dragDrop": "Arrastrar y soltar",
+        "browse": "Navegar…",
+        "urlInputBtn": "Añadir",
+        "myData": "Mis datos",
+        "done": "Hecho",
+        "btnHide": "Ocultar"
+    },
+    "satelliteGuidance": {
+        "prevI": "No, gracias"
+    },
+    "story": {
+        "story": "Historia",
+        "editor": {
+            "saveStory": "Guardar",
+            "saveBtn": "guardar",
+            "cancelBtn": "cancelar"
+        },
+        "cancelRemove": "Cancelar",
+        "removeAllStories": "Eliminar Todos",
+        "delete": "Eliminar",
+        "deleteStory": "eliminar",
+        "edit": "Editar",
+        "editStory": "editar",
+        "view": "Vista",
+        "viewStory": "vista"
+    },
+    "featureInfo": {
+        "noInfoAvailable": "No hay información disponible"
+    },
+    "feedback": {
+        "feedbackBtnText": "Danos tu opinión",
+        "send": "Enviar",
+        "sending": "Enviando…",
+        "cancel": "Cancelar",
+        "yourName": "Su nombre (opcional)"
+    },
+    "location": {
+        "centreMap": "Centrar mapa en su localización",
+        "errorGettingLocation": "Error obteniendo localización",
+        "location": "Localización",
+        "myLocation": "Mi localización",
+        "browserCannotProvide": "Su navegador no puede proporcionar su localización."
+    },
+    "countDatasets": {
+        "loadError": "No se pudo cargar.",
+        "btnText": "Iniciar"
+    },
+    "share": {
+        "printTitle": "Imprimir mapa",
+        "btnCatalogShareText": "Compartir",
+        "btnAdvanced": "Opciones avanzadas",
+        "printButton": "Imprimir"
+    },
+    "settingPanel": {
+        "performanceLabel": "Rendimiento",
+        "qualityLabel": "Calidad",
+        "mapView": "Vista del mapa",
+        "btnText": "Mapa",
+        "screen": "pantalla",
+        "native": "nativa",
+        "viewerModeLabels": {
+            "Leaflet": "2D"
+        },
+        "none": "(Nada)"
+    },
+    "toolsPanel": {
+        "btnText": "Herramienta"
+    },
+    "AR": {
+        "confirmText": "Lo tengo"
+    },
+    "zoomCotrol": {
+        "zoomOut": "Zoom -",
+        "zoomReset": "Restablecer zoom",
+        "zoomIn": "Zoom +"
+    },
+    "general": {
+        "delete": "Eliminar",
+        "skip": "Saltar",
+        "cancel": "Cancelar",
+        "next": "Sig",
+        "prev": "Ant",
+        "open": "Abrir",
+        "close": "Cerrar"
+    },
+    "measure": {
+        "measureTool": "Herramienta de Medición",
+        "measureDistance": "Medir distancia entre localizaciones"
+    }
+}
