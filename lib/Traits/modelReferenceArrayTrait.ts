@@ -110,7 +110,7 @@ export class ModelReferenceArrayTrait extends Trait {
             stratumName,
             jsonElement,
             {}
-          );
+          ).required().result;
           return nestedModel.uniqueId!;
         } catch {
           const stub = createStubCatalogItem(model.terria);

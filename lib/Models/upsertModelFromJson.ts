@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import defaults from "lodash-es/defaults";
-import TerriaError from "../Core/TerriaError";
+import TerriaError, { Result } from "../Core/TerriaError";
 import CommonStrata from "./CommonStrata";
 import createStubCatalogItem from "./createStubCatalogItem";
 import { BaseModel } from "./Model";
@@ -38,7 +38,8 @@ export default function upsertModelFromJson(
   stratumName: string,
   json: any,
   options: UpsertModelFromJsonOptions
-): BaseModel {
+): Result<BaseModel | undefined> {
+  const errors: TerriaError[] = [];
   defaults(options, defaultOptions);
 
   let uniqueId = json.id;
@@ -46,7 +47,7 @@ export default function upsertModelFromJson(
   if (uniqueId === undefined) {
     const localId = json.localId || json.name;
     if (localId === undefined) {
-      throw new TerriaError({
+      return Result.error({
         title: i18next.t("models.catalog.idForMatchingErrorTitle"),
         message: i18next.t("models.catalog.idForMatchingErrorMessage")
       });
@@ -72,8 +73,10 @@ export default function upsertModelFromJson(
     if (potentialId !== undefined) {
       model = terria.getModelById(BaseModel, potentialId);
       if (model === undefined) {
-        console.error(
-          `Failed to get model "${potentialId}" found using share key "${json.id}"`
+        errors.push(
+          new TerriaError({
+            message: `Failed to get model "${potentialId}" found using share key "${json.id}"`
+          })
         );
       }
     }
@@ -81,7 +84,7 @@ export default function upsertModelFromJson(
   if (model === undefined) {
     model = factory.create(json.type, uniqueId, terria);
     if (model === undefined) {
-      console.log(
+      errors.push(
         new TerriaError({
           title: i18next.t("models.catalog.unsupportedTypeTitle"),
           message: i18next.t("models.catalog.unsupportedTypeMessage", {
@@ -96,16 +99,23 @@ export default function upsertModelFromJson(
     }
 
     if (model.type !== StubCatalogItem.type && options.addModelToTerria) {
-      model.terria.addModel(model, json.shareKeys);
+      try {
+        model.terria.addModel(model, json.shareKeys);
+      } catch (error) {
+        errors.push(TerriaError.from(error));
+      }
     }
   }
 
   try {
     updateModelFromJson(model, stratumName, json, options.replaceStratum);
   } catch (error) {
-    console.log(`Error updating model from JSON`);
-    console.log(error);
+    errors.push(
+      TerriaError.from(error, {
+        message: `Error updating model from JSON: ${model.uniqueId}`
+      })
+    );
     model.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
   }
-  return model;
+  return new Result(model, TerriaError.combine(errors));
 }

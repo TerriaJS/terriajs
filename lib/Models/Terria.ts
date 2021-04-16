@@ -868,17 +868,15 @@ export default class Terria {
     );
 
     if (this.baseMaps.length === 0) {
-      try {
-        processBaseMaps(defaultBaseMaps(this), this);
-      } catch (e) {
+      processBaseMaps(defaultBaseMaps(this), this).catch(e =>
         errors.push(
           TerriaError.from(e, {
             title: {
               key: "models.terria.loadingBaseMapsErrorTitle"
             }
           })
-        );
-      }
+        )
+      );
     }
 
     if (!this.mainViewer.baseMap) {
@@ -924,20 +922,20 @@ export default class Terria {
           if (typeof containerId !== "string") {
             return;
           }
-          const container = Result.callback(
+          const container = (
             await this.loadModelStratum(
               containerId,
               stratumId,
               allModelStratumData,
               replaceStratum
-            ),
-            error =>
-              errors.push(
-                error.clone({
-                  message: `Failed to load container ${containerId}`
-                })
-              )
-          );
+            )
+          ).catch(error =>
+            errors.push(
+              error.clone({
+                message: `Failed to load container ${containerId}`
+              })
+            )
+          ).result;
 
           const dereferenced = ReferenceMixin.is(container)
             ? container.target
@@ -955,19 +953,19 @@ export default class Terria {
       cleanStratumData.type === SplitItemReference.type &&
       typeof splitSourceId === "string"
     ) {
-      Result.callback(
+      (
         await this.loadModelStratum(
           splitSourceId,
           stratumId,
           allModelStratumData,
           replaceStratum
-        ),
-        error =>
-          errors.push(
-            error.clone({
-              message: `Failed to load SplitItemReference ${splitSourceId}`
-            })
-          )
+        )
+      ).catch(error =>
+        errors.push(
+          error.clone({
+            message: `Failed to load SplitItemReference ${splitSourceId}`
+          })
+        )
       );
     }
     const loadedModel = upsertModelFromJson(
@@ -983,7 +981,8 @@ export default class Terria {
         replaceStratum,
         matchByShareKey: true
       }
-    );
+    ).required({ message: `Failed to upsert model ${modelId}` }).result;
+
     if (Array.isArray(containerIds)) {
       containerIds.forEach(containerId => {
         if (
@@ -1029,7 +1028,7 @@ export default class Terria {
       await openGroup(dereferencedGroup, dereferencedGroup.isOpen);
     }
 
-    return Result.to(loadedModel, TerriaError.combine(errors));
+    return new Result(loadedModel, TerriaError.combine(errors));
   }
 
   @action
@@ -1097,15 +1096,13 @@ export default class Terria {
       Array.isArray(initData.baseMaps) &&
       initData.baseMaps.length > 0
     ) {
-      try {
-        processBaseMaps(<BaseMapModel[]>(<unknown>initData.baseMaps), this);
-      } catch (e) {
-        throw TerriaError.from(e, {
+      processBaseMaps(<BaseMapModel[]>(<unknown>initData.baseMaps), this).throw(
+        {
           title: {
             key: "models.terria.loadingInitSourceErrorTitle"
           }
-        });
-      }
+        }
+      );
     }
 
     if (isJsonObject(initData.homeCamera)) {
@@ -1139,20 +1136,19 @@ export default class Terria {
     if (isJsonObject(models)) {
       await Promise.all(
         Object.keys(models).map(async modelId => {
-          Result.raise(
+          (
             await this.loadModelStratum(
               modelId,
               stratumId,
               models,
               replaceStratum
-            ),
-            {
-              message: {
-                key: "models.terria.loadModelErrorMessage",
-                parameters: { model: modelId }
-              }
+            )
+          ).throw({
+            message: {
+              key: "models.terria.loadModelErrorMessage",
+              parameters: { model: modelId }
             }
-          );
+          });
         })
       );
     }

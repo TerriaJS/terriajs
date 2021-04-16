@@ -4,6 +4,7 @@ import i18next from "i18next";
 import { Notification } from "../ReactViewModels/ViewState";
 import { terriaErrorNotification } from "../ReactViews/Notification/terriaErrorNotification";
 import isDefined from "./isDefined";
+import { NotUndefined } from "./TypeModifiers";
 
 export interface I18nTranslateString {
   key: string;
@@ -14,54 +15,46 @@ function resolveI18n(i: I18nTranslateString | string) {
   return typeof i === "string" ? i : i18next.t(i.key, i.parameters);
 }
 
-export type Result<T> = PartialResult<T> | T;
-export type PartialResult<T> = {
-  result: T;
-  error: TerriaError;
-  isPartialResult: true;
-};
-export namespace Result {
-  export function isPartial<T>(p: any): p is PartialResult<T> {
-    return isDefined(p.isPartialResult) && p.isPartialResult;
+// TODO:
+// When to use this or just throw Terria Errors?
+export class Result<T> {
+  static error(error: TerriaErrorOptions | TerriaError): Result<undefined> {
+    return new Result(
+      undefined,
+      error instanceof TerriaError ? error : new TerriaError(error)
+    );
   }
 
-  export function getResult<T>(p: Result<T>): T {
-    return isPartial(p) ? p.result : p;
+  static return<U>(result: U, errorOptions: TerriaErrorOptions): Result<U> {
+    return new Result(result, new TerriaError(errorOptions));
   }
 
-  export function getError<T>(p: Result<T>): TerriaError | undefined {
-    return isPartial(p) ? p.error : undefined;
+  constructor(readonly result: T, readonly error?: TerriaError) {}
+
+  catch(callback: (error: TerriaError) => void) {
+    if (this.error) callback(this.error);
+    return this;
   }
 
-  export function split<T>(
-    p: Result<T>,
-    errorOverrides?: TerriaErrorOverrides
-  ): [T, TerriaError | undefined] {
-    return [getResult(p), TerriaError.fromResult(p, errorOverrides)];
-  }
-
-  export function callback<T>(
-    p: Result<T>,
-    callback: (error: TerriaError) => void
-  ): T {
-    const error = getError(p);
-    if (error) callback(error);
-    return getResult(p);
-  }
-
-  export function raise<T>(
-    p: Result<T>,
-    errorOverrides?: TerriaErrorOverrides
-  ): T {
-    if (isPartial(p)) {
-      throw TerriaError.fromResult(p, errorOverrides);
+  // Rename to throwIfError
+  throw(errorOverrides?: TerriaErrorOverrides) {
+    if (this.error) {
+      throw this.error.clone(errorOverrides);
     }
-    return getResult(p);
+    return this;
   }
 
-  export function to<T>(result: T, error?: TerriaError): Result<T> {
-    if (error) return { result, error, isPartialResult: true };
-    return result;
+  // Rename to throwIfUndefined
+  required(errorOverrides?: TerriaErrorOverrides) {
+    if (isDefined(this.result))
+      return (this as unknown) as Result<NotUndefined<T>>;
+    if (this.error) {
+      throw this.error.clone(errorOverrides);
+    }
+    throw new TerriaError({
+      message: "Unhandled required Result exception",
+      ...errorOverrides
+    });
   }
 }
 
@@ -114,17 +107,6 @@ export default class TerriaError {
       originalError: error instanceof Error ? error : undefined,
       ...overrides
     });
-  }
-
-  static fromResult<T>(
-    result: Result<T>,
-    overrides?: TerriaErrorOverrides
-  ): TerriaError | undefined {
-    if (Result.isPartial(result)) {
-      return isDefined(overrides)
-        ? TerriaError.from(result.error, overrides)
-        : result.error;
-    }
   }
 
   static combine(

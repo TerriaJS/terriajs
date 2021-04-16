@@ -40,7 +40,7 @@ describe("CatalogGroup", function() {
         "definition",
         json,
         {}
-      )
+      ).required().result
     );
   });
 
