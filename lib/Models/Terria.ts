@@ -33,7 +33,7 @@ import JsonValue, {
 import { isLatLonHeight } from "../Core/LatLonHeight";
 import loadJson5 from "../Core/loadJson5";
 import ServerConfig from "../Core/ServerConfig";
-import TerriaError from "../Core/TerriaError";
+import TerriaError, { Result } from "../Core/TerriaError";
 import { Complete } from "../Core/TypeModifiers";
 import { getUriWithoutPath } from "../Core/uriHelpers";
 import PickedFeatures, {
@@ -900,7 +900,7 @@ export default class Terria {
     stratumId: string,
     allModelStratumData: JsonObject,
     replaceStratum: boolean
-  ): Promise<BaseModel> {
+  ): Promise<Result<BaseModel>> {
     const thisModelStratumData = allModelStratumData[modelId] || {};
     if (!isJsonObject(thisModelStratumData)) {
       throw new TerriaError({
@@ -914,6 +914,8 @@ export default class Terria {
     delete cleanStratumData.dereferenced;
     delete cleanStratumData.knownContainerUniqueIds;
 
+    const errors: TerriaError[] = [];
+
     const containerIds = thisModelStratumData.knownContainerUniqueIds;
     if (Array.isArray(containerIds)) {
       // Groups that contain this item must be loaded before this item.
@@ -922,12 +924,21 @@ export default class Terria {
           if (typeof containerId !== "string") {
             return;
           }
-          const container = await this.loadModelStratum(
-            containerId,
-            stratumId,
-            allModelStratumData,
-            replaceStratum
+          const container = Result.callback(
+            await this.loadModelStratum(
+              containerId,
+              stratumId,
+              allModelStratumData,
+              replaceStratum
+            ),
+            error =>
+              errors.push(
+                error.clone({
+                  message: `Failed to load container ${containerId}`
+                })
+              )
           );
+
           const dereferenced = ReferenceMixin.is(container)
             ? container.target
             : container;
@@ -944,11 +955,19 @@ export default class Terria {
       cleanStratumData.type === SplitItemReference.type &&
       typeof splitSourceId === "string"
     ) {
-      await this.loadModelStratum(
-        splitSourceId,
-        stratumId,
-        allModelStratumData,
-        replaceStratum
+      Result.callback(
+        await this.loadModelStratum(
+          splitSourceId,
+          stratumId,
+          allModelStratumData,
+          replaceStratum
+        ),
+        error =>
+          errors.push(
+            error.clone({
+              message: `Failed to load SplitItemReference ${splitSourceId}`
+            })
+          )
       );
     }
     const loadedModel = upsertModelFromJson(
@@ -1009,7 +1028,8 @@ export default class Terria {
     if (GroupMixin.isMixedInto(dereferencedGroup)) {
       await openGroup(dereferencedGroup, dereferencedGroup.isOpen);
     }
-    return loadedModel;
+
+    return Result.to(loadedModel, TerriaError.combine(errors));
   }
 
   @action
@@ -1119,21 +1139,20 @@ export default class Terria {
     if (isJsonObject(models)) {
       await Promise.all(
         Object.keys(models).map(async modelId => {
-          try {
+          Result.raise(
             await this.loadModelStratum(
               modelId,
               stratumId,
               models,
               replaceStratum
-            );
-          } catch (e) {
-            throw TerriaError.from(e, {
+            ),
+            {
               message: {
                 key: "models.terria.loadModelErrorMessage",
                 parameters: { model: modelId }
               }
-            });
-          }
+            }
+          );
         })
       );
     }

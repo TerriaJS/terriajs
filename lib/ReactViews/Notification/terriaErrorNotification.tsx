@@ -10,29 +10,37 @@ const Text: any = require("../../Styled/Text").default;
 const Spacing: any = require("../../Styled/Spacing").Spacing;
 const RawButton: any = require("../../Styled/Button").RawButton;
 const TextSpan: any = require("../../Styled/Text").TextSpan;
+const Box: any = require("../../Styled/Box").default;
 
-const ErrorsBox = (props: { errors: (Error | TerriaError)[] }) => {
+const ErrorsBox = (props: {
+  errors: (Error | TerriaError)[];
+  depth: number;
+}) => {
   return (
     <React.Fragment>
       {props.errors.map(error => (
-        <Collapsible
-          btnRight={true}
-          title={error instanceof Error ? "Stacktrace" : error.title}
-          titleTextProps={{ large: true }}
-          bodyBoxProps={{ padded: true }}
+        <Box
+          displayInlineBlock
+          css={{
+            paddingLeft: "10px",
+            borderLeft: "solid 1px rgba(255,255,255,.1)"
+          }}
         >
           {error instanceof Error ? (
             <pre>{error.stack ?? error.message}</pre>
           ) : (
-            <TerriaErrorBox error={error}></TerriaErrorBox>
+            <TerriaErrorBox
+              error={error}
+              depth={props.depth + 1}
+            ></TerriaErrorBox>
           )}
-        </Collapsible>
+        </Box>
       ))}
     </React.Fragment>
   );
 };
 
-const TerriaErrorBox = (props: { error: TerriaError }) => {
+const TerriaErrorBox = (props: { error: TerriaError; depth: number }) => {
   return (
     <React.Fragment>
       <Text>{parseCustomMarkdownToReact(props.error.message)}</Text>
@@ -40,10 +48,25 @@ const TerriaErrorBox = (props: { error: TerriaError }) => {
       <Spacing bottom={2} />
 
       {props.error.originalError ? (
-        <ErrorsBox errors={props.error.originalError}></ErrorsBox>
+        props.depth === 0 ? (
+          <Collapsible
+            btnRight={true}
+            title={"Stacktrace"}
+            titleTextProps={{ large: true }}
+            bodyBoxProps={{ padded: true }}
+          >
+            <ErrorsBox
+              errors={props.error.originalError}
+              depth={props.depth}
+            ></ErrorsBox>
+          </Collapsible>
+        ) : (
+          <ErrorsBox
+            errors={props.error.originalError}
+            depth={props.depth}
+          ></ErrorsBox>
+        )
       ) : null}
-
-      <Spacing bottom={2} />
     </React.Fragment>
   );
 };
@@ -60,7 +83,7 @@ export const terriaErrorNotification = (error: TerriaError) => (
 
   return (
     <React.Fragment>
-      <TerriaErrorBox error={error}></TerriaErrorBox>
+      <TerriaErrorBox error={error} depth={0}></TerriaErrorBox>
 
       {viewState.terria.configParameters.feedbackUrl ? (
         <RawButton

@@ -14,6 +14,57 @@ function resolveI18n(i: I18nTranslateString | string) {
   return typeof i === "string" ? i : i18next.t(i.key, i.parameters);
 }
 
+export type Result<T> = PartialResult<T> | T;
+export type PartialResult<T> = {
+  result: T;
+  error: TerriaError;
+  isPartialResult: true;
+};
+export namespace Result {
+  export function isPartial<T>(p: any): p is PartialResult<T> {
+    return isDefined(p.isPartialResult) && p.isPartialResult;
+  }
+
+  export function getResult<T>(p: Result<T>): T {
+    return isPartial(p) ? p.result : p;
+  }
+
+  export function getError<T>(p: Result<T>): TerriaError | undefined {
+    return isPartial(p) ? p.error : undefined;
+  }
+
+  export function split<T>(
+    p: Result<T>,
+    errorOverrides?: TerriaErrorOverrides
+  ): [T, TerriaError | undefined] {
+    return [getResult(p), TerriaError.fromResult(p, errorOverrides)];
+  }
+
+  export function callback<T>(
+    p: Result<T>,
+    callback: (error: TerriaError) => void
+  ): T {
+    const error = getError(p);
+    if (error) callback(error);
+    return getResult(p);
+  }
+
+  export function raise<T>(
+    p: Result<T>,
+    errorOverrides?: TerriaErrorOverrides
+  ): T {
+    if (isPartial(p)) {
+      throw TerriaError.fromResult(p, errorOverrides);
+    }
+    return getResult(p);
+  }
+
+  export function to<T>(result: T, error?: TerriaError): Result<T> {
+    if (error) return { result, error, isPartialResult: true };
+    return result;
+  }
+}
+
 export interface TerriaErrorOptions {
   /**  A detailed message describing the error.  This message may be HTML and it should be sanitized before display to the user. */
   message: string | I18nTranslateString;
@@ -30,6 +81,8 @@ export interface TerriaErrorOptions {
   useTerriaErrorNotification?: boolean;
 }
 
+export type TerriaErrorOverrides = Partial<TerriaErrorOptions>;
+
 /**
  * Represents an error that occurred in a TerriaJS module, especially an asynchronous one that cannot be raised
  * by throwing an exception because no one would be able to catch it.
@@ -44,10 +97,7 @@ export default class TerriaError {
 
   private _raisedToUser: boolean = false;
 
-  static from(
-    error: unknown,
-    overrides?: Partial<TerriaErrorOptions>
-  ): TerriaError {
+  static from(error: unknown, overrides?: TerriaErrorOverrides): TerriaError {
     if (error instanceof TerriaError) {
       return error.clone(overrides);
     }
@@ -66,10 +116,22 @@ export default class TerriaError {
     });
   }
 
+  static fromResult<T>(
+    result: Result<T>,
+    overrides?: TerriaErrorOverrides
+  ): TerriaError | undefined {
+    if (Result.isPartial(result)) {
+      return isDefined(overrides)
+        ? TerriaError.from(result.error, overrides)
+        : result.error;
+    }
+  }
+
   static combine(
     errors: TerriaError[],
-    overrides?: Partial<TerriaErrorOptions>
-  ): TerriaError {
+    overrides?: TerriaErrorOverrides
+  ): TerriaError | undefined {
+    if (errors.length === 0 && !overrides) return;
     return new TerriaError({
       title: { key: "models.raiseError.errorMultipleTitle" },
       message: { key: "models.raiseError.errorMultipleMessage" },
@@ -120,7 +182,7 @@ export default class TerriaError {
     };
   }
 
-  clone(overrides?: Partial<TerriaErrorOptions>): TerriaError {
+  clone(overrides?: TerriaErrorOverrides): TerriaError {
     return new TerriaError({
       ...{
         message: this._message,
