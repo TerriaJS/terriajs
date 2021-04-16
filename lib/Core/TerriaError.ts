@@ -51,6 +51,9 @@ export class Result<T> {
     if (this.error) {
       throw this.error.clone(errorOverrides);
     }
+    if (typeof errorOverrides === "string") {
+      errorOverrides = { message: errorOverrides };
+    }
     throw new TerriaError({
       message: "Unhandled required Result exception",
       ...errorOverrides
@@ -74,7 +77,7 @@ export interface TerriaErrorOptions {
   useTerriaErrorNotification?: boolean;
 }
 
-export type TerriaErrorOverrides = Partial<TerriaErrorOptions>;
+export type TerriaErrorOverrides = Partial<TerriaErrorOptions> | string;
 
 /**
  * Represents an error that occurred in a TerriaJS module, especially an asynchronous one that cannot be raised
@@ -94,6 +97,9 @@ export default class TerriaError {
     if (error instanceof TerriaError) {
       return error.clone(overrides);
     }
+    if (typeof overrides === "string") {
+      overrides = { message: overrides };
+    }
     return new TerriaError({
       title: { key: "models.raiseError.errorTitle" },
       message:
@@ -111,9 +117,12 @@ export default class TerriaError {
 
   static combine(
     errors: TerriaError[],
-    overrides?: TerriaErrorOverrides
+    overrides: TerriaErrorOverrides
   ): TerriaError | undefined {
-    if (errors.length === 0 && !overrides) return;
+    if (errors.length === 0) return;
+    if (typeof overrides === "string") {
+      overrides = { message: overrides };
+    }
     return new TerriaError({
       title: { key: "models.raiseError.errorMultipleTitle" },
       message: { key: "models.raiseError.errorMultipleMessage" },
@@ -165,6 +174,9 @@ export default class TerriaError {
   }
 
   clone(overrides?: TerriaErrorOverrides): TerriaError {
+    if (typeof overrides === "string") {
+      overrides = { message: overrides };
+    }
     return new TerriaError({
       ...{
         message: this._message,

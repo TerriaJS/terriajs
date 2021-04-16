@@ -117,5 +117,8 @@ export default function upsertModelFromJson(
     );
     model.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
   }
-  return new Result(model, TerriaError.combine(errors));
+  return new Result(
+    model,
+    TerriaError.combine(errors, `Error upserting model JSON: ${uniqueId}`)
+  );
 }

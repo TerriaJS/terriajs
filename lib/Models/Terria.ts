@@ -856,27 +856,13 @@ export default class Terria {
             initData: initSource
           });
         } catch (e) {
-          errors.push(
-            TerriaError.from(e, {
-              title: {
-                key: "models.terria.loadingInitSourceErrorTitle"
-              }
-            })
-          );
+          errors.push(e);
         }
       })
     );
 
     if (this.baseMaps.length === 0) {
-      processBaseMaps(defaultBaseMaps(this), this).catch(e =>
-        errors.push(
-          TerriaError.from(e, {
-            title: {
-              key: "models.terria.loadingBaseMapsErrorTitle"
-            }
-          })
-        )
-      );
+      processBaseMaps(defaultBaseMaps(this), this).catch(e => errors.push(e));
     }
 
     if (!this.mainViewer.baseMap) {
@@ -941,7 +927,16 @@ export default class Terria {
             ? container.target
             : container;
           if (GroupMixin.isMixedInto(dereferenced)) {
-            await dereferenced.loadMembers();
+            try {
+              await dereferenced.loadMembers();
+            } catch (error) {
+              errors.push(
+                TerriaError.from(
+                  error,
+                  `Failed to load group ${dereferenced.uniqueId}`
+                )
+              );
+            }
           }
         })
       );
@@ -981,7 +976,9 @@ export default class Terria {
         replaceStratum,
         matchByShareKey: true
       }
-    ).required({ message: `Failed to upsert model ${modelId}` }).result;
+    )
+      .required()
+      .catch(error => errors.push(error)).result;
 
     if (Array.isArray(containerIds)) {
       containerIds.forEach(containerId => {
@@ -1006,14 +1003,33 @@ export default class Terria {
       dereferenced = {};
     }
     if (ReferenceMixin.is(loadedModel)) {
-      await loadedModel.loadReference();
-      if (isDefined(loadedModel.target)) {
-        updateModelFromJson(
-          loadedModel.target,
-          stratumId,
-          dereferenced || {},
-          replaceStratum
+      try {
+        await loadedModel.loadReference();
+      } catch (e) {
+        errors.push(
+          TerriaError.from(
+            e,
+            `Failed to load reference ${loadedModel.uniqueId}`
+          )
         );
+      }
+
+      if (isDefined(loadedModel.target)) {
+        try {
+          updateModelFromJson(
+            loadedModel.target,
+            stratumId,
+            dereferenced || {},
+            replaceStratum
+          );
+        } catch (e) {
+          errors.push(
+            TerriaError.from(
+              e,
+              `Failed to update model from JSON: ${loadedModel.target.uniqueId}`
+            )
+          );
+        }
       }
     } else if (dereferenced) {
       throw new TerriaError({
@@ -1025,10 +1041,27 @@ export default class Terria {
     }
     const dereferencedGroup = getDereferencedIfExists(loadedModel);
     if (GroupMixin.isMixedInto(dereferencedGroup)) {
-      await openGroup(dereferencedGroup, dereferencedGroup.isOpen);
+      try {
+        await openGroup(dereferencedGroup, dereferencedGroup.isOpen);
+      } catch (error) {
+        errors.push(
+          TerriaError.from(
+            error,
+            `Failed to open group ${dereferencedGroup.uniqueId}`
+          )
+        );
+      }
     }
 
-    return new Result(loadedModel, TerriaError.combine(errors));
+    return new Result(
+      loadedModel,
+      TerriaError.combine(errors, {
+        message: {
+          key: "models.terria.loadModelErrorMessage",
+          parameters: { model: modelId }
+        }
+      })
+    );
   }
 
   @action
@@ -1037,6 +1070,8 @@ export default class Terria {
     replaceStratum = false,
     canUnsetFeaturePickingState = false
   }: ApplyInitDataOptions): Promise<void> {
+    const errors: TerriaError[] = [];
+
     initData = toJS(initData);
 
     const stratumId =
@@ -1096,13 +1131,10 @@ export default class Terria {
       Array.isArray(initData.baseMaps) &&
       initData.baseMaps.length > 0
     ) {
-      processBaseMaps(<BaseMapModel[]>(<unknown>initData.baseMaps), this).throw(
-        {
-          title: {
-            key: "models.terria.loadingInitSourceErrorTitle"
-          }
-        }
-      );
+      processBaseMaps(
+        <BaseMapModel[]>(<unknown>initData.baseMaps),
+        this
+      ).catch(e => errors.push(e));
     }
 
     if (isJsonObject(initData.homeCamera)) {
@@ -1143,11 +1175,8 @@ export default class Terria {
               models,
               replaceStratum
             )
-          ).throw({
-            message: {
-              key: "models.terria.loadModelErrorMessage",
-              parameters: { model: modelId }
-            }
+          ).catch(error => {
+            errors.push(error);
           });
         })
       );
@@ -1163,13 +1192,16 @@ export default class Terria {
     const newItems = filterOutUndefined(
       workbench.map(modelId => {
         if (typeof modelId !== "string") {
-          throw new TerriaError({
-            sender: this,
-            title: "Invalid model ID in workbench",
-            message: "A model ID in the workbench list is not a string."
-          });
+          errors.push(
+            new TerriaError({
+              sender: this,
+              title: "Invalid model ID in workbench",
+              message: "A model ID in the workbench list is not a string."
+            })
+          );
+        } else {
+          return this.getModelByIdOrShareKey(BaseModel, modelId);
         }
-        return this.getModelByIdOrShareKey(BaseModel, modelId);
       })
     );
 
@@ -1180,16 +1212,19 @@ export default class Terria {
       filterOutUndefined(
         timeline.map(modelId => {
           if (typeof modelId !== "string") {
-            throw new TerriaError({
-              sender: this,
-              title: "Invalid model ID in timeline",
-              message: "A model ID in the timneline list is not a string."
-            });
-          }
-          if (this.getModelById(BaseModel, modelId) !== undefined) {
-            return modelId;
+            errors.push(
+              new TerriaError({
+                sender: this,
+                title: "Invalid model ID in timeline",
+                message: "A model ID in the timneline list is not a string."
+              })
+            );
           } else {
-            return this.getModelIdByShareKey(modelId);
+            if (this.getModelById(BaseModel, modelId) !== undefined) {
+              return modelId;
+            } else {
+              return this.getModelIdByShareKey(modelId);
+            }
           }
         })
       )
@@ -1222,7 +1257,7 @@ export default class Terria {
             await model.loadMapItems();
           }
         } catch (e) {
-          this.raiseErrorToUser(
+          errors.push(
             TerriaError.from(e, {
               title: {
                 key: "models.terria.loadingWorkbenchItemErrorTitle",
@@ -1251,6 +1286,13 @@ export default class Terria {
         this.selectedFeature = undefined;
       });
     }
+
+    if (errors.length > 0)
+      throw TerriaError.combine(errors, {
+        message: {
+          key: "models.terria.loadingInitSourceErrorTitle"
+        }
+      });
   }
 
   @action

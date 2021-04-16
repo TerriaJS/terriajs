@@ -58,7 +58,14 @@ export function processBaseMaps(newBaseMaps: BaseMapModel[], terria: Terria) {
     }
   });
 
-  return new Result(models, TerriaError.combine(errors));
+  return new Result(
+    models,
+    TerriaError.combine(errors, {
+      message: {
+        key: "models.terria.loadingBaseMapsErrorTitle"
+      }
+    })
+  );
 }
 
 function addBingMapsKey(item: any, terria: Terria) {
