@@ -22,8 +22,10 @@ export const Box = styled.div`
   box-sizing: border-box;
 
   ${props => props.displayInlineBlock && `display: inline-block;`}
+  ${props => props.displayBlock && `display: block;`}
 
   ${props => props.rounded && `border-radius: ${props.theme.radiusLarge};`}
+  ${props => props.roundedSmall && `border-radius: ${props.theme.radiusSmall};`}
 
   ${props => props.fullHeight && `height: 100%;`}
   ${props => props.fullWidth && `width: 100%;`}
