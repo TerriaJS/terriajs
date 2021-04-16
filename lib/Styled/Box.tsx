@@ -67,7 +67,7 @@ export const Box = styled.div<IBoxProps>`
   ${props => props.position && `position: ${props.position};`}
   ${props => props.position === "absolute" && `z-index:1;`}
   ${props => !props.position && `position: relative;`}
-  
+
   ${props =>
     props.topRight &&
     `

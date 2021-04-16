@@ -90,7 +90,7 @@ class Disclaimer extends React.Component {
 
             fullWidth
             fullHeight
-            postion="absolute"
+            position="absolute"
           />
           <Box
             displayInlineBlock
