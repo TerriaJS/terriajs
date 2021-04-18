@@ -168,7 +168,7 @@ const MenuBar = observer(props => {
           </For>
         </If>
       </ul>
-      {props.terria.configParameters.languageConfiguration.enabled ? (
+      {props.terria.configParameters?.languageConfiguration?.enabled ? (
         <ul className={classNames(Styles.menu)}>
           <li className={Styles.menuItem}>
             <LangPanel
