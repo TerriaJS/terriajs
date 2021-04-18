@@ -1,4 +1,5 @@
 import { action, runInAction } from "mobx";
+import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
@@ -979,5 +980,19 @@ describe("Terria", function() {
       expect(terria.selectedFeature).toBeDefined();
       expect(terria.selectedFeature?.name).toBe("foo");
     });
+  });
+  it("customRequestSchedulerLimits sets RequestScheduler limits for domains", async function() {
+    const configUrl = `data:application/json;base64,${btoa(
+      JSON.stringify({
+        initializationUrls: [],
+        parameters: {
+          customRequestSchedulerLimits: {
+            "test.domain:333": 12
+          }
+        }
+      })
+    )}`;
+    await terria.start({ configUrl, i18nOptions });
+    expect(RequestScheduler.requestsByServer["test.domain:333"]).toBe(12);
   });
 });
