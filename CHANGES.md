@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.77)
 
+* Aliases `lodash` to `lodash-es` reducing bundle size by around 1.09MB.
 * [The next improvement]
 
 
