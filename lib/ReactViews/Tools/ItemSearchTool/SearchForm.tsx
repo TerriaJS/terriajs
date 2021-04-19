@@ -19,10 +19,9 @@ import ItemSearchProvider, {
 import ErrorComponent from "./ErrorComponent";
 import { ItemSearchQuery } from "./ItemSearchTool";
 import Loading from "./Loading";
-
-const Box: any = require("../../../Styled/Box").default;
-const Button: any = require("../../../Styled/Button").Button;
-const Text: any = require("../../../Styled/Text").default;
+import Text from "../../../Styled/Text";
+import Box from "../../../Styled/Box";
+import Button from "../../../Styled/Button";
 
 export interface SearchFormProps extends WithTranslation {
   itemSearchProvider: ItemSearchProvider;

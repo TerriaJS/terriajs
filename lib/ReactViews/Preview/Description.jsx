@@ -17,9 +17,8 @@ import { observer } from "mobx-react";
 
 import ExportData from "./ExportData";
 import WarningBox from "./WarningBox";
-
-const Button = require("../../Styled/Button").default;
-const Box = require("../../Styled/Box").default;
+import Box from "../../Styled/Box";
+import Button from "../../Styled/Button";
 
 /**
  * CatalogItem description.

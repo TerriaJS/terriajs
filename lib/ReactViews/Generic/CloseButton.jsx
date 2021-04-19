@@ -2,7 +2,7 @@
 import React from "react";
 import styled from "styled-components";
 // import Box  from "../../Styled/Box";
-import Icon from "../Icon";
+import Icon from "../../Styled/Icon";
 import { RawButton } from "../../Styled/Button";
 
 const StyledCloseButton = styled(RawButton)`
