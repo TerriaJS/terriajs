@@ -5,7 +5,7 @@ import SearchBox from "../Search/SearchBox";
 import MobileModalWindow from "./MobileModalWindow";
 import Branding from "../SidePanel/Branding";
 import Styles from "./mobile-header.scss";
-import Icon, { StyledIcon } from "../Icon";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import MobileMenu from "./MobileMenu";
 import classNames from "classnames";
 import { removeMarker } from "../../Models/LocationMarkerUtils";
@@ -164,7 +164,7 @@ const MobileHeader = observer(
                 }
               >
                 <Box
-                  positionAbsolute
+                  position="absolute"
                   css={`
                     left: 5px;
                   `}

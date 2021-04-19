@@ -1,5 +1,5 @@
 import React from "react";
-import Icon from "../Icon.jsx";
+import Icon from "../../Styled/Icon";
 import PropTypes from "prop-types";
 
 import Styles from "./mobile-menu-item.scss";

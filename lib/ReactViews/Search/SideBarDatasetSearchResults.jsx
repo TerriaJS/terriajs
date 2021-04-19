@@ -5,7 +5,7 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import SearchResult from "./SearchResult";
 import classNames from "classnames";
-import Icon from "../Icon";
+import Icon from "../../Styled/Icon";
 import Styles from "./sidebar-dataset-search-results.scss";
 import { withTranslation } from "react-i18next";
 

@@ -10,7 +10,7 @@ import Terria from "../../Models/Terria";
 // eslint-disable-next-line no-unused-vars
 import ViewState from "../../ReactViewModels/ViewState";
 import BadgeBar from "../BadgeBar";
-import Icon from "../Icon";
+import Icon from "../../Styled/Icon";
 import Styles from "./workbench.scss";
 import WorkbenchList from "./WorkbenchList";
 

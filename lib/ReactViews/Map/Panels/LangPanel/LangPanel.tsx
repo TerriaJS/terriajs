@@ -8,7 +8,7 @@ import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
 import Terria from "../../../../Models/Terria";
 
 import Styles from "../../menu-bar.scss";
-import Icon from "../../../Icon";
+import Icon from "../../../../Styled/Icon";
 import { useTranslation } from "react-i18next";
 
 const stripLangLocale = (lang: string = ""): string => lang.split("-")[0];
@@ -41,7 +41,7 @@ export default (props: Props) => {
       smallScreen={props.smallScreen}
       forceClosed={true}
     >
-      <Box static styledPadding={"20px 10px 10px 10px"}>
+      <Box styledPadding={"20px 10px 10px 10px"}>
         <Ul spaced lined fullWidth>
           {Object.entries(
             props.terria.configParameters.languageConfiguration.languages

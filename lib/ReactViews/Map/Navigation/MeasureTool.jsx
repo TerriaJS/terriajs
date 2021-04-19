@@ -3,7 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Styles from "./tool_button.scss";
 import { withTranslation } from "react-i18next";
-import Icon from "../../Icon";
+import Icon from "../../../Styled/Icon";
 import { observer } from "mobx-react";
 import { observable, action } from "mobx";
 

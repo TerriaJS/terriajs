@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
-import Icon from "../Icon.jsx";
+import Icon from "../../Styled/Icon";
 import IconWrapper from "../../Styled/IconWrapper";
 
 PrivateIndicator.propTypes = {

@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import Icon, { StyledIcon } from "../../../Icon.jsx";
+import Icon, { StyledIcon } from "../../../../Styled/Icon";
 import Styles from "./help-panel.scss";
 import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
