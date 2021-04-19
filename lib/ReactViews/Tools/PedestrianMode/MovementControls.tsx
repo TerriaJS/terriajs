@@ -2,13 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import Cesium from "../../../Models/Cesium";
-import Icon, { StyledIcon } from "../../Icon";
+import Box from "../../../Styled/Box";
+import Button from "../../../Styled/Button";
+import Spacing from "../../../Styled/Spacing";
+import Text from "../../../Styled/Text";
+import Icon, { StyledIcon } from "../../../Styled/Icon";
 import MovementsController from "./MovementsController";
-
-const Text = require("../../../Styled/Text").default;
-const Box = require("../../../Styled/Box").default;
-const Spacing = require("../../../Styled/Spacing").default;
-const Button = require("../../../Styled/Button").default;
 
 const mouseControlsImage = require("../../../../wwwroot/images/mouse-control.svg");
 const wasdControlsImage = require("../../../../wwwroot/images/wasd.svg");

@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 
-import Icon, { StyledIcon } from "../Icon";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import ButtonAsLabel from "../../Styled/ButtonAsLabel";
 import Box from "../../Styled/Box";
 import Text from "../../Styled/Text";
@@ -37,8 +37,8 @@ const MapDataCount = observer(function(props) {
     // Should we even provide a wrapper Box? makes sense not to, but most of the
     // components as they stand come with their own "wrapper" via scss
     // <Box styledMinHeight="72px">
-    <Box positionAbsolute css={"bottom: 40px;"}>
-      <ButtonAsLabel light={hasMapData} dark={!hasMapData}>
+    <Box position="absolute" css={"bottom: 40px;"}>
+      <ButtonAsLabel light={hasMapData}>
         <Spacing right={1} />
         <StyledIcon
           glyph={

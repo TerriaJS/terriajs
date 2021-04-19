@@ -1,6 +1,12 @@
 import styled from "styled-components";
 
-export const IconWrapper = styled.span`
+interface IconWrapperProps {
+  width?: number;
+  marginRight?: boolean;
+  wide?: boolean;
+}
+
+export const IconWrapper = styled.span<IconWrapperProps>`
   display: grid;
 
   // ${props => `width: ${props.width || 16}px`};

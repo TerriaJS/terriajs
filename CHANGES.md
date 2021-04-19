@@ -7,6 +7,10 @@ Change Log
 
 * Show a toast and spinner icon in the "Ideal zoom" button when the map is zooming.
 * `zoomTo()` will return a promise that resolves when the zoom animation is complete.
+* Convert `lib/Styled` `.jsx` files to `.tsx` (including Box, Icon, Text). The most significant changes to these interfaces are:
+  * `Box` no longer accepts `<Box positionAbsolute/>` and this should now be passed as `<Box position="absolute"/>`.
+  * `Text`'s `styledSize` has been removed. Use the `styledFontSize` prop.
+  * `ButtonAsLabel` no longer accepts `dark`. A dark background is now used when `light` is false (or undefined).
 * [The next improvement]
 
 

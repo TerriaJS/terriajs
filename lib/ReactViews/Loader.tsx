@@ -1,9 +1,9 @@
 import { TFunction } from "i18next";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
+import Box from "../Styled/Box";
 import { TextSpan } from "../Styled/Text";
-import AnimatedSpinnerIcon from "./AnimatedSpinnerIcon";
-const Box: any = require("../Styled/Box").default;
+import AnimatedSpinnerIcon from "../Styled/AnimatedSpinnerIcon";
 
 interface PropsType extends WithTranslation {
   message?: string;
