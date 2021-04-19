@@ -470,8 +470,7 @@ export default class Terria {
   }
 
   raiseErrorToUser(error: unknown) {
-    const terriaError =
-      error instanceof TerriaError ? error : TerriaError.from(error);
+    const terriaError = TerriaError.from(error);
     terriaError.raisedToUser = true;
     this.error.raiseEvent(terriaError);
   }
@@ -586,17 +585,18 @@ export default class Terria {
 
   setupInitializationUrls(baseUri: uri.URI, config: any) {
     const initializationUrls: string[] = config?.initializationUrls || [];
-    const initSources = initializationUrls.map(url =>
-      generateInitializationUrl(
+    const initSources: InitSource[] = initializationUrls.map(url => ({
+      name: `Init URL from config ${url}`,
+      ...generateInitializationUrl(
         baseUri,
         this.configParameters.initFragmentPaths,
         url
       )
-    );
+    }));
 
     // look for v7 catalogs -> push v7-v8 conversion to initSources
     if (Array.isArray(config?.v7initializationUrls)) {
-      this.initSources.push(
+      initSources.push(
         ...(config.v7initializationUrls as JsonArray)
           .filter(isJsonString)
           .map(async (v7initUrl: string) => {
@@ -612,12 +612,17 @@ export default class Terria {
               convert.messages.forEach(message =>
                 console.log(`- ${message.path.join(".")}: ${message.message}`)
               );
-              return { data: (convert.result as JsonObject | null) || {} };
+              return new Result({
+                data: (convert.result as JsonObject | null) || {}
+              });
             } catch (error) {
-              this.raiseErrorToUser(
+              return Result.error(
                 TerriaError.from(error, {
                   title: { key: "models.catalog.convertErrorTitle" },
-                  message: { key: "models.catalog.convertErrorMessage" }
+                  message: {
+                    key: "models.catalog.convertErrorMessage",
+                    parameters: { url: v7initUrl }
+                  }
                 })
               );
             }
@@ -748,8 +753,8 @@ export default class Terria {
     this._initSourceLoader.dispose();
   }
 
-  updateFromStartData(startData: any) {
-    interpretStartData(this, startData);
+  updateFromStartData(startData: any, name: string = "Application start data") {
+    interpretStartData(this, startData, name);
     return this.loadInitSources();
   }
 
@@ -799,8 +804,6 @@ export default class Terria {
             jsonValue = await loadJson5(initSource.initUrl);
           } catch (e) {
             throw TerriaError.from(e, {
-              sender: this,
-              title: { key: "models.terria.loadingInitSourceErrorTitle" },
               message: {
                 key: "models.terria.loadingInitSourceError2Message",
                 parameters: { loadSource: initSource.initUrl }
@@ -821,7 +824,14 @@ export default class Terria {
         } else if (isInitData(initSource)) {
           jsonValue = initSource.data;
         } else if (isInitDataPromise(initSource)) {
-          jsonValue = (await initSource)?.data;
+          jsonValue = (await initSource).throwIfError({
+            message: {
+              key: "models.terria.loadingInitSourceError2Message",
+              parameters: {
+                loadSource: initSource.name ?? "Unknown load source"
+              }
+            }
+          })?.data;
         }
 
         if (jsonValue && isJsonObject(jsonValue)) {
@@ -836,12 +846,16 @@ export default class Terria {
     const initSources = await Promise.all(
       this.initSources.map(async initSource => {
         try {
-          return await loadInitSource(initSource);
+          return {
+            name: initSource.name,
+            data: await loadInitSource(initSource)
+          };
         } catch (e) {
           errors.push(
             TerriaError.from(e, {
-              title: {
-                key: "models.terria.loadingInitSourceErrorTitle"
+              message: {
+                key: "models.terria.loadingInitSourceError2Message",
+                parameters: { loadSource: initSource.name ?? "Unknown source" }
               }
             })
           );
@@ -850,13 +864,21 @@ export default class Terria {
     );
 
     await Promise.all(
-      filterOutUndefined(initSources).map(async initSource => {
+      initSources.map(async initSource => {
+        if (!isDefined(initSource?.data)) return;
         try {
           await this.applyInitData({
-            initData: initSource
+            initData: initSource!.data
           });
         } catch (e) {
-          errors.push(e);
+          errors.push(
+            TerriaError.from(e, {
+              message: {
+                key: "models.terria.loadingInitSourceError2Message",
+                parameters: { loadSource: initSource!.name ?? "Unknown source" }
+              }
+            })
+          );
         }
       })
     );
@@ -1370,6 +1392,7 @@ export default class Terria {
     if (config.aspects?.["terria-init"]) {
       const { catalog, ...rest } = initObj;
       this.initSources.push({
+        name: `Magda map-config aspect terria-init from ${configUrl}`,
         data: {
           catalog: catalog
         }
@@ -1546,7 +1569,7 @@ async function interpretHash(
         try {
           // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
           const startData = JSON.parse(propertyValue);
-          interpretStartData(terria, startData);
+          interpretStartData(terria, startData, "Start data from hash");
         } catch (e) {
           throw TerriaError.from(e, {
             message: { key: "parsingStartDataErrorMessage" }
@@ -1560,7 +1583,10 @@ async function interpretHash(
           terria.configParameters.initFragmentPaths,
           property
         );
-        terria.initSources.push(initSourceFile);
+        terria.initSources.push({
+          name: `InitUrl from applicationURL hash ${property}`,
+          ...initSourceFile
+        });
       }
     });
   });
@@ -1589,7 +1615,11 @@ async function interpretHash(
         }
 
         if (result.result !== null) {
-          interpretStartData(terria, result.result);
+          interpretStartData(
+            terria,
+            result.result,
+            `Share data from link: ${hashProperties.share}`
+          );
         }
       } catch (error) {
         throw TerriaError.from(error, {
@@ -1601,7 +1631,7 @@ async function interpretHash(
   }
 }
 
-function interpretStartData(terria: Terria, startData: any) {
+function interpretStartData(terria: Terria, startData: any, name: string) {
   // TODO: version check, filtering, etc.
 
   if (startData.initSources) {
@@ -1609,6 +1639,7 @@ function interpretStartData(terria: Terria, startData: any) {
       terria.initSources.push(
         ...startData.initSources.map((initSource: any) => {
           return {
+            name,
             data: initSource
           };
         })

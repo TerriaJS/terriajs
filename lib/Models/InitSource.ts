@@ -1,4 +1,5 @@
 import { JsonObject } from "../Core/Json";
+import { Result } from "../Core/TerriaError";
 
 /**
  * An absolute or relative URL.
@@ -11,13 +12,18 @@ interface InitData {
   data: JsonObject;
 }
 
-type InitDataPromise = Promise<InitData | undefined>;
+type InitDataPromise = Promise<Result<InitData | undefined>>;
 
 interface InitOptions {
   options: InitSource[];
 }
 
-type InitSource = InitUrl | InitData | InitOptions | InitDataPromise;
+type InitSource = { name?: string } & (
+  | InitUrl
+  | InitData
+  | InitOptions
+  | InitDataPromise
+);
 
 export function isInitUrl(initSource: InitSource): initSource is InitUrl {
   return "initUrl" in initSource;

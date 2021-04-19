@@ -381,7 +381,9 @@
     "dismissText": "Got it, thanks!",
     "mobileViewStory": "View Stories {{storiesLength}}",
     "storyEditor": "Story Editor",
-    "hideStoryPanel": "hide story builder"
+    "hideStoryPanel": "hide story builder",
+    "loadSceneErrorTitle": "Error loading Story Scene",
+    "loadSceneErrorMessage": "An error occurred while loading data for story scene: `{{title}}`."
   },
   "satelliteGuidance": {
     "menuTitle": "You can access map guides at any time by looking in the <2>help menu</2>.",
@@ -948,7 +950,7 @@
       "mustHaveType": "Each item must have a type.",
       "compositesError": "Composites cannot include composite items.",
       "convertErrorTitle": "Could not upgrade catalog to V8",
-      "convertErrorMessage": "This catalog file is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the catalog data. Details of the error are below."
+      "convertErrorMessage": "This catalog file is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the catalog data for {{url}}. Details of the error are below."
     },
     "createParameter": {
       "unsupportedErrorTitle": "Unsupported function parameter type",
@@ -1287,16 +1289,16 @@
       "urlLoadErrorMessage": "A problem occurred while initialising Terria with URL parameters.",
       "loadModelErrorMessage": "An error ocurred while loading model `{{model}}`.",
       "loadingMagdaInitSourceErrorTitle": "Error loading Magda initialization source",
-      "loadingMagdaInitSourceErrorMessage": "An error occurred while loading initialization information from Magda record {{url}}.",
+      "loadingMagdaInitSourceErrorMessage": "An error occurred while loading initialization information from Magda record `{{url}}`.",
       "loadingInitSourcesErrorTitle": "Error loading initialization sources",
       "loadingInitSourceErrorTitle": "Error loading initialization source",
-      "loadingInitSourceErrorMessage": "Could not load initialization information from {{fragment}} because no initFragmentPaths are defined.",
-      "loadingInitSourceError2Message": "An error occurred while loading initialization information from {{loadSource}}.  This may indicate that you followed an invalid link or that there is a problem with your Internet connection.",
+      "loadingInitSourceErrorMessage": "Could not load initialization information from `{{fragment}}` because no initFragmentPaths are defined.",
+      "loadingInitSourceError2Message": "An error occurred while loading initialization information from `{{loadSource}}`.  This may indicate that you followed an invalid link or that there is a problem with your Internet connection.",
       "loadingBaseMapsErrorTitle": "Error loading basemaps",
-      "loadingBaseMapErrorTitle": "Error loading basemap: {{name}}",
+      "loadingBaseMapErrorTitle": "Error loading basemap: `{{name}}`",
       "loadingShareDataErrorTitle": "Error loading share data",
       "parsingStartDataErrorMessage": "An error occurred while parsing start data JSON.",
-      "loadingWorkbenchItemErrorTitle": "Error loading item in workbench: {{name}}",
+      "loadingWorkbenchItemErrorTitle": "Error loading item in workbench: `{{name}}`",
       "disclaimer": "Disclaimer",
       "buttonTitleConfirm": "I Agree"
     },

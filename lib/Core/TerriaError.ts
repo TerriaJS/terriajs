@@ -25,8 +25,11 @@ export class Result<T> {
     );
   }
 
-  static return<U>(result: U, errorOptions: TerriaErrorOptions): Result<U> {
-    return new Result(result, new TerriaError(errorOptions));
+  static return<U>(result: U, errorOptions?: TerriaErrorOptions): Result<U> {
+    return new Result(
+      result,
+      errorOptions ? new TerriaError(errorOptions) : undefined
+    );
   }
 
   constructor(
@@ -99,7 +102,7 @@ export default class TerriaError {
 
   static from(error: unknown, overrides?: TerriaErrorOverrides): TerriaError {
     if (error instanceof TerriaError) {
-      return error.clone(overrides);
+      return isDefined(overrides) ? error.clone(overrides) : error;
     }
     if (typeof overrides === "string") {
       overrides = { message: overrides };
