@@ -66,11 +66,18 @@
         "close": "တုံ့ပြန်မှုပေးခြင်းကို ပိတ်ရန်",
         "feedbackBtnText": "တုံ့ပြန်မှုပေးရန်",
         "feedbackPreamble": "သင့်တုန့်ပြန်ချက်ကို ကြားလိုပါသည်!",
-        "title": "တုံ့ပြန်ချက်"
+        "title": "တုံ့ပြန်ချက်",
+        "send": "ပေးပိုရန်"
     },
     "helpMenu": {
         "btnTitle": "အကူအညီရယူရန်",
-        "btnText": "အကူအညီတောင်းရန်"
+        "btnText": "အကူအညီတောင်းရန်",
+        "next": "ထို့နောက်",
+        "done": "ပြီးဆုံးပြီ",
+        "helpMenuMoreHelpTitle": "နောက်ထပ်အကူအညီ",
+        "helpMenuSatelliteGuideTitle": "ဂြိုလ်တုပုံရိပ်လမ်းညွှန်ကိုကြည့်ပါ",
+        "helpMenuOpenWelcome": "ကြိုဆိုသည့်သတင်းပြပါ",
+        "helpMenuHeader": "သင်ဘာလုပ်ချင်ပါသလဲ"
     },
     "core": {
         "dataType": {
