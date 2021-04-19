@@ -17,12 +17,12 @@ const ErrorsBox = (props: {
   depth: number;
 }) => {
   return (
-    <React.Fragment>
+    <>
       {props.errors.map(error => (
         <Box
           displayInlineBlock
           css={{
-            paddingLeft: "10px",
+            paddingLeft: "7px",
             borderLeft: "solid 1px rgba(255,255,255,.1)"
           }}
         >
@@ -36,23 +36,23 @@ const ErrorsBox = (props: {
           )}
         </Box>
       ))}
-    </React.Fragment>
+    </>
   );
 };
 
 const TerriaErrorBox = (props: { error: TerriaError; depth: number }) => {
   return (
-    <React.Fragment>
+    <>
       <Text>{parseCustomMarkdownToReact(props.error.message)}</Text>
 
-      <Spacing bottom={2} />
+      <Spacing bottom={1} />
 
       {Array.isArray(props.error.originalError) &&
       props.error.originalError.length > 0 ? (
         props.depth === 0 ? (
           <Collapsible
             btnRight={true}
-            title={"Stacktrace"}
+            title={i18next.t("models.raiseError.developerDetails")}
             titleTextProps={{ large: true }}
             bodyBoxProps={{ padded: true }}
           >
@@ -68,7 +68,7 @@ const TerriaErrorBox = (props: { error: TerriaError; depth: number }) => {
           ></ErrorsBox>
         )
       ) : null}
-    </React.Fragment>
+    </>
   );
 };
 
@@ -83,7 +83,7 @@ export const terriaErrorNotification = (error: TerriaError) => (
   };
 
   return (
-    <React.Fragment>
+    <>
       <TerriaErrorBox error={error} depth={0}></TerriaErrorBox>
 
       {viewState.terria.configParameters.feedbackUrl ? (
@@ -106,6 +106,6 @@ export const terriaErrorNotification = (error: TerriaError) => (
           {viewState.terria.supportEmail}
         </Text>
       )}
-    </React.Fragment>
+    </>
   );
 };
