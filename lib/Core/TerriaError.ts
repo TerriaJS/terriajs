@@ -4,7 +4,6 @@ import i18next from "i18next";
 import { Notification } from "../ReactViewModels/ViewState";
 import { terriaErrorNotification } from "../ReactViews/Notification/terriaErrorNotification";
 import isDefined from "./isDefined";
-import { NotUndefined } from "./TypeModifiers";
 
 export interface I18nTranslateString {
   key: string;
@@ -15,59 +14,7 @@ function resolveI18n(i: I18nTranslateString | string) {
   return typeof i === "string" ? i : i18next.t(i.key, i.parameters);
 }
 
-// TODO:
-// When to use this or just throw Terria Errors?
-export class Result<T> {
-  static error(error: TerriaErrorOptions | TerriaError): Result<undefined> {
-    return new Result(
-      undefined,
-      error instanceof TerriaError ? error : new TerriaError(error)
-    );
-  }
-
-  static return<U>(result: U, errorOptions?: TerriaErrorOptions): Result<U> {
-    return new Result(
-      result,
-      errorOptions ? new TerriaError(errorOptions) : undefined
-    );
-  }
-
-  constructor(
-    private readonly result: T,
-    private readonly error?: TerriaError
-  ) {}
-
-  ignoreError(): T {
-    return this.result;
-  }
-
-  catchError(callback: (error: TerriaError) => void): T {
-    if (this.error) callback(this.error);
-    return this.result;
-  }
-
-  throwIfError(errorOverrides?: TerriaErrorOverrides): T {
-    if (this.error) {
-      throw this.error.clone(errorOverrides);
-    }
-    return this.result;
-  }
-
-  throwIfUndefined(errorOverrides?: TerriaErrorOverrides): NotUndefined<T> {
-    if (isDefined(this.result)) return this.result as NotUndefined<T>;
-    if (this.error) {
-      throw this.error.clone(errorOverrides);
-    }
-    if (typeof errorOverrides === "string") {
-      errorOverrides = { message: errorOverrides };
-    }
-    throw new TerriaError({
-      message: "Unhandled required Result exception",
-      ...errorOverrides
-    });
-  }
-}
-
+/** Object used to create a TerriaError */
 export interface TerriaErrorOptions {
   /**  A detailed message describing the error.  This message may be HTML and it should be sanitized before display to the user. */
   message: string | I18nTranslateString;
@@ -79,11 +26,19 @@ export interface TerriaErrorOptions {
   /** True if the user has seen this error; otherwise, false. */
   raisedToUser?: boolean;
 
+  /** Error which this error was created from. This means TerriaErrors can be represented as a tree of errors - and therefore a stacktrace can be generated */
   originalError?: TerriaError | Error | (TerriaError | Error)[];
 
+  /** If true, lib\ReactViews\Notification\terriaErrorNotification.tsx will be used to display error message.
+   * If false, a plain old `Notification` will be used
+   */
   useTerriaErrorNotification?: boolean;
 }
 
+/** Object used to clone an existing TerriaError (see `TerriaError.clone()`).
+ *
+ * If this is a `string` it will be used to set `TerriaError.message`
+ */
 export type TerriaErrorOverrides = Partial<TerriaErrorOptions> | string;
 
 /**
@@ -91,18 +46,25 @@ export type TerriaErrorOverrides = Partial<TerriaErrorOptions> | string;
  * by throwing an exception because no one would be able to catch it.
  */
 export default class TerriaError {
-  readonly sender: unknown;
   private readonly _message: string | I18nTranslateString;
   private readonly _title: string | I18nTranslateString;
-  readonly originalError?: (TerriaError | Error)[];
-
   private readonly useTerriaErrorNotification: boolean;
 
+  /** `sender` isn't really used for anything at the moment... */
+  readonly sender: unknown;
+  readonly originalError?: (TerriaError | Error)[];
   private _raisedToUser: boolean = false;
 
+  /**
+   * Convenience function to generate a TerriaError from some unknown error. It will try to extract a meaningful message from whatever object it is given.
+   *
+   * If error is a `TerriaError`, then it will be `cloned` to create a tree of `TerriaErrors` (see `TerriaError.clone()`).
+   *
+   * `overrides` can be used to add more context to the TerriaError
+   */
   static from(error: unknown, overrides?: TerriaErrorOverrides): TerriaError {
     if (error instanceof TerriaError) {
-      return isDefined(overrides) ? error.clone(overrides) : error;
+      return isDefined(overrides) ? error.createParentError(overrides) : error;
     }
     if (typeof overrides === "string") {
       overrides = { message: overrides };
@@ -122,6 +84,9 @@ export default class TerriaError {
     });
   }
 
+  /** Combine an array of `TerriaErrors` into a single `TerriaError`.
+   * `overrides` can be used to add more context to the combined `TerriaError`.
+   */
   static combine(
     errors: TerriaError[],
     overrides: TerriaErrorOverrides
@@ -164,6 +129,7 @@ export default class TerriaError {
     return this._raisedToUser;
   }
 
+  /** Set raisedToUser value for **all** `TerriaErrors` in this tree. */
   set raisedToUser(r: boolean) {
     this._raisedToUser = r;
     if (this.originalError instanceof TerriaError) {
@@ -171,6 +137,7 @@ export default class TerriaError {
     }
   }
 
+  /** Convert `TerriaError` to `Notification` */
   toNotification(): Notification {
     return {
       title: () => this.title,
@@ -180,7 +147,10 @@ export default class TerriaError {
     };
   }
 
-  clone(overrides?: TerriaErrorOverrides): TerriaError {
+  /**
+   * Create a new parent `TerriaError` from this error. This essentially "clones" the `TerriaError` and applied `overrides` on top. It will also set `originalError` so we get a nice tree of `TerriaError`s
+   */
+  createParentError(overrides?: TerriaErrorOverrides): TerriaError {
     if (typeof overrides === "string") {
       overrides = { message: overrides };
     }

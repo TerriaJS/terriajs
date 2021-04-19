@@ -32,8 +32,9 @@ import JsonValue, {
 } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
 import loadJson5 from "../Core/loadJson5";
+import Result from "../Core/Result";
 import ServerConfig from "../Core/ServerConfig";
-import TerriaError, { Result } from "../Core/TerriaError";
+import TerriaError from "../Core/TerriaError";
 import { Complete } from "../Core/TypeModifiers";
 import { getUriWithoutPath } from "../Core/uriHelpers";
 import PickedFeatures, {
@@ -941,7 +942,7 @@ export default class Terria {
             )
           ).catchError(error =>
             errors.push(
-              error.clone({
+              error.createParentError({
                 message: `Failed to load container ${containerId}`
               })
             )
@@ -983,7 +984,7 @@ export default class Terria {
         )
       ).catchError(error =>
         errors.push(
-          error.clone({
+          error.createParentError({
             message: `Failed to load SplitItemReference ${splitSourceId}`
           })
         )

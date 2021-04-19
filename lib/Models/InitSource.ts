@@ -1,5 +1,5 @@
 import { JsonObject } from "../Core/Json";
-import { Result } from "../Core/TerriaError";
+import Result from "../Core/Result";
 
 /**
  * An absolute or relative URL.

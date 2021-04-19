@@ -3,7 +3,7 @@ import CommonStrata from "./CommonStrata";
 import upsertModelFromJson from "./upsertModelFromJson";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import UrlReference from "./UrlReference";
-import TerriaError, { Result } from "../Core/TerriaError";
+import TerriaError from "../Core/TerriaError";
 
 export default async function createUrlReferenceFromUrl(
   url: string,

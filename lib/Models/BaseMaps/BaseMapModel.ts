@@ -8,7 +8,8 @@ import Terria from "../Terria";
 import upsertModelFromJson from "../upsertModelFromJson";
 import MappableMixin from "../../ModelMixins/MappableMixin";
 import { runInAction } from "mobx";
-import TerriaError, { Result } from "../../Core/TerriaError";
+import TerriaError from "../../Core/TerriaError";
+import Result from "../../Core/Result";
 
 export interface BaseMapModel {
   image: string;

@@ -1,6 +1,8 @@
 import i18next from "i18next";
 import defaults from "lodash-es/defaults";
-import TerriaError, { Result } from "../Core/TerriaError";
+import Result from "../Core/Result";
+import TerriaError from "../Core/TerriaError";
+import GroupMixin from "../ModelMixins/GroupMixin";
 import CommonStrata from "./CommonStrata";
 import createStubCatalogItem from "./createStubCatalogItem";
 import { BaseModel } from "./Model";
@@ -8,7 +10,6 @@ import ModelFactory from "./ModelFactory";
 import StubCatalogItem from "./StubCatalogItem";
 import Terria from "./Terria";
 import updateModelFromJson from "./updateModelFromJson";
-import GroupMixin from "../ModelMixins/GroupMixin";
 
 export interface UpsertModelFromJsonOptions {
   addModelToTerria?: boolean;
