@@ -7,7 +7,7 @@ import Button from "../../../Styled/Button";
 import Spacing from "../../../Styled/Spacing";
 import Text from "../../../Styled/Text";
 import Icon, { StyledIcon } from "../../../Styled/Icon";
-import MovementsController from "./MovementsController";
+import MovementsController, { Mode } from "./MovementsController";
 
 const mouseControlsImage = require("../../../../wwwroot/images/mouse-control.svg");
 const wasdControlsImage = require("../../../../wwwroot/images/wasd.svg");
@@ -15,7 +15,7 @@ const heightControlsImage = require("../../../../wwwroot/images/height-controls.
 
 type MovementControlsProps = {
   cesium: Cesium;
-  onMove: () => void;
+  onMove: (mode: Mode) => void;
   pedestrianHeight: number;
   maxVerticalLookAngle: number;
 };

@@ -61,7 +61,7 @@ export default class MovementsController {
 
   constructor(
     readonly cesium: Cesium,
-    readonly onMove: () => void,
+    readonly onMove: (mode: Mode) => void,
     readonly pedestrianHeight: number,
     readonly maxVerticalLookAngle: number
   ) {
@@ -326,7 +326,7 @@ export default class MovementsController {
     if (this.activeMovements.size > 0) {
       [...this.activeMovements].forEach(movement => this.move(movement));
       this.updateSurfaceHeightEstimate();
-      this.onMove();
+      this.onMove(this.mode);
 
       if (
         this.activeMovements.has("down") &&

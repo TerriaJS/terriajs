@@ -7,6 +7,7 @@ import PositionRightOfWorkbench from "../../Workbench/PositionRightOfWorkbench";
 import DropPedestrianToGround from "./DropPedestrianToGround";
 import MiniMap, { getViewFromScene, MiniMapView } from "./MiniMap";
 import MovementControls from "./MovementControls";
+import { Mode } from "./MovementsController";
 
 // The desired camera height measured from the surface in metres
 export const PEDESTRIAN_HEIGHT = 1.7;
@@ -25,13 +26,22 @@ const PedestrianMode: React.FC<PedestrianModeProps> = observer(props => {
   const [view, setView] = useState<MiniMapView | undefined>();
 
   const onDropCancelled = () => viewState.closeTool();
-  const updateView = () => setView(getViewFromScene(cesium.scene));
+  const updateView = (mode: Mode) => {
+    viewState.isPedestrianWalkModeOn = mode === "walk";
+    setView(getViewFromScene(cesium.scene));
+  };
 
   useEffect(function closeOnZoomTo() {
     const disposer = cesium.zoomToEvent.addEventListener(() =>
       viewState.closeTool()
     );
     return disposer;
+  }, []);
+
+  useEffect(function unsetViewStateFlagOnClose() {
+    return () => {
+      viewState.isPedestrianWalkModeOn = false;
+    };
   }, []);
 
   return (
