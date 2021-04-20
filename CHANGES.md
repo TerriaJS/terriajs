@@ -5,7 +5,8 @@ Change Log
 
 #### next release (8.0.0-alpha.77)
 
-* Convert `Branding` to `.tsx`
+* Convert `Branding.jsx` to `.tsx`
+* Add `font` variables and `fontImports` to theme - this can be used to import CSS fonts.
 * Convert `lib/Styled` `.jsx` files to `.tsx` (including Box, Icon, Text). The most significant changes to these interfaces are:
   * `Box` no longer accepts `<Box positionAbsolute/>` and this should now be passed as `<Box position="absolute"/>`.
   * `Text`'s `styledSize` has been removed. Use the `styledFontSize` prop.
