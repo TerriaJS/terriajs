@@ -56,6 +56,13 @@
   greyLightest: $grey-lightest;
   charcoalGrey: $charcoal-grey;
 
+  // Fonts
+  fontPop: $font-pop;
+  fontBase: $font-base;
+  fontMono: $font-mono;
+  fontFeatureInfo: $font-feature-info;
+  font: $font;
+
   modalBg: $modal-bg;
   modalText: $modal-text;
   modalHighlight: $modal-highlight;
@@ -69,4 +76,11 @@
   workbenchWidth: 350;
 
   toolPrimaryColor: $tool-primary-color;
+
+  // Branding
+  brandingHeight: $branding-height;
+  brandingPaddingVertical: $branding-padding-vertical;
+  brandingPaddingHorizontal: $branding-padding-horizontal;
+
+  inputHeight: $input-height;
 }

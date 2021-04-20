@@ -61,9 +61,7 @@ export const Text = styled.div<ITextProps>`
   ${props => props.isLink && `text-decoration: underline;`}
 
   // TODO: themeify family
-  font-family: "Nunito", sans-serif;
-  ${props => props.nunito && `font-family: "Nunito", sans-serif;`}
-  // ${props => props.openSans && `font-family: "Nunito", sans-serif;`}
+  font-family: ${props => props.theme.fontBase};
 
   ${props =>
     props.breakWord &&
