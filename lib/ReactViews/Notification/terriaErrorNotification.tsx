@@ -18,13 +18,14 @@ const ErrorsBox = (props: {
 }) => {
   return (
     <>
-      {props.errors.map(error => (
+      {props.errors.map((error, idx) => (
         <Box
           displayInlineBlock
           css={{
             paddingLeft: "7px",
             borderLeft: "solid 1px rgba(255,255,255,.1)"
           }}
+          key={idx}
         >
           {error instanceof TerriaError ? (
             <TerriaErrorBox

@@ -600,34 +600,37 @@ export default class Terria {
       initSources.push(
         ...(config.v7initializationUrls as JsonArray)
           .filter(isJsonString)
-          .map(async (v7initUrl: string) => {
-            try {
-              const [{ convertCatalog }, catalog] = await Promise.all([
-                import("catalog-converter"),
-                loadJson5(v7initUrl)
-              ]);
-              const convert = convertCatalog(catalog, { generateIds: false });
-              console.log(
-                `WARNING: ${v7initUrl} is a v7 catalog - it has been upgraded to v8\nMessages:\n`
-              );
-              convert.messages.forEach(message =>
-                console.log(`- ${message.path.join(".")}: ${message.message}`)
-              );
-              return new Result({
-                data: (convert.result as JsonObject | null) || {}
-              });
-            } catch (error) {
-              return Result.error(
-                TerriaError.from(error, {
-                  title: { key: "models.catalog.convertErrorTitle" },
-                  message: {
-                    key: "models.catalog.convertErrorMessage",
-                    parameters: { url: v7initUrl }
-                  }
-                })
-              );
-            }
-          })
+          .map(v7initUrl => ({
+            name: `V7 Init URL from config ${v7initUrl}`,
+            data: (async () => {
+              try {
+                const [{ convertCatalog }, catalog] = await Promise.all([
+                  import("catalog-converter"),
+                  loadJson5(v7initUrl)
+                ]);
+                const convert = convertCatalog(catalog, { generateIds: false });
+                console.log(
+                  `WARNING: ${v7initUrl} is a v7 catalog - it has been upgraded to v8\nMessages:\n`
+                );
+                convert.messages.forEach(message =>
+                  console.log(`- ${message.path.join(".")}: ${message.message}`)
+                );
+                return new Result({
+                  data: (convert.result as JsonObject | null) || {}
+                });
+              } catch (error) {
+                return Result.error(
+                  TerriaError.from(error, {
+                    title: { key: "models.catalog.convertErrorTitle" },
+                    message: {
+                      key: "models.catalog.convertErrorMessage",
+                      parameters: { url: v7initUrl }
+                    }
+                  })
+                );
+              }
+            })()
+          }))
       );
     }
     this.initSources.push(...initSources);
@@ -806,8 +809,8 @@ export default class Terria {
           } catch (e) {
             throw TerriaError.from(e, {
               message: {
-                key: "models.terria.loadingInitSourceError2Message",
-                parameters: { loadSource: initSource.initUrl }
+                key: "models.terria.loadingInitJsonMessage",
+                parameters: { url: initSource.initUrl }
               }
             });
           }
@@ -825,14 +828,7 @@ export default class Terria {
         } else if (isInitData(initSource)) {
           jsonValue = initSource.data;
         } else if (isInitDataPromise(initSource)) {
-          jsonValue = (await initSource).throwIfError({
-            message: {
-              key: "models.terria.loadingInitSourceError2Message",
-              parameters: {
-                loadSource: initSource.name ?? "Unknown load source"
-              }
-            }
-          })?.data;
+          jsonValue = (await initSource.data).throwIfError()?.data;
         }
 
         if (jsonValue && isJsonObject(jsonValue)) {
@@ -898,7 +894,11 @@ export default class Terria {
     if (errors.length > 0) {
       this.raiseErrorToUser(
         TerriaError.combine(errors, {
-          title: { key: "models.terria.loadingInitSourcesErrorTitle" }
+          title: { key: "models.terria.loadingInitSourcesErrorTitle" },
+          message: {
+            key: "models.terria.loadingInitSourcesErrorMessage",
+            parameters: { appName: this.appName, email: this.supportEmail }
+          }
         })
       );
     }

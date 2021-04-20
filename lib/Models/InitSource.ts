@@ -12,7 +12,9 @@ interface InitData {
   data: JsonObject;
 }
 
-type InitDataPromise = Promise<Result<InitData | undefined>>;
+type InitDataPromise = {
+  data: Promise<Result<InitData | undefined>>;
+};
 
 interface InitOptions {
   options: InitSource[];
@@ -30,15 +32,20 @@ export function isInitUrl(initSource: InitSource): initSource is InitUrl {
 }
 
 export function isInitData(initSource: InitSource): initSource is InitData {
-  return "data" in initSource;
+  return (
+    initSource &&
+    "data" in initSource &&
+    Object.prototype.toString.call(initSource.data) !== "[object Promise]"
+  );
 }
 
 export function isInitDataPromise(
-  initSource: InitSource
+  initSource: any
 ): initSource is InitDataPromise {
   return (
     initSource &&
-    Object.prototype.toString.call(initSource) === "[object Promise]"
+    "data" in initSource &&
+    Object.prototype.toString.call(initSource.data) === "[object Promise]"
   );
 }
 

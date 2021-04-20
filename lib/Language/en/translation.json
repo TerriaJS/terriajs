@@ -950,7 +950,7 @@
       "mustHaveType": "Each item must have a type.",
       "compositesError": "Composites cannot include composite items.",
       "convertErrorTitle": "Could not upgrade catalog to V8",
-      "convertErrorMessage": "This catalog file is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the catalog data for {{url}}. Details of the error are below."
+      "convertErrorMessage": "This catalog file is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the catalog data for {{url}}."
     },
     "createParameter": {
       "unsupportedErrorTitle": "Unsupported function parameter type",
@@ -1164,12 +1164,9 @@
     },
     "raiseError": {
       "errorTitle": "An error occurred",
-      "errorMessage": "<p>{{appName}} experienced an error.  Please report this by emailing {{email}}. Details of the error are below.</p><p><pre>{{error}}</pre></p>",
       "errorMultipleTitle": "Multiple errors occurred",
       "errorMultipleMessage": "Details of the errors are below",
-      "errorMessageDetailed": "<p>{{message}}. Details of the error are below.</p><p><pre>{{error}}</pre></p><p><details><summary>Stack trace:</summary><pre>{{stackTrace}}</pre></details></p><p>Please report it by sending an email to {{email}}.</p>",
-      "errorMessageDetailedStackTrace": "<p>{{message}}. Details of the error are below.</p><p><pre>{{error}}</pre></p><p><details><summary>Stack trace:</summary><pre>{{stackTrace}}</pre></details></p><p>Please report it by sending an email to {{email}}.</p>",
-      "notificationFeedback": "To send error to the developers, click here.",
+      "notificationFeedback": "To send the error to the developers, click here.",
       "developerDetails": "Developer details"
     },
     "regionMapping": {
@@ -1291,10 +1288,12 @@
       "loadModelErrorMessage": "An error ocurred while loading model `{{model}}`.",
       "loadingMagdaInitSourceErrorTitle": "Error loading Magda initialization source",
       "loadingMagdaInitSourceErrorMessage": "An error occurred while loading initialization information from Magda record `{{url}}`.",
-      "loadingInitSourcesErrorTitle": "Error loading initialization sources",
+      "loadingInitSourcesErrorTitle": "Error loading map configuration",
+      "loadingInitSourcesErrorMessage": "An error occurred while loading {{appName}} map configuration &mdash; it may not display correctly. Please try reloading the map, and if the problem persists, please report it by sending an email to {{email}}, or you can press the button below.",
       "loadingInitSourceErrorTitle": "Error loading initialization source",
       "loadingInitSourceErrorMessage": "Could not load initialization information from `{{fragment}}` because no initFragmentPaths are defined.",
-      "loadingInitSourceError2Message": "An error occurred while loading initialization information from `{{loadSource}}`.  This may indicate that you followed an invalid link or that there is a problem with your Internet connection.",
+      "loadingInitSourceError2Message": "An error occurred while loading initialization information from:  \n*`{{loadSource}}`*.",
+      "loadingInitJsonMessage": "An error occurred while loading JSON file {{url}}.",
       "loadingBaseMapsErrorTitle": "Error loading basemaps",
       "loadingBaseMapErrorTitle": "Error loading basemap: `{{name}}`",
       "loadingShareDataErrorTitle": "Error loading share data",
@@ -1315,7 +1314,7 @@
       "asyncResultDescription": "This is the result of invoking the {{name}} process or service at {{timestamp}} with the input parameters below.",
       "loadingInitSourceErrorTitle": "Error loading initialization source",
       "loadingInitSourceErrorMessage": "Error loading initialization source {{fragment}} because no initFragmentPaths are defined.",
-      "loadingInitSourceError2Message": "An error occurred while loading initialization information from {{loadSource}}. This may indicate that you followed an invalid link or that there is a problem with your Internet connection.",
+      "loadingInitSourceError2Message": "An error occurred while loading initialization information from:  \n*`{{loadSource}}`*.",
       "disclaimer": "Disclaimer",
       "buttonTitleConfirm": "I Agree"
     },

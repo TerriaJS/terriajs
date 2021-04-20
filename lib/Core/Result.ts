@@ -124,7 +124,9 @@ export default class Result<T> {
    */
   throwIfError(errorOverrides?: TerriaErrorOverrides): T {
     if (this.error) {
-      throw this.error.createParentError(errorOverrides);
+      throw errorOverrides
+        ? this.error.createParentError(errorOverrides)
+        : this.error;
     }
     return this.value;
   }
@@ -136,7 +138,9 @@ export default class Result<T> {
   throwIfUndefined(errorOverrides?: TerriaErrorOverrides): NotUndefined<T> {
     if (isDefined(this.value)) return this.value as NotUndefined<T>;
     if (this.error) {
-      throw this.error.createParentError(errorOverrides);
+      throw errorOverrides
+        ? this.error.createParentError(errorOverrides)
+        : this.error;
     }
     if (typeof errorOverrides === "string") {
       errorOverrides = { message: errorOverrides };
