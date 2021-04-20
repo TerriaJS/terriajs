@@ -38,7 +38,7 @@ export default (props: {
         box-sizing: border-box;
 
         width: 100%;
-        height: ${(p: any) => p.theme.brandingHeight};
+        height: ${(p: any) => p.theme.logoHeight};
 
         overflow: hidden;
 
