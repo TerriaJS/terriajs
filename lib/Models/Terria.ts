@@ -436,6 +436,8 @@ export default class Terria {
    */
   @observable catalogReferencesLoaded: boolean = false;
 
+  augmentedVirtuality?: any;
+
   constructor(options: TerriaOptions = {}) {
     if (options.baseUrl) {
       if (options.baseUrl.lastIndexOf("/") !== options.baseUrl.length - 1) {

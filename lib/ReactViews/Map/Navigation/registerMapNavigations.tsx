@@ -19,6 +19,14 @@ import { ToggleSplitterController } from "./Items/ToggleSplitterTool";
 import ZoomControl, { ZOOM_CONTROL_ID } from "./Items/ZoomControl";
 import { HELP_PANEL_ID } from "./../Panels/HelpPanel/HelpPanel";
 import CloseToolButton from "./Items/CloseToolButton";
+import {
+  AR_TOOL_ID,
+  AugmentedVirtualityController,
+  AugmentedVirtualityHoverController,
+  AugmentedVirtualityRealign,
+  AugmentedVirtualityRealignController
+} from "./Items/AugmentedVirtualityTool";
+import AugmentedVirtuality from "../../../Models/AugmentedVirtuality";
 
 export const CLOSE_TOOL_ID = "close-tool";
 
@@ -113,7 +121,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     name: "pedestrianMode.toolButtonTitle",
     title: "pedestrianMode.toolButtonTitle",
     location: "TOP",
-    screenSize: "medium",
+    screenSize: undefined,
     controller: pedestrianModeToolController,
     order: 5
   });
@@ -134,6 +142,55 @@ export const registerMapNavigations = (viewState: ViewState) => {
     order: 7
   });
   closeToolButtonController.visible = false;
+
+  const augmentedVirtuality = new AugmentedVirtuality(terria);
+  const arController = new AugmentedVirtualityController({
+    terria: terria,
+    viewState: viewState,
+    augmentedVirtuality: augmentedVirtuality
+  });
+  mapNavigationModel.add({
+    id: AR_TOOL_ID,
+    name: "AR.arTool",
+    location: "TOP",
+    screenSize: undefined,
+    controller: arController,
+    order: 0,
+    noExpand: true
+  });
+
+  const arControllerHover = new AugmentedVirtualityHoverController({
+    augmentedVirtuality: augmentedVirtuality
+  });
+  mapNavigationModel.add({
+    id: `${AR_TOOL_ID}_hover`,
+    name: "AR.btnHover",
+    location: "TOP",
+    screenSize: undefined,
+    controller: arControllerHover,
+    order: 1,
+    noExpand: true
+  });
+
+  const arRealignController = new AugmentedVirtualityRealignController({
+    terria: terria,
+    viewState: viewState,
+    augmentedVirtuality: augmentedVirtuality
+  });
+  mapNavigationModel.add({
+    id: `${AR_TOOL_ID}_realign`,
+    name: augmentedVirtuality.manualAlignmentSet
+      ? "AR.btnRealign"
+      : "AR.btnResetRealign",
+    location: "TOP",
+    screenSize: undefined,
+    controller: arRealignController,
+    render: (
+      <AugmentedVirtualityRealign arRealignController={arRealignController} />
+    ),
+    order: 1,
+    noExpand: true
+  });
 
   const feedbackController = new FeedbackButtonController(viewState);
   mapNavigationModel.add({
