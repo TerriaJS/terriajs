@@ -9,6 +9,8 @@ Change Log
   * `Box` no longer accepts `<Box positionAbsolute/>` and this should now be passed as `<Box position="absolute"/>`.
   * `Text`'s `styledSize` has been removed. Use the `styledFontSize` prop.
   * `ButtonAsLabel` no longer accepts `dark`. A dark background is now used when `light` is false (or undefined).
+* Pedestrian mode will no longer respond to "wasd" keys when the user is typing in some input field.
+* Story scene transition between two story points captured in pedestrian mode is now more flat or linear and feels more like walking than flying.
 * [The next improvement]
 
 
