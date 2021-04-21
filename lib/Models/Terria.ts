@@ -1041,21 +1041,21 @@ export default class Terria {
       }
 
       if (isDefined(loadedModel.target)) {
-        try {
-          updateModelFromJson(
-            loadedModel.target,
-            stratumId,
-            dereferenced || {},
-            replaceStratum
-          );
-        } catch (e) {
+        updateModelFromJson(
+          loadedModel.target,
+          stratumId,
+          dereferenced || {},
+          replaceStratum
+        ).catchError(e =>
           errors.push(
             TerriaError.from(
               e,
-              `Failed to update model from JSON: ${loadedModel.target.uniqueId}`
+              `Failed to update model from JSON: ${
+                loadedModel.target!.uniqueId
+              }`
             )
-          );
-        }
+          )
+        );
       }
     } else if (dereferenced) {
       throw new TerriaError({
@@ -1114,7 +1114,11 @@ export default class Terria {
     }
 
     if (initData.catalog !== undefined) {
-      this.catalog.group.addMembersFromJson(stratumId, initData.catalog);
+      this.catalog.group
+        .addMembersFromJson(stratumId, initData.catalog)
+        .catchError(error => {
+          errors.push(error);
+        });
     }
 
     if (isJsonObject(initData.elements)) {

@@ -1,4 +1,4 @@
-import TerriaError from "../Core/TerriaError";
+import Result from "../Core/Result";
 import { BaseModel } from "../Models/Model";
 import Trait, { TraitOptions } from "./Trait";
 
@@ -46,15 +46,19 @@ export class PrimitiveArrayTrait<T> extends Trait {
     return undefined;
   }
 
-  fromJson(model: BaseModel, stratumName: string, jsonValue: any): T[] {
+  fromJson(
+    model: BaseModel,
+    stratumName: string,
+    jsonValue: any
+  ): Result<T[] | undefined> {
     if (!this.isValidJson(jsonValue)) {
-      throw new TerriaError({
+      return Result.error({
         title: "Invalid property",
         message: `Property ${this.id} is expected to be of type ${this.type}[].`
       });
     }
 
-    return jsonValue;
+    return Result.return(jsonValue);
   }
 
   toJson(value: T[]): any {
