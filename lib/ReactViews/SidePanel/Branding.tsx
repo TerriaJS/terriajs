@@ -59,8 +59,8 @@ export default (props: {
 
         font-family: ${(p: any) => p.theme.fontPop};
 
-        padding: ${(p: any) => p.theme.brandingPaddingHorizontal}
-          ${(p: any) => p.theme.brandingPaddingVertical};
+        padding: ${(p: any) => p.theme.logoPaddingHorizontal}
+          ${(p: any) => p.theme.logoPaddingVertical};
 
         @media (max-width: ${(p: any) => p.theme.sm}px) {
           height: ${(p: any) => p.theme.inputHeight};
