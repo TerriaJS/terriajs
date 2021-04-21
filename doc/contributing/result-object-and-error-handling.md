@@ -11,7 +11,7 @@ This is similar to the https://www.npmjs.com/package/neverthrow package
 ### Simple usage
 
 ```ts
-function someFn(someArg): Result<string | undefined> {
+function someFn(someArg: boolean): Result<string | undefined> {
   if (someArg) {
     return new Result('success')
   }
@@ -24,7 +24,11 @@ function someFn(someArg): Result<string | undefined> {
 ##### Ignore error and just return value
 
 ```ts
-const value = someFn(someArg).ignoreError()
+const value = someFn(true).ignoreError()
+// value = "success"
+
+const value = someFn(false).ignoreError()
+// value = undefined
 ```
 
 ##### Catch error, do something with it and then return value
@@ -57,10 +61,14 @@ function someFn(someArg): Result<string | undefined> {
   if (someArg) {
     return new Result('success')
   }
-  return new Result(undefined, TerriaError.from("Some error inside function"))
+  // Here we create a TerriaError with message "Some Error inside result"
+  return new Result(undefined, TerriaError.from("Some error inside result"))
 }
 
-const value = someFn(someArg).throwIfError("Some error outside of function")
+// Here we add `TerriaErrorOverrides` in throwIfError.
+// This is equivalent to calling `createParentError()` on the error inside inside result.
+// Eg. error.createParentError("Some error outside of result")
+const value = someFn(someArg).throwIfError("Some error outside of result")
 ```
 
 This will now throw a chain of TerriaErrors - which provides a good stack trace:
@@ -68,10 +76,10 @@ This will now throw a chain of TerriaErrors - which provides a good stack trace:
 ```json
 {
   ...,
-  message: "Some error outside of function",
+  message: "Some error outside of result",
   originalError: {
     ...,
-    message: "Some error inside function"
+    message: "Some error inside result"
   }
 }
 ```

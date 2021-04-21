@@ -78,16 +78,21 @@ import { NotUndefined } from "./TypeModifiers";
  *  }
  * ```
  */
-export default class Result<T> {
-  /** Convenience function to return a Result with an error */
+export default class Result<T = undefined> {
+  /** Convenience constructor  to return a Result with an error */
   static error(error: TerriaErrorOptions | TerriaError): Result<undefined> {
     return new Result(
       undefined,
+      // Create TerriaError if error is TerriaErrorOptions
       error instanceof TerriaError ? error : new TerriaError(error)
     );
   }
 
-  /** Convenience function to return a new Result with a vaule and/or error */
+  static none() {
+    return new Result(undefined);
+  }
+
+  /** Convenience constructor  to return a new Result with a vaule and/or error */
   static return<U>(
     value: U,
     error?: TerriaErrorOptions | TerriaError
@@ -95,7 +100,8 @@ export default class Result<T> {
     return new Result(
       value,
       error
-        ? error instanceof TerriaError
+        ? // Create TerriaError if error is TerriaErrorOptions
+          error instanceof TerriaError
           ? error
           : new TerriaError(error)
         : undefined
@@ -104,8 +110,12 @@ export default class Result<T> {
 
   constructor(
     private readonly value: T,
-    private readonly error?: TerriaError
+    private readonly _error?: TerriaError
   ) {}
+
+  get error(): TerriaError | undefined {
+    return this._error;
+  }
 
   /** Returns value regardless if an error occurred */
   ignoreError(): T {
@@ -114,7 +124,7 @@ export default class Result<T> {
 
   /** Apply callback function if an error occurred, and then return value */
   catchError(callback: (error: TerriaError) => void): T {
-    if (this.error) callback(this.error);
+    if (this._error) callback(this._error);
     return this.value;
   }
 
@@ -123,11 +133,8 @@ export default class Result<T> {
    * @param errorOverrides can be used to add error context
    */
   throwIfError(errorOverrides?: TerriaErrorOverrides): T {
-    if (this.error) {
-      throw errorOverrides
-        ? this.error.createParentError(errorOverrides)
-        : this.error;
-    }
+    if (this._error) throw TerriaError.from(this._error, errorOverrides);
+
     return this.value;
   }
 
@@ -136,12 +143,10 @@ export default class Result<T> {
    * @param errorOverrides will be used to create error if value is undefined
    */
   throwIfUndefined(errorOverrides?: TerriaErrorOverrides): NotUndefined<T> {
+    if (this._error) throw TerriaError.from(this._error, errorOverrides);
     if (isDefined(this.value)) return this.value as NotUndefined<T>;
-    if (this.error) {
-      throw errorOverrides
-        ? this.error.createParentError(errorOverrides)
-        : this.error;
-    }
+
+    // If value is undefined, throw a new TerriaError using errorOverrides
     if (typeof errorOverrides === "string") {
       errorOverrides = { message: errorOverrides };
     }

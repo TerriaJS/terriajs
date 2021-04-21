@@ -22,7 +22,7 @@ const ErrorsBox = (props: {
         <Box
           displayInlineBlock
           css={{
-            paddingLeft: "7px",
+            paddingLeft: "6px",
             borderLeft: "solid 1px rgba(255,255,255,.1)"
           }}
           key={idx}

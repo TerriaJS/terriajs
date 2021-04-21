@@ -5,6 +5,9 @@ import { Notification } from "../ReactViewModels/ViewState";
 import { terriaErrorNotification } from "../ReactViews/Notification/terriaErrorNotification";
 import isDefined from "./isDefined";
 
+/** This is used for I18n translation strings so we can "resolve" them when the Error is displayed to the user.
+ * This means we can create TerriaErrors before i18next has been initialised.
+ */
 export interface I18nTranslateString {
   key: string;
   parameters?: Record<string, string>;
@@ -66,19 +69,25 @@ export default class TerriaError {
     if (error instanceof TerriaError) {
       return isDefined(overrides) ? error.createParentError(overrides) : error;
     }
+
+    // Try to find message using overrides or error object
+    let message = "Unknown error";
+
+    // If overrides is a string - we treat is as the `message` parameter
     if (typeof overrides === "string") {
-      overrides = { message: overrides };
+      message = overrides;
+      overrides = {};
+    } else if (typeof error === "string") {
+      message = error;
+    } else if (error instanceof Error) {
+      message = error.message;
+    } else if (typeof error === "object" && error !== null) {
+      message = error.toString();
     }
+
     return new TerriaError({
       title: { key: "models.raiseError.errorTitle" },
-      message:
-        typeof error === "string"
-          ? (error as string)
-          : (error instanceof Error
-              ? error.message
-              : typeof error === "object"
-              ? error?.toString()
-              : undefined) ?? "Unknown error",
+      message,
       originalError: error instanceof Error ? error : undefined,
       ...overrides
     });
@@ -92,12 +101,17 @@ export default class TerriaError {
     overrides: TerriaErrorOverrides
   ): TerriaError | undefined {
     if (errors.length === 0) return;
+
+    // If overrides is a string - we treat is as the `message` parameter
     if (typeof overrides === "string") {
       overrides = { message: overrides };
     }
     return new TerriaError({
+      // Set default title and message
       title: { key: "models.raiseError.errorMultipleTitle" },
       message: { key: "models.raiseError.errorMultipleMessage" },
+
+      // Add original errors and overrides
       originalError: errors,
       ...overrides
     });
@@ -108,6 +122,8 @@ export default class TerriaError {
     this._title = options.title ?? { key: "core.terriaError.defaultValue" };
     this.sender = options.sender;
     this._raisedToUser = options.raisedToUser ?? false;
+
+    // Transform originalError to an array if needed
     this.originalError = isDefined(options.originalError)
       ? Array.isArray(options.originalError)
         ? options.originalError
@@ -141,6 +157,7 @@ export default class TerriaError {
   toNotification(): Notification {
     return {
       title: () => this.title,
+      // Use terriaErrorNotification or just use message
       message: this.useTerriaErrorNotification
         ? terriaErrorNotification(this)
         : () => this.message
@@ -148,7 +165,7 @@ export default class TerriaError {
   }
 
   /**
-   * Create a new parent `TerriaError` from this error. This essentially "clones" the `TerriaError` and applied `overrides` on top. It will also set `originalError` so we get a nice tree of `TerriaError`s
+   * Create a new parent `TerriaError` from this error. This essentially "clones" the `TerriaError` and applied `overrides` on top. It will also set `originalError` so we get a nice tree of `TerriaErrors`
    */
   createParentError(overrides?: TerriaErrorOverrides): TerriaError {
     if (typeof overrides === "string") {
