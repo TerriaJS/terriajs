@@ -153,7 +153,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     id: AR_TOOL_ID,
     name: "AR.arTool",
     location: "TOP",
-    screenSize: undefined,
+    screenSize: "small",
     controller: arController,
     order: 0,
     noExpand: true
@@ -166,7 +166,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     id: `${AR_TOOL_ID}_hover`,
     name: "AR.btnHover",
     location: "TOP",
-    screenSize: undefined,
+    screenSize: "small",
     controller: arControllerHover,
     order: 1,
     noExpand: true
@@ -183,7 +183,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
       ? "AR.btnRealign"
       : "AR.btnResetRealign",
     location: "TOP",
-    screenSize: undefined,
+    screenSize: "small",
     controller: arRealignController,
     render: (
       <AugmentedVirtualityRealign arRealignController={arRealignController} />
