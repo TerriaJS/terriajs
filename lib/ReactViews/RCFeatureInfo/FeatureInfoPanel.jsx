@@ -265,6 +265,7 @@ export const FeatureInfoPanel = createReactClass({
 
   render() {
     const terria = this.props.terria;
+    const viewState = this.props.viewState;
 
     const {
       catalogItems,
@@ -313,6 +314,7 @@ export const FeatureInfoPanel = createReactClass({
       this.openStorySummary(terria.selectedFeature?.properties);
       return null;
     }
+    viewState.selectedPosition = position;
     return null;
   }
 });

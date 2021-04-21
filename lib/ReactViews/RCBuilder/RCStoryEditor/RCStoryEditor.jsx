@@ -1,15 +1,20 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Styles from "./RCStoryEditor.scss";
 import sectors from "../../../Data/Sectors.js";
 import RCSectorSelection from "./RCSectorSelection/RCSectorSelection";
-
+import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
+import defined from "terriajs-cesium/Source/Core/defined";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 class RCStoryEditor extends React.Component {
   constructor(props) {
     super(props);
   }
   state = {
     sectors: sectors,
-    selectedSectors: []
+    selectedSectors: [],
+    isSettingHotspot: false,
+    hotspotPoint: null
   };
   onSectorChanged = event => {
     // current array of sectors
@@ -29,8 +34,48 @@ class RCStoryEditor extends React.Component {
     this.setState({ selectedSectors: selectedSectors });
     console.log("Sectors", this.state.selectedSectors);
   };
+  componentDidMount() {
+    const viewState = this.props.viewState;
+    this._selectHotspotSubscription = knockout
+      .getObservable(viewState, "selectedPosition")
+      .subscribe(() => {
+        if (this.state.isSettingHotspot) {
+          // Convert position to cartographic
+          const point = Cartographic.fromCartesian(viewState.selectedPosition);
+          this.setState({
+            hotspotPoint: {
+              lat: (point.latitude / Math.PI) * 180,
+              lon: (point.longitude / Math.PI) * 180
+            },
+            isSettingHotspot: false
+          });
+        }
+      });
+  }
+  componentWillUnmount() {
+    if (defined(this._pickedFeaturesSubscription)) {
+      this._pickedFeaturesSubscription.dispose();
+      this._pickedFeaturesSubscription = undefined;
+    }
+  }
+  listenForHotspot = () => {
+    this.setState({ isSettingHotspot: true });
+  };
+  cancelListenForHotspot = () => {
+    this.setState({ isSettingHotspot: false });
+  };
   render() {
-    const { sectors, selectedSectors } = this.state;
+    const {
+      sectors,
+      selectedSectors,
+      hotspotPoint,
+      isSettingHotspot
+    } = this.state;
+    const hotspotText = hotspotPoint
+      ? `${Number(hotspotPoint.lat).toFixed(4)}, ${Number(
+          hotspotPoint.lon
+        ).toFixed(4)}`
+      : "none set";
     return (
       <div className={Styles.RCStoryEditor}>
         <h3>Edit your story</h3>
@@ -52,9 +97,33 @@ class RCStoryEditor extends React.Component {
             selectedSectors={selectedSectors}
             onSectorSelected={this.onSectorChanged}
           />
+          <div>
+            <label>Hotspot</label>
+            {!isSettingHotspot && (
+              <div>
+                <label>Set at: {hotspotText}</label>&nbsp;
+                <button
+                  type="button"
+                  className={Styles.button}
+                  onClick={this.listenForHotspot}
+                >
+                  Select hotspot
+                </button>
+              </div>
+            )}
+            {isSettingHotspot && (
+              <div>
+                <label>Click on map to set the hotspot position</label>&nbsp;
+                <button onClick={this.cancelListenForHotspot}>Cancel</button>
+              </div>
+            )}
+          </div>
         </form>
       </div>
     );
   }
 }
+RCStoryEditor.propTypes = {
+  viewState: PropTypes.object
+};
 export default RCStoryEditor;

@@ -246,7 +246,7 @@ const StandardUserInterface = createReactClass({
                       viewState.topElement = "SidePanel";
                     }}
                   >
-                    <RCStoryEditor />
+                    <RCStoryEditor viewState={viewState} />
                     {/* {showHotspotSummary && (
                       <RCHotspotSummary viewState={viewState} />
                     )}
