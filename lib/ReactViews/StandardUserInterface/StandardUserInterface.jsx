@@ -313,6 +313,7 @@ const StandardUserInterface = observer(
                       >
                         <Branding
                           terria={terria}
+                          viewState={this.props.viewState}
                           version={this.props.version}
                         />
                         <SidePanel

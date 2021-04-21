@@ -23,6 +23,9 @@ interface CssExports {
   'logoHeight': string;
   'logoPaddingHorizontal': string;
   'logoPaddingVertical': string;
+  'logoSmallHeight': string;
+  'logoSmallPaddingHorizontal': string;
+  'logoSmallPaddingVertical': string;
   'mapButtonColor': string;
   'mapButtonTop': string;
   'mapNavigationTop': string;

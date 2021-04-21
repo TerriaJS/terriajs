@@ -165,11 +165,15 @@ interface ConfigParameters {
   bingMapsKey?: string;
   hideTerriaLogo?: boolean;
   /**
-   * An array of strings of HTML that fill up the top left logo space.
+   * An array of strings of HTML that fill up the top left logo space (see `brandBarSmallElements` or `displayOneBrand` for small screens).
    */
   brandBarElements?: string[];
   /**
-   * Index of which brandBarElements to show for mobile header.
+   * An array of strings of HTML that fill up the top left logo space - used for small screens.
+   */
+  brandBarSmallElements?: string[];
+  /**
+   * Index of which `brandBarElements` to show for mobile header. This will be used if `this.brandBarSmallElements` is undefined.
    */
   displayOneBrand?: number;
   /**
@@ -347,7 +351,8 @@ export default class Terria {
     bingMapsKey: undefined,
     hideTerriaLogo: false,
     brandBarElements: undefined,
-    displayOneBrand: 0, // index of which brandBarElements to show for mobile header
+    brandBarSmallElements: undefined,
+    displayOneBrand: 0,
     disableMyLocation: undefined,
     disableSplitter: undefined,
     disablePedestrianMode: false,
