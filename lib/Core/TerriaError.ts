@@ -58,7 +58,7 @@ export default class TerriaError {
   /**
    * Convenience function to generate a TerriaError from some unknown error. It will try to extract a meaningful message from whatever object it is given.
    *
-   * If error is a `TerriaError`, then it will be `cloned` to create a tree of `TerriaErrors` (see `TerriaError.clone()`).
+   * If error is a `TerriaError`, then `createParentError` it will be used to create a tree of `TerriaErrors` (see {@link `TerriaError#createParentError}`).
    *
    * `overrides` can be used to add more context to the TerriaError
    */
