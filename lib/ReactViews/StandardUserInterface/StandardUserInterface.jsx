@@ -29,6 +29,7 @@ import classNames from "classnames";
 import "inobounce";
 import { withTranslation } from "react-i18next";
 import Styles from "./StandardUserInterface.scss";
+import RCStoryEditor from "../RCBuilder/RCStoryEditor/RCStoryEditor";
 var Receipt = require("../../Models/Receipt");
 
 export const showStoryPrompt = (viewState, terria) => {
@@ -245,7 +246,8 @@ const StandardUserInterface = createReactClass({
                       viewState.topElement = "SidePanel";
                     }}
                   >
-                    {showHotspotSummary && (
+                    <RCStoryEditor />
+                    {/* {showHotspotSummary && (
                       <RCHotspotSummary viewState={viewState} />
                     )}
 
@@ -258,7 +260,7 @@ const StandardUserInterface = createReactClass({
                     {showStoryPanel ? (
                       <RCStoryPanel terria={terria} viewState={viewState} />
                     ) : null}
-                    <SidePanel terria={terria} viewState={viewState} />
+                    <SidePanel terria={terria} viewState={viewState} /> */}
                   </div>
                 </Medium>
               </If>
