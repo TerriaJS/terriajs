@@ -31,6 +31,8 @@ import { withTranslation } from "react-i18next";
 import Styles from "./StandardUserInterface.scss";
 var Receipt = require("../../Models/Receipt");
 
+import { withAuthenticator } from "@aws-amplify/ui-react";
+
 export const showStoryPrompt = (viewState, terria) => {
   terria.configParameters.showFeaturePrompts &&
     terria.configParameters.storyEnabled &&
@@ -367,4 +369,4 @@ const StandardUserInterface = createReactClass({
 
 export const StandardUserInterfaceWithoutTranslation = StandardUserInterface;
 
-export default withTranslation()(StandardUserInterface);
+export default withAuthenticator(withTranslation()(StandardUserInterface));
