@@ -23,14 +23,19 @@ describe("Branding", function() {
 
   it("renders without issues", function() {
     terria.configParameters.brandBarElements = ["<a href='blah'>a thing</a>"];
-    rendered = TestRenderer.create(<Branding terria={terria} />);
+    rendered = TestRenderer.create(
+      <Branding terria={terria} viewState={viewState} />
+    );
     expect(rendered.root.findByType("a")).toBeDefined();
   });
   it("renders when provided displayOne inside of index", function() {
     terria.configParameters.brandBarElements = [
       "<details><summary>a thing</summary></details>"
     ];
-    rendered = TestRenderer.create(<Branding terria={terria} displayOne={0} />);
+    terria.configParameters.displayOneBrand = 0;
+    rendered = TestRenderer.create(
+      <Branding terria={terria} viewState={viewState} />
+    );
     expect(rendered.root.findByType("details")).toBeDefined();
     expect(() => {
       rendered.root.findByType("a");
@@ -41,7 +46,10 @@ describe("Branding", function() {
       "",
       "<progress>progress is a html element!</progress>"
     ];
-    rendered = TestRenderer.create(<Branding terria={terria} displayOne={0} />);
+    terria.configParameters.displayOneBrand = 0;
+    rendered = TestRenderer.create(
+      <Branding terria={terria} viewState={viewState} />
+    );
     expect(rendered.root.findByType("progress")).toBeDefined();
     expect(() => {
       rendered.root.findByType("span");
@@ -52,8 +60,31 @@ describe("Branding", function() {
       "",
       "<meter>meter is a html element!</meter>"
     ];
-    rendered = TestRenderer.create(<Branding terria={terria} displayOne={5} />);
+    terria.configParameters.displayOneBrand = 5;
+    rendered = TestRenderer.create(
+      <Branding terria={terria} viewState={viewState} />
+    );
     expect(rendered.root.findByType("meter")).toBeDefined();
+    expect(() => {
+      rendered.root.findByType("progress");
+    }).toThrow();
+  });
+  it("renders when provided brandBarSmallElements and ignores displayOneBrand", function() {
+    terria.configParameters.brandBarSmallElements = [
+      "",
+      "<meter>meter is a html element!</meter>"
+    ];
+
+    terria.configParameters.brandBarElements = [
+      "<small>small is a html element!</small>",
+      "<a>a is a html element!</a>"
+    ];
+    terria.configParameters.displayOneBrand = 1;
+    rendered = TestRenderer.create(
+      <Branding terria={terria} viewState={viewState} />
+    );
+    expect(rendered.root.findByType("small")).toBeDefined();
+    expect(rendered.root.findByType("a")).toBeDefined();
     expect(() => {
       rendered.root.findByType("progress");
     }).toThrow();

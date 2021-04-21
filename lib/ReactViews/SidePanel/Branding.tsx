@@ -1,33 +1,41 @@
 "use strict";
 import React from "react";
-import defined from "terriajs-cesium/Source/Core/defined";
 import Terria from "../../Models/Terria";
-import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import ViewState from "../../ReactViewModels/ViewState";
+import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
+import isDefined from "../../Core/isDefined";
+
+const DEFAULT_BRANDING =
+  '<a target="_blank" href="http://terria.io"><img src="images/terria_logo.png" height="52" title="Version: {{ version }}" /></a>';
 
 export default (props: {
   terria: Terria;
   viewState: ViewState;
   version?: string;
 }) => {
-  // Use brandBarElements or brandBarSmallElements depending if using SmallScreenInterface (and default to brandBarElements)
-  let brandingHtmlElements = (props.viewState.useSmallScreenInterface
-    ? props.terria.configParameters.brandBarSmallElements
-    : props.terria.configParameters.brandBarElements) ??
-    props.terria.configParameters.brandBarElements ?? [
-      '<a target="_blank" href="http://terria.io"><img src="images/terria_logo.png" height="52" title="Version: {{ version }}" /></a>'
-    ];
+  // Set brandingHtmlElements to brandBarElements or default Terria branding as default
+  let brandingHtmlElements = props.terria.configParameters.brandBarElements ?? [
+    DEFAULT_BRANDING
+  ];
+
+  if (props.viewState.useSmallScreenInterface) {
+    const brandBarSmallElements =
+      props.terria.configParameters.brandBarSmallElements;
+    const displayOne = props.terria.configParameters.displayOneBrand;
+
+    // Use brandBarSmallElements if it exists
+    if (brandBarSmallElements) brandingHtmlElements = brandBarSmallElements;
+    // If no brandBarSmallElements, but displayOne parameter is selected
+    // Try to find brand element based on displayOne index - OR find the first item that isn't an empty string (for backward compatability of old terriamap defaults)
+    else if (isDefined(displayOne))
+      brandingHtmlElements = [
+        (brandingHtmlElements[displayOne] ||
+          brandingHtmlElements.find(item => item.length > 0)) ??
+          DEFAULT_BRANDING
+      ];
+  }
 
   const version = props.version ?? "Unknown";
-
-  const displayOne = props.terria.configParameters.displayOneBrand;
-  const displayContent =
-    // If the index exists, use that
-    (displayOne && brandingHtmlElements[displayOne]) ||
-    // If it doesn't exist, find the first item that isn't an empty string (for backward compatability of old terriamap defaults)
-    (displayOne && brandingHtmlElements.find(item => item?.length > 0)) ||
-    undefined;
-
   return (
     <div
       css={`
@@ -67,25 +75,20 @@ export default (props: {
           padding: ${(p: any) => p.theme.logoSmallPaddingHorizontal}
             ${(p: any) => p.theme.logoSmallPaddingVertical};
 
-          // Remove a "display: flex" on small screen
+          // Remove a "display: flex" on small screen if only showing one brandingHtmlElement
           a {
-            display: unset;
+            ${brandingHtmlElements.length > 0 ? "display: unset;" : ""}
           }
         }
       `}
     >
-      {displayContent &&
-        parseCustomHtmlToReact(
-          displayContent.replace(/\{\{\s*version\s*\}\}/g, version)
-        )}
-      {!displayContent &&
-        brandingHtmlElements.map((element, idx) => (
-          <React.Fragment key={idx}>
-            {parseCustomHtmlToReact(
-              element.replace(/\{\{\s*version\s*\}\}/g, version)
-            )}
-          </React.Fragment>
-        ))}
+      {brandingHtmlElements.map((element, idx) => (
+        <React.Fragment key={idx}>
+          {parseCustomHtmlToReact(
+            element.replace(/\{\{\s*version\s*\}\}/g, version)
+          )}
+        </React.Fragment>
+      ))}
     </div>
   );
 };
