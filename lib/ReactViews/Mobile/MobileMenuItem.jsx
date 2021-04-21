@@ -23,6 +23,9 @@ export default function MobileMenuItem(props) {
         </When>
         <Otherwise>
           <button onClick={props.onClick} className={Styles.link}>
+            {props.icon ? (
+              <Icon className={Styles.icon} glyph={props.icon} />
+            ) : null}
             {props.caption}
           </button>
         </Otherwise>
@@ -34,7 +37,9 @@ export default function MobileMenuItem(props) {
 MobileMenuItem.propTypes = {
   href: PropTypes.string,
   onClick: PropTypes.func,
-  caption: PropTypes.string
+  caption: PropTypes.string,
+  showMobileIcon: PropTypes.bool,
+  icon: PropTypes.string
 };
 
 MobileMenuItem.defaultProps = {

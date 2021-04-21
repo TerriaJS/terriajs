@@ -112,12 +112,6 @@ const MobileMenu = observer(
                 viewState={this.props.viewState}
               />
             </div>
-            {/* <div onClick={this.hideMenu}>
-              <HelpMenuPanelBasic
-                terria={this.props.terria}
-                viewState={this.props.viewState}
-              />
-            </div> */}
             <For each="menuItem" of={this.props.menuItems}>
               <div
                 onClick={this.hideMenu}

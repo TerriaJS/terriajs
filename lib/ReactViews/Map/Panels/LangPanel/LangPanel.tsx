@@ -38,8 +38,8 @@ export default (props: Props) => {
           ? t("languagePanel.changeLanguage")
           : stripLangLocale(props.i18n.language)
       }
+      mobileIcon={Icon.GLYPHS.globe}
       smallScreen={props.smallScreen}
-      forceClosed={true}
     >
       <Box styledPadding={"20px 10px 10px 10px"}>
         <Ul spaced lined fullWidth>
