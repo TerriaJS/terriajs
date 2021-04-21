@@ -41,9 +41,7 @@ export function activateStory(story, previousStory, terria) {
           // We pluck the parameters required for sceneTransition
           // and pass on the rest to applyInitData
           // toJS is required here because applyInitData currently cannot handle a mobx object.
-          const { initialCamera, isPedestrianWalkModeOn, ...initData } = toJS(
-            initSource
-          );
+          const { initialCamera, ...initData } = toJS(initSource);
           terria.applyInitData({
             initData,
             replaceStratum: false,
