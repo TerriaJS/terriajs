@@ -162,11 +162,10 @@ class MyLocation extends MapNavigationItemController {
   }
 
   augmentedVirtualityEnabled() {
-    /* return (
-      isDefined(this.props.terria.augmentedVirtuality) &&
-      this.props.terria.augmentedVirtuality.enabled
-    ); */
-    return false;
+    return (
+      isDefined(this.terria.augmentedVirtuality) &&
+      this.terria.augmentedVirtuality.enabled
+    );
   }
 
   followMeEnabled() {
