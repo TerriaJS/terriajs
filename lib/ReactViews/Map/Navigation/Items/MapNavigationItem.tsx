@@ -11,6 +11,7 @@ const Box = require("../../../../Styled/Box").default;
 interface PropTypes {
   item: IMapNavigationItem;
   terria: Terria;
+  closeTool?: boolean;
 }
 
 @observer
@@ -19,7 +20,7 @@ export class MapNavigationItem extends React.Component<PropTypes> {
     super(props);
   }
   render() {
-    const { item } = this.props;
+    const { closeTool = true, item } = this.props;
     if (item.render)
       return (
         <Control key={item.id} ref={item.controller.itemRef}>
@@ -30,6 +31,7 @@ export class MapNavigationItem extends React.Component<PropTypes> {
       <Control ref={item.controller.itemRef}>
         <MapIconButton
           expandInPlace
+          noExpand={item.noExpand}
           iconElement={() => <Icon glyph={item.controller.glyph} />}
           title={useTranslationIfExists(item.title || item.name)}
           onClick={() => {
@@ -37,7 +39,9 @@ export class MapNavigationItem extends React.Component<PropTypes> {
           }}
           disabled={item.controller.disabled}
           primary={item.controller.active}
-          closeIconElement={() => <Icon glyph={GLYPHS.closeTool} />}
+          closeIconElement={
+            closeTool ? () => <Icon glyph={GLYPHS.closeTool} /> : undefined
+          }
         >
           {useTranslationIfExists(item.name)}
         </MapIconButton>

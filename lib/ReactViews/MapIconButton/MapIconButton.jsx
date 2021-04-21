@@ -96,7 +96,9 @@ MapIconButton.propTypes = {
   handleClick: PropTypes.func,
   children: PropTypes.node,
   disabled: PropTypes.bool,
-  buttonRef: PropTypes.any
+  className: PropTypes.any,
+  buttonRef: PropTypes.any,
+  noExpand: PropTypes.bool
 };
 
 function MapIconButton(props) {
@@ -111,9 +113,10 @@ function MapIconButton(props) {
     primary,
     splitter,
     inverted,
-    disabled
+    disabled,
+    noExpand = false
   } = props;
-  const expanded = (isExpanded || neverCollapse) && children;
+  const expanded = !noExpand && (isExpanded || neverCollapse) && children;
   const buttonRef = props.buttonRef || useRef();
 
   // const handleAway = () => setTimeout(() => setExpanded(false), 1000);

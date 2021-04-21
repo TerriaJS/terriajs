@@ -10,6 +10,7 @@ export type NavigationItemLocation = "TOP" | "BOTTOM";
 export interface IMapNavigationItem
   extends ICompositeBarItem<MapNavigationItemController> {
   location: NavigationItemLocation;
+  noExpand?: boolean;
   render?: React.ReactNode;
 }
 

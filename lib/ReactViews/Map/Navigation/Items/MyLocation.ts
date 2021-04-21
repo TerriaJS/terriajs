@@ -1,15 +1,16 @@
 import i18next from "i18next";
 import { action, observable, runInAction } from "mobx";
 import React from "react";
+import CesiumCartographic from "terriajs-cesium/Source/Core/Cartographic";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import isDefined from "../../../../Core/isDefined";
 import TerriaError from "../../../../Core/TerriaError";
 import CommonStrata from "../../../../Models/CommonStrata";
 import GeoJsonCatalogItem from "../../../../Models/GeoJsonCatalogItem";
-import MapNavigationItemController from "../../../../ViewModels/MapNavigation/MapNavigationItemController";
 import Terria from "../../../../Models/Terria";
 import ViewerMode from "../../../../Models/ViewerMode";
+import MapNavigationItemController from "../../../../ViewModels/MapNavigation/MapNavigationItemController";
 import { GLYPHS } from "../../../Icon";
 
 interface PropTypes {
@@ -91,12 +92,12 @@ class MyLocation extends MapNavigationItemController {
       // We use the flag variable flown so that the user is flown to the current location when this function is
       // first fired, but subsuquently the updates are jump location moves, since we assume that the movements are
       // small and flyTo performs badly when the increments are small (slow and unresponsive).
-      /* this.props.terria.augmentedVirtuality.moveTo(
+      this.terria.augmentedVirtuality.moveTo(
         CesiumCartographic.fromDegrees(longitude, latitude),
         27500,
         !isDefined(this.flown)
       );
-      this.flown = true; */
+      this.flown = true;
     } else {
       // west, south, east, north, result
       const rectangle = Rectangle.fromDegrees(
