@@ -39,6 +39,7 @@ const PedestrianMode: React.FC<PedestrianModeProps> = observer(props => {
   }, []);
 
   useEffect(function unsetViewStateFlagOnClose() {
+    viewState.isPedestrianWalkModeOn = true;
     return () => {
       viewState.isPedestrianWalkModeOn = false;
     };
