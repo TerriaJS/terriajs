@@ -1,10 +1,9 @@
 import { runInAction } from "mobx";
-import Terria from "../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-import updateModelFromJson from "../../lib/Models/updateModelFromJson";
-import { BaseModel } from "../../lib/Models/Model";
 import CommonStrata from "../../lib/Models/CommonStrata";
-import CatalogGroup from "../../lib/Models/CatalogGroupNew";
+import { BaseModel } from "../../lib/Models/Model";
+import Terria from "../../lib/Models/Terria";
+import updateModelFromJson from "../../lib/Models/updateModelFromJson";
+import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
 
 describe("updateModelFromJson", function() {
   let model: BaseModel;
@@ -162,7 +161,26 @@ describe("updateModelFromJson", function() {
       expect("someTrait" in model).toBeFalsy();
       expect("someOtherTrait" in model).toBeFalsy();
       expect(result.error).toBeDefined();
-      expect(result.error?.originalError?.length).toBe(2);
+      expect(result.error?.originalError?.length).toBe(1);
+
+      expect(
+        result.error
+          ?.flatten()
+          .find(
+            error =>
+              error.message ===
+              "The property someTrait is not valid for type wms."
+          )
+      ).toBeDefined();
+      expect(
+        result.error
+          ?.flatten()
+          .find(
+            error =>
+              error.message ===
+              "The property someOtherTrait is not valid for type wms."
+          )
+      ).toBeDefined();
     });
   });
 });

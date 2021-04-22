@@ -3,6 +3,8 @@
 import i18next from "i18next";
 import { Notification } from "../ReactViewModels/ViewState";
 import { terriaErrorNotification } from "../ReactViews/Notification/terriaErrorNotification";
+import filterOutUndefined from "./filterOutUndefined";
+import flatten from "./flatten";
 import isDefined from "./isDefined";
 
 /** This is used for I18n translation strings so we can "resolve" them when the Error is displayed to the user.
@@ -181,5 +183,18 @@ export default class TerriaError {
       },
       ...overrides
     });
+  }
+
+  flatten(): TerriaError[] {
+    return filterOutUndefined([
+      this,
+      ...flatten(
+        this.originalError
+          ? this.originalError.map(error =>
+              error instanceof TerriaError ? error.flatten() : []
+            )
+          : []
+      )
+    ]);
   }
 }
