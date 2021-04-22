@@ -1,5 +1,5 @@
 import { computed } from "mobx";
-import { CustomDataSource } from "terriajs-cesium";
+import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Cesium from "../../lib/Models/Cesium";
 import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
