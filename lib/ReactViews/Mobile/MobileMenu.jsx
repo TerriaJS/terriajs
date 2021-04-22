@@ -136,7 +136,8 @@ const MobileMenu = observer(
             </If>
             <If
               condition={
-                this.props.terria.configParameters.languageConfiguration.enabled
+                this.props.terria.configParameters.languageConfiguration
+                  ?.enabled
               }
             >
               <div onClick={this.hideMenu}>
