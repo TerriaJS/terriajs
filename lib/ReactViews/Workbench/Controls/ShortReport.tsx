@@ -74,8 +74,6 @@ export default class ShortReport extends React.Component<{
                 onToggle={show =>
                   this.clickShortReport.bind(this, r.name, show)()
                 }
-                btnRight={true}
-                btnStyle={"plus"}
               >
                 {parseCustomMarkdownToReact(r.content!, {
                   catalogItem: this.props.item
