@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.77)
 
+* Make `InfoSections` collapsible in `DataPreview`. This adds `show` property to `InfoSectionTraits`.
 * Convert `Branding.jsx` to `.tsx`
 * Added `configParams.brandBarSmallElements` to set Branding elements for small screen (also added theme props)
 * Add `font` variables and `fontImports` to theme - this can be used to import CSS fonts.
@@ -103,7 +104,6 @@ Change Log
 * Fix bug in `TableColumn.title` getter.
 * Add support for TableColumn quarterly dates in the format yyyy-Qx (eg 2020-Q1).
 * Fix region mapping feature highlighting.
-* Make `InfoSections` collapsible in `DataPreview`. This adds `show` property to `InfoSectionTraits`.
 * Update clipboard to fix clipboard typing error.
 * Added direction indicator to the pedestrian mode minimap.
 * Limit up/down look angle in pedestrian mode.
