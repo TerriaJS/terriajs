@@ -1,4 +1,5 @@
-import { runInAction, isObservableArray } from "mobx";
+import { isObservableArray, runInAction } from "mobx";
+import Result from "../Core/Result";
 import TerriaError from "../Core/TerriaError";
 import createStratumInstance from "./createStratumInstance";
 import { BaseModel } from "./Model";
@@ -8,8 +9,10 @@ export default function updateModelFromJson(
   stratumName: string,
   json: any,
   replaceStratum: boolean = false
-) {
+): Result<undefined> {
   const traits = model.traits;
+
+  const errors: TerriaError[] = [];
 
   runInAction(() => {
     if (replaceStratum) {
@@ -28,30 +31,48 @@ export default function updateModelFromJson(
 
       const trait = traits[propertyName];
       if (trait === undefined) {
-        throw new TerriaError({
-          title: "Unknown property",
-          message: `The property ${propertyName} is not valid for type ${model.type}.`
-        });
+        errors.push(
+          new TerriaError({
+            title: "Unknown property",
+            message: `The property ${propertyName} is not valid for type ${model.type}.`
+          })
+        );
+        return;
       }
 
       const jsonValue = json[propertyName];
       if (jsonValue === undefined) {
         model.setTrait(stratumName, propertyName, undefined);
       } else {
-        let newTrait = trait.fromJson(model, stratumName, jsonValue);
-        // We want to merge members of groups with the same name/id
-        if (propertyName === "members") {
-          newTrait = mergeWithExistingMembers(
-            model,
-            stratumName,
-            propertyName,
-            newTrait
-          );
+        let newTrait = trait
+          .fromJson(model, stratumName, jsonValue)
+          .catchError(error => errors.push(error));
+
+        if (newTrait) {
+          // We want to merge members of groups with the same name/id
+          if (propertyName === "members") {
+            newTrait = mergeWithExistingMembers(
+              model,
+              stratumName,
+              propertyName,
+              newTrait
+            );
+          }
+          model.setTrait(stratumName, propertyName, newTrait);
         }
-        model.setTrait(stratumName, propertyName, newTrait);
       }
     });
   });
+
+  return Result.return(
+    undefined,
+    TerriaError.combine(
+      errors,
+      `Error${errors.length !== 1 ? "s" : ""} occurred while updating model \`${
+        model.uniqueId
+      }\` from JSON`
+    )
+  );
 }
 
 function mergeWithExistingMembers(

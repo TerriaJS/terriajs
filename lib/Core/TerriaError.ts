@@ -3,6 +3,8 @@
 import i18next from "i18next";
 import { Notification } from "../ReactViewModels/ViewState";
 import { terriaErrorNotification } from "../ReactViews/Notification/terriaErrorNotification";
+import filterOutUndefined from "./filterOutUndefined";
+import flatten from "./flatten";
 import isDefined from "./isDefined";
 
 /** This is used for I18n translation strings so we can "resolve" them when the Error is displayed to the user.
@@ -86,7 +88,7 @@ export default class TerriaError {
     }
 
     return new TerriaError({
-      title: { key: "models.raiseError.errorTitle" },
+      title: { key: "core.terriaError.defaultTitle" },
       message,
       originalError: error instanceof Error ? error : undefined,
       ...overrides
@@ -108,8 +110,8 @@ export default class TerriaError {
     }
     return new TerriaError({
       // Set default title and message
-      title: { key: "models.raiseError.errorMultipleTitle" },
-      message: { key: "models.raiseError.errorMultipleMessage" },
+      title: { key: "core.terriaError.defaultCombineTitle" },
+      message: { key: "core.terriaError.defaultCombineMessage" },
 
       // Add original errors and overrides
       originalError: errors,
@@ -119,7 +121,7 @@ export default class TerriaError {
 
   constructor(options: TerriaErrorOptions) {
     this._message = options.message;
-    this._title = options.title ?? { key: "core.terriaError.defaultValue" };
+    this._title = options.title ?? { key: "core.terriaError.defaultTitle" };
     this.sender = options.sender;
     this._raisedToUser = options.raisedToUser ?? false;
 
@@ -181,5 +183,18 @@ export default class TerriaError {
       },
       ...overrides
     });
+  }
+
+  flatten(): TerriaError[] {
+    return filterOutUndefined([
+      this,
+      ...flatten(
+        this.originalError
+          ? this.originalError.map(error =>
+              error instanceof TerriaError ? error.flatten() : []
+            )
+          : []
+      )
+    ]);
   }
 }

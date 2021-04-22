@@ -177,7 +177,7 @@ describe("TileErrorHandlerMixin", function() {
     let raiseEvent: jasmine.Spy;
 
     beforeEach(function() {
-      raiseEvent = spyOn(item.terria.error, "raiseEvent");
+      raiseEvent = spyOn(item.terria, "raiseErrorToUser");
       item.tileErrorHandlingOptions.setTrait(
         CommonStrata.user,
         "thresholdBeforeDisablingItem",
@@ -282,7 +282,7 @@ describe("TileErrorHandlerMixin", function() {
     });
 
     it("reports the last error to the user", async function() {
-      spyOn(item.terria.error, "raiseEvent");
+      spyOn(item.terria, "raiseErrorToUser");
       try {
         await onTileLoadError(item, newError(undefined));
       } catch {}
