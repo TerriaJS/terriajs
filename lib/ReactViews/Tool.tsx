@@ -5,7 +5,7 @@ import React, { Suspense, useEffect, useState } from "react";
 import { useTranslation, WithTranslation } from "react-i18next";
 import Terria from "../Models/Terria";
 import ViewState from "../ReactViewModels/ViewState";
-import Icon from "./Icon";
+import Icon from "../Styled/Icon";
 import Styles from "./Map/Navigation/tool_button.scss";
 import MapIconButton from "./MapIconButton/MapIconButton";
 

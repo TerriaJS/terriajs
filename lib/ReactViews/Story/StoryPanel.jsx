@@ -11,7 +11,7 @@ import getPath from "../../Core/getPath";
 import Terria from "../../Models/Terria";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import { Medium, Small } from "../Generic/Responsive";
-import Icon from "../Icon.jsx";
+import Icon from "../../Styled/Icon";
 import Styles from "./story-panel.scss";
 import TerriaError from "../../Core/TerriaError";
 

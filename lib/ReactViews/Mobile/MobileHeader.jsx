@@ -5,7 +5,7 @@ import SearchBox from "../Search/SearchBox";
 import MobileModalWindow from "./MobileModalWindow";
 import Branding from "../SidePanel/Branding";
 import Styles from "./mobile-header.scss";
-import Icon, { StyledIcon } from "../Icon";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import MobileMenu from "./MobileMenu";
 import classNames from "classnames";
 import { removeMarker } from "../../Models/LocationMarkerUtils";
@@ -140,7 +140,6 @@ const MobileHeader = observer(
 
     render() {
       const searchState = this.props.viewState.searchState;
-      const displayOne = this.props.terria.configParameters.displayOneBrand;
       const { t } = this.props;
       const nowViewingLength =
         this.props.terria.workbench.items !== undefined
@@ -164,7 +163,7 @@ const MobileHeader = observer(
                 }
               >
                 <Box
-                  positionAbsolute
+                  position="absolute"
                   css={`
                     left: 5px;
                   `}
@@ -194,11 +193,16 @@ const MobileHeader = observer(
                   </RawButton>
                   <Branding
                     terria={this.props.terria}
+                    viewState={this.props.viewState}
                     version={this.props.version}
-                    displayOne={displayOne}
                   />
                 </Box>
-                <div className={Styles.groupRight}>
+                <div
+                  className={Styles.groupRight}
+                  css={`
+                    background-color: ${p => p.theme.dark};
+                  `}
+                >
                   <button
                     type="button"
                     className={Styles.btnAdd}

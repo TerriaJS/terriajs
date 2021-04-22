@@ -8,7 +8,7 @@ import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import PropTypes from "prop-types";
 import sendFeedback from "../../Models/sendFeedback";
 import Styles from "./feedback-form.scss";
-import Icon, { StyledIcon } from "../Icon";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import classNames from "classnames";
 import { withTranslation, Trans } from "react-i18next";
 import { runInAction } from "mobx";
