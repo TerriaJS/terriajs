@@ -12,7 +12,8 @@ Change Log
   * `Box` no longer accepts `<Box positionAbsolute/>` and this should now be passed as `<Box position="absolute"/>`.
   * `Text`'s `styledSize` has been removed. Use the `styledFontSize` prop.
   * `ButtonAsLabel` no longer accepts `dark`. A dark background is now used when `light` is false (or undefined).
-* [The next improvement]
+* Added in language toggle and first draft of french translation.json
+  * This is enabled via language languageConfiguration.enabled inside config.json and relies on the language being both enumerated inside languageConfiguration.langagues and availble under {code}/translation.json
 
 
 #### 8.0.0-alpha.76
