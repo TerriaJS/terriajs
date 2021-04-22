@@ -86,7 +86,7 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
         }
 
         throw new TerriaError({
-          title: `Error submitting ${this.typeName} job`,
+          title: `Error submitting \`${this.typeName}\` job`,
           message
         });
       }

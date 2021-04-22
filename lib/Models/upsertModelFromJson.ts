@@ -76,7 +76,7 @@ export default function upsertModelFromJson(
       if (model === undefined) {
         errors.push(
           new TerriaError({
-            message: `Failed to get model "${potentialId}" found using share key "${json.id}"`
+            message: `Failed to get model \`"${potentialId}"\` found using share key \`"${json.id}"\``
           })
         );
       }
@@ -116,7 +116,7 @@ export default function upsertModelFromJson(
   ).catchError(error => {
     errors.push(
       TerriaError.from(error, {
-        message: `Error updating model from JSON: ${model!.uniqueId}`
+        message: `Error updating model from JSON: \`${model!.uniqueId}\``
       })
     );
     model!.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
@@ -124,6 +124,6 @@ export default function upsertModelFromJson(
 
   return new Result(
     model,
-    TerriaError.combine(errors, `Error upserting model JSON: ${uniqueId}`)
+    TerriaError.combine(errors, `Error upserting model JSON: \`${uniqueId}\``)
   );
 }
