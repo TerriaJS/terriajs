@@ -1,0 +1,122 @@
+type Story
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "owner"
+        queries: [get, list]
+        operations: [create, read, update, delete]
+      }
+    ]
+  ) {
+  id: ID!
+  authors: [Author!]!
+  title: String!
+  shortDescription: String!
+  description: String!
+  hotspotlocation: Coordinates!
+  sectors: [Sector!]!
+  catalog: [CatalogItem]
+  image: Image
+  pages: [Page]
+  microstories: [Story]
+  state: State!
+}
+
+type Page
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "owner"
+        queries: [get, list]
+        operations: [create, read, update, delete]
+      }
+    ]
+  ) {
+  id: ID!
+  title: String!
+  section: Section!
+  camera: String!
+  baseMapName: String!
+  currentTime: TerriaTime
+  viewer_mode_3d: Boolean!
+  scenarios: [PageContent!]
+}
+
+type Author {
+  id: ID!
+  full_name: String
+  affiliation: String
+}
+
+type PageContent {
+  id: ID!
+  ssp: SSP!
+  content: String!
+  split_map: Boolean!
+  enabled_catalog_items: [CatalogItem!]
+  split_catalog_items: SplitCatalog
+}
+
+type Coordinates {
+  latitude: Float!
+  longitude: Float!
+}
+
+type Image {
+  id: ID!
+  url: String!
+  caption: String
+  alt: String
+}
+
+enum Sector {
+  AGRICULTURE
+  MANUFACTURING
+  COASTAL_INFRASTRUCTURE
+  INTERNATIONAL_COOPERATION
+  FINANCE
+}
+
+type SplitCatalog {
+  left_catalog_items: [CatalogItem!]!
+  right_catalog_items: [CatalogItem!]!
+}
+
+enum SSP {
+  NONE
+  SSP1
+  SSP2
+  SSP3
+  SSP4
+  SSP5
+}
+
+enum Section {
+  INTRODUCTION
+  CONNECTION
+  CLIMATE_EVENT
+  LOCAL_IMPACT
+  CONNECTION_IMPACT
+  EU_IMPACT
+  GLOBAL_IMPACT
+}
+
+enum State {
+  DRAFT
+  UNDER_REVIEW
+  PUBLISHED
+}
+
+type CatalogItem {
+  id: ID!
+  json: String
+}
+
+type TerriaTime {
+  dayNumber: Int
+  secondsOfDay: Int
+}

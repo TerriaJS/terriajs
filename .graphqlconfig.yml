@@ -1,0 +1,12 @@
+projects:
+  receiptAPI:
+    schemaPath: lib/graphql/schema.json
+    includes:
+      - api/graphql/**/*.js
+    excludes:
+      - ./amplify/**
+    extensions:
+      amplify:
+        codeGenTarget: javascript
+        generatedFileName: ''
+        docsFilePath: api/graphql
