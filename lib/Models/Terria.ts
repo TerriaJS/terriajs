@@ -476,15 +476,15 @@ export default class Terria {
     }
   }
 
-  addErrorEventListener(fn: (e: Notification) => void) {
-    return this.error.addEventListener(fn);
+  addErrorEventListener(fn: (e: TerriaError) => void) {
+    return this.error.addEventListener(e => fn(e));
   }
 
   raiseErrorToUser(error: unknown) {
     const terriaError = TerriaError.from(error);
     if (!terriaError.raisedToUser) {
       terriaError.raisedToUser = true;
-      this.error.raiseEvent(terriaError.toNotification);
+      this.error.raiseEvent(terriaError);
     }
   }
 

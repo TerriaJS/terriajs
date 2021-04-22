@@ -338,7 +338,7 @@ export default class ViewState {
 
     // Show errors to the user as notifications.
     this._unsubscribeErrorListener = terria.addErrorEventListener(
-      (e: Notification) => {
+      (e: TerriaError) => {
         // Only add this error if an identical one doesn't already exist.
         if (
           this.notifications.filter(
@@ -346,7 +346,7 @@ export default class ViewState {
           ).length === 0
         ) {
           runInAction(() => {
-            this.notifications.push(e);
+            this.notifications.push(e.toNotification());
           });
         }
       }
