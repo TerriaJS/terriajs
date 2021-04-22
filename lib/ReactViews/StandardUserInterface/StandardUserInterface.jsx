@@ -51,6 +51,8 @@ export const showStoryPrompt = (viewState, terria) => {
     viewState.toggleFeaturePrompt("story", true);
 };
 const GlobalTerriaStyles = createGlobalStyle`
+  ${p => p.theme.fontImports ?? ""}
+
   // Theme-ify sass classes until they are removed
 
   // We override the primary, secondary, map and share buttons here as they
@@ -311,6 +313,7 @@ const StandardUserInterface = observer(
                       >
                         <Branding
                           terria={terria}
+                          viewState={this.props.viewState}
                           version={this.props.version}
                         />
                         <SidePanel
