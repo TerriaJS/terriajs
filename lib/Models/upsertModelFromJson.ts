@@ -114,11 +114,7 @@ export default function upsertModelFromJson(
     json,
     options.replaceStratum
   ).catchError(error => {
-    errors.push(
-      TerriaError.from(error, {
-        message: `Error updating model from JSON: \`${model!.uniqueId}\``
-      })
-    );
+    errors.push(error);
     model!.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
   });
 

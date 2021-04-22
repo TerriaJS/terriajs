@@ -138,11 +138,7 @@ export class ModelReferenceArrayTrait extends Trait {
       result,
       TerriaError.combine(
         errors,
-        `Error${
-          errors.length !== 1 ? "s" : ""
-        } occurred while updating modelReferenceArrayTrait model "${
-          model.uniqueId
-        }" from JSON`
+        `Error updating modelReferenceArrayTrait model "${model.uniqueId}" from JSON`
       )
     );
   }

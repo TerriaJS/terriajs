@@ -69,9 +69,7 @@ export default function updateModelFromJson(
     undefined,
     TerriaError.combine(
       errors,
-      `Error${errors.length !== 1 ? "s" : ""} occurred while updating model \`${
-        model.uniqueId
-      }\` from JSON`
+      `Error updating model \`${model.uniqueId}\` from JSON`
     )
   );
 }

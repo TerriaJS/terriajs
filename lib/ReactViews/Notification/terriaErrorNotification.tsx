@@ -6,11 +6,10 @@ import ViewState from "../../ReactViewModels/ViewState";
 import Collapsible from "../Custom/Collapsible/Collapsible";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 
-const Text: any = require("../../Styled/Text").default;
-const Spacing: any = require("../../Styled/Spacing").Spacing;
-const RawButton: any = require("../../Styled/Button").RawButton;
-const TextSpan: any = require("../../Styled/Text").TextSpan;
-const Box: any = require("../../Styled/Box").default;
+import Box from "../../Styled/Box";
+import Spacing from "../../Styled/Spacing";
+import { RawButton } from "../../Styled/Button";
+import { Text, TextSpan } from "../../Styled/Text";
 
 const ErrorsBox = (props: {
   errors: (Error | TerriaError)[];
@@ -44,24 +43,35 @@ const ErrorsBox = (props: {
 const TerriaErrorBox = (props: { error: TerriaError; depth: number }) => {
   return (
     <>
-      <Text>{parseCustomMarkdownToReact(props.error.message)}</Text>
+      <Text
+        css={`
+          p {
+            margin: 5px 0px;
+          }
+        `}
+      >
+        {parseCustomMarkdownToReact(props.error.message)}
+      </Text>
 
       <Spacing bottom={1} />
 
       {Array.isArray(props.error.originalError) &&
       props.error.originalError.length > 0 ? (
         props.depth === 0 ? (
-          <Collapsible
-            btnRight={true}
-            title={i18next.t("models.raiseError.developerDetails")}
-            titleTextProps={{ large: true }}
-            bodyBoxProps={{ padded: true }}
-          >
-            <ErrorsBox
-              errors={props.error.originalError}
-              depth={props.depth}
-            ></ErrorsBox>
-          </Collapsible>
+          <>
+            <Spacing bottom={2} />
+            <Collapsible
+              btnRight={true}
+              title={i18next.t("models.raiseError.developerDetails")}
+              titleTextProps={{ large: true }}
+              bodyBoxProps={{ padded: true }}
+            >
+              <ErrorsBox
+                errors={props.error.originalError}
+                depth={props.depth}
+              ></ErrorsBox>
+            </Collapsible>
+          </>
         ) : (
           <ErrorsBox
             errors={props.error.originalError}
