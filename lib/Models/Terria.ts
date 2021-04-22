@@ -280,7 +280,8 @@ export default class Terria {
 
   readonly baseUrl: string = "build/TerriaJS/";
   readonly notification = new CesiumEvent();
-  readonly error = new CesiumEvent();
+  /** Use `terria.addErrorEventListener` or `terria.raiseErrorToUser` if you need to interact with errors outside this class*/
+  private readonly error = new CesiumEvent();
   readonly tileLoadProgressEvent = new CesiumEvent();
   readonly workbench = new Workbench();
   readonly overlays = new Workbench();
@@ -475,10 +476,16 @@ export default class Terria {
     }
   }
 
+  addErrorEventListener(fn: (e: Notification) => void) {
+    return this.error.addEventListener(fn);
+  }
+
   raiseErrorToUser(error: unknown) {
     const terriaError = TerriaError.from(error);
-    terriaError.raisedToUser = true;
-    this.error.raiseEvent(terriaError);
+    if (!terriaError.raisedToUser) {
+      terriaError.raisedToUser = true;
+      this.error.raiseEvent(terriaError.toNotification);
+    }
   }
 
   @computed
