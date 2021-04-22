@@ -176,10 +176,12 @@ describe("Terria", function() {
           "Expected initSources[0] to be an InitDataPromise"
         );
         if (isInitDataPromise(terria.initSources[0])) {
-          const data = await terria.initSources[0];
+          const data = await terria.initSources[0].data;
           // JSON parse & stringify to avoid a problem where I think catalog-converter
           //  can return {"id": undefined} instead of no "id"
-          expect(JSON.parse(JSON.stringify(data.data.catalog))).toEqual([
+          expect(
+            JSON.parse(JSON.stringify(data.ignoreError()?.data.catalog))
+          ).toEqual([
             {
               name: groupName,
               type: "group",
