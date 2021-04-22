@@ -69,13 +69,13 @@ describe("Branding", function() {
       rendered.root.findByType("progress");
     }).toThrow();
   });
-  it("renders when provided brandBarSmallElements and ignores displayOneBrand", function() {
-    terria.configParameters.brandBarSmallElements = [
+  it("renders brandBarElements when provided brandBarSmallElements", function() {
+    terria.configParameters.brandBarElements = [
       "",
       "<meter>meter is a html element!</meter>"
     ];
 
-    terria.configParameters.brandBarElements = [
+    terria.configParameters.brandBarSmallElements = [
       "<small>small is a html element!</small>",
       "<a>a is a html element!</a>"
     ];
@@ -83,10 +83,28 @@ describe("Branding", function() {
     rendered = TestRenderer.create(
       <Branding terria={terria} viewState={viewState} />
     );
+    expect(rendered.root.findByType("meter")).toBeDefined();
+  });
+
+  it("renders when provided brandBarSmallElements and ignores displayOneBrand", function() {
+    terria.configParameters.brandBarElements = [
+      "",
+      "<meter>meter is a html element!</meter>"
+    ];
+
+    terria.configParameters.brandBarSmallElements = [
+      "<small>small is a html element!</small>",
+      "<a>a is a html element!</a>"
+    ];
+    terria.configParameters.displayOneBrand = 1;
+    viewState.useSmallScreenInterface = true;
+    rendered = TestRenderer.create(
+      <Branding terria={terria} viewState={viewState} />
+    );
     expect(rendered.root.findByType("small")).toBeDefined();
     expect(rendered.root.findByType("a")).toBeDefined();
     expect(() => {
-      rendered.root.findByType("progress");
+      rendered.root.findByType("meter");
     }).toThrow();
   });
 });
