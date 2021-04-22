@@ -128,5 +128,41 @@ describe("updateModelFromJson", function() {
         newJson.description
       );
     });
+
+    it("will ignore trait which doesn't exist in model", function() {
+      const model = terria.getModelById(BaseModel, "testgroup")!;
+      const newJson: any = {
+        name: "NewTestGroup",
+        type: "group",
+        id: "testgroup",
+        description: "This is another test group",
+        members: [
+          {
+            id: "3",
+            name: "TestWMS3",
+            type: "wms",
+            url: "test/WMS/single_metadata_url.xml",
+            someTrait: "What what",
+            someOtherTrait: "What what what?"
+          }
+        ]
+      };
+      const result = updateModelFromJson(
+        model,
+        CommonStrata.definition,
+        newJson
+      );
+      expect(model.getTrait(CommonStrata.definition, "name")).toBe(
+        newJson.name
+      );
+      expect(model.getTrait(CommonStrata.definition, "description")).toBe(
+        newJson.description
+      );
+
+      expect("someTrait" in model).toBeFalsy();
+      expect("someOtherTrait" in model).toBeFalsy();
+      expect(result.error).toBeDefined();
+      expect(result.error?.originalError?.length).toBe(2);
+    });
   });
 });
