@@ -7,7 +7,8 @@ import registerCatalogMembers from "../lib/Models/registerCatalogMembers";
 
 configure({
   enforceActions: true,
-  computedRequiresReaction: true
+  computedRequiresReaction: true,
+  computedConfigurable: true // so that we can spy on computed items
 });
 
 registerCatalogMembers();

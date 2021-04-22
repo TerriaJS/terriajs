@@ -20,6 +20,7 @@ import featureDataToGeoJson from "../Map/featureDataToGeoJson";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import { ProviderCoordsMap } from "../Map/PickedFeatures";
 import MappableMixin from "../ModelMixins/MappableMixin";
+import TimeVarying from "../ModelMixins/TimeVarying";
 import MouseCoords from "../ReactViewModels/MouseCoords";
 import CameraView from "./CameraView";
 import Cesium3DTilesCatalogItem from "./Cesium3DTilesCatalogItem";
@@ -52,16 +53,20 @@ export default abstract class GlobeOrMap {
   abstract destroy(): void;
 
   abstract doZoomTo(
-    viewOrExtent: CameraView | Rectangle | MappableMixin.MappableMixin,
+    target: CameraView | Rectangle | MappableMixin.MappableMixin,
     flightDurationSeconds: number
   ): void;
 
   zoomTo(
-    viewOrExtent: CameraView | Rectangle | MappableMixin.MappableMixin,
+    target: CameraView | Rectangle | MappableMixin.MappableMixin,
     flightDurationSeconds: number
   ): void {
     this.zoomToEvent.raiseEvent();
-    this.doZoomTo(viewOrExtent, flightDurationSeconds);
+    this.doZoomTo(target, flightDurationSeconds);
+    if (MappableMixin.isMixedInto(target) && TimeVarying.is(target)) {
+      // Set the target as the source for timeline
+      this.terria.timelineStack.promoteToTop(target);
+    }
   }
 
   abstract getCurrentCameraView(): CameraView;

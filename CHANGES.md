@@ -14,6 +14,8 @@ Change Log
   * `ButtonAsLabel` no longer accepts `dark`. A dark background is now used when `light` is false (or undefined).
 * Added in language toggle and first draft of french translation.json
   * This is enabled via language languageConfiguration.enabled inside config.json and relies on the language being both enumerated inside languageConfiguration.langagues and availble under {code}/translation.json
+* Fixes CZML catalog item so that it appears on the timeline.
+* [The next improvement]
 
 
 #### 8.0.0-alpha.76
