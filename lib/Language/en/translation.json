@@ -1166,7 +1166,7 @@
     },
     "raiseError": {
       "errorTitle": "An error occurred",
-      "notificationFeedback": "To send the error to the developers, click here.",
+      "notificationFeedback": "For questions or feedback, click here.",
       "developerDetails": "Developer details"
     },
     "regionMapping": {

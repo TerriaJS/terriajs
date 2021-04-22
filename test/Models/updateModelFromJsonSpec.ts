@@ -169,7 +169,7 @@ describe("updateModelFromJson", function() {
           .find(
             error =>
               error.message ===
-              "The property someTrait is not valid for type wms."
+              "The property `someTrait` is not valid for type `wms`."
           )
       ).toBeDefined();
       expect(
@@ -178,7 +178,7 @@ describe("updateModelFromJson", function() {
           .find(
             error =>
               error.message ===
-              "The property someOtherTrait is not valid for type wms."
+              "The property `someOtherTrait` is not valid for type `wms`."
           )
       ).toBeDefined();
     });
