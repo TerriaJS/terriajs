@@ -9,6 +9,7 @@ Change Log
   * `Box` no longer accepts `<Box positionAbsolute/>` and this should now be passed as `<Box position="absolute"/>`.
   * `Text`'s `styledSize` has been removed. Use the `styledFontSize` prop.
   * `ButtonAsLabel` no longer accepts `dark`. A dark background is now used when `light` is false (or undefined).
+* Fixes CZML catalog item so that it appears on the timeline.
 * [The next improvement]
 
 
@@ -92,7 +93,6 @@ Change Log
 
 #### 8.0.0-alpha.68
 * Remove points from rectangle `UserDrawing`
-* Fixes CZML catalog item so that it appears on the timeline.
 * Fix clipboard typing error. 
 * Ported `WebProcessingServiceCatalogGroup`.
 * Add CSW Group support
@@ -116,7 +116,6 @@ Change Log
 * TSify `Loader` function.
 * Added walking mode to pedestrian mode which clamps the pedestrain to a fixed height above the surface.
 * Upgraded catalog-converter to fix dependency version problem and ensure that all imports are async to reduce main bundle size.
-* [The next improvement]
 
 #### 8.0.0-alpha.66
 
