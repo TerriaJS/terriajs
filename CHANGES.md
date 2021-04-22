@@ -7,7 +7,7 @@ Change Log
 
 - **Breaking changes**:
   - `terria.error.raiseEvent` and `./raiseErrorToUser.ts` have been replaced with `terria.raiseErrorToUser`.
-  - `terria.error.raiseEvent` has been replaced with `terria.addErrorEventListener`
+  - `terria.error.addEventListener` has been replaced with `terria.addErrorEventListener`
 
 * New Error handling using `Result` and `TerriaError` now applied to initial loading, `updateModelFromJson()`, `upsertModelFromJson()` and `Traits.fromJson()`. This means errors will propagate through these functions, and a stacktrace will be displayed.
 * New `terriaErrorNotification()` function, which wraps up error messages.
