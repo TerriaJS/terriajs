@@ -709,7 +709,9 @@
       "failedToGet": "Failed to get server config from {{serverConfigUrl}}. This means services such as proxy, convert and URL shortening may not work."
     },
     "terriaError": {
-      "defaultValue": "An error occurred"
+      "defaultTitle": "An error occurred",
+      "defaultCombineTitle": "Multiple errors occurred",
+      "defaultCombineMessage": "Details of the errors are below"
     }
   },
   "map": {
@@ -1164,8 +1166,6 @@
     },
     "raiseError": {
       "errorTitle": "An error occurred",
-      "errorMultipleTitle": "Multiple errors occurred",
-      "errorMultipleMessage": "Details of the errors are below",
       "notificationFeedback": "To send the error to the developers, click here.",
       "developerDetails": "Developer details"
     },
