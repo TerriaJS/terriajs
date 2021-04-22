@@ -3,11 +3,12 @@ import PropTypes from "prop-types";
 import React from "react";
 import { observer } from "mobx-react";
 
-import Icon from "../../Icon";
+import Icon from "../../../Styled/Icon";
 import Styles from "./toggle_splitter_tool.scss";
 import { withTranslation } from "react-i18next";
 import { runInAction } from "mobx";
 import MapIconButton from "../../MapIconButton/MapIconButton";
+import withControlledVisibility from "../../../ReactViews/HOCs/withControlledVisibility";
 
 import { useRefForTerria } from "../../Hooks/useRefForTerria";
 
@@ -63,4 +64,6 @@ const ToggleSplitterToolWrapper = observer(function(props) {
   }
 });
 
-export default withTranslation()(ToggleSplitterToolWrapper);
+export default withTranslation()(
+  withControlledVisibility(ToggleSplitterToolWrapper)
+);

@@ -1,4 +1,5 @@
 import { action, runInAction } from "mobx";
+import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
@@ -305,6 +306,7 @@ describe("Terria", function() {
 
       const shareLink = buildShareLink(terria, viewState);
       await newTerria.updateApplicationUrl(shareLink);
+      await newTerria.loadInitSources();
       expect(newTerria.catalog.userAddedDataGroup.members).toContain("itemABC");
       expect(newTerria.catalog.userAddedDataGroup.members).toContain(
         "groupABC"
@@ -323,6 +325,7 @@ describe("Terria", function() {
 
       const shareLink = buildShareLink(terria, viewState);
       await newTerria.updateApplicationUrl(shareLink);
+      await newTerria.loadInitSources();
       expect(newTerria.catalog.userAddedDataGroup.members).toContain(
         "url_test"
       );
@@ -351,6 +354,7 @@ describe("Terria", function() {
 
       const shareLink = buildShareLink(terria, viewState);
       await newTerria.updateApplicationUrl(shareLink);
+      await newTerria.loadInitSources();
       expect(newTerria.workbench.itemIds).toEqual(terria.workbench.itemIds);
     });
 
@@ -372,6 +376,7 @@ describe("Terria", function() {
 
       const shareLink = buildShareLink(terria, viewState);
       await newTerria.updateApplicationUrl(shareLink);
+      await newTerria.loadInitSources();
       expect(newTerria.showSplitter).toEqual(true);
       expect(newTerria.splitPosition).toEqual(0.7);
       expect(newTerria.workbench.itemIds).toEqual(["itemABC"]);
@@ -394,6 +399,7 @@ describe("Terria", function() {
       expect(group.members.length).toBeGreaterThan(0);
       const shareLink = await buildShareLink(terria, viewState);
       await newTerria.updateApplicationUrl(shareLink);
+      await newTerria.loadInitSources();
       const newGroup = <WebMapServiceCatalogGroup>(
         newTerria.getModelById(BaseModel, "groupABC")
       );
@@ -475,6 +481,7 @@ describe("Terria", function() {
         csv?.setTrait(CommonStrata.user, "opacity", 0.5);
         const shareLink = buildShareLink(terria, viewState);
         await newTerria.updateApplicationUrl(shareLink);
+        await newTerria.loadInitSources();
 
         const newCsv = newTerria.getModelById(
           CsvCatalogItem,
@@ -497,6 +504,7 @@ describe("Terria", function() {
         terria.timelineStack.addToTop(csv);
         const shareLink = buildShareLink(terria, viewState);
         await newTerria.updateApplicationUrl(shareLink);
+        await newTerria.loadInitSources();
 
         const newCsv = newTerria.getModelById(
           CsvCatalogItem,
@@ -639,6 +647,7 @@ describe("Terria", function() {
         await newGroupRef.loadReference();
 
         await newTerria.updateApplicationUrl(shareLink);
+        await newTerria.loadInitSources();
 
         // Why does this return a CSV item (when above hack isn't added)? It returns a brand new csv item without data or URL
         // Does serialisation save enough attributes that upsertModelFromJson thinks it can create a new model?
@@ -700,6 +709,7 @@ describe("Terria", function() {
         await newGroupRef.loadReference();
 
         await newTerria.updateApplicationUrl(shareLink);
+        await newTerria.loadInitSources();
 
         // Why does this return a CSV item (when above hack isn't added)? It returns a brand new csv item without data or URL
         // Does serialisation save enough attributes that upsertModelFromJson thinks it can create a new model?
@@ -832,10 +842,10 @@ describe("Terria", function() {
 
   describe("applyInitData", function() {
     describe("when pickedFeatures is not present in initData", function() {
-      it("unsets the feature picking state if `canUnsetFeaturePickingState` is `true`", function() {
+      it("unsets the feature picking state if `canUnsetFeaturePickingState` is `true`", async function() {
         terria.pickedFeatures = new PickedFeatures();
         terria.selectedFeature = new Entity({ name: "selected" }) as Feature;
-        terria.applyInitData({
+        await terria.applyInitData({
           initData: {},
           canUnsetFeaturePickingState: true
         });
@@ -843,15 +853,63 @@ describe("Terria", function() {
         expect(terria.selectedFeature).toBeUndefined();
       });
 
-      it("otherwise, should not unset feature picking state", function() {
+      it("otherwise, should not unset feature picking state", async function() {
         terria.pickedFeatures = new PickedFeatures();
         terria.selectedFeature = new Entity({ name: "selected" }) as Feature;
-        terria.applyInitData({
+        await terria.applyInitData({
           initData: {}
         });
         expect(terria.pickedFeatures).toBeDefined();
         expect(terria.selectedFeature).toBeDefined();
       });
+    });
+  });
+
+  describe("basemaps", function() {
+    it("when no base maps are specified load defaultBaseMaps", async function() {
+      terria.applyInitData({
+        initData: {}
+      });
+      await terria.loadInitSources();
+      expect(terria.baseMaps).toBeDefined();
+      expect(terria.baseMaps.length).toBeGreaterThan(1);
+    });
+
+    it("propperly loads base maps", function() {
+      terria.applyInitData({
+        initData: {
+          baseMaps: [
+            {
+              item: {
+                id: "basemap-positron",
+                name: "Positron (Light)",
+                type: "open-street-map",
+                url: "https://basemaps.cartocdn.com/light_all/",
+                attribution:
+                  "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
+                subdomains: ["a", "b", "c", "d"],
+                opacity: 1.0
+              },
+              image: "/images/positron.png"
+            },
+            {
+              item: {
+                id: "basemap-darkmatter",
+                name: "Dark Matter",
+                type: "open-street-map",
+                url: "https://basemaps.cartocdn.com/dark_all/",
+                attribution:
+                  "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
+                subdomains: ["a", "b", "c", "d"],
+                opacity: 1.0
+              },
+              image: "/images/dark-matter.png"
+            }
+          ]
+        }
+      });
+      expect(terria.baseMaps).toBeDefined();
+      expect(terria.baseMaps.length).toEqual(2);
     });
   });
 
@@ -922,5 +980,19 @@ describe("Terria", function() {
       expect(terria.selectedFeature).toBeDefined();
       expect(terria.selectedFeature?.name).toBe("foo");
     });
+  });
+  it("customRequestSchedulerLimits sets RequestScheduler limits for domains", async function() {
+    const configUrl = `data:application/json;base64,${btoa(
+      JSON.stringify({
+        initializationUrls: [],
+        parameters: {
+          customRequestSchedulerLimits: {
+            "test.domain:333": 12
+          }
+        }
+      })
+    )}`;
+    await terria.start({ configUrl, i18nOptions });
+    expect(RequestScheduler.requestsByServer["test.domain:333"]).toBe(12);
   });
 });

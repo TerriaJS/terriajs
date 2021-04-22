@@ -7,9 +7,9 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import loadWithXhr from "../Core/loadWithXhr";
 import TerriaError from "../Core/TerriaError";
-import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import ChartableMixin from "../ModelMixins/ChartableMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import TableAutomaticStylesStratum, {
   ColorStyleLegend
@@ -23,15 +23,15 @@ import TableChartStyleTraits, {
 import TableColorStyleTraits from "../Traits/TableColorStyleTraits";
 import TablePointSizeStyleTraits from "../Traits/TablePointSizeStyleTraits";
 import TableStyleTraits from "../Traits/TableStyleTraits";
+import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
+import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import { SelectableDimension } from "./SelectableDimensions";
 import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
-import CommonStrata from "./CommonStrata";
-import { SelectableDimension } from "./SelectableDimensions";
-import { BaseModel } from "./Model";
 
 interface GetFeatureOfInterestResponse {
   featureMember?: FeatureMember[] | FeatureMember;
@@ -305,11 +305,7 @@ class GetObservationRequest {
 }
 
 export default class SensorObservationServiceCatalogItem extends TableMixin(
-  AsyncChartableMixin(
-    AsyncMappableMixin(
-      CatalogMemberMixin(CreateModel(SensorObservationServiceCatalogItemTraits))
-    )
-  )
+  CatalogMemberMixin(CreateModel(SensorObservationServiceCatalogItemTraits))
 ) {
   static readonly type = "sos";
   static defaultRequestTemplate = require("./SensorObservationServiceRequestTemplate.xml");

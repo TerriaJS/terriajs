@@ -14,7 +14,7 @@ import Terria from "../../../Models/Terria";
 import ViewerMode from "../../../Models/ViewerMode";
 // eslint-disable-next-line no-unused-vars
 import ViewState from "../../../ReactViewModels/ViewState";
-import Icon from "../../Icon";
+import Icon from "../../../Styled/Icon";
 import MenuPanel from "../../StandardUserInterface/customizable/MenuPanel";
 // import { provideRef } from "../../HOCs/provideRef";
 import withTerriaRef from "../../HOCs/withTerriaRef";
@@ -65,9 +65,7 @@ class SettingPanel extends React.Component {
 
   selectBaseMap(baseMap, event) {
     event.stopPropagation();
-    runInAction(() => {
-      this.props.terria.mainViewer.baseMap = baseMap.mappable;
-    });
+    this.props.terria.mainViewer.setBaseMap(baseMap.mappable);
     // this.props.terria.baseMapContrastColor = baseMap.contrastColor;
 
     // We store the user's chosen basemap for future use, but it's up to the instance to decide

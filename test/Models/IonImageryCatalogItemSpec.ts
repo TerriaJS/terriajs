@@ -1,7 +1,8 @@
-import IonImageryCatalogItem from "../../lib/Models/IonImageryCatalogItem";
-import Terria from "../../lib/Models/Terria";
 import { runInAction } from "mobx";
 import IonImageryProvider from "terriajs-cesium/Source/Scene/IonImageryProvider";
+import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
+import IonImageryCatalogItem from "../../lib/Models/IonImageryCatalogItem";
+import Terria from "../../lib/Models/Terria";
 
 describe("IonImageryCatalogItem", function() {
   let item = new IonImageryCatalogItem("test", new Terria());
@@ -20,11 +21,17 @@ describe("IonImageryCatalogItem", function() {
     });
 
     it("correctly sets the `alpha` value", function() {
+      if (!ImageryParts.is(item.mapItems[0]))
+        throw new Error("Expected MapItem to be an ImageryParts");
+
       runInAction(() => item.setTrait("definition", "opacity", 0.42));
       expect(item.mapItems[0].alpha).toBe(0.42);
     });
 
     it("correctly sets `show`", function() {
+      if (!ImageryParts.is(item.mapItems[0]))
+        throw new Error("Expected MapItem to be an ImageryParts");
+
       runInAction(() => item.setTrait("definition", "show", false));
       expect(item.mapItems[0].show).toBe(false);
       runInAction(() => item.setTrait("definition", "show", true));
@@ -34,6 +41,8 @@ describe("IonImageryCatalogItem", function() {
 
   describe("imageryProvider", function() {
     it("should be a UrlTemplateImageryProvider", function() {
+      if (!ImageryParts.is(item.mapItems[0]))
+        throw new Error("Expected MapItem to be an ImageryParts");
       let imageryProvider = item.mapItems[0].imageryProvider;
       expect(imageryProvider instanceof IonImageryProvider).toBeTruthy();
     });

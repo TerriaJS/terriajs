@@ -5,8 +5,8 @@ import React from "react";
 import { Trans, withTranslation, WithTranslation } from "react-i18next";
 import isDefined from "../Core/isDefined";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import addUserFiles from "../Models/addUserFiles";
-import Mappable from "../Models/Mappable";
 import { BaseModel } from "../Models/Model";
 import Terria from "../Models/Terria";
 import ViewState from "../ReactViewModels/ViewState";
@@ -46,11 +46,11 @@ class DragDropFile extends React.Component<PropsType> {
         }
 
         // Add load all mapable items
-        const mappableItems = addedCatalogItems.filter(Mappable.is);
-
-        yield Promise.all(
-          mappableItems.map(f => f.loadMapItems()).filter(p => isDefined(p))
+        const mappableItems = addedCatalogItems.filter(
+          MappableMixin.isMixedInto
         );
+
+        yield Promise.all(mappableItems.map(f => f.loadMapItems()));
 
         // Zoom to first item
         const firstZoomableItem = mappableItems.find(i =>

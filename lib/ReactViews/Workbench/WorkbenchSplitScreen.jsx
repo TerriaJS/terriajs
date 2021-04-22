@@ -7,7 +7,7 @@ import { observer } from "mobx-react";
 
 import classNames from "classnames";
 
-import Icon from "../Icon";
+import Icon from "../../Styled/Icon";
 
 import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";

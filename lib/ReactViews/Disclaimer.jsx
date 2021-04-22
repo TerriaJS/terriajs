@@ -81,7 +81,7 @@ class Disclaimer extends React.Component {
       .useSmallScreenInterface;
     return disclaimer ? (
       <FadeIn isVisible={this.props.viewState.disclaimerVisible}>
-        <TopElementBox positionAbsolute fullWidth fullHeight centered>
+        <TopElementBox position="absolute" fullWidth fullHeight centered>
           <BackgroundImage
             // // Make the image slightly larger to deal with
             // // image shrinking a tad bit when blurred
@@ -90,7 +90,7 @@ class Disclaimer extends React.Component {
 
             fullWidth
             fullHeight
-            positionAbsolute
+            position="absolute"
           />
           <Box
             displayInlineBlock
