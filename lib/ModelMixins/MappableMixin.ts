@@ -1,3 +1,5 @@
+import { computed } from "mobx";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
@@ -6,6 +8,8 @@ import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
 import MappableTraits from "../Traits/MappableTraits";
+import CatalogMemberMixin from "./CatalogMemberMixin";
+import TableMixin from "./TableMixin";
 
 export type MapItem =
   | ImageryParts
@@ -15,12 +19,10 @@ export type MapItem =
 
 // Shouldn't this be a class?
 export interface ImageryParts {
-  // TODO
   alpha: number;
-  // wms: boolean;
-  // isGeoServer: boolean;
-  show: boolean;
+  clippingRectangle: Rectangle | undefined;
   imageryProvider: ImageryProvider;
+  show: boolean;
 }
 
 // This discriminator only discriminates between ImageryParts and DataSource
@@ -52,6 +54,25 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
       return true;
     }
 
+    @computed
+    get cesiumRectangle() {
+      if (
+        this.rectangle !== undefined &&
+        this.rectangle.east !== undefined &&
+        this.rectangle.west !== undefined &&
+        this.rectangle.north !== undefined &&
+        this.rectangle.south !== undefined
+      ) {
+        return Rectangle.fromDegrees(
+          this.rectangle.west,
+          this.rectangle.south,
+          this.rectangle.east,
+          this.rectangle.north
+        );
+      }
+      return undefined;
+    }
+
     private _mapItemsLoader = new AsyncLoader(
       this.forceLoadMapItems.bind(this)
     );
@@ -68,8 +89,10 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
      * If the map items are already loaded or already loading, it will
      * return the existing promise.
      */
-    loadMapItems(): Promise<void> {
-      return this._mapItemsLoader.load();
+    async loadMapItems(force?: boolean) {
+      if (CatalogMemberMixin.isMixedInto(this)) await this.loadMetadata();
+      if (TableMixin.isMixedInto(this)) await this.loadRegionProviderList();
+      await this._mapItemsLoader.load(force);
     }
 
     abstract get mapItems(): MapItem[];
@@ -77,8 +100,12 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
     /**
      * Forces load of the maps items. This method does _not_ need to consider
      * whether the map items are already loaded.
+     *
+     * It is guaranteed that `loadMetadata` has finished before this is called.
+     *
+     * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
      */
-    protected abstract forceLoadMapItems(): Promise<void>;
+    protected abstract async forceLoadMapItems(): Promise<void>;
 
     dispose() {
       super.dispose();

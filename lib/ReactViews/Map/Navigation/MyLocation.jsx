@@ -11,13 +11,14 @@ import GeoJsonCatalogItem from "../../../Models/GeoJsonCatalogItem";
 // import Styles from "./tool_button.scss";
 import TerriaError from "../../../Core/TerriaError";
 import CesiumCartographic from "terriajs-cesium/Source/Core/Cartographic.js";
-import Icon from "../../Icon";
+import Icon from "../../../Styled/Icon";
 import defined from "terriajs-cesium/Source/Core/defined";
 import { withTranslation } from "react-i18next";
 import { runInAction } from "mobx";
 import CommonStrata from "../../../Models/CommonStrata";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import MapIconButton from "../../MapIconButton/MapIconButton";
+import withControlledVisibility from "../../../ReactViews/HOCs/withControlledVisibility";
 
 const MyLocation = createReactClass({
   displayName: "MyLocation",
@@ -198,4 +199,4 @@ const MyLocation = createReactClass({
   }
 });
 
-export default withTranslation()(MyLocation);
+export default withTranslation()(withControlledVisibility(MyLocation));

@@ -1,11 +1,11 @@
-import Icon from "../../Icon";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-import Styles from "./chart-item-selector.scss";
 import PropTypes from "prop-types";
-import ChartView from "../../../Charts/ChartView";
 import React from "react";
-import Chartable, { axesMatch } from "../../../Models/Chartable";
+import ChartView from "../../../Charts/ChartView";
+import ChartableMixin, { axesMatch } from "../../../ModelMixins/ChartableMixin";
+import Icon from "../../../Styled/Icon";
+import Styles from "./chart-item-selector.scss";
 
 export const ChartItem = observer(({ item, chartItem }) => {
   const lineColor = chartItem.isSelectedInWorkbench
@@ -75,7 +75,7 @@ ChartItemSelector.propTypes = {
 
 function unselectChartItemsWithXAxisNotMatching(items, requiredAxis) {
   items.forEach(item => {
-    if (Chartable.is(item)) {
+    if (ChartableMixin.isMixedInto(item)) {
       item.chartItems.forEach(chartItem => {
         if (!axesMatch(chartItem.xAxis, requiredAxis)) {
           chartItem.updateIsSelectedInWorkbench(false);

@@ -3,7 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Styles from "./tool_button.scss";
 import { withTranslation } from "react-i18next";
-import Icon from "../../Icon";
+import Icon from "../../../Styled/Icon";
 import { observer } from "mobx-react";
 import { observable, action } from "mobx";
 
@@ -18,6 +18,7 @@ import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import VertexFormat from "terriajs-cesium/Source/Core/VertexFormat";
 
 import MapIconButton from "../../MapIconButton/MapIconButton";
+import withControlledVisibility from "../../HOCs/withControlledVisibility";
 
 @observer
 class MeasureTool extends React.Component {
@@ -251,4 +252,4 @@ class MeasureTool extends React.Component {
     );
   }
 }
-export default withTranslation()(MeasureTool);
+export default withTranslation()(withControlledVisibility(MeasureTool));

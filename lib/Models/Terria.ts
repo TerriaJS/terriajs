@@ -7,6 +7,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
+import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
@@ -33,12 +34,15 @@ import { isLatLonHeight } from "../Core/LatLonHeight";
 import loadJson5 from "../Core/loadJson5";
 import ServerConfig from "../Core/ServerConfig";
 import TerriaError from "../Core/TerriaError";
+import { Complete } from "../Core/TypeModifiers";
 import { getUriWithoutPath } from "../Core/uriHelpers";
 import PickedFeatures, {
   featureBelongsToCatalogItem,
   isProviderCoordsMap
 } from "../Map/PickedFeatures";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
+import MappableMixin, { isDataSource } from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
@@ -48,7 +52,8 @@ import { shareConvertNotification } from "../ReactViews/Notification/shareConver
 import ShowableTraits from "../Traits/ShowableTraits";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
-import MappableMixin, { isDataSource } from "../ModelMixins/MappableMixin";
+import { BaseMapModel, processBaseMaps } from "./BaseMaps/BaseMapModel";
+import { defaultBaseMaps } from "./BaseMaps/defaultBaseMaps";
 import CameraView from "./CameraView";
 import CatalogGroup from "./CatalogGroupNew";
 import CatalogMemberFactory from "./CatalogMemberFactory";
@@ -57,6 +62,7 @@ import CommonStrata from "./CommonStrata";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import hasTraits from "./hasTraits";
+import IElementConfig from "./IElementConfig";
 import InitSource, {
   isInitData,
   isInitDataPromise,
@@ -72,7 +78,7 @@ import MapInteractionMode from "./MapInteractionMode";
 import { BaseModel } from "./Model";
 import NoViewer from "./NoViewer";
 import openGroup from "./openGroup";
-import { wrapErrorMessage } from "./raiseErrorToUser";
+import raiseErrorToUser, { wrapErrorMessage } from "./raiseErrorToUser";
 import ShareDataService from "./ShareDataService";
 import SplitItemReference from "./SplitItemReference";
 import TimelineStack from "./TimelineStack";
@@ -83,7 +89,6 @@ import Workbench from "./Workbench";
 // import overrides from "../Overrides/defaults.jsx";
 
 interface ConfigParameters {
-  [key: string]: ConfigParameters[keyof ConfigParameters];
   /**
    * TerriaJS uses this name whenever it needs to display the name of the application.
    */
@@ -208,6 +213,20 @@ interface ConfigParameters {
    *
    */
   languageConfiguration?: LanguageConfiguration;
+  /**
+   * Custom concurrent request limits for domains in Cesium's RequestScheduler. Cesium's default is 6 per domain (the maximum allowed by browsers unless the server supports http2). For servers supporting http2 try 12-24 to have more parallel requests. Setting this too high will undermine Cesium's prioritised request scheduling and important data may load slower. Format is {"domain_without_protocol:port": number}.
+   */
+  customRequestSchedulerLimits?: Record<string, number>;
+
+  /**
+   * Whether to load persisted viewer mode from local storage.
+   */
+  persistViewerMode?: boolean;
+
+  /**
+   * Whether to open the add data explorer panel on load.
+   */
+  openAddData?: boolean;
 }
 
 interface StartOptions {
@@ -265,6 +284,8 @@ export default class Terria {
   readonly timelineClock = new Clock({ shouldAnimate: false });
   // readonly overrides: any = overrides; // TODO: add options.functionOverrides like in master
 
+  readonly elements = observable.map<string, IElementConfig>();
+
   @observable
   readonly mainViewer = new TerriaViewer(
     this,
@@ -303,7 +324,7 @@ export default class Terria {
   readonly timelineStack = new TimelineStack(this.timelineClock);
 
   @observable
-  readonly configParameters: ConfigParameters = {
+  readonly configParameters: Complete<ConfigParameters> = {
     appName: "TerriaJS App",
     supportEmail: "info@terria.io",
     defaultMaximumShownFeatureInfos: 100,
@@ -346,13 +367,22 @@ export default class Terria {
     showInAppGuides: false,
     helpContent: [],
     helpContentTerms: defaultTerms,
-    languageConfiguration: undefined
+    languageConfiguration: undefined,
+    customRequestSchedulerLimits: undefined,
+    persistViewerMode: true,
+    openAddData: false
   };
 
   @observable
   baseMaps: BaseMapViewModel[] = [];
 
+  /** ID of basemap pulled from initData - this wil be used **before** `initBaseMapName` */
   initBaseMapId: string | undefined;
+
+  /** Name of basemap pulled from initData - this is for compatibility with sharelinks which use baseMapName instead of baseMapId. This will be used if `initBaseMapId` can't be resolved */
+  initBaseMapName: string | undefined;
+
+  previewBaseMapId: string = "basemap-positron";
 
   @observable
   pickedFeatures: PickedFeatures | undefined;
@@ -607,7 +637,8 @@ export default class Terria {
         this.setupInitializationUrls(baseUri, config);
       });
     } catch (error) {
-      this.error.raiseEvent(
+      raiseErrorToUser(
+        this,
         new TerriaError({
           sender: this,
           title: { key: "models.terria.loadConfigErrorTitle" },
@@ -631,6 +662,9 @@ export default class Terria {
         );
       }
     }
+    setCustomRequestSchedulerDomainLimits(
+      this.configParameters.customRequestSchedulerLimits
+    );
 
     this.analytics?.start(this.configParameters);
     this.analytics?.logEvent("launch", "url", launchUrlForAnalytics);
@@ -649,10 +683,7 @@ export default class Terria {
   }
 
   loadPersistedMapSettings(): void {
-    const persistViewerMode = defaultValue(
-      this.configParameters.persistViewerMode,
-      true
-    );
+    const persistViewerMode = this.configParameters.persistViewerMode;
     const mainViewer = this.mainViewer;
     const viewerMode = this.getLocalProperty("viewermode");
     if (persistViewerMode && defined(viewerMode)) {
@@ -669,33 +700,32 @@ export default class Terria {
     }
   }
 
-  @action
-  updateBaseMaps(baseMaps: BaseMapViewModel[]): void {
-    this.baseMaps.push(...baseMaps);
-    if (!this.mainViewer.baseMap) {
-      this.loadPersistedOrInitBaseMap();
-    }
-  }
-
-  @action
-  loadPersistedOrInitBaseMap(): void {
+  async loadPersistedOrInitBaseMap() {
+    // Set baseMap fallback to first option
+    let baseMap = this.baseMaps[0].mappable;
     const persistedBaseMapId = this.getLocalProperty("basemap");
     const baseMapSearch = this.baseMaps.find(
       baseMap => baseMap.mappable.uniqueId === persistedBaseMapId
     );
     if (baseMapSearch) {
-      this.mainViewer.baseMap = baseMapSearch.mappable;
+      baseMap = baseMapSearch.mappable;
     } else {
-      console.error(
-        `Couldn't find a basemap for unique id ${persistedBaseMapId}. Trying to load init base map.`
-      );
-      const baseMapSearch = this.baseMaps.find(
-        baseMap => baseMap.mappable.uniqueId === this.initBaseMapId
-      );
+      // Try to find basemap using initBaseMapId and initBaseMapName
+      const baseMapSearch =
+        this.baseMaps.find(
+          baseMap => baseMap.mappable.uniqueId === this.initBaseMapId
+        ) ??
+        this.baseMaps.find(
+          baseMap =>
+            CatalogMemberMixin.isMixedInto(baseMap.mappable) &&
+            baseMap.mappable.name === this.initBaseMapName
+        );
       if (baseMapSearch) {
-        this.mainViewer.baseMap = baseMapSearch.mappable;
+        baseMap = baseMapSearch.mappable;
       }
     }
+
+    await this.mainViewer.setBaseMap(baseMap);
   }
 
   get isLoadingInitSources(): boolean {
@@ -732,14 +762,15 @@ export default class Terria {
         .query("")
         .hash("")
     );
+
     await this.loadInitSources();
   }
 
   @action
   updateParameters(parameters: ConfigParameters | JsonObject): void {
-    Object.keys(parameters).forEach((key: string) => {
+    Object.entries(parameters).forEach(([key, value]) => {
       if (this.configParameters.hasOwnProperty(key)) {
-        this.configParameters[key] = parameters[key];
+        (this.configParameters as any)[key] = value;
       }
     });
 
@@ -751,24 +782,83 @@ export default class Terria {
   }
 
   protected async forceLoadInitSources(): Promise<void> {
+    const loadInitSource = createTransformer(
+      async (initSource: InitSource): Promise<JsonObject | undefined> => {
+        let jsonValue: JsonValue | undefined;
+        if (isInitUrl(initSource)) {
+          try {
+            jsonValue = await loadJson5(initSource.initUrl);
+          } catch (e) {
+            raiseErrorToUser(
+              this,
+              new TerriaError({
+                sender: this,
+                title: { key: "models.terria.loadingInitSourceErrorTitle" },
+                message: {
+                  key: "models.terria.loadingInitSourceError2Message",
+                  parameters: { loadSource: initSource.initUrl }
+                }
+              })
+            );
+          }
+        } else if (isInitOptions(initSource)) {
+          let error: any;
+          for (const option of initSource.options) {
+            try {
+              jsonValue = await loadInitSource(option);
+              if (jsonValue !== undefined) break;
+            } catch (err) {
+              error = err;
+            }
+          }
+          if (jsonValue === undefined && error !== undefined) throw error;
+        } else if (isInitData(initSource)) {
+          jsonValue = initSource.data;
+        } else if (isInitDataPromise(initSource)) {
+          jsonValue = (await initSource).data;
+        }
+
+        if (jsonValue && isJsonObject(jsonValue)) {
+          return jsonValue;
+        }
+        return undefined;
+      }
+    );
+
     const initSources = await Promise.all(
       this.initSources.map(async initSource => {
         try {
-          return loadInitSource(initSource);
+          return await loadInitSource(initSource);
         } catch (e) {
-          this.error.raiseEvent(e);
-          return undefined;
+          raiseErrorToUser(this, e, {
+            key: "models.terria.loadingInitSourceErrorTitle"
+          });
         }
       })
     );
 
     await Promise.all(
-      filterOutUndefined(initSources).map(initSource =>
-        this.applyInitData({
-          initData: initSource
-        })
-      )
+      filterOutUndefined(initSources).map(async initSource => {
+        try {
+          await this.applyInitData({
+            initData: initSource
+          });
+        } catch (e) {
+          raiseErrorToUser(this, e, {
+            key: "models.terria.loadingInitSourceErrorTitle"
+          });
+        }
+      })
     );
+
+    if (this.baseMaps.length === 0) {
+      processBaseMaps(defaultBaseMaps(this), this);
+    }
+
+    if (!this.mainViewer.baseMap) {
+      // Note: there is no "await" here - as basemaps can take a while to load and there is no need to wait for them to load before rendering Terria
+      this.loadPersistedOrInitBaseMap();
+    }
   }
 
   private async loadModelStratum(
@@ -910,6 +1000,10 @@ export default class Terria {
       this.catalog.group.addMembersFromJson(stratumId, initData.catalog);
     }
 
+    if (isJsonObject(initData.elements)) {
+      this.elements.merge(initData.elements);
+    }
+
     if (Array.isArray(initData.stories)) {
       this.stories = initData.stories;
     }
@@ -932,6 +1026,30 @@ export default class Terria {
 
     if (isJsonString(initData.baseMapId)) {
       this.initBaseMapId = initData.baseMapId;
+    }
+
+    if (isJsonString(initData.baseMapName)) {
+      this.initBaseMapName = initData.baseMapName;
+    }
+
+    if (isJsonString(initData.previewBaseMapId)) {
+      this.previewBaseMapId = initData.previewBaseMapId;
+    } else if (this.initBaseMapId) {
+      this.previewBaseMapId = this.initBaseMapId;
+    }
+
+    if (
+      initData.baseMaps &&
+      Array.isArray(initData.baseMaps) &&
+      initData.baseMaps.length > 0
+    ) {
+      try {
+        processBaseMaps(<BaseMapModel[]>(<unknown>initData.baseMaps), this);
+      } catch (e) {
+        raiseErrorToUser(this, e, {
+          key: "models.terria.loadingBaseMapsErrorTitle"
+        });
+      }
     }
 
     if (isJsonObject(initData.homeCamera)) {
@@ -960,6 +1078,7 @@ export default class Terria {
       ? initData.timeline.slice()
       : [];
 
+    // NOTE: after this Promise, this function is no longer an `@action`
     const models = initData.models;
     if (isJsonObject(models)) {
       await Promise.all(
@@ -972,6 +1091,9 @@ export default class Terria {
               replaceStratum
             );
           } catch (e) {
+            raiseErrorToUser(this, e, {
+              key: "models.terria.loadingShareDataErrorTitle"
+            });
             // TODO: deal with shared models that can't be loaded because, e.g. because they are private
             console.log(e);
             return Promise.resolve();
@@ -980,9 +1102,11 @@ export default class Terria {
       );
     }
 
-    if (isJsonString(initData.previewedItemId)) {
-      this.previewedItemId = initData.previewedItemId;
-    }
+    runInAction(() => {
+      if (isJsonString(initData.previewedItemId)) {
+        this.previewedItemId = initData.previewedItemId;
+      }
+    });
 
     // Set the new contents of the workbench.
     const newItems = filterOutUndefined(
@@ -1037,13 +1161,25 @@ export default class Terria {
     // Load the items on the workbench
     await Promise.all(
       newItems.map(async model => {
-        if (ReferenceMixin.is(model)) {
-          await model.loadReference();
-          model = model.target || model;
-        }
+        try {
+          if (ReferenceMixin.is(model)) {
+            await model.loadReference();
+            model = model.target || model;
+          }
 
-        if (MappableMixin.isMixedInto(model)) {
-          await model.loadMapItems();
+          if (MappableMixin.isMixedInto(model)) {
+            await model.loadMapItems();
+          }
+        } catch (e) {
+          raiseErrorToUser(this, e, {
+            key: "models.terria.loadingWorkbenchItemErrorTitle",
+            parameters: {
+              name:
+                (CatalogMemberMixin.isMixedInto(model)
+                  ? model.name
+                  : model.uniqueId) ?? "Unknown item"
+            }
+          });
         }
       })
     );
@@ -1278,35 +1414,6 @@ function generateInitializationUrl(
   };
 }
 
-const loadInitSource = createTransformer(
-  async (initSource: InitSource): Promise<JsonObject | undefined> => {
-    let jsonValue: JsonValue | undefined;
-    if (isInitUrl(initSource)) {
-      jsonValue = await loadJson5(initSource.initUrl);
-    } else if (isInitOptions(initSource)) {
-      let error: any;
-      for (const option of initSource.options) {
-        try {
-          jsonValue = await loadInitSource(option);
-          if (jsonValue !== undefined) break;
-        } catch (err) {
-          error = err;
-        }
-      }
-      if (jsonValue === undefined && error !== undefined) throw error;
-    } else if (isInitData(initSource)) {
-      jsonValue = initSource.data;
-    } else if (isInitDataPromise(initSource)) {
-      jsonValue = (await initSource).data;
-    }
-
-    if (jsonValue && isJsonObject(jsonValue)) {
-      return jsonValue;
-    }
-    return undefined;
-  }
-);
-
 async function interpretHash(
   terria: Terria,
   hashProperties: any,
@@ -1408,4 +1515,14 @@ function interpretStartData(terria: Terria, startData: any) {
   //     }
   //   }
   // }
+}
+
+function setCustomRequestSchedulerDomainLimits(
+  customDomainLimits: ConfigParameters["customRequestSchedulerLimits"]
+) {
+  if (isDefined(customDomainLimits)) {
+    Object.entries(customDomainLimits).forEach(([domain, limit]) => {
+      RequestScheduler.requestsByServer[domain] = limit;
+    });
+  }
 }

@@ -24,12 +24,13 @@ import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import Ray from "terriajs-cesium/Source/Core/Ray";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
-import Icon, { StyledIcon } from "../../Icon.jsx";
+import Icon, { StyledIcon } from "../../../Styled/Icon";
 import GyroscopeGuidance from "../../GyroscopeGuidance/GyroscopeGuidance";
 import { runInAction, computed, when } from "mobx";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
 import { withTerriaRef } from "../../HOCs/withTerriaRef";
+import withControlledVisibility from "../../HOCs/withControlledVisibility";
 
 import Box from "../../../Styled/Box";
 
@@ -712,5 +713,5 @@ function viewerChange(viewModel) {
 
 export const COMPASS_NAME = "MapNavigationCompassOuterRing";
 export default withTranslation()(
-  withTheme(withTerriaRef(Compass, COMPASS_NAME))
+  withControlledVisibility(withTheme(withTerriaRef(Compass, COMPASS_NAME)))
 );

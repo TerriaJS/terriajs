@@ -16,11 +16,7 @@ export default class CesiumTerrainCatalogItem extends UrlMixin(
     return CesiumTerrainCatalogItem.type;
   }
 
-  protected forceLoadMetadata() {
-    return Promise.resolve();
-  }
-
-  protected forceLoadMapItems() {
+  protected forceLoadMapItems(): Promise<void> {
     return Promise.resolve();
   }
 

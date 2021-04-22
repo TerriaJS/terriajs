@@ -6,7 +6,7 @@ import React from "react";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import VarType from "../../../Map/VarType";
-import Icon from "../../Icon";
+import Icon from "../../../Styled/Icon";
 import Styles from "./chart-panel-download-button.scss";
 
 const ChartPanelDownloadButton = createReactClass({
@@ -69,7 +69,7 @@ const ChartPanelDownloadButton = createReactClass({
     }
 
     const loadingPromises = this.props.chartableItems.map(c => {
-      return when(c.item.loadChartItems())
+      return when(c.item.loadMapItems())
         .then(() => c.item)
         .otherwise(() => undefined);
     });

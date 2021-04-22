@@ -8,13 +8,15 @@ import classNames from "classnames";
 import SettingPanel from "./Panels/SettingPanel";
 import SharePanel from "./Panels/SharePanel/SharePanel";
 import ToolsPanel from "./Panels/ToolsPanel/ToolsPanel";
-import Icon from "../Icon";
+import Icon from "../../Styled/Icon";
 import Prompt from "../Generic/Prompt";
 import { withTranslation, Trans } from "react-i18next";
 import Styles from "./menu-bar.scss";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import Text from "../../Styled/Text";
+
+import withControlledVisibility from "../../ReactViews/HOCs/withControlledVisibility";
 
 import { useRefForTerria } from "../Hooks/useRefForTerria";
 
@@ -203,4 +205,4 @@ MenuBar.propTypes = {
   t: PropTypes.func.isRequired
 };
 
-export default withTranslation()(MenuBar);
+export default withTranslation()(withControlledVisibility(MenuBar));

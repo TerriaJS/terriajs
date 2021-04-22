@@ -75,30 +75,30 @@ export default function Cesium3dTilesMixin<
     @observable
     private originalRootTransform: Matrix4 = Matrix4.IDENTITY.clone();
 
-    protected forceLoadMetadata() {
-      return Promise.resolve();
-    }
-
-    protected forceLoadMapItems() {
+    protected async forceLoadMapItems() {
       this.loadTileset();
       if (this.tileset) {
-        return makeRealPromise<Cesium3DTileset>(this.tileset.readyPromise)
-          .then(tileset => {
-            if (
-              tileset.extras !== undefined &&
-              tileset.extras.style !== undefined
-            ) {
-              runInAction(() => {
-                this.strata.set(
-                  CommonStrata.defaults,
-                  createStratumInstance(Cesium3DTilesCatalogItemTraits, {
-                    style: tileset.extras.style
-                  })
-                );
-              });
-            }
-          }) // TODO: What should handle this error?
-          .catch(e => console.error(e));
+        try {
+          const tileset = await makeRealPromise<Cesium3DTileset>(
+            this.tileset.readyPromise
+          );
+          if (
+            tileset.extras !== undefined &&
+            tileset.extras.style !== undefined
+          ) {
+            runInAction(() => {
+              this.strata.set(
+                CommonStrata.defaults,
+                createStratumInstance(Cesium3DTilesCatalogItemTraits, {
+                  style: tileset.extras.style
+                })
+              );
+            });
+          }
+        } catch (e) {
+          // TODO: What should handle this error?
+          console.error(e);
+        }
       } else {
         return Promise.resolve();
       }

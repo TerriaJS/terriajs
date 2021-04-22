@@ -1,5 +1,7 @@
 ## CKAN previewer
 
+**Warning: This feature is only supported by v7 TerriaMaps.**
+
 The CKAN previewer is a plugin for CKAN which uses TerriaJS to preview geospatial content using an iframe. It is provided in the [/ckanext-cesiumpreview folder of TerriaMap](https://github.com/TerriaJS/TerriaMap/tree/master/ckanext-cesiumpreview).
 
 ###To create a CKAN installation with docker

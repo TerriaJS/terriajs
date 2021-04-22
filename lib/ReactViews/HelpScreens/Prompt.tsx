@@ -12,11 +12,10 @@ const TourPrefaceBox: any = require("../Tour/TourPrefaceBox").default;
 
 import CloseButton from "../Generic/CloseButton";
 import ViewState from "../../ReactViewModels/ViewState";
-
-const Box: any = require("../../Styled/Box").default;
-const Button: any = require("../../Styled/Button").default;
-const Spacing: any = require("../../Styled/Spacing").default;
-const Text: any = require("../../Styled/Text").default;
+import Text from "../../Styled/Text";
+import Box from "../../Styled/Box";
+import Button from "../../Styled/Button";
+import Spacing from "../../Styled/Spacing";
 
 interface PromptProps {
   viewState: ViewState;
@@ -52,7 +51,7 @@ export const Prompt: React.FC<PromptProps> = ({
       <Box
         fullWidth
         fullHeight
-        positionAbsolute
+        position="absolute"
         css={`
           z-index: ${(p: any) => Number(p.theme.frontComponentZIndex) + 100};
         `}

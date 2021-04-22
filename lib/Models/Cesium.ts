@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { autorun, computed, runInAction } from "mobx";
-import { createTransformer } from "mobx-utils";
+import { computedFn } from "mobx-utils";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -59,7 +59,6 @@ import MappableMixin, {
   MapItem
 } from "../ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
-import TimeVarying from "../ModelMixins/TimeVarying";
 import SplitterTraits from "../Traits/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
@@ -115,9 +114,12 @@ export default class Cesium extends GlobeOrMap {
   private readonly _disposeSplitterReaction: () => void;
 
   private _createImageryLayer: (
-    ip: ImageryProvider
-  ) => ImageryLayer = createTransformer((ip: ImageryProvider) => {
-    return new ImageryLayer(ip);
+    ip: ImageryProvider,
+    clippingRectangle: Rectangle | undefined
+  ) => ImageryLayer = computedFn((ip, clippingRectangle) => {
+    return new ImageryLayer(ip, {
+      rectangle: clippingRectangle
+    });
   });
 
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
@@ -714,19 +716,11 @@ export default class Cesium extends GlobeOrMap {
             }
           });
         } else if (MappableMixin.isMixedInto(target)) {
-          if (isDefined(target.rectangle)) {
-            const { west, south, east, north } = target.rectangle;
-            if (
-              isDefined(west) &&
-              isDefined(south) &&
-              isDefined(east) &&
-              isDefined(north)
-            ) {
-              return that.scene.camera.flyTo({
-                duration: flightDurationSeconds,
-                destination: Rectangle.fromDegrees(west, south, east, north)
-              });
-            }
+          if (isDefined(target.cesiumRectangle)) {
+            return that.scene.camera.flyTo({
+              duration: flightDurationSeconds,
+              destination: target.cesiumRectangle
+            });
           }
 
           if (target.mapItems.length > 0) {
@@ -1370,7 +1364,10 @@ export default class Cesium extends GlobeOrMap {
     parts: ImageryParts,
     item: MappableMixin.MappableMixin
   ): ImageryLayer {
-    const layer = this._createImageryLayer(parts.imageryProvider);
+    const layer = this._createImageryLayer(
+      parts.imageryProvider,
+      parts.clippingRectangle
+    );
     if (TileErrorHandlerMixin.isMixedInto(item)) {
       // because this code path can run multiple times, make sure we remove the
       // handler if it is already registered

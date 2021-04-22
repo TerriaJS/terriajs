@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
-import Text from "../../Styled/Text";
+import { TextSpan } from "../../Styled/Text";
 
 // only spans are valid html for buttons (even though divs work)
 const ButtonWrapper = styled(Box).attrs({
@@ -16,9 +16,18 @@ const ButtonWrapper = styled(Box).attrs({
   align-items: center;
   transition: flex 0.3s ease-out;
 `;
-// styles half ripped from nav.scss
-const StyledMapIconButton = styled(RawButton)`
 
+interface IStyledMapIconButtonProps {
+  roundLeft?: boolean;
+  roundRight?: boolean;
+  primary?: boolean;
+  splitter?: boolean;
+  disabled?: boolean;
+  inverted?: boolean;
+}
+
+// styles half ripped from nav.scss
+const StyledMapIconButton = styled(RawButton)<IStyledMapIconButtonProps>`
 
   border-radius: 16px;
   ${props => props.roundLeft && `border-radius: 16px 0 0 16px;`}
@@ -81,23 +90,20 @@ const StyledMapIconButton = styled(RawButton)`
     }
   `}
 `;
-MapIconButton.propTypes = {
-  primary: PropTypes.bool,
-  splitter: PropTypes.bool,
-  inverted: PropTypes.bool,
-  expandInPlace: PropTypes.bool,
-  neverCollapse: PropTypes.bool,
-  roundLeft: PropTypes.bool,
-  roundRight: PropTypes.bool,
-  title: PropTypes.string,
-  iconElement: PropTypes.func.isRequired,
-  closeIconElement: PropTypes.func,
-  onClick: PropTypes.func,
-  handleClick: PropTypes.func,
-  children: PropTypes.node
-};
 
-function MapIconButton(props) {
+interface IMapIconButtonProps extends IStyledMapIconButtonProps {
+  expandInPlace?: boolean;
+  neverCollapse?: boolean;
+  title?: string;
+  iconElement: () => JSX.Element;
+  closeIconElement?: () => JSX.Element;
+  onClick?: () => void;
+  children?: React.ReactNode;
+  className?: string;
+  buttonRef?: React.RefObject<any>;
+}
+
+function MapIconButton(props: IMapIconButtonProps) {
   const [isExpanded, setExpanded] = useState(false);
   const {
     children,
@@ -116,9 +122,9 @@ function MapIconButton(props) {
 
   // const handleAway = () => setTimeout(() => setExpanded(false), 1000);
   const handleAway = () => setExpanded(false);
-  const handleFocus = bool => {
+  const handleFocus = (expanded: boolean) => {
     if (!disabled) {
-      setExpanded(bool);
+      setExpanded(expanded);
     }
   };
 
@@ -138,7 +144,6 @@ function MapIconButton(props) {
       onFocus={() => handleFocus(true)}
       onMouseOut={handleAway}
       onBlur={handleAway}
-      // onClick={props.handleClick}
       onClick={props.onClick}
       css={`
         svg {
@@ -158,8 +163,7 @@ function MapIconButton(props) {
           </span>
         )}
         {children && (
-          <Text
-            as="span"
+          <TextSpan
             noWrap
             medium
             css={`
@@ -172,7 +176,7 @@ function MapIconButton(props) {
             `}
           >
             {children}
-          </Text>
+          </TextSpan>
         )}
         {props.iconElement && (
           <span

@@ -368,13 +368,9 @@ export default abstract class GlobeOrMap {
                 .catch(function() {});
             });
 
-            this._highlightPromise = catalogItem.loadMapItems().then(() => {
-              if (removeCallback !== this._removeHighlightCallback) {
-                return;
-              }
-              catalogItem.setTrait(CommonStrata.user, "show", true);
-              this.terria.overlays.add(catalogItem);
-            });
+            catalogItem.setTrait(CommonStrata.user, "show", true);
+
+            this._highlightPromise = this.terria.overlays.add(catalogItem);
           }
         }
       }

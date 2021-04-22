@@ -1,10 +1,9 @@
 import React from "react";
 import { useTheme } from "styled-components";
-import { GLYPHS, StyledIcon } from "../../Icon";
-
-const BoxSpan: any = require("../../../Styled/Box").BoxSpan;
-const Button: any = require("../../../Styled/Button").default;
-const TextSpan: any = require("../../../Styled/Text").TextSpan;
+import { BoxSpan } from "../../../Styled/Box";
+import Button from "../../../Styled/Button";
+import { TextSpan } from "../../../Styled/Text";
+import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 
 const BackButton: React.FC<{ onClick: () => void }> = ({
   children,

@@ -2,7 +2,7 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import { withTranslation, Trans } from "react-i18next";
-import Icon from "../../../Icon.jsx";
+import Icon from "../../../../Styled/Icon";
 import createCatalogItemFromFileOrUrl from "../../../../Models/createCatalogItemFromFileOrUrl";
 import upsertModelFromJson from "../../../../Models/upsertModelFromJson";
 import addUserCatalogMember from "../../../../Models/addUserCatalogMember";

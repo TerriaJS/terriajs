@@ -4,7 +4,8 @@ import { act } from "react-dom/test-utils";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import { runInAction } from "mobx";
-import MapDataCount from "../../../lib/ReactViews/BottomDock/MapDataCount";
+const MapDataCount = require("../../../lib/ReactViews/BottomDock/MapDataCount")
+  .default;
 
 describe("MapDataCount", function() {
   let terria: Terria;
