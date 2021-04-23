@@ -32,6 +32,10 @@ import Styles from "./StandardUserInterface.scss";
 var Receipt = require("../../Models/Receipt");
 
 import { withAuthenticator } from "@aws-amplify/ui-react";
+import Amplify, { Auth } from "aws-amplify";
+import awsconfig from "../../aws-exports";
+Amplify.configure(awsconfig);
+Auth.configure(awsconfig);
 
 export const showStoryPrompt = (viewState, terria) => {
   terria.configParameters.showFeaturePrompts &&
@@ -370,3 +374,4 @@ const StandardUserInterface = createReactClass({
 export const StandardUserInterfaceWithoutTranslation = StandardUserInterface;
 
 export default withAuthenticator(withTranslation()(StandardUserInterface));
+// export default withTranslation()(StandardUserInterface);

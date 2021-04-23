@@ -6,7 +6,7 @@
     "framework": "react",
     "config": {
       "SourceDir": "lib",
-      "DistributionDir": "wwwroot",
+      "DistributionDir": "wwwroot/build",
       "BuildCommand": "npx gulp",
       "StartCommand": "yarn start"
     }
