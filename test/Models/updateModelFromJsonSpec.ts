@@ -135,6 +135,7 @@ describe("updateModelFromJson", function() {
         type: "group",
         id: "testgroup",
         description: "This is another test group",
+        isOpenInWorkbench: false,
         members: [
           {
             id: "3",
@@ -156,6 +157,10 @@ describe("updateModelFromJson", function() {
       );
       expect(model.getTrait(CommonStrata.definition, "description")).toBe(
         newJson.description
+      );
+
+      expect(model.getTrait(CommonStrata.definition, "isOpenInWorkbench")).toBe(
+        newJson.isOpenInWorkbench
       );
 
       expect("someTrait" in model).toBeFalsy();
