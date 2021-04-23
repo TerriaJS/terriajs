@@ -3,6 +3,7 @@ import Result from "../Core/Result";
 import TerriaError from "../Core/TerriaError";
 import createStratumInstance from "./createStratumInstance";
 import { BaseModel } from "./Model";
+import isDefined from "../Core/isDefined";
 
 export default function updateModelFromJson(
   model: BaseModel,
@@ -49,7 +50,7 @@ export default function updateModelFromJson(
           .fromJson(model, stratumName, jsonValue)
           .catchError(error => errors.push(error));
 
-        if (newTrait) {
+        if (isDefined(newTrait)) {
           // We want to merge members of groups with the same name/id
           if (propertyName === "members") {
             newTrait = mergeWithExistingMembers(
