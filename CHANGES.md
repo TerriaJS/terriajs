@@ -19,6 +19,7 @@ Change Log
   * `Box` no longer accepts `<Box positionAbsolute/>` and this should now be passed as `<Box position="absolute"/>`.
   * `Text`'s `styledSize` has been removed. Use the `styledFontSize` prop.
   * `ButtonAsLabel` no longer accepts `dark`. A dark background is now used when `light` is false (or undefined).
+* Fixes CZML catalog item so that it appears on the timeline.
 * [The next improvement]
 
 
