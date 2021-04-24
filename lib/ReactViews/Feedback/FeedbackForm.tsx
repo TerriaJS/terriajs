@@ -73,6 +73,10 @@ class FeedbackForm extends React.Component<IProps, IState> {
 
   componentDidMount() {
     window.addEventListener("keydown", this.escKeyListener, true);
+    this.setState({
+      commentIsValid:
+        this.props.viewState.terria.configParameters.feedbackMinLength === 0
+    });
   }
 
   componentWillUnmount() {
@@ -106,7 +110,10 @@ class FeedbackForm extends React.Component<IProps, IState> {
     this.setState({
       comment: e.target.value
     });
-    if (this.state.comment.replace(/\s+/g, " ").length > 30) {
+    if (
+      this.state.comment.replace(/\s+/g, " ").length >=
+      this.props.viewState.terria.configParameters.feedbackMinLength!
+    ) {
       this.setState({
         commentIsValid: true
       });
@@ -126,7 +133,10 @@ class FeedbackForm extends React.Component<IProps, IState> {
   onSubmit(e: React.FormEvent<HTMLFormElement | HTMLDivElement>) {
     e.preventDefault();
 
-    if (this.state.comment.length > 30) {
+    if (
+      this.state.comment.length >=
+      this.props.viewState.terria.configParameters.feedbackMinLength!
+    ) {
       this.state.isSending = true;
       sendFeedback({
         terria: this.props.viewState.terria,
@@ -243,7 +253,11 @@ class FeedbackForm extends React.Component<IProps, IState> {
               autoComplete="off"
             />
             {!this.state.commentIsValid && (
-              <WarningText>{t("feedback.minLength")}</WarningText>
+              <WarningText>
+                {t("feedback.minLength", {
+                  minLength: viewState.terria.configParameters.feedbackMinLength
+                })}
+              </WarningText>
             )}
           </StyledLabel>
           <Checkbox
@@ -274,7 +288,11 @@ class FeedbackForm extends React.Component<IProps, IState> {
               primary
               shortMinHeight
               styledMinWidth={"80px"}
-              disabled={this.state.comment.length <= 30 || this.state.isSending}
+              disabled={
+                this.state.comment.length <
+                  viewState.terria.configParameters.feedbackMinLength! ||
+                this.state.isSending
+              }
             >
               {this.state.isSending
                 ? t("feedback.sending")
