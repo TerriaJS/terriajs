@@ -261,7 +261,8 @@ class FeedbackForm extends React.Component<IProps, IState> {
             )}
           </StyledLabel>
           <Checkbox
-            isChecked={this.state.sendShareURL}
+            //isChecked={this.state.sendShareURL}
+            isDisabled={true}
             value="sendShareUrl"
             label={
               t("feedback.shareWithDevelopers", {

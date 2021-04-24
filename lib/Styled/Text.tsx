@@ -44,6 +44,7 @@ interface ITextPropsBase {
   highlightLinks?: boolean;
   overflowHide?: boolean;
   overflowEllipsis?: boolean;
+  isDisabled?: boolean;
   style?: any;
 }
 
@@ -186,6 +187,12 @@ export const Text = styled.div<ITextProps>`
       color: ${props.theme.colorPrimary};
     }
   `}
+
+  ${props =>
+    props.isDisabled &&
+    `
+    opacity: 0.3;
+    `}
 
   ${props => props.overflowHide && ` overflow: hidden;`}
   ${props => props.overflowEllipsis && ` text-overflow: ellipsis;`}

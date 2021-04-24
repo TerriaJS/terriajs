@@ -19,7 +19,14 @@ const CheckboxIcon: React.FC<CheckboxIconProps> = (
   props: CheckboxIconProps
 ) => {
   if (props.isDisabled) {
-    return <StyledCheckboxIcon glyph={GLYPHS.checkboxOn} />;
+    return (
+      <StyledCheckboxIcon
+        glyph={GLYPHS.checkboxOff}
+        css={`
+          opacity: 0.3;
+        `}
+      />
+    );
   } else if (props.isIndeterminate) {
     return <StyledCheckboxIcon glyph={GLYPHS.checkboxOn} />;
   } else {

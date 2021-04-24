@@ -83,6 +83,7 @@ const Checkbox = memo(
         <TextSpan
           as={"label"}
           htmlFor={id}
+          isDisabled={isDisabled}
           css={`
             font-size: inherit;
           `}
