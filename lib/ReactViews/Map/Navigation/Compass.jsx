@@ -30,6 +30,7 @@ import { runInAction, computed, when } from "mobx";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
 import { withTerriaRef } from "../../HOCs/withTerriaRef";
+import withControlledVisibility from "../../HOCs/withControlledVisibility";
 
 import Box from "../../../Styled/Box";
 
@@ -712,5 +713,5 @@ function viewerChange(viewModel) {
 
 export const COMPASS_NAME = "MapNavigationCompassOuterRing";
 export default withTranslation()(
-  withTheme(withTerriaRef(Compass, COMPASS_NAME))
+  withControlledVisibility(withTheme(withTerriaRef(Compass, COMPASS_NAME)))
 );

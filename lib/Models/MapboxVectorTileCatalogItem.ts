@@ -2,12 +2,11 @@ import { VectorTileFeature } from "@mapbox/vector-tile";
 import i18next from "i18next";
 import { clone } from "lodash-es";
 import { action, computed, observable, runInAction } from "mobx";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import isDefined from "../Core/isDefined";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
-import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import MappableMixin, { MapItem } from "../ModelMixins/MappableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
 import MapboxVectorTileCatalogItemTraits from "../Traits/MapboxVectorTileCatalogItemTraits";
@@ -77,10 +76,6 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
     });
   }
 
-  protected async forceLoadMapItems(): Promise<void> {
-    await this.loadMetadata();
-  }
-
   @computed
   get imageryProvider(): MapboxVectorTileImageryProvider | undefined {
     if (this.url === undefined || this.layer === undefined) {
@@ -95,13 +90,6 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
         lineJoin: "miter" as CanvasLineJoin,
         lineWidth: 1
       }))({ fillStyle: this.fillColor, strokeStyle: this.lineColor }),
-
-      rectangle: Rectangle.fromDegrees(
-        this.rectangle.west,
-        this.rectangle.south,
-        this.rectangle.east,
-        this.rectangle.north
-      ),
       minimumZoom: this.minimumZoom,
       maximumNativeZoom: this.maximumNativeZoom,
       maximumZoom: this.maximumZoom,
@@ -111,8 +99,12 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
     });
   }
 
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
+  }
+
   @computed
-  get mapItems() {
+  get mapItems(): MapItem[] {
     if (this.isLoadingMapItems || this.imageryProvider === undefined) {
       return [];
     }
@@ -122,7 +114,9 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
         imageryProvider: this.imageryProvider,
         show: this.show,
         alpha: this.opacity,
-        canZoomTo: this.canZoomTo
+        clippingRectangle: this.clipToRectangle
+          ? this.cesiumRectangle
+          : undefined
       }
     ];
   }

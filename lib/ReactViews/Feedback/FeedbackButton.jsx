@@ -9,6 +9,7 @@ import { withTranslation } from "react-i18next";
 import Icon from "../../Styled/Icon";
 import { runInAction } from "mobx";
 import MapIconButton from "../MapIconButton/MapIconButton";
+import withControlledVisibility from "../HOCs/withControlledVisibility";
 
 const FeedbackButton = observer(
   createReactClass({
@@ -40,4 +41,4 @@ const FeedbackButton = observer(
   })
 );
 
-export default withTranslation()(FeedbackButton);
+export default withTranslation()(withControlledVisibility(FeedbackButton));

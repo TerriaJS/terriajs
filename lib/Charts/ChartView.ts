@@ -1,6 +1,9 @@
-import Terria from "../Models/Terria";
-import Chartable, { ChartItem, axesMatch } from "../Models/Chartable";
 import { computed } from "mobx";
+import ChartableMixin, {
+  axesMatch,
+  ChartItem
+} from "../ModelMixins/ChartableMixin";
+import Terria from "../Models/Terria";
 
 /**
  * Derives a consistent view of chart data from all the chartable items in the
@@ -10,10 +13,10 @@ export default class ChartView {
   constructor(readonly terria: Terria) {}
 
   @computed
-  get chartableItems(): Chartable[] {
+  get chartableItems(): ChartableMixin.Instance[] {
     return <any>(
       this.terria.workbench.items.filter(
-        item => Chartable.is(item) && item.chartItems.length > 0
+        item => ChartableMixin.isMixedInto(item) && item.chartItems.length > 0
       )
     );
   }

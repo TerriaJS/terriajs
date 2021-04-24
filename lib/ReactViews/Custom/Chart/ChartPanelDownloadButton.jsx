@@ -69,7 +69,7 @@ const ChartPanelDownloadButton = createReactClass({
     }
 
     const loadingPromises = this.props.chartableItems.map(c => {
-      return when(c.item.loadChartItems())
+      return when(c.item.loadMapItems())
         .then(() => c.item)
         .otherwise(() => undefined);
     });

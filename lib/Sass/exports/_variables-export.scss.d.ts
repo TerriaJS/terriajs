@@ -8,6 +8,11 @@ interface CssExports {
   'dark': string;
   'darkLighter': string;
   'darkWithOverlay': string;
+  'font': string;
+  'fontBase': string;
+  'fontFeatureInfo': string;
+  'fontMono': string;
+  'fontPop': string;
   'frontComponentZIndex': string;
   'grey': string;
   'greyLighter': string;
@@ -16,6 +21,12 @@ interface CssExports {
   'inputHeight': string;
   'inputHeightLarge': string;
   'lg': string;
+  'logoHeight': string;
+  'logoPaddingHorizontal': string;
+  'logoPaddingVertical': string;
+  'logoSmallHeight': string;
+  'logoSmallPaddingHorizontal': string;
+  'logoSmallPaddingVertical': string;
   'mapButtonColor': string;
   'mapButtonTop': string;
   'mapNavigationTop': string;

@@ -18,6 +18,7 @@ import { runInAction } from "mobx";
 import CommonStrata from "../../../Models/CommonStrata";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import MapIconButton from "../../MapIconButton/MapIconButton";
+import withControlledVisibility from "../../../ReactViews/HOCs/withControlledVisibility";
 
 const MyLocation = createReactClass({
   displayName: "MyLocation",
@@ -198,4 +199,4 @@ const MyLocation = createReactClass({
   }
 });
 
-export default withTranslation()(MyLocation);
+export default withTranslation()(withControlledVisibility(MyLocation));

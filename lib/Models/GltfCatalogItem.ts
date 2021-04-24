@@ -110,10 +110,6 @@ export default class GltfCatalogItem extends MappableMixin(
     this.hasLocalData = true;
   }
 
-  forceLoadMapItems(): Promise<void> {
-    return Promise.resolve();
-  }
-
   @computed
   private get model() {
     if (this.url === undefined) {
@@ -128,6 +124,10 @@ export default class GltfCatalogItem extends MappableMixin(
       heightReference: new ConstantProperty(this.cesiumHeightReference)
     };
     return new ModelGraphics(options);
+  }
+
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
   }
 
   @computed

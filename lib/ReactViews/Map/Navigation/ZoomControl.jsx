@@ -12,6 +12,7 @@ const CesiumMath = require("terriajs-cesium/Source/Core/Math").default;
 const Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3").default;
 import Icon from "../../../Styled/Icon";
 import Styles from "./zoom_control.scss";
+import withControlledVisibility from "../../../ReactViews/HOCs/withControlledVisibility";
 import { withTranslation } from "react-i18next";
 
 // Map zoom control
@@ -200,4 +201,4 @@ const ZoomControl = createReactClass({
     );
   }
 });
-module.exports = withTranslation()(ZoomControl);
+module.exports = withTranslation()(withControlledVisibility(ZoomControl));

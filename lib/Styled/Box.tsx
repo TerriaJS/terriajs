@@ -16,31 +16,6 @@ interface Column {
   col12?: boolean;
 }
 
-/* const ALIGN_MAP = {
-  baseline: "baseline",
-  center: "center",
-  end: "flex-end",
-  start: "flex-start",
-  stretch: "stretch"
-};
-
-const alignStyle = css<{ align: keys  }>`
-  align-items: ${props => ALIGN_MAP[props.align]};
-`;
-
-const JUSTIFY_MAP = {
-  around: 'space-around',
-  between: 'space-between',
-  center: 'center',
-  end: 'flex-end',
-  evenly: 'space-evenly',
-  start: 'flex-start',
-};
-
-const justifyStyle = css`
-  justify-content: ${props => JUSTIFY_MAP[props.justify]};
-`; */
-
 interface IBoxPropsBase {
   position?: "relative" | "absolute" | "static";
   topRight?: boolean;
@@ -92,7 +67,7 @@ export const Box = styled.div<IBoxProps>`
   ${props => props.position && `position: ${props.position};`}
   ${props => props.position === "absolute" && `z-index:1;`}
   ${props => !props.position && `position: relative;`}
-  
+
   ${props =>
     props.topRight &&
     `

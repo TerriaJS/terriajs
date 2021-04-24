@@ -16,14 +16,6 @@ export default class ArcGisTerrainCatalogItem extends UrlMixin(
     return ArcGisTerrainCatalogItem.type;
   }
 
-  protected forceLoadMetadata() {
-    return Promise.resolve();
-  }
-
-  protected forceLoadMapItems() {
-    return Promise.resolve();
-  }
-
   @computed
   get mapItems() {
     if (this.url === undefined) return [];
@@ -32,5 +24,9 @@ export default class ArcGisTerrainCatalogItem extends UrlMixin(
     });
     if (this.attribution) item.credit = new Credit(this.attribution);
     return [];
+  }
+
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
   }
 }

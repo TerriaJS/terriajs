@@ -65,9 +65,7 @@ class SettingPanel extends React.Component {
 
   selectBaseMap(baseMap, event) {
     event.stopPropagation();
-    runInAction(() => {
-      this.props.terria.mainViewer.baseMap = baseMap.mappable;
-    });
+    this.props.terria.mainViewer.setBaseMap(baseMap.mappable);
     // this.props.terria.baseMapContrastColor = baseMap.contrastColor;
 
     // We store the user's chosen basemap for future use, but it's up to the instance to decide
