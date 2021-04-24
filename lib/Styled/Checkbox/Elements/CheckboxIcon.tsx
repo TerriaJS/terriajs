@@ -1,0 +1,38 @@
+import React from "react";
+import styled from "styled-components";
+import { GLYPHS, StyledIcon } from "../../Icon";
+import { CheckboxIconProps } from "../types";
+
+const StyledCheckboxIcon = styled(StyledIcon).attrs({
+  styledWidth: "1em"
+})`
+  top: 0.125em;
+  align-self: flex-start;
+  position: relative;
+  fill: currentColor;
+  &:hover {
+    opacity: 0.6;
+  }
+`;
+
+const CheckboxIcon: React.FC<CheckboxIconProps> = (
+  props: CheckboxIconProps
+) => {
+  if (props.isDisabled) {
+    return <StyledCheckboxIcon glyph={GLYPHS.checkboxOn} />;
+  } else if (props.isIndeterminate) {
+    return <StyledCheckboxIcon glyph={GLYPHS.checkboxOn} />;
+  } else {
+    return (
+      <>
+        {props.isChecked ? (
+          <StyledCheckboxIcon glyph={GLYPHS.checkboxOn} />
+        ) : (
+          <StyledCheckboxIcon glyph={GLYPHS.checkboxOff} />
+        )}
+      </>
+    );
+  }
+};
+
+export default CheckboxIcon;

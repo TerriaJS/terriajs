@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { Overflow, WordBreak, OneKeyFrom } from "./Styled.types";
 
 interface Column {
@@ -15,6 +15,31 @@ interface Column {
   col11?: boolean;
   col12?: boolean;
 }
+
+/* const ALIGN_MAP = {
+  baseline: "baseline",
+  center: "center",
+  end: "flex-end",
+  start: "flex-start",
+  stretch: "stretch"
+};
+
+const alignStyle = css<{ align: keys  }>`
+  align-items: ${props => ALIGN_MAP[props.align]};
+`;
+
+const JUSTIFY_MAP = {
+  around: 'space-around',
+  between: 'space-between',
+  center: 'center',
+  end: 'flex-end',
+  evenly: 'space-evenly',
+  start: 'flex-start',
+};
+
+const justifyStyle = css`
+  justify-content: ${props => JUSTIFY_MAP[props.justify]};
+`; */
 
 interface IBoxPropsBase {
   position?: "relative" | "absolute" | "static";
@@ -215,9 +240,9 @@ export const Box = styled.div<IBoxProps>`
 `;
 
 export const BoxSpan = styled(Box).attrs(
-  (props: { as?: React.ElementType | keyof JSX.IntrinsicElements }) => {
-    as: "span";
-  }
+  (props: { as?: React.ElementType | keyof JSX.IntrinsicElements }) => ({
+    as: "span"
+  })
 )``;
 
 export default Box;

@@ -13,6 +13,8 @@ interface CssExports {
   'greyLighter': string;
   'greyLighter2': string;
   'greyLightest': string;
+  'inputHeight': string;
+  'inputHeightLarge': string;
   'lg': string;
   'mapButtonColor': string;
   'mapButtonTop': string;

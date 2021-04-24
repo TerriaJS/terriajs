@@ -39,7 +39,7 @@ interface ITextPropsBase {
   primary?: boolean;
   fullWidth?: boolean;
   noWrap?: boolean;
-  as?: "h1" | "h2" | "h3" | "h4" | "span";
+  as?: keyof JSX.IntrinsicElements;
   styledLineHeight?: string;
   highlightLinks?: boolean;
   overflowHide?: boolean;
@@ -194,10 +194,10 @@ export const Text = styled.div<ITextProps>`
 
 `;
 
-export const TextSpan = styled(Text).attrs(
-  (props: { as?: React.ElementType | keyof JSX.IntrinsicElements }) => ({
-    as: props.as || "span"
-  })
-)``;
+export const TextSpan = styled(Text).attrs<{
+  as?: keyof JSX.IntrinsicElements;
+}>((props: { as?: keyof JSX.IntrinsicElements }) => ({
+  as: props.as || "span"
+}))``;
 
 export default Text;
