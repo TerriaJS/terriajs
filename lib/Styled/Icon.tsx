@@ -21,6 +21,7 @@ export const GLYPHS = {
   barChart: require("../../wwwroot/images/icons/bar-chart.svg"),
   bulb: require("../../wwwroot/images/icons/bulb.svg"),
   controls: require("../../wwwroot/images/icons/controls.svg"),
+  checkboxIndeterminate: require("../../wwwroot/images/icons/checkbox-indeterminate.svg"),
   checkboxOff: require("../../wwwroot/images/icons/checkbox-off.svg"),
   checkboxOn: require("../../wwwroot/images/icons/checkbox-on.svg"),
   close: require("../../wwwroot/images/icons/close.svg"),

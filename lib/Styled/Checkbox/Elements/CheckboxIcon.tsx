@@ -28,7 +28,7 @@ const CheckboxIcon: React.FC<CheckboxIconProps> = (
       />
     );
   } else if (props.isIndeterminate) {
-    return <StyledCheckboxIcon glyph={GLYPHS.checkboxOn} />;
+    return <StyledCheckboxIcon glyph={GLYPHS.checkboxIndeterminate} />;
   } else {
     return (
       <>
