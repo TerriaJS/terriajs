@@ -16,6 +16,7 @@ import Text from "../../Styled/Text";
 import parseCustomMarkdownToReact, {
   parseCustomMarkdownToReactWithOptions
 } from "../Custom/parseCustomMarkdownToReact";
+import { useUID } from "react-uid";
 
 interface IProps extends WithTranslation {
   theme: DefaultTheme;
@@ -393,17 +394,26 @@ interface StyledLabelProps {
 
 const StyledLabel: React.FC<StyledLabelProps> = (props: StyledLabelProps) => {
   const { viewState, label, textProps } = props;
+  const id = useUID();
+  const childrenWithId = React.Children.map(props.children, child => {
+    // checking isValidElement is the safe way and avoids a typescript error too
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child, { id: id });
+    }
+    return child;
+  });
+
   return (
     <Box column>
-      {props.label && (
-        <Text css={"p {margin: 0;}"} {...textProps}>
-          {parseCustomMarkdownToReactWithOptions(`${props.label}:`, {
+      {label && (
+        <Text as={"label"} htmlFor={id} css={"p {margin: 0;}"} {...textProps}>
+          {parseCustomMarkdownToReactWithOptions(`${label}:`, {
             injectTermsAsTooltips: true,
             tooltipTerms: viewState.terria.configParameters.helpContentTerms
           })}
         </Text>
       )}
-      {props.children}
+      {childrenWithId}
       {props.spacingBottom && <Spacing bottom={2} />}
     </Box>
   );
