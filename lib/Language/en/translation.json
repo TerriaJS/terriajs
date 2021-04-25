@@ -276,7 +276,7 @@
     "sending": "Sending...",
     "send": "Send",
     "feedbackBtnText": "Give Feedback",
-    "minLength": "Minim length of feedback comment is {{minLength}}"
+    "minLength": "Minimum length of feedback comment is {{minLength}}"
   },
   "helpPanel": {
     "menuPaneTitle": "We're here to help",
