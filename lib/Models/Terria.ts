@@ -386,7 +386,7 @@ export default class Terria {
     customRequestSchedulerLimits: undefined,
     persistViewerMode: true,
     openAddData: false,
-    feedbackPreamble: undefined,
+    feedbackPreamble: "feedback.feedbackPreamble",
     feedbackMinLength: 0
   };
 

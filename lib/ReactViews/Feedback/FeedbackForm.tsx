@@ -3,6 +3,7 @@ import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React, { useEffect, useRef } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
+import { useUID } from "react-uid";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import sendFeedback from "../../Models/sendFeedback";
 import ViewState from "../../ReactViewModels/ViewState";
@@ -16,7 +17,7 @@ import Text from "../../Styled/Text";
 import parseCustomMarkdownToReact, {
   parseCustomMarkdownToReactWithOptions
 } from "../Custom/parseCustomMarkdownToReact";
-import { useUID } from "react-uid";
+import { useTranslationIfExists } from "./../../Language/languageHelpers";
 
 interface IProps extends WithTranslation {
   theme: DefaultTheme;
@@ -166,8 +167,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
   render() {
     const { t, viewState, theme } = this.props;
     const preamble = parseCustomMarkdownToReact(
-      viewState.terria.configParameters.feedbackPreamble ||
-        t("feedback.feedbackPreamble")
+      useTranslationIfExists(viewState.terria.configParameters.feedbackPreamble)
     );
     return (
       <FormWrapper>
