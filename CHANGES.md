@@ -3,7 +3,11 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.77)
+#### next release (8.0.0-alpha.78)
+
+* [The next improvement]
+
+#### 8.0.0-alpha.77
 
 - **Breaking changes**:
   - `terria.error.raiseEvent` and `./raiseErrorToUser.ts` have been replaced with `terria.raiseErrorToUser`.
@@ -22,8 +26,6 @@ Change Log
   * `ButtonAsLabel` no longer accepts `dark`. A dark background is now used when `light` is false (or undefined).
 * Fixes CZML catalog item so that it appears on the timeline.
 * Enable `theme` config parameter. This can now be used to override theme properties.
-* [The next improvement]
-
 
 #### 8.0.0-alpha.76
 
