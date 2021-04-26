@@ -1,10 +1,9 @@
 import { runInAction } from "mobx";
-import Terria from "../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-import updateModelFromJson from "../../lib/Models/updateModelFromJson";
-import { BaseModel } from "../../lib/Models/Model";
 import CommonStrata from "../../lib/Models/CommonStrata";
-import CatalogGroup from "../../lib/Models/CatalogGroupNew";
+import { BaseModel } from "../../lib/Models/Model";
+import Terria from "../../lib/Models/Terria";
+import updateModelFromJson from "../../lib/Models/updateModelFromJson";
+import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
 
 describe("updateModelFromJson", function() {
   let model: BaseModel;
@@ -127,6 +126,66 @@ describe("updateModelFromJson", function() {
       expect(model.getTrait(CommonStrata.definition, "description")).toBe(
         newJson.description
       );
+    });
+
+    it("will ignore trait which doesn't exist in model", function() {
+      const model = terria.getModelById(BaseModel, "testgroup")!;
+      const newJson: any = {
+        name: "NewTestGroup",
+        type: "group",
+        id: "testgroup",
+        description: "This is another test group",
+        isOpenInWorkbench: false,
+        members: [
+          {
+            id: "3",
+            name: "TestWMS3",
+            type: "wms",
+            url: "test/WMS/single_metadata_url.xml",
+            someTrait: "What what",
+            someOtherTrait: "What what what?"
+          }
+        ]
+      };
+      const result = updateModelFromJson(
+        model,
+        CommonStrata.definition,
+        newJson
+      );
+      expect(model.getTrait(CommonStrata.definition, "name")).toBe(
+        newJson.name
+      );
+      expect(model.getTrait(CommonStrata.definition, "description")).toBe(
+        newJson.description
+      );
+
+      expect(model.getTrait(CommonStrata.definition, "isOpenInWorkbench")).toBe(
+        newJson.isOpenInWorkbench
+      );
+
+      expect("someTrait" in model).toBeFalsy();
+      expect("someOtherTrait" in model).toBeFalsy();
+      expect(result.error).toBeDefined();
+      expect(result.error?.originalError?.length).toBe(1);
+
+      expect(
+        result.error
+          ?.flatten()
+          .find(
+            error =>
+              error.message ===
+              "The property `someTrait` is not valid for type `wms`."
+          )
+      ).toBeDefined();
+      expect(
+        result.error
+          ?.flatten()
+          .find(
+            error =>
+              error.message ===
+              "The property `someOtherTrait` is not valid for type `wms`."
+          )
+      ).toBeDefined();
     });
   });
 });

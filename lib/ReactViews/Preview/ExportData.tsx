@@ -34,7 +34,7 @@ class ExportData extends React.Component<PropsType> {
   exportDataClicked(item: ExportableMixin.ExportableMixin) {
     exportData(item).catch(e => {
       if (e instanceof TerriaError) {
-        this.props.item.terria.error.raiseEvent(e);
+        this.props.item.terria.raiseErrorToUser(e);
       }
     });
   }

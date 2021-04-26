@@ -1,13 +1,13 @@
 import { computed } from "mobx";
+import isDefined from "../Core/isDefined";
+import Result from "../Core/Result";
 import TerriaError from "../Core/TerriaError";
+import createStubCatalogItem from "../Models/createStubCatalogItem";
 import { BaseModel } from "../Models/Model";
 import ModelFactory from "../Models/ModelFactory";
 import upsertModelFromJson from "../Models/upsertModelFromJson";
 import ModelReference from "./ModelReference";
-import filterOutUndefined from "../Core/filterOutUndefined";
 import Trait, { TraitOptions } from "./Trait";
-import StubCatalogItem from "../Models/StubCatalogItem";
-import createStubCatalogItem from "../Models/createStubCatalogItem";
 
 export interface ModelArrayTraitOptions extends TraitOptions {
   factory?: ModelFactory;
@@ -79,11 +79,11 @@ export class ModelReferenceArrayTrait extends Trait {
     model: BaseModel,
     stratumName: string,
     jsonValue: any
-  ): ReadonlyArray<ModelReference> {
+  ): Result<ReadonlyArray<ModelReference> | undefined> {
     // TODO: support removals
 
     if (!Array.isArray(jsonValue)) {
-      throw new TerriaError({
+      return Result.error({
         title: "Invalid property",
         message: `Property ${
           this.id
@@ -91,18 +91,23 @@ export class ModelReferenceArrayTrait extends Trait {
       });
     }
 
-    const result = jsonValue.map(jsonElement => {
-      if (typeof jsonElement === "string") {
-        return jsonElement;
-      } else if (typeof jsonElement === "object") {
-        if (this.factory === undefined) {
-          throw new TerriaError({
-            title: "Cannot create Model",
-            message:
-              "A modelReferenceArrayTrait does not have a factory but it contains an embedded model that does not yet exist."
-          });
-        }
-        try {
+    const errors: TerriaError[] = [];
+
+    const result = jsonValue
+      .map(jsonElement => {
+        if (typeof jsonElement === "string") {
+          return jsonElement;
+        } else if (typeof jsonElement === "object") {
+          if (this.factory === undefined) {
+            errors.push(
+              new TerriaError({
+                title: "Cannot create Model",
+                message:
+                  "A modelReferenceArrayTrait does not have a factory but it contains an embedded model that does not yet exist."
+              })
+            );
+            return;
+          }
           const nestedModel = upsertModelFromJson(
             this.factory,
             model.terria,
@@ -110,22 +115,32 @@ export class ModelReferenceArrayTrait extends Trait {
             stratumName,
             jsonElement,
             {}
+          ).catchError(error => errors.push(error));
+
+          // Maybe this should throw if undefined?
+          return (
+            nestedModel?.uniqueId ??
+            createStubCatalogItem(model.terria).uniqueId!
           );
-          return nestedModel.uniqueId!;
-        } catch {
-          const stub = createStubCatalogItem(model.terria);
-          return stub.uniqueId!;
+        } else {
+          errors.push(
+            new TerriaError({
+              title: "Invalid property",
+              message: `Elements of ${
+                this.id
+              } are expected to be strings or objects but instead are of type ${typeof jsonElement}.`
+            })
+          );
         }
-      } else {
-        throw new TerriaError({
-          title: "Invalid property",
-          message: `Elements of ${
-            this.id
-          } are expected to be strings or objects but instead are of type ${typeof jsonElement}.`
-        });
-      }
-    });
-    return result;
+      })
+      .filter(isDefined);
+    return Result.return(
+      result,
+      TerriaError.combine(
+        errors,
+        `Error updating modelReferenceArrayTrait model "${model.uniqueId}" from JSON`
+      )
+    );
   }
 
   toJson(value: ReadonlyArray<ModelReference> | undefined): any {

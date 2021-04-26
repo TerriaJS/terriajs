@@ -65,7 +65,7 @@ const MyLocation = createReactClass({
         this.setState({ watchId: watchId });
       }
     } else {
-      this.props.terria.error.raiseEvent(
+      this.props.terria.raiseErrorToUser(
         new TerriaError({
           sender: this,
           title: t("location.errorGettingLocation"),
@@ -143,7 +143,7 @@ const MyLocation = createReactClass({
       const secureUrl = uri.protocol("https").toString();
       message = t("location.originError", { secureUrl: secureUrl });
     }
-    this.props.terria.error.raiseEvent(
+    this.props.terria.raiseErrorToUser(
       new TerriaError({
         sender: this,
         title: t("location.errorGettingLocation"),

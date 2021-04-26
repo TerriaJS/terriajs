@@ -5,6 +5,14 @@ Change Log
 
 #### next release (8.0.0-alpha.77)
 
+- **Breaking changes**:
+  - `terria.error.raiseEvent` and `./raiseErrorToUser.ts` have been replaced with `terria.raiseErrorToUser`.
+  - `terria.error.addEventListener` has been replaced with `terria.addErrorEventListener`
+
+* New Error handling using `Result` and `TerriaError` now applied to initial loading, `updateModelFromJson()`, `upsertModelFromJson()` and `Traits.fromJson()`. This means errors will propagate through these functions, and a stacktrace will be displayed.
+  * `Result` and the new features of `TerriaError` should be considered unstable and may be extensively modified or removed in future 8.0.0-alpha.n releases
+* New `terriaErrorNotification()` function, which wraps up error messages.
+* `TerriaError` can now contain "child" errors - this includes a few new methods: `flatten()` and `createParentError()`. It also has a few new convenience functions: `TerriaError.from()` and `TerriaError.combine()`.
 * Convert `Branding.jsx` to `.tsx`
 * Added `configParams.brandBarSmallElements` to set Branding elements for small screen (also added theme props)
 * Add `font` variables and `fontImports` to theme - this can be used to import CSS fonts.

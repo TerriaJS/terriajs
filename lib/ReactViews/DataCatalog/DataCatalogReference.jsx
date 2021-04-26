@@ -10,7 +10,6 @@ import openGroup from "../../Models/openGroup";
 import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
 import CatalogGroup from "./CatalogGroup";
 import CatalogItem from "./CatalogItem";
-import raiseErrorToUser from "../../Models/raiseErrorToUser";
 
 const DataCatalogReference = observer(
   createReactClass({
@@ -85,7 +84,7 @@ const DataCatalogReference = observer(
             this.props.viewState.closeCatalog();
           }
         } catch (e) {
-          raiseErrorToUser(this.props.terria, e);
+          this.props.terria.raiseErrorToUser(e);
         }
       }
     },

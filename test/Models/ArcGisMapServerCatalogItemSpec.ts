@@ -216,9 +216,9 @@ describe("ArcGisMapServerCatalogItem", function() {
         });
 
         it("raise an error if requested level is above maximumScaleBeforeMessage", function() {
-          spyOn(item.terria.error, "raiseEvent");
+          spyOn(item.terria, "raiseErrorToUser");
           imageryProvider.requestImage(0, 0, 100);
-          expect(item.terria.error.raiseEvent).toHaveBeenCalled();
+          expect(item.terria.raiseErrorToUser).toHaveBeenCalled();
         });
       });
     });

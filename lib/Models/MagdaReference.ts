@@ -525,11 +525,14 @@ export default class MagdaReference extends AccessControlMixin(
       if (stratum === "id" || stratum === "type" || stratum === "shareKeys") {
         return;
       }
-      try {
-        updateModelFromJson(result, stratum, terriaAspect[stratum], true);
-      } catch (err) {
-        result.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
-      }
+      updateModelFromJson(
+        result,
+        stratum,
+        terriaAspect[stratum],
+        true
+      ).catchError(error =>
+        result.setTrait(CommonStrata.underride, "isExperiencingIssues", true)
+      );
     });
 
     if (override) {

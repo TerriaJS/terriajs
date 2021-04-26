@@ -1,3 +1,4 @@
+import Result from "../Core/Result";
 import { BaseModel } from "../Models/Model";
 import Trait, { TraitOptions } from "./Trait";
 
@@ -28,8 +29,8 @@ export class AnyTrait extends Trait {
     return undefined;
   }
 
-  fromJson(model: BaseModel, stratumName: string, jsonValue: any): any {
-    return jsonValue;
+  fromJson(model: BaseModel, stratumName: string, jsonValue: any): Result<any> {
+    return Result.return(jsonValue);
   }
 
   toJson(value: any): any {

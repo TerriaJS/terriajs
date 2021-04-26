@@ -436,7 +436,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
       {
         addModelToTerria: false
       }
-    );
+    ).throwIfError();
     return catalogItem;
   }
 }
