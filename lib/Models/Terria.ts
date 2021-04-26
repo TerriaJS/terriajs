@@ -658,6 +658,10 @@ export default class Terria {
   async start(options: StartOptions) {
     this.shareDataService = options.shareDataService;
 
+    const hashProperties = queryToObject(new URI(window.location).fragment());
+    if (isDefined(hashProperties.configUrl) && hashProperties.configUrl !== "")
+      options.configUrl = hashProperties.configUrl;
+
     const baseUri = new URI(options.configUrl).filename("");
 
     const launchUrlForAnalytics =
