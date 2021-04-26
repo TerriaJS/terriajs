@@ -314,6 +314,13 @@
     },
     "addData": {
         "btnHide": "ဖုံးဝှက်သည်",
-        "addDataBtnText": "ဒေတာထည့်ပါ"
+        "addDataBtnText": "ဒေတာထည့်ပါ",
+        "localAdd": "ဒေသခံဖိုင်ထည့်ရန်",
+        "searchPlaceholder": "စုစည်းထားသောစရင်များ ရှာဖွေရန်",
+        "searchPlaceholderWhole": "စုစည်ထားသောစာရင်းများအားလုံးရှာဖွေရန်",
+        "dataCatalogue": "ပြုစုထားသောဒေတာများစရင်းများ",
+        "myData": "ကျွန်ုပ်၏ဒေတာ",
+        "done": "ပြီးပြီ",
+        "closeDataPanel": "အချက်အလက် panel ကို ပိတ်ရန်"
     }
 }
