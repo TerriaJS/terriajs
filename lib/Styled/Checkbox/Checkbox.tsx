@@ -50,7 +50,6 @@ const Checkbox = memo(
     const id = useUID();
     return (
       <TextSpan
-        as={"label"}
         css={`
           display: flex;
           flex-shrink: 0;
@@ -59,9 +58,16 @@ const Checkbox = memo(
             //copy the global focus
             outline: 3px solid #c390f9;
           }
-          &:hover svg {
-            opacity: 0.6;
-          }
+          ${!isDisabled &&
+            `
+            &:hover svg {
+              opacity: 0.6;
+            }
+          `}
+          ${isDisabled &&
+            `
+            cursor: not-allowed;
+          `}
         `}
       >
         <HiddenCheckbox

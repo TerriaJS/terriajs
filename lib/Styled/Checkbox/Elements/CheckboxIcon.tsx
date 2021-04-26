@@ -5,14 +5,18 @@ import { CheckboxIconProps } from "../types";
 
 const StyledCheckboxIcon = styled(StyledIcon).attrs({
   styledWidth: "1em"
-})`
+})<{ disabled?: boolean }>`
   top: 0.125em;
   align-self: flex-start;
   position: relative;
   fill: currentColor;
-  &:hover {
-    opacity: 0.6;
-  }
+  ${props =>
+    !props.disabled &&
+    `
+    &:hover {
+      opacity: 0.6;
+    }
+  `}
 `;
 
 const CheckboxIcon: React.FC<CheckboxIconProps> = (
@@ -22,6 +26,7 @@ const CheckboxIcon: React.FC<CheckboxIconProps> = (
     return (
       <StyledCheckboxIcon
         glyph={GLYPHS.checkboxOff}
+        disabled
         css={`
           opacity: 0.3;
         `}

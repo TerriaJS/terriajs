@@ -192,7 +192,8 @@ export const Text = styled.div<ITextProps>`
     props.isDisabled &&
     `
     opacity: 0.3;
-    `}
+    cursor: not-allowed;
+  `}
 
   ${props => props.overflowHide && ` overflow: hidden;`}
   ${props => props.overflowEllipsis && ` text-overflow: ellipsis;`}
