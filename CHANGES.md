@@ -4,7 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.77)
-
+* Stopped rendering help panel when it is closed.
 * [The next improvement]
 
 
