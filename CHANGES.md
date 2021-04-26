@@ -10,6 +10,7 @@ Change Log
   - `terria.error.addEventListener` has been replaced with `terria.addErrorEventListener`
 
 * New Error handling using `Result` and `TerriaError` now applied to initial loading, `updateModelFromJson()`, `upsertModelFromJson()` and `Traits.fromJson()`. This means errors will propagate through these functions, and a stacktrace will be displayed.
+  * `Result` and the new features of `TerriaError` should be considered unstable and may be extensively modified or removed in future 8.0.0-alpha.n releases
 * New `terriaErrorNotification()` function, which wraps up error messages.
 * `TerriaError` can now contain "child" errors - this includes a few new methods: `flatten()` and `createParentError()`. It also has a few new convenience functions: `TerriaError.from()` and `TerriaError.combine()`.
 * Convert `Branding.jsx` to `.tsx`
