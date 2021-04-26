@@ -200,6 +200,12 @@ interface ConfigParameters {
    * True to display welcome message on startup.
    */
   showWelcomeMessage?: boolean;
+
+  // TODO: make themeing TS
+  /** Theme overrides, this is applied in StandardUserInterface and merged in order of highest priority:
+   *  `StandardUserInterface.jsx` `themeOverrides` prop -> `theme` config parameter (this object) -> default `terriaTheme` (see `StandardTheme.jsx`)
+   */
+  theme?: any;
   /**
    * Video to show in welcome message.
    */
@@ -362,6 +368,7 @@ export default class Terria {
     googleAnalyticsKey: undefined,
     rollbarAccessToken: undefined,
     globalDisclaimer: undefined,
+    theme: {},
     showWelcomeMessage: false,
     welcomeMessageVideo: {
       videoTitle: "Getting started with the map",
