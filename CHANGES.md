@@ -3,9 +3,13 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.78)
+#### next release (8.0.0-alpha.79)
 
 * [The next improvement]
+
+#### 8.0.0-alpha.78
+
+* Add `ignoreErrors` url parameter.
 
 #### 8.0.0-alpha.77
 
@@ -26,7 +30,6 @@ Change Log
   * `ButtonAsLabel` no longer accepts `dark`. A dark background is now used when `light` is false (or undefined).
 * Fixes CZML catalog item so that it appears on the timeline.
 * Enable `theme` config parameter. This can now be used to override theme properties.
-* Add `ignoreErrors` url parameter.
 
 #### 8.0.0-alpha.76
 
