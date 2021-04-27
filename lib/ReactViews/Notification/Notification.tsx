@@ -8,7 +8,7 @@ const NotificationWindow = require("./NotificationWindow").default;
 
 const Notification = observer((props: { viewState?: ViewState }) => {
   const viewState = props.viewState;
-  const notificationState = viewState?.notificationState;
+  const notificationState = viewState?.terria.notificationState;
   const notification = notificationState?.currentNotification;
 
   if (

@@ -48,7 +48,9 @@ import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
 import { defaultTerms, Term } from "../ReactViewModels/defaultTerms";
-import { Notification } from "../ReactViewModels/ViewState";
+import NotificationState, {
+  Notification
+} from "../ReactViewModels/NotificationState";
 import { shareConvertNotification } from "../ReactViews/Notification/shareConvertNotification";
 import ShowableTraits from "../Traits/ShowableTraits";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
@@ -285,7 +287,6 @@ export default class Terria {
   readonly modelIdShareKeysMap = observable.map<string, string[]>();
 
   readonly baseUrl: string = "build/TerriaJS/";
-  readonly notification = new CesiumEvent();
   /** Use `terria.addErrorEventListener` or `terria.raiseErrorToUser` if you need to interact with errors outside this class*/
   private readonly error = new CesiumEvent();
   readonly tileLoadProgressEvent = new CesiumEvent();
@@ -463,6 +464,8 @@ export default class Terria {
    * @type {boolean}
    */
   @observable catalogReferencesLoaded: boolean = false;
+
+  readonly notificationState: NotificationState = new NotificationState();
 
   constructor(options: TerriaOptions = {}) {
     if (options.baseUrl) {
@@ -1632,10 +1635,14 @@ async function interpretHash(
 
         // Show warning messages if converted
         if (result.converted) {
-          terria.notification.raiseEvent({
+          // terria.notification.raiseEvent({
+          //   title: i18next.t("share.convertNotificationTitle"),
+          //   message: shareConvertNotification(result.messages)
+          // } as Notification);
+          terria.notificationState.addNotificationToQueue({
             title: i18next.t("share.convertNotificationTitle"),
             message: shareConvertNotification(result.messages)
-          } as Notification);
+          });
         }
 
         if (result.result !== null) {

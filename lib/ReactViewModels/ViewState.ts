@@ -10,7 +10,6 @@ import { Ref } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import addedByUser from "../Core/addedByUser";
-import TerriaError from "../Core/TerriaError";
 import triggerResize from "../Core/triggerResize";
 import PickedFeatures from "../Map/PickedFeatures";
 import getAncestors from "../Models/getAncestors";
@@ -23,7 +22,6 @@ import {
   TourPoint
 } from "./defaultTourPoints";
 import DisclaimerHandler from "./DisclaimerHandler";
-import NotificationState from "./NotificationState";
 import SearchState from "./SearchState";
 
 export const DATA_CATALOG_NAME = "data-catalog";
@@ -40,19 +38,6 @@ interface ViewStateOptions {
   errorHandlingProvider?: any;
 }
 
-export interface Notification {
-  title: string | ((viewState: ViewState) => React.ReactNode);
-  message: string | ((viewState: ViewState) => React.ReactNode);
-  confirmText?: string;
-  denyText?: string;
-  confirmAction?: () => void;
-  denyAction?: () => void;
-  hideUi?: boolean;
-  type?: string;
-  width?: number | string;
-  height?: number | string;
-}
-
 /**
  * Root of a global view model. Presumably this should get nested as more stuff goes into it. Basically this belongs to
  * the root of the UI and then it can choose to pass either the whole thing or parts down as props to its children.
@@ -66,7 +51,6 @@ export default class ViewState {
     locationSearchResults: "locationSearchResults"
   });
   readonly searchState: SearchState;
-  readonly notificationState: NotificationState = new NotificationState();
   readonly terria: Terria;
   readonly relativePosition = RelativePosition;
 
@@ -293,7 +277,6 @@ export default class ViewState {
   @observable currentTool?: Tool;
 
   private _unsubscribeErrorListener: CesiumEvent.RemoveCallback;
-  private _unsubscribeNotificationListener: CesiumEvent.RemoveCallback;
   private _pickedFeaturesSubscription: IReactionDisposer;
   private _disclaimerVisibleSubscription: IReactionDisposer;
   private _isMapFullScreenSubscription: IReactionDisposer;
@@ -318,15 +301,10 @@ export default class ViewState {
       : null;
     this.terria = terria;
 
-    this._unsubscribeNotificationListener = terria.notification.addEventListener(
-      notification =>
-        this.notificationState.addNotificationToQueue(notification)
-    );
-
     // Show errors to the user as notifications.
     this._unsubscribeErrorListener = terria.addErrorEventListener(
       notification =>
-        this.notificationState.addNotificationToQueue(notification)
+        terria.notificationState.addNotificationToQueue(notification)
     );
 
     // When features are picked, show the feature info panel.
@@ -456,7 +434,6 @@ export default class ViewState {
   dispose() {
     this._pickedFeaturesSubscription();
     this._disclaimerVisibleSubscription();
-    this._unsubscribeNotificationListener();
     this._unsubscribeErrorListener();
     this._mobileMenuSubscription();
     this._isMapFullScreenSubscription();
@@ -679,8 +656,8 @@ export default class ViewState {
   @computed
   get hideMapUi() {
     return (
-      this.notificationState.currentNotification !== undefined &&
-      this.notificationState.currentNotification!.hideUi
+      this.terria.notificationState.currentNotification !== undefined &&
+      this.terria.notificationState.currentNotification!.hideUi
     );
   }
 }

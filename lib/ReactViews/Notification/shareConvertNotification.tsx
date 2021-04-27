@@ -28,14 +28,14 @@ export const shareConvertNotification = (
   const showHelp = () => {
     viewState.showHelpPanel();
     viewState.selectHelpMenuItem("storymigration");
-    viewState.notificationState.dismissCurrentNotification();
+    viewState.terria.notificationState.dismissCurrentNotification();
   };
 
   const showFeedback = () => {
     runInAction(() => {
       viewState.feedbackFormIsVisible = true;
     });
-    viewState.notificationState.dismissCurrentNotification();
+    viewState.terria.notificationState.dismissCurrentNotification();
   };
 
   return (
