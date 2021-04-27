@@ -492,6 +492,8 @@ export default class Terria {
     if (terriaError.shouldRaiseToUser && !terriaError.raisedToUser) {
       terriaError.raisedToUser = true;
       this.error.raiseEvent(terriaError);
+    } else {
+      console.log(JSON.stringify(terriaError));
     }
   }
 
