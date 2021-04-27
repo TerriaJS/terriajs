@@ -1333,7 +1333,7 @@ export default class Terria {
           errors.push(
             TerriaError.from(e, {
               severity: TerriaErrorSeverity.Error,
-              title: {
+              message: {
                 key: "models.terria.loadingWorkbenchItemErrorTitle",
                 parameters: {
                   name:

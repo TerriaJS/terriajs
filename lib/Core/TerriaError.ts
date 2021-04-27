@@ -20,7 +20,7 @@ function resolveI18n(i: I18nTranslateString | string) {
 }
 
 export enum TerriaErrorSeverity {
-  Severe,
+  Critical,
   Error,
   Warning
 }
@@ -163,7 +163,7 @@ export default class TerriaError {
 
   get shouldRaiseToUser() {
     return (
-      this.severity === TerriaErrorSeverity.Severe ||
+      this.severity === TerriaErrorSeverity.Critical ||
       this.severity === TerriaErrorSeverity.Error
     );
   }
@@ -182,8 +182,8 @@ export default class TerriaError {
         ? error._severity()
         : error._severity
     );
-    if (nestedSeverity.includes(TerriaErrorSeverity.Severe))
-      return TerriaErrorSeverity.Severe;
+    if (nestedSeverity.includes(TerriaErrorSeverity.Critical))
+      return TerriaErrorSeverity.Critical;
     if (nestedSeverity.includes(TerriaErrorSeverity.Error))
       return TerriaErrorSeverity.Error;
     return TerriaErrorSeverity.Warning;
