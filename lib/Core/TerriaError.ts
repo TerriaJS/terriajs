@@ -45,8 +45,10 @@ export interface TerriaErrorOptions {
    */
   useTerriaErrorNotification?: boolean;
 
-  /** TerriaErrorSeverity - will default to Warning */
-  severity?: TerriaErrorSeverity;
+  /** TerriaErrorSeverity - will default to Warning
+   * A function can be used here, which will be resolved when the error is raised to user.
+   */
+  severity?: TerriaErrorSeverity | (() => TerriaErrorSeverity);
 }
 
 /** Object used to clone an existing TerriaError (see `TerriaError.clone()`).
@@ -63,7 +65,7 @@ export default class TerriaError {
   private readonly _message: string | I18nTranslateString;
   private readonly _title: string | I18nTranslateString;
   private readonly useTerriaErrorNotification: boolean;
-  private readonly _severity: TerriaErrorSeverity;
+  private readonly _severity: TerriaErrorSeverity | (() => TerriaErrorSeverity);
 
   /** `sender` isn't really used for anything at the moment... */
   readonly sender: unknown;
@@ -175,7 +177,11 @@ export default class TerriaError {
   }
 
   get severity() {
-    const nestedSeverity = this.flatten().map(error => error._severity);
+    const nestedSeverity = this.flatten().map(error =>
+      typeof error._severity === "function"
+        ? error._severity()
+        : error._severity
+    );
     if (nestedSeverity.includes(TerriaErrorSeverity.Severe))
       return TerriaErrorSeverity.Severe;
     if (nestedSeverity.includes(TerriaErrorSeverity.Error))

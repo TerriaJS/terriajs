@@ -13,7 +13,7 @@ import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import { Medium, Small } from "../Generic/Responsive";
 import Icon from "../../Styled/Icon";
 import Styles from "./story-panel.scss";
-import TerriaError from "../../Core/TerriaError";
+import TerriaError, { TerriaErrorSeverity } from "../../Core/TerriaError";
 
 /**
  *
@@ -167,7 +167,8 @@ const StoryPanel = observer(
           this.props.terria
             .updateFromStartData(
               story.shareData,
-              `Story data: \`${story.title ?? story.id}\``
+              `Story data: \`${story.title ?? story.id}\``,
+              TerriaErrorSeverity.Warning
             )
             .catch(function(e) {
               this.props.terria.raiseErrorToUser(e);

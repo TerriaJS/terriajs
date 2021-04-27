@@ -68,7 +68,8 @@ import InitSource, {
   isInitData,
   isInitDataPromise,
   isInitOptions,
-  isInitUrl
+  isInitUrl,
+  INIT_SOURCE_DEFAULT_ERROR_SEVERITY
 } from "./InitSource";
 import Internationalization, {
   I18nStartOptions,
@@ -778,8 +779,12 @@ export default class Terria {
     this._initSourceLoader.dispose();
   }
 
-  updateFromStartData(startData: any, name: string = "Application start data") {
-    interpretStartData(this, startData, name);
+  updateFromStartData(
+    startData: any,
+    name: string = "Application start data",
+    errorSeverity?: TerriaErrorSeverity
+  ) {
+    interpretStartData(this, startData, name, errorSeverity);
     return this.loadInitSources();
   }
 
@@ -861,16 +866,19 @@ export default class Terria {
 
     const errors: TerriaError[] = [];
 
-    const initSources = await Promise.all(
+    // Load all init sources
+    const loadedInitSources = await Promise.all(
       this.initSources.map(async initSource => {
         try {
           return {
-            name: initSource.name,
+            ...initSource,
             data: await loadInitSource(initSource)
           };
         } catch (e) {
           errors.push(
             TerriaError.from(e, {
+              severity:
+                initSource.errorSeverity ?? INIT_SOURCE_DEFAULT_ERROR_SEVERITY,
               message: {
                 key: "models.terria.loadingInitSourceError2Message",
                 parameters: { loadSource: initSource.name ?? "Unknown source" }
@@ -881,8 +889,9 @@ export default class Terria {
       })
     );
 
+    // Apply all init sources
     await Promise.all(
-      initSources.map(async initSource => {
+      loadedInitSources.map(async initSource => {
         if (!isDefined(initSource?.data)) return;
         try {
           await this.applyInitData({
@@ -891,6 +900,8 @@ export default class Terria {
         } catch (e) {
           errors.push(
             TerriaError.from(e, {
+              severity:
+                initSource!.errorSeverity ?? INIT_SOURCE_DEFAULT_ERROR_SEVERITY,
               message: {
                 key: "models.terria.loadingInitSourceError2Message",
                 parameters: { loadSource: initSource!.name ?? "Unknown source" }
@@ -1107,11 +1118,13 @@ export default class Terria {
     return new Result(
       loadedModel,
       TerriaError.combine(errors, {
-        severity: this.workbench.items.find(
-          workbenchItem => workbenchItem.uniqueId === modelId
-        )
-          ? TerriaErrorSeverity.Error
-          : TerriaErrorSeverity.Warning,
+        // This will set TerriaErrorSeverity to Error if the model which FAILED to load is in the workbench.
+        severity: () =>
+          this.workbench.items.find(
+            workbenchItem => workbenchItem.uniqueId === modelId
+          )
+            ? TerriaErrorSeverity.Error
+            : TerriaErrorSeverity.Warning,
         message: {
           key: "models.terria.loadModelErrorMessage",
           parameters: { model: modelId }
@@ -1651,7 +1664,8 @@ async function interpretHash(
           interpretStartData(
             terria,
             result.result,
-            `Share data from link: ${hashProperties.share}`
+            `Share data from link: ${hashProperties.share}`,
+            TerriaErrorSeverity.Warning
           );
         }
       } catch (error) {
@@ -1664,7 +1678,12 @@ async function interpretHash(
   }
 }
 
-function interpretStartData(terria: Terria, startData: any, name: string) {
+function interpretStartData(
+  terria: Terria,
+  startData: any,
+  name: string,
+  errorSeverity?: TerriaErrorSeverity
+) {
   // TODO: version check, filtering, etc.
 
   if (startData.initSources) {
@@ -1673,7 +1692,8 @@ function interpretStartData(terria: Terria, startData: any, name: string) {
         ...startData.initSources.map((initSource: any) => {
           return {
             name,
-            data: initSource
+            data: initSource,
+            errorSeverity
           };
         })
       );
