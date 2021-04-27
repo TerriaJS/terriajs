@@ -19,6 +19,12 @@ function resolveI18n(i: I18nTranslateString | string) {
   return typeof i === "string" ? i : i18next.t(i.key, i.parameters);
 }
 
+export enum TerriaErrorSeverity {
+  Severe,
+  Error,
+  Warning
+}
+
 /** Object used to create a TerriaError */
 export interface TerriaErrorOptions {
   /**  A detailed message describing the error.  This message may be HTML and it should be sanitized before display to the user. */
@@ -38,6 +44,9 @@ export interface TerriaErrorOptions {
    * If false, a plain old `Notification` will be used
    */
   useTerriaErrorNotification?: boolean;
+
+  /** TerriaErrorSeverity - will default to Warning */
+  severity?: TerriaErrorSeverity;
 }
 
 /** Object used to clone an existing TerriaError (see `TerriaError.clone()`).
@@ -54,6 +63,7 @@ export default class TerriaError {
   private readonly _message: string | I18nTranslateString;
   private readonly _title: string | I18nTranslateString;
   private readonly useTerriaErrorNotification: boolean;
+  private readonly _severity: TerriaErrorSeverity;
 
   /** `sender` isn't really used for anything at the moment... */
   readonly sender: unknown;
@@ -133,6 +143,8 @@ export default class TerriaError {
       : [];
     this.useTerriaErrorNotification =
       options.useTerriaErrorNotification ?? true;
+
+    this._severity = options.severity ?? TerriaErrorSeverity.Warning;
   }
 
   get message() {
@@ -147,12 +159,28 @@ export default class TerriaError {
     return this._raisedToUser;
   }
 
+  get shouldRaiseToUser() {
+    return (
+      this.severity === TerriaErrorSeverity.Severe ||
+      this.severity === TerriaErrorSeverity.Error
+    );
+  }
+
   /** Set raisedToUser value for **all** `TerriaErrors` in this tree. */
   set raisedToUser(r: boolean) {
     this._raisedToUser = r;
     if (this.originalError instanceof TerriaError) {
       this.originalError.raisedToUser = r;
     }
+  }
+
+  get severity() {
+    const nestedSeverity = this.flatten().map(error => error._severity);
+    if (nestedSeverity.includes(TerriaErrorSeverity.Severe))
+      return TerriaErrorSeverity.Severe;
+    if (nestedSeverity.includes(TerriaErrorSeverity.Error))
+      return TerriaErrorSeverity.Error;
+    return TerriaErrorSeverity.Warning;
   }
 
   /** Convert `TerriaError` to `Notification` */

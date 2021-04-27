@@ -34,7 +34,7 @@ import { isLatLonHeight } from "../Core/LatLonHeight";
 import loadJson5 from "../Core/loadJson5";
 import Result from "../Core/Result";
 import ServerConfig from "../Core/ServerConfig";
-import TerriaError from "../Core/TerriaError";
+import TerriaError, { TerriaErrorSeverity } from "../Core/TerriaError";
 import { Complete } from "../Core/TypeModifiers";
 import { getUriWithoutPath } from "../Core/uriHelpers";
 import PickedFeatures, {
@@ -489,7 +489,7 @@ export default class Terria {
 
   raiseErrorToUser(error: unknown) {
     const terriaError = TerriaError.from(error);
-    if (!terriaError.raisedToUser) {
+    if (terriaError.shouldRaiseToUser && !terriaError.raisedToUser) {
       terriaError.raisedToUser = true;
       this.error.raiseEvent(terriaError);
     }
@@ -932,6 +932,7 @@ export default class Terria {
     const thisModelStratumData = allModelStratumData[modelId] || {};
     if (!isJsonObject(thisModelStratumData)) {
       throw new TerriaError({
+        severity: TerriaErrorSeverity.Error,
         sender: this,
         title: "Invalid model traits",
         message: "The traits of a model must be a JSON object."
@@ -1104,6 +1105,11 @@ export default class Terria {
     return new Result(
       loadedModel,
       TerriaError.combine(errors, {
+        severity: this.workbench.items.find(
+          workbenchItem => workbenchItem.uniqueId === modelId
+        )
+          ? TerriaErrorSeverity.Error
+          : TerriaErrorSeverity.Warning,
         message: {
           key: "models.terria.loadModelErrorMessage",
           parameters: { model: modelId }
@@ -1311,6 +1317,7 @@ export default class Terria {
         } catch (e) {
           errors.push(
             TerriaError.from(e, {
+              severity: TerriaErrorSeverity.Error,
               title: {
                 key: "models.terria.loadingWorkbenchItemErrorTitle",
                 parameters: {
