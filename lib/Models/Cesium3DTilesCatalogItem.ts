@@ -10,29 +10,27 @@ import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeatur
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import makeRealPromise from "../Core/makeRealPromise";
 import PickedFeatures from "../Map/PickedFeatures";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import Cesium3dTilesMixin from "../ModelMixins/Cesium3dTilesMixin";
 import FeatureInfoMixin from "../ModelMixins/FeatureInfoMixin";
 import SearchableItemMixin, {
   ItemSelectionDisposer
 } from "../ModelMixins/SearchableItemMixin";
-import Cesium3DTilesCatalogItemTraits from "../Traits/Cesium3DCatalogItemTraits";
+import Cesium3DTilesCatalogItemTraits from "../Traits/Cesium3DTilesCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import { ItemSearchResult } from "./ItemSearchProvider";
-import Mappable from "./Mappable";
 
 // A property name used for tagging a search result feature for highlighting/hiding.
 const SEARCH_RESULT_TAG = "terriajs_search_result";
 
-export default class Cesium3DTilesCatalogItem
-  extends SearchableItemMixin(
-    FeatureInfoMixin(
-      Cesium3dTilesMixin(
-        CatalogMemberMixin(CreateModel(Cesium3DTilesCatalogItemTraits))
-      )
+export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
+  FeatureInfoMixin(
+    Cesium3dTilesMixin(
+      CatalogMemberMixin(CreateModel(Cesium3DTilesCatalogItemTraits))
     )
   )
-  implements Mappable {
+) {
   static readonly type = "3d-tiles";
   readonly type = Cesium3DTilesCatalogItem.type;
   get typeName() {

@@ -18,7 +18,7 @@ import { observer } from "mobx-react";
 import CustomComponent from "../Custom/CustomComponent";
 import FeatureInfoDownload from "./FeatureInfoDownload";
 import formatNumberForLocale from "../../Core/formatNumberForLocale";
-import Icon from "../Icon";
+import Icon from "../../Styled/Icon";
 import propertyGetTimeValues from "../../Core/propertyGetTimeValues";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import { withTranslation } from "react-i18next";
@@ -801,6 +801,7 @@ function getTimeSeriesChartContext(catalogItem, feature, getChartDetails) {
       : feature.id;
     if (chartDetails) {
       const result = {
+        ...chartDetails,
         id: featureId.replace(/\"/g, ""),
         data: csvData.replace(/\\n/g, "\\n")
       };

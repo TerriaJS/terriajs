@@ -4,9 +4,10 @@ const createReactClass = require("create-react-class");
 const PropTypes = require("prop-types");
 import Styles from "./full_screen_button.scss";
 import classNames from "classnames";
-import Icon from "../Icon.jsx";
+import Icon from "../../Styled/Icon";
 import { withTranslation } from "react-i18next";
 import { observer } from "mobx-react";
+import withControlledVisibility from "../HOCs/withControlledVisibility";
 
 // The button to make the map full screen and hide the workbench.
 const FullScreenButton = observer(
@@ -102,4 +103,4 @@ const FullScreenButton = observer(
     }
   })
 );
-module.exports = withTranslation()(FullScreenButton);
+module.exports = withTranslation()(withControlledVisibility(FullScreenButton));

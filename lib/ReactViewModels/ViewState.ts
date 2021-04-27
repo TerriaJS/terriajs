@@ -10,6 +10,7 @@ import { Ref } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import addedByUser from "../Core/addedByUser";
+import TerriaError from "../Core/TerriaError";
 import triggerResize from "../Core/triggerResize";
 import PickedFeatures from "../Map/PickedFeatures";
 import getAncestors from "../Models/getAncestors";
@@ -40,7 +41,7 @@ interface ViewStateOptions {
 }
 
 export interface Notification {
-  title: string;
+  title: string | ((viewState: ViewState) => React.ReactNode);
   message: string | ((viewState: ViewState) => React.ReactNode);
   confirmText?: string;
   denyText?: string;
@@ -323,7 +324,7 @@ export default class ViewState {
     );
 
     // Show errors to the user as notifications.
-    this._unsubscribeErrorListener = terria.error.addEventListener(
+    this._unsubscribeErrorListener = terria.addErrorEventListener(
       notification =>
         this.notificationState.addNotificationToQueue(notification)
     );

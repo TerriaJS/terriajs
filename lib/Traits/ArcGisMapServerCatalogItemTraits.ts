@@ -1,23 +1,26 @@
 import { JsonObject } from "../Core/Json";
 import anyTrait from "./anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
+import LayerOrderingTraits from "./LayerOrderingTraits";
 import MappableTraits from "./MappableTraits";
 import mixTraits from "./mixTraits";
 import primitiveTrait from "./primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
 import SplitterTraits from "./SplitterTraits";
 import UrlTraits from "./UrlTraits";
-import LayerOrderingTraits from "./LayerOrderingTraits";
 
 export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
+  MappableTraits,
   FeatureInfoTraits,
   SplitterTraits,
   RasterLayerTraits,
   LayerOrderingTraits,
   MappableTraits,
   UrlTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  DiscretelyTimeVaryingTraits
 ) {
   @primitiveTrait({
     type: "string",
@@ -72,4 +75,13 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
     type: "string"
   })
   tokenUrl?: string;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Maximum Refresh Intervals",
+    description:
+      "The maximum number of discrete times that can be created by a single " +
+      "date range when layer in time-enabled."
+  })
+  maxRefreshIntervals: number = 1000;
 }

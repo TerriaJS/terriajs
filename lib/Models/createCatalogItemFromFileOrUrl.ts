@@ -75,7 +75,9 @@ function createCatalogMember(
     CommonStrata.definition,
     json,
     {}
-  );
+  ).throwIfUndefined({
+    message: `Failed to create catalog member from JSON: ${json.name}`
+  });
 }
 
 function tryConversionService(
@@ -86,7 +88,7 @@ function tryConversionService(
 ) {
   if (!terria.configParameters.conversionServiceBaseUrl) {
     // Don't allow conversion service. Duplicated in OgrCatalogItem.js
-    terria.error.raiseEvent(
+    terria.raiseErrorToUser(
       new TerriaError({
         title: i18next.t("models.catalog.unsupportedFileTypeTitle"),
         message: i18next.t("models.catalog.unsupportedFileTypeMessage", {
@@ -100,7 +102,7 @@ function tryConversionService(
   } else if (
     name.match(/\.(jpg|jpeg|pdf|xlsx|xls|tif|tiff|png|txt|doc|docx|xml|json)$/)
   ) {
-    terria.error.raiseEvent(
+    terria.raiseErrorToUser(
       new TerriaError({
         title: i18next.t("models.catalog.unsupportedFileTypeTitle"),
         message: i18next.t("models.catalog.unsupportedFileTypeMessageII", {

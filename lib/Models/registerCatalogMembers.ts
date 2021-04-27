@@ -44,9 +44,11 @@ import WebMapTileServiceCatalogGroup from "./WebMapTileServiceCatalogGroup";
 import WebMapTileServiceCatalogItem from "./WebMapTileServiceCatalogItem";
 import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
 import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalogFunctionJob";
+import WebProcessingServiceCatalogGroup from "./WebProcessingServiceCatalogGroup";
 import YDYRCatalogFunction from "./YDYRCatalogFunction";
 import YDYRCatalogFunctionJob from "./YDYRCatalogFunctionJob";
 import CswCatalogGroup from "./CswCatalogGroup";
+import { ApiTableCatalogItem } from "./ApiTableCatalogItem";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -161,6 +163,10 @@ export default function registerCatalogMembers() {
     WebProcessingServiceCatalogFunction
   );
   CatalogMemberFactory.register(
+    WebProcessingServiceCatalogGroup.type,
+    WebProcessingServiceCatalogGroup
+  );
+  CatalogMemberFactory.register(
     SensorObservationServiceCatalogItem.type,
     SensorObservationServiceCatalogItem
   );
@@ -176,6 +182,7 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CkanItemReference.type, CkanItemReference);
   CatalogMemberFactory.register(ThreddsCatalogGroup.type, ThreddsCatalogGroup);
   CatalogMemberFactory.register(CswCatalogGroup.type, CswCatalogGroup);
+  CatalogMemberFactory.register(ApiTableCatalogItem.type, ApiTableCatalogItem);
 
   UrlToCatalogMemberMapping.register(
     matchesExtension("csv"),

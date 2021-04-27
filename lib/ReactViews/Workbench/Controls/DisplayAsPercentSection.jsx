@@ -5,7 +5,7 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import { withTranslation } from "react-i18next";
-import Icon from "../../Icon";
+import Icon from "../../../Styled/Icon";
 import Styles from "./display-as-percent.scss";
 
 const DisplayAsPercentSection = createReactClass({

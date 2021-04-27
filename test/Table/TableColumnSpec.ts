@@ -76,7 +76,7 @@ describe("TableColumn", function() {
         "csvString",
         "date\n01/03/2004\n12/12/1999\n"
       );
-      await tableModel.loadChartItems();
+      await tableModel.loadMapItems();
       const tableColumn1 = new TableColumn(tableModel, 0);
       expect(
         tableColumn1.valuesAsDates.values.map(d => d && d.toISOString())
@@ -93,7 +93,7 @@ describe("TableColumn", function() {
         "csvString",
         "date\n15-7-95\n3-7-20\n"
       );
-      await tableModel.loadChartItems();
+      await tableModel.loadMapItems();
       const tableColumn1 = new TableColumn(tableModel, 0);
       expect(
         tableColumn1.valuesAsDates.values.map(d => d && d.toISOString())
@@ -110,7 +110,7 @@ describe("TableColumn", function() {
         "csvString",
         "date\n06/20/2004\n03/10/1999\n"
       );
-      await tableModel.loadChartItems();
+      await tableModel.loadMapItems();
       const tableColumn1 = new TableColumn(tableModel, 0);
       expect(
         tableColumn1.valuesAsDates.values.map(d => d && d.toISOString())
@@ -127,7 +127,7 @@ describe("TableColumn", function() {
         "csvString",
         "TIME_PERIOD,OBS_VALUE\n1983-Q2,-0.6\n1983-Q3,-3.2\n1983-Q4,0.9\n1984-Q1,-1.7\n1984-Q2,3.6\n1984-Q3,-1.1\n1984-Q4,3\n1985-Q1,1.1"
       );
-      await tableModel.loadChartItems();
+      await tableModel.loadMapItems();
       const tableColumn1 = new TableColumn(tableModel, 0);
       expect(
         tableColumn1.valuesAsDates.values.map(d => d && d.toISOString())
@@ -151,7 +151,7 @@ describe("TableColumn", function() {
         "csvString",
         "date\n06/06/2004\n03/10/1999\nNot a date"
       );
-      await tableModel.loadChartItems();
+      await tableModel.loadMapItems();
       const tableColumn1 = new TableColumn(tableModel, 0);
       expect(
         tableColumn1.valuesAsDates.values.map(d => d && d.toISOString())
@@ -187,7 +187,7 @@ describe("TableColumn", function() {
           }
         })
       ]);
-      await tableModel.loadChartItems();
+      await tableModel.loadMapItems();
       const tableColumn1 = new TableColumn(tableModel, 0);
       expect(tableColumn1.values).toEqual(["1", "2", "3", "4"]);
       expect(tableColumn1.valuesAsNumbers.values).toEqual([11, 12, 13, 14]);
@@ -208,7 +208,7 @@ describe("TableColumn", function() {
           }
         })
       ]);
-      await tableModel.loadChartItems();
+      await tableModel.loadMapItems();
       const tableColumn1 = new TableColumn(tableModel, 0);
       expect(tableColumn1.values).toEqual(["1", "2", "3", "4"]);
       const tableColumn2 = new TableColumn(tableModel, 1);
@@ -251,7 +251,7 @@ describe("TableColumn", function() {
           }
         })
       ]);
-      await tableModel.loadChartItems();
+      await tableModel.loadMapItems();
       const tableColumn3 = new TableColumn(tableModel, 2);
       expect(tableColumn3.values).toEqual(["21", "22", "23", "24"]);
 

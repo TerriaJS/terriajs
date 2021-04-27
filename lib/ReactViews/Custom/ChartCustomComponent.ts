@@ -1,29 +1,27 @@
 import { DomElement } from "domhandler";
 import { runInAction } from "mobx";
 import React, { ReactElement } from "react";
+import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import filterOutUndefined from "../../Core/filterOutUndefined";
+import LatLonHeight from "../../Core/LatLonHeight";
 import CommonStrata from "../../Models/CommonStrata";
+import createStratumInstance from "../../Models/createStratumInstance";
+import Feature from "../../Models/Feature";
+import hasTraits from "../../Models/hasTraits";
+import { BaseModel } from "../../Models/Model";
+import SplitItemReference from "../../Models/SplitItemReference";
+import ChartPointOnMapTraits from "../../Traits/ChartPointOnMapTraits";
+import DiscretelyTimeVaryingTraits from "../../Traits/DiscretelyTimeVaryingTraits";
+import LatLonHeightTraits from "../../Traits/LatLonHeightTraits";
 import ChartPreviewStyles from "./Chart/chart-preview.scss";
 import ChartExpandAndDownloadButtons from "./Chart/ChartExpandAndDownloadButtons";
 import Chart from "./Chart/FeatureInfoPanelChart";
 import CustomComponent, { ProcessNodeContext } from "./CustomComponent";
-import Model, { BaseModel } from "../../Models/Model";
-import CatalogMemberTraits from "../../Traits/CatalogMemberTraits";
-import hasTraits from "../../Models/hasTraits";
-import SplitItemReference from "../../Models/SplitItemReference";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import DiscretelyTimeVaryingTraits from "../../Traits/DiscretelyTimeVaryingTraits";
-import Chartable from "../../Models/Chartable";
-import LatLonHeight from "../../Core/LatLonHeight";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import Feature from "../../Models/Feature";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import ChartPointOnMapTraits from "../../Traits/ChartPointOnMapTraits";
-import LatLonHeightTraits from "../../Traits/LatLonHeightTraits";
-import createStratumInstance from "../../Models/createStratumInstance";
-import ModelTraits from "../../Traits/ModelTraits";
+import ChartableMixin from "../../ModelMixins/ChartableMixin";
 
 export interface ChartCustomComponentAttributes {
   /**  The title of the chart.  If not supplied, defaults to the name of the context-supplied feature, if available, or else simply "Chart". */
@@ -116,7 +114,7 @@ export interface ChartCustomComponentAttributes {
  */
 
 export default abstract class ChartCustomComponent<
-  CatalogItemType extends Chartable
+  CatalogItemType extends ChartableMixin.Instance
 > extends CustomComponent {
   get attributes(): Array<string> {
     return [

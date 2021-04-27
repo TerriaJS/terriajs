@@ -34,7 +34,6 @@ class PollingTraits extends ModelTraits {
 }
 
 export default class CsvCatalogItemTraits extends mixTraits(
-  ExportableTraits,
   AutoRefreshingTraits,
   FeatureInfoTraits,
   UrlTraits,

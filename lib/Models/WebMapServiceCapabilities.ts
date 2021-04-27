@@ -66,6 +66,8 @@ export interface CapabilitiesLayer {
 
   // WMS 1.1.1 puts dimension values in an Extent element instead of directly in the Dimension element.
   readonly Extent?: CapabilitiesExtent | ReadonlyArray<CapabilitiesExtent>;
+  readonly CRS?: string | string[]; // WMS 1.3.0
+  readonly SRS?: string | string[]; // WMS 1.1.1
 }
 
 export interface CapabilitiesService {

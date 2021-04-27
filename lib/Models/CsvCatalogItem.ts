@@ -2,9 +2,9 @@ import i18next from "i18next";
 import { computed, runInAction } from "mobx";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
-import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
 import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import ChartableMixin from "../ModelMixins/ChartableMixin";
 import ExportableMixin from "../ModelMixins/ExportableMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -30,13 +30,9 @@ import Terria from "./Terria";
 
 const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
 
-export default class CsvCatalogItem extends AsyncChartableMixin(
-  TableMixin(
-    ExportableMixin(
-      AutoRefreshingMixin(
-        UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
-      )
-    )
+export default class CsvCatalogItem extends TableMixin(
+  AutoRefreshingMixin(
+    UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
   )
 ) {
   static get type() {
@@ -154,10 +150,6 @@ export default class CsvCatalogItem extends AsyncChartableMixin(
         }
       });
     });
-  }
-
-  protected forceLoadMetadata(): Promise<void> {
-    return Promise.resolve();
   }
 
   protected forceLoadTableData(): Promise<string[][]> {

@@ -99,8 +99,8 @@ describe("SensorObservationServiceCatalogItem", function() {
 
     describe("when loading", function() {
       it("makes a GetFeatureOfInterest request", async function() {
-        await runInAction(() => item.loadMapItems());
-        const req = jasmine.Ajax.requests.mostRecent();
+        await item.loadMapItems();
+        const req = jasmine.Ajax.requests.filter("https://sos.example.com")[0];
         expect(req.url).toBe("https://sos.example.com");
         expect(req.method).toBe("POST");
         expect(req.data()).toContain("sos:GetFeatureOfInterest");
@@ -144,11 +144,8 @@ describe("SensorObservationServiceCatalogItem", function() {
     });
 
     describe("when loaded", function() {
-      beforeEach(async function() {
-        await runInAction(() => item.loadMapItems());
-      });
-
-      it("defines all feature columns", function() {
+      it("defines all feature columns", async function() {
+        await item.loadMapItems();
         expect(item.tableColumns.map(c => c.name)).toEqual([
           "identifier",
           "lat",
@@ -160,7 +157,8 @@ describe("SensorObservationServiceCatalogItem", function() {
         ]);
       });
 
-      it("populates the column values correctly", function() {
+      it("populates the column values correctly", async function() {
+        await item.loadMapItems();
         const values: any = {
           identifier: [
             "http://sos.example.com/stations/1",
@@ -191,8 +189,7 @@ describe("SensorObservationServiceCatalogItem", function() {
           item.setTrait(CommonStrata.user, "stationIdWhitelist", [
             "http://sos.example.com/stations/1"
           ]);
-          // @ts-ignore
-          await runInAction(() => item.forceLoadTableMixin());
+          await item.loadMapItems();
           const col = item.findColumnByName("identifier");
           expect(col).toBeDefined();
           expect(col?.values).toEqual(["http://sos.example.com/stations/1"]);
@@ -204,8 +201,7 @@ describe("SensorObservationServiceCatalogItem", function() {
           item.setTrait(CommonStrata.user, "stationIdBlacklist", [
             "http://sos.example.com/stations/1"
           ]);
-          // @ts-ignore
-          await runInAction(() => item.forceLoadTableMixin());
+          await item.loadMapItems();
           const col = item.findColumnByName("identifier");
           expect(col).toBeDefined();
           expect(col?.values).not.toContain(
@@ -214,7 +210,8 @@ describe("SensorObservationServiceCatalogItem", function() {
         });
       });
 
-      it("sets the style selectors correctly", function() {
+      it("sets the style selectors correctly", async function() {
+        await item.loadMapItems();
         expect(item.selectableDimensions.map(s => s.name)).toEqual([
           "Frequency",
           "Observation Type"
@@ -269,15 +266,21 @@ describe("SensorObservationServiceCatalogItem", function() {
       });
 
       it("sets the procedure based on active style", async function() {
-        await runInAction(() => item.loadMapItems());
-        let req = jasmine.Ajax.requests.mostRecent();
         item.setTrait(CommonStrata.user, "activeStyle", "Daily Mean");
+
+        await item.loadMapItems();
+
+        let req = jasmine.Ajax.requests.mostRecent();
+
         expect(req.data()).toContain(
           "<sos:procedure>Daily Mean</sos:procedure>"
         );
+
         item.setTrait(CommonStrata.user, "activeStyle", "Yearly Mean");
-        // @ts-ignore
-        await runInAction(() => item.forceLoadTableMixin());
+
+        // Shouldn't have to force this...
+        await item.loadMapItems(true);
+
         req = jasmine.Ajax.requests.mostRecent();
         expect(req.data()).toContain(
           "<sos:procedure>Yearly Mean</sos:procedure>"

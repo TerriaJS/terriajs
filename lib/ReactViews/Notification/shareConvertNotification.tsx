@@ -5,11 +5,9 @@ import isDefined from "../../Core/isDefined";
 import ViewState from "../../ReactViewModels/ViewState";
 import Collapsible from "../Custom/Collapsible/Collapsible";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
-
-const Text: any = require("../../Styled/Text").default;
-const Spacing: any = require("../../Styled/Spacing").Spacing;
-const RawButton: any = require("../../Styled/Button").RawButton;
-const TextSpan: any = require("../../Styled/Text").TextSpan;
+import Text, { TextSpan } from "../../Styled/Text";
+import { RawButton } from "../../Styled/Button";
+import Spacing from "../../Styled/Spacing";
 
 export const shareConvertNotification = (
   messages: import("catalog-converter").ShareResult["messages"]

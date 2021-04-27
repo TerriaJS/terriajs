@@ -12,8 +12,6 @@ import URI from "urijs";
 import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";
-import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogFunctionJobMixin from "../ModelMixins/CatalogFunctionJobMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import XmlRequestMixin from "../ModelMixins/XmlRequestMixin";
@@ -22,7 +20,6 @@ import { ShortReportTraits } from "../Traits/CatalogMemberTraits";
 import { FeatureInfoTemplateTraits } from "../Traits/FeatureInfoTraits";
 import WebProcessingServiceCatalogFunctionJobTraits from "../Traits/WebProcessingServiceCatalogFunctionJobTraits";
 import CatalogMemberFactory from "./CatalogMemberFactory";
-import { ChartItem } from "./Chartable";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
@@ -338,16 +335,8 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
           const json = JSON.parse(output.Data.ComplexData.text);
           const catalogItem = await this.createCatalogItemFromJson(json);
           if (isDefined(catalogItem)) {
-            if (CatalogMemberMixin.isMixedInto(catalogItem)) {
+            if (CatalogMemberMixin.isMixedInto(catalogItem))
               results.push(catalogItem);
-              await catalogItem.loadMetadata();
-            }
-            if (AsyncMappableMixin.isMixedInto(catalogItem)) {
-              await catalogItem.loadMapItems();
-            }
-            if (AsyncChartableMixin.isMixedInto(catalogItem)) {
-              await catalogItem.loadChartItems();
-            }
             reportContent = "Chart " + output.Title + " generated.";
           }
         }
@@ -396,10 +385,6 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     return [];
   }
 
-  get chartItems(): ChartItem[] {
-    return [];
-  }
-
   protected async forceLoadMetadata() {
     await super.forceLoadMetadata();
     const stratum = await WpsLoadableStratum.load(this);
@@ -409,8 +394,6 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
   }
 
   protected async forceLoadMapItems(): Promise<void> {
-    await this.loadMetadata();
-    await super.forceLoadMapItems();
     if (isDefined(this.geoJsonItem)) {
       const geoJsonItem = this.geoJsonItem;
       await runInAction(() => geoJsonItem.loadMapItems());
@@ -453,7 +436,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
       {
         addModelToTerria: false
       }
-    );
+    ).throwIfError();
     return catalogItem;
   }
 }

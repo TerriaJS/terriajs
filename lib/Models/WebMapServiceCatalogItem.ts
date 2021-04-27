@@ -9,27 +9,28 @@
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
 import i18next from "i18next";
 import { computed, runInAction } from "mobx";
-import moment from "moment";
 import combine from "terriajs-cesium/Source/Core/combine";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
 import URI from "urijs";
 import containsAny from "../Core/containsAny";
+import createDiscreteTimesFromIsoSegments from "../Core/createDiscreteTimes";
 import createTransformerAllowUndefined from "../Core/createTransformerAllowUndefined";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import isReadOnlyArray from "../Core/isReadOnlyArray";
 import { JsonObject } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";
-import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import ChartableMixin from "../ModelMixins/ChartableMixin";
 import DiffableMixin from "../ModelMixins/DiffableMixin";
 import ExportableMixin from "../ModelMixins/ExportableMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
+import { ImageryParts } from "../ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
 import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -41,10 +42,11 @@ import {
   InfoSectionTraits,
   MetadataUrlTraits
 } from "../Traits/CatalogMemberTraits";
-import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
 import LegendTraits from "../Traits/LegendTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
 import WebMapServiceCatalogItemTraits, {
+  SUPPORTED_CRS_3857,
+  SUPPORTED_CRS_4326,
   WebMapServiceAvailableLayerDimensionsTraits,
   WebMapServiceAvailableLayerStylesTraits,
   WebMapServiceAvailableStyleTraits
@@ -54,7 +56,6 @@ import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
-import { ImageryParts } from "./Mappable";
 import Model, { BaseModel } from "./Model";
 import { CapabilitiesStyle } from "./OwsInterfaces";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
@@ -69,7 +70,6 @@ import WebMapServiceCapabilities, {
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 
 const dateFormat = require("dateformat");
-
 class GetCapabilitiesStratum extends LoadableStratum(
   WebMapServiceCatalogItemTraits
 ) {
@@ -285,6 +285,27 @@ class GetCapabilitiesStratum extends LoadableStratum(
     return new Map(this.catalogItem.layersArray.map(lookup));
   }
 
+  @computed get crs() {
+    // Get set of supported CRS from layer hierarchy
+    const layerCrs = new Set<string>();
+    this.capabilitiesLayers.forEach(layer => {
+      if (layer) {
+        const srs = this.capabilities.getInheritedValues(layer, "SRS");
+        const crs = this.capabilities.getInheritedValues(layer, "CRS");
+        [
+          ...(Array.isArray(srs) ? srs : [srs]),
+          ...(Array.isArray(crs) ? crs : [crs])
+        ].forEach(c => layerCrs.add(c));
+      }
+    });
+
+    // Note order is important here, the first one found will be used
+    const supportedCrs = [...SUPPORTED_CRS_3857, ...SUPPORTED_CRS_4326];
+
+    // If nothing is supported, ask for EPSG:3857, and hope for the best.
+    return supportedCrs.find(crs => layerCrs.has(crs)) ?? "EPSG:3857";
+  }
+
   @computed
   get availableDimensions(): StratumFromTraits<
     WebMapServiceAvailableLayerDimensionsTraits
@@ -426,12 +447,21 @@ class GetCapabilitiesStratum extends LoadableStratum(
         // remove a circular reference to the parent
         delete out._parent;
 
-        result.push(
-          createStratumInstance(InfoSectionTraits, {
-            name: i18next.t("models.webMapServiceCatalogItem.dataDescription"),
-            contentAsObject: out as JsonObject
-          })
-        );
+        try {
+          result.push(
+            createStratumInstance(InfoSectionTraits, {
+              name: i18next.t(
+                "models.webMapServiceCatalogItem.dataDescription"
+              ),
+              contentAsObject: out as JsonObject
+            })
+          );
+        } catch (e) {
+          console.log(
+            `FAILED to create InfoSection with WMS layer Capabilities`
+          );
+          console.log(e);
+        }
       }
     }
 
@@ -686,7 +716,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
         } else {
           createDiscreteTimesFromIsoSegments(
             result,
-            isoSegments,
+            isoSegments[0],
+            isoSegments[1],
+            isoSegments[2],
             this.catalogItem.maxRefreshIntervals
           );
         }
@@ -747,7 +779,7 @@ class WebMapServiceCatalogItem
     ExportableMixin(
       DiffableMixin(
         TimeFilterMixin(
-          AsyncChartableMixin(
+          ChartableMixin(
             GetCapabilitiesMixin(
               UrlMixin(
                 CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
@@ -789,9 +821,15 @@ class WebMapServiceCatalogItem
     return WebMapServiceCatalogItem.type;
   }
 
-  // TODO
-  get isMappable() {
-    return true;
+  @computed
+  get shortReport(): string | undefined {
+    if (
+      this.tilingScheme instanceof GeographicTilingScheme &&
+      this.terria.currentViewer.type === "Leaflet"
+    ) {
+      return i18next.t("map.cesium.notWebMercatorTilingScheme", this);
+    }
+    return super.shortReport;
   }
 
   @computed
@@ -824,14 +862,6 @@ class WebMapServiceCatalogItem
       const diffStratum = new DiffStratum(this);
       this.strata.set(DiffableMixin.diffStratumName, diffStratum);
     });
-  }
-
-  protected forceLoadChartItems(): Promise<void> {
-    return this.forceLoadMetadata();
-  }
-
-  loadMapItems(): Promise<void> {
-    return this.loadMetadata();
   }
 
   @computed get cacheDuration(): string {
@@ -954,6 +984,10 @@ class WebMapServiceCatalogItem
     return uri.toString();
   }
 
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
+  }
+
   @computed
   get mapItems() {
     if (this.isShowingDiff === true) {
@@ -976,6 +1010,18 @@ class WebMapServiceCatalogItem
   }
 
   @computed
+  get tilingScheme() {
+    if (this.crs) {
+      if (SUPPORTED_CRS_3857.includes(this.crs))
+        return new WebMercatorTilingScheme();
+      if (SUPPORTED_CRS_4326.includes(this.crs))
+        return new GeographicTilingScheme();
+    }
+
+    return new WebMercatorTilingScheme();
+  }
+
+  @computed
   private get _currentImageryParts(): ImageryParts | undefined {
     const imageryProvider = this._createImageryProvider(
       this.currentDiscreteTimeTag
@@ -989,7 +1035,8 @@ class WebMapServiceCatalogItem
     return {
       imageryProvider,
       alpha: this.opacity,
-      show: this.show !== undefined ? this.show : true
+      show: this.show,
+      clippingRectangle: this.clipToRectangle ? this.cesiumRectangle : undefined
     };
   }
 
@@ -1008,7 +1055,10 @@ class WebMapServiceCatalogItem
       return {
         imageryProvider,
         alpha: 0.0,
-        show: true
+        show: true,
+        clippingRectangle: this.clipToRectangle
+          ? this.cesiumRectangle
+          : undefined
       };
     } else {
       return undefined;
@@ -1031,7 +1081,10 @@ class WebMapServiceCatalogItem
       return {
         imageryProvider,
         alpha: this.opacity,
-        show: this.show !== undefined ? this.show : true
+        show: this.show,
+        clippingRectangle: this.clipToRectangle
+          ? this.cesiumRectangle
+          : undefined
       };
     }
     return undefined;
@@ -1078,6 +1131,10 @@ class WebMapServiceCatalogItem
         ...dimensionParameters
       };
 
+      if (this.crs) {
+        parameters.crs = this.crs;
+      }
+
       if (this.supportsColorScaleRange) {
         parameters.COLORSCALERANGE = this.colorScaleRange;
       }
@@ -1108,26 +1165,6 @@ class WebMapServiceCatalogItem
         new URI(this.url)
       );
 
-      let rectangle;
-
-      if (
-        this.clipToRectangle &&
-        this.rectangle !== undefined &&
-        this.rectangle.east !== undefined &&
-        this.rectangle.west !== undefined &&
-        this.rectangle.north !== undefined &&
-        this.rectangle.south !== undefined
-      ) {
-        rectangle = Rectangle.fromDegrees(
-          this.rectangle.west,
-          this.rectangle.south,
-          this.rectangle.east,
-          this.rectangle.north
-        );
-      } else {
-        rectangle = undefined;
-      }
-
       const gcStratum: GetCapabilitiesStratum | undefined = this.strata.get(
         GetCapabilitiesMixin.getCapabilitiesStratumName
       ) as GetCapabilitiesStratum;
@@ -1140,7 +1177,7 @@ class WebMapServiceCatalogItem
         });
       }
 
-      const imageryOptions = {
+      const imageryOptions: WebMapServiceImageryProvider.ConstructorOptions = {
         url: proxyCatalogItemUrl(this, baseUrl.toString()),
         layers: lyrs.length > 0 ? lyrs.join(",") : "",
         parameters: parameters,
@@ -1148,9 +1185,10 @@ class WebMapServiceCatalogItem
           ...dimensionParameters,
           styles: this.styles === undefined ? "" : this.styles
         },
-        tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
+        tileWidth: this.tileWidth,
+        tileHeight: this.tileHeight,
+        tilingScheme: this.tilingScheme,
         maximumLevel: maximumLevel,
-        rectangle: rectangle,
         credit: this.attribution
       };
 
@@ -1177,7 +1215,7 @@ class WebMapServiceCatalogItem
         ) => {
           if (level > maximumLevel) {
             if (!messageDisplayed) {
-              this.terria.error.raiseEvent(
+              this.terria.raiseErrorToUser(
                 new TerriaError({
                   title: i18next.t(
                     "models.webMapServiceCatalogItem.datasetScaleErrorTitle"
@@ -1364,125 +1402,6 @@ function scaleDenominatorToLevel(
   var ratio = level0ScaleDenominator / (minScaleDenominator - 1e-6);
   var levelAtMinScaleDenominator = Math.log(ratio) / Math.log(2);
   return levelAtMinScaleDenominator | 0;
-}
-
-function createDiscreteTimesFromIsoSegments(
-  result: StratumFromTraits<DiscreteTimeTraits>[],
-  isoSegments: string[],
-  maxRefreshIntervals: number
-) {
-  // Note parseZone will create a moment with the original specified UTC offset if there is one,
-  // but if not, it will create a moment in UTC.
-  const start = moment.parseZone(isoSegments[0]);
-  const stop = moment.parseZone(isoSegments[1]);
-
-  // Note WMS uses extension ISO19128 of ISO8601; ISO 19128 allows start/end/periodicity
-  // and does not use the "R[n]/" prefix for repeated intervals
-  // eg. Data refreshed every 30 min: 2000-06-18T14:30Z/2000-06-18T14:30Z/PT30M
-  // See 06-042_OpenGIS_Web_Map_Service_WMS_Implementation_Specification.pdf section D.4
-  let duration: moment.Duration | undefined;
-  if (isoSegments[2] && isoSegments[2].length > 0) {
-    duration = moment.duration(isoSegments[2]);
-  }
-
-  // If we don't have a duration, or the duration is zero, then assume this is
-  // a continuous interval for which it's valid to request _any_ time. But
-  // we need to generate some discrete times, so choose an appropriate
-  // periodicity.
-  if (
-    duration === undefined ||
-    !duration.isValid() ||
-    duration.asSeconds() === 0.0
-  ) {
-    const spanMilliseconds = stop.diff(start);
-
-    // These times, in milliseconds, are approximate;
-    const second = 1000;
-    const minute = 60 * second;
-    const hour = 60 * minute;
-    const day = 24 * hour;
-    const week = 7 * day;
-    const month = 31 * day;
-    const year = 366 * day;
-    const decade = 10 * year;
-
-    if (spanMilliseconds <= 1000) {
-      duration = moment.duration(1, "millisecond");
-    } else if (spanMilliseconds <= 1000 * second) {
-      duration = moment.duration(1, "second");
-    } else if (spanMilliseconds <= 1000 * minute) {
-      duration = moment.duration(1, "minute");
-    } else if (spanMilliseconds <= 1000 * hour) {
-      duration = moment.duration(1, "hour");
-    } else if (spanMilliseconds <= 1000 * day) {
-      duration = moment.duration(1, "day");
-    } else if (spanMilliseconds <= 1000 * week) {
-      duration = moment.duration(1, "week");
-    } else if (spanMilliseconds <= 1000 * month) {
-      duration = moment.duration(1, "month");
-    } else if (spanMilliseconds <= 1000 * year) {
-      duration = moment.duration(1, "year");
-    } else if (spanMilliseconds <= 1000 * decade) {
-      duration = moment.duration(10, "year");
-    } else {
-      duration = moment.duration(100, "year");
-    }
-  }
-
-  let current = start.clone();
-  let count = 0;
-
-  // Add intervals starting at start until:
-  //    we go past the stop date, or
-  //    we go past the max limit
-  while (
-    current &&
-    current.isSameOrBefore(stop) &&
-    count < maxRefreshIntervals
-  ) {
-    result.push({
-      time: formatMomentForWms(current, duration),
-      tag: undefined
-    });
-    current.add(duration);
-    ++count;
-  }
-
-  if (count >= maxRefreshIntervals) {
-    console.warn(
-      "Interval has more than the allowed number of discrete times. Consider setting `maxRefreshIntervals`."
-    );
-  } else if (!current.isSame(stop)) {
-    result.push({
-      time: formatMomentForWms(stop, duration),
-      tag: undefined
-    });
-  }
-}
-
-function formatMomentForWms(m: moment.Moment, duration: moment.Duration) {
-  // If the original moment only contained a date (not a time), and the
-  // duration doesn't include hours, minutes, or seconds, format as a date
-  // only instead of a date+time.  Some WMS servers get confused when
-  // you add a time on them.
-  if (
-    duration.hours() > 0 ||
-    duration.minutes() > 0 ||
-    duration.seconds() > 0 ||
-    duration.milliseconds() > 0
-  ) {
-    return m.format();
-  } else {
-    const creationData = m.creationData();
-    if (creationData) {
-      const format = creationData.format;
-      if (typeof format === "string" && format.indexOf("T") < 0) {
-        return m.format(format);
-      }
-    }
-  }
-
-  return m.format();
 }
 
 /**
