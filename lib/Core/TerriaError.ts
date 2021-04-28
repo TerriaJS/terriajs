@@ -158,7 +158,7 @@ export default class TerriaError {
   /** Convert `TerriaError` to `Notification` */
   toNotification(): Notification {
     return {
-      title: this.title,
+      title: () => this.title, // Title may need to be resolved when error is raised to user (for example after i18next initialisation)
       // Use terriaErrorNotification or just use message
       message: this.useTerriaErrorNotification
         ? terriaErrorNotification(this)

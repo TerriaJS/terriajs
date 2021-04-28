@@ -1,6 +1,9 @@
 import Model from "../Models/Model";
 import Constructor from "../Core/Constructor";
 import ShowableTraits from "../Traits/ShowableTraits";
+import i18next from "i18next";
+
+const t = i18next.t.bind(i18next);
 
 type ShowableModel = Model<ShowableTraits>;
 
@@ -20,7 +23,7 @@ function ShowableMixin<T extends Constructor<ShowableModel>>(Base: T) {
          */
         if (!this.initialMessageShown && this.initialMessage !== undefined) {
           this.terria.notificationState.addNotificationToQueue({
-            title: this.initialMessage.title ?? "Message",
+            title: this.initialMessage.title ?? t("notification.title"),
             width: this.initialMessage.width,
             height: this.initialMessage.height,
             confirmText: this.initialMessage.confirmation

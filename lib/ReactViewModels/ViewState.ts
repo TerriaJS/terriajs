@@ -302,9 +302,8 @@ export default class ViewState {
     this.terria = terria;
 
     // Show errors to the user as notifications.
-    this._unsubscribeErrorListener = terria.addErrorEventListener(
-      notification =>
-        terria.notificationState.addNotificationToQueue(notification)
+    this._unsubscribeErrorListener = terria.addErrorEventListener(error =>
+      terria.notificationState.addNotificationToQueue(error.toNotification())
     );
 
     // When features are picked, show the feature info panel.

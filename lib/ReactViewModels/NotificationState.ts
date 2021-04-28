@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import ViewState from "./ViewState";
 
 export interface Notification {
-  title: string;
+  title: string | (() => string);
   message: string | ((viewState: ViewState) => ReactNode);
   confirmText?: string;
   denyText?: string;

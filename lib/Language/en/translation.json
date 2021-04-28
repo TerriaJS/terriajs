@@ -1532,5 +1532,8 @@
     "controls": {
       "title": "Controls"
     }
+  },
+  "notification": {
+    "title": "Message"
   }
 }
