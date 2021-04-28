@@ -6,6 +6,8 @@ import RCSectorSelection from "./RCSectorSelection/RCSectorSelection";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import { API, graphqlOperation } from "aws-amplify";
+import { getStory } from "../../../../api/graphql/queries";
 class RCStoryEditor extends React.Component {
   constructor(props) {
     super(props);
@@ -35,6 +37,14 @@ class RCStoryEditor extends React.Component {
     console.log("Sectors", this.state.selectedSectors);
   };
   componentDidMount() {
+    try {
+      API.graphql(graphqlOperation(getStory, { id: "1" })).then(story => {
+        console.log(story);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+
     const viewState = this.props.viewState;
     this._selectHotspotSubscription = knockout
       .getObservable(viewState, "selectedPosition")

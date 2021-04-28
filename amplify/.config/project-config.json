@@ -1,4 +1,7 @@
 {
+  "providers": [
+    "awscloudformation"
+  ],
   "projectName": "receipt",
   "version": "3.1",
   "frontend": "javascript",
@@ -8,10 +11,7 @@
       "SourceDir": "lib",
       "DistributionDir": "wwwroot/build",
       "BuildCommand": "npx gulp",
-      "StartCommand": "yarn start"
+      "StartCommand": "yarn serve"
     }
-  },
-  "providers": [
-    "awscloudformation"
-  ]
+  }
 }
