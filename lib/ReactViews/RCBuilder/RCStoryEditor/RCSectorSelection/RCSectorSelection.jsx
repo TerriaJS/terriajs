@@ -9,11 +9,10 @@ class RCSectorSelection extends React.Component {
     super(props);
   }
   render() {
-    console.log("Sector Selection");
     const { sectors, selectedSectors, onSectorSelected } = this.props;
     return (
       <div>
-        <label>Sector Here</label>
+        <label>Sectors</label>
         <div className={Styles.tabsContainer}>
           {sectors.map((sector, id) => {
             return (
