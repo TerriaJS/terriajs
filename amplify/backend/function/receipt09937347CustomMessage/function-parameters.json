@@ -1,0 +1,26 @@
+{
+  "trigger": true,
+  "modules": [
+    "verification-link"
+  ],
+  "parentResource": "receipt09937347",
+  "functionName": "receipt09937347CustomMessage",
+  "resourceName": "receipt09937347CustomMessage",
+  "parentStack": "auth",
+  "triggerEnvs": [
+    {
+      "key": "RESOURCENAME",
+      "value": "resourceName"
+    }
+  ],
+  "triggerDir": "/home/maarten/.nvm/versions/node/v15.9.0/lib/node_modules/@aws-amplify/cli/node_modules/amplify-category-auth/provider-utils/awscloudformation/triggers/CustomMessage",
+  "triggerTemplate": "CustomMessage.json.ejs",
+  "triggerEventPath": "CustomMessage.event.json",
+  "roleName": "receipt09937347CustomMessage",
+  "skipEdit": true,
+  "REDIRECTURL": "https://www.climateimpactstories.eu/redirect",
+  "EMAILSUBJECT": "climateimpactstories.eu email confirmation",
+  "EMAILMESSAGE": "Please confirm your email address for climateimpactstories.eu. If this mail was sent in error, you can safely ignore it.",
+  "RESOURCENAME": "resourceName",
+  "enableCors": false
+}

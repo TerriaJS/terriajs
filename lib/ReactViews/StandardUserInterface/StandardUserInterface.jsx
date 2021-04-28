@@ -32,6 +32,13 @@ import Styles from "./StandardUserInterface.scss";
 import RCStoryEditor from "../RCBuilder/RCStoryEditor/RCStoryEditor";
 var Receipt = require("../../Models/Receipt");
 
+import { AmplifySignUp, AmplifyAuthenticator } from "@aws-amplify/ui-react";
+// import { withAuthenticator } from "@aws-amplify/ui-react";
+import Amplify, { Auth } from "aws-amplify";
+import awsconfig from "../../aws-exports";
+Amplify.configure(awsconfig);
+Auth.configure(awsconfig);
+
 export const showStoryPrompt = (viewState, terria) => {
   terria.configParameters.showFeaturePrompts &&
     terria.configParameters.storyEnabled &&
@@ -162,38 +169,100 @@ const StandardUserInterface = createReactClass({
 
     const showHotspotSummary = viewState.hotspotSummaryEnabled;
 
+    const signupFormFields = [
+      {
+        type: "name",
+        label: "Full Name *",
+        required: true
+      },
+      {
+        type: "custom:Affilliation",
+        label: "Affiliation *",
+        required: true
+      },
+      {
+        type: "email",
+        label: "Email Address *",
+        required: true
+      },
+      {
+        type: "password",
+        label: "Password *",
+        required: true
+      }
+    ];
+
     return (
       <div className={Styles.storyWrapper}>
-        <WelcomeMessage viewState={viewState} />
-        <div
-          className={classNames(Styles.uiRoot, {
-            [Styles.withStoryBuilder]: showStoryBuilder
-          })}
-          ref={w => (this._wrapper = w)}
-        >
-          <div className={Styles.ui}>
-            <div className={Styles.uiInner}>
-              {/* Moved side panel to left */}
-              <If
-                condition={!viewState.hideMapUi() && !viewState.showToolPanel()}
-              >
-                <Small>
-                  <MobileHeader
-                    terria={terria}
-                    menuItems={customElements.menu}
-                    viewState={viewState}
-                    version={this.props.version}
-                    allBaseMaps={allBaseMaps}
-                  />
-                </Small>
-                <Small>
-                  <div className={Styles.middleContainer}>
-                    <section
-                      className={classNames(
-                        Styles.map,
-                        showStoryPanel && Styles.smallMap
+        <AmplifyAuthenticator usernameAlias="email">
+          <AmplifySignUp
+            usernameAlias="email"
+            formFields={signupFormFields}
+            slot="sign-up"
+          />
+
+          <WelcomeMessage viewState={viewState} />
+          <div
+            className={classNames(Styles.uiRoot, {
+              [Styles.withStoryBuilder]: showStoryBuilder
+            })}
+            ref={w => (this._wrapper = w)}
+          >
+            <div className={Styles.ui}>
+              <div className={Styles.uiInner}>
+                {/* Moved side panel to left */}
+                <If
+                  condition={
+                    !viewState.hideMapUi() && !viewState.showToolPanel()
+                  }
+                >
+                  <Small>
+                    <MobileHeader
+                      terria={terria}
+                      menuItems={customElements.menu}
+                      viewState={viewState}
+                      version={this.props.version}
+                      allBaseMaps={allBaseMaps}
+                    />
+                  </Small>
+                  <Small>
+                    <div className={Styles.middleContainer}>
+                      <section
+                        className={classNames(
+                          Styles.map,
+                          showStoryPanel && Styles.smallMap
+                        )}
+                      >
+                        <ProgressBar terria={terria} />
+                        <MapColumn
+                          terria={terria}
+                          viewState={viewState}
+                          customFeedbacks={customElements.feedback}
+                        />
+                      </section>
+
+                      {showStoryPanel ? (
+                        <div className={Styles.storyPanelWrapper}>
+                          <RCStoryPanel terria={terria} viewState={viewState} />
+                        </div>
+                      ) : null}
+
+                      {!(showStoryPanel || showHotspotSummary) && (
+                        <div className={Styles.tabsContainer}>
+                          <SidePanelSectorTabs
+                            terria={terria}
+                            viewState={viewState}
+                          />
+                        </div>
                       )}
-                    >
+
+                      {showHotspotSummary && (
+                        <RCHotspotSummary viewState={viewState} />
+                      )}
+                    </div>
+                  </Small>
+                  <Medium>
+                    <section className={Styles.map}>
                       <ProgressBar terria={terria} />
                       <MapColumn
                         terria={terria}
@@ -201,167 +270,140 @@ const StandardUserInterface = createReactClass({
                         customFeedbacks={customElements.feedback}
                       />
                     </section>
+                  </Medium>
+                  <Medium>
+                    <div
+                      className={classNames(
+                        Styles.sidePanel,
+                        viewState.topElement === "SidePanel"
+                          ? "top-element"
+                          : "",
+                        {
+                          [Styles.sidePanelHide]: viewState.isMapFullScreen
+                        }
+                      )}
+                      tabIndex={0}
+                      onClick={() => {
+                        viewState.topElement = "SidePanel";
+                      }}
+                    >
+                      {/* {showHotspotSummary && (
+                        <RCHotspotSummary viewState={viewState} />
+                      )}
 
-                    {showStoryPanel ? (
-                      <div className={Styles.storyPanelWrapper}>
-                        <RCStoryPanel terria={terria} viewState={viewState} />
-                      </div>
-                    ) : null}
-
-                    {!(showStoryPanel || showHotspotSummary) && (
-                      <div className={Styles.tabsContainer}>
+                      {!(showStoryPanel || showHotspotSummary) && (
                         <SidePanelSectorTabs
                           terria={terria}
                           viewState={viewState}
                         />
-                      </div>
-                    )}
+                      )}
+                      {showStoryPanel ? (
+                        <RCStoryPanel terria={terria} viewState={viewState} />
+                      ) : null} */}
+                      <SidePanel terria={terria} viewState={viewState} />
+                      <RCStoryEditor viewState={viewState} />
+                    </div>
+                  </Medium>
+                </If>
 
-                    {showHotspotSummary && (
-                      <RCHotspotSummary viewState={viewState} />
-                    )}
-                  </div>
-                </Small>
-                <Medium>
-                  <section className={Styles.map}>
-                    <ProgressBar terria={terria} />
-                    <MapColumn
-                      terria={terria}
-                      viewState={viewState}
-                      customFeedbacks={customElements.feedback}
-                    />
-                  </section>
-                </Medium>
+                <If condition={viewState.showToolPanel()}>
+                  <ToolPanel viewState={viewState} />
+                </If>
+
                 <Medium>
                   <div
-                    className={classNames(
-                      Styles.sidePanel,
-                      viewState.topElement === "SidePanel" ? "top-element" : "",
-                      {
-                        [Styles.sidePanelHide]: viewState.isMapFullScreen
-                      }
-                    )}
-                    tabIndex={0}
-                    onClick={() => {
-                      viewState.topElement = "SidePanel";
-                    }}
+                    className={classNames(Styles.showWorkbenchButton, {
+                      [Styles.showWorkbenchButtonisVisible]:
+                        viewState.isMapFullScreen,
+                      [Styles.showWorkbenchButtonisNotVisible]: !this.props
+                        .viewState.isMapFullScreen
+                    })}
                   >
-                    <RCStoryEditor viewState={viewState} />
-                    {/* {showHotspotSummary && (
-                      <RCHotspotSummary viewState={viewState} />
-                    )}
-
-                    {!(showStoryPanel || showHotspotSummary) && (
-                      <SidePanelSectorTabs
-                        terria={terria}
-                        viewState={viewState}
-                      />
-                    )}
-                    {showStoryPanel ? (
-                      <RCStoryPanel terria={terria} viewState={viewState} />
-                    ) : null}
-                    <SidePanel terria={terria} viewState={viewState} /> */}
+                    <FullScreenButton
+                      terria={terria}
+                      viewState={viewState}
+                      minified={false}
+                      btnText={t("sui.showWorkbench")}
+                      animationDuration={animationDuration}
+                    />
                   </div>
                 </Medium>
-              </If>
+              </div>
+            </div>
 
-              <If condition={viewState.showToolPanel()}>
-                <ToolPanel viewState={viewState} />
-              </If>
-
+            <If condition={!viewState.hideMapUi()}>
               <Medium>
                 <div
-                  className={classNames(Styles.showWorkbenchButton, {
-                    [Styles.showWorkbenchButtonisVisible]:
-                      viewState.isMapFullScreen,
-                    [Styles.showWorkbenchButtonisNotVisible]: !this.props
-                      .viewState.isMapFullScreen
+                  className={classNames({
+                    [Styles.explorerPanelIsVisible]:
+                      viewState.explorerPanelIsVisible,
+                    [Styles.NavigationMap]: true
                   })}
                 >
-                  <FullScreenButton
+                  {/* <MenuBar
                     terria={terria}
                     viewState={viewState}
-                    minified={false}
-                    btnText={t("sui.showWorkbench")}
+                    allBaseMaps={allBaseMaps}
+                    menuItems={customElements.menu}
                     animationDuration={animationDuration}
+                  /> */}
+                  <RCMenuBar terria={terria} viewState={viewState} />
+                  <MapNavigation
+                    terria={terria}
+                    viewState={viewState}
+                    navItems={customElements.nav}
                   />
                 </div>
               </Medium>
-            </div>
-          </div>
+            </If>
 
-          <If condition={!viewState.hideMapUi()}>
-            <Medium>
-              <div
-                className={classNames({
-                  [Styles.explorerPanelIsVisible]:
-                    viewState.explorerPanelIsVisible,
-                  [Styles.NavigationMap]: true
-                })}
-              >
-                {/* <MenuBar
-                  terria={terria}
-                  viewState={viewState}
-                  allBaseMaps={allBaseMaps}
-                  menuItems={customElements.menu}
-                  animationDuration={animationDuration}
-                /> */}
-                <RCMenuBar terria={terria} viewState={viewState} />
-                <MapNavigation
-                  terria={terria}
-                  viewState={viewState}
-                  navItems={customElements.nav}
-                />
-              </div>
-            </Medium>
-          </If>
+            <Notification viewState={viewState} />
+            <SatelliteGuide terria={terria} viewState={viewState} />
+            <MapInteractionWindow terria={terria} viewState={viewState} />
 
-          <Notification viewState={viewState} />
-          <SatelliteGuide terria={terria} viewState={viewState} />
-          <MapInteractionWindow terria={terria} viewState={viewState} />
-
-          {/* <If
-            condition={
-              !customElements.feedback.length &&
-              terria.configParameters.feedbackUrl &&
-              !viewState.hideMapUi()
-            }
-          >
-            <aside className={Styles.feedback}>
-              <FeedbackForm viewState={viewState} />
-            </aside>
-          </If> */}
-
-          <div
-            className={classNames(
-              Styles.featureInfo,
-              viewState.topElement === "FeatureInfo" ? "top-element" : "",
-              {
-                [Styles.featureInfoFullScreen]: viewState.isMapFullScreen
+            {/* <If
+              condition={
+                !customElements.feedback.length &&
+                terria.configParameters.feedbackUrl &&
+                !viewState.hideMapUi()
               }
-            )}
-            tabIndex={0}
-            onClick={() => {
-              viewState.topElement = "FeatureInfo";
-            }}
-          >
-            <FeatureInfoPanel terria={terria} viewState={viewState} />
+            >
+              <aside className={Styles.feedback}>
+                <FeedbackForm viewState={viewState} />
+              </aside>
+            </If> */}
+
+            <div
+              className={classNames(
+                Styles.featureInfo,
+                viewState.topElement === "FeatureInfo" ? "top-element" : "",
+                {
+                  [Styles.featureInfoFullScreen]: viewState.isMapFullScreen
+                }
+              )}
+              tabIndex={0}
+              onClick={() => {
+                viewState.topElement = "FeatureInfo";
+              }}
+            >
+              <FeatureInfoPanel terria={terria} viewState={viewState} />
+            </div>
+            <DragDropFile terria={terria} viewState={viewState} />
+            <DragDropNotification
+              lastUploadedFiles={viewState.lastUploadedFiles}
+              viewState={viewState}
+              t={this.props.t}
+            />
           </div>
-          <DragDropFile terria={terria} viewState={viewState} />
-          <DragDropNotification
-            lastUploadedFiles={viewState.lastUploadedFiles}
-            viewState={viewState}
-            t={this.props.t}
-          />
-        </div>
-        {terria.configParameters.storyEnabled && (
-          <StoryBuilder
-            isVisible={showStoryBuilder}
-            terria={terria}
-            viewState={viewState}
-            animationDuration={animationDuration}
-          />
-        )}
+          {terria.configParameters.storyEnabled && (
+            <StoryBuilder
+              isVisible={showStoryBuilder}
+              terria={terria}
+              viewState={viewState}
+              animationDuration={animationDuration}
+            />
+          )}
+        </AmplifyAuthenticator>
       </div>
     );
   }
@@ -370,3 +412,4 @@ const StandardUserInterface = createReactClass({
 export const StandardUserInterfaceWithoutTranslation = StandardUserInterface;
 
 export default withTranslation()(StandardUserInterface);
+// export default withTranslation()(StandardUserInterface);

@@ -38,7 +38,8 @@ module.exports = function(hot, dev) {
         },
         resolve: {
             alias: {},
-            modules: ['node_modules']
+            modules: ['node_modules'],
+            extensions: ['.mjs', '.js', '.jsx']
         }
     };
 
