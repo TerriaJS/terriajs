@@ -1,4 +1,5 @@
 import { JsonObject } from "../Core/Json";
+import Result from "../Core/Result";
 
 /**
  * An absolute or relative URL.
@@ -11,28 +12,40 @@ interface InitData {
   data: JsonObject;
 }
 
-type InitDataPromise = Promise<InitData>;
+type InitDataPromise = {
+  data: Promise<Result<InitData | undefined>>;
+};
 
 interface InitOptions {
   options: InitSource[];
 }
 
-type InitSource = InitUrl | InitData | InitOptions | InitDataPromise;
+type InitSource = { name?: string } & (
+  | InitUrl
+  | InitData
+  | InitOptions
+  | InitDataPromise
+);
 
 export function isInitUrl(initSource: InitSource): initSource is InitUrl {
   return "initUrl" in initSource;
 }
 
 export function isInitData(initSource: InitSource): initSource is InitData {
-  return "data" in initSource;
+  return (
+    initSource &&
+    "data" in initSource &&
+    Object.prototype.toString.call(initSource.data) !== "[object Promise]"
+  );
 }
 
 export function isInitDataPromise(
-  initSource: InitSource
+  initSource: any
 ): initSource is InitDataPromise {
   return (
     initSource &&
-    Object.prototype.toString.call(initSource) === "[object Promise]"
+    "data" in initSource &&
+    Object.prototype.toString.call(initSource.data) === "[object Promise]"
   );
 }
 

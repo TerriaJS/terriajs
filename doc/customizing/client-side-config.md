@@ -82,6 +82,7 @@ Specifies various options for configuring TerriaJS:
 |`customRequestSchedulerLimits`|no|**[RequestScheduler](https://cesium.com/docs/cesiumjs-ref-doc/RequestScheduler.html#.requestsByServer)**|undefined|Custom concurrent request limits for domains in Cesium's RequestScheduler.|
 |`persistViewerMode`|no|**boolean**|`true`|Whether to load persisted viewer mode from local storage.|
 |`openAddData`|no|**boolean**|`false`|Whether to open the add data explorer panel on load.|
+|`theme`|no|**any**|`{}`|An object used to override theme properties - for example `{"logoHeight": "70px"}`.|
 
 ### MagdaReferenceHeaders
 

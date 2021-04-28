@@ -203,7 +203,9 @@
     "convertNotificationMessage": "This share link is based on an older version of TerriaJS - the software powering this web map. While best efforts are made to preserve the link, you might encounter issues with visualising the data.  \n\nIf you're a user of the share link, click OK to make the warning message disappear and continue with accessing the data.",
     "convertNotificationHelp": "If you have created the share link, check the Help menu to see tips on updating the share link.",
     "convertNotificationFeedback": "For questions or feedback, click here.",
-    "convertNotificationWarningsTitle": "Technical details"
+    "convertNotificationWarningsTitle": "Technical details",
+    "convertErrorTitle": "Could not upgrade share link to V8",
+    "convertErrorMessage": "<p>This share link is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the share data. Details of the error are below.</p><p><pre>{{error}}</pre></p><p><details><summary>Stack trace:</summary><pre>{{stackTrace}}</pre></details></p><p>Please report it by sending an email to {{email}}.</p>"
   },
   "countDatasets": {
     "btnText": "Start",
@@ -379,7 +381,9 @@
     "dismissText": "Got it, thanks!",
     "mobileViewStory": "View Stories {{storiesLength}}",
     "storyEditor": "Story Editor",
-    "hideStoryPanel": "hide story builder"
+    "hideStoryPanel": "hide story builder",
+    "loadSceneErrorTitle": "Error loading Story Scene",
+    "loadSceneErrorMessage": "An error occurred while loading data for story scene: `{{title}}`."
   },
   "satelliteGuidance": {
     "menuTitle": "You can access map guides at any time by looking in the <2>help menu</2>.",
@@ -705,7 +709,9 @@
       "failedToGet": "Failed to get server config from {{serverConfigUrl}}. This means services such as proxy, convert and URL shortening may not work."
     },
     "terriaError": {
-      "defaultValue": "An error occurred"
+      "defaultTitle": "An error occurred",
+      "defaultCombineTitle": "Multiple errors occurred",
+      "defaultCombineMessage": "Details of the errors are below"
     }
   },
   "map": {
@@ -944,7 +950,9 @@
       "cancel": "Cancel",
       "useConversion": "Use conversion service?",
       "mustHaveType": "Each item must have a type.",
-      "compositesError": "Composites cannot include composite items."
+      "compositesError": "Composites cannot include composite items.",
+      "convertErrorTitle": "Could not upgrade catalog to V8",
+      "convertErrorMessage": "This catalog file is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the catalog data for {{url}}."
     },
     "createParameter": {
       "unsupportedErrorTitle": "Unsupported function parameter type",
@@ -1158,7 +1166,8 @@
     },
     "raiseError": {
       "errorTitle": "An error occurred",
-      "errorMessage": "<p>{{appName}} experienced an error.  Please report this by emailing {{email}}. Details of the error are below.</p><p><pre>{{error}}</pre></p>"
+      "notificationFeedback": "For questions or feedback, click here.",
+      "developerDetails": "Developer details"
     },
     "regionMapping": {
       "noDataForDate": "No data for the selected date.",
@@ -1276,13 +1285,20 @@
       "initErrorMessage": "A problem occurred with the Terria server. This may cause some layers or the conversion service to be unavailable.",
       "urlLoadErrorTitle": "Problem loading URL",
       "urlLoadErrorMessage": "A problem occurred while initialising Terria with URL parameters.",
+      "loadModelErrorMessage": "An error ocurred while loading model `{{model}}`.",
+      "loadingMagdaInitSourceErrorTitle": "Error loading Magda initialization source",
+      "loadingMagdaInitSourceErrorMessage": "An error occurred while loading initialization information from Magda record `{{url}}`.",
+      "loadingInitSourcesErrorTitle": "Error loading map configuration",
+      "loadingInitSourcesErrorMessage": "An error occurred while loading {{appName}} map configuration &mdash; it may not display correctly. Please try reloading the map, and if the problem persists, please report it by sending an email to {{email}}, or you can press the button below.",
       "loadingInitSourceErrorTitle": "Error loading initialization source",
-      "loadingInitSourceErrorMessage": "Could not load initialization information from {{fragment}} because no initFragmentPaths are defined.",
-      "loadingInitSourceError2Message": "An error occurred while loading initialization information from {{loadSource}}.  This may indicate that you followed an invalid link or that there is a problem with your Internet connection.",
+      "loadingInitSourceErrorMessage": "Could not load initialization information from `{{fragment}}` because no initFragmentPaths are defined.",
+      "loadingInitSourceError2Message": "An error occurred while loading initialization information from:  \n*`{{loadSource}}`*.",
+      "loadingInitJsonMessage": "An error occurred while loading JSON file {{url}}.",
       "loadingBaseMapsErrorTitle": "Error loading basemaps",
-      "loadingBaseMapErrorTitle": "Error loading basemap: {{name}}",
+      "loadingBaseMapErrorTitle": "Error loading basemap: `{{name}}`",
       "loadingShareDataErrorTitle": "Error loading share data",
-      "loadingWorkbenchItemErrorTitle": "Error loading item in workbench: {{name}}",
+      "parsingStartDataErrorMessage": "An error occurred while parsing start data JSON.",
+      "loadingWorkbenchItemErrorTitle": "Error loading item in workbench: `{{name}}`",
       "disclaimer": "Disclaimer",
       "buttonTitleConfirm": "I Agree"
     },
@@ -1298,7 +1314,7 @@
       "asyncResultDescription": "This is the result of invoking the {{name}} process or service at {{timestamp}} with the input parameters below.",
       "loadingInitSourceErrorTitle": "Error loading initialization source",
       "loadingInitSourceErrorMessage": "Error loading initialization source {{fragment}} because no initFragmentPaths are defined.",
-      "loadingInitSourceError2Message": "An error occurred while loading initialization information from {{loadSource}}. This may indicate that you followed an invalid link or that there is a problem with your Internet connection.",
+      "loadingInitSourceError2Message": "An error occurred while loading initialization information from:  \n*`{{loadSource}}`*.",
       "disclaimer": "Disclaimer",
       "buttonTitleConfirm": "I Agree"
     },

@@ -129,7 +129,7 @@ class ToolErrorBoundary extends React.Component<
 
   componentDidCatch() {
     const { terria, toolName, t } = this.props;
-    terria.error.raiseEvent({
+    terria.raiseErrorToUser({
       title: t("tool.loadingError.title", { toolName }),
       message: t("tool.loadingError.message")
     });

@@ -8,6 +8,8 @@ import Terria from "../Terria";
 import upsertModelFromJson from "../upsertModelFromJson";
 import MappableMixin from "../../ModelMixins/MappableMixin";
 import { runInAction } from "mobx";
+import TerriaError from "../../Core/TerriaError";
+import Result from "../../Core/Result";
 
 export interface BaseMapModel {
   image: string;
@@ -18,7 +20,9 @@ export interface BaseMapModel {
 }
 
 export function processBaseMaps(newBaseMaps: BaseMapModel[], terria: Terria) {
-  newBaseMaps.forEach(newBaseMap => {
+  const errors: TerriaError[] = [];
+
+  const models = newBaseMaps.map(newBaseMap => {
     const item = newBaseMap.item;
     if (!item) {
       console.log("basemap is missing the item property.");
@@ -44,15 +48,25 @@ export function processBaseMaps(newBaseMaps: BaseMapModel[], terria: Terria) {
       {
         addModelToTerria: true
       }
-    );
+    ).catchError(error => errors.push(error));
     if (MappableMixin.isMixedInto(model)) {
       if (newBaseMap.hideInBaseMapMenu !== true) {
         runInAction(() =>
           terria.baseMaps.push(new BaseMapViewModel(model, newBaseMap.image))
         );
       }
+      return model;
     }
   });
+
+  return new Result(
+    models,
+    TerriaError.combine(errors, {
+      message: {
+        key: "models.terria.loadingBaseMapsErrorTitle"
+      }
+    })
+  );
 }
 
 function addBingMapsKey(item: any, terria: Terria) {

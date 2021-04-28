@@ -1217,7 +1217,7 @@ class WebMapServiceCatalogItem
         ) => {
           if (level > maximumLevel) {
             if (!messageDisplayed) {
-              this.terria.error.raiseEvent(
+              this.terria.raiseErrorToUser(
                 new TerriaError({
                   title: i18next.t(
                     "models.webMapServiceCatalogItem.datasetScaleErrorTitle"
