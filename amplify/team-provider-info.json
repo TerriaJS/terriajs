@@ -12,18 +12,22 @@
       "AmplifyAppId": "d2hgbtbehosd9b"
     },
     "categories": {
-      "auth": {
-        "receipt09937347": {}
-      },
       "function": {
         "receipt09937347CustomMessage": {
+          "REDIRECTURL": "https://www.climateimpactstories.eu/redirect",
+          "EMAILSUBJECT": "climateimpactstories.eu email confirmation",
+          "EMAILMESSAGE": "Please confirm your email address for climateimpactstories.eu. If this mail was sent in error, you can safely ignore it.",
           "deploymentBucketName": "amplify-receipt-dev-145534-deployment",
           "s3Key": "amplify-builds/receipt09937347CustomMessage-57454545497a4b4b6662-build.zip"
         },
         "receipt09937347PostConfirmation": {
+          "GROUP": "receipt-editors",
           "deploymentBucketName": "amplify-receipt-dev-145534-deployment",
           "s3Key": "amplify-builds/receipt09937347PostConfirmation-6b71644c6b3747396f51-build.zip"
         }
+      },
+      "auth": {
+        "receipt09937347": {}
       }
     }
   }
