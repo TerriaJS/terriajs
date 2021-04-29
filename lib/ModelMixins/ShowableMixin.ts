@@ -21,7 +21,14 @@ function ShowableMixin<T extends Constructor<ShowableModel>>(Base: T) {
          * We only want to show the initialMessage once per catalog item. The event handler for
          * this.terria.notificationState.raiseEvent causes state changes, and `computed`s can't have side effects.
          */
-        if (!this.initialMessageShown && this.initialMessage !== undefined) {
+        const hasTitleOrMessage =
+          (this.initialMessage.title !== undefined &&
+            this.initialMessage.title !== "" &&
+            this.initialMessage.title !== null) ||
+          (this.initialMessage.content !== undefined &&
+            this.initialMessage.content !== "" &&
+            this.initialMessage.content !== null);
+        if (!this.initialMessageShown && hasTitleOrMessage) {
           this.terria.notificationState.addNotificationToQueue({
             title: this.initialMessage.title ?? t("notification.title"),
             width: this.initialMessage.width,
@@ -34,6 +41,8 @@ function ShowableMixin<T extends Constructor<ShowableModel>>(Base: T) {
             confirmAction: () => resolve()
           });
           this.initialMessageShown = true;
+        } else {
+          resolve();
         }
       });
     }

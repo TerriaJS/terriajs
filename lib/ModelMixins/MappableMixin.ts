@@ -9,6 +9,7 @@ import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
 import MappableTraits from "../Traits/MappableTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
+import ShowableMixin from "./ShowableMixin";
 import TableMixin from "./TableMixin";
 
 export type MapItem =
@@ -49,7 +50,7 @@ export function isDataSource(object: MapItem): object is DataSource {
 }
 
 function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
-  abstract class MappableMixin extends Base {
+  abstract class MappableMixin extends ShowableMixin(Base) {
     get isMappable() {
       return true;
     }
@@ -90,6 +91,7 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
      * return the existing promise.
      */
     async loadMapItems(force?: boolean) {
+      await this.showInitialMessageIfRequired();
       if (CatalogMemberMixin.isMixedInto(this)) await this.loadMetadata();
       if (TableMixin.isMixedInto(this)) await this.loadRegionProviderList();
       await this._mapItemsLoader.load(force);
