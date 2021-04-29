@@ -92,7 +92,8 @@
     "urijs": "^1.18.12",
     "url-loader": "^1.1.2",
     "webpack": "^4.29.5",
-    "worker-loader": "^2.0.0"
+    "worker-loader": "^2.0.0",
+    "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.8.3",
