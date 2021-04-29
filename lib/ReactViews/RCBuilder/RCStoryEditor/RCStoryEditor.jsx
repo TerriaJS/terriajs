@@ -16,7 +16,8 @@ class RCStoryEditor extends React.Component {
     sectors: sectors,
     selectedSectors: [],
     isSettingHotspot: false,
-    hotspotPoint: null
+    hotspotPoint: null,
+    storyDetails: null
   };
   onSectorChanged = event => {
     // current array of sectors
@@ -38,8 +39,9 @@ class RCStoryEditor extends React.Component {
   };
   componentDidMount() {
     try {
-      API.graphql(graphqlOperation(getStory, { id: "1" })).then(story => {
-        console.log(story);
+      API.graphql(graphqlOperation(getStory, { id: "3" })).then(story => {
+        console.log(story.data.getStory);
+        this.setState({ storyDetails: story.data.getStory });
       });
     } catch (error) {
       console.log(error);
@@ -86,6 +88,7 @@ class RCStoryEditor extends React.Component {
           hotspotPoint.lon
         ).toFixed(4)}`
       : "none set";
+    const { storyDetails } = this.state;
     return (
       <div className={Styles.RCStoryEditor}>
         <h3>Edit your story</h3>
