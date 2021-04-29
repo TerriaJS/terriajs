@@ -15,7 +15,9 @@ function RCStoryEditor(props) {
   const [listenForHotspot, setListenForHotspot] = useState(false);
   const [selectedSectors, setSelectedSectors] = useState([]);
   const [hotspotPoint, setHotspotPoint] = useState(null);
-  //const [selectHotspotSubscription, setSelectHotspotSubscription] = useState(null);
+  const [selectHotspotSubscription, setSelectHotspotSubscription] = useState(
+    null
+  );
 
   useEffect(() => {
     try {
@@ -28,29 +30,34 @@ function RCStoryEditor(props) {
       console.log(error);
     }
 
-    // const viewState = props.viewState;
-    // setSelectHotspotSubscription(knockout
-    //   .getObservable(viewState, "selectedPosition")
-    //   .subscribe(() => {
-    //     if (this.state.isSettingHotspot) {
-    //       // Convert position to cartographic
-    //       const point = Cartographic.fromCartesian(viewState.selectedPosition);
-    //       this.setState({
-    //         hotspotPoint: {
-    //           lat: (point.latitude / Math.PI) * 180,
-    //           lon: (point.longitude / Math.PI) * 180
-    //         },
-    //         isSettingHotspot: false
-    //       });
-    //     }
-    //   }));
+    const viewState = props.viewState;
+    setSelectHotspotSubscription(
+      knockout.getObservable(viewState, "selectedPosition").subscribe(() => {
+        // hack alert; getting the current state
+        let isListening;
+        setListenForHotspot(currentValue => {
+          isListening = currentValue;
+          return currentValue;
+        });
 
-    // return () => {
-    //   if (defined(this._pickedFeaturesSubscription)) {
-    //     this._pickedFeaturesSubscription.dispose();
-    //     this._pickedFeaturesSubscription = undefined;
-    //   }
-    // };
+        if (isListening) {
+          // Convert position to cartographic
+          const point = Cartographic.fromCartesian(viewState.selectedPosition);
+          console.log(point);
+          // setHotspotPoint({
+          //     lat: (point.latitude / Math.PI) * 180,
+          //     lon: (point.longitude / Math.PI) * 180
+          // });
+          // setListenForHotspot(false);
+        }
+      })
+    );
+
+    return () => {
+      if (selectHotspotSubscription !== null) {
+        selectHotspotSubscription.dispose();
+      }
+    };
   }, []);
 
   const onTitleChanged = event => {
