@@ -39,7 +39,10 @@ class RCStoryEditor extends React.Component {
     console.log("Sectors", this.state.selectedSectors);
   };
   onSave = () => {
-    const storyDetails = this.state.storyDetails;
+    const storyDetails = {
+      id: this.state.storyDetails.id,
+      title: this.state.storyDetails.title
+    };
     console.log(storyDetails);
     API.graphql({
       query: updateStory,

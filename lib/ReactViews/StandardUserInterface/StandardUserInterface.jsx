@@ -303,6 +303,7 @@ const StandardUserInterface = createReactClass({
                       ) : null}
                       <SidePanel terria={terria} viewState={viewState} /> */}
                       <RCStoryEditor viewState={viewState} />
+                      {/* <RCStoryCreator viewState={viewState} /> */}
                     </div>
                   </Medium>
                 </If>
