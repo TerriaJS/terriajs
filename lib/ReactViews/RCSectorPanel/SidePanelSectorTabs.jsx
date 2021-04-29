@@ -196,7 +196,8 @@ class SidePanelSectorTabs extends React.Component {
               <div className="rc-card-text">
                 <p className="bold">
                   The RECEIPT climate story explorer allows you to explore
-                  storylines that show indirect impact of climate change on EU.
+                  storylines that show indirect impact of climate change on the
+                  European Union.
                 </p>
                 <p>
                   As much of the wealth and many of the products that are eaten
@@ -208,7 +209,7 @@ class SidePanelSectorTabs extends React.Component {
                 </p>
                 <p>
                   More information on the RECEIPT Horizon 2020 project can be
-                  found on
+                  found at
                   <a href="https://climatestorylines.eu/">
                     {" "}
                     climatestorylines.eu

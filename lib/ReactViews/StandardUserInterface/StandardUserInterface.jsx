@@ -31,6 +31,18 @@ import { withTranslation } from "react-i18next";
 import Styles from "./StandardUserInterface.scss";
 var Receipt = require("../../Models/Receipt");
 
+import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
+
+import { RCBuilder } from "../RCBuilder/RCBuilder";
+import { RCLogin } from "../RCLogin/RCLogin";
+
+import { AmplifySignUp, AmplifyAuthenticator } from "@aws-amplify/ui-react";
+// import { withAuthenticator } from "@aws-amplify/ui-react";
+import Amplify, { Auth } from "aws-amplify";
+import awsconfig from "../../aws-exports";
+Amplify.configure(awsconfig);
+Auth.configure(awsconfig);
+
 export const showStoryPrompt = (viewState, terria) => {
   terria.configParameters.showFeaturePrompts &&
     terria.configParameters.storyEnabled &&
@@ -245,19 +257,52 @@ const StandardUserInterface = createReactClass({
                       viewState.topElement = "SidePanel";
                     }}
                   >
-                    {showHotspotSummary && (
-                      <RCHotspotSummary viewState={viewState} />
-                    )}
+                    <div style={{ textAlign: "end" }}>
+                      <Link to="/">Home</Link> |
+                      <Link to="/builder">Builder</Link> |
+                      <Link to="/users">Users</Link>
+                    </div>
+                    <hr />
 
-                    {!(showStoryPanel || showHotspotSummary) && (
-                      <SidePanelSectorTabs
-                        terria={terria}
-                        viewState={viewState}
-                      />
-                    )}
-                    {showStoryPanel ? (
-                      <RCStoryPanel terria={terria} viewState={viewState} />
-                    ) : null}
+                    <Switch>
+                      <Route exact path="/">
+                        {showHotspotSummary && (
+                          <RCHotspotSummary viewState={viewState} />
+                        )}
+
+                        {!(showStoryPanel || showHotspotSummary) && (
+                          <SidePanelSectorTabs
+                            terria={terria}
+                            viewState={viewState}
+                          />
+                        )}
+                        {showStoryPanel ? (
+                          <RCStoryPanel terria={terria} viewState={viewState} />
+                        ) : null}
+                      </Route>
+
+                      <Route path="/builder">
+                        <RCBuilder viewState={viewState} />
+                      </Route>
+
+                      <Route path="/users">
+                        <RCLogin viewState={viewState} />
+                      </Route>
+                    </Switch>
+
+                    {/*{showHotspotSummary && (*/}
+                    {/*  <RCHotspotSummary viewState={viewState} />*/}
+                    {/*)}*/}
+
+                    {/*{!(showStoryPanel || showHotspotSummary) && (*/}
+                    {/*  <SidePanelSectorTabs*/}
+                    {/*    terria={terria}*/}
+                    {/*    viewState={viewState}*/}
+                    {/*  />*/}
+                    {/*)}*/}
+                    {/*{showStoryPanel ? (*/}
+                    {/*  <RCStoryPanel terria={terria} viewState={viewState} />*/}
+                    {/*) : null}*/}
                     <SidePanel terria={terria} viewState={viewState} />
                   </div>
                 </Medium>
@@ -298,12 +343,12 @@ const StandardUserInterface = createReactClass({
                 })}
               >
                 {/* <MenuBar
-                  terria={terria}
-                  viewState={viewState}
-                  allBaseMaps={allBaseMaps}
-                  menuItems={customElements.menu}
-                  animationDuration={animationDuration}
-                /> */}
+                    terria={terria}
+                    viewState={viewState}
+                    allBaseMaps={allBaseMaps}
+                    menuItems={customElements.menu}
+                    animationDuration={animationDuration}
+                  /> */}
                 <RCMenuBar terria={terria} viewState={viewState} />
                 <MapNavigation
                   terria={terria}
@@ -319,16 +364,16 @@ const StandardUserInterface = createReactClass({
           <MapInteractionWindow terria={terria} viewState={viewState} />
 
           {/* <If
-            condition={
-              !customElements.feedback.length &&
-              terria.configParameters.feedbackUrl &&
-              !viewState.hideMapUi()
-            }
-          >
-            <aside className={Styles.feedback}>
-              <FeedbackForm viewState={viewState} />
-            </aside>
-          </If> */}
+              condition={
+                !customElements.feedback.length &&
+                terria.configParameters.feedbackUrl &&
+                !viewState.hideMapUi()
+              }
+            >
+              <aside className={Styles.feedback}>
+                <FeedbackForm viewState={viewState} />
+              </aside>
+            </If> */}
 
           <div
             className={classNames(
@@ -368,3 +413,4 @@ const StandardUserInterface = createReactClass({
 export const StandardUserInterfaceWithoutTranslation = StandardUserInterface;
 
 export default withTranslation()(StandardUserInterface);
+// export default withTranslation()(StandardUserInterface);
