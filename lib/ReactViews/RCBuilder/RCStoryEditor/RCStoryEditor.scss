@@ -65,7 +65,13 @@ textarea {
   transition: 0.2s ease all;
   -moz-transition: 0.2s ease all;
   -webkit-transition: 0.2s ease all;
+  &.topLabel {
+    top: -20px;
+    font-size: 14px;
+    color: #0c70a7;
+  }
 }
+
 .bar {
   position: relative;
   display: block;
