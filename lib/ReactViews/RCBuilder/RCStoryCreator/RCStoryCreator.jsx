@@ -8,7 +8,6 @@ class RCStoryCreator extends React.Component {
     super(props);
   }
   storyDetails = {
-    id: "3",
     authors: [
       {
         affiliation: "eScience Center",

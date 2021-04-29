@@ -8,6 +8,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import { API, graphqlOperation } from "aws-amplify";
 import { getStory } from "../../../../api/graphql/queries";
+import { updateStory } from "../../../../api/graphql/mutations";
 class RCStoryEditor extends React.Component {
   constructor(props) {
     super(props);
@@ -37,9 +38,28 @@ class RCStoryEditor extends React.Component {
     this.setState({ selectedSectors: selectedSectors });
     console.log("Sectors", this.state.selectedSectors);
   };
+  onSave = () => {
+    const storyDetails = this.state.storyDetails;
+    console.log(storyDetails);
+    API.graphql({
+      query: updateStory,
+      variables: { input: storyDetails }
+    });
+  };
+  onTitleChange = event => {
+    console.log(event.target.value);
+    const title = event.target.value;
+    this.setState(prevState => ({
+      ...prevState,
+      storyDetails: {
+        ...prevState.storyDetails,
+        title: title
+      }
+    }));
+  };
   componentDidMount() {
     try {
-      API.graphql(graphqlOperation(getStory, { id: "3" })).then(story => {
+      API.graphql(graphqlOperation(getStory, { id: "10" })).then(story => {
         console.log(story.data.getStory);
         this.setState({ storyDetails: story.data.getStory });
       });
@@ -92,9 +112,15 @@ class RCStoryEditor extends React.Component {
     return (
       <div className={Styles.RCStoryEditor}>
         <h3>Edit your story</h3>
+        <button onClick={this.onSave}>Save</button>
         <form className={Styles.RCStoryCard}>
           <div className={Styles.group}>
-            <input type="text" required />
+            <input
+              type="text"
+              required
+              defaultValue={storyDetails && storyDetails.title}
+              onChange={this.onTitleChange}
+            />
             <span className={Styles.highlight} />
             <span className={Styles.bar} />
             <label>Story Title</label>

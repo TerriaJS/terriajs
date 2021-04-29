@@ -30,6 +30,7 @@ import "inobounce";
 import { withTranslation } from "react-i18next";
 import Styles from "./StandardUserInterface.scss";
 import RCStoryEditor from "../RCBuilder/RCStoryEditor/RCStoryEditor";
+import RCStoryCreator from "../RCBuilder/RCStoryCreator/RCStoryCreator";
 var Receipt = require("../../Models/Receipt");
 
 import { AmplifySignUp, AmplifyAuthenticator } from "@aws-amplify/ui-react";
