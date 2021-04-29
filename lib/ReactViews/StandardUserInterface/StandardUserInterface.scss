@@ -24,6 +24,7 @@
 .story-wrapper {
   @media (min-width: $xs) {
     display: flex;
+    flex-direction: column;
   }
 }
 
