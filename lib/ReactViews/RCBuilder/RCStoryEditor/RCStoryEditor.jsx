@@ -12,6 +12,7 @@ import { updateStory } from "../../../../api/graphql/mutations";
 function RCStoryEditor(props) {
   const [story, setStory] = useState(null);
   const [title, setTitle] = useState("");
+  const [shortDescription, setShortDescription] = useState("");
   const [listenForHotspot, setListenForHotspot] = useState(false);
   const [selectedSectors, setSelectedSectors] = useState([]);
   const [hotspotPoint, setHotspotPoint] = useState(null);
@@ -19,10 +20,13 @@ function RCStoryEditor(props) {
 
   useEffect(() => {
     try {
-      API.graphql(graphqlOperation(getStory, { id: "10" })).then(story => {
-        console.log(story.data.getStory);
-        setStory(story.data.getStory);
-        setTitle(story.data.getStory.title);
+      API.graphql(graphqlOperation(getStory, { id: "4" })).then(story => {
+        const data = story.data.getStory;
+        console.log("Data", data);
+        setStory(data);
+        setTitle(data.title);
+        setShortDescription(data.shortDescription);
+        setSelectedSectors(data.sectors);
       });
     } catch (error) {
       console.log(error);
@@ -57,16 +61,18 @@ function RCStoryEditor(props) {
     setTitle(event.target.value);
   };
   const onSectorChanged = event => {
+    const sector = event.target.value
+      .split(" ")
+      .join("_")
+      .toUpperCase();
     // check if the check box is checked or unchecked
     if (event.target.checked) {
       // add the  value of the checkbox to selectedSectors array
-      const addedSector = event.target.value;
-      setSelectedSectors([...selectedSectors, addedSector]);
+      setSelectedSectors([...selectedSectors, sector]);
     } else {
       // or remove the value from the unchecked checkbox from the array
-      const removedSector = event.target.value;
       setSelectedSectors(
-        selectedSectors.filter(sector => sector !== removedSector)
+        selectedSectors.filter(selectedSector => selectedSector !== sector)
       );
     }
   };
@@ -75,13 +81,15 @@ function RCStoryEditor(props) {
     console.log(selectedSectors);
     const storyDetails = {
       id: story.id,
-      title: title
+      title: title,
+      shortDescription: shortDescription,
+      sectors: selectedSectors
     };
     console.log(storyDetails);
-    API.graphql({
-      query: updateStory,
-      variables: { input: storyDetails }
-    });
+    // API.graphql({
+    //   query: updateStory,
+    //   variables: { input: storyDetails }
+    // });
   };
 
   const hotspotText = hotspotPoint
@@ -96,16 +104,23 @@ function RCStoryEditor(props) {
       <button onClick={onSave}>Save</button>
       <form className={Styles.RCStoryCard}>
         <div className={Styles.group}>
-          <input type="text" required value={title} onChange={onTitleChanged} />
+          <input
+            type="text"
+            required
+            defaultValue={title}
+            onChange={onTitleChanged}
+          />
           <span className={Styles.highlight} />
           <span className={Styles.bar} />
-          <label>Story Title</label>
+          <label className={title && Styles.topLabel}>Story Title</label>
         </div>
         <div className={Styles.group}>
-          <textarea />
+          <textarea defaultValue={shortDescription} />
           <span className={Styles.highlight} />
           <span className={Styles.bar} />
-          <label>Short Description</label>
+          <label className={shortDescription && Styles.topLabel}>
+            Short Description
+          </label>
         </div>
         <RCSectorSelection
           sectors={sectors}
