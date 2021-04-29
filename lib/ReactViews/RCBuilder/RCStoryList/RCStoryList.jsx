@@ -28,10 +28,14 @@ class RCStoryList extends React.Component {
   }
 
   render() {
-    //const {}
+    const { stories } = this.state;
+
     return (
       <div className={Styles.RCStoryList}>
-        <h1>Hello List!</h1>
+        <h1>My stories</h1>
+        <div className={Styles.list}>
+          <p>List of stories</p>
+        </div>
       </div>
     );
   }

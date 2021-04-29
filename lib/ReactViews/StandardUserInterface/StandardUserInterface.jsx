@@ -29,7 +29,6 @@ import classNames from "classnames";
 import "inobounce";
 import { withTranslation } from "react-i18next";
 import Styles from "./StandardUserInterface.scss";
-import RCBuilder from "../RCBuilder/RCBuilder";
 var Receipt = require("../../Models/Receipt");
 
 import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";

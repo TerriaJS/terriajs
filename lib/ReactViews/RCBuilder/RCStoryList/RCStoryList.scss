@@ -1,6 +1,6 @@
 @import "~terriajs-variables";
 
-.RCStoryEditor {
+.RCStoryList {
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -8,4 +8,8 @@
     height: 60vh;
     overflow-y: auto;
   }
+}
+
+.list {
+  font-size: 18px;
 }
