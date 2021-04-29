@@ -29,8 +29,7 @@ import classNames from "classnames";
 import "inobounce";
 import { withTranslation } from "react-i18next";
 import Styles from "./StandardUserInterface.scss";
-import RCStoryEditor from "../RCBuilder/RCStoryEditor/RCStoryEditor";
-import RCStoryCreator from "../RCBuilder/RCStoryCreator/RCStoryCreator";
+import RCBuilder from "../RCBuilder/RCBuilder";
 var Receipt = require("../../Models/Receipt");
 
 import { AmplifySignUp, AmplifyAuthenticator } from "@aws-amplify/ui-react";
@@ -302,7 +301,7 @@ const StandardUserInterface = createReactClass({
                         <RCStoryPanel terria={terria} viewState={viewState} />
                       ) : null}
                       <SidePanel terria={terria} viewState={viewState} /> */}
-                      <RCStoryEditor viewState={viewState} />
+                      <RCBuilder viewState={viewState} />
                     </div>
                   </Medium>
                 </If>

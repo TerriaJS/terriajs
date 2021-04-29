@@ -1,0 +1,11 @@
+@import "~terriajs-variables";
+
+.RCStoryEditor {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  @media (max-width: $xs) {
+    height: 60vh;
+    overflow-y: auto;
+  }
+}
