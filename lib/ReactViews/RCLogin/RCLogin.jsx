@@ -1,96 +1,73 @@
 import {
   AmplifyAuthenticator,
+  AmplifySignIn,
   AmplifySignOut,
   AmplifySignUp
 } from "@aws-amplify/ui-react";
+import { onAuthUIStateChange } from "@aws-amplify/ui-components";
 import React from "react";
-import PropTypes from "prop-types";
 import "./RCLogin.scss";
 import { Auth } from "aws-amplify";
 
-const Receipt = require("../../Models/Receipt");
+const RCLogin = props => {
+  const [authState, setAuthState] = React.useState();
+  const [user, setUser] = React.useState({});
 
-class RCLogin extends React.Component {
-  state = {
-    user: null
-  };
+  React.useEffect(() => {
+    return onAuthUIStateChange(async newAuthState => {
+      setAuthState(newAuthState);
+      const user = await Auth.currentAuthenticatedUser();
+      setUser(user);
+    });
+  }, []);
 
-  componentDidMount() {
-    Auth.currentAuthenticatedUser({
-      bypassCache: false // Optional, By default is false. If set to true, this call will send a request to Cognito to get the latest user data
-    })
-      .then(user => {
-        console.log(user);
-        this.setState({ user: user });
-      })
-      .catch(err => {
-        this.setState({ user: null });
-        console.log(err);
-      });
-  }
+  const signupFormFields = [
+    {
+      type: "name",
+      label: "Full Name *",
+      placeholder: "Enter your name",
+      required: true
+    },
+    {
+      type: "custom:Affilliation",
+      label: "Affiliation *",
+      placeholder: "Enter your affiliation",
+      required: true
+    },
+    {
+      type: "email",
+      label: "Email Address *",
+      required: true
+    },
+    {
+      type: "password",
+      label: "Password *",
+      required: true
+    }
+  ];
 
-  render() {
-    const { t, viewState } = this.props;
+  return (
+    <div style={{ padding: "16px" }}>
+      <AmplifyAuthenticator usernameAlias="email">
+        <AmplifySignIn federated={false} usernameAlias="email" slot="sign-in" />
+        <AmplifySignUp
+          usernameAlias="email"
+          slot="sign-up"
+          formFields={signupFormFields}
+        />
 
-    const MyTheme = {
-      googleSignInButton: { backgroundColor: "red", borderColor: "red" },
-      button: { backgroundColor: "green", borderColor: "red" },
-      signInButtonIcon: { display: "none" }
-    };
-
-    const signupFormFields = [
-      {
-        type: "name",
-        label: "Full Name *",
-        required: true
-      },
-      {
-        type: "custom:Affilliation",
-        label: "Affiliation *",
-        required: true
-      },
-      {
-        type: "email",
-        label: "Email Address *",
-        required: true
-      },
-      {
-        type: "password",
-        label: "Password *",
-        required: true
-      }
-    ];
-    return (
-      <div style={{ padding: "16px" }}>
-        <h2>Login</h2>
-        {this.state && this.state.user?.attributes && (
-          <div style={{ padding: "16px" }}>
-            <div>{this.state?.user.attributes.name}</div>
-            <div>{this.state?.user.attributes["custom:Affilliation"]}</div>
-            <div>{this.state?.user.attributes.email}</div>
+        {authState === "signedin" && (
+          <div>
+            <div className="bold">{user.attributes?.name}</div>
+            <div>{user.attributes?.email}</div>
+            <div>{user.attributes?.["custom:Affilliation"]}</div>
           </div>
         )}
-        <div>
-          {!this.state.user && (
-            <AmplifyAuthenticator usernameAlias="email">
-              <AmplifySignUp
-                theme={MyTheme}
-                usernameAlias="email"
-                formFields={signupFormFields}
-                slot="sign-up"
-              />
-            </AmplifyAuthenticator>
-          )}
-
-          {this.state.user && <AmplifySignOut />}
+        <div style={{ marginTop: "32px", width: "25%" }}>
+          <AmplifySignOut />
         </div>
-      </div>
-    );
-  }
-}
-
-RCLogin.propTypes = {
-  viewState: PropTypes.object
+      </AmplifyAuthenticator>
+    </div>
+  );
 };
-
 export default RCLogin;
