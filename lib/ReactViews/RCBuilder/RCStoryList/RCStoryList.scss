@@ -10,6 +10,19 @@
   }
 }
 
-.list {
+.stories {
   font-size: 18px;
+  background: #ffffff;
+  box-shadow: 0px -8px 40px rgba(17, 8, 114, 0.0869565);
+  border-radius: 8px;
+  padding: 30px 16px;
+}
+
+.storycard {
+  font-size: 16px;
+  padding: 20px 20px 20px 15px;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
 }

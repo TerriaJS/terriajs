@@ -19,7 +19,7 @@ class RCStoryList extends React.Component {
     try {
       API.graphql(graphqlOperation(listStorys)).then(data => {
         const storylist = data.data.listStorys.items;
-        console.log(storylist);
+        console.log("story list", storylist);
         this.setState({ stories: storylist });
       });
     } catch (error) {
@@ -33,8 +33,14 @@ class RCStoryList extends React.Component {
     return (
       <div className={Styles.RCStoryList}>
         <h1>My stories</h1>
-        <div className={Styles.list}>
-          <p>List of stories</p>
+        <div className={Styles.stories}>
+          {stories.map(story => {
+            return (
+              <div className={Styles.storycard} key={story.id}>
+                {story.title}
+              </div>
+            );
+          })}
         </div>
       </div>
     );
