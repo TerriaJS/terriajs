@@ -20,12 +20,7 @@ class RCBuilder extends React.Component {
     return (
       <div>
         <div>
-          <h1 className={Styles.header}>
-            <img
-              src={require("../../../wwwroot/images/receipt/receipt-logo.svg")}
-            />
-            Story Builder
-          </h1>
+          <h1 className={Styles.header}>Story Builder</h1>
         </div>
         <Switch>
           <Route path={`${path}/new`}>
