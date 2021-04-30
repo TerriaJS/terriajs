@@ -7,8 +7,13 @@ import PropTypes from "prop-types";
 const Branding = props => {
   const history = useHistory();
 
-  const goHome = () => {
-    history.push("/", "");
+  /**
+   * Clean react-dom params and load the catalogs
+   * @returns {Promise<void>}
+   */
+  const goHome = async () => {
+    history.push("/");
+    await new Promise(resolve => setTimeout(resolve, 50));
     RCChangeUrlParams("", props.viewState);
   };
 

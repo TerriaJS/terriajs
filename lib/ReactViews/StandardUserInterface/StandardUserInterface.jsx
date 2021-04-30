@@ -126,13 +126,15 @@ const StandardUserInterface = createReactClass({
     }
   },
 
-  componentDidMount() {
+  async componentDidMount() {
     // this.props.viewState.isHotspotsFiltered = false;
     this._wrapper.addEventListener("dragover", this.dragOverListener, false);
     showStoryPrompt(this.props.viewState, this.props.terria);
     //
     // First web enters, read the params
+    // Wait for router-dom to set before loading the init params: async
     //
+    await new Promise(resolve => setTimeout(resolve, 500));
     RCChangeUrlParams(undefined, this.props.viewState);
   },
 
