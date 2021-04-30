@@ -34,7 +34,7 @@ var Receipt = require("../../Models/Receipt");
 import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
 
 import { RCBuilder } from "../RCBuilder/RCBuilder";
-import { RCLogin } from "../RCLogin/RCLogin";
+import RCLogin from "../RCLogin/RCLogin";
 
 import { AmplifySignUp, AmplifyAuthenticator } from "@aws-amplify/ui-react";
 // import { withAuthenticator } from "@aws-amplify/ui-react";
