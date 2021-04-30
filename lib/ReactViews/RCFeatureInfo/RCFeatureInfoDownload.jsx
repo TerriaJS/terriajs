@@ -11,9 +11,9 @@ import { withTranslation } from "react-i18next";
 
 import Icon from "../Icon.jsx";
 
-import Styles from "./feature-info-download.scss";
+import Styles from "./RCFeatureInfoDownload.scss";
 
-const FeatureInfoDownload = createReactClass({
+const RCFeatureInfoDownload = createReactClass({
   propTypes: {
     data: PropTypes.object.isRequired,
     name: PropTypes.string.isRequired,
@@ -122,4 +122,4 @@ function makeSafeForCsv(value) {
   return '"' + value.replace(/"/g, '""') + '"';
 }
 
-export default withTranslation()(FeatureInfoDownload);
+export default withTranslation()(RCFeatureInfoDownload);
