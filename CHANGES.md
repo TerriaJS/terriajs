@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.79)
 
+* Aliases `lodash` to `lodash-es` and use `babel-plugin-lodash` reducing bundle size by around 1.09MB.
 * Fix CkanCatalogGroup filterQuery issue. [#5332](https://github.com/TerriaJS/terriajs/pull/5332)
 * [The next improvement]
 
