@@ -91,7 +91,8 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
      * return the existing promise.
      */
     async loadMapItems(force?: boolean) {
-      await this.showInitialMessageIfRequired();
+      if (ShowableMixin.isMixedInto(this))
+        await this.showInitialMessageIfRequired();
       if (CatalogMemberMixin.isMixedInto(this)) await this.loadMetadata();
       if (TableMixin.isMixedInto(this)) await this.loadRegionProviderList();
       await this._mapItemsLoader.load(force);
