@@ -1,15 +1,15 @@
+import i18next from "i18next";
 import { configure, runInAction } from "mobx";
+import URI from "urijs";
+import { JsonObject } from "../../lib/Core/Json";
 import _loadWithXhr from "../../lib/Core/loadWithXhr";
-import Terria from "../../lib/Models/Terria";
+import CatalogGroup from "../../lib/Models/CatalogGroupNew";
 import CkanCatalogGroup, {
   CkanServerStratum
 } from "../../lib/Models/CkanCatalogGroup";
-import i18next from "i18next";
 import CkanItemReference from "../../lib/Models/CkanItemReference";
-import CatalogGroup from "../../lib/Models/CatalogGroupNew";
+import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-import { JsonObject } from "../../lib/Core/Json";
-import URI from "urijs";
 
 configure({
   enforceActions: "observed",
