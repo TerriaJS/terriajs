@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
@@ -7,6 +7,7 @@ import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
+import saveModelToJson from "../Models/saveModelToJson";
 import MappableTraits from "../Traits/MappableTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import ShowableMixin from "./ShowableMixin";
@@ -91,8 +92,13 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
      * return the existing promise.
      */
     async loadMapItems(force?: boolean) {
-      if (ShowableMixin.isMixedInto(this))
-        await this.showInitialMessageIfRequired();
+      if (ShowableMixin.isMixedInto(this)) {
+        await runInAction(async () => {
+          if (this.shouldShowInitialMessage) {
+            await this.showInitialMessage();
+          }
+        });
+      }
       if (CatalogMemberMixin.isMixedInto(this)) await this.loadMetadata();
       if (TableMixin.isMixedInto(this)) await this.loadRegionProviderList();
       await this._mapItemsLoader.load(force);
