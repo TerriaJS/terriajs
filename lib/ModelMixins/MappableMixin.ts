@@ -1,4 +1,5 @@
-import { computed, runInAction } from "mobx";
+import i18next from "i18next";
+import { computed } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
@@ -7,10 +8,8 @@ import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
-import saveModelToJson from "../Models/saveModelToJson";
 import MappableTraits from "../Traits/MappableTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
-import ShowableMixin from "./ShowableMixin";
 import TableMixin from "./TableMixin";
 
 export type MapItem =
@@ -50,8 +49,11 @@ export function isDataSource(object: MapItem): object is DataSource {
   return "entities" in object;
 }
 
+const t = i18next.t.bind(i18next);
+
 function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
-  abstract class MappableMixin extends ShowableMixin(Base) {
+  abstract class MappableMixin extends Base {
+    initialMessageShown: boolean = false;
     get isMappable() {
       return true;
     }
@@ -75,6 +77,38 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
       return undefined;
     }
 
+    get shouldShowInitialMessage(): boolean {
+      if (this.initialMessage !== undefined) {
+        const hasTitle =
+          this.initialMessage.title !== undefined &&
+          this.initialMessage.title !== "" &&
+          this.initialMessage.title !== null;
+        const hasContent =
+          this.initialMessage.content !== undefined &&
+          this.initialMessage.content !== "" &&
+          this.initialMessage.content !== null;
+        return hasTitle && hasContent && !this.initialMessageShown;
+      }
+      return false;
+    }
+
+    showInitialMessage(): Promise<void> {
+      this.initialMessageShown = true;
+      return new Promise(resolve => {
+        this.terria.notificationState.addNotificationToQueue({
+          title: this.initialMessage.title ?? t("notification.title"),
+          width: this.initialMessage.width,
+          height: this.initialMessage.height,
+          confirmText: this.initialMessage.confirmation
+            ? this.initialMessage.confirmText
+            : undefined,
+          message: this.initialMessage.content ?? "",
+          key: "initialMessage:" + this.initialMessage.key,
+          confirmAction: () => resolve()
+        });
+      });
+    }
+
     private _mapItemsLoader = new AsyncLoader(
       this.forceLoadMapItems.bind(this)
     );
@@ -92,12 +126,8 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
      * return the existing promise.
      */
     async loadMapItems(force?: boolean) {
-      if (ShowableMixin.isMixedInto(this)) {
-        await runInAction(async () => {
-          if (this.shouldShowInitialMessage) {
-            await this.showInitialMessage();
-          }
-        });
+      if (this.shouldShowInitialMessage) {
+        await this.showInitialMessage();
       }
       if (CatalogMemberMixin.isMixedInto(this)) await this.loadMetadata();
       if (TableMixin.isMixedInto(this)) await this.loadRegionProviderList();

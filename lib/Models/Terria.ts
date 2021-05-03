@@ -1635,10 +1635,6 @@ async function interpretHash(
 
         // Show warning messages if converted
         if (result.converted) {
-          // terria.notification.raiseEvent({
-          //   title: i18next.t("share.convertNotificationTitle"),
-          //   message: shareConvertNotification(result.messages)
-          // } as Notification);
           terria.notificationState.addNotificationToQueue({
             title: i18next.t("share.convertNotificationTitle"),
             message: shareConvertNotification(result.messages)
