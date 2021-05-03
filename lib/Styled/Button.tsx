@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
@@ -9,9 +8,35 @@ import { TextSpan } from "./Text";
 const Icon = styled.span`
   margin-right: 8px;
 `;
-const StyledButton = styled.button`
-  display: grid;
 
+interface IButtonProps {
+  fullWidth?: boolean;
+  fullHeight?: boolean;
+  styledWidth?: string;
+  activeStyles?: boolean;
+}
+
+interface IStyledButtonProps extends IButtonProps {
+  shortMinHeight?: boolean;
+  styledMinWidth?: string;
+  marginLeft?: number;
+  marginRight?: number;
+  primaryHover?: boolean;
+  primary?: boolean;
+  rounded?: boolean;
+  roundLeft?: boolean;
+  roundRight?: boolean;
+  secondary?: boolean;
+  denyButton?: boolean;
+  warning?: boolean;
+  splitter?: boolean;
+  transparentBg?: boolean;
+  disabled?: boolean;
+  [key: string]: any;
+}
+
+const StyledButton = styled.button<IStyledButtonProps>`
+  display: grid;
   pointer-events: auto;
   cursor: pointer;
   min-height: 40px;
@@ -108,7 +133,7 @@ const StyledButtonAsLink = styled(StyledButton).attrs({ as: Link })`
  * Use for things you need as clickable things & not necessary the design
  * language styled button
  */
-export const RawButton = styled.button`
+export const RawButton = styled.button<IButtonProps>`
   margin: 0;
   padding: 0;
   border: 0;
@@ -135,8 +160,21 @@ export const RawButton = styled.button`
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
 `;
 
+interface ButtonProps extends IStyledButtonProps {
+  renderIcon?: () => React.ReactChild;
+  iconProps?: any;
+  textProps?: any;
+  children?: React.ReactChildren;
+  buttonRef?: React.Ref<HTMLButtonElement>;
+  title?: string;
+  onClick?: (e: any) => void;
+}
+
 // Icon and props-children-mandatory-text-wrapping is a mess here so it's all very WIP
-export const ButtonRaw = (props, ref) => {
+export const ButtonRaw = (
+  props: ButtonProps,
+  ref: React.Ref<HTMLButtonElement>
+) => {
   const {
     primary,
     secondary,
@@ -166,8 +204,6 @@ export const ButtonRaw = (props, ref) => {
           <TextSpan
             white={primary || secondary || warning}
             medium={secondary}
-            // bold
-            skinny
             {...textProps}
           >
             {props.children}
@@ -178,20 +214,10 @@ export const ButtonRaw = (props, ref) => {
   );
 };
 
-ButtonRaw.propTypes = {
-  renderIcon: PropTypes.func,
-  iconProps: PropTypes.object,
-  textProps: PropTypes.object,
-  primary: PropTypes.bool,
-  secondary: PropTypes.bool,
-  warning: PropTypes.bool,
-  renderAsLink: PropTypes.bool,
-  children: PropTypes.node,
-  buttonRef: PropTypes.object
-};
-
-const ButtonWithRef = (props, ref) => <ButtonRaw {...props} buttonRef={ref} />;
+const ButtonWithRef = (
+  props: ButtonProps,
+  ref: React.Ref<HTMLButtonElement>
+) => <Button {...props} buttonRef={ref} />;
 
 export const Button = React.forwardRef(ButtonWithRef);
-
 export default Button;

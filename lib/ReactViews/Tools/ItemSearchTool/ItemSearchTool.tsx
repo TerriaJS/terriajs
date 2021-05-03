@@ -10,14 +10,13 @@ import ItemSearchProvider, {
   ItemSearchResult
 } from "../../../Models/ItemSearchProvider";
 import ViewState from "../../../ReactViewModels/ViewState";
+import Box from "../../../Styled/Box";
 import { Frame, Main } from "../ToolModal";
 import BackButton from "./BackButton";
 import ErrorComponent from "./ErrorComponent";
 import Loading from "./Loading";
 import SearchForm from "./SearchForm";
 import SearchResults from "./SearchResults";
-
-const Box: any = require("../../../Styled/Box").default;
 
 export interface PropsType extends WithTranslation {
   item: SearchableItemMixin.Instance;

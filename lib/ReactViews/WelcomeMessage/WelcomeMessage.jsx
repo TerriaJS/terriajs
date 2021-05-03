@@ -1,25 +1,20 @@
-import React, { useState } from "react";
-import { withTranslation } from "react-i18next";
-import { withTheme } from "styled-components";
+import { runInAction } from "mobx";
+import { observer } from "mobx-react";
 import PropTypes from "prop-types";
-
-import Icon, { StyledIcon } from "../Icon.jsx";
+import React, { useState } from "react";
+import { Trans, useTranslation, withTranslation } from "react-i18next";
+import styled, { withTheme } from "styled-components";
+import { CATALOG_ROUTE } from "../../ReactViewModels/TerriaRouting";
+import Box from "../../Styled/Box";
+import Button, { RawButton } from "../../Styled/Button";
+import Icon, { StyledIcon } from "../../Styled/Icon";
+import Spacing from "../../Styled/Spacing";
+import Text, { TextSpan } from "../../Styled/Text";
+import { useKeyPress } from "../Hooks/useKeyPress.js";
+import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
+import { TourPortalDisplayName } from "../Tour/TourPortal";
 import FadeIn from "../Transitions/FadeIn/FadeIn";
 import SlideUpFadeIn from "../Transitions/SlideUpFadeIn/SlideUpFadeIn";
-
-import Spacing from "../../Styled/Spacing";
-import Box from "../../Styled/Box";
-import Text, { TextSpan } from "../../Styled/Text";
-
-import { useKeyPress } from "../Hooks/useKeyPress.js";
-import { useTranslation, Trans } from "react-i18next";
-import { observer } from "mobx-react";
-import styled from "styled-components";
-import Button, { RawButton } from "../../Styled/Button";
-import { TourPortalDisplayName } from "../Tour/TourPortal";
-import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
-import { runInAction } from "mobx";
-import { CATALOG_ROUTE } from "../../ReactViewModels/TerriaRouting";
 
 export const WELCOME_MESSAGE_NAME = "welcomeMessage";
 export const LOCAL_PROPERTY_KEY = `${WELCOME_MESSAGE_NAME}Prompted`;
@@ -160,7 +155,7 @@ export const WelcomeMessagePure = props => {
       <WelcomeModalWrapper
         fullWidth
         fullHeight
-        positionAbsolute
+        position="absolute"
         right
         onClick={() => handleClose(false)}
       >
@@ -212,7 +207,7 @@ export const WelcomeMessagePure = props => {
                 <Text
                   bold
                   textLight
-                  styledSize={"36px"}
+                  styledFontSize={"36px"}
                   styledLineHeight={"49px"}
                 >
                   {t("welcomeMessage.title")}

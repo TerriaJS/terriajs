@@ -1,8 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-
-const Box: any = require("../../Styled/Box").default;
-const Spacing: any = require("../../Styled/Spacing").default;
+import Box from "../../Styled/Box";
+import Spacing from "../../Styled/Spacing";
 
 // Hard code colour for now
 const warningColor = "#f69900";

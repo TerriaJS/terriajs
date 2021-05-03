@@ -49,11 +49,16 @@ const NotificationWindow = createReactClass({
       typeof this.props.title === "function"
         ? this.props.title(this.props.viewState)
         : this.props.title ?? "";
-    const message = parseCustomMarkdownToReact(
+
+    let message =
       typeof this.props.message === "function"
         ? this.props.message(this.props.viewState)
-        : this.props.message
-    );
+        : this.props.message;
+
+    if (typeof message === "string") {
+      message = parseCustomMarkdownToReact(message);
+    }
+
     const confirmText = this.props.confirmText || "OK";
     const denyText = this.props.denyText;
     const type = this.props.type;

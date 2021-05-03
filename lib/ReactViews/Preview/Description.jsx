@@ -1,21 +1,18 @@
-import React from "react";
-
 import createReactClass from "create-react-class";
-
-import PropTypes from "prop-types";
-import { withTranslation, Trans } from "react-i18next";
-
-import defined from "terriajs-cesium/Source/Core/defined";
-
-import Collapsible from "../Custom/Collapsible/Collapsible";
-import DataPreviewSections from "./DataPreviewSections";
-import DataUri from "../../Core/DataUri";
-import MetadataTable from "./MetadataTable";
-import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
-import Styles from "./mappable-preview.scss";
 import { observer } from "mobx-react";
-
+import PropTypes from "prop-types";
+import React from "react";
+import { Trans, withTranslation } from "react-i18next";
+import defined from "terriajs-cesium/Source/Core/defined";
+import DataUri from "../../Core/DataUri";
+import Box from "../../Styled/Box";
+import Button from "../../Styled/Button";
+import Collapsible from "../Custom/Collapsible/Collapsible";
+import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
+import DataPreviewSections from "./DataPreviewSections";
 import ExportData from "./ExportData";
+import Styles from "./mappable-preview.scss";
+import MetadataTable from "./MetadataTable";
 import WarningBox from "./WarningBox";
 
 // TODO: v8ify
@@ -32,9 +29,6 @@ export const getMetaDescriptionSummary = catalogItem => {
 
   return `${description}${custodian}${type}${source}`;
 };
-
-const Button = require("../../Styled/Button").default;
-const Box = require("../../Styled/Box").default;
 
 /**
  * CatalogItem description.

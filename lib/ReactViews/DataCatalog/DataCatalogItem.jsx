@@ -7,11 +7,8 @@ import { withTranslation } from "react-i18next";
 import { withRouter } from "react-router-dom";
 import defined from "terriajs-cesium/Source/Core/defined";
 import URI from "urijs";
-// import addedByUser from "../../Core/addedByUser";
 import getPath from "../../Core/getPath";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
-import raiseErrorToUser from "../../Models/raiseErrorToUser";
-// import addedByUser from "../../Core/addedByUser";
 import removeUserAddedData from "../../Models/removeUserAddedData";
 import { ROOT_ROUTE } from "../../ReactViewModels/TerriaRouting";
 import CatalogItem from "./CatalogItem";
@@ -84,7 +81,7 @@ export const DataCatalogItem = observer(
           );
         }
       } catch (e) {
-        raiseErrorToUser(this.props.terria, e);
+        this.props.terria.raiseErrorToUser(e);
       }
     },
 

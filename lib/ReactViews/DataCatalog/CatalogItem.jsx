@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import classNames from "classnames";
-import Icon from "../Icon";
+import Icon from "../../Styled/Icon";
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
 import { useTranslation } from "react-i18next";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";

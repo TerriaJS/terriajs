@@ -87,7 +87,7 @@ const DataCatalogReference = observer(
             this.props.viewState.history?.push(ROOT_ROUTE);
           }
         } catch (e) {
-          raiseErrorToUser(this.props.terria, e);
+          this.props.terria.raiseErrorToUser(e);
         }
       }
     },

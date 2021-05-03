@@ -4,6 +4,7 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
 import Constructor from "../Core/Constructor";
+import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
 import { calculateDomain, ChartItem } from "../ModelMixins/ChartableMixin";
@@ -272,7 +273,8 @@ function DiscretelyTimeVaryingMixin<
       if (
         !isDefined(this.startTimeAsJulianDate) ||
         !isDefined(this.stopTimeAsJulianDate) ||
-        !isDefined(this.multiplierDefaultDeltaStep)
+        !isDefined(this.multiplierDefaultDeltaStep) ||
+        !isDefined(this.discreteTimesAsSortedJulianDates)
       )
         return;
 
@@ -285,7 +287,7 @@ function DiscretelyTimeVaryingMixin<
         this.stopTimeAsJulianDate.secondsOfDay -
         this.startTimeAsJulianDate.secondsOfDay;
       const meanDSeconds =
-        dSeconds / this.discreteTimesAsSortedJulianDates!.length;
+        dSeconds / this.discreteTimesAsSortedJulianDates.length;
 
       return meanDSeconds / this.multiplierDefaultDeltaStep;
     }
@@ -316,9 +318,9 @@ function DiscretelyTimeVaryingMixin<
       );
     }
 
-    @computed get chartItems(): ChartItem[] {
+    @computed get momentChart(): ChartItem | undefined {
       if (!this.showInChartPanel || !this.discreteTimesAsSortedJulianDates)
-        return [];
+        return;
       const points: ChartPoint[] = this.discreteTimesAsSortedJulianDates.map(
         dt => ({
           x: JulianDate.toDate(dt.time),
@@ -330,39 +332,41 @@ function DiscretelyTimeVaryingMixin<
       );
 
       const colorId = `color-${this.name}`;
-      return [
-        {
-          item: this,
-          name: this.name || "",
-          categoryName: this.name,
-          key: `key${this.uniqueId}-${this.name}`,
-          type: this.chartType || "momentLines",
-          xAxis: { scale: "time" },
-          points,
-          domain: { ...calculateDomain(points), y: [0, 1] },
-          showInChartPanel: this.show && this.showInChartPanel,
-          isSelectedInWorkbench: this.showInChartPanel,
-          updateIsSelectedInWorkbench: (isSelected: boolean) => {
-            runInAction(() => {
-              this.setTrait(CommonStrata.user, "showInChartPanel", isSelected);
-            });
-          },
-          getColor: () => {
-            return this.chartColor
-              ? this.chartColor
-              : getChartColorForId(colorId);
-          },
-          onClick: (point: any) => {
-            runInAction(() => {
-              this.setTrait(
-                CommonStrata.user,
-                "currentTime",
-                point.x.toISOString()
-              );
-            });
-          }
+      return {
+        item: this,
+        name: this.name || "",
+        categoryName: this.name,
+        key: `key${this.uniqueId}-${this.name}`,
+        type: this.chartType || "momentLines",
+        xAxis: { scale: "time" },
+        points,
+        domain: { ...calculateDomain(points), y: [0, 1] },
+        showInChartPanel: this.show && this.showInChartPanel,
+        isSelectedInWorkbench: this.showInChartPanel,
+        updateIsSelectedInWorkbench: (isSelected: boolean) => {
+          runInAction(() => {
+            this.setTrait(CommonStrata.user, "showInChartPanel", isSelected);
+          });
+        },
+        getColor: () => {
+          return this.chartColor
+            ? this.chartColor
+            : getChartColorForId(colorId);
+        },
+        onClick: (point: any) => {
+          runInAction(() => {
+            this.setTrait(
+              CommonStrata.user,
+              "currentTime",
+              point.x.toISOString()
+            );
+          });
         }
-      ];
+      };
+    }
+
+    @computed get chartItems(): ChartItem[] {
+      return filterOutUndefined([this.momentChart]);
     }
   }
 

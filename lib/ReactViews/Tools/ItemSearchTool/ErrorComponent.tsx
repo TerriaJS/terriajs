@@ -1,6 +1,6 @@
 import React from "react";
 
-const Text: any = require("../../../Styled/Text").Text;
+import Text from "../../../Styled/Text";
 
 const ErrorComponent: React.FC = ({ children }) => {
   return (

@@ -3,8 +3,59 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.73)
+#### next release (8.0.0-alpha.79)
+
 * [The next improvement]
+
+#### 8.0.0-alpha.78
+
+* Add `ignoreErrors` url parameter.
+
+#### 8.0.0-alpha.77
+
+- **Breaking changes**:
+  - `terria.error.raiseEvent` and `./raiseErrorToUser.ts` have been replaced with `terria.raiseErrorToUser`.
+  - `terria.error.addEventListener` has been replaced with `terria.addErrorEventListener`
+
+* New Error handling using `Result` and `TerriaError` now applied to initial loading, `updateModelFromJson()`, `upsertModelFromJson()` and `Traits.fromJson()`. This means errors will propagate through these functions, and a stacktrace will be displayed.
+  * `Result` and the new features of `TerriaError` should be considered unstable and may be extensively modified or removed in future 8.0.0-alpha.n releases
+* New `terriaErrorNotification()` function, which wraps up error messages.
+* `TerriaError` can now contain "child" errors - this includes a few new methods: `flatten()` and `createParentError()`. It also has a few new convenience functions: `TerriaError.from()` and `TerriaError.combine()`.
+* Convert `Branding.jsx` to `.tsx`
+* Added `configParams.brandBarSmallElements` to set Branding elements for small screen (also added theme props)
+* Add `font` variables and `fontImports` to theme - this can be used to import CSS fonts.
+* Convert `lib/Styled` `.jsx` files to `.tsx` (including Box, Icon, Text). The most significant changes to these interfaces are:
+  * `Box` no longer accepts `<Box positionAbsolute/>` and this should now be passed as `<Box position="absolute"/>`.
+  * `Text`'s `styledSize` has been removed. Use the `styledFontSize` prop.
+  * `ButtonAsLabel` no longer accepts `dark`. A dark background is now used when `light` is false (or undefined).
+* Fixes CZML catalog item so that it appears on the timeline.
+* Enable `theme` config parameter. This can now be used to override theme properties.
+
+#### 8.0.0-alpha.76
+
+* Added support for setting custom concurrent request limits per domain through `configParameters.customRequestSchedulerLimits`.
+* Added `momentChart` to region-mapped timeseries
+* Add time-series chart (in FeatureInfo) for region-mapped timeseries
+* Only show `TableMixin` chart if it has more than one
+* Add `TableChartStyle` name trait.
+
+#### 8.0.0-alpha.75
+
+* Fix `NotificationWindow` bug with `message`.
+* Re-add `loadInitSources` to `Terria.updateApplicationUrl()`
+* Added support for `elements` object in catalogue files (aka init files).
+  * Using this object you can hide/show most UI elements individually.
+  * See https://github.com/TerriaJS/terriajs/pull/5131. More in-depth docs to come.
+
+#### 8.0.0-alpha.74
+
+* Fix JS imports of `TerriaError`
+
+#### 8.0.0-alpha.73
+
+* Add `title` parameter in `raiseErrorToUser` to overwrite error title.
+* Added some error handling in `Terria.ts` to deal with loading init sources.
+* TSify `updateApplicationOnHashChange` + remove `loadInitSources` from `Terria.updateApplicationUrl()`
 
 #### 8.0.0-alpha.72
 

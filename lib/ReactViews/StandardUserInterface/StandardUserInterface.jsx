@@ -69,6 +69,8 @@ export const showStoryPrompt = (viewState, terria) => {
     viewState.toggleFeaturePrompt("story", true);
 };
 const GlobalTerriaStyles = createGlobalStyle`
+  ${p => p.theme.fontImports ?? ""}
+
   // Theme-ify sass classes until they are removed
 
   // We override the primary, secondary, map and share buttons here as they
@@ -242,7 +244,12 @@ const StandardUserInterfaceRaw = observer(
 
     render() {
       const { t } = this.props;
-      const mergedTheme = combine(this.props.themeOverrides, terriaTheme, true);
+      // Merge theme in order of highest priority: themeOverrides props -> theme config parameter -> default terriaTheme
+      const mergedTheme = combine(
+        this.props.themeOverrides,
+        combine(this.props.terria.configParameters.theme, terriaTheme, true),
+        true
+      );
       const theme = mergedTheme;
 
       const customElements = processCustomElements(
@@ -335,6 +342,7 @@ const StandardUserInterfaceRaw = observer(
                       >
                         <Branding
                           terria={terria}
+                          viewState={this.props.viewState}
                           version={this.props.version}
                         />
                         <SidePanel
@@ -361,6 +369,9 @@ const StandardUserInterfaceRaw = observer(
                         minified={false}
                         btnText={t("sui.showWorkbench")}
                         animationDuration={animationDuration}
+                        elementConfig={this.props.terria.elements.get(
+                          "show-workbench"
+                        )}
                       />
                     </div>
                   </Medium>

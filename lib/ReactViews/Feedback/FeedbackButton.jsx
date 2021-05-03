@@ -6,10 +6,11 @@ import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 // import { Medium } from "../Generic/Responsive";
-import Icon from "../Icon";
+import Icon from "../../Styled/Icon";
 // import Styles from "./feedback-button.scss";
 import { runInAction } from "mobx";
 import MapIconButton from "../MapIconButton/MapIconButton";
+import withControlledVisibility from "../HOCs/withControlledVisibility";
 
 const FeedbackButton = observer(
   createReactClass({
@@ -41,4 +42,4 @@ const FeedbackButton = observer(
   })
 );
 
-export default withTranslation()(FeedbackButton);
+export default withTranslation()(withControlledVisibility(FeedbackButton));
