@@ -15,7 +15,31 @@
   border-radius: 8px;
   padding: 30px 16px;
 }
+.RCButton {
+  background-color: white;
+  border: 1px solid #0c70a7;
+  box-sizing: border-box;
+  border-radius: 38px;
+  height: 40px;
+  padding: 0 10px;
+  min-width: 100px;
+  transition: all 100ms ease;
 
+  &:hover {
+    color: white;
+    background-color: #0c70a7;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  margin-bottom: 20px;
+}
 .group {
   position: relative;
   margin-bottom: 45px;
@@ -65,7 +89,13 @@ textarea {
   transition: 0.2s ease all;
   -moz-transition: 0.2s ease all;
   -webkit-transition: 0.2s ease all;
+  &.topLabel {
+    top: -20px;
+    font-size: 14px;
+    color: #0c70a7;
+  }
 }
+
 .bar {
   position: relative;
   display: block;

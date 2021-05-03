@@ -26,7 +26,12 @@ class RCSectorSelection extends React.Component {
                     />
                     <Icon
                       glyph={
-                        selectedSectors.includes(sector.title)
+                        selectedSectors.includes(
+                          sector.title
+                            .split(" ")
+                            .join("_")
+                            .toUpperCase()
+                        )
                           ? sector.iconHover
                           : sector.icon
                       }
