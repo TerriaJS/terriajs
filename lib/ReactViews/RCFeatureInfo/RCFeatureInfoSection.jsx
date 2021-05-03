@@ -15,7 +15,7 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 
 import CustomComponents from "../Custom/CustomComponents";
-import FeatureInfoDownload from "./FeatureInfoDownload";
+import FeatureInfoDownload from "./RCFeatureInfoDownload";
 import formatNumberForLocale from "../../Core/formatNumberForLocale";
 import Icon from "../Icon.jsx";
 import ObserveModelMixin from "../ObserveModelMixin";
@@ -23,7 +23,7 @@ import propertyGetTimeValues from "../../Core/propertyGetTimeValues";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import { withTranslation } from "react-i18next";
 
-import Styles from "./feature-info-section.scss";
+import Styles from "./RCFeatureInfoSection.scss";
 
 // We use Mustache templates inside React views, where React does the escaping; don't escape twice, or eg. " => &quot;
 Mustache.escape = function(string) {
@@ -31,7 +31,7 @@ Mustache.escape = function(string) {
 };
 
 // Individual feature info section
-export const FeatureInfoSection = createReactClass({
+export const RCFeatureInfoSection = createReactClass({
   displayName: "FeatureInfoSection",
   mixins: [ObserveModelMixin],
 
@@ -298,7 +298,7 @@ export const FeatureInfoSection = createReactClass({
               <For
                 each="ExtraComponent"
                 index="i"
-                of={FeatureInfoSection.extraComponents}
+                of={RCFeatureInfoSection.extraComponents}
               >
                 <ExtraComponent
                   key={i}
@@ -890,6 +890,6 @@ function contains(text, number, precision) {
 /**
  * Add your own react components to have them rendered in a FeatureInfoSection. ViewState will be passed as a prop.
  */
-FeatureInfoSection.extraComponents = [];
+RCFeatureInfoSection.extraComponents = [];
 
-export default withTranslation()(FeatureInfoSection);
+export default withTranslation()(RCFeatureInfoSection);

@@ -7,7 +7,7 @@
 }
 
 .btn {
-  composes: btn from "./feature-info-panel.scss";
+  composes: btn from "RCFeatureInfoPanel.scss";
   composes: btn-primary from "../../Sass/common/_buttons.scss";
 }
 

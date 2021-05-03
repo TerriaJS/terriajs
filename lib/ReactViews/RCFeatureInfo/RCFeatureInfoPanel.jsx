@@ -3,7 +3,7 @@
 import defined from "terriajs-cesium/Source/Core/defined";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import FeatureInfoCatalogItem from "./FeatureInfoCatalogItem.jsx";
+import FeatureInfoCatalogItem from "./RCFeatureInfoCatalogItem.jsx";
 import ObserveModelMixin from "../ObserveModelMixin";
 import React from "react";
 import createReactClass from "create-react-class";
@@ -22,10 +22,10 @@ import {
 import prettifyCoordinates from "../../Map/prettifyCoordinates";
 import raiseErrorToUser from "../../Models/raiseErrorToUser";
 
-import Styles from "./feature-info-panel.scss";
+import Styles from "./RCFeatureInfoPanel.scss";
 import { RCChangeUrlParams } from "../../Models/Receipt";
 
-export const FeatureInfoPanel = createReactClass({
+export const RCFeatureInfoPanel = createReactClass({
   displayName: "FeatureInfoPanel",
   mixins: [ObserveModelMixin],
 
@@ -416,4 +416,4 @@ function featureHasInfo(feature) {
   return defined(feature.properties) || defined(feature.description);
 }
 
-export default withTranslation()(FeatureInfoPanel);
+export default withTranslation()(RCFeatureInfoPanel);

@@ -5,7 +5,7 @@ import arrayContains from "../../Core/arrayContains";
 import RCHotspotSummary from "./../RCHotspotSummary/RCHotspotSummary.jsx";
 import DragDropFile from "./../DragDropFile.jsx";
 import DragDropNotification from "./../DragDropNotification.jsx";
-import FeatureInfoPanel from "./../RCFeatureInfo/FeatureInfoPanel.jsx";
+import FeatureInfoPanel from "../RCFeatureInfo/RCFeatureInfoPanel.jsx";
 import MapColumn from "./MapColumn.jsx";
 import MapInteractionWindow from "./../Notification/MapInteractionWindow.jsx";
 import MapNavigation from "./../Map/MapNavigation.jsx";
@@ -34,7 +34,7 @@ var Receipt = require("../../Models/Receipt");
 import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
 
 import { RCBuilder } from "../RCBuilder/RCBuilder";
-import { RCLogin } from "../RCLogin/RCLogin";
+import RCLogin from "../RCLogin/RCLogin";
 
 import { AmplifySignUp, AmplifyAuthenticator } from "@aws-amplify/ui-react";
 // import { withAuthenticator } from "@aws-amplify/ui-react";
@@ -126,13 +126,15 @@ const StandardUserInterface = createReactClass({
     }
   },
 
-  componentDidMount() {
+  async componentDidMount() {
     // this.props.viewState.isHotspotsFiltered = false;
     this._wrapper.addEventListener("dragover", this.dragOverListener, false);
     showStoryPrompt(this.props.viewState, this.props.terria);
     //
     // First web enters, read the params
+    // Wait for router-dom to set before loading the init params: async
     //
+    await new Promise(resolve => setTimeout(resolve, 500));
     RCChangeUrlParams(undefined, this.props.viewState);
   },
 
