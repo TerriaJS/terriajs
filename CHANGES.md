@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.79)
 
+* Fix CkanCatalogGroup filterQuery issue. [#5332](https://github.com/TerriaJS/terriajs/pull/5332)
 * [The next improvement]
 
 #### 8.0.0-alpha.78
@@ -124,8 +125,6 @@ Change Log
 * Limit up/down look angle in pedestrian mode.
 * Automatically disable pedestrian mode when map zooms to a different location.
 * Add support for time on `ArcGisMapServerCatalogItem`
-* Fix CkanCatalogGroup filterQuery issue. [#5332](https://github.com/TerriaJS/terriajs/pull/5332)
-* [The next improvement]
 * Merge `Mappable` and `AsyncMappableMixin` into **`MappableMixin`**.
 * Fixed a issue when multiple filters are set to Cesium3DTilesCatalogItem
 * Async/Awaitify `Terria.ts` + fix share links loading after `loadInitSources`.
