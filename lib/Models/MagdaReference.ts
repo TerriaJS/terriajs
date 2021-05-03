@@ -384,6 +384,14 @@ export default class MagdaReference extends AccessControlMixin(
           overriddenMember,
           terria.getModelById(BaseModel, member.id)
         );
+        let shareKeys;
+        if (
+          isJsonObject(member.aspects) &&
+          isJsonObject(member.aspects.terria) &&
+          Array.isArray(member.aspects.terria.shareKeys)
+        ) {
+          shareKeys = member.aspects.terria.shareKeys.filter(isJsonString);
+        }
 
         if (!model) {
           // Can't create an item or group yet, so create a reference.
@@ -427,7 +435,7 @@ export default class MagdaReference extends AccessControlMixin(
           }
 
           if (terria.getModelById(BaseModel, member.id) === undefined) {
-            terria.addModel(ref);
+            terria.addModel(ref, shareKeys);
           }
 
           if (AccessControlMixin.isMixedInto(ref)) {
@@ -437,7 +445,7 @@ export default class MagdaReference extends AccessControlMixin(
           return ref.uniqueId;
         } else {
           if (terria.getModelById(BaseModel, member.id) === undefined) {
-            terria.addModel(model);
+            terria.addModel(model, shareKeys);
           }
           if (AccessControlMixin.isMixedInto(model)) {
             model.setAccessType(getAccessTypeFromMagdaRecord(member));
@@ -459,7 +467,7 @@ export default class MagdaReference extends AccessControlMixin(
     if (isJsonObject(aspects.terria)) {
       const terriaStrata = aspects.terria;
       Object.keys(terriaStrata).forEach(stratum => {
-        if (stratum === "id" || stratum === "type") {
+        if (stratum === "id" || stratum === "type" || stratum === "shareKeys") {
           return;
         }
         updateModelFromJson(group, stratum, terriaStrata[stratum], true);
@@ -514,14 +522,17 @@ export default class MagdaReference extends AccessControlMixin(
     }
 
     Object.keys(terriaAspect).forEach(stratum => {
-      if (stratum === "type" || stratum === "id") {
+      if (stratum === "id" || stratum === "type" || stratum === "shareKeys") {
         return;
       }
-      try {
-        updateModelFromJson(result, stratum, terriaAspect[stratum], true);
-      } catch (err) {
-        result.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
-      }
+      updateModelFromJson(
+        result,
+        stratum,
+        terriaAspect[stratum],
+        true
+      ).catchError(error =>
+        result.setTrait(CommonStrata.underride, "isExperiencingIssues", true)
+      );
     });
 
     if (override) {

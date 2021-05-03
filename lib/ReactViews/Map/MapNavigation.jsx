@@ -10,11 +10,15 @@ import ToggleSplitterTool from "./Navigation/ToggleSplitterTool";
 import ViewerMode from "../../Models/ViewerMode";
 import ZoomControl from "./Navigation/ZoomControl";
 
+import withControlledVisibility from "../../ReactViews/HOCs/withControlledVisibility";
+
 import classNames from "classnames";
 import { observer } from "mobx-react";
 // import HelpTool from "./Navigation/HelpTool";
 // import StylesToolButton from "./Navigation/tool_button.scss";
-import Icon from "../Icon";
+import Icon from "../../Styled/Icon";
+import { ToolButton } from "../Tool.tsx";
+import PedestrianMode from "../Tools/PedestrianMode/PedestrianMode";
 
 // import Icon from "../Icon";
 import Box from "../../Styled/Box";
@@ -25,6 +29,7 @@ import CloseToolButton from "./Navigation/CloseToolButton";
 import Prompt from "../Generic/Prompt";
 import { runInAction } from "mobx";
 import { withTranslation } from "react-i18next";
+import Cesium from "../../Models/Cesium";
 
 /**
  * TODO: fix this so that we don't need to override pointer events like this.
@@ -44,6 +49,18 @@ const StyledMapNavigation = styled.div`
   `}
 `;
 
+const HelpIcon = withControlledVisibility(props => {
+  return (
+    <MapIconButton
+      expandInPlace
+      iconElement={() => <Icon glyph={Icon.GLYPHS.helpThick} />}
+      onClick={() => props.viewState.showHelpPanel()}
+      neverCollapse={props.viewState.featurePrompts.indexOf("help") >= 0}
+    >
+      Help
+    </MapIconButton>
+  );
+});
 // The map navigation region
 @observer
 class MapNavigation extends React.Component {
@@ -83,11 +100,15 @@ class MapNavigation extends React.Component {
                     <Compass
                       terria={this.props.terria}
                       viewState={this.props.viewState}
+                      elementConfig={this.props.terria.elements.get("compass")}
                     />
                   </div>
                 </If>
                 <div className={Styles.control}>
-                  <ZoomControl terria={this.props.terria} />
+                  <ZoomControl
+                    terria={this.props.terria}
+                    elementConfig={this.props.terria.elements.get("zoom")}
+                  />
                 </div>
               </div>
             </Medium>
@@ -98,7 +119,12 @@ class MapNavigation extends React.Component {
                 }
               >
                 <div className={Styles.control}>
-                  <MyLocation terria={this.props.terria} />
+                  <MyLocation
+                    terria={this.props.terria}
+                    elementConfig={this.props.terria.elements.get(
+                      "my-location"
+                    )}
+                  />
                 </div>
               </If>
               <If
@@ -108,6 +134,24 @@ class MapNavigation extends React.Component {
                   <ToggleSplitterTool
                     terria={this.props.terria}
                     viewState={this.props.viewState}
+                    elementConfig={this.props.terria.elements.get("split-tool")}
+                  />
+                </div>
+              </If>
+              <If
+                condition={
+                  !this.props.terria.configParameters.disablePedestrianMode &&
+                  this.props.terria.currentViewer instanceof Cesium
+                }
+              >
+                <div className={Styles.control}>
+                  <ToolButton
+                    viewState={this.props.viewState}
+                    toolName={t("pedestrianMode.toolButtonTitle")}
+                    icon={Icon.GLYPHS.pedestrian}
+                    getToolComponent={() => Promise.resolve(PedestrianMode)}
+                    params={{ cesium: this.props.terria.currentViewer }}
+                    t={t}
                   />
                 </div>
               </If>
@@ -135,21 +179,16 @@ class MapNavigation extends React.Component {
                     <FeedbackButton
                       terria={this.props.terria}
                       viewState={this.props.viewState}
+                      elementConfig={this.props.terria.elements.get("feedback")}
                     />
                   </div>
                 )}
               <If condition={!this.props.viewState.useSmallScreenInterface}>
                 <div className={Styles.control}>
-                  <MapIconButton
-                    expandInPlace
-                    iconElement={() => <Icon glyph={Icon.GLYPHS.helpThick} />}
-                    onClick={() => this.props.viewState.showHelpPanel()}
-                    neverCollapse={
-                      this.props.viewState.featurePrompts.indexOf("help") >= 0
-                    }
-                  >
-                    Help
-                  </MapIconButton>
+                  <HelpIcon
+                    viewState={this.props.viewState}
+                    elementConfig={this.props.terria.elements.get("help")}
+                  />
                 </div>
                 <Prompt
                   content={
@@ -189,4 +228,6 @@ class MapNavigation extends React.Component {
   }
 }
 
-export default withTranslation()(withTheme(MapNavigation));
+export default withTranslation()(
+  withTheme(withControlledVisibility(MapNavigation))
+);

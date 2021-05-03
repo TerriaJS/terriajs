@@ -8,7 +8,7 @@ import loadXML from "../Core/loadXML";
 import replaceUnderscores from "../Core/replaceUnderscores";
 import TerriaError from "../Core/TerriaError";
 import { geoRss2ToGeoJson, geoRssAtomToGeoJson } from "../Map/geoRssConvertor";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
@@ -18,7 +18,6 @@ import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import LoadableStratum from "./LoadableStratum";
-import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumOrder from "./StratumOrder";
@@ -86,6 +85,11 @@ class GeoRssStratum extends LoadableStratum(GeoRssCatalogItemTraits) {
       CommonStrata.definition,
       "clampToGround",
       item.clampToGround
+    );
+    geoJsonItem.setTrait(
+      CommonStrata.definition,
+      "attribution",
+      item.attribution
     );
     const feed: any = {};
     return Promise.resolve()
@@ -183,11 +187,9 @@ class GeoRssStratum extends LoadableStratum(GeoRssCatalogItemTraits) {
 
 StratumOrder.addLoadStratum(GeoRssStratum.stratumName);
 
-export default class GeoRssCatalogItem
-  extends AsyncMappableMixin(
-    UrlMixin(CatalogMemberMixin(CreateModel(GeoRssCatalogItemTraits)))
-  )
-  implements Mappable {
+export default class GeoRssCatalogItem extends MappableMixin(
+  UrlMixin(CatalogMemberMixin(CreateModel(GeoRssCatalogItemTraits)))
+) {
   static readonly type = "georss";
   get type() {
     return GeoRssCatalogItem.type;
@@ -195,10 +197,6 @@ export default class GeoRssCatalogItem
 
   get typeName() {
     return i18next.t("models.georss.name");
-  }
-
-  get isMappable(): boolean {
-    return true;
   }
 
   get canZoomTo(): boolean {
@@ -217,13 +215,10 @@ export default class GeoRssCatalogItem
     });
   }
 
-  protected forceLoadMapItems(): Promise<void> {
-    const that = this;
-    return that.loadMetadata().then(() => {
-      if (isDefined(that.geoJsonItem)) {
-        return that.geoJsonItem.loadMapItems();
-      }
-    });
+  protected async forceLoadMapItems() {
+    if (isDefined(this.geoJsonItem)) {
+      return this.geoJsonItem.loadMapItems();
+    }
   }
 
   @computed get cacheDuration(): string {

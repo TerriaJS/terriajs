@@ -63,11 +63,14 @@ export default class UrlReference extends UrlMixin(
       return Promise.resolve(undefined);
     }
 
+    // Does the mapping at this index match this url?
+    // Can we load it if we need to?
     if (
       (UrlToCatalogMemberMapping.mapping[index].matcher &&
         !UrlToCatalogMemberMapping.mapping[index].matcher(url)) ||
       (UrlToCatalogMemberMapping.mapping[index].requiresLoad && !allowLoad)
     ) {
+      // Nope, try the mapping at the next index.
       return UrlReference.createCatalogMemberFromUrlReference(
         sourceReference,
         id,
@@ -77,6 +80,7 @@ export default class UrlReference extends UrlMixin(
         index + 1
       );
     } else {
+      // We've got a match! Try and create a model
       const item = CatalogMemberFactory.create(
         UrlToCatalogMemberMapping.mapping[index].type,
         sourceReference.uniqueId,
@@ -85,6 +89,7 @@ export default class UrlReference extends UrlMixin(
       );
 
       if (item === undefined) {
+        // Creating the model failed, try the mapping at the next index
         return UrlReference.createCatalogMemberFromUrlReference(
           sourceReference,
           id,
@@ -105,6 +110,7 @@ export default class UrlReference extends UrlMixin(
           .loadMetadata()
           .then(() => item)
           .catch(e => {
+            // Loading failed. Try the next mapping.
             return UrlReference.createCatalogMemberFromUrlReference(
               sourceReference,
               id,

@@ -37,7 +37,9 @@ export default function createLongitudeLatitudeFeaturePerId(
   const idColumns = style.idColumns;
   const rowIds = style.tableModel.rowIds;
   const groups = Object.entries(
-    groupBy(rowIds, id => idColumns.map(col => col.values[id]).join("-"))
+    groupBy(rowIds, id =>
+      idColumns.map(col => col.valueFunctionForType(id)).join("-")
+    )
   );
   const features = groups.map(([featureId, rowIds]) =>
     createFeature(featureId, rowIds, style)
@@ -89,7 +91,9 @@ function createFeature(
     title: featureId,
     csvData: [
       chartColumns.map(col => col.name).join(","),
-      ...rowIds.map(i => chartColumns.map(col => col.values[i]).join(","))
+      ...rowIds.map(i =>
+        chartColumns.map(col => col.valueFunctionForType(i)).join(",")
+      )
     ].join("\n")
   });
 
@@ -202,7 +206,7 @@ function getRowValues(
   const result: JsonObject = {};
 
   tableColumns.forEach(column => {
-    result[column.name] = column.values[index];
+    result[column.title] = column.valueFunctionForType(index);
   });
 
   return result;
@@ -214,8 +218,8 @@ function getRowDescription(
 ) {
   const rows = tableColumns
     .map(column => {
-      const title = column.traits.title || column.name;
-      const value = column.values[index];
+      const title = column.title;
+      const value = column.valueFunctionForType(index);
       return `<tr><td>${title}</td><td>${value}</td></tr>`;
     })
     .join("\n");

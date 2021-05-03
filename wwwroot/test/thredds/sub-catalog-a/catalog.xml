@@ -1,0 +1,15 @@
+<catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" name="Catalog A" version="1.0.1">
+    <service name="all" serviceType="Compound" base="">
+        <service name="ncdods" serviceType="OPENDAP" base="/thredds/dodsC/"/>
+        <service name="HTTPServer" serviceType="HTTPServer" base="/thredds/fileServer/"/>
+        <service name="wms" serviceType="WMS" base="/thredds/wms/"/>
+        <service name="subsetServer" serviceType="NetcdfSubset" base="/thredds/ncss/grid/"/>
+        <service name="ncml" serviceType="NCML" base="/thredds/ncml/"/>
+        <service name="uddc" serviceType="UDDC" base="/thredds/uddc/"/>
+        <service name="iso" serviceType="ISO" base="/thredds/iso/"/>
+    </service>
+    <dataset name="Dataset 1" urlPath="fx3/gbr4/gbr4_simple_2016-06.nc">
+        <dataSize units="Gbytes">4.562</dataSize>
+        <date type="modified">2016-06-08T21:36:11Z</date>
+    </dataset>
+</catalog>

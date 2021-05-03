@@ -17,6 +17,7 @@ import { withTranslation } from "react-i18next";
 
 import RegionTypeParameterEditor from "./RegionTypeParameterEditor";
 import Styles from "./parameter-editors.scss";
+import CommonStrata from "../../Models/CommonStrata";
 
 const RegionPicker = createReactClass({
   displayName: "RegionPicker",
@@ -67,7 +68,7 @@ const RegionPicker = createReactClass({
         if (defined(value) && defined(value.realRegion)) {
           value = value.realRegion;
         }
-        this.props.parameter.value = value;
+        this.props.parameter.setValue(CommonStrata.user, value);
       }
     });
 

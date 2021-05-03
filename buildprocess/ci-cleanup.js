@@ -54,7 +54,7 @@ function makeSafeName(name) {
 
 function createIngress(branches) {
     return {
-        apiVersion: 'extensions/v1beta',
+        apiVersion: 'networking.k8s.io/v1beta1',
         kind: 'Ingress',
         metadata: {
             name: 'terriajs-ci',
@@ -101,7 +101,7 @@ getAllBranches('TerriaJS/terriajs').then(branches => {
         const branchName = release.substring(9);
         if (!branches.find(b => makeSafeName(b.name) === branchName)) {
             console.log('Deleting old release ' + release);
-            const helmDeleteResult = childProcess.spawnSync('helm', ['delete', '--purge', release], {
+            const helmDeleteResult = childProcess.spawnSync('helm', ['delete', release], {
                 stdio: 'inherit'
             });
             console.log('helm delete status: ' + helmDeleteResult.status);

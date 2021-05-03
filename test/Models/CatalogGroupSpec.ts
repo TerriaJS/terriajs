@@ -37,10 +37,10 @@ describe("CatalogGroup", function() {
         CatalogMemberFactory,
         terria,
         "",
-        undefined,
         "definition",
-        json
-      )
+        json,
+        {}
+      ).throwIfUndefined()
     );
   });
 

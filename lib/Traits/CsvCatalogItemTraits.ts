@@ -34,7 +34,6 @@ class PollingTraits extends ModelTraits {
 }
 
 export default class CsvCatalogItemTraits extends mixTraits(
-  ExportableTraits,
   AutoRefreshingTraits,
   FeatureInfoTraits,
   UrlTraits,
@@ -54,6 +53,14 @@ export default class CsvCatalogItemTraits extends mixTraits(
     type: "string"
   })
   csvString?: string;
+
+  @primitiveTrait({
+    name: "Ignore rows starting with comment",
+    description:
+      "Any rows of a CSV starting with '#' or '//' will be ignored. A value of `undefined` will be treated the same as `false`.",
+    type: "boolean"
+  })
+  ignoreRowsStartingWithComment?: boolean;
 
   @objectTrait({
     name: "Polling",

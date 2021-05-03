@@ -16,6 +16,7 @@ import UserDrawing from "../../Models/UserDrawing";
 import { withTranslation } from "react-i18next";
 import { observer } from "mobx-react";
 import { runInAction } from "mobx";
+import CommonStrata from "../../Models/CommonStrata";
 
 const PolygonParameterEditor = observer(
   createReactClass({
@@ -69,7 +70,7 @@ const PolygonParameterEditor = observer(
  * @param {FunctionParameter} parameter Parameter to set value on.
  */
 PolygonParameterEditor.setValueFromText = function(e, parameter) {
-  parameter.value = [JSON.parse(e.target.value)];
+  parameter.setValue(CommonStrata.user, [JSON.parse(e.target.value)]);
 };
 
 /**
@@ -141,7 +142,9 @@ export function selectOnMap(terria, viewState, parameter) {
     terria: terria,
     onPointClicked: function(pointEntities) {
       runInAction(() => {
-        parameter.value = [getPointsLongLats(pointEntities, terria)];
+        parameter.setValue(CommonStrata.user, [
+          getPointsLongLats(pointEntities, terria)
+        ]);
       });
     },
     onCleanUp: function() {
@@ -149,7 +152,9 @@ export function selectOnMap(terria, viewState, parameter) {
     },
     onPointMoved: function(customDataSource) {
       runInAction(() => {
-        parameter.value = [getPointsLongLats(customDataSource, terria)];
+        parameter.setValue(CommonStrata.user, [
+          getPointsLongLats(customDataSource, terria)
+        ]);
       });
     }
   });

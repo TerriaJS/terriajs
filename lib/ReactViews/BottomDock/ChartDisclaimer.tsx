@@ -7,9 +7,9 @@ import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
 import DiscretelyTimeVaryingTraits from "../../Traits/DiscretelyTimeVaryingTraits";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
-const Spacing: any = require("../../Styled/Spacing").default;
-const Text: any = require("../../Styled/Text").default;
-const Box: any = require("../../Styled/Box").default;
+import Box from "../../Styled/Box";
+import Spacing from "../../Styled/Spacing";
+import Text from "../../Styled/Text";
 
 interface ChartDisclaimerProps {
   terria: Terria;
@@ -22,14 +22,20 @@ const ChartDisclaimer: React.FC<ChartDisclaimerProps> = ({ terria }) => {
   const uniqueChartDisclaimers: string[] = [
     ...new Set(
       filterOutUndefined(
-        chartView.chartableItems.map(item =>
-          hasTraits(item, DiscretelyTimeVaryingTraits, "chartDisclaimer")
-            ? item.chartDisclaimer
+        chartView.chartItems.map(chartItem =>
+          chartItem.showInChartPanel &&
+          hasTraits(
+            chartItem.item,
+            DiscretelyTimeVaryingTraits,
+            "chartDisclaimer"
+          )
+            ? chartItem.item.chartDisclaimer
             : undefined
         )
       )
     )
   ];
+
   if (uniqueChartDisclaimers.length === 0) return null;
 
   return (

@@ -22,6 +22,9 @@ import GeoJsonParameterEditor from "./GeoJsonParameterEditor";
 import defined from "terriajs-cesium/Source/Core/defined";
 
 import Styles from "./parameter-editors.scss";
+import InfoParameterEditor from "./InfoParameterEditor";
+
+import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 
 const ParameterEditor = createReactClass({
   displayName: "ParameterEditor",
@@ -37,14 +40,22 @@ const ParameterEditor = createReactClass({
 
   renderLabel() {
     return (
-      <label
-        key={this.props.parameter.id}
-        className={Styles.label}
-        htmlFor={this.fieldId + this.props.parameter.type}
-      >
-        {this.props.parameter.name}
-        {this.props.parameter.isRequired && <span> (required)</span>}
-      </label>
+      <div>
+        <label
+          key={this.props.parameter.id}
+          className={Styles.label}
+          htmlFor={this.fieldId + this.props.parameter.type}
+        >
+          {this.props.parameter.name}
+          {this.props.parameter.isRequired && <span> (required)</span>}
+        </label>
+        {typeof this.props.parameter.description === "string" &&
+        this.props.parameter.description !== ""
+          ? parseCustomMarkdownToReact(this.props.parameter.description, {
+              parameter: this.props.parameter
+            })
+          : ""}
+      </div>
     );
   },
 
@@ -56,7 +67,15 @@ const ParameterEditor = createReactClass({
         this
       );
       if (defined(editor)) {
-        return editor;
+        return (
+          <div
+            style={{
+              color: this.props.parameter.isValid ? "inherit" : "#ff0000"
+            }}
+          >
+            {editor}
+          </div>
+        );
       }
     }
     const genericEditor = ParameterEditor.parameterTypeConverters.filter(
@@ -313,6 +332,23 @@ ParameterEditor.parameterTypeConverters = [
               previewed={parameterEditor.props.previewed}
               viewState={parameterEditor.props.viewState}
               parameter={parameterEditor.props.parameter}
+            />
+          </div>
+        );
+      }
+    }
+  },
+  {
+    id: "info",
+    parameterTypeToDiv: function GenericParameterToDiv(type, parameterEditor) {
+      if (type === this.id) {
+        return (
+          <div>
+            {parameterEditor.renderLabel()}
+            <InfoParameterEditor
+              previewed={parameterEditor.props.previewed}
+              parameter={parameterEditor.props.parameter}
+              parameterViewModel={parameterEditor.props.parameterViewModel}
             />
           </div>
         );

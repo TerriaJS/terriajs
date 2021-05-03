@@ -1,7 +1,5 @@
 "use strict";
 
-/*global require*/
-
 var Terria = require("../../lib/Models/Terria");
 var WfsFeaturesCatalogGroup = require("../../lib/Models/WfsFeaturesCatalogGroup");
 

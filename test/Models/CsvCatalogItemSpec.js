@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require,describe,it,expect,beforeEach,fail*/
 var clone = require("terriajs-cesium/Source/Core/clone").default;
 var Color = require("terriajs-cesium/Source/Core/Color").default;
 var JulianDate = require("terriajs-cesium/Source/Core/JulianDate").default;
@@ -1553,13 +1552,13 @@ describe("CsvCatalogItem with region mapping", function() {
   //
   //    xit('emits an error event', function() {
   //        csvItem.isEnabled = true;
-  //        expect(terria.error.raiseEvent).toHaveBeenCalled();
+  //        expect(terria.raiseErrorToUser).toHaveBeenCalled();
   //    });
   //
   //    xit('and showWarnings is false, it emits no error event or JS Error', function() {
   //        csvItem.showWarnings = false;
   //        csvItem.isEnabled = true;
-  //        expect(terria.error.raiseEvent).not.toHaveBeenCalled();
+  //        expect(terria.raiseErrorToUser).not.toHaveBeenCalled();
   //    });
   //});
 

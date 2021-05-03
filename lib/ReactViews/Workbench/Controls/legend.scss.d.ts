@@ -5,7 +5,6 @@ interface CssExports {
   'imageAnchor': string;
   'legend': string;
   'legend--svg': string;
-  'legendImagehasError': string;
   'legendInner': string;
   'legendLegendBoxImg': string;
   'legendOpenExternally': string;

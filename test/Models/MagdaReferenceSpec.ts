@@ -264,10 +264,10 @@ describe("MagdaReference", function() {
             {
               aspects: {
                 terria: {
-                  definition: {}
-                },
-                id: "item-with-no-type-and-definition",
-                type: "unknown"
+                  definition: {},
+                  id: "item-with-no-type-and-definition",
+                  type: "unknown"
+                }
               },
               id: "item-with-no-type-and-definition",
               name: "item with no type and definition"

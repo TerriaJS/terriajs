@@ -144,7 +144,7 @@ describe("DimensionSelectorSection", function() {
         // Check Style A
         expect(selects[3].props.name).toContain(`${wmsItem.uniqueId}-A-styles`);
         expect(selects[3].props.value).toBe("contour/ferret");
-        expect(selects[3].findAllByType("option").length).toBe(40);
+        expect(selects[3].findAllByType("option").length).toBe(41);
 
         expect(selects[4].props.name).toContain(`${wmsItem.uniqueId}-B-styles`);
         expect(selects[4].props.value).toBe("shadefill/alg2");

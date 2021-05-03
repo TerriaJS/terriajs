@@ -1,8 +1,14 @@
-The file `wwwroot/config.json` in TerriaMap contains client-side configuration parameters.
+The file `wwwroot/config.json` in TerriaMap contains client-side configuration parameters. See [this file for an example](https://github.com/TerriaJS/TerriaMap/blob/next/wwwroot/config.json).
 
-It has this structure:
+It has following structure:
 
-```
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|[initializationUrls](#intializationurls)|yes|**string[]**|[]|The list of initialization files which define the catalog content, for more details check [below](#intializationurls).|
+|parameters|yes|**[Parameters](#parameters)**||TerriaJS configuration options|
+
+**Example**
+```json5
 {
     "initializationUrls" : [
         "myinitfile",
@@ -23,49 +29,135 @@ If a string ends with `.json`, it is assumed to be a complete relative or absolu
 
 If the string does not end with `.json`, such as `"foo"`, it refers to an init file on the same web server at `init/foo.json`.  In a TerriaMap directory on your computer, it can be found at `wwwroot/init/foo.json`.
 
-## parameters
+### v7intializationUrls
+
+It is also possible to add version 7 init files &mdash; these will be converted on-the-fly in `terriajs` when a map is loaded. See [`catalog-converter`](https://github.com/TerriaJS/catalog-converter) repo for more information.
+
+## Parameters
+
+**The following table has not been updated for TerriaJS v8. Most should still work as they did in version 7 however we may have removed some and added new ones. The best reference for now is [`interface ConfigParameters`](https://github.com/TerriaJS/terriajs/blob/next/lib/Models/Terria.ts#L115) (you may have to search for `interface ConfigParameters` on that page to find it if future code changes change line numbers).** 
 
 Specifies various options for configuring TerriaJS:
 
-Option                      | Meaning
-----------------------------|--------
-`"appName"`                 | TerriaJS uses this name whenever it needs to display the name of the application.
-`"autoPlay"` | true to start playing time-dynamic datasets on load, or false to start them paused.
-`"bingMapsKey"`             | A [Bing Maps API key](https://msdn.microsoft.com/en-us/library/ff428642.aspx) used for requesting Bing Maps base maps and using the Bing Maps geocoder for searching. It is your responsibility to request a key and comply with all terms and conditions.
-`"brandBarElements": [ ]`   | An array of strings of HTML that fill up the top left logo space.
-`"defaultMaximumShownFeatureInfos"` | The maximum number of "feature info" boxes that can be displayed when clicking a point. (Default: 100)
-`"disclaimer": {`<span><br/>&nbsp;&nbsp;`"text": "",`<br/>&nbsp;&nbsp;`"url": ""`<br/>`}`</span> | This text will be displayed prominently at the bottom of the map, with a clickable link to the URL.
-`"feedbackUrl"`					| URL of the service used to send feedback.  If not specified, the "Give Feedback" button will not appear. | None
-`"googleAnalyticsKey"`      | A Google API key for [Google Analytics](https://analytics.google.com).  If specified, TerriaJS will send various events about how it's used to Google Analytics.
-`"googleAnalyticsOptions"`  | Additional options that will be passed to the Google Analytics call.
-`"printDisclaimer": {`<span><br/>&nbsp;&nbsp;`"text": "",`<br/>&nbsp;&nbsp;`"url": ""`<br/>`}`</span> | Same as `disclaimer`, except only shown in printed views.
-`"supportEmail"`            | The email address shown when things go wrong.
-`"mobileDefaultViewerMode"` | A string specifying the default view mode to load when running on a mobile platform. Options are: `"3DTerrain"`, `"3DSmooth"`, `"2D"`. (Default: `"2D"`)
-`"initFragmentPaths"`       | An array of base paths to use to try to use to resolve init fragments in the URL.  For example, if this property is `[ "init/", "http://example.com/init/"]`, then a URL with `#test` will first try to load `init/test.json` and, if that fails, next try to load `http://example.com/init/test.json`.  If not specified, this property defaults to `[ "init/" ]`.
-`"disableMyLocation"`       | True to disable the "Centre map at your current location" button.
-`"disableSplitter"`         | True to disable the use of the splitter control.
-`"tabbedCatalog"`           | True to create a separate explorer panel tab for each top-level catalog group to list its items in.
-`"interceptBrowserPrint"`   | True (the default) to intercept the browser's print feature and use a custom one accessible through the Share panel.
-`"openAddData"`             | True to automatically open Add Data dialog at startup.
-`"showWelcomeMessage"`      | True to display welcome message on startup.
-`"showInAppGuides"`         | True to display in-app guides.
-`"showFeaturePrompts"`      | True to display new feature popups.
-`"useCesiumIonTerrain"`     | True to use Cesium World Terrain from Cesium ion. False to use terrain from the URL specified with the `"cesiumTerrainUrl"` property. If this property is false and `"cesiumTerrainUrl"` is not specified, the 3D view will use a smooth ellipsoid instead of a terrain surface. Defaults to true.
-`"useCesiumIonBingImagery"` | True to use Bing Maps from Cesium ion (Cesium World Imagery). By default, Ion will be used, unless the `bingMapsKey` property is specified, in which case that will be used instead. To disable the Bing Maps layers entirely, set this property to false and set `bingMapsKey` to null.
-`"cesiumIonAccessToken"`    | The access token to use with Cesium ion. If `"useCesiumIonTerrain"` is true and this property is not specified, the Cesium default Ion key will be used. It is a violation of the Ion terms of use to use the default key in a deployed application.
-`"cesiumTerrainUrl"`        | The URL to use for Cesium terrain in the 3D model. This property is ignored if `"useCesiumIonTerrain"` is set to true.
-`"rollbarAccessToken"`      | Your `post_client_item` from Rollbar - as of right now, TerriaMap also needs to be modified such that you construct `RollbarErrorProvider` in `index.js`
-`"helpContent"`             | The content to be displayed in the help panel
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|`appName`|no|**string**|`"TerriaJS App"`|TerriaJS uses this name whenever it needs to display the name of the application.|
+|`supportEmail`|no|**string**|`"info@terria.io"`|The email address shown when things go wrong.|
+|`defaultMaximumShownFeatureInfos`|no|**number**|`100`|The maximum number of "feature info" boxes that can be displayed when clicking a point.|
+|`regionMappingDefinitionsUrl`|yes|**string**|`"build/TerriaJS/data/regionMapping.json"`|URL of the JSON file that defines region mapping for CSV files. This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.|
+|`conversionServiceBaseUrl`|no|**string**|`"convert/"`|URL of OGR2OGR conversion service (part of TerriaJS-Server). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.|
+|`proj4ServiceBaseUrl`|no|**string**|`"proj4/"`|URL of Proj4 projection lookup service (part of TerriaJS-Server). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.|
+|`corsProxyBaseUrl`|no|**string**|`"proxy/"`|URL of CORS proxy service (part of TerriaJS-Server). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.|
+|`proxyableDomainsUrl`|no|**string**|`"proxyabledomains/"`|Deprecated, will be determined from serverconfig.|
+|`serverConfigUrl`|no|**string**|`"serverconfig/"`|
+|`shareUrl`|no|**string**|`"share"`|
+|`feedbackUrl`|no|**string**||URL of the service used to send feedback.  If not specified, the "Give Feedback" button will not appear.|
+|`initFragmentPaths`|yes|**string[]**|`["init/"]`|An array of base paths to use to try to use to resolve init fragments in the URL.  For example, if this property is `[ "init/", "http://example.com/init/"]`, then a URL with `#test` will first try to load `init/test.json` and, if that fails, next try to load `http://example.com/init/test.json`.|
+|`storyEnabled`|yes|**boolean**|`true`|Whether the story is enabled. If false story function button won't be available.|
+|`interceptBrowserPrint`|no|**boolean**|`true`|True (the default) to intercept the browser's print feature and use a custom one accessible through the Share panel.|
+|`tabbedCatalog`|no|**boolean**|`false`|True to create a separate explorer panel tab for each top-level catalog group to list its items in.|
+|`useCesiumIonTerrain`|no|**boolean**|`true`|True to use Cesium World Terrain from Cesium ion. False to use terrain from the URL specified with the `"cesiumTerrainUrl"` property. If this property is false and `"cesiumTerrainUrl"` is not specified, the 3D view will use a smooth ellipsoid instead of a terrain surface. Defaults to true.|
+|`cesiumTerrainUrl`|no|**string**|undefined|The URL to use for Cesium terrain in the 3D Terrain viewer, in quantized mesh format. This property is ignored if "useCesiumIonTerrain" is set to true.|
+|`cesiumIonAccessToken`|no|**string**|undefined|The access token to use with Cesium ion. If `"useCesiumIonTerrain"` is true and this property is not specified, the Cesium default Ion key will be used. It is a violation of the Ion terms of use to use the default key in a deployed application.|
+|`useCesiumIonBingImagery`|no|**boolean**|`true`|True to use Bing Maps from Cesium ion (Cesium World Imagery). By default, Ion will be used, unless the `bingMapsKey` property is specified, in which case that will be used instead. To disable the Bing Maps layers entirely, set this property to false and set `bingMapsKey` to null.|
+|`bingMapsKey`|no|**string**|undefined|A [Bing Maps API key](https://msdn.microsoft.com/en-us/library/ff428642.aspx) used for requesting Bing Maps base maps and using the Bing Maps geocoder for searching. It is your responsibility to request a key and comply with all terms and conditions.|
+|`hideTerriaLogo`|no|**boolean**|`false`|
+|`brandBarElements`|no|**string[]**|undefined|An array of strings of HTML that fill up the top left logo space (see `brandBarSmallElements` or `displayOneBrand` for small screens).|
+|`brandBarSmallElements`|no|**string[]**|undefined|An array of strings of HTML that fill up the top left logo space - used for small screens.|
+|`displayOneBrand`|no|**number**|`0`|Index of which `brandBarElements` to show for mobile header. This will only be used if `brandBarSmallElements` is undefined.|
+|`disableMyLocation`|no|**boolean**|undefined|True to disable the "Centre map at your current location" button.|
+|`disableSplitter`|no|**boolean**|undefined|True to disable the use of the splitter control.|
+|`experimentalFeatures`|no|**boolean**|undefined||
+|`magdaReferenceHeaders`|no|**[MagdaReferenceHeaders](#MagdaReferenceHeaders)**|undefined|
+|`locationSearchBoundingBox`|no|**number**|undefined|
+|`googleAnalyticsKey`|no|**string**|undefined|A Google API key for [Google Analytics](https://analytics.google.com).  If specified, TerriaJS will send various events about how it's used to Google Analytics.|
+|`rollbarAccessToken`|no|**string**|undefined|Your `post_client_item` from Rollbar - as of right now, TerriaMap also needs to be modified such that you construct `RollbarErrorProvider` in `index.js`|
+|`globalDisclaimer`|no|**any**|undefined||
+|`showWelcomeMessage`|no|**boolean**|`false`|True to display welcome message on startup.|
+|`welcomeMessageVideo`|no|**any**||Video to show in welcome message.|
+|`showInAppGuides`|no|**boolean**|`false`|True to display in-app guides.|
+|`helpContent`|no|**[HelpContentItem](#HelpContentItem)**|`[]`|The content to be displayed in the help panel.|
+|`helpContentTerms`|no|**[Term](#Term)**|||
+|`languageConfiguration`|no|**[LanguageConfiguration](#LanguageConfiguration)**|undefined|Language configuration of TerriaJS.|
+|`customRequestSchedulerLimits`|no|**[RequestScheduler](https://cesium.com/docs/cesiumjs-ref-doc/RequestScheduler.html#.requestsByServer)**|undefined|Custom concurrent request limits for domains in Cesium's RequestScheduler.|
+|`persistViewerMode`|no|**boolean**|`true`|Whether to load persisted viewer mode from local storage.|
+|`openAddData`|no|**boolean**|`false`|Whether to open the add data explorer panel on load.|
+|`theme`|no|**any**|`{}`|An object used to override theme properties - for example `{"logoHeight": "70px"}`.|
 
+### MagdaReferenceHeaders
 
-## Advanced options
+***
 
-These options only need to be changed in unusual deployments. They define the URLs that are accessed for certain additional services, so must be changed if deploying as a static site, for instance.
+### HelpContentItem
+Configuration of items to appear in the search bar
 
-Option                      | Meaning | Default
-----------------------------|---------|---------
-`"conversionServiceBaseUrl"`    | URL of OGR2OGR conversion service (part of TerriaJS-Server). | `convert/`
-`"corsProxyBaseUrl"`            | URL of CORS proxy service (part of TerriaJS-Server)| `proxy/`
-`"proj4ServiceBaseUrl"`         | URL of Proj4 projection lookup service (part of TerriaJS-Server) | `proj4/`
-`"proxyableDomainsUrl"`         | URL of list of domains which the CORS proxy service will allow to be proxied. | `proxyabledomains/`
-`"regionMappingDefinitionsUrl"` | URL of the JSON file that defines region mapping for CSV files. | `build/TerriaJS/data/regionMapping.json`
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|`itemName`|yes|**string**|undefined|
+|`title`|no|**string**|undefined|Title of the help item|
+|`videoUrl`|no|**string**|undefined|The video to show on the top of help item.|
+|`placeholderImage`|no|**string**|undefined|Placeholder image for the video.|
+|`paneMode`|no|**enum["videoAndContent","slider","trainer"]**|`"videoAndContent"`|
+|`trainerItems`|no|**[TrainerItem[]](#TrainerItem)**|undefined|List of the trainer steps|
+|`markdownText`|no|**string**|undefined|The content of the help item, can use Markdown syntax.|
+|`icon`|no|**string**|undefined|Icon to show next to the itemName.|
+
+#### TrainerItem
+
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|title|yes|**string**||Title of the trainer item.|
+|footnote|yes|**string**||Text to show below steps.|
+|steps|yes|**StepItem**||List of the steps for this trainer item.|
+
+#### StepItem
+
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|title|yes|**string**||Title of the step.|
+|markdownDescription|no|**string**||The content of the step item.|
+
+***
+
+### Term
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|term|yes|**string**||Name of the term, content will be attached to it when found in text.|
+|content|yes|**string**||Description of the content.|
+|aliases|no|**string[]**||Aliases of the term.|
+
+***
+
+### LanguageConfiguration
+
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|enabled|yes|**boolean**|`false`|Controls whether a button to switch the portal's language is provided.|
+|debug|yes|**boolean**|`false`|Controls whether debug information regarding translations is logged to the console.|
+|react|yes|**ReactOptions**||
+|languages|yes|**Object**|`{en: "english"}`|Language abbreviations. Please mind that matching locale files must exist.|
+|fallbackLanguage|yes|**string**|`"en"`|Fallback language used if contents are not available in the currently selected language.|
+|changeLanguageOnStartWhen|yes|**string[]**|`["querystring", "localStorage", "navigator", "htmlTag"]`|Order of user language detection. See [i18next browser language detection documentation](https://github.com/i18next/i18next-browser-languageDetector) for details.|
+
+**Example**
+
+```json
+{
+  "enabled": true,
+  "debug": false,
+  "react": {
+    "useSuspense": false
+  },
+  "languages": {
+    "en": "english",
+    "de": "deutsch"
+  },
+  "fallbackLanguage": "en",
+  "changeLanguageOnStartWhen": [
+    "querystring",
+    "localStorage",
+    "navigator",
+    "htmlTag"
+  ]
+}
+```

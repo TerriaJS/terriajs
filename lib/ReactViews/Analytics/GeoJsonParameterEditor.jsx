@@ -18,10 +18,11 @@ import {
 } from "./SelectAPolygonParameterEditor";
 import { getDisplayValue as getRegionPickerDisplayValue } from "./RegionPicker";
 import createReactClass from "create-react-class";
-import GeoJsonParameter from "../../Models/GeoJsonParameter";
+import GeoJsonParameter from "../../Models/FunctionParameters/GeoJsonParameter";
 import { withTranslation } from "react-i18next";
 import { observer } from "mobx-react";
 import { runInAction } from "mobx";
+import CommonStrata from "../../Models/CommonStrata";
 
 const GeoJsonParameterEditor = observer(
   createReactClass({
@@ -39,7 +40,7 @@ const GeoJsonParameterEditor = observer(
 
     selectPointOnMap() {
       runInAction(() => {
-        this.props.parameter.value = undefined;
+        this.props.parameter.setValue(CommonStrata.user, undefined);
         selectPointOnMap(
           this.props.previewed.terria,
           this.props.viewState,
@@ -52,7 +53,7 @@ const GeoJsonParameterEditor = observer(
 
     selectPolygonOnMap() {
       runInAction(() => {
-        this.props.parameter.value = undefined;
+        this.props.parameter.setValue(CommonStrata.user, undefined);
         selectPolygonOnMap(
           this.props.previewed.terria,
           this.props.viewState,
@@ -64,7 +65,7 @@ const GeoJsonParameterEditor = observer(
 
     selectExistingPolygonOnMap() {
       runInAction(() => {
-        this.props.parameter.value = undefined;
+        this.props.parameter.setValue(CommonStrata.user, undefined);
         selectExistingPolygonOnMap(
           this.props.previewed.terria,
           this.props.viewState,

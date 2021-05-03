@@ -1,9 +1,14 @@
 import { computed } from "mobx";
+import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
+import isDefined from "../Core/isDefined";
 import Model from "../Models/Model";
 import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
-import AsyncLoader from "../Core/AsyncLoader";
 import AccessControlMixin from "./AccessControlMixin";
+import ChartableMixin from "./ChartableMixin";
+import GroupMixin from "./GroupMixin";
+import MappableMixin from "./MappableMixin";
+import ReferenceMixin from "./ReferenceMixin";
 
 export type CatalogMember = Model<CatalogMemberTraits>;
 
@@ -30,6 +35,16 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       return this._metadataLoader.isLoading;
     }
 
+    @computed
+    get isLoading() {
+      return (
+        this.isLoadingMetadata ||
+        (MappableMixin.isMixedInto(this) && this.isLoadingMapItems) ||
+        (ReferenceMixin.is(this) && this.isLoadingReference) ||
+        (GroupMixin.isMixedInto(this) && this.isLoadingMembers)
+      );
+    }
+
     loadMetadata(): Promise<void> {
       return this._metadataLoader.load();
     }
@@ -37,11 +52,18 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
     /**
      * Forces load of the metadata. This method does _not_ need to consider
      * whether the metadata is already loaded.
+     *
+     * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
      */
-    protected abstract forceLoadMetadata(): Promise<void>;
+    protected async forceLoadMetadata() {}
 
     get hasCatalogMemberMixin() {
       return true;
+    }
+
+    @computed
+    get inWorkbench() {
+      return this.terria.workbench.contains(this);
     }
 
     /**
@@ -76,6 +98,27 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
         (this.info !== undefined &&
           this.info.some(info => descriptionRegex.test(info.name || "")))
       );
+    }
+
+    @computed
+    get infoAsObject() {
+      const infoObject: any = {};
+
+      this.info.forEach(infoItem => {
+        if (infoItem.name !== undefined && infoItem.name.length > 0) {
+          const infoNameNoSpaces = infoItem.name.replace(/ /g, "");
+          if (
+            isDefined(infoItem.content) &&
+            !isDefined(infoObject[infoNameNoSpaces])
+          ) {
+            infoObject[infoNameNoSpaces] = infoItem.content;
+          } else if (isDefined(infoItem.contentAsObject)) {
+            infoObject[infoNameNoSpaces] = infoItem.contentAsObject;
+          }
+        }
+      });
+
+      return infoObject;
     }
 
     @computed

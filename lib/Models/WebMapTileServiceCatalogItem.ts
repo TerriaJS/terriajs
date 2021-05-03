@@ -1,16 +1,15 @@
 import i18next from "i18next";
 import { computed, runInAction } from "mobx";
 import defined from "terriajs-cesium/Source/Core/defined";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import WebMapTileServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapTileServiceImageryProvider";
 import URI from "urijs";
 import containsAny from "../Core/containsAny";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
+import MappableMixin, { MapItem } from "../ModelMixins/MappableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import LegendTraits from "../Traits/LegendTraits";
@@ -23,6 +22,7 @@ import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
+import { ServiceProvider } from "./OwsInterfaces";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
 import WebMapTileServiceCapabilities, {
@@ -30,8 +30,7 @@ import WebMapTileServiceCapabilities, {
   ResourceUrl,
   TileMatrixSetLink,
   WmtsCapabilitiesLegend,
-  WmtsLayer,
-  ServiceProvider
+  WmtsLayer
 } from "./WebMapTileServiceCapabilities";
 
 interface UsableTileMatrixSets {
@@ -82,11 +81,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
       model as WebMapTileServiceCatalogItem,
       this.capabilities
     ) as this;
-  }
-
-  @computed
-  get supportsReordering() {
-    return !this.keepOnTop;
   }
 
   @computed
@@ -420,7 +414,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 }
 
-class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
+class WebMapTileServiceCatalogItem extends MappableMixin(
   GetCapabilitiesMixin(
     UrlMixin(
       CatalogMemberMixin(CreateModel(WebMapTileServiceCatalogItemTraits))
@@ -444,6 +438,7 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
 
   static readonly type = "wmts";
   readonly canZoomTo = true;
+  readonly supportsSplitting = true;
 
   get type() {
     return WebMapTileServiceCatalogItem.type;
@@ -468,10 +463,6 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
     runInAction(() => {
       this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
     });
-  }
-
-  forceLoadMapItems(): Promise<void> {
-    return this.loadMetadata();
   }
 
   @computed get cacheDuration(): string {
@@ -542,25 +533,6 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
       return;
     }
 
-    let rectangle;
-
-    if (
-      this.rectangle !== undefined &&
-      this.rectangle.east !== undefined &&
-      this.rectangle.west !== undefined &&
-      this.rectangle.north !== undefined &&
-      this.rectangle.south !== undefined
-    ) {
-      rectangle = Rectangle.fromDegrees(
-        this.rectangle.west,
-        this.rectangle.south,
-        this.rectangle.east,
-        this.rectangle.north
-      );
-    } else {
-      rectangle = undefined;
-    }
-
     const imageryProvider = new WebMapTileServiceImageryProvider({
       url: proxyCatalogItemUrl(this, baseUrl),
       layer: layerIdentifier,
@@ -573,7 +545,7 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
       tileHeight: tileMatrixSet.tileHeight,
       tilingScheme: new WebMercatorTilingScheme(),
       format,
-      rectangle
+      credit: this.attribution
     });
     return imageryProvider;
   }
@@ -652,14 +624,21 @@ class WebMapTileServiceCatalogItem extends AsyncMappableMixin(
     };
   }
 
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
+  }
+
   @computed
-  get mapItems() {
+  get mapItems(): MapItem[] {
     if (isDefined(this.imageryProvider)) {
       return [
         {
           alpha: this.opacity,
           show: this.show,
-          imageryProvider: this.imageryProvider
+          imageryProvider: this.imageryProvider,
+          clippingRectangle: this.clipToRectangle
+            ? this.cesiumRectangle
+            : undefined
         }
       ];
     }

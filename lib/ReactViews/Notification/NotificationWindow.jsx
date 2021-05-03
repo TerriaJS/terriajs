@@ -1,10 +1,10 @@
 "use strict";
 
 import classNames from "classnames";
-import defined from "terriajs-cesium/Source/Core/defined";
-import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
+import React from "react";
+import defined from "terriajs-cesium/Source/Core/defined";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import Styles from "./notification-window.scss";
 
@@ -12,8 +12,15 @@ const NotificationWindow = createReactClass({
   displayName: "NotificationWindow",
 
   propTypes: {
-    title: PropTypes.string.isRequired,
-    message: PropTypes.string.isRequired,
+    viewState: PropTypes.object,
+    title: PropTypes.oneOfType([
+      PropTypes.string.isRequired,
+      PropTypes.func.isRequired
+    ]),
+    message: PropTypes.oneOfType([
+      PropTypes.string.isRequired,
+      PropTypes.func.isRequired
+    ]),
     confirmText: PropTypes.string,
     denyText: PropTypes.string,
     onConfirm: PropTypes.func.isRequired,
@@ -38,8 +45,20 @@ const NotificationWindow = createReactClass({
   },
 
   render() {
-    const title = this.props.title || "";
-    const message = this.props.message;
+    const title =
+      typeof this.props.title === "function"
+        ? this.props.title(this.props.viewState)
+        : this.props.title ?? "";
+
+    let message =
+      typeof this.props.message === "function"
+        ? this.props.message(this.props.viewState)
+        : this.props.message;
+
+    if (typeof message === "string") {
+      message = parseCustomMarkdownToReact(message);
+    }
+
     const confirmText = this.props.confirmText || "OK";
     const denyText = this.props.denyText;
     const type = this.props.type;
@@ -48,10 +67,22 @@ const NotificationWindow = createReactClass({
       height: defined(this.props.height) ? this.props.height : "auto",
       width: defined(this.props.width) ? this.props.width : "500px"
     };
+    const isStory = type === "story";
 
     return (
       <div className={classNames(Styles.wrapper, `${type}`)}>
-        <div className={Styles.notification}>
+        <div
+          className={Styles.notification}
+          isStory={isStory}
+          css={`
+            background: ${p =>
+              p.isStory ? p.theme.colorPrimary : p.theme.dark};
+            a,
+            a:visited {
+              color: ${p => p.theme.primary};
+            }
+          `}
+        >
           <div className={Styles.inner} style={divStyle}>
             <h3 className="title">{title}</h3>
             {window.location.host === "localhost:3001" &&
@@ -60,9 +91,7 @@ const NotificationWindow = createReactClass({
                   <img src="./build/TerriaJS/images/feature.gif" />
                 </div>
               )}
-            <div className={Styles.body}>
-              {parseCustomMarkdownToReact(message)}
-            </div>
+            <div className={Styles.body}>{message}</div>
           </div>
           <div className={Styles.footer}>
             <If condition={denyText}>

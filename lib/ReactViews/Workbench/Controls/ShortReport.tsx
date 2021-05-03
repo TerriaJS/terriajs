@@ -1,29 +1,22 @@
 "use strict";
 
-import React from "react";
-import { observer } from "mobx-react";
 import { runInAction } from "mobx";
+import { observer } from "mobx-react";
+import React from "react";
 import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import CommonStrata from "../../../Models/CommonStrata";
-
+import Box from "../../../Styled/Box";
+import Spacing from "../../../Styled/Spacing";
+import Text from "../../../Styled/Text";
+import Collapsible from "../../Custom/Collapsible/Collapsible";
 import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact";
-
-import { GLYPHS, StyledIcon } from "../../Icon";
-
-// :(
-const RawButton: any = require("../../../Styled/Button").RawButton;
-const Text: any = require("../../../Styled/Text").default;
-const TextSpan: any = require("../../../Styled/Text").TextSpan;
-const Box: any = require("../../../Styled/Box").default;
-const Spacing: any = require("../../../Styled/Spacing").default;
-const SpacingSpan: any = require("../../../Styled/Spacing").SpacingSpan;
 
 @observer
 export default class ShortReport extends React.Component<{
   item: CatalogMemberMixin.CatalogMemberMixin;
 }> {
-  clickShortReport(reportName?: string) {
+  clickShortReport(reportName: string | undefined, isOpen: boolean) {
     const shortReportSections = this.props.item.shortReportSections;
     const clickedReport = shortReportSections.find(
       report => report.name === reportName
@@ -40,7 +33,7 @@ export default class ShortReport extends React.Component<{
         shortReportSections.forEach(report =>
           report.setTrait(CommonStrata.user, "show", report.show)
         );
-        clickedReport.setTrait(CommonStrata.user, "show", !clickedReport.show);
+        clickedReport.setTrait(CommonStrata.user, "show", isOpen);
       });
     }
     return false;
@@ -71,44 +64,26 @@ export default class ShortReport extends React.Component<{
         )}
 
         {/* Show shortReportSections */}
-        {shortReportSections.map((r, i) => (
-          <React.Fragment key={r.name}>
-            <RawButton
-              fullWidth
-              onClick={this.clickShortReport.bind(this, r.name)}
-              css={`
-                text-align: left;
-              `}
-              aria-expanded={r.show}
-              aria-controls={`${this.props.item.uniqueId}-${r.name}`}
-            >
-              <TextSpan textLight bold medium>
-                {r.name}
-              </TextSpan>
-              <SpacingSpan right={2} />
-              <StyledIcon
-                displayInline
-                styledWidth={"8px"}
-                light
-                glyph={r.show ? GLYPHS.minusThick : GLYPHS.plusThick}
-              />
-            </RawButton>
-
-            {r.show && isDefined(r.content) && (
-              <Text
-                textLight
-                small
-                id={`${this.props.item.uniqueId}-${r.name}`}
+        {shortReportSections
+          .filter(r => r.content && r.name)
+          .map((r, i) => (
+            <React.Fragment key={r.name}>
+              <Collapsible
+                title={r.name!}
+                isOpen={r.show}
+                onToggle={show =>
+                  this.clickShortReport.bind(this, r.name, show)()
+                }
+                btnRight={true}
+                btnStyle={"plus"}
               >
-                {parseCustomMarkdownToReact(r.content, {
+                {parseCustomMarkdownToReact(r.content!, {
                   catalogItem: this.props.item
                 })}
-              </Text>
-            )}
-
-            {i < shortReportSections.length - 1 && <Spacing bottom={2} />}
-          </React.Fragment>
-        ))}
+              </Collapsible>
+              {i < shortReportSections.length - 1 && <Spacing bottom={2} />}
+            </React.Fragment>
+          ))}
       </Box>
     );
   }

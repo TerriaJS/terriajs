@@ -1,6 +1,6 @@
 import groupBy from "lodash-es/groupBy";
-import sortedIndex from "lodash-es/sortedIndex";
 import { computed } from "mobx";
+import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
 import Color from "terriajs-cesium/Source/Core/Color";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
@@ -28,7 +28,6 @@ import TableTraits from "../Traits/TableTraits";
 import ColorPalette from "./ColorPalette";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
-import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
 
 const getColorForId = createColorForIdTransformer();
 const defaultColor = "yellow";
@@ -58,6 +57,15 @@ export default class TableStyle {
   @computed
   get id(): string {
     return this.styleTraits.id || "Style" + this.styleNumber;
+  }
+
+  @computed
+  get title(): string {
+    return (
+      this.styleTraits.title ??
+      this.tableModel.tableColumns.find(col => col.name === this.id)?.title ??
+      this.id
+    );
   }
 
   /**
@@ -159,7 +167,9 @@ export default class TableStyle {
    */
   @computed
   get timeColumn(): TableColumn | undefined {
-    return this.resolveColumn(this.timeTraits.timeColumn);
+    return this.timeTraits.timeColumn === null
+      ? undefined
+      : this.resolveColumn(this.timeTraits.timeColumn);
   }
 
   /**
@@ -250,7 +260,7 @@ export default class TableStyle {
     }
 
     let paletteName = this.colorTraits.colorPalette;
-    let numberOfBins: number | undefined;
+    const numberOfBins = this.numberOfBins;
 
     if (
       colorColumn.type === TableColumnType.enum ||
@@ -259,7 +269,6 @@ export default class TableStyle {
     ) {
       // Enumerated values, so use a large, high contrast palette.
       paletteName = paletteName || "HighContrast";
-      numberOfBins = colorColumn.uniqueValues.values.length;
     } else if (colorColumn.type === TableColumnType.scalar) {
       if (paletteName === undefined) {
         const valuesAsNumbers = colorColumn.valuesAsNumbers;
@@ -275,7 +284,6 @@ export default class TableStyle {
           paletteName = "YlOrRd";
         }
       }
-      numberOfBins = this.binMaximums.length;
     }
 
     if (paletteName !== undefined && numberOfBins !== undefined) {
@@ -285,20 +293,40 @@ export default class TableStyle {
     }
   }
 
+  @computed
+  get numberOfBins(): number {
+    const colorColumn = this.colorColumn;
+    if (colorColumn === undefined) return this.binMaximums.length;
+    if (
+      colorColumn.type === TableColumnType.enum ||
+      colorColumn.type === TableColumnType.region ||
+      colorColumn.type === TableColumnType.text
+    ) {
+      return colorColumn.uniqueValues.values.length;
+    } else if (colorColumn.type === TableColumnType.scalar) {
+      return colorColumn.uniqueValues.values.length < this.binMaximums.length
+        ? colorColumn.uniqueValues.values.length
+        : this.binMaximums.length;
+    }
+    return this.binMaximums.length;
+  }
+
   /**
    * Gets the color to use for each bin. The length of the returned array
    * will be equal to {@link #numberOfColorBins}.
    */
   @computed
   get binColors(): readonly Readonly<Color>[] {
-    const numberOfBins = this.binMaximums.length;
+    const numberOfBins = this.numberOfBins;
 
     // Pick a color for every bin.
     const binColors = this.colorTraits.binColors || [];
     const result: Color[] = [];
     for (let i = 0; i < numberOfBins; ++i) {
       if (i < binColors.length) {
-        result.push(Color.fromCssColorString(binColors[i]));
+        result.push(
+          Color.fromCssColorString(binColors[i]) ?? Color.TRANSPARENT
+        );
       } else {
         result.push(this.colorPalette.selectColor(i));
       }
@@ -334,8 +362,10 @@ export default class TableStyle {
       if (min === undefined || max === undefined) {
         return [];
       }
-
-      const numberOfBins = this.colorTraits.numberOfBins;
+      const numberOfBins =
+        colorColumn.uniqueValues.values.length < this.colorTraits.numberOfBins
+          ? colorColumn.uniqueValues.values.length
+          : this.colorTraits.numberOfBins;
       let next = min;
       const step = (max - min) / numberOfBins;
 
@@ -393,8 +423,8 @@ export default class TableStyle {
           };
         }),
         nullColor: colorTraits.nullColor
-          ? Color.fromCssColorString(colorTraits.nullColor)
-          : new Color(0.0, 0.0, 0.0, 0.0)
+          ? Color.fromCssColorString(colorTraits.nullColor) ?? Color.TRANSPARENT
+          : Color.TRANSPARENT
       });
     } else if (
       colorColumn &&
@@ -402,9 +432,9 @@ export default class TableStyle {
         colorColumn.type === TableColumnType.region ||
         colorColumn.type === TableColumnType.text)
     ) {
-      const regionColor = Color.fromCssColorString(
-        this.colorTraits.regionColor
-      );
+      const regionColor =
+        Color.fromCssColorString(this.colorTraits.regionColor) ??
+        Color.TRANSPARENT;
       return new EnumColorMap({
         enumColors: filterOutUndefined(
           this.enumColors.map(e => {
@@ -415,14 +445,14 @@ export default class TableStyle {
               value: e.value,
               color:
                 colorColumn.type !== TableColumnType.region
-                  ? Color.fromCssColorString(e.color)
+                  ? Color.fromCssColorString(e.color) ?? Color.TRANSPARENT
                   : regionColor
             };
           })
         ),
         nullColor: colorTraits.nullColor
-          ? Color.fromCssColorString(colorTraits.nullColor)
-          : new Color(0.0, 0.0, 0.0, 0.0)
+          ? Color.fromCssColorString(colorTraits.nullColor) ?? Color.TRANSPARENT
+          : Color.TRANSPARENT
       });
     } else {
       // No column to color by, so use the same color for everything.

@@ -10,7 +10,7 @@ import primitiveTrait from "./primitiveTrait";
 import SplitterTraits from "./SplitterTraits";
 import UrlTraits from "./UrlTraits";
 import objectTrait from "./objectTrait";
-import { StyleTraits } from "./GeoJsonCatalogItemTraits";
+import StyleTraits from "./StyleTraits";
 import ExportableTraits from "./ExportableTraits";
 
 export default class WebFeatureServiceCatalogItemTraits extends mixTraits(

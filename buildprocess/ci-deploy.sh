@@ -22,8 +22,8 @@ curl -LO https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud
 tar xzf google-cloud-sdk-191.0.0-linux-x86_64.tar.gz
 source ./google-cloud-sdk/path.bash.inc
 
-curl -LO https://storage.googleapis.com/kubernetes-helm/helm-v2.8.1-linux-amd64.tar.gz
-tar xzf helm-v2.8.1-linux-amd64.tar.gz
+curl -LO https://get.helm.sh/helm-v3.3.1-linux-amd64.tar.gz
+tar xzf helm-v3.3.1-linux-amd64.tar.gz
 mv linux-amd64/helm helm
 
 export PATH=$PATH:$PWD

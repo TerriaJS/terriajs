@@ -1,14 +1,16 @@
-import Icon from "../../Icon";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-import Styles from "./chart-item-selector.scss";
 import PropTypes from "prop-types";
-import ChartView from "../../../Charts/ChartView";
 import React from "react";
-import Chartable, { axesMatch } from "../../../Models/Chartable";
+import ChartView from "../../../Charts/ChartView";
+import ChartableMixin, { axesMatch } from "../../../ModelMixins/ChartableMixin";
+import Icon from "../../../Styled/Icon";
+import Styles from "./chart-item-selector.scss";
 
-const ChartItem = observer(({ item, chartItem }) => {
-  const lineColor = chartItem.getColor();
+export const ChartItem = observer(({ item, chartItem }) => {
+  const lineColor = chartItem.isSelectedInWorkbench
+    ? chartItem.getColor()
+    : "#fff";
   const colorStyle = lineColor && { color: lineColor };
   const fillStyle = lineColor && { fill: lineColor };
 
@@ -53,11 +55,13 @@ const ChartItemSelector = observer(function({ item }) {
   // discretelytimevarying items and have a separate chart button to enable/disable.
   const chartItems = chartView.chartItems
     .filter(c => c.item === item)
-    .filter(c => c.type !== "momentPoints" && c.type !== "momentLines");
+    .filter(c => c.type !== "momentPoints" && c.type !== "momentLines")
+    .sort((a, b) => (a.name >= b.name ? 1 : -1));
+
   return (
     <ul className={Styles.root}>
       <For each="chartItem" index="i" of={chartItems}>
-        <li key={i} className={Styles.item}>
+        <li key={`li-${chartItem.key}`} className={Styles.item}>
           <ChartItem chartItem={chartItem} />
         </li>
       </For>
@@ -71,7 +75,7 @@ ChartItemSelector.propTypes = {
 
 function unselectChartItemsWithXAxisNotMatching(items, requiredAxis) {
   items.forEach(item => {
-    if (Chartable.is(item)) {
+    if (ChartableMixin.isMixedInto(item)) {
       item.chartItems.forEach(chartItem => {
         if (!axesMatch(chartItem.xAxis, requiredAxis)) {
           chartItem.updateIsSelectedInWorkbench(false);

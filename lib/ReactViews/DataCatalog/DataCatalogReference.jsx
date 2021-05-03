@@ -5,7 +5,6 @@ import React from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import addedByUser from "../../Core/addedByUser";
 import getPath from "../../Core/getPath";
-import addToWorkbench from "../../Models/addToWorkbench";
 import CommonStrata from "../../Models/CommonStrata";
 import openGroup from "../../Models/openGroup";
 import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
@@ -51,7 +50,7 @@ const DataCatalogReference = observer(
       }
     },
 
-    add(event) {
+    async add(event) {
       const keepCatalogOpen = event.shiftKey || event.ctrlKey;
 
       if (this.props.onActionButtonClicked) {
@@ -69,30 +68,24 @@ const DataCatalogReference = observer(
       ) {
         this.setPreviewedItem();
       } else {
-        const toAdd = !this.props.terria.workbench.contains(
-          this.props.reference
-        );
+        try {
+          if (!this.props.terria.workbench.contains(this.props.reference)) {
+            this.props.terria.timelineStack.addToTop(this.props.reference);
+            await this.props.terria.workbench.add(this.props.reference);
+          } else {
+            this.props.terria.timelineStack.remove(this.props.reference);
+            await this.props.terria.workbench.remove(this.props.reference);
+          }
 
-        if (toAdd) {
-          this.props.terria.timelineStack.addToTop(this.props.reference);
-        } else {
-          this.props.terria.timelineStack.remove(this.props.reference);
-        }
-
-        const addPromise = addToWorkbench(
-          this.props.terria.workbench,
-          this.props.reference,
-          toAdd
-        ).then(() => {
           if (
             this.props.terria.workbench.contains(this.props.reference) &&
             !keepCatalogOpen
           ) {
             this.props.viewState.closeCatalog();
           }
-        });
-
-        raiseErrorOnRejectedPromise(addPromise);
+        } catch (e) {
+          this.props.terria.raiseErrorToUser(e);
+        }
       }
     },
 

@@ -1,9 +1,9 @@
 import {
   action,
-  observable,
-  runInAction,
   IReactionDisposer,
-  reaction
+  observable,
+  reaction,
+  runInAction
 } from "mobx";
 import { observer } from "mobx-react";
 import moment from "moment";
@@ -15,15 +15,14 @@ import {
   ObjectifiedDates,
   ObjectifiedYears
 } from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
+import Button, { RawButton } from "../../../Styled/Button";
 import { scrollBars } from "../../../Styled/mixins";
-import Icon from "../../Icon";
+import Spacing from "../../../Styled/Spacing";
+import Icon from "../../../Styled/Icon";
 import { formatDateTime } from "./DateFormats";
 
 const dateFormat = require("dateformat");
 const DatePicker = require("react-datepicker").default;
-const Spacing = require("../../../Styled/Spacing").default;
-const RawButton = require("../../../Styled/Button").RawButton;
-const Button = require("../../../Styled/Button").default;
 
 function daysInMonth(month: number, year: number) {
   const n = new Date(year, month, 0).getDate();
@@ -216,7 +215,7 @@ class DateTimePicker extends React.Component<PropsType> {
       granularity: defaultGranularity
     };
 
-    window.addEventListener("click", this.closePickerEventHandler.bind(this));
+    window.addEventListener("click", this.closePickerEventHandler);
 
     // Update currentDateIndice when currentDate changes
     this.currentDateAutorunDisposer = reaction(
@@ -248,11 +247,10 @@ class DateTimePicker extends React.Component<PropsType> {
 
   componentWillUnmount() {
     this.currentDateAutorunDisposer && this.currentDateAutorunDisposer();
-    window.removeEventListener("click", () =>
-      this.closePickerEventHandler.bind(this)
-    );
+    window.removeEventListener("click", this.closePickerEventHandler);
   }
 
+  @action.bound
   closePickerEventHandler() {
     this.closePicker();
   }

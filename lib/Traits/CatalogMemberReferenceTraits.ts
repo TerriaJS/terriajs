@@ -11,6 +11,14 @@ export default class CatalogMemberReferenceTraits extends ModelTraits {
   name?: string;
 
   @primitiveTrait({
+    name: "Data Custodian",
+    type: "string",
+    description:
+      "Gets or sets a description of the custodian of this data item."
+  })
+  dataCustodian?: string;
+
+  @primitiveTrait({
     name: "Is a Group",
     description:
       "Is the target of this reference expected to be a catalog group?",

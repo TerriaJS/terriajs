@@ -9,7 +9,7 @@ import Ul from "../../Styled/List";
 import Text from "../../Styled/Text";
 import Spacing from "../../Styled/Spacing";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
-import Icon, { StyledIcon } from "../Icon.jsx";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import classNames from "classnames";
 
 const findTextContent = content => {
@@ -65,6 +65,7 @@ const StoryMenuButton = styled(RawButton)`
     background-color: ${props => props.theme.colorPrimary};
     svg {
       fill: ${props => props.theme.textLight};
+      stroke: ${props => props.theme.textLight};
     }
   }
 `;
@@ -213,11 +214,11 @@ class Story extends React.Component {
           className={classNames(this.props.className)}
           onMouseDown={this.props.onMouseDown}
           onTouchStart={this.props.onTouchStart}
-          static
+          position="static"
         >
           <Box
             fullWidth
-            static
+            position="static"
             justifySpaceBetween
             padded
             verticalCenter
@@ -300,7 +301,7 @@ const MenuButton = styled(RawButton)`
   &:hover,
   &:focus {
     opacity: 0.9;
-    background-color: #3d434d;
+    background-color: ${props => props.theme.dark};
   }
 `;
 

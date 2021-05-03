@@ -7,7 +7,7 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import raiseErrorOnRejectedPromise from "../../../Models/raiseErrorOnRejectedPromise";
-import Icon from "../../Icon";
+import Icon from "../../../Styled/Icon";
 import ChartPanelDownloadButton from "./ChartPanelDownloadButton";
 import Loader from "../../Loader";
 import Styles from "./chart-panel.scss";
@@ -73,6 +73,7 @@ class ChartPanel extends React.Component {
 
       chart = (
         <Chart
+          terria={this.props.terria}
           chartItems={chartItems}
           xAxis={this.chartView.xAxis}
           height={height - 34}

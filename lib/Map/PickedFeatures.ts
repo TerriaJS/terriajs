@@ -2,11 +2,26 @@ import { observable } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import Feature from "../Models/Feature";
-import Mappable, { ImageryParts } from "../Models/Mappable";
+import { ImageryParts } from "../ModelMixins/MappableMixin";
 import { BaseModel } from "../Models/Model";
+import MappableMixin from "../ModelMixins/MappableMixin";
 
 export type ProviderCoords = { x: number; y: number; level: number };
 export type ProviderCoordsMap = { [url: string]: ProviderCoords };
+
+export function isProviderCoords(obj: any): obj is ProviderCoords {
+  if (obj) {
+    return (
+      Number.isFinite(obj.x) &&
+      Number.isFinite(obj.y) &&
+      Number.isFinite(obj.level)
+    );
+  } else return false;
+}
+
+export function isProviderCoordsMap(obj: any): obj is ProviderCoordsMap {
+  return Object.keys(obj).every(url => isProviderCoords(obj[url]));
+}
 
 /**
  * Holds the vector and raster features that the user picked by clicking the mouse on the map.
@@ -50,7 +65,7 @@ export function featureBelongsToCatalogItem(
 ) {
   if (feature._catalogItem === catalogItem) return true;
 
-  if (!Mappable.is(catalogItem)) return;
+  if (!MappableMixin.isMixedInto(catalogItem)) return;
 
   const dataSource = feature.entityCollection?.owner;
   const imageryProvider = feature.imageryLayer?.imageryProvider;

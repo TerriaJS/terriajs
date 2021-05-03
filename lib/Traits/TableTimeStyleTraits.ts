@@ -1,14 +1,16 @@
 import ModelTraits from "./ModelTraits";
 import primitiveTrait from "./primitiveTrait";
+import primitiveArrayTrait from "./primitiveArrayTrait";
 
 export default class TableTimeStyleTraits extends ModelTraits {
   @primitiveTrait({
     name: "Time Column",
     description:
       "The column that indicates the time of a sample or the start time of an interval.",
-    type: "string"
+    type: "string",
+    isNullable: true
   })
-  timeColumn?: string;
+  timeColumn?: string | null;
 
   @primitiveTrait({
     name: "End Time Column",
@@ -17,7 +19,7 @@ export default class TableTimeStyleTraits extends ModelTraits {
   })
   endTimeColumn?: string;
 
-  @primitiveTrait({
+  @primitiveArrayTrait({
     name: "ID Columns",
     description: "The columns that identify an entity as it changes over time.",
     type: "string"

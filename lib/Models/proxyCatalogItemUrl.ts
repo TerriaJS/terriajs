@@ -36,3 +36,27 @@ export default function proxyCatalogItemUrl(
     return url;
   }
 }
+
+/**
+ * Similar to {@link proxyCatalogItemUrl}, but only returns proxy base url, not full URL (for example `proxy/`, instead of `proxy/some/other/resource`)
+ */
+export function proxyCatalogItemBaseUrl(
+  catalogItem: BaseModel | UrlReference | undefined,
+  url: string,
+  cacheDuration?: string
+) {
+  const corsProxy = catalogItem?.terria?.corsProxy;
+
+  if (
+    isDefined(corsProxy) &&
+    (corsProxy.shouldUseProxy(url) ||
+      (UrlMixin.isMixedInto(catalogItem) && catalogItem.forceProxy))
+  ) {
+    return corsProxy.getProxyBaseURL(
+      defaultValue(
+        UrlMixin.isMixedInto(catalogItem) && catalogItem.cacheDuration,
+        cacheDuration
+      )
+    );
+  }
+}

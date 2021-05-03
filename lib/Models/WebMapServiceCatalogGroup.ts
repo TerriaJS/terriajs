@@ -5,6 +5,7 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import isReadOnlyArray from "../Core/isReadOnlyArray";
 import replaceUnderscores from "../Core/replaceUnderscores";
+import runLater from "../Core/runLater";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
@@ -244,6 +245,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
     model.setTrait(stratum, "name", layer.Title);
     model.setTrait(stratum, "url", this.catalogGroup.url);
+    model._webMapServiceCatalogGroup = this.catalogGroup;
     model.setTrait(
       stratum,
       "getCapabilitiesUrl",
@@ -273,6 +275,12 @@ class GetCapabilitiesStratum extends LoadableStratum(
       "hideLegendInWorkbench",
       this.catalogGroup.hideLegendInWorkbench
     );
+
+    if (this.catalogGroup.itemProperties !== undefined) {
+      Object.keys(this.catalogGroup.itemProperties).map((k: any) =>
+        model.setTrait(stratum, k, this.catalogGroup.itemProperties![k])
+      );
+    }
     model.createGetCapabilitiesStratumFromParent(this.capabilities);
   }
 
@@ -280,10 +288,21 @@ class GetCapabilitiesStratum extends LoadableStratum(
     if (!isDefined(this.catalogGroup.uniqueId)) {
       return;
     }
-    return `${this.catalogGroup.uniqueId}/${layer.Name || layer.Title}`;
+    return `${this.catalogGroup.uniqueId}/${layer.Title}`;
   }
 }
 
+/**
+ * Creates an item in the catalog for each available WMS layer.
+ * Note: To present a single layer in the catalog you can also use `WebMapServiceCatalogItem`.
+ * @public
+ * @example
+ * {
+ *   "type": "wms-group",
+ *   "name": "Digital Earth Australia",
+ *   "url": "https://ows.services.dea.ga.gov.au",
+ * }
+ */
 export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(
   UrlMixin(
     GroupMixin(CatalogMemberMixin(CreateModel(WebMapServiceCatalogGroupTraits)))
@@ -296,24 +315,26 @@ export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(
   }
 
   protected async forceLoadMetadata(): Promise<void> {
-    if (
-      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
-      undefined
-    )
-      return;
-    const stratum = await GetCapabilitiesStratum.load(this);
-    runInAction(() => {
-      this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
-    });
+    let getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
+      this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
+    );
+    if (getCapabilitiesStratum === undefined) {
+      getCapabilitiesStratum = await GetCapabilitiesStratum.load(this);
+      runInAction(() => {
+        this.strata.set(
+          GetCapabilitiesMixin.getCapabilitiesStratumName,
+          getCapabilitiesStratum!
+        );
+      });
+    }
   }
 
   protected async forceLoadMembers(): Promise<void> {
-    await this.loadMetadata();
-    const getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
+    let getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)
     );
-    if (getCapabilitiesStratum) {
-      getCapabilitiesStratum.createMembersFromLayers();
+    if (getCapabilitiesStratum !== undefined) {
+      await runLater(() => getCapabilitiesStratum!.createMembersFromLayers());
     }
   }
 

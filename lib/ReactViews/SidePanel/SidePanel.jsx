@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import styled, { withTheme } from "styled-components";
-import Icon, { StyledIcon } from "../Icon";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import SearchBoxAndResults from "../Search/SearchBoxAndResults";
 import Workbench from "../Workbench/Workbench";
 import FullScreenButton from "./FullScreenButton";
@@ -17,6 +17,14 @@ import Text from "../../Styled/Text";
 import Button from "../../Styled/Button";
 
 const BoxHelpfulHints = styled(Box)``;
+
+const ResponsiveSpacing = styled(Box)`
+  height: 110px;
+  // Hardcoded px value, TODO: make it not hardcoded
+  @media (max-height: 700px) {
+    height: 3vh;
+  }
+`;
 
 function EmptyWorkbench(props) {
   const t = props.t;
@@ -33,15 +41,9 @@ function EmptyWorkbench(props) {
       />
     );
   };
-  const ResponsiveSpacing = styled(Box)`
-    height: 110px;
-    // Hardcoded px value, TODO: make it not hardcoded
-    @media (max-height: 700px) {
-      height: 3vh;
-    }
-  `;
+
   return (
-    <Text large textLight nunito>
+    <Text large textLight>
       {/* Hardcoded top to 150px for now for very very small screens
           TODO: make it not hardcoded */}
       <Box

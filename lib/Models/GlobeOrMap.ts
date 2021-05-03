@@ -1,10 +1,12 @@
 import { Feature as GeoJSONFeature, Position } from "geojson";
+import { observable, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
 import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
@@ -17,15 +19,15 @@ import LatLonHeight from "../Core/LatLonHeight";
 import featureDataToGeoJson from "../Map/featureDataToGeoJson";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import { ProviderCoordsMap } from "../Map/PickedFeatures";
+import MappableMixin from "../ModelMixins/MappableMixin";
+import TimeVarying from "../ModelMixins/TimeVarying";
+import MouseCoords from "../ReactViewModels/MouseCoords";
 import CameraView from "./CameraView";
 import Cesium3DTilesCatalogItem from "./Cesium3DTilesCatalogItem";
 import CommonStrata from "./CommonStrata";
 import Feature from "./Feature";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
-import Mappable from "./Mappable";
 import Terria from "./Terria";
-import { observable } from "mobx";
-import MouseCoords from "../ReactViewModels/MouseCoords";
 
 require("./ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureDescriptionFromProperties
 
@@ -34,10 +36,13 @@ export default abstract class GlobeOrMap {
   abstract readonly terria: Terria;
   protected static _featureHighlightName = "___$FeatureHighlight&__";
 
-  private _removeHighlightCallback?: () => void;
+  private _removeHighlightCallback?: () => Promise<void> | void;
   private _highlightPromise: Promise<void> | undefined;
   private _tilesLoadingCountMax: number = 0;
   protected supportsPolylinesOnTerrain?: boolean;
+
+  // Fired when zoomTo is called
+  zoomToEvent: CesiumEvent = new CesiumEvent();
 
   // This is updated by Leaflet and Cesium objects.
   // Avoid duplicate mousemove events.  Why would we get duplicate mousemove events?  I'm glad you asked:
@@ -46,10 +51,24 @@ export default abstract class GlobeOrMap {
   @observable mouseCoords: MouseCoords = new MouseCoords();
 
   abstract destroy(): void;
-  abstract zoomTo(
-    viewOrExtent: CameraView | Rectangle | Mappable,
+
+  abstract doZoomTo(
+    target: CameraView | Rectangle | MappableMixin.MappableMixin,
     flightDurationSeconds: number
   ): void;
+
+  zoomTo(
+    target: CameraView | Rectangle | MappableMixin.MappableMixin,
+    flightDurationSeconds: number
+  ): void {
+    this.zoomToEvent.raiseEvent();
+    this.doZoomTo(target, flightDurationSeconds);
+    if (MappableMixin.isMixedInto(target) && TimeVarying.is(target)) {
+      // Set the target as the source for timeline
+      this.terria.timelineStack.promoteToTop(target);
+    }
+  }
+
   abstract getCurrentCameraView(): CameraView;
 
   /* Gets the current container element.
@@ -60,6 +79,19 @@ export default abstract class GlobeOrMap {
   abstract resumeMapInteraction(): void;
 
   abstract notifyRepaintRequired(): void;
+
+  /**
+   * Picks features based off a latitude, longitude and (optionally) height.
+   * @param latLngHeight The position on the earth to pick.
+   * @param providerCoords A map of imagery provider urls to the coords used to get features for those imagery
+   *     providers - i.e. x, y, level
+   * @param existingFeatures An optional list of existing features to concatenate the ones found from asynchronous picking to.
+   */
+  abstract pickFromLocation(
+    latLngHeight: LatLonHeight,
+    providerCoords: ProviderCoordsMap,
+    existingFeatures: Feature[]
+  ): void;
 
   /**
    * Return features at a latitude, longitude and (optionally) height for the given imagery layers.
@@ -145,9 +177,9 @@ export default abstract class GlobeOrMap {
     rectangle: Rectangle
   ): () => void;
 
-  _highlightFeature(feature: Feature | undefined) {
+  async _highlightFeature(feature: Feature | undefined) {
     if (isDefined(this._removeHighlightCallback)) {
-      this._removeHighlightCallback();
+      await this._removeHighlightCallback();
       this._removeHighlightCallback = undefined;
       this._highlightPromise = undefined;
     }
@@ -157,19 +189,20 @@ export default abstract class GlobeOrMap {
 
       if (isDefined(feature._cesium3DTileFeature)) {
         const originalColor = feature._cesium3DTileFeature.color;
+        const defaultColor = Color.fromCssColorString("#fffffe");
 
         // Get the highlight color from the catalogItem trait or default to baseMapContrastColor
         const catalogItem = feature._catalogItem;
         let highlightColor;
-        if (
-          catalogItem instanceof Cesium3DTilesCatalogItem &&
-          catalogItem.highlightColor
-        ) {
-          highlightColor = Color.fromCssColorString(catalogItem.highlightColor);
+        if (catalogItem instanceof Cesium3DTilesCatalogItem) {
+          highlightColor =
+            Color.fromCssColorString(
+              runInAction(() => catalogItem.highlightColor)
+            ) ?? defaultColor;
         } else {
-          highlightColor = Color.fromCssColorString(
-            this.terria.baseMapContrastColor
-          );
+          highlightColor =
+            Color.fromCssColorString(this.terria.baseMapContrastColor) ??
+            defaultColor;
         }
 
         // highlighting doesn't work if the highlight colour is full white
@@ -178,7 +211,7 @@ export default abstract class GlobeOrMap {
           highlightColor,
           Color.WHITE
         )
-          ? Color.fromCssColorString("#fffffe")
+          ? defaultColor
           : highlightColor;
 
         this._removeHighlightCallback = function() {
@@ -200,12 +233,14 @@ export default abstract class GlobeOrMap {
 
         cesiumPolygon.polygon!.outline = new ConstantProperty(true);
         cesiumPolygon.polygon!.outlineColor = new ConstantProperty(
-          Color.fromCssColorString(this.terria.baseMapContrastColor)
+          Color.fromCssColorString(this.terria.baseMapContrastColor) ??
+            Color.GRAY
         );
         cesiumPolygon.polygon!.material = new ColorMaterialProperty(
           new ConstantProperty(
-            Color.fromCssColorString(
-              this.terria.baseMapContrastColor
+            (
+              Color.fromCssColorString(this.terria.baseMapContrastColor) ??
+              Color.LIGHTGRAY
             ).withAlpha(0.75)
           )
         );
@@ -225,9 +260,9 @@ export default abstract class GlobeOrMap {
         const polylineMaterial = cesiumPolyline.polyline!.material;
         const polylineWidth = cesiumPolyline.polyline!.width;
 
-        (<any>cesiumPolyline).polyline.material = Color.fromCssColorString(
-          this.terria.baseMapContrastColor
-        );
+        (<any>cesiumPolyline).polyline.material =
+          Color.fromCssColorString(this.terria.baseMapContrastColor) ??
+          Color.LIGHTGRAY;
         cesiumPolyline.polyline!.width = new ConstantProperty(2);
 
         this._removeHighlightCallback = function() {
@@ -244,13 +279,17 @@ export default abstract class GlobeOrMap {
           feature.imageryLayer.imageryProvider instanceof
             MapboxVectorTileImageryProvider
         ) {
-          const highlightImageryProvider = feature.imageryLayer.imageryProvider.createHighlightImageryProvider(
-            feature.data.id
-          );
-          this._removeHighlightCallback = this.terria.currentViewer._addVectorTileHighlight(
-            highlightImageryProvider,
-            feature.imageryLayer.imageryProvider.rectangle
-          );
+          const featureId =
+            feature.data?.id ?? feature.properties?.id?.getValue?.();
+          if (isDefined(featureId)) {
+            const highlightImageryProvider = feature.imageryLayer.imageryProvider.createHighlightImageryProvider(
+              featureId
+            );
+            this._removeHighlightCallback = this.terria.currentViewer._addVectorTileHighlight(
+              highlightImageryProvider,
+              feature.imageryLayer.imageryProvider.rectangle
+            );
+          }
         } else if (
           !isDefined(this.supportsPolylinesOnTerrain) ||
           this.supportsPolylinesOnTerrain
@@ -318,22 +357,20 @@ export default abstract class GlobeOrMap {
               if (!isDefined(this._highlightPromise)) {
                 return;
               }
-              this._highlightPromise
+              return this._highlightPromise
                 .then(() => {
                   if (removeCallback !== this._removeHighlightCallback) {
                     return;
                   }
                   catalogItem.setTrait(CommonStrata.user, "show", false);
+                  this.terria.overlays.remove(catalogItem);
                 })
                 .catch(function() {});
             });
 
-            this._highlightPromise = catalogItem.loadMapItems().then(() => {
-              if (removeCallback !== this._removeHighlightCallback) {
-                return;
-              }
-              catalogItem.setTrait(CommonStrata.user, "show", true);
-            });
+            catalogItem.setTrait(CommonStrata.user, "show", true);
+
+            this._highlightPromise = this.terria.overlays.add(catalogItem);
           }
         }
       }

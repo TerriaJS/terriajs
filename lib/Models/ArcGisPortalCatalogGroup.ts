@@ -3,7 +3,9 @@ import { action, computed, runInAction } from "mobx";
 import URI from "urijs";
 import isDefined from "../Core/isDefined";
 import loadJson from "../Core/loadJson";
+import runLater from "../Core/runLater";
 import TerriaError from "../Core/TerriaError";
+import AccessControlMixin from "../ModelMixins/AccessControlMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -317,7 +319,7 @@ export class ArcGisPortalStratum extends LoadableStratum(
       return;
     }
     const id = this._catalogGroup.uniqueId;
-    const itemId = id + "/" + arcgisDataset.id;
+    const itemId = `${id}/${arcgisDataset.id}`;
     let item = this._catalogGroup.terria.getModelById(
       ArcGisPortalItemReference,
       itemId
@@ -329,13 +331,20 @@ export class ArcGisPortalStratum extends LoadableStratum(
       item.setSupportedFormatFromItem(arcgisDataset);
       item.setArcgisStrata(item);
       item.terria.addModel(item);
-      if (
-        this._catalogGroup.groupBy === "organisationsGroups" ||
-        this._catalogGroup.groupBy === "usersGroups" ||
-        this._catalogGroup.groupBy === "portalCategories"
-      ) {
-        this.addCatalogItemByPortalGroupsToCatalogGroup(item, arcgisDataset);
-      }
+    }
+    if (
+      this._catalogGroup.groupBy === "organisationsGroups" ||
+      this._catalogGroup.groupBy === "usersGroups" ||
+      this._catalogGroup.groupBy === "portalCategories"
+    ) {
+      this.addCatalogItemByPortalGroupsToCatalogGroup(item, arcgisDataset);
+    }
+
+    if (
+      AccessControlMixin.isMixedInto(item) &&
+      arcgisDataset.access !== undefined
+    ) {
+      item.setAccessType(arcgisDataset.access);
     }
   }
 }
@@ -379,15 +388,13 @@ export default class ArcGisPortalCatalogGroup extends UrlMixin(
     }
   }
 
-  protected forceLoadMembers(): Promise<void> {
-    return this.loadMetadata().then(() => {
-      const portalStratum = <ArcGisPortalStratum | undefined>(
-        this.strata.get(ArcGisPortalStratum.stratumName)
-      );
-      if (portalStratum) {
-        portalStratum.createMembersFromDatasets();
-      }
-    });
+  protected async forceLoadMembers() {
+    const portalStratum = <ArcGisPortalStratum | undefined>(
+      this.strata.get(ArcGisPortalStratum.stratumName)
+    );
+    if (portalStratum) {
+      await runLater(() => portalStratum.createMembersFromDatasets());
+    }
   }
 }
 
@@ -437,6 +444,13 @@ function createGroupsByPortalGroups(arcgisPortal: ArcGisPortalStratum) {
             group.description
           );
         }
+      }
+
+      if (
+        AccessControlMixin.isMixedInto(existingGroup) &&
+        group.access !== undefined
+      ) {
+        existingGroup.setAccessType(group.access);
       }
       out.push(existingGroup);
     }

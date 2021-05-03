@@ -5,13 +5,16 @@ import SearchBox from "../Search/SearchBox";
 import MobileModalWindow from "./MobileModalWindow";
 import Branding from "../SidePanel/Branding";
 import Styles from "./mobile-header.scss";
-import Icon from "../Icon";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import MobileMenu from "./MobileMenu";
 import classNames from "classnames";
 import { removeMarker } from "../../Models/LocationMarkerUtils";
 import { withTranslation } from "react-i18next";
+import { withTheme } from "styled-components";
 import { observer } from "mobx-react";
-import { runInAction, action } from "mobx";
+import { runInAction } from "mobx";
+import Box from "../../Styled/Box";
+import { RawButton } from "../../Styled/Button";
 
 const MobileHeader = observer(
   createReactClass({
@@ -24,6 +27,7 @@ const MobileHeader = observer(
       version: PropTypes.string,
       menuLeftItems: PropTypes.array,
       menuItems: PropTypes.array,
+      theme: PropTypes.object,
       t: PropTypes.func.isRequired
     },
 
@@ -144,7 +148,13 @@ const MobileHeader = observer(
 
       return (
         <div className={Styles.ui}>
-          <div className={Styles.mobileHeader}>
+          <Box
+            justifySpaceBetween
+            fullWidth
+            fullHeight
+            paddedRatio={1}
+            backgroundColor={this.props.theme.dark}
+          >
             <Choose>
               <When
                 condition={
@@ -152,23 +162,47 @@ const MobileHeader = observer(
                   !searchState.showMobileCatalogSearch
                 }
               >
-                <div className={Styles.groupLeft}>
-                  <button
+                <Box
+                  position="absolute"
+                  css={`
+                    left: 5px;
+                  `}
+                >
+                  <RawButton
                     type="button"
-                    onClick={action(
-                      () => (this.props.viewState.mobileMenuVisible = true)
-                    )}
-                    className={Styles.btnMenu}
+                    onClick={() => this.props.viewState.toggleMobileMenu()}
                     title={t("mobile.toggleNavigation")}
+                    css={`
+                      border-radius: 2px;
+                      padding: 0 5px;
+                      margin-right: 3px;
+                      &:hover,
+                      &:focus,
+                      & {
+                        border: 1px solid
+                          ${this.props.theme.textLightTranslucent};
+                      }
+                    `}
                   >
-                    <Icon glyph={Icon.GLYPHS.menu} />
-                  </button>
+                    <StyledIcon
+                      light
+                      glyph={Icon.GLYPHS.menu}
+                      styledWidth={"37px"}
+                      styledHeight={"37px"}
+                    />
+                  </RawButton>
                   <Branding
                     terria={this.props.terria}
+                    viewState={this.props.viewState}
                     version={this.props.version}
                   />
-                </div>
-                <div className={Styles.groupRight}>
+                </Box>
+                <div
+                  className={Styles.groupRight}
+                  css={`
+                    background-color: ${p => p.theme.dark};
+                  `}
+                >
                   <button
                     type="button"
                     className={Styles.btnAdd}
@@ -230,7 +264,7 @@ const MobileHeader = observer(
                 </div>
               </Otherwise>
             </Choose>
-          </div>
+          </Box>
           <MobileMenu
             menuItems={this.props.menuItems}
             menuLeftItems={this.props.menuLeftItems}
@@ -248,4 +282,4 @@ const MobileHeader = observer(
     }
   })
 );
-module.exports = withTranslation()(MobileHeader);
+module.exports = withTranslation()(withTheme(MobileHeader));

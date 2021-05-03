@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
-import Icon from "../Icon.jsx";
+import Icon from "../../Styled/Icon";
 import Box from "../../Styled/Box";
 import { TextSpan } from "../../Styled/Text";
 import { RawButton } from "../../Styled/Button";
@@ -11,10 +11,11 @@ import Spacing from "../../Styled/Spacing";
 import MapIconButton from "../MapIconButton/MapIconButton";
 // import MenuPanel from "../StandardUserInterface/customizable/MenuPanel";
 import CleanDropdownPanel from "../CleanDropdownPanel/CleanDropdownPanel";
+import { COMPASS_LOCAL_PROPERTY_KEY } from "../Map/Navigation/Compass";
 
 GyroscopeGuidance.propTypes = {
   viewState: PropTypes.object.isRequired,
-  handleHelp: PropTypes.func.isRequired,
+  handleHelp: PropTypes.func,
   onClose: PropTypes.func.isRequired
 };
 
@@ -125,9 +126,9 @@ function GyroscopeGuidancePanel(props) {
           dragging the map.
         </Text>
         <Spacing bottom={4} />
-        <RawButton onClick={props.handleHelp}>
+        <RawButton onClick={props.onClose}>
           <Text displayBlock primary isLink>
-            Find out more about the controls and how to use them.
+            Close and don&apos;t show again
           </Text>
         </RawButton>
       </Text>
@@ -136,7 +137,7 @@ function GyroscopeGuidancePanel(props) {
 }
 
 GyroscopeGuidancePanel.propTypes = {
-  handleHelp: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired
 };
 
 export default function GyroscopeGuidance(props) {
@@ -145,15 +146,6 @@ export default function GyroscopeGuidance(props) {
   const { t } = useTranslation();
   return (
     <>
-      <MapIconButton
-        roundRight
-        neverCollapse
-        onClick={props.handleHelp}
-        iconElement={() => <Icon glyph={Icon.GLYPHS.helpThick} />}
-      >
-        Help
-      </MapIconButton>
-      <Spacing marginRight={1} />
       <div
         css={`
           position: relative;
@@ -163,11 +155,17 @@ export default function GyroscopeGuidance(props) {
           roundLeft
           buttonRef={controlsMapIcon}
           neverCollapse
-          iconElement={() => <Icon glyph={Icon.GLYPHS.controls} />}
+          iconElement={() => <Icon glyph={Icon.GLYPHS.questionMark} />}
           onClick={() => setControlPanelOpen(!controlPanelOpen)}
-        >
-          Controls
-        </MapIconButton>
+          inverted
+          css={`
+            svg {
+              margin: 0px;
+              width: 25px;
+              height: 25px;
+            }
+          `}
+        />
         <div
           onClick={e => e.preventDefault()}
           css={`
@@ -195,32 +193,23 @@ export default function GyroscopeGuidance(props) {
             isOpen={controlPanelOpen}
             onOpenChanged={() => controlPanelOpen}
             // onDismissed={() => setControlPanelOpen(false)}
-            btnTitle={t("settingPanel.btnTitle")}
-            btnText={t("settingPanel.btnText")}
+            btnTitle={t("compass.guidanceBtnTitle")}
+            btnText={t("compass.guidanceBtnText")}
             viewState={props.viewState}
             smallScreen={props.viewState.useSmallScreenInterface}
           >
-            <GyroscopeGuidancePanel handleHelp={props.handleHelp} />
+            <GyroscopeGuidancePanel
+              onClose={() => {
+                setControlPanelOpen(false);
+                props.onClose();
+                props.viewState.terria.setLocalProperty(
+                  COMPASS_LOCAL_PROPERTY_KEY,
+                  true
+                );
+              }}
+            />
           </CleanDropdownPanel>
         </div>
-      </div>
-      <Spacing right={2} />
-      <div
-        css={`
-          transform: scale(0.75);
-          transform-origin: right;
-          svg {
-            width: 15px;
-            height: 15px;
-          }
-        `}
-      >
-        <MapIconButton
-          css={"opacity: 0.8;"}
-          inverted
-          onClick={props.onClose}
-          iconElement={() => <Icon glyph={Icon.GLYPHS.closeLight} />}
-        />
       </div>
     </>
   );

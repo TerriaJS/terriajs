@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" name="My Parent Catalog" version="1.0.1">
+  <catalogRef name="sub-catalog 1" ID="subCatalog" xlink:href="/sub-catalog-a/catalog.xml" xlink:title="Some Catalog 1">
+  </catalogRef>
+  <catalogRef name="sub-catalog 2" ID="subCatalog2" xlink:href="/sub-catalog-b/catalog.xml" xlink:title="Some Catalog 2">
+  </catalogRef>
+  <service name="all" serviceType="Compound" base="">
+    <service name="ncdods" serviceType="OPENDAP" base="/thredds/dodsC/"/>
+    <service name="HTTPServer" serviceType="HTTPServer" base="/thredds/fileServer/"/>
+    <service name="wms" serviceType="WMS" base="/thredds/wms/"/>
+    <service name="subsetServer" serviceType="NetcdfSubset" base="/thredds/ncss/grid/"/>
+    <service name="ncml" serviceType="NCML" base="/thredds/ncml/"/>
+    <service name="uddc" serviceType="UDDC" base="/thredds/uddc/"/>
+    <service name="iso" serviceType="ISO" base="/thredds/iso/"/>
+  </service>
+  <dataset name="eReefs GBR4 SHOC Model v1.85 Results for 2016-06" ID="fx3-gbr4/gbr4_simple_2016-06.nc" urlPath="fx3/gbr4/gbr4_simple_2016-06.nc">
+    <dataSize units="Gbytes">4.562</dataSize>
+    <date type="modified">2016-06-08T21:36:11Z</date>
+    <metadata inherited="true">
+        <serviceName>all</serviceName>
+        <authority>au.org.nci</authority>
+        <dataType>GRID</dataType>
+        <documentation xlink:href="/thredds/fileServer/licenses/fx3_readme.txt" xlink:title="README"/>
+        <documentation type="rights" xlink:href="/thredds/fileServer/licenses/fx3_licence.txt" xlink:title="Licence"/>
+        <documentation type="history">
+            http://www.emg.cmar.csiro.au/www/en/emg/software/EMS/hydrodynamics.html
+        </documentation>
+        <documentation type="summary">
+            Files from the GBR4 dataset from the eReefs project. See README linked above for further details.
+        </documentation>
+        <creator>
+            <name>
+                Coastal Environmental Modelling, CSIRO Oceans and Atmosphere
+            </name>
+            <contact url="http://www.emg.cmar.csiro.au" email="cmar-hobart@csiro.au"/>
+        </creator>
+        <publisher>
+            <name>National Computational Infrastructure</name>
+            <contact url="http://nci.org.au" email="help@nf.nci.org.au"/>
+        </publisher>
+    </metadata>
+</dataset>
+</catalog>

@@ -5,7 +5,6 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import MapInteractionMode from "../../../Models/MapInteractionMode";
-import raiseErrorToUser from "../../../Models/raiseErrorToUser";
 import Loader from "../../Loader";
 import LocationItem from "../../LocationItem.jsx";
 import { withTranslation } from "react-i18next";
@@ -100,7 +99,7 @@ const SatelliteImageryTimeFilterSection = observer(
               );
             } catch (e) {
               console.log(e);
-              raiseErrorToUser(terria, e);
+              terria.raiseErrorToUser(e);
             }
           }
 
@@ -145,7 +144,12 @@ const SatelliteImageryTimeFilterSection = observer(
           : undefined;
 
       return (
-        <div className={Styles.active}>
+        <div
+          className={Styles.active}
+          css={`
+            background: ${p => p.theme.colorPrimary};
+          `}
+        >
           <div className={Styles.infoGroup}>
             <div>{t("satellite.infoGroup")}</div>
             <LocationItem position={position} />

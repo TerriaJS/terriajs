@@ -12,6 +12,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import addedByUser from "../Core/addedByUser";
 import isDefined from "../Core/isDefined";
+import TerriaError from "../Core/TerriaError";
 import triggerResize from "../Core/triggerResize";
 import PickedFeatures from "../Map/PickedFeatures";
 import getAncestors from "../Models/getAncestors";
@@ -41,8 +42,8 @@ interface ViewStateOptions {
 }
 
 export interface Notification {
-  title: string;
-  message: string;
+  title: string | ((viewState: ViewState) => React.ReactNode);
+  message: string | ((viewState: ViewState) => React.ReactNode);
   confirmText?: string;
   denyText?: string;
   confirmAction?: () => void;
@@ -336,20 +337,20 @@ export default class ViewState {
     );
 
     // Show errors to the user as notifications.
-    this._unsubscribeErrorListener = terria.error.addEventListener(<any>((
-      e: any
-    ) => {
-      // Only add this error if an identical one doesn't already exist.
-      if (
-        this.notifications.filter(
-          item => item.title === e.title && item.message === e.message
-        ).length === 0
-      ) {
-        runInAction(() => {
-          this.notifications.push(clone(e));
-        });
+    this._unsubscribeErrorListener = terria.addErrorEventListener(
+      (e: TerriaError) => {
+        // Only add this error if an identical one doesn't already exist.
+        if (
+          this.notifications.filter(
+            item => item.title === e.title && item.message === e.message
+          ).length === 0
+        ) {
+          runInAction(() => {
+            this.notifications.push(e.toNotification());
+          });
+        }
       }
-    }));
+    );
 
     // When features are picked, show the feature info panel.
     this._pickedFeaturesSubscription = reaction(
@@ -358,6 +359,8 @@ export default class ViewState {
         if (defined(pickedFeatures)) {
           this.featureInfoPanelIsVisible = true;
           this.featureInfoPanelIsCollapsed = false;
+        } else {
+          this.featureInfoPanelIsVisible = false;
         }
       }
     );
@@ -564,8 +567,11 @@ export default class ViewState {
       this.previewedItem = catalogMember;
       this.openAddData();
       if (this.terria.configParameters.tabbedCatalog) {
-        // Go to specific tab
-        this.activeTabIdInCategory = getAncestors(catalogMember)[0].uniqueId;
+        const parentGroups = getAncestors(catalogMember);
+        if (parentGroups.length > 0) {
+          // Go to specific tab
+          this.activeTabIdInCategory = parentGroups[0].uniqueId;
+        }
       }
     }
   }
@@ -686,6 +692,11 @@ export default class ViewState {
     this.currentTool = undefined;
   }
 
+  @action
+  toggleMobileMenu() {
+    this.mobileMenuVisible = !this.mobileMenuVisible;
+  }
+
   @computed
   get breadcrumbsShown() {
     return (
@@ -702,7 +713,7 @@ export default class ViewState {
 
 interface Tool {
   toolName: string;
-  getToolComponent: () => React.Component | Promise<React.Component>;
+  getToolComponent: () => React.ComponentType | Promise<React.ComponentType>;
   showCloseButton: boolean;
   params?: any;
 }

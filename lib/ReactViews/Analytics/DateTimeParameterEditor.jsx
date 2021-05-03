@@ -4,6 +4,7 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 
 import Styles from "./parameter-editors.scss";
+import CommonStrata from "../../Models/CommonStrata";
 
 const DateTimeParameterEditor = createReactClass({
   displayName: "DateTimeParameterEditor",
@@ -43,7 +44,7 @@ const DateTimeParameterEditor = createReactClass({
     if (dateTime.date && dateTime.time) {
       value = dateTime.date + "T" + dateTime.time;
     }
-    this.props.parameter.value = value;
+    this.props.parameter.setValue(CommonStrata.user, value);
   },
 
   onChangeDate(e) {

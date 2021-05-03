@@ -1,4 +1,5 @@
 import papaparse from "papaparse";
+import loadWithXhr from "../Core/loadWithXhr";
 
 // We'd like to use `FeatureDetection.supportsWebWorkers()` here, but
 // PapaParse doesn't get along with our webpack configuration. It ends up
@@ -16,11 +17,12 @@ export default class Csv {
    */
   static parseString(
     csv: string,
-    columnMajor: boolean = false
+    columnMajor: boolean = false,
+    filterOutComments: boolean = false
   ): Promise<string[][]> {
     return new Promise<string[][]>((resolve, reject) => {
       papaparse.parse(csv, {
-        ...getParseOptions(columnMajor, resolve, reject)
+        ...getParseOptions(columnMajor, filterOutComments, resolve, reject)
       });
     });
   }
@@ -33,11 +35,12 @@ export default class Csv {
    */
   static parseFile(
     file: File,
-    columnMajor: boolean = false
+    columnMajor: boolean = false,
+    filterOutComments: boolean = false
   ): Promise<string[][]> {
     return new Promise<string[][]>((resolve, reject) => {
       papaparse.parse(file, {
-        ...getParseOptions(columnMajor, resolve, reject)
+        ...getParseOptions(columnMajor, filterOutComments, resolve, reject)
       });
     });
   }
@@ -50,28 +53,40 @@ export default class Csv {
    */
   static parseUrl(
     url: string,
-    columnMajor: boolean = false
+    columnMajor: boolean = false,
+    filterOutComments: boolean = false
   ): Promise<string[][]> {
-    return new Promise<string[][]>((resolve, reject) => {
-      papaparse.parse(url, {
-        ...getParseOptions(columnMajor, resolve, reject),
-        download: true
-      });
+    return loadWithXhr({ url }).then(csv => {
+      if (typeof csv === "string") {
+        return Csv.parseString(csv, columnMajor, filterOutComments);
+      } else {
+        throw "Request failed";
+      }
     });
+    // There is currently a bug when using papaparse to fetch CSV URLs
+    // See: https://github.com/mholt/PapaParse/pull/832
+    // return new Promise<string[][]>((resolve, reject) => {
+    //   papaparse.parse(url, {
+    //     ...getParseOptions(columnMajor, resolve, reject),
+    //     download: true,
+    //   });
+    // });
   }
 }
 
 function getParseOptions(
   columnMajor: boolean,
+  filterOutComments: boolean,
   resolve: (value: string[][]) => void,
   reject: (reason?: any) => void
 ): papaparse.ParseConfig {
   return columnMajor
-    ? getParseOptionsColumnMajor(resolve, reject)
-    : getParseOptionsRowMajor(resolve, reject);
+    ? getParseOptionsColumnMajor(filterOutComments, resolve, reject)
+    : getParseOptionsRowMajor(filterOutComments, resolve, reject);
 }
 
 function getParseOptionsRowMajor(
+  filterOutComments: boolean,
   resolve: (value: string[][]) => void,
   reject: (reason?: any) => void
 ): papaparse.ParseConfig {
@@ -79,6 +94,7 @@ function getParseOptionsRowMajor(
   let parser: any = null;
 
   return {
+    comments: filterOutComments,
     skipEmptyLines: true,
     worker: useWorker,
     chunk: function(results, p) {
@@ -101,6 +117,7 @@ function getParseOptionsRowMajor(
 }
 
 function getParseOptionsColumnMajor(
+  filterOutComments: boolean,
   resolve: (value: string[][]) => void,
   reject: (reason?: any) => void
 ): papaparse.ParseConfig {
@@ -108,6 +125,7 @@ function getParseOptionsColumnMajor(
   let parser: any = null;
 
   return {
+    comments: filterOutComments,
     skipEmptyLines: true,
     worker: useWorker,
     chunk: function(results, p) {

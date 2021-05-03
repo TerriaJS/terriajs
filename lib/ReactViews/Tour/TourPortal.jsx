@@ -9,35 +9,33 @@
  * TODO: loop through configparameters for ability to customise at runtime
  * , then add docs for customisation
  */
-import React, { useEffect } from "react";
-import { withTheme, useTheme } from "styled-components";
-import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
 import { autorun } from "mobx";
 import { observer } from "mobx-react";
-
-import { useWindowSize } from "../Hooks/useWindowSize";
-
-import Caret from "../Generic/Caret";
-import CloseButton from "../Generic/CloseButton";
+import PropTypes from "prop-types";
+import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useTheme, withTheme } from "styled-components";
 import Box from "../../Styled/Box";
-import Spacing from "../../Styled/Spacing";
 import Button from "../../Styled/Button";
+import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
 import { parseCustomMarkdownToReactWithOptions } from "../Custom/parseCustomMarkdownToReact";
-
+import Caret from "../Generic/Caret";
+import CloseButton from "../Generic/CloseButton";
+import { useWindowSize } from "../Hooks/useWindowSize";
+import { useTranslationIfExists } from "./../../Language/languageHelpers";
 import {
-  getOffsetsFromTourPoint,
   calculateLeftPosition,
-  calculateTopPosition
+  calculateTopPosition,
+  getOffsetsFromTourPoint
 } from "./tour-helpers.ts";
-import TourOverlay from "./TourOverlay.jsx";
-import TourProgressDot from "./TourProgressDot.jsx";
-import TourIndicator from "./TourIndicator.jsx";
-import TourPrefaceBox from "./TourPrefaceBox.jsx";
 import TourExplanationBox, {
   TourExplanationBoxZIndex
 } from "./TourExplanationBox.jsx";
+import TourIndicator from "./TourIndicator.jsx";
+import TourOverlay from "./TourOverlay.jsx";
+import TourPrefaceBox from "./TourPrefaceBox.jsx";
+import TourProgressDot from "./TourProgressDot.jsx";
 
 /**
  * Indicator bar/"dots" on progress of tour.
@@ -93,7 +91,7 @@ export const TourExplanation = ({
     // which is offset against the original box
     return (
       <Box
-        positionAbsolute
+        position="absolute"
         style={{
           zIndex: TourExplanationBoxZIndex - 1,
           top: topStyle,
@@ -101,7 +99,7 @@ export const TourExplanation = ({
         }}
       >
         <Box
-          positionAbsolute
+          position="absolute"
           style={{
             top: `${caretOffsetTop}px`,
             left: `${caretOffsetLeft}px`
@@ -264,10 +262,13 @@ const TourGrouping = observer(({ viewState, tourPoints }) => {
             indicatorOffsetTop={indicatorOffsetTop}
             indicatorOffsetLeft={indicatorOffsetLeft}
           >
-            {parseCustomMarkdownToReactWithOptions(tourPoint?.content, {
-              injectTermsAsTooltips: true,
-              tooltipTerms: viewState.terria.configParameters.helpContentTerms
-            })}
+            {parseCustomMarkdownToReactWithOptions(
+              useTranslationIfExists(tourPoint?.content),
+              {
+                injectTermsAsTooltips: true,
+                tooltipTerms: viewState.terria.configParameters.helpContentTerms
+              }
+            )}
           </TourExplanation>
         );
       })}

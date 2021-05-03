@@ -1,10 +1,10 @@
-import GltfCatalogItem from "../../lib/Models/GltfCatalogItem";
-import Mappable from "../../lib/Models/Mappable";
-import Terria from "../../lib/Models/Terria";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import createStratumInstance from "../../lib/Models/createStratumInstance";
-import HeadingPitchRollTraits from "../../lib/Traits/HeadingPitchRollTraits";
+import MappableMixin from "../../lib/ModelMixins/MappableMixin";
 import CommonStrata from "../../lib/Models/CommonStrata";
+import createStratumInstance from "../../lib/Models/createStratumInstance";
+import GltfCatalogItem from "../../lib/Models/GltfCatalogItem";
+import Terria from "../../lib/Models/Terria";
+import HeadingPitchRollTraits from "../../lib/Traits/HeadingPitchRollTraits";
 
 describe("GltfCatalogItem", function() {
   let gltf: GltfCatalogItem;
@@ -15,7 +15,7 @@ describe("GltfCatalogItem", function() {
   });
 
   it("is Mappable", function() {
-    expect(Mappable.is(gltf)).toBeTruthy();
+    expect(MappableMixin.isMixedInto(gltf)).toBeTruthy();
   });
 
   it("creates a DataSource with a model", async function() {

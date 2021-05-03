@@ -16,7 +16,8 @@ export default class ArrayNestedStrataMap<T extends ModelTraits>
     readonly parentProperty: string,
     readonly objectTraits: TraitsConstructorWithRemoval<T>,
     readonly objectIdProperty: string | number | symbol,
-    readonly objectId: string
+    readonly objectId: string,
+    readonly merge: boolean
   ) {}
 
   clear(): void {
@@ -152,6 +153,9 @@ export default class ArrayNestedStrataMap<T extends ModelTraits>
 
       // This stratum applies to this object.
       result.set(stratumId, thisObject);
+
+      // If merge is false, only return the top-most strata's object
+      if (!this.merge) return result;
     }
 
     return result;

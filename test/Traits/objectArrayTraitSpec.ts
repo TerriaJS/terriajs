@@ -55,7 +55,26 @@ class OuterTraits extends ModelTraits {
   other?: string;
 }
 
+class OuterTraitsNoMerge extends ModelTraits {
+  @objectArrayTrait({
+    type: InnerTraits,
+    name: "Inner",
+    description: "Inner",
+    idProperty: "foo",
+    merge: false
+  })
+  inner?: InnerTraits[];
+
+  @primitiveTrait({
+    type: "string",
+    name: "Other",
+    description: "Other"
+  })
+  other?: string;
+}
+
 class TestModel extends CreateModel(OuterTraits) {}
+class TestModelNoMerge extends CreateModel(OuterTraitsNoMerge) {}
 
 describe("objectArrayTrait", function() {
   it("returns an empty model if all strata are undefined", function() {
@@ -212,4 +231,29 @@ describe("objectArrayTrait", function() {
     expect(model.inner[0].bar).toBe(4);
     expect(model.inner[0].baz).toBe(true);
   });
+
+  it("updates to reflect new strata added after evaluation (with no merge)", function() {
+    const terria = new Terria();
+    const model = new TestModelNoMerge("test", terria);
+
+    const newObj = model.addObject("user", "inner", "test");
+    expect(newObj).toBeDefined();
+
+    if (newObj) {
+      expect(newObj.foo).toBe("test");
+      newObj.setTrait("user", "bar", 4);
+      expect(newObj.bar).toBe(4);
+      newObj.setTrait("definition", "baz", true);
+      expect(newObj.baz).toBeUndefined();
+      newObj.setTrait("user", "baz", true);
+      expect(newObj.baz).toBeTruthy();
+    }
+
+    expect(model.inner.length).toBe(1);
+    expect(model.inner[0].foo).toBe("test");
+    expect(model.inner[0].bar).toBe(4);
+    expect(model.inner[0].baz).toBe(true);
+  });
+
+  OuterTraitsNoMerge;
 });

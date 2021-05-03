@@ -1,15 +1,17 @@
 import { BaseModel } from "../Models/Model";
 import i18next from "i18next";
+import isDefined from "./isDefined";
 export const USER_ADDED_CATEGORY_ID = "__User-Added_Data__";
 
 export default function addedByUser(
-  catalogMember: BaseModel,
+  catalogMember: BaseModel | undefined,
   options: {
     depth: number;
   } = {
     depth: 0
   }
 ): boolean {
+  if (!isDefined(catalogMember)) return false;
   const depth = options.depth;
   if (depth > 100) {
     console.error(
@@ -26,10 +28,9 @@ export default function addedByUser(
   return sourceReference.knownContainerUniqueIds.some(containerId => {
     return (
       containerId === USER_ADDED_CATEGORY_ID ||
-      addedByUser(
-        <BaseModel>catalogMember.terria.getModelById(BaseModel, containerId),
-        { depth: depth + 1 }
-      )
+      addedByUser(catalogMember.terria.getModelById(BaseModel, containerId), {
+        depth: depth + 1
+      })
     );
   });
 }

@@ -1,5 +1,7 @@
 # Feature Information Template
 
+**Warning: This section needs to be updated for TerriaJS version 8.**
+
 You can add a `featureInfoTemplate` to the items in your catalog `json` file like so:
 
     {

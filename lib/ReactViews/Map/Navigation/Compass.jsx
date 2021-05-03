@@ -24,16 +24,19 @@ import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import Ray from "terriajs-cesium/Source/Core/Ray";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
-import Icon, { StyledIcon } from "../../Icon.jsx";
+import Icon, { StyledIcon } from "../../../Styled/Icon";
 import GyroscopeGuidance from "../../GyroscopeGuidance/GyroscopeGuidance";
 import { runInAction, computed, when } from "mobx";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
 import { withTerriaRef } from "../../HOCs/withTerriaRef";
+import withControlledVisibility from "../../HOCs/withControlledVisibility";
 
 import Box from "../../../Styled/Box";
 
 import FadeIn from "../../Transitions/FadeIn/FadeIn";
+
+export const COMPASS_LOCAL_PROPERTY_KEY = "CompassHelpPrompted";
 
 // Map Compass
 //
@@ -292,6 +295,9 @@ class Compass extends React.Component {
     const { t } = this.props;
     const active = this.state.active;
     const description = t("compass.description");
+    const showGuidance = !this.props.viewState.terria.getLocalProperty(
+      COMPASS_LOCAL_PROPERTY_KEY
+    );
 
     return (
       <StyledCompass
@@ -347,7 +353,13 @@ class Compass extends React.Component {
             backgroundImage: require("../../../../wwwroot/images/compass-rotation-marker.svg")
           }}
           onMouseOver={() => this.setState({ active: true })}
-          onMouseOut={() => this.setState({ active: true })}
+          onMouseOut={() => {
+            if (showGuidance) {
+              this.setState({ active: true });
+            } else {
+              this.setState({ active: false });
+            }
+          }}
           // do we give focus to this? given it's purely a mouse tool
           // focus it anyway..
           tabIndex="0"
@@ -365,25 +377,27 @@ class Compass extends React.Component {
         </StyledCompassRotationMarker>
 
         {/* Gyroscope guidance menu */}
-        <FadeIn isVisible={active}>
-          <Box
-            css={`
-              ${p => p.theme.verticalAlign("absolute")}
-              direction: rtl;
-              right: 72px;
-            `}
-          >
-            <GyroscopeGuidance
-              rightOffset="72px"
-              viewState={this.props.viewState}
-              handleHelp={() => {
-                this.props.viewState.showHelpPanel();
-                this.props.viewState.selectHelpMenuItem("navigation");
-              }}
-              onClose={() => this.setState({ active: false })}
-            />
-          </Box>
-        </FadeIn>
+        <If condition={showGuidance}>
+          <FadeIn isVisible={active}>
+            <Box
+              css={`
+                ${p => p.theme.verticalAlign("absolute")}
+                direction: rtl;
+                right: 55px;
+              `}
+            >
+              <GyroscopeGuidance
+                rightOffset="72px"
+                viewState={this.props.viewState}
+                // handleHelp={() => {
+                //   this.props.viewState.showHelpPanel();
+                //   this.props.viewState.selectHelpMenuItem("navigation");
+                // }}
+                onClose={() => this.setState({ active: false })}
+              />
+            </Box>
+          </FadeIn>
+        </If>
       </StyledCompass>
     );
   }
@@ -699,5 +713,5 @@ function viewerChange(viewModel) {
 
 export const COMPASS_NAME = "MapNavigationCompassOuterRing";
 export default withTranslation()(
-  withTheme(withTerriaRef(Compass, COMPASS_NAME))
+  withControlledVisibility(withTheme(withTerriaRef(Compass, COMPASS_NAME)))
 );

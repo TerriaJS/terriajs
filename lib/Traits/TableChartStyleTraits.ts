@@ -4,6 +4,13 @@ import objectArrayTrait from "./objectArrayTrait";
 
 export class TableChartLineStyleTraits extends ModelTraits {
   @primitiveTrait({
+    name: "Name",
+    description: "Chart line name (will replace y-column name).",
+    type: "string"
+  })
+  name?: string;
+
+  @primitiveTrait({
     name: "Y Axis Column",
     description: "The column to use as the Y-axis.",
     type: "string"
@@ -13,14 +20,14 @@ export class TableChartLineStyleTraits extends ModelTraits {
   @primitiveTrait({
     name: "Y Axis Minimum",
     description: "The minimum value to show on the Y axis of the chart.",
-    type: "string"
+    type: "number"
   })
   yAxisMinimum?: number;
 
   @primitiveTrait({
     name: "Y Axis Maximum",
     description: "The maximum value to show on the Y axis of the chart.",
-    type: "string"
+    type: "number"
   })
   yAxisMaximum?: number;
 

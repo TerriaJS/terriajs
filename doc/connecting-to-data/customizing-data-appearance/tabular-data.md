@@ -1,5 +1,7 @@
 # Tabular Data
 
+**Warning: This page requires major changes to be updated for TerriaJS version 8.**
+
 ## Overview
 
 When you drag and drop a csv file onto the map, TerriaJS chooses some display defaults

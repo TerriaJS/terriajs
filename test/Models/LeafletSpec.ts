@@ -1,8 +1,10 @@
-import { computed } from "mobx";
-import Terria from "../../lib/Models/Terria";
-import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
-import Leaflet from "../../lib/Models/Leaflet";
 import L from "leaflet";
+import { computed } from "mobx";
+import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import Leaflet from "../../lib/Models/Leaflet";
+import Terria from "../../lib/Models/Terria";
+import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 
 describe("Leaflet Model", function() {
   let terria: Terria;
@@ -125,5 +127,21 @@ describe("Leaflet Model", function() {
       layers[1]._tiles = {};
       layers[0].fire("tileload");
     }
+  });
+
+  describe("zoomTo", function() {
+    describe("if the target is a TimeVarying item", function() {
+      it("sets the target item as the timeline source", function() {
+        const targetItem = new WebMapServiceCatalogItem("test", terria);
+        spyOnProperty(targetItem, "mapItems", "get").and.returnValue([
+          new CustomDataSource("test")
+        ]);
+        spyOn(terria.timelineStack, "promoteToTop");
+        leaflet.zoomTo(targetItem, 0);
+        expect(terria.timelineStack.promoteToTop).toHaveBeenCalledWith(
+          targetItem
+        );
+      });
+    });
   });
 });

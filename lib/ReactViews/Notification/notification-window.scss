@@ -27,7 +27,7 @@
 .notification {
   border-radius: $radius-small;
   border: 1px solid darken($dark, 3%);
-  background: $dark;
+  // background: $dark;
   z-index: 300;
   pre {
     // copy over scrollbar css because I can't compose within

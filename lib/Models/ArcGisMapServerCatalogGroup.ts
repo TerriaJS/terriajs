@@ -5,6 +5,7 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import loadJson from "../Core/loadJson";
 import replaceUnderscores from "../Core/replaceUnderscores";
+import runLater from "../Core/runLater";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
@@ -34,6 +35,7 @@ interface Layer {
   description?: string;
   copyrightText?: string;
   type?: string;
+  subLayerIds?: number[] | null;
 }
 
 export interface MapServer {
@@ -213,7 +215,12 @@ export class MapServerStratum extends LoadableStratum(
       (layer.parentLayerId !== -1 ? layer.parentLayerId + "/" : "") +
       layer.id;
     let model: ArcGisMapServerCatalogItem | ArcGisMapServerCatalogGroup;
-    if (layer.type === "Group Layer") {
+
+    // Treat layer as a group if it has type "Group Layer" - or has subLayers
+    if (
+      layer.type === "Group Layer" ||
+      (Array.isArray(layer.subLayerIds) && layer.subLayerIds.length > 0)
+    ) {
       const existingModel = this._catalogGroup.terria.getModelById(
         ArcGisMapServerCatalogGroup,
         layerId
@@ -285,14 +292,12 @@ export default class ArcGisMapServerCatalogGroup extends UrlMixin(
     });
   }
 
-  protected forceLoadMembers(): Promise<void> {
-    return this.loadMetadata().then(() => {
-      const mapServerStratum = <MapServerStratum | undefined>(
-        this.strata.get(MapServerStratum.stratumName)
-      );
-      if (mapServerStratum) {
-        mapServerStratum.createMembersFromLayers();
-      }
-    });
+  protected async forceLoadMembers() {
+    const mapServerStratum = <MapServerStratum | undefined>(
+      this.strata.get(MapServerStratum.stratumName)
+    );
+    if (mapServerStratum) {
+      await runLater(() => mapServerStratum.createMembersFromLayers());
+    }
   }
 }

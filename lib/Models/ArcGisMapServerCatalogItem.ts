@@ -6,6 +6,8 @@ import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTili
 import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import URI from "urijs";
+import createDiscreteTimesFromIsoSegments from "../Core/createDiscreteTimes";
+import createTransformerAllowUndefined from "../Core/createTransformerAllowUndefined";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import loadJson from "../Core/loadJson";
@@ -13,23 +15,24 @@ import replaceUnderscores from "../Core/replaceUnderscores";
 import TerriaError from "../Core/TerriaError";
 import proj4definitions from "../Map/Proj4Definitions";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixin";
+import MappableMixin, { ImageryParts } from "../ModelMixins/MappableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import ArcGisMapServerCatalogItemTraits from "../Traits/ArcGisMapServerCatalogItemTraits";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
+import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
 import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import getToken from "./getToken";
 import LoadableStratum from "./LoadableStratum";
-import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
 
 const proj4 = require("proj4").default;
-const unionRectangleArray = require("../Map/unionRectangleArray");
 
 interface RectangleExtent {
   east: number;
@@ -43,11 +46,18 @@ interface DocumentInfo {
   Title?: string;
 }
 
+interface TimeInfo {
+  timeExtent: [number, number];
+}
+
 interface MapServer {
   documentInfo?: DocumentInfo;
   description?: string;
   copyrightText?: string;
   mapName?: string;
+  timeInfo?: TimeInfo;
+  layers: Layer[];
+  fullExtent: Extent;
 }
 
 interface SpatialReference {
@@ -64,11 +74,13 @@ interface Extent {
 
 interface Layer {
   id: number;
-  name?: string;
+  name: string;
+  maxScale: number;
+
+  // The following is pulled from <mapservice-url>/layers or <mapservice-url>/<layerOrTableId>
   description?: string;
   copyrightText?: string;
   extent?: Extent;
-  maxScale?: number;
 }
 
 interface Legend {
@@ -77,6 +89,10 @@ interface Legend {
   imageData: string;
   width: number;
   height: number;
+}
+
+interface Legends {
+  layers?: { layerId: number; layerName: string; legend: Legend[] }[];
 }
 
 class MapServerStratum extends LoadableStratum(
@@ -88,9 +104,7 @@ class MapServerStratum extends LoadableStratum(
     private readonly _item: ArcGisMapServerCatalogItem,
     private readonly _mapServer: MapServer,
     private readonly _allLayers: Layer[],
-    private readonly _legends: {
-      layers?: { layerId: number; layerName: string; legend: Legend[] }[];
-    },
+    private readonly _legends: Legends | undefined,
     readonly token: string | undefined
   ) {
     super();
@@ -143,43 +157,63 @@ class MapServerStratum extends LoadableStratum(
     }
 
     // TODO: if tokenUrl, fetch and pass token as parameter
-    const serviceMetadata = getJson(item, serviceUri);
-    const layersMetadata = getJson(item, layersUri);
-    const legendMetadata = getJson(item, legendUri);
+    const serviceMetadata = await getJson(item, serviceUri);
 
-    const results = await Promise.all([
-      serviceMetadata,
-      layersMetadata,
-      legendMetadata
-    ]);
+    if (!isDefined(serviceMetadata)) {
+      throw new TerriaError({
+        title: i18next.t("models.arcGisService.invalidServerTitle"),
+        message: i18next.t("models.arcGisService.invalidServerMessage", {
+          cors: '<a href="http://enable-cors.org/" target="_blank">CORS</a>',
+          appName: item.terria.appName,
+          email:
+            '<a href="mailto:' +
+            item.terria.supportEmail +
+            '">' +
+            item.terria.supportEmail +
+            "</a>"
+        })
+      });
+    }
 
-    const mapServer = results[0];
-    const legend = results[2];
+    let layersMetadataResponse = await getJson(item, layersUri);
+    const legendMetadata = await getJson(item, legendUri);
 
-    let allLayers;
-    if (isDefined(results[1].layers)) {
-      allLayers = results[1].layers;
-    } else if (isDefined(results[1].id)) {
-      // single layer
-      allLayers = [results[1]];
+    // TODO: some error handling on these requests would be nice
+
+    let layers: Layer[] | undefined;
+
+    // Use the slightly more basic layer metadata
+    if (
+      isDefined(layersMetadataResponse) &&
+      isDefined(serviceMetadata.layers)
+    ) {
+      layers = serviceMetadata.layers;
     } else {
+      if (isDefined(layersMetadataResponse.layers)) {
+        layers = layersMetadataResponse.layers;
+        // If layersMetadata is only a single layer -> shove into an array
+      } else if (isDefined(layersMetadataResponse.id)) {
+        layers = [layersMetadataResponse];
+      }
+    }
+
+    if (!isDefined(layers) || layers.length === 0) {
       throw new TerriaError({
         title: i18next.t(
-          "models.arcGisMapServerCatalogItem.unusableMetadataTitle"
+          "models.arcGisMapServerCatalogItem.noLayersFoundMessage"
         ),
-        message: isDefined(results[0].error)
-          ? results[0].error.message
-          : i18next.t(
-              "models.arcGisMapServerCatalogItem.unusableMetadataDefaultMessage"
-            )
+        message: i18next.t(
+          "models.arcGisMapServerCatalogItem.noLayersFoundMessage",
+          item
+        )
       });
     }
 
     const stratum = new MapServerStratum(
       item,
-      mapServer,
-      allLayers,
-      legend,
+      serviceMetadata,
+      layers,
+      legendMetadata,
       token
     );
     return stratum;
@@ -228,8 +262,37 @@ class MapServerStratum extends LoadableStratum(
   }
 
   @computed get rectangle() {
-    const rectangle = getRectangleFromLayers(this._allLayers);
+    const rectangle: RectangleExtent = {
+      west: Infinity,
+      south: Infinity,
+      east: -Infinity,
+      north: -Infinity
+    };
+    // If we only have the summary layer info
+    if (!("extent" in this._allLayers[0])) {
+      getRectangleFromLayer(this.mapServerData.fullExtent, rectangle);
+    } else {
+      getRectangleFromLayers(rectangle, this._allLayers);
+    }
+    if (rectangle.west === Infinity) return undefined;
     return createStratumInstance(RectangleTraits, rectangle);
+  }
+
+  @computed get discreteTimes() {
+    if (this._mapServer.timeInfo === undefined) return undefined;
+    // Add union type - as `time` is always defined
+    const result: (StratumFromTraits<DiscreteTimeTraits> & {
+      time: string;
+    })[] = [];
+
+    createDiscreteTimesFromIsoSegments(
+      result,
+      new Date(this._mapServer.timeInfo.timeExtent[0]).toISOString(),
+      new Date(this._mapServer.timeInfo.timeExtent[1]).toISOString(),
+      undefined,
+      this._item.maxRefreshIntervals
+    );
+    return result;
   }
 
   @computed get info() {
@@ -266,14 +329,14 @@ class MapServerStratum extends LoadableStratum(
 
     let items: StratumFromTraits<LegendItemTraits>[] = [];
 
-    (this._legends.layers || []).forEach(l => {
+    (this._legends?.layers || []).forEach(l => {
       if (noDataRegex.test(l.layerName) || labelsRegex.test(l.layerName)) {
         return;
       }
       if (
         layers.length > 0 &&
         layers.indexOf(l.layerId.toString()) < 0 &&
-        layers.indexOf(l.layerName.toLowerCase()) < 0
+        layers.indexOf(l.layerName) < 0
       ) {
         // layer not selected
         return;
@@ -303,11 +366,13 @@ class MapServerStratum extends LoadableStratum(
 
 StratumOrder.addLoadStratum(MapServerStratum.stratumName);
 
-export default class ArcGisMapServerCatalogItem
-  extends UrlMixin(
-    CatalogMemberMixin(CreateModel(ArcGisMapServerCatalogItemTraits))
+export default class ArcGisMapServerCatalogItem extends MappableMixin(
+  UrlMixin(
+    DiscretelyTimeVaryingMixin(
+      CatalogMemberMixin(CreateModel(ArcGisMapServerCatalogItemTraits))
+    )
   )
-  implements Mappable {
+) {
   static readonly type = "esri-mapServer";
   get typeName() {
     return i18next.t("models.arcGisMapServerCatalogItem.name");
@@ -315,7 +380,6 @@ export default class ArcGisMapServerCatalogItem
 
   readonly supportsSplitting = true;
   readonly canZoomTo = true;
-  readonly isMappable = true;
 
   get type() {
     return ArcGisMapServerCatalogItem.type;
@@ -329,8 +393,8 @@ export default class ArcGisMapServerCatalogItem
     });
   }
 
-  loadMapItems() {
-    return this.loadMetadata();
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
   }
 
   @computed get cacheDuration(): string {
@@ -340,79 +404,145 @@ export default class ArcGisMapServerCatalogItem
     return "1d";
   }
 
-  @computed get imageryProvider() {
-    const stratum = <MapServerStratum>(
-      this.strata.get(MapServerStratum.stratumName)
-    );
-
-    if (!isDefined(this.url) || !isDefined(stratum)) {
-      return;
-    }
-
-    const maximumLevel = maximumScaleToLevel(this.maximumScale);
-    const dynamicRequired = this.layers && this.layers.length > 0;
-    const imageryProvider = new ArcGisMapServerImageryProvider({
-      url: cleanAndProxyUrl(this, getBaseURI(this).toString()),
-      layers: this.layers,
-      tilingScheme: new WebMercatorTilingScheme(),
-      maximumLevel: maximumLevel,
-      parameters: this.parameters,
-      enablePickFeatures: this.allowFeaturePicking,
-      usePreCachedTilesIfAvailable: !dynamicRequired,
-      mapServerData: stratum.mapServerData,
-      token: stratum.token
-    });
-
-    const maximumLevelBeforeMessage = maximumScaleToLevel(
-      this.maximumScaleBeforeMessage
-    );
-
-    if (isDefined(maximumLevelBeforeMessage)) {
-      const realRequestImage = imageryProvider.requestImage;
-      let messageDisplayed = false;
-
-      imageryProvider.requestImage = (x, y, level) => {
-        if (level > maximumLevelBeforeMessage) {
-          if (!messageDisplayed) {
-            this.terria.error.raiseEvent(
-              new TerriaError({
-                title: "Dataset will not be shown at this scale",
-                message:
-                  'The "' +
-                  this.name +
-                  '" dataset will not be shown when zoomed in this close to the map because the data custodian has ' +
-                  "indicated that the data is not intended or suitable for display at this scale.  Click the dataset's Info button on the " +
-                  "Now Viewing tab for more information about the dataset and the data custodian."
-              })
-            );
-            messageDisplayed = true;
-          }
-
-          if (!this.showTilesAfterMessage) {
-            return (<any>ImageryProvider.loadImage)(
-              imageryProvider,
-              this.terria.baseUrl + "images/blank.png"
-            );
-          }
-        }
-        return realRequestImage.call(imageryProvider, x, y, level);
-      };
-    }
-
-    return imageryProvider;
+  @computed
+  get discreteTimes() {
+    const mapServerStratum: MapServerStratum | undefined = this.strata.get(
+      MapServerStratum.stratumName
+    ) as MapServerStratum;
+    return mapServerStratum?.discreteTimes;
   }
 
-  @computed get mapItems() {
-    if (isDefined(this.imageryProvider)) {
-      return [
-        {
-          alpha: this.opacity,
-          show: this.show,
-          imageryProvider: this.imageryProvider
-        }
-      ];
+  @computed
+  private get _currentImageryParts(): ImageryParts | undefined {
+    const dateAsUnix: string | undefined =
+      this.currentDiscreteTimeTag === undefined
+        ? undefined
+        : new Date(this.currentDiscreteTimeTag).getTime().toString();
+
+    const imageryProvider = this._createImageryProvider(dateAsUnix);
+    if (imageryProvider === undefined) {
+      return undefined;
     }
-    return [];
+    return {
+      imageryProvider,
+      alpha: this.opacity,
+      show: this.show,
+      clippingRectangle: this.clipToRectangle ? this.cesiumRectangle : undefined
+    };
+  }
+
+  @computed
+  private get _nextImageryParts(): ImageryParts | undefined {
+    if (this.nextDiscreteTimeTag) {
+      const dateAsUnix: number = new Date(this.nextDiscreteTimeTag).getTime();
+      const imageryProvider = this._createImageryProvider(
+        dateAsUnix.toString()
+      );
+      if (imageryProvider === undefined) {
+        return undefined;
+      }
+
+      imageryProvider.enablePickFeatures = false;
+
+      return {
+        imageryProvider,
+        alpha: 0.0,
+        show: true,
+        clippingRectangle: this.clipToRectangle
+          ? this.cesiumRectangle
+          : undefined
+      };
+    } else {
+      return undefined;
+    }
+  }
+
+  private _createImageryProvider = createTransformerAllowUndefined(
+    (time: string | undefined): ArcGisMapServerImageryProvider | undefined => {
+      const stratum = <MapServerStratum>(
+        this.strata.get(MapServerStratum.stratumName)
+      );
+
+      if (!isDefined(this.url) || !isDefined(stratum)) {
+        return;
+      }
+
+      const params: any = Object.assign({}, this.parameters);
+      if (time !== undefined) {
+        params.time = time;
+      }
+
+      const maximumLevel = maximumScaleToLevel(this.maximumScale);
+      const dynamicRequired = this.layers && this.layers.length > 0;
+      const layers = this.layerIds || this.layers;
+      const imageryProvider = new ArcGisMapServerImageryProvider({
+        url: cleanAndProxyUrl(this, getBaseURI(this).toString()),
+        layers: layers,
+        tilingScheme: new WebMercatorTilingScheme(),
+        maximumLevel: maximumLevel,
+        parameters: params,
+        enablePickFeatures: this.allowFeaturePicking,
+        usePreCachedTilesIfAvailable: !dynamicRequired,
+        mapServerData: stratum.mapServerData,
+        token: stratum.token,
+        credit: this.attribution
+      });
+
+      const maximumLevelBeforeMessage = maximumScaleToLevel(
+        this.maximumScaleBeforeMessage
+      );
+
+      if (isDefined(maximumLevelBeforeMessage)) {
+        const realRequestImage = imageryProvider.requestImage;
+        let messageDisplayed = false;
+
+        imageryProvider.requestImage = (x, y, level) => {
+          if (level > maximumLevelBeforeMessage) {
+            if (!messageDisplayed) {
+              this.terria.raiseErrorToUser(
+                new TerriaError({
+                  title: "Dataset will not be shown at this scale",
+                  message:
+                    'The "' +
+                    this.name +
+                    '" dataset will not be shown when zoomed in this close to the map because the data custodian has ' +
+                    "indicated that the data is not intended or suitable for display at this scale.  Click the dataset's Info button on the " +
+                    "Now Viewing tab for more information about the dataset and the data custodian."
+                })
+              );
+              messageDisplayed = true;
+            }
+
+            if (!this.showTilesAfterMessage) {
+              return (<any>ImageryProvider.loadImage)(
+                imageryProvider,
+                this.terria.baseUrl + "images/blank.png"
+              );
+            }
+          }
+          return realRequestImage.call(imageryProvider, x, y, level);
+        };
+      }
+
+      return imageryProvider;
+    }
+  );
+
+  @computed
+  get mapItems() {
+    const result = [];
+
+    const current = this._currentImageryParts;
+    if (current) {
+      result.push(current);
+    }
+
+    const next = this._nextImageryParts;
+    if (next) {
+      result.push(next);
+    }
+
+    return result;
   }
 
   @computed get layers() {
@@ -426,6 +556,15 @@ export default class ArcGisMapServerCatalogItem
         return lastSegment;
       }
     }
+  }
+
+  @computed
+  get layerIds(): string | undefined {
+    const stratum = <MapServerStratum>(
+      this.strata.get(MapServerStratum.stratumName)
+    );
+    const ids = stratum ? stratum.allLayers.map(l => l.id) : [];
+    return ids.length === 0 ? undefined : ids.join(",");
   }
 
   @computed get allSelectedLayers() {
@@ -457,10 +596,16 @@ function getBaseURI(item: ArcGisMapServerCatalogItem) {
   return uri;
 }
 
-function getJson(item: ArcGisMapServerCatalogItem, uri: any) {
-  return loadJson(
-    proxyCatalogItemUrl(item, uri.addQuery("f", "json").toString())
-  );
+async function getJson(item: ArcGisMapServerCatalogItem, uri: any) {
+  try {
+    const response = await loadJson(
+      proxyCatalogItemUrl(item, uri.addQuery("f", "json").toString())
+    );
+    return response;
+  } catch (err) {
+    console.log(err);
+    return undefined;
+  }
 }
 
 /* Given a comma-separated string of layer names, returns the layer objects corresponding to them. */
@@ -519,11 +664,7 @@ function updateBbox(extent: Extent, rectangle: RectangleExtent) {
   if (extent.ymax > rectangle.north) rectangle.north = extent.ymax;
 }
 
-function getRectangleFromLayer(
-  thisLayerJson: Layer,
-  rectangle: RectangleExtent
-) {
-  const extent = thisLayerJson.extent;
+function getRectangleFromLayer(extent: Extent, rectangle: RectangleExtent) {
   if (
     isDefined(extent) &&
     extent.spatialReference &&
@@ -535,7 +676,7 @@ function getRectangleFromLayer(
     }
 
     if (!isDefined((proj4definitions as any)[wkid])) {
-      return undefined;
+      return;
     }
 
     const source = new proj4.Proj((proj4definitions as any)[wkid]);
@@ -556,34 +697,12 @@ function getRectangleFromLayer(
       rectangle
     );
   }
-
-  return undefined;
 }
 
-function getRectangleFromLayers(
-  layers: Layer[]
-): StratumFromTraits<RectangleTraits> | undefined {
-  const rectangle: RectangleExtent = {
-    west: Infinity,
-    south: Infinity,
-    east: -Infinity,
-    north: -Infinity
-  };
-  if (!Array.isArray(layers)) {
-    getRectangleFromLayer(layers, rectangle);
-  } else {
-    layers.forEach(function(item) {
-      getRectangleFromLayer(item, rectangle);
-    });
-  }
-  if (
-    rectangle.east === Infinity ||
-    rectangle.south === Infinity ||
-    rectangle.west === -Infinity ||
-    rectangle.north === -Infinity
-  )
-    return undefined;
-  return rectangle;
+function getRectangleFromLayers(rectangle: RectangleExtent, layers: Layer[]) {
+  layers.forEach(function(item) {
+    item.extent && getRectangleFromLayer(item.extent, rectangle);
+  });
 }
 
 function cleanAndProxyUrl(

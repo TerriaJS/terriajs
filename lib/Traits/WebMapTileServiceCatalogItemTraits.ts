@@ -108,14 +108,6 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   })
   availableStyles?: WebMapTileServiceAvailableLayerStylesTraits[];
 
-  @objectArrayTrait({
-    name: "Legend URLs",
-    description: "The legends to display on the workbench.",
-    type: LegendTraits,
-    idProperty: "index"
-  })
-  legends?: LegendTraits[];
-
   @anyTrait({
     name: "Parameters",
     description:

@@ -122,8 +122,12 @@ export default class CorsProxy {
    * @returns The proxied URL
    */
   getURL(resource: string, proxyFlag: string) {
+    return this.getProxyBaseURL(proxyFlag) + resource;
+  }
+
+  getProxyBaseURL(proxyFlag: string) {
     var flag = proxyFlag === undefined ? "" : "_" + proxyFlag + "/";
-    return this.baseProxyUrl + flag + resource;
+    return this.baseProxyUrl + flag;
   }
 
   /**

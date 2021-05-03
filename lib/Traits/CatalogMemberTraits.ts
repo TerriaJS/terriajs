@@ -1,9 +1,27 @@
+import i18next from "i18next";
+import { JsonObject } from "../Core/Json";
+import anyTrait from "./anyTrait";
+import LegendTraits from "./LegendTraits";
 import ModelTraits from "./ModelTraits";
 import objectArrayTrait from "./objectArrayTrait";
-import objectTrait from "./objectTrait";
-import primitiveTrait from "./primitiveTrait";
 import primitiveArrayTrait from "./primitiveArrayTrait";
-import i18next from "i18next";
+import primitiveTrait from "./primitiveTrait";
+
+export class MetadataUrlTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "URL",
+    description: "The metadata URL of the file or service."
+  })
+  url?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Title",
+    description: "Title used for metadata URL button."
+  })
+  title?: string;
+}
 
 export class InfoSectionTraits extends ModelTraits {
   @primitiveTrait({
@@ -21,6 +39,13 @@ export class InfoSectionTraits extends ModelTraits {
     isNullable: true
   })
   content?: string | null;
+
+  @anyTrait({
+    name: "Content As Object",
+    description:
+      "The content of the section which is a JSON object. Set this property to null to remove this section entirely."
+  })
+  contentAsObject?: JsonObject;
 
   static isRemoval(infoSection: InfoSectionTraits) {
     return infoSection.content === null;
@@ -85,8 +110,7 @@ export default class CatalogMemberTraits extends ModelTraits {
   @primitiveArrayTrait({
     type: "string",
     name: "InfoSectionOrder",
-    description: `An array of section titles definining the display order of info sections.
-    If this property is not defined, {@link DataPreviewSections}'s DEFAULT_SECTION_ORDER is used`
+    description: `An array of section titles definining the display order of info sections. If this property is not defined, {@link DataPreviewSections}'s DEFAULT_SECTION_ORDER is used`
   })
   infoSectionOrder?: string[] = [
     i18next.t("preview.disclaimer"),
@@ -142,6 +166,15 @@ export default class CatalogMemberTraits extends ModelTraits {
   })
   hideLegendInWorkbench: boolean = false;
 
+  @objectArrayTrait({
+    name: "Legend URLs",
+    description: "The legends to display on the workbench.",
+    type: LegendTraits,
+    idProperty: "index",
+    merge: false
+  })
+  legends?: LegendTraits[];
+
   @primitiveTrait({
     type: "boolean",
     name: "Hide source in explorer window",
@@ -149,4 +182,20 @@ export default class CatalogMemberTraits extends ModelTraits {
       "Indicates that the source of this data should be hidden from the UI (obviously this isn't super-secure as you can just look at the network requests)."
   })
   hideSource: boolean = false;
+
+  @objectArrayTrait({
+    type: MetadataUrlTraits,
+    name: "Metadata URLs",
+    description: "Metadata URLs to show in data catalog.",
+    idProperty: "index"
+  })
+  metadataUrls?: MetadataUrlTraits[];
+
+  @primitiveTrait({
+    name: "Data Custodian",
+    type: "string",
+    description:
+      "Gets or sets a description of the custodian of this data item."
+  })
+  dataCustodian?: string;
 }

@@ -6,13 +6,26 @@ interface CssExports {
   'colorSplitter': string;
   'compassWidth': string;
   'dark': string;
+  'darkLighter': string;
   'darkWithOverlay': string;
+  'font': string;
+  'fontBase': string;
+  'fontFeatureInfo': string;
+  'fontMono': string;
+  'fontPop': string;
   'frontComponentZIndex': string;
   'grey': string;
   'greyLighter': string;
   'greyLighter2': string;
   'greyLightest': string;
+  'inputHeight': string;
   'lg': string;
+  'logoHeight': string;
+  'logoPaddingHorizontal': string;
+  'logoPaddingVertical': string;
+  'logoSmallHeight': string;
+  'logoSmallPaddingHorizontal': string;
+  'logoSmallPaddingVertical': string;
   'mapButtonColor': string;
   'mapButtonTop': string;
   'mapNavigationTop': string;
@@ -34,6 +47,8 @@ interface CssExports {
   'textDarker': string;
   'textLight': string;
   'textLightDimmed': string;
+  'textLightTranslucent': string;
+  'toolPrimaryColor': string;
   'trainerHeight': string;
   'workbenchWidth': string;
 }

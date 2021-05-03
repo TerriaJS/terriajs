@@ -1,5 +1,5 @@
 import React from "react";
-
+import { isArrayLike } from "mobx";
 import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
@@ -18,36 +18,54 @@ const MetadataTable = createReactClass({
 
   render() {
     const metadataItem = this.props.metadataItem;
+    const keys = Object.keys(metadataItem);
+    const isArr = isArrayLike(metadataItem);
+    if (keys.length === 0 && !isArr) return null;
+
     return (
       <div className={Styles.root}>
-        <If condition={metadataItem.items.length > 0}>
-          <table>
-            <tbody>
-              <For each="item" index="i" of={metadataItem.items}>
-                <tr key={i}>
-                  <th className={Styles.name}>{item.name}</th>
-                  <td className={Styles.value}>
-                    <Choose>
-                      <When condition={item.items.length > 0}>
-                        <MetadataTable metadataItem={item} />
-                      </When>
-                      <When condition={Array.isArray(item.value)}>
-                        <If
-                          condition={
-                            item.value.length > 0 && isJoinable(item.value)
-                          }
-                        >
-                          {item.value.join(", ")}
-                        </If>
-                      </When>
-                      <Otherwise>{item.value}</Otherwise>
-                    </Choose>
-                  </td>
-                </tr>
-              </For>
-            </tbody>
-          </table>
-        </If>
+        <table>
+          <tbody>
+            <Choose>
+              <When condition={isArr}>
+                <If
+                  condition={
+                    metadataItem.length > 0 && isJoinable(metadataItem)
+                  }
+                >
+                  <tr>
+                    <td>{metadataItem.join(", ")}</td>
+                  </tr>
+                </If>
+              </When>
+              <When condition={keys.length > 0 && !isArr}>
+                <For each="key" index="i" of={keys}>
+                  <tr key={i}>
+                    <th className={Styles.name}>{key}</th>
+                    <td className={Styles.value}>
+                      <Choose>
+                        <When condition={typeof metadataItem[key] === "object"}>
+                          <MetadataTable metadataItem={metadataItem[key]} />
+                        </When>
+                        <When condition={isArrayLike(metadataItem[key])}>
+                          <If
+                            condition={
+                              metadataItem[key].length > 0 &&
+                              isJoinable(metadataItem[key])
+                            }
+                          >
+                            {metadataItem[key].join(", ")}
+                          </If>
+                        </When>
+                        <Otherwise>{metadataItem[key]}</Otherwise>
+                      </Choose>
+                    </td>
+                  </tr>
+                </For>
+              </When>
+            </Choose>
+          </tbody>
+        </table>
       </div>
     );
   }

@@ -5,7 +5,6 @@ import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import GroupTraits from "../Traits/GroupTraits";
-import addToWorkbench from "./addToWorkbench";
 import CommonStrata from "./CommonStrata";
 import hasTraits from "./hasTraits";
 import { BaseModel } from "./Model";
@@ -56,7 +55,7 @@ export default function addUserCatalogMember(
         defaultValue(options.enable, true) &&
         !GroupMixin.isMixedInto(dereferenced)
       ) {
-        addToWorkbench(terria.workbench, dereferenced);
+        terria.workbench.add(dereferenced);
       }
 
       return newCatalogItem;
@@ -69,7 +68,7 @@ export default function addUserCatalogMember(
         });
       }
 
-      terria.error.raiseEvent(e);
+      terria.raiseErrorToUser(e);
       return e;
     });
 }
