@@ -20,9 +20,21 @@
 
 .storycard {
   font-size: 16px;
-  padding: 20px 20px 20px 15px;
+  padding: 10px 20px 0px 15px;
   display: block;
   width: 100%;
   box-sizing: border-box;
   border: none;
+}
+
+td.storytitle {
+  width: 100%;
+}
+
+td.storyimage {
+  padding-right: 5px;
+}
+
+td.storyimage img {
+  width: 100px;
 }
