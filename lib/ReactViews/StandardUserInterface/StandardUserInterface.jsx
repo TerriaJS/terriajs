@@ -5,7 +5,7 @@ import arrayContains from "../../Core/arrayContains";
 import RCHotspotSummary from "./../RCHotspotSummary/RCHotspotSummary.jsx";
 import DragDropFile from "./../DragDropFile.jsx";
 import DragDropNotification from "./../DragDropNotification.jsx";
-import FeatureInfoPanel from "../RCFeatureInfo/RCFeatureInfoPanel.jsx";
+// import FeatureInfoPanel from "../FeatureInfo/FeatureInfoPanel.jsx";
 import MapColumn from "./MapColumn.jsx";
 import MapInteractionWindow from "./../Notification/MapInteractionWindow.jsx";
 import MapNavigation from "./../Map/MapNavigation.jsx";
@@ -390,7 +390,8 @@ const StandardUserInterface = createReactClass({
               viewState.topElement = "FeatureInfo";
             }}
           >
-            <FeatureInfoPanel terria={terria} viewState={viewState} />
+            {/*RC TODO: uncomment if there is a need to show the info popup when clicking on map */}
+            {/*<FeatureInfoPanel terria={terria} viewState={viewState} />*/}
           </div>
           <DragDropFile terria={terria} viewState={viewState} />
           <DragDropNotification
