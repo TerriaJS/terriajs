@@ -1,3 +1,5 @@
+**Warning: This page requires major changes to be updated for TerriaJS version 8.**
+
 TerriaJS is usually used in a single-page web application to provide mapping and catalog exploration capabilities.  It is written in TypeScript and compiled to ECMAScript 5 in order to run in Firefox, Chrome, Safari or Edge.
 
 Much of the following is outdated and maybe be explained better in [new model layer documentation](model-layer.md).

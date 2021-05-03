@@ -11,10 +11,6 @@ import MapInteractionMode, { UIMode } from "../../../Models/MapInteractionMode";
 import Terria from "../../../Models/Terria";
 import Loader from "../../Loader";
 
-const Box: any = require("../../../Styled/Box").default;
-const Text: any = require("../../../Styled/Text").default;
-const Spacing: any = require("../../../Styled/Spacing").default;
-
 interface PropsType {
   terria: Terria;
   location?: LatLonHeight;

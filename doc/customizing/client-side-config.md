@@ -62,8 +62,9 @@ Specifies various options for configuring TerriaJS:
 |`useCesiumIonBingImagery`|no|**boolean**|`true`|True to use Bing Maps from Cesium ion (Cesium World Imagery). By default, Ion will be used, unless the `bingMapsKey` property is specified, in which case that will be used instead. To disable the Bing Maps layers entirely, set this property to false and set `bingMapsKey` to null.|
 |`bingMapsKey`|no|**string**|undefined|A [Bing Maps API key](https://msdn.microsoft.com/en-us/library/ff428642.aspx) used for requesting Bing Maps base maps and using the Bing Maps geocoder for searching. It is your responsibility to request a key and comply with all terms and conditions.|
 |`hideTerriaLogo`|no|**boolean**|`false`|
-|`brandBarElements`|no|**string[]**|undefined|An array of strings of HTML that fill up the top left logo space.|
-|`displayOneBrand`|no|**number**|`0`|Index of which brandBarElements to show for mobile header.|
+|`brandBarElements`|no|**string[]**|undefined|An array of strings of HTML that fill up the top left logo space (see `brandBarSmallElements` or `displayOneBrand` for small screens).|
+|`brandBarSmallElements`|no|**string[]**|undefined|An array of strings of HTML that fill up the top left logo space - used for small screens.|
+|`displayOneBrand`|no|**number**|`0`|Index of which `brandBarElements` to show for mobile header. This will only be used if `brandBarSmallElements` is undefined.|
 |`disableMyLocation`|no|**boolean**|undefined|True to disable the "Centre map at your current location" button.|
 |`disableSplitter`|no|**boolean**|undefined|True to disable the use of the splitter control.|
 |`experimentalFeatures`|no|**boolean**|undefined||
@@ -78,6 +79,10 @@ Specifies various options for configuring TerriaJS:
 |`helpContent`|no|**[HelpContentItem](#HelpContentItem)**|`[]`|The content to be displayed in the help panel.|
 |`helpContentTerms`|no|**[Term](#Term)**|||
 |`languageConfiguration`|no|**[LanguageConfiguration](#LanguageConfiguration)**|undefined|Language configuration of TerriaJS.|
+|`customRequestSchedulerLimits`|no|**[RequestScheduler](https://cesium.com/docs/cesiumjs-ref-doc/RequestScheduler.html#.requestsByServer)**|undefined|Custom concurrent request limits for domains in Cesium's RequestScheduler.|
+|`persistViewerMode`|no|**boolean**|`true`|Whether to load persisted viewer mode from local storage.|
+|`openAddData`|no|**boolean**|`false`|Whether to open the add data explorer panel on load.|
+|`theme`|no|**any**|`{}`|An object used to override theme properties - for example `{"logoHeight": "70px"}`.|
 
 ### MagdaReferenceHeaders
 

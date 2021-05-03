@@ -1,13 +1,10 @@
-import TestRenderer, {
-  ReactTestInstance,
-  ReactTestRenderer
-} from "react-test-renderer";
 import React from "react";
+import { act } from "react-dom/test-utils";
+import TestRenderer, { ReactTestRenderer } from "react-test-renderer";
+import { ChartItem } from "../../../../lib/ModelMixins/ChartableMixin";
 import Terria from "../../../../lib/Models/Terria";
 import BottomDockChart from "../../../../lib/ReactViews/Custom/Chart/BottomDockChart";
-import { act } from "react-dom/test-utils";
 import PointOnMap from "../../../../lib/ReactViews/Custom/Chart/PointOnMap";
-import { ChartItem } from "../../../../lib/Models/Chartable";
 
 describe("BottomDockChart", function() {
   let terria: Terria;

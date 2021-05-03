@@ -1,5 +1,50 @@
 import { observable, computed, runInAction, toJS, action } from "mobx";
 
+/**
+ *
+ * The AsyncLoader class provides a way to memoize (of sorts) async requests. In a `forceLoadX` function you should load from an asynchronous service, transform the data into something that can be stored in 1 or multiple observables and then set those observables.
+ *
+ * It works by calling `loadCallback` in `@computed loadKeepAlive`. This `@computed` will update if observables change that were used in `loadCallback()`.Because we are using a `@computed` in this way - it is **very important** that no changes to `observables` are made **before an async call**.
+ *
+ * A **correct** example:
+ * ```ts
+ * async function loadX() {
+ *    const url = this.someObservableUrl
+ *    const someData = await loadText(url)
+ *    runInAction(() => this.someOtherObservable = someData)
+ * }
+ * ```
+ *
+ * This function will only be called *again* when `someObservableUrl` changes.
+ *
+ * ------------------------
+ *
+ * If there is any synchronous processing present it should be pulled out of forceLoadX and placed into 1 or multiple computeds.
+ *
+ * An **incorrect** example:
+ * ```ts
+ * async function loadX() {
+ *    const arg = this.someObservable
+ *    const someData = someSynchronousFn(arg)
+ *    runInAction(() => this.someOtherObservable = someData)
+ * }
+ * ```
+ *
+ * Instead this should be in a `@computed`:
+ *
+ * ```ts
+ * @computed
+ * get newComputed {
+ *    return someSynchronousFn(this.someObservable);
+ * }
+ * ```
+ *
+ * ------------------------
+ *
+ * **Other tips**:
+ *
+ * - You can not nest together `AsyncLoaders`.
+ */
 export default class AsyncLoader {
   @observable
   private _isLoading: boolean = false;
@@ -28,6 +73,7 @@ export default class AsyncLoader {
   }
 
   constructor(
+    /** {@see AsyncLoader} */
     readonly loadCallback: () => Promise<void>,
     readonly disposeCallback?: () => Promise<void>
   ) {}
@@ -41,7 +87,7 @@ export default class AsyncLoader {
 
   load(forceReload: boolean = false): Promise<void> {
     if (forceReload) {
-      ++this._forceReloadCount;
+      runInAction(() => ++this._forceReloadCount);
     }
 
     const newPromise = this.loadKeepAlive;

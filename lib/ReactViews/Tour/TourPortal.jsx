@@ -91,7 +91,7 @@ export const TourExplanation = ({
     // which is offset against the original box
     return (
       <Box
-        positionAbsolute
+        position="absolute"
         style={{
           zIndex: TourExplanationBoxZIndex - 1,
           top: topStyle,
@@ -99,7 +99,7 @@ export const TourExplanation = ({
         }}
       >
         <Box
-          positionAbsolute
+          position="absolute"
           style={{
             top: `${caretOffsetTop}px`,
             left: `${caretOffsetLeft}px`

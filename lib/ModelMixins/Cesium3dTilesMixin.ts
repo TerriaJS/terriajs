@@ -38,7 +38,7 @@ import Cesium3DTilesCatalogItemTraits from "../Traits/Cesium3DTilesCatalogItemTr
 import Cesium3dTilesTraits, {
   OptionsTraits
 } from "../Traits/Cesium3dTilesTraits";
-import AsyncMappableMixin from "./AsyncMappableMixin";
+import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
 
 const DEFAULT_HIGHLIGHT_COLOR = "#ff3f00";
@@ -66,9 +66,7 @@ class ObservableCesium3DTileset extends Cesium3DTileset {
 export default function Cesium3dTilesMixin<
   T extends Constructor<Model<Cesium3dTilesTraits>>
 >(Base: T) {
-  abstract class Cesium3dTilesMixin extends ShadowMixin(
-    AsyncMappableMixin(Base)
-  ) {
+  abstract class Cesium3dTilesMixin extends ShadowMixin(MappableMixin(Base)) {
     readonly canZoomTo = true;
 
     protected tileset?: ObservableCesium3DTileset;
@@ -77,34 +75,30 @@ export default function Cesium3dTilesMixin<
     @observable
     private originalRootTransform: Matrix4 = Matrix4.IDENTITY.clone();
 
-    get isMappable() {
-      return true;
-    }
-
-    protected forceLoadMetadata() {
-      return Promise.resolve();
-    }
-
-    protected forceLoadMapItems() {
+    protected async forceLoadMapItems() {
       this.loadTileset();
       if (this.tileset) {
-        return makeRealPromise<Cesium3DTileset>(this.tileset.readyPromise)
-          .then(tileset => {
-            if (
-              tileset.extras !== undefined &&
-              tileset.extras.style !== undefined
-            ) {
-              runInAction(() => {
-                this.strata.set(
-                  CommonStrata.defaults,
-                  createStratumInstance(Cesium3DTilesCatalogItemTraits, {
-                    style: tileset.extras.style
-                  })
-                );
-              });
-            }
-          }) // TODO: What should handle this error?
-          .catch(e => console.error(e));
+        try {
+          const tileset = await makeRealPromise<Cesium3DTileset>(
+            this.tileset.readyPromise
+          );
+          if (
+            tileset.extras !== undefined &&
+            tileset.extras.style !== undefined
+          ) {
+            runInAction(() => {
+              this.strata.set(
+                CommonStrata.defaults,
+                createStratumInstance(Cesium3DTilesCatalogItemTraits, {
+                  style: tileset.extras.style
+                })
+              );
+            });
+          }
+        } catch (e) {
+          // TODO: What should handle this error?
+          console.error(e);
+        }
       } else {
         return Promise.resolve();
       }
@@ -332,7 +326,7 @@ export default function Cesium3dTilesMixin<
         return [min, max].filter(x => x.length > 0).join(" && ");
       });
 
-      const showExpression = terms.join("&&");
+      const showExpression = terms.filter(x => x.length > 0).join("&&");
       if (showExpression.length > 0) {
         return showExpression;
       }

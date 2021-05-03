@@ -8,7 +8,7 @@ import isReadOnlyArray from "../Core/isReadOnlyArray";
 import loadText from "../Core/loadText";
 import TerriaError from "../Core/TerriaError";
 import gmlToGeoJson from "../Map/gmlToGeoJson";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import ExportableMixin from "../ModelMixins/ExportableMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
@@ -22,7 +22,6 @@ import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import LoadableStratum from "./LoadableStratum";
-import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
@@ -244,7 +243,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
 }
 
 class WebFeatureServiceCatalogItem extends ExportableMixin(
-  AsyncMappableMixin(
+  MappableMixin(
     GetCapabilitiesMixin(
       UrlMixin(
         CatalogMemberMixin(CreateModel(WebFeatureServiceCatalogItemTraits))
@@ -314,7 +313,6 @@ class WebFeatureServiceCatalogItem extends ExportableMixin(
   }
 
   async forceLoadMapItems(): Promise<void> {
-    await this.loadMetadata();
     const getCapabilitiesStratum:
       | GetCapabilitiesStratum
       | undefined = this.strata.get(

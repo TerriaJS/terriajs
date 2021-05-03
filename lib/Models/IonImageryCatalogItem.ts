@@ -1,24 +1,24 @@
 import { computed } from "mobx";
 import IonImageryProvider from "terriajs-cesium/Source/Scene/IonImageryProvider";
 import isDefined from "../Core/isDefined";
+import MappableMixin, { MapItem } from "../ModelMixins/MappableMixin";
 import IonImageryCatalogItemTraits from "../Traits/IonImageryCatalogItemTraits";
 import CreateModel from "./CreateModel";
-import Mappable from "./Mappable";
 
-export default class IonImageryCatalogItem
-  extends CreateModel(IonImageryCatalogItemTraits)
-  implements Mappable {
+export default class IonImageryCatalogItem extends MappableMixin(
+  CreateModel(IonImageryCatalogItemTraits)
+) {
   static readonly type = "ion-imagery";
 
   get type() {
     return IonImageryCatalogItem.type;
   }
 
-  loadMapItems() {
+  protected forceLoadMapItems(): Promise<void> {
     return Promise.resolve();
   }
 
-  @computed get mapItems() {
+  @computed get mapItems(): MapItem[] {
     if (!isDefined(this.imageryProvider)) {
       return [];
     }
@@ -26,7 +26,10 @@ export default class IonImageryCatalogItem
       {
         show: this.show,
         alpha: this.opacity,
-        imageryProvider: this.imageryProvider
+        imageryProvider: this.imageryProvider,
+        clippingRectangle: this.clipToRectangle
+          ? this.cesiumRectangle
+          : undefined
       }
     ];
   }

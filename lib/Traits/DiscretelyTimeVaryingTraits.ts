@@ -1,10 +1,8 @@
-import DiscreteTimeTraits from "./DiscreteTimeTraits";
-import objectArrayTrait from "./objectArrayTrait";
-import primitiveTrait from "./primitiveTrait";
-import TimeVaryingTraits from "./TimeVaryingTraits";
-import ShowableTraits from "./ShowableTraits";
+import { ChartItemType } from "../ModelMixins/ChartableMixin";
 import mixTraits from "./mixTraits";
-import { ChartItemType } from "../Models/Chartable";
+import primitiveTrait from "./primitiveTrait";
+import ShowableTraits from "./ShowableTraits";
+import TimeVaryingTraits from "./TimeVaryingTraits";
 
 export default class DiscretelyTimeVaryingTraits extends mixTraits(
   TimeVaryingTraits,

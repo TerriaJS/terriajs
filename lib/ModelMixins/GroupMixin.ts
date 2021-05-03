@@ -5,6 +5,8 @@ import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
+import Result from "../Core/Result";
+import TerriaError from "../Core/TerriaError";
 import Group from "../Models/Group";
 import Model, { BaseModel } from "../Models/Model";
 import GroupTraits from "../Traits/GroupTraits";
@@ -21,8 +23,12 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
      * by this function resolves, the list of members in `GroupMixin#members`
      * and `GroupMixin#memberModels` should be complete, but the individual
      * members will not necessarily be loaded themselves.
+     *
+     * It is guaranteed that `loadMetadata` has finished before this is called.
+     *
+     * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
      */
-    protected abstract forceLoadMembers(): Promise<void>;
+    protected abstract async forceLoadMembers(): Promise<void>;
 
     get isGroup() {
       return true;
@@ -64,11 +70,14 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
      * should be complete, but the individual members will not necessarily be
      * loaded themselves.
      */
-    loadMembers(): Promise<void> {
-      return this._memberLoader.load().finally(() => {
+    async loadMembers(): Promise<void> {
+      try {
+        if (CatalogMemberMixin.isMixedInto(this)) await this.loadMetadata();
+        await this._memberLoader.load();
+      } finally {
         this.refreshKnownContainerUniqueIds(this.uniqueId);
         this.addShareKeysToMembers();
-      });
+      }
     }
 
     @action
@@ -138,19 +147,30 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
     }
 
     @action
-    addMembersFromJson(stratumId: string, members: any[]) {
+    addMembersFromJson(stratumId: string, members: any[]): Result {
       const newMemberIds = this.traits["members"].fromJson(
         this,
         stratumId,
         members
       );
       newMemberIds
-        .map((memberId: string) =>
+        .ignoreError()
+        ?.map((memberId: string) =>
           this.terria.getModelById(BaseModel, memberId)
         )
         .forEach((member: BaseModel) => {
           this.add(stratumId, member);
         });
+
+      if (newMemberIds.error)
+        return Result.error(
+          TerriaError.from(
+            newMemberIds.error,
+            `Failed to add members from JSON for model \`${this.uniqueId}\``
+          )
+        );
+
+      return Result.none();
     }
 
     /**
@@ -215,7 +235,7 @@ namespace GroupMixin {
   export interface GroupMixin
     extends InstanceType<ReturnType<typeof GroupMixin>> {}
   export function isMixedInto(model: any): model is GroupMixin {
-    return model && model.isGroup;
+    return model && "isGroup" in model && model.isGroup;
   }
 }
 

@@ -12,11 +12,9 @@ import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
+import { proxyCatalogItemBaseUrl } from "./proxyCatalogItemUrl";
 import StratumOrder from "./StratumOrder";
 import ThreddsItemReference from "./ThreddsItemReference";
-import proxyCatalogItemUrl, {
-  proxyCatalogItemBaseUrl
-} from "./proxyCatalogItemUrl";
 
 interface ThreddsCatalog {
   id: string;
@@ -200,24 +198,23 @@ export default class ThreddsCatalogGroup extends UrlMixin(
     return "1d";
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return Promise.resolve();
+  protected async forceLoadMetadata(): Promise<void> {
+    if (!this.strata.get(ThreddsStratum.stratumName)) {
+      const stratum = await ThreddsStratum.load(this);
+      if (stratum === undefined) return;
+      await stratum.createMembers();
+      runInAction(() => {
+        this.strata.set(ThreddsStratum.stratumName, stratum);
+      });
+    }
   }
 
-  protected forceLoadMembers(): Promise<void> {
-    const threddsStratum = <ThreddsStratum | undefined>(
-      this.strata.get(ThreddsStratum.stratumName)
-    );
-    if (!threddsStratum) {
-      return ThreddsStratum.load(this).then(async stratum => {
-        if (stratum === undefined) return;
-        await stratum.createMembers();
-        runInAction(() => {
-          this.strata.set(ThreddsStratum.stratumName, stratum);
-        });
-      });
-    } else {
-      return Promise.resolve();
+  protected async forceLoadMembers() {
+    const stratum = this.strata.get(
+      ThreddsStratum.stratumName
+    ) as ThreddsStratum;
+    if (stratum) {
+      await stratum.createMembers();
     }
   }
 }
