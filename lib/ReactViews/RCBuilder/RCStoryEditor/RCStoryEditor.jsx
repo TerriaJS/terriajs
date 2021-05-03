@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import Styles from "./RCStoryEditor.scss";
 import sectors from "../../../Data/Sectors.js";
@@ -19,7 +19,11 @@ function RCStoryEditor(props) {
   const [selectHotspotSubscription, setSelectHotspotSubscription] = useState(
     null
   );
-
+  const stateRef = useRef();
+  const hotspotRef = useRef();
+  hotspotRef.current = hotspotPoint;
+  stateRef.current = listenForHotspot;
+  let pointval = {};
   useEffect(() => {
     try {
       API.graphql(graphqlOperation(getStory, { id: "4" })).then(story => {
@@ -29,30 +33,23 @@ function RCStoryEditor(props) {
         setTitle(data.title);
         setShortDescription(data.shortDescription);
         setSelectedSectors(data.sectors);
+        setHotspotPoint(data.hotspotlocation);
       });
     } catch (error) {
       console.log(error);
     }
-
     const viewState = props.viewState;
     setSelectHotspotSubscription(
       knockout.getObservable(viewState, "selectedPosition").subscribe(() => {
-        // hack alert; getting the current state
-        let isListening;
-        setListenForHotspot(currentValue => {
-          isListening = currentValue;
-          return currentValue;
-        });
-
+        let isListening = stateRef.current;
         if (isListening) {
           // Convert position to cartographic
           const point = Cartographic.fromCartesian(viewState.selectedPosition);
-          console.log(point);
-          // setHotspotPoint({
-          //     lat: (point.latitude / Math.PI) * 180,
-          //     lon: (point.longitude / Math.PI) * 180
-          // });
-          // setListenForHotspot(false);
+          setHotspotPoint({
+            latitude: (point.latitude / Math.PI) * 180,
+            longitude: (point.longitude / Math.PI) * 180
+          });
+          setListenForHotspot(false);
         }
       })
     );
@@ -90,25 +87,24 @@ function RCStoryEditor(props) {
       id: story.id,
       title: title,
       shortDescription: shortDescription,
-      sectors: selectedSectors
+      sectors: selectedSectors,
+      hotspotlocation: hotspotPoint
     };
-    console.log(storyDetails);
-    // API.graphql({
-    //   query: updateStory,
-    //   variables: { input: storyDetails }
-    // });
+    API.graphql({
+      query: updateStory,
+      variables: { input: storyDetails }
+    });
   };
 
   const hotspotText = hotspotPoint
-    ? `${Number(hotspotPoint.lat).toFixed(4)}, ${Number(
-        hotspotPoint.lon
+    ? `${Number(hotspotPoint.latitude).toFixed(4)}, ${Number(
+        hotspotPoint.longitude
       ).toFixed(4)}`
     : "none set";
 
   return (
     <div className={Styles.RCStoryEditor}>
       <h3>Edit your story</h3>
-      <button onClick={onSave}>Save</button>
       <form className={Styles.RCStoryCard}>
         <div className={Styles.group}>
           <input
@@ -134,14 +130,14 @@ function RCStoryEditor(props) {
           selectedSectors={selectedSectors}
           onSectorSelected={onSectorChanged}
         />
-        <div>
+        <div className={Styles.container}>
           <label>Hotspot</label>
           {!listenForHotspot && (
             <div>
-              <label>Set at: {hotspotText}</label>&nbsp;
+              <label>Set at: {hotspotText}</label>
               <button
                 type="button"
-                className={Styles.button}
+                className={Styles.RCButton}
                 onClick={() => setListenForHotspot(true)}
               >
                 Select hotspot
@@ -151,10 +147,18 @@ function RCStoryEditor(props) {
           {listenForHotspot && (
             <div>
               <label>Click on map to set the hotspot position</label>&nbsp;
-              <button onClick={() => setListenForHotspot(false)}>Cancel</button>
+              <button
+                onClick={() => setListenForHotspot(false)}
+                className={Styles.RCButton}
+              >
+                Cancel
+              </button>
             </div>
           )}
         </div>
+        <button className={Styles.RCButton} onClick={onSave}>
+          Save
+        </button>
       </form>
     </div>
   );
