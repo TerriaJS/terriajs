@@ -1,4 +1,4 @@
-import CatalogGroup from "../../lib/Models/CatalogGroupNew";
+import CatalogGroup from "../../lib/Models/CatalogGroup";
 import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
 import BaseModel from "../../lib/Models/GeoJsonCatalogItem";
 import Terria from "../../lib/Models/Terria";

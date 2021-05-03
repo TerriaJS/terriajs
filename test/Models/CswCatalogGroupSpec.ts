@@ -7,7 +7,7 @@ import loadText from "../../lib/Core/loadText";
 import CatalogMemberMixin from "../../lib/ModelMixins/CatalogMemberMixin";
 import updateModelFromJson from "../../lib/Models/updateModelFromJson";
 import CommonStrata from "../../lib/Models/CommonStrata";
-import CatalogGroup from "../../lib/Models/CatalogGroupNew";
+import CatalogGroup from "../../lib/Models/CatalogGroup";
 import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
 
 describe("CswCatalogGroup", function() {

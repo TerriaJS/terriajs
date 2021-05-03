@@ -8,7 +8,7 @@ import ArcGisPortalItemReference from "./ArcGisPortalItemReference";
 import ArcGisTerrainCatalogItem from "./ArcGisTerrainCatalogItem";
 import BingMapsCatalogItem from "./BingMapsCatalogItem";
 import CartoMapCatalogItem from "./CartoMapCatalogItem";
-import CatalogGroup from "./CatalogGroupNew";
+import CatalogGroup from "./CatalogGroup";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import Cesium3DTilesCatalogItem from "./Cesium3DTilesCatalogItem";
 import CesiumTerrainCatalogItem from "./CesiumTerrainCatalogItem";

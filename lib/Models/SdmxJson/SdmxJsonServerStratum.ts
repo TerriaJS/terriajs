@@ -10,7 +10,7 @@ import TerriaError from "../../Core/TerriaError";
 import { InfoSectionTraits } from "../../Traits/CatalogMemberTraits";
 import ModelReference from "../../Traits/ModelReference";
 import SdmxCatalogGroupTraits from "../../Traits/SdmxCatalogGroupTraits";
-import CatalogGroup from "../CatalogGroupNew";
+import CatalogGroup from "../CatalogGroup";
 import CommonStrata from "../CommonStrata";
 import createStratumInstance from "../createStratumInstance";
 import LoadableStratum from "../LoadableStratum";
