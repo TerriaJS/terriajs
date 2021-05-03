@@ -1,0 +1,40 @@
+@import "~terriajs-variables";
+
+.RCStoryList {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  @media (max-width: $xs) {
+    height: 60vh;
+    overflow-y: auto;
+  }
+}
+
+.stories {
+  font-size: 18px;
+  background: #ffffff;
+  box-shadow: 0px -8px 40px rgba(17, 8, 114, 0.0869565);
+  border-radius: 8px;
+  padding: 30px 16px;
+}
+
+.storycard {
+  font-size: 16px;
+  padding: 10px 20px 0px 15px;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+}
+
+td.storytitle {
+  width: 100%;
+}
+
+td.storyimage {
+  padding-right: 5px;
+}
+
+td.storyimage img {
+  width: 100px;
+}

@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
+import { API, graphqlOperation } from "aws-amplify";
 import PropTypes from "prop-types";
-import Styles from "./RCStoryEditor.scss";
+import { default as React, useEffect, useRef, useState } from "react";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
+import { updateStory } from "../../../../api/graphql/mutations";
+import { getStory } from "../../../../api/graphql/queries";
 import sectors from "../../../Data/Sectors.js";
 import RCSectorSelection from "./RCSectorSelection/RCSectorSelection";
-import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
-import defined from "terriajs-cesium/Source/Core/defined";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import { API, graphqlOperation } from "aws-amplify";
-import { getStory } from "../../../../api/graphql/queries";
-import { updateStory } from "../../../../api/graphql/mutations";
+import Styles from "./RCStoryEditor.scss";
+
 function RCStoryEditor(props) {
   const [story, setStory] = useState(null);
   const [title, setTitle] = useState("");
