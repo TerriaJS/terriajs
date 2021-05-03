@@ -3,12 +3,17 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.78)
+#### next release (8.0.0-alpha.79)
 
 * Move notification state change logic from ViewState into new class NotificationState
 * Catalog items can now show a disclaimer or message before loading through specifying InitialMessageTraits
-* Add `ShowableMixin`, for all models that get displayed on a map
+* Aliases `lodash` to `lodash-es` and use `babel-plugin-lodash` reducing bundle size by around 1.09MB.
+* Fix CkanCatalogGroup filterQuery issue. [#5332](https://github.com/TerriaJS/terriajs/pull/5332)
 * [The next improvement]
+
+#### 8.0.0-alpha.78
+
+* Add `ignoreErrors` url parameter.
 
 #### 8.0.0-alpha.77
 
