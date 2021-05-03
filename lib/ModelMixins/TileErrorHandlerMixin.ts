@@ -119,7 +119,7 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
 
         if (this.tileFailures > thresholdBeforeDisablingItem && this.show) {
           if (isThisItemABaseMap()) {
-            this.terria.error.raiseEvent(
+            this.terria.raiseErrorToUser(
               new TerriaError({
                 sender: this,
                 title: i18next.t(
@@ -136,7 +136,7 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
               })
             );
           } else {
-            this.terria.error.raiseEvent(
+            this.terria.raiseErrorToUser(
               new TerriaError({
                 sender: this,
                 title: i18next.t(

@@ -1,5 +1,6 @@
-import { BaseModel } from "./Model";
+import Result from "../Core/Result";
 import ModelReference from "../Traits/ModelReference";
+import { BaseModel } from "./Model";
 
 export default interface Group {
   readonly isGroup: boolean;
@@ -12,7 +13,7 @@ export default interface Group {
   loadMembers(): Promise<void>;
   refreshKnownContainerUniqueIds(uniqueId: string | undefined): void;
   add(stratumId: string, member: BaseModel): void;
-  addMembersFromJson(stratumId: string, members: any): void;
+  addMembersFromJson(stratumId: string, members: any): Result;
   remove(stratumId: string, member: BaseModel): void;
   moveMemberToIndex(
     stratumId: string,

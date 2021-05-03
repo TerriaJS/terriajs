@@ -198,7 +198,7 @@ export default class Cesium extends GlobeOrMap {
     //             console.log('Switching to EllipsoidTerrainProvider.');
     //             that.terria.viewerMode = ViewerMode.CesiumEllipsoid;
     //             if (!defined(that.TerrainMessageViewed)) {
-    //                 that.terria.error.raiseEvent({
+    //                 that.terria.raiseErrorToUser({
     //                     title : 'Terrain Server Not Responding',
     //                     message : '\
     // The terrain server is not responding at the moment.  You can still use all the features of '+that.terria.appName+' \

@@ -1,4 +1,4 @@
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import Result from "../Core/Result";
 import { BaseModel } from "../Models/Model";
 
 export interface TraitOptions {
@@ -19,7 +19,11 @@ export default abstract class Trait {
   }
 
   abstract getValue(model: BaseModel): any;
-  abstract fromJson(model: BaseModel, stratumName: string, jsonValue: any): any;
+  abstract fromJson(
+    model: BaseModel,
+    stratumName: string,
+    jsonValue: any
+  ): Result<any | undefined>;
   abstract toJson(value: any): any;
 
   abstract isSameType(trait: Trait): boolean;

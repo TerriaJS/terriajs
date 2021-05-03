@@ -6,11 +6,10 @@ import { useVirtual } from "react-virtual";
 import styled from "styled-components";
 import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
 import { ItemSearchResult } from "../../../Models/ItemSearchProvider";
+import Box from "../../../Styled/Box";
+import Button from "../../../Styled/Button";
 import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact";
 import MapEffects, { MapEffect } from "./MapEffects";
-
-const Box: any = require("../../../Styled/Box").default;
-const Button = require("../../../Styled/Button").default;
 
 export interface SearchResultsProps {
   item: SearchableItemMixin.Instance;
@@ -176,11 +175,11 @@ export const ResultsCount: React.FC<{ count: number }> = ({ count }) => {
   );
 };
 
-const ActionButton = styled(Button).attrs(props => ({
+const ActionButton = styled(Button).attrs((props: { selected: boolean }) => ({
   primary: props.selected,
   secondary: !props.selected,
   textProps: { medium: true }
-}))`
+}))<{ selected: boolean }>`
   min-height: 20px;
   padding: 1em;
   padding-top: 2px;
