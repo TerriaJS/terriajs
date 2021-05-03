@@ -56,6 +56,7 @@ interface IBoxPropsBase {
   overflow?: Overflow;
   overflowY?: Overflow;
   scroll?: boolean;
+  marginAuto?: boolean;
   style?: any;
   as?: React.ElementType | keyof JSX.IntrinsicElements;
 }

@@ -8,7 +8,6 @@ import getPath from "../../Core/getPath";
 import CommonStrata from "../../Models/CommonStrata";
 import openGroup from "../../Models/openGroup";
 import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
-import raiseErrorToUser from "../../Models/raiseErrorToUser";
 import { ROOT_ROUTE } from "../../ReactViewModels/TerriaRouting";
 import CatalogGroup from "./CatalogGroup";
 import CatalogItem from "./CatalogItem";

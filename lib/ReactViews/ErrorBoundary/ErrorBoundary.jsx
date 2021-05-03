@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import raiseErrorToUser from "../../Models/raiseErrorToUser";
 
 // https://reactjs.org/docs/error-boundaries.html
 export default class ErrorBoundary extends React.Component {
@@ -28,7 +27,7 @@ export default class ErrorBoundary extends React.Component {
       name,
       errorString
     );
-    raiseErrorToUser(this.props.terria, error);
+    this.props.terria.raiseErrorToUser(error);
   }
 
   render() {
