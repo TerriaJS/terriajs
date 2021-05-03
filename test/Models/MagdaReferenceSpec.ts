@@ -1,5 +1,5 @@
 import { runInAction } from "mobx";
-import CatalogGroup from "../../lib/Models/CatalogGroupNew";
+import CatalogGroup from "../../lib/Models/CatalogGroup";
 import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";

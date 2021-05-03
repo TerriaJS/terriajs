@@ -4,7 +4,7 @@ import ThreddsCatalogGroup, {
   ThreddsStratum
 } from "../../lib/Models/ThreddsCatalogGroup";
 import i18next from "i18next";
-import CatalogGroup from "../../lib/Models/CatalogGroupNew";
+import CatalogGroup from "../../lib/Models/CatalogGroup";
 import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
 
 configure({

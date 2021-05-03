@@ -7,7 +7,7 @@ import ArcGisPortalCatalogGroup, {
 import CommonStrata from "../../lib/Models/CommonStrata";
 import i18next from "i18next";
 import ArcGisPortalItemReference from "../../lib/Models/ArcGisPortalItemReference";
-import CatalogGroup from "../../lib/Models/CatalogGroupNew";
+import CatalogGroup from "../../lib/Models/CatalogGroup";
 import { BaseModel } from "../../lib/Models/Model";
 
 configure({

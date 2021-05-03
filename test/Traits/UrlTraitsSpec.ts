@@ -3,7 +3,7 @@ import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import Terria from "../../lib/Models/Terria";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import i18next from "i18next";
-import CatalogGroup from "../../lib/Models/CatalogGroupNew";
+import CatalogGroup from "../../lib/Models/CatalogGroup";
 import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
 import { BaseModel } from "../../lib/Models/Model";
 import UrlMixin from "../../lib/ModelMixins/UrlMixin";

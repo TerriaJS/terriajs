@@ -7,7 +7,7 @@ import CkanCatalogGroup, {
 import CommonStrata from "../../lib/Models/CommonStrata";
 import i18next from "i18next";
 import CkanItemReference from "../../lib/Models/CkanItemReference";
-import CatalogGroup from "../../lib/Models/CatalogGroupNew";
+import CatalogGroup from "../../lib/Models/CatalogGroup";
 import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
 import { BaseModel } from "../../lib/Models/Model";
 

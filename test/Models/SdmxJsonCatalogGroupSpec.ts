@@ -1,7 +1,7 @@
 import { runInAction } from "mobx";
 import Terria from "../../lib/Models/Terria";
 import SdmxCatalogGroup from "../../lib/Models/SdmxJson/SdmxJsonCatalogGroup";
-import CatalogGroup from "../../lib/Models/CatalogGroupNew";
+import CatalogGroup from "../../lib/Models/CatalogGroup";
 import SdmxJsonCatalogItem from "../../lib/Models/SdmxJson/SdmxJsonCatalogItem";
 
 const agencyScheme = JSON.stringify(

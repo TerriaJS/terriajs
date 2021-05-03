@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.79)
 
+* Add `preserveOrder` trait to `CatalogGroup` - this defaults to `true`. If `false` then members will be sorted alphabetically by `nameInCatalog`.
 * [The next improvement]
 
 #### 8.0.0-alpha.78
