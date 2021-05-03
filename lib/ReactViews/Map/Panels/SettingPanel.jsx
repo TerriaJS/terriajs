@@ -75,6 +75,9 @@ const SettingPanel = createReactClass({
       case 2:
         newViewerMode = ViewerMode.Leaflet;
         break;
+      case 3:
+        newViewerMode = ViewerMode.Cesium2D;
+        break;
       default:
         return;
     }
@@ -94,7 +97,8 @@ const SettingPanel = createReactClass({
       [ViewerMode.CesiumEllipsoid]: t(
         "settingPanel.viewerModeLabels.CesiumEllipsoid"
       ),
-      [ViewerMode.Leaflet]: t("settingPanel.viewerModeLabels.Leaflet")
+      [ViewerMode.Leaflet]: t("settingPanel.viewerModeLabels.Leaflet"),
+      [ViewerMode.Cesium2D]: t("settingPanel.viewerModeLabels.Cesium2D")
     };
 
     const qualityLabels = {
@@ -133,7 +137,11 @@ const SettingPanel = createReactClass({
       viewerModes.push(ViewerMode.CesiumTerrain);
     }
 
-    viewerModes.push(ViewerMode.CesiumEllipsoid, ViewerMode.Leaflet);
+    viewerModes.push(
+      ViewerMode.CesiumEllipsoid,
+      ViewerMode.Leaflet,
+      ViewerMode.Cesium2D
+    );
 
     return (
       <MenuPanel
