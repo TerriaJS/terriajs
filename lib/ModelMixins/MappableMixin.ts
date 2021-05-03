@@ -49,8 +49,6 @@ export function isDataSource(object: MapItem): object is DataSource {
   return "entities" in object;
 }
 
-const t = i18next.t.bind(i18next);
-
 function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
   abstract class MappableMixin extends Base {
     initialMessageShown: boolean = false;
@@ -93,10 +91,12 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
     }
 
     showInitialMessage(): Promise<void> {
+      // This function is deliberately not a computed,
+      // this.terria.notificationState.addNotificationToQueue changes state
       this.initialMessageShown = true;
       return new Promise(resolve => {
         this.terria.notificationState.addNotificationToQueue({
-          title: this.initialMessage.title ?? t("notification.title"),
+          title: this.initialMessage.title ?? i18next.t("notification.title"),
           width: this.initialMessage.width,
           height: this.initialMessage.height,
           confirmText: this.initialMessage.confirmation
@@ -130,6 +130,9 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
         await this.showInitialMessage();
       }
       if (CatalogMemberMixin.isMixedInto(this)) await this.loadMetadata();
+
+      // We need to make sure the region provider is loaded before loading
+      // region mapped tables.
       if (TableMixin.isMixedInto(this)) await this.loadRegionProviderList();
       await this._mapItemsLoader.load(force);
     }
