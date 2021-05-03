@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.79)
 
+* Fix CkanCatalogGroup filterQuery issue. [#5332](https://github.com/TerriaJS/terriajs/pull/5332)
 * [The next improvement]
 
 #### 8.0.0-alpha.78
