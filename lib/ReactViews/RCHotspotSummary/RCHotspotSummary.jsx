@@ -6,11 +6,8 @@ import { RCChangeUrlParams } from "../../Models/Receipt";
 import Icon from "../Icon";
 
 class RCHotspotSummary extends React.Component {
-  close() {
-    RCChangeUrlParams(
-      { sector: this.props.viewState.selectedHotspot["rc-sector"]?._value },
-      this.props.viewState
-    );
+  constructor(props) {
+    super(props);
   }
 
   render() {
@@ -61,6 +58,13 @@ class RCHotspotSummary extends React.Component {
         );
       });
 
+    const close = () => {
+      RCChangeUrlParams(
+        { sector: this.props.viewState.selectedHotspot["rc-sector"]?._value },
+        this.props.viewState
+      );
+    };
+
     return (
       <div className={Styles.RCHotspotSummary}>
         <div className={Styles.RCSummaryCard}>
@@ -72,7 +76,7 @@ class RCHotspotSummary extends React.Component {
             <h3>{title || "No title provided"}</h3>
             <button
               type="button"
-              onClick={this.close}
+              onClick={close}
               className={Styles.btnCloseFeature}
               title="Close"
             >
