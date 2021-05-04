@@ -40,11 +40,11 @@ function RCStoryEditor(props) {
     }
     const viewState = props.viewState;
     setSelectHotspotSubscription(
-      knockout.getObservable(viewState, "selectedPosition").subscribe(() => {
+      knockout.getObservable(viewState.terria, "pickedFeatures").subscribe(() => {
         let isListening = stateRef.current;
         if (isListening) {
           // Convert position to cartographic
-          const point = Cartographic.fromCartesian(viewState.selectedPosition);
+          const point = Cartographic.fromCartesian(viewState.terria.pickedFeatures.pickPosition);
           setHotspotPoint({
             latitude: (point.latitude / Math.PI) * 180,
             longitude: (point.longitude / Math.PI) * 180

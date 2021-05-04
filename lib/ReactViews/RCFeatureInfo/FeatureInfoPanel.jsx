@@ -314,7 +314,6 @@ export const FeatureInfoPanel = createReactClass({
       this.openStorySummary(terria.selectedFeature?.properties);
       return null;
     }
-    viewState.selectedPosition = position;
     return null;
   }
 });
