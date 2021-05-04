@@ -1,23 +1,14 @@
 "use strict";
 import React from "react";
 import PropTypes from "prop-types";
-import createReactClass from "create-react-class";
 import Styles from "./RCHotspotSummary.scss";
 import { RCChangeUrlParams } from "../../Models/Receipt";
 import Icon from "../Icon";
 
-const HotspotSummary = createReactClass({
-  propTypes: {
-    viewState: PropTypes.object.isRequired,
-    onClick: PropTypes.func
-  },
-
-  close() {
-    RCChangeUrlParams(
-      { sector: this.props.viewState.selectedHotspot["rc-sector"]?._value },
-      this.props.viewState
-    );
-  },
+class RCHotspotSummary extends React.Component {
+  constructor(props) {
+    super(props);
+  }
 
   render() {
     const hotspot = this.props.viewState.selectedHotspot;
@@ -67,6 +58,13 @@ const HotspotSummary = createReactClass({
         );
       });
 
+    const close = () => {
+      RCChangeUrlParams(
+        { sector: this.props.viewState.selectedHotspot["rc-sector"]?._value },
+        this.props.viewState
+      );
+    };
+
     return (
       <div className={Styles.RCHotspotSummary}>
         <div className={Styles.RCSummaryCard}>
@@ -78,7 +76,7 @@ const HotspotSummary = createReactClass({
             <h3>{title || "No title provided"}</h3>
             <button
               type="button"
-              onClick={this.close}
+              onClick={close}
               className={Styles.btnCloseFeature}
               title="Close"
             >
@@ -116,6 +114,11 @@ const HotspotSummary = createReactClass({
       </div>
     );
   }
-});
+}
 
-module.exports = HotspotSummary;
+RCHotspotSummary.propTypes = {
+  viewState: PropTypes.object.isRequired,
+  onClick: PropTypes.func
+};
+
+export default RCHotspotSummary;

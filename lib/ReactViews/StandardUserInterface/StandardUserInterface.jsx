@@ -1,12 +1,11 @@
-// import { withAuthenticator } from "@aws-amplify/ui-react";
+import React from "react";
 import Amplify, { Auth } from "aws-amplify";
 import classNames from "classnames";
 import createReactClass from "create-react-class";
 import "inobounce";
 import PropTypes from "prop-types";
-import React from "react";
 import { withTranslation } from "react-i18next";
-import { Link, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
 import awsconfig from "../../aws-exports";
 import arrayContains from "../../Core/arrayContains";
 import { RCChangeUrlParams } from "../../Models/Receipt";
@@ -14,18 +13,18 @@ import { Medium, Small } from "../Generic/Responsive";
 import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
 import ProgressBar from "../Map/ProgressBar.jsx";
 import RCBuilder from "../RCBuilder/RCBuilder";
-import { RCLogin } from "../RCLogin/RCLogin";
 import SidePanelSectorTabs from "../RCSectorPanel/SidePanelSectorTabs";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage.jsx";
 import DragDropFile from "./../DragDropFile.jsx";
 import DragDropNotification from "./../DragDropNotification.jsx";
+import MapColumn from "./MapColumn.jsx";
+import MapInteractionWindow from "./../Notification/MapInteractionWindow.jsx";
 import MapNavigation from "./../Map/MapNavigation.jsx";
 import RCMenuBar from "./../Map/RCMenuBar.jsx";
 import MobileHeader from "./../Mobile/MobileHeader.jsx";
 import MapInteractionWindow from "./../Notification/MapInteractionWindow.jsx";
 import Notification from "./../Notification/Notification.jsx";
 import ObserveModelMixin from "./../ObserveModelMixin";
-import FeatureInfoPanel from "./../RCFeatureInfo/FeatureInfoPanel.jsx";
 import RCHotspotSummary from "./../RCHotspotSummary/RCHotspotSummary.jsx";
 import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import SidePanel from "./../SidePanel/SidePanel.jsx";
@@ -35,7 +34,6 @@ import ToolPanel from "./../ToolPanel.jsx";
 import MapColumn from "./MapColumn.jsx";
 import processCustomElements from "./processCustomElements";
 import Styles from "./StandardUserInterface.scss";
-var Receipt = require("../../Models/Receipt");
 
 Amplify.configure(awsconfig);
 Auth.configure(awsconfig);
@@ -123,13 +121,15 @@ const StandardUserInterface = createReactClass({
     }
   },
 
-  componentDidMount() {
+  async componentDidMount() {
     // this.props.viewState.isHotspotsFiltered = false;
     this._wrapper.addEventListener("dragover", this.dragOverListener, false);
     showStoryPrompt(this.props.viewState, this.props.terria);
     //
     // First web enters, read the params
+    // Wait for router-dom to set before loading the init params: async
     //
+    await new Promise(resolve => setTimeout(resolve, 500));
     RCChangeUrlParams(undefined, this.props.viewState);
   },
 
@@ -385,7 +385,8 @@ const StandardUserInterface = createReactClass({
               viewState.topElement = "FeatureInfo";
             }}
           >
-            <FeatureInfoPanel terria={terria} viewState={viewState} />
+            {/*RC TODO: uncomment if there is a need to show the info popup when clicking on map */}
+            {/*<FeatureInfoPanel terria={terria} viewState={viewState} />*/}
           </div>
           <DragDropFile terria={terria} viewState={viewState} />
           <DragDropNotification
