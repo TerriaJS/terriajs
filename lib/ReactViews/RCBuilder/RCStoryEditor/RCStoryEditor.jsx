@@ -72,6 +72,9 @@ function RCStoryEditor(props) {
   const onTitleChanged = event => {
     setTitle(event.target.value);
   };
+  const onDescriptionChanged = event => {
+    setShortDescription(event.target.value);
+  };
   const onSectorChanged = event => {
     const sector = event.target.value
       .split(" ")
@@ -135,7 +138,10 @@ function RCStoryEditor(props) {
           <label className={title && Styles.topLabel}>Story Title</label>
         </div>
         <div className={Styles.group}>
-          <textarea defaultValue={shortDescription} />
+          <textarea
+            defaultValue={shortDescription}
+            onChange={onDescriptionChanged}
+          />
           <span className={Styles.highlight} />
           <span className={Styles.bar} />
           <label className={shortDescription && Styles.topLabel}>
