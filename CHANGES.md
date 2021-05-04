@@ -31,7 +31,10 @@ Change Log
   * `Text`'s `styledSize` has been removed. Use the `styledFontSize` prop.
   * `ButtonAsLabel` no longer accepts `dark`. A dark background is now used when `light` is false (or undefined).
 * Fixes CZML catalog item so that it appears on the timeline.
+* Create the Checkbox component with accessibility in mind.
+* Convert `FeedbackForm` to typescript.
 * Enable `theme` config parameter. This can now be used to override theme properties.
+* [The next improvement]
 
 #### 8.0.0-alpha.76
 

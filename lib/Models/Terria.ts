@@ -237,6 +237,16 @@ interface ConfigParameters {
    * Whether to open the add data explorer panel on load.
    */
   openAddData?: boolean;
+
+  /**
+   * Text showing at the top of feedback form.
+   */
+  feedbackPreamble?: string;
+
+  /**
+   * Minimum length of feedback comment.
+   */
+  feedbackMinLength?: number;
 }
 
 interface StartOptions {
@@ -383,7 +393,9 @@ export default class Terria {
     languageConfiguration: undefined,
     customRequestSchedulerLimits: undefined,
     persistViewerMode: true,
-    openAddData: false
+    openAddData: false,
+    feedbackPreamble: "feedback.feedbackPreamble",
+    feedbackMinLength: 0
   };
 
   @observable

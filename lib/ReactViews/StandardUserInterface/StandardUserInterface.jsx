@@ -415,12 +415,11 @@ const StandardUserInterface = observer(
                 condition={
                   !customElements.feedback.length &&
                   this.props.terria.configParameters.feedbackUrl &&
-                  !this.props.viewState.hideMapUi()
+                  !this.props.viewState.hideMapUi() &&
+                  this.props.viewState.feedbackFormIsVisible
                 }
               >
-                <aside className={Styles.feedback}>
-                  <FeedbackForm viewState={this.props.viewState} />
-                </aside>
+                <FeedbackForm viewState={this.props.viewState} />
               </If>
 
               <div
