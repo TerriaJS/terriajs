@@ -15,7 +15,6 @@ import SdmxCatalogItemTraits from "../../Traits/SdmxCatalogItemTraits";
 import CreateModel from "../CreateModel";
 import { BaseModel } from "../Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import raiseErrorToUser from "../raiseErrorToUser";
 import SelectableDimensions, {
   SelectableDimension
 } from "../SelectableDimensions";
@@ -173,8 +172,7 @@ export default class SdmxJsonCatalogItem
         error instanceof RequestErrorEvent &&
         typeof error.response === "string"
       ) {
-        raiseErrorToUser(
-          this.terria,
+        this.terria.raiseErrorToUser(
           new TerriaError({
             message: sdmxErrorString.has(error.statusCode)
               ? `${sdmxErrorString.get(error.statusCode)}: ${error.response}`
@@ -184,8 +182,7 @@ export default class SdmxJsonCatalogItem
           })
         );
       } else {
-        raiseErrorToUser(
-          this.terria,
+        this.terria.raiseErrorToUser(
           new TerriaError({
             message: `Failed to load SDMX data for "${this.name ??
               this.uniqueId}"`
