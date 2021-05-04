@@ -36,9 +36,8 @@
 }
 .container {
   display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  margin-bottom: 20px;
+  justify-content: space-between;
+  align-items: center;
 }
 .group {
   position: relative;
@@ -95,7 +94,10 @@ textarea {
     color: #0c70a7;
   }
 }
-
+.group textarea {
+  max-width: 100%;
+  min-height: 100px;
+}
 .bar {
   position: relative;
   display: block;
