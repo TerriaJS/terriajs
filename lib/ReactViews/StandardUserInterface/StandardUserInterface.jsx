@@ -17,8 +17,6 @@ import SidePanelSectorTabs from "../RCSectorPanel/SidePanelSectorTabs";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage.jsx";
 import DragDropFile from "./../DragDropFile.jsx";
 import DragDropNotification from "./../DragDropNotification.jsx";
-import MapColumn from "./MapColumn.jsx";
-import MapInteractionWindow from "./../Notification/MapInteractionWindow.jsx";
 import MapNavigation from "./../Map/MapNavigation.jsx";
 import RCMenuBar from "./../Map/RCMenuBar.jsx";
 import MobileHeader from "./../Mobile/MobileHeader.jsx";
@@ -33,6 +31,7 @@ import StoryBuilder from "./../Story/StoryBuilder.jsx";
 import ToolPanel from "./../ToolPanel.jsx";
 import MapColumn from "./MapColumn.jsx";
 import processCustomElements from "./processCustomElements";
+import RCLogin from "../RCLogin/RCLogin";
 import Styles from "./StandardUserInterface.scss";
 
 Amplify.configure(awsconfig);
