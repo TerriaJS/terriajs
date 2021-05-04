@@ -1,46 +1,17 @@
-import { API, graphqlOperation } from "aws-amplify";
+import { API, graphqlOperation, Storage } from "aws-amplify";
 import PropTypes from "prop-types";
 import { default as React, useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
+import { v5 as uuidv5 } from "uuid";
 import { updateStory } from "../../../../api/graphql/mutations";
 import { getStory } from "../../../../api/graphql/queries";
 import sectors from "../../../Data/Sectors.js";
 import RCSectorSelection from "./RCSectorSelection/RCSectorSelection";
 import Styles from "./RCStoryEditor.scss";
 
-const thumbsContainer = {
-  display: "flex",
-  flexDirection: "row",
-  flexWrap: "wrap",
-  marginTop: 16
-};
-
-const thumb = {
-  display: "inline-flex",
-  borderRadius: 2,
-  border: "1px solid #eaeaea",
-  marginBottom: 8,
-  marginRight: 8,
-  width: 100,
-  height: 100,
-  padding: 4,
-  boxSizing: "border-box"
-};
-
-const thumbInner = {
-  display: "flex",
-  minWidth: 0,
-  overflow: "hidden"
-};
-
-const img = {
-  display: "block",
-  width: "auto",
-  height: "100%"
-};
 function RCStoryEditor(props) {
   const [story, setStory] = useState(null);
   const [title, setTitle] = useState("");
@@ -51,6 +22,7 @@ function RCStoryEditor(props) {
   const [selectHotspotSubscription, setSelectHotspotSubscription] = useState(
     null
   );
+  const [image, setImage] = useState("");
   const [message, setMessage] = useState("");
   const [sectorRequiredMessage, setSectorRequiredMessage] = useState("*");
 
@@ -73,6 +45,7 @@ function RCStoryEditor(props) {
         setShortDescription(data.shortDescription);
         setSelectedSectors(data.sectors);
         setHotspotPoint(data.hotspotlocation);
+        setImage(data.image);
       });
     } catch (error) {
       console.log(error);
@@ -112,24 +85,24 @@ function RCStoryEditor(props) {
     [files]
   );
 
+  const onDrop = acceptedFiles => {
+    setFiles(
+      acceptedFiles.map(file =>
+        Object.assign(file, { preview: URL.createObjectURL(file) })
+      )
+    );
+  };
+
   const { getRootProps, getInputProps } = useDropzone({
     accept: "image/*",
-    onDrop: acceptedFiles => {
-      setFiles(
-        acceptedFiles.map(file => {
-          Object.assign(file, {
-            preview: URL.createObjectURL(file)
-          });
-        })
-      );
-    },
+    onDrop: onDrop,
     multiple: false
   });
 
   const thumbs = files.map(file => (
-    <div style={thumb} key={file.name}>
-      <div style={thumbInner}>
-        <img src={file.preview} style={img} />
+    <div className={Styles.thumb} key={file.name}>
+      <div className={Styles.thumbInner}>
+        <img src={file.preview} className={Styles.thumbnail} />
       </div>
     </div>
   ));
@@ -157,18 +130,46 @@ function RCStoryEditor(props) {
     }
   };
 
-  const onSave = () => {
+  const onSave = async () => {
     if (selectedSectors.length <= 0) {
       setSectorRequiredMessage("Select at least 1 sector");
     } else {
-      // imageid = uuidv5(file.name, story.id);
-      // const result = await Storage.put(imageid, file);
+      // If a new image is supplied we push it to s3 and
+      // update the references here
+      let image = story.image;
+      if (files.length > 0) {
+        try {
+          const file = files[0];
+
+          const fileExt = file.name.split(".").pop();
+          const imageid = uuidv5(file.name, story.id);
+
+          // remove the old image
+          Storage.remove(image.id);
+
+          // upload new image
+          const result = await Storage.put(
+            `story-${story.id}/${imageid}.${fileExt}`,
+            file
+          );
+
+          image.id = result.key;
+          image.url = await Storage.get(result.key);
+
+          setImage(image);
+          setFiles([]);
+        } catch (error) {
+          console.log("Error uploading file: ", error);
+        }
+      }
+
       const storyDetails = {
         id: story.id,
         title: title,
         shortDescription: shortDescription,
         sectors: selectedSectors,
-        hotspotlocation: hotspotPoint
+        hotspotlocation: hotspotPoint,
+        image: image
       };
       API.graphql({
         query: updateStory,
@@ -191,7 +192,12 @@ function RCStoryEditor(props) {
 
   return (
     <div className={Styles.RCStoryEditor}>
-      <h3>Edit your story</h3>
+      <h3>
+        Edit your story
+        <Link to="/builder" className={Styles.backButton}>
+          Back
+        </Link>
+      </h3>
       <form className={Styles.RCStoryCard}>
         <div className={Styles.group}>
           <input
@@ -248,14 +254,15 @@ function RCStoryEditor(props) {
             </div>
           )}
         </div>
-        <div className={Styles.container}>
-          <label>Image</label>
-          <section className="container">
+        <div className={Styles.group}>
+          <label className={Styles.topLabel}>Image</label>
+          <img className={Styles.image} src={image.url} />
+          <section className={Styles.dropContainer}>
             <div {...getRootProps({ className: "dropzone" })}>
               <input {...getInputProps()} />
               <p>Drag 'n' drop some files here, or click to select files</p>
             </div>
-            <aside style={thumbsContainer}>{thumbs}</aside>
+            <aside className={Styles.thumbsContainer}>{thumbs}</aside>
           </section>
         </div>
         <div className={Styles.container}>
