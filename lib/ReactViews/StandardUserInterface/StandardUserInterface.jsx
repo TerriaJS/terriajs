@@ -17,8 +17,6 @@ import RCBuilder from "../RCBuilder/RCBuilder";
 import { RCLogin } from "../RCLogin/RCLogin";
 import SidePanelSectorTabs from "../RCSectorPanel/SidePanelSectorTabs";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage.jsx";
-import DragDropFile from "./../DragDropFile.jsx";
-import DragDropNotification from "./../DragDropNotification.jsx";
 import MapNavigation from "./../Map/MapNavigation.jsx";
 import RCMenuBar from "./../Map/RCMenuBar.jsx";
 import MobileHeader from "./../Mobile/MobileHeader.jsx";
@@ -390,12 +388,12 @@ const StandardUserInterface = createReactClass({
             {/*RC TODO: uncomment if there is a need to show the info popup when clicking on map */}
             {/*<FeatureInfoPanel terria={terria} viewState={viewState} />*/}
           </div>
-          <DragDropFile terria={terria} viewState={viewState} />
+          {/* <DragDropFile terria={terria} viewState={viewState} />
           <DragDropNotification
             lastUploadedFiles={viewState.lastUploadedFiles}
             viewState={viewState}
             t={this.props.t}
-          />
+          /> */}
         </div>
         {terria.configParameters.storyEnabled && (
           <StoryBuilder
