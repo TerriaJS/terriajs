@@ -7,13 +7,8 @@
   "functionName": "receipt09937347CustomMessage",
   "resourceName": "receipt09937347CustomMessage",
   "parentStack": "auth",
-  "triggerEnvs": [
-    {
-      "key": "RESOURCENAME",
-      "value": "resourceName"
-    }
-  ],
-  "triggerDir": "/home/maarten/.nvm/versions/node/v15.9.0/lib/node_modules/@aws-amplify/cli/node_modules/amplify-category-auth/provider-utils/awscloudformation/triggers/CustomMessage",
+  "triggerEnvs": "[\n  {\n    \"key\": \"RESOURCENAME\",\n    \"value\": \"resourceName\"\n  }\n]",
+  "triggerDir": "/Users/bweel/.nvm/versions/node/v14.4.0/lib/node_modules/@aws-amplify/cli/node_modules/amplify-category-auth/provider-utils/awscloudformation/triggers/CustomMessage",
   "triggerTemplate": "CustomMessage.json.ejs",
   "triggerEventPath": "CustomMessage.event.json",
   "roleName": "receipt09937347CustomMessage",

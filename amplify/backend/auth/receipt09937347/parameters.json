@@ -53,11 +53,8 @@
     ],
     "triggers": "{\n  \"CustomMessage\": [\n    \"verification-link\"\n  ],\n  \"PostConfirmation\": [\n    \"add-to-group\"\n  ]\n}",
     "hostedUIDomainName": "climateimpactstories",
-    "authProvidersUserPool": [
-        "Google"
-    ],
-    "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"name\":\"name\",\"username\":\"sub\"}}]",
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://www.climateimpactstories.eu/redirect/\"],\"LogoutURLs\":[\"https://www.climateimpactstories.eu/logout/\"]}",
+    "authProvidersUserPool": [],
+    "hostedUIProviderMeta": "[]",
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "verificationBucketName": "receipt09937347verificationbucket",
@@ -87,5 +84,6 @@
                 "Name"
             ]
         }
-    ]
+    ],
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://www.climateimpactstories.eu/redirect/\"],\"LogoutURLs\":[\"https://www.climateimpactstories.eu/logout/\"]}"
 }
