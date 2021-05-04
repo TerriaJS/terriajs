@@ -273,14 +273,15 @@
     "title": "Feedback",
     "close": "close feedback",
     "yourName": "Your name (optional)",
-    "email": "Email address (optional)<br/><2>We can't follow up without it!</2>",
+    "email": "Email address (optional)<br/><em>We can't follow up without it!</em>",
     "commentQuestion": "Comment or question",
     "shareWithDevelopers": "Share my map view with {{appName}} developers",
     "captionText": "This helps us to troubleshoot issues by letting us see what you're seeing",
     "cancel": "Cancel",
     "sending": "Sending...",
     "send": "Send",
-    "feedbackBtnText": "Give Feedback"
+    "feedbackBtnText": "Give Feedback",
+    "minLength": "Minimum length of feedback comment is {{minLength}}"
   },
   "helpPanel": {
     "menuPaneTitle": "We're here to help",

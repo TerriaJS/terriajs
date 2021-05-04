@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.79)
 
+* Revert commit https://github.com/TerriaJS/terriajs/commit/668ee565004766b64184cd2941bbd53e05068ebb which added `enzyme` devDependency.
 * Aliases `lodash` to `lodash-es` and use `babel-plugin-lodash` reducing bundle size by around 1.09MB.
 * Fix CkanCatalogGroup filterQuery issue. [#5332](https://github.com/TerriaJS/terriajs/pull/5332)
 * [The next improvement]
@@ -33,7 +34,10 @@ Change Log
 * Added in language toggle and first draft of french translation.json
   * This is enabled via language languageConfiguration.enabled inside config.json and relies on the language being both enumerated inside languageConfiguration.langagues and availble under {code}/translation.json
 * Fixes CZML catalog item so that it appears on the timeline.
+* Create the Checkbox component with accessibility in mind.
+* Convert `FeedbackForm` to typescript.
 * Enable `theme` config parameter. This can now be used to override theme properties.
+* [The next improvement]
 
 #### 8.0.0-alpha.76
 
