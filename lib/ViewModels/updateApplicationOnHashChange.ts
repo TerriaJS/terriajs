@@ -1,7 +1,6 @@
 "use strict";
 
 import Terria from "../Models/Terria";
-import raiseErrorToUser from "../Models/raiseErrorToUser";
 
 /**
  * Updates the  {@link Terria} when the window's 'hashchange' event is raised.  This allows new init files and
@@ -18,7 +17,7 @@ export default function(terria: Terria, window: Window) {
         await terria.updateApplicationUrl(window.location.toString());
         await terria.loadInitSources();
       } catch (e) {
-        raiseErrorToUser(terria, e);
+        terria.raiseErrorToUser(e);
       }
     },
     false

@@ -3,8 +3,26 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.77)
+#### next release (8.0.0-alpha.79)
 
+* Aliases `lodash` to `lodash-es` and use `babel-plugin-lodash` reducing bundle size by around 1.09MB.
+* Fix CkanCatalogGroup filterQuery issue. [#5332](https://github.com/TerriaJS/terriajs/pull/5332)
+* [The next improvement]
+
+#### 8.0.0-alpha.78
+
+* Add `ignoreErrors` url parameter.
+
+#### 8.0.0-alpha.77
+
+- **Breaking changes**:
+  - `terria.error.raiseEvent` and `./raiseErrorToUser.ts` have been replaced with `terria.raiseErrorToUser`.
+  - `terria.error.addEventListener` has been replaced with `terria.addErrorEventListener`
+
+* New Error handling using `Result` and `TerriaError` now applied to initial loading, `updateModelFromJson()`, `upsertModelFromJson()` and `Traits.fromJson()`. This means errors will propagate through these functions, and a stacktrace will be displayed.
+  * `Result` and the new features of `TerriaError` should be considered unstable and may be extensively modified or removed in future 8.0.0-alpha.n releases
+* New `terriaErrorNotification()` function, which wraps up error messages.
+* `TerriaError` can now contain "child" errors - this includes a few new methods: `flatten()` and `createParentError()`. It also has a few new convenience functions: `TerriaError.from()` and `TerriaError.combine()`.
 * Convert `Branding.jsx` to `.tsx`
 * Added `configParams.brandBarSmallElements` to set Branding elements for small screen (also added theme props)
 * Add `font` variables and `fontImports` to theme - this can be used to import CSS fonts.
@@ -15,8 +33,7 @@ Change Log
 * Added in language toggle and first draft of french translation.json
   * This is enabled via language languageConfiguration.enabled inside config.json and relies on the language being both enumerated inside languageConfiguration.langagues and availble under {code}/translation.json
 * Fixes CZML catalog item so that it appears on the timeline.
-* [The next improvement]
-
+* Enable `theme` config parameter. This can now be used to override theme properties.
 
 #### 8.0.0-alpha.76
 

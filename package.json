@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "8.0.0-alpha.76",
+  "version": "8.0.0-alpha.78",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
@@ -64,6 +64,7 @@
     "@vx/tooltip": "^0.0.193-alpha.2",
     "babel-loader": "^8.0.5",
     "babel-plugin-jsx-control-statements": "^4.0.0",
+    "babel-plugin-lodash": "^3.3.4",
     "catalog-converter": "^0.0.4",
     "class-list": "^0.1.1",
     "classnames": "^2.2.3",
