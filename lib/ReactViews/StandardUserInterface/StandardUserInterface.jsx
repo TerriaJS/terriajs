@@ -25,13 +25,13 @@ import MobileHeader from "./../Mobile/MobileHeader.jsx";
 import MapInteractionWindow from "./../Notification/MapInteractionWindow.jsx";
 import Notification from "./../Notification/Notification.jsx";
 import ObserveModelMixin from "./../ObserveModelMixin";
-import FeatureInfoPanel from "./../RCFeatureInfo/FeatureInfoPanel.jsx";
 import RCHotspotSummary from "./../RCHotspotSummary/RCHotspotSummary.jsx";
 import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import SidePanel from "./../SidePanel/SidePanel.jsx";
 import RCStoryPanel from "./../Story/RCStoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 import ToolPanel from "./../ToolPanel.jsx";
+// import FeatureInfoPanel from "../FeatureInfo/FeatureInfoPanel.jsx";
 import MapColumn from "./MapColumn.jsx";
 import processCustomElements from "./processCustomElements";
 import Styles from "./StandardUserInterface.scss";
@@ -123,13 +123,15 @@ const StandardUserInterface = createReactClass({
     }
   },
 
-  componentDidMount() {
+  async componentDidMount() {
     // this.props.viewState.isHotspotsFiltered = false;
     this._wrapper.addEventListener("dragover", this.dragOverListener, false);
     showStoryPrompt(this.props.viewState, this.props.terria);
     //
     // First web enters, read the params
+    // Wait for router-dom to set before loading the init params: async
     //
+    await new Promise(resolve => setTimeout(resolve, 500));
     RCChangeUrlParams(undefined, this.props.viewState);
   },
 
@@ -385,7 +387,8 @@ const StandardUserInterface = createReactClass({
               viewState.topElement = "FeatureInfo";
             }}
           >
-            <FeatureInfoPanel terria={terria} viewState={viewState} />
+            {/*RC TODO: uncomment if there is a need to show the info popup when clicking on map */}
+            {/*<FeatureInfoPanel terria={terria} viewState={viewState} />*/}
           </div>
           <DragDropFile terria={terria} viewState={viewState} />
           <DragDropNotification

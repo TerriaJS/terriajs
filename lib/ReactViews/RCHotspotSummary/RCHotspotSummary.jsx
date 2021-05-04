@@ -1,23 +1,17 @@
 "use strict";
 import React from "react";
 import PropTypes from "prop-types";
-import createReactClass from "create-react-class";
 import Styles from "./RCHotspotSummary.scss";
 import { RCChangeUrlParams } from "../../Models/Receipt";
 import Icon from "../Icon";
 
-const HotspotSummary = createReactClass({
-  propTypes: {
-    viewState: PropTypes.object.isRequired,
-    onClick: PropTypes.func
-  },
-
+class RCHotspotSummary extends React.Component {
   close() {
     RCChangeUrlParams(
       { sector: this.props.viewState.selectedHotspot["rc-sector"]?._value },
       this.props.viewState
     );
-  },
+  }
 
   render() {
     const hotspot = this.props.viewState.selectedHotspot;
@@ -116,6 +110,11 @@ const HotspotSummary = createReactClass({
       </div>
     );
   }
-});
+}
 
-module.exports = HotspotSummary;
+RCHotspotSummary.propTypes = {
+  viewState: PropTypes.object.isRequired,
+  onClick: PropTypes.func
+};
+
+export default RCHotspotSummary;
