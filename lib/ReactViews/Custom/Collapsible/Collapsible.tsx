@@ -2,13 +2,11 @@
 
 import { observer } from "mobx-react";
 import React from "react";
-import { GLYPHS, StyledIcon } from "../../Icon";
-
-const RawButton: any = require("../../../Styled/Button").RawButton;
-const Text: any = require("../../../Styled/Text").default;
-const TextSpan: any = require("../../../Styled/Text").TextSpan;
-const Box: any = require("../../../Styled/Box").default;
-const SpacingSpan: any = require("../../../Styled/Spacing").SpacingSpan;
+import Box from "../../../Styled/Box";
+import { RawButton } from "../../../Styled/Button";
+import { SpacingSpan } from "../../../Styled/Spacing";
+import Text, { TextSpan } from "../../../Styled/Text";
+import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 
 interface CollapsibleProps {
   title: string;

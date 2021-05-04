@@ -4,14 +4,14 @@
 // are still settling, we will need to use this liberally
 import styled from "styled-components";
 
-// interface SpacingProps {
-//   bottom?: number; // going off "new 4 unit design"
-// }
+interface ISpacingProps {
+  marginRight?: number;
+  marginBottom?: number;
+  right?: number;
+  bottom?: number;
+}
 
-// export const Spacing = styled.div<SpacingProps>`
-//   ${props => props.bottom && `margin-bottom: ${props.bottom * 4}px;`}
-// `;
-export const Spacing = styled.div`
+export const Spacing = styled.div<ISpacingProps>`
   // Unsure how to deal with 1px right now
   ${props => props.marginRight && `margin-right: ${props.marginRight}px;`}
   ${props => props.marginBottom && `margin-bottom: ${props.marginBottom}px;`}

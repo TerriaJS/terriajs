@@ -9,7 +9,7 @@ import { Trans, withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import printWindow from "../../../../Core/printWindow";
 import Clipboard from "../../../Clipboard";
-import Icon from "../../../Icon.jsx";
+import Icon from "../../../../Styled/Icon";
 import Loader from "../../../Loader";
 import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
 import Input from "../../../Styled/Input/Input.jsx";
@@ -232,7 +232,7 @@ const SharePanel = observer(
             printWindow(windowToPrint)
               .then(null, e => {
                 // If the print promise rejects, raise an error
-                this.props.terria.error.raiseEvent(e);
+                this.props.terria.raiseErrorToUser(e);
               })
               .then(() => {
                 // whether there was an error or not, clean up

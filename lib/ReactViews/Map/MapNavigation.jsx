@@ -16,7 +16,7 @@ import classNames from "classnames";
 import { observer } from "mobx-react";
 // import HelpTool from "./Navigation/HelpTool";
 // import StylesToolButton from "./Navigation/tool_button.scss";
-import Icon from "../Icon";
+import Icon from "../../Styled/Icon";
 import { ToolButton } from "../Tool.tsx";
 import PedestrianMode from "../Tools/PedestrianMode/PedestrianMode";
 

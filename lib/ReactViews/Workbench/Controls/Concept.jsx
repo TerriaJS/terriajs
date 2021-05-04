@@ -1,7 +1,7 @@
 "use strict";
 
 import classNames from "classnames";
-import Icon from "../../Icon";
+import Icon from "../../../Styled/Icon";
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";

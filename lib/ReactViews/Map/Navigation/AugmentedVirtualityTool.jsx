@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Styles from "./augmented_virtuality_tool.scss";
-import Icon from "../../Icon";
+import Icon from "../../../Styled/Icon";
 import ViewerMode from "../../../Models/ViewerMode";
 import { withTranslation } from "react-i18next";
 import AugmentedVirtuality from "../../../Models/AugmentedVirtuality";

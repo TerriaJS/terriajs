@@ -17,7 +17,7 @@ import classNames from "classnames";
 import Styles from "./location-search-result.scss";
 import isDefined from "../../Core/isDefined";
 
-import Icon, { StyledIcon } from "../Icon";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 // import Box, { BoxSpan } from "../../Styled/Box";
 import { BoxSpan } from "../../Styled/Box";
 import Text, { TextSpan } from "../../Styled/Text";

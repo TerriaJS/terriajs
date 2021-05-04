@@ -1,6 +1,12 @@
 import styled from "styled-components";
 
-export const Hr = styled.hr`
+interface IProps {
+  fullWidth: boolean;
+  size: number;
+  borderBottomColor: string;
+}
+
+export const Hr = styled.hr<IProps>`
   margin:0;
   border: none;
   ${props => props.fullWidth && `width: 100%;`}

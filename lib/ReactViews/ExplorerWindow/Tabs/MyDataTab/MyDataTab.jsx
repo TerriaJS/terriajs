@@ -3,8 +3,8 @@ import { observer } from "mobx-react";
 
 import classNames from "classnames";
 import createReactClass from "create-react-class";
-import Icon from "../../../Icon.jsx";
-import Box from "../../../../Styled/Box.jsx";
+import Icon from "../../../../Styled/Icon";
+import Box from "../../../../Styled/Box";
 import PropTypes from "prop-types";
 
 import DataCatalog from "../../../DataCatalog/DataCatalog.jsx";

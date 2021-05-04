@@ -1,15 +1,15 @@
+import i18next from "i18next";
 import { configure, runInAction } from "mobx";
+import URI from "urijs";
+import { JsonObject } from "../../lib/Core/Json";
 import _loadWithXhr from "../../lib/Core/loadWithXhr";
-import Terria from "../../lib/Models/Terria";
+import CatalogGroup from "../../lib/Models/CatalogGroupNew";
 import CkanCatalogGroup, {
   CkanServerStratum
 } from "../../lib/Models/CkanCatalogGroup";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import i18next from "i18next";
 import CkanItemReference from "../../lib/Models/CkanItemReference";
-import CatalogGroup from "../../lib/Models/CatalogGroupNew";
+import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-import { BaseModel } from "../../lib/Models/Model";
 
 configure({
   enforceActions: "observed",
@@ -47,6 +47,32 @@ describe("CkanCatalogGroup", function() {
   it("has a type and typeName", function() {
     expect(ckanCatalogGroup.type).toBe("ckan-group");
     expect(ckanCatalogGroup.typeName).toBe(i18next.t("models.ckan.nameServer"));
+  });
+
+  it("add filter query correctly", function() {
+    const filterQueries: (JsonObject | string)[] = [
+      "fq=+(res_format%3Awms%20OR%20res_format%3AWMS)",
+      "fq=(res_format:wms OR res_format:WMS)",
+      { fq: "(res_format:wms OR res_format:WMS)" }
+    ];
+    const expectedQueryStrings = [
+      "fq=+%28res_format%3Awms+OR+res_format%3AWMS%29",
+      "fq=%28res_format%3Awms+OR+res_format%3AWMS%29",
+      "fq=%28res_format%3Awms+OR+res_format%3AWMS%29"
+    ];
+
+    filterQueries.forEach((filterQuery, i) => {
+      const uri = new URI("https://somewhere.com");
+      CkanServerStratum.addFilterQuery(uri, filterQuery);
+      expect(uri.query() === expectedQueryStrings[i]);
+    });
+
+    filterQueries.forEach((filterQuery, i) => {
+      const uri = new URI("https://somewhere.com");
+      uri.addQuery({ start: 0 });
+      CkanServerStratum.addFilterQuery(uri, filterQuery);
+      expect(uri.query() === "start=0&" + expectedQueryStrings[i]);
+    });
   });
 
   describe("after loading metadata - default settings - ", function() {
