@@ -8,7 +8,7 @@ import { getStory } from "../../../../api/graphql/queries";
 import sectors from "../../../Data/Sectors.js";
 import RCSectorSelection from "./RCSectorSelection/RCSectorSelection";
 import Styles from "./RCStoryEditor.scss";
-
+import { useParams } from "react-router-dom";
 function RCStoryEditor(props) {
   const [story, setStory] = useState(null);
   const [title, setTitle] = useState("");
@@ -19,16 +19,20 @@ function RCStoryEditor(props) {
   const [selectHotspotSubscription, setSelectHotspotSubscription] = useState(
     null
   );
+  const [message, setMessage] = useState("");
+  const [sectorRequiredMessage, setSectorRequiredMessage] = useState("*");
+
+  // get the story id from url
+  const { id } = useParams();
+  // store the reference for state
   const stateRef = useRef();
-  const hotspotRef = useRef();
-  hotspotRef.current = hotspotPoint;
   stateRef.current = listenForHotspot;
-  let pointval = {};
+
+  // Fetch story details with id
   useEffect(() => {
     try {
-      API.graphql(graphqlOperation(getStory, { id: "4" })).then(story => {
+      API.graphql(graphqlOperation(getStory, { id: id })).then(story => {
         const data = story.data.getStory;
-        console.log("Data", data);
         setStory(data);
         setTitle(data.title);
         setShortDescription(data.shortDescription);
@@ -38,13 +42,18 @@ function RCStoryEditor(props) {
     } catch (error) {
       console.log(error);
     }
-    const viewState = props.viewState;
+  }, []);
+  // Listen for picked features/position
+  useEffect(() => {
+    const { terria } = props.viewState;
     setSelectHotspotSubscription(
-      knockout.getObservable(viewState.terria, "pickedFeatures").subscribe(() => {
+      knockout.getObservable(terria, "pickedFeatures").subscribe(() => {
         let isListening = stateRef.current;
         if (isListening) {
           // Convert position to cartographic
-          const point = Cartographic.fromCartesian(viewState.terria.pickedFeatures.pickPosition);
+          const point = Cartographic.fromCartesian(
+            viewState.terria.pickedFeatures.pickPosition
+          );
           setHotspotPoint({
             latitude: (point.latitude / Math.PI) * 180,
             longitude: (point.longitude / Math.PI) * 180
@@ -53,7 +62,6 @@ function RCStoryEditor(props) {
         }
       })
     );
-
     return () => {
       if (selectHotspotSubscription !== null) {
         selectHotspotSubscription.dispose();
@@ -82,18 +90,27 @@ function RCStoryEditor(props) {
   };
 
   const onSave = () => {
-    console.log(selectedSectors);
-    const storyDetails = {
-      id: story.id,
-      title: title,
-      shortDescription: shortDescription,
-      sectors: selectedSectors,
-      hotspotlocation: hotspotPoint
-    };
-    API.graphql({
-      query: updateStory,
-      variables: { input: storyDetails }
-    });
+    if (selectedSectors.length <= 0) {
+      setSectorRequiredMessage("Select at least 1 sector");
+    } else {
+      const storyDetails = {
+        id: story.id,
+        title: title,
+        shortDescription: shortDescription,
+        sectors: selectedSectors,
+        hotspotlocation: hotspotPoint
+      };
+      API.graphql({
+        query: updateStory,
+        variables: { input: storyDetails }
+      }).then(response => {
+        if (response.data.updateStory) {
+          setMessage("Story details saved successfully!");
+        } else {
+          setMessage("Error", response.errors[0].message);
+        }
+      });
+    }
   };
 
   const hotspotText = hotspotPoint
@@ -129,11 +146,13 @@ function RCStoryEditor(props) {
           sectors={sectors}
           selectedSectors={selectedSectors}
           onSectorSelected={onSectorChanged}
+          sectorRequiredMessage={sectorRequiredMessage}
         />
-        <div className={Styles.container}>
+
+        <div className={Styles.RCStoryEditor}>
           <label>Hotspot</label>
           {!listenForHotspot && (
-            <div>
+            <div className={Styles.container}>
               <label>Set at: {hotspotText}</label>
               <button
                 type="button"
@@ -156,9 +175,12 @@ function RCStoryEditor(props) {
             </div>
           )}
         </div>
-        <button className={Styles.RCButton} onClick={onSave}>
-          Save
-        </button>
+        <div className={Styles.container}>
+          <button className={Styles.RCButton} onClick={onSave}>
+            Save
+          </button>
+          <label>{message}</label>
+        </div>
       </form>
     </div>
   );
