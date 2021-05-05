@@ -1,20 +1,12 @@
 import Checkbox from "./../../lib/Styled/Checkbox/Checkbox";
 import { ICheckboxProps } from "../../lib/Styled/Checkbox/types";
-import CheckboxIcon from "./../../lib/Styled/Checkbox/Elements/CheckboxIcon";
 import { render, fireEvent, screen } from "@testing-library/react";
 import React from "react";
 
 describe("Checkbox", function() {
   const mountCheckbox = (overridingProps: ICheckboxProps) => {
     const checkbox = render(
-      <Checkbox
-        label=""
-        onChange={() => {
-          console.log("on change");
-        }}
-        name="stub"
-        {...overridingProps}
-      />
+      <Checkbox label="" onChange={() => {}} name="stub" {...overridingProps} />
     );
     const input = (checkbox.getByRole("checkbox", {
       hidden: true
@@ -29,7 +21,6 @@ describe("Checkbox", function() {
         onChange: undefined
       });
       fireEvent.click(input);
-      console.log(input);
 
       expect(input.checked).toBe(false);
     });
