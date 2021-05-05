@@ -912,11 +912,11 @@ export default class Cesium extends GlobeOrMap {
     if (!this.terriaViewer.viewerOptions.useTerrain) {
       return { terrain: new EllipsoidTerrainProvider() };
     }
-    if (this.terria.configParameters.cesiumIonAssetId !== undefined) {
+    if (this.terria.configParameters.cesiumTerrainAssetId !== undefined) {
       return {
         terrain: new CesiumTerrainProvider({
           url: IonResource.fromAssetId(
-            this.terria.configParameters.cesiumIonAssetId,
+            this.terria.configParameters.cesiumTerrainAssetId,
             {
               accessToken: this.terria.configParameters.cesiumIonAccessToken
             }
