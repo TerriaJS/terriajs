@@ -20,8 +20,22 @@ function resolveI18n(i: I18nTranslateString | string) {
 }
 
 export enum TerriaErrorSeverity {
+  /** Critical errors should be used for any error which **will** cause Terria to fail or behave incorrectly.
+   * For example:
+   * - Errors while loading map configuration
+   * - Errors while loading map catalog
+   */
   Critical,
+  /** Errors which should be shown to the user. This should be used for any error which **may** significantly impact on user experience.
+   * For example:
+   * - Failing to load a catalog member/group
+   * - Failing to add a catalog member to the workbench
+   * - Failing to create a share link
+   * - Failing to load models (from share links or stories) **if they are in the workbench**
+   * - TileErrors
+   */
   Error,
+  /** Errors which can be ignored by the user. These will be printed to console (or shown to user in DEV environment) */
   Warning
 }
 
