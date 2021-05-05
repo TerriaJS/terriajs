@@ -709,7 +709,7 @@ export default class Terria {
           sender: this,
           title: { key: "models.terria.loadConfigErrorTitle" },
           message: `Couldn't load ${options.configUrl}`,
-          severity: TerriaErrorSeverity.Critical
+          severity: TerriaErrorSeverity.Error
         })
       );
     } finally {
@@ -1687,7 +1687,7 @@ async function interpretHash(
             `Share data from link: ${hashProperties.share}`,
             // We set errors to use Warning severity so they aren't shown to the user by default
             // This is due to many stories/shareData having invalid models in them
-            // If a more severe error is thrown while loading shareData (eg Error or Critical) then the error WILL still be shown to the user
+            // If a more severe error is thrown while loading shareData (eg Error) then the error WILL still be shown to the user
             TerriaErrorSeverity.Warning
           );
         }

@@ -19,15 +19,14 @@ function resolveI18n(i: I18nTranslateString | string) {
   return typeof i === "string" ? i : i18next.t(i.key, i.parameters);
 }
 
+/** `TerriaErrorSeverity` can be `Error` or `Warning`.
+ * Errors with severity `Error` are presented to the user. `Warning` will just be printed to console.
+ */
 export enum TerriaErrorSeverity {
-  /** Critical errors should be used for any error which **will** cause Terria to fail or behave incorrectly.
+  /** Errors which should be shown to the user. This should be used for any error which **may** significantly impact on user experience.
    * For example:
    * - Errors while loading map configuration
    * - Errors while loading map catalog
-   */
-  Critical,
-  /** Errors which should be shown to the user. This should be used for any error which **may** significantly impact on user experience.
-   * For example:
    * - Failing to load a catalog member/group
    * - Failing to add a catalog member to the workbench
    * - Failing to create a share link
@@ -171,12 +170,9 @@ export default class TerriaError {
     return resolveI18n(this._title);
   }
 
-  /** Show error to user if `nestedSeverity` is `Error` or `Critical */
+  /** Show error to user if `nestedSeverity` is `Error` */
   get shouldRaiseToUser() {
-    return (
-      this.nestedSeverity === TerriaErrorSeverity.Critical ||
-      this.nestedSeverity === TerriaErrorSeverity.Error
-    );
+    return this.nestedSeverity === TerriaErrorSeverity.Error;
   }
 
   get raisedToUser() {
@@ -199,8 +195,6 @@ export default class TerriaError {
     const nestedSeverity = this.flatten().map(error =>
       typeof error.severity === "function" ? error.severity() : error.severity
     );
-    if (nestedSeverity.includes(TerriaErrorSeverity.Critical))
-      return TerriaErrorSeverity.Critical;
     if (nestedSeverity.includes(TerriaErrorSeverity.Error))
       return TerriaErrorSeverity.Error;
     return TerriaErrorSeverity.Warning;
