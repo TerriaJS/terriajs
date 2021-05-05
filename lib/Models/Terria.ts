@@ -68,8 +68,7 @@ import InitSource, {
   isInitData,
   isInitDataPromise,
   isInitOptions,
-  isInitUrl,
-  INIT_SOURCE_DEFAULT_ERROR_SEVERITY
+  isInitUrl
 } from "./InitSource";
 import Internationalization, {
   I18nStartOptions,
@@ -709,7 +708,8 @@ export default class Terria {
         TerriaError.from(error, {
           sender: this,
           title: { key: "models.terria.loadConfigErrorTitle" },
-          message: `Couldn't load ${options.configUrl}`
+          message: `Couldn't load ${options.configUrl}`,
+          severity: TerriaErrorSeverity.Critical
         })
       );
     } finally {
@@ -899,8 +899,7 @@ export default class Terria {
         } catch (e) {
           errors.push(
             TerriaError.from(e, {
-              severity:
-                initSource.errorSeverity ?? INIT_SOURCE_DEFAULT_ERROR_SEVERITY,
+              severity: initSource.errorSeverity ?? TerriaErrorSeverity.Error,
               message: {
                 key: "models.terria.loadingInitSourceError2Message",
                 parameters: { loadSource: initSource.name ?? "Unknown source" }
@@ -922,8 +921,7 @@ export default class Terria {
         } catch (e) {
           errors.push(
             TerriaError.from(e, {
-              severity:
-                initSource!.errorSeverity ?? INIT_SOURCE_DEFAULT_ERROR_SEVERITY,
+              severity: initSource?.errorSeverity ?? TerriaErrorSeverity.Error,
               message: {
                 key: "models.terria.loadingInitSourceError2Message",
                 parameters: { loadSource: initSource!.name ?? "Unknown source" }
@@ -1687,6 +1685,9 @@ async function interpretHash(
             terria,
             result.result,
             `Share data from link: ${hashProperties.share}`,
+            // We set errors to use Warning severity so they aren't shown to the user by default
+            // This is due to many stories/shareData having invalid models in them
+            // If a more severe error is thrown while loading shareData (eg Error or Critical) then the error WILL still be shown to the user
             TerriaErrorSeverity.Warning
           );
         }

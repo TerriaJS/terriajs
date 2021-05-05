@@ -79,7 +79,7 @@ export default class TerriaError {
   private readonly _message: string | I18nTranslateString;
   private readonly _title: string | I18nTranslateString;
   private readonly useTerriaErrorNotification: boolean;
-  private readonly _severity: TerriaErrorSeverity | (() => TerriaErrorSeverity);
+  readonly severity: TerriaErrorSeverity | (() => TerriaErrorSeverity);
 
   /** `sender` isn't really used for anything at the moment... */
   readonly sender: unknown;
@@ -160,7 +160,7 @@ export default class TerriaError {
     this.useTerriaErrorNotification =
       options.useTerriaErrorNotification ?? true;
 
-    this._severity = options.severity ?? TerriaErrorSeverity.Warning;
+    this.severity = options.severity ?? TerriaErrorSeverity.Warning;
   }
 
   get message() {
@@ -171,15 +171,16 @@ export default class TerriaError {
     return resolveI18n(this._title);
   }
 
-  get raisedToUser() {
-    return this._raisedToUser;
-  }
-
+  /** Show error to user if `nestedSeverity` is `Error` or `Critical */
   get shouldRaiseToUser() {
     return (
-      this.severity === TerriaErrorSeverity.Critical ||
-      this.severity === TerriaErrorSeverity.Error
+      this.nestedSeverity === TerriaErrorSeverity.Critical ||
+      this.nestedSeverity === TerriaErrorSeverity.Error
     );
+  }
+
+  get raisedToUser() {
+    return this._raisedToUser;
   }
 
   /** Set raisedToUser value for **all** `TerriaErrors` in this tree. */
@@ -190,11 +191,13 @@ export default class TerriaError {
     }
   }
 
-  get severity() {
+  /** Get the nested error severity for this TerriaError and it's children (originalErrors)
+   * This will return the highest error severity across the whole tree of errors.
+   * It essentially escalates the severity of errors to the highest severity across the tree
+   */
+  get nestedSeverity() {
     const nestedSeverity = this.flatten().map(error =>
-      typeof error._severity === "function"
-        ? error._severity()
-        : error._severity
+      typeof error.severity === "function" ? error.severity() : error.severity
     );
     if (nestedSeverity.includes(TerriaErrorSeverity.Critical))
       return TerriaErrorSeverity.Critical;

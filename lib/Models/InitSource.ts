@@ -21,13 +21,10 @@ interface InitOptions {
   options: InitSource[];
 }
 
-export const INIT_SOURCE_DEFAULT_ERROR_SEVERITY = TerriaErrorSeverity.Error;
-
 type InitSource = {
   /** Name is only used for debugging purposes */
-
   name?: string;
-  /** Which severity should errors be displayed as (will default to INIT_SOURCE_DEFAULT_ERROR_SEVERITY) */
+  /** Severity to use for errors caught while loading/applying this initSource */
   errorSeverity?: TerriaErrorSeverity;
 } & (InitUrl | InitData | InitOptions | InitDataPromise);
 
