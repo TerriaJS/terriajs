@@ -35,7 +35,7 @@ export enum TerriaErrorSeverity {
    * - TileErrors
    */
   Error,
-  /** Errors which can be ignored by the user. These will be printed to console (or shown to user in DEV environment) */
+  /** Errors which can be ignored by the user. These will be printed to console */
   Warning
 }
 
