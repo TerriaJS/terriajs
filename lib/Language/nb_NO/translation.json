@@ -1,1 +1,20 @@
-{}
+{
+    "splitterTool": {
+        "toggleSplitterToolTitle": "Sammenlign"
+    },
+    "tour": {
+        "previous": "Forrige",
+        "finish": "Fullfør"
+    },
+    "general": {
+        "confirm": "Bekreft",
+        "cancel": "Avbryt",
+        "delete": "Slett",
+        "back": "Tilbake",
+        "skip": "Hopp over",
+        "next": "Neste",
+        "prev": "Forrige",
+        "open": "Åpne",
+        "close": "Lukk"
+    }
+}
