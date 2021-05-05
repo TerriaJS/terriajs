@@ -238,6 +238,16 @@ interface ConfigParameters {
    * Whether to open the add data explorer panel on load.
    */
   openAddData?: boolean;
+
+  /**
+   * Text showing at the top of feedback form.
+   */
+  feedbackPreamble?: string;
+
+  /**
+   * Minimum length of feedback comment.
+   */
+  feedbackMinLength?: number;
 }
 
 interface StartOptions {
@@ -384,7 +394,9 @@ export default class Terria {
     languageConfiguration: undefined,
     customRequestSchedulerLimits: undefined,
     persistViewerMode: true,
-    openAddData: false
+    openAddData: false,
+    feedbackPreamble: "feedback.feedbackPreamble",
+    feedbackMinLength: 0
   };
 
   @observable
@@ -489,6 +501,9 @@ export default class Terria {
   }
 
   raiseErrorToUser(error: unknown) {
+    if (this.userProperties.get("ignoreErrors") === "1") {
+      return;
+    }
     const terriaError = TerriaError.from(error);
     if (terriaError.shouldRaiseToUser && !terriaError.raisedToUser) {
       terriaError.raisedToUser = true;
@@ -659,6 +674,13 @@ export default class Terria {
   }
 
   async start(options: StartOptions) {
+    // Some hashProperties need to be set before anything else happens
+    const hashProperties = queryToObject(new URI(window.location).fragment());
+
+    if (isDefined(hashProperties["ignoreErrors"])) {
+      this.userProperties.set("ignoreErrors", hashProperties["ignoreErrors"]);
+    }
+
     this.shareDataService = options.shareDataService;
 
     const baseUri = new URI(options.configUrl).filename("");

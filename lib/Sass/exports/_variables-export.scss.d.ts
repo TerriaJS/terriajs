@@ -19,6 +19,7 @@ interface CssExports {
   'greyLighter2': string;
   'greyLightest': string;
   'inputHeight': string;
+  'inputHeightLarge': string;
   'lg': string;
   'logoHeight': string;
   'logoPaddingHorizontal': string;
