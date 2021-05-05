@@ -50,6 +50,7 @@ interface IBoxPropsBase {
   paddedRatio?: number;
   paddedHorizontally?: number | boolean;
   paddedVertically?: number | boolean;
+  styledPadding?: string;
   backgroundImage?: any;
   backgroundBlackOverlay?: number;
   wordBreak?: WordBreak;
@@ -59,6 +60,7 @@ interface IBoxPropsBase {
   style?: any;
   as?: React.ElementType | keyof JSX.IntrinsicElements;
 }
+
 type IBoxProps = IBoxPropsBase & OneKeyFrom<Column>;
 
 export const Box = styled.div<IBoxProps>`
@@ -163,6 +165,7 @@ export const Box = styled.div<IBoxProps>`
       padding-bottom: ${5 *
         (props.paddedVertically === true ? 1 : props.paddedVertically)}px;
     `}
+  ${props => props.styledPadding && `padding: ${props.styledPadding};`}
 
   ${props =>
     props.backgroundImage &&
