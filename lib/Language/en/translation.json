@@ -329,7 +329,7 @@
   },
   "welcomeMessage": {
     "title": "Let's get you started",
-    "welcomeMessage": "Welcome to the Queensland Digital Twin.<br/> Access a rich catalogue of 2D, 3D and live data from multiple sources in one convenient location. Take a tour guide or start exploring!",
+    "welcomeMessage": "Interested in data discovery and exploration?<br/>Dive right in and get started or check the following help guide options.",
     "tourBtnText": "Take the tour",
     "helpBtnText": "I'll need some help",
     "exploreDataBtnText": "Explore map data",
