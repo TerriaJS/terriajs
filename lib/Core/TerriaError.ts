@@ -53,12 +53,13 @@ export interface TerriaErrorOptions {
   /** Error which this error was created from. This means TerriaErrors can be represented as a tree of errors - and therefore a stacktrace can be generated */
   originalError?: TerriaError | Error | (TerriaError | Error)[];
 
-  /** If true, lib\ReactViews\Notification\terriaErrorNotification.tsx will be used to display error message.
-   * If false, a plain old `Notification` will be used
+  /** If `true`, `lib\ReactViews\Notification\terriaErrorNotification.tsx` will be used to display error message.
+   * If `false`, a plain old `Notification` will be used.
+   * This will default to `true`
    */
   useTerriaErrorNotification?: boolean;
 
-  /** TerriaErrorSeverity - will default to Warning
+  /** TerriaErrorSeverity - will default to `Warning`
    * A function can be used here, which will be resolved when the error is raised to user.
    */
   severity?: TerriaErrorSeverity | (() => TerriaErrorSeverity);
@@ -182,8 +183,10 @@ export default class TerriaError {
   /** Set raisedToUser value for **all** `TerriaErrors` in this tree. */
   set raisedToUser(r: boolean) {
     this._raisedToUser = r;
-    if (this.originalError instanceof TerriaError) {
-      this.originalError.raisedToUser = r;
+    if (this.originalError) {
+      this.originalError.forEach(err =>
+        err instanceof TerriaError ? (err.raisedToUser = r) : null
+      );
     }
   }
 
