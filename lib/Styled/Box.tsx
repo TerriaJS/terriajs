@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { Overflow, WordBreak, OneKeyFrom } from "./Styled.types";
 
 interface Column {
@@ -215,9 +215,9 @@ export const Box = styled.div<IBoxProps>`
 `;
 
 export const BoxSpan = styled(Box).attrs(
-  (props: { as?: React.ElementType | keyof JSX.IntrinsicElements }) => {
-    as: "span";
-  }
+  (props: { as?: React.ElementType | keyof JSX.IntrinsicElements }) => ({
+    as: "span"
+  })
 )``;
 
 export default Box;

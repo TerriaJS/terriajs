@@ -7,6 +7,7 @@ Change Log
 
 * Make `InfoSections` collapsible in `DataPreview`. This adds `show` property to `InfoSectionTraits`.
   * `WebMapServiceCatalogItem` service description and data description are now collapsed by default.
+* Revert commit https://github.com/TerriaJS/terriajs/commit/668ee565004766b64184cd2941bbd53e05068ebb which added `enzyme` devDependency.
 * Aliases `lodash` to `lodash-es` and use `babel-plugin-lodash` reducing bundle size by around 1.09MB.
 * Fix CkanCatalogGroup filterQuery issue. [#5332](https://github.com/TerriaJS/terriajs/pull/5332)
 * [The next improvement]
@@ -33,7 +34,10 @@ Change Log
   * `Text`'s `styledSize` has been removed. Use the `styledFontSize` prop.
   * `ButtonAsLabel` no longer accepts `dark`. A dark background is now used when `light` is false (or undefined).
 * Fixes CZML catalog item so that it appears on the timeline.
+* Create the Checkbox component with accessibility in mind.
+* Convert `FeedbackForm` to typescript.
 * Enable `theme` config parameter. This can now be used to override theme properties.
+* [The next improvement]
 
 #### 8.0.0-alpha.76
 
