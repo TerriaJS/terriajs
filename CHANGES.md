@@ -18,7 +18,8 @@ Change Log
 * Added in language toggle and first draft of french translation.json
   * This is enabled via language languageConfiguration.enabled inside config.json and relies on the language being both enumerated inside languageConfiguration.langagues and availble under {code}/translation.json
 * Updated to terriajs-cesium 1.81
-
+* Create the Checkbox component with accessibility in mind.
+* Convert `FeedbackForm` to typescript.
 #### 8.0.0-alpha.78
 
 * Add `ignoreErrors` url parameter.
@@ -41,10 +42,7 @@ Change Log
   * `Text`'s `styledSize` has been removed. Use the `styledFontSize` prop.
   * `ButtonAsLabel` no longer accepts `dark`. A dark background is now used when `light` is false (or undefined).
 * Fixes CZML catalog item so that it appears on the timeline.
-* Create the Checkbox component with accessibility in mind.
-* Convert `FeedbackForm` to typescript.
 * Enable `theme` config parameter. This can now be used to override theme properties.
-* [The next improvement]
 
 #### 8.0.0-alpha.76
 
