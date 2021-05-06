@@ -5,10 +5,9 @@ import React from "react";
 
 describe("Checkbox", function() {
   const mountCheckbox = (overridingProps: ICheckboxProps) => {
-    const utils = render(
+    render(
       <Checkbox label="" onChange={() => {}} name="stub" {...overridingProps} />
     );
-    utils.getByText("foo");
     const input = (screen.getByRole("checkbox", {
       hidden: true
     }) as any) as HTMLInputElement;
