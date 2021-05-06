@@ -138,15 +138,20 @@ function RCStoryEditor(props) {
       // update the references here
       let image = story.image;
       if (files.length > 0) {
+        const file = files[0];
+
+        const fileExt = file.name.split(".").pop();
+        const imageid = uuidv5(file.name, story.id);
+
         try {
-          const file = files[0];
-
-          const fileExt = file.name.split(".").pop();
-          const imageid = uuidv5(file.name, story.id);
-
           // remove the old image
           Storage.remove(image.id);
+        } catch (error) {
+          // An error here means it does not exist?
+          console.debug("Error removing old file: ", error);
+        }
 
+        try {
           // upload new image
           const result = await Storage.put(
             `story-${story.id}/${imageid}.${fileExt}`,
@@ -159,7 +164,7 @@ function RCStoryEditor(props) {
           setImage(image);
           setFiles([]);
         } catch (error) {
-          console.log("Error uploading file: ", error);
+          setMessage("Error uploading file: ", error);
         }
       }
 

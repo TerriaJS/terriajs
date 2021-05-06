@@ -23,7 +23,7 @@
         "receipt09937347PostConfirmation": {
           "GROUP": "receipt-editors",
           "deploymentBucketName": "amplify-receipt-dev-145534-deployment",
-          "s3Key": "amplify-builds/receipt09937347PostConfirmation-6d766c4d4c4f346c4775-build.zip"
+          "s3Key": "amplify-builds/receipt09937347PostConfirmation-47513371474f5a77396b-build.zip"
         }
       },
       "auth": {
