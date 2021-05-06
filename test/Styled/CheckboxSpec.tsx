@@ -5,13 +5,14 @@ import React from "react";
 
 describe("Checkbox", function() {
   const mountCheckbox = (overridingProps: ICheckboxProps) => {
-    const checkbox = render(
+    const utils = render(
       <Checkbox label="" onChange={() => {}} name="stub" {...overridingProps} />
     );
-    const input = (checkbox.getByRole("checkbox", {
+    utils.getByText("foo");
+    const input = (screen.getByRole("checkbox", {
       hidden: true
     }) as any) as HTMLInputElement;
-    return { input, checkbox };
+    return { input };
   };
 
   describe("basic", () => {
@@ -22,18 +23,18 @@ describe("Checkbox", function() {
       });
       fireEvent.click(input);
 
-      expect(input.checked).toBe(false);
+      expect(input).not.toBeChecked();
     });
 
     it("keeps isChecked as true when passing it as prop and calling onChange", () => {
       const { input } = mountCheckbox({ isChecked: true, onChange: undefined });
       fireEvent.click(input);
-      expect(input.checked).toBe(true);
+      expect(input).toBeChecked();
     });
 
     it("should be unchecked by default", () => {
       const { input } = mountCheckbox({ defaultChecked: false });
-      expect(input.checked).toBe(false);
+      expect(input).not.toBeChecked();
     });
 
     it("should call onchange once", () => {
@@ -47,19 +48,19 @@ describe("Checkbox", function() {
   describe("defaultChecked", () => {
     it("should render defaultChecked", () => {
       const { input } = mountCheckbox({ defaultChecked: true });
-      expect(input.checked).toBe(true);
+      expect(input).toBeChecked();
     });
 
     it("should render defaultChecked={undefined}", () => {
       const { input } = mountCheckbox({});
-      expect(input.checked).toBe(false);
+      expect(input).not.toBeChecked();
     });
   });
 
   describe("disabled", () => {
     it("should show a not-allowed cursor", () => {
       const { input } = mountCheckbox({ isDisabled: true });
-      expect(input.disabled).toBe(true);
+      expect(input).toBeDisabled();
     });
   });
 });
