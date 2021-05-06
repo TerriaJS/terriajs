@@ -4,8 +4,8 @@ import "jasmine-ajax";
 import { configure, spy } from "mobx";
 import i18next from "i18next";
 import registerCatalogMembers from "../lib/Models/registerCatalogMembers";
-//@ts-ignore
-import JasmineDOM from "@testing-library/jasmine-dom/dist";
+const JasmineDOM = require("@testing-library/jasmine-dom").default;
+//import JasmineDOM from "@testing-library/jasmine-dom/dist";
 
 configure({
   enforceActions: true,
