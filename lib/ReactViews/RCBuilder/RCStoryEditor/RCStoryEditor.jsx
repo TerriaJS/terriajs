@@ -1,6 +1,8 @@
 import { API, graphqlOperation } from "aws-amplify";
 import PropTypes from "prop-types";
 import { default as React, useEffect, useRef, useState } from "react";
+import { useDropzone } from "react-dropzone";
+import { useParams } from "react-router-dom";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 import { updateStory } from "../../../../api/graphql/mutations";
@@ -8,7 +10,37 @@ import { getStory } from "../../../../api/graphql/queries";
 import sectors from "../../../Data/Sectors.js";
 import RCSectorSelection from "./RCSectorSelection/RCSectorSelection";
 import Styles from "./RCStoryEditor.scss";
-import { useParams } from "react-router-dom";
+
+const thumbsContainer = {
+  display: "flex",
+  flexDirection: "row",
+  flexWrap: "wrap",
+  marginTop: 16
+};
+
+const thumb = {
+  display: "inline-flex",
+  borderRadius: 2,
+  border: "1px solid #eaeaea",
+  marginBottom: 8,
+  marginRight: 8,
+  width: 100,
+  height: 100,
+  padding: 4,
+  boxSizing: "border-box"
+};
+
+const thumbInner = {
+  display: "flex",
+  minWidth: 0,
+  overflow: "hidden"
+};
+
+const img = {
+  display: "block",
+  width: "auto",
+  height: "100%"
+};
 function RCStoryEditor(props) {
   const [story, setStory] = useState(null);
   const [title, setTitle] = useState("");
@@ -27,6 +59,9 @@ function RCStoryEditor(props) {
   // store the reference for state
   const stateRef = useRef();
   stateRef.current = listenForHotspot;
+
+  let pointval = {};
+  const [files, setFiles] = useState([]);
 
   // Fetch story details with id
   useEffect(() => {
@@ -69,6 +104,36 @@ function RCStoryEditor(props) {
     };
   }, []);
 
+  useEffect(
+    () => () => {
+      // Make sure to revoke the data uris to avoid memory leaks
+      files.forEach(file => URL.revokeObjectURL(file.preview));
+    },
+    [files]
+  );
+
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: "image/*",
+    onDrop: acceptedFiles => {
+      setFiles(
+        acceptedFiles.map(file => {
+          Object.assign(file, {
+            preview: URL.createObjectURL(file)
+          });
+        })
+      );
+    },
+    multiple: false
+  });
+
+  const thumbs = files.map(file => (
+    <div style={thumb} key={file.name}>
+      <div style={thumbInner}>
+        <img src={file.preview} style={img} />
+      </div>
+    </div>
+  ));
+
   const onTitleChanged = event => {
     setTitle(event.target.value);
   };
@@ -96,6 +161,8 @@ function RCStoryEditor(props) {
     if (selectedSectors.length <= 0) {
       setSectorRequiredMessage("Select at least 1 sector");
     } else {
+      // imageid = uuidv5(file.name, story.id);
+      // const result = await Storage.put(imageid, file);
       const storyDetails = {
         id: story.id,
         title: title,
@@ -180,6 +247,16 @@ function RCStoryEditor(props) {
               </button>
             </div>
           )}
+        </div>
+        <div className={Styles.container}>
+          <label>Image</label>
+          <section className="container">
+            <div {...getRootProps({ className: "dropzone" })}>
+              <input {...getInputProps()} />
+              <p>Drag 'n' drop some files here, or click to select files</p>
+            </div>
+            <aside style={thumbsContainer}>{thumbs}</aside>
+          </section>
         </div>
         <div className={Styles.container}>
           <button className={Styles.RCButton} onClick={onSave}>

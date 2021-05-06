@@ -76,6 +76,7 @@
     "react-anything-sortable": "^1.5.2",
     "react-datepicker": "0.53.0",
     "react-dom": "^16.8.6",
+    "react-dropzone": "^11.3.2",
     "react-i18next": "^11.2.1",
     "react-responsive": "^5.0.0",
     "react-router-dom": "^5.2.0",
@@ -92,6 +93,7 @@
     "terriajs-html2canvas": "1.0.0-alpha.12-terriajs-1",
     "urijs": "^1.18.12",
     "url-loader": "^1.1.2",
+    "uuid": "^8.3.2",
     "webpack": "^4.29.5",
     "worker-loader": "^2.0.0"
   },
