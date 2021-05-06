@@ -60,7 +60,7 @@ function RCStoryEditor(props) {
         if (isListening) {
           // Convert position to cartographic
           const point = Cartographic.fromCartesian(
-            viewState.terria.pickedFeatures.pickPosition
+            terria.pickedFeatures.pickPosition
           );
           setHotspotPoint({
             latitude: (point.latitude / Math.PI) * 180,

@@ -1,4 +1,3 @@
-// import { withAuthenticator } from "@aws-amplify/ui-react";
 import Amplify, { Auth } from "aws-amplify";
 import classNames from "classnames";
 import createReactClass from "create-react-class";
@@ -14,7 +13,7 @@ import { Medium, Small } from "../Generic/Responsive";
 import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
 import ProgressBar from "../Map/ProgressBar.jsx";
 import RCBuilder from "../RCBuilder/RCBuilder";
-import { RCLogin } from "../RCLogin/RCLogin";
+import RCLogin from "../RCLogin/RCLogin";
 import SidePanelSectorTabs from "../RCSectorPanel/SidePanelSectorTabs";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage.jsx";
 import MapNavigation from "./../Map/MapNavigation.jsx";
@@ -33,7 +32,6 @@ import ToolPanel from "./../ToolPanel.jsx";
 import MapColumn from "./MapColumn.jsx";
 import processCustomElements from "./processCustomElements";
 import Styles from "./StandardUserInterface.scss";
-var Receipt = require("../../Models/Receipt");
 
 Amplify.configure(awsconfig);
 Auth.configure(awsconfig);
