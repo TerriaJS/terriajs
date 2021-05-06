@@ -79,7 +79,7 @@ class Disclaimer extends React.Component {
       disclaimer?.message || "Disclaimer text goes here";
     const useSmallScreenInterface = this.props.viewState
       .useSmallScreenInterface;
-    const renderDenyButton = !!disclaimer.denyAction;
+    const renderDenyButton = !!disclaimer?.denyAction;
     return disclaimer ? (
       <FadeIn isVisible={this.props.viewState.disclaimerVisible}>
         <TopElementBox position="absolute" fullWidth fullHeight centered>
