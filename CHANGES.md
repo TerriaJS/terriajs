@@ -13,6 +13,7 @@ Change Log
 * Add `cesiumTerrainAssetId` to config.json to allow configuring default terrain.
 * Added in language toggle and first draft of french translation.json
   * This is enabled via language languageConfiguration.enabled inside config.json and relies on the language being both enumerated inside languageConfiguration.langagues and availble under {code}/translation.json
+* Removed `Disclaimer` deny or cancel button when there is no `denyAction` associated with it.
 * [The next improvement]
 
 #### 8.0.0-alpha.78
