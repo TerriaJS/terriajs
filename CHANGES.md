@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.80)
 
+* Removed `Disclaimer` deny or cancel button when there is no `denyAction` associated with it.
 * [The next improvement]
 
 #### 8.0.0-alpha.79
@@ -20,6 +21,7 @@ Change Log
 * Updated to terriajs-cesium 1.81
 * Create the Checkbox component with accessibility in mind.
 * Convert `FeedbackForm` to typescript.
+
 #### 8.0.0-alpha.78
 
 * Add `ignoreErrors` url parameter.
