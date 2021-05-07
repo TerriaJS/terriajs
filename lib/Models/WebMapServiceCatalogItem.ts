@@ -419,7 +419,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
     result.push(
       createStratumInstance(InfoSectionTraits, {
         name: i18next.t("models.webMapServiceCatalogItem.serviceDescription"),
-        contentAsObject: this.capabilities.Service as JsonObject
+        contentAsObject: this.capabilities.Service as JsonObject,
+        // Hide big ugly table by default
+        show: false
       })
     );
 
@@ -453,7 +455,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
               name: i18next.t(
                 "models.webMapServiceCatalogItem.dataDescription"
               ),
-              contentAsObject: out as JsonObject
+              contentAsObject: out as JsonObject,
+              // Hide big ugly table by default
+              show: false
             })
           );
         } catch (e) {
