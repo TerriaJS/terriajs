@@ -18,6 +18,7 @@ import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import HeadingPitchRange from "terriajs-cesium/Source/Core/HeadingPitchRange";
 import Ion from "terriajs-cesium/Source/Core/Ion";
+import IonResource from "terriajs-cesium/Source/Core/IonResource";
 import KeyboardEventModifier from "terriajs-cesium/Source/Core/KeyboardEventModifier";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
@@ -910,6 +911,18 @@ export default class Cesium extends GlobeOrMap {
   } {
     if (!this.terriaViewer.viewerOptions.useTerrain) {
       return { terrain: new EllipsoidTerrainProvider() };
+    }
+    if (this.terria.configParameters.cesiumTerrainAssetId !== undefined) {
+      return {
+        terrain: new CesiumTerrainProvider({
+          url: IonResource.fromAssetId(
+            this.terria.configParameters.cesiumTerrainAssetId,
+            {
+              accessToken: this.terria.configParameters.cesiumIonAccessToken
+            }
+          )
+        })
+      };
     }
     if (this.terria.configParameters.cesiumTerrainUrl) {
       return {
