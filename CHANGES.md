@@ -3,10 +3,13 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.80)
+#### next release (8.0.0-alpha.81)
+
+* [The next improvement]
+
+#### 8.0.0-alpha.80
 
 * Removed `Disclaimer` deny or cancel button when there is no `denyAction` associated with it.
-* [The next improvement]
 
 #### 8.0.0-alpha.79
 
