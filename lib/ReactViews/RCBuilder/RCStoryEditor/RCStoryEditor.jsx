@@ -261,7 +261,7 @@ function RCStoryEditor(props) {
         </div>
         <div className={Styles.group}>
           <label className={Styles.topLabel}>Image</label>
-          <img className={Styles.image} src={image.url} />
+          <img className={Styles.image} src={image?.url} />
           <section className={Styles.dropContainer}>
             <div {...getRootProps({ className: "dropzone" })}>
               <input {...getInputProps()} />
