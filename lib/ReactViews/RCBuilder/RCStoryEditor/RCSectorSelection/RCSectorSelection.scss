@@ -1,0 +1,58 @@
+@import "~terriajs-variables";
+
+// Sector Tabs CSS
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.tabsContainer {
+  display: flex;
+  justify-content: space-evenly;
+  background-color: $tabs-container-bg;
+  order: 1;
+  box-shadow: 0px -8px 40px rgba(17, 8, 114, 0.0869565);
+  border-radius: 8px;
+  padding: 10px;
+
+  @media (min-width: $xs) {
+    margin: 16px 0;
+    order: 0;
+  }
+
+  svg {
+    color: #106fa8;
+    height: auto;
+    width: 40px;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &:hover path {
+      color: white;
+    }
+
+    &:hover .fill {
+      fill: #106fa8;
+    }
+
+    &:hover .icon {
+      fill: white;
+    }
+  }
+}
+
+.selectedTab {
+  background-color: $selected-tab-background-color;
+}
+input[type="checkbox"] {
+  display: none;
+}
+.label {
+  display: inline-block;
+  padding: 3px;
+}
+input[type="checkbox"]:checked + .label {
+  background-color: #fff;
+}

@@ -1,0 +1,64 @@
+{
+  "authors": [
+    {
+      "affiliation": "eScience Center",
+      "full_name": "Team Cat",
+      "id": "2"
+    }
+  ],
+  "catalog": [
+
+  ],
+  "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras imperdiet, eros quis vestibulum bibendum, elit ligula semper nulla, ac facilisis nulla lorem vitae turpis. Pellentesque sapien nibh, rhoncus a feugiat.",
+  "hotspotlocation": {
+    "latitude": -40.25390625,
+    "longitude": -3.337953961416472
+  },
+  "id": "1",
+  "image": {
+    "id": "1",
+    "url": "/images/receipt/story-soy.jpg"
+  },
+  "microstories": [
+
+  ],
+  "pages": [
+
+  ],
+  "sectors": [
+    "COASTAL_INFRASTRUCTURE"
+  ],
+  "shortDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras imperdiet, eros quis vestibulum bibendum, elit ligula semper nulla, ac facilisis nulla lorem vitae turpis. Pellentesque sapien nibh, rhoncus a feugiat.",
+  "state": "PUBLISHED",
+  "title": "Sudan"
+}
+
+
+[16:28] Pushpanjali Pawar
+    
+{​​​​​
+"id": 2
+"authors": [
+    {
+      "affiliation": "eScience Center",
+      "full_name": "Team Cat",
+      "id": "2"
+    }
+  ],
+"title": "Sudan"
+"shortDescription": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras imperdiet, eros quis vestibulum bibendum, elit ligula semper nulla, ac facilisis nulla lorem vitae turpis. Pellentesque sapien nibh, rhoncus a feugiat."
+"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras imperdiet, eros quis vestibulum bibendum, elit ligula semper nulla, ac facilisis nulla lorem vitae turpis. Pellentesque sapien nibh, rhoncus a feugiat."
+"hotspotlocation": {
+    "latitude": -40.25390625,
+    "longitude": -3.337953961416472
+  },
+"sectors": ["COASTAL_INFRASTRUCTURE"]
+"catalog": []
+"image": {
+    "id": "1",
+    "url": "/images/receipt/story-soy.jpg"
+  },
+"pages": []
+"microstories": []
+"state": "PUBLISHED"
+}​​​​​

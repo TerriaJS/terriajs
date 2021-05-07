@@ -11,7 +11,7 @@
       "SourceDir": "lib",
       "DistributionDir": "wwwroot/build",
       "BuildCommand": "npx gulp",
-      "StartCommand": "yarn start"
+      "StartCommand": "yarn serve"
     }
   }
 }
