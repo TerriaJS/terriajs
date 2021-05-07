@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { Overflow, WordBreak, OneKeyFrom } from "./Styled.types";
 
 interface Column {
@@ -50,6 +50,7 @@ interface IBoxPropsBase {
   paddedRatio?: number;
   paddedHorizontally?: number | boolean;
   paddedVertically?: number | boolean;
+  styledPadding?: string;
   backgroundImage?: any;
   backgroundBlackOverlay?: number;
   wordBreak?: WordBreak;
@@ -60,6 +61,7 @@ interface IBoxPropsBase {
   style?: any;
   as?: React.ElementType | keyof JSX.IntrinsicElements;
 }
+
 type IBoxProps = IBoxPropsBase & OneKeyFrom<Column>;
 
 export const Box = styled.div<IBoxProps>`
@@ -168,6 +170,7 @@ export const Box = styled.div<IBoxProps>`
       padding-bottom: ${5 *
         (props.paddedVertically === true ? 1 : props.paddedVertically)}px;
     `}
+  ${props => props.styledPadding && `padding: ${props.styledPadding};`}
 
   ${props =>
     props.backgroundImage &&
@@ -220,9 +223,9 @@ export const Box = styled.div<IBoxProps>`
 `;
 
 export const BoxSpan = styled(Box).attrs(
-  (props: { as?: React.ElementType | keyof JSX.IntrinsicElements }) => {
-    as: "span";
-  }
+  (props: { as?: React.ElementType | keyof JSX.IntrinsicElements }) => ({
+    as: "span"
+  })
 )``;
 
 export default Box;

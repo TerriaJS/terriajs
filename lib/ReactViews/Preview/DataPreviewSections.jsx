@@ -1,20 +1,21 @@
-import React from "react";
-import Mustache from "mustache";
-
 import createReactClass from "create-react-class";
-
-import PropTypes from "prop-types";
-
 import naturalSort from "javascript-natural-sort";
-import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
+import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-
-import Styles from "./data-preview.scss";
+import Mustache from "mustache";
+import PropTypes from "prop-types";
+import React from "react";
+import { withTranslation } from "react-i18next";
+import isDefined from "../../Core/isDefined";
+import CommonStrata from "../../Models/CommonStrata";
+import { item } from "../Custom/Chart/tooltip.scss";
+import Collapsible from "../Custom/Collapsible/Collapsible";
+import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import MetadataTable from "./MetadataTable";
 
 naturalSort.insensitive = true;
-import { withTranslation } from "react-i18next";
-import { item } from "../Custom/Chart/tooltip.scss";
+
+const Box = require("../../Styled/Box").default;
 
 Mustache.escape = function(string) {
   return string;
@@ -52,6 +53,18 @@ const DataPreviewSections = observer(
       return items;
     },
 
+    clickInfoSection(reportName, isOpen) {
+      const info = this.props.metadataItem.info;
+      const clickedInfo = info.find(report => report.name === reportName);
+
+      if (isDefined(clickedInfo)) {
+        runInAction(() => {
+          clickedInfo.setTrait(CommonStrata.user, "show", isOpen);
+        });
+      }
+      return false;
+    },
+
     render() {
       const metadataItem = this.props.metadataItem;
       const items = metadataItem.hideSource
@@ -76,18 +89,29 @@ const DataPreviewSections = observer(
       return (
         <div>
           <For each="item" index="i" of={this.sortInfoSections(items)}>
-            <Choose>
-              <When condition={item.content?.length > 0}>
-                <div key={i}>
-                  <h2 className={Styles.subHeading}>{item.name}</h2>
-                  {renderSection(item)}
-                </div>
-              </When>
-              <When condition={item.contentAsObject !== undefined}>
-                <h2 className={Styles.subHeading}>{item.name}</h2>
-                <MetadataTable metadataItem={item.contentAsObject} />
-              </When>
-            </Choose>
+            <Box paddedVertically displayInlineBlock fullWidth>
+              <Collapsible
+                key={i}
+                light={false}
+                title={item.name}
+                isOpen={item.show}
+                onToggle={show =>
+                  this.clickInfoSection.bind(this, item.name, show)()
+                }
+                bodyTextProps={{ medium: true }}
+              >
+                <Choose>
+                  <When condition={item.content?.length > 0}>
+                    {renderSection(item)}
+                  </When>
+                  <When condition={item.contentAsObject !== undefined}>
+                    <p>
+                      <MetadataTable metadataItem={item.contentAsObject} />
+                    </p>
+                  </When>
+                </Choose>
+              </Collapsible>
+            </Box>
           </For>
         </div>
       );

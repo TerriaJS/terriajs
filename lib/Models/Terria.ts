@@ -152,6 +152,10 @@ interface ConfigParameters {
    */
   cesiumTerrainUrl?: string;
   /**
+   * The Cesium Ion Asset ID to use for Cesium terrain in the 3D Terrain viewer. `cesiumIonAccessToken` will be used to authenticate. This property is ignored if "useCesiumIonTerrain" is set to true.
+   */
+  cesiumTerrainAssetId?: number;
+  /**
    * The access token to use with Cesium ion. If `"useCesiumIonTerrain"` is true and this property is not specified, the Cesium default Ion key will be used. It is a violation of the Ion terms of use to use the default key in a deployed application.
    */
   cesiumIonAccessToken?: string;
@@ -237,6 +241,16 @@ interface ConfigParameters {
    * Whether to open the add data explorer panel on load.
    */
   openAddData?: boolean;
+
+  /**
+   * Text showing at the top of feedback form.
+   */
+  feedbackPreamble?: string;
+
+  /**
+   * Minimum length of feedback comment.
+   */
+  feedbackMinLength?: number;
 }
 
 interface StartOptions {
@@ -353,6 +367,7 @@ export default class Terria {
     tabbedCatalog: false,
     useCesiumIonTerrain: true,
     cesiumTerrainUrl: undefined,
+    cesiumTerrainAssetId: undefined,
     cesiumIonAccessToken: undefined,
     useCesiumIonBingImagery: undefined,
     bingMapsKey: undefined,
@@ -383,7 +398,9 @@ export default class Terria {
     languageConfiguration: undefined,
     customRequestSchedulerLimits: undefined,
     persistViewerMode: true,
-    openAddData: false
+    openAddData: false,
+    feedbackPreamble: "feedback.feedbackPreamble",
+    feedbackMinLength: 0
   };
 
   @observable
