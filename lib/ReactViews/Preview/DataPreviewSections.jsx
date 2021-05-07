@@ -8,14 +8,13 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import isDefined from "../../Core/isDefined";
 import CommonStrata from "../../Models/CommonStrata";
+import Box from "../../Styled/Box";
 import { item } from "../Custom/Chart/tooltip.scss";
 import Collapsible from "../Custom/Collapsible/Collapsible";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import MetadataTable from "./MetadataTable";
 
 naturalSort.insensitive = true;
-
-const Box = require("../../Styled/Box").default;
 
 Mustache.escape = function(string) {
   return string;
@@ -89,7 +88,7 @@ const DataPreviewSections = observer(
       return (
         <div>
           <For each="item" index="i" of={this.sortInfoSections(items)}>
-            <Box paddedVertically displayInlineBlock fullWidth>
+            <Box paddedVertically displayInlineBlock fullWidth key={i}>
               <Collapsible
                 key={i}
                 light={false}
@@ -105,9 +104,9 @@ const DataPreviewSections = observer(
                     {renderSection(item)}
                   </When>
                   <When condition={item.contentAsObject !== undefined}>
-                    <p>
+                    <Box paddedVertically={3} fullWidth>
                       <MetadataTable metadataItem={item.contentAsObject} />
-                    </p>
+                    </Box>
                   </When>
                 </Choose>
               </Collapsible>
