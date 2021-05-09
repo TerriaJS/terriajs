@@ -8,7 +8,7 @@ Accepted
 
 ## Context
 
-We have a request to provide a french translationed version of de-africa. We are using the i18next and i18next-react libraries with all our UI strings within en/translation.json. There are also two long life branches master & next representing our current production release (v7) and the next production release (v8). Due to the time lag between releases, there are hundreds more strings in the v7 translation.json versus the master version.
+We have a request to provide a french translationed version of de-africa. We are using the i18next and i18next-react libraries with all our UI strings within en/translation.json. There are also two long life branches master & next representing our current production release (v7) and the next production release (v8). Due to the time lag between releases, there are hundreds more strings in the v8 translation.json versus the master (v7) version.
 
 It would not be workable or scalable for translators to provide these translations into the github repository directly as this requires a level of technical expertise and we won't have an easy way of keeping track of which strings haven't been translated yet. We also require some quality check mechanism to ensure the quality of the contributed translations.
 
