@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require*/
 var CatalogItem = require("../../lib/Models/CatalogItem");
 var NominatimSearchProviderViewModel = require("../../lib/ViewModels/NominatimSearchProviderViewModel");
 var Terria = require("../../lib/Models/Terria");

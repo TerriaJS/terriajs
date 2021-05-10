@@ -1,11 +1,11 @@
 import { observable } from "mobx";
-import Mappable from "../Models/Mappable";
+import MappableMixin from "../ModelMixins/MappableMixin";
 
 export class BaseMapViewModel {
-  @observable mappable: Mappable;
+  @observable mappable: MappableMixin.MappableMixin;
   @observable image: string | undefined;
 
-  constructor(mappable: Mappable, image?: string) {
+  constructor(mappable: MappableMixin.MappableMixin, image?: string) {
     this.mappable = mappable;
     this.image = image;
   }

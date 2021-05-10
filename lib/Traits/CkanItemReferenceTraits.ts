@@ -7,14 +7,12 @@ import CkanResourceFormatTraits from "./CkanResourceFormatTraits";
 import mixTraits from "./mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import MappableTraits from "./MappableTraits";
-import DataCustodianTraits from "./DataCustodianTraits";
 import objectArrayTrait from "./objectArrayTrait";
 import primitiveTrait from "./primitiveTrait";
 import UrlTraits from "./UrlTraits";
 
 export default class CkanCatalogItemTraits extends mixTraits(
   UrlTraits,
-  DataCustodianTraits,
   MappableTraits,
   CkanSharedTraits,
   CatalogMemberReferenceTraits

@@ -1,7 +1,6 @@
 import { JsonObject } from "../Core/Json";
 import anyTrait from "./anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import DataCustodianTraits from "./DataCustodianTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
 import GroupTraits from "./GroupTraits";
 import mixTraits from "./mixTraits";
@@ -9,7 +8,6 @@ import primitiveTrait from "./primitiveTrait";
 import UrlTraits from "./UrlTraits";
 
 export default class WebMapServiceCatalogGroupTraits extends mixTraits(
-  DataCustodianTraits,
   GetCapabilitiesTraits,
   GroupTraits,
   UrlTraits,

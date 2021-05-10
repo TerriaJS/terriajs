@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
-import Icon from "../Icon.jsx";
+import Icon from "../../Styled/Icon";
 import Box from "../../Styled/Box";
 import { TextSpan } from "../../Styled/Text";
 import { RawButton } from "../../Styled/Button";

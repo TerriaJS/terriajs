@@ -1,15 +1,11 @@
+import i18next from "i18next";
 import { configure, runInAction } from "mobx";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
-import when from "terriajs-cesium/Source/ThirdParty/when";
 import isDefined from "../../lib/Core/isDefined";
 import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import ArcGisMapServerCatalogItem from "../../lib/Models/ArcGisMapServerCatalogItem";
 import Terria from "../../lib/Models/Terria";
-import { RectangleTraits } from "../../lib/Traits/MappableTraits";
-import createStratumInstance from "../../lib/Models/createStratumInstance";
-import i18next from "i18next";
 
 configure({
   enforceActions: "observed",
@@ -53,6 +49,8 @@ describe("ArcGisMapServerCatalogItem", function() {
         args[2] = "GET";
         args[3] = undefined;
         return realLoadWithXhr(...args);
+      } else if (url.match("/cadastre_history/MapServer")) {
+        args[0] = "test/ArcGisMapServer/time-enabled.json";
       }
 
       return realLoadWithXhr(...args);
@@ -134,7 +132,7 @@ describe("ArcGisMapServerCatalogItem", function() {
 
       it("passess the token to the imageryProvider", async function() {
         await item.loadMapItems();
-        const imageryProvider = item.mapItems[0].imageryProvider;
+        const imageryProvider: any = item.mapItems[0].imageryProvider;
         expect(imageryProvider.token).toBe("fakeToken");
       });
     });
@@ -174,7 +172,8 @@ describe("ArcGisMapServerCatalogItem", function() {
             item.setTrait("definition", "maximumScaleBeforeMessage", 1);
           });
 
-          imageryProvider = item.mapItems[0].imageryProvider;
+          imageryProvider = item.mapItems[0]
+            .imageryProvider as ArcGisMapServerImageryProvider;
         });
 
         it("should be an ArcGisMapServerImageryProvider", function() {
@@ -193,7 +192,8 @@ describe("ArcGisMapServerCatalogItem", function() {
 
         it("converts layer names to layer ids when constructing imagery provider", function() {
           item.setTrait("definition", "layers", "Offshore_Rocks_And_Wrecks");
-          const imageryProvider = item.mapItems[0].imageryProvider;
+          const imageryProvider = item.mapItems[0]
+            .imageryProvider as ArcGisMapServerImageryProvider;
           expect(imageryProvider.layers).toBe("31");
         });
 
@@ -216,9 +216,9 @@ describe("ArcGisMapServerCatalogItem", function() {
         });
 
         it("raise an error if requested level is above maximumScaleBeforeMessage", function() {
-          spyOn(item.terria.error, "raiseEvent");
+          spyOn(item.terria, "raiseErrorToUser");
           imageryProvider.requestImage(0, 0, 100);
-          expect(item.terria.error.raiseEvent).toHaveBeenCalled();
+          expect(item.terria.raiseErrorToUser).toHaveBeenCalled();
         });
       });
     });
@@ -235,10 +235,10 @@ describe("ArcGisMapServerCatalogItem", function() {
 
     it("defines a rectangle", function() {
       expect(item.rectangle).toBeDefined();
-      expect(item.rectangle.west).toEqual(97.90759300700006);
-      expect(item.rectangle.south).toEqual(-54.25906877199998);
-      expect(item.rectangle.east).toEqual(167.2820957260001);
-      expect(item.rectangle.north).toEqual(0.9835908000000587);
+      expect(item.rectangle.west).toEqual(100.14442693296783);
+      expect(item.rectangle.south).toEqual(-49.98407725285527);
+      expect(item.rectangle.east).toEqual(169.16154003177758);
+      expect(item.rectangle.north).toEqual(-2.3882536190571813);
     });
 
     it("defines info", function() {
@@ -257,6 +257,25 @@ describe("ArcGisMapServerCatalogItem", function() {
           expect(item.legends[0].items.length).toBe(30);
         }
       }
+    });
+  });
+
+  describe("time-enabled layer", function() {
+    it("can load a time-enabled layer", async function() {
+      runInAction(() => {
+        item = new ArcGisMapServerCatalogItem("test", new Terria());
+        item.setTrait(
+          "definition",
+          "url",
+          "http://example.com/cadastre_history/MapServer"
+        );
+      });
+      await item.loadMapItems();
+      if (item.discreteTimes !== undefined) {
+        expect(item.discreteTimes.length).toBe(781);
+      }
+      expect(item.startTime).toBe("2004-11-26T09:43:22Z");
+      expect(item.stopTime).toBe("2019-11-03T14:00:00Z");
     });
   });
 });

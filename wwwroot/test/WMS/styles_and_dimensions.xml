@@ -158,6 +158,12 @@
                     </Style>
 
                     <Style>
+                        <Name>no-legend</Name>
+                        <Title>no-legend</Title>
+                        <Abstract>A style with no legend</Abstract>
+                    </Style>
+
+                    <Style>
                         <Name>areafill/occam</Name>
                         <Title>areafill/occam</Title>
                         <Abstract>areafill style, using the occam palette</Abstract>

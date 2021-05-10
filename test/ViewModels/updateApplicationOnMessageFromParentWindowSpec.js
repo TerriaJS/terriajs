@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require*/
 var CatalogGroup = require("../../lib/Models/CatalogGroup");
 var createCatalogMemberFromType = require("../../lib/Models/createCatalogMemberFromType");
 var Terria = require("../../lib/Models/Terria");

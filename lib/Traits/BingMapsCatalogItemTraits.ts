@@ -1,10 +1,10 @@
-import primitiveTrait from "./primitiveTrait";
-import mixTraits from "./mixTraits";
-import RasterLayerTraits from "./RasterLayerTraits";
-import MappableTraits from "./MappableTraits";
+import BingMapsStyle from "terriajs-cesium/Source/Scene/BingMapsStyle";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
-import BingMapsStyle from "terriajs-cesium/Source/Scene/BingMapsStyle";
+import MappableTraits from "./MappableTraits";
+import mixTraits from "./mixTraits";
+import primitiveTrait from "./primitiveTrait";
+import RasterLayerTraits from "./RasterLayerTraits";
 
 export default class BingMapsCatalogItemTraits extends mixTraits(
   LayerOrderingTraits,

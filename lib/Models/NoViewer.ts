@@ -1,15 +1,15 @@
 "use strict";
 
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import CameraView from "./CameraView";
-import GlobeOrMap from "./GlobeOrMap";
-import Mappable from "./Mappable";
-import Terria from "./Terria";
-import TerriaViewer from "../ViewModels/TerriaViewer";
-import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import LatLonHeight from "../Core/LatLonHeight";
+import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import { ProviderCoordsMap } from "../Map/PickedFeatures";
+import MappableMixin from "../ModelMixins/MappableMixin";
+import TerriaViewer from "../ViewModels/TerriaViewer";
+import CameraView from "./CameraView";
 import Feature from "./Feature";
+import GlobeOrMap from "./GlobeOrMap";
+import Terria from "./Terria";
 
 class NoViewer extends GlobeOrMap {
   readonly type = "none";
@@ -23,7 +23,7 @@ class NoViewer extends GlobeOrMap {
 
   destroy() {}
 
-  zoomTo(v: CameraView | Rectangle | Mappable, t: any) {
+  doZoomTo(v: CameraView | Rectangle | MappableMixin.MappableMixin, t: any) {
     if (v instanceof CameraView) {
       this._currentView = v;
     } else if (v instanceof Rectangle) {

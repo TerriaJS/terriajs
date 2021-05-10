@@ -2,30 +2,34 @@ import i18next from "i18next";
 import { action, computed, observable } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import TerriaError from "../Core/TerriaError";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import ChartableMixin from "../ModelMixins/ChartableMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
 import CommonStrata from "../Models/CommonStrata";
-import Chartable from "./Chartable";
-import Mappable from "./Mappable";
+import LayerOrderingTraits from "../Traits/LayerOrderingTraits";
+import hasTraits from "./hasTraits";
 import { BaseModel } from "./Model";
 
-interface WorkbenchItem extends BaseModel {
-  supportsReordering?: boolean;
-  keepOnTop?: boolean;
-}
+const keepOnTop = (model: BaseModel) =>
+  hasTraits(model, LayerOrderingTraits, "keepOnTop") && model.keepOnTop;
+const supportsReordering = (model: BaseModel) =>
+  hasTraits(model, LayerOrderingTraits, "supportsReordering") &&
+  model.supportsReordering;
 
 export default class Workbench {
-  private readonly _items = observable.array<WorkbenchItem>();
+  private readonly _items = observable.array<BaseModel>();
 
   /**
    * Gets or sets the list of items on the workbench.
    */
   @computed
-  get items(): readonly WorkbenchItem[] {
+  get items(): readonly BaseModel[] {
     return this._items.map(dereferenceModel);
   }
-  set items(items: readonly WorkbenchItem[]) {
+  set items(items: readonly BaseModel[]) {
     this._items.spliceWithArray(0, this._items.length, items.slice());
   }
 
@@ -105,18 +109,18 @@ export default class Workbench {
    * @param item The model to add.
    */
   @action
-  private insertItem(item: WorkbenchItem, index: number = 0) {
+  private insertItem(item: BaseModel, index: number = 0) {
     if (this.contains(item)) {
       return;
     }
 
-    const targetItem: WorkbenchItem = dereferenceModel(item);
+    const targetItem: BaseModel = dereferenceModel(item);
 
     // Keep reorderable data sources (e.g.: imagery layers) below non-orderable ones (e.g.: GeoJSON).
-    if (targetItem.supportsReordering) {
+    if (supportsReordering(targetItem)) {
       while (
         index < this.items.length &&
-        !this.items[index].supportsReordering
+        !supportsReordering(this.items[index])
       ) {
         ++index;
       }
@@ -124,17 +128,17 @@ export default class Workbench {
       while (
         index > 0 &&
         this.items.length > 0 &&
-        this.items[index - 1].supportsReordering
+        supportsReordering(this.items[index - 1])
       ) {
         --index;
       }
     }
 
-    if (!targetItem.keepOnTop) {
+    if (!keepOnTop(targetItem)) {
       while (
         index < this.items.length &&
-        this.items[index].keepOnTop &&
-        this.items[index].supportsReordering === targetItem.supportsReordering
+        keepOnTop(this.items[index]) &&
+        supportsReordering(this.items[index]) === supportsReordering(targetItem)
       ) {
         ++index;
       }
@@ -142,9 +146,9 @@ export default class Workbench {
       while (
         index > 0 &&
         this.items.length > 0 &&
-        this.items[index - 1].keepOnTop &&
-        this.items[index - 1].supportsReordering ===
-          targetItem.supportsReordering
+        !keepOnTop(this.items[index - 1]) &&
+        supportsReordering(this.items[index - 1]) ===
+          supportsReordering(targetItem)
       ) {
         --index;
       }
@@ -158,15 +162,14 @@ export default class Workbench {
   /**
    * Adds or removes a model to/from the workbench. If the model is a reference,
    * it will also be dereferenced. If, after dereferencing, the item turns out not to
-   * be {@link Mappable} or {@link Chartable} but it is a {@link GroupMixin}, it will
+   * be {@link AsyncMappableMixin} or {@link ChartableMixin} but it is a {@link GroupMixin}, it will
    * be removed from the workbench. If it is mappable, `loadMapItems` will be called.
-   * If it is chartable, `loadChartItems` will be called.
    *
    * @param item The item to add to or remove from the workbench.
    */
   public async add(item: BaseModel | BaseModel[]): Promise<void> {
     if (Array.isArray(item)) {
-      await Promise.all(item.map(i => this.add(i)));
+      await Promise.all(item.reverse().map(i => this.add(i)));
       return;
     }
 
@@ -180,8 +183,8 @@ export default class Workbench {
         if (
           target &&
           GroupMixin.isMixedInto(target) &&
-          !Mappable.is(target) &&
-          !Chartable.is(target)
+          !MappableMixin.isMixedInto(target) &&
+          !ChartableMixin.isMixedInto(target)
         ) {
           this.remove(item);
         } else if (target) {
@@ -189,12 +192,10 @@ export default class Workbench {
         }
       }
 
-      if (Mappable.is(item)) {
-        await item.loadMapItems();
-      }
+      if (CatalogMemberMixin.isMixedInto(item)) await item.loadMetadata();
 
-      if (Chartable.is(item)) {
-        await item.loadChartItems();
+      if (MappableMixin.isMixedInto(item)) {
+        await item.loadMapItems();
       }
     } catch (e) {
       this.remove(item);
@@ -238,8 +239,8 @@ export default class Workbench {
     if (!this.contains(item)) {
       return;
     }
-    this._items.splice(this.indexOf(item), 1);
-    this._items.splice(newIndex, 0, item);
+    this.remove(item);
+    this.insertItem(item, newIndex);
   }
 }
 

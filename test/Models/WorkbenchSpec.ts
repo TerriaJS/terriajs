@@ -48,6 +48,89 @@ describe("Workbench", function() {
     expect(workbench.itemIds).toEqual(["C", "A", "B"]);
   });
 
+  describe("re-orders items correctly (with keepOnTop)", function() {
+    beforeEach(async () => {
+      item3.setTrait("definition", "keepOnTop", true);
+
+      await workbench.add([item1, item2, item3]);
+    });
+
+    it("will keepOnTop item3 ", () => {
+      expect(workbench.items).toEqual([item3, item1, item2]);
+      expect(workbench.itemIds).toEqual(["C", "A", "B"]);
+    });
+
+    it("will move item1 ", () => {
+      workbench.moveItemToIndex(item1, 2);
+      expect(workbench.items).toEqual([item3, item2, item1]);
+      expect(workbench.itemIds).toEqual(["C", "B", "A"]);
+    });
+
+    it("will not move item3 ", () => {
+      workbench.moveItemToIndex(item3, 2);
+      expect(workbench.items).toEqual([item3, item1, item2]);
+      expect(workbench.itemIds).toEqual(["C", "A", "B"]);
+    });
+
+    it("will move item2 ", () => {
+      workbench.moveItemToIndex(item2, 0);
+      expect(workbench.items).toEqual([item3, item2, item1]);
+      expect(workbench.itemIds).toEqual(["C", "B", "A"]);
+    });
+
+    it("will add another keepOnTop item4 ", () => {
+      item4.setTrait("definition", "keepOnTop", true);
+      workbench.add(item4);
+      expect(workbench.items).toEqual([item4, item3, item1, item2]);
+      expect(workbench.itemIds).toEqual(["D", "C", "A", "B"]);
+    });
+
+    it("will add another item4", () => {
+      workbench.add(item4);
+      expect(workbench.items).toEqual([item3, item4, item1, item2]);
+      expect(workbench.itemIds).toEqual(["C", "D", "A", "B"]);
+    });
+  });
+
+  describe("will keep non layer-reordering layers at top of workbench list", function() {
+    beforeEach(async () => {
+      item3.setTrait("definition", "supportsReordering", false);
+
+      await workbench.add([item1, item2, item3]);
+    });
+
+    it("will put item3 below ordering layers ", () => {
+      expect(workbench.items).toEqual([item3, item1, item2]);
+      expect(workbench.itemIds).toEqual(["C", "A", "B"]);
+    });
+
+    it("will move item1 ", () => {
+      workbench.moveItemToIndex(item1, 2);
+      expect(workbench.items).toEqual([item3, item2, item1]);
+      expect(workbench.itemIds).toEqual(["C", "B", "A"]);
+    });
+
+    it("will not move item3 ", () => {
+      workbench.moveItemToIndex(item3, 2);
+      expect(workbench.items).toEqual([item3, item1, item2]);
+      expect(workbench.itemIds).toEqual(["C", "A", "B"]);
+    });
+
+    it("will add another keepOnTop item4 ", () => {
+      item4.setTrait("definition", "keepOnTop", true);
+      workbench.add(item4);
+      expect(workbench.items).toEqual([item3, item4, item1, item2]);
+      expect(workbench.itemIds).toEqual(["C", "D", "A", "B"]);
+    });
+
+    it("will add another non layer-reordering item4 ", () => {
+      item4.setTrait("definition", "supportsReordering", false);
+      workbench.add(item4);
+      expect(workbench.items).toEqual([item4, item3, item1, item2]);
+      expect(workbench.itemIds).toEqual(["D", "C", "A", "B"]);
+    });
+  });
+
   it("add item", async function() {
     workbench.items = [item1, item2, item3];
 
@@ -55,15 +138,13 @@ describe("Workbench", function() {
 
     spyOn(wmsItem, "loadMetadata");
     spyOn(wmsItem, "loadMapItems");
-    spyOn(wmsItem, "loadChartItems");
 
     await workbench.add(item4);
     expect(workbench.items).toEqual([item4, item1, item2, item3]);
     expect(workbench.itemIds).toEqual(["D", "A", "B", "C"]);
 
-    expect(wmsItem.loadMetadata).toHaveBeenCalledTimes(0);
+    expect(wmsItem.loadMetadata).toHaveBeenCalledTimes(1);
     expect(wmsItem.loadMapItems).toHaveBeenCalledTimes(1);
-    expect(wmsItem.loadChartItems).toHaveBeenCalledTimes(1);
   });
 
   it("doesn't add duplicate model", async function() {

@@ -7,7 +7,7 @@ import CommonStrata from "../../../Models/CommonStrata";
 import createStratumInstance from "../../../Models/createStratumInstance";
 import GeoJsonCatalogItem from "../../../Models/GeoJsonCatalogItem";
 import Terria from "../../../Models/Terria";
-import { StyleTraits } from "../../../Traits/GeoJsonCatalogItemTraits";
+import StyleTraits from "../../../Traits/StyleTraits";
 
 interface PropsType {
   terria: Terria;

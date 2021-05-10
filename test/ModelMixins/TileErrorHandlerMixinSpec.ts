@@ -4,6 +4,7 @@ import Resource from "terriajs-cesium/Source/Core/Resource";
 import TileProviderError from "terriajs-cesium/Source/Core/TileProviderError";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
+import MappableMixin, { MapItem } from "../../lib/ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../../lib/ModelMixins/TileErrorHandlerMixin";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import CreateModel from "../../lib/Models/CreateModel";
@@ -16,13 +17,15 @@ import ShowableTraits from "../../lib/Traits/ShowableTraits";
 import UrlTraits from "../../lib/Traits/UrlTraits";
 
 class TestCatalogItem extends TileErrorHandlerMixin(
-  CreateModel(
-    mixTraits(
-      UrlTraits,
-      ShowableTraits,
-      RasterLayerTraits,
-      MappableTraits,
-      CatalogMemberTraits
+  MappableMixin(
+    CreateModel(
+      mixTraits(
+        UrlTraits,
+        ShowableTraits,
+        RasterLayerTraits,
+        MappableTraits,
+        CatalogMemberTraits
+      )
     )
   )
 ) {
@@ -41,8 +44,19 @@ class TestCatalogItem extends TileErrorHandlerMixin(
     };
   }
 
-  get mapItems() {
-    return [{ imageryProvider: this.imageryProvider }];
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
+  }
+
+  get mapItems(): MapItem[] {
+    return [
+      {
+        imageryProvider: this.imageryProvider,
+        show: true,
+        alpha: 1,
+        clippingRectangle: undefined
+      }
+    ];
   }
 }
 
@@ -163,7 +177,7 @@ describe("TileErrorHandlerMixin", function() {
     let raiseEvent: jasmine.Spy;
 
     beforeEach(function() {
-      raiseEvent = spyOn(item.terria.error, "raiseEvent");
+      raiseEvent = spyOn(item.terria, "raiseErrorToUser");
       item.tileErrorHandlingOptions.setTrait(
         CommonStrata.user,
         "thresholdBeforeDisablingItem",
@@ -268,7 +282,7 @@ describe("TileErrorHandlerMixin", function() {
     });
 
     it("reports the last error to the user", async function() {
-      spyOn(item.terria.error, "raiseEvent");
+      spyOn(item.terria, "raiseErrorToUser");
       try {
         await onTileLoadError(item, newError(undefined));
       } catch {}
@@ -276,7 +290,7 @@ describe("TileErrorHandlerMixin", function() {
         await onTileLoadError(item, newError(undefined, 1));
       } catch {}
       expect(item.tileFailures).toBe(2);
-      expect(item.terria.error.raiseEvent).toHaveBeenCalled();
+      expect(item.terria.raiseErrorToUser).toHaveBeenCalled();
     });
 
     it("disables the catalog item", async function() {

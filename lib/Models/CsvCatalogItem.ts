@@ -2,9 +2,9 @@ import i18next from "i18next";
 import { computed, runInAction } from "mobx";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
-import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
 import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import ChartableMixin from "../ModelMixins/ChartableMixin";
 import ExportableMixin from "../ModelMixins/ExportableMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -30,13 +30,9 @@ import Terria from "./Terria";
 
 const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
 
-export default class CsvCatalogItem extends AsyncChartableMixin(
-  TableMixin(
-    ExportableMixin(
-      AutoRefreshingMixin(
-        UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
-      )
-    )
+export default class CsvCatalogItem extends TableMixin(
+  AutoRefreshingMixin(
+    UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
   )
 ) {
   static get type() {
@@ -141,30 +137,40 @@ export default class CsvCatalogItem extends AsyncChartableMixin(
       return;
     }
 
-    Csv.parseUrl(proxyCatalogItemUrl(this, this.refreshUrl), true).then(
-      dataColumnMajor => {
-        runInAction(() => {
-          if (this.polling.shouldReplaceData) {
-            this.dataColumnMajor = dataColumnMajor;
-          } else {
-            this.append(dataColumnMajor);
-          }
-        });
-      }
-    );
-  }
-
-  protected forceLoadMetadata(): Promise<void> {
-    return Promise.resolve();
+    Csv.parseUrl(
+      proxyCatalogItemUrl(this, this.refreshUrl),
+      true,
+      this.ignoreRowsStartingWithComment
+    ).then(dataColumnMajor => {
+      runInAction(() => {
+        if (this.polling.shouldReplaceData) {
+          this.dataColumnMajor = dataColumnMajor;
+        } else {
+          this.append(dataColumnMajor);
+        }
+      });
+    });
   }
 
   protected forceLoadTableData(): Promise<string[][]> {
     if (this.csvString !== undefined) {
-      return Csv.parseString(this.csvString, true);
+      return Csv.parseString(
+        this.csvString,
+        true,
+        this.ignoreRowsStartingWithComment
+      );
     } else if (this._csvFile !== undefined) {
-      return Csv.parseFile(this._csvFile, true);
+      return Csv.parseFile(
+        this._csvFile,
+        true,
+        this.ignoreRowsStartingWithComment
+      );
     } else if (this.url !== undefined) {
-      return Csv.parseUrl(proxyCatalogItemUrl(this, this.url), true);
+      return Csv.parseUrl(
+        proxyCatalogItemUrl(this, this.url),
+        true,
+        this.ignoreRowsStartingWithComment
+      );
     } else {
       return Promise.reject(
         new TerriaError({

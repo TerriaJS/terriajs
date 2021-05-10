@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require*/
 var CesiumTerrainCatalogItem = require("../../lib/Models/CesiumTerrainCatalogItem");
 var CesiumTerrainProvider = require("terriajs-cesium/Source/Core/CesiumTerrainProvider")
   .default;

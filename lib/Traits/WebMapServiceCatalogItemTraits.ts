@@ -1,7 +1,6 @@
 import { JsonObject } from "../Core/Json";
 import anyTrait from "./anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import DataCustodianTraits from "./DataCustodianTraits";
 import DiffableTraits from "./DiffableTraits";
 import ExportableTraits from "./ExportableTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
@@ -19,6 +18,9 @@ import RasterLayerTraits from "./RasterLayerTraits";
 import SplitterTraits from "./SplitterTraits";
 import TimeFilterTraits from "./TimeFilterTraits";
 import UrlTraits from "./UrlTraits";
+
+export const SUPPORTED_CRS_3857 = ["EPSG:3857", "EPSG:900913"];
+export const SUPPORTED_CRS_4326 = ["EPSG:4326", "CRS:84", "EPSG:4283"];
 
 export class WebMapServiceAvailableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -135,8 +137,18 @@ export class WebMapServiceAvailableLayerDimensionsTraits extends ModelTraits {
   dimensions?: WebMapServiceAvailableDimensionTraits[];
 }
 
+/**
+ * Creates a single item in the catalog from one or many WMS layers.<br/>
+ * <strong>Note:</strong> <i>To present all layers in an available WMS as individual items in the catalog use the \`WebMapServiceCatalogGroup\`.</i>
+ * @example
+ * {
+ *   "type": "wms",
+ *   "name": "Mangrove Cover",
+ *   "url": "https://ows.services.dea.ga.gov.au",
+ *   "layers": "mangrove_cover_v2_0_2"
+ * }
+ */
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
-  DataCustodianTraits,
   ExportableTraits,
   DiffableTraits,
   FeatureInfoTraits,
@@ -163,6 +175,15 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       "The styles to use with each of the `Layer(s)` (comma separated values). This maps one-to-one with `Layer(s)`"
   })
   styles?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Style(s)",
+    description: `CRS to use with WMS layers. We support Web Mercator (${SUPPORTED_CRS_3857.join(
+      ", "
+    )}) and WGS 84 (${SUPPORTED_CRS_4326.join(", ")})`
+  })
+  crs?: string;
 
   @anyTrait({
     name: "Dimensions",
@@ -193,6 +214,22 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       "Additional parameters to pass to the MapServer when requesting images. Style parameters are stored as CSV in `styles`, dimension parameters are stored in `dimensions`."
   })
   parameters?: JsonObject;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Tile width (in pixels)",
+    description:
+      "Tile width in pixels. This will be added to `GetMap` requests for map tiles using the `width` parameter. Default value is 256 pixels"
+  })
+  tileWidth: number = 256;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Tile height (in pixels)",
+    description:
+      "Tile height in pixels. This will be added to `GetMap` requests for map tiles using the `height` parameter. Default value is 256 pixels"
+  })
+  tileHeight: number = 256;
 
   @primitiveTrait({
     type: "number",

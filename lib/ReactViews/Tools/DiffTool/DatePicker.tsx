@@ -7,15 +7,13 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import CommonStrata from "../../../Models/CommonStrata";
 import { formatDateTime } from "../../BottomDock/Timeline/DateFormats";
-import Icon, { StyledIcon } from "../../Icon";
+import Icon, { StyledIcon } from "../../../Styled/Icon";
 import DateTimePicker from "../../BottomDock/Timeline/DateTimePicker";
-
+import Text, { TextSpan } from "../../../Styled/Text";
+import Box from "../../../Styled/Box";
+import Button from "../../../Styled/Button";
+import Spacing from "../../../Styled/Spacing";
 const dateFormat = require("dateformat");
-const Box: any = require("../../../Styled/Box").default;
-const Text: any = require("../../../Styled/Text").default;
-const TextSpan: any = require("../../../Styled/Text").TextSpan;
-const Button: any = require("../../../Styled/Button").default;
-const Spacing: any = require("../../../Styled/Spacing").default;
 
 interface PropsType extends WithTranslation {
   heading: string;
@@ -209,7 +207,7 @@ const NextButton = styled(PagerButton).attrs({
   margin-left: 1px;
 `;
 
-const DateButton = styled(Button)`
+const DateButton = styled(Button)<{ isOpen: boolean }>`
   // z-index: 1000; // (Nanda): So that we don't loose the button clicks to the date picker popup
   z-index: 0;
   ${props => props.isOpen && `z-index: 1000;`};

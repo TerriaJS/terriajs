@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require*/
 var loadText = require("../../lib/Core/loadText");
 var when = require("terriajs-cesium/Source/ThirdParty/when").default;
 

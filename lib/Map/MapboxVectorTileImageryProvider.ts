@@ -49,6 +49,7 @@ interface MapboxVectorTileImageryProviderOptions {
   featureInfoFunc?: (
     feature: VectorTileFeature
   ) => ImageryLayerFeatureInfo | undefined;
+  credit?: Credit | string;
 }
 
 export default class MapboxVectorTileImageryProvider
@@ -72,6 +73,7 @@ export default class MapboxVectorTileImageryProvider
   ) => ImageryLayerFeatureInfo | undefined;
   private readonly _errorEvent = new CesiumEvent();
   private readonly _ready = true;
+  private readonly _credit?: Credit | string;
 
   constructor(options: MapboxVectorTileImageryProviderOptions) {
     this._uriTemplate = new URITemplate(options.url);
@@ -126,6 +128,8 @@ export default class MapboxVectorTileImageryProvider
     this._errorEvent = new CesiumEvent();
 
     this._ready = true;
+
+    this._credit = options.credit;
   }
 
   get url() {
@@ -177,7 +181,13 @@ export default class MapboxVectorTileImageryProvider
   }
 
   get credit(): Credit {
-    return <any>undefined;
+    let credit = this._credit;
+    if (credit === undefined) {
+      return <any>undefined;
+    } else if (typeof credit === "string") {
+      credit = new Credit(credit);
+    }
+    return credit;
   }
 
   get defaultAlpha(): number {
@@ -527,7 +537,8 @@ export default class MapboxVectorTileImageryProvider
       maximumNativeZoom: this._maximumNativeLevel,
       maximumZoom: this._maximumLevel,
       uniqueIdProp: this._uniqueIdProp,
-      styleFunc: styleFunc
+      styleFunc: styleFunc,
+      credit: ""
     });
     imageryProvider.pickFeatures = function() {
       return Promise.resolve([]);

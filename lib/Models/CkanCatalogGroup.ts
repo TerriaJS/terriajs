@@ -2,7 +2,9 @@ import i18next from "i18next";
 import { action, computed, observable, runInAction } from "mobx";
 import URI from "urijs";
 import isDefined from "../Core/isDefined";
+import { JsonObject } from "../Core/Json";
 import loadJson from "../Core/loadJson";
+import runLater from "../Core/runLater";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
@@ -70,6 +72,25 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     ) as this;
   }
 
+  static addFilterQuery(
+    uri: uri.URI,
+    filterQuery: JsonObject | string
+  ): uri.URI {
+    if (typeof filterQuery === "string") {
+      // An encoded filterQuery may look like "fq=+(res_format%3Awms%20OR%20res_format%3AWMS)".
+      // An unencoded filterQuery may look like "fq=(res_format:wms OR res_format:WMS)".
+      // In both cases, don't use addQuery(filterQuery) as "=" will be escaped too, which will
+      // cause unexpected result (e.g. empty query result).
+      uri.query(uri.query() + "&" + filterQuery);
+    } else {
+      Object.keys(filterQuery).forEach((key: string) =>
+        uri.addQuery(key, (filterQuery as JsonObject)[key])
+      );
+    }
+    uri.normalize();
+    return uri;
+  }
+
   static async load(
     catalogGroup: CkanCatalogGroup
   ): Promise<CkanServerStratum | undefined> {
@@ -84,9 +105,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
         .segment("api/3/action/package_search")
         .addQuery({ start: 0, rows: 1000, sort: "metadata_created asc" });
 
-      Object.keys(filterQuery).forEach((key: string) =>
-        uri.addQuery(key, filterQuery[key])
-      );
+      CkanServerStratum.addFilterQuery(uri, filterQuery as JsonObject | string);
 
       const result = await paginateThroughResults(uri, catalogGroup);
       if (ckanServerResponse === undefined) {
@@ -105,7 +124,10 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
   get members(): ModelReference[] {
     // When data is grouped (most circumstances) return group id's
     // for those which have content
-    if (this.filteredGroups !== undefined) {
+    if (
+      this.filteredGroups !== undefined &&
+      this._catalogGroup.groupBy !== "none"
+    ) {
       const groupIds: ModelReference[] = [];
       this.filteredGroups.forEach(g => {
         if (g.members.length > 0) {
@@ -224,8 +246,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
       return;
     }
 
-    const id = this._catalogGroup.uniqueId;
-    const datasetId = id + "/" + ckanDataset.id;
+    const datasetId = this._catalogGroup.uniqueId + "/" + ckanDataset.id;
 
     // Create a computed stratum to pass shared configuration down to items
     const inheritedPropertiesStratum = createInheritedCkanSharedTraitsStratum(
@@ -307,15 +328,13 @@ export default class CkanCatalogGroup extends UrlMixin(
     }
   }
 
-  protected forceLoadMembers(): Promise<void> {
-    return this.loadMetadata().then(() => {
-      const ckanServerStratum = <CkanServerStratum | undefined>(
-        this.strata.get(CkanServerStratum.stratumName)
-      );
-      if (ckanServerStratum) {
-        ckanServerStratum.createMembersFromDatasets();
-      }
-    });
+  protected async forceLoadMembers() {
+    const ckanServerStratum = <CkanServerStratum | undefined>(
+      this.strata.get(CkanServerStratum.stratumName)
+    );
+    if (ckanServerStratum) {
+      await runLater(() => ckanServerStratum.createMembersFromDatasets());
+    }
   }
 }
 

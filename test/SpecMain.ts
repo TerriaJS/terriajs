@@ -1,4 +1,3 @@
-/*global require*/
 /// <reference types="jasmine" />
 import "../lib/Core/prerequisites";
 import "jasmine-ajax";
@@ -8,7 +7,8 @@ import registerCatalogMembers from "../lib/Models/registerCatalogMembers";
 
 configure({
   enforceActions: true,
-  computedRequiresReaction: true
+  computedRequiresReaction: true,
+  computedConfigurable: true // so that we can spy on computed items
 });
 
 registerCatalogMembers();
@@ -20,8 +20,8 @@ spy(event => {
   }
 });
 
-beforeEach(function() {
-  i18next.init({
+beforeAll(async function() {
+  await i18next.init({
     lng: "cimode",
     debug: false
   });

@@ -53,7 +53,9 @@ export default class ColorPalette {
   private _colors: Color[];
 
   constructor(readonly colors: string[]) {
-    this._colors = colors.map(color => Color.fromCssColorString(color));
+    this._colors = colors.map(
+      color => Color.fromCssColorString(color) ?? Color.TRANSPARENT
+    );
   }
 
   selectColor(index: number): Color {

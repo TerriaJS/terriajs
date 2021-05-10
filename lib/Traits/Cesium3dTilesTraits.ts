@@ -14,6 +14,7 @@ import TransformationTraits from "./TransformationTraits";
 import PlaceEditorTraits from "./PlaceEditorTraits";
 import primitiveArrayTrait from "./primitiveArrayTrait";
 import ClippingPlanesTraits from "./ClippingPlanesTraits";
+import HighlightColorTraits from "./HighlightColorTraits";
 
 export class FilterTraits extends ModelTraits {
   @primitiveTrait({
@@ -100,6 +101,7 @@ export class OptionsTraits extends ModelTraits {
 }
 
 export default class Cesium3DTilesTraits extends mixTraits(
+  HighlightColorTraits,
   PlaceEditorTraits,
   TransformationTraits,
   FeatureInfoTraits,
@@ -168,14 +170,6 @@ export default class Cesium3DTilesTraits extends mixTraits(
       "When the colorBlendMode is MIX this value is used to interpolate between source color and feature color. A value of 0.0 results in the source color while a value of 1.0 results in the feature color, with any value in-between resulting in a mix of the source color and feature color."
   })
   colorBlendAmount = 0.5;
-
-  @primitiveTrait({
-    name: "Highlight color",
-    type: "string",
-    description:
-      "The color used to highlight a feature when it is picked. If not set, this defaults to `Terria.baseMapContrastColor`"
-  })
-  highlightColor?: string;
 
   @primitiveArrayTrait({
     name: "Feature ID properties",

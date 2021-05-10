@@ -18,13 +18,14 @@ import { observer } from "mobx-react";
 import CustomComponent from "../Custom/CustomComponent";
 import FeatureInfoDownload from "./FeatureInfoDownload";
 import formatNumberForLocale from "../../Core/formatNumberForLocale";
-import Icon from "../Icon";
+import Icon from "../../Styled/Icon";
 import propertyGetTimeValues from "../../Core/propertyGetTimeValues";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import { withTranslation } from "react-i18next";
 
 import Styles from "./feature-info-section.scss";
 import { runInAction } from "mobx";
+import TableMixin from "../../ModelMixins/TableMixin";
 
 // We use Mustache templates inside React views, where React does the escaping; don't escape twice, or eg. " => &quot;
 Mustache.escape = function(string) {
@@ -84,40 +85,54 @@ export const FeatureInfoSection = observer(
     },
 
     getTemplateData() {
-      const propertyData = this.getPropertyValues();
-      if (defined(propertyData)) {
-        // Properties accessible as {name, value} array; useful when you want
-        // to iterate anonymous property values in the mustache template.
-        propertyData.properties = Object.entries(propertyData).map(
-          ([name, value]) => ({
-            name,
-            value
-          })
-        );
-        propertyData.terria = {
-          formatNumber: mustacheFormatNumberFunction,
-          formatDateTime: mustacheFormatDateTime,
-          urlEncodeComponent: mustacheURLEncodeTextComponent,
-          urlEncode: mustacheURLEncodeText
-        };
-        if (this.props.position) {
-          const latLngInRadians = Ellipsoid.WGS84.cartesianToCartographic(
-            this.props.position
-          );
-          propertyData.terria.coords = {
-            latitude: CesiumMath.toDegrees(latLngInRadians.latitude),
-            longitude: CesiumMath.toDegrees(latLngInRadians.longitude)
-          };
-        }
-        if (this.props.catalogItem) {
-          propertyData.terria.currentTime = this.props.catalogItem.discreteTime;
-        }
-        propertyData.terria.timeSeries = getTimeSeriesChartContext(
-          this.props.catalogItem,
-          this.props.feature,
-          propertyData._terria_getChartDetails
-        );
+      const propertyData = Object.assign({}, this.getPropertyValues());
+
+      // Alises is a map from `key` (which exists in propertyData.properties) to some `aliasKey` which needs to resolve to `key`
+      // and Yes, this is awful, but not that much worse than what was done in V7
+      let aliases = [];
+      if (TableMixin.isMixedInto(this.props.catalogItem)) {
+        aliases = this.props.catalogItem.columns
+          .filter(col => col.name && col.title && col.name !== col.title)
+          .map(col => [col.name, col.title]);
       }
+      // Only assign alias if it is undefined
+      aliases.forEach(aliasMap => {
+        propertyData[aliasMap[0]] =
+          propertyData[aliasMap[0]] ?? propertyData[aliasMap[1]];
+      });
+
+      // Properties accessible as {name, value} array; useful when you want
+      // to iterate anonymous property values in the mustache template.
+      propertyData.properties = Object.entries(propertyData).map(
+        ([name, value]) => ({
+          name,
+          value
+        })
+      );
+      propertyData.terria = {
+        formatNumber: mustacheFormatNumberFunction,
+        formatDateTime: mustacheFormatDateTime,
+        urlEncodeComponent: mustacheURLEncodeTextComponent,
+        urlEncode: mustacheURLEncodeText
+      };
+      if (this.props.position) {
+        const latLngInRadians = Ellipsoid.WGS84.cartesianToCartographic(
+          this.props.position
+        );
+        propertyData.terria.coords = {
+          latitude: CesiumMath.toDegrees(latLngInRadians.latitude),
+          longitude: CesiumMath.toDegrees(latLngInRadians.longitude)
+        };
+      }
+      if (this.props.catalogItem) {
+        propertyData.terria.currentTime = this.props.catalogItem.discreteTime;
+      }
+      propertyData.terria.timeSeries = getTimeSeriesChartContext(
+        this.props.catalogItem,
+        this.props.feature,
+        propertyData._terria_getChartDetails
+      );
+
       return propertyData;
     },
 
@@ -454,7 +469,7 @@ function parseValues(properties) {
   // JSON.parse property values that look like arrays or objects
   const result = {};
   for (const key in properties) {
-    if (properties.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(properties, key)) {
       let val = properties[key];
       if (
         val &&
@@ -480,7 +495,7 @@ function parseValues(properties) {
 function applyFormatsInPlace(properties, formats) {
   // Optionally format each property. Updates properties in place, returning nothing.
   for (const key in formats) {
-    if (properties.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(properties, key)) {
       // Default type if not provided is number.
       if (
         !defined(formats[key].type) ||
@@ -519,7 +534,7 @@ function replaceBadKeyCharacters(properties) {
   }
   const result = {};
   for (const key in properties) {
-    if (properties.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(properties, key)) {
       const cleanKey = key.replace(/[.#]/g, "_");
       result[cleanKey] = replaceBadKeyCharacters(properties[key]);
     }
@@ -541,7 +556,7 @@ function areAllPropertiesConstant(properties) {
     return properties.isConstant;
   }
   for (const key in properties) {
-    if (properties.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(properties, key)) {
       result =
         result &&
         defined(properties[key]) &&
@@ -715,7 +730,7 @@ function describeFromProperties(
   }
   if (typeof properties === "object") {
     for (const key in properties) {
-      if (properties.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(properties, key)) {
         if (simpleStyleIdentifiers.indexOf(key) !== -1) {
           continue;
         }
@@ -786,6 +801,7 @@ function getTimeSeriesChartContext(catalogItem, feature, getChartDetails) {
       : feature.id;
     if (chartDetails) {
       const result = {
+        ...chartDetails,
         id: featureId.replace(/\"/g, ""),
         data: csvData.replace(/\\n/g, "\\n")
       };

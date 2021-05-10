@@ -121,3 +121,58 @@ Some rules:
 * The model with `ReferenceMixin` _may_ be in `terria.models`.
 * The `target` model must _not_ be in `terria.models`.
 * The instance referred to by the `target` property should remain stable (the same instance) whenever possible. But if something drastic changes (e.g. we need an instance of a different model class), it's possible for the `target` property to switch to pointing at an entirely new instance. So it's important to only hold on to references to the `ReferenceMixin` model and access the `target` as needed, rather than holding a reference to the `target` directly.
+
+# AsyncLoader
+
+The AsyncLoader class provides a way to memoize (of sorts) async requests. In a `forceLoadX` function you should load from an asynchronous service, transform the data into something that can be stored in 1 or multiple observables and then set those observables.
+
+It works by calling `loadCallback` in `@computed loadKeepAlive`. This `@computed` will update if observables change that were used in `loadCallback()`.Because we are using a `@computed` in this way - it is **very important** that no changes to `observables` are made **before an async call**.
+
+A **correct** example:
+
+```ts
+async function loadX() {
+  const url = this.someObservableUrl
+  const someData = await loadText(url)
+  runInAction(() => this.someOtherObservable = someData)
+}
+```
+
+This function will only be called *again* when `someObservableUrl` changes.
+
+------------------------
+
+If there is any synchronous processing present it should be pulled out of forceLoadX and placed into 1 or multiple computeds.
+
+An **incorrect** example:
+
+```ts
+async function loadX() {
+  const arg = this.someObservable
+  const someData = someSynchronousFn(arg)
+  runInAction(() => this.someOtherObservable = someData)
+}
+```
+
+Instead this should be in a `@computed`:
+
+```ts
+@computed 
+get newComputed {
+  return someSynchronousFn(this.someObservable);
+}
+```
+
+------------------------
+
+**Other tips**:
+
+- You can not nest together `AsyncLoaders`.
+  Eg.
+  ```ts
+  async function loadX() {
+    await loadY()
+  }
+  ```
+
+For more info, see `lib\Core\AsyncLoader.ts`

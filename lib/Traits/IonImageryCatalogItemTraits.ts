@@ -1,11 +1,13 @@
-import mixTraits from "./mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import LayerOrderingTraits from "./LayerOrderingTraits";
 import MappableTraits from "./MappableTraits";
-import RasterLayerTraits from "./RasterLayerTraits";
+import mixTraits from "./mixTraits";
 import primitiveTrait from "./primitiveTrait";
+import RasterLayerTraits from "./RasterLayerTraits";
 
 export default class IonImageryCatalogItemTraits extends mixTraits(
   RasterLayerTraits,
+  LayerOrderingTraits,
   MappableTraits,
   CatalogMemberTraits
 ) {

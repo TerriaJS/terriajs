@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require*/
 var TimelineStack = require("../../lib/Models/TimelineStack");
 var CatalogItem = require("../../lib/Models/CatalogItem");
 var Terria = require("../../lib/Models/Terria");

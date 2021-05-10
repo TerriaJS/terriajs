@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require,describe,it,expect*/
 var Reproject = require("../../lib/Map/Reproject");
 
 describe("Reproject", function() {

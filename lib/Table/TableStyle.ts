@@ -59,6 +59,15 @@ export default class TableStyle {
     return this.styleTraits.id || "Style" + this.styleNumber;
   }
 
+  @computed
+  get title(): string {
+    return (
+      this.styleTraits.title ??
+      this.tableModel.tableColumns.find(col => col.name === this.id)?.title ??
+      this.id
+    );
+  }
+
   /**
    * Gets the {@link TableStyleTraits} for this style. The traits are derived
    * from the default styles plus this style layered on top of the default.
@@ -158,7 +167,9 @@ export default class TableStyle {
    */
   @computed
   get timeColumn(): TableColumn | undefined {
-    return this.resolveColumn(this.timeTraits.timeColumn);
+    return this.timeTraits.timeColumn === null
+      ? undefined
+      : this.resolveColumn(this.timeTraits.timeColumn);
   }
 
   /**
@@ -313,7 +324,9 @@ export default class TableStyle {
     const result: Color[] = [];
     for (let i = 0; i < numberOfBins; ++i) {
       if (i < binColors.length) {
-        result.push(Color.fromCssColorString(binColors[i]));
+        result.push(
+          Color.fromCssColorString(binColors[i]) ?? Color.TRANSPARENT
+        );
       } else {
         result.push(this.colorPalette.selectColor(i));
       }
@@ -410,8 +423,8 @@ export default class TableStyle {
           };
         }),
         nullColor: colorTraits.nullColor
-          ? Color.fromCssColorString(colorTraits.nullColor)
-          : new Color(0.0, 0.0, 0.0, 0.0)
+          ? Color.fromCssColorString(colorTraits.nullColor) ?? Color.TRANSPARENT
+          : Color.TRANSPARENT
       });
     } else if (
       colorColumn &&
@@ -419,9 +432,9 @@ export default class TableStyle {
         colorColumn.type === TableColumnType.region ||
         colorColumn.type === TableColumnType.text)
     ) {
-      const regionColor = Color.fromCssColorString(
-        this.colorTraits.regionColor
-      );
+      const regionColor =
+        Color.fromCssColorString(this.colorTraits.regionColor) ??
+        Color.TRANSPARENT;
       return new EnumColorMap({
         enumColors: filterOutUndefined(
           this.enumColors.map(e => {
@@ -432,14 +445,14 @@ export default class TableStyle {
               value: e.value,
               color:
                 colorColumn.type !== TableColumnType.region
-                  ? Color.fromCssColorString(e.color)
+                  ? Color.fromCssColorString(e.color) ?? Color.TRANSPARENT
                   : regionColor
             };
           })
         ),
         nullColor: colorTraits.nullColor
-          ? Color.fromCssColorString(colorTraits.nullColor)
-          : new Color(0.0, 0.0, 0.0, 0.0)
+          ? Color.fromCssColorString(colorTraits.nullColor) ?? Color.TRANSPARENT
+          : Color.TRANSPARENT
       });
     } else {
       // No column to color by, so use the same color for everything.

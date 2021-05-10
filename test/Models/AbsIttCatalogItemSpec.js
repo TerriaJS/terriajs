@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require, fail*/
 var Rectangle = require("terriajs-cesium/Source/Core/Rectangle").default;
 
 var Terria = require("../../lib/Models/Terria");
