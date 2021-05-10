@@ -8,6 +8,7 @@ Change Log
 * Fix invalid HTML in `DataPreviewSections`.
 * Fix pluralisation of mapDataState to support other languages.
 * Fix CSW `Stratum` name bug.
+* Modifies `IndexedItemSearchProvider` to reflect changes to `terriajs-indexer` file format.
 * [The next improvement]
 
 #### 8.0.0-alpha.80
