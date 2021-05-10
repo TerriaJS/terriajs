@@ -6,6 +6,7 @@ Change Log
 #### next release (8.0.0-alpha.81)
 
 * Fix invalid HTML in `DataPreviewSections`.
+* Fix CSW `Stratum` name bug.
 * [The next improvement]
 
 #### 8.0.0-alpha.80
