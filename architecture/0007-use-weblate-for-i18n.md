@@ -1,6 +1,6 @@
 # 7. Use weblate for i18n
 
-Date: 2020-05-07
+Date: 2021-05-07
 
 ## Status
 
