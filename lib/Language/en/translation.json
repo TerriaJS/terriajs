@@ -179,6 +179,9 @@
     "n": "N",
     "elev": "Elev"
   },
+  "languagePanel": {
+    "changeLanguage": "Change Language"
+  },
   "share": {
     "browserPrint": "For better printed results, please use {{appName}}'s Print button instead of your web browser's print feature.",
     "shortLinkShortening": "Shortening...",
@@ -216,11 +219,9 @@
     "recount": "Recount",
     "title": "Count Datasets",
     "btnCount": "Count datasets",
-    "enabledOnMap": "enabled on map",
     "noMapDataEnabled": "No map data enabled",
-    "datasetSingular": "dataset",
-    "datasetPlural": "datasets",
-    "mapDataState": "{{numberOfDatasets}} {{singularOrPlural}} $t(countDatasets.enabledOnMap)"
+    "mapDataState": "{{count}} dataset enabled on map",
+    "mapDataState_plural": "{{count}} datasets enabled on map"
   },
   "toolsPanel": {
     "btnText": "Tool",

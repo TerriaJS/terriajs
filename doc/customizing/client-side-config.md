@@ -5,6 +5,7 @@ It has following structure:
 |Name|Required|Type|Default|Description|
 |----|--------|----|-------|-----------|
 |[initializationUrls](#intializationurls)|yes|**string[]**|[]|The list of initialization files which define the catalog content, for more details check [below](#intializationurls).|
+|[v7initializationUrls](#v7initializationUrls)|yes|**string[]**|[]|The list of v7 initialization files &mdash; these will be converted to v8 on the fly using [`catalog-converter`](https://github.com/TerriaJS/catalog-converter). For more details check [below](#v7initializationUrls).|
 |parameters|yes|**[Parameters](#parameters)**||TerriaJS configuration options|
 
 **Example**
@@ -29,7 +30,7 @@ If a string ends with `.json`, it is assumed to be a complete relative or absolu
 
 If the string does not end with `.json`, such as `"foo"`, it refers to an init file on the same web server at `init/foo.json`.  In a TerriaMap directory on your computer, it can be found at `wwwroot/init/foo.json`.
 
-### v7intializationUrls
+### v7initializationUrls
 
 It is also possible to add version 7 init files &mdash; these will be converted on-the-fly in `terriajs` when a map is loaded. See [`catalog-converter`](https://github.com/TerriaJS/catalog-converter) repo for more information.
 
@@ -57,7 +58,8 @@ Specifies various options for configuring TerriaJS:
 |`interceptBrowserPrint`|no|**boolean**|`true`|True (the default) to intercept the browser's print feature and use a custom one accessible through the Share panel.|
 |`tabbedCatalog`|no|**boolean**|`false`|True to create a separate explorer panel tab for each top-level catalog group to list its items in.|
 |`useCesiumIonTerrain`|no|**boolean**|`true`|True to use Cesium World Terrain from Cesium ion. False to use terrain from the URL specified with the `"cesiumTerrainUrl"` property. If this property is false and `"cesiumTerrainUrl"` is not specified, the 3D view will use a smooth ellipsoid instead of a terrain surface. Defaults to true.|
-|`cesiumTerrainUrl`|no|**string**|undefined|The URL to use for Cesium terrain in the 3D Terrain viewer, in quantized mesh format. This property is ignored if "useCesiumIonTerrain" is set to true.|
+|`cesiumTerrainUrl`|no|**string**|undefined|The URL to use for Cesium terrain in the 3D Terrain viewer, in quantized mesh format. This property is ignored if "useCesiumIonTerrain" is set to true, or if `cesiumTerrainAssetId` is present.|
+|`cesiumTerrainAssetId`|no|**number**|undefined|The Cesium Ion Asset ID to use for Cesium terrain in the 3D Terrain viewer. `cesiumIonAccessToken` will be used to authenticate. This property is ignored if "useCesiumIonTerrain" is set to true.|
 |`cesiumIonAccessToken`|no|**string**|undefined|The access token to use with Cesium ion. If `"useCesiumIonTerrain"` is true and this property is not specified, the Cesium default Ion key will be used. It is a violation of the Ion terms of use to use the default key in a deployed application.|
 |`useCesiumIonBingImagery`|no|**boolean**|`true`|True to use Bing Maps from Cesium ion (Cesium World Imagery). By default, Ion will be used, unless the `bingMapsKey` property is specified, in which case that will be used instead. To disable the Bing Maps layers entirely, set this property to false and set `bingMapsKey` to null.|
 |`bingMapsKey`|no|**string**|undefined|A [Bing Maps API key](https://msdn.microsoft.com/en-us/library/ff428642.aspx) used for requesting Bing Maps base maps and using the Bing Maps geocoder for searching. It is your responsibility to request a key and comply with all terms and conditions.|

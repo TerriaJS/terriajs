@@ -245,6 +245,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
     config.devServer = config.devServer || {
         stats: 'minimal',
         port: 3003,
+        open: true,
         contentBase: 'wwwroot/',
         proxy: {
             '*': {

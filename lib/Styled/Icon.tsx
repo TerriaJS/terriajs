@@ -131,8 +131,8 @@ interface IconProps {
   glyph: { id: string };
   style?: any;
   className?: string;
+  rotation?: number;
 }
-
 export const Icon: React.FC<IconProps> = (props: IconProps) => {
   return (
     <svg
@@ -142,6 +142,7 @@ export const Icon: React.FC<IconProps> = (props: IconProps) => {
       css={`
         display: block;
       `}
+      transform={`rotate(${props.rotation ?? 0})`}
     >
       <use xlinkHref={"#" + props.glyph.id} />
     </svg>
