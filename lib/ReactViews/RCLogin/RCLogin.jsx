@@ -48,8 +48,14 @@ const RCLogin = props => {
 
   return (
     <div style={{ padding: "16px" }}>
-      <AmplifyAuthenticator usernameAlias="email">
-        <AmplifySignIn federated={false} usernameAlias="email" slot="sign-in" />
+      <AmplifyAuthenticator federated={{}} usernameAlias="email">
+        <div slot="sign-in">
+          <AmplifySignIn>
+            <div slot="federated-buttons">
+              {/*  Left empty to override the AWS federated buttons*/}
+            </div>
+          </AmplifySignIn>
+        </div>
         <AmplifySignUp
           usernameAlias="email"
           slot="sign-up"
