@@ -711,15 +711,17 @@ export default class CswCatalogGroup extends UrlMixin(
   }
 
   protected async forceLoadMetadata(): Promise<void> {
-    if (this.strata.get(CswStratum.name) !== undefined) return;
+    if (this.strata.get(CswStratum.stratumName) !== undefined) return;
     const stratum = await CswStratum.load(this);
     runInAction(() => {
-      this.strata.set(CswStratum.name, stratum);
+      this.strata.set(CswStratum.stratumName, stratum);
     });
   }
 
   protected async forceLoadMembers(): Promise<void> {
-    const cswStratum = <CswStratum | undefined>this.strata.get(CswStratum.name);
+    const cswStratum = <CswStratum | undefined>(
+      this.strata.get(CswStratum.stratumName)
+    );
     if (cswStratum) {
       await runLater(() => cswStratum.createMembersFromLayers());
     }
