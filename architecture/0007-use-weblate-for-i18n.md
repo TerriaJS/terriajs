@@ -16,7 +16,12 @@ It would not be workable or scalable for translators to provide these translatio
 
 We will use hosted weblate at https://hosted.weblate.org/projects/terriajs/ to allow external translators to contribute to the project. There will be two projects, one connected to the master branch and another connected to the next branch.
 
-When the en/translation.json is updated, our weblate plugin and associated webhook will let the hosted weblate know and weblate will pull the updated changes. When a contributing translator provides translations, weblate will create a PR into the corresponding branch allowing a terria mainter to review the changes before merging the changes.
+When the en/translation.json is updated, our weblate plugin and associated webhook will let the hosted weblate know and weblate will pull the updated changes. When a contributing translator provides translations, weblate will create a PR into the corresponding branch allowing a terria maintainer to review the changes before merging the changes.
+
+In the case of a change to a source string within the en/translation.json file, weblate will automatically flag the string as 'needs editing' in the other languages.
+
+For new (lang_code)/translation.json files, the initial import will cause the translated strings to show up within the weblate interface. Once this is done, further translations should be done within the weblate interface as it will allow us to keep track of the translation progress and keep it in sync with the main en/translation.json file.
+
 
 ![weblate workflow](./imgs/weblate_process.png)
 
@@ -24,4 +29,4 @@ When the en/translation.json is updated, our weblate plugin and associated webho
 
 This will allow external translators to contribute translations via the hosted weblate interface. Weblate will also tell us what percentage of strings are translated and provide a workflow for reviewing translations before merging back in.
 
-This will tie our translation process into the weblate ecosystem which is a paid service and will also add additional complexity to terriajs. This is also currently only set up for terriajs and will require additional set up to provide translations for map specific strings.
+This will tie our translation process into the weblate ecosystem which is a paid service and will also add additional complexity to terriajs. This is also currently only set up for terriajs and will require additional set up to provide translations for map specific strings. We also do not have RTL language set up and additional work will be required to support these langauges.
