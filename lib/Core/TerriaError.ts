@@ -34,7 +34,10 @@ export enum TerriaErrorSeverity {
    * - TileErrors
    */
   Error,
-  /** Errors which can be ignored by the user. These will be printed to console */
+  /** Errors which can be ignored by the user. These will be printed to console s
+   * For example:
+   * - Failing to load models (from share links or stories) if they are **NOT** in the workbench
+   */
   Warning
 }
 
