@@ -2,10 +2,10 @@ import { computed } from "mobx";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
-import Model from "../Models/Model";
+import Result from "../Core/Result";
+import Model, { BaseModel } from "../Models/Model";
 import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
 import AccessControlMixin from "./AccessControlMixin";
-import ChartableMixin from "./ChartableMixin";
 import GroupMixin from "./GroupMixin";
 import MappableMixin from "./MappableMixin";
 import ReferenceMixin from "./ReferenceMixin";
@@ -45,8 +45,10 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       );
     }
 
-    loadMetadata(): Promise<void> {
-      return this._metadataLoader.load();
+    async loadMetadata(): Promise<Result<void>> {
+      return (await this._metadataLoader.load()).clone(
+        `Failed to load \`${getName(this)}\` metadata`
+      );
     }
 
     /**
@@ -154,3 +156,11 @@ namespace CatalogMemberMixin {
 }
 
 export default CatalogMemberMixin;
+
+export function getName(model: BaseModel) {
+  return (
+    (CatalogMemberMixin.isMixedInto(model)
+      ? model.nameInCatalog ?? model.name
+      : undefined) ?? model.uniqueId
+  );
+}

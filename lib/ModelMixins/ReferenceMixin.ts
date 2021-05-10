@@ -2,6 +2,7 @@ import { observable, runInAction, untracked } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
+import Result from "../Core/Result";
 import Model, { BaseModel, ModelInterface } from "../Models/Model";
 import ModelTraits from "../Traits/ModelTraits";
 
@@ -10,7 +11,7 @@ type RequiredTraits = ModelTraits;
 interface ReferenceInterface extends ModelInterface<RequiredTraits> {
   readonly isLoadingReference: boolean;
   readonly target: BaseModel | undefined;
-  loadReference(): Promise<void>;
+  loadReference(): Promise<Result<void>>;
 }
 /**
  * A mixin for a Model that acts as a "reference" to another Model, which is its "true"
@@ -73,7 +74,7 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
      * @param forceReload True to force the load to happen again, even if nothing
      *        appears to have changed since the last time it was loaded.
      */
-    loadReference(forceReload: boolean = false): Promise<void> {
+    loadReference(forceReload: boolean = false) {
       return this._referenceLoader.load(forceReload);
     }
 

@@ -499,11 +499,19 @@ export default class Terria {
     return this.error.addEventListener(e => fn(e));
   }
 
-  raiseErrorToUser(error: unknown) {
+  raiseErrorToUser(
+    error: unknown,
+    /** Override error severity */
+
+    severity?: TerriaErrorSeverity
+  ) {
     if (this.userProperties.get("ignoreErrors") === "1") {
       return;
     }
     const terriaError = TerriaError.from(error);
+    if (isDefined(severity)) {
+      terriaError.severity = severity;
+    }
     if (terriaError.shouldRaiseToUser && !terriaError.raisedToUser) {
       terriaError.raisedToUser = true;
       this.error.raiseEvent(terriaError);
@@ -793,7 +801,7 @@ export default class Terria {
   /**
    * Asynchronously loads init sources
    */
-  loadInitSources(): Promise<void> {
+  loadInitSources() {
     return this._initSourceLoader.load();
   }
 

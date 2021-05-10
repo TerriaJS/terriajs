@@ -82,18 +82,21 @@ export const DataCatalogItem = observer(
     },
 
     async setPreviewedItem() {
-      // raiseErrorOnRejectedPromise(this.props.item.terria, this.props.item.load());
-      if (this.props.item.loadMetadata) {
-        await this.props.item.loadMetadata();
+      try {
+        if (this.props.item.loadMetadata) {
+          await this.props.item.loadMetadata();
+        }
+        if (this.props.item.loadReference) {
+          await this.props.item.loadReference();
+        }
+        this.props.viewState.viewCatalogMember(this.props.item);
+        // mobile switch to nowvewing
+        this.props.viewState.switchMobileView(
+          this.props.viewState.mobileViewOptions.preview
+        );
+      } catch (e) {
+        this.props.terria.raiseErrorToUser(e);
       }
-      if (this.props.item.loadReference) {
-        await this.props.item.loadReference();
-      }
-      this.props.viewState.viewCatalogMember(this.props.item);
-      // mobile switch to nowvewing
-      this.props.viewState.switchMobileView(
-        this.props.viewState.mobileViewOptions.preview
-      );
     },
 
     isSelected() {

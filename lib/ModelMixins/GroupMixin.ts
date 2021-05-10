@@ -11,7 +11,7 @@ import Group from "../Models/Group";
 import Model, { BaseModel } from "../Models/Model";
 import GroupTraits from "../Traits/GroupTraits";
 import ModelReference from "../Traits/ModelReference";
-import CatalogMemberMixin from "./CatalogMemberMixin";
+import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
 
 function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
   abstract class GroupMixin extends Base implements Group {
@@ -70,14 +70,23 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
      * should be complete, but the individual members will not necessarily be
      * loaded themselves.
      */
-    async loadMembers(): Promise<void> {
-      try {
-        if (CatalogMemberMixin.isMixedInto(this)) await this.loadMetadata();
-        await this._memberLoader.load();
-      } finally {
-        this.refreshKnownContainerUniqueIds(this.uniqueId);
-        this.addShareKeysToMembers();
-      }
+    async loadMembers(): Promise<Result<void>> {
+      let errors: TerriaError[] = [];
+
+      // Call loadMetadata if CatalogMemberMixin
+      if (CatalogMemberMixin.isMixedInto(this))
+        (await this.loadMetadata()).pushErrorTo(errors);
+
+      // Call Group AsyncLoader if no errors occurred while loading metadata
+      if (errors.length === 0)
+        (await this._memberLoader.load()).pushErrorTo(errors);
+
+      this.refreshKnownContainerUniqueIds(this.uniqueId);
+      this.addShareKeysToMembers();
+
+      return Result.none(
+        TerriaError.combine(errors, `Failed to load group \`${getName(this)}\``)
+      );
     }
 
     @action

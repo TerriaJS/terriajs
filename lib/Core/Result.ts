@@ -79,7 +79,7 @@ import { NotUndefined } from "./TypeModifiers";
  * ```
  */
 export default class Result<T = undefined> {
-  /** Convenience constructor  to return a Result with an error */
+  /** Convenience constructor to return a Result with an error */
   static error(error: TerriaErrorOptions | TerriaError): Result<undefined> {
     return new Result(
       undefined,
@@ -88,8 +88,9 @@ export default class Result<T = undefined> {
     );
   }
 
-  static none() {
-    return new Result(undefined);
+  /** Convenience constructor to return a Result with no result (and potentially an error) */
+  static none(error?: TerriaErrorOptions | TerriaError) {
+    return error ? Result.error(error) : new Result(undefined);
   }
 
   /** Convenience constructor  to return a new Result with a vaule and/or error */
@@ -154,5 +155,19 @@ export default class Result<T = undefined> {
       message: "Unhandled required Result exception",
       ...errorOverrides
     });
+  }
+
+  pushErrorTo(errors: TerriaError[], errorOverrides?: TerriaErrorOverrides) {
+    if (this._error) errors.push(TerriaError.from(this._error, errorOverrides));
+  }
+
+  /** Clone this `Result` and apply `TerriaErrorOverrides` if there is an error */
+  clone(errorOverrides: TerriaErrorOverrides): Result<T> {
+    if (this._error)
+      return new Result(
+        this.value,
+        TerriaError.from(this._error, errorOverrides)
+      );
+    return new Result(this.value);
   }
 }

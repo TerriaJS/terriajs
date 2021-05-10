@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { action, computed, observable } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
-import TerriaError from "../Core/TerriaError";
+import TerriaError, { TerriaErrorSeverity } from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import ChartableMixin from "../ModelMixins/ChartableMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
@@ -199,12 +199,11 @@ export default class Workbench {
       }
     } catch (e) {
       this.remove(item);
-      throw e instanceof TerriaError
-        ? e
-        : new TerriaError({
-            title: i18next.t("workbench.addItemErrorTitle"),
-            message: i18next.t("workbench.addItemErrorMessage")
-          });
+      throw TerriaError.from(e, {
+        title: i18next.t("workbench.addItemErrorTitle"),
+        message: i18next.t("workbench.addItemErrorMessage"),
+        severity: TerriaErrorSeverity.Error
+      });
     }
   }
 

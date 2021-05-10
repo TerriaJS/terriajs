@@ -79,7 +79,7 @@ export default class TerriaError {
   private readonly _message: string | I18nTranslateString;
   private readonly _title: string | I18nTranslateString;
   private readonly useTerriaErrorNotification: boolean;
-  readonly severity: TerriaErrorSeverity | (() => TerriaErrorSeverity);
+  severity: TerriaErrorSeverity | (() => TerriaErrorSeverity);
 
   /** `sender` isn't really used for anything at the moment... */
   readonly sender: unknown;
