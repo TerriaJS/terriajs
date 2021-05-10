@@ -1,3 +1,4 @@
+import { AmplifyS3Image } from "@aws-amplify/ui-react";
 import { API, graphqlOperation } from "aws-amplify";
 import React from "react";
 import { withRouter } from "react-router-dom";
@@ -40,8 +41,11 @@ class RCStoryList extends React.Component {
             {stories.map(story => {
               return (
                 <tr className={Styles.storycard} key={story.id}>
-                  <td className={Styles.storyimage}>
-                    <img src={story.image?.url} />
+                  <td>
+                    <AmplifyS3Image
+                      className={Styles.storyimage}
+                      imgKey={story.image?.id}
+                    />
                   </td>
                   <td className={Styles.storytitle}>{story.title}</td>
                   <td>
