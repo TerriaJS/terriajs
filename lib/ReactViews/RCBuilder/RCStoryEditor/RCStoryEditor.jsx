@@ -1,3 +1,4 @@
+import { AmplifyS3Image } from "@aws-amplify/ui-react";
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import PropTypes from "prop-types";
 import { default as React, useEffect, useRef, useState } from "react";
@@ -22,7 +23,7 @@ function RCStoryEditor(props) {
   const [selectHotspotSubscription, setSelectHotspotSubscription] = useState(
     null
   );
-  const [image, setImage] = useState("");
+  const [images, setImages] = useState([]);
   const [message, setMessage] = useState("");
   const [sectorRequiredMessage, setSectorRequiredMessage] = useState("*");
 
@@ -45,7 +46,7 @@ function RCStoryEditor(props) {
         setShortDescription(data.shortDescription);
         setSelectedSectors(data.sectors);
         setHotspotPoint(data.hotspotlocation);
-        setImage(data.image);
+        setImages([data.image]);
       });
     } catch (error) {
       console.log(error);
@@ -161,7 +162,7 @@ function RCStoryEditor(props) {
           image.id = result.key;
           image.url = await Storage.get(result.key);
 
-          setImage(image);
+          setImages([image]);
           setFiles([]);
         } catch (error) {
           setMessage("Error uploading file: ", error);
@@ -261,7 +262,15 @@ function RCStoryEditor(props) {
         </div>
         <div className={Styles.group}>
           <label className={Styles.topLabel}>Image</label>
-          <img className={Styles.image} src={image?.url} />
+          {images.map(image => {
+            return (
+              <AmplifyS3Image
+                key={image.id}
+                className={Styles.image}
+                imgKey={image.id}
+              />
+            );
+          })}
           <section className={Styles.dropContainer}>
             <div {...getRootProps({ className: "dropzone" })}>
               <input {...getInputProps()} />
