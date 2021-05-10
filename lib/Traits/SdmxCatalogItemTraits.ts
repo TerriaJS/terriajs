@@ -1,6 +1,7 @@
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
+import MappableTraits from "./MappableTraits";
 import mixTraits from "./mixTraits";
 import objectArrayTrait from "./objectArrayTrait";
 import primitiveTrait from "./primitiveTrait";
@@ -19,7 +20,7 @@ export class SdmxDimensionTraits extends DimensionTraits {
 }
 export default class SdmxCatalogItemTraits extends mixTraits(
   SdmxCommonTraits,
-
+  MappableTraits,
   UrlTraits,
   DiscretelyTimeVaryingTraits,
   FeatureInfoTraits,

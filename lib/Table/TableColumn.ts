@@ -84,7 +84,8 @@ export default class TableColumn {
     this.tableModel = tableModel;
   }
 
-  /**
+  /** rawValues
+   *
    * Gets the raw, uninterpreted values in the column. This will not apply any transformations to data (eg transformation expressions).
    * For typed (and transformed values) please use valuesForType instead.
    *
@@ -766,6 +767,10 @@ export default class TableColumn {
     };
   }
 
+  /**
+   * Get column values formatted by type - for example - dates, numbers, regions...
+   * To get raw string column values @see rawValues
+   */
   @computed
   get values() {
     const values: (string | number | null)[] = [];

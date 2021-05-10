@@ -5,9 +5,24 @@ Change Log
 
 #### next release (8.0.0-alpha.81)
 
+- **Breaking changes**
+  - TableColumn `values` will now return typed values. For raw string values use `rawValues`.
+
 * Fix invalid HTML in `DataPreviewSections`.
 * Fix pluralisation of mapDataState to support other languages.
 * Fix CSW `Stratum` name bug.
+* Add `canZoomTo` to `TableMixin`
+* SDMX changes:
+  * Add better SDMX server error messages
+  * `conceptOverrides` is now `modelOverrides` - as dataflow dimension traits can now be overridden by codelist ID (which is higher priortiy than concept ID)
+  * `modelOverrides` are created for SDMX common concepts `UNIT_MEASURE`, `UNIT_MULT` and `FREQ`
+    * `UNIT_MEASURE` will be displayed on legends and charts
+    * `UNIT_MULT` will be used to multiple the primary measure by `10^x`
+    * `FREQ` will be displayed as "units" in Legends and charts (eg "Monthly")
+  * Single values will now be displayed in `ShortReportSections`
+  * Custom feature info template to show proper dimension names + time-series chart
+  * Smarter region-mapping
+  * Removed `viewMode` - not needed now due to better handling of time-series
 * [The next improvement]
 
 #### 8.0.0-alpha.80

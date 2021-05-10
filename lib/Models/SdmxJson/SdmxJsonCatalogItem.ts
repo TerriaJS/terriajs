@@ -65,13 +65,8 @@ export default class SdmxJsonCatalogItem
     return super.cacheDuration || "1d";
   }
 
-  @computed
-  get canZoomTo() {
-    return this.activeTableStyle.latitudeColumn !== undefined;
-  }
-
   /**
-   * Map SdmxDataflowStratum.dimensions to selectable dimensions
+   * Map SdmxDimensionTraits to SelectableDimension
    */
   @computed
   get sdmxSelectableDimensions(): SelectableDimension[] {
@@ -110,31 +105,6 @@ export default class SdmxJsonCatalogItem
   }
 
   /**
-   * Returns string compliant with the KeyType defined in the SDMX WADL (period separated dimension values) - dimension order is very important!
-   */
-  @computed get dataKey(): string {
-    const max = this.dimensions.length;
-    // We must sort the dimensions by position as traits lose their order across strata
-    return (
-      this.dimensions
-        .slice()
-        .sort(
-          (a, b) =>
-            (isDefined(a.position) ? a.position : max) -
-            (isDefined(b.position) ? b.position : max)
-        )
-        // If a dimension is disabled, use empty string (which is wildcard)
-        .map(dim =>
-          !dim.disable &&
-          this.columns.find(col => col.name === dim.id)?.type !== "region"
-            ? dim.selectedId
-            : ""
-        )
-        .join(".")
-    );
-  }
-
-  /**
    * Returns base URL (from traits), as SdmxJsonCatalogItem will override `url` property with SDMX Data request
    */
   @computed
@@ -145,7 +115,27 @@ export default class SdmxJsonCatalogItem
   @computed
   get url() {
     if (!super.url) return;
-    return `${super.url}/data/${this.dataflowId}/${this.dataKey}`;
+
+    // Get dataKey - this is used to filter dataflows by dimension values - it must be compliant with the KeyType defined in the SDMX WADL (period separated dimension values) - dimension order is very important!
+    // We must sort the dimensions by position as traits lose their order across strata
+
+    const dataKey = this.dimensions
+      .slice()
+      .sort(
+        (a, b) =>
+          (isDefined(a.position) ? a.position : this.dimensions.length) -
+          (isDefined(b.position) ? b.position : this.dimensions.length)
+      )
+      // If a dimension is disabled, use empty string (which is wildcard)
+      .map(dim =>
+        !dim.disable &&
+        this.columns.find(col => col.name === dim.id)?.type !== "region"
+          ? dim.selectedId
+          : ""
+      )
+      .join(".");
+
+    return `${super.url}/data/${this.dataflowId}/${dataKey}`;
   }
 
   protected async forceLoadTableData() {

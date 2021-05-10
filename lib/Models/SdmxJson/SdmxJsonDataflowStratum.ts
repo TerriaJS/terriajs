@@ -40,10 +40,15 @@ import {
 } from "./SdmxJsonStructureMessage";
 
 export interface SdmxJsonDataflow {
+  /** metadata for dataflow (eg description) */
   dataflow: Dataflow;
+  /** lists this dataflow's dimensions (including time), attributes, primary measure, ... */
   dataStructure: DataStructure;
+  /** codelists describe dimension/attribute values (usually to make them human-readable) */
   codelists?: CodeLists;
+  /** concept schemes: used to describe dimensions and attributes */
   conceptSchemes?: ConceptSchemes;
+  /** contentConstraints: describe allowed values for enumeratted dimensions/attributes */
   contentConstraints?: ContentConstraints;
 }
 export class SdmxJsonDataflowStratum extends LoadableStratum(
@@ -59,11 +64,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   }
 
   /**
-   * Load SDMX-JSON dataflow structure - will also load references:
-   * - data structure: dimensions (including time), attributes, primary measure
-   * - concept schemes: used to describe dimensions and attributes
-   * - codelists: used to describe dimension/attribute values (usually to make them human-readable)
-   * - contentConstraints: describe allowed values for enumeratted dimensions/attributes
+   * Load SDMX-JSON dataflow - will also load references (dataStructure, codelists, conceptSchemes, contentConstraints)
    */
   static async load(
     catalogItem: SdmxJsonCatalogItem
@@ -162,12 +163,13 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   // ------------- START SDMX TRAITS STRATUM -------------
 
   /**
-   * This essentially maps SDMX-JSON dataflow structure to SdmxDimensionTraits - it uses:
-   * - Data structure's dimensions (filtered to only include enumerated dimensions)
+   * This maps SDMX-JSON dataflow structure to SdmxDimensionTraits - it uses:
+   * - Data structure's dimensions (filtered to only include "enumerated" dimensions)
    * - Content constraints to find dimension options
    * - Codelists to add human readable labels to dimension options
    *
    * It will also apply ModelOverrides - which are used to override dimension values based on concept/codelist ID.
+   * - @see ModelOverrideTraits
    */
   @computed
   get dimensions(): StratumFromTraits<SdmxDimensionTraits>[] | undefined {
@@ -177,8 +179,8 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     if (!Array.isArray(dimensionList) || dimensionList.length === 0) return;
 
     // Contraint contains allowed dimension values for a given dataflow
-    // Get 'actual' contraints (rather than 'allowed' contraints)
-    const contraints = this.sdmxJsonDataflow.contentConstraints?.filter(
+    // Get 'actual' constraints (rather than 'allowed' constraints)
+    const constraints = this.sdmxJsonDataflow.contentConstraints?.filter(
       c => c.type === "Actual"
     );
 
@@ -204,14 +206,14 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
           // Concept maps dimension's ID to a human-readable name
           const concept = this.getConceptByUrn(dim.conceptIdentity);
 
-          // Codelist maps dimension enum values to human-readable name
+          // Codelist maps dimension enum values to human-readable labels
           const codelist = this.getCodelistByUrn(
             dim.localRepresentation?.enumeration
           );
 
-          // Get allowed options from contraints.cubeRegions (there may be multiple - take union of all values - which is probably wrong)
-          const allowedOptionIdsSet = Array.isArray(contraints)
-            ? contraints.reduce<Set<string>>((keys, constraint) => {
+          // Get allowed options from constraints.cubeRegions (there may be multiple - take union of all values)
+          const allowedOptionIdsSet = Array.isArray(constraints)
+            ? constraints.reduce<Set<string>>((keys, constraint) => {
                 constraint.cubeRegions?.forEach(cubeRegion =>
                   cubeRegion.keyValues
                     ?.filter(kv => kv.id === dim.id)
@@ -223,22 +225,24 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
               }, new Set())
             : undefined;
 
-          // Convert set to array
+          // Get unique allowed options from constraints.cubeRegions
           const allowedOptionIds = isDefined(allowedOptionIdsSet)
             ? Array.from(allowedOptionIdsSet)
-            : undefined;
+            : [];
 
           // Get codes by merging allowedOptionIds with codelist
-          let codes =
-            isDefined(allowedOptionIds) && allowedOptionIds.length > 0
+          let filteredCodesList =
+            (allowedOptionIds.length > 0
               ? codelist?.codes?.filter(
                   code =>
                     allowedOptionIds && allowedOptionIds.includes(code.id!)
                 )
               : // If no allowedOptions were found -> return all codes
-                codelist?.codes;
+                codelist?.codes) ?? [];
 
-          // Create options object - use modelOverride or options generated from codeslist
+          // Create options object
+          // If modelOverride `options` has been defined -> use it
+          // Other wise use filteredCodesList
           const overrideOptions =
             codelistOverride?.options ?? conceptOverride?.options;
           const options =
@@ -246,11 +250,11 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
               ? overrideOptions.map(option => {
                   return { id: option.id, name: option.name };
                 })
-              : codes?.map(code => {
+              : filteredCodesList.map(code => {
                   return { id: code.id!, name: code.name };
                 });
 
-          if (isDefined(options)) {
+          if (isDefined(options) && options.length > 0) {
             // Use first option as default if no other default is provided
             let selectedId: string | undefined =
               codelistOverride?.allowUndefined ??
@@ -298,6 +302,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   @computed
   get modelOverrides() {
     return filterOutUndefined(
+      // Map through all dimensions and attributes to find ones which use common concepts
       [
         ...(this.sdmxJsonDataflow.dataStructure.dataStructureComponents
           ?.dimensionList.dimensions ?? []),

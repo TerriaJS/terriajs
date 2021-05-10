@@ -233,6 +233,11 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return isDefined(this.activeTableStyle.regionColumn);
     }
 
+    @computed
+    get canZoomTo() {
+      return this.activeTableStyle.latitudeColumn !== undefined;
+    }
+
     /**
      * Gets the items to show on the map.
      */
