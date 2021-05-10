@@ -6,6 +6,7 @@ Change Log
 #### next release (8.0.0-alpha.81)
 
 * Fix invalid HTML in `DataPreviewSections`.
+* Fix pluralisation of mapDataState to support other languages.
 * Fix CSW `Stratum` name bug.
 * [The next improvement]
 

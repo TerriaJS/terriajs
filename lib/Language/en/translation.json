@@ -219,11 +219,9 @@
     "recount": "Recount",
     "title": "Count Datasets",
     "btnCount": "Count datasets",
-    "enabledOnMap": "enabled on map",
     "noMapDataEnabled": "No map data enabled",
-    "datasetSingular": "dataset",
-    "datasetPlural": "datasets",
-    "mapDataState": "{{numberOfDatasets}} {{singularOrPlural}} $t(countDatasets.enabledOnMap)"
+    "mapDataState": "{{count}} dataset enabled on map",
+    "mapDataState_plural": "{{count}} datasets enabled on map"
   },
   "toolsPanel": {
     "btnText": "Tool",
