@@ -39,11 +39,10 @@ function SearchableItemMixin<T extends Constructor<MixinModel>>(Base: T) {
     ): ItemSelectionDisposer;
 
     /**
-     * An optional implementation for zooming in to results.
+     * A method implementing zoom to behavior for results.
      *
-     * @param result The search result to zoom to.
      */
-    zoomToItemSearchResult?: (result: ItemSearchResult) => void;
+    abstract zoomToItemSearchResult(result: ItemSearchResult): void;
 
     /**
      * Returns true if this item is searchable and has a valid item search provider defined.
