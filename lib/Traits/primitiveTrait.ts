@@ -1,4 +1,5 @@
 import Result from "../Core/Result";
+import { TerriaErrorSeverity } from "../Core/TerriaError";
 import { BaseModel } from "../Models/Model";
 import Trait, { TraitOptions } from "./Trait";
 
@@ -54,7 +55,8 @@ export class PrimitiveTrait<T> extends Trait {
         title: "Invalid property",
         message: `Property ${this.id} is expected to be of type ${
           this.type
-        } but instead it is of type ${typeof jsonValue}.`
+        } but instead it is of type ${typeof jsonValue}.`,
+        severity: TerriaErrorSeverity.Warning
       });
     }
 

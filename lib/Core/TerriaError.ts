@@ -62,7 +62,7 @@ export interface TerriaErrorOptions {
    */
   useTerriaErrorNotification?: boolean;
 
-  /** TerriaErrorSeverity - will default to `Warning`
+  /** TerriaErrorSeverity - will default to `Error`
    * A function can be used here, which will be resolved when the error is raised to user.
    */
   severity?: TerriaErrorSeverity | (() => TerriaErrorSeverity);
@@ -137,6 +137,15 @@ export default class TerriaError {
     if (typeof overrides === "string") {
       overrides = { message: overrides };
     }
+
+    // Find highest severity across errors (eg if one if `Error`, then the new TerriaError will also be `Error`)
+    const severity = () =>
+      errors
+        .map(error => error.nestedSeverity)
+        .includes(TerriaErrorSeverity.Error)
+        ? TerriaErrorSeverity.Error
+        : TerriaErrorSeverity.Warning;
+
     return new TerriaError({
       // Set default title and message
       title: { key: "core.terriaError.defaultCombineTitle" },
@@ -144,6 +153,7 @@ export default class TerriaError {
 
       // Add original errors and overrides
       originalError: errors,
+      severity,
       ...overrides
     });
   }
@@ -163,7 +173,7 @@ export default class TerriaError {
     this.useTerriaErrorNotification =
       options.useTerriaErrorNotification ?? true;
 
-    this.severity = options.severity ?? TerriaErrorSeverity.Warning;
+    this.severity = options.severity ?? TerriaErrorSeverity.Error;
   }
 
   get message() {
@@ -230,7 +240,8 @@ export default class TerriaError {
         title: this._title,
         sender: this.sender,
         raisedToUser: this._raisedToUser,
-        originalError: this
+        originalError: this,
+        severity: this.severity
       },
       ...overrides
     });

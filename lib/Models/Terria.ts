@@ -507,7 +507,6 @@ export default class Terria {
   raiseErrorToUser(
     error: unknown,
     /** Override error severity */
-
     severity?: TerriaErrorSeverity
   ) {
     if (this.userProperties.get("ignoreErrors") === "1") {
@@ -980,7 +979,6 @@ export default class Terria {
     const thisModelStratumData = allModelStratumData[modelId] || {};
     if (!isJsonObject(thisModelStratumData)) {
       throw new TerriaError({
-        severity: TerriaErrorSeverity.Error,
         sender: this,
         title: "Invalid model traits",
         message: "The traits of a model must be a JSON object."
@@ -1011,7 +1009,8 @@ export default class Terria {
           ).catchError(error =>
             errors.push(
               error.createParentError({
-                message: `Failed to load container ${containerId}`
+                message: `Failed to load container ${containerId}`,
+                severity: TerriaErrorSeverity.Warning
               })
             )
           );
@@ -1025,10 +1024,10 @@ export default class Terria {
                 await dereferenced.loadMembers();
               } catch (error) {
                 errors.push(
-                  TerriaError.from(
-                    error,
-                    `Failed to load group ${dereferenced.uniqueId}`
-                  )
+                  TerriaError.from(error, {
+                    message: `Failed to load group ${dereferenced.uniqueId}`,
+                    severity: TerriaErrorSeverity.Warning
+                  })
                 );
               }
             }
@@ -1053,7 +1052,8 @@ export default class Terria {
       ).catchError(error =>
         errors.push(
           error.createParentError({
-            message: `Failed to load SplitItemReference ${splitSourceId}`
+            message: `Failed to load SplitItemReference ${splitSourceId}`,
+            severity: TerriaErrorSeverity.Warning
           })
         )
       );
@@ -1071,7 +1071,7 @@ export default class Terria {
         replaceStratum,
         matchByShareKey: true
       }
-    ).catchError(error => errors.push(error));
+    ).pushErrorTo(errors);
 
     if (loadedModel && Array.isArray(containerIds)) {
       containerIds.forEach(containerId => {
@@ -1101,10 +1101,10 @@ export default class Terria {
         await loadedModel.loadReference();
       } catch (e) {
         errors.push(
-          TerriaError.from(
-            e,
-            `Failed to load reference ${loadedModel.uniqueId}`
-          )
+          TerriaError.from(e, {
+            message: `Failed to load reference ${loadedModel.uniqueId}`,
+            severity: TerriaErrorSeverity.Warning
+          })
         );
       }
 
@@ -1114,15 +1114,9 @@ export default class Terria {
           stratumId,
           dereferenced || {},
           replaceStratum
-        ).catchError(e =>
-          errors.push(
-            TerriaError.from(
-              e,
-              `Failed to update model from JSON: ${
-                loadedModel.target!.uniqueId
-              }`
-            )
-          )
+        ).pushErrorTo(
+          errors,
+          `Failed to update model from JSON: ${loadedModel.target!.uniqueId}`
         );
       }
     } else if (dereferenced) {
@@ -1141,10 +1135,10 @@ export default class Terria {
           await openGroup(dereferencedGroup, dereferencedGroup.isOpen);
         } catch (error) {
           errors.push(
-            TerriaError.from(
-              error,
-              `Failed to open group ${dereferencedGroup.uniqueId}`
-            )
+            TerriaError.from(error, {
+              message: `Failed to open group ${dereferencedGroup.uniqueId}`,
+              severity: TerriaErrorSeverity.Warning
+            })
           );
         }
       }

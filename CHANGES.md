@@ -7,6 +7,20 @@ Change Log
 
 * Fix invalid HTML in `DataPreviewSections`.
 * Fix CSW `Stratum` name bug.
+* Add `TerriaErrorSeverity` enum, values can be `Error` or `Warning`.
+  * Errors with severity `Error` are presented to the user. `Warning` will just be printed to console.
+  * By default, errors will use `Error`
+  * The folloring errors will use `Error` severity.
+    * Loading map config
+    * Loading/Applying init source (excluding `shareData` and stories)
+    * Invalid model object (fails to parse as JSON)
+    * Loading models **if it is in the workbench**
+    * Loading catalog items in the workbench
+  * `TerriaError.shouldRaiseToUser` will look at all error severity in the entire tree of errors, and use the highest one.
+    * For example, if all errors in a tree are `Warning`, but there is one error with `Error` severity, the entire tree will be "raised to the user".
+* `AsyncLoader` loadXXX methods now return `Result` with `errors`.
+* Fix `MagdaReference` `forceLoadReference` bug.
+* Clean up `CkanCatalogGroup` loading - errors are no-longer swallowed.
 * [The next improvement]
 
 #### 8.0.0-alpha.80
@@ -23,19 +37,6 @@ Change Log
 * Add `cesiumTerrainAssetId` to config.json to allow configuring default terrain.
 * Added in language toggle and first draft of french translation.json
   * This is enabled via language languageConfiguration.enabled inside config.json and relies on the language being both enumerated inside languageConfiguration.langagues and availble under {code}/translation.json
-* Add `TerriaErrorSeverity` enum, values can be `Error` or `Warning`.
-  * Errors with severity `Error` are presented to the user. `Warning` will just be printed to console.
-  * By default, errors will use `Warning`
-  * The folloring errors will use `Error` severity.
-    * Loading map config
-    * Loading/Applying init source (excluding `shareData` and stories)
-    * Invalid model object (fails to parse as JSON)
-    * Loading models **if it is in the workbench**
-    * Loading catalog items in the workbench
-  * `TerriaError.shouldRaiseToUser` will look at all error severity in the entire tree of errors, and use the highest one.
-    * For example, if all errors in a tree are `Warning`, but there is one error with `Error` severity, the entire tree will be "raised to the user".
-* Fix `MagdaReference` `forceLoadReference` bug.
-* [The next improvement]
 * Updated to terriajs-cesium 1.81
 * Create the Checkbox component with accessibility in mind.
 * Convert `FeedbackForm` to typescript.

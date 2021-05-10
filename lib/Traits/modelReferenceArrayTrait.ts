@@ -1,7 +1,7 @@
 import { computed } from "mobx";
 import isDefined from "../Core/isDefined";
 import Result from "../Core/Result";
-import TerriaError from "../Core/TerriaError";
+import TerriaError, { TerriaErrorSeverity } from "../Core/TerriaError";
 import createStubCatalogItem from "../Models/createStubCatalogItem";
 import { BaseModel } from "../Models/Model";
 import ModelFactory from "../Models/ModelFactory";
@@ -87,7 +87,8 @@ export class ModelReferenceArrayTrait extends Trait {
         title: "Invalid property",
         message: `Property ${
           this.id
-        } is expected to be an array but instead it is of type ${typeof jsonValue}.`
+        } is expected to be an array but instead it is of type ${typeof jsonValue}.`,
+        severity: TerriaErrorSeverity.Warning
       });
     }
 
@@ -103,7 +104,8 @@ export class ModelReferenceArrayTrait extends Trait {
               new TerriaError({
                 title: "Cannot create Model",
                 message:
-                  "A modelReferenceArrayTrait does not have a factory but it contains an embedded model that does not yet exist."
+                  "A modelReferenceArrayTrait does not have a factory but it contains an embedded model that does not yet exist.",
+                severity: TerriaErrorSeverity.Warning
               })
             );
             return;
@@ -115,7 +117,7 @@ export class ModelReferenceArrayTrait extends Trait {
             stratumName,
             jsonElement,
             {}
-          ).catchError(error => errors.push(error));
+          ).pushErrorTo(errors);
 
           // Maybe this should throw if undefined?
           return (
@@ -128,7 +130,8 @@ export class ModelReferenceArrayTrait extends Trait {
               title: "Invalid property",
               message: `Elements of ${
                 this.id
-              } are expected to be strings or objects but instead are of type ${typeof jsonElement}.`
+              } are expected to be strings or objects but instead are of type ${typeof jsonElement}.`,
+              severity: TerriaErrorSeverity.Warning
             })
           );
         }

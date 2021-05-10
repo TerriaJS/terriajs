@@ -159,6 +159,7 @@ export default class Result<T = undefined> {
 
   pushErrorTo(errors: TerriaError[], errorOverrides?: TerriaErrorOverrides) {
     if (this._error) errors.push(TerriaError.from(this._error, errorOverrides));
+    return this.value;
   }
 
   /** Clone this `Result` and apply `TerriaErrorOverrides` if there is an error */

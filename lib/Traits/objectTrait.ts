@@ -1,6 +1,6 @@
 import { computed } from "mobx";
 import Result from "../Core/Result";
-import TerriaError from "../Core/TerriaError";
+import TerriaError, { TerriaErrorSeverity } from "../Core/TerriaError";
 import createStratumInstance from "../Models/createStratumInstance";
 import Model, { BaseModel, ModelConstructor } from "../Models/Model";
 import saveStratumToJson from "../Models/saveStratumToJson";
@@ -72,7 +72,8 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
         errors.push(
           new TerriaError({
             title: "Unknown property",
-            message: `${propertyName} is not a valid sub-property of ${this.id}.`
+            message: `${propertyName} is not a valid sub-property of ${this.id}.`,
+            severity: TerriaErrorSeverity.Warning
           })
         );
       }
