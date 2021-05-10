@@ -136,7 +136,7 @@ function RCStoryEditor(props) {
     } else {
       // If a new image is supplied we push it to s3 and
       // update the references here
-      let image = story.image;
+      let image = story.image || {};
       if (files.length > 0) {
         const file = files[0];
 
