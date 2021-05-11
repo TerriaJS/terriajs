@@ -1,3 +1,5 @@
+import { BaseModel } from "./Model";
+
 export interface DimensionOption {
   readonly id?: string;
   readonly name?: string;
@@ -17,7 +19,7 @@ export interface SelectableDimension extends Dimension {
   disable?: boolean;
 }
 
-interface SelectableDimensions {
+interface SelectableDimensions extends BaseModel {
   selectableDimensions: SelectableDimension[];
 }
 
