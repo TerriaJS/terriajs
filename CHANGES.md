@@ -23,6 +23,7 @@ Change Log
   * Custom feature info template to show proper dimension names + time-series chart
   * Smarter region-mapping
   * Removed `viewMode` - not needed now due to better handling of time-series
+* Add `#configUrl` hash parameter for **dev environment only**. It can be used to overwrite Terria config URL.
 * [The next improvement]
 
 #### 8.0.0-alpha.80
