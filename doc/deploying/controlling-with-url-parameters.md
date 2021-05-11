@@ -23,6 +23,7 @@ Parameter      | Meaning
 `<initfile>`     | Load catalog file as described below.
 `hideWelcomeMessage` | Forces the welcome message not to be displayed.
 `ignoreErrors=1` | Ignore **all** error messages.
+`configUrl=`... | Overwrite Terria config URL in **dev environment only**.
 
 ### Catalog files (init files)
 
