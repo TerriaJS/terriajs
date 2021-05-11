@@ -22,14 +22,9 @@ const MapDataCount = observer(function(props) {
   const numberOfDatasets = terria.workbench.items.filter(item => item.show)
     .length;
   const hasMapData = numberOfDatasets !== 0;
-  const dataset = t("countDatasets.datasetSingular");
-  const datasetPlural = t("countDatasets.datasetPlural");
-  const singularOrPlural =
-    numberOfDatasets > 1 || numberOfDatasets === 0 ? datasetPlural : dataset;
   const mapDataText = hasMapData
     ? t("countDatasets.mapDataState", {
-        numberOfDatasets,
-        singularOrPlural
+        count: numberOfDatasets
       })
     : t("countDatasets.noMapDataEnabled");
 
