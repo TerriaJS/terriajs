@@ -481,7 +481,7 @@ export default class Terria {
    */
   @observable catalogReferencesLoaded: boolean = false;
 
-  readonly developmentEnv = process?.env?.NODE_ENV === "development";
+  private readonly developmentEnv = process?.env?.NODE_ENV === "development";
 
   constructor(options: TerriaOptions = {}) {
     if (options.baseUrl) {
