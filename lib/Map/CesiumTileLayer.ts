@@ -15,6 +15,7 @@ import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDire
 import isDefined from "../Core/isDefined";
 import pollToPromise from "../Core/pollToPromise";
 import getUrlForImageryTile from "./getUrlForImageryTile";
+import Leaflet from "../Models/Leaflet";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
@@ -42,7 +43,7 @@ class Credit extends CesiumCredit {
 // agent, and then work around the bug by hiding the DOM element, forcing it to updated by asking for
 // its bounding client rectangle, and then showing it again.  There's a bit of a performance hit to
 // this, so we don't do it on other browsers that do not experience this bug.
-const useClipUpdateWorkaround =
+export const useClipUpdateWorkaround =
   FeatureDetection.isInternetExplorer() || FeatureDetection.isEdge();
 
 export default class CesiumTileLayer extends L.TileLayer {
@@ -61,6 +62,7 @@ export default class CesiumTileLayer extends L.TileLayer {
   @observable splitPosition: number = 0.5;
 
   constructor(
+    private leaflet: Leaflet,
     readonly imageryProvider: ImageryProvider,
     options: L.TileLayerOptions = {}
   ) {
@@ -89,7 +91,6 @@ export default class CesiumTileLayer extends L.TileLayer {
         return;
       }
 
-      const { left: clipLeft, right: clipRight } = this._clipsForSplitter;
       let display = null;
       if (useClipUpdateWorkaround) {
         display = container.style.display;
@@ -98,8 +99,10 @@ export default class CesiumTileLayer extends L.TileLayer {
       }
 
       if (this.splitDirection === ImagerySplitDirection.LEFT) {
+        const { left: clipLeft } = this._clipsForSplitter;
         container.style.clip = clipLeft;
       } else if (this.splitDirection === ImagerySplitDirection.RIGHT) {
+        const { right: clipRight } = this._clipsForSplitter;
         container.style.clip = clipRight;
       } else {
         container.style.clip = "auto";
@@ -118,15 +121,22 @@ export default class CesiumTileLayer extends L.TileLayer {
     let clipPositionWithinMap;
     let clipX;
 
-    const map = this._map;
-    const size = map.getSize();
-    const nw = map.containerPointToLayerPoint([0, 0]);
-    const se = map.containerPointToLayerPoint(size);
-    clipPositionWithinMap = size.x * this.splitPosition;
-    clipX = Math.round(nw.x + clipPositionWithinMap);
-    clipLeft = "rect(" + [nw.y, clipX, se.y, nw.x].join("px,") + "px)";
-    clipRight = "rect(" + [nw.y, se.x, se.y, clipX].join("px,") + "px)";
-
+    if (this.leaflet.size && this.leaflet.nw && this.leaflet.se) {
+      clipPositionWithinMap = this.leaflet.size.x * this.splitPosition;
+      clipX = Math.round(this.leaflet.nw.x + clipPositionWithinMap);
+      clipLeft =
+        "rect(" +
+        [this.leaflet.nw.y, clipX, this.leaflet.se.y, this.leaflet.nw.x].join(
+          "px,"
+        ) +
+        "px)";
+      clipRight =
+        "rect(" +
+        [this.leaflet.nw.y, this.leaflet.se.x, this.leaflet.se.y, clipX].join(
+          "px,"
+        ) +
+        "px)";
+    }
     return {
       left: clipLeft,
       right: clipRight,

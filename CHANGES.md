@@ -23,6 +23,9 @@ Change Log
   * Custom feature info template to show proper dimension names + time-series chart
   * Smarter region-mapping
   * Removed `viewMode` - not needed now due to better handling of time-series
+* Fix `DimensionSelector` Select duplicate ids.
+* Add Leaflet splitter support for region mapping
+* Fix Leaflet splitter while zooming and panning map
 * Add `#configUrl` hash parameter for **dev environment only**. It can be used to overwrite Terria config URL.
 * [The next improvement]
 

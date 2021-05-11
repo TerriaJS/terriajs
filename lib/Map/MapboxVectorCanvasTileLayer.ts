@@ -5,6 +5,10 @@ import L from "leaflet";
 
 import MapboxVectorTileImageryProvider from "./MapboxVectorTileImageryProvider";
 import pollToPromise from "../Core/pollToPromise";
+import { observable, computed, autorun } from "mobx";
+import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import { useClipUpdateWorkaround } from "./CesiumTileLayer";
+import Leaflet from "../Models/Leaflet";
 
 export default class MapboxVectorCanvasTileLayer extends L.GridLayer {
   readonly errorEvent: CesiumEvent = new CesiumEvent();
@@ -14,11 +18,80 @@ export default class MapboxVectorCanvasTileLayer extends L.GridLayer {
   readonly _zSubtract: number = 0;
   readonly _previousCredits: unknown[] = [];
 
+  @observable splitDirection = ImagerySplitDirection.NONE;
+  @observable splitPosition: number = 0.5;
+
   constructor(
+    private leaflet: Leaflet,
     readonly imageryProvider: MapboxVectorTileImageryProvider,
     options: L.GridLayerOptions
   ) {
     super(Object.assign(options, { async: true, tileSize: 256 }));
+
+    const disposeSplitterReaction = this._reactToSplitterChange();
+    this.on("remove", disposeSplitterReaction);
+  }
+
+  _reactToSplitterChange() {
+    return autorun(() => {
+      const container = this.getContainer();
+      if (container === null) {
+        return;
+      }
+
+      let display = null;
+      if (useClipUpdateWorkaround) {
+        display = container.style.display;
+        container.style.display = "none";
+        container.getBoundingClientRect();
+      }
+
+      if (this.splitDirection === ImagerySplitDirection.LEFT) {
+        const { left: clipLeft } = this._clipsForSplitter;
+        container.style.clip = clipLeft;
+      } else if (this.splitDirection === ImagerySplitDirection.RIGHT) {
+        const { right: clipRight } = this._clipsForSplitter;
+        container.style.clip = clipRight;
+      } else {
+        container.style.clip = "auto";
+      }
+
+      if (useClipUpdateWorkaround) {
+        container.style.display = display!;
+      }
+    });
+  }
+
+  @computed
+  get _clipsForSplitter() {
+    let clipLeft = "";
+    let clipRight = "";
+    let clipPositionWithinMap;
+    let clipX;
+
+    if (this.leaflet.size && this.leaflet.nw && this.leaflet.se) {
+      clipPositionWithinMap = this.leaflet.size.x * this.splitPosition;
+      clipX = Math.round(this.leaflet.nw.x + clipPositionWithinMap);
+      clipLeft =
+        "rect(" +
+        [this.leaflet.nw.y, clipX, this.leaflet.se.y, this.leaflet.nw.x].join(
+          "px,"
+        ) +
+        "px)";
+      clipRight =
+        "rect(" +
+        [this.leaflet.nw.y, this.leaflet.se.x, this.leaflet.se.y, clipX].join(
+          "px,"
+        ) +
+        "px)";
+    }
+
+    return {
+      left: clipLeft,
+      right: clipRight,
+      clipPositionWithinMap: clipPositionWithinMap,
+      clipX: clipX
+    };
   }
 
   createTile(tilePoint: L.Coords, done: L.DoneCallback) {
