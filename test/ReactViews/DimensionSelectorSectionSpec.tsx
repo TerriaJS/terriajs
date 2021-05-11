@@ -1,17 +1,64 @@
-import TestRenderer from "react-test-renderer";
-import React from "react";
 import { runInAction } from "mobx";
+import React from "react";
+import TestRenderer from "react-test-renderer";
 import { ThemeProvider } from "styled-components";
-
 import CommonStrata from "../../lib/Models/CommonStrata";
+import CreateModel from "../../lib/Models/CreateModel";
 import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
 import SelectableDimensions from "../../lib/Models/SelectableDimensions";
 import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-
-import DimensionSelectorSection from "../../lib/ReactViews/Workbench/Controls/DimensionSelectorSection";
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface/StandardTheme";
+import DimensionSelectorSection from "../../lib/ReactViews/Workbench/Controls/DimensionSelectorSection";
 import Select from "../../lib/Styled/Select";
+import ModelTraits from "../../lib/Traits/ModelTraits";
+
+export default class TestCatalogItem extends CreateModel(ModelTraits)
+  implements SelectableDimensions {
+  static readonly type = "stub";
+  get type() {
+    return "test";
+  }
+
+  selectableDimensions = [
+    {
+      id: "some-id",
+      name: "Some name",
+      options: [
+        { id: "option-1", name: "Option 1" },
+        { id: "option-2", name: "Option 2" }
+      ],
+      selectedId: "option-2",
+      allowUndefined: true,
+      setDimensionValue: (stratumId: string, newStyle: string) => {}
+    },
+    {
+      id: "some-id-2",
+      name: "Some name 2",
+      options: [
+        { id: "option-3", name: "Option 3" },
+        { id: "option-4", name: "Option 4" },
+        { id: "option-5", name: "Option 5" }
+      ],
+      selectedId: "option-3",
+      allowUndefined: false,
+      setDimensionValue: (stratumId: string, newStyle: string) => {}
+    },
+    {
+      id: "some-id-3",
+      name: "Some name 3",
+      options: [
+        { id: "option-6", name: "Neko" },
+        { id: "option-7", name: "Mochi" },
+        { id: "option-8", name: "A dog" }
+      ],
+      selectedId: "option-8",
+      allowUndefined: false,
+      setDimensionValue: (stratumId: string, newStyle: string) => {},
+      disable: true
+    }
+  ];
+}
 
 describe("DimensionSelectorSection", function() {
   let terria: Terria;
@@ -23,46 +70,7 @@ describe("DimensionSelectorSection", function() {
   });
 
   it("shows all dimensions and styles for a mock layer", function(done) {
-    const mockItem: SelectableDimensions = {
-      selectableDimensions: [
-        {
-          id: "some-id",
-          name: "Some name",
-          options: [
-            { id: "option-1", name: "Option 1" },
-            { id: "option-2", name: "Option 2" }
-          ],
-          selectedId: "option-2",
-          allowUndefined: true,
-          setDimensionValue: (stratumId: string, newStyle: string) => {}
-        },
-        {
-          id: "some-id-2",
-          name: "Some name 2",
-          options: [
-            { id: "option-3", name: "Option 3" },
-            { id: "option-4", name: "Option 4" },
-            { id: "option-5", name: "Option 5" }
-          ],
-          selectedId: "option-3",
-          allowUndefined: false,
-          setDimensionValue: (stratumId: string, newStyle: string) => {}
-        },
-        {
-          id: "some-id-3",
-          name: "Some name 3",
-          options: [
-            { id: "option-6", name: "Neko" },
-            { id: "option-7", name: "Mochi" },
-            { id: "option-8", name: "A dog" }
-          ],
-          selectedId: "option-8",
-          allowUndefined: false,
-          setDimensionValue: (stratumId: string, newStyle: string) => {},
-          disable: true
-        }
-      ]
-    };
+    const mockItem = new TestCatalogItem("what", terria);
 
     const section = TestRenderer.create(
       <ThemeProvider theme={terriaTheme}>
