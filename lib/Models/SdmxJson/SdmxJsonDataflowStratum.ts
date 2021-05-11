@@ -420,6 +420,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     return createStratumInstance(TableColumnTraits, {
       name: primaryMeasure?.id,
       title: primaryMeasureConcept?.name,
+      type: "scalar",
       // If a unitMultiplier was found, we add `x*(10^unitMultiplier)` transformation
       transformation: unitMultiplier
         ? createStratumInstance(ColumnTransformationTraits, {

@@ -10,6 +10,7 @@ const regionMapping = JSON.stringify(
 
 const dataflowNoRegionData = require("raw-loader!../../wwwroot/test/SDMX-JSON/data-noregion.csv");
 const dataflowRegionData = require("raw-loader!../../wwwroot/test/SDMX-JSON/data-region.csv");
+const dataflowRegionTimeData = require("raw-loader!../../wwwroot/test/SDMX-JSON/data-region-time.csv");
 
 const dataflowNoRegion = JSON.stringify(
   require("../../wwwroot/test/SDMX-JSON/dataflow-noregion.json")
@@ -17,6 +18,10 @@ const dataflowNoRegion = JSON.stringify(
 
 const dataflowRegion = JSON.stringify(
   require("../../wwwroot/test/SDMX-JSON/dataflow-region.json")
+);
+
+const dataflowRegionTime = JSON.stringify(
+  require("../../wwwroot/test/SDMX-JSON/dataflow-region-time.json")
 );
 
 describe("SdmxJsonCatalogItem", function() {
@@ -46,12 +51,17 @@ describe("SdmxJsonCatalogItem", function() {
       "http://www.example.com/data/DF_CPI/A..INF._T"
     ).andReturn({ responseText: dataflowRegionData });
 
+    jasmine.Ajax.stubRequest(
+      "http://www.example.com/dataflow/ABS/RT?references=all"
+    ).andReturn({ responseText: dataflowRegionTime });
+
+    jasmine.Ajax.stubRequest(
+      "http://www.example.com/data/RT/M1.20.10..M"
+    ).andReturn({ responseText: dataflowRegionTimeData });
+
     terria = new Terria();
     sdmxItem = new SdmxJsonCatalogItem("test", terria, undefined);
-    runInAction(() => {
-      sdmxItem.setTrait("definition", "url", "http://www.example.com");
-      sdmxItem.setTrait("definition", "agencyId", "SPC");
-    });
+    sdmxItem.setTrait("definition", "url", "http://www.example.com");
   });
 
   afterEach(function() {
@@ -69,6 +79,7 @@ describe("SdmxJsonCatalogItem", function() {
     });
 
     await sdmxItem.loadMapItems();
+    expect(sdmxItem.mapItems.length).toBe(0);
 
     expect(sdmxItem.description).toBe(
       "Nominal prices in USD for selected key international commodity prices relevant to Pacific Island Countries and Territories, extracted from World bank Commodity Prices (« pink sheets ») and from FAO GLOBEFISH European Fish Price Report."
@@ -91,10 +102,22 @@ describe("SdmxJsonCatalogItem", function() {
 
     expect(sdmxItem.columns.length).toBe(8);
     expect(sdmxItem.columns[0].name).toBe("OBS_VALUE");
+
+    expect(sdmxItem.columns.map(col => col.type)).toEqual([
+      "scalar",
+      "hidden",
+      "hidden",
+      "hidden",
+      "time",
+      "hidden",
+      "hidden",
+      "hidden"
+    ]);
   });
 
   it("loadsDataflow-region-conceptoverride", async function() {
     runInAction(() => {
+      sdmxItem.setTrait("definition", "agencyId", "SPC");
       sdmxItem.setTrait("definition", "dataflowId", "DF_CPI");
       sdmxItem.setTrait("definition", "modelOverrides", [
         createStratumInstance(ModelOverrideTraits, {
@@ -107,6 +130,8 @@ describe("SdmxJsonCatalogItem", function() {
     });
 
     await sdmxItem.loadMapItems();
+
+    expect(sdmxItem.mapItems.length).toBe(1);
 
     expect(sdmxItem.description).toBe(
       "Inflation rates for the Pacific island countries and territories per year."
@@ -142,5 +167,45 @@ describe("SdmxJsonCatalogItem", function() {
 
     expect(sdmxItem.columns.length).toBe(11);
     expect(sdmxItem.columns[0].name).toBe("OBS_VALUE");
+  });
+
+  it("uses SDMX common concepts", async function() {
+    runInAction(() => {
+      sdmxItem.setTrait("definition", "agencyId", "ABS");
+      sdmxItem.setTrait("definition", "dataflowId", "RT");
+      sdmxItem.setTrait("definition", "modelOverrides", [
+        createStratumInstance(ModelOverrideTraits, {
+          id:
+            "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ABS:CL_STATE(1.0.0)",
+          type: "region",
+          regionType: "STE_2016"
+        })
+      ]);
+    });
+
+    await sdmxItem.loadMapItems();
+
+    expect(sdmxItem.mapItems.length).toBe(1);
+
+    expect(sdmxItem.columns.filter(col => col.type === "region").length).toBe(
+      1
+    );
+    expect(sdmxItem.columns.filter(col => col.type === "region")[0].name).toBe(
+      "REGION"
+    );
+    expect(sdmxItem.activeTableStyle.regionColumn).toBeDefined();
+    expect(sdmxItem.activeTableStyle.regionColumn?.regionType).toBeTruthy(
+      "STE_2016"
+    );
+
+    expect(sdmxItem.activeStyle).toBe("OBS_VALUE");
+    const primaryCol = sdmxItem.columns.find(col => col.name === "OBS_VALUE");
+
+    expect(primaryCol).toBeDefined();
+    expect(primaryCol?.transformation.expression).toBe("x*(10^UNIT_MULT)");
+    expect(primaryCol?.transformation.dependencies[0]).toBe("UNIT_MULT");
+    expect(sdmxItem.activeTableStyle.colorTraits.legend.title).toBe(
+      "Australian Dollars (Monthly)"
+    );
   });
 });
