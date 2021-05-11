@@ -26,6 +26,7 @@ Change Log
 * Fix `DimensionSelector` Select duplicate ids.
 * Add Leaflet splitter support for region mapping
 * Fix Leaflet splitter while zooming and panning map
+* Split `TableMixin` region mapping `ImageryParts` and `ImageryProvider` to improve opacity/show performance
 * Add `#configUrl` hash parameter for **dev environment only**. It can be used to overwrite Terria config URL.
 * [The next improvement]
 
