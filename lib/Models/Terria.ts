@@ -481,6 +481,8 @@ export default class Terria {
    */
   @observable catalogReferencesLoaded: boolean = false;
 
+  readonly developmentEnv = process?.env?.NODE_ENV === "development";
+
   constructor(options: TerriaOptions = {}) {
     if (options.baseUrl) {
       if (options.baseUrl.lastIndexOf("/") !== options.baseUrl.length - 1) {
@@ -685,9 +687,14 @@ export default class Terria {
 
     this.shareDataService = options.shareDataService;
 
-    const hashProperties = queryToObject(new URI(window.location).fragment());
-    if (isDefined(hashProperties.configUrl) && hashProperties.configUrl !== "")
-      options.configUrl = hashProperties.configUrl;
+    // If in development environment, allow usage of #configUrl to set Terria config URL
+    if (this.developmentEnv) {
+      if (
+        isDefined(hashProperties["configUrl"]) &&
+        hashProperties["configUrl"] !== ""
+      )
+        options.configUrl = hashProperties["configUrl"];
+    }
 
     const baseUri = new URI(options.configUrl).filename("");
 
