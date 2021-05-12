@@ -6,8 +6,8 @@ import { observer } from "mobx-react";
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import isDefined from "../../../Core/isDefined";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import CommonStrata from "../../../Models/CommonStrata";
+import { BaseModel } from "../../../Models/Model";
 import SelectableDimensions, {
   SelectableDimension
 } from "../../../Models/SelectableDimensions";
@@ -17,7 +17,7 @@ import Spacing from "../../../Styled/Spacing";
 import Text from "../../../Styled/Text";
 
 interface PropsType extends WithTranslation {
-  item: SelectableDimensions & CatalogMemberMixin.CatalogMemberMixin;
+  item: SelectableDimensions & BaseModel;
 }
 
 @observer
