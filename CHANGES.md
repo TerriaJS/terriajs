@@ -5,9 +5,6 @@ Change Log
 
 #### next release (8.0.0-alpha.81)
 
-- **Breaking changes**
-  - TableColumn `values` will now return typed values. For raw string values use `rawValues`.
-
 * Fix invalid HTML in `DataPreviewSections`.
 * Fix pluralisation of mapDataState to support other languages.
 * Fix CSW `Stratum` name bug.
