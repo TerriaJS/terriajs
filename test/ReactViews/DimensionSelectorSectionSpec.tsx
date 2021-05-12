@@ -2,6 +2,7 @@ import { runInAction } from "mobx";
 import React from "react";
 import TestRenderer from "react-test-renderer";
 import { ThemeProvider } from "styled-components";
+import CatalogMemberMixin from "../../lib/ModelMixins/CatalogMemberMixin";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import CreateModel from "../../lib/Models/CreateModel";
 import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
@@ -11,9 +12,10 @@ import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem"
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface/StandardTheme";
 import DimensionSelectorSection from "../../lib/ReactViews/Workbench/Controls/DimensionSelectorSection";
 import Select from "../../lib/Styled/Select";
-import ModelTraits from "../../lib/Traits/ModelTraits";
+import CatalogMemberTraits from "../../lib/Traits/CatalogMemberTraits";
 
-export default class TestCatalogItem extends CreateModel(ModelTraits)
+export default class TestCatalogItem
+  extends CatalogMemberMixin(CreateModel(CatalogMemberTraits))
   implements SelectableDimensions {
   static readonly type = "stub";
   get type() {
