@@ -9,6 +9,7 @@ Change Log
 * Fix pluralisation of mapDataState to support other languages.
 * Fix CSW `Stratum` name bug.
 * Add `#configUrl` hash parameter for **dev environment only**. It can be used to overwrite Terria config URL.
+* Added Leaflet hack to remove white-gaps between tiles (https://github.com/Leaflet/Leaflet/issues/3575#issuecomment-688644225)
 * [The next improvement]
 
 #### 8.0.0-alpha.80
