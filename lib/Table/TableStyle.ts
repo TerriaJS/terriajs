@@ -1,3 +1,4 @@
+import * as d3Scale from "d3-scale-chromatic";
 import groupBy from "lodash-es/groupBy";
 import { computed } from "mobx";
 import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
@@ -7,6 +8,7 @@ import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import createColorForIdTransformer from "../Core/createColorForIdTransformer";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
+import StandardCssColors from "../Core/StandardCssColors";
 import ColorMap from "../Map/ColorMap";
 import ConstantColorMap from "../Map/ConstantColorMap";
 import ConstantPointSizeMap from "../Map/ConstantPointSizeMap";
@@ -26,7 +28,6 @@ import TablePointSizeStyleTraits from "../Traits/TablePointSizeStyleTraits";
 import TableStyleTraits from "../Traits/TableStyleTraits";
 import TableTimeStyleTraits from "../Traits/TableTimeStyleTraits";
 import TableTraits from "../Traits/TableTraits";
-import ColorPalette from "./ColorPalette";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
 
@@ -253,7 +254,7 @@ export default class TableStyle {
   }
 
   @computed
-  get paletteName() {
+  get colorPaletteName() {
     const colorColumn = this.colorColumn;
 
     if (colorColumn === undefined) {
@@ -261,15 +262,7 @@ export default class TableStyle {
     }
 
     let paletteName = this.colorTraits.colorPalette;
-
-    if (
-      colorColumn.type === TableColumnType.enum ||
-      colorColumn.type === TableColumnType.region ||
-      colorColumn.type === TableColumnType.text
-    ) {
-      // Enumerated values, so use a large, high contrast palette.
-      paletteName = paletteName || "HighContrast";
-    } else if (colorColumn.type === TableColumnType.scalar) {
+    if (colorColumn.type === TableColumnType.scalar) {
       if (paletteName === undefined) {
         const valuesAsNumbers = colorColumn.valuesAsNumbers;
         if (
@@ -281,7 +274,7 @@ export default class TableStyle {
           paletteName = "PuOr";
         } else {
           // Values do not cross zero so use a sequential palette.
-          paletteName = "Viridis";
+          paletteName = "Reds";
         }
       }
     }
@@ -289,19 +282,14 @@ export default class TableStyle {
     return paletteName;
   }
 
-  @computed
-  get colorPalette(): ColorPalette {
-    const numberOfBins = this.numberOfBins;
-
-    if (
-      this.paletteName !== undefined &&
-      numberOfBins !== undefined &&
-      numberOfBins !== 0
-    ) {
-      return ColorPalette.fromString(this.paletteName, numberOfBins);
-    } else {
-      return new ColorPalette([]);
-    }
+  @computed get fallbackColorPalette() {
+    return (
+      this.colorPaletteName
+        ?.split("-")
+        .map(color => Color.fromCssColorString(color) ?? Color.TRANSPARENT) ?? [
+        Color.TRANSPARENT
+      ]
+    );
   }
 
   @computed
@@ -332,6 +320,19 @@ export default class TableStyle {
 
     // Pick a color for every bin.
     const binColors = this.colorTraits.binColors || [];
+
+    const colorScaleScheme = (d3Scale as any)[`scheme${this.colorPaletteName}`];
+
+    let colorScale = this.fallbackColorPalette;
+
+    if (Array.isArray(colorScaleScheme)) {
+      colorScale = colorScaleScheme[this.numberOfBins];
+      // If invalid numberOfBins - use largest number
+      if (!Array.isArray(colorScale)) {
+        colorScale = colorScaleScheme[colorScaleScheme.length - 1];
+      }
+    }
+
     const result: Color[] = [];
     for (let i = 0; i < numberOfBins; ++i) {
       if (i < binColors.length) {
@@ -339,7 +340,7 @@ export default class TableStyle {
           Color.fromCssColorString(binColors[i]) ?? Color.TRANSPARENT
         );
       } else {
-        result.push(this.colorPalette.selectColor(i));
+        result.push(colorScale[i % colorScale.length]);
       }
     }
     return result;
@@ -407,11 +408,19 @@ export default class TableStyle {
 
     // Create a color for each unique value
     const uniqueValues = colorColumn.uniqueValues.values;
-    const palette = this.colorPalette;
+
+    let colorScale = StandardCssColors.highContrast;
+
+    if (isDefined(this.colorPaletteName)) {
+      colorScale =
+        (d3Scale as any)[`scheme${this.colorPaletteName}`] ??
+        this.fallbackColorPalette;
+    }
+
     return uniqueValues.map((value, i) => {
       return {
         value: value,
-        color: palette.selectColor(i).toCssColorString()
+        color: colorScale[i % colorScale.length]
       };
     });
   }
@@ -447,12 +456,19 @@ export default class TableStyle {
           nullColor
         });
       } else if (
-        this.paletteName &&
+        this.colorPaletteName &&
         isDefined(minValue) &&
         isDefined(maxValue)
       ) {
+        const colorScale = (d3Scale as any)[
+          `interpolate${this.colorPaletteName}`
+        ];
+
+        if (typeof colorScale !== "function")
+          throw `Color palette "${this.colorPaletteName}" is not valid.`;
+
         return new ContinuousColorMap({
-          palette: this.paletteName,
+          colorScale,
           minValue,
           maxValue,
           nullColor

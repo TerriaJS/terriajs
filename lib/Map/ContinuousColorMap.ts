@@ -1,16 +1,14 @@
-import * as d3Scale from "d3-scale-chromatic";
 import Color from "terriajs-cesium/Source/Core/Color";
 import ColorMap from "./ColorMap";
 
 export interface ContinuousColorMapOptions {
-  readonly palette: string;
   readonly nullColor: Readonly<Color>;
   readonly minValue: number;
   readonly maxValue: number;
+  readonly colorScale: (t: number) => string;
 }
 
 export default class ContinuousColorMap extends ColorMap {
-  readonly palette: string;
   readonly colorScale: (t: number) => string;
   readonly nullColor: Readonly<Color>;
   readonly minValue: number;
@@ -18,11 +16,6 @@ export default class ContinuousColorMap extends ColorMap {
 
   constructor(options: ContinuousColorMapOptions) {
     super();
-
-    const colorScale = (d3Scale as any)[`interpolate${options.palette}`];
-
-    if (typeof colorScale !== "function")
-      throw `Color palette "${options.palette}" is not valid.`;
 
     if (options.minValue === options.maxValue) {
       throw `Minimum and maximum values must be different.`;
@@ -32,8 +25,7 @@ export default class ContinuousColorMap extends ColorMap {
       throw `Minimum value must be less than the maximum value.`;
     }
 
-    this.palette = options.palette;
-    this.colorScale = colorScale;
+    this.colorScale = options.colorScale;
     this.nullColor = options.nullColor;
     this.minValue = options.minValue;
     this.maxValue = options.maxValue;
