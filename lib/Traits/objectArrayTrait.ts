@@ -76,7 +76,16 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
   });
 
   getValue(model: BaseModel): readonly Model<T>[] | undefined {
-    const strataTopToBottom: Map<string, any> = StratumOrder.sortTopToBottom(
+    // Strata order is important here, as it will determine order of `ids` - which will determine array order.
+    // By default, we assume bottom strata order is "more" correct than top
+    // For example:
+    // - In some LoadableStratum we set the objectArray to: [{item:"one", value:"a", item:"two", value:"b"}]
+    // - Then in the user stratum we set [{item:"two", value:"c"}]
+    // - We want the order in LoadableStratum to stay static (item "one" is before item "two")
+    // - If we were to use topToBottom strata, then the order would be flipped.
+    // Higher level stratum are set more frequently than lower level, so using bottomToTop will minimise change in order of elements
+
+    const strataBottomToTop: Map<string, any> = StratumOrder.sortBottomToTop(
       model.strata
     );
 
@@ -84,8 +93,8 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
     const removedIds = new Set<string>();
 
     // Find the unique objects and the strata that go into each.
-    for (let stratumId of strataTopToBottom.keys()) {
-      const stratum = strataTopToBottom.get(stratumId);
+    for (let stratumId of strataBottomToTop.keys()) {
+      const stratum = strataBottomToTop.get(stratumId);
       const objectArray = stratum[this.id];
 
       if (!objectArray) {
