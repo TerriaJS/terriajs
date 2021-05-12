@@ -9,6 +9,7 @@ Change Log
 * Fix pluralisation of mapDataState to support other languages.
 * Fix CSW `Stratum` name bug.
 * Add `#configUrl` hash parameter for **dev environment only**. It can be used to overwrite Terria config URL.
+* Flip ordering of strata in `objectArrayTrait`
 * [The next improvement]
 
 #### 8.0.0-alpha.80

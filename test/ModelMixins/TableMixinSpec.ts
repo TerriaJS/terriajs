@@ -168,8 +168,10 @@ describe("TableMixin", function() {
 
       await item.loadMapItems();
 
-      expect(item.styleDimensions?.options?.[0].id).toBe("value");
-      expect(item.styleDimensions?.options?.[0].name).toBe("Some Style Title");
+      console.log(item.styleDimensions);
+
+      expect(item.styleDimensions?.options?.[2].id).toBe("value");
+      expect(item.styleDimensions?.options?.[2].name).toBe("Some Style Title");
     });
 
     it("loads regionProviderList on loadMapItems", async function() {
