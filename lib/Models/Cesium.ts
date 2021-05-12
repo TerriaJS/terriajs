@@ -18,6 +18,7 @@ import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import HeadingPitchRange from "terriajs-cesium/Source/Core/HeadingPitchRange";
 import Ion from "terriajs-cesium/Source/Core/Ion";
+import IonResource from "terriajs-cesium/Source/Core/IonResource";
 import KeyboardEventModifier from "terriajs-cesium/Source/Core/KeyboardEventModifier";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
@@ -198,7 +199,7 @@ export default class Cesium extends GlobeOrMap {
     //             console.log('Switching to EllipsoidTerrainProvider.');
     //             that.terria.viewerMode = ViewerMode.CesiumEllipsoid;
     //             if (!defined(that.TerrainMessageViewed)) {
-    //                 that.terria.error.raiseEvent({
+    //                 that.terria.raiseErrorToUser({
     //                     title : 'Terrain Server Not Responding',
     //                     message : '\
     // The terrain server is not responding at the moment.  You can still use all the features of '+that.terria.appName+' \
@@ -910,6 +911,18 @@ export default class Cesium extends GlobeOrMap {
   } {
     if (!this.terriaViewer.viewerOptions.useTerrain) {
       return { terrain: new EllipsoidTerrainProvider() };
+    }
+    if (this.terria.configParameters.cesiumTerrainAssetId !== undefined) {
+      return {
+        terrain: new CesiumTerrainProvider({
+          url: IonResource.fromAssetId(
+            this.terria.configParameters.cesiumTerrainAssetId,
+            {
+              accessToken: this.terria.configParameters.cesiumIonAccessToken
+            }
+          )
+        })
+      };
     }
     if (this.terria.configParameters.cesiumTerrainUrl) {
       return {

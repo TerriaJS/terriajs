@@ -1,25 +1,81 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+import { Overflow, WordBreak, OneKeyFrom } from "./Styled.types";
 
-export const Box = styled.div`
-  ${props => props.relative && `position:relative;`}
+interface Column {
+  col1?: boolean;
+  col2?: boolean;
+  col3?: boolean;
+  col4?: boolean;
+  col5?: boolean;
+  col6?: boolean;
+  col7?: boolean;
+  col8?: boolean;
+  col9?: boolean;
+  col10?: boolean;
+  col11?: boolean;
+  col12?: boolean;
+}
 
+interface IBoxPropsBase {
+  position?: "relative" | "absolute" | "static";
+  topRight?: boolean;
+  displayInlineBlock?: boolean;
+  rounded?: boolean;
+  fullHeight?: boolean;
+  fullWidth?: boolean;
+  styledWidth?: string;
+  styledHeight?: string;
+  styledMinWidth?: string;
+  styledMinHeight?: string;
+  styledMaxHeight?: string;
+  col?: boolean;
+  verticalCenter?: boolean;
+  centered?: boolean;
+  justifyContentSpaceAround?: boolean;
+  justifySpaceBetween?: boolean;
+  left?: boolean;
+  alignItemsFlexStart?: boolean;
+  leftSelf?: boolean;
+  right?: boolean;
+  alignItemsFlexEnd?: boolean;
+  rightSelf?: boolean;
+  column?: boolean;
+  wrap?: boolean;
+  flex?: any;
+  flexShrinkZero?: boolean;
+  boxShadow?: boolean;
+  charcoalGreyBg?: boolean;
+  backgroundColor?: any;
+  padded?: boolean;
+  paddedRatio?: number;
+  paddedHorizontally?: number | boolean;
+  paddedVertically?: number | boolean;
+  styledPadding?: string;
+  backgroundImage?: any;
+  backgroundBlackOverlay?: number;
+  wordBreak?: WordBreak;
+  overflow?: Overflow;
+  overflowY?: Overflow;
+  scroll?: boolean;
+  style?: any;
+  as?: React.ElementType | keyof JSX.IntrinsicElements;
+}
+
+type IBoxProps = IBoxPropsBase & OneKeyFrom<Column>;
+
+export const Box = styled.div<IBoxProps>`
   display: flex;
-  position: relative;
-  ${props =>
-    props.positionAbsolute &&
-    `
-    position:absolute;
-    z-index:1;
-   `}
-  ${props => props.static && `position: static;`}
+  box-sizing: border-box;
+  ${props => props.position && `position: ${props.position};`}
+  ${props => props.position === "absolute" && `z-index:1;`}
+  ${props => !props.position && `position: relative;`}
+
   ${props =>
     props.topRight &&
     `
     right: 0px;
     top: 0px;
   `}
-
-  box-sizing: border-box;
 
   ${props => props.displayInlineBlock && `display: inline-block;`}
 
@@ -62,13 +118,13 @@ export const Box = styled.div`
   ${props => props.justifySpaceBetween && `justify-content: space-between;`}
 
   ${props => props.left && `align-items: center;`}
-  ${props => props.alignItemsFlexStart && `align-items: flex-start;`}
   ${props => props.left && `justify-content: flex-start;`}
+  ${props => props.alignItemsFlexStart && `align-items: flex-start;`}
   ${props => props.leftSelf && `align-self: flex-start;`}
 
   ${props => props.right && `align-items: center;`}
-  ${props => props.alignItemsFlexEnd && `align-items: flex-end;`}
   ${props => props.right && `justify-content: flex-end;`}
+  ${props => props.alignItemsFlexEnd && `align-items: flex-end;`}
   ${props => props.rightSelf && `align-self: flex-end;`}
 
   ${props => props.column && `flex-direction: column;`}
@@ -109,6 +165,7 @@ export const Box = styled.div`
       padding-bottom: ${5 *
         (props.paddedVertically === true ? 1 : props.paddedVertically)}px;
     `}
+  ${props => props.styledPadding && `padding: ${props.styledPadding};`}
 
   ${props =>
     props.backgroundImage &&
@@ -160,8 +217,10 @@ export const Box = styled.div`
   `}
 `;
 
-export const BoxSpan = styled(Box).attrs({
-  as: "span"
-})``;
+export const BoxSpan = styled(Box).attrs(
+  (props: { as?: React.ElementType | keyof JSX.IntrinsicElements }) => ({
+    as: "span"
+  })
+)``;
 
 export default Box;

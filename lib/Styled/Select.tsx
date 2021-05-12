@@ -28,8 +28,7 @@ or with overrides on icon
 import React from "react";
 import styled, { useTheme } from "styled-components";
 const Box: any = require("./Box").default;
-import { default as IconComponent, StyledIcon } from "../ReactViews/Icon";
-const Icon: any = IconComponent;
+import { GLYPHS, StyledIcon } from "./Icon";
 
 const StyledSelect = styled.select<SelectProps>`
   -moz-appearance: none;
@@ -110,7 +109,7 @@ const Select: React.FC<SelectProps> = props => {
           // light bg needs dark icon
           fillColor={props.light ? theme.textBlack : theme.textLight}
           styledWidth="16px"
-          glyph={Icon.GLYPHS.arrowDown}
+          glyph={GLYPHS.arrowDown}
           {...dropdownIconProps}
         />
       </ArrowPositioning>

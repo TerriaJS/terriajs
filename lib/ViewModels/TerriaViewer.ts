@@ -17,7 +17,7 @@ import NoViewer from "../Models/NoViewer";
 import Terria from "../Models/Terria";
 import ViewerMode from "../Models/ViewerMode";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import raiseErrorToUser from "../Models/raiseErrorToUser";
+import TerriaError from "../Core/TerriaError";
 
 // A class that deals with initialising, destroying and switching between viewers
 // Each map-view should have it's own TerriaViewer
@@ -52,15 +52,19 @@ export default class TerriaViewer {
 
       runInAction(() => (this._baseMap = baseMap));
     } catch (e) {
-      raiseErrorToUser(this.terria, e, {
-        key: "models.terria.loadingBaseMapErrorTitle",
-        parameters: {
-          name:
-            (CatalogMemberMixin.isMixedInto(baseMap)
-              ? baseMap.name
-              : baseMap.uniqueId) ?? "Unknown item"
-        }
-      });
+      this.terria.raiseErrorToUser(
+        TerriaError.from(e, {
+          title: {
+            key: "models.terria.loadingBaseMapErrorTitle",
+            parameters: {
+              name:
+                (CatalogMemberMixin.isMixedInto(baseMap)
+                  ? baseMap.name
+                  : baseMap.uniqueId) ?? "Unknown item"
+            }
+          }
+        })
+      );
     }
   }
 

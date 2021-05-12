@@ -24,7 +24,7 @@ import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import Ray from "terriajs-cesium/Source/Core/Ray";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
-import Icon, { StyledIcon } from "../../Icon.jsx";
+import Icon, { StyledIcon } from "../../../Styled/Icon";
 import GyroscopeGuidance from "../../GyroscopeGuidance/GyroscopeGuidance";
 import { runInAction, computed, when } from "mobx";
 import { withTranslation } from "react-i18next";

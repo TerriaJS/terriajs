@@ -11,7 +11,7 @@ import GeoJsonCatalogItem from "../../../Models/GeoJsonCatalogItem";
 // import Styles from "./tool_button.scss";
 import TerriaError from "../../../Core/TerriaError";
 import CesiumCartographic from "terriajs-cesium/Source/Core/Cartographic.js";
-import Icon from "../../Icon";
+import Icon from "../../../Styled/Icon";
 import defined from "terriajs-cesium/Source/Core/defined";
 import { withTranslation } from "react-i18next";
 import { runInAction } from "mobx";
@@ -65,7 +65,7 @@ const MyLocation = createReactClass({
         this.setState({ watchId: watchId });
       }
     } else {
-      this.props.terria.error.raiseEvent(
+      this.props.terria.raiseErrorToUser(
         new TerriaError({
           sender: this,
           title: t("location.errorGettingLocation"),
@@ -143,7 +143,7 @@ const MyLocation = createReactClass({
       const secureUrl = uri.protocol("https").toString();
       message = t("location.originError", { secureUrl: secureUrl });
     }
-    this.props.terria.error.raiseEvent(
+    this.props.terria.raiseErrorToUser(
       new TerriaError({
         sender: this,
         title: t("location.errorGettingLocation"),

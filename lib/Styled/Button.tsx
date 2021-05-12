@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import styled from "styled-components";
 import { BoxSpan } from "./Box";
 import { TextSpan } from "./Text";
@@ -7,7 +6,34 @@ import { TextSpan } from "./Text";
 const Icon = styled.span`
   margin-right: 8px;
 `;
-const StyledButton = styled.button`
+
+interface IButtonProps {
+  fullWidth?: boolean;
+  fullHeight?: boolean;
+  styledWidth?: string;
+  activeStyles?: boolean;
+}
+
+interface IStyledButtonProps extends IButtonProps {
+  shortMinHeight?: boolean;
+  styledMinWidth?: string;
+  marginLeft?: number;
+  marginRight?: number;
+  primaryHover?: boolean;
+  primary?: boolean;
+  rounded?: boolean;
+  roundLeft?: boolean;
+  roundRight?: boolean;
+  secondary?: boolean;
+  denyButton?: boolean;
+  warning?: boolean;
+  splitter?: boolean;
+  transparentBg?: boolean;
+  disabled?: boolean;
+  [key: string]: any;
+}
+
+const StyledButton = styled.button<IStyledButtonProps>`
   pointer-events: auto;
   cursor: pointer;
   min-height: 40px;
@@ -99,7 +125,7 @@ const StyledButton = styled.button`
  * Use for things you need as clickable things & not necessary the design
  * language styled button
  */
-export const RawButton = styled.button`
+export const RawButton = styled.button<IButtonProps>`
   margin: 0;
   padding: 0;
   border: 0;
@@ -126,8 +152,21 @@ export const RawButton = styled.button`
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
 `;
 
+interface ButtonProps extends IStyledButtonProps {
+  renderIcon?: () => React.ReactChild;
+  iconProps?: any;
+  textProps?: any;
+  children?: React.ReactChildren;
+  buttonRef?: React.Ref<HTMLButtonElement>;
+  title?: string;
+  onClick?: (e: any) => void;
+}
+
 // Icon and props-children-mandatory-text-wrapping is a mess here so it's all very WIP
-export const Button = (props, ref) => {
+export const Button = (
+  props: ButtonProps,
+  ref: React.Ref<HTMLButtonElement>
+) => {
   const {
     primary,
     secondary,
@@ -155,8 +194,6 @@ export const Button = (props, ref) => {
           <TextSpan
             white={primary || secondary || warning}
             medium={secondary}
-            // bold
-            skinny
             {...textProps}
           >
             {props.children}
@@ -167,17 +204,9 @@ export const Button = (props, ref) => {
   );
 };
 
-Button.propTypes = {
-  renderIcon: PropTypes.func,
-  iconProps: PropTypes.object,
-  textProps: PropTypes.object,
-  primary: PropTypes.bool,
-  secondary: PropTypes.bool,
-  warning: PropTypes.bool,
-  children: PropTypes.node,
-  buttonRef: PropTypes.object
-};
-
-const ButtonWithRef = (props, ref) => <Button {...props} buttonRef={ref} />;
+const ButtonWithRef = (
+  props: ButtonProps,
+  ref: React.Ref<HTMLButtonElement>
+) => <Button {...props} buttonRef={ref} />;
 
 export default React.forwardRef(ButtonWithRef);

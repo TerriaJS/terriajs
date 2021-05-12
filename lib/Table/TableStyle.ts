@@ -60,6 +60,15 @@ export default class TableStyle {
     return this.styleTraits.id || "Style" + this.styleNumber;
   }
 
+  @computed
+  get title(): string {
+    return (
+      this.styleTraits.title ??
+      this.tableModel.tableColumns.find(col => col.name === this.id)?.title ??
+      this.id
+    );
+  }
+
   /**
    * Gets the {@link TableStyleTraits} for this style. The traits are derived
    * from the default styles plus this style layered on top of the default.
