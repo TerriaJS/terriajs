@@ -84,14 +84,12 @@ export default class TableColumn {
     this.tableModel = tableModel;
   }
 
-  /** rawValues
-   *
+  /**
    * Gets the raw, uninterpreted values in the column. This will not apply any transformations to data (eg transformation expressions).
-   * For typed (and transformed values) please use valuesForType instead.
    *
    */
   @computed
-  get rawValues(): readonly string[] {
+  get values(): readonly string[] {
     const result: string[] = [];
 
     if (this.tableModel.dataColumnMajor !== undefined) {
@@ -215,7 +213,7 @@ export default class TableColumn {
     const replaceWithZero = this.traits.replaceWithZeroValues;
     const replaceWithNull = this.traits.replaceWithNullValues;
 
-    const values = this.rawValues;
+    const values = this.values;
     for (let i = 0; i < values.length; ++i) {
       const value = values[i];
 
@@ -450,19 +448,19 @@ export default class TableColumn {
       };
     }
 
-    let result = convertValuesToDates(this.rawValues, ddmmyyyy);
+    let result = convertValuesToDates(this.values, ddmmyyyy);
     if (!parsingFailed) return result;
     parsingFailed = false;
     if (!skipMmddyyyy) {
-      result = convertValuesToDates(this.rawValues, mmddyyyy);
+      result = convertValuesToDates(this.values, mmddyyyy);
       if (!parsingFailed) return result;
       parsingFailed = false;
     }
-    result = convertValuesToDates(this.rawValues, yyyyQQ);
+    result = convertValuesToDates(this.values, yyyyQQ);
     if (!parsingFailed) return result;
     parsingFailed = false;
 
-    return convertValuesToDates(this.rawValues, dateConstructor);
+    return convertValuesToDates(this.values, dateConstructor);
   }
 
   @computed
@@ -487,7 +485,7 @@ export default class TableColumn {
   get uniqueValues(): UniqueColumnValues {
     const replaceWithNull = this.traits.replaceWithNullValues;
 
-    const values = this.rawValues.map(value => {
+    const values = this.values.map(value => {
       if (value.length === 0) {
         return "";
       } else if (replaceWithNull && replaceWithNull.indexOf(value) >= 0) {
@@ -518,7 +516,7 @@ export default class TableColumn {
 
   @computed
   get valuesAsRegions(): ColumnValuesAsRegions {
-    const values = this.rawValues;
+    const values = this.values;
     const map = new Map<string, number | number[]>();
 
     const regionType = this.regionType;
@@ -683,7 +681,7 @@ export default class TableColumn {
         const uniqueValues = this.uniqueValues.values;
         if (
           uniqueValues.length <= 7 ||
-          uniqueValues.length < this.rawValues.length / 10
+          uniqueValues.length < this.values.length / 10
         ) {
           type = TableColumnType.enum;
         } else {
@@ -761,23 +759,10 @@ export default class TableColumn {
       };
     }
 
-    const values = this.rawValues;
+    const values = this.values;
     return function(rowIndex: number) {
       return values[rowIndex];
     };
-  }
-
-  /**
-   * Get column values formatted by type - for example - dates, numbers, regions...
-   * To get raw string column values @see rawValues
-   */
-  @computed
-  get values() {
-    const values: (string | number | null)[] = [];
-    for (let i = 0; i < this.rawValues.length; i++) {
-      values.push(this.valueFunctionForType(i));
-    }
-    return values;
   }
 
   @computed

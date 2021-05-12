@@ -189,7 +189,7 @@ describe("TableColumn", function() {
       ]);
       await tableModel.loadMapItems();
       const tableColumn1 = new TableColumn(tableModel, 0);
-      expect(tableColumn1.rawValues).toEqual(["1", "2", "3", "4"]);
+      expect(tableColumn1.values).toEqual(["1", "2", "3", "4"]);
       expect(tableColumn1.valuesAsNumbers.values).toEqual([11, 12, 13, 14]);
     });
 
@@ -210,9 +210,9 @@ describe("TableColumn", function() {
       ]);
       await tableModel.loadMapItems();
       const tableColumn1 = new TableColumn(tableModel, 0);
-      expect(tableColumn1.rawValues).toEqual(["1", "2", "3", "4"]);
+      expect(tableColumn1.values).toEqual(["1", "2", "3", "4"]);
       const tableColumn2 = new TableColumn(tableModel, 1);
-      expect(tableColumn2.rawValues).toEqual(["11", "12", "13", "14"]);
+      expect(tableColumn2.values).toEqual(["11", "12", "13", "14"]);
       expect(tableColumn1.valuesAsNumbers.values).toEqual([
         1 * 11,
         2 * 12,
@@ -253,7 +253,7 @@ describe("TableColumn", function() {
       ]);
       await tableModel.loadMapItems();
       const tableColumn3 = new TableColumn(tableModel, 2);
-      expect(tableColumn3.rawValues).toEqual(["21", "22", "23", "24"]);
+      expect(tableColumn3.values).toEqual(["21", "22", "23", "24"]);
 
       expect(tableColumn3.valuesAsNumbers.values).toEqual([
         1 * 11 * 10 * 11 * 10 * 21,

@@ -35,7 +35,7 @@ describe("Table Style", function() {
       expect(colorColumn).toBeDefined();
       if (colorColumn !== undefined) {
         expect(colorColumn.type).toBe(4);
-        expect(colorColumn.rawValues.length).toBe(450);
+        expect(colorColumn.values.length).toBe(450);
       }
 
       // Expect 7 as per Traits/TableStyleColorTraits.ts

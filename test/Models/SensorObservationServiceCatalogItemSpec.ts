@@ -177,11 +177,11 @@ describe("SensorObservationServiceCatalogItem", function() {
         };
         item.tableColumns
           .slice(0, -1)
-          .forEach(col => expect(col.rawValues).toEqual(values[col.name]));
+          .forEach(col => expect(col.values).toEqual(values[col.name]));
         // just test that the chart columns have chart component defined
         item.tableColumns
           .slice(-1)[0]
-          .rawValues.forEach(value => expect(value).toContain("<sos-chart "));
+          .values.forEach(value => expect(value).toContain("<sos-chart "));
       });
 
       describe("with a station id whiteliest", function() {
@@ -192,7 +192,7 @@ describe("SensorObservationServiceCatalogItem", function() {
           await item.loadMapItems();
           const col = item.findColumnByName("identifier");
           expect(col).toBeDefined();
-          expect(col?.rawValues).toEqual(["http://sos.example.com/stations/1"]);
+          expect(col?.values).toEqual(["http://sos.example.com/stations/1"]);
         });
       });
 
@@ -204,7 +204,7 @@ describe("SensorObservationServiceCatalogItem", function() {
           await item.loadMapItems();
           const col = item.findColumnByName("identifier");
           expect(col).toBeDefined();
-          expect(col?.rawValues).not.toContain(
+          expect(col?.values).not.toContain(
             "http://sos.example.com/stations/1"
           );
         });
@@ -332,8 +332,8 @@ describe("SensorObservationServiceCatalogItem", function() {
           ""
         ];
         const cols = item.tableColumns;
-        expect(cols[0].rawValues).toEqual(dates);
-        expect(cols[1].rawValues).toEqual(values);
+        expect(cols[0].values).toEqual(dates);
+        expect(cols[1].values).toEqual(values);
       });
     });
   });
