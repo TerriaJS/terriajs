@@ -559,7 +559,7 @@ export default class TableStyle {
     const tableRowIds = this.tableModel.rowIds;
     const rowGroups = Object.values(
       groupBy(tableRowIds, rowId =>
-        groupByCols.map(col => col.valueFunctionForType(rowId)).join("-")
+        groupByCols.map(col => col.values[rowId]).join("-")
       )
     );
 
