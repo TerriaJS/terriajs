@@ -65,6 +65,12 @@
     max-width: none !important;
   }
 
+  // Hack to fix "Space between tiles on fractional zoom levels in Webkit browsers" (https://github.com/Leaflet/Leaflet/issues/3575#issuecomment-688644225)
+  .leaflet-tile-container img {
+    width: 256.5px !important;
+    height: 256.5px !important;
+  }
+
   .leaflet-container.leaflet-touch-zoom {
     -ms-touch-action: pan-x pan-y;
     touch-action: pan-x pan-y;
