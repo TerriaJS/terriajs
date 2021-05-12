@@ -15,6 +15,7 @@ Change Log
 * SDMX changes:
   * Add better SDMX server error messages
   * `conceptOverrides` is now `modelOverrides` - as dataflow dimension traits can now be overridden by codelist ID (which is higher priortiy than concept ID)
+  * Added `regionTypeReplacements` to `modelOverride`- to manually override detected regionTypes
   * `modelOverrides` are created for SDMX common concepts `UNIT_MEASURE`, `UNIT_MULT` and `FREQ`
     * `UNIT_MEASURE` will be displayed on legends and charts
     * `UNIT_MULT` will be used to multiple the primary measure by `10^x`
