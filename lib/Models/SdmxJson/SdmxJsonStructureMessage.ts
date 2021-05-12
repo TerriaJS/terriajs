@@ -67,6 +67,60 @@ export type Dataflow = MaintainableType & {
 
 export type Dataflows = ArrayOneOrMore<Dataflow>;
 
+export type Attribute = IdentifiableTypeWithNCNameID & {
+  assignmentStatus?: UsageStatusType;
+  /**
+   * AttributeRelationship describes how the value of this attribute varies with the values of other components. These relationships will be used to determine the attachment level of the attribute in the various data formats.
+   */
+  attributeRelationship?: {
+    attachmentGroups?: string[];
+    dimensions?: string[];
+    /**
+     * Identifier of a local GroupKey Descriptor. This is used as a convenience to referencing all of the dimension defined by the referenced group. The attribute will also be attached to this group.
+     */
+    group?: string;
+    /**
+     * This means that value of the attribute will not vary with any of the other data structure components. This will always be treated as a data set level attribute.
+     */
+    none?: {
+      [k: string]: unknown;
+    };
+    /**
+     * Identifier of the local primary measure, where the reference to the data structure definition which defines the primary measure is provided in another context (for example the data structure definition in which the reference occurs). This is used to specify that the value of the attribute is dependent upon the observed value. An attribute with this relationship will always be treated as an observation level attribute.
+     */
+    primaryMeasure?: string;
+    [k: string]: unknown;
+  };
+  /**
+   * Urn reference to a concept where the identification of the concept scheme which defines it is contained in another context.
+   */
+  conceptIdentity?: string;
+  conceptRoles?: string[];
+  localRepresentation?: SimpleDataStructureRepresentationType;
+  [k: string]: unknown;
+};
+
+export type Dimension = IdentifiableTypeWithNCNameID & {
+  /**
+   * The position attribute specifies the position of the dimension in the data structure definition, starting at 0. It is optional as the position of the dimension in the key descriptor (DimensionList element) always takes precedence over the value supplied here. This is strictly for informational purposes only.
+   */
+  position?: number;
+  /**
+   * The type attribute identifies whether then dimension is a measure dimension, the time dimension, or a regular dimension. Although these are all apparent by the element names, this attribute allows for each dimension to be processed independent of its element as well as maintaining the restriction of only one measure and time dimension while still allowing dimension to occur in any order.
+   */
+  type?: "Dimension" | "MeasureDimension" | "TimeDimension";
+  /**
+   * Urn reference to a concept where the identification of the concept scheme which defines it is contained in another context.
+   */
+  conceptIdentity?: string;
+  /**
+   * ConceptRoles references concepts which define roles which this dimension serves. If the concept from which the attribute takes its identity also defines a role the concept serves, then the isConceptRole indicator can be set to true on the concept identity rather than repeating the reference here.
+   */
+  conceptRoles?: string[];
+  localRepresentation?: SimpleDataStructureRepresentationType;
+  [k: string]: unknown;
+};
+
 export type DataStructure = MaintainableType & {
   /**
    * DataStructureComponents defines the grouping of the sets of metadata concepts that have a defined structural role in the data structure definition. Note that for any component or group defined in a data structure definition, its id must be unique. This applies to the identifiers explicitly defined by the components as well as those inherited from the concept identity of a component. For example, if two dimensions take their identity from concepts with same identity (regardless of whether the concepts exist in different schemes) one of the dimensions must be provided a different explicit identifier. Although there are XML schema constraints to help enforce this, these only apply to explicitly assigned identifiers. Identifiers inherited from a concept from which a component takes its identity cannot be validated against this constraint. Therefore, systems processing data structure definitions will have to perform this check outside of the XML validation. There are also three reserved identifiers in a data structure definition; OBS_VALUE, TIME_PERIOD, and REPORTING_PERIOD_START_DAY. These identifiers may not be used outside of their respective defintions (PrimaryMeasure, TimeDimension, and ReportingYearStartDay). This applies to both the explicit identifiers that can be assigned to the components or groups as well as an identifier inherited by a component from its concept identity. For example, if an ordinary dimension (i.e. not the time dimension) takes its concept identity from a concept with the identifier TIME_PERIOD, that dimension must provide a different explicit identifier.
@@ -76,38 +130,7 @@ export type DataStructure = MaintainableType & {
      * AttributeList describes the attribute descriptor for the data structure definition. It is a collection of metadata concepts that define the attributes of the data structure definition.
      */
     attributeList?: IdentifiableType & {
-      attributes?: (IdentifiableTypeWithNCNameID & {
-        assignmentStatus?: UsageStatusType;
-        /**
-         * AttributeRelationship describes how the value of this attribute varies with the values of other components. These relationships will be used to determine the attachment level of the attribute in the various data formats.
-         */
-        attributeRelationship?: {
-          attachmentGroups?: string[];
-          dimensions?: string[];
-          /**
-           * Identifier of a local GroupKey Descriptor. This is used as a convenience to referencing all of the dimension defined by the referenced group. The attribute will also be attached to this group.
-           */
-          group?: string;
-          /**
-           * This means that value of the attribute will not vary with any of the other data structure components. This will always be treated as a data set level attribute.
-           */
-          none?: {
-            [k: string]: unknown;
-          };
-          /**
-           * Identifier of the local primary measure, where the reference to the data structure definition which defines the primary measure is provided in another context (for example the data structure definition in which the reference occurs). This is used to specify that the value of the attribute is dependent upon the observed value. An attribute with this relationship will always be treated as an observation level attribute.
-           */
-          primaryMeasure?: string;
-          [k: string]: unknown;
-        };
-        /**
-         * Urn reference to a concept where the identification of the concept scheme which defines it is contained in another context.
-         */
-        conceptIdentity?: string;
-        conceptRoles?: string[];
-        localRepresentation?: SimpleDataStructureRepresentationType;
-        [k: string]: unknown;
-      })[];
+      attributes?: Attribute[];
       reportingYearStartDays?: (IdentifiableTypeWithNCNameID & {
         assignmentStatus?: UsageStatusType;
         attributeRelationship?: AttributeRelationshipType;
@@ -124,62 +147,9 @@ export type DataStructure = MaintainableType & {
      * DimensionList describes the key descriptor for the data structure definition. It is an ordered set of metadata concepts that, combined, classify a statistical series, such as a time series, and whose values, when combined (the key) in an instance such as a data set, uniquely identify a specific series.
      */
     dimensionList: IdentifiableType & {
-      dimensions?: (IdentifiableTypeWithNCNameID & {
-        /**
-         * The position attribute specifies the position of the dimension in the data structure definition, starting at 0. It is optional as the position of the dimension in the key descriptor (DimensionList element) always takes precedence over the value supplied here. This is strictly for informational purposes only.
-         */
-        position?: number;
-        /**
-         * The type attribute identifies whether then dimension is a measure dimension, the time dimension, or a regular dimension. Although these are all apparent by the element names, this attribute allows for each dimension to be processed independent of its element as well as maintaining the restriction of only one measure and time dimension while still allowing dimension to occur in any order.
-         */
-        type?: "Dimension" | "MeasureDimension" | "TimeDimension";
-        /**
-         * Urn reference to a concept where the identification of the concept scheme which defines it is contained in another context.
-         */
-        conceptIdentity?: string;
-        /**
-         * ConceptRoles references concepts which define roles which this dimension serves. If the concept from which the attribute takes its identity also defines a role the concept serves, then the isConceptRole indicator can be set to true on the concept identity rather than repeating the reference here.
-         */
-        conceptRoles?: string[];
-        localRepresentation?: SimpleDataStructureRepresentationType;
-        [k: string]: unknown;
-      })[];
-      measureDimensions?: (IdentifiableTypeWithNCNameID & {
-        /**
-         * The position attribute specifies the position of the dimension in the data structure definition, starting at 0. It is optional as the position of the dimension in the key descriptor (DimensionList element) always takes precedence over the value supplied here. This is strictly for informational purposes only.
-         */
-        position?: number;
-        /**
-         * The type attribute identifies whether then dimension is a measure dimension, the time dimension, or a regular dimension. Although these are all apparent by the element names, this attribute allows for each dimension to be processed independent of its element as well as maintaining the restriction of only one measure and time dimension while still allowing dimension to occur in any order.
-         */
-        type?: "Dimension" | "MeasureDimension" | "TimeDimension";
-        /**
-         * Urn reference to a concept where the identification of the concept scheme which defines it is contained in another context.
-         */
-        conceptIdentity?: string;
-        /**
-         * ConceptRoles references concepts which define roles which this dimension serves. If the concept from which the attribute takes its identity also defines a role the concept serves, then the isConceptRole indicator can be set to true on the concept identity rather than repeating the reference here.
-         */
-        conceptRoles?: string[];
-        localRepresentation?: MeasureDimensionRepresentationType;
-        [k: string]: unknown;
-      })[];
-      timeDimensions?: (IdentifiableTypeWithNCNameID & {
-        /**
-         * The position attribute specifies the position of the dimension in the data structure definition, starting at 0. It is optional as the position of the dimension in the key descriptor (DimensionList element) always takes precedence over the value supplied here. This is strictly for informational purposes only.
-         */
-        position?: number;
-        /**
-         * The type attribute identifies whether the dimension is a measure dimension, the time dimension, or a regular dimension. Although these are all apparent by the element names, this attribute allows for each dimension to be processed independent of its element as well as maintaining the restriction of only one measure and time dimension while still allowing dimension to occur in any order.
-         */
-        type?: "Dimension" | "MeasureDimension" | "TimeDimension";
-        /**
-         * Urn reference to a concept where the identification of the concept scheme which defines it is contained in another context.
-         */
-        conceptIdentity?: string;
-        localRepresentation?: TimeDimensionRepresentationType;
-        [k: string]: unknown;
-      })[];
+      dimensions?: Dimension[];
+      measureDimensions?: Dimension[];
+      timeDimensions?: Dimension[];
       [k: string]: unknown;
     };
     groups?: (IdentifiableType & {

@@ -22,20 +22,23 @@ import TableColumnTraits, {
 } from "../../Traits/TableColumnTraits";
 import TableStyleTraits from "../../Traits/TableStyleTraits";
 import TableTimeStyleTraits from "../../Traits/TableTimeStyleTraits";
+import createCombinedModel from "../createCombinedModel";
 import createStratumInstance from "../createStratumInstance";
 import LoadableStratum from "../LoadableStratum";
-import { BaseModel } from "../Model";
+import Model, { BaseModel } from "../Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumFromTraits from "../StratumFromTraits";
 import StratumOrder from "../StratumOrder";
 import SdmxJsonCatalogItem from "./SdmxJsonCatalogItem";
 import { loadSdmxJsonStructure, parseSdmxUrn } from "./SdmxJsonServerStratum";
 import {
+  Attribute,
   CodeLists,
   ConceptSchemes,
   ContentConstraints,
   Dataflow,
   DataStructure,
+  Dimension,
   SdmxJsonStructureMessage
 } from "./SdmxJsonStructureMessage";
 
@@ -133,6 +136,32 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     return this.sdmxJsonDataflow.dataflow.description;
   }
 
+  get sdmxAttributes() {
+    return (
+      this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.attributeList
+        ?.attributes ?? []
+    );
+  }
+
+  get sdmxDimensions() {
+    return (
+      this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.dimensionList
+        ?.dimensions ?? []
+    );
+  }
+
+  get sdmxTimeDimensions() {
+    return (
+      this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.dimensionList
+        .timeDimensions ?? []
+    );
+  }
+
+  get sdmxPrimaryMeasure() {
+    return this.sdmxJsonDataflow.dataStructure.dataStructureComponents
+      ?.measureList.primaryMeasure;
+  }
+
   /**
    * If we get a dataflow with a single value (and not region-mapped), show the exact value in a short report
    */
@@ -142,7 +171,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
       return;
 
     const primaryCol = this.catalogItem.tableColumns.find(
-      col => col.name === this.primaryMeasureColumn.name
+      col => col.name === this.primaryMeasureColumn?.name
     );
     if (
       primaryCol?.valuesAsNumbers.values.length === 1 &&
@@ -162,6 +191,28 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
 
   // ------------- START SDMX TRAITS STRATUM -------------
 
+  /** Merge codelist and concept model overrides (codelist takes priority) */
+  getMergedModelOverride(
+    dim: Attribute | Dimension
+  ): Model<ModelOverrideTraits> | undefined {
+    const conceptOverride = this.catalogItem.modelOverrides.find(
+      concept => concept.id === dim.conceptIdentity
+    );
+    const codelistOverride = this.catalogItem.modelOverrides.find(
+      codelist => codelist.id === dim.localRepresentation?.enumeration
+    );
+
+    let modelOverride = conceptOverride;
+    if (!modelOverride) {
+      modelOverride = codelistOverride;
+
+      // If there is a codelist and concept override, merge them
+    } else if (codelistOverride) {
+      modelOverride = createCombinedModel(codelistOverride, modelOverride);
+    }
+
+    return modelOverride;
+  }
   /**
    * This maps SDMX-JSON dataflow structure to SdmxDimensionTraits - it uses:
    * - Data structure's dimensions (filtered to only include "enumerated" dimensions)
@@ -173,11 +224,6 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    */
   @computed
   get dimensions(): StratumFromTraits<SdmxDimensionTraits>[] | undefined {
-    const dimensionList = this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.dimensionList.dimensions?.filter(
-      isDefined
-    );
-    if (!Array.isArray(dimensionList) || dimensionList.length === 0) return;
-
     // Contraint contains allowed dimension values for a given dataflow
     // Get 'actual' constraints (rather than 'allowed' constraints)
     const constraints = this.sdmxJsonDataflow.contentConstraints?.filter(
@@ -185,7 +231,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     );
 
     return (
-      dimensionList
+      this.sdmxDimensions
         // Filter normal enum dimensions
         .filter(
           dim =>
@@ -194,14 +240,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
             dim.localRepresentation?.enumeration
         )
         .map(dim => {
-          // Get codelistOverride and conceptOverride
-          // Note: order matters, we use codelistOverride values over conceptOverride values
-          const conceptOverride = this.catalogItem.modelOverrides.find(
-            concept => concept.id === dim.conceptIdentity
-          );
-          const codelistOverride = this.catalogItem.modelOverrides.find(
-            codelist => codelist.id === dim.localRepresentation?.enumeration
-          );
+          const modelOverride = this.getMergedModelOverride(dim);
 
           // Concept maps dimension's ID to a human-readable name
           const concept = this.getConceptByUrn(dim.conceptIdentity);
@@ -243,8 +282,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
           // Create options object
           // If modelOverride `options` has been defined -> use it
           // Other wise use filteredCodesList
-          const overrideOptions =
-            codelistOverride?.options ?? conceptOverride?.options;
+          const overrideOptions = modelOverride?.options;
           const options =
             isDefined(overrideOptions) && overrideOptions.length > 0
               ? overrideOptions.map(option => {
@@ -256,15 +294,12 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
 
           if (isDefined(options) && options.length > 0) {
             // Use first option as default if no other default is provided
-            let selectedId: string | undefined =
-              codelistOverride?.allowUndefined ??
-              conceptOverride?.allowUndefined
-                ? undefined
-                : options[0].id;
+            let selectedId: string | undefined = modelOverride?.allowUndefined
+              ? undefined
+              : options[0].id;
 
             // Override selectedId if it a valid option
-            const selectedIdOverride =
-              codelistOverride?.selectedId ?? conceptOverride?.selectedId;
+            const selectedIdOverride = modelOverride?.selectedId;
 
             if (
               isDefined(selectedIdOverride) &&
@@ -275,16 +310,11 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
 
             return {
               id: dim.id!,
-              name:
-                codelistOverride?.name ??
-                conceptOverride?.name ??
-                concept?.name,
+              name: modelOverride?.name ?? concept?.name,
               options: options,
               position: dim.position,
-              disable: codelistOverride?.disable ?? conceptOverride?.disable,
-              allowUndefined:
-                codelistOverride?.allowUndefined ??
-                conceptOverride?.allowUndefined,
+              disable: modelOverride?.disable,
+              allowUndefined: modelOverride?.allowUndefined,
               selectedId: selectedId
             };
           }
@@ -303,12 +333,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   get modelOverrides() {
     return filterOutUndefined(
       // Map through all dimensions and attributes to find ones which use common concepts
-      [
-        ...(this.sdmxJsonDataflow.dataStructure.dataStructureComponents
-          ?.dimensionList.dimensions ?? []),
-        ...(this.sdmxJsonDataflow.dataStructure.dataStructureComponents
-          ?.attributeList?.attributes ?? [])
-      ].map(dimAttr => {
+      [...this.sdmxDimensions, ...this.sdmxAttributes].map(dimAttr => {
         const conceptUrn = parseSdmxUrn(dimAttr.conceptIdentity);
         // Add UNIT_MEASURE common concept override for unit-measure
         if (conceptUrn?.descendantIds?.[0] === "UNIT_MEASURE") {
@@ -394,12 +419,11 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    * - `transformation` if unit multiplier attribute has been found (which will apply `x*(10^unitMultiplier)` to all observation vlues)
    */
   @computed
-  get primaryMeasureColumn(): StratumFromTraits<TableColumnTraits> {
-    // Get primary measure column
-    const primaryMeasure = this.sdmxJsonDataflow.dataStructure
-      .dataStructureComponents?.measureList.primaryMeasure;
+  get primaryMeasureColumn(): StratumFromTraits<TableColumnTraits> | undefined {
+    if (!this.sdmxPrimaryMeasure) return;
+
     const primaryMeasureConcept = this.getConceptByUrn(
-      primaryMeasure?.conceptIdentity
+      this.sdmxPrimaryMeasure?.conceptIdentity
     );
 
     // Find unit multipler columns by searching for attributes/dimensions which have modelOverrides of type "unit-multiplier".
@@ -418,7 +442,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     )[0];
 
     return createStratumInstance(TableColumnTraits, {
-      name: primaryMeasure?.id,
+      name: this.sdmxPrimaryMeasure?.id,
       title: primaryMeasureConcept?.name,
       type: "scalar",
       // If a unitMultiplier was found, we add `x*(10^unitMultiplier)` transformation
@@ -442,14 +466,11 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
 
   @computed
   get dimensionColumns(): StratumFromTraits<TableColumnTraits>[] {
-    const dimensionsList = this.sdmxJsonDataflow.dataStructure
-      .dataStructureComponents?.dimensionList;
-
     // Get columns for all dimensions (excluding time dimensions)
     return (
-      dimensionsList?.dimensions
+      this.sdmxDimensions
 
-        ?.filter(dim => isDefined(dim.id))
+        .filter(dim => isDefined(dim.id))
         .map(dim => {
           // Hide dimension columns if they are disabled
           if (this.dimensions?.find(d => d.id === dim.id)?.disable) {
@@ -466,30 +487,17 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
             dim.localRepresentation?.enumeration
           );
 
-          // Get codelistOverride and conceptOverride
-          // Note: order matters, we use codelistOverride values over conceptOverride values
-          const conceptOverride = this.catalogItem.modelOverrides.find(
-            concept => concept.id === dim.conceptIdentity
-          );
-          const codelistOverride = this.catalogItem.modelOverrides.find(
-            codelist => codelist.id === dim.localRepresentation?.enumeration
-          );
+          const modelOverride = this.getMergedModelOverride(dim);
 
           // Try to find region type
           let regionType: string | undefined;
 
-          // Are any regionTypes present in modelOverrides
-          regionType =
-            this.matchRegionType(codelistOverride?.regionType) ??
-            this.matchRegionType(conceptOverride?.regionType);
+          // Are any regionTypes present in modelOverride
+          regionType = this.matchRegionType(modelOverride?.regionType);
 
           // Next try fetching reigon type from another dimension (only if this modelOverride type 'region')
           // It will look through dimensions which have modelOverrides of type `region-type` and have a selectedId, if one is found - it will be used as the regionType of this column
-          if (
-            !isDefined(regionType) &&
-            (codelistOverride?.type === "region" ||
-              conceptOverride?.type === "region")
-          ) {
+          if (!isDefined(regionType) && modelOverride?.type === "region") {
             // Use selectedId of first dimension with one
             regionType = this.matchRegionType(
               this.getDimensionsWithOverrideType("region-type").find(d =>
@@ -514,14 +522,10 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
               this.matchRegionType(concept?.id);
 
           // Apply regionTypeReplacements (which can replace regionType with a different regionType - using [{find:string, replace:string}] pattern)
-          if (
-            codelistOverride?.type === "region" ||
-            conceptOverride?.type === "region"
-          ) {
-            const replacement = (
-              codelistOverride?.regionTypeReplacements ??
-              conceptOverride?.regionTypeReplacements
-            )?.find(r => r.find === regionType)?.replace;
+          if (modelOverride?.type === "region") {
+            const replacement = modelOverride?.regionTypeReplacements?.find(
+              r => r.find === regionType
+            )?.replace;
             if (isDefined(replacement)) {
               regionType = replacement;
             }
@@ -533,7 +537,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
             type: isDefined(regionType) ? "region" : "hidden",
             regionType
           });
-        }) || []
+        }) ?? []
     );
   }
 
@@ -546,16 +550,14 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   @computed
   get timeColumns(): StratumFromTraits<TableColumnTraits>[] {
     return (
-      this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.dimensionList.timeDimensions?.map(
-        dim => {
-          const concept = this.getConceptByUrn(dim.conceptIdentity);
-          return createStratumInstance(TableColumnTraits, {
-            name: dim.id,
-            title: concept?.name ?? dim.id,
-            type: "time"
-          });
-        }
-      ) ?? []
+      this.sdmxTimeDimensions.map(dim => {
+        const concept = this.getConceptByUrn(dim.conceptIdentity);
+        return createStratumInstance(TableColumnTraits, {
+          name: dim.id,
+          title: concept?.name ?? dim.id,
+          type: "time"
+        });
+      }) ?? []
     );
   }
 
@@ -567,14 +569,12 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   @computed
   get attributeColumns(): StratumFromTraits<TableColumnTraits>[] {
     return (
-      this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.attributeList?.attributes?.map(
-        attr => {
-          return createStratumInstance(TableColumnTraits, {
-            name: attr.id,
-            type: "hidden"
-          });
-        }
-      ) ?? []
+      this.sdmxAttributes.map(attr => {
+        return createStratumInstance(TableColumnTraits, {
+          name: attr.id,
+          type: "hidden"
+        });
+      }) ?? []
     );
   }
 
@@ -583,12 +583,12 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    */
   @computed
   get columns() {
-    return [
+    return filterOutUndefined([
       this.primaryMeasureColumn,
       ...this.dimensionColumns,
       ...this.timeColumns,
       ...this.attributeColumns
-    ];
+    ]);
   }
 
   /**
@@ -642,7 +642,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    */
   @computed
   get activeStyle() {
-    return this.primaryMeasureColumn.name;
+    return this.primaryMeasureColumn?.name;
   }
 
   /**
@@ -685,15 +685,15 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
 
     const primaryMeasureName =
       this.unitMeasure ??
-      this.primaryMeasureColumn.title ??
-      this.primaryMeasureColumn.name ??
+      this.primaryMeasureColumn?.title ??
+      this.primaryMeasureColumn?.name ??
       "Value";
 
     template +=
       row("", "") +
       row(
         primaryMeasureName,
-        `{{#terria.formatNumber}}{useGrouping: true}{{${this.primaryMeasureColumn.name}}}{{/terria.formatNumber}}`
+        `{{#terria.formatNumber}}{useGrouping: true}{{${this.primaryMeasureColumn?.name}}}{{/terria.formatNumber}}`
       );
 
     // Add timeSeries chart if more than one time observation
@@ -756,7 +756,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   }
 
   getDimensionWithConceptOrCodelist(id: string) {
-    return this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.dimensionList?.dimensions?.find(
+    return this.sdmxDimensions.find(
       dim =>
         dim.conceptIdentity === id ||
         dim.localRepresentation?.enumeration === id
@@ -764,7 +764,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   }
 
   getAttributionWithConceptOrCodelist(id: string) {
-    return this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.attributeList?.attributes?.find(
+    return this.sdmxAttributes.find(
       attr =>
         attr.conceptIdentity === id ||
         attr.localRepresentation?.enumeration === id
