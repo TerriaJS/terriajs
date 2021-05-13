@@ -139,7 +139,7 @@ export class ModelOverrideTraits extends DimensionTraits {
     idProperty: "index",
     name: "Region type",
     description:
-      "If `type` has been specified as 'region' and this concept contains multiple regionTypes - you can add a map to correct automatically detected region types. For example: setting `regionTypesMap = [{find: 'SA1_2016', replace: 'SA1_2011'}]` will replace `regionType` with `SA1_2011` if it was `SA1_2016`"
+      "If `type` has been specified as 'region' and this dataflow contains multiple regionTypes - you can add a map to correct automatically detected region types. For example: setting `regionTypeReplacements = [{find: 'SA1_2016', replace: 'SA1_2011'}]` will replace `regionType` with `SA1_2011` if it was `SA1_2016`"
   })
   regionTypeReplacements?: ReplaceStringTraits[];
 }

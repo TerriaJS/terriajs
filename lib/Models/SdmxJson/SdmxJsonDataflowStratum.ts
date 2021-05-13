@@ -214,7 +214,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     return modelOverride;
   }
   /**
-   * This maps SDMX-JSON dataflow structure to SdmxDimensionTraits - it uses:
+   * This maps SDMX-JSON dataflow structure to `SdmxDimensionTraits` (which gets turned into `SelectableDimensions`) - it uses:
    * - Data structure's dimensions (filtered to only include "enumerated" dimensions)
    * - Content constraints to find dimension options
    * - Codelists to add human readable labels to dimension options
