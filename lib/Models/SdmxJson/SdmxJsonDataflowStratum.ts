@@ -407,7 +407,10 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
       frequencyDim?.options.find(o => o.id === frequencyDim.selectedId)?.name ??
       frequencyDim?.id;
 
-    return `${unitMeasure}${frequency ? ` (${frequency})` : ""}`;
+    return `${unitMeasure ||
+      i18next.t("models.sdmxJsonDataflowStratum.defaultUnitMeasure")}${
+      frequency ? ` (${frequency})` : ""
+    }`;
   }
 
   // ------------- START TABLE TRAITS STRATUM -------------
