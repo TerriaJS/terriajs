@@ -1,31 +1,40 @@
 {
-    "countDatasets": {
-        "countingMessage": "数えています、しばらくお待ちください…",
-        "loadError": "読み込みに失敗しました。",
-        "btnText": "スタート"
-    },
-    "share": {
-        "btnMapShareTitle": "地図を共有する",
-        "btnStoryShareTitle": "ストーリーを共有する",
-        "btnCatalogShareTitle": "カタログを共有する",
-        "btnMapShareText": "共有 / 印刷",
-        "btnStoryShareText": "共有する",
-        "btnCatalogShareText": "共有する"
-    },
-    "legend": {
-        "e": "東経",
-        "n": "北緯",
-        "zone": "ゾーン",
-        "lon": "経度",
-        "lat": "緯度"
-    },
-    "AR": {
-        "arTool": "AR (拡張現実)ツール",
-        "experimentalFeatureMessage": "AR(拡張現実)モードは、現在ベータ版です。このモードは、最新のハイエンドモバイルデバイスでのみ使用するように設計されています。. <br /><br />警告：このモードは大量のデータを通信する可能性があります。ネットワークプロバイダーなどの使用料にご注意ください。. <br /><br />このモードの精度は、モバイルデバイスの内部コンパスの精度によって異なります。"
-    },
-    "zoomCotrol": {
-        "zoomIn": "拡大する",
-        "zoomOut": "縮小する",
-        "zoomReset": "拡大・縮小を元に戻す"
-    }
+  "countDatasets": {
+    "countingMessage": "数えています、しばらくお待ちください…",
+    "loadError": "読み込みに失敗しました。",
+    "btnText": "スタート"
+  },
+  "share": {
+    "btnMapShareTitle": "地図を共有する",
+    "btnStoryShareTitle": "ストーリーを共有する",
+    "btnCatalogShareTitle": "カタログを共有する",
+    "btnMapShareText": "共有 / 印刷",
+    "btnStoryShareText": "共有する",
+    "btnCatalogShareText": "共有する"
+  },
+  "legend": {
+    "e": "東経",
+    "n": "北緯",
+    "zone": "ゾーン",
+    "lon": "経度",
+    "lat": "緯度"
+  },
+  "AR": {
+    "arTool": "AR (拡張現実)ツール",
+    "experimentalFeatureMessage": "AR(拡張現実)モードは、現在ベータ版です。このモードは、最新のハイエンドモバイルデバイスでのみ使用するように設計されています。. <br /><br />警告：このモードは大量のデータを通信する可能性があります。ネットワークプロバイダーなどの使用料にご注意ください。. <br /><br />このモードの精度は、モバイルデバイスの内部コンパスの精度によって異なります。"
+  },
+  "zoomCotrol": {
+    "zoomIn": "拡大する",
+    "zoomOut": "縮小する",
+    "zoomReset": "拡大・縮小を元に戻す"
+  },
+  "general": {
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "prev": "前",
+    "skip": "スキップ",
+    "next": "次",
+    "open": "開く",
+    "close": "閉じる"
+  }
 }
