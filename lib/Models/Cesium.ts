@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { autorun, computed, runInAction } from "mobx";
-import { createTransformer } from "mobx-utils";
+import { computedFn } from "mobx-utils";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -18,6 +18,7 @@ import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import HeadingPitchRange from "terriajs-cesium/Source/Core/HeadingPitchRange";
 import Ion from "terriajs-cesium/Source/Core/Ion";
+import IonResource from "terriajs-cesium/Source/Core/IonResource";
 import KeyboardEventModifier from "terriajs-cesium/Source/Core/KeyboardEventModifier";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
@@ -43,6 +44,7 @@ import when from "terriajs-cesium/Source/ThirdParty/when";
 import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
 import getElement from "terriajs-cesium/Source/Widgets/getElement";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
 import LatLonHeight from "../Core/LatLonHeight";
 import pollToPromise from "../Core/pollToPromise";
@@ -50,6 +52,13 @@ import CesiumRenderLoopPauser from "../Map/CesiumRenderLoopPauser";
 import CesiumSelectionIndicator from "../Map/CesiumSelectionIndicator";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import PickedFeatures, { ProviderCoordsMap } from "../Map/PickedFeatures";
+import MappableMixin, {
+  ImageryParts,
+  isCesium3DTileset,
+  isDataSource,
+  isTerrainProvider,
+  MapItem
+} from "../ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
 import SplitterTraits from "../Traits/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
@@ -57,13 +66,6 @@ import CameraView from "./CameraView";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import hasTraits from "./hasTraits";
-import Mappable, {
-  ImageryParts,
-  isCesium3DTileset,
-  isDataSource,
-  isTerrainProvider,
-  MapItem
-} from "./Mappable";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
 
@@ -97,7 +99,7 @@ export default class Cesium extends GlobeOrMap {
     | CameraView
     | Rectangle
     | DataSource
-    | Mappable
+    | MappableMixin.MappableMixin
     | /*TODO Cesium.Cesium3DTileset*/ any;
 
   // When true, feature picking is paused. This is useful for temporarily
@@ -113,9 +115,12 @@ export default class Cesium extends GlobeOrMap {
   private readonly _disposeSplitterReaction: () => void;
 
   private _createImageryLayer: (
-    ip: ImageryProvider
-  ) => ImageryLayer = createTransformer((ip: ImageryProvider) => {
-    return new ImageryLayer(ip);
+    ip: ImageryProvider,
+    clippingRectangle: Rectangle | undefined
+  ) => ImageryLayer = computedFn((ip, clippingRectangle) => {
+    return new ImageryLayer(ip, {
+      rectangle: clippingRectangle
+    });
   });
 
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
@@ -194,7 +199,7 @@ export default class Cesium extends GlobeOrMap {
     //             console.log('Switching to EllipsoidTerrainProvider.');
     //             that.terria.viewerMode = ViewerMode.CesiumEllipsoid;
     //             if (!defined(that.TerrainMessageViewed)) {
-    //                 that.terria.error.raiseEvent({
+    //                 that.terria.raiseErrorToUser({
     //                     title : 'Terrain Server Not Responding',
     //                     message : '\
     // The terrain server is not responding at the moment.  You can still use all the features of '+that.terria.appName+' \
@@ -511,11 +516,13 @@ export default class Cesium extends GlobeOrMap {
       ...this.terriaViewer.items.get(),
       this.terriaViewer.baseMap
     ];
-    // Flatmap
-    return ([] as { item: Mappable; mapItem: MapItem }[]).concat(
-      ...catalogItems
-        .filter(isDefined)
-        .map(item => item.mapItems.map(mapItem => ({ mapItem, item })))
+    return flatten(
+      filterOutUndefined(
+        catalogItems.map(item => {
+          if (isDefined(item) && MappableMixin.isMixedInto(item))
+            return item.mapItems.map(mapItem => ({ mapItem, item }));
+        })
+      )
     );
   }
 
@@ -620,12 +627,12 @@ export default class Cesium extends GlobeOrMap {
     }
   }
 
-  zoomTo(
+  doZoomTo(
     target:
       | CameraView
       | Rectangle
       | DataSource
-      | Mappable
+      | MappableMixin.MappableMixin
       | /*TODO Cesium.Cesium3DTileset*/ any,
     flightDurationSeconds?: number
   ): void {
@@ -709,25 +716,17 @@ export default class Cesium extends GlobeOrMap {
               up: target.up
             }
           });
-        } else if (Mappable.is(target)) {
-          if (isDefined(target.rectangle)) {
-            const { west, south, east, north } = target.rectangle;
-            if (
-              isDefined(west) &&
-              isDefined(south) &&
-              isDefined(east) &&
-              isDefined(north)
-            ) {
-              return that.scene.camera.flyTo({
-                duration: flightDurationSeconds,
-                destination: Rectangle.fromDegrees(west, south, east, north)
-              });
-            }
+        } else if (MappableMixin.isMixedInto(target)) {
+          if (isDefined(target.cesiumRectangle)) {
+            return that.scene.camera.flyTo({
+              duration: flightDurationSeconds,
+              destination: target.cesiumRectangle
+            });
           }
 
           if (target.mapItems.length > 0) {
             // Zoom to the first item!
-            return that.zoomTo(target.mapItems[0], flightDurationSeconds);
+            return that.doZoomTo(target.mapItems[0], flightDurationSeconds);
           }
         } else if (defined(target.rectangle)) {
           that.scene.camera.flyTo({
@@ -757,7 +756,10 @@ export default class Cesium extends GlobeOrMap {
       const items = this.terria.mainViewer.items.get();
       const showSplitter = this.terria.showSplitter;
       items.forEach(item => {
-        if (hasTraits(item, SplitterTraits, "splitDirection")) {
+        if (
+          MappableMixin.isMixedInto(item) &&
+          hasTraits(item, SplitterTraits, "splitDirection")
+        ) {
           const layers = this.getImageryLayersForItem(item);
           const splitDirection = item.splitDirection;
 
@@ -909,6 +911,18 @@ export default class Cesium extends GlobeOrMap {
   } {
     if (!this.terriaViewer.viewerOptions.useTerrain) {
       return { terrain: new EllipsoidTerrainProvider() };
+    }
+    if (this.terria.configParameters.cesiumTerrainAssetId !== undefined) {
+      return {
+        terrain: new CesiumTerrainProvider({
+          url: IonResource.fromAssetId(
+            this.terria.configParameters.cesiumTerrainAssetId,
+            {
+              accessToken: this.terria.configParameters.cesiumIonAccessToken
+            }
+          )
+        })
+      };
     }
     if (this.terria.configParameters.cesiumTerrainUrl) {
       return {
@@ -1349,7 +1363,7 @@ export default class Cesium extends GlobeOrMap {
     return result;
   }
 
-  getImageryLayersForItem(item: Mappable): ImageryLayer[] {
+  getImageryLayersForItem(item: MappableMixin.MappableMixin): ImageryLayer[] {
     return filterOutUndefined(
       item.mapItems.map(m => {
         if (ImageryParts.is(m)) {
@@ -1361,9 +1375,12 @@ export default class Cesium extends GlobeOrMap {
 
   private _makeImageryLayerFromParts(
     parts: ImageryParts,
-    item: Mappable
+    item: MappableMixin.MappableMixin
   ): ImageryLayer {
-    const layer = this._createImageryLayer(parts.imageryProvider);
+    const layer = this._createImageryLayer(
+      parts.imageryProvider,
+      parts.clippingRectangle
+    );
     if (TileErrorHandlerMixin.isMixedInto(item)) {
       // because this code path can run multiple times, make sure we remove the
       // handler if it is already registered

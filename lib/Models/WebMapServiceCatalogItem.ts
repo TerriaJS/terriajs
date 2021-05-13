@@ -11,8 +11,8 @@ import i18next from "i18next";
 import { computed, runInAction } from "mobx";
 import combine from "terriajs-cesium/Source/Core/combine";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
@@ -25,11 +25,12 @@ import isDefined from "../Core/isDefined";
 import isReadOnlyArray from "../Core/isReadOnlyArray";
 import { JsonObject } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";
-import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import ChartableMixin from "../ModelMixins/ChartableMixin";
 import DiffableMixin from "../ModelMixins/DiffableMixin";
 import ExportableMixin from "../ModelMixins/ExportableMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
+import { ImageryParts } from "../ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
 import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -44,6 +45,8 @@ import {
 import LegendTraits from "../Traits/LegendTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
 import WebMapServiceCatalogItemTraits, {
+  SUPPORTED_CRS_3857,
+  SUPPORTED_CRS_4326,
   WebMapServiceAvailableLayerDimensionsTraits,
   WebMapServiceAvailableLayerStylesTraits,
   WebMapServiceAvailableStyleTraits
@@ -53,7 +56,6 @@ import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
-import { ImageryParts } from "./Mappable";
 import Model, { BaseModel } from "./Model";
 import { CapabilitiesStyle } from "./OwsInterfaces";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
@@ -68,7 +70,6 @@ import WebMapServiceCapabilities, {
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 
 const dateFormat = require("dateformat");
-
 class GetCapabilitiesStratum extends LoadableStratum(
   WebMapServiceCatalogItemTraits
 ) {
@@ -284,6 +285,27 @@ class GetCapabilitiesStratum extends LoadableStratum(
     return new Map(this.catalogItem.layersArray.map(lookup));
   }
 
+  @computed get crs() {
+    // Get set of supported CRS from layer hierarchy
+    const layerCrs = new Set<string>();
+    this.capabilitiesLayers.forEach(layer => {
+      if (layer) {
+        const srs = this.capabilities.getInheritedValues(layer, "SRS");
+        const crs = this.capabilities.getInheritedValues(layer, "CRS");
+        [
+          ...(Array.isArray(srs) ? srs : [srs]),
+          ...(Array.isArray(crs) ? crs : [crs])
+        ].forEach(c => layerCrs.add(c));
+      }
+    });
+
+    // Note order is important here, the first one found will be used
+    const supportedCrs = [...SUPPORTED_CRS_3857, ...SUPPORTED_CRS_4326];
+
+    // If nothing is supported, ask for EPSG:3857, and hope for the best.
+    return supportedCrs.find(crs => layerCrs.has(crs)) ?? "EPSG:3857";
+  }
+
   @computed
   get availableDimensions(): StratumFromTraits<
     WebMapServiceAvailableLayerDimensionsTraits
@@ -397,7 +419,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
     result.push(
       createStratumInstance(InfoSectionTraits, {
         name: i18next.t("models.webMapServiceCatalogItem.serviceDescription"),
-        contentAsObject: this.capabilities.Service as JsonObject
+        contentAsObject: this.capabilities.Service as JsonObject,
+        // Hide big ugly table by default
+        show: false
       })
     );
 
@@ -425,12 +449,23 @@ class GetCapabilitiesStratum extends LoadableStratum(
         // remove a circular reference to the parent
         delete out._parent;
 
-        result.push(
-          createStratumInstance(InfoSectionTraits, {
-            name: i18next.t("models.webMapServiceCatalogItem.dataDescription"),
-            contentAsObject: out as JsonObject
-          })
-        );
+        try {
+          result.push(
+            createStratumInstance(InfoSectionTraits, {
+              name: i18next.t(
+                "models.webMapServiceCatalogItem.dataDescription"
+              ),
+              contentAsObject: out as JsonObject,
+              // Hide big ugly table by default
+              show: false
+            })
+          );
+        } catch (e) {
+          console.log(
+            `FAILED to create InfoSection with WMS layer Capabilities`
+          );
+          console.log(e);
+        }
       }
     }
 
@@ -748,7 +783,7 @@ class WebMapServiceCatalogItem
     ExportableMixin(
       DiffableMixin(
         TimeFilterMixin(
-          AsyncChartableMixin(
+          ChartableMixin(
             GetCapabilitiesMixin(
               UrlMixin(
                 CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
@@ -790,9 +825,15 @@ class WebMapServiceCatalogItem
     return WebMapServiceCatalogItem.type;
   }
 
-  // TODO
-  get isMappable() {
-    return true;
+  @computed
+  get shortReport(): string | undefined {
+    if (
+      this.tilingScheme instanceof GeographicTilingScheme &&
+      this.terria.currentViewer.type === "Leaflet"
+    ) {
+      return i18next.t("map.cesium.notWebMercatorTilingScheme", this);
+    }
+    return super.shortReport;
   }
 
   @computed
@@ -825,14 +866,6 @@ class WebMapServiceCatalogItem
       const diffStratum = new DiffStratum(this);
       this.strata.set(DiffableMixin.diffStratumName, diffStratum);
     });
-  }
-
-  protected forceLoadChartItems(): Promise<void> {
-    return this.forceLoadMetadata();
-  }
-
-  loadMapItems(): Promise<void> {
-    return this.loadMetadata();
   }
 
   @computed get cacheDuration(): string {
@@ -955,6 +988,10 @@ class WebMapServiceCatalogItem
     return uri.toString();
   }
 
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
+  }
+
   @computed
   get mapItems() {
     if (this.isShowingDiff === true) {
@@ -977,6 +1014,18 @@ class WebMapServiceCatalogItem
   }
 
   @computed
+  get tilingScheme() {
+    if (this.crs) {
+      if (SUPPORTED_CRS_3857.includes(this.crs))
+        return new WebMercatorTilingScheme();
+      if (SUPPORTED_CRS_4326.includes(this.crs))
+        return new GeographicTilingScheme();
+    }
+
+    return new WebMercatorTilingScheme();
+  }
+
+  @computed
   private get _currentImageryParts(): ImageryParts | undefined {
     const imageryProvider = this._createImageryProvider(
       this.currentDiscreteTimeTag
@@ -990,7 +1039,8 @@ class WebMapServiceCatalogItem
     return {
       imageryProvider,
       alpha: this.opacity,
-      show: this.show !== undefined ? this.show : true
+      show: this.show,
+      clippingRectangle: this.clipToRectangle ? this.cesiumRectangle : undefined
     };
   }
 
@@ -1009,7 +1059,10 @@ class WebMapServiceCatalogItem
       return {
         imageryProvider,
         alpha: 0.0,
-        show: true
+        show: true,
+        clippingRectangle: this.clipToRectangle
+          ? this.cesiumRectangle
+          : undefined
       };
     } else {
       return undefined;
@@ -1032,7 +1085,10 @@ class WebMapServiceCatalogItem
       return {
         imageryProvider,
         alpha: this.opacity,
-        show: this.show !== undefined ? this.show : true
+        show: this.show,
+        clippingRectangle: this.clipToRectangle
+          ? this.cesiumRectangle
+          : undefined
       };
     }
     return undefined;
@@ -1079,6 +1135,10 @@ class WebMapServiceCatalogItem
         ...dimensionParameters
       };
 
+      if (this.crs) {
+        parameters.crs = this.crs;
+      }
+
       if (this.supportsColorScaleRange) {
         parameters.COLORSCALERANGE = this.colorScaleRange;
       }
@@ -1109,26 +1169,6 @@ class WebMapServiceCatalogItem
         new URI(this.url)
       );
 
-      let rectangle;
-
-      if (
-        this.clipToRectangle &&
-        this.rectangle !== undefined &&
-        this.rectangle.east !== undefined &&
-        this.rectangle.west !== undefined &&
-        this.rectangle.north !== undefined &&
-        this.rectangle.south !== undefined
-      ) {
-        rectangle = Rectangle.fromDegrees(
-          this.rectangle.west,
-          this.rectangle.south,
-          this.rectangle.east,
-          this.rectangle.north
-        );
-      } else {
-        rectangle = undefined;
-      }
-
       const gcStratum: GetCapabilitiesStratum | undefined = this.strata.get(
         GetCapabilitiesMixin.getCapabilitiesStratumName
       ) as GetCapabilitiesStratum;
@@ -1141,7 +1181,7 @@ class WebMapServiceCatalogItem
         });
       }
 
-      const imageryOptions = {
+      const imageryOptions: WebMapServiceImageryProvider.ConstructorOptions = {
         url: proxyCatalogItemUrl(this, baseUrl.toString()),
         layers: lyrs.length > 0 ? lyrs.join(",") : "",
         parameters: parameters,
@@ -1149,9 +1189,10 @@ class WebMapServiceCatalogItem
           ...dimensionParameters,
           styles: this.styles === undefined ? "" : this.styles
         },
-        tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
+        tileWidth: this.tileWidth,
+        tileHeight: this.tileHeight,
+        tilingScheme: this.tilingScheme,
         maximumLevel: maximumLevel,
-        rectangle: rectangle,
         credit: this.attribution
       };
 
@@ -1178,7 +1219,7 @@ class WebMapServiceCatalogItem
         ) => {
           if (level > maximumLevel) {
             if (!messageDisplayed) {
-              this.terria.error.raiseEvent(
+              this.terria.raiseErrorToUser(
                 new TerriaError({
                   title: i18next.t(
                     "models.webMapServiceCatalogItem.datasetScaleErrorTitle"

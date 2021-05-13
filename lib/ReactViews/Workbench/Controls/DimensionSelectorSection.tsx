@@ -10,11 +10,10 @@ import CommonStrata from "../../../Models/CommonStrata";
 import SelectableDimensions, {
   SelectableDimension
 } from "../../../Models/SelectableDimensions";
+import Box from "../../../Styled/Box";
 import Select from "../../../Styled/Select";
-
-const Text: any = require("../../../Styled/Text").default;
-const Box: any = require("../../../Styled/Box").default;
-const Spacing: any = require("../../../Styled/Spacing").default;
+import Spacing from "../../../Styled/Spacing";
+import Text from "../../../Styled/Text";
 
 interface PropsType extends WithTranslation {
   item: SelectableDimensions;

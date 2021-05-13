@@ -1,19 +1,17 @@
-import React from "react";
-import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
 import classNames from "classnames";
+import createReactClass from "create-react-class";
+import { runInAction } from "mobx";
+import { observer } from "mobx-react";
+import PropTypes from "prop-types";
+import React from "react";
+import { withTranslation } from "react-i18next";
 import styled from "styled-components";
-
+import defined from "terriajs-cesium/Source/Core/defined";
+import MappableMixin from "../../ModelMixins/MappableMixin";
+import openGroup from "../../Models/openGroup";
+import Styles from "./tabs.scss";
 import DataCatalogTab from "./Tabs/DataCatalogTab";
 import MyDataTab from "./Tabs/MyDataTab/MyDataTab";
-import defined from "terriajs-cesium/Source/Core/defined";
-import { withTranslation } from "react-i18next";
-
-import Styles from "./tabs.scss";
-import { observer } from "mobx-react";
-import { runInAction } from "mobx";
-import Mappable from "../../Models/Mappable";
-import openGroup from "../../Models/openGroup";
 
 const Tabs = observer(
   createReactClass({
@@ -27,7 +25,7 @@ const Tabs = observer(
     },
 
     onFileAddFinished(files) {
-      const file = files.find(f => Mappable.is(f));
+      const file = files.find(f => MappableMixin.isMixedInto(f));
       if (file) {
         file
           .loadMapItems()

@@ -1,14 +1,17 @@
 import { action } from "mobx";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import Camera from "terriajs-cesium/Source/Scene/Camera";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
+import LatLonHeight from "../../../../lib/Core/LatLonHeight";
 import Cesium from "../../../../lib/Models/Cesium";
 import Terria from "../../../../lib/Models/Terria";
 import MovementsController from "../../../../lib/ReactViews/Tools/PedestrianMode/MovementsController";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Camera from "terriajs-cesium/Source/Scene/Camera";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import LatLonHeight from "../../../../lib/Core/LatLonHeight";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
+import {
+  MAX_VERTICAL_LOOK_ANGLE,
+  PEDESTRIAN_HEIGHT
+} from "../../../../lib/ReactViews/Tools/PedestrianMode/PedestrianMode";
 
 describe("MovementsController", function() {
   let cesium: Cesium;
@@ -22,7 +25,12 @@ describe("MovementsController", function() {
     terria.mainViewer.attach(container);
     await (terria.mainViewer as any)._cesiumPromise;
     cesium = terria.cesium!;
-    controller = new MovementsController(cesium, () => {});
+    controller = new MovementsController(
+      cesium,
+      () => {},
+      PEDESTRIAN_HEIGHT,
+      MAX_VERTICAL_LOOK_ANGLE
+    );
     scene = cesium.scene;
     camera = scene.camera;
   });

@@ -16,7 +16,7 @@ Uncomment and tweak the SASS variables to set the main colors and fonts used thr
 
 `lib/Views/global.scss`
 
-In this file, you can override any of TerriaJS's CSS.  It contains some commented-out examples of some things you might like to change.  You can also use your browser's DOM inspector to look at elements in the TerriaJS UI and which CSS classes they use, and then override those classes as desired in this file.  You will need to [rebuild TerriaMap](../getting-started.md#building-terriamap) after changing this file.
+**_(The following is no longer supported in version 8. Please discuss alternatives in [this issue](https://github.com/TerriaJS/terriajs/issues/5169))_** ~~In this file, you can override any of TerriaJS's CSS.  It contains some commented-out examples of some things you might like to change.  You can also use your browser's DOM inspector to look at elements in the TerriaJS UI and which CSS classes they use, and then override those classes as desired in this file.  You will need to [rebuild TerriaMap](../getting-started.md#building-terriamap) after changing this file.~~
 
 `lib/Views/UserInterface.jsx`
 

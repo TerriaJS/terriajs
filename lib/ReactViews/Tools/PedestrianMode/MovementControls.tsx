@@ -2,13 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import Cesium from "../../../Models/Cesium";
-import Icon, { StyledIcon } from "../../Icon";
+import Box from "../../../Styled/Box";
+import Button from "../../../Styled/Button";
+import Spacing from "../../../Styled/Spacing";
+import Text from "../../../Styled/Text";
+import Icon, { StyledIcon } from "../../../Styled/Icon";
 import MovementsController from "./MovementsController";
-
-const Text = require("../../../Styled/Text").default;
-const Box = require("../../../Styled/Box").default;
-const Spacing = require("../../../Styled/Spacing").default;
-const Button = require("../../../Styled/Button").default;
 
 const mouseControlsImage = require("../../../../wwwroot/images/mouse-control.svg");
 const wasdControlsImage = require("../../../../wwwroot/images/wasd.svg");
@@ -17,6 +16,8 @@ const heightControlsImage = require("../../../../wwwroot/images/height-controls.
 type MovementControlsProps = {
   cesium: Cesium;
   onMove: () => void;
+  pedestrianHeight: number;
+  maxVerticalLookAngle: number;
 };
 
 const MovementControls: React.FC<MovementControlsProps> = props => {
@@ -28,7 +29,9 @@ const MovementControls: React.FC<MovementControlsProps> = props => {
   useEffect(() => {
     const movementsController = new MovementsController(
       props.cesium,
-      props.onMove
+      props.onMove,
+      props.pedestrianHeight,
+      props.maxVerticalLookAngle
     );
     const detach = movementsController.activate();
     return detach;
@@ -57,8 +60,12 @@ const MovementControls: React.FC<MovementControlsProps> = props => {
   );
 };
 
+const backgroundColor = "#ffffff";
+
 const Container = styled.div`
-  background-color: #f0f0f0;
+  background-color: ${backgroundColor};
+  box-shadow: 0 4px 8px 4px rgb(0 0 0 / 5%);
+  border-radius: 3px;
 `;
 
 const Title = styled(Box).attrs({
@@ -80,6 +87,7 @@ const MinimizeMaximizeButton = styled(Button).attrs(props => ({
   padding: 0;
   margin: 0;
   border: 0;
+  background-color: ${backgroundColor};
 `;
 
 const ButtonIcon = styled(StyledIcon)`

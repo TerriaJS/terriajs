@@ -1,4 +1,10 @@
-TerriaJS is usually used in a single-page web application to provide mapping and catalog exploration capabilities.  It is written in ECMAScript (JavaScript) 2015+ and compiled to ECMAScript 5 in order to run in any relatively modern web browser, including Internet Explorer 9 or later.  Some features, such as 3D and vector tile region mapping, require more recent browsers, but TerriaJS can be expected to degrade gracefully in older browsers by disabling unsupported features or informing the user of the limitations of their browser. 
+**Warning: This page requires major changes to be updated for TerriaJS version 8.**
+
+TerriaJS is usually used in a single-page web application to provide mapping and catalog exploration capabilities.  It is written in TypeScript and compiled to ECMAScript 5 in order to run in Firefox, Chrome, Safari or Edge.
+
+Much of the following is outdated and maybe be explained better in [new model layer documentation](model-layer.md).
+
+------
 
 ## Layers
 

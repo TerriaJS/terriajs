@@ -1,4 +1,4 @@
-import { ChartItemType } from "../../Models/Chartable";
+import { ChartItemType } from "../../ModelMixins/ChartableMixin";
 import CommonStrata from "../../Models/CommonStrata";
 import CsvCatalogItem from "../../Models/CsvCatalogItem";
 import { BaseModel } from "../../Models/Model";

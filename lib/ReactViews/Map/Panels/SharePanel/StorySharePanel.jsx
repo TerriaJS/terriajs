@@ -5,11 +5,11 @@
 
 import createReactClass from "create-react-class";
 import React from "react";
-import Button from "../../../../Styled/Button.jsx";
-import Icon from "../../../Icon.jsx";
+import Button from "../../../../Styled/Button";
+import Icon from "../../../../Styled/Icon";
 import BaseOuterPanel from "../BaseOuterPanel";
 import InnerPanel from "../InnerPanel";
-import { StyledIcon } from "./../../../Icon";
+import { StyledIcon } from "../../../../Styled/Icon";
 
 const StorySharePanel = createReactClass({
   displayName: "StorySharePanel",

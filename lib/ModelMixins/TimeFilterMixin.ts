@@ -8,9 +8,9 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import LatLonHeight from "../Core/LatLonHeight";
 import runLater from "../Core/runLater";
 import { ProviderCoords, ProviderCoordsMap } from "../Map/PickedFeatures";
+import MappableMixin, { ImageryParts } from "./MappableMixin";
 import CommonStrata from "../Models/CommonStrata";
 import createStratumInstance from "../Models/createStratumInstance";
-import Mappable, { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
 import DiscretelyTimeVaryingTraits from "../Traits/DiscretelyTimeVaryingTraits";
 import MappableTraits from "../Traits/MappableTraits";
@@ -47,7 +47,7 @@ function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
       const disposeListener = onBecomeObserved(this, "mapItems", () => {
         runLater(
           action(async () => {
-            if (!Mappable.is(this)) {
+            if (!MappableMixin.isMixedInto(this)) {
               disposeListener();
               return;
             }
@@ -68,7 +68,7 @@ function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
       tileCoords: { x: number; y: number; level: number };
     }): Promise<boolean> {
       const propertyName = this.timeFilterPropertyName;
-      if (propertyName === undefined || !Mappable.is(this)) {
+      if (propertyName === undefined || !MappableMixin.isMixedInto(this)) {
         return false;
       }
 
@@ -97,7 +97,7 @@ function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
 
     @computed
     private get imageryUrls() {
-      if (!Mappable.is(this)) return [];
+      if (!MappableMixin.isMixedInto(this)) return [];
       return filterOutUndefined(
         this.mapItems.map(
           // @ts-ignore
@@ -154,7 +154,8 @@ function TimeFilterMixin<T extends Constructor<MixinModel>>(Base: T) {
 
     @action
     setTimeFilterFeature(feature: Entity, providerCoords?: ProviderCoordsMap) {
-      if (!Mappable.is(this) || providerCoords === undefined) return;
+      if (!MappableMixin.isMixedInto(this) || providerCoords === undefined)
+        return;
       this._currentTimeFilterFeature = feature;
 
       if (!this.currentTimeAsJulianDate) {
@@ -207,7 +208,7 @@ namespace TimeFilterMixin {
  * Return the feature at position containing the time filter property.
  */
 const resolveFeature = action(async function(
-  model: Mappable & TimeVarying,
+  model: MappableMixin.MappableMixin & TimeVarying,
   propertyName: string,
   position: LatLonHeight,
   tileCoords: ProviderCoords

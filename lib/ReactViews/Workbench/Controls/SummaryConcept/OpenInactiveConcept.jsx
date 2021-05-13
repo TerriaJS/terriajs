@@ -2,7 +2,7 @@
 
 import classNames from "classnames";
 import Concept from "../Concept";
-import Icon from "../../../Icon";
+import Icon from "../../../../Styled/Icon";
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";

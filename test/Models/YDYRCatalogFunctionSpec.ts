@@ -178,6 +178,8 @@ describe("YDYRCatalogFunction", function() {
       expect(job.results.length).toBe(1);
       expect(job.results[0].type).toBe(CsvCatalogItem.type);
       const result = job.results[0] as CsvCatalogItem;
+      await result.loadMapItems();
+
       expect(result.tableColumns.length).toBe(4);
       expect(result.activeStyle).toBe("Negative Binomial: Lower (10%)");
       expect(result.regionProviderDimensions?.selectedId).toBe("SA4_2016");

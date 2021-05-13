@@ -179,6 +179,9 @@
     "n": "N",
     "elev": "Elev"
   },
+  "languagePanel": {
+    "changeLanguage": "Change Language"
+  },
   "share": {
     "browserPrint": "For better printed results, please use {{appName}}'s Print button instead of your web browser's print feature.",
     "shortLinkShortening": "Shortening...",
@@ -203,7 +206,9 @@
     "convertNotificationMessage": "This share link is based on an older version of TerriaJS - the software powering this web map. While best efforts are made to preserve the link, you might encounter issues with visualising the data.  \n\nIf you're a user of the share link, click OK to make the warning message disappear and continue with accessing the data.",
     "convertNotificationHelp": "If you have created the share link, check the Help menu to see tips on updating the share link.",
     "convertNotificationFeedback": "For questions or feedback, click here.",
-    "convertNotificationWarningsTitle": "Technical details"
+    "convertNotificationWarningsTitle": "Technical details",
+    "convertErrorTitle": "Could not upgrade share link to V8",
+    "convertErrorMessage": "<p>This share link is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the share data. Details of the error are below.</p><p><pre>{{error}}</pre></p><p><details><summary>Stack trace:</summary><pre>{{stackTrace}}</pre></details></p><p>Please report it by sending an email to {{email}}.</p>"
   },
   "countDatasets": {
     "btnText": "Start",
@@ -214,11 +219,9 @@
     "recount": "Recount",
     "title": "Count Datasets",
     "btnCount": "Count datasets",
-    "enabledOnMap": "enabled on map",
     "noMapDataEnabled": "No map data enabled",
-    "datasetSingular": "dataset",
-    "datasetPlural": "datasets",
-    "mapDataState": "{{numberOfDatasets}} {{singularOrPlural}} $t(countDatasets.enabledOnMap)"
+    "mapDataState": "{{count}} dataset enabled on map",
+    "mapDataState_plural": "{{count}} datasets enabled on map"
   },
   "toolsPanel": {
     "btnText": "Tool",
@@ -268,14 +271,15 @@
     "title": "Feedback",
     "close": "close feedback",
     "yourName": "Your name (optional)",
-    "email": "Email address (optional)<br/><2>We can't follow up without it!</2>",
+    "email": "Email address (optional)<br/><em>We can't follow up without it!</em>",
     "commentQuestion": "Comment or question",
     "shareWithDevelopers": "Share my map view with {{appName}} developers",
     "captionText": "This helps us to troubleshoot issues by letting us see what you're seeing",
     "cancel": "Cancel",
     "sending": "Sending...",
     "send": "Send",
-    "feedbackBtnText": "Give Feedback"
+    "feedbackBtnText": "Give Feedback",
+    "minLength": "Minimum length of feedback comment is {{minLength}}"
   },
   "helpPanel": {
     "menuPaneTitle": "We're here to help",
@@ -379,7 +383,9 @@
     "dismissText": "Got it, thanks!",
     "mobileViewStory": "View Stories {{storiesLength}}",
     "storyEditor": "Story Editor",
-    "hideStoryPanel": "hide story builder"
+    "hideStoryPanel": "hide story builder",
+    "loadSceneErrorTitle": "Error loading Story Scene",
+    "loadSceneErrorMessage": "An error occurred while loading data for story scene: `{{title}}`."
   },
   "satelliteGuidance": {
     "menuTitle": "You can access map guides at any time by looking in the <2>help menu</2>.",
@@ -660,6 +666,7 @@
       "wms-group": "Web Map Service (WMS) Server",
       "wmts-group": "Web Map Tile Service (WMTS) Server",
       "wfs-group": "Web Feature Service (WFS) Server",
+      "wps-getCapabilities": "Web Processing Service (WPS) Server",
       "esri-group": "Esri ArcGIS Server",
       "esri-mapServer": "Esri ArcGIS MapServer (single layer)",
       "esri-featureServer": "Esri ArcGIS FeatureServer (single layer)",
@@ -704,7 +711,9 @@
       "failedToGet": "Failed to get server config from {{serverConfigUrl}}. This means services such as proxy, convert and URL shortening may not work."
     },
     "terriaError": {
-      "defaultValue": "An error occurred"
+      "defaultTitle": "An error occurred",
+      "defaultCombineTitle": "Multiple errors occurred",
+      "defaultCombineMessage": "Details of the errors are below"
     }
   },
   "map": {
@@ -943,7 +952,9 @@
       "cancel": "Cancel",
       "useConversion": "Use conversion service?",
       "mustHaveType": "Each item must have a type.",
-      "compositesError": "Composites cannot include composite items."
+      "compositesError": "Composites cannot include composite items.",
+      "convertErrorTitle": "Could not upgrade catalog to V8",
+      "convertErrorMessage": "This catalog file is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the catalog data for {{url}}."
     },
     "createParameter": {
       "unsupportedErrorTitle": "Unsupported function parameter type",
@@ -1157,7 +1168,8 @@
     },
     "raiseError": {
       "errorTitle": "An error occurred",
-      "errorMessage": "{{appName}}  experienced an error.  Please report this by emailing {{email}}. Details of the error are below."
+      "notificationFeedback": "For questions or feedback, click here.",
+      "developerDetails": "Developer details"
     },
     "regionMapping": {
       "noDataForDate": "No data for the selected date.",
@@ -1269,14 +1281,26 @@
       "notSupportedErrorMessage": "{{name}} cannot be shown in the 2D view. Switch to 3D and try again"
     },
     "terria": {
+      "loadConfigErrorTitle": "Failed to load Terria Map config",
       "proxyableDomainsDeprecation": "`proxyableDomainsUrl` is no longer supported in v8",
       "initErrorTitle": "Failed to initialize services",
       "initErrorMessage": "A problem occurred with the Terria server. This may cause some layers or the conversion service to be unavailable.",
       "urlLoadErrorTitle": "Problem loading URL",
       "urlLoadErrorMessage": "A problem occurred while initialising Terria with URL parameters.",
+      "loadModelErrorMessage": "An error ocurred while loading model `{{model}}`.",
+      "loadingMagdaInitSourceErrorTitle": "Error loading Magda initialization source",
+      "loadingMagdaInitSourceErrorMessage": "An error occurred while loading initialization information from Magda record `{{url}}`.",
+      "loadingInitSourcesErrorTitle": "Error loading map configuration",
+      "loadingInitSourcesErrorMessage": "An error occurred while loading {{appName}} map configuration &mdash; it may not display correctly. Please try reloading the map, and if the problem persists, please report it by sending an email to {{email}}, or you can press the button below.",
       "loadingInitSourceErrorTitle": "Error loading initialization source",
-      "loadingInitSourceErrorMessage": "Could not load initialization information from {{fragment}} because no initFragmentPaths are defined.",
-      "loadingInitSourceError2Message": "An error occurred while loading initialization information from {{loadSource}}.  This may indicate that you followed an invalid link or that there is a problem with your Internet connection.",
+      "loadingInitSourceErrorMessage": "Could not load initialization information from `{{fragment}}` because no initFragmentPaths are defined.",
+      "loadingInitSourceError2Message": "An error occurred while loading initialization information from:  \n*`{{loadSource}}`*.",
+      "loadingInitJsonMessage": "An error occurred while loading JSON file {{url}}.",
+      "loadingBaseMapsErrorTitle": "Error loading basemaps",
+      "loadingBaseMapErrorTitle": "Error loading basemap: `{{name}}`",
+      "loadingShareDataErrorTitle": "Error loading share data",
+      "parsingStartDataErrorMessage": "An error occurred while parsing start data JSON.",
+      "loadingWorkbenchItemErrorTitle": "Error loading item in workbench: `{{name}}`",
       "disclaimer": "Disclaimer",
       "buttonTitleConfirm": "I Agree"
     },
@@ -1292,7 +1316,7 @@
       "asyncResultDescription": "This is the result of invoking the {{name}} process or service at {{timestamp}} with the input parameters below.",
       "loadingInitSourceErrorTitle": "Error loading initialization source",
       "loadingInitSourceErrorMessage": "Error loading initialization source {{fragment}} because no initFragmentPaths are defined.",
-      "loadingInitSourceError2Message": "An error occurred while loading initialization information from {{loadSource}}. This may indicate that you followed an invalid link or that there is a problem with your Internet connection.",
+      "loadingInitSourceError2Message": "An error occurred while loading initialization information from:  \n*`{{loadSource}}`*.",
       "disclaimer": "Disclaimer",
       "buttonTitleConfirm": "I Agree"
     },
@@ -1426,6 +1450,20 @@
       "regionParameterName": "Region Parameter",
       "wpsServer": "Web Processing Service (WPS) Server",
       "wpsResult": "Web Processing Service Result"
+    },
+    "webProcessingServiceCatalogGroup": {
+      "typeName": "Web Processing Service (WPS) Server",
+      "missingUrlTitle": "Unable to load GetCapabilities",
+      "missingUrlMessage": "Could not load the Web Processing Service (WPS) GetCapabilities document because the catalog item does not have a `url`.",
+      "invalidCapabilitiesTitle": "Invalid GetCapabilities",
+      "invalidCapabilitiesMessage": "The URL {{url}} was retrieved successfully but it does not appear to be a valid Web Processing Service (WPS) GetCapabilities document. \n\nEither the catalog file has been set up incorrectly, or the server address has changed.",
+      "invalidServerTitle": "Invalid WPS server",
+      "invalidServerMessage": "An error occurred while invoking GetCapabilities on the WPS server. The server's response does not appear to be a valid GetCapabilities document. <p>If you entered the link manually, please verify that the link is correct.</p> <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
+      "abstract": "Web Processing Service Description",
+      "accessConstraints": "Web Processing Service Access Constraints",
+      "fees": "Web Processing Service Fees",
+      "providerName": "Web Processing Service Provider Name",
+      "providerSite": "Web Processing Service Provider Site"
     },
     "wfsFeatures": {
       "featuresGroup": "Group of features in a Web Feature Service (WFS) Server",

@@ -1,5 +1,6 @@
 import { action } from "mobx";
 import MapboxVectorTileImageryProvider from "../../lib/Map/MapboxVectorTileImageryProvider";
+import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import MapboxVectorTileCatalogItem from "../../lib/Models/MapboxVectorTileCatalogItem";
 import Terria from "../../lib/Models/Terria";
@@ -23,6 +24,9 @@ describe("MapboxVectorTileCatalogItem", function() {
       mvt.setTrait(CommonStrata.user, "url", "http://test");
       mvt.setTrait(CommonStrata.user, "layer", "test-layer");
       await mvt.loadMapItems();
+      if (!ImageryParts.is(mvt.mapItems[0]))
+        throw new Error("Expected MapItem to be an ImageryParts");
+
       imageryProvider = mvt.mapItems[0]
         .imageryProvider as MapboxVectorTileImageryProvider;
     });

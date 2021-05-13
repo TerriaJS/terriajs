@@ -2,7 +2,6 @@ import i18next from "i18next";
 import uniqWith from "lodash-es/uniqWith";
 import { computed, runInAction } from "mobx";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
@@ -17,21 +16,21 @@ import TerriaError from "../Core/TerriaError";
 import proj4definitions from "../Map/Proj4Definitions";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixin";
+import MappableMixin, { ImageryParts } from "../ModelMixins/MappableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import ArcGisMapServerCatalogItemTraits from "../Traits/ArcGisMapServerCatalogItemTraits";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
+import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
 import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import getToken from "./getToken";
 import LoadableStratum from "./LoadableStratum";
-import Mappable, { ImageryParts } from "./Mappable";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
-import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
 
 const proj4 = require("proj4").default;
 
@@ -367,13 +366,13 @@ class MapServerStratum extends LoadableStratum(
 
 StratumOrder.addLoadStratum(MapServerStratum.stratumName);
 
-export default class ArcGisMapServerCatalogItem
-  extends UrlMixin(
+export default class ArcGisMapServerCatalogItem extends MappableMixin(
+  UrlMixin(
     DiscretelyTimeVaryingMixin(
       CatalogMemberMixin(CreateModel(ArcGisMapServerCatalogItemTraits))
     )
   )
-  implements Mappable {
+) {
   static readonly type = "esri-mapServer";
   get typeName() {
     return i18next.t("models.arcGisMapServerCatalogItem.name");
@@ -381,7 +380,6 @@ export default class ArcGisMapServerCatalogItem
 
   readonly supportsSplitting = true;
   readonly canZoomTo = true;
-  readonly isMappable = true;
 
   get type() {
     return ArcGisMapServerCatalogItem.type;
@@ -395,8 +393,8 @@ export default class ArcGisMapServerCatalogItem
     });
   }
 
-  loadMapItems() {
-    return this.loadMetadata();
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
   }
 
   @computed get cacheDuration(): string {
@@ -428,7 +426,8 @@ export default class ArcGisMapServerCatalogItem
     return {
       imageryProvider,
       alpha: this.opacity,
-      show: this.show !== undefined ? this.show : true
+      show: this.show,
+      clippingRectangle: this.clipToRectangle ? this.cesiumRectangle : undefined
     };
   }
 
@@ -448,7 +447,10 @@ export default class ArcGisMapServerCatalogItem
       return {
         imageryProvider,
         alpha: 0.0,
-        show: true
+        show: true,
+        clippingRectangle: this.clipToRectangle
+          ? this.cesiumRectangle
+          : undefined
       };
     } else {
       return undefined;
@@ -465,26 +467,6 @@ export default class ArcGisMapServerCatalogItem
         return;
       }
 
-      let rectangle;
-
-      if (
-        this.clipToRectangle &&
-        this.rectangle !== undefined &&
-        this.rectangle.east !== undefined &&
-        this.rectangle.west !== undefined &&
-        this.rectangle.north !== undefined &&
-        this.rectangle.south !== undefined
-      ) {
-        rectangle = Rectangle.fromDegrees(
-          this.rectangle.west,
-          this.rectangle.south,
-          this.rectangle.east,
-          this.rectangle.north
-        );
-      } else {
-        rectangle = undefined;
-      }
-
       const params: any = Object.assign({}, this.parameters);
       if (time !== undefined) {
         params.time = time;
@@ -499,7 +481,6 @@ export default class ArcGisMapServerCatalogItem
         tilingScheme: new WebMercatorTilingScheme(),
         maximumLevel: maximumLevel,
         parameters: params,
-        rectangle: rectangle,
         enablePickFeatures: this.allowFeaturePicking,
         usePreCachedTilesIfAvailable: !dynamicRequired,
         mapServerData: stratum.mapServerData,
@@ -518,7 +499,7 @@ export default class ArcGisMapServerCatalogItem
         imageryProvider.requestImage = (x, y, level) => {
           if (level > maximumLevelBeforeMessage) {
             if (!messageDisplayed) {
-              this.terria.error.raiseEvent(
+              this.terria.raiseErrorToUser(
                 new TerriaError({
                   title: "Dataset will not be shown at this scale",
                   message:

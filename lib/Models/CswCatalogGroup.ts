@@ -6,6 +6,7 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import loadWithXhr from "../Core/loadWithXhr";
 import loadXML from "../Core/loadXML";
+import runLater from "../Core/runLater";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
@@ -713,18 +714,19 @@ export default class CswCatalogGroup extends UrlMixin(
   }
 
   protected async forceLoadMetadata(): Promise<void> {
-    if (this.strata.get(CswStratum.name) !== undefined) return;
+    if (this.strata.get(CswStratum.stratumName) !== undefined) return;
     const stratum = await CswStratum.load(this);
     runInAction(() => {
-      this.strata.set(CswStratum.name, stratum);
+      this.strata.set(CswStratum.stratumName, stratum);
     });
   }
 
   protected async forceLoadMembers(): Promise<void> {
-    await this.loadMetadata();
-    const cswStratum = <CswStratum | undefined>this.strata.get(CswStratum.name);
+    const cswStratum = <CswStratum | undefined>(
+      this.strata.get(CswStratum.stratumName)
+    );
     if (cswStratum) {
-      cswStratum.createMembersFromLayers();
+      await runLater(() => cswStratum.createMembersFromLayers());
     }
   }
 }

@@ -1,32 +1,27 @@
 import { computed } from "mobx";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplateImageryProvider";
+import URI from "urijs";
 import isDefined from "../Core/isDefined";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import MappableMixin, { MapItem } from "../ModelMixins/MappableMixin";
 import OpenStreetMapCatalogItemTraits from "../Traits/OpenStreetMapCatalogItemTraits";
 import CreateModel from "./CreateModel";
-import Mappable from "./Mappable";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import URI from "urijs";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 
-export default class OpenStreetMapCatalogItem
-  extends CatalogMemberMixin(CreateModel(OpenStreetMapCatalogItemTraits))
-  implements Mappable {
+export default class OpenStreetMapCatalogItem extends MappableMixin(
+  CatalogMemberMixin(CreateModel(OpenStreetMapCatalogItemTraits))
+) {
   static readonly type = "open-street-map";
 
-  get isMappable() {
-    return true;
+  get type() {
+    return OpenStreetMapCatalogItem.type;
   }
 
-  forceLoadMetadata() {
+  protected forceLoadMapItems(): Promise<void> {
     return Promise.resolve();
   }
 
-  loadMapItems() {
-    return Promise.resolve();
-  }
-
-  @computed get mapItems() {
+  @computed get mapItems(): MapItem[] {
     const imageryProvider = this.imageryProvider;
     if (!isDefined(imageryProvider)) {
       return [];
@@ -35,7 +30,10 @@ export default class OpenStreetMapCatalogItem
       {
         show: this.show,
         alpha: this.opacity,
-        imageryProvider
+        imageryProvider,
+        clippingRectangle: this.clipToRectangle
+          ? this.cesiumRectangle
+          : undefined
       }
     ];
   }
@@ -45,24 +43,10 @@ export default class OpenStreetMapCatalogItem
       return;
     }
 
-    let rectangle: Rectangle | undefined;
-    if (isDefined(this.rectangle)) {
-      const { west, south, east, north } = this.rectangle;
-      if (
-        isDefined(west) &&
-        isDefined(south) &&
-        isDefined(east) &&
-        isDefined(north)
-      ) {
-        rectangle = Rectangle.fromDegrees(west, south, east, north);
-      }
-    }
-
     return new UrlTemplateImageryProvider({
       url: cleanAndProxyUrl(this, this.templateUrl),
       subdomains: this.subdomains.slice(),
       credit: this.attribution,
-      rectangle: rectangle,
       maximumLevel: this.maximumLevel
     });
   }
