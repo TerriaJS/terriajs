@@ -136,12 +136,9 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
       StratumOrder.sortTopToBottom(model.strata)
     );
 
-    console.log(Array.from(idsInCorrectOrder).join(", "));
-    console.log(Array.from(idsWithCorrectRemovals).join(", "));
-
     // Correct ids are:
-    // Ids ordered by strata bottom to top
-    // Ids removed by strata top to bottom
+    // - Ids ordered by strata bottom to top combined with
+    // - Ids removed by strata top to bottom
     const ids = Array.from(idsInCorrectOrder).filter(id =>
       idsWithCorrectRemovals.has(id)
     );
