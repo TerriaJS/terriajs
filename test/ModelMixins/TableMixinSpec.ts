@@ -168,8 +168,6 @@ describe("TableMixin", function() {
 
       await item.loadMapItems();
 
-      console.log(item.styleDimensions);
-
       expect(item.styleDimensions?.options?.[2].id).toBe("value");
       expect(item.styleDimensions?.options?.[2].name).toBe("Some Style Title");
     });
