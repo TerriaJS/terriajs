@@ -1,1 +1,36 @@
-{}
+{
+  "tour": {
+    "exploreMapDataButton": {
+      "content": "## 地図データを探す\n\nここでは、データカタログからデータを探し、地図に追加することができます。複数のデータも追加できます。追加したデータは、ワークベンチ内にリストとして表示されます。"
+    },
+    "locationSearchInput": {
+      "content": "## 場所検索\n\n地図上の興味ある場所の名前や住所を入力してください。"
+    },
+    "previous": "前",
+    "finish": "完了",
+    "end": "ツアーを終了",
+    "preface": {
+      "start": "ツアーを開始",
+      "close": "後で",
+      "content": "どこから始めればよいかわからない場合は、主な機能を紹介するツアーをご利用ください。主要な機能を紹介しております。",
+      "title": "ツアーを始める"
+    }
+  },
+  "trainer": {
+    "hideAllSteps": "全ての手順を非表示",
+    "showAllSteps": "全ての手順を表示",
+    "collapseTrainer": "詳細な手順を非表示",
+    "expandTrainer": "詳細な手順を表示"
+  },
+  "general": {
+    "confirm": "確認",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "prev": "前",
+    "back": "戻る",
+    "skip": "スキップ",
+    "next": "次",
+    "open": "開く",
+    "close": "閉じる"
+  }
+}
