@@ -707,7 +707,7 @@ export default class Leaflet extends GlobeOrMap {
           latRadians
         );
 
-        const features = imageryLayer.pickFeatures(
+        const features = await imageryLayer.pickFeatures(
           coords.x,
           coords.y,
           coords.level,
