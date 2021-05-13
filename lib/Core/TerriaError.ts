@@ -101,14 +101,15 @@ export default class TerriaError {
       return isDefined(overrides) ? error.createParentError(overrides) : error;
     }
 
-    // Try to find message using overrides or error object
-    let message = "Unknown error";
-
     // If overrides is a string - we treat is as the `message` parameter
     if (typeof overrides === "string") {
-      message = overrides;
-      overrides = {};
-    } else if (typeof error === "string") {
+      overrides = { message: overrides };
+    }
+
+    // Try to find message from error object
+    let message: string | undefined;
+
+    if (typeof error === "string") {
       message = error;
     } else if (error instanceof Error) {
       message = error.message;
@@ -118,8 +119,14 @@ export default class TerriaError {
 
     return new TerriaError({
       title: { key: "core.terriaError.defaultTitle" },
-      message,
-      originalError: error instanceof Error ? error : undefined,
+      message: message ?? { key: "core.terriaError.defaultMessage" },
+      // Create original Error from `error` object or `message`
+      originalError:
+        error instanceof Error
+          ? error
+          : message
+          ? new Error(message)
+          : undefined,
       ...overrides
     });
   }
@@ -235,14 +242,12 @@ export default class TerriaError {
       overrides = { message: overrides };
     }
     return new TerriaError({
-      ...{
-        message: this._message,
-        title: this._title,
-        sender: this.sender,
-        raisedToUser: this._raisedToUser,
-        originalError: this,
-        severity: this.severity
-      },
+      message: this._message,
+      title: this._title,
+      sender: this.sender,
+      raisedToUser: this._raisedToUser,
+      originalError: this,
+      severity: this.severity,
       ...overrides
     });
   }

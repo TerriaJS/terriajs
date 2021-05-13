@@ -712,6 +712,7 @@
     },
     "terriaError": {
       "defaultTitle": "An error occurred",
+      "defaultMessage": "Unknown error",
       "defaultCombineTitle": "Multiple errors occurred",
       "defaultCombineMessage": "Details of the errors are below"
     }
