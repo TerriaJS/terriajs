@@ -75,26 +75,13 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
     );
   });
 
-  getValue(model: BaseModel): readonly Model<T>[] | undefined {
-    // Strata order is important here, as it will determine order of `ids` - which will determine array order.
-    // By default, we assume bottom strata order is "more" correct than top
-    // For example:
-    // - In some LoadableStratum we set the objectArray to: [{item:"one", value:"a", item:"two", value:"b"}]
-    // - Then in the user stratum we set [{item:"two", value:"c"}]
-    // - We want the order in LoadableStratum to stay static (item "one" is before item "two")
-    // - If we were to use topToBottom strata, then the order would be flipped.
-    // Higher level stratum are set more frequently than lower level, so using bottomToTop will minimise change in order of elements
-
-    const strataBottomToTop: Map<string, any> = StratumOrder.sortBottomToTop(
-      model.strata
-    );
-
+  getIdsAcrossStrata(strata: Map<string, any>, ignoreRemovals = false) {
     const ids = new Set<string>();
     const removedIds = new Set<string>();
 
     // Find the unique objects and the strata that go into each.
-    for (let stratumId of strataBottomToTop.keys()) {
-      const stratum = strataBottomToTop.get(stratumId);
+    for (let stratumId of strata.keys()) {
+      const stratum = strata.get(stratumId);
       const objectArray = stratum[this.id];
 
       if (!objectArray) {
@@ -108,7 +95,7 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
           if (this.type.isRemoval !== undefined && this.type.isRemoval(o)) {
             // This ID is removed in this stratum.
             removedIds.add(id);
-          } else if (removedIds.has(id)) {
+          } else if (removedIds.has(id) && !ignoreRemovals) {
             // This ID was removed by a stratum above this one, so ignore it.
             return;
           } else {
@@ -117,6 +104,47 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
         }
       );
     }
+
+    return ids;
+  }
+
+  getValue(model: BaseModel): readonly Model<T>[] | undefined {
+    // Strata order is important here for two reasons:
+
+    // Determining array order:
+    // By default, we assume bottom strata order is "more" correct than top
+    // For example:
+    // - In some LoadableStratum we set the objectArray to: [{item:"one", value:"a"}, {item:"two", value:"b"}]
+    // - Then in the user stratum we set [{item:"two", value:"c"}]
+    // - We want the order in LoadableStratum to stay static (item "one" is before item "two")
+    // - If we were to use topToBottom strata, then the order would be flipped.
+    // Higher level stratum are set more frequently than lower level, so using bottomToTop will minimise change in order of elements
+
+    // Removing elements correctly if elements are removed by higher stratum:
+    // Here we want higher stratum to remove elements of lower stratum
+    // For example:
+    // - In "definition" stratum, we set the objectArray to: [{item:"one", value:"a"}, {item:"two", value:"b"}]
+    // - The in "user" stratum, we remove the {item:"two", value:"b"} element
+    // - Then the corrent model will only have {item:"one", value:"a"}
+
+    const idsInCorrectOrder = this.getIdsAcrossStrata(
+      StratumOrder.sortBottomToTop(model.strata),
+      true
+    );
+
+    const idsWithCorrectRemovals = this.getIdsAcrossStrata(
+      StratumOrder.sortTopToBottom(model.strata)
+    );
+
+    console.log(Array.from(idsInCorrectOrder).join(", "));
+    console.log(Array.from(idsWithCorrectRemovals).join(", "));
+
+    // Correct ids are:
+    // Ids ordered by strata bottom to top
+    // Ids removed by strata top to bottom
+    const ids = Array.from(idsInCorrectOrder).filter(id =>
+      idsWithCorrectRemovals.has(id)
+    );
 
     // Create a model instance for each unique ID. Note that `createObject` is
     // memoized so we'll get the same model for the same ID each time,
