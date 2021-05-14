@@ -85,7 +85,7 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
           this.initialMessage.content !== undefined &&
           this.initialMessage.content !== "" &&
           this.initialMessage.content !== null;
-        return hasTitle && hasContent && !this.initialMessageShown;
+        return (hasTitle || hasContent) && !this.initialMessageShown;
       }
       return false;
     }

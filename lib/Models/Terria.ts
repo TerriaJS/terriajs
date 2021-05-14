@@ -52,7 +52,7 @@ import NotificationState, {
   Notification
 } from "../ReactViewModels/NotificationState";
 import { shareConvertNotification } from "../ReactViews/Notification/shareConvertNotification";
-import ShowableTraits from "../Traits/ShowableTraits";
+import MappableTraits from "../Traits/MappableTraits";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import { BaseMapModel, processBaseMaps } from "./BaseMaps/BaseMapModel";
@@ -1474,7 +1474,7 @@ export default class Terria {
       // Build index of terria features by a hash of their properties.
       const relevantItems = this.workbench.items.filter(
         item =>
-          hasTraits(item, ShowableTraits, "show") &&
+          hasTraits(item, MappableTraits, "show") &&
           item.show &&
           MappableMixin.isMixedInto(item)
       ) as MappableMixin.MappableMixin[];

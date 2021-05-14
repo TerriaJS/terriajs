@@ -6,12 +6,12 @@ import { SelectableDimension } from "../Models/SelectableDimensions";
 import StratumOrder from "../Models/StratumOrder";
 import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
 import DiffableTraits from "../Traits/DiffableTraits";
-import ShowableTraits from "../Traits/ShowableTraits";
+import MappableTraits from "../Traits/MappableTraits";
 import SplitterTraits from "../Traits/SplitterTraits";
 import TimeFilterMixin from "./TimeFilterMixin";
 
 type MixinModel = Model<
-  DiffableTraits & ShowableTraits & CatalogMemberTraits & SplitterTraits
+  DiffableTraits & MappableTraits & CatalogMemberTraits & SplitterTraits
 > &
   TimeFilterMixin.Instance;
 

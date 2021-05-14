@@ -10,7 +10,6 @@ import DiffableTraits from "../../lib/Traits/DiffableTraits";
 import DiscretelyTimeVaryingTraits from "../../lib/Traits/DiscretelyTimeVaryingTraits";
 import MappableTraits from "../../lib/Traits/MappableTraits";
 import mixTraits from "../../lib/Traits/mixTraits";
-import ShowableTraits from "../../lib/Traits/ShowableTraits";
 import SplitterTraits from "../../lib/Traits/SplitterTraits";
 import TimeFilterTraits from "../../lib/Traits/TimeFilterTraits";
 import { SelectableDimension } from "../../lib/Models/SelectableDimensions";
@@ -49,7 +48,6 @@ class TestDiffableItem extends DiffableMixin(
     CreateModel(
       mixTraits(
         DiffableTraits,
-        ShowableTraits,
         CatalogMemberTraits,
         SplitterTraits,
         TimeFilterTraits,
