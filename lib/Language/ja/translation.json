@@ -10,14 +10,19 @@
     "btnCatalogShareTitle": "カタログを共有する",
     "btnMapShareText": "共有 / 印刷",
     "btnStoryShareText": "共有する",
-    "btnCatalogShareText": "共有する"
+    "btnCatalogShareText": "共有する",
+    "embedTitle": "HTMLページへの埋め込みは下記のコードをお使いください:",
+    "btnAdvanced": "詳細設定",
+    "printExplanation": "このマップを印刷できる状態で表示",
+    "printTitle": "印刷"
   },
   "legend": {
     "e": "東経",
     "n": "北緯",
     "zone": "ゾーン",
     "lon": "経度",
-    "lat": "緯度"
+    "lat": "緯度",
+    "elev": "標高"
   },
   "AR": {
     "arTool": "拡張現実ツール",
@@ -43,7 +48,8 @@
     "close": "閉じる"
   },
   "compass": {
-    "title": "クリック＋ドラッグでカメラを回転"
+    "title": "クリック＋ドラッグでカメラを回転",
+    "description": "外側の輪：ビューを回転\n内側のジャイロスコープ：軌道の変更\nダブルクリック：ホームポジション\nヒント：軌道の変更はCtrlキーを押しながらマップをドラッグでも可能"
   },
   "splitterTool": {
     "workbench": {
@@ -57,5 +63,189 @@
     },
     "title": "左右にドラッグしてビューを調整してください",
     "toggleSplitterTool": "2つのデータセットを並列比較できるようになります"
+  },
+  "satelliteGuidance": {
+    "bodyV": "ワークベンチからスタイルのドロップダウンをクリックすると、衛生画像にフォールスカラーをはじめとする様々なスタイルを適用することができます。",
+    "titleV": "フォールスカラー (false color) 画像を見るには?",
+    "titleIV": "場所から画像を絞り込む",
+    "bodyIII": "ワークベンチで撮影日のドロップダウンをクリックして時期を選択すると過去の画像を読み込むことができます。",
+    "titleIII": "過去の画像を読み込む",
+    "bodyII": "衛生画像を地図に表示するにはズームレベルの調整が必要な場合があります。",
+    "titleII": "衛生画像はどこに表示されていますか?",
+    "prevI": "ガイドをスキップ",
+    "nextI": "ガイドを見る",
+    "bodyI": "過去の衛生画像をフル活用するための簡単ガイド",
+    "dismissText": "閉じる",
+    "menuTitle": "マップの使い方は<2>ヘルプメニュー</2>からいつでも見ることができます。"
+  },
+  "terriaViewer": {
+    "slowWebGLAvailableTitle": "WebGLのパフォーマンスが不足しています"
+  },
+  "catalogItem": {
+    "removeFromMap": "マップから削除",
+    "trash": "カタログから削除",
+    "add": "追加",
+    "remove": "削除",
+    "loading": "読み込み中…"
+  },
+  "dataCatalog": {
+    "groupEmpty": "このグループは空です",
+    "groupRemove": "グループを削除"
+  },
+  "loader": {
+    "loadingMessage": "読み込み中"
+  },
+  "dragDrop": {
+    "not": "<0>bbbb</0>",
+    "text": "<0>ドラッグ&ドロップ</0><1>してあなたのデータをマップに表示<1>"
+  },
+  "clipboard": {
+    "copy": "コピー",
+    "shareExplanation": "このURLを使えばだれでもこのマップにアクセスできます。",
+    "shareURL": "URLで共有",
+    "unsuccessful": "コピーに失敗しました",
+    "success": "クリップボードにコピーしました"
+  },
+  "workbench": {
+    "toggleVisibility": "データの表示/非表示",
+    "removeAll": "すべて削除",
+    "label": "データセット",
+    "removeFromMap": "削除",
+    "removeFromMapTitle": "データを削除",
+    "exportData": "エクスポート",
+    "exportDataTitle": "マップデータをエクスポート",
+    "splitItem": "比較",
+    "splitItemTitle": "複製して分割表示",
+    "previewItem": "データについて",
+    "previewItemTitle": "このデータについて",
+    "openFeature": "ズーム",
+    "openFeatureTitle": "データ範囲にズーム",
+    "zoomTo": "データ視点移動",
+    "zoomToTitle": "データの範囲にズーム",
+    "opacity": "透過度: {{opacity}} %",
+    "displayPercent": "合計値に対するパーセント表示にする",
+    "colorScaleUpdateRange": "カラーレンジを更新",
+    "rangeMin": "最小値:",
+    "rangeMax": "最大値:",
+    "colorScaleRange": "カラースケールのレンジ",
+    "colorScaleRangeMinSmallerThanMax": "カラーレンジの最小値は最大値よりも小さくしてください",
+    "colorScaleRangeMax": "最大値は数値であるべきです",
+    "colorScaleRangeMin": "最小値は数値であるべきです",
+    "colorScaleRangeTitle": "カラーレンジのスケールが間違っています"
+  },
+  "description": {
+    "dataNotLocal": "データの詳細はデータ提供者に確認してください（データ利用上の制限も含む）"
+  },
+  "preview": {
+    "addToMap": "マップに追加",
+    "removeFromMap": "マップから削除",
+    "dataPreviewError": "データプレビューのエラー",
+    "dataPreview": "データプレビュー",
+    "dataPreviewLoading": "プレビュー読み込み中...",
+    "noPreviewAvailable": "プレビューが利用できません",
+    "preview": "{{appName}} プレビュー",
+    "loading": "プレビュー読み込み中…",
+    "selectToPreview": "<0>データセットを選択してください（プレビューが表示されます） </0><1>- OR -</1><2>マップを開く</2>"
+  },
+  "search": {
+    "done": "終了",
+    "resultsLabel": "検索結果",
+    "searchCatalogue": "カタログを検索する",
+    "placeholder": "場所を検索",
+    "viewMore": "表示件数を増やす",
+    "viewLess": "表示件数を減らす",
+    "search": "データカタログで '{{searchText}}' を検索",
+    "data": "データについて"
+  },
+  "story": {
+    "hideStoryPanel": "ストーリービルダを隠す",
+    "storyEditor": "ストーリーエディタ",
+    "mobileViewStory": "ストーリーを見る {{storiesLength}}",
+    "dismissText": "了解しました。ありがとうございます!",
+    "story": "Story",
+    "promptHtml2": "<0><0>はじめに</0><1>データストーリー</1><2>地図からインタラクティブなストーリーを作成して共有できます。</2></0>",
+    "promptHtml1": "<0>ここをクリックしていつでもストーリを見たり作成することができます。</0>",
+    "navBtnMobile": "ストーリー {{title}} に進む",
+    "nextBtn": "次のシーンに進む",
+    "navBtn": "ストーリー {{title}} に進む",
+    "untitled": "タイトルなしのシーン",
+    "previousBtn": "一つ前のシーンに戻る",
+    "exitBtn": "ストーリーを終了",
+    "locationBtn": "シーンの中心に移動",
+    "editor": {
+      "saveStory": "保存",
+      "saveBtn": "保存",
+      "cancelEditing": "キャンセル",
+      "cancelBtn": "キャンセル",
+      "placeholder": "タイトルをここに入れてください"
+    },
+    "captureScene": "シーンをキャプチャ",
+    "captureSceneTitle": "現在のシーンをキャプチャ",
+    "play": "再生",
+    "preview": "ストーリーをプレビュー",
+    "removeAllStories": "すべて削除",
+    "message": "<2>ストーリーエディタです</2><1>地図を使ってストーリを作成し、共有することができます。<1><0><0></0>開始する </0></1></1>",
+    "doesNotExist": "ストーリーがありません",
+    "untitledScene": "タイトルなしのシーン",
+    "delete": "削除",
+    "deleteStory": "削除",
+    "recapture": "再キャプチャ",
+    "recaptureStory": "再キャプチャ",
+    "edit": "編集",
+    "editStory": "編集",
+    "view": "見る",
+    "viewStory": "見る"
+  },
+  "welcomeMessage": {
+    "title": "ようこそ"
+  },
+  "featureInfo": {
+    "noInfoAvailable": "情報はありません。",
+    "btnCloseFeature": "閉じる",
+    "panelHeading": "属性情報",
+    "noDataAvailable": "この場所には何も読み込まれていません。"
+  },
+  "sui": {
+    "hideWorkbench": "ワークベンチを非表示"
+  },
+  "helpMenu": {
+    "btnTitle": "使い方"
+  },
+  "settingPanel": {
+    "performanceLabel": "パフォーマンス",
+    "qualityLabel": "質",
+    "mapQuality": "ラスターデータの質:",
+    "nativeResolutionHeader": "デバイスの解像度を適用",
+    "imageOptimisation": "画像の最適化",
+    "baseMap": "ベースマップ",
+    "mapView": "マップビュー",
+    "btnTitle": "背景図の選択",
+    "qualityLabels": {
+      "lowerPerformance": "最高品質、低パフォーマンス",
+      "balancedPerformance": "パフォーマンスと品質の最適化",
+      "maximumPerformance": "パフォーマンス最大、低品質"
+    },
+    "viewerModeLabels": {
+      "Leaflet": "2D",
+      "CesiumEllipsoid": "3D地形なし",
+      "CesiumTerrain": "3D地形"
+    },
+    "none": "なし"
+  },
+  "toolsPanel": {
+    "btnTitle": "高度なツールボックス",
+    "btnText": "ツール"
+  },
+  "location": {
+    "centreMap": "自位置に地図を寄せる",
+    "originError": "HTTPSを利用しないとブラウザが位置情報を提供できません。代わりに {{secureUrl}} が利用できるかもしれません。",
+    "location": "位置",
+    "myLocation": "自位置",
+    "browserCannotProvide": "ブラウザが位置情報を提供できません",
+    "errorGettingLocation": "位置を取得する際にエラー発生"
+  },
+  "measure": {
+    "measureDistance": "距離を計測します",
+    "measureTool": "計測ツール"
   }
 }
