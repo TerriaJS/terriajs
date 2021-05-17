@@ -56,7 +56,10 @@
     "manualAlignmentTitle": "手動調整",
     "confirmText": "了解",
     "title": "実験的機能：拡張現実（AR）",
-    "experimentalFeatureMessage": "AR(拡張現実)モードは、現在ベータ版です。このモードは、最新のハイエンドモバイルデバイスでのみ使用するように設計されています。. <br /><br />警告：このモードは大量のデータを通信する可能性があります。ネットワークプロバイダーなどの使用料にご注意ください。. <br /><br />このモードの精度は、モバイルデバイスの内部コンパスの精度によって異なります。"
+    "experimentalFeatureMessage": "AR(拡張現実)モードは、現在ベータ版です。このモードは、最新のハイエンドモバイルデバイスでのみ使用するように設計されています。. <br /><br />警告：このモードは大量のデータを通信する可能性があります。ネットワークプロバイダーなどの使用料にご注意ください。. <br /><br />このモードの精度は、モバイルデバイスの内部コンパスの精度によって異なります。",
+    "btnResetRealign": "コンパスによる並びをリセット",
+    "btnRealign": "手動による並びに固定",
+    "btnHover": "ホバーする高さを固定"
   },
   "compass": {
     "title": "クリック＋ドラッグでカメラを回転",
@@ -147,7 +150,10 @@
   },
   "diffTool": {
     "instructions": {
-      "paneDescription": "同一地点における二つの時期のデータを可視化・比較します。"
+      "paneDescription": "同一地点における二つの時期のデータを可視化・比較します。",
+      "changeDates": "日付変更",
+      "setDateB": "日付Bに設定",
+      "setDateA": "日付Aに設定"
     },
     "locationPicker": {
       "nextMessages": {
@@ -161,7 +167,9 @@
         "title": "正確な場所を選択してください"
       },
       "initialMessages": {
-        "afterPick": "選択した地域を変更するには別の場所をクリックしてください"
+        "afterPick": "選択した地域を変更するには別の場所をクリックしてください",
+        "beforePick": "変異検知のプロセスを走らせるために必要です。",
+        "title": "正確な場所を選んでください"
       }
     },
     "datePicker": {
@@ -170,7 +178,34 @@
       "nextDateTitle": "翌日",
       "previousDateTitle": "前日",
       "back": "戻る"
-    }
+    },
+    "locationDisplay": {
+      "locationSelected": {
+        "description": "変更するには、地図上の別の場所を選んでください",
+        "title": "場所で選択および日付でフィルタ"
+      },
+      "noLocationSelected": {
+        "description": "場所で画像の日付ピッカーをフィルターするには、地図で場所を選択してください",
+        "title": "場所が選択されていません"
+      }
+    },
+    "labels": {
+      "areaFilterSelection": "エリアフィルタ選択",
+      "disabledButtonPrompt": "注意：変異検知では、場所と日付を選ぶ必要があります",
+      "generateDiffButtonText": "変異検知の生成",
+      "differenceOutput": "差異の出力",
+      "previewStyle": "スタイルのプレビュー",
+      "sourceDataset": "ソースデータセット",
+      "dateComparisonB": "日付比較 B",
+      "dateComparisonA": "日付比較 A",
+      "dates": "日付",
+      "area": "エリア"
+    },
+    "differenceResultsTitle": "検出結果の変更",
+    "chooseDifference": "別のアウトプットの選択",
+    "choosePreview": "プレビュースタイルの選択",
+    "exit": "終了",
+    "title": "違い"
   },
   "terriaViewer": {
     "slowWebGLAvailableTitle": "WebGLのパフォーマンスが不足しています"
@@ -418,7 +453,12 @@
       "message": "このツールをサーバーから読み込む際にエラー発生。もう一度お試しください。",
       "title": "{{toolName}} ツールを閉じる際にエラー発生"
     },
-    "closeButtonTitle": "{{toolName}} ツールを閉じる"
+    "closeButtonTitle": "{{toolName}} ツールを閉じる",
+    "button": {
+      "closed": "{{toolName}}",
+      "open": "終了{{toolNameLowerCase}}"
+    },
+    "exitBtnTitle": "終了"
   },
   "zoomCotrol": {
     "zoomOut": "ズームアウト",
