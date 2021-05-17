@@ -1,17 +1,14 @@
 import i18next from "i18next";
-import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import { action } from "mobx";
+import loadCsv from "../../Core/loadCsv";
 import loadJson5 from "../../Core/loadJson5";
+import { SearchParameterTraits } from "../../Traits/SearchableItemTraits";
 import ItemSearchProvider, {
   ItemSearchParameter,
   ItemSearchResult
 } from "../ItemSearchProvider";
 import { Index, IndexRoot, IndexType, parseIndexRoot } from "./Index";
 import joinUrl from "./joinUrl";
-import loadCsv from "../../Core/loadCsv";
-import { SearchParameterTraits } from "../../Traits/SearchableItemTraits";
-import { action } from "mobx";
-import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 
 const t = i18next.t.bind(i18next);
 

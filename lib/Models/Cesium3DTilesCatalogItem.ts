@@ -1,17 +1,14 @@
 import i18next from "i18next";
 import { action } from "mobx";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 import Cesium3DTile from "terriajs-cesium/Source/Scene/Cesium3DTile";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import makeRealPromise from "../Core/makeRealPromise";
 import PickedFeatures from "../Map/PickedFeatures";
-import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import Cesium3dTilesMixin from "../ModelMixins/Cesium3dTilesMixin";
 import FeatureInfoMixin from "../ModelMixins/FeatureInfoMixin";
