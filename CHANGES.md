@@ -4,7 +4,9 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.82)
-
+- **Breaking changes**:
+  - Bounding `radius` option is no longer supported in `resultsData.csv` of search indexes.
+* Modifies `IndexedItemSearchProvider` to reflect changes to `terriajs-indexer` file format.
 * [The next improvement]
 
 #### 8.0.0-alpha.81
@@ -12,7 +14,6 @@ Change Log
 * Fix invalid HTML in `DataPreviewSections`.
 * Fix pluralisation of mapDataState to support other languages.
 * Fix CSW `Stratum` name bug.
-* Modifies `IndexedItemSearchProvider` to reflect changes to `terriajs-indexer` file format.
 * [The next improvement]
 * Add `#configUrl` hash parameter for **dev environment only**. It can be used to overwrite Terria config URL.
 
