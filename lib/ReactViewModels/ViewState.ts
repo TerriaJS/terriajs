@@ -85,6 +85,7 @@ export default class ViewState {
   @observable topElement: string = "FeatureInfo";
   @observable lastUploadedFiles: any[] = [];
   @observable storyBuilderShown: boolean = false;
+  @observable isPedestrianWalkModeOn: boolean = false;
 
   // Flesh out later
   @observable showHelpMenu: boolean = false;

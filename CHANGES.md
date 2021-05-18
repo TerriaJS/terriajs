@@ -4,7 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.82)
-
+* Story scene transition between two story points captured in pedestrian mode is now flat or linear and feels more like walking than flying.
 * [The next improvement]
 
 #### 8.0.0-alpha.81
@@ -53,6 +53,7 @@ Change Log
   * `Box` no longer accepts `<Box positionAbsolute/>` and this should now be passed as `<Box position="absolute"/>`.
   * `Text`'s `styledSize` has been removed. Use the `styledFontSize` prop.
   * `ButtonAsLabel` no longer accepts `dark`. A dark background is now used when `light` is false (or undefined).
+* Pedestrian mode will no longer respond to "wasd" keys when the user is typing in some input field.
 * Fixes CZML catalog item so that it appears on the timeline.
 * Enable `theme` config parameter. This can now be used to override theme properties.
 

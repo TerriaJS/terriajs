@@ -61,7 +61,7 @@ export default class MovementsController {
 
   constructor(
     readonly cesium: Cesium,
-    readonly onMove: () => void,
+    readonly onMove: (mode: Mode) => void,
     readonly pedestrianHeight: number,
     readonly maxVerticalLookAngle: number
   ) {
@@ -326,7 +326,7 @@ export default class MovementsController {
     if (this.activeMovements.size > 0) {
       [...this.activeMovements].forEach(movement => this.move(movement));
       this.updateSurfaceHeightEstimate();
-      this.onMove();
+      this.onMove(this.mode);
 
       if (
         this.activeMovements.has("down") &&
@@ -365,8 +365,8 @@ export default class MovementsController {
         this.activeMovements.delete(KeyMap[ev.code]);
     };
 
-    document.addEventListener("keydown", onKeyDown);
-    document.addEventListener("keyup", onKeyUp);
+    document.addEventListener("keydown", excludeInputEvents(onKeyDown), true);
+    document.addEventListener("keyup", excludeInputEvents(onKeyUp), true);
 
     const keyMapDestroyer = () => {
       document.removeEventListener("keydown", onKeyDown);
@@ -569,4 +569,25 @@ function rotateVectorAboutAxis(
     vector.clone()
   );
   return rotatedVector;
+}
+
+// A regex matching input tag names
+const inputNodeRe = /input|textarea|select/i;
+
+function excludeInputEvents(
+  handler: (ev: KeyboardEvent) => void
+): (ev: KeyboardEvent) => void {
+  return ev => {
+    const target = ev.target;
+    if (target !== null) {
+      const nodeName = (target as any).nodeName;
+      const isContentEditable = (target as any).getAttribute?.(
+        "contenteditable"
+      );
+      if (isContentEditable || inputNodeRe.test(nodeName)) {
+        return;
+      }
+    }
+    handler(ev);
+  };
 }

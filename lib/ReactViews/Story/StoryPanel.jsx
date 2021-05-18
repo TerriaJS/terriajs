@@ -1,27 +1,33 @@
 import classNames from "classnames";
 import createReactClass from "create-react-class";
-import { runInAction } from "mobx";
+import { runInAction, toJS } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import { Swipeable } from "react-swipeable";
 import getPath from "../../Core/getPath";
+import { isJsonObject } from "../../Core/Json";
 // eslint-disable-next-line no-unused-vars
 import Terria from "../../Models/Terria";
+import Icon from "../../Styled/Icon";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import { Medium, Small } from "../Generic/Responsive";
-import Icon from "../../Styled/Icon";
 import Styles from "./story-panel.scss";
+import CameraView from "../../Models/CameraView";
+import Cesium from "../../Models/Cesium";
+import Leaflet from "../../Models/Leaflet";
+import rectangleToLatLngBounds from "../../Map/rectangleToLatLngBounds";
+import EasingFunction from "terriajs-cesium/Source/Core/EasingFunction";
 import TerriaError from "../../Core/TerriaError";
 
 /**
  *
  * @param {any} story
+ * @param {any|undefined} previousStory
  * @param {Terria} terria
  */
-
-export async function activateStory(story, terria) {
+export async function activateStory(story, previousStory, terria) {
   // Send a GA event on scene change with URL hash
   const analyticsLabel =
     window.location.hash.length > 0
@@ -29,15 +35,21 @@ export async function activateStory(story, terria) {
       : "No hash detected (story not shared yet?)";
   terria.analytics?.logEvent("story", "scene", analyticsLabel);
   if (story.shareData) {
+    const sceneTransitionType = getSceneTransitionType(previousStory, story);
     const errors = [];
     await Promise.all(
       story.shareData.initSources.map(async initSource => {
         try {
+          // We pluck the parameters required for sceneTransition
+          // and pass on the rest to applyInitData
+          // toJS is required here because applyInitData currently cannot handle a mobx object.
+          const { initialCamera, ...initData } = toJS(initSource);
           await terria.applyInitData({
-            initData: initSource,
+            initData: initData,
             replaceStratum: false,
             canUnsetFeaturePickingState: true
           });
+          sceneTransition(sceneTransitionType, initialCamera, terria);
         } catch (e) {
           errors.push(
             TerriaError.from(e, {
@@ -68,6 +80,88 @@ export async function activateStory(story, terria) {
   terria.workbench.items.forEach(item => {
     terria.analytics?.logEvent("story", "datasetView", getPath(item));
   });
+}
+
+/**
+ * Returns a scene transition type
+ *
+ * @param {any} previousStory
+ * @param {any} newStory
+ * @returns {"normal" | "walk"} Returns "walk" if pedestrian walk mode is ON in both
+            previous & new story scenes. Otherwise returns "normal".
+ */
+function getSceneTransitionType(previousStory, newStory) {
+  const isPedestrianWalkingInPreviousScene =
+    previousStory?.shareData.initSources.some(
+      initSource => initSource.isPedestrianWalkModeOn
+    ) === true;
+  const isPedestrianWalkingInCurrentScene =
+    newStory?.shareData.initSources.some(
+      initSource => initSource.isPedestrianWalkModeOn
+    ) === true;
+  const shouldWalkBetweenScenes =
+    isPedestrianWalkingInPreviousScene === true &&
+    isPedestrianWalkingInCurrentScene === true;
+  const transitionType = shouldWalkBetweenScenes ? "walk" : "normal";
+  return transitionType;
+}
+
+/**
+ * Fly to a scene with the given initialCamera
+ *
+ * @param {CameraView} initialCamera The camera view for the scene
+ * @param {Terria} terria The terria instance
+ */
+function sceneTransition(transitionType, cameraViewJson, terria) {
+  const flightDurationSeconds = 2.0;
+
+  const cesiumFlyTo = (cesium, transitionType, cameraView) => {
+    const camera = cesium.scene.camera;
+    const commonFlyToOptions = {
+      duration: flightDurationSeconds,
+      destination: cameraView.position,
+      orientation: {
+        direction: cameraView.direction,
+        up: cameraView.up
+      }
+    };
+    let flyToOptions;
+    if (transitionType === "walk") {
+      flyToOptions = {
+        ...commonFlyToOptions,
+        easingFunction: EasingFunction.LINEAR_NONE,
+        // Setting maximumHeight to a low enough value ensures that
+        // the flight path height change will be a linear interpolation
+        // of the height between the start and end points. Thus if 2 points
+        // are on street level, the camera remains steady when zooming between
+        // them. This effect is useful for story scenes captured in pedestrian mode
+        // where the scenes could be at street level and replaying the story should not
+        // change the camera height unnecessarily.
+        // Relevant Cesium code: https://github.com/CesiumGS/cesium/blob/ab07bcb130d99baaae08ce5e4346ae79899136e0/Source/Scene/CameraFlightPath.js#L110-L126
+        maximumHeight: -1000
+      };
+    } else {
+      flyToOptions = { ...commonFlyToOptions };
+    }
+    camera.flyTo(flyToOptions);
+  };
+
+  const leafletFlyTo = (leaflet, transitionType, cameraView) => {
+    const bounds = rectangleToLatLngBounds(cameraView.rectangle);
+    leaflet.map.flyToBounds(bounds, {
+      animate: flightDurationSeconds > 0,
+      duration: flightDurationSeconds
+    });
+  };
+
+  if (isJsonObject(cameraViewJson)) {
+    const cameraView = CameraView.fromJson(cameraViewJson);
+    if (terria.currentViewer instanceof Cesium)
+      cesiumFlyTo(terria.currentViewer, transitionType, cameraView);
+    else if (terria.currentViewer instanceof Leaflet)
+      leafletFlyTo(terria.currentViewer, transitionType, cameraView);
+    else terria.currentViewer.zoomTo(cameraView, flightDurationSeconds);
+  }
 }
 
 const StoryPanel = observer(
@@ -146,19 +240,22 @@ const StoryPanel = observer(
         index = 0;
       }
       if (index !== this.props.viewState.currentStoryId) {
+        const previousStory = this.props.terria.stories[
+          this.props.viewState.currentStoryId
+        ];
         runInAction(() => {
           this.props.viewState.currentStoryId = index;
         });
         if (index < (this.props.terria.stories || []).length) {
-          this.activateStory(this.props.terria.stories[index]);
+          this.activateStory(this.props.terria.stories[index], previousStory);
         }
       }
     },
 
     // This is in StoryPanel and StoryBuilder
-    activateStory(_story) {
+    activateStory(_story, previousStory) {
       const story = _story ? _story : this.props.terria.stories[0];
-      activateStory(story, this.props.terria);
+      activateStory(story, previousStory, this.props.terria);
     },
 
     onCenterScene(story) {
