@@ -448,56 +448,54 @@ export default class Leaflet extends GlobeOrMap {
       | MappableMixin.MappableMixin
       | any,
     flightDurationSeconds: number
-  ): void {
+  ): Promise<void> {
     if (!isDefined(target)) {
-      return;
+      return Promise.resolve();
       //throw new DeveloperError("target is required.");
     }
 
-    const that = this;
+    let bounds;
 
-    return when().then(function() {
-      var bounds;
+    // Target is a KML data source
+    if (isDefined(target.entities)) {
+      if (isDefined(this.dataSourceDisplay)) {
+        bounds = this.dataSourceDisplay.getLatLngBounds(target);
+      }
+    } else {
+      let extent;
 
-      // Target is a KML data source
-      if (isDefined(target.entities)) {
-        if (isDefined(that.dataSourceDisplay)) {
-          bounds = that.dataSourceDisplay.getLatLngBounds(target);
+      if (target instanceof Rectangle) {
+        extent = target;
+      } else if (target instanceof CameraView) {
+        extent = target.rectangle;
+      } else if (MappableMixin.isMixedInto(target)) {
+        if (isDefined(target.cesiumRectangle)) {
+          extent = target.cesiumRectangle;
+        }
+        if (!isDefined(extent)) {
+          // Zoom to the first item!
+          return this.doZoomTo(target.mapItems[0], flightDurationSeconds);
         }
       } else {
-        let extent;
-
-        if (target instanceof Rectangle) {
-          extent = target;
-        } else if (target instanceof CameraView) {
-          extent = target.rectangle;
-        } else if (MappableMixin.isMixedInto(target)) {
-          if (isDefined(target.cesiumRectangle)) {
-            extent = target.cesiumRectangle;
-          }
-          if (!isDefined(extent)) {
-            // Zoom to the first item!
-            return that.doZoomTo(target.mapItems[0], flightDurationSeconds);
-          }
-        } else {
-          extent = target.rectangle;
-        }
-
-        // Account for a bounding box crossing the date line.
-        if (extent.east < extent.west) {
-          extent = Rectangle.clone(extent);
-          extent.east += CesiumMath.TWO_PI;
-        }
-        bounds = rectangleToLatLngBounds(extent);
+        extent = target.rectangle;
       }
 
-      if (isDefined(bounds)) {
-        that.map.flyToBounds(bounds, {
-          animate: flightDurationSeconds > 0.0,
-          duration: flightDurationSeconds
-        });
+      // Account for a bounding box crossing the date line.
+      if (extent.east < extent.west) {
+        extent = Rectangle.clone(extent);
+        extent.east += CesiumMath.TWO_PI;
       }
-    });
+      bounds = rectangleToLatLngBounds(extent);
+    }
+
+    if (isDefined(bounds)) {
+      this.map.flyToBounds(bounds, {
+        animate: flightDurationSeconds > 0.0,
+        duration: flightDurationSeconds
+      });
+    }
+
+    return Promise.resolve();
   }
 
   getCurrentCameraView(): CameraView {

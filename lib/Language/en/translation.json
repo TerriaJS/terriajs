@@ -1534,5 +1534,8 @@
     "controls": {
       "title": "Controls"
     }
+  },
+  "toast": {
+    "mapIsZooming": "Loading ideal zoom..."
   }
 }

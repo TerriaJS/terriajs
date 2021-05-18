@@ -4,8 +4,12 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.82)
+
 - **Breaking changes**:
   - IndexedItemSearchProvider: (bounding) `radius` option is no longer supported in `resultsData.csv` of search indexes.
+
+* Show a toast and spinner icon in the "Ideal zoom" button when the map is zooming.
+* `zoomTo()` will return a promise that resolves when the zoom animation is complete.
 * Modifies `IndexedItemSearchProvider` to reflect changes to `terriajs-indexer` file format.
 * [The next improvement]
 
