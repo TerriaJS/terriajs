@@ -82,7 +82,7 @@
   "satelliteGuidance": {
     "bodyV": "ワークベンチからスタイルのドロップダウンをクリックすると、衛生画像にフォールスカラーをはじめとする様々なスタイルを適用することができます。",
     "titleV": "フォールスカラー (false color) 画像を見るには?",
-    "bodyIV": "場所や時期によっては衛生画像がないこともあります。特定の場所の衛生画像だけを見たい場合は、ワークベンチの 'filter by location' をクリックしてください。",
+    "bodyIV": "場所や時期によっては衛星画像がないこともあります。特定の場所の衛星画像だけを見たい場合は、ワークベンチの 'filter by location' をクリックしてください。",
     "titleIV": "場所から画像を絞り込む",
     "bodyIII": "ワークベンチで撮影日のドロップダウンをクリックして時期を選択すると過去の画像を読み込むことができます。",
     "titleIII": "過去の画像を読み込む",
@@ -92,7 +92,8 @@
     "nextI": "ガイドを見る",
     "bodyI": "過去の衛生画像をフル活用するための簡単ガイド",
     "dismissText": "閉じる",
-    "menuTitle": "マップの使い方は<2>ヘルプメニュー</2>からいつでも見ることができます。"
+    "menuTitle": "マップの使い方は<2>ヘルプメニュー</2>からいつでも見ることができます。",
+    "titleI": "衛星画像の使い方"
   },
   "story": {
     "loadSceneErrorMessage": "ストーリーのシーンのデータ {{title}} の読み込み中にエラーが発生しました。",
@@ -147,6 +148,28 @@
   "diffTool": {
     "instructions": {
       "paneDescription": "同一地点における二つの時期のデータを可視化・比較します。"
+    },
+    "locationPicker": {
+      "nextMessages": {
+        "afterPick": "選択した地点を変更するには別の場所をクリックしてください",
+        "title": "選択した地点は緯度： {{latitude}}、経度： {{longitude}}です",
+        "beforePick": "選択した地点を変更するには別の場所をクリックしてください"
+      },
+      "errorMessages": {
+        "afterPick": "選択した地点を変更するには別の場所をクリックしてください",
+        "beforePick": "選択された地点のデータを読み込めません。別の地点またはズームレベルでお試しください。",
+        "title": "正確な場所を選択してください"
+      },
+      "initialMessages": {
+        "afterPick": "選択した地域を変更するには別の場所をクリックしてください"
+      }
+    },
+    "datePicker": {
+      "dateOutOfRange": "日付が範囲外です",
+      "dateButtonTitle": "日付を選択",
+      "nextDateTitle": "翌日",
+      "previousDateTitle": "前日",
+      "back": "戻る"
     }
   },
   "terriaViewer": {
@@ -256,16 +279,48 @@
     "noInfoAvailable": "情報はありません。",
     "btnCloseFeature": "閉じる",
     "panelHeading": "属性情報",
-    "noDataAvailable": "この場所には何も読み込まれていません。"
+    "noDataAvailable": "この場所には何も読み込まれていません。",
+    "latLon": "緯度 / 経度 ",
+    "siteData": "地点の情報",
+    "locationMarker": "位置マーカー",
+    "satelliteSuggestionBtn": "この地点の{{catalogItemName}}を表示する",
+    "userSelection": "選択地点",
+    "clickToAddData": "データをマップに追加するには '$t(addData.addDataBtnText)' をクリックします。",
+    "clickMap": "マップをクリックするとその地点の詳細が表示されます",
+    "pickLocation": "地点を選択",
+    "download": "この表をダウンロード",
+    "catalogItem": {
+      "featureInfoShown": "以下には最初の{{maximum}}個が表示されています。",
+      "featuresFound": "{catalogItemName}には{{featCount}}個のフィーチャーがあります。",
+      "moreThanMax": "{{catalogItemName}}には{{maximum}}個以上のフィーチャーがあります。"
+    }
   },
   "sui": {
-    "hideWorkbench": "ワークベンチを非表示"
+    "hideWorkbench": "ワークベンチを非表示",
+    "showWorkbench": "ワークベンチを表示",
+    "notifications": {
+      "denyText": "後で",
+      "confirmText": "はい",
+      "message": "今すぐ見ますか?",
+      "title": "このマップにはストーリーが含まれています"
+    }
   },
   "helpMenu": {
-    "btnTitle": "使い方"
+    "btnTitle": "使い方",
+    "next": "次へ",
+    "done": "完了",
+    "helpMenuMoreHelpTitle": "ヘルプをもっと見る",
+    "helpMenuSatelliteGuideTitle": "衛星画像の使い方を見る",
+    "helpMenuOpenWelcome": "起動時のメッセージを表示する",
+    "helpMenuHeader": "何をしますか?",
+    "btnText": "ヘルプ"
   },
   "helpPanel": {
-    "menuPaneTitle": "使い方"
+    "menuPaneTitle": "使い方",
+    "takeTour": "ツアーを見る",
+    "dismissText": "閉じる",
+    "promptMessage": "ツアー、使い方のビデオなどのヘルプコンテンツがあります",
+    "menuPaneBody": "TerriaJS の使い方のヒントを得るには以下のガイドを読むか[info@terria.io](mailto:info@terria.io)で開発チームにメールしてください"
   },
   "settingPanel": {
     "performanceLabel": "パフォーマンス",
@@ -286,7 +341,25 @@
       "CesiumEllipsoid": "3D地形なし",
       "CesiumTerrain": "3D地形"
     },
-    "none": "なし"
+    "none": "なし",
+    "terrain": {
+      "right": "右",
+      "both": "両方",
+      "left": "左",
+      "sideLabel": "地形の表示",
+      "hideUndergroundFeatures": "ここを押すと地下が非表示になります",
+      "showUndergroundFeatures": "ここを押すと地下が表示されます",
+      "hideUnderground": "地下を隠す"
+    },
+    "timeline": {
+      "alwaysShow": "常に表示",
+      "hideLabel": "ここを押すとワークベンチに時系列データがない時も含めて常にタイムラインが表示されます",
+      "alwaysShowLabel": "ここを押すとワークベンチに時系列データがある時にだけタイムラインが表示されます"
+    },
+    "btnText": "マップ設定",
+    "screen": "スクリーン",
+    "native": "ネイティブ",
+    "nativeResolutionLabel": "ここを押すと解像度を{{resolution1}}から{{resolution2}}に変更します"
   },
   "toolsPanel": {
     "btnTitle": "高度なツールボックス",
@@ -294,7 +367,15 @@
   },
   "countDatasets": {
     "mapDataState": "{{numberOfDatasets}}{{singularOrPlural}}$t(countDatasets.enabledOnMap)",
-    "noMapDataEnabled": "データが表示されていません"
+    "noMapDataEnabled": "データが表示されていません",
+    "btnCount": "データセットをカウントする",
+    "title": "データセットをカウントする",
+    "recount": "再カウント",
+    "subTotals": "<div>{{name}}: {{items}}個のアイテム / {{groups}}個のグループ</div>",
+    "totals": "<div>このカタログには{{groups}}個のグループと{{items}}個のアイテムが含まれています。</div>",
+    "countingMessage": "カウントしています...",
+    "loadError": "読み込みに失敗しました。",
+    "btnText": "カウントする"
   },
   "share": {
     "btnMapShareTitle": "共有 / 印刷",
@@ -303,7 +384,26 @@
     "embedTitle": "HTMLページへの埋め込みは下記のコードをお使いください:",
     "btnAdvanced": "詳細設定",
     "printExplanation": "このマップを印刷できる状態で表示",
-    "printTitle": "印刷"
+    "printTitle": "印刷",
+    "convertErrorMessage": "<p>この共有リンクは古いバージョンのウェブマップで作成されました。共有されたデータをアップグレードする際にエラーが発生しました。以下はエラーの詳細です。</p><p><pre>{{error}}</pre></p><p><details><summary>Stack trace:</summary><pre>{{stackTrace}}</pre></details></p><p>エラーを報告するには{{email}}にメールを送信してください。</p>",
+    "convertErrorTitle": "共有リンクをV8にアップグレードすることができませんでした",
+    "convertNotificationWarningsTitle": "技術的な詳細",
+    "convertNotificationFeedback": "質問やフィードバックを送るにはここをクリックしてください。",
+    "convertNotificationHelp": "もしあなたがこの共有リンクの作成者なら、ヘルプメニューをクリックして共有リンクを更新する方法を確認してください。",
+    "convertNotificationMessage": "この共有リンクは古いバージョンのウェブマップで作成されたため、データが正しく表示されない可能性があります。\n\nあなたがこの共有リンクの作成者でなければ、OKをクリックしてこのメッセージを消して続行してください。",
+    "convertNotificationTitle": "共有リンクが更新されました",
+    "btnMapShareText": "共有 / 印刷",
+    "btnStoryShareText": "共有",
+    "btnCatalogShareText": "共有",
+    "shortenUsingService": "共有URLを短縮",
+    "creatingPrintView": "印刷ビューを作成しています...",
+    "printViewButton": "印刷ビューを表示",
+    "printButton": "印刷",
+    "generatingUrl": "共有URLを作成しています...",
+    "localDataNote": "<0><0>注意：</0></0><1>以下のデータはローカルからのデータを含むため共有できません。これらのデータを共有するには、データをウェブサーバーにアップロードして<2>URLを使用して追加してください</2></1>",
+    "shortLinkError": "短縮リンクが作成できませんでした。インターネット接続を確認してやり直してください。",
+    "shortLinkShortening": "短縮リンクを作成しています...",
+    "browserPrint": "より良い印刷結果を得るには、ブラウザの印刷機能ではなく{{appName}}の印刷ボタンを使用してください。"
   },
   "legend": {
     "elev": "標高",
@@ -337,5 +437,48 @@
     "measureDistance": "距離を計測します",
     "measureToolTitle": "距離の計測",
     "measureTool": "計測ツール"
+  },
+  "addData": {
+    "note": "<0>注意：</0>この方法で追加されたデータは保存されず、他の人に見せることもできません。",
+    "back": "戻る",
+    "infoText": "<0>ファイルをここにドラッグ・アンド・ドロップすると、ローカルのマップ上で見ることができます</0><1>（データが保存またはインターネットにアップロードされることはありません）</1>",
+    "dragDrop": "ドラッグ・アンド・ドロップ",
+    "webTitle": "ウェブからデータを追加する",
+    "localTitle": "ローカルのデータを追加する",
+    "browse": "ブラウズ...",
+    "urlInputBtn": "追加",
+    "localFile": "<0>ステップ2</0>：ファイルを選択",
+    "webFile": "<0>ステップ2</0>：データファイルまたはウェブサービスのURLを入力",
+    "webFileType": "<0>ステップ1</0>：ファイルタイプを選択（任意）",
+    "webAdd": "ウェブからデータを追加する",
+    "localFileType": "<0>ステップ1</0>：ファイルタイプを選択（任意）",
+    "localAdd": "ローカルのファイルを追加する",
+    "searchPlaceholder": "カタログから検索する",
+    "searchPlaceholderWhole": "カタログ全体から検索する",
+    "dataCatalogue": "データカタログ",
+    "myData": "自分のデータ",
+    "done": "完了",
+    "closeDataPanel": "データパネルを閉じる",
+    "load": "ローカル/ウェブのデータを読み込む",
+    "btnHide": "閉じる",
+    "addDataBtnText": "マップのデータを探す"
+  },
+  "feedback": {
+    "minLength": "フィードバックコメントは最低でも{{minLength}}必要です",
+    "feedbackBtnText": "フィードバック",
+    "send": "送信",
+    "sending": "送信中...",
+    "captionText": "問題の解決に役立てるため、あなたが見ているものを開発者と共有します",
+    "cancel": "キャンセル",
+    "email": "メールアドレス（任意）<br/><em>メールアドレスがない場合は返信できません</em>",
+    "shareWithDevelopers": "マップビューを{{appName}}の開発者と共有する",
+    "commentQuestion": "コメントまたは質問",
+    "yourName": "お名前（任意）",
+    "close": "フィードバックを閉じる",
+    "title": "フィードバック",
+    "feedbackPreamble": "ご意見をお聞かせください。"
+  },
+  "languagePanel": {
+    "changeLanguage": "言語を変更"
   }
 }
