@@ -63,7 +63,7 @@ export default abstract class GlobeOrMap {
   /**
    * Zoom map to a dataset or the given bounds.
    *
-   * @param viewOrExtent A bounds item to zoom to
+   * @param target A bounds item to zoom to
    * @param flightDurationSeconds Optional time in seconds for the zoom animation to complete
    * @returns A promise that resolves when the zoom animation is complete
    */
