@@ -1,6 +1,5 @@
 import React from "react";
 import { act, create, ReactTestRenderer } from "react-test-renderer";
-import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import timeout from "../../../../lib/Core/timeout";
 import ItemSearchProvider from "../../../../lib/Models/ItemSearchProvider";
 import SearchForm, {
@@ -17,7 +16,11 @@ class TestItemSearchProvider extends ItemSearchProvider {
       {
         id: "1",
         idPropertyName: "building-id",
-        zoomToTarget: new BoundingSphere(),
+        featureCoordinate: {
+          latitudeDegrees: 10,
+          longitudeDegrees: 130,
+          featureHeight: 42
+        },
         properties: { foo: "bar" }
       }
     ];

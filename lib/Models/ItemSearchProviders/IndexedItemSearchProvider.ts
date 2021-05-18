@@ -1,16 +1,14 @@
 import i18next from "i18next";
-import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import { action } from "mobx";
+import loadCsv from "../../Core/loadCsv";
 import loadJson5 from "../../Core/loadJson5";
+import { SearchParameterTraits } from "../../Traits/SearchableItemTraits";
 import ItemSearchProvider, {
   ItemSearchParameter,
   ItemSearchResult
 } from "../ItemSearchProvider";
 import { Index, IndexRoot, IndexType, parseIndexRoot } from "./Index";
 import joinUrl from "./joinUrl";
-import loadCsv from "../../Core/loadCsv";
-import { SearchParameterTraits } from "../../Traits/SearchableItemTraits";
-import { action } from "mobx";
 
 const t = i18next.t.bind(i18next);
 
@@ -230,7 +228,7 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
   ): ItemSearchResult {
     if (!this.indexRoot) throw new Error(`indexRoot is not loaded`);
     const id = record[this.indexRoot.idProperty];
-    if (!id) {
+    if (id === undefined) {
       throw new Error(
         `ID property not defined for data record at index ${dataIdx}`
       );
@@ -239,39 +237,25 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
     // The record can have a bunch of arbitrary properties and a few known
     // properties. We use the latitude, longitude, height & radius for
     // constructing a zoom target for the search result.
-    let { latitude, longitude, height, radius, ...properties } = record;
+    let { latitude, longitude, height, ...properties } = record;
     const _latitude = parseFloat(latitude);
     const _longitude = parseFloat(longitude);
     const _featureHeight = parseFloat(height);
-    const _tileRadius = parseFloat(radius);
-    if (isNaN(_latitude) || isNaN(_longitude) || isNaN(_tileRadius)) {
+    if (isNaN(_latitude) || isNaN(_longitude) || isNaN(_featureHeight)) {
       throw new Error(
         `No valid zoom point defined for data record at index ${dataIdx}`
       );
     }
 
-    let zoomToTarget;
-    if (_featureHeight) {
-      zoomToTarget = {
-        latitude: _latitude,
-        longitude: _longitude,
-        featureHeight: _featureHeight
-      };
-    } else {
-      const center = Cartesian3.fromDegrees(_longitude, _latitude);
-      const boundingSphere = new BoundingSphere(
-        center,
-        // Prefer the user specified feature height over the tile radius which is
-        // automatically calculated by the indexer.
-        // We also don't want to zoom too close to small objects, so threshold the zoom radius.
-        _tileRadius
-      );
-      zoomToTarget = boundingSphere;
-    }
+    const featureCoordinate = {
+      latitudeDegrees: _latitude,
+      longitudeDegrees: _longitude,
+      featureHeight: _featureHeight
+    };
     return {
       id,
       idPropertyName: this.indexRoot.idProperty,
-      zoomToTarget,
+      featureCoordinate,
       properties
     };
   }

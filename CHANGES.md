@@ -7,6 +7,9 @@ Change Log
 
 * Show a toast and spinner icon in the "Ideal zoom" button when the map is zooming.
 * `zoomTo()` will return a promise that resolves when the zoom animation is complete.
+- **Breaking changes**:
+  - IndexedItemSearchProvider: (bounding) `radius` option is no longer supported in `resultsData.csv` of search indexes.
+* Modifies `IndexedItemSearchProvider` to reflect changes to `terriajs-indexer` file format.
 * [The next improvement]
 
 #### 8.0.0-alpha.81
