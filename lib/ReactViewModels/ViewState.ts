@@ -709,6 +709,11 @@ export default class ViewState {
   get isToolOpen() {
     return this.currentTool !== undefined;
   }
+
+  @computed
+  get isMapZooming() {
+    return this.terria.currentViewer.isMapZooming;
+  }
 }
 
 interface Tool {
