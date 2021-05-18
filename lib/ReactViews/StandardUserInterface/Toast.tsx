@@ -15,7 +15,10 @@ const Toast: React.FC<ToastProps> = ({ children }) => {
 const Container = styled.div`
   position: absolute;
   bottom: 40px;
-  left: 45%;
+  left: 20px; // on mobile
+  @media (min-width: ${props => props.theme.sm}px) {
+    left: 45%; // on larger screens
+  }
 
   display: flex;
   align-items: center;
