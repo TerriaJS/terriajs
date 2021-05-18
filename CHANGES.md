@@ -4,7 +4,9 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.82)
-
+- **Breaking changes**:
+  - IndexedItemSearchProvider: (bounding) `radius` option is no longer supported in `resultsData.csv` of search indexes.
+* Modifies `IndexedItemSearchProvider` to reflect changes to `terriajs-indexer` file format.
 * [The next improvement]
 
 #### 8.0.0-alpha.81
