@@ -449,6 +449,11 @@ export default class Leaflet extends GlobeOrMap {
       | any,
     flightDurationSeconds: number
   ): Promise<void> {
+    if (!isDefined(target)) {
+      return Promise.resolve();
+      //throw new DeveloperError("target is required.");
+    }
+
     let bounds;
 
     // Target is a KML data source
