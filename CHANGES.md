@@ -5,7 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.82)
 - **Breaking changes**:
-  - Bounding `radius` option is no longer supported in `resultsData.csv` of search indexes.
+  - IndexedItemSearchProvider: (bounding) `radius` option is no longer supported in `resultsData.csv` of search indexes.
 * Modifies `IndexedItemSearchProvider` to reflect changes to `terriajs-indexer` file format.
 * [The next improvement]
 
@@ -14,7 +14,6 @@ Change Log
 * Fix invalid HTML in `DataPreviewSections`.
 * Fix pluralisation of mapDataState to support other languages.
 * Fix CSW `Stratum` name bug.
-* [The next improvement]
 * Add `#configUrl` hash parameter for **dev environment only**. It can be used to overwrite Terria config URL.
 
 #### 8.0.0-alpha.80
