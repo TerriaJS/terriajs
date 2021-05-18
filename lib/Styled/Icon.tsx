@@ -21,6 +21,7 @@ export const GLYPHS = {
   barChart: require("../../wwwroot/images/icons/bar-chart.svg"),
   bulb: require("../../wwwroot/images/icons/bulb.svg"),
   controls: require("../../wwwroot/images/icons/controls.svg"),
+  checkboxIndeterminate: require("../../wwwroot/images/icons/checkbox-indeterminate.svg"),
   checkboxOff: require("../../wwwroot/images/icons/checkbox-off.svg"),
   checkboxOn: require("../../wwwroot/images/icons/checkbox-on.svg"),
   close: require("../../wwwroot/images/icons/close.svg"),
@@ -130,8 +131,8 @@ interface IconProps {
   glyph: { id: string };
   style?: any;
   className?: string;
+  rotation?: number;
 }
-
 export const Icon: React.FC<IconProps> = (props: IconProps) => {
   return (
     <svg
@@ -141,6 +142,7 @@ export const Icon: React.FC<IconProps> = (props: IconProps) => {
       css={`
         display: block;
       `}
+      transform={`rotate(${props.rotation ?? 0})`}
     >
       <use xlinkHref={"#" + props.glyph.id} />
     </svg>
@@ -160,6 +162,13 @@ interface IStyledIconProps {
 
 export const StyledIcon = styled(Icon)<IStyledIconProps>`
   display: ${props => (props.displayInline ? `inline` : `block`)};
+  ${props =>
+    props.displayInline &&
+    `
+  display: inline; 
+  vertical-align: middle;
+  `}
+  
   flex-shrink: 0;
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
   ${props => props.styledHeight && `height: ${props.styledHeight};`}

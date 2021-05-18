@@ -18,6 +18,7 @@ import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import HeadingPitchRange from "terriajs-cesium/Source/Core/HeadingPitchRange";
 import Ion from "terriajs-cesium/Source/Core/Ion";
+import IonResource from "terriajs-cesium/Source/Core/IonResource";
 import KeyboardEventModifier from "terriajs-cesium/Source/Core/KeyboardEventModifier";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
@@ -200,7 +201,7 @@ export default class Cesium extends GlobeOrMap {
     //             console.log('Switching to EllipsoidTerrainProvider.');
     //             that.terria.viewerMode = ViewerMode.CesiumEllipsoid;
     //             if (!defined(that.TerrainMessageViewed)) {
-    //                 that.terria.error.raiseEvent({
+    //                 that.terria.raiseErrorToUser({
     //                     title : 'Terrain Server Not Responding',
     //                     message : '\
     // The terrain server is not responding at the moment.  You can still use all the features of '+that.terria.appName+' \
@@ -631,7 +632,7 @@ export default class Cesium extends GlobeOrMap {
   doZoomTo(target: any, flightDurationSeconds = 3.0): Promise<void> {
     this._lastZoomTarget = target;
 
-    const _zoom: () => Promise<void> = () => {
+    const _zoom: () => Promise<void> = async () => {
       const camera = this.scene.camera;
 
       if (target instanceof Rectangle) {
@@ -647,30 +648,36 @@ export default class Cesium extends GlobeOrMap {
         const terrainProvider = this.scene.globe.terrainProvider;
         // A sufficiently coarse tile level that still has approximately accurate height
         const level = 6;
-        const positions = [Rectangle.center(target)];
+        const center = Rectangle.center(target);
 
         // Perform an elevation query at the centre of the rectangle
-        return makeRealPromise<Cartographic[]>(
-          sampleTerrain(terrainProvider, level, positions)
-        ).then(results => {
-          if (this._lastZoomTarget !== target) {
-            return;
-          }
-
-          const finalDestinationCartographic = new Cartographic(
-            destination.longitude,
-            destination.latitude,
-            destination.height + results[0].height
+        let terrainSample: Cartographic;
+        try {
+          [terrainSample] = await makeRealPromise<Cartographic[]>(
+            sampleTerrain(terrainProvider, level, [center])
           );
+        } catch {
+          // if the request fails just use center with height=0
+          terrainSample = center;
+        }
 
-          const finalDestination = Ellipsoid.WGS84.cartographicToCartesian(
-            finalDestinationCartographic
-          );
+        if (this._lastZoomTarget !== target) {
+          return;
+        }
 
-          return flyToPromise(camera, {
-            duration: flightDurationSeconds,
-            destination: finalDestination
-          });
+        const finalDestinationCartographic = new Cartographic(
+          destination.longitude,
+          destination.latitude,
+          destination.height + terrainSample.height
+        );
+
+        const finalDestination = Ellipsoid.WGS84.cartographicToCartesian(
+          finalDestinationCartographic
+        );
+
+        return flyToPromise(camera, {
+          duration: flightDurationSeconds,
+          destination: finalDestination
         });
       } else if (defined(target.entities)) {
         // target is some DataSource
@@ -907,6 +914,18 @@ export default class Cesium extends GlobeOrMap {
   } {
     if (!this.terriaViewer.viewerOptions.useTerrain) {
       return { terrain: new EllipsoidTerrainProvider() };
+    }
+    if (this.terria.configParameters.cesiumTerrainAssetId !== undefined) {
+      return {
+        terrain: new CesiumTerrainProvider({
+          url: IonResource.fromAssetId(
+            this.terria.configParameters.cesiumTerrainAssetId,
+            {
+              accessToken: this.terria.configParameters.cesiumIonAccessToken
+            }
+          )
+        })
+      };
     }
     if (this.terria.configParameters.cesiumTerrainUrl) {
       return {

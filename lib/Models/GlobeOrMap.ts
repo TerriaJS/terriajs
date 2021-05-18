@@ -20,6 +20,7 @@ import featureDataToGeoJson from "../Map/featureDataToGeoJson";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import { ProviderCoordsMap } from "../Map/PickedFeatures";
 import MappableMixin from "../ModelMixins/MappableMixin";
+import TimeVarying from "../ModelMixins/TimeVarying";
 import MouseCoords from "../ReactViewModels/MouseCoords";
 import CameraView from "./CameraView";
 import Cesium3DTilesCatalogItem from "./Cesium3DTilesCatalogItem";
@@ -55,7 +56,7 @@ export default abstract class GlobeOrMap {
   abstract destroy(): void;
 
   abstract doZoomTo(
-    viewOrExtent: CameraView | Rectangle | MappableMixin.MappableMixin,
+    target: CameraView | Rectangle | MappableMixin.MappableMixin,
     flightDurationSeconds: number
   ): Promise<void>;
 
@@ -68,13 +69,13 @@ export default abstract class GlobeOrMap {
    */
   @action
   zoomTo(
-    viewOrExtent: CameraView | Rectangle | MappableMixin.MappableMixin,
+    target: CameraView | Rectangle | MappableMixin.MappableMixin,
     flightDurationSeconds: number
   ): Promise<void> {
     this.isMapZooming = true;
     const zoomId = createGuid();
     this._currentZoomId = zoomId;
-    return this.doZoomTo(viewOrExtent, flightDurationSeconds).finally(
+    return this.doZoomTo(target, flightDurationSeconds).finally(
       action(() => {
         // Unset isMapZooming only if the local zoomId matches _currentZoomId.
         // If they do not match, it means there was another call to zoomTo which
@@ -82,6 +83,10 @@ export default abstract class GlobeOrMap {
         if (zoomId === this._currentZoomId) {
           this.isMapZooming = false;
           this._currentZoomId = undefined;
+          if (MappableMixin.isMixedInto(target) && TimeVarying.is(target)) {
+            // Set the target as the source for timeline
+            this.terria.timelineStack.promoteToTop(target);
+          }
         }
       })
     );

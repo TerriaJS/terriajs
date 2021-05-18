@@ -239,7 +239,7 @@ const ViewingControls = observer(
       try {
         itemSearchProvider = item.createItemSearchProvider();
       } catch (error) {
-        raiseErrorToUser(viewState.terria, error);
+        viewState.terria.raiseErrorToUser(error);
         return;
       }
       this.props.viewState.openTool({
@@ -282,7 +282,7 @@ const ViewingControls = observer(
 
       exportData(item).catch(e => {
         if (e instanceof TerriaError) {
-          this.props.item.terria.error.raiseEvent(e);
+          this.props.item.terria.raiseErrorToUser(e);
         }
       });
     },

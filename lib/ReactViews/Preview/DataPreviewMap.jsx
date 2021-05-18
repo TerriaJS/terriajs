@@ -162,7 +162,7 @@ class DataPreviewMap extends React.Component {
       }
     });
 
-    // this._unsubscribeErrorHandler = this.terriaPreview.error.addEventListener(
+    // this._unsubscribeErrorHandler = this.terriaPreview.addErrorEventListener(
     //   e => {
     //     if (
     //       e.sender === this.props.previewedCatalogItem ||

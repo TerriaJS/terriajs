@@ -2,8 +2,11 @@ import { computed } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Cesium from "../../lib/Models/Cesium";
+import CommonStrata from "../../lib/Models/CommonStrata";
+import createStratumInstance from "../../lib/Models/createStratumInstance";
 import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import { RectangleTraits } from "../../lib/Traits/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 
 const supportsWebGL = require("../../lib/Core/supportsWebGL");
@@ -67,7 +70,7 @@ describeIfSupported("Cesium Model", function() {
     expect(terriaProgressEvt.calls.mostRecent().args).toEqual([2, 2]);
   });
 
-  describe("doZoomTo", function() {
+  describe("zoomTo", function() {
     let initialCameraPosition: Cartesian3;
 
     beforeEach(function() {
@@ -76,10 +79,29 @@ describeIfSupported("Cesium Model", function() {
 
     it("can zoomTo a rectangle", async function() {
       const [west, south, east, north] = [0, 0, 0, 0];
-      await cesium.doZoomTo(Rectangle.fromDegrees(west, south, east, north));
+      await cesium.zoomTo(Rectangle.fromDegrees(west, south, east, north), 0);
       expect(initialCameraPosition.equals(cesium.scene.camera.position)).toBe(
         false
       );
+    });
+
+    describe("if the target is a TimeVarying item", function() {
+      it("sets the target item as the timeline source", async function() {
+        const targetItem = new WebMapServiceCatalogItem("test", terria);
+        targetItem.setTrait(
+          CommonStrata.user,
+          "rectangle",
+          createStratumInstance(RectangleTraits, {
+            east: 0,
+            west: 0,
+            north: 0,
+            south: 0
+          })
+        );
+        const promoteToTop = spyOn(terria.timelineStack, "promoteToTop");
+        await cesium.zoomTo(targetItem, 0);
+        expect(promoteToTop).toHaveBeenCalledWith(targetItem);
+      });
     });
   });
 });

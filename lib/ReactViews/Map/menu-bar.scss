@@ -74,6 +74,14 @@
   }
 }
 
+.flex {
+  composes: flex from "../../Sass/common/_base.scss";
+}
+
+.langPanel {
+  margin-left: $padding;
+}
+
 .storyBtn {
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn--map from "../../Sass/common/_buttons.scss";
@@ -91,4 +99,10 @@
       fill: #ffffff;
     }
   }
+}
+
+.langBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn--map from "../../Sass/common/_buttons.scss";
+  text-transform: uppercase;
 }
