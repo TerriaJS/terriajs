@@ -43,7 +43,7 @@ function EmptyWorkbench(props) {
   };
 
   return (
-    <Text large textLight nunito>
+    <Text large textLight>
       {/* Hardcoded top to 150px for now for very very small screens
           TODO: make it not hardcoded */}
       <Box

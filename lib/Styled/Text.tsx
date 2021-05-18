@@ -39,11 +39,12 @@ interface ITextPropsBase {
   primary?: boolean;
   fullWidth?: boolean;
   noWrap?: boolean;
-  as?: "h1" | "h2" | "h3" | "h4" | "span";
+  as?: keyof JSX.IntrinsicElements;
   styledLineHeight?: string;
   highlightLinks?: boolean;
   overflowHide?: boolean;
   overflowEllipsis?: boolean;
+  isDisabled?: boolean;
   style?: any;
 }
 
@@ -61,9 +62,7 @@ export const Text = styled.div<ITextProps>`
   ${props => props.isLink && `text-decoration: underline;`}
 
   // TODO: themeify family
-  font-family: "Nunito", sans-serif;
-  ${props => props.nunito && `font-family: "Nunito", sans-serif;`}
-  // ${props => props.openSans && `font-family: "Nunito", sans-serif;`}
+  font-family: ${props => props.theme.fontBase};
 
   ${props =>
     props.breakWord &&
@@ -189,15 +188,22 @@ export const Text = styled.div<ITextProps>`
     }
   `}
 
+  ${props =>
+    props.isDisabled &&
+    `
+    opacity: 0.3;
+    cursor: not-allowed;
+  `}
+
   ${props => props.overflowHide && ` overflow: hidden;`}
   ${props => props.overflowEllipsis && ` text-overflow: ellipsis;`}
 
 `;
 
-export const TextSpan = styled(Text).attrs(
-  (props: { as?: React.ElementType | keyof JSX.IntrinsicElements }) => ({
-    as: props.as || "span"
-  })
-)``;
+export const TextSpan = styled(Text).attrs<{
+  as?: keyof JSX.IntrinsicElements;
+}>((props: { as?: keyof JSX.IntrinsicElements }) => ({
+  as: props.as || "span"
+}))``;
 
 export default Text;

@@ -24,7 +24,7 @@ describe("upsertModelFromJson", function() {
       "definition",
       json,
       {}
-    );
+    ).throwIfUndefined();
     expect(model instanceof WebMapServiceCatalogItem).toBe(true);
     expect(model.type).toBe("wms");
 
@@ -59,7 +59,7 @@ describe("upsertModelFromJson", function() {
         "definition",
         json,
         {}
-      );
+      ).throwIfUndefined();
       expect(model instanceof WebMapServiceCatalogGroup).toBe(true);
       expect(model.type).toBe("wms-group");
       return model;
@@ -122,7 +122,7 @@ describe("upsertModelFromJson", function() {
       "definition",
       json,
       {}
-    );
+    ).throwIfUndefined();
     expect(model instanceof WebMapServiceCatalogItem).toBe(true);
     expect(model.type).toBe("wms");
 
@@ -139,7 +139,7 @@ describe("upsertModelFromJson", function() {
         replaceStratum: false,
         matchByShareKey: true
       }
-    );
+    ).throwIfUndefined();
     expect(model).toBe(model2, "Failed to match model by shareKey");
 
     const wms = <WebMapServiceCatalogItem>model;

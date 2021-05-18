@@ -19,6 +19,7 @@ import Cesium from "../../Models/Cesium";
 import Leaflet from "../../Models/Leaflet";
 import rectangleToLatLngBounds from "../../Map/rectangleToLatLngBounds";
 import EasingFunction from "terriajs-cesium/Source/Core/EasingFunction";
+import TerriaError from "../../Core/TerriaError";
 
 /**
  *
@@ -26,36 +27,58 @@ import EasingFunction from "terriajs-cesium/Source/Core/EasingFunction";
  * @param {any|undefined} previousStory
  * @param {Terria} terria
  */
-export function activateStory(story, previousStory, terria) {
+export async function activateStory(story, previousStory, terria) {
   // Send a GA event on scene change with URL hash
   const analyticsLabel =
     window.location.hash.length > 0
       ? window.location.hash
       : "No hash detected (story not shared yet?)";
   terria.analytics?.logEvent("story", "scene", analyticsLabel);
-  return runInAction(() => {
-    if (story.shareData) {
-      const sceneTransitionType = getSceneTransitionType(previousStory, story);
-      return Promise.all(
-        story.shareData.initSources.map(initSource => {
+  if (story.shareData) {
+    const sceneTransitionType = getSceneTransitionType(previousStory, story);
+    const errors = [];
+    await Promise.all(
+      story.shareData.initSources.map(async initSource => {
+        try {
           // We pluck the parameters required for sceneTransition
           // and pass on the rest to applyInitData
           // toJS is required here because applyInitData currently cannot handle a mobx object.
           const { initialCamera, ...initData } = toJS(initSource);
-          terria.applyInitData({
-            initData,
+          await terria.applyInitData({
+            initData: initData,
             replaceStratum: false,
             canUnsetFeaturePickingState: true
           });
           sceneTransition(sceneTransitionType, initialCamera, terria);
+        } catch (e) {
+          errors.push(
+            TerriaError.from(e, {
+              message: {
+                key: "models.terria.loadingInitSourceError2Message",
+                parameters: {
+                  loadSource: initSource.name ?? "Unknown source"
+                }
+              }
+            })
+          );
+        }
+      })
+    );
+    if (errors.length > 0) {
+      terria.raiseErrorToUser(
+        TerriaError.combine(errors, {
+          title: { key: "story.loadSceneErrorTitle" },
+          message: {
+            key: "story.loadSceneErrorMessage",
+            parameters: { title: story.title ?? story.id }
+          }
         })
       );
     }
-    return Promise.resolve([]);
-  }).then(() => {
-    terria.workbench.items.forEach(item => {
-      terria.analytics?.logEvent("story", "datasetView", getPath(item));
-    });
+  }
+
+  terria.workbench.items.forEach(item => {
+    terria.analytics?.logEvent("story", "datasetView", getPath(item));
   });
 }
 
@@ -238,7 +261,14 @@ const StoryPanel = observer(
     onCenterScene(story) {
       if (story.shareData) {
         runInAction(() => {
-          this.props.terria.updateFromStartData(story.shareData);
+          this.props.terria
+            .updateFromStartData(
+              story.shareData,
+              `Story data: \`${story.title ?? story.id}\``
+            )
+            .catch(function(e) {
+              this.props.terria.raiseErrorToUser(e);
+            });
         });
       }
     },

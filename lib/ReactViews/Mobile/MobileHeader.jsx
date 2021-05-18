@@ -140,7 +140,6 @@ const MobileHeader = observer(
 
     render() {
       const searchState = this.props.viewState.searchState;
-      const displayOne = this.props.terria.configParameters.displayOneBrand;
       const { t } = this.props;
       const nowViewingLength =
         this.props.terria.workbench.items !== undefined
@@ -194,11 +193,16 @@ const MobileHeader = observer(
                   </RawButton>
                   <Branding
                     terria={this.props.terria}
+                    viewState={this.props.viewState}
                     version={this.props.version}
-                    displayOne={displayOne}
                   />
                 </Box>
-                <div className={Styles.groupRight}>
+                <div
+                  className={Styles.groupRight}
+                  css={`
+                    background-color: ${p => p.theme.dark};
+                  `}
+                >
                   <button
                     type="button"
                     className={Styles.btnAdd}
