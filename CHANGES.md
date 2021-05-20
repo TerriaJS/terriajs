@@ -16,6 +16,7 @@ Change Log
 * Feature info chart x-values are now be sorted in acending order
 * Remove merging rows by ID for `PER_ROW` data in `ApiTableCatalogItem`
 * Make `ApiTableCatalogItem` more compatible with Table `Traits`
+  * `keyToColumnMapping` has been removed, now columns must be defined in `columns` `TableColumnTraits` to be copied from API responses.
 * [The next improvement]
 
 #### 8.0.0-alpha.81
