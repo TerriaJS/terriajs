@@ -109,7 +109,7 @@ const MapColumn = observer(
               className={classNames(mapCellClass, Styles.mapCellMap)}
               ref={this.newMapCell}
             >
-              <If condition={!this.props.viewState.hideMapUi()}>
+              <If condition={!this.props.viewState.hideMapUi}>
                 <div
                   css={`
                     ${this.props.viewState.explorerPanelIsVisible &&
@@ -146,7 +146,7 @@ const MapColumn = observer(
                   viewState={this.props.viewState}
                 />
               </div>
-              <If condition={!this.props.viewState.hideMapUi()}>
+              <If condition={!this.props.viewState.hideMapUi}>
                 <MapDataCount
                   terria={this.props.terria}
                   viewState={this.props.viewState}
@@ -179,7 +179,7 @@ const MapColumn = observer(
                 condition={
                   !this.props.customFeedbacks.length &&
                   this.props.terria.configParameters.feedbackUrl &&
-                  !this.props.viewState.hideMapUi()
+                  !this.props.viewState.hideMapUi
                 }
               >
                 <div
@@ -200,7 +200,7 @@ const MapColumn = observer(
                 condition={
                   this.props.customFeedbacks.length &&
                   this.props.terria.configParameters.feedbackUrl &&
-                  !this.props.viewState.hideMapUi()
+                  !this.props.viewState.hideMapUi
                 }
               >
                 <For
@@ -223,7 +223,7 @@ const MapColumn = observer(
               </div>
             </If>
           </div>
-          <If condition={!this.props.viewState.hideMapUi()}>
+          <If condition={!this.props.viewState.hideMapUi}>
             <div className={Styles.mapRow}>
               <div className={mapCellClass}>
                 <BottomDock
