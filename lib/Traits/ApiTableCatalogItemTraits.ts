@@ -71,7 +71,8 @@ export default class ApiTableCatalogItemTraits extends mixTraits(
   @objectArrayTrait({
     name: "APIs",
     type: ApiTraits,
-    description: "The apis to use to retrieve the columns of the table.",
+    description:
+      'The apis to use to retrieve the columns of the table. Note: you **must** define which columns to use from API response in the `columns` `TableColumnTraits` - for example `[{name:"some-key-in-api-response", ...}]`',
     idProperty: "apiUrl"
   })
   apis: ApiTraits[] = [];
