@@ -1,1 +1,237 @@
-{}
+{
+  "models": {
+    "terriaJSONcatalog": {
+      "buttonTitleConfirm": "Saya Setuju",
+      "requestFailedMessage": "Permintaan gagal dengan kode status {{status}}.",
+      "requestFailedTitle": "Permintaan Gagal"
+    },
+    "terria": {
+      "buttonTitleConfirm": "Saya Setuju"
+    },
+    "mapboxMap": {
+      "name": "Peta Mapbox"
+    },
+    "ckan": {
+      "metadata_modified": "Dimodifikasi",
+      "metadata_created": "Dibuat",
+      "author": "Penulis",
+      "licence": "Lisensi",
+      "dataDescription": "Keterangan Data",
+      "datasetDescription": "Keterangan Dataset",
+      "serviceErrorMessage": "Layanan ini tidak memiliki keterangan apapun.",
+      "dataSourceErrorMessage": "Sumber data ini tidak memiliki keterangan apapun."
+    },
+    "cartoMap": {
+      "noUrlTitle": "Tidak ada URL"
+    },
+    "userData": {
+      "firefox": "Mozilla Firefox",
+      "chrome": "Google Chrome",
+      "internetExplorer": "Internet Explorer 11"
+    }
+  },
+  "core": {
+    "printWindow": {
+      "errorTitle": "Kesalahan mencetak"
+    },
+    "dataType": {
+      "other": "Lainnya (gunakan layanan pengkonversi)",
+      "json": "JSON",
+      "gpx": "GPX",
+      "czml": "CZML",
+      "csv": "CSV",
+      "kml": "KML atau KMZ",
+      "geoRss": "GeoRSS",
+      "geojson": "GeoJSON",
+      "open-street-map": "Server OpenStreetMap",
+      "auto": "Deteksi otomatis (direkomendasikan)"
+    }
+  },
+  "analytics": {
+    "enterValidCoords": "Mohon masukkan koordinat yang valid (contoh 131.0361, -25.3450).",
+    "clickToDrawLine": "Klik untuk menggambar garis",
+    "runAnalysis": "Jalankan Analisis",
+    "nothingSelected": "Tidak ada yang dipilih. Mohon gunakan tombol-tombol di atas untuk membuat pemilihan.",
+    "polygon": "Poligon",
+    "regionName": "Nama daerah",
+    "selectedPolygon": "Poligon yang Dipilih",
+    "clickToDrawRectangle": "Klik untuk menggambar persegi panjang",
+    "clickToDrawPolygon": "Klik untuk menggambar poligon",
+    "selectLocation": "Pilih lokasi"
+  },
+  "terriaViewer": {
+    "webGLNotSupportedOrSlowTitle": "WebGL tak didukung atau terlalu lambat",
+    "webGLNotSupportedTitle": "WebGL tidak didukung",
+    "slowWebGLAvailableTitle": "Performa WebGL buruk"
+  },
+  "viewModels": {
+    "searchCatalogueItem": "Item-item Katalog"
+  },
+  "chart": {
+    "download": "Unduh"
+  },
+  "catalogItem": {
+    "removeFromMap": "Hapus dari peta",
+    "trash": "Hapus dari katalog",
+    "add": "Tambahkan",
+    "remove": "Hapus",
+    "loading": "Memuat…"
+  },
+  "loader": {
+    "loadingMessage": "Memuat"
+  },
+  "clipboard": {
+    "copy": "Salin",
+    "shareExplanation": "Siapapun yang memiliki URL ini dapat mengakses peta ini.",
+    "shareURL": "Bagikan URL",
+    "unsuccessful": "Penyalinan gagal…",
+    "success": "Disalin ke papan klip"
+  },
+  "description": {
+    "metadataUrl": "URL Metadata"
+  },
+  "story": {
+    "dismissText": "Mengerti, terima kasih!",
+    "editor": {
+      "saveStory": "Simpan",
+      "saveBtn": "simpan",
+      "cancelEditing": "Batal",
+      "cancelBtn": "batal",
+      "placeholder": "Masukkan sebuah judul di sini"
+    },
+    "cancelRemove": "Batal",
+    "confirmRemove": "Hapus",
+    "delete": "Hapus",
+    "deleteStory": "hapus",
+    "edit": "Sunting",
+    "editStory": "sunting"
+  },
+  "welcomeMessage": {
+    "WelcomeMessageDissmissText": "Jangan tampilkan ini kepadaku lagi",
+    "WelcomeMessageSecondaryBtn": "Ambil tur",
+    "WelcomeMessagePrimaryBtn": "Jelajahi Data"
+  },
+  "featureInfo": {
+    "siteData": "Data Situs",
+    "noInfoAvailable": "Tidak ada informasi yang tersedia",
+    "satelliteSuggestionBtn": "Tampilkan {{catalogItemName}} di lokasi ini",
+    "panelHeading": "Informasi Fitur",
+    "clickToAddData": "Klik '$t(addData.addDataBtnText)' untuk menambahkan data ke peta.",
+    "noDataAvailable": "Tidak ada data yang tersedia di sini - coba lokasi lain.",
+    "clickMap": "Klik peta untuk mengetahui lebih lanjut tentang sebuah lokasi",
+    "pickLocation": "Pilih Lokasi"
+  },
+  "sui": {
+    "notifications": {
+      "denyText": "Mungkin nanti",
+      "confirmText": "Ya",
+      "message": "Apakah Anda ingin melihatnya sekarang?",
+      "title": "Peta ini mengandung cerita"
+    }
+  },
+  "helpMenu": {
+    "next": "SELANJUTNYA",
+    "done": "SELESAI",
+    "helpMenuMoreHelpTitle": "Lebih banyak bantuan",
+    "helpMenuOpenWelcome": "Tampilkan pesan selamat datang",
+    "helpMenuHeader": "Apa yang ingin Anda lakukan?",
+    "btnTitle": "dapatkan bantuan",
+    "btnText": "Dukungan"
+  },
+  "feedback": {
+    "feedbackBtnText": "Berikan Umpan Balik",
+    "send": "Kirim",
+    "sending": "Mengirim…",
+    "cancel": "Batal",
+    "captionText": "Ini membantu kami memecahkan masalah dengan membiarkan kami melihat apa yang Anda lihat",
+    "shareWithDevelopers": "Bagikan tampilan peta saya dengan pengembang-pengembang {{appName}}",
+    "commentQuestion": "Komentar atau pertanyaan",
+    "email": "Alamat surel (opsional)<br/><2>Kami tidak dapat menindaklanjuti tanpa ini!</2>",
+    "yourName": "Nama Anda (opsional)",
+    "close": "tutup umpan balik",
+    "title": "Umpan balik",
+    "feedbackPreamble": "Kami ingin mendengar dari Anda!"
+  },
+  "settingPanel": {
+    "btnText": "Peta",
+    "btnTitle": "Ubah tampilan",
+    "screen": "layar",
+    "qualityLabels": {
+      "maximumPerformance": "Performa maksimal, kualitas dikurangi",
+      "balancedPerformance": "Seimbang antara performa & kualitas"
+    },
+    "viewerModeLabels": {
+      "Leaflet": "2D",
+      "CesiumEllipsoid": "3D Halus"
+    },
+    "performanceLabel": "Performa",
+    "qualityLabel": "Kualitas",
+    "mapQuality": "Kualitas Peta Raster:",
+    "imageOptimisation": "Optimisasi Gambar",
+    "baseMap": "Peta Dasar",
+    "mapView": "Tampilan Peta"
+  },
+  "toolsPanel": {
+    "btnText": "Alat"
+  },
+  "countDatasets": {
+    "btnCount": "Hitung Dataset",
+    "title": "Hitung Dataset",
+    "recount": "Hitung ulang",
+    "countingMessage": "Menghitung, mohon tunggu…",
+    "loadError": "gagal memuat.",
+    "btnText": "Mulai"
+  },
+  "share": {
+    "btnMapShareTitle": "Bagikan peta Anda dengan orang lain",
+    "btnStoryShareTitle": "Bagikan cerita Anda dengan orang lain",
+    "btnCatalogShareTitle": "Bagikan katalog Anda dengan orang lain",
+    "btnMapShareText": "Bagikan / Cetak",
+    "btnStoryShareText": "Bagikan",
+    "btnCatalogShareText": "Bagikan",
+    "printButton": "Cetak",
+    "printExplanation": "Buka versi yang dapat dicetak dari peta ini.",
+    "printTitle": "Cetak Peta",
+    "shortLinkShortening": "Memendekkan…"
+  },
+  "legend": {
+    "zone": "ZONA",
+    "lon": "Buj",
+    "lat": "Lin"
+  },
+  "AR": {
+    "confirmText": "Dimengerti"
+  },
+  "zoomCotrol": {
+    "zoomOut": "Kecilkan",
+    "zoomIn": "Besarkan"
+  },
+  "splitterTool": {
+    "workbench": {
+      "copyName": "{{name}} (salin)",
+      "goright": "Kanan",
+      "gorightTitle": "Tampilkan di sisi kanan",
+      "bothTitle": "Tampilkan di kedua sisi",
+      "goleft": "Kiri"
+    }
+  },
+  "location": {
+    "originError": "Browser Anda hanya dapat menyediakan lokasi Anda saat menggunakan HTTPS. Mungkin Anda dapat menggunakan {{secureUrl}} sebagai gantinya.",
+    "location": "Lokasi",
+    "errorGettingLocation": "Kesalahan mendapatkan lokasi",
+    "myLocation": "Lokasi Saya",
+    "browserCannotProvide": "Browser Anda tidak dapat menyediakan lokasi Anda."
+  },
+  "measure": {
+    "measureDistance": "Ukur jarak diantara lokasi-lokasi",
+    "measureTool": "Alat Pengukur"
+  },
+  "general": {
+    "cancel": "Batal",
+    "delete": "Hapus",
+    "skip": "Lewati",
+    "prev": "Seb",
+    "open": "Buka",
+    "close": "Tutup"
+  }
+}
