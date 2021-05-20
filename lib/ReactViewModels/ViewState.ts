@@ -659,6 +659,10 @@ export default class ViewState {
       this.terria.notificationState.currentNotification!.hideUi
     );
   }
+
+  get isMapZooming() {
+    return this.terria.currentViewer.isMapZooming;
+  }
 }
 
 interface Tool {

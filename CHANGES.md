@@ -3,7 +3,17 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.81)
+#### next release (8.0.0-alpha.82)
+
+- **Breaking changes**:
+  - IndexedItemSearchProvider: (bounding) `radius` option is no longer supported in `resultsData.csv` of search indexes.
+
+* Show a toast and spinner icon in the "Ideal zoom" button when the map is zooming.
+* `zoomTo()` will return a promise that resolves when the zoom animation is complete.
+* Modifies `IndexedItemSearchProvider` to reflect changes to `terriajs-indexer` file format.
+* [The next improvement]
+
+#### 8.0.0-alpha.81
 
 * Move notification state change logic from ViewState into new class NotificationState
 * Catalog items can now show a disclaimer or message before loading through specifying InitialMessageTraits
@@ -11,7 +21,6 @@ Change Log
 * Fix pluralisation of mapDataState to support other languages.
 * Fix CSW `Stratum` name bug.
 * Add `#configUrl` hash parameter for **dev environment only**. It can be used to overwrite Terria config URL.
-* [The next improvement]
 
 #### 8.0.0-alpha.80
 

@@ -14,4 +14,5 @@ export default class MockSearchableItem extends SearchableItemMixin(
   hideFeaturesNotInItemSearchResults(results: ItemSearchResult[]) {
     return () => {};
   }
+  zoomToItemSearchResult(result: ItemSearchResult) {}
 }

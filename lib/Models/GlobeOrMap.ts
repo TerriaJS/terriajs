@@ -1,12 +1,12 @@
 import { Feature as GeoJSONFeature, Position } from "geojson";
-import { observable, runInAction } from "mobx";
+import { action, observable, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
+import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
 import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
@@ -41,8 +41,11 @@ export default abstract class GlobeOrMap {
   private _tilesLoadingCountMax: number = 0;
   protected supportsPolylinesOnTerrain?: boolean;
 
-  // Fired when zoomTo is called
-  zoomToEvent: CesiumEvent = new CesiumEvent();
+  // True if zoomTo() was called and the map is currently zooming to dataset
+  @observable isMapZooming = false;
+
+  // An internal id to track an in progress call to zoomTo()
+  _currentZoomId?: string;
 
   // This is updated by Leaflet and Cesium objects.
   // Avoid duplicate mousemove events.  Why would we get duplicate mousemove events?  I'm glad you asked:
@@ -55,18 +58,38 @@ export default abstract class GlobeOrMap {
   abstract doZoomTo(
     target: CameraView | Rectangle | MappableMixin.MappableMixin,
     flightDurationSeconds: number
-  ): void;
+  ): Promise<void>;
 
+  /**
+   * Zoom map to a dataset or the given bounds.
+   *
+   * @param target A bounds item to zoom to
+   * @param flightDurationSeconds Optional time in seconds for the zoom animation to complete
+   * @returns A promise that resolves when the zoom animation is complete
+   */
+  @action
   zoomTo(
     target: CameraView | Rectangle | MappableMixin.MappableMixin,
     flightDurationSeconds: number
-  ): void {
-    this.zoomToEvent.raiseEvent();
-    this.doZoomTo(target, flightDurationSeconds);
-    if (MappableMixin.isMixedInto(target) && TimeVarying.is(target)) {
-      // Set the target as the source for timeline
-      this.terria.timelineStack.promoteToTop(target);
-    }
+  ): Promise<void> {
+    this.isMapZooming = true;
+    const zoomId = createGuid();
+    this._currentZoomId = zoomId;
+    return this.doZoomTo(target, flightDurationSeconds).finally(
+      action(() => {
+        // Unset isMapZooming only if the local zoomId matches _currentZoomId.
+        // If they do not match, it means there was another call to zoomTo which
+        // could still be in progress and it will handle unsetting isMapZooming.
+        if (zoomId === this._currentZoomId) {
+          this.isMapZooming = false;
+          this._currentZoomId = undefined;
+          if (MappableMixin.isMixedInto(target) && TimeVarying.is(target)) {
+            // Set the target as the source for timeline
+            this.terria.timelineStack.promoteToTop(target);
+          }
+        }
+      })
+    );
   }
 
   abstract getCurrentCameraView(): CameraView;

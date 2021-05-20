@@ -1537,5 +1537,8 @@
   },
   "notification": {
     "title": "Message"
+  },
+  "toast": {
+    "mapIsZooming": "Loading ideal zoom..."
   }
 }
