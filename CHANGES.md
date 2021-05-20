@@ -11,6 +11,8 @@ Change Log
 * Show a toast and spinner icon in the "Ideal zoom" button when the map is zooming.
 * `zoomTo()` will return a promise that resolves when the zoom animation is complete.
 * Modifies `IndexedItemSearchProvider` to reflect changes to `terriajs-indexer` file format.
+* Move notification state change logic from ViewState into new class `NotificationState`
+* Catalog items can now show a disclaimer or message before loading through specifying `InitialMessageTraits`
 * [The next improvement]
 
 #### 8.0.0-alpha.81
