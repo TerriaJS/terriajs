@@ -586,7 +586,17 @@
       "wfs-group": "Web Feature Service (WFS) サーバー",
       "wmts-group": "Web Map Tile Service (WMTS) サーバー",
       "wms-group": "Web Map Service (WMS) サーバー",
-      "auto": "自動検出（推奨）"
+      "auto": "自動検出（推奨）",
+      "shp": "Shapefile (zip)",
+      "gltf": "GLTF",
+      "carto": "Carto",
+      "json": "JSON",
+      "gpx": "GPX",
+      "czml": "CZML",
+      "csv": "CSV",
+      "kml": "KMLまたはKMZ",
+      "geoRss": "GeoRSS",
+      "geojson": "GeoJSON"
     },
     "dataUri": {
       "errorMessage": "残念ながら、Microsoftのブラウザ（全てのバージョンのInternet ExplorerとEdge）では、データをファイルとしてダウンロードするのに必要となるdata URI機能がサポートされていません。ダウンロードするには、次のURLをChrome、Firefox、Safariなど別のブラウザにコピーしてください。{{href}}",
@@ -673,5 +683,134 @@
     "availableTimeChart": "利用可能な時刻を図上に表示する",
     "useTimeline": "タイムラインを使用",
     "back": "戻る"
+  },
+  "models": {
+    "arcGisFeatureServerCatalogItem": {
+      "serviceDescription": "サービスの説明",
+      "dataDescription": "データの説明",
+      "copyrightText": "著作権"
+    },
+    "catalog": {
+      "unsupportedFileTypeMessage": "このファイルフォーマットは{{appName}}でサポートされていません。サポートされているファイル形式は次の通りです。<ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>",
+      "unsupportedFileTypeTitle": "サポートされていないファイル形式",
+      "unsupportedTypeMessage": "不明なモデルタイプ{{type}}を作成できませんでした。",
+      "unsupportedTypeTitle": "不明なタイプ",
+      "serviceErrorMessage": "このサービスには詳細情報がありません。",
+      "dataSourceErrorMessage": "このデータソースには詳細情報がありません。",
+      "chartDataGroup": "図表データのグループ。",
+      "userAddedDataGroup": "Add Dataパネルからユーザーが追加したデータのグループ。",
+      "catalogMemberMustHaveType": "カタログメンバーにはタイプが必要です。",
+      "catalogMemberMustHaveName": "新しいカタログメンバーには名前が必要です。",
+      "idForMatchingErrorMessage": "モデルオブジェクトには`id`、`localId`、`name`プロパティのいずれかが必要です",
+      "idForMatchingErrorTitle": "属性が不足しています",
+      "group": "グループ",
+      "name": "名称未定のアイテム"
+    },
+    "ckan": {
+      "idsNotSpecifiedMessage": "CkanCatalogItemではresourceIdかdatasetIdのどちらかが指定されている必要があります。",
+      "idsNotSpecifiedTitle": "resourceIdかdatasetIdのどちらかを指定してください",
+      "update_freq": "更新頻度",
+      "metadata_modified": "更新日",
+      "metadata_created": "作成日",
+      "contact_point": "連絡先",
+      "author": "作成者",
+      "licence": "ライセンス",
+      "datasetCustodian": "データセットの管理者",
+      "resourceDescription": "リソースの説明",
+      "datasetDescription": "データセットの説明",
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
+      "name": "CKANリソース",
+      "corsErrorMessage": "このCKANサーバーからパッケージを取得することができませんでした。<br/><br/>このURLを手動で入力した場合は、URLを再確認してください。<br/><br/>もしあなたがこのサーバーの管理者なら、{{corsLink}}が有効であることを確かめてください。<br/><br/>そうでない場合で、再読み込みしても問題が解決しない場合は、以下の技術詳細情報を添えてこのエラーを{{email}}までご報告ください。<br/><br/>",
+      "errorLoadingMessage": "このCKANカタログの定義には有効なフィルタークエリが含まれていません。",
+      "errorLoadingTitle": "CKANカタログ読み込みエラー",
+      "nameServer": "CKANサーバー",
+      "dataDescription": "データの説明"
+    },
+    "arcgisPortal": {
+      "datasetDescription": "データセットの説明"
+    },
+    "cesiumTerrain": {
+      "errorRenderingMessage": "<p>3Dの描画中にエラーが発生しました。これはおそらく{{appName}}のバグか、システムやウェブブラウザに互換性がないことが原因です。作業を続けられるように2Dに切り替えます。以下の技術詳細情報を添えてこのエラーを{{email}}までご報告ください。</p>",
+      "errorRenderingTitle": "3D描画エラー",
+      "notSupportedErrorMessage": "\"{{name}}\"は2Dでは表示できません。3Dに切り替えてもう一度お試しください。",
+      "notSupportedErrorTitle": "2Dではサポートされていません",
+      "name3D": "Cesium 3Dタイル",
+      "name": "Cesium地表面"
+    },
+    "cartoMap": {
+      "noUrlMessage": "このCartoマップの利用可能なURLが見つかりませんでした。",
+      "noUrlTitle": "URLがありません",
+      "name": "Cartoマップ"
+    },
+    "wcs": {
+      "exportFailedMessageII": "Web Coverage Serviceが失敗しました：{{error}}",
+      "exportFailedMessage": "Web Coverage Serviceが失敗しました",
+      "exportFailedTitle": "データのエクスポートに失敗しました",
+      "asyncPendingDescription": "WCSを読み込んでいます<br/>{{timestamp}}における{{name}}サービス。",
+      "asyncResultDescription": "以下の入力パラメータによる、{{timestamp}}における{{name}}からのデータのエクスポート結果です。"
+    },
+    "bing": {
+      "name": "Bingマップ"
+    },
+    "webMapTileServiceCatalogItem": {
+      "dataDescription": "データの説明",
+      "serviceDescription": "サービスの説明"
+    },
+    "webMapServiceCatalogItem": {
+      "dataDescription": "データの説明",
+      "serviceDescription": "サービスの説明"
+    },
+    "webFeatureServiceCatalogItem": {
+      "dataDescription": "データの説明",
+      "serviceDescription": "サービスの説明"
+    },
+    "arcGisMapServerCatalogItem": {
+      "dataDescription": "データの説明",
+      "serviceDescription": "サービスの説明",
+      "copyrightText": "著作権"
+    },
+    "arcGisMapServerCatalogGroup": {
+      "dataDescription": "データの説明",
+      "serviceDescription": "サービスの説明",
+      "copyrightText": "著作権"
+    },
+    "georss": {
+      "copyrightText": "著作権"
+    },
+    "arcGisFeatureServerCatalogGroup": {
+      "copyrightText": "著作権",
+      "serviceDescription": "サービスの説明",
+      "dataDescription": "データの説明"
+    },
+    "userData": {
+      "firefox": "Mozilla Firefox",
+      "chrome": "Google Chrome",
+      "edge": "Microsoft Edge",
+      "internetExplorer": "Internet Explorer 11",
+      "fileApiNotSupportedMessage": "お使いのウェブブラウザは{{appName}}がファイルからデータを読み込む上で必要となるFile APIをサポートしていません。ブラウザをアップグレードしてください。最適な体験のためには、{{chrome}}、{{firefox}}または{{edge}}の最新版をお使いになることをおすすめします。",
+      "fileApiNotSupportedTitle": "File APIがサポートされていません",
+      "addingDataErrorMessage": "指定されたデータは無効であるか、期待された書式にしたがっていないため読み込むことができません。",
+      "addingDataErrorTitle": "データを追加できませんでした"
+    }
+  },
+  "map": {
+    "cesium": {
+      "unusalTilingScheme": "このデータセットは特殊なタイル化方式を使用しているため、2Dのマップでは表示できません。",
+      "notWebMercatorTilingScheme": "このデータセットはウェブメルカトル（EPSG:3857）図法をサポートしていないため、2Dのマップでは表示できません。"
+    },
+    "regionProvider": {
+      "csvRegionMappingMessageLoadError": "リージョン{{regionName}}のリージョン境界を読み込めませんでした。{{exception}}",
+      "csvRegionMappingMessageZeroBoundariesFound": "リージョン{{regionName}}ではリージョン境界が一つも見つかりませんでした",
+      "csvRegionMappingMessageZeroFound": "リージョンタイプ{{regionType}}ではリージョン名が一つも見つかりませんでした",
+      "csvRegionMappingTitle": "CSVリージョンマッピング"
+    },
+    "drawExtentHelper": {
+      "extent": "範囲",
+      "drawExtent": "描画範囲"
+    },
+    "displayVariablesConcept": {
+      "defaultName": "表示パラメーター"
+    }
   }
 }
