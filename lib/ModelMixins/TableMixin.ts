@@ -362,12 +362,14 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return {
         id: "activeStyle",
         name: "Display Variable",
-        options: this.tableStyles.map(style => {
-          return {
-            id: style.id,
-            name: style.title
-          };
-        }),
+        options: this.tableStyles
+          // .filter(style => style.colorColumn?.uniqueValues.values.length !== 0)
+          .map(style => {
+            return {
+              id: style.id,
+              name: style.title
+            };
+          }),
         selectedId: this.activeStyle,
         setDimensionValue: (stratumId: string, styleId: string) => {
           this.setTrait(stratumId, "activeStyle", styleId);
