@@ -239,8 +239,14 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      */
     @computed
     get mapItems(): (DataSource | ImageryParts)[] {
+      const pointsDataSource = this.createLongitudeLatitudeDataSource(
+        this.activeTableStyle
+      );
+
+      if (pointsDataSource && pointsDataSource.entities.values.length > 0)
+        return [pointsDataSource];
+
       return filterOutUndefined([
-        this.createLongitudeLatitudeDataSource(this.activeTableStyle),
         this.createRegionMappedImageryLayer({
           style: this.activeTableStyle,
           currentTime: this.currentDiscreteJulianDate

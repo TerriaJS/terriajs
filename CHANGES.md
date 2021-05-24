@@ -15,13 +15,14 @@ Change Log
 * Catalog items can now show a disclaimer or message before loading through specifying `InitialMessageTraits`
 * Added Leaflet hack to remove white-gaps between tiles (https://github.com/Leaflet/Leaflet/issues/3575#issuecomment-688644225)
 * Pedestrian mode will no longer respond to "wasd" keys when the user is typing in some input field.
-* Add `options` to CSV papaparsing
 * Move feature info timeseries chart funtion to `lib\Table\getChartDetailsFn.ts`
 * Fix feature info timeseries chart for point (lat/long) timeseries
 * Feature info chart x-values are now be sorted in acending order
 * Remove merging rows by ID for `PER_ROW` data in `ApiTableCatalogItem`
 * Make `ApiTableCatalogItem` more compatible with Table `Traits`
   * `keyToColumnMapping` has been removed, now columns must be defined in `columns` `TableColumnTraits` to be copied from API responses.
+* Add `options` to CSV papaparsing
+* `TableMixin` will now only show points **or** region mapping - not both
 * [The next improvement]
 
 #### 8.0.0-alpha.81
