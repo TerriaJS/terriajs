@@ -284,7 +284,7 @@ const StandardUserInterface = observer(
                 `}
               >
                 <div className={Styles.uiInner}>
-                  <If condition={!this.props.viewState.hideMapUi()}>
+                  <If condition={!this.props.viewState.hideMapUi}>
                     <Small>
                       <MobileHeader
                         terria={terria}
@@ -371,7 +371,7 @@ const StandardUserInterface = observer(
                         condition={
                           this.props.terria.configParameters
                             .experimentalFeatures &&
-                          !this.props.viewState.hideMapUi()
+                          !this.props.viewState.hideMapUi
                         }
                       >
                         <ExperimentalFeatures
@@ -385,7 +385,7 @@ const StandardUserInterface = observer(
                 </div>
               </div>
 
-              <If condition={!this.props.viewState.hideMapUi()}>
+              <If condition={!this.props.viewState.hideMapUi}>
                 <Medium>
                   <TrainerBar
                     terria={terria}
@@ -415,7 +415,7 @@ const StandardUserInterface = observer(
                 condition={
                   !customElements.feedback.length &&
                   this.props.terria.configParameters.feedbackUrl &&
-                  !this.props.viewState.hideMapUi() &&
+                  !this.props.viewState.hideMapUi &&
                   this.props.viewState.feedbackFormIsVisible
                 }
               >

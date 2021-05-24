@@ -13,7 +13,6 @@ import CatalogMemberTraits from "../../lib/Traits/CatalogMemberTraits";
 import MappableTraits from "../../lib/Traits/MappableTraits";
 import mixTraits from "../../lib/Traits/mixTraits";
 import RasterLayerTraits from "../../lib/Traits/RasterLayerTraits";
-import ShowableTraits from "../../lib/Traits/ShowableTraits";
 import UrlTraits from "../../lib/Traits/UrlTraits";
 
 class TestCatalogItem extends TileErrorHandlerMixin(
@@ -21,7 +20,6 @@ class TestCatalogItem extends TileErrorHandlerMixin(
     CreateModel(
       mixTraits(
         UrlTraits,
-        ShowableTraits,
         RasterLayerTraits,
         MappableTraits,
         CatalogMemberTraits
