@@ -14,6 +14,7 @@ Change Log
 * Move notification state change logic from ViewState into new class `NotificationState`
 * Catalog items can now show a disclaimer or message before loading through specifying `InitialMessageTraits`
 * Added Leaflet hack to remove white-gaps between tiles (https://github.com/Leaflet/Leaflet/issues/3575#issuecomment-688644225)
+* Pedestrian mode will no longer respond to "wasd" keys when the user is typing in some input field.
 * [The next improvement]
 
 #### 8.0.0-alpha.81
