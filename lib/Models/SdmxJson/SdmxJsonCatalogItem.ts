@@ -22,8 +22,6 @@ import StratumOrder from "../StratumOrder";
 import Terria from "../Terria";
 import { SdmxJsonDataflowStratum } from "./SdmxJsonDataflowStratum";
 
-const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
-
 export default class SdmxJsonCatalogItem
   extends ChartableMixin(
     TableMixin(UrlMixin(CatalogMemberMixin(CreateModel(SdmxCatalogItemTraits))))
@@ -241,4 +239,4 @@ export default class SdmxJsonCatalogItem
   }
 }
 
-StratumOrder.addLoadStratum(automaticTableStylesStratumName);
+StratumOrder.addLoadStratum(TableAutomaticStylesStratum.stratumName);

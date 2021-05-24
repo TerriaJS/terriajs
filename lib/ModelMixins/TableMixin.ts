@@ -27,6 +27,7 @@ import SelectableDimensions, {
 } from "../Models/SelectableDimensions";
 import createLongitudeLatitudeFeaturePerId from "../Table/createLongitudeLatitudeFeaturePerId";
 import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
+import getChartDetailsFn from "../Table/getChartDetailsFn";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
@@ -806,27 +807,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           !isDefined(featureData._terria_getChartDetails) &&
           this.discreteTimes &&
           this.discreteTimes.length > 1 &&
-          this.activeTableStyle.timeColumn &&
-          this.activeTableStyle.colorColumn?.type === TableColumnType.scalar &&
-          Array.isArray(regionIds) &&
-          regionIds.length > 1
+          Array.isArray(regionIds)
         ) {
-          const chartColumns = [
-            this.activeTableStyle.timeColumn,
-            this.activeTableStyle.colorColumn
-          ];
-          featureInfo.properties._terria_getChartDetails = () => ({
-            title: this.activeTableStyle.colorColumn?.title,
-            xName: this.activeTableStyle.timeColumn?.title,
-            yName: this.activeTableStyle.colorColumn?.title,
-            units: chartColumns.map(column => column.units || ""),
-            csvData: [
-              chartColumns.map(col => col!.title).join(","),
-              ...regionIds.map(i =>
-                chartColumns.map(col => col.valueFunctionForType(i)).join(",")
-              )
-            ].join("\n")
-          });
+          featureInfo.properties._terria_getChartDetails = getChartDetailsFn(
+            this.activeTableStyle,
+            regionIds
+          );
         }
 
         return featureInfo;
