@@ -239,19 +239,17 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      */
     @computed
     get mapItems(): (DataSource | ImageryParts)[] {
+      const regionMappingLayers = this.createRegionMappedImageryLayer({
+        style: this.activeTableStyle,
+        currentTime: this.currentDiscreteJulianDate
+      });
+
+      if (regionMappingLayers) return [regionMappingLayers];
+
       const pointsDataSource = this.createLongitudeLatitudeDataSource(
         this.activeTableStyle
       );
-
-      if (pointsDataSource && pointsDataSource.entities.values.length > 0)
-        return [pointsDataSource];
-
-      return filterOutUndefined([
-        this.createRegionMappedImageryLayer({
-          style: this.activeTableStyle,
-          currentTime: this.currentDiscreteJulianDate
-        })
-      ]);
+      return filterOutUndefined([pointsDataSource]);
     }
 
     /**
