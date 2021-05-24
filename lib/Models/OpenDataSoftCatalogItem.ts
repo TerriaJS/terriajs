@@ -83,21 +83,22 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     );
   }
 
+  @computed get geoPoint2dField() {
+    return this.dataset.fields?.find(f => f.type === "geo_point_2d")?.name;
+  }
+
   @computed get columns() {
-    return [
-      ...(this.dataset.fields
-        ?.filter(f => f.name !== "geo_point_2d")
-        .map(f =>
-          createStratumInstance(TableColumnTraits, {
-            name: f.name,
-            title: f.label
-          })
-        ) ?? []),
-      createStratumInstance(TableColumnTraits, {
-        name: "geo_point_2d",
-        type: "hidden"
-      })
-    ];
+    return (
+      this.dataset.fields?.map(f =>
+        createStratumInstance(TableColumnTraits, {
+          name: f.name,
+          title: f.label,
+          // Hide geoPoint2dField column if it exists
+          type:
+            f.name === this.catalogItem.geoPoint2dField ? "hidden" : undefined
+        })
+      ) ?? []
+    );
   }
 }
 
@@ -159,18 +160,20 @@ export default class OpenDataSoftCatalogItem extends TableMixin(
       }
     );
 
-    const pointCol = data.find(col => col[0] === "geo_point_2d");
+    if (this.geoPoint2dField) {
+      const pointCol = data.find(col => col[0] === this.geoPoint2dField);
 
-    if (pointCol) {
-      const lat = ["lat"];
-      const lon = ["lon"];
-      pointCol.forEach(cell => {
-        const split = cell.split(", ");
-        lat.push(split[0] ?? "");
-        lon.push(split[1] ?? "");
-      });
+      if (pointCol) {
+        const lat = ["lat"];
+        const lon = ["lon"];
+        pointCol.forEach(cell => {
+          const split = cell.split(", ");
+          lat.push(split[0] ?? "");
+          lon.push(split[1] ?? "");
+        });
 
-      data.push(lat, lon);
+        data.push(lat, lon);
+      }
     }
 
     return data;

@@ -18,6 +18,13 @@ export default class OpenDataSoftCatalogItemTraits extends mixTraits(
   })
   datasetId?: string;
 
+  @primitiveTrait({
+    type: "string",
+    name: "Geo point 2d field name",
+    description: "Field to use as geo point 2d (i.e. lat long)."
+  })
+  geoPoint2dField?: string;
+
   @primitiveArrayTrait({
     type: "string",
     name: "Select field",
