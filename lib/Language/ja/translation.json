@@ -480,13 +480,20 @@
     "catalog": {
       "unsupportedFileTypeMessage": "このファイルフォーマットは{{appName}}でサポートされていません。サポートされているファイル形式は次の通りです。<ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>",
       "unsupportedFileTypeTitle": "サポートされていないファイル形式",
-      "serviceErrorMessage": "このサービスには詳細情報がありません。",
-      "dataSourceErrorMessage": "このデータソースには詳細情報がありません。",
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
       "chartDataGroup": "図表データのグループ。",
       "catalogMemberMustHaveType": "カタログメンバーにはタイプが必要です。",
       "catalogMemberMustHaveName": "新しいカタログメンバーには名前が必要です。",
       "group": "グループ",
-      "name": "名称未定のアイテム"
+      "name": "名称未定のアイテム",
+      "compositesError": "Compositeタイプにcompositeタイプのアイテムを含めることはできません。",
+      "mustHaveType": "各アイテムにはタイプを指定する必要があります。",
+      "useConversion": "変換サービスを使用しますか？",
+      "cancel": "キャンセル",
+      "upload": "アップロード",
+      "readyToUpload": "{{appName}}の変換サービスにアップロードする準備はできていますか？",
+      "unsupportedFileTypeMessageII": "このファイルフォーマットは{{appName}}ではサポートされていません。直接サポートされているフォーマットは <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>  です。オンライン変換サービスを通してサポートされているファイルフォーマットは <ul><li>Shapefile (.zip)</li><li>MapInfo TAB (.zip)</li><li>その他の {{linkII}}</li></ul> などです。"
     },
     "ckan": {
       "idsNotSpecifiedMessage": "CkanCatalogItemではresourceIdかdatasetIdのどちらかが指定されている必要があります。",
@@ -529,6 +536,47 @@
     "webMapServiceCatalogItem": {
       "dataDescription": "データの説明",
       "serviceDescription": "サービスの説明"
+    },
+    "czml": {
+      "name": "Cesium言語（CZML）",
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+    },
+    "csw": {
+      "name": "カタログサービス（CSW）"
+    },
+    "csv": {
+      "unableToLoadMessage": "サポートされているCSVフォーマットについては <a href=\"https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au\">csv-geo-au</a> の仕様を参照してください。\n\n {{message}}",
+      "unableToLoadTitle": "CSVファイルを読み込めません",
+      "unexpectedTypeMessage": "CsvCatalogItemのデータはBlog型、File型、String型である必要がありますが、これらのうちのどれでもありませんでした。これはTerriaJSのバグであるかTerriaJSのAPIの使い方が不適切である可能性があります。{{appName}}のバグと思われる場合は以下にメールを送信してください ",
+      "unexpectedTypeTitle": "予期しないタイプのCSVデータ",
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
+      "name": "カンマ区切（CSV）"
+    },
+    "ogr": {
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+    },
+    "magda": {
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+    },
+    "kml": {
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+    },
+    "gpx": {
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+    },
+    "gltf": {
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+    },
+    "geoJson": {
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
     }
   },
   "map": {
