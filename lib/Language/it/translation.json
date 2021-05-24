@@ -1,82 +1,82 @@
 {
-    "measure": {
-        "measureDistance": "Misura la distanza fra punti",
-        "measureTool": "Strumento di misura"
-    },
-    "general": {
-        "cancel": "Cancella",
-        "delete": "Elimina",
-        "skip": "Salta",
-        "next": "Prossimo",
-        "prev": "Precedente",
-        "open": "Apri",
-        "close": "Chiudi"
-    },
-    "featureInfo": {
-        "download": "Scarica la tabella"
-    },
-    "sui": {
-        "notifications": {
-            "denyText": "Forse più tardi",
-            "confirmText": "Si",
-            "title": "Questa mappa contiene una storia"
-        }
-    },
-    "helpMenu": {
-        "next": "Prossimo",
-        "done": "FATTO",
-        "helpMenuOpenWelcome": "Mostra il messaggio di benvenuto"
-    },
-    "feedback": {
-        "send": "Invia",
-        "sending": "Invio in corso…",
-        "commentQuestion": "Commento o domanda",
-        "title": "Feedback"
-    },
-    "settingPanel": {
-        "performanceLabel": "Performance",
-        "qualityLabel": "Qualità",
-        "baseMap": "Mappa base",
-        "btnText": "Mappa",
-        "btnTitle": "Cambia vista",
-        "screen": "schermo",
-        "native": "nativa",
-        "qualityLabels": {
-            "lowerPerformance": "Qualità massima, performance ridotte",
-            "balancedPerformance": "Performance e qualità bilanciati",
-            "maximumPerformance": "Performance massime, qualità ridotta"
-        },
-        "viewerModeLabels": {
-            "Leaflet": "2D",
-            "CesiumTerrain": "Terreno 3D"
-        }
-    },
-    "toolsPanel": {
-        "btnTitle": "Strumenti avanzati",
-        "btnText": "Strumento"
-    },
-    "countDatasets": {
-        "totals": "<div>Il catalogo contiene {{items}} oggetti in {{groups}} gruppi.</div>",
-        "loadError": "caricamento fallito.",
-        "btnText": "Avvia"
-    },
-    "share": {
-        "btnMapShareTitle": "Condividi la mappa con altri",
-        "btnStoryShareTitle": "Condividi storie con altri",
-        "btnCatalogShareTitle": "Condividi il catalogo con altri",
-        "btnMapShareText": "Condividi / Stampa",
-        "btnStoryShareText": "Condividi",
-        "btnCatalogShareText": "Condividi",
-        "btnAdvanced": "Opzioni avanzate",
-        "creatingPrintView": "Creazione della vista di stampa in corso…",
-        "printButton": "Stampa",
-        "printExplanation": "Apri una versione stampabile della mappa.",
-        "printTitle": "Stampa mappa",
-        "generatingUrl": "Generazione dell'URL per la condivisione in corso…",
-        "shortLinkError": "Errore durante l'accorciamento dell'URL. Verificare la connessione internet e riprovare.",
-        "shortLinkShortening": "Accorciamento in corso…"
-    },
-    "AR": {
-        "arTool": "strumento per la realtà aumentata"
+  "measure": {
+    "measureDistance": "Misura la distanza fra punti",
+    "measureTool": "Strumento di misura"
+  },
+  "general": {
+    "cancel": "Cancella",
+    "delete": "Elimina",
+    "skip": "Salta",
+    "next": "Prossimo",
+    "prev": "Precedente",
+    "open": "Apri",
+    "close": "Chiudi"
+  },
+  "featureInfo": {
+    "download": "Scarica la tabella"
+  },
+  "sui": {
+    "notifications": {
+      "denyText": "Forse più tardi",
+      "confirmText": "Si",
+      "title": "Questa mappa contiene una storia"
     }
+  },
+  "helpMenu": {
+    "next": "Prossimo",
+    "done": "FATTO",
+    "helpMenuOpenWelcome": "Mostra il messaggio di benvenuto"
+  },
+  "feedback": {
+    "send": "Invia",
+    "sending": "Invio in corso…",
+    "commentQuestion": "Commento o domanda",
+    "title": "Feedback"
+  },
+  "settingPanel": {
+    "performanceLabel": "Performance",
+    "qualityLabel": "Qualità",
+    "baseMap": "Mappa base",
+    "btnText": "Mappa",
+    "btnTitle": "Cambia vista",
+    "screen": "schermo",
+    "native": "nativa",
+    "qualityLabels": {
+      "lowerPerformance": "Qualità massima, performance ridotte",
+      "balancedPerformance": "Performance e qualità bilanciati",
+      "maximumPerformance": "Performance massime, qualità ridotta"
+    },
+    "viewerModeLabels": {
+      "Leaflet": "2D",
+      "CesiumTerrain": "Terreno 3D"
+    }
+  },
+  "toolsPanel": {
+    "btnTitle": "Strumenti avanzati",
+    "btnText": "Strumento"
+  },
+  "countDatasets": {
+    "totals": "<div>Il catalogo contiene {{items}} oggetti in {{groups}} gruppi.</div>",
+    "loadError": "caricamento fallito.",
+    "btnText": "Avvia"
+  },
+  "share": {
+    "btnMapShareTitle": "Condividi la mappa con altri",
+    "btnStoryShareTitle": "Condividi storie con altri",
+    "btnCatalogShareTitle": "Condividi il catalogo con altri",
+    "btnMapShareText": "Condividi / Stampa",
+    "btnStoryShareText": "Condividi",
+    "btnCatalogShareText": "Condividi",
+    "btnAdvanced": "Opzioni avanzate",
+    "creatingPrintView": "Creazione della vista di stampa in corso…",
+    "printButton": "Stampa",
+    "printExplanation": "Apri una versione stampabile della mappa.",
+    "printTitle": "Stampa mappa",
+    "generatingUrl": "Generazione dell'URL per la condivisione in corso…",
+    "shortLinkError": "Errore durante l'accorciamento dell'URL. Verificare la connessione internet e riprovare.",
+    "shortLinkShortening": "Accorciamento in corso…"
+  },
+  "AR": {
+    "arTool": "strumento per la realtà aumentata"
+  }
 }

@@ -3,6 +3,7 @@ Change Log
 
 ### Next Release
 
+* Moved strings in DateTimeSelector and FeatureInfoPanel into i18next translation file.
 
 ### v7.11.16
 
