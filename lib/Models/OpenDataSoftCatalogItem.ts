@@ -1,24 +1,24 @@
 import { ApiClient, fromCatalog, Query } from "@opendatasoft/api-client";
-import { runInAction, computed } from "mobx";
+import { Dataset } from "@opendatasoft/api-client/dist/client/types";
+import { computed, runInAction } from "mobx";
+import URI from "urijs";
+import filterOutUndefined from "../Core/filterOutUndefined";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
+import Csv from "../Table/Csv";
 import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 import OpenDataSoftCatalogItemTraits from "../Traits/OpenDataSoftCatalogItemTraits";
+import TableColumnTraits from "../Traits/TableColumnTraits";
+import TableStyleTraits from "../Traits/TableStyleTraits";
+import TableTimeStyleTraits from "../Traits/TableTimeStyleTraits";
 import CreateModel from "./CreateModel";
+import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
+import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
-import { Dataset } from "@opendatasoft/api-client/dist/client/types";
-import Csv from "../Table/Csv";
-import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-
-import URI from "urijs";
-import filterOutUndefined from "../Core/filterOutUndefined";
-import createStratumInstance from "./createStratumInstance";
-import CommonStrata from "./CommonStrata";
-import TableColumnTraits from "../Traits/TableColumnTraits";
 
 export type ValidDataset = Dataset & { dataset_id: string };
 
@@ -87,18 +87,57 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     return this.dataset.fields?.find(f => f.type === "geo_point_2d")?.name;
   }
 
-  @computed get columns() {
+  @computed get geoPoint2dColumn() {
+    if (this.geoPoint2dField) {
+      return createStratumInstance(TableColumnTraits, {
+        name: this.geoPoint2dField,
+        type: "hidden"
+      });
+    }
+  }
+
+  @computed get timeColumn() {
+    const f = this.dataset.fields?.find(f => f.type === "datetime");
+
+    if (f) {
+      return createStratumInstance(TableColumnTraits, {
+        name: f.name,
+        title: f.label,
+        type: "time"
+      });
+    }
+  }
+
+  @computed get otherColumns() {
     return (
-      this.dataset.fields?.map(f =>
-        createStratumInstance(TableColumnTraits, {
-          name: f.name,
-          title: f.label,
-          // Hide geoPoint2dField column if it exists
-          type:
-            f.name === this.catalogItem.geoPoint2dField ? "hidden" : undefined
-        })
-      ) ?? []
+      this.dataset.fields
+        ?.filter(f => f.type !== "datetime" && f.type !== "geo_point_2d")
+        ?.map(f =>
+          createStratumInstance(TableColumnTraits, {
+            name: f.name,
+            title: f.label
+          })
+        ) ?? []
     );
+  }
+
+  @computed get columns() {
+    return filterOutUndefined([
+      this.timeColumn,
+      this.geoPoint2dColumn,
+      ...this.otherColumns
+    ]);
+  }
+
+  @computed
+  get defaultStyle() {
+    if (!this.timeColumn) return;
+    return createStratumInstance(TableStyleTraits, {
+      time: createStratumInstance(TableTimeStyleTraits, {
+        timeColumn: this.timeColumn.name,
+        idColumns: this.geoPoint2dField ? ["lat", "lon"] : undefined
+      })
+    });
   }
 }
 
