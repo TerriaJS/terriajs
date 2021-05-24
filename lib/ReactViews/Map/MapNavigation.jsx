@@ -174,7 +174,7 @@ class MapNavigation extends React.Component {
           >
             <div className={Styles.controls}>
               {this.props.terria.configParameters.feedbackUrl &&
-                !this.props.viewState.hideMapUi() && (
+                !this.props.viewState.hideMapUi && (
                   <div className={Styles.control}>
                     <FeedbackButton
                       terria={this.props.terria}
