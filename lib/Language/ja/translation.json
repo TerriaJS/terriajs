@@ -695,8 +695,8 @@
       "unsupportedFileTypeTitle": "サポートされていないファイル形式",
       "unsupportedTypeMessage": "不明なモデルタイプ{{type}}を作成できませんでした。",
       "unsupportedTypeTitle": "不明なタイプ",
-      "serviceErrorMessage": "このサービスには詳細情報がありません。",
-      "dataSourceErrorMessage": "このデータソースには詳細情報がありません。",
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
       "chartDataGroup": "図表データのグループ。",
       "userAddedDataGroup": "Add Dataパネルからユーザーが追加したデータのグループ。",
       "catalogMemberMustHaveType": "カタログメンバーにはタイプが必要です。",
@@ -704,7 +704,17 @@
       "idForMatchingErrorMessage": "モデルオブジェクトには`id`、`localId`、`name`プロパティのいずれかが必要です",
       "idForMatchingErrorTitle": "属性が不足しています",
       "group": "グループ",
-      "name": "名称未定のアイテム"
+      "name": "名称未定のアイテム",
+      "convertErrorMessage": "このカタログファイルは古いバージョンのマップ用に作成されたものです。{{url}}のカタログをアップグレード中にエラーが発生しました。",
+      "convertErrorTitle": "カタログをV8にアップデートできません",
+      "compositesError": "Compositeタイプにcompositeタイプのアイテムを含めることはできません。",
+      "mustHaveType": "各アイテムにはタイプを指定する必要があります。",
+      "useConversion": "変換サービスを使用しますか？",
+      "cancel": "キャンセル",
+      "upload": "アップロード",
+      "readyToUpload": "{{appName}}の変換サービスにアップロードする準備はできていますか？",
+      "getConfirmationMessage": "このファイルは{{appName}}では直接サポートされていません。\n\n{{appName}}の変換サービスにアップロードしますか？ファイルサイズが小さく、かつzip化されたEsri ShapeファイルやMapInfo Tabファイルであればこの方法で表示できる可能性があります。",
+      "unsupportedFileTypeMessageII": "このファイルフォーマットは{{appName}}ではサポートされていません。直接サポートされているフォーマットは <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>  です。オンライン変換サービスを通してサポートされているファイルフォーマットは <ul><li>Shapefile (.zip)</li><li>MapInfo TAB (.zip)</li><li>その他の {{linkII}}</li></ul> などです。"
     },
     "ckan": {
       "idsNotSpecifiedMessage": "CkanCatalogItemではresourceIdかdatasetIdのどちらかが指定されている必要があります。",
@@ -728,7 +738,9 @@
       "dataDescription": "データの説明"
     },
     "arcgisPortal": {
-      "datasetDescription": "データセットの説明"
+      "datasetDescription": "データセットの説明",
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
     },
     "cesiumTerrain": {
       "errorRenderingMessage": "<p>3Dの描画中にエラーが発生しました。これはおそらく{{appName}}のバグか、システムやウェブブラウザに互換性がないことが原因です。作業を続けられるように2Dに切り替えます。以下の技術詳細情報を添えてこのエラーを{{email}}までご報告ください。</p>",
@@ -792,6 +804,53 @@
       "fileApiNotSupportedTitle": "File APIがサポートされていません",
       "addingDataErrorMessage": "指定されたデータは無効であるか、期待された書式にしたがっていないため読み込むことができません。",
       "addingDataErrorTitle": "データを追加できませんでした"
+    },
+    "czml": {
+      "unableToLoadItemMessage": "このCZMLカタログアイテムには`url`、`czmlData`、`czmlString`のいずれのプロパティも存在しないため、読み込むことができません。",
+      "unableToLoadItemTitle": "CZMLがありません",
+      "errorLoadingMessage": "CZMLファイルの読み込み中にエラーが発生しました。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このエラーが発生する場合、サーバーが{{cors}}をサポートしていない可能性もあります。サーバーを管理しているのがあなたであれば、CORSが無効になっていないか確認し、無効になっている場合は有効にしてください。サーバーのコントロール権がない場合は、サーバー管理者に問い合わせてCORSを有効化してもらってください。または、{{appName}}の運営者に{{email}}から問い合わせいただければ、{{appName}}内のCORS非対応サーバーのリストにこのサーバーを加えることで{{appName}}自体がリクエストを中継できるかもしれません。 <p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。以下は技術的な詳細情報です。</p>\n<pre>${stackTrace}</pre>",
+      "errorLoadingTitle": "CZMLを読み込めませんでした",
+      "name": "Cesium言語（CZML）",
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+    },
+    "csw": {
+      "name": "カタログサービス（CSW）"
+    },
+    "csv": {
+      "unableToLoadItemMessage": "このCSVのカタログアイテムには`url`または`csvString`プロパティが指定されていないため、読み込むことができません。",
+      "unableToLoadItemTitle": "CSVがありません",
+      "unableToLoadMessage": "サポートされているCSVフォーマットについては <a href=\"https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au\">csv-geo-au</a> の仕様を参照してください。\n\n {{message}}",
+      "unableToLoadTitle": "CSVファイルを読み込めません",
+      "unexpectedTypeMessage": "CsvCatalogItemのデータはBlog型、File型、String型である必要がありますが、これらのうちのどれでもありませんでした。これはTerriaJSのバグであるかTerriaJSのAPIの使い方が不適切である可能性があります。{{appName}}のバグと思われる場合は以下にメールを送信してください ",
+      "unexpectedTypeTitle": "予期しないタイプのCSVデータ",
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
+      "name": "カンマ区切（CSV）"
+    },
+    "ogr": {
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+    },
+    "magda": {
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+    },
+    "kml": {
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+    },
+    "gpx": {
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+    },
+    "gltf": {
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+    },
+    "geoJson": {
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
     }
   },
   "map": {
