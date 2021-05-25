@@ -499,41 +499,60 @@ export default class TableStyle {
   @computed
   get timeIntervals(): (TimeInterval | null)[] | undefined {
     const timeColumn = this.timeColumn;
-    const displayDuration = this.timeTraits.displayDuration;
 
     if (timeColumn === undefined) {
       return;
     }
 
-    const getFinishDate = (startDate: JulianDate, rowIndex: number) => {
-      if (displayDuration !== undefined) {
-        return JulianDate.addMinutes(
-          startDate,
-          displayDuration,
-          new JulianDate()
-        );
-      } else {
-        return this.finishJulianDates?.[rowIndex] || undefined;
-      }
-    };
-
     const lastDate = timeColumn.valuesAsJulianDates.maximum;
-    const intervals = timeColumn.valuesAsJulianDates.values.map(
-      (startDate, i) => {
-        if (!startDate) {
-          return null;
-        }
-
-        const finishDate = getFinishDate(startDate, i);
-        return new TimeInterval({
-          start: startDate,
-          stop: finishDate,
-          isStopIncluded: JulianDate.equals(finishDate, lastDate),
-          data: startDate
-        });
+    const intervals = timeColumn.valuesAsJulianDates.values.map((date, i) => {
+      if (!date) {
+        return null;
       }
-    );
+
+      const startDate = this.startJulianDates?.[i] ?? date;
+      const finishDate = this.finishJulianDates?.[i] ?? undefined;
+
+      return new TimeInterval({
+        start: startDate,
+        stop: finishDate,
+        isStopIncluded: JulianDate.equals(finishDate, lastDate),
+        data: date
+      });
+    });
     return intervals;
+  }
+
+  /**
+   * Returns a start date for each row in the table.
+   * If `timeTraits.spreadStartTime` is true - the start dates will be the earliest value for all features (eg sensor IDs) - even if the time value is **after** the earliest time step. This means that at time step 0, all features will be displayed.
+   */
+  @computed
+  private get startJulianDates(): (JulianDate | null)[] | undefined {
+    const timeColumn = this.timeColumn;
+    if (timeColumn === undefined) {
+      return;
+    }
+
+    const firstDate = timeColumn.valuesAsJulianDates.minimum;
+
+    if (!this.timeTraits.spreadStartTime || !firstDate)
+      return timeColumn.valuesAsJulianDates.values;
+
+    const startDates = timeColumn.valuesAsJulianDates.values.slice();
+
+    this.rowGroups.forEach(([groupId, rowIds]) => {
+      // Find row ID with earliest date in this rowGroup
+      const firstRowId = rowIds
+        .filter(id => startDates[id])
+        .sort((idA, idB) =>
+          JulianDate.compare(startDates[idA]!, startDates[idB]!)
+        )[0];
+      // Set it to earliest date in the entire column
+      if (isDefined(firstRowId)) startDates[firstRowId] = firstDate;
+    });
+
+    return startDates;
   }
 
   /**
@@ -550,25 +569,27 @@ export default class TableStyle {
       return;
     }
 
-    // If id columns is not defined, group rows by (lat, lon) so that the
-    // finish date for a row with a certain location will be the date for
-    // the next row at the same location.
-    const groupByCols =
-      this.idColumns ||
-      filterOutUndefined([this.latitudeColumn, this.longitudeColumn]);
-    const tableRowIds = this.tableModel.rowIds;
-    const rowGroups = Object.values(
-      groupBy(tableRowIds, rowId =>
-        groupByCols.map(col => col.values[rowId]).join("-")
-      )
-    );
+    const startDates = timeColumn.valuesAsJulianDates.values;
 
-    // Estimate a final duration value to calculate the end date for groups
+    // If displayDuration trait is set, use that to set finish date
+    if (this.timeTraits.displayDuration !== undefined) {
+      return startDates.map(date =>
+        date
+          ? JulianDate.addMinutes(
+              date,
+              this.timeTraits.displayDuration!,
+              new JulianDate()
+            )
+          : null
+      );
+    }
+
+    // Otherwise estimate a final duration value to calculate the end date for groups
     // that have only one row. Fallback to a global default if an estimate
     // cannot be found.
     let finalDurationSeconds = DEFAULT_FINAL_DURATION_SECONDS;
-    for (let i = 0; i < rowGroups.length; i++) {
-      const rowIds = rowGroups[i];
+    for (let i = 0; i < this.rowGroups.length; i++) {
+      const rowIds = this.rowGroups[i][1];
       const startDates = rowIds.map(
         id => timeColumn.valuesAsJulianDates.values[id]
       );
@@ -580,9 +601,8 @@ export default class TableStyle {
       }
     }
 
-    const startDates = timeColumn.valuesAsJulianDates.values;
     const finishDates: (JulianDate | null)[] = [];
-    rowGroups.forEach(rowIds => {
+    this.rowGroups.forEach(([groupId, rowIds]) => {
       const startDatesForGroup = rowIds.map(id => startDates[id]);
       const finishDatesForGroup = this.calculateFinishDatesFromStartDates(
         startDatesForGroup,
@@ -593,6 +613,20 @@ export default class TableStyle {
       });
     });
     return finishDates;
+  }
+
+  /** Get rows grouped by id. Id will be calculated using idColumns or latitude/longitude columns
+   */
+  @computed get rowGroups() {
+    const groupByCols =
+      this.idColumns ||
+      filterOutUndefined([this.latitudeColumn, this.longitudeColumn]);
+    const tableRowIds = this.tableModel.rowIds;
+    return Object.entries(
+      groupBy(tableRowIds, rowId =>
+        groupByCols.map(col => col.values[rowId]).join("-")
+      )
+    );
   }
 
   /**
