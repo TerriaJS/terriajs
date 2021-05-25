@@ -524,7 +524,8 @@ export default class TableStyle {
   }
 
   /**
-   * Returns a finish date for each row in the table.
+   * Returns a start date for each row in the table.
+   * If `timeTraits.spreadStartTime` is true - the start dates will be the earliest value for all features (eg sensor IDs) - even if the time value is **after** the earliest time step. This means that at time step 0, all features will be displayed.
    */
   @computed
   private get startJulianDates(): (JulianDate | null)[] | undefined {
