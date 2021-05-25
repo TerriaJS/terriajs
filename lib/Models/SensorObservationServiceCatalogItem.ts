@@ -82,8 +82,7 @@ interface MeasurementTimeValuePair {
   value: Object | string;
 }
 
-const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
-StratumOrder.addLoadStratum(automaticTableStylesStratumName);
+StratumOrder.addLoadStratum(TableAutomaticStylesStratum.stratumName);
 
 class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
   constructor(readonly catalogItem: SensorObservationServiceCatalogItem) {
@@ -317,7 +316,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   ) {
     super(id, terria, sourceReference);
     this.strata.set(
-      automaticTableStylesStratumName,
+      TableAutomaticStylesStratum.stratumName,
       new SosAutomaticStylesStratum(this)
     );
   }
