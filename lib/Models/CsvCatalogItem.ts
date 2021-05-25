@@ -27,9 +27,6 @@ import Terria from "./Terria";
 // - ID+time column -> point moves, region changes (continuously?) over time
 // - points, no ID, time -> "blips" with a duration (perhaps provided by another column)
 //
-
-const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
-
 export default class CsvCatalogItem extends TableMixin(
   AutoRefreshingMixin(
     UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
@@ -48,7 +45,7 @@ export default class CsvCatalogItem extends TableMixin(
   ) {
     super(id, terria, sourceReference);
     this.strata.set(
-      automaticTableStylesStratumName,
+      TableAutomaticStylesStratum.stratumName,
       new TableAutomaticStylesStratum(this)
     );
   }
@@ -183,4 +180,4 @@ export default class CsvCatalogItem extends TableMixin(
   }
 }
 
-StratumOrder.addLoadStratum(automaticTableStylesStratumName);
+StratumOrder.addLoadStratum(TableAutomaticStylesStratum.stratumName);

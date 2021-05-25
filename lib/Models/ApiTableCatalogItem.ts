@@ -1,7 +1,7 @@
 import dateFormat from "dateformat";
-import { groupBy } from "lodash";
 import { computed, observable, runInAction } from "mobx";
 import URI from "urijs";
+import isDefined from "../Core/isDefined";
 import loadJson from "../Core/loadJson";
 import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
@@ -10,13 +10,40 @@ import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 import ApiTableCatalogItemTraits, {
   ApiTraits
 } from "../Traits/ApiTableCatalogItemTraits";
+import TableStyleTraits from "../Traits/TableStyleTraits";
+import TableTimeStyleTraits from "../Traits/TableTimeStyleTraits";
 import CreateModel from "./CreateModel";
-import Model from "./Model";
+import createStratumInstance from "./createStratumInstance";
+import LoadableStratum from "./LoadableStratum";
+import Model, { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
 
-const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
+export class ApiTableStratum extends LoadableStratum(
+  ApiTableCatalogItemTraits
+) {
+  static stratumName = "apiTable";
+
+  duplicateLoadableStratum(model: BaseModel): this {
+    return new ApiTableStratum(model as ApiTableCatalogItem) as this;
+  }
+
+  constructor(private readonly catalogItem: ApiTableCatalogItem) {
+    super();
+  }
+
+  // Set time id columns to `idKey`
+  @computed get defaultStyle() {
+    return createStratumInstance(TableStyleTraits, {
+      time: createStratumInstance(TableTimeStyleTraits, {
+        idColumns: this.catalogItem.idKey ? [this.catalogItem.idKey] : undefined
+      })
+    });
+  }
+}
+
+StratumOrder.addLoadStratum(ApiTableStratum.stratumName);
 /**
  * THE API AND TRAITS OF THIS EXPERIMENTAL CATALOG ITEM SHOULD BE CONSIDERED IN
  * ALPHA. EXPECT BREAKING CHANGES.
@@ -36,9 +63,10 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
   constructor(id: string | undefined, terria: Terria) {
     super(id, terria);
     this.strata.set(
-      automaticTableStylesStratumName,
+      TableAutomaticStylesStratum.stratumName,
       new TableAutomaticStylesStratum(this)
     );
+    this.strata.set(ApiTableStratum.stratumName, new ApiTableStratum(this));
   }
 
   @computed
@@ -71,42 +99,25 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
             .map(data => [data[this.idKey!], data])
         );
 
-        // Merge all responses with the same id (and timestamp, if applicable),
-        // Each of these merged responses will become a row in the table.
+        // Merge PER_ID data with *all* PER_ROW data (this may result in the same PER_ID data row being added to multiple PER_ROW data row)
         const perRowData = values
           .filter(val => val.api.kind === "PER_ROW")
           .map(val => val.data)
-          .reduce((curr, prev) => curr.concat(prev), []);
-
-        // Group all responses wth the same id
-        const groupedData = groupBy(perRowData, this.idKey);
-
-        this.apiResponses = Object.keys(groupedData).map(key => {
-          // Then, merge all responses with that key into a single object
-          const mergedResponse = groupedData[key].reduce(
-            (prev, curr) => Object.assign(prev, curr),
-            {}
+          .reduce((curr, prev) => curr.concat(prev), [])
+          .map(row =>
+            Object.assign(
+              row,
+              isDefined(row[this.idKey!]) ? perIdData.get(row[this.idKey!]) : {}
+            )
           );
 
-          // Add per id data for this response
-          Object.assign(
-            mergedResponse,
-            perIdData.get(mergedResponse[this.idKey!])
-          );
-          return mergedResponse;
-        });
+        this.apiResponses = perRowData;
       });
     });
   }
 
   protected makeTableColumns(addHeaders: boolean) {
-    return this.apis
-      .map(api =>
-        api.keyToColumnMapping.map(mapping =>
-          addHeaders ? [mapping.columnName!] : []
-        )
-      )
-      .reduce((prev, curr) => prev.concat(curr), []);
+    return this.columns.map(col => (addHeaders ? [col.name ?? ""] : []));
   }
 
   protected apiResponseToTable() {
@@ -117,22 +128,14 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
       return columnMajorTable;
     }
     // Fill in column values from the API response
-    let startColumnIdx = 0; // Store where the columns for each API start
-    this.apis.forEach(api => {
-      this.apiResponses.forEach(response => {
-        api.keyToColumnMapping.forEach((mapping, mappingIdx) => {
-          // Get cell value
-          let cellValue = response[mapping.keyInApiResponse!];
-          if (cellValue === undefined) {
-            cellValue = "";
-          }
-          // Append the new value to the correct column
-          const columnIdx = startColumnIdx + mappingIdx;
-          columnMajorTable[columnIdx].push(`${cellValue}`);
-        });
+    this.apiResponses.forEach(response => {
+      this.columns.forEach((col, mappingIdx) => {
+        if (!isDefined(col.name)) return;
+        // Append the new value to the correct column
+        columnMajorTable[mappingIdx].push(`${response[col.name] ?? ""}`);
       });
-      startColumnIdx += api.keyToColumnMapping.length;
     });
+
     return columnMajorTable;
   }
 
@@ -193,4 +196,4 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
   }
 }
 
-StratumOrder.addLoadStratum(automaticTableStylesStratumName);
+StratumOrder.addLoadStratum(TableAutomaticStylesStratum.stratumName);
