@@ -62,6 +62,8 @@ export default class ViewState {
   @observable isDraggingDroppingFile: boolean = false;
   @observable mobileView: string | null = null;
   @observable isMapFullScreen: boolean = false;
+  // show/hide the terria side panel without switching the map to full screen layout
+  @observable showTerriaSidePanel: boolean = true;
   @observable myDataIsUploadView: boolean = true;
   @observable mobileMenuVisible: boolean = false;
   @observable explorerPanelAnimating: boolean = false;

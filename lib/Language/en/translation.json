@@ -1540,5 +1540,20 @@
   },
   "toast": {
     "mapIsZooming": "Loading ideal zoom..."
+  },
+  "compare": {
+    "title": "Compare",
+    "done": "Done",
+    "leftPanel": "Left panel",
+    "rightPanel": "Right panel",
+    "bothPanels": "Both panels",
+    "info": "Compare spatial datasets from your workbench side-by-side on the map.",
+    "dataset": {
+      "label": "Dataset",
+      "selectOne": "Select one"
+    },
+    "dimensionSelector": {
+      "undefinedLabel": "Not specified"
+    }
   }
 }

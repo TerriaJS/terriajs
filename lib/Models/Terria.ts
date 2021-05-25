@@ -465,6 +465,11 @@ export default class Terria {
   @observable previewedItemId: string | undefined;
 
   /**
+   * Gets or sets the ID of the catalog item that is currently being compared.
+   */
+  @observable compareItemId: string | undefined;
+
+  /**
    * Base ratio for maximumScreenSpaceError
    * @type {number}
    */
@@ -481,6 +486,16 @@ export default class Terria {
    * @type {boolean}
    */
   @observable catalogReferencesLoaded: boolean = false;
+
+  /**
+   * Left item in the compare workflow
+   */
+  @observable compareLeftItemId?: string;
+
+  /**
+   * Right item in the compare workflow
+   */
+  @observable compareRightItemId?: string;
 
   readonly notificationState: NotificationState = new NotificationState();
 
@@ -1245,6 +1260,14 @@ export default class Terria {
 
     if (isJsonNumber(initData.splitPosition)) {
       this.splitPosition = initData.splitPosition;
+    }
+
+    if (isJsonString(initData.compareLeftItemId)) {
+      this.compareLeftItemId = initData.compareLeftItemId;
+    }
+
+    if (isJsonString(initData.compareRightItemId)) {
+      this.compareRightItemId = initData.compareRightItemId;
     }
 
     // Copy but don't yet load the workbench.

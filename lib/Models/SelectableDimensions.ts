@@ -22,9 +22,7 @@ interface SelectableDimensions {
 }
 
 namespace SelectableDimensions {
-  export function is(
-    model: SelectableDimensions
-  ): model is SelectableDimensions {
+  export function is(model: any): model is SelectableDimensions {
     return "selectableDimensions" in model;
   }
 }

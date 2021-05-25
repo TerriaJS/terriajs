@@ -127,7 +127,7 @@ export const GLYPHS = {
   closeTool: require("../../wwwroot/images/icons/close-tool.svg")
 };
 
-interface IconProps {
+export interface IconProps {
   glyph: { id: string };
   style?: any;
   className?: string;
@@ -165,10 +165,10 @@ export const StyledIcon = styled(Icon)<IStyledIconProps>`
   ${props =>
     props.displayInline &&
     `
-  display: inline; 
+  display: inline;
   vertical-align: middle;
   `}
-  
+
   flex-shrink: 0;
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
   ${props => props.styledHeight && `height: ${props.styledHeight};`}
