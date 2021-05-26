@@ -4,8 +4,8 @@ import Resource from "terriajs-cesium/Source/Core/Resource";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
 import TerriaError from "../../Core/TerriaError";
-import ChartableMixin from "../../ModelMixins/ChartableMixin";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
+import ChartableMixin from "../../ModelMixins/ChartableMixin";
 import TableMixin from "../../ModelMixins/TableMixin";
 import UrlMixin from "../../ModelMixins/UrlMixin";
 import Csv from "../../Table/Csv";
@@ -137,6 +137,7 @@ export default class SdmxJsonCatalogItem
   @computed
   get selectableDimensions(): SelectableDimension[] {
     return filterOutUndefined([
+      ...super.selectableDimensions,
       this.sdmxViewModeDimension,
       ...this.sdmxSelectableDimensions,
       this.regionColumnDimensions,

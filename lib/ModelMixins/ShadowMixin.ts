@@ -6,9 +6,11 @@ import SelectableDimensions, {
   SelectableDimension
 } from "../Models/SelectableDimensions";
 import ShadowTraits, { Shadows } from "../Traits/ShadowTraits";
+import CatalogMemberMixin from "./CatalogMemberMixin";
 
 function ShadowMixin<T extends Constructor<Model<ShadowTraits>>>(Base: T) {
-  abstract class ShadowMixin extends Base implements SelectableDimensions {
+  abstract class ShadowMixin extends CatalogMemberMixin(Base)
+    implements SelectableDimensions {
     get hasShadows() {
       return true;
     }
@@ -31,6 +33,7 @@ function ShadowMixin<T extends Constructor<Model<ShadowTraits>>>(Base: T) {
     @computed
     get selectableDimensions(): SelectableDimension[] {
       return [
+        ...super.selectableDimensions,
         {
           id: "shadows",
           name: "Shadows",

@@ -1,13 +1,14 @@
+import CatalogMemberTraits from "./CatalogMemberTraits";
+import { DimensionTraits } from "./DimensionTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import mixTraits from "./mixTraits";
 import objectArrayTrait from "./objectArrayTrait";
 import primitiveArrayTrait from "./primitiveArrayTrait";
 import primitiveTrait from "./primitiveTrait";
+import { ConceptTraits } from "./SdmxCommonTraits";
 import TableTraits from "./TableTraits";
 import UrlTraits from "./UrlTraits";
-import CatalogMemberTraits from "./CatalogMemberTraits";
-import { DimensionTraits, ConceptTraits } from "./SdmxCommonTraits";
 
 export class SdmxDimensionTraits extends DimensionTraits {
   @primitiveTrait({

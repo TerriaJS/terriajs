@@ -371,10 +371,10 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
             isDefined(conceptOverride?.options) &&
             conceptOverride!.options.length > 0
               ? conceptOverride?.options.map(option => {
-                  return { id: option.id, name: option.name };
+                  return { id: option.id, name: option.name, value: undefined };
                 })
               : codes?.map(code => {
-                  return { id: code.id!, name: code.name };
+                  return { id: code.id!, name: code.name, value: undefined };
                 });
 
           if (isDefined(options)) {

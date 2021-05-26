@@ -1,0 +1,73 @@
+import ModelTraits from "./ModelTraits";
+import { DimensionOption, Dimension } from "../Models/SelectableDimensions";
+import primitiveTrait from "./primitiveTrait";
+import anyTrait from "./anyTrait";
+import objectArrayTrait from "./objectArrayTrait";
+
+export class DimensionOptionTraits extends ModelTraits
+  implements DimensionOption {
+  @primitiveTrait({
+    type: "string",
+    name: "ID",
+    description: "Option ID"
+  })
+  id?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Name",
+    description: "Option name (human-readable)"
+  })
+  name?: string;
+
+  @anyTrait({
+    name: "Value",
+    description: "Value (if this is undefined, ID will be used)"
+  })
+  value?: any;
+}
+
+export class DimensionTraits extends ModelTraits implements Dimension {
+  @primitiveTrait({
+    type: "string",
+    name: "ID",
+    description: "Dimension ID"
+  })
+  id?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Name",
+    description: "Dimension name (human-readable)"
+  })
+  name?: string;
+
+  @objectArrayTrait({
+    type: DimensionOptionTraits,
+    idProperty: "id",
+    name: "Options",
+    description: "Dimension options"
+  })
+  options?: DimensionOptionTraits[];
+
+  @primitiveTrait({
+    type: "string",
+    name: "Selected ID",
+    description: "Selected Option's ID"
+  })
+  selectedId?: string;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Allow undefined",
+    description: "Allow dimension to be undefined"
+  })
+  allowUndefined?: boolean;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Disable dimension",
+    description: "Hides dimension"
+  })
+  disable?: boolean;
+}

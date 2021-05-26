@@ -1,9 +1,9 @@
+import CatalogMemberTraits from "./CatalogMemberTraits";
 import primitiveTrait from "./primitiveTrait";
-import ModelTraits from "./ModelTraits";
 
 export type Shadows = "CAST" | "RECEIVE" | "BOTH" | "NONE";
 
-export default class ShadowTraits extends ModelTraits {
+export default class ShadowTraits extends CatalogMemberTraits {
   @primitiveTrait({
     type: "string",
     name: "Shadows",
