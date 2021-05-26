@@ -121,6 +121,11 @@ class Chart extends React.Component {
       return <div className={Styles.empty}>No data available</div>;
     }
 
+    // Make sure points are asc sorted by x value
+    chartItem.points = chartItem.points.sort(
+      (a, b) => this.scales.x(a.x) - this.scales.x(b.x)
+    );
+
     const id = `featureInfoPanelChart-${chartItem.name}`;
     const textStyle = {
       fill: baseColor,

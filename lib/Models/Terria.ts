@@ -48,9 +48,11 @@ import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
 import { defaultTerms, Term } from "../ReactViewModels/defaultTerms";
-import { Notification } from "../ReactViewModels/ViewState";
+import NotificationState, {
+  Notification
+} from "../ReactViewModels/NotificationState";
 import { shareConvertNotification } from "../ReactViews/Notification/shareConvertNotification";
-import ShowableTraits from "../Traits/ShowableTraits";
+import MappableTraits from "../Traits/MappableTraits";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import { BaseMapModel, processBaseMaps } from "./BaseMaps/BaseMapModel";
@@ -299,7 +301,6 @@ export default class Terria {
   readonly modelIdShareKeysMap = observable.map<string, string[]>();
 
   readonly baseUrl: string = "build/TerriaJS/";
-  readonly notification = new CesiumEvent();
   /** Use `terria.addErrorEventListener` or `terria.raiseErrorToUser` if you need to interact with errors outside this class*/
   private readonly error = new CesiumEvent();
   readonly tileLoadProgressEvent = new CesiumEvent();
@@ -480,6 +481,8 @@ export default class Terria {
    * @type {boolean}
    */
   @observable catalogReferencesLoaded: boolean = false;
+
+  readonly notificationState: NotificationState = new NotificationState();
 
   private readonly developmentEnv = process?.env?.NODE_ENV === "development";
 
@@ -1471,7 +1474,7 @@ export default class Terria {
       // Build index of terria features by a hash of their properties.
       const relevantItems = this.workbench.items.filter(
         item =>
-          hasTraits(item, ShowableTraits, "show") &&
+          hasTraits(item, MappableTraits, "show") &&
           item.show &&
           MappableMixin.isMixedInto(item)
       ) as MappableMixin.MappableMixin[];
@@ -1670,10 +1673,10 @@ async function interpretHash(
 
         // Show warning messages if converted
         if (result.converted) {
-          terria.notification.raiseEvent({
+          terria.notificationState.addNotificationToQueue({
             title: i18next.t("share.convertNotificationTitle"),
             message: shareConvertNotification(result.messages)
-          } as Notification);
+          });
         }
 
         if (result.result !== null) {

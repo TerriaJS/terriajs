@@ -11,6 +11,18 @@ Change Log
 * Show a toast and spinner icon in the "Ideal zoom" button when the map is zooming.
 * `zoomTo()` will return a promise that resolves when the zoom animation is complete.
 * Modifies `IndexedItemSearchProvider` to reflect changes to `terriajs-indexer` file format.
+* Move feature info timeseries chart funtion to `lib\Table\getChartDetailsFn.ts`
+* Fix feature info timeseries chart for point (lat/long) timeseries
+* Feature info chart x-values are now be sorted in acending order
+* Remove merging rows by ID for `PER_ROW` data in `ApiTableCatalogItem`
+* Make `ApiTableCatalogItem` more compatible with Table `Traits`
+  * `keyToColumnMapping` has been removed, now columns must be defined in `columns` `TableColumnTraits` to be copied from API responses.
+* Move notification state change logic from ViewState into new class `NotificationState`
+* Catalog items can now show a disclaimer or message before loading through specifying `InitialMessageTraits`
+* Added Leaflet hack to remove white-gaps between tiles (https://github.com/Leaflet/Leaflet/issues/3575#issuecomment-688644225)
+* Disabled pedestrian mode in mobile view.
+* Pedestrian mode will no longer respond to "wasd" keys when the user is typing in some input field.
+* Fix references to old `viewState.notification`.
 * [The next improvement]
 
 #### 8.0.0-alpha.81

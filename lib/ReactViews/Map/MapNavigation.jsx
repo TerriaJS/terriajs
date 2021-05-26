@@ -141,6 +141,7 @@ class MapNavigation extends React.Component {
               <If
                 condition={
                   !this.props.terria.configParameters.disablePedestrianMode &&
+                  !this.props.viewState.useSmallScreenInterface &&
                   this.props.terria.currentViewer instanceof Cesium
                 }
               >
@@ -174,7 +175,7 @@ class MapNavigation extends React.Component {
           >
             <div className={Styles.controls}>
               {this.props.terria.configParameters.feedbackUrl &&
-                !this.props.viewState.hideMapUi() && (
+                !this.props.viewState.hideMapUi && (
                   <div className={Styles.control}>
                     <FeedbackButton
                       terria={this.props.terria}

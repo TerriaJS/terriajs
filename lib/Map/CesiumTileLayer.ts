@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import L from "leaflet";
+import L, { TileEvent } from "leaflet";
 import { autorun, computed, observable } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
@@ -80,6 +80,12 @@ export default class CesiumTileLayer extends L.TileLayer {
     )
       ? (imageryProvider as any)._leafletUpdateInterval
       : 100;
+
+    // Hack to fix "Space between tiles on fractional zoom levels in Webkit browsers" (https://github.com/Leaflet/Leaflet/issues/3575#issuecomment-688644225)
+    this.on("tileloadstart", (event: TileEvent) => {
+      event.tile.style.width = this.getTileSize().x + 0.5 + "px";
+      event.tile.style.height = this.getTileSize().y + 0.5 + "px";
+    });
   }
 
   _reactToSplitterChange() {
