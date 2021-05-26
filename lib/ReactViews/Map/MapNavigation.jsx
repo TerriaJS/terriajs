@@ -141,6 +141,7 @@ class MapNavigation extends React.Component {
               <If
                 condition={
                   !this.props.terria.configParameters.disablePedestrianMode &&
+                  !this.props.viewState.useSmallScreenInterface &&
                   this.props.terria.currentViewer instanceof Cesium
                 }
               >
