@@ -22,6 +22,7 @@ Change Log
 * Added Leaflet hack to remove white-gaps between tiles (https://github.com/Leaflet/Leaflet/issues/3575#issuecomment-688644225)
 * Disabled pedestrian mode in mobile view.
 * Pedestrian mode will no longer respond to "wasd" keys when the user is typing in some input field.
+* Fix references to old `viewState.notification`.
 * [The next improvement]
 
 #### 8.0.0-alpha.81
