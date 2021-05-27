@@ -23,6 +23,9 @@ Change Log
 * Disabled pedestrian mode in mobile view.
 * Pedestrian mode will no longer respond to "wasd" keys when the user is typing in some input field.
 * Fix references to old `viewState.notification`.
+* GeoJSON Mixin based catalog items can now call an API to retrieve their data as well as fetching it from a url.
+* Changes to loadJson and loadJsonBlob to POST a request body rather than always make a GET request.
+* Added ApiRequestTraits, and refactor ApiTableCatalogItemTraits to use it. `apiUrl` is now `url`.
 * [The next improvement]
 
 #### 8.0.0-alpha.81
