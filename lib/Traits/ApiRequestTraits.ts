@@ -25,7 +25,7 @@ export class QueryParamTraits extends ModelTraits {
   value?: string;
 }
 
-export class ApiRequestTraits extends UrlTraits {
+export default class ApiRequestTraits extends UrlTraits {
   @objectArrayTrait({
     name: "Query parameters",
     type: QueryParamTraits,
