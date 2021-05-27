@@ -53,8 +53,8 @@ class GeoJsonCatalogItem extends GeoJsonMixin(
   }
 
   protected loadZipFileFromUrl(url: string): Promise<JsonValue> {
-    const body = this.requestBody
-      ? saveModelToJson((this.requestBody as unknown) as BaseModel)
+    const body = this.requestData
+      ? saveModelToJson((this.requestData as unknown) as BaseModel)
       : undefined;
     return makeRealPromise<Blob>(loadBlob(url, undefined, body)).then(
       (blob: Blob) => {
@@ -90,10 +90,10 @@ class GeoJsonCatalogItem extends GeoJsonMixin(
       return loadJson(
         proxyCatalogItemUrl(this, url),
         undefined,
-        this.requestBody
-          ? saveModelToJson((this.requestBody as unknown) as BaseModel)
+        this.requestData
+          ? saveModelToJson((this.requestData as unknown) as BaseModel)
           : undefined,
-        true
+        this.postRequestDataAsFormData
       );
     }
   }

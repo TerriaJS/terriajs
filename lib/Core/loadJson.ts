@@ -5,7 +5,7 @@ export default function loadJson(
   urlOrResource: any,
   headers?: any,
   body?: any,
-  asForm?: boolean
+  asForm: boolean = false
 ): Promise<any> {
   let responseType: XMLHttpRequestResponseType = "json";
 

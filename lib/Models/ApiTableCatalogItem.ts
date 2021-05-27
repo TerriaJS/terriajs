@@ -17,6 +17,7 @@ import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
 import Model, { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import saveModelToJson from "./saveModelToJson";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
 
@@ -79,7 +80,14 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     const apiUrls = apisWithUrl.map(api => proxyCatalogItemUrl(this, api.url!));
     return Promise.all(
       apisWithUrl.map(async (api, idx) => {
-        const data = await loadJson(apiUrls[idx]);
+        const data = await loadJson(
+          apiUrls[idx],
+          undefined,
+          api.requestData
+            ? saveModelToJson((api.requestData as unknown) as BaseModel)
+            : undefined,
+          api.postRequestDataAsFormData
+        );
         return Promise.resolve({
           data,
           api
