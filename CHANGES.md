@@ -23,14 +23,6 @@ Change Log
 * Disabled pedestrian mode in mobile view.
 * Pedestrian mode will no longer respond to "wasd" keys when the user is typing in some input field.
 * Fix references to old `viewState.notification`.
-* Removed `useClipUpdateWorkaround` from Mapbox/Cesium TileLayers (for Leaflet) - because we no longer support IE
-* [The next improvement]
-
-#### 8.0.0-alpha.81
-
-* Fix invalid HTML in `DataPreviewSections`.
-* Fix pluralisation of mapDataState to support other languages.
-* Fix CSW `Stratum` name bug.
 * Add `canZoomTo` to `TableMixin`
 * SDMX changes:
   * Add better SDMX server error messages
@@ -48,6 +40,14 @@ Change Log
 * Add Leaflet splitter support for region mapping
 * Fix Leaflet splitter while zooming and panning map
 * Split `TableMixin` region mapping `ImageryParts` and `ImageryProvider` to improve opacity/show performance
+* Removed `useClipUpdateWorkaround` from Mapbox/Cesium TileLayers (for Leaflet) - because we no longer support IE
+* [The next improvement]
+
+#### 8.0.0-alpha.81
+
+* Fix invalid HTML in `DataPreviewSections`.
+* Fix pluralisation of mapDataState to support other languages.
+* Fix CSW `Stratum` name bug.
 * Add `#configUrl` hash parameter for **dev environment only**. It can be used to overwrite Terria config URL.
 
 #### 8.0.0-alpha.80
