@@ -8,7 +8,7 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 import ApiTableCatalogItemTraits, {
-  ApiTraits
+  ApiTableRequestTraits
 } from "../Traits/ApiTableCatalogItemTraits";
 import TableStyleTraits from "../Traits/TableStyleTraits";
 import TableTimeStyleTraits from "../Traits/TableTimeStyleTraits";
@@ -75,10 +75,8 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
   }
 
   protected loadDataFromApis() {
-    const apisWithUrl = this.apis.filter(api => api.apiUrl);
-    const apiUrls = apisWithUrl.map(api =>
-      proxyCatalogItemUrl(this, api.apiUrl!)
-    );
+    const apisWithUrl = this.apis.filter(api => api.url);
+    const apiUrls = apisWithUrl.map(api => proxyCatalogItemUrl(this, api.url!));
     return Promise.all(
       apisWithUrl.map(async (api, idx) => {
         const data = await loadJson(apiUrls[idx]);
@@ -87,7 +85,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
           api
         });
       })
-    ).then((values: { data: any[]; api: Model<ApiTraits> }[]) => {
+    ).then((values: { data: any[]; api: Model<ApiTableRequestTraits> }[]) => {
       runInAction(() => {
         // Make map of ids to values that are constant for that id
         const perIdData: Map<string, any> = new Map(
@@ -162,8 +160,8 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     });
   }
 
-  protected addQueryParams(api: Model<ApiTraits>): string {
-    const uri = new URI(api.apiUrl);
+  protected addQueryParams(api: Model<ApiTableRequestTraits>): string {
+    const uri = new URI(api.url);
 
     const substituteDateTimesInQueryParam = (param: string) => {
       if (param.startsWith("DATE!")) {

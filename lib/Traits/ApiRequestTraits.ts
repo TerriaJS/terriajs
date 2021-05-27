@@ -34,6 +34,15 @@ export class ApiRequestTraits extends UrlTraits {
   })
   queryParameters: QueryParamTraits[] = [];
 
+  @objectArrayTrait({
+    name: "Query parameters for updates",
+    type: QueryParamTraits,
+    description:
+      "Query parameters to supply to the API on subsequent calls after the first call.",
+    idProperty: "name"
+  })
+  updateQueryParameters: QueryParamTraits[] = [];
+
   @anyTrait({
     name: "Request body",
     description:
