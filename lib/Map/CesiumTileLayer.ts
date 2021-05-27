@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import L, { TileEvent } from "leaflet";
-import { autorun, computed, observable } from "mobx";
+import { autorun, computed, IReactionDisposer, observable } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumCredit from "terriajs-cesium/Source/Core/Credit";
@@ -14,8 +14,8 @@ import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import isDefined from "../Core/isDefined";
 import pollToPromise from "../Core/pollToPromise";
-import getUrlForImageryTile from "./getUrlForImageryTile";
 import Leaflet from "../Models/Leaflet";
+import getUrlForImageryTile from "./getUrlForImageryTile";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
@@ -74,8 +74,19 @@ export default class CesiumTileLayer extends L.TileLayer {
     });
     this.imageryProvider = imageryProvider;
 
-    const disposeSplitterReaction = this._reactToSplitterChange();
-    this.on("remove", disposeSplitterReaction);
+    // Handle splitter rection (and disposing reaction)
+    let disposeSplitterReaction: IReactionDisposer | undefined;
+    this.on("add", () => {
+      if (!disposeSplitterReaction) {
+        disposeSplitterReaction = this._reactToSplitterChange();
+      }
+    });
+    this.on("remove", () => {
+      if (disposeSplitterReaction) {
+        disposeSplitterReaction();
+        disposeSplitterReaction = undefined;
+      }
+    });
 
     this._leafletUpdateInterval = defined(
       (imageryProvider as any)._leafletUpdateInterval

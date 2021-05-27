@@ -1,5 +1,5 @@
 import L, { TileEvent } from "leaflet";
-import { autorun, computed, observable } from "mobx";
+import { autorun, computed, IReactionDisposer, observable } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
@@ -26,8 +26,19 @@ export default class MapboxVectorCanvasTileLayer extends L.GridLayer {
   ) {
     super(Object.assign(options, { async: true, tileSize: 256 }));
 
-    const disposeSplitterReaction = this._reactToSplitterChange();
-    this.on("remove", disposeSplitterReaction);
+    // Handle splitter rection (and disposing reaction)
+    let disposeSplitterReaction: IReactionDisposer | undefined;
+    this.on("add", () => {
+      if (!disposeSplitterReaction) {
+        disposeSplitterReaction = this._reactToSplitterChange();
+      }
+    });
+    this.on("remove", () => {
+      if (disposeSplitterReaction) {
+        disposeSplitterReaction();
+        disposeSplitterReaction = undefined;
+      }
+    });
 
     // Hack to fix "Space between tiles on fractional zoom levels in Webkit browsers" (https://github.com/Leaflet/Leaflet/issues/3575#issuecomment-688644225)
     this.on("tileloadstart", (event: TileEvent) => {
