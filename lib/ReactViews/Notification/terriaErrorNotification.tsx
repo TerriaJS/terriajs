@@ -89,7 +89,7 @@ export const terriaErrorNotification = (error: TerriaError) => (
   const showFeedback = () => {
     runInAction(() => {
       viewState.feedbackFormIsVisible = true;
-      viewState.notifications.splice(0, 1);
+      viewState.terria.notificationState.dismissCurrentNotification();
     });
   };
 
