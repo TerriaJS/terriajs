@@ -41,6 +41,7 @@ Change Log
 * Fix Leaflet splitter while zooming and panning map
 * Split `TableMixin` region mapping `ImageryParts` and `ImageryProvider` to improve opacity/show performance
 * Removed `useClipUpdateWorkaround` from Mapbox/Cesium TileLayers (for Leaflet) - because we no longer support IE
+* Fix overwriting `previewBaseMapId` with `initBaseMapId` by multiple `initData`.
 * [The next improvement]
 
 #### 8.0.0-alpha.81
