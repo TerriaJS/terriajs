@@ -3,7 +3,32 @@
     "gettingStartedTitle": "Mulai",
     "gettingStarted": "Mulai",
     "panelBody": "Buat dan bagikan cerita interaktif langsung dari peta Anda",
-    "panelTitle": "Penyunting Cerita"
+    "panelTitle": "Penyunting Cerita",
+    "storyEditor": "Penyunting Cerita",
+    "dismissText": "Mengerti, terima kasih",
+    "story": "Cerita",
+    "promptHtml1": "<0>Anda dapat melihat dan membuat cerita kapan saja dengan mengklik di sini.</0>",
+    "navBtnMobile": "pergi ke cerita {{title}}",
+    "navBtn": "pergi ke cerita {{title}}",
+    "editor": {
+      "saveStory": "Simpan",
+      "saveBtn": "simpan",
+      "cancelEditing": "Batal",
+      "cancelBtn": "batal",
+      "placeholder": "Masukkan sebuah judul di sini"
+    },
+    "play": "Putar",
+    "removeStoryDialog": "Apakah Anda yakin ingin menghapus '<1>{{storyName}}</1>'?",
+    "removeAllStories": "Hapus Semua",
+    "message": "<2>Ini adalah penyunting cerita Anda</2><1>Buat dan bagikan cerita interaktif langsung dari peta Anda<1><0><0></0>Memulai </0></1></1>",
+    "doesNotExist": "Cerita tidak ada",
+    "delete": "Hapus",
+    "deleteStory": "hapus",
+    "edit": "Sunting",
+    "editStory": "sunting",
+    "viewStory": "lihat",
+    "shareTitle": "bagikan cerita",
+    "share": "Bagikan"
   },
   "welcomeMessage": {
     "dismissText": "Tutup pesan dan jangan tampilkan ini lagi",
@@ -20,7 +45,8 @@
     "noInfoAvailable": "Tak ada informasi yang tersedia",
     "btnCloseFeature": "Tutup panel data",
     "clickToAddData": "Klik '$t(addData.addDataBtnText)' untuk menambahkan data ke peta.",
-    "noDataAvailable": "Tak ada data yang tersedia di sini - coba lokasi lain."
+    "noDataAvailable": "Tak ada data yang tersedia di sini - coba lokasi lain.",
+    "download": "Unduh Tabel ini"
   },
   "sui": {
     "notifications": {
@@ -135,7 +161,9 @@
   },
   "trainer": {
     "hideAllSteps": "Sembunyikan seluruh langkah",
-    "showAllSteps": "Tampilkan seluruh langkah"
+    "showAllSteps": "Tampilkan seluruh langkah",
+    "collapseTrainer": "Sembunyikan keterangan langkah",
+    "expandTrainer": "Tampilkan lebih banyak keterangan langkah"
   },
   "general": {
     "confirm": "Konfirmasi",
@@ -233,5 +261,25 @@
     "myLocation": "Lokasi Saya",
     "browserCannotProvide": "Browser Anda tidak dapat menyediakan lokasi Anda.",
     "errorGettingLocation": "Terjadi kesalahan mendapatkan lokasi"
+  },
+  "itemSearchTool": {
+    "backBtnText": "Cari lagi",
+    "searchBtnText": "Cari",
+    "searchError": "Pencarian gagal. Lihat konsol untuk keterangan kesalahan.",
+    "searching": "Mencari",
+    "title": "Cari {{itemName}}"
+  },
+  "deltaTool": {
+    "cancelBtn": "Batal",
+    "pickerMessage": {
+      "pickAnother": "Klik titik lain untuk mengubah pilihan",
+      "pickFirst": "Pilih titik dengan mengklik peta"
+    }
+  },
+  "toast": {
+    "mapIsZooming": "Memuat pembesaran yang ideal..."
+  },
+  "satelliteGuidance": {
+    "dismissText": "Mengerti, terima kasih!"
   }
 }
