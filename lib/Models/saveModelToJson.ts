@@ -12,7 +12,7 @@ export default function saveModelToJson(
   options: SaveModelOptions = {}
 ): JsonObject {
   if (options.includeStrata === undefined && model.strata === undefined) {
-    // There aren't any strata. Despite some dodgy typing, this can happen for anyTraits.
+    // There aren't any strata. Because of some dodgy typing, this can happen for anyTraits.
     // We stringify and then parse to remove stray mobx properties, etc.
     return JSON.parse(JSON.stringify(model));
   }
