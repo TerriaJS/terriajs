@@ -33,19 +33,6 @@ class Credit extends CesiumCredit {
   _shownInLeafletLastUpdate?: boolean;
 }
 
-// As of Internet Explorer 11.483.15063.0 and Edge 40.15063.0.0 (EdgeHTML 15.15063) there is an apparent
-// bug in both browsers where setting the `clip` CSS style on our Leaflet layers does not consistently
-// cause the new clip to be applied.  The change shows up in the DOM inspector, but it is not reflected
-// in the rendered view.  You can reproduce it by adding a layer and toggling it between left/both/right
-// repeatedly, and you will quickly see it fail to update sometimes.  Unfortunateely my attempts to
-// reproduce this in jsfiddle were unsuccessful, so presumably there is something unusual about our
-// setup.  In any case, we do the usually-horrible thing here of detecting these browsers by their user
-// agent, and then work around the bug by hiding the DOM element, forcing it to updated by asking for
-// its bounding client rectangle, and then showing it again.  There's a bit of a performance hit to
-// this, so we don't do it on other browsers that do not experience this bug.
-export const useClipUpdateWorkaround =
-  FeatureDetection.isInternetExplorer() || FeatureDetection.isEdge();
-
 export default class CesiumTileLayer extends L.TileLayer {
   readonly tileSize = 256;
   readonly errorEvent = new CesiumEvent();
@@ -108,13 +95,6 @@ export default class CesiumTileLayer extends L.TileLayer {
         return;
       }
 
-      let display = null;
-      if (useClipUpdateWorkaround) {
-        display = container.style.display;
-        container.style.display = "none";
-        container.getBoundingClientRect();
-      }
-
       if (this.splitDirection === ImagerySplitDirection.LEFT) {
         const { left: clipLeft } = this._clipsForSplitter;
         container.style.clip = clipLeft;
@@ -123,10 +103,6 @@ export default class CesiumTileLayer extends L.TileLayer {
         container.style.clip = clipRight;
       } else {
         container.style.clip = "auto";
-      }
-
-      if (useClipUpdateWorkaround) {
-        container.style.display = display!;
       }
     });
   }

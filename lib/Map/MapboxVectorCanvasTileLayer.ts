@@ -5,7 +5,6 @@ import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import Leaflet from "../Models/Leaflet";
-import { useClipUpdateWorkaround } from "./CesiumTileLayer";
 import MapboxVectorTileImageryProvider from "./MapboxVectorTileImageryProvider";
 
 export default class MapboxVectorCanvasTileLayer extends L.GridLayer {
@@ -54,13 +53,6 @@ export default class MapboxVectorCanvasTileLayer extends L.GridLayer {
         return;
       }
 
-      let display = null;
-      if (useClipUpdateWorkaround) {
-        display = container.style.display;
-        container.style.display = "none";
-        container.getBoundingClientRect();
-      }
-
       if (this.splitDirection === ImagerySplitDirection.LEFT) {
         const { left: clipLeft } = this._clipsForSplitter;
         container.style.clip = clipLeft;
@@ -69,10 +61,6 @@ export default class MapboxVectorCanvasTileLayer extends L.GridLayer {
         container.style.clip = clipRight;
       } else {
         container.style.clip = "auto";
-      }
-
-      if (useClipUpdateWorkaround) {
-        container.style.display = display!;
       }
     });
   }
