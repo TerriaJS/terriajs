@@ -5,10 +5,10 @@ import ItemSearchProvider, {
 } from "../Models/ItemSearchProvider";
 import { ItemSearchProviders } from "../Models/ItemSearchProviders";
 import Model from "../Models/Model";
+import MappableTraits from "../Traits/MappableTraits";
 import SearchableItemTraits from "../Traits/SearchableItemTraits";
-import ShowableTraits from "../Traits/ShowableTraits";
 
-type MixinModel = Model<SearchableItemTraits & ShowableTraits>;
+type MixinModel = Model<SearchableItemTraits & MappableTraits>;
 
 export type ItemSelectionDisposer = () => void;
 

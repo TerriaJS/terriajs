@@ -386,7 +386,7 @@ function clockIfAvailable(featureInfoSection) {
  */
 function currentTimeIfAvailable(featureInfoSection) {
   if (defined(featureInfoSection.props.catalogItem)) {
-    return featureInfoSection.props.catalogItem.currentTime;
+    return featureInfoSection.props.catalogItem.currentTimeAsJulianDate;
   }
 
   return undefined;

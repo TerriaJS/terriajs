@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { computed } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
@@ -50,6 +51,7 @@ export function isDataSource(object: MapItem): object is DataSource {
 
 function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
   abstract class MappableMixin extends Base {
+    initialMessageShown: boolean = false;
     get isMappable() {
       return true;
     }
@@ -73,6 +75,40 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
       return undefined;
     }
 
+    get shouldShowInitialMessage(): boolean {
+      if (this.initialMessage !== undefined) {
+        const hasTitle =
+          this.initialMessage.title !== undefined &&
+          this.initialMessage.title !== "" &&
+          this.initialMessage.title !== null;
+        const hasContent =
+          this.initialMessage.content !== undefined &&
+          this.initialMessage.content !== "" &&
+          this.initialMessage.content !== null;
+        return (hasTitle || hasContent) && !this.initialMessageShown;
+      }
+      return false;
+    }
+
+    showInitialMessage(): Promise<void> {
+      // This function is deliberately not a computed,
+      // this.terria.notificationState.addNotificationToQueue changes state
+      this.initialMessageShown = true;
+      return new Promise(resolve => {
+        this.terria.notificationState.addNotificationToQueue({
+          title: this.initialMessage.title ?? i18next.t("notification.title"),
+          width: this.initialMessage.width,
+          height: this.initialMessage.height,
+          confirmText: this.initialMessage.confirmation
+            ? this.initialMessage.confirmText
+            : undefined,
+          message: this.initialMessage.content ?? "",
+          key: "initialMessage:" + this.initialMessage.key,
+          confirmAction: () => resolve()
+        });
+      });
+    }
+
     private _mapItemsLoader = new AsyncLoader(
       this.forceLoadMapItems.bind(this)
     );
@@ -90,7 +126,13 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
      * return the existing promise.
      */
     async loadMapItems(force?: boolean) {
+      if (this.shouldShowInitialMessage) {
+        await this.showInitialMessage();
+      }
       if (CatalogMemberMixin.isMixedInto(this)) await this.loadMetadata();
+
+      // We need to make sure the region provider is loaded before loading
+      // region mapped tables.
       if (TableMixin.isMixedInto(this)) await this.loadRegionProviderList();
       await this._mapItemsLoader.load(force);
     }

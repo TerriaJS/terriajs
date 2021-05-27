@@ -1,10 +1,8 @@
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
+import L, { TileEvent } from "leaflet";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import L from "leaflet";
-
+import CesiumEvent from "terriajs-cesium/Source/Core/Event";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import MapboxVectorTileImageryProvider from "./MapboxVectorTileImageryProvider";
-import pollToPromise from "../Core/pollToPromise";
 
 export default class MapboxVectorCanvasTileLayer extends L.GridLayer {
   readonly errorEvent: CesiumEvent = new CesiumEvent();
@@ -19,6 +17,12 @@ export default class MapboxVectorCanvasTileLayer extends L.GridLayer {
     options: L.GridLayerOptions
   ) {
     super(Object.assign(options, { async: true, tileSize: 256 }));
+
+    // Hack to fix "Space between tiles on fractional zoom levels in Webkit browsers" (https://github.com/Leaflet/Leaflet/issues/3575#issuecomment-688644225)
+    this.on("tileloadstart", (event: TileEvent) => {
+      event.tile.style.width = this.getTileSize().x + 0.5 + "px";
+      event.tile.style.height = this.getTileSize().y + 0.5 + "px";
+    });
   }
 
   createTile(tilePoint: L.Coords, done: L.DoneCallback) {
