@@ -101,11 +101,6 @@ export default class CsvCatalogItem extends TableMixin(
     });
   }
 
-  @computed
-  get canZoomTo() {
-    return this.activeTableStyle.latitudeColumn !== undefined;
-  }
-
   /*
    * The polling URL to use for refreshing data.
    */
