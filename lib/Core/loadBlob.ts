@@ -6,12 +6,12 @@ export default function loadBlob(
   headers?: any,
   body?: any
 ): Promise<Blob> {
-  if (body === undefined) {
+  if (body !== undefined) {
     return makeRealPromise(
       Resource.post({
         url: urlOrResource,
         headers: headers,
-        data: body,
+        data: JSON.stringify(body),
         responseType: "blob"
       })
     );
