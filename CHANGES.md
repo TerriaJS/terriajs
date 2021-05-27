@@ -23,6 +23,7 @@ Change Log
 * Disabled pedestrian mode in mobile view.
 * Pedestrian mode will no longer respond to "wasd" keys when the user is typing in some input field.
 * Fix references to old `viewState.notification`.
+* Removed `useClipUpdateWorkaround` from Mapbox/Cesium TileLayers (for Leaflet) - because we no longer support IE
 * [The next improvement]
 
 #### 8.0.0-alpha.81
