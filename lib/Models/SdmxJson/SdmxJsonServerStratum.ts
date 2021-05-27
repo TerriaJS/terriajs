@@ -23,14 +23,14 @@ import {
   Agency,
   AgencyScheme,
   AgencySchemes,
+  Categories,
   Categorisations,
   Category,
   CategoryScheme,
   CategorySchemes,
   Dataflow,
   Dataflows,
-  SdmxJsonStructureMessage,
-  Categories
+  SdmxJsonStructureMessage
 } from "./SdmxJsonStructureMessage";
 
 export interface SdmxServer {
@@ -332,9 +332,9 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
 
     itemModel.setTrait(
       stratum,
-      "conceptOverrides",
-      this.catalogGroup.traits.conceptOverrides.toJson(
-        this.catalogGroup.conceptOverrides
+      "modelOverrides",
+      this.catalogGroup.traits.modelOverrides.toJson(
+        this.catalogGroup.modelOverrides
       )
     );
   }
@@ -443,7 +443,9 @@ export async function loadSdmxJsonStructure(
           title: i18next.t(
             "models.sdmxServerStratum.sdmxStructureLoadErrorTitle"
           ),
-          message: `${error.response}`
+          message: sdmxErrorString.has(error.statusCode)
+            ? `${sdmxErrorString.get(error.statusCode)}: ${error.response}`
+            : `${error.response}`
         });
       }
       // Not sure what happened (maybe CORS)
@@ -512,3 +514,18 @@ export enum SdmxHttpErrorCodes {
   // 503 Service unavailable = 503 Service unavailable
   ServiceUnavailable = 503
 }
+
+export const sdmxErrorString = new Map<SdmxHttpErrorCodes, string>();
+sdmxErrorString.set(SdmxHttpErrorCodes.NoChanges, "No changes");
+sdmxErrorString.set(SdmxHttpErrorCodes.NoResults, "No results");
+sdmxErrorString.set(SdmxHttpErrorCodes.Unauthorized, "Unauthorised");
+sdmxErrorString.set(SdmxHttpErrorCodes.ReponseTooLarge, "Response too large");
+sdmxErrorString.set(SdmxHttpErrorCodes.SyntaxError, "Syntax error");
+sdmxErrorString.set(SdmxHttpErrorCodes.SemanticError, "Semantic error");
+sdmxErrorString.set(SdmxHttpErrorCodes.UriTooLong, "URI too long");
+sdmxErrorString.set(SdmxHttpErrorCodes.ServerError, "Server error");
+sdmxErrorString.set(SdmxHttpErrorCodes.NotImplemented, "Not implemented");
+sdmxErrorString.set(
+  SdmxHttpErrorCodes.ServiceUnavailable,
+  "Service unavailable"
+);

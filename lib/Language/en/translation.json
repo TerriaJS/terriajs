@@ -1219,7 +1219,8 @@
         "invalidResponse": "Invalid JSON object",
         "noDatastructure": "No data structures could be found for dataflow {{catalogItem.dataflowId}}",
         "noDataflow": "Dataflow {{catalogItem.dataflowId}} is invalid"
-      }
+      },
+      "defaultUnitMeasure": "Units"
     },
     "sdmxCatalogItem": {
       "viewBy": {
@@ -1227,7 +1228,6 @@
         "time": "Time-series",
         "region": "Region"
       },
-      "noData": "No data available",
       "loadDataErrorTitle": "Could not load SDMX CSV",
       "loadDataErrorMessage": "Invalid response from {{csvUrl}}"
     },
