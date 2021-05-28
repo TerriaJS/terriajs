@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, observable, runInAction } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
@@ -29,6 +29,7 @@ import UrlMixin from "../ModelMixins/UrlMixin";
 import Model from "../Models/Model";
 import proxyCatalogItemUrl from "../Models/proxyCatalogItemUrl";
 import { GeoJsonTraits } from "../Traits/GeoJsonTraits";
+import { Feature, FeatureCollection, GeoJsonObject } from "geojson";
 
 const formatPropertyValue = require("../Core/formatPropertyValue");
 const hashFromString = require("../Core/hashFromString");
@@ -150,6 +151,43 @@ export default function GeoJsonMixin<
         });
     }
 
+    @action
+    private addPerPropertyStyleToGeoJson(json: JsonObject | GeoJsonObject) {
+      const geojson = json as GeoJsonObject;
+      if (geojson.type === "Feature") {
+        const featureProperties = (geojson as Feature).properties;
+        if (featureProperties === null) {
+          return;
+        }
+        const featurePropertiesEntires = Object.entries(featureProperties);
+
+        const matchedStyle = this.perPropertyStyles.find(style => {
+          const stylePropertiesEntries = Object.entries(style.properties);
+
+          // For every key-value pair in the style, is there an identical one in the feature's properties?
+          return stylePropertiesEntries.every(
+            ([styleKey, styleValue]) =>
+              featurePropertiesEntires.find(
+                ([featKey, featValue]) =>
+                  featKey === styleKey && featValue === styleValue
+              ) !== undefined
+          );
+        });
+
+        if (matchedStyle !== undefined) {
+          for (let trait of Object.keys(matchedStyle.style.traits)) {
+            // @ts-ignore - TS can't tell that `trait` is of the correct index type for style
+            featureProperties[trait] = matchedStyle.style[trait];
+          }
+        }
+      } else if (geojson.type === "FeatureCollection") {
+        const featureCollection = geojson as FeatureCollection;
+        featureCollection.features.forEach(feature => {
+          this.addPerPropertyStyleToGeoJson(feature);
+        });
+      }
+    }
+
     private loadDataSource(geoJson: JsonObject): Promise<GeoJsonDataSource> {
       /* Style information is applied as follows, in decreasing priority:
              - simple-style properties set directly on individual features in the GeoJSON file
@@ -158,6 +196,8 @@ export default function GeoJsonMixin<
              - if anything is underspecified there, then Cesium's defaults come in.
              See https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0
           */
+
+      this.addPerPropertyStyleToGeoJson(geoJson);
 
       function defaultColor(
         colorString: string | undefined,
