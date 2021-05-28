@@ -438,8 +438,8 @@
   "location": {
     "location": "Posisjon",
     "myLocation": "Min posisjon",
-    "browserCannotProvide": "Nettleseren din kan ikke oppgi posisjonen din.",
-    "errorGettingLocation": "Klarte ikke å hente posisjon",
+    "browserCannotProvide": "Nettleseren din kan ikke angi posisjonen din.",
+    "errorGettingLocation": "Kunne ikke hente plassering",
     "originError": "Din nettleser kan kun oppgi posisjonen din når du bruker HTTPS. Det kan hende du vil kunne bruke {{secureUrl}} istedenfor.",
     "centreMap": "Sentrer kart på din nåværende posisjon"
   },
