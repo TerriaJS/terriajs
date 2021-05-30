@@ -183,7 +183,7 @@ const StandardUserInterface = observer(
         this.props.terria.stories.length &&
         !this.props.viewState.storyShown
       ) {
-        this.props.viewState.notifications.push({
+        this.props.viewState.terria.notificationState.addNotificationToQueue({
           title: t("sui.notifications.title"),
           message: t("sui.notifications.message"),
           confirmText: t("sui.notifications.confirmText"),

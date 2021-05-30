@@ -50,7 +50,7 @@ export default class TableTimeStyleTraits extends ModelTraits {
     name: "Spread start time",
     type: "boolean",
     description:
-      'Indicates if start time of feature should be "spread" so that all features are displayed at the earliest time step. This is useful for non-contiguous sensor data. If true, the earliest time step will display the earliest values for all features (eg sensor IDs) - even if the time value is **after** the earliest time step.'
+      'Indicates if start time of feature should be "spread" so that all features are displayed at the earliest time step. This is useful for non-contiguous sensor data. If true, the earliest time step will display the earliest values for all features (eg sensor IDs) - even if the time value is **after** the earliest time step. This means that at time step 0, all features will be displayed.'
   })
   spreadStartTime?: boolean;
 }
