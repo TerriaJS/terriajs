@@ -10,6 +10,7 @@ import Csv from "../Table/Csv";
 import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 import OpenDataSoftCatalogItemTraits from "../Traits/OpenDataSoftCatalogItemTraits";
 import { DimensionTraits } from "../Traits/SdmxCommonTraits";
+import TableColorStyleTraits from "../Traits/TableColorStyleTraits";
 import TableColumnTraits from "../Traits/TableColumnTraits";
 import TableStyleTraits from "../Traits/TableStyleTraits";
 import TableTimeStyleTraits from "../Traits/TableTimeStyleTraits";
@@ -95,7 +96,12 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
   }
 
   @computed get regionFieldName() {
-    return [];
+    // Find first field which matches a region type
+    return this.dataset.fields?.find(
+      f =>
+        this.catalogItem.matchRegionType(f.name) ||
+        this.catalogItem.matchRegionType(f.label)
+    )?.name;
   }
 
   @computed get timeFieldName() {
@@ -104,6 +110,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
 
   @computed get onlySelectActiveFields() {
     return (
+      this.dataset.metas?.default.records_count > 5000 &&
       this.catalogItem.colorFieldName &&
       (this.catalogItem.geoPoint2dFieldName || this.catalogItem.timeFieldName)
     );
@@ -112,9 +119,9 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
   @computed get selectFields() {
     if (this.onlySelectActiveFields) {
       return filterOutUndefined([
+        this.catalogItem.timeFieldName,
         this.catalogItem.colorFieldName,
-        this.catalogItem.geoPoint2dFieldName,
-        this.catalogItem.timeFieldName
+        this.catalogItem.regionFieldName ?? this.catalogItem.geoPoint2dFieldName
       ]);
     }
     // Filter out fields with GeoJSON
@@ -130,6 +137,29 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
       return createStratumInstance(TableColumnTraits, {
         name: this.catalogItem.geoPoint2dFieldName,
         type: "hidden"
+      });
+    }
+  }
+
+  @computed get regionColumn() {
+    if (this.catalogItem.regionFieldName) {
+      return createStratumInstance(TableColumnTraits, {
+        name: this.catalogItem.regionFieldName,
+        type: "region"
+      });
+    }
+  }
+
+  @computed get colorColumn() {
+    if (!this.catalogItem.colorFieldName) return;
+
+    const f = this.dataset.fields?.find(
+      f => f.name === this.catalogItem.colorFieldName
+    );
+    if (this.catalogItem.colorFieldName) {
+      return createStratumInstance(TableColumnTraits, {
+        name: f?.name,
+        title: f?.label
       });
     }
   }
@@ -165,17 +195,20 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
   @computed get columns() {
     return filterOutUndefined([
       this.timeColumn,
-      this.geoPoint2dColumn,
-      ...this.otherColumns
+      this.colorColumn,
+      this.regionColumn ?? this.geoPoint2dColumn,
+      ...(this.onlySelectActiveFields ? [] : this.otherColumns)
     ]);
   }
 
   @computed
   get defaultStyle() {
-    if (!this.timeColumn) return;
     return createStratumInstance(TableStyleTraits, {
+      color: createStratumInstance(TableColorStyleTraits, {
+        colorColumn: this.catalogItem.colorFieldName
+      }),
       time: createStratumInstance(TableTimeStyleTraits, {
-        timeColumn: this.timeColumn.name,
+        timeColumn: this.timeColumn?.name,
         idColumns: this.catalogItem.geoPoint2dFieldName
           ? ["lat", "lon"]
           : undefined
@@ -191,10 +224,20 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
         name: "Fields",
         selectedId: this.catalogItem.colorFieldName,
         options: this.dataset.fields
-          ?.filter(f => ["double", "int", "text"].includes(f.type ?? ""))
+          ?.filter(
+            f =>
+              ["double", "int", "text"].includes(f.type ?? "") &&
+              f.name !== this.catalogItem.regionFieldName
+          )
           .map(f => ({ id: f.name, name: f.label }))
       })
     ];
+  }
+
+  @computed get activeStyle() {
+    return this.onlySelectActiveFields
+      ? this.catalogItem.colorFieldName
+      : undefined;
   }
 }
 

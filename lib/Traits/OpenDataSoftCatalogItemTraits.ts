@@ -39,6 +39,13 @@ export default class OpenDataSoftCatalogItemTraits extends mixTraits(
   })
   colorFieldName?: string;
 
+  @primitiveTrait({
+    type: "string",
+    name: "Region field name",
+    description: "Field to use as region mapping."
+  })
+  regionFieldName?: string;
+
   @primitiveArrayTrait({
     type: "string",
     name: "Select field",
