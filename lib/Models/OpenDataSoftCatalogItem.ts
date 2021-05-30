@@ -9,6 +9,7 @@ import UrlMixin from "../ModelMixins/UrlMixin";
 import Csv from "../Table/Csv";
 import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 import OpenDataSoftCatalogItemTraits from "../Traits/OpenDataSoftCatalogItemTraits";
+import { DimensionTraits } from "../Traits/SdmxCommonTraits";
 import TableColumnTraits from "../Traits/TableColumnTraits";
 import TableStyleTraits from "../Traits/TableStyleTraits";
 import TableTimeStyleTraits from "../Traits/TableTimeStyleTraits";
@@ -17,6 +18,7 @@ import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import SelectableDimensions from "./SelectableDimensions";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
 
@@ -74,7 +76,47 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     return this.dataset.metas?.default?.description;
   }
 
+  /** Find field to visualise by defautl (i.e. colorColumn)
+   *  It will find the field in this order:
+   * - First of type "double"
+   * - First of type "int"
+   * - First of type "text"
+   */
+  @computed get colorFieldName() {
+    return (
+      this.dataset.fields?.find(f => f.type === "double") ??
+      this.dataset.fields?.find(f => f.type === "int") ??
+      this.dataset.fields?.find(f => f.type === "text")
+    )?.name;
+  }
+
+  @computed get geoPoint2dFieldName() {
+    return this.dataset.fields?.find(f => f.type === "geo_point_2d")?.name;
+  }
+
+  @computed get regionFieldName() {
+    return [];
+  }
+
+  @computed get timeFieldName() {
+    return this.dataset.fields?.find(f => f.type === "datetime")?.name;
+  }
+
+  @computed get onlySelectActiveFields() {
+    return (
+      this.catalogItem.colorFieldName &&
+      (this.catalogItem.geoPoint2dFieldName || this.catalogItem.timeFieldName)
+    );
+  }
+
   @computed get selectFields() {
+    if (this.onlySelectActiveFields) {
+      return filterOutUndefined([
+        this.catalogItem.colorFieldName,
+        this.catalogItem.geoPoint2dFieldName,
+        this.catalogItem.timeFieldName
+      ]);
+    }
     // Filter out fields with GeoJSON
     return filterOutUndefined(
       this.dataset.fields
@@ -83,22 +125,21 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     );
   }
 
-  @computed get geoPoint2dField() {
-    return this.dataset.fields?.find(f => f.type === "geo_point_2d")?.name;
-  }
-
   @computed get geoPoint2dColumn() {
-    if (this.geoPoint2dField) {
+    if (this.catalogItem.geoPoint2dFieldName) {
       return createStratumInstance(TableColumnTraits, {
-        name: this.geoPoint2dField,
+        name: this.catalogItem.geoPoint2dFieldName,
         type: "hidden"
       });
     }
   }
 
   @computed get timeColumn() {
-    const f = this.dataset.fields?.find(f => f.type === "datetime");
+    if (!this.catalogItem.timeFieldName) return;
 
+    const f = this.dataset.fields?.find(
+      f => f.name === this.catalogItem.timeFieldName
+    );
     if (f) {
       return createStratumInstance(TableColumnTraits, {
         name: f.name,
@@ -135,17 +176,35 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     return createStratumInstance(TableStyleTraits, {
       time: createStratumInstance(TableTimeStyleTraits, {
         timeColumn: this.timeColumn.name,
-        idColumns: this.geoPoint2dField ? ["lat", "lon"] : undefined
+        idColumns: this.catalogItem.geoPoint2dFieldName
+          ? ["lat", "lon"]
+          : undefined
       })
     });
+  }
+
+  @computed get availableFields() {
+    if (!this.onlySelectActiveFields) return [];
+    return [
+      createStratumInstance(DimensionTraits, {
+        id: "available-fieds",
+        name: "Fields",
+        selectedId: this.catalogItem.colorFieldName,
+        options: this.dataset.fields
+          ?.filter(f => ["double", "int", "text"].includes(f.type ?? ""))
+          .map(f => ({ id: f.name, name: f.label }))
+      })
+    ];
   }
 }
 
 StratumOrder.addLoadStratum(OpenDataSoftDatasetStratum.stratumName);
 
-export default class OpenDataSoftCatalogItem extends TableMixin(
-  UrlMixin(CatalogMemberMixin(CreateModel(OpenDataSoftCatalogItemTraits)))
-) {
+export default class OpenDataSoftCatalogItem
+  extends TableMixin(
+    UrlMixin(CatalogMemberMixin(CreateModel(OpenDataSoftCatalogItemTraits)))
+  )
+  implements SelectableDimensions {
   static readonly type = "opendatasoft-item";
 
   constructor(
@@ -199,8 +258,8 @@ export default class OpenDataSoftCatalogItem extends TableMixin(
       }
     );
 
-    if (this.geoPoint2dField) {
-      const pointCol = data.find(col => col[0] === this.geoPoint2dField);
+    if (this.geoPoint2dFieldName) {
+      const pointCol = data.find(col => col[0] === this.geoPoint2dFieldName);
 
       if (pointCol) {
         const lat = ["lat"];
@@ -216,6 +275,20 @@ export default class OpenDataSoftCatalogItem extends TableMixin(
     }
 
     return data;
+  }
+
+  @computed
+  get selectableDimensions() {
+    return [
+      ...this.availableFields.map(f => ({
+        ...f,
+        setDimensionValue: (strataId: string, selectedId: string) => {
+          this.setTrait(strataId, "colorFieldName", selectedId);
+          this.loadMapItems();
+        }
+      })),
+      ...super.selectableDimensions
+    ];
   }
 }
 

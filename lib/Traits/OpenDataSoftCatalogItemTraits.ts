@@ -1,10 +1,10 @@
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import mixTraits from "./mixTraits";
-import UrlTraits from "./UrlTraits";
-import primitiveTrait from "./primitiveTrait";
-import MappableTraits from "./MappableTraits";
-import TableTraits from "./TableTraits";
 import primitiveArrayTrait from "./primitiveArrayTrait";
+import primitiveTrait from "./primitiveTrait";
+import { DimensionTraits } from "./SdmxCommonTraits";
+import TableTraits from "./TableTraits";
+import UrlTraits from "./UrlTraits";
 
 export default class OpenDataSoftCatalogItemTraits extends mixTraits(
   TableTraits,
@@ -23,7 +23,21 @@ export default class OpenDataSoftCatalogItemTraits extends mixTraits(
     name: "Geo point 2d field name",
     description: "Field to use as geo point 2d (i.e. lat long)."
   })
-  geoPoint2dField?: string;
+  geoPoint2dFieldName?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Datetime field name",
+    description: "Field to use as datetime."
+  })
+  timeFieldName?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Color field name",
+    description: "Field to use as color."
+  })
+  colorFieldName?: string;
 
   @primitiveArrayTrait({
     type: "string",
@@ -31,4 +45,11 @@ export default class OpenDataSoftCatalogItemTraits extends mixTraits(
     description: "Names of fields to 'select' when downloading data"
   })
   selectFields?: string[];
+
+  @primitiveArrayTrait({
+    type: "string",
+    name: "Available fields",
+    description: "Names of fields which can be 'selected'"
+  })
+  availableFields?: DimensionTraits[];
 }
