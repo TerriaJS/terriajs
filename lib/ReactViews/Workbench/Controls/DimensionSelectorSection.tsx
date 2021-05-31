@@ -7,6 +7,7 @@ import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import isDefined from "../../../Core/isDefined";
 import CommonStrata from "../../../Models/CommonStrata";
+import { BaseModel } from "../../../Models/Model";
 import SelectableDimensions, {
   SelectableDimension
 } from "../../../Models/SelectableDimensions";
@@ -16,7 +17,7 @@ import Spacing from "../../../Styled/Spacing";
 import Text from "../../../Styled/Text";
 
 interface PropsType extends WithTranslation {
-  item: SelectableDimensions;
+  item: SelectableDimensions & BaseModel;
 }
 
 @observer
@@ -53,7 +54,7 @@ class DimensionSelectorSection extends React.Component<PropsType> {
         <Spacing bottom={2} />
         {selectableDimensions.map((dim, i) => (
           <React.Fragment key={dim.id}>
-            <label htmlFor={dim.id}>
+            <label htmlFor={`${this.props.item.uniqueId}-${dim.id}`}>
               <Text textLight medium as="span">
                 {dim.name || dim.id}:
               </Text>
@@ -62,7 +63,7 @@ class DimensionSelectorSection extends React.Component<PropsType> {
             <Select
               light
               name={dim.id}
-              id={dim.id}
+              id={`${this.props.item.uniqueId}-${dim.id}`}
               value={
                 typeof dim.selectedId === "undefined"
                   ? "__undefined__"

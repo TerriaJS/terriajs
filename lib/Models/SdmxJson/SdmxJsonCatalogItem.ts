@@ -1,11 +1,12 @@
 import i18next from "i18next";
 import { computed, runInAction } from "mobx";
+import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
 import TerriaError from "../../Core/TerriaError";
-import ChartableMixin from "../../ModelMixins/ChartableMixin";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
+import ChartableMixin from "../../ModelMixins/ChartableMixin";
 import TableMixin from "../../ModelMixins/TableMixin";
 import UrlMixin from "../../ModelMixins/UrlMixin";
 import Csv from "../../Table/Csv";
@@ -15,14 +16,12 @@ import CreateModel from "../CreateModel";
 import { BaseModel } from "../Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import SelectableDimensions, {
-  Dimension,
   SelectableDimension
 } from "../SelectableDimensions";
 import StratumOrder from "../StratumOrder";
 import Terria from "../Terria";
 import { SdmxJsonDataflowStratum } from "./SdmxJsonDataflowStratum";
-
-const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
+import { sdmxErrorString } from "./SdmxJsonServerStratum";
 
 export default class SdmxJsonCatalogItem
   extends ChartableMixin(
@@ -64,52 +63,8 @@ export default class SdmxJsonCatalogItem
     return super.cacheDuration || "1d";
   }
 
-  @computed
-  get canZoomTo() {
-    return this.activeTableStyle.latitudeColumn !== undefined;
-  }
-
   /**
-   * Disable dimension if viewing time-series and this dimenion is a time dimension OR viewing region-mapping and this dimension is for region-mapping
-   */
-  isDimDisabled(dim: Dimension) {
-    const disable =
-      (this.viewBy === "time" && this.timeDimensionIds.includes(dim.id!)) ||
-      (this.viewBy === "region" &&
-        this.regionMappedDimensionIds.includes(dim.id!));
-    return disable;
-  }
-
-  /**
-   * View by Selectable dimension allows user to select viewby region or time-series.
-   */
-  @computed get sdmxViewModeDimension(): SelectableDimension {
-    return {
-      id: `viewMode`,
-      name: i18next.t("models.sdmxCatalogItem.viewBy.title"),
-      options: [
-        {
-          id: "region",
-          name: i18next.t("models.sdmxCatalogItem.viewBy.region")
-        },
-        { id: "time", name: i18next.t("models.sdmxCatalogItem.viewBy.time") }
-      ],
-      selectedId: this.viewBy,
-      // Disable if there aren't time dimensions and region-mapped dimensions
-      disable:
-        !Array.isArray(this.timeDimensionIds) ||
-        this.timeDimensionIds.length === 0 ||
-        !Array.isArray(this.regionMappedDimensionIds) ||
-        this.regionMappedDimensionIds.length === 0,
-      setDimensionValue: (stratumId: string, value: "time" | "region") => {
-        this.setTrait(stratumId, "viewBy", value);
-        this.loadMapItems();
-      }
-    };
-  }
-
-  /**
-   * Map SdmxDataflowStratum.dimensions to selectable dimensions
+   * Map SdmxDimensionTraits to SelectableDimension
    */
   @computed
   get sdmxSelectableDimensions(): SelectableDimension[] {
@@ -120,7 +75,9 @@ export default class SdmxJsonCatalogItem
         options: dim.options,
         selectedId: dim.selectedId,
         allowUndefined: dim.allowUndefined,
-        disable: this.isDimDisabled(dim) || dim.disable,
+        disable:
+          dim.disable ||
+          this.columns.find(col => col.name === dim.id)?.type === "region",
         setDimensionValue: (stratumId: string, value: string) => {
           let dimensionTraits = this.dimensions?.find(
             sdmxDim => sdmxDim.id === dim.id
@@ -139,7 +96,6 @@ export default class SdmxJsonCatalogItem
   @computed
   get selectableDimensions(): SelectableDimension[] {
     return filterOutUndefined([
-      this.sdmxViewModeDimension,
       ...this.sdmxSelectableDimensions,
       this.regionColumnDimensions,
       this.regionProviderDimensions
@@ -147,49 +103,45 @@ export default class SdmxJsonCatalogItem
   }
 
   /**
-   * Returns string compliant with the KeyType defined in the SDMX WADL (period separated dimension values) - dimension order is very important!
+   * Returns base URL (from traits), as SdmxJsonCatalogItem will override `url` property with SDMX Data request
    */
-  @computed get dataKey(): string {
-    const max = this.dimensions.length;
+  @computed
+  get baseUrl(): string | undefined {
+    return super.url;
+  }
+
+  @computed
+  get url() {
+    if (!super.url) return;
+
+    // Get dataKey - this is used to filter dataflows by dimension values - it must be compliant with the KeyType defined in the SDMX WADL (period separated dimension values) - dimension order is very important!
     // We must sort the dimensions by position as traits lose their order across strata
-    return (
-      this.dimensions
-        .slice()
-        .sort(
-          (a, b) =>
-            (isDefined(a.position) ? a.position : max) -
-            (isDefined(b.position) ? b.position : max)
-        )
-        // If a dimension is disabled, use empty string (which is wildcard)
-        .map(dim => (!this.isDimDisabled(dim) ? dim.selectedId : ""))
-        .join(".")
-    );
-  }
 
-  @computed
-  get csvUrl(): string {
-    if (this.viewBy === "time") {
-      // do something with time?
-      // Currently all time slices are returned at once - which is probably fine for the moment
-    }
-    return `${this.url}/data/${this.dataflowId}/${this.dataKey}`;
-  }
+    const dataKey = this.dimensions
+      .slice()
+      .sort(
+        (a, b) =>
+          (isDefined(a.position) ? a.position : this.dimensions.length) -
+          (isDefined(b.position) ? b.position : this.dimensions.length)
+      )
+      // If a dimension is disabled, use empty string (which is wildcard)
+      .map(dim =>
+        !dim.disable &&
+        this.columns.find(col => col.name === dim.id)?.type !== "region"
+          ? dim.selectedId
+          : ""
+      )
+      .join(".");
 
-  @computed
-  get shortReport() {
-    if (!isDefined(this.dataColumnMajor) || this.isLoading) return;
-
-    return this.dataColumnMajor.length === 0
-      ? i18next.t("models.sdmxCatalogItem.noData")
-      : undefined;
+    return `${super.url}/data/${this.dataflowId}/${dataKey}`;
   }
 
   protected async forceLoadTableData() {
-    let columns: string[][] = [];
+    if (!this.url) return;
 
     try {
       const csvString = await new Resource({
-        url: proxyCatalogItemUrl(this, this.csvUrl),
+        url: proxyCatalogItemUrl(this, this.url),
         headers: {
           Accept: "application/vnd.sdmx.data+csv; version=1.0.0"
         }
@@ -202,43 +154,31 @@ export default class SdmxJsonCatalogItem
         });
       }
 
-      columns = await Csv.parseString(csvString, true);
+      return await Csv.parseString(csvString, true);
     } catch (error) {
-      console.log(`Could not load sdmx-csv:`);
-      console.log(error);
-    }
-
-    // Filter colums to only include primary measure, region mapped and time dimensions
-    if (isDefined(this.primaryMeasureDimensionId)) {
-      let colNames = [this.primaryMeasureDimensionId];
-
-      // If viewing region-mapping, add region-map dimension columns
       if (
-        this.viewBy === "region" &&
-        this.regionMappedDimensionIds.length > 0
+        error instanceof RequestErrorEvent &&
+        typeof error.response === "string"
       ) {
-        colNames.push(...this.regionMappedDimensionIds);
-        colNames.push(...this.timeDimensionIds);
-
-        // If viewing time-series, add time dimension column
-      } else if (this.viewBy === "time" && this.timeDimensionIds.length > 0) {
-        colNames.push(...this.timeDimensionIds);
-        // If no filter available - just use all columns and hope for the best
-      } else {
-        console.log(
-          `WARNING: no time or region dimensions are found for ${this.name}, therefore styling may be unpredictable!`
+        this.terria.raiseErrorToUser(
+          new TerriaError({
+            message: sdmxErrorString.has(error.statusCode)
+              ? `${sdmxErrorString.get(error.statusCode)}: ${error.response}`
+              : `${error.response}`,
+            title: `Failed to load SDMX data for "${this.name ??
+              this.uniqueId}"`
+          })
         );
-        return columns;
+      } else {
+        this.terria.raiseErrorToUser(
+          new TerriaError({
+            message: `Failed to load SDMX data for "${this.name ??
+              this.uniqueId}"`
+          })
+        );
       }
-
-      return columns.filter(col => colNames.includes(col[0]));
-    } else {
-      console.log(
-        `WARNING: no primary measure dimension was defined for ${this.name}, therefore styling may be unpredictable!`
-      );
-      return columns;
     }
   }
 }
 
-StratumOrder.addLoadStratum(automaticTableStylesStratumName);
+StratumOrder.addLoadStratum(TableAutomaticStylesStratum.stratumName);
