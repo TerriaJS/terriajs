@@ -9,6 +9,7 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
 import Constructor from "../Core/Constructor";
@@ -200,8 +201,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     @computed
     get disableOpacityControl() {
-      // disable opacity control for point tables
-      return this.activeTableStyle.isPoints();
+      // disable opacity control for point tables - or if no mapItems
+      return this.activeTableStyle.isPoints() || this.mapItems.length === 0;
     }
 
     @computed
@@ -234,6 +235,11 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return isDefined(this.activeTableStyle.regionColumn);
     }
 
+    @computed
+    get canZoomTo() {
+      return this.activeTableStyle.latitudeColumn !== undefined;
+    }
+
     /**
      * Gets the items to show on the map.
      */
@@ -241,11 +247,29 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     get mapItems(): (DataSource | ImageryParts)[] {
       return filterOutUndefined([
         this.createLongitudeLatitudeDataSource(this.activeTableStyle),
-        this.createRegionMappedImageryLayer({
-          style: this.activeTableStyle,
-          currentTime: this.currentDiscreteJulianDate
-        })
+        this.regionMappedImageryParts
       ]);
+    }
+
+    // regionMappedImageryParts and regionMappedImageryProvider are split up like this so that we aren't re-creating the imageryProvider if things like `opacity` and `show` change
+    @computed get regionMappedImageryParts() {
+      if (!this.regionMappedImageryProvider) return;
+
+      return {
+        imageryProvider: this.regionMappedImageryProvider,
+        alpha: this.opacity,
+        show: this.show,
+        clippingRectangle: this.clipToRectangle
+          ? this.cesiumRectangle
+          : undefined
+      };
+    }
+
+    @computed get regionMappedImageryProvider() {
+      return this.createRegionMappedImageryProvider({
+        style: this.activeTableStyle,
+        currentTime: this.currentDiscreteJulianDate
+      });
     }
 
     /**
@@ -467,6 +491,11 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     @computed
+    get disableDateTimeSelector() {
+      return this.mapItems.length === 0;
+    }
+
+    @computed
     get discreteTimes():
       | { time: string; tag: string | undefined }[]
       | undefined {
@@ -595,11 +624,11 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       }
     );
 
-    private readonly createRegionMappedImageryLayer = createTransformer(
+    private readonly createRegionMappedImageryProvider = createTransformer(
       (input: {
         style: TableStyle;
         currentTime: JulianDate | undefined;
-      }): ImageryParts | undefined => {
+      }): ImageryProvider | undefined => {
         if (!input.style.isRegions()) {
           return undefined;
         }
@@ -642,63 +671,56 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
         const catalogItem = this;
 
-        return {
-          alpha: this.opacity,
-          imageryProvider: new MapboxVectorTileImageryProvider({
-            url: regionType.server,
-            layerName: regionType.layerName,
-            styleFunc: function(feature: any) {
-              const featureRegion = feature.properties[regionType.regionProp];
-              const regionIdString =
-                featureRegion !== undefined && featureRegion !== null
-                  ? featureRegion.toString()
-                  : "";
+        return new MapboxVectorTileImageryProvider({
+          url: regionType.server,
+          layerName: regionType.layerName,
+          styleFunc: function(feature: any) {
+            const featureRegion = feature.properties[regionType.regionProp];
+            const regionIdString =
+              featureRegion !== undefined && featureRegion !== null
+                ? featureRegion.toString()
+                : "";
 
-              let rowNumber = catalogItem.getImageryLayerFilteredRows(
-                input,
-                currentTimeRows,
-                valuesAsRegions.regionIdToRowNumbersMap.get(
-                  regionIdString.toLowerCase()
+            let rowNumber = catalogItem.getImageryLayerFilteredRows(
+              input,
+              currentTimeRows,
+              valuesAsRegions.regionIdToRowNumbersMap.get(
+                regionIdString.toLowerCase()
+              )
+            );
+            let value: string | number | null = isDefined(rowNumber)
+              ? valueFunction(rowNumber)
+              : null;
+
+            const color = colorMap.mapValueToColor(value);
+            if (color === undefined) {
+              return undefined;
+            }
+
+            return {
+              fillStyle: color.toCssColorString(),
+              strokeStyle: baseMapContrastColor,
+              lineWidth: 1,
+              lineJoin: "miter"
+            };
+          },
+          subdomains: regionType.serverSubdomains,
+          rectangle:
+            Array.isArray(regionType.bbox) && regionType.bbox.length >= 4
+              ? Rectangle.fromDegrees(
+                  regionType.bbox[0],
+                  regionType.bbox[1],
+                  regionType.bbox[2],
+                  regionType.bbox[3]
                 )
-              );
-              let value: string | number | null = isDefined(rowNumber)
-                ? valueFunction(rowNumber)
-                : null;
-
-              const color = colorMap.mapValueToColor(value);
-              if (color === undefined) {
-                return undefined;
-              }
-
-              return {
-                fillStyle: color.toCssColorString(),
-                strokeStyle: baseMapContrastColor,
-                lineWidth: 1,
-                lineJoin: "miter"
-              };
-            },
-            subdomains: regionType.serverSubdomains,
-            rectangle:
-              Array.isArray(regionType.bbox) && regionType.bbox.length >= 4
-                ? Rectangle.fromDegrees(
-                    regionType.bbox[0],
-                    regionType.bbox[1],
-                    regionType.bbox[2],
-                    regionType.bbox[3]
-                  )
-                : undefined,
-            minimumZoom: regionType.serverMinZoom,
-            maximumNativeZoom: regionType.serverMaxNativeZoom,
-            maximumZoom: regionType.serverMaxZoom,
-            uniqueIdProp: regionType.uniqueIdProp,
-            featureInfoFunc: (feature: any) =>
-              this.getImageryLayerFeatureInfo(input, feature, currentTimeRows)
-          }),
-          show: this.show,
-          clippingRectangle: this.clipToRectangle
-            ? this.cesiumRectangle
-            : undefined
-        };
+              : undefined,
+          minimumZoom: regionType.serverMinZoom,
+          maximumNativeZoom: regionType.serverMaxNativeZoom,
+          maximumZoom: regionType.serverMaxZoom,
+          uniqueIdProp: regionType.uniqueIdProp,
+          featureInfoFunc: (feature: any) =>
+            this.getImageryLayerFeatureInfo(input, feature, currentTimeRows)
+        });
       }
     );
 
