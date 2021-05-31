@@ -46,12 +46,19 @@ export default class OpenDataSoftCatalogItemTraits extends mixTraits(
   })
   regionFieldName?: string;
 
-  @primitiveArrayTrait({
+  @primitiveTrait({
     type: "string",
     name: "Select field",
     description: "Names of fields to 'select' when downloading data"
   })
-  selectFields?: string[];
+  selectFields?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Group by field",
+    description: "Names of fields to 'groupBy' when downloading data"
+  })
+  groupByFields?: string;
 
   @primitiveArrayTrait({
     type: "string",
@@ -59,4 +66,19 @@ export default class OpenDataSoftCatalogItemTraits extends mixTraits(
     description: "Names of fields which can be 'selected'"
   })
   availableFields?: DimensionTraits[];
+
+  @primitiveTrait({
+    type: "string",
+    name: "Aggregate time values",
+    description: "Aggregate time values (eg 1 day)."
+  })
+  aggregateTime?: string;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Use records API",
+    description:
+      "Use records API instead of export API - this will limit number of records fetched."
+  })
+  useRecordsApi?: boolean;
 }
