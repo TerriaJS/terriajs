@@ -13,7 +13,6 @@ import GeoJsonCatalogItemTraits from "../Traits/GeoJsonCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import saveModelToJson from "./saveModelToJson";
 
 const zip = require("terriajs-cesium/Source/ThirdParty/zip").default;
 
@@ -53,9 +52,7 @@ class GeoJsonCatalogItem extends GeoJsonMixin(
   }
 
   protected loadZipFileFromUrl(url: string): Promise<JsonValue> {
-    const body = this.requestData
-      ? saveModelToJson((this.requestData as unknown) as BaseModel)
-      : undefined;
+    const body = this.requestData ? toJS(this.requestData) : undefined;
     return makeRealPromise<Blob>(loadBlob(url, undefined, body)).then(
       (blob: Blob) => {
         return parseBlob(blob);
@@ -90,9 +87,7 @@ class GeoJsonCatalogItem extends GeoJsonMixin(
       return loadJson(
         proxyCatalogItemUrl(this, url),
         undefined,
-        this.requestData
-          ? saveModelToJson((this.requestData as unknown) as BaseModel)
-          : undefined,
+        this.requestData ? toJS(this.requestData) : undefined,
         this.postRequestDataAsFormData
       );
     }
