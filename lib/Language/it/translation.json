@@ -13,7 +13,8 @@
     "close": "Chiudi"
   },
   "featureInfo": {
-    "download": "Scarica la tabella"
+    "download": "Scarica la tabella",
+    "locationMarker": "Posizione del marker"
   },
   "sui": {
     "notifications": {
@@ -25,13 +26,19 @@
   "helpMenu": {
     "next": "Prossimo",
     "done": "FATTO",
-    "helpMenuOpenWelcome": "Mostra il messaggio di benvenuto"
+    "helpMenuOpenWelcome": "Visualizza messaggio di benvenuto",
+    "helpMenuMoreHelpTitle": "Per maggiori informazioni",
+    "helpMenuHeader": "Cosa si vuole fare?",
+    "btnTitle": "Ricevi aiuto",
+    "btnText": "Guida"
   },
   "feedback": {
     "send": "Invia",
     "sending": "Invio in corso…",
     "commentQuestion": "Commento o domanda",
-    "title": "Feedback"
+    "title": "Feedback",
+    "cancel": "Annulla",
+    "yourName": "Il tuo nome (opzionale)"
   },
   "settingPanel": {
     "performanceLabel": "Performance",
@@ -49,7 +56,8 @@
     "viewerModeLabels": {
       "Leaflet": "2D",
       "CesiumTerrain": "Terreno 3D"
-    }
+    },
+    "none": "(Nessuno)"
   },
   "toolsPanel": {
     "btnTitle": "Strumenti avanzati",
@@ -78,5 +86,8 @@
   },
   "AR": {
     "arTool": "strumento per la realtà aumentata"
+  },
+  "zoomCotrol": {
+    "zoomReset": "Reimposta zoom"
   }
 }
