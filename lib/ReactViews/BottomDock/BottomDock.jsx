@@ -10,6 +10,7 @@ import ChartPanel from "../Custom/Chart/ChartPanel";
 import Styles from "./bottom-dock.scss";
 import ChartDisclaimer from "./ChartDisclaimer";
 import Timeline from "./Timeline/Timeline";
+import withControlledVisibility from "../HOCs/withControlledVisibility";
 
 const BottomDock = observer(
   createReactClass({
@@ -77,4 +78,4 @@ const BottomDock = observer(
   })
 );
 
-module.exports = measureElement(BottomDock, false);
+module.exports = withControlledVisibility(measureElement(BottomDock, false));

@@ -55,6 +55,9 @@ const Compare: React.FC<PropsType> = observer(props => {
   useEffect(
     action(function onMount() {
       terria.showSplitter = true;
+      // hide MapDataCount
+      terria.elements.set("map-data-count", { visible: false });
+      terria.elements.set("bottom-dock", { visible: false });
       // hide all workbench items except the left & right items
       terria.workbench.items.forEach(item => {
         if (
@@ -65,6 +68,8 @@ const Compare: React.FC<PropsType> = observer(props => {
       });
       return action(function onUnmount() {
         terria.showSplitter = false;
+        terria.elements.set("map-data-count", { visible: true });
+        terria.elements.set("bottom-dock", { visible: true });
       });
     }),
     []
