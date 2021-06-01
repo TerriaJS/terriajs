@@ -1554,6 +1554,11 @@
     },
     "dimensionSelector": {
       "undefinedLabel": "Not specified"
+    },
+    "dateButton": {
+      "left": "Left",
+      "right": "Right",
+      "select": "Select a date"
     }
   }
 }

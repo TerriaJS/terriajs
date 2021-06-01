@@ -6,6 +6,7 @@ import styled from "styled-components";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import filterOutUndefined from "../../Core/filterOutUndefined";
+import DiscretelyTimeVaryingMixin from "../../ModelMixins/DiscretelyTimeVaryingMixin";
 import CommonStrata from "../../Models/CommonStrata";
 import { Comparable, isComparableItem } from "../../Models/Comparable";
 import hasTraits from "../../Models/hasTraits";
@@ -20,6 +21,7 @@ import WorkflowPanel, { Box } from "../../Styled/WorkflowPanel";
 import CatalogMemberTraits from "../../Traits/CatalogMemberTraits";
 import MappableTraits from "../../Traits/MappableTraits";
 import SplitterTraits from "../../Traits/SplitterTraits";
+import DatePicker from "./DatePicker";
 import DimensionSelectors from "./DimensionSelectors";
 import ItemList, { MappableCatalogItem } from "./ItemList";
 import ItemSelector from "./ItemSelector";
@@ -158,49 +160,60 @@ const Compare: React.FC<PropsType> = observer(props => {
   };
 
   return (
-    <WorkflowPanel
-      viewState={viewState}
-      icon={GLYPHS.compare}
-      title={t("compare.title")}
-      closeButtonText={t("compare.done")}
-      onClose={props.onClose}
-    >
-      <Box>
-        <InfoText>{t("compare.info")}</InfoText>
-      </Box>
-      <Box icon={GLYPHS.left} title={t("compare.leftPanel")}>
-        <ItemSelector
-          selectableItems={comparableItems}
-          selectedItem={
-            props.leftItemId
-              ? sourceItemId(terria, props.leftItemId)
-              : undefined
-          }
-          onChange={changeLeftItem}
-        />
-        {leftItem && <DimensionSelectors item={leftItem} />}
-      </Box>
-      <Box icon={GLYPHS.right} title={t("compare.rightPanel")}>
-        <ItemSelector
-          selectableItems={comparableItems}
-          selectedItem={
-            props.rightItemId
-              ? sourceItemId(terria, props.rightItemId)
-              : undefined
-          }
-          onChange={changeRightItem}
-        />
-        {rightItem && <DimensionSelectors item={rightItem} />}
-      </Box>
-      <Box
-        icon={GLYPHS.splitter}
-        title={t("compare.bothPanels")}
-        collapsible
-        isCollapsed
+    <>
+      <WorkflowPanel
+        viewState={viewState}
+        icon={GLYPHS.compare}
+        title={t("compare.title")}
+        closeButtonText={t("compare.done")}
+        onClose={props.onClose}
       >
-        <ItemList items={itemsInBothPanels} onChange={changeItemInBothPanels} />
-      </Box>
-    </WorkflowPanel>
+        <Box>
+          <InfoText>{t("compare.info")}</InfoText>
+        </Box>
+        <Box icon={GLYPHS.left} title={t("compare.leftPanel")}>
+          <ItemSelector
+            selectableItems={comparableItems}
+            selectedItem={
+              props.leftItemId
+                ? sourceItemId(terria, props.leftItemId)
+                : undefined
+            }
+            onChange={changeLeftItem}
+          />
+          {leftItem && <DimensionSelectors item={leftItem} />}
+        </Box>
+        <Box icon={GLYPHS.right} title={t("compare.rightPanel")}>
+          <ItemSelector
+            selectableItems={comparableItems}
+            selectedItem={
+              props.rightItemId
+                ? sourceItemId(terria, props.rightItemId)
+                : undefined
+            }
+            onChange={changeRightItem}
+          />
+          {rightItem && <DimensionSelectors item={rightItem} />}
+        </Box>
+        <Box
+          icon={GLYPHS.splitter}
+          title={t("compare.bothPanels")}
+          collapsible
+          isCollapsed
+        >
+          <ItemList
+            items={itemsInBothPanels}
+            onChange={changeItemInBothPanels}
+          />
+        </Box>
+      </WorkflowPanel>
+      {DiscretelyTimeVaryingMixin.isMixedInto(leftItem) && (
+        <DatePicker side="left" item={leftItem} />
+      )}
+      {DiscretelyTimeVaryingMixin.isMixedInto(rightItem) && (
+        <DatePicker side="right" item={rightItem} />
+      )}
+    </>
   );
 });
 

@@ -149,6 +149,7 @@ interface PropsType extends WithTranslation {
   onOpen: () => void;
   onClose: () => void;
   dateFormat?: string;
+  className?: string;
 }
 
 type Granularity = "century" | "year" | "month" | "day" | "time" | "hour";
@@ -634,39 +635,16 @@ class DateTimePicker extends React.Component<PropsType> {
     if (this.props.dates) {
       const datesObject = this.props.dates;
       return (
-        <div
-          css={`
-            color: ${(p: any) => p.theme.textLight};
-            display: table-cell;
-            width: 30px;
-            height: 30px;
-          `}
+        <Container
+          className={this.props.className}
           onClick={event => {
             event.stopPropagation();
           }}
         >
           {this.props.isOpen && (
-            <div
-              css={`
-                background: ${(p: any) => p.theme.dark};
-                width: 260px;
-                height: 300px;
-                border: 1px solid ${(p: any) => p.theme.grey};
-                border-radius: 5px;
-                padding: 5px;
-                position: relative;
-                top: -170px;
-                left: 0;
-                z-index: 100;
-
-                ${this.props.openDirection === "down"
-                  ? `
-                  top: 40px;
-                  left: -190px;
-                `
-                  : ""}
-              `}
-              className={"scrollbars"}
+            <Inner
+              openDirection={this.props.openDirection}
+              className={"scrollbars inner"}
             >
               <BackButton
                 title={this.props.t("dateTime.back")}
@@ -716,14 +694,34 @@ class DateTimePicker extends React.Component<PropsType> {
                 this.renderMinutesView(
                   datesObject[this.currentDateIndice.century!]
                 )}
-            </div>
+            </Inner>
           )}
-        </div>
+        </Container>
       );
     } else {
       return null;
     }
   }
 }
+
+const Container = styled.div`
+  color: ${(p: any) => p.theme.textLight};
+  display: table-cell;
+  width: 30px;
+  height: 30px;
+`;
+
+const Inner = styled.div<{ openDirection?: string }>`
+  background: ${(p: any) => p.theme.dark};
+  width: 260px;
+  height: 300px;
+  border: 1px solid ${(p: any) => p.theme.grey};
+  border-radius: 5px;
+  padding: 5px;
+  position: relative;
+  top: ${p => (p.openDirection === "down" ? "40px" : "-170px")};
+  left: ${p => (p.openDirection === "down" ? "-190px" : "0px")};
+  z-index: 100;
+`;
 
 export default withTranslation()(DateTimePicker);
