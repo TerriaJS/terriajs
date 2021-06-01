@@ -23,6 +23,7 @@ Change Log
 * Disabled pedestrian mode in mobile view.
 * Pedestrian mode will no longer respond to "wasd" keys when the user is typing in some input field.
 * Fix references to old `viewState.notification`.
+* wiring changeLanguage button to useTranslation hook so that it can be detected in client maps
 * Add `canZoomTo` to `TableMixin`
 * SDMX changes:
   * Add better SDMX server error messages
