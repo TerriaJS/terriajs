@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { JsonObject } from "../Core/Json";
 import anyTrait from "./anyTrait";
-import { DimensionTraits } from "./DimensionTraits";
+import DimensionTraits from "./DimensionTraits";
 import LegendTraits from "./LegendTraits";
 import ModelTraits from "./ModelTraits";
 import objectArrayTrait from "./objectArrayTrait";

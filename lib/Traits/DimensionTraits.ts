@@ -22,12 +22,12 @@ export class DimensionOptionTraits extends ModelTraits
 
   @anyTrait({
     name: "Value",
-    description: "Value (if this is undefined, ID will be used)"
+    description: "Value (if this is undefined, `id` will be used)"
   })
   value?: any;
 }
 
-export class DimensionTraits extends ModelTraits implements Dimension {
+export default class DimensionTraits extends ModelTraits implements Dimension {
   @primitiveTrait({
     type: "string",
     name: "ID",

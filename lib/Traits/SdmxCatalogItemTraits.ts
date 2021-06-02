@@ -1,5 +1,5 @@
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import { DimensionTraits } from "./DimensionTraits";
+import DimensionTraits from "./DimensionTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import MappableTraits from "./MappableTraits";

@@ -1,5 +1,5 @@
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import { DimensionTraits } from "./DimensionTraits";
+import DimensionTraits from "./DimensionTraits";
 import GroupTraits from "./GroupTraits";
 import mixTraits from "./mixTraits";
 import objectArrayTrait from "./objectArrayTrait";
