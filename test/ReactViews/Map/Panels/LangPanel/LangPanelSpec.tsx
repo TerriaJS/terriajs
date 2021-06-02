@@ -1,7 +1,6 @@
 import { create } from "react-test-renderer";
 import React from "react";
 import { act } from "react-dom/test-utils";
-import i18n from "i18next";
 
 import Terria from "../../../../../lib/Models/Terria";
 import ViewState from "../../../../../lib/ReactViewModels/ViewState";
@@ -28,9 +27,7 @@ describe("LangPanel", function() {
 
   it("should not render if there is no langauge config", function() {
     act(() => {
-      testRenderer = create(
-        <LangPanel i18n={i18n} terria={terria} smallScreen={false} />
-      );
+      testRenderer = create(<LangPanel terria={terria} smallScreen={false} />);
     });
 
     expect(testRenderer.toJSON()).toBeNull();
@@ -50,9 +47,7 @@ describe("LangPanel", function() {
       }
     });
     act(() => {
-      testRenderer = create(
-        <LangPanel i18n={i18n} terria={terria} smallScreen={false} />
-      );
+      testRenderer = create(<LangPanel terria={terria} smallScreen={false} />);
     });
 
     expect(testRenderer.toJSON()).toBeDefined();

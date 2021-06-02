@@ -38,10 +38,10 @@ describe("ApiTableCatalogItem", function() {
         idKey: "id",
         apis: [
           {
-            apiUrl: "https://terria.io/values.json"
+            url: "https://terria.io/values.json"
           },
           {
-            apiUrl: "https://terria.io/position.json",
+            url: "https://terria.io/position.json",
             kind: "PER_ID"
           }
         ],

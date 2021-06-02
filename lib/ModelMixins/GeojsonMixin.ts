@@ -104,21 +104,6 @@ export default function GeoJsonMixin<
     }
 
     protected forceLoadMapItems(): Promise<void> {
-      const createLoadError = () =>
-        new TerriaError({
-          sender: this,
-          title: i18next.t("models.geoJson.errorLoadingTitle"),
-          message: i18next.t("models.geoJson.errorParsingMessage", {
-            appName: this.terria.appName,
-            email:
-              '<a href="mailto:' +
-              this.terria.supportEmail +
-              '">' +
-              this.terria.supportEmail +
-              "</a>."
-          })
-        });
-
       return new Promise<JsonValue | undefined>((resolve, reject) => {
         this.customDataLoader(resolve, reject);
         if (isDefined(this._file)) {
@@ -138,7 +123,10 @@ export default function GeoJsonMixin<
       })
         .then((geoJson: JsonValue | undefined) => {
           if (!isJsonObject(geoJson)) {
-            throw createLoadError();
+            throw new TerriaError({
+              title: i18next.t("models.geoJson.errorLoadingTitle"),
+              message: i18next.t("models.geoJson.errorParsingMessage")
+            });
           }
           return reprojectToGeographic(
             geoJson,
@@ -155,11 +143,10 @@ export default function GeoJsonMixin<
           this._dataSource = dataSource;
         })
         .catch(e => {
-          if (e instanceof TerriaError) {
-            throw e;
-          } else {
-            throw createLoadError();
-          }
+          throw TerriaError.from(e, {
+            title: i18next.t("models.geoJson.errorLoadingTitle"),
+            message: i18next.t("models.geoJson.errorParsingMessage")
+          });
         });
     }
 
