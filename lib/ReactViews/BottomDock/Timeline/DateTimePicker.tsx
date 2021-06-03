@@ -18,7 +18,7 @@ import {
 import Button, { RawButton } from "../../../Styled/Button";
 import { scrollBars } from "../../../Styled/mixins";
 import Spacing from "../../../Styled/Spacing";
-import Icon from "../../../Styled/Icon";
+import Icon, { StyledIcon } from "../../../Styled/Icon";
 import { formatDateTime } from "./DateFormats";
 
 const dateFormat = require("dateformat");
@@ -73,7 +73,7 @@ const GridRowInner = styled.span<{ marginRight: string }>`
   }
 `;
 
-const Grid = styled.div`
+export const Grid = styled.div`
   display: block;
   width: 100%;
   height: 100%;
@@ -106,13 +106,13 @@ const GridLabel = styled.span`
   padding-left: 3px;
 `;
 
-const GridBody = styled.div`
+export const GridBody = styled.div`
   height: calc(100% - 30px);
   overflow: auto;
   ${scrollBars()}
 `;
 
-const BackButton = styled(RawButton)`
+const ControlButton = styled(RawButton)`
   display: inline-block;
   z-index: 99;
   position: relative;
@@ -129,6 +129,16 @@ const BackButton = styled(RawButton)`
   &:disabled {
     opacity: 0.1;
   }
+`;
+
+const BackButton = styled(ControlButton)``;
+
+export const CloseButton = styled(ControlButton)`
+  position: absolute;
+  right: 2px;
+  background: transparent;
+  border: 0;
+  padding: 0;
 `;
 
 export const DateButton = styled(Button).attrs({
@@ -150,6 +160,11 @@ interface PropsType extends WithTranslation {
   onClose: () => void;
   dateFormat?: string;
   className?: string;
+  showCloseButtonInTitle?: boolean;
+  // A component to use for marking selected time
+  selectedTimeMarkerComponent?: React.ComponentType;
+  // When showing list of times, scroll to the currently selected time
+  scrollToSelectedTime?: boolean;
 }
 
 type Granularity = "century" | "year" | "month" | "day" | "time" | "hour";
@@ -172,6 +187,13 @@ class DateTimePicker extends React.Component<PropsType> {
   } = { granularity: "century" };
 
   private currentDateAutorunDisposer: IReactionDisposer | undefined;
+
+  private readonly selectedTimeRef: React.RefObject<HTMLElement>;
+
+  constructor(props: PropsType) {
+    super(props);
+    this.selectedTimeRef = React.createRef();
+  }
 
   componentWillMount() {
     const datesObject = this.props.dates;
@@ -251,6 +273,15 @@ class DateTimePicker extends React.Component<PropsType> {
     window.removeEventListener("click", this.closePickerEventHandler);
   }
 
+  componentDidUpdate() {
+    // Scroll into view to reveal the selected time item
+    this.props.scrollToSelectedTime &&
+      this.selectedTimeRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+      });
+  }
+
   @action.bound
   closePickerEventHandler() {
     this.closePicker();
@@ -270,7 +301,7 @@ class DateTimePicker extends React.Component<PropsType> {
     const centuries = datesObject.indice;
     if (datesObject.dates && datesObject.dates.length >= 12) {
       return (
-        <Grid>
+        <Grid className="century-grid">
           <GridHeading>Select a century</GridHeading>
           {centuries.map(c => (
             <DateButton
@@ -493,22 +524,31 @@ class DateTimePicker extends React.Component<PropsType> {
   renderList(items: Date[]) {
     if (isDefined(items)) {
       return (
-        <Grid>
+        <Grid className="time-grid">
           <GridHeading>Select a time</GridHeading>
           <GridBody>
-            {items.map(item => (
-              <DateButton
-                key={formatDateTime(item)}
-                onClick={() => {
-                  this.closePicker(item);
-                  this.props.onChange(item);
-                }}
-              >
-                {isDefined(this.props.dateFormat)
-                  ? dateFormat(item, this.props.dateFormat)
-                  : formatDateTime(item)}
-              </DateButton>
-            ))}
+            {items.map(item => {
+              const isSelected =
+                this.props.currentDate?.getTime() === item.getTime();
+              const Selected = isSelected
+                ? this.props.selectedTimeMarkerComponent
+                : null;
+              return (
+                <DateButton
+                  key={formatDateTime(item)}
+                  onClick={() => {
+                    this.closePicker(item);
+                    this.props.onChange(item);
+                  }}
+                  ref={isSelected ? this.selectedTimeRef : null}
+                >
+                  {isDefined(this.props.dateFormat)
+                    ? dateFormat(item, this.props.dateFormat)
+                    : formatDateTime(item)}
+                  {Selected && <Selected />}
+                </DateButton>
+              );
+            })}
           </GridBody>
         </Grid>
       );
@@ -662,6 +702,11 @@ class DateTimePicker extends React.Component<PropsType> {
               >
                 <Icon glyph={Icon.GLYPHS.left} />
               </BackButton>
+              {this.props.showCloseButtonInTitle && (
+                <CloseButton onClick={() => this.closePicker()}>
+                  <Icon glyph={Icon.GLYPHS.close} />
+                </CloseButton>
+              )}
               {!isDefined(this.currentDateIndice.century) &&
                 this.renderCenturyGrid(datesObject)}
               {isDefined(this.currentDateIndice.century) &&
