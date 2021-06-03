@@ -802,8 +802,8 @@ function getTimeSeriesChartContext(catalogItem, feature, getChartDetails) {
     if (chartDetails) {
       const result = {
         ...chartDetails,
-        id: featureId.replace(/\"/g, ""),
-        data: csvData.replace(/\\n/g, "\\n")
+        id: featureId?.replace(/\"/g, ""),
+        data: csvData?.replace(/\\n/g, "\\n")
       };
       const idAttr = 'id="' + result.id + '" ';
       const sourceAttr = 'sources="1"';

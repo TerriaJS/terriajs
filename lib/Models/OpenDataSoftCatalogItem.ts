@@ -191,6 +191,10 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     );
   }
 
+  @computed get pointsCount() {
+    return this.pointTimeSeries?.length;
+  }
+
   /** Get the maximum number of samples for a given point (or sensor) */
   @computed get maxPointSamples() {
     if (!this.pointTimeSeries) return;
@@ -209,7 +213,9 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
   @computed get useRecordsApi() {
     return (
       !this.recordsCount ||
-      (isDefined(this.recordsCount) && this.recordsCount > 50000)
+      this.recordsCount > 20000 ||
+      (isDefined(this.maxPointSamples) && this.maxPointSamples < 5000) ||
+      (isDefined(this.pointsCount) && this.pointsCount < 1000)
     );
   }
 
@@ -492,8 +498,8 @@ export default class OpenDataSoftCatalogItem
         const cols: { [key: string]: string[] } = {};
 
         if (this.geoPoint2dFieldName && !this.regionFieldName) {
-          cols["lat"] = [];
-          cols["lon"] = [];
+          cols["lat"] = new Array(records.length).fill("");
+          cols["lon"] = new Array(records.length).fill("");
         }
         this.timeFieldName ? (cols[this.timeFieldName] = []) : null;
         this.colorFieldName ? (cols[this.colorFieldName] = []) : null;
@@ -510,6 +516,9 @@ export default class OpenDataSoftCatalogItem
                 cols.lat[index] = `${value.lat}` ?? "";
                 cols.lon[index] = `${value.lon}` ?? "";
               } else {
+                if (!Array.isArray(cols[field])) {
+                  cols[field] = new Array(records.length).fill("");
+                }
                 cols[field][index] = `${value}`;
               }
             }
