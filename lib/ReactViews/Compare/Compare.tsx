@@ -8,13 +8,9 @@ import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import filterOutUndefined from "../../Core/filterOutUndefined";
-import PickedFeatures from "../../Map/PickedFeatures";
-import DiscretelyTimeVaryingMixin from "../../ModelMixins/DiscretelyTimeVaryingMixin";
 import TimeFilterMixin from "../../ModelMixins/TimeFilterMixin";
 import CommonStrata from "../../Models/CommonStrata";
 import { Comparable, isComparableItem } from "../../Models/Comparable";
-import doesImageryFeatureBelongToItem from "../../Models/doesImageryFeatureBelongToCatalogItem";
-import Feature from "../../Models/Feature";
 import hasTraits from "../../Models/hasTraits";
 import { BaseModel } from "../../Models/Model";
 import SplitItemReference from "../../Models/SplitItemReference";
@@ -33,7 +29,6 @@ import DimensionSelectors from "./DimensionSelectors";
 import ItemList, { MappableCatalogItem } from "./ItemList";
 import ItemSelector from "./ItemSelector";
 import LocationDateFilter from "./LocationDateFilter";
-import LocationPicker from "./LocationPicker";
 
 export type PropsType = {
   viewState: ViewState;
