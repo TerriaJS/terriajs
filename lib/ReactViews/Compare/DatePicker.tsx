@@ -3,25 +3,49 @@ import { action } from "mobx";
 import { observer } from "mobx-react";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import styled from "styled-components";
+import styled, { DefaultTheme, ThemeProvider } from "styled-components";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import DiscretelyTimeVaryingMixin from "../../ModelMixins/DiscretelyTimeVaryingMixin";
 import CommonStrata from "../../Models/CommonStrata";
+import { Comparable } from "../../Models/Comparable";
 import Button from "../../Styled/Button";
 import Icon, { StyledIcon } from "../../Styled/Icon";
 import { formatDateTime } from "../BottomDock/Timeline/DateFormats";
-import DateTimePicker from "../BottomDock/Timeline/DateTimePicker";
+import DateTimePicker, {
+  DateButton,
+  Grid,
+  GridBody
+} from "../BottomDock/Timeline/DateTimePicker";
 
 type PropsType = {
-  item: DiscretelyTimeVaryingMixin.DiscretelyTimeVaryingMixin;
+  item: Comparable | undefined;
   side: "left" | "right";
 };
 
-const DatePicker: React.FC<PropsType> = observer(({ item, side }) => {
+const lightTheme = (theme: DefaultTheme) => ({
+  ...theme,
+  dark: "white",
+  textLight: theme.textDark,
+  colorPrimary: "black",
+  overlay: "#cccccc"
+});
+
+const DatePicker: React.FC<PropsType> = observer(props => {
   const [t] = useTranslation();
   const [isPickerOpen, setIsPickerOpen] = useState(false);
 
-  const Container = side === "left" ? LeftContainer : RightContainer;
+  // Check if the item has dates, otherwise render nothing
+  const item:
+    | DiscretelyTimeVaryingMixin.DiscretelyTimeVaryingMixin
+    | undefined =
+    DiscretelyTimeVaryingMixin.isMixedInto(props.item) &&
+    (props.item.discreteTimes?.length ?? 0) > 0
+      ? props.item
+      : undefined;
+  if (item === undefined) {
+    return null;
+  }
+
   const date =
     item.currentDiscreteJulianDate &&
     JulianDate.toDate(item.currentDiscreteJulianDate);
@@ -38,20 +62,20 @@ const DatePicker: React.FC<PropsType> = observer(({ item, side }) => {
 
   return (
     <Container>
-      <Inner>
-        <PrevButton
-          disabled={item.isPreviousDiscreteTimeAvailable === false}
-          onClick={() => item.moveToPreviousDiscreteTime(CommonStrata.user)}
-        />
-        <DateButton onClick={openDatePicker}>
-          <Prefix>{t(`compare.dateButton.${side}`)}</Prefix>
-          {dateString ?? t("compare.dateButton.select")}
-        </DateButton>
-        <NextButton
-          disabled={item.isNextDiscreteTimeAvailable === false}
-          onClick={() => item.moveToNextDiscreteTime(CommonStrata.user)}
-        />
-        <PickerContainer isOpen={isPickerOpen}>
+      <PrevButton
+        disabled={item.isPreviousDiscreteTimeAvailable === false}
+        onClick={() => item.moveToPreviousDiscreteTime(CommonStrata.user)}
+      />
+      <DatePickerButton onClick={openDatePicker}>
+        <Prefix>{t(`compare.dateButton.${props.side}`)}</Prefix>
+        {dateString ?? t("compare.dateButton.select")}
+      </DatePickerButton>
+      <NextButton
+        disabled={item.isNextDiscreteTimeAvailable === false}
+        onClick={() => item.moveToNextDiscreteTime(CommonStrata.user)}
+      />
+      <PickerContainer isOpen={isPickerOpen}>
+        <ThemeProvider theme={lightTheme}>
           <StyledDateTimePicker
             currentDate={date}
             dates={item.objectifiedDates}
@@ -60,9 +84,12 @@ const DatePicker: React.FC<PropsType> = observer(({ item, side }) => {
             isOpen={isPickerOpen}
             onOpen={() => setIsPickerOpen(true)}
             onClose={() => setIsPickerOpen(false)}
+            showCloseButtonInTitle={true}
+            selectedTimeMarkerComponent={SelectedTimeMarker}
+            scrollToSelectedTime={true}
           />
-        </PickerContainer>
-      </Inner>
+        </ThemeProvider>
+      </PickerContainer>
     </Container>
   );
 });
@@ -71,40 +98,13 @@ function getFormattedDate(date: Date, format?: string): string {
   return format ? dateFormat(date, format) : formatDateTime(date);
 }
 
-const CommonContainer = styled.div`
-  --map-width: calc(100% - ${p => p.theme.workbenchWidth}px);
-
-  display: flex;
-  flex-direction: column;
-
-  position: absolute;
-  z-index: 10000;
-  bottom: 40px;
-  width: calc(var(--map-width) / 2);
-  box-sizing: border-box;
-`;
-
-const LeftContainer = styled(CommonContainer)`
-  left: ${p => p.theme.workbenchWidth}px;
-  align-items: flex-end;
-  @media (min-width: calc(${p => p.theme.workbenchWidth}px + 650px)) {
-    padding-right: 20px;
-  }
-`;
-
-const RightContainer = styled(CommonContainer)`
-  left: calc(${p => p.theme.workbenchWidth}px + var(--map-width) / 2);
-  align-items: flex-start;
-  @media (min-width: calc(${p => p.theme.workbenchWidth}px + 650px)) {
-    padding-left: 20px;
-  }
-`;
-
-const Inner = styled.div`
+const Container = styled.div`
+  position: relative;
   display: flex;
   justify-items: space-between;
-  width: 300px;
+  width: 250px;
   max-width: 100%;
+  padding: 0 10px;
 `;
 
 const PagerButton = styled(Button).attrs({
@@ -150,7 +150,7 @@ const NextButton = styled(PagerButton).attrs({
   ${({ theme }) => theme.borderRadiusRight(theme.radius40Button)}
 `;
 
-const DateButton = styled(Button).attrs({ shortMinHeight: true })<{
+const DatePickerButton = styled(Button).attrs({ shortMinHeight: true })<{
   isOpen: boolean;
 }>`
   z-index: 0;
@@ -167,20 +167,64 @@ const Prefix = styled.span`
   }
 `;
 
+const StyledDateTimePicker = styled(DateTimePicker)`
+  > .inner {
+    box-sizing: border-box;
+    width: 250px;
+    height: 250px;
+    top: -216px; // height - DatePickerButton height
+    padding-left: 0px;
+    padding-right: 0px;
+
+    > ${Grid} {
+      padding: 0px;
+    }
+
+    > ${GridBody} {
+      height: 100%;
+    }
+  }
+
+  & ${DateButton} {
+    min-height: 35px;
+    font-size: 13px;
+  }
+
+  & .century-grid ${DateButton} {
+    width: 80%;
+    margin: 3px 10%;
+  }
+
+  & .time-grid ${DateButton} {
+    width: 100%;
+    border-top: 1px solid #dfdfdf;
+    border-radius: 0;
+    margin: 0px;
+    background: white;
+    color: black;
+
+    &:last-child {
+      border-bottom: 1px solid #dfdfdf;
+    }
+  }
+`;
+
+const SelectedTimeMarker = styled(StyledIcon).attrs({
+  dark: true,
+  styledWidth: "14px",
+  glyph: Icon.GLYPHS.selected
+})`
+  display: inline;
+  position: absolute;
+  right: 0px;
+`;
+
 const PickerContainer = styled.div<{ isOpen: boolean }>`
   display: ${p => (p.isOpen ? "block" : "none")};
   position: absolute;
-`;
 
-const StyledDateTimePicker = styled(DateTimePicker)`
-  > div {
-    box-sizing: border-box;
-    width: 300px;
-    top: -260px;
-  }
-
-  > .inner {
-    background: white;
+  & > ${StyledDateTimePicker} {
+    position: absolute;
   }
 `;
 

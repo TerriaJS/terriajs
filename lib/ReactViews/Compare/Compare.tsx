@@ -3,12 +3,18 @@ import { observer } from "mobx-react";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import filterOutUndefined from "../../Core/filterOutUndefined";
+import PickedFeatures from "../../Map/PickedFeatures";
 import DiscretelyTimeVaryingMixin from "../../ModelMixins/DiscretelyTimeVaryingMixin";
+import TimeFilterMixin from "../../ModelMixins/TimeFilterMixin";
 import CommonStrata from "../../Models/CommonStrata";
 import { Comparable, isComparableItem } from "../../Models/Comparable";
+import doesImageryFeatureBelongToItem from "../../Models/doesImageryFeatureBelongToCatalogItem";
+import Feature from "../../Models/Feature";
 import hasTraits from "../../Models/hasTraits";
 import { BaseModel } from "../../Models/Model";
 import SplitItemReference from "../../Models/SplitItemReference";
@@ -21,10 +27,13 @@ import WorkflowPanel, { Box } from "../../Styled/WorkflowPanel";
 import CatalogMemberTraits from "../../Traits/CatalogMemberTraits";
 import MappableTraits from "../../Traits/MappableTraits";
 import SplitterTraits from "../../Traits/SplitterTraits";
+import { TimeFilterCoordinates } from "../../Traits/TimeFilterTraits";
 import DatePicker from "./DatePicker";
 import DimensionSelectors from "./DimensionSelectors";
 import ItemList, { MappableCatalogItem } from "./ItemList";
 import ItemSelector from "./ItemSelector";
+import LocationDateFilter from "./LocationDateFilter";
+import LocationPicker from "./LocationPicker";
 
 export type PropsType = {
   viewState: ViewState;
@@ -207,15 +216,49 @@ const Compare: React.FC<PropsType> = observer(props => {
           />
         </Box>
       </WorkflowPanel>
-      {DiscretelyTimeVaryingMixin.isMixedInto(leftItem) && (
-        <DatePicker side="left" item={leftItem} />
-      )}
-      {DiscretelyTimeVaryingMixin.isMixedInto(rightItem) && (
-        <DatePicker side="right" item={rightItem} />
-      )}
+      <MapOverlay>
+        <Left>
+          <DatePicker side="left" item={leftItem} />
+        </Left>
+        <LocationDateFilter
+          viewState={viewState}
+          leftItem={leftItem}
+          rightItem={rightItem}
+        />
+        <Right>
+          <DatePicker side="right" item={rightItem} />
+        </Right>
+      </MapOverlay>
     </>
   );
 });
+
+const Left = styled.div``;
+const Right = styled.div``;
+
+const MapOverlay = styled.div`
+  --map-width: calc(100% - ${p => p.theme.workbenchWidth}px);
+  width: var(--map-width);
+  display: flex;
+  justify-content: center;
+
+  position: absolute;
+  left: ${p => p.theme.workbenchWidth}px;
+  bottom: 40px;
+  z-index: 1000;
+
+  & > ${Left} {
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  & > ${Right} {
+    width: 50%;
+    display: flex;
+    justify-content: flex-start;
+  }
+`;
 
 function findComparableItemById(
   workbench: Workbench,
@@ -278,6 +321,24 @@ function hideItem(item: BaseModel) {
 
 function removeItem(item: BaseModel) {
   item.terria.removeModelReferences(item);
+}
+
+function locationFromTimeFilterCoordinates(
+  timeFilterCoordinates: TimeFilterCoordinates | undefined
+): Cartesian3 | undefined {
+  const longitude = timeFilterCoordinates?.longitude;
+  const latitude = timeFilterCoordinates?.latitude;
+  if (longitude === undefined || latitude === undefined) {
+    return undefined;
+  } else {
+    return Cartographic.toCartesian(
+      Cartographic.fromDegrees(longitude, latitude)
+    );
+  }
+}
+
+function canFilterDates(item: any) {
+  return TimeFilterMixin.isMixedInto(item) && item.canFilterTimeByFeature;
 }
 
 const InfoText = styled(Text).attrs({ medium: true, textAlignCenter: true })`

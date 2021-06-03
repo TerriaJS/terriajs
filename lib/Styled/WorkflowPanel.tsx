@@ -117,24 +117,20 @@ export const Box: React.FC<BoxProps> = props => {
   );
 };
 
-interface CollapseToggleProps {
-  isCollapsed?: boolean;
-  onClick?: () => void;
-}
-
-const CollapseToggle: React.FC<CollapseToggleProps> = props => {
-  const glyph = props.isCollapsed ? GLYPHS.closed : GLYPHS.opened;
-  return (
-    <CollapseButton onClick={props.onClick}>
-      <StyledIcon light glyph={glyph} styledWidth="10px" styledHeight="10px" />
-    </CollapseButton>
-  );
-};
-
-const CollapseButton = styled.button`
-  background: none;
-  border: none;
-  padding: 7px;
+const CollapseToggle = styled(Button).attrs(props => ({
+  renderIcon: () => (
+    <StyledIcon
+      light
+      glyph={props.isCollapsed ? GLYPHS.closed : GLYPHS.opened}
+      styledWidth="10px"
+      styledHeight="10px"
+    />
+  )
+}))<{ isCollapsed: boolean }>`
+  min-height: 0px;
+  padding: 0.7em;
+  background: transparent;
+  border: 0px;
 `;
 
 const BoxWrap = styled.div`
@@ -149,8 +145,8 @@ const BoxTitleBar = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 0.7em 0.4em;
   border-bottom: 1px solid ${p => p.theme.darkLighter};
+  padding-left: 0.4em;
 `;
 
 const BoxTitle = styled(Text).attrs({
@@ -158,7 +154,7 @@ const BoxTitle = styled(Text).attrs({
   bold: true
 })`
   flex-grow: 1;
-  padding: 0 0.5em;
+  padding: 0.7em 0.4em;
 `;
 
 const BoxIcon = styled(StyledIcon).attrs({

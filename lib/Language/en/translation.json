@@ -1559,6 +1559,13 @@
       "left": "Left",
       "right": "Right",
       "select": "Select a date"
+    },
+    "dateLocationFilter": {
+      "filter": "Filter date by location",
+      "cancel": "Cancel",
+      "location": "Now showing available imagery for {{latitude}}, {{longitude}}",
+      "mouseTooltipTitle": "Select location",
+      "mouseTooltipMessage": "Right click to cancel"
     }
   }
 }
