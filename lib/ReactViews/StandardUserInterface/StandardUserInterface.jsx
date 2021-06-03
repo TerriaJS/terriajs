@@ -248,7 +248,7 @@ const StandardUserInterface = observer(
         !this.shouldUseMobileInterface();
       const showStoryPanel =
         this.props.terria.configParameters.storyEnabled &&
-        this.props.terria.stories.length &&
+        this.props.terria.stories.length > 0 &&
         this.props.viewState.storyShown &&
         !this.props.viewState.explorerPanelIsVisible &&
         !this.props.viewState.storyBuilderShown;
@@ -393,7 +393,6 @@ const StandardUserInterface = observer(
                   </section>
                 </div>
               </div>
-
               <If condition={!this.props.viewState.hideMapUi}>
                 <Medium>
                   <TrainerBar
@@ -415,13 +414,11 @@ const StandardUserInterface = observer(
                   />
                 </If>
               </Medium>
-
               <Notification viewState={this.props.viewState} />
               <MapInteractionWindow
                 terria={terria}
                 viewState={this.props.viewState}
               />
-
               <If
                 condition={
                   !customElements.feedback.length &&
@@ -432,7 +429,6 @@ const StandardUserInterface = observer(
               >
                 <FeedbackForm viewState={this.props.viewState} />
               </If>
-
               <div
                 className={classNames(
                   Styles.featureInfo,
