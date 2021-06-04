@@ -188,6 +188,11 @@ const Container = styled.div`
   top: -50px;
 `;
 
-const FilterButton = styled(Button).attrs({ shortMinHeight: true })``;
+const FilterButton = styled(Button).attrs({ shortMinHeight: true })`
+  &:hover,
+  &:focus {
+    opacity: 1;
+  }
+`;
 
 export default LocationPicker;

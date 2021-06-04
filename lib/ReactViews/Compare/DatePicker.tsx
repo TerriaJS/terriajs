@@ -17,9 +17,11 @@ import DateTimePicker, {
   GridBody
 } from "../BottomDock/Timeline/DateTimePicker";
 
+type Side = "left" | "right";
+
 type PropsType = {
   item: Comparable | undefined;
-  side: "left" | "right";
+  side: Side;
 };
 
 const lightTheme = (theme: DefaultTheme) => ({
@@ -61,7 +63,7 @@ const DatePicker: React.FC<PropsType> = observer(props => {
   };
 
   return (
-    <Container>
+    <Container side={props.side}>
       <PrevButton
         disabled={item.isPreviousDiscreteTimeAvailable === false}
         onClick={() => item.moveToPreviousDiscreteTime(CommonStrata.user)}
@@ -98,15 +100,6 @@ function getFormattedDate(date: Date, format?: string): string {
   return format ? dateFormat(date, format) : formatDateTime(date);
 }
 
-const Container = styled.div`
-  position: relative;
-  display: flex;
-  justify-items: space-between;
-  width: 250px;
-  max-width: 100%;
-  padding: 0 10px;
-`;
-
 const PagerButton = styled(Button).attrs({
   iconProps: {
     css: "margin-right:0;"
@@ -120,6 +113,19 @@ const PagerButton = styled(Button).attrs({
 
   ${({ theme }) => theme.centerWithFlex()}
   flex-direction: column;
+
+  &[disabled] {
+    opacity: 1;
+    background: white;
+    svg {
+      opacity: 0.3;
+    }
+  }
+
+  &:hover,
+  &:focus {
+    opacity: 1;
+  }
 `;
 
 const PrevButton = styled(PagerButton).attrs({
@@ -132,7 +138,7 @@ const PrevButton = styled(PagerButton).attrs({
     />
   )
 })`
-  border-right: 1px solid rgba(37, 56, 88, 0.24);
+  border-right: 0px;
   ${({ theme }) => theme.borderRadiusLeft(theme.radius40Button)}
 `;
 
@@ -146,11 +152,13 @@ const NextButton = styled(PagerButton).attrs({
     />
   )
 })`
-  border-left: 1px solid rgba(37, 56, 88, 0.24);
+  border-left: 0px;
   ${({ theme }) => theme.borderRadiusRight(theme.radius40Button)}
 `;
 
-const DatePickerButton = styled(Button).attrs({ shortMinHeight: true })<{
+const DatePickerButton = styled(Button).attrs({
+  shortMinHeight: true
+})<{
   isOpen: boolean;
 }>`
   z-index: 0;
@@ -158,7 +166,13 @@ const DatePickerButton = styled(Button).attrs({ shortMinHeight: true })<{
   ${props => props.isOpen && `z-index: 1000;`};
   background-color: white;
   border-radius: 0px;
+  border-width: 0 1px 0 1px;
   padding: 0;
+
+  &:hover,
+  &:focus {
+    opacity: 1;
+  }
 `;
 
 const Prefix = styled.span`
@@ -168,9 +182,11 @@ const Prefix = styled.span`
 `;
 
 const StyledDateTimePicker = styled(DateTimePicker)`
+  width: 100%;
+
   > .inner {
     box-sizing: border-box;
-    width: 250px;
+    width: 100%;
     height: 250px;
     top: -216px; // height - DatePickerButton height
     padding-left: 0px;
@@ -222,10 +238,22 @@ const SelectedTimeMarker = styled(StyledIcon).attrs({
 const PickerContainer = styled.div<{ isOpen: boolean }>`
   display: ${p => (p.isOpen ? "block" : "none")};
   position: absolute;
+  width: 100%;
 
   & > ${StyledDateTimePicker} {
     position: absolute;
   }
+`;
+
+const Container = styled.div<{ side: Side }>`
+  position: relative;
+  display: flex;
+  justify-items: space-between;
+  width: 270px;
+  max-width: 100%;
+  padding: 0;
+
+  ${p => (p.side === "left" ? "margin-right: 20px;" : "margin-left: 20px;")}
 `;
 
 export default DatePicker;
