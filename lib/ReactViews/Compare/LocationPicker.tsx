@@ -78,21 +78,63 @@ const LocationPicker: React.FC<PropsType> = observer(props => {
         />
       )}
       {showTooltip && mapContainer && (
-        <MouseTooltip mapContainer={mapContainer} onCancel={cancelPicking} />
+        <>
+          <MouseTooltip mapContainer={mapContainer} />
+          <PickCanceller
+            mapContainer={mapContainer}
+            cancelPicking={cancelPicking}
+          />
+        </>
       )}
     </Container>
   );
 });
 
-type MouseTooltipProps = {
+type PickCancellerProps = {
   mapContainer: HTMLElement;
-  onCancel: () => void;
+  cancelPicking: () => void;
 };
 
-const MouseTooltip: React.FC<MouseTooltipProps> = ({
-  mapContainer,
-  onCancel
+/**
+ * Watches for DOM events that cancel the picking
+ */
+const PickCanceller: React.FC<PickCancellerProps> = ({
+  cancelPicking,
+  mapContainer
 }) => {
+  const cancellationTimer = useRef<number | undefined>(undefined);
+
+  useEffect(() => {
+    const cancelPickingAfterTimeout = () =>
+      // cancel picking after the mouse is out for 400msecs
+      (cancellationTimer.current = window.setTimeout(cancelPicking, 400));
+
+    const clearCancellationTimer = () => {
+      // clear the cancel timeout if the mouse enters before the timeout
+      if (cancellationTimer.current !== undefined)
+        window.clearTimeout(cancellationTimer.current);
+    };
+
+    document.addEventListener("contextmenu", cancelPicking);
+    mapContainer.addEventListener("mouseleave", cancelPickingAfterTimeout);
+    mapContainer.addEventListener("mouseenter", clearCancellationTimer);
+    return () => {
+      document.removeEventListener("contextmenu", cancelPicking);
+      mapContainer.removeEventListener("mouseleave", cancelPickingAfterTimeout);
+      mapContainer.removeEventListener("mouseenter", clearCancellationTimer);
+    };
+  });
+  return null;
+};
+
+type MouseTooltipProps = {
+  mapContainer: HTMLElement;
+};
+
+/**
+ * Shows a tooltip that follows the mouse
+ */
+const MouseTooltip: React.FC<MouseTooltipProps> = ({ mapContainer }) => {
   const [t] = useTranslation();
   const [mousePosition, setMousePosition] = useState<
     { x: number; y: number } | undefined
@@ -102,11 +144,9 @@ const MouseTooltip: React.FC<MouseTooltipProps> = ({
     const listener = (ev: MouseEvent) =>
       setMousePosition({ x: ev.clientX, y: ev.clientY });
     mapContainer.addEventListener("mousemove", listener);
-    mapContainer.addEventListener("contextmenu", onCancel);
     mapContainer.style.cursor = "crosshair";
     return function onUnmount() {
       mapContainer.removeEventListener("mousemove", listener);
-      mapContainer.removeEventListener("contextmenu", onCancel);
       mapContainer.style.cursor = "auto";
     };
   }, []);
