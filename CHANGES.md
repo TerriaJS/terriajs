@@ -46,6 +46,7 @@ Change Log
 * GeoJSON Mixin based catalog items can now call an API to retrieve their data as well as fetching it from a url.
 * Changes to loadJson and loadJsonBlob to POST a request body rather than always make a GET request.
 * Added ApiRequestTraits, and refactor ApiTableCatalogItemTraits to use it. `apiUrl` is now `url`.
+* Adjusted styling of x-axis labels in feature info panel to prevent its clipping.
 * [The next improvement]
 
 #### 8.0.0-alpha.81
