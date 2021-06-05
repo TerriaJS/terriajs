@@ -396,7 +396,13 @@
       "geojson": "GeoJSON"
     },
     "chartData": "図表データ",
-    "userAddedData": "ユーザーが追加したデータ"
+    "userAddedData": "ユーザーが追加したデータ",
+    "readXml": {
+      "xmlError": "有効なXMLがファイルにありません。"
+    },
+    "googleAnalytics": {
+      "log": "Google Analytics によるトラッキングは無効になっています。 terria.configParameters.googleAnalyticsKey が設定されていません"
+    }
   },
   "analytics": {
     "selectExistingPolygon": "既存のポリゴンを選ぶ",
@@ -467,7 +473,8 @@
     "arcGisMapServerCatalogItem": {
       "dataDescription": "データの説明",
       "serviceDescription": "サービスの説明",
-      "copyrightText": "著作権"
+      "copyrightText": "著作権",
+      "name": "Esri ArcGISマップサーバー"
     },
     "userData": {
       "addingDataErrorMessage": "指定されたデータは無効であるか、期待された書式にしたがっていないため読み込むことができません。",
@@ -513,7 +520,14 @@
       "errorLoadingMessage": "このCKANカタログの定義には有効なフィルタークエリが含まれていません。",
       "errorLoadingTitle": "CKANカタログ読み込みエラー",
       "nameServer": "CKANサーバー",
-      "dataDescription": "データの説明"
+      "dataDescription": "データの説明",
+      "errorRetrievingUrlTitle": "CKAN URLを取得時にエラー",
+      "notCompatibleMessageII": "CKANのデータセットはサポートされたフォーマットで提供されるリソースがありません。",
+      "notCompatibleMessageI": "CKANデータセットには、ID {{resourceId}} を持つリソースがないか、サポートしているフォーマットではありません。",
+      "notCompatibleTitle": "互換性のあるリソースが見つかりません",
+      "invalidCkanMessage": "CKANサーバーから戻ってきたリソースには、package_idがありません。",
+      "invalidCkanTitle": "無効なCKANのリソースJSON",
+      "errorRetrievingUrlMessage": "URLをJSON: {{url}} で取得できません。"
     },
     "cesiumTerrain": {
       "errorRenderingMessage": "<p>3Dの描画中にエラーが発生しました。これはおそらく{{appName}}のバグか、システムやウェブブラウザに互換性がないことが原因です。作業を続けられるように2Dに切り替えます。以下の技術詳細情報を添えてこのエラーを{{email}}までご報告ください。</p>",
@@ -577,6 +591,31 @@
     "geoJson": {
       "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
       "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+    },
+    "arcGisMapServerCatalogGroup": {
+      "cors": "CORS",
+      "groupNotAvailableTitle": "グループはありません",
+      "invalidServiceTitle": "無効なArcGISマップサービス",
+      "name": "ArcGIS マップサーバーグループ"
+    },
+    "abs": {
+      "unexpectedFormatTitle": "対応していないデータフォーマット",
+      "groupNotAvailableTitle": "グループはありません",
+      "dataMergeErrorTitle": "データは統合できません",
+      "itemNotAvailableTitle": "アイテムがありません",
+      "nameGroup": "ABS.Stat データセットリスト",
+      "name": "ABS.Stat"
+    },
+    "arcGisFeatureServer": {
+      "groupNotAvailableTitle": "グループはありません",
+      "invalidServiceTitle": "無効なArcGISフィーチャーサービス",
+      "nameGroup": "ArcGISフィーチャーサーバーグループ",
+      "name": "ArcGISフィーチャーサーバー"
+    },
+    "arcGisService": {
+      "groupNotAvailableTitle": "グループはありません",
+      "invalidServerTitle": "無効なArcGISサーバー",
+      "name": "ArcGISサーバーグループ"
     }
   },
   "map": {
@@ -595,7 +634,48 @@
     },
     "cesium": {
       "unusalTilingScheme": "このデータセットは特殊なタイル化方式を使用しているため、2Dのマップでは表示できません。",
-      "notWebMercatorTilingScheme": "このデータセットはウェブメルカトル（EPSG:3857）図法をサポートしていないため、2Dのマップでは表示できません。"
+      "notWebMercatorTilingScheme": "このデータセットはウェブメルカトル（EPSG:3857）図法をサポートしていないため、2Dのマップでは表示できません。",
+      "failedToObtain": "画像タイル X: {{x}} Y: {{y}} Level: {{level}} の取得に失敗しました。",
+      "devError": "cesiumが必須です。"
+    },
+    "gnafAddressGeocoder": {
+      "score": "スコア",
+      "lat": "緯度",
+      "lon": "経度",
+      "matchedAddresses": "マッチした住所",
+      "postcode": "郵便番号",
+      "state": "州",
+      "suburb": "郊外",
+      "noAddresses2": "tableStructure にはアドレス列はありますが、アドレスがありません",
+      "noAddresses": "この tableStructure にはアドレスがありません",
+      "postOfficeBox": "私書箱",
+      "poBox": "私書箱"
+    },
+    "w3cToGeoJson": {
+      "containsUnsupportedFeatureType": "W3Cジオメトリ付きのGeoRSSがサポートしていないフィーチャータイプ: {{type}} を含んでいます"
+    },
+    "geoRssToGeoJson": {
+      "containsUnsupportedFeatureType": "GeoRSSがサポートしていないフィーチャータイプ: {{type}} を含んでいます"
+    },
+    "gmlToGeoJson": {
+      "containsUnsupportedFeatureType": "GMLがサポートしていないフィーチャータイプ: {{type}} を含んでいます",
+      "missingPosList": "GMLポリゴンの外側リングはposListにありません。",
+      "missingExteriorRing": "GMLポリゴンが外部リングから抜け落ちています。",
+      "missingPos": "GMLポイント要素がpos要素にありません。"
+    },
+    "computeRingWindingOrder": {
+      "devError": "正しいポイントのタイプ {x:number, y:number}"
+    },
+    "addressGeocoder": {
+      "devError": "bulkConvertAddresses が derived class で実装されている必要があります。"
+    },
+    "mapboxVectorTileImageryProvider": {
+      "moreThanFourTiles": "画像供給元の画像範囲と minimumLevel は最小レベルで {{tileCount}} タイルあるようです. 最小レベルで4タイル以上を提供する画像共有元はサポートしていません。",
+      "requireStyles": "MapboxVectorTileImageryProvider は options.styleFunc として渡されるスタイリング関数が必要です",
+      "requireLayerName": "MapboxVectorTileImageryProvider は options.layerName として渡されるレイヤ名が必要です"
+    },
+    "imageryProviderHooks": {
+      "devError": "画像の色の塗り替えのためのコンテクストがありません。"
     }
   }
 }
