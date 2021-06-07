@@ -584,34 +584,30 @@ export default class TableStyle {
       );
     }
 
+    const finishDates: (JulianDate | null)[] = [];
+
     // Otherwise estimate a final duration value to calculate the end date for groups
     // that have only one row. Fallback to a global default if an estimate
     // cannot be found.
-    let finalDurationSeconds = DEFAULT_FINAL_DURATION_SECONDS;
     for (let i = 0; i < this.rowGroups.length; i++) {
       const rowIds = this.rowGroups[i][1];
-      const startDates = rowIds.map(
-        id => timeColumn.valuesAsJulianDates.values[id]
+      const sortedStartDates = sortedUniqueDates(
+        rowIds.map(id => timeColumn.valuesAsJulianDates.values[id])
       );
-      const sortedStartDates = sortedUniqueDates(startDates);
-      const finalDuration = estimateFinalDurationSeconds(sortedStartDates);
-      if (finalDuration) {
-        finalDurationSeconds = finalDuration;
-        break;
-      }
-    }
+      const finalDuration =
+        estimateFinalDurationSeconds(sortedStartDates) ??
+        DEFAULT_FINAL_DURATION_SECONDS;
 
-    const finishDates: (JulianDate | null)[] = [];
-    this.rowGroups.forEach(([groupId, rowIds]) => {
       const startDatesForGroup = rowIds.map(id => startDates[id]);
       const finishDatesForGroup = this.calculateFinishDatesFromStartDates(
         startDatesForGroup,
-        finalDurationSeconds
+        finalDuration
       );
       finishDatesForGroup.forEach((date, i) => {
         finishDates[rowIds[i]] = date;
       });
-    });
+    }
+
     return finishDates;
   }
 
@@ -642,6 +638,8 @@ export default class TableStyle {
     defaultFinalDurationSeconds: number
   ) {
     const sortedStartDates: JulianDate[] = sortedUniqueDates(startDates);
+    const lastDate = this.timeColumn?.valuesAsJulianDates.maximum;
+
     return startDates.map(date => {
       if (!date) {
         return null;
@@ -655,6 +653,8 @@ export default class TableStyle {
       const nextDate = sortedStartDates[nextDateIndex + 1];
       if (nextDate) {
         return nextDate;
+      } else if (this.timeTraits.spreadFinishTime && lastDate) {
+        return lastDate;
       } else {
         // This is the last date in the row, so calculate a final date
         const finalDurationSeconds =

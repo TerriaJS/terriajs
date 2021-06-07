@@ -243,10 +243,8 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
         : this.catalogItem.colorFieldName,
       // If aggregating time - use geopoint field
       // Otherwise use region field or geopoint field (in that order)
-      this.aggregateTime
-        ? this.catalogItem.geoPoint2dFieldName
-        : this.catalogItem.regionFieldName ??
-          this.catalogItem.geoPoint2dFieldName
+      this.catalogItem.geoPoint2dFieldName,
+      this.catalogItem.regionFieldName
     ]).join(", ");
   }
 
@@ -321,7 +319,8 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     return filterOutUndefined([
       this.timeColumn,
       this.colorColumn,
-      this.regionColumn ?? this.geoPoint2dColumn,
+      this.regionColumn,
+      this.geoPoint2dColumn,
       ...(!this.selectAllFields ? [] : this.otherColumns)
     ]);
   }
@@ -331,14 +330,23 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     return createStratumInstance(TableStyleTraits, {
       latitudeColumn: this.catalogItem.geoPoint2dFieldName ? "lat" : undefined,
       longitudeColumn: this.catalogItem.geoPoint2dFieldName ? "lon" : undefined,
+
       time: createStratumInstance(TableTimeStyleTraits, {
-        spreadStartTime: true,
+        spreadStartTime:
+          isDefined(this.maxPointSamples) && this.maxPointSamples === 1,
+        spreadFinishTime:
+          isDefined(this.maxPointSamples) && this.maxPointSamples === 1,
         timeColumn: this.timeColumn?.name,
         idColumns: this.catalogItem.geoPoint2dFieldName
           ? ["lat", "lon"]
           : undefined
       })
     });
+  }
+
+  /** Disable date time selector if there is only 1 sample per point */
+  @computed get disableDateTimeSelector() {
+    return isDefined(this.maxPointSamples) && this.maxPointSamples === 1;
   }
 
   @computed get availableFields() {
@@ -497,22 +505,16 @@ export default class OpenDataSoftCatalogItem
       if (records && records.length > 0) {
         const cols: { [key: string]: string[] } = {};
 
-        if (this.geoPoint2dFieldName && !this.regionFieldName) {
+        if (this.geoPoint2dFieldName) {
           cols["lat"] = new Array(records.length).fill("");
           cols["lon"] = new Array(records.length).fill("");
         }
         this.timeFieldName ? (cols[this.timeFieldName] = []) : null;
-        this.colorFieldName ? (cols[this.colorFieldName] = []) : null;
-        this.regionFieldName ? (cols[this.regionFieldName] = []) : null;
 
         records.forEach((record, index) =>
           Object.entries(record.record?.fields ?? {}).forEach(
             ([field, value]) => {
-              if (
-                !this.regionFieldName &&
-                field === this.geoPoint2dFieldName &&
-                isJsonObject(value)
-              ) {
+              if (field === this.geoPoint2dFieldName && isJsonObject(value)) {
                 cols.lat[index] = `${value.lat}` ?? "";
                 cols.lon[index] = `${value.lon}` ?? "";
               } else {

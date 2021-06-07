@@ -145,6 +145,11 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
   }
 
   @computed
+  get disableDateTimeSelector() {
+    return this.catalogItem.mapItems.length === 0 ? true : undefined;
+  }
+
+  @computed
   get initialTimeSource() {
     return "start";
   }

@@ -245,12 +245,20 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      */
     @computed
     get mapItems(): (DataSource | ImageryParts)[] {
+      const numRegions =
+        this.activeTableStyle.regionColumn?.uniqueValues.values.length ?? 0;
+      const numPoints = this.activeTableStyle.rowGroups.length;
+
+      if (numPoints > numRegions) {
+        const pointsDataSource = this.createLongitudeLatitudeDataSource(
+          this.activeTableStyle
+        );
+        return filterOutUndefined([pointsDataSource]);
+      }
+
       if (this.regionMappedImageryParts) return [this.regionMappedImageryParts];
 
-      const pointsDataSource = this.createLongitudeLatitudeDataSource(
-        this.activeTableStyle
-      );
-      return filterOutUndefined([pointsDataSource]);
+      return [];
     }
 
     // regionMappedImageryParts and regionMappedImageryProvider are split up like this so that we aren't re-creating the imageryProvider if things like `opacity` and `show` change
@@ -507,11 +515,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     @computed
     get isSampled(): boolean {
       return this.activeTableStyle.timeTraits.isSampled;
-    }
-
-    @computed
-    get disableDateTimeSelector() {
-      return this.mapItems.length === 0;
     }
 
     @computed
