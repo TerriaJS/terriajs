@@ -1562,6 +1562,7 @@
     },
     "dateLocationFilter": {
       "filter": "Filter date by location",
+      "loading": "Loading filter...",
       "cancel": "Cancel",
       "location": "Now showing available imagery for {{latitude}}, {{longitude}}",
       "mouseTooltipTitle": "Select location",

@@ -1,16 +1,15 @@
-import { action, reaction } from "mobx";
 import { observer } from "mobx-react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import PickedFeatures from "../../Map/PickedFeatures";
-import MapInteractionMode, { UIMode } from "../../Models/MapInteractionMode";
-import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
+import AnimatedSpinnerIcon from "../../Styled/AnimatedSpinnerIcon";
 import Button from "../../Styled/Button";
-import Text from "../../Styled/Text";
+import { TextSpan } from "../../Styled/Text";
 import CurrentLocation from "./CurrentLocation";
+import MousePickInteraction from "./MousePickInteraction";
 
 type PropsType = {
   viewState: ViewState;
@@ -18,221 +17,100 @@ type PropsType = {
   onPick: (pickedFeatures: PickedFeatures | undefined) => void;
 };
 
+type State = "init" | "picking" | "loading" | "picked";
+
 const LocationPicker: React.FC<PropsType> = observer(props => {
   const { viewState, location, onPick } = props;
   const [t] = useTranslation();
-  const [isPicking, setIsPicking] = useState(false);
-  const [showTooltip, setShowTooltip] = useState(false);
-  // Keeps track of current pick
-  const currentPick = useRef<PickedFeatures | undefined>(undefined);
-  const mapContainer = getHTMLElement(viewState.terria.mainViewer.mapContainer);
+  const [state, setState] = useState<State>("init");
 
-  const cancelPicking = () => {
-    setIsPicking(false);
-    setShowTooltip(false);
-    currentPick.current = undefined;
-  };
-
-  const toggleIsPicking = () => {
-    if (isPicking) {
-      cancelPicking();
-    } else {
-      setIsPicking(true);
-      setShowTooltip(true);
-    }
+  const setPicked = (picked: PickedFeatures | undefined) => {
+    setState("picked");
+    props.onPick(picked);
   };
 
   useEffect(() => {
-    if (isPicking) {
-      const disposer = startPickInteractionMode(
-        viewState.terria,
-        async pickedFeatures => {
-          currentPick.current = pickedFeatures;
-          setShowTooltip(false);
-          await pickedFeatures?.allFeaturesAvailablePromise;
-          setIsPicking(false);
-          // After awaiting, ignore this pick if a new currentPick was set
-          if (currentPick.current === pickedFeatures) {
-            onPick(pickedFeatures);
-            currentPick.current = undefined;
-          }
-        }
-      );
-      return disposer;
+    if (state === "picked" && location === undefined) {
+      setState("init");
     }
-  }, [isPicking]);
+  });
 
   return (
     <Container>
-      {location === undefined && (
-        <FilterButton primary onClick={toggleIsPicking}>
-          {isPicking
-            ? t("compare.dateLocationFilter.cancel")
-            : t("compare.dateLocationFilter.filter")}
+      {state === "init" && (
+        <FilterButton onClick={() => setState("picking")}>
+          {t("compare.dateLocationFilter.filter")}
         </FilterButton>
       )}
-      {location && !isPicking && (
+      {state === "picking" && (
+        <CancelButton onClick={() => setState("init")}>
+          {t("compare.dateLocationFilter.cancel")}
+        </CancelButton>
+      )}
+      {state === "loading" && (
+        <CancelButton onClick={() => setState("init")}>
+          <AnimatedSpinnerIcon
+            light
+            styledWidth="14px"
+            css={`
+              display: inline;
+              margin-right: 1em;
+            `}
+          />
+          {t("compare.dateLocationFilter.loading")}
+          <CancelText>{t("compare.dateLocationFilter.cancel")}</CancelText>
+        </CancelButton>
+      )}
+      {(state === "picking" || state === "loading") && (
+        <MousePickInteraction
+          terria={viewState.terria}
+          onLoadingPick={() => setState("loading")}
+          onCancelPick={() => setState("init")}
+          onFinishPick={setPicked}
+        />
+      )}
+      {state === "picked" && location && (
         <CurrentLocation
           location={location}
           onClear={() => onPick(undefined)}
         />
       )}
-      {showTooltip && mapContainer && (
-        <>
-          <MouseTooltip mapContainer={mapContainer} />
-          <PickCanceller
-            mapContainer={mapContainer}
-            cancelPicking={cancelPicking}
-          />
-        </>
-      )}
     </Container>
   );
 });
-
-type PickCancellerProps = {
-  mapContainer: HTMLElement;
-  cancelPicking: () => void;
-};
-
-/**
- * Watches for DOM events that cancel the picking
- */
-const PickCanceller: React.FC<PickCancellerProps> = ({
-  cancelPicking,
-  mapContainer
-}) => {
-  const cancellationTimer = useRef<number | undefined>(undefined);
-
-  useEffect(() => {
-    const cancelPickingAfterTimeout = () =>
-      // cancel picking after the mouse is out for 400msecs
-      (cancellationTimer.current = window.setTimeout(cancelPicking, 400));
-
-    const clearCancellationTimer = () => {
-      // clear the cancel timeout if the mouse enters before the timeout
-      if (cancellationTimer.current !== undefined)
-        window.clearTimeout(cancellationTimer.current);
-    };
-
-    document.addEventListener("contextmenu", cancelPicking);
-    mapContainer.addEventListener("mouseleave", cancelPickingAfterTimeout);
-    mapContainer.addEventListener("mouseenter", clearCancellationTimer);
-    return () => {
-      document.removeEventListener("contextmenu", cancelPicking);
-      mapContainer.removeEventListener("mouseleave", cancelPickingAfterTimeout);
-      mapContainer.removeEventListener("mouseenter", clearCancellationTimer);
-    };
-  });
-  return null;
-};
-
-type MouseTooltipProps = {
-  mapContainer: HTMLElement;
-};
-
-/**
- * Shows a tooltip that follows the mouse
- */
-const MouseTooltip: React.FC<MouseTooltipProps> = ({ mapContainer }) => {
-  const [t] = useTranslation();
-  const [mousePosition, setMousePosition] = useState<
-    { x: number; y: number } | undefined
-  >();
-
-  useEffect(function onMount() {
-    const listener = (ev: MouseEvent) =>
-      setMousePosition({ x: ev.clientX, y: ev.clientY });
-    mapContainer.addEventListener("mousemove", listener);
-    mapContainer.style.cursor = "crosshair";
-    return function onUnmount() {
-      mapContainer.removeEventListener("mousemove", listener);
-      mapContainer.style.cursor = "auto";
-    };
-  }, []);
-
-  return (
-    <>
-      {mousePosition && (
-        <Tooltip {...mousePosition}>
-          <Text bold textAlignCenter>
-            {t("compare.dateLocationFilter.mouseTooltipTitle")}
-          </Text>
-          <Text light>
-            {t("compare.dateLocationFilter.mouseTooltipMessage")}
-          </Text>
-        </Tooltip>
-      )}
-    </>
-  );
-};
-
-const Tooltip = styled.div.attrs<{
-  x: number;
-  y: number;
-}>(props => ({
-  style: { left: props.x + 10, top: props.y + 10 }
-}))`
-  position: fixed;
-  background: white;
-  padding: 5px;
-  border-radius: 3px;
-`;
-
-const startPickInteractionMode = action(
-  (terria: Terria, callback: (pick: PickedFeatures | undefined) => void) => {
-    // Add a new map interaction mode
-    const pickMode = new MapInteractionMode({
-      message: "foo",
-      messageAsNode: <div></div>,
-      uiMode: UIMode.Difference
-    });
-    terria.mapInteractionModeStack.push(pickMode);
-
-    // Setup a reaction to watch picking
-    const reactionDisposer = reaction(
-      () => pickMode.pickedFeatures,
-      (pick: PickedFeatures | undefined) => {
-        closePicker();
-        callback(pick);
-      }
-    );
-
-    const closePicker = action(() => {
-      // Remove the map interaction mode
-      terria.mapInteractionModeStack = terria.mapInteractionModeStack.filter(
-        mode => mode !== pickMode
-      );
-      reactionDisposer();
-    });
-
-    return closePicker;
-  }
-);
-
-function getHTMLElement(
-  elementOrSelector: string | HTMLElement | undefined
-): HTMLElement | undefined {
-  if (elementOrSelector instanceof HTMLElement) {
-    return elementOrSelector;
-  } else if (typeof elementOrSelector === "string") {
-    const element = document.querySelector(elementOrSelector);
-    return element instanceof HTMLElement ? element : undefined;
-  } else {
-    return undefined;
-  }
-}
 
 const Container = styled.div`
   position: absolute;
   top: -50px;
 `;
 
-const FilterButton = styled(Button).attrs({ shortMinHeight: true })`
+const FilterButton = styled(Button).attrs({
+  shortMinHeight: true,
+  primary: true
+})`
   &:hover,
   &:focus {
     opacity: 1;
   }
+`;
+
+const CancelButton = styled(Button).attrs({
+  shortMinHeight: true,
+  primary: true
+})`
+  &:hover,
+  &:focus {
+    opacity: 1;
+  }
+
+  & ${TextSpan} {
+    display: flex;
+  }
+`;
+
+const CancelText = styled.span`
+  margin-left: 1em;
+  text-decoration: underline;
 `;
 
 export default LocationPicker;
