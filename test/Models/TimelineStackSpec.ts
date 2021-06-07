@@ -1,6 +1,6 @@
 import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
 import { BaseModel } from "../../lib/Models/Model";
-import { autorun, runInAction, observable } from "mobx";
+import { autorun, runInAction, observable, when } from "mobx";
 import Terria from "../../lib/Models/Terria";
 
 describe("TimelineStack", function() {
@@ -17,6 +17,11 @@ describe("TimelineStack", function() {
     wms.setTrait("definition", "url", "test/WMS/period_datetimes.xml");
     await wms.loadMapItems();
     terria.timelineStack.addToTop(wms);
+    terria.timelineStack.activate();
+  });
+
+  afterEach(function() {
+    terria.timelineStack.deactivate();
   });
 
   it(" - is populated with items", async function() {
@@ -40,5 +45,19 @@ describe("TimelineStack", function() {
 
     terria.timelineStack.remove(wms2);
     expect(terria.timelineStack.top).toBe(wms);
+  });
+
+  it("automatically syncs the clock with the top item", async function() {
+    const wms2 = new WebMapServiceCatalogItem("test2", terria);
+    terria.addModel(wms2);
+    wms2.setTrait("definition", "url", "test/WMS/comma_sep_datetimes.xml");
+    wms2.setTrait("user", "isPaused", false);
+    await wms2.loadMapItems();
+    terria.timelineStack.addToTop(wms2);
+
+    terria.timelineStack.clock.shouldAnimate = true;
+    wms2.setTrait("user", "isPaused", true);
+    await when(() => terria.timelineStack.top?.isPaused === true);
+    expect(terria.timelineStack.clock.shouldAnimate).toBe(false);
   });
 });
