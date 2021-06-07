@@ -24,6 +24,7 @@ import CatalogMemberTraits from "../../Traits/CatalogMemberTraits";
 import MappableTraits from "../../Traits/MappableTraits";
 import SplitterTraits from "../../Traits/SplitterTraits";
 import { TimeFilterCoordinates } from "../../Traits/TimeFilterTraits";
+import Legend from "../Workbench/Controls/Legend";
 import DatePicker from "./DatePicker";
 import DimensionSelectors from "./DimensionSelectors";
 import ItemList, { MappableCatalogItem } from "./ItemList";
@@ -186,6 +187,7 @@ const Compare: React.FC<PropsType> = observer(props => {
             onChange={changeLeftItem}
           />
           {leftItem && <DimensionSelectors item={leftItem} />}
+          {leftItem && <Legend item={leftItem} />}
         </Box>
         <Box icon={GLYPHS.right} title={t("compare.rightPanel")}>
           <ItemSelector
@@ -198,6 +200,7 @@ const Compare: React.FC<PropsType> = observer(props => {
             onChange={changeRightItem}
           />
           {rightItem && <DimensionSelectors item={rightItem} />}
+          {rightItem && <Legend item={rightItem} />}
         </Box>
         <Box
           icon={GLYPHS.splitter}
