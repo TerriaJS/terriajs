@@ -45,7 +45,10 @@ const Container = styled.div`
   top: 0px;
   z-index: 100000;
   font-family: ${p => p.theme.fontPop}px;
+  display: flex;
+  flex-direction: column;
   width: ${p => p.theme.workbenchWidth}px;
+  height: 100vh;
   max-width: ${p => p.theme.workbenchWidth}px;
   box-sizing: border-box;
 `;
@@ -73,7 +76,13 @@ const Icon = styled(StyledIcon).attrs({
   light: true
 })``;
 
-const Content = styled.div``;
+const Content = styled.div`
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  ${p => p.theme.addTerriaScrollbarStyles()}
+`;
 
 const CloseButton = styled(Button).attrs({
   secondary: true
