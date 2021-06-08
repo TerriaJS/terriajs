@@ -4,6 +4,7 @@ import styled from "styled-components";
 import ViewState from "../ReactViewModels/ViewState";
 import Button from "./Button";
 import { GLYPHS, IconProps, StyledIcon } from "./Icon";
+import { addTerriaScrollbarStyles } from "./mixins";
 import Text from "./Text";
 
 type PropsType = {
@@ -81,7 +82,7 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 0;
-  ${p => p.theme.addTerriaScrollbarStyles()}
+  ${addTerriaScrollbarStyles()}
 `;
 
 const CloseButton = styled(Button).attrs({
