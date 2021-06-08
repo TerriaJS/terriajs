@@ -23,7 +23,6 @@ import DateTimeSelectorSection from "./Controls/DateTimeSelectorSection";
 import DimensionSelectorSection from "./Controls/DimensionSelectorSection";
 import DisplayAsPercentSection from "./Controls/DisplayAsPercentSection";
 import FilterSection from "./Controls/FilterSection";
-import LeftRightSection from "./Controls/LeftRightSection";
 import Legend from "./Controls/Legend";
 import OpacitySection from "./Controls/OpacitySection";
 import SatelliteImageryTimeFilterSection from "./Controls/SatelliteImageryTimeFilterSection";
@@ -167,7 +166,6 @@ export const WorkbenchItemRaw = observer(
                 viewState={this.props.viewState}
               />
               <OpacitySection item={workbenchItem} />
-              <LeftRightSection item={workbenchItem} />
               <TimerSection item={workbenchItem} />
               <If
                 condition={
