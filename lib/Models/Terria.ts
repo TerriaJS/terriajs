@@ -465,11 +465,6 @@ export default class Terria {
   @observable previewedItemId: string | undefined;
 
   /**
-   * Gets or sets the ID of the catalog item that is currently being compared.
-   */
-  @observable compareItemId: string | undefined;
-
-  /**
    * Base ratio for maximumScreenSpaceError
    * @type {number}
    */
