@@ -47,9 +47,9 @@ const Container = styled.div`
   font-family: ${p => p.theme.fontPop}px;
   display: flex;
   flex-direction: column;
-  width: ${p => p.theme.workbenchWidth}px;
+  width: ${p => p.theme.workflowPanelWidth}px;
   height: 100vh;
-  max-width: ${p => p.theme.workbenchWidth}px;
+  max-width: ${p => p.theme.workflowPanelWidth}px;
   box-sizing: border-box;
 `;
 

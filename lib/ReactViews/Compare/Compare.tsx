@@ -235,13 +235,13 @@ const Left = styled.div``;
 const Right = styled.div``;
 
 const MapOverlay = styled.div`
-  --map-width: calc(100% - ${p => p.theme.workbenchWidth}px);
+  --map-width: calc(100% - ${p => p.theme.workflowPanelWidth}px);
   width: var(--map-width);
   display: flex;
   justify-content: center;
 
   position: absolute;
-  left: ${p => p.theme.workbenchWidth}px;
+  left: ${p => p.theme.workflowPanelWidth}px;
   bottom: 40px;
   z-index: 1000;
 
