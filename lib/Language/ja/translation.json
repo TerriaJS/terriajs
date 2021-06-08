@@ -745,7 +745,8 @@
       "upload": "アップロード",
       "readyToUpload": "{{appName}}の変換サービスにアップロードする準備はできていますか？",
       "getConfirmationMessage": "このファイルは{{appName}}では直接サポートされていません。\n\n{{appName}}の変換サービスにアップロードしますか？ファイルサイズが小さく、かつzip化されたEsri ShapeファイルやMapInfo Tabファイルであればこの方法で表示できる可能性があります。",
-      "unsupportedFileTypeMessageII": "このファイルフォーマットは{{appName}}ではサポートされていません。直接サポートされているフォーマットは <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>  です。オンライン変換サービスを通してサポートされているファイルフォーマットは <ul><li>Shapefile (.zip)</li><li>MapInfo TAB (.zip)</li><li>その他の {{linkII}}</li></ul> などです。"
+      "unsupportedFileTypeMessageII": "このファイルフォーマットは{{appName}}ではサポートされていません。直接サポートされているフォーマットは <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>  です。オンライン変換サービスを通してサポートされているファイルフォーマットは <ul><li>Shapefile (.zip)</li><li>MapInfo TAB (.zip)</li><li>その他の {{linkII}}</li></ul> などです。",
+      "stubCreationFailure": "カタログアイテム {{item}} を消すことができません"
     },
     "ckan": {
       "idsNotSpecifiedMessage": "CkanCatalogItemではresourceIdかdatasetIdのどちらかが指定されている必要があります。",
@@ -781,7 +782,14 @@
       "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
       "errorLoadingMessage": "ArcGISポータルカタログの定義には、有効なフィルタクエリが含まれていません。",
       "errorLoadingTitle": "ArcGIS ポータルカタログの読み込みエラー",
-      "nameGroup": "ArcGISポータルグループ"
+      "nameGroup": "ArcGISポータルグループ",
+      "errorRetrievingUrlMessage": "URLがJSONで取得できませんでした: {{url}}.",
+      "errorRetrievingUrlTitle": "ArcGISポータルURL取得エラー",
+      "idsNotSpecifiedMessage": "ArcGISポータルアイテムは itemIdが必須です。",
+      "idsNotSpecifiedTitle": "resourceid または datasetid を指定してください",
+      "openInPortal": "ArcGISポータルで開く",
+      "licence": "ライセンス",
+      "name": "ArcGIS ポータルアイテム"
     },
     "cesiumTerrain": {
       "errorRenderingMessage": "<p>3Dの描画中にエラーが発生しました。これはおそらく{{appName}}のバグか、システムやウェブブラウザに互換性がないことが原因です。作業を続けられるように2Dに切り替えます。以下の技術詳細情報を添えてこのエラーを{{email}}までご報告ください。</p>",
@@ -840,14 +848,26 @@
       "name": "ArcGIS マップサーバーグループ"
     },
     "georss": {
-      "copyrightText": "著作権"
+      "copyrightText": "著作権",
+      "unableToLoadItemMessage": "`url`または `geoRss` プロパティが設定されていないため、GeoRSSカタログアイテムは読み込めません。",
+      "unableToLoadItemTitle": "利用できるGeoRSSがありません",
+      "errorLoadingTitle": "GeoRSSを読み込めません",
+      "author": "作成者",
+      "link": "リンク",
+      "description": "説明",
+      "category": "カテゴリー",
+      "updated": "アップデート済み",
+      "subtitle": "サブタイトル",
+      "name": "GeoRSS"
     },
     "arcGisFeatureServerCatalogGroup": {
       "copyrightText": "著作権",
       "serviceDescription": "サービスの説明",
       "dataDescription": "データの説明",
       "invalidServiceTitle": "無効なArcGISフィーチャーサービス",
-      "name": "ArcGISフィーチャーサーバーグループ"
+      "name": "ArcGISフィーチャーサーバーグループ",
+      "cors": "CORS",
+      "groupNotAvailableTitle": "グループはありません"
     },
     "userData": {
       "firefox": "Mozilla Firefox",
@@ -869,7 +889,18 @@
       "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
     },
     "csw": {
-      "name": "カタログサービス（CSW）"
+      "name": "カタログサービス（CSW）",
+      "missingUrlMessage": "カタロググループが `url`を持たないため、カタログサービス (CSW) を読み込めません。",
+      "missingUrlTitle": "カタログサービス (CSW) を読み込めません",
+      "cors": "CORS",
+      "metadataURL": "メタデータレコード URL",
+      "links": "リンク",
+      "dataResponsibility": "データに関する責任",
+      "errorLoadingRecordsTitle": "CSWレコードを読み込めません。",
+      "notUseableTitle": "カタログサービスが利用できません",
+      "errorLoadingTitle": "CSQを読み込めません",
+      "exceptionMessage": "CSWサーバーがエラーを報告しています:\n\n {{exceptionText}}",
+      "unknownError": "CSWサーバーが原因の特定できないエラーを報告しています。"
     },
     "csv": {
       "unableToLoadItemMessage": "このCSVのカタログアイテムには`url`または`csvString`プロパティが指定されていないため、読み込むことができません。",
@@ -896,15 +927,31 @@
     },
     "gpx": {
       "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
-      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
+      "errorLoadingTitle": "GPX読み込みエラー",
+      "name": "GPX"
     },
     "gltf": {
       "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
-      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
+      "unableToRetrieve": "以下からフィーチャーの詳細情報をとれません:\n\n{{url}}",
+      "error": "エラー",
+      "notSupportedErrorMessage": "\"{{name}}\" は2Dビューでは表示できません。  3Dに切り替えてもう一度お試しください。",
+      "notSupportedErrorTitle": "2Dではサポートされていません",
+      "name": "GL Transmission Format (glTF)"
     },
     "geoJson": {
       "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
-      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
+      "firefox": "Mozilla Firefox",
+      "chrome": "Google Chrome",
+      "internetExplorer": "Internet Explorer 11",
+      "unsupportedBrowserTitle": "サポートしていないウェブブラウザです",
+      "unableToLoadItemMessage": "GeoJSON カタログアイテムが読み込めません。`url`, `geoJsonData`, または `geoJsonString` プロパティが設定されていないためです。",
+      "unableToLoadItemTitle": "利用できるGeoJSONがありません",
+      "couldNotLoadTitle": "JSONを読み込めません",
+      "errorLoadingTitle": "GeoJSON読み込みエラー",
+      "name": "GeoJSON"
     },
     "arcGisFeatureServer": {
       "groupNotAvailableTitle": "グループはありません",
@@ -924,6 +971,37 @@
       "itemNotAvailableTitle": "アイテムがありません",
       "nameGroup": "ABS.Stat データセットリスト",
       "name": "ABS.Stat"
+    },
+    "imageryLayer": {
+      "resolvingAvailability": "アベイラビリティの問題を解決しています...",
+      "intervalSupportErrorMessage": "申し訳ありませんが、 {{typeName}} ({{type}}) カタログアイテムは、\"intervals\" プロパティを設定しても時間間隔の変更に対応していません。",
+      "intervalSupportErrorTitle": "インターバルはサポートしていません",
+      "unableToDisplayTitle": "データセットを表示できません",
+      "unknownTileErrorTitle": "不明なタイルエラー",
+      "tileErrorMessageII": "以下のURLから200 (OK) が返されました:\n{{url}}\nただし、画像としては読み込めません。",
+      "tileErrorTitle": "タイルエラー",
+      "accessingCatalogItemErrorTitle": "カタログアイテムにアクセスする際にエラーが発生しました",
+      "accessingBaseMapErrorTitle": "ベース地図にアクセスする際にエラーが発生しました"
+    },
+    "googleUrlShortener": {
+      "urlNotLocatedTitle": "短縮したスタートURLが見つかりません",
+      "unexpectedResult": "予期せぬURL短縮の結果になりました"
+    },
+    "getToken": {
+      "unableToRequest": "<p>トークンサーバーからトークンをリクエストできません。</p><p>以下のメールに報告して下さい: {{email}}</p>",
+      "invalidToken": "<p>トークンサーバーが無効なトークンだと報告しています。</p><p>以下のメールアドレスに報告して下さい {{email}}</p>",
+      "errorTitle": "トークンエラー"
+    },
+    "shapefile": {
+      "name": "Shapefile"
+    },
+    "function": {
+      "unknownFormaterMessage": "ファンクションパラメタフォーマッター {{formatter}} が不明です。\n\n有効なフォーマッターは:\n\n",
+      "unknownFormaterTitle": "不明なフォーマッター"
+    },
+    "createParameter": {
+      "unsupportedErrorMessage": "不明なパラメタタイプ: {{type}}.",
+      "unsupportedErrorTitle": "サポートしていないタイプのパラメタです"
     }
   },
   "map": {
