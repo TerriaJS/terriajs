@@ -557,7 +557,14 @@
       "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
     },
     "csw": {
-      "name": "カタログサービス（CSW）"
+      "name": "カタログサービス（CSW）",
+      "cors": "CORS",
+      "metadataURL": "メタデータレコード URL",
+      "links": "リンク",
+      "dataResponsibility": "データに関する責任",
+      "notUseableTitle": "カタログサービスが利用できません",
+      "exceptionMessage": "CSWサーバーがエラーを報告しています:\n\n {{exceptionText}}",
+      "unknownError": "CSWサーバーが原因の特定できないエラーを報告しています。"
     },
     "csv": {
       "unableToLoadMessage": "サポートされているCSVフォーマットについては <a href=\"https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au\">csv-geo-au</a> の仕様を参照してください。\n\n {{message}}",
@@ -582,15 +589,27 @@
     },
     "gpx": {
       "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
-      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
+      "errorLoadingTitle": "GPX読み込みエラー",
+      "name": "GPX"
     },
     "gltf": {
       "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
-      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
+      "unableToRetrieve": "以下からフィーチャーの詳細情報をとれません:\n\n{{url}}",
+      "error": "エラー",
+      "notSupportedErrorMessage": "\"{{name}}\" は2Dビューでは表示できません。  3Dに切り替えてもう一度お試しください。",
+      "notSupportedErrorTitle": "2Dではサポートされていません",
+      "name": "GL Transmission Format (glTF)"
     },
     "geoJson": {
       "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
-      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
+      "firefox": "Mozilla Firefox",
+      "unsupportedBrowserTitle": "サポートしていないウェブブラウザです",
+      "couldNotLoadTitle": "JSONを読み込めません",
+      "errorLoadingTitle": "GeoJSON読み込みエラー",
+      "name": "GeoJSON"
     },
     "arcGisMapServerCatalogGroup": {
       "cors": "CORS",
@@ -616,6 +635,30 @@
       "groupNotAvailableTitle": "グループはありません",
       "invalidServerTitle": "無効なArcGISサーバー",
       "name": "ArcGISサーバーグループ"
+    },
+    "imageryLayer": {
+      "tileErrorTitle": "タイルエラー",
+      "accessingCatalogItemErrorTitle": "カタログアイテムにアクセスする際にエラーが発生しました",
+      "accessingBaseMapErrorTitle": "ベース地図にアクセスする際にエラーが発生しました",
+      "intervalSupportErrorMessage": "申し訳ありませんが、 {{typeName}} ({{type}}) カタログアイテムは、\"intervals\" プロパティを設定しても時間間隔の変更に対応していません。",
+      "intervalSupportErrorTitle": "インターバルはサポートしていません",
+      "unableToDisplayTitle": "データセットを表示できません",
+      "unknownTileErrorTitle": "不明なタイルエラー"
+    },
+    "googleUrlShortener": {
+      "urlNotLocatedTitle": "短縮したスタートURLが見つかりません"
+    },
+    "getToken": {
+      "invalidToken": "<p>トークンサーバーが無効なトークンだと報告しています。</p><p>以下のメールアドレスに報告して下さい {{email}}</p>",
+      "errorTitle": "トークンエラー",
+      "unableToRequest": "<p>トークンサーバーからトークンをリクエストできません。</p><p>以下のメールに報告して下さい: {{email}}</p>"
+    },
+    "function": {
+      "unknownFormaterTitle": "不明なフォーマッター"
+    },
+    "createParameter": {
+      "unsupportedErrorMessage": "不明なパラメタタイプ: {{type}}.",
+      "unsupportedErrorTitle": "サポートしていないタイプのパラメタです"
     }
   },
   "map": {
