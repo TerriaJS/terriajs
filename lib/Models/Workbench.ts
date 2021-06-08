@@ -113,7 +113,6 @@ export default class Workbench {
     if (this.contains(item)) {
       return;
     }
-
     const targetItem: BaseModel = dereferenceModel(item);
 
     // Keep reorderable data sources (e.g.: imagery layers) below non-orderable ones (e.g.: GeoJSON).
@@ -167,13 +166,14 @@ export default class Workbench {
    *
    * @param item The item to add to or remove from the workbench.
    */
-  public async add(item: BaseModel | BaseModel[]): Promise<void> {
+  public async add(
+    item: BaseModel | BaseModel[],
+    index: number = 0
+  ): Promise<void> {
     if (Array.isArray(item)) {
-      await Promise.all(item.reverse().map(i => this.add(i)));
+      await Promise.all(item.reverse().map(i => this.add(i, index)));
       return;
     }
-
-    this.insertItem(item);
 
     try {
       if (ReferenceMixin.is(item)) {
@@ -188,8 +188,11 @@ export default class Workbench {
         ) {
           this.remove(item);
         } else if (target) {
-          return this.add(target);
+          return this.add(target, index);
         }
+      } else {
+        // Item is not a reference, so add the item
+        this.insertItem(item, index);
       }
 
       if (CatalogMemberMixin.isMixedInto(item)) await item.loadMetadata();

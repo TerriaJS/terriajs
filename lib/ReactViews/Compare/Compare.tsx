@@ -282,7 +282,8 @@ async function cloneItem(item: Comparable): Promise<string | undefined> {
   ref.setTrait(CommonStrata.user, "splitSourceItemId", item.uniqueId);
   try {
     terria.addModel(ref);
-    await terria.workbench.add(ref);
+    // Insert below the parent item in the workbench
+    await terria.workbench.add(ref, terria.workbench.indexOf(item) + 1);
   } catch (e) {
     return undefined;
   }
