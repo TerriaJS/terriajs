@@ -16,9 +16,9 @@ import {
   ObjectifiedYears
 } from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
 import Button, { RawButton } from "../../../Styled/Button";
+import Icon from "../../../Styled/Icon";
 import { scrollBars } from "../../../Styled/mixins";
 import Spacing from "../../../Styled/Spacing";
-import Icon, { StyledIcon } from "../../../Styled/Icon";
 import { formatDateTime } from "./DateFormats";
 
 const dateFormat = require("dateformat");
@@ -84,7 +84,7 @@ export const Grid = styled.div`
   margin-top: -20px;
 `;
 
-const GridHeading = styled.div`
+export const GridHeading = styled.div`
   text-align: center;
   color: ${(p: any) => p.theme.textLight};
   font-size: 12px;
@@ -165,6 +165,8 @@ interface PropsType extends WithTranslation {
   selectedTimeMarkerComponent?: React.ComponentType;
   // When showing list of times, scroll to the currently selected time
   scrollToSelectedTime?: boolean;
+  backIcon?: React.ComponentType;
+  closeIcon?: React.ComponentType;
 }
 
 type Granularity = "century" | "year" | "month" | "day" | "time" | "hour";
@@ -672,6 +674,9 @@ class DateTimePicker extends React.Component<PropsType> {
   }
 
   render() {
+    const BackIcon = this.props.backIcon;
+    const CloseIcon = this.props.closeIcon;
+
     if (this.props.dates) {
       const datesObject = this.props.dates;
       return (
@@ -700,11 +705,15 @@ class DateTimePicker extends React.Component<PropsType> {
                 type="button"
                 onClick={() => this.goBack()}
               >
-                <Icon glyph={Icon.GLYPHS.left} />
+                {BackIcon ? <BackIcon /> : <Icon glyph={Icon.GLYPHS.left} />}
               </BackButton>
               {this.props.showCloseButtonInTitle && (
                 <CloseButton onClick={() => this.closePicker()}>
-                  <Icon glyph={Icon.GLYPHS.close} />
+                  {CloseIcon ? (
+                    <CloseIcon />
+                  ) : (
+                    <Icon glyph={Icon.GLYPHS.close} />
+                  )}
                 </CloseButton>
               )}
               {!isDefined(this.currentDateIndice.century) &&

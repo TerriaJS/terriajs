@@ -14,7 +14,8 @@ import { formatDateTime } from "../BottomDock/Timeline/DateFormats";
 import DateTimePicker, {
   DateButton,
   Grid,
-  GridBody
+  GridBody,
+  GridHeading
 } from "../BottomDock/Timeline/DateTimePicker";
 
 type Side = "left" | "right";
@@ -89,6 +90,8 @@ const DatePicker: React.FC<PropsType> = observer(props => {
             showCloseButtonInTitle={true}
             selectedTimeMarkerComponent={SelectedTimeMarker}
             scrollToSelectedTime={true}
+            backIcon={BackIcon}
+            closeIcon={CloseIcon}
           />
         </ThemeProvider>
       </PickerContainer>
@@ -196,8 +199,12 @@ const StyledDateTimePicker = styled(DateTimePicker)`
       padding: 0px;
     }
 
-    > ${GridBody} {
-      height: 100%;
+    & ${GridHeading} {
+      font-weight: bold;
+      color: black;
+      padding-bottom: 10px;
+      margin-bottom: 5px;
+      border-bottom: 1px solid #c0c0c0;
     }
   }
 
@@ -213,12 +220,16 @@ const StyledDateTimePicker = styled(DateTimePicker)`
 
   & .time-grid ${DateButton} {
     width: 100%;
-    border-top: 1px solid #dfdfdf;
     border-radius: 0;
     margin: 0px;
     background: white;
     color: black;
 
+    border-top: 1px solid #dfdfdf;
+
+    &:first-child {
+      border-top: 0;
+    }
     &:last-child {
       border-bottom: 1px solid #dfdfdf;
     }
@@ -227,12 +238,29 @@ const StyledDateTimePicker = styled(DateTimePicker)`
 
 const SelectedTimeMarker = styled(StyledIcon).attrs({
   dark: true,
-  styledWidth: "14px",
+  styledWidth: "20px",
+  styledHeight: "20px",
   glyph: Icon.GLYPHS.selected
 })`
   display: inline;
   position: absolute;
   right: 0px;
+`;
+
+const BackIcon = styled(StyledIcon).attrs({
+  glyph: Icon.GLYPHS.leftSmall,
+  dark: true
+})`
+  width: 20px !important;
+  height: 20px !important;
+`;
+
+const CloseIcon = styled(StyledIcon).attrs({
+  glyph: Icon.GLYPHS.closeCircle,
+  dark: true
+})`
+  width: 20px !important;
+  height: 20px !important;
 `;
 
 const PickerContainer = styled.div<{ isOpen: boolean }>`
