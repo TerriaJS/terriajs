@@ -176,7 +176,7 @@ const Compare: React.FC<PropsType> = observer(props => {
         <Box>
           <InfoText>{t("compare.info")}</InfoText>
         </Box>
-        <Box icon={GLYPHS.left} title={t("compare.leftPanel")}>
+        <Box icon={GLYPHS.leftSmall} title={t("compare.leftPanel")}>
           <ItemSelector
             selectableItems={comparableItems}
             selectedItem={
@@ -189,7 +189,7 @@ const Compare: React.FC<PropsType> = observer(props => {
           {leftItem && <DimensionSelectors item={leftItem} />}
           {leftItem && <Legend item={leftItem} />}
         </Box>
-        <Box icon={GLYPHS.right} title={t("compare.rightPanel")}>
+        <Box icon={GLYPHS.rightSmall} title={t("compare.rightPanel")}>
           <ItemSelector
             selectableItems={comparableItems}
             selectedItem={
@@ -203,7 +203,7 @@ const Compare: React.FC<PropsType> = observer(props => {
           {rightItem && <Legend item={rightItem} />}
         </Box>
         <Box
-          icon={GLYPHS.splitter}
+          icon={GLYPHS.bothPanels}
           title={t("compare.bothPanels")}
           collapsible
           isCollapsed

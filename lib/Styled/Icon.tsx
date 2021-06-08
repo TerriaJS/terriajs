@@ -124,7 +124,11 @@ export const GLYPHS = {
   pedestrian: require("../../wwwroot/images/icons/pedestrian.svg"),
   minimize: require("../../wwwroot/images/icons/minimize.svg"),
   maximize: require("../../wwwroot/images/icons/maximize.svg"),
-  closeTool: require("../../wwwroot/images/icons/close-tool.svg")
+  closeTool: require("../../wwwroot/images/icons/close-tool.svg"),
+  leftSmall: require("../../wwwroot/images/icons/left-small.svg"),
+  rightSmall: require("../../wwwroot/images/icons/right-small.svg"),
+  bothPanels: require("../../wwwroot/images/icons/both-panels.svg"),
+  closeCircle: require("../../wwwroot/images/icons/close-circle.svg")
 };
 
 export interface IconProps {
