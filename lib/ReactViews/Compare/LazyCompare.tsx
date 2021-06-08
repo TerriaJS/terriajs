@@ -14,7 +14,7 @@ const LazyCompare: React.FC<PropsType> = observer(
     const terria = viewState.terria;
     const leftItemId = terria.compareLeftItemId;
     const rightItemId = terria.compareRightItemId;
-    return leftItemId || rightItemId ? (
+    return terria.showSplitter ? (
       <Suspense fallback={<></>}>
         <Compare
           viewState={viewState}
@@ -27,6 +27,7 @@ const LazyCompare: React.FC<PropsType> = observer(
             terria.compareRightItemId = id;
           })}
           onClose={action(() => {
+            terria.showSplitter = false;
             terria.compareLeftItemId = undefined;
             terria.compareRightItemId = undefined;
           })}
