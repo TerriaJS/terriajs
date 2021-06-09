@@ -34,6 +34,7 @@ import createStratumInstance from "../Models/createStratumInstance";
 import Feature from "../Models/Feature";
 import Model from "../Models/Model";
 import proxyCatalogItemUrl from "../Models/proxyCatalogItemUrl";
+import { SelectableDimension } from "../Models/SelectableDimensions";
 import Cesium3DTilesCatalogItemTraits from "../Traits/Cesium3DTilesCatalogItemTraits";
 import Cesium3dTilesTraits, {
   OptionsTraits
@@ -245,6 +246,10 @@ export default function Cesium3dTilesMixin<
 
       this.tileset.modelMatrix = this.modelMatrix;
       return [this.tileset];
+    }
+
+    @computed get selectableDimensions(): SelectableDimension[] {
+      return [...this.selectableDimensions, this.shadowDimension];
     }
 
     @computed
