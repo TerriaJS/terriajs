@@ -142,7 +142,12 @@ class Chart extends React.Component {
             numTicks={2}
             stroke="none"
             tickStroke="none"
-            tickLabelProps={() => textStyle}
+            tickLabelProps={() => ({
+              ...textStyle,
+              // nudge the tick label a bit to the left so that we can fit
+              // values up to 8 chars long without getting clipped
+              dx: "-2em"
+            })}
             label={this.props.xAxisLabel}
             labelOffset={3}
             labelProps={textStyle}
