@@ -3,7 +3,11 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.82)
+#### next release (8.0.0-alpha.83)
+
+* [The next improvement]
+
+#### 8.0.0-alpha.82
 
 - **Breaking changes**:
   - IndexedItemSearchProvider: (bounding) `radius` option is no longer supported in `resultsData.csv` of search indexes.
@@ -23,6 +27,7 @@ Change Log
 * Disabled pedestrian mode in mobile view.
 * Pedestrian mode will no longer respond to "wasd" keys when the user is typing in some input field.
 * Fix references to old `viewState.notification`.
+* wiring changeLanguage button to useTranslation hook so that it can be detected in client maps
 * Add `canZoomTo` to `TableMixin`
 * SDMX changes:
   * Add better SDMX server error messages
@@ -42,7 +47,10 @@ Change Log
 * Split `TableMixin` region mapping `ImageryParts` and `ImageryProvider` to improve opacity/show performance
 * Removed `useClipUpdateWorkaround` from Mapbox/Cesium TileLayers (for Leaflet) - because we no longer support IE
 * Fix overwriting `previewBaseMapId` with `initBaseMapId` by multiple `initData`.
-* [The next improvement]
+* GeoJSON Mixin based catalog items can now call an API to retrieve their data as well as fetching it from a url.
+* Changes to loadJson and loadJsonBlob to POST a request body rather than always make a GET request.
+* Added ApiRequestTraits, and refactor ApiTableCatalogItemTraits to use it. `apiUrl` is now `url`.
+* Adjusted styling of x-axis labels in feature info panel to prevent its clipping.
 
 #### 8.0.0-alpha.81
 
