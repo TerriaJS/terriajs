@@ -26,6 +26,7 @@ function ShadowMixin<T extends Constructor<Model<ShadowTraits>>>(Base: T) {
       }
     }
 
+    /** Shadow SelectableDimension. This has to be added to a catalog member's `selectableDimension` array */
     @computed
     get shadowDimension(): SelectableDimension {
       return {
