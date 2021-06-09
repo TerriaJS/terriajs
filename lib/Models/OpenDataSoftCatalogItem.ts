@@ -20,12 +20,12 @@ import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
+import { isValidDataset, ValidDataset } from "./OpenDataSoftCatalogGroup";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import SelectableDimensions from "./SelectableDimensions";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
 
-export type ValidDataset = Dataset & { dataset_id: string };
 type PointTimeSeries = {
   samples?: number;
   minTime?: Date;
@@ -129,14 +129,6 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     private readonly pointTimeSeries?: PointTimeSeries[]
   ) {
     super();
-  }
-
-  @computed get name() {
-    return this.dataset.metas?.default?.title ?? this.dataset.dataset_id;
-  }
-
-  @computed get description() {
-    return this.dataset.metas?.default?.description;
   }
 
   /** Find field to visualise by defautl (i.e. colorColumn)
@@ -381,10 +373,6 @@ function getGeoPointField(dataset: Dataset) {
 
 function getTimeField(dataset: Dataset) {
   return dataset.fields?.find(f => f.type === "datetime")?.name;
-}
-
-function isValidDataset(dataset: Dataset | undefined): dataset is ValidDataset {
-  return isDefined(dataset) && isDefined(dataset.dataset_id);
 }
 
 StratumOrder.addLoadStratum(OpenDataSoftDatasetStratum.stratumName);
