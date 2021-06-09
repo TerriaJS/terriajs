@@ -2,6 +2,7 @@ import { computed, runInAction } from "mobx";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
+import TerriaError from "../Core/TerriaError";
 import Model from "../Models/Model";
 import SelectableDimensions, {
   SelectableDimension
@@ -157,12 +158,11 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
             );
             const value = dim.options.find(o => o.id === selectedId)?.value;
             if (isDefined(value)) {
-              try {
-                updateModelFromJson(this, stratumId, value);
-              } catch (e) {
-                // Todo: handle error
-                console.log(e);
-              }
+              updateModelFromJson(this, stratumId, value).catchError(e =>
+                this.terria.raiseErrorToUser(
+                  TerriaError.from(e, "Failed to update catalog member model")
+                )
+              );
             }
           }
         })) ?? []
