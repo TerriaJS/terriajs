@@ -43,6 +43,7 @@ import DiscretelyTimeVaryingMixin, {
 } from "./DiscretelyTimeVaryingMixin";
 import ExportableMixin, { ExportData } from "./ExportableMixin";
 import { ImageryParts } from "./MappableMixin";
+import i18next from "i18next";
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
@@ -259,6 +260,15 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       if (this.regionMappedImageryParts) return [this.regionMappedImageryParts];
 
       return [];
+    }
+
+    @computed
+    get shortReport() {
+      return this.mapItems.length === 0 &&
+        this.chartItems.length === 0 &&
+        !this.isLoadingMapItems
+        ? i18next.t("models.tableData.noData")
+        : super.shortReport;
     }
 
     // regionMappedImageryParts and regionMappedImageryProvider are split up like this so that we aren't re-creating the imageryProvider if things like `opacity` and `show` change
