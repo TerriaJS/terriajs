@@ -1,4 +1,5 @@
 import createReactClass from "create-react-class";
+import { reaction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -89,15 +90,18 @@ const DataCatalogGroup = observer(
     },
 
     componentDidMount() {
-      if (this.props.group.isOpen) {
-        this.props.group.loadMembers();
-      }
+      this._cleanupLoadMembersReaction = reaction(
+        () => [this.props.group, this.isOpen()],
+        ([group, isOpen]) => {
+          if (isOpen) {
+            group.loadMembers();
+          }
+        }
+      );
     },
 
-    componentDidUpdate() {
-      if (this.props.group.isOpen) {
-        this.props.group.loadMembers();
-      }
+    componentWillUnmount() {
+      this._cleanupLoadMembersReaction();
     },
 
     render() {
