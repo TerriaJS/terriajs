@@ -3,6 +3,7 @@ import { DimensionOption, Dimension } from "../Models/SelectableDimensions";
 import primitiveTrait from "./primitiveTrait";
 import anyTrait from "./anyTrait";
 import objectArrayTrait from "./objectArrayTrait";
+import { JsonObject } from "../Core/Json";
 
 export class DimensionOptionTraits extends ModelTraits
   implements DimensionOption {
@@ -24,7 +25,7 @@ export class DimensionOptionTraits extends ModelTraits
     name: "Value",
     description: "Value (if this is undefined, `id` will be used)"
   })
-  value?: any;
+  value?: JsonObject;
 }
 
 export default class DimensionTraits extends ModelTraits implements Dimension {

@@ -137,6 +137,9 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       }
     }
 
+    /** Converts modelDimensions to selectableDimensions
+     * This will apply modelDimension JSON value to user stratum
+     */
     @computed
     get selectableDimensions(): SelectableDimension[] {
       return (
@@ -157,6 +160,7 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
               try {
                 updateModelFromJson(this, stratumId, value);
               } catch (e) {
+                // Todo: handle error
                 console.log(e);
               }
             }

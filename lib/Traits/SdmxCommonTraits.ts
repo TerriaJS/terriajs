@@ -2,10 +2,10 @@ import CatalogMemberTraits from "./CatalogMemberTraits";
 import DimensionTraits from "./DimensionTraits";
 import GroupTraits from "./GroupTraits";
 import mixTraits from "./mixTraits";
+import ModelTraits from "./ModelTraits";
 import objectArrayTrait from "./objectArrayTrait";
 import primitiveTrait from "./primitiveTrait";
 import UrlTraits from "./UrlTraits";
-import ModelTraits from "./ModelTraits";
 
 export class ReplaceStringTraits extends ModelTraits {
   @primitiveTrait({
