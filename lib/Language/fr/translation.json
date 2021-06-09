@@ -139,5 +139,11 @@
     "abs": {
       "itemNotAvailableMessage": "Une erreur s'est produite lors de l'appel de {{methodName}} sur le serveur ABS ITT. <p> Cette erreur peut indiquer que l'élément que vous avez ouvert est temporairement indisponible ou qu'il y a un problème avec votre connexion Internet. Essayez de rouvrir le groupe et si le problème persiste, veuillez le signaler en envoyant un courriel à {{email}}. </p>"
     }
+  },
+  "emptyWorkbench": {
+    "helpfulHintsThree": "Dans le plan de travail, vous pouvez activer et désactiver les ensembles de données, modifier leur opacité, activer la comparaison d'écran partagé, modifier les styles et parcourir les dates et les heures, si les données prennent en charge cette fonctionnalité.",
+    "helpfulHintsTwo": "Une fois que vous avez ajouté des données à la carte, vos ensembles de données actifs sont répertoriés ici dans votre plan de travail. Le plan de travail vous aidera à interagir avec les données.",
+    "helpfulHintsOne": "Parcourez les données disponibles en sélectionnant « Explorer les données cartographiques » ou cliquez sur « Télécharger » pour ajouter vos propres données à la carte.",
+    "helpfulHints": "Astuces utiles"
   }
 }
