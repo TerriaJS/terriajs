@@ -1,28 +1,11 @@
-import { Dimension, DimensionOption } from "../Models/SelectableDimensions";
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import DimensionTraits from "./DimensionTraits";
 import GroupTraits from "./GroupTraits";
 import mixTraits from "./mixTraits";
 import ModelTraits from "./ModelTraits";
 import objectArrayTrait from "./objectArrayTrait";
 import primitiveTrait from "./primitiveTrait";
 import UrlTraits from "./UrlTraits";
-
-export class DimensionOptionTraits extends ModelTraits
-  implements DimensionOption {
-  @primitiveTrait({
-    type: "string",
-    name: "ID",
-    description: "Option ID"
-  })
-  id?: string;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Name",
-    description: "Option name (human-readable)"
-  })
-  name?: string;
-}
 
 export class ReplaceStringTraits extends ModelTraits {
   @primitiveTrait({
@@ -38,51 +21,6 @@ export class ReplaceStringTraits extends ModelTraits {
     description: "String to replace with"
   })
   replace?: string;
-}
-
-export class DimensionTraits extends ModelTraits implements Dimension {
-  @primitiveTrait({
-    type: "string",
-    name: "ID",
-    description: "Dimension ID"
-  })
-  id?: string;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Name",
-    description: "Dimension name (human-readable)"
-  })
-  name?: string;
-
-  @objectArrayTrait({
-    type: DimensionOptionTraits,
-    idProperty: "id",
-    name: "Options",
-    description: "Dimension options"
-  })
-  options?: DimensionOptionTraits[];
-
-  @primitiveTrait({
-    type: "string",
-    name: "Selected ID",
-    description: "Selected Option's ID"
-  })
-  selectedId?: string;
-
-  @primitiveTrait({
-    type: "boolean",
-    name: "Allow undefined",
-    description: "Allow dimension to be undefined"
-  })
-  allowUndefined?: boolean;
-
-  @primitiveTrait({
-    type: "boolean",
-    name: "Disable dimension",
-    description: "Hides dimension"
-  })
-  disable?: boolean;
 }
 
 export type ModelOverrideType =
