@@ -3,12 +3,9 @@ import { observer } from "mobx-react";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import filterOutUndefined from "../../Core/filterOutUndefined";
-import TimeFilterMixin from "../../ModelMixins/TimeFilterMixin";
 import CommonStrata from "../../Models/CommonStrata";
 import { Comparable, isComparableItem } from "../../Models/Comparable";
 import hasTraits from "../../Models/hasTraits";
@@ -23,7 +20,6 @@ import WorkflowPanel, { Box } from "../../Styled/WorkflowPanel";
 import CatalogMemberTraits from "../../Traits/CatalogMemberTraits";
 import MappableTraits from "../../Traits/MappableTraits";
 import SplitterTraits from "../../Traits/SplitterTraits";
-import { TimeFilterCoordinates } from "../../Traits/TimeFilterTraits";
 import Legend from "../Workbench/Controls/Legend";
 import DatePicker from "./DatePicker";
 import DimensionSelectors from "./DimensionSelectors";
@@ -234,6 +230,9 @@ const Compare: React.FC<PropsType> = observer(props => {
 const Left = styled.div``;
 const Right = styled.div``;
 
+/**
+ * Overlays the children on top of the map
+ */
 const MapOverlay = styled.div`
   --map-width: calc(100% - ${p => p.theme.workflowPanelWidth}px);
   width: var(--map-width);
@@ -258,6 +257,9 @@ const MapOverlay = styled.div`
   }
 `;
 
+/**
+ * Find a Comparable item in the workbench with the given id.
+ */
 function findComparableItemById(
   workbench: Workbench,
   itemId: string
@@ -268,6 +270,9 @@ function findComparableItemById(
   return comparableItem ? (comparableItem as Comparable) : undefined;
 }
 
+/**
+ * Returns true if the item is a clone of some other item.
+ */
 function isCloneItem(item: BaseModel): boolean {
   return (
     item instanceof SplitItemReference ||
@@ -275,6 +280,9 @@ function isCloneItem(item: BaseModel): boolean {
   );
 }
 
+/**
+ * Create and return a clone of the given item, also add it to the workbench.
+ */
 async function cloneItem(item: Comparable): Promise<string | undefined> {
   const terria = item.terria;
   const cloneId = createGuid();
@@ -290,6 +298,10 @@ async function cloneItem(item: Comparable): Promise<string | undefined> {
   return cloneId;
 }
 
+/**
+ * If the given id is that of a clone, dereference it and return the id of
+ * the original item. Otherwise return the id.
+ */
 function sourceItemId(terria: Terria, id: string): string | undefined {
   const model = terria.getModelById(BaseModel, id);
   if (!model) return undefined;
@@ -299,6 +311,9 @@ function sourceItemId(terria: Terria, id: string): string | undefined {
   else return id;
 }
 
+/**
+ * Show the item on the given direction
+ */
 function showItem(item: BaseModel, direction: ImagerySplitDirection) {
   if (hasTraits(item, MappableTraits, "show"))
     item.setTrait(CommonStrata.user, "show", true);
@@ -306,6 +321,9 @@ function showItem(item: BaseModel, direction: ImagerySplitDirection) {
     item.setTrait(CommonStrata.user, "splitDirection", direction);
 }
 
+/**
+ * Hide the item
+ */
 function hideItem(item: BaseModel) {
   if (hasTraits(item, MappableTraits, "show"))
     item.setTrait(CommonStrata.user, "show", false);
@@ -318,26 +336,11 @@ function hideItem(item: BaseModel) {
   }
 }
 
+/**
+ * Remove item from terria
+ */
 function removeItem(item: BaseModel) {
   item.terria.removeModelReferences(item);
-}
-
-function locationFromTimeFilterCoordinates(
-  timeFilterCoordinates: TimeFilterCoordinates | undefined
-): Cartesian3 | undefined {
-  const longitude = timeFilterCoordinates?.longitude;
-  const latitude = timeFilterCoordinates?.latitude;
-  if (longitude === undefined || latitude === undefined) {
-    return undefined;
-  } else {
-    return Cartographic.toCartesian(
-      Cartographic.fromDegrees(longitude, latitude)
-    );
-  }
-}
-
-function canFilterDates(item: any) {
-  return TimeFilterMixin.isMixedInto(item) && item.canFilterTimeByFeature;
 }
 
 const InfoText = styled(Text).attrs({ medium: true, textAlignCenter: true })`

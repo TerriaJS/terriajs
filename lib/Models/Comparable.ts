@@ -12,6 +12,9 @@ export type Comparable = Model<
   MappableMixin.MappableMixin &
   CatalogMemberMixin.CatalogMemberMixin;
 
+/**
+ * Returns true if the item is Comparable.
+ */
 export function isComparableItem(item: any): item is Comparable {
   const isComparable =
     item &&

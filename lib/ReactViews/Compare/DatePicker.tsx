@@ -14,7 +14,6 @@ import { formatDateTime } from "../BottomDock/Timeline/DateFormats";
 import DateTimePicker, {
   DateButton,
   Grid,
-  GridBody,
   GridHeading
 } from "../BottomDock/Timeline/DateTimePicker";
 
@@ -33,6 +32,9 @@ const lightTheme = (theme: DefaultTheme) => ({
   overlay: "#cccccc"
 });
 
+/**
+ * A date picker component that controls the date of the given item.
+ */
 const DatePicker: React.FC<PropsType> = observer(props => {
   const [t] = useTranslation();
   const [isPickerOpen, setIsPickerOpen] = useState(false);
@@ -184,6 +186,8 @@ const Prefix = styled.span`
   }
 `;
 
+// As of now DateTimePicker does not provide a direct way to customize, so we
+// override style rules here to customize it from outside.
 const StyledDateTimePicker = styled(DateTimePicker)`
   width: 100%;
 

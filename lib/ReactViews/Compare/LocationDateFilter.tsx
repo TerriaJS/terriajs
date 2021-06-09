@@ -17,6 +17,10 @@ type PropsType = {
   rightItem?: Comparable;
 };
 
+/**
+ * A component that controls the time filters for the left & right items.
+ * Does nothing, if neither the left or right items are time filterable.
+ */
 const LocationDateFilter: React.FC<PropsType> = observer(props => {
   const leftItem: TimeFilterMixin.Instance | undefined =
     TimeFilterMixin.isMixedInto(props.leftItem) &&
@@ -43,7 +47,7 @@ const LocationDateFilter: React.FC<PropsType> = observer(props => {
   );
 
   const setLocationFromPick = (pickedFeatures: PickedFeatures | undefined) => {
-    // Find a feature matching left or right item
+    // Find a feature from the pickedFeatures matching left or right item
     const feature =
       (leftItem &&
         pickedFeatures?.features?.find(f =>
@@ -73,6 +77,9 @@ const LocationDateFilter: React.FC<PropsType> = observer(props => {
   );
 });
 
+/**
+ * Converts TimeFilterCoordinates to a Cartesian value
+ */
 function locationFromTimeFilterCoordinates(
   timeFilterCoordinates: TimeFilterCoordinates | undefined
 ): Cartesian3 | undefined {

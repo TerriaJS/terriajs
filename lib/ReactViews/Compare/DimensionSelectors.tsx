@@ -12,6 +12,9 @@ type PropsType = {
   item: Comparable;
 };
 
+/**
+ * This component shows a selector for every dimension the item has.
+ */
 const DimensionSelectors: React.FC<PropsType> = observer(({ item }) => {
   const selectableDimensions = findAllSelectableDimensions(item);
   return (

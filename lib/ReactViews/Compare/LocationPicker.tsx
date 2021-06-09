@@ -19,6 +19,9 @@ type PropsType = {
 
 type State = "init" | "picking" | "loading" | "picked";
 
+/**
+ * Component for picking a location on the map (using MapInteractionMode).
+ */
 const LocationPicker: React.FC<PropsType> = observer(props => {
   const { viewState, location, onPick } = props;
   const [t] = useTranslation();

@@ -8,6 +8,9 @@ type PropsType = {
   onChange: (id: string) => void;
 };
 
+/**
+ * An item selector component.
+ */
 const ItemSelector: React.FC<PropsType> = props => {
   const { selectableItems, selectedItem } = props;
   const [t] = useTranslation();
