@@ -5,8 +5,12 @@ Change Log
 
 #### next release (8.0.0-alpha.83)
 
+- **Breaking changes**:
+  - `EnumColorMap` will only be used for enum `TableColumns` with number of unique values <= number of bins 
+
 * Add `options` to CSV papaparsing
 * `TableMixin` will now only show points **or** region mapping - not both
+* Added `TableMixin` `filterDimension` - it will be displayed if `activeStyle` is set to a column which can't be used with a `ColorMap` (eg has more unique values than number of bins)
 * [The next improvement]
 
 #### 8.0.0-alpha.82
