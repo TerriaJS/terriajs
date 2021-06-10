@@ -1,6 +1,8 @@
 import { ApiClient, fromCatalog, Query } from "@opendatasoft/api-client";
 import { Dataset } from "@opendatasoft/api-client/dist/client/types";
 import { computed, runInAction } from "mobx";
+import { JulianDate } from "terriajs-cesium";
+import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import URI from "urijs";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
@@ -131,31 +133,17 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     super();
   }
 
-  /** Find field to visualise by defautl (i.e. colorColumn)
+  /** Find field to visualise by default (i.e. colorColumn)
    *  It will find the field in this order:
    * - First of type "double"
    * - First of type "int"
    * - First of type "text"
    */
   @computed get colorFieldName() {
-    // Filter out not useful fields
-    const fields =
-      this.dataset.fields?.filter(
-        f =>
-          ![
-            "id",
-            "name",
-            "lat",
-            "lon",
-            "long",
-            "latitude",
-            "longitude"
-          ].includes(f.name?.toLowerCase() ?? "")
-      ) ?? [];
     return (
-      fields.find(f => f.type === "double") ??
-      fields.find(f => f.type === "int") ??
-      fields.find(f => f.type === "text")
+      this.usefulFields.find(f => f.type === "double") ??
+      this.usefulFields.find(f => f.type === "int") ??
+      this.usefulFields.find(f => f.type === "text")
     )?.name;
   }
 
@@ -195,6 +183,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
 
   @computed get selectAllFields() {
     return (
+      (this.dataset.fields?.length ?? 0) <= 10 ||
       (isDefined(this.recordsCount) && this.recordsCount < 10000) ||
       !this.catalogItem.colorFieldName ||
       !(this.catalogItem.geoPoint2dFieldName || this.catalogItem.timeFieldName)
@@ -301,7 +290,8 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
         ?.map(f =>
           createStratumInstance(TableColumnTraits, {
             name: f.name,
-            title: f.label
+            title: f.label,
+            type: isIdField(f.name) ? "hidden" : undefined
           })
         ) ?? []
     );
@@ -336,9 +326,71 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     });
   }
 
+  @computed
+  get currentTime() {
+    if (!this.pointTimeSeries && this.catalogItem.geoPoint2dFieldName) return;
+
+    if (
+      !this.catalogItem.activeTableStyle.timeIntervals ||
+      !this.catalogItem.activeTableStyle.rowGroups
+    )
+      return;
+
+    // this.catalogItem.activeTableStyle.rowGroups.map(([id, rows]) => {
+    //   const intervals = filterOutUndefined(
+    //     rows.map(
+    //       rowId =>
+    //         this.catalogItem.activeTableStyle.timeIntervals![rowId] ?? undefined
+    //     )
+    //   );
+    // });
+
+    const intervals = filterOutUndefined(
+      this.pointTimeSeries?.map(p =>
+        p.minTime && p.maxTime
+          ? new TimeInterval({
+              start: JulianDate.fromDate(p.minTime),
+              stop: JulianDate.fromDate(p.maxTime)
+            })
+          : undefined
+      ) ?? []
+    );
+
+    if (intervals.length > 0) {
+      const totalInterval = intervals.reduce<TimeInterval | undefined>(
+        (intersection, current) =>
+          intersection
+            ? TimeInterval.intersect(intersection, current)
+            : current,
+        undefined
+      );
+
+      if (totalInterval && !totalInterval.isEmpty) {
+        return totalInterval.stop.toString();
+      }
+    }
+  }
+
   /** Disable date time selector if there is only 1 sample per point */
   @computed get disableDateTimeSelector() {
-    return isDefined(this.maxPointSamples) && this.maxPointSamples === 1;
+    return isDefined(this.maxPointSamples) && this.maxPointSamples === 1
+      ? true
+      : undefined;
+  }
+
+  @computed get usefulFields() {
+    return (
+      this.dataset.fields?.filter(
+        f =>
+          ["double", "int", "text"].includes(f.type ?? "") &&
+          !["lat", "lon", "long", "latitude", "longitude"].includes(
+            f.name?.toLowerCase() ?? ""
+          ) &&
+          !isIdField(f.name) &&
+          !isIdField(f.label) &&
+          f.name !== this.catalogItem.regionFieldName
+      ) ?? []
+    );
   }
 
   @computed get availableFields() {
@@ -348,16 +400,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
           id: "available-fieds",
           name: "Fields",
           selectedId: this.catalogItem.colorFieldName,
-          options: this.dataset.fields
-            ?.filter(
-              f =>
-                ["double", "int", "text"].includes(f.type ?? "") &&
-                !["lat", "lon", "long", "latitude", "longitude"].includes(
-                  f.name?.toLowerCase() ?? ""
-                ) &&
-                f.name !== this.catalogItem.regionFieldName
-            )
-            .map(f => ({ id: f.name, name: f.label }))
+          options: this.usefulFields.map(f => ({ id: f.name, name: f.label }))
         })
       ];
   }
@@ -365,6 +408,19 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
   @computed get activeStyle() {
     return this.catalogItem.colorFieldName;
   }
+}
+
+/** Column is hidden if the name starts or ends with `id` */
+function isIdField(...names: (string | undefined)[]) {
+  return names
+    .filter(isDefined)
+    .reduce<boolean>(
+      (hide, name) =>
+        hide ||
+        name.toLowerCase().startsWith("id") ||
+        name.toLowerCase().endsWith("id"),
+      false
+    );
 }
 
 function getGeoPointField(dataset: Dataset) {
@@ -539,7 +595,9 @@ export default class OpenDataSoftCatalogItem
           this.loadMapItems();
         }
       })) ?? []),
-      ...super.selectableDimensions
+      ...super.selectableDimensions.filter(
+        s => !this.availableFields || s.id !== "activeStyle"
+      )
     ];
   }
 }
