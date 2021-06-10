@@ -30,6 +30,12 @@ import Model from "../Models/Model";
 import proxyCatalogItemUrl from "../Models/proxyCatalogItemUrl";
 import { GeoJsonTraits } from "../Traits/GeoJsonTraits";
 import { Feature, FeatureCollection, GeoJsonObject } from "geojson";
+import DiscretelyTimeVaryingMixin, {
+  DiscreteTimeAsJS
+} from "./DiscretelyTimeVaryingMixin";
+import TimeIntervalCollection from "terriajs-cesium/Source/Core/TimeIntervalCollection";
+import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
+import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
 
 const formatPropertyValue = require("../Core/formatPropertyValue");
 const hashFromString = require("../Core/hashFromString");
@@ -53,7 +59,9 @@ type Coordinates = number[];
 export default function GeoJsonMixin<
   T extends Constructor<Model<GeoJsonTraits>>
 >(Base: T) {
-  abstract class GeoJsonMixin extends MappableMixin(UrlMixin(Base)) {
+  abstract class GeoJsonMixin extends DiscretelyTimeVaryingMixin(
+    MappableMixin(UrlMixin(Base))
+  ) {
     protected readonly zipFileRegex = /(\.zip\b)/i;
 
     readonly canZoomTo = true;
@@ -272,12 +280,42 @@ export default function GeoJsonMixin<
 
       return makeRealPromise<GeoJsonDataSource>(
         GeoJsonDataSource.load(geoJson, options)
-      ).then(function(dataSource) {
+      ).then(dataSource => {
         const entities = dataSource.entities;
         for (let i = 0; i < entities.values.length; ++i) {
           const entity = entities.values[i];
 
           const properties = entity.properties;
+
+          // Time
+          if (
+            isDefined(properties) &&
+            isDefined(this.timeProperty) &&
+            isDefined(this.discreteTimesAsSortedJulianDates)
+          ) {
+            const startTimeDiscreteTime = properties[this.timeProperty];
+            const startTimeIdx = this.discreteTimesAsSortedJulianDates?.findIndex(
+              t => t.tag === startTimeDiscreteTime.getValue()
+            );
+            const startTime = this.discreteTimesAsSortedJulianDates[
+              startTimeIdx
+            ];
+
+            if (isDefined(startTime)) {
+              const endTimeIdx = startTimeIdx + 1;
+              const endTime = this.discreteTimesAsSortedJulianDates[endTimeIdx];
+
+              entity.availability = new TimeIntervalCollection([
+                new TimeInterval({
+                  start: startTime.time,
+                  stop: endTime?.time ?? Iso8601.MAXIMUM_VALUE,
+                  isStopIncluded: false
+                })
+              ]);
+            }
+          }
+
+          // Billboard
           if (isDefined(entity.billboard) && isDefined(options.markerUrl)) {
             entity.billboard = new BillboardGraphics({
               image: new ConstantProperty(options.markerUrl),
@@ -393,6 +431,34 @@ export default function GeoJsonMixin<
         }
         return dataSource;
       });
+    }
+
+    @computed
+    get discreteTimes(): DiscreteTimeAsJS[] | undefined {
+      if (this.timeProperty === undefined || this.readyData === undefined) {
+        return undefined;
+      }
+      const discreteTimes: DiscreteTimeAsJS[] = [];
+      const addFeatureToDiscreteTimes = (geojson: GeoJsonObject) => {
+        if (geojson.type === "Feature") {
+          let feature = geojson as Feature;
+          if (feature.properties !== null && feature.properties !== undefined) {
+            discreteTimes.push({
+              time: feature.properties[this.timeProperty!],
+              tag: feature.properties[this.timeProperty!]
+            });
+          }
+        } else if (geojson.type === "FeatureCollection") {
+          const featureCollection = geojson as FeatureCollection;
+          featureCollection.features.forEach(feature =>
+            addFeatureToDiscreteTimes(feature)
+          );
+        }
+      };
+
+      addFeatureToDiscreteTimes((this.readyData as unknown) as GeoJsonObject);
+
+      return discreteTimes;
     }
 
     protected abstract async customDataLoader(

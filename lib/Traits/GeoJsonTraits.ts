@@ -1,5 +1,6 @@
 import anyTrait from "./anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import MappableTraits from "./MappableTraits";
 import mixTraits from "./mixTraits";
@@ -38,7 +39,8 @@ export class GeoJsonTraits extends mixTraits(
   FeatureInfoTraits,
   UrlTraits,
   MappableTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  DiscretelyTimeVaryingTraits
 ) {
   @objectTrait({
     type: StyleTraits,
@@ -63,4 +65,12 @@ export class GeoJsonTraits extends mixTraits(
     idProperty: "index"
   })
   perPropertyStyles: PerPropertyGeoJsonStyleTraits[] = [];
+
+  @primitiveTrait({
+    name: "Time property",
+    type: "string",
+    description:
+      "The property of each GeoJSON feature that specifies which point in time that feature is associated with. If not specified, it is assumed that the dataset is constant throughout time."
+  })
+  timeProperty?: string;
 }
