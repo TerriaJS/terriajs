@@ -1,7 +1,9 @@
-import { DomElement } from "domhandler";
 import React, { ReactElement } from "react";
 import Collapsible from "./Collapsible/Collapsible";
-import CustomComponent, { ProcessNodeContext } from "./CustomComponent";
+import CustomComponent, {
+  DomElement,
+  ProcessNodeContext
+} from "./CustomComponent";
 
 /**
  * A `<collapsible>` custom component, which displays a collapsible section
