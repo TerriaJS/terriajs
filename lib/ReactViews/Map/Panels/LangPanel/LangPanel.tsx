@@ -2,7 +2,6 @@ import React from "react";
 import Box from "../../../../Styled/Box";
 import { RawButton } from "../../../../Styled/Button";
 import Ul, { Li } from "../../../../Styled/List";
-import i18n from "i18next";
 
 import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
 import Terria from "../../../../Models/Terria";
@@ -14,13 +13,12 @@ import { useTranslation } from "react-i18next";
 const stripLangLocale = (lang: string = ""): string => lang.split("-")[0];
 
 type Props = {
-  i18n: typeof i18n;
   terria: Terria;
   smallScreen: boolean;
 };
 
 export default (props: Props) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   if (!props.terria.configParameters.languageConfiguration?.languages) {
     return null;
@@ -36,7 +34,7 @@ export default (props: Props) => {
       btnText={
         props.smallScreen
           ? t("languagePanel.changeLanguage")
-          : stripLangLocale(props.i18n.language)
+          : stripLangLocale(i18n.language)
       }
       mobileIcon={Icon.GLYPHS.globe}
       smallScreen={props.smallScreen}
