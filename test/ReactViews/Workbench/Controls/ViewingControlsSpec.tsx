@@ -25,6 +25,7 @@ describe("ViewingControls", function() {
       catalogSearchProvider: undefined,
       locationSearchProviders: []
     });
+    terria.configParameters.useExperimentalCompareWorkflow = true;
   });
 
   describe("compare", function() {

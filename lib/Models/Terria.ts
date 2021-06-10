@@ -253,6 +253,8 @@ interface ConfigParameters {
    * Minimum length of feedback comment.
    */
   feedbackMinLength?: number;
+
+  useExperimentalCompareWorkflow?: boolean;
 }
 
 interface StartOptions {
@@ -401,7 +403,8 @@ export default class Terria {
     persistViewerMode: true,
     openAddData: false,
     feedbackPreamble: "feedback.feedbackPreamble",
-    feedbackMinLength: 0
+    feedbackMinLength: 0,
+    useExperimentalCompareWorkflow: false
   };
 
   @observable

@@ -8,9 +8,11 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import styled from "styled-components";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
 import getPath from "../../../Core/getPath";
@@ -18,8 +20,10 @@ import TerriaError from "../../../Core/TerriaError";
 import PickedFeatures from "../../../Map/PickedFeatures";
 import ExportableMixin from "../../../ModelMixins/ExportableMixin";
 import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
+import addUserCatalogMember from "../../../Models/addUserCatalogMember";
 import CommonStrata from "../../../Models/CommonStrata";
 import getAncestors from "../../../Models/getAncestors";
+import SplitItemReference from "../../../Models/SplitItemReference";
 import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
@@ -161,6 +165,62 @@ const ViewingControls = observer(
       }, 50);
     },
 
+    splitItem() {
+      const { t } = this.props;
+      const item = this.props.item;
+      const terria = item.terria;
+
+      const splitRef = new SplitItemReference(createGuid(), terria);
+      runInAction(async () => {
+        if (item.splitDirection === ImagerySplitDirection.NONE) {
+          item.setTrait(
+            CommonStrata.user,
+            "splitDirection",
+            ImagerySplitDirection.RIGHT
+          );
+        }
+
+        splitRef.setTrait(
+          CommonStrata.user,
+          "splitSourceItemId",
+          item.uniqueId
+        );
+        terria.addModel(splitRef);
+        terria.showSplitter = true;
+
+        await splitRef.loadReference();
+        runInAction(() => {
+          const target = splitRef.target;
+          if (target) {
+            target.setTrait(
+              CommonStrata.user,
+              "name",
+              t("splitterTool.workbench.copyName", {
+                name: item.name
+              })
+            );
+
+            // Set a direction opposite to the original item
+            target.setTrait(
+              CommonStrata.user,
+              "splitDirection",
+              item.splitDirection === ImagerySplitDirection.LEFT
+                ? ImagerySplitDirection.RIGHT
+                : ImagerySplitDirection.LEFT
+            );
+          }
+        });
+
+        // Add it to terria.catalog, which is required so the new item can be shared.
+        addUserCatalogMember(terria, splitRef, {
+          open: false
+        });
+      });
+    },
+
+    /**
+     * Used only when terria.configParameters.useExperimentalCompareWorkflow is true
+     */
     compareItem() {
       runInAction(() => {
         this.props.viewState.terria.compareLeftItemId = this.props.item.uniqueId;
@@ -243,6 +303,12 @@ const ViewingControls = observer(
         !item.terria.configParameters.disableSplitter &&
         item.terria.currentViewer.canShowSplitter &&
         isComparableItem(item);
+
+      const compareOrSplitItem = () =>
+        viewState.terria.configParameters.useExperimentalCompareWorkflow
+          ? this.compareItem()
+          : this.splitItem();
+
       return (
         <ul ref={e => (this.menuRef = e)}>
           <If
@@ -263,7 +329,7 @@ const ViewingControls = observer(
           <If condition={canCompareItem}>
             <li>
               <ViewingControlMenuButton
-                onClick={this.compareItem}
+                onClick={compareOrSplitItem}
                 title={t("workbench.splitItemTitle")}
               >
                 <BoxViewingControl>

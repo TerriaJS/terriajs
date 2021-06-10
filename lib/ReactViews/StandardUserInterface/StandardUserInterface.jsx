@@ -401,9 +401,12 @@ const StandardUserInterface = observer(
                   />
                 </Medium>
               </If>
-              <Medium>
-                <LazyCompare viewState={this.props.viewState} />
-              </Medium>
+              {this.props.viewState.terria.configParameters
+                .useExperimentalCompareWorkflow && (
+                <Medium>
+                  <LazyCompare viewState={this.props.viewState} />
+                </Medium>
+              )}
               <Medium>
                 {/* I think this does what the previous boolean condition does, but without the console error */}
                 <If condition={this.props.viewState.isToolOpen}>
