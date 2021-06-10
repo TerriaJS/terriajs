@@ -406,7 +406,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return filterOutUndefined([
         this.regionColumnDimensions,
         this.regionProviderDimensions,
-        this.styleDimensions
+        this.styleDimensions,
+        this.filterDimension
       ]);
     }
 
@@ -422,14 +423,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return {
         id: "activeStyle",
         name: "Display Variable",
-        options: this.tableStyles
-          // .filter(style => style.colorColumn?.uniqueValues.values.length !== 0)
-          .map(style => {
-            return {
-              id: style.id,
-              name: style.title
-            };
-          }),
+        options: this.tableStyles.map(style => {
+          return {
+            id: style.id,
+            name: style.title
+          };
+        }),
         selectedId: this.activeStyle,
         setDimensionValue: (stratumId: string, styleId: string) => {
           this.setTrait(stratumId, "activeStyle", styleId);
@@ -511,6 +510,38 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         selectedId: this.activeTableStyle.regionColumn?.name,
         setDimensionValue: (stratumId: string, regionCol: string) => {
           this.defaultStyle.setTrait(stratumId, "regionColumn", regionCol);
+        }
+      };
+    }
+
+    /**
+     *
+     */
+    @computed
+    get filterDimension(): SelectableDimension | undefined {
+      if (
+        !this.activeTableStyle.filterAvailable ||
+        !this.activeTableStyle.colorColumn
+      ) {
+        return;
+      }
+
+      return {
+        id: "filterColumn",
+        name: `Filter by ${this.activeTableStyle.title}`,
+        allowUndefined: true,
+        options: this.activeTableStyle.colorColumn.sortedUniqueValues.map(
+          value => {
+            return {
+              id: value
+            };
+          }
+        ),
+        selectedId: this.activeTableStyle.styleTraits.filter,
+        setDimensionValue: (stratumId: string, value: string) => {
+          this.styles
+            .find(s => s.id === this.activeTableStyle.id)
+            ?.setTrait(stratumId, "filter", value);
         }
       };
     }

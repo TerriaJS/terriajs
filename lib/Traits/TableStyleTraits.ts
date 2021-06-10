@@ -85,6 +85,13 @@ export default class TableStyleTraits extends ModelTraits {
   })
   time?: TableTimeStyleTraits;
 
+  @primitiveTrait({
+    name: "Filter",
+    description: "filter",
+    type: "string"
+  })
+  filter?: string;
+
   static isRemoval(style: StratumFromTraits<TableStyleTraits>) {
     return style.title === null;
   }

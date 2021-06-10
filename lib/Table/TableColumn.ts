@@ -14,6 +14,8 @@ import TableColumnTraits, {
 } from "../Traits/TableColumnTraits";
 import TableTraits from "../Traits/TableTraits";
 import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
+const naturalSort = require("javascript-natural-sort");
+naturalSort.insensitive = true;
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
@@ -226,7 +228,8 @@ export default class TableColumn {
         n = null;
       } else {
         n = toNumber(values[i]);
-        if (n === null) {
+        // Only count as non number if value isn't actually null
+        if (value !== "null" && n === null) {
           ++numberOfNonNumbers;
         }
       }
@@ -512,6 +515,10 @@ export default class TableColumn {
       counts: countArray.map(a => a[1]),
       numberOfNulls: nullCount
     };
+  }
+
+  @computed get sortedUniqueValues() {
+    return this.uniqueValues.values.slice().sort(naturalSort);
   }
 
   @computed
@@ -819,8 +826,8 @@ const allCommas = /,/g;
 
 function toNumber(value: string): number | null {
   // Remove commas and try to parse as a number.
-  const withoutCommas = value.replace(allCommas, "");
-  if (withoutCommas.length === 0) {
+  const strippedValue = value.replace(allCommas, "").replace("$", "");
+  if (strippedValue.length === 0) {
     // Treat an empty string as not a number rather than as zero.
     return null;
   }
@@ -828,7 +835,7 @@ function toNumber(value: string): number | null {
   // `Number()` requires that the entire string form a number, unlike
   // parseInt and parseFloat which allow extra non-number characters
   // at the end.
-  const asNumber = Number(withoutCommas);
+  const asNumber = Number(strippedValue);
   if (!Number.isNaN(asNumber)) {
     return asNumber;
   }

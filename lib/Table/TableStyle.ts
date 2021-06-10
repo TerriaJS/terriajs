@@ -251,6 +251,18 @@ export default class TableStyle {
     return this.xAxisColumn !== undefined && this.chartTraits.lines.length > 0;
   }
 
+  /** Column can use EnumColorMap if type is enum, region or text AND the number of unique values is less than (or equal to) the number of bins */
+  @computed get isEnum() {
+    return (
+      !!this.colorColumn &&
+      (this.colorColumn.type === TableColumnType.enum ||
+        this.colorColumn.type === TableColumnType.region ||
+        this.colorColumn.type === TableColumnType.text) &&
+      this.colorColumn.uniqueValues.values.length <=
+        this.colorPalette.colors.length
+    );
+  }
+
   @computed
   get colorPalette(): ColorPalette {
     const colorColumn = this.colorColumn;
@@ -297,13 +309,7 @@ export default class TableStyle {
   get numberOfBins(): number {
     const colorColumn = this.colorColumn;
     if (colorColumn === undefined) return this.binMaximums.length;
-    if (
-      colorColumn.type === TableColumnType.enum ||
-      colorColumn.type === TableColumnType.region ||
-      colorColumn.type === TableColumnType.text
-    ) {
-      return colorColumn.uniqueValues.values.length;
-    } else if (colorColumn.type === TableColumnType.scalar) {
+    if (colorColumn.type === TableColumnType.scalar) {
       return colorColumn.uniqueValues.values.length < this.binMaximums.length
         ? colorColumn.uniqueValues.values.length
         : this.binMaximums.length;
@@ -422,16 +428,9 @@ export default class TableStyle {
             includeMinimumInThisBin: false
           };
         }),
-        nullColor: colorTraits.nullColor
-          ? Color.fromCssColorString(colorTraits.nullColor) ?? Color.TRANSPARENT
-          : Color.TRANSPARENT
+        nullColor: this.nullColor
       });
-    } else if (
-      colorColumn &&
-      (colorColumn.type === TableColumnType.enum ||
-        colorColumn.type === TableColumnType.region ||
-        colorColumn.type === TableColumnType.text)
-    ) {
+    } else if (colorColumn && this.isEnum) {
       const regionColor =
         Color.fromCssColorString(this.colorTraits.regionColor) ??
         Color.TRANSPARENT;
@@ -450,9 +449,7 @@ export default class TableStyle {
             };
           })
         ),
-        nullColor: colorTraits.nullColor
-          ? Color.fromCssColorString(colorTraits.nullColor) ?? Color.TRANSPARENT
-          : Color.TRANSPARENT
+        nullColor: this.nullColor
       });
     } else {
       // No column to color by, so use the same color for everything.
@@ -465,8 +462,31 @@ export default class TableStyle {
       } else if (colorId) {
         color = Color.fromCssColorString(getColorForId(colorId));
       }
+
+      if (this.styleTraits.filter) {
+        return new EnumColorMap({
+          enumColors: [{ value: this.styleTraits.filter, color }],
+          nullColor: Color.TRANSPARENT
+        });
+      }
+
       return new ConstantColorMap(color, this.tableModel.name);
     }
+  }
+
+  @computed get nullColor() {
+    return this.colorTraits.nullColor
+      ? Color.fromCssColorString(this.colorTraits.nullColor) ??
+          Color.TRANSPARENT
+      : Color.TRANSPARENT;
+  }
+
+  @computed
+  get filterAvailable() {
+    return (
+      !!this.colorColumn &&
+      !(this.colorColumn.type === TableColumnType.scalar || this.isEnum)
+    );
   }
 
   @computed
