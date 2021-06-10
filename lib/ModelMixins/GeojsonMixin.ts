@@ -169,8 +169,10 @@ export default function GeoJsonMixin<
         }
         const featurePropertiesEntires = Object.entries(featureProperties);
 
-        const matchedStyle = this.perPropertyStyles.find(style => {
-          const stylePropertiesEntries = Object.entries(style.properties);
+        const matchedStyles = this.perPropertyStyles.filter(style => {
+          const stylePropertiesEntries = Object.entries(
+            style.properties as any
+          );
 
           // For every key-value pair in the style, is there an identical one in the feature's properties?
           return stylePropertiesEntries.every(
@@ -186,10 +188,12 @@ export default function GeoJsonMixin<
           );
         });
 
-        if (matchedStyle !== undefined) {
-          for (let trait of Object.keys(matchedStyle.style.traits)) {
-            // @ts-ignore - TS can't tell that `trait` is of the correct index type for style
-            featureProperties[trait] = matchedStyle.style[trait];
+        if (matchedStyles !== undefined) {
+          for (let matched of matchedStyles) {
+            for (let trait of Object.keys(matched.style.traits)) {
+              // @ts-ignore - TS can't tell that `trait` is of the correct index type for style
+              featureProperties[trait] = matched.style[trait];
+            }
           }
         }
       } else if (geojson.type === "FeatureCollection") {

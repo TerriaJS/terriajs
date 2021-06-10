@@ -1,3 +1,4 @@
+import { JsonObject } from "../Core/Json";
 import anyTrait from "./anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
@@ -17,7 +18,7 @@ export class PerPropertyGeoJsonStyleTraits extends ModelTraits {
     description:
       "If the properties of a feature match these properties, then apply the style to that feature"
   })
-  properties?: any;
+  properties?: JsonObject;
 
   @objectTrait({
     name: "Style",
