@@ -33,7 +33,9 @@ const LocationPicker: React.FC<PropsType> = observer(props => {
   };
 
   useEffect(() => {
-    if (state === "picked" && location === undefined) {
+    if (state === "init" && location !== undefined) {
+      setState("picked");
+    } else if (state === "picked" && location === undefined) {
       setState("init");
     }
   });

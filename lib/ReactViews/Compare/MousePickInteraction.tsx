@@ -14,13 +14,16 @@ type PropsType = {
   onCancelPick: () => void;
 };
 
+/**
+ * A component implementing the mouse pick interaction using MapInteractionMode.
+ */
 const MousePickInteraction: React.FC<PropsType> = props => {
   const currentPick = useRef<PickedFeatures | undefined>(undefined);
   const mapContainer = getHTMLElement(props.terria.mainViewer.mapContainer);
   const [showTooltip, setShowTooltip] = useState<boolean>(true);
 
   useEffect(() => {
-    const disposer = startPickInteractionMode(
+    const disposer = setupPickInteractionMode(
       props.terria,
       async (pickedFeatures: PickedFeatures | undefined) => {
         props.onLoadingPick();
@@ -122,13 +125,17 @@ const Tooltip = styled.div.attrs<{
   border-radius: 3px;
 `;
 
-const startPickInteractionMode = action(
+/**
+ * Setsup the pick interaction mode returning a function to dispose the interaction.
+ */
+const setupPickInteractionMode = action(
   (terria: Terria, callback: (pick: PickedFeatures | undefined) => void) => {
     // Add a new map interaction mode
     const pickMode = new MapInteractionMode({
       message: "foo",
       messageAsNode: <div></div>,
-      uiMode: UIMode.Difference
+      uiMode: UIMode.Difference,
+      ignoreSplitterWhenPicking: true
     });
     terria.mapInteractionModeStack.push(pickMode);
 
@@ -136,7 +143,6 @@ const startPickInteractionMode = action(
     const reactionDisposer = reaction(
       () => pickMode.pickedFeatures,
       (pick: PickedFeatures | undefined) => {
-        closePicker();
         callback(pick);
       }
     );

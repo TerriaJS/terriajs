@@ -14,6 +14,9 @@ type CurrentLocationProps = {
   onClear: () => void;
 };
 
+/**
+ * A component showing the current selected location of the location filter.
+ */
 const CurrentLocation: React.FC<CurrentLocationProps> = ({
   location,
   onClear
