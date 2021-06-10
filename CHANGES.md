@@ -6,6 +6,8 @@ Change Log
 #### next release (8.0.0-alpha.83)
 
 * Add `modelDimensions` to `CatalogMemberMixin` - this can be used to apply model stratum with a `SelectableDimension` (i.e. a drop-down menu).
+* `GeoJsonMixin`-based catalog items can now be styled based on to their properties through traits.
+* `GeoJsonMixin`-based catalog items can now vary over time if a `timeProperty` is specified.
 * [The next improvement]
 
 #### 8.0.0-alpha.82
