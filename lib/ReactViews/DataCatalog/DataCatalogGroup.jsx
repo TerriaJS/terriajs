@@ -1,5 +1,5 @@
 import createReactClass from "create-react-class";
-import { reaction } from "mobx";
+import { comparer, reaction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -96,7 +96,8 @@ const DataCatalogGroup = observer(
           if (isOpen) {
             group.loadMembers();
           }
-        }
+        },
+        { equals: comparer.shallow, fireImmediately: true }
       );
     },
 
