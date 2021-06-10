@@ -446,9 +446,15 @@ export default function GeoJsonMixin<
       const addFeatureToDiscreteTimes = (geojson: GeoJsonObject) => {
         if (geojson.type === "Feature") {
           let feature = geojson as Feature;
-          if (feature.properties !== null && feature.properties !== undefined) {
+          if (
+            feature.properties !== null &&
+            feature.properties !== undefined &&
+            feature.properties[this.timeProperty!] !== undefined
+          ) {
             discreteTimes.push({
-              time: feature.properties[this.timeProperty!],
+              time: new Date(
+                `${feature.properties[this.timeProperty!]}`
+              ).toISOString(),
               tag: feature.properties[this.timeProperty!]
             });
           }

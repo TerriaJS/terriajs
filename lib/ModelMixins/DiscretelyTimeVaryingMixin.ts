@@ -107,19 +107,7 @@ function DiscretelyTimeVaryingMixin<
               tag: dt.tag !== undefined ? dt.tag : dt.time
             });
           }
-        } catch {
-          // It might just be a year rather than a full date
-          if (typeof dt.time === "number" || dt.time.length === 4) {
-            const asDateString = `${dt.time}-01-01T00:00:00`;
-            try {
-              const time = JulianDate.fromIso8601(asDateString);
-              asJulian.push({
-                time,
-                tag: dt.tag !== undefined ? dt.tag : dt.time
-              });
-            } catch {}
-          }
-        }
+        } catch {}
       }
       asJulian.sort((a, b) => JulianDate.compare(a.time, b.time));
       return asJulian;

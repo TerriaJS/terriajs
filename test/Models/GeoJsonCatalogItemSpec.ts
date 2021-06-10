@@ -1,4 +1,5 @@
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import loadJson from "../../lib/Core/loadJson";
 import loadText from "../../lib/Core/loadText";
@@ -338,4 +339,39 @@ describe("GeoJsonCatalogItem", function() {
   //     });
   //   });
   // });
+
+  describe("Support for time-varying geojson", () => {
+    it("Associates features with discrete times", async () => {
+      geojson.setTrait(
+        CommonStrata.user,
+        "url",
+        "test/GeoJSON/time-based.geojson"
+      );
+      geojson.setTrait(CommonStrata.user, "timeProperty", "year");
+      await geojson.loadMapItems();
+      expect(geojson.mapItems.length).toEqual(1);
+      const entities = geojson.mapItems[0].entities.values;
+      expect(entities.length).toEqual(2);
+
+      const entity1 = entities[0];
+      expect(
+        entity1.availability?.start.equals(
+          JulianDate.fromDate(new Date("2021"))
+        )
+      ).toBeTruthy();
+      expect(
+        entity1.availability?.stop.equals(Iso8601.MAXIMUM_VALUE)
+      ).toBeTruthy();
+
+      const entity2 = entities[1];
+      expect(
+        entity2.availability?.start.equals(
+          JulianDate.fromDate(new Date("2019"))
+        )
+      ).toBeTruthy();
+      expect(
+        entity2.availability?.stop.equals(JulianDate.fromDate(new Date("2021")))
+      ).toBeTruthy();
+    });
+  });
 });
