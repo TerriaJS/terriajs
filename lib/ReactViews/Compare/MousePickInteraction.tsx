@@ -44,9 +44,17 @@ const MousePickInteraction: React.FC<PropsType> = props => {
 
   useEffect(function cancelPick() {
     const cancelPicking = props.onCancelPick;
+    const cancelPickingIfTargetIsNotMap = (ev: MouseEvent) => {
+      if (ev.target !== mapContainer) {
+        cancelPicking();
+      }
+    };
+
     document.addEventListener("contextmenu", cancelPicking);
+    document.addEventListener("mousedown", cancelPickingIfTargetIsNotMap);
     return () => {
       document.removeEventListener("contextmenu", cancelPicking);
+      document.removeEventListener("mousedown", cancelPickingIfTargetIsNotMap);
     };
   });
 
