@@ -58,27 +58,13 @@ const MousePickInteraction: React.FC<PropsType> = props => {
     };
   });
 
-  return mapContainer ? (
+  return (
     <>
-      {showTooltip && <MouseTooltip mapContainer={mapContainer} />}
-      <PickCanceller
-        mapContainer={mapContainer}
-        cancelPicking={props.onCancelPick}
-      />
+      {mapContainer && showTooltip && (
+        <MouseTooltip mapContainer={mapContainer} />
+      )}
     </>
-  ) : null;
-};
-
-type PickCancellerProps = {
-  mapContainer: HTMLElement;
-  cancelPicking: () => void;
-};
-
-/**
- * Watches for DOM events that cancel the picking
- */
-const PickCanceller: React.FC<PickCancellerProps> = ({ cancelPicking }) => {
-  return null;
+  );
 };
 
 type MouseTooltipProps = {
