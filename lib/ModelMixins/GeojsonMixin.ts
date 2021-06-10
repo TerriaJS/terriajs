@@ -191,8 +191,9 @@ export default function GeoJsonMixin<
         if (matchedStyles !== undefined) {
           for (let matched of matchedStyles) {
             for (let trait of Object.keys(matched.style.traits)) {
-              // @ts-ignore - TS can't tell that `trait` is of the correct index type for style
-              featureProperties[trait] = matched.style[trait];
+              featureProperties[trait] =
+                // @ts-ignore - TS can't tell that `trait` is of the correct index type for style
+                matched.style[trait] ?? featureProperties[trait];
             }
           }
         }
