@@ -1659,6 +1659,8 @@ async function interpretHash(
             message: { key: "parsingStartDataErrorMessage" }
           });
         }
+      } else if (property === "useExperimentalCompareWorkflow") {
+        terria.configParameters.useExperimentalCompareWorkflow = true;
       } else if (defined(propertyValue) && propertyValue.length > 0) {
         userProperties.set(property, propertyValue);
       } else {
