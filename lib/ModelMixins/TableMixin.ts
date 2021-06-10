@@ -33,6 +33,7 @@ import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
 import TableTraits from "../Traits/TableTraits";
+import CatalogMemberMixin from "./CatalogMemberMixin";
 import ChartableMixin, {
   calculateDomain,
   ChartAxis,
@@ -51,7 +52,9 @@ import i18next from "i18next";
 class RegionProviderList extends JSRegionProviderList {}
 function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
   abstract class TableMixin
-    extends ExportableMixin(ChartableMixin(DiscretelyTimeVaryingMixin(Base)))
+    extends ExportableMixin(
+      ChartableMixin(DiscretelyTimeVaryingMixin(CatalogMemberMixin(Base)))
+    )
     implements SelectableDimensions {
     get hasTableMixin() {
       return true;
@@ -404,6 +407,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     @computed
     get selectableDimensions(): SelectableDimension[] {
       return filterOutUndefined([
+        ...super.selectableDimensions,
         this.regionColumnDimensions,
         this.regionProviderDimensions,
         this.styleDimensions,

@@ -8,8 +8,6 @@ import isDefined from "../Core/isDefined";
 import loadWithXhr from "../Core/loadWithXhr";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import ChartableMixin from "../ModelMixins/ChartableMixin";
-import MappableMixin from "../ModelMixins/MappableMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import TableAutomaticStylesStratum, {
   ColorStyleLegend
@@ -543,6 +541,10 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   @computed
   get selectableDimensions() {
     return filterOutUndefined([
+      // Filter out proceduresSelector - as it duplicates TableMixin.styleDimensions
+      ...super.selectableDimensions.filter(
+        dim => dim.id !== this.proceduresSelector?.id
+      ),
       this.proceduresSelector,
       this.observablesSelector
     ]);

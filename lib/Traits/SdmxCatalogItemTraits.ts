@@ -1,11 +1,12 @@
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import DimensionTraits from "./DimensionTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import MappableTraits from "./MappableTraits";
 import mixTraits from "./mixTraits";
 import objectArrayTrait from "./objectArrayTrait";
 import primitiveTrait from "./primitiveTrait";
-import SdmxCommonTraits, { DimensionTraits } from "./SdmxCommonTraits";
+import SdmxCommonTraits from "./SdmxCommonTraits";
 import TableTraits from "./TableTraits";
 import UrlTraits from "./UrlTraits";
 

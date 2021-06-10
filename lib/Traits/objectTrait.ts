@@ -75,6 +75,7 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
             message: `${propertyName} is not a valid sub-property of ${this.id}.`
           })
         );
+        return;
       }
 
       const subJsonValue = jsonValue[propertyName];

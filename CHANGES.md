@@ -11,6 +11,9 @@ Change Log
 * Add `options` to CSV papaparsing
 * `TableMixin` will now only show points **or** region mapping - not both
 * Added `TableMixin` `filterDimension` - it will be displayed if `activeStyle` is set to a column which can't be used with a `ColorMap` (eg has more unique values than number of bins)
+* Add `modelDimensions` to `CatalogMemberMixin` - this can be used to apply model stratum with a `SelectableDimension` (i.e. a drop-down menu).
+* `GeoJsonMixin`-based catalog items can now be styled based on to their properties through traits.
+* `GeoJsonMixin`-based catalog items can now vary over time if a `timeProperty` is specified.
 * [The next improvement]
 
 #### 8.0.0-alpha.82
