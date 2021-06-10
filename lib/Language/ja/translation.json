@@ -386,10 +386,23 @@
       "esri-featureServer": "Esri ArcGIS FeatureServer (単一レイヤ)",
       "esri-mapServer": "Esri ArcGIS MapServer (単一レイヤ)",
       "esri-group": "Esri ArcGIS サーバー",
-      "auto": "自動検出（推奨）"
+      "auto": "自動検出（推奨）",
+      "json": "JSON",
+      "gpx": "GPX",
+      "czml": "CZML",
+      "csv": "CSV",
+      "kml": "KMLまたはKMZ",
+      "geoRss": "GeoRSS",
+      "geojson": "GeoJSON"
     },
     "chartData": "図表データ",
-    "userAddedData": "ユーザーが追加したデータ"
+    "userAddedData": "ユーザーが追加したデータ",
+    "readXml": {
+      "xmlError": "有効なXMLがファイルにありません。"
+    },
+    "googleAnalytics": {
+      "log": "Google Analytics によるトラッキングは無効になっています。 terria.configParameters.googleAnalyticsKey が設定されていません"
+    }
   },
   "analytics": {
     "selectExistingPolygon": "既存のポリゴンを選ぶ",
@@ -448,5 +461,264 @@
     "infoGroup": "次の地点における利用可能な撮影日時のみを表示しています:",
     "filterByLocation": "位置から絞り込む",
     "pickPoint": "地点を選択するにはマップ上をクリックしてください。"
+  },
+  "models": {
+    "bing": {
+      "name": "Bingマップ"
+    },
+    "webMapTileServiceCatalogItem": {
+      "dataDescription": "データの説明",
+      "serviceDescription": "サービスの説明"
+    },
+    "arcGisMapServerCatalogItem": {
+      "dataDescription": "データの説明",
+      "serviceDescription": "サービスの説明",
+      "copyrightText": "著作権",
+      "name": "Esri ArcGISマップサーバー"
+    },
+    "userData": {
+      "addingDataErrorMessage": "指定されたデータは無効であるか、期待された書式にしたがっていないため読み込むことができません。",
+      "addingDataErrorTitle": "データを追加できませんでした",
+      "firefox": "Mozilla Firefox",
+      "chrome": "Google Chrome",
+      "internetExplorer": "Internet Explorer 11",
+      "fileApiNotSupportedTitle": "File APIがサポートされていません"
+    },
+    "catalog": {
+      "unsupportedFileTypeMessage": "このファイルフォーマットは{{appName}}でサポートされていません。サポートされているファイル形式は次の通りです。<ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>",
+      "unsupportedFileTypeTitle": "サポートされていないファイル形式",
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
+      "chartDataGroup": "図表データのグループ。",
+      "catalogMemberMustHaveType": "カタログメンバーにはタイプが必要です。",
+      "catalogMemberMustHaveName": "新しいカタログメンバーには名前が必要です。",
+      "group": "グループ",
+      "name": "名称未定のアイテム",
+      "compositesError": "Compositeタイプにcompositeタイプのアイテムを含めることはできません。",
+      "mustHaveType": "各アイテムにはタイプを指定する必要があります。",
+      "useConversion": "変換サービスを使用しますか？",
+      "cancel": "キャンセル",
+      "upload": "アップロード",
+      "readyToUpload": "{{appName}}の変換サービスにアップロードする準備はできていますか？",
+      "unsupportedFileTypeMessageII": "このファイルフォーマットは{{appName}}ではサポートされていません。直接サポートされているフォーマットは <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>  です。オンライン変換サービスを通してサポートされているファイルフォーマットは <ul><li>Shapefile (.zip)</li><li>MapInfo TAB (.zip)</li><li>その他の {{linkII}}</li></ul> などです。"
+    },
+    "ckan": {
+      "idsNotSpecifiedMessage": "CkanCatalogItemではresourceIdかdatasetIdのどちらかが指定されている必要があります。",
+      "idsNotSpecifiedTitle": "resourceIdかdatasetIdのどちらかを指定してください",
+      "update_freq": "更新頻度",
+      "metadata_modified": "更新日",
+      "metadata_created": "作成日",
+      "contact_point": "連絡先",
+      "author": "作成者",
+      "licence": "ライセンス",
+      "resourceDescription": "リソースの説明",
+      "datasetDescription": "データセットの説明",
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
+      "name": "CKANリソース",
+      "corsErrorMessage": "このCKANサーバーからパッケージを取得することができませんでした。<br/><br/>このURLを手動で入力した場合は、URLを再確認してください。<br/><br/>もしあなたがこのサーバーの管理者なら、{{corsLink}}が有効であることを確かめてください。<br/><br/>そうでない場合で、再読み込みしても問題が解決しない場合は、以下の技術詳細情報を添えてこのエラーを{{email}}までご報告ください。<br/><br/>",
+      "errorLoadingMessage": "このCKANカタログの定義には有効なフィルタークエリが含まれていません。",
+      "errorLoadingTitle": "CKANカタログ読み込みエラー",
+      "nameServer": "CKANサーバー",
+      "dataDescription": "データの説明",
+      "errorRetrievingUrlTitle": "CKAN URLを取得時にエラー",
+      "notCompatibleMessageII": "CKANのデータセットはサポートされたフォーマットで提供されるリソースがありません。",
+      "notCompatibleMessageI": "CKANデータセットには、ID {{resourceId}} を持つリソースがないか、サポートしているフォーマットではありません。",
+      "notCompatibleTitle": "互換性のあるリソースが見つかりません",
+      "invalidCkanMessage": "CKANサーバーから戻ってきたリソースには、package_idがありません。",
+      "invalidCkanTitle": "無効なCKANのリソースJSON",
+      "errorRetrievingUrlMessage": "URLをJSON: {{url}} で取得できません。"
+    },
+    "cesiumTerrain": {
+      "errorRenderingMessage": "<p>3Dの描画中にエラーが発生しました。これはおそらく{{appName}}のバグか、システムやウェブブラウザに互換性がないことが原因です。作業を続けられるように2Dに切り替えます。以下の技術詳細情報を添えてこのエラーを{{email}}までご報告ください。</p>",
+      "errorRenderingTitle": "3D描画エラー",
+      "notSupportedErrorTitle": "2Dではサポートされていません",
+      "name3D": "Cesium 3Dタイル",
+      "name": "Cesium地表面"
+    },
+    "cartoMap": {
+      "noUrlMessage": "このCartoマップの利用可能なURLが見つかりませんでした。",
+      "noUrlTitle": "URLがありません",
+      "name": "Cartoマップ"
+    },
+    "wcs": {
+      "exportFailedMessageII": "Web Coverage Serviceが失敗しました：{{error}}",
+      "exportFailedMessage": "Web Coverage Serviceが失敗しました",
+      "exportFailedTitle": "データのエクスポートに失敗しました",
+      "asyncResultDescription": "以下の入力パラメータによる、{{timestamp}}における{{name}}からのデータのエクスポート結果です。"
+    },
+    "webMapServiceCatalogItem": {
+      "dataDescription": "データの説明",
+      "serviceDescription": "サービスの説明"
+    },
+    "czml": {
+      "name": "Cesium言語（CZML）",
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+    },
+    "csw": {
+      "name": "カタログサービス（CSW）",
+      "cors": "CORS",
+      "metadataURL": "メタデータレコード URL",
+      "links": "リンク",
+      "dataResponsibility": "データに関する責任",
+      "notUseableTitle": "カタログサービスが利用できません",
+      "exceptionMessage": "CSWサーバーがエラーを報告しています:\n\n {{exceptionText}}",
+      "unknownError": "CSWサーバーが原因の特定できないエラーを報告しています。"
+    },
+    "csv": {
+      "unableToLoadMessage": "サポートされているCSVフォーマットについては <a href=\"https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au\">csv-geo-au</a> の仕様を参照してください。\n\n {{message}}",
+      "unableToLoadTitle": "CSVファイルを読み込めません",
+      "unexpectedTypeMessage": "CsvCatalogItemのデータはBlog型、File型、String型である必要がありますが、これらのうちのどれでもありませんでした。これはTerriaJSのバグであるかTerriaJSのAPIの使い方が不適切である可能性があります。{{appName}}のバグと思われる場合は以下にメールを送信してください ",
+      "unexpectedTypeTitle": "予期しないタイプのCSVデータ",
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
+      "name": "カンマ区切（CSV）"
+    },
+    "ogr": {
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+    },
+    "magda": {
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+    },
+    "kml": {
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+    },
+    "gpx": {
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
+      "errorLoadingTitle": "GPX読み込みエラー",
+      "name": "GPX"
+    },
+    "gltf": {
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
+      "unableToRetrieve": "以下からフィーチャーの詳細情報をとれません:\n\n{{url}}",
+      "error": "エラー",
+      "notSupportedErrorMessage": "\"{{name}}\" は2Dビューでは表示できません。  3Dに切り替えてもう一度お試しください。",
+      "notSupportedErrorTitle": "2Dではサポートされていません",
+      "name": "GL Transmission Format (glTF)"
+    },
+    "geoJson": {
+      "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
+      "firefox": "Mozilla Firefox",
+      "unsupportedBrowserTitle": "サポートしていないウェブブラウザです",
+      "couldNotLoadTitle": "JSONを読み込めません",
+      "errorLoadingTitle": "GeoJSON読み込みエラー",
+      "name": "GeoJSON"
+    },
+    "arcGisMapServerCatalogGroup": {
+      "cors": "CORS",
+      "groupNotAvailableTitle": "グループはありません",
+      "invalidServiceTitle": "無効なArcGISマップサービス",
+      "name": "ArcGIS マップサーバーグループ"
+    },
+    "abs": {
+      "unexpectedFormatTitle": "対応していないデータフォーマット",
+      "groupNotAvailableTitle": "グループはありません",
+      "dataMergeErrorTitle": "データは統合できません",
+      "itemNotAvailableTitle": "アイテムがありません",
+      "nameGroup": "ABS.Stat データセットリスト",
+      "name": "ABS.Stat"
+    },
+    "arcGisFeatureServer": {
+      "groupNotAvailableTitle": "グループはありません",
+      "invalidServiceTitle": "無効なArcGISフィーチャーサービス",
+      "nameGroup": "ArcGISフィーチャーサーバーグループ",
+      "name": "ArcGISフィーチャーサーバー"
+    },
+    "arcGisService": {
+      "groupNotAvailableTitle": "グループはありません",
+      "invalidServerTitle": "無効なArcGISサーバー",
+      "name": "ArcGISサーバーグループ"
+    },
+    "imageryLayer": {
+      "tileErrorTitle": "タイルエラー",
+      "accessingCatalogItemErrorTitle": "カタログアイテムにアクセスする際にエラーが発生しました",
+      "accessingBaseMapErrorTitle": "ベース地図にアクセスする際にエラーが発生しました",
+      "intervalSupportErrorMessage": "申し訳ありませんが、 {{typeName}} ({{type}}) カタログアイテムは、\"intervals\" プロパティを設定しても時間間隔の変更に対応していません。",
+      "intervalSupportErrorTitle": "インターバルはサポートしていません",
+      "unableToDisplayTitle": "データセットを表示できません",
+      "unknownTileErrorTitle": "不明なタイルエラー"
+    },
+    "googleUrlShortener": {
+      "urlNotLocatedTitle": "短縮したスタートURLが見つかりません"
+    },
+    "getToken": {
+      "invalidToken": "<p>トークンサーバーが無効なトークンだと報告しています。</p><p>以下のメールアドレスに報告して下さい {{email}}</p>",
+      "errorTitle": "トークンエラー",
+      "unableToRequest": "<p>トークンサーバーからトークンをリクエストできません。</p><p>以下のメールに報告して下さい: {{email}}</p>"
+    },
+    "function": {
+      "unknownFormaterTitle": "不明なフォーマッター"
+    },
+    "createParameter": {
+      "unsupportedErrorMessage": "不明なパラメタタイプ: {{type}}.",
+      "unsupportedErrorTitle": "サポートしていないタイプのパラメタです"
+    }
+  },
+  "map": {
+    "regionProvider": {
+      "csvRegionMappingMessageLoadError": "リージョン{{regionName}}のリージョン境界を読み込めませんでした。{{exception}}",
+      "csvRegionMappingMessageZeroBoundariesFound": "リージョン{{regionName}}ではリージョン境界が一つも見つかりませんでした",
+      "csvRegionMappingMessageZeroFound": "リージョンタイプ{{regionType}}ではリージョン名が一つも見つかりませんでした",
+      "csvRegionMappingTitle": "CSVリージョンマッピング"
+    },
+    "drawExtentHelper": {
+      "extent": "範囲",
+      "drawExtent": "描画範囲"
+    },
+    "displayVariablesConcept": {
+      "defaultName": "表示パラメーター"
+    },
+    "cesium": {
+      "unusalTilingScheme": "このデータセットは特殊なタイル化方式を使用しているため、2Dのマップでは表示できません。",
+      "notWebMercatorTilingScheme": "このデータセットはウェブメルカトル（EPSG:3857）図法をサポートしていないため、2Dのマップでは表示できません。",
+      "failedToObtain": "画像タイル X: {{x}} Y: {{y}} Level: {{level}} の取得に失敗しました。",
+      "devError": "cesiumが必須です。"
+    },
+    "gnafAddressGeocoder": {
+      "score": "スコア",
+      "lat": "緯度",
+      "lon": "経度",
+      "matchedAddresses": "マッチした住所",
+      "postcode": "郵便番号",
+      "state": "州",
+      "suburb": "郊外",
+      "noAddresses2": "tableStructure にはアドレス列はありますが、アドレスがありません",
+      "noAddresses": "この tableStructure にはアドレスがありません",
+      "postOfficeBox": "私書箱",
+      "poBox": "私書箱"
+    },
+    "w3cToGeoJson": {
+      "containsUnsupportedFeatureType": "W3Cジオメトリ付きのGeoRSSがサポートしていないフィーチャータイプ: {{type}} を含んでいます"
+    },
+    "geoRssToGeoJson": {
+      "containsUnsupportedFeatureType": "GeoRSSがサポートしていないフィーチャータイプ: {{type}} を含んでいます"
+    },
+    "gmlToGeoJson": {
+      "containsUnsupportedFeatureType": "GMLがサポートしていないフィーチャータイプ: {{type}} を含んでいます",
+      "missingPosList": "GMLポリゴンの外側リングはposListにありません。",
+      "missingExteriorRing": "GMLポリゴンが外部リングから抜け落ちています。",
+      "missingPos": "GMLポイント要素がpos要素にありません。"
+    },
+    "computeRingWindingOrder": {
+      "devError": "正しいポイントのタイプ {x:number, y:number}"
+    },
+    "addressGeocoder": {
+      "devError": "bulkConvertAddresses が derived class で実装されている必要があります。"
+    },
+    "mapboxVectorTileImageryProvider": {
+      "moreThanFourTiles": "画像供給元の画像範囲と minimumLevel は最小レベルで {{tileCount}} タイルあるようです. 最小レベルで4タイル以上を提供する画像共有元はサポートしていません。",
+      "requireStyles": "MapboxVectorTileImageryProvider は options.styleFunc として渡されるスタイリング関数が必要です",
+      "requireLayerName": "MapboxVectorTileImageryProvider は options.layerName として渡されるレイヤ名が必要です"
+    },
+    "imageryProviderHooks": {
+      "devError": "画像の色の塗り替えのためのコンテクストがありません。"
+    }
   }
 }
