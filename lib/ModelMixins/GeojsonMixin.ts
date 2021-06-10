@@ -175,10 +175,14 @@ export default function GeoJsonMixin<
           // For every key-value pair in the style, is there an identical one in the feature's properties?
           return stylePropertiesEntries.every(
             ([styleKey, styleValue]) =>
-              featurePropertiesEntires.find(
-                ([featKey, featValue]) =>
-                  featKey === styleKey && featValue === styleValue
-              ) !== undefined
+              featurePropertiesEntires.find(([featKey, featValue]) => {
+                if (typeof styleValue === "string" && !style.caseSensitive) {
+                  featKey === styleKey &&
+                    (featValue as string).toLowerCase() ===
+                      (styleValue as string).toLowerCase();
+                }
+                return featKey === styleKey && featValue === styleValue;
+              }) !== undefined
           );
         });
 

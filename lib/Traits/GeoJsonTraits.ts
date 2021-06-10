@@ -15,7 +15,7 @@ export class PerPropertyGeoJsonStyleTraits extends ModelTraits {
   @anyTrait({
     name: "Properties",
     description:
-      "If the properties of a feature match the given properties, then apply the style to that feature"
+      "If the properties of a feature match these properties, then apply the style to that feature"
   })
   properties?: any;
 
@@ -33,7 +33,7 @@ export class PerPropertyGeoJsonStyleTraits extends ModelTraits {
     description:
       "True if properties should be matched in a case sensitive fashion"
   })
-  caseSensitive?: boolean;
+  caseSensitive?: boolean = false;
 }
 export class GeoJsonTraits extends mixTraits(
   FeatureInfoTraits,
