@@ -1,4 +1,6 @@
+import { runInAction } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import loadJson from "../../lib/Core/loadJson";
 import loadText from "../../lib/Core/loadText";
@@ -6,6 +8,7 @@ import TerriaError from "../../lib/Core/TerriaError";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
 import Terria from "../../lib/Models/Terria";
+import updateModelFromJson from "../../lib/Models/updateModelFromJson";
 import { JsonObject } from "./../../lib/Core/Json";
 
 describe("GeoJsonCatalogItem", function() {
@@ -338,4 +341,71 @@ describe("GeoJsonCatalogItem", function() {
   //     });
   //   });
   // });
+
+  describe("Support for time-varying geojson", () => {
+    it("Associates features with discrete times", async () => {
+      geojson.setTrait(
+        CommonStrata.user,
+        "url",
+        "test/GeoJSON/time-based.geojson"
+      );
+      geojson.setTrait(CommonStrata.user, "timeProperty", "year");
+      await geojson.loadMapItems();
+      expect(geojson.mapItems.length).toEqual(1);
+      const entities = geojson.mapItems[0].entities.values;
+      expect(entities.length).toEqual(2);
+
+      const entity1 = entities[0];
+      expect(
+        entity1.availability?.start.equals(
+          JulianDate.fromDate(new Date("2021"))
+        )
+      ).toBeTruthy();
+      expect(
+        entity1.availability?.stop.equals(Iso8601.MAXIMUM_VALUE)
+      ).toBeTruthy();
+
+      const entity2 = entities[1];
+      expect(
+        entity2.availability?.start.equals(
+          JulianDate.fromDate(new Date("2019"))
+        )
+      ).toBeTruthy();
+      expect(
+        entity2.availability?.stop.equals(JulianDate.fromDate(new Date("2021")))
+      ).toBeTruthy();
+    });
+  });
+
+  describe("Per features styling", function() {
+    it("Applies styles to features according to their properties, respecting string case", async function() {
+      const name = "PETER FAGANS GRAVE";
+      const fill = "#0000ff";
+      runInAction(() => {
+        updateModelFromJson(geojson, CommonStrata.override, {
+          name: "test",
+          type: "geojson",
+          url: "test/GeoJSON/cemeteries.geojson",
+          perPropertyStyles: [
+            {
+              properties: { NAME: name },
+              style: {
+                fill: fill
+              },
+              caseSensitive: true
+            }
+          ]
+        });
+      });
+
+      await geojson.loadMapItems();
+      const entity = geojson.mapItems[0].entities.values.find(
+        e => e.properties?.getValue(JulianDate.now()).NAME === name
+      );
+      expect(entity).toBeDefined();
+      expect(entity?.properties?.getValue(JulianDate.now())?.fill).toEqual(
+        fill
+      );
+    });
+  });
 });
