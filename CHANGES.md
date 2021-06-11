@@ -3,11 +3,14 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.84)
+#### next release (8.0.0-alpha.85)
+
+* [The next improvement]
+
+#### 8.0.0-alpha.84
 
 * Fix `ArcGisMapServerCatalogGroup` infinite loading by removing the cycle of calling `loadMembers` that was present in the `DataCatalogGroup` React component. However calling `loadMembers` is still not cached as it should for `ArcGisMapServerCatalogGroup`, and the infinite loading bug could return.
-* Fix bug `selectableDimensions` bug in `Cesium3dTilesMixin`.
-* [The next improvement]
+* Fix bug `selectableDimensions` bug in `Cesium3dTilesMixin` and `GltfCatalogItem`.
 
 #### 8.0.0-alpha.83
 
