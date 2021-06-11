@@ -152,6 +152,6 @@ export default class GltfCatalogItem extends MappableMixin(
   }
 
   @computed get selectableDimensions(): SelectableDimension[] {
-    return [...this.selectableDimensions, this.shadowDimension];
+    return [...super.selectableDimensions, this.shadowDimension];
   }
 }
