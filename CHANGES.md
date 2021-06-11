@@ -6,6 +6,7 @@ Change Log
 #### next release (8.0.0-alpha.83)
 
 * Add `modelDimensions` to `CatalogMemberMixin` - this can be used to apply model stratum with a `SelectableDimension` (i.e. a drop-down menu).
+* `GyroscopeGuidance` can now be translated.
 * [The next improvement]
 
 #### 8.0.0-alpha.82
