@@ -1,7 +1,7 @@
 import { ApiClient, fromCatalog, Query } from "@opendatasoft/api-client";
 import { Dataset } from "@opendatasoft/api-client/dist/client/types";
 import { computed, runInAction } from "mobx";
-import { JulianDate } from "terriajs-cesium";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import URI from "urijs";
 import filterOutUndefined from "../Core/filterOutUndefined";
@@ -13,8 +13,8 @@ import TableMixin from "../ModelMixins/TableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import Csv from "../Table/Csv";
 import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
+import DimensionTraits from "../Traits/DimensionTraits";
 import OpenDataSoftCatalogItemTraits from "../Traits/OpenDataSoftCatalogItemTraits";
-import { DimensionTraits } from "../Traits/SdmxCommonTraits";
 import TableColumnTraits from "../Traits/TableColumnTraits";
 import TableStyleTraits from "../Traits/TableStyleTraits";
 import TableTimeStyleTraits from "../Traits/TableTimeStyleTraits";
@@ -336,28 +336,48 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     )
       return;
 
-    // this.catalogItem.activeTableStyle.rowGroups.map(([id, rows]) => {
-    //   const intervals = filterOutUndefined(
-    //     rows.map(
-    //       rowId =>
-    //         this.catalogItem.activeTableStyle.timeIntervals![rowId] ?? undefined
-    //     )
-    //   );
-    // });
+    const groupIntervals = this.catalogItem.activeTableStyle.rowGroups.map(
+      ([id, rows]) => {
+        let start: JulianDate | undefined;
+        let stop: JulianDate | undefined;
 
-    const intervals = filterOutUndefined(
-      this.pointTimeSeries?.map(p =>
-        p.minTime && p.maxTime
-          ? new TimeInterval({
-              start: JulianDate.fromDate(p.minTime),
-              stop: JulianDate.fromDate(p.maxTime)
-            })
-          : undefined
-      ) ?? []
+        rows.forEach(rowId => {
+          const interval =
+            this.catalogItem.activeTableStyle.timeIntervals![rowId] ??
+            undefined;
+
+          if (interval?.start) {
+            start =
+              !start || JulianDate.lessThan(interval.start, start)
+                ? interval.start
+                : start;
+          }
+
+          if (interval?.stop) {
+            stop =
+              !stop || JulianDate.lessThan(stop, interval.stop)
+                ? interval.stop
+                : stop;
+          }
+        });
+
+        return new TimeInterval({ start, stop });
+      }
     );
 
-    if (intervals.length > 0) {
-      const totalInterval = intervals.reduce<TimeInterval | undefined>(
+    // const intervals = filterOutUndefined(
+    //   this.pointTimeSeries?.map(p =>
+    //     p.minTime && p.maxTime
+    //       ? new TimeInterval({
+    //           start: JulianDate.fromDate(p.minTime),
+    //           stop: JulianDate.fromDate(p.maxTime)
+    //         })
+    //       : undefined
+    //   ) ?? []
+    // );
+
+    if (groupIntervals.length > 0) {
+      const totalInterval = groupIntervals.reduce<TimeInterval | undefined>(
         (intersection, current) =>
           intersection
             ? TimeInterval.intersect(intersection, current)
@@ -400,7 +420,11 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
           id: "available-fieds",
           name: "Fields",
           selectedId: this.catalogItem.colorFieldName,
-          options: this.usefulFields.map(f => ({ id: f.name, name: f.label }))
+          options: this.usefulFields.map(f => ({
+            id: f.name,
+            name: f.label,
+            value: undefined
+          }))
         })
       ];
   }

@@ -2,9 +2,9 @@ import CatalogMemberTraits from "./CatalogMemberTraits";
 import mixTraits from "./mixTraits";
 import primitiveArrayTrait from "./primitiveArrayTrait";
 import primitiveTrait from "./primitiveTrait";
-import { DimensionTraits } from "./SdmxCommonTraits";
 import TableTraits from "./TableTraits";
 import UrlTraits from "./UrlTraits";
+import DimensionTraits from "./DimensionTraits";
 
 export default class OpenDataSoftCatalogItemTraits extends mixTraits(
   TableTraits,
