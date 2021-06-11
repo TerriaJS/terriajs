@@ -14,7 +14,12 @@
   },
   "featureInfo": {
     "download": "Scarica la tabella",
-    "locationMarker": "Posizione del marker"
+    "locationMarker": "Posizione del marker",
+    "siteData": "Posizione Dati",
+    "latLon": "Lat / Lon ",
+    "btnCloseFeature": "Chiudi pannello dati",
+    "pickLocation": "Seleziona posizione",
+    "noInfoAvailable": "Nessuna informazione disponibile"
   },
   "sui": {
     "notifications": {
@@ -38,10 +43,14 @@
     "commentQuestion": "Commento o domanda",
     "title": "Feedback",
     "cancel": "Annulla",
-    "yourName": "Il tuo nome (opzionale)"
+    "yourName": "Il tuo nome (opzionale)",
+    "shareWithDevelopers": "Condividi la mia mappa con gli sviluppatori di {{appName}}",
+    "email": "Indirizzo email (opzionale)<br/><2>Non ti possiamo informare senza di questa!</2>",
+    "close": "chiudi feedback",
+    "feedbackBtnText": "Fornite un feedback"
   },
   "settingPanel": {
-    "performanceLabel": "Performance",
+    "performanceLabel": "Prestazioni",
     "qualityLabel": "Qualità",
     "baseMap": "Mappa base",
     "btnText": "Mappa",
@@ -57,7 +66,12 @@
       "Leaflet": "2D",
       "CesiumTerrain": "Terreno 3D"
     },
-    "none": "(Nessuno)"
+    "none": "(Nessuno)",
+    "mapQuality": "Qualità della mappa raster:",
+    "nativeResolutionHeader": "Utilizza risoluzione nativa del dispositivo",
+    "imageOptimisation": "Ottimizzazione dell'immagine",
+    "mapView": "Visualizzazione Mappa",
+    "nativeResolutionLabel": "Premi per fermare la risoluzione {{resolution1}} e iniziare ad usare la risoluzione{{resolution2}}"
   },
   "toolsPanel": {
     "btnTitle": "Strumenti avanzati",
@@ -66,7 +80,10 @@
   "countDatasets": {
     "totals": "<div>Il catalogo contiene {{items}} oggetti in {{groups}} gruppi.</div>",
     "loadError": "caricamento fallito.",
-    "btnText": "Avvia"
+    "btnText": "Avvia",
+    "btnCount": "Conta i dataset",
+    "title": "Conta i Dataset",
+    "recount": "Ricalcola"
   },
   "share": {
     "btnMapShareTitle": "Condividi la mappa con altri",
@@ -82,12 +99,257 @@
     "printTitle": "Stampa mappa",
     "generatingUrl": "Generazione dell'URL per la condivisione in corso…",
     "shortLinkError": "Errore durante l'accorciamento dell'URL. Verificare la connessione internet e riprovare.",
-    "shortLinkShortening": "Accorciamento in corso…"
+    "shortLinkShortening": "Accorciamento in corso…",
+    "shortenUsingService": "Accorciate l'URL usando un servizio web",
+    "embedTitle": "Per includere questa mappa in una pagina HTML copiate questo codice:",
+    "printViewButton": "Mostra anteprima di stampa",
+    "browserPrint": "Per una stampa migliore, per favore usate il pulsante Stampa di {{appName}} invece di quello del browser."
   },
   "AR": {
-    "arTool": "strumento per la realtà aumentata"
+    "arTool": "strumento per la realtà aumentata",
+    "btnResetRealign": "reimposta allineamento bussola",
+    "confirmText": "Capito"
   },
   "zoomCotrol": {
-    "zoomReset": "Reimposta zoom"
+    "zoomReset": "Reimposta zoom",
+    "zoomOut": "Ridurre",
+    "zoomIn": "Ingrandire"
+  },
+  "location": {
+    "location": "Posizione",
+    "myLocation": "La mia posizione"
+  },
+  "models": {
+    "webProcessingService": {
+      "errorDetails": "Dettagli dell'errore"
+    },
+    "webMapServiceCatalogItem": {
+      "missingDataTitle": "Dati mancanti"
+    },
+    "userDrawing": {
+      "btnDone": "Fatto",
+      "btnCancel": "Annulla",
+      "line": "Linea",
+      "pointEntities": "Punti"
+    },
+    "terriaJSONcatalog": {
+      "disclaimer": "Scarico di responsabilità",
+      "requestFailedTitle": "Richiesta fallita",
+      "buttonTitleConfirm": "Accetto"
+    },
+    "terria": {
+      "buttonTitleConfirm": "Accetto",
+      "disclaimer": "Scarico di responsabilità"
+    },
+    "time": {
+      "invalidDate": "Data non valida"
+    },
+    "sensorObservationService": {
+      "property": "Proprietà"
+    },
+    "feedback": {
+      "thanksTitle": "Grazie per il tuo feedback!"
+    },
+    "raiseError": {
+      "errorTitle": "Si è verificato un errore"
+    },
+    "placesLikeMe": {
+      "characteristics": "Caratteristiche",
+      "regionName": "Paese"
+    },
+    "gpx": {
+      "name": "GPX"
+    },
+    "getToken": {
+      "errorTitle": "Errore token"
+    },
+    "csv": {
+      "name": "Valori separati da virgola (CSV)"
+    },
+    "bing": {
+      "name": "Bing Maps"
+    },
+    "socrataServer": {
+      "tags": "Etichette",
+      "attributes": "Attributi",
+      "licence": "Licenza",
+      "description": "Descrizione"
+    },
+    "ogr": {
+      "unsupportedFileTzpe": "Tipo di file non supportato",
+      "safari": "Apple Safari"
+    },
+    "gltf": {
+      "error": "Errore"
+    },
+    "geoJson": {
+      "firefox": "Mozilla Firefox"
+    },
+    "csw": {
+      "links": "Collegamenti"
+    },
+    "catalog": {
+      "cancel": "Annulla",
+      "upload": "Carica",
+      "unsupportedFileTypeTitle": "Tipo di file non supportato",
+      "group": "Gruppo"
+    },
+    "ckan": {
+      "update_freq": "Frequenza di aggiornamento",
+      "metadata_modified": "Modifica",
+      "metadata_created": "Creato",
+      "contact_point": "Contatti",
+      "author": "Autore",
+      "licence": "Licenza"
+    },
+    "userData": {
+      "firefox": "Mozilla Firefox",
+      "chrome": "Google Chrome",
+      "internetExplorer": "Internet Explorer 11"
+    }
+  },
+  "map": {
+    "gnafAddressGeocoder": {
+      "score": "Punteggio",
+      "lat": "Lat",
+      "lon": "Lon",
+      "postcode": "Codice postale",
+      "state": "Stato",
+      "suburb": "Frazione"
+    }
+  },
+  "core": {
+    "terriaError": {
+      "defaultValue": "Si è verificato un errore"
+    },
+    "dataType": {
+      "json": "JSON",
+      "gpx": "GPX",
+      "csv": "CSV",
+      "open-street-map": "Server OpenStreetMap"
+    }
+  },
+  "analytics": {
+    "polygon": "Poligono"
+  },
+  "description": {
+    "typeName": "Digita nome",
+    "layerName": "Nome layer",
+    "name": "Descrizione"
+  },
+  "preview": {
+    "updateFrequency": "Frequenza di aggiornamento",
+    "modified": "Modifica",
+    "created": "Creato",
+    "contact": "Contatti",
+    "author": "Autore",
+    "licence": "Licenza",
+    "disclaimer": "Scarico di responsabilità"
+  },
+  "legend": {
+    "n": "N",
+    "e": "E",
+    "lon": "Lon",
+    "lat": "Lat"
+  },
+  "splitterTool": {
+    "workbench": {
+      "goright": "Destra",
+      "both": "Entrambi",
+      "goleft": "Sinistra"
+    }
+  },
+  "deltaTool": {
+    "cancelBtn": "Annulla"
+  },
+  "viewModels": {
+    "searchLocations": "Posizioni",
+    "searchAddresses": "Indirizzi"
+  },
+  "chart": {
+    "download": "Scarica",
+    "expand": "Espandi",
+    "sectionLabel": "Grafici"
+  },
+  "catalogItem": {
+    "add": "Aggiungi",
+    "remove": "Rimuovi",
+    "loading": "Caricamento…"
+  },
+  "loader": {
+    "loadingMessage": "Caricamento"
+  },
+  "clipboard": {
+    "copy": "Copia",
+    "shareURL": "Condividi URL",
+    "success": "Copiato negli appunti"
+  },
+  "concept": {
+    "inactive": {
+      "cancel": "Annulla"
+    },
+    "active": {
+      "edit": "Modifica condizione"
+    }
+  },
+  "satellite": {
+    "newLocation": "Nuova posizione",
+    "zoomTo": "Ingrandisci fino a",
+    "removeFilter": "Rimuovi filtro"
+  },
+  "dateTime": {
+    "timeline": {
+      "togglePlay": "Riproduci",
+      "gotoStart": "Torna all'inizio"
+    }
+  },
+  "workbench": {
+    "removeAll": "Rimuovi Tutto",
+    "removeFromMap": "Rimuovi",
+    "exportData": "Esporta",
+    "splitItem": "Dividi",
+    "previewItemTitle": "info",
+    "openFeature": "Ingradisci fino a",
+    "rangeMin": "Minimo:",
+    "rangeMax": "Massimo:"
+  },
+  "mobile": {
+    "toggleNavigation": "Attiva/disattiva la navigazione"
+  },
+  "search": {
+    "data": "Dati",
+    "done": "Fatto",
+    "resultsLabel": "Cerca risultati"
+  },
+  "addData": {
+    "back": "Indietro",
+    "dragDrop": "Trascina e rilascia",
+    "browse": "Cerca…",
+    "urlInputBtn": "Aggiungi",
+    "done": "Fatto",
+    "btnHide": "Nascondi"
+  },
+  "satelliteGuidance": {
+    "prevI": "No grazie"
+  },
+  "story": {
+    "storyEditor": "Editor Storie",
+    "editor": {
+      "saveStory": "Salva",
+      "saveBtn": "salva",
+      "cancelEditing": "Annulla",
+      "cancelBtn": "annulla"
+    },
+    "cancelRemove": "Annulla",
+    "confirmRemove": "Elimina",
+    "removeAllStories": "Rimuovi Tutto",
+    "delete": "Elimina",
+    "deleteStory": "elimina",
+    "recapture": "Registrare nuovamente",
+    "recaptureStory": "Registrare nuovamente",
+    "edit": "Modifica",
+    "editStory": "modifica",
+    "view": "Visualizza",
+    "viewStory": "vista"
   }
 }
