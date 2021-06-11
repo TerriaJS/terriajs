@@ -3,7 +3,16 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.83)
+#### next release (8.0.0-alpha.85)
+
+* [The next improvement]
+
+#### 8.0.0-alpha.84
+
+* Fix `ArcGisMapServerCatalogGroup` infinite loading by removing the cycle of calling `loadMembers` that was present in the `DataCatalogGroup` React component. However calling `loadMembers` is still not cached as it should for `ArcGisMapServerCatalogGroup`, and the infinite loading bug could return.
+* Fix bug `selectableDimensions` bug in `Cesium3dTilesMixin` and `GltfCatalogItem`.
+
+#### 8.0.0-alpha.83
 
 - **Breaking changes**:
   - `EnumColorMap` will only be used for enum `TableColumns` with number of unique values <= number of bins 
@@ -14,7 +23,6 @@ Change Log
 * Add `modelDimensions` to `CatalogMemberMixin` - this can be used to apply model stratum with a `SelectableDimension` (i.e. a drop-down menu).
 * `GeoJsonMixin`-based catalog items can now be styled based on to their properties through traits.
 * `GeoJsonMixin`-based catalog items can now vary over time if a `timeProperty` is specified.
-* [The next improvement]
 
 #### 8.0.0-alpha.82
 
