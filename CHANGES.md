@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.84)
 
+* Fix bug `selectableDimensions` bug in `Cesium3dTilesMixin`.
 * [The next improvement]
 
 #### 8.0.0-alpha.83
