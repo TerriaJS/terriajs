@@ -573,7 +573,11 @@
   "core": {
     "printWindow": {
       "errorMessage": "10秒経っても印刷が始まりませんでした。お使いのブラウザでは印刷がサポートされていないのかもしれません。",
-      "errorTitle": "印刷エラー"
+      "errorTitle": "印刷エラー",
+      "onafterprint": "onafterprint",
+      "onbeforeprint": "onbeforeprint",
+      "printMediaEnd": "メディアプリント終了",
+      "printMediaStart": "メディア印刷開始"
     },
     "dataType": {
       "other": "その他（変換サービスを使う）",
@@ -626,6 +630,9 @@
       "logStartedWithGAParameters": "ConsoleAnalyticsを開始しましたが `googleAnalyticsKey` または`googleAnalyticsOptions` キーが `userParameters`で観察されます",
       "startedNoLogToConsole": "ConsoleAnalyticsを開始しましたが `userParameters.logToConsole` が定義されていないか、falseに設定されています。",
       "started": "ConsoleAnalyticsを開始しました。"
+    },
+    "errors": {
+      "tooDeepAddedByUser": "addedByUser と ID: \"{{memberId}}\" チェックしたところカタログアイテムが100を超えました。カタロググループに再帰が起きていないか確認してください。"
     }
   },
   "analytics": {
@@ -923,11 +930,31 @@
       "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
       "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
       "invalidFile": "このファイルは無効または{{appName}}の変換サポートされていない可能性があります。",
-      "legacyBrowserMessage": "お使いのウェブブラウザは{{appName}}がファイルからデータを読み込む上で必要となる\"FormData\"型をサポートしていません。ブラウザをアップグレードしてください。最適な体験のためには、{{chrome}}、{{firefox}}、{{safari}}または{{internetExplorer}}の最新版をお使いになることをおすすめします。"
+      "legacyBrowserMessage": "お使いのウェブブラウザは{{appName}}がファイルからデータを読み込む上で必要となる\"FormData\"型をサポートしていません。ブラウザをアップグレードしてください。最適な体験のためには、{{chrome}}、{{firefox}}、{{safari}}または{{internetExplorer}}の最新版をお使いになることをおすすめします。",
+      "emailUs": "より詳しい情報やサポートが必要な場合は {{email}} までメールで連絡してください",
+      "errorConvertingToGeoJsonMessage": "ファイルをGeoJSONに変換中にエラーが発生しました。 ",
+      "errorConvertingToGeoJsonTitle": "GeoJSONに変換中にエラー",
+      "loadError": "ファイルサイズが {{appName}} 変換サービスの上限である {{maxConversionSizeMB}} MB を超えています",
+      "unsupportedFileTzpe": "サポートしていないファイルタイプ",
+      "safari": "Apple Safari",
+      "firefox": "Mozilla Firefox",
+      "chrome": "Google Chrome",
+      "internetExplorer": "インターネットエクスプローラー１１",
+      "legacyBrowserTitle": "古いタイプのブラウザはサポートしていません",
+      "name": "不明 / GeoJSONに変換済み"
     },
     "magda": {
       "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
-      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
+      "notCompatibleMessageII": "MAGDA データセットはサポートされたフォーマットで作成されたいずれのディストリビューションも含みません。",
+      "notCompatibleMessageI": "MAGDA データセットは ID {{distributionId}} のディストリビューションではないか、サポートされたフォーマットではありません。",
+      "notCompatibleTitle": "互換性のあるディストリビューションが見つかりません",
+      "retrieveErrorMessage": "ディストリビューションまたはデータセットIDがありません",
+      "retrieveErrorTitle": "MAGDA レコードを取得時にエラー",
+      "idsNotSpecifiedMessage": "MagdaCatalogItem は recordId を指定する必要があります。",
+      "idsNotSpecifiedTitle": "recordId を指定する必要があります",
+      "distributionDesc": "ディストリビューションの説明",
+      "name": "MAGDAディストリビューション"
     },
     "kml": {
       "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
@@ -994,7 +1021,9 @@
       "unexpectedFormatTitle": "対応していないデータフォーマット",
       "itemNotAvailableTitle": "アイテムがありません",
       "nameGroup": "ABS.Stat データセットリスト",
-      "name": "ABS.Stat"
+      "name": "ABS.Stat",
+      "unexpectedFormtMessage": "ABS ITT サーバーで GetGenericData 呼び出し中にエラーが発生しました：データフォーマットが変更されました。 <p>エラーを以下のメールアドレスに報告して下さい： {{email}}.</p>",
+      "itemNotAvailableMessage": "ABS ITT サーバーで {{methodName}} を呼び出した際にエラーが発生しました。<p>これは開いているアイテムが一時的に利用できないか、インターネット接続に問題がある可能性があります。もう一度グループを開いてもまだ門d内が見られるようであれば、問題を以下のメールアドレスに報告して下さい： {{email}}.</p>"
     },
     "imageryLayer": {
       "resolvingAvailability": "アベイラビリティの問題を解決しています...",
@@ -1005,7 +1034,9 @@
       "tileErrorMessageII": "以下のURLから200 (OK) が返されました:\n{{url}}\nただし、画像としては読み込めません。",
       "tileErrorTitle": "タイルエラー",
       "accessingCatalogItemErrorTitle": "カタログアイテムにアクセスする際にエラーが発生しました",
-      "accessingBaseMapErrorTitle": "ベース地図にアクセスする際にエラーが発生しました"
+      "accessingBaseMapErrorTitle": "ベース地図にアクセスする際にエラーが発生しました",
+      "unableToShowLocMessage": "{{name}} はこの場所では表示できません。利用できるキャプチャ時間が不明です。{{featureTimesProperty}} 属性が見つかりません。",
+      "unableToShowLocTitle": "この場所では表示できません"
     },
     "googleUrlShortener": {
       "urlNotLocatedTitle": "短縮したスタートURLが見つかりません",
@@ -1049,6 +1080,132 @@
     },
     "webProcessingServiceCatalogGroup": {
       "invalidServerMessage": "WPSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。サーバーの応答が有効なGetCapabilitiesドキュメントではないようです。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>"
+    },
+    "spatialDetailing": {
+      "name": "Spatial Detailing"
+    },
+    "socrataServer": {
+      "tags": "タグ",
+      "attributes": "帰属",
+      "licence": "ライセンス",
+      "description": "説明",
+      "retrieveErrorMessage": "このSocrataサーバーからパッケージを取得できません。<br/><br/>URLをマニュアルで入力した場合、もう一度URLをご確認ください。<br/><br/> 再読み込みしても問題が解決しない場合は問題の詳細を以下のメールアドレスまで報告して下さい： {{email}} 。ご協力ありがとうございます！’<br/><br/><pre> {{formatError}}</pre>",
+      "name": "Socrata サーバー"
+    },
+    "shareData": {
+      "expandErrorMessage": "{{appName}} を起動するためために利用する共有データサービスが見つかりません。リンクのエラーか現在サービスが使えない可能性があります。{{appName}} のバグだと思われる場合は、 {{email}} へメールでお知らせください",
+      "expandErrorTitle": "URLを展開できません",
+      "generateErrorMessage": "短縮URLを生成するための共有データサービスを利用する際に問題が発生しました。{{appName}} のバグであると思われる場合は、{{email}} へメールでご連絡ください。",
+      "generateErrorTitle": "短縮URLを生成できませんでした。"
+    },
+    "sdmxCatalogItem": {
+      "viewBy": {
+        "title": "View by",
+        "region": "地域",
+        "time": "時系列"
+      },
+      "loadDataErrorMessage": "{{csvUrl}} からの無効な反応",
+      "loadDataErrorTitle": "SDMX CSV を読み込めません"
+    },
+    "senaps": {
+      "retrieveErrorTitle": "Senaps カタログアイテム処理中のエラー",
+      "name": "Senaps Locations",
+      "missingSenapsBaseUrl": "Senaps のベースURLがありません。ログインしましたか？",
+      "noStreamsMessageFeatureInfo": "ここにはストリームはありません。",
+      "availableStreamsHeadingFeatureInfo": "利用可能なストリーム",
+      "locationHeadingFeatureInfo": "位置",
+      "missingKeyErrorMessage": "Senaps APIキーを appendParamToQueryString オプションを使って terriajs-server 設定に追加する必要があります",
+      "generalErrorMessage": "Senaps データを処理中にエラーが発生しました"
+    },
+    "mapboxStyle": {
+      "name": "Mapbox スタイル"
+    },
+    "mapboxVectorTile": {
+      "name": "Mapbox ベクタタイル"
+    },
+    "mapboxMap": {
+      "name": "Mapbox マップ"
+    },
+    "invokeAnalyticsService": {
+      "invocationFailedMessage": "{{invocationName}} 計算中にサーバーでエラーが発生しました。",
+      "invocationFailedTitle": "サービスの呼び出しに失敗しました"
+    },
+    "time": {
+      "invalidInitialTimeSource": "設定ファイル: {{initialTimeSource}} で指定した無効な initialTimeSource",
+      "invalidDate": "無効な日付"
+    },
+    "sdmxJsonDataflowStratum": {
+      "defaultUnitMeasure": "単位",
+      "loadDataErrorMessage": {
+        "noDataflow": "データフロー {{catalogItem.dataflowId}} は無効です",
+        "noDatastructure": "データフロー {{catalogItem.dataflowId}} でデータストラクチャが見つかりません",
+        "invalidResponse": "無効なJSONオブジェクトです"
+      },
+      "loadDataErrorTitle": "SDMXデータフローを読み込めません"
+    },
+    "sdmxServerStratum": {
+      "loadDataErrorMessage": "サーバーはデーターフローがありません",
+      "loadDataErrorTitle": "SDMXグループの読み込み失敗",
+      "sdmxStructureLoadErrorTitle": "SDMX ストラクチャリクエストは失敗"
+    },
+    "sensorObservationService": {
+      "noMatchingFeatures": "Sensor Observation Service はクエリに一致する地物を返しませんでした。",
+      "unknownFormat": "サーバーが不明なフォーマットで応答しました。",
+      "noFeatures": "クエリに合致する地物がありません。",
+      "missingBody": "サーバーがbodyのないレスポンスを返しました。",
+      "exceptionMessage": "サーバーがエラーを返しています: \n\n {{exceptionText}}",
+      "unknownError": "サーバーが玄以のわからないエラーを返しています。",
+      "alreadyLoadingMessage": "データはまだ読み込み中です。一旦読み込みが終われば表示を変更することができます",
+      "alreadyLoadingTitle": "データは読み込み中です",
+      "sos": "SOS",
+      "property": "属性",
+      "procedure": "プロシージャ"
+    },
+    "resultPending": {
+      "name": "結果待ち"
+    },
+    "feedback": {
+      "unableToSendMessage": "恥ずかしい限りです。フィードバックを送ろうとした際にエラーが発生しました。申し訳ありませんが以下のメールアドレスにフィードバックを送って下さい: {{email}}.",
+      "unableToSendTitle": "フィードバックを送れません",
+      "thanksMessage": "皆さんのフィードバックが {{appName}} をより良いものにしていきます",
+      "thanksTitle": "フィードバックを頂き、ありがとうございます！"
+    },
+    "regionMapping": {
+      "issuesLoadingTitle": "{{name}} 読み込みに問題",
+      "csvSpecification": "CSV-geo-au 仕様",
+      "msg": "ファイルのフォーマットの方法は、 {{link}} を参照してください。",
+      "moreThanOneValueText": "一つ以上の値",
+      "moreThanOneValue": "これらの地域は {{moreThanOneValueText}} あります",
+      "notRecognisedText": "わかりません",
+      "notRecognised": "これらの地域名は {{notRecognisedText}} です ",
+      "invalidServerTypeMessage": "想定した serverType は \"WMS\" または \"vector\" ですが、\"{{serverType}}\" です",
+      "invalidServerTypeTitle": "regionMapping.json の無効な serverType {{serverType}}",
+      "outdatedBrowserTitle": "ウェブブラウザが古すぎます",
+      "noDataForRegion": "選択した地域にデータなし。",
+      "noDataForDate": "選んだデータにデータなし。"
+    },
+    "raiseError": {
+      "developerDetails": "開発者の詳細",
+      "notificationFeedback": "質問またはフィードバックはここをクリック。",
+      "errorTitle": "エラーが発生しました"
+    },
+    "placesLikeMe": {
+      "likenessesError": "似通り度のリストと地域コードのリストに含まれる要素の数は同一ではありません。",
+      "placesLike": "{{regionName}} のような場所",
+      "regioNotSelectedDescription": "地域を選択する必要があります。",
+      "regioNotSelectedName": "地域が選択されていません",
+      "name": "似通った場所",
+      "characteristicsDescription": "解析に含む地域特性。",
+      "characteristics": "特性",
+      "regionDescription": "解析する地域  解析でこれに一番近い地域を推定します。",
+      "regionName": "地域",
+      "regionTypeDescription": "解析のための地域タイプ。",
+      "regionTypeName": "地域タイプ",
+      "regionsLikeThisDescription": "与えられた条件に基づき_尤もらしい_ 地域を特定。",
+      "regionsLikeThisName": "これに似た地域"
+    },
+    "openStreetMap": {
+      "name": "Open Street Map"
     }
   },
   "map": {
