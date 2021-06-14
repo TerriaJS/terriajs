@@ -19,7 +19,9 @@
       "dataDescription": "Keterangan Data",
       "datasetDescription": "Keterangan Dataset",
       "serviceErrorMessage": "Layanan ini tidak memiliki keterangan apapun.",
-      "dataSourceErrorMessage": "Sumber data ini tidak memiliki keterangan apapun."
+      "dataSourceErrorMessage": "Sumber data ini tidak memiliki keterangan apapun.",
+      "update_freq": "Frekuensi pembaruan",
+      "contact_point": "Kontak"
     },
     "cartoMap": {
       "noUrlTitle": "Tidak ada URL"
@@ -28,6 +30,62 @@
       "firefox": "Mozilla Firefox",
       "chrome": "Google Chrome",
       "internetExplorer": "Internet Explorer 11"
+    },
+    "socrataServer": {
+      "tags": "Tag",
+      "attributes": "Atribut",
+      "licence": "Lisensi",
+      "description": "Deskripsi"
+    },
+    "ogr": {
+      "safari": "Apple Safari"
+    },
+    "gpx": {
+      "serviceErrorMessage": "Layanan ini tidak memiliki keterangan apapun.",
+      "dataSourceErrorMessage": "Sumber data ini tidak memiliki keterangan apapun."
+    },
+    "gltf": {
+      "error": "Galat"
+    },
+    "geoJson": {
+      "firefox": "Mozilla Firefox"
+    },
+    "czml": {
+      "serviceErrorMessage": "Layanan ini tidak memiliki keterangan apapun.",
+      "dataSourceErrorMessage": "Sumber data ini tidak memiliki keterangan apapun."
+    },
+    "csw": {
+      "links": "Tautan"
+    },
+    "catalog": {
+      "cancel": "Batal",
+      "upload": "Unggah",
+      "serviceErrorMessage": "Layanan ini tidak memiliki keterangan apapun.",
+      "dataSourceErrorMessage": "Sumber data ini tidak memiliki keterangan apapun.",
+      "group": "Grup"
+    },
+    "time": {
+      "invalidDate": "Tanggal Tidak Valid"
+    },
+    "resultPending": {
+      "name": "Hasil Tertunda"
+    },
+    "feedback": {
+      "unableToSendMessage": "Tak bisa mengirim umpan balik Anda. Silakan kirim email ke {{email}} sebagai gantinya.",
+      "unableToSendTitle": "Tak bisa mengirim umpan balik",
+      "thanksMessage": "Umpan balik Anda membantu membuat {{appName}} lebih baik",
+      "thanksTitle": "Terima kasih atas masukan Anda"
+    },
+    "sensorObservationService": {
+      "alreadyLoadingTitle": "Data sudah dimuat",
+      "sos": "SOS",
+      "property": "Properti",
+      "procedure": "Prosedur"
+    },
+    "webProcessingService": {
+      "wpsServer": "Peladen Layanan Pemrosesan Web (WPS)",
+      "regionParameterName": "Parameter Wilayah",
+      "errorDetails": "Rincian Galat"
     }
   },
   "core": {
@@ -65,15 +123,19 @@
     "slowWebGLAvailableTitle": "Performa WebGL buruk"
   },
   "viewModels": {
-    "searchCatalogueItem": "Item-item Katalog"
+    "searchCatalogueItem": "Item-item Katalog",
+    "searchLocations": "Lokasi"
   },
   "chart": {
-    "download": "Unduh"
+    "download": "Unduh",
+    "expand": "Perluas",
+    "closePanel": "Tutup Panel",
+    "sectionLabel": "Bagan"
   },
   "catalogItem": {
     "removeFromMap": "Hapus dari peta",
     "trash": "Hapus dari katalog",
-    "add": "Tambahkan",
+    "add": "Tambah",
     "remove": "Hapus",
     "loading": "Memuat…"
   },
@@ -119,7 +181,8 @@
     "removeAllStories": "Hapus Semua",
     "doesNotExist": "Cerita tidak ada",
     "view": "Tampilan",
-    "viewStory": "lihat"
+    "viewStory": "lihat",
+    "recapture": "Menangkap kembali"
   },
   "welcomeMessage": {
     "WelcomeMessageDissmissText": "Jangan tampilkan ini kepadaku lagi",
@@ -149,10 +212,10 @@
     }
   },
   "helpMenu": {
-    "next": "SELANJUTNYA",
+    "next": "BERIKUTNYA",
     "done": "SELESAI",
     "helpMenuMoreHelpTitle": "Lebih banyak bantuan",
-    "helpMenuOpenWelcome": "Tampilkan pesan selamat datang",
+    "helpMenuOpenWelcome": "Tunjukkan pesan selamat datang",
     "helpMenuHeader": "Apa yang ingin Anda lakukan?",
     "btnTitle": "dapatkan bantuan",
     "btnText": "Bantuan"
@@ -217,7 +280,8 @@
     "printTitle": "Cetak Peta",
     "shortLinkShortening": "Memendekkan…",
     "printViewButton": "Perlihatkan Tampilan Pencetakan",
-    "shortLinkError": "Sebuah kesalahan terjadi ketika mencoba untuk memperpendek URL.  Harap periksa koneksi internet Anda dan coba lagi."
+    "shortLinkError": "Sebuah kesalahan terjadi ketika mencoba untuk memperpendek URL.  Harap periksa koneksi internet Anda dan coba lagi.",
+    "btnAdvanced": "Opsi lanjutan"
   },
   "legend": {
     "zone": "ZONA",
@@ -232,7 +296,8 @@
   },
   "zoomCotrol": {
     "zoomOut": "Perkecil",
-    "zoomIn": "Perbesar"
+    "zoomIn": "Perbesar",
+    "zoomReset": "Setel ulang zum"
   },
   "splitterTool": {
     "workbench": {
@@ -283,7 +348,8 @@
     "dataDescription": "Keterangan Data",
     "addToMap": "Tambahkan ke peta",
     "removeFromMap": "Hapus dari peta",
-    "loading": "MEMUAT TINJAUAN…"
+    "loading": "MEMUAT TINJAUAN…",
+    "disclaimer": "Sangkalan"
   },
   "search": {
     "data": "Data",
@@ -296,11 +362,42 @@
     "webFileType": "<0>Langkah 1:</0> Pilih jenis berkas (opsional)",
     "myData": "Data Saya",
     "done": "Selesai",
-    "btnHide": "Sembunyikan"
+    "btnHide": "Sembunyikan",
+    "dragDrop": "Tarik dan Jatuhkan",
+    "browse": "Jelajah…"
   },
   "satelliteGuidance": {
     "nextI": "Lihat panduan",
     "prevI": "Tidak, terima kasih",
     "dismissText": "Mengerti, terima kasih!"
+  },
+  "concept": {
+    "inactive": {
+      "cancel": "Batal"
+    },
+    "active": {
+      "edit": "Sunting kondisi"
+    }
+  },
+  "satellite": {
+    "newLocation": "Lokasi baru",
+    "removeFilter": "Hapus filter"
+  },
+  "dateTime": {
+    "timeline": {
+      "togglePlay": "Putar"
+    }
+  },
+  "workbench": {
+    "removeAll": "Hapus semua",
+    "removeFromMap": "Hapus",
+    "exportData": "Ekspor",
+    "splitItem": "Pisahkan",
+    "previewItemTitle": "info",
+    "rangeMin": "Minimum:",
+    "rangeMax": "Maksimum:"
+  },
+  "mobile": {
+    "toggleNavigation": "Toggle Navigasi"
   }
 }
