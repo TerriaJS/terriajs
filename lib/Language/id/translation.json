@@ -28,7 +28,8 @@
     "editStory": "sunting",
     "viewStory": "lihat",
     "shareTitle": "bagikan cerita",
-    "share": "Bagikan"
+    "share": "Bagikan",
+    "recapture": "Menangkap kembali"
   },
   "welcomeMessage": {
     "dismissText": "Tutup pesan dan jangan tampilkan ini lagi",
@@ -57,10 +58,10 @@
     }
   },
   "helpMenu": {
-    "next": "SELANJUTNYA",
+    "next": "BERIKUTNYA",
     "done": "SELESAI",
     "helpMenuMoreHelpTitle": "Lebih banyak bantuan",
-    "helpMenuOpenWelcome": "Tampilkan pesan selamat datang",
+    "helpMenuOpenWelcome": "Tunjukkan pesan selamat datang",
     "helpMenuHeader": "Apa yang ingin Anda lakukan?",
     "btnTitle": "dapatkan bantuan",
     "btnText": "Bantuan"
@@ -142,7 +143,8 @@
     "printExplanation": "Buka versi yang dapat dicetak dari peta ini.",
     "printTitle": "Cetak Peta",
     "shortLinkError": "Sebuah kesalahan terjadi ketika mencoba untuk memperpendek URL.  Harap periksa koneksi internet Anda dan coba lagi.",
-    "shortLinkShortening": "Memendekkan..."
+    "shortLinkShortening": "Memendekkan...",
+    "btnAdvanced": "Opsi lanjutan"
   },
   "measure": {
     "measureTool": "Alat Pengukur",
@@ -241,7 +243,8 @@
   },
   "zoomCotrol": {
     "zoomOut": "Perkecil",
-    "zoomIn": "Perbesar"
+    "zoomIn": "Perbesar",
+    "zoomReset": "Setel ulang zum"
   },
   "splitterTool": {
     "workbench": {
@@ -281,5 +284,117 @@
   },
   "satelliteGuidance": {
     "dismissText": "Mengerti, terima kasih!"
+  },
+  "models": {
+    "socrataServer": {
+      "tags": "Tag",
+      "attributes": "Atribut",
+      "licence": "Lisensi",
+      "description": "Deskripsi"
+    },
+    "ogr": {
+      "safari": "Apple Safari"
+    },
+    "gpx": {
+      "serviceErrorMessage": "Layanan ini tidak memiliki keterangan apapun.",
+      "dataSourceErrorMessage": "Sumber data ini tidak memiliki keterangan apapun."
+    },
+    "gltf": {
+      "error": "Galat"
+    },
+    "geoJson": {
+      "firefox": "Mozilla Firefox"
+    },
+    "czml": {
+      "serviceErrorMessage": "Layanan ini tidak memiliki keterangan apapun.",
+      "dataSourceErrorMessage": "Sumber data ini tidak memiliki keterangan apapun."
+    },
+    "csw": {
+      "links": "Tautan"
+    },
+    "catalog": {
+      "cancel": "Batal",
+      "upload": "Unggah",
+      "serviceErrorMessage": "Layanan ini tidak memiliki keterangan apapun.",
+      "dataSourceErrorMessage": "Sumber data ini tidak memiliki keterangan apapun.",
+      "group": "Grup"
+    },
+    "ckan": {
+      "update_freq": "Frekuensi pembaruan",
+      "contact_point": "Kontak"
+    },
+    "userData": {
+      "firefox": "Mozilla Firefox",
+      "chrome": "Google Chrome"
+    },
+    "time": {
+      "invalidDate": "Tanggal Tidak Valid"
+    },
+    "resultPending": {
+      "name": "Hasil Tertunda"
+    },
+    "feedback": {
+      "unableToSendTitle": "Tak bisa mengirim umpan balik",
+      "thanksMessage": "Umpan balik Anda membantu membuat {{appName}} lebih baik",
+      "thanksTitle": "Terima kasih atas masukan Anda"
+    },
+    "sensorObservationService": {
+      "alreadyLoadingTitle": "Data sudah dimuat",
+      "sos": "SOS",
+      "property": "Properti",
+      "procedure": "Prosedur"
+    },
+    "webProcessingService": {
+      "wpsServer": "Peladen Layanan Pemrosesan Web (WPS)",
+      "regionParameterName": "Parameter Wilayah",
+      "errorDetails": "Rincian Galat"
+    }
+  },
+  "viewModels": {
+    "searchLocations": "Lokasi"
+  },
+  "chart": {
+    "expand": "Perluas",
+    "closePanel": "Tutup Panel",
+    "sectionLabel": "Bagan"
+  },
+  "catalogItem": {
+    "add": "Tambah"
+  },
+  "concept": {
+    "inactive": {
+      "cancel": "Batal"
+    },
+    "active": {
+      "edit": "Sunting kondisi"
+    }
+  },
+  "satellite": {
+    "newLocation": "Lokasi baru",
+    "removeFilter": "Hapus filter"
+  },
+  "dateTime": {
+    "timeline": {
+      "togglePlay": "Putar"
+    }
+  },
+  "workbench": {
+    "removeAll": "Hapus semua",
+    "removeFromMap": "Hapus",
+    "exportData": "Ekspor",
+    "rangeMin": "Minimum:",
+    "rangeMax": "Maksimum:"
+  },
+  "preview": {
+    "disclaimer": "Sangkalan"
+  },
+  "mobile": {
+    "toggleNavigation": "Toggle Navigasi"
+  },
+  "addData": {
+    "dragDrop": "Tarik dan Jatuhkan"
+  },
+  "notification": {
+    "title": "Pesan"
   }
 }
