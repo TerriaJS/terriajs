@@ -568,7 +568,8 @@
       "dataResponsibility": "データに関する責任",
       "notUseableTitle": "カタログサービスが利用できません",
       "exceptionMessage": "CSWサーバーがエラーを報告しています:\n\n {{exceptionText}}",
-      "unknownError": "CSWサーバーが原因の特定できないエラーを報告しています。"
+      "unknownError": "CSWサーバーが原因の特定できないエラーを報告しています。",
+      "checkCORSDomain": "<br/>"
     },
     "csv": {
       "unableToLoadMessage": "サポートされているCSVフォーマットについては <a href=\"https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au\">csv-geo-au</a> の仕様を参照してください。\n\n {{message}}",
@@ -699,7 +700,22 @@
       "unsupportedErrorTitle": "サポートしていないタイプのパラメタです"
     },
     "spatialDetailing": {
-      "name": "Spatial Detailing"
+      "name": "Spatial Detailing",
+      "wrongNumberOfElements": "値のリストと地域コードのリストの要素の数が異なります",
+      "spatialDetailingOf": "{{at}}における{{of}}の空間詳細化",
+      "characteristicToPredictDescription": "地域ごとに予測する特性。",
+      "characteristicToPredictName": "予測する特性",
+      "aggregationFalseDescription": "荒い地域の値が地域におけるサンプルの合計である場合。例として総人口が挙げられます。",
+      "aggregationFalseName": "合計による集計",
+      "aggregationTrueDescription": "荒い地域の値が地域におけるサンプルの平均である場合。例として平均世帯収入が挙げられます。",
+      "aggregationTrueName": "平均による集計",
+      "aggregationDescription": "荒い地域ごとの値がどのように集計されたものであるかを指定します。地域全体の平均値である場合はTrueを、地域全体の合計値である場合はFalseを指定します。",
+      "coarseDataRegionTypeDescription": "荒い入力データを紐付ける地域のタイプ。",
+      "aggregationName": "集計",
+      "coarseDataRegionTypeName": "荒いデータの地域タイプ",
+      "regionTypeToPredictName": "予測地域タイプ",
+      "regionTypeToPredictDescription": "特性を予測する地域のタイプ。",
+      "description": "国勢調査で得られた特性との相関を学習・利用することで、荒いデータから細かな地域の特性を予測します。"
     },
     "socrataServer": {
       "tags": "タグ",
@@ -800,6 +816,18 @@
     },
     "webMapTileServiceCatalogGroup": {
       "groupNotAvailableMessage": "WMTSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このエラーが発生する場合、サーバーが <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>をサポートしていない可能性もあります。サーバーを管理しているのがあなたであれば、CORSが無効になっていないか確認し、無効になっている場合は有効にしてください。サーバーのコントロール権がない場合は、サーバー管理者に問い合わせてCORSを有効化してもらってください。または、{{appName}}の運営者に{{email}}から問い合わせいただければ、{{appName}}内のCORS非対応サーバーのリストにこのサーバーを加えることで{{appName}}自体がリクエストを中継できるかもしれません。 </p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>"
+    },
+    "terrainCatalog": {
+      "notSupportedErrorTitle": "2Dではサポートされていません"
+    },
+    "tableData": {
+      "bulkGeocoderErrorMessage": "座標の取得時にエラーが発生したため、緯度経度を住所に対応づけることができませんでした。インターネット接続を確認するか時間をおいてやり直してください。",
+      "bulkGeocoderErrorTitle": "一括ジオコーダーエラー",
+      "bulkGeocoderInfo2Message": "{{nullAddresses}}個の住所がCSVにありませんでした。",
+      "bulkGeocoderInfoMessage": "CSVに含まれている住所のうち{{number}}個を地図で見つけることができませんでした ",
+      "bulkGeocoderInfoTitle": "一括ジオコーダー",
+      "unsupportedCharactersMessage": "{{longitude}}, {{latitude}}を緯度・経度の組として読み取ることができません",
+      "unsupportedCharactersTitle": "緯度・経度の列に無効な文字が含まれています"
     }
   },
   "map": {
