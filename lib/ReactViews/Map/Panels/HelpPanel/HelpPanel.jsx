@@ -4,7 +4,7 @@ import React from "react";
 import { runInAction } from "mobx";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
-import Icon, { StyledIcon } from "../../../Icon.jsx";
+import Icon, { StyledIcon } from "../../../../Styled/Icon";
 import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
@@ -51,7 +51,7 @@ class HelpPanel extends React.Component {
           right: ${isVisible ? (isExpanded ? 490 : 0) : -320}px;
         `}
       >
-        <Box positionAbsolute paddedRatio={3} topRight>
+        <Box position="absolute" paddedRatio={3} topRight>
           <RawButton onClick={() => this.props.viewState.hideHelpPanel()}>
             <StyledIcon
               styledWidth={"16px"}

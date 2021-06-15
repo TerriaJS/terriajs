@@ -6,7 +6,7 @@ import Box from "../Styled/Box";
 import Button from "../Styled/Button";
 import { verticalAlign } from "../Styled/mixins";
 import Spacing from "../Styled/Spacing";
-import Icon, { StyledIcon } from "./Icon";
+import Icon, { StyledIcon } from "../Styled/Icon";
 
 enum CopyStatus {
   Success,
@@ -43,7 +43,6 @@ const Clipboard: React.FC<ClipboardProps> = props => {
         setStatus(CopyStatus.NotCopiedOrWaiting);
       }, 3000);
     }
-    // Cast to any as temporary fix for a clipboardjs typing bug - https://github.com/zenorocha/clipboard.js/issues/737
     clipboardBtn.on("success", () => {
       setStatus(CopyStatus.Success);
       resetTooltipLater();

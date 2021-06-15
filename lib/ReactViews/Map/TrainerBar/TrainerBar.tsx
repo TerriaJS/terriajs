@@ -14,7 +14,7 @@ import ViewState from "../../../ReactViewModels/ViewState";
 import Select from "../../../Styled/Select";
 import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact";
 import measureElement from "../../HOCs/measureElement";
-import { GLYPHS, StyledIcon } from "../../Icon";
+import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Text from "../../../Styled/Text";
 import Box from "../../../Styled/Box";
 import Button, { RawButton } from "../../../Styled/Button";
@@ -190,7 +190,7 @@ class StepAccordionRaw extends React.Component<
           <Box
             paddedHorizontally={4}
             column
-            positionAbsolute
+            position="absolute"
             fullWidth
             css={`
               top: 0;
@@ -258,7 +258,7 @@ class StepAccordionRaw extends React.Component<
         {isShowingAllSteps && (
           <BoxTrainerExpandedSteps
             column
-            positionAbsolute
+            position="absolute"
             backgroundColor={theme.textBlack}
             fullWidth
             paddedRatio={4}
@@ -335,7 +335,7 @@ export const TrainerBar = observer((props: TrainerBarProps) => {
   return (
     <TrainerBarWrapper
       centered
-      positionAbsolute
+      position="absolute"
       styledWidth={
         isMapFullScreen
           ? "100%"

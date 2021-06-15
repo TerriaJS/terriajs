@@ -1,31 +1,5 @@
-import styled from "styled-components";
-
-type Overflow =
-  | "visible"
-  | "hidden"
-  | "scroll"
-  | "auto"
-  | "initial"
-  | "inherit";
-
-/* 
-we can use this after upgrade to typescript 4
-
-type StyledSizePx = `${number}px`
-type StyledSizePercent = `${number}%`
-export type StyledSize = StyledSizePx | StyledSizePercent | `calc(${string})`;
-type Color = `#${string}` | `rgb(${number},${number},${number})` | `rgba(${number}, ${number}, ${number}, ${number})` | `hsl(${number}, ${number}%, ${number}%)` | `hsla(${number}, ${number}%, ${number}%, ${number}%)` | string;
-
-type FlexGrow = number | "initial" | "inherit";
-type FlexShrink = number | "initial" | "inherit";
-type FlexBasis = StyledSize | "auto" | "initial" | "inherit";
-type Flex = FlexGrow | FlexShrink | FlexBasis | `${FlexGrow} ${FlexShrink} ${FlexBasis}`;
- */
-type OneKeyFrom<T, K extends keyof T = keyof T> = K extends any
-  ? Pick<T, K> & Partial<Record<Exclude<keyof T, K>, never>> extends infer O
-    ? { [P in keyof O]: O[P] }
-    : never
-  : never;
+import styled, { css } from "styled-components";
+import { Overflow, WordBreak, OneKeyFrom } from "./Styled.types";
 
 interface Column {
   col1?: boolean;
@@ -43,9 +17,7 @@ interface Column {
 }
 
 interface IBoxPropsBase {
-  relative?: boolean;
-  positionAbsolute?: boolean;
-  static?: boolean;
+  position?: "relative" | "absolute" | "static";
   topRight?: boolean;
   displayInlineBlock?: boolean;
   rounded?: boolean;
@@ -78,38 +50,34 @@ interface IBoxPropsBase {
   paddedRatio?: number;
   paddedHorizontally?: number | boolean;
   paddedVertically?: number | boolean;
+  styledPadding?: string;
   backgroundImage?: any;
   backgroundBlackOverlay?: number;
-  wordBreak?: any;
+  wordBreak?: WordBreak;
   overflow?: Overflow;
   overflowY?: Overflow;
+  overflowX?: Overflow;
   scroll?: boolean;
   style?: any;
   as?: React.ElementType | keyof JSX.IntrinsicElements;
   ref?: any;
 }
+
 type IBoxProps = IBoxPropsBase & OneKeyFrom<Column>;
 
 export const Box = styled.div<IBoxProps>`
-  ${props => props.relative && `position:relative;`}
-
   display: flex;
-  position: relative;
-  ${props =>
-    props.positionAbsolute &&
-    `
-    position:absolute;
-    z-index:1;
-   `}
-  ${props => props.static && `position: static;`}
+  box-sizing: border-box;
+  ${props => props.position && `position: ${props.position};`}
+  ${props => props.position === "absolute" && `z-index:1;`}
+  ${props => !props.position && `position: relative;`}
+
   ${props =>
     props.topRight &&
     `
     right: 0px;
     top: 0px;
   `}
-
-  box-sizing: border-box;
 
   ${props => props.displayInlineBlock && `display: inline-block;`}
 
@@ -152,13 +120,13 @@ export const Box = styled.div<IBoxProps>`
   ${props => props.justifySpaceBetween && `justify-content: space-between;`}
 
   ${props => props.left && `align-items: center;`}
-  ${props => props.alignItemsFlexStart && `align-items: flex-start;`}
   ${props => props.left && `justify-content: flex-start;`}
+  ${props => props.alignItemsFlexStart && `align-items: flex-start;`}
   ${props => props.leftSelf && `align-self: flex-start;`}
 
   ${props => props.right && `align-items: center;`}
-  ${props => props.alignItemsFlexEnd && `align-items: flex-end;`}
   ${props => props.right && `justify-content: flex-end;`}
+  ${props => props.alignItemsFlexEnd && `align-items: flex-end;`}
   ${props => props.rightSelf && `align-self: flex-end;`}
 
   ${props => props.column && `flex-direction: column;`}
@@ -199,6 +167,7 @@ export const Box = styled.div<IBoxProps>`
       padding-bottom: ${5 *
         (props.paddedVertically === true ? 1 : props.paddedVertically)}px;
     `}
+  ${props => props.styledPadding && `padding: ${props.styledPadding};`}
 
   ${props =>
     props.backgroundImage &&
@@ -229,6 +198,11 @@ export const Box = styled.div<IBoxProps>`
     `
       overflow-y: ${props.overflowY};
     `}
+    ${props =>
+      props.overflowX &&
+      `
+        overflow-x: ${props.overflowX};
+      `}
 
   ${props =>
     props.scroll &&
@@ -250,8 +224,10 @@ export const Box = styled.div<IBoxProps>`
   `}
 `;
 
-export const BoxSpan = styled(Box).attrs({
-  as: "span"
-})``;
+export const BoxSpan = styled(Box).attrs(
+  (props: { as?: React.ElementType | keyof JSX.IntrinsicElements }) => ({
+    as: "span"
+  })
+)``;
 
 export default Box;

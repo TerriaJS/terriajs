@@ -51,7 +51,7 @@ export const Prompt: React.FC<PromptProps> = ({
       <Box
         fullWidth
         fullHeight
-        positionAbsolute
+        position="absolute"
         css={`
           z-index: ${(p: any) => Number(p.theme.frontComponentZIndex) + 100};
         `}

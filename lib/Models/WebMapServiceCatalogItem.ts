@@ -419,7 +419,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
     result.push(
       createStratumInstance(InfoSectionTraits, {
         name: i18next.t("models.webMapServiceCatalogItem.serviceDescription"),
-        contentAsObject: this.capabilities.Service as JsonObject
+        contentAsObject: this.capabilities.Service as JsonObject,
+        // Hide big ugly table by default
+        show: false
       })
     );
 
@@ -453,7 +455,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
               name: i18next.t(
                 "models.webMapServiceCatalogItem.dataDescription"
               ),
-              contentAsObject: out as JsonObject
+              contentAsObject: out as JsonObject,
+              // Hide big ugly table by default
+              show: false
             })
           );
         } catch (e) {
@@ -1215,7 +1219,7 @@ class WebMapServiceCatalogItem
         ) => {
           if (level > maximumLevel) {
             if (!messageDisplayed) {
-              this.terria.error.raiseEvent(
+              this.terria.raiseErrorToUser(
                 new TerriaError({
                   title: i18next.t(
                     "models.webMapServiceCatalogItem.datasetScaleErrorTitle"
@@ -1374,10 +1378,11 @@ class WebMapServiceCatalogItem
   @computed
   get selectableDimensions() {
     if (this.disableDimensionSelectors) {
-      return [];
+      return super.selectableDimensions;
     }
 
     return filterOutUndefined([
+      ...super.selectableDimensions,
       ...this.wmsDimensionSelectableDimensions,
       ...this.styleSelectableDimensions
     ]);

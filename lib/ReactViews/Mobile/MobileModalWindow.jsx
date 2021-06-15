@@ -8,7 +8,7 @@ import DataCatalog from "../DataCatalog/DataCatalog";
 import DataPreview from "../Preview/DataPreview";
 import MobileSearch from "./MobileSearch";
 import WorkbenchList from "../Workbench/WorkbenchList";
-import Icon from "../Icon";
+import Icon from "../../Styled/Icon";
 
 import Styles from "./mobile-modal-window.scss";
 import { runInAction } from "mobx";

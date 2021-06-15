@@ -85,7 +85,8 @@ export default class TableColumn {
   }
 
   /**
-   * Gets the raw, uninterpreted values in the column.
+   * Gets the raw, uninterpreted values in the column. This will not apply any transformations to data (eg transformation expressions).
+   *
    */
   @computed
   get values(): readonly string[] {
@@ -830,15 +831,6 @@ function toNumber(value: string): number | null {
   const asNumber = Number(withoutCommas);
   if (!Number.isNaN(asNumber)) {
     return asNumber;
-  }
-  return null;
-}
-
-function toDate(value: string): Date | null {
-  // TODO: Add much more sophisticated date parsing from old TableColumn.convertToDates.
-  const ms = Date.parse(value);
-  if (!Number.isNaN(ms)) {
-    return new Date(ms);
   }
   return null;
 }

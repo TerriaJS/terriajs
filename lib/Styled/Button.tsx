@@ -194,8 +194,6 @@ export const Button = (
           <TextSpan
             white={primary || secondary || warning}
             medium={secondary}
-            // bold
-            skinny
             {...textProps}
           >
             {props.children}

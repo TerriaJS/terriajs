@@ -18,7 +18,7 @@ import { observer } from "mobx-react";
 import CustomComponent from "../Custom/CustomComponent";
 import FeatureInfoDownload from "./FeatureInfoDownload";
 import formatNumberForLocale from "../../Core/formatNumberForLocale";
-import Icon from "../Icon";
+import Icon from "../../Styled/Icon";
 import propertyGetTimeValues from "../../Core/propertyGetTimeValues";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import { withTranslation } from "react-i18next";
@@ -386,7 +386,7 @@ function clockIfAvailable(featureInfoSection) {
  */
 function currentTimeIfAvailable(featureInfoSection) {
   if (defined(featureInfoSection.props.catalogItem)) {
-    return featureInfoSection.props.catalogItem.currentTime;
+    return featureInfoSection.props.catalogItem.currentTimeAsJulianDate;
   }
 
   return undefined;

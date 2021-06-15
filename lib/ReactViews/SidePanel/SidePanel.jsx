@@ -6,10 +6,10 @@ import { withTranslation } from "react-i18next";
 import styled, { withTheme } from "styled-components";
 import Box from "../../Styled/Box";
 import Button from "../../Styled/Button";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
 import { useRefForTerria } from "../Hooks/useRefForTerria";
-import Icon, { StyledIcon } from "../Icon";
 import SearchBoxAndResults from "../Search/SearchBoxAndResults";
 import Workbench from "../Workbench/Workbench";
 
@@ -40,7 +40,7 @@ function EmptyWorkbench(props) {
   };
 
   return (
-    <Text large textLight nunito>
+    <Text large textLight>
       {/* Hardcoded top to 150px for now for very very small screens
           TODO: make it not hardcoded */}
       <Box
@@ -225,7 +225,7 @@ const SidePanel = observer(
 );
 
 // Used to create two refs for <SidePanel /> to consume, rather than
-// using the withTerriaRef() HOC twice, designed for a single ref
+// using the withTerriaRef() HOC twice,  designed for a single ref
 const SidePanelWithRefs = props => {
   const refForExploreMapData = useRefForTerria(
     EXPLORE_MAP_DATA_NAME,

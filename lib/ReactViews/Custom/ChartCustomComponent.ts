@@ -1,4 +1,3 @@
-import { DomElement } from "domhandler";
 import { runInAction } from "mobx";
 import React, { ReactElement } from "react";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
@@ -20,7 +19,10 @@ import LatLonHeightTraits from "../../Traits/LatLonHeightTraits";
 import ChartPreviewStyles from "./Chart/chart-preview.scss";
 import ChartExpandAndDownloadButtons from "./Chart/ChartExpandAndDownloadButtons";
 import Chart from "./Chart/FeatureInfoPanelChart";
-import CustomComponent, { ProcessNodeContext } from "./CustomComponent";
+import CustomComponent, {
+  DomElement,
+  ProcessNodeContext
+} from "./CustomComponent";
 import ChartableMixin from "../../ModelMixins/ChartableMixin";
 
 export interface ChartCustomComponentAttributes {

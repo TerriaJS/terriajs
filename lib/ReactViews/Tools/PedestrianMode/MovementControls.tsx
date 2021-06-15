@@ -6,7 +6,7 @@ import Box from "../../../Styled/Box";
 import Button from "../../../Styled/Button";
 import Spacing from "../../../Styled/Spacing";
 import Text from "../../../Styled/Text";
-import Icon, { StyledIcon } from "../../Icon";
+import Icon, { StyledIcon } from "../../../Styled/Icon";
 import MovementsController from "./MovementsController";
 
 const mouseControlsImage = require("../../../../wwwroot/images/mouse-control.svg");

@@ -5,6 +5,8 @@ import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
+import Result from "../Core/Result";
+import TerriaError from "../Core/TerriaError";
 import Group from "../Models/Group";
 import Model, { BaseModel } from "../Models/Model";
 import GroupTraits from "../Traits/GroupTraits";
@@ -145,19 +147,30 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
     }
 
     @action
-    addMembersFromJson(stratumId: string, members: any[]) {
+    addMembersFromJson(stratumId: string, members: any[]): Result {
       const newMemberIds = this.traits["members"].fromJson(
         this,
         stratumId,
         members
       );
       newMemberIds
-        .map((memberId: string) =>
+        .ignoreError()
+        ?.map((memberId: string) =>
           this.terria.getModelById(BaseModel, memberId)
         )
         .forEach((member: BaseModel) => {
           this.add(stratumId, member);
         });
+
+      if (newMemberIds.error)
+        return Result.error(
+          TerriaError.from(
+            newMemberIds.error,
+            `Failed to add members from JSON for model \`${this.uniqueId}\``
+          )
+        );
+
+      return Result.none();
     }
 
     /**

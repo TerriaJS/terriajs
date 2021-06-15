@@ -10,7 +10,7 @@ import styled from "styled-components";
 import SearchBox from "../Search/SearchBox";
 // import SidebarSearch from "../Search/SidebarSearch";
 import LocationSearchResults from "../Search/LocationSearchResults";
-import Icon, { StyledIcon } from "../Icon";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 
 import Box from "../../Styled/Box";
 import Text from "../../Styled/Text";
@@ -167,7 +167,7 @@ export class SearchBoxAndResultsRaw extends React.Component {
           {/* Results */}
           <If condition={shouldShowResults}>
             <Box
-              positionAbsolute
+              position="absolute"
               fullWidth
               column
               css={`

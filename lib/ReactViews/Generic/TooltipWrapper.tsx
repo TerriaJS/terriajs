@@ -161,7 +161,7 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
           ReactDOM.createPortal(
             <BoxSpan
               paddedRatio={3}
-              positionAbsolute
+              position="absolute"
               rounded
               style={{
                 ...innerElementStyles
@@ -183,7 +183,7 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
         {/* Render this always so that the ref exists for calculations */}
         <BoxSpan
           paddedRatio={3}
-          positionAbsolute
+          position="absolute"
           css={`
             visibility: hidden;
             left: 50%;

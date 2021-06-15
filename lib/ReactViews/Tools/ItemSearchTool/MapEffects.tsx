@@ -70,12 +70,5 @@ function zoomToResult(
   item: SearchableItemMixin.Instance,
   result: ItemSearchResult
 ): void {
-  if (item.zoomToItemSearchResult) {
-    item.zoomToItemSearchResult(result);
-  } else {
-    item.terria.currentViewer.zoomTo(
-      result.zoomToTarget as any,
-      undefined as any
-    );
-  }
+  item.zoomToItemSearchResult(result);
 }

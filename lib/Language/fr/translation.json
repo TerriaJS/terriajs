@@ -1,0 +1,149 @@
+{
+  "AR": {
+    "manualAlignmentTitle": "Alignement manuel",
+    "confirmText": "Compris",
+    "experimentalFeatureMessage": "Le mode de réalité augmentée est actuellement en version bêta. Ce mode est uniquement conçu pour être utilisé sur les derniers appareils mobiles haut de gamme.<br /><br />AVERTISSEMENT : Ce mode peut consommer beaucoup de données, veuillez tenir compte des frais d'utilisation des données de votre fournisseur de réseau.<br /><br />La précision de ce mode dépend de la précision de la boussole interne de votre appareil mobile.",
+    "title": "Fonctionnalité expérimentale : réalité augmentée"
+  },
+  "story": {
+    "cancelRemove": "Annuler",
+    "confirmRemove": "Supprimer",
+    "removeStoriesPanel": "Voulez-vous vraiment supprimer {{ count }} scène ?",
+    "removeStoriesPanel_plural": "Voulez-vous vraiment supprimer {{ count }} scènes ?",
+    "edit": "Modifier",
+    "editStory": "modifier"
+  },
+  "featureInfo": {
+    "noInfoAvailable": "Aucune information disponible"
+  },
+  "sui": {
+    "notifications": {
+      "denyText": "Peut-être plus tard",
+      "confirmText": "Oui",
+      "message": "Souhaitez-vous la voir maintenant ?",
+      "title": "Cette carte contient une histoire"
+    }
+  },
+  "helpMenu": {
+    "next": "SUIVANT",
+    "done": "TERMINÉ",
+    "btnTitle": "obtenir de l'aide",
+    "helpMenuHeader": "Qu'est-ce que vous aimeriez faire ?",
+    "btnText": "Aide"
+  },
+  "feedback": {
+    "feedbackBtnText": "Envoyer les remarques",
+    "send": "Envoyer",
+    "sending": "Envoi…",
+    "cancel": "Annuler",
+    "shareWithDevelopers": "Partager ma vue cartographique avec les développeurs de {{appName}}",
+    "commentQuestion": "Commentaire ou question",
+    "yourName": "Votre nom (facultatif)",
+    "close": "fermer la remarque",
+    "title": "Remarques",
+    "feedbackPreamble": "Nous serions ravis d’avoir votre retour !",
+    "email": "Adresse courriel (facultative)<br/><2>Nous ne pouvons pas faire de suivi sans !</2>"
+  },
+  "settingPanel": {
+    "performanceLabel": "Performance",
+    "qualityLabel": "Qualité",
+    "mapView": "Vue carte",
+    "btnText": "Carte",
+    "btnTitle": "Changer de vue",
+    "screen": "écran",
+    "viewerModeLabels": {
+      "CesiumTerrain": "Terrain 3D"
+    },
+    "none": "(Aucun)"
+  },
+  "toolsPanel": {
+    "btnTitle": "Boîte à outils avancée",
+    "btnText": "Outil"
+  },
+  "countDatasets": {
+    "btnCount": "Compter les jeux de données",
+    "title": "Compter les jeux de données",
+    "recount": "Recompter",
+    "subTotals": "<div> {{name}} : {{items}} éléments / {{groups}} groupes </div>",
+    "totals": "<div>Le catalogue contient {{items}} éléments dans {{groups}} groupes. </div>",
+    "countingMessage": "Comptage, veuillez patienter…",
+    "loadError": "n'a pas réussi à se charger."
+  },
+  "share": {
+    "btnStoryShareTitle": "Partagez votre histoire avec d'autres",
+    "btnMapShareTitle": "Partagez votre carte avec d'autres",
+    "btnCatalogShareTitle": "Partagez votre catalogue avec d'autres",
+    "btnMapShareText": "Partager / Imprimer",
+    "btnStoryShareText": "Partager",
+    "btnCatalogShareText": "Partager",
+    "shortenUsingService": "Raccourcir l'URL de partage à l'aide d'un service Web",
+    "embedTitle": "Pour l'intégrer, copiez ce code pour intégrer cette carte dans une page HTML :",
+    "btnAdvanced": "Options avancées",
+    "creatingPrintView": "Création de la vue d'impression…",
+    "printViewButton": "Afficher la vue d'impression",
+    "printButton": "Imprimer",
+    "printExplanation": "Ouvrir une version imprimable de cette carte.",
+    "printTitle": "Imprimer la carte",
+    "shortLinkShortening": "Raccourcissement…"
+  },
+  "legend": {
+    "elev": "Élév.",
+    "zone": "ZONE",
+    "lon": "Lon",
+    "lat": "Lat"
+  },
+  "compass": {
+    "title": "Cliquez et faites glisser pour faire pivoter la caméra",
+    "description": "Faire glisser l'anneau extérieur : faire pivoter la vue.\nFaites glisser le gyroscope intérieur : orbite libre.\nDouble-cliquez : réinitialiser la vue.\nASTUCE : vous pouvez également libérer l'orbite en maintenant la touche CTRL enfoncée et en faisant glisser la carte."
+  },
+  "zoomCotrol": {
+    "zoomOut": "Zoom arrière",
+    "zoomReset": "Réinitialiser le zoom",
+    "zoomIn": "Zoom avant"
+  },
+  "splitterTool": {
+    "workbench": {
+      "copyName": "{{name}} (copie)",
+      "goright": "Droite",
+      "gorightTitle": "Afficher sur le côté droit",
+      "both": "Les deux",
+      "bothTitle": "Afficher des deux côtés",
+      "goleft": "Gauche",
+      "goleftTitle": "Afficher sur le côté gauche"
+    },
+    "title": "Faites glisser vers la gauche ou la droite pour ajuster les vues",
+    "toggleSplitterTool": "Activer la comparaison côte à côte entre deux ensembles de données différents"
+  },
+  "location": {
+    "centreMap": "Centrer la carte sur votre position actuelle",
+    "originError": "Votre navigateur peut fournir votre emplacement seulement quand vous utilisez https. Vous pourrez peut-être utiliser {{secureUrl}} à la place.",
+    "location": "Emplacement",
+    "myLocation": "Ma position",
+    "browserCannotProvide": "Votre navigateur ne peut pas fournir votre position.",
+    "errorGettingLocation": "Erreur de localisation"
+  },
+  "measure": {
+    "measureDistance": "Mesurer la distance entre les emplacements",
+    "measureTool": "Outil de mesure"
+  },
+  "general": {
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "skip": "Passer",
+    "prev": "Préc.",
+    "next": "Suiv.",
+    "open": "Ouvrir",
+    "close": "Fermer"
+  },
+  "models": {
+    "abs": {
+      "itemNotAvailableMessage": "Une erreur s'est produite lors de l'appel de {{methodName}} sur le serveur ABS ITT. <p> Cette erreur peut indiquer que l'élément que vous avez ouvert est temporairement indisponible ou qu'il y a un problème avec votre connexion Internet. Essayez de rouvrir le groupe et si le problème persiste, veuillez le signaler en envoyant un courriel à {{email}}. </p>"
+    }
+  },
+  "emptyWorkbench": {
+    "helpfulHintsThree": "Dans le plan de travail, vous pouvez activer et désactiver les ensembles de données, modifier leur opacité, activer la comparaison d'écran partagé, modifier les styles et parcourir les dates et les heures, si les données prennent en charge cette fonctionnalité.",
+    "helpfulHintsTwo": "Une fois que vous avez ajouté des données à la carte, vos ensembles de données actifs sont répertoriés ici dans votre plan de travail. Le plan de travail vous aidera à interagir avec les données.",
+    "helpfulHintsOne": "Parcourez les données disponibles en sélectionnant « Explorer les données cartographiques » ou cliquez sur « Télécharger » pour ajouter vos propres données à la carte.",
+    "helpfulHints": "Astuces utiles"
+  }
+}

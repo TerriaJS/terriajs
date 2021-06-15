@@ -17,7 +17,7 @@ import Spacing from "../../Styled/Spacing";
 import Text, { TextSpan } from "../../Styled/Text";
 import BadgeBar from "../BadgeBar";
 import measureElement from "../HOCs/measureElement";
-import Icon, { StyledIcon } from "../Icon";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
 import { getShareData } from "../Map/Panels/SharePanel/BuildShareLink";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
@@ -372,7 +372,7 @@ const StoryBuilder = observer(
             )}
             <Box
               column
-              static
+              position="static"
               css={`
                 ${(this.state.isRemoving || this.state.isSharing) &&
                   `opacity: 0.3`}
@@ -383,7 +383,7 @@ const StoryBuilder = observer(
                 scroll
                 overflowY={"auto"}
                 styledMaxHeight={"calc(100vh - 283px)"}
-                static
+                position="static"
                 ref={this.storiesWrapperRef}
                 css={`
                   margin-right: -10px;
@@ -573,8 +573,7 @@ const RemoveDialog = props => {
   return (
     <Box
       backgroundColor={props.theme.darkWithOverlay}
-      absolute
-      positionAbsolute
+      position="absolute"
       rounded
       paddedVertically={3}
       paddedHorizontally={2}
