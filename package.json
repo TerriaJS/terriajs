@@ -114,7 +114,7 @@
     "proj4": "^2.4.4",
     "prop-types": "^15.6.0",
     "raw-loader": "^1.0.0",
-    "rc-slider": "^8.6.6",
+    "rc-slider": "^9.7.2",
     "react": "^17.0.2",
     "react-addons-pure-render-mixin": "^15.6.0",
     "react-anything-sortable": "^1.7.4",
