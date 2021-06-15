@@ -18,11 +18,11 @@
   },
   "dependencies": {
     "@babel/core": "^7.16.0",
-    "@babel/parser": "^7.12.14",
-    "@babel/plugin-proposal-decorators": "^7.10.4",
-    "@babel/preset-env": "^7.10.4",
-    "@babel/preset-react": "^7.0.0",
-    "@babel/preset-typescript": "^7.10.4",
+    "@babel/parser": "^7.14.6",
+    "@babel/plugin-proposal-decorators": "^7.14.5",
+    "@babel/preset-env": "^7.14.5",
+    "@babel/preset-react": "^7.14.5",
+    "@babel/preset-typescript": "^7.14.5",
     "@mapbox/geojson-merge": "^1.1.1",
     "@mapbox/point-geometry": "^0.1.0",
     "@mapbox/togeojson": "^0.16.0",
@@ -176,7 +176,7 @@
     "worker-loader": "^2.0.0"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.12.16",
+    "@babel/eslint-parser": "^7.14.5",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@types/dateformat": "^3.0.1",
     "@types/fs-extra": "^7.0.0",
