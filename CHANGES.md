@@ -6,6 +6,7 @@ Change Log
 #### next release (8.0.0-alpha.85)
 
 * Remove table style `SelectableDimension` from SDMX
+* Fix checkbox when click happen on svg icon. (#5550)
 * [The next improvement]
 
 #### 8.0.0-alpha.84
