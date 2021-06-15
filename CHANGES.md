@@ -889,6 +889,10 @@
 * Remove table style `SelectableDimension` from SDMX
 * `GyroscopeGuidance` can now be translated.
 * Wraps tool title bar text using `...`.
+* Upgrade to react v17. (#5549)
+* Upgrade to documentationjs 13, and fix configuration issue. (#5549)
+* Remove unused dependencies `class-list`, `d3-axis`, `d3-dispatch`, `simple-statistics` and `ts-loader`. (#5549)
+* [The next improvement]
 
 #### 8.0.0-alpha.84
 
