@@ -10,7 +10,7 @@ import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
 import { TextSpan } from "../../Styled/Text";
 import BadgeBar from "../BadgeBar";
-import Icon, { StyledIcon } from "../Icon";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import WorkbenchList from "./WorkbenchList";
 
 interface IProps extends WithTranslation {

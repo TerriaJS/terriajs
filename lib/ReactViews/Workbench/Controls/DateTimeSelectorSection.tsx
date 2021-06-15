@@ -15,7 +15,7 @@ import Spacing from "../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../Styled/Text";
 import { formatDateTime } from "../../BottomDock/Timeline/DateFormats";
 import DateTimePicker from "../../BottomDock/Timeline/DateTimePicker";
-import { GLYPHS, StyledIcon } from "../../Icon";
+import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 
 interface IState {
   isOpen: boolean;
