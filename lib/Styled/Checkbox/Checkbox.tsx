@@ -50,6 +50,8 @@ const Checkbox = memo(
     const id = useUID();
     return (
       <TextSpan
+        as={"label"}
+        htmlFor={id}
         css={`
           display: flex;
           flex-shrink: 0;
@@ -87,8 +89,6 @@ const Checkbox = memo(
         />
         <Spacing right={1} />
         <TextSpan
-          as={"label"}
-          htmlFor={id}
           isDisabled={isDisabled}
           css={`
             font-size: inherit;
