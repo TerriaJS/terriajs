@@ -275,12 +275,13 @@ class DateTimePicker extends React.Component<PropsType> {
     window.removeEventListener("click", this.closePickerEventHandler);
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps: PropsType) {
     // Scroll into view to reveal the selected time item
-    this.props.scrollToSelectedTime &&
+    this.props.currentDate !== prevProps.currentDate &&
+      this.props.scrollToSelectedTime &&
       this.selectedTimeRef.current?.scrollIntoView({
         behavior: "smooth",
-        block: "nearest"
+        block: "center"
       });
   }
 
