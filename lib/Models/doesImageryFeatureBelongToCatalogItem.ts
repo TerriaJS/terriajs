@@ -12,9 +12,7 @@ export default function doesImageryFeatureBelongToItem(
   if (!MappableMixin.isMixedInto(item)) return false;
   const imageryProvider = feature.imageryLayer?.imageryProvider;
   if (imageryProvider === undefined) return false;
-  return (
-    item.mapItems.find(
-      m => ImageryParts.is(m) && m.imageryProvider === imageryProvider
-    ) !== undefined
+  return item.mapItems.some(
+    m => ImageryParts.is(m) && m.imageryProvider === imageryProvider
   );
 }
