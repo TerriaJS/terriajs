@@ -331,8 +331,17 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
   @computed
   get defaultStyle() {
     return createStratumInstance(TableStyleTraits, {
-      latitudeColumn: this.catalogItem.geoPoint2dFieldName ? "lat" : undefined,
-      longitudeColumn: this.catalogItem.geoPoint2dFieldName ? "lon" : undefined,
+      regionColumn: this.regionFieldName,
+      latitudeColumn:
+        this.catalogItem.geoPoint2dFieldName &&
+        !this.catalogItem.regionFieldName
+          ? "lat"
+          : undefined,
+      longitudeColumn:
+        this.catalogItem.geoPoint2dFieldName &&
+        !this.catalogItem.regionFieldName
+          ? "lon"
+          : undefined,
 
       time: createStratumInstance(TableTimeStyleTraits, {
         // If we are viewing a timeseries with only 1 sample per point - spreadStart/EndTime
@@ -362,6 +371,13 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
 
   @computed
   get featureInfoTemplate() {
+    if (
+      !this.catalogItem.datasetId ||
+      !this.catalogItem.url ||
+      this.selectAllFields
+    )
+      return;
+
     let template = '<table class="cesium-infoBox-defaultTable">';
 
     // Function to format row with title and value
@@ -477,7 +493,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
       : undefined;
   }
 
-  /** Get fields with useful infomation (for visualisation). Eg numbers, text, not IDs... */
+  /** Get fields with useful infomation (for visualisation). Eg numbers, text, not IDs, not region... */
   @computed get usefulFields() {
     return (
       this.dataset.fields?.filter(
@@ -488,7 +504,9 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
           ) &&
           !isIdField(f.name) &&
           !isIdField(f.label) &&
-          f.name !== this.catalogItem.regionFieldName
+          f.name !== this.catalogItem.regionFieldName &&
+          !this.catalogItem.matchRegionType(f.name) &&
+          !this.catalogItem.matchRegionType(f.label)
       ) ?? []
     );
   }
@@ -676,9 +694,12 @@ export default class OpenDataSoftCatalogItem
 
   // Convert availableFields DimensionTraits to SelectableDimension
   @computed get availableFieldsDimension(): SelectableDimension | undefined {
-    if (this.availableFields) {
+    if (this.availableFields?.options?.length ?? 0 > 0) {
       return {
-        ...this.availableFields,
+        id: this.availableFields.id,
+        name: this.availableFields.name,
+        selectedId: this.availableFields.selectedId,
+        options: this.availableFields.options,
         setDimensionValue: (strataId: string, selectedId: string) => {
           this.setTrait(strataId, "colorFieldName", selectedId);
           this.loadMapItems();
@@ -692,7 +713,7 @@ export default class OpenDataSoftCatalogItem
     return filterOutUndefined([
       this.availableFieldsDimension,
       ...super.selectableDimensions.filter(
-        s => !this.availableFields || s.id !== "activeStyle"
+        s => !this.availableFieldsDimension || s.id !== "activeStyle"
       )
     ]);
   }

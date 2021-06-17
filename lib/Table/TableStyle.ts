@@ -73,8 +73,9 @@ export default class TableStyle {
   get hidden() {
     return (
       this.styleTraits.hidden ??
-      ((this.isEnum && this.enumColors.length <= 1) ||
-        (!this.isEnum && this.numberOfBins <= 1))
+      (((this.isEnum && this.enumColors.length <= 1) ||
+        (!this.isEnum && this.numberOfBins <= 1)) &&
+        !this.filterAvailable)
     );
   }
 
@@ -495,7 +496,10 @@ export default class TableStyle {
   get filterAvailable() {
     return (
       !!this.colorColumn &&
-      !(this.colorColumn.type === TableColumnType.scalar || this.isEnum)
+      !(this.colorColumn.type === TableColumnType.scalar || this.isEnum) &&
+      this.colorColumn.uniqueValues.values.length <
+        this.colorColumn.values.length -
+          this.colorColumn.uniqueValues.numberOfNulls
     );
   }
 

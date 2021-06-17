@@ -21,6 +21,7 @@ import { BaseModel } from "./Model";
 import OpenDataSoftCatalogItem from "./OpenDataSoftCatalogItem";
 import StratumOrder from "./StratumOrder";
 
+// "Valid" types which force some properties to be defined
 export type ValidDataset = Dataset & { dataset_id: string };
 export type ValidFacet = Facet & { name: string; facets?: ValidFacet[] };
 
@@ -40,7 +41,7 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
     let datasets: ValidDataset[] | undefined;
     let facets: ValidFacet[] | undefined;
 
-    // If no facets, try to get some
+    // If no facetFilters, try to get some facets
     if (
       catalogGroup.facetFilters &&
       catalogGroup.facetFilters.length === 0 &&
@@ -51,7 +52,7 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
       ) as ValidFacet[];
     }
 
-    // If no facets
+    // If no facets (or we have facetFiles) - get datasets
     if (!facets || facets.length === 0) {
       let q = fromCatalog()
         .datasets()
@@ -61,6 +62,7 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
         // Possible values: calendar, geo, image, apiproxy, timeserie, and aggregate
         .where(`features = "geo" OR features = "timeserie"`);
 
+      // If facet filters, use them to filter datasets
       if (catalogGroup.facetFilters && catalogGroup.facetFilters.length > 0) {
         q = q.refine(
           catalogGroup.facetFilters.map(f => `${f.name}:${f.value}`).join(",")
@@ -114,6 +116,7 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
     this.datasets.forEach(dataset => this.createMemberFromDataset(dataset));
   }
 
+  /** Turn facet into OpenDataSoftCatalogGroup */
   @action
   createGroupFromFacet(facet: ValidFacet) {
     const layerId = this.getFacetId(facet);
@@ -173,6 +176,7 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
     }
   }
 
+  /** Turn dataset into OpenDataSoftCatalogItem */
   @action
   createMemberFromDataset(dataset: ValidDataset) {
     const layerId = this.getDatasetId(dataset);

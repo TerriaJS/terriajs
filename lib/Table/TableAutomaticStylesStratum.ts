@@ -177,6 +177,10 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
     ) as this;
   }
 
+  @computed get title() {
+    return this.catalogItem.activeTableStyle.title;
+  }
+
   @computed
   get items(): StratumFromTraits<LegendItemTraits>[] {
     const activeStyle = this.catalogItem.activeTableStyle;
