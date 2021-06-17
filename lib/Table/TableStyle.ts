@@ -68,6 +68,16 @@ export default class TableStyle {
     );
   }
 
+  /** Hide style if number of colors (enumColors or numberOfBins) is less than 2. As a ColorMap with a single color isn't super useful. */
+  @computed
+  get hidden() {
+    return (
+      this.styleTraits.hidden ??
+      ((this.isEnum && this.enumColors.length <= 1) ||
+        (!this.isEnum && this.numberOfBins <= 1))
+    );
+  }
+
   /**
    * Gets the {@link TableStyleTraits} for this style. The traits are derived
    * from the default styles plus this style layered on top of the default.

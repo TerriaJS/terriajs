@@ -92,6 +92,13 @@ export default class TableStyleTraits extends ModelTraits {
   })
   filter?: string;
 
+  @primitiveTrait({
+    name: "Hide style",
+    description: `Hide style from "Display Variable" drop-down in workbench. It is hidden by default if number of colors (enumColors or numberOfBins) is less than 2 - as a ColorMap with a single color isn't super useful`,
+    type: "boolean"
+  })
+  hidden?: boolean;
+
   static isRemoval(style: StratumFromTraits<TableStyleTraits>) {
     return style.title === null;
   }

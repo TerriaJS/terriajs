@@ -427,7 +427,9 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return {
         id: "activeStyle",
         name: "Display Variable",
-        options: this.tableStyles.map(style => {
+        options: this.tableStyles
+          .filter(style => !style.hidden)
+          .map(style => {
           return {
             id: style.id,
             name: style.title
