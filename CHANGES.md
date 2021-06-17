@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.85)
 
+* Remove table style `SelectableDimension` from SDMX
 * `GyroscopeGuidance` can now be translated.
 * [The next improvement]
 
