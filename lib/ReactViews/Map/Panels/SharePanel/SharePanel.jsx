@@ -376,7 +376,7 @@ const SharePanel = observer(
                 id="share-url"
                 rounded
                 onCopy={text =>
-                  terria.analytics.logEvent("Share", "Story copy", text)
+                  terria.analytics?.logEvent("Share", "Story copy", text)
                 }
               />
               {this.renderWarning()}
@@ -401,7 +401,7 @@ const SharePanel = observer(
                 source={this.getShareUrlInput("light")}
                 id="share-url"
                 onCopy={text =>
-                  terria.analytics.logEvent("Share", "Catalog copy", text)
+                  terria.analytics?.logEvent("Share", "Catalog copy", text)
                 }
               />
               {this.renderWarning()}
@@ -424,7 +424,7 @@ const SharePanel = observer(
               source={this.getShareUrlInput("dark")}
               id="share-url"
               onCopy={text =>
-                terria.analytics.logEvent("Share", "Share copy", text)
+                terria.analytics?.logEvent("Share", "Share copy", text)
               }
             />
             {this.renderWarning()}

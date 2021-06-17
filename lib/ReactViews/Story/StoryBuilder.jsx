@@ -118,6 +118,12 @@ const StoryBuilder = observer(
         id: _story.id ? _story.id : createGuid()
       };
 
+      this.props.terria.analytics?.logEvent(
+        "Story",
+        "save",
+        JSON.stringify(story)
+      );
+
       const storyIndex = (this.props.terria.stories || [])
         .map(story => story.id)
         .indexOf(_story.id);
@@ -214,6 +220,7 @@ const StoryBuilder = observer(
         triggerResize();
       }, this.props.animationDuration || 1);
       this.props.terria.currentViewer.notifyRepaintRequired();
+      this.props.terria.analytics?.logEvent("Story", "run story");
     },
 
     editStory(story) {
