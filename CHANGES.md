@@ -4,6 +4,9 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.85)
+- **Breaking changes**:
+  - Removed `registerAnalytics.js`
+
 
 * Remove table style `SelectableDimension` from SDMX
 * [The next improvement]
