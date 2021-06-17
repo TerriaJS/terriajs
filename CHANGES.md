@@ -13,6 +13,8 @@ Change Log
 * Added `TableMixin` `filterDimension` - it will be displayed if `activeStyle` is set to a column which can't be used with a `ColorMap` (eg has more unique values than number of bins)
 * Added `TableStyle.hidden` trait. Table styles can now be hidden from the `"Display Variable"` drop-down - and styles with less than `ColorMap` bin/item will be hidden by default
 * Add `FeatureInfoMixin` support for 2D vector features
+* Remove table style `SelectableDimension` from SDMX
+* `GyroscopeGuidance` can now be translated.
 * [The next improvement]
 
 #### 8.0.0-alpha.84

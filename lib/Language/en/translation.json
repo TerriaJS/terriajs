@@ -85,7 +85,17 @@
     "description": "Drag outer ring: rotate view.\nDrag inner gyroscope: free orbit.\nDouble-click: reset view.\nTIP: You can also free orbit by holding the CTRL key and dragging the map.",
     "title": "Click and drag to rotate the camera",
     "guidanceBtnTitle": "Gyroscope Guidance",
-    "guidanceBtnText": "View detailed instructions on how to use the compass"
+    "guidanceBtnText": "View detailed instructions on how to use the compass",
+    "guidance": {
+      "title": "Gyroscope Contols",
+      "outerRingTitle": "Outer Ring",
+      "outerRingDescription": "Drag the outer ring in a circular motion to rotate the map view 360˚.",
+      "innerCircleTitle": "Inner Circle",
+      "innerCircleDescription1": "Click in the centre and slowly drag up, down, left or right to tilt and rotate the map at the same time.",
+      "innerCircleDescription2": "Double click in here to reset view to its default state.",
+      "ctrlDragDescription": "You can also tilt and rotate the map by holding the CTRL key and dragging the map.",
+      "dismissText": "Close and don't show again"
+    }
   },
   "AR": {
     "title": "Experimental Feature: Augmented Reality",
