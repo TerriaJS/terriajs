@@ -536,6 +536,7 @@ export default class ViewState {
 
   @action
   showHelpPanel() {
+    this.terria.analytics?.logEvent("Help", "Panel opened");
     this.showHelpMenu = true;
     this.helpPanelExpanded = false;
     this.selectedHelpMenuItem = "";

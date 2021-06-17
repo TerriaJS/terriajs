@@ -86,6 +86,7 @@ class HelpPanel extends React.Component {
               rounded
               styledMinWidth={"240px"}
               onClick={() => {
+                this.props.terria.analytics?.logEvent("Help", "Take tour");
                 runInAction(() => {
                   this.props.viewState.hideHelpPanel();
                   this.props.viewState.setTourIndex(0);

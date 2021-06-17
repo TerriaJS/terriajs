@@ -58,9 +58,16 @@ class HelpPanelItem extends React.Component {
       >
         <button
           className={className}
-          onClick={() =>
-            this.props.viewState.selectHelpMenuItem(this.props.content.itemName)
-          }
+          onClick={() => {
+            this.props.terria.analytics?.logEvent(
+              "Help",
+              "Item selected",
+              title
+            );
+            this.props.viewState.selectHelpMenuItem(
+              this.props.content.itemName
+            );
+          }}
         >
           <Box
             left
