@@ -379,7 +379,11 @@
   "core": {
     "printWindow": {
       "errorMessage": "10秒経っても印刷が始まりませんでした。お使いのブラウザでは印刷がサポートされていないのかもしれません。",
-      "errorTitle": "印刷エラー"
+      "errorTitle": "印刷エラー",
+      "printMediaStart": "メディア印刷開始",
+      "onafterprint": "onafterprint",
+      "onbeforeprint": "onbeforeprint",
+      "printMediaEnd": "メディアプリント終了"
     },
     "dataType": {
       "other": "その他（変換サービスを使う）",
@@ -564,7 +568,8 @@
       "dataResponsibility": "データに関する責任",
       "notUseableTitle": "カタログサービスが利用できません",
       "exceptionMessage": "CSWサーバーがエラーを報告しています:\n\n {{exceptionText}}",
-      "unknownError": "CSWサーバーが原因の特定できないエラーを報告しています。"
+      "unknownError": "CSWサーバーが原因の特定できないエラーを報告しています。",
+      "checkCORSDomain": "<br/>"
     },
     "csv": {
       "unableToLoadMessage": "サポートされているCSVフォーマットについては <a href=\"https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au\">csv-geo-au</a> の仕様を参照してください。\n\n {{message}}",
@@ -577,21 +582,41 @@
     },
     "ogr": {
       "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
-      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
+      "legacyBrowserTitle": "古いタイプのブラウザはサポートしていません",
+      "name": "不明 / GeoJSONに変換済み",
+      "emailUs": "より詳しい情報やサポートが必要な場合は {{email}} までメールで連絡してください",
+      "loadError": "ファイルサイズが {{appName}} 変換サービスの上限である {{maxConversionSizeMB}} MB を超えています",
+      "unsupportedFileTzpe": "サポートしていないファイルタイプ",
+      "safari": "Apple Safari",
+      "invalidFile": "このファイルは無効または{{appName}}の変換サポートされていない可能性があります。",
+      "legacyBrowserMessage": "お使いのウェブブラウザは{{appName}}がファイルからデータを読み込む上で必要となる\"FormData\"型をサポートしていません。ブラウザをアップグレードしてください。最適な体験のためには、{{chrome}}、{{firefox}}、{{safari}}または{{internetExplorer}}の最新版をお使いになることをおすすめします。"
     },
     "magda": {
       "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
-      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
+      "notCompatibleMessageII": "MAGDA データセットはサポートされたフォーマットで作成されたいずれのディストリビューションも含みません。",
+      "notCompatibleTitle": "互換性のあるディストリビューションが見つかりません",
+      "retrieveErrorMessage": "ディストリビューションまたはデータセットIDがありません",
+      "retrieveErrorTitle": "MAGDA レコードを取得時にエラー",
+      "distributionDesc": "ディストリビューションの説明",
+      "name": "MAGDAディストリビューション"
     },
     "kml": {
       "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
-      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。"
+      "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
+      "errorLoadingTitle": "KMLまたはKMZの読み込み中にエラーが発生しました",
+      "unexpectedTypeMessage": "KmlCatalogItem.dataはXMLドキュメント、Blob、ファイルのいずれかである必要がありますが、これらのどれでもありませんでした。これは{{appName}}のバグであるか{{appName}}のAPIの使い方が間違っている可能性があります。これが{{appName}}のバグと思われる場合は、{{email}}までご連絡ください。",
+      "unexpectedTypeTitle": "予期しないタイプのKMLデータ",
+      "name": "KMLまたはKMZ",
+      "errorLoadingMessage": "KMLファイルまたはKMZファイルの読み込み中にエラーが発生しました。このファイルは無効または{{appName}}でサポートされていない可能性があります。サポートや詳しい情報が必要な場合は{{email}}にご連絡ください。"
     },
     "gpx": {
       "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
       "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
       "errorLoadingTitle": "GPX読み込みエラー",
-      "name": "GPX"
+      "name": "GPX",
+      "errorLoadingMessage": "GPXファイルの読み込み中にエラーが発生しました。このファイルは無効または{{appName}}でサポートされていない可能性があります。サポートや詳しい情報が必要な場合は{{email}}にご連絡ください"
     },
     "gltf": {
       "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
@@ -609,13 +634,19 @@
       "unsupportedBrowserTitle": "サポートしていないウェブブラウザです",
       "couldNotLoadTitle": "JSONを読み込めません",
       "errorLoadingTitle": "GeoJSON読み込みエラー",
-      "name": "GeoJSON"
+      "name": "GeoJSON",
+      "couldNotLoadMessage": "与えられたリンクからJSONデータを読み込むことができませんでした。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このエラーが発生する場合、サーバーが{{cors}}をサポートしていない可能性もあります。サーバーを管理しているのがあなたであれば、CORSが無効になっていないか確認し、無効になっている場合は有効にしてください。サーバーのコントロール権がない場合は、サーバー管理者に問い合わせてCORSを有効化してもらってください。または、{{appName}}の運営者に{{email}}から問い合わせいただければ、{{appName}}内のCORS非対応サーバーのリストにこのサーバーを加えることで{{appName}}自体がリクエストを中継できるかもしれません。 <p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>",
+      "unsupportedBrowserMessage": "お使いのウェブブラウザは{{appName}}がファイルからデータを読み込む上で必要となるFile APIをサポートしていません。ブラウザをアップグレードしてください。最適な体験のためには、{{chrome}}、{{firefox}}または{{internetExplorer}}の最新版をお使いになることをおすすめします。",
+      "errorLoadingMessage": "GeoJSONファイルの読み込み中にエラーが発生しました。このファイルは無効または{{appName}}でサポートされていない可能性があります。サポートや詳しい情報が必要な場合は{{email}}にご連絡ください",
+      "errorParsingMessage": "与えられたデータをJSONとしてパーズできませんでした。このファイルは無効または{{appName}}でサポートされていない可能性があります。サポートや詳しい情報が必要な場合は{{email}}にご連絡ください"
     },
     "arcGisMapServerCatalogGroup": {
       "cors": "CORS",
       "groupNotAvailableTitle": "グループはありません",
       "invalidServiceTitle": "無効なArcGISマップサービス",
-      "name": "ArcGIS マップサーバーグループ"
+      "name": "ArcGIS マップサーバーグループ",
+      "invalidServiceMessage": "ArcGIS Map Serviceの呼び出し中にエラーが発生しました。サーバーの応答が有効なMap Serviceドキュメントではないようです。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>",
+      "groupNotAvailableMessage": "ArcGIS Map Serviceの呼び出し中にエラーが発生しました。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このエラーが発生する場合、サーバーが{{cors}}をサポートしていない可能性もあります。サーバーを管理しているのがあなたであれば、CORSが無効になっていないか確認し、無効になっている場合は有効にしてください。サーバーのコントロール権がない場合は、サーバー管理者に問い合わせてCORSを有効化してもらってください。または、{{appName}}の運営者に{{email}}から問い合わせいただければ、{{appName}}内のCORS非対応サーバーのリストにこのサーバーを加えることで{{appName}}自体がリクエストを中継できるかもしれません。 <p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>"
     },
     "abs": {
       "unexpectedFormatTitle": "対応していないデータフォーマット",
@@ -623,18 +654,23 @@
       "dataMergeErrorTitle": "データは統合できません",
       "itemNotAvailableTitle": "アイテムがありません",
       "nameGroup": "ABS.Stat データセットリスト",
-      "name": "ABS.Stat"
+      "name": "ABS.Stat",
+      "itemNotAvailableMessage": "ABS ITT サーバーで {{methodName}} を呼び出した際にエラーが発生しました。<p>これは開いているアイテムが一時的に利用できないか、インターネット接続に問題がある可能性があります。もう一度グループを開いてもまだ門d内が見られるようであれば、問題を以下のメールアドレスに報告して下さい： {{email}}.</p>",
+      "unexpectedFormtMessage": "ABS ITT サーバーで GetGenericData 呼び出し中にエラーが発生しました：データフォーマットが変更されました。 <p>エラーを以下のメールアドレスに報告して下さい： {{email}}.</p>"
     },
     "arcGisFeatureServer": {
       "groupNotAvailableTitle": "グループはありません",
       "invalidServiceTitle": "無効なArcGISフィーチャーサービス",
       "nameGroup": "ArcGISフィーチャーサーバーグループ",
-      "name": "ArcGISフィーチャーサーバー"
+      "name": "ArcGISフィーチャーサーバー",
+      "invalidServiceMessage": "ArcGIS Feature Serviceの呼び出し中にエラーが発生しました。サーバーの応答が有効なFeature Serviceドキュメントではないようです。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>"
     },
     "arcGisService": {
       "groupNotAvailableTitle": "グループはありません",
       "invalidServerTitle": "無効なArcGISサーバー",
-      "name": "ArcGISサーバーグループ"
+      "name": "ArcGISサーバーグループ",
+      "invalidServerMessage": "ArcGIS RESTサービスの呼び出し中にエラーが発生しました。サーバーの応答が有効なArcGIS RESTドキュメントではないようです。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>",
+      "groupNotAvailableMessage": "ArcGIS RESTサービスの呼び出し中にエラーが発生しました。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このエラーが発生する場合、サーバーが{{cors}}をサポートしていない可能性もあります。サーバーを管理しているのがあなたであれば、CORSが無効になっていないか確認し、無効になっている場合は有効にしてください。サーバーのコントロール権がない場合は、サーバー管理者に問い合わせてCORSを有効化してもらってください。または、{{appName}}の運営者に{{email}}から問い合わせいただければ、{{appName}}内のCORS非対応サーバーのリストにこのサーバーを加えることで{{appName}}自体がリクエストを中継できるかもしれません。 <p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>"
     },
     "imageryLayer": {
       "tileErrorTitle": "タイルエラー",
@@ -643,10 +679,13 @@
       "intervalSupportErrorMessage": "申し訳ありませんが、 {{typeName}} ({{type}}) カタログアイテムは、\"intervals\" プロパティを設定しても時間間隔の変更に対応していません。",
       "intervalSupportErrorTitle": "インターバルはサポートしていません",
       "unableToDisplayTitle": "データセットを表示できません",
-      "unknownTileErrorTitle": "不明なタイルエラー"
+      "unknownTileErrorTitle": "不明なタイルエラー",
+      "unableToShowLocMessage": "{{name}} はこの場所では表示できません。利用できるキャプチャ時間が不明です。{{featureTimesProperty}} 属性が見つかりません。",
+      "unableToShowLocTitle": "この場所では表示できません"
     },
     "googleUrlShortener": {
-      "urlNotLocatedTitle": "短縮したスタートURLが見つかりません"
+      "urlNotLocatedTitle": "短縮したスタートURLが見つかりません",
+      "urlNotLocatedMessage": "{{appName}}の立ち上げに使われた短縮URLが見つかりませんでした。リンクが間違っているか、URL短縮サービスが停止している可能性があります。{{appName}}のバグと思われる場合は{{email}}にご連絡ください"
     },
     "getToken": {
       "invalidToken": "<p>トークンサーバーが無効なトークンだと報告しています。</p><p>以下のメールアドレスに報告して下さい {{email}}</p>",
@@ -659,6 +698,136 @@
     "createParameter": {
       "unsupportedErrorMessage": "不明なパラメタタイプ: {{type}}.",
       "unsupportedErrorTitle": "サポートしていないタイプのパラメタです"
+    },
+    "spatialDetailing": {
+      "name": "Spatial Detailing",
+      "wrongNumberOfElements": "値のリストと地域コードのリストの要素の数が異なります",
+      "spatialDetailingOf": "{{at}}における{{of}}の空間詳細化",
+      "characteristicToPredictDescription": "地域ごとに予測する特性。",
+      "characteristicToPredictName": "予測する特性",
+      "aggregationFalseDescription": "荒い地域の値が地域におけるサンプルの合計である場合。例として総人口が挙げられます。",
+      "aggregationFalseName": "合計による集計",
+      "aggregationTrueDescription": "荒い地域の値が地域におけるサンプルの平均である場合。例として平均世帯収入が挙げられます。",
+      "aggregationTrueName": "平均による集計",
+      "aggregationDescription": "荒い地域ごとの値がどのように集計されたものであるかを指定します。地域全体の平均値である場合はTrueを、地域全体の合計値である場合はFalseを指定します。",
+      "coarseDataRegionTypeDescription": "荒い入力データを紐付ける地域のタイプ。",
+      "aggregationName": "集計",
+      "coarseDataRegionTypeName": "荒いデータの地域タイプ",
+      "regionTypeToPredictName": "予測地域タイプ",
+      "regionTypeToPredictDescription": "特性を予測する地域のタイプ。",
+      "description": "国勢調査で得られた特性との相関を学習・利用することで、荒いデータから細かな地域の特性を予測します。"
+    },
+    "socrataServer": {
+      "tags": "タグ",
+      "attributes": "帰属",
+      "licence": "ライセンス",
+      "description": "説明",
+      "retrieveErrorMessage": "このSocrataサーバーからパッケージを取得できません。<br/><br/>URLをマニュアルで入力した場合、もう一度URLをご確認ください。<br/><br/> 再読み込みしても問題が解決しない場合は問題の詳細を以下のメールアドレスまで報告して下さい： {{email}} 。ご協力ありがとうございます！’<br/><br/><pre> {{formatError}}</pre>",
+      "name": "Socrata サーバー"
+    },
+    "shareData": {
+      "generateErrorTitle": "短縮URLを生成できませんでした。",
+      "expandErrorMessage": "{{appName}} を起動するためために利用する共有データサービスが見つかりません。リンクのエラーか現在サービスが使えない可能性があります。{{appName}} のバグだと思われる場合は、 {{email}} へメールでお知らせください",
+      "generateErrorMessage": "短縮URLを生成するための共有データサービスを利用する際に問題が発生しました。{{appName}} のバグであると思われる場合は、{{email}} へメールでご連絡ください。"
+    },
+    "time": {
+      "invalidInitialTimeSource": "設定ファイル: {{initialTimeSource}} で指定した無効な initialTimeSource",
+      "invalidDate": "無効な日付"
+    },
+    "sensorObservationService": {
+      "noMatchingFeatures": "Sensor Observation Service はクエリに一致する地物を返しませんでした。",
+      "unknownFormat": "サーバーが不明なフォーマットで応答しました。",
+      "noFeatures": "クエリに合致する地物がありません。",
+      "missingBody": "サーバーがbodyのないレスポンスを返しました。",
+      "exceptionMessage": "サーバーがエラーを返しています: \n\n {{exceptionText}}",
+      "unknownError": "サーバーが玄以のわからないエラーを返しています。",
+      "alreadyLoadingMessage": "データはまだ読み込み中です。一旦読み込みが終われば表示を変更することができます",
+      "alreadyLoadingTitle": "データは読み込み中です",
+      "sos": "SOS",
+      "property": "属性",
+      "procedure": "プロシージャ"
+    },
+    "resultPending": {
+      "name": "結果待ち"
+    },
+    "feedback": {
+      "unableToSendTitle": "フィードバックを送れません",
+      "thanksMessage": "皆さんのフィードバックが {{appName}} をより良いものにしていきます",
+      "thanksTitle": "フィードバックを頂き、ありがとうございます！"
+    },
+    "regionMapping": {
+      "issuesLoadingTitle": "{{name}} 読み込みに問題",
+      "csvSpecification": "CSV-geo-au 仕様",
+      "msg": "ファイルのフォーマットの方法は、 {{link}} を参照してください。",
+      "moreThanOneValueText": "一つ以上の値",
+      "moreThanOneValue": "これらの地域は {{moreThanOneValueText}} あります",
+      "notRecognisedText": "わかりません",
+      "notRecognised": "これらの地域名は {{notRecognisedText}} です ",
+      "invalidServerTypeTitle": "regionMapping.json の無効な serverType {{serverType}}",
+      "outdatedBrowserTitle": "ウェブブラウザが古すぎます",
+      "noDataForRegion": "選択した地域にデータなし。",
+      "noDataForDate": "選んだデータにデータなし。"
+    },
+    "raiseError": {
+      "errorTitle": "エラーが発生しました"
+    },
+    "placesLikeMe": {
+      "likenessesError": "似通り度のリストと地域コードのリストに含まれる要素の数は同一ではありません。",
+      "placesLike": "{{regionName}} のような場所",
+      "regioNotSelectedDescription": "地域を選択する必要があります。",
+      "regioNotSelectedName": "地域が選択されていません",
+      "name": "似通った場所",
+      "characteristics": "特性",
+      "regionDescription": "解析する地域  解析でこれに一番近い地域を推定します。",
+      "regionName": "地域",
+      "regionTypeDescription": "解析のための地域タイプ。",
+      "regionTypeName": "地域タイプ",
+      "regionsLikeThisDescription": "与えられた条件に基づき_尤もらしい_ 地域を特定。",
+      "characteristicsDescription": "解析に含む地域特性。",
+      "regionsLikeThisName": "これに似た地域"
+    },
+    "mapboxStyle": {
+      "name": "Mapbox スタイル"
+    },
+    "mapboxVectorTile": {
+      "name": "Mapbox ベクタタイル"
+    },
+    "mapboxMap": {
+      "name": "Mapbox マップ"
+    },
+    "invokeAnalyticsService": {
+      "invocationFailedMessage": "{{invocationName}} 計算中にサーバーでエラーが発生しました。",
+      "invocationFailedTitle": "サービスの呼び出しに失敗しました"
+    },
+    "ionImagery": {
+      "name": "Cesium Ion Imagery"
+    },
+    "wfsFeatures": {
+      "queryErrorMessage": "WFSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。サーバーの応答が有効なGetCapabilitiesドキュメントではないようです。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>",
+      "groupNotAvailableMessage": "WFSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このエラーが発生する場合、サーバーが <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>をサポートしていない可能性もあります。サーバーを管理しているのがあなたであれば、CORSが無効になっていないか確認し、無効になっている場合は有効にしてください。サーバーのコントロール権がない場合は、サーバー管理者に問い合わせてCORSを有効化してもらってください。または、{{appName}}の運営者に{{email}}から問い合わせいただければ、{{appName}}内のCORS非対応サーバーのリストにこのサーバーを加えることで{{appName}}自体がリクエストを中継できるかもしれません。 </p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>"
+    },
+    "webMapServiceCatalogGroup": {
+      "invalidWMSServerMessage": "WMSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。サーバーの応答が有効なGetCapabilitiesドキュメントではないようです。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>",
+      "groupNotAvailableMessage": "WMSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このエラーが発生する場合、サーバーが <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>をサポートしていない可能性もあります。サーバーを管理しているのがあなたであれば、CORSが無効になっていないか確認し、無効になっている場合は有効にしてください。サーバーのコントロール権がない場合は、サーバー管理者に問い合わせてCORSを有効化してもらってください。または、{{appName}}の運営者に{{email}}から問い合わせいただければ、{{appName}}内のCORS非対応サーバーのリストにこのサーバーを加えることで{{appName}}自体がリクエストを中継できるかもしれません。 </p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>"
+    },
+    "webFeatureServiceCatalogGroup": {
+      "invalidWFSServerMessage": "WFSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。サーバーの応答が有効なGetCapabilitiesドキュメントではないようです。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>",
+      "groupNotAvailableMessage": "WFSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このエラーが発生する場合、サーバーが <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>をサポートしていない可能性もあります。サーバーを管理しているのがあなたであれば、CORSが無効になっていないか確認し、無効になっている場合は有効にしてください。サーバーのコントロール権がない場合は、サーバー管理者に問い合わせてCORSを有効化してもらってください。または、{{appName}}の運営者に{{email}}から問い合わせいただければ、{{appName}}内のCORS非対応サーバーのリストにこのサーバーを加えることで{{appName}}自体がリクエストを中継できるかもしれません。 </p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>"
+    },
+    "webMapTileServiceCatalogGroup": {
+      "groupNotAvailableMessage": "WMTSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このエラーが発生する場合、サーバーが <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>をサポートしていない可能性もあります。サーバーを管理しているのがあなたであれば、CORSが無効になっていないか確認し、無効になっている場合は有効にしてください。サーバーのコントロール権がない場合は、サーバー管理者に問い合わせてCORSを有効化してもらってください。または、{{appName}}の運営者に{{email}}から問い合わせいただければ、{{appName}}内のCORS非対応サーバーのリストにこのサーバーを加えることで{{appName}}自体がリクエストを中継できるかもしれません。 </p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>"
+    },
+    "terrainCatalog": {
+      "notSupportedErrorTitle": "2Dではサポートされていません"
+    },
+    "tableData": {
+      "bulkGeocoderErrorMessage": "座標の取得時にエラーが発生したため、緯度経度を住所に対応づけることができませんでした。インターネット接続を確認するか時間をおいてやり直してください。",
+      "bulkGeocoderErrorTitle": "一括ジオコーダーエラー",
+      "bulkGeocoderInfo2Message": "{{nullAddresses}}個の住所がCSVにありませんでした。",
+      "bulkGeocoderInfoMessage": "CSVに含まれている住所のうち{{number}}個を地図で見つけることができませんでした ",
+      "bulkGeocoderInfoTitle": "一括ジオコーダー",
+      "unsupportedCharactersMessage": "{{longitude}}, {{latitude}}を緯度・経度の組として読み取ることができません",
+      "unsupportedCharactersTitle": "緯度・経度の列に無効な文字が含まれています"
     }
   },
   "map": {
