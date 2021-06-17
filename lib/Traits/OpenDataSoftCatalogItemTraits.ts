@@ -5,9 +5,12 @@ import primitiveTrait from "./primitiveTrait";
 import TableTraits from "./TableTraits";
 import UrlTraits from "./UrlTraits";
 import DimensionTraits from "./DimensionTraits";
+import FeatureInfoTraits from "./FeatureInfoTraits";
+import objectTrait from "./objectTrait";
 
 export default class OpenDataSoftCatalogItemTraits extends mixTraits(
   TableTraits,
+  FeatureInfoTraits,
   UrlTraits,
   CatalogMemberTraits
 ) {
@@ -60,25 +63,18 @@ export default class OpenDataSoftCatalogItemTraits extends mixTraits(
   })
   groupByFields?: string;
 
-  @primitiveArrayTrait({
-    type: "string",
+  @objectTrait({
+    type: DimensionTraits,
     name: "Available fields",
     description: "Names of fields which can be 'selected'"
   })
-  availableFields?: DimensionTraits[];
+  availableFields?: DimensionTraits;
 
   @primitiveTrait({
     type: "string",
     name: "Aggregate time values",
-    description: "Aggregate time values (eg 1 day)."
+    description:
+      "Aggregate time values (eg 1 day). See https://help.opendatasoft.com/apis/ods-search-v2/#group-by-clause"
   })
   aggregateTime?: string;
-
-  @primitiveTrait({
-    type: "boolean",
-    name: "Use records API",
-    description:
-      "Use records API instead of export API - this will limit number of records fetched."
-  })
-  useRecordsApi?: boolean;
 }

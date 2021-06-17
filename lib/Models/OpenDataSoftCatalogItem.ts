@@ -1,30 +1,33 @@
-import { ApiClient, fromCatalog, Query } from "@opendatasoft/api-client";
+import { ApiClient, fromCatalog } from "@opendatasoft/api-client";
 import { Dataset } from "@opendatasoft/api-client/dist/client/types";
 import { computed, runInAction } from "mobx";
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
-import URI from "urijs";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
 import { isJsonObject } from "../Core/Json";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import FeatureInfoMixin from "../ModelMixins/FeatureInfoMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import Csv from "../Table/Csv";
 import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 import DimensionTraits from "../Traits/DimensionTraits";
+import { FeatureInfoTemplateTraits } from "../Traits/FeatureInfoTraits";
 import OpenDataSoftCatalogItemTraits from "../Traits/OpenDataSoftCatalogItemTraits";
 import TableColumnTraits from "../Traits/TableColumnTraits";
 import TableStyleTraits from "../Traits/TableStyleTraits";
 import TableTimeStyleTraits from "../Traits/TableTimeStyleTraits";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
+import Feature from "./Feature";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
 import { isValidDataset, ValidDataset } from "./OpenDataSoftCatalogGroup";
-import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import SelectableDimensions from "./SelectableDimensions";
+import SelectableDimensions, {
+  SelectableDimension
+} from "./SelectableDimensions";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
 
@@ -32,8 +35,12 @@ type PointTimeSeries = {
   samples?: number;
   minTime?: Date;
   maxTime?: Date;
+  /** Interval in seconds (in between maxTime and minTime) */
   intervalSec?: number;
 };
+
+// Column name to use for OpenDataSoft Record IDs
+const RECORD_ID_COL = "record_id";
 
 export class OpenDataSoftDatasetStratum extends LoadableStratum(
   OpenDataSoftCatalogItemTraits
@@ -62,6 +69,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     if (!isValidDataset(dataset))
       throw `Could not find dataset \`${catalogItem.datasetId}\``;
 
+    // Try to retrieve information about geo-referenced (point or polygon/region) time-series
     let pointTimeSeries: PointTimeSeries[] | undefined;
 
     const timeField = catalogItem.timeFieldName ?? getTimeField(dataset);
@@ -69,6 +77,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
       catalogItem.geoPoint2dFieldName ?? getGeoPointField(dataset);
 
     if (timeField && geoPointField) {
+      // Get aggregation of time values for each feature (point/polygon)
       const counts = (
         await client.get(
           fromCatalog()
@@ -164,13 +173,16 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     )?.name;
   }
 
-  @computed get recordsCount() {
-    return this.pointTimeSeries?.reduce<number>(
-      (total, current) => total + (current.samples ?? 0),
-      0
+  @computed get recordsCount(): number | undefined {
+    return (
+      this.pointTimeSeries?.reduce<number>(
+        (total, current) => total + (current.samples ?? 0),
+        0
+      ) || this.dataset.metas?.default?.records_count
     );
   }
 
+  /** Number of features in timeseries */
   @computed get pointsCount() {
     return this.pointTimeSeries?.length;
   }
@@ -181,6 +193,13 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     return Math.max(...this.pointTimeSeries.map(p => p.samples ?? 0));
   }
 
+  /** Should we select all fields (properties) in each record?
+   * - Less than 10 fields
+   * - Less than 10000 records
+   * - There is no colorFieldName (no suitable default field - eg number - to visualise)
+   * - There is no geoPoint and no time field
+   *
+   */
   @computed get selectAllFields() {
     return (
       (this.dataset.fields?.length ?? 0) <= 10 ||
@@ -190,19 +209,9 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     );
   }
 
-  /** Use records API */
-  @computed get useRecordsApi() {
-    return (
-      !this.recordsCount ||
-      this.recordsCount > 20000 ||
-      (isDefined(this.maxPointSamples) && this.maxPointSamples < 5000) ||
-      (isDefined(this.pointsCount) && this.pointsCount < 1000)
-    );
-  }
-
   @computed get selectFields() {
     if (this.selectAllFields) {
-      // Filter out fields with GeoJSON
+      // Filter out fields with GeoJSON and fields which could be lat/lon as all point information is provided with field types "geo_point" (See `getGeoPointField()`)
       return filterOutUndefined(
         this.dataset.fields
           ?.filter(
@@ -222,7 +231,6 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
       this.aggregateTime
         ? `avg(${this.catalogItem.colorFieldName}) as ${this.catalogItem.colorFieldName}`
         : this.catalogItem.colorFieldName,
-      // If aggregating time - use geopoint field
       // Otherwise use region field or geopoint field (in that order)
       this.catalogItem.geoPoint2dFieldName,
       this.catalogItem.regionFieldName
@@ -230,11 +238,14 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
   }
 
   @computed get groupByFields() {
+    // If aggregating time - use RANGE group by clause to average values over a date range (eg `aggregateTime = "1 day"`)
+    // See https://help.opendatasoft.com/apis/ods-search-v2/#group-by-clause
     if (this.aggregateTime && this.timeFieldName && this.geoPoint2dFieldName) {
       return `${this.geoPoint2dFieldName},RANGE(${this.timeFieldName}, ${this.aggregateTime}) as ${this.timeFieldName}`;
     }
   }
 
+  // Hide geopoint column
   @computed get geoPoint2dColumn() {
     if (this.catalogItem.geoPoint2dFieldName) {
       return createStratumInstance(TableColumnTraits, {
@@ -244,6 +255,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     }
   }
 
+  // Set reigon column type
   @computed get regionColumn() {
     if (this.catalogItem.regionFieldName) {
       return createStratumInstance(TableColumnTraits, {
@@ -253,6 +265,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     }
   }
 
+  // Set colour column type and title
   @computed get colorColumn() {
     if (!this.catalogItem.colorFieldName) return;
 
@@ -268,6 +281,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     }
   }
 
+  // Set time column type and title
   @computed get timeColumn() {
     if (!this.catalogItem.timeFieldName) return;
 
@@ -283,10 +297,16 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     }
   }
 
+  // Set all other column types and title
   @computed get otherColumns() {
     return (
       this.dataset.fields
-        ?.filter(f => f.type !== "datetime" && f.type !== "geo_point_2d")
+        ?.filter(
+          f =>
+            f.name !== this.catalogItem.timeFieldName &&
+            f.name !== this.catalogItem.colorFieldName &&
+            f.name !== this.catalogItem.regionFieldName
+        )
         ?.map(f =>
           createStratumInstance(TableColumnTraits, {
             name: f.name,
@@ -307,6 +327,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     ]);
   }
 
+  /** Set default style traits for points (lat/lon) and time */
   @computed
   get defaultStyle() {
     return createStratumInstance(TableStyleTraits, {
@@ -314,6 +335,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
       longitudeColumn: this.catalogItem.geoPoint2dFieldName ? "lon" : undefined,
 
       time: createStratumInstance(TableTimeStyleTraits, {
+        // If we are viewing a timeseries with only 1 sample per point - spreadStart/EndTime
         spreadStartTime:
           isDefined(this.maxPointSamples) && this.maxPointSamples === 1,
         spreadFinishTime:
@@ -326,16 +348,75 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     });
   }
 
+  /** If `selectAllFields` is false, we have to fetch record information with the Record API */
+  @computed get featureInfoUrlTemplate() {
+    if (
+      !this.catalogItem.datasetId ||
+      !this.catalogItem.url ||
+      this.selectAllFields
+    )
+      return;
+
+    return `${this.catalogItem.url}/api/v2/catalog/datasets/${this.catalogItem.datasetId}/records/{${RECORD_ID_COL}}`;
+  }
+
+  @computed
+  get featureInfoTemplate() {
+    let template = '<table class="cesium-infoBox-defaultTable">';
+
+    // Function to format row with title and value
+    const row = (title: string, value: string) =>
+      `<tr><td style="vertical-align: middle">${title}</td><td>${value}</td></tr>`;
+
+    // Add fields (exepct for geo_* fields)
+    template += this.dataset.fields
+      ?.filter(
+        field => field.type !== "geo_point_2d" && field.type !== "geo_shape"
+      )
+      ?.map(field =>
+        row(field.label ?? field.name ?? "", `{{record.fields.${field.name}}}`)
+      )
+      .join("");
+
+    // Add region mapping info
+    const regionType = this.catalogItem.activeTableStyle.regionColumn
+      ?.regionType;
+
+    if (regionType)
+      template += row(regionType?.description, `{{${regionType?.nameProp}}}`);
+
+    // Add timeSeries chart if more than one time observation
+    if (
+      this.catalogItem.discreteTimes &&
+      this.catalogItem.discreteTimes.length > 1
+    ) {
+      const chartName = `${this.catalogItem.name}: {{${this.catalogItem.activeTableStyle.title}}}`;
+      template += `</table><chart sources="${chartName}" title="${chartName}" x-column="{{terria.timeSeries.xName}}" y-column="{{terria.timeSeries.yName}}" >{{terria.timeSeries.data}}</chart>`;
+    }
+
+    return createStratumInstance(FeatureInfoTemplateTraits, { template });
+  }
+
+  /** Try to find a sensible currentTime based on the latest timeInterval which has values for all points
+   * This is biased for real-time sensor data - where we would usually want to see the latest values.
+   * As we are fetching the last 1000 records, there may be time intervals which are incomplete. Ideally we want to see all sensors with some data by default.
+   */
   @computed
   get currentTime() {
     if (!this.pointTimeSeries && this.catalogItem.geoPoint2dFieldName) return;
 
+    const lastDate = this.catalogItem.activeTableStyle?.timeColumn
+      ?.valuesAsJulianDates.maximum;
+
     if (
       !this.catalogItem.activeTableStyle.timeIntervals ||
-      !this.catalogItem.activeTableStyle.rowGroups
+      !this.catalogItem.activeTableStyle.rowGroups ||
+      !lastDate
     )
       return;
 
+    // Group all time intervals for each row group (each Point feature)
+    // This calculates the start/stop dates for each row group
     const groupIntervals = this.catalogItem.activeTableStyle.rowGroups.map(
       ([id, rows]) => {
         let start: JulianDate | undefined;
@@ -365,17 +446,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
       }
     );
 
-    // const intervals = filterOutUndefined(
-    //   this.pointTimeSeries?.map(p =>
-    //     p.minTime && p.maxTime
-    //       ? new TimeInterval({
-    //           start: JulianDate.fromDate(p.minTime),
-    //           stop: JulianDate.fromDate(p.maxTime)
-    //         })
-    //       : undefined
-    //   ) ?? []
-    // );
-
+    // Find intersection of groupIntervals - this will roughly estimate the time interval which is the "most complete" - that is to say, the time interval which has the most groups (or points) with data
     if (groupIntervals.length > 0) {
       const totalInterval = groupIntervals.reduce<TimeInterval | undefined>(
         (intersection, current) =>
@@ -385,10 +456,18 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
         undefined
       );
 
-      if (totalInterval && !totalInterval.isEmpty) {
+      // If intersection is found - use last date
+      if (
+        totalInterval &&
+        !totalInterval.isEmpty &&
+        !JulianDate.lessThan(lastDate, totalInterval.stop)
+      ) {
         return totalInterval.stop.toString();
       }
     }
+
+    // If no intersection is found - use last date for entire dataset
+    return lastDate.toString();
   }
 
   /** Disable date time selector if there is only 1 sample per point */
@@ -398,6 +477,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
       : undefined;
   }
 
+  /** Get fields with useful infomation (for visualisation). Eg numbers, text, not IDs... */
   @computed get usefulFields() {
     return (
       this.dataset.fields?.filter(
@@ -413,20 +493,21 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     );
   }
 
+  /** Convert usefulFields to a Dimenion (which gets turned into a SelectableDimension in OpenDataSoftCatalogItem).
+   * This means we can chose which field to "select" when downloading data.
+   */
   @computed get availableFields() {
     if (!this.selectAllFields)
-      return [
-        createStratumInstance(DimensionTraits, {
-          id: "available-fieds",
-          name: "Fields",
-          selectedId: this.catalogItem.colorFieldName,
-          options: this.usefulFields.map(f => ({
-            id: f.name,
-            name: f.label,
-            value: undefined
-          }))
-        })
-      ];
+      return createStratumInstance(DimensionTraits, {
+        id: "available-fieds",
+        name: "Fields",
+        selectedId: this.catalogItem.colorFieldName,
+        options: this.usefulFields.map(f => ({
+          id: f.name,
+          name: f.label,
+          value: undefined
+        }))
+      });
   }
 
   @computed get activeStyle() {
@@ -458,8 +539,10 @@ function getTimeField(dataset: Dataset) {
 StratumOrder.addLoadStratum(OpenDataSoftDatasetStratum.stratumName);
 
 export default class OpenDataSoftCatalogItem
-  extends TableMixin(
-    UrlMixin(CatalogMemberMixin(CreateModel(OpenDataSoftCatalogItemTraits)))
+  extends FeatureInfoMixin(
+    TableMixin(
+      UrlMixin(CatalogMemberMixin(CreateModel(OpenDataSoftCatalogItemTraits)))
+    )
   )
   implements SelectableDimensions {
   static readonly type = "opendatasoft-item";
@@ -480,6 +563,20 @@ export default class OpenDataSoftCatalogItem
     return OpenDataSoftCatalogItem.type;
   }
 
+  buildFeatureFromPickResult(
+    _screenPosition: Cartesian2 | undefined,
+    pickResult: any
+  ) {
+    const feature = new Feature(pickResult?.id);
+    // If feature is time-series, we have to make sure that recordId is set in feature.proprties
+    // Otherwise we won't be able to use featureInfoUrlTemplate in FeatureInfoMixin
+    const recordId = pickResult?.id?.data?.getValue?.(
+      this.terria.timelineClock.currentTime
+    )?.[RECORD_ID_COL];
+    feature.properties?.addProperty(RECORD_ID_COL, recordId);
+    return feature;
+  }
+
   protected async forceLoadMetadata(): Promise<void> {
     if (!this.strata.has(OpenDataSoftDatasetStratum.stratumName)) {
       const stratum = await OpenDataSoftDatasetStratum.load(this);
@@ -498,131 +595,106 @@ export default class OpenDataSoftCatalogItem
   protected async forceLoadTableData() {
     if (!this.datasetId || !this.url) return [];
 
-    // return [];
-
     let data: string[][] = [];
 
-    // If not aggregating time - download CSV
-    if (!this.useRecordsApi) {
-      let q = new Query(
-        `/api/v2/catalog/datasets/${this.datasetId}/exports/csv`
-      );
+    let q = fromCatalog()
+      .dataset(this.datasetId)
+      .records()
+      .limit(100);
 
-      if (this.selectFields) {
-        q = q.select(this.selectFields);
-      }
+    // If fetching time - order records by latest time
+    if (this.timeFieldName) q = q.orderBy(`${this.timeFieldName} DESC`);
 
-      const uri = new URI(`${this.url}${q.toString()}`);
+    if (this.selectFields) {
+      q = q.select(this.selectFields);
+    }
 
-      console.log(uri);
+    if (this.groupByFields) {
+      q = q.groupBy(this.groupByFields);
+    }
 
-      data = await Csv.parseUrl(
-        proxyCatalogItemUrl(this, uri.toString()),
-        true,
-        true,
-        {
-          delimiter: ";"
-        }
-      );
-      if (this.geoPoint2dFieldName) {
-        const pointCol = data.find(col => col[0] === this.geoPoint2dFieldName);
+    const stratum = this.strata.get(OpenDataSoftDatasetStratum.stratumName) as
+      | OpenDataSoftDatasetStratum
+      | undefined;
+    // Fetch maximum of 1000 records
+    const recordsToFetch = Math.min(1000, stratum?.recordsCount ?? 1000);
 
-        data = data.filter(col => col[0] !== this.geoPoint2dFieldName);
-
-        if (pointCol) {
-          const lat = ["lat"];
-          const lon = ["lon"];
-          pointCol.forEach((cell, idx) => {
-            if (idx === 0) return;
-            const split = cell.split(", ");
-            lat.push(split[0] ?? "");
-            lon.push(split[1] ?? "");
-          });
-
-          data.push(lat, lon);
-        }
-      }
-    } else {
-      let q = fromCatalog()
-        .dataset(this.datasetId)
-        .records()
-        .limit(100);
-
-      if (this.timeFieldName) q = q.orderBy(`${this.timeFieldName} DESC`);
-
-      if (this.selectFields) {
-        q = q.select(this.selectFields);
-      }
-
-      if (this.groupByFields) {
-        q = q.groupBy(this.groupByFields);
-      }
-
-      // Get 1000 records
-      const records = flatten(
-        await Promise.all(
-          new Array(10)
-            .fill(0)
-            .map(
-              async (v, index) =>
-                (await this.apiClient.get(q.offset(index * 100))).records ?? []
-            )
-        )
-      );
-
-      if (records && records.length > 0) {
-        const cols: { [key: string]: string[] } = {};
-
-        if (this.geoPoint2dFieldName) {
-          cols["lat"] = new Array(records.length).fill("");
-          cols["lon"] = new Array(records.length).fill("");
-        }
-        this.timeFieldName ? (cols[this.timeFieldName] = []) : null;
-
-        records.forEach((record, index) =>
-          Object.entries(record.record?.fields ?? {}).forEach(
-            ([field, value]) => {
-              if (field === this.geoPoint2dFieldName && isJsonObject(value)) {
-                cols.lat[index] = `${value.lat}` ?? "";
-                cols.lon[index] = `${value.lon}` ?? "";
-              } else {
-                if (!Array.isArray(cols[field])) {
-                  cols[field] = new Array(records.length).fill("");
-                }
-                cols[field][index] = `${value}`;
-              }
-            }
+    // Get 1000 records (in chunks of 100)
+    const records = flatten(
+      await Promise.all(
+        new Array(Math.ceil(recordsToFetch / 100))
+          .fill(0)
+          .map(
+            async (v, index) =>
+              (await this.apiClient.get(q.offset(index * 100))).records ?? []
           )
-        );
+      )
+    );
 
-        console.log(cols);
+    if (records && records.length > 0) {
+      // Set up columns object
+      const cols: { [key: string]: string[] } = {};
 
-        data = Object.entries(cols).map(([field, values]) => [
-          field,
-          ...values
-        ]);
+      cols[RECORD_ID_COL] = new Array(records.length).fill("");
+
+      if (this.geoPoint2dFieldName) {
+        cols["lat"] = new Array(records.length).fill("");
+        cols["lon"] = new Array(records.length).fill("");
+      }
+      if (this.timeFieldName) {
+        cols[this.timeFieldName] = new Array(records.length).fill("");
       }
 
-      console.log(records);
+      records.forEach((record, index) => {
+        if (!record.record?.id) return;
+        // Manually add Record ID
+        cols[RECORD_ID_COL][index] = record.record?.id;
+        // Go through each field and set column value
+        Object.entries(record.record?.fields ?? {}).forEach(
+          ([field, value]) => {
+            // geoPoint2dFieldName will return a JSON object - spilt lat/lon columns
+            if (field === this.geoPoint2dFieldName && isJsonObject(value)) {
+              cols.lat[index] = `${value.lat}` ?? "";
+              cols.lon[index] = `${value.lon}` ?? "";
+            } else {
+              // Copy current field into columns object
+              if (!Array.isArray(cols[field])) {
+                cols[field] = new Array(records.length).fill("");
+              }
+              cols[field][index] = `${value}`;
+            }
+          }
+        );
+      });
+
+      // Munge into dataColumnMajor format
+      data = Object.entries(cols).map(([field, values]) => [field, ...values]);
     }
 
     return data;
   }
 
-  @computed
-  get selectableDimensions() {
-    return [
-      ...(this.availableFields?.map(f => ({
-        ...f,
+  // Convert availableFields DimensionTraits to SelectableDimension
+  @computed get availableFieldsDimension(): SelectableDimension | undefined {
+    if (this.availableFields) {
+      return {
+        ...this.availableFields,
         setDimensionValue: (strataId: string, selectedId: string) => {
           this.setTrait(strataId, "colorFieldName", selectedId);
           this.loadMapItems();
         }
-      })) ?? []),
+      };
+    }
+  }
+
+  @computed
+  get selectableDimensions() {
+    return filterOutUndefined([
+      this.availableFieldsDimension,
       ...super.selectableDimensions.filter(
         s => !this.availableFields || s.id !== "activeStyle"
       )
-    ];
+    ]);
   }
 }
 
