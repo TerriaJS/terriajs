@@ -6,6 +6,7 @@ Change Log
 #### next release (8.0.0-alpha.85)
 - **Breaking changes**:
   - Removed `registerAnalytics.js`
+  - Removed `HelpMenuPanel.jsx`
 
 
 * Remove table style `SelectableDimension` from SDMX
