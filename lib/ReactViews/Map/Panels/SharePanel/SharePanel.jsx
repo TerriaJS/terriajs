@@ -361,7 +361,7 @@ const SharePanel = observer(
     },
 
     renderContentForStoryShare() {
-      const { t } = this.props;
+      const { t, terria } = this.props;
       return (
         <Choose>
           <When condition={this.state.shareUrl === ""}>
@@ -375,6 +375,9 @@ const SharePanel = observer(
                 source={this.getShareUrlInputStory("light")}
                 id="share-url"
                 rounded
+                onCopy={text =>
+                  terria.analytics.logEvent("Share", "Story copy", text)
+                }
               />
               {this.renderWarning()}
             </div>
@@ -384,7 +387,7 @@ const SharePanel = observer(
     },
 
     renderContentForCatalogShare() {
-      const { t } = this.props;
+      const { t, terria } = this.props;
       return (
         <Choose>
           <When condition={this.state.shareUrl === ""}>
@@ -397,6 +400,9 @@ const SharePanel = observer(
                 text={this.state.shareUrl}
                 source={this.getShareUrlInput("light")}
                 id="share-url"
+                onCopy={text =>
+                  terria.analytics.logEvent("Share", "Catalog copy", text)
+                }
               />
               {this.renderWarning()}
             </div>
@@ -406,7 +412,7 @@ const SharePanel = observer(
     },
 
     renderContentWithPrintAndEmbed() {
-      const { t } = this.props;
+      const { t, terria } = this.props;
       const iframeCode = this.state.shareUrl.length
         ? `<iframe style="width: 720px; height: 600px; border: none;" src="${this.state.shareUrl}" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>`
         : "";
@@ -414,7 +420,13 @@ const SharePanel = observer(
       return (
         <div>
           <div className={DropdownStyles.section}>
-            <Clipboard source={this.getShareUrlInput("dark")} id="share-url" />
+            <Clipboard
+              source={this.getShareUrlInput("dark")}
+              id="share-url"
+              onCopy={text =>
+                terria.analytics.logEvent("Share", "Share copy", text)
+              }
+            />
             {this.renderWarning()}
           </div>
           <div className={DropdownStyles.section}>
