@@ -12,8 +12,8 @@ import SampledProperty from "terriajs-cesium/Source/DataSources/SampledProperty"
 import TimeIntervalCollectionPositionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionPositionProperty";
 import TimeIntervalCollectionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
-import { JsonObject } from "../Core/Json";
 import Feature from "../Models/Feature";
+import { getRowValues } from "./createLongitudeLatitudeFeaturePerRow";
 import getChartDetailsFn from "./getChartDetailsFn";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
@@ -133,6 +133,9 @@ function createFeature(
     getChartDetailsFn(style, rowIds)
   );
 
+  // Add properties to feature.data so we have access to TimeIntervalCollectionProperty outside of the PropertyBag.
+  feature.data = properties;
+
   feature.properties = propertiesBag;
   feature.description = description;
   return feature;
@@ -182,19 +185,6 @@ function calculateShow(availability: TimeIntervalCollection) {
     );
   }
   return show;
-}
-
-function getRowValues(
-  index: number,
-  tableColumns: Readonly<TableColumn[]>
-): JsonObject {
-  const result: JsonObject = {};
-
-  tableColumns.forEach(column => {
-    result[column.title] = column.valueFunctionForType(index);
-  });
-
-  return result;
 }
 
 function getRowDescription(

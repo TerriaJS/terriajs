@@ -430,11 +430,11 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         options: this.tableStyles
           .filter(style => !style.hidden)
           .map(style => {
-          return {
-            id: style.id,
-            name: style.title
-          };
-        }),
+            return {
+              id: style.id,
+              name: style.title
+            };
+          }),
         selectedId: this.activeStyle,
         setDimensionValue: (stratumId: string, styleId: string) => {
           this.setTrait(stratumId, "activeStyle", styleId);
@@ -521,7 +521,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     /**
-     *
+     * The filter dimension can be used to filter table rows by the value in the `activeStyle` column.
+     * It is displayed if `activeStyle` is set to a column which can't be used with a `ColorMap` (eg has more unique values than number of bins)
      */
     @computed
     get filterDimension(): SelectableDimension | undefined {
@@ -686,7 +687,11 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           features = createLongitudeLatitudeFeaturePerRow(style);
         }
 
-        features.forEach(f => dataSource.entities.add(f));
+        // _catalogItem property is needed for some feature picking functions (eg FeatureInfoMixin)
+        features.forEach(f => {
+          (f as any)._catalogItem = this;
+          dataSource.entities.add(f);
+        });
         dataSource.show = this.show;
         dataSource.entities.resumeEvents();
         return dataSource;
