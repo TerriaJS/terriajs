@@ -676,8 +676,8 @@ export default class TableColumn {
       // or zero are counted as neither failed nor successful.
 
       if (
-        // A scalar column with a single value is useless
-        this.uniqueValues.values.length > 1 &&
+        // We need at least one value
+        this.valuesAsNumbers.numberOfValidNumbers >= 1 &&
         this.valuesAsNumbers.numberOfNonNumbers <=
           Math.ceil(this.valuesAsNumbers.numberOfValidNumbers * 0.1)
       ) {
