@@ -7,6 +7,7 @@ Change Log
 
 * Remove table style `SelectableDimension` from SDMX
 * `GyroscopeGuidance` can now be translated.
+* Made the moment points in the chart optionally clickable.
 * [The next improvement]
 
 #### 8.0.0-alpha.84
