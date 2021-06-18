@@ -44,8 +44,7 @@ function createFeature(
   rowIds: number[],
   style: RequiredTableStyle
 ): Entity {
-  const isSampled =
-    style.timeTraits.isSampled && !style.timeTraits.spreadStartTime;
+  const isSampled = style.timeTraits.isSampled;
   const tableHasScalarColumn = style.tableModel.tableColumns.find(
     col => col.type === TableColumnType.scalar
   );

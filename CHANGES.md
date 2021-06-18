@@ -10,9 +10,13 @@ Change Log
 
 * Add `options` to CSV papaparsing
 * `TableMixin` will now only show points **or** region mapping - not both
-* Add `FeatureInfoMixin` support for 2D vector features
+* Add `FeatureInfoMixin` support for 2D vector features (in Cesium only)
 * Remove table style `SelectableDimension` from SDMX
 * `GyroscopeGuidance` can now be translated.
+* `TableStyles` are now hidden from the "Display Variable" selector if the number of colors (enumColors or numberOfBins) is less than 2. As a ColorMap with a single color isn't super useful.
+* Improved default `TableColumn.isSampled` - it will be false if a binary column is detected (0 or 1)
+* Improved default Table charting - now a time column will be used for xAxis by default
+* Added `spreadFinishTime` - which works same way as `spreadStartTime` - if `true`, finish time of feature will be "spread" so that all features are displayed at the latest time step.
 * [The next improvement]
 
 #### 8.0.0-alpha.84
