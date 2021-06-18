@@ -8,7 +8,7 @@ Change Log
   - Removed `registerAnalytics.js`
   - Removed `HelpMenuPanel.jsx`
 
-
+* Added analytic events related to story, share and help menu items, Also refactored events to use category and action enums.
 * Remove table style `SelectableDimension` from SDMX
 * `GyroscopeGuidance` can now be translated.
 * [The next improvement]
