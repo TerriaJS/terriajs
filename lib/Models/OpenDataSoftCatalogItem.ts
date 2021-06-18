@@ -174,12 +174,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
   }
 
   @computed get recordsCount(): number | undefined {
-    return (
-      this.pointTimeSeries?.reduce<number>(
-        (total, current) => total + (current.samples ?? 0),
-        0
-      ) || this.dataset.metas?.default?.records_count
-    );
+    return this.dataset.metas?.default?.records_count;
   }
 
   /** Number of features in timeseries */
