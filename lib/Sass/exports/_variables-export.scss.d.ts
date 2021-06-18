@@ -52,6 +52,7 @@ interface CssExports {
   'toolPrimaryColor': string;
   'trainerHeight': string;
   'workbenchWidth': string;
+  'workflowPanelWidth': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

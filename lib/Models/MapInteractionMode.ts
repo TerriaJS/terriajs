@@ -16,6 +16,7 @@ interface Options {
   uiMode?: UIMode; // diff tool hack for now
   onEnable?: (viewState: ViewState) => void;
   invisible?: boolean;
+  ignoreSplitterWhenPicking?: boolean;
 }
 
 /**
@@ -42,6 +43,8 @@ export default class MapInteractionMode {
   pickedFeatures?: PickedFeatures;
 
   onEnable?: (viewState: ViewState) => void;
+
+  ignoreSplitterWhenPicking: boolean;
 
   constructor(options: Options) {
     /**
@@ -81,6 +84,12 @@ export default class MapInteractionMode {
      * Gets or sets the features that are currently picked.
      */
     this.pickedFeatures = undefined;
+
+    /**
+     * When true, ignores the splitter when picking and returns features from
+     * both sides of the splitter.
+     */
+    this.ignoreSplitterWhenPicking = options.ignoreSplitterWhenPicking ?? false;
 
     /**
      * Gets or sets whether to use the diff tool UI+styles

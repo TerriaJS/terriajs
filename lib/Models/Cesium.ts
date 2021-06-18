@@ -68,6 +68,7 @@ import CameraView from "./CameraView";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import hasTraits from "./hasTraits";
+import MapInteractionMode from "./MapInteractionMode";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
 
@@ -309,8 +310,7 @@ export default class Cesium extends GlobeOrMap {
 
     // Handle left click by picking objects from the map.
     inputHandler.setInputAction(e => {
-      if (!this.isFeaturePickingPaused)
-        this.pickFromScreenPosition(e.position, false);
+      if (!this.isFeaturePickingPaused) this.pickFromScreenPosition(e.position);
     }, ScreenSpaceEventType.LEFT_CLICK);
 
     let zoomUserDrawing: UserDrawing | undefined;
@@ -983,7 +983,7 @@ export default class Cesium extends GlobeOrMap {
    * specified and set terria.pickedFeatures based on this.
    *
    */
-  pickFromScreenPosition(screenPosition: Cartesian2, ignoreSplitter: boolean) {
+  pickFromScreenPosition(screenPosition: Cartesian2, ignoreSplitter?: boolean) {
     const pickRay = this.scene.camera.getPickRay(screenPosition);
     const pickPosition = this.scene.globe.pick(pickRay, this.scene);
     const pickPositionCartographic =
@@ -996,6 +996,10 @@ export default class Cesium extends GlobeOrMap {
       ? this.scene.imageryLayers.pickImageryLayerFeatures(pickRay, this.scene)
       : undefined;
 
+    const mapInteractionMode: MapInteractionMode | undefined = this.terria
+      .mapInteractionModeStack[this.terria.mapInteractionModeStack.length - 1];
+    const shouldIgnoreSplitter =
+      ignoreSplitter ?? mapInteractionMode?.ignoreSplitterWhenPicking;
     const result = this._buildPickedFeatures(
       providerCoords,
       pickPosition,
@@ -1003,18 +1007,12 @@ export default class Cesium extends GlobeOrMap {
       pickRasterPromise ? [pickRasterPromise] : [],
       undefined,
       pickPositionCartographic ? pickPositionCartographic.height : 0.0,
-      ignoreSplitter
+      shouldIgnoreSplitter ?? false
     );
 
-    const mapInteractionModeStack = this.terria.mapInteractionModeStack;
     runInAction(() => {
-      if (
-        isDefined(mapInteractionModeStack) &&
-        mapInteractionModeStack.length > 0
-      ) {
-        mapInteractionModeStack[
-          mapInteractionModeStack.length - 1
-        ].pickedFeatures = result;
+      if (mapInteractionMode) {
+        mapInteractionMode.pickedFeatures = result;
       } else {
         this.terria.pickedFeatures = result;
       }
@@ -1065,6 +1063,9 @@ export default class Cesium extends GlobeOrMap {
       }
     }
 
+    const mapInteractionMode: MapInteractionMode | undefined = this.terria
+      .mapInteractionModeStack[this.terria.mapInteractionModeStack.length - 1];
+
     const result = this._buildPickedFeatures(
       providerCoords,
       pickPosition,
@@ -1072,17 +1073,11 @@ export default class Cesium extends GlobeOrMap {
       filterOutUndefined(promises),
       imageryLayers,
       pickPositionCartographic.height,
-      false
+      mapInteractionMode?.ignoreSplitterWhenPicking
     );
 
-    const mapInteractionModeStack = this.terria.mapInteractionModeStack;
-    if (
-      defined(mapInteractionModeStack) &&
-      mapInteractionModeStack.length > 0
-    ) {
-      mapInteractionModeStack[
-        mapInteractionModeStack.length - 1
-      ].pickedFeatures = result;
+    if (mapInteractionMode) {
+      mapInteractionMode.pickedFeatures = result;
     } else {
       this.terria.pickedFeatures = result;
     }

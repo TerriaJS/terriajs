@@ -28,9 +28,11 @@ class WorkbenchList extends React.Component {
   render() {
     return (
       <ul className={Styles.workbenchContent}>
-        {this.props.terria.showSplitter && (
-          <WorkbenchSplitScreen terria={this.props.terria} />
-        )}
+        {this.props.terria.showSplitter &&
+          !this.props.terria.configParameters
+            .useExperimentalCompareWorkflow && (
+            <WorkbenchSplitScreen terria={this.props.terria} />
+          )}
         <Sortable onSort={this.onSort} direction="vertical" dynamic={true}>
           <For each="item" of={this.props.terria.workbench.items}>
             <WorkbenchItem

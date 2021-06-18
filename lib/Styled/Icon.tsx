@@ -124,10 +124,14 @@ export const GLYPHS = {
   pedestrian: require("../../wwwroot/images/icons/pedestrian.svg"),
   minimize: require("../../wwwroot/images/icons/minimize.svg"),
   maximize: require("../../wwwroot/images/icons/maximize.svg"),
-  closeTool: require("../../wwwroot/images/icons/close-tool.svg")
+  closeTool: require("../../wwwroot/images/icons/close-tool.svg"),
+  leftSmall: require("../../wwwroot/images/icons/left-small.svg"),
+  rightSmall: require("../../wwwroot/images/icons/right-small.svg"),
+  bothPanels: require("../../wwwroot/images/icons/both-panels.svg"),
+  closeCircle: require("../../wwwroot/images/icons/close-circle.svg")
 };
 
-interface IconProps {
+export interface IconProps {
   glyph: { id: string };
   style?: any;
   className?: string;
@@ -165,10 +169,10 @@ export const StyledIcon = styled(Icon)<IStyledIconProps>`
   ${props =>
     props.displayInline &&
     `
-  display: inline; 
+  display: inline;
   vertical-align: middle;
   `}
-  
+
   flex-shrink: 0;
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
   ${props => props.styledHeight && `height: ${props.styledHeight};`}

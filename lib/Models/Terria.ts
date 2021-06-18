@@ -253,6 +253,8 @@ interface ConfigParameters {
    * Minimum length of feedback comment.
    */
   feedbackMinLength?: number;
+
+  useExperimentalCompareWorkflow?: boolean;
 }
 
 interface StartOptions {
@@ -401,7 +403,8 @@ export default class Terria {
     persistViewerMode: true,
     openAddData: false,
     feedbackPreamble: "feedback.feedbackPreamble",
-    feedbackMinLength: 0
+    feedbackMinLength: 0,
+    useExperimentalCompareWorkflow: false
   };
 
   @observable
@@ -481,6 +484,16 @@ export default class Terria {
    * @type {boolean}
    */
   @observable catalogReferencesLoaded: boolean = false;
+
+  /**
+   * Left item in the compare workflow
+   */
+  @observable compareLeftItemId?: string;
+
+  /**
+   * Right item in the compare workflow
+   */
+  @observable compareRightItemId?: string;
 
   readonly notificationState: NotificationState = new NotificationState();
 
@@ -1245,6 +1258,14 @@ export default class Terria {
       this.splitPosition = initData.splitPosition;
     }
 
+    if (isJsonString(initData.compareLeftItemId)) {
+      this.compareLeftItemId = initData.compareLeftItemId;
+    }
+
+    if (isJsonString(initData.compareRightItemId)) {
+      this.compareRightItemId = initData.compareRightItemId;
+    }
+
     // Copy but don't yet load the workbench.
     const workbench = Array.isArray(initData.workbench)
       ? initData.workbench.slice()
@@ -1638,6 +1659,8 @@ async function interpretHash(
             message: { key: "parsingStartDataErrorMessage" }
           });
         }
+      } else if (property === "useExperimentalCompareWorkflow") {
+        terria.configParameters.useExperimentalCompareWorkflow = true;
       } else if (defined(propertyValue) && propertyValue.length > 0) {
         userProperties.set(property, propertyValue);
       } else {

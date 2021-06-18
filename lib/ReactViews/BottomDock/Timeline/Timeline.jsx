@@ -38,8 +38,13 @@ export const Timeline = observer(
       window.addEventListener("resize", this.resizeListener, false);
     },
 
+    componentDidMount() {
+      this.props.terria.timelineStack.activate();
+    },
+
     componentWillUnmount() {
       window.removeEventListener("resize", this.resizeListener);
+      this.props.terria.timelineStack.deactivate();
     },
 
     changeDateTime(time) {

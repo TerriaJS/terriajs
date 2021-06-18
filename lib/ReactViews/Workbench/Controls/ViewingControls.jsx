@@ -24,13 +24,14 @@ import addUserCatalogMember from "../../../Models/addUserCatalogMember";
 import CommonStrata from "../../../Models/CommonStrata";
 import getAncestors from "../../../Models/getAncestors";
 import SplitItemReference from "../../../Models/SplitItemReference";
+import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import Icon, { StyledIcon } from "../../../Styled/Icon";
 import { exportData } from "../../Preview/ExportData";
 import WorkbenchButton from "../WorkbenchButton";
 import Styles from "./viewing-controls.scss";
-import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
+import { isComparableItem } from "../../../Models/Comparable.ts";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -217,6 +218,16 @@ const ViewingControls = observer(
       });
     },
 
+    /**
+     * Used only when terria.configParameters.useExperimentalCompareWorkflow is true
+     */
+    compareItem() {
+      runInAction(() => {
+        this.props.viewState.terria.compareLeftItemId = this.props.item.uniqueId;
+        this.props.viewState.terria.showSplitter = true;
+      });
+    },
+
     openDiffTool() {
       // Disable timeline
       // Should we do this? Difference is quite a specific use case
@@ -288,11 +299,16 @@ const ViewingControls = observer(
 
     renderViewingControlsMenu() {
       const { t, item, viewState } = this.props;
-      const canSplit =
+      const canCompareItem =
         !item.terria.configParameters.disableSplitter &&
-        item.supportsSplitting &&
-        defined(item.splitDirection) &&
-        item.terria.currentViewer.canShowSplitter;
+        item.terria.currentViewer.canShowSplitter &&
+        isComparableItem(item);
+
+      const compareOrSplitItem = () =>
+        viewState.terria.configParameters.useExperimentalCompareWorkflow
+          ? this.compareItem()
+          : this.splitItem();
+
       return (
         <ul ref={e => (this.menuRef = e)}>
           <If
@@ -310,10 +326,10 @@ const ViewingControls = observer(
               </ViewingControlMenuButton>
             </li>
           </If>
-          <If condition={canSplit}>
-            <li className={classNames(Styles.split)}>
+          <If condition={canCompareItem}>
+            <li>
               <ViewingControlMenuButton
-                onClick={this.splitItem}
+                onClick={compareOrSplitItem}
                 title={t("workbench.splitItemTitle")}
               >
                 <BoxViewingControl>
@@ -393,14 +409,8 @@ const ViewingControls = observer(
       const canZoom =
         item.canZoomTo ||
         (item.tableStructure && item.tableStructure.sourceFeature);
-      const canSplit =
-        !item.terria.configParameters.disableSplitter &&
-        item.supportsSplitting &&
-        defined(item.splitDirection) &&
-        item.terria.currentViewer.canShowSplitter;
       const classList = {
         [Styles.noZoom]: !canZoom,
-        [Styles.noSplit]: !canSplit,
         [Styles.noInfo]: !item.showsInfo
       };
       const { t } = this.props;

@@ -230,6 +230,7 @@ const MapColumn = observer(
                   terria={this.props.terria}
                   viewState={this.props.viewState}
                   domElementRef={this.addBottomDock}
+                  elementConfig={this.props.terria.elements.get("bottom-dock")}
                 />
               </div>
             </div>

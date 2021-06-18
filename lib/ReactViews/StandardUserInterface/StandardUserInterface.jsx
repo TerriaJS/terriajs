@@ -43,6 +43,7 @@ import { action, runInAction } from "mobx";
 import HelpPanel from "../Map/Panels/HelpPanel/HelpPanel";
 import Tool from "../Tool";
 import Disclaimer from "../Disclaimer";
+import LazyCompare from "../Compare/LazyCompare";
 
 export const showStoryPrompt = (viewState, terria) => {
   terria.configParameters.showFeaturePrompts &&
@@ -247,7 +248,7 @@ const StandardUserInterface = observer(
         !this.shouldUseMobileInterface();
       const showStoryPanel =
         this.props.terria.configParameters.storyEnabled &&
-        this.props.terria.stories.length &&
+        this.props.terria.stories.length > 0 &&
         this.props.viewState.storyShown &&
         !this.props.viewState.explorerPanelIsVisible &&
         !this.props.viewState.storyBuilderShown;
@@ -316,15 +317,23 @@ const StandardUserInterface = observer(
                           this.props.viewState.triggerResizeEvent()
                         }
                       >
-                        <Branding
-                          terria={terria}
-                          viewState={this.props.viewState}
-                          version={this.props.version}
-                        />
-                        <SidePanel
-                          terria={terria}
-                          viewState={this.props.viewState}
-                        />
+                        {/* Conditionally shows the default terria side panel elements.
+                            By hiding it other workflow tools can draw over the sidepanel to show
+                            workflow specific components
+                          */}
+                        {this.props.viewState.showTerriaSidePanel && (
+                          <>
+                            <Branding
+                              terria={terria}
+                              viewState={this.props.viewState}
+                              version={this.props.version}
+                            />
+                            <SidePanel
+                              terria={terria}
+                              viewState={this.props.viewState}
+                            />
+                          </>
+                        )}
                       </div>
                     </Medium>
                   </If>
@@ -384,7 +393,6 @@ const StandardUserInterface = observer(
                   </section>
                 </div>
               </div>
-
               <If condition={!this.props.viewState.hideMapUi}>
                 <Medium>
                   <TrainerBar
@@ -393,7 +401,12 @@ const StandardUserInterface = observer(
                   />
                 </Medium>
               </If>
-
+              {this.props.viewState.terria.configParameters
+                .useExperimentalCompareWorkflow && (
+                <Medium>
+                  <LazyCompare viewState={this.props.viewState} />
+                </Medium>
+              )}
               <Medium>
                 {/* I think this does what the previous boolean condition does, but without the console error */}
                 <If condition={this.props.viewState.isToolOpen}>
@@ -404,13 +417,11 @@ const StandardUserInterface = observer(
                   />
                 </If>
               </Medium>
-
               <Notification viewState={this.props.viewState} />
               <MapInteractionWindow
                 terria={terria}
                 viewState={this.props.viewState}
               />
-
               <If
                 condition={
                   !customElements.feedback.length &&
@@ -421,7 +432,6 @@ const StandardUserInterface = observer(
               >
                 <FeedbackForm viewState={this.props.viewState} />
               </If>
-
               <div
                 className={classNames(
                   Styles.featureInfo,

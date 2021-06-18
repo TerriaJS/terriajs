@@ -167,7 +167,10 @@ export const WorkbenchItemRaw = observer(
                 viewState={this.props.viewState}
               />
               <OpacitySection item={workbenchItem} />
-              <LeftRightSection item={workbenchItem} />
+              {!this.props.viewState.terria.configParameters
+                .useExperimentalCompareWorkflow && (
+                <LeftRightSection item={workbenchItem} />
+              )}
               <TimerSection item={workbenchItem} />
               <If
                 condition={
