@@ -37,7 +37,7 @@ export default class TableTimeStyleTraits extends ModelTraits {
       "if the CSV does not have both a time column and an ID column.",
     type: "boolean"
   })
-  isSampled: boolean = true;
+  isSampled?: boolean;
 
   @primitiveTrait({
     name: "Display Duration",

@@ -10,7 +10,6 @@ Change Log
 
 * Add `options` to CSV papaparsing
 * `TableMixin` will now only show points **or** region mapping - not both
-* Added `TableMixin` `filterDimension` - it will be displayed if `activeStyle` is set to a column which can't be used with a `ColorMap` (eg has more unique values than number of bins)
 * Add `FeatureInfoMixin` support for 2D vector features
 * Remove table style `SelectableDimension` from SDMX
 * `GyroscopeGuidance` can now be translated.

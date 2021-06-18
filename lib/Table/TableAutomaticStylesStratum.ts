@@ -177,8 +177,13 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
     ) as this;
   }
 
+  /** Add column title as legend title if showing a Discrete or Enum ColorMap */
   @computed get title() {
-    return this.catalogItem.activeTableStyle.title;
+    if (
+      this.catalogItem.activeTableStyle.colorMap instanceof DiscreteColorMap ||
+      this.catalogItem.activeTableStyle.colorMap instanceof EnumColorMap
+    )
+      return this.catalogItem.activeTableStyle.title;
   }
 
   @computed

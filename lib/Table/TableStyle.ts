@@ -73,9 +73,8 @@ export default class TableStyle {
   get hidden() {
     return (
       this.styleTraits.hidden ??
-      (((this.isEnum && this.enumColors.length <= 1) ||
-        (!this.isEnum && this.numberOfBins <= 1)) &&
-        !this.filterAvailable)
+      ((this.isEnum && this.enumColors.length <= 1) ||
+        (!this.isEnum && this.numberOfBins <= 1))
     );
   }
 
@@ -267,11 +266,17 @@ export default class TableStyle {
     return (
       !!this.colorColumn &&
       (this.colorColumn.type === TableColumnType.enum ||
-        this.colorColumn.type === TableColumnType.region ||
-        this.colorColumn.type === TableColumnType.text) &&
+        this.colorColumn.type === TableColumnType.region) &&
       this.colorColumn.uniqueValues.values.length <=
         this.colorPalette.colors.length
     );
+  }
+
+  /** Style isSampled by default. TimeTraits.isSampled will be used if defined. If not, and color column is binary - isSampled will be false. */
+  @computed get isSampled() {
+    if (isDefined(this.timeTraits.isSampled)) return this.timeTraits.isSampled;
+    if (isDefined(this.colorColumn)) return !this.colorColumn.isScalarBinary;
+    return true;
   }
 
   @computed
@@ -287,8 +292,7 @@ export default class TableStyle {
 
     if (
       colorColumn.type === TableColumnType.enum ||
-      colorColumn.type === TableColumnType.region ||
-      colorColumn.type === TableColumnType.text
+      colorColumn.type === TableColumnType.region
     ) {
       // Enumerated values, so use a large, high contrast palette.
       paletteName = paletteName || "HighContrast";
@@ -474,13 +478,6 @@ export default class TableStyle {
         color = Color.fromCssColorString(getColorForId(colorId));
       }
 
-      if (this.styleTraits.filter) {
-        return new EnumColorMap({
-          enumColors: [{ value: this.styleTraits.filter, color }],
-          nullColor: Color.TRANSPARENT
-        });
-      }
-
       return new ConstantColorMap(color, this.tableModel.name);
     }
   }
@@ -490,17 +487,6 @@ export default class TableStyle {
       ? Color.fromCssColorString(this.colorTraits.nullColor) ??
           Color.TRANSPARENT
       : Color.TRANSPARENT;
-  }
-
-  @computed
-  get filterAvailable() {
-    return (
-      !!this.colorColumn &&
-      !(this.colorColumn.type === TableColumnType.scalar || this.isEnum) &&
-      this.colorColumn.uniqueValues.values.length <
-        this.colorColumn.values.length -
-          this.colorColumn.uniqueValues.numberOfNulls
-    );
   }
 
   @computed

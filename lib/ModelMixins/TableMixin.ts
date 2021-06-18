@@ -1,4 +1,5 @@
 import { VectorTileFeature } from "@mapbox/vector-tile";
+import i18next from "i18next";
 import { action, computed, observable, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
@@ -19,6 +20,7 @@ import { JsonObject } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
 import makeRealPromise from "../Core/makeRealPromise";
 import TerriaError from "../Core/TerriaError";
+import ConstantColorMap from "../Map/ConstantColorMap";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import JSRegionProviderList from "../Map/RegionProviderList";
 import CommonStrata from "../Models/CommonStrata";
@@ -44,7 +46,6 @@ import DiscretelyTimeVaryingMixin, {
 } from "./DiscretelyTimeVaryingMixin";
 import ExportableMixin, { ExportData } from "./ExportableMixin";
 import { ImageryParts } from "./MappableMixin";
-import i18next from "i18next";
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
@@ -250,10 +251,17 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     @computed
     get mapItems(): (DataSource | ImageryParts)[] {
       const numRegions =
-        this.activeTableStyle.regionColumn?.uniqueValues.values.length ?? 0;
+        this.activeTableStyle.regionColumn?.valuesAsRegions?.uniqueRegionIds
+          ?.length ?? 0;
       const numPoints = this.activeTableStyle.rowGroups.length;
 
-      if (numPoints > numRegions) {
+      // If we have more points than regions OR we have points are are using a ConstantColorMap - show points instead of regions
+      // (Using ConstantColorMap with regions will result in all regions being a color - which isn't useful)
+      if (
+        (numPoints > 0 &&
+          this.activeTableStyle.colorMap instanceof ConstantColorMap) ||
+        numPoints > numRegions
+      ) {
         const pointsDataSource = this.createLongitudeLatitudeDataSource(
           this.activeTableStyle
         );
@@ -269,7 +277,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     get shortReport() {
       return this.mapItems.length === 0 &&
         this.chartItems.length === 0 &&
-        !this.isLoadingMapItems
+        !this.isLoading
         ? i18next.t("models.tableData.noData")
         : super.shortReport;
     }
@@ -410,8 +418,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         ...super.selectableDimensions,
         this.regionColumnDimensions,
         this.regionProviderDimensions,
-        this.styleDimensions,
-        this.filterDimension
+        this.styleDimensions
       ]);
     }
 
@@ -520,39 +527,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       };
     }
 
-    /**
-     * The filter dimension can be used to filter table rows by the value in the `activeStyle` column.
-     * It is displayed if `activeStyle` is set to a column which can't be used with a `ColorMap` (eg has more unique values than number of bins)
-     */
-    @computed
-    get filterDimension(): SelectableDimension | undefined {
-      if (
-        !this.activeTableStyle.filterAvailable ||
-        !this.activeTableStyle.colorColumn
-      ) {
-        return;
-      }
-
-      return {
-        id: "filterColumn",
-        name: `Filter by ${this.activeTableStyle.title}`,
-        allowUndefined: true,
-        options: this.activeTableStyle.colorColumn.sortedUniqueValues.map(
-          value => {
-            return {
-              id: value
-            };
-          }
-        ),
-        selectedId: this.activeTableStyle.styleTraits.filter,
-        setDimensionValue: (stratumId: string, value: string) => {
-          this.styles
-            .find(s => s.id === this.activeTableStyle.id)
-            ?.setTrait(stratumId, "filter", value);
-        }
-      };
-    }
-
     @computed
     get rowIds(): number[] {
       const nRows = (this.dataColumnMajor?.[0]?.length || 1) - 1;
@@ -562,7 +536,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     @computed
     get isSampled(): boolean {
-      return this.activeTableStyle.timeTraits.isSampled;
+      return this.activeTableStyle.isSampled;
     }
 
     @computed
