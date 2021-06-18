@@ -30,6 +30,8 @@ import SelectableDimensions, {
 } from "./SelectableDimensions";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
+import i18next from "i18next";
+import { MetadataUrlTraits } from "../Traits/CatalogMemberTraits";
 
 type PointTimeSeries = {
   samples?: number;
@@ -58,13 +60,13 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
       domain: catalogItem.url
     });
 
-    const dataset = (
-      await client.get(
-        fromCatalog()
-          .dataset(catalogItem.datasetId)
-          .itself()
-      )
-    ).dataset;
+    const response = await client.get(
+      fromCatalog()
+        .dataset(catalogItem.datasetId)
+        .itself()
+    );
+
+    const dataset = response.dataset;
 
     if (!isValidDataset(dataset))
       throw `Could not find dataset \`${catalogItem.datasetId}\``;
@@ -140,6 +142,23 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     private readonly pointTimeSeries?: PointTimeSeries[]
   ) {
     super();
+  }
+
+  @computed get name() {
+    return this.dataset.metas?.default?.title ?? this.dataset.dataset_id;
+  }
+
+  @computed get description() {
+    return this.dataset.metas?.default?.description;
+  }
+
+  @computed get metadataUrls() {
+    return [
+      createStratumInstance(MetadataUrlTraits, {
+        title: i18next.t("models.openDataSoft.viewDatasetPage"),
+        url: `${this.catalogItem.url}/explore/dataset/${this.dataset.dataset_id}/information/`
+      })
+    ];
   }
 
   /** Find field to visualise by default (i.e. colorColumn)

@@ -3,6 +3,7 @@ import CatalogGroup from "../../lib/Models/CatalogGroupNew";
 import OpenDataSoftCatalogGroup from "../../lib/Models/OpenDataSoftCatalogGroup";
 import OpenDataSoftCatalogItem from "../../lib/Models/OpenDataSoftCatalogItem";
 import Terria from "../../lib/Models/Terria";
+import fetchMock from "fetch-mock";
 
 const facets = JSON.stringify(require("../../wwwroot/test/ods/facets.json"));
 
@@ -15,22 +16,21 @@ describe("OpenDataSoftCatalogGroup", function() {
   let odsGroup: OpenDataSoftCatalogGroup;
 
   beforeEach(function() {
-    jasmine.Ajax.install();
-    jasmine.Ajax.stubRequest(
-      "https://example.com/api/v2/catalog/facets/"
-    ).andReturn({
-      responseText: facets
+    fetchMock.mock("https://example.com/api/v2/catalog/facets/", {
+      body: facets
     });
-    jasmine.Ajax.stubRequest(
-      "https://example.com/api/v2/catalog/datasets/?limit=100&order_by=title+asc&refine=features%3Ageo&where=features+%3D+%22geo%22+OR+features+%3D+%22timeserie%22"
-    ).andReturn({ responseText: datasets });
+
+    fetchMock.mock(
+      "https://example.com/api/v2/catalog/datasets/?limit=100&order_by=title+asc&refine=features%3Ageo&where=features+%3D+%22geo%22+OR+features+%3D+%22timeserie%22",
+      { body: datasets }
+    );
 
     terria = new Terria();
     odsGroup = new OpenDataSoftCatalogGroup("test", terria);
   });
 
   afterEach(function() {
-    jasmine.Ajax.uninstall();
+    fetchMock.restore();
   });
 
   it("has a type", function() {
