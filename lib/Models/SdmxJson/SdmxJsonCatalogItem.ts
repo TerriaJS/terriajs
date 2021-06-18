@@ -96,7 +96,9 @@ export default class SdmxJsonCatalogItem
   @computed
   get selectableDimensions(): SelectableDimension[] {
     return filterOutUndefined([
-      ...super.selectableDimensions,
+      ...super.selectableDimensions.filter(
+        d => d.id !== this.styleDimensions?.id
+      ),
       ...this.sdmxSelectableDimensions,
       this.regionColumnDimensions,
       this.regionProviderDimensions
