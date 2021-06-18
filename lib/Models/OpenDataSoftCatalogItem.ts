@@ -1,5 +1,6 @@
 import { ApiClient, fromCatalog } from "@opendatasoft/api-client";
 import { Dataset } from "@opendatasoft/api-client/dist/client/types";
+import i18next from "i18next";
 import { computed, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -13,6 +14,7 @@ import FeatureInfoMixin from "../ModelMixins/FeatureInfoMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
+import { MetadataUrlTraits } from "../Traits/CatalogMemberTraits";
 import DimensionTraits from "../Traits/DimensionTraits";
 import { FeatureInfoTemplateTraits } from "../Traits/FeatureInfoTraits";
 import OpenDataSoftCatalogItemTraits from "../Traits/OpenDataSoftCatalogItemTraits";
@@ -30,8 +32,6 @@ import SelectableDimensions, {
 } from "./SelectableDimensions";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
-import i18next from "i18next";
-import { MetadataUrlTraits } from "../Traits/CatalogMemberTraits";
 
 type PointTimeSeries = {
   samples?: number;
