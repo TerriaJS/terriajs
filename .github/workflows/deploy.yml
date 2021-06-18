@@ -1,9 +1,6 @@
 name: Deploy TerriaMap
 
-on:
-  push:
-    branches:
-      - actions
+on: push
 
 jobs:
   deploy:
