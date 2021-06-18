@@ -11,6 +11,10 @@ import Box from "../../../../Styled/Box";
 import parseCustomMarkdownToReact from "../../../Custom/parseCustomMarkdownToReact";
 import HelpPanelItem from "./HelpPanelItem";
 import Button, { RawButton } from "../../../../Styled/Button";
+import {
+  Category,
+  HelpAction
+} from "../../../../Core/AnalyticEvents/analyticEvents";
 
 @observer
 class HelpPanel extends React.Component {
@@ -86,7 +90,10 @@ class HelpPanel extends React.Component {
               rounded
               styledMinWidth={"240px"}
               onClick={() => {
-                this.props.terria.analytics?.logEvent("Help", "Take tour");
+                this.props.terria.analytics?.logEvent(
+                  Category.help,
+                  HelpAction.takeTour
+                );
                 runInAction(() => {
                   this.props.viewState.hideHelpPanel();
                   this.props.viewState.setTourIndex(0);

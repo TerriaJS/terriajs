@@ -10,6 +10,7 @@ import { Ref } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import addedByUser from "../Core/addedByUser";
+import { Category, HelpAction } from "../Core/AnalyticEvents/analyticEvents";
 import triggerResize from "../Core/triggerResize";
 import PickedFeatures from "../Map/PickedFeatures";
 import getAncestors from "../Models/getAncestors";
@@ -536,7 +537,7 @@ export default class ViewState {
 
   @action
   showHelpPanel() {
-    this.terria.analytics?.logEvent("Help", "Panel opened");
+    this.terria.analytics?.logEvent(Category.help, HelpAction.panelOpened);
     this.showHelpMenu = true;
     this.helpPanelExpanded = false;
     this.selectedHelpMenuItem = "";

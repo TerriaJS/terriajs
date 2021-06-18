@@ -14,6 +14,10 @@ import { Medium, Small } from "../Generic/Responsive";
 import Icon from "../../Styled/Icon";
 import Styles from "./story-panel.scss";
 import TerriaError from "../../Core/TerriaError";
+import {
+  Category,
+  StoryAction
+} from "../../Core/AnalyticEvents/analyticEvents";
 
 /**
  *
@@ -22,7 +26,11 @@ import TerriaError from "../../Core/TerriaError";
  */
 
 export async function activateStory(scene, terria) {
-  terria.analytics?.logEvent("Story", "view scene", JSON.stringify(scene));
+  terria.analytics?.logEvent(
+    Category.story,
+    StoryAction.viewScene,
+    JSON.stringify(scene)
+  );
 
   if (scene.shareData) {
     const errors = [];
@@ -62,7 +70,11 @@ export async function activateStory(scene, terria) {
   }
 
   terria.workbench.items.forEach(item => {
-    terria.analytics?.logEvent("Story", "datasetView", getPath(item));
+    terria.analytics?.logEvent(
+      Category.story,
+      StoryAction.datasetView,
+      getPath(item)
+    );
   });
 }
 

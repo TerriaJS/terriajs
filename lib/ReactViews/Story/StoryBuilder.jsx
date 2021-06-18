@@ -24,6 +24,10 @@ import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
 import Styles from "./story-builder.scss";
 import Story from "./Story.jsx";
 import StoryEditor from "./StoryEditor.jsx";
+import {
+  Category,
+  StoryAction
+} from "../../Core/AnalyticEvents/analyticEvents";
 
 const STORY_VIDEO = "storyVideo";
 
@@ -119,8 +123,8 @@ const StoryBuilder = observer(
       };
 
       this.props.terria.analytics?.logEvent(
-        "Story",
-        "save",
+        Category.story,
+        StoryAction.saveStory,
         JSON.stringify(story)
       );
 
@@ -220,7 +224,10 @@ const StoryBuilder = observer(
         triggerResize();
       }, this.props.animationDuration || 1);
       this.props.terria.currentViewer.notifyRepaintRequired();
-      this.props.terria.analytics?.logEvent("Story", "run story");
+      this.props.terria.analytics?.logEvent(
+        Category.story,
+        StoryAction.runStory
+      );
     },
 
     editStory(story) {

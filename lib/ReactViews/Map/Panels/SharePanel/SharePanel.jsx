@@ -23,6 +23,10 @@ import {
 import PrintView from "./PrintView";
 import Styles from "./share-panel.scss";
 import StorySharePanel from "./StorySharePanel";
+import {
+  Category,
+  ShareAction
+} from "../../../../Core/AnalyticEvents/analyticEvents";
 
 const SharePanel = observer(
   createReactClass({
@@ -376,7 +380,11 @@ const SharePanel = observer(
                 id="share-url"
                 rounded
                 onCopy={text =>
-                  terria.analytics?.logEvent("Share", "Story copy", text)
+                  terria.analytics?.logEvent(
+                    Category.share,
+                    ShareAction.storyCopy,
+                    text
+                  )
                 }
               />
               {this.renderWarning()}
@@ -401,7 +409,11 @@ const SharePanel = observer(
                 source={this.getShareUrlInput("light")}
                 id="share-url"
                 onCopy={text =>
-                  terria.analytics?.logEvent("Share", "Catalog copy", text)
+                  terria.analytics?.logEvent(
+                    Category.share,
+                    ShareAction.catalogCopy,
+                    text
+                  )
                 }
               />
               {this.renderWarning()}
@@ -424,7 +436,11 @@ const SharePanel = observer(
               source={this.getShareUrlInput("dark")}
               id="share-url"
               onCopy={text =>
-                terria.analytics?.logEvent("Share", "Share copy", text)
+                terria.analytics?.logEvent(
+                  Category.share,
+                  ShareAction.shareCopy,
+                  text
+                )
               }
             />
             {this.renderWarning()}

@@ -9,6 +9,10 @@ import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import styled, { withTheme } from "styled-components";
 import HelpVideoPanel from "./HelpVideoPanel";
+import {
+  Category,
+  HelpAction
+} from "../../../../Core/AnalyticEvents/analyticEvents";
 
 @observer
 class HelpPanelItem extends React.Component {
@@ -60,8 +64,8 @@ class HelpPanelItem extends React.Component {
           className={className}
           onClick={() => {
             this.props.terria.analytics?.logEvent(
-              "Help",
-              "Item selected",
+              Category.help,
+              HelpAction.itemSelected,
               title
             );
             this.props.viewState.selectHelpMenuItem(
