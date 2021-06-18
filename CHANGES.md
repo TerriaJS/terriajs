@@ -17,6 +17,7 @@ Change Log
 * Improved default `TableColumn.isSampled` - it will be false if a binary column is detected (0 or 1)
 * Improved default Table charting - now a time column will be used for xAxis by default
 * Added `spreadFinishTime` - which works same way as `spreadStartTime` - if `true`, finish time of feature will be "spread" so that all features are displayed at the latest time step.
+* Added support for `OpenDataSoft` - only point or region based features + timeseries
 * [The next improvement]
 
 #### 8.0.0-alpha.84
