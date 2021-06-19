@@ -48,7 +48,7 @@ export const DataCatalog = observer(
           <If condition={isSearching && hasCatalogSearchProvider}>
             <label className={Styles.label}>{t("search.resultsLabel")}</label>
             <SearchHeader
-              searchResults={searchState.catalogSearchProvider}
+              searchResults={searchState.catalogSearchResults}
               isWaitingForSearchToStart={
                 searchState.isWaitingToStartCatalogSearch
               }
