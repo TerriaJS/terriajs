@@ -4,6 +4,8 @@ import "jasmine-ajax";
 import { configure, spy } from "mobx";
 import i18next from "i18next";
 import registerCatalogMembers from "../lib/Models/registerCatalogMembers";
+const JasmineDOM = require("@testing-library/jasmine-dom").default;
+//import JasmineDOM from "@testing-library/jasmine-dom/dist";
 
 configure({
   enforceActions: true,
@@ -26,6 +28,8 @@ beforeAll(async function() {
     debug: false
   });
 });
+
+beforeAll(() => jasmine.addMatchers(JasmineDOM));
 
 jasmine.getEnv().addReporter({
   specDone: result =>
