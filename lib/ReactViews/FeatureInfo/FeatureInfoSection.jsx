@@ -727,7 +727,7 @@ function getTimeSeriesChartContext(catalogItem, feature, getChartDetails) {
     const distinguishingId = catalogItem.dataViewId;
     const featureId = defined(distinguishingId)
       ? distinguishingId + "--" + feature.id
-      : feature.id;
+      : feature.id.toString();
     if (chartDetails) {
       const result = {
         xName: chartDetails.xName.replace(/\"/g, ""),
