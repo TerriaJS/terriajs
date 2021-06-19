@@ -1,6 +1,6 @@
 click==7.1.2
 future==0.18.2
-Jinja2==2.11.2
+Jinja2==2.11.3
 joblib==0.16.0
 livereload==2.6.3
 lunr==0.5.8
