@@ -74,4 +74,12 @@ export class GeoJsonTraits extends mixTraits(
       "The property of each GeoJSON feature that specifies which point in time that feature is associated with. If not specified, it is assumed that the dataset is constant throughout time."
   })
   timeProperty?: string;
+
+  @primitiveTrait({
+    name: "Height property",
+    type: "string",
+    description:
+      "The property of each GeoJSON feature that specifies the height. If defined, polygons will be extruded to this property (in meters) above terrain."
+  })
+  heightProperty?: string;
 }

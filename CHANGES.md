@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.86)
 
+* `GeoJsonMixin`-based catalog items with polygon features can be extruded if a `heightProperty` is specified.
 * [The next improvement]
 
 #### 8.0.0-alpha.85

@@ -1,11 +1,15 @@
+import { Feature, FeatureCollection, GeoJsonObject } from "geojson";
 import i18next from "i18next";
 import { action, computed, observable, runInAction } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
+import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
+import TimeIntervalCollection from "terriajs-cesium/Source/Core/TimeIntervalCollection";
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
 import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
@@ -23,19 +27,15 @@ import JsonValue, { isJsonObject, JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
 import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError from "../Core/TerriaError";
-import MappableMixin from "./MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import Model from "../Models/Model";
 import proxyCatalogItemUrl from "../Models/proxyCatalogItemUrl";
 import { GeoJsonTraits } from "../Traits/GeoJsonTraits";
-import { Feature, FeatureCollection, GeoJsonObject } from "geojson";
 import DiscretelyTimeVaryingMixin, {
   DiscreteTimeAsJS
 } from "./DiscretelyTimeVaryingMixin";
-import TimeIntervalCollection from "terriajs-cesium/Source/Core/TimeIntervalCollection";
-import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
-import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
+import MappableMixin from "./MappableMixin";
 
 const formatPropertyValue = require("../Core/formatPropertyValue");
 const hashFromString = require("../Core/hashFromString");
@@ -418,24 +418,38 @@ export default function GeoJsonMixin<
             );
           }
 
-          // Cesium on Windows can't render polygons with a stroke-width > 1.0.  And even on other platforms it
-          // looks bad because WebGL doesn't mitre the lines together nicely.
-          // As a workaround for the special case where the polygon is unfilled anyway, change it to a polyline.
-          if (
-            isDefined(entity.polygon) &&
-            polygonHasWideOutline(entity.polygon, now) &&
-            !polygonIsFilled(entity.polygon)
-          ) {
-            createPolylineFromPolygon(entities, entity, now);
-            entity.polygon = (undefined as unknown) as PolygonGraphics;
-          } else if (
-            isDefined(entity.polygon) &&
-            polygonHasOutline(entity.polygon, now) &&
-            isPolygonOnTerrain(entity.polygon, now)
-          ) {
-            // Polygons don't directly support outlines when they're on terrain.
-            // So create a manual outline.
-            createPolylineFromPolygon(entities, entity, now);
+          if (isDefined(entity.polygon)) {
+            // Cesium on Windows can't render polygons with a stroke-width > 1.0.  And even on other platforms it
+            // looks bad because WebGL doesn't mitre the lines together nicely.
+            // As a workaround for the special case where the polygon is unfilled anyway, change it to a polyline.
+            if (
+              polygonHasWideOutline(entity.polygon, now) &&
+              !polygonIsFilled(entity.polygon)
+            ) {
+              createPolylineFromPolygon(entities, entity, now);
+              entity.polygon = (undefined as unknown) as PolygonGraphics;
+            } else if (
+              polygonHasOutline(entity.polygon, now) &&
+              isPolygonOnTerrain(entity.polygon, now)
+            ) {
+              // Polygons don't directly support outlines when they're on terrain.
+              // So create a manual outline.
+              createPolylineFromPolygon(entities, entity, now);
+            }
+
+            // Extrude polyhons if heightProperty is set
+            if (
+              this.heightProperty &&
+              properties &&
+              isDefined(properties[this.heightProperty])
+            ) {
+              entity.polygon.closeTop = new ConstantProperty(true);
+              entity.polygon.extrudedHeight = properties[this.heightProperty];
+
+              entity.polygon.extrudedHeightReference = new ConstantProperty(
+                HeightReference.RELATIVE_TO_GROUND
+              );
+            }
           }
         }
         return dataSource;
