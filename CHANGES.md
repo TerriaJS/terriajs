@@ -4,9 +4,15 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.85)
+- **Breaking changes**:
+  - Removed `registerAnalytics.js`
+  - Removed `HelpMenuPanel.jsx`
 
+* Added analytic events related to story, share and help menu items, Also refactored events to use category and action enums.
 * Remove table style `SelectableDimension` from SDMX
 * Fix checkbox when click happen on svg icon. (#5550)
+* `GyroscopeGuidance` can now be translated.
+* Wraps tool title bar text using `...`.
 * [The next improvement]
 
 #### 8.0.0-alpha.84

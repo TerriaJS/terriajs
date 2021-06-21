@@ -119,6 +119,7 @@ const Title: React.FC<TitleProps> = props => {
         styledLineHeight="30px"
         overflowEllipsis
         overflowHide
+        noWrap
       >
         {props.title}
       </TitleText>
@@ -128,4 +129,5 @@ const Title: React.FC<TitleProps> = props => {
 
 const TitleText = styled(Text)`
   flex-grow: 2;
+  max-width: 220px;
 `;
