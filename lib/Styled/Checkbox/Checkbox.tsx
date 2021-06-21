@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { useUID } from "react-uid";
 import { TextSpan } from "../Text";
-import { Spacing } from "./../Spacing";
+import { SpacingSpan } from "./../Spacing";
 import CheckboxIcon from "./Elements/CheckboxIcon";
 import HiddenCheckbox from "./Elements/HiddenCheckbox";
 import { ICheckboxProps } from "./types";
@@ -51,7 +51,7 @@ const Checkbox = memo(
     return (
       <TextSpan
         as={"label"}
-        htmlFor={id}
+        htmlFor={`checkbox-${id}`}
         css={`
           display: flex;
           flex-shrink: 0;
@@ -78,7 +78,7 @@ const Checkbox = memo(
           onChange={onChange}
           value={value}
           name={name}
-          id={id}
+          id={`checkbox-${id}`}
           ref={ref}
         />
         <CheckboxIcon
@@ -87,7 +87,8 @@ const Checkbox = memo(
           isDisabled={isDisabled}
           label=""
         />
-        <Spacing right={1} />
+        <span />
+        <SpacingSpan right={1} />
         <TextSpan
           isDisabled={isDisabled}
           css={`
