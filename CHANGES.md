@@ -3,7 +3,12 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.85)
+#### next release (8.0.0-alpha.86)
+
+* [The next improvement]
+
+#### 8.0.0-alpha.85
+
 - **Breaking changes**:
   - Removed `registerAnalytics.js`
   - Removed `HelpMenuPanel.jsx`
@@ -12,7 +17,6 @@ Change Log
 * Remove table style `SelectableDimension` from SDMX
 * `GyroscopeGuidance` can now be translated.
 * Wraps tool title bar text using `...`.
-* [The next improvement]
 
 #### 8.0.0-alpha.84
 
