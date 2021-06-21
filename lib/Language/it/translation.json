@@ -19,7 +19,9 @@
     "latLon": "Lat / Lon ",
     "btnCloseFeature": "Chiudi pannello dati",
     "pickLocation": "Seleziona posizione",
-    "noInfoAvailable": "Nessuna informazione disponibile"
+    "noInfoAvailable": "Nessuna informazione disponibile",
+    "panelHeading": "Informazioni dell'elemento",
+    "userSelection": "Seleziona utente"
   },
   "sui": {
     "notifications": {
@@ -64,7 +66,8 @@
     },
     "viewerModeLabels": {
       "Leaflet": "2D",
-      "CesiumTerrain": "Terreno 3D"
+      "CesiumTerrain": "Terreno 3D",
+      "CesiumEllipsoid": "3D Regolare"
     },
     "none": "(Nessuno)",
     "mapQuality": "Qualità della mappa raster:",
@@ -83,7 +86,8 @@
     "btnText": "Avvia",
     "btnCount": "Conta i dataset",
     "title": "Conta i Dataset",
-    "recount": "Ricalcola"
+    "recount": "Ricalcola",
+    "countingMessage": "Conteggio in corso, perfavore aspettare…"
   },
   "share": {
     "btnMapShareTitle": "Condividi la mappa con altri",
@@ -186,13 +190,15 @@
       "firefox": "Mozilla Firefox"
     },
     "csw": {
-      "links": "Collegamenti"
+      "links": "Collegamenti",
+      "dataResponsibility": "Resposabile dei dati"
     },
     "catalog": {
       "cancel": "Annulla",
       "upload": "Carica",
       "unsupportedFileTypeTitle": "Tipo di file non supportato",
-      "group": "Gruppo"
+      "group": "Gruppo",
+      "name": "Elemento senza nome"
     },
     "ckan": {
       "update_freq": "Frequenza di aggiornamento",
@@ -200,12 +206,21 @@
       "metadata_created": "Creato",
       "contact_point": "Contatti",
       "author": "Autore",
-      "licence": "Licenza"
+      "licence": "Licenza",
+      "resourceDescription": "Descrizione della risorsa",
+      "dataDescription": "Descrizione dei dati",
+      "datasetDescription": "Descrizione del dataset"
     },
     "userData": {
       "firefox": "Mozilla Firefox",
       "chrome": "Google Chrome",
       "internetExplorer": "Internet Explorer 11"
+    },
+    "spatialDetailing": {
+      "name": "Dettaglio spaziale"
+    },
+    "magda": {
+      "distributionDesc": "Descrizione della distribuzione"
     }
   },
   "map": {
@@ -227,15 +242,26 @@
       "gpx": "GPX",
       "csv": "CSV",
       "open-street-map": "Server OpenStreetMap"
+    },
+    "printWindow": {
+      "errorTitle": "Errore nella stampa",
+      "printMediaEnd": "termina la stampa delle immagini",
+      "printMediaStart": "inizia la stampa delle immagini"
     }
   },
   "analytics": {
-    "polygon": "Poligono"
+    "polygon": "Poligono",
+    "selectLocation": "Seleziona posizione"
   },
   "description": {
     "typeName": "Digita nome",
     "layerName": "Nome layer",
-    "name": "Descrizione"
+    "name": "Descrizione",
+    "dataCustodian": "Depositario dei dati",
+    "downloadData": "Scarica dati",
+    "dataUrl": "URL dei dati",
+    "dataServiceDetails": "Dettagli dei servizi dei dati",
+    "dataSourceDetails": "Dettagli della sorgente dei dati"
   },
   "preview": {
     "updateFrequency": "Frequenza di aggiornamento",
@@ -244,7 +270,15 @@
     "contact": "Contatti",
     "author": "Autore",
     "licence": "Licenza",
-    "disclaimer": "Scarico di responsabilità"
+    "disclaimer": "Scarico di responsabilità",
+    "datasetDescription": "Descrizione del dataset",
+    "dataDescription": "Descrizione dei dati",
+    "dataPreview": "ANTEPRIMA DATI",
+    "preview": "anteprima di {{appName}}",
+    "loading": "ANTEPRIMA IN CARICAMENTO…",
+    "dataPreviewError": "ERRORE ANTEPRIMA DEI DATI",
+    "dataPreviewLoading": "CARICAMENTO ANTEPRIMA DEI DATI...",
+    "noPreviewAvailable": "NESSUNA ANTEPRIMA DISPONIBILE"
   },
   "legend": {
     "n": "N",
@@ -260,21 +294,29 @@
     }
   },
   "deltaTool": {
-    "cancelBtn": "Annulla"
+    "cancelBtn": "Annulla",
+    "secondaryImage": "Immagine secondaria",
+    "primaryImage": "Immagine principale",
+    "selectedLocation": "Posizione selezionata"
   },
   "viewModels": {
     "searchLocations": "Posizioni",
-    "searchAddresses": "Indirizzi"
+    "searchAddresses": "Indirizzi",
+    "searchCatalogueItem": "Catalogo degli elementi",
+    "searchPlaceNames": "Nome ufficiale dei luoghi"
   },
   "chart": {
     "download": "Scarica",
     "expand": "Espandi",
-    "sectionLabel": "Grafici"
+    "sectionLabel": "Grafici",
+    "closePanel": "Chiudi pannello"
   },
   "catalogItem": {
     "add": "Aggiungi",
     "remove": "Rimuovi",
-    "loading": "Caricamento…"
+    "loading": "Caricamento…",
+    "removeFromMap": "Rimuovi dalla mappa",
+    "trash": "Rimuovi questo catalogo"
   },
   "loader": {
     "loadingMessage": "Caricamento"
@@ -282,26 +324,41 @@
   "clipboard": {
     "copy": "Copia",
     "shareURL": "Condividi URL",
-    "success": "Copiato negli appunti"
+    "success": "Copiato negli appunti",
+    "unsuccessful": "Copia senza successo…"
   },
   "concept": {
     "inactive": {
-      "cancel": "Annulla"
+      "cancel": "Annulla",
+      "newText": "Nuova condizione"
     },
     "active": {
-      "edit": "Modifica condizione"
+      "edit": "Modifica condizione",
+      "remove": "Rimuovi condizione"
+    },
+    "summary": {
+      "addFirstText": "Aggiungi una nuova condizione",
+      "addMoreText": "Aggiungi una condizione"
     }
   },
   "satellite": {
     "newLocation": "Nuova posizione",
     "zoomTo": "Ingrandisci fino a",
-    "removeFilter": "Rimuovi filtro"
+    "removeFilter": "Rimuovi filtro",
+    "querying": "Ricerca della posizione…",
+    "filterByLocation": "Seleziona in base alla posizione"
   },
   "dateTime": {
     "timeline": {
       "togglePlay": "Riproduci",
-      "gotoStart": "Torna all'inizio"
-    }
+      "gotoStart": "Torna all'inizio",
+      "playFaster": "Riproduci più veloce",
+      "playSlower": "Riproduci più piano"
+    },
+    "useTimeline": "Utilizza barra del tempo",
+    "next": "Tempo successivo",
+    "previous": "Tempo precedente",
+    "selectTime": "Seleziona un tempo"
   },
   "workbench": {
     "removeAll": "Rimuovi Tutto",
@@ -311,7 +368,18 @@
     "previewItemTitle": "info",
     "openFeature": "Ingradisci fino a",
     "rangeMin": "Minimo:",
-    "rangeMax": "Massimo:"
+    "rangeMax": "Massimo:",
+    "toggleVisibility": "Mostra/Nascondi dati",
+    "label": "Dati",
+    "colorScaleUpdateRange": "Aggiorna scala",
+    "removeFromMapTitle": "Rimuovi questi dati",
+    "exportDataTitle": "Esporta i dati della mappa",
+    "previewItem": "Informazioni su questi dati",
+    "openFeatureTitle": "Ingrandisci sui dati",
+    "zoomTo": "Ingrandisci all'estensione",
+    "zoomToTitle": "Ingrandisci all'estensione",
+    "opacity": "Opacità: {{opacity}} %",
+    "colorScaleRange": "Gamma della scala dei colori"
   },
   "mobile": {
     "toggleNavigation": "Attiva/disattiva la navigazione"
@@ -319,7 +387,9 @@
   "search": {
     "data": "Dati",
     "done": "Fatto",
-    "resultsLabel": "Cerca risultati"
+    "resultsLabel": "Cerca risultati",
+    "searchCatalogue": "Cerca il catalogo",
+    "placeholder": "Cerca posizioni"
   },
   "addData": {
     "back": "Indietro",
@@ -327,10 +397,24 @@
     "browse": "Cerca…",
     "urlInputBtn": "Aggiungi",
     "done": "Fatto",
-    "btnHide": "Nascondi"
+    "btnHide": "Nascondi",
+    "dataCatalogue": "Catalogo dei dati",
+    "myData": "I miei dati",
+    "addDataBtnText": "Aggiungi dati",
+    "webTitle": "Aggiungi dati dal web",
+    "localTitle": "Aggiungi dati locali",
+    "webAdd": "Carica dati dal web",
+    "localAdd": "Carica dati locali",
+    "searchPlaceholder": "Cerca il catalogo",
+    "searchPlaceholderWhole": "Cerca in tutto il catalogo",
+    "closeDataPanel": "Chiudi pannello dati",
+    "load": "Carica dati locali/web"
   },
   "satelliteGuidance": {
-    "prevI": "No grazie"
+    "prevI": "No grazie",
+    "dismissText": "Capito, grazie!",
+    "nextI": "Mostra guida",
+    "titleIII": "Caricamento delle immagini storiche"
   },
   "story": {
     "storyEditor": "Editor Storie",
@@ -350,6 +434,32 @@
     "edit": "Modifica",
     "editStory": "modifica",
     "view": "Visualizza",
-    "viewStory": "vista"
+    "viewStory": "vista",
+    "hideStoryPanel": "nascondi il costruttore di storie",
+    "mobileViewStory": "Mostra Storie {{storiesLength}}",
+    "dismissText": "Capito, grazie!",
+    "captureSceneTitle": "cattura scena corrente",
+    "untitled": "scena senza nome",
+    "exitBtn": "esci dalla storia",
+    "locationBtn": "centra la scena",
+    "captureScene": "Cattura Scena",
+    "play": "Riproduci Storia",
+    "preview": "storie precedenti",
+    "untitledScene": "scena senza nome",
+    "story": "Storia"
+  },
+  "welcomeMessage": {
+    "WelcomeMessageSecondaryBtn": "Fai un tour",
+    "WelcomeMessagePrimaryBtn": "Analizza i dati"
+  },
+  "dragDrop": {
+    "not": "<0>bbbb</0>"
+  },
+  "terriaViewer": {
+    "webGLNotSupportedTitle": "WebGL non supportato",
+    "slowWebGLAvailableTitle": "Scarse prestazioni WebGL"
+  },
+  "dataCatalog": {
+    "groupRemove": "rimuovi questo gruppo"
   }
 }
