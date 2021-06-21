@@ -11,6 +11,7 @@ Change Log
 * Added analytic events related to story, share and help menu items, Also refactored events to use category and action enums.
 * Remove table style `SelectableDimension` from SDMX
 * `GyroscopeGuidance` can now be translated.
+* Wraps tool title bar text using `...`.
 * [The next improvement]
 
 #### 8.0.0-alpha.84
