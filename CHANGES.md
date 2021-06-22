@@ -6,6 +6,7 @@ Change Log
 #### next release (8.0.0-alpha.86)
 
 * `GeoJsonMixin`-based catalog items with polygon features can be extruded if a `heightProperty` is specified.
+* In `terriaErrorNotification` - show `error.message` (as well as `error.stack`) if `error.stack` is defined
 * [The next improvement]
 
 #### 8.0.0-alpha.85
