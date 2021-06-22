@@ -419,24 +419,6 @@ export default function GeoJsonMixin<
           }
 
           if (isDefined(entity.polygon)) {
-            // Cesium on Windows can't render polygons with a stroke-width > 1.0.  And even on other platforms it
-            // looks bad because WebGL doesn't mitre the lines together nicely.
-            // As a workaround for the special case where the polygon is unfilled anyway, change it to a polyline.
-            if (
-              polygonHasWideOutline(entity.polygon, now) &&
-              !polygonIsFilled(entity.polygon)
-            ) {
-              createPolylineFromPolygon(entities, entity, now);
-              entity.polygon = (undefined as unknown) as PolygonGraphics;
-            } else if (
-              polygonHasOutline(entity.polygon, now) &&
-              isPolygonOnTerrain(entity.polygon, now)
-            ) {
-              // Polygons don't directly support outlines when they're on terrain.
-              // So create a manual outline.
-              createPolylineFromPolygon(entities, entity, now);
-            }
-
             // Extrude polygons if heightProperty is set
             if (
               this.heightProperty &&
@@ -452,6 +434,23 @@ export default function GeoJsonMixin<
               entity.polygon.extrudedHeightReference = new ConstantProperty(
                 HeightReference.RELATIVE_TO_GROUND
               );
+            }
+            // Cesium on Windows can't render polygons with a stroke-width > 1.0.  And even on other platforms it
+            // looks bad because WebGL doesn't mitre the lines together nicely.
+            // As a workaround for the special case where the polygon is unfilled anyway, change it to a polyline.
+            else if (
+              polygonHasWideOutline(entity.polygon, now) &&
+              !polygonIsFilled(entity.polygon)
+            ) {
+              createPolylineFromPolygon(entities, entity, now);
+              entity.polygon = (undefined as unknown) as PolygonGraphics;
+            } else if (
+              polygonHasOutline(entity.polygon, now) &&
+              isPolygonOnTerrain(entity.polygon, now)
+            ) {
+              // Polygons don't directly support outlines when they're on terrain.
+              // So create a manual outline.
+              createPolylineFromPolygon(entities, entity, now);
             }
           }
         }
