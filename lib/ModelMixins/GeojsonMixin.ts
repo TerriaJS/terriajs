@@ -300,19 +300,21 @@ export default function GeoJsonMixin<
           if (
             isDefined(properties) &&
             isDefined(this.timeProperty) &&
-            isDefined(this.discreteTimesAsSortedJulianDates)
+            isDefined(this.uniqueDiscreteTimesAsSortedJulianDates)
           ) {
             const startTimeDiscreteTime = properties[this.timeProperty];
-            const startTimeIdx = this.discreteTimesAsSortedJulianDates?.findIndex(
+            const startTimeIdx = this.uniqueDiscreteTimesAsSortedJulianDates?.findIndex(
               t => t.tag === startTimeDiscreteTime.getValue()
             );
-            const startTime = this.discreteTimesAsSortedJulianDates[
+            const startTime = this.uniqueDiscreteTimesAsSortedJulianDates[
               startTimeIdx
             ];
 
             if (isDefined(startTime)) {
               const endTimeIdx = startTimeIdx + 1;
-              const endTime = this.discreteTimesAsSortedJulianDates[endTimeIdx];
+              const endTime = this.uniqueDiscreteTimesAsSortedJulianDates[
+                endTimeIdx
+              ];
 
               entity.availability = new TimeIntervalCollection([
                 new TimeInterval({

@@ -113,6 +113,14 @@ function DiscretelyTimeVaryingMixin<
       return asJulian;
     }
 
+    @computed
+    get uniqueDiscreteTimesAsSortedJulianDates(): AsJulian[] | undefined {
+      const asMap = new Map(
+        this.discreteTimesAsSortedJulianDates?.map(val => [val.tag, val])
+      );
+      return Array.from(asMap.values());
+    }
+
     getDiscreteTimeIndex(time: JulianDate): number | undefined {
       const discreteTimes = this.discreteTimesAsSortedJulianDates;
       if (discreteTimes === undefined || discreteTimes.length === 0) {
