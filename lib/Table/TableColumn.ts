@@ -703,17 +703,6 @@ export default class TableColumn {
   }
 
   @computed
-  get isScalarDiscrete() {
-    if (this.type === TableColumnType.scalar) {
-      return this.valuesAsNumbers.values.reduce<boolean>(
-        (discrete, current) =>
-          discrete && (current === null || Number.isInteger(current)),
-        true
-      );
-    }
-  }
-
-  @computed
   get isScalarBinary() {
     if (this.type === TableColumnType.scalar) {
       return (
