@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.86)
 
+* Bugfix to make time-based geojson work when there are multiple features with the same time property value.
 * [The next improvement]
 
 #### 8.0.0-alpha.85
