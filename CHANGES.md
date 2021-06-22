@@ -3,7 +3,7 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.85)
+#### next release (8.0.0-alpha.86)
 
 - **Breaking changes**:
   - `EnumColorMap` will only be used for enum `TableColumns` with number of unique values <= number of bins 
@@ -19,6 +19,19 @@ Change Log
 * Added `spreadFinishTime` - which works same way as `spreadStartTime` - if `true`, finish time of feature will be "spread" so that all features are displayed at the latest time step.
 * Added support for `OpenDataSoft` - only point or region based features + timeseries
 * [The next improvement]
+* `GeoJsonMixin`-based catalog items with polygon features can be extruded if a `heightProperty` is specified.
+* [The next improvement]
+
+#### 8.0.0-alpha.85
+
+- **Breaking changes**:
+  - Removed `registerAnalytics.js`
+  - Removed `HelpMenuPanel.jsx`
+
+* Added analytic events related to story, share and help menu items, Also refactored events to use category and action enums.
+* Remove table style `SelectableDimension` from SDMX
+* `GyroscopeGuidance` can now be translated.
+* Wraps tool title bar text using `...`.
 
 #### 8.0.0-alpha.84
 

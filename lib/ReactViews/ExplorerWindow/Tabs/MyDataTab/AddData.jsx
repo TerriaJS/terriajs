@@ -16,6 +16,10 @@ import Loader from "../../../Loader";
 import TerriaError from "../../../../Core/TerriaError";
 import addUserFiles from "../../../../Models/addUserFiles";
 import TimeVarying from "../../../../ModelMixins/TimeVarying";
+import {
+  Category,
+  DatatabAction
+} from "../../../../Core/AnalyticEvents/analyticEvents";
 
 // Local and remote data have different dataType options
 const defaultRemoteDataTypes = getDataType().remoteDataType;
@@ -90,7 +94,11 @@ const AddData = createReactClass({
   handleUrl(e) {
     const url = this.state.remoteUrl;
     e.preventDefault();
-    this.props.terria.analytics.logEvent("addDataUrl", url);
+    this.props.terria.analytics?.logEvent(
+      Category.dataTab,
+      DatatabAction.addDataUrl,
+      url
+    );
     this.setState({
       isLoading: true
     });
