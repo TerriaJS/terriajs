@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.86)
 
+* Made the moment points in the chart optionally clickable.
 * [The next improvement]
 
 #### 8.0.0-alpha.85
@@ -16,8 +17,6 @@ Change Log
 * Added analytic events related to story, share and help menu items, Also refactored events to use category and action enums.
 * Remove table style `SelectableDimension` from SDMX
 * `GyroscopeGuidance` can now be translated.
-* Made the moment points in the chart optionally clickable.
-* [The next improvement]
 * Wraps tool title bar text using `...`.
 
 #### 8.0.0-alpha.84
