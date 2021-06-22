@@ -437,7 +437,7 @@ export default function GeoJsonMixin<
               createPolylineFromPolygon(entities, entity, now);
             }
 
-            // Extrude polyhons if heightProperty is set
+            // Extrude polygons if heightProperty is set
             if (
               this.heightProperty &&
               properties &&
