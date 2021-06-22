@@ -275,7 +275,8 @@ export default class TableStyle {
   /** Style isSampled by default. TimeTraits.isSampled will be used if defined. If not, and color column is binary - isSampled will be false. */
   @computed get isSampled() {
     if (isDefined(this.timeTraits.isSampled)) return this.timeTraits.isSampled;
-    if (isDefined(this.colorColumn)) return !this.colorColumn.isScalarBinary;
+    if (isDefined(this.colorColumn) && this.colorColumn.isScalarBinary)
+      return false;
     return true;
   }
 
