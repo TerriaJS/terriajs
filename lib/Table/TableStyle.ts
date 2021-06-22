@@ -469,7 +469,7 @@ export default class TableStyle {
       });
     } else {
       // No column to color by, so use the same color for everything.
-      let color = Color.fromCssColorString(defaultColor);
+      let color: Color | undefined;
       const colorId = this.tableModel.uniqueId || this.tableModel.name;
       if (colorTraits.nullColor) {
         color = Color.fromCssColorString(colorTraits.nullColor);
@@ -479,7 +479,10 @@ export default class TableStyle {
         color = Color.fromCssColorString(getColorForId(colorId));
       }
 
-      return new ConstantColorMap(color, this.tableModel.name);
+      return new ConstantColorMap(
+        color ?? Color.fromCssColorString(defaultColor),
+        this.tableModel.name
+      );
     }
   }
 
