@@ -394,10 +394,10 @@ describe("GeoJsonCatalogItem", function() {
         )
       ).toBe(10);
       expect(
-        entity1.polygon?.extrudedHeightReference?.getValue(
+        entity1.polygon?.heightReference?.getValue(
           terria.timelineClock.currentTime
         )
-      ).toBe(HeightReference.RELATIVE_TO_GROUND);
+      ).toBe(HeightReference.CLAMP_TO_GROUND);
 
       const entity2 = entities[1];
       expect(
@@ -405,6 +405,11 @@ describe("GeoJsonCatalogItem", function() {
           terria.timelineClock.currentTime
         )
       ).toBe(20);
+      expect(
+        entity2.polygon?.heightReference?.getValue(
+          terria.timelineClock.currentTime
+        )
+      ).toBe(HeightReference.CLAMP_TO_GROUND);
       expect(
         entity2.polygon?.extrudedHeightReference?.getValue(
           terria.timelineClock.currentTime

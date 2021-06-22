@@ -446,6 +446,9 @@ export default function GeoJsonMixin<
               entity.polygon.closeTop = new ConstantProperty(true);
               entity.polygon.extrudedHeight = properties[this.heightProperty];
 
+              entity.polygon.heightReference = new ConstantProperty(
+                HeightReference.CLAMP_TO_GROUND
+              );
               entity.polygon.extrudedHeightReference = new ConstantProperty(
                 HeightReference.RELATIVE_TO_GROUND
               );
