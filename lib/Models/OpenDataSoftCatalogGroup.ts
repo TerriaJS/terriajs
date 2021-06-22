@@ -72,9 +72,8 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
       const catalog = await client.get(q);
 
       datasets = filterOutUndefined(
-        catalog.datasets
-          ?.map(d => d.dataset)
-          .filter(d => isDefined(d?.dataset_id)) ?? []
+        catalog.datasets?.map(d => d.dataset).filter(d => isValidDataset(d)) ??
+          []
       ) as ValidDataset[];
     }
 
