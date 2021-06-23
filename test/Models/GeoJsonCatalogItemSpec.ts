@@ -418,6 +418,59 @@ describe("GeoJsonCatalogItem", function() {
     });
   });
 
+  describe("Support for czml templating", () => {
+    it("Sets polygon height properties correctly", async () => {
+      geojson.setTrait(CommonStrata.user, "url", "test/GeoJSON/points.geojson");
+      geojson.setTrait(CommonStrata.user, "czmlTemplate", {
+        cylinder: {
+          length: {
+            reference: "#properties.height"
+          },
+          topRadius: {
+            reference: "#properties.radius"
+          },
+          bottomRadius: {
+            reference: "#properties.radius"
+          },
+          material: {
+            solidColor: {
+              color: {
+                rgba: [0, 200, 0, 20]
+              }
+            }
+          }
+        }
+      });
+      await geojson.loadMapItems();
+
+      const entities = geojson.mapItems[0].entities.values;
+      console.log(entities);
+      expect(entities.length).toEqual(5);
+
+      const entity1 = entities[0];
+      expect(
+        entity1.cylinder?.length?.getValue(terria.timelineClock.currentTime)
+      ).toBe(10);
+      expect(
+        entity1.cylinder?.bottomRadius?.getValue(
+          terria.timelineClock.currentTime
+        )
+      ).toBe(10);
+      expect(entity1.properties?.someOtherProp?.getValue()).toBe("what");
+
+      const entity2 = entities[1];
+      expect(
+        entity2.cylinder?.length?.getValue(terria.timelineClock.currentTime)
+      ).toBe(20);
+      expect(
+        entity2.cylinder?.bottomRadius?.getValue(
+          terria.timelineClock.currentTime
+        )
+      ).toBe(5);
+      expect(entity2.properties?.someOtherProp?.getValue()).toBe("ok");
+    });
+  });
+
   describe("Per features styling", function() {
     it("Applies styles to features according to their properties, respecting string case", async function() {
       const name = "PETER FAGANS GRAVE";
