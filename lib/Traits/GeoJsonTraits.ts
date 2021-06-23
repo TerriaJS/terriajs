@@ -94,6 +94,9 @@ export class GeoJsonTraits extends mixTraits(
           length: {
             reference: "#properties.length"
           },
+          topRadius: {
+            reference: "#properties.radius"
+          },
           bottomRadius: {
             reference: "#properties.radius"
           },
