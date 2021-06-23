@@ -96,29 +96,24 @@ function DiscretelyTimeVaryingMixin<
         return undefined;
       }
 
-      const asJulian: AsJulian[] = [];
+      const asJulian: Map<string, AsJulian> = new Map();
       for (let i = 0; i < discreteTimes.length; i++) {
         const dt = discreteTimes[i];
         try {
           if (dt.time !== undefined) {
             const time = JulianDate.fromIso8601(dt.time);
-            asJulian.push({
+            const j = {
               time,
               tag: dt.tag !== undefined ? dt.tag : dt.time
-            });
+            };
+            asJulian.set(j.tag, j);
           }
         } catch {}
       }
-      asJulian.sort((a, b) => JulianDate.compare(a.time, b.time));
-      return asJulian;
-    }
 
-    @computed
-    get uniqueDiscreteTimesAsSortedJulianDates(): AsJulian[] | undefined {
-      const asMap = new Map(
-        this.discreteTimesAsSortedJulianDates?.map(val => [val.tag, val])
-      );
-      return Array.from(asMap.values());
+      const asJulianArray = Array.from(asJulian.values());
+      asJulianArray.sort((a, b) => JulianDate.compare(a.time, b.time));
+      return asJulianArray;
     }
 
     getDiscreteTimeIndex(time: JulianDate): number | undefined {
