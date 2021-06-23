@@ -21,6 +21,7 @@ Change Log
 * [The next improvement]
 * `GeoJsonMixin`-based catalog items with polygon features can be extruded if a `heightProperty` is specified.
 * Add `czmlTemplate` to `GeoJsonTraits` - it can be used to replace GeoJSON Point features with a CZML packet.
+* Made the moment points in the chart optionally clickable.
 * [The next improvement]
 
 #### 8.0.0-alpha.85
