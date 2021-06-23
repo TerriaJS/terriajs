@@ -37,7 +37,7 @@ export default class TableTimeStyleTraits extends ModelTraits {
       "if the CSV does not have both a time column and an ID column.",
     type: "boolean"
   })
-  isSampled: boolean = true;
+  isSampled?: boolean;
 
   @primitiveTrait({
     name: "Display Duration",
@@ -53,4 +53,12 @@ export default class TableTimeStyleTraits extends ModelTraits {
       'Indicates if start time of feature should be "spread" so that all features are displayed at the earliest time step. This is useful for non-contiguous sensor data. If true, the earliest time step will display the earliest values for all features (eg sensor IDs) - even if the time value is **after** the earliest time step. This means that at time step 0, all features will be displayed.'
   })
   spreadStartTime?: boolean;
+
+  @primitiveTrait({
+    name: "Spread end time",
+    type: "boolean",
+    description:
+      'Indicates if finish time of feature should be "spread" so that all features are displayed at the latest time step. See also `spreadStartTime`.'
+  })
+  spreadFinishTime?: boolean;
 }

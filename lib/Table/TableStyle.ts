@@ -68,6 +68,16 @@ export default class TableStyle {
     );
   }
 
+  /** Hide style if number of colors (enumColors or numberOfBins) is less than 2. As a ColorMap with a single color isn't super useful. */
+  @computed
+  get hidden() {
+    return (
+      this.styleTraits.hidden ??
+      ((this.isEnum && this.enumColors.length <= 1) ||
+        (!this.isEnum && this.numberOfBins <= 1))
+    );
+  }
+
   /**
    * Gets the {@link TableStyleTraits} for this style. The traits are derived
    * from the default styles plus this style layered on top of the default.
@@ -251,6 +261,25 @@ export default class TableStyle {
     return this.xAxisColumn !== undefined && this.chartTraits.lines.length > 0;
   }
 
+  /** Column can use EnumColorMap if type is enum, region or text AND the number of unique values is less than (or equal to) the number of bins */
+  @computed get isEnum() {
+    return (
+      !!this.colorColumn &&
+      (this.colorColumn.type === TableColumnType.enum ||
+        this.colorColumn.type === TableColumnType.region) &&
+      this.colorColumn.uniqueValues.values.length <=
+        this.colorPalette.colors.length
+    );
+  }
+
+  /** Style isSampled by default. TimeTraits.isSampled will be used if defined. If not, and color column is binary - isSampled will be false. */
+  @computed get isSampled() {
+    if (isDefined(this.timeTraits.isSampled)) return this.timeTraits.isSampled;
+    if (isDefined(this.colorColumn) && this.colorColumn.isScalarBinary)
+      return false;
+    return true;
+  }
+
   @computed
   get colorPalette(): ColorPalette {
     const colorColumn = this.colorColumn;
@@ -264,8 +293,7 @@ export default class TableStyle {
 
     if (
       colorColumn.type === TableColumnType.enum ||
-      colorColumn.type === TableColumnType.region ||
-      colorColumn.type === TableColumnType.text
+      colorColumn.type === TableColumnType.region
     ) {
       // Enumerated values, so use a large, high contrast palette.
       paletteName = paletteName || "HighContrast";
@@ -297,13 +325,7 @@ export default class TableStyle {
   get numberOfBins(): number {
     const colorColumn = this.colorColumn;
     if (colorColumn === undefined) return this.binMaximums.length;
-    if (
-      colorColumn.type === TableColumnType.enum ||
-      colorColumn.type === TableColumnType.region ||
-      colorColumn.type === TableColumnType.text
-    ) {
-      return colorColumn.uniqueValues.values.length;
-    } else if (colorColumn.type === TableColumnType.scalar) {
+    if (colorColumn.type === TableColumnType.scalar) {
       return colorColumn.uniqueValues.values.length < this.binMaximums.length
         ? colorColumn.uniqueValues.values.length
         : this.binMaximums.length;
@@ -422,16 +444,9 @@ export default class TableStyle {
             includeMinimumInThisBin: false
           };
         }),
-        nullColor: colorTraits.nullColor
-          ? Color.fromCssColorString(colorTraits.nullColor) ?? Color.TRANSPARENT
-          : Color.TRANSPARENT
+        nullColor: this.nullColor
       });
-    } else if (
-      colorColumn &&
-      (colorColumn.type === TableColumnType.enum ||
-        colorColumn.type === TableColumnType.region ||
-        colorColumn.type === TableColumnType.text)
-    ) {
+    } else if (colorColumn && this.isEnum) {
       const regionColor =
         Color.fromCssColorString(this.colorTraits.regionColor) ??
         Color.TRANSPARENT;
@@ -450,13 +465,11 @@ export default class TableStyle {
             };
           })
         ),
-        nullColor: colorTraits.nullColor
-          ? Color.fromCssColorString(colorTraits.nullColor) ?? Color.TRANSPARENT
-          : Color.TRANSPARENT
+        nullColor: this.nullColor
       });
     } else {
       // No column to color by, so use the same color for everything.
-      let color = Color.fromCssColorString(defaultColor);
+      let color: Color | undefined;
       const colorId = this.tableModel.uniqueId || this.tableModel.name;
       if (colorTraits.nullColor) {
         color = Color.fromCssColorString(colorTraits.nullColor);
@@ -465,8 +478,19 @@ export default class TableStyle {
       } else if (colorId) {
         color = Color.fromCssColorString(getColorForId(colorId));
       }
-      return new ConstantColorMap(color, this.tableModel.name);
+
+      return new ConstantColorMap(
+        color ?? Color.fromCssColorString(defaultColor),
+        this.tableModel.name
+      );
     }
+  }
+
+  @computed get nullColor() {
+    return this.colorTraits.nullColor
+      ? Color.fromCssColorString(this.colorTraits.nullColor) ??
+          Color.TRANSPARENT
+      : Color.TRANSPARENT;
   }
 
   @computed
@@ -584,34 +608,30 @@ export default class TableStyle {
       );
     }
 
+    const finishDates: (JulianDate | null)[] = [];
+
     // Otherwise estimate a final duration value to calculate the end date for groups
     // that have only one row. Fallback to a global default if an estimate
     // cannot be found.
-    let finalDurationSeconds = DEFAULT_FINAL_DURATION_SECONDS;
     for (let i = 0; i < this.rowGroups.length; i++) {
       const rowIds = this.rowGroups[i][1];
-      const startDates = rowIds.map(
-        id => timeColumn.valuesAsJulianDates.values[id]
+      const sortedStartDates = sortedUniqueDates(
+        rowIds.map(id => timeColumn.valuesAsJulianDates.values[id])
       );
-      const sortedStartDates = sortedUniqueDates(startDates);
-      const finalDuration = estimateFinalDurationSeconds(sortedStartDates);
-      if (finalDuration) {
-        finalDurationSeconds = finalDuration;
-        break;
-      }
-    }
+      const finalDuration =
+        estimateFinalDurationSeconds(sortedStartDates) ??
+        DEFAULT_FINAL_DURATION_SECONDS;
 
-    const finishDates: (JulianDate | null)[] = [];
-    this.rowGroups.forEach(([groupId, rowIds]) => {
       const startDatesForGroup = rowIds.map(id => startDates[id]);
       const finishDatesForGroup = this.calculateFinishDatesFromStartDates(
         startDatesForGroup,
-        finalDurationSeconds
+        finalDuration
       );
       finishDatesForGroup.forEach((date, i) => {
         finishDates[rowIds[i]] = date;
       });
-    });
+    }
+
     return finishDates;
   }
 
@@ -642,6 +662,8 @@ export default class TableStyle {
     defaultFinalDurationSeconds: number
   ) {
     const sortedStartDates: JulianDate[] = sortedUniqueDates(startDates);
+    const lastDate = this.timeColumn?.valuesAsJulianDates.maximum;
+
     return startDates.map(date => {
       if (!date) {
         return null;
@@ -655,6 +677,8 @@ export default class TableStyle {
       const nextDate = sortedStartDates[nextDateIndex + 1];
       if (nextDate) {
         return nextDate;
+      } else if (this.timeTraits.spreadFinishTime && lastDate) {
+        return lastDate;
       } else {
         // This is the last date in the row, so calculate a final date
         const finalDurationSeconds =
