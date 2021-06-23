@@ -20,6 +20,7 @@ Change Log
 * Added support for `OpenDataSoft` - only point or region based features + timeseries
 * [The next improvement]
 * `GeoJsonMixin`-based catalog items with polygon features can be extruded if a `heightProperty` is specified.
+* Made the moment points in the chart optionally clickable.
 * [The next improvement]
 
 #### 8.0.0-alpha.85
