@@ -20,6 +20,8 @@ Change Log
 * Added support for `OpenDataSoft` - only point or region based features + timeseries
 * `GeoJsonMixin`-based catalog items with polygon features can be extruded if a `heightProperty` is specified.
 * Bugfix to make time-based geojson work when there are multiple features with the same time property value.
+* Add `czmlTemplate` to `GeoJsonTraits` - it can be used to replace GeoJSON Point features with a CZML packet.
+* Made the moment points in the chart optionally clickable.
 * [The next improvement]
 
 #### 8.0.0-alpha.85
