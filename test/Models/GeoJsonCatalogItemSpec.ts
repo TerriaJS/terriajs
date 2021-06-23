@@ -2,6 +2,7 @@ import { runInAction } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import loadJson from "../../lib/Core/loadJson";
 import loadText from "../../lib/Core/loadText";
 import TerriaError from "../../lib/Core/TerriaError";
@@ -112,7 +113,7 @@ describe("GeoJsonCatalogItem", function() {
          done();
        });
      })
-     
+
      it("works by blob", function(done) {
        loadBlob("test/GeoJSON/bike_racks.geojson").then(function(blob) {
          geojson.data = blob;
@@ -293,7 +294,7 @@ describe("GeoJsonCatalogItem", function() {
           });
       });
     });
-    /* 
+    /*
     it("fails gracefully when the provided blob is JSON but not GeoJSON", function(done) {
       loadBlob("test/CZML/verysimple.czml").then(function(blob) {
         geojson.data = blob;
@@ -374,6 +375,46 @@ describe("GeoJsonCatalogItem", function() {
       expect(
         entity2.availability?.stop.equals(JulianDate.fromDate(new Date("2021")))
       ).toBeTruthy();
+    });
+  });
+
+  describe("Support for geojson with extruded heights", () => {
+    it("Sets polygon height properties correctly", async () => {
+      geojson.setTrait(CommonStrata.user, "url", "test/GeoJSON/height.geojson");
+      geojson.setTrait(CommonStrata.user, "heightProperty", "someProperty");
+      await geojson.loadMapItems();
+      expect(geojson.mapItems.length).toEqual(1);
+      const entities = geojson.mapItems[0].entities.values;
+      expect(entities.length).toEqual(2);
+
+      const entity1 = entities[0];
+      expect(
+        entity1.polygon?.extrudedHeight?.getValue(
+          terria.timelineClock.currentTime
+        )
+      ).toBe(10);
+      expect(
+        entity1.polygon?.heightReference?.getValue(
+          terria.timelineClock.currentTime
+        )
+      ).toBe(HeightReference.CLAMP_TO_GROUND);
+
+      const entity2 = entities[1];
+      expect(
+        entity2.polygon?.extrudedHeight?.getValue(
+          terria.timelineClock.currentTime
+        )
+      ).toBe(20);
+      expect(
+        entity2.polygon?.heightReference?.getValue(
+          terria.timelineClock.currentTime
+        )
+      ).toBe(HeightReference.CLAMP_TO_GROUND);
+      expect(
+        entity2.polygon?.extrudedHeightReference?.getValue(
+          terria.timelineClock.currentTime
+        )
+      ).toBe(HeightReference.RELATIVE_TO_GROUND);
     });
   });
 

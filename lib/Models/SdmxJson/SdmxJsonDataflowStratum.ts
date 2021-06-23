@@ -496,13 +496,15 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
           let regionType: string | undefined;
 
           // Are any regionTypes present in modelOverride
-          regionType = this.matchRegionType(modelOverride?.regionType);
+          regionType = this.catalogItem.matchRegionType(
+            modelOverride?.regionType
+          );
 
           // Next try fetching reigon type from another dimension (only if this modelOverride type 'region')
           // It will look through dimensions which have modelOverrides of type `region-type` and have a selectedId, if one is found - it will be used as the regionType of this column
           if (!isDefined(regionType) && modelOverride?.type === "region") {
             // Use selectedId of first dimension with one
-            regionType = this.matchRegionType(
+            regionType = this.catalogItem.matchRegionType(
               this.getDimensionsWithOverrideType("region-type").find(d =>
                 isDefined(d.selectedId)
               )?.selectedId
@@ -518,11 +520,11 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
 
           if (!isDefined(regionType))
             regionType =
-              this.matchRegionType(dim.id) ??
-              this.matchRegionType(codelist?.name) ??
-              this.matchRegionType(codelist?.id) ??
-              this.matchRegionType(concept?.name) ??
-              this.matchRegionType(concept?.id);
+              this.catalogItem.matchRegionType(dim.id) ??
+              this.catalogItem.matchRegionType(codelist?.name) ??
+              this.catalogItem.matchRegionType(codelist?.id) ??
+              this.catalogItem.matchRegionType(concept?.name) ??
+              this.catalogItem.matchRegionType(concept?.id);
 
           // Apply regionTypeReplacements (which can replace regionType with a different regionType - using [{find:string, replace:string}] pattern)
           if (modelOverride?.type === "region") {
@@ -772,21 +774,6 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
         attr.conceptIdentity === id ||
         attr.localRepresentation?.enumeration === id
     );
-  }
-
-  /**
-   * Try to resolve `regionType` to a region provider (this will also match against region provider aliases)
-   */
-  matchRegionType(regionType?: string): string | undefined {
-    if (!isDefined(regionType)) return;
-    const matchingRegionProviders = this.catalogItem.regionProviderList?.getRegionDetails(
-      [regionType],
-      undefined,
-      undefined
-    );
-    if (matchingRegionProviders && matchingRegionProviders.length > 0) {
-      return matchingRegionProviders[0].regionProvider.regionType;
-    }
   }
 }
 

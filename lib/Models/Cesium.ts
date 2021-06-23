@@ -1176,18 +1176,11 @@ export default class Cesium extends GlobeOrMap {
         id = picked.primitive.id;
       }
 
-      if (id instanceof Entity && vectorFeatures.indexOf(id) === -1) {
-        const feature = Feature.fromEntityCollectionOrEntity(id);
-        if (picked.primitive) {
-          feature.cesiumPrimitive = picked.primitive;
-        }
-        vectorFeatures.push(feature);
-      } else if (
-        picked.primitive &&
-        picked.primitive._catalogItem &&
-        picked.primitive._catalogItem.getFeaturesFromPickResult
-      ) {
-        const result = picked.primitive._catalogItem.getFeaturesFromPickResult(
+      // Try to find catalogItem for picked feature, and use catalogItem.getFeaturesFromPickResult() if it exists - this is used by FeatureInfoMixin
+      const catalogItem = picked?.primitive?._catalogItem ?? id?._catalogItem;
+
+      if (typeof catalogItem.getFeaturesFromPickResult === "function") {
+        const result = catalogItem.getFeaturesFromPickResult.bind(catalogItem)(
           screenPosition,
           picked
         );
@@ -1198,6 +1191,12 @@ export default class Cesium extends GlobeOrMap {
             vectorFeatures.push(result);
           }
         }
+      } else if (id instanceof Entity && vectorFeatures.indexOf(id) === -1) {
+        const feature = Feature.fromEntityCollectionOrEntity(id);
+        if (picked.primitive) {
+          feature.cesiumPrimitive = picked.primitive;
+        }
+        vectorFeatures.push(feature);
       }
     }
 

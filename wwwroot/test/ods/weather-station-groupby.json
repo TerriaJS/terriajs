@@ -1,0 +1,38 @@
+{
+  "links": [
+    {
+      "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records?group_by=geolocation&limit=100&select=min%28metadata_time%29+as+min_time%2C+max%28metadata_time%29+as+max_time%2C+count%28metadata_time%29+as+num&offset=0",
+      "rel": "self"
+    },
+    {
+      "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+      "rel": "dataset"
+    },
+    {
+      "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+      "rel": "datasets"
+    }
+  ],
+  "records": [
+    {
+      "record": {
+        "fields": {
+          "min_time": "2020-12-07T23:02:57.000Z",
+          "geolocation": "[-33.998172017745674, 150.86541895754635]",
+          "num": 23718,
+          "max_time": "2021-06-18T06:00:37.000Z"
+        }
+      }
+    },
+    {
+      "record": {
+        "fields": {
+          "min_time": "2020-12-07T23:04:11.000Z",
+          "geolocation": "[-34.0700100408867, 150.8079999871552]",
+          "num": 5589,
+          "max_time": "2021-06-18T05:20:05.000Z"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,350 @@
+{
+  "links": [
+    {
+      "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/facets",
+      "rel": "self"
+    },
+    {
+      "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog",
+      "rel": "source"
+    }
+  ],
+  "facets": [
+    {
+      "name": "publisher",
+      "facets": [
+        {
+          "count": 6,
+          "state": "displayed",
+          "name": "Campbelltown City Council",
+          "value": "Campbelltown City Council"
+        }
+      ]
+    },
+    {
+      "name": "features",
+      "facets": [
+        {
+          "count": 7,
+          "state": "displayed",
+          "name": "analyze",
+          "value": "analyze"
+        },
+        {
+          "count": 6,
+          "state": "displayed",
+          "name": "geo",
+          "value": "geo"
+        },
+        {
+          "count": 5,
+          "state": "displayed",
+          "name": "custom_view",
+          "value": "custom_view"
+        },
+        {
+          "count": 2,
+          "state": "displayed",
+          "name": "timeserie",
+          "value": "timeserie"
+        }
+      ]
+    },
+    {
+      "name": "language",
+      "facets": [
+        {
+          "count": 7,
+          "state": "displayed",
+          "name": "en",
+          "value": "en"
+        }
+      ]
+    },
+    {
+      "name": "modified",
+      "facets": [
+        {
+          "count": 6,
+          "state": "displayed",
+          "name": "2020",
+          "value": "2020"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "2021",
+          "value": "2021"
+        }
+      ]
+    },
+    {
+      "name": "theme",
+      "facets": [
+        {
+          "count": 3,
+          "state": "displayed",
+          "name": "Environmental Protection",
+          "value": "Environmental Protection"
+        },
+        {
+          "count": 2,
+          "state": "displayed",
+          "name": "Community, Events and Education",
+          "value": "Community, Events and Education"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Arts and Culture",
+          "value": "Arts and Culture"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "City Planning and Amenities",
+          "value": "City Planning and Amenities"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Governance and Administration",
+          "value": "Governance and Administration"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Investment, Tourism and Growth",
+          "value": "Investment, Tourism and Growth"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Parks and Recreation",
+          "value": "Parks and Recreation"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Waste and Recycling",
+          "value": "Waste and Recycling"
+        }
+      ]
+    },
+    {
+      "name": "keyword",
+      "facets": [
+        {
+          "count": 3,
+          "state": "displayed",
+          "name": "Campbelltown City Council",
+          "value": "Campbelltown City Council"
+        },
+        {
+          "count": 2,
+          "state": "displayed",
+          "name": "climate",
+          "value": "climate"
+        },
+        {
+          "count": 2,
+          "state": "displayed",
+          "name": "heat",
+          "value": "heat"
+        },
+        {
+          "count": 2,
+          "state": "displayed",
+          "name": "temperature",
+          "value": "temperature"
+        },
+        {
+          "count": 2,
+          "state": "displayed",
+          "name": "urban heat",
+          "value": "urban heat"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Acquatics",
+          "value": "Acquatics"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Animal Care Facility",
+          "value": "Animal Care Facility"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Art Centre",
+          "value": "Art Centre"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Athletics Centre",
+          "value": "Athletics Centre"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Bin Collection",
+          "value": "Bin Collection"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Buy Local",
+          "value": "Buy Local"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Child Care",
+          "value": "Child Care"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Culture",
+          "value": "Culture"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Facilities for Hire",
+          "value": "Facilities for Hire"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Fitness",
+          "value": "Fitness"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Indoor Sports",
+          "value": "Indoor Sports"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Leisure Centres",
+          "value": "Leisure Centres"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Libraries",
+          "value": "Libraries"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Local Businesses",
+          "value": "Local Businesses"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Parks",
+          "value": "Parks"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Recreation",
+          "value": "Recreation"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Sports Grounds",
+          "value": "Sports Grounds"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Sports Stadium",
+          "value": "Sports Stadium"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Waste Collection",
+          "value": "Waste Collection"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Waste Service",
+          "value": "Waste Service"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "Western Parkland city Waste Collection",
+          "value": "Western Parkland city Waste Collection"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "bins",
+          "value": "bins"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "collection zones",
+          "value": "collection zones"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "garbage",
+          "value": "garbage"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "garden",
+          "value": "garden"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "organics",
+          "value": "organics"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "recycle",
+          "value": "recycle"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "recycling",
+          "value": "recycling"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "waste",
+          "value": "waste"
+        },
+        {
+          "count": 1,
+          "state": "displayed",
+          "name": "weather",
+          "value": "weather"
+        }
+      ]
+    }
+  ]
+}

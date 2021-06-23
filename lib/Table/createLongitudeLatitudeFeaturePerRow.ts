@@ -1,16 +1,16 @@
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
 import TimeIntervalCollection from "terriajs-cesium/Source/Core/TimeIntervalCollection";
+import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
+import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
+import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import { JsonObject } from "../Core/Json";
 import TableColumn from "./TableColumn";
 import TableStyle from "./TableStyle";
-import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
-import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
-import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 
 type RequiredTableStyle = TableStyle & {
   longitudeColumn: TableColumn;
@@ -64,7 +64,7 @@ export default function createLongitudeLatitudeFeaturePerRow(
   );
 }
 
-function getRowValues(
+export function getRowValues(
   index: number,
   tableColumns: Readonly<TableColumn[]>
 ): JsonObject {
