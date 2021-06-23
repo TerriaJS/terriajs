@@ -220,7 +220,14 @@ export default function GeoJsonMixin<
       }
 
       const czmlTemplate = toJS(this.czmlTemplate);
-      const czmlPackets = [];
+
+      const rootCzml = [
+        {
+          id: "document",
+          name: "CZML",
+          version: "1.0"
+        }
+      ];
 
       // Create a czml packet for each geoJson Point feature
       // Set czml position (cartographicDegrees) to point coordinates
@@ -245,18 +252,10 @@ export default function GeoJsonMixin<
             );
           }
 
-          czmlPackets.push(czml);
+          rootCzml.push(czml);
         }
       }
 
-      const rootCzml = [
-        {
-          id: "document",
-          name: "CZML",
-          version: "1.0"
-        },
-        ...czmlPackets
-      ];
       return CzmlDataSource.load(rootCzml);
     }
 
