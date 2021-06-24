@@ -96,24 +96,21 @@ function DiscretelyTimeVaryingMixin<
         return undefined;
       }
 
-      const asJulianMap: Map<string, AsJulian> = new Map();
+      const asJulian: AsJulian[] = [];
       for (let i = 0; i < discreteTimes.length; i++) {
         const dt = discreteTimes[i];
         try {
           if (dt.time !== undefined) {
             const time = JulianDate.fromIso8601(dt.time);
-            const asJulian = {
+            asJulian.push({
               time,
               tag: dt.tag !== undefined ? dt.tag : dt.time
-            };
-            asJulianMap.set(asJulian.tag, asJulian);
+            });
           }
         } catch {}
       }
-
-      const asJulianArray = Array.from(asJulianMap.values());
-      asJulianArray.sort((a, b) => JulianDate.compare(a.time, b.time));
-      return asJulianArray;
+      asJulian.sort((a, b) => JulianDate.compare(a.time, b.time));
+      return asJulian;
     }
 
     getDiscreteTimeIndex(time: JulianDate): number | undefined {
