@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "8.0.0-alpha.85",
+  "version": "8.0.0-alpha.86",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
