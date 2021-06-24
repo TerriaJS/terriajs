@@ -16,7 +16,7 @@
       "title": "ツアーを始める"
     },
     "mapNavigationSplitterIcon": {
-      "content": "## 比較\n\nTerriaでは、分割画面ビューを使用してデータセットを比較する強力な機能があります。時系列/ 4Dコンポーネントを含むデータセットの場合、日付ピッカーを使用して、でもデータの比較ができます。"
+      "content": "## 比較\n\nTerriaでは、分割画面ビューを使用してデータセットを比較する強力な機能があります。衛星画像のように時系列要素を含むデータセットの場合、日付ピッカーをクリックして時間を進めたり戻したりしてデータの比較ができます。"
     },
     "mapNavigationCompassOuterRing": {
       "content": "## ビューの制御\n\n地図のビューを変更できます。二重円の外側を使用してビューの向きを変更したり、内側を使用してカメラアングルを傾けたりできます。ダブルクリックすればビューをリセットできます。"
@@ -25,7 +25,7 @@
       "content": "## ストーリー\n\nストーリーを使用すると、データセットにコンテキスト情報を追加して、3Dのガイドマップやレポートが作れます。ストーリーエディタを使用して独自のデータストーリーを作成し、完了したら「共有」パネルで共有します。"
     },
     "menuBarMapSettingsButton": {
-      "content": "## 地図設定\n\nベース地図、画質などの地図オプションを設定したり、地表面（地形）を非表示にして地下にあるデータセットを見えるようにできます。"
+      "content": "## 地図設定\n\nベースマップ、2D/3D地形、画質などのオプションを設定してパフォーマンスを上げることができます。"
     },
     "sidePanelUploadButton": {
       "content": "## データアップロード\n\n独自のデータをアップロードして、他のデータセットと一緒に表示できます。ファイルまたはリンクを既存のオンラインデータセットまたはデータサービスにアップロードします。CSV、GeoJSON、KML、GPX、CZMLなどのファイルフォーマットをサポートしています。"
@@ -65,7 +65,17 @@
     "title": "クリック＋ドラッグでカメラを回転",
     "guidanceBtnText": "コンパスの詳しい使い方を見る",
     "guidanceBtnTitle": "ジャイロスコープの使い方",
-    "description": "外側の輪：ビューを回転\n内側のジャイロスコープ：軌道の変更\nダブルクリック：ホームポジション\nヒント：軌道の変更はCtrlキーを押しながらマップをドラッグでも可能"
+    "description": "外側の輪：ビューを回転\n内側のジャイロスコープ：軌道の変更\nダブルクリック：ホームポジション\nヒント：軌道の変更はCtrlキーを押しながらマップをドラッグでも可能",
+    "guidance": {
+      "ctrlDragDescription": "CTRLキーを押しながらドラッグしても地図を傾けたり回したりできます。",
+      "dismissText": "閉じて今後は表示しない",
+      "innerCircleDescription2": "また、ここをダブルクリックすると表示が初期状態に戻ります。",
+      "innerCircleDescription1": "内側の丸い部分をクリックして上下左右にゆっくりとドラッグすると、一度に地図を傾けたり回したりできます。",
+      "innerCircleTitle": "内側の円",
+      "outerRingDescription": "外側のリングをドラッグして回すと地図が回転します。",
+      "outerRingTitle": "外側のリング",
+      "title": "ジャイロスコープコントロール"
+    }
   },
   "splitterTool": {
     "workbench": {
@@ -600,7 +610,9 @@
       "csv": "CSV",
       "kml": "KMLまたはKMZ",
       "geoRss": "GeoRSS",
-      "geojson": "GeoJSON"
+      "geojson": "GeoJSON",
+      "opendatasoft-group": "Opendatasoftポータル",
+      "sdmx-group": "SDMX-JSON"
     },
     "dataUri": {
       "errorMessage": "残念ながら、Microsoftのブラウザ（全てのバージョンのInternet ExplorerとEdge）では、データをファイルとしてダウンロードするのに必要となるdata URI機能がサポートされていません。ダウンロードするには、次のURLをChrome、Firefox、Safariなど別のブラウザにコピーしてください。{{href}}",
@@ -1320,7 +1332,8 @@
       "bulkGeocoderInfoMessage": "CSVに含まれている住所のうち{{number}}個を地図で見つけることができませんでした ",
       "bulkGeocoderInfoTitle": "一括ジオコーダー",
       "unsupportedCharactersMessage": "{{longitude}}, {{latitude}}を緯度・経度の組として読み取ることができません",
-      "unsupportedCharactersTitle": "緯度・経度の列に無効な文字が含まれています"
+      "unsupportedCharactersTitle": "緯度・経度の列に無効な文字が含まれています",
+      "noData": "表示するデータがありません"
     },
     "terriaJSONcatalog": {
       "serviceResponseErrorMessage": "TerriaJsonCatalogFunction JSON を受け取るはずでしたが、{{xhr}} を受け取りました",
@@ -1413,6 +1426,9 @@
       "datasetScaleErrorMessage": "データセット {{name}} はあまりズームすると表示されないようにデータ提供者が設定しています。データセットの情報ボタンをクリックしてよし詳細な情報を参照してください。",
       "datasetScaleErrorTitle": "このスケールではデータセットは表示されません",
       "3dTypeIn2dMode": "**備考:** このデータセットは2Dビュワーでは表示できません。3D地図モードで表示してください。"
+    },
+    "openDataSoft": {
+      "viewDatasetPage": "データセットのページを見る"
     }
   },
   "map": {
