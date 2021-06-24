@@ -519,7 +519,7 @@ export default function GeoJsonMixin<
       if (this.timeProperty === undefined || this.readyData === undefined) {
         return undefined;
       }
-      const discreteTimes: DiscreteTimeAsJS[] = [];
+      const discreteTimesMap: Map<string, DiscreteTimeAsJS> = new Map();
       const addFeatureToDiscreteTimes = (geojson: GeoJsonObject) => {
         if (geojson.type === "Feature") {
           let feature = geojson as Feature;
@@ -528,12 +528,13 @@ export default function GeoJsonMixin<
             feature.properties !== undefined &&
             feature.properties[this.timeProperty!] !== undefined
           ) {
-            discreteTimes.push({
+            const dt = {
               time: new Date(
                 `${feature.properties[this.timeProperty!]}`
               ).toISOString(),
               tag: feature.properties[this.timeProperty!]
-            });
+            };
+            discreteTimesMap.set(dt.tag, dt);
           }
         } else if (geojson.type === "FeatureCollection") {
           const featureCollection = geojson as FeatureCollection;
@@ -545,7 +546,7 @@ export default function GeoJsonMixin<
 
       addFeatureToDiscreteTimes((this.readyData as unknown) as GeoJsonObject);
 
-      return discreteTimes;
+      return Array.from(discreteTimesMap.values());
     }
 
     protected abstract async customDataLoader(
