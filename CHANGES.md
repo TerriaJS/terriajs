@@ -3,7 +3,9 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.86)
+#### next release (8.0.0-alpha.87)
+* [The next improvement]
+#### 8.0.0-alpha.86
 
 - **Breaking changes**:
   - `EnumColorMap` will only be used for enum `TableColumns` with number of unique values <= number of bins 
@@ -20,8 +22,6 @@ Change Log
 * Bugfix to make time-based geojson work when there are multiple features with the same time property value.
 * Add `czmlTemplate` to `GeoJsonTraits` - it can be used to replace GeoJSON Point features with a CZML packet.
 * Made the moment points in the chart optionally clickable.
-* [The next improvement]
-
 #### 8.0.0-alpha.85
 
 - **Breaking changes**:
