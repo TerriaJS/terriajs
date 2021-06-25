@@ -4,7 +4,10 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.87)
+
+* Disable `TableMixin` time column if only one unique time interval
 * [The next improvement]
+
 #### 8.0.0-alpha.86
 
 - **Breaking changes**:
