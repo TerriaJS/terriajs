@@ -15,7 +15,7 @@ export function defaultBaseMaps(terria: Terria): any[] {
         mapStyle: "AerialWithLabelsOnDemand",
         opacity: 1.0
       },
-      image: "images/basemaps/bing-aerial-labels.png"
+      image: "build/TerriaJS/images/basemaps/bing-aerial-labels.png"
     });
 
     baseMaps.push({
@@ -26,7 +26,7 @@ export function defaultBaseMaps(terria: Terria): any[] {
         mapStyle: "Aerial",
         opacity: 1.0
       },
-      image: "images/basemaps/bing-aerial.png"
+      image: "build/TerriaJS/images/basemaps/bing-aerial.png"
     });
     baseMaps.push({
       item: {
@@ -36,7 +36,7 @@ export function defaultBaseMaps(terria: Terria): any[] {
         mapStyle: "RoadOnDemand",
         opacity: 1.0
       },
-      image: "images/basemaps/bing-maps-roads.png"
+      image: "build/TerriaJS/images/basemaps/bing-maps-roads.png"
     });
   } else if (terria.configParameters.useCesiumIonBingImagery !== false) {
     baseMaps.push({
@@ -47,7 +47,7 @@ export function defaultBaseMaps(terria: Terria): any[] {
         ionAssetId: 3,
         opacity: 1.0
       },
-      image: "images/basemaps/bing-aerial-labels.png"
+      image: "build/TerriaJS/images/basemaps/bing-aerial-labels.png"
     });
 
     baseMaps.push({
@@ -58,7 +58,7 @@ export function defaultBaseMaps(terria: Terria): any[] {
         ionAssetId: 2,
         opacity: 1.0
       },
-      image: "images/basemaps/bing-aerial.png"
+      image: "build/TerriaJS/images/basemaps/bing-aerial.png"
     });
     baseMaps.push({
       item: {
@@ -68,7 +68,7 @@ export function defaultBaseMaps(terria: Terria): any[] {
         ionAssetId: 4,
         opacity: 1.0
       },
-      image: "images/basemaps/bing-maps-roads.png"
+      image: "build/TerriaJS/images/basemaps/bing-maps-roads.png"
     });
   }
 
@@ -82,7 +82,7 @@ export function defaultBaseMaps(terria: Terria): any[] {
       layers: "NE2_HR_LC_SR_W_DR",
       opacity: 1.0
     },
-    image: "images/basemaps/natural-earth.png"
+    image: "build/TerriaJS/images/basemaps/natural-earth.png"
   });
 
   baseMaps.push({
@@ -95,7 +95,7 @@ export function defaultBaseMaps(terria: Terria): any[] {
       layers: "nasa-black-marble:dnb_land_ocean_ice.2012.54000x27000_geo",
       opacity: 1.0
     },
-    image: "images/basemaps/black-marble.png"
+    image: "build/TerriaJS/images/basemaps/black-marble.png"
   });
 
   baseMaps.push({
@@ -109,7 +109,7 @@ export function defaultBaseMaps(terria: Terria): any[] {
       subdomains: ["a", "b", "c", "d"],
       opacity: 1.0
     },
-    image: "images/basemaps/positron.png"
+    image: "build/TerriaJS/images/basemaps/positron.png"
   });
 
   baseMaps.push({
@@ -123,7 +123,7 @@ export function defaultBaseMaps(terria: Terria): any[] {
       subdomains: ["a", "b", "c", "d"],
       opacity: 1.0
     },
-    image: "images/basemaps/dark-matter.png"
+    image: "build/TerriaJS/images/basemaps/dark-matter.png"
   });
 
   return baseMaps;
