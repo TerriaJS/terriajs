@@ -557,7 +557,6 @@ export default class TableStyle {
         | undefined;
       if (firstInterval) {
         // Does there exist an interval which is different from firstInterval (that is to say, does there exist at least two unique intervals)
-        // Disable date time selector if all intervals are the same
         return !!this.timeIntervals?.find(
           t =>
             t &&
