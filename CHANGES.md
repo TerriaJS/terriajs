@@ -7,6 +7,8 @@ Change Log
 
 * Data from TableMixin always overrides other feature information (e.g. from vector tiles in region mapping) by column name and title for feature info templating (consistent with v7).
 * Fixed point entity creation for TableMixin where different columns are used for point size and colour.
+* Changed MappableMixin's initialMessage to show while map items are loaded. Map items could be displayed behind the disclaimer before a user accepts the disclaimer.
+* Fixed a cyclic dependency between initialMessage and app spinner (globe gif greysreen) that caused the app spinner to be present forever when loading a share link.
 * [The next improvement]
 
 #### 8.0.0-alpha.86
