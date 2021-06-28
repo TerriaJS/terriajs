@@ -21,7 +21,11 @@
     "pickLocation": "Seleziona posizione",
     "noInfoAvailable": "Nessuna informazione disponibile",
     "panelHeading": "Informazioni dell'elemento",
-    "userSelection": "Seleziona utente"
+    "userSelection": "Seleziona utente",
+    "noDataAvailable": "Qui non è presente alcun dato - prova un altro punto",
+    "catalogItem": {
+      "featureInfoShown": "I primi {{maximum}} sono mostrati qui sotto."
+    }
   },
   "sui": {
     "notifications": {
