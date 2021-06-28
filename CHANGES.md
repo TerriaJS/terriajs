@@ -4,7 +4,11 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.87)
+
+* Data from TableMixin always overrides other feature information (e.g. from vector tiles in region mapping) by column name and title for feature info templating (consistent with v7).
+* Fixed point entity creation for TableMixin where different columns are used for point size and colour.
 * [The next improvement]
+
 #### 8.0.0-alpha.86
 
 - **Breaking changes**:
@@ -22,6 +26,7 @@ Change Log
 * Bugfix to make time-based geojson work when there are multiple features with the same time property value.
 * Add `czmlTemplate` to `GeoJsonTraits` - it can be used to replace GeoJSON Point features with a CZML packet.
 * Made the moment points in the chart optionally clickable.
+
 #### 8.0.0-alpha.85
 
 - **Breaking changes**:
