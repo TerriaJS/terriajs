@@ -70,8 +70,14 @@ function createFeature(
   const colorMap = style.colorMap;
   const pointSizeMap = style.pointSizeMap;
   const colorColumn = style.colorColumn;
-  const valueFunction =
+  const colorValueFunction =
     colorColumn !== undefined ? colorColumn.valueFunctionForType : () => null;
+  const pointSizeColumn = style.pointSizeColumn;
+  const pointSizeValueFunction =
+    pointSizeColumn !== undefined
+      ? pointSizeColumn.valueFunctionForType
+      : () => null;
+
   const availability = new TimeIntervalCollection();
   const tableColumns = style.tableModel.tableColumns;
 
@@ -79,7 +85,8 @@ function createFeature(
     const longitude = longitudes[rowId];
     const latitude = latitudes[rowId];
     const interval = timeIntervals[rowId];
-    const value = valueFunction(rowId);
+    const colorValue = colorValueFunction(rowId);
+    const pointSizeValue = pointSizeValueFunction(rowId);
 
     if (longitude === null || latitude === null || !interval) {
       return;
@@ -91,10 +98,10 @@ function createFeature(
       interval
     );
 
-    addSampleOrInterval(color, colorMap.mapValueToColor(value), interval);
+    addSampleOrInterval(color, colorMap.mapValueToColor(colorValue), interval);
     addSampleOrInterval(
       pointSize,
-      pointSizeMap.mapValueToPointSize(value),
+      pointSizeMap.mapValueToPointSize(pointSizeValue),
       interval
     );
     addSampleOrInterval(
