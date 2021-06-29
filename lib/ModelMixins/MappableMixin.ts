@@ -127,7 +127,9 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
      */
     async loadMapItems(force?: boolean) {
       if (this.shouldShowInitialMessage) {
-        await this.showInitialMessage();
+        // Don't await the initialMessage because this causes cyclic dependency between loading
+        //  and user interaction (see https://github.com/TerriaJS/terriajs/issues/5528)
+        this.showInitialMessage();
       }
       if (CatalogMemberMixin.isMixedInto(this)) await this.loadMetadata();
 
