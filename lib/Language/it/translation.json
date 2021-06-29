@@ -112,7 +112,9 @@
   "AR": {
     "arTool": "strumento per la realtà aumentata",
     "btnResetRealign": "reimposta allineamento bussola",
-    "confirmText": "Capito"
+    "confirmText": "Capito",
+    "resetAlignmentMessage": "",
+    "manualAlignmentTitle": "Allineamento Manuale"
   },
   "zoomCotrol": {
     "zoomReset": "Reimposta zoom",
