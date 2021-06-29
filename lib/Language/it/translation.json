@@ -87,7 +87,8 @@
     "btnCount": "Conta i dataset",
     "title": "Conta i Dataset",
     "recount": "Ricalcola",
-    "countingMessage": "Conteggio in corso, perfavore aspettare…"
+    "countingMessage": "Conteggio in corso, perfavore aspettare…",
+    "subTotals": "<div> {{name}}: {{items}} elementi / {{groups}} gruppi</div>"
   },
   "share": {
     "btnMapShareTitle": "Condividi la mappa con altri",
