@@ -109,4 +109,4 @@ const NotificationWindow = createReactClass({
   }
 });
 
-module.exports = NotificationWindow;
+module.exports.default = NotificationWindow;

@@ -1,8 +1,12 @@
 import { computed } from "mobx";
-import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Cesium from "../../lib/Models/Cesium";
+import CommonStrata from "../../lib/Models/CommonStrata";
+import createStratumInstance from "../../lib/Models/createStratumInstance";
 import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import { RectangleTraits } from "../../lib/Traits/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 
 const supportsWebGL = require("../../lib/Core/supportsWebGL");
@@ -67,17 +71,36 @@ describeIfSupported("Cesium Model", function() {
   });
 
   describe("zoomTo", function() {
+    let initialCameraPosition: Cartesian3;
+
+    beforeEach(function() {
+      initialCameraPosition = cesium.scene.camera.position.clone();
+    });
+
+    it("can zoomTo a rectangle", async function() {
+      const [west, south, east, north] = [0, 0, 0, 0];
+      await cesium.zoomTo(Rectangle.fromDegrees(west, south, east, north), 0);
+      expect(initialCameraPosition.equals(cesium.scene.camera.position)).toBe(
+        false
+      );
+    });
+
     describe("if the target is a TimeVarying item", function() {
-      it("sets the target item as the timeline source", function() {
+      it("sets the target item as the timeline source", async function() {
         const targetItem = new WebMapServiceCatalogItem("test", terria);
-        spyOnProperty(targetItem, "mapItems", "get").and.returnValue([
-          new CustomDataSource("test")
-        ]);
-        spyOn(terria.timelineStack, "promoteToTop");
-        cesium.zoomTo(targetItem, 0);
-        expect(terria.timelineStack.promoteToTop).toHaveBeenCalledWith(
-          targetItem
+        targetItem.setTrait(
+          CommonStrata.user,
+          "rectangle",
+          createStratumInstance(RectangleTraits, {
+            east: 0,
+            west: 0,
+            north: 0,
+            south: 0
+          })
         );
+        const promoteToTop = spyOn(terria.timelineStack, "promoteToTop");
+        await cesium.zoomTo(targetItem, 0);
+        expect(promoteToTop).toHaveBeenCalledWith(targetItem);
       });
     });
   });

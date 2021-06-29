@@ -201,7 +201,7 @@ const StandardUserInterfaceRaw = observer(
         this.props.terria.stories.length &&
         !this.props.viewState.storyShown
       ) {
-        this.props.viewState.notifications.push({
+        this.props.viewState.terria.notificationState.addNotificationToQueue({
           title: t("sui.notifications.title"),
           message: t("sui.notifications.message"),
           confirmText: t("sui.notifications.confirmText"),
@@ -308,7 +308,7 @@ const StandardUserInterfaceRaw = observer(
                 `}
               >
                 <div className={Styles.uiInner}>
-                  <If condition={!this.props.viewState.hideMapUi()}>
+                  <If condition={!this.props.viewState.hideMapUi}>
                     <Small>
                       <MobileHeader
                         terria={terria}
@@ -400,7 +400,7 @@ const StandardUserInterfaceRaw = observer(
                         condition={
                           this.props.terria.configParameters
                             .experimentalFeatures &&
-                          !this.props.viewState.hideMapUi()
+                          !this.props.viewState.hideMapUi
                         }
                       >
                         <ExperimentalFeatures
@@ -414,7 +414,7 @@ const StandardUserInterfaceRaw = observer(
                 </div>
               </div>
 
-              <If condition={!this.props.viewState.hideMapUi()}>
+              <If condition={!this.props.viewState.hideMapUi}>
                 <Medium>
                   <TrainerBar
                     terria={terria}
@@ -444,7 +444,7 @@ const StandardUserInterfaceRaw = observer(
                 condition={
                   !customElements.feedback.length &&
                   this.props.terria.configParameters.feedbackUrl &&
-                  !this.props.viewState.hideMapUi() &&
+                  !this.props.viewState.hideMapUi &&
                   this.props.viewState.feedbackFormIsVisible
                 }
               >

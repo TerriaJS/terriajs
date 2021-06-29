@@ -32,6 +32,11 @@ import Icon, { StyledIcon } from "../../../Styled/Icon";
 import { exportData } from "../../Preview/ExportData";
 import WorkbenchButton from "../WorkbenchButton";
 import Styles from "./viewing-controls.scss";
+import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
+import {
+  Category,
+  DataSourceAction
+} from "../../../Core/AnalyticEvents/analyticEvents";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -86,6 +91,12 @@ const ViewingControls = observer(
       t: PropTypes.func.isRequired
     },
 
+    getInitialState() {
+      return {
+        isMapZoomingToCatalogItem: false
+      };
+    },
+
     /* eslint-disable-next-line camelcase */
     UNSAFE_componentWillMount() {
       window.addEventListener("click", this.hideMenu);
@@ -107,8 +118,8 @@ const ViewingControls = observer(
       terria.removeSelectedFeaturesForModel(this.props.item);
       this.props.viewState.terria.timelineStack.remove(this.props.item);
       this.props.viewState.terria.analytics?.logEvent(
-        "dataSource",
-        "removeFromWorkbench",
+        Category.dataSource,
+        DataSourceAction.removeFromWorkbench,
         getPath(this.props.item)
       );
     },
@@ -125,7 +136,10 @@ const ViewingControls = observer(
           zoomToView = this.props.viewState.terria.mainViewer.homeCamera;
           console.log("Extent is wider than world so using homeCamera.");
         }
-        viewer.zoomTo(zoomToView);
+        this.setState({ isMapZoomingToCatalogItem: true });
+        viewer.zoomTo(zoomToView).finally(() => {
+          this.setState({ isMapZoomingToCatalogItem: false });
+        });
       });
     },
 
@@ -413,8 +427,18 @@ const ViewingControls = observer(
               onClick={this.zoomTo}
               title={t("workbench.zoomToTitle")}
               // className={Styles.btn}
-              disabled={!item.canZoomTo}
-              iconElement={() => <Icon glyph={Icon.GLYPHS.search} />}
+              disabled={
+                // disabled if the item cannot be zoomed to or if a zoom is already in progress
+                item.canZoomTo === false ||
+                this.state.isMapZoomingToCatalogItem === true
+              }
+              iconElement={() =>
+                this.state.isMapZoomingToCatalogItem ? (
+                  <AnimatedSpinnerIcon />
+                ) : (
+                  <Icon glyph={Icon.GLYPHS.search} />
+                )
+              }
             >
               {t("workbench.zoomTo")}
             </WorkbenchButton>

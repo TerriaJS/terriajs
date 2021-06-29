@@ -71,7 +71,7 @@ const InvokeFunction = observer(
       this.props.previewed.submitJob().catch(e => {
         if (e instanceof TerriaError) {
           runInAction(() => {
-            this.props.terria.notification.raiseEvent({
+            this.props.terria.notificationState.addNotificationToQueue({
               title: e.title,
               message: e.message,
               confirmText: "Ok",

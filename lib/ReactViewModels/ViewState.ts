@@ -9,12 +9,10 @@ import {
 import { Ref } from "react";
 import { History } from "history";
 
-import clone from "terriajs-cesium/Source/Core/clone";
 import defined from "terriajs-cesium/Source/Core/defined";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import addedByUser from "../Core/addedByUser";
-import isDefined from "../Core/isDefined";
-import TerriaError from "../Core/TerriaError";
+import { Category, HelpAction } from "../Core/AnalyticEvents/analyticEvents";
 import triggerResize from "../Core/triggerResize";
 import PickedFeatures from "../Map/PickedFeatures";
 import getAncestors from "../Models/getAncestors";
@@ -43,19 +41,6 @@ interface ViewStateOptions {
   errorHandlingProvider?: any;
 }
 
-export interface Notification {
-  title: string | ((viewState: ViewState) => React.ReactNode);
-  message: string | ((viewState: ViewState) => React.ReactNode);
-  confirmText?: string;
-  denyText?: string;
-  confirmAction?: () => void;
-  denyAction?: () => void;
-  hideUi?: boolean;
-  type?: string;
-  width?: number | string;
-  height?: number | string;
-}
-
 /**
  * Root of a global view model. Presumably this should get nested as more stuff goes into it. Basically this belongs to
  * the root of the UI and then it can choose to pass either the whole thing or parts down as props to its children.
@@ -81,7 +66,6 @@ export default class ViewState {
   @observable isDraggingDroppingFile: boolean = false;
   @observable mobileView: string | null = null;
   @observable isMapFullScreen: boolean = false;
-  @observable readonly notifications: Notification[] = [];
   @observable myDataIsUploadView: boolean = true;
   @observable mobileMenuVisible: boolean = false;
   @observable explorerPanelAnimating: boolean = false;
@@ -297,7 +281,6 @@ export default class ViewState {
   @observable currentTool?: Tool;
 
   private _unsubscribeErrorListener: CesiumEvent.RemoveCallback;
-  private _unsubscribeNotificationListener: CesiumEvent.RemoveCallback;
   private _pickedFeaturesSubscription: IReactionDisposer;
   private _disclaimerVisibleSubscription: IReactionDisposer;
   private _isMapFullScreenSubscription: IReactionDisposer;
@@ -322,37 +305,9 @@ export default class ViewState {
       : null;
     this.terria = terria;
 
-    this._unsubscribeNotificationListener = terria.notification.addEventListener(
-      (notification: Notification) => {
-        // Only add this notification if an identical one doesn't already exist.
-        if (
-          this.notifications.filter(
-            item =>
-              item.title === notification.title &&
-              item.message === notification.message
-          ).length === 0
-        ) {
-          runInAction(() => {
-            this.notifications.push(clone(notification));
-          });
-        }
-      }
-    );
-
     // Show errors to the user as notifications.
-    this._unsubscribeErrorListener = terria.addErrorEventListener(
-      (e: TerriaError) => {
-        // Only add this error if an identical one doesn't already exist.
-        if (
-          this.notifications.filter(
-            item => item.title === e.title && item.message === e.message
-          ).length === 0
-        ) {
-          runInAction(() => {
-            this.notifications.push(e.toNotification());
-          });
-        }
-      }
+    this._unsubscribeErrorListener = terria.addErrorEventListener(error =>
+      terria.notificationState.addNotificationToQueue(error.toNotification())
     );
 
     // When features are picked, show the feature info panel.
@@ -482,7 +437,6 @@ export default class ViewState {
   dispose() {
     this._pickedFeaturesSubscription();
     this._disclaimerVisibleSubscription();
-    this._unsubscribeNotificationListener();
     this._unsubscribeErrorListener();
     this._mobileMenuSubscription();
     this._isMapFullScreenSubscription();
@@ -586,6 +540,7 @@ export default class ViewState {
 
   @action
   showHelpPanel() {
+    this.terria.analytics?.logEvent(Category.help, HelpAction.panelOpened);
     this.showHelpMenu = true;
     this.helpPanelExpanded = false;
     this.selectedHelpMenuItem = "";
@@ -641,17 +596,6 @@ export default class ViewState {
     if (this.previewedItem === model) this.previewedItem = undefined;
     if (this.userDataPreviewedItem === model)
       this.userDataPreviewedItem = undefined;
-  }
-
-  getNextNotification() {
-    return this.notifications.length > 0 ? this.notifications[0] : undefined;
-  }
-
-  hideMapUi() {
-    return (
-      isDefined(this.getNextNotification()) &&
-      this.getNextNotification()!.hideUi
-    );
   }
 
   @action
@@ -711,6 +655,18 @@ export default class ViewState {
   @computed
   get isToolOpen() {
     return this.currentTool !== undefined;
+  }
+
+  @computed
+  get hideMapUi() {
+    return (
+      this.terria.notificationState.currentNotification !== undefined &&
+      this.terria.notificationState.currentNotification!.hideUi
+    );
+  }
+
+  get isMapZooming() {
+    return this.terria.currentViewer.isMapZooming;
   }
 }
 

@@ -14,6 +14,8 @@ import TableColumnTraits, {
 } from "../Traits/TableColumnTraits";
 import TableTraits from "../Traits/TableTraits";
 import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
+const naturalSort = require("javascript-natural-sort");
+naturalSort.insensitive = true;
 
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
@@ -45,6 +47,7 @@ export interface ColumnValuesAsDates {
 
 export interface ColumnValuesAsRegions {
   readonly regionIds: ReadonlyArray<string | null>;
+  readonly uniqueRegionIds: ReadonlyArray<string>;
   readonly numberOfValidRegions: number;
   readonly numberOfNonRegions: number;
   readonly numberOfRegionsWithMultipleRows: number;
@@ -85,7 +88,8 @@ export default class TableColumn {
   }
 
   /**
-   * Gets the raw, uninterpreted values in the column.
+   * Gets the raw, uninterpreted values in the column. This will not apply any transformations to data (eg transformation expressions).
+   *
    */
   @computed
   get values(): readonly string[] {
@@ -225,7 +229,8 @@ export default class TableColumn {
         n = null;
       } else {
         n = toNumber(values[i]);
-        if (n === null) {
+        // Only count as non number if value isn't actually null
+        if (value !== "null" && n === null) {
           ++numberOfNonNumbers;
         }
       }
@@ -494,7 +499,7 @@ export default class TableColumn {
     });
 
     const count = countBy(values);
-    const nullCount = count[""];
+    const nullCount = count[""] ?? 0;
     delete count[""];
 
     function toArray(key: string, value: number): [string, number] {
@@ -526,11 +531,13 @@ export default class TableColumn {
         numberOfNonRegions: values.length,
         numberOfRegionsWithMultipleRows: 0,
         regionIds: values.map(() => null),
-        regionIdToRowNumbersMap: map
+        regionIdToRowNumbersMap: map,
+        uniqueRegionIds: []
       };
     }
 
     const regionIds: (string | null)[] = [];
+    const uniqueRegionIds = new Set<string>();
     let numberOfValidRegions = 0;
     let numberOfNonRegions = 0;
     let numberOfRegionsWithMultipleRows = 0;
@@ -542,6 +549,7 @@ export default class TableColumn {
         value
       );
       regionIds.push(regionId);
+      if (regionId !== null) uniqueRegionIds.add(regionId);
 
       if (regionId !== null) {
         ++numberOfValidRegions;
@@ -562,6 +570,7 @@ export default class TableColumn {
 
     return {
       regionIds: regionIds,
+      uniqueRegionIds: Array.from(uniqueRegionIds),
       regionIdToRowNumbersMap: map,
       numberOfValidRegions: numberOfValidRegions,
       numberOfNonRegions: numberOfNonRegions,
@@ -666,10 +675,11 @@ export default class TableColumn {
       // the number of failed parsings. Note that replacements with null
       // or zero are counted as neither failed nor successful.
 
-      const numbers = this.valuesAsNumbers;
       if (
-        numbers.numberOfNonNumbers <=
-        Math.ceil(numbers.numberOfValidNumbers * 0.1)
+        // We need at least one value
+        this.valuesAsNumbers.numberOfValidNumbers >= 1 &&
+        this.valuesAsNumbers.numberOfNonNumbers <=
+          Math.ceil(this.valuesAsNumbers.numberOfValidNumbers * 0.1)
       ) {
         type = TableColumnType.scalar;
       } else {
@@ -690,6 +700,17 @@ export default class TableColumn {
     }
 
     return type;
+  }
+
+  @computed
+  get isScalarBinary() {
+    if (this.type === TableColumnType.scalar) {
+      return (
+        this.uniqueValues.values.length === 2 &&
+        this.uniqueValues.values[0] === "0" &&
+        this.uniqueValues.values[1] === "1"
+      );
+    }
   }
 
   @computed
@@ -818,8 +839,8 @@ const allCommas = /,/g;
 
 function toNumber(value: string): number | null {
   // Remove commas and try to parse as a number.
-  const withoutCommas = value.replace(allCommas, "");
-  if (withoutCommas.length === 0) {
+  const strippedValue = value.replace(allCommas, "").replace("$", "");
+  if (strippedValue.length === 0) {
     // Treat an empty string as not a number rather than as zero.
     return null;
   }
@@ -827,18 +848,9 @@ function toNumber(value: string): number | null {
   // `Number()` requires that the entire string form a number, unlike
   // parseInt and parseFloat which allow extra non-number characters
   // at the end.
-  const asNumber = Number(withoutCommas);
+  const asNumber = Number(strippedValue);
   if (!Number.isNaN(asNumber)) {
     return asNumber;
-  }
-  return null;
-}
-
-function toDate(value: string): Date | null {
-  // TODO: Add much more sophisticated date parsing from old TableColumn.convertToDates.
-  const ms = Date.parse(value);
-  if (!Number.isNaN(ms)) {
-    return new Date(ms);
   }
   return null;
 }

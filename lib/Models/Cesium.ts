@@ -33,6 +33,7 @@ import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
 import DataSourceDisplay from "terriajs-cesium/Source/DataSources/DataSourceDisplay";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import Camera from "terriajs-cesium/Source/Scene/Camera";
 import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
@@ -40,14 +41,15 @@ import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDire
 import Scene from "terriajs-cesium/Source/Scene/Scene";
 import SceneTransforms from "terriajs-cesium/Source/Scene/SceneTransforms";
 import SingleTileImageryProvider from "terriajs-cesium/Source/Scene/SingleTileImageryProvider";
-import when from "terriajs-cesium/Source/ThirdParty/when";
 import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
 import getElement from "terriajs-cesium/Source/Widgets/getElement";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
 import LatLonHeight from "../Core/LatLonHeight";
+import makeRealPromise from "../Core/makeRealPromise";
 import pollToPromise from "../Core/pollToPromise";
+import waitForDataSourceToLoad from "../Core/waitForDataSourceToLoad";
 import CesiumRenderLoopPauser from "../Map/CesiumRenderLoopPauser";
 import CesiumSelectionIndicator from "../Map/CesiumSelectionIndicator";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
@@ -95,7 +97,7 @@ export default class Cesium extends GlobeOrMap {
   readonly canShowSplitter = true;
   private readonly _eventHelper: EventHelper;
   private _pauseMapInteractionCount = 0;
-  private _lastTarget:
+  private _lastZoomTarget:
     | CameraView
     | Rectangle
     | DataSource
@@ -627,117 +629,118 @@ export default class Cesium extends GlobeOrMap {
     }
   }
 
-  doZoomTo(
-    target:
-      | CameraView
-      | Rectangle
-      | DataSource
-      | MappableMixin.MappableMixin
-      | /*TODO Cesium.Cesium3DTileset*/ any,
-    flightDurationSeconds?: number
-  ): void {
-    if (!defined(target)) {
-      return;
-      //throw new DeveloperError("viewOrExtent is required.");
-    }
-    flightDurationSeconds = defaultValue(flightDurationSeconds, 3.0);
+  doZoomTo(target: any, flightDurationSeconds = 3.0): Promise<void> {
+    this._lastZoomTarget = target;
 
-    var that = this;
-    that._lastTarget = target;
-    return when()
-      .then(function() {
-        if (target instanceof Rectangle) {
-          var camera = that.scene.camera;
+    const _zoom: () => Promise<void> = async () => {
+      const camera = this.scene.camera;
 
-          // Work out the destination that the camera would naturally fly to
-          var destinationCartesian = camera.getRectangleCameraCoordinates(
-            target
+      if (target instanceof Rectangle) {
+        // target is a Rectangle
+
+        // Work out the destination that the camera would naturally fly to
+        const destinationCartesian = camera.getRectangleCameraCoordinates(
+          target
+        );
+        const destination = Ellipsoid.WGS84.cartesianToCartographic(
+          destinationCartesian
+        );
+        const terrainProvider = this.scene.globe.terrainProvider;
+        // A sufficiently coarse tile level that still has approximately accurate height
+        const level = 6;
+        const center = Rectangle.center(target);
+
+        // Perform an elevation query at the centre of the rectangle
+        let terrainSample: Cartographic;
+        try {
+          [terrainSample] = await makeRealPromise<Cartographic[]>(
+            sampleTerrain(terrainProvider, level, [center])
           );
-          var destination = Ellipsoid.WGS84.cartesianToCartographic(
-            destinationCartesian
-          );
-          var terrainProvider = that.scene.globe.terrainProvider;
-          var level = 6; // A sufficiently coarse tile level that still has approximately accurate height
-          var positions = [Rectangle.center(target)];
-
-          // Perform an elevation query at the centre of the rectangle
-          return sampleTerrain(terrainProvider, level, positions).then(function(
-            results
-          ) {
-            if (that._lastTarget !== target) {
-              return;
-            }
-
-            var finalDestinationCartographic = new Cartographic(
-              destination.longitude,
-              destination.latitude,
-              destination.height + results[0].height
-            );
-
-            var finalDestination = Ellipsoid.WGS84.cartographicToCartesian(
-              finalDestinationCartographic
-            );
-
-            camera.flyTo({
-              duration: flightDurationSeconds,
-              destination: finalDestination
-            });
-          });
-        } else if (defined(target.entities)) {
-          // Zooming to a DataSource
-          if (target.isLoading && defined(target.loadingEvent)) {
-            var deferred = when.defer();
-            var removeEvent = target.loadingEvent.addEventListener(function() {
-              removeEvent();
-              deferred.resolve();
-            });
-            return deferred.promise.then(function() {
-              if (that._lastTarget !== target) {
-                return;
-              }
-              return zoomToDataSource(that, target, flightDurationSeconds);
-            });
-          }
-          return zoomToDataSource(that, target);
-        } else if (defined(target.readyPromise)) {
-          return target.readyPromise.then(function() {
-            if (defined(target.boundingSphere) && that._lastTarget === target) {
-              zoomToBoundingSphere(that, target, flightDurationSeconds);
-            }
-          });
-        } else if (defined(target.boundingSphere)) {
-          return zoomToBoundingSphere(that, target, flightDurationSeconds);
-        } else if (target.position !== undefined) {
-          that.scene.camera.flyTo({
-            duration: flightDurationSeconds,
-            destination: target.position,
-            orientation: {
-              direction: target.direction,
-              up: target.up
-            }
-          });
-        } else if (MappableMixin.isMixedInto(target)) {
-          if (isDefined(target.cesiumRectangle)) {
-            return that.scene.camera.flyTo({
-              duration: flightDurationSeconds,
-              destination: target.cesiumRectangle
-            });
-          }
-
-          if (target.mapItems.length > 0) {
-            // Zoom to the first item!
-            return that.doZoomTo(target.mapItems[0], flightDurationSeconds);
-          }
-        } else if (defined(target.rectangle)) {
-          that.scene.camera.flyTo({
-            duration: flightDurationSeconds,
-            destination: target.rectangle
-          });
+        } catch {
+          // if the request fails just use center with height=0
+          terrainSample = center;
         }
-      })
-      .then(function() {
-        that.notifyRepaintRequired();
-      });
+
+        if (this._lastZoomTarget !== target) {
+          return;
+        }
+
+        const finalDestinationCartographic = new Cartographic(
+          destination.longitude,
+          destination.latitude,
+          destination.height + terrainSample.height
+        );
+
+        const finalDestination = Ellipsoid.WGS84.cartographicToCartesian(
+          finalDestinationCartographic
+        );
+
+        return flyToPromise(camera, {
+          duration: flightDurationSeconds,
+          destination: finalDestination
+        });
+      } else if (defined(target.entities)) {
+        // target is some DataSource
+        return waitForDataSourceToLoad(target).then(() => {
+          if (this._lastZoomTarget === target) {
+            return zoomToDataSource(this, target, flightDurationSeconds);
+          }
+        });
+      } else if (
+        // check for readyPromise first because cesium raises an exception when
+        // accessing `.boundingSphere` before ready
+        defined(target.readyPromise) ||
+        defined(target.boundingSphere)
+      ) {
+        // target is some object like a Model with boundingSphere and possibly a readyPromise
+        return Promise.resolve(target.readyPromise).then(() => {
+          if (this._lastZoomTarget === target) {
+            return flyToBoundingSpherePromise(camera, target.boundingSphere, {
+              // By passing range=0, cesium calculates an appropriate zoom distance
+              offset: new HeadingPitchRange(0, -0.5, 0),
+              duration: flightDurationSeconds
+            });
+          }
+        });
+      } else if (target.position !== undefined) {
+        // target is a CameraView or an Entity
+        return flyToPromise(camera, {
+          duration: flightDurationSeconds,
+          destination: target.position,
+          orientation: {
+            direction: target.direction,
+            up: target.up
+          }
+        });
+      } else if (MappableMixin.isMixedInto(target)) {
+        // target is a Mappable
+        if (isDefined(target.cesiumRectangle)) {
+          return flyToPromise(camera, {
+            duration: flightDurationSeconds,
+            destination: target.cesiumRectangle
+          });
+        } else if (target.mapItems.length > 0) {
+          // Zoom to the first item!
+          return this.doZoomTo(target.mapItems[0], flightDurationSeconds);
+        } else {
+          return Promise.resolve();
+        }
+      } else if (defined(target.rectangle)) {
+        // target has a rectangle
+        return flyToPromise(camera, {
+          duration: flightDurationSeconds,
+          destination: target.rectangle
+        });
+      } else {
+        return Promise.resolve();
+      }
+    };
+
+    // we call notifyRepaintRequired before and after the zoom
+    // to wake the cesium render loop which might pause itself after
+    // some idle time
+    this.notifyRepaintRequired();
+    return _zoom().finally(() => this.notifyRepaintRequired());
   }
 
   notifyRepaintRequired() {
@@ -1173,18 +1176,11 @@ export default class Cesium extends GlobeOrMap {
         id = picked.primitive.id;
       }
 
-      if (id instanceof Entity && vectorFeatures.indexOf(id) === -1) {
-        const feature = Feature.fromEntityCollectionOrEntity(id);
-        if (picked.primitive) {
-          feature.cesiumPrimitive = picked.primitive;
-        }
-        vectorFeatures.push(feature);
-      } else if (
-        picked.primitive &&
-        picked.primitive._catalogItem &&
-        picked.primitive._catalogItem.getFeaturesFromPickResult
-      ) {
-        const result = picked.primitive._catalogItem.getFeaturesFromPickResult(
+      // Try to find catalogItem for picked feature, and use catalogItem.getFeaturesFromPickResult() if it exists - this is used by FeatureInfoMixin
+      const catalogItem = picked?.primitive?._catalogItem ?? id?._catalogItem;
+
+      if (typeof catalogItem?.getFeaturesFromPickResult === "function") {
+        const result = catalogItem.getFeaturesFromPickResult.bind(catalogItem)(
           screenPosition,
           picked
         );
@@ -1195,6 +1191,12 @@ export default class Cesium extends GlobeOrMap {
             vectorFeatures.push(result);
           }
         }
+      } else if (id instanceof Entity && vectorFeatures.indexOf(id) === -1) {
+        const feature = Feature.fromEntityCollectionOrEntity(id);
+        if (picked.primitive) {
+          feature.cesiumPrimitive = picked.primitive;
+        }
+        vectorFeatures.push(feature);
       }
     }
 
@@ -1495,7 +1497,8 @@ function zoomToDataSource(
   target: DataSource,
   flightDurationSeconds?: number
 ): Promise<void> {
-  return pollToPromise(
+  let flyToPromise: Promise<void> | undefined;
+  const pollPromise = pollToPromise(
     function() {
       const dataSourceDisplay = cesium.dataSourceDisplay;
       if (dataSourceDisplay === undefined) {
@@ -1523,38 +1526,60 @@ function zoomToDataSource(
         }
       }
 
+      const _lastZoomTarget = (cesium as any)._lastZoomTarget;
+
       // Test if boundingSpheres is empty to avoid zooming to nowhere
-      if (boundingSpheres.length > 0) {
+      if (boundingSpheres.length > 0 && _lastZoomTarget === target) {
         var boundingSphere = BoundingSphere.fromBoundingSpheres(
           boundingSpheres
         );
-        cesium.scene.camera.flyToBoundingSphere(boundingSphere, {
-          duration: flightDurationSeconds,
-          // By passing range=0, cesium calculates an appropriate zoom distance
-          offset: new HeadingPitchRange(0, -0.5, 0)
-        });
+        flyToPromise = flyToBoundingSpherePromise(
+          cesium.scene.camera,
+          boundingSphere,
+          {
+            duration: flightDurationSeconds,
+            // By passing range=0, cesium calculates an appropriate zoom distance
+            offset: new HeadingPitchRange(0, -0.5, 0)
+          }
+        );
         cesium.scene.camera.lookAtTransform(Matrix4.IDENTITY);
       }
       return true;
     },
     {
       pollInterval: 100,
-      timeout: 5000
+      timeout: 30000
     }
   );
+  return pollPromise.then(() => flyToPromise);
 }
 
-function zoomToBoundingSphere(
-  cesium: Cesium,
-  target: {
-    boundingSphere: BoundingSphere;
-  },
-  flightDurationSeconds?: number
-) {
-  var boundingSphere = target.boundingSphere;
-  cesium.scene.camera.flyToBoundingSphere(boundingSphere, {
-    // By passing range=0, cesium calculates an appropriate zoom distance
-    offset: new HeadingPitchRange(0, -0.5, 0),
-    duration: flightDurationSeconds
+type FlyToOptions = Parameters<InstanceType<typeof Camera>["flyTo"]>[0];
+
+function flyToPromise(camera: Camera, options: FlyToOptions): Promise<void> {
+  return new Promise((complete, cancel) => {
+    camera.flyTo({
+      ...options,
+      complete,
+      cancel
+    });
+  });
+}
+
+type FlyToBoundingSphereOptions = Parameters<
+  InstanceType<typeof Camera>["flyToBoundingSphere"]
+>[1];
+
+function flyToBoundingSpherePromise(
+  camera: Camera,
+  boundingSphere: BoundingSphere,
+  options: FlyToBoundingSphereOptions
+): Promise<void> {
+  return new Promise((complete, cancel) => {
+    camera.flyToBoundingSphere(boundingSphere, {
+      ...options,
+      complete,
+      cancel
+    });
   });
 }

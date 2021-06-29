@@ -7,6 +7,10 @@ import { withTranslation } from "react-i18next";
 import { withRouter } from "react-router-dom";
 import defined from "terriajs-cesium/Source/Core/defined";
 import URI from "urijs";
+import {
+  Category,
+  DataSourceAction
+} from "../../Core/AnalyticEvents/analyticEvents";
 import getPath from "../../Core/getPath";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import removeUserAddedData from "../../Models/removeUserAddedData";
@@ -75,8 +79,10 @@ export const DataCatalogItem = observer(
           this.props.viewState.closeCatalog();
           this.props.viewState.history?.push(ROOT_ROUTE);
           this.props.terria.analytics?.logEvent(
-            "dataSource",
-            toAdd ? "addFromCatalogue" : "removeFromCatalogue",
+            Category.dataSource,
+            toAdd
+              ? DataSourceAction.addFromCatalogue
+              : DataSourceAction.removeFromCatalogue,
             getPath(this.props.item)
           );
         }
