@@ -166,7 +166,6 @@ const MenuBar = observer(props => {
           <ul className={classNames(Styles.menu, Styles.langPanel)}>
             <li className={Styles.menuItem}>
               <LangPanel
-                i18n={props.i18n}
                 terria={props.terria}
                 smallScreen={props.viewState.useSmallScreenInterface}
               />

@@ -14,6 +14,10 @@ import { Medium, Small } from "../Generic/Responsive";
 import Icon from "../../Styled/Icon";
 import Styles from "./story-panel.scss";
 import TerriaError from "../../Core/TerriaError";
+import {
+  Category,
+  StoryAction
+} from "../../Core/AnalyticEvents/analyticEvents";
 
 /**
  *
@@ -21,17 +25,17 @@ import TerriaError from "../../Core/TerriaError";
  * @param {Terria} terria
  */
 
-export async function activateStory(story, terria) {
-  // Send a GA event on scene change with URL hash
-  const analyticsLabel =
-    window.location.hash.length > 0
-      ? window.location.hash
-      : "No hash detected (story not shared yet?)";
-  terria.analytics?.logEvent("story", "scene", analyticsLabel);
-  if (story.shareData) {
+export async function activateStory(scene, terria) {
+  terria.analytics?.logEvent(
+    Category.story,
+    StoryAction.viewScene,
+    JSON.stringify(scene)
+  );
+
+  if (scene.shareData) {
     const errors = [];
     await Promise.all(
-      story.shareData.initSources.map(async initSource => {
+      scene.shareData.initSources.map(async initSource => {
         try {
           await terria.applyInitData({
             initData: initSource,
@@ -58,7 +62,7 @@ export async function activateStory(story, terria) {
           title: { key: "story.loadSceneErrorTitle" },
           message: {
             key: "story.loadSceneErrorMessage",
-            parameters: { title: story.title ?? story.id }
+            parameters: { title: scene.title ?? scene.id }
           }
         })
       );
@@ -66,7 +70,11 @@ export async function activateStory(story, terria) {
   }
 
   terria.workbench.items.forEach(item => {
-    terria.analytics?.logEvent("story", "datasetView", getPath(item));
+    terria.analytics?.logEvent(
+      Category.story,
+      StoryAction.datasetView,
+      getPath(item)
+    );
   });
 }
 

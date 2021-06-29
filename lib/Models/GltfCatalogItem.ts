@@ -9,13 +9,14 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
-import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import ShadowMixin from "../ModelMixins/ShadowMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import GltfCatalogItemTraits from "../Traits/GltfCatalogItemTraits";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
+import { SelectableDimension } from "./SelectableDimensions";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
@@ -148,5 +149,9 @@ export default class GltfCatalogItem extends MappableMixin(
       })
     );
     return [dataSource];
+  }
+
+  @computed get selectableDimensions(): SelectableDimension[] {
+    return [...super.selectableDimensions, this.shadowDimension];
   }
 }
