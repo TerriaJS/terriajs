@@ -447,9 +447,6 @@ export default class TableStyle {
         nullColor: this.nullColor
       });
     } else if (colorColumn && this.isEnum) {
-      const regionColor =
-        Color.fromCssColorString(this.colorTraits.regionColor) ??
-        Color.TRANSPARENT;
       return new EnumColorMap({
         enumColors: filterOutUndefined(
           this.enumColors.map(e => {
@@ -461,7 +458,7 @@ export default class TableStyle {
               color:
                 colorColumn.type !== TableColumnType.region
                   ? Color.fromCssColorString(e.color) ?? Color.TRANSPARENT
-                  : regionColor
+                  : this.regionColor
             };
           })
         ),
@@ -469,9 +466,13 @@ export default class TableStyle {
       });
     } else {
       // No column to color by, so use the same color for everything.
-      let color: Color | undefined;
+      let color: Color = Color.fromCssColorString(defaultColor);
       const colorId = this.tableModel.uniqueId || this.tableModel.name;
-      if (colorTraits.nullColor) {
+
+      // If colorColumn is of type region - use regionColor
+      if (colorColumn?.type === TableColumnType.region) {
+        color = this.regionColor;
+      } else if (colorTraits.nullColor) {
         color = Color.fromCssColorString(colorTraits.nullColor);
       } else if (this.binColors.length > 0) {
         color = this.binColors[0];
@@ -479,10 +480,7 @@ export default class TableStyle {
         color = Color.fromCssColorString(getColorForId(colorId));
       }
 
-      return new ConstantColorMap(
-        color ?? Color.fromCssColorString(defaultColor),
-        this.tableModel.name
-      );
+      return new ConstantColorMap(color, this.tableModel.name);
     }
   }
 
@@ -491,6 +489,13 @@ export default class TableStyle {
       ? Color.fromCssColorString(this.colorTraits.nullColor) ??
           Color.TRANSPARENT
       : Color.TRANSPARENT;
+  }
+
+  @computed get regionColor() {
+    return (
+      Color.fromCssColorString(this.colorTraits.regionColor) ??
+      Color.TRANSPARENT
+    );
   }
 
   @computed
