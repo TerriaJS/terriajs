@@ -18,14 +18,16 @@ export default async function createUrlReferenceFromUrl(
     {
       type: UrlReference.type,
       name: url,
-      url: url,
       localId: url,
       allowLoad: allowLoad
     },
     {}
   ).throwIfUndefined({
     message: `Could not create UrlReference for URL: ${url}`
-  });
+  }) as UrlReference;
+
+  // Set URL in user stratum so it can be shared
+  item.setTrait(CommonStrata.user, "url", url);
 
   if (!(item instanceof UrlReference)) {
     throw new TerriaError({
