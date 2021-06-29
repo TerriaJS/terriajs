@@ -4,5 +4,8 @@
     "catalogItem": {
       "featureInfoShown": "I primi {{maximum}} sono mostrati qui sotto."
     }
+  },
+  "countDatasets": {
+    "subTotals": "<div> {{name}}: {{items}} elementi / {{groups}} gruppi</div>"
   }
 }
