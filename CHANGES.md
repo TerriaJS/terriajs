@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.87)
+* Made attribution & disclaimer links in cesium map customizable.
 * [The next improvement]
 #### 8.0.0-alpha.86
 

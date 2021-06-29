@@ -789,6 +789,16 @@
       "csvRegionMappingMessageLoadError": "Couldn't load region boundaries for region {{regionName}} {{exception}}"
     }
   },
+  "cesiumExtraCredits": {
+    "attribution": {
+      "link": "/about.html#data-attribution",
+      "text": "Data attribution"
+    },
+    "disclaimer": {
+      "link": "/about.html#disclaimer",
+      "text": "Disclaimer"
+    }
+  },
   "models": {
     "abs": {
       "name": "ABS.Stat",

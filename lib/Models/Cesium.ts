@@ -240,9 +240,17 @@ export default class Cesium extends GlobeOrMap {
       }
       if (expandLink) {
         let attributionToAboutPage = document.createElement("div");
-        attributionToAboutPage.innerHTML = `<a href="about.html#data-attribution" target="_blank" rel="noopener noreferrer">Data attribution</a>`;
+        attributionToAboutPage.innerHTML = `<a href="${i18next.t(
+          "cesiumExtraCredits.attribution.link"
+        )}" target="_blank" rel="noopener noreferrer">${i18next.t(
+          "cesiumExtraCredits.attribution.text"
+        )}</a>`;
         let disclaimerToAboutPage = document.createElement("div");
-        disclaimerToAboutPage.innerHTML = `<a href="about.html#disclaimer" target="_blank" rel="noopener noreferrer">Disclaimer</a>`;
+        disclaimerToAboutPage.innerHTML = `<a href="${i18next.t(
+          "cesiumExtraCredits.disclaimer.link"
+        )}" target="_blank" rel="noopener noreferrer">${i18next.t(
+          "cesiumExtraCredits.disclaimer.text"
+        )}</a>`;
 
         if (logoContainer && logoContainer.parentNode) {
           if (disclaimerToAboutPage && disclaimerToAboutPage.firstChild) {
