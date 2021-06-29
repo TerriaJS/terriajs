@@ -7,5 +7,8 @@
   },
   "countDatasets": {
     "subTotals": "<div> {{name}}: {{items}} elementi / {{groups}} gruppi</div>"
+  },
+  "AR": {
+    "manualAlignmentTitle": "Allineamento Manuale"
   }
 }
