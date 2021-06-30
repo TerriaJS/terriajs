@@ -1,21 +1,16 @@
-import i18next, { TFunction } from "i18next";
+import i18next from "i18next";
 import { action, computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-import {
-  useTranslation,
-  withTranslation,
-  WithTranslation
-} from "react-i18next";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import AugmentedVirtuality from "../../../../Models/AugmentedVirtuality";
 import Terria from "../../../../Models/Terria";
 import ViewerMode from "../../../../Models/ViewerMode";
 import ViewState from "../../../../ReactViewModels/ViewState";
-import MapNavigationItemController from "../../../../ViewModels/MapNavigation/MapNavigationItemController";
 import { GLYPHS, Icon } from "../../../../Styled/Icon";
+import MapNavigationItemController from "../../../../ViewModels/MapNavigation/MapNavigationItemController";
 import MapIconButton from "../../../MapIconButton/MapIconButton";
-import { Control } from "./MapNavigationItem";
 
 interface IAugmentedVirtuality {
   augmentedVirtuality: AugmentedVirtuality;

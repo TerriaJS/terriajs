@@ -1,8 +1,8 @@
-import MapNavigationItemController from "../../ViewModels/MapNavigation/MapNavigationItemController";
-import ViewState from "../../ReactViewModels/ViewState";
-import { computed, action } from "mobx";
+import { action, computed } from "mobx";
 import isDefined from "../../Core/isDefined";
+import ViewState from "../../ReactViewModels/ViewState";
 import { GLYPHS } from "../../Styled/Icon";
+import MapNavigationItemController from "../../ViewModels/MapNavigation/MapNavigationItemController";
 
 export const FEEDBACK_TOOL_ID = "feedback-tool";
 

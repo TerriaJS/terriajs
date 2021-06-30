@@ -1,24 +1,19 @@
 import { runInAction } from "mobx";
 import React from "react";
-import { GenericMapNavigationItemController } from "../../../ViewModels/MapNavigation/MapNavigationItemController";
+import AugmentedVirtuality from "../../../Models/AugmentedVirtuality";
 import ViewerMode from "../../../Models/ViewerMode";
 import ViewState from "../../../ReactViewModels/ViewState";
 import { GLYPHS } from "../../../Styled/Icon";
-import PedestrianMode, {
-  PEDESTRIAN_MODE_ID
-} from "../../Tools/PedestrianMode/PedestrianMode";
+import { GenericMapNavigationItemController } from "../../../ViewModels/MapNavigation/MapNavigationItemController";
 import {
   FeedbackButtonController,
   FEEDBACK_TOOL_ID
 } from "../../Feedback/FeedbackButtonController";
+import PedestrianMode, {
+  PEDESTRIAN_MODE_ID
+} from "../../Tools/PedestrianMode/PedestrianMode";
 import { ToolButtonController } from "./../../Tools/Tool";
-import Compass, { COMPASS_TOOL_ID } from "./Items/Compass";
-import MeasureTool from "./Items/MeasureTool";
-import MyLocation from "./Items/MyLocation";
-import { ToggleSplitterController } from "./Items/ToggleSplitterTool";
-import ZoomControl, { ZOOM_CONTROL_ID } from "./Items/ZoomControl";
 import { HELP_PANEL_ID } from "./../Panels/HelpPanel/HelpPanel";
-import CloseToolButton from "./Items/CloseToolButton";
 import {
   AR_TOOL_ID,
   AugmentedVirtualityController,
@@ -26,7 +21,12 @@ import {
   AugmentedVirtualityRealign,
   AugmentedVirtualityRealignController
 } from "./Items/AugmentedVirtualityTool";
-import AugmentedVirtuality from "../../../Models/AugmentedVirtuality";
+import CloseToolButton from "./Items/CloseToolButton";
+import Compass, { COMPASS_TOOL_ID } from "./Items/Compass";
+import MeasureTool from "./Items/MeasureTool";
+import MyLocation from "./Items/MyLocation";
+import { ToggleSplitterController } from "./Items/ToggleSplitterTool";
+import ZoomControl, { ZOOM_CONTROL_ID } from "./Items/ZoomControl";
 
 export const CLOSE_TOOL_ID = "close-tool";
 

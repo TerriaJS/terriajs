@@ -2,11 +2,11 @@ import { observer } from "mobx-react";
 import React from "react";
 import styled from "styled-components";
 import { useTranslationIfExists } from "../../../../Language/languageHelpers";
-import { IMapNavigationItem } from "../../../../ViewModels/MapNavigation/MapNavigationModel";
 import Terria from "../../../../Models/Terria";
+import Box from "../../../../Styled/Box";
 import Icon, { GLYPHS } from "../../../../Styled/Icon";
+import { IMapNavigationItem } from "../../../../ViewModels/MapNavigation/MapNavigationModel";
 import MapIconButton from "../../../MapIconButton/MapIconButton";
-const Box = require("../../../../Styled/Box").default;
 
 interface PropTypes {
   item: IMapNavigationItem;

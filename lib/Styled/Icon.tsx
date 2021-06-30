@@ -157,7 +157,7 @@ interface IStyledIconProps {
   light?: boolean;
   dark?: boolean;
   realDark?: boolean;
-  fillColor?: boolean;
+  fillColor?: string;
   opacity?: number;
 }
 

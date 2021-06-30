@@ -3,18 +3,16 @@ import { observer } from "mobx-react";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
+import { useTranslationIfExists } from "../../../../Language/languageHelpers";
 import ViewState from "../../../../ReactViewModels/ViewState";
+import Box, { BoxSpan } from "../../../../Styled/Box";
+import { StyledIcon } from "../../../../Styled/Icon";
+import Spacing from "../../../../Styled/Spacing";
+import Text from "../../../../Styled/Text";
+import { IMapNavigationItem } from "../../../../ViewModels/MapNavigation/MapNavigationModel";
 import CloseButton from "../../../Generic/CloseButton";
 import { PrefaceBox } from "../../../Generic/PrefaceBox";
-import { StyledIcon } from "../../../../Styled/Icon";
-import { useTranslationIfExists } from "../../../../Language/languageHelpers";
 import { filterViewerAndScreenSize } from "../MapNavigation";
-import { IMapNavigationItem } from "../../../../ViewModels/MapNavigation/MapNavigationModel";
-
-const Box = require("../../../../Styled/Box").default;
-const BoxSpan = require("../../../../Styled/Box").BoxSpan;
-const Text = require("../../../../Styled/Text").default;
-const Spacing = require("../../../../Styled/Spacing").default;
 
 interface PropTypes {
   viewState: ViewState;

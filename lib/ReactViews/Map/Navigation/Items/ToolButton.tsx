@@ -1,9 +1,9 @@
 import { observer } from "mobx-react";
 import React from "react";
+import Box from "../../../../Styled/Box";
 import Icon from "../../../../Styled/Icon";
 import MapIconButton from "../../../MapIconButton/MapIconButton";
 import { ToolButtonController } from "../../../Tools/Tool";
-const Box = require("../../../../Styled/Box");
 
 interface ToolButtonProps {
   controller: ToolButtonController;

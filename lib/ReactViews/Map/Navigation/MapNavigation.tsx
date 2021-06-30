@@ -14,19 +14,18 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import isDefined from "../../../Core/isDefined";
 import ViewState from "../../../ReactViewModels/ViewState";
-import Prompt from "../../Generic/Prompt";
-import { Medium } from "../../Generic/Responsive";
+import Box from "../../../Styled/Box";
 import Icon, { GLYPHS } from "../../../Styled/Icon";
-import MapIconButton from "../../MapIconButton/MapIconButton";
-import { Control, MapNavigationItem } from "./Items/MapNavigationItem";
+import Text from "../../../Styled/Text";
 import MapNavigationModel, {
   IMapNavigationItem,
   OVERFLOW_ITEM_ID
 } from "../../../ViewModels/MapNavigation/MapNavigationModel";
+import Prompt from "../../Generic/Prompt";
+import { Medium } from "../../Generic/Responsive";
+import MapIconButton from "../../MapIconButton/MapIconButton";
+import { Control, MapNavigationItem } from "./Items/MapNavigationItem";
 import { registerMapNavigations } from "./registerMapNavigations";
-
-const Box = require("../../../Styled/Box").default;
-const Text = require("../../../Styled/Text").default;
 
 const OVERFLOW_ACTION_SIZE = 42;
 

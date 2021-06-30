@@ -1,8 +1,6 @@
 "use strict";
-import React, { useState, useRef } from "react";
-import PropTypes from "prop-types";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
-
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
 import { TextSpan } from "../../Styled/Text";

@@ -10,8 +10,8 @@ import CommonStrata from "../../../../Models/CommonStrata";
 import GeoJsonCatalogItem from "../../../../Models/GeoJsonCatalogItem";
 import Terria from "../../../../Models/Terria";
 import ViewerMode from "../../../../Models/ViewerMode";
-import MapNavigationItemController from "../../../../ViewModels/MapNavigation/MapNavigationItemController";
 import { GLYPHS } from "../../../../Styled/Icon";
+import MapNavigationItemController from "../../../../ViewModels/MapNavigation/MapNavigationItemController";
 
 interface PropTypes {
   terria: Terria;
