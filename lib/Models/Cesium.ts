@@ -240,7 +240,8 @@ export default class Cesium extends GlobeOrMap {
       }
       if (expandLink) {
         this.terria.configParameters.extraCreditLinks
-          ?.reverse()
+          ?.slice()
+          .reverse()
           .forEach(({ url, text }) => {
             // Create a link and insert it after the logo node
             // Defaults to the given text if no translation is provided
