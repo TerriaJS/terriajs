@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.87)
 
+* Re-add basemap images to terriajs rather than requiring all TerriaMaps to have those basemap images. Default basemaps will use those images.
 * Data from TableMixin always overrides other feature information (e.g. from vector tiles in region mapping) by column name and title for feature info templating (consistent with v7).
 * Fixed point entity creation for TableMixin where different columns are used for point size and colour.
 * Changed MappableMixin's initialMessage to show while map items are loaded. Map items could be displayed behind the disclaimer before a user accepts the disclaimer.
