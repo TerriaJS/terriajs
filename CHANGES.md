@@ -4,6 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.88)
+* Fixed a bug with numeric item search where it sometimes fails to return all matching values.
 * [The next improvement]
 #### 8.0.0-alpha.87
 
