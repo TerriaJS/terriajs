@@ -23,8 +23,13 @@ export default function createLongitudeLatitudeFeaturePerRow(
   const longitudes = style.longitudeColumn.valuesAsNumbers.values;
   const latitudes = style.latitudeColumn.valuesAsNumbers.values;
   const colorColumn = style.colorColumn;
-  const valueFunction =
+  const colorValueFunction =
     colorColumn !== undefined ? colorColumn.valueFunctionForType : () => null;
+  const pointSizeColumn = style.pointSizeColumn;
+  const pointSizeValueFunction =
+    pointSizeColumn !== undefined
+      ? pointSizeColumn.valueFunctionForType
+      : () => null;
   const colorMap = style.colorMap;
   const pointSizeMap = style.pointSizeMap;
   const outlineColor = Color.fromCssColorString(
@@ -42,15 +47,16 @@ export default function createLongitudeLatitudeFeaturePerRow(
       if (longitude === null || latitude === null) {
         return;
       }
-      const value = valueFunction(rowId);
+      const colorValue = colorValueFunction(rowId);
+      const pointSizeValue = pointSizeValueFunction(rowId);
       const feature = new Entity({
         position: new ConstantPositionProperty(
           Cartesian3.fromDegrees(longitude, latitude, 0.0)
         ),
         point: new PointGraphics({
-          color: new ConstantProperty(colorMap.mapValueToColor(value)),
+          color: new ConstantProperty(colorMap.mapValueToColor(colorValue)),
           pixelSize: new ConstantProperty(
-            pointSizeMap.mapValueToPointSize(value)
+            pointSizeMap.mapValueToPointSize(pointSizeValue)
           ),
           outlineWidth: new ConstantProperty(1),
           outlineColor: new ConstantProperty(outlineColor),

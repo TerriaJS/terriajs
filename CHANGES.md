@@ -5,6 +5,12 @@ Change Log
 
 #### next release (8.0.0-alpha.87)
 
+* Re-add basemap images to terriajs rather than requiring all TerriaMaps to have those basemap images. Default basemaps will use those images.
+* Data from TableMixin always overrides other feature information (e.g. from vector tiles in region mapping) by column name and title for feature info templating (consistent with v7).
+* Fixed point entity creation for TableMixin where different columns are used for point size and colour.
+* Changed MappableMixin's initialMessage to show while map items are loaded. Map items could be displayed behind the disclaimer before a user accepts the disclaimer.
+* Fixed a cyclic dependency between initialMessage and app spinner (globe gif greysreen) that caused the app spinner to be present forever when loading a share link.
+* Removed hardcoded credit links and made it configurable via terria config parameters.
 * Disable `TableMixin` time column if only one unique time interval
 * [The next improvement]
 
@@ -25,6 +31,7 @@ Change Log
 * Bugfix to make time-based geojson work when there are multiple features with the same time property value.
 * Add `czmlTemplate` to `GeoJsonTraits` - it can be used to replace GeoJSON Point features with a CZML packet.
 * Made the moment points in the chart optionally clickable.
+
 #### 8.0.0-alpha.85
 
 - **Breaking changes**:
