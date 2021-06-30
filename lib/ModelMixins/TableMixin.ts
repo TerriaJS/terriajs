@@ -543,6 +543,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     get discreteTimes():
       | { time: string; tag: string | undefined }[]
       | undefined {
+      if (!this.activeTableStyle.moreThanOneTimeInterval) return;
       const dates = this.activeTableStyle.timeColumn?.valuesAsDates.values;
       if (dates === undefined) {
         return;
@@ -702,7 +703,11 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
         // TODO: this is already implemented in RegionProvider.prototype.mapRegionsToIndicesInto, but regionTypes require "loading" for this to work. I think the whole RegionProvider thing needs to be re-done in TypeScript at some point and then we can move stuff into that.
         // If time varying, get row indices which match
-        if (input.currentTime && input.style.timeIntervals) {
+        if (
+          input.currentTime &&
+          input.style.timeIntervals &&
+          input.style.moreThanOneTimeInterval
+        ) {
           currentTimeRows = input.style.timeIntervals.reduce<number[]>(
             (rows, timeInterval, index) => {
               if (

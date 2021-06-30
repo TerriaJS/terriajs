@@ -11,6 +11,7 @@ Change Log
 * Changed MappableMixin's initialMessage to show while map items are loaded. Map items could be displayed behind the disclaimer before a user accepts the disclaimer.
 * Fixed a cyclic dependency between initialMessage and app spinner (globe gif greysreen) that caused the app spinner to be present forever when loading a share link.
 * Removed hardcoded credit links and made it configurable via terria config parameters.
+* Disable `TableMixin` time column if only one unique time interval
 * [The next improvement]
 
 #### 8.0.0-alpha.86

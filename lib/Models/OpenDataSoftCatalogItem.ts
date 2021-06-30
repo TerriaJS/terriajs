@@ -500,13 +500,6 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
     return lastDate.toString();
   }
 
-  /** Disable date time selector if there is only 1 sample per point */
-  @computed get disableDateTimeSelector() {
-    return isDefined(this.maxPointSamples) && this.maxPointSamples === 1
-      ? true
-      : undefined;
-  }
-
   /** Get fields with useful infomation (for visualisation). Eg numbers, text, not IDs, not region... */
   @computed get usefulFields() {
     return (

@@ -36,7 +36,9 @@ export default function createLongitudeLatitudeFeaturePerRow(
     "black" //this.terria.baseMapContrastColor;
   );
   const tableColumns = style.tableModel.tableColumns;
-  const intervals = style.timeIntervals || [];
+  const intervals = style.moreThanOneTimeInterval
+    ? style.timeIntervals ?? []
+    : [];
   const rowIds = style.tableModel.rowIds;
   return filterOutUndefined(
     rowIds.map(rowId => {
