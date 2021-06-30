@@ -468,25 +468,29 @@ export default class TableStyle {
     } else {
       // No column to color by, so use the same color for everything.
       let color: Color | undefined;
-      // May use nullColor depending on colorColumn (eg if of type 'region')
-      let nullColor: Color | undefined;
+
       const colorId = this.tableModel.uniqueId || this.tableModel.name;
 
       // If colorColumn is of type region - use regionColor
-      if (colorColumn?.type === TableColumnType.region) {
+      if (colorColumn?.type === TableColumnType.region && this.regionColor) {
         color = this.regionColor;
-        nullColor = this.nullColor;
       } else if (colorTraits.nullColor) {
         color = Color.fromCssColorString(colorTraits.nullColor);
-      } else if (this.binColors.length > 0) {
-        color = this.binColors[0];
+      } else if (colorTraits.binColors && colorTraits.binColors.length > 0) {
+        color = Color.fromCssColorString(colorTraits.binColors[0]);
       } else if (colorId) {
         color = Color.fromCssColorString(getColorForId(colorId));
       }
 
       if (!color) {
-        color = this.defaultColor;
+        color = Color.fromCssColorString(defaultColor);
       }
+
+      // Use nullColor if colorColumn is of type `region`
+      let nullColor =
+        colorColumn?.type === TableColumnType.region
+          ? this.nullColor
+          : undefined;
 
       return new ConstantColorMap({
         color,
@@ -494,10 +498,6 @@ export default class TableStyle {
         nullColor
       });
     }
-  }
-
-  @computed get defaultColor() {
-    return Color.fromCssColorString(defaultColor);
   }
 
   @computed get nullColor() {
@@ -508,10 +508,7 @@ export default class TableStyle {
   }
 
   @computed get regionColor() {
-    return (
-      Color.fromCssColorString(this.colorTraits.regionColor) ??
-      this.defaultColor
-    );
+    return Color.fromCssColorString(this.colorTraits.regionColor);
   }
 
   @computed
