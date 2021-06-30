@@ -423,9 +423,12 @@ export default class Terria {
     feedbackPreamble: "feedback.feedbackPreamble",
     feedbackMinLength: 0,
     extraCreditLinks: [
-      // Default credit links (currently shown at the bottom of the Cesium map)
-      { text: "Data attribution", url: "about.html#data-attribution" },
-      { text: "Disclaimer", url: "about.html#disclaimer" }
+      // Default credit links (shown at the bottom of the Cesium map)
+      {
+        text: "map.extraCreditLinks.dataAttribution",
+        url: "about.html#data-attribution"
+      },
+      { text: "map.extraCreditLinks.disclaimer", url: "about.html#disclaimer" }
     ]
   };
 

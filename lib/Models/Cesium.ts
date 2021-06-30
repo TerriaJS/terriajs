@@ -243,14 +243,16 @@ export default class Cesium extends GlobeOrMap {
           ?.reverse()
           .forEach(({ url, text }) => {
             // Create a link and insert it after the logo node
+            // Defaults to the given text if no translation is provided
+            const translatedText = i18next.t(text);
             const el = document.createElement("div");
-            el.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+            el.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer">${translatedText}</a>`;
             const linkNode = el.firstChild as Element | null;
             if (linkNode) {
               logoContainer?.insertAdjacentElement("afterend", linkNode);
             }
           });
-        expandLink.innerText = "Basemap";
+        expandLink.innerText = i18next.t("map.extraCreditLinks.basemap");
       }
     }
 
