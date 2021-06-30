@@ -20,7 +20,7 @@ interface PropTypes {
 }
 
 const CollapsedNavigationBox = styled(Box).attrs({
-  positionAbsolute: true,
+  position: "absolute",
   styledWidth: "500px",
   styledMaxHeight: "320px",
   backgroundColor: "white",
