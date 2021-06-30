@@ -254,6 +254,8 @@ interface ConfigParameters {
    * Minimum length of feedback comment.
    */
   feedbackMinLength?: number;
+
+  extraCreditLinks?: { url: string; text: string }[];
 }
 
 interface StartOptions {
@@ -416,7 +418,12 @@ export default class Terria {
     persistViewerMode: true,
     openAddData: false,
     feedbackPreamble: "feedback.feedbackPreamble",
-    feedbackMinLength: 0
+    feedbackMinLength: 0,
+    extraCreditLinks: [
+      // Default credit links (currently shown at the bottom of the Cesium map)
+      { text: "Data attribution", url: "about.html#data-attribution" },
+      { text: "Disclaimer", url: "about.html#disclaimer" }
+    ]
   };
 
   @observable

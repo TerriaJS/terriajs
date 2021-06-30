@@ -239,27 +239,17 @@ export default class Cesium extends GlobeOrMap {
         );
       }
       if (expandLink) {
-        let attributionToAboutPage = document.createElement("div");
-        attributionToAboutPage.innerHTML = `<a href="about.html#data-attribution" target="_blank" rel="noopener noreferrer">Data attribution</a>`;
-        let disclaimerToAboutPage = document.createElement("div");
-        disclaimerToAboutPage.innerHTML = `<a href="about.html#disclaimer" target="_blank" rel="noopener noreferrer">Disclaimer</a>`;
-
-        if (logoContainer && logoContainer.parentNode) {
-          if (disclaimerToAboutPage && disclaimerToAboutPage.firstChild) {
-            logoContainer.parentNode.insertBefore(
-              disclaimerToAboutPage.firstChild,
-              logoContainer.nextSibling
-            );
-          }
-
-          if (attributionToAboutPage && attributionToAboutPage.firstChild) {
-            logoContainer.parentNode.insertBefore(
-              attributionToAboutPage.firstChild,
-              logoContainer.nextSibling
-            );
-          }
-        }
-
+        this.terria.configParameters.extraCreditLinks
+          ?.reverse()
+          .forEach(({ url, text }) => {
+            // Create a link and insert it after the logo node
+            const el = document.createElement("div");
+            el.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+            const linkNode = el.firstChild as Element | null;
+            if (linkNode) {
+              logoContainer?.insertAdjacentElement("afterend", linkNode);
+            }
+          });
         expandLink.innerText = "Basemap";
       }
     }
