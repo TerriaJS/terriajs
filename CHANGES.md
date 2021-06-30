@@ -9,6 +9,7 @@ Change Log
 * Fixed point entity creation for TableMixin where different columns are used for point size and colour.
 * Changed MappableMixin's initialMessage to show while map items are loaded. Map items could be displayed behind the disclaimer before a user accepts the disclaimer.
 * Fixed a cyclic dependency between initialMessage and app spinner (globe gif greysreen) that caused the app spinner to be present forever when loading a share link.
+* Removed hardcoded credit links and made it configurable via terria config parameters.
 * [The next improvement]
 
 #### 8.0.0-alpha.86
