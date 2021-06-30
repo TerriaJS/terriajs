@@ -4,7 +4,10 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.88)
+
+* Fix datetime button margin with scroll in workbench.
 * [The next improvement]
+
 #### 8.0.0-alpha.87
 
 * Re-add basemap images to terriajs rather than requiring all TerriaMaps to have those basemap images. Default basemaps will use those images.
