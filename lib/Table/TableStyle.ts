@@ -476,16 +476,12 @@ export default class TableStyle {
       if (colorColumn?.type === TableColumnType.region) {
         color = this.regionColor;
         nullColor = this.nullColor;
-      }
-
-      if (!color) {
-        if (colorTraits.nullColor) {
-          color = Color.fromCssColorString(colorTraits.nullColor);
-        } else if (this.binColors.length > 0) {
-          color = this.binColors[0];
-        } else if (colorId) {
-          color = Color.fromCssColorString(getColorForId(colorId));
-        }
+      } else if (colorTraits.nullColor) {
+        color = Color.fromCssColorString(colorTraits.nullColor);
+      } else if (this.binColors.length > 0) {
+        color = this.binColors[0];
+      } else if (colorId) {
+        color = Color.fromCssColorString(getColorForId(colorId));
       }
 
       return new ConstantColorMap({
