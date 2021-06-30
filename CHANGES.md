@@ -4,7 +4,10 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.88)
+
+* Fix checkbox when click happen on svg icon. (#5550)
 * [The next improvement]
+
 #### 8.0.0-alpha.87
 
 * Re-add basemap images to terriajs rather than requiring all TerriaMaps to have those basemap images. Default basemaps will use those images.
@@ -41,7 +44,6 @@ Change Log
 
 * Added analytic events related to story, share and help menu items, Also refactored events to use category and action enums.
 * Remove table style `SelectableDimension` from SDMX
-* Fix checkbox when click happen on svg icon. (#5550)
 * `GyroscopeGuidance` can now be translated.
 * Wraps tool title bar text using `...`.
 
