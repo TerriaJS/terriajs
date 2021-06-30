@@ -1,6 +1,5 @@
 import { computed } from "mobx";
 import { createTransformer } from "mobx-utils";
-import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import ConstantColorMap from "../Map/ConstantColorMap";
@@ -150,7 +149,11 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
 
   @computed
   get disableDateTimeSelector() {
-    return this.catalogItem.mapItems.length === 0 ? true : undefined;
+    if (
+      this.catalogItem.mapItems.length === 0 ||
+      !this.catalogItem.activeTableStyle.moreThanOneTimeInterval
+    )
+      return true;
   }
 
   @computed
