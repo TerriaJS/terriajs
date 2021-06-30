@@ -6,7 +6,7 @@ import styled, { useTheme } from "styled-components";
 import ViewState from "../../../../ReactViewModels/ViewState";
 import CloseButton from "../../../Generic/CloseButton";
 import { PrefaceBox } from "../../../Generic/PrefaceBox";
-import { StyledIcon } from "../../../Icon";
+import { StyledIcon } from "../../../../Styled/Icon";
 import { useTranslationIfExists } from "../../../../Language/languageHelpers";
 import { filterViewerAndScreenSize } from "../MapNavigation";
 import { IMapNavigationItem } from "../../../../ViewModels/MapNavigation/MapNavigationModel";

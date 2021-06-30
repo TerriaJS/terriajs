@@ -11,7 +11,7 @@ import GeoJsonCatalogItem from "../../../../Models/GeoJsonCatalogItem";
 import Terria from "../../../../Models/Terria";
 import ViewerMode from "../../../../Models/ViewerMode";
 import MapNavigationItemController from "../../../../ViewModels/MapNavigation/MapNavigationItemController";
-import { GLYPHS } from "../../../Icon";
+import { GLYPHS } from "../../../../Styled/Icon";
 
 interface PropTypes {
   terria: Terria;
@@ -71,7 +71,7 @@ class MyLocation extends MapNavigationItemController {
         this.watchId = watchId;
       }
     } else {
-      this.terria.error.raiseEvent(
+      this.terria.raiseErrorToUser(
         new TerriaError({
           sender: this,
           title: t("location.errorGettingLocation"),
@@ -152,7 +152,7 @@ class MyLocation extends MapNavigationItemController {
       const secureUrl = uri.protocol("https").toString();
       message = t("location.originError", { secureUrl: secureUrl });
     }
-    this.terria.error.raiseEvent(
+    this.terria.raiseErrorToUser(
       new TerriaError({
         sender: this,
         title: t("location.errorGettingLocation"),

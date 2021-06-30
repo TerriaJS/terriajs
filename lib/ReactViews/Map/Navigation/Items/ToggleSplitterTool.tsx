@@ -2,7 +2,7 @@ import { action, computed } from "mobx";
 import MapNavigationItemController from "../../../../ViewModels/MapNavigation/MapNavigationItemController";
 import ViewerMode from "../../../../Models/ViewerMode";
 import ViewState from "../../../../ReactViewModels/ViewState";
-import Icon from "../../../Icon";
+import Icon from "../../../../Styled/Icon";
 
 export const SPLITTER_ICON_NAME = "MapNavigationSplitterIcon";
 

@@ -2,7 +2,7 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import { withTranslation, Trans } from "react-i18next";
-import Icon from "../../../Icon.jsx";
+import Icon from "../../../../Styled/Icon";
 import createCatalogItemFromFileOrUrl from "../../../../Models/createCatalogItemFromFileOrUrl";
 import upsertModelFromJson from "../../../../Models/upsertModelFromJson";
 import addUserCatalogMember from "../../../../Models/addUserCatalogMember";
@@ -15,6 +15,11 @@ import Styles from "./add-data.scss";
 import Loader from "../../../Loader";
 import TerriaError from "../../../../Core/TerriaError";
 import addUserFiles from "../../../../Models/addUserFiles";
+import TimeVarying from "../../../../ModelMixins/TimeVarying";
+import {
+  Category,
+  DatatabAction
+} from "../../../../Core/AnalyticEvents/analyticEvents";
 
 // Local and remote data have different dataType options
 const defaultRemoteDataTypes = getDataType().remoteDataType;
@@ -89,7 +94,11 @@ const AddData = createReactClass({
   handleUrl(e) {
     const url = this.state.remoteUrl;
     e.preventDefault();
-    this.props.terria.analytics.logEvent("addDataUrl", url);
+    this.props.terria.analytics?.logEvent(
+      Category.dataTab,
+      DatatabAction.addDataUrl,
+      url
+    );
     this.setState({
       isLoading: true
     });
@@ -105,7 +114,9 @@ const AddData = createReactClass({
           CommonStrata.defaults,
           { type: this.state.remoteDataType.value, name: url },
           {}
-        );
+        ).throwIfUndefined({
+          message: `An error occurred trying to add data from URL: ${url}`
+        });
         newItem.setTrait(CommonStrata.user, "url", url);
         promise = newItem.loadMetadata().then(() => newItem);
       } catch (e) {
@@ -115,6 +126,9 @@ const AddData = createReactClass({
     addUserCatalogMember(this.props.terria, promise).then(addedItem => {
       if (addedItem && !(addedItem instanceof TerriaError)) {
         this.props.onFileAddFinished([addedItem]);
+      }
+      if (TimeVarying.is(addedItem)) {
+        this.props.terria.timelineStack.addToTop(addedItem);
       }
       // FIXME: Setting state here might result in a react warning if the
       // component unmounts before the promise finishes

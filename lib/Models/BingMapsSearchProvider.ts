@@ -11,6 +11,7 @@ import SearchResult from "./SearchResult";
 import Terria from "./Terria";
 import SearchProviderResults from "./SearchProviderResults";
 import i18next from "i18next";
+import { Category, SearchAction } from "../Core/AnalyticEvents/analyticEvents";
 
 interface BingMapsSearchProviderOptions {
   terria: Terria;
@@ -66,7 +67,11 @@ export default class BingMapsSearchProvider extends SearchProvider {
       return Promise.resolve();
     }
 
-    this.terria.analytics.logEvent("search", "bing", searchText);
+    this.terria.analytics?.logEvent(
+      Category.search,
+      SearchAction.bing,
+      searchText
+    );
 
     let longitudeDegrees;
     let latitudeDegrees;

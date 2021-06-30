@@ -3,13 +3,10 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import Box from "../Styled/Box";
+import Button from "../Styled/Button";
 import { verticalAlign } from "../Styled/mixins";
-import Icon, { StyledIcon } from "./Icon";
-
-const Spacing: React.ComponentType<{
-  bottom?: number;
-}> = require("../Styled/Spacing").default;
-const Button: React.ComponentType<any> = require("../Styled/Button").default;
+import Spacing from "../Styled/Spacing";
+import Icon, { StyledIcon } from "../Styled/Icon";
 
 enum CopyStatus {
   Success,
@@ -22,6 +19,7 @@ interface ClipboardProps {
   source: React.ReactElement;
   theme: "dark" | "light";
   rounded?: boolean;
+  onCopy?: (contents: string) => void;
 }
 
 const Clipboard: React.FC<ClipboardProps> = props => {
@@ -46,8 +44,8 @@ const Clipboard: React.FC<ClipboardProps> = props => {
         setStatus(CopyStatus.NotCopiedOrWaiting);
       }, 3000);
     }
-    // Cast to any as temporary fix for a clipboardjs typing bug - https://github.com/zenorocha/clipboard.js/issues/737
-    clipboardBtn.on("success", () => {
+    clipboardBtn.on("success", evt => {
+      props.onCopy?.(evt.text);
       setStatus(CopyStatus.Success);
       resetTooltipLater();
     });

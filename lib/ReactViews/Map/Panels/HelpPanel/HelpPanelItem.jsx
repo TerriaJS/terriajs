@@ -3,12 +3,16 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import Icon, { StyledIcon } from "../../../Icon.jsx";
+import Icon, { StyledIcon } from "../../../../Styled/Icon";
 import Styles from "./help-panel.scss";
 import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import styled, { withTheme } from "styled-components";
 import HelpVideoPanel from "./HelpVideoPanel";
+import {
+  Category,
+  HelpAction
+} from "../../../../Core/AnalyticEvents/analyticEvents";
 
 @observer
 class HelpPanelItem extends React.Component {
@@ -58,9 +62,16 @@ class HelpPanelItem extends React.Component {
       >
         <button
           className={className}
-          onClick={() =>
-            this.props.viewState.selectHelpMenuItem(this.props.content.itemName)
-          }
+          onClick={() => {
+            this.props.terria.analytics?.logEvent(
+              Category.help,
+              HelpAction.itemSelected,
+              title
+            );
+            this.props.viewState.selectHelpMenuItem(
+              this.props.content.itemName
+            );
+          }}
         >
           <Box
             left

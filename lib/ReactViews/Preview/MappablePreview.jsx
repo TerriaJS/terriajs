@@ -6,12 +6,15 @@ import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import getPath from "../../Core/getPath";
 import MappableMixin from "../../ModelMixins/MappableMixin";
-import raiseErrorToUser from "../../Models/raiseErrorToUser";
 import measureElement from "../HOCs/measureElement";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
 import DataPreviewMap from "./DataPreviewMap";
 import Description from "./Description";
 import Styles from "./mappable-preview.scss";
+import {
+  Category,
+  DataSourceAction
+} from "../../Core/AnalyticEvents/analyticEvents";
 
 /**
  * @typedef {object} Props
@@ -58,13 +61,15 @@ class MappablePreview extends React.Component {
       ) {
         this.props.viewState.closeCatalog();
         this.props.terria.analytics?.logEvent(
-          "dataSource",
-          toAdd ? "addFromPreviewButton" : "removeFromPreviewButton",
+          Category.dataSource,
+          toAdd
+            ? DataSourceAction.addFromPreviewButton
+            : DataSourceAction.removeFromPreviewButton,
           getPath(this.props.previewed)
         );
       }
     } catch (e) {
-      raiseErrorToUser(this.props.terria, e);
+      this.props.terria.raiseErrorToUser(e);
     }
   }
 

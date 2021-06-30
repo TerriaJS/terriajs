@@ -9,9 +9,9 @@ import readJson from "../Core/readJson";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GeoJsonMixin from "../ModelMixins/GeojsonMixin";
-import UrlMixin from "../ModelMixins/UrlMixin";
 import GeoJsonCatalogItemTraits from "../Traits/GeoJsonCatalogItemTraits";
 import CreateModel from "./CreateModel";
+import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 
 const zip = require("terriajs-cesium/Source/ThirdParty/zip").default;
@@ -51,6 +51,15 @@ class GeoJsonCatalogItem extends GeoJsonMixin(
     }
   }
 
+  protected loadZipFileFromUrl(url: string): Promise<JsonValue> {
+    const body = this.requestData ? toJS(this.requestData) : undefined;
+    return makeRealPromise<Blob>(loadBlob(url, undefined, body)).then(
+      (blob: Blob) => {
+        return parseBlob(blob);
+      }
+    );
+  }
+
   protected async loadFromUrl(url: string): Promise<any> {
     if (this.zipFileRegex.test(url)) {
       if (typeof FileReader === "undefined") {
@@ -73,17 +82,16 @@ class GeoJsonCatalogItem extends GeoJsonMixin(
           })
         });
       }
-      return loadZipFileFromUrl(proxyCatalogItemUrl(this, url));
+      return this.loadZipFileFromUrl(proxyCatalogItemUrl(this, url));
     } else {
-      return loadJson(proxyCatalogItemUrl(this, url));
+      return loadJson(
+        proxyCatalogItemUrl(this, url),
+        undefined,
+        this.requestData ? toJS(this.requestData) : undefined,
+        this.postRequestDataAsFormData
+      );
     }
   }
-}
-
-function loadZipFileFromUrl(url: string): Promise<JsonValue> {
-  return makeRealPromise<Blob>(loadBlob(url)).then((blob: Blob) => {
-    return parseBlob(blob);
-  });
 }
 
 function parseBlob(blob: Blob): Promise<JsonValue> {

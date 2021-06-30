@@ -24,12 +24,16 @@ class NoViewer extends GlobeOrMap {
 
   destroy() {}
 
-  doZoomTo(v: CameraView | Rectangle | MappableMixin.MappableMixin, t: any) {
+  doZoomTo(
+    v: CameraView | Rectangle | MappableMixin.MappableMixin,
+    t: any
+  ): Promise<void> {
     if (v instanceof CameraView) {
       this._currentView = v;
     } else if (v instanceof Rectangle) {
       this._currentView = new CameraView(v);
     }
+    return Promise.resolve();
   }
 
   notifyRepaintRequired() {}

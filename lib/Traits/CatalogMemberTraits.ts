@@ -1,6 +1,7 @@
 import i18next from "i18next";
 import { JsonObject } from "../Core/Json";
 import anyTrait from "./anyTrait";
+import DimensionTraits from "./DimensionTraits";
 import LegendTraits from "./LegendTraits";
 import ModelTraits from "./ModelTraits";
 import objectArrayTrait from "./objectArrayTrait";
@@ -46,6 +47,13 @@ export class InfoSectionTraits extends ModelTraits {
       "The content of the section which is a JSON object. Set this property to null to remove this section entirely."
   })
   contentAsObject?: JsonObject;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Show",
+    description: "Indicates if this info section showing (not collapsed)."
+  })
+  show? = true;
 
   static isRemoval(infoSection: InfoSectionTraits) {
     return infoSection.content === null;
@@ -198,4 +206,13 @@ export default class CatalogMemberTraits extends ModelTraits {
       "Gets or sets a description of the custodian of this data item."
   })
   dataCustodian?: string;
+
+  @objectArrayTrait({
+    type: DimensionTraits,
+    idProperty: "id",
+    name: "Model dimensions",
+    description:
+      "This provides ability to set model JSON through SelectableDimensions (a dropdown)."
+  })
+  modelDimensions?: DimensionTraits[];
 }

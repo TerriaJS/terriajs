@@ -4,6 +4,13 @@ import objectArrayTrait from "./objectArrayTrait";
 
 export class TableChartLineStyleTraits extends ModelTraits {
   @primitiveTrait({
+    name: "Name",
+    description: "Chart line name (will replace y-column name).",
+    type: "string"
+  })
+  name?: string;
+
+  @primitiveTrait({
     name: "Y Axis Column",
     description: "The column to use as the Y-axis.",
     type: "string"

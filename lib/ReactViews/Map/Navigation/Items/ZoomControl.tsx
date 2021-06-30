@@ -8,13 +8,17 @@ import IntersectionTests from "terriajs-cesium/Source/Core/IntersectionTests";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Ray from "terriajs-cesium/Source/Core/Ray";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
+import {
+  Category,
+  ViewAction
+} from "../../../../Core/AnalyticEvents/analyticEvents";
 import isDefined from "../../../../Core/isDefined";
+import Box from "../../../../Styled/Box";
 import { RawButton } from "../../../../Styled/Button";
+import Icon, { GLYPHS } from "../../../../Styled/Icon";
 import Ul, { Li } from "../../../../Styled/List";
-import Icon, { GLYPHS } from "../../../Icon";
 import Terria from "./../../../../Models/Terria";
 const Tween = require("terriajs-cesium/Source/ThirdParty/Tween").default;
-const Box = require("../../../../Styled/Box").default;
 
 interface PropTypes extends WithTranslation {
   terria: Terria;
@@ -104,7 +108,7 @@ class ZoomControl extends React.Component<PropTypes> {
 
   zoomIn() {
     const cartesian3Scratch = new Cartesian3();
-    this.props.terria.analytics.logEvent("navigation", "click", "zoomIn");
+    this.props.terria.analytics?.logEvent(Category.view, ViewAction.zoomIn);
 
     if (isDefined(this.props.terria.leaflet)) {
       this.props.terria.leaflet.map.zoomIn(1);
@@ -137,7 +141,7 @@ class ZoomControl extends React.Component<PropTypes> {
 
   zoomOut() {
     const cartesian3Scratch = new Cartesian3();
-    this.props.terria.analytics.logEvent("navigation", "click", "zoomOut");
+    this.props.terria.analytics?.logEvent(Category.view, ViewAction.zoomOut);
 
     if (isDefined(this.props.terria.leaflet)) {
       this.props.terria.leaflet.map.zoomOut(1);
@@ -168,7 +172,7 @@ class ZoomControl extends React.Component<PropTypes> {
   }
 
   zoomReset() {
-    this.props.terria.analytics.logEvent("navigation", "click", "reset");
+    this.props.terria.analytics?.logEvent(Category.view, ViewAction.reset);
     this.props.terria.currentViewer.zoomTo(
       this.props.terria.mainViewer.homeCamera,
       1.5

@@ -60,3 +60,4 @@ The following people have contributed to TerriaJS:
    * [Edison Guo](https://github.com/edisonguo)
 * [Zoran Kokeza](https://github.com/zoran995)
 * [J. Garcia](https://github.com/ctwhome)
+* [Yusuke Kiuchi](https://github.com/ykiu)

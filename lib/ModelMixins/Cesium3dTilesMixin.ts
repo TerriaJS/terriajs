@@ -34,10 +34,12 @@ import createStratumInstance from "../Models/createStratumInstance";
 import Feature from "../Models/Feature";
 import Model from "../Models/Model";
 import proxyCatalogItemUrl from "../Models/proxyCatalogItemUrl";
+import { SelectableDimension } from "../Models/SelectableDimensions";
 import Cesium3DTilesCatalogItemTraits from "../Traits/Cesium3DTilesCatalogItemTraits";
 import Cesium3dTilesTraits, {
   OptionsTraits
 } from "../Traits/Cesium3dTilesTraits";
+import CatalogMemberMixin from "./CatalogMemberMixin";
 import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
 
@@ -66,7 +68,9 @@ class ObservableCesium3DTileset extends Cesium3DTileset {
 export default function Cesium3dTilesMixin<
   T extends Constructor<Model<Cesium3dTilesTraits>>
 >(Base: T) {
-  abstract class Cesium3dTilesMixin extends ShadowMixin(MappableMixin(Base)) {
+  abstract class Cesium3dTilesMixin extends ShadowMixin(
+    MappableMixin(CatalogMemberMixin(Base))
+  ) {
     readonly canZoomTo = true;
 
     protected tileset?: ObservableCesium3DTileset;
@@ -245,6 +249,10 @@ export default function Cesium3dTilesMixin<
 
       this.tileset.modelMatrix = this.modelMatrix;
       return [this.tileset];
+    }
+
+    @computed get selectableDimensions(): SelectableDimension[] {
+      return [...super.selectableDimensions, this.shadowDimension];
     }
 
     @computed

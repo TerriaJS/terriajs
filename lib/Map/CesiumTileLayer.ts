@@ -1,6 +1,6 @@
 import i18next from "i18next";
-import L from "leaflet";
-import { autorun, computed, observable } from "mobx";
+import L, { TileEvent } from "leaflet";
+import { autorun, computed, IReactionDisposer, observable } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumCredit from "terriajs-cesium/Source/Core/Credit";
@@ -14,6 +14,7 @@ import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import isDefined from "../Core/isDefined";
 import pollToPromise from "../Core/pollToPromise";
+import Leaflet from "../Models/Leaflet";
 import getUrlForImageryTile from "./getUrlForImageryTile";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
@@ -32,19 +33,6 @@ class Credit extends CesiumCredit {
   _shownInLeafletLastUpdate?: boolean;
 }
 
-// As of Internet Explorer 11.483.15063.0 and Edge 40.15063.0.0 (EdgeHTML 15.15063) there is an apparent
-// bug in both browsers where setting the `clip` CSS style on our Leaflet layers does not consistently
-// cause the new clip to be applied.  The change shows up in the DOM inspector, but it is not reflected
-// in the rendered view.  You can reproduce it by adding a layer and toggling it between left/both/right
-// repeatedly, and you will quickly see it fail to update sometimes.  Unfortunateely my attempts to
-// reproduce this in jsfiddle were unsuccessful, so presumably there is something unusual about our
-// setup.  In any case, we do the usually-horrible thing here of detecting these browsers by their user
-// agent, and then work around the bug by hiding the DOM element, forcing it to updated by asking for
-// its bounding client rectangle, and then showing it again.  There's a bit of a performance hit to
-// this, so we don't do it on other browsers that do not experience this bug.
-const useClipUpdateWorkaround =
-  FeatureDetection.isInternetExplorer() || FeatureDetection.isEdge();
-
 export default class CesiumTileLayer extends L.TileLayer {
   readonly tileSize = 256;
   readonly errorEvent = new CesiumEvent();
@@ -61,6 +49,7 @@ export default class CesiumTileLayer extends L.TileLayer {
   @observable splitPosition: number = 0.5;
 
   constructor(
+    private leaflet: Leaflet,
     readonly imageryProvider: ImageryProvider,
     options: L.TileLayerOptions = {}
   ) {
@@ -72,14 +61,31 @@ export default class CesiumTileLayer extends L.TileLayer {
     });
     this.imageryProvider = imageryProvider;
 
-    const disposeSplitterReaction = this._reactToSplitterChange();
-    this.on("remove", disposeSplitterReaction);
+    // Handle splitter rection (and disposing reaction)
+    let disposeSplitterReaction: IReactionDisposer | undefined;
+    this.on("add", () => {
+      if (!disposeSplitterReaction) {
+        disposeSplitterReaction = this._reactToSplitterChange();
+      }
+    });
+    this.on("remove", () => {
+      if (disposeSplitterReaction) {
+        disposeSplitterReaction();
+        disposeSplitterReaction = undefined;
+      }
+    });
 
     this._leafletUpdateInterval = defined(
       (imageryProvider as any)._leafletUpdateInterval
     )
       ? (imageryProvider as any)._leafletUpdateInterval
       : 100;
+
+    // Hack to fix "Space between tiles on fractional zoom levels in Webkit browsers" (https://github.com/Leaflet/Leaflet/issues/3575#issuecomment-688644225)
+    this.on("tileloadstart", (event: TileEvent) => {
+      event.tile.style.width = this.getTileSize().x + 0.5 + "px";
+      event.tile.style.height = this.getTileSize().y + 0.5 + "px";
+    });
   }
 
   _reactToSplitterChange() {
@@ -89,24 +95,14 @@ export default class CesiumTileLayer extends L.TileLayer {
         return;
       }
 
-      const { left: clipLeft, right: clipRight } = this._clipsForSplitter;
-      let display = null;
-      if (useClipUpdateWorkaround) {
-        display = container.style.display;
-        container.style.display = "none";
-        container.getBoundingClientRect();
-      }
-
       if (this.splitDirection === ImagerySplitDirection.LEFT) {
+        const { left: clipLeft } = this._clipsForSplitter;
         container.style.clip = clipLeft;
       } else if (this.splitDirection === ImagerySplitDirection.RIGHT) {
+        const { right: clipRight } = this._clipsForSplitter;
         container.style.clip = clipRight;
       } else {
         container.style.clip = "auto";
-      }
-
-      if (useClipUpdateWorkaround) {
-        container.style.display = display!;
       }
     });
   }
@@ -118,15 +114,22 @@ export default class CesiumTileLayer extends L.TileLayer {
     let clipPositionWithinMap;
     let clipX;
 
-    const map = this._map;
-    const size = map.getSize();
-    const nw = map.containerPointToLayerPoint([0, 0]);
-    const se = map.containerPointToLayerPoint(size);
-    clipPositionWithinMap = size.x * this.splitPosition;
-    clipX = Math.round(nw.x + clipPositionWithinMap);
-    clipLeft = "rect(" + [nw.y, clipX, se.y, nw.x].join("px,") + "px)";
-    clipRight = "rect(" + [nw.y, se.x, se.y, clipX].join("px,") + "px)";
-
+    if (this.leaflet.size && this.leaflet.nw && this.leaflet.se) {
+      clipPositionWithinMap = this.leaflet.size.x * this.splitPosition;
+      clipX = Math.round(this.leaflet.nw.x + clipPositionWithinMap);
+      clipLeft =
+        "rect(" +
+        [this.leaflet.nw.y, clipX, this.leaflet.se.y, this.leaflet.nw.x].join(
+          "px,"
+        ) +
+        "px)";
+      clipRight =
+        "rect(" +
+        [this.leaflet.nw.y, this.leaflet.se.x, this.leaflet.se.y, clipX].join(
+          "px,"
+        ) +
+        "px)";
+    }
     return {
       left: clipLeft,
       right: clipRight,

@@ -9,7 +9,7 @@ import { terriaTheme } from "../../../../../lib/ReactViews/StandardUserInterface
 // import Compass from "../../../../../lib/ReactViews/Map/Navigation/Compass";
 const Compass: any = require("../../../../../lib/ReactViews/Map/Navigation/Items/Compass")
   .default;
-import { StyledIcon } from "../../../../../lib/ReactViews/Icon";
+import { StyledIcon } from "../../../../../lib/Styled/Icon";
 
 describe("Compass", function() {
   let terria: Terria;

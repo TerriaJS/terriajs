@@ -6,13 +6,11 @@ import React from "react";
 import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import CommonStrata from "../../../Models/CommonStrata";
+import Box from "../../../Styled/Box";
+import Spacing from "../../../Styled/Spacing";
+import Text from "../../../Styled/Text";
 import Collapsible from "../../Custom/Collapsible/Collapsible";
 import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact";
-
-// :(
-const Text: any = require("../../../Styled/Text").default;
-const Box: any = require("../../../Styled/Box").default;
-const Spacing: any = require("../../../Styled/Spacing").default;
 
 @observer
 export default class ShortReport extends React.Component<{
@@ -76,8 +74,6 @@ export default class ShortReport extends React.Component<{
                 onToggle={show =>
                   this.clickShortReport.bind(this, r.name, show)()
                 }
-                btnRight={true}
-                btnStyle={"plus"}
               >
                 {parseCustomMarkdownToReact(r.content!, {
                   catalogItem: this.props.item

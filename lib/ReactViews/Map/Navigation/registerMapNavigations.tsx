@@ -3,7 +3,7 @@ import React from "react";
 import { GenericMapNavigationItemController } from "../../../ViewModels/MapNavigation/MapNavigationItemController";
 import ViewerMode from "../../../Models/ViewerMode";
 import ViewState from "../../../ReactViewModels/ViewState";
-import { GLYPHS } from "../../Icon";
+import { GLYPHS } from "../../../Styled/Icon";
 import PedestrianMode, {
   PEDESTRIAN_MODE_ID
 } from "../../Tools/PedestrianMode/PedestrianMode";

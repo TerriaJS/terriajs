@@ -9,8 +9,11 @@ import addedByUser from "../../Core/addedByUser";
 import getPath from "../../Core/getPath";
 import removeUserAddedData from "../../Models/removeUserAddedData";
 import CatalogItem from "./CatalogItem";
-import raiseErrorToUser from "../../Models/raiseErrorToUser";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
+import {
+  Category,
+  DataSourceAction
+} from "../../Core/AnalyticEvents/analyticEvents";
 
 // Individual dataset
 export const DataCatalogItem = observer(
@@ -72,13 +75,15 @@ export const DataCatalogItem = observer(
         ) {
           this.props.viewState.closeCatalog();
           this.props.terria.analytics?.logEvent(
-            "dataSource",
-            toAdd ? "addFromCatalogue" : "removeFromCatalogue",
+            Category.dataSource,
+            toAdd
+              ? DataSourceAction.addFromCatalogue
+              : DataSourceAction.removeFromCatalogue,
             getPath(this.props.item)
           );
         }
       } catch (e) {
-        raiseErrorToUser(this.props.terria, e);
+        this.props.terria.raiseErrorToUser(e);
       }
     },
 

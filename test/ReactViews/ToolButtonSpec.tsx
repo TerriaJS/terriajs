@@ -2,7 +2,7 @@ import React from "react";
 import TestRenderer from "react-test-renderer";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
-import Icon from "../../lib/ReactViews/Icon";
+import Icon from "../../lib/Styled/Icon";
 import MapIconButton from "../../lib/ReactViews/MapIconButton/MapIconButton";
 
 const TestComponent = () => <div>Test hello</div>;

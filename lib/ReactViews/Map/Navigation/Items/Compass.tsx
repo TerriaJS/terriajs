@@ -30,9 +30,9 @@ import isDefined from "../../../../Core/isDefined";
 import Terria from "../../../../Models/Terria.js";
 import ViewState from "../../../../ReactViewModels/ViewState.js";
 import Box from "../../../../Styled/Box";
+import Icon, { StyledIcon } from "../../../../Styled/Icon";
 import GyroscopeGuidance from "../../../GyroscopeGuidance/GyroscopeGuidance";
 import { withTerriaRef } from "../../../HOCs/withTerriaRef";
-import Icon, { StyledIcon } from "../../../Icon.jsx";
 import FadeIn from "../../../Transitions/FadeIn/FadeIn";
 
 const CameraFlightPath = require("terriajs-cesium/Source/Scene/CameraFlightPath")

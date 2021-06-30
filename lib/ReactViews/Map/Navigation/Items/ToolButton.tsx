@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import React from "react";
-import Icon from "../../../Icon";
+import Icon from "../../../../Styled/Icon";
 import MapIconButton from "../../../MapIconButton/MapIconButton";
 import { ToolButtonController } from "../../../Tools/Tool";
 const Box = require("../../../../Styled/Box");
@@ -18,7 +18,7 @@ const ToolButton: React.FC<ToolButtonProps> = observer(
         <MapIconButton
           primary={controller.active}
           expandInPlace
-          title={name}
+          title={controller.title}
           onClick={() => controller.handleClick()}
           iconElement={() => <Icon glyph={controller.glyph} />}
           closeIconElement={() => <Icon glyph={Icon.GLYPHS.closeTool} />}

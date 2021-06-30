@@ -16,7 +16,7 @@ import isDefined from "../../../Core/isDefined";
 import ViewState from "../../../ReactViewModels/ViewState";
 import Prompt from "../../Generic/Prompt";
 import { Medium } from "../../Generic/Responsive";
-import Icon, { GLYPHS } from "../../Icon";
+import Icon, { GLYPHS } from "../../../Styled/Icon";
 import MapIconButton from "../../MapIconButton/MapIconButton";
 import { Control, MapNavigationItem } from "./Items/MapNavigationItem";
 import MapNavigationModel, {

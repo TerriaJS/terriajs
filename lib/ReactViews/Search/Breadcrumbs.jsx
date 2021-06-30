@@ -6,7 +6,7 @@ import { withTheme } from "styled-components";
 import Box from "../../Styled/Box";
 import { getParentGroups } from "../../Core/getPath";
 import Text from "../../Styled/Text";
-import Icon, { StyledIcon } from "../Icon";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import Spacing from "../../Styled/Spacing";
 import { RawButton } from "../../Styled/Button";
 import styled from "styled-components";

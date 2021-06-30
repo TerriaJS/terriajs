@@ -1,5 +1,6 @@
 import { computed } from "mobx";
 import { computedFn } from "mobx-utils";
+import Result from "../Core/Result";
 import TerriaError from "../Core/TerriaError";
 import createStratumInstance from "../Models/createStratumInstance";
 import Model, { BaseModel, ModelConstructor } from "../Models/Model";
@@ -125,11 +126,11 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
     model: BaseModel,
     stratumName: string,
     jsonValue: any
-  ): ReadonlyArray<StratumFromTraits<T>> {
+  ): Result<ReadonlyArray<StratumFromTraits<T>> | undefined> {
     // TODO: support removals
 
     if (!Array.isArray(jsonValue)) {
-      throw new TerriaError({
+      return Result.error({
         title: "Invalid property",
         message: `Property ${
           this.id
@@ -137,33 +138,48 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
       });
     }
 
-    return jsonValue.map(jsonElement => {
+    const errors: TerriaError[] = [];
+
+    const resultArray = jsonValue.map(jsonElement => {
       const ResultType = this.type;
       const result: any = createStratumInstance(ResultType);
 
       Object.keys(jsonElement).forEach(propertyName => {
         const trait = ResultType.traits[propertyName];
         if (trait === undefined) {
-          throw new TerriaError({
-            title: "Unknown property",
-            message: `${propertyName} is not a valid sub-property of elements of ${this.id}.`
-          });
+          errors.push(
+            new TerriaError({
+              title: "Unknown property",
+              message: `${propertyName} is not a valid sub-property of elements of ${this.id}.`
+            })
+          );
+          return;
         }
 
         const subJsonValue = jsonElement[propertyName];
         if (subJsonValue === undefined) {
           result[propertyName] = subJsonValue;
         } else {
-          result[propertyName] = trait.fromJson(
-            model,
-            stratumName,
-            subJsonValue
-          );
+          result[propertyName] = trait
+            .fromJson(model, stratumName, subJsonValue)
+            .catchError(error => errors.push(error));
         }
       });
 
       return result;
     });
+
+    return Result.return(
+      resultArray,
+      TerriaError.combine(
+        errors,
+        `Error${
+          errors.length !== 1 ? "s" : ""
+        } occurred while updating objectArrayTrait model "${
+          model.uniqueId
+        }" from JSON`
+      )
+    );
   }
 
   toJson(value: readonly StratumFromTraits<T>[] | undefined): any {

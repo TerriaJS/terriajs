@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useTranslationIfExists } from "../../../../Language/languageHelpers";
 import { IMapNavigationItem } from "../../../../ViewModels/MapNavigation/MapNavigationModel";
 import Terria from "../../../../Models/Terria";
-import Icon, { GLYPHS } from "../../../Icon";
+import Icon, { GLYPHS } from "../../../../Styled/Icon";
 import MapIconButton from "../../../MapIconButton/MapIconButton";
 const Box = require("../../../../Styled/Box").default;
 

@@ -1,13 +1,12 @@
 import { WithT } from "i18next";
 import { computed } from "mobx";
 import { default as React, Suspense, useEffect, useState } from "react";
-import { useTranslation, WithTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { useTranslationIfExists } from "../../Language/languageHelpers";
-import MapNavigationItemController from "../../ViewModels/MapNavigation/MapNavigationItemController";
 import Terria from "../../Models/Terria";
 import ViewerMode from "../../Models/ViewerMode";
 import ViewState from "../../ReactViewModels/ViewState";
-const Box = require("./../../Styled/Box").default;
+import MapNavigationItemController from "../../ViewModels/MapNavigation/MapNavigationItemController";
 
 interface ToolProps {
   viewState: ViewState;
@@ -125,7 +124,7 @@ class ToolErrorBoundary extends React.Component<
 
   componentDidCatch() {
     const { terria, toolName, t } = this.props;
-    terria.error.raiseEvent({
+    terria.raiseErrorToUser({
       title: t("tool.loadingError.title", { toolName }),
       message: t("tool.loadingError.message")
     });

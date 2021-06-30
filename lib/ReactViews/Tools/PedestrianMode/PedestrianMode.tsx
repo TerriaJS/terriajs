@@ -1,3 +1,4 @@
+import { reaction } from "mobx";
 import { observer } from "mobx-react";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -35,8 +36,11 @@ const PedestrianMode: React.FC<PedestrianModeProps> = observer(props => {
   const updateView = () => setView(getViewFromScene(cesium.scene));
 
   useEffect(function closeOnZoomTo() {
-    const disposer = cesium.zoomToEvent.addEventListener(() =>
-      viewState.closeTool()
+    const disposer = reaction(
+      () => cesium.isMapZooming,
+      isMapZooming => {
+        if (isMapZooming) viewState.closeTool();
+      }
     );
     return disposer;
   }, []);

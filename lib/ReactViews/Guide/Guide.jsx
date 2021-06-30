@@ -35,9 +35,12 @@ import Styles from "./guide.scss";
 import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
 import { useTranslation } from "react-i18next";
-import i18next from "i18next";
 import Button from "../../Styled/Button";
 import Box from "../../Styled/Box";
+import {
+  Category,
+  GuideAction
+} from "../../Core/AnalyticEvents/analyticEvents";
 
 const GuideProgress = props => {
   // doesn't work for IE11
@@ -69,7 +72,7 @@ GuideProgress.propTypes = {
 };
 
 export const analyticsSetShowGuide = (
-  bool,
+  isOpen,
   index,
   guideKey,
   terria,
@@ -77,14 +80,17 @@ export const analyticsSetShowGuide = (
     setCalledFromInside: false
   }
 ) => {
-  const openOrClose = bool
-    ? i18next.t("general.open")
-    : i18next.t("general.close");
-  const actionSuffix = options.setCalledFromInside ? " from inside modal" : "";
+  const action = options.setCalledFromInside
+    ? isOpen
+      ? GuideAction.openInModal
+      : GuideAction.closeInModal
+    : isOpen
+    ? GuideAction.open
+    : GuideAction.close;
 
-  terria.analytics.logEvent(
-    "guide",
-    `Guide ${openOrClose}${actionSuffix}`,
+  terria.analytics?.logEvent(
+    Category.guide,
+    action,
     `At index: ${index}, Guide: ${guideKey}`
   );
 };
@@ -101,9 +107,9 @@ export const GuidePure = ({
 
   const handlePrev = () => {
     const newIndex = currentGuideIndex - 1;
-    terria.analytics.logEvent(
-      "guide",
-      "Navigate Previous",
+    terria.analytics?.logEvent(
+      Category.guide,
+      GuideAction.navigatePrev,
       `New index: ${newIndex}, Guide: ${guideKey}`
     );
     if (currentGuideIndex === 0) {
@@ -117,9 +123,9 @@ export const GuidePure = ({
     const newIndex = currentGuideIndex + 1;
 
     if (guideData[newIndex]) {
-      terria.analytics.logEvent(
-        "guide",
-        "Navigate Next",
+      terria.analytics?.logEvent(
+        Category.guide,
+        GuideAction.navigateNext,
         `New index: ${newIndex}, Guide: ${guideKey}`
       );
 

@@ -1,15 +1,14 @@
 import { TFunction } from "i18next";
 import { observer } from "mobx-react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
 import ViewState from "../../ReactViewModels/ViewState";
-import { GLYPHS, StyledIcon } from "../Icon";
-
-const Box = require("../../Styled/Box").default;
-const RawButton: any = require("../../Styled/Button").RawButton;
-const Spacing: any = require("../../Styled/Spacing").default;
-const Text: any = require("../../Styled/Text").default;
+import Box from "../../Styled/Box";
+import { RawButton } from "../../Styled/Button";
+import Spacing from "../../Styled/Spacing";
+import Text from "../../Styled/Text";
+import { GLYPHS, StyledIcon } from "../../Styled/Icon";
 
 export interface FrameProps {
   title: string;
@@ -65,10 +64,10 @@ export const Main = styled(Text)`
 
 const Wrapper = styled(Box).attrs({
   column: true,
-  positionAbsolute: true,
+  position: "absolute",
   styledWidth: "340px"
   // charcoalGreyBg: true
-})`
+})<{ isMapFullScreen: boolean }>`
   top: 70px;
   left: 0px;
   min-height: 220px;
@@ -99,7 +98,7 @@ const ToolCloseButton: React.FC<ToolCloseButtonProps> = props => {
 
 interface TitleProps {
   title: string;
-  icon?: string;
+  icon?: { id: string };
 }
 
 const Title: React.FC<TitleProps> = props => {
@@ -120,6 +119,7 @@ const Title: React.FC<TitleProps> = props => {
         styledLineHeight="30px"
         overflowEllipsis
         overflowHide
+        noWrap
       >
         {props.title}
       </TitleText>
@@ -129,4 +129,5 @@ const Title: React.FC<TitleProps> = props => {
 
 const TitleText = styled(Text)`
   flex-grow: 2;
+  max-width: 220px;
 `;

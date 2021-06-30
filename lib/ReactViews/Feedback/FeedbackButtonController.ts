@@ -2,7 +2,7 @@ import MapNavigationItemController from "../../ViewModels/MapNavigation/MapNavig
 import ViewState from "../../ReactViewModels/ViewState";
 import { computed, action } from "mobx";
 import isDefined from "../../Core/isDefined";
-import { GLYPHS } from "../Icon";
+import { GLYPHS } from "../../Styled/Icon";
 
 export const FEEDBACK_TOOL_ID = "feedback-tool";
 
@@ -29,7 +29,7 @@ export class FeedbackButtonController extends MapNavigationItemController {
   get visible() {
     return (
       isDefined(this.viewState.terria.configParameters.feedbackUrl) &&
-      !this.viewState.hideMapUi()!
+      !this.viewState.hideMapUi
     );
   }
 

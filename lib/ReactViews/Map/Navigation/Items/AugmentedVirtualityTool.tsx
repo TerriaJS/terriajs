@@ -13,7 +13,7 @@ import Terria from "../../../../Models/Terria";
 import ViewerMode from "../../../../Models/ViewerMode";
 import ViewState from "../../../../ReactViewModels/ViewState";
 import MapNavigationItemController from "../../../../ViewModels/MapNavigation/MapNavigationItemController";
-import { GLYPHS, Icon } from "../../../Icon";
+import { GLYPHS, Icon } from "../../../../Styled/Icon";
 import MapIconButton from "../../../MapIconButton/MapIconButton";
 import { Control } from "./MapNavigationItem";
 
@@ -85,7 +85,7 @@ export class AugmentedVirtualityController extends MapNavigationItemController {
 
     if (experimentalWarning !== false && !this.experimentalWarningShown) {
       this.experimentalWarningShown = true;
-      this.props.viewState.notifications.push({
+      this.props.viewState.terria.notificationState.addNotificationToQueue({
         title: i18next.t("AR.title"),
         message: i18next.t("AR.experimentalFeatureMessage"),
         confirmText: i18next.t("AR.confirmText")
@@ -134,7 +134,7 @@ export class AugmentedVirtualityRealignController extends MapNavigationItemContr
     if (!this.realignHelpShown) {
       this.realignHelpShown = true;
 
-      this.props.viewState.notifications.push({
+      this.props.viewState.terria.notificationState.addNotificationToQueue({
         title: i18next.t("AR.manualAlignmentTitle"),
         message: i18next.t("AR.manualAlignmentMessage", {
           img:
@@ -151,7 +151,7 @@ export class AugmentedVirtualityRealignController extends MapNavigationItemContr
   handleClickResetRealign() {
     if (!this.resetRealignHelpShown) {
       this.resetRealignHelpShown = true;
-      this.props.viewState.notifications.push({
+      this.props.viewState.terria.notificationState.addNotificationToQueue({
         title: i18next.t("AR.resetAlignmentTitle"),
         message: i18next.t("AR.resetAlignmentMessage"),
         confirmText: i18next.t("AR.confirmText")
