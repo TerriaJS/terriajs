@@ -11,10 +11,60 @@
     "removeStoriesPanel": "Voulez-vous vraiment supprimer {{ count }} scène ?",
     "removeStoriesPanel_plural": "Voulez-vous vraiment supprimer {{ count }} scènes ?",
     "edit": "Modifier",
-    "editStory": "modifier"
+    "editStory": "modifier",
+    "hideStoryPanel": "masquer le constructeur d'histoires",
+    "storyEditor": "Éditeur d'histoires",
+    "mobileViewStory": "Voir les histoires {{storiesLength}}",
+    "dismissText": "Compris, Merci!",
+    "story": "Histoire",
+    "promptHtml2": "<0><0>PRESENTATION</0><1>Histoires de données</1><2>Créez et partagez des histoires interactives directement depuis votre carte.</2></0>",
+    "promptHtml1": "<0>Vous pouvez afficher et créer des histoires à tout moment en cliquant ici.</0>",
+    "navBtnMobile": "aller à l'histoire {{title}}",
+    "nextBtn": "passer à la scène suivante",
+    "navBtn": "aller à l'histoire {{title}}",
+    "untitled": "scène sans titre",
+    "previousBtn": "aller à la scène précédente",
+    "exitBtn": "Sortir de l'histoire",
+    "locationBtn": "centrer la scène",
+    "editor": {
+      "saveStory": "Enregistrer",
+      "saveBtn": "enregistrer",
+      "cancelEditing": "Annuler",
+      "cancelBtn": "Annuler",
+      "placeholder": "Entrez un titre ici"
+    },
+    "captureScene": "Capturer la scène",
+    "captureSceneTitle": "capturer la scène actuelle",
+    "preview": "aperçu des histoires",
+    "removeAllStories": "Tout supprimer",
+    "message": "<2>Ceci est votre éditeur d'histoires</2><1>Créez et partagez des histoires interactives directement depuis votre carte<1><0><0></0>Mise en route </0></1></1 >",
+    "doesNotExist": "L'histoire n'existe pas",
+    "untitledScene": "scène sans titre",
+    "delete": "Supprimer",
+    "deleteStory": "supprimer",
+    "recaptureStory": "re-selectionner",
+    "view": "Affichage",
+    "viewStory": "voir"
   },
   "featureInfo": {
-    "noInfoAvailable": "Aucune information disponible"
+    "noInfoAvailable": "Aucune information disponible",
+    "latLon": "Lat/Lon ",
+    "siteData": "Données du site",
+    "locationMarker": "Marqueur de position",
+    "satelliteSuggestionBtn": "Afficher {{catalogItemName}} à cet emplacement",
+    "btnCloseFeature": "Informations sur la fonctionFermer le panneau de données",
+    "panelHeading": "Informations sur les fonctionnalités",
+    "userSelection": "Sélection de l'utilisateur",
+    "clickToAddData": "Cliquez sur '$t(addData.addDataBtnText)' pour ajouter des données à la carte.",
+    "noDataAvailable": "Aucune donnée n'est disponible ici - essayez un autre emplacement.",
+    "clickMap": "Cliquez sur la carte pour en savoir plus sur un emplacement",
+    "pickLocation": "Sélectionnez un emplacement",
+    "download": "Télécharger ce tableau",
+    "catalogItem": {
+      "featureInfoShown": "Les premiers {{maximum}} sont indiqués ci-dessous.",
+      "featuresFound": "{{featCount}} {catalogItemName} fonctionnalités ont été trouvées.",
+      "moreThanMax": "Plus de {{maximum}} {{catalogItemName}} fonctionnalités ont été trouvées."
+    }
   },
   "sui": {
     "notifications": {
@@ -22,14 +72,19 @@
       "confirmText": "Oui",
       "message": "Souhaitez-vous la voir maintenant ?",
       "title": "Cette carte contient une histoire"
-    }
+    },
+    "hideWorkbench": "Cacher le plan de travail",
+    "showWorkbench": "Afficher le plan de travail"
   },
   "helpMenu": {
     "next": "SUIVANT",
     "done": "TERMINÉ",
     "btnTitle": "obtenir de l'aide",
     "helpMenuHeader": "Qu'est-ce que vous aimeriez faire ?",
-    "btnText": "Aide"
+    "btnText": "Aide",
+    "helpMenuMoreHelpTitle": "Besoin de plus d'aide ?",
+    "helpMenuSatelliteGuideTitle": "Voir le guide d'imagerie satellite",
+    "helpMenuOpenWelcome": "Afficher un message de bienvenue"
   },
   "feedback": {
     "feedbackBtnText": "Envoyer les remarques",
@@ -41,8 +96,9 @@
     "yourName": "Votre nom (facultatif)",
     "close": "fermer la remarque",
     "title": "Remarques",
-    "feedbackPreamble": "Nous serions ravis d’avoir votre retour !",
-    "email": "Adresse courriel (facultative)<br/><2>Nous ne pouvons pas faire de suivi sans !</2>"
+    "feedbackPreamble": "Nous serions ravis d’avoir votre avis !",
+    "email": "Adresse courriel (facultative)<br/><2>Nous ne pouvons pas faire de suivi sans !</2>",
+    "captionText": "Cela nous aide à résoudre les problèmes en nous permettant de voir ce que vous voyez"
   },
   "settingPanel": {
     "performanceLabel": "Performance",
@@ -52,9 +108,20 @@
     "btnTitle": "Changer de vue",
     "screen": "écran",
     "viewerModeLabels": {
-      "CesiumTerrain": "Terrain 3D"
+      "CesiumTerrain": "Terrain 3D",
+      "CesiumEllipsoid": "3D Lisse"
     },
-    "none": "(Aucun)"
+    "none": "(Aucun)",
+    "qualityLabels": {
+      "balancedPerformance": "Performances et qualité équilibrées",
+      "maximumPerformance": "Performances maximales, qualité inférieure",
+      "lowerPerformance": "Qualité maximale, performances inférieures"
+    },
+    "mapQuality": "Qualité de la carte raster :",
+    "nativeResolutionHeader": "Utiliser la résolution native de l'appareil",
+    "imageOptimisation": "Optimisation des images",
+    "baseMap": "Carte de base",
+    "nativeResolutionLabel": "Appuyez pour arrêter d'utiliser la résolution {{resolution1}}  et commencer à utiliser la résolution {{resolution2}}"
   },
   "toolsPanel": {
     "btnTitle": "Boîte à outils avancée",
@@ -84,7 +151,9 @@
     "printButton": "Imprimer",
     "printExplanation": "Ouvrir une version imprimable de cette carte.",
     "printTitle": "Imprimer la carte",
-    "shortLinkShortening": "Raccourcissement…"
+    "shortLinkShortening": "Raccourcissement…",
+    "shortLinkError": "Une erreur s'est produite lors de la tentative de raccourcissement de l'URL. S'il vous plaît, vérifiez votre connexion à internet et réessayez.",
+    "browserPrint": "Pour de meilleurs résultats imprimés, veuillez utiliser le bouton Imprimer de {{appName}} au lieu de la fonction d'impression de votre navigateur Web."
   },
   "legend": {
     "elev": "Élév.",
@@ -137,7 +206,311 @@
   },
   "models": {
     "abs": {
-      "itemNotAvailableMessage": "Une erreur s'est produite lors de l'appel de {{methodName}} sur le serveur ABS ITT. <p> Cette erreur peut indiquer que l'élément que vous avez ouvert est temporairement indisponible ou qu'il y a un problème avec votre connexion Internet. Essayez de rouvrir le groupe et si le problème persiste, veuillez le signaler en envoyant un courriel à {{email}}. </p>"
+      "itemNotAvailableMessage": "Une erreur s'est produite lors de l'appel de {{methodName}} sur le serveur ABS ITT. <p> Cette erreur peut indiquer que l'élément que vous avez ouvert est temporairement indisponible ou qu'il y a un problème avec votre connexion Internet. Essayez de rouvrir le groupe et si le problème persiste, veuillez le signaler en envoyant un courriel à {{email}}. </p>",
+      "name": "ABS.Stat"
     }
+  },
+  "map": {
+    "regionProvider": {
+      "csvRegionMappingMessageLoadError": "Impossible de charger les limites de la région {{regionName}} {{exception}}",
+      "csvRegionMappingMessageZeroBoundariesFound": "Zéro frontières de région trouvées pour la région {{regionName}}",
+      "csvRegionMappingMessageZeroFound": "Aucun nom de région trouvé pour le type de région {{regionType}}",
+      "csvRegionMappingTitle": "Cartographie des régions CSV"
+    },
+    "mapboxVectorTileImageryProvider": {
+      "moreThanFourTiles": "Le rectangle et le minimumLevel du fournisseur d'images indiquent qu'il y a {{tileCount}} tuiles au niveau minimum. Les fournisseurs d'images avec plus de quatre tuiles au niveau minimum ne sont pas pris en charge.",
+      "requireStyles": "MapboxVectorTileImageryProvider nécessite une fonction de style passée en tant que options.styleFunc",
+      "requireLayerName": "MapboxVectorTileImageryProvider nécessite un nom de couche transmis comme options.layerName"
+    },
+    "imageryProviderHooks": {
+      "devError": "Aucun contexte pour la recoloration de l'image."
+    },
+    "gnafAddressGeocoder": {
+      "postOfficeBox": "boîte postale",
+      "poBox": "boîte postale",
+      "score": "Score",
+      "lat": "Lat",
+      "lon": "Lon",
+      "matchedAddresses": "Adresse correspondante",
+      "postcode": "Code postal",
+      "state": "État",
+      "suburb": "Banlieue",
+      "noAddresses2": "Même si la tableStructure rapporte qu'elle a une colonne d'adresse, elle n'a pas d'adresse",
+      "noAddresses": "Cette tableStructure n'a pas d'adresses !"
+    },
+    "w3cToGeoJson": {
+      "containsUnsupportedFeatureType": "GeoRSS avec la géométrie W3C contient un type d'entité non pris en charge : {{type}}"
+    },
+    "geoRssToGeoJson": {
+      "containsUnsupportedFeatureType": "GeoRSS contient un type d'entité non pris en charge : {{type}}"
+    },
+    "gmlToGeoJson": {
+      "containsUnsupportedFeatureType": "GML contient un type de fonctionnalité non pris en charge : {{type}}",
+      "missingPosList": "L'anneau extérieur du polygone GML n'a pas de posList.",
+      "missingExteriorRing": "Le polygone GML n'a pas son anneau extérieur.",
+      "missingPos": "Il manque un élément pos à l'élément de point GML."
+    },
+    "drawExtentHelper": {
+      "extent": "Étendue",
+      "drawExtent": "Dessiner l'étendue"
+    },
+    "displayVariablesConcept": {
+      "defaultName": "Affichage de la variable"
+    },
+    "computeRingWindingOrder": {
+      "devError": "Points attendus de type {x:nombre, y:nombre}"
+    },
+    "cesium": {
+      "unusalTilingScheme": "Ce jeu de données ne peut pas être affiché sur la carte 2D car il utilise une structure de tuile inhabituelle qui n'est pas prise en charge.",
+      "notWebMercatorTilingScheme": "Ce jeu de données ne peut pas être affiché sur la carte 2D car il ne prend pas en charge la projection Web Mercator (EPSG:3857).",
+      "failedToObtain": "Échec de l'obtention de la mosaïque d'image X : {{x}} Y : {{y}} Niveau : {{level}}.",
+      "devError": "cesium est nécessaire."
+    },
+    "addressGeocoder": {
+      "devError": "bulkConvertAddresses doit être implémenté dans la classe dérivée."
+    }
+  },
+  "core": {
+    "readXml": {
+      "xmlError": "Le fichier ne contient pas de XML valide."
+    },
+    "googleAnalytics": {
+      "log": "Le suivi de Google Analytics est désactivé car terria.configParameters.googleAnalyticsKey n'est pas spécifié"
+    },
+    "printWindow": {
+      "onafterprint": "onafterprint",
+      "onbeforeprint": "avant impression",
+      "printMediaEnd": "fin du support imprimé",
+      "printMediaStart": "début des supports imprimés",
+      "errorMessage": "L'impression n'a pas démarré dans les 10 secondes. Peut-être que ce navigateur Web ne prend pas en charge l'impression ?",
+      "errorTitle": "Erreur d'impression"
+    },
+    "dataType": {
+      "other": "Autre (utiliser le service de conversion)",
+      "json": "JSON",
+      "czml": "CZML",
+      "csv": "CSV",
+      "kml": "KML ou KMZ",
+      "geoRss": "GeoRSS",
+      "geojson": "GeoJSON",
+      "esri-featureServer": "Esri ArcGIS FeatureServer (couche unique)",
+      "esri-mapServer": "Esri ArcGIS MapServer (couche unique)",
+      "esri-group": "Serveur Esri ArcGIS",
+      "auto": "Détection automatique (recommandé)"
+    },
+    "chartData": "Données graphiques",
+    "userAddedData": "Données ajoutées par l'utilisateur"
+  },
+  "analytics": {
+    "selectExistingPolygon": "Sélectionner un polygone existant",
+    "regionName": "Nom de la région",
+    "selectedPolygon": "Polygone sélectionné",
+    "clickToDrawRectangle": "Cliquez pour dessiner un rectangle",
+    "clickToDrawPolygon": "Cliquez pour dessiner un polygone",
+    "selectPoint": "Sélectionnez un point en cliquant sur la carte.",
+    "enterValidCoords": "Veuillez saisir des coordonnées valides (p. ex. 131.0361, -25.3450).",
+    "clickToDrawLine": "Cliquez pour tracer une ligne",
+    "runAnalysis": "Exécuter l’analyse",
+    "existingPolygon": "Polygone existant",
+    "polygon": "Polygone",
+    "point": "Point (lat/lon)",
+    "selectLocation": "Sélectionnez le lieu"
+  },
+  "terriaViewer": {
+    "webGLNotSupportedOrSlowTitle": "WebGL non pris en charge ou trop lent",
+    "webGLNotSupportedTitle": "WebGL non pris en charge",
+    "slowWebGLAvailableTitle": "Mauvaises performances de WebGL"
+  },
+  "viewModels": {
+    "inDataCatalogue": "Dans le catalogue de données",
+    "inMultipleLocations": "Dans plusieurs endroits, y compris : ",
+    "searchNoCatalogueItem": "Désolé, aucun article du catalogue ne correspond à votre recherche.",
+    "searchCatalogueItem": "Articles du catalogue",
+    "searchLocations": "Lieux",
+    "searchPlaceNames": "Noms de lieux officiels",
+    "searchAddresses": "Adresses",
+    "searchErrorOccurred": "Une erreur s'est produite lors de la recherche.  Veuillez vérifier votre connexion Internet ou réessayer plus tard.",
+    "searchNoLocations": "Désolé, aucun lieu ne correspond à votre requête de recherche."
+  },
+  "chart": {
+    "download": "Télécharger",
+    "expand": "Développer",
+    "closePanel": "Fermer le panneau",
+    "sectionLabel": "Graphiques"
+  },
+  "catalogItem": {
+    "removeFromMap": "Supprimer de la carte",
+    "trash": "Supprimer du catalogue",
+    "add": "Ajouter",
+    "remove": "Supprimer"
+  },
+  "dataCatalog": {
+    "groupEmpty": "Ce groupe est vide",
+    "groupRemove": "supprimer ce groupe"
+  },
+  "loader": {
+    "loadingMessage": "Chargement en cours"
+  },
+  "dragDrop": {
+    "not": "<0>bbbb</0>",
+    "text": "<0>Drag & Drop</0><1>Vos données n'importe où pour les visualiser sur la carte<1>"
+  },
+  "clipboard": {
+    "copy": "Copier",
+    "shareExplanation": "Toute personne disposant de cette URL pourra accéder à cette carte.",
+    "shareURL": "Partager l'URL",
+    "success": "Copié dans le presse-papiers"
+  },
+  "concept": {
+    "summary": {
+      "addFirstText": "Ajouter une nouvelle condition",
+      "addMoreText": "Ajouter une condition"
+    },
+    "inactive": {
+      "newText": "Nouvelle condition",
+      "cancel": "Annuler"
+    },
+    "active": {
+      "remove": "Supprimer la condition",
+      "edit": "Modifier la condition"
+    }
+  },
+  "timer": {
+    "nextScheduledUpdateCountdown": "Prochaine mise à jour des données dans {{timeCountdown}}",
+    "nextScheduledUpdateTime": "Prochaine mise à jour des données à {{scheduledUpdateTime}}"
+  },
+  "satellite": {
+    "newLocation": "Nouvel emplacement",
+    "zoomTo": "Zoomer sur",
+    "removeFilter": "Supprimer le filtre",
+    "infoGroup": "Afficher uniquement les temps de capture disponibles pour :",
+    "filterByLocation": "Filtrer par lieu",
+    "pickPoint": "Sélectionnez un point en cliquant sur la carte."
+  },
+  "dateTime": {
+    "timeline": {
+      "playFaster": "Jouer plus vite",
+      "playSlower": "Jouer plus lentement",
+      "togglePlay": "Jouer",
+      "gotoStart": "Aller au début",
+      "textCell": "Nom de l'ensemble de données dont l'intervalle de temps est affiché"
+    },
+    "availableTimeChart": "Afficher les dates disponibles sur le graphique",
+    "useTimeline": "Utiliser la chronologie",
+    "next": "Temps suivant",
+    "outOfRange": "Actuellement hors de portée.",
+    "selectTime": "Sélectionnez une heure",
+    "previous": "Temps précédent"
+  },
+  "workbench": {
+    "toggleVisibility": "Afficher/masquer les données",
+    "removeAll": "Supprimer tout",
+    "removeFromMap": "Supprimer",
+    "removeFromMapTitle": "Supprimer ces données",
+    "exportData": "Exporter",
+    "exportDataTitle": "Exporter les données cartographiques",
+    "splitItemTitle": "Dupliquer et afficher le séparateur",
+    "openFeature": "Zoomer sur",
+    "openFeatureTitle": "Zoom sur les données",
+    "zoomToTitle": "Zoom sur l'étendue",
+    "opacity": "Opacité : {{opacity}} %",
+    "displayPercent": "Affichage en pourcentage du total régional",
+    "colorScaleUpdateRange": "Mettre à jour la plage",
+    "rangeMin": "Minimum :",
+    "rangeMax": "Maximum :",
+    "colorScaleRange": "Échelle de couleurs",
+    "colorScaleRangeMinSmallerThanMax": "La valeur minimale de la gamme de l'échelle de couleurs doit être inférieure à la valeur maximale.",
+    "colorScaleRangeMax": "La valeur maximale doit être un nombre.",
+    "colorScaleRangeMin": "La valeur minimale doit être un nombre.",
+    "colorScaleRangeTitle": "Plage d'échelle de couleur non valide"
+  },
+  "description": {
+    "dataCustodian": "Dépositaire des données",
+    "dataServiceDetails": "Détails du service de données",
+    "dataSourceDetails": "Détails de la source de données",
+    "downloadData": "Télécharger les données",
+    "useTheLinkToDownload": "Utilisez le lien ci-dessous pour télécharger directement les données.",
+    "downloadInFormat": "Télécharger les données actuellement sélectionnées au format {{format}}",
+    "useLinkBelow": "Utilisez le lien ci-dessous pour télécharger les données. Voir la {{link}} pour plus d'informations sur la personnalisation des paramètres de requête des URL.",
+    "dataUrl": "URL de données",
+    "typeName": "Tapez le nom",
+    "layerName": "Nom du calque",
+    "wfs": "Il s'agit d'un <1>Service WFS</1>, qui transfère des données spatiales brutes sur demande. Il peut être utilisé dans les logiciels SIG avec cette URL :",
+    "wms": "Il s'agit d'un <1>Service WMS</1>, qui génère des images cartographiques sur demande. Il peut être utilisé dans un logiciel SIG avec cette URL :",
+    "dataNotLocal": "Veuillez contacter le fournisseur de ces données pour plus d'informations, notamment sur les droits et les contraintes d'utilisation.",
+    "dataLocal": "Ce fichier n'existe que dans votre navigateur. Pour le partager, vous devez le charger sur un serveur web public.",
+    "name": "Déscription"
+  },
+  "preview": {
+    "dataCustodian": "Dépositaire des données",
+    "updateFrequency": "Fréquence de mise à jour",
+    "modified": "Modifié",
+    "created": "Créé",
+    "contact": "Contacts",
+    "author": "Auteur",
+    "accessConstraints": "Contraintes d'accès",
+    "licence": "Licence",
+    "resourceDescription": "Description des ressources",
+    "serviceDescription": "Description du service",
+    "datasetDescription": "Description de l'ensemble de données",
+    "dataDescription": "Description des données",
+    "disclaimer": "Avis de non-responsabilité",
+    "addToMap": "Ajouter à la carte",
+    "removeFromMap": "Retirer de la carte",
+    "dataPreviewError": "ERREUR D'APERÇU DES DONNÉES",
+    "dataPreview": "APERÇU DES DONNÉES",
+    "dataPreviewLoading": "CHARGEMENT DE L'APERÇU DES DONNÉES...",
+    "noPreviewAvailable": "AUCUN APERÇU DISPONIBLE",
+    "preview": "{{appName}} aperçu",
+    "selectToPreview": "<0>Sélectionner un ensemble de données pour voir un aperçu </0><1>- OU -</1><2>Aller à la carte</2>",
+    "doesNotContainGeospatialData": "Ce fichier ne contient pas de données géospatiales."
+  },
+  "mobile": {
+    "toggleNavigation": "Basculer la navigation"
+  },
+  "search": {
+    "searchCatalogue": "Recherche dans le catalogue",
+    "placeholder": "Recherche de lieux",
+    "viewMore": "Voir plus de {{name}} résultats",
+    "viewLess": "Voir moins de {{name}} résultats",
+    "data": "Données",
+    "done": "Terminé",
+    "resultsLabel": "Résultats de recherche"
+  },
+  "addData": {
+    "note": "<0>Note : </0>Les données ajoutées de cette manière ne sont pas sauvegardées ou rendues visibles aux autres.",
+    "back": "Précédent",
+    "infoText": "<0>Glissez et déposez un fichier ici pour le visualiser localement sur la carte</0><1>(il ne sera pas enregistré ou téléchargé sur Internet)</1>",
+    "dragDrop": "Glisser-déposer",
+    "webTitle": "Ajouter des données Web",
+    "localTitle": "Ajouter des données locales",
+    "urlInputBtn": "ajouter",
+    "webFile": "<0>Étape 2 :</0> Saisissez l'URL du fichier de données ou du service Web",
+    "webFileType": "<0>Étape 1 :</0> Sélectionnez le type de fichier (facultatif)",
+    "webAdd": "Ajouter des données web",
+    "localFile": "<0>Étape 2 :</0> Sélectionnez le fichier",
+    "localFileType": "<0>Étape 1 :</0> Sélectionnez le type de fichier (facultatif)",
+    "localAdd": "Ajouter un fichier local",
+    "dataCatalogue": "Catalogue de données",
+    "myData": "Mes données",
+    "done": "Terminé",
+    "closeDataPanel": "Fermer le panneau de données",
+    "load": "Charger des données locales/Web",
+    "btnHide": "Cacher"
+  },
+  "satelliteGuidance": {
+    "bodyV": "Vous pouvez appliquer une gamme de styles, tels que les fausses couleurs, aux images satellite en cliquant sur la liste déroulante des styles dans votre atelier de données.",
+    "titleV": "Comment visualiser les images en fausses couleurs ?",
+    "titleIV": "Filtrage des images par emplacement",
+    "bodyIII": "Dans votre plan de travail de données, cliquez sur la liste déroulante de la date de capture et sélectionnez parmi les heures disponibles pour charger les images historiques.",
+    "titleIII": "Chargement des images historiques",
+    "bodyII": "Vous devrez peut-être ajuster votre niveau de zoom pour rendre les images satellites visibles sur la carte.",
+    "titleII": "Où sont mes images satellites ?",
+    "nextI": "Voir le guide",
+    "prevI": "Non merci",
+    "bodyI": "Un guide ultra-rapide pour tirer le meilleur parti des images satellites historiques.",
+    "titleI": "Imagerie satellite : comment puis-je… ?",
+    "dismissText": "Compris, Merci!",
+    "menuTitle": "Vous pouvez accéder à tout moment aux guides cartographiques en consultant le <2>menu d'aide</2>."
   }
 }
