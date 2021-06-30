@@ -467,7 +467,7 @@ export default class TableStyle {
       });
     } else {
       // No column to color by, so use the same color for everything.
-      let color: Color = Color.fromCssColorString(defaultColor);
+      let color: Color = this.defaultColor;
       // May use nullColor depending on colorColumn (eg if of type 'region')
       let nullColor: Color | undefined;
       const colorId = this.tableModel.uniqueId || this.tableModel.name;
@@ -496,6 +496,10 @@ export default class TableStyle {
     }
   }
 
+  @computed get defaultColor() {
+    return Color.fromCssColorString(defaultColor);
+  }
+
   @computed get nullColor() {
     return this.colorTraits.nullColor
       ? Color.fromCssColorString(this.colorTraits.nullColor) ??
@@ -506,7 +510,7 @@ export default class TableStyle {
   @computed get regionColor() {
     return (
       Color.fromCssColorString(this.colorTraits.regionColor) ??
-      Color.TRANSPARENT
+      this.defaultColor
     );
   }
 
