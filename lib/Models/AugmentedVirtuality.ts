@@ -7,9 +7,6 @@ import Camera from "terriajs-cesium/Source/Scene/Camera";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Terria from "./Terria";
-import MapNavigationItemController from "../ViewModels/MapNavigation/MapNavigationItemController";
-import { GLYPHS } from "../ReactViews/Icon";
-import ViewerMode from "./ViewerMode";
 
 const sampleTerrainMostDetailed = require("terriajs-cesium/Source/Core/sampleTerrainMostDetailed")
   .default;
