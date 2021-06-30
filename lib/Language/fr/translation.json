@@ -11,10 +11,40 @@
     "removeStoriesPanel": "Voulez-vous vraiment supprimer {{ count }} scène ?",
     "removeStoriesPanel_plural": "Voulez-vous vraiment supprimer {{ count }} scènes ?",
     "edit": "Modifier",
-    "editStory": "modifier"
+    "editStory": "modifier",
+    "untitledScene": "scène sans titre",
+    "delete": "Supprimer",
+    "deleteStory": "supprimer",
+    "recaptureStory": "re-selectionner",
+    "view": "Affichage",
+    "viewStory": "voir",
+    "shareTitle": "Partager les histoires",
+    "share": "Partager",
+    "badgeBarLabel": "Les scènes",
+    "gettingStartedTitle": "Démarrage rapide",
+    "gettingStarted": "Démarrage rapide",
+    "panelBody": "Créez et partagez des histoires interactives directement depuis votre carte",
+    "panelTitle": "Éditeur d'histoire"
   },
   "featureInfo": {
-    "noInfoAvailable": "Aucune information disponible"
+    "noInfoAvailable": "Aucune information disponible",
+    "latLon": "Lat/Lon ",
+    "siteData": "Données du site",
+    "locationMarker": "Marqueur de position",
+    "satelliteSuggestionBtn": "Afficher {{catalogItemName}} à cet emplacement",
+    "btnCloseFeature": "Informations sur la fonctionFermer le panneau de données",
+    "panelHeading": "Informations sur les fonctionnalités",
+    "userSelection": "Sélection de l'utilisateur",
+    "clickToAddData": "Cliquez sur '$t(addData.addDataBtnText)' pour ajouter des données à la carte.",
+    "noDataAvailable": "Aucune donnée n'est disponible ici - essayez un autre emplacement.",
+    "clickMap": "Cliquez sur la carte pour en savoir plus sur un emplacement",
+    "pickLocation": "Sélectionnez un emplacement",
+    "download": "Télécharger ce tableau",
+    "catalogItem": {
+      "featureInfoShown": "Les premiers {{maximum}} sont indiqués ci-dessous.",
+      "featuresFound": "{{featCount}} {catalogItemName} fonctionnalités ont été trouvées.",
+      "moreThanMax": "Plus de {{maximum}} {{catalogItemName}} fonctionnalités ont été trouvées."
+    }
   },
   "sui": {
     "notifications": {
@@ -22,14 +52,19 @@
       "confirmText": "Oui",
       "message": "Souhaitez-vous la voir maintenant ?",
       "title": "Cette carte contient une histoire"
-    }
+    },
+    "hideWorkbench": "Cacher le plan de travail",
+    "showWorkbench": "Afficher le plan de travail"
   },
   "helpMenu": {
     "next": "SUIVANT",
     "done": "TERMINÉ",
     "btnTitle": "obtenir de l'aide",
     "helpMenuHeader": "Qu'est-ce que vous aimeriez faire ?",
-    "btnText": "Aide"
+    "btnText": "Aide",
+    "helpMenuMoreHelpTitle": "Besoin de plus d'aide ?",
+    "helpMenuSatelliteGuideTitle": "Voir le guide d'imagerie satellite",
+    "helpMenuOpenWelcome": "Afficher un message de bienvenue"
   },
   "feedback": {
     "feedbackBtnText": "Envoyer les remarques",
@@ -41,20 +76,46 @@
     "yourName": "Votre nom (facultatif)",
     "close": "fermer la remarque",
     "title": "Remarques",
-    "feedbackPreamble": "Nous serions ravis d’avoir votre retour !",
-    "email": "Adresse courriel (facultative)<br/><2>Nous ne pouvons pas faire de suivi sans !</2>"
+    "feedbackPreamble": "Nous serions ravis d’avoir votre avis !",
+    "email": "Adresse courriel (facultative)<br/><2>Nous ne pouvons pas faire de suivi sans !</2>",
+    "minLength": "La longueur minimale du commentaire est de {{minLength}}",
+    "captionText": "Cela nous aide à résoudre les problèmes en nous permettant de voir ce que vous voyez"
   },
   "settingPanel": {
     "performanceLabel": "Performance",
     "qualityLabel": "Qualité",
     "mapView": "Vue carte",
-    "btnText": "Carte",
+    "btnText": "Paramètres de la carte",
     "btnTitle": "Changer de vue",
     "screen": "écran",
     "viewerModeLabels": {
-      "CesiumTerrain": "Terrain 3D"
+      "CesiumTerrain": "Terrain 3D",
+      "CesiumEllipsoid": "3D Lisse"
     },
-    "none": "(Aucun)"
+    "none": "(Aucun)",
+    "terrain": {
+      "right": "Droite",
+      "both": "Les deux",
+      "left": "Gauche",
+      "sideLabel": "Afficher le terrain sur le",
+      "hideUndergroundFeatures": "Appuyez pour commencer à masquer les entités qui se trouvent sous la surface du terrain",
+      "showUndergroundFeatures": "Appuyez pour commencer à afficher les entités qui se trouvent sous la surface du terrain",
+      "hideUnderground": "Le terrain cache des éléments souterrains"
+    },
+    "timeline": {
+      "hideLabel": "Appuyez pour commencer à toujours afficher la chronologie, même lorsqu'aucun jeu de données variant dans le temps n'est sur le plan de travail",
+      "alwaysShowLabel": "Appuyez pour commencer à n'afficher la chronologie que lorsqu'il existe des ensembles de données variables dans le temps sur le plan de travail"
+    },
+    "mapQuality": "Qualité de la carte raster :",
+    "nativeResolutionHeader": "Utiliser la résolution native de l'appareil",
+    "imageOptimisation": "Optimisation des images",
+    "baseMap": "Carte de base",
+    "nativeResolutionLabel": "Appuyez pour arrêter d'utiliser la résolution {{resolution1}}  et commencer à utiliser la résolution {{resolution2}}",
+    "qualityLabels": {
+      "lowerPerformance": "Qualité maximale, performances inférieures",
+      "balancedPerformance": "Performances et qualité équilibrées",
+      "maximumPerformance": "Performances maximales, qualité inférieure"
+    }
   },
   "toolsPanel": {
     "btnTitle": "Boîte à outils avancée",
@@ -67,7 +128,10 @@
     "subTotals": "<div> {{name}} : {{items}} éléments / {{groups}} groupes </div>",
     "totals": "<div>Le catalogue contient {{items}} éléments dans {{groups}} groupes. </div>",
     "countingMessage": "Comptage, veuillez patienter…",
-    "loadError": "n'a pas réussi à se charger."
+    "loadError": "n'a pas réussi à se charger.",
+    "mapDataState": "{{count}} jeu de données activé sur la carte",
+    "mapDataState_plural": "{{count}} ensembles de données activés sur la carte",
+    "noMapDataEnabled": "Aucune donnée cartographique activée"
   },
   "share": {
     "btnStoryShareTitle": "Partagez votre histoire avec d'autres",
@@ -84,7 +148,18 @@
     "printButton": "Imprimer",
     "printExplanation": "Ouvrir une version imprimable de cette carte.",
     "printTitle": "Imprimer la carte",
-    "shortLinkShortening": "Raccourcissement…"
+    "shortLinkShortening": "Raccourcissement…",
+    "convertErrorMessage": "<p>Ce lien de partage est basé sur une ancienne version de TerriaJS - le logiciel qui alimente cette carte Web. Une erreur s'est produite lors de la tentative de mise à niveau des données de partage. Les détails de l'erreur sont ci-dessous.</p><p><pre>{{error}}</pre></p><p><details><summary>Trace de la pile :</summary><pre>{{stackTrace}}</pre></details></p><p>Veuillez le signaler en envoyant un e-mail à {{email}}.</p>",
+    "convertErrorTitle": "Impossible de mettre à niveau le lien de partage vers V8",
+    "convertNotificationWarningsTitle": "Détails techniques",
+    "convertNotificationFeedback": "Pour des questions ou des commentaires, cliquez ici.",
+    "convertNotificationHelp": "Si vous avez créé le lien de partage, consultez le menu Aide pour obtenir des conseils sur la mise à jour du lien de partage.",
+    "convertNotificationMessage": "Ce lien de partage est basé sur une ancienne version de TerriaJS - le logiciel qui alimente cette carte Web. Bien que tous les efforts soient faits pour préserver le lien, vous pouvez rencontrer des problèmes lors de la visualisation des données.\n\nSi vous êtes un utilisateur du lien de partage, cliquez sur OK pour faire disparaître le message d'avertissement et continuer à accéder aux données.",
+    "convertNotificationTitle": "Avis : lien de partage mis à niveau",
+    "generatingUrl": "Génération de l'URL de partage...",
+    "localDataNote": "<0><0>Remarque :</0></0><1>Les sources de données suivantes ne seront PAS partagées car elles incluent des données de ce système local. Pour partager ces sources de données, publiez leurs données sur un serveur Web et <2>ajoutez-les à l'aide d'une URL</2>.</1>",
+    "shortLinkError": "Une erreur s'est produite lors de la tentative de raccourcissement de l'URL. S'il vous plaît, vérifiez votre connexion à internet et réessayez.",
+    "browserPrint": "Pour de meilleurs résultats imprimés, veuillez utiliser le bouton Imprimer de {{appName}} au lieu de la fonction d'impression de votre navigateur Web."
   },
   "legend": {
     "elev": "Élév.",
@@ -94,7 +169,19 @@
   },
   "compass": {
     "title": "Cliquez et faites glisser pour faire pivoter la caméra",
-    "description": "Faire glisser l'anneau extérieur : faire pivoter la vue.\nFaites glisser le gyroscope intérieur : orbite libre.\nDouble-cliquez : réinitialiser la vue.\nASTUCE : vous pouvez également libérer l'orbite en maintenant la touche CTRL enfoncée et en faisant glisser la carte."
+    "description": "Faire glisser l'anneau extérieur : faire pivoter la vue.\nFaites glisser le gyroscope intérieur : orbite libre.\nDouble-cliquez : réinitialiser la vue.\nASTUCE : vous pouvez également libérer l'orbite en maintenant la touche CTRL enfoncée et en faisant glisser la carte.",
+    "guidance": {
+      "dismissText": "Fermer et ne plus afficher",
+      "ctrlDragDescription": "Vous pouvez également incliner et faire pivoter la carte en maintenant la touche CTRL enfoncée et en faisant glisser la carte.",
+      "innerCircleDescription2": "Double-cliquez ici pour réinitialiser la vue à son état par défaut.",
+      "innerCircleDescription1": "Cliquez au centre et faites glisser lentement vers le haut, le bas, la gauche ou la droite pour incliner et faire pivoter la carte en même temps.",
+      "innerCircleTitle": "Cercle intérieur",
+      "outerRingDescription": "Faites glisser l'anneau extérieur dans un mouvement circulaire pour faire pivoter la vue de la carte à 360˚.",
+      "outerRingTitle": "Anneau extérieur",
+      "title": "Commandes de gyroscope"
+    },
+    "guidanceBtnText": "Afficher des instructions détaillées sur l'utilisation de la boussole",
+    "guidanceBtnTitle": "Guidage du gyroscope"
   },
   "zoomCotrol": {
     "zoomOut": "Zoom arrière",
@@ -112,7 +199,9 @@
       "goleftTitle": "Afficher sur le côté gauche"
     },
     "title": "Faites glisser vers la gauche ou la droite pour ajuster les vues",
-    "toggleSplitterTool": "Activer la comparaison côte à côte entre deux ensembles de données différents"
+    "toggleSplitterTool": "Activer la comparaison côte à côte entre deux ensembles de données différents",
+    "toggleSplitterToolDisabled": "Veuillez désactiver les autres fonctionnalités de comparaison côte à côte afin d'activer la comparaison standard",
+    "toggleSplitterToolTitle": "Comparer"
   },
   "location": {
     "centreMap": "Centrer la carte sur votre position actuelle",
@@ -124,7 +213,8 @@
   },
   "measure": {
     "measureDistance": "Mesurer la distance entre les emplacements",
-    "measureTool": "Outil de mesure"
+    "measureTool": "Outil de mesure",
+    "measureToolTitle": "Mesure de distance"
   },
   "general": {
     "cancel": "Annuler",
@@ -133,7 +223,9 @@
     "prev": "Préc.",
     "next": "Suiv.",
     "open": "Ouvrir",
-    "close": "Fermer"
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "back": "Précédent"
   },
   "models": {
     "abs": {
@@ -145,5 +237,132 @@
     "helpfulHintsTwo": "Une fois que vous avez ajouté des données à la carte, vos ensembles de données actifs sont répertoriés ici dans votre plan de travail. Le plan de travail vous aidera à interagir avec les données.",
     "helpfulHintsOne": "Parcourez les données disponibles en sélectionnant « Explorer les données cartographiques » ou cliquez sur « Télécharger » pour ajouter vos propres données à la carte.",
     "helpfulHints": "Astuces utiles"
+  },
+  "diffTool": {
+    "instructions": {
+      "paneDescription": "Visualisez et comparez la différence de données entre deux dates à un même endroit.",
+      "changeDates": "Changer les dates",
+      "setDateB": "Définir la date AB",
+      "setDateA": "Définir la date A"
+    },
+    "exit": "Sortie",
+    "title": "Différence",
+    "datePicker": {
+      "dateOutOfRange": "Actuellement hors de portée",
+      "dateButtonTitle": "Sélectionnez une date",
+      "nextDateTitle": "Prochaine date",
+      "previousDateTitle": "Date précédente",
+      "back": "Retour"
+    },
+    "locationPicker": {
+      "errorMessages": {
+        "afterPick": "Cliquez sur un autre point pour modifier la sélection",
+        "beforePick": "Échec de la résolution des images à l'emplacement ! Veuillez choisir un emplacement ou un niveau de zoom différent.",
+        "title": "Sélectionnez un emplacement précis"
+      },
+      "nextMessages": {
+        "afterPick": "Cliquez sur un autre point pour modifier la sélection",
+        "beforePick": "Cliquez sur un autre point pour modifier la sélection",
+        "title": "Vous avez sélectionné l'emplacement {{latitude}} {{longitude}}"
+      },
+      "initialMessages": {
+        "afterPick": "Cliquez sur un autre point pour changer la région sélectionnée",
+        "beforePick": "Nous en avons besoin pour exécuter notre processus de détection des changements.",
+        "title": "Sélectionnez un emplacement précis"
+      }
+    },
+    "locationDisplay": {
+      "locationSelected": {
+        "description": "Pour modifier, cliquez sur un autre point de la carte",
+        "title": "Lieu sélectionné et dates filtrées"
+      },
+      "noLocationSelected": {
+        "description": "Pour filtrer le sélecteur de date d'image par emplacement, veuillez sélectionner un point sur la carte",
+        "title": "Aucun emplacement sélectionné"
+      }
+    },
+    "labels": {
+      "areaFilterSelection": "Sélection du filtre de zone",
+      "disabledButtonPrompt": "Veuillez noter : un lieu et des dates doivent être sélectionnés pour procéder à la détection des changements",
+      "generateDiffButtonText": "Générer une détection de changement",
+      "differenceOutput": "Sortie différentielle",
+      "previewStyle": "Style d'aperçu",
+      "sourceDataset": "Ensemble de données source",
+      "dateComparisonB": "Comparaison de dates B",
+      "dateComparisonA": "Comparaison de dates A",
+      "dates": "Dates",
+      "area": "Aire"
+    },
+    "differenceResultsTitle": "Changer les résultats de la détection",
+    "chooseDifference": "Choisissez une sortie de différence",
+    "choosePreview": "Choisissez un style d'aperçu"
+  },
+  "tool": {
+    "button": {
+      "closed": "{{toolName}}",
+      "open": "Quittez {{toolNameLowerCase}}"
+    },
+    "exitBtnTitle": "Sortie",
+    "loadingError": {
+      "message": "Une erreur s'est produite lors de la tentative de chargement de cet outil à partir du serveur. Veuillez réessayer.",
+      "title": "Erreur lors du chargement de l'outil {{toolName}}"
+    },
+    "closeButtonTitle": "Fermez l'outil {{toolName}}"
+  },
+  "tour": {
+    "mapNavigationSplitterIcon": {
+      "content": "## Comparer\n\nUne fonctionnalité puissante de Terria est la possibilité de comparer des ensembles de données à l'aide d'une vue en écran partagé. Pour les ensembles de données avec un composant de série temporelle, tels que les images satellites, vous pouvez comparer les dates en amont et en aval dans le temps en cliquant sur le sélecteur de date."
+    },
+    "mapNavigationCompassOuterRing": {
+      "content": "## Afficher les contrôles\n\nIci, vous pouvez changer la vue de la carte. Vous pouvez modifier l'orientation de votre vue à l'aide de la bague extérieure et vous pouvez incliner l'angle de la caméra à l'aide de la bague intérieure. Double-cliquez pour réinitialiser la vue."
+    },
+    "menuBarStoryButton": {
+      "content": "## Histoires\n\nLes histoires vous permettent d'ajouter des informations contextuelles à un ensemble de données pour donner vie à un récit. Créez votre propre histoire de données à l'aide de l'éditeur d'histoires et partagez-la via le panneau \"Partager\" une fois que vous avez terminé."
+    },
+    "menuBarMapSettingsButton": {
+      "content": "## Paramètres de la carte\n\nPersonnalisez les paramètres de la carte tels que les fonds de carte, le relief 2D/3D et la qualité de l'image de la carte pour de meilleures performances."
+    },
+    "sidePanelUploadButton": {
+      "content": "## Télécharger des données\n\nVous pouvez télécharger vos propres données sur la carte pour les afficher avec d'autres ensembles de données. Téléchargez un fichier ou un lien vers un ensemble de données en ligne ou un service de données existant. Les formats de données pris en charge incluent CSV, GeoJSON, KML, GPX et CZML."
+    },
+    "exploreMapDataButton": {
+      "content": "## Explorer les données cartographiques\n\nParcourez le catalogue des données disponibles et ajoutez-le à la carte ici. Vous pouvez ajouter plusieurs ensembles de données à tout moment, et vous les verrez répertoriés ci-dessous dans le Workbench."
+    },
+    "locationSearchInput": {
+      "content": "## Recherche d'emplacement\n\nEntrez une localité ou une adresse pour localiser facilement un point d'intérêt sur la carte."
+    },
+    "previous": "Précédent",
+    "finish": "Terminer",
+    "end": "Finir la visite",
+    "preface": {
+      "title": "Faire la visite",
+      "start": "Commencer la visite",
+      "close": "Peut-être plus tard",
+      "content": "Vous ne savez pas par où commencer ? Faites un tour rapide des principales fonctionnalités de notre logiciel et découvrez certaines des fonctions clés pour vous aider à avancer."
+    }
+  },
+  "trainer": {
+    "hideAllSteps": "Cacher toutes les étapes",
+    "showAllSteps": "Montrer toutes les étapes",
+    "collapseTrainer": "Masquer le détail de l'étape",
+    "expandTrainer": "Afficher plus de détails sur l'étape"
+  },
+  "welcomeMessage": {
+    "dismissText": "Fermer le message et ne plus me le montrer",
+    "exploreDataBtnText": "Explorer les données cartographiques",
+    "helpBtnText": "j'aurai besoin d'aide",
+    "tourBtnText": "Visite guidée",
+    "welcomeMessage": "Intéressé par la découverte et l'exploration de données ?<br/>Plongez-vous directement et commencez ou consultez les options du guide d'aide suivantes.",
+    "title": "Commençons"
+  },
+  "helpPanel": {
+    "takeTour": "Visite guidée",
+    "dismissText": "Compris, Merci!",
+    "promptMessage": "Trouvez la visite guidée, des vidéos pratiques et d'autres contenus d'aide ici",
+    "menuPaneBody": "Trouvez des conseils utiles sur l'utilisation de TerriaJS en consultant les guides ci-dessous ou en contactant l'équipe à [info@terria.io](mailto:info@terria.io)",
+    "menuPaneTitle": "Nous sommes là pour vous aider"
+  },
+  "languagePanel": {
+    "changeLanguage": "Changer la langue"
   }
 }
