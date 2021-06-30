@@ -255,6 +255,9 @@ interface ConfigParameters {
    */
   feedbackMinLength?: number;
 
+  /**
+   * Extra links to show in the credit line at the bottom of the map (currently only the Cesium map).
+   */
   extraCreditLinks?: { url: string; text: string }[];
 }
 
