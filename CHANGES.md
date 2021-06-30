@@ -5,7 +5,11 @@ Change Log
 
 #### next release (8.0.0-alpha.88)
 * Fixed a bug with numeric item search where it sometimes fails to return all matching values.
+
+* Fix datetime button margin with scroll in workbench.
+* Fix checkbox when click happen on svg icon. (#5550)
 * [The next improvement]
+
 #### 8.0.0-alpha.87
 
 * Re-add basemap images to terriajs rather than requiring all TerriaMaps to have those basemap images. Default basemaps will use those images.
