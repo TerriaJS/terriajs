@@ -21,7 +21,7 @@ type NumericSearchQuery = {
 export default class NumericIndex implements IndexBase<NumericSearchQuery> {
   readonly type = IndexType.numeric;
 
-  private idValuePairs?: Promise<{ dataRowId: number; value: number }[]>;
+  idValuePairs?: Promise<{ dataRowId: number; value: number }[]>;
 
   /**
    * Constructs a NumericIndex.
@@ -73,8 +73,12 @@ export default class NumericIndex implements IndexBase<NumericSearchQuery> {
       { value: endValue },
       (a, b) => a.value - b.value
     );
-    const startIndex = i < 0 ? ~i : i;
-    const endIndex = j < 0 ? ~j : j;
+    let startIndex = i < 0 ? ~i : i;
+    let endIndex = j < 0 ? ~j : j;
+    // iterate startIndex backward till we find the first matching value
+    while (idValuePairs[startIndex - 1]?.value === value.start) startIndex -= 1;
+    // iterate endIndex forward till we find the last matching value
+    while (idValuePairs[endIndex + 1]?.value === value.end) endIndex += 1;
     const matchingIds = idValuePairs
       .slice(startIndex, endIndex + 1)
       .map(({ dataRowId }) => dataRowId);
