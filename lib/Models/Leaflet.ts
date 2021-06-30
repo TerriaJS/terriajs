@@ -444,14 +444,12 @@ export default class Leaflet extends GlobeOrMap {
       | DataSource
       | MappableMixin.MappableMixin
       | any,
-    flightDurationSeconds: number
+    flightDurationSeconds: number = 3.0
   ): Promise<void> {
     if (!isDefined(target)) {
       return Promise.resolve();
       //throw new DeveloperError("target is required.");
     }
-    flightDurationSeconds = defaultValue(flightDurationSeconds, 3.0);
-
     let bounds;
 
     // Target is a KML data source
