@@ -787,6 +787,11 @@
       "csvRegionMappingMessageZeroFound": "Zero region names found for region type {{regionType}}",
       "csvRegionMappingMessageZeroBoundariesFound": "Zero region boundaries found for region {{regionName}}",
       "csvRegionMappingMessageLoadError": "Couldn't load region boundaries for region {{regionName}} {{exception}}"
+    },
+    "extraCreditLinks": {
+      "dataAttribution": "Data attribution",
+      "disclaimer": "Disclaimer",
+      "basemap": "Basemap"
     }
   },
   "models": {

@@ -241,7 +241,8 @@ export default class TableStyle {
       this.latitudeColumn !== undefined &&
       this.idColumns !== undefined &&
       this.timeColumn !== undefined &&
-      this.timeIntervals !== undefined
+      this.timeIntervals !== undefined &&
+      this.moreThanOneTimeInterval
     );
   }
 
@@ -557,6 +558,26 @@ export default class TableStyle {
       });
     });
     return intervals;
+  }
+
+  /** Is there more than one unique time interval */
+  @computed get moreThanOneTimeInterval() {
+    if (this.timeIntervals) {
+      // Find first non-null time interval
+      const firstInterval = this.timeIntervals?.find(t => t) as
+        | TimeInterval
+        | undefined;
+      if (firstInterval) {
+        // Does there exist an interval which is different from firstInterval (that is to say, does there exist at least two unique intervals)
+        return !!this.timeIntervals?.find(
+          t =>
+            t &&
+            (!firstInterval.start.equals(t.start) ||
+              !firstInterval.stop.equals(t.stop))
+        );
+      }
+    }
+    return false;
   }
 
   /**
