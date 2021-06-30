@@ -3,7 +3,9 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.87)
+#### next release (8.0.0-alpha.88)
+* [The next improvement]
+#### 8.0.0-alpha.87
 
 * Re-add basemap images to terriajs rather than requiring all TerriaMaps to have those basemap images. Default basemaps will use those images.
 * Data from TableMixin always overrides other feature information (e.g. from vector tiles in region mapping) by column name and title for feature info templating (consistent with v7).
@@ -12,7 +14,6 @@ Change Log
 * Fixed a cyclic dependency between initialMessage and app spinner (globe gif greysreen) that caused the app spinner to be present forever when loading a share link.
 * Removed hardcoded credit links and made it configurable via terria config parameters.
 * Disable `TableMixin` time column if only one unique time interval
-* [The next improvement]
 
 #### 8.0.0-alpha.86
 
