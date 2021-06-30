@@ -143,7 +143,6 @@ const MobileMenu = observer(
               <div onClick={this.hideMenu}>
                 <LangPanel
                   terria={this.props.terria}
-                  i18n={this.props.i18n}
                   smallScreen={this.props.viewState.useSmallScreenInterface}
                 />
               </div>
