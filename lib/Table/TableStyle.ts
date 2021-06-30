@@ -467,11 +467,14 @@ export default class TableStyle {
     } else {
       // No column to color by, so use the same color for everything.
       let color: Color = Color.fromCssColorString(defaultColor);
+      // May use nullColor depending on colorColumn (eg if of type 'region')
+      let nullColor: Color | undefined;
       const colorId = this.tableModel.uniqueId || this.tableModel.name;
 
       // If colorColumn is of type region - use regionColor
       if (colorColumn?.type === TableColumnType.region) {
         color = this.regionColor;
+        nullColor = this.nullColor;
       } else if (colorTraits.nullColor) {
         color = Color.fromCssColorString(colorTraits.nullColor);
       } else if (this.binColors.length > 0) {
@@ -480,7 +483,11 @@ export default class TableStyle {
         color = Color.fromCssColorString(getColorForId(colorId));
       }
 
-      return new ConstantColorMap(color, this.tableModel.name);
+      return new ConstantColorMap({
+        color,
+        title: this.tableModel.name,
+        nullColor
+      });
     }
   }
 
