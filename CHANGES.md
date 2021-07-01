@@ -7,6 +7,7 @@ Change Log
 
 * Fix datetime button margin with scroll in workbench.
 * Fix checkbox when click happen on svg icon. (#5550)
+* Added progress indicator when loading item search tool.
 * [The next improvement]
 
 #### 8.0.0-alpha.87
