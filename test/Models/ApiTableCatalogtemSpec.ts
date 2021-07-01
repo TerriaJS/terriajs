@@ -3,6 +3,7 @@ import { ApiTableCatalogItem } from "../../lib/Models/ApiTableCatalogItem";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import proxyCatalogItemUrl from "../../lib/Models/proxyCatalogItemUrl";
 import Terria from "../../lib/Models/Terria";
+import updateModelFromJson from "../../lib/Models/updateModelFromJson";
 
 const regionMapping = JSON.stringify(
   require("../../wwwroot/data/regionMapping.json")
@@ -30,47 +31,35 @@ describe("ApiTableCatalogItem", function() {
   });
 
   it("creates a table from api calls", async function() {
-    let catalogJson = {
-      idKey: "id",
-      apis: [
-        {
-          apiUrl: "https://terria.io/values.json",
-          keyToColumnMapping: [
-            {
-              columnName: "Value",
-              keyInApiResponse: "value"
-            }
-          ]
-        },
-        {
-          apiUrl: "https://terria.io/position.json",
-          kind: "PER_ID",
-          keyToColumnMapping: [
-            {
-              columnName: "latitude",
-              keyInApiResponse: "latitude"
-            },
-            {
-              columnName: "longitude",
-              keyInApiResponse: "longitude"
-            }
-          ]
-        }
-      ]
-    };
     const valueApiIdx = 0;
     const positionApiIdx = 1;
     runInAction(() => {
-      apiCatalogItem.setTrait(
-        CommonStrata.definition,
-        "idKey",
-        catalogJson.idKey
-      );
-      apiCatalogItem.setTrait(
-        CommonStrata.definition,
-        "apis",
-        catalogJson.apis as any
-      );
+      updateModelFromJson(apiCatalogItem, CommonStrata.definition, {
+        idKey: "id",
+        apis: [
+          {
+            url: "https://terria.io/values.json"
+          },
+          {
+            url: "https://terria.io/position.json",
+            kind: "PER_ID"
+          }
+        ],
+        columns: [
+          {
+            title: "Value",
+            name: "value"
+          },
+          {
+            title: "latitude",
+            name: "latitude"
+          },
+          {
+            title: "longitude",
+            name: "longitude"
+          }
+        ]
+      });
     });
 
     jasmine.Ajax.stubRequest(
@@ -78,15 +67,12 @@ describe("ApiTableCatalogItem", function() {
     ).andReturn({ responseText: regionMapping });
 
     jasmine.Ajax.stubRequest(
-      proxyCatalogItemUrl(
-        apiCatalogItem,
-        catalogJson.apis[positionApiIdx].apiUrl
-      )
+      proxyCatalogItemUrl(apiCatalogItem, "https://terria.io/position.json")
     ).andReturn({
       responseText: positionApiResponse
     });
     jasmine.Ajax.stubRequest(
-      proxyCatalogItemUrl(apiCatalogItem, catalogJson.apis[valueApiIdx].apiUrl)
+      proxyCatalogItemUrl(apiCatalogItem, "https://terria.io/values.json")
     ).andReturn({
       responseText: valueApiResponse
     });

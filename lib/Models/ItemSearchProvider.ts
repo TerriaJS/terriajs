@@ -1,4 +1,5 @@
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import { SearchParameterTraits } from "../Traits/SearchableItemTraits";
 
 export type ItemSearchParameter =
@@ -31,9 +32,11 @@ export interface TextItemSearchParameter extends BaseParameter {
 export type ItemSearchResult = {
   id: string | number;
   idPropertyName: string;
-  zoomToTarget:
-    | BoundingSphere
-    | { latitude: number; longitude: number; featureHeight: number };
+  featureCoordinate: {
+    latitudeDegrees: number;
+    longitudeDegrees: number;
+    featureHeight: number;
+  };
   properties: Record<string, string | number>;
 };
 

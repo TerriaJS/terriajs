@@ -1,4 +1,3 @@
-import groupBy from "lodash-es/groupBy";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
 import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
@@ -7,17 +6,18 @@ import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import TimeIntervalCollection from "terriajs-cesium/Source/Core/TimeIntervalCollection";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
+import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 import SampledPositionProperty from "terriajs-cesium/Source/DataSources/SampledPositionProperty";
 import SampledProperty from "terriajs-cesium/Source/DataSources/SampledProperty";
 import TimeIntervalCollectionPositionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionPositionProperty";
 import TimeIntervalCollectionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
-import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
-import { JsonObject } from "../Core/Json";
+import Feature from "../Models/Feature";
+import { getRowValues } from "./createLongitudeLatitudeFeaturePerRow";
+import getChartDetailsFn from "./getChartDetailsFn";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
 import TableStyle from "./TableStyle";
-import Feature from "../Models/Feature";
 
 type RequiredTableStyle = TableStyle & {
   longitudeColumn: TableColumn;
@@ -33,15 +33,7 @@ type RequiredTableStyle = TableStyle & {
 export default function createLongitudeLatitudeFeaturePerId(
   style: RequiredTableStyle
 ): Entity[] {
-  // Group rows by id and create a feature per group
-  const idColumns = style.idColumns;
-  const rowIds = style.tableModel.rowIds;
-  const groups = Object.entries(
-    groupBy(rowIds, id =>
-      idColumns.map(col => col.valueFunctionForType(id)).join("-")
-    )
-  );
-  const features = groups.map(([featureId, rowIds]) =>
+  const features = style.rowGroups.map(([featureId, rowIds]) =>
     createFeature(featureId, rowIds, style)
   );
   return features;
@@ -78,30 +70,23 @@ function createFeature(
   const colorMap = style.colorMap;
   const pointSizeMap = style.pointSizeMap;
   const colorColumn = style.colorColumn;
-  const valueFunction =
+  const colorValueFunction =
     colorColumn !== undefined ? colorColumn.valueFunctionForType : () => null;
+  const pointSizeColumn = style.pointSizeColumn;
+  const pointSizeValueFunction =
+    pointSizeColumn !== undefined
+      ? pointSizeColumn.valueFunctionForType
+      : () => null;
+
   const availability = new TimeIntervalCollection();
   const tableColumns = style.tableModel.tableColumns;
-  const chartColumns = style.tableModel.tableColumns.filter(
-    col =>
-      col.type !== TableColumnType.longitude &&
-      col.type !== TableColumnType.latitude
-  );
-  const getChartDetails = () => ({
-    title: featureId,
-    csvData: [
-      chartColumns.map(col => col.name).join(","),
-      ...rowIds.map(i =>
-        chartColumns.map(col => col.valueFunctionForType(i)).join(",")
-      )
-    ].join("\n")
-  });
 
   rowIds.forEach(rowId => {
     const longitude = longitudes[rowId];
     const latitude = latitudes[rowId];
     const interval = timeIntervals[rowId];
-    const value = valueFunction(rowId);
+    const colorValue = colorValueFunction(rowId);
+    const pointSizeValue = pointSizeValueFunction(rowId);
 
     if (longitude === null || latitude === null || !interval) {
       return;
@@ -113,17 +98,16 @@ function createFeature(
       interval
     );
 
-    addSampleOrInterval(color, colorMap.mapValueToColor(value), interval);
+    addSampleOrInterval(color, colorMap.mapValueToColor(colorValue), interval);
     addSampleOrInterval(
       pointSize,
-      pointSizeMap.mapValueToPointSize(value),
+      pointSizeMap.mapValueToPointSize(pointSizeValue),
       interval
     );
     addSampleOrInterval(
       properties,
       {
-        ...getRowValues(rowId, tableColumns),
-        _terria_getChartDetails: getChartDetails
+        ...getRowValues(rowId, tableColumns)
       },
       interval
     );
@@ -148,7 +132,17 @@ function createFeature(
     }),
     availability
   });
-  feature.properties = new PropertyBag(properties);
+
+  const propertiesBag = new PropertyBag(properties);
+  propertiesBag.addProperty(
+    "_terria_getChartDetails",
+    getChartDetailsFn(style, rowIds)
+  );
+
+  // Add properties to feature.data so we have access to TimeIntervalCollectionProperty outside of the PropertyBag.
+  feature.data = properties;
+
+  feature.properties = propertiesBag;
   feature.description = description;
   return feature;
 }
@@ -197,19 +191,6 @@ function calculateShow(availability: TimeIntervalCollection) {
     );
   }
   return show;
-}
-
-function getRowValues(
-  index: number,
-  tableColumns: Readonly<TableColumn[]>
-): JsonObject {
-  const result: JsonObject = {};
-
-  tableColumns.forEach(column => {
-    result[column.title] = column.valueFunctionForType(index);
-  });
-
-  return result;
 }
 
 function getRowDescription(

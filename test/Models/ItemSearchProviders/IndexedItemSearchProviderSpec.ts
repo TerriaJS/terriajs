@@ -1,6 +1,4 @@
 import "jasmine-ajax";
-import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import JsonValue from "../../../lib/Core/Json";
 import IndexedItemSearchProvider from "../../../lib/Models/ItemSearchProviders/IndexedItemSearchProvider";
 import Csv from "../../../lib/Table/Csv";
@@ -169,21 +167,21 @@ describe("IndexedItemSearchProvider", function() {
         {
           id: 632,
           idPropertyName: "building_id",
-          zoomToTarget: createBoundingSphere({
-            latitude: 19.12575420288384,
-            longitude: 11.870779042051964,
-            radius: 3.6875988497925927
-          }),
+          featureCoordinate: {
+            latitudeDegrees: 19.12575420288384,
+            longitudeDegrees: 11.870779042051964,
+            featureHeight: 3.6875988497925927
+          },
           properties: { building_id: 632 }
         },
         {
           id: 410,
           idPropertyName: "building_id",
-          zoomToTarget: createBoundingSphere({
-            latitude: 46.567720640307755,
-            longitude: 16.64851364383736,
-            radius: 17.23546017384181
-          }),
+          featureCoordinate: {
+            latitudeDegrees: 46.567720640307755,
+            longitudeDegrees: 16.64851364383736,
+            featureHeight: 17.23546017384181
+          },
           properties: { building_id: 410 }
         }
       ]);
@@ -204,15 +202,4 @@ function stubRequest(url: string, response: JsonValue) {
     responseText:
       typeof response === "string" ? response : JSON.stringify(response)
   });
-}
-
-function createBoundingSphere(props: {
-  latitude: number;
-  longitude: number;
-  radius: number;
-}): BoundingSphere {
-  const { longitude, latitude, radius } = props;
-  const center = Cartesian3.fromDegrees(longitude, latitude);
-  const boundingSphere = new BoundingSphere(center, radius);
-  return boundingSphere;
 }

@@ -1,7 +1,5 @@
 import React from "react";
 import { act, create, ReactTestRenderer } from "react-test-renderer";
-import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import { ItemSearchResult } from "../../../../lib/Models/ItemSearchProvider";
 import Terria from "../../../../lib/Models/Terria";
 import SearchResults, {
@@ -37,12 +35,14 @@ async function render(
 }
 
 function sampleResults(count: number): ItemSearchResult[] {
-  const center = Cartesian3.fromDegrees(100, 45);
-  const radius = 200;
   return [...Array(count)].map(i => ({
     id: `building-${i}`,
     idPropertyName: "building-id",
-    zoomToTarget: new BoundingSphere(center, radius),
+    featureCoordinate: {
+      latitudeDegrees: 45,
+      longitudeDegrees: 100,
+      featureHeight: 200
+    },
     properties: {
       name: `bldg-${i}`
     }

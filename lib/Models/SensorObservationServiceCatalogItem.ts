@@ -8,8 +8,6 @@ import isDefined from "../Core/isDefined";
 import loadWithXhr from "../Core/loadWithXhr";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import ChartableMixin from "../ModelMixins/ChartableMixin";
-import MappableMixin from "../ModelMixins/MappableMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import TableAutomaticStylesStratum, {
   ColorStyleLegend
@@ -82,8 +80,7 @@ interface MeasurementTimeValuePair {
   value: Object | string;
 }
 
-const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
-StratumOrder.addLoadStratum(automaticTableStylesStratumName);
+StratumOrder.addLoadStratum(TableAutomaticStylesStratum.stratumName);
 
 class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
   constructor(readonly catalogItem: SensorObservationServiceCatalogItem) {
@@ -317,7 +314,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   ) {
     super(id, terria, sourceReference);
     this.strata.set(
-      automaticTableStylesStratumName,
+      TableAutomaticStylesStratum.stratumName,
       new SosAutomaticStylesStratum(this)
     );
   }
@@ -544,6 +541,10 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   @computed
   get selectableDimensions() {
     return filterOutUndefined([
+      // Filter out proceduresSelector - as it duplicates TableMixin.styleDimensions
+      ...super.selectableDimensions.filter(
+        dim => dim.id !== this.proceduresSelector?.id
+      ),
       this.proceduresSelector,
       this.observablesSelector
     ]);

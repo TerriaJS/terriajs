@@ -1,4 +1,5 @@
 import { VectorTileFeature } from "@mapbox/vector-tile";
+import i18next from "i18next";
 import { action, computed, observable, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
@@ -9,6 +10,7 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
 import Constructor from "../Core/Constructor";
@@ -18,6 +20,7 @@ import { JsonObject } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
 import makeRealPromise from "../Core/makeRealPromise";
 import TerriaError from "../Core/TerriaError";
+import ConstantColorMap from "../Map/ConstantColorMap";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import JSRegionProviderList from "../Map/RegionProviderList";
 import CommonStrata from "../Models/CommonStrata";
@@ -27,10 +30,12 @@ import SelectableDimensions, {
 } from "../Models/SelectableDimensions";
 import createLongitudeLatitudeFeaturePerId from "../Table/createLongitudeLatitudeFeaturePerId";
 import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
+import getChartDetailsFn from "../Table/getChartDetailsFn";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
 import TableTraits from "../Traits/TableTraits";
+import CatalogMemberMixin from "./CatalogMemberMixin";
 import ChartableMixin, {
   calculateDomain,
   ChartAxis,
@@ -48,7 +53,9 @@ import { ImageryParts } from "./MappableMixin";
 class RegionProviderList extends JSRegionProviderList {}
 function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
   abstract class TableMixin
-    extends ExportableMixin(ChartableMixin(DiscretelyTimeVaryingMixin(Base)))
+    extends ExportableMixin(
+      ChartableMixin(DiscretelyTimeVaryingMixin(CatalogMemberMixin(Base)))
+    )
     implements SelectableDimensions {
     get hasTableMixin() {
       return true;
@@ -199,8 +206,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     @computed
     get disableOpacityControl() {
-      // disable opacity control for point tables
-      return this.activeTableStyle.isPoints();
+      // disable opacity control for point tables - or if no mapItems
+      return this.activeTableStyle.isPoints() || this.mapItems.length === 0;
     }
 
     @computed
@@ -233,18 +240,90 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return isDefined(this.activeTableStyle.regionColumn);
     }
 
+    @computed
+    get canZoomTo() {
+      return this.activeTableStyle.latitudeColumn !== undefined;
+    }
+
     /**
      * Gets the items to show on the map.
      */
     @computed
     get mapItems(): (DataSource | ImageryParts)[] {
-      return filterOutUndefined([
-        this.createLongitudeLatitudeDataSource(this.activeTableStyle),
-        this.createRegionMappedImageryLayer({
-          style: this.activeTableStyle,
-          currentTime: this.currentDiscreteJulianDate
-        })
-      ]);
+      const numRegions =
+        this.activeTableStyle.regionColumn?.valuesAsRegions?.uniqueRegionIds
+          ?.length ?? 0;
+
+      // Estimate number of points based off number of rowGroups
+      const numPoints = this.activeTableStyle.rowGroups.length;
+
+      // If we have more points than regions OR we have points are are using a ConstantColorMap - show points instead of regions
+      // (Using ConstantColorMap with regions will result in all regions being the same color - which isn't useful)
+      if (
+        (numPoints > 0 &&
+          this.activeTableStyle.colorMap instanceof ConstantColorMap) ||
+        numPoints > numRegions
+      ) {
+        const pointsDataSource = this.createLongitudeLatitudeDataSource(
+          this.activeTableStyle
+        );
+
+        // Make sure there are actually more points than regions
+        if (
+          pointsDataSource &&
+          pointsDataSource.entities.values.length > numRegions
+        )
+          return [pointsDataSource];
+      }
+
+      if (this.regionMappedImageryParts) return [this.regionMappedImageryParts];
+
+      return [];
+    }
+
+    @computed
+    get shortReport() {
+      return this.mapItems.length === 0 &&
+        this.chartItems.length === 0 &&
+        !this.isLoading
+        ? i18next.t("models.tableData.noData")
+        : super.shortReport;
+    }
+
+    // regionMappedImageryParts and regionMappedImageryProvider are split up like this so that we aren't re-creating the imageryProvider if things like `opacity` and `show` change
+    @computed get regionMappedImageryParts() {
+      if (!this.regionMappedImageryProvider) return;
+
+      return {
+        imageryProvider: this.regionMappedImageryProvider,
+        alpha: this.opacity,
+        show: this.show,
+        clippingRectangle: this.clipToRectangle
+          ? this.cesiumRectangle
+          : undefined
+      };
+    }
+
+    @computed get regionMappedImageryProvider() {
+      return this.createRegionMappedImageryProvider({
+        style: this.activeTableStyle,
+        currentTime: this.currentDiscreteJulianDate
+      });
+    }
+
+    /**
+     * Try to resolve `regionType` to a region provider (this will also match against region provider aliases)
+     */
+    matchRegionType(regionType?: string): string | undefined {
+      if (!isDefined(regionType)) return;
+      const matchingRegionProviders = this.regionProviderList?.getRegionDetails(
+        [regionType],
+        undefined,
+        undefined
+      );
+      if (matchingRegionProviders && matchingRegionProviders.length > 0) {
+        return matchingRegionProviders[0].regionProvider.regionType;
+      }
     }
 
     /**
@@ -344,6 +423,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     @computed
     get selectableDimensions(): SelectableDimension[] {
       return filterOutUndefined([
+        ...super.selectableDimensions,
         this.regionColumnDimensions,
         this.regionProviderDimensions,
         this.styleDimensions
@@ -362,12 +442,14 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return {
         id: "activeStyle",
         name: "Display Variable",
-        options: this.tableStyles.map(style => {
-          return {
-            id: style.id,
-            name: style.title
-          };
-        }),
+        options: this.tableStyles
+          .filter(style => !style.hidden || this.activeStyle === style.id)
+          .map(style => {
+            return {
+              id: style.id,
+              name: style.title
+            };
+          }),
         selectedId: this.activeStyle,
         setDimensionValue: (stratumId: string, styleId: string) => {
           this.setTrait(stratumId, "activeStyle", styleId);
@@ -462,13 +544,14 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     @computed
     get isSampled(): boolean {
-      return this.activeTableStyle.timeTraits.isSampled;
+      return this.activeTableStyle.isSampled;
     }
 
     @computed
     get discreteTimes():
       | { time: string; tag: string | undefined }[]
       | undefined {
+      if (!this.activeTableStyle.moreThanOneTimeInterval) return;
       const dates = this.activeTableStyle.timeColumn?.valuesAsDates.values;
       if (dates === undefined) {
         return;
@@ -587,18 +670,22 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           features = createLongitudeLatitudeFeaturePerRow(style);
         }
 
-        features.forEach(f => dataSource.entities.add(f));
+        // _catalogItem property is needed for some feature picking functions (eg FeatureInfoMixin)
+        features.forEach(f => {
+          (f as any)._catalogItem = this;
+          dataSource.entities.add(f);
+        });
         dataSource.show = this.show;
         dataSource.entities.resumeEvents();
         return dataSource;
       }
     );
 
-    private readonly createRegionMappedImageryLayer = createTransformer(
+    private readonly createRegionMappedImageryProvider = createTransformer(
       (input: {
         style: TableStyle;
         currentTime: JulianDate | undefined;
-      }): ImageryParts | undefined => {
+      }): ImageryProvider | undefined => {
         if (!input.style.isRegions()) {
           return undefined;
         }
@@ -624,7 +711,11 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
         // TODO: this is already implemented in RegionProvider.prototype.mapRegionsToIndicesInto, but regionTypes require "loading" for this to work. I think the whole RegionProvider thing needs to be re-done in TypeScript at some point and then we can move stuff into that.
         // If time varying, get row indices which match
-        if (input.currentTime && input.style.timeIntervals) {
+        if (
+          input.currentTime &&
+          input.style.timeIntervals &&
+          input.style.moreThanOneTimeInterval
+        ) {
           currentTimeRows = input.style.timeIntervals.reduce<number[]>(
             (rows, timeInterval, index) => {
               if (
@@ -641,63 +732,56 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
         const catalogItem = this;
 
-        return {
-          alpha: this.opacity,
-          imageryProvider: new MapboxVectorTileImageryProvider({
-            url: regionType.server,
-            layerName: regionType.layerName,
-            styleFunc: function(feature: any) {
-              const featureRegion = feature.properties[regionType.regionProp];
-              const regionIdString =
-                featureRegion !== undefined && featureRegion !== null
-                  ? featureRegion.toString()
-                  : "";
+        return new MapboxVectorTileImageryProvider({
+          url: regionType.server,
+          layerName: regionType.layerName,
+          styleFunc: function(feature: any) {
+            const featureRegion = feature.properties[regionType.regionProp];
+            const regionIdString =
+              featureRegion !== undefined && featureRegion !== null
+                ? featureRegion.toString()
+                : "";
 
-              let rowNumber = catalogItem.getImageryLayerFilteredRows(
-                input,
-                currentTimeRows,
-                valuesAsRegions.regionIdToRowNumbersMap.get(
-                  regionIdString.toLowerCase()
+            let rowNumber = catalogItem.getImageryLayerFilteredRows(
+              input,
+              currentTimeRows,
+              valuesAsRegions.regionIdToRowNumbersMap.get(
+                regionIdString.toLowerCase()
+              )
+            );
+            let value: string | number | null = isDefined(rowNumber)
+              ? valueFunction(rowNumber)
+              : null;
+
+            const color = colorMap.mapValueToColor(value);
+            if (color === undefined) {
+              return undefined;
+            }
+
+            return {
+              fillStyle: color.toCssColorString(),
+              strokeStyle: baseMapContrastColor,
+              lineWidth: 1,
+              lineJoin: "miter"
+            };
+          },
+          subdomains: regionType.serverSubdomains,
+          rectangle:
+            Array.isArray(regionType.bbox) && regionType.bbox.length >= 4
+              ? Rectangle.fromDegrees(
+                  regionType.bbox[0],
+                  regionType.bbox[1],
+                  regionType.bbox[2],
+                  regionType.bbox[3]
                 )
-              );
-              let value: string | number | null = isDefined(rowNumber)
-                ? valueFunction(rowNumber)
-                : null;
-
-              const color = colorMap.mapValueToColor(value);
-              if (color === undefined) {
-                return undefined;
-              }
-
-              return {
-                fillStyle: color.toCssColorString(),
-                strokeStyle: baseMapContrastColor,
-                lineWidth: 1,
-                lineJoin: "miter"
-              };
-            },
-            subdomains: regionType.serverSubdomains,
-            rectangle:
-              Array.isArray(regionType.bbox) && regionType.bbox.length >= 4
-                ? Rectangle.fromDegrees(
-                    regionType.bbox[0],
-                    regionType.bbox[1],
-                    regionType.bbox[2],
-                    regionType.bbox[3]
-                  )
-                : undefined,
-            minimumZoom: regionType.serverMinZoom,
-            maximumNativeZoom: regionType.serverMaxNativeZoom,
-            maximumZoom: regionType.serverMaxZoom,
-            uniqueIdProp: regionType.uniqueIdProp,
-            featureInfoFunc: (feature: any) =>
-              this.getImageryLayerFeatureInfo(input, feature, currentTimeRows)
-          }),
-          show: this.show,
-          clippingRectangle: this.clipToRectangle
-            ? this.cesiumRectangle
-            : undefined
-        };
+              : undefined,
+          minimumZoom: regionType.serverMinZoom,
+          maximumNativeZoom: regionType.serverMaxNativeZoom,
+          maximumZoom: regionType.serverMaxZoom,
+          uniqueIdProp: regionType.uniqueIdProp,
+          featureInfoFunc: (feature: any) =>
+            this.getImageryLayerFeatureInfo(input, feature, currentTimeRows)
+        });
       }
     );
 
@@ -804,27 +888,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           !isDefined(featureData._terria_getChartDetails) &&
           this.discreteTimes &&
           this.discreteTimes.length > 1 &&
-          this.activeTableStyle.timeColumn &&
-          this.activeTableStyle.colorColumn?.type === TableColumnType.scalar &&
-          Array.isArray(regionIds) &&
-          regionIds.length > 1
+          Array.isArray(regionIds)
         ) {
-          const chartColumns = [
-            this.activeTableStyle.timeColumn,
-            this.activeTableStyle.colorColumn
-          ];
-          featureInfo.properties._terria_getChartDetails = () => ({
-            title: this.activeTableStyle.colorColumn?.title,
-            xName: this.activeTableStyle.timeColumn?.title,
-            yName: this.activeTableStyle.colorColumn?.title,
-            units: chartColumns.map(column => column.units || ""),
-            csvData: [
-              chartColumns.map(col => col!.title).join(","),
-              ...regionIds.map(i =>
-                chartColumns.map(col => col.valueFunctionForType(i)).join(",")
-              )
-            ].join("\n")
-          });
+          featureInfo.properties._terria_getChartDetails = getChartDetailsFn(
+            this.activeTableStyle,
+            regionIds
+          );
         }
 
         return featureInfo;

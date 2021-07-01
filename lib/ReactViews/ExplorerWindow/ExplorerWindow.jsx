@@ -36,7 +36,7 @@ const ExplorerWindow = observer(
     isVisible() {
       return (
         !this.props.viewState.useSmallScreenInterface &&
-        !this.props.viewState.hideMapUi() &&
+        !this.props.viewState.hideMapUi &&
         this.props.viewState.explorerPanelIsVisible
       );
     },
