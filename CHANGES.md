@@ -8,6 +8,8 @@ Change Log
 * Respect order of objects from lower strata in `objectArrayTrait`.
 * Fix datetime button margin with scroll in workbench.
 * Fix checkbox when click happen on svg icon. (#5550)
+* Add `nullColor` to `ConstantColorMap` - used when `colorColumn` is of type `region` to hide regions where rows don't exist.
+* `TableStyles` will only be created for `text` columns if there are no columns of type `scalar`, `enum` or `region`.
 * [The next improvement]
 
 #### 8.0.0-alpha.87
