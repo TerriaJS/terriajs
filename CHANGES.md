@@ -13,6 +13,7 @@ Change Log
 * Moved `TableStyle.colorMap` into `TableColorMap`
 * Replaced `colorbrewer.json` with `d3-scale-chromatic` - we now support d3 color scales (in addition to color brewer) -  see https://github.com/d3/d3-scale-chromatic
 * Added `ContinuousColorMap` - it will now be used by default for `scalar` columns
+  * To use `DiscreteColorMap` - you will need to set `numberOfBins` to something other than `0`.
 * `TableColorMap` default color palette for `scalar` columns is not `Reds` instead of `RdYlOr`
 * [The next improvement]
 
