@@ -4,7 +4,7 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.88)
-
+* Fixed a bug with numeric item search where it sometimes fails to return all matching values.
 * Respect order of objects from lower strata in `objectArrayTrait`.
 * Fix datetime button margin with scroll in workbench.
 * Fix checkbox when click happen on svg icon. (#5550)
