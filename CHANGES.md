@@ -6,6 +6,8 @@ Change Log
 #### next release (8.0.0-alpha.88)
 
 * Fix sharing user added data of type "Auto-detect".
+* Fix datetime button margin with scroll in workbench.
+* Fix checkbox when click happen on svg icon. (#5550)
 * [The next improvement]
 
 #### 8.0.0-alpha.87
