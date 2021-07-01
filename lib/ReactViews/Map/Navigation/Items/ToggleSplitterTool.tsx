@@ -7,7 +7,7 @@ import MapNavigationItemController from "../../../../ViewModels/MapNavigation/Ma
 export const SPLITTER_ICON_NAME = "MapNavigationSplitterIcon";
 
 export class ToggleSplitterController extends MapNavigationItemController {
-  static id = "splitter-tool";
+  static id = "split-tool";
   constructor(private viewState: ViewState) {
     super();
   }

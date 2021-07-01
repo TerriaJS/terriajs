@@ -4,7 +4,7 @@ import ViewState from "../../ReactViewModels/ViewState";
 import { GLYPHS } from "../../Styled/Icon";
 import MapNavigationItemController from "../../ViewModels/MapNavigation/MapNavigationItemController";
 
-export const FEEDBACK_TOOL_ID = "feedback-tool";
+export const FEEDBACK_TOOL_ID = "feedback";
 
 export class FeedbackButtonController extends MapNavigationItemController {
   constructor(private viewState: ViewState) {
