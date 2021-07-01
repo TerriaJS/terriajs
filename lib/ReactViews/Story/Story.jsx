@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { sortable } from "react-anything-sortable";
 import { withTranslation } from "react-i18next";
 import styled, { withTheme } from "styled-components";
@@ -47,10 +47,6 @@ const StoryMenuButton = styled(RawButton)`
     fill: ${props => props.theme.textDarker};
     width: 18px;
     height: 18px;
-  }
-  & > span {
-    // position: absolute;
-    // left: 37px;
   }
 
   border-radius: 0;
@@ -171,121 +167,111 @@ const renderMenu = props => {
   );
 };
 
-class Story extends React.Component {
-  constructor(props) {
-    super(props);
-    this.storyRef = React.createRef();
-  }
+const Story = props => {
+  const story = props.story;
+  const bodyText = getTruncatedContent(story.text);
+  const { t } = props;
+  const storyRef = useRef(null);
+  const closeHandler = () => {
+    hideList(props);
+  };
+  useEffect(() => {
+    window.addEventListener("click", closeHandler);
+    return () => window.removeEventListener("click", closeHandler);
+  });
 
-  /* eslint-disable-next-line camelcase */
-  UNSAFE_componentWillMount() {
-    window.addEventListener("click", this.hideList);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("click", this.hideList);
-  }
-
-  render() {
-    const story = this.props.story;
-    const bodyText = getTruncatedContent(story.text);
-    const { t } = this.props;
-    return (
-      <>
+  return (
+    <>
+      <Box
+        ref={storyRef}
+        column
+        backgroundColor={props.theme.darkWithOverlay}
+        rounded
+        css={`
+          cursor: move;
+          float: none !important;
+        `}
+        style={props.style}
+        className={classNames(props.className)}
+        onMouseDown={props.onMouseDown}
+        onTouchStart={props.onTouchStart}
+        position="static"
+      >
         <Box
-          ref={this.storyRef}
-          column
-          backgroundColor={this.props.theme.darkWithOverlay}
+          fullWidth
+          position="static"
+          justifySpaceBetween
+          padded
+          verticalCenter
+          styledHeight={"40px"}
+          backgroundColor={props.theme.darkWithOverlay}
           rounded
           css={`
-            cursor: move;
-            float: none !important;
+            padding-left: 15px;
+            padding-right: 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
           `}
-          style={this.props.style}
-          className={classNames(this.props.className)}
-          onMouseDown={this.props.onMouseDown}
-          onTouchStart={this.props.onTouchStart}
-          position="static"
         >
-          <Box
-            fullWidth
-            position="static"
-            justifySpaceBetween
-            padded
-            verticalCenter
-            styledHeight={"40px"}
-            backgroundColor={this.props.theme.darkWithOverlay}
-            rounded
-            css={`
-              padding-left: 15px;
-              padding-right: 0;
-              border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-            `}
-          >
-            <Text textLight medium>
-              {story.title && story.title.length > 0
-                ? story.title
-                : t("story.untitledScene")}
-            </Text>
-            <Box>
-              {this.props.recaptureStorySuccessful && (
-                <RawButton>
-                  <StyledIcon
-                    styledWidth="20px"
-                    light
-                    glyph={Icon.GLYPHS.recapture}
-                    onClick={toggleMenu(this.PropTypesprops)}
-                    css={`
-                      padding-right: 10px;
-                    `}
-                  />
-                </RawButton>
-              )}
-              <MenuButton
-                theme={this.props.theme}
-                onClick={toggleMenu(this.props)}
-              >
+          <Text textLight medium>
+            {story.title && story.title.length > 0
+              ? story.title
+              : t("story.untitledScene")}
+          </Text>
+          <Box>
+            {props.recaptureStorySuccessful && (
+              <RawButton>
                 <StyledIcon
                   styledWidth="20px"
                   light
-                  glyph={Icon.GLYPHS.menuDotted}
-                  onClick={toggleMenu(this.props)}
+                  glyph={Icon.GLYPHS.recapture}
+                  onClick={toggleMenu(props)}
+                  css={`
+                    padding-right: 10px;
+                  `}
                 />
-              </MenuButton>
-            </Box>
-            {this.props.menuOpen && (
-              <Box
-                css={`
-                  position: absolute;
-                  z-index: 100;
-                  right: 20px;
-
-                  ${this.calculateOffset}
-                  padding: 0;
-                  margin: 0;
-
-                  ul {
-                    list-style: none;
-                  }
-                `}
-              >
-                {renderMenu(this.props)}
-              </Box>
+              </RawButton>
             )}
+            <MenuButton theme={props.theme} onClick={toggleMenu(props)}>
+              <StyledIcon
+                styledWidth="20px"
+                light
+                glyph={Icon.GLYPHS.menuDotted}
+                onClick={toggleMenu(props)}
+              />
+            </MenuButton>
           </Box>
-          {bodyText.length > 0 && (
-            <Box paddedRatio={2} paddedHorizontally={3}>
-              <Text textLight medium>
-                {bodyText}
-              </Text>
+          {props.menuOpen && (
+            <Box
+              css={`
+                position: absolute;
+                z-index: 100;
+                right: 20px;
+
+                ${calculateOffset(props)(storyRef)}
+                padding: 0;
+                margin: 0;
+
+                ul {
+                  list-style: none;
+                }
+              `}
+            >
+              {renderMenu(props)}
             </Box>
           )}
         </Box>
-        <Spacing bottom={1} />
-      </>
-    );
-  }
-}
+        {bodyText.length > 0 && (
+          <Box paddedRatio={2} paddedHorizontally={3}>
+            <Text textLight medium>
+              {bodyText}
+            </Text>
+          </Box>
+        )}
+      </Box>
+      <Spacing bottom={1} />
+    </>
+  );
+};
 
 const MenuButton = styled(RawButton)`
   padding: 0 10px 0 10px;
