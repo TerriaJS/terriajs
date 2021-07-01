@@ -10,6 +10,8 @@ Change Log
 * Fix checkbox when click happen on svg icon. (#5550)
 * Add `nullColor` to `ConstantColorMap` - used when `colorColumn` is of type `region` to hide regions where rows don't exist.
 * `TableStyles` will only be created for `text` columns if there are no columns of type `scalar`, `enum` or `region`.
+* Moved `TableStyle.colorMap` into `TableColorMap`
+* Added `ContinuousColorMap` - it will now be used by default for `scalar` columns
 * [The next improvement]
 
 #### 8.0.0-alpha.87
