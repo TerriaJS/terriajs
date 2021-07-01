@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import React, { Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
@@ -30,7 +31,12 @@ const LazyItemSearchTool: React.FC<PropsType> = props => {
         </Frame>
       }
     >
-      <RaiseToUserErrorBoundary viewState={viewState}>
+      <RaiseToUserErrorBoundary
+        viewState={viewState}
+        terriaErrorOptions={{
+          title: i18next.t("itemSearchTool.toolLoadError")
+        }}
+      >
         <ItemSearchTool {...props} />
       </RaiseToUserErrorBoundary>
     </Suspense>

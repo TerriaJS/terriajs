@@ -1,13 +1,19 @@
-import i18next from "i18next";
 import React, { ErrorInfo } from "react";
+import TerriaError, { TerriaErrorOverrides } from "../../Core/TerriaError";
 import ViewState from "../../ReactViewModels/ViewState";
+
+type PropsType = {
+  viewState: ViewState;
+  // Pass in options to customize the title and other presentation aspects of the error
+  terriaErrorOptions?: TerriaErrorOverrides;
+};
 
 /**
  * An error boundary that raises the error to the user.
  */
-export default class RaiseToUserErrorBoundary extends React.Component<{
-  viewState: ViewState;
-}> {
+export default class RaiseToUserErrorBoundary extends React.Component<
+  PropsType
+> {
   state = { hasError: false };
 
   static getDerivedStateFromError(error: any) {
@@ -17,10 +23,9 @@ export default class RaiseToUserErrorBoundary extends React.Component<{
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    const newError = new Error(i18next.t("itemSearchTool.toolLoadError"));
-    newError.name = error.name;
-    newError.stack = error.stack;
-    this.props.viewState.terria.raiseErrorToUser(newError);
+    this.props.viewState.terria.raiseErrorToUser(
+      TerriaError.from(error, this.props.terriaErrorOptions)
+    );
   }
 
   render() {
