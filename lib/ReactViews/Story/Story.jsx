@@ -119,10 +119,10 @@ const calculateOffset = props => storyRef => {
   return `top: ${offsetTopScroll}px;`;
 };
 
-const renderMenu = props => menuRef => {
+const renderMenu = props => {
   const { t } = props;
   return (
-    <Ul ref={e => (menuRef = e)}>
+    <Ul>
       <li>
         <StoryMenuButton
           onClick={viewStory(props)}
@@ -175,7 +175,6 @@ class Story extends React.Component {
   constructor(props) {
     super(props);
     this.storyRef = React.createRef();
-    this.menuRef = React.createRef();
   }
 
   /* eslint-disable-next-line camelcase */
@@ -270,7 +269,7 @@ class Story extends React.Component {
                   }
                 `}
               >
-                {renderMenu(this.props)(this.menuRef)}
+                {renderMenu(this.props)}
               </Box>
             )}
           </Box>
