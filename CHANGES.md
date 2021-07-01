@@ -11,7 +11,9 @@ Change Log
 * Add `nullColor` to `ConstantColorMap` - used when `colorColumn` is of type `region` to hide regions where rows don't exist.
 * `TableStyles` will only be created for `text` columns if there are no columns of type `scalar`, `enum` or `region`.
 * Moved `TableStyle.colorMap` into `TableColorMap`
+* Replaced `colorbrewer.json` with `d3-scale-chromatic` - we now support d3 color scales (in addition to color brewer) -  see https://github.com/d3/d3-scale-chromatic
 * Added `ContinuousColorMap` - it will now be used by default for `scalar` columns
+* `TableColorMap` default color palette for `scalar` columns is not `Reds` instead of `RdYlOr`
 * [The next improvement]
 
 #### 8.0.0-alpha.87

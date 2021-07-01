@@ -148,14 +148,10 @@ export default class TableColorStyleTraits extends ModelTraits {
 
   @primitiveTrait({
     name: "Color Palette",
-    description:
-      "The name of a [ColorBrewer](http://colorbrewer2.org/) palette to use when mapping values " +
-      "to colors. This property is ignored if `Bin Colors` is defined and has enough colors for " +
-      "all bins, or if `Enum Colors` is defined. The default value depends on the type of the " +
-      "`Color Column` and on the data. Scalar columns that cross zero will use the diverging " +
-      "purple-to-orange palette `PuOr`. Scala columns that do not cross zero will use the " +
-      "sequential yellow-orange-red palette `YlOrRd`. All other scenarios will use the " +
-      "21 color `HighContrast` palette.",
+    description: `The name of a [ColorBrewer](http://colorbrewer2.org/) palette to use when mapping values to colors. This property is ignored if \`Bin Colors\` is defined and has enough colors for all bins, or if \`Enum Colors\` is defined. The default value depends on the type of the \`Color Column\` and on the data. Scalar columns that cross zero will use the diverging purple-to-orange palette \`PuOr\`. Scala columns that do not cross zero will use the sequential Red palette \`Reds\`. All other scenarios will use the 21 color \`HighContrast\` palette.
+      D3 color schemes are also supported (https://github.com/d3/d3-scale-chromatic) - but without \`scheme\` or \`interpolate\` string (for example - to use \`interpolateViridis\` - set \`colorPalete = Viridis\`).
+      This is case seensitive.
+      `,
     type: "string"
   })
   colorPalette?: string;
