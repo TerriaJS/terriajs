@@ -23,7 +23,7 @@ const defaultColor = "yellow";
 
 export default class TableColorMap {
   constructor(
-    /** Title used for ConstantColorMaps - and to create a unique color for a particular Table-based CatalogItem (it should not be set to the name of the colorColumn) */
+    /** Title used for ConstantColorMaps - and to create a unique color for a particular Table-based CatalogItem */
     readonly title: string | undefined,
     readonly colorColumn: TableColumn | undefined,
     readonly colorTraits: Model<TableColorStyleTraits>
