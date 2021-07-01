@@ -69,14 +69,13 @@ export default class NumericIndex implements IndexBase<NumericSearchQuery> {
       { dataRowId: 0, value: startValue },
       entry => entry.value
     );
-    const endIndex =
-      sortedLastIndexBy(
-        idValuePairs,
-        { dataRowId: 0, value: endValue },
-        entry => entry.value
-      ) - 1;
+    const endIndex = sortedLastIndexBy(
+      idValuePairs,
+      { dataRowId: 0, value: endValue },
+      entry => entry.value
+    );
     const matchingIds = idValuePairs
-      .slice(startIndex, endIndex + 1)
+      .slice(startIndex, endIndex)
       .map(({ dataRowId }) => dataRowId);
     return new Set(matchingIds);
   }
