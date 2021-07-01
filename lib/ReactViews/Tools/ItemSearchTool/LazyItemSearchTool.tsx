@@ -1,10 +1,9 @@
-import i18next from "i18next";
-import React, { ErrorInfo, Suspense } from "react";
+import React, { Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
-import ViewState from "../../../ReactViewModels/ViewState";
 import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
+import RaiseToUserErrorBoundary from "../../Errors/RaiseToUserErrorBoundary";
 import { Frame, Main } from "../ToolModal";
 import { PropsType } from "./ItemSearchTool";
 
@@ -31,9 +30,9 @@ const LazyItemSearchTool: React.FC<PropsType> = props => {
         </Frame>
       }
     >
-      <LazyLoadErrorBoundary viewState={viewState}>
+      <RaiseToUserErrorBoundary viewState={viewState}>
         <ItemSearchTool {...props} />
-      </LazyLoadErrorBoundary>
+      </RaiseToUserErrorBoundary>
     </Suspense>
   );
 };
@@ -42,26 +41,5 @@ const Wrapper = styled(Main)`
   align-items: center;
   justify-content: center;
 `;
-
-class LazyLoadErrorBoundary extends React.Component<{ viewState: ViewState }> {
-  state = { hasError: false };
-
-  static getDerivedStateFromError(error: any) {
-    return {
-      hasError: true
-    };
-  }
-
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    const newError = new Error(i18next.t("itemSearchTool.toolLoadError"));
-    newError.name = error.name;
-    newError.stack = error.stack;
-    this.props.viewState.terria.raiseErrorToUser(newError);
-  }
-
-  render() {
-    return this.state.hasError ? null : this.props.children;
-  }
-}
 
 export default LazyItemSearchTool;
