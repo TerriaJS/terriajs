@@ -10,7 +10,7 @@ import { PropsType } from "./ItemSearchTool";
 const ItemSearchTool = React.lazy(() => import("./ItemSearchTool"));
 
 /**
- * Lazily loads the item search tool.
+ * Lazily loads the item search tool while showing a the search window and an animated spinner.
  */
 const LazyItemSearchTool: React.FC<PropsType> = props => {
   const { viewState, item } = props;

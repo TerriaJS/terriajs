@@ -3,7 +3,7 @@ import React, { ErrorInfo } from "react";
 import ViewState from "../../ReactViewModels/ViewState";
 
 /**
- * An error boundary that raise the error to the user.
+ * An error boundary that raises the error to the user.
  */
 export default class RaiseToUserErrorBoundary extends React.Component<{
   viewState: ViewState;
