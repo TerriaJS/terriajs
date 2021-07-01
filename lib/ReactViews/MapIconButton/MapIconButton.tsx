@@ -1,6 +1,6 @@
 "use strict";
 import React, { useRef, useState } from "react";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
 import { TextSpan } from "../../Styled/Text";
@@ -119,6 +119,7 @@ function MapIconButton(props: IMapIconButtonProps) {
   } = props;
   const expanded = !noExpand && (isExpanded || neverCollapse) && children;
   const buttonRef = props.buttonRef || useRef();
+  const theme = useTheme();
 
   // const handleAway = () => setTimeout(() => setExpanded(false), 1000);
   const handleAway = () => setExpanded(false);
@@ -203,6 +204,13 @@ function MapIconButton(props: IMapIconButtonProps) {
             width: 32px;
             height: 32px;
             margin:auto;
+            @media (max-width: ${theme.mobile}px) {
+              width: ${
+                primary && !!props.closeIconElement && !isExpanded
+                  ? "64px"
+                  : "32px"
+              };
+            }
           `
         }
       >
