@@ -6,6 +6,8 @@ Change Log
 #### next release (8.0.0-alpha.88)
 
 * Respect order of objects from lower strata in `objectArrayTrait`.
+* Fix datetime button margin with scroll in workbench.
+* Fix checkbox when click happen on svg icon. (#5550)
 * [The next improvement]
 
 #### 8.0.0-alpha.87
