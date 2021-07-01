@@ -23,7 +23,8 @@ const defaultColor = "yellow";
 
 export default class TableColorMap {
   constructor(
-    readonly name: string | undefined,
+    /** Title used for ConstantColorMaps - and to create a unique color for a particular Table-based CatalogItem (it should not be set to the name of the colorColumn) */
+    readonly title: string | undefined,
     readonly colorColumn: TableColumn | undefined,
     readonly colorTraits: Model<TableColorStyleTraits>
   ) {}
@@ -312,8 +313,8 @@ export default class TableColorMap {
       color = Color.fromCssColorString(colorTraits.nullColor);
     } else if (colorTraits.binColors && colorTraits.binColors.length > 0) {
       color = Color.fromCssColorString(colorTraits.binColors[0]);
-    } else if (this.name) {
-      color = Color.fromCssColorString(getColorForId(this.name));
+    } else if (this.title) {
+      color = Color.fromCssColorString(getColorForId(this.title));
     }
 
     if (!color) {
@@ -322,7 +323,7 @@ export default class TableColorMap {
 
     return new ConstantColorMap({
       color,
-      title: this.name,
+      title: this.title,
 
       // Use nullColor if colorColumn is of type `region`
       // This is so we only see regions which rows exist for (everything else will use nullColor)
