@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import PropTypes from "prop-types";
 import React from "react";
 import { sortable } from "react-anything-sortable";
@@ -70,18 +71,111 @@ const StoryMenuButton = styled(RawButton)`
   }
 `;
 
+const hideList = props => props.openMenu(null);
+
+const getTruncatedContent = text => {
+  const content = parseCustomHtmlToReact(text);
+  const except = findTextContent(content);
+  return except.slice(0, 100);
+};
+
+const toggleMenu = props => event => {
+  event.stopPropagation();
+  props.openMenu(props.story);
+};
+
+const viewStory = props => event => {
+  event.stopPropagation();
+  props.viewStory(props.story);
+  hideList(props);
+};
+
+const deleteStory = props => event => {
+  event.stopPropagation();
+  props.deleteStory(props.story);
+  hideList(props);
+};
+
+const editStory = props => event => {
+  event.stopPropagation();
+  props.editStory(props.story);
+  hideList(props);
+};
+
+const recaptureStory = props => event => {
+  event.stopPropagation();
+  props.recaptureStory(props.story);
+  hideList(props);
+};
+
+const calculateOffset = props => storyRef => {
+  const offsetTop = storyRef.current?.offsetTop || 0;
+  const scrollTop = props.parentRef.current.scrollTop || 0;
+  const heightParrent = storyRef.current?.offsetParent.offsetHeight || 0;
+  const offsetTopScroll = offsetTop - scrollTop + 25;
+  if (offsetTopScroll + 125 > heightParrent) {
+    return `bottom ${offsetTopScroll + 125 - heightParrent + 45}px;`;
+  }
+  return `top: ${offsetTopScroll}px;`;
+};
+
+const renderMenu = props => menuRef => {
+  const { t } = props;
+  return (
+    <Ul ref={e => (menuRef = e)}>
+      <li>
+        <StoryMenuButton
+          onClick={viewStory(props)}
+          title={t("story.viewStory")}
+        >
+          <StoryControl>
+            <StyledIcon glyph={Icon.GLYPHS.viewStory} />
+            <span>{t("story.view")}</span>
+          </StoryControl>
+        </StoryMenuButton>
+      </li>
+      <li>
+        <StoryMenuButton
+          onClick={editStory(props)}
+          title={t("story.editStory")}
+        >
+          <StoryControl>
+            <StyledIcon glyph={Icon.GLYPHS.editStory} />
+            <span>{t("story.edit")}</span>
+          </StoryControl>
+        </StoryMenuButton>
+      </li>
+      <li>
+        <StoryMenuButton
+          onClick={recaptureStory(props)}
+          title={t("story.recaptureStory")}
+        >
+          <StoryControl>
+            <StyledIcon glyph={Icon.GLYPHS.story} />
+            <span>{t("story.recapture")}</span>
+          </StoryControl>
+        </StoryMenuButton>
+      </li>
+      <li>
+        <StoryMenuButton
+          onClick={deleteStory(props)}
+          title={t("story.deleteStory")}
+        >
+          <StoryControl>
+            <StyledIcon glyph={Icon.GLYPHS.cancel} />
+            <span>{t("story.delete")}</span>
+          </StoryControl>
+        </StoryMenuButton>
+      </li>
+    </Ul>
+  );
+};
+
 class Story extends React.Component {
   constructor(props) {
     super(props);
     this.storyRef = React.createRef();
     this.menuRef = React.createRef();
-    this.toggleMenu = this.toggleMenu.bind(this);
-    this.viewStory = this.viewStory.bind(this);
-    this.deleteStory = this.deleteStory.bind(this);
-    this.editStory = this.editStory.bind(this);
-    this.recaptureStory = this.recaptureStory.bind(this);
-    this.hideList = this.hideList.bind(this);
-    this.calculateOffset = this.calculateOffset.bind(this);
   }
 
   /* eslint-disable-next-line camelcase */
@@ -93,111 +187,9 @@ class Story extends React.Component {
     window.removeEventListener("click", this.hideList);
   }
 
-  hideList() {
-    this.props.openMenu(null);
-  }
-
-  getTruncatedContent(text) {
-    const content = parseCustomHtmlToReact(text);
-    const except = findTextContent(content);
-    return except.slice(0, 100);
-  }
-
-  toggleMenu(event) {
-    event.stopPropagation();
-    this.props.openMenu(this.props.story);
-  }
-
-  viewStory(event) {
-    event.stopPropagation();
-    this.props.viewStory(this.props.story);
-    this.hideList();
-  }
-
-  editStory(event) {
-    event.stopPropagation();
-    this.props.editStory(this.props.story);
-    this.hideList();
-  }
-
-  recaptureStory(event) {
-    event.stopPropagation();
-    this.props.recaptureStory(this.props.story);
-    this.hideList();
-  }
-
-  deleteStory(event) {
-    event.stopPropagation();
-    this.props.deleteStory(this.props.story);
-    this.hideList();
-  }
-
-  renderMenu() {
-    const { t } = this.props;
-    return (
-      <Ul ref={e => (this.menuRef = e)}>
-        <li>
-          <StoryMenuButton
-            onClick={this.viewStory}
-            title={t("story.viewStory")}
-          >
-            <StoryControl>
-              <StyledIcon glyph={Icon.GLYPHS.viewStory} />
-              <span>{t("story.view")}</span>
-            </StoryControl>
-          </StoryMenuButton>
-        </li>
-        <li>
-          <StoryMenuButton
-            onClick={this.editStory}
-            title={t("story.editStory")}
-          >
-            <StoryControl>
-              <StyledIcon glyph={Icon.GLYPHS.editStory} />
-              <span>{t("story.edit")}</span>
-            </StoryControl>
-          </StoryMenuButton>
-        </li>
-        <li>
-          <StoryMenuButton
-            onClick={this.recaptureStory}
-            title={t("story.recaptureStory")}
-          >
-            <StoryControl>
-              <StyledIcon glyph={Icon.GLYPHS.story} />
-              <span>{t("story.recapture")}</span>
-            </StoryControl>
-          </StoryMenuButton>
-        </li>
-        <li>
-          <StoryMenuButton
-            onClick={this.deleteStory}
-            title={t("story.deleteStory")}
-          >
-            <StoryControl>
-              <StyledIcon glyph={Icon.GLYPHS.cancel} />
-              <span>{t("story.delete")}</span>
-            </StoryControl>
-          </StoryMenuButton>
-        </li>
-      </Ul>
-    );
-  }
-
-  calculateOffset() {
-    const offsetTop = this.storyRef.current?.offsetTop || 0;
-    const scrollTop = this.props.parentRef.current.scrollTop || 0;
-    const heightParrent = this.storyRef.current?.offsetParent.offsetHeight || 0;
-    const offsetTopScroll = offsetTop - scrollTop + 25;
-    if (offsetTopScroll + 125 > heightParrent) {
-      return `bottom ${offsetTopScroll + 125 - heightParrent + 45}px;`;
-    }
-    return `top: ${offsetTopScroll}px;`;
-  }
-
   render() {
     const story = this.props.story;
-    const bodyText = this.getTruncatedContent(story.text);
+    const bodyText = getTruncatedContent(story.text);
     const { t } = this.props;
     return (
       <>
@@ -243,19 +235,22 @@ class Story extends React.Component {
                     styledWidth="20px"
                     light
                     glyph={Icon.GLYPHS.recapture}
-                    onClick={this.toggleMenu}
+                    onClick={toggleMenu(this.PropTypesprops)}
                     css={`
                       padding-right: 10px;
                     `}
                   />
                 </RawButton>
               )}
-              <MenuButton theme={this.props.theme} onClick={this.toggleMenu}>
+              <MenuButton
+                theme={this.props.theme}
+                onClick={toggleMenu(this.props)}
+              >
                 <StyledIcon
                   styledWidth="20px"
                   light
                   glyph={Icon.GLYPHS.menuDotted}
-                  onClick={this.toggleMenu}
+                  onClick={toggleMenu(this.props)}
                 />
               </MenuButton>
             </Box>
@@ -275,7 +270,7 @@ class Story extends React.Component {
                   }
                 `}
               >
-                {this.renderMenu()}
+                {renderMenu(this.props)(this.menuRef)}
               </Box>
             )}
           </Box>
