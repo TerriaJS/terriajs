@@ -106,8 +106,8 @@ describe("createCombinedModel", function() {
 
       const combined = createCombinedModel(top, bottom);
       expect(combined.nestedArrayWithoutDefault.length).toBe(2);
-      expect(combined.nestedArrayWithoutDefault[0].withoutDefault).toBe(100);
-      expect(combined.nestedArrayWithoutDefault[1].withoutDefault).toBe(99);
+      expect(combined.nestedArrayWithoutDefault[0].withoutDefault).toBe(99);
+      expect(combined.nestedArrayWithoutDefault[1].withoutDefault).toBe(100);
     });
 
     it("combines different objects with the same ID", function() {
