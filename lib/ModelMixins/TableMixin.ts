@@ -253,6 +253,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       const numRegions =
         this.activeTableStyle.regionColumn?.valuesAsRegions?.uniqueRegionIds
           ?.length ?? 0;
+
+      // Estimate number of points based off number of rowGroups
       const numPoints = this.activeTableStyle.rowGroups.length;
 
       // If we have more points than regions OR we have points are are using a ConstantColorMap - show points instead of regions
@@ -265,7 +267,13 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         const pointsDataSource = this.createLongitudeLatitudeDataSource(
           this.activeTableStyle
         );
-        return filterOutUndefined([pointsDataSource]);
+
+        // Make sure there are actually more points than regions
+        if (
+          pointsDataSource &&
+          pointsDataSource.entities.values.length > numRegions
+        )
+          return [pointsDataSource];
       }
 
       if (this.regionMappedImageryParts) return [this.regionMappedImageryParts];

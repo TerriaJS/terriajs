@@ -31,6 +31,7 @@ import { exportData } from "../../Preview/ExportData";
 import WorkbenchButton from "../WorkbenchButton";
 import Styles from "./viewing-controls.scss";
 import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
+import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
 import {
   Category,
   DataSourceAction
@@ -247,10 +248,7 @@ const ViewingControls = observer(
       }
       this.props.viewState.openTool({
         toolName: "Search Item",
-        getToolComponent: () =>
-          import("../../Tools/ItemSearchTool/ItemSearchTool").then(
-            m => m.default
-          ),
+        getToolComponent: () => LazyItemSearchTool,
         showCloseButton: false,
         params: {
           item,
