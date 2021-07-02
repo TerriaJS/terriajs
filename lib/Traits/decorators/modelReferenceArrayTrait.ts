@@ -1,13 +1,13 @@
 import { computed } from "mobx";
-import isDefined from "../Core/isDefined";
-import Result from "../Core/Result";
-import TerriaError from "../Core/TerriaError";
-import createStubCatalogItem from "../Models/createStubCatalogItem";
-import { BaseModel } from "../Models/Model";
-import ModelFactory from "../Models/ModelFactory";
-import upsertModelFromJson from "../Models/upsertModelFromJson";
-import ModelReference from "./ModelReference";
-import Trait, { TraitOptions } from "./Trait";
+import isDefined from "../../Core/isDefined";
+import Result from "../../Core/Result";
+import TerriaError from "../../Core/TerriaError";
+import createStubCatalogItem from "../../Models/createStubCatalogItem";
+import { BaseModel } from "../../Models/Model";
+import ModelFactory from "../../Models/ModelFactory";
+import upsertModelFromJson from "../../Models/upsertModelFromJson";
+import ModelReference from "../ModelReference";
+import Trait, { TraitOptions } from "../Trait";
 
 export interface ModelArrayTraitOptions extends TraitOptions {
   factory?: ModelFactory;

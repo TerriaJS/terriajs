@@ -1,6 +1,6 @@
 import ModelTraits from "./ModelTraits";
-import objectTrait from "./objectTrait";
-import primitiveTrait from "./primitiveTrait";
+import objectTrait from "./decorators/objectTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
 
 export class TileErrorHandlingTraits extends ModelTraits {
   @primitiveTrait({

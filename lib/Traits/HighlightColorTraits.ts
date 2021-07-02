@@ -1,5 +1,5 @@
 import ModelTraits from "./ModelTraits";
-import primitiveTrait from "./primitiveTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
 
 export default class HighlightColorTraits extends ModelTraits {
   @primitiveTrait({

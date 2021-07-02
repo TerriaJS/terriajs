@@ -1,7 +1,7 @@
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import MappableTraits from "./MappableTraits";
 import mixTraits from "./mixTraits";
-import primitiveTrait from "./primitiveTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
 import UrlTraits from "./UrlTraits";
 
 export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(

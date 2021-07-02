@@ -3,9 +3,9 @@ import FeatureInfoTraits from "./FeatureInfoTraits";
 import UrlTraits from "./UrlTraits";
 import MappableTraits from "./MappableTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import anyTrait from "./anyTrait";
+import anyTrait from "./decorators/anyTrait";
 import { JsonObject } from "../Core/Json";
-import primitiveTrait from "./primitiveTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
 
 export default class GpxCatalogItemTraits extends mixTraits(
   FeatureInfoTraits,

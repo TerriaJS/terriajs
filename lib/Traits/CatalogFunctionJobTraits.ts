@@ -3,8 +3,8 @@ import CatalogFunctionTraits from "./CatalogFunctionTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import GroupTraits from "./GroupTraits";
 import mixTraits from "./mixTraits";
-import primitiveArrayTrait from "./primitiveArrayTrait";
-import primitiveTrait from "./primitiveTrait";
+import primitiveArrayTrait from "./decorators/primitiveArrayTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
 
 export default class CatalogFunctionJobTraits extends mixTraits(
   CatalogFunctionTraits,

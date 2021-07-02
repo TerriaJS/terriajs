@@ -1,15 +1,15 @@
 import { JsonObject } from "../Core/Json";
-import anyTrait from "./anyTrait";
+import anyTrait from "./decorators/anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import MappableTraits from "./MappableTraits";
 import mixTraits from "./mixTraits";
-import primitiveTrait from "./primitiveTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
 import SplitterTraits from "./SplitterTraits";
 import UrlTraits from "./UrlTraits";
-import objectTrait from "./objectTrait";
+import objectTrait from "./decorators/objectTrait";
 import StyleTraits from "./StyleTraits";
 import ExportableTraits from "./ExportableTraits";
 

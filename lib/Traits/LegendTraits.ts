@@ -1,7 +1,7 @@
-import primitiveTrait from "./primitiveTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
 import ModelTraits from "./ModelTraits";
-import objectArrayTrait from "./objectArrayTrait";
-import primitiveArrayTrait from "./primitiveArrayTrait";
+import objectArrayTrait from "./decorators/objectArrayTrait";
+import primitiveArrayTrait from "./decorators/primitiveArrayTrait";
 
 export class LegendItemTraits extends ModelTraits {
   @primitiveTrait({

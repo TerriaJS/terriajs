@@ -3,8 +3,8 @@ import DimensionTraits from "./DimensionTraits";
 import GroupTraits from "./GroupTraits";
 import mixTraits from "./mixTraits";
 import ModelTraits from "./ModelTraits";
-import objectArrayTrait from "./objectArrayTrait";
-import primitiveTrait from "./primitiveTrait";
+import objectArrayTrait from "./decorators/objectArrayTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
 import UrlTraits from "./UrlTraits";
 
 export class ReplaceStringTraits extends ModelTraits {

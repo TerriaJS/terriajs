@@ -3,8 +3,8 @@ import UrlTraits from "./UrlTraits";
 import MappableTraits from "./MappableTraits";
 import mixTraits from "./mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import primitiveTrait from "./primitiveTrait";
-import anyTrait from "./anyTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
+import anyTrait from "./decorators/anyTrait";
 
 export default class KmlCatalogItemTraits extends mixTraits(
   FeatureInfoTraits,

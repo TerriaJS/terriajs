@@ -1,6 +1,6 @@
 import ModelTraits from "./ModelTraits";
-import primitiveTrait from "./primitiveTrait";
-import primitiveArrayTrait from "./primitiveArrayTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
+import primitiveArrayTrait from "./decorators/primitiveArrayTrait";
 
 export default class DiffableTraits extends ModelTraits {
   @primitiveArrayTrait({

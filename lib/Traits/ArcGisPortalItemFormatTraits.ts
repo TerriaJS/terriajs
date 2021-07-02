@@ -1,7 +1,7 @@
 import { JsonObject } from "../Core/Json";
-import anyTrait from "./anyTrait";
+import anyTrait from "./decorators/anyTrait";
 import ModelTraits from "./ModelTraits";
-import primitiveTrait from "./primitiveTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
 
 export default class ArcGisPortalItemFormatTraits extends ModelTraits {
   @primitiveTrait({

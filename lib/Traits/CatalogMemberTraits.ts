@@ -1,12 +1,12 @@
 import i18next from "i18next";
 import { JsonObject } from "../Core/Json";
-import anyTrait from "./anyTrait";
+import anyTrait from "./decorators/anyTrait";
 import DimensionTraits from "./DimensionTraits";
 import LegendTraits from "./LegendTraits";
 import ModelTraits from "./ModelTraits";
-import objectArrayTrait from "./objectArrayTrait";
-import primitiveArrayTrait from "./primitiveArrayTrait";
-import primitiveTrait from "./primitiveTrait";
+import objectArrayTrait from "./decorators/objectArrayTrait";
+import primitiveArrayTrait from "./decorators/primitiveArrayTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
 
 export class MetadataUrlTraits extends ModelTraits {
   @primitiveTrait({

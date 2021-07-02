@@ -1,8 +1,8 @@
 import ModelTraits from "./ModelTraits";
-import objectArrayTrait from "./objectArrayTrait";
-import primitiveArrayTrait from "./primitiveArrayTrait";
-import primitiveTrait from "./primitiveTrait";
-import objectTrait from "./objectTrait";
+import objectArrayTrait from "./decorators/objectArrayTrait";
+import primitiveArrayTrait from "./decorators/primitiveArrayTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
+import objectTrait from "./decorators/objectTrait";
 import LegendTraits from "./LegendTraits";
 
 export class EnumColorTraits extends ModelTraits {

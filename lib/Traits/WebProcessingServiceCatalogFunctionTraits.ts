@@ -1,6 +1,6 @@
 import mixTraits from "./mixTraits";
 import UrlTraits from "./UrlTraits";
-import primitiveTrait from "./primitiveTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
 import CatalogFunctionTraits from "./CatalogFunctionTraits";
 
 export default class WebProcessingServiceCatalogFunctionTraits extends mixTraits(

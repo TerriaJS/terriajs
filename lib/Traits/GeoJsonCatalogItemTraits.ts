@@ -1,9 +1,9 @@
 import { JsonObject } from "../Core/Json";
-import anyTrait from "./anyTrait";
+import anyTrait from "./decorators/anyTrait";
 import ApiRequestTraits from "./ApiRequestTraits";
 import { GeoJsonTraits } from "./GeoJsonTraits";
 import mixTraits from "./mixTraits";
-import primitiveTrait from "./primitiveTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
 
 export default class GeoJsonCatalogItemTraits extends mixTraits(
   GeoJsonTraits,

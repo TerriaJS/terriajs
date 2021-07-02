@@ -2,9 +2,8 @@ import ApiRequestTraits, { QueryParamTraits } from "./ApiRequestTraits";
 import AutoRefreshingTraits from "./AutoRefreshingTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import mixTraits from "./mixTraits";
-import ModelTraits from "./ModelTraits";
-import objectArrayTrait from "./objectArrayTrait";
-import primitiveTrait from "./primitiveTrait";
+import objectArrayTrait from "./decorators/objectArrayTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
 import TableTraits from "./TableTraits";
 
 export class ApiTableRequestTraits extends ApiRequestTraits {

@@ -1,5 +1,5 @@
 import { JsonObject } from "../Core/Json";
-import anyTrait from "./anyTrait";
+import anyTrait from "./decorators/anyTrait";
 import CkanSharedTraits from "./CkanSharedTraits";
 import CatalogMemberReferenceTraits from "./CatalogMemberReferenceTraits";
 import CkanCatalogGroupTraits from "./CkanCatalogGroupTraits";
@@ -7,8 +7,8 @@ import CkanResourceFormatTraits from "./CkanResourceFormatTraits";
 import mixTraits from "./mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import MappableTraits from "./MappableTraits";
-import objectArrayTrait from "./objectArrayTrait";
-import primitiveTrait from "./primitiveTrait";
+import objectArrayTrait from "./decorators/objectArrayTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
 import UrlTraits from "./UrlTraits";
 
 export default class CkanCatalogItemTraits extends mixTraits(

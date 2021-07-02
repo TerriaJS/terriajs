@@ -1,7 +1,7 @@
-import primitiveTrait from "./primitiveTrait";
-import anyTrait from "./anyTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
+import anyTrait from "./decorators/anyTrait";
 import JsonObject from "../Core/Json";
-import objectArrayTrait from "./objectArrayTrait";
+import objectArrayTrait from "./decorators/objectArrayTrait";
 import ArcGisPortalItemFormatTraits from "./ArcGisPortalItemFormatTraits";
 import mixTraits from "./mixTraits";
 

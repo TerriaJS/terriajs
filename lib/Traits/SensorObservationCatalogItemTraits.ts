@@ -1,10 +1,10 @@
-import primitiveTrait from "./primitiveTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
 import mixTraits from "./mixTraits";
 import UrlTraits from "./UrlTraits";
 import TableTraits from "./TableTraits";
-import objectArrayTrait from "./objectArrayTrait";
+import objectArrayTrait from "./decorators/objectArrayTrait";
 import ModelTraits from "./ModelTraits";
-import primitiveArrayTrait from "./primitiveArrayTrait";
+import primitiveArrayTrait from "./decorators/primitiveArrayTrait";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import i18next from "i18next";
 

@@ -3,8 +3,8 @@ import TableColorStyleTraits from "./TableColorStyleTraits";
 import TablePointSizeStyleTraits from "./TablePointSizeStyleTraits";
 import TableTimeStyleTraits from "./TableTimeStyleTraits";
 import ModelTraits from "./ModelTraits";
-import objectTrait from "./objectTrait";
-import primitiveTrait from "./primitiveTrait";
+import objectTrait from "./decorators/objectTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
 import StratumFromTraits from "../Models/StratumFromTraits";
 
 export default class TableStyleTraits extends ModelTraits {

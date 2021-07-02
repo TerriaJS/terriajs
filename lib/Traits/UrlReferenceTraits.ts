@@ -1,6 +1,6 @@
 import CatalogMemberReferenceTraits from "./CatalogMemberReferenceTraits";
 import mixTraits from "./mixTraits";
-import primitiveTrait from "./primitiveTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
 import UrlTraits from "./UrlTraits";
 
 export default class UrlReferenceTraits extends mixTraits(

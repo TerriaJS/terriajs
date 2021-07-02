@@ -1,6 +1,6 @@
-import Result from "../Core/Result";
-import { BaseModel } from "../Models/Model";
-import Trait, { TraitOptions } from "./Trait";
+import Result from "../../Core/Result";
+import { BaseModel } from "../../Models/Model";
+import Trait, { TraitOptions } from "../Trait";
 
 export interface AnyTraitOptions extends TraitOptions {}
 

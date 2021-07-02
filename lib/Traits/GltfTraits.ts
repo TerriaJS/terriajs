@@ -1,5 +1,5 @@
 import mixTraits from "./mixTraits";
-import primitiveTrait from "./primitiveTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
 import ShadowTraits from "./ShadowTraits";
 import TransformationTraits from "./TransformationTraits";
 

@@ -1,7 +1,7 @@
-import anyTrait from "./anyTrait";
+import anyTrait from "./decorators/anyTrait";
 import ModelTraits from "./ModelTraits";
-import objectArrayTrait from "./objectArrayTrait";
-import primitiveTrait from "./primitiveTrait";
+import objectArrayTrait from "./decorators/objectArrayTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
 import UrlTraits from "./UrlTraits";
 
 export class QueryParamTraits extends ModelTraits {

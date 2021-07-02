@@ -1,11 +1,11 @@
 import { JsonObject } from "../Core/Json";
-import anyTrait from "./anyTrait";
+import anyTrait from "./decorators/anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import CkanSharedTraits from "./CkanSharedTraits";
 import GroupTraits from "./GroupTraits";
 import mixTraits from "./mixTraits";
-import primitiveArrayTrait from "./primitiveArrayTrait";
-import primitiveTrait from "./primitiveTrait";
+import primitiveArrayTrait from "./decorators/primitiveArrayTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
 import UrlTraits from "./UrlTraits";
 
 export default class CkanCatalogGroupTraits extends mixTraits(

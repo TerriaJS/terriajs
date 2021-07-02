@@ -1,19 +1,19 @@
 import { computed } from "mobx";
 import { computedFn } from "mobx-utils";
-import Result from "../Core/Result";
-import TerriaError from "../Core/TerriaError";
-import createStratumInstance from "../Models/createStratumInstance";
-import Model, { BaseModel, ModelConstructor } from "../Models/Model";
-import saveStratumToJson from "../Models/saveStratumToJson";
-import StratumFromTraits from "../Models/StratumFromTraits";
-import StratumOrder from "../Models/StratumOrder";
+import Result from "../../Core/Result";
+import TerriaError from "../../Core/TerriaError";
+import createStratumInstance from "../../Models/createStratumInstance";
+import Model, { BaseModel, ModelConstructor } from "../../Models/Model";
+import saveStratumToJson from "../../Models/saveStratumToJson";
+import StratumFromTraits from "../../Models/StratumFromTraits";
+import StratumOrder from "../../Models/StratumOrder";
 import ArrayNestedStrataMap, {
   getObjectId,
   TraitsConstructorWithRemoval
-} from "./ArrayNestedStrataMap";
-import ModelTraits from "./ModelTraits";
-import Trait, { TraitOptions } from "./Trait";
-import traitsClassToModelClass from "./traitsClassToModelClass";
+} from "../ArrayNestedStrataMap";
+import ModelTraits from "../ModelTraits";
+import Trait, { TraitOptions } from "../Trait";
+import traitsClassToModelClass from "../traitsClassToModelClass";
 
 export interface ObjectArrayTraitOptions<T extends ModelTraits>
   extends TraitOptions {

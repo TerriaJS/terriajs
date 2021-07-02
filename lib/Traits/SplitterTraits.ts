@@ -1,7 +1,7 @@
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 
 import ModelTraits from "./ModelTraits";
-import primitiveTrait from "./primitiveTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
 
 export default class SplitterTraits extends ModelTraits {
   @primitiveTrait({

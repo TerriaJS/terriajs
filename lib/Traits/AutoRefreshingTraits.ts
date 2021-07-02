@@ -1,4 +1,4 @@
-import primitiveTrait from "./primitiveTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
 import MappableTraits from "./MappableTraits";
 
 export default class AutoRefreshingTraits extends MappableTraits {

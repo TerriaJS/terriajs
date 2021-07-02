@@ -1,8 +1,8 @@
 import ModelTraits from "./ModelTraits";
 import { DimensionOption, Dimension } from "../Models/SelectableDimensions";
-import primitiveTrait from "./primitiveTrait";
-import anyTrait from "./anyTrait";
-import objectArrayTrait from "./objectArrayTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
+import anyTrait from "./decorators/anyTrait";
+import objectArrayTrait from "./decorators/objectArrayTrait";
 import { JsonObject } from "../Core/Json";
 
 export class DimensionOptionTraits extends ModelTraits

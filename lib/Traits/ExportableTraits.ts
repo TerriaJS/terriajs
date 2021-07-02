@@ -1,4 +1,4 @@
-import primitiveTrait from "./primitiveTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
 import ModelTraits from "./ModelTraits";
 
 export default class ExportableTraits extends ModelTraits {

@@ -1,6 +1,6 @@
 import ModelTraits from "./ModelTraits";
-import primitiveTrait from "./primitiveTrait";
-import objectTrait from "./objectTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
+import objectTrait from "./decorators/objectTrait";
 
 export class EditorTraits extends ModelTraits {
   @primitiveTrait({

@@ -1,5 +1,5 @@
 import GltfTraits from "./GltfTraits";
-import primitiveTrait from "./primitiveTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
 import mixTraits from "./mixTraits";
 import UrlTraits from "./UrlTraits";
 

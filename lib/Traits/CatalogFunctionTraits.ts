@@ -1,5 +1,5 @@
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import anyTrait from "./anyTrait";
+import anyTrait from "./decorators/anyTrait";
 import { JsonObject } from "../Core/Json";
 
 export default class CatalogFunctionTraits extends CatalogMemberTraits {

@@ -1,6 +1,6 @@
 import LatLonHeightTraits from "./LatLonHeightTraits";
 import ModelTraits from "./ModelTraits";
-import objectTrait from "./objectTrait";
+import objectTrait from "./decorators/objectTrait";
 
 export default class ChartPointOnMapTraits extends ModelTraits {
   @objectTrait({

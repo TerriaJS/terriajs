@@ -1,7 +1,7 @@
 import mixTraits from "./mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import MappableTraits from "./MappableTraits";
-import modelReferenceArrayTrait from "./modelReferenceArrayTrait";
+import modelReferenceArrayTrait from "./decorators/modelReferenceArrayTrait";
 import CatalogMemberFactory from "../Models/CatalogMemberFactory";
 import ModelReference from "./ModelReference";
 

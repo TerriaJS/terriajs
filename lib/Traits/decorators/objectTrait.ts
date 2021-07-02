@@ -1,15 +1,15 @@
 import { computed } from "mobx";
-import Result from "../Core/Result";
-import TerriaError from "../Core/TerriaError";
-import createStratumInstance from "../Models/createStratumInstance";
-import Model, { BaseModel, ModelConstructor } from "../Models/Model";
-import saveStratumToJson from "../Models/saveStratumToJson";
-import StratumFromTraits from "../Models/StratumFromTraits";
-import ModelTraits from "./ModelTraits";
-import NestedStrataMap from "./NestedStrataMap";
-import Trait, { TraitOptions } from "./Trait";
-import traitsClassToModelClass from "./traitsClassToModelClass";
-import TraitsConstructor from "./TraitsConstructor";
+import Result from "../../Core/Result";
+import TerriaError from "../../Core/TerriaError";
+import createStratumInstance from "../../Models/createStratumInstance";
+import Model, { BaseModel, ModelConstructor } from "../../Models/Model";
+import saveStratumToJson from "../../Models/saveStratumToJson";
+import StratumFromTraits from "../../Models/StratumFromTraits";
+import ModelTraits from "../ModelTraits";
+import NestedStrataMap from "../NestedStrataMap";
+import Trait, { TraitOptions } from "../Trait";
+import traitsClassToModelClass from "../traitsClassToModelClass";
+import TraitsConstructor from "../TraitsConstructor";
 
 export interface ObjectTraitOptions<T extends ModelTraits>
   extends TraitOptions {

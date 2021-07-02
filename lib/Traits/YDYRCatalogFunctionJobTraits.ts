@@ -1,7 +1,7 @@
 import mixTraits from "./mixTraits";
 import UrlTraits from "./UrlTraits";
 import CatalogFunctionJobTraits from "./CatalogFunctionJobTraits";
-import primitiveTrait from "./primitiveTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
 
 export default class YDYRCatalogFunctionJobTraits extends mixTraits(
   UrlTraits,

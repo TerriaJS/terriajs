@@ -1,10 +1,10 @@
 import ModelTraits from "./ModelTraits";
-import primitiveTrait from "./primitiveTrait";
-import primitiveArrayTrait from "./primitiveArrayTrait";
-import anyTrait from "./anyTrait";
+import primitiveTrait from "./decorators/primitiveTrait";
+import primitiveArrayTrait from "./decorators/primitiveArrayTrait";
+import anyTrait from "./decorators/anyTrait";
 import { JsonObject } from "../Core/Json";
 import TableColumnType from "../Table/TableColumnType";
-import objectTrait from "./objectTrait";
+import objectTrait from "./decorators/objectTrait";
 
 export const THIS_COLUMN_EXPRESSION_TOKEN = "x";
 
