@@ -5,6 +5,7 @@ Change Log
 
 #### next release (8.0.0-alpha.88)
 
+* Fixed a bug with numeric item search where it sometimes fails to return all matching values.
 * Respect order of objects from lower strata in `objectArrayTrait`.
 * Fix datetime button margin with scroll in workbench.
 * Fix checkbox when click happen on svg icon. (#5550)
@@ -16,6 +17,7 @@ Change Log
   * To use `DiscreteColorMap` - you will need to set `numberOfBins` to something other than `0`.
 * `TableColorMap` default color palette for `scalar` columns is not `Reds` instead of `RdYlOr`
 * Legends for `scalar` columns will now calculate optimal `numberFormatOptions.maximumFractionDigits` and  `numberFormatOptions.minimumFractionDigits`
+* Fix sharing user added data of type "Auto-detect".
 * [The next improvement]
 
 #### 8.0.0-alpha.87
