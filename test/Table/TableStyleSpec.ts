@@ -19,7 +19,7 @@ describe("Table Style", function() {
       "data/regionMapping.json";
   });
 
-  describe(" - Scalar with bins", function() {
+  describe(" - Scalar", function() {
     let csvItem: CsvCatalogItem;
 
     beforeEach(async function() {

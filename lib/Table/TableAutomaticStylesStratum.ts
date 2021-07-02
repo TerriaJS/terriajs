@@ -239,19 +239,27 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
       )
         return;
 
-      // We want to show fraction digits depending on how small difference is between min and max
+      // We want to show fraction digits depending on how small difference is between min and max.
+      // This also takes into consideration the defualt number of legend items - 7
+      // So we add an extra digit
       // For example:
-      // - if difference is 1 - we want to show one fraction digit
-      // - if difference is 0.1 - we want to show two fraction digits
+      // - if difference is 10 - we wnat to show one fraction digit
+      // - if difference is 1 - we want to show two fraction digits
+      // - if difference is 0.1 - we want to show three fraction digits
+
+      // log_10(20/x) achieves this (where x is difference between min and max)
+      // https://www.wolframalpha.com/input/?i=log_10%2820%2Fx%29
+      // We use 20 here instead of 10 to give us a more convervative value (that is, we may show an extra fraction digit even if it is not needed)
+      // So when x >= 20 - we will not show any fraction digits
 
       // Clamp values between 0 and 5
-      const fractionDigits = Math.max(
+      let fractionDigits = Math.max(
         0,
         Math.min(
           5,
           Math.ceil(
             Math.log10(
-              2 /
+              20 /
                 Math.abs(
                   colorColumn.valuesAsNumbers.maximum -
                     colorColumn.valuesAsNumbers.minimum
@@ -260,6 +268,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
           )
         )
       );
+
       return {
         maximumFractionDigits: fractionDigits,
         minimumFractionDigits: fractionDigits
