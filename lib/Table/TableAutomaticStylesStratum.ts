@@ -232,21 +232,33 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
       isDefined(colorColumn.valuesAsNumbers.maximum) &&
       isDefined(colorColumn.valuesAsNumbers.minimum)
     ) {
+      if (
+        colorColumn.valuesAsNumbers.maximum -
+          colorColumn.valuesAsNumbers.minimum ===
+        0
+      )
+        return;
+
       // We want to show fraction digits depending on how small difference is between min and max
       // For example:
       // - if difference is 1 - we want to show one fraction digit
       // - if difference is 0.1 - we want to show two fraction digits
-      const fractionDigits = Math.min(
-        Math.ceil(
-          Math.log10(
-            1 /
-              Math.abs(
-                colorColumn.valuesAsNumbers.maximum -
-                  colorColumn.valuesAsNumbers.minimum
-              )
+
+      // Clamp values between 0 and 5
+      const fractionDigits = Math.max(
+        0,
+        Math.min(
+          5,
+          Math.ceil(
+            Math.log10(
+              2 /
+                Math.abs(
+                  colorColumn.valuesAsNumbers.maximum -
+                    colorColumn.valuesAsNumbers.minimum
+                )
+            )
           )
-        ),
-        5
+        )
       );
       return {
         maximumFractionDigits: fractionDigits,
