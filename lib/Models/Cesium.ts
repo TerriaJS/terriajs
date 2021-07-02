@@ -239,28 +239,21 @@ export default class Cesium extends GlobeOrMap {
         );
       }
       if (expandLink) {
-        let attributionToAboutPage = document.createElement("div");
-        attributionToAboutPage.innerHTML = `<a href="about.html#data-attribution" target="_blank" rel="noopener noreferrer">Data attribution</a>`;
-        let disclaimerToAboutPage = document.createElement("div");
-        disclaimerToAboutPage.innerHTML = `<a href="about.html#disclaimer" target="_blank" rel="noopener noreferrer">Disclaimer</a>`;
-
-        if (logoContainer && logoContainer.parentNode) {
-          if (disclaimerToAboutPage && disclaimerToAboutPage.firstChild) {
-            logoContainer.parentNode.insertBefore(
-              disclaimerToAboutPage.firstChild,
-              logoContainer.nextSibling
-            );
-          }
-
-          if (attributionToAboutPage && attributionToAboutPage.firstChild) {
-            logoContainer.parentNode.insertBefore(
-              attributionToAboutPage.firstChild,
-              logoContainer.nextSibling
-            );
-          }
-        }
-
-        expandLink.innerText = "Basemap";
+        this.terria.configParameters.extraCreditLinks
+          ?.slice()
+          .reverse()
+          .forEach(({ url, text }) => {
+            // Create a link and insert it after the logo node
+            // Defaults to the given text if no translation is provided
+            const translatedText = i18next.t(text);
+            const a = document.createElement("a");
+            a.href = url;
+            a.target = "_blank";
+            a.rel = "noopener noreferrer";
+            a.innerText = translatedText;
+            logoContainer?.insertAdjacentElement("afterend", a);
+          });
+        expandLink.innerText = i18next.t("map.extraCreditLinks.basemap");
       }
     }
 

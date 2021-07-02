@@ -3,8 +3,28 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.87)
+#### next release (8.0.0-alpha.88)
+
+* Fixed a bug with numeric item search where it sometimes fails to return all matching values.
+* Respect order of objects from lower strata in `objectArrayTrait`.
+* Fix datetime button margin with scroll in workbench.
+* Fix checkbox when click happen on svg icon. (#5550)
+* Added progress indicator when loading item search tool.
+* Add `nullColor` to `ConstantColorMap` - used when `colorColumn` is of type `region` to hide regions where rows don't exist.
+* `TableStyles` will only be created for `text` columns if there are no columns of type `scalar`, `enum` or `region`.
+* Fix sharing user added data of type "Auto-detect".
 * [The next improvement]
+
+#### 8.0.0-alpha.87
+
+* Re-add basemap images to terriajs rather than requiring all TerriaMaps to have those basemap images. Default basemaps will use those images.
+* Data from TableMixin always overrides other feature information (e.g. from vector tiles in region mapping) by column name and title for feature info templating (consistent with v7).
+* Fixed point entity creation for TableMixin where different columns are used for point size and colour.
+* Changed MappableMixin's initialMessage to show while map items are loaded. Map items could be displayed behind the disclaimer before a user accepts the disclaimer.
+* Fixed a cyclic dependency between initialMessage and app spinner (globe gif greysreen) that caused the app spinner to be present forever when loading a share link.
+* Removed hardcoded credit links and made it configurable via terria config parameters.
+* Disable `TableMixin` time column if only one unique time interval
+
 #### 8.0.0-alpha.86
 
 - **Breaking changes**:
@@ -22,6 +42,7 @@ Change Log
 * Bugfix to make time-based geojson work when there are multiple features with the same time property value.
 * Add `czmlTemplate` to `GeoJsonTraits` - it can be used to replace GeoJSON Point features with a CZML packet.
 * Made the moment points in the chart optionally clickable.
+
 #### 8.0.0-alpha.85
 
 - **Breaking changes**:
