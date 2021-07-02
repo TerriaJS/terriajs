@@ -219,6 +219,42 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
     return [];
   }
 
+  @computed get numberFormatOptions():
+    | Intl.NumberFormatOptions
+    | JsonObject
+    | undefined {
+    const colorColumn = this.catalogItem?.activeTableStyle?.colorColumn;
+    if (colorColumn?.traits?.format) return colorColumn?.traits?.format;
+
+    if (
+      colorColumn &&
+      colorColumn.type === TableColumnType.scalar &&
+      isDefined(colorColumn.valuesAsNumbers.maximum) &&
+      isDefined(colorColumn.valuesAsNumbers.minimum)
+    ) {
+      // We want to show fraction digits depending on how small difference is between min and max
+      // For example:
+      // - if difference is 1 - we want to show one fraction digit
+      // - if difference is 0.1 - we want to show two fraction digits
+      const fractionDigits = Math.min(
+        Math.ceil(
+          Math.log10(
+            1 /
+              Math.abs(
+                colorColumn.valuesAsNumbers.maximum -
+                  colorColumn.valuesAsNumbers.minimum
+              )
+          )
+        ),
+        5
+      );
+      return {
+        maximumFractionDigits: fractionDigits,
+        minimumFractionDigits: fractionDigits
+      };
+    }
+  }
+
   private _createLegendItemsFromContinuousColorMap(
     activeStyle: TableStyle,
     colorMap: ContinuousColorMap
@@ -237,10 +273,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
             })
           ]
         : [];
-    let numberFormatOptions: Intl.NumberFormatOptions | JsonObject | undefined;
-    if (colorColumn?.traits?.format !== undefined) {
-      numberFormatOptions = colorColumn.traits.format;
-    }
+
     return new Array(7)
       .fill(0)
       .map((_, i) => {
@@ -248,7 +281,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
           colorMap.minValue + (colorMap.maxValue - colorMap.minValue) * (i / 6);
         return createStratumInstance(LegendItemTraits, {
           color: colorMap.mapValueToColor(value).toCssColorString(),
-          title: this._formatValue(value, numberFormatOptions)
+          title: this._formatValue(value, this.numberFormatOptions)
         });
       })
       .reverse()
@@ -277,17 +310,20 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
             })
           ]
         : [];
-    let numberFormatOptions: Intl.NumberFormatOptions | JsonObject | undefined;
-    if (colorColumn?.traits?.format !== undefined) {
-      numberFormatOptions = colorColumn.traits.format;
-    }
+
     return colorMap.maximums
       .map((maximum, i) => {
         const isBottom = i === 0;
         const formattedMin = isBottom
-          ? this._formatValue(minimum, numberFormatOptions)
-          : this._formatValue(colorMap.maximums[i - 1], numberFormatOptions);
-        const formattedMax = this._formatValue(maximum, numberFormatOptions);
+          ? this._formatValue(minimum, this.numberFormatOptions)
+          : this._formatValue(
+              colorMap.maximums[i - 1],
+              this.numberFormatOptions
+            );
+        const formattedMax = this._formatValue(
+          maximum,
+          this.numberFormatOptions
+        );
         return createStratumInstance(LegendItemTraits, {
           color: colorMap.colors[i].toCssColorString(),
           title: `${formattedMin} to ${formattedMax}`
@@ -354,6 +390,9 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
     value: number,
     format: Intl.NumberFormatOptions | JsonObject | undefined
   ): string {
-    return Math.round(value).toLocaleString(undefined, format);
+    return (format?.maximumFractionDigits
+      ? value
+      : Math.round(value)
+    ).toLocaleString(undefined, format);
   }
 }

@@ -255,7 +255,12 @@ export default class TableColorMap {
       const maxValue =
         colorTraits.maximumValue ?? colorColumn?.valuesAsNumbers.maximum;
 
-      if (this.colorPaletteName && isDefined(minValue) && isDefined(maxValue)) {
+      if (
+        this.colorPaletteName &&
+        isDefined(minValue) &&
+        isDefined(maxValue) &&
+        minValue !== maxValue
+      ) {
         // Get colorScale from `d3-scale-chromatic` library - all continuous color schemes start with "interpolate"
         // See https://github.com/d3/d3-scale-chromatic#diverging
         const colorScale = (d3Scale as any)[

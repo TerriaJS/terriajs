@@ -15,6 +15,7 @@ Change Log
 * Added `ContinuousColorMap` - it will now be used by default for `scalar` columns
   * To use `DiscreteColorMap` - you will need to set `numberOfBins` to something other than `0`.
 * `TableColorMap` default color palette for `scalar` columns is not `Reds` instead of `RdYlOr`
+* Legends for `scalar` columns will now calculate optimal `numberFormatOptions.maximumFractionDigits` and  `numberFormatOptions.minimumFractionDigits`
 * [The next improvement]
 
 #### 8.0.0-alpha.87
