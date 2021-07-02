@@ -1,6 +1,5 @@
 import { computed } from "mobx";
 import { createTransformer } from "mobx-utils";
-import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import ConstantColorMap from "../Map/ConstantColorMap";
@@ -123,14 +122,20 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
     let columns = this.catalogItem.tableColumns.filter(
       column =>
         column.type === TableColumnType.scalar ||
-        column.type === TableColumnType.enum ||
-        column.type === TableColumnType.text
+        column.type === TableColumnType.enum
     );
 
-    // If no styles for scalar, enum or text, try to create a style using region columns
+    // If no styles for scalar, enum - try to create a style using region columns
     if (columns.length === 0) {
       columns = this.catalogItem.tableColumns.filter(
         column => column.type === TableColumnType.region
+      );
+    }
+
+    // If still no styles - try to create a style using text columns
+    if (columns.length === 0) {
+      columns = this.catalogItem.tableColumns.filter(
+        column => column.type === TableColumnType.text
       );
     }
 
@@ -150,7 +155,11 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
 
   @computed
   get disableDateTimeSelector() {
-    return this.catalogItem.mapItems.length === 0 ? true : undefined;
+    if (
+      this.catalogItem.mapItems.length === 0 ||
+      !this.catalogItem.activeTableStyle.moreThanOneTimeInterval
+    )
+      return true;
   }
 
   @computed

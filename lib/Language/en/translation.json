@@ -789,6 +789,11 @@
       "csvRegionMappingMessageZeroFound": "Zero region names found for region type {{regionType}}",
       "csvRegionMappingMessageZeroBoundariesFound": "Zero region boundaries found for region {{regionName}}",
       "csvRegionMappingMessageLoadError": "Couldn't load region boundaries for region {{regionName}} {{exception}}"
+    },
+    "extraCreditLinks": {
+      "dataAttribution": "Data attribution",
+      "disclaimer": "Disclaimer",
+      "basemap": "Basemap"
     }
   },
   "models": {
@@ -1522,6 +1527,7 @@
     "missingContent": "missing content"
   },
   "itemSearchTool": {
+    "toolLoadError": "Error loading search tool.",
     "title": "Search {{itemName}}",
     "loading": "Loading search parameters",
     "loadError": "Error loading search parameters. Check console for detailed errors.",

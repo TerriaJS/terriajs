@@ -254,6 +254,11 @@ interface ConfigParameters {
    * Minimum length of feedback comment.
    */
   feedbackMinLength?: number;
+
+  /**
+   * Extra links to show in the credit line at the bottom of the map (currently only the Cesium map).
+   */
+  extraCreditLinks?: { url: string; text: string }[];
 }
 
 interface StartOptions {
@@ -416,7 +421,15 @@ export default class Terria {
     persistViewerMode: true,
     openAddData: false,
     feedbackPreamble: "feedback.feedbackPreamble",
-    feedbackMinLength: 0
+    feedbackMinLength: 0,
+    extraCreditLinks: [
+      // Default credit links (shown at the bottom of the Cesium map)
+      {
+        text: "map.extraCreditLinks.dataAttribution",
+        url: "about.html#data-attribution"
+      },
+      { text: "map.extraCreditLinks.disclaimer", url: "about.html#disclaimer" }
+    ]
   };
 
   @observable
