@@ -1525,6 +1525,7 @@
     "missingContent": "missing content"
   },
   "itemSearchTool": {
+    "toolLoadError": "Error loading search tool.",
     "title": "Search {{itemName}}",
     "loading": "Loading search parameters",
     "loadError": "Error loading search parameters. Check console for detailed errors.",
