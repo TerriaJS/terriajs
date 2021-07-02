@@ -79,12 +79,11 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   MappableTraits,
   CatalogMemberTraits
 ) {
-  @primitiveTrait({
-    type: "string",
-    name: "Is GeoServer",
-    description: "True if this WMS is a GeoServer; otherwise, false."
+  @anyTrait({
+    name: "server",
+    description: "Which server serves data in this WMTS."
   })
-  isGeoServer: boolean = false;
+  server?: "geoserver";
 
   @primitiveTrait({
     type: "string",

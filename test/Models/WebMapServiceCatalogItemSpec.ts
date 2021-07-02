@@ -300,7 +300,7 @@ describe("WebMapServiceCatalogItem", function() {
         "test/WMS/styles_and_dimensions.xml"
       );
       wmsItem.setTrait(CommonStrata.definition, "layers", "A");
-      wmsItem.setTrait(CommonStrata.definition, "isGeoServer", true);
+      wmsItem.setTrait(CommonStrata.definition, "server", "geoserver");
     });
 
     wmsItem
@@ -378,7 +378,7 @@ describe("WebMapServiceCatalogItem", function() {
     wmsItem
       .loadMetadata()
       .then(function() {
-        expect(wmsItem.isThredds).toBeTruthy();
+        expect(wmsItem.server === "thredds").toBeTruthy();
         expect(wmsItem.legends.length).toBe(1);
         expect(wmsItem.legends[0].url).toBe(
           "http://geoport-dev.whoi.edu/thredds/wms/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A&colorscalerange=0%2C1"

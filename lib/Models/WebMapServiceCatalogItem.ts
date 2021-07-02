@@ -69,6 +69,8 @@ import WebMapServiceCapabilities, {
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 
+export type ServerType = "geoserver" | "esri" | "thredds";
+
 const dateFormat = require("dateformat");
 class GetCapabilitiesStratum extends LoadableStratum(
   WebMapServiceCatalogItemTraits
@@ -229,7 +231,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       if (isDefined(legendUri)) {
         // Add geoserver related LEGEND_OPTIONS to match terria styling (if supported)
         if (
-          this.catalogItem.isGeoServer &&
+          this.catalogItem.server === "geoserver" &&
           legendUri.hasQuery("request", "GetLegendGraphic")
         ) {
           let legendOptions =
@@ -642,7 +644,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
   // TODO - Geoserver also support NCWMS via a plugin, just need to work out how to detect that
   @computed
   get isNcWMS(): boolean {
-    if (this.catalogItem.isThredds) return true;
+    if (this.isThredds) return true;
     return false;
   }
 
@@ -653,6 +655,17 @@ class GetCapabilitiesStratum extends LoadableStratum(
     return false;
   }
 
+  get server(): ServerType | undefined {
+    if (this.isGeoServer) {
+      return "geoserver";
+    } else if (this.isEsri) {
+      return "esri";
+    } else if (this.isThredds || this.isNcWMS) {
+      return "thredds";
+    }
+    return undefined;
+  }
+
   @computed
   get supportsGetLegendGraphic(): boolean {
     return (
@@ -660,14 +673,14 @@ class GetCapabilitiesStratum extends LoadableStratum(
       isDefined(
         this.capabilities?.json?.Capability?.Request?.GetLegendGraphic
       ) ||
-      (this.catalogItem.isGeoServer ?? false) ||
-      (this.catalogItem.isNcWMS ?? false)
+      (this.catalogItem.server === "geoserver" ?? false) ||
+      (this.catalogItem.server === "thredds" ?? false)
     );
   }
 
   @computed
   get supportsColorScaleRange(): boolean {
-    return this.catalogItem.isNcWMS;
+    return this.catalogItem.server === "thredds";
   }
 
   @computed
