@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import React from "react";
 import ChartView from "../../../Charts/ChartView";
 import ChartableMixin, { axesMatch } from "../../../ModelMixins/ChartableMixin";
-import Icon from "../../../Styled/Icon";
 import Styles from "./chart-item-selector.scss";
 import Checkbox from "../../../Styled/Checkbox/Checkbox";
 
