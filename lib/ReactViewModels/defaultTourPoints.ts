@@ -28,19 +28,19 @@ export const defaultTourPoints = [
     appRefName: "LocationSearchInput",
     priority: 30,
     offsetLeft: 225,
-    content: "tour.locationSearchInput.content"
+    content: "translate#tour.locationSearchInput.content"
   },
   {
     appRefName: "ExploreMapDataButton",
     priority: 10,
     offsetLeft: 70,
-    content: "tour.exploreMapDataButton.content"
+    content: "translate#tour.exploreMapDataButton.content"
   },
   {
     appRefName: "SidePanelUploadButton",
     priority: 20,
     offsetLeft: 70,
-    content: "tour.sidePanelUploadButton.content"
+    content: "translate#tour.sidePanelUploadButton.content"
   },
   {
     appRefName: "MenuBarMapSettingsButton",
@@ -48,7 +48,7 @@ export const defaultTourPoints = [
     caretOffsetLeft: TOUR_WIDTH - 25,
     offsetLeft: -TOUR_WIDTH - 30,
     positionLeft: RelativePosition.RECT_RIGHT,
-    content: "tour.menuBarMapSettingsButton.content"
+    content: "translate#tour.menuBarMapSettingsButton.content"
   },
   {
     appRefName: "MenuBarStoryButton",
@@ -56,7 +56,7 @@ export const defaultTourPoints = [
     caretOffsetLeft: TOUR_WIDTH - 25,
     offsetLeft: -TOUR_WIDTH - 10,
     positionLeft: RelativePosition.RECT_RIGHT,
-    content: "tour.menuBarStoryButton.content"
+    content: "translate#tour.menuBarStoryButton.content"
   },
   {
     appRefName: "MapNavigationCompassOuterRing",
@@ -69,7 +69,7 @@ export const defaultTourPoints = [
     offsetLeft: -TOUR_WIDTH - 15,
     positionTop: RelativePosition.RECT_TOP,
     positionLeft: RelativePosition.RECT_LEFT,
-    content: "tour.mapNavigationCompassOuterRing.content"
+    content: "translate#tour.mapNavigationCompassOuterRing.content"
   },
   {
     appRefName: "MapNavigationSplitterIcon",
@@ -82,6 +82,6 @@ export const defaultTourPoints = [
     offsetLeft: -TOUR_WIDTH - 15,
     positionTop: RelativePosition.RECT_TOP,
     positionLeft: RelativePosition.RECT_LEFT,
-    content: "tour.mapNavigationSplitterIcon.content"
+    content: "translate#tour.mapNavigationSplitterIcon.content"
   }
 ];

@@ -19,6 +19,7 @@ import Text from "../../../Styled/Text";
 import Box from "../../../Styled/Box";
 import Button, { RawButton } from "../../../Styled/Button";
 import Spacing from "../../../Styled/Spacing";
+import { useTranslationIfExists } from "./../../../Language/languageHelpers";
 
 const StyledHtml: any = require("../../Map/Panels/HelpPanel/StyledHtml")
   .default;
@@ -89,7 +90,7 @@ const renderStep = (
       </Box>
       <Box column>
         <Text textLight extraExtraLarge semiBold>
-          {i18next.t(step.title)}
+          {useTranslationIfExists(step.title)}
         </Text>
         {options.renderDescription && step?.markdownDescription && (
           <>
@@ -383,7 +384,7 @@ export const TrainerBar = observer((props: TrainerBarProps) => {
           >
             {selectedTrainerItems.map((item, index) => (
               <option key={item.title} value={index}>
-                {t(item.title)}
+                {useTranslationIfExists(item.title)}
               </option>
             ))}
           </Select>
