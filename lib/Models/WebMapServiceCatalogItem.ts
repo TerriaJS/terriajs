@@ -1187,7 +1187,7 @@ class WebMapServiceCatalogItem
           feature_count:
             1 +
             (this.maximumShownFeatureInfos ??
-              this.terria.configParameters.defaultMaximumShownFeatureInfos)!,
+              this.terria.configParameters.defaultMaximumShownFeatureInfos),
           styles: this.styles === undefined ? "" : this.styles
         },
         tileWidth: this.tileWidth,
