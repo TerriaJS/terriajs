@@ -15,6 +15,7 @@ Change Log
 * Fix sharing user added data of type "Auto-detect".
 * #5605 tidy up format string used in `MagdaReference`
 * `WebMapServiceCatalogGroup` will now create layer auto-IDs using `Name` field to avoid ID clashes.
+* Added `GroupMixin` `shareKey` generation for members - if the group has `shareKeys`.
 * [The next improvement]
 
 #### 8.0.0-alpha.87
