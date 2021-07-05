@@ -38,6 +38,7 @@ class DimensionSelectorSection extends React.Component<PropsType> {
       dim =>
         !dim.disable &&
         isDefined(dim.options) &&
+        dim.options.length < 1000 &&
         dim.options.length + (dim.allowUndefined ? 1 : 0) > 1
     );
 
