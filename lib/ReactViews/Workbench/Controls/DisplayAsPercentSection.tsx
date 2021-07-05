@@ -17,9 +17,9 @@ const DisplayAsPercentSection: React.FC<IDisplayAsPercentSection> = (
     props.item.displayPercent = !props.item.displayPercent;
   };
 
-  /* if (!props.item.canDisplayPercent) {
+  if (!props.item.canDisplayPercent) {
     return null;
-  } */
+  }
 
   return (
     <>
