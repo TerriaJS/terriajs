@@ -12,7 +12,14 @@ export const Ul = styled(Box).attrs({
 })<IUlProps>`
   list-style: none;
   margin: 0;
-  ${props => props.fullWidth && "width: 100%;"}
+  ${props =>
+    props.fullWidth &&
+    css`
+      width: 100%;
+      ${Li} {
+        width: 100%;
+      }
+    `}
   ${props =>
     props.spaced &&
     css`

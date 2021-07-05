@@ -619,7 +619,8 @@
     "sectionLabel": "Charts",
     "closePanel": "Close Panel",
     "expand": "Expand",
-    "download": "Download"
+    "download": "Download",
+    "showItemInChart": "Show {{value}} in chart"
   },
   "viewModels": {
     "searchNoLocations": "Sorry, no locations match your search query.",
