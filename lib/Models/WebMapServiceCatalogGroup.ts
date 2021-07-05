@@ -194,7 +194,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       let model: CatalogGroup;
       if (existingModel === undefined) {
         model = new CatalogGroup(layerId, this.catalogGroup.terria);
-        this.catalogGroup.terria.addModel(model);
+        this.catalogGroup.terria.addModel(model, this.getLayerShareKeys(layer));
       } else {
         model = existingModel;
       }
@@ -233,7 +233,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     if (existingModel === undefined) {
       model = new WebMapServiceCatalogItem(layerId, this.catalogGroup.terria);
 
-      this.catalogGroup.terria.addModel(model);
+      this.catalogGroup.terria.addModel(model, this.getLayerShareKeys(layer));
     } else {
       model = existingModel;
     }
@@ -288,7 +288,18 @@ class GetCapabilitiesStratum extends LoadableStratum(
     if (!isDefined(this.catalogGroup.uniqueId)) {
       return;
     }
-    return `${this.catalogGroup.uniqueId}/${layer.Title}`;
+    return `${this.catalogGroup.uniqueId}/${layer.Name ?? layer.Title}`;
+  }
+
+  /** For backward-compatibility.
+   * If layer.Name is defined, we will use it to create layer autoID (see `this.getLayerId`).
+   * Previously we used layer.Title, so we now add it as a shareKey
+   */
+  getLayerShareKeys(layer: CapabilitiesLayer) {
+    if (isDefined(layer.Name))
+      return [`${this.catalogGroup.uniqueId}/${layer.Title}`];
+
+    return [];
   }
 }
 
