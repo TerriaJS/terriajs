@@ -32,7 +32,6 @@ class HelpPanelItem extends React.Component {
   }
 
   render() {
-    const { t } = this.props;
     const { icon } = this.props.content;
     const MenuIconWrapper = styled(Box).attrs({
       centered: true
