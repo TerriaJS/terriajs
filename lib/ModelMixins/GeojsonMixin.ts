@@ -1,14 +1,20 @@
+import { Feature, FeatureCollection, GeoJsonObject, Point } from "geojson";
 import i18next from "i18next";
-import { action, computed, observable, runInAction } from "mobx";
+import { action, computed, observable, runInAction, toJS } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
+import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
+import TimeIntervalCollection from "terriajs-cesium/Source/Core/TimeIntervalCollection";
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
 import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
+import CzmlDataSource from "terriajs-cesium/Source/DataSources/CzmlDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import EntityCollection from "terriajs-cesium/Source/DataSources/EntityCollection";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
@@ -23,19 +29,15 @@ import JsonValue, { isJsonObject, JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
 import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError from "../Core/TerriaError";
-import MappableMixin from "./MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import Model from "../Models/Model";
 import proxyCatalogItemUrl from "../Models/proxyCatalogItemUrl";
 import { GeoJsonTraits } from "../Traits/GeoJsonTraits";
-import { Feature, FeatureCollection, GeoJsonObject } from "geojson";
 import DiscretelyTimeVaryingMixin, {
   DiscreteTimeAsJS
 } from "./DiscretelyTimeVaryingMixin";
-import TimeIntervalCollection from "terriajs-cesium/Source/Core/TimeIntervalCollection";
-import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
-import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
+import MappableMixin from "./MappableMixin";
 
 const formatPropertyValue = require("../Core/formatPropertyValue");
 const hashFromString = require("../Core/hashFromString");
@@ -66,7 +68,7 @@ export default function GeoJsonMixin<
 
     readonly canZoomTo = true;
 
-    private _dataSource: GeoJsonDataSource | undefined;
+    private _dataSource: CzmlDataSource | GeoJsonDataSource | undefined;
     protected _file?: File;
 
     @observable private _readyData?: JsonObject;
@@ -112,51 +114,51 @@ export default function GeoJsonMixin<
       return Promise.resolve();
     }
 
-    protected forceLoadMapItems(): Promise<void> {
-      return new Promise<JsonValue | undefined>((resolve, reject) => {
-        this.customDataLoader(resolve, reject);
-        if (isDefined(this._file)) {
-          this.loadFromFile(this._file)
-            .then(resolve)
-            .catch(reject);
-        } else if (isDefined(this.url)) {
-          // try loading from a zip file url or a regular url
-          resolve(this.loadFromUrl(this.url));
-        } else {
-          throw new TerriaError({
-            sender: this,
-            title: i18next.t("models.geoJson.unableToLoadItemTitle"),
-            message: i18next.t("models.geoJson.unableToLoadItemMessage")
-          });
-        }
-      })
-        .then((geoJson: JsonValue | undefined) => {
-          if (!isJsonObject(geoJson)) {
-            throw new TerriaError({
-              title: i18next.t("models.geoJson.errorLoadingTitle"),
-              message: i18next.t("models.geoJson.errorParsingMessage")
-            });
+    protected async forceLoadMapItems(): Promise<void> {
+      try {
+        const geoJson = await new Promise<JsonValue | undefined>(
+          (resolve, reject) => {
+            this.customDataLoader(resolve, reject);
+            if (isDefined(this._file)) {
+              this.loadFromFile(this._file)
+                .then(resolve)
+                .catch(reject);
+            } else if (isDefined(this.url)) {
+              // try loading from a zip file url or a regular url
+              resolve(this.loadFromUrl(this.url));
+            } else {
+              throw new TerriaError({
+                sender: this,
+                title: i18next.t("models.geoJson.unableToLoadItemTitle"),
+                message: i18next.t("models.geoJson.unableToLoadItemMessage")
+              });
+            }
           }
-          return reprojectToGeographic(
-            geoJson,
-            this.terria.configParameters.proj4ServiceBaseUrl
-          );
-        })
-        .then((geoJsonWgs84: JsonObject) => {
-          runInAction(() => {
-            this._readyData = geoJsonWgs84;
-          });
-          return this.loadDataSource(geoJsonWgs84);
-        })
-        .then(dataSource => {
-          this._dataSource = dataSource;
-        })
-        .catch(e => {
-          throw TerriaError.from(e, {
+        );
+        if (!isJsonObject(geoJson)) {
+          throw new TerriaError({
             title: i18next.t("models.geoJson.errorLoadingTitle"),
             message: i18next.t("models.geoJson.errorParsingMessage")
           });
+        }
+        const geoJsonWgs84 = await reprojectToGeographic(
+          geoJson,
+          this.terria.configParameters.proj4ServiceBaseUrl
+        );
+        runInAction(() => {
+          this._readyData = geoJsonWgs84;
         });
+        if (isDefined(this.czmlTemplate)) {
+          this._dataSource = await this.loadCzmlDataSource(geoJsonWgs84);
+        } else {
+          this._dataSource = await this.loadGeoJsonDataSource(geoJsonWgs84);
+        }
+      } catch (e) {
+        throw TerriaError.from(e, {
+          title: i18next.t("models.geoJson.errorLoadingTitle"),
+          message: i18next.t("models.geoJson.errorParsingMessage")
+        });
+      }
     }
 
     @action
@@ -205,7 +207,61 @@ export default function GeoJsonMixin<
       }
     }
 
-    private loadDataSource(geoJson: JsonObject): Promise<GeoJsonDataSource> {
+    private async loadCzmlDataSource(
+      geoJson: JsonObject
+    ): Promise<CzmlDataSource> {
+      if (
+        geoJson.type !== "FeatureCollection" ||
+        !Array.isArray(geoJson.features)
+      ) {
+        throw TerriaError.from(
+          "CZML templating only supports GeoJSON FeatureCollections"
+        );
+      }
+
+      const czmlTemplate = toJS(this.czmlTemplate);
+
+      const rootCzml = [
+        {
+          id: "document",
+          name: "CZML",
+          version: "1.0"
+        }
+      ];
+
+      // Create a czml packet for each geoJson Point feature
+      // Set czml position (cartographicDegrees) to point coordinates
+      // Set czml properties to feature properties
+      for (let i = 0; i < geoJson.features.length; i++) {
+        const feature = geoJson.features[i] as any;
+        if (feature !== null && feature.geometry?.type === "Point") {
+          const point = feature.geometry as Point;
+          const czml = clone(czmlTemplate ?? {}, true);
+          const coords = point.coordinates;
+          if (coords.length === 2) {
+            coords[2] = 0;
+          }
+          czml.position = {
+            cartographicDegrees: point.coordinates
+          };
+
+          if (feature.properties !== null) {
+            czml.properties = Object.assign(
+              czml.properties ?? {},
+              feature.properties
+            );
+          }
+
+          rootCzml.push(czml);
+        }
+      }
+
+      return CzmlDataSource.load(rootCzml);
+    }
+
+    private loadGeoJsonDataSource(
+      geoJson: JsonObject
+    ): Promise<GeoJsonDataSource | CzmlDataSource> {
       /* Style information is applied as follows, in decreasing priority:
              - simple-style properties set directly on individual features in the GeoJSON file
              - simple-style properties set as the 'Style' property on the catalog item
@@ -418,24 +474,40 @@ export default function GeoJsonMixin<
             );
           }
 
-          // Cesium on Windows can't render polygons with a stroke-width > 1.0.  And even on other platforms it
-          // looks bad because WebGL doesn't mitre the lines together nicely.
-          // As a workaround for the special case where the polygon is unfilled anyway, change it to a polyline.
-          if (
-            isDefined(entity.polygon) &&
-            polygonHasWideOutline(entity.polygon, now) &&
-            !polygonIsFilled(entity.polygon)
-          ) {
-            createPolylineFromPolygon(entities, entity, now);
-            entity.polygon = (undefined as unknown) as PolygonGraphics;
-          } else if (
-            isDefined(entity.polygon) &&
-            polygonHasOutline(entity.polygon, now) &&
-            isPolygonOnTerrain(entity.polygon, now)
-          ) {
-            // Polygons don't directly support outlines when they're on terrain.
-            // So create a manual outline.
-            createPolylineFromPolygon(entities, entity, now);
+          if (isDefined(entity.polygon)) {
+            // Extrude polygons if heightProperty is set
+            if (
+              this.heightProperty &&
+              properties &&
+              isDefined(properties[this.heightProperty])
+            ) {
+              entity.polygon.closeTop = new ConstantProperty(true);
+              entity.polygon.extrudedHeight = properties[this.heightProperty];
+
+              entity.polygon.heightReference = new ConstantProperty(
+                HeightReference.CLAMP_TO_GROUND
+              );
+              entity.polygon.extrudedHeightReference = new ConstantProperty(
+                HeightReference.RELATIVE_TO_GROUND
+              );
+            }
+            // Cesium on Windows can't render polygons with a stroke-width > 1.0.  And even on other platforms it
+            // looks bad because WebGL doesn't mitre the lines together nicely.
+            // As a workaround for the special case where the polygon is unfilled anyway, change it to a polyline.
+            else if (
+              polygonHasWideOutline(entity.polygon, now) &&
+              !polygonIsFilled(entity.polygon)
+            ) {
+              createPolylineFromPolygon(entities, entity, now);
+              entity.polygon = (undefined as unknown) as PolygonGraphics;
+            } else if (
+              polygonHasOutline(entity.polygon, now) &&
+              isPolygonOnTerrain(entity.polygon, now)
+            ) {
+              // Polygons don't directly support outlines when they're on terrain.
+              // So create a manual outline.
+              createPolylineFromPolygon(entities, entity, now);
+            }
           }
         }
         return dataSource;
@@ -447,7 +519,7 @@ export default function GeoJsonMixin<
       if (this.timeProperty === undefined || this.readyData === undefined) {
         return undefined;
       }
-      const discreteTimes: DiscreteTimeAsJS[] = [];
+      const discreteTimesMap: Map<string, DiscreteTimeAsJS> = new Map();
       const addFeatureToDiscreteTimes = (geojson: GeoJsonObject) => {
         if (geojson.type === "Feature") {
           let feature = geojson as Feature;
@@ -456,12 +528,13 @@ export default function GeoJsonMixin<
             feature.properties !== undefined &&
             feature.properties[this.timeProperty!] !== undefined
           ) {
-            discreteTimes.push({
+            const dt = {
               time: new Date(
                 `${feature.properties[this.timeProperty!]}`
               ).toISOString(),
               tag: feature.properties[this.timeProperty!]
-            });
+            };
+            discreteTimesMap.set(dt.tag, dt);
           }
         } else if (geojson.type === "FeatureCollection") {
           const featureCollection = geojson as FeatureCollection;
@@ -473,7 +546,7 @@ export default function GeoJsonMixin<
 
       addFeatureToDiscreteTimes((this.readyData as unknown) as GeoJsonObject);
 
-      return discreteTimes;
+      return Array.from(discreteTimesMap.values());
     }
 
     protected abstract async customDataLoader(

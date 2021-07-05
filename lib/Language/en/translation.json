@@ -36,7 +36,7 @@
       "content": "## Upload Data\n\nYou can upload your own data to the map to view it with other data sets. Upload a file or link to an existing online data set or data service. Supported data formats include CSV, GeoJSON, KML, GPX and CZML."
     },
     "menuBarMapSettingsButton": {
-      "content": "## Map Settings\n\nCustomise map options such as base maps, map image quality or remove the ground (terrain) to interrogate underground datasets."
+      "content": "## Map Settings\n\nCustomise map settings such as base maps, 2D/3D Terrain, and map image quality for improved performance."
     },
     "menuBarStoryButton": {
       "content": "## Stories\n\nStories allow you to add contextual information to a dataset to bring a narrative to life. Create your own data story using the Story Editor, and share it via the ‘Share’ panel once you’re done."
@@ -45,7 +45,7 @@
       "content": "## View controls\n\nHere you can change the view of the map. You can change the orientation of your view by using the outer ring, and you can tilt the camera angle using the inner ring. Double click to reset the view."
     },
     "mapNavigationSplitterIcon": {
-      "content": "## Compare\n\nA powerful feature of Terria is the ability to compare datasets using a split screen view. For datasets with a time-series/4D component, you can compare dates backwards and forwards in time using the date picker."
+      "content": "## Compare\n\nA powerful feature of Terria is the ability to compare datasets using a split screen view. For datasets with a time-series component, such as satellite images, you can compare dates backwards and forwards in time by clicking on the date picker/selector."
     }
   },
   "measure": {
@@ -85,7 +85,17 @@
     "description": "Drag outer ring: rotate view.\nDrag inner gyroscope: free orbit.\nDouble-click: reset view.\nTIP: You can also free orbit by holding the CTRL key and dragging the map.",
     "title": "Click and drag to rotate the camera",
     "guidanceBtnTitle": "Gyroscope Guidance",
-    "guidanceBtnText": "View detailed instructions on how to use the compass"
+    "guidanceBtnText": "View detailed instructions on how to use the compass",
+    "guidance": {
+      "title": "Gyroscope Contols",
+      "outerRingTitle": "Outer Ring",
+      "outerRingDescription": "Drag the outer ring in a circular motion to rotate the map view 360˚.",
+      "innerCircleTitle": "Inner Circle",
+      "innerCircleDescription1": "Click in the centre and slowly drag up, down, left or right to tilt and rotate the map at the same time.",
+      "innerCircleDescription2": "Double click in here to reset view to its default state.",
+      "ctrlDragDescription": "You can also tilt and rotate the map by holding the CTRL key and dragging the map.",
+      "dismissText": "Close and don't show again"
+    }
   },
   "AR": {
     "title": "Experimental Feature: Augmented Reality",
@@ -673,6 +683,8 @@
       "esri-featureServer": "Esri ArcGIS FeatureServer (single layer)",
       "3d-tiles": "3D Tiles",
       "open-street-map": "Open Street Map Server",
+      "sdmx-group": "SDMX-JSON",
+      "opendatasoft-group": "Opendatasoft Portal",
       "geojson": "GeoJSON",
       "geoRss": "GeoRSS",
       "kml": "KML or KMZ",
@@ -776,6 +788,11 @@
       "csvRegionMappingMessageZeroFound": "Zero region names found for region type {{regionType}}",
       "csvRegionMappingMessageZeroBoundariesFound": "Zero region boundaries found for region {{regionName}}",
       "csvRegionMappingMessageLoadError": "Couldn't load region boundaries for region {{regionName}} {{exception}}"
+    },
+    "extraCreditLinks": {
+      "dataAttribution": "Data attribution",
+      "disclaimer": "Disclaimer",
+      "basemap": "Basemap"
     }
   },
   "models": {
@@ -1209,6 +1226,9 @@
       "unknownFormat": "The server responded with an unknown feature format.",
       "noMatchingFeatures": "The Sensor Observation Service did not return any features matching your query."
     },
+    "openDataSoft": {
+      "viewDatasetPage": "View dataset page"
+    },
     "sdmxServerStratum": {
       "sdmxStructureLoadErrorTitle": "SDMX structure request failed",
       "loadDataErrorTitle": "Failed to load SDMX group",
@@ -1269,6 +1289,7 @@
       "wrongNumberOfElements": "The list of values and the list of region codes do not contain the same number of elements"
     },
     "tableData": {
+      "noData": "No data to show",
       "unsupportedCharactersTitle": "Invalid characters in latitude and longitude columns",
       "unsupportedCharactersMessage": "Could not interpret latitude and longitude pair {{longitude}}, {{latitude}}",
       "bulkGeocoderInfoTitle": "Bulk Geocoder Information",
@@ -1505,6 +1526,7 @@
     "missingContent": "missing content"
   },
   "itemSearchTool": {
+    "toolLoadError": "Error loading search tool.",
     "title": "Search {{itemName}}",
     "loading": "Loading search parameters",
     "loadError": "Error loading search parameters. Check console for detailed errors.",

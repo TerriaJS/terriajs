@@ -31,6 +31,11 @@ import { exportData } from "../../Preview/ExportData";
 import WorkbenchButton from "../WorkbenchButton";
 import Styles from "./viewing-controls.scss";
 import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
+import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
+import {
+  Category,
+  DataSourceAction
+} from "../../../Core/AnalyticEvents/analyticEvents";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -112,8 +117,8 @@ const ViewingControls = observer(
       terria.removeSelectedFeaturesForModel(this.props.item);
       this.props.viewState.terria.timelineStack.remove(this.props.item);
       this.props.viewState.terria.analytics?.logEvent(
-        "dataSource",
-        "removeFromWorkbench",
+        Category.dataSource,
+        DataSourceAction.removeFromWorkbench,
         getPath(this.props.item)
       );
     },
@@ -243,10 +248,7 @@ const ViewingControls = observer(
       }
       this.props.viewState.openTool({
         toolName: "Search Item",
-        getToolComponent: () =>
-          import("../../Tools/ItemSearchTool/ItemSearchTool").then(
-            m => m.default
-          ),
+        getToolComponent: () => LazyItemSearchTool,
         showCloseButton: false,
         params: {
           item,

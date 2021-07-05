@@ -1,4 +1,5 @@
 import { VectorTileFeature } from "@mapbox/vector-tile";
+import i18next from "i18next";
 import { action, computed, observable, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
@@ -19,6 +20,7 @@ import { JsonObject } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
 import makeRealPromise from "../Core/makeRealPromise";
 import TerriaError from "../Core/TerriaError";
+import ConstantColorMap from "../Map/ConstantColorMap";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import JSRegionProviderList from "../Map/RegionProviderList";
 import CommonStrata from "../Models/CommonStrata";
@@ -248,10 +250,44 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      */
     @computed
     get mapItems(): (DataSource | ImageryParts)[] {
-      return filterOutUndefined([
-        this.createLongitudeLatitudeDataSource(this.activeTableStyle),
-        this.regionMappedImageryParts
-      ]);
+      const numRegions =
+        this.activeTableStyle.regionColumn?.valuesAsRegions?.uniqueRegionIds
+          ?.length ?? 0;
+
+      // Estimate number of points based off number of rowGroups
+      const numPoints = this.activeTableStyle.rowGroups.length;
+
+      // If we have more points than regions OR we have points are are using a ConstantColorMap - show points instead of regions
+      // (Using ConstantColorMap with regions will result in all regions being the same color - which isn't useful)
+      if (
+        (numPoints > 0 &&
+          this.activeTableStyle.colorMap instanceof ConstantColorMap) ||
+        numPoints > numRegions
+      ) {
+        const pointsDataSource = this.createLongitudeLatitudeDataSource(
+          this.activeTableStyle
+        );
+
+        // Make sure there are actually more points than regions
+        if (
+          pointsDataSource &&
+          pointsDataSource.entities.values.length > numRegions
+        )
+          return [pointsDataSource];
+      }
+
+      if (this.regionMappedImageryParts) return [this.regionMappedImageryParts];
+
+      return [];
+    }
+
+    @computed
+    get shortReport() {
+      return this.mapItems.length === 0 &&
+        this.chartItems.length === 0 &&
+        !this.isLoading
+        ? i18next.t("models.tableData.noData")
+        : super.shortReport;
     }
 
     // regionMappedImageryParts and regionMappedImageryProvider are split up like this so that we aren't re-creating the imageryProvider if things like `opacity` and `show` change
@@ -273,6 +309,21 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         style: this.activeTableStyle,
         currentTime: this.currentDiscreteJulianDate
       });
+    }
+
+    /**
+     * Try to resolve `regionType` to a region provider (this will also match against region provider aliases)
+     */
+    matchRegionType(regionType?: string): string | undefined {
+      if (!isDefined(regionType)) return;
+      const matchingRegionProviders = this.regionProviderList?.getRegionDetails(
+        [regionType],
+        undefined,
+        undefined
+      );
+      if (matchingRegionProviders && matchingRegionProviders.length > 0) {
+        return matchingRegionProviders[0].regionProvider.regionType;
+      }
     }
 
     /**
@@ -391,12 +442,14 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return {
         id: "activeStyle",
         name: "Display Variable",
-        options: this.tableStyles.map(style => {
-          return {
-            id: style.id,
-            name: style.title
-          };
-        }),
+        options: this.tableStyles
+          .filter(style => !style.hidden || this.activeStyle === style.id)
+          .map(style => {
+            return {
+              id: style.id,
+              name: style.title
+            };
+          }),
         selectedId: this.activeStyle,
         setDimensionValue: (stratumId: string, styleId: string) => {
           this.setTrait(stratumId, "activeStyle", styleId);
@@ -491,18 +544,14 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     @computed
     get isSampled(): boolean {
-      return this.activeTableStyle.timeTraits.isSampled;
-    }
-
-    @computed
-    get disableDateTimeSelector() {
-      return this.mapItems.length === 0;
+      return this.activeTableStyle.isSampled;
     }
 
     @computed
     get discreteTimes():
       | { time: string; tag: string | undefined }[]
       | undefined {
+      if (!this.activeTableStyle.moreThanOneTimeInterval) return;
       const dates = this.activeTableStyle.timeColumn?.valuesAsDates.values;
       if (dates === undefined) {
         return;
@@ -621,7 +670,11 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           features = createLongitudeLatitudeFeaturePerRow(style);
         }
 
-        features.forEach(f => dataSource.entities.add(f));
+        // _catalogItem property is needed for some feature picking functions (eg FeatureInfoMixin)
+        features.forEach(f => {
+          (f as any)._catalogItem = this;
+          dataSource.entities.add(f);
+        });
         dataSource.show = this.show;
         dataSource.entities.resumeEvents();
         return dataSource;
@@ -658,7 +711,11 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
         // TODO: this is already implemented in RegionProvider.prototype.mapRegionsToIndicesInto, but regionTypes require "loading" for this to work. I think the whole RegionProvider thing needs to be re-done in TypeScript at some point and then we can move stuff into that.
         // If time varying, get row indices which match
-        if (input.currentTime && input.style.timeIntervals) {
+        if (
+          input.currentTime &&
+          input.style.timeIntervals &&
+          input.style.moreThanOneTimeInterval
+        ) {
           currentTimeRows = input.style.timeIntervals.reduce<number[]>(
             (rows, timeInterval, index) => {
               if (

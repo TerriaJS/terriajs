@@ -12,6 +12,10 @@ import { TextSpan } from "../../Styled/Text";
 import BadgeBar from "../BadgeBar";
 import Icon, { StyledIcon } from "../../Styled/Icon";
 import WorkbenchList from "./WorkbenchList";
+import {
+  Category,
+  DataSourceAction
+} from "../../Core/AnalyticEvents/analyticEvents";
 
 interface IProps extends WithTranslation {
   terria: Terria;
@@ -39,8 +43,8 @@ class Workbench extends React.Component<IProps> {
   removeAll() {
     this.props.terria.workbench.items.forEach(item => {
       this.props.terria.analytics?.logEvent(
-        "dataSource",
-        "removeAllFromWorkbench",
+        Category.dataSource,
+        DataSourceAction.removeAllFromWorkbench,
         getPath(item)
       );
     });

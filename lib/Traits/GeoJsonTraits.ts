@@ -74,4 +74,42 @@ export class GeoJsonTraits extends mixTraits(
       "The property of each GeoJSON feature that specifies which point in time that feature is associated with. If not specified, it is assumed that the dataset is constant throughout time."
   })
   timeProperty?: string;
+
+  @primitiveTrait({
+    name: "Height property",
+    type: "string",
+    description:
+      "The property of each GeoJSON feature that specifies the height. If defined, polygons will be extruded to this property (in meters) above terrain."
+  })
+  heightProperty?: string;
+
+  @anyTrait({
+    name: "CZML template",
+    description: `CZML template to be used to replace each GeoJSON Point feature. Feature coordinates and properties will automatically be applied to CZML packet, so they can be used as references. If this is defined, \`clampToGround\`, \`style\`, \`perPropertyStyles\`, \`timeProperty\` and \`heightProperty\` will be ignored.
+
+    For example - this will render a cylinder for every point (and use the length and radius feature properties)
+      \`\`\`json
+      {
+        cylinder: {
+          length: {
+            reference: "#properties.length"
+          },
+          topRadius: {
+            reference: "#properties.radius"
+          },
+          bottomRadius: {
+            reference: "#properties.radius"
+          },
+          material: {
+            solidColor: {
+              color: {
+                rgba: [0, 200, 0, 20]
+              }
+            }
+          }
+        }
+      }
+      \`\`\``
+  })
+  czmlTemplate?: JsonObject;
 }

@@ -12,6 +12,7 @@ import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import URI from "urijs";
+import { Category, LaunchAction } from "../Core/AnalyticEvents/analyticEvents";
 import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
 import ConsoleAnalytics from "../Core/ConsoleAnalytics";
@@ -253,6 +254,11 @@ interface ConfigParameters {
    * Minimum length of feedback comment.
    */
   feedbackMinLength?: number;
+
+  /**
+   * Extra links to show in the credit line at the bottom of the map (currently only the Cesium map).
+   */
+  extraCreditLinks?: { url: string; text: string }[];
 }
 
 interface StartOptions {
@@ -270,7 +276,21 @@ interface StartOptions {
   i18nOptions?: I18nStartOptions;
 }
 
-type Analytics = any;
+interface Analytics {
+  start: (
+    userParameters: Partial<{
+      logToConsole: boolean;
+      googleAnalyticsKey: any;
+      googleAnalyticsOptions: any;
+    }>
+  ) => void;
+  logEvent: (
+    category: string,
+    action: string,
+    label?: string,
+    value?: string
+  ) => void;
+}
 
 interface TerriaOptions {
   baseUrl?: string;
@@ -342,7 +362,7 @@ export default class Terria {
    * If a global `ga` function is defined, this defaults to `GoogleAnalytics`.  Otherwise, it defaults
    * to `ConsoleAnalytics`.
    */
-  readonly analytics: Analytics;
+  readonly analytics: Analytics | undefined;
 
   /**
    * Gets the stack of layers active on the timeline.
@@ -401,7 +421,15 @@ export default class Terria {
     persistViewerMode: true,
     openAddData: false,
     feedbackPreamble: "feedback.feedbackPreamble",
-    feedbackMinLength: 0
+    feedbackMinLength: 0,
+    extraCreditLinks: [
+      // Default credit links (shown at the bottom of the Cesium map)
+      {
+        text: "map.extraCreditLinks.dataAttribution",
+        url: "about.html#data-attribution"
+      },
+      { text: "map.extraCreditLinks.disclaimer", url: "about.html#disclaimer" }
+    ]
   };
 
   @observable
@@ -741,7 +769,11 @@ export default class Terria {
     );
 
     this.analytics?.start(this.configParameters);
-    this.analytics?.logEvent("launch", "url", launchUrlForAnalytics);
+    this.analytics?.logEvent(
+      Category.launch,
+      LaunchAction.url,
+      launchUrlForAnalytics
+    );
     this.serverConfig = new ServerConfig();
     const serverConfig = await this.serverConfig.init(
       this.configParameters.serverConfigUrl

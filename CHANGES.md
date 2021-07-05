@@ -3,10 +3,57 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.85)
+#### next release (8.0.0-alpha.88)
 
-* Remove table style `SelectableDimension` from SDMX
+* Fixed a bug with numeric item search where it sometimes fails to return all matching values.
+* Respect order of objects from lower strata in `objectArrayTrait`.
+* Fix datetime button margin with scroll in workbench.
+* Fix checkbox when click happen on svg icon. (#5550)
+* Added progress indicator when loading item search tool.
+* Add `nullColor` to `ConstantColorMap` - used when `colorColumn` is of type `region` to hide regions where rows don't exist.
+* `TableStyles` will only be created for `text` columns if there are no columns of type `scalar`, `enum` or `region`.
+* Fix sharing user added data of type "Auto-detect".
 * [The next improvement]
+* #5605 tidy up format string used in `MagdaReference`
+
+#### 8.0.0-alpha.87
+
+* Re-add basemap images to terriajs rather than requiring all TerriaMaps to have those basemap images. Default basemaps will use those images.
+* Data from TableMixin always overrides other feature information (e.g. from vector tiles in region mapping) by column name and title for feature info templating (consistent with v7).
+* Fixed point entity creation for TableMixin where different columns are used for point size and colour.
+* Changed MappableMixin's initialMessage to show while map items are loaded. Map items could be displayed behind the disclaimer before a user accepts the disclaimer.
+* Fixed a cyclic dependency between initialMessage and app spinner (globe gif greysreen) that caused the app spinner to be present forever when loading a share link.
+* Removed hardcoded credit links and made it configurable via terria config parameters.
+* Disable `TableMixin` time column if only one unique time interval
+
+#### 8.0.0-alpha.86
+
+- **Breaking changes**:
+  - `EnumColorMap` will only be used for enum `TableColumns` with number of unique values <= number of bins 
+
+* Add `options` to CSV papaparsing
+* `TableMixin` will now only show points **or** region mapping - not both
+* Add `FeatureInfoMixin` support for 2D vector features (in Cesium only)
+* `TableStyles` are now hidden from the "Display Variable" selector if the number of colors (enumColors or numberOfBins) is less than 2. As a ColorMap with a single color isn't super useful.
+* Improved default `TableColumn.isSampled` - it will be false if a binary column is detected (0 or 1)
+* Improved default Table charting - now a time column will be used for xAxis by default
+* Added `spreadFinishTime` - which works same way as `spreadStartTime` - if `true`, finish time of feature will be "spread" so that all features are displayed at the latest time step.
+* Added support for `OpenDataSoft` - only point or region based features + timeseries
+* `GeoJsonMixin`-based catalog items with polygon features can be extruded if a `heightProperty` is specified.
+* Bugfix to make time-based geojson work when there are multiple features with the same time property value.
+* Add `czmlTemplate` to `GeoJsonTraits` - it can be used to replace GeoJSON Point features with a CZML packet.
+* Made the moment points in the chart optionally clickable.
+
+#### 8.0.0-alpha.85
+
+- **Breaking changes**:
+  - Removed `registerAnalytics.js`
+  - Removed `HelpMenuPanel.jsx`
+
+* Added analytic events related to story, share and help menu items, Also refactored events to use category and action enums.
+* Remove table style `SelectableDimension` from SDMX
+* `GyroscopeGuidance` can now be translated.
+* Wraps tool title bar text using `...`.
 
 #### 8.0.0-alpha.84
 
