@@ -42,7 +42,9 @@ const FeatureInfoCatalogItem = observer(
         // Display no more than defined number of feature infos
         totalFeaturesCount = features.length;
         if (defined(catalogItem)) {
-          maximumShownFeatureInfos = catalogItem.maximumShownFeatureInfos;
+          if (catalogItem.maximumShownFeatureInfos) {
+            maximumShownFeatureInfos = catalogItem.maximumShownFeatureInfos;
+          }
           featureInfoTemplate = catalogItem.featureInfoTemplate;
         }
         hiddenNumber = totalFeaturesCount - maximumShownFeatureInfos; // A positive hiddenNumber => some are hidden; negative means none are.
