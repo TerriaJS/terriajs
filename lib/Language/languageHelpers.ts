@@ -10,9 +10,6 @@ export function useTranslationIfExists(keyOrString: string) {
       ? i18next.t(translationKey)
       : translationKey;
   } else {
-    console.log(
-      `translation id should contain translate# in front of ${keyOrString}`
-    );
     return keyOrString || "";
   }
 }
