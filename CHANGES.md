@@ -13,6 +13,8 @@ Change Log
 * Add `nullColor` to `ConstantColorMap` - used when `colorColumn` is of type `region` to hide regions where rows don't exist.
 * `TableStyles` will only be created for `text` columns if there are no columns of type `scalar`, `enum` or `region`.
 * Fix sharing user added data of type "Auto-detect".
+* Use checkbox component on more places. (#5610)
+* Added title to checkbox component. (#5610)
 * [The next improvement]
 
 #### 8.0.0-alpha.87
