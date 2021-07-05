@@ -4,12 +4,12 @@ import PropTypes from "prop-types";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 // import styled from "styled-components";
-
+import { withTranslation } from "react-i18next";
 import classNames from "classnames";
 
 import Icon from "../../Styled/Icon";
-
 import Box from "../../Styled/Box";
+import Checkbox from "./../../Styled/Checkbox/Checkbox";
 import Spacing from "../../Styled/Spacing";
 import { RawButton } from "../../Styled/Button";
 
@@ -193,29 +193,13 @@ class WorkbenchSplitScreen extends React.Component {
               <>
                 <Spacing bottom={2} />
                 <Box className={Styles.nativeResolutionWrapper}>
-                  <button
+                  <Checkbox
                     id="depthTestAgainstTerrain"
-                    type="button"
-                    onClick={() => toggleDepthTestAgainstTerrainEnabled()}
+                    isChecked={depthTestAgainstTerrainEnabled}
+                    label={this.props.t("settingPanel.terrain.hideUnderground")}
                     title={depthTestAgainstTerrainLabel}
-                    className={Styles.btnNativeResolution}
-                  >
-                    {depthTestAgainstTerrainEnabled ? (
-                      <Icon glyph={Icon.GLYPHS.checkboxOn} />
-                    ) : (
-                      <Icon glyph={Icon.GLYPHS.checkboxOff} />
-                    )}
-                  </button>
-                  <label
-                    title={depthTestAgainstTerrainLabel}
-                    htmlFor="depthTestAgainstTerrain"
-                    className={classNames(
-                      DropdownStyles.subHeading,
-                      Styles.nativeResolutionHeader
-                    )}
-                  >
-                    Terrain hides underground features
-                  </label>
+                    onChange={() => toggleDepthTestAgainstTerrainEnabled()}
+                  />
                 </Box>
               </>
             </If>
@@ -228,7 +212,8 @@ class WorkbenchSplitScreen extends React.Component {
 }
 
 WorkbenchSplitScreen.propTypes = {
-  terria: PropTypes.object
+  terria: PropTypes.object,
+  t: PropTypes.func.isRequired
 };
 
-export default WorkbenchSplitScreen;
+export default withTranslation()(WorkbenchSplitScreen);

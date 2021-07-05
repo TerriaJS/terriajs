@@ -13,6 +13,7 @@ import getPath from "../../Core/getPath";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
 import CommonStrata from "../../Models/CommonStrata";
 import Box from "../../Styled/Box";
+import Checkbox from "../../Styled/Checkbox/Checkbox";
 import Icon from "../../Styled/Icon";
 import Loader from "../Loader";
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
@@ -96,21 +97,15 @@ export const WorkbenchItemRaw = observer(
                   leftSelf
                   className={Styles.visibilityColumn}
                   css={`
-                    padding: 3px 5px;
+                    padding: 0 5px;
                   `}
                 >
-                  <button
-                    type="button"
-                    onClick={this.toggleVisibility}
+                  <Checkbox
+                    id="workbenchtoggleVisibility"
+                    isChecked={workbenchItem.show}
                     title={t("workbench.toggleVisibility")}
-                    className={Styles.btnVisibility}
-                  >
-                    {workbenchItem.show ? (
-                      <Icon glyph={Icon.GLYPHS.checkboxOn} />
-                    ) : (
-                      <Icon glyph={Icon.GLYPHS.checkboxOff} />
-                    )}
-                  </button>
+                    onChange={this.toggleVisibility}
+                  />
                 </Box>
               </If>
             </Box>

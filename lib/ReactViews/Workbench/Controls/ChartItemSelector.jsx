@@ -6,13 +6,12 @@ import ChartView from "../../../Charts/ChartView";
 import ChartableMixin, { axesMatch } from "../../../ModelMixins/ChartableMixin";
 import Icon from "../../../Styled/Icon";
 import Styles from "./chart-item-selector.scss";
+import Checkbox from "../../../Styled/Checkbox/Checkbox";
 
 export const ChartItem = observer(({ item, chartItem }) => {
   const lineColor = chartItem.isSelectedInWorkbench
     ? chartItem.getColor()
     : "#fff";
-  const colorStyle = lineColor && { color: lineColor };
-  const fillStyle = lineColor && { fill: lineColor };
 
   const toggleActive = () => {
     const catalogItem = chartItem.item;
@@ -30,21 +29,16 @@ export const ChartItem = observer(({ item, chartItem }) => {
 
   return (
     <div>
-      <button
-        type="button"
-        onClick={toggleActive}
-        style={colorStyle}
-        className={Styles.button}
-        title="select variable"
-      >
-        {chartItem.isSelectedInWorkbench && (
-          <Icon style={fillStyle} glyph={Icon.GLYPHS.checkboxOn} />
-        )}
-        {!chartItem.isSelectedInWorkbench && (
-          <Icon style={fillStyle} glyph={Icon.GLYPHS.checkboxOff} />
-        )}
-      </button>
-      <span>{chartItem.name}</span>
+      <Checkbox
+        id="depthTestAgainstTerrain"
+        isChecked={chartItem.isSelectedInWorkbench}
+        label={chartItem.name}
+        title={`show ${chartItem.name} in chart`}
+        onChange={toggleActive}
+        css={`
+          color: ${lineColor};
+        `}
+      />
     </div>
   );
 });

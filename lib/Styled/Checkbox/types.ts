@@ -25,6 +25,8 @@ export interface ICheckboxProps {
   label?: React.ReactChild;
   /** The name of the submitted field in a checkbox. */
   name?: string;
+  /** Title of the html component */
+  title?: string;
   /**
    * Function that is called whenever the state of the checkbox changes. It will
    * be called with an object containing the react synthetic event. Use currentTarget to get value, name and checked
@@ -44,6 +46,4 @@ export interface CheckboxIconProps {
    * style and does not modify the isChecked property.
    */
   isIndeterminate?: boolean;
-  /** The label for icon to be displayed */
-  label: any;
 }

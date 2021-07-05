@@ -14,6 +14,7 @@ import Terria from "../../../Models/Terria";
 import ViewerMode from "../../../Models/ViewerMode";
 // eslint-disable-next-line no-unused-vars
 import ViewState from "../../../ReactViewModels/ViewState";
+import Checkbox from "../../../Styled/Checkbox/Checkbox";
 import Icon from "../../../Styled/Icon";
 import MenuPanel from "../../StandardUserInterface/customizable/MenuPanel";
 // import { provideRef } from "../../HOCs/provideRef";
@@ -282,29 +283,13 @@ class SettingPanel extends React.Component {
               className={Styles.nativeResolutionWrapper}
               title={qualityLabels[this.props.terria.quality]}
             >
-              <button
+              <Checkbox
                 id="depthTestAgainstTerrain"
-                type="button"
-                onClick={this.toggleDepthTestAgainstTerrainEnabled.bind(this)}
                 title={depthTestAgainstTerrainLabel}
-                className={Styles.btnNativeResolution}
-              >
-                {depthTestAgainstTerrainEnabled ? (
-                  <Icon glyph={Icon.GLYPHS.checkboxOn} />
-                ) : (
-                  <Icon glyph={Icon.GLYPHS.checkboxOff} />
-                )}
-              </button>
-              <label
-                title={depthTestAgainstTerrainLabel}
-                htmlFor="depthTestAgainstTerrain"
-                className={classNames(
-                  DropdownStyles.subHeading,
-                  Styles.nativeResolutionHeader
-                )}
-              >
-                {t("settingPanel.terrain.hideUnderground")}
-              </label>
+                isChecked={depthTestAgainstTerrainEnabled}
+                label={t("settingPanel.terrain.hideUnderground")}
+                onChange={this.toggleDepthTestAgainstTerrainEnabled.bind(this)}
+              />
             </section>
           </div>
         </If>
@@ -344,10 +329,12 @@ class SettingPanel extends React.Component {
             className={Styles.nativeResolutionWrapper}
             title={qualityLabels[this.props.terria.quality]}
           >
-            <button
+            <Checkbox
               id="alwaysShowTimeline"
-              type="button"
-              onClick={() => {
+              isChecked={alwaysShowTimeline}
+              label={t("settingPanel.timeline.alwaysShow")}
+              title={alwaysShowTimelineLabel}
+              onChange={() => {
                 runInAction(() => {
                   if (alwaysShowTimeline) {
                     this.props.terria.timelineStack.defaultTimeVarying = undefined;
@@ -356,25 +343,7 @@ class SettingPanel extends React.Component {
                   }
                 });
               }}
-              title={alwaysShowTimelineLabel}
-              className={Styles.btnNativeResolution}
-            >
-              {alwaysShowTimeline ? (
-                <Icon glyph={Icon.GLYPHS.checkboxOn} />
-              ) : (
-                <Icon glyph={Icon.GLYPHS.checkboxOff} />
-              )}
-            </button>
-            <label
-              title={alwaysShowTimelineLabel}
-              htmlFor="alwaysShowTimeline"
-              className={classNames(
-                DropdownStyles.subHeading,
-                Styles.nativeResolutionHeader
-              )}
-            >
-              {t("settingPanel.timeline.alwaysShow")}
-            </label>
+            />
           </section>
         </div>
         <If condition={this.props.terria.viewerMode !== ViewerMode.Leaflet}>
@@ -386,33 +355,17 @@ class SettingPanel extends React.Component {
               className={Styles.nativeResolutionWrapper}
               title={qualityLabels[this.props.terria.quality]}
             >
-              <button
+              <Checkbox
                 id="mapUseNativeResolution"
-                type="button"
-                onClick={() => {
+                isChecked={useNativeResolution}
+                label={t("settingPanel.nativeResolutionHeader")}
+                title={nativeResolutionLabel}
+                onChange={() => {
                   runInAction(() => {
                     this.props.terria.useNativeResolution = !useNativeResolution;
                   });
                 }}
-                title={nativeResolutionLabel}
-                className={Styles.btnNativeResolution}
-              >
-                {useNativeResolution ? (
-                  <Icon glyph={Icon.GLYPHS.checkboxOn} />
-                ) : (
-                  <Icon glyph={Icon.GLYPHS.checkboxOff} />
-                )}
-              </button>
-              <label
-                title={nativeResolutionLabel}
-                htmlFor="mapUseNativeResolution"
-                className={classNames(
-                  DropdownStyles.subHeading,
-                  Styles.nativeResolutionHeader
-                )}
-              >
-                {t("settingPanel.nativeResolutionHeader")}
-              </label>
+              />
             </section>
             <label
               htmlFor="mapQuality"
