@@ -296,7 +296,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
    * Previously we used layer.Title, so we now add it as a shareKey
    */
   getLayerShareKeys(layer: CapabilitiesLayer) {
-    if (isDefined(layer.Name))
+    if (isDefined(layer.Name) && layer.Title !== layer.Name)
       return [`${this.catalogGroup.uniqueId}/${layer.Title}`];
 
     return [];
