@@ -22,7 +22,7 @@ import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
 import { getShareData } from "../Map/Panels/SharePanel/BuildShareLink";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
 import Styles from "./story-builder.scss";
-import Story from "./Story.jsx";
+import Story from "./Story";
 import StoryEditor from "./StoryEditor.jsx";
 import {
   Category,

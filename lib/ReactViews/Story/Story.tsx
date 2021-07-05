@@ -1,6 +1,4 @@
-/* eslint-disable react/prop-types */
-import PropTypes from "prop-types";
-import React, { useEffect, useRef } from "react";
+import React, { MouseEventHandler, useEffect, useRef } from "react";
 import { sortable } from "react-anything-sortable";
 import { withTranslation } from "react-i18next";
 import styled, { withTheme } from "styled-components";
@@ -13,7 +11,25 @@ import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import Icon, { StyledIcon } from "../../Styled/Icon";
 import classNames from "classnames";
 
-const findTextContent = content => {
+interface Props {
+  story: any;
+  editStory: any;
+  viewStory: any;
+  deleteStory: any;
+  recaptureStory: any;
+  recaptureStorySuccessful: any;
+  onMouseDown: any;
+  onTouchStart: any;
+  style: any;
+  className: any;
+  menuOpen: any;
+  openMenu: any;
+  theme: any;
+  parentRef: any;
+  t: any;
+}
+
+const findTextContent = (content: any): string => {
   if (typeof content === "string") {
     return content;
   }
@@ -67,56 +83,63 @@ const StoryMenuButton = styled(RawButton)`
   }
 `;
 
-const hideList = props => props.openMenu(null);
+const hideList = (props: Props) => props.openMenu(null);
 
-const getTruncatedContent = text => {
+const getTruncatedContent = (text: string) => {
   const content = parseCustomHtmlToReact(text);
   const except = findTextContent(content);
   return except.slice(0, 100);
 };
 
-const toggleMenu = props => event => {
+const toggleMenu = (props: Props): MouseEventHandler<HTMLElement> => event => {
   event.stopPropagation();
   props.openMenu(props.story);
 };
 
-const viewStory = props => event => {
+const viewStory = (props: Props): MouseEventHandler<HTMLElement> => event => {
   event.stopPropagation();
   props.viewStory(props.story);
   hideList(props);
 };
 
-const deleteStory = props => event => {
+const deleteStory = (props: Props): MouseEventHandler<HTMLElement> => event => {
   event.stopPropagation();
   props.deleteStory(props.story);
   hideList(props);
 };
 
-const editStory = props => event => {
+const editStory = (props: Props): MouseEventHandler<HTMLElement> => event => {
   event.stopPropagation();
   props.editStory(props.story);
   hideList(props);
 };
 
-const recaptureStory = props => event => {
+const recaptureStory = (
+  props: Props
+): MouseEventHandler<HTMLElement> => event => {
   event.stopPropagation();
   props.recaptureStory(props.story);
   hideList(props);
 };
 
-const calculateOffset = props => storyRef => {
+const calculateOffset = (props: Props) => (
+  storyRef: React.RefObject<HTMLElement>
+) => {
   const offsetTop = storyRef.current?.offsetTop || 0;
   const scrollTop = props.parentRef.current.scrollTop || 0;
-  const heightParrent = storyRef.current?.offsetParent.offsetHeight || 0;
+  const heightParent =
+    (storyRef.current?.offsetParent as HTMLElement)?.offsetHeight || 0;
+
   const offsetTopScroll = offsetTop - scrollTop + 25;
-  if (offsetTopScroll + 125 > heightParrent) {
-    return `bottom ${offsetTopScroll + 125 - heightParrent + 45}px;`;
+  if (offsetTopScroll + 125 > heightParent) {
+    return `bottom ${offsetTopScroll + 125 - heightParent + 45}px;`;
   }
   return `top: ${offsetTopScroll}px;`;
 };
 
-const renderMenu = props => {
+const renderMenu = (props: Props) => {
   const { t } = props;
+
   return (
     <Ul>
       <li>
@@ -167,11 +190,11 @@ const renderMenu = props => {
   );
 };
 
-const Story = props => {
+const Story = (props: Props) => {
   const story = props.story;
   const bodyText = getTruncatedContent(story.text);
   const { t } = props;
-  const storyRef = useRef(null);
+  const storyRef = useRef<HTMLDivElement>(null);
   const closeHandler = () => {
     hideList(props);
   };
@@ -224,7 +247,6 @@ const Story = props => {
                   styledWidth="20px"
                   light
                   glyph={Icon.GLYPHS.recapture}
-                  onClick={toggleMenu(props)}
                   css={`
                     padding-right: 10px;
                   `}
@@ -236,7 +258,6 @@ const Story = props => {
                 styledWidth="20px"
                 light
                 glyph={Icon.GLYPHS.menuDotted}
-                onClick={toggleMenu(props)}
               />
             </MenuButton>
           </Box>
@@ -284,23 +305,5 @@ const MenuButton = styled(RawButton)`
     background-color: ${props => props.theme.dark};
   }
 `;
-
-Story.propTypes = {
-  story: PropTypes.object,
-  editStory: PropTypes.func,
-  viewStory: PropTypes.func,
-  deleteStory: PropTypes.func,
-  recaptureStory: PropTypes.func,
-  recaptureStorySuccessful: PropTypes.bool,
-  onMouseDown: PropTypes.func.isRequired,
-  onTouchStart: PropTypes.func.isRequired,
-  style: PropTypes.object,
-  className: PropTypes.string,
-  menuOpen: PropTypes.bool,
-  openMenu: PropTypes.func,
-  theme: PropTypes.object.isRequired,
-  parentRef: PropTypes.any,
-  t: PropTypes.func.isRequired
-};
 
 export default sortable(withTranslation()(withTheme(Story)));
