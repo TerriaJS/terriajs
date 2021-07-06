@@ -1,12 +1,12 @@
 import { JsonObject } from "../../Core/Json";
-import anyTrait from "../decorators/anyTrait";
+import anyTrait from "../Decorators/anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import MappableTraits from "./MappableTraits";
 import mixTraits from "../mixTraits";
-import primitiveTrait from "../decorators/primitiveTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
 import SplitterTraits from "./SplitterTraits";
 import UrlTraits from "./UrlTraits";

@@ -1,7 +1,7 @@
 import { ChartItemType } from "../../ModelMixins/ChartableMixin";
 import MappableTraits from "./MappableTraits";
 import mixTraits from "../mixTraits";
-import primitiveTrait from "../decorators/primitiveTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
 import TimeVaryingTraits from "./TimeVaryingTraits";
 
 export default class DiscretelyTimeVaryingTraits extends mixTraits(

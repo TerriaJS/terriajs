@@ -3,7 +3,7 @@ import CatalogMemberTraits from "./CatalogMemberTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import MappableTraits from "./MappableTraits";
 import mixTraits from "../mixTraits";
-import primitiveTrait from "../decorators/primitiveTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
 
 export default class BingMapsCatalogItemTraits extends mixTraits(

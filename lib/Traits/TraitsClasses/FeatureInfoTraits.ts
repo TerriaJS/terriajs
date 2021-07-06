@@ -1,7 +1,7 @@
 import ModelTraits from "../ModelTraits";
-import objectTrait from "../decorators/objectTrait";
-import primitiveTrait from "../decorators/primitiveTrait";
-import anyTrait from "../decorators/anyTrait";
+import objectTrait from "../Decorators/objectTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import anyTrait from "../Decorators/anyTrait";
 
 class FeatureInfoFormatTraits extends ModelTraits {
   @primitiveTrait({

@@ -2,7 +2,7 @@ import CatalogMemberTraits from "./CatalogMemberTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
 import GroupTraits from "./GroupTraits";
 import mixTraits from "../mixTraits";
-import primitiveTrait from "../decorators/primitiveTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
 import UrlTraits from "./UrlTraits";
 
 export default class WebMapTileServiceCatalogGroupTraits extends mixTraits(

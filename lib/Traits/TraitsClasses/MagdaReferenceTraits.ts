@@ -1,10 +1,10 @@
 import { JsonObject } from "../../Core/Json";
-import anyTrait from "../decorators/anyTrait";
+import anyTrait from "../Decorators/anyTrait";
 import CatalogMemberReferenceTraits from "./CatalogMemberReferenceTraits";
 import MagdaDistributionFormatTraits from "./MagdaDistributionFormatTraits";
 import mixTraits from "../mixTraits";
-import objectArrayTrait from "../decorators/objectArrayTrait";
-import primitiveTrait from "../decorators/primitiveTrait";
+import objectArrayTrait from "../Decorators/objectArrayTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
 import UrlTraits from "./UrlTraits";
 
 export default class MagdaReferenceTraits extends mixTraits(

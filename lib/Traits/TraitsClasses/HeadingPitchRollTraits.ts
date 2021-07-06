@@ -1,5 +1,5 @@
 import ModelTraits from "../ModelTraits";
-import primitiveTrait from "../decorators/primitiveTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
 
 export default class HeadingPitchRollTraits extends ModelTraits {
   @primitiveTrait({

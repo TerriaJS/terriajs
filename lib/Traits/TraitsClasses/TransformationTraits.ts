@@ -1,8 +1,8 @@
 import ModelTraits from "../ModelTraits";
-import objectTrait from "../decorators/objectTrait";
+import objectTrait from "../Decorators/objectTrait";
 import LatLonHeightTraits from "./LatLonHeightTraits";
 import HeadingPitchRollTraits from "./HeadingPitchRollTraits";
-import primitiveTrait from "../decorators/primitiveTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
 
 export default class TransformationTraits extends ModelTraits {
   @objectTrait({

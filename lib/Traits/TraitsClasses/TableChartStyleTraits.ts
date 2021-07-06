@@ -1,6 +1,6 @@
 import ModelTraits from "../ModelTraits";
-import primitiveTrait from "../decorators/primitiveTrait";
-import objectArrayTrait from "../decorators/objectArrayTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import objectArrayTrait from "../Decorators/objectArrayTrait";
 
 export class TableChartLineStyleTraits extends ModelTraits {
   @primitiveTrait({

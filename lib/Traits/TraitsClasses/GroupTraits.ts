@@ -1,8 +1,8 @@
 import CatalogMemberFactory from "../../Models/CatalogMemberFactory";
 import ModelReference from "../ModelReference";
-import modelReferenceArrayTrait from "../decorators/modelReferenceArrayTrait";
+import modelReferenceArrayTrait from "../Decorators/modelReferenceArrayTrait";
 import ModelTraits from "../ModelTraits";
-import primitiveTrait from "../decorators/primitiveTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
 
 export default class GroupTraits extends ModelTraits {
   @primitiveTrait({

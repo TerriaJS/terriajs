@@ -1,9 +1,9 @@
 import { JsonObject } from "../../Core/Json";
-import anyTrait from "../decorators/anyTrait";
+import anyTrait from "../Decorators/anyTrait";
 import ModelTraits from "../ModelTraits";
-import objectArrayTrait from "../decorators/objectArrayTrait";
-import objectTrait from "../decorators/objectTrait";
-import primitiveTrait from "../decorators/primitiveTrait";
+import objectArrayTrait from "../Decorators/objectArrayTrait";
+import objectTrait from "../Decorators/objectTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
 
 export class SearchParameterTraits extends ModelTraits {
   @primitiveTrait({

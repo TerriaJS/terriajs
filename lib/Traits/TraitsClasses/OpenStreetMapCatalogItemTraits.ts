@@ -2,8 +2,8 @@ import CatalogMemberTraits from "./CatalogMemberTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import MappableTraits from "./MappableTraits";
 import mixTraits from "../mixTraits";
-import primitiveArrayTrait from "../decorators/primitiveArrayTrait";
-import primitiveTrait from "../decorators/primitiveTrait";
+import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
 import UrlTraits from "./UrlTraits";
 

@@ -1,6 +1,6 @@
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import mixTraits from "../mixTraits";
-import primitiveTrait from "../decorators/primitiveTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
 
 export default class TimeVaryingTraits extends mixTraits(CatalogMemberTraits) {
   @primitiveTrait({

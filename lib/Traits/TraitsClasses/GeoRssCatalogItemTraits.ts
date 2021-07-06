@@ -3,7 +3,7 @@ import FeatureInfoTraits from "./FeatureInfoTraits";
 import UrlTraits from "./UrlTraits";
 import MappableTraits from "./MappableTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import primitiveTrait from "../decorators/primitiveTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
 
 export default class GeoRssCatalogItemTraits extends mixTraits(
   FeatureInfoTraits,

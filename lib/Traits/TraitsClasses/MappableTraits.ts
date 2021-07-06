@@ -1,8 +1,8 @@
 import AttributionTraits from "./AttributionTraits";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
-import objectTrait from "../decorators/objectTrait";
-import primitiveTrait from "../decorators/primitiveTrait";
+import objectTrait from "../Decorators/objectTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
 
 export class RectangleTraits extends ModelTraits {
   @primitiveTrait({

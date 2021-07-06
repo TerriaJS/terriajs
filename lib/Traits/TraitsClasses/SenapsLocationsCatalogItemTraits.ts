@@ -1,10 +1,10 @@
 import mixTraits from "../mixTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import primitiveTrait from "../decorators/primitiveTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
 import MappableTraits from "./MappableTraits";
 import SplitterTraits from "./SplitterTraits";
-import objectTrait from "../decorators/objectTrait";
+import objectTrait from "../Decorators/objectTrait";
 import StyleTraits from "./StyleTraits";
 import UrlTraits from "./UrlTraits";
 

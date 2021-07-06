@@ -1,18 +1,18 @@
 import { JsonObject } from "../../Core/Json";
-import anyTrait from "../decorators/anyTrait";
+import anyTrait from "../Decorators/anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import MappableTraits from "./MappableTraits";
 import ShadowTraits from "./ShadowTraits";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
-import objectArrayTrait from "../decorators/objectArrayTrait";
-import objectTrait from "../decorators/objectTrait";
-import primitiveTrait from "../decorators/primitiveTrait";
+import objectArrayTrait from "../Decorators/objectArrayTrait";
+import objectTrait from "../Decorators/objectTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
 import UrlTraits from "./UrlTraits";
 import TransformationTraits from "./TransformationTraits";
 import PlaceEditorTraits from "./PlaceEditorTraits";
-import primitiveArrayTrait from "../decorators/primitiveArrayTrait";
+import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import ClippingPlanesTraits from "./ClippingPlanesTraits";
 import HighlightColorTraits from "./HighlightColorTraits";
 

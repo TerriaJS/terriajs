@@ -1,7 +1,7 @@
 import ModelTraits from "../ModelTraits";
 import LatLonHeightTraits from "./LatLonHeightTraits";
-import objectTrait from "../decorators/objectTrait";
-import primitiveTrait from "../decorators/primitiveTrait";
+import objectTrait from "../Decorators/objectTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 

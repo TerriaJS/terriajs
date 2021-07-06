@@ -1,6 +1,6 @@
-import primitiveTrait from "../../lib/Traits/decorators/primitiveTrait";
-import objectTrait from "../../lib/Traits/decorators/objectTrait";
-import objectArrayTrait from "../../lib/Traits/decorators/objectArrayTrait";
+import primitiveTrait from "../../lib/Traits/Decorators/primitiveTrait";
+import objectTrait from "../../lib/Traits/Decorators/objectTrait";
+import objectArrayTrait from "../../lib/Traits/Decorators/objectArrayTrait";
 import ModelTraits from "../../lib/Traits/ModelTraits";
 import { JsonObject } from "../../lib/Core/Json";
 

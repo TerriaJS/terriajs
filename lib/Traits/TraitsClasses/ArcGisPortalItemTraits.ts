@@ -2,7 +2,7 @@ import ArcGisPortalSharedTraits from "./ArcGisPortalSharedTraits";
 import CatalogMemberReferenceTraits from "./CatalogMemberReferenceTraits";
 import MappableTraits from "./MappableTraits";
 import mixTraits from "../mixTraits";
-import primitiveTrait from "../decorators/primitiveTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
 import UrlTraits from "./UrlTraits";
 
 export default class ArcGisPortalItemTraits extends mixTraits(

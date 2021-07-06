@@ -1,11 +1,11 @@
 import { JsonObject } from "../../Core/Json";
-import anyTrait from "../decorators/anyTrait";
+import anyTrait from "../Decorators/anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import ArcGisPortalSharedTraits from "./ArcGisPortalSharedTraits";
 import GroupTraits from "./GroupTraits";
 import mixTraits from "../mixTraits";
-import primitiveArrayTrait from "../decorators/primitiveArrayTrait";
-import primitiveTrait from "../decorators/primitiveTrait";
+import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
 import UrlTraits from "./UrlTraits";
 
 export default class ArcGisPortalCatalogGroupTraits extends mixTraits(
