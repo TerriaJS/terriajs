@@ -8,7 +8,9 @@ import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvi
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../ModelMixins/MappableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import LegendTraits, { LegendItemTraits } from "../Traits/TraitsClasses/LegendTraits";
+import LegendTraits, {
+  LegendItemTraits
+} from "../Traits/TraitsClasses/LegendTraits";
 import MapboxVectorTileCatalogItemTraits from "../Traits/TraitsClasses/MapboxVectorTileCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";

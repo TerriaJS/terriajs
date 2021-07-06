@@ -10,7 +10,9 @@ import createStratumInstance from "../Models/createStratumInstance";
 import LoadableStratum from "../Models/LoadableStratum";
 import { BaseModel } from "../Models/Model";
 import StratumFromTraits from "../Models/StratumFromTraits";
-import LegendTraits, { LegendItemTraits } from "../Traits/TraitsClasses/LegendTraits";
+import LegendTraits, {
+  LegendItemTraits
+} from "../Traits/TraitsClasses/LegendTraits";
 import TableChartStyleTraits, {
   TableChartLineStyleTraits
 } from "../Traits/TraitsClasses/TableChartStyleTraits";

@@ -21,7 +21,9 @@ import UrlMixin from "../ModelMixins/UrlMixin";
 import ArcGisMapServerCatalogItemTraits from "../Traits/TraitsClasses/ArcGisMapServerCatalogItemTraits";
 import { InfoSectionTraits } from "../Traits/TraitsClasses/CatalogMemberTraits";
 import DiscreteTimeTraits from "../Traits/TraitsClasses/DiscreteTimeTraits";
-import LegendTraits, { LegendItemTraits } from "../Traits/TraitsClasses/LegendTraits";
+import LegendTraits, {
+  LegendItemTraits
+} from "../Traits/TraitsClasses/LegendTraits";
 import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
