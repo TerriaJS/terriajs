@@ -117,7 +117,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
                     plugins: [
                         'babel-plugin-jsx-control-statements',
                         '@babel/plugin-transform-modules-commonjs',
-                        ["@babel/plugin-proposal-Decorators", { "legacy": true }],
+                        ["@babel/plugin-proposal-decorators", { "legacy": true }],
                         '@babel/proposal-class-properties',
                         '@babel/proposal-object-rest-spread',
                         'babel-plugin-styled-components',
