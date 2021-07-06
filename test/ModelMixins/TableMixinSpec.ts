@@ -1,15 +1,18 @@
+import { runInAction } from "mobx";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import CommonStrata from "../../lib/Models/CommonStrata";
 import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
 import Terria from "../../lib/Models/Terria";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import { runInAction } from "mobx";
-import createStratumInstance from "../../lib/Models/createStratumInstance";
 import updateModelFromJson from "../../lib/Models/updateModelFromJson";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import createStratumInstance from "../../lib/Models/createStratumInstance";
+import TableStyleTraits from "../../lib/Traits/TableStyleTraits";
+import TableTimeStyleTraits from "../../lib/Traits/TableTimeStyleTraits";
 
 const LatLonValCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_val.csv");
 const LatLonValCsvDuplicate = require("raw-loader!../../wwwroot/test/csv/lat_lon_val_with_duplicate_row.csv");
 const LatLonEnumDateIdCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum_date_id.csv");
+const ParkingSensorDataCsv = require("raw-loader!../../wwwroot/test/csv/parking-sensor-data.csv");
 const regionMapping = JSON.stringify(
   require("../../wwwroot/data/regionMapping.json")
 );
@@ -66,7 +69,7 @@ describe("TableMixin", function() {
         ).toEqual([
           "2015-08-07T06:00:00Z",
           "2015-08-07T00:00:00Z",
-          "2015-08-03T06:00:00Z",
+          "2015-08-02T23:59:59Z",
           "2015-08-05T00:00:00Z"
         ]);
       });
@@ -130,6 +133,159 @@ describe("TableMixin", function() {
     });
   });
 
+  describe("when the table has time-series points with intervals", function() {
+    let dataSource: CustomDataSource;
+    beforeEach(async function() {
+      item.setTrait(CommonStrata.user, "csvString", ParkingSensorDataCsv);
+      await item.loadMapItems();
+      dataSource = <CustomDataSource>item.mapItems[0];
+      expect(dataSource instanceof CustomDataSource).toBe(true);
+    });
+
+    it("creates one entity per id", async function() {
+      console.log(item);
+      expect(dataSource.entities.values.length).toBe(21);
+    });
+
+    it("creates correct intervals", async function() {
+      expect(item.activeTableStyle.timeIntervals?.length).toBe(21);
+      expect(item.disableDateTimeSelector).toBeFalsy();
+      expect(
+        item.activeTableStyle.timeIntervals?.map(t => [
+          t?.start.toString(),
+          t?.stop.toString()
+        ])
+      ).toEqual([
+        ["2021-06-25T10:39:02Z", "2021-06-26T10:39:01Z"],
+        ["2021-06-25T10:26:45Z", "2021-06-26T10:26:44Z"],
+        ["2021-06-25T10:18:01Z", "2021-06-26T10:18:00Z"],
+        ["2021-06-25T09:53:52Z", "2021-06-26T09:53:51Z"],
+        ["2021-06-25T09:51:32Z", "2021-06-26T09:51:31Z"],
+        ["2021-06-25T09:47:06Z", "2021-06-26T09:47:05Z"],
+        ["2021-06-25T09:19:21Z", "2021-06-26T09:19:20Z"],
+        ["2021-06-25T09:14:36Z", "2021-06-26T09:14:35Z"],
+        ["2021-06-25T09:06:47Z", "2021-06-26T09:06:46Z"],
+        ["2021-06-25T09:01:32Z", "2021-06-26T09:01:31Z"],
+        ["2021-06-25T08:25:09Z", "2021-06-26T08:25:08Z"],
+        ["2021-06-25T07:22:15Z", "2021-06-26T07:22:14Z"],
+        ["2021-06-25T06:10:52Z", "2021-06-26T06:10:51Z"],
+        ["2021-06-25T04:39:45Z", "2021-06-26T04:39:44Z"],
+        ["2021-06-25T03:46:13Z", "2021-06-26T03:46:12Z"],
+        ["2021-06-25T00:29:26Z", "2021-06-26T00:29:25Z"],
+        ["2021-06-25T00:27:23Z", "2021-06-26T00:27:22Z"],
+        ["2021-06-24T14:39:42Z", "2021-06-25T14:39:41Z"],
+        ["2021-06-15T02:50:37Z", "2021-06-16T02:50:36Z"],
+        ["2021-05-12T00:52:56Z", "2021-05-13T00:52:55Z"],
+        ["2021-05-04T03:55:39Z", "2021-05-05T03:55:38Z"]
+      ]);
+    });
+
+    it("creates correct intervals if spreadStartTime", async function() {
+      runInAction(() =>
+        item.setTrait(
+          CommonStrata.user,
+          "defaultStyle",
+          createStratumInstance(TableStyleTraits, {
+            time: createStratumInstance(TableTimeStyleTraits, {
+              spreadStartTime: true
+            })
+          })
+        )
+      );
+      expect(item.disableDateTimeSelector).toBeFalsy();
+      expect(item.activeTableStyle.timeIntervals?.length).toBe(21);
+      expect(
+        item.activeTableStyle.timeIntervals?.map(t => [
+          t?.start.toString(),
+          t?.stop.toString()
+        ])
+      ).toEqual([
+        ["2021-05-04T03:55:39Z", "2021-06-26T10:39:01Z"],
+        ["2021-05-04T03:55:39Z", "2021-06-26T10:26:44Z"],
+        ["2021-05-04T03:55:39Z", "2021-06-26T10:18:00Z"],
+        ["2021-05-04T03:55:39Z", "2021-06-26T09:53:51Z"],
+        ["2021-05-04T03:55:39Z", "2021-06-26T09:51:31Z"],
+        ["2021-05-04T03:55:39Z", "2021-06-26T09:47:05Z"],
+        ["2021-05-04T03:55:39Z", "2021-06-26T09:19:20Z"],
+        ["2021-05-04T03:55:39Z", "2021-06-26T09:14:35Z"],
+        ["2021-05-04T03:55:39Z", "2021-06-26T09:06:46Z"],
+        ["2021-05-04T03:55:39Z", "2021-06-26T09:01:31Z"],
+        ["2021-05-04T03:55:39Z", "2021-06-26T08:25:08Z"],
+        ["2021-05-04T03:55:39Z", "2021-06-26T07:22:14Z"],
+        ["2021-05-04T03:55:39Z", "2021-06-26T06:10:51Z"],
+        ["2021-05-04T03:55:39Z", "2021-06-26T04:39:44Z"],
+        ["2021-05-04T03:55:39Z", "2021-06-26T03:46:12Z"],
+        ["2021-05-04T03:55:39Z", "2021-06-26T00:29:25Z"],
+        ["2021-05-04T03:55:39Z", "2021-06-26T00:27:22Z"],
+        ["2021-05-04T03:55:39Z", "2021-06-25T14:39:41Z"],
+        ["2021-05-04T03:55:39Z", "2021-06-16T02:50:36Z"],
+        ["2021-05-04T03:55:39Z", "2021-05-13T00:52:55Z"],
+        ["2021-05-04T03:55:39Z", "2021-05-05T03:55:38Z"]
+      ]);
+    });
+
+    it("creates correct intervals if spreadStartTime and spreadFinishTime", async function() {
+      runInAction(() =>
+        item.setTrait(
+          CommonStrata.user,
+          "defaultStyle",
+          createStratumInstance(TableStyleTraits, {
+            time: createStratumInstance(TableTimeStyleTraits, {
+              spreadStartTime: true,
+              spreadFinishTime: true
+            })
+          })
+        )
+      );
+      expect(item.disableDateTimeSelector).toBeTruthy();
+      expect(item.activeTableStyle.timeIntervals?.length).toBe(21);
+      expect(item.activeTableStyle.moreThanOneTimeInterval).toBe(false);
+    });
+
+    it("creates correct intervals if spreadFinishTime", async function() {
+      runInAction(() =>
+        item.setTrait(
+          CommonStrata.user,
+          "defaultStyle",
+          createStratumInstance(TableStyleTraits, {
+            time: createStratumInstance(TableTimeStyleTraits, {
+              spreadFinishTime: true
+            })
+          })
+        )
+      );
+      expect(item.activeTableStyle.timeIntervals?.length).toBe(21);
+      expect(
+        item.activeTableStyle.timeIntervals?.map(t => [
+          t?.start.toString(),
+          t?.stop.toString()
+        ])
+      ).toEqual([
+        ["2021-06-25T10:39:02Z", "2021-06-25T10:39:02Z"],
+        ["2021-06-25T10:26:45Z", "2021-06-25T10:39:02Z"],
+        ["2021-06-25T10:18:01Z", "2021-06-25T10:39:02Z"],
+        ["2021-06-25T09:53:52Z", "2021-06-25T10:39:02Z"],
+        ["2021-06-25T09:51:32Z", "2021-06-25T10:39:02Z"],
+        ["2021-06-25T09:47:06Z", "2021-06-25T10:39:02Z"],
+        ["2021-06-25T09:19:21Z", "2021-06-25T10:39:02Z"],
+        ["2021-06-25T09:14:36Z", "2021-06-25T10:39:02Z"],
+        ["2021-06-25T09:06:47Z", "2021-06-25T10:39:02Z"],
+        ["2021-06-25T09:01:32Z", "2021-06-25T10:39:02Z"],
+        ["2021-06-25T08:25:09Z", "2021-06-25T10:39:02Z"],
+        ["2021-06-25T07:22:15Z", "2021-06-25T10:39:02Z"],
+        ["2021-06-25T06:10:52Z", "2021-06-25T10:39:02Z"],
+        ["2021-06-25T04:39:45Z", "2021-06-25T10:39:02Z"],
+        ["2021-06-25T03:46:13Z", "2021-06-25T10:39:02Z"],
+        ["2021-06-25T00:29:26Z", "2021-06-25T10:39:02Z"],
+        ["2021-06-25T00:27:23Z", "2021-06-25T10:39:02Z"],
+        ["2021-06-24T14:39:42Z", "2021-06-25T10:39:02Z"],
+        ["2021-06-15T02:50:37Z", "2021-06-25T10:39:02Z"],
+        ["2021-05-12T00:52:56Z", "2021-06-25T10:39:02Z"],
+        ["2021-05-04T03:55:39Z", "2021-06-25T10:39:02Z"]
+      ]);
+    });
+  });
+
   describe("when the table has a few styles", function() {
     it("creates all styleDimensions", async function() {
       runInAction(() => {
@@ -168,8 +324,8 @@ describe("TableMixin", function() {
 
       await item.loadMapItems();
 
-      expect(item.styleDimensions?.options?.[0].id).toBe("value");
-      expect(item.styleDimensions?.options?.[0].name).toBe("Some Style Title");
+      expect(item.styleDimensions?.options?.[2].id).toBe("value");
+      expect(item.styleDimensions?.options?.[2].name).toBe("Some Style Title");
     });
 
     it("loads regionProviderList on loadMapItems", async function() {

@@ -1,6 +1,5 @@
 import { computed } from "mobx";
 import { createTransformer } from "mobx-utils";
-import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import ConstantColorMap from "../Map/ConstantColorMap";
@@ -92,17 +91,21 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
 
   @computed
   get defaultChartStyle(): StratumFromTraits<TableStyleTraits> | undefined {
-    const scalarColumns = this.catalogItem.tableColumns.filter(
-      column =>
-        column.type === TableColumnType.scalar ||
-        column.type === TableColumnType.time
+    const timeColumns = this.catalogItem.tableColumns.filter(
+      column => column.type === TableColumnType.time
     );
 
-    if (scalarColumns.length >= 2) {
+    const scalarColumns = this.catalogItem.tableColumns.filter(
+      column => column.type === TableColumnType.scalar
+    );
+
+    const hasTime = timeColumns.length > 0;
+
+    if (scalarColumns.length >= (hasTime ? 1 : 2)) {
       return createStratumInstance(TableStyleTraits, {
         chart: createStratumInstance(TableChartStyleTraits, {
-          xAxisColumn: scalarColumns[0].name,
-          lines: scalarColumns.slice(1).map((column, i) =>
+          xAxisColumn: hasTime ? timeColumns[0].name : scalarColumns[0].name,
+          lines: scalarColumns.slice(hasTime ? 0 : 1).map((column, i) =>
             createStratumInstance(TableChartLineStyleTraits, {
               yAxisColumn: column.name,
               isSelectedInWorkbench: i === 0 // activate only the first chart line by default
@@ -119,14 +122,20 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
     let columns = this.catalogItem.tableColumns.filter(
       column =>
         column.type === TableColumnType.scalar ||
-        column.type === TableColumnType.enum ||
-        column.type === TableColumnType.text
+        column.type === TableColumnType.enum
     );
 
-    // If no styles for scalar, enum or text, try to create a style using region columns
+    // If no styles for scalar, enum - try to create a style using region columns
     if (columns.length === 0) {
       columns = this.catalogItem.tableColumns.filter(
         column => column.type === TableColumnType.region
+      );
+    }
+
+    // If still no styles - try to create a style using text columns
+    if (columns.length === 0) {
+      columns = this.catalogItem.tableColumns.filter(
+        column => column.type === TableColumnType.text
       );
     }
 
@@ -142,6 +151,15 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
         })
       })
     );
+  }
+
+  @computed
+  get disableDateTimeSelector() {
+    if (
+      this.catalogItem.mapItems.length === 0 ||
+      !this.catalogItem.activeTableStyle.moreThanOneTimeInterval
+    )
+      return true;
   }
 
   @computed
@@ -166,6 +184,15 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
       newModel as TableCatalogItem,
       this.index
     ) as this;
+  }
+
+  /** Add column title as legend title if showing a Discrete or Enum ColorMap */
+  @computed get title() {
+    if (
+      this.catalogItem.activeTableStyle.colorMap instanceof DiscreteColorMap ||
+      this.catalogItem.activeTableStyle.colorMap instanceof EnumColorMap
+    )
+      return this.catalogItem.activeTableStyle.title;
   }
 
   @computed

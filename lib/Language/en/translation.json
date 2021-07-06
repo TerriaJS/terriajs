@@ -682,6 +682,8 @@
       "esri-featureServer": "Esri ArcGIS FeatureServer (single layer)",
       "3d-tiles": "3D Tiles",
       "open-street-map": "Open Street Map Server",
+      "sdmx-group": "SDMX-JSON",
+      "opendatasoft-group": "Opendatasoft Portal",
       "geojson": "GeoJSON",
       "geoRss": "GeoRSS",
       "kml": "KML or KMZ",
@@ -785,6 +787,11 @@
       "csvRegionMappingMessageZeroFound": "Zero region names found for region type {{regionType}}",
       "csvRegionMappingMessageZeroBoundariesFound": "Zero region boundaries found for region {{regionName}}",
       "csvRegionMappingMessageLoadError": "Couldn't load region boundaries for region {{regionName}} {{exception}}"
+    },
+    "extraCreditLinks": {
+      "dataAttribution": "Data attribution",
+      "disclaimer": "Disclaimer",
+      "basemap": "Basemap"
     }
   },
   "models": {
@@ -1218,6 +1225,9 @@
       "unknownFormat": "The server responded with an unknown feature format.",
       "noMatchingFeatures": "The Sensor Observation Service did not return any features matching your query."
     },
+    "openDataSoft": {
+      "viewDatasetPage": "View dataset page"
+    },
     "sdmxServerStratum": {
       "sdmxStructureLoadErrorTitle": "SDMX structure request failed",
       "loadDataErrorTitle": "Failed to load SDMX group",
@@ -1278,6 +1288,7 @@
       "wrongNumberOfElements": "The list of values and the list of region codes do not contain the same number of elements"
     },
     "tableData": {
+      "noData": "No data to show",
       "unsupportedCharactersTitle": "Invalid characters in latitude and longitude columns",
       "unsupportedCharactersMessage": "Could not interpret latitude and longitude pair {{longitude}}, {{latitude}}",
       "bulkGeocoderInfoTitle": "Bulk Geocoder Information",
@@ -1514,6 +1525,7 @@
     "missingContent": "missing content"
   },
   "itemSearchTool": {
+    "toolLoadError": "Error loading search tool.",
     "title": "Search {{itemName}}",
     "loading": "Loading search parameters",
     "loadError": "Error loading search parameters. Check console for detailed errors.",

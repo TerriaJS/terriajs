@@ -239,28 +239,21 @@ export default class Cesium extends GlobeOrMap {
         );
       }
       if (expandLink) {
-        let attributionToAboutPage = document.createElement("div");
-        attributionToAboutPage.innerHTML = `<a href="about.html#data-attribution" target="_blank" rel="noopener noreferrer">Data attribution</a>`;
-        let disclaimerToAboutPage = document.createElement("div");
-        disclaimerToAboutPage.innerHTML = `<a href="about.html#disclaimer" target="_blank" rel="noopener noreferrer">Disclaimer</a>`;
-
-        if (logoContainer && logoContainer.parentNode) {
-          if (disclaimerToAboutPage && disclaimerToAboutPage.firstChild) {
-            logoContainer.parentNode.insertBefore(
-              disclaimerToAboutPage.firstChild,
-              logoContainer.nextSibling
-            );
-          }
-
-          if (attributionToAboutPage && attributionToAboutPage.firstChild) {
-            logoContainer.parentNode.insertBefore(
-              attributionToAboutPage.firstChild,
-              logoContainer.nextSibling
-            );
-          }
-        }
-
-        expandLink.innerText = "Basemap";
+        this.terria.configParameters.extraCreditLinks
+          ?.slice()
+          .reverse()
+          .forEach(({ url, text }) => {
+            // Create a link and insert it after the logo node
+            // Defaults to the given text if no translation is provided
+            const translatedText = i18next.t(text);
+            const a = document.createElement("a");
+            a.href = url;
+            a.target = "_blank";
+            a.rel = "noopener noreferrer";
+            a.innerText = translatedText;
+            logoContainer?.insertAdjacentElement("afterend", a);
+          });
+        expandLink.innerText = i18next.t("map.extraCreditLinks.basemap");
       }
     }
 
@@ -1176,18 +1169,11 @@ export default class Cesium extends GlobeOrMap {
         id = picked.primitive.id;
       }
 
-      if (id instanceof Entity && vectorFeatures.indexOf(id) === -1) {
-        const feature = Feature.fromEntityCollectionOrEntity(id);
-        if (picked.primitive) {
-          feature.cesiumPrimitive = picked.primitive;
-        }
-        vectorFeatures.push(feature);
-      } else if (
-        picked.primitive &&
-        picked.primitive._catalogItem &&
-        picked.primitive._catalogItem.getFeaturesFromPickResult
-      ) {
-        const result = picked.primitive._catalogItem.getFeaturesFromPickResult(
+      // Try to find catalogItem for picked feature, and use catalogItem.getFeaturesFromPickResult() if it exists - this is used by FeatureInfoMixin
+      const catalogItem = picked?.primitive?._catalogItem ?? id?._catalogItem;
+
+      if (typeof catalogItem?.getFeaturesFromPickResult === "function") {
+        const result = catalogItem.getFeaturesFromPickResult.bind(catalogItem)(
           screenPosition,
           picked
         );
@@ -1198,6 +1184,12 @@ export default class Cesium extends GlobeOrMap {
             vectorFeatures.push(result);
           }
         }
+      } else if (id instanceof Entity && vectorFeatures.indexOf(id) === -1) {
+        const feature = Feature.fromEntityCollectionOrEntity(id);
+        if (picked.primitive) {
+          feature.cesiumPrimitive = picked.primitive;
+        }
+        vectorFeatures.push(feature);
       }
     }
 

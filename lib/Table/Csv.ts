@@ -18,11 +18,13 @@ export default class Csv {
   static parseString(
     csv: string,
     columnMajor: boolean = false,
-    filterOutComments: boolean = false
+    filterOutComments: boolean = false,
+    options: papaparse.ParseConfig = {}
   ): Promise<string[][]> {
     return new Promise<string[][]>((resolve, reject) => {
       papaparse.parse(csv, {
-        ...getParseOptions(columnMajor, filterOutComments, resolve, reject)
+        ...getParseOptions(columnMajor, filterOutComments, resolve, reject),
+        ...options
       });
     });
   }
@@ -36,11 +38,13 @@ export default class Csv {
   static parseFile(
     file: File,
     columnMajor: boolean = false,
-    filterOutComments: boolean = false
+    filterOutComments: boolean = false,
+    options: papaparse.ParseConfig = {}
   ): Promise<string[][]> {
     return new Promise<string[][]>((resolve, reject) => {
       papaparse.parse(file, {
-        ...getParseOptions(columnMajor, filterOutComments, resolve, reject)
+        ...getParseOptions(columnMajor, filterOutComments, resolve, reject),
+        ...options
       });
     });
   }
@@ -54,11 +58,12 @@ export default class Csv {
   static parseUrl(
     url: string,
     columnMajor: boolean = false,
-    filterOutComments: boolean = false
+    filterOutComments: boolean = false,
+    options: papaparse.ParseConfig = {}
   ): Promise<string[][]> {
     return loadWithXhr({ url }).then(csv => {
       if (typeof csv === "string") {
-        return Csv.parseString(csv, columnMajor, filterOutComments);
+        return Csv.parseString(csv, columnMajor, filterOutComments, options);
       } else {
         throw "Request failed";
       }

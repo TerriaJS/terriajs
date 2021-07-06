@@ -1,0 +1,30 @@
+name: Deploy TerriaMap
+
+on: push
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '10.x'
+      - uses: google-github-actions/setup-gcloud@v0.2.1
+        with:
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+          export_default_credentials: true
+      - uses: google-github-actions/get-gke-credentials@v0.3.0
+        with:
+          cluster_name: ${{ secrets.GKE_CLUSTER }}
+          location: ${{ secrets.GKE_LOCATION }}
+      - uses: azure/setup-helm@v1.1
+        with:
+          version: 'v3.3.1'
+      - run: bash ./buildprocess/ci-deploy.sh
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
+          SHARE_S3_ACCESS_KEY_ID: ${{ secrets.SHARE_S3_ACCESS_KEY_ID }}
+          SHARE_S3_SECRET_ACCESS_KEY: ${{ secrets.SHARE_S3_SECRET_ACCESS_KEY }}
+          FEEDBACK_GITHUB_TOKEN: ${{ secrets.FEEDBACK_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

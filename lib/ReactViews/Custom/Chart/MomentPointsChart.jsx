@@ -1,10 +1,11 @@
-import { observer } from "mobx-react";
-import { computed } from "mobx";
+import { scaleLinear } from "@vx/scale";
 import { Circle } from "@vx/shape";
+import { interpolateNumber as d3InterpolateNumber } from "d3-interpolate";
+import { computed } from "mobx";
+import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
-import { interpolateNumber as d3InterpolateNumber } from "d3-interpolate";
-import { scaleLinear } from "@vx/scale";
+import styled from "styled-components";
 
 const markerRadiusSmall = 2;
 const markerRadiusLarge = 5;
@@ -62,25 +63,41 @@ class MomentPointsChart extends React.Component {
     const { id, chartItem, scales } = this.props;
     const baseKey = `moment-point-${chartItem.categoryName}-${chartItem.name}`;
     const fillColor = chartItem.getColor();
+    const isClickable = chartItem.onClick !== undefined;
+    const clickProps = point => {
+      if (isClickable) {
+        return {
+          pointerEvents: "all",
+          cursor: "pointer",
+          onClick: () => chartItem.onClick(point)
+        };
+      }
+      return {};
+    };
     return (
       <g id={id}>
         <For each="p" index="i" of={this.points}>
-          <Circle
+          <StyledCircle
             key={`${baseKey}-${i}`}
             cx={scales.x(p.x)}
             cy={scales.y(p.y)}
             r={3}
             fill={fillColor}
             opacity={p.isSelected ? 1.0 : 0.3}
-            pointerEvents="all"
-            cursor="pointer"
-            onClick={() => chartItem.onClick(p)}
+            {...clickProps(p)}
           />
         </For>
       </g>
     );
   }
 }
+
+const StyledCircle = styled(Circle)`
+  &:hover {
+    opacity: 1;
+    fill: white;
+  }
+`;
 
 /** Interpolates the given source point {x, y} to the closet point in the `sortedPoints` array.
  *
