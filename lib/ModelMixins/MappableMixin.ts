@@ -8,7 +8,7 @@ import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
-import MappableTraits from "../Traits/MappableTraits";
+import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import TableMixin from "./TableMixin";
 

@@ -41,16 +41,16 @@ import { terriaTheme } from "../ReactViews/StandardUserInterface/StandardTheme";
 import {
   InfoSectionTraits,
   MetadataUrlTraits
-} from "../Traits/CatalogMemberTraits";
-import LegendTraits from "../Traits/LegendTraits";
-import { RectangleTraits } from "../Traits/MappableTraits";
+} from "../Traits/TraitsClasses/CatalogMemberTraits";
+import LegendTraits from "../Traits/TraitsClasses/LegendTraits";
+import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import WebMapServiceCatalogItemTraits, {
   SUPPORTED_CRS_3857,
   SUPPORTED_CRS_4326,
   WebMapServiceAvailableLayerDimensionsTraits,
   WebMapServiceAvailableLayerStylesTraits,
   WebMapServiceAvailableStyleTraits
-} from "../Traits/WebMapServiceCatalogItemTraits";
+} from "../Traits/TraitsClasses/WebMapServiceCatalogItemTraits";
 import { callWebCoverageService } from "./callWebCoverageService";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";

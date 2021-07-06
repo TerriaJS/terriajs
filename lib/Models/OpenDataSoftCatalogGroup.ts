@@ -8,11 +8,11 @@ import runLater from "../Core/runLater";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import { MetadataUrlTraits } from "../Traits/CatalogMemberTraits";
+import { MetadataUrlTraits } from "../Traits/TraitsClasses/CatalogMemberTraits";
 import ModelReference from "../Traits/ModelReference";
 import OpenDataSoftCatalogGroupTraits, {
   RefineTraits
-} from "../Traits/OpenDataSoftCatalogGroupTraits";
+} from "../Traits/TraitsClasses/OpenDataSoftCatalogGroupTraits";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";

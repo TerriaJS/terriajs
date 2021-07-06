@@ -11,12 +11,12 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
 import MappableMixin, { MapItem } from "../ModelMixins/MappableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
-import LegendTraits from "../Traits/LegendTraits";
-import { RectangleTraits } from "../Traits/MappableTraits";
+import { InfoSectionTraits } from "../Traits/TraitsClasses/CatalogMemberTraits";
+import LegendTraits from "../Traits/TraitsClasses/LegendTraits";
+import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import WebMapTileServiceCatalogItemTraits, {
   WebMapTileServiceAvailableLayerStylesTraits
-} from "../Traits/WebMapTileServiceCatalogItemTraits";
+} from "../Traits/TraitsClasses/WebMapTileServiceCatalogItemTraits";
 import isReadOnlyArray from "./../Core/isReadOnlyArray";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";

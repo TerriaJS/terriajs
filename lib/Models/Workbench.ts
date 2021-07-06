@@ -9,7 +9,7 @@ import MappableMixin from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
 import CommonStrata from "../Models/CommonStrata";
-import LayerOrderingTraits from "../Traits/LayerOrderingTraits";
+import LayerOrderingTraits from "../Traits/TraitsClasses/LayerOrderingTraits";
 import hasTraits from "./hasTraits";
 import { BaseModel } from "./Model";
 

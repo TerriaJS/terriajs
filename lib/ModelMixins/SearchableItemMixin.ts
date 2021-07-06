@@ -5,8 +5,8 @@ import ItemSearchProvider, {
 } from "../Models/ItemSearchProvider";
 import { ItemSearchProviders } from "../Models/ItemSearchProviders";
 import Model from "../Models/Model";
-import MappableTraits from "../Traits/MappableTraits";
-import SearchableItemTraits from "../Traits/SearchableItemTraits";
+import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
+import SearchableItemTraits from "../Traits/TraitsClasses/SearchableItemTraits";
 
 type MixinModel = Model<SearchableItemTraits & MappableTraits>;
 

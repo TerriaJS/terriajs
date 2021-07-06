@@ -7,7 +7,7 @@ import CkanItemReference, {
   CkanDatasetStratum
 } from "../../lib/Models/CkanItemReference";
 import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-import InfoSectionTraits from "../../lib/Traits/CatalogMemberTraits";
+import InfoSectionTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
 
 configure({
   enforceActions: "observed",

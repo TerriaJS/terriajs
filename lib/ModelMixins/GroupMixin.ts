@@ -9,7 +9,7 @@ import Result from "../Core/Result";
 import TerriaError from "../Core/TerriaError";
 import Group from "../Models/Group";
 import Model, { BaseModel } from "../Models/Model";
-import GroupTraits from "../Traits/GroupTraits";
+import GroupTraits from "../Traits/TraitsClasses/GroupTraits";
 import ModelReference from "../Traits/ModelReference";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 

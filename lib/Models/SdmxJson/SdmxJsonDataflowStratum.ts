@@ -3,25 +3,25 @@ import { computed } from "mobx";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
 import TerriaError from "../../Core/TerriaError";
-import { ShortReportTraits } from "../../Traits/CatalogMemberTraits";
-import { FeatureInfoTemplateTraits } from "../../Traits/FeatureInfoTraits";
-import LegendTraits from "../../Traits/LegendTraits";
+import { ShortReportTraits } from "../../Traits/TraitsClasses/CatalogMemberTraits";
+import { FeatureInfoTemplateTraits } from "../../Traits/TraitsClasses/FeatureInfoTraits";
+import LegendTraits from "../../Traits/TraitsClasses/LegendTraits";
 import SdmxCatalogItemTraits, {
   SdmxDimensionTraits
-} from "../../Traits/SdmxCatalogItemTraits";
+} from "../../Traits/TraitsClasses/SdmxCatalogItemTraits";
 import {
   ModelOverrideTraits,
   ModelOverrideType
-} from "../../Traits/SdmxCommonTraits";
+} from "../../Traits/TraitsClasses/SdmxCommonTraits";
 import TableChartStyleTraits, {
   TableChartLineStyleTraits
-} from "../../Traits/TableChartStyleTraits";
-import TableColorStyleTraits from "../../Traits/TableColorStyleTraits";
+} from "../../Traits/TraitsClasses/TableChartStyleTraits";
+import TableColorStyleTraits from "../../Traits/TraitsClasses/TableColorStyleTraits";
 import TableColumnTraits, {
   ColumnTransformationTraits
-} from "../../Traits/TableColumnTraits";
-import TableStyleTraits from "../../Traits/TableStyleTraits";
-import TableTimeStyleTraits from "../../Traits/TableTimeStyleTraits";
+} from "../../Traits/TraitsClasses/TableColumnTraits";
+import TableStyleTraits from "../../Traits/TraitsClasses/TableStyleTraits";
+import TableTimeStyleTraits from "../../Traits/TraitsClasses/TableTimeStyleTraits";
 import createCombinedModel from "../createCombinedModel";
 import createStratumInstance from "../createStratumInstance";
 import LoadableStratum from "../LoadableStratum";

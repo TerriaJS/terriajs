@@ -1,6 +1,6 @@
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
-import SplitItemReferenceTraits from "../Traits/SplitItemReferenceTraits";
+import SplitItemReferenceTraits from "../Traits/TraitsClasses/SplitItemReferenceTraits";
 import CreateModel from "./CreateModel";
 import { BaseModel } from "./Model";
 
