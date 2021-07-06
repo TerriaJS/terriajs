@@ -13,6 +13,8 @@ Change Log
 * Add `nullColor` to `ConstantColorMap` - used when `colorColumn` is of type `region` to hide regions where rows don't exist.
 * `TableStyles` will only be created for `text` columns if there are no columns of type `scalar`, `enum` or `region`.
 * Fix sharing user added data of type "Auto-detect".
+* #5605 tidy up format string used in `MagdaReference`
+* Fix wms feature info returning only one feature
 * Limit `SelectableDimension` options to 1000 values
 * [The next improvement]
 
