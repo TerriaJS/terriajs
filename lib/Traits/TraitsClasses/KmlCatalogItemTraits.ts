@@ -4,7 +4,6 @@ import MappableTraits from "./MappableTraits";
 import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";
-import anyTrait from "../Decorators/anyTrait";
 
 export default class KmlCatalogItemTraits extends mixTraits(
   FeatureInfoTraits,

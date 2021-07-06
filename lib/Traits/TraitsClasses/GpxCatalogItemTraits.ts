@@ -3,8 +3,6 @@ import FeatureInfoTraits from "./FeatureInfoTraits";
 import UrlTraits from "./UrlTraits";
 import MappableTraits from "./MappableTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import anyTrait from "../Decorators/anyTrait";
-import { JsonObject } from "../../Core/Json";
 import primitiveTrait from "../Decorators/primitiveTrait";
 
 export default class GpxCatalogItemTraits extends mixTraits(

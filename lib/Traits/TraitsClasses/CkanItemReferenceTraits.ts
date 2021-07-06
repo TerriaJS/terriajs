@@ -1,13 +1,7 @@
-import { JsonObject } from "../../Core/Json";
-import anyTrait from "../Decorators/anyTrait";
 import CkanSharedTraits from "./CkanSharedTraits";
 import CatalogMemberReferenceTraits from "./CatalogMemberReferenceTraits";
-import CkanCatalogGroupTraits from "./CkanCatalogGroupTraits";
-import CkanResourceFormatTraits from "./CkanResourceFormatTraits";
 import mixTraits from "../mixTraits";
-import CatalogMemberTraits from "./CatalogMemberTraits";
 import MappableTraits from "./MappableTraits";
-import objectArrayTrait from "../Decorators/objectArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import UrlTraits from "./UrlTraits";
 

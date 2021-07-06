@@ -1,14 +1,12 @@
 import JsonValue, { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
 import FeatureInfoTraits from "./FeatureInfoTraits";
-import MappableTraits from "./MappableTraits";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import CatalogFunctionJobTraits from "./CatalogFunctionJobTraits";
 import WebProcessingServiceCatalogFunctionTraits from "./WebProcessingServiceCatalogFunctionTraits";
-import { Feature } from "geojson";
 
 export class WPSParameterTraits extends ModelTraits {
   @primitiveTrait({

@@ -1,5 +1,5 @@
 import ModelTraits from "../ModelTraits";
-import { DimensionOption, Dimension } from "../../Models/SelectableDimensions";
+import { Dimension, DimensionOption } from "../../Models/SelectableDimensions";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import anyTrait from "../Decorators/anyTrait";
 import objectArrayTrait from "../Decorators/objectArrayTrait";

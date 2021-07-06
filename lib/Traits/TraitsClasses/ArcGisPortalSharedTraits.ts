@@ -1,4 +1,3 @@
-import primitiveTrait from "../Decorators/primitiveTrait";
 import anyTrait from "../Decorators/anyTrait";
 import JsonObject from "../../Core/Json";
 import objectArrayTrait from "../Decorators/objectArrayTrait";

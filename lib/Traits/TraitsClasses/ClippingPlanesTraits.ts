@@ -1,10 +1,8 @@
 import ModelTraits from "../ModelTraits";
-import anyTrait from "../Decorators/anyTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import objectTrait from "../Decorators/objectTrait";
-import { JsonObject } from "../../Core/Json";
 
 export class ClippingPlaneDefinitionTraits extends ModelTraits {
   @primitiveTrait({

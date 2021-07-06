@@ -1,6 +1,5 @@
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import mixTraits from "../mixTraits";
-import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import TableTraits from "./TableTraits";
 import UrlTraits from "./UrlTraits";

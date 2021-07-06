@@ -6,7 +6,6 @@ import primitiveTrait from "../Decorators/primitiveTrait";
 import TableTraits from "./TableTraits";
 import UrlTraits from "./UrlTraits";
 import AutoRefreshingTraits from "./AutoRefreshingTraits";
-import ExportableTraits from "./ExportableTraits";
 
 class PollingTraits extends ModelTraits {
   @primitiveTrait({

@@ -1,4 +1,4 @@
-import ApiRequestTraits, { QueryParamTraits } from "./ApiRequestTraits";
+import ApiRequestTraits from "./ApiRequestTraits";
 import AutoRefreshingTraits from "./AutoRefreshingTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import mixTraits from "../mixTraits";
