@@ -1,7 +1,9 @@
-import { DomElement } from "domhandler";
 import React, { ReactElement } from "react";
 import { TooltipWithButtonLauncher } from "../Generic/TooltipWrapper";
-import CustomComponent, { ProcessNodeContext } from "./CustomComponent";
+import CustomComponent, {
+  DomElement,
+  ProcessNodeContext
+} from "./CustomComponent";
 
 /**
  * A `<terriatooltip>` custom component, taking a title and content

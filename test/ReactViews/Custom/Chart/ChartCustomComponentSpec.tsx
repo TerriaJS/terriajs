@@ -1,4 +1,3 @@
-import { DomElement } from "domhandler";
 import { ReactChild } from "react";
 import ChartableMixin from "../../../../lib/ModelMixins/ChartableMixin";
 import CreateModel from "../../../../lib/Models/CreateModel";
@@ -11,7 +10,10 @@ import Chart from "../../../../lib/ReactViews/Custom/Chart/FeatureInfoPanelChart
 import ChartCustomComponent, {
   ChartCustomComponentAttributes
 } from "../../../../lib/ReactViews/Custom/ChartCustomComponent";
-import { ProcessNodeContext } from "../../../../lib/ReactViews/Custom/CustomComponent";
+import {
+  DomElement,
+  ProcessNodeContext
+} from "../../../../lib/ReactViews/Custom/CustomComponent";
 import UrlTraits from "../../../../lib/Traits/UrlTraits";
 import mixTraits from "../../../../lib/Traits/mixTraits";
 import MappableTraits from "../../../../lib/Traits/MappableTraits";

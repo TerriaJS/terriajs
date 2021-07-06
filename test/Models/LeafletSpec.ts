@@ -1,9 +1,12 @@
 import L from "leaflet";
 import { computed } from "mobx";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import CommonStrata from "../../lib/Models/CommonStrata";
+import createStratumInstance from "../../lib/Models/createStratumInstance";
 import Leaflet from "../../lib/Models/Leaflet";
 import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import { RectangleTraits } from "../../lib/Traits/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 
 describe("Leaflet Model", function() {
@@ -131,13 +134,20 @@ describe("Leaflet Model", function() {
 
   describe("zoomTo", function() {
     describe("if the target is a TimeVarying item", function() {
-      it("sets the target item as the timeline source", function() {
+      it("sets the target item as the timeline source", async function() {
         const targetItem = new WebMapServiceCatalogItem("test", terria);
-        spyOnProperty(targetItem, "mapItems", "get").and.returnValue([
-          new CustomDataSource("test")
-        ]);
+        targetItem.setTrait(
+          CommonStrata.user,
+          "rectangle",
+          createStratumInstance(RectangleTraits, {
+            east: 0,
+            west: 0,
+            north: 0,
+            south: 0
+          })
+        );
         spyOn(terria.timelineStack, "promoteToTop");
-        leaflet.zoomTo(targetItem, 0);
+        await leaflet.zoomTo(targetItem, 0);
         expect(terria.timelineStack.promoteToTop).toHaveBeenCalledWith(
           targetItem
         );

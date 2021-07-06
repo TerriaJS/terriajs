@@ -1158,10 +1158,7 @@ class WebMapServiceCatalogItem
         "width",
         "height",
         "bbox",
-        "layers",
-        // This is here as a temporary fix until Cesium implements this fix
-        // https://github.com/CesiumGS/cesium/issues/9021
-        "version"
+        "layers"
       ];
 
       const baseUrl = queryParametersToRemove.reduce(
@@ -1187,6 +1184,10 @@ class WebMapServiceCatalogItem
         parameters: parameters,
         getFeatureInfoParameters: {
           ...dimensionParameters,
+          feature_count:
+            1 +
+            (this.maximumShownFeatureInfos ??
+              this.terria.configParameters.defaultMaximumShownFeatureInfos),
           styles: this.styles === undefined ? "" : this.styles
         },
         tileWidth: this.tileWidth,
@@ -1378,10 +1379,11 @@ class WebMapServiceCatalogItem
   @computed
   get selectableDimensions() {
     if (this.disableDimensionSelectors) {
-      return [];
+      return super.selectableDimensions;
     }
 
     return filterOutUndefined([
+      ...super.selectableDimensions,
       ...this.wmsDimensionSelectableDimensions,
       ...this.styleSelectableDimensions
     ]);

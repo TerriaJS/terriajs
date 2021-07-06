@@ -22,7 +22,8 @@ export default class TableTraits extends mixTraits(
   CatalogMemberTraits,
   MappableTraits,
   RasterLayerTraits,
-  ChartPointOnMapTraits
+  ChartPointOnMapTraits,
+  CatalogMemberTraits
 ) {
   @primitiveTrait({
     name: "Show Warning for Unmatched Regions",

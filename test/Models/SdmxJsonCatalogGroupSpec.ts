@@ -3,6 +3,7 @@ import Terria from "../../lib/Models/Terria";
 import SdmxCatalogGroup from "../../lib/Models/SdmxJson/SdmxJsonCatalogGroup";
 import CatalogGroup from "../../lib/Models/CatalogGroupNew";
 import SdmxJsonCatalogItem from "../../lib/Models/SdmxJson/SdmxJsonCatalogItem";
+import TableColumnType from "../../lib/Table/TableColumnType";
 
 const agencyScheme = JSON.stringify(
   require("../../wwwroot/test/SDMX-JSON/agency-scheme.json")
@@ -90,11 +91,16 @@ describe("SdmxCatalogGroup", function() {
       expect(dataflowNoRegion.description).toBe(
         "Nominal prices in USD for selected key international commodity prices relevant to Pacific Island Countries and Territories, extracted from World bank Commodity Prices (« pink sheets ») and from FAO GLOBEFISH European Fish Price Report."
       );
-      expect(dataflowNoRegion.regionMappedDimensionIds.length).toBe(0);
-      expect(dataflowNoRegion.timeDimensionIds.length).toBe(1);
-      expect(dataflowNoRegion.timeDimensionIds[0]).toBe("TIME_PERIOD");
-      expect(dataflowNoRegion.primaryMeasureDimensionId).toBe("OBS_VALUE");
-      expect(dataflowNoRegion.viewBy).toBe("time");
+      expect(
+        dataflowNoRegion.columns.filter(col => col.type === "region").length
+      ).toBe(0);
+      expect(
+        dataflowNoRegion.columns.filter(col => col.type === "time").length
+      ).toBe(1);
+      expect(
+        dataflowNoRegion.columns.filter(col => col.type === "time")[0]?.name
+      ).toBe("TIME_PERIOD");
+      expect(dataflowNoRegion.activeStyle).toBe("OBS_VALUE");
 
       expect(dataflowNoRegion.dimensions.length).toBe(3);
       expect(dataflowNoRegion.dimensions[0].name).toBe("Frequency");
@@ -102,7 +108,7 @@ describe("SdmxCatalogGroup", function() {
       expect(dataflowNoRegion.dimensions[1].options.length).toBe(28);
       expect(dataflowNoRegion.dimensions[2].name).toBe("Indicator");
 
-      expect(dataflowNoRegion.columns.length).toBe(4);
+      expect(dataflowNoRegion.columns.length).toBe(8);
       expect(dataflowNoRegion.columns[0].name).toBe("OBS_VALUE");
     });
 
@@ -119,12 +125,16 @@ describe("SdmxCatalogGroup", function() {
         "Inflation rates for the Pacific island countries and territories per year."
       );
       // No concept override - so expect 0 region dimensions
-      expect(dataflowRegion.regionMappedDimensionIds.length).toBe(0);
-
-      expect(dataflowRegion.timeDimensionIds.length).toBe(1);
-      expect(dataflowRegion.timeDimensionIds[0]).toBe("TIME_PERIOD");
-      expect(dataflowRegion.primaryMeasureDimensionId).toBe("OBS_VALUE");
-      expect(dataflowRegion.viewBy).toBe("time");
+      expect(
+        dataflowRegion.columns.filter(col => col.type === "region").length
+      ).toBe(0);
+      expect(
+        dataflowRegion.columns.filter(col => col.type === "time").length
+      ).toBe(1);
+      expect(
+        dataflowRegion.columns.filter(col => col.type === "time")[0]?.name
+      ).toBe("TIME_PERIOD");
+      expect(dataflowRegion.activeStyle).toBe("OBS_VALUE");
 
       expect(dataflowRegion.dimensions.length).toBe(4);
       expect(dataflowRegion.dimensions[0].name).toBe("Frequency");
@@ -134,7 +144,7 @@ describe("SdmxCatalogGroup", function() {
       expect(dataflowRegion.dimensions[2].name).toBe("Indicator");
       expect(dataflowRegion.dimensions[3].name).toBe("Commodity");
 
-      expect(dataflowRegion.columns.length).toBe(5);
+      expect(dataflowRegion.columns.length).toBe(11);
       expect(dataflowRegion.columns[0].name).toBe("OBS_VALUE");
     });
   });
