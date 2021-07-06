@@ -129,11 +129,11 @@ export interface SearchResultsType {
   elementSet?: "brief" | "summary" | "full";
   expires?: Date;
   /** position of next record in the result set (0 if no records remain) */
-  nextRecord?: number;
+  nextRecord?: string | number;
   /** number of records matched by the query */
-  numberOfRecordsMatched: number;
+  numberOfRecordsMatched: string | number;
   /** number of records returned to client */
-  numberOfRecordsReturned: number;
+  numberOfRecordsReturned: string | number;
   recordSchema?: string;
   resultSetId?: string;
   Record?: Records;
@@ -325,7 +325,10 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
       records.push(...(json?.SearchResults?.Record ?? []));
 
       // Get next start position - or stop pageing
-      const nextRecord = json?.SearchResults?.nextRecord;
+      const nextRecord =
+        typeof json?.SearchResults?.nextRecord === "string"
+          ? parseInt(json?.SearchResults?.nextRecord ?? "0")
+          : json?.SearchResults?.nextRecord;
       if (
         !isDefined(nextRecord) ||
         nextRecord === 0 ||
