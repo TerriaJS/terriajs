@@ -49,12 +49,8 @@ import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
 import { defaultTerms, Term } from "../ReactViewModels/defaultTerms";
-import MapNavigationModel, {
-  IMapNavigationItem
-} from "../ViewModels/MapNavigation/MapNavigationModel";
-import NotificationState, {
-  Notification
-} from "../ReactViewModels/NotificationState";
+import MapNavigationModel from "../ViewModels/MapNavigation/MapNavigationModel";
+import NotificationState from "../ReactViewModels/NotificationState";
 import { shareConvertNotification } from "../ReactViews/Notification/shareConvertNotification";
 import MappableTraits from "../Traits/MappableTraits";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
@@ -1231,8 +1227,11 @@ export default class Terria {
       if (this.mapNavigationModel.items.length > 0) {
         this.elements.forEach((element, key) => {
           if (isDefined(element.visible)) {
-            const item = this.mapNavigationModel.findItem(key);
-            if (item) item.controller.visible = element.visible;
+            if (element.visible) {
+              this.mapNavigationModel.show(key);
+            } else {
+              this.mapNavigationModel.hide(key);
+            }
           }
         });
       }
