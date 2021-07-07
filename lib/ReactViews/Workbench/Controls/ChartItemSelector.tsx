@@ -57,6 +57,7 @@ export const ChartItem: React.FC<IChartItem> = ({ chartItem }: IChartItem) => {
 const ChartItemSelector: React.FC<IChartItemSelector> = observer(
   ({ item }: IChartItemSelector) => {
     const theme = useTheme();
+    console.log(theme);
     const chartView = new ChartView(item.terria);
     // We don't need to show selectors for moment datasets. They are part of
     // discretelytimevarying items and have a separate chart button to enable/disable.
@@ -72,7 +73,7 @@ const ChartItemSelector: React.FC<IChartItemSelector> = observer(
         spaced
         padded
         rounded
-        backgroundColor={theme.overlay}
+        backgroundColor={theme?.overlay}
         css={`
           margin: 10px 0;
         `}
