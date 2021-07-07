@@ -1106,7 +1106,7 @@
       "serviceErrorMessage": "This service does not have any details available.",
       "distributionDesc": "Distribution Description",
       "idsNotSpecifiedTitle": "recordId must be specified",
-      "idsNotSpecifiedMessage": "MagdaCatalogItem requires that recordId be specified.",
+      "idsNotSpecifiedMessage": "MagdaReference requires that recordId be specified.",
       "retrieveErrorTitle": "Error retrieving MAGDA record",
       "retrieveErrorMessage": "No distribution or dataset ID provided",
       "notCompatibleTitle": "No compatible distributions found",
