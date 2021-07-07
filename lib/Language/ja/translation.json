@@ -62,7 +62,7 @@
   },
   "compass": {
     "title": "クリック＋ドラッグでカメラを回転",
-    "description": "外側の輪：ビューを回転\n内側のジャイロスコープ：軌道の変更\nダブルクリック：ホームポジション\nヒント：軌道の変更はCtrlキーを押しながらマップをドラッグでも可能"
+    "description": "外側の輪：ビューを回転.\n内側のジャイロスコープ：軌道の変更.\nダブルクリック：ホームポジション.\nヒント：軌道の変更はCtrlキーを押しながらマップをドラッグでも可能."
   },
   "splitterTool": {
     "workbench": {
@@ -206,7 +206,7 @@
     "storyEditor": "ストーリーエディタ",
     "mobileViewStory": "ストーリーを見る {{storiesLength}}",
     "dismissText": "了解しました。ありがとうございます!",
-    "story": "Story",
+    "story": "ストーリー",
     "promptHtml2": "<0><0>はじめに</0><1>データストーリー</1><2>地図からインタラクティブなストーリーを作成して共有できます。</2></0>",
     "promptHtml1": "<0>ここをクリックしていつでもストーリを見たり作成することができます。</0>",
     "navBtnMobile": "ストーリー {{title}} に進む",
@@ -234,7 +234,7 @@
     "delete": "削除",
     "deleteStory": "削除",
     "recapture": "再キャプチャ",
-    "recaptureStory": "再キャプチャ",
+    "recaptureStory": "リキャプチャ",
     "edit": "編集",
     "editStory": "編集",
     "view": "見る",
@@ -253,7 +253,7 @@
     "locationMarker": "位置マーカー",
     "satelliteSuggestionBtn": "この地点の{{catalogItemName}}を表示する",
     "userSelection": "選択地点",
-    "clickToAddData": "データをマップに追加するには '$t(addData.addDataBtnText)' をクリックします。",
+    "clickToAddData": "データをマップに追加するには 「$t(addData.addDataBtnText)」 をクリックします。",
     "clickMap": "マップをクリックするとその地点の詳細が表示されます",
     "pickLocation": "地点を選択",
     "download": "この表をダウンロード",
@@ -344,7 +344,7 @@
   "addData": {
     "note": "<0>注意：</0>この方法で追加されたデータは保存されず、他の人に見せることもできません。",
     "back": "戻る",
-    "infoText": "<0>ファイルをここにドラッグ・アンド・ドロップすると、ローカルのマップ上で見ることができます</0><1>（データが保存またはインターネットにアップロードされることはありません）</1>",
+    "infoText": "<0>ファイルをここにドラッグ・アンド・ドロップすると、ローカル環境で自分のデータを見ることができます</0><1>（データが保存またはインターネットにアップロードされることはありません）</1>",
     "dragDrop": "ドラッグ・アンド・ドロップ",
     "webTitle": "ウェブからデータを追加する",
     "localTitle": "ローカルのデータを追加する",
@@ -504,7 +504,7 @@
       "mustHaveType": "各アイテムにはタイプを指定する必要があります。",
       "useConversion": "変換サービスを使用しますか？",
       "cancel": "キャンセル",
-      "upload": "アップロード",
+      "upload": "自データ",
       "readyToUpload": "{{appName}}の変換サービスにアップロードする準備はできていますか？",
       "unsupportedFileTypeMessageII": "このファイルフォーマットは{{appName}}ではサポートされていません。直接サポートされているフォーマットは <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>  です。オンライン変換サービスを通してサポートされているファイルフォーマットは <ul><li>Shapefile (.zip)</li><li>MapInfo TAB (.zip)</li><li>その他の {{linkII}}</li></ul> などです。"
     },
@@ -584,7 +584,7 @@
       "notUseableTitle": "カタログサービスが利用できません",
       "exceptionMessage": "CSWサーバーがエラーを報告しています:\n\n {{exceptionText}}",
       "unknownError": "CSWサーバーが原因の特定できないエラーを報告しています。",
-      "checkCORSDomain": "<br/>",
+      "checkCORSDomain": "CSW サーバ上でGetDomainを実行できませんでした。<br/><br/> URLを手入力している場合は、もう一度URLをチェックしてください。<br/><br/> もしご自分のサーバーをお使いでしたら、 <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a> が有効になっていることを確認して下さい。<br/><br/> その上でリロードしても問題が解決しない場合は、以下のメールに問題を報告して下さい。 {{email}} その際、以下の詳細なテクニカル情報も送付してください。  よろしくお願いします!",
       "checkCORS": "CSW サーバー上で GetRecords を実行できません。<br/><br/> URLを手で入力した場合、URLをもう一度確認してみてください。<br/><br/> もしご自身のサーバーをお使いなら、 {{cors}} が有効になっているか確認してください。<br/><br/> 再読み込みしても問題が解決しない場合は、問題を {{email}} に報告して下さい",
       "checkCORSRecords": "この CWS サーバーでGetRecords を実行できません。<br/><br/> ご自身のサーバーである場合、 <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a> が有効になっていることを確認してください。<br/><br/> 再読み込みでも問題が解決しない場合は、この問題を {{email}} に問題の詳細を記載したうえで報告して下さい。ご協力お願いいたします!",
       "notUseableMessage": "CSWサーバーでGetDomainを呼び出した際に無効な反応が戻ってきました。<p>型ログサーバーが一時的に利用できないか、インターネット接続に問題がある可能性があります。プロセシングサーバーをもう一度開き、それでも問題が解決しない場合、問題を報告して下さい。</p> "
