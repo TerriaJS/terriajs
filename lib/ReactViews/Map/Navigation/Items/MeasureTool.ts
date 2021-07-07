@@ -1,6 +1,6 @@
 "use strict";
 import i18next from "i18next";
-import {action, observable} from "mobx";
+import { action, observable } from "mobx";
 import React from "react";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -12,7 +12,7 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
 import Terria from "../../../../Models/Terria";
 import UserDrawing from "../../../../Models/UserDrawing";
 import ViewerMode from "../../../../Models/ViewerMode";
-import {GLYPHS} from "../../../../Styled/Icon";
+import { GLYPHS } from "../../../../Styled/Icon";
 import MapNavigationItemController from "../../../../ViewModels/MapNavigation/MapNavigationItemController";
 
 const EllipsoidTangentPlane = require("terriajs-cesium/Source/Core/EllipsoidTangentPlane");
