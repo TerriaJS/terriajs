@@ -19,6 +19,7 @@ export class MapNavigationItem extends React.Component<PropTypes> {
   constructor(props: PropTypes) {
     super(props);
   }
+
   render() {
     const { closeTool = true, item } = this.props;
     if (item.render)

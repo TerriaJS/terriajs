@@ -56,9 +56,11 @@ const StyledMapNavigation = styled.div<StyledMapNavigationProps>`
     }
   }
   pointer-events: none;
+
   button {
     pointer-events: auto;
   }
+
   ${p =>
     p.trainerBarVisible &&
     `
@@ -91,12 +93,13 @@ enum Orientation {
 class MapNavigation extends React.Component<PropTypes> {
   static displayName = "MapNavigation";
   private navigationRef = React.createRef<HTMLDivElement>();
-  private resizeListener: () => any;
-  private viewState: ViewState;
+  private readonly resizeListener: () => any;
+  private readonly viewState: ViewState;
   private itemSizeInBar: Map<string, number>;
   @observable private model: MapNavigationModel;
   @observable private overflows: boolean;
   private viewerModeReactionDisposer: IReactionDisposer | undefined;
+
   constructor(props: PropTypes) {
     super(props);
     registerMapNavigations(props.viewState);

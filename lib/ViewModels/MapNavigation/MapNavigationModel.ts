@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import {
   ICompositeBarItem,
   CompositeBarModel
@@ -11,7 +12,7 @@ export interface IMapNavigationItem
   extends ICompositeBarItem<MapNavigationItemController> {
   location: NavigationItemLocation;
   noExpand?: boolean;
-  render?: React.ReactNode;
+  render?: ReactNode;
 }
 
 export default class MapNavigationModel extends CompositeBarModel<

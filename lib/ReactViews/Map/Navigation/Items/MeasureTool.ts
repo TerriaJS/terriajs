@@ -1,6 +1,6 @@
 "use strict";
 import i18next from "i18next";
-import { action, observable } from "mobx";
+import {action, observable} from "mobx";
 import React from "react";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -12,7 +12,7 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
 import Terria from "../../../../Models/Terria";
 import UserDrawing from "../../../../Models/UserDrawing";
 import ViewerMode from "../../../../Models/ViewerMode";
-import { GLYPHS } from "../../../../Styled/Icon";
+import {GLYPHS} from "../../../../Styled/Icon";
 import MapNavigationItemController from "../../../../ViewModels/MapNavigation/MapNavigationItemController";
 
 const EllipsoidTangentPlane = require("terriajs-cesium/Source/Core/EllipsoidTangentPlane");
@@ -25,18 +25,17 @@ interface PropTypes {
 
 export default class MeasureTool extends MapNavigationItemController {
   static id = "measure-tool";
+  static displayName = "MeasureTool";
   readonly terria: Terria;
   @observable
   totalDistanceMetres: number = 0;
-
   @observable
   totalAreaMetresSquared: number = 0;
-
   @observable
   userDrawing: UserDrawing;
-
-  static displayName = "MeasureTool";
   onClose: () => void;
+  itemRef: React.RefObject<HTMLDivElement> = React.createRef();
+
   constructor(props: PropTypes) {
     super();
     const t = i18next.t.bind(i18next);
@@ -53,10 +52,10 @@ export default class MeasureTool extends MapNavigationItemController {
     this.onClose = props.onClose;
   }
 
-  itemRef: React.RefObject<HTMLDivElement> = React.createRef();
   get glyph(): any {
     return GLYPHS.measure;
   }
+
   get viewerMode(): ViewerMode | undefined {
     return undefined;
   }
@@ -241,11 +240,6 @@ export default class MeasureTool extends MapNavigationItemController {
     }
     return message;
   };
-
-  /* @computed
-  get active() {
-    return this.userDrawing.isDrawing;
-  } */
 
   @action.bound
   handleClick() {

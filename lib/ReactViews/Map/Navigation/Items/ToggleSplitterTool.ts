@@ -4,10 +4,9 @@ import ViewState from "../../../../ReactViewModels/ViewState";
 import Icon from "../../../../Styled/Icon";
 import MapNavigationItemController from "../../../../ViewModels/MapNavigation/MapNavigationItemController";
 
-export const SPLITTER_ICON_NAME = "MapNavigationSplitterIcon";
-
 export class ToggleSplitterController extends MapNavigationItemController {
   static id = "split-tool";
+
   constructor(private viewState: ViewState) {
     super();
   }
@@ -18,8 +17,26 @@ export class ToggleSplitterController extends MapNavigationItemController {
     }
     return Icon.GLYPHS.compare;
   }
+
   get viewerMode(): ViewerMode | undefined {
     return undefined;
+  }
+
+  @computed
+  get visible() {
+    return super.visible || this.viewState.terria.currentViewer.canShowSplitter;
+  }
+
+  @computed
+  get disabled() {
+    const toolIsDifference =
+      this.viewState.currentTool?.toolName === "Difference";
+    return this.viewState.isToolOpen && toolIsDifference;
+  }
+
+  @computed
+  get active(): boolean {
+    return super.active;
   }
 
   @action
@@ -44,23 +61,5 @@ export class ToggleSplitterController extends MapNavigationItemController {
     const terria = this.viewState.terria;
     terria.showSplitter = false;
     this._active = false;
-  }
-
-  @computed
-  get visible() {
-    return super.visible || this.viewState.terria.currentViewer.canShowSplitter;
-  }
-
-  @computed
-  get disabled() {
-    const toolIsDifference =
-      this.viewState.currentTool?.toolName === "Difference";
-    const isDiffMode = this.viewState.isToolOpen && toolIsDifference;
-    return isDiffMode;
-  }
-
-  @computed
-  get active(): boolean {
-    return super.active;
   }
 }

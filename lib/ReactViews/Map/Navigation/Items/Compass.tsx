@@ -54,6 +54,7 @@ interface StyledCompassProps {
   active: boolean;
   theme: DefaultTheme;
 }
+
 const StyledCompass = styled.div<StyledCompassProps>`
   display: none;
   position: relative;
@@ -100,6 +101,7 @@ interface StyledCompassOuterRingProps {
   active: boolean;
   theme: DefaultTheme;
 }
+
 const StyledCompassOuterRing = styled.div<StyledCompassOuterRingProps>`
   ${props => props.theme.centerWithoutFlex()}
   // override the transform provided in centerWithoutFlex()
@@ -116,7 +118,7 @@ const StyledCompassOuterRing = styled.div<StyledCompassOuterRingProps>`
 
 const StyledCompassInnerRing = styled.div`
   ${props => props.theme.verticalAlign()}
-  
+
   width: ${props =>
     Number(props.theme.compassWidth) - Number(props.theme.ringWidth) - 10}px;
   height: ${props =>
@@ -237,9 +239,9 @@ class Compass extends React.Component<PropTypes> {
     const distanceFraction = distanceFromCenter / maxDistance;
 
     const nominalTotalRadius = 145;
-    const norminalGyroRadius = 50;
+    const nominalGyroRadius = 50;
 
-    if (distanceFraction < norminalGyroRadius / nominalTotalRadius) {
+    if (distanceFraction < nominalGyroRadius / nominalTotalRadius) {
       orbit(this, compassElement, vector);
     } else if (distanceFraction < 1.0) {
       rotate(this, compassElement, vector);

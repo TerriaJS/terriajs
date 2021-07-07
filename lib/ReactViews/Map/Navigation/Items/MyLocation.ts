@@ -20,10 +20,12 @@ interface PropTypes {
 class MyLocation extends MapNavigationItemController {
   static id = "my-location";
   static displayName = "MyLocation";
-  private _marker: GeoJsonCatalogItem;
+  readonly terria: Terria;
+  itemRef: React.RefObject<HTMLDivElement> = React.createRef();
+  private readonly _marker: GeoJsonCatalogItem;
   @observable private watchId: number | undefined;
   @observable private flown: boolean | undefined;
-  readonly terria: Terria;
+
   constructor(props: PropTypes) {
     super();
     this.terria = props.terria;
@@ -36,10 +38,10 @@ class MyLocation extends MapNavigationItemController {
     this.followMeEnabled = this.followMeEnabled.bind(this);
   }
 
-  itemRef: React.RefObject<HTMLDivElement> = React.createRef();
   get glyph(): any {
     return GLYPHS.geolocationThick;
   }
+
   get viewerMode(): ViewerMode | undefined {
     return undefined;
   }
@@ -62,13 +64,11 @@ class MyLocation extends MapNavigationItemController {
         );
       } else {
         // When Augmented Virtuality is enabled then we effectively toggle into watch mode and the position is repeatedly updated.
-        const watchId = navigator.geolocation.watchPosition(
+        this.watchId = navigator.geolocation.watchPosition(
           this.zoomToMyLocation,
           this.handleLocationError,
           options
         );
-
-        this.watchId = watchId;
       }
     } else {
       this.terria.raiseErrorToUser(
@@ -87,10 +87,10 @@ class MyLocation extends MapNavigationItemController {
     const latitude = position.coords.latitude;
 
     if (this.augmentedVirtualityEnabled()) {
-      // Note: Specifiying the value of 27500m here enables this function to approximately mimic the behaviour of
-      //       the else case from the cameras inital view and when the viewer pan/zooms out to much.
+      // Note: Specifying the value of 27500m here enables this function to approximately mimic the behaviour of
+      //       the else case from the cameras initial view and when the viewer pan/zooms out to much.
       // We use the flag variable flown so that the user is flown to the current location when this function is
-      // first fired, but subsuquently the updates are jump location moves, since we assume that the movements are
+      // first fired, but subsequently the updates are jump location moves, since we assume that the movements are
       // small and flyTo performs badly when the increments are small (slow and unresponsive).
       this.terria.augmentedVirtuality.moveTo(
         CesiumCartographic.fromDegrees(longitude, latitude),
@@ -169,11 +169,7 @@ class MyLocation extends MapNavigationItemController {
   }
 
   followMeEnabled() {
-    if (isDefined(this.watchId)) {
-      return true;
-    }
-
-    return false;
+    return !!isDefined(this.watchId);
   }
 
   @action.bound

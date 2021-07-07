@@ -26,6 +26,7 @@ export const AR_TOOL_ID = "AR_TOOL";
 
 export class AugmentedVirtualityController extends MapNavigationItemController {
   @observable experimentalWarningShown = false;
+
   constructor(private props: IProps) {
     super();
   }
@@ -95,6 +96,7 @@ export class AugmentedVirtualityRealignController extends MapNavigationItemContr
   @observable realignHelpShown = false;
   @observable resetRealignHelpShown = false;
   augmentedVirtuality: AugmentedVirtuality;
+
   constructor(private props: IProps) {
     super();
     this.augmentedVirtuality = props.augmentedVirtuality;
@@ -171,14 +173,14 @@ export const AugmentedVirtualityRealign: React.FC<{
         iconElement={() => <Icon glyph={GLYPHS.arRealign} />}
         title={t("AR.btnRealign")}
         onClick={props.arRealignController.handleClickRealign}
-      ></StyledMapIconButton>
+      />
     ) : (
       <MapIconButton
         noExpand
         iconElement={() => <Icon glyph={GLYPHS.arResetAlignment} />}
         title={t("AR.btnResetRealign")}
         onClick={props.arRealignController.handleClickResetRealign}
-      ></MapIconButton>
+      />
     );
   }
 );

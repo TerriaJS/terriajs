@@ -1,11 +1,6 @@
 import { action, computed, observable } from "mobx";
-import React from "react";
 import isDefined from "../../Core/isDefined";
-import CommonStrata from "../../Models/CommonStrata";
-import {
-  CompositeBarItemController,
-  ICompositeBarItemController
-} from "./CompositeBarItemController";
+import { ICompositeBarItemController } from "./CompositeBarItemController";
 
 export type ScreenSize = "small" | "medium";
 
@@ -54,6 +49,16 @@ export abstract class CompositeBarModel<
     return this._items;
   }
 
+  get visibleItems(): CompositeBarItem[] {
+    return this.items.filter(item => item.controller.visible);
+  }
+
+  get pinnedItems(): CompositeBarItem[] {
+    return this.items.filter(
+      item => item.controller.visible && item.controller.pinned
+    );
+  }
+
   setItems(items: CompositeBarItem[]) {
     const result: CompositeBarItem[] = [];
     if (!this.items || this.items.length === 0) {
@@ -79,20 +84,6 @@ export abstract class CompositeBarModel<
       }
       this._items = result;
     }
-  }
-
-  get visibleItems(): CompositeBarItem[] {
-    return this.items.filter(item => item.controller.visible);
-  }
-
-  get pinnedItems(): CompositeBarItem[] {
-    return this.items.filter(
-      item => item.controller.visible && item.controller.pinned
-    );
-  }
-
-  protected createCompositeBarItem(item: CompositeBarItem): CompositeBarItem {
-    return item;
   }
 
   @action.bound
@@ -207,6 +198,10 @@ export abstract class CompositeBarModel<
 
   findItem(id: string): CompositeBarItem {
     return this.items.filter(item => item.id === id)[0];
+  }
+
+  protected createCompositeBarItem(item: CompositeBarItem): CompositeBarItem {
+    return item;
   }
 
   private findIndex(id: string): number {

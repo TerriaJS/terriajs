@@ -50,6 +50,7 @@ interface IOptions {
   handleClick?: () => void;
   icon: { id: string };
 }
+
 // Basically used with custom renderer element, just to control basic properties of elements
 export class GenericMapNavigationItemController extends MapNavigationItemController {
   constructor(private options: IOptions) {
@@ -59,9 +60,11 @@ export class GenericMapNavigationItemController extends MapNavigationItemControl
   get glyph(): { id: string } {
     return this.options.icon;
   }
+
   get viewerMode(): ViewerMode | undefined {
     return this.options?.viewerMode;
   }
+
   handleClick(): void {
     if (this.options?.handleClick) {
       this.options.handleClick();

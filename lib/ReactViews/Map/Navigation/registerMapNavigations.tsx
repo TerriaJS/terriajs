@@ -6,14 +6,14 @@ import ViewState from "../../../ReactViewModels/ViewState";
 import { GLYPHS } from "../../../Styled/Icon";
 import { GenericMapNavigationItemController } from "../../../ViewModels/MapNavigation/MapNavigationItemController";
 import {
-  FeedbackButtonController,
-  FEEDBACK_TOOL_ID
+  FEEDBACK_TOOL_ID,
+  FeedbackButtonController
 } from "../../Feedback/FeedbackButtonController";
 import PedestrianMode, {
   PEDESTRIAN_MODE_ID
 } from "../../Tools/PedestrianMode/PedestrianMode";
-import { ToolButtonController } from "./../../Tools/Tool";
-import { HELP_PANEL_ID } from "./../Panels/HelpPanel/HelpPanel";
+import { ToolButtonController } from "../../Tools/Tool";
+import { HELP_PANEL_ID } from "../Panels/HelpPanel/HelpPanel";
 import {
   AR_TOOL_ID,
   AugmentedVirtualityController,
@@ -218,5 +218,3 @@ export const registerMapNavigations = (viewState: ViewState) => {
     order: 9
   });
 };
-
-export const SPLITTER_ICON_NAME = "MapNavigationSplitterIcon";

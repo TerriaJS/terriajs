@@ -18,6 +18,7 @@ import { RawButton } from "../../../../Styled/Button";
 import Icon, { GLYPHS } from "../../../../Styled/Icon";
 import Ul, { Li } from "../../../../Styled/List";
 import Terria from "./../../../../Models/Terria";
+
 const Tween = require("terriajs-cesium/Source/ThirdParty/Tween").default;
 
 interface PropTypes extends WithTranslation {
@@ -25,6 +26,7 @@ interface PropTypes extends WithTranslation {
   theme: DefaultTheme;
   t: TFunction;
 }
+
 export const ZOOM_CONTROL_ID = "zoom";
 
 class ZoomControl extends React.Component<PropTypes> {
