@@ -66,6 +66,19 @@ const NavigationButton = styled(BoxSpan).attrs({
     width: 0;
     padding-bottom: 100%;
   }
+  ${props =>
+    props.disabled &&
+    `
+    background-color: ${props.theme.grey};
+    color: ${props.theme.grey};
+    opacity: 0.7;
+    svg {
+      fill: ${props.theme.textLightDimmed};
+    }
+    &[disabled] {
+      cursor: not-allowed;
+    }
+  `}
 `;
 
 const CollapsedNavigationPanel: React.FC<PropTypes> = observer(
@@ -91,13 +104,16 @@ const CollapsedNavigationPanel: React.FC<PropTypes> = observer(
               key={item.id}
               title={useTranslationIfExists(item.name)}
               onClick={() => {
-                viewState.closeCollapsedNavigation();
-                item.controller.handleClick();
+                if (!item.controller.disabled) {
+                  viewState.closeCollapsedNavigation();
+                  item.controller.handleClick();
+                }
               }}
               css={`
                 ${item.controller.active &&
                   `border: 2px solid ${theme.colorPrimary};`}
               `}
+              disabled={item.controller.disabled}
             >
               <StyledIcon
                 glyph={item.controller.glyph}
