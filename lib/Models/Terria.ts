@@ -49,7 +49,9 @@ import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
 import { defaultTerms, Term } from "../ReactViewModels/defaultTerms";
-import MapNavigationModel from "../ViewModels/MapNavigation/MapNavigationModel";
+import MapNavigationModel, {
+  IMapNavigationItem
+} from "../ViewModels/MapNavigation/MapNavigationModel";
 import NotificationState, {
   Notification
 } from "../ReactViewModels/NotificationState";
@@ -502,7 +504,9 @@ export default class Terria {
   /**
    * Model to use for map navigation
    */
-  @observable mapNavigationModel: MapNavigationModel = new MapNavigationModel();
+  @observable mapNavigationModel: MapNavigationModel = new MapNavigationModel(
+    this
+  );
 
   /**
    * Gets or sets whether to use the device's native resolution (sets cesium.viewer.resolutionScale to a ratio of devicePixelRatio)
@@ -1223,6 +1227,15 @@ export default class Terria {
 
     if (isJsonObject(initData.elements)) {
       this.elements.merge(initData.elements);
+      // we don't want to go through all elements unless they are added.
+      if (this.mapNavigationModel.items.length > 0) {
+        this.elements.forEach((element, key) => {
+          if (isDefined(element.visible)) {
+            const item = this.mapNavigationModel.findItem(key);
+            if (item) item.controller.visible = element.visible;
+          }
+        });
+      }
     }
 
     if (Array.isArray(initData.stories)) {

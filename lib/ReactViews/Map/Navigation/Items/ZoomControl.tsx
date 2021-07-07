@@ -31,7 +31,6 @@ export const ZOOM_CONTROL_ID = "zoom";
 
 class ZoomControl extends React.Component<PropTypes> {
   static displayName = "ZoomControl";
-  static id = ZOOM_CONTROL_ID;
 
   constructor(props: PropTypes) {
     super(props);
@@ -218,8 +217,6 @@ class ZoomControl extends React.Component<PropTypes> {
     );
   }
 }
-
-ZoomControl.id = ZOOM_CONTROL_ID;
 
 const StyledZoomControl = styled(Box).attrs(props => ({
   backgroundColor: props.theme.textLight,

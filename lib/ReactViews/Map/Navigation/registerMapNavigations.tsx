@@ -39,7 +39,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     icon: GLYPHS.compassInnerArrows
   });
   compassController.pinned = true;
-  mapNavigationModel.add({
+  mapNavigationModel.addItem({
     id: COMPASS_TOOL_ID,
     name: "compass",
     controller: compassController,
@@ -54,7 +54,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     icon: GLYPHS.plusThick
   });
   zoomToolController.pinned = true;
-  mapNavigationModel.add({
+  mapNavigationModel.addItem({
     id: ZOOM_CONTROL_ID,
     name: "zoom",
     controller: zoomToolController,
@@ -65,8 +65,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
   });
 
   const myLocation = new MyLocation({ terria });
-
-  mapNavigationModel.add({
+  mapNavigationModel.addItem({
     id: MyLocation.id,
     name: "location.location",
     title: "location.centreMap",
@@ -77,8 +76,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
   });
 
   const toggleSplitterController = new ToggleSplitterController(viewState);
-
-  mapNavigationModel.add({
+  mapNavigationModel.addItem({
     id: ToggleSplitterController.id,
     name: "splitterTool.toggleSplitterToolTitle",
     title: toggleSplitterController.disabled
@@ -98,8 +96,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
       });
     }
   });
-
-  mapNavigationModel.add({
+  mapNavigationModel.addItem({
     id: MeasureTool.id,
     name: "measure.measureToolTitle",
     title: "measure.measureDistance",
@@ -115,8 +112,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     getToolComponent: () => PedestrianMode as any,
     icon: GLYPHS.pedestrian
   });
-
-  mapNavigationModel.add({
+  mapNavigationModel.addItem({
     id: PEDESTRIAN_MODE_ID,
     name: "pedestrianMode.toolButtonTitle",
     title: "pedestrianMode.toolButtonTitle",
@@ -132,7 +128,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     },
     icon: GLYPHS.closeLight
   });
-  mapNavigationModel.add({
+  mapNavigationModel.addItem({
     id: CLOSE_TOOL_ID,
     name: "close",
     location: "TOP",
@@ -149,7 +145,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     viewState: viewState,
     augmentedVirtuality: augmentedVirtuality
   });
-  mapNavigationModel.add({
+  mapNavigationModel.addItem({
     id: AR_TOOL_ID,
     name: "AR.arTool",
     location: "TOP",
@@ -162,7 +158,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
   const arControllerHover = new AugmentedVirtualityHoverController({
     augmentedVirtuality: augmentedVirtuality
   });
-  mapNavigationModel.add({
+  mapNavigationModel.addItem({
     id: `${AR_TOOL_ID}_hover`,
     name: "AR.btnHover",
     location: "TOP",
@@ -177,7 +173,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     viewState: viewState,
     augmentedVirtuality: augmentedVirtuality
   });
-  mapNavigationModel.add({
+  mapNavigationModel.addItem({
     id: `${AR_TOOL_ID}_realign`,
     name: augmentedVirtuality.manualAlignmentSet
       ? "AR.btnRealign"
@@ -193,7 +189,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
   });
 
   const feedbackController = new FeedbackButtonController(viewState);
-  mapNavigationModel.add({
+  mapNavigationModel.addItem({
     id: FEEDBACK_TOOL_ID,
     name: "feedback.feedbackBtnText",
     title: "feedback.feedbackBtnText",
@@ -207,8 +203,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     icon: GLYPHS.helpThick,
     handleClick: () => viewState.showHelpPanel()
   });
-
-  mapNavigationModel.add({
+  mapNavigationModel.addItem({
     id: HELP_PANEL_ID,
     name: "helpMenu.btnText",
     title: "helpMenu.btnTitle",

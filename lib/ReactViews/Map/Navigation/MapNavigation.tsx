@@ -142,6 +142,7 @@ class MapNavigation extends React.Component<PropTypes> {
       : Orientation.VERTICAL;
   }
 
+  @action
   private computeSizes(items: IMapNavigationItem[]): void {
     items.forEach(item => {
       if (this.orientation === Orientation.VERTICAL) {

@@ -30,11 +30,18 @@ export abstract class CompositeBarItemController
   @observable
   private _disabled: boolean = false;
 
+  /**
+   * Gets the {@link this._disabled}
+   */
   @computed
   get disabled(): boolean {
     return this._disabled;
   }
 
+  /**
+   * Sets the {@link this._disabled}
+   * @param value
+   */
   set disabled(value: boolean) {
     this._disabled = value;
   }
@@ -46,11 +53,17 @@ export abstract class CompositeBarItemController
   @observable
   private _collapsed: boolean = false;
 
+  /**
+   * Gets the {@this._collapsed}
+   */
   @computed
   get collapsed(): boolean {
     return this._collapsed;
   }
 
+  /**
+   * Sets the {@this._collapsed}
+   */
   set collapsed(value: boolean) {
     this._collapsed = value;
   }
@@ -62,6 +75,9 @@ export abstract class CompositeBarItemController
   @observable
   protected _active: boolean = false;
 
+  /**
+   * Gets the {@link this._active}
+   */
   @computed
   get active(): boolean {
     return !this.disabled && this._active;
@@ -74,11 +90,17 @@ export abstract class CompositeBarItemController
   @observable
   private _pinned: boolean = false;
 
+  /**
+   * Gets the {@link this._pinned}
+   */
   @computed
   get pinned() {
     return this._pinned;
   }
 
+  /**
+   * Sets the {@link this._pinned}
+   */
   set pinned(value: boolean) {
     this._pinned = value;
   }
@@ -90,11 +112,17 @@ export abstract class CompositeBarItemController
   @observable
   private _visible: boolean = true;
 
+  /**
+   * Gets the {@link this._visible}
+   */
   @computed
   get visible(): boolean {
     return this._visible;
   }
 
+  /**
+   * Sets the {@link this._visible}
+   */
   set visible(value: boolean) {
     this._visible = value;
   }

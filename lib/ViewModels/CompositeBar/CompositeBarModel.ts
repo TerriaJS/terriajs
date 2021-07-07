@@ -35,7 +35,10 @@ export abstract class CompositeBarModel<
   private _items: CompositeBarItem[] = [];
   private readonly options?: ICompositeBarOptions;
 
-  constructor(items?: CompositeBarItem[], options?: ICompositeBarOptions) {
+  protected constructor(
+    items?: CompositeBarItem[],
+    options?: ICompositeBarOptions
+  ) {
     if (options) {
       this.options = options;
     }
@@ -49,6 +52,7 @@ export abstract class CompositeBarModel<
     return this._items;
   }
 
+  @computed
   get visibleItems(): CompositeBarItem[] {
     return this.items.filter(item => item.controller.visible);
   }
@@ -87,12 +91,11 @@ export abstract class CompositeBarModel<
   }
 
   @action.bound
-  add(newItem: CompositeBarItem, requestedIndex?: number) {
+  protected add(newItem: CompositeBarItem, requestedIndex?: number) {
     const existingItem = this.findItem(newItem.id);
     if (existingItem) {
       existingItem.name = newItem.name;
       existingItem.controller = newItem.controller;
-      existingItem.name = newItem.name;
       existingItem.title = newItem.title;
       existingItem.screenSize = newItem.screenSize;
       existingItem.order = newItem.order;
