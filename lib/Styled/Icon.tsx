@@ -139,9 +139,6 @@ export const Icon: React.FC<IconProps> = (props: IconProps) => {
       viewBox="0 0 100 100"
       className={classNames("icon", props.className)}
       style={props.style}
-      css={`
-        display: block;
-      `}
       transform={`rotate(${props.rotation ?? 0})`}
     >
       <use xlinkHref={"#" + props.glyph.id} />
@@ -165,10 +162,10 @@ export const StyledIcon = styled(Icon)<IStyledIconProps>`
   ${props =>
     props.displayInline &&
     `
-  display: inline; 
+  display: inline;
   vertical-align: middle;
   `}
-  
+
   flex-shrink: 0;
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
   ${props => props.styledHeight && `height: ${props.styledHeight};`}
