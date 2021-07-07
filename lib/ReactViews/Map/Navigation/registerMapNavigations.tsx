@@ -121,7 +121,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     name: "pedestrianMode.toolButtonTitle",
     title: "pedestrianMode.toolButtonTitle",
     location: "TOP",
-    screenSize: undefined,
+    screenSize: "medium",
     controller: pedestrianModeToolController,
     order: 5
   });
