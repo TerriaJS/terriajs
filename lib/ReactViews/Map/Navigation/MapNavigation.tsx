@@ -26,6 +26,7 @@ import { Medium } from "../../Generic/Responsive";
 import MapIconButton from "../../MapIconButton/MapIconButton";
 import { Control, MapNavigationItem } from "./Items/MapNavigationItem";
 import { registerMapNavigations } from "./registerMapNavigations";
+import withControlledVisibility from "../../HOCs/withControlledVisibility";
 
 const OVERFLOW_ACTION_SIZE = 42;
 
@@ -344,7 +345,9 @@ class MapNavigation extends React.Component<PropTypes> {
   }
 }
 
-export default withTranslation()(withTheme(MapNavigation));
+export default withTranslation()(
+  withTheme(withControlledVisibility(MapNavigation))
+);
 
 export function filterViewerAndScreenSize(
   item: IMapNavigationItem,
