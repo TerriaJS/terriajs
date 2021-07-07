@@ -15,6 +15,7 @@ Change Log
 * Fix sharing user added data of type "Auto-detect".
 * #5605 tidy up format string used in `MagdaReference`
 * Fix wms feature info returning only one feature
+* Fix `StyledIcon` css `display` clash
 * [The next improvement]
 
 #### 8.0.0-alpha.87
