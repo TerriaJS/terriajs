@@ -28,7 +28,7 @@
       "content": "## 地図設定\n\nベースマップ、2D/3D地形、画質などのオプションを設定してパフォーマンスを上げることができます。"
     },
     "sidePanelUploadButton": {
-      "content": "## 自分のデータ\n\n手元にある独自のデータを他のデータセットと一緒に表示できます。CSV、GeoJSON、KML、GPX、CZMLなどのファイルフォーマットをサポートしています。"
+      "content": "## 自データ\n\n手元にある独自のデータを他のデータセットと一緒に表示できます。CSV、GeoJSON、KML、GPX、CZMLなどのファイルフォーマットをサポートしています。"
     }
   },
   "trainer": {
@@ -65,7 +65,7 @@
     "title": "クリック＋ドラッグでカメラを回転",
     "guidanceBtnText": "コンパスの詳しい使い方を見る",
     "guidanceBtnTitle": "ジャイロスコープの使い方",
-    "description": "外側の輪：ビューを回転\n内側のジャイロスコープ：軌道の変更\nダブルクリック：ホームポジション\nヒント：軌道の変更はCtrlキーを押しながらマップをドラッグでも可能",
+    "description": "外側の輪：ビューを回転.\n内側のジャイロスコープ：軌道の変更.\nダブルクリック：ホームポジション.\nヒント：軌道の変更はCtrlキーを押しながらマップをドラッグでも可能.",
     "guidance": {
       "ctrlDragDescription": "CTRLキーを押しながらドラッグしても地図を傾けたり回したりできます。",
       "dismissText": "閉じて今後は表示しない",
@@ -95,7 +95,7 @@
   "satelliteGuidance": {
     "bodyV": "ワークベンチからスタイルのドロップダウンをクリックすると、衛生画像にフォールスカラーをはじめとする様々なスタイルを適用することができます。",
     "titleV": "フォールスカラー (false color) 画像を見るには?",
-    "bodyIV": "場所や時期によっては衛星画像がないこともあります。特定の場所の衛星画像だけを見たい場合は、ワークベンチの 'filter by location' をクリックしてください。",
+    "bodyIV": "場所や時期によっては衛星画像がないこともあります。特定の場所の衛星画像だけを見たい場合は、ワークベンチの 「場所によるフィルタ」 をクリックしてください。",
     "titleIV": "場所から画像を絞り込む",
     "bodyIII": "ワークベンチで撮影日のドロップダウンをクリックして時期を選択すると過去の画像を読み込むことができます。",
     "titleIII": "過去の画像を読み込む",
@@ -245,7 +245,7 @@
     "emptyArea": "ワークベンチは空です",
     "helpfulHintsThree": "ワークベンチからはデータの表示・非表示の切り替え、透過度の調整、画面分割比較モードへの移行、スタイルの変更のほか、サポートされているデータでは日時の変更も行えます。",
     "helpfulHintsTwo": "データを地図に追加すると、アクティブなデータセットの一覧がこのワークベンチに表示されます。ワークベンチからデータを操作することができます。",
-    "helpfulHintsOne": "「登録済みデータ」 を選択して使えるデータを探すか、「自分のデータ」 をクリックして自分のデータを地図に追加します。",
+    "helpfulHintsOne": "「登録済みデータ」 を選択して使えるデータを探すか、「自データ」 をクリックして手元のデータを地図に追加します。",
     "helpfulHints": "ヒント"
   },
   "loader": {
@@ -308,7 +308,7 @@
     "dataSourceDetails": "データソースの詳細",
     "downloadData": "データをダウンロード",
     "useTheLinkToDownload": "データを直接ダウンロードするには以下のリンクを使用してください。",
-    "downloadNotSupported": "残念ながらお使いのブラウザにはこのデータをファイルとしてダウンロードするための機能がありません。データをダウンロードするにはChrome、Firefox、Safariのどれかを使用してください。",
+    "downloadNotSupported": "残念ながらお使いのブラウザにはこのデータをファイルとしてダウンロードするための機能がありません。データをダウンロードするには Chrome、Firefox、Safari のどれかを使用してください。",
     "downloadInFormat": "選択中のデータを{{format}}フォーマットでダウンロード",
     "useLinkBelow": "データをダウンロードするには以下のリンクを使用してください。URLのクエリーパラメーターをカスタマイズする方法の詳細は{{link}}から確認してください。",
     "metadataUrls": "メタデータのリンク",
@@ -363,7 +363,7 @@
     "exploreDataBtnText": "登録済みデータ",
     "helpBtnText": "ヘルプを見る",
     "tourBtnText": "ツアーに参加",
-    "welcomeMessage": " ",
+    "welcomeMessage": "データを探して3D地図上に展開してみませんか？<br/>とにかく触ってみるか、ヘルプガイドで使い方の概要を見てみてください。",
     "title": "ようこそ"
   },
   "featureInfo": {
@@ -447,7 +447,7 @@
       "hideLabel": "ここを押すとワークベンチに時系列データがない時も含めて常にタイムラインが表示されます",
       "alwaysShowLabel": "ここを押すとワークベンチに時系列データがある時にだけタイムラインが表示されます"
     },
-    "btnText": "マップ設定",
+    "btnText": "地図の設定：",
     "screen": "スクリーン",
     "native": "ネイティブ",
     "nativeResolutionLabel": "ここを押すと解像度を{{resolution1}}から{{resolution2}}に変更します"
@@ -464,14 +464,14 @@
     "recount": "再カウント",
     "subTotals": "<div>{{name}}: {{items}}個のアイテム / {{groups}}個のグループ</div>",
     "totals": "<div>このカタログには{{groups}}個のグループと{{items}}個のアイテムが含まれています。</div>",
-    "countingMessage": "カウントしています...",
+    "countingMessage": "数えています、しばらくお待ちください…",
     "loadError": "読み込みに失敗しました。",
     "btnText": "カウントする"
   },
   "share": {
-    "btnMapShareTitle": "共有 / 印刷",
-    "btnStoryShareTitle": "ストーリーを他の人と共有",
-    "btnCatalogShareTitle": "カタログを他の人と共有",
+    "btnMapShareTitle": "地図を共有する",
+    "btnStoryShareTitle": "ストーリーを共有する",
+    "btnCatalogShareTitle": "カタログを共有する",
     "embedTitle": "HTMLページへの埋め込みは下記のコードをお使いください:",
     "btnAdvanced": "詳細設定",
     "printExplanation": "このマップを印刷できる状態で表示。",
@@ -537,7 +537,7 @@
   "addData": {
     "note": "<0>注意：</0>この方法で追加されたデータは保存されず、他の人に見せることもできません。",
     "back": "戻る",
-    "infoText": "<0>ファイルをここにドラッグ・アンド・ドロップすると、ローカルのマップ上で見ることができます</0><1>（データが保存またはインターネットにアップロードされることはありません）</1>",
+    "infoText": "<0>ファイルをここにドラッグ・アンド・ドロップすると、ローカル環境で自分のデータを見ることができます</0><1>（データが保存またはインターネットにアップロードされることはありません）</1>",
     "dragDrop": "ドラッグ・アンド・ドロップ",
     "webTitle": "ウェブからデータを追加する",
     "localTitle": "ローカルのデータを追加する",
@@ -761,7 +761,7 @@
       "mustHaveType": "各アイテムにはタイプを指定する必要があります。",
       "useConversion": "変換サービスを使用しますか？",
       "cancel": "キャンセル",
-      "upload": "自分のデータ",
+      "upload": "自データ",
       "readyToUpload": "{{appName}}の変換サービスにアップロードする準備はできていますか？",
       "getConfirmationMessage": "このファイルは{{appName}}では直接サポートされていません。\n\n{{appName}}の変換サービスにアップロードしますか？ファイルサイズが小さく、かつzip化されたEsri ShapeファイルやMapInfo Tabファイルであればこの方法で表示できる可能性があります。",
       "unsupportedFileTypeMessageII": "このファイルフォーマットは{{appName}}ではサポートされていません。直接サポートされているフォーマットは <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>  です。オンライン変換サービスを通してサポートされているファイルフォーマットは <ul><li>Shapefile (.zip)</li><li>MapInfo TAB (.zip)</li><li>その他の {{linkII}}</li></ul> などです。",
@@ -964,7 +964,7 @@
       "errorLoadingTitle": "CSQを読み込めません",
       "exceptionMessage": "CSWサーバーがエラーを報告しています:\n\n {{exceptionText}}",
       "unknownError": "CSWサーバーが原因の特定できないエラーを報告しています。",
-      "checkCORSDomain": "<br/>",
+      "checkCORSDomain": "CSW サーバ上でGetDomainを実行できませんでした。<br/><br/> URLを手入力している場合は、もう一度URLをチェックしてください。<br/><br/> もしご自分のサーバーをお使いでしたら、 <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a> が有効になっていることを確認して下さい。<br/><br/> その上でリロードしても問題が解決しない場合は、以下のメールに問題を報告して下さい。 {{email}} その際、以下の詳細なテクニカル情報も送付してください。  よろしくお願いします!",
       "checkCORS": "CSW サーバー上で GetRecords を実行できません。<br/><br/> URLを手で入力した場合、URLをもう一度確認してみてください。<br/><br/> もしご自身のサーバーをお使いなら、 {{cors}} が有効になっているか確認してください。<br/><br/> 再読み込みしても問題が解決しない場合は、問題を {{email}} に報告して下さい",
       "checkCORSRecords": "この CWS サーバーでGetRecords を実行できません。<br/><br/> ご自身のサーバーである場合、 <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a> が有効になっていることを確認してください。<br/><br/> 再読み込みでも問題が解決しない場合は、この問題を {{email}} に問題の詳細を記載したうえで報告して下さい。ご協力お願いいたします!",
       "errorLoadingRecordsMessage": "CSW サーバーで GetRecords を読み込み中に無効なレスポンスが返ってきました。 <p>指定したカタログサーバーが一時的に利用できないか、インターネット接続に問題がある可能性があります。プロセッシングサーバーをもう一度開き、問題がそれでも解決しない場合は、メールでエラーを報告して下さい ",
@@ -1490,6 +1490,11 @@
     },
     "addressGeocoder": {
       "devError": "bulkConvertAddresses が derived class で実装されている必要があります。"
+    },
+    "extraCreditLinks": {
+      "basemap": "背景地図",
+      "disclaimer": "免責事項",
+      "dataAttribution": "データの帰属"
     }
   },
   "toast": {
@@ -1527,7 +1532,8 @@
     "noParameters": "検索に使えるパラメタが見つかりません",
     "loadError": "検索パラメタの読み込み時のエラー。エラーの詳細は、コンソールをチェックしてください。",
     "loading": "検索パラメタの読み込み",
-    "title": "検索 {{itemName}}"
+    "title": "検索 {{itemName}}",
+    "toolLoadError": "検索ツール読み込みエラー。"
   },
   "term": {
     "missingContent": "見つからないコンテンツ"
