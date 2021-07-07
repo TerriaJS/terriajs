@@ -4,7 +4,19 @@ Change Log
 ### MobX Development
 
 #### next release (8.0.0-alpha.88)
+
+* Fixed a bug with numeric item search where it sometimes fails to return all matching values.
+* Respect order of objects from lower strata in `objectArrayTrait`.
+* Fix datetime button margin with scroll in workbench.
+* Fix checkbox when click happen on svg icon. (#5550)
+* Added progress indicator when loading item search tool.
+* Add `nullColor` to `ConstantColorMap` - used when `colorColumn` is of type `region` to hide regions where rows don't exist.
+* `TableStyles` will only be created for `text` columns if there are no columns of type `scalar`, `enum` or `region`.
+* Fix sharing user added data of type "Auto-detect".
+* #5605 tidy up format string used in `MagdaReference`
+* Fix wms feature info returning only one feature
 * [The next improvement]
+
 #### 8.0.0-alpha.87
 
 * Re-add basemap images to terriajs rather than requiring all TerriaMaps to have those basemap images. Default basemaps will use those images.

@@ -448,9 +448,6 @@ export default class TableStyle {
         nullColor: this.nullColor
       });
     } else if (colorColumn && this.isEnum) {
-      const regionColor =
-        Color.fromCssColorString(this.colorTraits.regionColor) ??
-        Color.TRANSPARENT;
       return new EnumColorMap({
         enumColors: filterOutUndefined(
           this.enumColors.map(e => {
@@ -462,7 +459,7 @@ export default class TableStyle {
               color:
                 colorColumn.type !== TableColumnType.region
                   ? Color.fromCssColorString(e.color) ?? Color.TRANSPARENT
-                  : regionColor
+                  : this.regionColor
             };
           })
         ),
@@ -471,19 +468,35 @@ export default class TableStyle {
     } else {
       // No column to color by, so use the same color for everything.
       let color: Color | undefined;
+
       const colorId = this.tableModel.uniqueId || this.tableModel.name;
-      if (colorTraits.nullColor) {
+
+      // If colorColumn is of type region - use regionColor
+      if (colorColumn?.type === TableColumnType.region && this.regionColor) {
+        color = this.regionColor;
+      } else if (colorTraits.nullColor) {
         color = Color.fromCssColorString(colorTraits.nullColor);
-      } else if (this.binColors.length > 0) {
-        color = this.binColors[0];
+      } else if (colorTraits.binColors && colorTraits.binColors.length > 0) {
+        color = Color.fromCssColorString(colorTraits.binColors[0]);
       } else if (colorId) {
         color = Color.fromCssColorString(getColorForId(colorId));
       }
 
-      return new ConstantColorMap(
-        color ?? Color.fromCssColorString(defaultColor),
-        this.tableModel.name
-      );
+      if (!color) {
+        color = Color.fromCssColorString(defaultColor);
+      }
+
+      // Use nullColor if colorColumn is of type `region`
+      let nullColor =
+        colorColumn?.type === TableColumnType.region
+          ? this.nullColor
+          : undefined;
+
+      return new ConstantColorMap({
+        color,
+        title: this.tableModel.name,
+        nullColor
+      });
     }
   }
 
@@ -492,6 +505,10 @@ export default class TableStyle {
       ? Color.fromCssColorString(this.colorTraits.nullColor) ??
           Color.TRANSPARENT
       : Color.TRANSPARENT;
+  }
+
+  @computed get regionColor() {
+    return Color.fromCssColorString(this.colorTraits.regionColor);
   }
 
   @computed

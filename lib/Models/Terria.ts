@@ -104,7 +104,7 @@ interface ConfigParameters {
   /**
    * The maximum number of "feature info" boxes that can be displayed when clicking a point.
    */
-  defaultMaximumShownFeatureInfos?: number;
+  defaultMaximumShownFeatureInfos: number;
   /**
    * URL of the JSON file that defines region mapping for CSV files.
    */
