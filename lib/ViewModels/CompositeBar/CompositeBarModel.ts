@@ -161,6 +161,32 @@ export abstract class CompositeBarModel<
   }
 
   @action
+  disable(id: string): void {
+    for (const item of this.items) {
+      if (item.id === id) {
+        if (!item.controller.disabled) {
+          item.controller.disabled = true;
+          return;
+        }
+        return;
+      }
+    }
+  }
+
+  @action
+  enable(id: string): void {
+    for (const item of this.items) {
+      if (item.id === id) {
+        if (item.controller.disabled) {
+          item.controller.disabled = false;
+          return;
+        }
+        return;
+      }
+    }
+  }
+
+  @action
   move(compositeId: string, toCompositeId: string): void {
     const fromIndex = this.findIndex(compositeId);
     const toIndex = this.findIndex(toCompositeId);
@@ -196,7 +222,7 @@ export abstract class CompositeBarModel<
     }
   }
 
-  findItem(id: string): CompositeBarItem {
+  findItem(id: string): CompositeBarItem | undefined {
     return this.items.filter(item => item.id === id)[0];
   }
 

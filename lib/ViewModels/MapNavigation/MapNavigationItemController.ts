@@ -12,11 +12,19 @@ export interface IMapNavigationItemController
 }
 
 export default abstract class MapNavigationItemController extends CompositeBarItemController {
+  /**
+   * Set this item to active state. If used it's recommended to override this method and a proper logic
+   * for activating this item, so it's easier to programmatically control the item from other places.
+   */
   @action
   activate() {
     this._active = true;
   }
 
+  /**
+   * Set this item to inactive state. If used it's recommended to override this method and a proper logic
+   * for deactivating this item, so it's easier to programmatically control the item from other places.
+   */
   @action
   deactivate() {
     this._active = false;
@@ -48,6 +56,8 @@ export default abstract class MapNavigationItemController extends CompositeBarIt
 interface IOptions {
   viewerMode?: ViewerMode;
   handleClick?: () => void;
+  activate?: () => void;
+  deactivate?: () => void;
   icon: { id: string };
 }
 
@@ -63,6 +73,20 @@ export class GenericMapNavigationItemController extends MapNavigationItemControl
 
   get viewerMode(): ViewerMode | undefined {
     return this.options?.viewerMode;
+  }
+
+  activate() {
+    if (this.options?.activate) {
+      this.options.activate();
+    }
+    super.activate();
+  }
+
+  deactivate() {
+    if (this.options?.deactivate) {
+      this.options.deactivate();
+    }
+    super.deactivate();
   }
 
   handleClick(): void {

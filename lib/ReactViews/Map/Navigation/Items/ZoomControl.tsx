@@ -219,6 +219,8 @@ class ZoomControl extends React.Component<PropTypes> {
   }
 }
 
+ZoomControl.id = ZOOM_CONTROL_ID;
+
 const StyledZoomControl = styled(Box).attrs(props => ({
   backgroundColor: props.theme.textLight,
   centered: true,

@@ -23,6 +23,10 @@ export abstract class CompositeBarItemController
     return CompositeBarItemController.id;
   }
 
+  /**
+   * Whether this item is disabled
+   * @private
+   */
   @observable
   private _disabled: boolean = false;
 
@@ -35,6 +39,10 @@ export abstract class CompositeBarItemController
     this._disabled = value;
   }
 
+  /**
+   * Whether this item is collapsed
+   * @private
+   */
   @observable
   private _collapsed: boolean = false;
 
@@ -47,6 +55,10 @@ export abstract class CompositeBarItemController
     this._collapsed = value;
   }
 
+  /**
+   * Whether this item is active
+   * @protected
+   */
   @observable
   protected _active: boolean = false;
 
@@ -55,11 +67,15 @@ export abstract class CompositeBarItemController
     return !this.disabled && this._active;
   }
 
+  /**
+   * Whether this item is pinned, if item is pinned it will be always visible on screen.
+   * @private
+   */
   @observable
   private _pinned: boolean = false;
 
   @computed
-  get pinned(): boolean {
+  get pinned() {
     return this._pinned;
   }
 
@@ -67,6 +83,10 @@ export abstract class CompositeBarItemController
     this._pinned = value;
   }
 
+  /**
+   * Whether this item is visible on the screen.
+   * @private
+   */
   @observable
   private _visible: boolean = true;
 
@@ -79,9 +99,18 @@ export abstract class CompositeBarItemController
     this._visible = value;
   }
 
+  /**
+   * Glyph to be shown with this item.
+   */
   abstract get glyph(): { id: string };
 
+  /**
+   * Get viewer on which this item should be visible. If undefined item will be visible in both viewers.
+   */
   abstract get viewerMode(): ViewerMode | undefined;
 
+  /**
+   * What should happen after clicking on this item.
+   */
   abstract handleClick(): void;
 }

@@ -20,6 +20,7 @@ const PolygonGeometryLibrary = require("terriajs-cesium/Source/Core/PolygonGeome
 
 interface PropTypes {
   terria: Terria;
+
   onClose(): void;
 }
 
@@ -216,7 +217,7 @@ export default class MeasureTool extends MapNavigationItemController {
   onCleanUp() {
     this.totalDistanceMetres = 0;
     this.totalAreaMetresSquared = 0;
-    this.deactivate();
+    super.deactivate();
   }
 
   @action.bound
@@ -241,13 +242,28 @@ export default class MeasureTool extends MapNavigationItemController {
     return message;
   };
 
+  /**
+   * @overrides
+   */
+  deactivate() {
+    this.userDrawing.endDrawing();
+    super.deactivate();
+  }
+
+  /**
+   * @overrides
+   */
+  activate() {
+    this.userDrawing.enterDrawMode();
+    super.activate();
+  }
+
   @action.bound
   handleClick() {
     if (this.active) {
-      this.userDrawing.endDrawing();
       this.deactivate();
     } else {
-      this.userDrawing.enterDrawMode();
+      //this.userDrawing.enterDrawMode();
       this.activate();
     }
   }
