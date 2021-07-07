@@ -103,7 +103,7 @@ describe("MapNavigationModel", function() {
 
   it("properly constructs model", function() {
     const items = [item1, item2, item3, item4, item5];
-    const mapNavigationModel = new MapNavigationModel(items);
+    const mapNavigationModel = new MapNavigationModel(terria, items);
     expect(mapNavigationModel.items.length).toEqual(5);
     expect(mapNavigationModel.pinnedItems.length).toEqual(1);
     expect(mapNavigationModel.visibleItems.length).toEqual(4);
@@ -116,7 +116,7 @@ describe("MapNavigationModel", function() {
   });
 
   it("properly sets items", function() {
-    const mapNavigationModel = new MapNavigationModel([item2]);
+    const mapNavigationModel = new MapNavigationModel(terria, [item2]);
     expect(mapNavigationModel.items.length).toEqual(1);
     expect(mapNavigationModel.pinnedItems.length).toEqual(1);
     expect(mapNavigationModel.visibleItems.length).toEqual(1);
@@ -141,7 +141,7 @@ describe("MapNavigationModel", function() {
 
   it("properly adds item to model", function() {
     const items = [item1, item2, item3];
-    const mapNavigationModel = new MapNavigationModel(items);
+    const mapNavigationModel = new MapNavigationModel(terria, items);
     let collapsedItems = mapNavigationModel.visibleItems.filter(
       item => item.controller.collapsed
     );
@@ -153,8 +153,8 @@ describe("MapNavigationModel", function() {
     let itemsId = mapNavigationModel.items.map(item => item.id);
     expect(itemsId).toEqual(["item1", "item2", "item3"]);
 
-    mapNavigationModel.add(item4);
-    mapNavigationModel.add(item5);
+    mapNavigationModel.addItem(item4);
+    mapNavigationModel.addItem(item5);
     expect(mapNavigationModel.items.length).toEqual(5);
     expect(mapNavigationModel.pinnedItems.length).toEqual(1);
     expect(mapNavigationModel.visibleItems.length).toEqual(4);
@@ -165,7 +165,7 @@ describe("MapNavigationModel", function() {
     itemsId = mapNavigationModel.items.map(item => item.id);
     expect(itemsId).toEqual(["item1", "item2", "item3", "item4", "item5"]);
 
-    mapNavigationModel.add(item2Duplicate);
+    mapNavigationModel.addItem(item2Duplicate);
     expect(mapNavigationModel.items.length).toEqual(5);
     expect(mapNavigationModel.pinnedItems.length).toEqual(0);
     expect(mapNavigationModel.visibleItems.length).toEqual(3);
@@ -179,7 +179,7 @@ describe("MapNavigationModel", function() {
 
   it("properly adds item to index", function() {
     const items = [item1, item2, item3];
-    const mapNavigationModel = new MapNavigationModel(items);
+    const mapNavigationModel = new MapNavigationModel(terria, items);
     expect(mapNavigationModel.items.length).toEqual(3);
     expect(mapNavigationModel.pinnedItems.length).toEqual(1);
     expect(mapNavigationModel.visibleItems.length).toEqual(2);
@@ -190,8 +190,8 @@ describe("MapNavigationModel", function() {
     let itemsId = mapNavigationModel.items.map(item => item.id);
     expect(itemsId).toEqual(["item1", "item2", "item3"]);
 
-    mapNavigationModel.add(item4, 2);
-    mapNavigationModel.add(item5, 1);
+    mapNavigationModel.addItem(item4, 2);
+    mapNavigationModel.addItem(item5, 1);
     expect(mapNavigationModel.items.length).toEqual(5);
     expect(mapNavigationModel.pinnedItems.length).toEqual(1);
     expect(mapNavigationModel.visibleItems.length).toEqual(4);
@@ -205,7 +205,7 @@ describe("MapNavigationModel", function() {
 
   it("properly removes item", function() {
     const items = [item1, item2, item3, item4, item5];
-    const mapNavigationModel = new MapNavigationModel(items);
+    const mapNavigationModel = new MapNavigationModel(terria, items);
     expect(mapNavigationModel.items.length).toEqual(5);
     expect(mapNavigationModel.pinnedItems.length).toEqual(1);
     expect(mapNavigationModel.visibleItems.length).toEqual(4);
@@ -226,7 +226,7 @@ describe("MapNavigationModel", function() {
 
   it("properly hides item", function() {
     const items = [item1, item2, item3, item4, item5];
-    const mapNavigationModel = new MapNavigationModel(items);
+    const mapNavigationModel = new MapNavigationModel(terria, items);
     expect(mapNavigationModel.items.length).toEqual(5);
     expect(mapNavigationModel.pinnedItems.length).toEqual(1);
     expect(mapNavigationModel.visibleItems.length).toEqual(4);
@@ -247,7 +247,7 @@ describe("MapNavigationModel", function() {
 
   it("properly collapse item", function() {
     const items = [item1, item2, item3, item4, item5];
-    const mapNavigationModel = new MapNavigationModel(items);
+    const mapNavigationModel = new MapNavigationModel(terria, items);
     expect(mapNavigationModel.items.length).toEqual(5);
     expect(mapNavigationModel.pinnedItems.length).toEqual(1);
     expect(mapNavigationModel.visibleItems.length).toEqual(4);
@@ -277,7 +277,7 @@ describe("MapNavigationModel", function() {
 
   it("properly sets pinned", function() {
     const items = [item1, item2, item3, item4, item5];
-    const mapNavigationModel = new MapNavigationModel(items);
+    const mapNavigationModel = new MapNavigationModel(terria, items);
     spyOn(console, "error");
 
     mapNavigationModel.setPinned(item1.id, true);
@@ -293,7 +293,7 @@ describe("MapNavigationModel", function() {
 
   it("properly moves item", function() {
     const items = [item1, item2, item3, item4, item5];
-    const mapNavigationModel = new MapNavigationModel(items);
+    const mapNavigationModel = new MapNavigationModel(terria, items);
     let itemsId = mapNavigationModel.items.map(item => item.id);
     expect(itemsId).toEqual(["item1", "item2", "item3", "item4", "item5"]);
 
