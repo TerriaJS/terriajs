@@ -43,6 +43,7 @@ import { action, runInAction } from "mobx";
 import HelpPanel from "../Map/Panels/HelpPanel/HelpPanel";
 import Tool from "../Tool";
 import Disclaimer from "../Disclaimer";
+import Box from "../../Styled/Box";
 
 export const showStoryPrompt = (viewState, terria) => {
   terria.configParameters.showFeaturePrompts &&
@@ -247,7 +248,7 @@ const StandardUserInterface = observer(
         !this.shouldUseMobileInterface();
       const showStoryPanel =
         this.props.terria.configParameters.storyEnabled &&
-        this.props.terria.stories.length &&
+        this.props.terria.stories.length > 0 &&
         this.props.viewState.storyShown &&
         !this.props.viewState.explorerPanelIsVisible &&
         !this.props.viewState.storyBuilderShown;
@@ -296,7 +297,8 @@ const StandardUserInterface = observer(
                       />
                     </Small>
                     <Medium>
-                      <div
+                      <Box
+                        column
                         className={classNames(
                           Styles.sidePanel,
                           this.props.viewState.topElement === "SidePanel"
@@ -321,11 +323,18 @@ const StandardUserInterface = observer(
                           viewState={this.props.viewState}
                           version={this.props.version}
                         />
+                        <FullScreenButton
+                          terria={this.props.terria}
+                          viewState={this.props.viewState}
+                          minified={true}
+                          animationDuration={250}
+                          btnText={t("addData.btnHide")}
+                        />
                         <SidePanel
                           terria={terria}
                           viewState={this.props.viewState}
                         />
-                      </div>
+                      </Box>
                     </Medium>
                   </If>
                   <Medium>

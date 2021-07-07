@@ -56,7 +56,6 @@
 
 .btn--done {
   composes: btn from "../../Sass/common/_buttons.scss";
-  composes: btn from "../badge-bar.scss";
   composes: btn--tertiary-dark from "../../Sass/common/_buttons.scss";
   padding: 5px;
   font-size: $font-size-mid-mini;

@@ -1,6 +1,9 @@
 import React from "react";
 import { act } from "react-dom/test-utils";
-import TestRenderer, { ReactTestRenderer } from "react-test-renderer";
+import TestRenderer, {
+  ReactTestInstance,
+  ReactTestRenderer
+} from "react-test-renderer";
 import ChartableMixin, {
   ChartItem
 } from "../../../../lib/ModelMixins/ChartableMixin";
@@ -77,8 +80,8 @@ describe("ChartItemSelector", function() {
 
   it("sorts the chart items by name", function() {
     const chartItemNames = testRenderer.root
-      .findAllByType("span")
-      .map(c => c.children[0]);
+      .findAllByType("label")
+      .map(c => (c.children[3] as any).children[0].children[0]);
     expect(chartItemNames).toEqual(["aaa", "zzz"]);
   });
 });

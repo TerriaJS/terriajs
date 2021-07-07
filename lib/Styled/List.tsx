@@ -1,18 +1,25 @@
 import styled, { css } from "styled-components";
+import Box from "./Box";
 
 export const Li = styled.li``;
+interface IUlProps {
+  spaced?: boolean;
+  lined?: boolean;
+}
 
-type ListProps = Partial<{
-  spaced: boolean;
-  lined: boolean;
-  fullWidth: boolean;
-}>;
-
-export const Ul = styled.ul<ListProps>`
+export const Ul = styled(Box).attrs({
+  as: "ul"
+})<IUlProps>`
   list-style: none;
-  padding: 0;
   margin: 0;
-  ${props => props.fullWidth && "width: 100%;"}
+  ${props =>
+    props.fullWidth &&
+    css`
+      width: 100%;
+      ${Li} {
+        width: 100%;
+      }
+    `}
   ${props =>
     props.spaced &&
     css`

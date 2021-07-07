@@ -24,13 +24,13 @@ describe("DateTimeSelectorSection", function() {
     await wmsItem.loadMapItems();
     act(() => {
       testRenderer = TestRenderer.create(
-        <DateTimeSelectorSection t={() => {}} item={wmsItem} />
+        <DateTimeSelectorSection item={wmsItem} />
       );
     });
     buttons = testRenderer.root.findAllByType("button");
 
     currentDateBtn = buttons.filter((b: any) => {
-      if (b.props.className.indexOf("currentDate") > -1) return true;
+      if (b.props.className.indexOf("StyledStyledButton2") > -1) return true;
       return false;
     })[0];
   });
@@ -42,13 +42,15 @@ describe("DateTimeSelectorSection", function() {
     const expectedDateStr = formatDateTime(
       new Date("2014-01-01T00:00:00.000Z")
     );
-    expect(currentDateBtn.children[0]).toEqual(expectedDateStr);
+    expect(currentDateBtn.children[0].children[0].children[0]).toEqual(
+      expectedDateStr
+    );
   });
 
   it("A datetime selector can be formatted", async function() {
     wmsItem.setTrait("definition", "dateFormat", "yyyy");
     expect(buttons).toBeDefined();
     expect(buttons.length).toEqual(5);
-    expect(currentDateBtn.children[0]).toEqual("2014");
+    expect(currentDateBtn.children[0].children[0].children[0]).toEqual("2014");
   });
 });

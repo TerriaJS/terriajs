@@ -56,9 +56,11 @@ interface IBoxPropsBase {
   wordBreak?: WordBreak;
   overflow?: Overflow;
   overflowY?: Overflow;
+  overflowX?: Overflow;
   scroll?: boolean;
   style?: any;
   as?: React.ElementType | keyof JSX.IntrinsicElements;
+  ref?: any;
 }
 
 type IBoxProps = IBoxPropsBase & OneKeyFrom<Column>;
@@ -196,6 +198,11 @@ export const Box = styled.div<IBoxProps>`
     `
       overflow-y: ${props.overflowY};
     `}
+    ${props =>
+      props.overflowX &&
+      `
+        overflow-x: ${props.overflowX};
+      `}
 
   ${props =>
     props.scroll &&

@@ -165,8 +165,8 @@ export const StyledIcon = styled(Icon)<IStyledIconProps>`
   ${props =>
     props.displayInline &&
     `
-  display: inline; 
-  vertical-align: middle;
+    display: inline; 
+    vertical-align: middle;
   `}
   
   flex-shrink: 0;

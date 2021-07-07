@@ -494,4 +494,4 @@ const ViewingControls = observer(
     }
   })
 );
-module.exports = withTranslation()(ViewingControls);
+export default withTranslation()(ViewingControls);

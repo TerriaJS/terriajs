@@ -538,6 +538,7 @@
     "searchItemTitle": "Search"
   },
   "dateTime": {
+    "time": "Time:",
     "back": "Go back",
     "previous": "Previous time",
     "selectTime": "Select a time",
@@ -618,7 +619,8 @@
     "sectionLabel": "Charts",
     "closePanel": "Close Panel",
     "expand": "Expand",
-    "download": "Download"
+    "download": "Download",
+    "showItemInChart": "Show {{value}} in chart"
   },
   "viewModels": {
     "searchNoLocations": "Sorry, no locations match your search query.",
