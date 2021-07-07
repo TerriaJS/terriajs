@@ -1,7 +1,7 @@
 {
   "tour": {
     "exploreMapDataButton": {
-      "content": "## マップのデータを探す\n\nここでは、データカタログからデータを探し、地図に追加することができます。複数のデータも追加できます。追加したデータは、ワークベンチ内にリストとして表示されます。"
+      "content": "## 登録済みデータ\n\nここでは、データカタログからデータを探し、地図に追加することができます。複数のデータも追加できます。追加したデータは、ワークベンチ内にリストとして表示されます。"
     },
     "locationSearchInput": {
       "content": "## 場所検索\n\n地図上の興味ある場所の名前や住所を入力してください。"
@@ -28,7 +28,7 @@
       "content": "## 地図設定\n\nベースマップ、2D/3D地形、画質などのオプションを設定してパフォーマンスを上げることができます。"
     },
     "sidePanelUploadButton": {
-      "content": "## データアップロード\n\n独自のデータをアップロードして、他のデータセットと一緒に表示できます。ファイルまたはリンクを既存のオンラインデータセットまたはデータサービスにアップロードします。CSV、GeoJSON、KML、GPX、CZMLなどのファイルフォーマットをサポートしています。"
+      "content": "## 自分のデータ\n\n手元にある独自のデータを他のデータセットと一緒に表示できます。CSV、GeoJSON、KML、GPX、CZMLなどのファイルフォーマットをサポートしています。"
     }
   },
   "trainer": {
@@ -115,7 +115,7 @@
     "storyEditor": "ストーリーエディタ",
     "mobileViewStory": "ストーリーを見る {{storiesLength}}",
     "dismissText": "了解しました。ありがとうございます!",
-    "story": "Story",
+    "story": "ストーリー",
     "promptHtml2": "<0><0>はじめに</0><1>データストーリー</1><2>地図からインタラクティブなストーリーを作成して共有できます。</2></0>",
     "promptHtml1": "<0>ここをクリックしていつでもストーリを見たり作成することができます。</0>",
     "navBtnMobile": "ストーリー {{title}} に進む",
@@ -145,7 +145,7 @@
     "delete": "削除",
     "deleteStory": "削除",
     "recapture": "再キャプチャ",
-    "recaptureStory": "再キャプチャ",
+    "recaptureStory": "リキャプチャ",
     "edit": "編集",
     "editStory": "編集",
     "view": "見る",
@@ -155,7 +155,7 @@
     "badgeBarLabel": "シーン",
     "gettingStartedTitle": "開始する",
     "gettingStarted": "開始する",
-    "panelBody": "地図を使ってストーリを作成し、共有することができます",
+    "panelBody": "地図を使ってストーリーを作成し、共有することができます",
     "panelTitle": "ストーリーエディタ"
   },
   "diffTool": {
@@ -245,7 +245,7 @@
     "emptyArea": "ワークベンチは空です",
     "helpfulHintsThree": "ワークベンチからはデータの表示・非表示の切り替え、透過度の調整、画面分割比較モードへの移行、スタイルの変更のほか、サポートされているデータでは日時の変更も行えます。",
     "helpfulHintsTwo": "データを地図に追加すると、アクティブなデータセットの一覧がこのワークベンチに表示されます。ワークベンチからデータを操作することができます。",
-    "helpfulHintsOne": "'マップのデータを探す'を選択して使えるデータを探すか、'アップロード'をクリックして自分のデータを地図に追加します。",
+    "helpfulHintsOne": "「登録済みデータ」 を選択して使えるデータを探すか、「自分のデータ」 をクリックして自分のデータを地図に追加します。",
     "helpfulHints": "ヒント"
   },
   "loader": {
@@ -360,7 +360,7 @@
   },
   "welcomeMessage": {
     "dismissText": "閉じて今後は表示しない",
-    "exploreDataBtnText": "マップのデータを探す",
+    "exploreDataBtnText": "登録済みデータ",
     "helpBtnText": "ヘルプを見る",
     "tourBtnText": "ツアーに参加",
     "welcomeMessage": " ",
@@ -376,7 +376,7 @@
     "locationMarker": "位置マーカー",
     "satelliteSuggestionBtn": "この地点の{{catalogItemName}}を表示する",
     "userSelection": "選択地点",
-    "clickToAddData": "データをマップに追加するには '$t(addData.addDataBtnText)' をクリックします。",
+    "clickToAddData": "データをマップに追加するには 「$t(addData.addDataBtnText)」 をクリックします。",
     "clickMap": "マップをクリックするとその地点の詳細が表示されます",
     "pickLocation": "地点を選択",
     "download": "この表をダウンロード",
@@ -557,7 +557,7 @@
     "closeDataPanel": "データパネルを閉じる",
     "load": "ローカル/ウェブのデータを読み込む",
     "btnHide": "閉じる",
-    "addDataBtnText": "マップのデータを探す"
+    "addDataBtnText": "登録済みデータ"
   },
   "feedback": {
     "minLength": "フィードバックコメントは最低でも{{minLength}}必要です",
@@ -761,7 +761,7 @@
       "mustHaveType": "各アイテムにはタイプを指定する必要があります。",
       "useConversion": "変換サービスを使用しますか？",
       "cancel": "キャンセル",
-      "upload": "アップロード",
+      "upload": "自分のデータ",
       "readyToUpload": "{{appName}}の変換サービスにアップロードする準備はできていますか？",
       "getConfirmationMessage": "このファイルは{{appName}}では直接サポートされていません。\n\n{{appName}}の変換サービスにアップロードしますか？ファイルサイズが小さく、かつzip化されたEsri ShapeファイルやMapInfo Tabファイルであればこの方法で表示できる可能性があります。",
       "unsupportedFileTypeMessageII": "このファイルフォーマットは{{appName}}ではサポートされていません。直接サポートされているフォーマットは <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>  です。オンライン変換サービスを通してサポートされているファイルフォーマットは <ul><li>Shapefile (.zip)</li><li>MapInfo TAB (.zip)</li><li>その他の {{linkII}}</li></ul> などです。",
