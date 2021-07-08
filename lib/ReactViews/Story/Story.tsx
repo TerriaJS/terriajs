@@ -9,21 +9,24 @@ import Text from "../../Styled/Text";
 import Spacing from "../../Styled/Spacing";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import Icon, { StyledIcon } from "../../Styled/Icon";
-import classNames from "classnames";
+
+export type Story = {
+  title: string;
+  text: string;
+  id: string;
+  shareData?: any;
+};
 
 interface Props {
-  story: any;
-  editStory: any;
-  viewStory: any;
-  deleteStory: any;
-  recaptureStory: any;
-  recaptureStorySuccessful: any;
-  onMouseDown: any;
-  onTouchStart: any;
-  style: any;
-  className: any;
-  menuOpen: any;
-  openMenu: any;
+  story: Story;
+  editStory: () => void;
+  viewStory: () => void;
+  deleteStory: () => void;
+  recaptureStory: () => void;
+  recaptureStorySuccessful: boolean;
+  menuOpen: boolean;
+  openMenu: () => void;
+  closeMenu: () => void;
   theme: any;
   parentRef: any;
   t: any;
@@ -83,7 +86,7 @@ const StoryMenuButton = styled(RawButton)`
   }
 `;
 
-const hideList = (props: Props) => props.openMenu(null);
+const hideList = (props: Props) => props.closeMenu();
 
 const getTruncatedContent = (text: string) => {
   const content = parseCustomHtmlToReact(text);
@@ -93,24 +96,24 @@ const getTruncatedContent = (text: string) => {
 
 const toggleMenu = (props: Props): MouseEventHandler<HTMLElement> => event => {
   event.stopPropagation();
-  props.openMenu(props.story);
+  props.openMenu();
 };
 
 const viewStory = (props: Props): MouseEventHandler<HTMLElement> => event => {
   event.stopPropagation();
-  props.viewStory(props.story);
+  props.viewStory();
   hideList(props);
 };
 
 const deleteStory = (props: Props): MouseEventHandler<HTMLElement> => event => {
   event.stopPropagation();
-  props.deleteStory(props.story);
+  props.deleteStory();
   hideList(props);
 };
 
 const editStory = (props: Props): MouseEventHandler<HTMLElement> => event => {
   event.stopPropagation();
-  props.editStory(props.story);
+  props.editStory();
   hideList(props);
 };
 
@@ -118,7 +121,7 @@ const recaptureStory = (
   props: Props
 ): MouseEventHandler<HTMLElement> => event => {
   event.stopPropagation();
-  props.recaptureStory(props.story);
+  props.recaptureStory();
   hideList(props);
 };
 
@@ -198,6 +201,7 @@ const Story = (props: Props) => {
   const closeHandler = () => {
     hideList(props);
   };
+
   useEffect(() => {
     window.addEventListener("click", closeHandler);
     return () => window.removeEventListener("click", closeHandler);
@@ -214,10 +218,6 @@ const Story = (props: Props) => {
           cursor: move;
           float: none !important;
         `}
-        style={props.style}
-        className={classNames(props.className)}
-        onMouseDown={props.onMouseDown}
-        onTouchStart={props.onTouchStart}
         position="static"
       >
         <Box

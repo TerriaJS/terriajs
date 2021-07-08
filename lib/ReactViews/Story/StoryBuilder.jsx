@@ -417,15 +417,16 @@ const StoryBuilder = observer(
                       key={`${story.id}`}
                       story={story}
                       sortData={story}
-                      deleteStory={this.removeStory.bind(this, index)}
-                      recaptureStory={this.recaptureScene}
+                      deleteStory={this.removeStory.bind(this, index, story)}
+                      recaptureStory={this.recaptureScene.bind(this, story)}
                       recaptureStorySuccessful={Boolean(
                         story.id === this.state.recaptureSuccessful
                       )}
                       viewStory={this.viewStory.bind(this, index)}
                       menuOpen={this.state.storyWithOpenMenu === story}
-                      openMenu={this.openMenu}
-                      editStory={this.editStory}
+                      openMenu={this.openMenu.bind(this, story)}
+                      closeMenu={this.openMenu.bind(this)}
+                      editStory={this.editStory.bind(this, story)}
                       parentRef={this.storiesWrapperRef}
                     />
                   </For>
