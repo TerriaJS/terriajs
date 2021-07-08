@@ -1,6 +1,5 @@
 # Result object and Error Handling
 
-
 ## Result object
 
 The Result class is similar to Option type/object in Scala/Rust.
@@ -83,3 +82,20 @@ This will now throw a chain of TerriaErrors - which provides a good stack trace:
   }
 }
 ```
+
+## TerriaError object
+
+### TerriaErrorSeverity
+
+Add TerriaErrorSeverity enum, values can be Error or Warning.
+
+    Errors with severity Error are presented to the user. Warning will just be printed to console.
+    By default, errors will use Warning
+    The folloring errors will use Error severity.
+        Loading map config
+        Loading/Applying init source (excluding shareData and stories)
+        Invalid model object (fails to parse as JSON)
+        Loading models if it is in the workbench
+        Loading catalog items in the workbench
+    TerriaError.shouldRaiseToUser will look at all error severity in the entire tree of errors, and use the highest one.
+        For example, if all errors in a tree are Warning, but there is one error with Error severity, the entire tree will be "raised to the user".
