@@ -1,7 +1,9 @@
 import React, { MouseEventHandler, useEffect, useRef } from "react";
-import { SortableContainer } from "react-anything-sortable";
 import { withTranslation } from "react-i18next";
 import styled, { withTheme } from "styled-components";
+import { sortable } from "react-anything-sortable";
+import classNames from "classnames";
+
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
 import Ul from "../../Styled/List";
@@ -30,6 +32,12 @@ interface Props {
   theme: any;
   parentRef: any;
   t: any;
+
+  //props for react-anything-sortable
+  className: any;
+  style: any;
+  onMouseDown: any;
+  onTouchStart: any;
 }
 
 const findTextContent = (content: any): string => {
@@ -208,7 +216,7 @@ const Story = (props: Props) => {
   });
 
   return (
-    <SortableContainer>
+    <>
       <Box
         ref={storyRef}
         column
@@ -219,6 +227,10 @@ const Story = (props: Props) => {
           float: none !important;
         `}
         position="static"
+        style={props.style}
+        className={classNames(props.className)}
+        onMouseDown={props.onMouseDown}
+        onTouchStart={props.onTouchStart}
       >
         <Box
           fullWidth
@@ -290,7 +302,7 @@ const Story = (props: Props) => {
         )}
       </Box>
       <Spacing bottom={1} />
-    </SortableContainer>
+    </>
   );
 };
 
@@ -306,4 +318,4 @@ const MenuButton = styled(RawButton)`
   }
 `;
 
-export default withTranslation()(withTheme(Story));
+export default sortable(withTranslation()(withTheme(Story)));
