@@ -1,5 +1,5 @@
 import React, { MouseEventHandler, useEffect, useRef } from "react";
-import { sortable } from "react-anything-sortable";
+import { SortableContainer } from "react-anything-sortable";
 import { withTranslation } from "react-i18next";
 import styled, { withTheme } from "styled-components";
 import Box from "../../Styled/Box";
@@ -208,7 +208,7 @@ const Story = (props: Props) => {
   });
 
   return (
-    <>
+    <SortableContainer>
       <Box
         ref={storyRef}
         column
@@ -290,7 +290,7 @@ const Story = (props: Props) => {
         )}
       </Box>
       <Spacing bottom={1} />
-    </>
+    </SortableContainer>
   );
 };
 
@@ -306,4 +306,4 @@ const MenuButton = styled(RawButton)`
   }
 `;
 
-export default sortable(withTranslation()(withTheme(Story)));
+export default withTranslation()(withTheme(Story));
