@@ -1,5 +1,5 @@
 import ModelTraits from "../ModelTraits";
-import primitiveTrait from "../primitiveTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
 
 export default class SearchProviderTraits extends ModelTraits {
   @primitiveTrait({

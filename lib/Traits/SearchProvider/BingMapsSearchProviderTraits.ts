@@ -1,5 +1,5 @@
 import mixTraits from "../mixTraits";
-import primitiveTrait from "../primitiveTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
 import LocationSearchProviderTraits, {
   SearchProviderMapCenterTraits
 } from "./LocationSearchProviderTraits";
@@ -27,8 +27,8 @@ export default class BingMapsSearchProviderTraits extends mixTraits(
   @primitiveTrait({
     type: "string",
     name: "Culture",
-    description: `Use the culture parameter to specify a culture for your request. 
-    The culture parameter provides the result in the language of the culture. 
+    description: `Use the culture parameter to specify a culture for your request.
+    The culture parameter provides the result in the language of the culture.
     For a list of supported cultures, see [Supported Culture Codes](https://docs.microsoft.com/en-us/bingmaps/rest-services/common-parameters-and-types/supported-culture-codes)`
   })
   culture: string = "en-au";

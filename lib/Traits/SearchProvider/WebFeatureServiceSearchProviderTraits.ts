@@ -1,4 +1,4 @@
-import primitiveTrait from "../primitiveTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
 import LocationSearchProviderTraits from "./LocationSearchProviderTraits";
 
 export default class WebFeatureServiceSearchProviderTraits extends LocationSearchProviderTraits {

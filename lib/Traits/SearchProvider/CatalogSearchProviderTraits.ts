@@ -1,6 +1,6 @@
 import mixTraits from "../mixTraits";
 import SearchProviderTraits from "./SearchProviderTraits";
-import primitiveTrait from "../primitiveTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
 
 export default class CatalogSearchProviderTraits extends mixTraits(
   SearchProviderTraits
