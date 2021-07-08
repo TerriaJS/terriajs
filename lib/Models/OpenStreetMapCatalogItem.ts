@@ -4,7 +4,7 @@ import URI from "urijs";
 import isDefined from "../Core/isDefined";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../ModelMixins/MappableMixin";
-import OpenStreetMapCatalogItemTraits from "../Traits/OpenStreetMapCatalogItemTraits";
+import OpenStreetMapCatalogItemTraits from "../Traits/TraitsClasses/OpenStreetMapCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 

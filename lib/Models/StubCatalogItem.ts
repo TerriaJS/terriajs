@@ -4,8 +4,8 @@
 import CreateModel from "./CreateModel";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import mixTraits from "../Traits/mixTraits";
-import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
-import primitiveTrait from "../Traits/primitiveTrait";
+import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";
+import primitiveTrait from "../Traits/Decorators/primitiveTrait";
 
 export class StubCatalogItemTraits extends mixTraits(CatalogMemberTraits) {
   @primitiveTrait({

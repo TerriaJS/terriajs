@@ -9,7 +9,7 @@ import ArcGisPortalItemReference, {
   ArcGisPortalItemStratum
 } from "../../lib/Models/ArcGisPortalItemReference";
 import ArcGisFeatureServerCatalogItem from "../../lib/Models/ArcGisFeatureServerCatalogItem";
-import InfoSectionTraits from "../../lib/Traits/CatalogMemberTraits";
+import InfoSectionTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
 
 configure({
   enforceActions: "observed",

@@ -23,7 +23,7 @@ import WebMapServiceCatalogItem, {
 import isDefined from "../Core/isDefined";
 import makeRealPromise from "../Core/makeRealPromise";
 import TerriaError from "../Core/TerriaError";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
+import { InfoSectionTraits } from "../Traits/TraitsClasses/CatalogMemberTraits";
 
 export const callWebCoverageService = function(
   wmsCatalogItem: WebMapServiceCatalogItem

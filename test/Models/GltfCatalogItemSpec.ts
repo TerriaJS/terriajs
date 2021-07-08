@@ -4,7 +4,7 @@ import CommonStrata from "../../lib/Models/CommonStrata";
 import createStratumInstance from "../../lib/Models/createStratumInstance";
 import GltfCatalogItem from "../../lib/Models/GltfCatalogItem";
 import Terria from "../../lib/Models/Terria";
-import HeadingPitchRollTraits from "../../lib/Traits/HeadingPitchRollTraits";
+import HeadingPitchRollTraits from "../../lib/Traits/TraitsClasses/HeadingPitchRollTraits";
 
 describe("GltfCatalogItem", function() {
   let gltf: GltfCatalogItem;

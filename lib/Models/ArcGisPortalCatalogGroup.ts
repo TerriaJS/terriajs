@@ -9,7 +9,7 @@ import AccessControlMixin from "../ModelMixins/AccessControlMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import ArcGisPortalCatalogGroupTraits from "../Traits/ArcGisPortalCatalogGroupTraits";
+import ArcGisPortalCatalogGroupTraits from "../Traits/TraitsClasses/ArcGisPortalCatalogGroupTraits";
 import ModelReference from "../Traits/ModelReference";
 import {
   ArcGisItem,

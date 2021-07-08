@@ -9,11 +9,11 @@ import TileErrorHandlerMixin from "../../lib/ModelMixins/TileErrorHandlerMixin";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import CreateModel from "../../lib/Models/CreateModel";
 import Terria from "../../lib/Models/Terria";
-import CatalogMemberTraits from "../../lib/Traits/CatalogMemberTraits";
-import MappableTraits from "../../lib/Traits/MappableTraits";
+import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
+import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
 import mixTraits from "../../lib/Traits/mixTraits";
-import RasterLayerTraits from "../../lib/Traits/RasterLayerTraits";
-import UrlTraits from "../../lib/Traits/UrlTraits";
+import RasterLayerTraits from "../../lib/Traits/TraitsClasses/RasterLayerTraits";
+import UrlTraits from "../../lib/Traits/TraitsClasses/UrlTraits";
 
 class TestCatalogItem extends TileErrorHandlerMixin(
   MappableMixin(

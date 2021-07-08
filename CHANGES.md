@@ -17,6 +17,7 @@ Change Log
 * Fix wms feature info returning only one feature
 * `WebMapServiceCatalogGroup` will now create layer auto-IDs using `Name` field to avoid ID clashes.
 * Added `GroupMixin` `shareKey` generation for members - if the group has `shareKeys`.
+* Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses`
 * [The next improvement]
 
 #### 8.0.0-alpha.87

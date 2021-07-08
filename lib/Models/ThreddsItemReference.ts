@@ -2,7 +2,7 @@ import i18next from "i18next";
 import { runInAction } from "mobx";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import ThreddsItemReferenceTraits from "../Traits/ThreddsItemReferenceTraits";
+import ThreddsItemReferenceTraits from "../Traits/TraitsClasses/ThreddsItemReferenceTraits";
 import ModelTraits from "../Traits/ModelTraits";
 import ThreddsCatalogGroup, { ThreddsDataset } from "./ThreddsCatalogGroup";
 import CatalogMemberFactory from "./CatalogMemberFactory";

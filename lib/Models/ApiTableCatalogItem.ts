@@ -9,9 +9,9 @@ import TableMixin from "../ModelMixins/TableMixin";
 import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 import ApiTableCatalogItemTraits, {
   ApiTableRequestTraits
-} from "../Traits/ApiTableCatalogItemTraits";
-import TableStyleTraits from "../Traits/TableStyleTraits";
-import TableTimeStyleTraits from "../Traits/TableTimeStyleTraits";
+} from "../Traits/TraitsClasses/ApiTableCatalogItemTraits";
+import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
+import TableTimeStyleTraits from "../Traits/TraitsClasses/TableTimeStyleTraits";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";

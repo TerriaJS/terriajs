@@ -14,13 +14,13 @@ import TableAutomaticStylesStratum, {
 } from "../Table/TableAutomaticStylesStratum";
 import TableColumnType from "../Table/TableColumnType";
 import xml2json from "../ThirdParty/xml2json";
-import SensorObservationServiceCatalogItemTraits from "../Traits/SensorObservationCatalogItemTraits";
+import SensorObservationServiceCatalogItemTraits from "../Traits/TraitsClasses/SensorObservationCatalogItemTraits";
 import TableChartStyleTraits, {
   TableChartLineStyleTraits
-} from "../Traits/TableChartStyleTraits";
-import TableColorStyleTraits from "../Traits/TableColorStyleTraits";
-import TablePointSizeStyleTraits from "../Traits/TablePointSizeStyleTraits";
-import TableStyleTraits from "../Traits/TableStyleTraits";
+} from "../Traits/TraitsClasses/TableChartStyleTraits";
+import TableColorStyleTraits from "../Traits/TraitsClasses/TableColorStyleTraits";
+import TablePointSizeStyleTraits from "../Traits/TraitsClasses/TablePointSizeStyleTraits";
+import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";

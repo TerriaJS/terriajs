@@ -9,7 +9,7 @@ import readJson from "../Core/readJson";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GeoJsonMixin from "../ModelMixins/GeojsonMixin";
-import GeoJsonCatalogItemTraits from "../Traits/GeoJsonCatalogItemTraits";
+import GeoJsonCatalogItemTraits from "../Traits/TraitsClasses/GeoJsonCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";

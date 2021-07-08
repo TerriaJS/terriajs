@@ -3,8 +3,8 @@ import CreateModel from "../../lib/Models/CreateModel";
 import createStratumInstance from "../../lib/Models/createStratumInstance";
 import Terria from "../../lib/Models/Terria";
 import ModelTraits from "../../lib/Traits/ModelTraits";
-import objectArrayTrait from "../../lib/Traits/objectArrayTrait";
-import primitiveTrait from "../../lib/Traits/primitiveTrait";
+import objectArrayTrait from "../../lib/Traits/Decorators/objectArrayTrait";
+import primitiveTrait from "../../lib/Traits/Decorators/primitiveTrait";
 
 configure({
   enforceActions: true,

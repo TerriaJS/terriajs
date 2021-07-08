@@ -13,9 +13,9 @@ import getUrlForImageryTile from "../Map/getUrlForImageryTile";
 import CommonStrata from "../Models/CommonStrata";
 import CompositeCatalogItem from "../Models/CompositeCatalogItem";
 import Model from "../Models/Model";
-import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
-import MappableTraits from "../Traits/MappableTraits";
-import RasterLayerTraits from "../Traits/RasterLayerTraits";
+import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";
+import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
+import RasterLayerTraits from "../Traits/TraitsClasses/RasterLayerTraits";
 import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
 import MappableMixin from "./MappableMixin";
 
