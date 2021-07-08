@@ -14,7 +14,7 @@ import ModelReference from "../Traits/ModelReference";
 import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
 
 function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
-  abstract class GroupMixin extends Base implements Group {
+  abstract class Klass extends Base implements Group {
     private _memberLoader = new AsyncLoader(this.forceLoadMembers.bind(this));
 
     /**
@@ -100,7 +100,7 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
     }
 
     @action
-    addShareKeysToMembers(): void {
+    addShareKeysToMembers(members = this.memberModels): void {
       const groupId = this.uniqueId;
       if (!groupId) return;
 
@@ -117,17 +117,33 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
        * - member.uniqueId = 'some-group-id/some-member-id'
        * - group.shareKeys = 'old-group-id'
        * - So we want to create member.shareKeys = ["old-group-id/some-member-id"]
+       *
+       * We also repeat this process for each shareKey for each member
        */
 
-      this.memberModels.forEach((model: BaseModel) => {
+      members.forEach((model: BaseModel) => {
         // Only add shareKey if model.uniqueId is an autoID (i.e. contains groupId)
         if (isDefined(model.uniqueId) && model.uniqueId.includes(groupId)) {
-          shareKeys.forEach(groupShareKey =>
+          shareKeys.forEach(groupShareKey => {
+            // Get shareKeys for current model
+            const modelShareKeys = this.terria.modelIdShareKeysMap.get(
+              model.uniqueId!
+            );
+            modelShareKeys?.forEach(modelShareKey => {
+              this.terria.addShareKey(
+                model.uniqueId!,
+                modelShareKey.replace(groupId, groupShareKey)
+              );
+            });
             this.terria.addShareKey(
               model.uniqueId!,
               model.uniqueId!.replace(groupId, groupShareKey)
-            )
-          );
+            );
+          });
+          // If member is a Group -> apply shareKeys to the next level of members
+          if (GroupMixin.isMixedInto(model)) {
+            this.addShareKeysToMembers(model.memberModels);
+          }
         }
       });
     }
@@ -237,7 +253,7 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
     }
   }
 
-  return GroupMixin;
+  return Klass;
 }
 
 namespace GroupMixin {

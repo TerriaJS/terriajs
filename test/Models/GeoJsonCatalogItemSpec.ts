@@ -1,11 +1,15 @@
+import { runInAction } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import loadJson from "../../lib/Core/loadJson";
 import loadText from "../../lib/Core/loadText";
 import TerriaError from "../../lib/Core/TerriaError";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
 import Terria from "../../lib/Models/Terria";
+import updateModelFromJson from "../../lib/Models/updateModelFromJson";
 import { JsonObject } from "./../../lib/Core/Json";
 
 describe("GeoJsonCatalogItem", function() {
@@ -109,7 +113,7 @@ describe("GeoJsonCatalogItem", function() {
          done();
        });
      })
-     
+
      it("works by blob", function(done) {
        loadBlob("test/GeoJSON/bike_racks.geojson").then(function(blob) {
          geojson.data = blob;
@@ -290,7 +294,7 @@ describe("GeoJsonCatalogItem", function() {
           });
       });
     });
-    /* 
+    /*
     it("fails gracefully when the provided blob is JSON but not GeoJSON", function(done) {
       loadBlob("test/CZML/verysimple.czml").then(function(blob) {
         geojson.data = blob;
@@ -338,4 +342,164 @@ describe("GeoJsonCatalogItem", function() {
   //     });
   //   });
   // });
+
+  describe("Support for time-varying geojson", () => {
+    it("Associates features with discrete times", async () => {
+      geojson.setTrait(
+        CommonStrata.user,
+        "url",
+        "test/GeoJSON/time-based.geojson"
+      );
+      geojson.setTrait(CommonStrata.user, "timeProperty", "year");
+      await geojson.loadMapItems();
+      expect(geojson.mapItems.length).toEqual(1);
+      const entities = geojson.mapItems[0].entities.values;
+      expect(entities.length).toEqual(2);
+
+      const entity1 = entities[0];
+      expect(
+        entity1.availability?.start.equals(
+          JulianDate.fromDate(new Date("2021"))
+        )
+      ).toBeTruthy();
+      expect(
+        entity1.availability?.stop.equals(Iso8601.MAXIMUM_VALUE)
+      ).toBeTruthy();
+
+      const entity2 = entities[1];
+      expect(
+        entity2.availability?.start.equals(
+          JulianDate.fromDate(new Date("2019"))
+        )
+      ).toBeTruthy();
+      expect(
+        entity2.availability?.stop.equals(JulianDate.fromDate(new Date("2021")))
+      ).toBeTruthy();
+    });
+  });
+
+  describe("Support for geojson with extruded heights", () => {
+    it("Sets polygon height properties correctly", async () => {
+      geojson.setTrait(CommonStrata.user, "url", "test/GeoJSON/height.geojson");
+      geojson.setTrait(CommonStrata.user, "heightProperty", "someProperty");
+      await geojson.loadMapItems();
+      expect(geojson.mapItems.length).toEqual(1);
+      const entities = geojson.mapItems[0].entities.values;
+      expect(entities.length).toEqual(2);
+
+      const entity1 = entities[0];
+      expect(
+        entity1.polygon?.extrudedHeight?.getValue(
+          terria.timelineClock.currentTime
+        )
+      ).toBe(10);
+      expect(
+        entity1.polygon?.heightReference?.getValue(
+          terria.timelineClock.currentTime
+        )
+      ).toBe(HeightReference.CLAMP_TO_GROUND);
+
+      const entity2 = entities[1];
+      expect(
+        entity2.polygon?.extrudedHeight?.getValue(
+          terria.timelineClock.currentTime
+        )
+      ).toBe(20);
+      expect(
+        entity2.polygon?.heightReference?.getValue(
+          terria.timelineClock.currentTime
+        )
+      ).toBe(HeightReference.CLAMP_TO_GROUND);
+      expect(
+        entity2.polygon?.extrudedHeightReference?.getValue(
+          terria.timelineClock.currentTime
+        )
+      ).toBe(HeightReference.RELATIVE_TO_GROUND);
+    });
+  });
+
+  describe("Support for czml templating", () => {
+    it("Sets polygon height properties correctly", async () => {
+      geojson.setTrait(CommonStrata.user, "url", "test/GeoJSON/points.geojson");
+      geojson.setTrait(CommonStrata.user, "czmlTemplate", {
+        cylinder: {
+          length: {
+            reference: "#properties.height"
+          },
+          topRadius: {
+            reference: "#properties.radius"
+          },
+          bottomRadius: {
+            reference: "#properties.radius"
+          },
+          material: {
+            solidColor: {
+              color: {
+                rgba: [0, 200, 0, 20]
+              }
+            }
+          }
+        }
+      });
+      await geojson.loadMapItems();
+
+      const entities = geojson.mapItems[0].entities.values;
+      console.log(entities);
+      expect(entities.length).toEqual(5);
+
+      const entity1 = entities[0];
+      expect(
+        entity1.cylinder?.length?.getValue(terria.timelineClock.currentTime)
+      ).toBe(10);
+      expect(
+        entity1.cylinder?.bottomRadius?.getValue(
+          terria.timelineClock.currentTime
+        )
+      ).toBe(10);
+      expect(entity1.properties?.someOtherProp?.getValue()).toBe("what");
+
+      const entity2 = entities[1];
+      expect(
+        entity2.cylinder?.length?.getValue(terria.timelineClock.currentTime)
+      ).toBe(20);
+      expect(
+        entity2.cylinder?.bottomRadius?.getValue(
+          terria.timelineClock.currentTime
+        )
+      ).toBe(5);
+      expect(entity2.properties?.someOtherProp?.getValue()).toBe("ok");
+    });
+  });
+
+  describe("Per features styling", function() {
+    it("Applies styles to features according to their properties, respecting string case", async function() {
+      const name = "PETER FAGANS GRAVE";
+      const fill = "#0000ff";
+      runInAction(() => {
+        updateModelFromJson(geojson, CommonStrata.override, {
+          name: "test",
+          type: "geojson",
+          url: "test/GeoJSON/cemeteries.geojson",
+          perPropertyStyles: [
+            {
+              properties: { NAME: name },
+              style: {
+                fill: fill
+              },
+              caseSensitive: true
+            }
+          ]
+        });
+      });
+
+      await geojson.loadMapItems();
+      const entity = geojson.mapItems[0].entities.values.find(
+        e => e.properties?.getValue(JulianDate.now()).NAME === name
+      );
+      expect(entity).toBeDefined();
+      expect(entity?.properties?.getValue(JulianDate.now())?.fill).toEqual(
+        fill
+      );
+    });
+  });
 });

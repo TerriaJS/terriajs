@@ -1,0 +1,2923 @@
+{
+  "total_count": 29307,
+  "links": [
+    {
+      "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records?limit=100&offset=0&order_by=metadata_time+DESC&select=metadata_time%2C+heat_stress_index%2C+geolocation",
+      "rel": "self"
+    },
+    {
+      "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records?limit=100&offset=0&order_by=metadata_time+DESC&select=metadata_time%2C+heat_stress_index%2C+geolocation",
+      "rel": "first"
+    },
+    {
+      "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records?limit=100&offset=29300&order_by=metadata_time+DESC&select=metadata_time%2C+heat_stress_index%2C+geolocation",
+      "rel": "last"
+    },
+    {
+      "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records?limit=100&offset=100&order_by=metadata_time+DESC&select=metadata_time%2C+heat_stress_index%2C+geolocation",
+      "rel": "next"
+    }
+  ],
+  "records": [
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/3dbf1e8af981e84b4d12ff4bf4c5d490acda1e6a",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "3dbf1e8af981e84b4d12ff4bf4c5d490acda1e6a",
+        "timestamp": "2021-06-18T06:00:47.176Z",
+        "size": 235,
+        "fields": {
+          "metadata_time": "2021-06-18T06:00:37+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/9fa01bab2011125b03a6b5d3f2bccda7844008ae",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "9fa01bab2011125b03a6b5d3f2bccda7844008ae",
+        "timestamp": "2021-06-18T05:50:47.566Z",
+        "size": 234,
+        "fields": {
+          "metadata_time": "2021-06-18T05:50:47+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/4b787bd1610cb3b27b7251505f9c3afdb0370e42",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "4b787bd1610cb3b27b7251505f9c3afdb0370e42",
+        "timestamp": "2021-06-18T05:20:05.518Z",
+        "size": 224,
+        "fields": {
+          "metadata_time": "2021-06-18T05:20:05+00:00",
+          "geolocation": {
+            "lat": -34.07001,
+            "lon": 150.808
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/a8a08107008363c91ccebc83c2e1530293e80640",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "a8a08107008363c91ccebc83c2e1530293e80640",
+        "timestamp": "2021-06-18T05:16:10.173Z",
+        "size": 168,
+        "fields": {
+          "metadata_time": "2021-06-18T05:16:09+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/5895900c493c3a1d5123c3ca7f6e0f0761a86dd9",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "5895900c493c3a1d5123c3ca7f6e0f0761a86dd9",
+        "timestamp": "2021-06-18T05:00:59.435Z",
+        "size": 236,
+        "fields": {
+          "metadata_time": "2021-06-18T05:00:51+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/1845f5f3cd9d4ec4758c77a26a54cb5fe646e44c",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "1845f5f3cd9d4ec4758c77a26a54cb5fe646e44c",
+        "timestamp": "2021-06-18T04:50:59.44Z",
+        "size": 236,
+        "fields": {
+          "metadata_time": "2021-06-18T04:50:59+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/b4eaa00e297c9e43e827a3c3b51d3cc64eaf41b8",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "b4eaa00e297c9e43e827a3c3b51d3cc64eaf41b8",
+        "timestamp": "2021-06-18T04:30:38.279Z",
+        "size": 237,
+        "fields": {
+          "metadata_time": "2021-06-18T04:30:37+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/0158b5571d7339e829ae5c5afa4b0f5dd5c3fd12",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "0158b5571d7339e829ae5c5afa4b0f5dd5c3fd12",
+        "timestamp": "2021-06-18T04:10:53.418Z",
+        "size": 235,
+        "fields": {
+          "metadata_time": "2021-06-18T04:10:53+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/45055bb3dc1a9b01ae661331f712d788f7e29d61",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "45055bb3dc1a9b01ae661331f712d788f7e29d61",
+        "timestamp": "2021-06-18T03:50:46.291Z",
+        "size": 235,
+        "fields": {
+          "metadata_time": "2021-06-18T03:50:46+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/42cea74198ed26d6de839b3aafc8c929a8a77438",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "42cea74198ed26d6de839b3aafc8c929a8a77438",
+        "timestamp": "2021-06-18T03:30:50.653Z",
+        "size": 235,
+        "fields": {
+          "metadata_time": "2021-06-18T03:30:50+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/d99bddc91149abfe0fc6f2a898135c1e22118599",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "d99bddc91149abfe0fc6f2a898135c1e22118599",
+        "timestamp": "2021-06-18T03:20:44.461Z",
+        "size": 236,
+        "fields": {
+          "metadata_time": "2021-06-18T03:20:44+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/79a60487d5485d896ef70dcdc4e93da165efbf0b",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "79a60487d5485d896ef70dcdc4e93da165efbf0b",
+        "timestamp": "2021-06-18T03:20:06.4Z",
+        "size": 222,
+        "fields": {
+          "metadata_time": "2021-06-18T03:20:06+00:00",
+          "geolocation": {
+            "lat": -34.07001,
+            "lon": 150.808
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/72f409bda317aaad6b6bffd1496c3038d84b1458",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "72f409bda317aaad6b6bffd1496c3038d84b1458",
+        "timestamp": "2021-06-18T03:10:39.434Z",
+        "size": 235,
+        "fields": {
+          "metadata_time": "2021-06-18T03:10:39+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/10b3921b2f172763370dc3328db6aa7d3b745ae2",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "10b3921b2f172763370dc3328db6aa7d3b745ae2",
+        "timestamp": "2021-06-18T03:00:57.586Z",
+        "size": 235,
+        "fields": {
+          "metadata_time": "2021-06-18T03:00:43+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/f91e9883c466c934333913f27e04db739fe63e92",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "f91e9883c466c934333913f27e04db739fe63e92",
+        "timestamp": "2021-06-18T02:44:14.8Z",
+        "size": 234,
+        "fields": {
+          "metadata_time": "2021-06-18T02:44:14+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/1b0220f5ccd3d2026dacd6ef8913c837548fce7d",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "1b0220f5ccd3d2026dacd6ef8913c837548fce7d",
+        "timestamp": "2021-06-18T02:41:06.446Z",
+        "size": 236,
+        "fields": {
+          "metadata_time": "2021-06-18T02:41:06+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/3203b6029f2c81845e5a3e992c25b50ad7ffbb7d",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "3203b6029f2c81845e5a3e992c25b50ad7ffbb7d",
+        "timestamp": "2021-06-18T02:31:06.564Z",
+        "size": 237,
+        "fields": {
+          "metadata_time": "2021-06-18T02:31:06+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/b3e1069a2fc91e18c359815f86fd41bf4251ee74",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "b3e1069a2fc91e18c359815f86fd41bf4251ee74",
+        "timestamp": "2021-06-18T02:00:42.672Z",
+        "size": 236,
+        "fields": {
+          "metadata_time": "2021-06-18T02:00:38+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/0a77f18a7e7abb8022779c51508ebda6701edd7f",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "0a77f18a7e7abb8022779c51508ebda6701edd7f",
+        "timestamp": "2021-06-18T01:20:49.333Z",
+        "size": 235,
+        "fields": {
+          "metadata_time": "2021-06-18T01:20:49+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/3ac1797c0d812c41b7a1fadf63e584540d28532d",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "3ac1797c0d812c41b7a1fadf63e584540d28532d",
+        "timestamp": "2021-06-18T01:20:07.216Z",
+        "size": 222,
+        "fields": {
+          "metadata_time": "2021-06-18T01:20:06+00:00",
+          "geolocation": {
+            "lat": -34.07001,
+            "lon": 150.808
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/8e3c836bd4a8b606067a8395d443545b20c0174c",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "8e3c836bd4a8b606067a8395d443545b20c0174c",
+        "timestamp": "2021-06-18T00:50:40.544Z",
+        "size": 234,
+        "fields": {
+          "metadata_time": "2021-06-18T00:50:40+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/b97576b65ade3d2cae10d4c8c5c47acfa0f64c00",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "b97576b65ade3d2cae10d4c8c5c47acfa0f64c00",
+        "timestamp": "2021-06-18T00:40:49.664Z",
+        "size": 234,
+        "fields": {
+          "metadata_time": "2021-06-18T00:40:49+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/2cfe52d0d854bc421653a3483e7d1db43c142d8a",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "2cfe52d0d854bc421653a3483e7d1db43c142d8a",
+        "timestamp": "2021-06-18T00:35:07.323Z",
+        "size": 215,
+        "fields": {
+          "metadata_time": "2021-06-18T00:35:07+00:00",
+          "geolocation": {
+            "lat": -34.07001,
+            "lon": 150.808
+          },
+          "heat_stress_index": 12.108954231678485
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/b67491bc2d7f31fdd22ec473b07d6b27c6b77fee",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "b67491bc2d7f31fdd22ec473b07d6b27c6b77fee",
+        "timestamp": "2021-06-18T00:21:07.499Z",
+        "size": 235,
+        "fields": {
+          "metadata_time": "2021-06-18T00:21:07+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/7cbdd0436d3aa6d6dc74922cad8aaf1ed02e7bfd",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "7cbdd0436d3aa6d6dc74922cad8aaf1ed02e7bfd",
+        "timestamp": "2021-06-18T00:00:54.427Z",
+        "size": 234,
+        "fields": {
+          "metadata_time": "2021-06-18T00:00:47+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/65e039fc2da2b66774bf1e730271ed57fba9fae2",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "65e039fc2da2b66774bf1e730271ed57fba9fae2",
+        "timestamp": "2021-06-17T23:50:41.733Z",
+        "size": 235,
+        "fields": {
+          "metadata_time": "2021-06-17T23:50:41+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/26b2c02a2dc255e556bad7da03e74f06fcf23307",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "26b2c02a2dc255e556bad7da03e74f06fcf23307",
+        "timestamp": "2021-06-17T23:31:00.449Z",
+        "size": 236,
+        "fields": {
+          "metadata_time": "2021-06-17T23:31:00+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/37bf70ffe500dc3ce20493859362a3834184cdf3",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "37bf70ffe500dc3ce20493859362a3834184cdf3",
+        "timestamp": "2021-06-17T23:21:01.571Z",
+        "size": 237,
+        "fields": {
+          "metadata_time": "2021-06-17T23:21:01+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/9c8b145f3707fc0cb386894d98cec04f90f088e3",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "9c8b145f3707fc0cb386894d98cec04f90f088e3",
+        "timestamp": "2021-06-17T23:00:52.333Z",
+        "size": 237,
+        "fields": {
+          "metadata_time": "2021-06-17T23:00:48+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/773b8a97f1f615875b72e954a827faef27fb1919",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "773b8a97f1f615875b72e954a827faef27fb1919",
+        "timestamp": "2021-06-17T22:50:48.324Z",
+        "size": 237,
+        "fields": {
+          "metadata_time": "2021-06-17T22:50:48+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/8abc4ed3f3c4259f0379f3f185cba7fef0a214d7",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "8abc4ed3f3c4259f0379f3f185cba7fef0a214d7",
+        "timestamp": "2021-06-17T22:40:55.684Z",
+        "size": 237,
+        "fields": {
+          "metadata_time": "2021-06-17T22:40:55+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/66ab156c6ed27a248508cf28901db90a1e5e5512",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "66ab156c6ed27a248508cf28901db90a1e5e5512",
+        "timestamp": "2021-06-17T22:00:41.111Z",
+        "size": 235,
+        "fields": {
+          "metadata_time": "2021-06-17T22:00:40+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/e7c6da03d64f0e8f39a44d7b3752ea22106da4d7",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "e7c6da03d64f0e8f39a44d7b3752ea22106da4d7",
+        "timestamp": "2021-06-17T21:40:41.166Z",
+        "size": 238,
+        "fields": {
+          "metadata_time": "2021-06-17T21:40:40+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/0eca4b135924adb974103b74f4a0c0b6066295be",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "0eca4b135924adb974103b74f4a0c0b6066295be",
+        "timestamp": "2021-06-17T21:20:45.707Z",
+        "size": 233,
+        "fields": {
+          "metadata_time": "2021-06-17T21:20:45+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/c60609a35a0c7163403ed13d794903c556cc3f60",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "c60609a35a0c7163403ed13d794903c556cc3f60",
+        "timestamp": "2021-06-17T21:00:53.986Z",
+        "size": 236,
+        "fields": {
+          "metadata_time": "2021-06-17T21:00:40+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/6cec4eaf0df499156f21eb1e5c28719043c764f0",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "6cec4eaf0df499156f21eb1e5c28719043c764f0",
+        "timestamp": "2021-06-17T20:50:57.938Z",
+        "size": 235,
+        "fields": {
+          "metadata_time": "2021-06-17T20:50:57+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/bd1ccca88dd60d0c8af85bbbeae451605bc414c3",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "bd1ccca88dd60d0c8af85bbbeae451605bc414c3",
+        "timestamp": "2021-06-17T20:05:09.245Z",
+        "size": 220,
+        "fields": {
+          "metadata_time": "2021-06-17T20:05:08+00:00",
+          "geolocation": {
+            "lat": -34.07001,
+            "lon": 150.808
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/02b04ebe4aab8102565b16e1c6ab691038dc0938",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "02b04ebe4aab8102565b16e1c6ab691038dc0938",
+        "timestamp": "2021-06-17T20:00:52.875Z",
+        "size": 233,
+        "fields": {
+          "metadata_time": "2021-06-17T20:00:51+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/0576716d9211b708f30799017f103e7362cbc864",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "0576716d9211b708f30799017f103e7362cbc864",
+        "timestamp": "2021-06-17T19:50:42.457Z",
+        "size": 234,
+        "fields": {
+          "metadata_time": "2021-06-17T19:50:42+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/96ec3b2f269ba9580d6ff6dfcb8dbfbeb302871b",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "96ec3b2f269ba9580d6ff6dfcb8dbfbeb302871b",
+        "timestamp": "2021-06-17T19:30:59.127Z",
+        "size": 233,
+        "fields": {
+          "metadata_time": "2021-06-17T19:30:58+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/29a49007e1e12beb012988fc4e6f8a55f5ace4d1",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "29a49007e1e12beb012988fc4e6f8a55f5ace4d1",
+        "timestamp": "2021-06-17T19:20:42.46Z",
+        "size": 235,
+        "fields": {
+          "metadata_time": "2021-06-17T19:20:42+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/85a80504f6cb8d717da6e9dabff9a659e99d1992",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "85a80504f6cb8d717da6e9dabff9a659e99d1992",
+        "timestamp": "2021-06-17T19:20:09.413Z",
+        "size": 210,
+        "fields": {
+          "metadata_time": "2021-06-17T19:20:09+00:00",
+          "geolocation": {
+            "lat": -34.07001,
+            "lon": 150.808
+          },
+          "heat_stress_index": 6.356274285714287
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/586c6dd0a782c6bdcf04ad9dbcfd71a6c191d6f4",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "586c6dd0a782c6bdcf04ad9dbcfd71a6c191d6f4",
+        "timestamp": "2021-06-17T19:10:47.001Z",
+        "size": 233,
+        "fields": {
+          "metadata_time": "2021-06-17T19:10:46+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/4302a1474a99bf357a4065058161d50e1b388a1c",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "4302a1474a99bf357a4065058161d50e1b388a1c",
+        "timestamp": "2021-06-17T19:00:46.678Z",
+        "size": 235,
+        "fields": {
+          "metadata_time": "2021-06-17T19:00:41+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/1fee739f9433f4a8afc674d69e5c7401ec0f23d3",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "1fee739f9433f4a8afc674d69e5c7401ec0f23d3",
+        "timestamp": "2021-06-17T18:50:42.174Z",
+        "size": 234,
+        "fields": {
+          "metadata_time": "2021-06-17T18:50:41+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/2b633590a74dbe88f0279623a3e36692cf156520",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "2b633590a74dbe88f0279623a3e36692cf156520",
+        "timestamp": "2021-06-17T18:50:09.639Z",
+        "size": 212,
+        "fields": {
+          "metadata_time": "2021-06-17T18:50:09+00:00",
+          "geolocation": {
+            "lat": -34.07001,
+            "lon": 150.808
+          },
+          "heat_stress_index": 7.394214285714287
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/ce8dc994045298f4db75b2ef55c11d1000a75fc5",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "ce8dc994045298f4db75b2ef55c11d1000a75fc5",
+        "timestamp": "2021-06-17T18:40:42.148Z",
+        "size": 233,
+        "fields": {
+          "metadata_time": "2021-06-17T18:40:41+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/96412e16d16efb34cf26b649fc930bc5d76eb14d",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "96412e16d16efb34cf26b649fc930bc5d76eb14d",
+        "timestamp": "2021-06-17T18:30:42.534Z",
+        "size": 235,
+        "fields": {
+          "metadata_time": "2021-06-17T18:30:42+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/5f5945eef881783e42076ace2ede1df04987411c",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "5f5945eef881783e42076ace2ede1df04987411c",
+        "timestamp": "2021-06-17T18:21:33.412Z",
+        "size": 233,
+        "fields": {
+          "metadata_time": "2021-06-17T18:21:33+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/d82c953afa33c03a66a30f9371c27017a8792c5f",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "d82c953afa33c03a66a30f9371c27017a8792c5f",
+        "timestamp": "2021-06-17T18:10:42.382Z",
+        "size": 233,
+        "fields": {
+          "metadata_time": "2021-06-17T18:10:42+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/0a5a6eab3651827113e7b2822660bba8a03f93f9",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "0a5a6eab3651827113e7b2822660bba8a03f93f9",
+        "timestamp": "2021-06-17T18:05:10.049Z",
+        "size": 222,
+        "fields": {
+          "metadata_time": "2021-06-17T18:05:09+00:00",
+          "geolocation": {
+            "lat": -34.07001,
+            "lon": 150.808
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/24c9ce236ed8c710a8ea415afa7847ed710a72f6",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "24c9ce236ed8c710a8ea415afa7847ed710a72f6",
+        "timestamp": "2021-06-17T17:30:44.309Z",
+        "size": 232,
+        "fields": {
+          "metadata_time": "2021-06-17T17:30:43+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/2c8cce74ca9e6081afa513c6e02c1168dd4d6bef",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "2c8cce74ca9e6081afa513c6e02c1168dd4d6bef",
+        "timestamp": "2021-06-17T17:20:58.225Z",
+        "size": 235,
+        "fields": {
+          "metadata_time": "2021-06-17T17:20:57+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/04ebe96d3a869aa7903fd0d631da6cced676ef47",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "04ebe96d3a869aa7903fd0d631da6cced676ef47",
+        "timestamp": "2021-06-17T17:20:10.305Z",
+        "size": 213,
+        "fields": {
+          "metadata_time": "2021-06-17T17:20:10+00:00",
+          "geolocation": {
+            "lat": -34.07001,
+            "lon": 150.808
+          },
+          "heat_stress_index": 8.201634285714286
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/f11cb7367a8bbb4f5bbacd9e8b1c93dd63e12770",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "f11cb7367a8bbb4f5bbacd9e8b1c93dd63e12770",
+        "timestamp": "2021-06-17T17:10:42.735Z",
+        "size": 234,
+        "fields": {
+          "metadata_time": "2021-06-17T17:10:42+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/b6c64e71410d3abec5982fdafb8004cc72ba54df",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "b6c64e71410d3abec5982fdafb8004cc72ba54df",
+        "timestamp": "2021-06-17T16:50:48.639Z",
+        "size": 233,
+        "fields": {
+          "metadata_time": "2021-06-17T16:50:48+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/0b491bc58b6b9bef59d680e0f060cc4cffbb630b",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "0b491bc58b6b9bef59d680e0f060cc4cffbb630b",
+        "timestamp": "2021-06-17T16:50:10.404Z",
+        "size": 213,
+        "fields": {
+          "metadata_time": "2021-06-17T16:50:10+00:00",
+          "geolocation": {
+            "lat": -34.07001,
+            "lon": 150.808
+          },
+          "heat_stress_index": 8.372754285714286
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/5e8be19032c014ee20eaa7a7f0bc4304c81a66ca",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "5e8be19032c014ee20eaa7a7f0bc4304c81a66ca",
+        "timestamp": "2021-06-17T16:40:48.886Z",
+        "size": 235,
+        "fields": {
+          "metadata_time": "2021-06-17T16:40:48+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/ef924ce5b208aef00fdd7508c2914fd860f79eca",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "ef924ce5b208aef00fdd7508c2914fd860f79eca",
+        "timestamp": "2021-06-17T16:30:47.638Z",
+        "size": 235,
+        "fields": {
+          "metadata_time": "2021-06-17T16:30:47+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/1d381f9c3be7482582ce4ff6f455a8e8456d524f",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "1d381f9c3be7482582ce4ff6f455a8e8456d524f",
+        "timestamp": "2021-06-17T16:11:13.427Z",
+        "size": 235,
+        "fields": {
+          "metadata_time": "2021-06-17T16:10:57+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/24fbb0918f1afbc1869c746e208942236663c4fb",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "24fbb0918f1afbc1869c746e208942236663c4fb",
+        "timestamp": "2021-06-17T16:05:10.819Z",
+        "size": 223,
+        "fields": {
+          "metadata_time": "2021-06-17T16:05:10+00:00",
+          "geolocation": {
+            "lat": -34.07001,
+            "lon": 150.808
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/05efc07a1dee2b47e3692f9c9d1d26932ba4c772",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "05efc07a1dee2b47e3692f9c9d1d26932ba4c772",
+        "timestamp": "2021-06-17T16:00:54.997Z",
+        "size": 233,
+        "fields": {
+          "metadata_time": "2021-06-17T16:00:42+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/e023c367bc18ca808fe535b103535b35c942c162",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "e023c367bc18ca808fe535b103535b35c942c162",
+        "timestamp": "2021-06-17T15:51:34.287Z",
+        "size": 233,
+        "fields": {
+          "metadata_time": "2021-06-17T15:51:34+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/e08ab28228225ddd836b13636c0eb6da896c3665",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "e08ab28228225ddd836b13636c0eb6da896c3665",
+        "timestamp": "2021-06-17T15:51:10.975Z",
+        "size": 234,
+        "fields": {
+          "metadata_time": "2021-06-17T15:51:10+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/32473b4844ed403861c587816c119ba23d96d035",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "32473b4844ed403861c587816c119ba23d96d035",
+        "timestamp": "2021-06-17T15:50:10.904Z",
+        "size": 214,
+        "fields": {
+          "metadata_time": "2021-06-17T15:50:10+00:00",
+          "geolocation": {
+            "lat": -34.07001,
+            "lon": 150.808
+          },
+          "heat_stress_index": 7.852914285714286
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/07554091f9f2bbaded53685ad9bb2dbdf512356c",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "07554091f9f2bbaded53685ad9bb2dbdf512356c",
+        "timestamp": "2021-06-17T15:30:43.822Z",
+        "size": 233,
+        "fields": {
+          "metadata_time": "2021-06-17T15:30:43+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/9032206d692f216ca8aa6f4f4032962412e4229e",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "9032206d692f216ca8aa6f4f4032962412e4229e",
+        "timestamp": "2021-06-17T15:21:44.305Z",
+        "size": 233,
+        "fields": {
+          "metadata_time": "2021-06-17T15:21:44+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/f630483d067c48f781fe923de1ef9c0626fb31b1",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "f630483d067c48f781fe923de1ef9c0626fb31b1",
+        "timestamp": "2021-06-17T15:20:10.986Z",
+        "size": 213,
+        "fields": {
+          "metadata_time": "2021-06-17T15:20:10+00:00",
+          "geolocation": {
+            "lat": -34.07001,
+            "lon": 150.808
+          },
+          "heat_stress_index": 4.5173942857142855
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/6336e33429d3ba7dee19a6329995b706eff41ac2",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "6336e33429d3ba7dee19a6329995b706eff41ac2",
+        "timestamp": "2021-06-17T15:05:11.26Z",
+        "size": 222,
+        "fields": {
+          "metadata_time": "2021-06-17T15:05:10+00:00",
+          "geolocation": {
+            "lat": -34.07001,
+            "lon": 150.808
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/5e9fc3d4a224748607c8923dbf36ebbe7cc5a8d7",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "5e9fc3d4a224748607c8923dbf36ebbe7cc5a8d7",
+        "timestamp": "2021-06-17T14:41:04.981Z",
+        "size": 235,
+        "fields": {
+          "metadata_time": "2021-06-17T14:41:04+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/a61c013d522c766e50b157a43a6d0030a8a677c1",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "a61c013d522c766e50b157a43a6d0030a8a677c1",
+        "timestamp": "2021-06-17T14:35:49.229Z",
+        "size": 158,
+        "fields": {
+          "metadata_time": "2021-06-17T14:35:48+00:00",
+          "geolocation": {
+            "lat": -34.07001,
+            "lon": 150.808
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/e424892ccf2abafae2b78b3a11f552c58edcd419",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "e424892ccf2abafae2b78b3a11f552c58edcd419",
+        "timestamp": "2021-06-17T14:35:12.817Z",
+        "size": 213,
+        "fields": {
+          "metadata_time": "2021-06-17T14:35:12+00:00",
+          "geolocation": {
+            "lat": -34.07001,
+            "lon": 150.808
+          },
+          "heat_stress_index": 6.207774285714287
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/28a228d4cce3812ceb7d315ea0f01d9ac7960a2d",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "28a228d4cce3812ceb7d315ea0f01d9ac7960a2d",
+        "timestamp": "2021-06-17T14:30:43.765Z",
+        "size": 236,
+        "fields": {
+          "metadata_time": "2021-06-17T14:30:43+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/463f451a690cba99914c3f373e21e27a3ccfe7cc",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "463f451a690cba99914c3f373e21e27a3ccfe7cc",
+        "timestamp": "2021-06-17T14:20:43.897Z",
+        "size": 232,
+        "fields": {
+          "metadata_time": "2021-06-17T14:20:43+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/3cc6c07e55b1221fdce7b3506b31cc08efd04102",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "3cc6c07e55b1221fdce7b3506b31cc08efd04102",
+        "timestamp": "2021-06-17T13:50:45.787Z",
+        "size": 233,
+        "fields": {
+          "metadata_time": "2021-06-17T13:50:45+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/83651b02bf64138e578b5276aa24cf915c4b5e01",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "83651b02bf64138e578b5276aa24cf915c4b5e01",
+        "timestamp": "2021-06-17T13:40:45.753Z",
+        "size": 233,
+        "fields": {
+          "metadata_time": "2021-06-17T13:40:45+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/243a9698c4e10f37dd732fdabd25d30238d9d074",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "243a9698c4e10f37dd732fdabd25d30238d9d074",
+        "timestamp": "2021-06-17T13:30:45.928Z",
+        "size": 235,
+        "fields": {
+          "metadata_time": "2021-06-17T13:30:45+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/0acc39fa4a84fcb987c93eb6d99f386530f2a8c8",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "0acc39fa4a84fcb987c93eb6d99f386530f2a8c8",
+        "timestamp": "2021-06-17T13:20:52.039Z",
+        "size": 237,
+        "fields": {
+          "metadata_time": "2021-06-17T13:20:51+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/099309c4632839e3f169351c0ff709a38668c856",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "099309c4632839e3f169351c0ff709a38668c856",
+        "timestamp": "2021-06-17T13:10:50.179Z",
+        "size": 237,
+        "fields": {
+          "metadata_time": "2021-06-17T13:10:49+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/3ea25da86c2e4f63420faaa0666550bec7900408",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "3ea25da86c2e4f63420faaa0666550bec7900408",
+        "timestamp": "2021-06-17T13:05:13.425Z",
+        "size": 214,
+        "fields": {
+          "metadata_time": "2021-06-17T13:05:13+00:00",
+          "geolocation": {
+            "lat": -34.07001,
+            "lon": 150.808
+          },
+          "heat_stress_index": 9.004074285714287
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/5a6c86603b3eec862abc4167c471ddfbda94bcd5",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "5a6c86603b3eec862abc4167c471ddfbda94bcd5",
+        "timestamp": "2021-06-17T13:00:50.251Z",
+        "size": 235,
+        "fields": {
+          "metadata_time": "2021-06-17T13:00:49+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/e1071d19eeb689bf7c611cc4032b61afd74a746e",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "e1071d19eeb689bf7c611cc4032b61afd74a746e",
+        "timestamp": "2021-06-17T12:50:45.028Z",
+        "size": 234,
+        "fields": {
+          "metadata_time": "2021-06-17T12:50:44+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/3cfdd8249b4489ecf07e80c5d32753e106aaccf3",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "3cfdd8249b4489ecf07e80c5d32753e106aaccf3",
+        "timestamp": "2021-06-17T12:40:45.065Z",
+        "size": 236,
+        "fields": {
+          "metadata_time": "2021-06-17T12:40:44+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/381909b1e5a4e2556c3ca1b57c9fc4f7d5d53b3c",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "381909b1e5a4e2556c3ca1b57c9fc4f7d5d53b3c",
+        "timestamp": "2021-06-17T12:30:45.228Z",
+        "size": 234,
+        "fields": {
+          "metadata_time": "2021-06-17T12:30:44+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/3234a9c2d1b7f669638446848fcf910fef4dbe3c",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "3234a9c2d1b7f669638446848fcf910fef4dbe3c",
+        "timestamp": "2021-06-17T12:20:49.385Z",
+        "size": 235,
+        "fields": {
+          "metadata_time": "2021-06-17T12:20:49+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/8e37c097a8856254b2fad4912c392cce55026e66",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "8e37c097a8856254b2fad4912c392cce55026e66",
+        "timestamp": "2021-06-17T12:10:44.839Z",
+        "size": 236,
+        "fields": {
+          "metadata_time": "2021-06-17T12:10:44+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/348d7804bbb80b4a7e6b9662f720bfcc0c8ee630",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "348d7804bbb80b4a7e6b9662f720bfcc0c8ee630",
+        "timestamp": "2021-06-17T12:02:02.819Z",
+        "size": 234,
+        "fields": {
+          "metadata_time": "2021-06-17T12:02:02+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/2b13b364c7fc574b15d3bd0670fc7c2300bcb07f",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "2b13b364c7fc574b15d3bd0670fc7c2300bcb07f",
+        "timestamp": "2021-06-17T12:00:46.357Z",
+        "size": 237,
+        "fields": {
+          "metadata_time": "2021-06-17T12:00:46+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/a2af127157f2f0751ba53180798e2bd5bc061aff",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "a2af127157f2f0751ba53180798e2bd5bc061aff",
+        "timestamp": "2021-06-17T11:50:46.796Z",
+        "size": 236,
+        "fields": {
+          "metadata_time": "2021-06-17T11:50:46+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/ece966b5eb5de06ed5fed04b55a257234a9423ff",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "ece966b5eb5de06ed5fed04b55a257234a9423ff",
+        "timestamp": "2021-06-17T11:40:52.716Z",
+        "size": 234,
+        "fields": {
+          "metadata_time": "2021-06-17T11:40:52+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/338e52e196c7bcbcbb314c1c955b853d12751993",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "338e52e196c7bcbcbb314c1c955b853d12751993",
+        "timestamp": "2021-06-17T11:30:46.571Z",
+        "size": 232,
+        "fields": {
+          "metadata_time": "2021-06-17T11:30:46+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/8c5587e81f63863a6db56aba308737b4da60f814",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "8c5587e81f63863a6db56aba308737b4da60f814",
+        "timestamp": "2021-06-17T11:14:09.108Z",
+        "size": 168,
+        "fields": {
+          "metadata_time": "2021-06-17T11:14:08+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/2d6ab127c886f91606d2bacb5e621ec4f78cba75",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "2d6ab127c886f91606d2bacb5e621ec4f78cba75",
+        "timestamp": "2021-06-17T11:10:52.988Z",
+        "size": 235,
+        "fields": {
+          "metadata_time": "2021-06-17T11:10:52+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/0cddff2593624fe9cce858eafdd63dda50de8beb",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "0cddff2593624fe9cce858eafdd63dda50de8beb",
+        "timestamp": "2021-06-17T11:01:05.51Z",
+        "size": 239,
+        "fields": {
+          "metadata_time": "2021-06-17T11:01:05+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/26ff60e570414d850896e26429793971df780392",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "26ff60e570414d850896e26429793971df780392",
+        "timestamp": "2021-06-17T10:50:46.917Z",
+        "size": 239,
+        "fields": {
+          "metadata_time": "2021-06-17T10:50:46+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/1f006fea6f0adaa4089b1f520fe45da3e30a6c99",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "1f006fea6f0adaa4089b1f520fe45da3e30a6c99",
+        "timestamp": "2021-06-17T10:40:46.98Z",
+        "size": 239,
+        "fields": {
+          "metadata_time": "2021-06-17T10:40:46+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/e92a1906e816bb76f76da6ebb902a247f5974c82",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "e92a1906e816bb76f76da6ebb902a247f5974c82",
+        "timestamp": "2021-06-17T10:30:51.478Z",
+        "size": 236,
+        "fields": {
+          "metadata_time": "2021-06-17T10:30:51+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/2213b959e3806388c6352e14cced73175a4fc457",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "2213b959e3806388c6352e14cced73175a4fc457",
+        "timestamp": "2021-06-17T10:20:51.266Z",
+        "size": 239,
+        "fields": {
+          "metadata_time": "2021-06-17T10:20:50+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/7a2a8e38dd41938508910df1e6b7e3299d2a228f",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "7a2a8e38dd41938508910df1e6b7e3299d2a228f",
+        "timestamp": "2021-06-17T10:10:46.066Z",
+        "size": 238,
+        "fields": {
+          "metadata_time": "2021-06-17T10:10:45+00:00",
+          "geolocation": {
+            "lat": -33.998172,
+            "lon": 150.865419
+          },
+          "heat_stress_index": null
+        }
+      }
+    },
+    {
+      "links": [
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records/69c0a976dccb3d06776d608a76e4ca74a04f1756",
+          "rel": "self"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+          "rel": "dataset"
+        },
+        {
+          "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+          "rel": "datasets"
+        }
+      ],
+      "record": {
+        "id": "69c0a976dccb3d06776d608a76e4ca74a04f1756",
+        "timestamp": "2021-06-17T10:05:14.637Z",
+        "size": 214,
+        "fields": {
+          "metadata_time": "2021-06-17T10:05:14+00:00",
+          "geolocation": {
+            "lat": -34.07001,
+            "lon": 150.808
+          },
+          "heat_stress_index": 7.852914285714286
+        }
+      }
+    }
+  ]
+}

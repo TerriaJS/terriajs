@@ -76,6 +76,7 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
             severity: TerriaErrorSeverity.Warning
           })
         );
+        return;
       }
 
       const subJsonValue = jsonValue[propertyName];

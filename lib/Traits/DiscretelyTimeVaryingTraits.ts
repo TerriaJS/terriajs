@@ -1,12 +1,12 @@
 import { ChartItemType } from "../ModelMixins/ChartableMixin";
+import MappableTraits from "./MappableTraits";
 import mixTraits from "./mixTraits";
 import primitiveTrait from "./primitiveTrait";
-import ShowableTraits from "./ShowableTraits";
 import TimeVaryingTraits from "./TimeVaryingTraits";
 
 export default class DiscretelyTimeVaryingTraits extends mixTraits(
   TimeVaryingTraits,
-  ShowableTraits
+  MappableTraits
 ) {
   @primitiveTrait({
     name: "Mapping from Continuous Time",

@@ -3,7 +3,118 @@ Change Log
 
 ### MobX Development
 
-#### next release (8.0.0-alpha.81)
+#### next release (8.0.0-alpha.88)
+
+* Fixed a bug with numeric item search where it sometimes fails to return all matching values.
+* Respect order of objects from lower strata in `objectArrayTrait`.
+* Fix datetime button margin with scroll in workbench.
+* Fix checkbox when click happen on svg icon. (#5550)
+* Added progress indicator when loading item search tool.
+* Add `nullColor` to `ConstantColorMap` - used when `colorColumn` is of type `region` to hide regions where rows don't exist.
+* `TableStyles` will only be created for `text` columns if there are no columns of type `scalar`, `enum` or `region`.
+* Fix sharing user added data of type "Auto-detect".
+* #5605 tidy up format string used in `MagdaReference`
+* Fix wms feature info returning only one feature
+* `WebMapServiceCatalogGroup` will now create layer auto-IDs using `Name` field to avoid ID clashes.
+* Added `GroupMixin` `shareKey` generation for members - if the group has `shareKeys`.
+* [The next improvement]
+
+#### 8.0.0-alpha.87
+
+* Re-add basemap images to terriajs rather than requiring all TerriaMaps to have those basemap images. Default basemaps will use those images.
+* Data from TableMixin always overrides other feature information (e.g. from vector tiles in region mapping) by column name and title for feature info templating (consistent with v7).
+* Fixed point entity creation for TableMixin where different columns are used for point size and colour.
+* Changed MappableMixin's initialMessage to show while map items are loaded. Map items could be displayed behind the disclaimer before a user accepts the disclaimer.
+* Fixed a cyclic dependency between initialMessage and app spinner (globe gif greysreen) that caused the app spinner to be present forever when loading a share link.
+* Removed hardcoded credit links and made it configurable via terria config parameters.
+* Disable `TableMixin` time column if only one unique time interval
+
+#### 8.0.0-alpha.86
+
+- **Breaking changes**:
+  - `EnumColorMap` will only be used for enum `TableColumns` with number of unique values <= number of bins 
+
+* Add `options` to CSV papaparsing
+* `TableMixin` will now only show points **or** region mapping - not both
+* Add `FeatureInfoMixin` support for 2D vector features (in Cesium only)
+* `TableStyles` are now hidden from the "Display Variable" selector if the number of colors (enumColors or numberOfBins) is less than 2. As a ColorMap with a single color isn't super useful.
+* Improved default `TableColumn.isSampled` - it will be false if a binary column is detected (0 or 1)
+* Improved default Table charting - now a time column will be used for xAxis by default
+* Added `spreadFinishTime` - which works same way as `spreadStartTime` - if `true`, finish time of feature will be "spread" so that all features are displayed at the latest time step.
+* Added support for `OpenDataSoft` - only point or region based features + timeseries
+* `GeoJsonMixin`-based catalog items with polygon features can be extruded if a `heightProperty` is specified.
+* Bugfix to make time-based geojson work when there are multiple features with the same time property value.
+* Add `czmlTemplate` to `GeoJsonTraits` - it can be used to replace GeoJSON Point features with a CZML packet.
+* Made the moment points in the chart optionally clickable.
+
+#### 8.0.0-alpha.85
+
+- **Breaking changes**:
+  - Removed `registerAnalytics.js`
+  - Removed `HelpMenuPanel.jsx`
+
+* Added analytic events related to story, share and help menu items, Also refactored events to use category and action enums.
+* Remove table style `SelectableDimension` from SDMX
+* `GyroscopeGuidance` can now be translated.
+* Wraps tool title bar text using `...`.
+
+#### 8.0.0-alpha.84
+
+* Fix `ArcGisMapServerCatalogGroup` infinite loading by removing the cycle of calling `loadMembers` that was present in the `DataCatalogGroup` React component. However calling `loadMembers` is still not cached as it should for `ArcGisMapServerCatalogGroup`, and the infinite loading bug could return.
+* Fix bug `selectableDimensions` bug in `Cesium3dTilesMixin` and `GltfCatalogItem`.
+
+#### 8.0.0-alpha.83
+
+* Add `modelDimensions` to `CatalogMemberMixin` - this can be used to apply model stratum with a `SelectableDimension` (i.e. a drop-down menu).
+* `GeoJsonMixin`-based catalog items can now be styled based on to their properties through traits.
+* `GeoJsonMixin`-based catalog items can now vary over time if a `timeProperty` is specified.
+
+#### 8.0.0-alpha.82
+
+- **Breaking changes**:
+  - IndexedItemSearchProvider: (bounding) `radius` option is no longer supported in `resultsData.csv` of search indexes.
+
+* Show a toast and spinner icon in the "Ideal zoom" button when the map is zooming.
+* `zoomTo()` will return a promise that resolves when the zoom animation is complete.
+* Modifies `IndexedItemSearchProvider` to reflect changes to `terriajs-indexer` file format.
+* Move feature info timeseries chart funtion to `lib\Table\getChartDetailsFn.ts`
+* Fix feature info timeseries chart for point (lat/long) timeseries
+* Feature info chart x-values are now be sorted in acending order
+* Remove merging rows by ID for `PER_ROW` data in `ApiTableCatalogItem`
+* Make `ApiTableCatalogItem` more compatible with Table `Traits`
+  * `keyToColumnMapping` has been removed, now columns must be defined in `columns` `TableColumnTraits` to be copied from API responses.
+* Move notification state change logic from ViewState into new class `NotificationState`
+* Catalog items can now show a disclaimer or message before loading through specifying `InitialMessageTraits`
+* Added Leaflet hack to remove white-gaps between tiles (https://github.com/Leaflet/Leaflet/issues/3575#issuecomment-688644225)
+* Disabled pedestrian mode in mobile view.
+* Pedestrian mode will no longer respond to "wasd" keys when the user is typing in some input field.
+* Fix references to old `viewState.notification`.
+* wiring changeLanguage button to useTranslation hook so that it can be detected in client maps
+* Add `canZoomTo` to `TableMixin`
+* SDMX changes:
+  * Add better SDMX server error messages
+  * `conceptOverrides` is now `modelOverrides` - as dataflow dimension traits can now be overridden by codelist ID (which is higher priortiy than concept ID)
+  * Added `regionTypeReplacements` to `modelOverride`- to manually override detected regionTypes
+  * `modelOverrides` are created for SDMX common concepts `UNIT_MEASURE`, `UNIT_MULT` and `FREQ`
+    * `UNIT_MEASURE` will be displayed on legends and charts
+    * `UNIT_MULT` will be used to multiple the primary measure by `10^x`
+    * `FREQ` will be displayed as "units" in Legends and charts (eg "Monthly")
+  * Single values will now be displayed in `ShortReportSections`
+  * Custom feature info template to show proper dimension names + time-series chart
+  * Smarter region-mapping
+  * Removed `viewMode` - not needed now due to better handling of time-series
+* Fix `DimensionSelector` Select duplicate ids.
+* Add Leaflet splitter support for region mapping
+* Fix Leaflet splitter while zooming and panning map
+* Split `TableMixin` region mapping `ImageryParts` and `ImageryProvider` to improve opacity/show performance
+* Removed `useClipUpdateWorkaround` from Mapbox/Cesium TileLayers (for Leaflet) - because we no longer support IE
+* Fix overwriting `previewBaseMapId` with `initBaseMapId` by multiple `initData`.
+* GeoJSON Mixin based catalog items can now call an API to retrieve their data as well as fetching it from a url.
+* Changes to loadJson and loadJsonBlob to POST a request body rather than always make a GET request.
+* Added ApiRequestTraits, and refactor ApiTableCatalogItemTraits to use it. `apiUrl` is now `url`.
+* Adjusted styling of x-axis labels in feature info panel to prevent its clipping.
+
+#### 8.0.0-alpha.81
 
 * Fix invalid HTML in `DataPreviewSections`.
 * Fix pluralisation of mapDataState to support other languages.
@@ -23,7 +134,6 @@ Change Log
 * Fix `MagdaReference` `forceLoadReference` bug.
 * Clean up `CkanCatalogGroup` loading - errors are no-longer swallowed.
 * Add `#configUrl` hash parameter for **dev environment only**. It can be used to overwrite Terria config URL.
-* [The next improvement]
 
 #### 8.0.0-alpha.80
 

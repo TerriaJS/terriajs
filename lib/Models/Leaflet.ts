@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import L, { GridLayer } from "leaflet";
-import { action, autorun, runInAction } from "mobx";
+import { action, autorun, observable, runInAction } from "mobx";
 import { computedFn } from "mobx-utils";
 import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -58,26 +58,6 @@ import Terria from "./Terria";
 const FeatureDetection: FeatureDetection = require("terriajs-cesium/Source/Core/FeatureDetection")
   .default;
 
-interface SplitterClips {
-  left: string;
-  right: string;
-  clipPositionWithinMap?: number;
-  clipX?: number;
-}
-
-// As of Internet Explorer 11.483.15063.0 and Edge 40.15063.0.0 (EdgeHTML 15.15063) there is an apparent
-// bug in both browsers where setting the `clip` CSS style on our Leaflet layers does not consistently
-// cause the new clip to be applied.  The change shows up in the DOM inspector, but it is not reflected
-// in the rendered view.  You can reproduce it by adding a layer and toggling it between left/both/right
-// repeatedly, and you will quickly see it fail to update sometimes.  Unfortunateely my attempts to
-// reproduce this in jsfiddle were unsuccessful, so presumably there is something unusual about our
-// setup.  In any case, we do the usually-horrible thing here of detecting these browsers by their user
-// agent, and then work around the bug by hiding the DOM element, forcing it to updated by asking for
-// its bounding client rectangle, and then showing it again.  There's a bit of a performance hit to
-// this, so we don't do it on other browsers that do not experience this bug.
-const useClipUpdateWorkaround =
-  FeatureDetection.isInternetExplorer() || FeatureDetection.isEdge();
-
 // This class is an observer. It probably won't contain any observables itself
 
 export default class Leaflet extends GlobeOrMap {
@@ -104,6 +84,18 @@ export default class Leaflet extends GlobeOrMap {
   private _disposeSelectedFeatureSubscription?: () => void;
   private _disposeSplitterReaction: () => void;
 
+  // These are used to split CesiumTileLayer and MapboxCanvasVectorTileLayer
+  @observable size: L.Point | undefined;
+  @observable nw: L.Point | undefined;
+  @observable se: L.Point | undefined;
+
+  @action
+  private updateMapObservables() {
+    this.size = this.map.getSize();
+    this.nw = this.map.containerPointToLayerPoint([0, 0]);
+    this.se = this.map.containerPointToLayerPoint(this.size);
+  }
+
   private _createImageryLayer: (
     ip: ImageryProvider,
     clippingRectangle: Rectangle | undefined
@@ -112,9 +104,9 @@ export default class Leaflet extends GlobeOrMap {
       bounds: clippingRectangle && rectangleToLatLngBounds(clippingRectangle)
     };
     if (ip instanceof MapboxVectorTileImageryProvider) {
-      return new MapboxVectorCanvasTileLayer(ip, layerOptions);
+      return new MapboxVectorCanvasTileLayer(this, ip, layerOptions);
     } else {
-      return new CesiumTileLayer(ip, layerOptions);
+      return new CesiumTileLayer(this, ip, layerOptions);
     }
   });
 
@@ -151,6 +143,9 @@ export default class Leaflet extends GlobeOrMap {
       preferCanvas: true,
       worldCopyJump: false
     }).setView([-28.5, 135], 5);
+
+    this.map.on("move", () => this.updateMapObservables());
+    this.map.on("zoom", () => this.updateMapObservables());
 
     this.scene = new LeafletScene(this.map);
 
@@ -345,6 +340,8 @@ export default class Leaflet extends GlobeOrMap {
       cesiumCancelAnimationFrame(this._cesiumReqAnimFrameId);
     }
     this.dataSourceDisplay.destroy();
+    this.map.off("move");
+    this.map.off("zoom");
     this.map.remove();
   }
 
@@ -448,56 +445,54 @@ export default class Leaflet extends GlobeOrMap {
       | MappableMixin.MappableMixin
       | any,
     flightDurationSeconds: number
-  ): void {
+  ): Promise<void> {
     if (!isDefined(target)) {
-      return;
+      return Promise.resolve();
       //throw new DeveloperError("target is required.");
     }
 
-    const that = this;
+    let bounds;
 
-    return when().then(function() {
-      var bounds;
+    // Target is a KML data source
+    if (isDefined(target.entities)) {
+      if (isDefined(this.dataSourceDisplay)) {
+        bounds = this.dataSourceDisplay.getLatLngBounds(target);
+      }
+    } else {
+      let extent;
 
-      // Target is a KML data source
-      if (isDefined(target.entities)) {
-        if (isDefined(that.dataSourceDisplay)) {
-          bounds = that.dataSourceDisplay.getLatLngBounds(target);
+      if (target instanceof Rectangle) {
+        extent = target;
+      } else if (target instanceof CameraView) {
+        extent = target.rectangle;
+      } else if (MappableMixin.isMixedInto(target)) {
+        if (isDefined(target.cesiumRectangle)) {
+          extent = target.cesiumRectangle;
+        }
+        if (!isDefined(extent)) {
+          // Zoom to the first item!
+          return this.doZoomTo(target.mapItems[0], flightDurationSeconds);
         }
       } else {
-        let extent;
-
-        if (target instanceof Rectangle) {
-          extent = target;
-        } else if (target instanceof CameraView) {
-          extent = target.rectangle;
-        } else if (MappableMixin.isMixedInto(target)) {
-          if (isDefined(target.cesiumRectangle)) {
-            extent = target.cesiumRectangle;
-          }
-          if (!isDefined(extent)) {
-            // Zoom to the first item!
-            return that.doZoomTo(target.mapItems[0], flightDurationSeconds);
-          }
-        } else {
-          extent = target.rectangle;
-        }
-
-        // Account for a bounding box crossing the date line.
-        if (extent.east < extent.west) {
-          extent = Rectangle.clone(extent);
-          extent.east += CesiumMath.TWO_PI;
-        }
-        bounds = rectangleToLatLngBounds(extent);
+        extent = target.rectangle;
       }
 
-      if (isDefined(bounds)) {
-        that.map.flyToBounds(bounds, {
-          animate: flightDurationSeconds > 0.0,
-          duration: flightDurationSeconds
-        });
+      // Account for a bounding box crossing the date line.
+      if (extent.east < extent.west) {
+        extent = Rectangle.clone(extent);
+        extent.east += CesiumMath.TWO_PI;
       }
-    });
+      bounds = rectangleToLatLngBounds(extent);
+    }
+
+    if (isDefined(bounds)) {
+      this.map.flyToBounds(bounds, {
+        animate: flightDurationSeconds > 0.0,
+        duration: flightDurationSeconds
+      });
+    }
+
+    return Promise.resolve();
   }
 
   getCurrentCameraView(): CameraView {
@@ -834,7 +829,7 @@ export default class Leaflet extends GlobeOrMap {
           const splitDirection = item.splitDirection;
 
           layers.forEach(
-            action((layer: CesiumTileLayer) => {
+            action(layer => {
               if (showSplitter) {
                 layer.splitDirection = splitDirection;
                 layer.splitPosition = splitPosition;
@@ -852,12 +847,15 @@ export default class Leaflet extends GlobeOrMap {
 
   getImageryLayersForItem(
     item: MappableMixin.MappableMixin
-  ): CesiumTileLayer[] {
+  ): (CesiumTileLayer | MapboxVectorCanvasTileLayer)[] {
     return filterOutUndefined(
       item.mapItems.map(m => {
         if (ImageryParts.is(m)) {
           const layer = this._makeImageryLayerFromParts(m, item);
-          return layer instanceof CesiumTileLayer ? layer : undefined;
+          return layer instanceof CesiumTileLayer ||
+            layer instanceof MapboxVectorCanvasTileLayer
+            ? layer
+            : undefined;
         }
       })
     );
@@ -1048,7 +1046,11 @@ export default class Leaflet extends GlobeOrMap {
       options.maxZoom = map.options.maxZoom;
     }
 
-    const layer = new MapboxVectorCanvasTileLayer(imageryProvider, options);
+    const layer = new MapboxVectorCanvasTileLayer(
+      this,
+      imageryProvider,
+      options
+    );
     layer.addTo(map);
     layer.bringToFront();
 

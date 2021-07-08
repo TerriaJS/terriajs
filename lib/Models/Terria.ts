@@ -12,6 +12,7 @@ import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import URI from "urijs";
+import { Category, LaunchAction } from "../Core/AnalyticEvents/analyticEvents";
 import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
 import ConsoleAnalytics from "../Core/ConsoleAnalytics";
@@ -48,9 +49,11 @@ import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
 import { defaultTerms, Term } from "../ReactViewModels/defaultTerms";
-import { Notification } from "../ReactViewModels/ViewState";
+import NotificationState, {
+  Notification
+} from "../ReactViewModels/NotificationState";
 import { shareConvertNotification } from "../ReactViews/Notification/shareConvertNotification";
-import ShowableTraits from "../Traits/ShowableTraits";
+import MappableTraits from "../Traits/MappableTraits";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import { BaseMapModel, processBaseMaps } from "./BaseMaps/BaseMapModel";
@@ -100,7 +103,7 @@ interface ConfigParameters {
   /**
    * The maximum number of "feature info" boxes that can be displayed when clicking a point.
    */
-  defaultMaximumShownFeatureInfos?: number;
+  defaultMaximumShownFeatureInfos: number;
   /**
    * URL of the JSON file that defines region mapping for CSV files.
    */
@@ -251,6 +254,11 @@ interface ConfigParameters {
    * Minimum length of feedback comment.
    */
   feedbackMinLength?: number;
+
+  /**
+   * Extra links to show in the credit line at the bottom of the map (currently only the Cesium map).
+   */
+  extraCreditLinks?: { url: string; text: string }[];
 }
 
 interface StartOptions {
@@ -268,7 +276,21 @@ interface StartOptions {
   i18nOptions?: I18nStartOptions;
 }
 
-type Analytics = any;
+interface Analytics {
+  start: (
+    userParameters: Partial<{
+      logToConsole: boolean;
+      googleAnalyticsKey: any;
+      googleAnalyticsOptions: any;
+    }>
+  ) => void;
+  logEvent: (
+    category: string,
+    action: string,
+    label?: string,
+    value?: string
+  ) => void;
+}
 
 interface TerriaOptions {
   baseUrl?: string;
@@ -299,7 +321,6 @@ export default class Terria {
   readonly modelIdShareKeysMap = observable.map<string, string[]>();
 
   readonly baseUrl: string = "build/TerriaJS/";
-  readonly notification = new CesiumEvent();
   /** Use `terria.addErrorEventListener` or `terria.raiseErrorToUser` if you need to interact with errors outside this class*/
   private readonly error = new CesiumEvent();
   readonly tileLoadProgressEvent = new CesiumEvent();
@@ -341,7 +362,7 @@ export default class Terria {
    * If a global `ga` function is defined, this defaults to `GoogleAnalytics`.  Otherwise, it defaults
    * to `ConsoleAnalytics`.
    */
-  readonly analytics: Analytics;
+  readonly analytics: Analytics | undefined;
 
   /**
    * Gets the stack of layers active on the timeline.
@@ -400,7 +421,15 @@ export default class Terria {
     persistViewerMode: true,
     openAddData: false,
     feedbackPreamble: "feedback.feedbackPreamble",
-    feedbackMinLength: 0
+    feedbackMinLength: 0,
+    extraCreditLinks: [
+      // Default credit links (shown at the bottom of the Cesium map)
+      {
+        text: "map.extraCreditLinks.dataAttribution",
+        url: "about.html#data-attribution"
+      },
+      { text: "map.extraCreditLinks.disclaimer", url: "about.html#disclaimer" }
+    ]
   };
 
   @observable
@@ -480,6 +509,8 @@ export default class Terria {
    * @type {boolean}
    */
   @observable catalogReferencesLoaded: boolean = false;
+
+  readonly notificationState: NotificationState = new NotificationState();
 
   private readonly developmentEnv = process?.env?.NODE_ENV === "development";
 
@@ -573,7 +604,9 @@ export default class Terria {
     }
 
     if (this.models.has(model.uniqueId)) {
-      throw new RuntimeError("A model with the specified ID already exists.");
+      throw new RuntimeError(
+        `A model with the specified ID already exists: \`${model.uniqueId}\``
+      );
     }
 
     this.models.set(model.uniqueId, model);
@@ -748,7 +781,11 @@ export default class Terria {
     );
 
     this.analytics?.start(this.configParameters);
-    this.analytics?.logEvent("launch", "url", launchUrlForAnalytics);
+    this.analytics?.logEvent(
+      Category.launch,
+      LaunchAction.url,
+      launchUrlForAnalytics
+    );
     this.serverConfig = new ServerConfig();
     const serverConfig = await this.serverConfig.init(
       this.configParameters.serverConfigUrl
@@ -1235,8 +1272,6 @@ export default class Terria {
 
     if (isJsonString(initData.previewBaseMapId)) {
       this.previewBaseMapId = initData.previewBaseMapId;
-    } else if (this.initBaseMapId) {
-      this.previewBaseMapId = this.initBaseMapId;
     }
 
     if (
@@ -1495,7 +1530,7 @@ export default class Terria {
       // Build index of terria features by a hash of their properties.
       const relevantItems = this.workbench.items.filter(
         item =>
-          hasTraits(item, ShowableTraits, "show") &&
+          hasTraits(item, MappableTraits, "show") &&
           item.show &&
           MappableMixin.isMixedInto(item)
       ) as MappableMixin.MappableMixin[];
@@ -1694,10 +1729,10 @@ async function interpretHash(
 
         // Show warning messages if converted
         if (result.converted) {
-          terria.notification.raiseEvent({
+          terria.notificationState.addNotificationToQueue({
             title: i18next.t("share.convertNotificationTitle"),
             message: shareConvertNotification(result.messages)
-          } as Notification);
+          });
         }
 
         if (result.result !== null) {

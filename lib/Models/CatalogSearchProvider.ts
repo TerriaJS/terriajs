@@ -5,6 +5,7 @@ import Terria from "./Terria";
 import SearchProviderResults from "./SearchProviderResults";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
+import { Category, SearchAction } from "../Core/AnalyticEvents/analyticEvents";
 
 interface CatalogSearchProviderOptions {
   terria: Terria;
@@ -120,7 +121,11 @@ export default class CatalogSearchProvider extends SearchProvider {
       return Promise.resolve();
     }
 
-    this.terria.analytics.logEvent("search", "catalog", searchText);
+    this.terria.analytics?.logEvent(
+      Category.search,
+      SearchAction.catalog,
+      searchText
+    );
     const resultMap: ResultMap = new Map();
 
     const promise: Promise<any> = loadAndSearchCatalogRecursively(
