@@ -4,7 +4,7 @@ import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import CompositeCatalogItemTraits from "../Traits/CompositeCatalogItemTraits";
+import CompositeCatalogItemTraits from "../Traits/TraitsClasses/CompositeCatalogItemTraits";
 import ModelReference from "../Traits/ModelReference";
 import MappableMixin, { MapItem } from "../ModelMixins/MappableMixin";
 import CreateModel from "./CreateModel";

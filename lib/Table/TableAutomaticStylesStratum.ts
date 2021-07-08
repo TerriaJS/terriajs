@@ -10,15 +10,17 @@ import createStratumInstance from "../Models/createStratumInstance";
 import LoadableStratum from "../Models/LoadableStratum";
 import { BaseModel } from "../Models/Model";
 import StratumFromTraits from "../Models/StratumFromTraits";
-import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
+import LegendTraits, {
+  LegendItemTraits
+} from "../Traits/TraitsClasses/LegendTraits";
 import TableChartStyleTraits, {
   TableChartLineStyleTraits
-} from "../Traits/TableChartStyleTraits";
-import TableColorStyleTraits from "../Traits/TableColorStyleTraits";
-import TablePointSizeStyleTraits from "../Traits/TablePointSizeStyleTraits";
-import TableStyleTraits from "../Traits/TableStyleTraits";
-import TableTimeStyleTraits from "../Traits/TableTimeStyleTraits";
-import TableTraits from "../Traits/TableTraits";
+} from "../Traits/TraitsClasses/TableChartStyleTraits";
+import TableColorStyleTraits from "../Traits/TraitsClasses/TableColorStyleTraits";
+import TablePointSizeStyleTraits from "../Traits/TraitsClasses/TablePointSizeStyleTraits";
+import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
+import TableTimeStyleTraits from "../Traits/TraitsClasses/TableTimeStyleTraits";
+import TableTraits from "../Traits/TraitsClasses/TableTraits";
 import TableColumnType from "./TableColumnType";
 import TableStyle from "./TableStyle";
 

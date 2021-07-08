@@ -4,7 +4,7 @@ import getDereferencedIfExists from "../Core/getDereferencedIfExists";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
 import GroupMixin from "../ModelMixins/GroupMixin";
-import GroupTraits from "../Traits/GroupTraits";
+import GroupTraits from "../Traits/TraitsClasses/GroupTraits";
 import CommonStrata from "./CommonStrata";
 import hasTraits from "./hasTraits";
 import { BaseModel } from "./Model";

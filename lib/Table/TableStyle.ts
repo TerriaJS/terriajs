@@ -17,14 +17,14 @@ import ScalePointSizeMap from "../Map/ScalePointSizeMap";
 import createCombinedModel from "../Models/createCombinedModel";
 import Model from "../Models/Model";
 import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
-import TableChartStyleTraits from "../Traits/TableChartStyleTraits";
+import TableChartStyleTraits from "../Traits/TraitsClasses/TableChartStyleTraits";
 import TableColorStyleTraits, {
   EnumColorTraits
-} from "../Traits/TableColorStyleTraits";
-import TablePointSizeStyleTraits from "../Traits/TablePointSizeStyleTraits";
-import TableStyleTraits from "../Traits/TableStyleTraits";
-import TableTimeStyleTraits from "../Traits/TableTimeStyleTraits";
-import TableTraits from "../Traits/TableTraits";
+} from "../Traits/TraitsClasses/TableColorStyleTraits";
+import TablePointSizeStyleTraits from "../Traits/TraitsClasses/TablePointSizeStyleTraits";
+import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
+import TableTimeStyleTraits from "../Traits/TraitsClasses/TableTimeStyleTraits";
+import TableTraits from "../Traits/TraitsClasses/TableTraits";
 import ColorPalette from "./ColorPalette";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";

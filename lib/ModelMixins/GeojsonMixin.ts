@@ -33,7 +33,7 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import Model from "../Models/Model";
 import proxyCatalogItemUrl from "../Models/proxyCatalogItemUrl";
-import { GeoJsonTraits } from "../Traits/GeoJsonTraits";
+import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
 import DiscretelyTimeVaryingMixin, {
   DiscreteTimeAsJS
 } from "./DiscretelyTimeVaryingMixin";
