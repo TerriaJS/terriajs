@@ -12,12 +12,12 @@ import Spacing from "../../Styled/Spacing";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import Icon, { StyledIcon } from "../../Styled/Icon";
 
-export type Story = {
+export interface Story {
   title: string;
   text: string;
   id: string;
   shareData?: any;
-};
+}
 
 interface Props {
   story: Story;
