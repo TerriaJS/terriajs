@@ -141,7 +141,7 @@ const MobileHeader = observer(
 
     render() {
       const searchState = this.props.viewState.searchState;
-      const { t } = this.props;
+      const { t, terria } = this.props;
       const nowViewingLength =
         terria.workbench.items !== undefined
           ? terria.workbench.items.length
