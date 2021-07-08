@@ -6,7 +6,7 @@ import TerriaError from "../Core/TerriaError";
 import CommonStrata from "../Models/CommonStrata";
 import FunctionParameter from "../Models/FunctionParameters/FunctionParameter";
 import Model from "../Models/Model";
-import CatalogFunctionTraits from "../Traits/CatalogFunctionTraits";
+import CatalogFunctionTraits from "../Traits/TraitsClasses/CatalogFunctionTraits";
 import CatalogFunctionJobMixin from "./CatalogFunctionJobMixin";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 

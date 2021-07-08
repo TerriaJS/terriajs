@@ -34,7 +34,7 @@ import getChartDetailsFn from "../Table/getChartDetailsFn";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
-import TableTraits from "../Traits/TableTraits";
+import TableTraits from "../Traits/TraitsClasses/TableTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import ChartableMixin, {
   calculateDomain,

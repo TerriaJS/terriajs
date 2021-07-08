@@ -6,7 +6,7 @@ import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../ModelMixins/MappableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import CartoMapCatalogItemTraits from "../Traits/CartoMapCatalogItemTraits";
+import CartoMapCatalogItemTraits from "../Traits/TraitsClasses/CartoMapCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";

@@ -3,7 +3,7 @@ import runLater from "../../Core/runLater";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../ModelMixins/GroupMixin";
 import UrlMixin from "../../ModelMixins/UrlMixin";
-import SdmxCatalogGroupTraits from "../../Traits/SdmxCatalogGroupTraits";
+import SdmxCatalogGroupTraits from "../../Traits/TraitsClasses/SdmxCatalogGroupTraits";
 import CreateModel from "../CreateModel";
 import { SdmxServerStratum } from "./SdmxJsonServerStratum";
 

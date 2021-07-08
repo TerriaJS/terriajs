@@ -12,11 +12,11 @@ import MappableMixin, { ImageryParts } from "./MappableMixin";
 import CommonStrata from "../Models/CommonStrata";
 import createStratumInstance from "../Models/createStratumInstance";
 import Model from "../Models/Model";
-import DiscretelyTimeVaryingTraits from "../Traits/DiscretelyTimeVaryingTraits";
-import MappableTraits from "../Traits/MappableTraits";
+import DiscretelyTimeVaryingTraits from "../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
+import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import TimeFilterTraits, {
   TimeFilterCoordinates
-} from "../Traits/TimeFilterTraits";
+} from "../Traits/TraitsClasses/TimeFilterTraits";
 import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
 import TimeVarying from "./TimeVarying";
 

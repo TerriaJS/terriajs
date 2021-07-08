@@ -6,7 +6,7 @@ import createStratumInstance from "../../lib/Models/createStratumInstance";
 import Leaflet from "../../lib/Models/Leaflet";
 import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-import { RectangleTraits } from "../../lib/Traits/MappableTraits";
+import { RectangleTraits } from "../../lib/Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 
 describe("Leaflet Model", function() {
