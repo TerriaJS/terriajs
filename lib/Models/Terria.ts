@@ -595,7 +595,9 @@ export default class Terria {
     }
 
     if (this.models.has(model.uniqueId)) {
-      throw new RuntimeError("A model with the specified ID already exists.");
+      throw new RuntimeError(
+        `A model with the specified ID already exists: \`${model.uniqueId}\``
+      );
     }
 
     this.models.set(model.uniqueId, model);
