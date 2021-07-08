@@ -5,22 +5,13 @@ import React from "react";
 import { Trans } from "react-i18next";
 import styled from "styled-components";
 import { addMarker, removeMarker } from "../../Models/LocationMarkerUtils";
-// import { ThemeContext } from "styled-components";
-
 import SearchBox from "../Search/SearchBox";
-// import SidebarSearch from "../Search/SidebarSearch";
 import LocationSearchResults from "../Search/LocationSearchResults";
 import Icon, { StyledIcon } from "../../Styled/Icon";
-
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
 import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
-import Icon, { StyledIcon } from "../Icon";
-// import SidebarSearch from "../Search/SidebarSearch";
-import LocationSearchResults from "./LocationSearchResults";
-// import { ThemeContext } from "styled-components";
-import SearchBox from "./SearchBox";
 
 export function SearchInDataCatalog({ viewState, handleClick }) {
   const locationSearchText = viewState.searchState.locationSearchText;
@@ -53,6 +44,7 @@ export function SearchInDataCatalog({ viewState, handleClick }) {
     </RawButton>
   );
 }
+
 SearchInDataCatalog.propTypes = {
   handleClick: PropTypes.func.isRequired,
   viewState: PropTypes.object.isRequired
@@ -74,11 +66,13 @@ const PresentationBox = styled(Box).attrs({
 `;
 
 export const LOCATION_SEARCH_INPUT_NAME = "LocationSearchInput";
+
 export class SearchBoxAndResultsRaw extends React.Component {
   constructor(props) {
     super(props);
     this.locationSearchRef = React.createRef();
   }
+
   componentDidMount() {
     this.props.viewState.updateAppRef(
       LOCATION_SEARCH_INPUT_NAME,
@@ -114,6 +108,7 @@ export class SearchBoxAndResultsRaw extends React.Component {
       this._nowViewingChangeSubscription = undefined;
     }
   }
+
   changeSearchText(newText) {
     runInAction(() => {
       this.props.viewState.searchState.locationSearchText = newText;
@@ -134,17 +129,21 @@ export class SearchBoxAndResultsRaw extends React.Component {
       });
     }
   }
+
   search() {
     this.props.viewState.searchState.searchLocations();
   }
+
   toggleShowLocationSearchResults(bool) {
     runInAction(() => {
       this.props.viewState.searchState.showLocationSearchResults = bool;
     });
   }
+
   startLocationSearch() {
     this.toggleShowLocationSearchResults(true);
   }
+
   render() {
     const { viewState, placeholder } = this.props;
     const searchState = viewState.searchState;

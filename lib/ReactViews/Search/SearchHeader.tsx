@@ -1,8 +1,8 @@
-import React from "react";
-import Loader from "../Loader";
 import { observer } from "mobx-react";
-const Text = require("../../Styled/Text").default;
-const BoxSpan = require("../../Styled/Box").BoxSpan;
+import React from "react";
+import { BoxSpan } from "../../Styled/Box";
+import Text from "../../Styled/Text";
+import Loader from "../Loader";
 
 interface SearchHeaderProps {
   searchResults: { [key: string]: any };

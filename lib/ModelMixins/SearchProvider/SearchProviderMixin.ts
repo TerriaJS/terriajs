@@ -14,6 +14,13 @@ function SearchProviderMixin<T extends Constructor<SearchProviderModel>>(
   abstract class SearchProviderMixin extends Base {
     abstract get type(): string;
 
+    protected abstract logEvent(searchText: string): void;
+
+    protected abstract doSearch(
+      searchText: string,
+      results: SearchProviderResults
+    ): Promise<void>;
+
     @action
     search(searchText: string): SearchProviderResults {
       const result = new SearchProviderResults(this);
@@ -24,16 +31,12 @@ function SearchProviderMixin<T extends Constructor<SearchProviderModel>>(
         });
         return result;
       }
+      this.logEvent(searchText);
       result.resultsCompletePromise = fromPromise(
         this.doSearch(searchText, result)
       );
       return result;
     }
-
-    protected abstract doSearch(
-      searchText: string,
-      results: SearchProviderResults
-    ): Promise<void>;
 
     private shouldRunSearch(searchText: string) {
       if (
@@ -53,12 +56,14 @@ function SearchProviderMixin<T extends Constructor<SearchProviderModel>>(
       return true;
     }
   }
+
   return SearchProviderMixin;
 }
 
 namespace SearchProviderMixin {
   export interface SearchProviderMixin
     extends InstanceType<ReturnType<typeof SearchProviderMixin>> {}
+
   export function isMixedInto(model: any): model is SearchProviderMixin {
     return model && model.hasSearchProviderMixin;
   }

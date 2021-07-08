@@ -12,12 +12,9 @@ import Terria from "../Terria";
 import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
 
-interface CatalogSearchProviderOptions {
-  terria: Terria;
-}
-
 type UniqueIdString = string;
 type ResultMap = Map<UniqueIdString, boolean>;
+
 export function loadAndSearchCatalogRecursively(
   terria: Terria,
   searchTextLowercase: string,
@@ -105,13 +102,20 @@ export default class CatalogSearchProvider extends SearchProviderMixin(
   CreateModel(CatalogSearchProviderTraits)
 ) {
   static readonly type = "catalog-search-provider";
+  @observable isSearching: boolean = false;
+  @observable debounceDurationOnceLoaded: number = 300;
 
   get type() {
     return CatalogSearchProvider.type;
   }
 
-  @observable isSearching: boolean = false;
-  @observable debounceDurationOnceLoaded: number = 300;
+  protected logEvent(searchText: string) {
+    this.terria.analytics?.logEvent(
+      Category.search,
+      SearchAction.catalog,
+      searchText
+    );
+  }
 
   protected doSearch(
     searchText: string,
@@ -126,11 +130,6 @@ export default class CatalogSearchProvider extends SearchProviderMixin(
       return Promise.resolve();
     }
 
-    this.terria.analytics?.logEvent(
-      Category.search,
-      SearchAction.catalog,
-      searchText
-    );
     const resultMap: ResultMap = new Map();
 
     const promise: Promise<any> = loadAndSearchCatalogRecursively(

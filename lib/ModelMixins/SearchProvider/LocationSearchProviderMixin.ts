@@ -1,15 +1,10 @@
-import { action, observable } from "mobx";
-import { fromPromise } from "mobx-utils";
+import { action } from "mobx";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Constructor from "../../Core/Constructor";
-import Model, { BaseModel } from "../../Models/Model";
-import SearchProviderResults from "../../Models/SearchProvider/SearchProviderResults";
-import StratumFromTraits from "../../Models/StratumFromTraits";
+import Model from "../../Models/Model";
 import Terria from "../../Models/Terria";
-import ModelTraits from "../../Traits/ModelTraits";
-import SearchProviderTraits from "../../Traits/SearchProvider/SearchProviderTraits";
 import CommonStrata from "../../Models/CommonStrata";
 import LocationSearchProviderTraits from "../../Traits/SearchProvider/LocationSearchProviderTraits";
 import SearchProviderMixin from "./SearchProviderMixin";
@@ -20,15 +15,16 @@ function LocationSearchProviderMixin<
   T extends Constructor<LocationSearchProviderModel>
 >(Base: T) {
   abstract class LocationSearchProviderMixin extends SearchProviderMixin(Base) {
+    get hasLocationSearchProviderMixin() {
+      return true;
+    }
+
     @action
     toggleOpen(stratumId: CommonStrata = CommonStrata.user) {
       this.setTrait(stratumId, "isOpen", !this.isOpen);
     }
-
-    get hasLocationSearchProviderMixin() {
-      return true;
-    }
   }
+
   return LocationSearchProviderMixin;
 }
 
@@ -59,6 +55,7 @@ export function getMapCenter(terria: Terria): MapCenter {
 namespace LocationSearchProviderMixin {
   export interface LocationSearchProviderMixin
     extends InstanceType<ReturnType<typeof LocationSearchProviderMixin>> {}
+
   export function isMixedInto(
     model: any
   ): model is LocationSearchProviderMixin {

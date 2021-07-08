@@ -2,6 +2,10 @@ import WebFeatureServiceSearchProviderTraits from "../../Traits/SearchProvider/W
 import CreateModel from "../CreateModel";
 import WebFeatureServiceSearchProviderMixin from "../../ModelMixins/SearchProvider/WebFeatureServiceSearchProviderMixin";
 import SearchResult from "./SearchResult";
+import {
+  Category,
+  SearchAction
+} from "../../Core/AnalyticEvents/analyticEvents";
 
 const featureCodesToNamesMap = new Map([
   ["AF", "Aviation"],
@@ -227,6 +231,14 @@ export default class AustralianGazetteerSearchProvider extends WebFeatureService
 
   get type() {
     return AustralianGazetteerSearchProvider.type;
+  }
+
+  protected logEvent(searchText: string) {
+    this.terria.analytics?.logEvent(
+      Category.search,
+      SearchAction.gazetteer,
+      searchText
+    );
   }
 
   featureToSearchResultFunction: (

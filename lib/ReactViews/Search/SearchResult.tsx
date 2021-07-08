@@ -1,16 +1,13 @@
 import React from "react";
 import styled, { useTheme } from "styled-components";
 import { Li } from "../../Styled/List";
-import Icon, { StyledIcon } from "../Icon";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import highlightKeyword from "../ReactViewHelpers/highlightKeyword";
-
-const Box = require("../../Styled/Box").default;
-const BoxSpan = require("../../Styled/Box").BoxSpan;
-const TextSpan = require("../../Styled/Text").TextSpan;
-const RawButton = require("../../Styled/Button").RawButton;
-const Spacing = require("../../Styled/Spacing").default;
-const SpacingSpan = require("../../Styled/Spacing").SpacingSpan;
-const Hr = require("../../Styled/Hr").default;
+import Box, { BoxSpan } from "../../Styled/Box";
+import { TextSpan } from "../../Styled/Text";
+import Spacing, { SpacingSpan } from "../../Styled/Spacing";
+import { RawButton } from "../../Styled/Button";
+import Hr from "../../Styled/Hr";
 
 // Not sure how to generalise this or if it should be kept in stlyed/Button.jsx
 
@@ -59,13 +56,7 @@ const SearchResult: React.FC<SearchResultProps> = (
             <SpacingSpan right={2} />
           </BoxSpan>
           {/* )} */}
-          <TextSpan
-            breakWord
-            large
-            // (You need light text on a dark theme, and vice versa)
-            textLight={isDarkTheme}
-            textDark={isLightTheme}
-          >
+          <TextSpan breakWord large textDark={isLightTheme}>
             <BoxSpan
               paddedRatio={2}
               paddedVertically={3}

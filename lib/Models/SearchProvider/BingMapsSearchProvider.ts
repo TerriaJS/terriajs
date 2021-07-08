@@ -13,6 +13,10 @@ import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
 import CommonStrata from "./../CommonStrata";
 import Terria from "../Terria";
+import {
+  Category,
+  SearchAction
+} from "../../Core/AnalyticEvents/analyticEvents";
 
 export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
   CreateModel(BingMapsSearchProviderTraits)
@@ -45,14 +49,20 @@ export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
     }
   }
 
+  protected logEvent(searchText: string) {
+    this.terria.analytics?.logEvent(
+      Category.search,
+      SearchAction.gazetteer,
+      searchText
+    );
+  }
+
   protected doSearch(
     searchText: string,
     searchResults: SearchProviderResults
   ): Promise<void> {
     searchResults.results.length = 0;
     searchResults.message = undefined;
-
-    this.terria.analytics.logEvent("search", "bing", searchText);
 
     const searchQuery = new Resource({
       url: this.url + "REST/v1/Locations",

@@ -22,6 +22,10 @@ export default class StubSearchProvider extends SearchProviderMixin(
     return StubSearchProvider.type;
   }
 
+  protected logEvent(searchText: string) {
+    return;
+  }
+
   protected doSearch(
     searchText: string,
     results: SearchProviderResults

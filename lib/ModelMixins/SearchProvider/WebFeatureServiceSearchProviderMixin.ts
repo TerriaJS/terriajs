@@ -177,6 +177,7 @@ function WebFeatureServiceSearchProviderMixin<
           results.message = i18next.t("viewModels.searchErrorOccurred");
         });
     }
+
     get isWebFeatureServiceSearchProviderMixin() {
       return true;
     }
@@ -190,6 +191,7 @@ namespace WebFeatureServiceSearchProviderMixin {
     extends InstanceType<
       ReturnType<typeof WebFeatureServiceSearchProviderMixin>
     > {}
+
   export function isMixedInto(
     model: any
   ): model is WebFeatureServiceSearchProviderMixin {

@@ -52,21 +52,23 @@ export default class SearchState {
       new CatalogSearchProvider("catalog-search-provider", options.terria);
     this.locationSearchProviders = options.locationSearchProviders || [];
 
+    const self = this;
+
     this._catalogSearchDisposer = reaction(
-      () => this.catalogSearchText,
+      () => self.catalogSearchText,
       () => {
-        this.isWaitingToStartCatalogSearch = true;
-        if (this.catalogSearchProvider) {
-          this.catalogSearchResults = this.catalogSearchProvider.search("");
+        self.isWaitingToStartCatalogSearch = true;
+        if (self.catalogSearchProvider) {
+          self.catalogSearchResults = self.catalogSearchProvider.search("");
         }
       }
     );
 
     this._locationSearchDisposer = reaction(
-      () => this.locationSearchText,
+      () => self.locationSearchText,
       () => {
-        this.isWaitingToStartLocationSearch = true;
-        this.locationSearchResults = this.locationSearchProviders.map(
+        self.isWaitingToStartLocationSearch = true;
+        self.locationSearchResults = self.locationSearchProviders.map(
           provider => {
             return provider.search("");
           }

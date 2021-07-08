@@ -5,7 +5,7 @@
   https://github.com/TerriaJS/nsw-digital-twin/issues/248#issuecomment-599919318
  */
 
-import { observable, computed, action } from "mobx";
+import { action, computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import {
@@ -15,20 +15,18 @@ import {
 } from "react-i18next";
 import styled, { DefaultTheme } from "styled-components";
 import isDefined from "../../Core/isDefined";
+import SearchProviderResults from "../../Models/SearchProvider/SearchProviderResults";
 import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
+import Box, { BoxSpan } from "../../Styled/Box";
+import { RawButton } from "../../Styled/Button";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import Ul from "../../Styled/List";
-import Icon, { StyledIcon } from "../Icon";
+import Text, { TextSpan } from "../../Styled/Text";
+import Loader from "../Loader";
 import LocationSearchProviderMixin from "./../../ModelMixins/SearchProvider/LocationSearchProviderMixin";
-import SearchProviderResults from "../../Models/SearchProvider/SearchProviderResults";
 import SearchHeader from "./SearchHeader";
 import SearchResult from "./SearchResult";
-import Loader from "../Loader";
-const BoxSpan: any = require("../../Styled/Box").BoxSpan;
-const Box: any = require("../../Styled/Box").default;
-const Text: any = require("../../Styled/Text").default;
-const TextSpan: any = require("../../Styled/Text").TextSpan;
-const RawButton: any = require("../../Styled/Button").RawButton;
 
 const RawButtonAndHighlight = styled(RawButton)`
   ${p => `
@@ -109,7 +107,7 @@ class LocationSearchResults extends React.Component<PropsType> {
               isOpen={isOpen}
               search={search}
               isWaitingForSearchToStart={this.props.isWaitingForSearchToStart}
-            ></NameWithLoader>
+            />
             <StyledIcon
               styledWidth={"9px"}
               glyph={isOpen ? Icon.GLYPHS.opened : Icon.GLYPHS.closed}
