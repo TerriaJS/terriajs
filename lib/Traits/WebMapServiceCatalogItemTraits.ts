@@ -343,4 +343,12 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
       "The maximum of the color scale range. Because COLORSCALERANGE is a non-standard property supported by ncWMS servers, this property is ignored unless WebMapServiceCatalogItem's supportsColorScaleRange is true. WebMapServiceCatalogItem's colorScaleMinimum must be set as well."
   })
   colorScaleMaximum: number = 50;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Maximum shown feature infos",
+    description:
+      'The maximum number of "feature infos" that can be displayed in feature info panel.'
+  })
+  maximumShownFeatureInfos?: number;
 }

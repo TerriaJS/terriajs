@@ -111,10 +111,12 @@ describe("WebMapServiceCatalogGroup", function() {
       const wmsItem = wms.memberModels[0] as WebMapServiceCatalogItem;
       expect(wmsItem.uniqueId).toBeDefined();
       expect(terria.modelIdShareKeysMap.has(wmsItem.uniqueId!)).toBeTruthy();
-      expect(terria.modelIdShareKeysMap.get(wmsItem.uniqueId!)![0]).toEqual(
-        `some-share-key/${wmsItem.name}`
-      );
-      console.log(wmsItem);
+
+      expect(terria.modelIdShareKeysMap.get(wmsItem.uniqueId!)).toEqual([
+        "test/average_data",
+        "some-share-key/average_data",
+        "some-share-key/single_period"
+      ]);
     });
   });
 

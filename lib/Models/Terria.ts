@@ -103,7 +103,7 @@ interface ConfigParameters {
   /**
    * The maximum number of "feature info" boxes that can be displayed when clicking a point.
    */
-  defaultMaximumShownFeatureInfos?: number;
+  defaultMaximumShownFeatureInfos: number;
   /**
    * URL of the JSON file that defines region mapping for CSV files.
    */
@@ -595,7 +595,9 @@ export default class Terria {
     }
 
     if (this.models.has(model.uniqueId)) {
-      throw new RuntimeError("A model with the specified ID already exists.");
+      throw new RuntimeError(
+        `A model with the specified ID already exists: \`${model.uniqueId}\``
+      );
     }
 
     this.models.set(model.uniqueId, model);
