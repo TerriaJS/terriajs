@@ -19,10 +19,12 @@ import proj4definitions from "../Map/Proj4Definitions";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import ArcGisFeatureServerCatalogItemTraits from "../Traits/ArcGisFeatureServerCatalogItemTraits";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
-import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
-import { RectangleTraits } from "../Traits/MappableTraits";
+import ArcGisFeatureServerCatalogItemTraits from "../Traits/TraitsClasses/ArcGisFeatureServerCatalogItemTraits";
+import { InfoSectionTraits } from "../Traits/TraitsClasses/CatalogMemberTraits";
+import LegendTraits, {
+  LegendItemTraits
+} from "../Traits/TraitsClasses/LegendTraits";
+import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";

@@ -2,7 +2,7 @@ import { runInAction } from "mobx";
 import createStratumInstance from "../../lib/Models/createStratumInstance";
 import SdmxJsonCatalogItem from "../../lib/Models/SdmxJson/SdmxJsonCatalogItem";
 import Terria from "../../lib/Models/Terria";
-import { ModelOverrideTraits } from "../../lib/Traits/SdmxCommonTraits";
+import { ModelOverrideTraits } from "../../lib/Traits/TraitsClasses/SdmxCommonTraits";
 
 const regionMapping = JSON.stringify(
   require("../../wwwroot/data/regionMapping.json")

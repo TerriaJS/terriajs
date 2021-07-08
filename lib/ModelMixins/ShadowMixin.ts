@@ -3,7 +3,7 @@ import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
 import { SelectableDimension } from "../Models/SelectableDimensions";
-import ShadowTraits, { Shadows } from "../Traits/ShadowTraits";
+import ShadowTraits, { Shadows } from "../Traits/TraitsClasses/ShadowTraits";
 
 function ShadowMixin<T extends Constructor<Model<ShadowTraits>>>(Base: T) {
   abstract class ShadowMixin extends Base {

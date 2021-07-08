@@ -6,7 +6,7 @@ import CommonStrata from "../../lib/Models/CommonStrata";
 import createStratumInstance from "../../lib/Models/createStratumInstance";
 import DimensionTraits, {
   DimensionOptionTraits
-} from "../../lib/Traits/DimensionTraits";
+} from "../../lib/Traits/TraitsClasses/DimensionTraits";
 
 describe("CatalogMemberMixin", function() {
   describe(" - infoWithoutSources", function() {

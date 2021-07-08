@@ -10,7 +10,7 @@ import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import ArcGisCatalogGroupTraits from "../Traits/ArcGisMapServerCatalogGroupTraits";
+import ArcGisCatalogGroupTraits from "../Traits/TraitsClasses/ArcGisMapServerCatalogGroupTraits";
 import ModelReference from "../Traits/ModelReference";
 import ArcGisFeatureServerCatalogGroup, {
   FeatureServerStratum

@@ -8,7 +8,7 @@ import SelectableDimensions, {
   SelectableDimension
 } from "../Models/SelectableDimensions";
 import updateModelFromJson from "../Models/updateModelFromJson";
-import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
+import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";
 import AccessControlMixin from "./AccessControlMixin";
 import GroupMixin from "./GroupMixin";
 import MappableMixin from "./MappableMixin";

@@ -13,7 +13,7 @@ import CommonStrata from "../../Models/CommonStrata";
 import CreateModel from "../../Models/CreateModel";
 import GeoJsonCatalogItem from "../../Models/GeoJsonCatalogItem";
 import ViewerMode from "../../Models/ViewerMode";
-import MappableTraits from "../../Traits/MappableTraits";
+import MappableTraits from "../../Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../ViewModels/TerriaViewer";
 import Styles from "./data-preview-map.scss";
 
