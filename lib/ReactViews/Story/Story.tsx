@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import styled, { useTheme } from "styled-components";
 import { sortable } from "react-anything-sortable";
 import classNames from "classnames";
+import { TFunction } from "i18next";
 
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
@@ -36,6 +37,10 @@ interface Props {
   style: any;
   onMouseDown(): void;
   onTouchStart(): void;
+}
+
+interface MenuProps extends Props {
+  t: TFunction;
 }
 
 const findTextContent = (content: any): string => {
@@ -85,6 +90,7 @@ const StoryMenuButton = styled(RawButton)`
   &:focus {
     color: ${props => props.theme.textLight};
     background-color: ${props => props.theme.colorPrimary};
+
     svg {
       fill: ${props => props.theme.textLight};
       stroke: ${props => props.theme.textLight};
@@ -146,8 +152,8 @@ const calculateOffset = (props: Props) => (
   return `top: ${offsetTopScroll}px;`;
 };
 
-const renderMenu = (props: Props) => {
-  const { t } = useTranslation();
+const renderMenu = (props: MenuProps) => {
+  const { t } = props;
 
   return (
     <Ul>
@@ -288,7 +294,7 @@ const Story = (props: Props) => {
                 }
               `}
             >
-              {renderMenu(props)}
+              {renderMenu({ ...props, t })}
             </Box>
           )}
         </Box>
@@ -310,6 +316,7 @@ const MenuButton = styled(RawButton)`
   min-height: 40px;
   border-radius: ${props => props.theme.radiusLarge};
   background: transparent;
+
   &:hover,
   &:focus {
     opacity: 0.9;
