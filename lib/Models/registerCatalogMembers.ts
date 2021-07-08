@@ -51,6 +51,7 @@ import CswCatalogGroup from "./CswCatalogGroup";
 import { ApiTableCatalogItem } from "./ApiTableCatalogItem";
 import OpenDataSoftCatalogGroup from "./OpenDataSoftCatalogGroup";
 import OpenDataSoftCatalogItem from "./OpenDataSoftCatalogItem";
+import SocrataCatalogGroup from "./SocrataCatalogGroup";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -193,6 +194,7 @@ export default function registerCatalogMembers() {
     OpenDataSoftCatalogItem.type,
     OpenDataSoftCatalogItem
   );
+  CatalogMemberFactory.register(SocrataCatalogGroup.type, SocrataCatalogGroup);
 
   UrlToCatalogMemberMapping.register(
     matchesExtension("csv"),
