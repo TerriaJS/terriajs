@@ -1,22 +1,20 @@
-import DiscreteTimeTraits from "./DiscreteTimeTraits";
-import objectArrayTrait from "./objectArrayTrait";
+import { ChartItemType } from "../ModelMixins/ChartableMixin";
+import MappableTraits from "./MappableTraits";
+import mixTraits from "./mixTraits";
 import primitiveTrait from "./primitiveTrait";
 import TimeVaryingTraits from "./TimeVaryingTraits";
-import ShowableTraits from "./ShowableTraits";
-import mixTraits from "./mixTraits";
-import { ChartItemType } from "../Models/Chartable";
 
 export default class DiscretelyTimeVaryingTraits extends mixTraits(
   TimeVaryingTraits,
-  ShowableTraits
+  MappableTraits
 ) {
   @primitiveTrait({
     name: "Mapping from Continuous Time",
     description:
-      "Specifies how a continuous time (e.g. the timeline control) is mapped to a discrete time for this dataset. Valid values are:\n\n" +
-      "  * `nearest` - the nearest available discrete time to the current continuous time is used.\n" +
-      "  * `next` - the discrete time equal to or after the current continuous time is used.\n" +
-      "  * `previous` - the discrete time equal to or before the current continuous time is used.",
+      "Specifies how a continuous time (e.g. the timeline control) is mapped to a discrete time for this dataset. Valid values are: <br/>" +
+      " * `nearest` - the nearest available discrete time to the current continuous time is used. <br/>" +
+      " * `next` - the discrete time equal to or after the current continuous time is used. <br/>" +
+      " * `previous` - the discrete time equal to or before the current continuous time is used.",
     type: "string"
   })
   fromContinuous: string = "nearest";

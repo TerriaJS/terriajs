@@ -3,7 +3,6 @@ import mixTraits from "./mixTraits";
 import ModelTraits from "./ModelTraits";
 import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
-import ShowableTraits from "./ShowableTraits";
 
 export class RectangleTraits extends ModelTraits {
   @primitiveTrait({
@@ -35,10 +34,60 @@ export class RectangleTraits extends ModelTraits {
   north?: number;
 }
 
-export default class MappableTraits extends mixTraits(
-  ShowableTraits,
-  AttributionTraits
-) {
+export class InitialMessageTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "Title",
+    description: "The title of the message."
+  })
+  title?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Content",
+    description: "The content of the message."
+  })
+  content?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Key",
+    description:
+      "Identifier. If multiple messages with the same key are triggered, only the first will be displayed."
+  })
+  key?: string;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Confirmation",
+    description: "Whether the message requires confirmation."
+  })
+  confirmation?: boolean;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Name",
+    description:
+      "If `confirmation` is true, the text to put on the confirmation button."
+  })
+  confirmText?: string;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Width",
+    description: "Width of the message."
+  })
+  width?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "height",
+    description: "Height of the message."
+  })
+  height?: number;
+}
+
+export default class MappableTraits extends mixTraits(AttributionTraits) {
   @objectTrait({
     type: RectangleTraits,
     name: "Rectangle",
@@ -54,4 +103,20 @@ export default class MappableTraits extends mixTraits(
       "Disables the preview on the Add Data panel. This is useful when the preview will be very slow to load."
   })
   disablePreview: boolean = false;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Show",
+    description:
+      "Show or hide a workbench item. When show is false, a mappable item is removed from the map and a chartable item is removed from the chart panel."
+  })
+  show: boolean = true;
+
+  @objectTrait({
+    name: "Initial message",
+    type: InitialMessageTraits,
+    description:
+      "A message to show when the user adds the catalog item to the workbench. Useful for showing disclaimers."
+  })
+  initialMessage?: InitialMessageTraits;
 }

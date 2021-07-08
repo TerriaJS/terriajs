@@ -2,9 +2,9 @@ import i18next from "i18next";
 import { computed, runInAction } from "mobx";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
-import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
 import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import ChartableMixin from "../ModelMixins/ChartableMixin";
 import ExportableMixin from "../ModelMixins/ExportableMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
@@ -27,16 +27,9 @@ import Terria from "./Terria";
 // - ID+time column -> point moves, region changes (continuously?) over time
 // - points, no ID, time -> "blips" with a duration (perhaps provided by another column)
 //
-
-const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
-
-export default class CsvCatalogItem extends AsyncChartableMixin(
-  TableMixin(
-    ExportableMixin(
-      AutoRefreshingMixin(
-        UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
-      )
-    )
+export default class CsvCatalogItem extends TableMixin(
+  AutoRefreshingMixin(
+    UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits)))
   )
 ) {
   static get type() {
@@ -52,7 +45,7 @@ export default class CsvCatalogItem extends AsyncChartableMixin(
   ) {
     super(id, terria, sourceReference);
     this.strata.set(
-      automaticTableStylesStratumName,
+      TableAutomaticStylesStratum.stratumName,
       new TableAutomaticStylesStratum(this)
     );
   }
@@ -108,11 +101,6 @@ export default class CsvCatalogItem extends AsyncChartableMixin(
     });
   }
 
-  @computed
-  get canZoomTo() {
-    return this.activeTableStyle.latitudeColumn !== undefined;
-  }
-
   /*
    * The polling URL to use for refreshing data.
    */
@@ -156,10 +144,6 @@ export default class CsvCatalogItem extends AsyncChartableMixin(
     });
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return Promise.resolve();
-  }
-
   protected forceLoadTableData(): Promise<string[][]> {
     if (this.csvString !== undefined) {
       return Csv.parseString(
@@ -191,4 +175,4 @@ export default class CsvCatalogItem extends AsyncChartableMixin(
   }
 }
 
-StratumOrder.addLoadStratum(automaticTableStylesStratumName);
+StratumOrder.addLoadStratum(TableAutomaticStylesStratum.stratumName);

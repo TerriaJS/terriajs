@@ -1,5 +1,5 @@
-import primitiveTrait from "./primitiveTrait";
 import ModelTraits from "./ModelTraits";
+import primitiveTrait from "./primitiveTrait";
 
 export type Shadows = "CAST" | "RECEIVE" | "BOTH" | "NONE";
 

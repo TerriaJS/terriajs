@@ -7,7 +7,6 @@ export default class ResultPendingCatalogItem extends CatalogMemberMixin(
   CreateModel(ResultPendingCatalogItemTraits)
 ) {
   @observable showsInfo = false;
-  @observable isMappable = false;
 
   loadPromise: Promise<any> = Promise.resolve();
 

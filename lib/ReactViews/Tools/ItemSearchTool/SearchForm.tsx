@@ -19,10 +19,9 @@ import ItemSearchProvider, {
 import ErrorComponent from "./ErrorComponent";
 import { ItemSearchQuery } from "./ItemSearchTool";
 import Loading from "./Loading";
-
-const Box: any = require("../../../Styled/Box").default;
-const Button: any = require("../../../Styled/Button").Button;
-const Text: any = require("../../../Styled/Text").default;
+import Text from "../../../Styled/Text";
+import Box from "../../../Styled/Box";
+import Button from "../../../Styled/Button";
 
 export interface SearchFormProps extends WithTranslation {
   itemSearchProvider: ItemSearchProvider;
@@ -316,6 +315,8 @@ const Input = styled.input`
   color: ${p => p.theme.dark};
   box-sizing: border-box;
   width: 100%;
+  height: 38px;
+  font-size: 1.1em;
 `;
 
 const Select = styled(ReactSelect).attrs({

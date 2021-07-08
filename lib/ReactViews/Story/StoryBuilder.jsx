@@ -11,22 +11,23 @@ import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import defined from "terriajs-cesium/Source/Core/defined";
 import dataStoriesImg from "../../../wwwroot/images/data-stories-getting-started.jpg";
 import triggerResize from "../../Core/triggerResize";
-import { RawButton } from "../../Styled/Button";
-import { TextSpan } from "../../Styled/Text";
+import Box from "../../Styled/Box";
+import Button, { RawButton } from "../../Styled/Button";
+import Spacing from "../../Styled/Spacing";
+import Text, { TextSpan } from "../../Styled/Text";
 import BadgeBar from "../BadgeBar.jsx";
 import measureElement from "../HOCs/measureElement";
-import Icon, { StyledIcon } from "../Icon";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
 import { getShareData } from "../Map/Panels/SharePanel/BuildShareLink";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
 import Styles from "./story-builder.scss";
 import Story from "./Story.jsx";
 import StoryEditor from "./StoryEditor.jsx";
-
-const Spacing = require("../../Styled/Spacing").default;
-const Box = require("../../Styled/Box").default;
-const Text = require("../../Styled/Text").default;
-const Button = require("../../Styled/Button").default;
+import {
+  Category,
+  StoryAction
+} from "../../Core/AnalyticEvents/analyticEvents";
 
 const STORY_VIDEO = "storyVideo";
 
@@ -120,6 +121,12 @@ const StoryBuilder = observer(
         text: _story.text,
         id: _story.id ? _story.id : createGuid()
       };
+
+      this.props.terria.analytics?.logEvent(
+        Category.story,
+        StoryAction.saveStory,
+        JSON.stringify(story)
+      );
 
       const storyIndex = (this.props.terria.stories || [])
         .map(story => story.id)
@@ -217,6 +224,10 @@ const StoryBuilder = observer(
         triggerResize();
       }, this.props.animationDuration || 1);
       this.props.terria.currentViewer.notifyRepaintRequired();
+      this.props.terria.analytics?.logEvent(
+        Category.story,
+        StoryAction.runStory
+      );
     },
 
     editStory(story) {
@@ -375,7 +386,7 @@ const StoryBuilder = observer(
             )}
             <Box
               column
-              static
+              position="static"
               css={`
                 ${(this.state.isRemoving || this.state.isSharing) &&
                   `opacity: 0.3`}
@@ -386,7 +397,7 @@ const StoryBuilder = observer(
                 scroll
                 overflowY={"auto"}
                 styledMaxHeight={"calc(100vh - 283px)"}
-                static
+                position="static"
                 ref={this.storiesWrapperRef}
                 css={`
                   margin-right: -10px;
@@ -576,8 +587,7 @@ const RemoveDialog = props => {
   return (
     <Box
       backgroundColor={props.theme.darkWithOverlay}
-      absolute
-      positionAbsolute
+      position="absolute"
       rounded
       paddedVertically={3}
       paddedHorizontally={2}

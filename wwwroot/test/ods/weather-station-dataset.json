@@ -1,0 +1,480 @@
+{
+  "links": [
+    {
+      "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations",
+      "rel": "self"
+    },
+    {
+      "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets",
+      "rel": "datasets"
+    },
+    {
+      "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/records",
+      "rel": "records"
+    },
+    {
+      "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/exports",
+      "rel": "exports"
+    },
+    {
+      "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/aggregates",
+      "rel": "aggregate"
+    },
+    {
+      "href": "https://www.campbelltownopendataportal.com.au/api/v2/catalog/datasets/weather-stations/facets",
+      "rel": "facets"
+    }
+  ],
+  "dataset": {
+    "dataset_id": "weather-stations",
+    "dataset_uid": "da_7rkvfm",
+    "attachments": [],
+    "has_records": true,
+    "data_visible": true,
+    "fields": [
+      {
+        "description": null,
+        "label": "Device name",
+        "type": "text",
+        "name": "device_name",
+        "annotations": {
+          "facet": []
+        }
+      },
+      {
+        "description": null,
+        "label": "dev_id",
+        "type": "text",
+        "name": "dev_id",
+        "annotations": {
+          "facet": []
+        }
+      },
+      {
+        "description": null,
+        "label": "time",
+        "type": "datetime",
+        "name": "metadata_time",
+        "annotations": {
+          "facet": [],
+          "facetsort": [
+            "-alphanum"
+          ],
+          "timeserie_precision": [
+            "hour"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "Heat Stress Index",
+        "type": "double",
+        "name": "heat_stress_index",
+        "annotations": {
+          "decimals": [
+            1
+          ],
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "UVIndex",
+        "type": "double",
+        "name": "payload_fields_uvindex",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "wshumidity",
+        "type": "double",
+        "name": "payload_fields_wshumidity",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "wstemperature",
+        "type": "double",
+        "name": "payload_fields_wstemperature",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "airpressure",
+        "type": "double",
+        "name": "payload_fields_airpressure",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "brightness",
+        "type": "double",
+        "name": "payload_fields_brightness",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "gustdirection",
+        "type": "double",
+        "name": "payload_fields_gustdirection",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "gustspeed",
+        "type": "double",
+        "name": "payload_fields_gustspeed",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "precip",
+        "type": "double",
+        "name": "payload_fields_precip",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "precipint",
+        "type": "double",
+        "name": "payload_fields_precipint",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "radiation",
+        "type": "double",
+        "name": "payload_fields_radiation",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "winddirection",
+        "type": "double",
+        "name": "payload_fields_winddirection",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "windspeed",
+        "type": "double",
+        "name": "payload_fields_windspeed",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "averagespl",
+        "type": "double",
+        "name": "payload_fields_averagespl",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "carbonmonoxide",
+        "type": "double",
+        "name": "payload_fields_carbonmonoxide",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "humidity",
+        "type": "double",
+        "name": "payload_fields_humidity",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "ibatt",
+        "type": "double",
+        "name": "payload_fields_ibatt",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "nitrogendioxide",
+        "type": "double",
+        "name": "payload_fields_nitrogendioxide",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "ozone",
+        "type": "double",
+        "name": "payload_fields_ozone",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "particulateserr",
+        "type": "double",
+        "name": "payload_fields_particulateserr",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "particulatesvsn",
+        "type": "double",
+        "name": "payload_fields_particulatesvsn",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "peakspl",
+        "type": "double",
+        "name": "payload_fields_peakspl",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "pm1",
+        "type": "double",
+        "name": "payload_fields_pm1",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "pm10",
+        "type": "double",
+        "name": "payload_fields_pm10",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "pm25",
+        "type": "double",
+        "name": "payload_fields_pm25",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "temperature",
+        "type": "double",
+        "name": "payload_fields_temperature",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "vbatt",
+        "type": "double",
+        "name": "payload_fields_vbatt",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "vpanel",
+        "type": "double",
+        "name": "payload_fields_vpanel",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "fixstatus",
+        "type": "double",
+        "name": "payload_fields_fixstatus",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "hdop",
+        "type": "double",
+        "name": "payload_fields_hdop",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "nsat",
+        "type": "double",
+        "name": "payload_fields_nsat",
+        "annotations": {
+          "facetsort": [
+            "-count"
+          ]
+        }
+      },
+      {
+        "description": null,
+        "label": "Geolocation",
+        "type": "geo_point_2d",
+        "name": "geolocation",
+        "annotations": {}
+      },
+      {
+        "description": null,
+        "label": "organisation",
+        "type": "text",
+        "name": "organisation",
+        "annotations": {}
+      }
+    ],
+    "metas": {
+      "default": {
+        "records_count": 100,
+        "modified": "2020-12-07T05:27:41+00:00",
+        "source_domain_address": null,
+        "references": null,
+        "keyword": [
+          "weather"
+        ],
+        "source_domain_title": null,
+        "geographic_reference": [
+          "au_80_11978",
+          "au_80_10780"
+        ],
+        "timezone": null,
+        "title": "Environmental sensors",
+        "parent_domain": "westernparklands",
+        "theme": [
+          "Environmental Protection"
+        ],
+        "modified_updates_on_data_change": false,
+        "metadata_processed": "2021-06-18T06:00:13.031000+00:00",
+        "data_processed": "2021-06-18T05:50:48+00:00",
+        "territory": [
+          "Ingleburn",
+          "Campbelltown (NSW)"
+        ],
+        "description": "<p>Two environmental monitoring stations (EMS) were installed in December 2020. The EMS measures: particulate matter (PM 1.0, PM 2.5, PM 10), Nitrogen Dioxide, Carbon Monoxide, Ozone, temperature, relative humidity, and ambient noise.\u00a0<br/></p>",
+        "modified_updates_on_metadata_change": false,
+        "shared_catalog": null,
+        "source_domain": null,
+        "attributions": null,
+        "geographic_area_mode": null,
+        "geographic_reference_auto": true,
+        "geographic_area": null,
+        "publisher": "Campbelltown City Council",
+        "language": "en",
+        "license": "CC BY",
+        "source_dataset": null,
+        "metadata_languages": [
+          "en"
+        ],
+        "oauth_scope": null,
+        "federated": false,
+        "license_url": "https://creativecommons.org/licenses/by/4.0/"
+      }
+    },
+    "features": [
+      "geo",
+      "analyze",
+      "timeserie"
+    ]
+  }
+}

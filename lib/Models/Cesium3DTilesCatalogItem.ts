@@ -3,7 +3,6 @@ import { action } from "mobx";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 import Cesium3DTile from "terriajs-cesium/Source/Scene/Cesium3DTile";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
@@ -16,23 +15,20 @@ import FeatureInfoMixin from "../ModelMixins/FeatureInfoMixin";
 import SearchableItemMixin, {
   ItemSelectionDisposer
 } from "../ModelMixins/SearchableItemMixin";
-import Cesium3DTilesCatalogItemTraits from "../Traits/Cesium3DCatalogItemTraits";
+import Cesium3DTilesCatalogItemTraits from "../Traits/Cesium3DTilesCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import { ItemSearchResult } from "./ItemSearchProvider";
-import Mappable from "./Mappable";
 
 // A property name used for tagging a search result feature for highlighting/hiding.
 const SEARCH_RESULT_TAG = "terriajs_search_result";
 
-export default class Cesium3DTilesCatalogItem
-  extends SearchableItemMixin(
-    FeatureInfoMixin(
-      Cesium3dTilesMixin(
-        CatalogMemberMixin(CreateModel(Cesium3DTilesCatalogItemTraits))
-      )
+export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
+  FeatureInfoMixin(
+    Cesium3dTilesMixin(
+      CatalogMemberMixin(CreateModel(Cesium3DTilesCatalogItemTraits))
     )
   )
-  implements Mappable {
+) {
   static readonly type = "3d-tiles";
   readonly type = Cesium3DTilesCatalogItem.type;
   get typeName() {
@@ -115,7 +111,7 @@ export default class Cesium3DTilesCatalogItem
    * Hides all features NO matching entry in `results`.
    * Required by {@SearchableItemMixin}.
    *
-   * Works similar to {@highlightItemSearchResults}
+   * Works similar to {@highlightFeaturesFromItemSearchResults}
    */
   @action hideFeaturesNotInItemSearchResults(
     results: ItemSearchResult[]
@@ -205,37 +201,40 @@ export default class Cesium3DTilesCatalogItem
   /**
    * Zoom to an item search result.
    */
-  zoomToItemSearchResult = action((result: ItemSearchResult) => {
+  zoomToItemSearchResult = action(async (result: ItemSearchResult) => {
     if (this.terria.cesium === undefined) return;
 
     const scene = this.terria.cesium.scene;
     const camera = scene.camera;
-    const zoomTarget = result.zoomToTarget;
-    if (zoomTarget instanceof BoundingSphere) {
-      camera.flyToBoundingSphere(zoomTarget);
+    const {
+      latitudeDegrees,
+      longitudeDegrees,
+      featureHeight
+    } = result.featureCoordinate;
+
+    const cartographic = Cartographic.fromDegrees(
+      longitudeDegrees,
+      latitudeDegrees
+    );
+    const [terrainCartographic] = await makeRealPromise<Cartographic[]>(
+      sampleTerrainMostDetailed(scene.terrainProvider, [cartographic])
+    ).catch(() => [cartographic]);
+
+    if (featureHeight < 20) {
+      // for small features we show a top-down view so that it is visible even
+      // if surrounded by larger features
+      const minViewDistance = 50;
+      // height = terrainHeight + featureHeight + minViewDistance
+      terrainCartographic.height += featureHeight + minViewDistance;
+      const destination = Cartographic.toCartesian(cartographic);
+      // use default orientation which is a top-down view of the feature
+      camera.flyTo({ destination, orientation: undefined });
     } else {
-      const { latitude, longitude, featureHeight } = zoomTarget;
-      if (featureHeight < 20) {
-        // If feature height is small, we try to zoom to a view from a top
-        // angle. We also try to be a bit more precise so that the camera does
-        // not go underground.
-        const cartographic = Cartographic.fromDegrees(longitude, latitude);
-        const promise = makeRealPromise<Cartographic[]>(
-          sampleTerrainMostDetailed(scene.terrainProvider, [cartographic])
-        ).catch(() => [cartographic]);
-        promise.then(([terrainCartographic]) => {
-          terrainCartographic.height += featureHeight + 10;
-          const destination = Ellipsoid.WGS84.cartographicToCartesian(
-            terrainCartographic
-          );
-          camera.flyTo({ destination });
-        });
-      } else {
-        const cartographic = Cartographic.fromDegrees(longitude, latitude);
-        const center = Ellipsoid.WGS84.cartographicToCartesian(cartographic);
-        const boundingSphere = new BoundingSphere(center, featureHeight * 2);
-        camera.flyToBoundingSphere(boundingSphere);
-      }
+      // for tall features we fly to the bounding sphere containing it so that
+      // the whole feature is visible
+      const center = Cartographic.toCartesian(terrainCartographic);
+      const bs = new BoundingSphere(center, featureHeight * 2);
+      camera.flyToBoundingSphere(bs);
     }
   });
 }

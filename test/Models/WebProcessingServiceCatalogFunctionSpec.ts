@@ -3,7 +3,7 @@ import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import isDefined from "../../lib/Core/isDefined";
 import TerriaError from "../../lib/Core/TerriaError";
-import AsyncMappableMixin from "../../lib/ModelMixins/AsyncMappableMixin";
+import MappableMixin from "../../lib/ModelMixins/MappableMixin";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
 import DateTimeParameter from "../../lib/Models/FunctionParameters/DateTimeParameter";
@@ -163,8 +163,8 @@ describe("WebProcessingServiceCatalogFunction", function() {
 
     it("adds result to workbench", async function() {
       expect(job.results.length).toBe(2);
-      expect(AsyncMappableMixin.isMixedInto(job.results[0])).toBeTruthy();
-      expect(AsyncMappableMixin.isMixedInto(job.results[1])).toBeTruthy();
+      expect(MappableMixin.isMixedInto(job.results[0])).toBeTruthy();
+      expect(MappableMixin.isMixedInto(job.results[1])).toBeTruthy();
       expect(job.results[0].inWorkbench).toBeTruthy();
       expect(job.results[1].inWorkbench).toBeTruthy();
     });

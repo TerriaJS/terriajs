@@ -17,9 +17,8 @@ import { observer } from "mobx-react";
 
 import ExportData from "./ExportData";
 import WarningBox from "./WarningBox";
-
-const Button = require("../../Styled/Button").default;
-const Box = require("../../Styled/Box").default;
+import Box from "../../Styled/Box";
+import Button from "../../Styled/Button";
 
 /**
  * CatalogItem description.
@@ -89,6 +88,28 @@ const Description = observer(
             condition={!catalogItem.hasLocalData && !catalogItem.hasDescription}
           >
             <p>{t("description.dataNotLocal")}</p>
+          </If>
+
+          <If condition={metadataUrls && metadataUrls.length > 0}>
+            <h4 className={Styles.h4}>{t("description.metadataUrls")}</h4>
+            <For each="metadataUrl" index="i" of={metadataUrls}>
+              <Box paddedVertically key={metadataUrl.url}>
+                <a
+                  href={metadataUrl.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`${Styles.link} description-metadataUrls`}
+                  css={`
+                    color: ${p => p.theme.colorPrimary};
+                  `}
+                >
+                  <If condition={metadataUrl.title}>
+                    <Button primary={true}>{metadataUrl.title}</Button>
+                  </If>
+                  <If condition={!metadataUrl.title}>{metadataUrl.url}</If>
+                </a>
+              </Box>
+            </For>
           </If>
 
           <DataPreviewSections metadataItem={catalogItem} />
@@ -187,27 +208,6 @@ const Description = observer(
               </Choose>
             </If>
 
-            <If condition={metadataUrls && metadataUrls.length > 0}>
-              <h4 className={Styles.h4}>{t("description.metadataUrls")}</h4>
-              <For each="metadataUrl" index="i" of={metadataUrls}>
-                <Box paddedVertically key={metadataUrl.url}>
-                  <a
-                    href={metadataUrl.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`${Styles.link} description-metadataUrls`}
-                    css={`
-                      color: ${p => p.theme.colorPrimary};
-                    `}
-                  >
-                    <If condition={metadataUrl.title}>
-                      <Button primary={true}>{metadataUrl.title}</Button>
-                    </If>
-                    <If condition={!metadataUrl.title}>{metadataUrl.url}</If>
-                  </a>
-                </Box>
-              </For>
-            </If>
             <If
               condition={
                 catalogItem.dataUrlType &&

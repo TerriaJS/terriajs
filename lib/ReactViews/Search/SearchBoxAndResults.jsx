@@ -5,6 +5,13 @@ import React from "react";
 import { Trans } from "react-i18next";
 import styled from "styled-components";
 import { addMarker, removeMarker } from "../../Models/LocationMarkerUtils";
+// import { ThemeContext } from "styled-components";
+
+import SearchBox from "../Search/SearchBox";
+// import SidebarSearch from "../Search/SidebarSearch";
+import LocationSearchResults from "../Search/LocationSearchResults";
+import Icon, { StyledIcon } from "../../Styled/Icon";
+
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
 import Spacing from "../../Styled/Spacing";
@@ -163,7 +170,7 @@ export class SearchBoxAndResultsRaw extends React.Component {
           {/* Results */}
           <If condition={shouldShowResults}>
             <Box
-              positionAbsolute
+              position="absolute"
               fullWidth
               column
               css={`

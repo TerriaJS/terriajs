@@ -10,9 +10,14 @@ const Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid").default;
 const Tween = require("terriajs-cesium/Source/ThirdParty/Tween").default;
 const CesiumMath = require("terriajs-cesium/Source/Core/Math").default;
 const Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3").default;
-import Icon from "../../Icon";
+import Icon from "../../../Styled/Icon";
 import Styles from "./zoom_control.scss";
+import withControlledVisibility from "../../../ReactViews/HOCs/withControlledVisibility";
 import { withTranslation } from "react-i18next";
+import {
+  Category,
+  ViewAction
+} from "../../../Core/AnalyticEvents/analyticEvents";
 
 // Map zoom control
 const ZoomControl = createReactClass({
@@ -89,7 +94,7 @@ const ZoomControl = createReactClass({
 
   zoomIn() {
     const cartesian3Scratch = new Cartesian3();
-    this.props.terria.analytics.logEvent("navigation", "click", "zoomIn");
+    this.props.terria.analytics?.logEvent(Category.view, ViewAction.zoomIn);
 
     if (defined(this.props.terria.leaflet)) {
       this.props.terria.leaflet.map.zoomIn(1);
@@ -122,7 +127,7 @@ const ZoomControl = createReactClass({
 
   zoomOut() {
     const cartesian3Scratch = new Cartesian3();
-    this.props.terria.analytics.logEvent("navigation", "click", "zoomOut");
+    this.props.terria.analytics?.logEvent(Category.view, ViewAction.zoomOut);
 
     if (defined(this.props.terria.leaflet)) {
       this.props.terria.leaflet.map.zoomOut(1);
@@ -153,7 +158,7 @@ const ZoomControl = createReactClass({
   },
 
   zoomReset() {
-    this.props.terria.analytics.logEvent("navigation", "click", "reset");
+    this.props.terria.analytics?.logEvent(Category.view, ViewAction.reset);
     this.props.terria.currentViewer.zoomTo(
       this.props.terria.mainViewer.homeCamera,
       1.5
@@ -200,4 +205,4 @@ const ZoomControl = createReactClass({
     );
   }
 });
-module.exports = withTranslation()(ZoomControl);
+module.exports = withTranslation()(withControlledVisibility(ZoomControl));

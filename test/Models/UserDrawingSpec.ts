@@ -552,6 +552,7 @@ describe("UserDrawing", function() {
     });
 
     expect(userDrawing.pointEntities.entities.values.length).toEqual(2);
+    expect(userDrawing.mapItems.length).toBe(2);
   });
 
   it("draws rectangle", function() {
@@ -612,5 +613,7 @@ describe("UserDrawing", function() {
     expect(rectangle.west).toBeCloseTo(CesiumMath.toRadians(149.121));
     expect(rectangle.north).toBeCloseTo(CesiumMath.toRadians(-35.309));
     expect(rectangle.south).toBeCloseTo(CesiumMath.toRadians(-35.311));
+
+    expect(userDrawing.mapItems.length).toBe(1);
   });
 });

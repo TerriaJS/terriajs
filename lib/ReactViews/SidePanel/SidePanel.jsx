@@ -6,7 +6,7 @@ import { withTranslation } from "react-i18next";
 import styled, { withTheme } from "styled-components";
 import { useTranslationIfExists } from "../../Language/languageHelpers";
 import { useRefForTerria } from "../Hooks/useRefForTerria";
-import Icon, { StyledIcon } from "../Icon";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import SearchBoxAndResults from "../Search/SearchBoxAndResults";
 import Workbench from "../Workbench/Workbench";
 import FullScreenButton from "./FullScreenButton";
@@ -43,7 +43,7 @@ function EmptyWorkbench(props) {
   };
 
   return (
-    <Text large textLight nunito>
+    <Text large textLight>
       {/* Hardcoded top to 150px for now for very very small screens
           TODO: make it not hardcoded */}
       <Box

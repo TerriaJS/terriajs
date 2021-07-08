@@ -1,5 +1,7 @@
 # Customizing your Data's Appearance
 
+**Warning: This section needs to be updated for TerriaJS version 8.**
+
 You can customize your data's appearance by using a small `json` configuration file to
 describe the settings you want to use.  Without such guidance, TerriaJS chooses
 default settings, eg. the size of the points, the color scale, how to cluster values in the

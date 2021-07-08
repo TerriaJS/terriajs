@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Styles from "./augmented_virtuality_tool.scss";
-import Icon from "../../Icon";
+import Icon from "../../../Styled/Icon";
 import ViewerMode from "../../../Models/ViewerMode";
 import { withTranslation } from "react-i18next";
 import AugmentedVirtuality from "../../../Models/AugmentedVirtuality";
@@ -72,7 +72,7 @@ class AugmentedVirtualityTool extends React.Component {
     ) {
       this.experimentalWarningShown = true;
       const { t } = this.props;
-      this.props.viewState.notifications.push({
+      this.props.viewState.terria.notificationState.addNotificationToQueue({
         title: t("AR.title"),
         message: t("AR.experimentalFeatureMessage"),
         confirmText: t("AR.confirmText")
@@ -86,7 +86,7 @@ class AugmentedVirtualityTool extends React.Component {
     if (!this.realignHelpShown) {
       this.realignHelpShown = true;
       const { t } = this.props;
-      this.props.viewState.notifications.push({
+      this.props.viewState.terria.notificationState.addNotificationToQueue({
         title: t("AR.manualAlignmentTitle"),
         message: t("AR.manualAlignmentMessage", {
           img:
@@ -104,7 +104,7 @@ class AugmentedVirtualityTool extends React.Component {
     if (!this.resetRealignHelpShown) {
       this.resetRealignHelpShown = true;
       const { t } = this.props;
-      this.props.viewState.notifications.push({
+      this.props.viewState.terria.notificationState.addNotificationToQueue({
         title: t("AR.resetAlignmentTitle"),
         message: t("AR.resetAlignmentMessage"),
         confirmText: t("AR.confirmText")

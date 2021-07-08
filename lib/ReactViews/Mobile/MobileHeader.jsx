@@ -4,6 +4,14 @@ import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
+import SearchBox from "../Search/SearchBox";
+import MobileModalWindow from "./MobileModalWindow";
+import Branding from "../SidePanel/Branding";
+import Styles from "./mobile-header.scss";
+import Icon, { StyledIcon } from "../../Styled/Icon";
+import MobileMenu from "./MobileMenu";
+import classNames from "classnames";
+import { removeMarker } from "../../Models/LocationMarkerUtils";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
 import { useTranslationIfExists } from "../../Language/languageHelpers";
@@ -141,8 +149,7 @@ const MobileHeader = observer(
 
     render() {
       const searchState = this.props.viewState.searchState;
-      const displayOne = this.props.terria.configParameters.displayOneBrand;
-      const { t, terria } = this.props;
+      const { t } = this.props;
       const nowViewingLength =
         terria.workbench.items !== undefined
           ? terria.workbench.items.length
@@ -165,7 +172,7 @@ const MobileHeader = observer(
                 }
               >
                 <Box
-                  positionAbsolute
+                  position="absolute"
                   css={`
                     left: 5px;
                   `}
@@ -194,12 +201,17 @@ const MobileHeader = observer(
                     />
                   </RawButton>
                   <Branding
-                    terria={terria}
+                    terria={this.props.terria}
+                    viewState={this.props.viewState}
                     version={this.props.version}
-                    displayOne={displayOne}
                   />
                 </Box>
-                <div className={Styles.groupRight}>
+                <div
+                  className={Styles.groupRight}
+                  css={`
+                    background-color: ${p => p.theme.dark};
+                  `}
+                >
                   <button
                     type="button"
                     className={Styles.btnAdd}

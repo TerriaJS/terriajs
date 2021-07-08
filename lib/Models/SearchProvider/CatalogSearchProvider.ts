@@ -1,12 +1,20 @@
 import { autorun, observable, runInAction } from "mobx";
+import {
+  Category,
+  SearchAction
+} from "../../Core/AnalyticEvents/analyticEvents";
 import GroupMixin from "../../ModelMixins/GroupMixin";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
+import SearchProviderMixin from "../../ModelMixins/SearchProvider/SearchProviderMixin";
 import CatalogSearchProviderTraits from "../../Traits/SearchProvider/CatalogSearchProviderTraits";
 import CreateModel from "../CreateModel";
 import Terria from "../Terria";
-import SearchProviderMixin from "../../ModelMixins/SearchProvider/SearchProviderMixin";
 import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
+
+interface CatalogSearchProviderOptions {
+  terria: Terria;
+}
 
 type UniqueIdString = string;
 type ResultMap = Map<UniqueIdString, boolean>;
@@ -118,7 +126,11 @@ export default class CatalogSearchProvider extends SearchProviderMixin(
       return Promise.resolve();
     }
 
-    this.terria.analytics.logEvent("search", "catalog", searchText);
+    this.terria.analytics?.logEvent(
+      Category.search,
+      SearchAction.catalog,
+      searchText
+    );
     const resultMap: ResultMap = new Map();
 
     const promise: Promise<any> = loadAndSearchCatalogRecursively(

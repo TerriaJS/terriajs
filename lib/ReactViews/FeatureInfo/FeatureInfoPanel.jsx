@@ -11,7 +11,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import { withTranslation } from "react-i18next";
-import Icon from "../Icon";
+import Icon from "../../Styled/Icon";
 import {
   LOCATION_MARKER_DATA_SOURCE_NAME,
   addMarker,
@@ -19,7 +19,6 @@ import {
   isMarkerVisible
 } from "../../Models/LocationMarkerUtils";
 import prettifyCoordinates from "../../Map/prettifyCoordinates";
-import raiseErrorToUser from "../../Models/raiseErrorToUser";
 import i18next from "i18next";
 import Styles from "./feature-info-panel.scss";
 import classNames from "classnames";
@@ -205,7 +204,7 @@ class FeatureInfoPanel extends React.Component {
         this.props.terria.pickedFeatures
       );
     } catch (e) {
-      raiseErrorToUser(this.props.terria, e);
+      this.props.terria.raiseErrorToUser(e);
     }
   }
 
@@ -294,10 +293,19 @@ class FeatureInfoPanel extends React.Component {
 
       // If there is a selected feature then use the feature location.
       position = terria.selectedFeature.position.getValue(clock);
+      if (position === undefined) {
+        // For discretely time varying features, we'll only have values for integer values of clock
+        position = terria.selectedFeature.position.getValue(Math.floor(clock));
+      }
 
       // If position is invalid then don't use it.
       // This seems to be fixing the symptom rather then the cause, but don't know what is the true cause this ATM.
-      if (isNaN(position.x) || isNaN(position.y) || isNaN(position.z)) {
+      if (
+        position === undefined ||
+        isNaN(position.x) ||
+        isNaN(position.y) ||
+        isNaN(position.z)
+      ) {
         position = undefined;
       }
     }

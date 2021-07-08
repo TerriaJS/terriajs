@@ -1,4 +1,5 @@
 import { computed } from "mobx";
+import Result from "../Core/Result";
 import TerriaError from "../Core/TerriaError";
 import createStratumInstance from "../Models/createStratumInstance";
 import Model, { BaseModel, ModelConstructor } from "../Models/Model";
@@ -55,32 +56,49 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
     model: BaseModel,
     stratumName: string,
     jsonValue: any
-  ): StratumFromTraits<T> {
+  ): Result<StratumFromTraits<T> | undefined> {
     const ResultType = this.type;
     const result: any = createStratumInstance(ResultType);
 
     if (this.isNullable && jsonValue === null) {
-      return jsonValue;
+      return Result.return(jsonValue);
     }
+
+    const errors: TerriaError[] = [];
 
     Object.keys(jsonValue).forEach(propertyName => {
       const trait = ResultType.traits[propertyName];
       if (trait === undefined) {
-        throw new TerriaError({
-          title: "Unknown property",
-          message: `${propertyName} is not a valid sub-property of ${this.id}.`
-        });
+        errors.push(
+          new TerriaError({
+            title: "Unknown property",
+            message: `${propertyName} is not a valid sub-property of ${this.id}.`
+          })
+        );
+        return;
       }
 
       const subJsonValue = jsonValue[propertyName];
       if (subJsonValue === undefined) {
         result[propertyName] = undefined;
       } else {
-        result[propertyName] = trait.fromJson(model, stratumName, subJsonValue);
+        result[propertyName] = trait
+          .fromJson(model, stratumName, subJsonValue)
+          .catchError(error => errors.push(error));
       }
     });
 
-    return result;
+    return Result.return(
+      result,
+      TerriaError.combine(
+        errors,
+        `Error${
+          errors.length !== 1 ? "s" : ""
+        } occurred while updating objectTrait model "${
+          model.uniqueId
+        }" from JSON`
+      )
+    );
   }
 
   toJson(value: StratumFromTraits<T> | undefined): any {

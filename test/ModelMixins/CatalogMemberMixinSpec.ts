@@ -1,7 +1,12 @@
-import { runInAction } from "mobx";
+import { runInAction, IReactionDisposer, reaction } from "mobx";
 import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
 import updateModelFromJson from "../../lib/Models/updateModelFromJson";
+import CommonStrata from "../../lib/Models/CommonStrata";
+import createStratumInstance from "../../lib/Models/createStratumInstance";
+import DimensionTraits, {
+  DimensionOptionTraits
+} from "../../lib/Traits/DimensionTraits";
 
 describe("CatalogMemberMixin", function() {
   describe(" - infoWithoutSources", function() {
@@ -69,6 +74,104 @@ describe("CatalogMemberMixin", function() {
       expect(wmsItem.metadataUrls.length).toBe(1);
       expect(wmsItem.metadataUrls[0].url).toBe("http://examplemetadata.com");
       expect(wmsItem.metadataUrls[0].title).toBe("Some Title");
+    });
+  });
+
+  describe(" - AsyncLoaders work as expected", function() {
+    let terria: Terria;
+    let wmsItem: WebMapServiceCatalogItem;
+
+    beforeEach(async function() {
+      terria = new Terria({
+        baseUrl: "./"
+      });
+      wmsItem = new WebMapServiceCatalogItem("test", terria);
+
+      runInAction(() => {
+        wmsItem.setTrait(
+          "definition",
+          "url",
+          "test/WMS/single_metadata_url.xml"
+        );
+      });
+    });
+
+    it(" - calls loadMetadata and then loadMapItems", async () => {
+      const promise = wmsItem.loadMapItems();
+
+      expect(wmsItem.isLoading).toBeTruthy();
+      expect(wmsItem.isLoadingMetadata).toBeTruthy();
+      expect(wmsItem.isLoadingMapItems).toBeFalsy();
+
+      let dispose: IReactionDisposer | undefined;
+
+      // Wait for isLoadingMapItems to be true -> then check isLoadingMetadata and isLoading
+      await new Promise(resolve => {
+        dispose = reaction(
+          () => wmsItem.isLoadingMapItems,
+          () => {
+            if (wmsItem.isLoadingMapItems) {
+              expect(wmsItem.isLoading).toBeTruthy();
+              expect(wmsItem.isLoadingMetadata).toBeFalsy();
+              resolve();
+            }
+          }
+        );
+      });
+
+      dispose?.();
+
+      await promise;
+
+      expect(wmsItem.isLoading).toBeFalsy();
+      expect(wmsItem.isLoadingMetadata).toBeFalsy();
+      expect(wmsItem.isLoadingMapItems).toBeFalsy();
+    });
+
+    it(" - modelDimensions", () => {
+      wmsItem.setTrait(CommonStrata.definition, "styles", "init-style");
+      wmsItem.setTrait(CommonStrata.definition, "layers", "init-layers");
+      wmsItem.setTrait(CommonStrata.user, "modelDimensions", [
+        createStratumInstance(DimensionTraits, {
+          id: "modelDimensions",
+          options: [
+            createStratumInstance(DimensionOptionTraits, {
+              id: "styles-test",
+              value: { styles: "test" }
+            }),
+            createStratumInstance(DimensionOptionTraits, {
+              id: "styles-test2",
+              value: { styles: "test2" }
+            }),
+            createStratumInstance(DimensionOptionTraits, {
+              id: "layers-test",
+              value: { layers: "test" }
+            })
+          ]
+        })
+      ]);
+
+      expect(wmsItem.styles).toBe("init-style");
+      expect(wmsItem.layers).toBe("init-layers");
+
+      const modelDimension = wmsItem.selectableDimensions.find(
+        dim => dim.id === "modelDimensions"
+      );
+
+      modelDimension?.setDimensionValue(CommonStrata.user, "styles-test");
+
+      expect(wmsItem.styles).toBe("test");
+      expect(wmsItem.layers).toBe("init-layers");
+
+      modelDimension?.setDimensionValue(CommonStrata.user, "styles-test2");
+
+      expect(wmsItem.styles).toBe("test2");
+      expect(wmsItem.layers).toBe("init-layers");
+
+      modelDimension?.setDimensionValue(CommonStrata.user, "layers-test");
+
+      expect(wmsItem.styles).toBe("test2");
+      expect(wmsItem.layers).toBe("test");
     });
   });
 });

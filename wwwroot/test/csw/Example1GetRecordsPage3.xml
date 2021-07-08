@@ -1,0 +1,1078 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<csw:GetRecordsResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+  <csw:SearchStatus timestamp="2021-03-08T19:48:35" />
+  <csw:SearchResults numberOfRecordsMatched="230" numberOfRecordsReturned="30" elementSet="full" nextRecord="231">
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>9a0d6456d9c5b7a9a6d5ca3899f960fa3f06785a</dc:identifier>
+      <dc:date>2020-09-23T13:24:38</dc:date>
+      <dc:title>(Month 12) December Mean Direction of the Maximum Directionally Resolved Wave Power</dc:title>
+      <dc:subject>Wave Energy Resource | Direction of Maximum Directionally Resolved Wave Power | Monthly Means</dc:subject>
+      <dct:abstract>The December mean direction of the maximum directionally resolved wave power is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using December data from December 1980 to December 2010.
+The direction of the maximum directionally resolved wave power is 0j and is used as the characteristic direction of the sea-state. Note, accurate determination of the directionally resolved wave power, J0, and its maximum, Jm, and hence 0j require spectral data, which was not archived at all grid points of the CAWCR wave hindcast. Here, we provide estimates of Jm using spectra reconstructed with archived gridded wave partition data, assuming a Pierson-Moskowitz spectra fit to each partition, with assumed spreading, and superimposed to produce a reconstructed spectra. Further details of the method used to estimate Jm are provided in the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The December mean direction of the maximum directionally resolved wave power is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using December data from December 1980 to December 2010.
+The direction of the maximum directionally resolved wave power is 0j and is used as the characteristic direction of the sea-state. Note, accurate determination of the directionally resolved wave power, J0, and its maximum, Jm, and hence 0j require spectral data, which was not archived at all grid points of the CAWCR wave hindcast. Here, we provide estimates of Jm using spectra reconstructed with archived gridded wave partition data, assuming a Pierson-Moskowitz spectra fit to each partition, with assumed spreading, and superimposed to produce a reconstructed spectra. Further details of the method used to estimate Jm are provided in the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.jthm_avg.12" description="ww3.aus_4m.jthm_avg.12">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Mean wave direction (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.jthm_avg.12</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.jthm_avg.12.nc" description="Download: ww3.aus_4m.jthm_avg.12.nc">http://oa-gis.csiro.au/data/jthm/ww3.aus_4m.jthm_avg.12.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>e64e0b29e3bfd45cca9d6f6fc985667d4ad3dd6d</dc:identifier>
+      <dc:date>2020-09-23T13:24:38</dc:date>
+      <dc:title>Annual Mean Spectral Width</dc:title>
+      <dc:subject>Wave Energy Resource | Wave Spectral Width | Statistics</dc:subject>
+      <dct:abstract>The annual mean spectral width is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+The spectral width characterises the relative spreading of energy along the wave spectrum. The spectral width is defined as the standard deviation of the period variance density, normalised by energy period. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+Spectral width is not standard output from the WaveWatch III model, but is determined from available parameters HS, T01 and T02, from which the moments m0, m1 and m2 can be determined. For further details on the calculation of the spectral width, please refer to the Atlas report (Hemer et al., 2016)
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The annual mean spectral width is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+The spectral width characterises the relative spreading of energy along the wave spectrum. The spectral width is defined as the standard deviation of the period variance density, normalised by energy period. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+Spectral width is not standard output from the WaveWatch III model, but is determined from available parameters HS, T01 and T02, from which the moments m0, m1 and m2 can be determined. For further details on the calculation of the spectral width, please refer to the Atlas report (Hemer et al., 2016)
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.nu_avg" description="ww3.aus_4m.nu_avg">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Spectral width (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.nu_avg</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.nu_avg.nc" description="Download: ww3.aus_4m.nu_avg.nc">http://oa-gis.csiro.au/data/nu/ww3.aus_4m.nu_avg.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>0f374bf7bb0a8f42872f0b0fdeea9c9f97820967</dc:identifier>
+      <dc:date>2020-09-23T13:24:38</dc:date>
+      <dc:title>Monthly Variability of Spectral Width</dc:title>
+      <dc:subject>Wave Energy Resource | Wave Spectral Width | Statistics</dc:subject>
+      <dct:abstract>The monthly variability of spectral width provides a convenient measure of the variability of the mean monthly spectral width over a typical year. It is determined as maximum range of the mean monthly annual cycle calculated from the CAWCR global wave hindcast.  The mean monthly annual cycles were determined using the archived hourly 4’ Australian grid from 1st January 1980 to 31st December 2010.
+The spectral width characterises the relative spreading of energy along the wave spectrum. The spectral width is defined as the standard deviation of the period variance density, normalised by energy period. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+Spectral width is not standard output from the WaveWatch III model, but is determined from available parameters HS, T01 and T02, from which the moments m0, m1 and m2 can be determined. For further details on the calculation of the spectral width, please refer to the Atlas report (Hemer et al., 2016)
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The monthly variability of spectral width provides a convenient measure of the variability of the mean monthly spectral width over a typical year. It is determined as maximum range of the mean monthly annual cycle calculated from the CAWCR global wave hindcast.  The mean monthly annual cycles were determined using the archived hourly 4’ Australian grid from 1st January 1980 to 31st December 2010.
+The spectral width characterises the relative spreading of energy along the wave spectrum. The spectral width is defined as the standard deviation of the period variance density, normalised by energy period. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+Spectral width is not standard output from the WaveWatch III model, but is determined from available parameters HS, T01 and T02, from which the moments m0, m1 and m2 can be determined. For further details on the calculation of the spectral width, please refer to the Atlas report (Hemer et al., 2016)
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.nu_avg_mv" description="ww3.aus_4m.nu_avg_mv">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Spectral width (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.nu_avg_mv</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.nu_avg_mv.nc" description="Download: ww3.aus_4m.nu_avg_mv.nc">http://oa-gis.csiro.au/data/nu/ww3.aus_4m.nu_avg_mv.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>b91afea358d1fe6fb0298a2c1584350b0a04bc07</dc:identifier>
+      <dc:date>2020-09-23T13:24:38</dc:date>
+      <dc:title>Maximum Spectral Width</dc:title>
+      <dc:subject>Wave Energy Resource | Wave Spectral Width | Statistics</dc:subject>
+      <dct:abstract>The maximum spectral width is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+The spectral width characterises the relative spreading of energy along the wave spectrum. The spectral width is defined as the standard deviation of the period variance density, normalised by energy period. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+Spectral width is not standard output from the WaveWatch III model, but is determined from available parameters HS, T01 and T02, from which the moments m0, m1 and m2 can be determined. For further details on the calculation of the spectral width, please refer to the Atlas report (Hemer et al., 2016)
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The maximum spectral width is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+The spectral width characterises the relative spreading of energy along the wave spectrum. The spectral width is defined as the standard deviation of the period variance density, normalised by energy period. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+Spectral width is not standard output from the WaveWatch III model, but is determined from available parameters HS, T01 and T02, from which the moments m0, m1 and m2 can be determined. For further details on the calculation of the spectral width, please refer to the Atlas report (Hemer et al., 2016)
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.nu_max" description="ww3.aus_4m.nu_max">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Spectral width (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.nu_max</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.nu_max.nc" description="Download: ww3.aus_4m.nu_max.nc">http://oa-gis.csiro.au/data/nu/ww3.aus_4m.nu_max.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>12209e60d480656467e72cce65d1a0e384ec0f67</dc:identifier>
+      <dc:date>2020-09-23T13:24:39</dc:date>
+      <dc:title>Minimum Spectral Width</dc:title>
+      <dc:subject>Wave Energy Resource | Wave Spectral Width | Statistics</dc:subject>
+      <dct:abstract>The minimum spectral width is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+The spectral width characterises the relative spreading of energy along the wave spectrum. The spectral width is defined as the standard deviation of the period variance density, normalised by energy period. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+Spectral width is not standard output from the WaveWatch III model, but is determined from available parameters HS, T01 and T02, from which the moments m0, m1 and m2 can be determined. For further details on the calculation of the spectral width, please refer to the Atlas report (Hemer et al., 2016)
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The minimum spectral width is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+The spectral width characterises the relative spreading of energy along the wave spectrum. The spectral width is defined as the standard deviation of the period variance density, normalised by energy period. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+Spectral width is not standard output from the WaveWatch III model, but is determined from available parameters HS, T01 and T02, from which the moments m0, m1 and m2 can be determined. For further details on the calculation of the spectral width, please refer to the Atlas report (Hemer et al., 2016)
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.nu_min" description="ww3.aus_4m.nu_min">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Spectral width (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.nu_min</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.nu_min.nc" description="Download: ww3.aus_4m.nu_min.nc">http://oa-gis.csiro.au/data/nu/ww3.aus_4m.nu_min.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>7ac65f260a838e770ed79b4b063e1bc032344267</dc:identifier>
+      <dc:date>2020-09-23T13:24:39</dc:date>
+      <dc:title>10th Percentile of Spectral Width</dc:title>
+      <dc:subject>Wave Energy Resource | Wave Spectral Width | Statistics</dc:subject>
+      <dct:abstract>The 10th percentile of spectral width is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+The spectral width characterises the relative spreading of energy along the wave spectrum. The spectral width is defined as the standard deviation of the period variance density, normalised by energy period. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+Spectral width is not standard output from the WaveWatch III model, but is determined from available parameters HS, T01 and T02, from which the moments m0, m1 and m2 can be determined. For further details on the calculation of the spectral width, please refer to the Atlas report (Hemer et al., 2016)
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The 10th percentile of spectral width is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+The spectral width characterises the relative spreading of energy along the wave spectrum. The spectral width is defined as the standard deviation of the period variance density, normalised by energy period. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+Spectral width is not standard output from the WaveWatch III model, but is determined from available parameters HS, T01 and T02, from which the moments m0, m1 and m2 can be determined. For further details on the calculation of the spectral width, please refer to the Atlas report (Hemer et al., 2016)
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.nu_p10" description="ww3.aus_4m.nu_p10">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Spectral width (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.nu_p10</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.nu_p10.nc" description="Download: ww3.aus_4m.nu_p10.nc">http://oa-gis.csiro.au/data/nu/ww3.aus_4m.nu_p10.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>3b1ae9e52f47640cfb98b32f389b271476d46b68</dc:identifier>
+      <dc:date>2020-09-23T13:24:39</dc:date>
+      <dc:title>50th Percentile of Spectral Width</dc:title>
+      <dc:subject>Wave Energy Resource | Wave Spectral Width | Statistics</dc:subject>
+      <dct:abstract>The 50th percentile of spectral width is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+The spectral width characterises the relative spreading of energy along the wave spectrum. The spectral width is defined as the standard deviation of the period variance density, normalised by energy period. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+Spectral width is not standard output from the WaveWatch III model, but is determined from available parameters HS, T01 and T02, from which the moments m0, m1 and m2 can be determined. For further details on the calculation of the spectral width, please refer to the Atlas report (Hemer et al., 2016)
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The 50th percentile of spectral width is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+The spectral width characterises the relative spreading of energy along the wave spectrum. The spectral width is defined as the standard deviation of the period variance density, normalised by energy period. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+Spectral width is not standard output from the WaveWatch III model, but is determined from available parameters HS, T01 and T02, from which the moments m0, m1 and m2 can be determined. For further details on the calculation of the spectral width, please refer to the Atlas report (Hemer et al., 2016)
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.nu_p50" description="ww3.aus_4m.nu_p50">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Spectral width (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.nu_p50</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.nu_p50.nc" description="Download: ww3.aus_4m.nu_p50.nc">http://oa-gis.csiro.au/data/nu/ww3.aus_4m.nu_p50.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>4fa7df0553020f92d0473d7d0a636c025ada76a7</dc:identifier>
+      <dc:date>2020-09-23T13:24:39</dc:date>
+      <dc:title>90th Percentile of Spectral Width</dc:title>
+      <dc:subject>Wave Energy Resource | Wave Spectral Width | Statistics</dc:subject>
+      <dct:abstract>The 90th percentile of spectral width is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+The spectral width characterises the relative spreading of energy along the wave spectrum. The spectral width is defined as the standard deviation of the period variance density, normalised by energy period. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+Spectral width is not standard output from the WaveWatch III model, but is determined from available parameters HS, T01 and T02, from which the moments m0, m1 and m2 can be determined. For further details on the calculation of the spectral width, please refer to the Atlas report (Hemer et al., 2016)
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The 90th percentile of spectral width is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+The spectral width characterises the relative spreading of energy along the wave spectrum. The spectral width is defined as the standard deviation of the period variance density, normalised by energy period. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+Spectral width is not standard output from the WaveWatch III model, but is determined from available parameters HS, T01 and T02, from which the moments m0, m1 and m2 can be determined. For further details on the calculation of the spectral width, please refer to the Atlas report (Hemer et al., 2016)
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.nu_p90" description="ww3.aus_4m.nu_p90">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Spectral width (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.nu_p90</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.nu_p90.nc" description="Download: ww3.aus_4m.nu_p90.nc">http://oa-gis.csiro.au/data/nu/ww3.aus_4m.nu_p90.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>b2eecf74b456e61c124ed3c29c2e2cf3ce5546a5</dc:identifier>
+      <dc:date>2020-09-23T13:24:39</dc:date>
+      <dc:title>Standard Deviation of Spectral Width</dc:title>
+      <dc:subject>Wave Energy Resource | Wave Spectral Width | Statistics</dc:subject>
+      <dct:abstract>The standard deviation of spectral width is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+The spectral width characterises the relative spreading of energy along the wave spectrum. The spectral width is defined as the standard deviation of the period variance density, normalised by energy period. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+Spectral width is not standard output from the WaveWatch III model, but is determined from available parameters HS, T01 and T02, from which the moments m0, m1 and m2 can be determined. For further details on the calculation of the spectral width, please refer to the Atlas report (Hemer et al., 2016)
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The standard deviation of spectral width is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+The spectral width characterises the relative spreading of energy along the wave spectrum. The spectral width is defined as the standard deviation of the period variance density, normalised by energy period. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+Spectral width is not standard output from the WaveWatch III model, but is determined from available parameters HS, T01 and T02, from which the moments m0, m1 and m2 can be determined. For further details on the calculation of the spectral width, please refer to the Atlas report (Hemer et al., 2016)
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.nu_std" description="ww3.aus_4m.nu_std">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Spectral width (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.nu_std</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.nu_std.nc" description="Download: ww3.aus_4m.nu_std.nc">http://oa-gis.csiro.au/data/nu/ww3.aus_4m.nu_std.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>2325e18768d3a95e6e65d6e1090a2979069189d6</dc:identifier>
+      <dc:date>2020-09-23T13:24:39</dc:date>
+      <dc:title>Annual Mean Wave Energy Period</dc:title>
+      <dc:subject>Earth Science | Oceans | Ocean Waves</dc:subject>
+      <dc:subject>Earth Science | Oceans | Ocean Waves | Wave Period</dc:subject>
+      <dc:subject>Wave Energy Resource | Wave Period | Statistics</dc:subject>
+      <dct:abstract>The annual mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The annual mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.te_avg" description="ww3.aus_4m.te_avg">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Wave energy period (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.te_avg</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.te_avg.nc" description="Download: ww3.aus_4m.te_avg.nc">http://oa-gis.csiro.au/data/te/ww3.aus_4m.te_avg.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>af02b8cf40ac92fc7d3d677fa8c1b3bbb421f9d9</dc:identifier>
+      <dc:date>2020-09-23T13:24:39</dc:date>
+      <dc:title>(Month 01) January Mean Wave Energy Period</dc:title>
+      <dc:subject>Earth Science | Oceans | Ocean Waves</dc:subject>
+      <dc:subject>Earth Science | Oceans | Ocean Waves | Wave Period</dc:subject>
+      <dc:subject>Wave Energy Resource | Wave Period | Monthly Means</dc:subject>
+      <dct:abstract>The January mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using January data from January 1980 to January 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The January mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using January data from January 1980 to January 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.te_avg01" description="ww3.aus_4m.te_avg01">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Wave energy period (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.te_avg01</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.te_avg01.nc" description="Download: ww3.aus_4m.te_avg01.nc">http://oa-gis.csiro.au/data/te/ww3.aus_4m.te_avg01.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>14e9db4e523d4f43fc101b622598516a64f1eb39</dc:identifier>
+      <dc:date>2020-09-23T13:24:39</dc:date>
+      <dc:title>(Month 02) February Mean Wave Energy Period</dc:title>
+      <dc:subject>Earth Science | Oceans | Ocean Waves</dc:subject>
+      <dc:subject>Earth Science | Oceans | Ocean Waves | Wave Period</dc:subject>
+      <dc:subject>Wave Energy Resource | Wave Period | Monthly Means</dc:subject>
+      <dct:abstract>The February mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using February data from February 1980 to February 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The February mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using February data from February 1980 to February 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.te_avg02" description="ww3.aus_4m.te_avg02">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Wave energy period (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.te_avg02</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.te_avg02.nc" description="Download: ww3.aus_4m.te_avg02.nc">http://oa-gis.csiro.au/data/te/ww3.aus_4m.te_avg02.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>47dc040597d5a70af3b032f2272ef52367aa2318</dc:identifier>
+      <dc:date>2020-09-23T13:24:39</dc:date>
+      <dc:title>(Month 03) March Mean Wave Energy Period</dc:title>
+      <dc:subject>Earth Science | Oceans | Ocean Waves</dc:subject>
+      <dc:subject>Earth Science | Oceans | Ocean Waves | Wave Period</dc:subject>
+      <dc:subject>Wave Energy Resource | Wave Period | Monthly Means</dc:subject>
+      <dct:abstract>The March mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using March data from March 1980 to March 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The March mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using March data from March 1980 to March 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.te_avg03" description="ww3.aus_4m.te_avg03">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Wave energy period (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.te_avg03</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.te_avg03.nc" description="Download: ww3.aus_4m.te_avg03.nc">http://oa-gis.csiro.au/data/te/ww3.aus_4m.te_avg03.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>8750f81b00a6837f96b49c0a612e885727639ba0</dc:identifier>
+      <dc:date>2020-09-23T13:24:39</dc:date>
+      <dc:title>(Month 04) April Mean Wave Energy Period</dc:title>
+      <dc:subject>Earth Science | Oceans | Ocean Waves</dc:subject>
+      <dc:subject>Earth Science | Oceans | Ocean Waves | Wave Period</dc:subject>
+      <dc:subject>Wave Energy Resource | Wave Period | Monthly Means</dc:subject>
+      <dct:abstract>The April mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using April data from April 1980 to April 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The April mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using April data from April 1980 to April 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.te_avg04" description="ww3.aus_4m.te_avg04">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Wave energy period (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.te_avg04</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.te_avg04.nc" description="Download: ww3.aus_4m.te_avg04.nc">http://oa-gis.csiro.au/data/te/ww3.aus_4m.te_avg04.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>154ddaab049f83d90859fbc15bee73064d1c1ba0</dc:identifier>
+      <dc:date>2020-09-23T13:24:40</dc:date>
+      <dc:title>(Month 05) May Mean Wave Energy Period</dc:title>
+      <dc:subject>Earth Science | Oceans | Ocean Waves</dc:subject>
+      <dc:subject>Earth Science | Oceans | Ocean Waves | Wave Period</dc:subject>
+      <dc:subject>Wave Energy Resource | Wave Period | Monthly Means</dc:subject>
+      <dct:abstract>The May mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using May data from May 1980 to May 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The May mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using May data from May 1980 to May 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.te_avg05" description="ww3.aus_4m.te_avg05">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Wave energy period (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.te_avg05</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.te_avg05.nc" description="Download: ww3.aus_4m.te_avg05.nc">http://oa-gis.csiro.au/data/te/ww3.aus_4m.te_avg05.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>c064b580c560ba03ef97ffbbb4cc0988f9fbab57</dc:identifier>
+      <dc:date>2020-09-23T13:24:40</dc:date>
+      <dc:title>(Month 06) June Mean Wave Energy Period</dc:title>
+      <dc:subject>Earth Science | Oceans | Ocean Waves</dc:subject>
+      <dc:subject>Earth Science | Oceans | Ocean Waves | Wave Period</dc:subject>
+      <dc:subject>Wave Energy Resource | Wave Period | Monthly Means</dc:subject>
+      <dct:abstract>The June mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using June data from June 1980 to June 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The June mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using June data from June 1980 to June 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.te_avg06" description="ww3.aus_4m.te_avg06">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Wave energy period (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.te_avg06</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.te_avg06.nc" description="Download: ww3.aus_4m.te_avg06.nc">http://oa-gis.csiro.au/data/te/ww3.aus_4m.te_avg06.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>a277ee08241a25f956a3c4d9d655b25cf315ec42</dc:identifier>
+      <dc:date>2020-09-23T13:24:40</dc:date>
+      <dc:title>(Month 07) July Mean Wave Energy Period</dc:title>
+      <dc:subject>Earth Science | Oceans | Ocean Waves</dc:subject>
+      <dc:subject>Earth Science | Oceans | Ocean Waves | Wave Period</dc:subject>
+      <dc:subject>Wave Energy Resource | Wave Period | Monthly Means</dc:subject>
+      <dct:abstract>The July mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using July data from July 1980 to July 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The July mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using July data from July 1980 to July 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.te_avg07" description="ww3.aus_4m.te_avg07">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Wave energy period (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.te_avg07</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.te_avg07.nc" description="Download: ww3.aus_4m.te_avg07.nc">http://oa-gis.csiro.au/data/te/ww3.aus_4m.te_avg07.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>a78e8fad4fba30d357288aae224a535758c56483</dc:identifier>
+      <dc:date>2020-09-23T13:24:40</dc:date>
+      <dc:title>(Month 08) August Mean Wave Energy Period</dc:title>
+      <dc:subject>Earth Science | Oceans | Ocean Waves</dc:subject>
+      <dc:subject>Earth Science | Oceans | Ocean Waves | Wave Period</dc:subject>
+      <dc:subject>Wave Energy Resource | Wave Period | Monthly Means</dc:subject>
+      <dct:abstract>The August mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using August data from August 1980 to August 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The August mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using August data from August 1980 to August 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.te_avg08" description="ww3.aus_4m.te_avg08">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Wave energy period (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.te_avg08</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.te_avg08.nc" description="Download: ww3.aus_4m.te_avg08.nc">http://oa-gis.csiro.au/data/te/ww3.aus_4m.te_avg08.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>fa9b69bfe342ffbfc333b7ecefd66118098461fc</dc:identifier>
+      <dc:date>2020-09-23T13:24:40</dc:date>
+      <dc:title>(Month 09) September Mean Wave Energy Period</dc:title>
+      <dc:subject>Earth Science | Oceans | Ocean Waves</dc:subject>
+      <dc:subject>Earth Science | Oceans | Ocean Waves | Wave Period</dc:subject>
+      <dc:subject>Wave Energy Resource | Wave Period | Monthly Means</dc:subject>
+      <dct:abstract>The September mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using September data from September 1980 to September 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The September mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using September data from September 1980 to September 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.te_avg09" description="ww3.aus_4m.te_avg09">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Wave energy period (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.te_avg09</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.te_avg09.nc" description="Download: ww3.aus_4m.te_avg09.nc">http://oa-gis.csiro.au/data/te/ww3.aus_4m.te_avg09.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>64de53311df497d0bac1d63214549269ecf194c0</dc:identifier>
+      <dc:date>2020-09-23T13:24:40</dc:date>
+      <dc:title>(Month 10) October Mean Wave Energy Period</dc:title>
+      <dc:subject>Earth Science | Oceans | Ocean Waves</dc:subject>
+      <dc:subject>Earth Science | Oceans | Ocean Waves | Wave Period</dc:subject>
+      <dc:subject>Wave Energy Resource | Wave Period | Monthly Means</dc:subject>
+      <dct:abstract>The October mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using October data from October 1980 to October 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The October mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using October data from October 1980 to October 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.te_avg10" description="ww3.aus_4m.te_avg10">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Wave energy period (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.te_avg10</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.te_avg10.nc" description="Download: ww3.aus_4m.te_avg10.nc">http://oa-gis.csiro.au/data/te/ww3.aus_4m.te_avg10.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>dc90e1ed5b56f5a2ce89d57f556eacfcdd4f6859</dc:identifier>
+      <dc:date>2020-09-23T13:24:40</dc:date>
+      <dc:title>(Month 11) November Mean Wave Energy Period</dc:title>
+      <dc:subject>Earth Science | Oceans | Ocean Waves</dc:subject>
+      <dc:subject>Earth Science | Oceans | Ocean Waves | Wave Period</dc:subject>
+      <dc:subject>Wave Energy Resource | Wave Period | Monthly Means</dc:subject>
+      <dct:abstract>The November mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using November data from November 1980 to November 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The November mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using November data from November 1980 to November 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.te_avg11" description="ww3.aus_4m.te_avg11">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Wave energy period (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.te_avg11</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.te_avg11.nc" description="Download: ww3.aus_4m.te_avg11.nc">http://oa-gis.csiro.au/data/te/ww3.aus_4m.te_avg11.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>0002a60c4e9d8cd03c1f284e75116f978f62e83d</dc:identifier>
+      <dc:date>2020-09-23T13:24:40</dc:date>
+      <dc:title>(Month 12) December Mean Wave Energy Period</dc:title>
+      <dc:subject>Earth Science | Oceans | Ocean Waves</dc:subject>
+      <dc:subject>Earth Science | Oceans | Ocean Waves | Wave Period</dc:subject>
+      <dc:subject>Wave Energy Resource | Wave Period | Monthly Means</dc:subject>
+      <dct:abstract>The December mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using December data from December 1980 to December 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The December mean wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using December data from December 1980 to December 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.te_avg12" description="ww3.aus_4m.te_avg12">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Wave energy period (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.te_avg12</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.te_avg12.nc" description="Download: ww3.aus_4m.te_avg12.nc">http://oa-gis.csiro.au/data/te/ww3.aus_4m.te_avg12.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>80c542ea9c321d208a736554615bef86be7bfaf2</dc:identifier>
+      <dc:date>2020-09-23T13:24:40</dc:date>
+      <dc:title>Monthly Variability of Wave Energy Period</dc:title>
+      <dc:subject>Earth Science | Oceans | Ocean Waves</dc:subject>
+      <dc:subject>Earth Science | Oceans | Ocean Waves | Wave Period</dc:subject>
+      <dc:subject>Wave Energy Resource | Wave Period | Statistics</dc:subject>
+      <dct:abstract>The monthly variability of wave energy period provides a convenient measure of the variability of the mean monthly wave energy period over a typical year. It is determined as maximum range of the mean monthly annual cycle calculated from the CAWCR global wave hindcast.  The mean monthly annual cycles were determined using the archived hourly 4’ Australian grid from 1st January 1980 to 31st December 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The monthly variability of wave energy period provides a convenient measure of the variability of the mean monthly wave energy period over a typical year. It is determined as maximum range of the mean monthly annual cycle calculated from the CAWCR global wave hindcast.  The mean monthly annual cycles were determined using the archived hourly 4’ Australian grid from 1st January 1980 to 31st December 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.te_avg_mv" description="ww3.aus_4m.te_avg_mv">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Wave energy period (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.te_avg_mv</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.te_avg_mv.nc" description="Download: ww3.aus_4m.te_avg_mv.nc">http://oa-gis.csiro.au/data/te/ww3.aus_4m.te_avg_mv.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>5446e4710af8d48813d82017190dbe905b3dca78</dc:identifier>
+      <dc:date>2020-09-23T13:24:40</dc:date>
+      <dc:title>Maximum Wave Energy Period</dc:title>
+      <dc:subject>Earth Science | Oceans | Ocean Waves</dc:subject>
+      <dc:subject>Earth Science | Oceans | Ocean Waves | Wave Period</dc:subject>
+      <dc:subject>Wave Energy Resource | Wave Period | Statistics</dc:subject>
+      <dct:abstract>The maximum wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The maximum wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.te_max" description="ww3.aus_4m.te_max">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Wave energy period (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.te_max</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.te_max.nc" description="Download: ww3.aus_4m.te_max.nc">http://oa-gis.csiro.au/data/te/ww3.aus_4m.te_max.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>c9f34467b3f7c20b08e5f48d0ef57ceeb7bb1c77</dc:identifier>
+      <dc:date>2020-09-23T13:24:41</dc:date>
+      <dc:title>Minimum Wave Energy Period</dc:title>
+      <dc:subject>Earth Science | Oceans | Ocean Waves</dc:subject>
+      <dc:subject>Earth Science | Oceans | Ocean Waves | Wave Period</dc:subject>
+      <dc:subject>Wave Energy Resource | Wave Period | Statistics</dc:subject>
+      <dct:abstract>The minimum wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The minimum wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.te_min" description="ww3.aus_4m.te_min">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Wave energy period (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.te_min</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.te_min.nc" description="Download: ww3.aus_4m.te_min.nc">http://oa-gis.csiro.au/data/te/ww3.aus_4m.te_min.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>0857e8d7561f0f3dbd48ab5a956e0d2f450e27de</dc:identifier>
+      <dc:date>2020-09-23T13:24:41</dc:date>
+      <dc:title>10th Percentile of Wave Energy Period</dc:title>
+      <dc:subject>Earth Science | Oceans | Ocean Waves</dc:subject>
+      <dc:subject>Earth Science | Oceans | Ocean Waves | Wave Period</dc:subject>
+      <dc:subject>Wave Energy Resource | Wave Period | Statistics</dc:subject>
+      <dct:abstract>The 10th percentile of wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The 10th percentile of wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.te_p10" description="ww3.aus_4m.te_p10">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Wave energy period (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.te_p10</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.te_p10.nc" description="Download: ww3.aus_4m.te_p10.nc">http://oa-gis.csiro.au/data/te/ww3.aus_4m.te_p10.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>1a67924c30a0e73c2cf1f740aeb3c1b1f9ceec9e</dc:identifier>
+      <dc:date>2020-09-23T13:24:41</dc:date>
+      <dc:title>50th Percentile of Wave Energy Period</dc:title>
+      <dc:subject>Earth Science | Oceans | Ocean Waves</dc:subject>
+      <dc:subject>Earth Science | Oceans | Ocean Waves | Wave Period</dc:subject>
+      <dc:subject>Wave Energy Resource | Wave Period | Statistics</dc:subject>
+      <dct:abstract>The 50th percentile of wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The 50th percentile of wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.te_p50" description="ww3.aus_4m.te_p50">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Wave energy period (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.te_p50</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.te_p50.nc" description="Download: ww3.aus_4m.te_p50.nc">http://oa-gis.csiro.au/data/te/ww3.aus_4m.te_p50.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>1497f896e3233c130c9881ecbeabef4dd9211f60</dc:identifier>
+      <dc:date>2020-09-23T13:24:41</dc:date>
+      <dc:title>90th Percentile of Wave Energy Period</dc:title>
+      <dc:subject>Earth Science | Oceans | Ocean Waves</dc:subject>
+      <dc:subject>Earth Science | Oceans | Ocean Waves | Wave Period</dc:subject>
+      <dc:subject>Wave Energy Resource | Wave Period | Statistics</dc:subject>
+      <dct:abstract>The 90th percentile of wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The 90th percentile of wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.te_p90" description="ww3.aus_4m.te_p90">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Wave energy period (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.te_p90</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.te_p90.nc" description="Download: ww3.aus_4m.te_p90.nc">http://oa-gis.csiro.au/data/te/ww3.aus_4m.te_p90.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:mcp="http://bluenet3.antcrc.utas.edu.au/mcp" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+      <dc:identifier>08dd18cac0f9c3338300f33ab10bbd100d246a42</dc:identifier>
+      <dc:date>2020-09-23T13:24:41</dc:date>
+      <dc:title>Standard Deviation of Wave Energy Period</dc:title>
+      <dc:subject>Earth Science | Oceans | Ocean Waves</dc:subject>
+      <dc:subject>Earth Science | Oceans | Ocean Waves | Wave Period</dc:subject>
+      <dc:subject>Wave Energy Resource | Wave Period | Statistics</dc:subject>
+      <dct:abstract>The standard deviation of wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dct:abstract>
+      <dc:description>The standard deviation of wave energy period is derived from the CAWCR global wave hindcast, using data from the archived hourly 4’ Australian grid, using data from 1st January 1980 to 31st December 2010.
+Wave energy period, Te is a measure of the length of a wave. The wave energy period is the mean period of the wave field with respect to the spectral distribution of energy in the wave field. An equation describing its calculation can be found in the the atlas report (Hemer et al., 2016).
+
+For further information on the CAWCR wave hindcast, see Durrant et al (2014)**. See DAP entry http://dx.doi.org/10.4225/08/523168703DCC5 for 1979-2010 data. Please note that the licensee/user is required to acknowledge the source of this data on the following terms: 'Source: Bureau of Meteorology and CSIRO © 2013'. Apart from dealings under the Copyright Act 1968, the licensee shall not reproduce (electronically or otherwise), modify or supply (by sale or otherwise) this data without written permission. Please contact us for more information.</dc:description>
+      <dc:contributor>Input data: NCEP CFSv2 surface winds and sea ice, http://cfs.ncep.noaa.gov. Wave model used: WaveWatch III, http://polar.ncep.noaa.gov/waves/wavewatch/wavewatch.shtml The Centre for Australian Weather and Climate Research (CAWCR) is a partnership between the Bureau of Meteorology and CSIRO. Hindcast modelling undertaken as part of the PACCSAP (Pacific-Australia Climate Change Science and Adaptation Planning) Project 4.3 "High resolution wind-wave climate and projections of change in the Pacific region for coastal hazard assessments" in 2012, funded by DCCEE and AusAID and undertaken jointly by CSIRO and the BoM. This dataset was produced as part of the Australian Renewable Energy Agency – CSIRO Oceans and Atmosphere Flagship co-funded Australian Wave Energy Atlas Project.</dc:contributor>
+      <dc:contributor>Bureau of Meteorology Australia
+CSIRO Australia</dc:contributor>
+      <dc:language />
+      <ows:BoundingBox crs="::EPSG:4326">
+        <ows:LowerCorner>175.00038146972656 -49.999998331069946</ows:LowerCorner>
+        <ows:UpperCorner>100.0 3.000264883041382</ows:UpperCorner>
+      </ows:BoundingBox>
+      <dc:type>dataset</dc:type>
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="awavea2019:ww3.aus_4m.te_std" description="ww3.aus_4m.te_std">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="image/png" name="Wave energy period (LegendURL)" description="">http://oa-gis.csiro.au/geoserver/wms?request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=awavea2019%3Aww3.aus_4m.te_std</dc:URI>
+      <dc:URI protocol="WWW:LINK-1.0-http--link" name="ww3.aus_4m.te_std.nc" description="Download: ww3.aus_4m.te_std.nc">http://oa-gis.csiro.au/data/te/ww3.aus_4m.te_std.nc</dc:URI>
+    </csw:Record>
+    <csw:Record xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows">
+      <dc:identifier>4ba50e4a3243fa768797dcdbc1541204db89a7e1</dc:identifier>
+      <dc:date>2020-09-23T13:24:19</dc:date>
+      <dc:title>GeoServer Web Map Service</dc:title>
+      <dc:type>service</dc:type>
+      <dc:subject>WFS</dc:subject>
+      <dc:subject>WMS</dc:subject>
+      <dc:subject>GEOSERVER</dc:subject>
+      <dc:format />
+      <dct:abstract>A compliant implementation of WMS plus most of the SLD extension (dynamic styling). Can also generate PDF, SVG, KML, GeoRSS</dct:abstract>
+      <dc:description>A compliant implementation of WMS plus most of the SLD extension (dynamic styling). Can also generate PDF, SVG, KML, GeoRSS</dc:description>
+      <dc:source />
+      <dc:format />
+      <dc:URI protocol="OGC:WMS-1.1.1-http-get-capabilities">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.te_std">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.te_p90">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.te_p50">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.te_p10">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.te_min">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.te_max">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.te_avg_mv">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.te_avg12">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.te_avg11">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.te_avg10">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.te_avg09">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.te_avg08">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.te_avg07">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.te_avg06">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.te_avg05">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.te_avg04">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.te_avg03">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.te_avg02">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.te_avg01">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.te_avg">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.nu_std">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.nu_p90">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.nu_p50">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.nu_p10">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.nu_min">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.nu_max">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.nu_avg_mv">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.nu_avg">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jthm_avg.12">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jthm_avg.11">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jthm_avg.10">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jthm_avg.09">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jthm_avg.08">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jthm_avg.07">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jthm_avg.06">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jthm_avg.05">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jthm_avg.04">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jthm_avg.03">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jthm_avg.02">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jthm_avg.01">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jthm_avg">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jm_std">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jm_p90">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jm_p50">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jm_p10">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jm_min">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jm_max">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jm_avg_mv">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jm_avg.12">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jm_avg.11">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jm_avg.10">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jm_avg.09">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jm_avg.08">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jm_avg.07">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jm_avg.06">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jm_avg.05">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jm_avg.04">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jm_avg.03">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jm_avg.02">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jm_avg.01">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jm_avg">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jdc_std">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jdc_p90">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jdc_p50">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jdc_p10">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jdc_min">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jdc_max">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jdc_avg_mv">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jdc_avg.12">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jdc_avg.11">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jdc_avg.10">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jdc_avg.09">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jdc_avg.08">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jdc_avg.07">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jdc_avg.06">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jdc_avg.05">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jdc_avg.04">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jdc_avg.03">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jdc_avg.02">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jdc_avg.01">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.jdc_avg">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.hs_std">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.hs_p90">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.hs_p10">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.hs_min">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.hs_avg_mv">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.hs_avg12">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.hs_avg11">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.hs_avg10">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.hs_avg09">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.hs_avg08">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.hs_avg07">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.hs_avg06">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.hs_avg05">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.hs_avg04">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.hs_avg03">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.hs_avg02">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.hs_avg01">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.hs_avg">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.dir_avg12">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.dir_avg11">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.dir_avg10">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.dir_avg09">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.dir_avg08">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.dir_avg07">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.dir_avg06">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.dir_avg05">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.dir_avg04">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.dir_avg03">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.dir_avg02">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.dir_avg01">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.dir_avg">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.CgE_std">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.CgE_p90">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.CgE_p50">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.CgE_p10">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.CgE_min">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.CgE_max">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.CgE_avg_mv">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.CgE_avg12">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.CgE_avg11">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.CgE_avg10">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.CgE_avg09">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.CgE_avg08">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.CgE_avg07">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.CgE_avg06">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.CgE_avg05">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.CgE_avg04">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.CgE_avg03">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.CgE_avg02">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.CgE_avg01">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="awavea2019:ww3.aus_4m.CgE_avg">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="proxy:trendRMSE_31July2014">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:tidalModelOutline">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:spexp-ti2">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:spexp-ti1">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:spexp-ti0">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="proxy:residSD_31July2014">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_sppc_ti9">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_sppc_ti8">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_sppc_ti5">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_sppc_ti2">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_sppc_ti10">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_sppc_ti1">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_sppc_ti0">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_kefpc_ti9">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_kefpc_ti8">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_kefpc_ti5">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_kefpc_ti2">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_kefpc_ti10">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_kefpc_ti1">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_kefpc_ti0">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_dsppc_ti9">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_dsppc_ti8">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_dsppc_ti5">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_dsppc_ti2">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_dsppc_ti10">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_dsppc_ti1">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_dsppc_ti0">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_drangepc_ti9">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_drangepc_ti8">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_drangepc_ti5">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_drangepc_ti2">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_drangepc_ti10">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_drangepc_ti1">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_drangepc_ti0">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_dkefpc_ti9">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_dkefpc_ti8">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_dkefpc_ti5">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_dkefpc_ti2">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_dkefpc_ti10">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_dkefpc_ti1">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:raster_dkefpc_ti0">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="proxy:oil_spills_sum">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:lagoon_ebbflood_pden_mean-ti0">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="proxy:efold_31July2014">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:clarence_sppc-ti9">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:clarence_sppc-ti8">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:clarence_sppc-ti5">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:clarence_sppc-ti2">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:clarence_sppc-ti10">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:clarence_sppc-ti1">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:clarence_sppc-ti0">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:clarence_kefpc-ti9">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:clarence_kefpc-ti8">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:clarence_kefpc-ti5">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:clarence_kefpc-ti2">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:clarence_kefpc-ti10">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:clarence_kefpc-ti1">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:clarence_kefpc-ti0">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:clarence_kefmean-ti0">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:clarence_drangepc-ti9">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:clarence_drangepc-ti8">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:clarence_drangepc-ti5">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:clarence_drangepc-ti2">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:clarence_drangepc-ti1">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:clarence_drangepc-ti0">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:banks_sppc-ti9">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:banks_sppc-ti8">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:banks_sppc-ti5">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:banks_sppc-ti2">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:banks_sppc-ti10">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:banks_sppc-ti1">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:banks_sppc-ti0">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:banks_spmean">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:banks_kefpc-ti9">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:banks_kefpc-ti8">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:banks_kefpc-ti5">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:banks_kefpc-ti2">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:banks_kefpc-ti10">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:banks_kefpc-ti1">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:banks_kefpc-ti0">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:banks_kefmean-ti0">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:banks_drangepc-ti9">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:banks_drangepc-ti8">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:banks_drangepc-ti5">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:banks_drangepc-ti2">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:banks_drangepc-ti1">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:banks_drangepc-ti0">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:ausTidalModelGeom">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="proxy:annualRMSE_31July2014">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:ClarenceStraitModelGrid">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:BankStraitModelGrid">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="proxy:ALTT_31July2014">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="proxy:ALTTSE_31July2014">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="proxy:seismic_surveys">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="proxy:ausrep_shipping_summaries">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="proxy:fisheries_effort">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="OGC:WMS" name="tidal:TidalModelSummary">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+      <dc:URI protocol="application/vnd.ogc.wms_xml" description="http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp; http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;">http://oa-gis.csiro.au/geoserver/wms?SERVICE=WMS&amp;</dc:URI>
+    </csw:Record>
+  </csw:SearchResults>
+</csw:GetRecordsResponse>
+

@@ -7,8 +7,6 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import loadWithXhr from "../Core/loadWithXhr";
 import TerriaError from "../Core/TerriaError";
-import AsyncChartableMixin from "../ModelMixins/AsyncChartableMixin";
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import TableAutomaticStylesStratum, {
@@ -23,15 +21,15 @@ import TableChartStyleTraits, {
 import TableColorStyleTraits from "../Traits/TableColorStyleTraits";
 import TablePointSizeStyleTraits from "../Traits/TablePointSizeStyleTraits";
 import TableStyleTraits from "../Traits/TableStyleTraits";
+import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
+import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import { SelectableDimension } from "./SelectableDimensions";
 import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
-import CommonStrata from "./CommonStrata";
-import { SelectableDimension } from "./SelectableDimensions";
-import { BaseModel } from "./Model";
 
 interface GetFeatureOfInterestResponse {
   featureMember?: FeatureMember[] | FeatureMember;
@@ -82,8 +80,7 @@ interface MeasurementTimeValuePair {
   value: Object | string;
 }
 
-const automaticTableStylesStratumName = TableAutomaticStylesStratum.stratumName;
-StratumOrder.addLoadStratum(automaticTableStylesStratumName);
+StratumOrder.addLoadStratum(TableAutomaticStylesStratum.stratumName);
 
 class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
   constructor(readonly catalogItem: SensorObservationServiceCatalogItem) {
@@ -305,11 +302,7 @@ class GetObservationRequest {
 }
 
 export default class SensorObservationServiceCatalogItem extends TableMixin(
-  AsyncChartableMixin(
-    AsyncMappableMixin(
-      CatalogMemberMixin(CreateModel(SensorObservationServiceCatalogItemTraits))
-    )
-  )
+  CatalogMemberMixin(CreateModel(SensorObservationServiceCatalogItemTraits))
 ) {
   static readonly type = "sos";
   static defaultRequestTemplate = require("./SensorObservationServiceRequestTemplate.xml");
@@ -321,7 +314,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   ) {
     super(id, terria, sourceReference);
     this.strata.set(
-      automaticTableStylesStratumName,
+      TableAutomaticStylesStratum.stratumName,
       new SosAutomaticStylesStratum(this)
     );
   }
@@ -548,6 +541,10 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
   @computed
   get selectableDimensions() {
     return filterOutUndefined([
+      // Filter out proceduresSelector - as it duplicates TableMixin.styleDimensions
+      ...super.selectableDimensions.filter(
+        dim => dim.id !== this.proceduresSelector?.id
+      ),
       this.proceduresSelector,
       this.observablesSelector
     ]);

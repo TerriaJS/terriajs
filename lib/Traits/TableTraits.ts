@@ -22,7 +22,8 @@ export default class TableTraits extends mixTraits(
   CatalogMemberTraits,
   MappableTraits,
   RasterLayerTraits,
-  ChartPointOnMapTraits
+  ChartPointOnMapTraits,
+  CatalogMemberTraits
 ) {
   @primitiveTrait({
     name: "Show Warning for Unmatched Regions",
@@ -90,8 +91,16 @@ export default class TableTraits extends mixTraits(
   @primitiveArrayTrait({
     name: "Column units",
     description:
-      "An optional array of column units that override the inidividual `TableColumnTraits.unit` setting.",
+      "An optional array of column units that override the individual `TableColumnTraits.unit` setting.",
     type: "string"
   })
   columnUnits: string[] = [];
+
+  @primitiveTrait({
+    name: "Remove duplicate rows",
+    type: "boolean",
+    description:
+      "If two rows in the table are identical, only retain one copy. This could cause performance issues, and so should be used only when absolutely necessary."
+  })
+  removeDuplicateRows: boolean = false;
 }

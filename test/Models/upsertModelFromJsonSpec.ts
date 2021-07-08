@@ -24,7 +24,7 @@ describe("upsertModelFromJson", function() {
       "definition",
       json,
       {}
-    );
+    ).throwIfUndefined();
     expect(model instanceof WebMapServiceCatalogItem).toBe(true);
     expect(model.type).toBe("wms");
 
@@ -59,7 +59,7 @@ describe("upsertModelFromJson", function() {
         "definition",
         json,
         {}
-      );
+      ).throwIfUndefined();
       expect(model instanceof WebMapServiceCatalogGroup).toBe(true);
       expect(model.type).toBe("wms-group");
       return model;
@@ -83,13 +83,11 @@ describe("upsertModelFromJson", function() {
     expect(item.layers).toBeUndefined();
     expect(item.isGeoServer).toBe(false);
 
-    const loadMetadataPromise = group.loadMetadata();
+    // loadMembers will call loadMetadata first, so check isLoadingMetadata and then await loadMetadata
     const loadMembersPromise = group.loadMembers();
-
     expect(group.isLoadingMetadata).toBe(true);
+    await group.loadMetadata();
     expect(group.isLoadingMembers).toBe(true);
-
-    await loadMetadataPromise;
     await loadMembersPromise;
 
     expect(group.isLoadingMetadata).toBe(false);
@@ -124,7 +122,7 @@ describe("upsertModelFromJson", function() {
       "definition",
       json,
       {}
-    );
+    ).throwIfUndefined();
     expect(model instanceof WebMapServiceCatalogItem).toBe(true);
     expect(model.type).toBe("wms");
 
@@ -141,7 +139,7 @@ describe("upsertModelFromJson", function() {
         replaceStratum: false,
         matchByShareKey: true
       }
-    );
+    ).throwIfUndefined();
     expect(model).toBe(model2, "Failed to match model by shareKey");
 
     const wms = <WebMapServiceCatalogItem>model;

@@ -79,9 +79,10 @@ class Disclaimer extends React.Component {
       disclaimer?.message || "Disclaimer text goes here";
     const useSmallScreenInterface = this.props.viewState
       .useSmallScreenInterface;
+    const renderDenyButton = !!disclaimer?.denyAction;
     return disclaimer ? (
       <FadeIn isVisible={this.props.viewState.disclaimerVisible}>
-        <TopElementBox positionAbsolute fullWidth fullHeight centered>
+        <TopElementBox position="absolute" fullWidth fullHeight centered>
           <BackgroundImage
             // // Make the image slightly larger to deal with
             // // image shrinking a tad bit when blurred
@@ -90,7 +91,7 @@ class Disclaimer extends React.Component {
 
             fullWidth
             fullHeight
-            positionAbsolute
+            position="absolute"
           />
           <Box
             displayInlineBlock
@@ -133,13 +134,15 @@ class Disclaimer extends React.Component {
               centered
               displayInlineBlock={useSmallScreenInterface}
             >
-              <DisclaimerButton
-                denyButton
-                onClick={() => this.deny(disclaimer.denyAction)}
-                fullWidth={useSmallScreenInterface}
-              >
-                {disclaimerDeny}
-              </DisclaimerButton>
+              {renderDenyButton && (
+                <DisclaimerButton
+                  denyButton
+                  onClick={() => this.deny(disclaimer.denyAction)}
+                  fullWidth={useSmallScreenInterface}
+                >
+                  {disclaimerDeny}
+                </DisclaimerButton>
+              )}
               <Choose>
                 <When condition={useSmallScreenInterface}>
                   <Spacing bottom={3} />
@@ -150,7 +153,7 @@ class Disclaimer extends React.Component {
               </Choose>
               <DisclaimerButton
                 onClick={() => this.confirm(disclaimer.confirmAction)}
-                fullWidth={useSmallScreenInterface}
+                fullWidth={useSmallScreenInterface || !renderDenyButton}
                 primary
               >
                 {disclaimerConfirm}

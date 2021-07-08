@@ -5,7 +5,7 @@ import React, { Suspense, useEffect, useState } from "react";
 import { useTranslation, WithTranslation } from "react-i18next";
 import Terria from "../Models/Terria";
 import ViewState from "../ReactViewModels/ViewState";
-import Icon from "./Icon";
+import Icon from "../Styled/Icon";
 import Styles from "./Map/Navigation/tool_button.scss";
 import MapIconButton from "./MapIconButton/MapIconButton";
 
@@ -129,7 +129,7 @@ class ToolErrorBoundary extends React.Component<
 
   componentDidCatch() {
     const { terria, toolName, t } = this.props;
-    terria.error.raiseEvent({
+    terria.raiseErrorToUser({
       title: t("tool.loadingError.title", { toolName }),
       message: t("tool.loadingError.message")
     });

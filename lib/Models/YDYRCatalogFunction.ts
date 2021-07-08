@@ -190,7 +190,7 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
   }
 
   async forceLoadMetadata() {
-    return super.loadMetadata();
+    return super.forceLoadMetadata();
     // TODO: load capabilities from https://ydyr.info/api/v1/capability?format=json
     // https://github.com/TerriaJS/terriajs/issues/4943
   }

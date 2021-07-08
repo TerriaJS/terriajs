@@ -9,7 +9,11 @@ import ClockRange from "terriajs-cesium/Source/Core/ClockRange";
 import { withTranslation } from "react-i18next";
 
 import Styles from "./timeline-controls.scss";
-import Icon from "../../Icon";
+import Icon from "../../../Styled/Icon";
+import {
+  Category,
+  TimeLineAction
+} from "../../../Core/AnalyticEvents/analyticEvents";
 
 const TimelineControls = createReactClass({
   propTypes: {
@@ -27,15 +31,16 @@ const TimelineControls = createReactClass({
   },
 
   gotoStart() {
-    this.props.analytics.logEvent("navigation", "click", "gotoStart");
-
+    this.props.analytics?.logEvent(Category.timeLine, TimeLineAction.gotoStart);
     this.props.clock.currentTime = this.props.clock.startTime;
-
     this.props.currentViewer.notifyRepaintRequired();
   },
 
   togglePlay() {
-    this.props.analytics.logEvent("navigation", "click", "togglePlay");
+    this.props.analytics?.logEvent(
+      Category.timeLine,
+      TimeLineAction.togglePlay
+    );
 
     this.props.clock.tick();
     if (this.props.clock.multiplier < 0) {
@@ -47,7 +52,10 @@ const TimelineControls = createReactClass({
   },
 
   playSlower() {
-    this.props.analytics.logEvent("navigation", "click", "playSlower");
+    this.props.analytics?.logEvent(
+      Category.timeLine,
+      TimeLineAction.playSlower
+    );
 
     this.props.clock.tick();
     this.props.clock.multiplier /= 2;
@@ -57,7 +65,10 @@ const TimelineControls = createReactClass({
   },
 
   playFaster() {
-    this.props.analytics.logEvent("navigation", "click", "playFaster");
+    this.props.analytics?.logEvent(
+      Category.timeLine,
+      TimeLineAction.playFaster
+    );
 
     this.props.clock.tick();
     this.props.clock.multiplier *= 2;
@@ -67,7 +78,10 @@ const TimelineControls = createReactClass({
   },
 
   toggleLoop() {
-    this.props.analytics.logEvent("navigation", "click", "toggleLoop");
+    this.props.analytics?.logEvent(
+      Category.timeline,
+      TimeLineAction.toggleLoop
+    );
 
     if (this.isLooping()) {
       this.props.clock.clockRange = ClockRange.CLAMPED;

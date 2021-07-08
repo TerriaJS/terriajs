@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
-import Icon from "../Icon.jsx";
+import Icon from "../../Styled/Icon";
 import Box from "../../Styled/Box";
 import { TextSpan } from "../../Styled/Text";
 import { RawButton } from "../../Styled/Button";
@@ -63,7 +63,7 @@ const CompassIcon = styled(Icon)`
 `;
 
 function GyroscopeGuidancePanel(props) {
-  // TODO: i18inify
+  const { t } = useTranslation();
   return (
     <Box
       column
@@ -73,7 +73,7 @@ function GyroscopeGuidancePanel(props) {
         min-width: 295px;
       `}
     >
-      <Text large>Gyroscope Contols</Text>
+      <Text large>{t("compass.guidance.title")}</Text>
       <Spacing bottom={4} />
       <Text medium>
         <Box>
@@ -84,13 +84,10 @@ function GyroscopeGuidancePanel(props) {
           <Spacing right={2} />
           <Box column>
             <Text bold uppercase>
-              Outer Ring
+              {t("compass.guidance.outerRingTitle")}
             </Text>
             <Spacing bottom={1} />
-            <Text>
-              Drag the outer ring in a circular motion to rotate the map view
-              360˚.
-            </Text>
+            <Text>{t("compass.guidance.outerRingDescription")}</Text>
           </Box>
         </Box>
         <Spacing bottom={4} />
@@ -107,28 +104,20 @@ function GyroscopeGuidancePanel(props) {
           <Spacing right={2} />
           <Box column>
             <Text bold uppercase>
-              Inner Circle
+              {t("compass.guidance.innerCircleTitle")}
             </Text>
             <Spacing bottom={1} />
-            <Text>
-              Click in the centre and slowly drag up, down, left or right to
-              tilt and rotate the map at the same time.
-            </Text>
+            <Text>{t("compass.guidance.innerCircleDescription1")}</Text>
             <Spacing bottom={2} />
-            <Text>
-              Double click in here to reset view to its default state.
-            </Text>
+            <Text>{t("compass.guidance.innerCircleDescription2")}</Text>
           </Box>
         </Box>
         <Spacing bottom={4} />
-        <Text>
-          You can also tilt and rotate the map by holding the CTRL key and
-          dragging the map.
-        </Text>
+        <Text>{t("compass.guidance.ctrlDragDescription")}</Text>
         <Spacing bottom={4} />
         <RawButton onClick={props.onClose}>
           <Text displayBlock primary isLink>
-            Close and don&apos;t show again
+            {t("compass.guidance.dismissText")}
           </Text>
         </RawButton>
       </Text>
