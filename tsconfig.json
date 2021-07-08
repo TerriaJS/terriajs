@@ -12,7 +12,7 @@
         "allowSyntheticDefaultImports": true,
         "outDir": "ts-out",
         "resolveJsonModule": true,
-        "typeRoots": ["./lib/ThirdParty"],
+        "typeRoots": ["./lib/ThirdParty/**/*.d.ts"],
         "types": ["terriajs-cesium"]
     },
     "include": [
