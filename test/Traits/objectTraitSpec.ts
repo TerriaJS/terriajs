@@ -1,6 +1,6 @@
 import { configure, runInAction, autorun } from "mobx";
-import primitiveTrait from "../../lib/Traits/primitiveTrait";
-import objectTrait from "../../lib/Traits/objectTrait";
+import primitiveTrait from "../../lib/Traits/Decorators/primitiveTrait";
+import objectTrait from "../../lib/Traits/Decorators/objectTrait";
 import ModelTraits from "../../lib/Traits/ModelTraits";
 import CreateModel from "../../lib/Models/CreateModel";
 import Terria from "../../lib/Models/Terria";

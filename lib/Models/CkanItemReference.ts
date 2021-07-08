@@ -7,11 +7,11 @@ import { JsonObject } from "../Core/Json";
 import loadJson from "../Core/loadJson";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
-import CkanItemReferenceTraits from "../Traits/CkanItemReferenceTraits";
-import CkanResourceFormatTraits from "../Traits/CkanResourceFormatTraits";
-import CkanSharedTraits from "../Traits/CkanSharedTraits";
-import { RectangleTraits } from "../Traits/MappableTraits";
+import { InfoSectionTraits } from "../Traits/TraitsClasses/CatalogMemberTraits";
+import CkanItemReferenceTraits from "../Traits/TraitsClasses/CkanItemReferenceTraits";
+import CkanResourceFormatTraits from "../Traits/TraitsClasses/CkanResourceFormatTraits";
+import CkanSharedTraits from "../Traits/TraitsClasses/CkanSharedTraits";
+import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import ModelTraits from "../Traits/ModelTraits";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import CkanCatalogGroup, {

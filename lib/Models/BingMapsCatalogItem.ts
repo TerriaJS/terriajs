@@ -3,7 +3,7 @@ import Credit from "terriajs-cesium/Source/Core/Credit";
 import BingMapsImageryProvider from "terriajs-cesium/Source/Scene/BingMapsImageryProvider";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../ModelMixins/MappableMixin";
-import BingMapsCatalogItemTraits from "../Traits/BingMapsCatalogItemTraits";
+import BingMapsCatalogItemTraits from "../Traits/TraitsClasses/BingMapsCatalogItemTraits";
 import CreateModel from "./CreateModel";
 
 export default class BingMapsCatalogItem extends MappableMixin(

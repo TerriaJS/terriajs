@@ -10,7 +10,7 @@ import TableMixin from "../ModelMixins/TableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import Csv from "../Table/Csv";
 import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
-import CsvCatalogItemTraits from "../Traits/CsvCatalogItemTraits";
+import CsvCatalogItemTraits from "../Traits/TraitsClasses/CsvCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";

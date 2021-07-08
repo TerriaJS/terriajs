@@ -6,8 +6,8 @@ import StratumFromTraits from "./StratumFromTraits";
 import createStratumInstance from "./createStratumInstance";
 import { decorate, computed } from "mobx";
 import TraitsConstructor from "../Traits/TraitsConstructor";
-import { ObjectArrayTrait } from "../Traits/objectArrayTrait";
-import { ObjectTrait } from "../Traits/objectTrait";
+import { ObjectArrayTrait } from "../Traits/Decorators/objectArrayTrait";
+import { ObjectTrait } from "../Traits/Decorators/objectTrait";
 
 /**
  * Creates a model by combining two other models in the usual

@@ -9,7 +9,7 @@ import Reproject from "../Map/Reproject";
 import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
 import XmlRequestMixin from "../ModelMixins/XmlRequestMixin";
 import xml2json from "../ThirdParty/xml2json";
-import WebProcessingServiceCatalogFunctionTraits from "../Traits/WebProcessingServiceCatalogFunctionTraits";
+import WebProcessingServiceCatalogFunctionTraits from "../Traits/TraitsClasses/WebProcessingServiceCatalogFunctionTraits";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import BooleanParameter from "./FunctionParameters/BooleanParameter";

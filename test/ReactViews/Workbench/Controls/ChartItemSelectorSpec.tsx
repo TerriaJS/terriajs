@@ -7,9 +7,9 @@ import ChartableMixin, {
 import CreateModel from "../../../../lib/Models/CreateModel";
 import Terria from "../../../../lib/Models/Terria";
 import ChartItemSelector from "../../../../lib/ReactViews/Workbench/Controls/ChartItemSelector";
-import UrlTraits from "../../../../lib/Traits/UrlTraits";
+import UrlTraits from "../../../../lib/Traits/TraitsClasses/UrlTraits";
 import mixTraits from "../../../../lib/Traits/mixTraits";
-import MappableTraits from "../../../../lib/Traits/MappableTraits";
+import MappableTraits from "../../../../lib/Traits/TraitsClasses/MappableTraits";
 
 class SomeChartableItem extends ChartableMixin(
   CreateModel(mixTraits(UrlTraits, MappableTraits))

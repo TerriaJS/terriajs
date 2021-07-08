@@ -15,6 +15,11 @@ Change Log
 * Fix sharing user added data of type "Auto-detect".
 * Use checkbox component on more places. (#5610)
 * Added title to checkbox component. (#5610)
+* #5605 tidy up format string used in `MagdaReference`
+* Fix wms feature info returning only one feature
+* `WebMapServiceCatalogGroup` will now create layer auto-IDs using `Name` field to avoid ID clashes.
+* Added `GroupMixin` `shareKey` generation for members - if the group has `shareKeys`.
+* Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses`
 * [The next improvement]
 
 #### 8.0.0-alpha.87
