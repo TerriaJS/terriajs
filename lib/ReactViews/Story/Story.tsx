@@ -1,6 +1,6 @@
 import React, { MouseEventHandler, useEffect, useRef } from "react";
-import { withTranslation } from "react-i18next";
-import styled, { withTheme } from "styled-components";
+import { useTranslation } from "react-i18next";
+import styled, { useTheme } from "styled-components";
 import { sortable } from "react-anything-sortable";
 import classNames from "classnames";
 
@@ -29,15 +29,13 @@ interface Props {
   menuOpen: boolean;
   openMenu: () => void;
   closeMenu: () => void;
-  theme: any;
   parentRef: any;
-  t: any;
 
   //props for react-anything-sortable
   className: any;
   style: any;
-  onMouseDown: any;
-  onTouchStart: any;
+  onMouseDown(): void;
+  onTouchStart(): void;
 }
 
 const findTextContent = (content: any): string => {
@@ -149,7 +147,7 @@ const calculateOffset = (props: Props) => (
 };
 
 const renderMenu = (props: Props) => {
-  const { t } = props;
+  const { t } = useTranslation();
 
   return (
     <Ul>
@@ -204,7 +202,8 @@ const renderMenu = (props: Props) => {
 const Story = (props: Props) => {
   const story = props.story;
   const bodyText = getTruncatedContent(story.text);
-  const { t } = props;
+  const theme = useTheme();
+  const { t } = useTranslation();
   const storyRef = useRef<HTMLDivElement>(null);
   const closeHandler = () => {
     hideList(props);
@@ -220,7 +219,7 @@ const Story = (props: Props) => {
       <Box
         ref={storyRef}
         column
-        backgroundColor={props.theme.darkWithOverlay}
+        backgroundColor={theme.darkWithOverlay}
         rounded
         css={`
           cursor: move;
@@ -239,7 +238,7 @@ const Story = (props: Props) => {
           padded
           verticalCenter
           styledHeight={"40px"}
-          backgroundColor={props.theme.darkWithOverlay}
+          backgroundColor={theme.darkWithOverlay}
           rounded
           css={`
             padding-left: 15px;
@@ -265,7 +264,7 @@ const Story = (props: Props) => {
                 />
               </RawButton>
             )}
-            <MenuButton theme={props.theme} onClick={toggleMenu(props)}>
+            <MenuButton theme={theme} onClick={toggleMenu(props)}>
               <StyledIcon
                 styledWidth="20px"
                 light
@@ -318,4 +317,4 @@ const MenuButton = styled(RawButton)`
   }
 `;
 
-export default sortable(withTranslation()(withTheme(Story)));
+export default sortable(Story);
