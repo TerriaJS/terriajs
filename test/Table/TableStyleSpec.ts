@@ -2,11 +2,11 @@ const findAllWithType = require("react-shallow-testutils").findAllWithType;
 import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import createStratumInstance from "../../lib/Models/createStratumInstance";
-import TableStyleTraits from "../../lib/Traits/TableStyleTraits";
-import TableColorStyleTraits from "../../lib/Traits/TableColorStyleTraits";
 import DiscreteColorMap from "../../lib/Map/DiscreteColorMap";
 import ContinuousColorMap from "../../lib/Map/ContinuousColorMap";
 import EnumColorMap from "../../lib/Map/EnumColorMap";
+import TableStyleTraits from "../../lib/Traits/TraitsClasses/TableStyleTraits";
+import TableColorStyleTraits from "../../lib/Traits/TraitsClasses/TableColorStyleTraits";
 
 describe("Table Style", function() {
   let terria: Terria;
