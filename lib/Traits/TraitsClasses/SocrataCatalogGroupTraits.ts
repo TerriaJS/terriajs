@@ -1,3 +1,5 @@
+import { JsonObject } from "../../Core/Json";
+import anyTrait from "../Decorators/anyTrait";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
@@ -43,4 +45,10 @@ export default class SocrataCatalogGroupTraits extends mixTraits(
     idProperty: "name"
   })
   facetFilters?: FacetFilterTraits[];
+
+  @anyTrait({
+    name: "Filter Query",
+    description: `Gets or sets the filter query to pass to Socrata when querying the available data sources and their groups.`
+  })
+  filterQuery: JsonObject = {};
 }
