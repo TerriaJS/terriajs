@@ -6,7 +6,7 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import ModelReference from "../Traits/ModelReference";
-import ThreddsCatalogGroupTraits from "../Traits/ThreddsCatalogGroupTraits";
+import ThreddsCatalogGroupTraits from "../Traits/TraitsClasses/ThreddsCatalogGroupTraits";
 import CatalogGroup from "./CatalogGroupNew";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";

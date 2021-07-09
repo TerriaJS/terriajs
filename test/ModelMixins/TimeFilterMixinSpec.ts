@@ -3,10 +3,10 @@ import TimeFilterMixin from "../../lib/ModelMixins/TimeFilterMixin";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import CreateModel from "../../lib/Models/CreateModel";
 import Terria from "../../lib/Models/Terria";
-import DiscretelyTimeVaryingTraits from "../../lib/Traits/DiscretelyTimeVaryingTraits";
-import MappableTraits from "../../lib/Traits/MappableTraits";
+import DiscretelyTimeVaryingTraits from "../../lib/Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
+import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
 import mixTraits from "../../lib/Traits/mixTraits";
-import TimeFilterTraits from "../../lib/Traits/TimeFilterTraits";
+import TimeFilterTraits from "../../lib/Traits/TraitsClasses/TimeFilterTraits";
 
 describe("TimeFilterMixin", function() {
   describe("canFilterTimeByFeature", function() {

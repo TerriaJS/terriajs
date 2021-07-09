@@ -1,6 +1,6 @@
 import Model from "../Models/Model";
 import Constructor from "../Core/Constructor";
-import ExportableTraits from "../Traits/ExportableTraits";
+import ExportableTraits from "../Traits/TraitsClasses/ExportableTraits";
 import { computed } from "mobx";
 
 export type ExportData = string | { name: string; file: Blob };

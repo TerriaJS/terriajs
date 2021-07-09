@@ -19,7 +19,7 @@ import isDefined from "../Core/isDefined";
 import DragPoints from "../Map/DragPoints";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import ViewState from "../ReactViewModels/ViewState";
-import MappableTraits from "../Traits/MappableTraits";
+import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import CreateModel from "./CreateModel";
 import MapInteractionMode from "./MapInteractionMode";
 import Terria from "./Terria";

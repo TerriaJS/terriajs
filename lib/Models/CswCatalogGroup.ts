@@ -12,10 +12,10 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import xml2json from "../ThirdParty/xml2json";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
+import { InfoSectionTraits } from "../Traits/TraitsClasses/CatalogMemberTraits";
 import CswCatalogGroupTraits, {
   QueryPropertyName
-} from "../Traits/CswCatalogGroupTraits";
+} from "../Traits/TraitsClasses/CswCatalogGroupTraits";
 import ModelReference from "../Traits/ModelReference";
 import ArcGisMapServerCatalogItem from "./ArcGisMapServerCatalogItem";
 import CatalogGroup from "./CatalogGroupNew";

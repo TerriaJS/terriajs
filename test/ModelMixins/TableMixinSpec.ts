@@ -6,8 +6,8 @@ import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import updateModelFromJson from "../../lib/Models/updateModelFromJson";
 import createStratumInstance from "../../lib/Models/createStratumInstance";
-import TableStyleTraits from "../../lib/Traits/TableStyleTraits";
-import TableTimeStyleTraits from "../../lib/Traits/TableTimeStyleTraits";
+import TableStyleTraits from "../../lib/Traits/TraitsClasses/TableStyleTraits";
+import TableTimeStyleTraits from "../../lib/Traits/TraitsClasses/TableTimeStyleTraits";
 
 const LatLonValCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_val.csv");
 const LatLonValCsvDuplicate = require("raw-loader!../../wwwroot/test/csv/lat_lon_val_with_duplicate_row.csv");

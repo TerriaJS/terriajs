@@ -7,7 +7,7 @@ import isDefined from "../Core/isDefined";
 import loadJson from "../Core/loadJson";
 import Feature from "../Models/Feature";
 import Model from "../Models/Model";
-import FeatureInfoTraits from "../Traits/FeatureInfoTraits";
+import FeatureInfoTraits from "../Traits/TraitsClasses/FeatureInfoTraits";
 import { action } from "mobx";
 import proxyCatalogItemUrl from "../Models/proxyCatalogItemUrl";
 

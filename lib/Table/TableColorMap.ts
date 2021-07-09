@@ -14,7 +14,7 @@ import Model from "../Models/Model";
 import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import TableColorStyleTraits, {
   EnumColorTraits
-} from "../Traits/TableColorStyleTraits";
+} from "../Traits/TraitsClasses/TableColorStyleTraits";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
 
