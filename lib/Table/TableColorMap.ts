@@ -29,59 +29,42 @@ export default class TableColorMap {
     readonly colorTraits: Model<TableColorStyleTraits>
   ) {}
 
-  /** Get colorPalete name.
+  /** Get default colorPalete name.
    * Follows https://github.com/d3/d3-scale-chromatic#api-reference
    * If Enum or Region - use custom HighContrast (See StandardCssColors.highContrast)
    * If scalar and not diverging - use Reds palette
    * If scalar and diverging - use Purple to Orange palette
    */
   @computed
-  get colorPaletteName() {
+  get defaultColorPaletteName() {
     const colorColumn = this.colorColumn;
 
     if (colorColumn === undefined) {
       return;
     }
 
-    let paletteName = this.colorTraits.colorPalette;
-
     if (
       colorColumn.type === TableColumnType.enum ||
       colorColumn.type === TableColumnType.region
     ) {
       // Enumerated values, so use a large, high contrast palette.
-      paletteName = paletteName || "HighContrast";
+      return "HighContrast";
     } else if (colorColumn.type === TableColumnType.scalar) {
-      if (paletteName === undefined) {
-        const valuesAsNumbers = colorColumn.valuesAsNumbers;
-        if (
-          valuesAsNumbers !== undefined &&
-          (valuesAsNumbers.minimum || 0.0) < 0.0 &&
-          (valuesAsNumbers.maximum || 0.0) > 0.0
-        ) {
-          // Values cross zero, so use a diverging palette
-          paletteName = "PuOr";
-        } else {
-          // Values do not cross zero so use a sequential palette.
-          paletteName = "Reds";
-        }
+      const valuesAsNumbers = colorColumn.valuesAsNumbers;
+      if (
+        valuesAsNumbers !== undefined &&
+        (valuesAsNumbers.minimum || 0.0) < 0.0 &&
+        (valuesAsNumbers.maximum || 0.0) > 0.0
+      ) {
+        // Values cross zero, so use a diverging palette
+        return "PuOr";
+      } else {
+        // Values do not cross zero so use a sequential palette.
+        return "Reds";
       }
     }
 
-    return paletteName;
-  }
-
-  /**
-   * `colorPaletteName` can also be "-" delimited CSS colors, this is used to handle that use-case
-   */
-  @computed get fallbackColorPalette() {
-    return (
-      this.colorPaletteName
-        ?.split("-")
-        .map(color => Color.fromCssColorString(color) ?? Color.TRANSPARENT) ?? [
-        Color.TRANSPARENT
-      ]
-    );
+    return "Reds";
   }
 
   /**
@@ -96,21 +79,18 @@ export default class TableColorMap {
 
     // Get colorScale from `d3-scale-chromatic` library - all categorical color schemes start with "scheme"
     // See https://github.com/d3/d3-scale-chromatic#categorical
-    const colorScaleScheme = (d3Scale as any)[`scheme${this.colorPaletteName}`];
-
-    // If colorScale doesn't exist in `d3-scale-chromatic` - we will use `fallbackColorPalette`
-    let colorScale = this.fallbackColorPalette;
+    let colorScaleScheme =
+      (d3Scale as any)[`scheme${this.colorTraits.colorPalette}`] ??
+      (d3Scale as any)[`scheme${this.defaultColorPaletteName}`];
 
     // d3 categorical color schemes are represented as two dimensional arrays
     // First array represents number of bins in the given color scale (eg 3 = [#ff0000, #ffaa00, #ffff00])
     // Second aray contains color values
 
-    if (Array.isArray(colorScaleScheme)) {
-      colorScale = colorScaleScheme[this.binMaximums.length];
-      // If invalid numberOfBins - use largest number
-      if (!Array.isArray(colorScale)) {
-        colorScale = colorScaleScheme[colorScaleScheme.length - 1];
-      }
+    let colorScale = colorScaleScheme[this.binMaximums.length];
+    // If invalid numberOfBins - use largest number
+    if (!Array.isArray(colorScale)) {
+      colorScale = colorScaleScheme[colorScaleScheme.length - 1];
     }
 
     const result: Color[] = [];
@@ -199,12 +179,12 @@ export default class TableColorMap {
     let colorScale = StandardCssColors.highContrast;
 
     if (
-      isDefined(this.colorPaletteName) &&
-      this.colorPaletteName !== "HighContrast"
+      isDefined(this.colorTraits.colorPalette) &&
+      this.colorTraits.colorPalette !== "HighContrast"
     ) {
       colorScale =
-        (d3Scale as any)[`scheme${this.colorPaletteName}`] ??
-        this.fallbackColorPalette;
+        (d3Scale as any)[`scheme${this.colorTraits.colorPalette}`] ??
+        (d3Scale as any)[`scheme${this.defaultColorPaletteName}`];
     }
 
     return colorScale.map((color, i) => {
@@ -255,21 +235,13 @@ export default class TableColorMap {
       const maxValue =
         colorTraits.maximumValue ?? colorColumn?.valuesAsNumbers.maximum;
 
-      if (
-        this.colorPaletteName &&
-        isDefined(minValue) &&
-        isDefined(maxValue) &&
-        minValue !== maxValue
-      ) {
+      if (isDefined(minValue) && isDefined(maxValue) && minValue !== maxValue) {
         // Get colorScale from `d3-scale-chromatic` library - all continuous color schemes start with "interpolate"
         // See https://github.com/d3/d3-scale-chromatic#diverging
-        const colorScale = (d3Scale as any)[
-          `interpolate${this.colorPaletteName}`
-        ];
-
-        // d3 continuous color schemes are represented as a function which map a value [0,1] to a color
-        if (typeof colorScale !== "function")
-          throw `Color palette "${this.colorPaletteName}" is not valid.`;
+        // d3 continuous color schemes are represented as a function which map a value [0,1] to a color]
+        const colorScale =
+          (d3Scale as any)[`interpolate${this.colorTraits.colorPalette}`] ??
+          (d3Scale as any)[`interpolate${this.defaultColorPaletteName}`];
 
         return new ContinuousColorMap({
           colorScale,
