@@ -18,10 +18,16 @@ import RasterLayerTraits from "./RasterLayerTraits";
 import SplitterTraits from "./SplitterTraits";
 import TimeFilterTraits from "./TimeFilterTraits";
 import UrlTraits from "./UrlTraits";
-import { ServerType } from "../Models/WebMapServiceCatalogItem";
+import enumTrait from "../decorators/enumTrait";
 
 export const SUPPORTED_CRS_3857 = ["EPSG:3857", "EPSG:900913"];
 export const SUPPORTED_CRS_4326 = ["EPSG:4326", "CRS:84", "EPSG:4283"];
+
+export enum ServerTypeEnum {
+  geoserver = "geoserver",
+  esri = "esri",
+  NcWMS = "ncwms"
+}
 
 export class WebMapServiceAvailableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -285,12 +291,12 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   })
   linkedWcsCoverage?: string;
 
-  @anyTrait({
-    name: "Server",
-    description:
-      "Which server serves data in this WMS. Supported options are geoserver, esri and thredds"
+  @enumTrait({
+    enum: ServerTypeEnum,
+    name: "Server enum",
+    description: ""
   })
-  server?: ServerType;
+  server?: ServerTypeEnum;
 
   @primitiveTrait({
     type: "boolean",

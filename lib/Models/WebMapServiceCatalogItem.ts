@@ -45,6 +45,7 @@ import {
 import LegendTraits from "../Traits/TraitsClasses/LegendTraits";
 import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import WebMapServiceCatalogItemTraits, {
+  ServerTypeEnum,
   SUPPORTED_CRS_3857,
   SUPPORTED_CRS_4326,
   WebMapServiceAvailableLayerDimensionsTraits,
@@ -68,8 +69,6 @@ import WebMapServiceCapabilities, {
   MetadataURL
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
-
-export type ServerType = "geoserver" | "esri" | "thredds";
 
 const dateFormat = require("dateformat");
 class GetCapabilitiesStratum extends LoadableStratum(
@@ -231,7 +230,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       if (isDefined(legendUri)) {
         // Add geoserver related LEGEND_OPTIONS to match terria styling (if supported)
         if (
-          this.catalogItem.server === "geoserver" &&
+          this.catalogItem.server === ServerTypeEnum.geoserver &&
           legendUri.hasQuery("request", "GetLegendGraphic")
         ) {
           let legendOptions =
@@ -629,8 +628,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   // TODO - There is possibly a better way to do this
+  // TODO - Geoserver also support NCWMS via a plugin, just need to work out how to detect that
   @computed
-  get isThredds(): boolean {
+  get isNcWMS(): boolean {
     if (
       this.catalogItem.url &&
       (this.catalogItem.url.indexOf("thredds") > -1 ||
@@ -641,13 +641,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
     return false;
   }
 
-  // TODO - Geoserver also support NCWMS via a plugin, just need to work out how to detect that
-  @computed
-  get isNcWMS(): boolean {
-    if (this.isThredds) return true;
-    return false;
-  }
-
   @computed
   get isEsri(): boolean {
     if (this.catalogItem.url !== undefined)
@@ -655,13 +648,13 @@ class GetCapabilitiesStratum extends LoadableStratum(
     return false;
   }
 
-  get server(): ServerType | undefined {
+  get server(): ServerTypeEnum | undefined {
     if (this.isGeoServer) {
-      return "geoserver";
+      return ServerTypeEnum.geoserver;
     } else if (this.isEsri) {
-      return "esri";
-    } else if (this.isThredds || this.isNcWMS) {
-      return "thredds";
+      return ServerTypeEnum.esri;
+    } else if (this.isNcWMS) {
+      return ServerTypeEnum.NcWMS;
     }
     return undefined;
   }
@@ -673,14 +666,14 @@ class GetCapabilitiesStratum extends LoadableStratum(
       isDefined(
         this.capabilities?.json?.Capability?.Request?.GetLegendGraphic
       ) ||
-      (this.catalogItem.server === "geoserver" ?? false) ||
-      (this.catalogItem.server === "thredds" ?? false)
+      (this.catalogItem.server === ServerTypeEnum.geoserver ?? false) ||
+      (this.catalogItem.server === ServerTypeEnum.NcWMS ?? false)
     );
   }
 
   @computed
   get supportsColorScaleRange(): boolean {
-    return this.catalogItem.server === "thredds";
+    return this.catalogItem.server === ServerTypeEnum.NcWMS;
   }
 
   @computed
