@@ -11,6 +11,7 @@ import arrayContains from "../../Core/arrayContains";
 import { RCChangeUrlParams } from "../../Models/Receipt";
 import { Medium, Small } from "../Generic/Responsive";
 import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
+import InternetExplorerOverlay from "../InternetExplorerOverlay/InternetExplorerOverlay.jsx";
 import ProgressBar from "../Map/ProgressBar.jsx";
 import RCBuilder from "../RCBuilder/RCBuilder";
 import RCLogin from "../RCLogin/RCLogin";
@@ -170,6 +171,7 @@ const StandardUserInterface = createReactClass({
 
     return (
       <div className={Styles.storyWrapper}>
+        <InternetExplorerOverlay viewState={this.props.viewState} />
         <WelcomeMessage viewState={viewState} />
         <div
           className={classNames(Styles.uiRoot, {

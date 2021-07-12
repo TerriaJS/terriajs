@@ -76,6 +76,11 @@ npm run gulp watch
 
 `npm run gulp` simply runs `gulp`, so you can use that directly if you prefer (run `npm install -g gulp` to install it globally).
 
+_If any of the above fail with an error that includes `Allocation failed - JavaScript heap out of memory` (see e.g. [the stack trace in this issue](https://github.com/TerriaJS/TerriaMap/issues/374)) run the task again after setting a higher Node.js allocation limit:_
+```bash
+export NODE_OPTIONS=--max_old_space_size=8192
+```
+
 The full set of `gulp` tasks can be found on the [Development Environment](contributing/development-environment.md#terriamap-gulp-tasks) page.
 
 ### Running TerriaMap

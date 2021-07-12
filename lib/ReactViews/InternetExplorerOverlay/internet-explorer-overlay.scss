@@ -1,0 +1,120 @@
+@import "~terriajs-variables";
+@import "~terriajs-mixins";
+@import url("https://fonts.googleapis.com/css?family=Montserrat:700&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Nunito:600,600i&display=swap");
+
+.IEMessageWrapper {
+  color: $dark;
+  position: fixed;
+  z-index: 9999999999999999999999;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: $dark;
+  opacity: 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.IEMessage {
+  position: relative;
+  font-family: "Nunito", "Open Sans";
+  text-align: left;
+  box-shadow: $box-shadow;
+  box-sizing: border-box;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  margin: 0;
+  width: $sm;
+  padding: $padding * 4;
+  @media (max-width: $sm), (max-height: 299px) {
+    width: 100%;
+    transform: none;
+    overflow: scroll;
+    height: 100vh;
+    text-align: center;
+  }
+  @media (min-width: $sm) and (min-height: 300px) {
+    min-height: 300px;
+  }
+
+  background-color: $modal-bg;
+  border-radius: 4px;
+
+  max-width: 100%;
+  h1 {
+    position: relative;
+    font-family: "Montserrat", "Open Sans";
+    font-size: 32px;
+    margin-top: 0;
+    margin-bottom: $padding-small * 3;
+  }
+}
+.highlight {
+  color: $color-primary;
+}
+.IEMessage-button {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  position: relative;
+  &:not(:root) {
+    display: inline-block;
+    width: auto;
+    width: initial;
+    margin: 0 auto 10px;
+    margin-right: auto;
+
+    padding: 10px 25px;
+
+    margin-right: 10px;
+  }
+}
+.IEMessage-buttonPrimary {
+  composes: btn-primary from "../../Sass/common/_buttons.scss";
+}
+.IEMessage-buttonTertiary {
+  composes: btn--tertiary from "../../Sass/common/_buttons.scss";
+  border-width: 1px;
+  &:hover,
+  &:focus {
+    border-width: 1px;
+  }
+}
+
+.IEMessage-body {
+  color: rgba($dark, 0.8);
+  font-size: $font-size-base;
+  line-height: 24px;
+  font-weight: 600;
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.close-btn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  position: absolute;
+  z-index: 10;
+  top: $padding-small;
+  right: $padding-small;
+
+  top: 15px;
+  right: 15px;
+
+  &:hover,
+  &:focus {
+    svg {
+      fill: $color-secondary;
+    }
+  }
+
+  svg {
+    fill: $color-primary;
+    height: $padding;
+    width: $padding;
+  }
+}
