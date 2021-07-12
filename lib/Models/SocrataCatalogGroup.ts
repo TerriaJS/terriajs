@@ -122,7 +122,7 @@ export class SocrataCatalogStratum extends LoadableStratum(
     if (!catalogGroup.url) throw "`url` must be set";
 
     const filterQuery = Object.assign({}, catalogGroup.filterQuery, {
-      only: "dataset"
+      only: "dataset,map"
     });
 
     const domain = URI(catalogGroup.url).hostname();
@@ -282,6 +282,17 @@ export class SocrataCatalogStratum extends LoadableStratum(
       ]);
 
       facetGroup!.add(CommonStrata.underride, facetValueGroup);
+
+      // Add shareKey for v7 share compabitility
+      // In v7 socrata group structure uses categories as top level group (whereas v8 facets as top level)'
+      // For example
+      // - v8 = //socrata melbourne/categories/Business
+      // - v7 = //socrata melbourne/Business
+      if (facet.facet === "categories")
+        this.catalogGroup.terria.addShareKey(
+          facetValueId,
+          facetValueId.replace("/categories/", "/")
+        );
     });
   }
 
@@ -383,6 +394,17 @@ export class SocrataCatalogStratum extends LoadableStratum(
 
     if (resultModel) {
       resultModel.setTrait(stratum, "name", result.resource.name);
+
+      // Add shareKey for v7 share compabitility
+      // In v7 socrata group structure uses categories as top level group (whereas v8 facets as top level)'
+      // For example
+      // - v8 = //socrata melbourne/categories/Business/aia8-ryiq
+      // - v7 = //socrata melbourne/Business/aia8-ryiq
+      if (resultId.includes("/categories/"))
+        this.catalogGroup.terria.addShareKey(
+          resultId,
+          resultId.replace("/categories/", "/")
+        );
     }
   }
 
