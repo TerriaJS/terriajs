@@ -1,6 +1,6 @@
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixin";
-import DiscretelyTimeVaryingTraits from "../Traits/DiscretelyTimeVaryingTraits";
+import DiscretelyTimeVaryingTraits from "../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import Terria from "./Terria";

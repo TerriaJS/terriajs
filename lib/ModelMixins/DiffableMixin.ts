@@ -4,10 +4,10 @@ import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
 import { SelectableDimension } from "../Models/SelectableDimensions";
 import StratumOrder from "../Models/StratumOrder";
-import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
-import DiffableTraits from "../Traits/DiffableTraits";
-import MappableTraits from "../Traits/MappableTraits";
-import SplitterTraits from "../Traits/SplitterTraits";
+import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";
+import DiffableTraits from "../Traits/TraitsClasses/DiffableTraits";
+import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
+import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
 import TimeFilterMixin from "./TimeFilterMixin";
 
 type MixinModel = Model<
