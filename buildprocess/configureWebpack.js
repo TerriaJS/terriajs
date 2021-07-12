@@ -91,6 +91,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
                 'babel-plugin-jsx-control-statements',
                 '@babel/plugin-transform-modules-commonjs',
                 '@babel/plugin-syntax-dynamic-import',
+                "@babel/plugin-transform-runtime",
                 ["@babel/plugin-proposal-optional-chaining"],
                 ['@babel/plugin-proposal-class-properties',
                     {

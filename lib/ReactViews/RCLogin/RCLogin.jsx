@@ -1,78 +1,79 @@
 import {
   AmplifyAuthenticator,
+  AmplifySignIn,
   AmplifySignOut,
   AmplifySignUp
 } from "@aws-amplify/ui-react";
+import { onAuthUIStateChange } from "@aws-amplify/ui-components";
 import React from "react";
-
-import { withTranslation } from "react-i18next";
-import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
 import "./RCLogin.scss";
+import { Auth } from "aws-amplify";
 
-const Receipt = require("../../Models/Receipt");
+const RCLogin = props => {
+  const [authState, setAuthState] = React.useState();
+  const [user, setUser] = React.useState({});
 
-export const RCLogin = createReactClass({
-  propTypes: {
-    /**
-     * Terria instance
-     */
-    viewState: PropTypes.object.isRequired
-  },
+  React.useEffect(() => {
+    return onAuthUIStateChange(async newAuthState => {
+      setAuthState(newAuthState);
+      const user = await Auth.currentAuthenticatedUser();
+      setUser(user);
+    });
+  }, []);
 
-  componentDidMount() {
-    // console.log('🎹', this.props.viewState);
-  },
+  const signupFormFields = [
+    {
+      type: "name",
+      label: "Full Name *",
+      placeholder: "Enter your name",
+      required: true
+    },
+    {
+      type: "custom:Affilliation",
+      label: "Affiliation *",
+      placeholder: "Enter your affiliation",
+      required: true
+    },
+    {
+      type: "email",
+      label: "Email Address *",
+      required: true
+    },
+    {
+      type: "password",
+      label: "Password *",
+      required: true
+    }
+  ];
 
-  render() {
-    const { t, viewState } = this.props;
+  return (
+    <div style={{ padding: "16px" }}>
+      <AmplifyAuthenticator federated={{}} usernameAlias="email">
+        <div slot="sign-in">
+          <AmplifySignIn>
+            <div slot="federated-buttons">
+              {/*  Left empty to override the AWS federated buttons*/}
+            </div>
+          </AmplifySignIn>
+        </div>
+        <AmplifySignUp
+          usernameAlias="email"
+          slot="sign-up"
+          formFields={signupFormFields}
+        />
 
-    const MyTheme = {
-      googleSignInButton: { backgroundColor: "red", borderColor: "red" },
-      button: { backgroundColor: "green", borderColor: "red" },
-      signInButtonIcon: { display: "none" }
-    };
-
-    const signupFormFields = [
-      {
-        type: "name",
-        label: "Full Name *",
-        required: true
-      },
-      {
-        type: "custom:Affilliation",
-        label: "Affiliation *",
-        required: true
-      },
-      {
-        type: "email",
-        label: "Email Address *",
-        required: true
-      },
-      {
-        type: "password",
-        label: "Password *",
-        required: true
-      }
-    ];
-    return (
-      <div>
-        <h2>Login</h2>
-        <div>
-          <AmplifyAuthenticator usernameAlias="email">
-            <AmplifySignUp
-              theme={MyTheme}
-              usernameAlias="email"
-              formFields={signupFormFields}
-              slot="sign-up"
-            />
-          </AmplifyAuthenticator>
-
+        {authState === "signedin" && (
+          <div>
+            <div className="bold">{user.attributes?.name}</div>
+            <div>{user.attributes?.email}</div>
+            <div>{user.attributes?.["custom:Affilliation"]}</div>
+          </div>
+        )}
+        <div style={{ marginTop: "32px", width: "25%" }}>
           <AmplifySignOut />
         </div>
-      </div>
-    );
-  }
-});
-// export default withAuthenticator(withTranslation()(RCLogin));
-export default withTranslation()(RCLogin);
+      </AmplifyAuthenticator>
+    </div>
+  );
+};
+export default RCLogin;

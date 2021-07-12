@@ -1,6 +1,11 @@
 @import "~terriajs-variables";
 
 // Sector Tabs CSS
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .tabsContainer {
   display: flex;
   justify-content: space-evenly;

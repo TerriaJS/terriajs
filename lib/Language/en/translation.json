@@ -103,7 +103,8 @@
     "viewerModeLabels": {
       "CesiumTerrain": "3D Terrain",
       "CesiumEllipsoid": "3D Smooth",
-      "Leaflet": "2D"
+      "Leaflet": "2D",
+      "Cesium2D": "2D Cesium"
     },
     "qualityLabels": {
       "maximumPerformance": "Maximum performance, lower quality",
