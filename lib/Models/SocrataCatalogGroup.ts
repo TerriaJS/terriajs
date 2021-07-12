@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { action, computed, runInAction } from "mobx";
 import URI from "urijs";
 import isDefined from "../Core/isDefined";
@@ -7,6 +8,10 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import ModelReference from "../Traits/ModelReference";
+import {
+  InfoSectionTraits,
+  MetadataUrlTraits
+} from "../Traits/TraitsClasses/CatalogMemberTraits";
 import SocrataCatalogGroupTraits, {
   FacetFilterTraits
 } from "../Traits/TraitsClasses/SocrataCatalogGroupTraits";
@@ -19,7 +24,7 @@ import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import { SocrataMapViewCatalogItem } from "./SocrataMapViewCatalogItem";
+import SocrataMapViewCatalogItem from "./SocrataMapViewCatalogItem";
 import StratumOrder from "./StratumOrder";
 
 export interface Facet {
@@ -160,9 +165,8 @@ export class SocrataCatalogStratum extends LoadableStratum(
         throw `Could not find any facets for domain ${domain}`;
     }
 
-    // If facetFilter is set, use it to search for datasets
+    // If facetFilter is set, use it to search for datasets (aka resources)
     else {
-      // http://api.us.socrata.com/api/catalog/v1?categories=Education&tags=families&search_context=data.seattle.gov
       const resultsUri = URI(
         `${catalogGroup.url}/api/catalog/v1?search_context=${domain}`
       ).addQuery(filterQuery);
@@ -170,6 +174,7 @@ export class SocrataCatalogStratum extends LoadableStratum(
       catalogGroup.facetFilters.forEach(({ name, value }) =>
         name && isDefined(value) ? resultsUri.addQuery(name, value) : null
       );
+
       const resultsResponse = await loadJson(
         proxyCatalogItemUrl(catalogGroup, resultsUri.toString())
       );
@@ -282,21 +287,16 @@ export class SocrataCatalogStratum extends LoadableStratum(
       ]);
 
       facetGroup!.add(CommonStrata.underride, facetValueGroup);
-
-      // Add shareKey for v7 share compabitility
-      // In v7 socrata group structure uses categories as top level group (whereas v8 facets as top level)'
-      // For example
-      // - v8 = //socrata melbourne/categories/Business
-      // - v7 = //socrata melbourne/Business
-      if (facet.facet === "categories")
-        this.catalogGroup.terria.addShareKey(
-          facetValueId,
-          facetValueId.replace("/categories/", "/")
-        );
     });
   }
 
-  /** Turn Result into catalog item */
+  /** Turn Result into catalog item
+   * If type is 'dataset':
+   * - If has geometery -> create GeoJSONCatalogItem
+   * - Otherwise -> create CsvCatalogItem
+   * If type is 'map' -> SocrataMapViewCatalogItem
+   * - Then the Socrata `views` API will be used to fetch data (this mimics how Socrata portal map visualisation works - it isn't an official API)
+   */
   @action
   createItemFromResult(result: Result) {
     const resultId = this.getResultId(result);
@@ -370,6 +370,7 @@ export class SocrataCatalogStratum extends LoadableStratum(
           `${this.catalogGroup.url}/resource/${result.resource.id}.csv?$limit=10000`
         );
       }
+      // If type is 'map' -> SocrataMapViewCatalogItem
     } else if (result.resource.type === "map") {
       resultModel = this.catalogGroup.terria.getModelById(
         SocrataMapViewCatalogItem,
@@ -385,7 +386,6 @@ export class SocrataCatalogStratum extends LoadableStratum(
       }
 
       // Replace the stratum inherited from the parent group.
-
       resultModel.strata.delete(stratum);
 
       resultModel.setTrait(stratum, "url", this.catalogGroup.url);
@@ -394,17 +394,29 @@ export class SocrataCatalogStratum extends LoadableStratum(
 
     if (resultModel) {
       resultModel.setTrait(stratum, "name", result.resource.name);
+      resultModel.setTrait(stratum, "description", result.resource.description);
+      resultModel.setTrait(stratum, "attribution", result.resource.attribution);
+      resultModel.setTrait(stratum, "info", [
+        createStratumInstance(InfoSectionTraits, {
+          name: i18next.t("models.socrataServer.licence"),
+          content: result.metadata.license
+        }),
+        createStratumInstance(InfoSectionTraits, {
+          name: i18next.t("models.socrataServer.tags"),
+          content: result.classification.tags.join(", ")
+        }),
+        createStratumInstance(InfoSectionTraits, {
+          name: i18next.t("models.socrataServer.attributes"),
+          content: result.resource.columns_name.join(", ")
+        })
+      ]);
 
-      // Add shareKey for v7 share compabitility
-      // In v7 socrata group structure uses categories as top level group (whereas v8 facets as top level)'
-      // For example
-      // - v8 = //socrata melbourne/categories/Business/aia8-ryiq
-      // - v7 = //socrata melbourne/Business/aia8-ryiq
-      if (resultId.includes("/categories/"))
-        this.catalogGroup.terria.addShareKey(
-          resultId,
-          resultId.replace("/categories/", "/")
-        );
+      resultModel.setTrait(stratum, "metadataUrls", [
+        createStratumInstance(MetadataUrlTraits, {
+          title: i18next.t("models.openDataSoft.viewDatasetPage"),
+          url: result.permalink
+        })
+      ]);
     }
   }
 

@@ -37,7 +37,7 @@ import SenapsLocationsCatalogItem from "./SenapsLocationsCatalogItem";
 import SensorObservationServiceCatalogItem from "./SensorObservationServiceCatalogItem";
 import ShapefileCatalogItem from "./ShapefileCatalogItem";
 import SocrataCatalogGroup from "./SocrataCatalogGroup";
-import { SocrataMapViewCatalogItem } from "./SocrataMapViewCatalogItem";
+import SocrataMapViewCatalogItem from "./SocrataMapViewCatalogItem";
 import SplitItemReference from "./SplitItemReference";
 import StubCatalogItem from "./StubCatalogItem";
 import ThreddsCatalogGroup from "./ThreddsCatalogGroup";

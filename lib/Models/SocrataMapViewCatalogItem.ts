@@ -79,6 +79,9 @@ export interface View {
   flags: string[];
 }
 
+/** This will fetch `views` for a given Socrata `resourceId`.
+ * From the JSON response we get `childViews` - which can be used to generate a URL to fetch GeoJSON
+ */
 export class SocrataMapViewStratum extends LoadableStratum(
   SocrataMapViewCatalogItemTraits
 ) {
@@ -126,7 +129,11 @@ export class SocrataMapViewStratum extends LoadableStratum(
 
 StratumOrder.addLoadStratum(SocrataMapViewStratum.stratumName);
 
-export class SocrataMapViewCatalogItem extends UrlMixin(
+/**
+ * Use the Socrata `views` API to fetch data.
+ * This mimics how Socrata portal map visualisation works - it isn't an official API
+ */
+export default class SocrataMapViewCatalogItem extends UrlMixin(
   MappableMixin(
     CatalogMemberMixin(CreateModel(SocrataMapViewCatalogItemTraits))
   )
@@ -134,7 +141,7 @@ export class SocrataMapViewCatalogItem extends UrlMixin(
   @observable
   private geojsonCatalogItem: GeoJsonCatalogItem | undefined;
 
-  static readonly type = "socrata-map";
+  static readonly type = "socrata-map-item";
 
   get type() {
     return SocrataMapViewCatalogItem.type;
