@@ -12,7 +12,6 @@ import UrlMixin from "../../../ModelMixins/UrlMixin";
 import ArcGisPortalItemFormatTraits from "../../../Traits/TraitsClasses/ArcGisPortalItemFormatTraits";
 import ArcGisPortalItemTraits from "../../../Traits/TraitsClasses/ArcGisPortalItemTraits";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
-import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import ModelTraits from "../../../Traits/ModelTraits";
 import ArcGisPortalCatalogGroup from "./ArcGisPortalCatalogGroup";
 import { ArcGisItem } from "./ArcGisPortalDefinitions";

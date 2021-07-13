@@ -1,5 +1,5 @@
 import { computed, IReactionDisposer, observable, runInAction } from "mobx";
-import { createTransformer, ITransformer, now } from "mobx-utils";
+import { createTransformer, ITransformer } from "mobx-utils";
 import Pbf from "pbf";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -27,7 +27,6 @@ import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import StratumOrder from "../../Definition/StratumOrder";
-
 import CreateModel from "../../Definition/CreateModel";
 import {
   FeedEntity,

@@ -4,8 +4,6 @@ import isDefined from "../../../Core/isDefined";
 import TerriaError from "../../../Core/TerriaError";
 import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
-import ChartableMixin from "../../../ModelMixins/ChartableMixin";
-import ExportableMixin from "../../../ModelMixins/ExportableMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import Csv from "../../../Table/Csv";

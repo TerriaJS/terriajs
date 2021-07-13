@@ -11,7 +11,6 @@ import {
   CapabilitiesGeographicBoundingBox,
   CapabilitiesService
 } from "./WebMapServiceCapabilities";
-import { computed } from "mobx";
 
 export interface FeatureType {
   readonly Name?: string;

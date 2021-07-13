@@ -2,16 +2,11 @@
 
 import URI from "urijs";
 import i18next from "i18next";
-
 import { runInAction } from "mobx";
-
 import loadBlob from "../../../Core/loadBlob";
-
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
-var sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf").default;
-
 import CommonStrata from "../../Definition/CommonStrata";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import proxyCatalogItemUrl from "../../proxyCatalogItemUrl";
@@ -24,6 +19,8 @@ import isDefined from "../../../Core/isDefined";
 import makeRealPromise from "../../../Core/makeRealPromise";
 import TerriaError from "../../../Core/TerriaError";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
+
+var sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf").default;
 
 export const callWebCoverageService = function(
   wmsCatalogItem: WebMapServiceCatalogItem
