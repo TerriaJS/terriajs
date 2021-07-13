@@ -23,6 +23,7 @@ export class EnumTrait<T> extends Trait {
   readonly enum: T;
   readonly allowLabelsAsValue: boolean;
   readonly isNullable: boolean;
+
   constructor(id: string, options: EnumTraitOptions<T>) {
     super(id, options);
     this.enum = options.enum;
@@ -79,7 +80,7 @@ export class EnumTrait<T> extends Trait {
     );
   }
 
-  getValidValues() {
+  private getValidValues() {
     const validValues = getEnumValues(this.enum);
     if (this.allowLabelsAsValue) {
       for (const label of getEnumLabels(this.enum)) {
@@ -109,7 +110,7 @@ function isValidEnumValue(
 ) {
   if (allowLabelsAsValue) {
     const labels = getEnumLabels(enumDefinition);
-    if (labels.indexOf(String(value))) {
+    if (labels.indexOf(String(value)) !== -1) {
       return true;
     }
   }
