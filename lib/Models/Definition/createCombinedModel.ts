@@ -1,13 +1,11 @@
-import ModelTraits, { TraitDefinitions } from "../../Traits/ModelTraits";
+import ModelTraits from "../../Traits/ModelTraits";
 import Model, { BaseModel, ModelConstructor } from "./Model";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import traitsClassToModelClass from "../../Traits/traitsClassToModelClass";
 import StratumFromTraits from "./StratumFromTraits";
 import createStratumInstance from "./createStratumInstance";
-import { decorate, computed } from "mobx";
+import { computed, decorate } from "mobx";
 import TraitsConstructor from "../../Traits/TraitsConstructor";
-import { ObjectArrayTrait } from "../../Traits/decorators/objectArrayTrait";
-import { ObjectTrait } from "../../Traits/decorators/objectTrait";
 
 /**
  * Creates a model by combining two other models in the usual

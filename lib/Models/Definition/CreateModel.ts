@@ -1,8 +1,8 @@
-import { action, computed, observable, runInAction, trace } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import { getObjectId } from "../../Traits/ArrayNestedStrataMap";
 import { ModelId } from "../../Traits/ModelReference";
 import ModelTraits from "../../Traits/ModelTraits";
-import { ObjectArrayTrait } from "../../Traits/decorators/objectArrayTrait";
+import { ObjectArrayTrait } from "../../Traits/Decorators/objectArrayTrait";
 import TraitsConstructor from "../../Traits/TraitsConstructor";
 import addModelStrataView from "./addModelStrataView";
 import createStratumInstance from "./createStratumInstance";
