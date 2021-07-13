@@ -1,5 +1,5 @@
 import Result from "../Core/Result";
-import { BaseModel } from "../Models/Model";
+import { BaseModel } from "../Models/Definition/Model";
 
 export interface TraitOptions {
   name: string;

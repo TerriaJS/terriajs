@@ -1,4 +1,4 @@
-import { BaseModel } from "../Models/Model";
+import { BaseModel } from "../Models/Definition/Model";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 

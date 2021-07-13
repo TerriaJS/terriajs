@@ -1,7 +1,7 @@
 import { runInAction } from "mobx";
-import CatalogGroup from "../../lib/Models/CatalogGroupNew";
-import OpenDataSoftCatalogGroup from "../../lib/Models/OpenDataSoftCatalogGroup";
-import OpenDataSoftCatalogItem from "../../lib/Models/OpenDataSoftCatalogItem";
+import CatalogGroup from "../../lib/Models/Catalog/CatalogGroupNew";
+import OpenDataSoftCatalogGroup from "../../lib/Models/Catalog/CatalogGroups/OpenDataSoftCatalogGroup";
+import OpenDataSoftCatalogItem from "../../lib/Models/Catalog/CatalogItems/OpenDataSoftCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import fetchMock from "fetch-mock";
 

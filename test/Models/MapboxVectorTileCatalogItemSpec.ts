@@ -1,8 +1,8 @@
 import { action } from "mobx";
 import MapboxVectorTileImageryProvider from "../../lib/Map/MapboxVectorTileImageryProvider";
 import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import MapboxVectorTileCatalogItem from "../../lib/Models/MapboxVectorTileCatalogItem";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import MapboxVectorTileCatalogItem from "../../lib/Models/Catalog/CatalogItems/MapboxVectorTileCatalogItem";
 import Terria from "../../lib/Models/Terria";
 
 describe("MapboxVectorTileCatalogItem", function() {

@@ -1,6 +1,6 @@
 "use strict";
 
-var CesiumTerrainCatalogItem = require("../../lib/Models/CesiumTerrainCatalogItem");
+var CesiumTerrainCatalogItem = require("../../lib/Models/Catalog/CatalogItems/CesiumTerrainCatalogItem");
 var CesiumTerrainProvider = require("terriajs-cesium/Source/Core/CesiumTerrainProvider")
   .default;
 var loadWithXhr = require("../../lib/Core/loadWithXhr");

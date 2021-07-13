@@ -4,8 +4,8 @@ import { act } from "react-dom/test-utils";
 import { create, ReactTestRenderer } from "react-test-renderer";
 import { ThemeProvider } from "styled-components";
 import Terria from "../../../lib/Models/Terria";
-import updateModelFromJson from "../../../lib/Models/updateModelFromJson";
-import WebMapServiceCatalogItem from "../../../lib/Models/WebMapServiceCatalogItem";
+import updateModelFromJson from "../../../lib/Models/Definition/updateModelFromJson";
+import WebMapServiceCatalogItem from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Description from "../../../lib/ReactViews/Preview/Description";
 import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface/StandardTheme";
 

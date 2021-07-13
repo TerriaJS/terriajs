@@ -1,8 +1,8 @@
 import { runInAction } from "mobx";
 import Terria from "../../lib/Models/Terria";
-import SdmxCatalogGroup from "../../lib/Models/SdmxJson/SdmxJsonCatalogGroup";
-import CatalogGroup from "../../lib/Models/CatalogGroupNew";
-import SdmxJsonCatalogItem from "../../lib/Models/SdmxJson/SdmxJsonCatalogItem";
+import SdmxCatalogGroup from "../../lib/Models/Catalog/SdmxJson/SdmxJsonCatalogGroup";
+import CatalogGroup from "../../lib/Models/Catalog/CatalogGroupNew";
+import SdmxJsonCatalogItem from "../../lib/Models/Catalog/SdmxJson/SdmxJsonCatalogItem";
 import TableColumnType from "../../lib/Table/TableColumnType";
 
 const agencyScheme = JSON.stringify(

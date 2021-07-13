@@ -1,8 +1,8 @@
 import getPath from "../../lib/Core/getPath";
-import CatalogGroup from "../../lib/Models/CatalogGroupNew";
-import CommonStrata from "../../lib/Models/CommonStrata";
+import CatalogGroup from "../../lib/Models/Catalog/CatalogGroupNew";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import Terria from "../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 
 describe("getPath", function() {
   let terria: Terria;

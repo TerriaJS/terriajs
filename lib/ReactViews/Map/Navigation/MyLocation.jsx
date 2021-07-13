@@ -7,7 +7,7 @@ import URI from "urijs";
 
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 
-import GeoJsonCatalogItem from "../../../Models/GeoJsonCatalogItem";
+import GeoJsonCatalogItem from "../../../Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 // import Styles from "./tool_button.scss";
 import TerriaError from "../../../Core/TerriaError";
 import CesiumCartographic from "terriajs-cesium/Source/Core/Cartographic.js";
@@ -15,7 +15,7 @@ import Icon from "../../../Styled/Icon";
 import defined from "terriajs-cesium/Source/Core/defined";
 import { withTranslation } from "react-i18next";
 import { runInAction } from "mobx";
-import CommonStrata from "../../../Models/CommonStrata";
+import CommonStrata from "../../../Models/Definition/CommonStrata";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import MapIconButton from "../../MapIconButton/MapIconButton";
 import withControlledVisibility from "../../../ReactViews/HOCs/withControlledVisibility";

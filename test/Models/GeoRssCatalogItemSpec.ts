@@ -1,7 +1,7 @@
 import Terria from "../../lib/Models/Terria";
-import GeoRssCatalogItem from "../../lib/Models/GeoRssCatalogItem";
+import GeoRssCatalogItem from "../../lib/Models/Catalog/CatalogItems/GeoRssCatalogItem";
 import i18next from "i18next";
-import CommonStrata from "../../lib/Models/CommonStrata";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import { runInAction } from "mobx";
 import isDefined from "./../../lib/Core/isDefined";
 import { JsonArray } from "../../lib/Core/Json";

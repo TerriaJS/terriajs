@@ -4,7 +4,7 @@ import ItemSearchProvider, {
   ItemSearchResult
 } from "../Models/ItemSearchProvider";
 import { ItemSearchProviders } from "../Models/ItemSearchProviders";
-import Model from "../Models/Model";
+import Model from "../Models/Definition/Model";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import SearchableItemTraits from "../Traits/TraitsClasses/SearchableItemTraits";
 

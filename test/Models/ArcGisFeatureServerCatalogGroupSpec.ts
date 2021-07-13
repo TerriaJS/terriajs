@@ -1,10 +1,10 @@
 import { configure, runInAction } from "mobx";
 import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import Terria from "../../lib/Models/Terria";
-import ArcGisFeatureServerCatalogGroup from "../../lib/Models/ArcGisFeatureServerCatalogGroup";
-import CommonStrata from "../../lib/Models/CommonStrata";
+import ArcGisFeatureServerCatalogGroup from "../../lib/Models/Catalog/esri/ArcGisFeatureServerCatalogGroup";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import i18next from "i18next";
-import ArcGisFeatureServerCatalogItem from "../../lib/Models/ArcGisFeatureServerCatalogItem";
+import ArcGisFeatureServerCatalogItem from "../../lib/Models/Catalog/esri/ArcGisFeatureServerCatalogItem";
 
 configure({
   enforceActions: "observed",

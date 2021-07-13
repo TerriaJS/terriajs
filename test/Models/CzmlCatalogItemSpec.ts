@@ -3,8 +3,8 @@ import loadBlob from "../../lib/Core/loadBlob";
 import loadJson from "../../lib/Core/loadJson";
 import loadText from "../../lib/Core/loadText";
 import TerriaError from "../../lib/Core/TerriaError";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import CzmlCatalogItem from "../../lib/Models/CzmlCatalogItem";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import CzmlCatalogItem from "../../lib/Models/Catalog/CatalogItems/CzmlCatalogItem";
 import Terria from "../../lib/Models/Terria";
 
 describe("CzmlCatalogItem", function() {

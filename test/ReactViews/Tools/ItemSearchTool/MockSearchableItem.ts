@@ -1,5 +1,5 @@
 import SearchableItemMixin from "../../../../lib/ModelMixins/SearchableItemMixin";
-import CreateModel from "../../../../lib/Models/CreateModel";
+import CreateModel from "../../../../lib/Models/Definition/CreateModel";
 import { ItemSearchResult } from "../../../../lib/Models/ItemSearchProvider";
 import MappableTraits from "../../../../lib/Traits/TraitsClasses/MappableTraits";
 import mixTraits from "../../../../lib/Traits/mixTraits";

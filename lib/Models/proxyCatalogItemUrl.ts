@@ -1,7 +1,7 @@
 "use strict";
 
 import UrlMixin from "../ModelMixins/UrlMixin";
-import { BaseModel } from "./Model";
+import { BaseModel } from "./Definition/Model";
 import UrlReference from "./UrlReference";
 import isDefined from "../Core/isDefined";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";

@@ -7,7 +7,7 @@ import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import addedByUser from "../../Core/addedByUser";
 import getPath from "../../Core/getPath";
-import removeUserAddedData from "../../Models/removeUserAddedData";
+import removeUserAddedData from "../../Models/Catalog/removeUserAddedData";
 import CatalogItem from "./CatalogItem";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import {

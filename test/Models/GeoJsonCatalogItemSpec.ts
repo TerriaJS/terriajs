@@ -6,10 +6,10 @@ import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import loadJson from "../../lib/Core/loadJson";
 import loadText from "../../lib/Core/loadText";
 import TerriaError from "../../lib/Core/TerriaError";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import GeoJsonCatalogItem from "../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import Terria from "../../lib/Models/Terria";
-import updateModelFromJson from "../../lib/Models/updateModelFromJson";
+import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
 import { JsonObject } from "./../../lib/Core/Json";
 
 describe("GeoJsonCatalogItem", function() {

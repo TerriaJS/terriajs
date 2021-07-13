@@ -1,9 +1,9 @@
 import { runInAction } from "mobx";
-import { ApiTableCatalogItem } from "../../lib/Models/ApiTableCatalogItem";
-import CommonStrata from "../../lib/Models/CommonStrata";
+import { ApiTableCatalogItem } from "../../lib/Models/Catalog/CatalogItems/ApiTableCatalogItem";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import proxyCatalogItemUrl from "../../lib/Models/proxyCatalogItemUrl";
 import Terria from "../../lib/Models/Terria";
-import updateModelFromJson from "../../lib/Models/updateModelFromJson";
+import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
 
 const regionMapping = JSON.stringify(
   require("../../wwwroot/data/regionMapping.json")

@@ -1,9 +1,9 @@
 import { runInAction } from "mobx";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import CommonStrata from "../../lib/Models/CommonStrata";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import SplitItemReference from "../../lib/Models/SplitItemReference";
 import Terria from "../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 
 describe("SplitItemReference", function() {
   it("can dereference the source item", async function() {

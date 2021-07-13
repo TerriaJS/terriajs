@@ -2,7 +2,7 @@ const findAllWithType = require("react-shallow-testutils").findAllWithType;
 import React from "react";
 
 import Terria from "../../lib/Models/Terria";
-import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
+import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 
 describe("Table Style", function() {
   let terria: Terria;

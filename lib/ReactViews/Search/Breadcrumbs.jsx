@@ -13,7 +13,7 @@ import styled from "styled-components";
 import getAncestors from "../../Models/getAncestors";
 import getDereferencedIfExists from "../../Core/getDereferencedIfExists";
 import { runInAction } from "mobx";
-import CommonStrata from "../../Models/CommonStrata";
+import CommonStrata from "../../Models/Definition/CommonStrata";
 
 const RawButtonAndUnderline = styled(RawButton)`
   ${props => `

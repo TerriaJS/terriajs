@@ -4,7 +4,7 @@ var CkanCatalogItem = require("../../lib/Models/CkanCatalogItem");
 var loadText = require("../../lib/Core/loadText");
 var Terria = require("../../lib/Models/Terria");
 var TerriaError = require("../../lib/Core/TerriaError").default;
-var WebMapServiceCatalogItem = require("../../lib/Models/WebMapServiceCatalogItem");
+var WebMapServiceCatalogItem = require("../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem");
 var when = require("terriajs-cesium/Source/ThirdParty/when").default;
 
 describe("CkanCatalogItem", function() {

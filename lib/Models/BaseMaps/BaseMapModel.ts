@@ -1,11 +1,11 @@
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
 import { BaseMapViewModel } from "../../ViewModels/BaseMapViewModel";
-import BingMapsCatalogItem from "../BingMapsCatalogItem";
-import CatalogMemberFactory from "../CatalogMemberFactory";
-import CommonStrata from "../CommonStrata";
-import { BaseModel } from "../Model";
+import BingMapsCatalogItem from "../Catalog/CatalogItems/BingMapsCatalogItem";
+import CatalogMemberFactory from "../Catalog/CatalogMemberFactory";
+import CommonStrata from "../Definition/CommonStrata";
+import { BaseModel } from "../Definition/Model";
 import Terria from "../Terria";
-import upsertModelFromJson from "../upsertModelFromJson";
+import upsertModelFromJson from "../Definition/upsertModelFromJson";
 import MappableMixin from "../../ModelMixins/MappableMixin";
 import { runInAction } from "mobx";
 import TerriaError from "../../Core/TerriaError";

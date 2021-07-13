@@ -7,7 +7,7 @@ import isDefined from "../Core/isDefined";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import addUserFiles from "../Models/addUserFiles";
-import { BaseModel } from "../Models/Model";
+import { BaseModel } from "../Models/Definition/Model";
 import Terria from "../Models/Terria";
 import ViewState from "../ReactViewModels/ViewState";
 import Styles from "./drag-drop-file.scss";

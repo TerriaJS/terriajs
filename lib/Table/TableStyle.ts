@@ -14,9 +14,9 @@ import DiscreteColorMap from "../Map/DiscreteColorMap";
 import EnumColorMap from "../Map/EnumColorMap";
 import PointSizeMap from "../Map/PointSizeMap";
 import ScalePointSizeMap from "../Map/ScalePointSizeMap";
-import createCombinedModel from "../Models/createCombinedModel";
-import Model from "../Models/Model";
-import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
+import createCombinedModel from "../Models/Definition/createCombinedModel";
+import Model from "../Models/Definition/Model";
+import ModelPropertiesFromTraits from "../Models/Definition/ModelPropertiesFromTraits";
 import TableChartStyleTraits from "../Traits/TraitsClasses/TableChartStyleTraits";
 import TableColorStyleTraits, {
   EnumColorTraits

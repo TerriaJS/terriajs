@@ -7,11 +7,11 @@ var CHART_DATA_CATEGORY_NAME = require("../../lib/Core/addedForCharts")
 
 var Catalog = require("../../lib/Models/Catalog");
 var CatalogItem = require("../../lib/Models/CatalogItem");
-var createCatalogMemberFromType = require("../../lib/Models/createCatalogMemberFromType");
+var createCatalogMemberFromType = require("../../lib/Models/Catalog/createCatalogMemberFromType");
 var CatalogGroup = require("../../lib/Models/CatalogGroup");
-var GeoJsonCatalogItem = require("../../lib/Models/GeoJsonCatalogItem");
+var GeoJsonCatalogItem = require("../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem");
 var ImageryLayerCatalogItem = require("../../lib/Models/ImageryLayerCatalogItem");
-var WebMapServiceCatalogItem = require("../../lib/Models/WebMapServiceCatalogItem");
+var WebMapServiceCatalogItem = require("../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem");
 
 describe("Catalog", function() {
   var terria;

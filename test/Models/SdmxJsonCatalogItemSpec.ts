@@ -1,6 +1,6 @@
 import { runInAction } from "mobx";
-import createStratumInstance from "../../lib/Models/createStratumInstance";
-import SdmxJsonCatalogItem from "../../lib/Models/SdmxJson/SdmxJsonCatalogItem";
+import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
+import SdmxJsonCatalogItem from "../../lib/Models/Catalog/SdmxJson/SdmxJsonCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import { ModelOverrideTraits } from "../../lib/Traits/TraitsClasses/SdmxCommonTraits";
 

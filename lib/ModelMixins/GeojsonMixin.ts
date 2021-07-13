@@ -31,7 +31,7 @@ import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import Model from "../Models/Model";
+import Model from "../Models/Definition/Model";
 import proxyCatalogItemUrl from "../Models/proxyCatalogItemUrl";
 import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
 import DiscretelyTimeVaryingMixin, {

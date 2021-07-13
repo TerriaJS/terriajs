@@ -1,10 +1,10 @@
-import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
-import CompositeCatalogItem from "../../lib/Models/CompositeCatalogItem";
-import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-import updateModelFromJson from "../../lib/Models/updateModelFromJson";
+import CatalogMemberFactory from "../../lib/Models/Catalog/CatalogMemberFactory";
+import CompositeCatalogItem from "../../lib/Models/Catalog/CatalogItems/CompositeCatalogItem";
+import GeoJsonCatalogItem from "../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
 import Terria from "../../lib/Models/Terria";
-import CommonStrata from "../../lib/Models/CommonStrata";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import { runInAction } from "mobx";
 
 describe("CompositeCatalogItem", function() {

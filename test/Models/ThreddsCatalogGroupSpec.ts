@@ -2,10 +2,10 @@ import { configure } from "mobx";
 import Terria from "../../lib/Models/Terria";
 import ThreddsCatalogGroup, {
   ThreddsStratum
-} from "../../lib/Models/ThreddsCatalogGroup";
+} from "../../lib/Models/Catalog/CatalogGroups/ThreddsCatalogGroup";
 import i18next from "i18next";
-import CatalogGroup from "../../lib/Models/CatalogGroupNew";
-import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
+import CatalogGroup from "../../lib/Models/Catalog/CatalogGroupNew";
+import WebMapServiceCatalogGroup from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
 
 configure({
   enforceActions: "observed",

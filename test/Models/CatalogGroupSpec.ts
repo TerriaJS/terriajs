@@ -1,12 +1,12 @@
-import CatalogGroup from "../../lib/Models/CatalogGroupNew";
-import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
-import BaseModel from "../../lib/Models/GeoJsonCatalogItem";
+import CatalogGroup from "../../lib/Models/Catalog/CatalogGroupNew";
+import GeoJsonCatalogItem from "../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
+import BaseModel from "../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import Terria from "../../lib/Models/Terria";
-import upsertModelFromJson from "../../lib/Models/upsertModelFromJson";
-import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import StubCatalogItem from "../../lib/Models/StubCatalogItem";
-import { getUniqueStubName } from "../../lib/Models/createStubCatalogItem";
+import upsertModelFromJson from "../../lib/Models/Definition/upsertModelFromJson";
+import CatalogMemberFactory from "../../lib/Models/Catalog/CatalogMemberFactory";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import StubCatalogItem from "../../lib/Models/Catalog/CatalogItems/StubCatalogItem";
+import { getUniqueStubName } from "../../lib/Models/Catalog/createStubCatalogItem";
 
 describe("CatalogGroup", function() {
   let terria: Terria, json: any, catalogGroup: CatalogGroup;

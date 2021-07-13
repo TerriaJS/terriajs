@@ -7,7 +7,7 @@ import {
   ReactTestRenderer
 } from "react-test-renderer";
 import { assertObject } from "../../../../lib/Core/Json";
-import CommonStrata from "../../../../lib/Models/CommonStrata";
+import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import ItemSearchProvider, {
   ItemSearchParameter,
   ItemSearchResult

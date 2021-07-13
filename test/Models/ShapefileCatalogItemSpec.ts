@@ -1,5 +1,5 @@
-import CommonStrata from "../../lib/Models/CommonStrata";
-import ShapefileCatalogItem from "../../lib/Models/ShapefileCatalogItem";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import ShapefileCatalogItem from "../../lib/Models/Catalog/CatalogItems/ShapefileCatalogItem";
 import Terria from "../../lib/Models/Terria";
 
 describe("ShapefileCatalogItem", function() {

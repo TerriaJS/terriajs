@@ -1,5 +1,5 @@
 import { runInAction } from "mobx";
-import OpenDataSoftCatalogItem from "../../lib/Models/OpenDataSoftCatalogItem";
+import OpenDataSoftCatalogItem from "../../lib/Models/Catalog/CatalogItems/OpenDataSoftCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import fetchMock from "fetch-mock";
 

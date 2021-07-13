@@ -4,7 +4,7 @@ import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplate
 import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
 import CartoMapCatalogItem, {
   CartoLoadableStratum
-} from "../../lib/Models/CartoMapCatalogItem";
+} from "../../lib/Models/Catalog/CatalogItems/CartoMapCatalogItem";
 import Terria from "../../lib/Models/Terria";
 
 configure({
