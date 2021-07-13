@@ -6,6 +6,7 @@ import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import { ServerTypeEnum } from "../../lib/Traits/TraitsClasses/WebMapServiceCatalogItemTraits";
 
 describe("WebMapServiceCatalogItem", function() {
   it("derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specified", function() {
@@ -300,7 +301,11 @@ describe("WebMapServiceCatalogItem", function() {
         "test/WMS/styles_and_dimensions.xml"
       );
       wmsItem.setTrait(CommonStrata.definition, "layers", "A");
-      wmsItem.setTrait(CommonStrata.definition, "server", "geoserver");
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "server",
+        ServerTypeEnum.geoserver
+      );
     });
 
     wmsItem
@@ -378,7 +383,7 @@ describe("WebMapServiceCatalogItem", function() {
     wmsItem
       .loadMetadata()
       .then(function() {
-        expect(wmsItem.server === "thredds").toBeTruthy();
+        expect(wmsItem.server === ServerTypeEnum.NcWMS).toBeTruthy();
         expect(wmsItem.legends.length).toBe(1);
         expect(wmsItem.legends[0].url).toBe(
           "http://geoport-dev.whoi.edu/thredds/wms/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A&colorscalerange=0%2C1"
