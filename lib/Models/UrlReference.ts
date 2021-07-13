@@ -6,7 +6,7 @@ import { BaseModel } from "./Model";
 import StratumFromTraits from "./StratumFromTraits";
 import Terria from "./Terria";
 import ModelTraits from "../Traits/ModelTraits";
-import UrlReferenceTraits from "../Traits/UrlReferenceTraits";
+import UrlReferenceTraits from "../Traits/TraitsClasses/UrlReferenceTraits";
 import StratumOrder from "./StratumOrder";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import updateModelFromJson from "./updateModelFromJson";

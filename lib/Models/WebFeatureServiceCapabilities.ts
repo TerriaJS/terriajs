@@ -5,7 +5,7 @@ import loadXML from "../Core/loadXML";
 import makeRealPromise from "../Core/makeRealPromise";
 import TerriaError from "../Core/TerriaError";
 import xml2json from "../ThirdParty/xml2json";
-import { RectangleTraits } from "../Traits/MappableTraits";
+import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import StratumFromTraits from "./StratumFromTraits";
 import {
   CapabilitiesGeographicBoundingBox,

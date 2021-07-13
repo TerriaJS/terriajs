@@ -42,8 +42,8 @@ import MappableMixin, {
   MapItem
 } from "../ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
-import RasterLayerTraits from "../Traits/RasterLayerTraits";
-import SplitterTraits from "../Traits/SplitterTraits";
+import RasterLayerTraits from "../Traits/TraitsClasses/RasterLayerTraits";
+import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
 import Feature from "./Feature";

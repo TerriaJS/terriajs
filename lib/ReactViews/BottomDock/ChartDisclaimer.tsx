@@ -5,7 +5,7 @@ import filterOutUndefined from "../../Core/filterOutUndefined";
 import hasTraits from "../../Models/hasTraits";
 import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
-import DiscretelyTimeVaryingTraits from "../../Traits/DiscretelyTimeVaryingTraits";
+import DiscretelyTimeVaryingTraits from "../../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";

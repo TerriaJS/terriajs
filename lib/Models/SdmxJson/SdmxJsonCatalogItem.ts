@@ -11,7 +11,7 @@ import TableMixin from "../../ModelMixins/TableMixin";
 import UrlMixin from "../../ModelMixins/UrlMixin";
 import Csv from "../../Table/Csv";
 import TableAutomaticStylesStratum from "../../Table/TableAutomaticStylesStratum";
-import SdmxCatalogItemTraits from "../../Traits/SdmxCatalogItemTraits";
+import SdmxCatalogItemTraits from "../../Traits/TraitsClasses/SdmxCatalogItemTraits";
 import CreateModel from "../CreateModel";
 import { BaseModel } from "../Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";

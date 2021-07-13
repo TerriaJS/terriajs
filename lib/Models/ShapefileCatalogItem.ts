@@ -4,7 +4,7 @@ import * as shp from "shpjs";
 import JsonValue, { isJsonObject, JsonArray } from "../Core/Json";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GeoJsonMixin from "../ModelMixins/GeojsonMixin";
-import ShapefileCatalogItemTraits from "../Traits/ShapefileCatalogItemTraits";
+import ShapefileCatalogItemTraits from "../Traits/TraitsClasses/ShapefileCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import { JsonObject } from "./../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";

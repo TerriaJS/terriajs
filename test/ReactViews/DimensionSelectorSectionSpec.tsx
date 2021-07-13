@@ -12,7 +12,7 @@ import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem"
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface/StandardTheme";
 import DimensionSelectorSection from "../../lib/ReactViews/Workbench/Controls/DimensionSelectorSection";
 import Select from "../../lib/Styled/Select";
-import CatalogMemberTraits from "../../lib/Traits/CatalogMemberTraits";
+import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
 
 export default class TestCatalogItem
   extends CatalogMemberMixin(CreateModel(CatalogMemberTraits))
