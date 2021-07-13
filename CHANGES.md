@@ -28,6 +28,7 @@ Change Log
 * `WebMapServiceCatalogGroup` will now create layer auto-IDs using `Name` field to avoid ID clashes.
 * Added `GroupMixin` `shareKey` generation for members - if the group has `shareKeys`.
 * Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses`
+* I18n-ify shadow options in 3DTiles and some strings in feature info panel.
 * [The next improvement]
 
 #### 8.0.0-alpha.87
