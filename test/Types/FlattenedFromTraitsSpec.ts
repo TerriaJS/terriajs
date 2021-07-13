@@ -6,7 +6,7 @@ import {
   IsWritableArray
 } from "../../lib/Core/TypeConditionals";
 import FlattenedFromTraits from "../../lib/Models/FlattenedFromTraits";
-import TraitsForTesting, { NestedTraits } from "./TraitsForTesting";
+import TraitsForTesting, { MyEnum, MyEnumString } from "./TraitsForTesting";
 import { expectFalse, expectTrue } from "./TypeChecks";
 
 type Flattened = FlattenedFromTraits<TraitsForTesting>;
@@ -19,11 +19,28 @@ expectTrue<Equals<typeof flattened.unknownObject, JsonObject | undefined>>();
 expectTrue<
   Equals<typeof flattened.unknownObjectWithDefault, JsonObject | undefined>
 >();
+expectTrue<Equals<typeof flattened.enumTraitWithDefault, MyEnum | undefined>>();
+expectTrue<
+  Equals<typeof flattened.enumTraitWithoutDefault, MyEnum | undefined>
+>();
+expectTrue<
+  Equals<typeof flattened.enumTraitStringWithDefault, MyEnumString | undefined>
+>();
+expectTrue<
+  Equals<
+    typeof flattened.enumTraitStringWithoutDefault,
+    MyEnumString | undefined
+  >
+>();
 expectTrue<Equals<typeof flattened.withNull, string | null | undefined>>();
 
 // Properties may not be modified.
 expectFalse<IsWritable<typeof flattened, "withDefault">>();
 expectFalse<IsWritable<typeof flattened, "withoutDefault">>();
+expectFalse<IsWritable<typeof flattened, "enumTraitWithDefault">>();
+expectFalse<IsWritable<typeof flattened, "enumTraitWithoutDefault">>();
+expectFalse<IsWritable<typeof flattened, "enumTraitStringWithDefault">>();
+expectFalse<IsWritable<typeof flattened, "enumTraitStringWithoutDefault">>();
 
 // Properties that are nested traits allow undefined.
 expectTrue<AllowsUndefined<typeof flattened.nestedWithDefault>>();

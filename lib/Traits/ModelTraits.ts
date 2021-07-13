@@ -14,6 +14,7 @@ export type TraitDefinitions = {
 // * Arrays of any of the above.
 
 class ModelTraits {
+  private ___modelTraitId: undefined;
   static traits: TraitDefinitions;
 }
 
