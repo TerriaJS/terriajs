@@ -13,7 +13,7 @@ Change Log
 * Add `nullColor` to `ConstantColorMap` - used when `colorColumn` is of type `region` to hide regions where rows don't exist.
 * `TableStyles` will only be created for `text` columns if there are no columns of type `scalar`, `enum` or `region`.
 * Fix sharing user added data of type "Auto-detect".
-* Use checkbox component on more places. (#5610)
+* Use checkbox component in more places. (#5610)
 * Added title to checkbox component. (#5610)
 * #5605 tidy up format string used in `MagdaReference`
 * Fix wms feature info returning only one feature
