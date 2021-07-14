@@ -27,6 +27,7 @@ Change Log
 * `WebMapServiceCatalogGroup` will now create layer auto-IDs using `Name` field to avoid ID clashes.
 * Added `GroupMixin` `shareKey` generation for members - if the group has `shareKeys`.
 * Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses`
+* Fix `StyledIcon` css `display` clash
 * Limit `SelectableDimension` options to 1000 values
 * Added support for `SocrataCatalogGroup` and `SocrataMapViewCatalogGroup`
   * Notes on v7 to v8 Socrata integration:
