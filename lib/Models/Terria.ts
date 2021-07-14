@@ -35,7 +35,10 @@ import { isLatLonHeight } from "../Core/LatLonHeight";
 import loadJson5 from "../Core/loadJson5";
 import Result from "../Core/Result";
 import ServerConfig from "../Core/ServerConfig";
-import TerriaError, { TerriaErrorSeverity } from "../Core/TerriaError";
+import TerriaError, {
+  TerriaErrorSeverity,
+  TerriaErrorOverrides
+} from "../Core/TerriaError";
 import { Complete } from "../Core/TypeModifiers";
 import { getUriWithoutPath } from "../Core/uriHelpers";
 import PickedFeatures, {
@@ -537,18 +540,12 @@ export default class Terria {
     return this.error.addEventListener(e => fn(e));
   }
 
-  raiseErrorToUser(
-    error: unknown,
-    /** Override error severity */
-    severity?: TerriaErrorSeverity
-  ) {
+  raiseErrorToUser(error: unknown, overrides?: TerriaErrorOverrides) {
     if (this.userProperties.get("ignoreErrors") === "1") {
       return;
     }
-    const terriaError = TerriaError.from(error);
-    if (isDefined(severity)) {
-      terriaError.severity = severity;
-    }
+    const terriaError = TerriaError.from(error, overrides);
+
     if (terriaError.shouldRaiseToUser && !terriaError.raisedToUser) {
       terriaError.raisedToUser = true;
       this.error.raiseEvent(terriaError);

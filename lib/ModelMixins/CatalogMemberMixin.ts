@@ -50,6 +50,11 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       );
     }
 
+    /** Calls AsyncLoader to load metadata.
+     *
+     * This returns a Result object, it will contain errors if they occur - they will not be thrown.
+     * To throw errors, use `(await loadMetadata()).throwIfError()`
+     */
     async loadMetadata(): Promise<Result<void>> {
       return (await this._metadataLoader.load()).clone(
         `Failed to load \`${getName(this)}\` metadata`
@@ -61,6 +66,8 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
      * whether the metadata is already loaded.
      *
      * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
+     *
+     * Errors can be thrown here.
      */
     protected async forceLoadMetadata() {}
 

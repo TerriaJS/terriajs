@@ -457,6 +457,8 @@
     "selectToPreview": "<0>Select a dataset to see a preview </0><1>- OR -</1><2>Go to the map</2>",
     "loading": "PREVIEW LOADING...",
     "preview": "{{appName}} preview",
+    "previewItemErrorTitle": "Catalog item could not be previewed.",
+    "previewItemErrorMessage": "An error occurred while loading the catalog item.",
     "noPreviewAvailable": "NO PREVIEW AVAILABLE",
     "dataPreviewLoading": "DATA PREVIEW LOADING...",
     "dataPreview": "DATA PREVIEW",

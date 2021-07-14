@@ -192,10 +192,11 @@ export default class Workbench {
         }
       }
 
-      if (CatalogMemberMixin.isMixedInto(item)) await item.loadMetadata();
+      if (CatalogMemberMixin.isMixedInto(item))
+        (await item.loadMetadata()).throwIfError();
 
       if (MappableMixin.isMixedInto(item)) {
-        await item.loadMapItems();
+        (await item.loadMapItems()).throwIfError();
       }
     } catch (e) {
       this.remove(item);

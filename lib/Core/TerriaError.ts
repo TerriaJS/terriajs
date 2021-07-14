@@ -71,8 +71,24 @@ export interface TerriaErrorOptions {
 /** Object used to clone an existing TerriaError (see `TerriaError.clone()`).
  *
  * If this is a `string` it will be used to set `TerriaError.message`
+ * If this is `TerriaErrorSeverity` it will be used to set `TerriaError.severity`
  */
-export type TerriaErrorOverrides = Partial<TerriaErrorOptions> | string;
+export type TerriaErrorOverrides =
+  | Partial<TerriaErrorOptions>
+  | string
+  | TerriaErrorSeverity;
+
+export function parseOverrides(
+  overrides: TerriaErrorOverrides | undefined
+): Partial<TerriaErrorOptions> {
+  // If overrides is a string - we treat is as the `message` parameter
+  if (typeof overrides === "string") {
+    overrides = { message: overrides };
+  } else if (typeof overrides === "number") {
+    overrides = { severity: overrides };
+  }
+  return overrides ?? {};
+}
 
 /**
  * Represents an error that occurred in a TerriaJS module, especially an asynchronous one that cannot be raised
@@ -101,11 +117,6 @@ export default class TerriaError {
       return isDefined(overrides) ? error.createParentError(overrides) : error;
     }
 
-    // If overrides is a string - we treat is as the `message` parameter
-    if (typeof overrides === "string") {
-      overrides = { message: overrides };
-    }
-
     // Try to find message from error object
     let message: string | undefined;
 
@@ -127,7 +138,7 @@ export default class TerriaError {
           : message
           ? new Error(message)
           : undefined,
-      ...overrides
+      ...parseOverrides(overrides)
     });
   }
 
@@ -135,19 +146,15 @@ export default class TerriaError {
    * `overrides` can be used to add more context to the combined `TerriaError`.
    */
   static combine(
-    errors: TerriaError[],
+    errors: (TerriaError | undefined)[],
     overrides: TerriaErrorOverrides
   ): TerriaError | undefined {
-    if (errors.length === 0) return;
-
-    // If overrides is a string - we treat is as the `message` parameter
-    if (typeof overrides === "string") {
-      overrides = { message: overrides };
-    }
+    const filteredErrors = errors.filter(e => isDefined(e)) as TerriaError[];
+    if (filteredErrors.length === 0) return;
 
     // Find highest severity across errors (eg if one if `Error`, then the new TerriaError will also be `Error`)
     const severity = () =>
-      errors
+      filteredErrors
         .map(error => error.nestedSeverity)
         .includes(TerriaErrorSeverity.Error)
         ? TerriaErrorSeverity.Error
@@ -159,9 +166,9 @@ export default class TerriaError {
       message: { key: "core.terriaError.defaultCombineMessage" },
 
       // Add original errors and overrides
-      originalError: errors,
+      originalError: filteredErrors,
       severity,
-      ...overrides
+      ...parseOverrides(overrides)
     });
   }
 
@@ -238,9 +245,6 @@ export default class TerriaError {
    * Create a new parent `TerriaError` from this error. This essentially "clones" the `TerriaError` and applied `overrides` on top. It will also set `originalError` so we get a nice tree of `TerriaErrors`
    */
   createParentError(overrides?: TerriaErrorOverrides): TerriaError {
-    if (typeof overrides === "string") {
-      overrides = { message: overrides };
-    }
     return new TerriaError({
       message: this._message,
       title: this._title,
@@ -248,7 +252,7 @@ export default class TerriaError {
       raisedToUser: this._raisedToUser,
       originalError: this,
       severity: this.severity,
-      ...overrides
+      ...parseOverrides(overrides)
     });
   }
 

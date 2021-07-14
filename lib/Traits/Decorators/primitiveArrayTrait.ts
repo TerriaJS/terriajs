@@ -60,7 +60,7 @@ export class PrimitiveArrayTrait<T> extends Trait {
       });
     }
 
-    return Result.return(jsonValue);
+    return new Result(jsonValue);
   }
 
   toJson(value: T[]): any {

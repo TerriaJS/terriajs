@@ -27,6 +27,8 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
      * It is guaranteed that `loadMetadata` has finished before this is called.
      *
      * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
+     *
+     * Errors can be thrown here.
      */
     protected abstract async forceLoadMembers(): Promise<void>;
 
@@ -69,24 +71,28 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
      * list of members in `GroupMixin#members` and `GroupMixin#memberModels`
      * should be complete, but the individual members will not necessarily be
      * loaded themselves.
+     *
+     * This returns a Result object, it will contain errors if they occur - they will not be thrown.
+     * To throw errors, use `(await loadMetadata()).throwIfError()`
      */
     async loadMembers(): Promise<Result<void>> {
-      let errors: TerriaError[] = [];
+      try {
+        // Call loadMetadata if CatalogMemberMixin
+        if (CatalogMemberMixin.isMixedInto(this))
+          (await this.loadMetadata()).throwIfError();
 
-      // Call loadMetadata if CatalogMemberMixin
-      if (CatalogMemberMixin.isMixedInto(this))
-        (await this.loadMetadata()).pushErrorTo(errors);
+        // Call Group AsyncLoader if no errors occurred while loading metadata
+        (await this._memberLoader.load()).throwIfError();
 
-      // Call Group AsyncLoader if no errors occurred while loading metadata
-      if (errors.length === 0)
-        (await this._memberLoader.load()).pushErrorTo(errors);
+        this.refreshKnownContainerUniqueIds(this.uniqueId);
+        this.addShareKeysToMembers();
+      } catch (e) {
+        return Result.error(
+          TerriaError.from(e, `Failed to load group \`${getName(this)}\``)
+        );
+      }
 
-      this.refreshKnownContainerUniqueIds(this.uniqueId);
-      this.addShareKeysToMembers();
-
-      return Result.none(
-        TerriaError.combine(errors, `Failed to load group \`${getName(this)}\``)
-      );
+      return Result.none();
     }
 
     @action

@@ -5,6 +5,7 @@ import Constructor from "../Core/Constructor";
 import Result from "../Core/Result";
 import Model, { BaseModel, ModelInterface } from "../Models/Model";
 import ModelTraits from "../Traits/ModelTraits";
+import { getName } from "./CatalogMemberMixin";
 
 type RequiredTraits = ModelTraits;
 
@@ -48,6 +49,8 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
     /**
      * Forces load of the reference. This method does _not_ need to consider
      * whether the reference is already loaded.
+     *
+     * Errors can be thrown here.
      */
     protected abstract forceLoadReference(
       previousTarget: BaseModel | undefined
@@ -73,9 +76,14 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
      * {@link ReferenceMixin#target} should return the target of the reference.
      * @param forceReload True to force the load to happen again, even if nothing
      *        appears to have changed since the last time it was loaded.
+     *
+     * This returns a Result object, it will contain errors if they occur - they will not be thrown.
+     * To throw errors, use `(await loadMetadata()).throwIfError()`
      */
-    loadReference(forceReload: boolean = false) {
-      return this._referenceLoader.load(forceReload);
+    async loadReference(forceReload: boolean = false) {
+      return (await this._referenceLoader.load(forceReload)).clone(
+        `Failed to load reference \`${getName(this)}\``
+      );
     }
 
     dispose() {

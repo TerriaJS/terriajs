@@ -14,6 +14,7 @@ import {
   Category,
   DataSourceAction
 } from "../../Core/AnalyticEvents/analyticEvents";
+import { TerriaErrorSeverity } from "../../Core/TerriaError";
 
 // Individual dataset
 export const DataCatalogItem = observer(
@@ -90,10 +91,10 @@ export const DataCatalogItem = observer(
     async setPreviewedItem() {
       try {
         if (this.props.item.loadMetadata) {
-          await this.props.item.loadMetadata();
+          (await this.props.item.loadMetadata()).throwIfError();
         }
         if (this.props.item.loadReference) {
-          await this.props.item.loadReference();
+          (await this.props.item.loadReference()).throwIfError();
         }
         this.props.viewState.viewCatalogMember(this.props.item);
         // mobile switch to nowvewing
@@ -101,7 +102,10 @@ export const DataCatalogItem = observer(
           this.props.viewState.mobileViewOptions.preview
         );
       } catch (e) {
-        this.props.terria.raiseErrorToUser(e);
+        this.props.terria.raiseErrorToUser(e, TerriaErrorSeverity.Error, {
+          title: { key: "preview.previewItemErrorTitle" },
+          message: { key: "preview.previewItemErrorMessage" }
+        });
       }
     },
 

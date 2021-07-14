@@ -1,9 +1,11 @@
 import isDefined from "./isDefined";
 import TerriaError, {
   TerriaErrorOptions,
-  TerriaErrorOverrides
+  TerriaErrorOverrides,
+  parseOverrides
 } from "./TerriaError";
 import { NotUndefined } from "./TypeModifiers";
+import isPromise from "./isPromise";
 
 /**
  * The Result class is similar to Option type/object in Scala/Rust.
@@ -93,26 +95,35 @@ export default class Result<T = undefined> {
     return error ? Result.error(error) : new Result(undefined);
   }
 
-  /** Convenience constructor  to return a new Result with a vaule and/or error */
-  static return<U>(
-    value: U,
-    error?: TerriaErrorOptions | TerriaError
-  ): Result<U> {
+  /** Combine array of Results.
+   * The new Result will have an error if at least one error has occurred in array of results
+   * The value will be array of result values
+   */
+  static combine<U>(
+    results: Result<U>[],
+    errorOverrides: TerriaErrorOverrides
+  ): Result<U[]> {
     return new Result(
-      value,
-      error
-        ? // Create TerriaError if error is TerriaErrorOptions
-          error instanceof TerriaError
-          ? error
-          : new TerriaError(error)
-        : undefined
+      results.map(r => r.value),
+      TerriaError.combine(
+        results.map(r => r.error),
+        errorOverrides
+      )
     );
   }
 
-  constructor(
-    private readonly value: T,
-    private readonly _error?: TerriaError
-  ) {}
+  private readonly value: T;
+  private readonly _error?: TerriaError;
+
+  constructor(value: T, error?: TerriaErrorOptions | TerriaError) {
+    this.value = value;
+    this._error = error
+      ? // Create TerriaError if error is TerriaErrorOptions
+        error instanceof TerriaError
+        ? error
+        : new TerriaError(error)
+      : undefined;
+  }
 
   get error(): TerriaError | undefined {
     return this._error;
@@ -148,12 +159,9 @@ export default class Result<T = undefined> {
     if (isDefined(this.value)) return this.value as NotUndefined<T>;
 
     // If value is undefined, throw a new TerriaError using errorOverrides
-    if (typeof errorOverrides === "string") {
-      errorOverrides = { message: errorOverrides };
-    }
     throw new TerriaError({
       message: "Unhandled required Result exception",
-      ...errorOverrides
+      ...parseOverrides(errorOverrides)
     });
   }
 

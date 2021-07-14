@@ -67,7 +67,7 @@ export default function updateModelFromJson(
     });
   });
 
-  return Result.return(
+  return new Result(
     undefined,
     TerriaError.combine(
       errors,

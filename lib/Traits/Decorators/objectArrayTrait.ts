@@ -207,7 +207,7 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
       return result;
     });
 
-    return Result.return(
+    return new Result(
       resultArray,
       TerriaError.combine(
         errors,

@@ -61,7 +61,7 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
     const result: any = createStratumInstance(ResultType);
 
     if (this.isNullable && jsonValue === null) {
-      return Result.return(jsonValue);
+      return new Result(jsonValue);
     }
 
     const errors: TerriaError[] = [];
@@ -89,7 +89,7 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
       }
     });
 
-    return Result.return(
+    return new Result(
       result,
       TerriaError.combine(
         errors,

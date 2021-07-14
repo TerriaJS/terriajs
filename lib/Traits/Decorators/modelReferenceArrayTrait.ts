@@ -137,7 +137,7 @@ export class ModelReferenceArrayTrait extends Trait {
         }
       })
       .filter(isDefined);
-    return Result.return(
+    return new Result(
       result,
       TerriaError.combine(
         errors,

@@ -364,8 +364,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
           }
         });
       });
-      await this.geoJsonItem!.loadMetadata();
-      await this.geoJsonItem!.loadMapItems();
+      (await this.geoJsonItem!.loadMapItems()).throwIfError;
     }
 
     runInAction(() => {
