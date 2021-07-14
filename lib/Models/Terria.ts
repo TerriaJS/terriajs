@@ -49,9 +49,8 @@ import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
 import { defaultTerms, Term } from "../ReactViewModels/defaultTerms";
-import NotificationState, {
-  Notification
-} from "../ReactViewModels/NotificationState";
+import MapNavigationModel from "../ViewModels/MapNavigation/MapNavigationModel";
+import NotificationState from "../ReactViewModels/NotificationState";
 import { shareConvertNotification } from "../ReactViews/Notification/shareConvertNotification";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
@@ -499,6 +498,13 @@ export default class Terria {
   @observable baseMaximumScreenSpaceError = 2;
 
   /**
+   * Model to use for map navigation
+   */
+  @observable mapNavigationModel: MapNavigationModel = new MapNavigationModel(
+    this
+  );
+
+  /**
    * Gets or sets whether to use the device's native resolution (sets cesium.viewer.resolutionScale to a ratio of devicePixelRatio)
    * @type {boolean}
    */
@@ -509,6 +515,8 @@ export default class Terria {
    * @type {boolean}
    */
   @observable catalogReferencesLoaded: boolean = false;
+
+  augmentedVirtuality?: any;
 
   readonly notificationState: NotificationState = new NotificationState();
 
@@ -1217,6 +1225,18 @@ export default class Terria {
 
     if (isJsonObject(initData.elements)) {
       this.elements.merge(initData.elements);
+      // we don't want to go through all elements unless they are added.
+      if (this.mapNavigationModel.items.length > 0) {
+        this.elements.forEach((element, key) => {
+          if (isDefined(element.visible)) {
+            if (element.visible) {
+              this.mapNavigationModel.show(key);
+            } else {
+              this.mapNavigationModel.hide(key);
+            }
+          }
+        });
+      }
     }
 
     if (Array.isArray(initData.stories)) {

@@ -1,13 +1,12 @@
 import { WithT } from "i18next";
 import { computed } from "mobx";
-import { observer } from "mobx-react";
-import React, { Suspense, useEffect, useState } from "react";
-import { useTranslation, WithTranslation } from "react-i18next";
-import Terria from "../Models/Terria";
-import ViewState from "../ReactViewModels/ViewState";
-import Icon from "../Styled/Icon";
-import Styles from "./Map/Navigation/tool_button.scss";
-import MapIconButton from "./MapIconButton/MapIconButton";
+import { default as React, Suspense, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useTranslationIfExists } from "../../Language/languageHelpers";
+import Terria from "../../Models/Terria";
+import ViewerMode from "../../Models/ViewerMode";
+import ViewState from "../../ReactViewModels/ViewState";
+import MapNavigationItemController from "../../ViewModels/MapNavigation/MapNavigationItemController";
 
 interface ToolProps {
   viewState: ViewState;
@@ -54,21 +53,47 @@ const Tool: React.FC<ToolProps> = props => {
   );
 };
 
-interface ToolButtonProps extends ToolProps, WithTranslation {
+interface ToolButtonProps extends ToolProps {
   icon: { id: string };
 }
 
-@observer
-export class ToolButton extends React.Component<ToolButtonProps> {
-  @computed
-  get isThisToolOpen() {
-    const currentTool = this.props.viewState.currentTool;
-    return currentTool && currentTool.toolName === this.props.toolName;
+export class ToolButtonController extends MapNavigationItemController {
+  constructor(private props: ToolButtonProps) {
+    super();
+  }
+  get glyph() {
+    return this.props.icon;
+  }
+  get viewerMode() {
+    return ViewerMode.Cesium;
   }
 
-  toggleOpen() {
+  get name() {
+    return useTranslationIfExists(this.props.toolName);
+  }
+  @computed
+  get title() {
+    const buttonState = this.active ? "open" : "closed";
+    return useTranslationIfExists(`tool.button.${buttonState}`, {
+      toolName: this.name,
+      toolNameLowerCase: this.name.toLowerCase()
+    });
+  }
+
+  @computed
+  get active() {
+    const currentTool = this.props.viewState.currentTool;
+    currentTool && currentTool.toolName === this.props.toolName;
+    return (
+      super.active ||
+      (currentTool && currentTool.toolName === this.props.toolName) ||
+      false
+    );
+  }
+
+  handleClick() {
     const { viewState } = this.props;
-    if (this.isThisToolOpen) {
+    if (this.active) {
       viewState.closeTool();
     } else {
       viewState.openTool({
@@ -78,36 +103,6 @@ export class ToolButton extends React.Component<ToolButtonProps> {
         showCloseButton: false
       });
     }
-  }
-
-  componentWillUnmount() {
-    // Close tool when if tool button unmounts
-    if (this.isThisToolOpen) this.props.viewState.closeTool();
-  }
-
-  render() {
-    const { toolName, icon } = this.props;
-    const buttonState = this.isThisToolOpen ? "open" : "closed";
-    const buttonTitle = this.props.t // We need this check because some jsx files do not pass `t` prop
-      ? this.props.t(`tool.button.${buttonState}`, {
-          toolName,
-          toolNameLowerCase: toolName.toLowerCase()
-        })
-      : toolName;
-    return (
-      <div className={Styles.toolButton}>
-        <MapIconButton
-          primary={this.isThisToolOpen}
-          expandInPlace
-          title={toolName}
-          onClick={() => this.toggleOpen()}
-          iconElement={() => <Icon glyph={icon} />}
-          closeIconElement={() => <Icon glyph={Icon.GLYPHS.closeTool} />}
-        >
-          {buttonTitle}
-        </MapIconButton>
-      </div>
-    );
   }
 }
 

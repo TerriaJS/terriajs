@@ -44,6 +44,7 @@ import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Loader from "../../Loader";
 import DatePicker from "./DatePicker";
 import LocationPicker from "./LocationPicker";
+import { CLOSE_TOOL_ID } from "../../Map/Navigation/registerMapNavigations";
 
 const dateFormat = require("dateformat");
 
@@ -117,6 +118,11 @@ class DiffTool extends React.Component<PropsType> {
     terria.showSplitter = true;
     viewState.setIsMapFullScreen(true);
     this.sourceItem.setTrait(CommonStrata.user, "show", false);
+    terria.mapNavigationModel.show(CLOSE_TOOL_ID);
+    const closeTool = terria.mapNavigationModel.findItem(CLOSE_TOOL_ID);
+    if (closeTool) {
+      closeTool.controller.activate();
+    }
   }
 
   @action
@@ -129,6 +135,11 @@ class DiffTool extends React.Component<PropsType> {
     terria.showSplitter = originalSettings.showSplitter;
     viewState.setIsMapFullScreen(originalSettings.isMapFullScreen);
     this.sourceItem.setTrait(CommonStrata.user, "show", true);
+    terria.mapNavigationModel.hide(CLOSE_TOOL_ID);
+    const closeTool = terria.mapNavigationModel.findItem(CLOSE_TOOL_ID);
+    if (closeTool) {
+      closeTool.controller.deactivate();
+    }
   }
 
   componentDidMount() {
