@@ -9,7 +9,8 @@ import isDefined from "../../../Core/isDefined";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import { BaseModel } from "../../../Models/Definition/Model";
 import SelectableDimensions, {
-  SelectableDimension
+  SelectableDimension,
+  MAX_SELECTABLE_DIMENSION_OPTIONS
 } from "../../../Models/SelectableDimensions";
 import Box from "../../../Styled/Box";
 import Select from "../../../Styled/Select";
@@ -38,6 +39,7 @@ class DimensionSelectorSection extends React.Component<PropsType> {
       dim =>
         !dim.disable &&
         isDefined(dim.options) &&
+        dim.options.length < MAX_SELECTABLE_DIMENSION_OPTIONS &&
         dim.options.length + (dim.allowUndefined ? 1 : 0) > 1
     );
 

@@ -49,7 +49,12 @@ const DataPreviewSections = observer(
         return aIndex - bIndex;
       });
 
-      return items;
+      return items.filter(
+        item =>
+          isDefined(item.content) &&
+          item.content !== null &&
+          item.content !== ""
+      );
     },
 
     clickInfoSection(reportName, isOpen) {

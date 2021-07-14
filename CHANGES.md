@@ -5,6 +5,9 @@ Change Log
 
 #### next release (8.0.0-alpha.88)
 
+- **Breaking changes**:
+  - `colorPalette` no longer supports a list of CSS colors (eg `rgb(0,0,255)-rgb(0,255,0)-rgb(255,0,0)`). Instead please use `binColors`.
+
 * Fixed a bug with numeric item search where it sometimes fails to return all matching values.
 * Respect order of objects from lower strata in `objectArrayTrait`.
 * Fix datetime button margin with scroll in workbench.
@@ -12,6 +15,12 @@ Change Log
 * Added progress indicator when loading item search tool.
 * Add `nullColor` to `ConstantColorMap` - used when `colorColumn` is of type `region` to hide regions where rows don't exist.
 * `TableStyles` will only be created for `text` columns if there are no columns of type `scalar`, `enum` or `region`.
+* Moved `TableStyle.colorMap` into `TableColorMap`
+* Replaced `colorbrewer.json` with `d3-scale-chromatic` - we now support d3 color scales (in addition to color brewer) -  see https://github.com/d3/d3-scale-chromatic
+* Added `ContinuousColorMap` - it will now be used by default for `scalar` columns
+  * To use `DiscreteColorMap` - you will need to set `numberOfBins` to something other than `0`.
+* `TableColorMap` default color palette for `scalar` columns is not `Reds` instead of `RdYlOr`
+* Legends for `scalar` columns will now calculate optimal `numberFormatOptions.maximumFractionDigits` and  `numberFormatOptions.minimumFractionDigits`
 * Fix sharing user added data of type "Auto-detect".
 * #5605 tidy up format string used in `MagdaReference`
 * Fix wms feature info returning only one feature
@@ -25,6 +34,12 @@ Change Log
     * Other Catalog items related files are moved to `Models/Catalog/CatalogItems`
     * Other Catalog items related files are moved to `Models/Catalog/CatalogGroups`
     * Catalog functions related files are moved to `Models/Catalog/CatalogFunction`
+* Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses`
+* Limit `SelectableDimension` options to 1000 values
+* Added support for `SocrataCatalogGroup` and `SocrataMapViewCatalogGroup`
+  * Notes on v7 to v8 Socrata integration:
+    * Share links are not preserved
+    * Added basic support for dataset resources
 * [The next improvement]
 
 #### 8.0.0-alpha.87

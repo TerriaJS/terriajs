@@ -199,12 +199,10 @@ export default class Workbench {
       }
     } catch (e) {
       this.remove(item);
-      throw e instanceof TerriaError
-        ? e
-        : new TerriaError({
-            title: i18next.t("workbench.addItemErrorTitle"),
-            message: i18next.t("workbench.addItemErrorMessage")
-          });
+      throw TerriaError.from(e, {
+        title: i18next.t("workbench.addItemErrorTitle"),
+        message: i18next.t("workbench.addItemErrorMessage")
+      });
     }
   }
 
