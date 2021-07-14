@@ -2,13 +2,13 @@
 
 import Terria from "../../lib/Models/Terria";
 
-import CswCatalogGroup from "../../lib/Models/CswCatalogGroup";
+import CswCatalogGroup from "../../lib/Models/Catalog/CatalogGroups/CswCatalogGroup";
 import loadText from "../../lib/Core/loadText";
 import CatalogMemberMixin from "../../lib/ModelMixins/CatalogMemberMixin";
-import updateModelFromJson from "../../lib/Models/updateModelFromJson";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import CatalogGroup from "../../lib/Models/CatalogGroupNew";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import CatalogGroup from "../../lib/Models/Catalog/CatalogGroupNew";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 
 describe("CswCatalogGroup", function() {
   let terria: Terria;

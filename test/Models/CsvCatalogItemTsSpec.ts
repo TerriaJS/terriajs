@@ -1,4 +1,4 @@
-import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
+import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import { runInAction } from "mobx";
 import Terria from "../../lib/Models/Terria";
 

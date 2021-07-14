@@ -5,7 +5,7 @@ import Terria from "../../lib/Models/Terria";
 import SenapsLocationsCatalogItem, {
   SenapsFeature,
   SenapsFeatureCollection
-} from "../../lib/Models/SenapsLocationsCatalogItem";
+} from "../../lib/Models/Catalog/CatalogItems/SenapsLocationsCatalogItem";
 import TerriaError from "../../lib/Core/TerriaError";
 
 interface ExtendedLoadWithXhr {

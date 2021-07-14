@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { autorun, runInAction } from "mobx";
-import WebMapTileServiceCatalogItem from "../../lib/Models/WebMapTileServiceCatalogItem";
+import WebMapTileServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapTileServiceCatalogItem";
 import Terria from "./../../lib/Models/Terria";
 
 describe("WebMapTileServiceCatalogItem", function() {

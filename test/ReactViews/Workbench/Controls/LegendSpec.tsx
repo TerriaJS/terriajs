@@ -4,8 +4,8 @@ import { getShallowRenderedOutput } from "../../MoreShallowTools";
 import React from "react";
 
 import Terria from "../../../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../../../lib/Models/WebMapServiceCatalogItem";
-import CsvCatalogItem from "../../../../lib/Models/CsvCatalogItem";
+import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import CsvCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import Legend from "../../../../lib/ReactViews/Workbench/Controls/Legend";
 
 describe("Legend", function() {

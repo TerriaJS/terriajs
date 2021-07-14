@@ -25,10 +25,10 @@ import TimeIntervalCollection from "terriajs-cesium/Source/Core/TimeIntervalColl
 import TimeIntervalCollectionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty";
 
 import Catalog from "../../lib/Models/Catalog";
-import createCatalogMemberFromType from "../../lib/Models/createCatalogMemberFromType";
+import createCatalogMemberFromType from "../../lib/Models/Catalog/createCatalogMemberFromType";
 import CatalogItem from "../../lib/Models/CatalogItem";
 import CatalogGroup from "../../lib/Models/CatalogGroup";
-import CzmlCatalogItem from "../../lib/Models/CzmlCatalogItem";
+import CzmlCatalogItem from "../../lib/Models/Catalog/CatalogItems/CzmlCatalogItem";
 import { FeatureInfoSection } from "../../lib/ReactViews/FeatureInfo/FeatureInfoSection";
 import Terria from "../../lib/Models/Terria";
 

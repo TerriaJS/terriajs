@@ -5,7 +5,7 @@ import {
   IsWritable,
   IsWritableArray
 } from "../../lib/Core/TypeConditionals";
-import FlattenedFromTraits from "../../lib/Models/FlattenedFromTraits";
+import FlattenedFromTraits from "../../lib/Models/Definition/FlattenedFromTraits";
 import TraitsForTesting, { NestedTraits } from "./TraitsForTesting";
 import { expectFalse, expectTrue } from "./TypeChecks";
 

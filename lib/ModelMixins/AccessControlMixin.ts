@@ -1,6 +1,6 @@
 import { action, computed, observable } from "mobx";
 import Constructor from "../Core/Constructor";
-import Model, { BaseModel } from "../Models/Model";
+import Model, { BaseModel } from "../Models/Definition/Model";
 import ModelTraits from "../Traits/ModelTraits";
 
 type AccessControlModel = Model<ModelTraits>;

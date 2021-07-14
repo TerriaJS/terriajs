@@ -1,6 +1,6 @@
 import { runInAction } from "mobx";
-import createCombinedModel from "../../lib/Models/createCombinedModel";
-import CreateModel from "../../lib/Models/CreateModel";
+import createCombinedModel from "../../lib/Models/Definition/createCombinedModel";
+import CreateModel from "../../lib/Models/Definition/CreateModel";
 import Terria from "../../lib/Models/Terria";
 import TraitsForTesting from "../Types/TraitsForTesting";
 

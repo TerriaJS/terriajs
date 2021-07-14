@@ -48,7 +48,7 @@ import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
-import hasTraits from "./hasTraits";
+import hasTraits from "./Definition/hasTraits";
 import MapInteractionMode from "./MapInteractionMode";
 import Terria from "./Terria";
 

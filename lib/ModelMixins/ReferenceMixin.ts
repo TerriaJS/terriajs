@@ -2,7 +2,7 @@ import { observable, runInAction, untracked } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
-import Model, { BaseModel, ModelInterface } from "../Models/Model";
+import Model, { BaseModel, ModelInterface } from "../Models/Definition/Model";
 import ModelTraits from "../Traits/ModelTraits";
 
 type RequiredTraits = ModelTraits;

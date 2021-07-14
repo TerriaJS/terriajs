@@ -2,9 +2,9 @@ import { configure, runInAction, autorun } from "mobx";
 import primitiveTrait from "../../lib/Traits/Decorators/primitiveTrait";
 import objectTrait from "../../lib/Traits/Decorators/objectTrait";
 import ModelTraits from "../../lib/Traits/ModelTraits";
-import CreateModel from "../../lib/Models/CreateModel";
+import CreateModel from "../../lib/Models/Definition/CreateModel";
 import Terria from "../../lib/Models/Terria";
-import createStratumInstance from "../../lib/Models/createStratumInstance";
+import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 
 configure({
   enforceActions: true,

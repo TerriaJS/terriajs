@@ -1,8 +1,8 @@
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import MappableMixin from "../../lib/ModelMixins/MappableMixin";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import createStratumInstance from "../../lib/Models/createStratumInstance";
-import GltfCatalogItem from "../../lib/Models/GltfCatalogItem";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
+import GltfCatalogItem from "../../lib/Models/Catalog/CatalogItems/GltfCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import HeadingPitchRollTraits from "../../lib/Traits/TraitsClasses/HeadingPitchRollTraits";
 

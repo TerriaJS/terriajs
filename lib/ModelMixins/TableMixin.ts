@@ -23,8 +23,8 @@ import TerriaError from "../Core/TerriaError";
 import ConstantColorMap from "../Map/ConstantColorMap";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import JSRegionProviderList from "../Map/RegionProviderList";
-import CommonStrata from "../Models/CommonStrata";
-import Model from "../Models/Model";
+import CommonStrata from "../Models/Definition/CommonStrata";
+import Model from "../Models/Definition/Model";
 import SelectableDimensions, {
   SelectableDimension
 } from "../Models/SelectableDimensions";

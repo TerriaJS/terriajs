@@ -1,9 +1,9 @@
 import i18next from "i18next";
 import { configure, runInAction } from "mobx";
 import isDefined from "../../lib/Core/isDefined";
-import CommonStrata from "../../lib/Models/CommonStrata";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import Terria from "../../lib/Models/Terria";
-import WebProcessingServiceCatalogFunctionJob from "../../lib/Models/WebProcessingServiceCatalogFunctionJob";
+import WebProcessingServiceCatalogFunctionJob from "../../lib/Models/Catalog/Ows/WebProcessingServiceCatalogFunctionJob";
 
 // For more tests see - test\Models\WebProcessingServiceCatalogFunctionSpec.ts
 

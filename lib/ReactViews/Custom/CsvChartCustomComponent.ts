@@ -1,7 +1,7 @@
 import { ChartItemType } from "../../ModelMixins/ChartableMixin";
-import CommonStrata from "../../Models/CommonStrata";
-import CsvCatalogItem from "../../Models/CsvCatalogItem";
-import { BaseModel } from "../../Models/Model";
+import CommonStrata from "../../Models/Definition/CommonStrata";
+import CsvCatalogItem from "../../Models/Catalog/CatalogItems/CsvCatalogItem";
+import { BaseModel } from "../../Models/Definition/Model";
 import ChartCustomComponent, {
   ChartCustomComponentAttributes,
   splitStringIfDefined

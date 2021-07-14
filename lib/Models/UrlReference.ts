@@ -1,15 +1,15 @@
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import CatalogMemberFactory from "./CatalogMemberFactory";
-import CreateModel from "./CreateModel";
-import { BaseModel } from "./Model";
-import StratumFromTraits from "./StratumFromTraits";
+import CatalogMemberFactory from "./Catalog/CatalogMemberFactory";
+import CreateModel from "./Definition/CreateModel";
+import { BaseModel } from "./Definition/Model";
+import StratumFromTraits from "./Definition/StratumFromTraits";
 import Terria from "./Terria";
 import ModelTraits from "../Traits/ModelTraits";
 import UrlReferenceTraits from "../Traits/TraitsClasses/UrlReferenceTraits";
-import StratumOrder from "./StratumOrder";
+import StratumOrder from "./Definition/StratumOrder";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import updateModelFromJson from "./updateModelFromJson";
+import updateModelFromJson from "./Definition/updateModelFromJson";
 
 const urlRecordStratum = "url-record";
 StratumOrder.addDefaultStratum(urlRecordStratum);

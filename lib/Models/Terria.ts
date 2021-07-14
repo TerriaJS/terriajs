@@ -59,13 +59,13 @@ import TerriaViewer from "../ViewModels/TerriaViewer";
 import { BaseMapModel, processBaseMaps } from "./BaseMaps/BaseMapModel";
 import { defaultBaseMaps } from "./BaseMaps/defaultBaseMaps";
 import CameraView from "./CameraView";
-import CatalogGroup from "./CatalogGroupNew";
-import CatalogMemberFactory from "./CatalogMemberFactory";
-import Catalog from "./CatalogNew";
-import CommonStrata from "./CommonStrata";
+import CatalogGroup from "./Catalog/CatalogGroupNew";
+import CatalogMemberFactory from "./Catalog/CatalogMemberFactory";
+import Catalog from "./Catalog/CatalogNew";
+import CommonStrata from "./Definition/CommonStrata";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
-import hasTraits from "./hasTraits";
+import hasTraits from "./Definition/hasTraits";
 import IElementConfig from "./IElementConfig";
 import InitSource, {
   isInitData,
@@ -77,16 +77,18 @@ import Internationalization, {
   I18nStartOptions,
   LanguageConfiguration
 } from "./Internationalization";
-import MagdaReference, { MagdaReferenceHeaders } from "./MagdaReference";
+import MagdaReference, {
+  MagdaReferenceHeaders
+} from "./Catalog/MagdaReference";
 import MapInteractionMode from "./MapInteractionMode";
-import { BaseModel } from "./Model";
+import { BaseModel } from "./Definition/Model";
 import NoViewer from "./NoViewer";
 import openGroup from "./openGroup";
 import ShareDataService from "./ShareDataService";
 import SplitItemReference from "./SplitItemReference";
 import TimelineStack from "./TimelineStack";
-import updateModelFromJson from "./updateModelFromJson";
-import upsertModelFromJson from "./upsertModelFromJson";
+import updateModelFromJson from "./Definition/updateModelFromJson";
+import upsertModelFromJson from "./Definition/upsertModelFromJson";
 import ViewerMode from "./ViewerMode";
 import Workbench from "./Workbench";
 // import overrides from "../Overrides/defaults.jsx";

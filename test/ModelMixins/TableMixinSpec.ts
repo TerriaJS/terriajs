@@ -1,11 +1,11 @@
 import { runInAction } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import Terria from "../../lib/Models/Terria";
-import updateModelFromJson from "../../lib/Models/updateModelFromJson";
-import createStratumInstance from "../../lib/Models/createStratumInstance";
+import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
+import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 import TableStyleTraits from "../../lib/Traits/TraitsClasses/TableStyleTraits";
 import TableTimeStyleTraits from "../../lib/Traits/TraitsClasses/TableTimeStyleTraits";
 

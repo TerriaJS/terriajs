@@ -1,8 +1,8 @@
 import { runInAction } from "mobx";
 import Terria from "../../lib/Models/Terria";
-import SocrataCatalogGroup from "../../lib/Models/SocrataCatalogGroup";
-import CatalogGroup from "../../lib/Models/CatalogGroupNew";
-import SocrataMapViewCatalogItem from "../../lib/Models/SocrataMapViewCatalogItem";
+import SocrataCatalogGroup from "../../lib/Models/Catalog/CatalogGroups/SocrataCatalogGroup";
+import CatalogGroup from "../../lib/Models/Catalog/CatalogGroupNew";
+import SocrataMapViewCatalogItem from "../../lib/Models/Catalog/CatalogItems/SocrataMapViewCatalogItem";
 
 const facets = JSON.stringify(
   require("../../wwwroot/test/Socrata/facets.json")

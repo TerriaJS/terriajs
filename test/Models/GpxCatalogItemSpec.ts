@@ -1,8 +1,8 @@
 import i18next from "i18next";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import loadText from "../../lib/Core/loadText";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import GpxCatalogItem from "../../lib/Models/GpxCatalogItem";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import GpxCatalogItem from "../../lib/Models/Catalog/CatalogItems/GpxCatalogItem";
 import Terria from "../../lib/Models/Terria";
 
 describe("GpxCatalogItem", function() {

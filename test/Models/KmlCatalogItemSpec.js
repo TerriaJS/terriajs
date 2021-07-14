@@ -1,6 +1,6 @@
 "use strict";
 
-var KmlCatalogItem = require("../../lib/Models/KmlCatalogItem");
+var KmlCatalogItem = require("../../lib/Models/Catalog/CatalogItems/KmlCatalogItem");
 var TerriaError = require("../../lib/Core/TerriaError").default;
 var Terria = require("../../lib/Models/Terria");
 

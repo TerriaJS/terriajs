@@ -3,13 +3,13 @@ import { configure, runInAction } from "mobx";
 import URI from "urijs";
 import { JsonObject } from "../../lib/Core/Json";
 import _loadWithXhr from "../../lib/Core/loadWithXhr";
-import CatalogGroup from "../../lib/Models/CatalogGroupNew";
+import CatalogGroup from "../../lib/Models/Catalog/CatalogGroupNew";
 import CkanCatalogGroup, {
   CkanServerStratum
-} from "../../lib/Models/CkanCatalogGroup";
-import CkanItemReference from "../../lib/Models/CkanItemReference";
+} from "../../lib/Models/Catalog/Ckan/CkanCatalogGroup";
+import CkanItemReference from "../../lib/Models/Catalog/Ckan/CkanItemReference";
 import Terria from "../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 
 configure({
   enforceActions: "observed",

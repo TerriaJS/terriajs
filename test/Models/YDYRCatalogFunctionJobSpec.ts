@@ -1,8 +1,8 @@
 import { configure, reaction } from "mobx";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import Terria from "../../lib/Models/Terria";
-import YDYRCatalogFunctionJob from "../../lib/Models/YDYRCatalogFunctionJob";
+import YDYRCatalogFunctionJob from "../../lib/Models/Catalog/CatalogFunctions/YDYRCatalogFunctionJob";
 import "../SpecHelpers";
 
 // For more tests see - test\Models\YDYRCatalogFunctionSpec.ts

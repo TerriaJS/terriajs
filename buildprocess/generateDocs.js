@@ -3,7 +3,7 @@
 import documentation from "documentation";
 import fs from "fs";
 import YAML from "yaml";
-import CatalogMemberFactory from "../lib/Models/CatalogMemberFactory";
+import CatalogMemberFactory from "../lib/Models/Catalog/CatalogMemberFactory";
 import registerCatalogMembers from "../lib/Models/registerCatalogMembers";
 import { ObjectArrayTrait } from "../lib/Traits/objectArrayTrait";
 import { ObjectTrait } from "../lib/Traits/objectTrait";

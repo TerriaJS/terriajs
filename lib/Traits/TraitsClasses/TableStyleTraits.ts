@@ -5,7 +5,7 @@ import TableTimeStyleTraits from "./TableTimeStyleTraits";
 import ModelTraits from "../ModelTraits";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
-import StratumFromTraits from "../../Models/StratumFromTraits";
+import StratumFromTraits from "../../Models/Definition/StratumFromTraits";
 
 export default class TableStyleTraits extends ModelTraits {
   @primitiveTrait({

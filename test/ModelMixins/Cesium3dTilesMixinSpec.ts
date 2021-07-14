@@ -1,6 +1,6 @@
 import { runInAction } from "mobx";
 import Terria from "../../lib/Models/Terria";
-import Cesium3DTilesCatalogItem from "../../lib/Models/Cesium3DTilesCatalogItem";
+import Cesium3DTilesCatalogItem from "../../lib/Models/Catalog/CatalogItems/Cesium3DTilesCatalogItem";
 import ClippingPlaneCollection from "terriajs-cesium/Source/Scene/ClippingPlaneCollection";
 import ClippingPlane from "terriajs-cesium/Source/Scene/ClippingPlane";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";

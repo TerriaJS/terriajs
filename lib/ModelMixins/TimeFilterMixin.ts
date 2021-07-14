@@ -9,9 +9,9 @@ import LatLonHeight from "../Core/LatLonHeight";
 import runLater from "../Core/runLater";
 import { ProviderCoords, ProviderCoordsMap } from "../Map/PickedFeatures";
 import MappableMixin, { ImageryParts } from "./MappableMixin";
-import CommonStrata from "../Models/CommonStrata";
-import createStratumInstance from "../Models/createStratumInstance";
-import Model from "../Models/Model";
+import CommonStrata from "../Models/Definition/CommonStrata";
+import createStratumInstance from "../Models/Definition/createStratumInstance";
+import Model from "../Models/Definition/Model";
 import DiscretelyTimeVaryingTraits from "../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import TimeFilterTraits, {

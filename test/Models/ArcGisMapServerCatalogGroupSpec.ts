@@ -1,10 +1,10 @@
 import { configure, runInAction } from "mobx";
 import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import Terria from "../../lib/Models/Terria";
-import ArcGisMapServerCatalogGroup from "../../lib/Models/ArcGisMapServerCatalogGroup";
-import CommonStrata from "../../lib/Models/CommonStrata";
+import ArcGisMapServerCatalogGroup from "../../lib/Models/Catalog/esri/ArcGisMapServerCatalogGroup";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import i18next from "i18next";
-import ArcGisMapServerCatalogItem from "../../lib/Models/ArcGisMapServerCatalogItem";
+import ArcGisMapServerCatalogItem from "../../lib/Models/Catalog/esri/ArcGisMapServerCatalogItem";
 
 configure({
   enforceActions: "observed",

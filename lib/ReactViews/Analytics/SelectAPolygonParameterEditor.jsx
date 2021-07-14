@@ -9,8 +9,8 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import featureDataToGeoJson from "../../Map/featureDataToGeoJson";
-import CommonStrata from "../../Models/CommonStrata";
-import GeoJsonCatalogItem from "../../Models/GeoJsonCatalogItem";
+import CommonStrata from "../../Models/Definition/CommonStrata";
+import GeoJsonCatalogItem from "../../Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import MapInteractionMode from "../../Models/MapInteractionMode";
 import Styles from "./parameter-editors.scss";
 

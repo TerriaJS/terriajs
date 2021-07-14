@@ -7,7 +7,7 @@ import {
 } from "mobx";
 import { now } from "mobx-utils";
 import Constructor from "../Core/Constructor";
-import Model from "../Models/Model";
+import Model from "../Models/Definition/Model";
 import AutoRefreshingTraits from "../Traits/TraitsClasses/AutoRefreshingTraits";
 import MappableMixin from "./MappableMixin";
 

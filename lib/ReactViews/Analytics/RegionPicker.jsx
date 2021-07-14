@@ -11,13 +11,13 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 
-import GeoJsonCatalogItem from "../../Models/GeoJsonCatalogItem";
-import WebMapServiceCatalogItem from "../../Models/WebMapServiceCatalogItem";
+import GeoJsonCatalogItem from "../../Models/Catalog/CatalogItems/GeoJsonCatalogItem";
+import WebMapServiceCatalogItem from "../../Models/Catalog/Ows/WebMapServiceCatalogItem";
 import { withTranslation } from "react-i18next";
 
 import RegionTypeParameterEditor from "./RegionTypeParameterEditor";
 import Styles from "./parameter-editors.scss";
-import CommonStrata from "../../Models/CommonStrata";
+import CommonStrata from "../../Models/Definition/CommonStrata";
 
 const RegionPicker = createReactClass({
   displayName: "RegionPicker",

@@ -1,9 +1,9 @@
 import { runInAction } from "mobx";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import { BaseModel } from "../../lib/Models/Model";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import { BaseModel } from "../../lib/Models/Definition/Model";
 import Terria from "../../lib/Models/Terria";
-import updateModelFromJson from "../../lib/Models/updateModelFromJson";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 
 describe("updateModelFromJson", function() {
   let model: BaseModel;

@@ -4,7 +4,7 @@ import Styles from "./parameter-editors.scss";
 import FunctionParameter from "../../Models/FunctionParameters/FunctionParameter";
 import { action } from "mobx";
 import { observer } from "mobx-react";
-import CommonStrata from "../../Models/CommonStrata";
+import CommonStrata from "../../Models/Definition/CommonStrata";
 
 @observer
 export default class GenericParameterEditor extends React.Component<{

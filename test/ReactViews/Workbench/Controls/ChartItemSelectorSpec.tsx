@@ -4,7 +4,7 @@ import TestRenderer, { ReactTestRenderer } from "react-test-renderer";
 import ChartableMixin, {
   ChartItem
 } from "../../../../lib/ModelMixins/ChartableMixin";
-import CreateModel from "../../../../lib/Models/CreateModel";
+import CreateModel from "../../../../lib/Models/Definition/CreateModel";
 import Terria from "../../../../lib/Models/Terria";
 import ChartItemSelector from "../../../../lib/ReactViews/Workbench/Controls/ChartItemSelector";
 import UrlTraits from "../../../../lib/Traits/TraitsClasses/UrlTraits";

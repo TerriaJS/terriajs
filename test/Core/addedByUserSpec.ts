@@ -1,8 +1,8 @@
 import addedByUser from "../../lib/Core/addedByUser";
 import Terria from "../../lib/Models/Terria";
-import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-import CommonStrata from "../../lib/Models/CommonStrata";
+import WebMapServiceCatalogGroup from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 
 describe("addedByUser", function() {
   let terria: Terria;

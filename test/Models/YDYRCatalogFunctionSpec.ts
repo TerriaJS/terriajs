@@ -1,10 +1,10 @@
 import { configure, reaction, toJS } from "mobx";
-import addUserCatalogMember from "../../lib/Models/addUserCatalogMember";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
+import addUserCatalogMember from "../../lib/Models/Catalog/addUserCatalogMember";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import Terria from "../../lib/Models/Terria";
-import YDYRCatalogFunction from "../../lib/Models/YDYRCatalogFunction";
-import YDYRCatalogFunctionJob from "../../lib/Models/YDYRCatalogFunctionJob";
+import YDYRCatalogFunction from "../../lib/Models/Catalog/CatalogFunctions/YDYRCatalogFunction";
+import YDYRCatalogFunctionJob from "../../lib/Models/Catalog/CatalogFunctions/YDYRCatalogFunctionJob";
 import "../SpecHelpers";
 
 const regionMapping = JSON.stringify(

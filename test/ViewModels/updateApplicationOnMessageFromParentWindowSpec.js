@@ -1,7 +1,7 @@
 "use strict";
 
 var CatalogGroup = require("../../lib/Models/CatalogGroup");
-var createCatalogMemberFromType = require("../../lib/Models/createCatalogMemberFromType");
+var createCatalogMemberFromType = require("../../lib/Models/Catalog/createCatalogMemberFromType");
 var Terria = require("../../lib/Models/Terria");
 var updateApplicationOnMessageFromParentWindow = require("../../lib/ViewModels/updateApplicationOnMessageFromParentWindow");
 

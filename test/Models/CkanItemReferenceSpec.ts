@@ -1,12 +1,12 @@
 import { configure, runInAction } from "mobx";
 import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import Terria from "../../lib/Models/Terria";
-import CommonStrata from "../../lib/Models/CommonStrata";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import i18next from "i18next";
 import CkanItemReference, {
   CkanDatasetStratum
-} from "../../lib/Models/CkanItemReference";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+} from "../../lib/Models/Catalog/Ckan/CkanItemReference";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import InfoSectionTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
 
 configure({

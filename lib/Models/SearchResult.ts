@@ -1,4 +1,4 @@
-import { BaseModel } from "./Model";
+import { BaseModel } from "./Definition/Model";
 import { observable, action } from "mobx";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";

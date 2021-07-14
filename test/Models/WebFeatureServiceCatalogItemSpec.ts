@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { autorun, runInAction } from "mobx";
 import Terria from "../../lib/Models/Terria";
-import WebFeatureServiceCatalogItem from "../../lib/Models/WebFeatureServiceCatalogItem";
+import WebFeatureServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebFeatureServiceCatalogItem";
 
 describe("WebFeatureServiceCatalogItem", function() {
   it("derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specified", function() {

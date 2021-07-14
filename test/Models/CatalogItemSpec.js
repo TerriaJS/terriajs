@@ -9,7 +9,7 @@ var DataSourceClock = require("terriajs-cesium/Source/DataSources/DataSourceCloc
   .default;
 var JulianDate = require("terriajs-cesium/Source/Core/JulianDate").default;
 var Terria = require("../../lib/Models/Terria");
-var createCatalogMemberFromType = require("../../lib/Models/createCatalogMemberFromType");
+var createCatalogMemberFromType = require("../../lib/Models/Catalog/createCatalogMemberFromType");
 
 describe("CatalogItem", function() {
   var terria;

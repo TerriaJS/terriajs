@@ -16,7 +16,7 @@ import MapInteractionMode from "../../Models/MapInteractionMode";
 import Styles from "./parameter-editors.scss";
 import { runInAction, autorun } from "mobx";
 import { withTranslation } from "react-i18next";
-import CommonStrata from "../../Models/CommonStrata";
+import CommonStrata from "../../Models/Definition/CommonStrata";
 
 const PointParameterEditor = createReactClass({
   displayName: "PointParameterEditor",

@@ -7,7 +7,7 @@ import { withTranslation } from "react-i18next";
 import addedByUser from "../../Core/addedByUser";
 import getPath from "../../Core/getPath";
 import openGroup from "../../Models/openGroup";
-import removeUserAddedData from "../../Models/removeUserAddedData";
+import removeUserAddedData from "../../Models/Catalog/removeUserAddedData";
 import CatalogGroup from "./CatalogGroup";
 import DataCatalogMember from "./DataCatalogMember";
 

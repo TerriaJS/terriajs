@@ -22,7 +22,7 @@ import GeoJsonParameter from "../../Models/FunctionParameters/GeoJsonParameter";
 import { withTranslation } from "react-i18next";
 import { observer } from "mobx-react";
 import { runInAction } from "mobx";
-import CommonStrata from "../../Models/CommonStrata";
+import CommonStrata from "../../Models/Definition/CommonStrata";
 
 const GeoJsonParameterEditor = observer(
   createReactClass({

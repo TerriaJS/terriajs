@@ -1,5 +1,5 @@
 import { runInAction } from "mobx";
-import SocrataMapViewCatalogItem from "../../lib/Models/SocrataMapViewCatalogItem";
+import SocrataMapViewCatalogItem from "../../lib/Models/Catalog/CatalogItems/SocrataMapViewCatalogItem";
 import Terria from "../../lib/Models/Terria";
 
 const view = JSON.stringify(require("../../wwwroot/test/Socrata/view.json"));

@@ -7,8 +7,8 @@ var Rectangle = require("terriajs-cesium/Source/Core/Rectangle").default;
 var when = require("terriajs-cesium/Source/ThirdParty/when").default;
 
 var CatalogItem = require("../../lib/Models/CatalogItem");
-var CsvCatalogItem = require("../../lib/Models/CsvCatalogItem");
-var SensorObservationServiceCatalogItem = require("../../lib/Models/SensorObservationServiceCatalogItem");
+var CsvCatalogItem = require("../../lib/Models/Catalog/CatalogItems/CsvCatalogItem");
+var SensorObservationServiceCatalogItem = require("../../lib/Models/Catalog/CatalogItems/SensorObservationServiceCatalogItem");
 var ImageryLayerCatalogItem = require("../../lib/Models/ImageryLayerCatalogItem");
 var ImageryProviderHooks = require("../../lib/Map/ImageryProviderHooks");
 var loadAndStubTextResources = require("../Utility/loadAndStubTextResources");

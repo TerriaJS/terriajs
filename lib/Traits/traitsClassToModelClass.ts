@@ -1,5 +1,5 @@
 import memoize from "lodash-es/memoize";
-import CreateModel from "../Models/CreateModel";
+import CreateModel from "../Models/Definition/CreateModel";
 import ModelTraits from "./ModelTraits";
 import TraitsConstructor from "./TraitsConstructor";
 

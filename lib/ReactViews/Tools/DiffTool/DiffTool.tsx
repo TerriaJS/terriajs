@@ -22,9 +22,9 @@ import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import MappableMixin, {
   ImageryParts
 } from "../../../ModelMixins/MappableMixin";
-import CommonStrata from "../../../Models/CommonStrata";
+import CommonStrata from "../../../Models/Definition/CommonStrata";
 import Feature from "../../../Models/Feature";
-import hasTraits, { HasTrait } from "../../../Models/hasTraits";
+import hasTraits, { HasTrait } from "../../../Models/Definition/hasTraits";
 import {
   getMarkerLocation,
   removeMarker

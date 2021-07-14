@@ -1,7 +1,7 @@
 import { observable } from "mobx";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import ResultPendingCatalogItemTraits from "../Traits/TraitsClasses/ResultPendingCatalogItemTraits";
-import CreateModel from "./CreateModel";
+import CreateModel from "./Definition/CreateModel";
 
 export default class ResultPendingCatalogItem extends CatalogMemberMixin(
   CreateModel(ResultPendingCatalogItemTraits)

@@ -3,12 +3,12 @@ import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import Terria from "../../lib/Models/Terria";
 import ArcGisPortalCatalogGroup, {
   ArcGisPortalStratum
-} from "../../lib/Models/ArcGisPortalCatalogGroup";
-import CommonStrata from "../../lib/Models/CommonStrata";
+} from "../../lib/Models/Catalog/esri/ArcGisPortalCatalogGroup";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import i18next from "i18next";
-import ArcGisPortalItemReference from "../../lib/Models/ArcGisPortalItemReference";
-import CatalogGroup from "../../lib/Models/CatalogGroupNew";
-import { BaseModel } from "../../lib/Models/Model";
+import ArcGisPortalItemReference from "../../lib/Models/Catalog/esri/ArcGisPortalItemReference";
+import CatalogGroup from "../../lib/Models/Catalog/CatalogGroupNew";
+import { BaseModel } from "../../lib/Models/Definition/Model";
 
 configure({
   enforceActions: "observed",

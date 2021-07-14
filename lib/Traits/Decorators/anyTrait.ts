@@ -1,5 +1,5 @@
 import Result from "../../Core/Result";
-import { BaseModel } from "../../Models/Model";
+import { BaseModel } from "../../Models/Definition/Model";
 import Trait, { TraitOptions } from "../Trait";
 
 export interface AnyTraitOptions extends TraitOptions {}

@@ -5,7 +5,7 @@ import { ThemeProvider } from "styled-components";
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface/StandardTheme";
 import WarningBox from "../../lib/ReactViews/Preview/WarningBox";
 import Terria from "../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Box from "../../lib/Styled/Box";
 
 describe("WarningBox", function() {

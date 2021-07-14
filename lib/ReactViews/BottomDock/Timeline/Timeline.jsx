@@ -14,7 +14,7 @@ import { formatDateTime } from "./DateFormats";
 import { withTranslation } from "react-i18next";
 
 import Styles from "./timeline.scss";
-import CommonStrata from "../../../Models/CommonStrata";
+import CommonStrata from "../../../Models/Definition/CommonStrata";
 
 export const Timeline = observer(
   createReactClass({

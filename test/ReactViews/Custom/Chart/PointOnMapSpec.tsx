@@ -1,7 +1,7 @@
 import React from "react";
 import { act } from "react-dom/test-utils";
 import TestRenderer, { ReactTestRenderer } from "react-test-renderer";
-import GeoJsonCatalogItem from "../../../../lib/Models/GeoJsonCatalogItem";
+import GeoJsonCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import PointOnMap from "../../../../lib/ReactViews/Custom/Chart/PointOnMap";
 

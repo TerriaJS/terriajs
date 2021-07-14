@@ -3,12 +3,12 @@ import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import Terria from "../../lib/Models/Terria";
 import registerCatalogMembers from "../../lib/Models/registerCatalogMembers";
 
-import CommonStrata from "../../lib/Models/CommonStrata";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import i18next from "i18next";
 import ArcGisPortalItemReference, {
   ArcGisPortalItemStratum
-} from "../../lib/Models/ArcGisPortalItemReference";
-import ArcGisFeatureServerCatalogItem from "../../lib/Models/ArcGisFeatureServerCatalogItem";
+} from "../../lib/Models/Catalog/esri/ArcGisPortalItemReference";
+import ArcGisFeatureServerCatalogItem from "../../lib/Models/Catalog/esri/ArcGisFeatureServerCatalogItem";
 import InfoSectionTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
 
 configure({

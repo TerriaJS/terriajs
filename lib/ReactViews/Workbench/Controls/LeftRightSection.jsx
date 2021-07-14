@@ -13,7 +13,7 @@ import { withTranslation } from "react-i18next";
 // import Icon from '../../Icon';
 import Styles from "./left-right-section.scss";
 import { observer } from "mobx-react";
-import CommonStrata from "../../../Models/CommonStrata";
+import CommonStrata from "../../../Models/Definition/CommonStrata";
 import { runInAction } from "mobx";
 
 const LeftRightButton = styled.button`

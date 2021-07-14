@@ -5,7 +5,7 @@ import { ThemeProvider } from "styled-components";
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface/StandardTheme";
 import ShortReport from "../../lib/ReactViews/Workbench/Controls/ShortReport";
 import Terria from "../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 
 describe("ShortReport", function() {
   let testRenderer: any;

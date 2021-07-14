@@ -1,10 +1,13 @@
 import { computed } from "mobx";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
-import createStratumInstance from "../../Models/createStratumInstance";
-import Model, { BaseModel, ModelConstructor } from "../../Models/Model";
-import saveStratumToJson from "../../Models/saveStratumToJson";
-import StratumFromTraits from "../../Models/StratumFromTraits";
+import createStratumInstance from "../../Models/Definition/createStratumInstance";
+import Model, {
+  BaseModel,
+  ModelConstructor
+} from "../../Models/Definition/Model";
+import saveStratumToJson from "../../Models/Definition/saveStratumToJson";
+import StratumFromTraits from "../../Models/Definition/StratumFromTraits";
 import ModelTraits from "../ModelTraits";
 import NestedStrataMap from "../NestedStrataMap";
 import Trait, { TraitOptions } from "../Trait";

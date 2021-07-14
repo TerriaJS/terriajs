@@ -1,7 +1,7 @@
 import { computed, observable, reaction } from "mobx";
 import isDefined from "../../Core/isDefined";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
-import CommonStrata from "../CommonStrata";
+import CommonStrata from "../Definition/CommonStrata";
 import { DimensionOption } from "../SelectableDimensions";
 import FunctionParameter, {
   Options as FunctionParameterOptions

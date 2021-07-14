@@ -3,7 +3,7 @@ import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import Feature from "../Models/Feature";
 import { ImageryParts } from "../ModelMixins/MappableMixin";
-import { BaseModel } from "../Models/Model";
+import { BaseModel } from "../Models/Definition/Model";
 import MappableMixin from "../ModelMixins/MappableMixin";
 
 export type ProviderCoords = { x: number; y: number; level: number };

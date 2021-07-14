@@ -1,10 +1,10 @@
 import { runInAction } from "mobx";
-import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
-import CommonStrata from "../../lib/Models/CommonStrata";
+import CatalogMemberFactory from "../../lib/Models/Catalog/CatalogMemberFactory";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import Terria from "../../lib/Models/Terria";
-import upsertModelFromJson from "../../lib/Models/upsertModelFromJson";
-import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import upsertModelFromJson from "../../lib/Models/Definition/upsertModelFromJson";
+import WebMapServiceCatalogGroup from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 
 describe("upsertModelFromJson", function() {
   it("can create basic WMS item", function() {

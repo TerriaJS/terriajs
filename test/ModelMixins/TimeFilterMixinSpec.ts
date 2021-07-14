@@ -1,7 +1,7 @@
 import { action, computed } from "mobx";
 import TimeFilterMixin from "../../lib/ModelMixins/TimeFilterMixin";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import CreateModel from "../../lib/Models/CreateModel";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import CreateModel from "../../lib/Models/Definition/CreateModel";
 import Terria from "../../lib/Models/Terria";
 import DiscretelyTimeVaryingTraits from "../../lib/Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";

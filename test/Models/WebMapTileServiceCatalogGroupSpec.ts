@@ -1,4 +1,4 @@
-import WebMapTileServiceCatalogGroup from "./../../lib/Models/WebMapTileServiceCatalogGroup";
+import WebMapTileServiceCatalogGroup from "../../lib/Models/Catalog/Ows/WebMapTileServiceCatalogGroup";
 import Terria from "../../lib/Models/Terria";
 import { runInAction } from "mobx";
 import i18next from "i18next";

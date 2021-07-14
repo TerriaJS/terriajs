@@ -1,7 +1,7 @@
 import { action } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
-import CommonStrata from "../../Models/CommonStrata";
+import CommonStrata from "../../Models/Definition/CommonStrata";
 import BooleanParameter from "../../Models/FunctionParameters/BooleanParameter";
 import Icon from "../../Styled/Icon";
 import Styles from "./parameter-editors.scss";
