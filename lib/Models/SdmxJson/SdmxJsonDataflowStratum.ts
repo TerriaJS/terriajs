@@ -252,7 +252,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
           );
 
           // Get allowed options from constraints.cubeRegions (there may be multiple - take union of all values)
-          const allowedOptionIdsSet = Array.isArray(constraints)
+          const allowedOptionIds = Array.isArray(constraints)
             ? constraints.reduce<Set<string>>((keys, constraint) => {
                 constraint.cubeRegions?.forEach(cubeRegion =>
                   cubeRegion.keyValues
@@ -263,23 +263,17 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
                 );
                 return keys;
               }, new Set())
-            : undefined;
-
-          // Get unique allowed options from constraints.cubeRegions
-          const allowedOptionIds = isDefined(allowedOptionIdsSet)
-            ? Array.from(allowedOptionIdsSet)
-            : [];
+            : new Set();
 
           let options: StratumFromTraits<DimensionOptionTraits>[] = [];
 
           // Only create options if less then 1000 values
-          if (allowedOptionIds.length < 1000) {
+          if (allowedOptionIds.size < 1000) {
             // Get codes by merging allowedOptionIds with codelist
             let filteredCodesList =
-              (allowedOptionIds.length > 0
-                ? codelist?.codes?.filter(
-                    code =>
-                      allowedOptionIds && allowedOptionIds.includes(code.id!)
+              (allowedOptionIds.size > 0
+                ? codelist?.codes?.filter(code =>
+                    allowedOptionIds.has(code.id!)
                   )
                 : // If no allowedOptions were found -> return all codes
                   codelist?.codes) ?? [];
@@ -303,9 +297,10 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
           }
 
           // Use first option as default if no other default is provided
-          let selectedId: string | undefined = modelOverride?.allowUndefined
-            ? undefined
-            : options[0]?.id;
+          let selectedId: string | undefined =
+            modelOverride?.allowUndefined || allowedOptionIds.size >= 1000
+              ? undefined
+              : options[0]?.id;
 
           // Override selectedId if it a valid option
           const selectedIdOverride = modelOverride?.selectedId;
