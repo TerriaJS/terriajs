@@ -137,6 +137,15 @@ textarea {
   pointer-events: none;
   opacity: 0.5;
 }
+.toggleContent {
+  display: none;
+  background: gainsboro;
+  min-height: 100px;
+}
+:checked + .toggleContent {
+  display: block;
+}
+
 /* ANIMATIONS ================ */
 @-webkit-keyframes inputHighlighter {
   from {

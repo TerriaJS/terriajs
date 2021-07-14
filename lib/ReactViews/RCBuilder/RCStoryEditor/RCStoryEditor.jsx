@@ -1,9 +1,10 @@
 import { AmplifyS3Image } from "@aws-amplify/ui-react";
 import { API, graphqlOperation, Storage } from "aws-amplify";
+import * as mutations from "../../../../api/graphql/mutations";
 import PropTypes from "prop-types";
 import { default as React, useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, withRouter, useHistory } from "react-router-dom";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 import { v5 as uuidv5 } from "uuid";
@@ -24,8 +25,10 @@ function RCStoryEditor(props) {
     null
   );
   const [images, setImages] = useState([]);
+  const [pages, setPages] = useState([]);
   const [message, setMessage] = useState("");
   const [sectorRequiredMessage, setSectorRequiredMessage] = useState("*");
+  const history = useHistory();
 
   // get the story id from url
   const { id } = useParams();
@@ -47,6 +50,7 @@ function RCStoryEditor(props) {
         setSelectedSectors(data.sectors);
         setHotspotPoint(data.hotspotlocation);
         setImages([data.image]);
+        setPages(data.pages);
       });
     } catch (error) {
       console.log(error);
@@ -131,63 +135,101 @@ function RCStoryEditor(props) {
     }
   };
 
-  const onSave = async () => {
+  const onSave = () => {
     if (selectedSectors.length <= 0) {
       setSectorRequiredMessage("Select at least 1 sector");
     } else {
-      // If a new image is supplied we push it to s3 and
-      // update the references here
-      let image = story.image || {};
-      if (files.length > 0) {
-        const file = files[0];
+      saveStory();
+    }
+  };
 
-        const fileExt = file.name.split(".").pop();
-        const imageid = uuidv5(file.name, story.id);
+  const addPage = () => {
+    const newPage = {
+      title: "New page",
+      section: "INTRODUCTION",
+      camera: [0, 0, 0, 0],
+      baseMapName: "basemap",
+      viewer_mode_3d: true,
+      scenarios: []
+    };
 
-        try {
-          // remove the old image
-          Storage.remove(image.id);
-        } catch (error) {
-          // An error here means it does not exist?
-          console.debug("Error removing old file: ", error);
-        }
+    API.graphql({
+      query: mutations.createPage,
+      variables: { input: newPage }
+    }).then(response => {
+      if (response.data.createPage) {
+        console.log(response.data);
+        newPage.id = response.data.createPage.id;
+        const newPages = Array.isArray(pages) ? [...pages, newPage] : [newPage];
+        setPages(newPages);
+        saveStory()
+          .then(() => {
+            history.push(`/builder/page/${newPage.id}/edit`);
+          })
+          .catch(error => {
+            console.log(error);
+            setMessage("Error", error);
+          });
+      } else {
+        setMessage("Error", response.errors[0].message);
+      }
+    });
+  };
 
-        try {
-          // upload new image
-          const result = await Storage.put(
-            `story-${story.id}/${imageid}.${fileExt}`,
-            file
-          );
+  const saveStory = async () => {
+    // If a new image is supplied we push it to s3 and
+    // update the references here
+    let image = story.image || {};
+    if (files.length > 0) {
+      const file = files[0];
 
-          image.id = result.key;
-          image.url = await Storage.get(result.key);
+      const fileExt = file.name.split(".").pop();
+      const imageid = uuidv5(file.name, story.id);
 
-          setImages([image]);
-          setFiles([]);
-        } catch (error) {
-          setMessage("Error uploading file: ", error);
-        }
+      try {
+        // remove the old image
+        Storage.remove(image.id);
+      } catch (error) {
+        // An error here means it does not exist?
+        console.debug("Error removing old file: ", error);
       }
 
-      const storyDetails = {
-        id: story.id,
-        title: title,
-        shortDescription: shortDescription,
-        sectors: selectedSectors,
-        hotspotlocation: hotspotPoint,
-        image: image
-      };
-      API.graphql({
-        query: updateStory,
-        variables: { input: storyDetails }
-      }).then(response => {
-        if (response.data.updateStory) {
-          setMessage("Story details saved successfully!");
-        } else {
-          setMessage("Error", response.errors[0].message);
-        }
-      });
+      try {
+        // upload new image
+        const result = await Storage.put(
+          `story-${story.id}/${imageid}.${fileExt}`,
+          file
+        );
+
+        image.id = result.key;
+        image.url = await Storage.get(result.key);
+
+        setImages([image]);
+        setFiles([]);
+      } catch (error) {
+        setMessage("Error uploading file: ", error);
+      }
     }
+
+    const storyDetails = {
+      id: story.id,
+      title: title,
+      shortDescription: shortDescription,
+      sectors: selectedSectors,
+      hotspotlocation: hotspotPoint,
+      image: image,
+      pages: pages
+    };
+    return API.graphql({
+      query: updateStory,
+      variables: { input: storyDetails }
+    }).then(response => {
+      if (response.data.updateStory) {
+        setMessage("Story details saved successfully!");
+      } else {
+        setMessage("Error", response.errors[0].message);
+      }
+    });
   };
 
   const hotspotText = hotspotPoint
@@ -249,8 +291,8 @@ function RCStoryEditor(props) {
             </div>
           )}
           {listenForHotspot && (
-            <div>
-              <label>Click on map to set the hotspot position</label>&nbsp;
+            <div className={Styles.container}>
+              <span>Click on map to set the hotspot position</span>&nbsp;
               <button
                 onClick={() => setListenForHotspot(false)}
                 className={Styles.RCButton}
@@ -260,6 +302,7 @@ function RCStoryEditor(props) {
             </div>
           )}
         </div>
+
         <div className={Styles.group}>
           <label className={Styles.topLabel}>Image</label>
           {images.map(image => {
@@ -279,6 +322,31 @@ function RCStoryEditor(props) {
             <aside className={Styles.thumbsContainer}>{thumbs}</aside>
           </section>
         </div>
+
+        <div className={Styles.group}>
+          <label className={Styles.topLabel} htmlFor="pagesToggle">
+            Pages
+          </label>
+          <input type="checkbox" id="pagesToggle" name="pagesToggle" checked />
+          <div className={Styles.toggleContent}>
+            <button
+              className={Styles.RCButton}
+              style={{ float: "right" }}
+              onClick={addPage}
+            >
+              Add
+            </button>
+            <ul>
+              {pages &&
+                pages.map(page => (
+                  <li key={page.id}>
+                    <a href={`#builder/page/${page.id}/edit`}>{page.title}</a>
+                  </li>
+                ))}
+            </ul>
+          </div>
+        </div>
+
         <div className={Styles.container}>
           <button className={Styles.RCButton} onClick={onSave}>
             Save
@@ -293,4 +361,4 @@ function RCStoryEditor(props) {
 RCStoryEditor.propTypes = {
   viewState: PropTypes.object
 };
-export default RCStoryEditor;
+export default withRouter(RCStoryEditor);
