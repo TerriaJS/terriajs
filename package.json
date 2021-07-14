@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "8.0.0-alpha.87",
+  "version": "8.0.0-alpha.87-prerender-1",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
@@ -34,6 +34,7 @@
     "@types/dateformat": "^3.0.1",
     "@types/dompurify": "^2.0.2",
     "@types/geojson": "^7946.0.7",
+    "@types/history": "^4.7.7",
     "@types/jasmine": "^2.8.8",
     "@types/jasmine-ajax": "^3.3.0",
     "@types/json5": "^0.0.30",
@@ -45,6 +46,7 @@
     "@types/pbf": "^3.0.1",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.2",
+    "@types/react-router-dom": "^5.1.5",
     "@types/react-select": "^3.1.2",
     "@types/react-test-renderer": "^17.0.1",
     "@types/retry": "^0.12.0",
@@ -127,8 +129,10 @@
     "react-anything-sortable": "^1.5.2",
     "react-datepicker": "0.53.0",
     "react-dom": "^16.3.2",
+    "react-helmet": "^5.2.1",
     "react-i18next": "^11.2.1",
     "react-responsive": "^5.0.0",
+    "react-router-dom": "^5.0.0",
     "react-select": "^3.1.1",
     "react-swipeable": "^5.1.0",
     "react-transition-group": "^4.3.0",
@@ -196,7 +200,7 @@
     "react-shallow-testutils": "^3.0.0",
     "react-test-renderer": "^16.3.2",
     "regenerator-runtime": "^0.13.2",
-    "terriajs-server": "^3.0.1",
+    "terriajs-server": "^3.3.1",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.1.14",
     "yaml": "^1.10.0"

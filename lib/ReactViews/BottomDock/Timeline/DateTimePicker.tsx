@@ -140,6 +140,36 @@ export const DateButton = styled(Button).attrs({
   border-radius: 4px;
 `;
 
+const Panel = styled.div`
+  color: ${p => p.theme.textLight};
+  display: table-cell;
+  width: 30px;
+  height: 30px;
+`;
+
+interface InnerPanelProps {
+  openDirection?: string;
+}
+
+const InnerPanel = styled.div<InnerPanelProps>`
+  background: ${p => p.theme.dark};
+  width: 260px;
+  height: 300px;
+  border: 1px solid ${p => p.theme.grey};
+  border-radius: 5px;
+  padding: 5px;
+  position: relative;
+  top: -170px;
+  left: 0;
+  z-index: 100;
+  ${p =>
+    p.openDirection === "down" &&
+    `
+    top: 40px;
+    left: -190px;
+    `}
+`;
+
 interface PropsType extends WithTranslation {
   dates: ObjectifiedDates;
   currentDate?: Date; // JS Date object - must be an element of props.dates, or null/undefined.
@@ -435,6 +465,7 @@ class DateTimePicker extends React.Component<PropsType> {
       // const selected = isDefined(this.currentDateIndice.day) ? this.props.datesObject[this.currentDateIndice.year][this.currentDateIndice.month][this.currentDateIndice.day][0] : null;
       return (
         <div
+          //@ts-ignore
           css={`
             text-align: center;
             margin-top: -10px;
@@ -634,39 +665,15 @@ class DateTimePicker extends React.Component<PropsType> {
     if (this.props.dates) {
       const datesObject = this.props.dates;
       return (
-        <div
-          css={`
-            color: ${(p: any) => p.theme.textLight};
-            display: table-cell;
-            width: 30px;
-            height: 30px;
-          `}
+        <Panel
           onClick={event => {
             event.stopPropagation();
           }}
         >
           {this.props.isOpen && (
-            <div
-              css={`
-                background: ${(p: any) => p.theme.dark};
-                width: 260px;
-                height: 300px;
-                border: 1px solid ${(p: any) => p.theme.grey};
-                border-radius: 5px;
-                padding: 5px;
-                position: relative;
-                top: -170px;
-                left: 0;
-                z-index: 100;
-
-                ${this.props.openDirection === "down"
-                  ? `
-                  top: 40px;
-                  left: -190px;
-                `
-                  : ""}
-              `}
+            <InnerPanel
               className={"scrollbars"}
+              openDirection={this.props.openDirection}
             >
               <BackButton
                 title={this.props.t("dateTime.back")}
@@ -716,9 +723,9 @@ class DateTimePicker extends React.Component<PropsType> {
                 this.renderMinutesView(
                   datesObject[this.currentDateIndice.century!]
                 )}
-            </div>
+            </InnerPanel>
           )}
-        </div>
+        </Panel>
       );
     } else {
       return null;

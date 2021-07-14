@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import React, { useState } from "react";
 import { Trans, useTranslation, withTranslation } from "react-i18next";
 import styled, { withTheme } from "styled-components";
+import { CATALOG_ROUTE } from "../../ReactViewModels/TerriaRouting";
 import Box from "../../Styled/Box";
 import Button, { RawButton } from "../../Styled/Button";
 import Icon, { StyledIcon } from "../../Styled/Icon";
@@ -26,7 +27,14 @@ const WelcomeModalWrapper = styled(Box)`
 
 function WelcomeMessageButton(props) {
   return (
-    <Button primary rounded fullWidth onClick={props.onClick}>
+    <Button
+      primary
+      rounded
+      fullWidth
+      onClick={props.onClick}
+      renderAsLink={props.renderAsLink}
+      to={props.to}
+    >
       <Box centered>
         {props.buttonIcon && (
           <StyledIcon light styledWidth={"22px"} glyph={props.buttonIcon} />
@@ -45,7 +53,9 @@ function WelcomeMessageButton(props) {
 WelcomeMessageButton.propTypes = {
   buttonText: PropTypes.string,
   buttonIcon: PropTypes.object,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  renderAsLink: PropTypes.bool,
+  to: PropTypes.string
 };
 
 @observer
@@ -292,6 +302,8 @@ export const WelcomeMessagePure = props => {
                       handleClose(false);
                       setShouldExploreData(true);
                     }}
+                    renderAsLink
+                    to={CATALOG_ROUTE}
                   />
                 </Box>
               </Box>

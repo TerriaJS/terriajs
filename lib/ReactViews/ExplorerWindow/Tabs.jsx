@@ -4,6 +4,7 @@ import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
+import { Helmet } from "react-helmet";
 import { withTranslation } from "react-i18next";
 import styled from "styled-components";
 import defined from "terriajs-cesium/Source/Core/defined";
@@ -132,6 +133,11 @@ const Tabs = observer(
 
       return (
         <div className={Styles.tabs}>
+          <Helmet>
+            <title>
+              {currentTab.name} - {this.props.terria.appName}
+            </title>
+          </Helmet>
           <ul
             className={Styles.tabList}
             role="tablist"

@@ -6,13 +6,14 @@ interface CssExports {
   'description': string;
   'error': string;
   'field': string;
-  'h3': string;
   'h4': string;
+  'heading': string;
   'metadata': string;
   'previewed--info': string;
   'previewedInfo': string;
   'share-link--wrapper': string;
   'shareLinkWrapper': string;
+  'subHeading': string;
   'title-and-share-wrapper': string;
   'titleAndShareWrapper': string;
 }

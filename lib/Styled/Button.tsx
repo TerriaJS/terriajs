@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
+
 import { BoxSpan } from "./Box";
 import { TextSpan } from "./Text";
 
@@ -34,12 +36,14 @@ interface IStyledButtonProps extends IButtonProps {
 }
 
 const StyledButton = styled.button<IStyledButtonProps>`
+  display: grid;
   pointer-events: auto;
   cursor: pointer;
   min-height: 40px;
   ${props => props.shortMinHeight && `min-height: 34px;`}
   // min-width: 75px;
   padding: 0 16px;
+  box-sizing: border-box;
 
   border: 1px solid #e4e5e7;
   border-radius: 4px;
@@ -121,6 +125,10 @@ const StyledButton = styled.button<IStyledButtonProps>`
   `}
 `;
 
+const StyledButtonAsLink = styled(StyledButton).attrs({ as: Link })`
+  text-decoration: none;
+`;
+
 /**
  * Use for things you need as clickable things & not necessary the design
  * language styled button
@@ -157,56 +165,51 @@ interface ButtonProps extends IStyledButtonProps {
   iconProps?: any;
   textProps?: any;
   children?: React.ReactChildren;
-  buttonRef?: React.Ref<HTMLButtonElement>;
   title?: string;
   onClick?: (e: any) => void;
+  renderAsLink: boolean;
 }
 
 // Icon and props-children-mandatory-text-wrapping is a mess here so it's all very WIP
-export const Button = (
-  props: ButtonProps,
-  ref: React.Ref<HTMLButtonElement>
-) => {
-  const {
-    primary,
-    secondary,
-    warning,
-    iconProps,
-    textProps,
-    buttonRef,
-    ...rest
-  } = props;
-  return (
-    <StyledButton
-      ref={buttonRef}
-      primary={primary}
-      secondary={secondary}
-      warning={warning}
-      {...rest}
-    >
-      <BoxSpan centered>
-        {props.renderIcon && typeof props.renderIcon === "function" && (
-          <Icon css={iconProps && iconProps.css} {...iconProps}>
-            {props.renderIcon()}
-          </Icon>
-        )}
-        {props.children && (
-          <TextSpan
-            white={primary || secondary || warning}
-            medium={secondary}
-            {...textProps}
-          >
-            {props.children}
-          </TextSpan>
-        )}
-      </BoxSpan>
-    </StyledButton>
-  );
-};
+export const Button = React.forwardRef(
+  (props: ButtonProps, ref: React.Ref<HTMLButtonElement>) => {
+    const {
+      primary,
+      secondary,
+      warning,
+      iconProps,
+      textProps,
+      renderAsLink,
+      ...rest
+    } = props;
+    const ButtonComponent = renderAsLink ? StyledButtonAsLink : StyledButton;
+    return (
+      <ButtonComponent
+        ref={ref}
+        primary={primary}
+        secondary={secondary}
+        warning={warning}
+        {...rest}
+      >
+        <BoxSpan centered marginAuto>
+          {props.renderIcon && typeof props.renderIcon === "function" && (
+            <Icon css={iconProps && iconProps.css} {...iconProps}>
+              {props.renderIcon()}
+            </Icon>
+          )}
+          {props.children && (
+            <TextSpan
+              white={primary || secondary || warning}
+              medium={secondary}
+              {...textProps}
+            >
+              {props.children}
+            </TextSpan>
+          )}
+        </BoxSpan>
+      </ButtonComponent>
+    );
+  }
+);
 
-const ButtonWithRef = (
-  props: ButtonProps,
-  ref: React.Ref<HTMLButtonElement>
-) => <Button {...props} buttonRef={ref} />;
-
-export default React.forwardRef(ButtonWithRef);
+export default Button;

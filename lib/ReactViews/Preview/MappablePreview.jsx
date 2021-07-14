@@ -6,6 +6,8 @@ import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import getPath from "../../Core/getPath";
 import MappableMixin from "../../ModelMixins/MappableMixin";
+import { ROOT_ROUTE } from "../../ReactViewModels/TerriaRouting";
+import ErrorBoundary from "../ErrorBoundary/ErrorBoundary.jsx";
 import measureElement from "../HOCs/measureElement";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
 import DataPreviewMap from "./DataPreviewMap";
@@ -60,6 +62,7 @@ class MappablePreview extends React.Component {
         !keepCatalogOpen
       ) {
         this.props.viewState.closeCatalog();
+        this.props.viewState.history?.push(ROOT_ROUTE);
         this.props.terria.analytics?.logEvent(
           Category.dataSource,
           toAdd
@@ -88,14 +91,17 @@ class MappablePreview extends React.Component {
             !catalogItem.disablePreview
           }
         >
-          <DataPreviewMap
-            terria={this.props.terria}
-            previewed={catalogItem}
-            showMap={
-              !this.props.viewState.explorerPanelAnimating ||
-              this.props.viewState.useSmallScreenInterface
-            }
-          />
+          <ErrorBoundary terria={this.props.terria}>
+            <DataPreviewMap
+              key={catalogItem.uniqueId}
+              terria={this.props.terria}
+              previewed={catalogItem}
+              showMap={
+                !this.props.viewState.explorerPanelAnimating ||
+                this.props.viewState.useSmallScreenInterface
+              }
+            />
+          </ErrorBoundary>
         </If>
         <button
           type="button"
@@ -111,7 +117,7 @@ class MappablePreview extends React.Component {
             className={Styles.titleAndShareWrapper}
             ref={component => (this.refToMeasure = component)}
           >
-            <h3 className={Styles.h3}>{catalogItem.name}</h3>
+            <h1 className={Styles.heading}>{catalogItem.name}</h1>
             <If
               condition={
                 !catalogItem.hasLocalData &&

@@ -7,6 +7,8 @@ import {
   runInAction
 } from "mobx";
 import { Ref } from "react";
+import { History } from "history";
+
 import defined from "terriajs-cesium/Source/Core/defined";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import addedByUser from "../Core/addedByUser";
@@ -54,6 +56,7 @@ export default class ViewState {
   readonly searchState: SearchState;
   readonly terria: Terria;
   readonly relativePosition = RelativePosition;
+  history: History | undefined;
 
   @observable previewedItem: BaseModel | undefined;
   @observable userDataPreviewedItem: BaseModel | undefined;

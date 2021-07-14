@@ -8,6 +8,7 @@ import getPath from "../../Core/getPath";
 import CommonStrata from "../../Models/CommonStrata";
 import openGroup from "../../Models/openGroup";
 import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
+import { ROOT_ROUTE } from "../../ReactViewModels/TerriaRouting";
 import CatalogGroup from "./CatalogGroup";
 import CatalogItem from "./CatalogItem";
 
@@ -82,6 +83,7 @@ const DataCatalogReference = observer(
             !keepCatalogOpen
           ) {
             this.props.viewState.closeCatalog();
+            this.props.viewState.history?.push(ROOT_ROUTE);
           }
         } catch (e) {
           this.props.terria.raiseErrorToUser(e);

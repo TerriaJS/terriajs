@@ -4,6 +4,20 @@ import { ThemeProvider, createGlobalStyle } from "styled-components";
 import PropTypes from "prop-types";
 import combine from "terriajs-cesium/Source/Core/combine";
 
+import {
+  BrowserRouter,
+  MemoryRouter,
+  Route,
+  withRouter
+} from "react-router-dom";
+import { Helmet } from "react-helmet";
+
+import {
+  CATALOG_ROUTE,
+  CATALOG_MEMBER_ROUTE
+} from "../../ReactViewModels/TerriaRouting";
+import { createBrowserHistory } from "history";
+
 import { terriaTheme } from "./StandardTheme";
 import arrayContains from "../../Core/arrayContains";
 import Branding from "../SidePanel/Branding";
@@ -20,6 +34,8 @@ import MobileHeader from "../Mobile/MobileHeader";
 import Notification from "../Notification/Notification";
 import ProgressBar from "../Map/ProgressBar";
 import SidePanel from "../SidePanel/SidePanel";
+
+import RoutingListener from "./RoutingListener.jsx";
 import processCustomElements from "./processCustomElements";
 import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryPanel from "./../Story/StoryPanel.jsx";
@@ -29,6 +45,8 @@ import withFallback from "../HOCs/withFallback";
 import TourPortal from "../Tour/TourPortal";
 import SatelliteHelpPrompt from "../HelpScreens/SatelliteHelpPrompt";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage";
+import withRoutingTracker from "./withRoutingTracker";
+// import SatelliteGuide from "../Guide/SatelliteGuide.jsx";
 
 import { Small, Medium } from "../Generic/Responsive";
 import classNames from "classnames";
@@ -121,7 +139,7 @@ const GlobalTerriaStyles = createGlobalStyle`
 `;
 const animationDuration = 250;
 /** blah */
-const StandardUserInterface = observer(
+const StandardUserInterfaceRaw = observer(
   createReactClass({
     displayName: "StandardUserInterface",
 
@@ -263,10 +281,16 @@ const StandardUserInterface = observer(
             terria={terria}
             viewState={this.props.viewState}
           />
+          <Helmet>
+            <title>{this.props.terria.appName}</title>
+            <meta name="description" content="A web map built on Terria Map" />
+          </Helmet>
+          <RoutingListener viewState={this.props.viewState} />
           <div className={Styles.storyWrapper}>
             <If condition={!this.props.viewState.disclaimerVisible}>
               <WelcomeMessage viewState={this.props.viewState} />
             </If>
+
             <div
               className={classNames(Styles.uiRoot, {
                 [Styles.withStoryBuilder]: showStoryBuilder
@@ -363,9 +387,14 @@ const StandardUserInterface = observer(
                       animationDuration={animationDuration}
                     />
                     <main>
-                      <ExplorerWindow
-                        terria={terria}
-                        viewState={this.props.viewState}
+                      <Route
+                        path={[CATALOG_MEMBER_ROUTE, CATALOG_ROUTE, "*"]}
+                        render={() => (
+                          <ExplorerWindow
+                            terria={terria}
+                            viewState={this.props.viewState}
+                          />
+                        )}
                       />
                       <If
                         condition={
@@ -470,6 +499,40 @@ const StandardUserInterface = observer(
   })
 );
 
-export const StandardUserInterfaceWithoutTranslation = StandardUserInterface;
+const StandardUserInterfaceWithRouter = withRouter(
+  withRoutingTracker(withTranslation()(StandardUserInterfaceRaw))
+);
+
+// TODO: add actual basename implementation, by (possible) way of:
+// pulling out `serverConfig.baseHref` via `/serverconfig/`
+// ? somewhere else? duplicate it in client side config.json?
+// const TODO_DYNAMIC_BASENAME = `/test-terria/`;
+const getHistory = basename => {
+  const browserHistory = createBrowserHistory({
+    // note - history api wants `basename` lowercase `n`
+    basename
+    // basename: TODO_DYNAMIC_BASENAME
+  });
+
+  return browserHistory;
+};
+
+export const StandardUserInterface = props => {
+  const experimental = props.terria.configParameters.experimentalFeatures;
+  const Router = experimental ? BrowserRouter : MemoryRouter;
+  const basename = props.terria.serverConfig?.config?.baseHref ?? "/";
+
+  return (
+    <Router basename={basename} history={experimental && getHistory(basename)}>
+      <StandardUserInterfaceWithRouter
+        key={props.terria.configParameters.brandBarElements}
+        {...props}
+      />
+    </Router>
+  );
+};
+StandardUserInterface.propTypes = {
+  terria: PropTypes.object.isRequired
+};
 
 export default withFallback(withTranslation()(StandardUserInterface));

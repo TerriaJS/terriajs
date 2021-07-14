@@ -2,10 +2,14 @@ import { computed, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
+import URI from "urijs";
+
+import { BaseModel } from "../../../Models/Model";
+import { withRouter } from "react-router-dom";
+import DataCatalog from "../../DataCatalog/DataCatalog.jsx";
+import DataPreview from "../../Preview/DataPreview.jsx";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
-import DataCatalog from "../../DataCatalog/DataCatalog";
-import DataPreview from "../../Preview/DataPreview";
 import SearchBox, { DEBOUNCE_INTERVAL } from "../../Search/SearchBox.jsx";
 import Styles from "./data-catalog-tab.scss";
 import Breadcrumbs from "../../Search/Breadcrumbs";
@@ -17,6 +21,7 @@ class DataCatalogTab extends React.Component {
   static propTypes = {
     terria: PropTypes.object,
     viewState: PropTypes.object,
+    match: PropTypes.object,
     items: PropTypes.array,
     searchPlaceholder: PropTypes.string,
     overrideState: PropTypes.string,
@@ -44,8 +49,25 @@ class DataCatalogTab extends React.Component {
   render() {
     const terria = this.props.terria;
     const searchState = this.props.viewState.searchState;
-    const previewed = this.props.viewState.previewedItem;
     const showBreadcrumbs = this.props.viewState.breadcrumbsShown;
+
+    const idToDecode =
+      this.props.match.params && this.props.match.params.catalogMemberId;
+    const cleanPath = URI.decode(idToDecode);
+    // TODO
+    // Below are two older methods of grabbing previewed item, we may want to
+    // tweak this later when we tackle the problem of nested IDs/routes
+
+    // const previewed = this.props.viewState.previewedItem;
+    // const previewedItem = this.props.terria.catalog.shareKeyIndex?.[cleanPath];
+
+    /**
+     * We do a lookup on the ID via the route, rather than
+     * `viewState.previewItem` as the URL is the source of truth for current
+     * previewed ID
+     */
+    const previewedItem = this.props.terria.getModelById(BaseModel, cleanPath);
+
     return (
       <div className={Styles.root}>
         <Box fullHeight column>
@@ -80,7 +102,7 @@ class DataCatalogTab extends React.Component {
               <DataPreview
                 terria={terria}
                 viewState={this.props.viewState}
-                previewed={previewed}
+                previewed={previewedItem}
               />
             </Box>
           </Box>
@@ -89,7 +111,7 @@ class DataCatalogTab extends React.Component {
             <Breadcrumbs
               terria={this.props.terria}
               viewState={this.props.viewState}
-              previewed={previewed}
+              previewed={previewedItem}
             />
           )}
         </Box>
@@ -98,4 +120,4 @@ class DataCatalogTab extends React.Component {
   }
 }
 
-export default withTranslation()(withTheme(DataCatalogTab));
+export default withRouter(withTranslation()(withTheme(DataCatalogTab)));

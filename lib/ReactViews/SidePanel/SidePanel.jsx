@@ -11,9 +11,12 @@ import FullScreenButton from "./FullScreenButton";
 
 import { useRefForTerria } from "../Hooks/useRefForTerria";
 
+import { CATALOG_ROUTE } from "../../ReactViewModels/TerriaRouting";
+
 import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
+// import Button from "../../Styled/Button";
 import Button from "../../Styled/Button";
 
 const BoxHelpfulHints = styled(Box)``;
@@ -105,6 +108,7 @@ const SidePanelButton = React.forwardRef((props, ref) => {
   return (
     <Button
       primary
+      renderAsLink
       ref={ref}
       renderIcon={props.children && (() => props.children)}
       textProps={{
@@ -176,6 +180,8 @@ const SidePanel = observer(
             <Spacing bottom={2} />
             <Box justifySpaceBetween>
               <SidePanelButton
+                to={CATALOG_ROUTE}
+                type="button"
                 ref={this.props.refForExploreMapData}
                 onClick={e => this.onAddDataClicked(e)}
                 title={addData}
@@ -189,6 +195,8 @@ const SidePanel = observer(
                 />
               </SidePanelButton>
               <SidePanelButton
+                to={CATALOG_ROUTE}
+                type="button"
                 ref={this.props.refForUploadData}
                 onClick={e => this.onAddLocalDataClicked(e)}
                 title={t("addData.load")}

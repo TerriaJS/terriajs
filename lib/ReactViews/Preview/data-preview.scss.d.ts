@@ -12,6 +12,7 @@ interface CssExports {
   'previewChart': string;
   'previewInner': string;
   'preview__inner': string;
+  'subHeading': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

@@ -4,7 +4,7 @@ import React from "react";
 import { findWithClass } from "react-shallow-testutils";
 import { getShallowRenderedOutput } from "./MoreShallowTools";
 import {
-  StandardUserInterfaceWithoutTranslation as StandardUserInterface,
+  StandardUserInterfaceRaw,
   showStoryPrompt
 } from "../../lib/ReactViews/StandardUserInterface/StandardUserInterface";
 import Terria from "../../lib/Models/Terria";
@@ -26,7 +26,7 @@ describe("StandardUserInterface", function() {
 
   it("has class story-wrapper", function() {
     const ui = (
-      <StandardUserInterface
+      <StandardUserInterfaceRaw
         terria={terria}
         viewState={viewState}
         t={() => {}}
@@ -39,7 +39,7 @@ describe("StandardUserInterface", function() {
   it("feature info panel has top-element class when it is the top element", function() {
     viewState.topElement = "FeatureInfo";
     const ui = (
-      <StandardUserInterface
+      <StandardUserInterfaceRaw
         terria={terria}
         viewState={viewState}
         t={() => {}}
@@ -56,7 +56,7 @@ describe("StandardUserInterface", function() {
   it("side panel has top-element class when it is the top element", function() {
     viewState.topElement = "SidePanel";
     const ui = (
-      <StandardUserInterface
+      <StandardUserInterfaceRaw
         terria={terria}
         viewState={viewState}
         t={() => {}}
@@ -73,7 +73,7 @@ describe("StandardUserInterface", function() {
   it("feature info panel does not have top-element class when it is not the top element", function() {
     viewState.topElement = "SidePanel";
     const ui = (
-      <StandardUserInterface
+      <StandardUserInterfaceRaw
         terria={terria}
         viewState={viewState}
         t={() => {}}

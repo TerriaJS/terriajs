@@ -59,6 +59,7 @@ interface IBoxPropsBase {
   overflowY?: Overflow;
   ref?: Ref<any>;
   scroll?: boolean;
+  marginAuto?: boolean;
   style?: any;
   as?: React.ElementType | keyof JSX.IntrinsicElements;
 }
@@ -114,6 +115,10 @@ export const Box = styled.div<IBoxProps>`
   ${props => props.verticalCenter && `align-items: center;`}
   ${props => props.centered && `align-items: center;`}
   ${props => props.centered && `justify-content: center;`}
+
+  // TODO: "centered" prop - can't automatically assume nor override margin,
+  // so we have a marginAuto prop here
+  ${props => props.marginAuto && `margin: auto;`}
 
   ${props =>
     props.justifyContentSpaceAround && `justify-content: space-around;`}

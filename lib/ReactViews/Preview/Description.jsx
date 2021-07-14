@@ -1,24 +1,34 @@
-import React from "react";
-
 import createReactClass from "create-react-class";
-
-import PropTypes from "prop-types";
-import { withTranslation, Trans } from "react-i18next";
-
-import defined from "terriajs-cesium/Source/Core/defined";
-
-import Collapsible from "../Custom/Collapsible/Collapsible";
-import DataPreviewSections from "./DataPreviewSections";
-import DataUri from "../../Core/DataUri";
-import MetadataTable from "./MetadataTable";
-import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
-import Styles from "./mappable-preview.scss";
 import { observer } from "mobx-react";
-
-import ExportData from "./ExportData";
-import WarningBox from "./WarningBox";
+import PropTypes from "prop-types";
+import React from "react";
+import { Trans, withTranslation } from "react-i18next";
+import defined from "terriajs-cesium/Source/Core/defined";
+import DataUri from "../../Core/DataUri";
 import Box from "../../Styled/Box";
 import Button from "../../Styled/Button";
+import Collapsible from "../Custom/Collapsible/Collapsible";
+import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
+import DataPreviewSections from "./DataPreviewSections";
+import ExportData from "./ExportData";
+import Styles from "./mappable-preview.scss";
+import MetadataTable from "./MetadataTable";
+import WarningBox from "./WarningBox";
+
+// TODO: v8ify
+export const getMetaDescriptionSummary = catalogItem => {
+  const description =
+    (catalogItem.description && `${catalogItem.description} `) || "";
+  const custodian =
+    (catalogItem.dataCustodian && `- ${catalogItem.dataCustodian} `) || "";
+  const type =
+    (catalogItem.type && `- a ${catalogItem.type} catalog item `) || "";
+  const source =
+    (catalogItem.url && `sourced from "${catalogItem.url}" `) || "";
+  // Don't need local data info as it won't exist from the server for prerendering
+
+  return `${description}${custodian}${type}${source}`;
+};
 
 /**
  * CatalogItem description.

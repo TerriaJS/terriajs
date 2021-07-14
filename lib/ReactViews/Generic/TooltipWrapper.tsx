@@ -145,6 +145,7 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
     return (
       <span
         ref={this.rootRef}
+        //@ts-ignore
         css={`
           position: relative;
           display: inline-block;

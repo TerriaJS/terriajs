@@ -4,16 +4,18 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
+import { withRouter } from "react-router-dom";
 import defined from "terriajs-cesium/Source/Core/defined";
-import addedByUser from "../../Core/addedByUser";
-import getPath from "../../Core/getPath";
-import removeUserAddedData from "../../Models/removeUserAddedData";
-import CatalogItem from "./CatalogItem";
-import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
+import URI from "urijs";
 import {
   Category,
   DataSourceAction
 } from "../../Core/AnalyticEvents/analyticEvents";
+import getPath from "../../Core/getPath";
+import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
+import removeUserAddedData from "../../Models/removeUserAddedData";
+import { ROOT_ROUTE } from "../../ReactViewModels/TerriaRouting";
+import CatalogItem from "./CatalogItem";
 
 // Individual dataset
 export const DataCatalogItem = observer(
@@ -21,6 +23,7 @@ export const DataCatalogItem = observer(
     displayName: "DataCatalogItem",
 
     propTypes: {
+      match: PropTypes.object.isRequired,
       item: PropTypes.object.isRequired,
       viewState: PropTypes.object.isRequired,
       overrideState: PropTypes.string,
@@ -74,6 +77,7 @@ export const DataCatalogItem = observer(
           !keepCatalogOpen
         ) {
           this.props.viewState.closeCatalog();
+          this.props.viewState.history?.push(ROOT_ROUTE);
           this.props.terria.analytics?.logEvent(
             Category.dataSource,
             toAdd
@@ -103,9 +107,13 @@ export const DataCatalogItem = observer(
     },
 
     isSelected() {
-      return addedByUser(this.props.item)
-        ? this.props.viewState.userDataPreviewedItem === this.props.item
-        : this.props.viewState.previewedItem === this.props.item;
+      return (
+        this.props.item.uniqueId ===
+        URI.decode(this.props.match.params.catalogMemberId)
+      );
+      // return addedByUser(this.props.item)
+      //   ? this.props.viewState.userDataPreviewedItem === this.props.item
+      //   : this.props.viewState.previewedItem === this.props.item;
     },
 
     render() {
@@ -119,6 +127,7 @@ export const DataCatalogItem = observer(
       };
       return (
         <CatalogItem
+          linkTo={URI.encode(item.uniqueId)}
           onTextClick={this.setPreviewedItem}
           selected={this.isSelected()}
           text={item.nameInCatalog}
@@ -159,4 +168,4 @@ export const DataCatalogItem = observer(
   })
 );
 
-export default withTranslation()(DataCatalogItem);
+export default withRouter(withTranslation()(DataCatalogItem));

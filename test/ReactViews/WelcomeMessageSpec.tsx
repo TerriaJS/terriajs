@@ -7,6 +7,7 @@ import { runInAction } from "mobx";
 const WelcomeMessage: any = require("../../lib/ReactViews/WelcomeMessage/WelcomeMessage")
   .default;
 import { WelcomeMessagePure } from "../../lib/ReactViews/WelcomeMessage/WelcomeMessage";
+import { BrowserRouter as Router } from "react-router-dom";
 
 describe("WelcomeMessage", function() {
   let terria: Terria;
@@ -28,7 +29,11 @@ describe("WelcomeMessage", function() {
   it("renders when showWelcomeMessage is set to true in config file", function() {
     runInAction(() => (terria.configParameters.showWelcomeMessage = true));
     act(() => {
-      testRenderer = create(<WelcomeMessage viewState={viewState} />);
+      testRenderer = create(
+        <Router>
+          <WelcomeMessage viewState={viewState} />
+        </Router>
+      );
     });
     const welcomeMessagePure = testRenderer.root.findByType(WelcomeMessagePure);
     expect(welcomeMessagePure.props.showWelcomeMessage).toEqual(true);
@@ -37,7 +42,11 @@ describe("WelcomeMessage", function() {
   it("doesn't render when showWelcomeMessage is set to true in config file", function() {
     runInAction(() => (terria.configParameters.showWelcomeMessage = false));
     act(() => {
-      testRenderer = create(<WelcomeMessage viewState={viewState} />);
+      testRenderer = create(
+        <Router>
+          <WelcomeMessage viewState={viewState} />
+        </Router>
+      );
     });
     const welcomeMessagePure = testRenderer.root.findByType(WelcomeMessagePure);
     expect(welcomeMessagePure.props.showWelcomeMessage).toEqual(false);
