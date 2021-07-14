@@ -16,7 +16,7 @@
   padding: 10px;
 
   @media (min-width: $xs) {
-    margin: 16px 0;
+    margin: 4px 0;
     order: 0;
   }
 
@@ -53,6 +53,19 @@ input[type="checkbox"] {
   display: inline-block;
   padding: 3px;
 }
+label.topLabel {
+  font-weight: normal;
+  pointer-events: none;
+  transition: 0.2s ease all;
+  -moz-transition: 0.2s ease all;
+  -webkit-transition: 0.2s ease all;
+  font-size: 14px;
+  color: #0c70a7;
+}
 input[type="checkbox"]:checked + .label {
   background-color: #fff;
+}
+.group {
+  position: relative;
+  margin-bottom: 45px;
 }

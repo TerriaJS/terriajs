@@ -13,9 +13,9 @@ const RCSectorSelection = props => {
   } = props;
 
   return (
-    <div>
+    <div className={Styles.group}>
       <div className={Styles.container}>
-        <label>Sectors</label>
+        <label className={Styles.topLabel}>Sectors</label>
         <label style={{ color: "red" }}>{sectorRequiredMessage}</label>
       </div>
       <div className={Styles.tabsContainer}>

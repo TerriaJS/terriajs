@@ -234,11 +234,11 @@ function RCStoryEditor(props) {
           sectorRequiredMessage={sectorRequiredMessage}
         />
 
-        <div className={Styles.RCStoryEditor}>
-          <label>Hotspot</label>
+        <div className={Styles.group}>
+          <label className={Styles.topLabel}>Hotspot</label>
           {!listenForHotspot && (
             <div className={Styles.container}>
-              <label>Set at: {hotspotText}</label>
+              <span>Set at: {hotspotText}</span>
               <button
                 type="button"
                 className={Styles.RCButton}

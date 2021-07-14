@@ -10,10 +10,6 @@ class RCBuilder extends React.Component {
     super(props);
   }
 
-  componentDidMount() {
-    console.log("🎹", this.props.viewState);
-  }
-
   render() {
     const { t, viewState } = this.props;
     const path = this.props.match.path;
