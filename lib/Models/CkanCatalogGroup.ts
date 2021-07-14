@@ -9,8 +9,8 @@ import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import CkanCatalogGroupTraits from "../Traits/CkanCatalogGroupTraits";
-import CkanSharedTraits from "../Traits/CkanSharedTraits";
+import CkanCatalogGroupTraits from "../Traits/TraitsClasses/CkanCatalogGroupTraits";
+import CkanSharedTraits from "../Traits/TraitsClasses/CkanSharedTraits";
 import ModelReference from "../Traits/ModelReference";
 import CatalogGroup from "./CatalogGroupNew";
 import { CkanDataset, CkanServerResponse } from "./CkanDefinitions";
@@ -312,19 +312,16 @@ export default class CkanCatalogGroup extends UrlMixin(
     return "1d";
   }
 
-  protected forceLoadMetadata(): Promise<void> {
+  protected async forceLoadMetadata(): Promise<void> {
     const ckanServerStratum = <CkanServerStratum | undefined>(
       this.strata.get(CkanServerStratum.stratumName)
     );
     if (!ckanServerStratum) {
-      return CkanServerStratum.load(this).then(stratum => {
-        if (stratum === undefined) return;
-        runInAction(() => {
-          this.strata.set(CkanServerStratum.stratumName, stratum);
-        });
+      const stratum = await CkanServerStratum.load(this);
+      if (stratum === undefined) return;
+      runInAction(() => {
+        this.strata.set(CkanServerStratum.stratumName, stratum);
       });
-    } else {
-      return Promise.resolve();
     }
   }
 
@@ -455,15 +452,10 @@ async function getCkanDatasets(
   uri: any,
   catalogGroup: CkanCatalogGroup
 ): Promise<CkanServerResponse | undefined> {
-  try {
-    const response: CkanServerResponse = await loadJson(
-      proxyCatalogItemUrl(catalogGroup, uri.toString())
-    );
-    return response;
-  } catch (err) {
-    console.log(err);
-    return undefined;
-  }
+  const response: CkanServerResponse = await loadJson(
+    proxyCatalogItemUrl(catalogGroup, uri.toString())
+  );
+  return response;
 }
 
 async function getMoreResults(
@@ -473,16 +465,12 @@ async function getMoreResults(
   nextResultStart: number
 ) {
   uri.setQuery("start", nextResultStart);
-  try {
-    const ckanServerResponse = await getCkanDatasets(uri, catalogGroup);
-    if (ckanServerResponse === undefined) {
-      return;
-    }
-    baseResults.result.results = baseResults.result.results.concat(
-      ckanServerResponse.result.results
-    );
-  } catch (err) {
-    console.log(err);
-    return undefined;
+
+  const ckanServerResponse = await getCkanDatasets(uri, catalogGroup);
+  if (ckanServerResponse === undefined) {
+    return;
   }
+  baseResults.result.results = baseResults.result.results.concat(
+    ckanServerResponse.result.results
+  );
 }

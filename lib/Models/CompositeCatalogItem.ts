@@ -4,11 +4,13 @@ import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import CompositeCatalogItemTraits from "../Traits/CompositeCatalogItemTraits";
+import CompositeCatalogItemTraits from "../Traits/TraitsClasses/CompositeCatalogItemTraits";
 import ModelReference from "../Traits/ModelReference";
 import MappableMixin, { MapItem } from "../ModelMixins/MappableMixin";
 import CreateModel from "./CreateModel";
 import { BaseModel } from "./Model";
+import TerriaError from "../Core/TerriaError";
+import Result from "../Core/Result";
 
 export default class CompositeCatalogItem extends MappableMixin(
   CatalogMemberMixin(CreateModel(CompositeCatalogItemTraits))
@@ -40,19 +42,25 @@ export default class CompositeCatalogItem extends MappableMixin(
   }
 
   protected async forceLoadMetadata(): Promise<void> {
-    await Promise.all(
-      this.memberModels
-        .filter(CatalogMemberMixin.isMixedInto)
-        .map(model => model.loadMetadata())
-    );
+    Result.combine(
+      await Promise.all(
+        this.memberModels
+          .filter(CatalogMemberMixin.isMixedInto)
+          .map(async model => await model.loadMetadata())
+      ),
+      "Failed to load composite catalog items metadata"
+    ).throwIfError();
   }
 
   async forceLoadMapItems(): Promise<void> {
-    await Promise.all(
-      this.memberModels
-        .filter(MappableMixin.isMixedInto)
-        .map(model => model.loadMapItems())
-    );
+    Result.combine(
+      await Promise.all(
+        this.memberModels
+          .filter(MappableMixin.isMixedInto)
+          .map(model => model.loadMapItems())
+      ),
+      "Failed to load composite catalog items mapItems"
+    ).throwIfError();
   }
 
   @computed get mapItems() {

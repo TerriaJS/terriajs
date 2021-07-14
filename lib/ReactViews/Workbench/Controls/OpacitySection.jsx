@@ -7,7 +7,7 @@ import Slider from "rc-slider";
 import React from "react";
 import CommonStrata from "../../../Models/CommonStrata";
 import hasTraits from "../../../Models/hasTraits";
-import RasterLayerTraits from "../../../Traits/RasterLayerTraits";
+import RasterLayerTraits from "../../../Traits/TraitsClasses/RasterLayerTraits";
 import Styles from "./opacity-section.scss";
 import { withTranslation } from "react-i18next";
 import { runInAction } from "mobx";

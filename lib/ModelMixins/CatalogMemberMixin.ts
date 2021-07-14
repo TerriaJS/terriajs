@@ -2,13 +2,14 @@ import { computed, runInAction } from "mobx";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
+import Result from "../Core/Result";
 import TerriaError from "../Core/TerriaError";
-import Model from "../Models/Model";
+import Model, { BaseModel } from "../Models/Model";
 import SelectableDimensions, {
   SelectableDimension
 } from "../Models/SelectableDimensions";
 import updateModelFromJson from "../Models/updateModelFromJson";
-import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
+import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";
 import AccessControlMixin from "./AccessControlMixin";
 import GroupMixin from "./GroupMixin";
 import MappableMixin from "./MappableMixin";
@@ -49,8 +50,15 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       );
     }
 
-    loadMetadata(): Promise<void> {
-      return this._metadataLoader.load();
+    /** Calls AsyncLoader to load metadata.
+     *
+     * This returns a Result object, it will contain errors if they occur - they will not be thrown.
+     * To throw errors, use `(await loadMetadata()).throwIfError()`
+     */
+    async loadMetadata(): Promise<Result<void>> {
+      return (await this._metadataLoader.load()).clone(
+        `Failed to load \`${getName(this)}\` metadata`
+      );
     }
 
     /**
@@ -58,6 +66,8 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
      * whether the metadata is already loaded.
      *
      * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
+     *
+     * Errors can be thrown here.
      */
     protected async forceLoadMetadata() {}
 
@@ -189,3 +199,11 @@ namespace CatalogMemberMixin {
 }
 
 export default CatalogMemberMixin;
+
+export function getName(model: BaseModel) {
+  return (
+    (CatalogMemberMixin.isMixedInto(model)
+      ? model.nameInCatalog ?? model.name
+      : undefined) ?? model.uniqueId
+  );
+}

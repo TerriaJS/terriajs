@@ -10,7 +10,7 @@ import hasTraits from "../../../Models/hasTraits";
 import raiseErrorOnRejectedPromise from "../../../Models/raiseErrorOnRejectedPromise";
 import Terria from "../../../Models/Terria";
 import Icon from "../../../Styled/Icon";
-import UrlTraits from "../../../Traits/UrlTraits";
+import UrlTraits from "../../../Traits/TraitsClasses/UrlTraits";
 import Styles from "./chart-expand-and-download-buttons.scss";
 
 const Dropdown = require("../../Generic/Dropdown");

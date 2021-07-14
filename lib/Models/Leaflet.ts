@@ -42,8 +42,8 @@ import MappableMixin, {
   MapItem
 } from "../ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
-import RasterLayerTraits from "../Traits/RasterLayerTraits";
-import SplitterTraits from "../Traits/SplitterTraits";
+import RasterLayerTraits from "../Traits/TraitsClasses/RasterLayerTraits";
+import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
 import Feature from "./Feature";
@@ -688,35 +688,33 @@ export default class Leaflet extends GlobeOrMap {
     // We want the all available promise to return after the cleanup one to
     // make sure all vector click events have resolved.
     const promises = [cleanup].concat(
-      imageryLayers.map(imageryLayer => {
+      imageryLayers.map(async imageryLayer => {
         const imageryLayerUrl = (<any>imageryLayer.imageryProvider).url;
         const longRadians = CesiumMath.toRadians(latlng.lng);
         const latRadians = CesiumMath.toRadians(latlng.lat);
 
-        return Promise.resolve(
-          tileCoordinates[imageryLayerUrl] ||
-            imageryLayer.getFeaturePickingCoords(
-              this.map,
-              longRadians,
-              latRadians
-            )
-        ).then(coords => {
-          return imageryLayer
-            .pickFeatures(
-              coords.x,
-              coords.y,
-              coords.level,
-              longRadians,
-              latRadians
-            )
-            .then(features => {
-              return {
-                features: features,
-                imageryLayer: imageryLayer,
-                coords: coords
-              };
-            });
-        });
+        if (tileCoordinates[imageryLayerUrl])
+          return tileCoordinates[imageryLayerUrl];
+
+        const coords = await imageryLayer.getFeaturePickingCoords(
+          this.map,
+          longRadians,
+          latRadians
+        );
+
+        const features = await imageryLayer.pickFeatures(
+          coords.x,
+          coords.y,
+          coords.level,
+          longRadians,
+          latRadians
+        );
+
+        return {
+          features: features,
+          imageryLayer: imageryLayer,
+          coords: coords
+        };
       })
     );
 

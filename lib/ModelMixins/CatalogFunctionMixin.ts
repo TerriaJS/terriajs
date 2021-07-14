@@ -6,7 +6,7 @@ import TerriaError from "../Core/TerriaError";
 import CommonStrata from "../Models/CommonStrata";
 import FunctionParameter from "../Models/FunctionParameters/FunctionParameter";
 import Model from "../Models/Model";
-import CatalogFunctionTraits from "../Traits/CatalogFunctionTraits";
+import CatalogFunctionTraits from "../Traits/TraitsClasses/CatalogFunctionTraits";
 import CatalogFunctionJobMixin from "./CatalogFunctionJobMixin";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 
@@ -60,7 +60,7 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
 
         newJob.setTrait(CommonStrata.user, "parameters", toJS(this.parameters));
 
-        await newJob.loadMetadata();
+        (await newJob.loadMetadata()).throwIfError();
 
         this.terria.addModel(newJob);
         this.terria.catalog.userAddedDataGroup.add(CommonStrata.user, newJob);

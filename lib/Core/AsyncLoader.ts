@@ -1,4 +1,6 @@
-import { observable, computed, runInAction, toJS, action } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
+import Result from "./Result";
+import TerriaError from "./TerriaError";
 
 /**
  *
@@ -85,7 +87,7 @@ export default class AsyncLoader {
     return this._isLoading;
   }
 
-  load(forceReload: boolean = false): Promise<void> {
+  async load(forceReload: boolean = false): Promise<Result<void>> {
     if (forceReload) {
       runInAction(() => ++this._forceReloadCount);
     }
@@ -102,25 +104,21 @@ export default class AsyncLoader {
       runInAction(() => {
         this._isLoading = true;
       });
-      newPromise
-        .then(result => {
-          runInAction(() => {
-            this._isLoading = false;
-          });
-          return result;
-        })
-        .catch(e => {
-          runInAction(() => {
-            this._isLoading = false;
-          });
-
-          // Do not re-throw the exception because it's guaranteed to be
-          // unhandled. We're returning the original `newPromise`, not the
-          // result of the `.then` and `.catch` above.
-        });
     }
 
-    return newPromise;
+    let error: TerriaError | undefined;
+
+    try {
+      await newPromise;
+    } catch (e) {
+      error = TerriaError.from(e);
+    }
+
+    runInAction(() => {
+      this._isLoading = false;
+    });
+
+    return Result.none(error);
   }
 
   /**

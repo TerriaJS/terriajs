@@ -6,7 +6,7 @@ import { BaseModel } from "./Model";
 import StratumFromTraits from "./StratumFromTraits";
 import Terria from "./Terria";
 import ModelTraits from "../Traits/ModelTraits";
-import UrlReferenceTraits from "../Traits/UrlReferenceTraits";
+import UrlReferenceTraits from "../Traits/TraitsClasses/UrlReferenceTraits";
 import StratumOrder from "./StratumOrder";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import updateModelFromJson from "./updateModelFromJson";
@@ -50,7 +50,7 @@ export default class UrlReference extends UrlMixin(
     return Promise.resolve(target);
   }
 
-  private static createCatalogMemberFromUrlReference(
+  private static async createCatalogMemberFromUrlReference(
     sourceReference: BaseModel,
     id: string,
     url: string,
@@ -106,23 +106,19 @@ export default class UrlReference extends UrlMixin(
       });
 
       if (allowLoad && CatalogMemberMixin.isMixedInto(item)) {
-        return item
-          .loadMetadata()
-          .then(() => item)
-          .catch(e => {
-            // Loading failed. Try the next mapping.
-            return UrlReference.createCatalogMemberFromUrlReference(
-              sourceReference,
-              id,
-              url,
-              terria,
-              allowLoad,
-              index + 1
-            );
-          });
-      } else {
-        return Promise.resolve(item);
+        const loadMetadataResult = await item.loadMetadata();
+        if (loadMetadataResult.error) {
+          return UrlReference.createCatalogMemberFromUrlReference(
+            sourceReference,
+            id,
+            url,
+            terria,
+            allowLoad,
+            index + 1
+          );
+        }
       }
+      return item;
     }
   }
 }

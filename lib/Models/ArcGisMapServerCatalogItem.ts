@@ -18,11 +18,13 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixin";
 import MappableMixin, { ImageryParts } from "../ModelMixins/MappableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import ArcGisMapServerCatalogItemTraits from "../Traits/ArcGisMapServerCatalogItemTraits";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
-import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
-import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
-import { RectangleTraits } from "../Traits/MappableTraits";
+import ArcGisMapServerCatalogItemTraits from "../Traits/TraitsClasses/ArcGisMapServerCatalogItemTraits";
+import { InfoSectionTraits } from "../Traits/TraitsClasses/CatalogMemberTraits";
+import DiscreteTimeTraits from "../Traits/TraitsClasses/DiscreteTimeTraits";
+import LegendTraits, {
+  LegendItemTraits
+} from "../Traits/TraitsClasses/LegendTraits";
+import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import getToken from "./getToken";
@@ -385,11 +387,10 @@ export default class ArcGisMapServerCatalogItem extends MappableMixin(
     return ArcGisMapServerCatalogItem.type;
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return MapServerStratum.load(this).then(stratum => {
-      runInAction(() => {
-        this.strata.set(MapServerStratum.stratumName, stratum);
-      });
+  protected async forceLoadMetadata(): Promise<void> {
+    const stratum = await MapServerStratum.load(this);
+    runInAction(() => {
+      this.strata.set(MapServerStratum.stratumName, stratum);
     });
   }
 

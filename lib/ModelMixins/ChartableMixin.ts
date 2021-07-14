@@ -6,7 +6,7 @@ import Model from "../Models/Model";
 import ModelTraits from "../Traits/ModelTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import MappableMixin from "./MappableMixin";
-import MappableTraits from "../Traits/MappableTraits";
+import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 
 type Scale = "linear" | "time";
 

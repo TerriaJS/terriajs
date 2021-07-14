@@ -5,6 +5,9 @@ Change Log
 
 #### next release (8.0.0-alpha.88)
 
+- **Breaking changes**:
+  - `colorPalette` no longer supports a list of CSS colors (eg `rgb(0,0,255)-rgb(0,255,0)-rgb(255,0,0)`). Instead please use `binColors`.
+
 * Fixed a bug with numeric item search where it sometimes fails to return all matching values.
 * Respect order of objects from lower strata in `objectArrayTrait`.
 * Fix datetime button margin with scroll in workbench.
@@ -12,10 +15,25 @@ Change Log
 * Added progress indicator when loading item search tool.
 * Add `nullColor` to `ConstantColorMap` - used when `colorColumn` is of type `region` to hide regions where rows don't exist.
 * `TableStyles` will only be created for `text` columns if there are no columns of type `scalar`, `enum` or `region`.
+* Moved `TableStyle.colorMap` into `TableColorMap`
+* Replaced `colorbrewer.json` with `d3-scale-chromatic` - we now support d3 color scales (in addition to color brewer) -  see https://github.com/d3/d3-scale-chromatic
+* Added `ContinuousColorMap` - it will now be used by default for `scalar` columns
+  * To use `DiscreteColorMap` - you will need to set `numberOfBins` to something other than `0`.
+* `TableColorMap` default color palette for `scalar` columns is not `Reds` instead of `RdYlOr`
+* Legends for `scalar` columns will now calculate optimal `numberFormatOptions.maximumFractionDigits` and  `numberFormatOptions.minimumFractionDigits`
 * Fix sharing user added data of type "Auto-detect".
 * #5605 tidy up format string used in `MagdaReference`
 * Fix wms feature info returning only one feature
 * In `terriaErrorNotification` - show `error.message` (as well as `error.stack`) if `error.stack` is defined
+* `WebMapServiceCatalogGroup` will now create layer auto-IDs using `Name` field to avoid ID clashes.
+* Added `GroupMixin` `shareKey` generation for members - if the group has `shareKeys`.
+* Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses`
+* Fix `StyledIcon` css `display` clash
+* Limit `SelectableDimension` options to 1000 values
+* Added support for `SocrataCatalogGroup` and `SocrataMapViewCatalogGroup`
+  * Notes on v7 to v8 Socrata integration:
+    * Share links are not preserved
+    * Added basic support for dataset resources
 * [The next improvement]
 
 #### 8.0.0-alpha.87
@@ -118,6 +136,20 @@ Change Log
 * Fix invalid HTML in `DataPreviewSections`.
 * Fix pluralisation of mapDataState to support other languages.
 * Fix CSW `Stratum` name bug.
+* Add `TerriaErrorSeverity` enum, values can be `Error` or `Warning`.
+  * Errors with severity `Error` are presented to the user. `Warning` will just be printed to console.
+  * By default, errors will use `Error`
+  * The folloring errors will use `Error` severity.
+    * Loading map config
+    * Loading/Applying init source (excluding `shareData` and stories)
+    * Invalid model object (fails to parse as JSON)
+    * Loading models **if it is in the workbench**
+    * Loading catalog items in the workbench
+  * `TerriaError.shouldRaiseToUser` will look at all error severity in the entire tree of errors, and use the highest one.
+    * For example, if all errors in a tree are `Warning`, but there is one error with `Error` severity, the entire tree will be "raised to the user".
+* `AsyncLoader` loadXXX methods now return `Result` with `errors`.
+* Fix `MagdaReference` `forceLoadReference` bug.
+* Clean up `CkanCatalogGroup` loading - errors are no-longer swallowed.
 * Add `#configUrl` hash parameter for **dev environment only**. It can be used to overwrite Terria config URL.
 
 #### 8.0.0-alpha.80

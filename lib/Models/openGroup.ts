@@ -1,8 +1,8 @@
-import Terria from "./Terria";
-import { BaseModel } from "./Model";
+import { TerriaErrorSeverity } from "../Core/TerriaError";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import CommonStrata from "./CommonStrata";
+import { BaseModel } from "./Model";
 
 /**
  * Opens or closes a model, which is likely to include a {@link GroupMixin}.
@@ -16,21 +16,22 @@ import CommonStrata from "./CommonStrata";
  * @param [isOpen=true] True if the group should be opened. False if it should be closed.
  * @param stratum The stratum in which to mark the group opened or closed.
  */
-export default function openGroup(
+export default async function openGroup(
   group: BaseModel,
   isOpen: boolean = true,
   stratum: string = CommonStrata.user
 ): Promise<void> {
   if (ReferenceMixin.is(group)) {
-    return group.loadReference().then(() => {
-      if (group.target) {
-        return openGroup(group.target, isOpen, stratum);
-      }
-    });
+    await group.loadReference();
+    if (group.target) {
+      return openGroup(group.target, isOpen, stratum);
+    }
   } else if (GroupMixin.isMixedInto(group)) {
     group.setTrait(stratum, "isOpen", isOpen);
     if (group.isOpen) {
-      return group.loadMembers();
+      (await group.loadMembers()).catchError(e =>
+        group.terria.raiseErrorToUser(e, TerriaErrorSeverity.Error)
+      );
     }
   }
 

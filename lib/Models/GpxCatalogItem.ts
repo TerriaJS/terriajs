@@ -9,7 +9,7 @@ import TerriaError from "../Core/TerriaError";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import GpxCatalogItemTraits from "../Traits/GpxCatalogItemTraits";
+import GpxCatalogItemTraits from "../Traits/TraitsClasses/GpxCatalogItemTraits";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
@@ -55,8 +55,8 @@ class GpxCatalogItem extends MappableMixin(
     return toGeoJSON.gpx(dom);
   }
 
-  protected forceLoadMapItems(): Promise<void> {
-    return new Promise<string>(resolve => {
+  protected async forceLoadMapItems(): Promise<void> {
+    const data = await new Promise<string>(resolve => {
       if (isDefined(this.gpxString)) {
         resolve(this.gpxString);
       } else if (isDefined(this._gpxFile)) {
@@ -70,23 +70,19 @@ class GpxCatalogItem extends MappableMixin(
           message: i18next.t("models.gpx.errorLoadingMessage")
         });
       }
-    })
-      .then(data => {
-        return this.loadGpxText(data);
-      })
-      .then(geoJsonData => {
-        this._geoJsonItem.setTrait(
-          CommonStrata.definition,
-          "geoJsonData",
-          geoJsonData
-        );
-        this._geoJsonItem.setTrait(
-          CommonStrata.definition,
-          "attribution",
-          this.attribution
-        );
-        return this._geoJsonItem.loadMapItems();
-      });
+    });
+    const geoJsonData = this.loadGpxText(data);
+    this._geoJsonItem.setTrait(
+      CommonStrata.definition,
+      "geoJsonData",
+      geoJsonData
+    );
+    this._geoJsonItem.setTrait(
+      CommonStrata.definition,
+      "attribution",
+      this.attribution
+    );
+    return (await this._geoJsonItem.loadMapItems()).throwIfError();
   }
 
   protected forceLoadMetadata(): Promise<void> {
