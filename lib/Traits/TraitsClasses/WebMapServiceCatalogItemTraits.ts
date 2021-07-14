@@ -18,9 +18,16 @@ import RasterLayerTraits from "./RasterLayerTraits";
 import SplitterTraits from "./SplitterTraits";
 import TimeFilterTraits from "./TimeFilterTraits";
 import UrlTraits from "./UrlTraits";
+import enumTrait from "../decorators/enumTrait";
 
 export const SUPPORTED_CRS_3857 = ["EPSG:3857", "EPSG:900913"];
 export const SUPPORTED_CRS_4326 = ["EPSG:4326", "CRS:84", "EPSG:4283"];
+
+export enum ServerTypeEnum {
+  geoserver = "geoserver",
+  esri = "esri",
+  NcWMS = "ncwms"
+}
 
 export class WebMapServiceAvailableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -284,33 +291,12 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   })
   linkedWcsCoverage?: string;
 
-  @primitiveTrait({
-    type: "string",
-    name: "Is GeoServer",
-    description: "True if this WMS is a GeoServer; otherwise, false."
+  @enumTrait({
+    enum: ServerTypeEnum,
+    name: "Server enum",
+    description: ""
   })
-  isGeoServer: boolean = false;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Is Esri",
-    description: "True if this WMS is from Esri; otherwise, false."
-  })
-  isEsri: boolean = false;
-
-  @primitiveTrait({
-    type: "boolean",
-    name: "Is Thredds",
-    description: "True if this WMS is from a THREDDS server; otherwise, false."
-  })
-  isThredds: boolean = false;
-
-  @primitiveTrait({
-    type: "boolean",
-    name: "Is NcWMS",
-    description: "True if this WMS supports NcWMS."
-  })
-  isNcWMS: boolean = false;
+  server?: ServerTypeEnum;
 
   @primitiveTrait({
     type: "boolean",
