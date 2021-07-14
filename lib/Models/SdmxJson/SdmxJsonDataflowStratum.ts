@@ -4,6 +4,7 @@ import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
 import TerriaError from "../../Core/TerriaError";
 import { ShortReportTraits } from "../../Traits/TraitsClasses/CatalogMemberTraits";
+import { DimensionOptionTraits } from "../../Traits/TraitsClasses/DimensionTraits";
 import { FeatureInfoTemplateTraits } from "../../Traits/TraitsClasses/FeatureInfoTraits";
 import LegendTraits from "../../Traits/TraitsClasses/LegendTraits";
 import SdmxCatalogItemTraits, {
@@ -41,6 +42,7 @@ import {
   Dimension,
   SdmxJsonStructureMessage
 } from "./SdmxJsonStructureMessage";
+import { MAX_SELECTABLE_DIMENSION_OPTIONS } from "../SelectableDimensions";
 
 export interface SdmxJsonDataflow {
   /** metadata for dataflow (eg description) */
@@ -251,7 +253,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
           );
 
           // Get allowed options from constraints.cubeRegions (there may be multiple - take union of all values)
-          const allowedOptionIdsSet = Array.isArray(constraints)
+          const allowedOptionIds = Array.isArray(constraints)
             ? constraints.reduce<Set<string>>((keys, constraint) => {
                 constraint.cubeRegions?.forEach(cubeRegion =>
                   cubeRegion.keyValues
@@ -262,62 +264,65 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
                 );
                 return keys;
               }, new Set())
-            : undefined;
+            : new Set();
 
-          // Get unique allowed options from constraints.cubeRegions
-          const allowedOptionIds = isDefined(allowedOptionIdsSet)
-            ? Array.from(allowedOptionIdsSet)
-            : [];
+          let options: StratumFromTraits<DimensionOptionTraits>[] = [];
 
-          // Get codes by merging allowedOptionIds with codelist
-          let filteredCodesList =
-            (allowedOptionIds.length > 0
-              ? codelist?.codes?.filter(
-                  code =>
-                    allowedOptionIds && allowedOptionIds.includes(code.id!)
-                )
-              : // If no allowedOptions were found -> return all codes
-                codelist?.codes) ?? [];
+          // Only create options if less then MAX_SELECTABLE_DIMENSION_OPTIONS (1000) values
+          if (allowedOptionIds.size < MAX_SELECTABLE_DIMENSION_OPTIONS) {
+            // Get codes by merging allowedOptionIds with codelist
+            let filteredCodesList =
+              (allowedOptionIds.size > 0
+                ? codelist?.codes?.filter(code =>
+                    allowedOptionIds.has(code.id!)
+                  )
+                : // If no allowedOptions were found -> return all codes
+                  codelist?.codes) ?? [];
 
-          // Create options object
-          // If modelOverride `options` has been defined -> use it
-          // Other wise use filteredCodesList
-          const overrideOptions = modelOverride?.options;
-          const options =
-            isDefined(overrideOptions) && overrideOptions.length > 0
-              ? overrideOptions.map(option => {
-                  return { id: option.id, name: option.name, value: undefined };
-                })
-              : filteredCodesList.map(code => {
-                  return { id: code.id!, name: code.name, value: undefined };
-                });
-
-          if (isDefined(options) && options.length > 0) {
-            // Use first option as default if no other default is provided
-            let selectedId: string | undefined = modelOverride?.allowUndefined
-              ? undefined
-              : options[0].id;
-
-            // Override selectedId if it a valid option
-            const selectedIdOverride = modelOverride?.selectedId;
-
-            if (
-              isDefined(selectedIdOverride) &&
-              options.find(option => option.id === selectedIdOverride)
-            ) {
-              selectedId = selectedIdOverride;
-            }
-
-            return {
-              id: dim.id!,
-              name: modelOverride?.name ?? concept?.name,
-              options: options,
-              position: dim.position,
-              disable: modelOverride?.disable,
-              allowUndefined: modelOverride?.allowUndefined,
-              selectedId: selectedId
-            };
+            // Create options object
+            // If modelOverride `options` has been defined -> use it
+            // Other wise use filteredCodesList
+            const overrideOptions = modelOverride?.options;
+            options =
+              isDefined(overrideOptions) && overrideOptions.length > 0
+                ? overrideOptions.map(option => {
+                    return {
+                      id: option.id,
+                      name: option.name,
+                      value: undefined
+                    };
+                  })
+                : filteredCodesList.map(code => {
+                    return { id: code.id!, name: code.name, value: undefined };
+                  });
           }
+
+          // Use first option as default if no other default is provided
+          let selectedId: string | undefined =
+            modelOverride?.allowUndefined ||
+            allowedOptionIds.size >= MAX_SELECTABLE_DIMENSION_OPTIONS
+              ? undefined
+              : options[0]?.id;
+
+          // Override selectedId if it a valid option
+          const selectedIdOverride = modelOverride?.selectedId;
+
+          if (
+            isDefined(selectedIdOverride) &&
+            options.find(option => option.id === selectedIdOverride)
+          ) {
+            selectedId = selectedIdOverride;
+          }
+
+          return {
+            id: dim.id!,
+            name: modelOverride?.name ?? concept?.name,
+            options: options,
+            position: dim.position,
+            disable: modelOverride?.disable,
+            allowUndefined: modelOverride?.allowUndefined,
+            selectedId: selectedId
+          };
         })
         .filter(isDefined)
     );
