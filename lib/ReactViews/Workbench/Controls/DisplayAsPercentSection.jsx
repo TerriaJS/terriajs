@@ -1,12 +1,10 @@
 "use strict";
 
-import classNames from "classnames";
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import { withTranslation } from "react-i18next";
-import Icon from "../../../Styled/Icon";
-import Styles from "./display-as-percent.scss";
+import Checkbox from "./../../../Styled/Checkbox/Checkbox";
 
 const DisplayAsPercentSection = createReactClass({
   displayName: "DisplayAsPercentSection",
@@ -26,23 +24,12 @@ const DisplayAsPercentSection = createReactClass({
     }
     const { t } = this.props;
     return (
-      <label className={Styles.main}>
-        <button
-          type="button"
-          onClick={this.togglePercentage}
-          className={classNames(Styles.btn, {
-            [Styles.btnActive]: this.props.item.displayPercent,
-            [Styles.btnInactive]: !this.props.item.displayPercent
-          })}
-        >
-          {this.props.item.displayPercent ? (
-            <Icon glyph={Icon.GLYPHS.checkboxOn} />
-          ) : (
-            <Icon glyph={Icon.GLYPHS.checkboxOff} />
-          )}
-          <span>{t("workbench.displayPercent")}</span>
-        </button>
-      </label>
+      <Checkbox
+        id="workbenchDisplayPercent"
+        isChecked={this.props.item.displayPercent}
+        label={t("workbench.displayPercent")}
+        onChange={this.togglePercentage}
+      />
     );
   }
 });

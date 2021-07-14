@@ -25,6 +25,7 @@ const Checkbox = memo(
       isIndeterminate = false,
       onChange: onChangeProps,
       label,
+      title,
       name,
       value,
       ...rest
@@ -51,6 +52,7 @@ const Checkbox = memo(
     return (
       <TextSpan
         as={"label"}
+        title={title}
         htmlFor={`checkbox-${id}`}
         css={`
           display: flex;
@@ -71,6 +73,7 @@ const Checkbox = memo(
             cursor: not-allowed;
           `}
         `}
+        {...rest}
       >
         <HiddenCheckbox
           disabled={isDisabled}
@@ -85,7 +88,6 @@ const Checkbox = memo(
           isIndeterminate={isIndeterminate}
           isChecked={isChecked}
           isDisabled={isDisabled}
-          label=""
         />
         <SpacingSpan right={1} />
         <TextSpan

@@ -22,6 +22,8 @@ Change Log
 * `TableColorMap` default color palette for `scalar` columns is not `Reds` instead of `RdYlOr`
 * Legends for `scalar` columns will now calculate optimal `numberFormatOptions.maximumFractionDigits` and  `numberFormatOptions.minimumFractionDigits`
 * Fix sharing user added data of type "Auto-detect".
+* Use checkbox component in more places. (#5610)
+* Added title to checkbox component. (#5610)
 * #5605 tidy up format string used in `MagdaReference`
 * Fix wms feature info returning only one feature
 * `WebMapServiceCatalogGroup` will now create layer auto-IDs using `Name` field to avoid ID clashes.
