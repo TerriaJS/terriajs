@@ -1,0 +1,179 @@
+{
+  "id": "y79a-us3f",
+  "name": "Tree canopies 2011 (Urban Forest)",
+  "assetType": "map",
+  "attribution": "City of Melbourne",
+  "averageRating": 0,
+  "blobFilename": "Tree Canopy 2011.zip",
+  "blobFileSize": 63186567,
+  "blobId": "756v-I_VpmWQKHJpm5e4omNcXrYgdI9lDWzsWjeq13s",
+  "blobMimeType": "application/zip; charset=binary",
+  "category": "Environment",
+  "createdAt": 1406265103,
+  "description": "Tree canopy within City of Melbourne mapped using 2008 aerial photos and LiDAR. The canopy polygons represent actual tree canopy extents on both private and public property across the city. The data is considered accurate for 2011. Changes in tree canopy are expected to have occurred since that time.",
+  "displayType": "map",
+  "downloadCount": 3178,
+  "hideFromCatalog": false,
+  "hideFromDataJson": false,
+  "indexUpdatedAt": 1574201762,
+  "licenseId": "CC_40_BY",
+  "newBackend": true,
+  "numberOfComments": 0,
+  "oid": 15141200,
+  "previewImageId": "a425cfae-bf81-46f9-9ed7-fa63ebc7047e",
+  "provenance": "official",
+  "publicationAppendEnabled": false,
+  "publicationDate": 1406265635,
+  "publicationGroup": 5805795,
+  "publicationStage": "published",
+  "tableId": 5805795,
+  "totalTimesRated": 0,
+  "viewCount": 66590,
+  "viewLastModified": 1586123171,
+  "viewType": "geo",
+  "approvals": [
+    {
+      "reviewedAt": 1560825327,
+      "reviewedAutomatically": false,
+      "state": "approved",
+      "submissionId": 800285,
+      "submissionObject": "public_audience_request",
+      "submissionOutcome": "change_audience",
+      "submittedAt": 1486423090,
+      "workflowId": 2180,
+      "reviewer": {
+        "id": "svy8-e7in",
+        "displayName": "Johanna Hopper"
+      },
+      "submissionDetails": {
+        "permissionType": "READ"
+      },
+      "submissionOutcomeApplication": {
+        "endedAt": 1560825327,
+        "failureCount": 0,
+        "startedAt": 1560825327,
+        "status": "success"
+      },
+      "submitter": {
+        "id": "4yi8-jvny",
+        "displayName": "Will (CoM)"
+      }
+    }
+  ],
+  "childViews": [
+    "7emh-y3dj"
+  ],
+  "columns": [],
+  "displayFormat": {
+    "distinctLegend": true,
+    "bkgdLayers": [
+      {
+        "layerKey": "Google Roadmap",
+        "alias": "Google",
+        "opacity": 1
+      },
+      {
+        "layerKey": "Google Roadmap",
+        "alias": "Bing",
+        "opacity": 1
+      },
+      {
+        "layerKey": "World Street Map (ESRI)",
+        "alias": "ESRI",
+        "opacity": 1
+      }
+    ],
+    "exclusiveLayers": true,
+    "viewDefinitions": [
+      {
+        "uid": "self"
+      }
+    ],
+    "plotStyle": "point"
+  },
+  "grants": [
+    {
+      "inherited": false,
+      "type": "viewer",
+      "flags": [
+        "public"
+      ]
+    }
+  ],
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "logoUrl": "images/licenses/cc30by.png",
+    "termsLink": "http://creativecommons.org/licenses/by/4.0/legalcode"
+  },
+  "metadata": {
+    "geo": {
+      "bbox": "144.89935435329883,-37.850521602110206,144.99116122434526,-37.77544812812966",
+      "featureIdAttribute": "_SocrataID",
+      "layers": "7emh-y3dj",
+      "namespace": "_y79a-us3f",
+      "owsUrl": "/api/geospatial/y79a-us3f",
+      "bboxCrs": "EPSG:4326",
+      "isNbe": true
+    },
+    "custom_fields": {
+      "Data management": {
+        "Source data update frequency": "Monthly"
+      },
+      "Quality": {
+        "Update frequency": "Static (not updated)",
+        "Reliability level": "Useful with caveats"
+      }
+    },
+    "availableDisplayTypes": [
+      "map",
+      "table",
+      "fatrow",
+      "page"
+    ],
+    "renderTypeConfig": {
+      "visible": {
+        "map": true
+      }
+    }
+  },
+  "owner": {
+    "id": "by7m-q3n8",
+    "displayName": "City of Melbourne Open Data Team",
+    "profileImageUrlLarge": "/api/users/by7m-q3n8/profile_images/LARGE",
+    "profileImageUrlMedium": "/api/users/by7m-q3n8/profile_images/THUMB",
+    "profileImageUrlSmall": "/api/users/by7m-q3n8/profile_images/TINY",
+    "screenName": "City of Melbourne Open Data Team",
+    "type": "interactive",
+    "flags": [
+      "mayBeStoriesCoOwner"
+    ]
+  },
+  "query": {},
+  "rights": [
+    "read"
+  ],
+  "tableAuthor": {
+    "id": "by7m-q3n8",
+    "displayName": "City of Melbourne Open Data Team",
+    "profileImageUrlLarge": "/api/users/by7m-q3n8/profile_images/LARGE",
+    "profileImageUrlMedium": "/api/users/by7m-q3n8/profile_images/THUMB",
+    "profileImageUrlSmall": "/api/users/by7m-q3n8/profile_images/TINY",
+    "screenName": "City of Melbourne Open Data Team",
+    "type": "interactive",
+    "flags": [
+      "mayBeStoriesCoOwner"
+    ]
+  },
+  "tags": [
+    "urban forest",
+    "forest",
+    "tree",
+    "#urbanforest",
+    "eventsplanner",
+    "citizenreporter"
+  ],
+  "flags": [
+    "default",
+    "ownerMayBeContacted"
+  ]
+}
