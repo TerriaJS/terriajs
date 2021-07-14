@@ -17,7 +17,8 @@ Change Log
 * Fix wms feature info returning only one feature
 * `WebMapServiceCatalogGroup` will now create layer auto-IDs using `Name` field to avoid ID clashes.
 * Added `GroupMixin` `shareKey` generation for members - if the group has `shareKeys`.
-* Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses (#5626)
+* Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses 
+* Organise `Models` directory into multiple sub-directories (#5626)
   * New model related classes are moved to `Models/Definition`
   * Catalog related files are moved to `Models/Catalog`
     * ESRI, OWS, GTFS and CKAN related files are moved to their own sub-directories in `Models/Catalog/`
