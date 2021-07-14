@@ -268,7 +268,8 @@
     "downloadData": "Scarica dati",
     "dataUrl": "URL dei dati",
     "dataServiceDetails": "Dettagli dei servizi dei dati",
-    "dataSourceDetails": "Dettagli della sorgente dei dati"
+    "dataSourceDetails": "Dettagli della sorgente dei dati",
+    "downloadNotSupported": "Sfortunatamente sembra che il browser non supporti il download di questi dati. Riprova usando i browser Chromium, Firefox o Safari."
   },
   "preview": {
     "updateFrequency": "Frequenza di aggiornamento",
@@ -285,7 +286,9 @@
     "loading": "ANTEPRIMA IN CARICAMENTO…",
     "dataPreviewError": "ERRORE ANTEPRIMA DEI DATI",
     "dataPreviewLoading": "CARICAMENTO ANTEPRIMA DEI DATI...",
-    "noPreviewAvailable": "NESSUNA ANTEPRIMA DISPONIBILE"
+    "noPreviewAvailable": "NESSUNA ANTEPRIMA DISPONIBILE",
+    "addToMap": "Aggiungi alla mappa",
+    "removeFromMap": "Rimuovi dalla mappa"
   },
   "legend": {
     "n": "N",
@@ -386,7 +389,10 @@
     "zoomTo": "Ingrandisci all'estensione",
     "zoomToTitle": "Ingrandisci all'estensione",
     "opacity": "Opacità: {{opacity}} %",
-    "colorScaleRange": "Gamma della scala dei colori"
+    "colorScaleRange": "Gamma della scala dei colori",
+    "colorScaleRangeMinSmallerThanMax": "Il valore minimo deve essere inferiore del valore massimo.",
+    "colorScaleRangeMax": "Il valore massimo deve essere un numero.",
+    "colorScaleRangeMin": "Il valore minimo deve essere un numero."
   },
   "mobile": {
     "toggleNavigation": "Attiva/disattiva la navigazione"
@@ -429,7 +435,8 @@
       "saveStory": "Salva",
       "saveBtn": "salva",
       "cancelEditing": "Annulla",
-      "cancelBtn": "annulla"
+      "cancelBtn": "annulla",
+      "placeholder": "Inserisci un titolo"
     },
     "cancelRemove": "Annulla",
     "confirmRemove": "Elimina",
@@ -453,7 +460,10 @@
     "play": "Riproduci Storia",
     "preview": "storie precedenti",
     "untitledScene": "scena senza nome",
-    "story": "Storia"
+    "story": "Storia",
+    "navBtn": "vai alla storia {{title}}",
+    "navBtnMobile": "vai alla storia {{title}}",
+    "nextBtn": "vai alla scena seguente"
   },
   "welcomeMessage": {
     "WelcomeMessageSecondaryBtn": "Fai un tour",
