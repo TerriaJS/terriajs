@@ -27,6 +27,11 @@ Change Log
 * `WebMapServiceCatalogGroup` will now create layer auto-IDs using `Name` field to avoid ID clashes.
 * Added `GroupMixin` `shareKey` generation for members - if the group has `shareKeys`.
 * Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses 
+* Limit `SelectableDimension` options to 1000 values
+* Added support for `SocrataCatalogGroup` and `SocrataMapViewCatalogGroup`
+  * Notes on v7 to v8 Socrata integration:
+    * Share links are not preserved
+    * Added basic support for dataset resources
 * Organise `Models` directory into multiple sub-directories (#5626)
   * New model related classes are moved to `Models/Definition`
   * Catalog related files are moved to `Models/Catalog`
@@ -34,12 +39,7 @@ Change Log
     * Other Catalog items related files are moved to `Models/Catalog/CatalogItems`
     * Other Catalog items related files are moved to `Models/Catalog/CatalogGroups`
     * Catalog functions related files are moved to `Models/Catalog/CatalogFunction`
-* Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses`
-* Limit `SelectableDimension` options to 1000 values
-* Added support for `SocrataCatalogGroup` and `SocrataMapViewCatalogGroup`
-  * Notes on v7 to v8 Socrata integration:
-    * Share links are not preserved
-    * Added basic support for dataset resources
+  * Removed unused Models files
 * [The next improvement]
 
 #### 8.0.0-alpha.87
