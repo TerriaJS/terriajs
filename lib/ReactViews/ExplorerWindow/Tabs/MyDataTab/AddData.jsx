@@ -14,7 +14,7 @@ import getDataType from "../../../../Core/getDataType";
 import Styles from "./add-data.scss";
 import Loader from "../../../Loader";
 import TerriaError from "../../../../Core/TerriaError";
-import addUserFiles from "../../../../Models/addUserFiles";
+import addUserFiles from "../../../../Models/Catalog/addUserFiles";
 import TimeVarying from "../../../../ModelMixins/TimeVarying";
 import {
   Category,

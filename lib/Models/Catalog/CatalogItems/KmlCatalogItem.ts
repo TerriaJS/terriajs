@@ -18,7 +18,7 @@ import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import KmlCatalogItemTraits from "../../../Traits/TraitsClasses/KmlCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
-import proxyCatalogItemUrl from "../../proxyCatalogItemUrl";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 const kmzRegex = /\.kmz$/i;
 

@@ -1,11 +1,14 @@
 import { autorun, observable, runInAction } from "mobx";
 import SearchProvider from "./SearchProvider";
 import SearchResult from "./SearchResult";
-import Terria from "./Terria";
+import Terria from "../Terria";
 import SearchProviderResults from "./SearchProviderResults";
-import GroupMixin from "../ModelMixins/GroupMixin";
-import ReferenceMixin from "../ModelMixins/ReferenceMixin";
-import { Category, SearchAction } from "../Core/AnalyticEvents/analyticEvents";
+import GroupMixin from "../../ModelMixins/GroupMixin";
+import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
+import {
+  Category,
+  SearchAction
+} from "../../Core/AnalyticEvents/analyticEvents";
 
 interface CatalogSearchProviderOptions {
   terria: Terria;

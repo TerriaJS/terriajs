@@ -29,7 +29,7 @@ import LoadableStratum from "../../Definition/LoadableStratum";
 import Model, { BaseModel } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
-import proxyCatalogItemUrl from "../../proxyCatalogItemUrl";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { MAX_SELECTABLE_DIMENSION_OPTIONS } from "../../SelectableDimensions";
 import SdmxJsonCatalogItem from "./SdmxJsonCatalogItem";
 import { loadSdmxJsonStructure, parseSdmxUrn } from "./SdmxJsonServerStratum";

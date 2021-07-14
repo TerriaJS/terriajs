@@ -23,7 +23,7 @@ import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
 import addUserCatalogMember from "../../../Models/Catalog/addUserCatalogMember";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import getAncestors from "../../../Models/getAncestors";
-import SplitItemReference from "../../../Models/SplitItemReference";
+import SplitItemReference from "../../../Models/Catalog/SplitItemReference";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import Icon, { StyledIcon } from "../../../Styled/Icon";

@@ -13,7 +13,7 @@ import GpxCatalogItemTraits from "../../../Traits/TraitsClasses/GpxCatalogItemTr
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
-import proxyCatalogItemUrl from "../../proxyCatalogItemUrl";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 const toGeoJSON = require("@mapbox/togeojson");
 

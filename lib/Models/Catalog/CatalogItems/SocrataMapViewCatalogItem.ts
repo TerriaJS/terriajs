@@ -11,7 +11,7 @@ import CreateModel from "../../Definition/CreateModel";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../../proxyCatalogItemUrl";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
 
 export interface View {

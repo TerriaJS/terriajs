@@ -9,7 +9,7 @@ import Feature from "../Models/Feature";
 import Model from "../Models/Definition/Model";
 import FeatureInfoTraits from "../Traits/TraitsClasses/FeatureInfoTraits";
 import { action } from "mobx";
-import proxyCatalogItemUrl from "../Models/proxyCatalogItemUrl";
+import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 
 type Target = Model<FeatureInfoTraits>;
 

@@ -1,5 +1,5 @@
 import { configure } from "mobx";
-import createAustralianGazetteerSearchProvider from "../../lib/Models/AustralianGazetteerSearchProvider";
+import createAustralianGazetteerSearchProvider from "../../lib/Models/SearchProviders/AustralianGazetteerSearchProvider";
 import Terria from "../../lib/Models/Terria";
 import WebFeatureServiceSearchProvider from "../../lib/Models/Catalog/Ows/WebFeatureServiceSearchProvider";
 

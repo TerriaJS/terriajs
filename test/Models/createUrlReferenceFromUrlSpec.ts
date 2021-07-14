@@ -6,7 +6,7 @@ import createUrlReferenceFromUrl from "../../lib/Models/Catalog/createUrlReferen
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import GeoJsonCatalogItem from "../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import Terria from "../../lib/Models/Terria";
-import UrlReference from "../../lib/Models/UrlReference";
+import UrlReference from "../../lib/Models/Catalog/UrlReference";
 import WebMapServiceCatalogGroup from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import { USER_ADDED_CATEGORY_ID } from "../../lib/Core/addedByUser";

@@ -6,7 +6,7 @@ import ChartCustomComponent, {
 } from "./ChartCustomComponent";
 import { BaseModel } from "../../Models/Definition/Model";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import SplitItemReference from "../../Models/SplitItemReference";
+import SplitItemReference from "../../Models/Catalog/SplitItemReference";
 interface SOSChartCustomComponentAttributes
   extends ChartCustomComponentAttributes {
   name?: string;

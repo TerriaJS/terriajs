@@ -1,6 +1,6 @@
-import Constructor from "../Core/Constructor";
+import Constructor from "../../Core/Constructor";
 import ItemSearchProvider from "./ItemSearchProvider";
-import IndexedItemSearchProvider from "./ItemSearchProviders/IndexedItemSearchProvider";
+import IndexedItemSearchProvider from "./IndexedItemSearchProvider";
 
 export const ItemSearchProviders: Map<
   string,

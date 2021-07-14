@@ -1,7 +1,7 @@
 import { runInAction } from "mobx";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
-import SplitItemReference from "../../lib/Models/SplitItemReference";
+import SplitItemReference from "../../lib/Models/Catalog/SplitItemReference";
 import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 

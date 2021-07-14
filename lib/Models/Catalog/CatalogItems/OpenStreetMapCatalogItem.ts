@@ -6,7 +6,7 @@ import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import OpenStreetMapCatalogItemTraits from "../../../Traits/TraitsClasses/OpenStreetMapCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
-import proxyCatalogItemUrl from "../../proxyCatalogItemUrl";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 export default class OpenStreetMapCatalogItem extends MappableMixin(
   CatalogMemberMixin(CreateModel(OpenStreetMapCatalogItemTraits))

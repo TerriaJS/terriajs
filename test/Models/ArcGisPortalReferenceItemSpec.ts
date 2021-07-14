@@ -1,7 +1,7 @@
 import { configure, runInAction } from "mobx";
 import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import Terria from "../../lib/Models/Terria";
-import registerCatalogMembers from "../../lib/Models/registerCatalogMembers";
+import registerCatalogMembers from "../../lib/Models/Catalog/registerCatalogMembers";
 
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import i18next from "i18next";

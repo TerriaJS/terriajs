@@ -83,9 +83,9 @@ import MagdaReference, {
 import MapInteractionMode from "./MapInteractionMode";
 import { BaseModel } from "./Definition/Model";
 import NoViewer from "./NoViewer";
-import openGroup from "./openGroup";
+import openGroup from "./Catalog/openGroup";
 import ShareDataService from "./ShareDataService";
-import SplitItemReference from "./SplitItemReference";
+import SplitItemReference from "./Catalog/SplitItemReference";
 import TimelineStack from "./TimelineStack";
 import updateModelFromJson from "./Definition/updateModelFromJson";
 import upsertModelFromJson from "./Definition/upsertModelFromJson";

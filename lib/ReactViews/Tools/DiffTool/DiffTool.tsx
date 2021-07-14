@@ -30,7 +30,7 @@ import {
   removeMarker
 } from "../../../Models/LocationMarkerUtils";
 import { DimensionOption } from "../../../Models/SelectableDimensions";
-import SplitItemReference from "../../../Models/SplitItemReference";
+import SplitItemReference from "../../../Models/Catalog/SplitItemReference";
 import Terria from "../../../Models/Terria";
 import ViewState from "../../../ReactViewModels/ViewState";
 import Box, { BoxSpan } from "../../../Styled/Box";

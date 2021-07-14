@@ -33,7 +33,7 @@ import CommonStrata from "../Models/Definition/CommonStrata";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import Feature from "../Models/Feature";
 import Model from "../Models/Definition/Model";
-import proxyCatalogItemUrl from "../Models/proxyCatalogItemUrl";
+import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import { SelectableDimension } from "../Models/SelectableDimensions";
 import Cesium3DTilesCatalogItemTraits from "../Traits/TraitsClasses/Cesium3DTilesCatalogItemTraits";
 import Cesium3dTilesTraits, {

@@ -1,8 +1,8 @@
-import Terria from "./Terria";
-import { BaseModel } from "./Definition/Model";
-import GroupMixin from "../ModelMixins/GroupMixin";
-import ReferenceMixin from "../ModelMixins/ReferenceMixin";
-import CommonStrata from "./Definition/CommonStrata";
+import Terria from "../Terria";
+import { BaseModel } from "../Definition/Model";
+import GroupMixin from "../../ModelMixins/GroupMixin";
+import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
+import CommonStrata from "../Definition/CommonStrata";
 
 /**
  * Opens or closes a model, which is likely to include a {@link GroupMixin}.

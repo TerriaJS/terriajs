@@ -8,7 +8,7 @@ import { withTranslation } from "react-i18next";
 import styled from "styled-components";
 import defined from "terriajs-cesium/Source/Core/defined";
 import MappableMixin from "../../ModelMixins/MappableMixin";
-import openGroup from "../../Models/openGroup";
+import openGroup from "../../Models/Catalog/openGroup";
 import Styles from "./tabs.scss";
 import DataCatalogTab from "./Tabs/DataCatalogTab";
 import MyDataTab from "./Tabs/MyDataTab/MyDataTab";

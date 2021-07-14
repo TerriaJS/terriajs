@@ -23,7 +23,7 @@ import CsvCatalogItem from "../CatalogItems/CsvCatalogItem";
 import GeoJsonCatalogItem from "../CatalogItems/GeoJsonCatalogItem";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../../proxyCatalogItemUrl";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import SocrataMapViewCatalogItem from "../CatalogItems/SocrataMapViewCatalogItem";
 import StratumOrder from "../../Definition/StratumOrder";
 

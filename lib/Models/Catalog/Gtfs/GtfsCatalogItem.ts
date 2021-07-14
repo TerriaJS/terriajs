@@ -34,7 +34,7 @@ import {
   FeedMessageReader
 } from "./GtfsRealtimeProtoBufReaders";
 import prettyPrintGtfsEntityField from "./prettyPrintGtfsEntityField";
-import proxyCatalogItemUrl from "../../proxyCatalogItemUrl";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import Terria from "../../Terria";
 import VehicleData from "./VehicleData";
 import { BaseModel } from "../../Definition/Model";

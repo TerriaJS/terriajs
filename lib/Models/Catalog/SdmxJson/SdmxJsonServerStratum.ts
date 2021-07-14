@@ -15,7 +15,7 @@ import CommonStrata from "../../Definition/CommonStrata";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../../proxyCatalogItemUrl";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
 import SdmxCatalogGroup from "./SdmxJsonCatalogGroup";
 import SdmxJsonCatalogItem from "./SdmxJsonCatalogItem";

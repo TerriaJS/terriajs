@@ -9,8 +9,8 @@ import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import CommonStrata from "../../Definition/CommonStrata";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import proxyCatalogItemUrl from "../../proxyCatalogItemUrl";
-import ResultPendingCatalogItem from "../../ResultPendingCatalogItem";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import ResultPendingCatalogItem from "../ResultPendingCatalogItem";
 import UserDrawing from "../../UserDrawing";
 import WebMapServiceCatalogItem, {
   formatDimensionsForOws

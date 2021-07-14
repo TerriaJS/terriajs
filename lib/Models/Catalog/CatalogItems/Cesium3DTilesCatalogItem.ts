@@ -17,7 +17,7 @@ import SearchableItemMixin, {
 } from "../../../ModelMixins/SearchableItemMixin";
 import Cesium3DTilesCatalogItemTraits from "../../../Traits/TraitsClasses/Cesium3DTilesCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
-import { ItemSearchResult } from "../../ItemSearchProvider";
+import { ItemSearchResult } from "../../ItemSearchProviders/ItemSearchProvider";
 
 // A property name used for tagging a search result feature for highlighting/hiding.
 const SEARCH_RESULT_TAG = "terriajs_search_result";

@@ -24,7 +24,7 @@ import CreateModel from "../Definition/CreateModel";
 import createStratumInstance from "../Definition/createStratumInstance";
 import { BaseModel } from "../Definition/Model";
 import ModelPropertiesFromTraits from "../Definition/ModelPropertiesFromTraits";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "../Definition/StratumFromTraits";
 import StratumOrder from "../Definition/StratumOrder";
 import Terria from "../Terria";

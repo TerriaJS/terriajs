@@ -27,7 +27,7 @@ import KmlCatalogItem from "../CatalogItems/KmlCatalogItem";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel, ModelConstructor } from "../../Definition/Model";
 import { BoundingBox } from "../Ows/OwsInterfaces";
-import proxyCatalogItemUrl from "../../proxyCatalogItemUrl";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
 import WebMapServiceCatalogItem from "../Ows/WebMapServiceCatalogItem";
 

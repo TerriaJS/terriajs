@@ -14,7 +14,7 @@ import TableAutomaticStylesStratum from "../../../Table/TableAutomaticStylesStra
 import SdmxCatalogItemTraits from "../../../Traits/TraitsClasses/SdmxCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../../proxyCatalogItemUrl";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import SelectableDimensions, {
   SelectableDimension
 } from "../../SelectableDimensions";

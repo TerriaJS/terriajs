@@ -8,7 +8,7 @@ import ShapefileCatalogItemTraits from "../../../Traits/TraitsClasses/ShapefileC
 import CreateModel from "../../Definition/CreateModel";
 import makeRealPromise from "../../../Core/makeRealPromise";
 import TerriaError from "../../../Core/TerriaError";
-import proxyCatalogItemUrl from "../../proxyCatalogItemUrl";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import loadBlob from "../../../Core/loadBlob";
 
 export function isJsonArrayOrDeepArrayOfObjects(

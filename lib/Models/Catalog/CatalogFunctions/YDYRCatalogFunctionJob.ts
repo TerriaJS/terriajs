@@ -9,7 +9,7 @@ import YDYRCatalogFunctionJobTraits from "../../../Traits/TraitsClasses/YDYRCata
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import CsvCatalogItem from "../CatalogItems/CsvCatalogItem";
-import proxyCatalogItemUrl from "../../proxyCatalogItemUrl";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { ALGORITHMS, DATASETS } from "./YDYRCatalogFunction";
 
 export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(

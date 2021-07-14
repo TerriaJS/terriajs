@@ -10,7 +10,7 @@ import CartoMapCatalogItemTraits from "../../../Traits/TraitsClasses/CartoMapCat
 import CreateModel from "../../Definition/CreateModel";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../../proxyCatalogItemUrl";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
 
 export class CartoLoadableStratum extends LoadableStratum(

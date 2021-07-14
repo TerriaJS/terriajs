@@ -17,11 +17,11 @@ import {
 } from "../../lib/Models/InitSource";
 import MagdaReference from "../../lib/Models/Catalog/MagdaReference";
 import { BaseModel } from "../../lib/Models/Definition/Model";
-import openGroup from "../../lib/Models/openGroup";
+import openGroup from "../../lib/Models/Catalog/openGroup";
 import Terria from "../../lib/Models/Terria";
 import UrlReference, {
   UrlToCatalogMemberMapping
-} from "../../lib/Models/UrlReference";
+} from "../../lib/Models/Catalog/UrlReference";
 import WebMapServiceCatalogGroup from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import ViewState from "../../lib/ReactViewModels/ViewState";

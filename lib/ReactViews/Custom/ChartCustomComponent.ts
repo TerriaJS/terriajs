@@ -12,7 +12,7 @@ import createStratumInstance from "../../Models/Definition/createStratumInstance
 import Feature from "../../Models/Feature";
 import hasTraits from "../../Models/Definition/hasTraits";
 import { BaseModel } from "../../Models/Definition/Model";
-import SplitItemReference from "../../Models/SplitItemReference";
+import SplitItemReference from "../../Models/Catalog/SplitItemReference";
 import ChartPointOnMapTraits from "../../Traits/TraitsClasses/ChartPointOnMapTraits";
 import DiscretelyTimeVaryingTraits from "../../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import LatLonHeightTraits from "../../Traits/TraitsClasses/LatLonHeightTraits";

@@ -1,16 +1,16 @@
-import getDataType from "../Core/getDataType";
-import isDefined from "../Core/isDefined";
-import readJson from "../Core/readJson";
-import TerriaError from "../Core/TerriaError";
-import TimeVarying from "../ModelMixins/TimeVarying";
-import ViewState from "../ReactViewModels/ViewState";
-import addUserCatalogMember from "./Catalog/addUserCatalogMember";
-import CommonStrata from "./Definition/CommonStrata";
-import createCatalogItemFromFileOrUrl from "./Catalog/createCatalogItemFromFileOrUrl";
-import { BaseModel } from "./Definition/Model";
-import raiseErrorOnRejectedPromise from "./raiseErrorOnRejectedPromise";
+import getDataType from "../../Core/getDataType";
+import isDefined from "../../Core/isDefined";
+import readJson from "../../Core/readJson";
+import TerriaError from "../../Core/TerriaError";
+import TimeVarying from "../../ModelMixins/TimeVarying";
+import ViewState from "../../ReactViewModels/ViewState";
+import addUserCatalogMember from "./addUserCatalogMember";
+import CommonStrata from "../Definition/CommonStrata";
+import createCatalogItemFromFileOrUrl from "./createCatalogItemFromFileOrUrl";
+import { BaseModel } from "../Definition/Model";
+import raiseErrorOnRejectedPromise from "../raiseErrorOnRejectedPromise";
 import ResultPendingCatalogItem from "./ResultPendingCatalogItem";
-import Terria from "./Terria";
+import Terria from "../Terria";
 
 interface FileType {
   value: string;
