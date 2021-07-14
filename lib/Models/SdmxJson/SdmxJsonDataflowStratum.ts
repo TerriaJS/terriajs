@@ -42,6 +42,7 @@ import {
   Dimension,
   SdmxJsonStructureMessage
 } from "./SdmxJsonStructureMessage";
+import { MAX_SELECTABLE_DIMENSION_OPTIONS } from "../SelectableDimensions";
 
 export interface SdmxJsonDataflow {
   /** metadata for dataflow (eg description) */
@@ -267,8 +268,8 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
 
           let options: StratumFromTraits<DimensionOptionTraits>[] = [];
 
-          // Only create options if less then 1000 values
-          if (allowedOptionIds.size < 1000) {
+          // Only create options if less then MAX_SELECTABLE_DIMENSION_OPTIONS (1000) values
+          if (allowedOptionIds.size < MAX_SELECTABLE_DIMENSION_OPTIONS) {
             // Get codes by merging allowedOptionIds with codelist
             let filteredCodesList =
               (allowedOptionIds.size > 0
@@ -298,7 +299,8 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
 
           // Use first option as default if no other default is provided
           let selectedId: string | undefined =
-            modelOverride?.allowUndefined || allowedOptionIds.size >= 1000
+            modelOverride?.allowUndefined ||
+            allowedOptionIds.size >= MAX_SELECTABLE_DIMENSION_OPTIONS
               ? undefined
               : options[0]?.id;
 

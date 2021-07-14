@@ -1,3 +1,5 @@
+export const MAX_SELECTABLE_DIMENSION_OPTIONS = 1000;
+
 export interface DimensionOption {
   readonly id?: string;
   readonly name?: string;
