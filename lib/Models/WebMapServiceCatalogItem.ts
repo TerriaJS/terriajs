@@ -146,6 +146,17 @@ class GetCapabilitiesStratum extends LoadableStratum(
       ).join(",");
     }
 
+    // Some data providers may restrict the number of layers per request.
+    // If the number of available layers exceeds the limit, only the first
+    // few layers within the limit are selected.
+    const layerLimit = this.capabilities.Service.LayerLimit;
+    if (layerLimit && layerLimit >= 1) {
+      layers = layers
+        .split(",")
+        .slice(0, layerLimit)
+        .join(",");
+    }
+
     return layers;
   }
 
