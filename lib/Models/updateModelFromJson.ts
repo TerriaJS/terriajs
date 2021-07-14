@@ -3,6 +3,7 @@ import Result from "../Core/Result";
 import TerriaError from "../Core/TerriaError";
 import createStratumInstance from "./createStratumInstance";
 import { BaseModel } from "./Model";
+import { useTranslationIfExists } from "./../Language/languageHelpers";
 import isDefined from "../Core/isDefined";
 
 export default function updateModelFromJson(
@@ -62,6 +63,10 @@ export default function updateModelFromJson(
           }
           model.setTrait(stratumName, propertyName, newTrait);
         }
+        if (propertyName === "name") {
+          newTrait = useTranslationIfExists(jsonValue);
+        }
+        model.setTrait(stratumName, propertyName, newTrait);
       }
     });
   });

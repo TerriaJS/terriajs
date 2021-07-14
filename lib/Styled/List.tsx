@@ -20,7 +20,6 @@ export const Ul = styled.ul<ListProps>`
         padding-top: 5px;
       }
     `}
-
   ${props =>
     props.lined &&
     css`

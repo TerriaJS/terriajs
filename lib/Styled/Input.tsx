@@ -1,6 +1,6 @@
 import React from "react";
 import styled, { DefaultTheme, useTheme } from "styled-components";
-const Box: any = require("./Box").default;
+import Box from "./Box";
 
 export const StyledInput = styled.input<InputProps>`
   -moz-appearance: none;

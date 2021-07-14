@@ -1,5 +1,13 @@
 import i18next from "i18next";
-import { action, computed, observable, runInAction, toJS, when } from "mobx";
+import {
+  action,
+  computed,
+  isObservableArray,
+  observable,
+  runInAction,
+  toJS,
+  when
+} from "mobx";
 import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
@@ -82,6 +90,8 @@ import MapInteractionMode from "./MapInteractionMode";
 import { BaseModel } from "./Model";
 import NoViewer from "./NoViewer";
 import openGroup from "./openGroup";
+import SearchProviderFactory from "./SearchProvider/SearchProviderFactory";
+import upsertSearchProviderFromJson from "./SearchProvider/upsertSearchProviderFromJson";
 import ShareDataService from "./ShareDataService";
 import SplitItemReference from "./SplitItemReference";
 import TimelineStack from "./TimelineStack";
@@ -259,6 +269,41 @@ interface ConfigParameters {
    * Extra links to show in the credit line at the bottom of the map (currently only the Cesium map).
    */
   extraCreditLinks?: { url: string; text: string }[];
+
+  /**
+   * The search bar allows requesting information from various search services at once.
+   */
+  searchBar?: SearchBar;
+}
+
+interface SearchBar {
+  /**
+   * Input text field placeholder shown when no input has been given yet. The string is translateable.
+   * @default "translate#search.placeholder"
+   */
+  placeholder: string;
+  /**
+   * Maximum amount of entries in the suggestion list.
+   * @default 5
+   */
+  recommendedListLength: number;
+  /**
+   * The duration of the camera flight to an entered location, in seconds.
+   * @default 1.5
+   */
+  flightDurationSeconds: number;
+  /**
+   * Minimum number of characters to start search.
+   */
+  minCharacters: number;
+  /**
+   * Bounding box limits for the search results.
+   */
+  boundingBoxLimit?: number[];
+  /**
+   * Array of search providers to be used.
+   */
+  searchProviders: any[];
 }
 
 interface StartOptions {
@@ -315,6 +360,7 @@ interface HomeCameraInit {
 
 export default class Terria {
   private models = observable.map<string, BaseModel>();
+  private locationSearchProviders = observable.map<string, BaseModel>();
   /** Map from share key -> id */
   readonly shareKeysMap = observable.map<string, string>();
   /** Map from id -> share keys */
@@ -429,7 +475,14 @@ export default class Terria {
         url: "about.html#data-attribution"
       },
       { text: "map.extraCreditLinks.disclaimer", url: "about.html#disclaimer" }
-    ]
+    ],
+    searchBar: {
+      placeholder: "translate#search.placeholder",
+      recommendedListLength: 5,
+      flightDurationSeconds: 1.5,
+      minCharacters: 3,
+      searchProviders: []
+    }
   };
 
   @observable
@@ -602,6 +655,34 @@ export default class Terria {
 
     this.models.set(model.uniqueId, model);
     shareKeys?.forEach(shareKey => this.addShareKey(model.uniqueId!, shareKey));
+  }
+
+  /**
+   * Add new SearchProvider to the list of SearchProviders.
+   */
+  @action
+  addSearchProvider(model: BaseModel) {
+    if (model.uniqueId === undefined) {
+      throw new DeveloperError(
+        "A SearchProvider without a `uniqueId` cannot be added."
+      );
+    }
+
+    if (this.locationSearchProviders.has(model.uniqueId)) {
+      console.log(
+        new DeveloperError(
+          "A SearchProvider with the specified ID already exists."
+        )
+      );
+    }
+
+    this.locationSearchProviders.set(model.uniqueId, model);
+  }
+
+  get locationSearchProvidersArray() {
+    return [...this.locationSearchProviders.entries()].map(function(entry) {
+      return entry[1];
+    });
   }
 
   /**
@@ -787,6 +868,7 @@ export default class Terria {
     if (options.applicationUrl) {
       await this.updateApplicationUrl(options.applicationUrl.href);
     }
+    this.initializeSearchProviders();
     this.loadPersistedMapSettings();
   }
 
@@ -806,6 +888,24 @@ export default class Terria {
         );
       }
     }
+  }
+
+  initializeSearchProviders() {
+    let searchProviders = this.configParameters.searchBar?.searchProviders;
+    if (!isObservableArray(searchProviders))
+      throw new TerriaError({
+        sender: SearchProviderFactory,
+        title: "SearchProviders",
+        message: ""
+      });
+    searchProviders.forEach(searchProvider => {
+      upsertSearchProviderFromJson(
+        SearchProviderFactory,
+        this,
+        CommonStrata.definition,
+        searchProvider
+      );
+    });
   }
 
   async loadPersistedOrInitBaseMap() {
@@ -882,7 +982,16 @@ export default class Terria {
   updateParameters(parameters: ConfigParameters | JsonObject): void {
     Object.entries(parameters).forEach(([key, value]) => {
       if (this.configParameters.hasOwnProperty(key)) {
-        (this.configParameters as any)[key] = value;
+        if (key === "searchBar") {
+          // merge default and new
+          //@ts-ignore
+          this.configParameters[key] = {
+            ...this.configParameters[key],
+            ...value
+          };
+        } else {
+          (this.configParameters as any)[key] = value;
+        }
       }
     });
 

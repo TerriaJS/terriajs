@@ -15,9 +15,7 @@ export enum Category {
 export enum SearchAction {
   bing = "Bing",
   catalog = "Catalog",
-  gazetteer = "Gazetteer",
-  gnaf = "gnaf",
-  nominatim = "nominatim"
+  gazetteer = "Gazetteer"
 }
 
 export enum LaunchAction {

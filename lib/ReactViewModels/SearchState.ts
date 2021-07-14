@@ -1,16 +1,16 @@
-// import CatalogItemNameSearchProviderViewModel from "../ViewModels/CatalogItemNameSearchProviderViewModel";
 import {
-  observable,
-  reaction,
-  IReactionDisposer,
+  action,
   computed,
-  action
+  IReactionDisposer,
+  observable,
+  reaction
 } from "mobx";
-import Terria from "../Models/Terria";
-import SearchProviderResults from "../Models/SearchProviderResults";
-import SearchProvider from "../Models/SearchProvider";
 import filterOutUndefined from "../Core/filterOutUndefined";
-import CatalogSearchProvider from "../Models/CatalogSearchProvider";
+import LocationSearchProviderMixin from "../ModelMixins/SearchProvider/LocationSearchProviderMixin";
+import SearchProviderMixin from "../ModelMixins/SearchProvider/SearchProviderMixin";
+import CatalogSearchProvider from "../Models/SearchProvider/CatalogSearchProvider";
+import SearchProviderResults from "../Models/SearchProvider/SearchProviderResults";
+import Terria from "../Models/Terria";
 
 interface SearchStateOptions {
   terria: Terria;
@@ -20,9 +20,10 @@ interface SearchStateOptions {
 
 export default class SearchState {
   @observable
-  catalogSearchProvider: SearchProvider | undefined;
+  catalogSearchProvider: SearchProviderMixin.SearchProviderMixin | undefined;
 
-  @observable locationSearchProviders: SearchProvider[];
+  @observable
+  locationSearchProviders: LocationSearchProviderMixin.LocationSearchProviderMixin[];
 
   @observable catalogSearchText: string = "";
   @observable isWaitingToStartCatalogSearch: boolean = false;
@@ -48,24 +49,26 @@ export default class SearchState {
   constructor(options: SearchStateOptions) {
     this.catalogSearchProvider =
       options.catalogSearchProvider ||
-      new CatalogSearchProvider({ terria: options.terria });
+      new CatalogSearchProvider("catalog-search-provider", options.terria);
     this.locationSearchProviders = options.locationSearchProviders || [];
 
+    const self = this;
+
     this._catalogSearchDisposer = reaction(
-      () => this.catalogSearchText,
+      () => self.catalogSearchText,
       () => {
-        this.isWaitingToStartCatalogSearch = true;
-        if (this.catalogSearchProvider) {
-          this.catalogSearchResults = this.catalogSearchProvider.search("");
+        self.isWaitingToStartCatalogSearch = true;
+        if (self.catalogSearchProvider) {
+          self.catalogSearchResults = self.catalogSearchProvider.search("");
         }
       }
     );
 
     this._locationSearchDisposer = reaction(
-      () => this.locationSearchText,
+      () => self.locationSearchText,
       () => {
-        this.isWaitingToStartLocationSearch = true;
-        this.locationSearchResults = this.locationSearchProviders.map(
+        self.isWaitingToStartLocationSearch = true;
+        self.locationSearchResults = self.locationSearchProviders.map(
           provider => {
             return provider.search("");
           }

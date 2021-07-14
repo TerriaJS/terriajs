@@ -1,7 +1,11 @@
-import i18next from "i18next";
+import WebFeatureServiceSearchProviderTraits from "../../Traits/SearchProvider/WebFeatureServiceSearchProviderTraits";
+import CreateModel from "../CreateModel";
+import WebFeatureServiceSearchProviderMixin from "../../ModelMixins/SearchProvider/WebFeatureServiceSearchProviderMixin";
 import SearchResult from "./SearchResult";
-import Terria from "./Terria";
-import WebFeatureServiceSearchProvider from "./WebFeatureServiceSearchProvider";
+import {
+  Category,
+  SearchAction
+} from "../../Core/AnalyticEvents/analyticEvents";
 
 const featureCodesToNamesMap = new Map([
   ["AF", "Aviation"],
@@ -220,23 +224,33 @@ const searchResultScoreFunction = function(
   return score;
 };
 
-const WFS_SERVICE_URL =
-  "http://services.ga.gov.au/gis/services/Australian_Gazetteer/MapServer/WFSServer";
-const SEARCH_PROPERTY_NAME = "Australian_Gazetteer:NameU";
-const SEARCH_PROPERTY_TYPE_NAME = "Australian_Gazetteer:Gazetteer_of_Australia";
-
-export default function createAustralianGazetteerSearchProvider(
-  terria: Terria
+export default class AustralianGazetteerSearchProvider extends WebFeatureServiceSearchProviderMixin(
+  CreateModel(WebFeatureServiceSearchProviderTraits)
 ) {
-  return new WebFeatureServiceSearchProvider({
-    terria,
-    featureToSearchResultFunction,
-    wfsServiceUrl: WFS_SERVICE_URL,
-    searchPropertyName: SEARCH_PROPERTY_NAME,
-    searchPropertyTypeName: SEARCH_PROPERTY_TYPE_NAME,
-    transformSearchText: searchText => searchText.toUpperCase(),
-    name: i18next.t("viewModels.searchPlaceNames"),
-    searchResultFilterFunction: searchResultFilterFunction,
-    searchResultScoreFunction: searchResultScoreFunction
-  });
+  static readonly type = "australian-gazetteer-search-provider";
+
+  get type() {
+    return AustralianGazetteerSearchProvider.type;
+  }
+
+  protected logEvent(searchText: string) {
+    this.terria.analytics?.logEvent(
+      Category.search,
+      SearchAction.gazetteer,
+      searchText
+    );
+  }
+
+  featureToSearchResultFunction: (
+    feature: any
+  ) => SearchResult = featureToSearchResultFunction;
+  transformSearchText:
+    | ((searchText: string) => string)
+    | undefined = searchText => searchText.toUpperCase();
+  searchResultFilterFunction:
+    | ((feature: any) => boolean)
+    | undefined = searchResultFilterFunction;
+  searchResultScoreFunction:
+    | ((feature: any, searchText: string) => number)
+    | undefined = searchResultScoreFunction;
 }

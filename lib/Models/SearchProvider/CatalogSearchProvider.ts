@@ -1,18 +1,20 @@
 import { autorun, observable, runInAction } from "mobx";
-import SearchProvider from "./SearchProvider";
-import SearchResult from "./SearchResult";
-import Terria from "./Terria";
+import {
+  Category,
+  SearchAction
+} from "../../Core/AnalyticEvents/analyticEvents";
+import GroupMixin from "../../ModelMixins/GroupMixin";
+import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
+import SearchProviderMixin from "../../ModelMixins/SearchProvider/SearchProviderMixin";
+import CatalogSearchProviderTraits from "../../Traits/SearchProvider/CatalogSearchProviderTraits";
+import CreateModel from "../CreateModel";
+import Terria from "../Terria";
 import SearchProviderResults from "./SearchProviderResults";
-import GroupMixin from "../ModelMixins/GroupMixin";
-import ReferenceMixin from "../ModelMixins/ReferenceMixin";
-import { Category, SearchAction } from "../Core/AnalyticEvents/analyticEvents";
-
-interface CatalogSearchProviderOptions {
-  terria: Terria;
-}
+import SearchResult from "./SearchResult";
 
 type UniqueIdString = string;
 type ResultMap = Map<UniqueIdString, boolean>;
+
 export function loadAndSearchCatalogRecursively(
   terria: Terria,
   searchTextLowercase: string,
@@ -96,16 +98,23 @@ export function loadAndSearchCatalogRecursively(
   });
 }
 
-export default class CatalogSearchProvider extends SearchProvider {
-  readonly terria: Terria;
+export default class CatalogSearchProvider extends SearchProviderMixin(
+  CreateModel(CatalogSearchProviderTraits)
+) {
+  static readonly type = "catalog-search-provider";
   @observable isSearching: boolean = false;
   @observable debounceDurationOnceLoaded: number = 300;
 
-  constructor(options: CatalogSearchProviderOptions) {
-    super();
+  get type() {
+    return CatalogSearchProvider.type;
+  }
 
-    this.terria = options.terria;
-    this.name = "Catalog Items";
+  protected logEvent(searchText: string) {
+    this.terria.analytics?.logEvent(
+      Category.search,
+      SearchAction.catalog,
+      searchText
+    );
   }
 
   protected doSearch(
@@ -121,11 +130,6 @@ export default class CatalogSearchProvider extends SearchProvider {
       return Promise.resolve();
     }
 
-    this.terria.analytics?.logEvent(
-      Category.search,
-      SearchAction.catalog,
-      searchText
-    );
     const resultMap: ResultMap = new Map();
 
     const promise: Promise<any> = loadAndSearchCatalogRecursively(
