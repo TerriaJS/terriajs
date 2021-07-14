@@ -10,7 +10,7 @@ TerriaJS is a library for building rich, web-based geospatial data explorers, us
 
 --------------------
 
-**We are currently working on a brand new version of Terria &mdash; verson 8!**
+**We are currently working on a brand new version of Terria &mdash; version 8!**
 
 We will soon be posting docs outlining this new version: 
 
