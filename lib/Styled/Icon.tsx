@@ -160,11 +160,12 @@ interface IStyledIconProps {
 export const StyledIcon = styled(Icon)<IStyledIconProps>`
   display: ${props => (props.displayInline ? `inline` : `block`)};
   ${props =>
-    props.displayInline &&
-    `
+    props.displayInline
+      ? `
   display: inline;
-  vertical-align: middle;
-  `}
+  vertical-align: middle;`
+      : `
+  display: block;`}
 
   flex-shrink: 0;
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
