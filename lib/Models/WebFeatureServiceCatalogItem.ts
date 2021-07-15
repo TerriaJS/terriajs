@@ -433,7 +433,7 @@ class WebFeatureServiceCatalogItem extends ExportableMixin(
         );
     });
 
-    await this.geojsonCatalogItem!.loadMapItems();
+    (await this.geojsonCatalogItem!.loadMapItems()).throwIfError();
   }
 
   @computed

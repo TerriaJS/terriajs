@@ -36,7 +36,6 @@ import {
 } from "./GtfsRealtimeProtoBufReaders";
 import prettyPrintGtfsEntityField from "./prettyPrintGtfsEntityField";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import raiseErrorOnRejectedPromise from "./raiseErrorOnRejectedPromise";
 import Terria from "./Terria";
 import VehicleData from "./VehicleData";
 import { BaseModel } from "./Model";

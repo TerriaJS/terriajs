@@ -45,7 +45,6 @@ export default class PointOnMap extends React.Component<PropsType> {
     });
     props.terria.addModel(pointItem);
     props.terria.overlays.add(pointItem);
-    pointItem.loadMapItems();
     this.pointItem = pointItem;
   }
 

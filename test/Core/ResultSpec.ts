@@ -20,7 +20,7 @@ describe("Result", function() {
     ).toBe("what");
     expect(caughtError).toBeFalsy();
 
-    const result2 = Result.return("what");
+    const result2 = new Result("what");
 
     expect(result2.ignoreError()).toBe("what");
     expect(result2.throwIfError()).toBe("what");
@@ -55,7 +55,7 @@ describe("Result", function() {
     ).toBe("what");
     expect(caughtError).toBeTruthy();
 
-    const result2 = Result.return("what", { message: "some error" });
+    const result2 = new Result("what", { message: "some error" });
 
     expect(result2.ignoreError()).toBe("what");
     expect(result2.throwIfError).toThrow();

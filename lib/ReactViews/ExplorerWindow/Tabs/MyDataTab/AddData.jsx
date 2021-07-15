@@ -91,7 +91,7 @@ const AddData = createReactClass({
     });
   },
 
-  handleUrl(e) {
+  async handleUrl(e) {
     const url = this.state.remoteUrl;
     e.preventDefault();
     this.props.terria.analytics?.logEvent(
@@ -118,7 +118,9 @@ const AddData = createReactClass({
           message: `An error occurred trying to add data from URL: ${url}`
         });
         newItem.setTrait(CommonStrata.user, "url", url);
-        promise = newItem.loadMetadata().then(() => newItem);
+        promise = newItem
+          .loadMetadata()
+          .then(result => result.throwIfError() && newItem);
       } catch (e) {
         promise = Promise.reject(e);
       }

@@ -46,9 +46,7 @@ export default class TerriaViewer {
     if (!baseMap) return;
 
     try {
-      if (CatalogMemberMixin.isMixedInto(baseMap)) await baseMap.loadMetadata();
-
-      if (baseMap) await baseMap.loadMapItems();
+      if (baseMap) (await baseMap.loadMapItems()).throwIfError();
 
       runInAction(() => (this._baseMap = baseMap));
     } catch (e) {

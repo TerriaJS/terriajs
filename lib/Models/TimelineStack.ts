@@ -93,7 +93,7 @@ export default class TimelineStack {
     return (
       this.items.find(item => {
         const dereferenced: TimeVarying =
-          ReferenceMixin.is(item) && item.target
+          ReferenceMixin.isMixedInto(item) && item.target
             ? (item.target as TimeVarying)
             : item;
         return (

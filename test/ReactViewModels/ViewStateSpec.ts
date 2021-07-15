@@ -18,9 +18,9 @@ describe("ViewState", function() {
   });
 
   describe("removeModelReferences", function() {
-    it("unsets the previewedItem if it matches the model", function() {
+    it("unsets the previewedItem if it matches the model", async function() {
       const item = new SimpleCatalogItem("testId", terria);
-      viewState.previewedItem = item;
+      await viewState.viewCatalogMember(item);
       viewState.removeModelReferences(item);
       expect(viewState.previewedItem).toBeUndefined();
     });

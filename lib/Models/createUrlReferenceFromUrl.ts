@@ -10,39 +10,35 @@ export default async function createUrlReferenceFromUrl(
   terria: Terria,
   allowLoad: boolean
 ): Promise<UrlReference | undefined> {
-  const item = upsertModelFromJson(
-    CatalogMemberFactory,
-    terria,
-    "",
-    CommonStrata.definition,
-    {
-      type: UrlReference.type,
-      name: url,
-      localId: url,
-      allowLoad: allowLoad
-    },
-    {}
-  ).throwIfUndefined({
-    message: `Could not create UrlReference for URL: ${url}`
-  }) as UrlReference;
+  try {
+    const item = upsertModelFromJson(
+      CatalogMemberFactory,
+      terria,
+      "",
+      CommonStrata.definition,
+      {
+        type: UrlReference.type,
+        name: url,
+        localId: url,
+        allowLoad: allowLoad
+      },
+      {}
+    ).throwIfUndefined() as UrlReference;
 
-  // Set URL in user stratum so it can be shared
-  item.setTrait(CommonStrata.user, "url", url);
+    // Set URL in user stratum so it can be shared
+    item.setTrait(CommonStrata.user, "url", url);
 
-  if (!(item instanceof UrlReference)) {
-    throw new TerriaError({
-      message: `Could not create UrlReference for URL: ${url}`
-    });
+    if (!(item instanceof UrlReference)) {
+      throw `Invalid model type`;
+    }
+
+    terria.catalog.userAddedDataGroup.add(CommonStrata.user, item);
+
+    (await item.loadReference()).throwIfError();
+    if (item.target !== undefined) {
+      return item;
+    }
+  } catch (e) {
+    throw TerriaError.from(e, `Could not load UrlReference for URL: ${url}`);
   }
-
-  terria.catalog.userAddedDataGroup.add(CommonStrata.user, item);
-
-  await item.loadReference();
-  if (item.target !== undefined) {
-    return item;
-  }
-
-  throw new TerriaError({
-    message: `Could not load UrlReference for URL: ${url}`
-  });
 }

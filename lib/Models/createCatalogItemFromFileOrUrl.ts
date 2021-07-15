@@ -164,7 +164,7 @@ async function loadItem(
   fileOrUrl: File | string
 ): Promise<BaseModel> {
   if (
-    ReferenceMixin.is(newCatalogItem) &&
+    ReferenceMixin.isMixedInto(newCatalogItem) &&
     newCatalogItem.target !== undefined
   ) {
     return loadItem(newCatalogItem.target, fileOrUrl);

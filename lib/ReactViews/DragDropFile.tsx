@@ -11,6 +11,7 @@ import { BaseModel } from "../Models/Model";
 import Terria from "../Models/Terria";
 import ViewState from "../ReactViewModels/ViewState";
 import Styles from "./drag-drop-file.scss";
+import Result from "../Core/Result";
 
 interface PropsType extends WithTranslation {
   terria: Terria;
@@ -36,7 +37,7 @@ class DragDropFile extends React.Component<PropsType> {
       if (isDefined(addedCatalogItems) && addedCatalogItems.length > 0) {
         props.viewState.myDataIsUploadView = false;
         if (props.viewState.explorerPanelIsVisible) {
-          props.viewState.viewCatalogMember(addedCatalogItems[0]);
+          yield props.viewState.viewCatalogMember(addedCatalogItems[0]);
           props.viewState.openUserData();
         } else {
           // update last batch of uploaded files
@@ -50,7 +51,10 @@ class DragDropFile extends React.Component<PropsType> {
           MappableMixin.isMixedInto
         );
 
-        yield Promise.all(mappableItems.map(f => f.loadMapItems()));
+        Result.combine(
+          yield Promise.all(mappableItems.map(f => f.loadMapItems())),
+          "Failed to load uploaded files"
+        ).raiseError(props.terria);
 
         // Zoom to first item
         const firstZoomableItem = mappableItems.find(i =>

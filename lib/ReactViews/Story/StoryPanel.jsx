@@ -6,18 +6,18 @@ import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import { Swipeable } from "react-swipeable";
-import getPath from "../../Core/getPath";
-// eslint-disable-next-line no-unused-vars
-import Terria from "../../Models/Terria";
-import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
-import { Medium, Small } from "../Generic/Responsive";
-import Icon from "../../Styled/Icon";
-import Styles from "./story-panel.scss";
-import TerriaError from "../../Core/TerriaError";
 import {
   Category,
   StoryAction
 } from "../../Core/AnalyticEvents/analyticEvents";
+import getPath from "../../Core/getPath";
+import TerriaError, { TerriaErrorSeverity } from "../../Core/TerriaError";
+// eslint-disable-next-line no-unused-vars
+import Terria from "../../Models/Terria";
+import Icon from "../../Styled/Icon";
+import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
+import { Medium, Small } from "../Generic/Responsive";
+import Styles from "./story-panel.scss";
 
 /**
  *
@@ -175,7 +175,11 @@ const StoryPanel = observer(
           this.props.terria
             .updateFromStartData(
               story.shareData,
-              `Story data: \`${story.title ?? story.id}\``
+              `Story data: \`${story.title ?? story.id}\``,
+              // We set errors to use Warning severity so they aren't shown to the user by default
+              // This is due to many stories/shareData having invalid models in them
+              // If a more severe error is thrown while loading shareData (eg Error) then the error WILL still be shown to the user
+              TerriaErrorSeverity.Warning
             )
             .catch(function(e) {
               this.props.terria.raiseErrorToUser(e);

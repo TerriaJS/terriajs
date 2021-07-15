@@ -24,6 +24,7 @@ Change Log
 * Fix sharing user added data of type "Auto-detect".
 * #5605 tidy up format string used in `MagdaReference`
 * Fix wms feature info returning only one feature
+* In `terriaErrorNotification` - show `error.message` (as well as `error.stack`) if `error.stack` is defined
 * `WebMapServiceCatalogGroup` will now create layer auto-IDs using `Name` field to avoid ID clashes.
 * Added `GroupMixin` `shareKey` generation for members - if the group has `shareKeys`.
 * Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses`
@@ -135,6 +136,20 @@ Change Log
 * Fix invalid HTML in `DataPreviewSections`.
 * Fix pluralisation of mapDataState to support other languages.
 * Fix CSW `Stratum` name bug.
+* Add `TerriaErrorSeverity` enum, values can be `Error` or `Warning`.
+  * Errors with severity `Error` are presented to the user. `Warning` will just be printed to console.
+  * By default, errors will use `Error`
+  * The folloring errors will use `Error` severity.
+    * Loading map config
+    * Loading/Applying init source (excluding `shareData` and stories)
+    * Invalid model object (fails to parse as JSON)
+    * Loading models **if it is in the workbench**
+    * Loading catalog items in the workbench
+  * `TerriaError.shouldRaiseToUser` will look at all error severity in the entire tree of errors, and use the highest one.
+    * For example, if all errors in a tree are `Warning`, but there is one error with `Error` severity, the entire tree will be "raised to the user".
+* `AsyncLoader` loadXXX methods now return `Result` with `errors`.
+* Fix `MagdaReference` `forceLoadReference` bug.
+* Clean up `CkanCatalogGroup` loading - errors are no-longer swallowed.
 * Add `#configUrl` hash parameter for **dev environment only**. It can be used to overwrite Terria config URL.
 
 #### 8.0.0-alpha.80

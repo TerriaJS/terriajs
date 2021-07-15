@@ -1,7 +1,14 @@
 "use strict";
 
 import classNames from "classnames";
-import { action, autorun, computed, observable, runInAction } from "mobx";
+import {
+  action,
+  autorun,
+  computed,
+  observable,
+  runInAction,
+  reaction
+} from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -146,14 +153,21 @@ class DataPreviewMap extends React.Component {
     }
 
     this.previewViewer.attach(container);
-    this._disposePreviewBadgeStateUpdater = autorun(() => {
-      if (this.props.showMap && this.props.previewed !== undefined) {
-        this.setPreviewBadgeState("loading");
-        this.props.previewed.loadMapItems().then(() => {
+    this._disposePreviewBadgeStateUpdater = reaction(
+      () => this.props.showMap && this.props.previewed !== undefined,
+      async () => {
+        if (this.props.showMap && this.props.previewed !== undefined) {
+          this.setPreviewBadgeState("loading");
+
+          (await this.props.previewed.loadMapItems()).raiseError(
+            this.props.previewed.terria,
+            `Failed to preview map for ${this.props.previewed.name}`
+          );
+
           this.setPreviewBadgeState("dataPreview");
-        });
+        }
       }
-    });
+    );
     this._disposeZoomToExtentSubscription = autorun(() => {
       if (this.isZoomedToExtent) {
         this.previewViewer.currentViewer.zoomTo(this.props.previewed);

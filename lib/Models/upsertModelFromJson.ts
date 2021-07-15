@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import defaults from "lodash-es/defaults";
 import Result from "../Core/Result";
-import TerriaError from "../Core/TerriaError";
+import TerriaError, { TerriaErrorSeverity } from "../Core/TerriaError";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import CommonStrata from "./CommonStrata";
 import createStubCatalogItem from "./createStubCatalogItem";
@@ -50,7 +50,8 @@ export default function upsertModelFromJson(
     if (localId === undefined) {
       return Result.error({
         title: i18next.t("models.catalog.idForMatchingErrorTitle"),
-        message: i18next.t("models.catalog.idForMatchingErrorMessage")
+        message: i18next.t("models.catalog.idForMatchingErrorMessage"),
+        severity: TerriaErrorSeverity.Warning
       });
     }
 
@@ -76,7 +77,8 @@ export default function upsertModelFromJson(
       if (model === undefined) {
         errors.push(
           new TerriaError({
-            message: `Failed to get model \`"${potentialId}"\` found using share key \`"${json.id}"\``
+            message: `Failed to get model \`"${potentialId}"\` found using share key \`"${json.id}"\``,
+            severity: TerriaErrorSeverity.Warning
           })
         );
       }
@@ -90,7 +92,8 @@ export default function upsertModelFromJson(
           title: i18next.t("models.catalog.unsupportedTypeTitle"),
           message: i18next.t("models.catalog.unsupportedTypeMessage", {
             type: json.type
-          })
+          }),
+          severity: TerriaErrorSeverity.Warning
         })
       );
       model = createStubCatalogItem(terria, uniqueId);
@@ -103,7 +106,11 @@ export default function upsertModelFromJson(
       try {
         model.terria.addModel(model, json.shareKeys);
       } catch (error) {
-        errors.push(TerriaError.from(error));
+        errors.push(
+          TerriaError.from(error, {
+            severity: TerriaErrorSeverity.Warning
+          })
+        );
       }
     }
   }

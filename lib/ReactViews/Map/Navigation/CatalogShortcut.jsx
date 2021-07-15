@@ -19,9 +19,9 @@ const CatalogShortcut = createReactClass({
     title: PropTypes.string
   },
 
-  handleClick() {
+  async handleClick() {
     if (defined(this.props.catalogMember)) {
-      this.props.viewState.viewCatalogMember(this.props.catalogMember);
+      await this.props.viewState.viewCatalogMember(this.props.catalogMember);
     }
   },
 

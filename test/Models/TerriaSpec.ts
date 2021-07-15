@@ -17,7 +17,6 @@ import {
 } from "../../lib/Models/InitSource";
 import MagdaReference from "../../lib/Models/MagdaReference";
 import { BaseModel } from "../../lib/Models/Model";
-import openGroup from "../../lib/Models/openGroup";
 import Terria from "../../lib/Models/Terria";
 import UrlReference, {
   UrlToCatalogMemberMapping
@@ -396,10 +395,10 @@ describe("Terria", function() {
       const group = <WebMapServiceCatalogGroup>(
         terria.getModelById(BaseModel, "groupABC")
       );
-      await openGroup(group);
+      await viewState.viewCatalogMember(group);
       expect(group.isOpen).toBe(true);
       expect(group.members.length).toBeGreaterThan(0);
-      const shareLink = await buildShareLink(terria, viewState);
+      const shareLink = buildShareLink(terria, viewState);
       await newTerria.updateApplicationUrl(shareLink);
       await newTerria.loadInitSources();
       const newGroup = <WebMapServiceCatalogGroup>(

@@ -30,7 +30,7 @@ export class AnyTrait extends Trait {
   }
 
   fromJson(model: BaseModel, stratumName: string, jsonValue: any): Result<any> {
-    return Result.return(jsonValue);
+    return new Result(jsonValue);
   }
 
   toJson(value: any): any {

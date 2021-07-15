@@ -7,9 +7,11 @@ import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
+import Result from "../Core/Result";
+import TerriaError from "../Core/TerriaError";
 import Model from "../Models/Model";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
-import CatalogMemberMixin from "./CatalogMemberMixin";
+import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
 import TableMixin from "./TableMixin";
 
 export type MapItem =
@@ -122,21 +124,34 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
 
     /**
      * Loads the map items. It is safe to call this as often as necessary.
+     * This will also call `loadMetadata()`.
      * If the map items are already loaded or already loading, it will
      * return the existing promise.
+     *
+     * This returns a Result object, it will contain errors if they occur - they will not be thrown.
+     * To throw errors, use `(await loadMetadata()).throwIfError()`
      */
-    async loadMapItems(force?: boolean) {
-      if (this.shouldShowInitialMessage) {
-        // Don't await the initialMessage because this causes cyclic dependency between loading
-        //  and user interaction (see https://github.com/TerriaJS/terriajs/issues/5528)
-        this.showInitialMessage();
-      }
-      if (CatalogMemberMixin.isMixedInto(this)) await this.loadMetadata();
+    async loadMapItems(force?: boolean): Promise<Result<void>> {
+      try {
+        if (this.shouldShowInitialMessage) {
+          // Don't await the initialMessage because this causes cyclic dependency between loading
+          //  and user interaction (see https://github.com/TerriaJS/terriajs/issues/5528)
+          this.showInitialMessage();
+        }
+        if (CatalogMemberMixin.isMixedInto(this))
+          (await this.loadMetadata()).throwIfError();
 
-      // We need to make sure the region provider is loaded before loading
-      // region mapped tables.
-      if (TableMixin.isMixedInto(this)) await this.loadRegionProviderList();
-      await this._mapItemsLoader.load(force);
+        // We need to make sure the region provider is loaded before loading
+        // region mapped tables.
+        if (TableMixin.isMixedInto(this)) await this.loadRegionProviderList();
+        (await this._mapItemsLoader.load(force)).throwIfError();
+      } catch (e) {
+        return Result.error(
+          TerriaError.from(e, `Failed to load \`${getName(this)}\` mapItems`)
+        );
+      }
+
+      return Result.none();
     }
 
     abstract get mapItems(): MapItem[];
@@ -148,6 +163,8 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
      * It is guaranteed that `loadMetadata` has finished before this is called.
      *
      * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
+     *
+     * Errors can be thrown here.
      */
     protected abstract async forceLoadMapItems(): Promise<void>;
 

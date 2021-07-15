@@ -19,6 +19,28 @@ function resolveI18n(i: I18nTranslateString | string) {
   return typeof i === "string" ? i : i18next.t(i.key, i.parameters);
 }
 
+/** `TerriaErrorSeverity` can be `Error` or `Warning`.
+ * Errors with severity `Error` are presented to the user. `Warning` will just be printed to console.
+ */
+export enum TerriaErrorSeverity {
+  /** Errors which should be shown to the user. This should be used for any error which **may** significantly impact on user experience.
+   * For example:
+   * - Errors while loading map configuration
+   * - Errors while loading map catalog
+   * - Failing to load a catalog member/group
+   * - Failing to add a catalog member to the workbench
+   * - Failing to create a share link
+   * - Failing to load models (from share links or stories) **if they are in the workbench**
+   * - TileErrors
+   */
+  Error,
+  /** Errors which can be ignored by the user. These will be printed to console s
+   * For example:
+   * - Failing to load models (from share links or stories) if they are **NOT** in the workbench
+   */
+  Warning
+}
+
 /** Object used to create a TerriaError */
 export interface TerriaErrorOptions {
   /**  A detailed message describing the error.  This message may be HTML and it should be sanitized before display to the user. */
@@ -34,17 +56,39 @@ export interface TerriaErrorOptions {
   /** Error which this error was created from. This means TerriaErrors can be represented as a tree of errors - and therefore a stacktrace can be generated */
   originalError?: TerriaError | Error | (TerriaError | Error)[];
 
-  /** If true, lib\ReactViews\Notification\terriaErrorNotification.tsx will be used to display error message.
-   * If false, a plain old `Notification` will be used
+  /** If `true`, `lib\ReactViews\Notification\terriaErrorNotification.tsx` will be used to display error message.
+   * If `false`, a plain old `Notification` will be used.
+   * This will default to `true`
    */
   useTerriaErrorNotification?: boolean;
+
+  /** TerriaErrorSeverity - will default to `Error`
+   * A function can be used here, which will be resolved when the error is raised to user.
+   */
+  severity?: TerriaErrorSeverity | (() => TerriaErrorSeverity);
 }
 
 /** Object used to clone an existing TerriaError (see `TerriaError.clone()`).
  *
  * If this is a `string` it will be used to set `TerriaError.message`
+ * If this is `TerriaErrorSeverity` it will be used to set `TerriaError.severity`
  */
-export type TerriaErrorOverrides = Partial<TerriaErrorOptions> | string;
+export type TerriaErrorOverrides =
+  | Partial<TerriaErrorOptions>
+  | string
+  | TerriaErrorSeverity;
+
+export function parseOverrides(
+  overrides: TerriaErrorOverrides | undefined
+): Partial<TerriaErrorOptions> {
+  // If overrides is a string - we treat is as the `message` parameter
+  if (typeof overrides === "string") {
+    overrides = { message: overrides };
+  } else if (typeof overrides === "number") {
+    overrides = { severity: overrides };
+  }
+  return overrides ?? {};
+}
 
 /**
  * Represents an error that occurred in a TerriaJS module, especially an asynchronous one that cannot be raised
@@ -54,6 +98,7 @@ export default class TerriaError {
   private readonly _message: string | I18nTranslateString;
   private readonly _title: string | I18nTranslateString;
   private readonly useTerriaErrorNotification: boolean;
+  severity: TerriaErrorSeverity | (() => TerriaErrorSeverity);
 
   /** `sender` isn't really used for anything at the moment... */
   readonly sender: unknown;
@@ -72,14 +117,10 @@ export default class TerriaError {
       return isDefined(overrides) ? error.createParentError(overrides) : error;
     }
 
-    // Try to find message using overrides or error object
-    let message = "Unknown error";
+    // Try to find message from error object
+    let message: string | undefined;
 
-    // If overrides is a string - we treat is as the `message` parameter
-    if (typeof overrides === "string") {
-      message = overrides;
-      overrides = {};
-    } else if (typeof error === "string") {
+    if (typeof error === "string") {
       message = error;
     } else if (error instanceof Error) {
       message = error.message;
@@ -89,9 +130,15 @@ export default class TerriaError {
 
     return new TerriaError({
       title: { key: "core.terriaError.defaultTitle" },
-      message,
-      originalError: error instanceof Error ? error : undefined,
-      ...overrides
+      message: message ?? { key: "core.terriaError.defaultMessage" },
+      // Create original Error from `error` object or `message`
+      originalError:
+        error instanceof Error
+          ? error
+          : message
+          ? new Error(message)
+          : undefined,
+      ...parseOverrides(overrides)
     });
   }
 
@@ -99,23 +146,29 @@ export default class TerriaError {
    * `overrides` can be used to add more context to the combined `TerriaError`.
    */
   static combine(
-    errors: TerriaError[],
+    errors: (TerriaError | undefined)[],
     overrides: TerriaErrorOverrides
   ): TerriaError | undefined {
-    if (errors.length === 0) return;
+    const filteredErrors = errors.filter(e => isDefined(e)) as TerriaError[];
+    if (filteredErrors.length === 0) return;
 
-    // If overrides is a string - we treat is as the `message` parameter
-    if (typeof overrides === "string") {
-      overrides = { message: overrides };
-    }
+    // Find highest severity across errors (eg if one if `Error`, then the new TerriaError will also be `Error`)
+    const severity = () =>
+      filteredErrors
+        .map(error => error.nestedSeverity)
+        .includes(TerriaErrorSeverity.Error)
+        ? TerriaErrorSeverity.Error
+        : TerriaErrorSeverity.Warning;
+
     return new TerriaError({
       // Set default title and message
       title: { key: "core.terriaError.defaultCombineTitle" },
       message: { key: "core.terriaError.defaultCombineMessage" },
 
       // Add original errors and overrides
-      originalError: errors,
-      ...overrides
+      originalError: filteredErrors,
+      severity,
+      ...parseOverrides(overrides)
     });
   }
 
@@ -133,6 +186,8 @@ export default class TerriaError {
       : [];
     this.useTerriaErrorNotification =
       options.useTerriaErrorNotification ?? true;
+
+    this.severity = options.severity ?? TerriaErrorSeverity.Error;
   }
 
   get message() {
@@ -143,6 +198,11 @@ export default class TerriaError {
     return resolveI18n(this._title);
   }
 
+  /** Show error to user if `nestedSeverity` is `Error` */
+  get shouldRaiseToUser() {
+    return this.nestedSeverity === TerriaErrorSeverity.Error;
+  }
+
   get raisedToUser() {
     return this._raisedToUser;
   }
@@ -150,9 +210,24 @@ export default class TerriaError {
   /** Set raisedToUser value for **all** `TerriaErrors` in this tree. */
   set raisedToUser(r: boolean) {
     this._raisedToUser = r;
-    if (this.originalError instanceof TerriaError) {
-      this.originalError.raisedToUser = r;
+    if (this.originalError) {
+      this.originalError.forEach(err =>
+        err instanceof TerriaError ? (err.raisedToUser = r) : null
+      );
     }
+  }
+
+  /** Get the nested error severity for this TerriaError and it's children (originalErrors)
+   * This will return the highest error severity across the whole tree of errors.
+   * It essentially escalates the severity of errors to the highest severity across the tree
+   */
+  get nestedSeverity() {
+    const nestedSeverity = this.flatten().map(error =>
+      typeof error.severity === "function" ? error.severity() : error.severity
+    );
+    if (nestedSeverity.includes(TerriaErrorSeverity.Error))
+      return TerriaErrorSeverity.Error;
+    return TerriaErrorSeverity.Warning;
   }
 
   /** Convert `TerriaError` to `Notification` */
@@ -170,18 +245,14 @@ export default class TerriaError {
    * Create a new parent `TerriaError` from this error. This essentially "clones" the `TerriaError` and applied `overrides` on top. It will also set `originalError` so we get a nice tree of `TerriaErrors`
    */
   createParentError(overrides?: TerriaErrorOverrides): TerriaError {
-    if (typeof overrides === "string") {
-      overrides = { message: overrides };
-    }
     return new TerriaError({
-      ...{
-        message: this._message,
-        title: this._title,
-        sender: this.sender,
-        raisedToUser: this._raisedToUser,
-        originalError: this
-      },
-      ...overrides
+      message: this._message,
+      title: this._title,
+      sender: this.sender,
+      raisedToUser: this._raisedToUser,
+      originalError: this,
+      severity: this.severity,
+      ...parseOverrides(overrides)
     });
   }
 

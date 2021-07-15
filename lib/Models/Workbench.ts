@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { action, computed, observable } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
-import TerriaError from "../Core/TerriaError";
+import TerriaError, { TerriaErrorSeverity } from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import ChartableMixin from "../ModelMixins/ChartableMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
@@ -176,8 +176,8 @@ export default class Workbench {
     this.insertItem(item);
 
     try {
-      if (ReferenceMixin.is(item)) {
-        await item.loadReference();
+      if (ReferenceMixin.isMixedInto(item)) {
+        (await item.loadReference()).throwIfError();
 
         const target = item.target;
         if (
@@ -192,16 +192,18 @@ export default class Workbench {
         }
       }
 
-      if (CatalogMemberMixin.isMixedInto(item)) await item.loadMetadata();
+      if (CatalogMemberMixin.isMixedInto(item))
+        (await item.loadMetadata()).throwIfError();
 
       if (MappableMixin.isMixedInto(item)) {
-        await item.loadMapItems();
+        (await item.loadMapItems()).throwIfError();
       }
     } catch (e) {
       this.remove(item);
       throw TerriaError.from(e, {
         title: i18next.t("workbench.addItemErrorTitle"),
-        message: i18next.t("workbench.addItemErrorMessage")
+        message: i18next.t("workbench.addItemErrorMessage"),
+        severity: TerriaErrorSeverity.Error
       });
     }
   }
@@ -243,7 +245,7 @@ export default class Workbench {
 }
 
 function dereferenceModel(model: BaseModel): BaseModel {
-  if (ReferenceMixin.is(model) && model.target !== undefined) {
+  if (ReferenceMixin.isMixedInto(model) && model.target !== undefined) {
     return model.target;
   }
   return model;

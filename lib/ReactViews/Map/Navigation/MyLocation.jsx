@@ -128,7 +128,6 @@ const MyLocation = createReactClass({
         "stroke-width": 3
       });
 
-      this._marker.loadMapItems();
       this.props.terria.workbench.add(this._marker);
     });
   },

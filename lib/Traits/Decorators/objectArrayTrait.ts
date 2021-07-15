@@ -1,7 +1,7 @@
 import { computed } from "mobx";
 import { computedFn } from "mobx-utils";
 import Result from "../../Core/Result";
-import TerriaError from "../../Core/TerriaError";
+import TerriaError, { TerriaErrorSeverity } from "../../Core/TerriaError";
 import createStratumInstance from "../../Models/createStratumInstance";
 import Model, { BaseModel, ModelConstructor } from "../../Models/Model";
 import saveStratumToJson from "../../Models/saveStratumToJson";
@@ -170,7 +170,8 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
         title: "Invalid property",
         message: `Property ${
           this.id
-        } is expected to be an array but instead it is of type ${typeof jsonValue}.`
+        } is expected to be an array but instead it is of type ${typeof jsonValue}.`,
+        severity: TerriaErrorSeverity.Warning
       });
     }
 
@@ -186,7 +187,8 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
           errors.push(
             new TerriaError({
               title: "Unknown property",
-              message: `${propertyName} is not a valid sub-property of elements of ${this.id}.`
+              message: `${propertyName} is not a valid sub-property of elements of ${this.id}.`,
+              severity: TerriaErrorSeverity.Warning
             })
           );
           return;
@@ -205,7 +207,7 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
       return result;
     });
 
-    return Result.return(
+    return new Result(
       resultArray,
       TerriaError.combine(
         errors,

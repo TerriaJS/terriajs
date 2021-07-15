@@ -273,9 +273,6 @@ const ViewingControls = observer(
           });
         });
       this.props.viewState.viewCatalogMember(item);
-      this.props.viewState.switchMobileView(
-        this.props.viewState.mobileViewOptions.preview
-      );
     },
 
     exportDataClicked() {

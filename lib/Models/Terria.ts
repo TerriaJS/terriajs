@@ -35,14 +35,17 @@ import { isLatLonHeight } from "../Core/LatLonHeight";
 import loadJson5 from "../Core/loadJson5";
 import Result from "../Core/Result";
 import ServerConfig from "../Core/ServerConfig";
-import TerriaError from "../Core/TerriaError";
+import TerriaError, {
+  TerriaErrorSeverity,
+  TerriaErrorOverrides
+} from "../Core/TerriaError";
 import { Complete } from "../Core/TypeModifiers";
 import { getUriWithoutPath } from "../Core/uriHelpers";
 import PickedFeatures, {
   featureBelongsToCatalogItem,
   isProviderCoordsMap
 } from "../Map/PickedFeatures";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import MappableMixin, { isDataSource } from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
@@ -81,7 +84,6 @@ import MagdaReference, { MagdaReferenceHeaders } from "./MagdaReference";
 import MapInteractionMode from "./MapInteractionMode";
 import { BaseModel } from "./Model";
 import NoViewer from "./NoViewer";
-import openGroup from "./openGroup";
 import ShareDataService from "./ShareDataService";
 import SplitItemReference from "./SplitItemReference";
 import TimelineStack from "./TimelineStack";
@@ -537,14 +539,17 @@ export default class Terria {
     return this.error.addEventListener(e => fn(e));
   }
 
-  raiseErrorToUser(error: unknown) {
+  raiseErrorToUser(error: unknown, overrides?: TerriaErrorOverrides) {
     if (this.userProperties.get("ignoreErrors") === "1") {
       return;
     }
-    const terriaError = TerriaError.from(error);
-    if (!terriaError.raisedToUser) {
+    const terriaError = TerriaError.from(error, overrides);
+
+    if (terriaError.shouldRaiseToUser && !terriaError.raisedToUser) {
       terriaError.raisedToUser = true;
       this.error.raiseEvent(terriaError);
+    } else {
+      console.log(terriaError);
     }
   }
 
@@ -755,7 +760,8 @@ export default class Terria {
         TerriaError.from(error, {
           sender: this,
           title: { key: "models.terria.loadConfigErrorTitle" },
-          message: `Couldn't load ${options.configUrl}`
+          message: `Couldn't load ${options.configUrl}`,
+          severity: TerriaErrorSeverity.Error
         })
       );
     } finally {
@@ -843,7 +849,7 @@ export default class Terria {
   /**
    * Asynchronously loads init sources
    */
-  loadInitSources(): Promise<void> {
+  loadInitSources() {
     return this._initSourceLoader.load();
   }
 
@@ -851,8 +857,14 @@ export default class Terria {
     this._initSourceLoader.dispose();
   }
 
-  updateFromStartData(startData: any, name: string = "Application start data") {
-    interpretStartData(this, startData, name);
+  updateFromStartData(
+    startData: any,
+    /** Name for startData initSources - this is only used for debugging purposes */
+    name: string = "Application start data",
+    /** Error severity to use for loading startData init sources - default will be `TerriaErrorSeverity.Error` */
+    errorSeverity?: TerriaErrorSeverity
+  ) {
+    interpretStartData(this, startData, name, errorSeverity);
     return this.loadInitSources();
   }
 
@@ -934,16 +946,18 @@ export default class Terria {
 
     const errors: TerriaError[] = [];
 
-    const initSources = await Promise.all(
+    // Load all init sources
+    const loadedInitSources = await Promise.all(
       this.initSources.map(async initSource => {
         try {
           return {
-            name: initSource.name,
+            ...initSource,
             data: await loadInitSource(initSource)
           };
         } catch (e) {
           errors.push(
             TerriaError.from(e, {
+              severity: initSource.errorSeverity ?? TerriaErrorSeverity.Error,
               message: {
                 key: "models.terria.loadingInitSourceError2Message",
                 parameters: { loadSource: initSource.name ?? "Unknown source" }
@@ -954,8 +968,9 @@ export default class Terria {
       })
     );
 
+    // Apply all init sources
     await Promise.all(
-      initSources.map(async initSource => {
+      loadedInitSources.map(async initSource => {
         if (!isDefined(initSource?.data)) return;
         try {
           await this.applyInitData({
@@ -964,6 +979,7 @@ export default class Terria {
         } catch (e) {
           errors.push(
             TerriaError.from(e, {
+              severity: initSource?.errorSeverity ?? TerriaErrorSeverity.Error,
               message: {
                 key: "models.terria.loadingInitSourceError2Message",
                 parameters: { loadSource: initSource!.name ?? "Unknown source" }
@@ -1037,13 +1053,14 @@ export default class Terria {
           ).catchError(error =>
             errors.push(
               error.createParentError({
-                message: `Failed to load container ${containerId}`
+                message: `Failed to load container ${containerId}`,
+                severity: TerriaErrorSeverity.Warning
               })
             )
           );
 
           if (container) {
-            const dereferenced = ReferenceMixin.is(container)
+            const dereferenced = ReferenceMixin.isMixedInto(container)
               ? container.target
               : container;
             if (GroupMixin.isMixedInto(dereferenced)) {
@@ -1051,10 +1068,10 @@ export default class Terria {
                 await dereferenced.loadMembers();
               } catch (error) {
                 errors.push(
-                  TerriaError.from(
-                    error,
-                    `Failed to load group ${dereferenced.uniqueId}`
-                  )
+                  TerriaError.from(error, {
+                    message: `Failed to load group ${dereferenced.uniqueId}`,
+                    severity: TerriaErrorSeverity.Warning
+                  })
                 );
               }
             }
@@ -1079,7 +1096,8 @@ export default class Terria {
       ).catchError(error =>
         errors.push(
           error.createParentError({
-            message: `Failed to load SplitItemReference ${splitSourceId}`
+            message: `Failed to load SplitItemReference ${splitSourceId}`,
+            severity: TerriaErrorSeverity.Warning
           })
         )
       );
@@ -1097,7 +1115,7 @@ export default class Terria {
         replaceStratum,
         matchByShareKey: true
       }
-    ).catchError(error => errors.push(error));
+    ).pushErrorTo(errors);
 
     if (loadedModel && Array.isArray(containerIds)) {
       containerIds.forEach(containerId => {
@@ -1117,22 +1135,16 @@ export default class Terria {
       loadedModel &&
       replaceStratum &&
       dereferenced === undefined &&
-      ReferenceMixin.is(loadedModel) &&
+      ReferenceMixin.isMixedInto(loadedModel) &&
       loadedModel.target !== undefined
     ) {
       dereferenced = {};
     }
-    if (loadedModel && ReferenceMixin.is(loadedModel)) {
-      try {
-        await loadedModel.loadReference();
-      } catch (e) {
-        errors.push(
-          TerriaError.from(
-            e,
-            `Failed to load reference ${loadedModel.uniqueId}`
-          )
-        );
-      }
+    if (loadedModel && ReferenceMixin.isMixedInto(loadedModel)) {
+      (await loadedModel.loadReference()).pushErrorTo(errors, {
+        message: `Failed to load reference ${loadedModel.uniqueId}`,
+        severity: TerriaErrorSeverity.Warning
+      });
 
       if (isDefined(loadedModel.target)) {
         updateModelFromJson(
@@ -1140,15 +1152,9 @@ export default class Terria {
           stratumId,
           dereferenced || {},
           replaceStratum
-        ).catchError(e =>
-          errors.push(
-            TerriaError.from(
-              e,
-              `Failed to update model from JSON: ${
-                loadedModel.target!.uniqueId
-              }`
-            )
-          )
+        ).pushErrorTo(
+          errors,
+          `Failed to update model from JSON: ${loadedModel.target!.uniqueId}`
         );
       }
     } else if (dereferenced) {
@@ -1163,15 +1169,11 @@ export default class Terria {
     if (loadedModel) {
       const dereferencedGroup = getDereferencedIfExists(loadedModel);
       if (GroupMixin.isMixedInto(dereferencedGroup)) {
-        try {
-          await openGroup(dereferencedGroup, dereferencedGroup.isOpen);
-        } catch (error) {
-          errors.push(
-            TerriaError.from(
-              error,
-              `Failed to open group ${dereferencedGroup.uniqueId}`
-            )
-          );
+        if (dereferencedGroup.isOpen) {
+          (await dereferencedGroup.loadMembers()).pushErrorTo(errors, {
+            message: `Failed to open group ${dereferencedGroup.uniqueId}`,
+            severity: TerriaErrorSeverity.Warning
+          });
         }
       }
     }
@@ -1179,6 +1181,13 @@ export default class Terria {
     return new Result(
       loadedModel,
       TerriaError.combine(errors, {
+        // This will set TerriaErrorSeverity to Error if the model which FAILED to load is in the workbench.
+        severity: () =>
+          this.workbench.items.find(
+            workbenchItem => workbenchItem.uniqueId === modelId
+          )
+            ? TerriaErrorSeverity.Error
+            : TerriaErrorSeverity.Warning,
         message: {
           key: "models.terria.loadModelErrorMessage",
           parameters: { model: modelId }
@@ -1373,24 +1382,22 @@ export default class Terria {
     await Promise.all(
       newItems.map(async model => {
         try {
-          if (ReferenceMixin.is(model)) {
-            await model.loadReference();
+          if (ReferenceMixin.isMixedInto(model)) {
+            (await model.loadReference()).throwIfError();
             model = model.target || model;
           }
 
           if (MappableMixin.isMixedInto(model)) {
-            await model.loadMapItems();
+            (await model.loadMapItems()).throwIfError();
           }
         } catch (e) {
           errors.push(
             TerriaError.from(e, {
-              title: {
+              severity: TerriaErrorSeverity.Error,
+              message: {
                 key: "models.terria.loadingWorkbenchItemErrorTitle",
                 parameters: {
-                  name:
-                    (CatalogMemberMixin.isMixedInto(model)
-                      ? model.name
-                      : model.uniqueId) ?? "Unknown item"
+                  name: getName(model) ?? "Unknown Model"
                 }
               }
             })
@@ -1477,7 +1484,12 @@ export default class Terria {
       reference.setTrait(CommonStrata.definition, "url", magdaRoot);
       reference.setTrait(CommonStrata.definition, "recordId", id);
       reference.setTrait(CommonStrata.definition, "magdaRecord", config);
-      await reference.loadReference();
+      (await reference.loadReference()).catchError(e =>
+        this.raiseErrorToUser(
+          e,
+          `Failed to load MagdaReference for record ${id}`
+        )
+      );
       if (reference.target instanceof CatalogGroup) {
         runInAction(() => {
           this.catalog.group = <CatalogGroup>reference.target;
@@ -1715,7 +1727,11 @@ async function interpretHash(
           interpretStartData(
             terria,
             result.result,
-            `Share data from link: ${hashProperties.share}`
+            `Share data from link: ${hashProperties.share}`,
+            // We set errors to use Warning severity so they aren't shown to the user by default
+            // This is due to many stories/shareData having invalid models in them
+            // If a more severe error is thrown while loading shareData (eg Error) then the error WILL still be shown to the user
+            TerriaErrorSeverity.Warning
           );
         }
       } catch (error) {
@@ -1728,7 +1744,14 @@ async function interpretHash(
   }
 }
 
-function interpretStartData(terria: Terria, startData: any, name: string) {
+function interpretStartData(
+  terria: Terria,
+  startData: any,
+  /** Name for startData initSources - this is only used for debugging purposes */
+  name: string,
+  /** Error severity to use for loading startData init sources - default will be `TerriaErrorSeverity.Error` */
+  errorSeverity?: TerriaErrorSeverity
+) {
   // TODO: version check, filtering, etc.
 
   if (startData.initSources) {
@@ -1737,41 +1760,13 @@ function interpretStartData(terria: Terria, startData: any, name: string) {
         ...startData.initSources.map((initSource: any) => {
           return {
             name,
-            data: initSource
+            data: initSource,
+            errorSeverity
           };
         })
       );
     });
   }
-
-  // if (defined(startData.version) && startData.version !== latestStartVersion) {
-  //   adjustForBackwardCompatibility(startData);
-  // }
-
-  // if (defined(terria.filterStartDataCallback)) {
-  //   startData = terria.filterStartDataCallback(startData) || startData;
-  // }
-
-  // // Include any initSources specified in the URL.
-  // if (defined(startData.initSources)) {
-  //   for (var i = 0; i < startData.initSources.length; ++i) {
-  //     var initSource = startData.initSources[i];
-  //     // avoid loading terria.json twice
-  //     if (
-  //       temporaryInitSources.indexOf(initSource) < 0 &&
-  //       !initFragmentExists(temporaryInitSources, initSource)
-  //     ) {
-  //       temporaryInitSources.push(initSource);
-  //       // Only add external files to the application's list of init sources.
-  //       if (
-  //         typeof initSource === "string" &&
-  //         persistentInitSources.indexOf(initSource) < 0
-  //       ) {
-  //         persistentInitSources.push(initSource);
-  //       }
-  //     }
-  //   }
-  // }
 }
 
 function setCustomRequestSchedulerDomainLimits(

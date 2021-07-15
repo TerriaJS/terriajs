@@ -195,8 +195,8 @@ describe("DataCatalogItem", () => {
           viewState.userDataPreviewedItem = item;
         });
 
-        it("item is NOT added by user and IS the currently previewed data item", () => {
-          viewState.previewedItem = item;
+        it("item is NOT added by user and IS the currently previewed data item", async () => {
+          await viewState.viewCatalogMember(item);
         });
 
         afterEach(() => {
