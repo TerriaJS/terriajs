@@ -121,23 +121,24 @@ function RCStoryEditor(props) {
       return;
     }
     const { terria } = props.viewState;
-    const catalogItem = terria.nowViewing.items
-      .find(item => item.name === "hotspots");
+    const catalogItem = terria.nowViewing.items.find(
+      item => item.name === "hotspots"
+    );
     if (catalogItem !== undefined) {
-      catalogItem._dataSource.load({
-        "type": "Feature",
-        "geometry": {
-          "type": "Point",
-          "coordinates": [
-            hotspotPoint.longitude,
-            hotspotPoint.latitude
-          ]
+      catalogItem._dataSource.load(
+        {
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: [hotspotPoint.longitude, hotspotPoint.latitude]
+          }
+        },
+        {
+          markerSymbol: "circle",
+          markerSize: 64,
+          markerColor: Color.fromRgba(0xee7755ff)
         }
-      }, { 
-        markerSymbol: 'circle',
-        markerSize: 64,
-        markerColor: Color.fromRgba(0xEE7755FF)
-      });
+      );
     }
   }, [hotspotPoint]);
 
