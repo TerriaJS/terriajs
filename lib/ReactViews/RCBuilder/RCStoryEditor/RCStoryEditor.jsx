@@ -183,18 +183,24 @@ function RCStoryEditor(props) {
       scenarios: []
     };
 
+    // Create a new page
     API.graphql({
       query: mutations.createPage,
       variables: { input: newPage }
     }).then(response => {
       if (response.data.createPage) {
         console.log(response.data);
+
+        // Add the new page to the story
         newPage.id = response.data.createPage.id;
         const newPages = Array.isArray(pages) ? [...pages, newPage] : [newPage];
         setPages(newPages);
+
+        // Save the story
         saveStory()
           .then(() => {
-            history.push(`/builder/page/${newPage.id}/edit`);
+            // Go to the editor for the new page
+            history.push(`/builder/story/${id}/page/${newPage.id}/edit`);
           })
           .catch(error => {
             console.log(error);
@@ -357,7 +363,7 @@ function RCStoryEditor(props) {
           <label className={Styles.topLabel} htmlFor="pagesToggle">
             Pages
           </label>
-          <input type="checkbox" id="pagesToggle" name="pagesToggle" checked />
+          <input type="checkbox" id="pagesToggle" name="pagesToggle" />
           <div className={Styles.toggleContent}>
             <button
               className={Styles.RCButton}
@@ -370,7 +376,9 @@ function RCStoryEditor(props) {
               {pages &&
                 pages.map(page => (
                   <li key={page.id}>
-                    <a href={`#builder/page/${page.id}/edit`}>{page.title}</a>
+                    <a href={`#builder/story/${id}/page/${page.id}/edit`}>
+                      {page.title}
+                    </a>
                   </li>
                 ))}
             </ul>

@@ -4,7 +4,7 @@ import { default as React, useEffect, useState } from "react";
 import { getPage } from "../../../../api/graphql/queries";
 import { updatePage } from "../../../../api/graphql/mutations";
 import Styles from "../RCStoryEditor/RCStoryEditor.scss";
-import { useParams } from "react-router-dom";
+import { useParams, withRouter, Link } from "react-router-dom";
 
 function RCPageEditor(props) {
   const [page, setPage] = useState(null);
@@ -12,12 +12,12 @@ function RCPageEditor(props) {
   const [message, setMessage] = useState("");
 
   // get the page id from url
-  const { id } = useParams();
+  const { story_id: storyID, page_id: pageID } = useParams();
 
   // Fetch page details with id
   useEffect(() => {
     try {
-      API.graphql(graphqlOperation(getPage, { id: id })).then(story => {
+      API.graphql(graphqlOperation(getPage, { id: pageID })).then(story => {
         const data = story.data.getPage;
         setPage(data);
         setTitle(data.title);
@@ -27,11 +27,7 @@ function RCPageEditor(props) {
     }
   }, []);
 
-  const onTitleChanged = event => {
-    setTitle(event.target.value);
-  };
-
-  const onSave = () => {
+  const savePage = () => {
     const pageDetails = {
       id: page.id,
       title: title
@@ -43,6 +39,7 @@ function RCPageEditor(props) {
       if (response.data.updatePage) {
         setMessage("Page details saved successfully!");
       } else {
+        console.log(response);
         setMessage("Error", response.errors[0].message);
       }
     });
@@ -50,14 +47,22 @@ function RCPageEditor(props) {
 
   return (
     <div className={Styles.RCPageEditor}>
-      <h3>Edit the page</h3>
+      <h3>
+        Edit the page
+        <Link
+          to={`/builder/story/${storyID}/edit`}
+          className={Styles.backButton}
+        >
+          Back
+        </Link>
+      </h3>
       <form className={Styles.RCStoryCard}>
         <div className={Styles.group}>
           <input
             type="text"
             required
             defaultValue={title}
-            onChange={onTitleChanged}
+            onChange={e => setTitle(e.target.value)}
           />
           <span className={Styles.highlight} />
           <span className={Styles.bar} />
@@ -65,7 +70,7 @@ function RCPageEditor(props) {
         </div>
 
         <div className={Styles.container}>
-          <button className={Styles.RCButton} onClick={onSave}>
+          <button className={Styles.RCButton} onClick={savePage}>
             Save
           </button>
           <label>{message}</label>
@@ -78,4 +83,4 @@ function RCPageEditor(props) {
 RCPageEditor.propTypes = {
   viewState: PropTypes.object
 };
-export default RCPageEditor;
+export default withRouter(RCPageEditor);

@@ -27,7 +27,7 @@ class RCBuilder extends React.Component {
           <Route path={`${path}/story/:id/edit`}>
             <RCStoryEditor viewState={viewState} />
           </Route>
-          <Route path={`${path}/page/:id/edit`}>
+          <Route path={`${path}/story/:story_id/page/:page_id/edit`}>
             <RCPageEditor viewState={viewState} />
           </Route>
           <Route>

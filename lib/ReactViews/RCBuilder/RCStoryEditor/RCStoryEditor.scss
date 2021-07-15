@@ -138,8 +138,7 @@ textarea {
   opacity: 0.5;
 }
 .toggleContent {
-  display: none;
-  background: gainsboro;
+  // display: none;
   min-height: 100px;
 }
 :checked + .toggleContent {
@@ -190,7 +189,7 @@ textarea {
   padding: 20px;
   border-width: 2px;
   border-radius: 2px;
-  border-color: #00e676;
+  border-color: #0c70a7;
   border-style: dashed;
   background-color: #fafafa;
   color: #bdbdbd;
