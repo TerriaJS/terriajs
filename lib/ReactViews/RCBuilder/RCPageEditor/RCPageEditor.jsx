@@ -4,12 +4,13 @@ import { default as React, useEffect, useState } from "react";
 import { getPage } from "../../../../api/graphql/queries";
 import { updatePage } from "../../../../api/graphql/mutations";
 import Styles from "../RCStoryEditor/RCStoryEditor.scss";
-import { useParams, withRouter, Link } from "react-router-dom";
+import { useParams, withRouter, useHistory } from "react-router-dom";
 
 function RCPageEditor(props) {
   const [page, setPage] = useState(null);
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
+  const history = useHistory();
 
   // get the page id from url
   const { story_id: storyID, page_id: pageID } = useParams();
@@ -46,16 +47,16 @@ function RCPageEditor(props) {
   };
 
   return (
-    <div className={Styles.RCPageEditor}>
-      <h3>
-        Edit the page
-        <Link
-          to={`/builder/story/${storyID}/edit`}
-          className={Styles.backButton}
+    <div className={Styles.RCStoryEditor}>
+      <div className={Styles.container}>
+        <h3>Edit the page</h3>
+        <button
+          className={Styles.RCButton}
+          onClick={() => history.push(`/builder/story/${storyID}/edit`)}
         >
           Back
-        </Link>
-      </h3>
+        </button>
+      </div>
       <form className={Styles.RCStoryCard}>
         <div className={Styles.group}>
           <input

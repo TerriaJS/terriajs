@@ -2,7 +2,7 @@ import { AmplifyS3Image } from "@aws-amplify/ui-react";
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import * as mutations from "../../../../api/graphql/mutations";
 import PropTypes from "prop-types";
-import { default as React, useEffect, useRef, useState } from "react";
+import { default as React, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Link, useParams, withRouter, useHistory } from "react-router-dom";
 import { v5 as uuidv5 } from "uuid";
@@ -11,8 +11,6 @@ import { getStory } from "../../../../api/graphql/queries";
 import sectors from "../../../Data/Sectors.js";
 import RCSectorSelection from "./RCSectorSelection/RCSectorSelection";
 import Styles from "./RCStoryEditor.scss";
-import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
-import GeoJsonCatalogItem from "../../../Models/GeoJsonCatalogItem";
 import RCHotspotSelector from "../RCHotspotSelector/RCHotspotSelector";
 
 function RCStoryEditor(props) {
@@ -192,7 +190,7 @@ function RCStoryEditor(props) {
       shortDescription: shortDescription,
       sectors: selectedSectors,
       hotspotlocation: hotspotPoint,
-      image: image,
+      image: image
       //TODO: pages: pages
     };
     return API.graphql({
@@ -209,12 +207,15 @@ function RCStoryEditor(props) {
 
   return (
     <div className={Styles.RCStoryEditor}>
-      <h3>
-        Edit your story
-        <Link to="/builder" className={Styles.backButton}>
+      <div className={Styles.container}>
+        <h3>Edit your story</h3>
+        <button
+          className={Styles.RCButton}
+          onClick={() => history.push("/builder")}
+        >
           Back
-        </Link>
-      </h3>
+        </button>
+      </div>
       <form className={Styles.RCStoryCard}>
         <div className={Styles.group}>
           <input
@@ -245,7 +246,11 @@ function RCStoryEditor(props) {
           sectorRequiredMessage={sectorRequiredMessage}
         />
 
-        <RCHotspotSelector hotspotPoint={hotspotPoint} setHotspotPoint={setHotspotPoint} viewState={viewState} />
+        <RCHotspotSelector
+          hotspotPoint={hotspotPoint}
+          setHotspotPoint={setHotspotPoint}
+          viewState={viewState}
+        />
 
         <div className={Styles.group}>
           <label className={Styles.topLabel}>Image</label>
