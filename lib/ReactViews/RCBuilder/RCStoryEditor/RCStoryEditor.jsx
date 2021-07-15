@@ -5,9 +5,6 @@ import PropTypes from "prop-types";
 import { default as React, useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Link, useParams, withRouter, useHistory } from "react-router-dom";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import Color from "terriajs-cesium/Source/Core/Color";
-import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 import { v5 as uuidv5 } from "uuid";
 import { updateStory } from "../../../../api/graphql/mutations";
 import { getStory } from "../../../../api/graphql/queries";
@@ -16,31 +13,24 @@ import RCSectorSelection from "./RCSectorSelection/RCSectorSelection";
 import Styles from "./RCStoryEditor.scss";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import GeoJsonCatalogItem from "../../../Models/GeoJsonCatalogItem";
+import RCHotspotSelector from "../RCHotspotSelector/RCHotspotSelector";
 
 function RCStoryEditor(props) {
   const [story, setStory] = useState(null);
   const [title, setTitle] = useState("");
   const [shortDescription, setShortDescription] = useState("");
-  const [listenForHotspot, setListenForHotspot] = useState(false);
   const [selectedSectors, setSelectedSectors] = useState([]);
   const [hotspotPoint, setHotspotPoint] = useState(null);
-  const [selectHotspotSubscription, setSelectHotspotSubscription] = useState(
-    null
-  );
-  const hotspotDatasourceRef = useRef(null);
   const [images, setImages] = useState([]);
   const [pages, setPages] = useState([]);
   const [message, setMessage] = useState("");
   const [sectorRequiredMessage, setSectorRequiredMessage] = useState("*");
   const history = useHistory();
+  const viewState = props.viewState;
 
   // get the story id from url
   const { id } = useParams();
-  // store the reference for state
-  const stateRef = useRef();
-  stateRef.current = listenForHotspot;
 
-  let pointval = {};
   const [files, setFiles] = useState([]);
 
   // Fetch story details with id
@@ -59,31 +49,6 @@ function RCStoryEditor(props) {
     } catch (error) {
       console.log(error);
     }
-  }, []);
-  // Listen for picked features/position
-  useEffect(() => {
-    const { terria } = props.viewState;
-    setSelectHotspotSubscription(
-      knockout.getObservable(terria, "pickedFeatures").subscribe(() => {
-        let isListening = stateRef.current;
-        if (isListening) {
-          // Convert position to cartographic
-          const point = Cartographic.fromCartesian(
-            terria.pickedFeatures.pickPosition
-          );
-          setHotspotPoint({
-            latitude: (point.latitude / Math.PI) * 180,
-            longitude: (point.longitude / Math.PI) * 180
-          });
-          setListenForHotspot(false);
-        }
-      })
-    );
-    return () => {
-      if (selectHotspotSubscription !== null) {
-        selectHotspotSubscription.dispose();
-      }
-    };
   }, []);
 
   useEffect(
@@ -115,32 +80,6 @@ function RCStoryEditor(props) {
       </div>
     </div>
   ));
-
-  useEffect(() => {
-    if (hotspotPoint === null) {
-      return;
-    }
-    const { terria } = props.viewState;
-    const catalogItem = terria.nowViewing.items.find(
-      item => item.name === "hotspots"
-    );
-    if (catalogItem !== undefined) {
-      catalogItem._dataSource.load(
-        {
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: [hotspotPoint.longitude, hotspotPoint.latitude]
-          }
-        },
-        {
-          markerSymbol: "circle",
-          markerSize: 64,
-          markerColor: Color.fromRgba(0xee7755ff)
-        }
-      );
-    }
-  }, [hotspotPoint]);
 
   const onTitleChanged = event => {
     setTitle(event.target.value);
@@ -254,7 +193,7 @@ function RCStoryEditor(props) {
       sectors: selectedSectors,
       hotspotlocation: hotspotPoint,
       image: image,
-      pages: pages
+      //TODO: pages: pages
     };
     return API.graphql({
       query: updateStory,
@@ -267,12 +206,6 @@ function RCStoryEditor(props) {
       }
     });
   };
-
-  const hotspotText = hotspotPoint
-    ? `${Number(hotspotPoint.latitude).toFixed(4)}, ${Number(
-        hotspotPoint.longitude
-      ).toFixed(4)}`
-    : "none set";
 
   return (
     <div className={Styles.RCStoryEditor}>
@@ -312,32 +245,7 @@ function RCStoryEditor(props) {
           sectorRequiredMessage={sectorRequiredMessage}
         />
 
-        <div className={Styles.group}>
-          <label className={Styles.topLabel}>Hotspot</label>
-          {!listenForHotspot && (
-            <div className={Styles.container}>
-              <span>Set at: {hotspotText}</span>
-              <button
-                type="button"
-                className={Styles.RCButton}
-                onClick={() => setListenForHotspot(true)}
-              >
-                Select hotspot
-              </button>
-            </div>
-          )}
-          {listenForHotspot && (
-            <div className={Styles.container}>
-              <span>Click on map to set the hotspot position</span>&nbsp;
-              <button
-                onClick={() => setListenForHotspot(false)}
-                className={Styles.RCButton}
-              >
-                Cancel
-              </button>
-            </div>
-          )}
-        </div>
+        <RCHotspotSelector hotspotPoint={hotspotPoint} setHotspotPoint={setHotspotPoint} viewState={viewState} />
 
         <div className={Styles.group}>
           <label className={Styles.topLabel}>Image</label>
