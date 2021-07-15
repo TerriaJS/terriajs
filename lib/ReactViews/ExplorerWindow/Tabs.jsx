@@ -105,7 +105,7 @@ const Tabs = observer(
             )[0];
             // If member was found and member can be opened, open it (causes CkanCatalogGroups to fetch etc.)
             if (defined(member)) {
-              await this.props.viewState.viewCatalogMember(member);
+              this.props.viewState.viewCatalogMember(member);
             }
           }
         }
