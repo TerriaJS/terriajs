@@ -45,7 +45,7 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       return (
         this.isLoadingMetadata ||
         (MappableMixin.isMixedInto(this) && this.isLoadingMapItems) ||
-        (ReferenceMixin.is(this) && this.isLoadingReference) ||
+        (ReferenceMixin.isMixedInto(this) && this.isLoadingReference) ||
         (GroupMixin.isMixedInto(this) && this.isLoadingMembers)
       );
     }

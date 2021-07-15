@@ -5,7 +5,7 @@ import TerriaError, {
   parseOverrides
 } from "./TerriaError";
 import { NotUndefined } from "./TypeModifiers";
-import isPromise from "./isPromise";
+import Terria from "../Models/Terria";
 
 /**
  * The Result class is similar to Option type/object in Scala/Rust.
@@ -90,7 +90,7 @@ export default class Result<T = undefined> {
     );
   }
 
-  /** Convenience constructor to return a Result with no result (and potentially an error) */
+  /** Convenience constructor to return a Result with no value (and potentially an error) */
   static none(error?: TerriaErrorOptions | TerriaError) {
     return error ? Result.error(error) : new Result(undefined);
   }
@@ -137,6 +137,15 @@ export default class Result<T = undefined> {
   /** Apply callback function if an error occurred, and then return value */
   catchError(callback: (error: TerriaError) => void): T {
     if (this._error) callback(this._error);
+    return this.value;
+  }
+
+  /** Raise error if one has occurred, and then return value.
+   *
+   * @param errorOverrides can be used to add error context
+   */
+  raiseError(terria: Terria, errorOverrides?: TerriaErrorOverrides): T {
+    if (this._error) terria.raiseErrorToUser(this.error, errorOverrides);
     return this.value;
   }
 

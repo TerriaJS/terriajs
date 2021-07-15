@@ -39,16 +39,18 @@ class FeatureInfoPanelChart extends React.Component {
     );
   }
 
-  componentDidUpdate() {
-    runInAction(() => {
-      this.props.item.loadMapItems();
-    });
+  async componentDidUpdate() {
+    (await this.props.item.loadMapItems()).raiseError(
+      this.props.item.terria,
+      `Failed to load chart for ${this.props.item.name}`
+    );
   }
 
-  componentDidMount() {
-    runInAction(() => {
-      this.props.item.loadMapItems();
-    });
+  async componentDidMount() {
+    (await this.props.item.loadMapItems()).raiseError(
+      this.props.item.terria,
+      `Failed to load chart for ${this.props.item.name}`
+    );
   }
 
   render() {

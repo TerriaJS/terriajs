@@ -38,7 +38,7 @@ const DataPreview = observer(
     render() {
       const { t } = this.props;
       let previewed = this.props.previewed;
-      if (previewed !== undefined && ReferenceMixin.is(previewed)) {
+      if (previewed !== undefined && ReferenceMixin.isMixedInto(previewed)) {
         if (previewed.target === undefined) {
           // Reference is not available yet.
           return this.renderUnloadedReference();

@@ -176,8 +176,8 @@ export default class Workbench {
     this.insertItem(item);
 
     try {
-      if (ReferenceMixin.is(item)) {
-        await item.loadReference();
+      if (ReferenceMixin.isMixedInto(item)) {
+        (await item.loadReference()).throwIfError();
 
         const target = item.target;
         if (
@@ -245,7 +245,7 @@ export default class Workbench {
 }
 
 function dereferenceModel(model: BaseModel): BaseModel {
-  if (ReferenceMixin.is(model) && model.target !== undefined) {
+  if (ReferenceMixin.isMixedInto(model) && model.target !== undefined) {
     return model.target;
   }
   return model;

@@ -66,11 +66,6 @@ class ChartPanel extends React.Component {
     }
     const items = this.props.terria.workbench.items;
     if (items.length > 0) {
-      const loadPromises = items.map(
-        item => item.loadMapItems && item.loadMapItems()
-      );
-      raiseErrorOnRejectedPromise(this.props.terria, Promise.all(loadPromises));
-
       chart = (
         <Chart
           terria={this.props.terria}

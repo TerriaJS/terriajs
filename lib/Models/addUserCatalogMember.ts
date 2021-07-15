@@ -61,14 +61,10 @@ export default function addUserCatalogMember(
       return newCatalogItem;
     })
     .catch((e: any) => {
-      if (!(e instanceof TerriaError)) {
-        e = new TerriaError({
-          title: i18next.t("models.userData.addingDataErrorTitle"),
-          message: i18next.t("models.userData.addingDataErrorTitle")
-        });
-      }
-
-      terria.raiseErrorToUser(e);
+      terria.raiseErrorToUser(e, {
+        title: i18next.t("models.userData.addingDataErrorTitle"),
+        message: i18next.t("models.userData.addingDataErrorTitle")
+      });
       return e;
     });
 }

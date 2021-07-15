@@ -45,7 +45,7 @@ import PickedFeatures, {
   featureBelongsToCatalogItem,
   isProviderCoordsMap
 } from "../Map/PickedFeatures";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import MappableMixin, { isDataSource } from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
@@ -84,7 +84,6 @@ import MagdaReference, { MagdaReferenceHeaders } from "./MagdaReference";
 import MapInteractionMode from "./MapInteractionMode";
 import { BaseModel } from "./Model";
 import NoViewer from "./NoViewer";
-import openGroup from "./openGroup";
 import ShareDataService from "./ShareDataService";
 import SplitItemReference from "./SplitItemReference";
 import TimelineStack from "./TimelineStack";
@@ -1061,7 +1060,7 @@ export default class Terria {
           );
 
           if (container) {
-            const dereferenced = ReferenceMixin.is(container)
+            const dereferenced = ReferenceMixin.isMixedInto(container)
               ? container.target
               : container;
             if (GroupMixin.isMixedInto(dereferenced)) {
@@ -1136,22 +1135,16 @@ export default class Terria {
       loadedModel &&
       replaceStratum &&
       dereferenced === undefined &&
-      ReferenceMixin.is(loadedModel) &&
+      ReferenceMixin.isMixedInto(loadedModel) &&
       loadedModel.target !== undefined
     ) {
       dereferenced = {};
     }
-    if (loadedModel && ReferenceMixin.is(loadedModel)) {
-      try {
-        await loadedModel.loadReference();
-      } catch (e) {
-        errors.push(
-          TerriaError.from(e, {
-            message: `Failed to load reference ${loadedModel.uniqueId}`,
-            severity: TerriaErrorSeverity.Warning
-          })
-        );
-      }
+    if (loadedModel && ReferenceMixin.isMixedInto(loadedModel)) {
+      (await loadedModel.loadReference()).pushErrorTo(errors, {
+        message: `Failed to load reference ${loadedModel.uniqueId}`,
+        severity: TerriaErrorSeverity.Warning
+      });
 
       if (isDefined(loadedModel.target)) {
         updateModelFromJson(
@@ -1176,15 +1169,11 @@ export default class Terria {
     if (loadedModel) {
       const dereferencedGroup = getDereferencedIfExists(loadedModel);
       if (GroupMixin.isMixedInto(dereferencedGroup)) {
-        try {
-          await openGroup(dereferencedGroup, dereferencedGroup.isOpen);
-        } catch (error) {
-          errors.push(
-            TerriaError.from(error, {
-              message: `Failed to open group ${dereferencedGroup.uniqueId}`,
-              severity: TerriaErrorSeverity.Warning
-            })
-          );
+        if (dereferencedGroup.isOpen) {
+          (await dereferencedGroup.loadMembers()).pushErrorTo(errors, {
+            message: `Failed to open group ${dereferencedGroup.uniqueId}`,
+            severity: TerriaErrorSeverity.Warning
+          });
         }
       }
     }
@@ -1393,13 +1382,13 @@ export default class Terria {
     await Promise.all(
       newItems.map(async model => {
         try {
-          if (ReferenceMixin.is(model)) {
-            await model.loadReference();
+          if (ReferenceMixin.isMixedInto(model)) {
+            (await model.loadReference()).throwIfError();
             model = model.target || model;
           }
 
           if (MappableMixin.isMixedInto(model)) {
-            await model.loadMapItems();
+            (await model.loadMapItems()).throwIfError();
           }
         } catch (e) {
           errors.push(
@@ -1408,10 +1397,7 @@ export default class Terria {
               message: {
                 key: "models.terria.loadingWorkbenchItemErrorTitle",
                 parameters: {
-                  name:
-                    (CatalogMemberMixin.isMixedInto(model)
-                      ? model.name
-                      : model.uniqueId) ?? "Unknown item"
+                  name: getName(model) ?? "Unknown Model"
                 }
               }
             })
@@ -1498,7 +1484,12 @@ export default class Terria {
       reference.setTrait(CommonStrata.definition, "url", magdaRoot);
       reference.setTrait(CommonStrata.definition, "recordId", id);
       reference.setTrait(CommonStrata.definition, "magdaRecord", config);
-      await reference.loadReference();
+      (await reference.loadReference()).catchError(e =>
+        this.raiseErrorToUser(
+          e,
+          `Failed to load MagdaReference for record ${id}`
+        )
+      );
       if (reference.target instanceof CatalogGroup) {
         runInAction(() => {
           this.catalog.group = <CatalogGroup>reference.target;

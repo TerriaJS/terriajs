@@ -95,7 +95,9 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
   return ReferenceMixin;
 }
 
-ReferenceMixin.is = function(model: BaseModel): model is ReferenceInterface {
+ReferenceMixin.isMixedInto = function(
+  model: BaseModel
+): model is ReferenceInterface {
   return "loadReference" in model && "target" in model;
 };
 
