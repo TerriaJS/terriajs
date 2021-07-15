@@ -1,9 +1,13 @@
 Change Log
 ==========
 
-### MobX Development
+### v8 Development
 
-#### next release (8.0.0-alpha.88)
+#### next release (8.0.0-alpha.89)
+
+* [The next improvement]
+
+#### 8.0.0-alpha.88
 
 - **Breaking changes**:
   - `colorPalette` no longer supports a list of CSS colors (eg `rgb(0,0,255)-rgb(0,255,0)-rgb(255,0,0)`). Instead please use `binColors`.
@@ -33,7 +37,6 @@ Change Log
   * Notes on v7 to v8 Socrata integration:
     * Share links are not preserved
     * Added basic support for dataset resources
-* [The next improvement]
 
 #### 8.0.0-alpha.87
 
