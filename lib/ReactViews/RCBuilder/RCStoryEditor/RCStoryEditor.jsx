@@ -6,6 +6,7 @@ import { default as React, useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Link, useParams, withRouter, useHistory } from "react-router-dom";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import Color from "terriajs-cesium/Source/Core/Color";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 import { v5 as uuidv5 } from "uuid";
 import { updateStory } from "../../../../api/graphql/mutations";
@@ -13,6 +14,8 @@ import { getStory } from "../../../../api/graphql/queries";
 import sectors from "../../../Data/Sectors.js";
 import RCSectorSelection from "./RCSectorSelection/RCSectorSelection";
 import Styles from "./RCStoryEditor.scss";
+import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
+import GeoJsonCatalogItem from "../../../Models/GeoJsonCatalogItem";
 
 function RCStoryEditor(props) {
   const [story, setStory] = useState(null);
@@ -24,6 +27,7 @@ function RCStoryEditor(props) {
   const [selectHotspotSubscription, setSelectHotspotSubscription] = useState(
     null
   );
+  const hotspotDatasourceRef = useRef(null);
   const [images, setImages] = useState([]);
   const [pages, setPages] = useState([]);
   const [message, setMessage] = useState("");
@@ -111,6 +115,31 @@ function RCStoryEditor(props) {
       </div>
     </div>
   ));
+
+  useEffect(() => {
+    if (hotspotPoint === null) {
+      return;
+    }
+    const { terria } = props.viewState;
+    const catalogItem = terria.nowViewing.items
+      .find(item => item.name === "hotspots");
+    if (catalogItem !== undefined) {
+      catalogItem._dataSource.load({
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            hotspotPoint.longitude,
+            hotspotPoint.latitude
+          ]
+        }
+      }, { 
+        markerSymbol: 'circle',
+        markerSize: 64,
+        markerColor: Color.fromRgba(0xEE7755FF)
+      });
+    }
+  }, [hotspotPoint]);
 
   const onTitleChanged = event => {
     setTitle(event.target.value);
