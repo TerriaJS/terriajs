@@ -1,6 +1,7 @@
 /* eslint-disable-line */ const aws = require('aws-sdk');
 
 exports.handler = async (event, context) => {
+  console.log("Adding user to group");
   const cognitoidentityserviceprovider = new aws.CognitoIdentityServiceProvider({ apiVersion: '2016-04-18' });
   const groupParams = {
     GroupName: process.env.GROUP,
@@ -24,11 +25,11 @@ exports.handler = async (event, context) => {
     return {
       statusCode: 200,
       body: JSON.stringify(event)
-    }
+    };
   } catch (error) {
     return {
       statusCode: 500,
       body: JSON.stringify(error)
-    }
+    };
   }
 };

@@ -5,6 +5,7 @@
   "main": "index.js",
   "license": "Apache-2.0",
   "dependencies": {
-    "axios": "latest"
+    "axios": "latest",
+    "uuid": "^8.3.2"
   }
 }
