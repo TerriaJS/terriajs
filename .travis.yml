@@ -1,14 +1,16 @@
-dist: trusty
+dist: bionic
 sudo: false
 matrix:
   include:
   - language: node_js
     node_js:
     - '10'
+    services:
+      - xvfb
     script:
     - npm run prettier-check
-    - pyenv shell 2.7
-    - pip install -r doc/requirements.txt
+    - pyenv shell 3.6
+    - pip install -r requirements.txt
     - gulp lint docs release
     - gulp test-travis
     env:

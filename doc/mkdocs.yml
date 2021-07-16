@@ -9,7 +9,7 @@ site_dir: '../wwwroot/doc/guide'
 markdown_extensions:
   - markdown.extensions.admonition
 strict: true
-pages:
+nav:
 - Home: 'README.md'
 - Getting Started: 'getting-started.md'
 - Customizing:
@@ -50,6 +50,8 @@ pages:
         - Composite (item): 'connecting-to-data/catalog-type-details/composite.md'
         - Format Conversion Service (based on OGR) (item): 'connecting-to-data/catalog-type-details/ogr.md'
         - GeoJSON (item): 'connecting-to-data/catalog-type-details/geojson.md'
+        - GeoRSS (item): 'connecting-to-data/catalog-type-details/georss.md'
+        - GLTF (item): 'connecting-to-data/catalog-type-details/gltf.md'
         - GPX (item): 'connecting-to-data/catalog-type-details/gpx.md'
         - Group (Manual) (group): 'connecting-to-data/catalog-type-details/group.md'
         - Keyhole Markup Language (KML) (item): 'connecting-to-data/catalog-type-details/kml.md'
@@ -68,6 +70,7 @@ pages:
         - Web Feature Service (WFS) (item): 'connecting-to-data/catalog-type-details/wfs.md'
         - Web Map Service (WMS) (group): 'connecting-to-data/catalog-type-details/wms-getCapabilities.md'
         - Web Map Service (WMS) (item): 'connecting-to-data/catalog-type-details/wms.md'
+        - Web Map Tile Service (WMTS) (item): 'connecting-to-data/catalog-type-details/wmts.md'
         - Web Processing Service (WPS) (function): 'connecting-to-data/catalog-type-details/wps.md'
         - Web Processing Service (WPS) (group): 'connecting-to-data/catalog-type-details/wps-getCapabilities.md'
         - WFS Features (group): 'connecting-to-data/catalog-type-details/wfs-features-group.md'
@@ -78,6 +81,7 @@ pages:
     - Deploying to AWS: 'deploying/deploying-to-aws.md'
     - Deploying with Kubernetes: 'deploying/deploying-with-kubernetes.md'
     - Setting Up a Region Mapping Server: 'deploying/setting-up-a-region-mapping-server.md'
+    - (Deprecated) Setting Up WMS Region Mapping: 'deploying/deprecated-wms-region-mapping.md'
     - Setting Up Geoserver: 'deploying/setting-up-geoserver.md'
     - Using as a CKAN Previewer: 'deploying/using-as-a-ckan-previewer.md'
     - Controlling with URL Parameters: 'deploying/controlling-with-url-parameters.md'
@@ -89,5 +93,5 @@ pages:
     - Using a Custom Version of Cesium: 'contributing/using-a-custom-version-of-cesium.md'
     - Setting up Saucelabs: 'contributing/setting-up-saucelabs.md'
     - Problems and Solutions: 'contributing/problems-and-solutions.md'
-- Acknowledgements: 
+- Acknowledgements:
     - Attributions: 'acknowledgements/attributions.md'

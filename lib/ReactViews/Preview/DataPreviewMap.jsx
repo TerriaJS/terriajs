@@ -79,16 +79,11 @@ const DataPreviewMap = createReactClass({
     // TODO: we shouldn't hard code the base map here. (copied from branch analyticsWithCharts)
     const positron = new OpenStreetMapCatalogItem(this.terriaPreview);
     positron.name = "Positron (Light)";
-    positron.url = "//global.ssl.fastly.net/light_all/";
+    positron.url = "//basemaps.cartocdn.com/light_all/";
     positron.attribution =
-      "© OpenStreetMap contributors ODbL, © CartoDB CC-BY 3.0";
+      "© OpenStreetMap contributors ODbL, © CARTO CC-BY 3.0";
     positron.opacity = 1.0;
-    positron.subdomains = [
-      "cartodb-basemaps-a",
-      "cartodb-basemaps-b",
-      "cartodb-basemaps-c",
-      "cartodb-basemaps-d"
-    ];
+    positron.subdomains = ["a", "b", "c", "d"];
     this.terriaPreview.baseMap = positron;
 
     this.isZoomedToExtent = false;
