@@ -1743,35 +1743,6 @@ function interpretStartData(terria: Terria, startData: any, name: string) {
       );
     });
   }
-
-  // if (defined(startData.version) && startData.version !== latestStartVersion) {
-  //   adjustForBackwardCompatibility(startData);
-  // }
-
-  // if (defined(terria.filterStartDataCallback)) {
-  //   startData = terria.filterStartDataCallback(startData) || startData;
-  // }
-
-  // // Include any initSources specified in the URL.
-  // if (defined(startData.initSources)) {
-  //   for (var i = 0; i < startData.initSources.length; ++i) {
-  //     var initSource = startData.initSources[i];
-  //     // avoid loading terria.json twice
-  //     if (
-  //       temporaryInitSources.indexOf(initSource) < 0 &&
-  //       !initFragmentExists(temporaryInitSources, initSource)
-  //     ) {
-  //       temporaryInitSources.push(initSource);
-  //       // Only add external files to the application's list of init sources.
-  //       if (
-  //         typeof initSource === "string" &&
-  //         persistentInitSources.indexOf(initSource) < 0
-  //       ) {
-  //         persistentInitSources.push(initSource);
-  //       }
-  //     }
-  //   }
-  // }
 }
 
 function setCustomRequestSchedulerDomainLimits(
