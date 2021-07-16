@@ -1,14 +1,16 @@
 var aws = require('aws-sdk');
 const { v4: uuidv4 } = require('uuid');
-var ddb = new aws.DynamoDB();
+var ddb = new aws.DynamoDB({ apiVersion: '2012-08-10' });
+var s3 = new aws.S3({ apiVersion: '2006-03-01' });
 
-exports.handler = async (event, context) => {
+exports.handler = async (event, context, callback) => {
     const date = new Date();
+    console.log("Add example story function");
     if (event.request.userAttributes.sub) {
         console.log("create an example story for user");
         try {
           const item = await ddb.getItem({
-            TableName: process.env.STORYTABLE,
+            TableName: process.env.API_RECEIPTAPI_STORYTABLE_NAME,
             Key: {
               id: {S: "0"}
             }
@@ -34,22 +36,34 @@ exports.handler = async (event, context) => {
           story.state = {S: "DRAFT"};
           story.updatedAt= {S: date.toISOString()};
 
+          const newKey = 'story-' + story.id.S + '/' + story.image.M.id.S.split('/')[1];
+          var params = {
+            Bucket: process.env.STORAGE_STORYCONTENT_BUCKETNAME,
+            CopySource: process.env.STORAGE_STORYCONTENT_BUCKETNAME + '/public/' + story.image.M.id.S,
+            Key: 'public/'+newKey
+          };
+          console.log("Copy params: ", JSON.stringify(params));
+          s3.copyObject(params, function(err, data) {
+            if (err) console.log(err, err.stack); // an error occurred
+            else     console.log(data);           // successful response
+          });
+
+          story.image.M.id = { "S": newKey};
           console.log("Going to put item: ", JSON.stringify(story));
 
           await ddb.putItem({
             Item: story,
-            TableName: process.env.STORYTABLE
-
+            TableName: process.env.API_RECEIPTAPI_STORYTABLE_NAME
           }).promise();
           console.log("Success");
         } catch (err) {
           console.log("Error", err);
         }
-        context.done(null, event);
+        callback(null, 'Created story successfully');
     } else {
         // Nothing to do, the user's email ID is unknown
         console.log("Error: Nothing was written to DynamoDB");
-        context.done(null, event);
+        callback(null, 'Story was not created');
     }
 };
 
