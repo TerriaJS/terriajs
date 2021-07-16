@@ -358,22 +358,22 @@
     "searchPlaceholder": "カタログから検索する",
     "searchPlaceholderWhole": "カタログ全体から検索する",
     "dataCatalogue": "データカタログ",
-    "myData": "自分のデータ",
+    "myData": "自分のデータを追加",
     "done": "完了",
     "closeDataPanel": "データパネルを閉じる",
     "load": "ローカル/ウェブのデータを読み込む",
     "btnHide": "閉じる"
   },
   "feedback": {
-    "feedbackBtnText": "フィードバック",
+    "feedbackBtnText": "ご意見・ご要望",
     "send": "送信",
-    "captionText": "問題の解決に役立てるため、あなたが見ているものを開発者と共有します",
+    "captionText": "問題の解決に役立てるため、見ているものを開発者と共有します",
     "cancel": "キャンセル",
     "shareWithDevelopers": "マップビューを{{appName}}の開発者と共有する",
     "commentQuestion": "コメントまたは質問",
     "yourName": "お名前（任意）",
-    "close": "フィードバックを閉じる",
-    "title": "フィードバック",
+    "close": "ご意見・ご要望を閉じる",
+    "title": "ご意見・ご要望",
     "feedbackPreamble": "ご意見をお聞かせください。"
   },
   "core": {
@@ -776,9 +776,9 @@
       "name": "結果待ち"
     },
     "feedback": {
-      "unableToSendTitle": "フィードバックを送れません",
-      "thanksMessage": "皆さんのフィードバックが {{appName}} をより良いものにしていきます",
-      "thanksTitle": "フィードバックを頂き、ありがとうございます！"
+      "unableToSendTitle": "ご意見・ご要望を送れません",
+      "thanksMessage": "皆さんのご意見・ご要望が {{appName}} をより良いものにしていきます",
+      "thanksTitle": "ご意見・ご要望を頂き、ありがとうございます！"
     },
     "regionMapping": {
       "issuesLoadingTitle": "{{name}} 読み込みに問題",
