@@ -29,7 +29,7 @@ const RCLogin = props => {
       required: true
     },
     {
-      type: "custom:Affiliation",
+      type: "custom:affiliation",
       label: "Affiliation *",
       placeholder: "Enter your affiliation",
       required: true
@@ -66,7 +66,7 @@ const RCLogin = props => {
           <div>
             <div className="bold">{user.attributes?.name}</div>
             <div>{user.attributes?.email}</div>
-            <div>{user.attributes?.["custom:Affilliation"]}</div>
+            <div>{user.attributes?.["custom:affiliation"]}</div>
           </div>
         )}
         <div style={{ marginTop: "32px", width: "25%" }}>
