@@ -1,13 +1,13 @@
-import { action, computed, observable } from "mobx";
+import { action, computed } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import isDefined from "../../Core/isDefined";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
+import ModelReference from "../../Traits/ModelReference";
 import {
   BaseMapsTraits,
   BaseMapTraits
 } from "../../Traits/TraitsClasses/BaseMapTraits";
-import ModelReference from "../../Traits/ModelReference";
 import BingMapsCatalogItem from "../BingMapsCatalogItem";
 import CommonStrata from "../CommonStrata";
 import CreateModel from "../CreateModel";
@@ -21,7 +21,7 @@ export class BaseMapModel extends CreateModel(BaseMapTraits) {}
 
 export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
   private readonly _defaultBaseMaps: BaseMapModel[] = [];
-  private readonly _baseMapItems = observable.array<BaseMapModel>();
+
   /**
    * List of the basemaps to show in setting panel
    */
@@ -101,22 +101,28 @@ export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
         errors.push(error);
       })
       ?.forEach((member: BaseMapModel) => {
-        this.add(stratumId, member);
+        const existingItem = this.items.find(
+          baseMap => baseMap.item === member.item
+        );
+        if (existingItem) {
+          // object array trait doesn't automatically update model item
+          existingItem.setTrait(stratumId, "image", member.image);
+        } else {
+          this.add(stratumId, member);
+        }
       });
 
     updateModelFromJson(this, stratumId, rest).catchError(error => {
       errors.push(error);
     });
 
-    if (newItemsIds.error)
-      return Result.error(
-        TerriaError.from(
-          errors,
-          `Failed to add members from JSON for model \`${this.uniqueId}\``
-        )
-      );
-
-    return Result.none();
+    return Result.return(
+      undefined,
+      TerriaError.combine(
+        errors,
+        `Failed to add members from JSON for model \`${this.uniqueId}\``
+      )
+    );
   }
 }
 
