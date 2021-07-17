@@ -6,7 +6,7 @@ import TerriaError from "../../Core/TerriaError";
 import {
   BaseMapsTraits,
   BaseMapTraits
-} from "../../Traits/BaseMaps/BaseMapTraits";
+} from "../../Traits/TraitsClasses/BaseMapTraits";
 import ModelReference from "../../Traits/ModelReference";
 import BingMapsCatalogItem from "../BingMapsCatalogItem";
 import CommonStrata from "../CommonStrata";
