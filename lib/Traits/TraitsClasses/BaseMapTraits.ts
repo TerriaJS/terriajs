@@ -27,7 +27,7 @@ export class BaseMapsTraits extends ModelTraits {
     type: "string",
     name: "defaultBaseMapId",
     description:
-      "ID of the base map to use as default. This wil be used **before** `defaultBaseMapName`"
+      "The id of the baseMap user will see on the first mapLoad. This wil be used **before** `defaultBaseMapName`"
   })
   defaultBaseMapId?: string;
 
@@ -41,7 +41,8 @@ export class BaseMapsTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
     name: "previewBaseMapId",
-    description: "ID of the base map to use for data preview"
+    description:
+      "The id of the baseMap to be used as the base map in data preview. "
   })
   previewBaseMapId?: string = "basemap-positron";
 

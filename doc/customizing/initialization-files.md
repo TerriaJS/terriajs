@@ -22,10 +22,8 @@ An init file is a [JSON file](https://en.wikipedia.org/wiki/JSON) with this basi
     },
     "initialCamera": { ... },
     "corsDomains": [ "myserver.gov.au" ],
-    "baseMapId": "basemap-dark-matter",
-    "previewBaseMapId": "basemap-dark-matter",
-    "baseMaps": [
-      {
+    "baseMaps": {
+      "items": {
         "item": {
           "id": "basemap-darkmatter",
           "name": "Dark Matter",
@@ -33,8 +31,8 @@ An init file is a [JSON file](https://en.wikipedia.org/wiki/JSON) with this basi
         },
         "image": "/images/dark-matter.png"
       },
-      ...
-    ]
+    },
+    ...
 }
 ```
 
@@ -76,9 +74,7 @@ Catalog files can be edited two ways:
 |stories|no|[**Story[]**](#story)||An array of stories to be loaded.|
 |viewerMode|no|**"3d"** or **"3dSmooth"** or **"2D"** |"3d"|The id of the viewer mode to be shown initialy.|
 |homeCamera|yes|[**CameraPosition**](#CameraPosition)||Where the camera goes when you click the "home" button between the zoom-in and zoom-out buttons.|
-|<a id="base-maps"></a>baseMaps|no|[**`baseMaps`**](#baseMaps)|[default list of basemaps](../../lib/Models/BaseMaps/defaultBaseMaps.ts)|The array of the base maps to be shown to the user.|
-|<a id="base-map-id"></a>baseMapId|no|**string**||The id of the baseMap user will see on the first mapLoad. The value must be an id of the catalog item from the [`baseMaps`](#base-maps) array|
-|previewBaseMapId|no|**string**|[`baseMapId`](#base-map-id)|The id of the baseMap to be used as the base map in data preview. The value must be an id of the catalog item from the [`baseMaps`](#base-maps) array.|
+|<a id="base-maps"></a>baseMaps|no|[**`baseMaps`**](#baseMaps)||The definition of the base maps to be shown to the user.|
 |showSplitter|no|**boolean**|false|Show splitter initally.|
 |splitPosition|no|**number**|0.5|The position of splitter.|
 |workbench|no|**string[]**||List of items ids to initially add to workbench.|
@@ -90,6 +86,7 @@ Catalog files can be edited two ways:
 The bounding box method uses `north`, `east `,`south`, and `west`, in lat/lng decimal degrees.  The camera will be positioned in the center point of those bounds, looking toward the Earth's center, zoomed back enough to see to the edges of the bounds.
 
 This is the only mode supported in 2D mode (Leaflet). Therefore, you should always include a bounding box, even if you also use another mode.
+
 |Name|Required|Type|Default|Description|
 |----|--------|----|-------|-----------|
 |north|yes|**number**|||
@@ -223,13 +220,27 @@ Definition of the story. This can be pretty complex to define for the standard u
 |shareData|yes|[**ShareData**](#sharedata)|||
 
 #### ShareData
+
 |Name|Required|Type|Default|Description|
 |----|--------|----|-------|-----------|
 |version|yes|string|"8.0.0"|The version of share data.|
 |initSources|yes|[**CatalogFileProperties**](#catalog-file-properties)
 
 ### `baseMaps`
+
+Definition of the base map model.
+
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|items|no|[`basemap-items`](#basemapitem)|[default list of basemaps](../../lib/Models/BaseMaps/defaultBaseMaps.ts)|The array of the base maps to be shown to the user.|
+|defaultBaseMapId|no|**string**||The id of the baseMap user will see on the first mapLoad.|
+|previewBaseMapId|no|**string**||The id of the baseMap to be used as the base map in data preview.|
+|useBaseMaps|no|**string[]**|_all_|Array of base maps ids that is available to user. Use this do define order of the base maps in settings panel. Leave undefined to show all basemaps.|
+
+### `baseMapItem`
+
 Definition of the baseMap model.
+
 |Name|Required|Type|Default|Description|
 |----|--------|----|-------|-----------|
 |item|yes|[**Catalog Item**](../connecting-to-data/catalog-items.md)||Catalog item defition to be used for the base map|
