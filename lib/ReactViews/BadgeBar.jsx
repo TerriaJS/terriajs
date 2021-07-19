@@ -1,7 +1,6 @@
-import React from "react";
+import React, { Children } from "react";
 import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
-import defined from "terriajs-cesium/Source/Core/defined";
 import Styles from "./badge-bar.scss";
 import classNames from "classnames";
 
@@ -16,21 +15,19 @@ const BadgeBar = createReactClass({
 
   render() {
     return (
-      <ul
-        className={classNames(Styles.header, {
-          [Styles.smallBadge]: this.props.smallBadge
-        })}
-      >
-        <li>
-          <label className={Styles.title}>{this.props.label}</label>
-        </li>
-        {defined(this.props.badge) && (
+      <div className={classNames(Styles.badgebar)}>
+        <ul className={classNames(Styles.list)}>
           <li>
-            <label className={Styles.labelBadge}>({this.props.badge})</label>
+            <label className={Styles.title}>
+              {this.props.label}
+              {this.props.badge ? ` (${this.props.badge})` : null}
+            </label>
           </li>
-        )}
-        <li>{this.props.children}</li>
-      </ul>
+          {Children.map(this.props.children, (child, i) => (
+            <li key={i}>{child}</li>
+          ))}
+        </ul>
+      </div>
     );
   }
 });

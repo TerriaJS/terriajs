@@ -33,6 +33,7 @@ Change Log
   * Notes on v7 to v8 Socrata integration:
     * Share links are not preserved
     * Added basic support for dataset resources
+* Modified BadgeBar to be more tolerant to longer strings
 * [The next improvement]
 
 #### 8.0.0-alpha.87
