@@ -33,6 +33,7 @@ Change Log
   * Notes on v7 to v8 Socrata integration:
     * Share links are not preserved
     * Added basic support for dataset resources
+* Add `MappableTraits` and `FeatureInfoTraits` to `ArcGisMapServerCatalogGroupTraits` so that `ArcGisMapServerCatalogGroup` can override relevant traits of its layers.
 * [The next improvement]
 
 #### 8.0.0-alpha.87
