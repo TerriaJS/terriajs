@@ -108,9 +108,27 @@ export default class TerriaError {
   /**
    * Convenience function to generate a TerriaError from some unknown error. It will try to extract a meaningful message from whatever object it is given.
    *
-   * If error is a `TerriaError`, then `createParentError` it will be used to create a tree of `TerriaErrors` (see {@link `TerriaError#createParentError}`).
-   *
    * `overrides` can be used to add more context to the TerriaError
+   *
+   * If error is a `TerriaError`, and `overrides` are provided -  then `createParentError` will be used to create a tree of `TerriaErrors` (see {@link `TerriaError#createParentError}`).
+   *
+   * Note, you can not pass `TerriaErrorOptions` (or JSON version of `TerriaError`) as the error parameter.
+   *
+   * For example:
+   *
+   * This is  **incorrect**:
+   *
+   * ```
+   * TerriaError.from({message: "Some message", title: "Some title"})
+   * ```
+   *
+   * Instead you must use TerriaError constructor
+   *
+   * This is **correct**:
+   *
+   * ```
+   * new TerriaError({message: "Some message", title: "Some title"})
+   * ```
    */
   static from(error: unknown, overrides?: TerriaErrorOverrides): TerriaError {
     if (error instanceof TerriaError) {
