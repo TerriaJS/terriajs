@@ -86,7 +86,13 @@ class WorkbenchItemRaw extends React.Component<IProps> {
         <Box fullWidth justifySpaceBetween padded>
           <Box fullWidth>
             {(true || item.supportsToggleShown) && (
-              <Box left verticalCenter>
+              <Box
+                left
+                verticalCenter
+                css={`
+                  padding-left: 5px;
+                `}
+              >
                 <Checkbox
                   id="workbenchtoggleVisibility"
                   isChecked={item.show}

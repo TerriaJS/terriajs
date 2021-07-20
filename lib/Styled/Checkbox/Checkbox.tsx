@@ -90,7 +90,7 @@ const Checkbox = memo(
           isDisabled={isDisabled}
           labeled={!!label}
         />
-        <SpacingSpan right={1} />
+        {!!label && <SpacingSpan right={1} />}
         <TextSpan
           isDisabled={isDisabled}
           css={`
