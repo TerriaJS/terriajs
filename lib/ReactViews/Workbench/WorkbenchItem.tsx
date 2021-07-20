@@ -90,7 +90,7 @@ class WorkbenchItemRaw extends React.Component<IProps> {
                   onClick={() => this.toggleVisibility()}
                   title={t("workbench.toggleVisibility")}
                 >
-                  <Box padded>
+                  <BoxSpan padded>
                     {item.show ? (
                       <StyledIcon
                         light
@@ -104,7 +104,7 @@ class WorkbenchItemRaw extends React.Component<IProps> {
                         glyph={Icon.GLYPHS.checkboxOff}
                       />
                     )}
-                  </Box>
+                  </BoxSpan>
                 </RawButton>
               </Box>
             )}
@@ -141,11 +141,11 @@ class WorkbenchItemRaw extends React.Component<IProps> {
           <Box centered paddedHorizontally>
             <RawButton onClick={() => this.toggleDisplay()}>
               {item.isPrivate && (
-                <Box paddedHorizontally>
+                <BoxSpan paddedHorizontally>
                   <PrivateIndicator inWorkbench />
-                </Box>
+                </BoxSpan>
               )}
-              <Box padded>
+              <BoxSpan padded>
                 {item.isOpenInWorkbench ? (
                   <StyledIcon
                     styledHeight={"8px"}
@@ -159,7 +159,7 @@ class WorkbenchItemRaw extends React.Component<IProps> {
                     glyph={Icon.GLYPHS.closed}
                   />
                 )}
-              </Box>
+              </BoxSpan>
             </RawButton>
           </Box>
         </Box>

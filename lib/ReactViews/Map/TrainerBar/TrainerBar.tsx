@@ -15,7 +15,7 @@ import Select from "../../../Styled/Select";
 import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact";
 import measureElement from "../../HOCs/measureElement";
 import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
-import Text from "../../../Styled/Text";
+import Text, { TextSpan } from "../../../Styled/Text";
 import Box from "../../../Styled/Box";
 import Button, { RawButton } from "../../../Styled/Button";
 import Spacing from "../../../Styled/Spacing";
@@ -220,11 +220,11 @@ class StepAccordionRaw extends React.Component<
                           : t("trainer.showAllSteps")
                       }
                     >
-                      <Text medium primary isLink textAlignLeft>
+                      <TextSpan medium primary isLink textAlignLeft>
                         {isShowingAllSteps
                           ? t("trainer.hideAllSteps")
                           : t("trainer.showAllSteps")}
-                      </Text>
+                      </TextSpan>
                     </RawButton>
                   </>
                 )
