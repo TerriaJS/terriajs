@@ -189,7 +189,7 @@ export default class Workbench {
           this.remove(item);
           throw `${getName(
             item
-          )} cannot be added to the workbench - as there is nothing to vizualise`;
+          )} cannot be added to the workbench - as there is nothing to visualize`;
         } else if (target) {
           return this.add(target);
         }
