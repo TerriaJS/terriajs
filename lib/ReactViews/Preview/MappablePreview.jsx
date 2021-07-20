@@ -69,7 +69,7 @@ class MappablePreview extends React.Component {
         );
       }
     } catch (e) {
-      this.props.terria.raiseErrorToUser(e);
+      this.props.terria.raiseErrorToUser(e, undefined, true);
     }
   }
 

@@ -19,7 +19,7 @@ interface AddUserCatalogMemberOptions {
  * Adds a user's catalog item or group to the catalog.
  *
  */
-export default function addUserCatalogMember(
+export default async function addUserCatalogMember(
   terria: Terria,
   newCatalogMemberOrPromise: BaseModel | Promise<BaseModel | undefined>,
   options: AddUserCatalogMemberOptions = {}
@@ -29,42 +29,40 @@ export default function addUserCatalogMember(
       ? newCatalogMemberOrPromise
       : Promise.resolve(newCatalogMemberOrPromise);
 
-  return promise
-    .then((newCatalogItem?: BaseModel) => {
-      if (!isDefined(newCatalogItem)) {
-        return;
-      }
+  try {
+    const newCatalogItem = await promise;
+    if (!isDefined(newCatalogItem)) {
+      return;
+    }
 
-      terria.catalog.userAddedDataGroup.setTrait(
-        CommonStrata.user,
-        "isOpen",
-        true
-      );
-      terria.catalog.userAddedDataGroup.add(CommonStrata.user, newCatalogItem);
+    terria.catalog.userAddedDataGroup.setTrait(
+      CommonStrata.user,
+      "isOpen",
+      true
+    );
+    terria.catalog.userAddedDataGroup.add(CommonStrata.user, newCatalogItem);
 
-      const dereferenced = getDereferencedIfExists(newCatalogItem);
+    const dereferenced = getDereferencedIfExists(newCatalogItem);
 
-      if (
-        isDefined(options.open) &&
-        hasTraits(dereferenced, GroupTraits, "isOpen")
-      ) {
-        dereferenced.setTrait(CommonStrata.user, "isOpen", true);
-      }
+    if (
+      isDefined(options.open) &&
+      hasTraits(dereferenced, GroupTraits, "isOpen")
+    ) {
+      dereferenced.setTrait(CommonStrata.user, "isOpen", true);
+    }
 
-      if (
-        defaultValue(options.enable, true) &&
-        !GroupMixin.isMixedInto(dereferenced)
-      ) {
-        terria.workbench.add(dereferenced);
-      }
-
-      return newCatalogItem;
-    })
-    .catch((e: any) => {
-      terria.raiseErrorToUser(e, {
-        title: i18next.t("models.userData.addingDataErrorTitle"),
-        message: i18next.t("models.userData.addingDataErrorTitle")
-      });
-      return e;
+    if (
+      defaultValue(options.enable, true) &&
+      !GroupMixin.isMixedInto(dereferenced)
+    ) {
+      terria.workbench.add(dereferenced);
+    }
+    return newCatalogItem;
+  } catch (e) {
+    terria.raiseErrorToUser(e, {
+      title: i18next.t("models.userData.addingDataErrorTitle"),
+      message: i18next.t("models.userData.addingDataErrorTitle")
     });
+    return e;
+  }
 }

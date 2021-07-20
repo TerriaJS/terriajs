@@ -9,6 +9,7 @@ import getPath from "../../Core/getPath";
 import removeUserAddedData from "../../Models/removeUserAddedData";
 import CatalogGroup from "./CatalogGroup";
 import DataCatalogMember from "./DataCatalogMember";
+import { getName } from "../../ModelMixins/CatalogMemberMixin";
 
 const DataCatalogGroup = observer(
   createReactClass({
@@ -55,9 +56,14 @@ const DataCatalogGroup = observer(
           isOpen: !this.state.isOpen
         });
       }
-      await this.props.viewState.viewCatalogMember(
-        this.props.group,
-        !this.props.group.isOpen
+      (
+        await this.props.viewState.viewCatalogMember(
+          this.props.group,
+          !this.props.group.isOpen
+        )
+      ).raiseError(
+        this.props.terria,
+        `Failed to open group: ${getName(this.props.group)}`
       );
     },
 

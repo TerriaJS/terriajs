@@ -26,8 +26,12 @@ const Tabs = observer(
     async onFileAddFinished(files) {
       const file = files.find(f => MappableMixin.isMixedInto(f));
       if (file) {
-        await this.props.viewState.viewCatalogMember(file);
-        this.props.terria.currentViewer.zoomTo(file, 1);
+        const result = await this.props.viewState.viewCatalogMember(file);
+        if (result.error) {
+          result.raiseError(this.props.terria);
+        } else {
+          this.props.terria.currentViewer.zoomTo(file, 1);
+        }
       }
       this.props.viewState.myDataIsUploadView = false;
     },

@@ -258,7 +258,7 @@ const ViewingControls = observer(
       });
     },
 
-    previewItem() {
+    async previewItem() {
       let item = this.props.item;
       // If this is a chartable item opened from another catalog item, get the info of the original item.
       if (defined(item.sourceCatalogItem)) {
@@ -272,16 +272,16 @@ const ViewingControls = observer(
             group.setTrait(CommonStrata.user, "isOpen", true);
           });
         });
-      this.props.viewState.viewCatalogMember(item);
+      (await this.props.viewState.viewCatalogMember(item)).raiseError(
+        this.props.viewState.terria
+      );
     },
 
     exportDataClicked() {
       const item = this.props.item;
 
       exportData(item).catch(e => {
-        if (e instanceof TerriaError) {
-          this.props.item.terria.raiseErrorToUser(e);
-        }
+        this.props.item.terria.raiseErrorToUser(e);
       });
     },
 

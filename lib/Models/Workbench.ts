@@ -2,7 +2,7 @@ import i18next from "i18next";
 import { action, computed, observable } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import TerriaError, { TerriaErrorSeverity } from "../Core/TerriaError";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
 import ChartableMixin from "../ModelMixins/ChartableMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
@@ -181,12 +181,15 @@ export default class Workbench {
 
         const target = item.target;
         if (
-          target &&
-          GroupMixin.isMixedInto(target) &&
-          !MappableMixin.isMixedInto(target) &&
-          !ChartableMixin.isMixedInto(target)
+          !target ||
+          (target &&
+            !MappableMixin.isMixedInto(target) &&
+            !ChartableMixin.isMixedInto(target))
         ) {
           this.remove(item);
+          throw `${getName(
+            item
+          )} cannot be added to the workbench - as there is nothing to vizualise`;
         } else if (target) {
           return this.add(target);
         }

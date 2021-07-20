@@ -32,13 +32,15 @@ class Breadcrumbs extends React.Component {
     t: PropTypes.func.isRequired
   };
 
-  openInCatalog(items) {
+  async openInCatalog(items) {
     items.forEach(item => {
       runInAction(() => {
         item.setTrait(CommonStrata.user, "isOpen", true);
       });
     });
-    this.props.viewState.viewCatalogMember(items[0]);
+    (await this.props.viewState.viewCatalogMember(items[0])).raiseError(
+      this.props.terria
+    );
     this.props.viewState.changeSearchState("");
   }
 

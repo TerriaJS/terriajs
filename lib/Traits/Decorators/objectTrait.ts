@@ -85,7 +85,7 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
       } else {
         result[propertyName] = trait
           .fromJson(model, stratumName, subJsonValue)
-          .catchError(error => errors.push(error));
+          .pushErrorTo(errors);
       }
     });
 

@@ -539,13 +539,27 @@ export default class Terria {
     return this.error.addEventListener(e => fn(e));
   }
 
-  raiseErrorToUser(error: unknown, overrides?: TerriaErrorOverrides) {
+  /** Raise error to user.
+   *
+   * This accepts same arguments as `TerriaError.from` - but also has:
+   *
+   * @param forceRaiseToUser - which can be used to force raise the error
+   */
+  raiseErrorToUser(
+    error: unknown,
+    overrides?: TerriaErrorOverrides,
+    forceRaiseToUser = false
+  ) {
     if (this.userProperties.get("ignoreErrors") === "1") {
       return;
     }
+
     const terriaError = TerriaError.from(error, overrides);
 
-    if (terriaError.shouldRaiseToUser && !terriaError.raisedToUser) {
+    if (
+      (terriaError.shouldRaiseToUser && !terriaError.raisedToUser) ||
+      forceRaiseToUser
+    ) {
       terriaError.raisedToUser = true;
       this.error.raiseEvent(terriaError);
     } else {
@@ -698,15 +712,13 @@ export default class Terria {
                   data: (convert.result as JsonObject | null) || {}
                 });
               } catch (error) {
-                return Result.error(
-                  TerriaError.from(error, {
-                    title: { key: "models.catalog.convertErrorTitle" },
-                    message: {
-                      key: "models.catalog.convertErrorMessage",
-                      parameters: { url: v7initUrl }
-                    }
-                  })
-                );
+                return Result.error(error, {
+                  title: { key: "models.catalog.convertErrorTitle" },
+                  message: {
+                    key: "models.catalog.convertErrorMessage",
+                    parameters: { url: v7initUrl }
+                  }
+                });
               }
             })()
           }))
@@ -756,14 +768,12 @@ export default class Terria {
         this.setupInitializationUrls(baseUri, config);
       });
     } catch (error) {
-      this.raiseErrorToUser(
-        TerriaError.from(error, {
-          sender: this,
-          title: { key: "models.terria.loadConfigErrorTitle" },
-          message: `Couldn't load ${options.configUrl}`,
-          severity: TerriaErrorSeverity.Error
-        })
-      );
+      this.raiseErrorToUser(error, {
+        sender: this,
+        title: { key: "models.terria.loadConfigErrorTitle" },
+        message: `Couldn't load ${options.configUrl}`,
+        severity: TerriaErrorSeverity.Error
+      });
     } finally {
       if (!options.i18nOptions?.skipInit) {
         Internationalization.initLanguage(
@@ -791,7 +801,9 @@ export default class Terria {
       this.shareDataService.init(this.serverConfig.config);
     }
     if (options.applicationUrl) {
-      await this.updateApplicationUrl(options.applicationUrl.href);
+      (await this.updateApplicationUrl(options.applicationUrl.href)).raiseError(
+        this
+      );
     }
     this.loadPersistedMapSettings();
   }
@@ -887,7 +899,7 @@ export default class Terria {
       this.raiseErrorToUser(e);
     }
 
-    await this.loadInitSources();
+    return await this.loadInitSources();
   }
 
   @action
@@ -991,9 +1003,7 @@ export default class Terria {
     );
 
     if (this.baseMaps.length === 0) {
-      processBaseMaps(defaultBaseMaps(this), this).catchError(e =>
-        errors.push(e)
-      );
+      processBaseMaps(defaultBaseMaps(this), this).pushErrorTo(errors);
     }
 
     if (!this.mainViewer.baseMap) {
@@ -1002,15 +1012,14 @@ export default class Terria {
     }
 
     if (errors.length > 0) {
-      this.raiseErrorToUser(
-        TerriaError.combine(errors, {
-          title: { key: "models.terria.loadingInitSourcesErrorTitle" },
-          message: {
-            key: "models.terria.loadingInitSourcesErrorMessage",
-            parameters: { appName: this.appName, email: this.supportEmail }
-          }
-        })
-      );
+      // Note - this will get wrapped up in a Result object because it is called in AsyncLoader
+      throw TerriaError.combine(errors, {
+        title: { key: "models.terria.loadingInitSourcesErrorTitle" },
+        message: {
+          key: "models.terria.loadingInitSourcesErrorMessage",
+          parameters: { appName: this.appName, email: this.supportEmail }
+        }
+      });
     }
   }
 
@@ -1050,30 +1059,20 @@ export default class Terria {
               allModelStratumData,
               replaceStratum
             )
-          ).catchError(error =>
-            errors.push(
-              error.createParentError({
-                message: `Failed to load container ${containerId}`,
-                severity: TerriaErrorSeverity.Warning
-              })
-            )
-          );
+          ).pushErrorTo(errors, {
+            message: `Failed to load container ${containerId}`,
+            severity: TerriaErrorSeverity.Warning
+          });
 
           if (container) {
             const dereferenced = ReferenceMixin.isMixedInto(container)
               ? container.target
               : container;
             if (GroupMixin.isMixedInto(dereferenced)) {
-              try {
-                await dereferenced.loadMembers();
-              } catch (error) {
-                errors.push(
-                  TerriaError.from(error, {
-                    message: `Failed to load group ${dereferenced.uniqueId}`,
-                    severity: TerriaErrorSeverity.Warning
-                  })
-                );
-              }
+              (await dereferenced.loadMembers()).pushErrorTo(errors, {
+                message: `Failed to load group ${dereferenced.uniqueId}`,
+                severity: TerriaErrorSeverity.Warning
+              });
             }
           }
         })
@@ -1093,14 +1092,10 @@ export default class Terria {
           allModelStratumData,
           replaceStratum
         )
-      ).catchError(error =>
-        errors.push(
-          error.createParentError({
-            message: `Failed to load SplitItemReference ${splitSourceId}`,
-            severity: TerriaErrorSeverity.Warning
-          })
-        )
-      );
+      ).pushErrorTo(errors, {
+        message: `Failed to load SplitItemReference ${splitSourceId}`,
+        severity: TerriaErrorSeverity.Warning
+      });
     }
     const loadedModel = upsertModelFromJson(
       CatalogMemberFactory,
@@ -1219,9 +1214,7 @@ export default class Terria {
     if (initData.catalog !== undefined) {
       this.catalog.group
         .addMembersFromJson(stratumId, initData.catalog)
-        .catchError(error => {
-          errors.push(error);
-        });
+        .pushErrorTo(errors);
     }
 
     if (isJsonObject(initData.elements)) {
@@ -1268,7 +1261,7 @@ export default class Terria {
       processBaseMaps(
         <BaseMapModel[]>(<unknown>initData.baseMaps),
         this
-      ).catchError(e => errors.push(e));
+      ).pushErrorTo(errors);
     }
 
     if (isJsonObject(initData.homeCamera)) {
@@ -1309,9 +1302,7 @@ export default class Terria {
               models,
               replaceStratum
             )
-          ).catchError(error => {
-            errors.push(error);
-          });
+          ).pushErrorTo(errors);
         })
       );
     }
@@ -1455,15 +1446,13 @@ export default class Terria {
           initData: initObjWithoutCatalog
         });
       } catch (e) {
-        this.raiseErrorToUser(
-          TerriaError.from(e, {
-            title: { key: "models.terria.loadingMagdaInitSourceErrorMessage" },
-            message: {
-              key: "models.terria.loadingMagdaInitSourceErrorMessage",
-              parameters: { url: configUrl }
-            }
-          })
-        );
+        this.raiseErrorToUser(e, {
+          title: { key: "models.terria.loadingMagdaInitSourceErrorMessage" },
+          message: {
+            key: "models.terria.loadingMagdaInitSourceErrorMessage",
+            parameters: { url: configUrl }
+          }
+        });
       }
     }
 
@@ -1484,11 +1473,9 @@ export default class Terria {
       reference.setTrait(CommonStrata.definition, "url", magdaRoot);
       reference.setTrait(CommonStrata.definition, "recordId", id);
       reference.setTrait(CommonStrata.definition, "magdaRecord", config);
-      (await reference.loadReference()).catchError(e =>
-        this.raiseErrorToUser(
-          e,
-          `Failed to load MagdaReference for record ${id}`
-        )
+      (await reference.loadReference()).raiseError(
+        this,
+        `Failed to load MagdaReference for record ${id}`
       );
       if (reference.target instanceof CatalogGroup) {
         runInAction(() => {

@@ -87,9 +87,7 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
         this.refreshKnownContainerUniqueIds(this.uniqueId);
         this.addShareKeysToMembers();
       } catch (e) {
-        return Result.error(
-          TerriaError.from(e, `Failed to load group \`${getName(this)}\``)
-        );
+        return Result.error(e, `Failed to load group \`${getName(this)}\``);
       }
 
       return Result.none();
@@ -195,10 +193,8 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
 
       if (newMemberIds.error)
         return Result.error(
-          TerriaError.from(
-            newMemberIds.error,
-            `Failed to add members from JSON for model \`${this.uniqueId}\``
-          )
+          newMemberIds.error,
+          `Failed to add members from JSON for model \`${this.uniqueId}\``
         );
 
       return Result.none();

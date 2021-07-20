@@ -174,10 +174,7 @@ export default class SdmxJsonCatalogItem
         );
       } else {
         this.terria.raiseErrorToUser(
-          new TerriaError({
-            message: `Failed to load SDMX data for "${this.name ??
-              this.uniqueId}"`
-          })
+          `Failed to load SDMX data for "${this.name ?? this.uniqueId}"`
         );
       }
     }

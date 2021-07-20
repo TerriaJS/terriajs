@@ -29,6 +29,7 @@ import {
 } from "./defaultTourPoints";
 import DisclaimerHandler from "./DisclaimerHandler";
 import SearchState from "./SearchState";
+import Result from "../Core/Result";
 
 export const DATA_CATALOG_NAME = "data-catalog";
 export const USER_DATA_NAME = "my-data";
@@ -539,30 +540,30 @@ export default class ViewState {
     item: BaseModel,
     isOpen: boolean = true,
     stratum: string = CommonStrata.user
-  ): Promise<void> {
+  ): Promise<Result<void>> {
     try {
+      runInAction(() => (this._previewedItem = item));
       if (ReferenceMixin.isMixedInto(item)) {
         (await item.loadReference()).throwIfError();
 
         // If reference is a group - call viewCatalogMember on reference.target
         if (item.target && GroupMixin.isMixedInto(item.target)) {
-          await this.viewCatalogMember(item.target, isOpen, stratum);
-          return;
+          return await this.viewCatalogMember(item.target, isOpen, stratum);
         }
       }
-
-      if (CatalogMemberMixin.isMixedInto(item))
-        (await item.loadMetadata()).throwIfError();
 
       if (GroupMixin.isMixedInto(item)) {
         item.setTrait(stratum, "isOpen", isOpen);
         if (item.isOpen) {
           (await item.loadMembers()).throwIfError();
         }
-      }
+      } else {
+        if (CatalogMemberMixin.isMixedInto(item))
+          (await item.loadMetadata()).throwIfError();
 
-      if (MappableMixin.isMixedInto(item))
-        (await item.loadMapItems()).throwIfError();
+        if (MappableMixin.isMixedInto(item))
+          (await item.loadMapItems()).throwIfError();
+      }
 
       if (addedByUser(item)) {
         runInAction(() => (this.userDataPreviewedItem = item));
@@ -570,7 +571,6 @@ export default class ViewState {
         this.openUserData();
       } else {
         runInAction(() => {
-          this._previewedItem = item;
           this.openAddData();
           if (this.terria.configParameters.tabbedCatalog) {
             const parentGroups = getAncestors(item);
@@ -587,8 +587,9 @@ export default class ViewState {
         this.switchMobileView(this.mobileViewOptions.preview);
       }
     } catch (e) {
-      this.terria.raiseErrorToUser(e, `Failed to view ${getName(item)}`);
+      return Result.error(e);
     }
+    return Result.none();
   }
 
   @action

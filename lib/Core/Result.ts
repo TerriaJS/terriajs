@@ -81,18 +81,20 @@ import Terria from "../Models/Terria";
  * ```
  */
 export default class Result<T = undefined> {
-  /** Convenience constructor to return a Result with an error */
-  static error(error: TerriaErrorOptions | TerriaError): Result<undefined> {
-    return new Result(
-      undefined,
-      // Create TerriaError if error is TerriaErrorOptions
-      error instanceof TerriaError ? error : new TerriaError(error)
-    );
+  /** Convenience constructor to return a Result with an error.
+   *
+   * This accepts same arguments as `TerriaError.from`
+   */
+  static error(
+    error: unknown,
+    overrides?: TerriaErrorOverrides
+  ): Result<undefined> {
+    return new Result(undefined, TerriaError.from(error, overrides));
   }
 
   /** Convenience constructor to return a Result with no value (and potentially an error) */
-  static none(error?: TerriaErrorOptions | TerriaError) {
-    return error ? Result.error(error) : new Result(undefined);
+  static none(error?: unknown, overrides?: TerriaErrorOverrides) {
+    return error ? Result.error(error, overrides) : new Result(undefined);
   }
 
   /** Combine array of Results.

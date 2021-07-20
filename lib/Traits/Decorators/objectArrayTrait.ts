@@ -166,13 +166,15 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
     // TODO: support removals
 
     if (!Array.isArray(jsonValue)) {
-      return Result.error({
-        title: "Invalid property",
-        message: `Property ${
-          this.id
-        } is expected to be an array but instead it is of type ${typeof jsonValue}.`,
-        severity: TerriaErrorSeverity.Warning
-      });
+      return Result.error(
+        new TerriaError({
+          title: "Invalid property",
+          message: `Property ${
+            this.id
+          } is expected to be an array but instead it is of type ${typeof jsonValue}.`,
+          severity: TerriaErrorSeverity.Warning
+        })
+      );
     }
 
     const errors: TerriaError[] = [];
@@ -200,7 +202,7 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
         } else {
           result[propertyName] = trait
             .fromJson(model, stratumName, subJsonValue)
-            .catchError(error => errors.push(error));
+            .pushErrorTo(errors);
         }
       });
 

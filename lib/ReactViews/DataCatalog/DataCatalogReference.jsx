@@ -6,9 +6,9 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import addedByUser from "../../Core/addedByUser";
 import getPath from "../../Core/getPath";
 import CommonStrata from "../../Models/CommonStrata";
-import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
 import CatalogGroup from "./CatalogGroup";
 import CatalogItem from "./CatalogItem";
+import { TerriaErrorSeverity } from "../../Core/TerriaError";
 
 const DataCatalogReference = observer(
   createReactClass({
@@ -23,11 +23,17 @@ const DataCatalogReference = observer(
     },
 
     async setPreviewedItem() {
-      await this.props.viewState.viewCatalogMember(
-        this.props.reference,
-        true,
-        CommonStrata.user
-      );
+      (
+        await this.props.viewState.viewCatalogMember(
+          this.props.reference,
+          true,
+          CommonStrata.user
+        )
+      ).raiseError(this.props.terria, {
+        title: { key: "preview.previewItemErrorTitle" },
+        message: { key: "preview.previewItemErrorMessage" },
+        severity: TerriaErrorSeverity.Error
+      });
     },
 
     async add(event) {
@@ -64,7 +70,7 @@ const DataCatalogReference = observer(
             this.props.viewState.closeCatalog();
           }
         } catch (e) {
-          this.props.terria.raiseErrorToUser(e);
+          this.props.terria.raiseErrorToUser(e, undefined, true);
         }
       }
     },

@@ -45,13 +45,10 @@ export default class TerriaViewer {
   async setBaseMap(baseMap?: MappableMixin.MappableMixin) {
     if (!baseMap) return;
 
-    try {
-      if (baseMap) (await baseMap.loadMapItems()).throwIfError();
-
-      runInAction(() => (this._baseMap = baseMap));
-    } catch (e) {
-      this.terria.raiseErrorToUser(
-        TerriaError.from(e, {
+    if (baseMap) {
+      const result = await baseMap.loadMapItems();
+      if (result.error) {
+        result.raiseError(this.terria, {
           title: {
             key: "models.terria.loadingBaseMapErrorTitle",
             parameters: {
@@ -61,8 +58,10 @@ export default class TerriaViewer {
                   : baseMap.uniqueId) ?? "Unknown item"
             }
           }
-        })
-      );
+        });
+      } else {
+        runInAction(() => (this._baseMap = baseMap));
+      }
     }
   }
 

@@ -33,9 +33,7 @@ export async function exportData(item: ExportableMixin.ExportableMixin) {
 class ExportData extends React.Component<PropsType> {
   exportDataClicked(item: ExportableMixin.ExportableMixin) {
     exportData(item).catch(e => {
-      if (e instanceof TerriaError) {
-        this.props.item.terria.raiseErrorToUser(e);
-      }
+      this.props.item.terria.raiseErrorToUser(e);
     });
   }
 

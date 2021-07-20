@@ -104,7 +104,13 @@ const AddData = createReactClass({
     });
     let promise;
     if (this.state.remoteDataType.value === "auto") {
-      promise = loadFile(this);
+      promise = createCatalogItemFromFileOrUrl(
+        this.props.terria,
+        this.props.viewState,
+        this.state.remoteUrl,
+        this.state.remoteDataType.value,
+        true
+      );
     } else {
       try {
         const newItem = upsertModelFromJson(
@@ -126,12 +132,13 @@ const AddData = createReactClass({
       }
     }
     addUserCatalogMember(this.props.terria, promise).then(addedItem => {
-      if (addedItem && !(addedItem instanceof TerriaError)) {
+      if (addedItem) {
         this.props.onFileAddFinished([addedItem]);
+        if (TimeVarying.is(addedItem)) {
+          this.props.terria.timelineStack.addToTop(addedItem);
+        }
       }
-      if (TimeVarying.is(addedItem)) {
-        this.props.terria.timelineStack.addToTop(addedItem);
-      }
+
       // FIXME: Setting state here might result in a react warning if the
       // component unmounts before the promise finishes
       this.setState({
@@ -247,18 +254,5 @@ const AddData = createReactClass({
     return <div className={Styles.inner}>{this.renderPanels()}</div>;
   }
 });
-
-/**
- * Loads a catalog item from a file.
- */
-function loadFile(viewModel) {
-  return createCatalogItemFromFileOrUrl(
-    viewModel.props.terria,
-    viewModel.props.viewState,
-    viewModel.state.remoteUrl,
-    viewModel.state.remoteDataType.value,
-    true
-  );
-}
 
 module.exports = withTranslation()(AddData);

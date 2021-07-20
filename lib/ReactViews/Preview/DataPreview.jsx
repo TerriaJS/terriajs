@@ -54,6 +54,12 @@ const DataPreview = observer(
       return (
         <div className={Styles.preview}>
           <Choose>
+            <When condition={previewed && previewed.isLoadingMetadata}>
+              <div className={Styles.previewInner}>
+                <h3 className={Styles.h3}>{previewed.name}</h3>
+                <Loader />
+              </div>
+            </When>
             <When condition={previewed && previewed.isMappable}>
               <div className={Styles.previewInner}>
                 <MappablePreview
@@ -114,6 +120,7 @@ const DataPreview = observer(
               </div>
             </Otherwise>
           </Choose>
+          )
         </div>
       );
     },

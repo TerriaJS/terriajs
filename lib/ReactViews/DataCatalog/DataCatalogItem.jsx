@@ -84,19 +84,18 @@ export const DataCatalogItem = observer(
           );
         }
       } catch (e) {
-        this.props.terria.raiseErrorToUser(e);
+        this.props.terria.raiseErrorToUser(e, undefined, true);
       }
     },
 
     async setPreviewedItem() {
-      try {
-        await this.props.viewState.viewCatalogMember(this.props.item);
-      } catch (e) {
-        this.props.terria.raiseErrorToUser(e, TerriaErrorSeverity.Error, {
-          title: { key: "preview.previewItemErrorTitle" },
-          message: { key: "preview.previewItemErrorMessage" }
-        });
-      }
+      (
+        await this.props.viewState.viewCatalogMember(this.props.item)
+      ).raiseError(this.props.terria, {
+        title: { key: "preview.previewItemErrorTitle" },
+        message: { key: "preview.previewItemErrorMessage" },
+        severity: TerriaErrorSeverity.Error
+      });
     },
 
     isSelected() {

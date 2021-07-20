@@ -3,7 +3,6 @@ import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import Result from "../Core/Result";
-import TerriaError from "../Core/TerriaError";
 import Model, { BaseModel } from "../Models/Model";
 import SelectableDimensions, {
   SelectableDimension
@@ -14,6 +13,7 @@ import AccessControlMixin from "./AccessControlMixin";
 import GroupMixin from "./GroupMixin";
 import MappableMixin from "./MappableMixin";
 import ReferenceMixin from "./ReferenceMixin";
+
 type CatalogMember = Model<CatalogMemberTraits>;
 
 function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
@@ -168,10 +168,9 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
             );
             const value = dim.options.find(o => o.id === selectedId)?.value;
             if (isDefined(value)) {
-              updateModelFromJson(this, stratumId, value).catchError(e =>
-                this.terria.raiseErrorToUser(
-                  TerriaError.from(e, "Failed to update catalog member model")
-                )
+              updateModelFromJson(this, stratumId, value).raiseError(
+                this.terria,
+                `Failed to update catalog item ${getName(this)}`
               );
             }
           }

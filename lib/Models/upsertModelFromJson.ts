@@ -48,11 +48,13 @@ export default function upsertModelFromJson(
   if (uniqueId === undefined) {
     const localId = json.localId || json.name;
     if (localId === undefined) {
-      return Result.error({
-        title: i18next.t("models.catalog.idForMatchingErrorTitle"),
-        message: i18next.t("models.catalog.idForMatchingErrorMessage"),
-        severity: TerriaErrorSeverity.Warning
-      });
+      return Result.error(
+        new TerriaError({
+          title: i18next.t("models.catalog.idForMatchingErrorTitle"),
+          message: i18next.t("models.catalog.idForMatchingErrorMessage"),
+          severity: TerriaErrorSeverity.Warning
+        })
+      );
     }
 
     let id = (parentId || "") + "/" + localId;
