@@ -245,6 +245,30 @@ export class MapServerStratum extends LoadableStratum(
           this._catalogGroup.terria
         );
         this._catalogGroup.terria.addModel(model);
+
+        if (this._catalogGroup.rectangle) {
+          model.setTrait(
+            CommonStrata.definition,
+            "rectangle",
+            this._catalogGroup.rectangle
+          );
+        }
+
+        if (this._catalogGroup.initialMessage) {
+          model.setTrait(
+            CommonStrata.definition,
+            "initialMessage",
+            this._catalogGroup.initialMessage
+          );
+        }
+
+        if (this._catalogGroup.featureInfoTemplate) {
+          model.setTrait(
+            CommonStrata.definition,
+            "featureInfoTemplate",
+            this._catalogGroup.featureInfoTemplate
+          );
+        }
       } else {
         model = existingModel;
       }
