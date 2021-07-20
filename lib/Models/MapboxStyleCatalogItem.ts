@@ -5,6 +5,9 @@ import MappableMixin, { MapItem } from "../ModelMixins/MappableMixin";
 import MapboxStyleCatalogItemTraits from "../Traits/TraitsClasses/MapboxStyleCatalogItemTraits";
 import CreateModel from "./CreateModel";
 
+/**
+ *  A raster catalog item for rendering styled mapbox layers.
+ */
 export default class MapboxStyleCatalogItem extends MappableMixin(
   CatalogMemberMixin(CreateModel(MapboxStyleCatalogItemTraits))
 ) {

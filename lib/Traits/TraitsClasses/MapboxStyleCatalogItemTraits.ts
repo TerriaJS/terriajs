@@ -24,8 +24,9 @@ export default class MapboxStyleCatalogItemTraits extends mixTraits(
   username = "mapbox";
 
   @primitiveTrait({
-    name: "mapId",
-    description: "The Mapbox Style ID.",
+    name: "styleId",
+    description:
+      "The Mapbox Style ID. eg 'streets-v11', 'outdoors-v11'. You can find more styleIds for the 'mapbox' user here: https://docs.mapbox.com/api/maps/styles/#mapbox-styles",
     type: "string"
   })
   styleId?: string;
