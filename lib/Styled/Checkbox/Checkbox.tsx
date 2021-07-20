@@ -88,6 +88,7 @@ const Checkbox = memo(
           isIndeterminate={isIndeterminate}
           isChecked={isChecked}
           isDisabled={isDisabled}
+          labeled={!!label}
         />
         <SpacingSpan right={1} />
         <TextSpan

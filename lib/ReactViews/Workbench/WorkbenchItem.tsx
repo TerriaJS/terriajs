@@ -16,6 +16,7 @@ import { RawButton } from "../../Styled/Button";
 import { Li } from "../../Styled/List";
 import { TextSpan } from "../../Styled/Text";
 import Icon, { StyledIcon } from "../../Styled/Icon";
+import Checkbox from "../../Styled/Checkbox/Checkbox";
 import Loader from "../Loader";
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
 import ChartItemSelector from "./Controls/ChartItemSelector";
@@ -86,26 +87,12 @@ class WorkbenchItemRaw extends React.Component<IProps> {
           <Box fullWidth>
             {(true || item.supportsToggleShown) && (
               <Box left verticalCenter>
-                <RawButton
-                  onClick={() => this.toggleVisibility()}
+                <Checkbox
+                  id="workbenchtoggleVisibility"
+                  isChecked={item.show}
                   title={t("workbench.toggleVisibility")}
-                >
-                  <BoxSpan padded>
-                    {item.show ? (
-                      <StyledIcon
-                        light
-                        styledHeight={"14px"}
-                        glyph={Icon.GLYPHS.checkboxOn}
-                      />
-                    ) : (
-                      <StyledIcon
-                        light
-                        styledHeight={"14px"}
-                        glyph={Icon.GLYPHS.checkboxOff}
-                      />
-                    )}
-                  </BoxSpan>
-                </RawButton>
+                  onChange={() => this.toggleVisibility()}
+                />
               </Box>
             )}
             <Box left fullWidth paddedHorizontally centered>

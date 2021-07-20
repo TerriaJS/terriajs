@@ -46,4 +46,8 @@ export interface CheckboxIconProps {
    * style and does not modify the isChecked property.
    */
   isIndeterminate?: boolean;
+  /**
+   * Wheter this checkbox has label so we apply top distance to fix position.
+   */
+  labeled: boolean;
 }
