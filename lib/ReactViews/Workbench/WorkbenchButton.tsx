@@ -2,8 +2,9 @@
 import React from "react";
 import styled from "styled-components";
 import Box from "../../Styled/Box";
-const Text = require("../../Styled/Text").default;
-const RawButton = require("../../Styled/Button").RawButton;
+import { SpacingSpan } from "./../../Styled/Spacing";
+import { TextSpan } from "../../Styled/Text";
+import { RawButton } from "../../Styled/Button";
 
 // only spans are valid html for buttons (even though divs work)
 const ButtonWrapper = styled(Box).attrs({
@@ -13,12 +14,17 @@ const ButtonWrapper = styled(Box).attrs({
   justify-content: center;
   align-items: center;
 `;
+
+interface IStyledWorkbenchButton {
+  primary?: boolean;
+  inverted?: boolean;
+}
+
 // styles half ripped from nav.scss
-const StyledWorkbenchButton = styled(RawButton)`
+const StyledWorkbenchButton = styled(RawButton)<IStyledWorkbenchButton>`
   border-radius: 3px;
   background: ${props => props.theme.dark};
   color: ${props => props.theme.textLight};
-  padding: 0 10px;
   flex-grow: 1;
   margin-right: 10px;
 
@@ -29,9 +35,6 @@ const StyledWorkbenchButton = styled(RawButton)`
   svg {
     height: 16px;
     width: 16px;
-    margin: 0 auto;
-    ${props => !props.iconOnly && `margin-right: 8px;`};
-    vertical-align: middle;
     fill: ${props => props.theme.textLight};
   }
 
@@ -102,28 +105,22 @@ const WorkbenchButton: React.FC<IProps> = (props: IProps) => {
     >
       <ButtonWrapper>
         {/* only spans are valid html for buttons (even though divs work) */}
-        {props.iconElement && (
-          <span
-            css={`
-              display: block;
-            `}
-          >
-            {props.iconElement()}
-          </span>
-        )}
+        {props.iconElement && props.iconElement()}
         {children && (
-          <Text
-            as="span"
-            noWrap
-            small
-            css={`
-              display: block;
-              text-transform: uppercase;
-              letter-spacing: 0.08px;
-            `}
-          >
-            {children}
-          </Text>
+          <>
+            <SpacingSpan right={1}></SpacingSpan>
+            <TextSpan
+              noWrap
+              small
+              css={`
+                display: block;
+                text-transform: uppercase;
+                letter-spacing: 0.08px;
+              `}
+            >
+              {children}
+            </TextSpan>
+          </>
         )}
       </ButtonWrapper>
     </StyledWorkbenchButton>
