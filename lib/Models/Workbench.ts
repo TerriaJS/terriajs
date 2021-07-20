@@ -9,7 +9,7 @@ import MappableMixin from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
 import CommonStrata from "../Models/CommonStrata";
-import LayerOrderingTraits from "../Traits/LayerOrderingTraits";
+import LayerOrderingTraits from "../Traits/TraitsClasses/LayerOrderingTraits";
 import hasTraits from "./hasTraits";
 import { BaseModel } from "./Model";
 
@@ -199,12 +199,10 @@ export default class Workbench {
       }
     } catch (e) {
       this.remove(item);
-      throw e instanceof TerriaError
-        ? e
-        : new TerriaError({
-            title: i18next.t("workbench.addItemErrorTitle"),
-            message: i18next.t("workbench.addItemErrorMessage")
-          });
+      throw TerriaError.from(e, {
+        title: i18next.t("workbench.addItemErrorTitle"),
+        message: i18next.t("workbench.addItemErrorMessage")
+      });
     }
   }
 

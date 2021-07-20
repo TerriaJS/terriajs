@@ -71,6 +71,8 @@ export default class Collapsible extends React.Component<
           onClick={this.toggleOpen.bind(this)}
           css={`
             text-align: left;
+            display: flex;
+            align-items: center;
           `}
           aria-expanded={this.state.isOpen}
           aria-controls={`${this.props.title}`}

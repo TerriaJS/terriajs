@@ -12,7 +12,7 @@ import hasTraits from "../../../Models/hasTraits";
 import Box from "../../../Styled/Box";
 import Spacing from "../../../Styled/Spacing";
 import Text from "../../../Styled/Text";
-import RasterLayerTraits from "../../../Traits/RasterLayerTraits";
+import RasterLayerTraits from "../../../Traits/TraitsClasses/RasterLayerTraits";
 
 interface IProps extends WithTranslation {
   item: any;

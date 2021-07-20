@@ -22,7 +22,7 @@ import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
 import { getShareData } from "../Map/Panels/SharePanel/BuildShareLink";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
 import Styles from "./story-builder.scss";
-import Story from "./Story.jsx";
+import Story from "./Story";
 import StoryEditor from "./StoryEditor.jsx";
 import {
   Category,
@@ -417,15 +417,16 @@ const StoryBuilder = observer(
                       key={`${story.id}`}
                       story={story}
                       sortData={story}
-                      deleteStory={this.removeStory.bind(this, index)}
-                      recaptureStory={this.recaptureScene}
+                      deleteStory={() => this.removeStory(index, story)}
+                      recaptureStory={() => this.recaptureScene(story)}
                       recaptureStorySuccessful={Boolean(
                         story.id === this.state.recaptureSuccessful
                       )}
-                      viewStory={this.viewStory.bind(this, index)}
+                      viewStory={() => this.viewStory(index)}
                       menuOpen={this.state.storyWithOpenMenu === story}
-                      openMenu={this.openMenu}
-                      editStory={this.editStory}
+                      openMenu={() => this.openMenu(story)}
+                      closeMenu={() => this.openMenu(null)}
+                      editStory={() => this.editStory(story)}
                       parentRef={this.storiesWrapperRef}
                     />
                   </For>

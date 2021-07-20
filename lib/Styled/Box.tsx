@@ -1,3 +1,4 @@
+import { Ref } from "react";
 import styled, { css } from "styled-components";
 import { Overflow, WordBreak, OneKeyFrom } from "./Styled.types";
 
@@ -57,10 +58,10 @@ interface IBoxPropsBase {
   overflow?: Overflow;
   overflowY?: Overflow;
   overflowX?: Overflow;
+  ref?: Ref<any>;
   scroll?: boolean;
   style?: any;
   as?: React.ElementType | keyof JSX.IntrinsicElements;
-  ref?: any;
 }
 
 type IBoxProps = IBoxPropsBase & OneKeyFrom<Column>;

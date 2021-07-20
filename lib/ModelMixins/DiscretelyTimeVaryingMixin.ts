@@ -10,7 +10,7 @@ import TerriaError from "../Core/TerriaError";
 import { calculateDomain, ChartItem } from "../ModelMixins/ChartableMixin";
 import CommonStrata from "../Models/CommonStrata";
 import Model from "../Models/Model";
-import DiscretelyTimeVaryingTraits from "../Traits/DiscretelyTimeVaryingTraits";
+import DiscretelyTimeVaryingTraits from "../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import TimeVarying from "./TimeVarying";
 
 type DiscretelyTimeVarying = Model<DiscretelyTimeVaryingTraits>;

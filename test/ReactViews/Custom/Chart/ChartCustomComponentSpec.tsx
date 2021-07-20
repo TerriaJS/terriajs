@@ -14,9 +14,9 @@ import {
   DomElement,
   ProcessNodeContext
 } from "../../../../lib/ReactViews/Custom/CustomComponent";
-import UrlTraits from "../../../../lib/Traits/UrlTraits";
+import UrlTraits from "../../../../lib/Traits/TraitsClasses/UrlTraits";
 import mixTraits from "../../../../lib/Traits/mixTraits";
-import MappableTraits from "../../../../lib/Traits/MappableTraits";
+import MappableTraits from "../../../../lib/Traits/TraitsClasses/MappableTraits";
 
 const isComponentOfType: any = require("react-shallow-testutils")
   .isComponentOfType;
