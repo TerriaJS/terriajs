@@ -1,13 +1,12 @@
 "use strict";
 
 import classNames from "classnames";
-import { action, runInAction, observable, computed } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import Slider from "rc-slider";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import DefaultTimelineModel from "../../../Models/DefaultTimelineModel";
 // eslint-disable-next-line no-unused-vars
 import Terria from "../../../Models/Terria";
@@ -15,11 +14,12 @@ import ViewerMode from "../../../Models/ViewerMode";
 // eslint-disable-next-line no-unused-vars
 import ViewState from "../../../ReactViewModels/ViewState";
 import Icon from "../../../Styled/Icon";
-import MenuPanel from "../../StandardUserInterface/customizable/MenuPanel";
 // import { provideRef } from "../../HOCs/provideRef";
 import withTerriaRef from "../../HOCs/withTerriaRef";
+import MenuPanel from "../../StandardUserInterface/customizable/MenuPanel";
 import DropdownStyles from "./panel.scss";
 import Styles from "./setting-panel.scss";
+import { TerrainSide } from "./TerrainSide";
 // The basemap and viewer setting panel
 /**
  * @typedef {object} Props
@@ -28,12 +28,6 @@ import Styles from "./setting-panel.scss";
  *
  * @extends {React.Component<Props>}
  */
-
-const sides = {
-  left: "settingPanel.terrain.left",
-  both: "settingPanel.terrain.both",
-  right: "settingPanel.terrain.right"
-};
 
 @observer
 class SettingPanel extends React.Component {
@@ -108,27 +102,6 @@ class SettingPanel extends React.Component {
   }
 
   @action
-  showTerrainOnSide(side, event) {
-    event.stopPropagation();
-
-    switch (side) {
-      case sides.left:
-        this.props.terria.terrainSplitDirection = ImagerySplitDirection.LEFT;
-        this.props.terria.showSplitter = true;
-        break;
-      case sides.right:
-        this.props.terria.terrainSplitDirection = ImagerySplitDirection.RIGHT;
-        this.props.terria.showSplitter = true;
-        break;
-      case sides.both:
-        this.props.terria.terrainSplitDirection = ImagerySplitDirection.NONE;
-        break;
-    }
-
-    this.props.terria.currentViewer.notifyRepaintRequired();
-  }
-
-  @action
   toggleDepthTestAgainstTerrainEnabled(event) {
     event.stopPropagation();
     this.props.terria.depthTestAgainstTerrainEnabled = !this.props.terria
@@ -174,22 +147,6 @@ class SettingPanel extends React.Component {
       icon: "map"
     };
 
-    const isCesiumWithTerrain =
-      this.props.terria.mainViewer.viewerMode === ViewerMode.Cesium &&
-      this.props.terria.mainViewer.viewerOptions.useTerrain &&
-      this.props.terria.currentViewer &&
-      this.props.terria.currentViewer.scene &&
-      this.props.terria.currentViewer.scene.globe;
-
-    const supportsDepthTestAgainstTerrain = isCesiumWithTerrain;
-    const depthTestAgainstTerrainEnabled =
-      supportsDepthTestAgainstTerrain &&
-      this.props.terria.depthTestAgainstTerrainEnabled;
-
-    const depthTestAgainstTerrainLabel = depthTestAgainstTerrainEnabled
-      ? t("settingPanel.terrain.showUndergroundFeatures")
-      : t("settingPanel.terrain.hideUndergroundFeatures");
-
     const viewerModes = [];
 
     if (
@@ -200,20 +157,6 @@ class SettingPanel extends React.Component {
     }
 
     viewerModes.push("3dsmooth", "2d");
-
-    const supportsSide = isCesiumWithTerrain;
-
-    let currentSide = sides.both;
-    if (supportsSide) {
-      switch (this.props.terria.terrainSplitDirection) {
-        case ImagerySplitDirection.LEFT:
-          currentSide = sides.left;
-          break;
-        case ImagerySplitDirection.RIGHT:
-          currentSide = sides.right;
-          break;
-      }
-    }
 
     const timelineStack = this.props.terria.timelineStack;
     const alwaysShowTimeline =
@@ -255,59 +198,7 @@ class SettingPanel extends React.Component {
             </For>
           </ul>
         </div>
-        <If condition={supportsSide}>
-          <div className={classNames(Styles.viewer, DropdownStyles.section)}>
-            <label className={DropdownStyles.heading}>
-              {t("settingPanel.terrain.sideLabel")}
-            </label>
-            <ul className={Styles.viewerSelector}>
-              {Object.values(sides).map(side => (
-                <li key={side} className={Styles.listItemThreeCols}>
-                  <button
-                    onClick={this.showTerrainOnSide.bind(this, side)}
-                    className={classNames(Styles.btnViewer, {
-                      [Styles.isActive]: side === currentSide
-                    })}
-                  >
-                    {t(side)}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </If>
-        <If condition={supportsDepthTestAgainstTerrain}>
-          <div className={classNames(Styles.viewer, DropdownStyles.section)}>
-            <section
-              className={Styles.nativeResolutionWrapper}
-              title={qualityLabels[this.props.terria.quality]}
-            >
-              <button
-                id="depthTestAgainstTerrain"
-                type="button"
-                onClick={this.toggleDepthTestAgainstTerrainEnabled.bind(this)}
-                title={depthTestAgainstTerrainLabel}
-                className={Styles.btnNativeResolution}
-              >
-                {depthTestAgainstTerrainEnabled ? (
-                  <Icon glyph={Icon.GLYPHS.checkboxOn} />
-                ) : (
-                  <Icon glyph={Icon.GLYPHS.checkboxOff} />
-                )}
-              </button>
-              <label
-                title={depthTestAgainstTerrainLabel}
-                htmlFor="depthTestAgainstTerrain"
-                className={classNames(
-                  DropdownStyles.subHeading,
-                  Styles.nativeResolutionHeader
-                )}
-              >
-                {t("settingPanel.terrain.hideUnderground")}
-              </label>
-            </section>
-          </div>
-        </If>
+        <TerrainSide terria={this.props.terria} />
         <div className={classNames(Styles.baseMap, DropdownStyles.section)}>
           <label className={DropdownStyles.heading}>
             {" "}

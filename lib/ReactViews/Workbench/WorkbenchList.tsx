@@ -6,7 +6,6 @@ import React from "react";
 import Sortable from "react-anything-sortable";
 import styled from "styled-components";
 import Terria from "../../Models/Terria";
-import Workbench from "../../Models/Workbench";
 import ViewState from "../../ReactViewModels/ViewState";
 import { Ul } from "../../Styled/List";
 import WorkbenchItem from "./WorkbenchItem";
@@ -49,6 +48,7 @@ class WorkbenchList extends React.Component<IProps> {
         paddedHorizontally
         fullWidth
         fullHeight
+        column
       >
         {this.props.terria.showSplitter && (
           <WorkbenchSplitScreen terria={this.props.terria} />

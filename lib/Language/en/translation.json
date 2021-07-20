@@ -535,7 +535,8 @@
       "undefinedLabel": "Not specified"
     },
     "searchItem": "Search",
-    "searchItemTitle": "Search"
+    "searchItemTitle": "Search",
+    "splitScreenMode": "SPLIT SCREEN MODE"
   },
   "dateTime": {
     "time": "Time:",
