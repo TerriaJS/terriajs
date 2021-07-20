@@ -4,7 +4,7 @@
       "content": "## データを地図上で見る\n\nここでは、データカタログからデータを探し、地図に追加することができます。複数のデータも追加できます。追加したデータは、画面左側にリストとして表示されます。"
     },
     "locationSearchInput": {
-      "content": "## 場所検索\n\n地図上の興味ある場所の名前や住所を入力してください。"
+      "content": "## 場所を検索\n\n地名や住所を入力するとその場所を地図上で検索できます。"
     },
     "previous": "前",
     "finish": "完了",
@@ -353,7 +353,7 @@
     "viewMore": "より {{name}} 結果を表示",
     "viewLess": "{{name}} 少なく結果を表示",
     "search": "データカタログで '{{searchText}}' を検索",
-    "searchInDataCatalog": "データカタログで <1>'{{locationSearchText}}'</1> を検索",
+    "searchInDataCatalog": "データカタログで <1>「{{locationSearchText}}」</1> を検索",
     "data": "データについて",
     "done": "終了",
     "resultsLabel": "検索結果"
