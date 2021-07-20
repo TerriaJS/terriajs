@@ -12,19 +12,8 @@ const BadgeBar: React.FC<IProps> = (props: IProps) => {
     <Box paddedHorizontally={3} justifySpaceBetween>
       <Box verticalCenter>
         <TextSpan textLight uppercase>
-          {props.label}
+          {props.label} {props.badge ? `(${props.badge})` : null}
         </TextSpan>
-        {props.badge && (
-          <TextSpan
-            textLight
-            uppercase
-            css={`
-              padding-left: 5px;
-            `}
-          >
-            ({props.badge})
-          </TextSpan>
-        )}
       </Box>
 
       <Box>{props.children}</Box>
