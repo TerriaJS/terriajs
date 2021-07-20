@@ -336,7 +336,10 @@ class SettingPanel extends React.Component {
                   {baseMap.item === this.props.terria.mainViewer.baseMap ? (
                     <Icon glyph={Icon.GLYPHS.selected} />
                   ) : null}
-                  <img alt={baseMap.item.name} src={baseMap.image} />
+                  <img
+                    alt={baseMap.item ? baseMap.item.name : ""}
+                    src={baseMap.image}
+                  />
                 </button>
               </li>
             </For>

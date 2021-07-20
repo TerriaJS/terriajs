@@ -245,7 +245,6 @@ Definition of the baseMap model.
 |----|--------|----|-------|-----------|
 |item|yes|[**Catalog Item**](../connecting-to-data/catalog-items.md)||Catalog item defition to be used for the base map|
 |image|yes|**string**||Path to an image file of the baseMap image to be shown in Map Settings|
-|hideInBaseMapMenu|no|**boolean**|`false`|Useful for eg, when a basemap entry is only meant to be used as a member of a composite basemap and must be hidden from the basemap listing|
 
 ### Cartesian 3
 |Name|Required|Type|Default|Description|
