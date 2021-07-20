@@ -61,6 +61,7 @@ interface IBoxPropsBase {
   ref?: Ref<any>;
   scroll?: boolean;
   style?: any;
+  innerGap?: number | boolean;
   as?: React.ElementType | keyof JSX.IntrinsicElements;
 }
 
@@ -169,6 +170,10 @@ export const Box = styled.div<IBoxProps>`
         (props.paddedVertically === true ? 1 : props.paddedVertically)}px;
     `}
   ${props => props.styledPadding && `padding: ${props.styledPadding};`}
+
+  ${props =>
+    props.innerGap &&
+    `gap: ${5 * (props.innerGap === true ? 1 : props.innerGap)}px;`}
 
   ${props =>
     props.backgroundImage &&

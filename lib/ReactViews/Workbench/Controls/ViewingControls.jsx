@@ -36,6 +36,7 @@ import {
   Category,
   DataSourceAction
 } from "../../../Core/AnalyticEvents/analyticEvents";
+import Ul from "../../../Styled/List";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -409,13 +410,14 @@ const ViewingControls = observer(
       const showMenu = item.uniqueId === viewState.workbenchWithOpenControls;
       return (
         <Box>
-          <ul
+          <Ul
             className={Styles.control}
             css={`
               & > button:last-child {
                 margin-right: 0;
               }
             `}
+            innerGap={2}
           >
             {/* <If condition={item.canZoomTo}> */}
             <WorkbenchButton
@@ -467,7 +469,7 @@ const ViewingControls = observer(
               iconElement={() => <Icon glyph={Icon.GLYPHS.menuDotted} />}
             />
             {/* </If> */}
-          </ul>
+          </Ul>
           {showMenu && (
             <Box
               css={`

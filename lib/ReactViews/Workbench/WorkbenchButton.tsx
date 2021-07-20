@@ -26,7 +26,6 @@ const StyledWorkbenchButton = styled(RawButton)<IStyledWorkbenchButton>`
   background: ${props => props.theme.dark};
   color: ${props => props.theme.textLight};
   flex-grow: 1;
-  margin-right: 10px;
 
   height: 32px;
   min-width: 32px;

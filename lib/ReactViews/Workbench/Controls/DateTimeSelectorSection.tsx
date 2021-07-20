@@ -161,7 +161,7 @@ class DateTimeSelectorSection extends React.Component<IProps, IState> {
           {t("dateTime.time")}
         </Text>
         <Spacing bottom={1} />
-        <Box fullWidth justifySpaceBetween styledHeight={"30px"}>
+        <Box fullWidth justifySpaceBetween styledHeight={"30px"} innerGap>
           <Box
             backgroundColor="rgba(250, 250, 250, 0.2)"
             css={`
@@ -268,7 +268,6 @@ const StyledButton = styled(RawButton)`
 const TimelineButton = styled(RawButton)<{ active: boolean }>`
   padding: 0 5px;
   border-radius: 2px;
-  margin: 0 0 0 5px;
   background-color: rgba(250, 250, 250, 0.2);
   ${props =>
     props.active &&
