@@ -34,6 +34,7 @@ Change Log
     * Share links are not preserved
     * Added basic support for dataset resources
 * Modified BadgeBar to be more tolerant to longer strings
+* Fix splitter thumb icon vertical position
 * [The next improvement]
 
 #### 8.0.0-alpha.87
