@@ -34,6 +34,9 @@ Change Log
     * Share links are not preserved
     * Added basic support for dataset resources
 * Fix splitter thumb icon vertical position
+* Fix select when clicking on multiple features in 2D (#5660)
+* Implemented support for `featureInfoUrlTemplate` on 2D vector features (#5660)
+* Implemented FeatureInfoMixin in GeojsonMixin (#5660)
 * [The next improvement]
 
 #### 8.0.0-alpha.87
