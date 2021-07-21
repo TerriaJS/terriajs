@@ -9,25 +9,14 @@ interface IProps {
 }
 const BadgeBar: React.FC<IProps> = (props: IProps) => {
   return (
-    <Box paddedHorizontally={3} justifySpaceBetween>
+    <Box paddedHorizontally={3} justifySpaceBetween whiteSpace="nowrap">
       <Box verticalCenter>
         <TextSpan textLight uppercase>
-          {props.label}
+          {props.label} {props.badge ? `(${props.badge})` : null}
         </TextSpan>
-        {props.badge && (
-          <TextSpan
-            textLight
-            uppercase
-            css={`
-              padding-left: 5px;
-            `}
-          >
-            ({props.badge})
-          </TextSpan>
-        )}
       </Box>
 
-      <Box whiteSpace="nowrap">{props.children}</Box>
+      <Box>{props.children}</Box>
     </Box>
   );
 };
