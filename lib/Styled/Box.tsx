@@ -42,6 +42,14 @@ interface IBoxPropsBase {
   rightSelf?: boolean;
   column?: boolean;
   wrap?: boolean;
+  whiteSpace?:
+    | "normal"
+    | "nowrap"
+    | "pre"
+    | "pre-line"
+    | "pre-wrap"
+    | "initial"
+    | "inherit";
   flex?: any;
   flexShrinkZero?: boolean;
   boxShadow?: boolean;
@@ -188,6 +196,7 @@ export const Box = styled.div<IBoxProps>`
     `}
 
   ${props => props.wordBreak && `word-break: ${props.wordBreak};`}
+  ${props => props.whiteSpace && `white-space: ${props.whiteSpace};`}
   ${props =>
     props.overflow &&
     `

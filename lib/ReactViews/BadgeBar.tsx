@@ -27,7 +27,7 @@ const BadgeBar: React.FC<IProps> = (props: IProps) => {
         )}
       </Box>
 
-      <Box>{props.children}</Box>
+      <Box whiteSpace="nowrap">{props.children}</Box>
     </Box>
   );
 };
