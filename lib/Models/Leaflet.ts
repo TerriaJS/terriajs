@@ -601,8 +601,22 @@ export default class Leaflet extends GlobeOrMap {
       }
     }
 
-    const feature = Feature.fromEntityCollectionOrEntity(entity);
-    if (isDefined(this._pickedFeatures)) {
+    const catalogItem = (entity as any)._catalogItem;
+
+    if (typeof catalogItem.getFeaturesFromPickResult === "function") {
+      const result = catalogItem.getFeaturesFromPickResult.bind(catalogItem)(
+        undefined,
+        entity
+      );
+      if (result && isDefined(this._pickedFeatures)) {
+        if (Array.isArray(result)) {
+          this._pickedFeatures.features.push(...result);
+        } else {
+          this._pickedFeatures.features.push(result);
+        }
+      }
+    } else if (isDefined(this._pickedFeatures)) {
+      const feature = Feature.fromEntityCollectionOrEntity(entity);
       this._pickedFeatures.features.push(feature);
 
       if (isDefined(entity) && entity.position) {

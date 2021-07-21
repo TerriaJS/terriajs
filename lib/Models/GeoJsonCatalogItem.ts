@@ -11,7 +11,6 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GeoJsonMixin from "../ModelMixins/GeojsonMixin";
 import GeoJsonCatalogItemTraits from "../Traits/TraitsClasses/GeoJsonCatalogItemTraits";
 import CreateModel from "./CreateModel";
-import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 
 const zip = require("terriajs-cesium/Source/ThirdParty/zip").default;

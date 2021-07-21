@@ -1,6 +1,12 @@
-import { Feature, FeatureCollection, GeoJsonObject, Point } from "geojson";
+import {
+  Feature as GeojsonFeature,
+  FeatureCollection,
+  GeoJsonObject,
+  Point
+} from "geojson";
 import i18next from "i18next";
 import { action, computed, observable, runInAction, toJS } from "mobx";
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -34,9 +40,11 @@ import UrlMixin from "../ModelMixins/UrlMixin";
 import Model from "../Models/Model";
 import proxyCatalogItemUrl from "../Models/proxyCatalogItemUrl";
 import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
+import Feature from "./../Models/Feature";
 import DiscretelyTimeVaryingMixin, {
   DiscreteTimeAsJS
 } from "./DiscretelyTimeVaryingMixin";
+import FeatureInfoMixin from "./FeatureInfoMixin";
 import MappableMixin from "./MappableMixin";
 
 const formatPropertyValue = require("../Core/formatPropertyValue");
@@ -62,7 +70,7 @@ export default function GeoJsonMixin<
   T extends Constructor<Model<GeoJsonTraits>>
 >(Base: T) {
   abstract class GeoJsonMixin extends DiscretelyTimeVaryingMixin(
-    MappableMixin(UrlMixin(Base))
+    MappableMixin(FeatureInfoMixin(UrlMixin(Base)))
   ) {
     protected readonly zipFileRegex = /(\.zip\b)/i;
 
@@ -108,6 +116,20 @@ export default function GeoJsonMixin<
       }
       this._dataSource.show = this.show;
       return [this._dataSource];
+    }
+
+    /**
+     * {@link FeatureInfoMixin.buildFeatureFromPickResult}
+     */
+    buildFeatureFromPickResult(
+      _screenPosition: Cartesian2 | undefined,
+      pickResult: any
+    ): Feature | undefined {
+      if (pickResult instanceof Entity) {
+        return Feature.fromEntityCollectionOrEntity(pickResult);
+      } else if (isDefined(pickResult?.id)) {
+        return Feature.fromEntityCollectionOrEntity(pickResult.id);
+      }
     }
 
     protected forceLoadMetadata(): Promise<void> {
@@ -165,7 +187,7 @@ export default function GeoJsonMixin<
     private addPerPropertyStyleToGeoJson(json: JsonObject | GeoJsonObject) {
       const geojson = json as GeoJsonObject;
       if (geojson.type === "Feature") {
-        const featureProperties = (geojson as Feature).properties;
+        const featureProperties = (geojson as GeojsonFeature).properties;
         if (featureProperties === null) {
           return;
         }
@@ -244,6 +266,9 @@ export default function GeoJsonMixin<
           czml.position = {
             cartographicDegrees: point.coordinates
           };
+
+          // _catalogItem property is needed for some feature picking functions (eg FeatureInfoMixin)
+          (feature as any)._catalogItem = this;
 
           if (feature.properties !== null) {
             czml.properties = Object.assign(
@@ -351,7 +376,8 @@ export default function GeoJsonMixin<
           const entity = entities.values[i];
 
           const properties = entity.properties;
-
+          // _catalogItem property is needed for some feature picking functions (eg FeatureInfoMixin)
+          (entity as any)._catalogItem = this;
           // Time
           if (
             isDefined(properties) &&
@@ -522,7 +548,7 @@ export default function GeoJsonMixin<
       const discreteTimesMap: Map<string, DiscreteTimeAsJS> = new Map();
       const addFeatureToDiscreteTimes = (geojson: GeoJsonObject) => {
         if (geojson.type === "Feature") {
-          let feature = geojson as Feature;
+          let feature = geojson as GeojsonFeature;
           if (
             feature.properties !== null &&
             feature.properties !== undefined &&
