@@ -1,5 +1,6 @@
 import i18next from "i18next";
-import L, { GridLayer } from "leaflet";
+import L from "../Map/LeafletPatched";
+import { GridLayer } from "leaflet";
 import { action, autorun, observable, runInAction } from "mobx";
 import { computedFn } from "mobx-utils";
 import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";

@@ -321,7 +321,7 @@
   "featureInfo": {
     "catalogItem": {
       "moreThanMax": "More than {{maximum}} {{catalogItemName}} features were found.",
-      "featuresFound": "{{featCount}} {catalogItemName} features were found.",
+      "featuresFound": "{{featCount}} {{catalogItemName}} features were found.",
       "featureInfoShown": "The first {{maximum}} are shown below."
     },
     "download": "Download this Table",
