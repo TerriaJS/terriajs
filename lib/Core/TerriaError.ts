@@ -173,7 +173,7 @@ export default class TerriaError {
     // Find highest severity across errors (eg if one if `Error`, then the new TerriaError will also be `Error`)
     const severity = () =>
       filteredErrors
-        .map(error => error.nestedSeverity)
+        .map(error => error.severity)
         .includes(TerriaErrorSeverity.Error)
         ? TerriaErrorSeverity.Error
         : TerriaErrorSeverity.Warning;
@@ -216,9 +216,9 @@ export default class TerriaError {
     return resolveI18n(this._title);
   }
 
-  /** Show error to user if `nestedSeverity` is `Error` */
+  /** Show error to user if `severity` is `Error` */
   get shouldRaiseToUser() {
-    return this.nestedSeverity === TerriaErrorSeverity.Error;
+    return this.severity === TerriaErrorSeverity.Error;
   }
 
   get raisedToUser() {
@@ -233,19 +233,6 @@ export default class TerriaError {
         err instanceof TerriaError ? (err.raisedToUser = r) : null
       );
     }
-  }
-
-  /** Get the nested error severity for this TerriaError and it's children (originalErrors)
-   * This will return the highest error severity across the whole tree of errors.
-   * It essentially escalates the severity of errors to the highest severity across the tree
-   */
-  get nestedSeverity() {
-    const nestedSeverity = this.flatten().map(error =>
-      typeof error.severity === "function" ? error.severity() : error.severity
-    );
-    if (nestedSeverity.includes(TerriaErrorSeverity.Error))
-      return TerriaErrorSeverity.Error;
-    return TerriaErrorSeverity.Warning;
   }
 
   /** Convert `TerriaError` to `Notification` */

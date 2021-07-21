@@ -43,6 +43,10 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
       return this._memberLoader.isLoading;
     }
 
+    get loadMembersError() {
+      return this._memberLoader.error;
+    }
+
     @computed
     get memberModels(): ReadonlyArray<BaseModel> {
       const members = this.members;

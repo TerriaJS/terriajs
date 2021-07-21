@@ -23,17 +23,11 @@ const DataCatalogReference = observer(
     },
 
     async setPreviewedItem() {
-      (
-        await this.props.viewState.viewCatalogMember(
-          this.props.reference,
-          true,
-          CommonStrata.user
-        )
-      ).raiseError(this.props.terria, {
-        title: { key: "preview.previewItemErrorTitle" },
-        message: { key: "preview.previewItemErrorMessage" },
-        severity: TerriaErrorSeverity.Error
-      });
+      await this.props.viewState.viewCatalogMember(
+        this.props.reference,
+        true,
+        CommonStrata.user
+      );
     },
 
     async add(event) {

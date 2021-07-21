@@ -56,14 +56,9 @@ const DataCatalogGroup = observer(
           isOpen: !this.state.isOpen
         });
       }
-      (
-        await this.props.viewState.viewCatalogMember(
-          this.props.group,
-          !this.props.group.isOpen
-        )
-      ).raiseError(
-        this.props.terria,
-        `Failed to open group: ${getName(this.props.group)}`
+      this.props.viewState.viewCatalogMember(
+        this.props.group,
+        !this.props.group.isOpen
       );
     },
 

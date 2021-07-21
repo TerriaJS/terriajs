@@ -56,6 +56,10 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
       previousTarget: BaseModel | undefined
     ): Promise<BaseModel | undefined>;
 
+    get loadReferenceError() {
+      return this._referenceLoader.error;
+    }
+
     /**
      * Gets a value indicating whether the reference is currently loading. While this is true,
      * {@link ModelMixin#target} may be undefined or stale.

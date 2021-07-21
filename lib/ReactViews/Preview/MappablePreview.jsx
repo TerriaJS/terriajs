@@ -15,6 +15,7 @@ import {
   Category,
   DataSourceAction
 } from "../../Core/AnalyticEvents/analyticEvents";
+import WarningBox from "./WarningBox";
 
 /**
  * @typedef {object} Props
@@ -129,6 +130,18 @@ class MappablePreview extends React.Component {
               </div>
             </If>
           </div>
+          <If condition={catalogItem.loadMetadataError}>
+            <WarningBox
+              error={catalogItem.loadMetadataError}
+              viewState={this.props.viewState}
+            />
+          </If>
+          <If condition={catalogItem.loadMapItemsError}>
+            <WarningBox
+              error={catalogItem.loadMapItemsError}
+              viewState={this.props.viewState}
+            />
+          </If>
           <Description item={catalogItem} />
         </div>
       </div>

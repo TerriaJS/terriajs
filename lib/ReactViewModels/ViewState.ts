@@ -530,7 +530,8 @@ export default class ViewState {
    *   - If after doing this the group is open, its members will be loaded with a call to `loadMembers`.
    * - `Mappable` - `loadMapItems` will be called
    *
-   * Then it will open the catalog and show the item.
+   * Then (if no errors have occurred) it will open the catalog.
+   * Note - `previewItem` is set at the start of the function, regardless of errors.
    *
    * @param item The model to view in catalog.
    * @param [isOpen=true] True if the group should be opened. False if it should be closed.
@@ -557,13 +558,10 @@ export default class ViewState {
         if (item.isOpen) {
           (await item.loadMembers()).throwIfError();
         }
-      } else {
-        if (CatalogMemberMixin.isMixedInto(item))
-          (await item.loadMetadata()).throwIfError();
-
-        if (MappableMixin.isMixedInto(item))
-          (await item.loadMapItems()).throwIfError();
-      }
+      } else if (MappableMixin.isMixedInto(item))
+        (await item.loadMapItems()).throwIfError();
+      else if (CatalogMemberMixin.isMixedInto(item))
+        (await item.loadMetadata()).throwIfError();
 
       if (addedByUser(item)) {
         runInAction(() => (this.userDataPreviewedItem = item));

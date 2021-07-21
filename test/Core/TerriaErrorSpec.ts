@@ -83,20 +83,4 @@ describe("TerriaError", function() {
     ).toBe(0);
     expect(combined?.flatten().length).toBe(7);
   });
-
-  it("Can calculate nestedSeverity from tree of errrors", function() {
-    const error = new TerriaError({ message: "some message" });
-    const error2 = TerriaError.from(error, "Some other message");
-
-    const error3 = TerriaError.from(error2, {
-      title: "A title",
-      severity: TerriaErrorSeverity.Error
-    });
-    const errors = error3.flatten();
-
-    const combined = TerriaError.combine(errors, "A big error");
-    expect(combined?.nestedSeverity).toBe(TerriaErrorSeverity.Error);
-    expect(combined?.severity).toBe(TerriaErrorSeverity.Warning);
-    expect(combined?.shouldRaiseToUser).toBeTruthy();
-  });
 });

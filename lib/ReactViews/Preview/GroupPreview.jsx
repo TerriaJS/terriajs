@@ -12,6 +12,7 @@ import Styles from "./mappable-preview.scss";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
 import { withTranslation } from "react-i18next";
+import WarningBox from "./WarningBox";
 
 /**
  * A "preview" for CatalogGroup.
@@ -52,6 +53,18 @@ const GroupPreview = observer(
               />
             </div>
           </div>
+          <If condition={this.props.previewed.loadMetadataError}>
+            <WarningBox
+              error={this.props.previewed.loadMetadataError}
+              viewState={this.props.viewState}
+            />
+          </If>
+          <If condition={this.props.previewed.loadMembersError}>
+            <WarningBox
+              error={this.props.previewed.loadMembersError}
+              viewState={this.props.viewState}
+            />
+          </If>
           <div className={Styles.previewedInfo}>
             <div className={Styles.url}>
               <Choose>

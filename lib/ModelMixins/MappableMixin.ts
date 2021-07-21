@@ -115,6 +115,10 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
       this.forceLoadMapItems.bind(this)
     );
 
+    get loadMapItemsError() {
+      return this._mapItemsLoader.error;
+    }
+
     /**
      * Gets a value indicating whether map items are currently loading.
      */

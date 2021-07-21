@@ -550,15 +550,13 @@ export default class Terria {
     overrides?: TerriaErrorOverrides,
     forceRaiseToUser = false
   ) {
-    if (this.userProperties.get("ignoreErrors") === "1") {
-      return;
-    }
-
     const terriaError = TerriaError.from(error, overrides);
 
     if (
-      (terriaError.shouldRaiseToUser && !terriaError.raisedToUser) ||
-      forceRaiseToUser
+      forceRaiseToUser ||
+      (this.userProperties.get("ignoreErrors") !== "1" &&
+        terriaError.shouldRaiseToUser &&
+        !terriaError.raisedToUser)
     ) {
       terriaError.raisedToUser = true;
       this.error.raiseEvent(terriaError);

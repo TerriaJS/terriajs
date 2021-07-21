@@ -89,13 +89,7 @@ export const DataCatalogItem = observer(
     },
 
     async setPreviewedItem() {
-      (
-        await this.props.viewState.viewCatalogMember(this.props.item)
-      ).raiseError(this.props.terria, {
-        title: { key: "preview.previewItemErrorTitle" },
-        message: { key: "preview.previewItemErrorMessage" },
-        severity: TerriaErrorSeverity.Error
-      });
+      await this.props.viewState.viewCatalogMember(this.props.item);
     },
 
     isSelected() {

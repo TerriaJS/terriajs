@@ -205,8 +205,7 @@ export default class Workbench {
       this.remove(item);
       throw TerriaError.from(e, {
         title: i18next.t("workbench.addItemErrorTitle"),
-        message: i18next.t("workbench.addItemErrorMessage"),
-        severity: TerriaErrorSeverity.Error
+        message: i18next.t("workbench.addItemErrorMessage")
       });
     }
   }
