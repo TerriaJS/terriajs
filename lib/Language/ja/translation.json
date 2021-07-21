@@ -199,7 +199,7 @@
     "viewMore": "より {{name}} 結果を表示",
     "viewLess": "{{name}} 少なく結果を表示",
     "search": "データカタログで '{{searchText}}' を検索",
-    "data": "データについて"
+    "data": "データ"
   },
   "story": {
     "hideStoryPanel": "ストーリービルダを隠す",
