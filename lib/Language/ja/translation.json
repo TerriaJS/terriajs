@@ -354,7 +354,7 @@
     "viewLess": "{{name}} 少なく結果を表示",
     "search": "データカタログで '{{searchText}}' を検索",
     "searchInDataCatalog": "データカタログで <1>「{{locationSearchText}}」</1> を検索",
-    "data": "データについて",
+    "data": "データ",
     "done": "終了",
     "resultsLabel": "検索結果"
   },
