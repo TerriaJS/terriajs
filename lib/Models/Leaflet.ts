@@ -603,7 +603,10 @@ export default class Leaflet extends GlobeOrMap {
 
     const catalogItem = (entity as any)._catalogItem;
 
-    if (typeof catalogItem.getFeaturesFromPickResult === "function") {
+    if (
+      typeof catalogItem.getFeaturesFromPickResult === "function" &&
+      this.terria.allowFeatureInfoRequests
+    ) {
       const result = catalogItem.getFeaturesFromPickResult.bind(catalogItem)(
         undefined,
         entity

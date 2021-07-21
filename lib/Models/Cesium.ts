@@ -1172,7 +1172,10 @@ export default class Cesium extends GlobeOrMap {
       // Try to find catalogItem for picked feature, and use catalogItem.getFeaturesFromPickResult() if it exists - this is used by FeatureInfoMixin
       const catalogItem = picked?.primitive?._catalogItem ?? id?._catalogItem;
 
-      if (typeof catalogItem?.getFeaturesFromPickResult === "function") {
+      if (
+        typeof catalogItem?.getFeaturesFromPickResult === "function" &&
+        this.terria.allowFeatureInfoRequests
+      ) {
         const result = catalogItem.getFeaturesFromPickResult.bind(catalogItem)(
           screenPosition,
           picked
