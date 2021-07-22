@@ -34,6 +34,7 @@ Change Log
     * Share links are not preserved
     * Added basic support for dataset resources
 * Fix splitter thumb icon vertical position
+* Renamed all mixin instance type definitions to `XMixin.Instance`.
 * [The next improvement]
 
 #### 8.0.0-alpha.87
