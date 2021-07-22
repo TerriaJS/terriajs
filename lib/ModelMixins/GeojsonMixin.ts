@@ -136,7 +136,7 @@ export default function GeoJsonMixin<
       return Promise.resolve();
     }
 
-    protected async loadGeoJson() {
+    protected async loadData() {
       return await new Promise<JsonValue | undefined>((resolve, reject) => {
         this.customDataLoader(resolve, reject);
         if (isDefined(this._file)) {
@@ -158,7 +158,7 @@ export default function GeoJsonMixin<
 
     protected async forceLoadMapItems(): Promise<void> {
       try {
-        const geoJson = await this.loadGeoJson();
+        const geoJson = await this.loadData();
         if (!isJsonObject(geoJson)) {
           throw new TerriaError({
             title: i18next.t("models.geoJson.errorLoadingTitle"),

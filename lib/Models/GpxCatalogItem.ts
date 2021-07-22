@@ -27,8 +27,8 @@ class GpxCatalogItem extends GeoJsonMixin(
     return toGeoJSON.gpx(dom);
   }
 
-  protected loadGeoJson() {
-    return super.loadGeoJson().then(data => {
+  protected loadData() {
+    return super.loadData().then(data => {
       if (isDefined(data)) {
         return this.loadGpxText(data as any);
       }

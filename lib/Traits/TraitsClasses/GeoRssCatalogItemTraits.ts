@@ -1,23 +1,8 @@
-import mixTraits from "../mixTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
-import UrlTraits from "./UrlTraits";
-import MappableTraits from "./MappableTraits";
-import CatalogMemberTraits from "./CatalogMemberTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import { GeoJsonTraits } from "./GeoJsonTraits";
 
-export default class GeoRssCatalogItemTraits extends mixTraits(
-  FeatureInfoTraits,
-  UrlTraits,
-  MappableTraits,
-  CatalogMemberTraits
-) {
-  @primitiveTrait({
-    type: "boolean",
-    name: "Clamp to Ground",
-    description:
-      "Whether the features in this service should be clamped to the terrain surface."
-  })
-  clampToGround: boolean = true;
+export default class GeoRssCatalogItemTraits extends mixTraits(GeoJsonTraits) {
   @primitiveTrait({
     type: "string",
     name: "geoRssString",

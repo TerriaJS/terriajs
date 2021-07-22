@@ -1,22 +1,19 @@
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import { computed, observable, runInAction } from "mobx";
 import getFilenameFromUri from "terriajs-cesium/Source/Core/getFilenameFromUri";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import isDefined from "../Core/isDefined";
 import loadXML from "../Core/loadXML";
+import readXml from "../Core/readXml";
 import replaceUnderscores from "../Core/replaceUnderscores";
 import TerriaError from "../Core/TerriaError";
 import { geoRss2ToGeoJson, geoRssAtomToGeoJson } from "../Map/geoRssConvertor";
-import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import UrlMixin from "../ModelMixins/UrlMixin";
+import GeoJsonMixin from "../ModelMixins/GeojsonMixin";
 import { InfoSectionTraits } from "../Traits/TraitsClasses/CatalogMemberTraits";
 import GeoRssCatalogItemTraits from "../Traits/TraitsClasses/GeoRssCatalogItemTraits";
-import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
-import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
@@ -54,87 +51,22 @@ interface ConvertedJson {
 
 class GeoRssStratum extends LoadableStratum(GeoRssCatalogItemTraits) {
   static stratumName = "georss";
-
   constructor(
     private readonly _item: GeoRssCatalogItem,
-    private readonly _geoJsonItem: GeoJsonCatalogItem,
-    private readonly _feed: Feed
+    private readonly _feed?: Feed
   ) {
     super();
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
-    return new GeoRssStratum(
-      newModel as GeoRssCatalogItem,
-      this._geoJsonItem,
-      this._feed
-    ) as this;
-  }
-
-  get feedData(): Feed {
-    return this._feed;
-  }
-
-  get geoJsonItem(): GeoJsonCatalogItem {
-    return this._geoJsonItem;
-  }
-
-  static async load(item: GeoRssCatalogItem) {
-    const geoJsonItem = new GeoJsonCatalogItem(createGuid(), item.terria, item);
-    geoJsonItem.setTrait(
-      CommonStrata.definition,
-      "clampToGround",
-      item.clampToGround
-    );
-    geoJsonItem.setTrait(
-      CommonStrata.definition,
-      "attribution",
-      item.attribution
-    );
-    const feed: any = {};
-    return Promise.resolve()
-      .then(() => loadGeoRss(item))
-      .then(json => {
-        if (isDefined(json.geoJsonData)) {
-          geoJsonItem.setTrait(
-            CommonStrata.definition,
-            "geoJsonData",
-            json.geoJsonData
-          );
-        }
-        geoJsonItem.loadMetadata();
-        return json.metadata;
-      })
-      .then(feed => {
-        const stratum = new GeoRssStratum(item, geoJsonItem, feed);
-        return stratum;
-      })
-      .catch(e => {
-        if (e instanceof TerriaError) {
-          throw e;
-        } else {
-          throw new TerriaError({
-            sender: this,
-            title: i18next.t("models.georss.errorLoadingTitle"),
-            message: i18next.t("models.georss.errorLoadingMessage", {
-              appName: item.terria.appName,
-              email:
-                '<a href="mailto:' +
-                item.terria.supportEmail +
-                '">' +
-                item.terria.supportEmail +
-                "</a>.",
-              stackTrace: e.stack || e.toString()
-            })
-          });
-        }
-      });
+    return new GeoRssStratum(newModel as GeoRssCatalogItem, this._feed) as this;
   }
 
   @computed get name(): string | undefined {
-    if (this._feed.title && this._feed.title.length > 0) {
+    if (this._feed && this._feed.title && this._feed.title.length > 0) {
       return replaceUnderscores(this._feed.title);
     }
+    return super.name;
   }
 
   @computed get dataCustodian(): string | undefined {
@@ -149,6 +81,9 @@ class GeoRssStratum extends LoadableStratum(GeoRssCatalogItemTraits) {
   }
 
   @computed get info() {
+    if (!this._feed) {
+      return [];
+    }
     return [
       createStratumInstance(InfoSectionTraits, {
         name: i18next.t("models.georss.subtitle"),
@@ -187,8 +122,8 @@ class GeoRssStratum extends LoadableStratum(GeoRssCatalogItemTraits) {
 
 StratumOrder.addLoadStratum(GeoRssStratum.stratumName);
 
-export default class GeoRssCatalogItem extends MappableMixin(
-  UrlMixin(CatalogMemberMixin(CreateModel(GeoRssCatalogItemTraits)))
+export default class GeoRssCatalogItem extends GeoJsonMixin(
+  CatalogMemberMixin(CreateModel(GeoRssCatalogItemTraits))
 ) {
   static readonly type = "georss";
   get type() {
@@ -199,26 +134,8 @@ export default class GeoRssCatalogItem extends MappableMixin(
     return i18next.t("models.georss.name");
   }
 
-  get canZoomTo(): boolean {
-    return true;
-  }
-
-  get showsInfo(): boolean {
-    return true;
-  }
-
   protected forceLoadMetadata(): Promise<void> {
-    return GeoRssStratum.load(this).then(stratum => {
-      runInAction(() => {
-        this.strata.set(GeoRssStratum.stratumName, stratum);
-      });
-    });
-  }
-
-  protected async forceLoadMapItems() {
-    if (isDefined(this.geoJsonItem)) {
-      return this.geoJsonItem.loadMapItems();
-    }
+    return Promise.resolve();
   }
 
   @computed get cacheDuration(): string {
@@ -228,61 +145,66 @@ export default class GeoRssCatalogItem extends MappableMixin(
     return "1d";
   }
 
-  @computed get geoJsonItem(): GeoJsonCatalogItem | undefined {
-    const stratum = <GeoRssStratum>this.strata.get(GeoRssStratum.stratumName);
-    return isDefined(stratum) ? stratum.geoJsonItem : undefined;
-  }
-
-  @computed get feedData(): Feed | undefined {
-    const stratum = <GeoRssStratum>this.strata.get(GeoRssStratum.stratumName);
-    return isDefined(stratum) ? stratum.feedData : undefined;
-  }
-
-  get mapItems() {
-    if (isDefined(this.geoJsonItem)) {
-      return this.geoJsonItem.mapItems.map(mapItem => {
-        mapItem.show = this.show;
-        return mapItem;
+  protected async loadData(): Promise<any> {
+    try {
+      const xmlData: any = super.loadData();
+      if (!isDefined(xmlData)) {
+        throw new RuntimeError("document is not valid");
+      }
+      const json = this.parseGeorss(xmlData);
+      runInAction(() => {
+        this.strata.set(
+          GeoRssStratum.stratumName,
+          new GeoRssStratum(this, json?.metadata)
+        );
+      });
+      return json?.geoJsonData;
+    } catch (e) {
+      throw TerriaError.from(e, {
+        title: i18next.t("models.georss.errorLoadingTitle"),
+        message: i18next.t("models.georss.errorLoadingMessage")
       });
     }
-    return [];
   }
-}
 
-function loadGeoRss(item: GeoRssCatalogItem) {
-  return new Promise<Document>(resolve => {
-    if (isDefined(item.geoRssString)) {
-      const parser = new DOMParser();
-      resolve(parser.parseFromString(item.geoRssString, "text/xml"));
-    } else if (isDefined(item.url)) {
-      resolve(loadXML(proxyCatalogItemUrl(item, item.url)));
-    } else {
-      throw new TerriaError({
-        sender: item,
-        title: i18next.t("models.georss.unableToLoadItemTitle"),
-        message: i18next.t("models.georss.unableToLoadItemMessage")
-      });
-    }
-  }).then(xmlData => {
+  private parseGeorss(xmlData: any): ConvertedJson | never {
     const documentElement = xmlData.documentElement;
 
     if (documentElement.localName.includes(GeoRssFormat.ATOM)) {
       const jsonData: ConvertedJson = {
         geoJsonData: geoRssAtomToGeoJson(xmlData),
-        metadata: parseMetadata(documentElement.childNodes, item)
+        metadata: parseMetadata(documentElement.childNodes, this)
       };
       return jsonData;
     } else if (documentElement.localName === GeoRssFormat.RSS) {
       const element = documentElement.getElementsByTagName("channel")[0];
       const jsonData: ConvertedJson = {
         geoJsonData: geoRss2ToGeoJson(xmlData),
-        metadata: parseMetadata(element.childNodes, item)
+        metadata: parseMetadata(element.childNodes, this)
       };
       return jsonData;
     } else {
       throw new RuntimeError("document is not valid");
     }
-  });
+  }
+
+  protected async loadFromFile(file: File): Promise<Document> {
+    return readXml(file);
+  }
+
+  protected async loadFromUrl(url: string): Promise<Document> {
+    return loadXML(proxyCatalogItemUrl(this, url));
+  }
+
+  protected async customDataLoader(
+    resolve: (value: any) => void,
+    _reject: (reason: any) => void
+  ): Promise<any> {
+    if (isDefined(this.geoRssString)) {
+      const parser = new DOMParser();
+      resolve(parser.parseFromString(this.geoRssString, "text/xml"));
+    }
+  }
 }
 
 function parseMetadata(

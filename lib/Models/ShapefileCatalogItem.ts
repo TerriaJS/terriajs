@@ -2,16 +2,14 @@ import * as geoJsonMerge from "@mapbox/geojson-merge";
 import i18next from "i18next";
 import * as shp from "shpjs";
 import JsonValue, { isJsonObject, JsonArray } from "../Core/Json";
+import loadBlob from "../Core/loadBlob";
+import makeRealPromise from "../Core/makeRealPromise";
+import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import GeoJsonMixin from "../ModelMixins/GeojsonMixin";
 import ShapefileCatalogItemTraits from "../Traits/TraitsClasses/ShapefileCatalogItemTraits";
 import CreateModel from "./CreateModel";
-import { JsonObject } from "./../Core/Json";
-import makeRealPromise from "../Core/makeRealPromise";
-import readJson from "../Core/readJson";
-import TerriaError from "../Core/TerriaError";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import loadBlob from "../Core/loadBlob";
 
 export function isJsonArrayOrDeepArrayOfObjects(
   value: JsonValue | undefined
@@ -67,8 +65,8 @@ class ShapefileCatalogItem extends GeoJsonMixin(
   }
 
   protected async customDataLoader(
-    resolve: (value: any) => void,
-    reject: (reason: any) => void
+    _resolve: (value: any) => void,
+    _reject: (reason: any) => void
   ): Promise<any> {}
 }
 
