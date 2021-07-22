@@ -824,7 +824,7 @@ export default class Terria {
         baseMap = baseMapSearch;
       }
     }
-    await this.mainViewer.setBaseMap(<MappableMixin.MappableMixin>baseMap.item);
+    await this.mainViewer.setBaseMap(<MappableMixin.Instance>baseMap.item);
   }
 
   get isLoadingInitSources(): boolean {
