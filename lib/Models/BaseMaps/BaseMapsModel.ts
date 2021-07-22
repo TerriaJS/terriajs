@@ -93,14 +93,11 @@ export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
   loadFromJson(stratumId: CommonStrata, newBaseMaps: any): Result {
     const errors: TerriaError[] = [];
     const { items, ...rest } = newBaseMaps;
-    console.log(items);
     if (items !== undefined) {
       const { items: itemsTrait } = this.traits;
       const newItemsIds = itemsTrait.fromJson(this, stratumId, items);
-      console.log(newItemsIds);
       newItemsIds
         .catchError(error => {
-          console.log(error);
           errors.push(error);
         })
         ?.forEach((member: BaseMapModel) => {
