@@ -1,6 +1,7 @@
 import ModelTraits from "../ModelTraits";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import SplitterTraits from "./SplitterTraits";
 
 export class TileErrorHandlingTraits extends ModelTraits {
   @primitiveTrait({
@@ -35,7 +36,7 @@ export class TileErrorHandlingTraits extends ModelTraits {
   ignoreUnknownTileErrors?: boolean;
 }
 
-export default class RasterLayerTraits extends ModelTraits {
+export default class RasterLayerTraits extends SplitterTraits {
   @primitiveTrait({
     type: "number",
     name: "Opacity",

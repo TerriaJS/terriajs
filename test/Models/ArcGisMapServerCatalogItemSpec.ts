@@ -65,7 +65,7 @@ describe("ArcGisMapServerCatalogItem", function() {
   });
 
   it("supports splitting", function() {
-    expect(item.supportsSplitting).toBeTruthy();
+    expect(item.disableSplitter).toBeFalsy();
   });
 
   it("supports zooming to extent", function() {

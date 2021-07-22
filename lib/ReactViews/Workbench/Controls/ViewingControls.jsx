@@ -36,6 +36,8 @@ import {
   Category,
   DataSourceAction
 } from "../../../Core/AnalyticEvents/analyticEvents";
+import hasTraits from "../../../Models/hasTraits";
+import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -292,7 +294,8 @@ const ViewingControls = observer(
       const { t, item, viewState } = this.props;
       const canSplit =
         !item.terria.configParameters.disableSplitter &&
-        item.supportsSplitting &&
+        hasTraits(item, SplitterTraits, "splitDirection") &&
+        !item.disableSplitter &&
         defined(item.splitDirection) &&
         item.terria.currentViewer.canShowSplitter;
       return (
