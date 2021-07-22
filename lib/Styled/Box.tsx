@@ -1,6 +1,6 @@
 import { Ref } from "react";
 import styled, { css } from "styled-components";
-import { Overflow, WordBreak, OneKeyFrom } from "./Styled.types";
+import { Overflow, WordBreak, WhiteSpace, OneKeyFrom } from "./Styled.types";
 
 interface Column {
   col1?: boolean;
@@ -27,6 +27,7 @@ interface IBoxPropsBase {
   styledWidth?: string;
   styledHeight?: string;
   styledMinWidth?: string;
+  styledMaxWidth?: string;
   styledMinHeight?: string;
   styledMaxHeight?: string;
   col?: boolean;
@@ -42,14 +43,7 @@ interface IBoxPropsBase {
   rightSelf?: boolean;
   column?: boolean;
   wrap?: boolean;
-  whiteSpace?:
-    | "normal"
-    | "nowrap"
-    | "pre"
-    | "pre-line"
-    | "pre-wrap"
-    | "initial"
-    | "inherit";
+  whiteSpace?: WhiteSpace;
   flex?: any;
   flexShrinkZero?: boolean;
   boxShadow?: boolean;
@@ -96,6 +90,7 @@ export const Box = styled.div<IBoxProps>`
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
   ${props => props.styledHeight && `height: ${props.styledHeight};`}
   ${props => props.styledMinWidth && `min-width: ${props.styledMinWidth};`}
+  ${props => props.styledMaxWidth && `max-width: ${props.styledMaxWidth};`}
   ${props => props.styledMinHeight && `min-height: ${props.styledMinHeight};`}
   ${props => props.styledMaxHeight && `max-height: ${props.styledMaxHeight};`}
 
