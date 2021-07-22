@@ -160,3 +160,101 @@ describe("ArcGisMapServerCatalogGroup", function() {
     });
   });
 });
+
+describe("ArcGisMapServerCatalogGroup creates its layer members with given traits", function() {
+  const mapServerUrl =
+    "http://example.com/arcgis/rest/services/Residential_Dwelling_Density/MapServer";
+  const rectangle = { east: 158, north: -8, south: -45, west: 109 };
+  const initialMessage = {
+    title: "Hint",
+    content: "If map items can not be seen, zoom in further to reveal them.",
+    key: undefined,
+    confirmation: false,
+    confirmText: undefined,
+    width: undefined,
+    height: undefined
+  };
+  const featureInfoTemplate = {
+    template: "{{Pixel Value}} people in the given radius.",
+    name: undefined,
+    partials: undefined,
+    formats: undefined
+  };
+  const numberOfGroupMembers = 4;
+
+  let terria: Terria;
+  let group: ArcGisMapServerCatalogGroup;
+
+  beforeEach(function() {
+    terria = new Terria({
+      baseUrl: "./"
+    });
+    group = new ArcGisMapServerCatalogGroup("test", terria);
+
+    const realLoadWithXhr = loadWithXhr.load;
+    // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
+    spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
+      let url = args[0];
+
+      if (url.match("Residential_Dwelling_Density/MapServer")) {
+        url = url.replace(/^.*\/MapServer/, "MapServer");
+        url = url.replace(/MapServer\/?\?f=json$/i, "mapServer.json");
+        args[0] = "test/ArcGisMapServer/Residential_Dwelling_Density/" + url;
+      }
+
+      return realLoadWithXhr(...args);
+    });
+  });
+
+  describe("loadMembers", function() {
+    it("properly creates members with parent's traits", async function() {
+      runInAction(() => {
+        group.setTrait(CommonStrata.definition, "url", mapServerUrl);
+        group.setTrait(CommonStrata.definition, "rectangle", rectangle);
+        group.setTrait(
+          CommonStrata.definition,
+          "initialMessage",
+          initialMessage
+        );
+        group.setTrait(
+          CommonStrata.definition,
+          "featureInfoTemplate",
+          featureInfoTemplate
+        );
+      });
+
+      await group.loadMembers();
+
+      for (let i = 0; i < numberOfGroupMembers; i++) {
+        const member = <ArcGisMapServerCatalogItem>group.memberModels[i];
+
+        const memberRectangle = member.getTrait(
+          CommonStrata.definition,
+          "rectangle"
+        );
+        expect(memberRectangle?.east).toEqual(rectangle.east);
+        expect(memberRectangle?.north).toEqual(rectangle.north);
+        expect(memberRectangle?.west).toEqual(rectangle.west);
+        expect(memberRectangle?.south).toEqual(rectangle.south);
+
+        const memberInitialMessage = member.getTrait(
+          CommonStrata.definition,
+          "initialMessage"
+        );
+        expect(memberInitialMessage?.title).toEqual(initialMessage.title);
+        expect(memberInitialMessage?.content).toEqual(initialMessage.content);
+        expect(memberInitialMessage?.confirmation).toEqual(
+          initialMessage.confirmation
+        );
+
+        const memberFeatureInfoTemplate = member.getTrait(
+          CommonStrata.definition,
+          "featureInfoTemplate"
+        );
+        expect(memberFeatureInfoTemplate?.template).toEqual(
+          featureInfoTemplate.template
+        );
+      }
+    });
+  });
+});
