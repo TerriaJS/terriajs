@@ -2,25 +2,19 @@
 TerriaJS
 ============
 
+# We will be deprecating our master branch (v7) of TerriaJS in early August 2021
+What this means:
+- The [Next branch (v8)](https://github.com/TerriaJS/terriajs/tree/next) will become our new main branch
+- We will be providing documentation on how to migrate from v7 to v8
+- We will be actively monitoring our issues in the [GitHub issue tracker](https://github.com/TerriaJS/terriajs/issues/new)
+
+-------------------
+
 [![Join the chat at https://gitter.im/TerriaJS/terriajs](https://badges.gitter.im/TerriaJS/terriajs.svg)](https://gitter.im/TerriaJS/terriajs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Docs](https://img.shields.io/badge/docs-online-blue.svg)](https://docs.terria.io/)
 
 ![Terria logo](terria-logo.png "Terria logo")
 
 TerriaJS is a library for building rich, web-based geospatial data explorers, used to drive [National Map](http://nationalmap.gov.au), [AREMI](http://nationalmap.gov.au/renewables) and [NEII Viewer](http://neii.gov.au/viewer/).  It uses [Cesium](https://cesiumjs.org) and WebGL for a full 3D globe in the browser with no plugins.  It gracefully falls back to 2D with [Leaflet](http://leafletjs.com/) on systems that can't run Cesium. It can handle catalogs of thousands of layers, with dozens of geospatial file and web service types supported. It is almost entirely JavaScript in the browser, meaning it can even be deployed as a static website, making it simple and cheap to host.
-
---------------------
-
-**We are currently working on a brand new version of Terria &mdash; version 8!**
-
-We will soon be posting docs outlining this new version: 
-
-- how it differs from the current version 
-- how it will impact users (including guides and tools to help you upgrade)
-- release roadmap (including which features are supported or in development)
-
-Stay tuned!
-
-**Can't wait? Go here for the *next* Terria:** https://github.com/TerriaJS/terriajs/tree/next
 
 --------------------
 
