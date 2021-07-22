@@ -74,7 +74,7 @@ Catalog files can be edited two ways:
 |stories|no|[**Story[]**](#story)||An array of stories to be loaded.|
 |viewerMode|no|**"3d"** or **"3dSmooth"** or **"2D"** |"3d"|The id of the viewer mode to be shown initialy.|
 |homeCamera|yes|[**CameraPosition**](#CameraPosition)||Where the camera goes when you click the "home" button between the zoom-in and zoom-out buttons.|
-|<a id="base-maps"></a>baseMaps|no|[**`baseMaps`**](#baseMaps)||The definition of the base maps to be shown to the user.|
+|baseMaps|no|[**`baseMaps`**](#base-maps)||The definition of the base maps to be shown to the user.|
 |showSplitter|no|**boolean**|false|Show splitter initally.|
 |splitPosition|no|**number**|0.5|The position of splitter.|
 |workbench|no|**string[]**||List of items ids to initially add to workbench.|
@@ -226,18 +226,51 @@ Definition of the story. This can be pretty complex to define for the standard u
 |version|yes|string|"8.0.0"|The version of share data.|
 |initSources|yes|[**CatalogFileProperties**](#catalog-file-properties)
 
-### `baseMaps`
+### <a id="base-maps"></a>`baseMaps`
 
 Definition of the base map model.
 
 |Name|Required|Type|Default|Description|
 |----|--------|----|-------|-----------|
-|items|no|[`basemap-items`](#basemapitem)|[default list of basemaps](../../lib/Models/BaseMaps/defaultBaseMaps.ts)|The array of the base maps to be shown to the user.|
-|defaultBaseMapId|no|**string**||The id of the baseMap user will see on the first mapLoad.|
-|previewBaseMapId|no|**string**||The id of the baseMap to be used as the base map in data preview.|
-|useBaseMaps|no|**string[]**|_all_|Array of base maps ids that is available to user. Use this do define order of the base maps in settings panel. Leave undefined to show all basemaps.|
+|<a id="basemaps-items"></a>items|no|[`basemapItem`](#basemap-item)|[default list of basemaps](https://github.com/TerriaJS/terriajs/blob/next/lib/Models/BaseMaps/defaultBaseMaps.ts)|The array of the base maps to be shown to the user. It will be combined with default list. To override the default basemap definition specify the id of the default basemap and parameter that need to be overriden.|
+|defaultBaseMapId|no|**string**||The id of the baseMap user will see on the first mapLoad. The value must be an id of the catalog item from the [`useBaseMaps`](#usebasemaps) array.|
+|previewBaseMapId|no|**string**||The id of the baseMap to be used as the base map in data preview. The value must be an id of the catalog item from the [`useBaseMaps`](#usebasemaps) array.||
+|<a id="usebasemaps"></a>useBaseMaps|no|**string[]**|_all_|Array of base maps ids that is available to user. Use this do define order of the base maps in settings panel. Leave undefined to show all basemaps. The values must be an ids of the catalog item from the [`baseMaps items`](#basemaps-items) array.|
 
-### `baseMapItem`
+**Example**
+```json
+  "baseMaps": {
+    "items": [
+      {
+        "item": {
+          "id": "basemap-positron",
+          "name": "Base map positron customized name",
+        },
+        "image": "build/TerriaJS/images/time-series-guide.jpg"
+      },
+      {
+        "item": {
+          "id": "test-basemap",
+          "name": "Voyager with labels",
+          "type": "open-street-map",
+          "url": "https://basemaps.cartocdn.com/rastertiles/voyager_labels_under/",
+          "attribution": "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
+          "subdomains": ["a", "b", "c", "d"],
+          "opacity": 1.0
+        },
+        "image": "build/TerriaJS/images/Australia.png"
+      },
+      {
+        "item": "//Surface Geology",
+        "image": "build/TerriaJS/images/Australia.png"
+      }
+    ],
+    "defaultBaseMapId": "basemap-positron",
+    "previewBaseMapId": "basemap-natural-earth-II"
+  }
+```
+
+### <a id="basemap-item"></a>`baseMapItem`
 
 Definition of the baseMap model.
 
