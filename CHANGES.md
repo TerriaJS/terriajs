@@ -7,6 +7,8 @@ Change Log
 
 - **Breaking changes**:
   - `colorPalette` no longer supports a list of CSS colors (eg `rgb(0,0,255)-rgb(0,255,0)-rgb(255,0,0)`). Instead please use `binColors`.
+  - Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses`
+  - Renamed all mixin instance type definitions to `XMixin.Instance`.
 
 * Fixed a bug with numeric item search where it sometimes fails to return all matching values.
 * Respect order of objects from lower strata in `objectArrayTrait`.
@@ -27,11 +29,16 @@ Change Log
 * `WebMapServiceCatalogGroup` will now create layer auto-IDs using `Name` field to avoid ID clashes.
 * Added `GroupMixin` `shareKey` generation for members - if the group has `shareKeys`.
 * Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses`
+* Fix `StyledIcon` css `display` clash
 * Limit `SelectableDimension` options to 1000 values
 * Added support for `SocrataCatalogGroup` and `SocrataMapViewCatalogGroup`
   * Notes on v7 to v8 Socrata integration:
     * Share links are not preserved
     * Added basic support for dataset resources
+* Added `MapboxMapCatalogItem`.
+* Added `MapboxStyleCatalogItem`.
+* Fix splitter thumb icon vertical position
+* Renamed all mixin instance type definitions to `XMixin.Instance`.
 * [The next improvement]
 
 #### 8.0.0-alpha.87
