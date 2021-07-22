@@ -20,7 +20,7 @@ import WarningBox from "./WarningBox";
 /**
  * @typedef {object} Props
  * @prop {Terria} terria
- * @prop {MappableMixin.MappableMixin} previewed
+ * @prop {MappableMixin.Instance} previewed
  * @prop {ViewState} viewState
  *
  */

@@ -925,10 +925,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 }
 
 namespace TableMixin {
-  export interface TableMixin
+  export interface Instance
     extends InstanceType<ReturnType<typeof TableMixin>> {}
 
-  export function isMixedInto(model: any): model is TableMixin {
+  export function isMixedInto(model: any): model is Instance {
     return model && model.hasTableMixin;
   }
 }

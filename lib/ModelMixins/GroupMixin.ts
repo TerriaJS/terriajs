@@ -263,9 +263,9 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
 }
 
 namespace GroupMixin {
-  export interface GroupMixin
+  export interface Instance
     extends InstanceType<ReturnType<typeof GroupMixin>> {}
-  export function isMixedInto(model: any): model is GroupMixin {
+  export function isMixedInto(model: any): model is Instance {
     return model && "isGroup" in model && model.isGroup;
   }
 }

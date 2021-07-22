@@ -27,6 +27,8 @@ import GtfsCatalogItem from "./GtfsCatalogItem";
 import IonImageryCatalogItem from "./IonImageryCatalogItem";
 import KmlCatalogItem from "./KmlCatalogItem";
 import MagdaReference from "./MagdaReference";
+import MapboxMapCatalogItem from "./MapboxMapCatalogItem";
+import MapboxStyleCatalogItem from "./MapboxStyleCatalogItem";
 import MapboxVectorTileCatalogItem from "./MapboxVectorTileCatalogItem";
 import OpenDataSoftCatalogGroup from "./OpenDataSoftCatalogGroup";
 import OpenDataSoftCatalogItem from "./OpenDataSoftCatalogItem";
@@ -199,6 +201,14 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(
     SocrataMapViewCatalogItem.type,
     SocrataMapViewCatalogItem
+  );
+  CatalogMemberFactory.register(
+    MapboxMapCatalogItem.type,
+    MapboxMapCatalogItem
+  );
+  CatalogMemberFactory.register(
+    MapboxStyleCatalogItem.type,
+    MapboxStyleCatalogItem
   );
 
   UrlToCatalogMemberMapping.register(
