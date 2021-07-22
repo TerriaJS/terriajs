@@ -56,7 +56,7 @@ export default abstract class GlobeOrMap {
   abstract destroy(): void;
 
   abstract doZoomTo(
-    target: CameraView | Rectangle | MappableMixin.MappableMixin,
+    target: CameraView | Rectangle | MappableMixin.Instance,
     flightDurationSeconds: number
   ): Promise<void>;
 
@@ -69,7 +69,7 @@ export default abstract class GlobeOrMap {
    */
   @action
   zoomTo(
-    target: CameraView | Rectangle | MappableMixin.MappableMixin,
+    target: CameraView | Rectangle | MappableMixin.Instance,
     flightDurationSeconds: number
   ): Promise<void> {
     this.isMapZooming = true;
