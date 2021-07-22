@@ -77,7 +77,7 @@ Catalog files can be edited two ways:
 |viewerMode|no|**"3d"** or **"3dSmooth"** or **"2D"** |"3d"|The id of the viewer mode to be shown initialy.|
 |homeCamera|yes|[**CameraPosition**](#CameraPosition)||Where the camera goes when you click the "home" button between the zoom-in and zoom-out buttons.|
 |<a id="base-maps"></a>baseMaps|no|[**`baseMaps`**](#baseMaps)|[default list of basemaps](https://github.com/TerriaJS/terriajs/blob/next/lib/Models/BaseMaps/defaultBaseMaps.ts)|The array of the base maps to be shown to the user.|
-|<a id="base-map-id"></a>baseMapId|no|**string**||The id of the baseMap user will see on the first mapLoad. The value must be an id of the catalog item from the [`baseMaps`](#basemaps) array|
+|<a id="base-map-id"></a>baseMapId|no|**string**||The id of the baseMap user will see on the first mapLoad. The value must be an id of the catalog item from the [`baseMaps`](#base-maps) array|
 |previewBaseMapId|no|**string**|[`baseMapId`](#base-map-id)|The id of the baseMap to be used as the base map in data preview. The value must be an id of the catalog item from the [`baseMaps`](#base-maps) array.|
 |showSplitter|no|**boolean**|false|Show splitter initally.|
 |splitPosition|no|**number**|0.5|The position of splitter.|
