@@ -437,7 +437,6 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
   ];
 
   static readonly type = "wmts";
-  readonly canZoomTo = true;
 
   get type() {
     return WebMapTileServiceCatalogItem.type;

@@ -818,7 +818,6 @@ class WebMapServiceCatalogItem
   };
 
   static readonly type = "wms";
-  readonly canZoomTo = true;
 
   get type() {
     return WebMapServiceCatalogItem.type;

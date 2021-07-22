@@ -380,8 +380,6 @@ export default class ArcGisMapServerCatalogItem extends MappableMixin(
     return i18next.t("models.arcGisMapServerCatalogItem.name");
   }
 
-  readonly canZoomTo = true;
-
   get type() {
     return ArcGisMapServerCatalogItem.type;
   }

@@ -69,11 +69,11 @@ describe("ArcGisMapServerCatalogItem", function() {
   });
 
   it("supports zooming to extent", function() {
-    expect(item.canZoomTo).toBeTruthy();
+    expect(item.disableZoomTo).toBeFalsy();
   });
 
   it("supports preview", function() {
-    expect(item.showsInfo).toBeTruthy();
+    expect(item.disableAboutData).toBeFalsy();
   });
 
   describe("loadMapItems", function() {

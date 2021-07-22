@@ -38,6 +38,7 @@ import {
 } from "../../../Core/AnalyticEvents/analyticEvents";
 import hasTraits from "../../../Models/hasTraits";
 import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
+import MappableMixin from "../../../ModelMixins/MappableMixin";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -396,7 +397,7 @@ const ViewingControls = observer(
       const viewState = this.props.viewState;
       const item = this.props.item;
       const canZoom =
-        item.canZoomTo ||
+        (MappableMixin.isMixedInto(item) && !item.disableZoomTo) ||
         (item.tableStructure && item.tableStructure.sourceFeature);
       const canSplit =
         !item.terria.configParameters.disableSplitter &&
@@ -406,7 +407,7 @@ const ViewingControls = observer(
       const classList = {
         [Styles.noZoom]: !canZoom,
         [Styles.noSplit]: !canSplit,
-        [Styles.noInfo]: !item.showsInfo
+        [Styles.noInfo]: item.disableAboutData
       };
       const { t } = this.props;
       const showMenu = item.uniqueId === viewState.workbenchWithOpenControls;
@@ -420,15 +421,13 @@ const ViewingControls = observer(
               }
             `}
           >
-            {/* <If condition={item.canZoomTo}> */}
             <WorkbenchButton
               className={classNames(Styles.zoom, classList)}
               onClick={this.zoomTo}
               title={t("workbench.zoomToTitle")}
-              // className={Styles.btn}
               disabled={
                 // disabled if the item cannot be zoomed to or if a zoom is already in progress
-                item.canZoomTo === false ||
+                (MappableMixin.isMixedInto(item) && item.disableZoomTo) ||
                 this.state.isMapZoomingToCatalogItem === true
               }
               iconElement={() =>
@@ -441,13 +440,11 @@ const ViewingControls = observer(
             >
               {t("workbench.zoomTo")}
             </WorkbenchButton>
-            {/* </If> */}
-            {/* <If condition={item.showsInfo}> */}
             <WorkbenchButton
               onClick={this.previewItem}
               title={t("workbench.previewItemTitle")}
               iconElement={() => <Icon glyph={Icon.GLYPHS.about} />}
-              disabled={!item.showsInfo}
+              disabled={item.disableAboutData}
               className={classNames(Styles.info, classList)}
             >
               {t("workbench.previewItem")}
@@ -469,7 +466,6 @@ const ViewingControls = observer(
               className={classNames(Styles.info, classList)}
               iconElement={() => <Icon glyph={Icon.GLYPHS.menuDotted} />}
             />
-            {/* </If> */}
           </ul>
           {showMenu && (
             <Box

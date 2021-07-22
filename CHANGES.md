@@ -10,6 +10,8 @@ Change Log
   - Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses`
   - Renamed all mixin instance type definitions to `XMixin.Instance`.
   - `$color-splitter` and `theme.colorSplitter` has been replaced with `$color-secondary` and `theme.colorSecondary`
+  - `canZoomTo` has bee replaced with `disableZoomTo` in `MappableTraits`
+  - `showsInfo` has been replaced with `disableAboutData` in `CatalogMemberTraits`
 
 * Fixed a bug with numeric item search where it sometimes fails to return all matching values.
 * Respect order of objects from lower strata in `objectArrayTrait`.
@@ -44,6 +46,10 @@ Change Log
   * `SplitterTraits` is now included in `RasterLayerTraits`
   * Removed `supportsSplitter` variable
   * Added `disableSplitter` trait
+* Clean up `canZoomTo`
+  * Replaced with `disableZoomTo` in `MappableTraits`
+* Clean up `showsInfo`
+  * Replaced with `disableAboutData` in `CatalogMemberTraits`
 * [The next improvement]
 
 #### 8.0.0-alpha.87

@@ -396,14 +396,6 @@ export default class ArcGisFeatureServerCatalogItem extends MappableMixin(
     return i18next.t("models.arcGisFeatureServerCatalogItem.name");
   }
 
-  get canZoomTo(): boolean {
-    return true;
-  }
-
-  get showsInfo(): boolean {
-    return true;
-  }
-
   protected forceLoadMetadata(): Promise<void> {
     return FeatureServerStratum.load(this).then(stratum => {
       runInAction(() => {
