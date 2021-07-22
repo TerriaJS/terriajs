@@ -18,6 +18,7 @@ import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumOrder from "./StratumOrder";
+import { JsonObject } from "./../Core/Json";
 
 enum GeoRssFormat {
   RSS = "rss",
@@ -134,20 +135,32 @@ export default class GeoRssCatalogItem extends GeoJsonMixin(
     return i18next.t("models.georss.name");
   }
 
-  protected async loadData(): Promise<any> {
+  private parseGeorss(xmlData: any): JsonObject | never {
+    const documentElement = xmlData.documentElement;
+    let json: JsonObject;
+    let metadata: Feed;
+    if (documentElement.localName.includes(GeoRssFormat.ATOM)) {
+      metadata = parseMetadata(documentElement.childNodes, this);
+      json = <any>geoRssAtomToGeoJson(xmlData);
+    } else if (documentElement.localName === GeoRssFormat.RSS) {
+      const element = documentElement.getElementsByTagName("channel")[0];
+      metadata = parseMetadata(element.childNodes, this);
+      json = <any>geoRss2ToGeoJson(xmlData);
+    } else {
+      throw new RuntimeError("document is not valid");
+    }
+    runInAction(() => {
+      this.strata.set(
+        GeoRssStratum.stratumName,
+        new GeoRssStratum(this, metadata)
+      );
+    });
+    return json;
+  }
+
+  protected async loadFromFile(file: File): Promise<JsonObject> {
     try {
-      const xmlData: any = await super.loadData();
-      if (!isDefined(xmlData)) {
-        throw new RuntimeError("document is not valid");
-      }
-      const json = this.parseGeorss(xmlData);
-      runInAction(() => {
-        this.strata.set(
-          GeoRssStratum.stratumName,
-          new GeoRssStratum(this, json?.metadata)
-        );
-      });
-      return json?.geoJsonData;
+      return this.parseGeorss(await readXml(file));
     } catch (e) {
       throw TerriaError.from(e, {
         title: i18next.t("models.georss.errorLoadingTitle"),
@@ -156,42 +169,21 @@ export default class GeoRssCatalogItem extends GeoJsonMixin(
     }
   }
 
-  private parseGeorss(xmlData: any): ConvertedJson | never {
-    const documentElement = xmlData.documentElement;
-
-    if (documentElement.localName.includes(GeoRssFormat.ATOM)) {
-      const jsonData: ConvertedJson = {
-        geoJsonData: geoRssAtomToGeoJson(xmlData),
-        metadata: parseMetadata(documentElement.childNodes, this)
-      };
-      return jsonData;
-    } else if (documentElement.localName === GeoRssFormat.RSS) {
-      const element = documentElement.getElementsByTagName("channel")[0];
-      const jsonData: ConvertedJson = {
-        geoJsonData: geoRss2ToGeoJson(xmlData),
-        metadata: parseMetadata(element.childNodes, this)
-      };
-      return jsonData;
-    } else {
-      throw new RuntimeError("document is not valid");
+  protected async loadFromUrl(url: string): Promise<JsonObject> {
+    try {
+      return this.parseGeorss(await loadXML(proxyCatalogItemUrl(this, url)));
+    } catch (e) {
+      throw TerriaError.from(e, {
+        title: i18next.t("models.georss.errorLoadingTitle"),
+        message: i18next.t("models.georss.errorLoadingMessage")
+      });
     }
   }
 
-  protected async loadFromFile(file: File): Promise<Document> {
-    return readXml(file);
-  }
-
-  protected async loadFromUrl(url: string): Promise<Document> {
-    return loadXML(proxyCatalogItemUrl(this, url));
-  }
-
-  protected async customDataLoader(
-    resolve: (value: any) => void,
-    _reject: (reason: any) => void
-  ): Promise<any> {
+  protected async customDataLoader(): Promise<any> {
     if (isDefined(this.geoRssString)) {
       const parser = new DOMParser();
-      resolve(parser.parseFromString(this.geoRssString, "text/xml"));
+      return parser.parseFromString(this.geoRssString, "text/xml");
     }
   }
 }

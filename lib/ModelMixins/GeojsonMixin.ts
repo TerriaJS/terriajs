@@ -136,24 +136,21 @@ export default function GeoJsonMixin<
       return Promise.resolve();
     }
 
-    protected async loadData() {
-      return await new Promise<JsonValue | undefined>((resolve, reject) => {
-        this.customDataLoader(resolve, reject);
-        if (isDefined(this._file)) {
-          this.loadFromFile(this._file)
-            .then(resolve)
-            .catch(reject);
-        } else if (isDefined(this.url)) {
-          // try loading from a zip file url or a regular url
-          resolve(this.loadFromUrl(this.url));
-        } else {
-          throw new TerriaError({
-            sender: this,
-            title: i18next.t("models.geoJson.unableToLoadItemTitle"),
-            message: i18next.t("models.geoJson.unableToLoadItemMessage")
-          });
-        }
-      });
+    private async loadData() {
+      const geojsonData = await this.customDataLoader();
+      if (isDefined(geojsonData)) return geojsonData;
+      if (isDefined(this._file)) {
+        return await this.loadFromFile(this._file);
+      } else if (isDefined(this.url)) {
+        // try loading from a zip file url or a regular url
+        return await this.loadFromUrl(this.url);
+      } else {
+        throw new TerriaError({
+          sender: this,
+          title: i18next.t("models.geoJson.unableToLoadItemTitle"),
+          message: i18next.t("models.geoJson.unableToLoadItemMessage")
+        });
+      }
     }
 
     protected async forceLoadMapItems(): Promise<void> {
@@ -178,10 +175,7 @@ export default function GeoJsonMixin<
           this._dataSource = await this.loadGeoJsonDataSource(geoJsonWgs84);
         }
       } catch (e) {
-        throw TerriaError.from(e, {
-          title: i18next.t("models.geoJson.errorLoadingTitle"),
-          message: i18next.t("models.geoJson.errorParsingMessage")
-        });
+        throw TerriaError.from(e);
       }
     }
 
@@ -577,13 +571,14 @@ export default function GeoJsonMixin<
       return Array.from(discreteTimesMap.values());
     }
 
-    protected abstract async customDataLoader(
-      resolve: (value: any) => void,
-      reject: (reason: any) => void
-    ): Promise<any>;
+    protected abstract async customDataLoader(): Promise<JsonValue | undefined>;
 
-    protected abstract async loadFromFile(file: File): Promise<any>;
-    protected abstract async loadFromUrl(url: string): Promise<any>;
+    protected abstract async loadFromFile(
+      file: File
+    ): Promise<JsonValue | undefined>;
+    protected abstract async loadFromUrl(
+      url: string
+    ): Promise<JsonValue | undefined>;
   }
   return GeoJsonMixin;
 }

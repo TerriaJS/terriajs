@@ -28,12 +28,9 @@ class GpxCatalogItem extends GeoJsonMixin(
     return toGeoJSON.gpx(dom);
   }
 
-  protected async loadData() {
+  protected async loadFromFile(file: File): Promise<string | undefined> {
     try {
-      const data: any = await super.loadData();
-      if (isDefined(data)) {
-        return this.parseGpxText(data);
-      }
+      return this.parseGpxText(await readText(file));
     } catch (e) {
       throw TerriaError.from(e, {
         title: i18next.t("models.gpx.errorLoadingTitle"),
@@ -42,20 +39,20 @@ class GpxCatalogItem extends GeoJsonMixin(
     }
   }
 
-  protected async loadFromFile(file: File): Promise<any> {
-    return readText(file);
+  protected async loadFromUrl(url: string): Promise<string | undefined> {
+    try {
+      return this.parseGpxText(await loadText(proxyCatalogItemUrl(this, url)));
+    } catch (e) {
+      throw TerriaError.from(e, {
+        title: i18next.t("models.gpx.errorLoadingTitle"),
+        message: i18next.t("models.gpx.errorLoadingMessage")
+      });
+    }
   }
 
-  protected async loadFromUrl(url: string): Promise<any> {
-    return loadText(proxyCatalogItemUrl(this, url));
-  }
-
-  protected async customDataLoader(
-    resolve: (value: any) => void,
-    _reject: (reason: any) => void
-  ): Promise<any> {
+  protected async customDataLoader(): Promise<string | undefined> {
     if (isDefined(this.gpxString)) {
-      resolve(this.gpxString);
+      return this.gpxString;
     }
   }
 }

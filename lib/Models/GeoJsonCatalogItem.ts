@@ -12,6 +12,7 @@ import GeoJsonMixin from "../ModelMixins/GeojsonMixin";
 import GeoJsonCatalogItemTraits from "../Traits/TraitsClasses/GeoJsonCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import { JsonObject } from "./../Core/Json";
 
 const zip = require("terriajs-cesium/Source/ThirdParty/zip").default;
 
@@ -29,14 +30,11 @@ class GeoJsonCatalogItem extends GeoJsonMixin(
     return i18next.t("models.geoJson.name");
   }
 
-  protected async customDataLoader(
-    resolve: (value: any) => void,
-    reject: (reason: any) => void
-  ): Promise<any> {
+  protected async customDataLoader(): Promise<JsonObject | undefined> {
     if (isDefined(this.geoJsonData)) {
-      resolve(toJS(this.geoJsonData));
+      return toJS(this.geoJsonData);
     } else if (isDefined(this.geoJsonString)) {
-      resolve(<JsonValue>JSON.parse(this.geoJsonString));
+      return <JsonObject>JSON.parse(this.geoJsonString);
     }
   }
 
