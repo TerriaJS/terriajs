@@ -9,6 +9,4 @@ export default class GpxCatalogItemTraits extends mixTraits(GeoJsonTraits) {
     description: "A GPX string."
   })
   gpxString?: string;
-
-  clampToGround = false;
 }
