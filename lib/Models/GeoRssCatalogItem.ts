@@ -134,20 +134,9 @@ export default class GeoRssCatalogItem extends GeoJsonMixin(
     return i18next.t("models.georss.name");
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return Promise.resolve();
-  }
-
-  @computed get cacheDuration(): string {
-    if (isDefined(super.cacheDuration)) {
-      return super.cacheDuration;
-    }
-    return "1d";
-  }
-
   protected async loadData(): Promise<any> {
     try {
-      const xmlData: any = super.loadData();
+      const xmlData: any = await super.loadData();
       if (!isDefined(xmlData)) {
         throw new RuntimeError("document is not valid");
       }

@@ -5,6 +5,7 @@ import CommonStrata from "../../lib/Models/CommonStrata";
 import { runInAction } from "mobx";
 import isDefined from "./../../lib/Core/isDefined";
 import { JsonArray } from "../../lib/Core/Json";
+import DataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 
 describe("GeoRssCatalogItem", function() {
   let terria: Terria;
@@ -38,18 +39,10 @@ describe("GeoRssCatalogItem", function() {
       });
 
       await item.loadMapItems();
-
-      expect(item.geoJsonItem).toBeDefined();
-      if (isDefined(item.geoJsonItem)) {
-        const geoJsonData = item.geoJsonItem.geoJsonData;
-        expect(geoJsonData).toBeDefined();
-        if (isDefined(geoJsonData)) {
-          expect(geoJsonData.type).toEqual("FeatureCollection");
-
-          const features = <JsonArray>geoJsonData.features;
-          expect(features.length).toEqual(3);
-        }
-      }
+      expect(item.mapItems.length).toEqual(1);
+      const mapItem = item.mapItems[0];
+      const entities = (<DataSource>mapItem).entities.values;
+      expect(entities.length).toEqual(3);
     });
 
     it("load combined geometry rss", async function() {
@@ -61,16 +54,10 @@ describe("GeoRssCatalogItem", function() {
         );
       });
       await item.loadMapItems();
-      expect(item.geoJsonItem).toBeDefined();
-      if (isDefined(item.geoJsonItem)) {
-        const geoJsonData = item.geoJsonItem.geoJsonData;
-        expect(geoJsonData).toBeDefined();
-        if (isDefined(geoJsonData)) {
-          expect(geoJsonData.type).toEqual("FeatureCollection");
-          const features = <JsonArray>geoJsonData.features;
-          expect(features.length).toEqual(8);
-        }
-      }
+      expect(item.mapItems.length).toEqual(1);
+      const mapItem = item.mapItems[0];
+      const entities = (<DataSource>mapItem).entities.values;
+      expect(entities.length).toEqual(8);
     });
 
     it("properly handles entry with no geometry", async function() {
@@ -82,16 +69,10 @@ describe("GeoRssCatalogItem", function() {
         );
       });
       await item.loadMapItems();
-      expect(item.geoJsonItem).toBeDefined();
-      if (isDefined(item.geoJsonItem)) {
-        const geoJsonData = item.geoJsonItem.geoJsonData;
-        expect(geoJsonData).toBeDefined();
-        if (isDefined(geoJsonData)) {
-          expect(geoJsonData.type).toEqual("FeatureCollection");
-          const features = <JsonArray>geoJsonData.features;
-          expect(features.length).toEqual(2);
-        }
-      }
+      expect(item.mapItems.length).toEqual(1);
+      const mapItem = item.mapItems[0];
+      const entities = (<DataSource>mapItem).entities.values;
+      expect(entities.length).toEqual(2);
     });
   });
 
@@ -107,17 +88,10 @@ describe("GeoRssCatalogItem", function() {
 
       await item.loadMapItems();
 
-      expect(item.geoJsonItem).toBeDefined();
-      if (isDefined(item.geoJsonItem)) {
-        const geoJsonData = item.geoJsonItem.geoJsonData;
-        expect(geoJsonData).toBeDefined();
-        if (isDefined(geoJsonData)) {
-          expect(geoJsonData.type).toEqual("FeatureCollection");
-
-          const features = <JsonArray>geoJsonData.features;
-          expect(features.length).toEqual(3);
-        }
-      }
+      expect(item.mapItems.length).toEqual(1);
+      const mapItem = item.mapItems[0];
+      const entities = (<DataSource>mapItem).entities.values;
+      expect(entities.length).toEqual(3);
     });
 
     it("load combined geometry atom feed", async function() {
@@ -129,16 +103,10 @@ describe("GeoRssCatalogItem", function() {
         );
       });
       await item.loadMapItems();
-      expect(item.geoJsonItem).toBeDefined();
-      if (isDefined(item.geoJsonItem)) {
-        const geoJsonData = item.geoJsonItem.geoJsonData;
-        expect(geoJsonData).toBeDefined();
-        if (isDefined(geoJsonData)) {
-          expect(geoJsonData.type).toEqual("FeatureCollection");
-          const features = <JsonArray>geoJsonData.features;
-          expect(features.length).toEqual(8);
-        }
-      }
+      expect(item.mapItems.length).toEqual(1);
+      const mapItem = item.mapItems[0];
+      const entities = (<DataSource>mapItem).entities.values;
+      expect(entities.length).toEqual(8);
     });
 
     it("properly handles entry with no geometry", async function() {
@@ -150,16 +118,10 @@ describe("GeoRssCatalogItem", function() {
         );
       });
       await item.loadMapItems();
-      expect(item.geoJsonItem).toBeDefined();
-      if (isDefined(item.geoJsonItem)) {
-        const geoJsonData = item.geoJsonItem.geoJsonData;
-        expect(geoJsonData).toBeDefined();
-        if (isDefined(geoJsonData)) {
-          expect(geoJsonData.type).toEqual("FeatureCollection");
-          const features = <JsonArray>geoJsonData.features;
-          expect(features.length).toEqual(2);
-        }
-      }
+      expect(item.mapItems.length).toEqual(1);
+      const mapItem = item.mapItems[0];
+      const entities = (<DataSource>mapItem).entities.values;
+      expect(entities.length).toEqual(2);
     });
   });
 
