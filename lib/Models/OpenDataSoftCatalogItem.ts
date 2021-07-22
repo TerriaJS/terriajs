@@ -595,7 +595,7 @@ export default class OpenDataSoftCatalogItem
   ) {
     let feature: Feature | undefined;
     if (pickResult instanceof Entity) {
-      return Feature.fromEntityCollectionOrEntity(pickResult);
+      feature = Feature.fromEntityCollectionOrEntity(pickResult);
     } else {
       feature = new Feature(pickResult?.id);
     }
