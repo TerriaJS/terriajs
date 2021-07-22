@@ -168,17 +168,10 @@ describe("ArcGisMapServerCatalogGroup creates its layer members with given trait
   const initialMessage = {
     title: "Hint",
     content: "If map items can not be seen, zoom in further to reveal them.",
-    key: undefined,
-    confirmation: false,
-    confirmText: undefined,
-    width: undefined,
-    height: undefined
+    confirmation: false
   };
   const featureInfoTemplate = {
-    template: "{{Pixel Value}} people in the given radius.",
-    name: undefined,
-    partials: undefined,
-    formats: undefined
+    template: "{{Pixel Value}} people in the given radius."
   };
   const numberOfGroupMembers = 4;
 
@@ -210,17 +203,11 @@ describe("ArcGisMapServerCatalogGroup creates its layer members with given trait
     it("properly creates members with parent's traits", async function() {
       runInAction(() => {
         group.setTrait(CommonStrata.definition, "url", mapServerUrl);
-        group.setTrait(CommonStrata.definition, "rectangle", rectangle);
-        group.setTrait(
-          CommonStrata.definition,
-          "initialMessage",
-          initialMessage
-        );
-        group.setTrait(
-          CommonStrata.definition,
-          "featureInfoTemplate",
-          featureInfoTemplate
-        );
+        group.setTrait(CommonStrata.definition, "itemProperties", {
+          rectangle: rectangle,
+          initialMessage: initialMessage,
+          featureInfoTemplate: featureInfoTemplate
+        });
       });
 
       await group.loadMembers();
@@ -228,30 +215,18 @@ describe("ArcGisMapServerCatalogGroup creates its layer members with given trait
       for (let i = 0; i < numberOfGroupMembers; i++) {
         const member = <ArcGisMapServerCatalogItem>group.memberModels[i];
 
-        const memberRectangle = member.getTrait(
-          CommonStrata.definition,
-          "rectangle"
-        );
-        expect(memberRectangle?.east).toEqual(rectangle.east);
-        expect(memberRectangle?.north).toEqual(rectangle.north);
-        expect(memberRectangle?.west).toEqual(rectangle.west);
-        expect(memberRectangle?.south).toEqual(rectangle.south);
+        expect(member.rectangle?.east).toEqual(rectangle.east);
+        expect(member.rectangle?.north).toEqual(rectangle.north);
+        expect(member.rectangle?.west).toEqual(rectangle.west);
+        expect(member.rectangle?.south).toEqual(rectangle.south);
 
-        const memberInitialMessage = member.getTrait(
-          CommonStrata.definition,
-          "initialMessage"
-        );
-        expect(memberInitialMessage?.title).toEqual(initialMessage.title);
-        expect(memberInitialMessage?.content).toEqual(initialMessage.content);
-        expect(memberInitialMessage?.confirmation).toEqual(
+        expect(member.initialMessage?.title).toEqual(initialMessage.title);
+        expect(member.initialMessage?.content).toEqual(initialMessage.content);
+        expect(member.initialMessage?.confirmation).toEqual(
           initialMessage.confirmation
         );
 
-        const memberFeatureInfoTemplate = member.getTrait(
-          CommonStrata.definition,
-          "featureInfoTemplate"
-        );
-        expect(memberFeatureInfoTemplate?.template).toEqual(
+        expect(member.featureInfoTemplate?.template).toEqual(
           featureInfoTemplate.template
         );
       }
