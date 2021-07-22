@@ -136,27 +136,29 @@ export default function GeoJsonMixin<
       return Promise.resolve();
     }
 
+    protected async loadGeoJson() {
+      return await new Promise<JsonValue | undefined>((resolve, reject) => {
+        this.customDataLoader(resolve, reject);
+        if (isDefined(this._file)) {
+          this.loadFromFile(this._file)
+            .then(resolve)
+            .catch(reject);
+        } else if (isDefined(this.url)) {
+          // try loading from a zip file url or a regular url
+          resolve(this.loadFromUrl(this.url));
+        } else {
+          throw new TerriaError({
+            sender: this,
+            title: i18next.t("models.geoJson.unableToLoadItemTitle"),
+            message: i18next.t("models.geoJson.unableToLoadItemMessage")
+          });
+        }
+      });
+    }
+
     protected async forceLoadMapItems(): Promise<void> {
       try {
-        const geoJson = await new Promise<JsonValue | undefined>(
-          (resolve, reject) => {
-            this.customDataLoader(resolve, reject);
-            if (isDefined(this._file)) {
-              this.loadFromFile(this._file)
-                .then(resolve)
-                .catch(reject);
-            } else if (isDefined(this.url)) {
-              // try loading from a zip file url or a regular url
-              resolve(this.loadFromUrl(this.url));
-            } else {
-              throw new TerriaError({
-                sender: this,
-                title: i18next.t("models.geoJson.unableToLoadItemTitle"),
-                message: i18next.t("models.geoJson.unableToLoadItemMessage")
-              });
-            }
-          }
-        );
+        const geoJson = await this.loadGeoJson();
         if (!isJsonObject(geoJson)) {
           throw new TerriaError({
             title: i18next.t("models.geoJson.errorLoadingTitle"),

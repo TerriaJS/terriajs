@@ -37,6 +37,7 @@ Change Log
 * Fix select when clicking on multiple features in 2D (#5660)
 * Implemented support for `featureInfoUrlTemplate` on 2D vector features (#5660)
 * Implemented FeatureInfoMixin in GeojsonMixin (#5660)
+* `GpxCatalogItem` now use `GeojsonMixin` for loading data. 
 * [The next improvement]
 
 #### 8.0.0-alpha.87
