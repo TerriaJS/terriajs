@@ -7,6 +7,7 @@ import GpxCatalogItemTraits from "../Traits/TraitsClasses/GpxCatalogItemTraits";
 import GeoJsonMixin from "./../ModelMixins/GeojsonMixin";
 import CreateModel from "./CreateModel";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import TerriaError from "../Core/TerriaError";
 const toGeoJSON = require("@mapbox/togeojson");
 
 class GpxCatalogItem extends GeoJsonMixin(
@@ -22,26 +23,31 @@ class GpxCatalogItem extends GeoJsonMixin(
     return i18next.t("models.gpx.name");
   }
 
-  private loadGpxText(text: string) {
+  private parseGpxText(text: string) {
     var dom = new DOMParser().parseFromString(text, "text/xml");
     return toGeoJSON.gpx(dom);
   }
 
-  protected loadData() {
-    return super.loadData().then(data => {
+  protected async loadData() {
+    try {
+      const data: any = await super.loadData();
       if (isDefined(data)) {
-        return this.loadGpxText(data as any);
+        return this.parseGpxText(data);
       }
-      return undefined;
-    });
+    } catch (e) {
+      throw TerriaError.from(e, {
+        title: i18next.t("models.gpx.errorLoadingTitle"),
+        message: i18next.t("models.gpx.errorLoadingMessage")
+      });
+    }
   }
 
-  protected loadFromFile(file: File): Promise<any> {
+  protected async loadFromFile(file: File): Promise<any> {
     return readText(file);
   }
 
-  protected loadFromUrl(url: string): Promise<any> {
-    throw loadText(proxyCatalogItemUrl(this, url));
+  protected async loadFromUrl(url: string): Promise<any> {
+    return loadText(proxyCatalogItemUrl(this, url));
   }
 
   protected async customDataLoader(
