@@ -14,7 +14,7 @@ const minimapNavIcon = require("../../../../wwwroot/images/minimap-nav.svg");
 
 type MiniMapProps = {
   terria: Terria;
-  baseMap: MappableMixin.MappableMixin;
+  baseMap: MappableMixin.Instance;
   view: MiniMapView;
 };
 

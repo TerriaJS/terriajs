@@ -70,12 +70,12 @@ describe("CswCatalogGroup", function() {
     await group.loadMembers();
 
     expect(group.memberModels.length).toBe(3);
-    expect(
-      (group.memberModels[0] as CatalogMemberMixin.CatalogMemberMixin).name
-    ).toBe("Multiple Use");
-    expect(
-      (group.memberModels[2] as CatalogMemberMixin.CatalogMemberMixin).name
-    ).toBe("Wave Energy Resource");
+    expect((group.memberModels[0] as CatalogMemberMixin.Instance).name).toBe(
+      "Multiple Use"
+    );
+    expect((group.memberModels[2] as CatalogMemberMixin.Instance).name).toBe(
+      "Wave Energy Resource"
+    );
 
     const tidalEnergyGroup = group.memberModels[1] as CatalogGroup;
     expect(tidalEnergyGroup.name).toBe("Tidal Energy");
@@ -101,14 +101,14 @@ describe("CswCatalogGroup", function() {
 
     expect(group2.memberModels.length).toBe(230);
 
-    expect(
-      (group2.memberModels[0] as CatalogMemberMixin.CatalogMemberMixin).name
-    ).toBe("Percent Occurrence Tidal Currant Exceeds 1.0 m/s");
+    expect((group2.memberModels[0] as CatalogMemberMixin.Instance).name).toBe(
+      "Percent Occurrence Tidal Currant Exceeds 1.0 m/s"
+    );
     expect(group2.memberModels[0].type).toBe(WebMapServiceCatalogItem.type);
 
-    expect(
-      (group2.memberModels[1] as CatalogMemberMixin.CatalogMemberMixin).name
-    ).toBe("Percent Occurrence Tidal Currant Exceeds 1.5 m/s");
+    expect((group2.memberModels[1] as CatalogMemberMixin.Instance).name).toBe(
+      "Percent Occurrence Tidal Currant Exceeds 1.5 m/s"
+    );
     expect(group2.memberModels[1].type).toBe(WebMapServiceCatalogItem.type);
   });
 
@@ -118,14 +118,14 @@ describe("CswCatalogGroup", function() {
 
     expect(group.memberModels.length).toBe(230);
 
-    expect(
-      (group.memberModels[0] as CatalogMemberMixin.CatalogMemberMixin).name
-    ).toBe("Percent Occurrence Tidal Currant Exceeds 1.0 m/s");
+    expect((group.memberModels[0] as CatalogMemberMixin.Instance).name).toBe(
+      "Percent Occurrence Tidal Currant Exceeds 1.0 m/s"
+    );
     expect(group.memberModels[0].type).toBe(WebMapServiceCatalogItem.type);
 
-    expect(
-      (group.memberModels[1] as CatalogMemberMixin.CatalogMemberMixin).name
-    ).toBe("Percent Occurrence Tidal Currant Exceeds 1.5 m/s");
+    expect((group.memberModels[1] as CatalogMemberMixin.Instance).name).toBe(
+      "Percent Occurrence Tidal Currant Exceeds 1.5 m/s"
+    );
     expect(group.memberModels[1].type).toBe(WebMapServiceCatalogItem.type);
   });
 
