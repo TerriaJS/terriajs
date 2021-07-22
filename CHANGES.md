@@ -35,6 +35,8 @@ Change Log
   * Notes on v7 to v8 Socrata integration:
     * Share links are not preserved
     * Added basic support for dataset resources
+* Added `MapboxMapCatalogItem`.
+* Added `MapboxStyleCatalogItem`.
 * Fix splitter thumb icon vertical position
 * Renamed all mixin instance type definitions to `XMixin.Instance`.
 * [The next improvement]
