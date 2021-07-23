@@ -106,6 +106,14 @@ export default class MappableTraits extends mixTraits(AttributionTraits) {
 
   @primitiveTrait({
     type: "boolean",
+    name: "Disable zoom to",
+    description:
+      "Disables the zoom to (aka 'Ideal Zoom') button in the workbench."
+  })
+  disableZoomTo: boolean = false;
+
+  @primitiveTrait({
+    type: "boolean",
     name: "Show",
     description:
       "Show or hide a workbench item. When show is false, a mappable item is removed from the map and a chartable item is removed from the chart panel."

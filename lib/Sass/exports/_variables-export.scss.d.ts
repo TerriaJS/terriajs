@@ -3,7 +3,7 @@
 interface CssExports {
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
+  'colorSecondary': string;
   'compassWidth': string;
   'dark': string;
   'darkLighter': string;

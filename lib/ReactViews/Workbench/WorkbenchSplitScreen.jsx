@@ -113,7 +113,7 @@ class WorkbenchSplitScreen extends React.Component {
             centered
             justifySpaceBetween
             css={`
-              background: ${p => p.theme.colorSplitter};
+              background: ${p => p.theme.colorSecondary};
               padding: 0 10px;
               font-weight: bold;
               font-size: 14px;
@@ -178,7 +178,7 @@ class WorkbenchSplitScreen extends React.Component {
 
                           &:hover,
                           &:focus {
-                            background-color: ${p => p.theme.colorSplitter};
+                            background-color: ${p => p.theme.colorSecondary};
                           }
                         }
                       `}
