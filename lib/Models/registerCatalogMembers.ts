@@ -1,3 +1,4 @@
+import { ApiTableCatalogItem } from "./ApiTableCatalogItem";
 import ArcGisCatalogGroup from "./ArcGisCatalogGroup";
 import ArcGisFeatureServerCatalogGroup from "./ArcGisFeatureServerCatalogGroup";
 import ArcGisFeatureServerCatalogItem from "./ArcGisFeatureServerCatalogItem";
@@ -16,6 +17,7 @@ import CkanCatalogGroup from "./CkanCatalogGroup";
 import CkanItemReference from "./CkanItemReference";
 import CompositeCatalogItem from "./CompositeCatalogItem";
 import CsvCatalogItem from "./CsvCatalogItem";
+import CswCatalogGroup from "./CswCatalogGroup";
 import CzmlCatalogItem from "./CzmlCatalogItem";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import GeoRssCatalogItem from "./GeoRssCatalogItem";
@@ -25,13 +27,19 @@ import GtfsCatalogItem from "./GtfsCatalogItem";
 import IonImageryCatalogItem from "./IonImageryCatalogItem";
 import KmlCatalogItem from "./KmlCatalogItem";
 import MagdaReference from "./MagdaReference";
+import MapboxMapCatalogItem from "./MapboxMapCatalogItem";
+import MapboxStyleCatalogItem from "./MapboxStyleCatalogItem";
 import MapboxVectorTileCatalogItem from "./MapboxVectorTileCatalogItem";
+import OpenDataSoftCatalogGroup from "./OpenDataSoftCatalogGroup";
+import OpenDataSoftCatalogItem from "./OpenDataSoftCatalogItem";
 import OpenStreetMapCatalogItem from "./OpenStreetMapCatalogItem";
 import SdmxJsonCatalogGroup from "./SdmxJson/SdmxJsonCatalogGroup";
 import SdmxJsonCatalogItem from "./SdmxJson/SdmxJsonCatalogItem";
 import SenapsLocationsCatalogItem from "./SenapsLocationsCatalogItem";
 import SensorObservationServiceCatalogItem from "./SensorObservationServiceCatalogItem";
 import ShapefileCatalogItem from "./ShapefileCatalogItem";
+import SocrataCatalogGroup from "./SocrataCatalogGroup";
+import SocrataMapViewCatalogItem from "./SocrataMapViewCatalogItem";
 import SplitItemReference from "./SplitItemReference";
 import StubCatalogItem from "./StubCatalogItem";
 import ThreddsCatalogGroup from "./ThreddsCatalogGroup";
@@ -47,10 +55,6 @@ import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalo
 import WebProcessingServiceCatalogGroup from "./WebProcessingServiceCatalogGroup";
 import YDYRCatalogFunction from "./YDYRCatalogFunction";
 import YDYRCatalogFunctionJob from "./YDYRCatalogFunctionJob";
-import CswCatalogGroup from "./CswCatalogGroup";
-import { ApiTableCatalogItem } from "./ApiTableCatalogItem";
-import OpenDataSoftCatalogGroup from "./OpenDataSoftCatalogGroup";
-import OpenDataSoftCatalogItem from "./OpenDataSoftCatalogItem";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -192,6 +196,19 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(
     OpenDataSoftCatalogItem.type,
     OpenDataSoftCatalogItem
+  );
+  CatalogMemberFactory.register(SocrataCatalogGroup.type, SocrataCatalogGroup);
+  CatalogMemberFactory.register(
+    SocrataMapViewCatalogItem.type,
+    SocrataMapViewCatalogItem
+  );
+  CatalogMemberFactory.register(
+    MapboxMapCatalogItem.type,
+    MapboxMapCatalogItem
+  );
+  CatalogMemberFactory.register(
+    MapboxStyleCatalogItem.type,
+    MapboxStyleCatalogItem
   );
 
   UrlToCatalogMemberMapping.register(

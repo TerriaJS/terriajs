@@ -34,8 +34,6 @@ class KmlCatalogItem extends MappableMixin(
 
   private _kmlFile?: File;
 
-  readonly canZoomTo = true;
-
   setFileInput(file: File) {
     this._kmlFile = file;
   }

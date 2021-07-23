@@ -14,6 +14,15 @@ export type WordBreak =
   | "initial"
   | "inherit";
 
+export type WhiteSpace =
+  | "normal"
+  | "nowrap"
+  | "pre"
+  | "pre-line"
+  | "pre-wrap"
+  | "initial"
+  | "inherit";
+
 export type OneKeyFrom<T, K extends keyof T = keyof T> = K extends any
   ? Pick<T, K> & Partial<Record<Exclude<keyof T, K>, never>> extends infer O
     ? { [P in keyof O]: O[P] }
