@@ -455,7 +455,7 @@
     }
   },
   "timer": {
-    "nextScheduledUpdateCountdown": "次のデータ更新まであと{{timeCountdown}}}",
+    "nextScheduledUpdateCountdown": "次のデータ更新まであと{{timeCountdown}}",
     "nextScheduledUpdateTime": "次のデータ更新予定時刻は{{scheduledUpdateTime}}です"
   },
   "satellite": {
