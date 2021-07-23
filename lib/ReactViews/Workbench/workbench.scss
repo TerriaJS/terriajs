@@ -1,15 +1,11 @@
 @import "~terriajs-variables";
 @import "../../Sass/common/mixins";
 
-.workbench {
-}
-
 .remove-button {
   composes: btn from "../../Sass/common/_buttons.scss";
   color: $text-light;
   font-size: $font-size-mid-mini;
   padding: 0;
-  margin-left: 20px;
   svg {
     height: 12px;
     width: 12px;
@@ -18,4 +14,10 @@
     vertical-align: bottom;
     display: inline-block;
   }
+}
+
+.remove-button:not(:first-child) {
+  margin-left: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
