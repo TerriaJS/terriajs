@@ -18,6 +18,7 @@ import { observer } from "mobx-react";
 import CustomComponent from "../Custom/CustomComponent";
 import FeatureInfoDownload from "./FeatureInfoDownload";
 import formatNumberForLocale from "../../Core/formatNumberForLocale";
+import formatPropertyValue from "../../Core/formatPropertyValue";
 import Icon from "../../Styled/Icon";
 import propertyGetTimeValues from "../../Core/propertyGetTimeValues";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
@@ -110,6 +111,7 @@ export const FeatureInfoSection = observer(
         })
       );
       propertyData.terria = {
+        replaceText: mustacheReplaceTextFunction,
         formatNumber: mustacheFormatNumberFunction,
         formatDateTime: mustacheFormatDateTime,
         urlEncodeComponent: mustacheURLEncodeTextComponent,
@@ -628,6 +630,9 @@ function mustacheFormatNumberFunction() {
   return mustacheJsonSubOptions(formatNumberForLocale);
 }
 
+function mustacheReplaceTextFunction() {
+  return mustacheJsonSubOptions(formatPropertyValue);
+}
 /**
  * Formats the date according to the date format string.
  * If the date expression can't be parsed using Date.parse() it will be returned unmodified.
