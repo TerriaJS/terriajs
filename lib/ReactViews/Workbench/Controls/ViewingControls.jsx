@@ -1,5 +1,4 @@
 "use strict";
-import classNames from "classnames";
 import createReactClass from "create-react-class";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
@@ -14,31 +13,30 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import when from "terriajs-cesium/Source/ThirdParty/when";
+import {
+  Category,
+  DataSourceAction
+} from "../../../Core/AnalyticEvents/analyticEvents";
 import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
 import getPath from "../../../Core/getPath";
 import TerriaError from "../../../Core/TerriaError";
 import PickedFeatures from "../../../Map/PickedFeatures";
 import ExportableMixin from "../../../ModelMixins/ExportableMixin";
+import MappableMixin from "../../../ModelMixins/MappableMixin";
 import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
 import addUserCatalogMember from "../../../Models/addUserCatalogMember";
 import CommonStrata from "../../../Models/CommonStrata";
 import getAncestors from "../../../Models/getAncestors";
+import hasTraits from "../../../Models/hasTraits";
 import SplitItemReference from "../../../Models/SplitItemReference";
+import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import Icon, { StyledIcon } from "../../../Styled/Icon";
-import { exportData } from "../../Preview/ExportData";
-import WorkbenchButton from "../WorkbenchButton";
-import Styles from "./viewing-controls.scss";
-import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
-import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
-import {
-  Category,
-  DataSourceAction
-} from "../../../Core/AnalyticEvents/analyticEvents";
-import hasTraits from "../../../Models/hasTraits";
 import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
-import MappableMixin from "../../../ModelMixins/MappableMixin";
+import { exportData } from "../../Preview/ExportData";
+import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
+import WorkbenchButton from "../WorkbenchButton";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -304,7 +302,7 @@ const ViewingControls = observer(
           <If
             condition={item.tableStructure && item.tableStructure.sourceFeature}
           >
-            <li className={classNames(Styles.zoom)}>
+            <li>
               <ViewingControlMenuButton
                 onClick={this.openFeature}
                 title={t("workbench.openFeatureTitle")}
@@ -317,7 +315,7 @@ const ViewingControls = observer(
             </li>
           </If>
           <If condition={canSplit}>
-            <li className={classNames(Styles.split)}>
+            <li>
               <ViewingControlMenuButton
                 onClick={this.splitItem}
                 title={t("workbench.splitItemTitle")}
@@ -336,7 +334,7 @@ const ViewingControls = observer(
               item.canDiffImages
             }
           >
-            <li className={classNames(Styles.split)}>
+            <li>
               <ViewingControlMenuButton
                 onClick={this.openDiffTool}
                 title={t("workbench.diffImageTitle")}
@@ -351,7 +349,7 @@ const ViewingControls = observer(
           <If
             condition={ExportableMixin.isMixedInto(item) && item.canExportData}
           >
-            <li className={classNames(Styles.info)}>
+            <li>
               <ViewingControlMenuButton
                 onClick={this.exportDataClicked}
                 title={t("workbench.exportDataTitle")}
@@ -366,7 +364,7 @@ const ViewingControls = observer(
           <If
             condition={SearchableItemMixin.isMixedInto(item) && item.canSearch}
           >
-            <li className={classNames(Styles.info)}>
+            <li>
               <ViewingControlMenuButton
                 onClick={() => runInAction(() => this.searchItem())}
                 title={t("workbench.searchItemTitle")}
@@ -378,7 +376,7 @@ const ViewingControls = observer(
               </ViewingControlMenuButton>
             </li>
           </If>
-          <li className={classNames(Styles.removez)}>
+          <li>
             <ViewingControlMenuButton
               onClick={this.removeFromMap}
               title={t("workbench.removeFromMapTitle")}
@@ -401,8 +399,20 @@ const ViewingControls = observer(
       return (
         <Box>
           <ul
-            className={Styles.control}
             css={`
+              list-style: none;
+              padding-left: 0;
+              margin: 0;
+              width: 100%;
+              position: relative;
+              display: flex;
+              justify-content: space-between;
+
+              li {
+                display: block;
+                float: left;
+                box-sizing: border-box;
+              }
               & > button:last-child {
                 margin-right: 0;
               }
