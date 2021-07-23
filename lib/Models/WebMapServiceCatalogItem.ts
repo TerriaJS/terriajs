@@ -68,6 +68,7 @@ import WebMapServiceCapabilities, {
   MetadataURL
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
+import { countBy } from "lodash-es";
 
 const dateFormat = require("dateformat");
 class GetCapabilitiesStratum extends LoadableStratum(
@@ -730,6 +731,28 @@ class GetCapabilitiesStratum extends LoadableStratum(
     }
 
     return result;
+  }
+
+  @computed get currentTime() {
+    // Get default times for all layers
+    const defaultTimes = filterOutUndefined(
+      Array.from(this.capabilitiesLayers).map(([layerName, layer]) => {
+        if (!layer) return;
+        const dimensions = this.capabilities.getInheritedValues(
+          layer,
+          "Dimension"
+        );
+
+        const timeDimension = dimensions.find(
+          dimension => dimension.name.toLowerCase() === "time"
+        );
+
+        return timeDimension?.default;
+      })
+    );
+
+    // Return first default time
+    return defaultTimes[0];
   }
 }
 
