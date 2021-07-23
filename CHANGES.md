@@ -53,7 +53,7 @@ Change Log
   * Replaced with `disableZoomTo` in `MappableTraits`
 * Clean up `showsInfo`
   * Replaced with `disableAboutData` in `CatalogMemberTraits`
-* Add `feature` object to `FeatureInfoSection.getTemplateData 
+* Add `feature` object to `FeatureInfoSection.getTemplateData`
 * [The next improvement]
 
 #### 8.0.0-alpha.87
