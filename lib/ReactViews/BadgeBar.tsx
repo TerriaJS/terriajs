@@ -10,13 +10,13 @@ interface IProps {
 const BadgeBar: React.FC<IProps> = (props: IProps) => {
   return (
     <Box paddedHorizontally={3} justifySpaceBetween whiteSpace="nowrap">
-      <Box verticalCenter styledMaxWidth="50%">
+      <Box verticalCenter styledMaxWidth="40%">
         <TextSpan textLight uppercase overflowHide overflowEllipsis>
           {props.label} {props.badge ? `(${props.badge})` : null}
         </TextSpan>
       </Box>
 
-      <Box styledMaxWidth="50%">{props.children}</Box>
+      <Box styledMaxWidth="60%">{props.children}</Box>
     </Box>
   );
 };
