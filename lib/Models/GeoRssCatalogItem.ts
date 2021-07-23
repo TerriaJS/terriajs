@@ -199,14 +199,6 @@ export default class GeoRssCatalogItem extends MappableMixin(
     return i18next.t("models.georss.name");
   }
 
-  get canZoomTo(): boolean {
-    return true;
-  }
-
-  get showsInfo(): boolean {
-    return true;
-  }
-
   protected forceLoadMetadata(): Promise<void> {
     return GeoRssStratum.load(this).then(stratum => {
       runInAction(() => {
