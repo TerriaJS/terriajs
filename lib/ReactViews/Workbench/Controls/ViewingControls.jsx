@@ -396,19 +396,6 @@ const ViewingControls = observer(
     render() {
       const viewState = this.props.viewState;
       const item = this.props.item;
-      const canZoom =
-        (MappableMixin.isMixedInto(item) && !item.disableZoomTo) ||
-        (item.tableStructure && item.tableStructure.sourceFeature);
-      const canSplit =
-        !item.terria.configParameters.disableSplitter &&
-        item.supportsSplitting &&
-        defined(item.splitDirection) &&
-        item.terria.currentViewer.canShowSplitter;
-      const classList = {
-        [Styles.noZoom]: !canZoom,
-        [Styles.noSplit]: !canSplit,
-        [Styles.noInfo]: item.disableAboutData
-      };
       const { t } = this.props;
       const showMenu = item.uniqueId === viewState.workbenchWithOpenControls;
       return (
@@ -422,7 +409,6 @@ const ViewingControls = observer(
             `}
           >
             <WorkbenchButton
-              className={classNames(Styles.zoom, classList)}
               onClick={this.zoomTo}
               title={t("workbench.zoomToTitle")}
               disabled={
@@ -445,7 +431,6 @@ const ViewingControls = observer(
               title={t("workbench.previewItemTitle")}
               iconElement={() => <Icon glyph={Icon.GLYPHS.about} />}
               disabled={item.disableAboutData}
-              className={classNames(Styles.info, classList)}
             >
               {t("workbench.previewItem")}
             </WorkbenchButton>
@@ -463,7 +448,6 @@ const ViewingControls = observer(
               }}
               title={t("workbench.showMoreActionsTitle")}
               iconOnly
-              className={classNames(Styles.info, classList)}
               iconElement={() => <Icon glyph={Icon.GLYPHS.menuDotted} />}
             />
           </ul>
