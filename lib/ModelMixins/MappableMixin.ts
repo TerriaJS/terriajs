@@ -161,9 +161,9 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
 }
 
 namespace MappableMixin {
-  export interface MappableMixin
+  export interface Instance
     extends InstanceType<ReturnType<typeof MappableMixin>> {}
-  export function isMixedInto(model: any): model is MappableMixin {
+  export function isMixedInto(model: any): model is Instance {
     return model && model.isMappable;
   }
 }

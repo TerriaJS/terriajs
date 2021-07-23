@@ -7,6 +7,8 @@ Change Log
 
 - **Breaking changes**:
   - `colorPalette` no longer supports a list of CSS colors (eg `rgb(0,0,255)-rgb(0,255,0)-rgb(255,0,0)`). Instead please use `binColors`.
+  - Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses`
+  - Renamed all mixin instance type definitions to `XMixin.Instance`.
 
 * Fixed a bug with numeric item search where it sometimes fails to return all matching values.
 * Respect order of objects from lower strata in `objectArrayTrait`.
@@ -34,7 +36,10 @@ Change Log
     * Share links are not preserved
     * Added basic support for dataset resources
 * Modified BadgeBar to be more tolerant to longer strings
+* Added `MapboxMapCatalogItem`.
+* Added `MapboxStyleCatalogItem`.
 * Fix splitter thumb icon vertical position
+* Renamed all mixin instance type definitions to `XMixin.Instance`.
 * [The next improvement]
 
 #### 8.0.0-alpha.87
