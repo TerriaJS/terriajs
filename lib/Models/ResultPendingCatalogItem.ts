@@ -6,7 +6,7 @@ import CreateModel from "./CreateModel";
 export default class ResultPendingCatalogItem extends CatalogMemberMixin(
   CreateModel(ResultPendingCatalogItemTraits)
 ) {
-  @observable showsInfo = false;
+  @observable disableAboutData = true;
 
   loadPromise: Promise<any> = Promise.resolve();
 

@@ -2,7 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'colorPrimary': string;
-  'colorSplitter': string;
+  'colorSecondary': string;
   'dark': string;
   'heading': string;
   'isOpen': string;

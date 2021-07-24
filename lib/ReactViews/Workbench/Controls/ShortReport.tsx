@@ -14,7 +14,7 @@ import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact"
 
 @observer
 export default class ShortReport extends React.Component<{
-  item: CatalogMemberMixin.CatalogMemberMixin;
+  item: CatalogMemberMixin.Instance;
 }> {
   clickShortReport(reportName: string | undefined, isOpen: boolean) {
     const shortReportSections = this.props.item.shortReportSections;

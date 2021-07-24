@@ -71,8 +71,6 @@ export default function Cesium3dTilesMixin<
   abstract class Cesium3dTilesMixin extends ShadowMixin(
     MappableMixin(CatalogMemberMixin(Base))
   ) {
-    readonly canZoomTo = true;
-
     protected tileset?: ObservableCesium3DTileset;
 
     // Just a variable to save the original tileset.root.transform if it exists

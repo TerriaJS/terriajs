@@ -290,8 +290,8 @@ export const FeatureInfoSection = observer(
                   onClick={this.toggleRawData}
                 >
                   {this.state.showRawData
-                    ? "Show Curated Data"
-                    : "Show Raw Data"}
+                    ? t("featureInfo.showCuratedData")
+                    : t("featureInfo.showRawData")}
                 </button>
               </If>
               <div>

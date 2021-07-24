@@ -15,7 +15,6 @@ import TableColumnTraits from "./TableColumnTraits";
 import TableStyleTraits from "./TableStyleTraits";
 
 export default class TableTraits extends mixTraits(
-  SplitterTraits,
   DiscretelyTimeVaryingTraits,
   ExportableTraits,
   LayerOrderingTraits,

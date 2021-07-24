@@ -77,8 +77,6 @@ export default class CzmlCatalogItem
     return CzmlCatalogItem.type;
   }
 
-  readonly canZoomTo = true;
-
   @observable private _dataSource: CzmlDataSource | undefined;
   private _czmlFile?: File;
 
