@@ -110,6 +110,10 @@ export const FeatureInfoSection = observer(
           value
         })
       );
+
+      // Add entire feature object
+      propertyData.feature = this.props.feature;
+
       propertyData.terria = {
         replaceText: mustacheReplaceTextFunction,
         formatNumber: mustacheFormatNumberFunction,
