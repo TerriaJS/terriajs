@@ -2,7 +2,7 @@ import { AxisBottom, AxisLeft } from "@vx/axis";
 import { Group } from "@vx/group";
 import { withParentSize } from "@vx/responsive";
 import { scaleLinear, scaleTime } from "@vx/scale";
-import { computed, runInAction } from "mobx";
+import { computed } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";

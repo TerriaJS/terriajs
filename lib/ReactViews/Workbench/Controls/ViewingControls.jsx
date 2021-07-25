@@ -14,9 +14,12 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import when from "terriajs-cesium/Source/ThirdParty/when";
+import {
+  Category,
+  DataSourceAction
+} from "../../../Core/AnalyticEvents/analyticEvents";
 import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
 import getPath from "../../../Core/getPath";
-import TerriaError from "../../../Core/TerriaError";
 import PickedFeatures from "../../../Map/PickedFeatures";
 import ExportableMixin from "../../../ModelMixins/ExportableMixin";
 import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
@@ -24,18 +27,14 @@ import addUserCatalogMember from "../../../Models/addUserCatalogMember";
 import CommonStrata from "../../../Models/CommonStrata";
 import getAncestors from "../../../Models/getAncestors";
 import SplitItemReference from "../../../Models/SplitItemReference";
+import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import Icon, { StyledIcon } from "../../../Styled/Icon";
 import { exportData } from "../../Preview/ExportData";
+import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
 import WorkbenchButton from "../WorkbenchButton";
 import Styles from "./viewing-controls.scss";
-import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
-import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
-import {
-  Category,
-  DataSourceAction
-} from "../../../Core/AnalyticEvents/analyticEvents";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,

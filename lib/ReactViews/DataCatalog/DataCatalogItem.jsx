@@ -6,15 +6,14 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import addedByUser from "../../Core/addedByUser";
-import getPath from "../../Core/getPath";
-import removeUserAddedData from "../../Models/removeUserAddedData";
-import CatalogItem from "./CatalogItem";
-import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import {
   Category,
   DataSourceAction
 } from "../../Core/AnalyticEvents/analyticEvents";
-import { TerriaErrorSeverity } from "../../Core/TerriaError";
+import getPath from "../../Core/getPath";
+import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
+import removeUserAddedData from "../../Models/removeUserAddedData";
+import CatalogItem from "./CatalogItem";
 
 // Individual dataset
 export const DataCatalogItem = observer(

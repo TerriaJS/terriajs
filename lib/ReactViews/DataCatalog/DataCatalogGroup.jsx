@@ -9,7 +9,6 @@ import getPath from "../../Core/getPath";
 import removeUserAddedData from "../../Models/removeUserAddedData";
 import CatalogGroup from "./CatalogGroup";
 import DataCatalogMember from "./DataCatalogMember";
-import { getName } from "../../ModelMixins/CatalogMemberMixin";
 
 const DataCatalogGroup = observer(
   createReactClass({

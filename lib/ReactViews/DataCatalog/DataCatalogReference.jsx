@@ -8,7 +8,6 @@ import getPath from "../../Core/getPath";
 import CommonStrata from "../../Models/CommonStrata";
 import CatalogGroup from "./CatalogGroup";
 import CatalogItem from "./CatalogItem";
-import { TerriaErrorSeverity } from "../../Core/TerriaError";
 
 const DataCatalogReference = observer(
   createReactClass({

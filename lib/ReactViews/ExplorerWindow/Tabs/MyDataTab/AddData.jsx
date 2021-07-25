@@ -1,25 +1,24 @@
-import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import { withTranslation, Trans } from "react-i18next";
-import Icon from "../../../../Styled/Icon";
-import createCatalogItemFromFileOrUrl from "../../../../Models/createCatalogItemFromFileOrUrl";
-import upsertModelFromJson from "../../../../Models/upsertModelFromJson";
-import addUserCatalogMember from "../../../../Models/addUserCatalogMember";
-import CatalogMemberFactory from "../../../../Models/CatalogMemberFactory";
-import CommonStrata from "../../../../Models/CommonStrata";
-import Dropdown from "../../../Generic/Dropdown";
-import FileInput from "./FileInput";
-import getDataType from "../../../../Core/getDataType";
-import Styles from "./add-data.scss";
-import Loader from "../../../Loader";
-import TerriaError from "../../../../Core/TerriaError";
-import addUserFiles from "../../../../Models/addUserFiles";
-import TimeVarying from "../../../../ModelMixins/TimeVarying";
+import React from "react";
+import { Trans, withTranslation } from "react-i18next";
 import {
   Category,
   DatatabAction
 } from "../../../../Core/AnalyticEvents/analyticEvents";
+import getDataType from "../../../../Core/getDataType";
+import TimeVarying from "../../../../ModelMixins/TimeVarying";
+import addUserCatalogMember from "../../../../Models/addUserCatalogMember";
+import addUserFiles from "../../../../Models/addUserFiles";
+import CatalogMemberFactory from "../../../../Models/CatalogMemberFactory";
+import CommonStrata from "../../../../Models/CommonStrata";
+import createCatalogItemFromFileOrUrl from "../../../../Models/createCatalogItemFromFileOrUrl";
+import upsertModelFromJson from "../../../../Models/upsertModelFromJson";
+import Icon from "../../../../Styled/Icon";
+import Dropdown from "../../../Generic/Dropdown";
+import Loader from "../../../Loader";
+import Styles from "./add-data.scss";
+import FileInput from "./FileInput";
 
 // Local and remote data have different dataType options
 const defaultRemoteDataTypes = getDataType().remoteDataType;

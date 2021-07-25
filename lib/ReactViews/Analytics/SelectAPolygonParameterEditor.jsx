@@ -7,13 +7,12 @@ import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import when from "terriajs-cesium/Source/ThirdParty/when";
+import Result from "../../Core/Result";
 import featureDataToGeoJson from "../../Map/featureDataToGeoJson";
 import CommonStrata from "../../Models/CommonStrata";
 import GeoJsonCatalogItem from "../../Models/GeoJsonCatalogItem";
 import MapInteractionMode from "../../Models/MapInteractionMode";
 import Styles from "./parameter-editors.scss";
-import Result from "../../Core/Result";
 
 const SelectAPolygonParameterEditor = createReactClass({
   propTypes: {

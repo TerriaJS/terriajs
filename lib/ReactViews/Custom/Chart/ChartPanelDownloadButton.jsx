@@ -4,11 +4,10 @@ import FileSaver from "file-saver";
 import PropTypes from "prop-types";
 import React from "react";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
-import when from "terriajs-cesium/Source/ThirdParty/when";
+import Result from "../../../Core/Result";
 import VarType from "../../../Map/VarType";
 import Icon from "../../../Styled/Icon";
 import Styles from "./chart-panel-download-button.scss";
-import Result from "../../../Core/Result";
 
 const ChartPanelDownloadButton = createReactClass({
   displayName: "ChartPanelDownloadButton",

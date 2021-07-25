@@ -1,18 +1,17 @@
 "use strict";
 
-import { observer } from "mobx-react";
 import { computed } from "mobx";
+import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
-import raiseErrorOnRejectedPromise from "../../../Models/raiseErrorOnRejectedPromise";
-import Icon from "../../../Styled/Icon";
-import ChartPanelDownloadButton from "./ChartPanelDownloadButton";
-import Loader from "../../Loader";
-import Styles from "./chart-panel.scss";
-import Chart from "./BottomDockChart";
 import ChartView from "../../../Charts/ChartView.ts";
+import Icon from "../../../Styled/Icon";
+import Loader from "../../Loader";
+import Chart from "./BottomDockChart";
+import Styles from "./chart-panel.scss";
+import ChartPanelDownloadButton from "./ChartPanelDownloadButton";
 
 const height = 300;
 
