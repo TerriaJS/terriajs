@@ -547,10 +547,11 @@ export default class ViewState {
       if (ReferenceMixin.isMixedInto(item)) {
         (await item.loadReference()).throwIfError();
 
-        // If reference is a group - call viewCatalogMember on reference.target
-        if (item.target && GroupMixin.isMixedInto(item.target)) {
+        // call viewCatalogMember on reference.target
+        if (item.target) {
           return await this.viewCatalogMember(item.target, isOpen, stratum);
         }
+        return Result.error(`Failed to resolve reference for ${getName(item)}`);
       }
 
       if (GroupMixin.isMixedInto(item)) {

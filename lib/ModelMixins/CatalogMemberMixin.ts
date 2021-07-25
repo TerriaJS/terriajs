@@ -33,8 +33,8 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       this.forceLoadMetadata.bind(this)
     );
 
-    get loadMetadataError() {
-      return this._metadataLoader.error;
+    get loadMetadataResult() {
+      return this._metadataLoader.result;
     }
 
     /**

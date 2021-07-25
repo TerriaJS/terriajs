@@ -56,8 +56,8 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
       previousTarget: BaseModel | undefined
     ): Promise<BaseModel | undefined>;
 
-    get loadReferenceError() {
-      return this._referenceLoader.error;
+    get loadReferenceResult() {
+      return this._referenceLoader.result;
     }
 
     /**

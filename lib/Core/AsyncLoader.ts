@@ -52,7 +52,7 @@ export default class AsyncLoader {
   private _isLoading: boolean = false;
 
   @observable
-  private _error: TerriaError | undefined = undefined;
+  private _result: Result<void> | undefined = undefined;
 
   @observable
   private _forceReloadCount: number = 0;
@@ -90,8 +90,8 @@ export default class AsyncLoader {
     return this._isLoading;
   }
 
-  get error() {
-    return this._error;
+  get result() {
+    return this._result;
   }
 
   async load(forceReload: boolean = false): Promise<Result<void>> {
@@ -119,14 +119,14 @@ export default class AsyncLoader {
       await newPromise;
     } catch (e) {
       error = TerriaError.from(e);
-      runInAction(() => (this._error = error));
     }
 
     runInAction(() => {
+      this._result = Result.none(error);
       this._isLoading = false;
     });
 
-    return Result.none(error);
+    return this._result!;
   }
 
   /**

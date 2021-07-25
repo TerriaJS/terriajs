@@ -143,9 +143,9 @@ const InvokeFunction = observer(
         <div className={Styles.invokeFunction}>
           <div className={Styles.content}>
             <h3>{this.props.previewed.name}</h3>
-            <If condition={this.props.previewed.loadMetadataError}>
+            <If condition={this.props.previewed.loadMetadataResult?.error}>
               <WarningBox
-                error={this.props.previewed.loadMetadataError}
+                error={this.props.previewed.loadMetadataResult?.error}
                 viewState={this.props.viewState}
               />
             </If>

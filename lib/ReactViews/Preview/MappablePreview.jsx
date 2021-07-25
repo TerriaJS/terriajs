@@ -130,15 +130,15 @@ class MappablePreview extends React.Component {
               </div>
             </If>
           </div>
-          <If condition={catalogItem.loadMetadataError}>
+          <If condition={catalogItem.loadMetadataResult?.error}>
             <WarningBox
-              error={catalogItem.loadMetadataError}
+              error={catalogItem.loadMetadataResult?.error}
               viewState={this.props.viewState}
             />
           </If>
-          <If condition={catalogItem.loadMapItemsError}>
+          <If condition={catalogItem.loadMapItemsResult?.error}>
             <WarningBox
-              error={catalogItem.loadMapItemsError}
+              error={catalogItem.loadMapItemsResult?.error}
               viewState={this.props.viewState}
             />
           </If>

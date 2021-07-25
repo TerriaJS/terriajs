@@ -136,8 +136,8 @@ const DataPreview = observer(
               <div className={Styles.placeholder}>
                 <h2>Unable to resolve reference</h2>
                 <p>
-                  {this.props.previewed.loadReferenceError
-                    ? this.props.previewed.loadReferenceError.message
+                  {this.props.previewed.loadReferenceResult?.error
+                    ? this.props.previewed.loadReferenceResult?.error?.message
                     : `This reference could not be resolved because it is invalid or
                   because it points to something that cannot be visualised.`}
                 </p>

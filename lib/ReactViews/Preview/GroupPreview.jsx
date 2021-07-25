@@ -53,9 +53,9 @@ const GroupPreview = observer(
               />
             </div>
           </div>
-          <If condition={this.props.previewed.loadMetadataError}>
+          <If condition={this.props.previewed.loadMetadataResult?.error}>
             <WarningBox
-              error={this.props.previewed.loadMetadataError}
+              error={this.props.previewed.loadMetadataResult?.error}
               viewState={this.props.viewState}
             />
           </If>
