@@ -536,11 +536,13 @@ export default class ViewState {
    * @param item The model to view in catalog.
    * @param [isOpen=true] True if the group should be opened. False if it should be closed.
    * @param stratum The stratum in which to mark the group opened or closed.
+   * @param openAddData True if data catalog window should be opened.
    */
   async viewCatalogMember(
     item: BaseModel,
     isOpen: boolean = true,
-    stratum: string = CommonStrata.user
+    stratum: string = CommonStrata.user,
+    openAddData = true
   ): Promise<Result<void>> {
     try {
       runInAction(() => (this._previewedItem = item));
@@ -564,26 +566,28 @@ export default class ViewState {
       else if (CatalogMemberMixin.isMixedInto(item))
         (await item.loadMetadata()).throwIfError();
 
-      if (addedByUser(item)) {
-        runInAction(() => (this.userDataPreviewedItem = item));
+      if (openAddData) {
+        if (addedByUser(item)) {
+          runInAction(() => (this.userDataPreviewedItem = item));
 
-        this.openUserData();
-      } else {
-        runInAction(() => {
-          this.openAddData();
-          if (this.terria.configParameters.tabbedCatalog) {
-            const parentGroups = getAncestors(item);
-            if (parentGroups.length > 0) {
-              // Go to specific tab
-              this.activeTabIdInCategory = parentGroups[0].uniqueId;
+          this.openUserData();
+        } else {
+          runInAction(() => {
+            this.openAddData();
+            if (this.terria.configParameters.tabbedCatalog) {
+              const parentGroups = getAncestors(item);
+              if (parentGroups.length > 0) {
+                // Go to specific tab
+                this.activeTabIdInCategory = parentGroups[0].uniqueId;
+              }
             }
-          }
-        });
-      }
+          });
+        }
 
-      // mobile switch to nowvewing if not viewing a group
-      if (!GroupMixin.isMixedInto(item)) {
-        this.switchMobileView(this.mobileViewOptions.preview);
+        // mobile switch to nowvewing if not viewing a group
+        if (!GroupMixin.isMixedInto(item)) {
+          this.switchMobileView(this.mobileViewOptions.preview);
+        }
       }
     } catch (e) {
       return Result.error(e);
