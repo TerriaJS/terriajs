@@ -207,10 +207,12 @@ namespace CatalogMemberMixin {
 
 export default CatalogMemberMixin;
 
-export function getName(model: BaseModel) {
+export function getName(model: BaseModel | undefined) {
   return (
     (CatalogMemberMixin.isMixedInto(model)
       ? model.nameInCatalog ?? model.name
-      : undefined) ?? model.uniqueId
+      : undefined) ??
+    model?.uniqueId ??
+    ""
   );
 }

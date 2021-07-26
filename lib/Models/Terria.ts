@@ -969,7 +969,7 @@ export default class Terria {
         } catch (e) {
           errors.push(
             TerriaError.from(e, {
-              severity: initSource.errorSeverity ?? TerriaErrorSeverity.Error,
+              severity: initSource.errorSeverity,
               message: {
                 key: "models.terria.loadingInitSourceError2Message",
                 parameters: { loadSource: initSource.name ?? "Unknown source" }
@@ -991,7 +991,7 @@ export default class Terria {
         } catch (e) {
           errors.push(
             TerriaError.from(e, {
-              severity: initSource?.errorSeverity ?? TerriaErrorSeverity.Error,
+              severity: initSource?.errorSeverity,
               message: {
                 key: "models.terria.loadingInitSourceError2Message",
                 parameters: { loadSource: initSource!.name ?? "Unknown source" }
@@ -1156,8 +1156,9 @@ export default class Terria {
       throw new TerriaError({
         sender: this,
         title: "Model cannot be dereferenced",
-        message:
-          "The stratum has a `dereferenced` property, but the model cannot be dereferenced."
+        message: `Model ${getName(
+          loadedModel
+        )} has a \`dereferenced\` property, but the model cannot be dereferenced.`
       });
     }
 

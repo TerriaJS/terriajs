@@ -43,16 +43,7 @@ export async function activateStory(scene, terria) {
             canUnsetFeaturePickingState: true
           });
         } catch (e) {
-          errors.push(
-            TerriaError.from(e, {
-              message: {
-                key: "models.terria.loadingInitSourceError2Message",
-                parameters: {
-                  loadSource: initSource.name ?? "Unknown source"
-                }
-              }
-            })
-          );
+          errors.push(TerriaError.from(e));
         }
       })
     );

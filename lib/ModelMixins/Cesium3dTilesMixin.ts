@@ -107,12 +107,8 @@ export default function Cesium3dTilesMixin<
     }
 
     private loadTileset() {
-      if (!isDefined(this.url)) {
-        throw `\`url\` not defined for ${getName(this)}`;
-      }
-
-      if (!isDefined(this.ionAssetId)) {
-        throw `\`ionAssetId\` not defined for ${getName(this)}`;
+      if (!isDefined(this.url) && !isDefined(this.ionAssetId)) {
+        throw `\`url\` and \`ionAssetId\` are not defined for ${getName(this)}`;
       }
 
       let resource = undefined;

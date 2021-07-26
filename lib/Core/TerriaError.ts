@@ -45,11 +45,13 @@ export enum TerriaErrorSeverity {
 export interface TerriaErrorOptions {
   /**  A detailed message describing the error.  This message may be HTML and it should be sanitized before display to the user. */
   message: string | I18nTranslateString;
+
   /** A short title describing the error. */
   title?: string | I18nTranslateString;
 
   /** The object that raised the error. */
   sender?: unknown;
+
   /** True if the user has seen this error; otherwise, false. */
   raisedToUser?: boolean;
 
@@ -72,6 +74,7 @@ export type TerriaErrorOverrides =
   | string
   | TerriaErrorSeverity;
 
+/** Turn TerriaErrorOverrides to TerriaErrorOptions so it can be passed to TerriaError constructor */
 export function parseOverrides(
   overrides: TerriaErrorOverrides | undefined
 ): Partial<TerriaErrorOptions> {
@@ -81,6 +84,15 @@ export function parseOverrides(
   } else if (typeof overrides === "number") {
     overrides = { severity: overrides };
   }
+
+  // Remove undefined properties
+  if (overrides)
+    Object.keys(overrides).forEach(key =>
+      (overrides as any)[key] === undefined
+        ? delete (overrides as any)[key]
+        : null
+    );
+
   return overrides ?? {};
 }
 
