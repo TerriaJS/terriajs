@@ -18,6 +18,7 @@ import TableColorStyleTraits, {
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
 import TerriaError from "../Core/TerriaError";
+import runLater from "../Core/runLater";
 
 const getColorForId = createColorForIdTransformer();
 const defaultColor = "yellow";
@@ -85,12 +86,8 @@ export default class TableColorMap {
     ];
 
     if (!colorScaleScheme) {
-      this.colorColumn?.tableModel.terria.raiseErrorToUser(
-        new TerriaError({
-          title: "Invalid colorPalette",
-          message: `${this.colorTraits.colorPalette} is invalid. Will use default colorPalete instead`
-        })
-      );
+      this.invalidColorPaletteWarning();
+
       colorScaleScheme = (d3Scale as any)[
         `scheme${this.defaultColorPaletteName}`
       ];
@@ -200,12 +197,7 @@ export default class TableColorMap {
       colorScale = (d3Scale as any)[`scheme${this.colorTraits.colorPalette}`];
 
       if (!colorScale) {
-        this.colorColumn?.tableModel.terria.raiseErrorToUser(
-          new TerriaError({
-            title: "Invalid colorPalette",
-            message: `${this.colorTraits.colorPalette} is invalid. Will use default colorPalete instead`
-          })
-        );
+        this.invalidColorPaletteWarning();
         colorScale = (d3Scale as any)[`scheme${this.defaultColorPaletteName}`];
       }
     }
@@ -267,12 +259,7 @@ export default class TableColorMap {
         ];
 
         if (!colorScale) {
-          this.colorColumn?.tableModel.terria.raiseErrorToUser(
-            new TerriaError({
-              title: "Invalid colorPalette",
-              message: `${this.colorTraits.colorPalette} is invalid. Will use default colorPalete instead`
-            })
-          );
+          this.invalidColorPaletteWarning();
           colorScale = (d3Scale as any)[
             `interpolate${this.defaultColorPaletteName}`
           ];
@@ -355,5 +342,17 @@ export default class TableColorMap {
 
   @computed get regionColor() {
     return Color.fromCssColorString(this.colorTraits.regionColor);
+  }
+
+  // TODO: Make TableColorMap use Result to pass warnings up model layer
+  invalidColorPaletteWarning() {
+    runLater(() =>
+      this.colorColumn?.tableModel.terria.raiseErrorToUser(
+        new TerriaError({
+          title: "Invalid colorPalette",
+          message: `${this.colorTraits.colorPalette} is invalid. Will use default colorPalete instead`
+        })
+      )
+    );
   }
 }
