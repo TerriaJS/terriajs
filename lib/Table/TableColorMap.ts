@@ -17,6 +17,7 @@ import TableColorStyleTraits, {
 } from "../Traits/TraitsClasses/TableColorStyleTraits";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
+import TerriaError from "../Core/TerriaError";
 
 const getColorForId = createColorForIdTransformer();
 const defaultColor = "yellow";
@@ -79,9 +80,21 @@ export default class TableColorMap {
 
     // Get colorScale from `d3-scale-chromatic` library - all categorical color schemes start with "scheme"
     // See https://github.com/d3/d3-scale-chromatic#categorical
-    let colorScaleScheme =
-      (d3Scale as any)[`scheme${this.colorTraits.colorPalette}`] ??
-      (d3Scale as any)[`scheme${this.defaultColorPaletteName}`];
+    let colorScaleScheme = (d3Scale as any)[
+      `scheme${this.colorTraits.colorPalette}`
+    ];
+
+    if (!colorScaleScheme) {
+      this.colorColumn?.tableModel.terria.raiseErrorToUser(
+        new TerriaError({
+          title: "Invalid colorPalette",
+          message: `${this.colorTraits.colorPalette} is invalid. Will use default colorPalete instead`
+        })
+      );
+      colorScaleScheme = (d3Scale as any)[
+        `scheme${this.defaultColorPaletteName}`
+      ];
+    }
 
     // d3 categorical color schemes are represented as two dimensional arrays
     // First array represents number of bins in the given color scale (eg 3 = [#ff0000, #ffaa00, #ffff00])
@@ -184,9 +197,17 @@ export default class TableColorMap {
       isDefined(this.colorTraits.colorPalette) &&
       this.colorTraits.colorPalette !== "HighContrast"
     ) {
-      colorScale =
-        (d3Scale as any)[`scheme${this.colorTraits.colorPalette}`] ??
-        (d3Scale as any)[`scheme${this.defaultColorPaletteName}`];
+      colorScale = (d3Scale as any)[`scheme${this.colorTraits.colorPalette}`];
+
+      if (!colorScale) {
+        this.colorColumn?.tableModel.terria.raiseErrorToUser(
+          new TerriaError({
+            title: "Invalid colorPalette",
+            message: `${this.colorTraits.colorPalette} is invalid. Will use default colorPalete instead`
+          })
+        );
+        colorScale = (d3Scale as any)[`scheme${this.defaultColorPaletteName}`];
+      }
     }
 
     return colorScale.map((color, i) => {
@@ -241,9 +262,21 @@ export default class TableColorMap {
         // Get colorScale from `d3-scale-chromatic` library - all continuous color schemes start with "interpolate"
         // See https://github.com/d3/d3-scale-chromatic#diverging
         // d3 continuous color schemes are represented as a function which map a value [0,1] to a color]
-        const colorScale =
-          (d3Scale as any)[`interpolate${this.colorTraits.colorPalette}`] ??
-          (d3Scale as any)[`interpolate${this.defaultColorPaletteName}`];
+        let colorScale = (d3Scale as any)[
+          `interpolate${this.colorTraits.colorPalette}`
+        ];
+
+        if (!colorScale) {
+          this.colorColumn?.tableModel.terria.raiseErrorToUser(
+            new TerriaError({
+              title: "Invalid colorPalette",
+              message: `${this.colorTraits.colorPalette} is invalid. Will use default colorPalete instead`
+            })
+          );
+          colorScale = (d3Scale as any)[
+            `interpolate${this.defaultColorPaletteName}`
+          ];
+        }
 
         return new ContinuousColorMap({
           colorScale,
