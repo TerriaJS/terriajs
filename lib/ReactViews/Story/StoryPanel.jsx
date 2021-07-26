@@ -11,9 +11,7 @@ import {
   StoryAction
 } from "../../Core/AnalyticEvents/analyticEvents";
 import getPath from "../../Core/getPath";
-import TerriaError, { TerriaErrorSeverity } from "../../Core/TerriaError";
-// eslint-disable-next-line no-unused-vars
-import Terria from "../../Models/Terria";
+import TerriaError from "../../Core/TerriaError";
 import Icon from "../../Styled/Icon";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import { Medium, Small } from "../Generic/Responsive";
