@@ -174,11 +174,7 @@ const StoryPanel = observer(
         this.props.terria
           .updateFromStartData(
             story.shareData,
-            `Story data: \`${story.title ?? story.id}\``,
-            // We set errors to use Warning severity so they aren't shown to the user by default
-            // This is due to many stories/shareData having invalid models in them
-            // If a more severe error is thrown while loading shareData (eg Error) then the error WILL still be shown to the user
-            TerriaErrorSeverity.Warning
+            `Story data: \`${story.title ?? story.id}\``
           )
           .raiseError(this.props.terria);
       }

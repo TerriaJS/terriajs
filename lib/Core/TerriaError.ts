@@ -173,7 +173,11 @@ export default class TerriaError {
     // Find highest severity across errors (eg if one if `Error`, then the new TerriaError will also be `Error`)
     const severity = () =>
       filteredErrors
-        .map(error => error.severity)
+        .map(error =>
+          typeof error.severity === "function"
+            ? error.severity()
+            : error.severity
+        )
         .includes(TerriaErrorSeverity.Error)
         ? TerriaErrorSeverity.Error
         : TerriaErrorSeverity.Warning;
@@ -218,7 +222,11 @@ export default class TerriaError {
 
   /** Show error to user if `severity` is `Error` */
   get shouldRaiseToUser() {
-    return this.severity === TerriaErrorSeverity.Error;
+    return (
+      (typeof this.severity === "function"
+        ? this.severity()
+        : this.severity) === TerriaErrorSeverity.Error
+    );
   }
 
   get raisedToUser() {

@@ -679,6 +679,7 @@ export default class Terria {
     const initializationUrls: string[] = config?.initializationUrls || [];
     const initSources: InitSource[] = initializationUrls.map(url => ({
       name: `Init URL from config ${url}`,
+      errorSeverity: TerriaErrorSeverity.Error,
       ...generateInitializationUrl(
         baseUri,
         this.configParameters.initFragmentPaths,
@@ -693,6 +694,7 @@ export default class Terria {
           .filter(isJsonString)
           .map(v7initUrl => ({
             name: `V7 Init URL from config ${v7initUrl}`,
+            errorSeverity: TerriaErrorSeverity.Error,
             data: (async () => {
               try {
                 const [{ convertCatalog }, catalog] = await Promise.all([
@@ -1487,6 +1489,7 @@ export default class Terria {
       const { catalog, ...rest } = initObj;
       this.initSources.push({
         name: `Magda map-config aspect terria-init from ${configUrl}`,
+        errorSeverity: TerriaErrorSeverity.Error,
         data: {
           catalog: catalog
         }
@@ -1663,7 +1666,12 @@ async function interpretHash(
         try {
           // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
           const startData = JSON.parse(propertyValue);
-          interpretStartData(terria, startData, "Start data from hash");
+          interpretStartData(
+            terria,
+            startData,
+            "Start data from hash",
+            TerriaErrorSeverity.Error
+          );
         } catch (e) {
           throw TerriaError.from(e, {
             message: { key: "parsingStartDataErrorMessage" }
@@ -1679,6 +1687,7 @@ async function interpretHash(
         );
         terria.initSources.push({
           name: `InitUrl from applicationURL hash ${property}`,
+          errorSeverity: TerriaErrorSeverity.Error,
           ...initSourceFile
         });
       }
@@ -1712,11 +1721,7 @@ async function interpretHash(
           interpretStartData(
             terria,
             result.result,
-            `Share data from link: ${hashProperties.share}`,
-            // We set errors to use Warning severity so they aren't shown to the user by default
-            // This is due to many stories/shareData having invalid models in them
-            // If a more severe error is thrown while loading shareData (eg Error) then the error WILL still be shown to the user
-            TerriaErrorSeverity.Warning
+            `Share data from link: ${hashProperties.share}`
           );
         }
       } catch (error) {
@@ -1734,7 +1739,7 @@ function interpretStartData(
   startData: any,
   /** Name for startData initSources - this is only used for debugging purposes */
   name: string,
-  /** Error severity to use for loading startData init sources - default will be `TerriaErrorSeverity.Error` */
+  /** Error severity to use for loading startData init sources - if not set, TerriaError will be propagated normally */
   errorSeverity?: TerriaErrorSeverity
 ) {
   // TODO: version check, filtering, etc.
