@@ -56,6 +56,7 @@ Change Log
 * Clean up `showsInfo`
   * Replaced with `disableAboutData` in `CatalogMemberTraits`
 * Add `feature` object to `FeatureInfoSection.getTemplateData`
+* Add `mustacheReplaceTextFunction` function to `FeatureInfoSection`
 * [The next improvement]
 
 #### 8.0.0-alpha.87
