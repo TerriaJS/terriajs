@@ -100,7 +100,9 @@ export default class TableColorMap {
           Color.fromCssColorString(binColors[i]) ?? Color.TRANSPARENT
         );
       } else {
-        result.push(colorScale[i % colorScale.length]);
+        result.push(
+          Color.fromCssColorString(colorScale[i % colorScale.length])
+        );
       }
     }
     return result;
