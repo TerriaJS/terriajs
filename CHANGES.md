@@ -9,6 +9,9 @@ Change Log
   - `colorPalette` no longer supports a list of CSS colors (eg `rgb(0,0,255)-rgb(0,255,0)-rgb(255,0,0)`). Instead please use `binColors`.
   - Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses`
   - Renamed all mixin instance type definitions to `XMixin.Instance`.
+  - `$color-splitter` and `theme.colorSplitter` has been replaced with `$color-secondary` and `theme.colorSecondary`
+  - `canZoomTo` has bee replaced with `disableZoomTo` in `MappableTraits`
+  - `showsInfo` has been replaced with `disableAboutData` in `CatalogMemberTraits`
 
 * Fixed a bug with numeric item search where it sometimes fails to return all matching values.
 * Respect order of objects from lower strata in `objectArrayTrait`.
@@ -29,12 +32,14 @@ Change Log
 * `WebMapServiceCatalogGroup` will now create layer auto-IDs using `Name` field to avoid ID clashes.
 * Added `GroupMixin` `shareKey` generation for members - if the group has `shareKeys`.
 * Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses`
+* I18n-ify shadow options in 3DTiles and some strings in feature info panel.
 * Fix `StyledIcon` css `display` clash
 * Limit `SelectableDimension` options to 1000 values
 * Added support for `SocrataCatalogGroup` and `SocrataMapViewCatalogGroup`
   * Notes on v7 to v8 Socrata integration:
     * Share links are not preserved
     * Added basic support for dataset resources
+* Modified BadgeBar to be more tolerant to longer strings
 * Added `MapboxMapCatalogItem`.
 * Added `MapboxStyleCatalogItem`.
 * Fix splitter thumb icon vertical position
@@ -55,6 +60,16 @@ Change Log
 * Clean up `CkanCatalogGroup` loading - errors are no-longer swallowed.
 * In `terriaErrorNotification` - show `error.message` (as well as `error.stack`) if `error.stack` is defined
 * Fix `DataPreviewSections` info section bug.
+* Clean up `ViewControl` colors
+  * `$color-splitter` and `theme.colorSplitter` has been replaced with `$color-secondary` and `theme.colorSecondary`
+* Clean up `SplitterTraits`
+  * `SplitterTraits` is now included in `RasterLayerTraits`
+  * Removed `supportsSplitter` variable
+  * Added `disableSplitter` trait
+* Clean up `canZoomTo`
+  * Replaced with `disableZoomTo` in `MappableTraits`
+* Clean up `showsInfo`
+  * Replaced with `disableAboutData` in `CatalogMemberTraits`
 * [The next improvement]
 
 #### 8.0.0-alpha.87

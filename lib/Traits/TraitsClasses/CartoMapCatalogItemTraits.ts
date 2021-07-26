@@ -1,16 +1,14 @@
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import MappableTraits from "./MappableTraits";
-import mixTraits from "../mixTraits";
-import primitiveTrait from "../Decorators/primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
-import SplitterTraits from "./SplitterTraits";
 import UrlTraits from "./UrlTraits";
 
 export default class CartoMapCatalogItemTraits extends mixTraits(
-  SplitterTraits,
   RasterLayerTraits,
   LayerOrderingTraits,
   UrlTraits,

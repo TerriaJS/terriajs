@@ -49,10 +49,10 @@ describe("CatalogItem", function() {
   });
 
   it("can zoom to only if rectangle is defined", function() {
-    expect(item.canZoomTo).toBe(false);
+    expect(item.disableZoomTo).toBeTruthy();
     // When a rectangle is defined, it can be zoomed-to.
     item.rectangle = Rectangle.fromDegrees(1, 2, 3, 4);
-    expect(item.canZoomTo).toBe(true);
+    expect(item.disableZoomTo).toBeFalsy();
   });
 
   it("keeps its .clock.currentTime and .currentTime in sync with terria.clock.currentTime when .useOwnClock is false", function() {

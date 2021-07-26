@@ -87,7 +87,6 @@ export default class GtfsCatalogItem extends MappableMixin(
 ) {
   disposer: IReactionDisposer | undefined;
 
-  readonly canZoomTo = true;
   _bbox: RectangleExtent = {
     west: Infinity,
     south: Infinity,

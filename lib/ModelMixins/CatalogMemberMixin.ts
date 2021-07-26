@@ -88,13 +88,6 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       return this.terria.workbench.contains(this);
     }
 
-    /**
-     * Default value for showsInfo (About Data button)
-     */
-    get showsInfo() {
-      return true;
-    }
-
     @computed
     get nameInCatalog(): string | undefined {
       return super.nameInCatalog || this.name;
