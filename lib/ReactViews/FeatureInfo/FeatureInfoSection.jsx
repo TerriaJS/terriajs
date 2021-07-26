@@ -635,7 +635,7 @@ function mustacheFormatNumberFunction() {
 }
 
 /**
- * Returns a function that replaces value in Mustache templates, sing this syntax:
+ * Returns a function that replaces value in Mustache templates, using this syntax:
  * {{#terria.replaceText}}{replaceText: true, from: [<source matching element>], to: [<replacement element>]}{{value}}{{/terria.replaceText}}
  * E.g. {{#terria.replaceText}}{replaceText: true, from: [0, 1, 2, 3], to: [\"100m\", \"500m\", \"1km\", \"2km\"]}{{value}}{{/terria.replaceText}}
  * @private
