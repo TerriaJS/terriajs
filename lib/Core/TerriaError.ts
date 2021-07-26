@@ -56,12 +56,6 @@ export interface TerriaErrorOptions {
   /** Error which this error was created from. This means TerriaErrors can be represented as a tree of errors - and therefore a stacktrace can be generated */
   originalError?: TerriaError | Error | (TerriaError | Error)[];
 
-  /** If `true`, `lib\ReactViews\Notification\terriaErrorNotification.tsx` will be used to display error message.
-   * If `false`, a plain old `Notification` will be used.
-   * This will default to `true`
-   */
-  useTerriaErrorNotification?: boolean;
-
   /** TerriaErrorSeverity - will default to `Error`
    * A function can be used here, which will be resolved when the error is raised to user.
    */
@@ -97,7 +91,6 @@ export function parseOverrides(
 export default class TerriaError {
   private readonly _message: string | I18nTranslateString;
   private readonly _title: string | I18nTranslateString;
-  private readonly useTerriaErrorNotification: boolean;
   severity: TerriaErrorSeverity | (() => TerriaErrorSeverity);
 
   /** `sender` isn't really used for anything at the moment... */
@@ -206,8 +199,6 @@ export default class TerriaError {
         ? options.originalError
         : [options.originalError]
       : [];
-    this.useTerriaErrorNotification =
-      options.useTerriaErrorNotification ?? true;
 
     this.severity = options.severity ?? TerriaErrorSeverity.Error;
   }
@@ -247,10 +238,7 @@ export default class TerriaError {
   toNotification(): Notification {
     return {
       title: () => this.title, // Title may need to be resolved when error is raised to user (for example after i18next initialisation)
-      // Use terriaErrorNotification or just use message
-      message: this.useTerriaErrorNotification
-        ? terriaErrorNotification(this)
-        : () => this.message
+      message: terriaErrorNotification(this)
     };
   }
 
@@ -258,11 +246,11 @@ export default class TerriaError {
    * Create a new parent `TerriaError` from this error. This essentially "clones" the `TerriaError` and applied `overrides` on top. It will also set `originalError` so we get a nice tree of `TerriaErrors`
    */
   createParentError(overrides?: TerriaErrorOverrides): TerriaError {
+    // Note: we don't copy over `raisedToUser` here
     return new TerriaError({
       message: this._message,
       title: this._title,
       sender: this.sender,
-      raisedToUser: this._raisedToUser,
       originalError: this,
       severity: this.severity,
       ...parseOverrides(overrides)

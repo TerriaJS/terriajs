@@ -590,7 +590,7 @@ export default class ViewState {
         }
       }
     } catch (e) {
-      return Result.error(e);
+      return Result.error(e, `Could not view catalog member ${getName(item)}`);
     }
     return Result.none();
   }
