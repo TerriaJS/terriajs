@@ -46,16 +46,6 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
       });
     });
 
-    /**
-     * Forces load of the reference. This method does _not_ need to consider
-     * whether the reference is already loaded.
-     *
-     * Errors can be thrown here.
-     */
-    protected abstract forceLoadReference(
-      previousTarget: BaseModel | undefined
-    ): Promise<BaseModel | undefined>;
-
     get loadReferenceResult() {
       return this._referenceLoader.result;
     }
@@ -83,12 +73,26 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
      *
      * This returns a Result object, it will contain errors if they occur - they will not be thrown.
      * To throw errors, use `(await loadMetadata()).throwIfError()`
+     *
+     * {@see AsyncLoader}
      */
     async loadReference(forceReload: boolean = false) {
       return (await this._referenceLoader.load(forceReload)).clone(
         `Failed to load reference \`${getName(this)}\``
       );
     }
+
+    /**
+     * Forces load of the reference. This method does _not_ need to consider
+     * whether the reference is already loaded.
+     *
+     * Errors can be thrown here.
+     *
+     * {@see AsyncLoader}
+     */
+    protected abstract forceLoadReference(
+      previousTarget: BaseModel | undefined
+    ): Promise<BaseModel | undefined>;
 
     dispose() {
       super.dispose();

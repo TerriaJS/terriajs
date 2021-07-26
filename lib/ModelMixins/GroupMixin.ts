@@ -17,21 +17,6 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
   abstract class Klass extends Base implements Group {
     private _memberLoader = new AsyncLoader(this.forceLoadMembers.bind(this));
 
-    /**
-     * Forces load of the group members. This method does _not_ need to consider
-     * whether the group members are already loaded. When the promise returned
-     * by this function resolves, the list of members in `GroupMixin#members`
-     * and `GroupMixin#memberModels` should be complete, but the individual
-     * members will not necessarily be loaded themselves.
-     *
-     * It is guaranteed that `loadMetadata` has finished before this is called.
-     *
-     * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
-     *
-     * Errors can be thrown here.
-     */
-    protected abstract async forceLoadMembers(): Promise<void>;
-
     get isGroup() {
       return true;
     }
@@ -62,11 +47,6 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
       );
     }
 
-    @action
-    toggleOpen(stratumId: string) {
-      this.setTrait(stratumId, "isOpen", !this.isOpen);
-    }
-
     /**
      * Load the group members if necessary. Returns an existing promise
      * if the members are already loaded or if loading is already in progress,
@@ -78,6 +58,8 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
      *
      * This returns a Result object, it will contain errors if they occur - they will not be thrown.
      * To throw errors, use `(await loadMetadata()).throwIfError()`
+     *
+     * {@see AsyncLoader}
      */
     async loadMembers(): Promise<Result<void>> {
       try {
@@ -95,6 +77,28 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
       }
 
       return Result.none();
+    }
+
+    /**
+     * Forces load of the group members. This method does _not_ need to consider
+     * whether the group members are already loaded. When the promise returned
+     * by this function resolves, the list of members in `GroupMixin#members`
+     * and `GroupMixin#memberModels` should be complete, but the individual
+     * members will not necessarily be loaded themselves.
+     *
+     * It is guaranteed that `loadMetadata` has finished before this is called.
+     *
+     * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
+     *
+     * Errors can be thrown here.
+     *
+     * {@see AsyncLoader}
+     */
+    protected abstract async forceLoadMembers(): Promise<void>;
+
+    @action
+    toggleOpen(stratumId: string) {
+      this.setTrait(stratumId, "isOpen", !this.isOpen);
     }
 
     @action

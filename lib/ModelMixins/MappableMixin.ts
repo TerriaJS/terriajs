@@ -92,25 +92,6 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
       return false;
     }
 
-    showInitialMessage(): Promise<void> {
-      // This function is deliberately not a computed,
-      // this.terria.notificationState.addNotificationToQueue changes state
-      this.initialMessageShown = true;
-      return new Promise(resolve => {
-        this.terria.notificationState.addNotificationToQueue({
-          title: this.initialMessage.title ?? i18next.t("notification.title"),
-          width: this.initialMessage.width,
-          height: this.initialMessage.height,
-          confirmText: this.initialMessage.confirmation
-            ? this.initialMessage.confirmText
-            : undefined,
-          message: this.initialMessage.content ?? "",
-          key: "initialMessage:" + this.initialMessage.key,
-          confirmAction: () => resolve()
-        });
-      });
-    }
-
     private _mapItemsLoader = new AsyncLoader(
       this.forceLoadMapItems.bind(this)
     );
@@ -134,6 +115,8 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
      *
      * This returns a Result object, it will contain errors if they occur - they will not be thrown.
      * To throw errors, use `(await loadMetadata()).throwIfError()`
+     *
+     * {@see AsyncLoader}
      */
     async loadMapItems(force?: boolean): Promise<Result<void>> {
       try {
@@ -156,8 +139,6 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
       return Result.none();
     }
 
-    abstract get mapItems(): MapItem[];
-
     /**
      * Forces load of the maps items. This method does _not_ need to consider
      * whether the map items are already loaded.
@@ -167,8 +148,34 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
      * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
      *
      * Errors can be thrown here.
+     *
+     * {@see AsyncLoader}
      */
     protected abstract async forceLoadMapItems(): Promise<void>;
+
+    /**
+     * Array of MapItems to show on the map/chart when Catalog Member is shown
+     */
+    abstract get mapItems(): MapItem[];
+
+    showInitialMessage(): Promise<void> {
+      // This function is deliberately not a computed,
+      // this.terria.notificationState.addNotificationToQueue changes state
+      this.initialMessageShown = true;
+      return new Promise(resolve => {
+        this.terria.notificationState.addNotificationToQueue({
+          title: this.initialMessage.title ?? i18next.t("notification.title"),
+          width: this.initialMessage.width,
+          height: this.initialMessage.height,
+          confirmText: this.initialMessage.confirmation
+            ? this.initialMessage.confirmText
+            : undefined,
+          message: this.initialMessage.content ?? "",
+          key: "initialMessage:" + this.initialMessage.key,
+          confirmAction: () => resolve()
+        });
+      });
+    }
 
     dispose() {
       super.dispose();
