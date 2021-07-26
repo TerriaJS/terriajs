@@ -1,7 +1,23 @@
 {
-    "request": {
-        "userPoolId": "testID",
-        "userName": "testUser"
-    },
-    "response": {}
+  "version": "1",
+  "region": "eu-central-1",
+  "userPoolId": "eu-central-1_DZ8sz9dnt",
+  "userName": "44b9932c-11a8-4198-8a43-6bf78708271c",
+  "callerContext": {
+    "awsSdkVersion": "aws-sdk-js-2.474.0",
+    "clientId": "61avn77vbef84rmjkdj3rickaa"
+  },
+  "triggerSource": "PostConfirmation_ConfirmSignUp",
+  "request": {
+    "userAttributes": {
+      "sub": "44b9932c-11a8-4198-8a43-6bf78708271c",
+      "email_verified": "true",
+      "cognito:user_status": "CONFIRMED",
+      "cognito:email_alias": "berend.weel@gmail.com",
+      "name": "testing",
+      "email": "berend.weel@gmail.com",
+      "custom:affiliation": "testing"
+    }
+  },
+  "response": {}
 }

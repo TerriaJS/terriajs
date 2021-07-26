@@ -1,33 +1,29 @@
 {
-  "dev": {
+  "devel": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-receipt-dev-145534-authRole",
-      "UnauthRoleArn": "arn:aws:iam::204861241826:role/amplify-receipt-dev-145534-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::204861241826:role/amplify-receipt-dev-145534-authRole",
+      "AuthRoleName": "amplify-receipt-devel-163903-authRole",
+      "UnauthRoleArn": "arn:aws:iam::204861241826:role/amplify-receipt-devel-163903-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::204861241826:role/amplify-receipt-devel-163903-authRole",
       "Region": "eu-central-1",
-      "DeploymentBucketName": "amplify-receipt-dev-145534-deployment",
-      "UnauthRoleName": "amplify-receipt-dev-145534-unauthRole",
-      "StackName": "amplify-receipt-dev-145534",
-      "StackId": "arn:aws:cloudformation:eu-central-1:204861241826:stack/amplify-receipt-dev-145534/b3adbb40-a1d7-11eb-b7df-0a62470760ce",
+      "DeploymentBucketName": "amplify-receipt-devel-163903-deployment",
+      "UnauthRoleName": "amplify-receipt-devel-163903-unauthRole",
+      "StackName": "amplify-receipt-devel-163903",
+      "StackId": "arn:aws:cloudformation:eu-central-1:204861241826:stack/amplify-receipt-devel-163903/66ff99d0-e57a-11eb-9ee7-06687ad9b4b0",
       "AmplifyAppId": "d2hgbtbehosd9b"
     },
     "categories": {
-      "function": {
-        "receipt09937347CustomMessage": {
-          "REDIRECTURL": "https://www.climateimpactstories.eu/redirect",
-          "EMAILSUBJECT": "climateimpactstories.eu email confirmation",
-          "EMAILMESSAGE": "Please confirm your email address for climateimpactstories.eu. If this mail was sent in error, you can safely ignore it.",
-          "deploymentBucketName": "amplify-receipt-dev-145534-deployment",
-          "s3Key": "amplify-builds/receipt09937347CustomMessage-51777a78707677726e37-build.zip"
-        },
-        "receipt09937347PostConfirmation": {
-          "GROUP": "receipt-editors",
-          "deploymentBucketName": "amplify-receipt-dev-145534-deployment",
-          "s3Key": "amplify-builds/receipt09937347PostConfirmation-47513371474f5a77396b-build.zip"
-        }
-      },
       "auth": {
         "receipt09937347": {}
+      },
+      "function": {
+        "receipt09937347CustomMessage": {
+          "deploymentBucketName": "amplify-receipt-devel-163903-deployment",
+          "s3Key": "amplify-builds/receipt09937347CustomMessage-57454545497a4b4b6662-build.zip"
+        },
+        "receipt09937347PostConfirmation": {
+          "deploymentBucketName": "amplify-receipt-devel-163903-deployment",
+          "s3Key": "amplify-builds/receipt09937347PostConfirmation-437069676f7738337442-build.zip"
+        }
       }
     }
   }

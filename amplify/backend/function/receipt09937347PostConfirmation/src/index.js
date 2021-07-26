@@ -1,4 +1,13 @@
-/*
+/* Amplify Params - DO NOT EDIT
+	API_RECEIPTAPI_GRAPHQLAPIIDOUTPUT
+	API_RECEIPTAPI_PAGETABLE_ARN
+	API_RECEIPTAPI_PAGETABLE_NAME
+	API_RECEIPTAPI_STORYTABLE_ARN
+	API_RECEIPTAPI_STORYTABLE_NAME
+	ENV
+	REGION
+	STORAGE_STORYCONTENT_BUCKETNAME
+Amplify Params - DO NOT EDIT *//*
   this file will loop through all js modules which are uploaded to the lambda resource,
   provided that the file names (without extension) are included in the "MODULES" env variable.
   "MODULES" is a comma-delimmited string.
