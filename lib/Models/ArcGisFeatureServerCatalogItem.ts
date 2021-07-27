@@ -239,7 +239,7 @@ class FeatureServerStratum extends LoadableStratum(
   @computed
   get shortReport(): string | undefined {
     // Show notice if reached
-    if (this._esriJson.exceededTransferLimit) {
+    if (this._esriJson?.exceededTransferLimit) {
       return i18next.t(
         "models.arcGisFeatureServerCatalogItem.reachedMaxFeatureLimit",
         this

@@ -1,16 +1,17 @@
 "use strict";
 
 import createReactClass from "create-react-class";
+import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import Slider from "rc-slider";
 import React from "react";
+import { withTranslation } from "react-i18next";
+import isDefined from "../../../Core/isDefined";
 import CommonStrata from "../../../Models/CommonStrata";
 import hasTraits from "../../../Models/hasTraits";
 import RasterLayerTraits from "../../../Traits/TraitsClasses/RasterLayerTraits";
 import Styles from "./opacity-section.scss";
-import { withTranslation } from "react-i18next";
-import { runInAction } from "mobx";
 
 const OpacitySection = observer(
   createReactClass({
@@ -35,6 +36,7 @@ const OpacitySection = observer(
       const { t } = this.props;
       if (
         !hasTraits(item, RasterLayerTraits, "opacity") ||
+        !isDefined(item.opacity) ||
         item.disableOpacityControl
       ) {
         return null;
