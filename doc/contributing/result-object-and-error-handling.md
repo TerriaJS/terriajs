@@ -127,3 +127,33 @@ See `lib\Core\TerriaError.ts` for more documentation.
 * By default, errors will use `Error`
 * `TerriaErrorSeverity` will be copied through nested `TerriaErrors` on creation (eg if you call `TerriaError.from()` on a `Warning` then the parent error will also be `Warning`)
 * Loading models from share links or stories will use `Warning` if the model is **not in the workbench**, otherwise it will use `Error`.
+
+#### Example of severity propagation
+
+Say we have this error with severity `Warning`:
+
+```ts
+const error = {
+  "message": "some message",
+  "severity": TerriaErrorSeverity.Warning
+}
+```
+
+And then we call:
+
+```ts
+error.createParentError("some higher message")
+```
+
+It will return a new TerriaError with the same severity - `Warning` - **not** the default severity `Error`.
+
+```ts
+{
+  "message": "some higher message",
+  "severity": TerriaErrorSeverity.Warning
+  "orginalError": {
+    "message": "some message",
+    "severity": TerriaErrorSeverity.Warning
+  }
+}
+```
