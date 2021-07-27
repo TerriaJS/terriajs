@@ -74,12 +74,6 @@ class DataPreviewMap extends React.Component {
    */
   previewViewer;
 
-  /**
-   * @type {string}
-   */
-  @observable
-  previewBadgeState = "";
-
   static propTypes = {
     terria: PropTypes.object.isRequired,
     previewed: PropTypes.object,
@@ -87,9 +81,15 @@ class DataPreviewMap extends React.Component {
     t: PropTypes.func.isRequired
   };
 
-  @action
-  setPreviewBadgeState(text) {
-    this.previewBadgeState = text;
+  @computed
+  get previewBadgeState() {
+    if (this.props.previewed?.isLoading) return "loading";
+    if (this.props.previewed?.loadMapItemsResult?.error === 0)
+      return "dataPreviewError";
+    if (this.props.previewed?.mapItems?.length === 0)
+      return "noPreviewAvailable";
+
+    return "dataPreview";
   }
 
   constructor(props) {
@@ -153,21 +153,7 @@ class DataPreviewMap extends React.Component {
     }
 
     this.previewViewer.attach(container);
-    this._disposePreviewBadgeStateUpdater = reaction(
-      () => this.props.showMap && this.props.previewed !== undefined,
-      async () => {
-        if (this.props.showMap && this.props.previewed !== undefined) {
-          this.setPreviewBadgeState("loading");
 
-          (await this.props.previewed.loadMapItems()).raiseError(
-            this.props.previewed.terria,
-            `Failed to preview map for ${this.props.previewed.name}`
-          );
-
-          this.setPreviewBadgeState("dataPreview");
-        }
-      }
-    );
     this._disposeZoomToExtentSubscription = autorun(() => {
       if (this.isZoomedToExtent) {
         this.previewViewer.currentViewer.zoomTo(this.props.previewed);
@@ -175,27 +161,9 @@ class DataPreviewMap extends React.Component {
         this.previewViewer.currentViewer.zoomTo(this.previewViewer.homeCamera);
       }
     });
-
-    // this._unsubscribeErrorHandler = this.terriaPreview.addErrorEventListener(
-    //   e => {
-    //     if (
-    //       e.sender === this.props.previewedCatalogItem ||
-    //       (e.sender &&
-    //         e.sender.nowViewingCatalogItem ===
-    //           this.props.previewedCatalogItem)
-    //     ) {
-    //       this._errorPreviewingCatalogItem = true;
-    //       this.setState({
-    //         previewBadgeText: "NO PREVIEW AVAILABLE"
-    //       });
-    //     }
-    //   }
-    // );
   }
 
   componentWillUnmount() {
-    this._disposePreviewBadgeStateUpdater &&
-      this._disposePreviewBadgeStateUpdater();
     this._disposeZoomToExtentSubscription &&
       this._disposeZoomToExtentSubscription();
     this.previewViewer.detach();
@@ -318,148 +286,3 @@ class DataPreviewMap extends React.Component {
 }
 
 export default withTranslation()(DataPreviewMap);
-
-// Unported code
-
-//   componentWillUnmount() {
-//     this.destroyPreviewMap();
-
-//     if (this._unsubscribeErrorHandler) {
-//       this._unsubscribeErrorHandler();
-//       this._unsubscribeErrorHandler = undefined;
-//     }
-//   },
-
-//   /* eslint-disable-next-line camelcase */
-//   UNSAFE_componentWillReceiveProps(newProps) {
-//     if (newProps.showMap && !this.props.showMap) {
-//       this.initMap(newProps.previewedCatalogItem);
-//     } else {
-//       this.updatePreview(newProps.previewedCatalogItem);
-//     }
-//   },
-
-//   updatePreview(previewedCatalogItem) {
-//     if (this.lastPreviewedCatalogItem === previewedCatalogItem) {
-//       return;
-//     }
-
-//     if (previewedCatalogItem) {
-//       this.props.terria.analytics.logEvent(
-//         "dataSource",
-//         "preview",
-//         previewedCatalogItem.name
-//       );
-//     }
-
-//     this.lastPreviewedCatalogItem = previewedCatalogItem;
-
-//     this.setState({
-//       previewBadgeText: "DATA PREVIEW LOADING..."
-//     });
-
-//     this.isZoomedToExtent = false;
-//     this.terriaPreview.currentViewer.zoomTo(this.terriaPreview.homeView);
-
-//     if (defined(this.removePreviewFromMap)) {
-//       this.removePreviewFromMap();
-//       this.removePreviewFromMap = undefined;
-//     }
-
-//     if (defined(this.rectangleCatalogItem)) {
-//       this.rectangleCatalogItem.isEnabled = false;
-//     }
-
-//     const previewed = previewedCatalogItem;
-//     if (previewed && defined(previewed.type) && previewed.isMappable) {
-//       const that = this;
-//       return when(previewed.load())
-//         .then(() => {
-//           // If this item has a separate now viewing item, load it before continuing.
-//           let nowViewingItem;
-//           let loadNowViewingItemPromise;
-//           if (defined(previewed.nowViewingCatalogItem)) {
-//             nowViewingItem = previewed.nowViewingCatalogItem;
-//             loadNowViewingItemPromise = when(nowViewingItem.load());
-//           } else {
-//             nowViewingItem = previewed;
-//             loadNowViewingItemPromise = when();
-//           }
-
-//           return loadNowViewingItemPromise.then(() => {
-//             // Now that the item is loaded, add it to the map.
-//             // Unless we've started previewing something else in the meantime!
-//             if (
-//               !that._unsubscribeErrorHandler ||
-//               previewed !== that.lastPreviewedCatalogItem
-//             ) {
-//               return;
-//             }
-
-//             if (defined(nowViewingItem.showOnSeparateMap)) {
-//               if (
-//                 defined(nowViewingItem.clock) &&
-//                 defined(nowViewingItem.clock.currentTime)
-//               ) {
-//                 that.terriaPreview.clock.currentTime =
-//                   nowViewingItem.clock.currentTime;
-//               }
-
-//               this._errorPreviewingCatalogItem = false;
-//               that.removePreviewFromMap = nowViewingItem.showOnSeparateMap(
-//                 that.terriaPreview.currentViewer
-//               );
-
-//               if (this._errorPreviewingCatalogItem) {
-//                 this.setState({
-//                   previewBadgeText: "NO PREVIEW AVAILABLE"
-//                 });
-//               } else if (that.removePreviewFromMap) {
-//                 this.setState({
-//                   previewBadgeText: "DATA PREVIEW"
-//                 });
-//               } else {
-//                 this.setState({
-//                   previewBadgeText: "NO PREVIEW AVAILABLE"
-//                 });
-//               }
-//             } else {
-//               this.setState({
-//                 previewBadgeText: "NO PREVIEW AVAILABLE"
-//               });
-//             }
-
-//             that.updateBoundingRectangle(previewed);
-//           });
-//         })
-//         .otherwise(err => {
-//           console.error(err);
-
-//           this.setState({
-//             previewBadgeText: "DATA PREVIEW ERROR"
-//           });
-//         });
-//     }
-//   },
-
-//   clickMap() {
-//     if (!defined(this.props.previewedCatalogItem)) {
-//       return;
-//     }
-
-//     this.isZoomedToExtent = !this.isZoomedToExtent;
-
-//     if (this.isZoomedToExtent) {
-//       const catalogItem = defaultValue(
-//         this.props.previewedCatalogItem.nowViewingCatalogItem,
-//         this.props.previewedCatalogItem
-//       );
-//       if (defined(catalogItem.rectangle)) {
-//         this.terriaPreview.currentViewer.zoomTo(catalogItem.rectangle);
-//       }
-//     } else {
-//       this.terriaPreview.currentViewer.zoomTo(this.terriaPreview.homeView);
-//     }
-
-//     this.updateBoundingRectangle(this.props.previewedCatalogItem);
-//   },

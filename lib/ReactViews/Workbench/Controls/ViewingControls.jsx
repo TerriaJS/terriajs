@@ -272,9 +272,7 @@ const ViewingControls = observer(
             group.setTrait(CommonStrata.user, "isOpen", true);
           });
         });
-      (await this.props.viewState.viewCatalogMember(item)).raiseError(
-        this.props.viewState.terria
-      );
+      this.props.viewState.viewCatalogMember(item);
     },
 
     exportDataClicked() {
