@@ -44,14 +44,16 @@ const WarningBox: React.FC<{
           {props.viewState &&
           Array.isArray(props.error!.originalError) &&
           props.error!.originalError.length > 0 ? (
-            <RawButton
-              activeStyles
-              onClick={() =>
-                showErrorNotification(props.viewState!, props.error!)
-              }
-            >
-              <TextSpan primary>See details</TextSpan>
-            </RawButton>
+            <div>
+              <RawButton
+                activeStyles
+                onClick={() =>
+                  showErrorNotification(props.viewState!, props.error!)
+                }
+              >
+                <TextSpan primary>See details</TextSpan>
+              </RawButton>
+            </div>
           ) : null}
           <RawButton
             activeStyles
