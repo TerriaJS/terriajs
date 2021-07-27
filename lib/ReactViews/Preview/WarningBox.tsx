@@ -1,14 +1,30 @@
+import i18next from "i18next";
+import { runInAction } from "mobx";
 import React from "react";
-import Box from "../../Styled/Box";
-import Spacing from "../../Styled/Spacing";
 import TerriaError from "../../Core/TerriaError";
-import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
-import { RawButton } from "../../Styled/Button";
 import ViewState from "../../ReactViewModels/ViewState";
+import Box from "../../Styled/Box";
+import { RawButton } from "../../Styled/Button";
+import Spacing from "../../Styled/Spacing";
 import { TextSpan } from "../../Styled/Text";
+import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 
 // Hard code colour for now
 const warningColor = "#f69900";
+
+const showFeedback = (viewState: ViewState) => {
+  runInAction(() => {
+    viewState.feedbackFormIsVisible = true;
+    viewState.terria.notificationState.dismissCurrentNotification();
+  });
+};
+
+const showErrorNotification = (viewState: ViewState, error: TerriaError) => {
+  runInAction(() => {
+    error.showDetails = true;
+  });
+  viewState.terria.raiseErrorToUser(error, undefined, true);
+};
 
 const WarningBox: React.FC<{
   error?: TerriaError;
@@ -31,16 +47,22 @@ const WarningBox: React.FC<{
             <RawButton
               activeStyles
               onClick={() =>
-                props.viewState!.terria.raiseErrorToUser(
-                  props.error,
-                  undefined,
-                  true
-                )
+                showErrorNotification(props.viewState!, props.error!)
               }
             >
               <TextSpan primary>See details</TextSpan>
             </RawButton>
           ) : null}
+          <RawButton
+            activeStyles
+            onClick={() => showFeedback(props.viewState!)}
+          >
+            <TextSpan primary>
+              {parseCustomMarkdownToReact(
+                i18next.t("models.raiseError.notificationFeedback")
+              )}
+            </TextSpan>
+          </RawButton>
         </div>
       ) : (
         props.children

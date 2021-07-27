@@ -70,6 +70,7 @@ Change Log
   * Replaced with `disableZoomTo` in `MappableTraits`
 * Clean up `showsInfo`
   * Replaced with `disableAboutData` in `CatalogMemberTraits`
+* Move `FeedbackForm` `z-index` to same as `Notification` - this is so it will appear above Data catalog.
 * [The next improvement]
 
 #### 8.0.0-alpha.87

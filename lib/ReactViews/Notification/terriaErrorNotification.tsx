@@ -69,6 +69,9 @@ const TerriaErrorBox = (props: { error: TerriaError; depth: number }) => {
               title={i18next.t("models.raiseError.developerDetails")}
               titleTextProps={{ large: true }}
               bodyBoxProps={{ padded: true }}
+              isOpen={props.error.showDetails}
+              onToggle={show => () =>
+                runInAction(() => (props.error.showDetails = show))}
             >
               <ErrorsBox
                 errors={props.error.originalError}

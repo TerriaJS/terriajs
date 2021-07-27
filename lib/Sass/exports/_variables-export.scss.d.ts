@@ -35,6 +35,7 @@ interface CssExports {
   'modalBg': string;
   'modalHighlight': string;
   'modalText': string;
+  'notificationWindowZIndex': string;
   'overlay': string;
   'overlayInvert': string;
   'radius40Button': string;

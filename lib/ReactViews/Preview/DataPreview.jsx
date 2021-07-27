@@ -120,7 +120,6 @@ const DataPreview = observer(
               </div>
             </Otherwise>
           </Choose>
-          )
         </div>
       );
     },

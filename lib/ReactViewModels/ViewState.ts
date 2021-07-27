@@ -545,27 +545,10 @@ export default class ViewState {
     openAddData = true
   ): Promise<Result<void>> {
     try {
+      // Set preview item
       runInAction(() => (this._previewedItem = item));
-      if (ReferenceMixin.isMixedInto(item)) {
-        (await item.loadReference()).throwIfError();
 
-        // call viewCatalogMember on reference.target
-        if (item.target) {
-          return await this.viewCatalogMember(item.target, isOpen, stratum);
-        }
-        return Result.error(`Failed to resolve reference for ${getName(item)}`);
-      }
-
-      if (GroupMixin.isMixedInto(item)) {
-        item.setTrait(stratum, "isOpen", isOpen);
-        if (item.isOpen) {
-          (await item.loadMembers()).throwIfError();
-        }
-      } else if (MappableMixin.isMixedInto(item))
-        (await item.loadMapItems()).throwIfError();
-      else if (CatalogMemberMixin.isMixedInto(item))
-        (await item.loadMetadata()).throwIfError();
-
+      // Open "Add Data"
       if (openAddData) {
         if (addedByUser(item)) {
           runInAction(() => (this.userDataPreviewedItem = item));
@@ -589,6 +572,27 @@ export default class ViewState {
           this.switchMobileView(this.mobileViewOptions.preview);
         }
       }
+
+      // Load preview item
+      if (ReferenceMixin.isMixedInto(item)) {
+        (await item.loadReference()).throwIfError();
+
+        // call viewCatalogMember on reference.target
+        if (item.target) {
+          return await this.viewCatalogMember(item.target, isOpen, stratum);
+        }
+        return Result.error(`Failed to resolve reference for ${getName(item)}`);
+      }
+
+      if (GroupMixin.isMixedInto(item)) {
+        item.setTrait(stratum, "isOpen", isOpen);
+        if (item.isOpen) {
+          (await item.loadMembers()).throwIfError();
+        }
+      } else if (MappableMixin.isMixedInto(item))
+        (await item.loadMapItems()).throwIfError();
+      else if (CatalogMemberMixin.isMixedInto(item))
+        (await item.loadMetadata()).throwIfError();
     } catch (e) {
       return Result.error(e, `Could not view catalog member ${getName(item)}`);
     }

@@ -486,13 +486,15 @@ export default class Terria {
 
   @observable stories: any[] = [];
 
-  // TODO: this is duplicated with properties on ViewState, which is
-  //       kind of terrible.
   /**
    * Gets or sets the ID of the catalog member that is currently being
-   * previewed.
+   * previewed. This is observed in ViewState. It is used to open "Add data" if a catalog member is open in a share link.
+   * This should stay private - use viewState.viewCatalogMember() instead
    */
-  @observable previewedItemId: string | undefined;
+  @observable private _previewedItemId: string | undefined;
+  get previewedItemId() {
+    return this._previewedItemId;
+  }
 
   /**
    * Base ratio for maximumScreenSpaceError
@@ -1310,7 +1312,7 @@ export default class Terria {
 
     runInAction(() => {
       if (isJsonString(initData.previewedItemId)) {
-        this.previewedItemId = initData.previewedItemId;
+        this._previewedItemId = initData.previewedItemId;
       }
     });
 

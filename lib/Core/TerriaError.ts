@@ -6,6 +6,7 @@ import { terriaErrorNotification } from "../ReactViews/Notification/terriaErrorN
 import filterOutUndefined from "./filterOutUndefined";
 import flatten from "./flatten";
 import isDefined from "./isDefined";
+import { observable } from "mobx";
 
 /** This is used for I18n translation strings so we can "resolve" them when the Error is displayed to the user.
  * This means we can create TerriaErrors before i18next has been initialised.
@@ -62,6 +63,9 @@ export interface TerriaErrorOptions {
    * A function can be used here, which will be resolved when the error is raised to user.
    */
   severity?: TerriaErrorSeverity | (() => TerriaErrorSeverity);
+
+  /** If true, show error details in terriaErrorNotification by default. If false, error details will be collapsed by default */
+  showDetails?: boolean;
 }
 
 /** Object used to clone an existing TerriaError (see `TerriaError.clone()`).
@@ -103,12 +107,14 @@ export function parseOverrides(
 export default class TerriaError {
   private readonly _message: string | I18nTranslateString;
   private readonly _title: string | I18nTranslateString;
-  severity: TerriaErrorSeverity | (() => TerriaErrorSeverity);
+  private _raisedToUser: boolean = false;
 
+  readonly severity: TerriaErrorSeverity | (() => TerriaErrorSeverity);
   /** `sender` isn't really used for anything at the moment... */
   readonly sender: unknown;
   readonly originalError?: (TerriaError | Error)[];
-  private _raisedToUser: boolean = false;
+
+  @observable showDetails = false;
 
   /**
    * Convenience function to generate a TerriaError from some unknown error. It will try to extract a meaningful message from whatever object it is given.
@@ -204,6 +210,7 @@ export default class TerriaError {
     this._title = options.title ?? { key: "core.terriaError.defaultTitle" };
     this.sender = options.sender;
     this._raisedToUser = options.raisedToUser ?? false;
+    this.showDetails = options.showDetails ?? false;
 
     // Transform originalError to an array if needed
     this.originalError = isDefined(options.originalError)
