@@ -3,7 +3,8 @@ import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
 import { SelectableDimension } from "../Models/SelectableDimensions";
-import ShadowTraits, { Shadows } from "../Traits/ShadowTraits";
+import ShadowTraits, { Shadows } from "../Traits/TraitsClasses/ShadowTraits";
+import i18next from "i18next";
 
 function ShadowMixin<T extends Constructor<Model<ShadowTraits>>>(Base: T) {
   abstract class ShadowMixin extends Base {
@@ -31,12 +32,12 @@ function ShadowMixin<T extends Constructor<Model<ShadowTraits>>>(Base: T) {
     get shadowDimension(): SelectableDimension {
       return {
         id: "shadows",
-        name: "Shadows",
+        name: i18next.t("models.shadow.name"),
         options: [
-          { id: "NONE", name: "None" },
-          { id: "CAST", name: "Cast Only" },
-          { id: "RECEIVE", name: "Receive Only" },
-          { id: "BOTH", name: "Cast and Receive" }
+          { id: "NONE", name: i18next.t("models.shadow.options.none") },
+          { id: "CAST", name: i18next.t("models.shadow.options.cast") },
+          { id: "RECEIVE", name: i18next.t("models.shadow.options.receive") },
+          { id: "BOTH", name: i18next.t("models.shadow.options.both") }
         ],
         selectedId: this.shadows,
         disable: !this.showShadowUi,
@@ -50,9 +51,9 @@ function ShadowMixin<T extends Constructor<Model<ShadowTraits>>>(Base: T) {
 }
 
 namespace ShadowMixin {
-  export interface ShadowsMixin
+  export interface Instance
     extends InstanceType<ReturnType<typeof ShadowMixin>> {}
-  export function isMixedInto(model: any): model is ShadowsMixin {
+  export function isMixedInto(model: any): model is Instance {
     return model && model.hasShadows;
   }
 }

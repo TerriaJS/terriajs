@@ -14,9 +14,9 @@ import ExportableMixin from "../ModelMixins/ExportableMixin";
 import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import xml2json from "../ThirdParty/xml2json";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
-import { RectangleTraits } from "../Traits/MappableTraits";
-import WebFeatureServiceCatalogItemTraits from "../Traits/WebFeatureServiceCatalogItemTraits";
+import { InfoSectionTraits } from "../Traits/TraitsClasses/CatalogMemberTraits";
+import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
+import WebFeatureServiceCatalogItemTraits from "../Traits/TraitsClasses/WebFeatureServiceCatalogItemTraits";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
@@ -267,8 +267,6 @@ class WebFeatureServiceCatalogItem extends ExportableMixin(
   ];
 
   static readonly type = "wfs";
-  readonly canZoomTo = true;
-
   @observable
   private geojsonCatalogItem: GeoJsonCatalogItem | undefined;
 

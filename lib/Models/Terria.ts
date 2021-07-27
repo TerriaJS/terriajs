@@ -53,7 +53,7 @@ import NotificationState, {
   Notification
 } from "../ReactViewModels/NotificationState";
 import { shareConvertNotification } from "../ReactViews/Notification/shareConvertNotification";
-import MappableTraits from "../Traits/MappableTraits";
+import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import { BaseMapModel, processBaseMaps } from "./BaseMaps/BaseMapModel";
@@ -103,7 +103,7 @@ interface ConfigParameters {
   /**
    * The maximum number of "feature info" boxes that can be displayed when clicking a point.
    */
-  defaultMaximumShownFeatureInfos?: number;
+  defaultMaximumShownFeatureInfos: number;
   /**
    * URL of the JSON file that defines region mapping for CSV files.
    */
@@ -595,7 +595,9 @@ export default class Terria {
     }
 
     if (this.models.has(model.uniqueId)) {
-      throw new RuntimeError("A model with the specified ID already exists.");
+      throw new RuntimeError(
+        `A model with the specified ID already exists: \`${model.uniqueId}\``
+      );
     }
 
     this.models.set(model.uniqueId, model);
@@ -1507,7 +1509,7 @@ export default class Terria {
           hasTraits(item, MappableTraits, "show") &&
           item.show &&
           MappableMixin.isMixedInto(item)
-      ) as MappableMixin.MappableMixin[];
+      ) as MappableMixin.Instance[];
 
       relevantItems.forEach(item => {
         const entities: Entity[] = item.mapItems

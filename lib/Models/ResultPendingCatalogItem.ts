@@ -1,12 +1,12 @@
 import { observable } from "mobx";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import ResultPendingCatalogItemTraits from "../Traits/ResultPendingCatalogItemTraits";
+import ResultPendingCatalogItemTraits from "../Traits/TraitsClasses/ResultPendingCatalogItemTraits";
 import CreateModel from "./CreateModel";
 
 export default class ResultPendingCatalogItem extends CatalogMemberMixin(
   CreateModel(ResultPendingCatalogItemTraits)
 ) {
-  @observable showsInfo = false;
+  @observable disableAboutData = true;
 
   loadPromise: Promise<any> = Promise.resolve();
 

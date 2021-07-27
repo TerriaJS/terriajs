@@ -12,7 +12,7 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import CzmlCatalogItemTraits from "../Traits/CzmlCatalogItemTraits";
+import CzmlCatalogItemTraits from "../Traits/TraitsClasses/CzmlCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
@@ -76,8 +76,6 @@ export default class CzmlCatalogItem
   get type() {
     return CzmlCatalogItem.type;
   }
-
-  readonly canZoomTo = true;
 
   @observable private _dataSource: CzmlDataSource | undefined;
   private _czmlFile?: File;

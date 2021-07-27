@@ -22,8 +22,8 @@ import MappableMixin from "../ModelMixins/MappableMixin";
 import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import GtfsCatalogItemTraits from "../Traits/GtfsCatalogItemTraits";
-import { RectangleTraits } from "../Traits/MappableTraits";
+import GtfsCatalogItemTraits from "../Traits/TraitsClasses/GtfsCatalogItemTraits";
+import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
 import StratumOrder from "./StratumOrder";
@@ -88,7 +88,6 @@ export default class GtfsCatalogItem extends MappableMixin(
 ) {
   disposer: IReactionDisposer | undefined;
 
-  readonly canZoomTo = true;
   _bbox: RectangleExtent = {
     west: Infinity,
     south: Infinity,

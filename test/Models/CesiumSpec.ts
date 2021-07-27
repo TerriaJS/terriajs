@@ -6,7 +6,7 @@ import CommonStrata from "../../lib/Models/CommonStrata";
 import createStratumInstance from "../../lib/Models/createStratumInstance";
 import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-import { RectangleTraits } from "../../lib/Traits/MappableTraits";
+import { RectangleTraits } from "../../lib/Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 
 const supportsWebGL = require("../../lib/Core/supportsWebGL");

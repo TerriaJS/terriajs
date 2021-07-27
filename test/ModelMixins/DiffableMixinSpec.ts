@@ -5,13 +5,13 @@ import TimeFilterMixin from "../../lib/ModelMixins/TimeFilterMixin";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import CreateModel from "../../lib/Models/CreateModel";
 import Terria from "../../lib/Models/Terria";
-import CatalogMemberTraits from "../../lib/Traits/CatalogMemberTraits";
-import DiffableTraits from "../../lib/Traits/DiffableTraits";
-import DiscretelyTimeVaryingTraits from "../../lib/Traits/DiscretelyTimeVaryingTraits";
-import MappableTraits from "../../lib/Traits/MappableTraits";
+import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
+import DiffableTraits from "../../lib/Traits/TraitsClasses/DiffableTraits";
+import DiscretelyTimeVaryingTraits from "../../lib/Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
+import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
 import mixTraits from "../../lib/Traits/mixTraits";
-import SplitterTraits from "../../lib/Traits/SplitterTraits";
-import TimeFilterTraits from "../../lib/Traits/TimeFilterTraits";
+import SplitterTraits from "../../lib/Traits/TraitsClasses/SplitterTraits";
+import TimeFilterTraits from "../../lib/Traits/TraitsClasses/TimeFilterTraits";
 import { SelectableDimension } from "../../lib/Models/SelectableDimensions";
 
 describe("DiffableMixin", function() {

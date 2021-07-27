@@ -16,7 +16,7 @@ import TerriaError from "../Core/TerriaError";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import KmlCatalogItemTraits from "../Traits/KmlCatalogItemTraits";
+import KmlCatalogItemTraits from "../Traits/TraitsClasses/KmlCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 
@@ -33,8 +33,6 @@ class KmlCatalogItem extends MappableMixin(
   private _dataSource: KmlDataSource | undefined;
 
   private _kmlFile?: File;
-
-  readonly canZoomTo = true;
 
   setFileInput(file: File) {
     this._kmlFile = file;

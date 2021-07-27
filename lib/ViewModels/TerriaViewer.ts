@@ -36,13 +36,13 @@ export default class TerriaViewer {
   readonly terria: Terria;
 
   @observable
-  private _baseMap: MappableMixin.MappableMixin | undefined;
+  private _baseMap: MappableMixin.Instance | undefined;
 
   get baseMap() {
     return this._baseMap;
   }
 
-  async setBaseMap(baseMap?: MappableMixin.MappableMixin) {
+  async setBaseMap(baseMap?: MappableMixin.Instance) {
     if (!baseMap) return;
 
     try {
@@ -70,8 +70,8 @@ export default class TerriaViewer {
 
   // This is a "view" of a workbench/other
   readonly items:
-    | IComputedValue<MappableMixin.MappableMixin[]>
-    | IObservableValue<MappableMixin.MappableMixin[]>;
+    | IComputedValue<MappableMixin.Instance[]>
+    | IObservableValue<MappableMixin.Instance[]>;
 
   @observable
   viewerMode: ViewerMode | undefined = ViewerMode.Cesium;
@@ -94,10 +94,7 @@ export default class TerriaViewer {
   readonly beforeViewerChanged = new CesiumEvent();
   readonly afterViewerChanged = new CesiumEvent();
 
-  constructor(
-    terria: Terria,
-    items: IComputedValue<MappableMixin.MappableMixin[]>
-  ) {
+  constructor(terria: Terria, items: IComputedValue<MappableMixin.Instance[]>) {
     this.terria = terria;
     this.items = items;
   }

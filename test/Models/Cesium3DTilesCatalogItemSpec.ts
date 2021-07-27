@@ -12,8 +12,8 @@ import Cesium3DTilesCatalogItem from "../../lib/Models/Cesium3DTilesCatalogItem"
 import createStratumInstance from "../../lib/Models/createStratumInstance";
 import Terria from "../../lib/Models/Terria";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
-import HeadingPitchRollTraits from "../../lib/Traits/HeadingPitchRollTraits";
-import LatLonHeightTraits from "../../lib/Traits/LatLonHeightTraits";
+import HeadingPitchRollTraits from "../../lib/Traits/TraitsClasses/HeadingPitchRollTraits";
+import LatLonHeightTraits from "../../lib/Traits/TraitsClasses/LatLonHeightTraits";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
@@ -22,7 +22,7 @@ import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import {
   OptionsTraits,
   FilterTraits
-} from "../../lib/Traits/Cesium3dTilesTraits";
+} from "../../lib/Traits/TraitsClasses/Cesium3dTilesTraits";
 
 describe("Cesium3DTilesCatalogItemSpec", function() {
   let item: Cesium3DTilesCatalogItem;
@@ -42,11 +42,11 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
   });
 
   it("supports zooming", function() {
-    expect(item.canZoomTo).toBeTruthy();
+    expect(item.disableZoomTo).toBeFalsy();
   });
 
   it("supports show info", function() {
-    expect(item.showsInfo).toBeTruthy();
+    expect(item.disableAboutData).toBeFalsy();
   });
 
   it("is mappable", function() {

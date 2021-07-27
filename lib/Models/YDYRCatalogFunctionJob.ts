@@ -5,7 +5,7 @@ import loadJson from "../Core/loadJson";
 import loadWithXhr from "../Core/loadWithXhr";
 import CatalogFunctionJobMixin from "../ModelMixins/CatalogFunctionJobMixin";
 import TableMixin from "../ModelMixins/TableMixin";
-import YDYRCatalogFunctionJobTraits from "../Traits/YDYRCatalogFunctionJobTraits";
+import YDYRCatalogFunctionJobTraits from "../Traits/TraitsClasses/YDYRCatalogFunctionJobTraits";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import CsvCatalogItem from "./CsvCatalogItem";

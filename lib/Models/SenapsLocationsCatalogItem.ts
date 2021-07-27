@@ -8,8 +8,8 @@ import TerriaError from "../Core/TerriaError";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import { FeatureInfoTemplateTraits } from "../Traits/FeatureInfoTraits";
-import SenapsLocationsCatalogItemTraits from "../Traits/SenapsLocationsCatalogItemTraits";
+import { FeatureInfoTemplateTraits } from "../Traits/TraitsClasses/FeatureInfoTraits";
+import SenapsLocationsCatalogItemTraits from "../Traits/TraitsClasses/SenapsLocationsCatalogItemTraits";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
@@ -242,8 +242,6 @@ class SenapsLocationsCatalogItem extends MappableMixin(
   get typeName() {
     return i18next.t("models.senaps.name");
   }
-
-  readonly canZoomTo = true;
 
   protected forceLoadMapItems(): Promise<void> {
     return SenapsLocationsStratum.load(this).then(stratum => {

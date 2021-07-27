@@ -8,7 +8,7 @@ import SelectableDimensions, {
   SelectableDimension
 } from "../Models/SelectableDimensions";
 import updateModelFromJson from "../Models/updateModelFromJson";
-import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
+import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";
 import AccessControlMixin from "./AccessControlMixin";
 import GroupMixin from "./GroupMixin";
 import MappableMixin from "./MappableMixin";
@@ -68,13 +68,6 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
     @computed
     get inWorkbench() {
       return this.terria.workbench.contains(this);
-    }
-
-    /**
-     * Default value for showsInfo (About Data button)
-     */
-    get showsInfo() {
-      return true;
     }
 
     @computed
@@ -181,9 +174,9 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
 const descriptionRegex = /description/i;
 
 namespace CatalogMemberMixin {
-  export interface CatalogMemberMixin
+  export interface Instance
     extends InstanceType<ReturnType<typeof CatalogMemberMixin>> {}
-  export function isMixedInto(model: any): model is CatalogMemberMixin {
+  export function isMixedInto(model: any): model is Instance {
     return model && model.hasCatalogMemberMixin;
   }
 }

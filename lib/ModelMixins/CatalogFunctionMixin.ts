@@ -6,7 +6,7 @@ import TerriaError from "../Core/TerriaError";
 import CommonStrata from "../Models/CommonStrata";
 import FunctionParameter from "../Models/FunctionParameters/FunctionParameter";
 import Model from "../Models/Model";
-import CatalogFunctionTraits from "../Traits/CatalogFunctionTraits";
+import CatalogFunctionTraits from "../Traits/TraitsClasses/CatalogFunctionTraits";
 import CatalogFunctionJobMixin from "./CatalogFunctionJobMixin";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 
@@ -101,9 +101,9 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
 }
 
 namespace CatalogFunctionMixin {
-  export interface CatalogFunctionMixin
+  export interface Instance
     extends InstanceType<ReturnType<typeof CatalogFunctionMixin>> {}
-  export function isMixedInto(model: any): model is CatalogFunctionMixin {
+  export function isMixedInto(model: any): model is Instance {
     return model && model.hasCatalogFunctionMixin;
   }
 }

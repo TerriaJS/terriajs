@@ -13,7 +13,7 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import ShadowMixin from "../ModelMixins/ShadowMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import GltfCatalogItemTraits from "../Traits/GltfCatalogItemTraits";
+import GltfCatalogItemTraits from "../Traits/TraitsClasses/GltfCatalogItemTraits";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import { SelectableDimension } from "./SelectableDimensions";
@@ -32,10 +32,6 @@ export default class GltfCatalogItem extends MappableMixin(
 
   get type() {
     return GltfCatalogItem.type;
-  }
-
-  get canZoomTo() {
-    return true;
   }
 
   @computed

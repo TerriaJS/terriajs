@@ -8,8 +8,10 @@ import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvi
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../ModelMixins/MappableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
-import MapboxVectorTileCatalogItemTraits from "../Traits/MapboxVectorTileCatalogItemTraits";
+import LegendTraits, {
+  LegendItemTraits
+} from "../Traits/TraitsClasses/LegendTraits";
+import MapboxVectorTileCatalogItemTraits from "../Traits/TraitsClasses/MapboxVectorTileCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
@@ -67,7 +69,6 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
   get typeName() {
     return i18next.t("models.mapboxVectorTile.name");
   }
-  readonly canZoomTo = true;
 
   async forceLoadMetadata() {
     const stratum = await MapboxVectorTileLoadableStratum.load(this);

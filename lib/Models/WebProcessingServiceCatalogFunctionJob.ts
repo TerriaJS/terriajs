@@ -16,9 +16,9 @@ import CatalogFunctionJobMixin from "../ModelMixins/CatalogFunctionJobMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import XmlRequestMixin from "../ModelMixins/XmlRequestMixin";
 import xml2json from "../ThirdParty/xml2json";
-import { ShortReportTraits } from "../Traits/CatalogMemberTraits";
-import { FeatureInfoTemplateTraits } from "../Traits/FeatureInfoTraits";
-import WebProcessingServiceCatalogFunctionJobTraits from "../Traits/WebProcessingServiceCatalogFunctionJobTraits";
+import { ShortReportTraits } from "../Traits/TraitsClasses/CatalogMemberTraits";
+import { FeatureInfoTemplateTraits } from "../Traits/TraitsClasses/FeatureInfoTraits";
+import WebProcessingServiceCatalogFunctionJobTraits from "../Traits/TraitsClasses/WebProcessingServiceCatalogFunctionJobTraits";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
@@ -304,7 +304,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
 
     const outputs = runInAction(() => this.outputs);
 
-    const results: CatalogMemberMixin.CatalogMemberMixin[] = [];
+    const results: CatalogMemberMixin.Instance[] = [];
 
     await Promise.all(
       outputs.map(async (output, i) => {

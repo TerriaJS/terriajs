@@ -8,7 +8,7 @@ import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
-import MappableTraits from "../Traits/MappableTraits";
+import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import TableMixin from "./TableMixin";
 
@@ -161,9 +161,9 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
 }
 
 namespace MappableMixin {
-  export interface MappableMixin
+  export interface Instance
     extends InstanceType<ReturnType<typeof MappableMixin>> {}
-  export function isMixedInto(model: any): model is MappableMixin {
+  export function isMixedInto(model: any): model is Instance {
     return model && model.isMappable;
   }
 }

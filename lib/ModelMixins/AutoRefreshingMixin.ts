@@ -8,7 +8,7 @@ import {
 import { now } from "mobx-utils";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
-import AutoRefreshingTraits from "../Traits/AutoRefreshingTraits";
+import AutoRefreshingTraits from "../Traits/TraitsClasses/AutoRefreshingTraits";
 import MappableMixin from "./MappableMixin";
 
 type AutoRefreshing = Model<AutoRefreshingTraits>;

@@ -38,7 +38,7 @@ import Button, { RawButton } from "../../../Styled/Button";
 import Select from "../../../Styled/Select";
 import Spacing from "../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../Styled/Text";
-import RasterLayerTraits from "../../../Traits/RasterLayerTraits";
+import RasterLayerTraits from "../../../Traits/TraitsClasses/RasterLayerTraits";
 import { parseCustomMarkdownToReactWithOptions } from "../../Custom/parseCustomMarkdownToReact";
 import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Loader from "../../Loader";
@@ -747,7 +747,7 @@ const DiffAccordion: React.FC<DiffAccordionProps> = props => {
         paddedHorizontally={2}
         centered
         justifySpaceBetween
-        backgroundColor={theme.colorSplitter}
+        backgroundColor={theme.colorSecondary}
       >
         <Box centered>
           <StyledIcon styledWidth="20px" light glyph={GLYPHS.difference} />

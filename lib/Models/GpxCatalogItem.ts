@@ -9,7 +9,7 @@ import TerriaError from "../Core/TerriaError";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import GpxCatalogItemTraits from "../Traits/GpxCatalogItemTraits";
+import GpxCatalogItemTraits from "../Traits/TraitsClasses/GpxCatalogItemTraits";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
@@ -32,14 +32,6 @@ class GpxCatalogItem extends MappableMixin(
   private _geoJsonItem = new GeoJsonCatalogItem(createGuid(), this.terria);
 
   private _gpxFile?: File;
-
-  get canZoomTo(): boolean {
-    return true;
-  }
-
-  get showsInfo(): boolean {
-    return true;
-  }
 
   setFileInput(file: File) {
     this._gpxFile = file;

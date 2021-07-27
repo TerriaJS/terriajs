@@ -4,7 +4,7 @@ import IonResource from "terriajs-cesium/Source/Core/IonResource";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import CesiumTerrainCatalogItemTraits from "../Traits/CesiumTerrainCatalogItemTraits";
+import CesiumTerrainCatalogItemTraits from "../Traits/TraitsClasses/CesiumTerrainCatalogItemTraits";
 import CreateModel from "./CreateModel";
 
 export default class CesiumTerrainCatalogItem extends UrlMixin(

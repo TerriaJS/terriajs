@@ -35,10 +35,10 @@ import Feature from "../Models/Feature";
 import Model from "../Models/Model";
 import proxyCatalogItemUrl from "../Models/proxyCatalogItemUrl";
 import { SelectableDimension } from "../Models/SelectableDimensions";
-import Cesium3DTilesCatalogItemTraits from "../Traits/Cesium3DTilesCatalogItemTraits";
+import Cesium3DTilesCatalogItemTraits from "../Traits/TraitsClasses/Cesium3DTilesCatalogItemTraits";
 import Cesium3dTilesTraits, {
   OptionsTraits
-} from "../Traits/Cesium3dTilesTraits";
+} from "../Traits/TraitsClasses/Cesium3dTilesTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
@@ -71,8 +71,6 @@ export default function Cesium3dTilesMixin<
   abstract class Cesium3dTilesMixin extends ShadowMixin(
     MappableMixin(CatalogMemberMixin(Base))
   ) {
-    readonly canZoomTo = true;
-
     protected tileset?: ObservableCesium3DTileset;
 
     // Just a variable to save the original tileset.root.transform if it exists

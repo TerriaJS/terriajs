@@ -4,7 +4,7 @@ import isReadOnlyArray from "../Core/isReadOnlyArray";
 import loadXML from "../Core/loadXML";
 import TerriaError from "../Core/TerriaError";
 import xml2json from "../ThirdParty/xml2json";
-import { RectangleTraits } from "../Traits/MappableTraits";
+import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import {
   CapabilitiesStyle,
   OnlineResource,

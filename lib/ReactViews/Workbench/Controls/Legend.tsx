@@ -9,7 +9,9 @@ import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import Model from "../../../Models/Model";
 import proxyCatalogItemUrl from "../../../Models/proxyCatalogItemUrl";
-import LegendTraits, { LegendItemTraits } from "../../../Traits/LegendTraits";
+import LegendTraits, {
+  LegendItemTraits
+} from "../../../Traits/TraitsClasses/LegendTraits";
 import Styles from "./legend.scss";
 
 /* A lookup map for displayable mime types */
@@ -35,7 +37,7 @@ function checkMimeType(legend: Model<LegendTraits>) {
 
 @observer
 export default class Legend extends React.Component<{
-  item: CatalogMemberMixin.CatalogMemberMixin;
+  item: CatalogMemberMixin.Instance;
   forPrint?: boolean;
 }> {
   static defaultProps = {

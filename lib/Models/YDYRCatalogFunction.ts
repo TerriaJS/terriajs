@@ -5,7 +5,7 @@ import CatalogFunctionMixin from "../ModelMixins/CatalogFunctionMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import TableColumnType from "../Table/TableColumnType";
-import YDYRCatalogFunctionTraits from "../Traits/YDYRCatalogFunctionTraits";
+import YDYRCatalogFunctionTraits from "../Traits/TraitsClasses/YDYRCatalogFunctionTraits";
 import CreateModel from "./CreateModel";
 import BooleanParameter from "./FunctionParameters/BooleanParameter";
 import EnumerationParameter from "./FunctionParameters/EnumerationParameter";
@@ -201,7 +201,7 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
   }
 
   @computed
-  get selectedTableCatalogMember(): TableMixin.TableMixin | undefined {
+  get selectedTableCatalogMember(): TableMixin.Instance | undefined {
     if (!isDefined(this.inputLayers?.value)) {
       return;
     }

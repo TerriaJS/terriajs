@@ -34,7 +34,7 @@ import getChartDetailsFn from "../Table/getChartDetailsFn";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
-import TableTraits from "../Traits/TableTraits";
+import TableTraits from "../Traits/TraitsClasses/TableTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import ChartableMixin, {
   calculateDomain,
@@ -236,13 +236,21 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       });
     }
 
-    get supportsSplitting() {
-      return isDefined(this.activeTableStyle.regionColumn);
+    @computed
+    get disableSplitter() {
+      return !isDefined(this.activeTableStyle.regionColumn);
     }
 
     @computed
-    get canZoomTo() {
-      return this.activeTableStyle.latitudeColumn !== undefined;
+    get disableZoomTo() {
+      // Disable zoom if only showing imagery parts  (eg region mapping) and no rectangle is defined
+      if (
+        !this.mapItems.find(m => m instanceof DataSource) &&
+        !isDefined(this.cesiumRectangle)
+      ) {
+        return true;
+      }
+      return super.disableZoomTo;
     }
 
     /**
@@ -925,10 +933,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 }
 
 namespace TableMixin {
-  export interface TableMixin
+  export interface Instance
     extends InstanceType<ReturnType<typeof TableMixin>> {}
 
-  export function isMixedInto(model: any): model is TableMixin {
+  export function isMixedInto(model: any): model is Instance {
     return model && model.hasTableMixin;
   }
 }

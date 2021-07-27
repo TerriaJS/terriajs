@@ -6,7 +6,7 @@ import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../ModelMixins/MappableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import CartoMapCatalogItemTraits from "../Traits/CartoMapCatalogItemTraits";
+import CartoMapCatalogItemTraits from "../Traits/TraitsClasses/CartoMapCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import LoadableStratum from "./LoadableStratum";
 import { BaseModel } from "./Model";
@@ -107,14 +107,6 @@ export default class CartoMapCatalogItem extends MappableMixin(
 
   get type() {
     return CartoMapCatalogItem.type;
-  }
-
-  get canZoomTo() {
-    return isDefined(this.rectangle);
-  }
-
-  get supportsSplitting() {
-    return true;
   }
 
   @computed get mapItems(): MapItem[] {
