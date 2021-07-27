@@ -148,25 +148,24 @@ export default class TerriaError {
 
     // Try to find message from error object
     let message: string | undefined;
+    // Create original Error from `error` object
+    let originalError: Error | undefined;
 
     if (typeof error === "string") {
       message = error;
+      originalError = new Error(message);
     } else if (error instanceof Error) {
       message = error.message;
+      originalError = error;
     } else if (typeof error === "object" && error !== null) {
       message = error.toString();
+      originalError = new Error(error.toString());
     }
 
     return new TerriaError({
       title: { key: "core.terriaError.defaultTitle" },
       message: message ?? { key: "core.terriaError.defaultMessage" },
-      // Create original Error from `error` object or `message`
-      originalError:
-        error instanceof Error
-          ? error
-          : message
-          ? new Error(message)
-          : undefined,
+      originalError,
       ...parseOverrides(overrides)
     });
   }

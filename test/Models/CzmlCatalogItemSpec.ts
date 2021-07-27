@@ -111,36 +111,24 @@ describe("CzmlCatalogItem", function() {
   describe("error handling", function() {
     it("fails gracefully when the data at a URL is not JSON", async function() {
       czml.setTrait(CommonStrata.user, "url", "test/KML/vic_police.kml");
-      let error: any;
-      try {
-        await czml.loadMapItems();
-      } catch (e) {
-        error = e;
-      }
+      let error = (await czml.loadMapItems()).error;
+
       expect(error instanceof TerriaError).toBe(true);
     });
 
     it("fails gracefully when the provided string is not JSON", async function() {
       const invalidCzmlString = await loadText("test/KML/vic_police.kml");
       czml.setTrait(CommonStrata.user, "czmlString", invalidCzmlString);
-      let error: any;
-      try {
-        await czml.loadMapItems();
-      } catch (e) {
-        error = e;
-      }
+      let error = (await czml.loadMapItems()).error;
+
       expect(error instanceof TerriaError).toBe(true);
     });
 
     it("fails gracefully when the provided blob is not JSON", async function() {
       const invalidBlob = (await loadBlob("test/KML/vic_police.kml")) as File;
       czml.setFileInput(invalidBlob);
-      let error: any;
-      try {
-        await czml.loadMapItems();
-      } catch (e) {
-        error = e;
-      }
+      let error = (await czml.loadMapItems()).error;
+
       expect(error instanceof TerriaError).toBe(true);
     });
   });
