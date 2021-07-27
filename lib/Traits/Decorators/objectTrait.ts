@@ -72,8 +72,7 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
         errors.push(
           new TerriaError({
             title: "Unknown property",
-            message: `${propertyName} is not a valid sub-property of ${this.id}.`,
-            severity: TerriaErrorSeverity.Warning
+            message: `${propertyName} is not a valid sub-property of ${this.id}.`
           })
         );
         return;

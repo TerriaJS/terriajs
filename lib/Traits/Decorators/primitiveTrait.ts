@@ -56,8 +56,7 @@ export class PrimitiveTrait<T> extends Trait {
           title: "Invalid property",
           message: `Property ${this.id} is expected to be of type ${
             this.type
-          } but instead it is of type ${typeof jsonValue}.`,
-          severity: TerriaErrorSeverity.Warning
+          } but instead it is of type ${typeof jsonValue}.`
         })
       );
     }

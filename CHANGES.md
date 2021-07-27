@@ -47,12 +47,8 @@ Change Log
 * Add `TerriaErrorSeverity` enum, values can be `Error` or `Warning`.
   * Errors with severity `Error` are presented to the user. `Warning` will just be printed to console.
   * By default, errors will use `Error`
-  * The folloring errors will use `Error` severity.
-    * Loading map config
-    * Loading/Applying init source (excluding `shareData` and stories)
-    * Invalid model object (fails to parse as JSON)
-    * Loading models **if it is in the workbench**
-    * Loading catalog items in the workbench
+  * `TerriaErrorSeverity` will be copied through nested `TerriaErrors` on creation (eg if you call `TerriaError.from()` on a `Warning` then the parent error will also be `Warning`)
+  * Loading models from share links or stories will use `Warning` if the model is **not in the workbench**, otherwise it will use `Error`.
 * `AsyncLoader` loadXXX methods now return `Result` with `errors`.
 * `AsyncLoader` now has an observable `result` property.
 * Removed `openGroup()` - it is replaced by `viewState.viewCatalogMember`
@@ -71,6 +67,7 @@ Change Log
 * Clean up `showsInfo`
   * Replaced with `disableAboutData` in `CatalogMemberTraits`
 * Move `FeedbackForm` `z-index` to same as `Notification` - this is so it will appear above Data catalog.
+* Added `result.raiseError()`, `result.pushErrorTo()` and `result.clone()` helper methods - and `Result.combine()` convenience function
 * [The next improvement]
 
 #### 8.0.0-alpha.87

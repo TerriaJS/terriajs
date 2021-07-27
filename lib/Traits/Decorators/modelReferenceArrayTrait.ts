@@ -88,8 +88,7 @@ export class ModelReferenceArrayTrait extends Trait {
           title: "Invalid property",
           message: `Property ${
             this.id
-          } is expected to be an array but instead it is of type ${typeof jsonValue}.`,
-          severity: TerriaErrorSeverity.Warning
+          } is expected to be an array but instead it is of type ${typeof jsonValue}.`
         })
       );
     }
@@ -106,8 +105,7 @@ export class ModelReferenceArrayTrait extends Trait {
               new TerriaError({
                 title: "Cannot create Model",
                 message:
-                  "A modelReferenceArrayTrait does not have a factory but it contains an embedded model that does not yet exist.",
-                severity: TerriaErrorSeverity.Warning
+                  "A modelReferenceArrayTrait does not have a factory but it contains an embedded model that does not yet exist."
               })
             );
             return;
@@ -132,8 +130,7 @@ export class ModelReferenceArrayTrait extends Trait {
               title: "Invalid property",
               message: `Elements of ${
                 this.id
-              } are expected to be strings or objects but instead are of type ${typeof jsonElement}.`,
-              severity: TerriaErrorSeverity.Warning
+              } are expected to be strings or objects but instead are of type ${typeof jsonElement}.`
             })
           );
         }

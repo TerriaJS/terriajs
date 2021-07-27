@@ -24,15 +24,7 @@ function resolveI18n(i: I18nTranslateString | string) {
  * Errors with severity `Error` are presented to the user. `Warning` will just be printed to console.
  */
 export enum TerriaErrorSeverity {
-  /** Errors which should be shown to the user. This should be used for any error which **may** significantly impact on user experience.
-   * For example:
-   * - Errors while loading map configuration
-   * - Errors while loading map catalog
-   * - Failing to load a catalog member/group
-   * - Failing to add a catalog member to the workbench
-   * - Failing to create a share link
-   * - Failing to load models (from share links or stories) **if they are in the workbench**
-   * - TileErrors
+  /** Errors which should be shown to the user. This is the default value for all errors.
    */
   Error,
   /** Errors which can be ignored by the user. These will be printed to console s

@@ -171,8 +171,7 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
           title: "Invalid property",
           message: `Property ${
             this.id
-          } is expected to be an array but instead it is of type ${typeof jsonValue}.`,
-          severity: TerriaErrorSeverity.Warning
+          } is expected to be an array but instead it is of type ${typeof jsonValue}.`
         })
       );
     }
@@ -189,8 +188,7 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
           errors.push(
             new TerriaError({
               title: "Unknown property",
-              message: `${propertyName} is not a valid sub-property of elements of ${this.id}.`,
-              severity: TerriaErrorSeverity.Warning
+              message: `${propertyName} is not a valid sub-property of elements of ${this.id}.`
             })
           );
           return;

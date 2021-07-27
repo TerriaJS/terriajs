@@ -51,8 +51,7 @@ export default function upsertModelFromJson(
       return Result.error(
         new TerriaError({
           title: i18next.t("models.catalog.idForMatchingErrorTitle"),
-          message: i18next.t("models.catalog.idForMatchingErrorMessage"),
-          severity: TerriaErrorSeverity.Warning
+          message: i18next.t("models.catalog.idForMatchingErrorMessage")
         })
       );
     }
@@ -79,8 +78,7 @@ export default function upsertModelFromJson(
       if (model === undefined) {
         errors.push(
           new TerriaError({
-            message: `Failed to get model \`"${potentialId}"\` found using share key \`"${json.id}"\``,
-            severity: TerriaErrorSeverity.Warning
+            message: `Failed to get model \`"${potentialId}"\` found using share key \`"${json.id}"\``
           })
         );
       }
@@ -94,8 +92,7 @@ export default function upsertModelFromJson(
           title: i18next.t("models.catalog.unsupportedTypeTitle"),
           message: i18next.t("models.catalog.unsupportedTypeMessage", {
             type: json.type
-          }),
-          severity: TerriaErrorSeverity.Warning
+          })
         })
       );
       model = createStubCatalogItem(terria, uniqueId);
@@ -108,11 +105,7 @@ export default function upsertModelFromJson(
       try {
         model.terria.addModel(model, json.shareKeys);
       } catch (error) {
-        errors.push(
-          TerriaError.from(error, {
-            severity: TerriaErrorSeverity.Warning
-          })
-        );
+        errors.push(error);
       }
     }
   }

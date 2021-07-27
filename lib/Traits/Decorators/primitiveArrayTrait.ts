@@ -56,8 +56,7 @@ export class PrimitiveArrayTrait<T> extends Trait {
       return Result.error(
         new TerriaError({
           title: "Invalid property",
-          message: `Property ${this.id} is expected to be of type ${this.type}[].`,
-          severity: TerriaErrorSeverity.Warning
+          message: `Property ${this.id} is expected to be of type ${this.type}[].`
         })
       );
     }

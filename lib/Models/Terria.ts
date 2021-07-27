@@ -1061,20 +1061,17 @@ export default class Terria {
               allModelStratumData,
               replaceStratum
             )
-          ).pushErrorTo(errors, {
-            message: `Failed to load container ${containerId}`,
-            severity: TerriaErrorSeverity.Warning
-          });
+          ).pushErrorTo(errors, `Failed to load container ${containerId}`);
 
           if (container) {
             const dereferenced = ReferenceMixin.isMixedInto(container)
               ? container.target
               : container;
             if (GroupMixin.isMixedInto(dereferenced)) {
-              (await dereferenced.loadMembers()).pushErrorTo(errors, {
-                message: `Failed to load group ${dereferenced.uniqueId}`,
-                severity: TerriaErrorSeverity.Warning
-              });
+              (await dereferenced.loadMembers()).pushErrorTo(
+                errors,
+                `Failed to load group ${dereferenced.uniqueId}`
+              );
             }
           }
         })
@@ -1094,10 +1091,10 @@ export default class Terria {
           allModelStratumData,
           replaceStratum
         )
-      ).pushErrorTo(errors, {
-        message: `Failed to load SplitItemReference ${splitSourceId}`,
-        severity: TerriaErrorSeverity.Warning
-      });
+      ).pushErrorTo(
+        errors,
+        `Failed to load SplitItemReference ${splitSourceId}`
+      );
     }
     const loadedModel = upsertModelFromJson(
       CatalogMemberFactory,
@@ -1138,10 +1135,10 @@ export default class Terria {
       dereferenced = {};
     }
     if (loadedModel && ReferenceMixin.isMixedInto(loadedModel)) {
-      (await loadedModel.loadReference()).pushErrorTo(errors, {
-        message: `Failed to load reference ${loadedModel.uniqueId}`,
-        severity: TerriaErrorSeverity.Warning
-      });
+      (await loadedModel.loadReference()).pushErrorTo(
+        errors,
+        `Failed to load reference ${loadedModel.uniqueId}`
+      );
 
       if (isDefined(loadedModel.target)) {
         updateModelFromJson(
@@ -1168,10 +1165,10 @@ export default class Terria {
       const dereferencedGroup = getDereferencedIfExists(loadedModel);
       if (GroupMixin.isMixedInto(dereferencedGroup)) {
         if (dereferencedGroup.isOpen) {
-          (await dereferencedGroup.loadMembers()).pushErrorTo(errors, {
-            message: `Failed to open group ${dereferencedGroup.uniqueId}`,
-            severity: TerriaErrorSeverity.Warning
-          });
+          (await dereferencedGroup.loadMembers()).pushErrorTo(
+            errors,
+            `Failed to open group ${dereferencedGroup.uniqueId}`
+          );
         }
       }
     }
