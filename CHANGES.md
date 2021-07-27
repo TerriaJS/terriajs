@@ -62,6 +62,7 @@ Change Log
 * In `terriaErrorNotification` - show `error.message` (as well as `error.stack`) if `error.stack` is defined
 * `AsyncLoader` loadXXX methods now return `Result` with `errors`.
 * `AsyncLoader` now has an observable `result` property.
+* `viewState.viewCatalogMember()` now handles loading catalog members, opening groups and showing "Add Data" window.
 * Removed `openGroup()` - it is replaced by `viewState.viewCatalogMember`
 * Fix `MagdaReference` `forceLoadReference` bug.
 * Clean up `CkanCatalogGroup` loading - errors are no-longer swallowed.
