@@ -7,15 +7,13 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import ChartView from "../../../Charts/ChartView.ts";
+import MappableMixin from "../../../ModelMixins/MappableMixin";
 import Icon from "../../../Styled/Icon";
 import Loader from "../../Loader";
+import { Result } from "../../Tools/ItemSearchTool/SearchResults";
 import Chart from "./BottomDockChart";
 import Styles from "./chart-panel.scss";
 import ChartPanelDownloadButton from "./ChartPanelDownloadButton";
-import MappableMixin from "../../../ModelMixins/MappableMixin";
-import { itemSymbol } from "./tooltip.scss";
-import filterOutUndefined from "../../../Core/filterOutUndefined";
-import { Result } from "../../Tools/ItemSearchTool/SearchResults";
 
 const height = 300;
 
