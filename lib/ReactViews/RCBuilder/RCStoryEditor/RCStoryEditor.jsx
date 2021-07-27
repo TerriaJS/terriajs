@@ -4,7 +4,7 @@ import * as mutations from "../../../../api/graphql/mutations";
 import PropTypes from "prop-types";
 import { default as React, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { Link, useParams, withRouter, useHistory } from "react-router-dom";
+import { useParams, withRouter, useHistory } from "react-router-dom";
 import { v5 as uuidv5 } from "uuid";
 import { updateStory } from "../../../../api/graphql/mutations";
 import { getStory } from "../../../../api/graphql/queries";
@@ -12,7 +12,8 @@ import sectors from "../../../Data/Sectors.js";
 import RCSectorSelection from "./RCSectorSelection/RCSectorSelection";
 import Styles from "./RCStoryEditor.scss";
 import RCHotspotSelector from "../RCHotspotSelector/RCHotspotSelector";
-
+import RCPagesList from "../RCPagesList/RCPagesList";
+import RCAccordian from "../RCAccordian/RCAccordian";
 function RCStoryEditor(props) {
   const [story, setStory] = useState(null);
   const [title, setTitle] = useState("");
@@ -42,7 +43,7 @@ function RCStoryEditor(props) {
         setSelectedSectors(data.sectors);
         setHotspotPoint(data.hotspotlocation);
         setImages([data.image]);
-        setPages(data.pages);
+        console.log("Pages from story", data.pages);
       });
     } catch (error) {
       console.log(error);
@@ -126,13 +127,13 @@ function RCStoryEditor(props) {
       variables: { input: newPage }
     }).then(response => {
       if (response.data.createPage) {
-        console.log(response.data);
+        console.log("page created", response.data);
 
         // Add the new page to the story
         newPage.id = response.data.createPage.id;
         const newPages = Array.isArray(pages) ? [...pages, newPage] : [newPage];
         setPages(newPages);
-
+        console.log("pages saved", newPages);
         // Save the story
         saveStory()
           .then(() => {
@@ -152,7 +153,7 @@ function RCStoryEditor(props) {
   const saveStory = async () => {
     // If a new image is supplied we push it to s3 and
     // update the references here
-    let image = story.image || {};
+    const image = story.image || {};
     if (files.length > 0) {
       const file = files[0];
 
@@ -191,7 +192,7 @@ function RCStoryEditor(props) {
       sectors: selectedSectors,
       hotspotlocation: hotspotPoint,
       image: image
-      //TODO: pages: pages
+      // TODO: pages: pages
     };
     return API.graphql({
       query: updateStory,
@@ -273,11 +274,15 @@ function RCStoryEditor(props) {
         </div>
 
         <div className={Styles.group}>
-          <label className={Styles.topLabel} htmlFor="pagesToggle">
+          {/* <label className={Styles.topLabel} htmlFor="pagesToggle">
             Pages
           </label>
-          <input type="checkbox" id="pagesToggle" name="pagesToggle" />
-          <div className={Styles.toggleContent}>
+          <input type="checkbox" id="pagesToggle" name="pagesToggle" /> */}
+
+          <RCAccordian title="Pages">
+            <RCPagesList />
+          </RCAccordian>
+          {/* <div className={Styles.toggleContent}>
             <button
               className={Styles.RCButton}
               style={{ float: "right" }}
@@ -286,6 +291,7 @@ function RCStoryEditor(props) {
               Add
             </button>
             <ul>
+              {console.log('pages', pages)}
               {pages &&
                 pages.map(page => (
                   <li key={page.id}>
@@ -295,7 +301,7 @@ function RCStoryEditor(props) {
                   </li>
                 ))}
             </ul>
-          </div>
+          </div> */}
         </div>
 
         <div className={Styles.container}>
