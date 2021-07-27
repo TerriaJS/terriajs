@@ -84,7 +84,10 @@ class DataPreviewMap extends React.Component {
   @computed
   get previewBadgeState() {
     if (this.props.previewed?.isLoading) return "loading";
-    if (this.props.previewed?.loadMapItemsResult?.error === 0)
+    if (
+      this.props.previewed?.loadMetadataResult?.error ||
+      this.props.previewed?.loadMapItemsResult?.error
+    )
       return "dataPreviewError";
     if (this.props.previewed?.mapItems?.length === 0)
       return "noPreviewAvailable";
