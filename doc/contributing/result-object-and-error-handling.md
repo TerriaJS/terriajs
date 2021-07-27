@@ -7,6 +7,8 @@ It wraps up some `value` and `error` - so that a function can return both simula
 
 This is similar to the https://www.npmjs.com/package/neverthrow package
 
+See `lib\Core\Result.ts` for more documentation.
+
 ### Simple usage
 
 ```ts
@@ -48,10 +50,22 @@ const value = someFn(someArg).throwIfError()
 const value = someFn(someArg).throwIfUndefined()
 ```
 
+##### Raise error to user if error, and return value
+
+```ts
+const value = someFn(someArg).raiseError(terria)
+```
+
 ### `TerriaErrorOverrides`
 
-`TerriaErrorOverrides` can be provided when creating a `new Result()`, and also when using `throwIfError()` or `throwIfUndefined`.
+`TerriaErrorOverrides` can be provided when creating a `new Result()`, and also methods which act on errors (eg `raiseError`, `throwIfError`, ...)
+
 This allows you to add more context to TerriaErrors.
+
+Valid `TerriaErrorOverrides` include:
+
+- String values - eg `"Some error message"`
+- JSON representation of `TerriaError` - eg `{"title": "Error title", "message": "Some error message"}`
 
 #### Simple usage
 
@@ -83,19 +97,33 @@ This will now throw a chain of TerriaErrors - which provides a good stack trace:
 }
 ```
 
+### Convenience functions
+
+There are a few convenience functions and methods to make `Result` a bit easier to use.
+
+#### `Result.error()`
+
+This accepts same arguments as `TerriaError.from` and will create a new `Result` object with an error
+
+#### `Result.none()`
+
+This also accepts same arguments as `TerriaError.from` - but all arguments are optional. It will create a Result with no value (and potentially an error - if arguments are defined)
+
+#### `Result.combine()`
+
+Combines an array of `Result` objects into a single `Result` - also accepts same arguments as `TerriaError.from`.
+
 ## TerriaError object
+
+Represents an error that occurred in a TerriaJS module, especially an asynchronous one that cannot be raised by throwing an exception because no one would be able to catch it.
+
+See `lib\Core\TerriaError.ts` for more documentation.
 
 ### TerriaErrorSeverity
 
-Add TerriaErrorSeverity enum, values can be Error or Warning.
+`TerriaErrorSeverity` enum values can be `Error` or `Warning`.
 
-    Errors with severity Error are presented to the user. Warning will just be printed to console.
-    By default, errors will use Warning
-    The folloring errors will use Error severity.
-        Loading map config
-        Loading/Applying init source (excluding shareData and stories)
-        Invalid model object (fails to parse as JSON)
-        Loading models if it is in the workbench
-        Loading catalog items in the workbench
-    TerriaError.shouldRaiseToUser will look at all error severity in the entire tree of errors, and use the highest one.
-        For example, if all errors in a tree are Warning, but there is one error with Error severity, the entire tree will be "raised to the user".
+* Errors with severity `Error` are presented to the user. `Warning` will just be printed to console.
+* By default, errors will use `Error`
+* `TerriaErrorSeverity` will be copied through nested `TerriaErrors` on creation (eg if you call `TerriaError.from()` on a `Warning` then the parent error will also be `Warning`)
+* Loading models from share links or stories will use `Warning` if the model is **not in the workbench**, otherwise it will use `Error`.

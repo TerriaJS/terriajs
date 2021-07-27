@@ -31,7 +31,6 @@ import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
 import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
-import runLater from "../Core/runLater";
 
 const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
 
@@ -396,7 +395,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
   protected async forceLoadMapItems(): Promise<void> {
     if (isDefined(this.geoJsonItem)) {
       const geoJsonItem = this.geoJsonItem;
-      (await runLater(() => geoJsonItem.loadMapItems())).throwIfError();
+      (await geoJsonItem.loadMapItems()).throwIfError();
     }
   }
 

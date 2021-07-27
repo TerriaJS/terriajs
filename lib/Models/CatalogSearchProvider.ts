@@ -72,6 +72,7 @@ export function loadAndSearchCatalogRecursively(
       Promise.all(
         referencesAndGroupsToLoad.map(async model => {
           if (ReferenceMixin.isMixedInto(model)) {
+            // TODO: could handle errors better here
             (await model.loadReference()).throwIfError();
           }
           // TODO: investigate performant route for calling loadMembers on additional groupmixins

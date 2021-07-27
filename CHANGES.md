@@ -44,18 +44,6 @@ Change Log
 * Added `MapboxStyleCatalogItem`.
 * Fix splitter thumb icon vertical position
 * Renamed all mixin instance type definitions to `XMixin.Instance`.
-* Add `TerriaErrorSeverity` enum, values can be `Error` or `Warning`.
-  * Errors with severity `Error` are presented to the user. `Warning` will just be printed to console.
-  * By default, errors will use `Error`
-  * `TerriaErrorSeverity` will be copied through nested `TerriaErrors` on creation (eg if you call `TerriaError.from()` on a `Warning` then the parent error will also be `Warning`)
-  * Loading models from share links or stories will use `Warning` if the model is **not in the workbench**, otherwise it will use `Error`.
-* `AsyncLoader` loadXXX methods now return `Result` with `errors`.
-* `AsyncLoader` now has an observable `result` property.
-* Removed `openGroup()` - it is replaced by `viewState.viewCatalogMember`
-* Fix `MagdaReference` `forceLoadReference` bug.
-* Clean up `CkanCatalogGroup` loading - errors are no-longer swallowed.
-* In `terriaErrorNotification` - show `error.message` (as well as `error.stack`) if `error.stack` is defined
-* Fix `DataPreviewSections` info section bug.
 * Clean up `ViewControl` colors
   * `$color-splitter` and `theme.colorSplitter` has been replaced with `$color-secondary` and `theme.colorSecondary`
 * Clean up `SplitterTraits`
@@ -66,8 +54,22 @@ Change Log
   * Replaced with `disableZoomTo` in `MappableTraits`
 * Clean up `showsInfo`
   * Replaced with `disableAboutData` in `CatalogMemberTraits`
+* Add `TerriaErrorSeverity` enum, values can be `Error` or `Warning`.
+  * Errors with severity `Error` are presented to the user. `Warning` will just be printed to console.
+  * By default, errors will use `Error`
+  * `TerriaErrorSeverity` will be copied through nested `TerriaErrors` on creation (eg if you call `TerriaError.from()` on a `Warning` then the parent error will also be `Warning`)
+  * Loading models from share links or stories will use `Warning` if the model is **not in the workbench**, otherwise it will use `Error`.
+* In `terriaErrorNotification` - show `error.message` (as well as `error.stack`) if `error.stack` is defined
+* `AsyncLoader` loadXXX methods now return `Result` with `errors`.
+* `AsyncLoader` now has an observable `result` property.
+* Removed `openGroup()` - it is replaced by `viewState.viewCatalogMember`
+* Fix `MagdaReference` `forceLoadReference` bug.
+* Clean up `CkanCatalogGroup` loading - errors are no-longer swallowed.
+* Clean up `3dTilesMixin` loading - errors are no-longer swallowed.
+* Fix `DataPreviewSections` info section bug.
 * Move `FeedbackForm` `z-index` to same as `Notification` - this is so it will appear above Data catalog.
 * Added `result.raiseError()`, `result.pushErrorTo()` and `result.clone()` helper methods - and `Result.combine()` convenience function
+* Renamed `ReferenceMixin.is` to `ReferenceMixin.isMixedInto`
 * [The next improvement]
 
 #### 8.0.0-alpha.87

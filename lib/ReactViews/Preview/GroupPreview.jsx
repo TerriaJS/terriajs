@@ -59,9 +59,9 @@ const GroupPreview = observer(
               viewState={this.props.viewState}
             />
           </If>
-          <If condition={this.props.previewed.loadMembersError}>
+          <If condition={this.props.previewed.loadMembersResult?.error}>
             <WarningBox
-              error={this.props.previewed.loadMembersError}
+              error={this.props.previewed.loadMembersResult?.error}
               viewState={this.props.viewState}
             />
           </If>

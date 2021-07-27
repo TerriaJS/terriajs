@@ -12,6 +12,10 @@ import Loader from "../../Loader";
 import Chart from "./BottomDockChart";
 import Styles from "./chart-panel.scss";
 import ChartPanelDownloadButton from "./ChartPanelDownloadButton";
+import MappableMixin from "../../../ModelMixins/MappableMixin";
+import { itemSymbol } from "./tooltip.scss";
+import filterOutUndefined from "../../../Core/filterOutUndefined";
+import { Result } from "../../Tools/ItemSearchTool/SearchResults";
 
 const height = 300;
 
@@ -65,6 +69,17 @@ class ChartPanel extends React.Component {
     }
     const items = this.props.terria.workbench.items;
     if (items.length > 0) {
+      // Load all items
+      Promise.all(
+        items
+          .filter(item => MappableMixin.isMixedInto(item))
+          .map(item => item.loadMapItems())
+      ).then(results =>
+        Result.combine(results, "Failed to load chart items").raiseError(
+          this.props.terria
+        )
+      );
+
       chart = (
         <Chart
           terria={this.props.terria}

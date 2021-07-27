@@ -423,27 +423,24 @@ export default class ArcGisFeatureServerCatalogItem extends MappableMixin(
           } else if (renderer.type === "uniqueValue") {
             const uniqueValueRenderer = <UniqueValueRenderer>renderer;
             const rendererObj = setupUniqueValueRenderer(uniqueValueRenderer);
-            entities.values.forEach(function(entity_2) {
-              const symbol_1 = getUniqueValueSymbol(
-                entity_2,
+            entities.values.forEach(function(entity) {
+              const symbol = getUniqueValueSymbol(
+                entity,
                 uniqueValueRenderer,
                 rendererObj
               );
-              if (symbol_1) {
-                updateEntityWithEsriStyle(entity_2, symbol_1, that);
+              if (symbol) {
+                updateEntityWithEsriStyle(entity, symbol, that);
               }
             });
 
             // For a 'classBreaks' renderer symbology gets applied via classes or ranges of data.
           } else if (renderer.type === "classBreaks") {
             const classBreaksRenderer = <ClassBreaksRenderer>renderer;
-            entities.values.forEach(function(entity_4) {
-              const symbol_2 = getClassBreaksSymbol(
-                entity_4,
-                classBreaksRenderer
-              );
-              if (symbol_2) {
-                updateEntityWithEsriStyle(entity_4, symbol_2, that);
+            entities.values.forEach(function(entity) {
+              const symbol = getClassBreaksSymbol(entity, classBreaksRenderer);
+              if (symbol) {
+                updateEntityWithEsriStyle(entity, symbol, that);
               }
             });
           }

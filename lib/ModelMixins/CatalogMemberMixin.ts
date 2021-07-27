@@ -200,12 +200,13 @@ namespace CatalogMemberMixin {
 
 export default CatalogMemberMixin;
 
+/** Convenience function to get user readable name of a BaseModel */
 export function getName(model: BaseModel | undefined) {
   return (
     (CatalogMemberMixin.isMixedInto(model)
       ? model.nameInCatalog ?? model.name
       : undefined) ??
     model?.uniqueId ??
-    ""
+    "Unknown model"
   );
 }
