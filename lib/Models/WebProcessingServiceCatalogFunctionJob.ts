@@ -304,7 +304,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
 
     const outputs = runInAction(() => this.outputs);
 
-    const results: CatalogMemberMixin.CatalogMemberMixin[] = [];
+    const results: CatalogMemberMixin.Instance[] = [];
 
     await Promise.all(
       outputs.map(async (output, i) => {

@@ -88,11 +88,11 @@ describe("ArcGisFeatureServerCatalogItem", function() {
   });
 
   it("supports zooming to extent", function() {
-    expect(item.canZoomTo).toBeTruthy();
+    expect(item.disableZoomTo).toBeFalsy();
   });
 
   it("supports show info", function() {
-    expect(item.showsInfo).toBeTruthy();
+    expect(item.disableAboutData).toBeFalsy();
   });
 
   describe("after loading metadata", function() {

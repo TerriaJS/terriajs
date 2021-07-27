@@ -1509,7 +1509,7 @@ export default class Terria {
           hasTraits(item, MappableTraits, "show") &&
           item.show &&
           MappableMixin.isMixedInto(item)
-      ) as MappableMixin.MappableMixin[];
+      ) as MappableMixin.Instance[];
 
       relevantItems.forEach(item => {
         const entities: Entity[] = item.mapItems

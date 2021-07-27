@@ -65,15 +65,15 @@ describe("ArcGisMapServerCatalogItem", function() {
   });
 
   it("supports splitting", function() {
-    expect(item.supportsSplitting).toBeTruthy();
+    expect(item.disableSplitter).toBeFalsy();
   });
 
   it("supports zooming to extent", function() {
-    expect(item.canZoomTo).toBeTruthy();
+    expect(item.disableZoomTo).toBeFalsy();
   });
 
   it("supports preview", function() {
-    expect(item.showsInfo).toBeTruthy();
+    expect(item.disableAboutData).toBeFalsy();
   });
 
   describe("loadMapItems", function() {
