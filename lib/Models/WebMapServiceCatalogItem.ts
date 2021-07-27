@@ -68,7 +68,6 @@ import WebMapServiceCapabilities, {
   MetadataURL
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
-import { countBy } from "lodash-es";
 
 const dateFormat = require("dateformat");
 class GetCapabilitiesStratum extends LoadableStratum(
