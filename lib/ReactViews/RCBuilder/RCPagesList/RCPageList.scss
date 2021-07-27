@@ -1,0 +1,22 @@
+@import "~terriajs-variables";
+
+.listItem {
+  min-height: 30px;
+  padding: 5px;
+  margin-bottom: 12px;
+  background: #fafafa;
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: 1fr 40px;
+  align-items: center;
+  button {
+    border: none;
+    background-color: transparent;
+  }
+  svg {
+    height: 18px;
+    width: 18px;
+    margin: 3px;
+    fill: $charcoal-grey;
+  }
+}
