@@ -1663,6 +1663,7 @@ async function interpretHash(
       } else if (property === "hideWelcomeMessage") {
         terria.configParameters.showWelcomeMessage = false;
       } else if (property === "start") {
+        terria.configParameters.showWelcomeMessage = false;
         try {
           // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
           const startData = JSON.parse(propertyValue);
