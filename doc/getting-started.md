@@ -104,7 +104,9 @@ rm -rf node_modules
 npm install
 ```
 
-Having trouble? Drop by the TerriaJS [gitter](https://gitter.im/TerriaJS/terriajs) or [forum](https://groups.google.com/forum/#!forum/terriajs) and we'll be happy to help!
+### Having trouble? 
+
+Checkout the [Problems and Solutions](contributing/problems-and-solutions.md) page to see if we have them covered. You are also welcome to post your problem on the [TerriaJS Discussions](https://github.com/TerriaJS/terriajs/discussions) forum and we'll be happy to help!
 
 ### Next Steps
 
