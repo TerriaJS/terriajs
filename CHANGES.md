@@ -55,6 +55,7 @@ Change Log
   * Replaced with `disableZoomTo` in `MappableTraits`
 * Clean up `showsInfo`
   * Replaced with `disableAboutData` in `CatalogMemberTraits`
+* Disabled welcome popup for shared stories
 * [The next improvement]
 
 #### 8.0.0-alpha.87
