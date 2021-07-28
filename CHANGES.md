@@ -55,6 +55,7 @@ Change Log
 * Clean up `showsInfo`
   * Replaced with `disableAboutData` in `CatalogMemberTraits`
 * Fix `DiscreteColorMap` bug with `binColors` and added warning message if `colorPalette` is invalid.
+* Fix `EnumColorMap` bug with `binColors`
 * [The next improvement]
 
 #### 8.0.0-alpha.87
