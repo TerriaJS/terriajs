@@ -56,6 +56,7 @@ Change Log
   * Replaced with `disableAboutData` in `CatalogMemberTraits`
 * Fix `DiscreteColorMap` bug with `binColors` and added warning message if `colorPalette` is invalid.
 * Fix `EnumColorMap` bug with `binColors`
+* Moved d3-scale-chromatic code into `tableColorMap.colorScaleCategorical()` and `tableColorMap.colorScaleContinuous()`
 * [The next improvement]
 
 #### 8.0.0-alpha.87

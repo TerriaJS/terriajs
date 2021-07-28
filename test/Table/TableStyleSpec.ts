@@ -1,4 +1,3 @@
-const findAllWithType = require("react-shallow-testutils").findAllWithType;
 import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import createStratumInstance from "../../lib/Models/createStratumInstance";
@@ -124,6 +123,14 @@ describe("Table Style", function() {
 
       expect(activeStyle.colorMap instanceof ContinuousColorMap).toBeTruthy();
     });
+  });
+
+  describe(" - Enum", function() {
+    let csvItem: CsvCatalogItem;
+
+    beforeEach(async function() {
+      csvItem = new CsvCatalogItem("SmallCsv", terria, undefined);
+    });
 
     it(" - uses EnumColorMap by default", async function() {
       csvItem.setTrait(
@@ -154,6 +161,48 @@ describe("Table Style", function() {
         "#ff6800",
         "#a6bdd7",
         "#c10020"
+      ]);
+    });
+
+    it(" - uses EnumColorMap with specified colorPalette", async function() {
+      csvItem.setTrait(
+        "definition",
+        "url",
+        "/test/csv/lat_lon_enum_date_id.csv"
+      );
+
+      csvItem.setTrait(
+        "definition",
+        "defaultStyle",
+        createStratumInstance(TableStyleTraits, {
+          color: createStratumInstance(TableColorStyleTraits, {
+            colorPalette: "Category10"
+          })
+        })
+      );
+
+      csvItem.setTrait("definition", "activeStyle", "enum");
+      await csvItem.loadMapItems();
+
+      const activeStyle = csvItem.activeTableStyle;
+      const colorColumn = activeStyle.colorColumn;
+      expect(colorColumn).toBeDefined();
+      expect(colorColumn!.type).toBe(5);
+      expect(colorColumn!.uniqueValues.values.length).toBe(6);
+
+      expect(activeStyle.colorMap instanceof EnumColorMap).toBeTruthy();
+      expect((activeStyle.colorMap as EnumColorMap).colors.length).toBe(6);
+      expect(
+        (activeStyle.colorMap as EnumColorMap).colors.map(c =>
+          c.toCssHexString()
+        )
+      ).toEqual([
+        "#1f77b4",
+        "#ff7f0e",
+        "#2ca02c",
+        "#d62728",
+        "#9467bd",
+        "#8c564b"
       ]);
     });
   });
