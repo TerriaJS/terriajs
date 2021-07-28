@@ -6,6 +6,7 @@ Change Log
 #### next release (8.0.0-alpha.88)
 
 - **Breaking changes**:
+  - Require `translate#` in front of translatable content id in `config.json` (i.e. `helpContent`).
   - `colorPalette` no longer supports a list of CSS colors (eg `rgb(0,0,255)-rgb(0,255,0)-rgb(255,0,0)`). Instead please use `binColors`.
   - Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses`
   - Renamed all mixin instance type definitions to `XMixin.Instance`.
