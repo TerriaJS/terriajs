@@ -5,7 +5,7 @@ import * as mutations from "../../../../api/graphql/mutations";
 import { useParams, withRouter, useHistory } from "react-router-dom";
 import Styles from "./RCPageList.scss";
 import Icon from "../../Icon";
-import sortList from "./sortList";
+import orderList from "./RCOrderList";
 
 function RCPageList() {
   const [pages, setPages] = useState(null);
@@ -17,7 +17,7 @@ function RCPageList() {
       API.graphql(graphqlOperation(listPages)).then(data => {
         const pageList = data.data.listPages.items;
         setPages(pageList);
-        sortList("slist");
+        orderList("listContainer");
       });
     } catch (error) {
       console.log(error);

@@ -2,8 +2,16 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import Styles from "./RCAccordian.scss";
+
 const RCAccordian = props => {
-  const { title, hasAction, actionTitle, action, children } = props;
+  const {
+    title,
+    hasAction,
+    actionTitle,
+    action,
+    enableReorder,
+    children
+  } = props;
   const [isOpen, setOpen] = React.useState(false);
   return (
     <div className={Styles.accordionWrapper}>
@@ -20,7 +28,12 @@ const RCAccordian = props => {
           !isOpen && Styles.collapsed
         )}
       >
-        <div className={Styles.accordionContent}>{children}</div>
+        <ul
+          className={Styles.accordionContent}
+          id={enableReorder && "listContainer"}
+        >
+          {children}
+        </ul>
       </div>
     </div>
   );
@@ -30,6 +43,7 @@ RCAccordian.propTypes = {
   hasAction: PropTypes.bool,
   actionTitle: PropTypes.string,
   action: PropTypes.func,
+  enableReorder: PropTypes.bool,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node

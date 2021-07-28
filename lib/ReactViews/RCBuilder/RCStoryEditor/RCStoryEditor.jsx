@@ -12,7 +12,7 @@ import sectors from "../../../Data/Sectors.js";
 import RCSectorSelection from "./RCSectorSelection/RCSectorSelection";
 import Styles from "./RCStoryEditor.scss";
 import RCHotspotSelector from "../RCHotspotSelector/RCHotspotSelector";
-import RCPagesList from "../RCPagesList/RCPagesList";
+import RCPageList from "../RCPageList/RCPageList";
 import RCAccordian from "../RCAccordian/RCAccordian";
 function RCStoryEditor(props) {
   const [story, setStory] = useState(null);
@@ -43,7 +43,6 @@ function RCStoryEditor(props) {
         setSelectedSectors(data.sectors);
         setHotspotPoint(data.hotspotlocation);
         setImages([data.image]);
-        console.log("Pages from story", data.pages);
       });
     } catch (error) {
       console.log(error);
@@ -284,8 +283,9 @@ function RCStoryEditor(props) {
             hasAction={true}
             actionTitle="+ Add"
             action={addPage}
+            enableReorder={true}
           >
-            <RCPagesList />
+            <RCPageList />
           </RCAccordian>
           {/* <div className={Styles.toggleContent}>
             <button
