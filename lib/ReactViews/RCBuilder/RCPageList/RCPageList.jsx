@@ -4,7 +4,9 @@ import { listPages } from "../../../../api/graphql/queries";
 import * as mutations from "../../../../api/graphql/mutations";
 import { useParams, withRouter, useHistory } from "react-router-dom";
 import Styles from "./RCPageList.scss";
-import Icon from "../../../ReactViews/Icon";
+import Icon from "../../Icon";
+import sortList from "./sortList";
+
 function RCPageList() {
   const [pages, setPages] = useState(null);
   // get the story id from url
@@ -15,6 +17,7 @@ function RCPageList() {
       API.graphql(graphqlOperation(listPages)).then(data => {
         const pageList = data.data.listPages.items;
         setPages(pageList);
+        sortList("slist");
       });
     } catch (error) {
       console.log(error);
@@ -39,7 +42,8 @@ function RCPageList() {
   return pages
     ? pages.map(page => {
         return (
-          <div key={page.id} className={Styles.listItem}>
+          <li key={page.id} className={Styles.listItem}>
+            <Icon glyph={Icon.GLYPHS.reorder} class="reorder" />
             <span>{page.title}</span>
             <button onClick={() => toEditPage(page.id)}>
               <Icon glyph={Icon.GLYPHS.edit} />
@@ -47,7 +51,7 @@ function RCPageList() {
             <button onClick={() => deletePage(page.id)}>
               <Icon glyph={Icon.GLYPHS.trashcan} />
             </button>
-          </div>
+          </li>
         );
       })
     : null;
