@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import Styles from "./RCAccordian.scss";
 const RCAccordian = props => {
-  const { title, children } = props;
+  const { title, hasAction, actionTitle, action, children } = props;
   const [isOpen, setOpen] = React.useState(false);
   return (
     <div className={Styles.accordionWrapper}>
@@ -12,6 +12,7 @@ const RCAccordian = props => {
         onClick={() => setOpen(!isOpen)}
       >
         {title}
+        {hasAction && <button onClick={action}> {actionTitle}</button>}
       </div>
       <div
         className={classNames(
@@ -26,6 +27,9 @@ const RCAccordian = props => {
 };
 RCAccordian.propTypes = {
   title: PropTypes.string,
+  hasAction: PropTypes.bool,
+  actionTitle: PropTypes.string,
+  action: PropTypes.func,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node

@@ -135,15 +135,15 @@ function RCStoryEditor(props) {
         setPages(newPages);
         console.log("pages saved", newPages);
         // Save the story
-        saveStory()
-          .then(() => {
-            // Go to the editor for the new page
-            history.push(`/builder/story/${id}/page/${newPage.id}/edit`);
-          })
-          .catch(error => {
-            console.log(error);
-            setMessage("Error", error);
-          });
+        saveStory();
+        // .then(() => {
+        //   // Go to the editor for the new page
+        //   history.push(`/builder/story/${id}/page/${newPage.id}/edit`);
+        // })
+        // .catch(error => {
+        //   console.log(error);
+        //   setMessage("Error", error);
+        // });
       } else {
         setMessage("Error", response.errors[0].message);
       }
@@ -279,7 +279,12 @@ function RCStoryEditor(props) {
           </label>
           <input type="checkbox" id="pagesToggle" name="pagesToggle" /> */}
 
-          <RCAccordian title="Pages">
+          <RCAccordian
+            title="Pages"
+            hasAction={true}
+            actionTitle="+ Add"
+            action={addPage}
+          >
             <RCPagesList />
           </RCAccordian>
           {/* <div className={Styles.toggleContent}>

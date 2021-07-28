@@ -24,9 +24,13 @@
   font-weight: 600;
   cursor: pointer;
   color: #106fa8;
-  display: flex;
+  display: grid;
+  grid-template-columns: 20px 1fr 80px;
   align-items: center;
-
+  button {
+    border: none;
+    background-color: transparent;
+  }
   &::before {
     content: "";
     width: 0;
