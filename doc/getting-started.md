@@ -9,7 +9,7 @@ You may also be interested in how to [make your own map without writing any code
 If you've done this sort of thing before, you'll find it easy to clone and build TerriaMap with these quick instructions:
 
 ```bash
-git clone https://github.com/TerriaJS/TerriaMap.git --branch next
+git clone https://github.com/TerriaJS/TerriaMap.git
 
 cd TerriaMap
 
@@ -37,7 +37,7 @@ The following components are optional:
 The latest version of TerriaMap is on [GitHub](https://github.com), and the preferred way to get it is by using `git`:
 
 ```bash
-git clone https://github.com/TerriaJS/TerriaMap.git --branch next
+git clone https://github.com/TerriaJS/TerriaMap.git
 
 cd TerriaMap
 ```
