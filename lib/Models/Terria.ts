@@ -871,15 +871,20 @@ export default class Terria {
     this._initSourceLoader.dispose();
   }
 
-  updateFromStartData(
+  async updateFromStartData(
     startData: any,
     /** Name for startData initSources - this is only used for debugging purposes */
     name: string = "Application start data",
     /** Error severity to use for loading startData init sources - default will be `TerriaErrorSeverity.Error` */
     errorSeverity?: TerriaErrorSeverity
   ) {
-    interpretStartData(this, startData, name, errorSeverity);
-    return this.loadInitSources();
+    try {
+      await interpretStartData(this, startData, name, errorSeverity);
+    } catch (e) {
+      return Result.error(e);
+    }
+
+    return await this.loadInitSources();
   }
 
   async updateApplicationUrl(newUrl: string) {
@@ -1657,27 +1662,10 @@ async function interpretHash(
 ) {
   runInAction(() => {
     Object.keys(hashProperties).forEach(function(property) {
+      if (["clean", "hideWelcomeMessage", "start", "share"].includes(property))
+        return;
       const propertyValue = hashProperties[property];
-      if (property === "clean") {
-        terria.initSources.splice(0, terria.initSources.length);
-      } else if (property === "hideWelcomeMessage") {
-        terria.configParameters.showWelcomeMessage = false;
-      } else if (property === "start") {
-        try {
-          // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
-          const startData = JSON.parse(propertyValue);
-          interpretStartData(
-            terria,
-            startData,
-            "Start data from hash",
-            TerriaErrorSeverity.Error
-          );
-        } catch (e) {
-          throw TerriaError.from(e, {
-            message: { key: "parsingStartDataErrorMessage" }
-          });
-        }
-      } else if (defined(propertyValue) && propertyValue.length > 0) {
+      if (defined(propertyValue) && propertyValue.length > 0) {
         userProperties.set(property, propertyValue);
       } else {
         const initSourceFile = generateInitializationUrl(
@@ -1694,6 +1682,31 @@ async function interpretHash(
     });
   });
 
+  if (isDefined(hashProperties.clean)) {
+    terria.initSources.splice(0, terria.initSources.length);
+  }
+
+  if (isDefined(hashProperties.hideWelcomeMessage)) {
+    terria.configParameters.showWelcomeMessage = false;
+  }
+
+  // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
+  if (isDefined(hashProperties.start)) {
+    try {
+      const startData = JSON.parse(hashProperties.start);
+      await interpretStartData(
+        terria,
+        startData,
+        'Start data from hash `"#start"` value',
+        TerriaErrorSeverity.Error
+      );
+    } catch (e) {
+      throw TerriaError.from(e, {
+        message: { key: "parsingStartDataErrorMessage" }
+      });
+    }
+  }
+
   // Resolve #share=xyz with the share data service.
   if (
     hashProperties.share !== undefined &&
@@ -1702,39 +1715,18 @@ async function interpretHash(
     const shareProps = await terria.shareDataService.resolveData(
       hashProperties.share
     );
-    if (isDefined(shareProps) && shareProps !== {}) {
-      // Convert shareProps to v8 if neccessary
-      const { convertShare } = await import("catalog-converter");
 
-      try {
-        const result = convertShare(shareProps);
-
-        // Show warning messages if converted
-        if (result.converted) {
-          terria.notificationState.addNotificationToQueue({
-            title: i18next.t("share.convertNotificationTitle"),
-            message: shareConvertNotification(result.messages)
-          });
-        }
-
-        if (result.result !== null) {
-          interpretStartData(
-            terria,
-            result.result,
-            `Share data from link: ${hashProperties.share}`
-          );
-        }
-      } catch (error) {
-        throw TerriaError.from(error, {
-          title: { key: "share.convertErrorTitle" },
-          message: { key: "share.convertErrorMessage" }
-        });
-      }
+    if (shareProps) {
+      await interpretStartData(
+        terria,
+        shareProps,
+        `Start data from sharelink \`"${hashProperties.share}"\``
+      );
     }
   }
 }
 
-function interpretStartData(
+async function interpretStartData(
   terria: Terria,
   startData: any,
   /** Name for startData initSources - this is only used for debugging purposes */
@@ -1742,20 +1734,40 @@ function interpretStartData(
   /** Error severity to use for loading startData init sources - if not set, TerriaError will be propagated normally */
   errorSeverity?: TerriaErrorSeverity
 ) {
-  // TODO: version check, filtering, etc.
+  if (isDefined(startData) && startData !== {}) {
+    // Convert startData to v8 if neccessary
+    const { convertShare } = await import("catalog-converter");
 
-  if (startData.initSources) {
-    runInAction(() => {
-      terria.initSources.push(
-        ...startData.initSources.map((initSource: any) => {
-          return {
-            name,
-            data: initSource,
-            errorSeverity
-          };
-        })
-      );
-    });
+    try {
+      const result = convertShare(startData);
+
+      // Show warning messages if converted
+      if (result.converted) {
+        terria.notificationState.addNotificationToQueue({
+          title: i18next.t("share.convertNotificationTitle"),
+          message: shareConvertNotification(result.messages)
+        });
+      }
+
+      if (result.result !== null && Array.isArray(result.result.initSources)) {
+        runInAction(() => {
+          terria.initSources.push(
+            ...result.result!.initSources.map((initSource: any) => {
+              return {
+                name,
+                data: initSource,
+                errorSeverity
+              };
+            })
+          );
+        });
+      }
+    } catch (error) {
+      throw TerriaError.from(error, {
+        title: { key: "share.convertErrorTitle" },
+        message: { key: "share.convertErrorMessage" }
+      });
+    }
   }
 }
 
