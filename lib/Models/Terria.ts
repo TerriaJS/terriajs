@@ -1698,7 +1698,8 @@ async function interpretHash(
         terria,
         startData,
         'Start data from hash `"#start"` value',
-        TerriaErrorSeverity.Error
+        TerriaErrorSeverity.Error,
+        false // Hide conversion warning message - as we assume that people using #start are embedding terria.
       );
     } catch (e) {
       throw TerriaError.from(e, {
@@ -1732,7 +1733,8 @@ async function interpretStartData(
   /** Name for startData initSources - this is only used for debugging purposes */
   name: string,
   /** Error severity to use for loading startData init sources - if not set, TerriaError will be propagated normally */
-  errorSeverity?: TerriaErrorSeverity
+  errorSeverity?: TerriaErrorSeverity,
+  showConversionWarning = true
 ) {
   if (isDefined(startData) && startData !== {}) {
     // Convert startData to v8 if neccessary
@@ -1742,7 +1744,7 @@ async function interpretStartData(
       const result = convertShare(startData);
 
       // Show warning messages if converted
-      if (result.converted) {
+      if (result.converted && showConversionWarning) {
         terria.notificationState.addNotificationToQueue({
           title: i18next.t("share.convertNotificationTitle"),
           message: shareConvertNotification(result.messages)
