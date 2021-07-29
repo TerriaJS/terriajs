@@ -470,8 +470,6 @@ export default class Terria {
 
   @observable stories: any[] = [];
 
-  // TODO: this is duplicated with properties on ViewState, which is
-  //       kind of terrible.
   /**
    * Gets or sets the ID of the catalog member that is currently being
    * previewed.
