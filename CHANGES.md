@@ -12,7 +12,7 @@ Change Log
   - `$color-splitter` and `theme.colorSplitter` has been replaced with `$color-secondary` and `theme.colorSecondary`
   - `canZoomTo` has bee replaced with `disableZoomTo` in `MappableTraits`
   - `showsInfo` has been replaced with `disableAboutData` in `CatalogMemberTraits`
-  - `AsyncLoader` loadXXX methods now return `Result` with `errors` **they no longer throw errors** - if you need errors to be thrown you can use `(await loadXX).throthrowIfErrorwError()`.
+  - `AsyncLoader` loadXXX methods now return `Result` with `errors` **they no longer throw errors** - if you need errors to be thrown you can use `(await loadXX).throwIfError()`.
   - Removed `openGroup()` - it is replaced by `viewState.viewCatalogMember`
   - Renamed `ReferenceMixin.is` to `ReferenceMixin.isMixedInto`
 
