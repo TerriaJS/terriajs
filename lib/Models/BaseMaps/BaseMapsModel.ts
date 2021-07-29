@@ -20,8 +20,6 @@ import { defaultBaseMaps } from "./defaultBaseMaps";
 export class BaseMapModel extends CreateModel(BaseMapTraits) {}
 
 export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
-  private readonly _defaultBaseMaps: BaseMapModel[] = [];
-
   /**
    * List of the basemaps to show in setting panel
    */
@@ -59,13 +57,9 @@ export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
   // Can't do this in constructor since {@link CatalogMemberFactory} doesn't
   // have any values at the moment of initializing Terria class.
   initializeDefaultBaseMaps(): Result {
-    if (this._defaultBaseMaps.length === 0 && this.items.length === 0) {
-      this._defaultBaseMaps.push(...defaultBaseMaps(this.terria));
-      return this.loadFromJson(CommonStrata.definition, <any>{
-        items: this._defaultBaseMaps
-      });
-    }
-    return Result.none();
+    return this.loadFromJson(CommonStrata.definition, {
+      items: defaultBaseMaps(this.terria)
+    });
   }
 
   @action

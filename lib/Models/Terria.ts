@@ -770,6 +770,15 @@ export default class Terria {
     if (this.shareDataService && this.serverConfig.config) {
       this.shareDataService.init(this.serverConfig.config);
     }
+
+    this.baseMapsModel
+      .initializeDefaultBaseMaps()
+      .catchError(error =>
+        this.raiseErrorToUser(
+          TerriaError.from(error, "Failed to load default basemaps")
+        )
+      );
+
     if (options.applicationUrl) {
       await this.updateApplicationUrl(options.applicationUrl.href);
     }
@@ -1223,10 +1232,6 @@ export default class Terria {
           break;
       }
     }
-
-    this.baseMapsModel.initializeDefaultBaseMaps().catchError(error => {
-      errors.push(error);
-    });
 
     if (isJsonObject(initData.baseMaps)) {
       this.baseMapsModel
