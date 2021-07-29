@@ -169,6 +169,7 @@ export default class MagdaReference extends AccessControlMixin(
     const override = toJS(this.override);
     const distributionFormats = this.preparedDistributionFormats;
 
+    // `runLater` is needed due to no actions in `AsyncLoader` computed promise (See AsyncLoader.ts)
     return await runLater(async () => {
       const target = MagdaReference.createMemberFromRecord(
         this.terria,

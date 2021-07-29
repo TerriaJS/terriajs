@@ -86,6 +86,8 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
      * Forces load of the reference. This method does _not_ need to consider
      * whether the reference is already loaded.
      *
+     * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
+     *
      * Errors can be thrown here.
      *
      * {@see AsyncLoader}
