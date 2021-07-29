@@ -14,7 +14,7 @@ Change Log
     - list of available basemaps is defined in `baseMaps.init`. This list is combined with default base maps so it's possible to override defaults
     - definition of `initBaseMapId` and `initBaseMapName` are moved to `baseMaps.defaultBaseMapId` and `baseMaps.defaultBaseMapName`
     - `previewBaseMapId` is moved to `baseMaps.previewBaseMapId`
-    - implemented `baseMaps.useBaseMaps` array of base map ids to define a list of baseMaps available to user
+    - implemented `baseMaps.enabledBaseMaps` array of base map ids to define a list of baseMaps available to user
     - updated docs for `baseMaps`
   - `$color-splitter` and `theme.colorSplitter` has been replaced with `$color-secondary` and `theme.colorSecondary`
   - `canZoomTo` has bee replaced with `disableZoomTo` in `MappableTraits`
