@@ -276,7 +276,7 @@ Definition of the baseMap model.
 
 |Name|Required|Type|Default|Description|
 |----|--------|----|-------|-----------|
-|item|yes|[**Catalog Item**](../connecting-to-data/catalog-items.md)||Catalog item defition to be used for the base map|
+|item|yes|[**Catalog Item**](../connecting-to-data/catalog-items.md)||Catalog item defition to be used for the base map. It is also possible to reference an existing catalog item using its id (i.e. `"//Surface Geology"`).|
 |image|yes|**string**||Path to an image file of the baseMap image to be shown in Map Settings|
 
 ### Cartesian 3

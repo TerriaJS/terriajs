@@ -17,7 +17,8 @@ export class BaseMapTraits extends ModelTraits {
   @modelReferenceTrait({
     factory: CatalogMemberFactory,
     name: "Base map item",
-    description: "Base map item definition"
+    description:
+      'Catalog item defition to be used for the base map. It is also possible to reference an existing catalog item using its id (i.e. `"//Surface Geology"`).'
   })
   item?: ModelReference;
 }
