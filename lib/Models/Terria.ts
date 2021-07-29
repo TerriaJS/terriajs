@@ -1,4 +1,5 @@
 import i18next from "i18next";
+import _ from "lodash";
 import { action, computed, observable, runInAction, toJS, when } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
@@ -9,6 +10,7 @@ import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
+import CompositeEntityCollection from "terriajs-cesium/Source/DataSources/CompositeEntityCollection";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import URI from "urijs";
@@ -1663,7 +1665,6 @@ async function interpretHash(
       } else if (property === "hideWelcomeMessage") {
         terria.configParameters.showWelcomeMessage = false;
       } else if (property === "start") {
-        terria.configParameters.showWelcomeMessage = false;
         try {
           // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
           const startData = JSON.parse(propertyValue);
@@ -1729,10 +1730,13 @@ async function interpretHash(
   }
 }
 
+const containsStory = (initSource: any) =>
+  _.isArray(initSource.stories) && !_.isEmpty(initSource.stories);
+
 function interpretStartData(terria: Terria, startData: any, name: string) {
   // TODO: version check, filtering, etc.
 
-  if (startData.initSources) {
+  if (_.isArray(startData.initSources)) {
     runInAction(() => {
       terria.initSources.push(
         ...startData.initSources.map((initSource: any) => {
@@ -1742,6 +1746,10 @@ function interpretStartData(terria: Terria, startData: any, name: string) {
           };
         })
       );
+
+      if (startData.initSources.some(containsStory)) {
+        terria.configParameters.showWelcomeMessage = false;
+      }
     });
   }
 }
