@@ -105,6 +105,7 @@ export default class TerriaError {
   /** `sender` isn't really used for anything at the moment... */
   readonly sender: unknown;
   readonly originalError?: (TerriaError | Error)[];
+  readonly stack: string | undefined;
 
   @observable showDetails = false;
 
@@ -211,6 +212,7 @@ export default class TerriaError {
       : [];
 
     this.severity = options.severity ?? TerriaErrorSeverity.Error;
+    this.stack = new Error().stack;
   }
 
   get message() {
@@ -278,5 +280,48 @@ export default class TerriaError {
           : []
       )
     ]);
+  }
+
+  /**
+   * Returns a plain error object for this TerriaError instance.
+   *
+   * The `message` string for the returned plain error will include the
+   * messages from all the nested `originalError`s for this instance.
+   */
+  toError(): Error {
+    // indentation required per nesting when stringifying nested error messages
+    const indentChar = "  ";
+    const buildNestedMessage: (
+      error: TerriaError,
+      depth: number
+    ) => string | undefined = (error, depth) => {
+      if (!Array.isArray(error.originalError)) {
+        return;
+      }
+
+      const indent = indentChar.repeat(depth);
+      const nestedMessage = error.originalError
+        .map(e => {
+          if (e instanceof TerriaError) {
+            // recursively build the message for nested errors
+            return `${indent}${e.message}\n${buildNestedMessage(e, depth + 1)}`;
+          } else {
+            return `${indent}${e.toString()}`;
+          }
+        })
+        .join("\n");
+      return nestedMessage;
+    };
+
+    let message = this.message;
+    const nestedMessage = buildNestedMessage(this, 1);
+    if (nestedMessage) {
+      message = `${message}\nNested error:\n${nestedMessage}`;
+    }
+
+    const error = new Error(message);
+    error.name = "TerriaError";
+    error.stack = this.stack;
+    return error;
   }
 }
