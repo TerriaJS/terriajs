@@ -11,13 +11,14 @@
 
 .accordionItem {
   overflow: hidden;
-  transition: max-height 0.3s cubic-bezier(1, 0, 1, 0);
+  transition: max-height 0.5s cubic-bezier(1, 0, 1, 0);
   height: auto;
+  max-height: 300px;
 }
 
 .accordionItem.collapsed {
   max-height: 0;
-  transition: max-height 0.35s cubic-bezier(0, 1, 0, 1);
+  transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
 }
 
 .accordionTitle {

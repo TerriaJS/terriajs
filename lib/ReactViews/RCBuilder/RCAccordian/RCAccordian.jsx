@@ -12,7 +12,7 @@ const RCAccordian = props => {
     enableReorder,
     children
   } = props;
-  const [isOpen, setOpen] = React.useState(false);
+  const [isOpen, setOpen] = React.useState(true);
   return (
     <div className={Styles.accordionWrapper}>
       <div

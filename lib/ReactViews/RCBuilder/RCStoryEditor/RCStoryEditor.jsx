@@ -1,6 +1,5 @@
 import { AmplifyS3Image } from "@aws-amplify/ui-react";
 import { API, graphqlOperation, Storage } from "aws-amplify";
-import * as mutations from "../../../../api/graphql/mutations";
 import PropTypes from "prop-types";
 import { default as React, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -13,7 +12,6 @@ import RCSectorSelection from "./RCSectorSelection/RCSectorSelection";
 import Styles from "./RCStoryEditor.scss";
 import RCHotspotSelector from "../RCHotspotSelector/RCHotspotSelector";
 import RCPageList from "../RCPageList/RCPageList";
-import RCAccordian from "../RCAccordian/RCAccordian";
 function RCStoryEditor(props) {
   const [story, setStory] = useState(null);
   const [title, setTitle] = useState("");
@@ -21,7 +19,6 @@ function RCStoryEditor(props) {
   const [selectedSectors, setSelectedSectors] = useState([]);
   const [hotspotPoint, setHotspotPoint] = useState(null);
   const [images, setImages] = useState([]);
-  const [pages, setPages] = useState([]);
   const [message, setMessage] = useState("");
   const [sectorRequiredMessage, setSectorRequiredMessage] = useState("*");
   const history = useHistory();
@@ -108,45 +105,6 @@ function RCStoryEditor(props) {
     } else {
       saveStory();
     }
-  };
-
-  const addPage = () => {
-    const newPage = {
-      title: "New page",
-      section: "INTRODUCTION",
-      camera: [0, 0, 0, 0],
-      baseMapName: "basemap",
-      viewer_mode_3d: true,
-      scenarios: []
-    };
-
-    // Create a new page
-    API.graphql({
-      query: mutations.createPage,
-      variables: { input: newPage }
-    }).then(response => {
-      if (response.data.createPage) {
-        console.log("page created", response.data);
-
-        // Add the new page to the story
-        newPage.id = response.data.createPage.id;
-        const newPages = Array.isArray(pages) ? [...pages, newPage] : [newPage];
-        setPages(newPages);
-        console.log("pages saved", newPages);
-        // Save the story
-        saveStory();
-        // .then(() => {
-        //   // Go to the editor for the new page
-        //   history.push(`/builder/story/${id}/page/${newPage.id}/edit`);
-        // })
-        // .catch(error => {
-        //   console.log(error);
-        //   setMessage("Error", error);
-        // });
-      } else {
-        setMessage("Error", response.errors[0].message);
-      }
-    });
   };
 
   const saveStory = async () => {
@@ -277,16 +235,7 @@ function RCStoryEditor(props) {
             Pages
           </label>
           <input type="checkbox" id="pagesToggle" name="pagesToggle" /> */}
-
-          <RCAccordian
-            title="Pages"
-            hasAction={true}
-            actionTitle="+ Add"
-            action={addPage}
-            enableReorder={true}
-          >
-            <RCPageList />
-          </RCAccordian>
+          <RCPageList />
           {/* <div className={Styles.toggleContent}>
             <button
               className={Styles.RCButton}
