@@ -61,7 +61,7 @@ const StyledMapIconButton = styled(RawButton)<IStyledMapIconButtonProps>`
     props.splitter &&
     !props.disabled &&
     `
-    background: ${props.theme.colorSplitter};
+    background: ${props.theme.colorSecondary};
     color: ${props.theme.textLight};
     svg {
       fill: ${props.theme.textLight};

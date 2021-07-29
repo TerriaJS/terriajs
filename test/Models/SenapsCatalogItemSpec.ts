@@ -89,11 +89,11 @@ describe("SenapsLocationsCatalogItem", function() {
   });
 
   it("- supports zooming to extent", function() {
-    expect(item.canZoomTo).toBeTruthy();
+    expect(item.disableZoomTo).toBeFalsy();
   });
 
   it("- supports show info", function() {
-    expect(item.showsInfo).toBeTruthy();
+    expect(item.disableAboutData).toBeFalsy();
   });
 
   describe("Can not get any items without base url", async function() {

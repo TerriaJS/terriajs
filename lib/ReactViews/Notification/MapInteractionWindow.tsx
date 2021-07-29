@@ -26,7 +26,7 @@ const MapInteractionWindowWrapper = styled.div<{ isDiffTool: boolean }>`
 
     box-sizing: border-box;
     padding: 10px 15px;
-    background: ${props.theme.colorSplitter};
+    background: ${props.theme.colorSecondary};
     color:${props.theme.textLight};
   `}
 `;

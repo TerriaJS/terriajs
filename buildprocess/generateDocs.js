@@ -5,10 +5,10 @@ import fs from "fs";
 import YAML from "yaml";
 import CatalogMemberFactory from "../lib/Models/CatalogMemberFactory";
 import registerCatalogMembers from "../lib/Models/registerCatalogMembers";
-import { ObjectArrayTrait } from "../lib/Traits/objectArrayTrait";
-import { ObjectTrait } from "../lib/Traits/objectTrait";
-import { PrimitiveArrayTrait } from "../lib/Traits/primitiveArrayTrait";
-import { PrimitiveTrait } from "../lib/Traits/primitiveTrait";
+import { ObjectArrayTrait } from "../lib/Traits/Decorators/objectArrayTrait";
+import { ObjectTrait } from "../lib/Traits/Decorators/objectTrait";
+import { PrimitiveArrayTrait } from "../lib/Traits/Decorators/primitiveArrayTrait";
+import { PrimitiveTrait } from "../lib/Traits/Decorators/primitiveTrait";
 import Terria from "../lib/Models/Terria";
 
 // Run with cwd = /build
