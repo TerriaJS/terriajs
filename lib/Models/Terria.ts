@@ -1,5 +1,4 @@
 import i18next from "i18next";
-import _ from "lodash";
 import { action, computed, observable, runInAction, toJS, when } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
@@ -1731,12 +1730,12 @@ async function interpretHash(
 }
 
 const containsStory = (initSource: any) =>
-  _.isArray(initSource.stories) && !_.isEmpty(initSource.stories);
+  Array.isArray(initSource.stories) && initSource.stories.length;
 
 function interpretStartData(terria: Terria, startData: any, name: string) {
   // TODO: version check, filtering, etc.
 
-  if (_.isArray(startData.initSources)) {
+  if (Array.isArray(startData.initSources)) {
     runInAction(() => {
       terria.initSources.push(
         ...startData.initSources.map((initSource: any) => {
