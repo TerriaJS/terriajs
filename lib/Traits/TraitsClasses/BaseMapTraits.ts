@@ -26,11 +26,11 @@ export class BaseMapTraits extends ModelTraits {
 export class BaseMapsTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
-    name: "baseMapId",
+    name: "defaultBaseMapId",
     description:
       "The id of the baseMap user will see on the first mapLoad. This wil be used **before** `defaultBaseMapName`"
   })
-  baseMapId?: string;
+  defaultBaseMapId?: string;
 
   @primitiveTrait({
     type: "string",
