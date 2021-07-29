@@ -58,9 +58,9 @@ export class BaseMapsTraits extends ModelTraits {
 
   @primitiveArrayTrait({
     type: "string",
-    name: "useBaseMaps",
+    name: "enabledBaseMaps",
     description:
       "Array of base maps ids that is available to user. Use this do define order of the base maps in settings panel. Leave undefined to show all basemaps."
   })
-  useBaseMaps?: string[];
+  enabledBaseMaps?: string[];
 }

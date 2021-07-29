@@ -60,10 +60,10 @@ describe("BaseMapModel", () => {
     );
   });
 
-  it("properly use useBaseMaps list", () => {
+  it("properly use enabledBaseMaps list", () => {
     const baseMaps: any = {
       items: [baseMapPositron],
-      useBaseMaps: ["basemap-positron"]
+      enabledBaseMaps: ["basemap-positron"]
     };
     baseMapsModel.loadFromJson(CommonStrata.definition, baseMaps);
     expect(baseMapsModel.items.length).toBe(
@@ -78,7 +78,7 @@ describe("BaseMapModel", () => {
     _baseMapPositron.image = "test";
     const baseMaps: any = {
       items: [_baseMapPositron],
-      useBaseMaps: ["basemap-positron"]
+      enabledBaseMaps: ["basemap-positron"]
     };
     baseMapsModel.loadFromJson(CommonStrata.definition, baseMaps);
     expect(baseMapsModel.items.length).toBe(defaultBaseMapsLength);
@@ -89,7 +89,7 @@ describe("BaseMapModel", () => {
   it("propperly combines from multiple loads", () => {
     const baseMaps: any = {
       items: [baseMapPositron],
-      useBaseMaps: ["basemap-positron1"]
+      enabledBaseMaps: ["basemap-positron1"]
     };
     baseMapsModel.loadFromJson(CommonStrata.definition, baseMaps);
     expect(baseMapsModel.items.length).toBe(defaultBaseMapsLength + 1);
@@ -97,7 +97,7 @@ describe("BaseMapModel", () => {
 
     const baseMaps1: any = {
       items: [baseMapDarkMatter],
-      useBaseMaps: ["basemap-positron1", "basemap-darkmatter1"]
+      enabledBaseMaps: ["basemap-positron1", "basemap-darkmatter1"]
     };
     baseMapsModel.loadFromJson(CommonStrata.definition, baseMaps1);
     expect(baseMapsModel.items.length).toBe(defaultBaseMapsLength + 2);

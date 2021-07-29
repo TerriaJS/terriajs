@@ -40,11 +40,11 @@ export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
   private filterBaseMapItems() {
     const items = this.items;
     const baseMaps: BaseMapModel[] = [];
-    if (!this.useBaseMaps) {
+    if (!this.enabledBaseMaps) {
       return this.items;
     }
 
-    for (const id of this.useBaseMaps) {
+    for (const id of this.enabledBaseMaps) {
       const baseMap = items?.find(baseMap => baseMap.item === id);
       if (baseMap?.item && !ModelReference.isRemoved(baseMap.item)) {
         baseMaps.push(baseMap);
