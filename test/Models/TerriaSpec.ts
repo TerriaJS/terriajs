@@ -870,6 +870,7 @@ describe("Terria", function() {
 
   describe("basemaps", function() {
     it("when no base maps are specified load defaultBaseMaps", async function() {
+      await terria.start({ configUrl: "" });
       terria.applyInitData({
         initData: {}
       });
@@ -881,7 +882,8 @@ describe("Terria", function() {
       );
     });
 
-    it("propperly loads base maps", function() {
+    it("propperly loads base maps", async function() {
+      await terria.start({ configUrl: "" });
       terria.applyInitData({
         initData: {
           baseMaps: {
