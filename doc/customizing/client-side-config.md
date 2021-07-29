@@ -73,7 +73,7 @@ Specifies various options for configuring TerriaJS:
 |`magdaReferenceHeaders`|no|**[MagdaReferenceHeaders](#MagdaReferenceHeaders)**|undefined|
 |`locationSearchBoundingBox`|no|**number**|undefined|
 |`googleAnalyticsKey`|no|**string**|undefined|A Google API key for [Google Analytics](https://analytics.google.com).  If specified, TerriaJS will send various events about how it's used to Google Analytics.|
-|`rollbarAccessToken`|no|**string**|undefined|Your `post_client_item` from Rollbar - as of right now, TerriaMap also needs to be modified such that you construct `RollbarErrorProvider` in `index.js`|
+|`errorService`|no|**[ErrorServiceOptions](#errorserviceoptions)**|undefined|Optional configuration for the remote error logging service that Terria should log errors to.|
 |`globalDisclaimer`|no|**any**|undefined||
 |`showWelcomeMessage`|no|**boolean**|`false`|True to display welcome message on startup.|
 |`welcomeMessageVideo`|no|**any**||Video to show in welcome message.|
@@ -143,6 +143,14 @@ Configuration of items to appear in the search bar
 |languages|yes|**Object**|`{en: "english"}`|Language abbreviations. Please mind that matching locale files must exist.|
 |fallbackLanguage|yes|**string**|`"en"`|Fallback language used if contents are not available in the currently selected language.|
 |changeLanguageOnStartWhen|yes|**string[]**|`["querystring", "localStorage", "navigator", "htmlTag"]`|Order of user language detection. See [i18next browser language detection documentation](https://github.com/i18next/i18next-browser-languageDetector) for details.|
+
+***
+
+### ErrorServiceOptions
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|provider|yes|**string**|`undefined`|A string identifying the error service provider to use. Currently only `rollbar` is supported.|
+|configuration|no|**any**|`undefined`|The configuration object to pass as constructor parameters to the error service provider instance. See the [provider implementation](https://github.com/TerriaJS/terriajs/blob/next/lib/Models/ErrorServiceProviders/) for supported configuration parameters.|
 
 **Example**
 
