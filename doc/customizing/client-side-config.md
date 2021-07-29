@@ -5,7 +5,7 @@ It has following structure:
 |Name|Required|Type|Default|Description|
 |----|--------|----|-------|-----------|
 |[initializationUrls](#intializationurls)|yes|**string[]**|[]|The list of initialization files which define the catalog content, for more details check [below](#intializationurls).|
-|[v7initializationUrls](#v7initializationUrls)|yes|**string[]**|[]|The list of v7 initialization files &mdash; these will be converted to v8 on the fly using [`catalog-converter`](https://github.com/TerriaJS/catalog-converter). For more details check [below](#v7initializationUrls).|
+|[v7initializationUrls](#v7initializationurls)|yes|**string[]**|[]|The list of v7 initialization files &mdash; these will be converted to v8 on the fly using [`catalog-converter`](https://github.com/TerriaJS/catalog-converter). For more details check [below](#v7initializationUrls).|
 |parameters|yes|**[Parameters](#parameters)**||TerriaJS configuration options|
 
 **Example**
@@ -70,7 +70,7 @@ Specifies various options for configuring TerriaJS:
 |`disableMyLocation`|no|**boolean**|undefined|True to disable the "Centre map at your current location" button.|
 |`disableSplitter`|no|**boolean**|undefined|True to disable the use of the splitter control.|
 |`experimentalFeatures`|no|**boolean**|undefined||
-|`magdaReferenceHeaders`|no|**[MagdaReferenceHeaders](#MagdaReferenceHeaders)**|undefined|
+|`magdaReferenceHeaders`|no|**[MagdaReferenceHeaders](#magdareferenceheaders)**|undefined|
 |`locationSearchBoundingBox`|no|**number**|undefined|
 |`googleAnalyticsKey`|no|**string**|undefined|A Google API key for [Google Analytics](https://analytics.google.com).  If specified, TerriaJS will send various events about how it's used to Google Analytics.|
 |`errorService`|no|**[ErrorServiceOptions](#errorserviceoptions)**|undefined|Optional configuration for the remote error logging service that Terria should log errors to.|
@@ -78,9 +78,9 @@ Specifies various options for configuring TerriaJS:
 |`showWelcomeMessage`|no|**boolean**|`false`|True to display welcome message on startup.|
 |`welcomeMessageVideo`|no|**any**||Video to show in welcome message.|
 |`showInAppGuides`|no|**boolean**|`false`|True to display in-app guides.|
-|`helpContent`|no|**[HelpContentItem](#HelpContentItem)**|`[]`|The content to be displayed in the help panel.|
-|`helpContentTerms`|no|**[Term](#Term)**|||
-|`languageConfiguration`|no|**[LanguageConfiguration](#LanguageConfiguration)**|undefined|Language configuration of TerriaJS.|
+|`helpContent`|no|**[HelpContentItem](#helpcontentitem)**|`[]`|The content to be displayed in the help panel.|
+|`helpContentTerms`|no|**[Term](#term)**|||
+|`languageConfiguration`|no|**[LanguageConfiguration](#languageconfiguration)**|undefined|Language configuration of TerriaJS.|
 |`customRequestSchedulerLimits`|no|**[RequestScheduler](https://cesium.com/docs/cesiumjs-ref-doc/RequestScheduler.html#.requestsByServer)**|undefined|Custom concurrent request limits for domains in Cesium's RequestScheduler.|
 |`persistViewerMode`|no|**boolean**|`true`|Whether to load persisted viewer mode from local storage.|
 |`openAddData`|no|**boolean**|`false`|Whether to open the add data explorer panel on load.|
@@ -103,7 +103,7 @@ Configuration of items to appear in the search bar
 |`videoUrl`|no|**string**|undefined|The video to show on the top of help item.|
 |`placeholderImage`|no|**string**|undefined|Placeholder image for the video.|
 |`paneMode`|no|**enum["videoAndContent","slider","trainer"]**|`"videoAndContent"`|
-|`trainerItems`|no|**[TrainerItem[]](#TrainerItem)**|undefined|List of the trainer steps|
+|`trainerItems`|no|**[TrainerItem[]](#traineritem)**|undefined|List of the trainer steps|
 |`markdownText`|no|**string**|undefined|The content of the help item, can use Markdown syntax.|
 |`icon`|no|**string**|undefined|Icon to show next to the itemName.|
 
