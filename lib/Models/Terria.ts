@@ -814,11 +814,11 @@ export default class Terria {
     if (baseMapSearch?.item && MappableMixin.isMixedInto(baseMapSearch.item)) {
       baseMap = baseMapSearch;
     } else {
-      // Try to find basemap using defaultBaseMapId and defaultBaseMapName
+      // Try to find basemap using baseMapId and defaultBaseMapName
       const baseMapSearch =
         baseMapItems.find(
           baseMapItem =>
-            baseMapItem.item?.uniqueId === this.baseMapsModel.defaultBaseMapId
+            baseMapItem.item?.uniqueId === this.baseMapsModel.baseMapId
         ) ??
         baseMapItems.find(
           baseMapItem =>
