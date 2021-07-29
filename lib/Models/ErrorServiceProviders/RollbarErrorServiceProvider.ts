@@ -8,6 +8,8 @@ export default class RollbarErrorServiceProvider
 
   /**
    * @param configuration Configuration for the Rollbar instance. See https://docs.rollbar.com/docs/rollbarjs-configuration-reference#context-1
+   *
+   * Caveat: Rollbar API requests are blocked by some privacy extensions for browsers.
    */
   constructor(configuration: any) {
     this.rollbar = new Rollbar({
