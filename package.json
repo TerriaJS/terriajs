@@ -136,7 +136,7 @@
     "react-virtual": "~2.3.2",
     "resolve-url-loader": "^3.0.1",
     "retry": "^0.12.0",
-    "rollbar": "2.15.2",
+    "rollbar": "^2.24.0",
     "sass-loader": "^7.1.0",
     "shpjs": "^3.6.0",
     "simple-statistics": "^7.0.1",
