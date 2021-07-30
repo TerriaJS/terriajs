@@ -830,6 +830,42 @@ describe("FeatureInfoSection", function() {
       expect(findAllEqualTo(result, "Yak").length).toEqual(0);
     });
 
+    it("does not replace any text, using terria.replaceText but not defining replaceText flag in the options.", function() {
+      const template =
+        '{{#terria.replaceText}}{from: ["Bar", "Kay", "This name"], to: ["Rab", "Yak", "That name"]}{{name}}{{/terria.replaceText}}';
+
+      const section = (
+        <FeatureInfoSection
+          feature={feature} // feature.properties.name === "Kay";
+          isOpen={true}
+          template={template}
+          viewState={viewState}
+          t={() => {}}
+        />
+      );
+      const result = getShallowRenderedOutput(section);
+      expect(findAllEqualTo(result, "Yak").length).toEqual(0);
+      expect(findAllEqualTo(result, "Kay").length).toEqual(1);
+    });
+
+    it("does not replace any text, using terria.replaceText but setting replaceText flag to false in the options.", function() {
+      const template =
+        '{{#terria.replaceText}}{replaceText: false, from: ["Bar", "Kay", "This name"], to: ["Rab", "Yak", "That name"]}{{name}}{{/terria.replaceText}}';
+
+      const section = (
+        <FeatureInfoSection
+          feature={feature} // feature.properties.name === "Kay";
+          isOpen={true}
+          template={template}
+          viewState={viewState}
+          t={() => {}}
+        />
+      );
+      const result = getShallowRenderedOutput(section);
+      expect(findAllEqualTo(result, "Yak").length).toEqual(0);
+      expect(findAllEqualTo(result, "Kay").length).toEqual(1);
+    });
+
     it("does not replace text if no matching, using terria.replaceText", function() {
       // The value of feature.properties.name does not match any string in "from" array.
       const template =
