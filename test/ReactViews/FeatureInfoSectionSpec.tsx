@@ -389,7 +389,7 @@ describe("FeatureInfoSection", function() {
           isOpen={true}
           template={template}
           viewState={viewState}
-          t={() => {}}
+          t={i18next.getFixedT("cimode")}
         />
       );
       const result = getShallowRenderedOutput(section);
