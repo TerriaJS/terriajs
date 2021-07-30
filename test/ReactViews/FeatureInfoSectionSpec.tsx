@@ -42,7 +42,10 @@ import i18next from "i18next";
 
 let separator = ",";
 if (typeof Intl === "object" && typeof Intl.NumberFormat === "function") {
-  separator = Intl.NumberFormat().format(1000)[1];
+  const thousand = Intl.NumberFormat().format(1000);
+  if (thousand.length === 5) {
+    separator = thousand[1];
+  }
 }
 
 const contentClass = Styles.content;
@@ -389,7 +392,7 @@ describe("FeatureInfoSection", function() {
           isOpen={true}
           template={template}
           viewState={viewState}
-          t={i18next.getFixedT("cimode")}
+          t={() => {}}
         />
       );
       const result = getShallowRenderedOutput(section);
