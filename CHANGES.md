@@ -12,7 +12,7 @@ Change Log
   - `$color-splitter` and `theme.colorSplitter` has been replaced with `$color-secondary` and `theme.colorSecondary`
   - `canZoomTo` has bee replaced with `disableZoomTo` in `MappableTraits`
   - `showsInfo` has been replaced with `disableAboutData` in `CatalogMemberTraits`
-  - `AsyncLoader` loadXXX methods now return `Result` with `errors` **they no longer throw errors** - if you need errors to be thrown you can use `(await loadXX).throthrowIfErrorwError()`.
+  - `AsyncLoader` loadXXX methods now return `Result` with `errors` **they no longer throw errors** - if you need errors to be thrown you can use `(await loadXX).throwIfError()`.
   - Removed `openGroup()` - it is replaced by `viewState.viewCatalogMember`
   - Renamed `ReferenceMixin.is` to `ReferenceMixin.isMixedInto`
 
@@ -63,10 +63,8 @@ Change Log
   * `TerriaErrorSeverity` will be copied through nested `TerriaErrors` on creation (eg if you call `TerriaError.from()` on a `Warning` then the parent error will also be `Warning`)
   * Loading models from share links or stories will use `Warning` if the model is **not in the workbench**, otherwise it will use `Error`.
 * In `terriaErrorNotification` - show `error.message` (as well as `error.stack`) if `error.stack` is defined
-* `AsyncLoader` loadXXX methods now return `Result` with `errors`.
 * `AsyncLoader` now has an observable `result` property.
 * `viewState.viewCatalogMember()` now handles loading catalog members, opening groups and showing "Add Data" window.
-* Removed `openGroup()` - it is replaced by `viewState.viewCatalogMember`
 * Fix `MagdaReference` `forceLoadReference` bug.
 * Clean up `CkanCatalogGroup` loading - errors are no-longer swallowed.
 * Clean up `3dTilesMixin` loading - errors are no-longer swallowed.

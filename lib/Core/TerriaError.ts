@@ -223,7 +223,7 @@ export default class TerriaError {
     return resolveI18n(this._title);
   }
 
-  /** Show error to user if `severity` is `Error` */
+  /** True if `severity` is `Error` */
   get shouldRaiseToUser() {
     return (
       (typeof this.severity === "function"
