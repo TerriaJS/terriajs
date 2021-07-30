@@ -62,6 +62,7 @@ Change Log
   * Replaced with `disableZoomTo` in `MappableTraits`
 * Clean up `showsInfo`
   * Replaced with `disableAboutData` in `CatalogMemberTraits`
+* Add WMS support for default value of time dimension.
 * [The next improvement]
 
 #### 8.0.0-alpha.87
