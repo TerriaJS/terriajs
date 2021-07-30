@@ -953,7 +953,7 @@ describe("FeatureInfoSection", function() {
       // target = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>ABC</td></tr></tbody></table><br />
       //           <table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
       const json = await loadJson("test/init/czml-with-template-0.json");
-      const theItem = upsertModelFromJson(
+      const czmlItem = upsertModelFromJson(
         CatalogMemberFactory,
         terria,
         "",
@@ -962,31 +962,28 @@ describe("FeatureInfoSection", function() {
         {}
       ).throwIfUndefined() as CzmlCatalogItem;
 
-      await theItem.loadMapItems();
+      await czmlItem.loadMapItems();
 
-      const czmlData = theItem.mapItems;
+      const czmlData = czmlItem.mapItems;
       expect(czmlData.length).toBeGreaterThan(0);
-      const feature = czmlData[0].entities.values[0];
+      const czmlFeature = czmlData[0].entities.values[0];
       const section = (
         <FeatureInfoSection
-          feature={feature}
+          feature={czmlFeature}
           isOpen={true}
           viewState={viewState}
-          template={theItem.featureInfoTemplate}
+          template={czmlItem.featureInfoTemplate}
           t={() => {}}
         />
       );
-      const result_5 = getShallowRenderedOutput(section);
-      expect(findAllEqualTo(result_5, "ABC").length).toEqual(1);
-      expect(findAllEqualTo(result_5, "2010").length).toEqual(1);
-      expect(findAllEqualTo(result_5, "14.4").length).toEqual(1);
-      expect(findAllEqualTo(result_5, "2012").length).toEqual(1);
-      expect(findAllEqualTo(result_5, "10.7").length).toEqual(1);
+      const result = getShallowRenderedOutput(section);
+      expect(findAllEqualTo(result, "ABC").length).toEqual(1);
+      expect(findAllEqualTo(result, "2010").length).toEqual(1);
+      expect(findAllEqualTo(result, "14.4").length).toEqual(1);
+      expect(findAllEqualTo(result, "2012").length).toEqual(1);
+      expect(findAllEqualTo(result, "10.7").length).toEqual(1);
     });
 
-    /*
-    // Disable this test as it needs further investigation.
-    
     it("uses and completes a time-varying, string-form featureInfoTemplate", async function() {
       // targetBlank = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td></td></tr></tbody></table><br />
       //                <table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
@@ -995,7 +992,7 @@ describe("FeatureInfoSection", function() {
       // targetDEF = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>DEF</td></tr></tbody></table><br />
       //              <table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
       const json = await loadJson("test/init/czml-with-template-1.json");
-      const theItem = upsertModelFromJson(
+      const czmlItem = upsertModelFromJson(
         CatalogMemberFactory,
         terria,
         "",
@@ -1004,37 +1001,33 @@ describe("FeatureInfoSection", function() {
         {}
       ).throwIfUndefined() as CzmlCatalogItem;
 
-      await theItem.loadMapItems();
+      await czmlItem.loadMapItems();
 
-      const czmlData = theItem.mapItems;
-      expect(
-        czmlData.length
-      ).toBeGreaterThan(0);
-      const feature = czmlData[0].entities.values[0];
-      theItem.setTrait(CommonStrata.user, "currentTime", "2010-02-02");
-      // catalogItem.clock.currentTime = JulianDate.fromIso8601("2010-02-02");
+      const czmlData = czmlItem.mapItems;
+      expect(czmlData.length).toBeGreaterThan(0);
+      const czmlFeature = czmlData[0].entities.values[0];
+      czmlItem.setTrait(CommonStrata.user, "currentTime", "2010-02-02");
       let section = (
         <FeatureInfoSection
-          feature={feature}
+          feature={czmlFeature}
           isOpen={true}
-          catalogItem={catalogItem}
+          catalogItem={czmlItem}
           viewState={viewState}
-          template={theItem.featureInfoTemplate}
+          template={czmlItem.featureInfoTemplate}
           t={() => {}}
         />
       );
       let result = getShallowRenderedOutput(section);
       expect(findAllEqualTo(result, "ABC").length).toEqual(0);
       expect(findAllEqualTo(result, "DEF").length).toEqual(0);
-      theItem.setTrait(CommonStrata.user, "currentTime", "2012-02-02");
-      // catalogItem.clock.currentTime = JulianDate.fromIso8601("2012-02-02");
+      czmlItem.setTrait(CommonStrata.user, "currentTime", "2012-02-02");
       section = (
         <FeatureInfoSection
-          feature={feature}
+          feature={czmlFeature}
           isOpen={true}
-          catalogItem={catalogItem}
+          catalogItem={czmlItem}
           viewState={viewState}
-          template={theItem.featureInfoTemplate}
+          template={czmlItem.featureInfoTemplate}
           t={() => {}}
         />
       );
@@ -1042,15 +1035,14 @@ describe("FeatureInfoSection", function() {
       expect(findAllEqualTo(result, "ABC").length).toEqual(1);
       expect(findAllEqualTo(result, "DEF").length).toEqual(0);
 
-      theItem.setTrait(CommonStrata.user, "currentTime", "2014-02-02");
-      // catalogItem.clock.currentTime = JulianDate.fromIso8601("2014-02-02");
+      czmlItem.setTrait(CommonStrata.user, "currentTime", "2014-02-02");
       section = (
         <FeatureInfoSection
-          feature={feature}
+          feature={czmlFeature}
           isOpen={true}
-          catalogItem={catalogItem}
+          catalogItem={czmlItem}
           viewState={viewState}
-          template={theItem.featureInfoTemplate}
+          template={czmlItem.featureInfoTemplate}
           t={() => {}}
         />
       );
@@ -1058,7 +1050,6 @@ describe("FeatureInfoSection", function() {
       expect(findAllEqualTo(result, "ABC").length).toEqual(0);
       expect(findAllEqualTo(result, "DEF").length).toEqual(1);
     });
-*/
   });
 });
 
