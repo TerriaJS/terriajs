@@ -17,7 +17,7 @@ export default class TransformationTraits extends ModelTraits {
     type: HeadingPitchRollTraits,
     name: "Rotation",
     description:
-      "The rotation of the model expressed as heading, pitch and roll in the local frame of reference."
+      "The rotation of the model expressed as heading, pitch and roll in the local frame of reference. Defaults to zero rotation."
   })
   rotation?: HeadingPitchRollTraits;
 
