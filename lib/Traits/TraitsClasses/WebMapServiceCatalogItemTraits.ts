@@ -1,5 +1,11 @@
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
+import objectArrayTrait from "../Decorators/objectArrayTrait";
+import objectTrait from "../Decorators/objectTrait";
+import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import ModelTraits from "../ModelTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import DiffableTraits from "./DiffableTraits";
 import ExportableTraits from "./ExportableTraits";
@@ -8,14 +14,7 @@ import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import LegendTraits from "./LegendTraits";
 import MappableTraits from "./MappableTraits";
-import mixTraits from "../mixTraits";
-import ModelTraits from "../ModelTraits";
-import objectArrayTrait from "../Decorators/objectArrayTrait";
-import objectTrait from "../Decorators/objectTrait";
-import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
-import primitiveTrait from "../Decorators/primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
-import SplitterTraits from "./SplitterTraits";
 import TimeFilterTraits from "./TimeFilterTraits";
 import UrlTraits from "./UrlTraits";
 
@@ -153,7 +152,6 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   DiffableTraits,
   FeatureInfoTraits,
   LayerOrderingTraits,
-  SplitterTraits,
   TimeFilterTraits,
   GetCapabilitiesTraits,
   RasterLayerTraits,

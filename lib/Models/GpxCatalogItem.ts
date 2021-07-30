@@ -33,14 +33,6 @@ class GpxCatalogItem extends MappableMixin(
 
   private _gpxFile?: File;
 
-  get canZoomTo(): boolean {
-    return true;
-  }
-
-  get showsInfo(): boolean {
-    return true;
-  }
-
   setFileInput(file: File) {
     this._gpxFile = file;
   }

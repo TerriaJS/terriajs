@@ -215,4 +215,11 @@ export default class CatalogMemberTraits extends ModelTraits {
       "This provides ability to set model JSON through SelectableDimensions (a dropdown)."
   })
   modelDimensions?: DimensionTraits[];
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Disable about data",
+    description: "Disables the 'About Data' button in the workbench."
+  })
+  disableAboutData: boolean = false;
 }

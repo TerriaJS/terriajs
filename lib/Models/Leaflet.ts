@@ -112,7 +112,7 @@ export default class Leaflet extends GlobeOrMap {
 
   private _makeImageryLayerFromParts(
     parts: ImageryParts,
-    item: MappableMixin.MappableMixin
+    item: MappableMixin.Instance
   ) {
     if (TileErrorHandlerMixin.isMixedInto(item)) {
       // because this code path can run multiple times, make sure we remove the
@@ -353,7 +353,7 @@ export default class Leaflet extends GlobeOrMap {
       ];
       // Flatmap
       const allImageryMapItems = ([] as {
-        item: MappableMixin.MappableMixin;
+        item: MappableMixin.Instance;
         parts: ImageryParts;
       }[]).concat(
         ...catalogItems
@@ -438,12 +438,7 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   doZoomTo(
-    target:
-      | CameraView
-      | Rectangle
-      | DataSource
-      | MappableMixin.MappableMixin
-      | any,
+    target: CameraView | Rectangle | DataSource | MappableMixin.Instance | any,
     flightDurationSeconds: number
   ): Promise<void> {
     if (!isDefined(target)) {
@@ -848,7 +843,7 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   getImageryLayersForItem(
-    item: MappableMixin.MappableMixin
+    item: MappableMixin.Instance
   ): (CesiumTileLayer | MapboxVectorCanvasTileLayer)[] {
     return filterOutUndefined(
       item.mapItems.map(m => {

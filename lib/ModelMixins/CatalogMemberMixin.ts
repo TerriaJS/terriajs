@@ -70,13 +70,6 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       return this.terria.workbench.contains(this);
     }
 
-    /**
-     * Default value for showsInfo (About Data button)
-     */
-    get showsInfo() {
-      return true;
-    }
-
     @computed
     get nameInCatalog(): string | undefined {
       return super.nameInCatalog || this.name;
@@ -181,9 +174,9 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
 const descriptionRegex = /description/i;
 
 namespace CatalogMemberMixin {
-  export interface CatalogMemberMixin
+  export interface Instance
     extends InstanceType<ReturnType<typeof CatalogMemberMixin>> {}
-  export function isMixedInto(model: any): model is CatalogMemberMixin {
+  export function isMixedInto(model: any): model is Instance {
     return model && model.hasCatalogMemberMixin;
   }
 }

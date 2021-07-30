@@ -34,10 +34,6 @@ export default class GltfCatalogItem extends MappableMixin(
     return GltfCatalogItem.type;
   }
 
-  get canZoomTo() {
-    return true;
-  }
-
   @computed
   private get cesiumUpAxis() {
     if (this.upAxis === undefined) {

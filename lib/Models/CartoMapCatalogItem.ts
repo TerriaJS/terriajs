@@ -109,14 +109,6 @@ export default class CartoMapCatalogItem extends MappableMixin(
     return CartoMapCatalogItem.type;
   }
 
-  get canZoomTo() {
-    return isDefined(this.rectangle);
-  }
-
-  get supportsSplitting() {
-    return true;
-  }
-
   @computed get mapItems(): MapItem[] {
     if (isDefined(this.imageryProvider)) {
       return [

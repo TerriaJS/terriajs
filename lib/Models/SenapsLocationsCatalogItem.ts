@@ -243,8 +243,6 @@ class SenapsLocationsCatalogItem extends MappableMixin(
     return i18next.t("models.senaps.name");
   }
 
-  readonly canZoomTo = true;
-
   protected forceLoadMapItems(): Promise<void> {
     return SenapsLocationsStratum.load(this).then(stratum => {
       if (stratum === undefined) return;

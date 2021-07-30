@@ -747,7 +747,7 @@ const DiffAccordion: React.FC<DiffAccordionProps> = props => {
         paddedHorizontally={2}
         centered
         justifySpaceBetween
-        backgroundColor={theme.colorSplitter}
+        backgroundColor={theme.colorSecondary}
       >
         <Box centered>
           <StyledIcon styledWidth="20px" light glyph={GLYPHS.difference} />
