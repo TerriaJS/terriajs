@@ -10,6 +10,12 @@ Change Log
   - `colorPalette` no longer supports a list of CSS colors (eg `rgb(0,0,255)-rgb(0,255,0)-rgb(255,0,0)`). Instead please use `binColors`.
   - Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses`
   - Renamed all mixin instance type definitions to `XMixin.Instance`.
+  - Basemaps are now defined as `baseMaps` object
+    - list of available basemaps is defined in `baseMaps.init`. This list is combined with default base maps so it's possible to override defaults
+    - definition of `initBaseMapId` and `initBaseMapName` are moved to `baseMaps.defaultBaseMapId` and `baseMaps.defaultBaseMapName`
+    - `previewBaseMapId` is moved to `baseMaps.previewBaseMapId`
+    - implemented `baseMaps.enabledBaseMaps` array of base map ids to define a list of baseMaps available to user
+    - updated docs for `baseMaps`
   - `$color-splitter` and `theme.colorSplitter` has been replaced with `$color-secondary` and `theme.colorSecondary`
   - `canZoomTo` has bee replaced with `disableZoomTo` in `MappableTraits`
   - `showsInfo` has been replaced with `disableAboutData` in `CatalogMemberTraits`
@@ -45,6 +51,7 @@ Change Log
 * Added `MapboxStyleCatalogItem`.
 * Fix splitter thumb icon vertical position
 * Renamed all mixin instance type definitions to `XMixin.Instance`.
+* 
 * Clean up `ViewControl` colors
   * `$color-splitter` and `theme.colorSplitter` has been replaced with `$color-secondary` and `theme.colorSecondary`
 * Clean up `SplitterTraits`
