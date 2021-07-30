@@ -65,13 +65,13 @@ class SettingPanel extends React.Component {
 
   selectBaseMap(baseMap, event) {
     event.stopPropagation();
-    this.props.terria.mainViewer.setBaseMap(baseMap.mappable);
+    this.props.terria.mainViewer.setBaseMap(baseMap);
     // this.props.terria.baseMapContrastColor = baseMap.contrastColor;
 
     // We store the user's chosen basemap for future use, but it's up to the instance to decide
     // whether to use that at start up.
-    if (baseMap.mappable) {
-      const baseMapId = baseMap.mappable.uniqueId;
+    if (baseMap) {
+      const baseMapId = baseMap.uniqueId;
       if (baseMapId) {
         this.props.terria.setLocalProperty("basemap", baseMapId);
       }
@@ -80,7 +80,7 @@ class SettingPanel extends React.Component {
 
   mouseEnterBaseMap(baseMap) {
     runInAction(() => {
-      this._hoverBaseMap = baseMap.mappable.name;
+      this._hoverBaseMap = baseMap.item.name;
     });
   }
 
@@ -317,22 +317,29 @@ class SettingPanel extends React.Component {
             {this.activeMapName}
           </label>
           <ul className={Styles.baseMapSelector}>
-            <For each="baseMap" index="i" of={this.props.terria.baseMaps}>
+            <For
+              each="baseMap"
+              index="i"
+              of={this.props.terria.baseMapsModel.baseMapItems}
+            >
               <li key={i} className={Styles.listItemFourCols}>
                 <button
                   className={classNames(Styles.btnBaseMap, {
                     [Styles.isActive]:
-                      baseMap.mappable === this.props.terria.mainViewer.baseMap
+                      baseMap.item === this.props.terria.mainViewer.baseMap
                   })}
-                  onClick={this.selectBaseMap.bind(this, baseMap)}
+                  onClick={this.selectBaseMap.bind(this, baseMap.item)}
                   onMouseEnter={this.mouseEnterBaseMap.bind(this, baseMap)}
                   onMouseLeave={this.mouseLeaveBaseMap.bind(this, baseMap)}
                   onFocus={this.mouseEnterBaseMap.bind(this, baseMap)}
                 >
-                  {baseMap.mappable === this.props.terria.mainViewer.baseMap ? (
+                  {baseMap.item === this.props.terria.mainViewer.baseMap ? (
                     <Icon glyph={Icon.GLYPHS.selected} />
                   ) : null}
-                  <img alt={baseMap.mappable.name} src={baseMap.image} />
+                  <img
+                    alt={baseMap.item ? baseMap.item.name : ""}
+                    src={baseMap.image}
+                  />
                 </button>
               </li>
             </For>
