@@ -58,6 +58,7 @@ Change Log
   * Replaced with `disableAboutData` in `CatalogMemberTraits`
 * Add `feature` object to `FeatureInfoSection.getTemplateData`
 * Add `mustacheReplaceTextFunction` function to `FeatureInfoSection`
+* Add a way to replace text in feature info templates, eg. `{{#terria.replaceText}}{"replaceText": true, "from": [0,1,2,3], "to": ["Zero","One","Two","Three"]}{{value}}{{/terria.replaceText}}`. The quotes around the keys are optional.
 * [The next improvement]
 
 #### 8.0.0-alpha.87

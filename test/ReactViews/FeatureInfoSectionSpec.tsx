@@ -891,7 +891,7 @@ describe("FeatureInfoSection", function() {
 
       const section = (
         <FeatureInfoSection
-          feature={feature}
+          feature={feature} // feature.properties.name === "Kay";
           isOpen={true}
           template={template}
           viewState={viewState}
@@ -900,6 +900,8 @@ describe("FeatureInfoSection", function() {
       );
       const result = getShallowRenderedOutput(section);
       expect(findAllEqualTo(result, "Yak!").length).toEqual(1);
+      expect(findAllEqualTo(result, "Yak!alert('gotcha')").length).toEqual(0);
+      expect(findAllEqualTo(result, "alert('gotcha')").length).toEqual(0);
       expect(
         findAllEqualTo(result, "Yak!<script>alert('gotcha')</script>").length
       ).toEqual(0);
@@ -907,7 +909,7 @@ describe("FeatureInfoSection", function() {
     });
 
     /*
-    v8 version does not support this feature at the moment. Need more work.
+    // v8 version does not support this feature at the moment. See https://github.com/TerriaJS/terriajs/issues/5685
      
     it("can access the current time", function() {
       const template = "<div class='rrrr'>Time: {{terria.currentTime}}</div>";

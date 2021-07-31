@@ -132,10 +132,10 @@ You can replace text by directly using `terria.replaceText` in the template and 
  - Any unsafe string in the `to` array will be stripped off when being rendered.
 
             "featureInfoTemplate": {
-              "template": "{{Pixel Value}} dwellings in {{#terria.replaceText}}{replaceText: true, from: [0,1,2,3], to: [\"100m\", \"500m\", \"1km\", \"2km\"]}{{feature.data.layerId}}{{/terria.replaceText}} radius."
+              "template": '{{Pixel Value}} dwellings in {{#terria.replaceText}}{replaceText: true, from: [0,1,2,3], to: ["100m", "500m", "1km", "2km"]}{{feature.data.layerId}}{{/terria.replaceText}} radius.'
             }
 
-where the number array `[0,1,2,3]` can also be written as string array `[\"0\",\"1\",\"2\",\"3\"]`. 
+where the number array `[0,1,2,3]` can also be written as string array `["0","1","2","3"]`. 
 
 If `{{Pixel Value}}` equals to `150` and `{{feature.data.layerId}}` to `2`, the text `150 dwellings in 1km radius.` will be rendered.
 
