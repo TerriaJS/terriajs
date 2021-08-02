@@ -1,10 +1,18 @@
+import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
+import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
+import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
+import Transforms from "terriajs-cesium/Source/Core/Transforms";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import MappableMixin from "../../lib/ModelMixins/MappableMixin";
 import CommonStrata from "../../lib/Models/CommonStrata";
 import createStratumInstance from "../../lib/Models/createStratumInstance";
 import GltfCatalogItem from "../../lib/Models/GltfCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import HeadingPitchRollTraits from "../../lib/Traits/TraitsClasses/HeadingPitchRollTraits";
+import LatLonHeightTraits from "../../lib/Traits/TraitsClasses/LatLonHeightTraits";
 
 describe("GltfCatalogItem", function() {
   let gltf: GltfCatalogItem;
@@ -28,18 +36,27 @@ describe("GltfCatalogItem", function() {
 
   describe("orientation", function() {
     describe("when no rotation is defined", function() {
-      it("defaults to Quatenrion.IDENTITY", async function() {
+      it("defaults to zero rotation", async function() {
+        gltf.setTrait(
+          CommonStrata.user,
+          "origin",
+          createStratumInstance(LatLonHeightTraits, {
+            longitude: -123.0744619,
+            latitude: 44.0503706,
+            height: 0
+          })
+        );
+
         await gltf.loadMapItems();
         const entity = gltf.mapItems[0]?.entities.values[0];
-        expect(entity.orientation).toBeDefined();
+        const orientation = entity.orientation;
+        expect(orientation).toBeDefined();
 
-        if (entity.orientation !== undefined) {
-          const orientation = entity?.orientation.getValue(JulianDate.now());
-          expect(orientation).toBeDefined();
-          expect(orientation.x).toEqual(0);
-          expect(orientation.y).toEqual(0);
-          expect(orientation.z).toEqual(0);
-          expect(orientation.w).toEqual(1);
+        if (orientation !== undefined) {
+          const { heading, pitch, roll } = getEntityHprInDegrees(entity);
+          expect(heading).toEqual(0);
+          expect(pitch).toEqual(0);
+          expect(roll).toEqual(0);
         }
       });
     });
@@ -55,16 +72,26 @@ describe("GltfCatalogItem", function() {
             roll: 50
           })
         );
+
+        gltf.setTrait(
+          CommonStrata.user,
+          "origin",
+          createStratumInstance(LatLonHeightTraits, {
+            longitude: -123.0744619,
+            latitude: 44.0503706,
+            height: 0
+          })
+        );
         await gltf.loadMapItems();
         const entity = gltf.mapItems[0]?.entities.values[0];
-        expect(entity.orientation).toBeDefined();
+        const orientation = entity.orientation?.getValue(JulianDate.now());
+        expect(orientation).toBeDefined();
 
-        if (entity.orientation !== undefined) {
-          const orientation = entity?.orientation.getValue(JulianDate.now());
-          expect(orientation.x.toFixed(2)).toEqual("0.50");
-          expect(orientation.y.toFixed(2)).toEqual("-0.07");
-          expect(orientation.z.toFixed(2)).toEqual("0.55");
-          expect(orientation.w.toFixed(2)).toEqual("0.67");
+        if (orientation !== undefined) {
+          const { heading, pitch, roll } = getEntityHprInDegrees(entity);
+          expect(heading).toEqual(30);
+          expect(pitch).toEqual(40);
+          expect(roll).toEqual(50);
         }
       });
     });
@@ -81,3 +108,16 @@ describe("GltfCatalogItem", function() {
     });
   });
 });
+
+/**
+ * Returns the current entity rotation HPR in degrees.
+ */
+function getEntityHprInDegrees(entity: Entity) {
+  const modelMatrix = entity.computeModelMatrix(JulianDate.now());
+  const hpr = Transforms.fixedFrameToHeadingPitchRoll(modelMatrix);
+  return {
+    heading: Math.round(CesiumMath.toDegrees(hpr.heading)),
+    pitch: Math.round(CesiumMath.toDegrees(hpr.pitch)),
+    roll: Math.round(CesiumMath.toDegrees(hpr.roll))
+  };
+}

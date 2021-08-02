@@ -49,15 +49,11 @@ import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
 import { defaultTerms, Term } from "../ReactViewModels/defaultTerms";
-import NotificationState, {
-  Notification
-} from "../ReactViewModels/NotificationState";
+import NotificationState from "../ReactViewModels/NotificationState";
 import { shareConvertNotification } from "../ReactViews/Notification/shareConvertNotification";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
-import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
-import { BaseMapModel, processBaseMaps } from "./BaseMaps/BaseMapModel";
-import { defaultBaseMaps } from "./BaseMaps/defaultBaseMaps";
+import { BaseMapsModel } from "./BaseMaps/BaseMapsModel";
 import CameraView from "./CameraView";
 import CatalogGroup from "./CatalogGroupNew";
 import CatalogMemberFactory from "./CatalogMemberFactory";
@@ -327,6 +323,7 @@ export default class Terria {
   readonly workbench = new Workbench();
   readonly overlays = new Workbench();
   readonly catalog = new Catalog(this);
+  readonly baseMapsModel = new BaseMapsModel("basemaps", this);
   readonly timelineClock = new Clock({ shouldAnimate: false });
   // readonly overrides: any = overrides; // TODO: add options.functionOverrides like in master
 
@@ -433,17 +430,6 @@ export default class Terria {
   };
 
   @observable
-  baseMaps: BaseMapViewModel[] = [];
-
-  /** ID of basemap pulled from initData - this wil be used **before** `initBaseMapName` */
-  initBaseMapId: string | undefined;
-
-  /** Name of basemap pulled from initData - this is for compatibility with sharelinks which use baseMapName instead of baseMapId. This will be used if `initBaseMapId` can't be resolved */
-  initBaseMapName: string | undefined;
-
-  previewBaseMapId: string = "basemap-positron";
-
-  @observable
   pickedFeatures: PickedFeatures | undefined;
 
   @observable
@@ -484,8 +470,6 @@ export default class Terria {
 
   @observable stories: any[] = [];
 
-  // TODO: this is duplicated with properties on ViewState, which is
-  //       kind of terrible.
   /**
    * Gets or sets the ID of the catalog member that is currently being
    * previewed.
@@ -784,6 +768,15 @@ export default class Terria {
     if (this.shareDataService && this.serverConfig.config) {
       this.shareDataService.init(this.serverConfig.config);
     }
+
+    this.baseMapsModel
+      .initializeDefaultBaseMaps()
+      .catchError(error =>
+        this.raiseErrorToUser(
+          TerriaError.from(error, "Failed to load default basemaps")
+        )
+      );
+
     if (options.applicationUrl) {
       await this.updateApplicationUrl(options.applicationUrl.href);
     }
@@ -809,31 +802,36 @@ export default class Terria {
   }
 
   async loadPersistedOrInitBaseMap() {
+    const baseMapItems = this.baseMapsModel.baseMapItems;
     // Set baseMap fallback to first option
-    let baseMap = this.baseMaps[0].mappable;
+    let baseMap = baseMapItems[0];
     const persistedBaseMapId = this.getLocalProperty("basemap");
-    const baseMapSearch = this.baseMaps.find(
-      baseMap => baseMap.mappable.uniqueId === persistedBaseMapId
+    const baseMapSearch = baseMapItems.find(
+      baseMapItem => baseMapItem.item?.uniqueId === persistedBaseMapId
     );
-    if (baseMapSearch) {
-      baseMap = baseMapSearch.mappable;
+    if (baseMapSearch?.item && MappableMixin.isMixedInto(baseMapSearch.item)) {
+      baseMap = baseMapSearch;
     } else {
-      // Try to find basemap using initBaseMapId and initBaseMapName
+      // Try to find basemap using defaultBaseMapId and defaultBaseMapName
       const baseMapSearch =
-        this.baseMaps.find(
-          baseMap => baseMap.mappable.uniqueId === this.initBaseMapId
+        baseMapItems.find(
+          baseMapItem =>
+            baseMapItem.item?.uniqueId === this.baseMapsModel.defaultBaseMapId
         ) ??
-        this.baseMaps.find(
-          baseMap =>
-            CatalogMemberMixin.isMixedInto(baseMap.mappable) &&
-            baseMap.mappable.name === this.initBaseMapName
+        baseMapItems.find(
+          baseMapItem =>
+            CatalogMemberMixin.isMixedInto(baseMapItem) &&
+            (<any>baseMapItem.item).name ===
+              this.baseMapsModel.defaultBaseMapName
         );
-      if (baseMapSearch) {
-        baseMap = baseMapSearch.mappable;
+      if (
+        baseMapSearch?.item &&
+        MappableMixin.isMixedInto(baseMapSearch.item)
+      ) {
+        baseMap = baseMapSearch;
       }
     }
-
-    await this.mainViewer.setBaseMap(baseMap);
+    await this.mainViewer.setBaseMap(<MappableMixin.Instance>baseMap.item);
   }
 
   get isLoadingInitSources(): boolean {
@@ -973,12 +971,6 @@ export default class Terria {
         }
       })
     );
-
-    if (this.baseMaps.length === 0) {
-      processBaseMaps(defaultBaseMaps(this), this).catchError(e =>
-        errors.push(e)
-      );
-    }
 
     if (!this.mainViewer.baseMap) {
       // Note: there is no "await" here - as basemaps can take a while to load and there is no need to wait for them to load before rendering Terria
@@ -1239,27 +1231,12 @@ export default class Terria {
       }
     }
 
-    if (isJsonString(initData.baseMapId)) {
-      this.initBaseMapId = initData.baseMapId;
-    }
-
-    if (isJsonString(initData.baseMapName)) {
-      this.initBaseMapName = initData.baseMapName;
-    }
-
-    if (isJsonString(initData.previewBaseMapId)) {
-      this.previewBaseMapId = initData.previewBaseMapId;
-    }
-
-    if (
-      initData.baseMaps &&
-      Array.isArray(initData.baseMaps) &&
-      initData.baseMaps.length > 0
-    ) {
-      processBaseMaps(
-        <BaseMapModel[]>(<unknown>initData.baseMaps),
-        this
-      ).catchError(e => errors.push(e));
+    if (isJsonObject(initData.baseMaps)) {
+      this.baseMapsModel
+        .loadFromJson(CommonStrata.definition, initData.baseMaps)
+        .catchError(error => {
+          errors.push(error);
+        });
     }
 
     if (isJsonObject(initData.homeCamera)) {
@@ -1728,10 +1705,13 @@ async function interpretHash(
   }
 }
 
+const containsStory = (initSource: any) =>
+  Array.isArray(initSource.stories) && initSource.stories.length;
+
 function interpretStartData(terria: Terria, startData: any, name: string) {
   // TODO: version check, filtering, etc.
 
-  if (startData.initSources) {
+  if (Array.isArray(startData.initSources)) {
     runInAction(() => {
       terria.initSources.push(
         ...startData.initSources.map((initSource: any) => {
@@ -1741,37 +1721,12 @@ function interpretStartData(terria: Terria, startData: any, name: string) {
           };
         })
       );
+
+      if (startData.initSources.some(containsStory)) {
+        terria.configParameters.showWelcomeMessage = false;
+      }
     });
   }
-
-  // if (defined(startData.version) && startData.version !== latestStartVersion) {
-  //   adjustForBackwardCompatibility(startData);
-  // }
-
-  // if (defined(terria.filterStartDataCallback)) {
-  //   startData = terria.filterStartDataCallback(startData) || startData;
-  // }
-
-  // // Include any initSources specified in the URL.
-  // if (defined(startData.initSources)) {
-  //   for (var i = 0; i < startData.initSources.length; ++i) {
-  //     var initSource = startData.initSources[i];
-  //     // avoid loading terria.json twice
-  //     if (
-  //       temporaryInitSources.indexOf(initSource) < 0 &&
-  //       !initFragmentExists(temporaryInitSources, initSource)
-  //     ) {
-  //       temporaryInitSources.push(initSource);
-  //       // Only add external files to the application's list of init sources.
-  //       if (
-  //         typeof initSource === "string" &&
-  //         persistentInitSources.indexOf(initSource) < 0
-  //       ) {
-  //         persistentInitSources.push(initSource);
-  //       }
-  //     }
-  //   }
-  // }
 }
 
 function setCustomRequestSchedulerDomainLimits(

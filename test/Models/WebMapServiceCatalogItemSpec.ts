@@ -186,6 +186,28 @@ describe("WebMapServiceCatalogItem", function() {
     }
   });
 
+  it("uses default time", function(done) {
+    const terria = new Terria();
+    const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
+    runInAction(() => {
+      wmsItem.setTrait(CommonStrata.definition, "url", "http://example.com");
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "getCapabilitiesUrl",
+        "test/WMS/styles_and_dimensions.xml"
+      );
+      wmsItem.setTrait(CommonStrata.definition, "layers", "A,B");
+    });
+
+    wmsItem
+      .loadMetadata()
+      .then(function() {
+        expect(wmsItem.currentTime).toBe("2016-09-24T00:00:00.000Z");
+      })
+      .then(done)
+      .catch(done.fail);
+  });
+
   it("dimensions and styles for a 'real' WMS layer", function(done) {
     const terria = new Terria();
     const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
