@@ -262,6 +262,7 @@
     "qualityLabel": "Quality",
     "performanceLabel": "Performance",
     "timeline": {
+      "title": "Timeline",
       "alwaysShowLabel": "Press to start only showing the timeline when there are time-varying datasets on the workbench",
       "hideLabel": "Press to start always showing the timeline, even when no time-varying datasets are on the workbench",
       "alwaysShow": "Always show"
