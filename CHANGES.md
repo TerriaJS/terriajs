@@ -67,6 +67,7 @@ Change Log
 * Moved d3-scale-chromatic code into `tableColorMap.colorScaleCategorical()` and `tableColorMap.colorScaleContinuous()`
 * Disabled welcome popup for shared stories
 * Add WMS support for default value of time dimension.
+* Anonymize user IP when using google analytics.
 * [The next improvement]
 
 #### 8.0.0-alpha.87
