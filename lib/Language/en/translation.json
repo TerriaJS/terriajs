@@ -452,7 +452,9 @@
     "searchCatalogue": "Search the catalogue"
   },
   "mobile": {
-    "toggleNavigation": "toggle navigation"
+    "toggleNavigation": "toggle navigation",
+    "addDataBtnText": "Data",
+    "doneBtnText": "Done"
   },
   "preview": {
     "doesNotContainGeospatialData": "This file does not contain geospatial data.",
