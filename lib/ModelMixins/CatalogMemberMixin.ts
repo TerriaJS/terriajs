@@ -54,7 +54,9 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       );
     }
 
-    /** Calls AsyncLoader to load metadata.
+    /** Calls AsyncLoader to load metadata. It is safe to call this as often as necessary.
+     * If metadata is already loaded or already loading, it will
+     * return the existing promise.
      *
      * This returns a Result object, it will contain errors if they occur - they will not be thrown.
      * To throw errors, use `(await loadMetadata()).throwIfError()`
