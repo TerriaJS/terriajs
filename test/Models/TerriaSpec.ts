@@ -27,6 +27,7 @@ import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem"
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
+import { defaultBaseMaps } from "./../../lib/Models/BaseMaps/defaultBaseMaps";
 
 const mapConfigBasicJson = require("../../wwwroot/test/Magda/map-config-basic.json");
 const mapConfigBasicString = JSON.stringify(mapConfigBasicJson);
@@ -869,49 +870,59 @@ describe("Terria", function() {
 
   describe("basemaps", function() {
     it("when no base maps are specified load defaultBaseMaps", async function() {
+      await terria.start({ configUrl: "" });
       terria.applyInitData({
         initData: {}
       });
       await terria.loadInitSources();
-      expect(terria.baseMaps).toBeDefined();
-      expect(terria.baseMaps.length).toBeGreaterThan(1);
+      const _defaultBaseMaps = defaultBaseMaps(terria);
+      expect(terria.baseMapsModel).toBeDefined();
+      expect(terria.baseMapsModel.baseMapItems.length).toBe(
+        _defaultBaseMaps.length
+      );
     });
 
-    it("propperly loads base maps", function() {
+    it("propperly loads base maps", async function() {
+      await terria.start({ configUrl: "" });
       terria.applyInitData({
         initData: {
-          baseMaps: [
-            {
-              item: {
-                id: "basemap-positron",
-                name: "Positron (Light)",
-                type: "open-street-map",
-                url: "https://basemaps.cartocdn.com/light_all/",
-                attribution:
-                  "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
-                subdomains: ["a", "b", "c", "d"],
-                opacity: 1.0
+          baseMaps: {
+            items: [
+              {
+                item: {
+                  id: "basemap-positron",
+                  name: "Positron (Light)",
+                  type: "open-street-map",
+                  url: "https://basemaps.cartocdn.com/light_all/",
+                  attribution:
+                    "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
+                  subdomains: ["a", "b", "c", "d"],
+                  opacity: 1.0
+                },
+                image: "/images/positron.png"
               },
-              image: "/images/positron.png"
-            },
-            {
-              item: {
-                id: "basemap-darkmatter",
-                name: "Dark Matter",
-                type: "open-street-map",
-                url: "https://basemaps.cartocdn.com/dark_all/",
-                attribution:
-                  "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
-                subdomains: ["a", "b", "c", "d"],
-                opacity: 1.0
-              },
-              image: "/images/dark-matter.png"
-            }
-          ]
+              {
+                item: {
+                  id: "basemap-darkmatter1",
+                  name: "Dark Matter",
+                  type: "open-street-map",
+                  url: "https://basemaps.cartocdn.com/dark_all/",
+                  attribution:
+                    "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
+                  subdomains: ["a", "b", "c", "d"],
+                  opacity: 1.0
+                },
+                image: "/images/dark-matter.png"
+              }
+            ]
+          }
         }
       });
-      expect(terria.baseMaps).toBeDefined();
-      expect(terria.baseMaps.length).toEqual(2);
+      const _defaultBaseMaps = defaultBaseMaps(terria);
+      expect(terria.baseMapsModel).toBeDefined();
+      expect(terria.baseMapsModel.baseMapItems.length).toEqual(
+        _defaultBaseMaps.length + 1
+      );
     });
   });
 
