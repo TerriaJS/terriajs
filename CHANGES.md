@@ -66,6 +66,7 @@ Change Log
 * Add `feature` object to `FeatureInfoSection.getTemplateData`
 * Add `mustacheReplaceTextFunction` function to `FeatureInfoSection`
 * Add a way to replace text in feature info templates, eg. `{{#terria.replaceText}}{"replaceText": true, "from": [0,1,2,3], "to": ["Zero","One","Two","Three"]}{{value}}{{/terria.replaceText}}`. The quotes around the keys are optional.
+* Disabled welcome popup for shared stories
 * Add WMS support for default value of time dimension.
 * [The next improvement]
 
