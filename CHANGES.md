@@ -62,6 +62,7 @@ Change Log
   * Replaced with `disableZoomTo` in `MappableTraits`
 * Clean up `showsInfo`
   * Replaced with `disableAboutData` in `CatalogMemberTraits`
+* Disabled welcome popup for shared stories
 * Add WMS support for default value of time dimension.
 * [The next improvement]
 
