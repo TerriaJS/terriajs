@@ -567,6 +567,8 @@ export default class Terria {
   ) {
     const terriaError = TerriaError.from(error, overrides);
 
+    // Log error to error service
+    this.errorService.error(terriaError);
     if (
       forceRaiseToUser ||
       (this.userProperties.get("ignoreErrors") !== "1" &&
@@ -574,7 +576,6 @@ export default class Terria {
         !terriaError.raisedToUser)
     ) {
       terriaError.raisedToUser = true;
-      this.errorService.error(terriaError);
       this.error.raiseEvent(terriaError);
     } else {
       console.log(terriaError);
