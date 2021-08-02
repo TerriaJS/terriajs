@@ -105,7 +105,7 @@ export default class TerriaError {
   /** `sender` isn't really used for anything at the moment... */
   readonly sender: unknown;
   readonly originalError?: (TerriaError | Error)[];
-  readonly stack: string | undefined;
+  readonly stack: string;
 
   @observable showDetails = false;
 
@@ -212,7 +212,15 @@ export default class TerriaError {
       : [];
 
     this.severity = options.severity ?? TerriaErrorSeverity.Error;
-    this.stack = new Error().stack;
+    this.stack = (new Error().stack ?? "")
+      .split("\n")
+      // Filter out some less useful lines in the stack trace
+      .filter(s =>
+        ["result.ts", "terriaerror.ts", "opendatasoft.apiclient.umd.js"].every(
+          remove => !s.toLowerCase().includes(remove)
+        )
+      )
+      .join("\n");
   }
 
   get message() {
@@ -291,10 +299,12 @@ export default class TerriaError {
   toError(): Error {
     // indentation required per nesting when stringifying nested error messages
     const indentChar = "  ";
-    const buildNestedMessage: (
-      error: TerriaError,
-      depth: number
-    ) => string | undefined = (error, depth) => {
+    const buildNested: (
+      prop: "message" | "stack"
+    ) => (error: TerriaError, depth: number) => string | undefined = prop => (
+      error,
+      depth
+    ) => {
       if (!Array.isArray(error.originalError)) {
         return;
       }
@@ -304,9 +314,15 @@ export default class TerriaError {
         .map(e => {
           if (e instanceof TerriaError) {
             // recursively build the message for nested errors
-            return `${indent}${e.message}\n${buildNestedMessage(e, depth + 1)}`;
+            return `${e[prop]
+              ?.split("\n")
+              .map(s => indent + s)
+              .join("\n")}\n${buildNested(prop)(e, depth + 1)}`;
           } else {
-            return `${indent}${e.toString()}`;
+            return `${e[prop]
+              ?.split("\n")
+              .map(s => indent + s)
+              .join("\n")}`;
           }
         })
         .join("\n");
@@ -314,14 +330,20 @@ export default class TerriaError {
     };
 
     let message = this.message;
-    const nestedMessage = buildNestedMessage(this, 1);
+    const nestedMessage = buildNested("message")(this, 1);
     if (nestedMessage) {
       message = `${message}\nNested error:\n${nestedMessage}`;
     }
 
     const error = new Error(message);
-    error.name = "TerriaError";
-    error.stack = this.stack;
+    error.name = this.title;
+
+    let stack = this.stack;
+    const nestedStack = buildNested("stack")(this, 1);
+    if (nestedStack) {
+      stack = `${stack}\n${nestedStack}`;
+    }
+    error.stack = stack;
     return error;
   }
 }
