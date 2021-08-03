@@ -231,31 +231,7 @@ function RCStoryEditor(props) {
         </div>
 
         <div className={Styles.group}>
-          {/* <label className={Styles.topLabel} htmlFor="pagesToggle">
-            Pages
-          </label>
-          <input type="checkbox" id="pagesToggle" name="pagesToggle" /> */}
           <RCPageList />
-          {/* <div className={Styles.toggleContent}>
-            <button
-              className={Styles.RCButton}
-              style={{ float: "right" }}
-              onClick={addPage}
-            >
-              Add
-            </button>
-            <ul>
-              {console.log('pages', pages)}
-              {pages &&
-                pages.map(page => (
-                  <li key={page.id}>
-                    <a href={`#builder/story/${id}/page/${page.id}/edit`}>
-                      {page.title}
-                    </a>
-                  </li>
-                ))}
-            </ul>
-          </div> */}
         </div>
 
         <div className={Styles.container}>

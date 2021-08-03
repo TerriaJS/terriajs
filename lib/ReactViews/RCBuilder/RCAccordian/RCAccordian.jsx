@@ -15,11 +15,8 @@ const RCAccordian = props => {
   const [isOpen, setOpen] = React.useState(true);
   return (
     <div className={Styles.accordionWrapper}>
-      <div
-        className={classNames(Styles.accordionTitle, isOpen && Styles.open)}
-        onClick={() => setOpen(!isOpen)}
-      >
-        {title}
+      <div className={classNames(Styles.accordionTitle, isOpen && Styles.open)}>
+        <div onClick={() => setOpen(!isOpen)}>{title}</div>
         {hasAction && <button onClick={action}> {actionTitle}</button>}
       </div>
       <div
