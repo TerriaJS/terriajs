@@ -82,6 +82,32 @@ describe("CompositeCatalogItem", function() {
     );
   });
 
+  it("syncs visibility to its members", function() {
+    const item1 = new GeoJsonCatalogItem("item1", terria);
+    const item2 = new WebMapServiceCatalogItem("item2", terria);
+
+    runInAction(() => {
+      item1.setTrait(
+        CommonStrata.definition,
+        "url",
+        "test/GeoJSON/bike_racks.geojson"
+      );
+      item2.setTrait(
+        CommonStrata.definition,
+        "url",
+        "test/WMS/single_metadata_url.xml"
+      );
+    });
+
+    composite.add(CommonStrata.definition, item1);
+    composite.add(CommonStrata.definition, item2);
+
+    composite.setTrait(CommonStrata.user, "show", false);
+
+    expect(item1.show).toEqual(false);
+    expect(item2.show).toEqual(false);
+  });
+
   // it("concatenates legends", function(done) {
   //   composite
   //     .updateFromJson({

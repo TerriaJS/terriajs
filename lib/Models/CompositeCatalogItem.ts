@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed } from "mobx";
+import { action, computed, runInAction, autorun } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
@@ -9,11 +9,16 @@ import ModelReference from "../Traits/ModelReference";
 import MappableMixin, { MapItem } from "../ModelMixins/MappableMixin";
 import CreateModel from "./CreateModel";
 import { BaseModel } from "./Model";
+import CommonStrata from "./CommonStrata";
 
 export default class CompositeCatalogItem extends MappableMixin(
   CatalogMemberMixin(CreateModel(CompositeCatalogItemTraits))
 ) {
   static readonly type = "composite";
+
+  private _visibilityDisposer = autorun(() => {
+    this.syncVisibilityToMembers();
+  });
 
   get type() {
     return CompositeCatalogItem.type;
@@ -55,13 +60,16 @@ export default class CompositeCatalogItem extends MappableMixin(
     );
   }
 
-  @computed get mapItems() {
-    // this.memberModels.forEach(model => {
-    //   runInAction(() => {
-    //     model.setTrait(CommonStrata.definition, "show", this.show);
-    //   });
-    // });
+  syncVisibilityToMembers() {
+    const { show } = this;
+    this.memberModels.forEach(model => {
+      runInAction(() => {
+        model.setTrait(CommonStrata.user, "show", show);
+      });
+    });
+  }
 
+  @computed get mapItems() {
     const result: MapItem[] = [];
     this.memberModels.filter(MappableMixin.isMixedInto).forEach(model => {
       result.push(...model.mapItems);
@@ -87,5 +95,10 @@ export default class CompositeCatalogItem extends MappableMixin(
     } else {
       this.setTrait(stratumId, "members", [member.uniqueId]);
     }
+  }
+
+  dispose() {
+    super.dispose();
+    this._visibilityDisposer();
   }
 }
