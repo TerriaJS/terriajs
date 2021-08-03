@@ -14,6 +14,7 @@
   transition: max-height 0.5s cubic-bezier(1, 0, 1, 0);
   height: auto;
   max-height: 300px;
+  overflow-y: scroll;
 }
 
 .accordionItem.collapsed {
