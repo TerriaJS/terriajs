@@ -22,17 +22,21 @@
   transition: max-height 0.3s cubic-bezier(0, 1, 0, 1);
 }
 
-.accordionTitle {
+.accordionHeader {
   font-weight: 600;
-  cursor: pointer;
   color: #106fa8;
   display: grid;
-  grid-template-columns: 20px 1fr 80px;
+  grid-template-columns: 1fr 80px;
   align-items: center;
   button {
     border: none;
     background-color: transparent;
   }
+}
+.accordionTitle {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
   &::before {
     content: "";
     width: 0;
@@ -43,12 +47,6 @@
     border-top: 8px solid transparent;
     border-right: 0;
   }
-
-  &:hover,
-  &.open {
-    color: #0c70a7;
-  }
-
   &.open {
     &::before {
       content: "";
@@ -59,7 +57,6 @@
     }
   }
 }
-
 .accordionContent {
   padding: 10px 5px;
 }
