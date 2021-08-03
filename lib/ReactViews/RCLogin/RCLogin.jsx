@@ -1,13 +1,13 @@
+import { onAuthUIStateChange } from "@aws-amplify/ui-components";
 import {
   AmplifyAuthenticator,
   AmplifySignIn,
   AmplifySignOut,
   AmplifySignUp
 } from "@aws-amplify/ui-react";
-import { onAuthUIStateChange } from "@aws-amplify/ui-components";
+import { Auth } from "aws-amplify";
 import React from "react";
 import "./RCLogin.scss";
-import { Auth } from "aws-amplify";
 
 const RCLogin = props => {
   const [authState, setAuthState] = React.useState();
@@ -29,7 +29,7 @@ const RCLogin = props => {
       required: true
     },
     {
-      type: "custom:Affilliation",
+      type: "custom:affiliation",
       label: "Affiliation *",
       placeholder: "Enter your affiliation",
       required: true
@@ -66,7 +66,7 @@ const RCLogin = props => {
           <div>
             <div className="bold">{user.attributes?.name}</div>
             <div>{user.attributes?.email}</div>
-            <div>{user.attributes?.["custom:Affilliation"]}</div>
+            <div>{user.attributes?.["custom:affiliation"]}</div>
           </div>
         )}
         <div style={{ marginTop: "32px", width: "25%" }}>
