@@ -24,7 +24,8 @@ class HelpPanelItem extends React.Component {
     viewState: PropTypes.object.isRequired,
     content: PropTypes.object.isRequired,
     theme: PropTypes.object,
-    t: PropTypes.func.isRequired
+    t: PropTypes.func.isRequired,
+    i18n: PropTypes.object.isRequired
   };
 
   constructor(props) {
@@ -32,6 +33,7 @@ class HelpPanelItem extends React.Component {
   }
 
   render() {
+    const { i18n } = this.props;
     const { icon } = this.props.content;
     const MenuIconWrapper = styled(Box).attrs({
       centered: true
@@ -53,7 +55,9 @@ class HelpPanelItem extends React.Component {
     // `content.icon` is user defined and can possibly force the UI to lookup a
     // nonexistant icon.
     const iconGlyph = Icon.GLYPHS[icon] || Icon.GLYPHS.video;
-    const title = useTranslationIfExists(this.props.content.title);
+    const title =
+      this.props.content.title &&
+      useTranslationIfExists(this.props.content.title, i18n);
     return (
       <div
         css={`
@@ -113,10 +117,14 @@ class HelpPanelItem extends React.Component {
           itemString={this.props.content.itemName}
           paneMode={this.props.content.paneMode}
           markdownContent={this.props.content.markdownText}
-          videoUrl={useTranslationIfExists(this.props.content.videoUrl)}
-          placeholderImage={useTranslationIfExists(
-            this.props.content.placeholderImage
-          )}
+          videoUrl={
+            this.props.content.videoUrl &&
+            useTranslationIfExists(this.props.content.videoUrl, i18n)
+          }
+          placeholderImage={
+            this.props.content.videoUrl &&
+            useTranslationIfExists(this.props.content.placeholderImage, i18n)
+          }
         />
       </div>
     );

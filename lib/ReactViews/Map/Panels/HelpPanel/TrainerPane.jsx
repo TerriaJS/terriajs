@@ -38,7 +38,7 @@ class TrainerPane extends React.Component {
   }
 
   render() {
-    const { content, viewState } = this.props;
+    const { content, i18n, viewState } = this.props;
     const { trainerItems, markdownText } = content;
     return (
       <Text textDark noFontSize>
@@ -62,7 +62,7 @@ class TrainerPane extends React.Component {
                   >
                     <BoxSpan centered>
                       <BoxSpan centered>
-                        {useTranslationIfExists(item.title)}
+                        {useTranslationIfExists(item.title, i18n)}
                       </BoxSpan>
                     </BoxSpan>
                   </TrainerButton>
