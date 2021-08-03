@@ -137,6 +137,14 @@ textarea {
   pointer-events: none;
   opacity: 0.5;
 }
+.toggleContent {
+  // display: none;
+  min-height: 100px;
+}
+:checked + .toggleContent {
+  display: block;
+}
+
 /* ANIMATIONS ================ */
 @-webkit-keyframes inputHighlighter {
   from {
@@ -166,13 +174,6 @@ textarea {
   }
 }
 
-.backButton {
-  width: 100px;
-  right: 5px;
-  float: right;
-  font-weight: bold;
-}
-
 .dropContainer {
   flex: 1;
   display: flex;
@@ -181,7 +182,7 @@ textarea {
   padding: 20px;
   border-width: 2px;
   border-radius: 2px;
-  border-color: #00e676;
+  border-color: #0c70a7;
   border-style: dashed;
   background-color: #fafafa;
   color: #bdbdbd;

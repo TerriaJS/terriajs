@@ -5,13 +5,11 @@ import Styles from "./RCBuilder.scss";
 import RCStoryCreator from "./RCStoryCreator/RCStoryCreator";
 import RCStoryEditor from "./RCStoryEditor/RCStoryEditor";
 import RCStoryList from "./RCStoryList/RCStoryList";
+import RCPageEditor from "./RCPageEditor/RCPageEditor";
+
 class RCBuilder extends React.Component {
   constructor(props) {
     super(props);
-  }
-
-  componentDidMount() {
-    console.log("🎹", this.props.viewState);
   }
 
   render() {
@@ -28,6 +26,9 @@ class RCBuilder extends React.Component {
           </Route>
           <Route path={`${path}/story/:id/edit`}>
             <RCStoryEditor viewState={viewState} />
+          </Route>
+          <Route path={`${path}/story/:story_id/page/:page_id/edit`}>
+            <RCPageEditor viewState={viewState} />
           </Route>
           <Route>
             <RCStoryList viewState={viewState} />
