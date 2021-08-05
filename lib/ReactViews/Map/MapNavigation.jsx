@@ -28,7 +28,7 @@ import FeedbackButton from "../Feedback/FeedbackButton";
 import CloseToolButton from "./Navigation/CloseToolButton";
 import Prompt from "../Generic/Prompt";
 import { runInAction } from "mobx";
-import { withTranslation } from "react-i18next";
+import { withTranslation, useTranslation } from "react-i18next";
 import Cesium from "../../Models/Cesium";
 
 /**
@@ -50,6 +50,7 @@ const StyledMapNavigation = styled.div`
 `;
 
 const HelpIcon = withControlledVisibility(props => {
+  const { t } = useTranslation();
   return (
     <MapIconButton
       expandInPlace
@@ -57,7 +58,7 @@ const HelpIcon = withControlledVisibility(props => {
       onClick={() => props.viewState.showHelpPanel()}
       neverCollapse={props.viewState.featurePrompts.indexOf("help") >= 0}
     >
-      Help
+      {t("helpPanel.btnText")}
     </MapIconButton>
   );
 });
