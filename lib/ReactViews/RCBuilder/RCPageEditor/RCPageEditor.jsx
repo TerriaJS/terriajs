@@ -32,6 +32,9 @@ function RCPageEditor(props) {
           currentTime: data.currentTime,
           viewerMode: data.viewer_mode_3d ? "3d" : "2d"
         };
+        if (Array.isArray(mapView.initialCamera)) {
+          delete mapView.initialCamera;
+        }
         setMapView(mapView);
         moveToSavedView(props.viewState, mapView);
       });

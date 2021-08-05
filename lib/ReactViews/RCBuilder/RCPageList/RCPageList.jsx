@@ -32,8 +32,9 @@ function RCPageList() {
     const newPage = {
       title: "New page",
       section: "INTRODUCTION",
-      camera: [0, 0, 0, 0],
-      baseMapName: "basemap",
+      camera:
+        '{"west":-37.96875000000001,"south":-37.857507156252034,"east":95.44921875,"north":79.00496216031351}',
+      baseMapName: "Bing Maps Aerial with Labels",
       viewer_mode_3d: true,
       scenarios: []
     };
