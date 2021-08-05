@@ -5,10 +5,12 @@ import { getPage } from "../../../../api/graphql/queries";
 import { updatePage } from "../../../../api/graphql/mutations";
 import Styles from "../RCStoryEditor/RCStoryEditor.scss";
 import { useParams, withRouter, useHistory } from "react-router-dom";
+import { captureCurrentView, moveToSavedView } from "./ViewCapture";
 
 function RCPageEditor(props) {
   const [page, setPage] = useState(null);
   const [title, setTitle] = useState("");
+  const [mapView, setMapView] = useState(null);
   const [message, setMessage] = useState("");
   const history = useHistory();
 
@@ -22,6 +24,16 @@ function RCPageEditor(props) {
         const data = story.data.getPage;
         setPage(data);
         setTitle(data.title);
+
+        // Map view settings
+        const mapView = {
+          initialCamera: JSON.parse(data.camera),
+          baseMapName: data.baseMapName,
+          currentTime: data.currentTime,
+          viewerMode: data.viewer_mode_3d ? "3d" : "2d"
+        };
+        setMapView(mapView);
+        moveToSavedView(props.viewState, mapView);
       });
     } catch (error) {
       console.log(error);
@@ -31,7 +43,14 @@ function RCPageEditor(props) {
   const savePage = () => {
     const pageDetails = {
       id: page.id,
-      title: title
+      title: title,
+      camera: JSON.stringify(mapView.initialCamera),
+      baseMapName: mapView.baseMapName,
+      currentTime: {
+        dayNumber: mapView.currentTime.dayNumber,
+        secondsOfDay: Math.floor(mapView.currentTime.secondsOfDay)
+      },
+      viewer_mode_3d: mapView.viewerMode === "3d"
     };
     API.graphql({
       query: updatePage,
@@ -68,6 +87,23 @@ function RCPageEditor(props) {
           <span className={Styles.highlight} />
           <span className={Styles.bar} />
           <label className={title && Styles.topLabel}>Story Title</label>
+        </div>
+
+        <div className={Styles.group}>
+          <label className={Styles.topLabel}>Map view</label>
+          <button
+            className={Styles.RCButton}
+            onClick={() => setMapView(captureCurrentView(props.viewState))}
+          >
+            Capture current view
+          </button>
+          &nbsp;
+          <button
+            className={Styles.RCButton}
+            onClick={() => moveToSavedView(props.viewState, mapView)}
+          >
+            Move to captured view
+          </button>
         </div>
 
         <div className={Styles.container}>
