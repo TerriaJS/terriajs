@@ -443,7 +443,7 @@ function getFeaturesGroupedByCatalogItems(terria) {
   return { catalogItems, featureCatalogItemPairs };
 }
 
-function determineCatalogItem(workbench, feature) {
+export function determineCatalogItem(workbench, feature) {
   // If the feature is a marker return a fake item
   if (feature.entityCollection && feature.entityCollection.owner) {
     const dataSource = feature.entityCollection.owner;
