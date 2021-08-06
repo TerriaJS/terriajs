@@ -101,6 +101,7 @@ Change Log
 * Refactored some `Traits` classes so they use `mixTraits` instead of extending other `Traits` classes.
 * Allow translation of some components.
 * Fixed a bug which prevented adding any reference catalog item while the story is playing.
+* Improve handling of featureInfoTemplate for composite catalog items.
 * [The next improvement]
 
 #### 8.0.0-alpha.87
