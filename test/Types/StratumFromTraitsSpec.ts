@@ -1,5 +1,5 @@
 import StratumFromTraits from "../../lib/Models/StratumFromTraits";
-import TraitsForTesting from "./TraitsForTesting";
+import TraitsForTesting, { MyEnum } from "./TraitsForTesting";
 import { expectFalse, expectTrue } from "./TypeChecks";
 import {
   Equals,
@@ -21,6 +21,10 @@ expectTrue<
   Equals<typeof stratum.unknownObjectWithDefault, JsonObject | undefined>
 >();
 expectTrue<Equals<typeof stratum.withNull, string | null | undefined>>();
+expectTrue<Equals<typeof stratum.enumTraitWithDefault, MyEnum | undefined>>();
+expectTrue<
+  Equals<typeof stratum.enumTraitWithoutDefault, MyEnum | undefined>
+>();
 
 // All properties can be modified.
 expectTrue<IsWritable<typeof stratum, "withDefault">>();
@@ -28,6 +32,8 @@ expectTrue<IsWritable<typeof stratum, "withoutDefault">>();
 expectTrue<IsWritable<typeof stratum, "unknownObject">>();
 expectTrue<IsWritable<typeof stratum, "unknownObjectWithDefault">>();
 expectTrue<IsWritable<typeof stratum, "withNull">>();
+expectTrue<IsWritable<typeof stratum, "enumTraitWithDefault">>();
+expectTrue<IsWritable<typeof stratum, "enumTraitWithoutDefault">>();
 
 // Properties that are nested traits allow undefined.
 expectTrue<AllowsUndefined<typeof stratum.nestedWithDefault>>();

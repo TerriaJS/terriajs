@@ -5,7 +5,11 @@ import ModelTraits, { IsValidSimpleTraitType } from "../Traits/ModelTraits";
 type SingleTrait<TTrait> = If<
   IsValidSimpleTraitType<NonNullable<TTrait>>,
   TTrait,
-  TTrait extends ModelTraits ? FlattenedFromTraits<TTrait> : never
+  TTrait extends ModelTraits
+    ? FlattenedFromTraits<TTrait>
+    : TTrait extends undefined
+    ? never
+    : TTrait
 >;
 
 type ArrayTrait<TTrait, TElement> = ReadonlyArray<SingleTrait<TElement>>;

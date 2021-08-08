@@ -6,7 +6,11 @@ import Model from "./Model";
 type SingleTrait<TTrait> = If<
   IsValidSimpleTraitType<NonNullable<TTrait>>,
   TTrait,
-  TTrait extends ModelTraits ? Model<TTrait> : never
+  TTrait extends ModelTraits
+    ? Model<TTrait>
+    : TTrait extends undefined
+    ? never
+    : TTrait
 >;
 type ArrayTrait<TTrait, TElement> = ReadonlyArray<SingleTrait<TElement>>;
 

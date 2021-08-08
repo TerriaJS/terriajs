@@ -82,7 +82,7 @@ describe("upsertModelFromJson", function() {
     expect(group.memberModels[0]).toBe(item);
     expect(item.name).toBe("Override");
     expect(item.layers).toBeUndefined();
-    expect(item.isGeoServer).toBe(false);
+    expect(item.server === "geoserver").toBe(false);
 
     // loadMembers will call loadMetadata first, so check isLoadingMetadata and then await loadMetadata
     const loadMembersPromise = group.loadMembers();
@@ -101,7 +101,7 @@ describe("upsertModelFromJson", function() {
 
     await item.loadMetadata();
 
-    expect(item.isGeoServer).toBe(true);
+    expect(item.server === "geoserver").toBe(true);
   });
 
   it("can update a model by shareKey", function() {

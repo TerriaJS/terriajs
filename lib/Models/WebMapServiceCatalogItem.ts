@@ -45,6 +45,7 @@ import {
 import LegendTraits from "../Traits/TraitsClasses/LegendTraits";
 import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import WebMapServiceCatalogItemTraits, {
+  ServerTypeEnum,
   SUPPORTED_CRS_3857,
   SUPPORTED_CRS_4326,
   WebMapServiceAvailableLayerDimensionsTraits,
@@ -229,7 +230,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       if (isDefined(legendUri)) {
         // Add geoserver related LEGEND_OPTIONS to match terria styling (if supported)
         if (
-          this.catalogItem.isGeoServer &&
+          this.catalogItem.server === ServerTypeEnum.geoserver &&
           legendUri.hasQuery("request", "GetLegendGraphic")
         ) {
           let legendOptions =
@@ -627,8 +628,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   // TODO - There is possibly a better way to do this
+  // TODO - Geoserver also support NCWMS via a plugin, just need to work out how to detect that
   @computed
-  get isThredds(): boolean {
+  get isNcWMS(): boolean {
     if (
       this.catalogItem.url &&
       (this.catalogItem.url.indexOf("thredds") > -1 ||
@@ -639,18 +641,22 @@ class GetCapabilitiesStratum extends LoadableStratum(
     return false;
   }
 
-  // TODO - Geoserver also support NCWMS via a plugin, just need to work out how to detect that
-  @computed
-  get isNcWMS(): boolean {
-    if (this.catalogItem.isThredds) return true;
-    return false;
-  }
-
   @computed
   get isEsri(): boolean {
     if (this.catalogItem.url !== undefined)
       return this.catalogItem.url.indexOf("MapServer/WMSServer") > -1;
     return false;
+  }
+
+  get server(): ServerTypeEnum | undefined {
+    if (this.isGeoServer) {
+      return ServerTypeEnum.geoserver;
+    } else if (this.isEsri) {
+      return ServerTypeEnum.esri;
+    } else if (this.isNcWMS) {
+      return ServerTypeEnum.NcWMS;
+    }
+    return undefined;
   }
 
   @computed
@@ -660,14 +666,14 @@ class GetCapabilitiesStratum extends LoadableStratum(
       isDefined(
         this.capabilities?.json?.Capability?.Request?.GetLegendGraphic
       ) ||
-      (this.catalogItem.isGeoServer ?? false) ||
-      (this.catalogItem.isNcWMS ?? false)
+      (this.catalogItem.server === ServerTypeEnum.geoserver ?? false) ||
+      (this.catalogItem.server === ServerTypeEnum.NcWMS ?? false)
     );
   }
 
   @computed
   get supportsColorScaleRange(): boolean {
-    return this.catalogItem.isNcWMS;
+    return this.catalogItem.server === ServerTypeEnum.NcWMS;
   }
 
   @computed

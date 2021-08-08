@@ -3,6 +3,17 @@ import objectTrait from "../../lib/Traits/Decorators/objectTrait";
 import objectArrayTrait from "../../lib/Traits/Decorators/objectArrayTrait";
 import ModelTraits from "../../lib/Traits/ModelTraits";
 import { JsonObject } from "../../lib/Core/Json";
+import enumTrait from "../../lib/Traits/decorators/enumTrait";
+
+export enum MyEnum {
+  foo,
+  bar
+}
+
+export enum MyEnumString {
+  foo = "test",
+  bar = "baz"
+}
 
 export class NestedTraits extends ModelTraits {
   @primitiveTrait({
@@ -92,6 +103,34 @@ export default class TraitsForTesting extends ModelTraits {
     idProperty: "withDefault"
   })
   nestedArrayWithoutDefault?: NestedTraits[];
+
+  @enumTrait({
+    enum: MyEnum,
+    name: "Enum trait",
+    description: "enumTrait"
+  })
+  enumTraitWithDefault: MyEnum = 0;
+
+  @enumTrait({
+    enum: MyEnum,
+    name: "Enum trait",
+    description: "enumTrait"
+  })
+  enumTraitWithoutDefault?: MyEnum;
+
+  @enumTrait({
+    enum: MyEnumString,
+    name: "Enum trait",
+    description: "enumTrait"
+  })
+  enumTraitStringWithDefault: MyEnumString = MyEnumString.foo;
+
+  @enumTrait({
+    enum: MyEnum,
+    name: "Enum trait",
+    description: "enumTrait"
+  })
+  enumTraitStringWithoutDefault?: MyEnumString;
 
   // TODO: Add trait decorator for unknown object
   unknownObject?: JsonObject;

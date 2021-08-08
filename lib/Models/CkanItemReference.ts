@@ -483,7 +483,7 @@ export default class CkanItemReference extends UrlMixin(
 
     // Also tried this other approach which works from the CkanCatalogGroup
     // this.setItemProperties(model, this.itemProperties)
-    if (this.itemProperties !== undefined) {
+    if (isDefined(this.itemProperties)) {
       const ipKeys = Object.keys(this.itemProperties);
       ipKeys.forEach(p => {
         // @ts-ignore
