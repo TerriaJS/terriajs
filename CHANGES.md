@@ -360,6 +360,15 @@ Change Log
 * Fix hard-coded colour value in Story
 * Use `configParameters.cesiumIonAccessToken` in `IonImageryCatalogItem`
 * Added support for skipping comments in CSV files
+* Re-order the preference of formats in MagdaReference.
+* Fix `DiffTool` date-picker label `dateComparisonB`
+* Fix app crash when switching different tools.
+* Create `merge` `TraitsOption` for `objectArrayTrait`
+* Lock the version of i18next to 19.8.9 till new version of i18next-http-backend is available.
+* Rearrange the order of MagdaReference format preference.
+* Limit the number of layers in WebMapServiceCatalogItem model if data service provider provides layer limit.
+* For wms format data, MagdaReference treat it as wms-group type and its layers as group members.
+* [The next improvement]
 * Fix WMS GetLegendGraphics request `style` parameter
 * Loosen Legend `mimeType` check - so now it will treat the Legend URL as an image if the `mimeType` matches **OR** the file extension matches (previously, if `mimeType` was defined, then it wouldn't look at filetype extension)
 * Fix `DiffTool` date-picker label `dateComparisonB`

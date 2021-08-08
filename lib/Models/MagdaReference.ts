@@ -46,13 +46,6 @@ export default class MagdaReference extends AccessControlMixin(
     MagdaDistributionFormatTraits
   >[] = [
     createStratumInstance(MagdaDistributionFormatTraits, {
-      id: "WMS",
-      formatRegex: "^wms$",
-      definition: {
-        type: "wms"
-      }
-    }),
-    createStratumInstance(MagdaDistributionFormatTraits, {
       id: "EsriMapServer",
       formatRegex: "^esri (mapserver|map server|rest|tiled map service)$",
       urlRegex: "MapServer",
@@ -61,10 +54,16 @@ export default class MagdaReference extends AccessControlMixin(
       }
     }),
     createStratumInstance(MagdaDistributionFormatTraits, {
-      id: "CSV",
-      formatRegex: "^csv(-geo-)?",
+      id: "WMS",
+      formatRegex: "^wms$",
       definition: {
-        type: "csv"
+        // Treat it as wms-group instead of wms because of the following advantages:
+        // 1. Users are able to select which layers to add to map.
+        // 2. Always query for one layer per request as some data service providers may
+        //    restrict layer limit per request.
+        // 3. If there are many layers and query all layers in one request, the query string
+        //    may exceed max length. This approach will unlikely cause this problem.
+        type: "wms-group"
       }
     }),
     createStratumInstance(MagdaDistributionFormatTraits, {
@@ -75,24 +74,10 @@ export default class MagdaReference extends AccessControlMixin(
       }
     }),
     createStratumInstance(MagdaDistributionFormatTraits, {
-      id: "KML",
-      formatRegex: "^km[lz]$",
-      definition: {
-        type: "kml"
-      }
-    }),
-    createStratumInstance(MagdaDistributionFormatTraits, {
       id: "GeoJSON",
       formatRegex: "^geojson$",
       definition: {
         type: "geojson"
-      }
-    }),
-    createStratumInstance(MagdaDistributionFormatTraits, {
-      id: "WFS",
-      formatRegex: "^wfs$",
-      definition: {
-        type: "wfs"
       }
     }),
     createStratumInstance(MagdaDistributionFormatTraits, {
@@ -109,6 +94,27 @@ export default class MagdaReference extends AccessControlMixin(
       urlRegex: "FeatureServer/d",
       definition: {
         type: "esri-featureServer"
+      }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+      id: "WFS",
+      formatRegex: "^wfs$",
+      definition: {
+        type: "wfs"
+      }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+      id: "KML",
+      formatRegex: "^km[lz]$",
+      definition: {
+        type: "kml"
+      }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+      id: "CSV",
+      formatRegex: "^csv(-geo-)?",
+      definition: {
+        type: "csv"
       }
     })
   ];
