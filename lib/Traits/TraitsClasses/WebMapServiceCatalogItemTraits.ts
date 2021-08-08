@@ -21,6 +21,17 @@ import UrlTraits from "./UrlTraits";
 export const SUPPORTED_CRS_3857 = ["EPSG:3857", "EPSG:900913"];
 export const SUPPORTED_CRS_4326 = ["EPSG:4326", "CRS:84", "EPSG:4283"];
 
+/**
+ * Creates a single item in the catalog from one or many WMS layers.<br/>
+ * <strong>Note:</strong> <i>To present all layers in an available WMS as individual items in the catalog use the \`WebMapServiceCatalogGroup\`.</i>
+ * @example
+ * {
+ *   "type": "wms",
+ *   "name": "Mangrove Cover",
+ *   "url": "https://ows.services.dea.ga.gov.au",
+ *   "layers": "mangrove_cover_v2_0_2"
+ * }
+ */
 export class WebMapServiceAvailableStyleTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
@@ -136,17 +147,6 @@ export class WebMapServiceAvailableLayerDimensionsTraits extends ModelTraits {
   dimensions?: WebMapServiceAvailableDimensionTraits[];
 }
 
-/**
- * Creates a single item in the catalog from one or many WMS layers.<br/>
- * <strong>Note:</strong> <i>To present all layers in an available WMS as individual items in the catalog use the \`WebMapServiceCatalogGroup\`.</i>
- * @example
- * {
- *   "type": "wms",
- *   "name": "Mangrove Cover",
- *   "url": "https://ows.services.dea.ga.gov.au",
- *   "layers": "mangrove_cover_v2_0_2"
- * }
- */
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
   ExportableTraits,
   DiffableTraits,

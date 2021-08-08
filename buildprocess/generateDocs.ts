@@ -1,21 +1,26 @@
-// @ts-check
-
 import documentation from "documentation";
 import fs from "fs";
+import { uniqueId } from "lodash-es";
 import YAML from "yaml";
+import flatten from "../lib/Core/flatten";
+import isDefined from "../lib/Core/isDefined";
+import markdownToHtml from "../lib/Core/markdownToHtml";
 import CatalogMemberFactory from "../lib/Models/CatalogMemberFactory";
+import { BaseModel } from "../lib/Models/Model";
 import registerCatalogMembers from "../lib/Models/registerCatalogMembers";
+import Terria from "../lib/Models/Terria";
+import { AnyTrait } from "../lib/Traits/Decorators/anyTrait";
+import { ModelReferenceArrayTrait } from "../lib/Traits/Decorators/modelReferenceArrayTrait";
+import { ModelReferenceTrait } from "../lib/Traits/Decorators/modelReferenceTrait";
 import { ObjectArrayTrait } from "../lib/Traits/Decorators/objectArrayTrait";
 import { ObjectTrait } from "../lib/Traits/Decorators/objectTrait";
 import { PrimitiveArrayTrait } from "../lib/Traits/Decorators/primitiveArrayTrait";
 import { PrimitiveTrait } from "../lib/Traits/Decorators/primitiveTrait";
-import Terria from "../lib/Models/Terria";
+import ModelTraits from "../lib/Traits/ModelTraits";
+import Trait from "../lib/Traits/Trait";
 
-// Run with cwd = /build
-// Gets /build/doc/mkdocs.yml (which is a direct copy of /doc/mkdocs.yml)
-//  adds all of the auto-generated pages and writes out to /build/mkdocs.yml
-
-function markdownFromTraitType(trait) {
+/** Get type name for a given Trait */
+function markdownFromTraitType(trait: Trait) {
   let base = "";
   if (trait instanceof PrimitiveTrait || trait instanceof PrimitiveArrayTrait) {
     base = trait.type;
@@ -23,61 +28,160 @@ function markdownFromTraitType(trait) {
     trait instanceof ObjectTrait ||
     trait instanceof ObjectArrayTrait
   ) {
-    base = "object";
-  }
-  if (
-    trait instanceof PrimitiveArrayTrait ||
-    trait instanceof ObjectArrayTrait
+    base = trait.type.name;
+  } else if (trait instanceof AnyTrait) {
+    base = "any";
+  } else if (
+    trait instanceof ModelReferenceTrait ||
+    trait instanceof ModelReferenceArrayTrait
   ) {
-    return base + "[]";
+    base = "ModelReference";
   } else {
-    return base;
+    base = "unknown";
   }
+
+  return base;
 }
 
-function visitObjectTraitProperties(objectTrait, callback, depth = 0) {
-  Object.entries(objectTrait.type.traits).forEach(([k, trait]) => {
-    callback(k, trait, depth);
-    if (trait instanceof ObjectTrait || trait instanceof ObjectArrayTrait) {
-      visitObjectTraitProperties(trait, callback, depth + 1);
-    }
-  });
+/** Render row for a Trait with:
+ * - name
+ * - type
+ * - default value
+ * - description
+ */
+function renderTraitRow(property: string, trait: Trait, defaultValue: any) {
+  let traitType = markdownFromTraitType(trait);
+  let traitTypeIsArray =
+    trait instanceof PrimitiveArrayTrait || trait instanceof ObjectArrayTrait;
+  if (trait instanceof ObjectTrait || trait instanceof ObjectArrayTrait) {
+    traitType = `<a href="#${traitType}"><code>${traitType +
+      (traitTypeIsArray ? "[]" : "")}</code></b>`;
+    defaultValue = undefined
+  } else {
+    traitType = `<code>${traitType + (traitTypeIsArray ? "[]" : "")}</code>`;
+  }
+
+  // Delete defalut value is it is an empty array
+  if (Array.isArray(defaultValue) && (defaultValue.length === 0 || defaultValue.every(i => !isDefined(i))))
+    defaultValue = undefined
+
+  return `
+<tr>
+  <td><code>${property}</code></td>
+  <td>${traitType}</td>
+  <td>${defaultValue ? `<code>${defaultValue}</code>` : ""}</td>
+  <td>${markdownToHtml(trait.description, true)}</td>
+</tr>`;
 }
 
-function markdownFromObjectTrait(objectTrait, traitKey, sampleMember) {
-  let out = `
-### ${objectTrait.name}
-| Trait | Type | Default | Description |
-| ------ | ------ | ------ | ------ |
-`;
-  const callback = (name, trait, depth) => {
-    const traitType = markdownFromTraitType(trait);
-    const description = trait.description
-      .replace(/\n/g, "\r")
-      .replace(/\r+\s+/g, "\r");
-    const defaultValue =
-      sampleMember[traitKey][name] === undefined
-        ? ""
-        : sampleMember[traitKey][name];
-    out += `| ${name} | **${traitType}** | ${defaultValue} | ${description} |
-`;
+/** Render rows for all traits with the given parentTrait */
+function renderTraitRows(
+  parentTrait: string,
+  model: BaseModel,
+  showTitle = true
+) {
+  const objectTraits: BaseModel[] = [];
+  const traitRows = Object.entries(model.traits)
+    .filter(([property, trait]) => trait.parent.name === parentTrait)
+    .map(([property, trait]) => {
+      if (trait instanceof ObjectTrait) {
+        objectTraits.push(model[property]);
+      } else if (trait instanceof ObjectArrayTrait) {
+        objectTraits.push(
+          new (trait as ObjectArrayTrait<ModelTraits>).modelClass(
+            uniqueId(),
+            model.terria
+          )
+        );
+      }
+
+      return renderTraitRow(property, trait, model[property]);
+    })
+    .join("\n");
+
+  return {
+    html: `
+${showTitle ? `<tr><td colspan=4><b>${parentTrait}</b></td></tr>` : ""}
+${traitRows}`,
+    objectTraits
   };
-  if (
-    objectTrait instanceof ObjectTrait ||
-    objectTrait instanceof ObjectArrayTrait
-  ) {
-    visitObjectTraitProperties(objectTrait, callback);
-  }
-  return out;
 }
 
-function getDescription(metadata) {
+// This tracks which traits have been rendered already - so we don't get duplicates
+// It is reset for every catalog model
+let alreadyRenderedTraits: string[] = []
+
+/** Render table of traits for given model */
+function renderTraitTable(model: BaseModel, recursive = false, depth = 1) {
+  const rootTraits = model.TraitsClass.name;
+
+  // Return nothing if these traits have already been rendered
+  if (alreadyRenderedTraits.includes(rootTraits))
+    return {}
+
+  alreadyRenderedTraits.push(rootTraits)
+
+  // Traits organised by parentTraits
+  const traits = Object.values(model.traits).reduce<{
+    [parentTrait: string]: Trait[];
+  }>((obj, cur) => {
+    obj[cur.parent.name]
+      ? obj[cur.parent.name].push(cur)
+      : (obj[cur.parent.name] = [cur]);
+    return obj;
+  }, {});
+
+  // List of all groups of traits
+  const otherTraits = Object.keys(traits)
+    .filter(trait => trait !== rootTraits)
+    .sort();
+
+  const traitGroups = [rootTraits, ...otherTraits];
+
+  const traitGroupRows = traitGroups.map(traits =>
+    renderTraitRows(traits, model, traits !== rootTraits)
+  );
+
+  let html = `
+
+${"#".repeat(depth + 1)} ${rootTraits}
+
+<table>
+  <thead>
+      <tr>
+          <th>Trait</th>
+          <th>Type</th>
+          <th>Default</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+  ${traitGroupRows.map(rows => rows.html).join("\n")}
+  </tbody>
+</table>`;
+
+  const objectTraits = flatten(traitGroupRows.map(rows => rows.objectTraits));
+
+  if (recursive) {
+    html += objectTraits
+      .map(model => renderTraitTable(model, true, depth + 1).html).filter(isDefined)
+      .join("\n");
+  }
+
+  return { html, objectTraits };
+}
+
+// Run with cwd = /build
+// Gets /build/doc/mkdocs.yml (which is a direct copy of /doc/mkdocs.yml)
+//  adds all of the auto-generated pages and writes out to /build/mkdocs.yml
+
+function getDescription(metadata: any) {
   return concatTags(metadata);
 }
 
-function concatTags(inNode) {
+function concatTags(inNode: any) {
   if (!inNode) return false;
-  let outDescr = inNode.map(node => {
+  let outDescr = inNode.map((node: any) => {
     return node.value;
   });
   outDescr = outDescr.join(" ").replace(" .", ".");
@@ -86,7 +190,7 @@ function concatTags(inNode) {
   return outDescr;
 }
 
-async function getJsDoc(memberName) {
+async function getJsDoc(memberName: string): Promise<any> {
   return new Promise(function(resolve) {
     documentation
       .build([`../lib/Traits/${memberName}Traits.ts`], {
@@ -104,61 +208,57 @@ async function getJsDoc(memberName) {
   });
 }
 
-async function processMember(sampleMember, memberName) {
+async function processMember(sampleMember: BaseModel, memberName: string) {
   let description = "";
   let example = "";
 
   const jsDocJson = await getJsDoc(memberName);
 
+  if (memberName === "WebMapServiceCatalogItem") {
+    console.log(jsDocJson);
+  }
+
   if (jsDocJson[0]) {
+    console.log(jsDocJson);
     if (jsDocJson[0].description) {
       description = getDescription(
         jsDocJson[0].description.children[0].children
       );
     }
     if (jsDocJson[0].examples[0]) {
-      example = `## Example usage
-\`\`\`\`json
+      example = `
+## Example usage
+\`\`\`json
 ${jsDocJson[0].examples[0].description}
-\`\`\`\`
+\`\`\`
 `;
     }
   }
 
-  let content = `${description}
+  let content = `
+# ${memberName}
+
+${description}
 ${example}
 
-## Properties
-
-"type": "${sampleMember.type}"
+\`"type": "${sampleMember.type}"\`
 `;
 
-  content += `
-| Trait | Type | Default | Description |
-| ------ | ------ | ------ | ------ |
-`;
+  // Render table of *top-level* traits for the given member
+  // and reset alreadyRenderedTraits
+  alreadyRenderedTraits = []
+  const mainTraitTable = renderTraitTable(sampleMember);
+  content += mainTraitTable.html;
 
-  let additionalContent = "\n";
-  Object.entries(sampleMember.traits).forEach(([k, trait]) => {
-    const traitType = markdownFromTraitType(trait);
-    if (trait instanceof ObjectTrait || trait instanceof ObjectArrayTrait) {
-      additionalContent += markdownFromObjectTrait(trait, k, sampleMember);
-      content += `| ${k} | **${traitType}** <br> see below | | ${trait.description} |
-`;
-    } else {
-      const defaultValue =
-        sampleMember[k] === undefined || k === "currentTime"
-          ? ""
-          : sampleMember[k];
-      content += `| ${k} | **${traitType}** | ${defaultValue} | ${trait.description} |
-`;
-    }
-  });
+  // Render object-traits
+  content += mainTraitTable.objectTraits?.map(
+    objectTrait => renderTraitTable(objectTrait, true).html
+  ).filter(isDefined).join("\n");
 
-  return content + additionalContent;
+  return content;
 }
 
-async function processArray(members) {
+async function processArray(members: BaseModel[]) {
   const typeDetailsNavItems = [];
   let catalogItemsContent = "";
   let catalogGroupsContent = "";
@@ -178,6 +278,8 @@ async function processArray(members) {
       catalogFunctionsContent += tableRow;
     } else if (memberName.endsWith("Reference")) {
       catalogReferencesContent += tableRow;
+    } else if (memberName.endsWith("FunctionJob")) {
+      // Ignore FunctionJobs
     } else {
       console.error(`${memberName} is not an Item, Group or Function`);
     }
@@ -205,7 +307,7 @@ export default async function generateDocs() {
   const terria = new Terria();
 
   registerCatalogMembers();
-  const catalogMembers = Array.from(CatalogMemberFactory.constructors);
+  const catalogMembers = CatalogMemberFactory.constructorsArray;
 
   const members = catalogMembers
     .map(member => {
@@ -219,6 +321,8 @@ export default async function generateDocs() {
     });
 
   const mkDocsConfig = YAML.parse(fs.readFileSync("doc/mkdocs.yml", "utf8"));
+
+  console.log("read doc/mkdocs.yml");
 
   const commonContentHeader = `The Type column in the table below indicates the \`"type"\` property to use in the [Initialization File](../customizing/initialization-files.md).
 
@@ -264,26 +368,35 @@ export default async function generateDocs() {
 
   fs.writeFileSync("mkdocs.yml", YAML.stringify(mkDocsConfig));
 
+  console.log("write mkdocs.yml");
+
   fs.writeFileSync(
     "doc/connecting-to-data/catalog-items.md",
     catalogItemsContentHeader + commonContentHeader + catalogItemsContent
   );
+  console.log("write items");
   fs.writeFileSync(
     "doc/connecting-to-data/catalog-functions.md",
     catalogFunctionsContentHeader +
       commonContentHeader +
       catalogFunctionsContent
   );
+  console.log("write fnuctions");
+
   fs.writeFileSync(
     "doc/connecting-to-data/catalog-groups.md",
     catalogGroupsContentHeader + commonContentHeader + catalogGroupsContent
   );
+  console.log("write groups");
+
   fs.writeFileSync(
     "doc/connecting-to-data/catalog-references.md",
     catalogReferencesContentHeader +
       commonContentHeader +
       catalogReferencesContent
   );
+
+  console.log("write reference");
 }
 
 generateDocs().catch(err => {

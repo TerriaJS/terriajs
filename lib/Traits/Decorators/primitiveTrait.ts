@@ -15,7 +15,11 @@ export default function primitiveTrait<T>(options: PrimitiveTraitOptions<T>) {
     if (!constructor.traits) {
       constructor.traits = {};
     }
-    constructor.traits[propertyKey] = new PrimitiveTrait(propertyKey, options);
+    constructor.traits[propertyKey] = new PrimitiveTrait(
+      propertyKey,
+      options,
+      constructor
+    );
   };
 }
 
@@ -23,8 +27,8 @@ export class PrimitiveTrait<T> extends Trait {
   readonly type: PrimitiveType;
   readonly isNullable: boolean;
 
-  constructor(id: string, options: PrimitiveTraitOptions<T>) {
-    super(id, options);
+  constructor(id: string, options: PrimitiveTraitOptions<T>, parent: any) {
+    super(id, options, parent);
     this.type = options.type;
     this.isNullable = options.isNullable || false;
   }

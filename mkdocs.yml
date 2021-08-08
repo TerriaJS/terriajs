@@ -1,0 +1,110 @@
+site_name: TerriaJS
+theme:
+  name: material
+  logo: terria.png
+docs_dir: doc
+site_dir: ../wwwroot/doc/guide
+markdown_extensions:
+  - markdown.extensions.admonition
+strict: false
+nav:
+  - Home: README.md
+  - Getting Started: getting-started.md
+  - Customizing:
+      - Overview: customizing/README.md
+      - Client-side Config: customizing/client-side-config.md
+      - Initialization Files: customizing/initialization-files.md
+      - Server-side Config: customizing/server-side-config.md
+      - Skinning: customizing/skinning.md
+  - Connecting to Data:
+      - Overview: connecting-to-data/README.md
+      - Cross-Origin Resource Sharing: connecting-to-data/cross-origin-resource-sharing.md
+      - Catalog Groups: connecting-to-data/catalog-groups.md
+      - Catalog Items: connecting-to-data/catalog-items.md
+      - Customizing Data Appearance:
+          - Overview: connecting-to-data/customizing-data-appearance/overview.md
+          - Imagery Data: connecting-to-data/customizing-data-appearance/imagery-data.md
+          - Tabular Data: connecting-to-data/customizing-data-appearance/tabular-data.md
+          - Feature Information Template: connecting-to-data/customizing-data-appearance/feature-info-template.md
+      - Catalog Functions: connecting-to-data/catalog-functions.md
+      - Catalog References: connecting-to-data/catalog-references.md
+      - Catalog Type Details:
+          - ApiTableCatalogItem: connecting-to-data/catalog-type-details/api-table.md
+          - ArcGisCatalogGroup: connecting-to-data/catalog-type-details/esri-group.md
+          - ArcGisFeatureServerCatalogGroup: connecting-to-data/catalog-type-details/esri-featureServer-group.md
+          - ArcGisFeatureServerCatalogItem: connecting-to-data/catalog-type-details/esri-featureServer.md
+          - ArcGisMapServerCatalogGroup: connecting-to-data/catalog-type-details/esri-mapServer-group.md
+          - ArcGisMapServerCatalogItem: connecting-to-data/catalog-type-details/esri-mapServer.md
+          - ArcGisPortalCatalogGroup: connecting-to-data/catalog-type-details/arcgis-portal-group.md
+          - ArcGisPortalItemReference: connecting-to-data/catalog-type-details/arcgis-portal-item.md
+          - ArcGisTerrainCatalogItem: connecting-to-data/catalog-type-details/arcgis-terrain.md
+          - BingMapsCatalogItem: connecting-to-data/catalog-type-details/bing-maps.md
+          - CartoMapCatalogItem: connecting-to-data/catalog-type-details/carto.md
+          - CatalogGroup: connecting-to-data/catalog-type-details/group.md
+          - Cesium3DTilesCatalogItem: connecting-to-data/catalog-type-details/3d-tiles.md
+          - CesiumTerrainCatalogItem: connecting-to-data/catalog-type-details/cesium-terrain.md
+          - CkanCatalogGroup: connecting-to-data/catalog-type-details/ckan-group.md
+          - CkanItemReference: connecting-to-data/catalog-type-details/ckan-item.md
+          - CompositeCatalogItem: connecting-to-data/catalog-type-details/composite.md
+          - CsvCatalogItem: connecting-to-data/catalog-type-details/csv.md
+          - CswCatalogGroup: connecting-to-data/catalog-type-details/csw-group.md
+          - CzmlCatalogItem: connecting-to-data/catalog-type-details/czml.md
+          - GeoJsonCatalogItem: connecting-to-data/catalog-type-details/geojson.md
+          - GeoRssCatalogItem: connecting-to-data/catalog-type-details/georss.md
+          - GltfCatalogItem: connecting-to-data/catalog-type-details/gltf.md
+          - GpxCatalogItem: connecting-to-data/catalog-type-details/gpx.md
+          - GtfsCatalogItem: connecting-to-data/catalog-type-details/gtfs.md
+          - IonImageryCatalogItem: connecting-to-data/catalog-type-details/ion-imagery.md
+          - KmlCatalogItem: connecting-to-data/catalog-type-details/kml.md
+          - MagdaReference: connecting-to-data/catalog-type-details/magda.md
+          - MapboxMapCatalogItem: connecting-to-data/catalog-type-details/mapbox-map.md
+          - MapboxStyleCatalogItem: connecting-to-data/catalog-type-details/mapbox-style.md
+          - MapboxVectorTileCatalogItem: connecting-to-data/catalog-type-details/mvt.md
+          - OpenDataSoftCatalogGroup: connecting-to-data/catalog-type-details/opendatasoft-group.md
+          - OpenDataSoftCatalogItem: connecting-to-data/catalog-type-details/opendatasoft-item.md
+          - OpenStreetMapCatalogItem: connecting-to-data/catalog-type-details/open-street-map.md
+          - SdmxCatalogGroup: connecting-to-data/catalog-type-details/sdmx-group.md
+          - SdmxJsonCatalogItem: connecting-to-data/catalog-type-details/sdmx-json.md
+          - SenapsLocationsCatalogItem: connecting-to-data/catalog-type-details/senaps-locations.md
+          - SensorObservationServiceCatalogItem: connecting-to-data/catalog-type-details/sos.md
+          - ShapefileCatalogItem: connecting-to-data/catalog-type-details/shp.md
+          - SocrataCatalogGroup: connecting-to-data/catalog-type-details/socrata-group.md
+          - SocrataMapViewCatalogItem: connecting-to-data/catalog-type-details/socrata-map-item.md
+          - SplitItemReference: connecting-to-data/catalog-type-details/split-reference.md
+          - StubCatalogItem: connecting-to-data/catalog-type-details/stub.md
+          - ThreddsCatalogGroup: connecting-to-data/catalog-type-details/thredds-group.md
+          - UrlReference: connecting-to-data/catalog-type-details/url-reference.md
+          - WebFeatureServiceCatalogGroup: connecting-to-data/catalog-type-details/wfs-group.md
+          - WebFeatureServiceCatalogItem: connecting-to-data/catalog-type-details/wfs.md
+          - WebMapServiceCatalogGroup: connecting-to-data/catalog-type-details/wms-group.md
+          - WebMapServiceCatalogItem: connecting-to-data/catalog-type-details/wms.md
+          - WebMapTileServiceCatalogGroup: connecting-to-data/catalog-type-details/wmts-group.md
+          - WebMapTileServiceCatalogItem: connecting-to-data/catalog-type-details/wmts.md
+          - WebProcessingServiceCatalogFunction: connecting-to-data/catalog-type-details/wps.md
+          - WebProcessingServiceCatalogFunctionJob: connecting-to-data/catalog-type-details/wps-result.md
+          - WebProcessingServiceCatalogGroup: connecting-to-data/catalog-type-details/wps-getCapabilities.md
+          - YDYRCatalogFunction: connecting-to-data/catalog-type-details/ydyr.md
+          - YDYRCatalogFunctionJob: connecting-to-data/catalog-type-details/ydyr-job.md
+  - Deploying:
+      - Overview: deploying/README.md
+      - Deploying TerriaMap: deploying/deploying-terriamap.md
+      - Deploying to AWS: deploying/deploying-to-aws.md
+      - Deploying with Kubernetes: deploying/deploying-with-kubernetes.md
+      - Setting Up a Region Mapping Server: deploying/setting-up-a-region-mapping-server.md
+      - (Deprecated) Setting Up WMS Region Mapping: deploying/deprecated-wms-region-mapping.md
+      - Setting Up Geoserver: deploying/setting-up-geoserver.md
+      - Using as a CKAN Previewer: deploying/using-as-a-ckan-previewer.md
+      - Controlling with URL Parameters: deploying/controlling-with-url-parameters.md
+      - Controlling in an &lt;iframe&gt; or Popup: deploying/controlling-in-an-iframe-or-popup.md
+  - Contributing:
+      - Overview: contributing/README.md
+      - Development Environment: contributing/development-environment.md
+      - Architecture: contributing/architecture.md
+      - Using a Custom Version of Cesium: contributing/using-a-custom-version-of-cesium.md
+      - Setting up Saucelabs: contributing/setting-up-saucelabs.md
+      - Problems and Solutions: contributing/problems-and-solutions.md
+      - New model layer documentation: contributing/model-layer.md
+      - Frontend style guide: contributing/frontend-style-guide.md
+      - Version 8 migration guide: contributing/migration-guide.md
+  - Acknowledgements:
+      - Attributions: acknowledgements/attributions.md

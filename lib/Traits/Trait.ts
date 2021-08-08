@@ -11,11 +11,13 @@ export default abstract class Trait {
   readonly name: string;
   readonly description: string;
   readonly decoratorForFlattened?: PropertyDecorator;
+  readonly parent: any;
 
-  constructor(id: string, options: TraitOptions) {
+  constructor(id: string, options: TraitOptions, parent: any) {
     this.id = id;
     this.name = options.name;
     this.description = options.description;
+    this.parent = parent;
   }
 
   abstract getValue(model: BaseModel): any;
