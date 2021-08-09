@@ -72,6 +72,7 @@ Change Log
 * New model-generated documentation in `generateDocs.ts`
 * Refactored some `Traits` classes so they use `mixTraits` instead of extending other `Traits` classes.
 * Allow translation of some components.
+* Add entries for translation in documentation nav.
 * [The next improvement]
 
 #### 8.0.0-alpha.87
