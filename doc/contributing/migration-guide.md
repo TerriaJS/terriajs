@@ -26,11 +26,11 @@ To migrate to TerriaJS version 8 you'll need to update each of these:
 
 The best way to upgrade your catalog files to TerriaJS version 8 is to run the files through our [catalog converter](https://catalog-converter.terria.io/).
 
-[Checkout the source code](https://github.com/TerriaJS/catalog-converter) if you want the converter as a command line tool with extra options (such as more control over ids), or if you want to contribute to it. (And the source for the catalog converter UI can be found at [https://github.com/TerriaJS/catalog-converter-ui](https://github.com/TerriaJS/catalog-converter-ui)).
+[Checkout the source code](https://github.com/TerriaJS/catalog-converter) if you want the converter as a command line tool with extra options (such as more control over ids), or if you want to contribute to it. (The source for the catalog converter UI can be found at [https://github.com/TerriaJS/catalog-converter-ui](https://github.com/TerriaJS/catalog-converter-ui)).
 
 ### Upgrading TerriaMap code by git merge
 
-If you set up your map in the standard way using a fork of [TerriaMap](https://github.com/TerriaJS/TerriaMap) you will be able to upgrade from TerriaJS version 7 to version 8 by merging in the `next` branch of TerriaMap. To do this, run the following `git` commands:
+If you have set up your map in the standard way using a fork of [TerriaMap](https://github.com/TerriaJS/TerriaMap) you will be able to upgrade from TerriaJS version 7 to version 8 by merging in the `next` branch of TerriaMap. To do this, run the following `git` commands:
 
 1. Add TerriaMap as a remote:
 ```sh
@@ -49,7 +49,7 @@ git branch --contains post-prettier # The output of this must include the new br
 ```sh
 git merge TerriaMap/master
 ```
-5. And then merge in the latest TerriaMap built on terriajs version 8. If you completed the previous step, most conflicts in this stage should be resolved in favour of TerriaMap/next (the Incoming change):
+5. Finally, merge in the latest TerriaMap built on terriajs version 8. If you completed the previous step, most conflicts in this stage should be resolved in favour of TerriaMap/next (the Incoming change):
 ```sh
 git merge TerriaMap/next
 ```
