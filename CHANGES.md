@@ -78,6 +78,8 @@ Change Log
 * Fix `DataPreviewSections` info section bug.
 * Move `FeedbackForm` `z-index` to same as `Notification` - this is so it will appear above Data catalog.
 * Added `result.raiseError()`, `result.pushErrorTo()` and `result.clone()` helper methods - and `Result.combine()` convenience function
+* Renamed `ReferenceMixin.is` to `ReferenceMixin.isMixedInto`
+* Added support for logging to external error service and configuring it via config parameters. See `errorService` in [client configuration](doc/customizing/client-side-config.md).
 * Fix `DiscreteColorMap` bug with `binColors` and added warning message if `colorPalette` is invalid.
 * Fix `EnumColorMap` bug with `binColors`
 * Moved d3-scale-chromatic code into `tableColorMap.colorScaleCategorical()` and `tableColorMap.colorScaleContinuous()`
