@@ -87,7 +87,8 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
         test: /\.(ts|js)x?$/,
         include: [
             path.resolve(terriaJSBasePath, 'lib'),
-            path.resolve(terriaJSBasePath, 'test')
+            path.resolve(terriaJSBasePath, 'test'),
+            path.resolve(terriaJSBasePath, 'buildprocess', 'generateDocs.ts')
         ],
         use: [
             {
