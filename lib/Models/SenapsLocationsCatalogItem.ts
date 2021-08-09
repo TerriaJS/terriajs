@@ -206,19 +206,19 @@ export class SenapsLocationsStratum extends LoadableStratum(
         featureInfo
       );
 
-      geojsonCatalogItem.loadMapItems();
+      (await geojsonCatalogItem.loadMapItems()).throwIfError();
       return new SenapsLocationsStratum(
         senapsLocationsCatalogItem,
         geojsonCatalogItem
       );
     } catch (e) {
-      const msg =
-        e.statusCode === 401
-          ? "models.senaps.missingKeyErrorMessage"
-          : "models.senaps.generalErrorMessage";
-      throw new TerriaError({
+      throw TerriaError.from(e, {
         title: i18next.t("models.senaps.retrieveErrorTitle"),
-        message: i18next.t(msg)
+        message: i18next.t(
+          e.statusCode === 401
+            ? "models.senaps.missingKeyErrorMessage"
+            : "models.senaps.generalErrorMessage"
+        )
       });
     }
   }

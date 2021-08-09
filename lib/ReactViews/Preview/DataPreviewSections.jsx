@@ -51,8 +51,8 @@ const DataPreviewSections = observer(
 
       return items.filter(
         item =>
-          isDefined(item.content) &&
-          item.content !== null &&
+          isDefined(item.content ?? item.contentAsObject) &&
+          (item.content ?? item.contentAsObject) !== null &&
           item.content !== ""
       );
     },

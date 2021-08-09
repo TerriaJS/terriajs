@@ -80,55 +80,41 @@ class GeoRssStratum extends LoadableStratum(GeoRssCatalogItemTraits) {
   }
 
   static async load(item: GeoRssCatalogItem) {
-    const geoJsonItem = new GeoJsonCatalogItem(createGuid(), item.terria, item);
-    geoJsonItem.setTrait(
-      CommonStrata.definition,
-      "clampToGround",
-      item.clampToGround
-    );
-    geoJsonItem.setTrait(
-      CommonStrata.definition,
-      "attribution",
-      item.attribution
-    );
-    const feed: any = {};
-    return Promise.resolve()
-      .then(() => loadGeoRss(item))
-      .then(json => {
-        if (isDefined(json.geoJsonData)) {
-          geoJsonItem.setTrait(
-            CommonStrata.definition,
-            "geoJsonData",
-            json.geoJsonData
-          );
-        }
-        geoJsonItem.loadMetadata();
-        return json.metadata;
-      })
-      .then(feed => {
-        const stratum = new GeoRssStratum(item, geoJsonItem, feed);
-        return stratum;
-      })
-      .catch(e => {
-        if (e instanceof TerriaError) {
-          throw e;
-        } else {
-          throw new TerriaError({
-            sender: this,
-            title: i18next.t("models.georss.errorLoadingTitle"),
-            message: i18next.t("models.georss.errorLoadingMessage", {
-              appName: item.terria.appName,
-              email:
-                '<a href="mailto:' +
-                item.terria.supportEmail +
-                '">' +
-                item.terria.supportEmail +
-                "</a>.",
-              stackTrace: e.stack || e.toString()
-            })
-          });
-        }
+    try {
+      const geoJsonItem = new GeoJsonCatalogItem(
+        createGuid(),
+        item.terria,
+        item
+      );
+      geoJsonItem.setTrait(
+        CommonStrata.definition,
+        "clampToGround",
+        item.clampToGround
+      );
+      geoJsonItem.setTrait(
+        CommonStrata.definition,
+        "attribution",
+        item.attribution
+      );
+
+      const json = await loadGeoRss(item);
+      if (isDefined(json.geoJsonData)) {
+        geoJsonItem.setTrait(
+          CommonStrata.definition,
+          "geoJsonData",
+          json.geoJsonData
+        );
+      }
+      const feed = json.metadata;
+      (await geoJsonItem.loadMetadata()).throwIfError();
+
+      return new GeoRssStratum(item, geoJsonItem, feed);
+    } catch (e) {
+      throw TerriaError.from(e, {
+        title: i18next.t("models.georss.errorLoadingTitle"),
+        message: i18next.t("models.georss.errorLoadingMessage")
       });
+    }
   }
 
   @computed get name(): string | undefined {
@@ -209,7 +195,7 @@ export default class GeoRssCatalogItem extends MappableMixin(
 
   protected async forceLoadMapItems() {
     if (isDefined(this.geoJsonItem)) {
-      return this.geoJsonItem.loadMapItems();
+      return (await this.geoJsonItem.loadMapItems()).throwIfError();
     }
   }
 

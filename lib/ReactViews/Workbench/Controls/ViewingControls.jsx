@@ -19,7 +19,6 @@ import {
 } from "../../../Core/AnalyticEvents/analyticEvents";
 import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
 import getPath from "../../../Core/getPath";
-import TerriaError from "../../../Core/TerriaError";
 import PickedFeatures from "../../../Map/PickedFeatures";
 import ExportableMixin from "../../../ModelMixins/ExportableMixin";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
@@ -259,7 +258,7 @@ const ViewingControls = observer(
       });
     },
 
-    previewItem() {
+    async previewItem() {
       let item = this.props.item;
       // If this is a chartable item opened from another catalog item, get the info of the original item.
       if (defined(item.sourceCatalogItem)) {
@@ -274,18 +273,13 @@ const ViewingControls = observer(
           });
         });
       this.props.viewState.viewCatalogMember(item);
-      this.props.viewState.switchMobileView(
-        this.props.viewState.mobileViewOptions.preview
-      );
     },
 
     exportDataClicked() {
       const item = this.props.item;
 
       exportData(item).catch(e => {
-        if (e instanceof TerriaError) {
-          this.props.item.terria.raiseErrorToUser(e);
-        }
+        this.props.item.terria.raiseErrorToUser(e);
       });
     },
 

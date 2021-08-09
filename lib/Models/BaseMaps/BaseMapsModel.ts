@@ -90,28 +90,22 @@ export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
     if (items !== undefined) {
       const { items: itemsTrait } = this.traits;
       const newItemsIds = itemsTrait.fromJson(this, stratumId, items);
-      newItemsIds
-        .catchError(error => {
-          errors.push(error);
-        })
-        ?.forEach((member: BaseMapModel) => {
-          const existingItem = this.items.find(
-            baseMap => baseMap.item === member.item
-          );
-          if (existingItem) {
-            // object array trait doesn't automatically update model item
-            existingItem.setTrait(stratumId, "image", member.image);
-          } else {
-            this.add(stratumId, member);
-          }
-        });
+      newItemsIds.pushErrorTo(errors)?.forEach((member: BaseMapModel) => {
+        const existingItem = this.items.find(
+          baseMap => baseMap.item === member.item
+        );
+        if (existingItem) {
+          // object array trait doesn't automatically update model item
+          existingItem.setTrait(stratumId, "image", member.image);
+        } else {
+          this.add(stratumId, member);
+        }
+      });
     }
 
-    updateModelFromJson(this, stratumId, rest).catchError(error => {
-      errors.push(error);
-    });
+    updateModelFromJson(this, stratumId, rest).pushErrorTo(errors);
 
-    return Result.return(
+    return new Result(
       undefined,
       TerriaError.combine(
         errors,

@@ -1,6 +1,6 @@
 import { computed } from "mobx";
 import Result from "../../Core/Result";
-import TerriaError from "../../Core/TerriaError";
+import TerriaError, { TerriaErrorSeverity } from "../../Core/TerriaError";
 import createStratumInstance from "../../Models/createStratumInstance";
 import Model, { BaseModel, ModelConstructor } from "../../Models/Model";
 import saveStratumToJson from "../../Models/saveStratumToJson";
@@ -65,7 +65,7 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
     const result: any = createStratumInstance(ResultType);
 
     if (this.isNullable && jsonValue === null) {
-      return Result.return(jsonValue);
+      return new Result(jsonValue);
     }
 
     const errors: TerriaError[] = [];
@@ -88,11 +88,11 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
       } else {
         result[propertyName] = trait
           .fromJson(model, stratumName, subJsonValue)
-          .catchError(error => errors.push(error));
+          .pushErrorTo(errors);
       }
     });
 
-    return Result.return(
+    return new Result(
       result,
       TerriaError.combine(
         errors,
