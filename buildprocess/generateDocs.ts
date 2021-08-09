@@ -53,7 +53,7 @@ function renderTraitRow(property: string, trait: Trait, defaultValue: any) {
   let traitTypeIsArray =
     trait instanceof PrimitiveArrayTrait || trait instanceof ObjectArrayTrait;
   if (trait instanceof ObjectTrait || trait instanceof ObjectArrayTrait) {
-    traitType = `<a href="#${traitType}"><code>${traitType +
+    traitType = `<a href="#${traitType.toLocaleLowerCase()}"><code>${traitType +
       (traitTypeIsArray ? "[]" : "")}</code></b>`;
     defaultValue = undefined
   } else {
