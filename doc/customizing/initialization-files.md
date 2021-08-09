@@ -23,14 +23,16 @@ An init file is a [JSON file](https://en.wikipedia.org/wiki/JSON) with this basi
     "initialCamera": { ... },
     "corsDomains": [ "myserver.gov.au" ],
     "baseMaps": {
-      "items": {
-        "item": {
-          "id": "basemap-darkmatter",
-          "name": "Dark Matter",
-          ...
-        },
-        "image": "/images/dark-matter.png"
-      },
+      "items": [
+        {
+          "item": {
+            "id": "basemap-darkmatter",
+            "name": "Dark Matter",
+              ...
+          },
+          "image": "/images/dark-matter.png"
+        }
+      ],
     },
     ...
 }
