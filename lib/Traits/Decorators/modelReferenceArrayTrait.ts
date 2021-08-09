@@ -23,7 +23,8 @@ export default function modelReferenceArrayTrait<T>(
     }
     constructor.traits[propertyKey] = new ModelReferenceArrayTrait(
       propertyKey,
-      options
+      options,
+      constructor
     );
   };
 }
@@ -32,8 +33,8 @@ export class ModelReferenceArrayTrait extends Trait {
   readonly decoratorForFlattened = computed.struct;
   private factory: ModelFactory | undefined;
 
-  constructor(id: string, options: ModelArrayTraitOptions) {
-    super(id, options);
+  constructor(id: string, options: ModelArrayTraitOptions, parent: any) {
+    super(id, options, parent);
     this.factory = options.factory;
   }
 
