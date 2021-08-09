@@ -235,64 +235,38 @@ describe("GeoJsonCatalogItem", function() {
   // });
 
   describe("error handling", function() {
-    it("fails gracefully when the data at a URL is not JSON", function(done) {
+    it("fails gracefully when the data at a URL is not JSON", async () => {
       geojson.setTrait(CommonStrata.user, "url", "test/KML/vic_police.kml");
 
-      geojson
-        .loadMapItems()
-        .then(function() {
-          done.fail("Load should not succeed.");
-        })
-        .catch(function(e: any) {
-          expect(e instanceof TerriaError).toBe(true);
-          done();
-        });
+      const error = (await geojson.loadMapItems()).error;
+
+      expect(error).toBeDefined("Load should not succeed");
     });
 
-    it("fails gracefully when the provided string is not JSON", async function(done) {
-      loadText("test/KML/vic_police.kml").then(function(s: string) {
-        geojson.setTrait(CommonStrata.user, "geoJsonString", s);
+    it("fails gracefully when the provided string is not JSON", async () => {
+      const s = await loadText("test/KML/vic_police.kml");
+      geojson.setTrait(CommonStrata.user, "geoJsonString", s);
 
-        geojson
-          .loadMapItems()
-          .then(function() {
-            done.fail("Load should not succeed.");
-          })
-          .catch(function(e: any) {
-            expect(e instanceof TerriaError).toBe(true);
-            done();
-          });
-      });
+      const error = (await geojson.loadMapItems()).error;
+
+      expect(error).toBeDefined("Load should not succeed");
     });
 
-    it("fails gracefully when the data at a URL is JSON but not GeoJSON", function(done) {
+    it("fails gracefully when the data at a URL is JSON but not GeoJSON", async () => {
       geojson.setTrait(CommonStrata.user, "url", "test/CZML/verysimple.czml");
 
-      geojson
-        .loadMapItems()
-        .then(function() {
-          done.fail("Load should not succeed.");
-        })
-        .catch(function(e: any) {
-          expect(e instanceof TerriaError).toBe(true);
-          done();
-        });
+      const error = (await geojson.loadMapItems()).error;
+
+      expect(error).toBeDefined("Load should not succeed");
     });
 
-    it("fails gracefully when the provided string is JSON but not GeoJSON", async function(done) {
-      loadText("test/CZML/verysimple.czml").then(function(s: string) {
-        geojson.setTrait(CommonStrata.user, "geoJsonString", s);
+    it("fails gracefully when the provided string is JSON but not GeoJSON", async () => {
+      const s = await loadText("test/CZML/verysimple.czml");
+      geojson.setTrait(CommonStrata.user, "geoJsonString", s);
 
-        geojson
-          .loadMapItems()
-          .then(function() {
-            done.fail("Load should not succeed.");
-          })
-          .catch(function(e: any) {
-            expect(e instanceof TerriaError).toBe(true);
-            done();
-          });
-      });
+      const error = (await geojson.loadMapItems()).error;
+
+      expect(error).toBeDefined("Load should not succeed");
     });
     /*
     it("fails gracefully when the provided blob is JSON but not GeoJSON", function(done) {

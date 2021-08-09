@@ -163,14 +163,30 @@ Some rules:
 
 ## AsyncLoader
 
-The AsyncLoader class provides a way to memoize (of sorts) async requests. In a `forceLoadX` function you should load from an asynchronous service, transform the data into something that can be stored in 1 or multiple observables and then set those observables.
+The AsyncLoader class provides a way to memoize (of sorts) async requests. 
 
-It works by calling `loadCallback` in `@computed loadKeepAlive`. This `@computed` will update if observables change that were used in `loadCallback()`.Because we are using a `@computed` in this way - it is **very important** that no changes to `observables` are made **before an async call**.
+`AsyncLoader` accepts an async function which can be use to do the following: 
+
+1. load data from an asynchronous service
+2. transform the data into something that can be stored in 1 or multiple observables
+3. set those observables.
+
+It works by calling an async function `forceLoadX()` in a `@computed` called `loadKeepAlive`. This `@computed` will update if observables change that were used in `forceLoadX()`. Because we are using a `@computed` in this way - it is **very important** that no changes to `observables` are made **before an async call**.
+
+This means that we can call `asyncLoader.load()` many times without worrying about 
+
+`forceLoadX()` shouldn't be called directly - instead you should use `asyncLoader.load()` method - for example in `CatalogMemberMixin` we have
+
+- the abstract method `forceLoadMetadata`
+-  `loadMetadata()` which wraps `asyncLoader.load()`
+- `loadMetadata()` can be called as many times as needed 
+- See [CatalogMemberMixin example](#CatalogMemberMixin-example)
+
 
 A **correct** example:
 
 ```ts
-async function loadX() {
+async function forceLoadX() {
   const url = this.someObservableUrl
   const someData = await loadText(url)
   runInAction(() => this.someOtherObservable = someData)
@@ -186,7 +202,7 @@ If there is any synchronous processing present it should be pulled out of forceL
 An **incorrect** example:
 
 ```ts
-async function loadX() {
+async function forceLoadX() {
   const arg = this.someObservable
   const someData = someSynchronousFn(arg)
   runInAction(() => this.someOtherObservable = someData)
@@ -206,12 +222,46 @@ get newComputed {
 
 **Other tips**:
 
-- You can not nest together `AsyncLoaders`.
+- You should not nest together `AsyncLoaders`.
   Eg.
   ```ts
-  async function loadX() {
-    await loadY()
+  async function forceLoadX() {
+    await this.forceLoadY()
   }
   ```
 
 For more info, see `lib\Core\AsyncLoader.ts`
+
+## CatalogMemberMixin example
+
+`CatalogMemberMixin` contains an `AsyncLoader`, which uses the followingfunction which must be implemented by a class:
+
+```ts
+/** Calls AsyncLoader to load metadata. It is safe to call this as often as necessary.
+ * If metadata is already loaded or already loading, it will
+ * return the existing promise.
+ *
+ * This returns a Result object, it will contain errors if they occur - they will not be thrown.
+ * To throw errors, use `(await loadMetadata()).throwIfError()`
+ *
+ * {@see AsyncLoader}
+ */
+async loadMetadata(): Promise<Result<void>> {
+  return (await this._metadataLoader.load()).clone(
+    `Failed to load \`${getName(this)}\` metadata`
+  );
+}
+
+/**
+ * Forces load of the metadata. This method does _not_ need to consider
+ * whether the metadata is already loaded.
+ *
+ * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
+ *
+ * Errors can be thrown here.
+ *
+ * {@see AsyncLoader}
+ */
+protected async forceLoadMetadata() {}
+```
+

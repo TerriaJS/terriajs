@@ -2,7 +2,7 @@ import { AxisBottom, AxisLeft } from "@vx/axis";
 import { Group } from "@vx/group";
 import { withParentSize } from "@vx/responsive";
 import { scaleLinear, scaleTime } from "@vx/scale";
-import { computed, runInAction } from "mobx";
+import { computed } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -39,16 +39,18 @@ class FeatureInfoPanelChart extends React.Component {
     );
   }
 
-  componentDidUpdate() {
-    runInAction(() => {
-      this.props.item.loadMapItems();
-    });
+  async componentDidUpdate() {
+    (await this.props.item.loadMapItems()).raiseError(
+      this.props.item.terria,
+      `Failed to load chart for ${this.props.item.name}`
+    );
   }
 
-  componentDidMount() {
-    runInAction(() => {
-      this.props.item.loadMapItems();
-    });
+  async componentDidMount() {
+    (await this.props.item.loadMapItems()).raiseError(
+      this.props.item.terria,
+      `Failed to load chart for ${this.props.item.name}`
+    );
   }
 
   render() {

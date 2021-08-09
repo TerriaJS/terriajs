@@ -8,6 +8,7 @@ import ViewState from "../ReactViewModels/ViewState";
 import Icon from "../Styled/Icon";
 import Styles from "./Map/Navigation/tool_button.scss";
 import MapIconButton from "./MapIconButton/MapIconButton";
+import TerriaError from "../Core/TerriaError";
 
 interface ToolProps {
   viewState: ViewState;
@@ -129,10 +130,12 @@ class ToolErrorBoundary extends React.Component<
 
   componentDidCatch() {
     const { terria, toolName, t } = this.props;
-    terria.raiseErrorToUser({
-      title: t("tool.loadingError.title", { toolName }),
-      message: t("tool.loadingError.message")
-    });
+    terria.raiseErrorToUser(
+      new TerriaError({
+        title: t("tool.loadingError.title", { toolName }),
+        message: t("tool.loadingError.message")
+      })
+    );
     this.setState({ hasError: true });
   }
 

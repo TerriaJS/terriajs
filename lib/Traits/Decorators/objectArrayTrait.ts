@@ -1,7 +1,7 @@
 import { computed } from "mobx";
 import { computedFn } from "mobx-utils";
 import Result from "../../Core/Result";
-import TerriaError from "../../Core/TerriaError";
+import TerriaError, { TerriaErrorSeverity } from "../../Core/TerriaError";
 import createStratumInstance from "../../Models/createStratumInstance";
 import Model, { BaseModel, ModelConstructor } from "../../Models/Model";
 import saveStratumToJson from "../../Models/saveStratumToJson";
@@ -167,12 +167,14 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
     // TODO: support removals
 
     if (!Array.isArray(jsonValue)) {
-      return Result.error({
-        title: "Invalid property",
-        message: `Property ${
-          this.id
-        } is expected to be an array but instead it is of type ${typeof jsonValue}.`
-      });
+      return Result.error(
+        new TerriaError({
+          title: "Invalid property",
+          message: `Property ${
+            this.id
+          } is expected to be an array but instead it is of type ${typeof jsonValue}.`
+        })
+      );
     }
 
     const errors: TerriaError[] = [];
@@ -199,14 +201,14 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
         } else {
           result[propertyName] = trait
             .fromJson(model, stratumName, subJsonValue)
-            .catchError(error => errors.push(error));
+            .pushErrorTo(errors);
         }
       });
 
       return result;
     });
 
-    return Result.return(
+    return new Result(
       resultArray,
       TerriaError.combine(
         errors,

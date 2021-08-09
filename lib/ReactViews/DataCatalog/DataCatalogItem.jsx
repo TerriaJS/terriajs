@@ -6,14 +6,14 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import addedByUser from "../../Core/addedByUser";
-import getPath from "../../Core/getPath";
-import removeUserAddedData from "../../Models/removeUserAddedData";
-import CatalogItem from "./CatalogItem";
-import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import {
   Category,
   DataSourceAction
 } from "../../Core/AnalyticEvents/analyticEvents";
+import getPath from "../../Core/getPath";
+import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
+import removeUserAddedData from "../../Models/removeUserAddedData";
+import CatalogItem from "./CatalogItem";
 
 // Individual dataset
 export const DataCatalogItem = observer(
@@ -83,23 +83,12 @@ export const DataCatalogItem = observer(
           );
         }
       } catch (e) {
-        this.props.terria.raiseErrorToUser(e);
+        this.props.terria.raiseErrorToUser(e, undefined, true);
       }
     },
 
     async setPreviewedItem() {
-      // raiseErrorOnRejectedPromise(this.props.item.terria, this.props.item.load());
-      if (this.props.item.loadMetadata) {
-        await this.props.item.loadMetadata();
-      }
-      if (this.props.item.loadReference) {
-        await this.props.item.loadReference();
-      }
-      this.props.viewState.viewCatalogMember(this.props.item);
-      // mobile switch to nowvewing
-      this.props.viewState.switchMobileView(
-        this.props.viewState.mobileViewOptions.preview
-      );
+      await this.props.viewState.viewCatalogMember(this.props.item);
     },
 
     isSelected() {
