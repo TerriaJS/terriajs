@@ -84,6 +84,11 @@ Change Log
 * Moved d3-scale-chromatic code into `tableColorMap.colorScaleCategorical()` and `tableColorMap.colorScaleContinuous()`
 * Disabled welcome popup for shared stories
 * Add WMS support for default value of time dimension.
+* Add `description` and `example` static properties to `Trait`, and added `@traitClass` decorator.
+* Add `parent` property to `Trait`, which contains parent `TraitClass`.
+* New model-generated documentation in `generateDocs.ts`
+* Refactored some `Traits` classes so they use `mixTraits` instead of extending other `Traits` classes.
+* Allow translation of some components.
 * [The next improvement]
 
 #### 8.0.0-alpha.87

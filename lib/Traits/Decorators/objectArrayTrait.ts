@@ -36,7 +36,8 @@ export default function objectArrayTrait<T extends ModelTraits>(
     }
     constructor.traits[propertyKey] = new ObjectArrayTrait(
       propertyKey,
-      options
+      options,
+      constructor
     );
   };
 }
@@ -48,8 +49,8 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
   readonly modelClass: ModelConstructor<Model<T>>;
   readonly merge: boolean;
 
-  constructor(id: string, options: ObjectArrayTraitOptions<T>) {
-    super(id, options);
+  constructor(id: string, options: ObjectArrayTraitOptions<T>, parent: any) {
+    super(id, options, parent);
     this.type = options.type;
     this.idProperty = options.idProperty;
     this.modelClass = options.modelClass || traitsClassToModelClass(this.type);

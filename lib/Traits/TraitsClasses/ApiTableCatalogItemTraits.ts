@@ -6,7 +6,7 @@ import objectArrayTrait from "../Decorators/objectArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import TableTraits from "./TableTraits";
 
-export class ApiTableRequestTraits extends ApiRequestTraits {
+export class ApiTableRequestTraits extends mixTraits(ApiRequestTraits) {
   @primitiveTrait({
     name: "Kind",
     type: "string",

@@ -20,7 +20,8 @@ export default function modelReferenceTrait<T>(options: ModelTraitOptions) {
     }
     constructor.traits[propertyKey] = new ModelReferenceTrait(
       propertyKey,
-      options
+      options,
+      constructor
     );
   };
 }
@@ -30,8 +31,8 @@ export class ModelReferenceTrait extends Trait {
   private readonly factory: ModelFactory | undefined;
   private readonly modelParentId: string | undefined;
 
-  constructor(id: string, options: ModelTraitOptions) {
-    super(id, options);
+  constructor(id: string, options: ModelTraitOptions, parent: any) {
+    super(id, options, parent);
     this.factory = options.factory;
     this.modelParentId = options.modelParentId;
   }

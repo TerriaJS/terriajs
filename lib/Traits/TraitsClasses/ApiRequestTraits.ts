@@ -3,6 +3,7 @@ import ModelTraits from "../ModelTraits";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import UrlTraits from "./UrlTraits";
+import mixTraits from "../mixTraits";
 
 export class QueryParamTraits extends ModelTraits {
   @primitiveTrait({
@@ -25,7 +26,7 @@ export class QueryParamTraits extends ModelTraits {
   value?: string;
 }
 
-export default class ApiRequestTraits extends UrlTraits {
+export default class ApiRequestTraits extends mixTraits(UrlTraits) {
   @objectArrayTrait({
     name: "Query parameters",
     type: QueryParamTraits,

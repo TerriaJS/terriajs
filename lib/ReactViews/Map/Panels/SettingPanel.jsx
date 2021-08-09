@@ -346,7 +346,9 @@ class SettingPanel extends React.Component {
           </ul>
         </div>
         <div className={DropdownStyles.section}>
-          <label className={DropdownStyles.heading}>Timeline</label>
+          <label className={DropdownStyles.heading}>
+            {t("settingPanel.timeline.title")}
+          </label>
           <section
             className={Styles.nativeResolutionWrapper}
             title={qualityLabels[this.props.terria.quality]}

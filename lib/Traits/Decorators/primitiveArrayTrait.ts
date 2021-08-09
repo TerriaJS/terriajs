@@ -20,7 +20,8 @@ export default function primitiveArrayTrait<T>(
     }
     constructor.traits[propertyKey] = new PrimitiveArrayTrait(
       propertyKey,
-      options
+      options,
+      constructor
     );
   };
 }
@@ -29,8 +30,8 @@ export class PrimitiveArrayTrait<T> extends Trait {
   readonly type: PrimitiveType;
   readonly isNullable: boolean;
 
-  constructor(id: string, options: PrimitiveArrayTraitOptions<T>) {
-    super(id, options);
+  constructor(id: string, options: PrimitiveArrayTraitOptions<T>, parent: any) {
+    super(id, options, parent);
     this.type = options.type;
     this.isNullable = options.isNullable || false;
   }
