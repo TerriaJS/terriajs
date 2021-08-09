@@ -54,7 +54,6 @@ Change Log
 * Added `MapboxStyleCatalogItem`.
 * Fix splitter thumb icon vertical position
 * Renamed all mixin instance type definitions to `XMixin.Instance`.
-* 
 * Clean up `ViewControl` colors
   * `$color-splitter` and `theme.colorSplitter` has been replaced with `$color-secondary` and `theme.colorSecondary`
 * Clean up `SplitterTraits`
