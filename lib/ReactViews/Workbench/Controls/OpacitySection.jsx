@@ -36,8 +36,6 @@ const OpacitySection = observer(
       const { t } = this.props;
       if (
         !hasTraits(item, RasterLayerTraits, "opacity") ||
-        // This is needed - as there is some issue with `LoadableStratum` adding `RasterLayerTraits` randomly
-        !isDefined(item.opacity) ||
         item.disableOpacityControl
       ) {
         return null;
