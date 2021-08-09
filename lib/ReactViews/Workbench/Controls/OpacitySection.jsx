@@ -7,7 +7,6 @@ import PropTypes from "prop-types";
 import Slider from "rc-slider";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import isDefined from "../../../Core/isDefined";
 import CommonStrata from "../../../Models/CommonStrata";
 import hasTraits from "../../../Models/hasTraits";
 import RasterLayerTraits from "../../../Traits/TraitsClasses/RasterLayerTraits";
