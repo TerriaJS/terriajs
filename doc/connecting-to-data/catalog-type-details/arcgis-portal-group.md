@@ -112,20 +112,6 @@ If the value is a blank string or undefined, these items will be left at the top
 </td>
 </tr>
 
-<tr><td colspan=4><b>ApiTableRequestTraits</b></td></tr>
-
-<tr>
-  <td><code>kind</code></td>
-  <td><code>string</code></td>
-  <td></td>
-  <td><p>Determines how table rows are constructed from this API.</p>
-<ul>
-<li>PER_ROW: values are specific to a row in the table</li>
-<li>PER_ID: values are the same for all objects with the same id</li>
-</ul>
-</td>
-</tr>
-
 <tr><td colspan=4><b>ArcGisPortalSharedTraits</b></td></tr>
 
 <tr>
@@ -716,6 +702,14 @@ If the value is a blank string or undefined, these items will be left at the top
 
 
 <tr>
+  <td><code>id</code></td>
+  <td><code>string</code></td>
+  <td></td>
+  <td><p>Dimension ID</p>
+</td>
+</tr>
+
+<tr>
   <td><code>name</code></td>
   <td><code>string</code></td>
   <td></td>
@@ -752,55 +746,6 @@ If the value is a blank string or undefined, these items will be left at the top
   <td><code>boolean</code></td>
   <td></td>
   <td><p>Hides dimension</p>
-</td>
-</tr>
-
-<tr><td colspan=4><b>ModelOverrideTraits</b></td></tr>
-
-<tr>
-  <td><code>id</code></td>
-  <td><code>string</code></td>
-  <td></td>
-  <td><p>Concept ID (full URN form - urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ABS:CS_C16_COMMON(1.0.0).REGION)</p>
-</td>
-</tr>
-
-<tr>
-  <td><code>type</code></td>
-  <td><code>string</code></td>
-  <td></td>
-  <td><p>Override concept/dimension type - Possible values are:
-- 'region': values contain region codes used for region mapping - eg Country code)
-- 'region-type': values contains region types - eg 'CNT2' which is 2-letter country codes)
-- 'unit-measure': values should be used to describe primary-measure (eg in chart title)
-- 'unit-multiplier': multiply primary-measure value by atrtibute values
-- 'frequency': value used to determine time period frequency (ie. yearly, monthly...)</p>
-</td>
-</tr>
-
-<tr>
-  <td><code>regionType</code></td>
-  <td><code>string</code></td>
-  <td></td>
-  <td><p>If <code>type</code> has been specified as 'region', you can also manually specify the region type (eg SA2 for ABS Statistical Area 2)</p>
-</td>
-</tr>
-
-<tr>
-  <td><code>regionTypeReplacements</code></td>
-  <td><a href="#ReplaceStringTraits"><code>ReplaceStringTraits[]</code></b></td>
-  <td></td>
-  <td><p>If <code>type</code> has been specified as 'region' and this dataflow contains multiple regionTypes - you can add a map to correct automatically detected region types. For example: setting <code>regionTypeReplacements = [{find: 'SA1_2016', replace: 'SA1_2011'}]</code> will replace <code>regionType</code> with <code>SA1_2011</code> if it was <code>SA1_2016</code></p>
-</td>
-</tr>
-
-<tr><td colspan=4><b>SdmxDimensionTraits</b></td></tr>
-
-<tr>
-  <td><code>position</code></td>
-  <td><code>string</code></td>
-  <td></td>
-  <td><p>The position attribute specifies the position of the dimension in the data structure definition, starting at 0. This is important for making sdmx-csv requests</p>
 </td>
 </tr>
   </tbody>
@@ -842,40 +787,6 @@ If the value is a blank string or undefined, these items will be left at the top
   <td><code>any</code></td>
   <td></td>
   <td><p>Value (if this is undefined, <code>id</code> will be used)</p>
-</td>
-</tr>
-  </tbody>
-</table>
-
-
-### ReplaceStringTraits
-
-<table>
-  <thead>
-      <tr>
-          <th>Trait</th>
-          <th>Type</th>
-          <th>Default</th>
-          <th>Description</th>
-      </tr>
-  </thead>
-  <tbody>
-  
-
-
-<tr>
-  <td><code>find</code></td>
-  <td><code>string</code></td>
-  <td></td>
-  <td><p>String to find</p>
-</td>
-</tr>
-
-<tr>
-  <td><code>replace</code></td>
-  <td><code>string</code></td>
-  <td></td>
-  <td><p>String to replace with</p>
 </td>
 </tr>
   </tbody>

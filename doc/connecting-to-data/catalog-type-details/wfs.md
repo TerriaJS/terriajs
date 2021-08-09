@@ -88,20 +88,6 @@
 </td>
 </tr>
 
-<tr><td colspan=4><b>ApiTableRequestTraits</b></td></tr>
-
-<tr>
-  <td><code>kind</code></td>
-  <td><code>string</code></td>
-  <td></td>
-  <td><p>Determines how table rows are constructed from this API.</p>
-<ul>
-<li>PER_ROW: values are specific to a row in the table</li>
-<li>PER_ID: values are the same for all objects with the same id</li>
-</ul>
-</td>
-</tr>
-
 <tr><td colspan=4><b>AttributionTraits</b></td></tr>
 
 <tr>
@@ -109,24 +95,6 @@
   <td><code>string</code></td>
   <td></td>
   <td><p>The attribution to display with the data.</p>
-</td>
-</tr>
-
-<tr><td colspan=4><b>AutoRefreshingTraits</b></td></tr>
-
-<tr>
-  <td><code>refreshInterval</code></td>
-  <td><code>number</code></td>
-  <td></td>
-  <td><p>How often the data in this model is refreshed, in seconds</p>
-</td>
-</tr>
-
-<tr>
-  <td><code>refreshEnabled</code></td>
-  <td><code>boolean</code></td>
-  <td></td>
-  <td><p>Toggle for enabling auto refresh.</p>
 </td>
 </tr>
 
@@ -371,44 +339,6 @@
   <td><a href="#InitialMessageTraits"><code>InitialMessageTraits</code></b></td>
   <td></td>
   <td><p>A message to show when the user adds the catalog item to the workbench. Useful for showing disclaimers.</p>
-</td>
-</tr>
-
-<tr><td colspan=4><b>RasterLayerTraits</b></td></tr>
-
-<tr>
-  <td><code>opacity</code></td>
-  <td><code>number</code></td>
-  <td></td>
-  <td><p>The opacity of the map layers.</p>
-</td>
-</tr>
-
-<tr>
-  <td><code>leafletUpdateInterval</code></td>
-  <td><code>number</code></td>
-  <td></td>
-  <td><p>Update a tile only once during this interval when the map is panned. Value should be specified in milliseconds.</p>
-</td>
-</tr>
-
-<tr>
-  <td><code>tileErrorHandlingOptions</code></td>
-  <td><a href="#TileErrorHandlingTraits"><code>TileErrorHandlingTraits</code></b></td>
-  <td></td>
-  <td><p>Options for handling tile errors</p>
-</td>
-</tr>
-
-<tr>
-  <td><code>clipToRectangle</code></td>
-  <td><code>boolean</code></td>
-  <td></td>
-  <td><p>Gets or sets a value indicating whether this dataset should be clipped to the {@link CatalogItem#rectangle}.
-If true, no part of the dataset will be displayed outside the rectangle.
-This property is true by default, leading to better performance and avoiding tile request errors that might occur when requesting tiles outside the server-specified rectangle.
-However, it may also cause features to be cut off in some cases, such as if a server reports an extent that does not take into account that the representation of features sometimes require a larger spatial extent than the features themselves.
-For example, if a point feature on the edge of the extent is drawn as a circle with a radius of 5 pixels, half of that circle will be cut off.</p>
 </td>
 </tr>
 
@@ -902,6 +832,14 @@ For example, if a point feature on the edge of the extent is drawn as a circle w
 
 
 <tr>
+  <td><code>id</code></td>
+  <td><code>string</code></td>
+  <td></td>
+  <td><p>Dimension ID</p>
+</td>
+</tr>
+
+<tr>
   <td><code>name</code></td>
   <td><code>string</code></td>
   <td></td>
@@ -938,55 +876,6 @@ For example, if a point feature on the edge of the extent is drawn as a circle w
   <td><code>boolean</code></td>
   <td></td>
   <td><p>Hides dimension</p>
-</td>
-</tr>
-
-<tr><td colspan=4><b>ModelOverrideTraits</b></td></tr>
-
-<tr>
-  <td><code>id</code></td>
-  <td><code>string</code></td>
-  <td></td>
-  <td><p>Concept ID (full URN form - urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=ABS:CS_C16_COMMON(1.0.0).REGION)</p>
-</td>
-</tr>
-
-<tr>
-  <td><code>type</code></td>
-  <td><code>string</code></td>
-  <td></td>
-  <td><p>Override concept/dimension type - Possible values are:
-- 'region': values contain region codes used for region mapping - eg Country code)
-- 'region-type': values contains region types - eg 'CNT2' which is 2-letter country codes)
-- 'unit-measure': values should be used to describe primary-measure (eg in chart title)
-- 'unit-multiplier': multiply primary-measure value by atrtibute values
-- 'frequency': value used to determine time period frequency (ie. yearly, monthly...)</p>
-</td>
-</tr>
-
-<tr>
-  <td><code>regionType</code></td>
-  <td><code>string</code></td>
-  <td></td>
-  <td><p>If <code>type</code> has been specified as 'region', you can also manually specify the region type (eg SA2 for ABS Statistical Area 2)</p>
-</td>
-</tr>
-
-<tr>
-  <td><code>regionTypeReplacements</code></td>
-  <td><a href="#ReplaceStringTraits"><code>ReplaceStringTraits[]</code></b></td>
-  <td></td>
-  <td><p>If <code>type</code> has been specified as 'region' and this dataflow contains multiple regionTypes - you can add a map to correct automatically detected region types. For example: setting <code>regionTypeReplacements = [{find: 'SA1_2016', replace: 'SA1_2011'}]</code> will replace <code>regionType</code> with <code>SA1_2011</code> if it was <code>SA1_2016</code></p>
-</td>
-</tr>
-
-<tr><td colspan=4><b>SdmxDimensionTraits</b></td></tr>
-
-<tr>
-  <td><code>position</code></td>
-  <td><code>string</code></td>
-  <td></td>
-  <td><p>The position attribute specifies the position of the dimension in the data structure definition, starting at 0. This is important for making sdmx-csv requests</p>
 </td>
 </tr>
   </tbody>
@@ -1028,40 +917,6 @@ For example, if a point feature on the edge of the extent is drawn as a circle w
   <td><code>any</code></td>
   <td></td>
   <td><p>Value (if this is undefined, <code>id</code> will be used)</p>
-</td>
-</tr>
-  </tbody>
-</table>
-
-
-### ReplaceStringTraits
-
-<table>
-  <thead>
-      <tr>
-          <th>Trait</th>
-          <th>Type</th>
-          <th>Default</th>
-          <th>Description</th>
-      </tr>
-  </thead>
-  <tbody>
-  
-
-
-<tr>
-  <td><code>find</code></td>
-  <td><code>string</code></td>
-  <td></td>
-  <td><p>String to find</p>
-</td>
-</tr>
-
-<tr>
-  <td><code>replace</code></td>
-  <td><code>string</code></td>
-  <td></td>
-  <td><p>String to replace with</p>
 </td>
 </tr>
   </tbody>
@@ -1236,56 +1091,6 @@ For example, if a point feature on the edge of the extent is drawn as a circle w
   <td><code>number</code></td>
   <td></td>
   <td><p>Height of the message.</p>
-</td>
-</tr>
-  </tbody>
-</table>
-
-
-## TileErrorHandlingTraits
-
-<table>
-  <thead>
-      <tr>
-          <th>Trait</th>
-          <th>Type</th>
-          <th>Default</th>
-          <th>Description</th>
-      </tr>
-  </thead>
-  <tbody>
-  
-
-
-<tr>
-  <td><code>thresholdBeforeDisablingItem</code></td>
-  <td><code>number</code></td>
-  <td></td>
-  <td><p>The number of tile failures before disabling the item.</p>
-</td>
-</tr>
-
-<tr>
-  <td><code>treat403AsError</code></td>
-  <td><code>boolean</code></td>
-  <td></td>
-  <td><p>Indicates whether a 403 response code when requesting a tile should be treated as an error. If false, 403s are assumed to just be missing tiles and need not be reported to the user.</p>
-</td>
-</tr>
-
-<tr>
-  <td><code>treat404AsError</code></td>
-  <td><code>boolean</code></td>
-  <td></td>
-  <td><p>Indicates whether a 404 response code when requesting a tile should be treated as an error. If false, 404s are assumed to just be missing tiles and need not be reported to the user.</p>
-</td>
-</tr>
-
-<tr>
-  <td><code>ignoreUnknownTileErrors</code></td>
-  <td><code>boolean</code></td>
-  <td></td>
-  <td><p>A flag indicating whether non-specific (no HTTP status code) tile errors should be ignored. This is a last resort, for dealing with odd cases such as data sources that return non-images (eg XML) with a 200 status code. No error messages will be shown to the user.</p>
 </td>
 </tr>
   </tbody>

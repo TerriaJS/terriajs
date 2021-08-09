@@ -43,7 +43,7 @@ export type ModelOverrideType =
  *
  * Then regionTypeReplacements are applied (which can replace regionType with a different regionType - using [{find:string, replace:string}] pattern)
  */
-export class ModelOverrideTraits extends DimensionTraits {
+export class ModelOverrideTraits extends mixTraits(DimensionTraits) {
   @primitiveTrait({
     type: "string",
     name: "ID",

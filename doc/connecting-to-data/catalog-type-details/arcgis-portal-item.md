@@ -64,20 +64,6 @@
 </td>
 </tr>
 
-<tr><td colspan=4><b>ApiTableRequestTraits</b></td></tr>
-
-<tr>
-  <td><code>kind</code></td>
-  <td><code>string</code></td>
-  <td></td>
-  <td><p>Determines how table rows are constructed from this API.</p>
-<ul>
-<li>PER_ROW: values are specific to a row in the table</li>
-<li>PER_ID: values are the same for all objects with the same id</li>
-</ul>
-</td>
-</tr>
-
 <tr><td colspan=4><b>ArcGisPortalSharedTraits</b></td></tr>
 
 <tr>
@@ -103,24 +89,6 @@
   <td><code>string</code></td>
   <td></td>
   <td><p>The attribution to display with the data.</p>
-</td>
-</tr>
-
-<tr><td colspan=4><b>AutoRefreshingTraits</b></td></tr>
-
-<tr>
-  <td><code>refreshInterval</code></td>
-  <td><code>number</code></td>
-  <td></td>
-  <td><p>How often the data in this model is refreshed, in seconds</p>
-</td>
-</tr>
-
-<tr>
-  <td><code>refreshEnabled</code></td>
-  <td><code>boolean</code></td>
-  <td></td>
-  <td><p>Toggle for enabling auto refresh.</p>
 </td>
 </tr>
 

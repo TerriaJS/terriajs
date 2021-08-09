@@ -88,20 +88,6 @@
 </td>
 </tr>
 
-<tr><td colspan=4><b>ApiTableRequestTraits</b></td></tr>
-
-<tr>
-  <td><code>kind</code></td>
-  <td><code>string</code></td>
-  <td></td>
-  <td><p>Determines how table rows are constructed from this API.</p>
-<ul>
-<li>PER_ROW: values are specific to a row in the table</li>
-<li>PER_ID: values are the same for all objects with the same id</li>
-</ul>
-</td>
-</tr>
-
 <tr><td colspan=4><b>CatalogMemberReferenceTraits</b></td></tr>
 
 <tr>
