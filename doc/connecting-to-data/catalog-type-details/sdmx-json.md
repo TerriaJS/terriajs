@@ -54,40 +54,6 @@
 </td>
 </tr>
 
-<tr><td colspan=4><b>ApiRequestTraits</b></td></tr>
-
-<tr>
-  <td><code>queryParameters</code></td>
-  <td><a href="#QueryParamTraits"><code>QueryParamTraits[]</code></b></td>
-  <td></td>
-  <td><p>Query parameters to supply to the API</p>
-</td>
-</tr>
-
-<tr>
-  <td><code>updateQueryParameters</code></td>
-  <td><a href="#QueryParamTraits"><code>QueryParamTraits[]</code></b></td>
-  <td></td>
-  <td><p>Query parameters to supply to the API on subsequent calls after the first call.</p>
-</td>
-</tr>
-
-<tr>
-  <td><code>requestData</code></td>
-  <td><code>any</code></td>
-  <td></td>
-  <td><p>JSON body to be sent with the HTTP request to the server. If provided, the request will be made as POST rather than a GET.</p>
-</td>
-</tr>
-
-<tr>
-  <td><code>postRequestDataAsFormData</code></td>
-  <td><code>boolean</code></td>
-  <td></td>
-  <td><p>Send the request data as form data instead of a JSON body.</p>
-</td>
-</tr>
-
 <tr><td colspan=4><b>AttributionTraits</b></td></tr>
 
 <tr>
@@ -755,40 +721,6 @@ For example, if a point feature on the edge of the extent is drawn as a circle w
   <td><code>any</code></td>
   <td></td>
   <td><p>Value (if this is undefined, <code>id</code> will be used)</p>
-</td>
-</tr>
-  </tbody>
-</table>
-
-
-## QueryParamTraits
-
-<table>
-  <thead>
-      <tr>
-          <th>Trait</th>
-          <th>Type</th>
-          <th>Default</th>
-          <th>Description</th>
-      </tr>
-  </thead>
-  <tbody>
-  
-
-
-<tr>
-  <td><code>name</code></td>
-  <td><code>string</code></td>
-  <td></td>
-  <td><p>The name of the query parameter.</p>
-</td>
-</tr>
-
-<tr>
-  <td><code>value</code></td>
-  <td><code>string</code></td>
-  <td></td>
-  <td><p>The value of the query parameter. Parameter values starting with <code>DATE!</code>, eg. <code>DATE!HH:MM</code>, will be replaced wih the current date and time, formatted according to the format string following the <code>!</code>. For more information on the format string format, see the  <a href="https://github.com/felixge/node-dateformat">dateformat</a> library.</p>
 </td>
 </tr>
   </tbody>
