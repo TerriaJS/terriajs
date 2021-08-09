@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "api-table"`
-
 
 ## ApiTableCatalogItemTraits
 

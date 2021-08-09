@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "cesium-terrain"`
-
 
 ## CesiumTerrainCatalogItemTraits
 

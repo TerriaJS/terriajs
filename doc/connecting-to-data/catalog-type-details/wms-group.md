@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "wms-group"`
-
 
 ## WebMapServiceCatalogGroupTraits
 

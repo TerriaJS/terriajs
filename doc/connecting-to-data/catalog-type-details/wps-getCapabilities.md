@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "wps-getCapabilities"`
-
 
 ## WebProcessingServiceCatalogGroupTraits
 

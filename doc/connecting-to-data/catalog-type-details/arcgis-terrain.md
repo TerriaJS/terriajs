@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "arcgis-terrain"`
-
 
 ## ArcGisTerrainCatalogItemTraits
 

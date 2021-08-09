@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "esri-group"`
-
 
 ## ArcGisMapServerCatalogGroupTraits
 

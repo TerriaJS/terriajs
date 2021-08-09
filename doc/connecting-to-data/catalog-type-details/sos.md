@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "sos"`
-
 
 ## SensorObservationCatalogItemTraits
 

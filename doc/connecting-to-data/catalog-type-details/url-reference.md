@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "url-reference"`
-
 
 ## UrlReferenceTraits
 

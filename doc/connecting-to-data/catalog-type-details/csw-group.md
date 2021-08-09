@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "csw-group"`
-
 
 ## CswCatalogGroupTraits
 

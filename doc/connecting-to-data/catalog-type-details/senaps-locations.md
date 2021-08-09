@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "senaps-locations"`
-
 
 ## SenapsLocationsCatalogItemTraits
 

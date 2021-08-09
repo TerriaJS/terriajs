@@ -1,4 +1,3 @@
-import documentation from "documentation";
 import fs from "fs";
 import { uniqueId } from "lodash-es";
 import YAML from "yaml";
@@ -85,7 +84,7 @@ function renderTraitRows(
     .filter(([property, trait]) => trait.parent.name === parentTrait)
     .map(([property, trait]) => {
       if (trait instanceof ObjectTrait) {
-        objectTraits.push(model[property]);
+        objectTraits.push((model as any)[property]);
       } else if (trait instanceof ObjectArrayTrait) {
         objectTraits.push(
           new (trait as ObjectArrayTrait<ModelTraits>).modelClass(
@@ -95,7 +94,7 @@ function renderTraitRows(
         );
       }
 
-      return renderTraitRow(property, trait, model[property]);
+      return renderTraitRow(property, trait, (model as any)[property]);
     })
     .join("\n");
 
@@ -171,78 +170,18 @@ ${"#".repeat(depth + 1)} ${rootTraits}
   return { html, objectTraits };
 }
 
-// Run with cwd = /build
-// Gets /build/doc/mkdocs.yml (which is a direct copy of /doc/mkdocs.yml)
-//  adds all of the auto-generated pages and writes out to /build/mkdocs.yml
-
-function getDescription(metadata: any) {
-  return concatTags(metadata);
-}
-
-function concatTags(inNode: any) {
-  if (!inNode) return false;
-  let outDescr = inNode.map((node: any) => {
-    return node.value;
-  });
-  outDescr = outDescr.join(" ").replace(" .", ".");
-  if (outDescr === "Optional parameters")
-    outDescr = outDescr.concat(": see below");
-  return outDescr;
-}
-
-async function getJsDoc(memberName: string): Promise<any> {
-  return new Promise(function(resolve) {
-    documentation
-      .build([`../lib/Traits/${memberName}Traits.ts`], {
-        shallow: true,
-        external: []
-      })
-      .then(documentation.formats.json)
-      .then(output => {
-        console.log(`../lib/Traits/${memberName}Traits.ts:\n${output}`);
-        resolve(JSON.parse(output));
-      })
-      .catch(err => {
-        console.log(`${memberName}: ${err}`);
-      });
-  });
-}
-
 async function processMember(sampleMember: BaseModel, memberName: string) {
-  let description = "";
-  let example = "";
-
-  const jsDocJson = await getJsDoc(memberName);
-
-  if (memberName === "WebMapServiceCatalogItem") {
-    console.log(jsDocJson);
-  }
-
-  if (jsDocJson[0]) {
-    console.log(jsDocJson);
-    if (jsDocJson[0].description) {
-      description = getDescription(
-        jsDocJson[0].description.children[0].children
-      );
-    }
-    if (jsDocJson[0].examples[0]) {
-      example = `
-## Example usage
-\`\`\`json
-${jsDocJson[0].examples[0].description}
-\`\`\`
-`;
-    }
-  }
-
   let content = `
 # ${memberName}
 
-${description}
-${example}
+${sampleMember.TraitsClass.description ?? ""}
 
-\`"type": "${sampleMember.type}"\`
-`;
+${sampleMember.TraitsClass.example ? `
+## Example usage
+\`\`\`json
+${JSON.stringify(sampleMember.TraitsClass.example, null, 2)}
+\`\`\`
+` : `\`"type": "${sampleMember.type}"\``}`;
 
   // Render table of *top-level* traits for the given member
   // and reset alreadyRenderedTraits
@@ -313,7 +252,7 @@ export default async function generateDocs() {
     .map(member => {
       const memberName = member[1];
       return new memberName(undefined, terria);
-    }, this)
+    })
     .sort(function(a, b) {
       if (a.constructor.name < b.constructor.name) return -1;
       else if (a.constructor.name > b.constructor.name) return 1;
@@ -352,12 +291,12 @@ export default async function generateDocs() {
 
   // Add entries for all the catalog item/group/function/reference types to type details subsection in mkdocs.yml
   const connectingToDataSection = mkDocsConfig.nav
-    .map(section => section["Connecting to Data"])
-    .filter(x => x !== undefined)[0];
+    .map((section:any) => section["Connecting to Data"])
+    .filter((x:any) => x !== undefined)[0];
   const typeDetailsSubSection =
     connectingToDataSection &&
     connectingToDataSection.find(
-      subSection => "Catalog Type Details" in subSection
+      (subSection:any) => "Catalog Type Details" in subSection
     );
   if (typeDetailsSubSection === undefined) {
     throw new Error(

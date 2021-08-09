@@ -161,7 +161,6 @@
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@types/dateformat": "^3.0.1",
     "babel-plugin-styled-components": "^1.10.7",
-    "documentation": "12.3.0",
     "eslint": "^7.20.0",
     "eslint-plugin-jsx-control-statements": "^2.2.1",
     "eslint-plugin-react": "^7.19.0",

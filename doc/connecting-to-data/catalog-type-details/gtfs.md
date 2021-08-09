@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "gtfs"`
-
 
 ## GtfsCatalogItemTraits
 

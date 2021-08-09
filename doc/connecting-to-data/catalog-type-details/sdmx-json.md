@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "sdmx-json"`
-
 
 ## SdmxCatalogItemTraits
 

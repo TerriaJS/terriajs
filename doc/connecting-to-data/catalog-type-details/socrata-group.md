@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "socrata-group"`
-
 
 ## SocrataCatalogGroupTraits
 

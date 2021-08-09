@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "3d-tiles"`
-
 
 ## Cesium3DTilesCatalogItemTraits
 

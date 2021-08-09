@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "ion-imagery"`
-
 
 ## IonImageryCatalogItemTraits
 

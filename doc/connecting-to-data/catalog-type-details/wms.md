@@ -1,10 +1,20 @@
 
 # WebMapServiceCatalogItem
 
+Creates a single item in the catalog from one or many WMS layers.
+
+<strong>Note:</strong> <i>To present all layers in an available WMS as individual items in the catalog use the `WebMapServiceCatalogGroup`.</i>
 
 
-
-`"type": "wms"`
+## Example usage
+```json
+{
+  "type": "wms",
+  "name": "Mangrove Cover",
+  "url": "https://ows.services.dea.ga.gov.au",
+  "layers": "mangrove_cover_v2_0_2"
+}
+```
 
 
 ## WebMapServiceCatalogItemTraits
@@ -647,7 +657,7 @@ For example, if a point feature on the edge of the extent is drawn as a circle w
 <tr>
   <td><code>currentTime</code></td>
   <td><code>string</code></td>
-  <td><code>2021-08-09T03:28:07.3670000Z</code></td>
+  <td><code>2021-08-09T04:53:46.1620000Z</code></td>
   <td><p>The current time at which to show this dataset.</p>
 </td>
 </tr>

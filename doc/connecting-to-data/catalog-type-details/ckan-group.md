@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "ckan-group"`
-
 
 ## CkanCatalogGroupTraits
 

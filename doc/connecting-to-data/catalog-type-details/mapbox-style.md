@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "mapbox-style"`
-
 
 ## MapboxStyleCatalogItemTraits
 

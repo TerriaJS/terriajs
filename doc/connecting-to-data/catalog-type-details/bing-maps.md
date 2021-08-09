@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "bing-maps"`
-
 
 ## BingMapsCatalogItemTraits
 

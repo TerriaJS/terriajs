@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "wmts-group"`
-
 
 ## WebMapTileServiceCatalogGroupTraits
 

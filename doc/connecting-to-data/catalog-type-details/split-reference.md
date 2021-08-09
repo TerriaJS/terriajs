@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "split-reference"`
-
 
 ## SplitItemReferenceTraits
 

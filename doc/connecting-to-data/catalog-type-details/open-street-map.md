@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "open-street-map"`
-
 
 ## OpenStreetMapCatalogItemTraits
 

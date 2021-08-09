@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "socrata-map-item"`
-
 
 ## SocrataMapViewCatalogItemTraits
 

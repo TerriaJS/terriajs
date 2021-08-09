@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "opendatasoft-item"`
-
 
 ## OpenDataSoftCatalogItemTraits
 

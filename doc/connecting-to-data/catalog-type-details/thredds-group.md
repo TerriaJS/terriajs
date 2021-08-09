@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "thredds-group"`
-
 
 ## ThreddsCatalogGroupTraits
 

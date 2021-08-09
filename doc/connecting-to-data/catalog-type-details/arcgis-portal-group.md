@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "arcgis-portal-group"`
-
 
 ## ArcGisPortalCatalogGroupTraits
 

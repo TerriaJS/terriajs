@@ -3,9 +3,7 @@
 
 
 
-
 `"type": "esri-mapServer"`
-
 
 ## ArcGisMapServerCatalogItemTraits
 
@@ -431,7 +429,7 @@ For example, if a point feature on the edge of the extent is drawn as a circle w
 <tr>
   <td><code>currentTime</code></td>
   <td><code>string</code></td>
-  <td><code>2021-08-09T03:28:07.0330000Z</code></td>
+  <td><code>2021-08-09T04:53:45.8350000Z</code></td>
   <td><p>The current time at which to show this dataset.</p>
 </td>
 </tr>
