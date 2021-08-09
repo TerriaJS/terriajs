@@ -307,26 +307,22 @@ export default async function generateDocs() {
 
   fs.writeFileSync("mkdocs.yml", YAML.stringify(mkDocsConfig));
 
-  console.log("write mkdocs.yml");
-
   fs.writeFileSync(
     "doc/connecting-to-data/catalog-items.md",
     catalogItemsContentHeader + commonContentHeader + catalogItemsContent
   );
-  console.log("write items");
+
   fs.writeFileSync(
     "doc/connecting-to-data/catalog-functions.md",
     catalogFunctionsContentHeader +
       commonContentHeader +
       catalogFunctionsContent
   );
-  console.log("write fnuctions");
 
   fs.writeFileSync(
     "doc/connecting-to-data/catalog-groups.md",
     catalogGroupsContentHeader + commonContentHeader + catalogGroupsContent
   );
-  console.log("write groups");
 
   fs.writeFileSync(
     "doc/connecting-to-data/catalog-references.md",
@@ -334,8 +330,6 @@ export default async function generateDocs() {
       commonContentHeader +
       catalogReferencesContent
   );
-
-  console.log("write reference");
 }
 
 generateDocs().catch(err => {
