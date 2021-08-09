@@ -64,10 +64,10 @@ function AccessControlMixin<T extends Constructor<AccessControlModel>>(
 }
 
 namespace AccessControlMixin {
-  export interface AccessControlMixin
+  export interface Instance
     extends InstanceType<ReturnType<typeof AccessControlMixin>> {}
 
-  export function isMixedInto(model: any): model is AccessControlMixin {
+  export function isMixedInto(model: any): model is Instance {
     return model && model.hasAccessControlMixin;
   }
 }

@@ -1,25 +1,24 @@
-import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import { withTranslation, Trans } from "react-i18next";
-import Icon from "../../../../Styled/Icon";
-import createCatalogItemFromFileOrUrl from "../../../../Models/Catalog/createCatalogItemFromFileOrUrl";
-import upsertModelFromJson from "../../../../Models/Definition/upsertModelFromJson";
-import addUserCatalogMember from "../../../../Models/Catalog/addUserCatalogMember";
-import CatalogMemberFactory from "../../../../Models/Catalog/CatalogMemberFactory";
-import CommonStrata from "../../../../Models/Definition/CommonStrata";
-import Dropdown from "../../../Generic/Dropdown";
-import FileInput from "./FileInput";
-import getDataType from "../../../../Core/getDataType";
-import Styles from "./add-data.scss";
-import Loader from "../../../Loader";
-import TerriaError from "../../../../Core/TerriaError";
-import addUserFiles from "../../../../Models/Catalog/addUserFiles";
-import TimeVarying from "../../../../ModelMixins/TimeVarying";
+import React from "react";
+import { Trans, withTranslation } from "react-i18next";
 import {
   Category,
   DatatabAction
 } from "../../../../Core/AnalyticEvents/analyticEvents";
+import getDataType from "../../../../Core/getDataType";
+import TimeVarying from "../../../../ModelMixins/TimeVarying";
+import addUserCatalogMember from "../../../../Models/Catalog/addUserCatalogMember";
+import addUserFiles from "../../../../Models/Catalog/addUserFiles";
+import CatalogMemberFactory from "../../../../Models/Catalog/CatalogMemberFactory";
+import createCatalogItemFromFileOrUrl from "../../../../Models/Catalog/createCatalogItemFromFileOrUrl";
+import CommonStrata from "../../../../Models/Definition/CommonStrata";
+import upsertModelFromJson from "../../../../Models/Definition/upsertModelFromJson";
+import Icon from "../../../../Styled/Icon";
+import Dropdown from "../../../Generic/Dropdown";
+import Loader from "../../../Loader";
+import Styles from "./add-data.scss";
+import FileInput from "./FileInput";
 
 // Local and remote data have different dataType options
 const defaultRemoteDataTypes = getDataType().remoteDataType;
@@ -91,7 +90,7 @@ const AddData = createReactClass({
     });
   },
 
-  handleUrl(e) {
+  async handleUrl(e) {
     const url = this.state.remoteUrl;
     e.preventDefault();
     this.props.terria.analytics?.logEvent(
@@ -104,7 +103,13 @@ const AddData = createReactClass({
     });
     let promise;
     if (this.state.remoteDataType.value === "auto") {
-      promise = loadFile(this);
+      promise = createCatalogItemFromFileOrUrl(
+        this.props.terria,
+        this.props.viewState,
+        this.state.remoteUrl,
+        this.state.remoteDataType.value,
+        true
+      );
     } else {
       try {
         const newItem = upsertModelFromJson(
@@ -118,18 +123,25 @@ const AddData = createReactClass({
           message: `An error occurred trying to add data from URL: ${url}`
         });
         newItem.setTrait(CommonStrata.user, "url", url);
-        promise = newItem.loadMetadata().then(() => newItem);
+        promise = newItem.loadMetadata().then(result => {
+          if (result.error) {
+            return Promise.reject(result.error);
+          }
+
+          return Promise.resolve(newItem);
+        });
       } catch (e) {
         promise = Promise.reject(e);
       }
     }
     addUserCatalogMember(this.props.terria, promise).then(addedItem => {
-      if (addedItem && !(addedItem instanceof TerriaError)) {
+      if (addedItem) {
         this.props.onFileAddFinished([addedItem]);
+        if (TimeVarying.is(addedItem)) {
+          this.props.terria.timelineStack.addToTop(addedItem);
+        }
       }
-      if (TimeVarying.is(addedItem)) {
-        this.props.terria.timelineStack.addToTop(addedItem);
-      }
+
       // FIXME: Setting state here might result in a react warning if the
       // component unmounts before the promise finishes
       this.setState({
@@ -245,18 +257,5 @@ const AddData = createReactClass({
     return <div className={Styles.inner}>{this.renderPanels()}</div>;
   }
 });
-
-/**
- * Loads a catalog item from a file.
- */
-function loadFile(viewModel) {
-  return createCatalogItemFromFileOrUrl(
-    viewModel.props.terria,
-    viewModel.props.viewState,
-    viewModel.state.remoteUrl,
-    viewModel.state.remoteDataType.value,
-    true
-  );
-}
 
 module.exports = withTranslation()(AddData);

@@ -58,6 +58,11 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
   TableMixin(CatalogMemberMixin(CreateModel(ApiTableCatalogItemTraits)))
 ) {
   static readonly type = "api-table";
+
+  get type() {
+    return ApiTableCatalogItem.type;
+  }
+
   @observable private apiResponses: any[] = [];
   @observable private hasData: boolean = false;
 

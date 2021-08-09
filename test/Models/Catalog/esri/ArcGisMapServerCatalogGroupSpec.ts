@@ -139,24 +139,19 @@ describe("ArcGisMapServerCatalogGroup", function() {
         group.setTrait(CommonStrata.definition, "url", mapServerErrorUrl);
       });
 
-      try {
-        await group.loadMembers();
-      } catch (err) {
-        return;
-      }
-      throw new Error("Promise should not be resolved");
+      const error = (await group.loadMembers()).error;
+
+      expect(error).toBeDefined("Load member should error");
     });
 
     it("throws error if it's not mapserver ", async function() {
       runInAction(() => {
         group.setTrait(CommonStrata.definition, "url", mapServerErrorUrl);
       });
-      try {
-        await group.loadMembers();
-      } catch (err) {
-        return;
-      }
-      throw new Error("Promise should not be resolved");
+
+      const error = (await group.loadMembers()).error;
+
+      expect(error).toBeDefined("Load member should error");
     });
   });
 });

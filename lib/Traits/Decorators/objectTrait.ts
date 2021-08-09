@@ -29,7 +29,11 @@ export default function objectTrait<T extends ModelTraits>(
     if (!constructor.traits) {
       constructor.traits = {};
     }
-    constructor.traits[propertyKey] = new ObjectTrait(propertyKey, options);
+    constructor.traits[propertyKey] = new ObjectTrait(
+      propertyKey,
+      options,
+      constructor
+    );
   };
 }
 
@@ -39,8 +43,8 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
   readonly decoratorForFlattened = computed.struct;
   readonly modelClass: ModelConstructor<Model<T>>;
 
-  constructor(id: string, options: ObjectTraitOptions<T>) {
-    super(id, options);
+  constructor(id: string, options: ObjectTraitOptions<T>, parent: any) {
+    super(id, options, parent);
     this.type = options.type;
     this.isNullable = options.isNullable || false;
     this.modelClass = options.modelClass || traitsClassToModelClass(this.type);
@@ -64,7 +68,7 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
     const result: any = createStratumInstance(ResultType);
 
     if (this.isNullable && jsonValue === null) {
-      return Result.return(jsonValue);
+      return new Result(jsonValue);
     }
 
     const errors: TerriaError[] = [];
@@ -87,11 +91,11 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
       } else {
         result[propertyName] = trait
           .fromJson(model, stratumName, subJsonValue)
-          .catchError(error => errors.push(error));
+          .pushErrorTo(errors);
       }
     });
 
-    return Result.return(
+    return new Result(
       result,
       TerriaError.combine(
         errors,

@@ -44,11 +44,7 @@ export default async function addUserFiles(
   function loadInitData(initData: { catalog: any }) {
     terria.catalog.group
       .addMembersFromJson(CommonStrata.user, initData.catalog)
-      .catchError(error => {
-        terria.raiseErrorToUser(
-          TerriaError.from(error, "Failed to load catalog from file")
-        );
-      });
+      .raiseError(terria, "Failed to load catalog from file");
   }
 
   for (let i = 0; i < files.length; i++) {

@@ -42,11 +42,11 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
   });
 
   it("supports zooming", function() {
-    expect(item.canZoomTo).toBeTruthy();
+    expect(item.disableZoomTo).toBeFalsy();
   });
 
   it("supports show info", function() {
-    expect(item.showsInfo).toBeTruthy();
+    expect(item.disableAboutData).toBeFalsy();
   });
 
   it("is mappable", function() {

@@ -17,15 +17,13 @@ import CatalogMemberMixin from "./CatalogMemberMixin";
 import GroupMixin from "./GroupMixin";
 
 class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
-  constructor(
-    readonly catalogFunctionJob: CatalogFunctionJobMixin.CatalogFunctionJobMixin
-  ) {
+  constructor(readonly catalogFunctionJob: CatalogFunctionJobMixin.Instance) {
     super();
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
     return new FunctionJobStratum(
-      model as CatalogFunctionJobMixin.CatalogFunctionJobMixin
+      model as CatalogFunctionJobMixin.Instance
     ) as this;
   }
 
@@ -235,14 +233,14 @@ function CatalogFunctionJobMixin<
      * Job result CatalogMembers - set from calling {@link CatalogFunctionJobMixin#downloadResults}
      */
     @observable
-    public results: CatalogMemberMixin.CatalogMemberMixin[] = [];
+    public results: CatalogMemberMixin.Instance[] = [];
 
     /**
      * Called in {@link CatalogFunctionJobMixin#onJobFinish}
      * @returns catalog members to add to workbench
      */
     abstract async downloadResults(): Promise<
-      CatalogMemberMixin.CatalogMemberMixin[] | void
+      CatalogMemberMixin.Instance[] | void
     >;
 
     @action
@@ -308,9 +306,9 @@ function CatalogFunctionJobMixin<
 
 namespace CatalogFunctionJobMixin {
   StratumOrder.addLoadStratum(FunctionJobStratum.name);
-  export interface CatalogFunctionJobMixin
+  export interface Instance
     extends InstanceType<ReturnType<typeof CatalogFunctionJobMixin>> {}
-  export function isMixedInto(model: any): model is CatalogFunctionJobMixin {
+  export function isMixedInto(model: any): model is Instance {
     return model && model.hasCatalogFunctionJobMixin;
   }
 }

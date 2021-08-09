@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import defaults from "lodash-es/defaults";
 import Result from "../../Core/Result";
-import TerriaError from "../../Core/TerriaError";
+import TerriaError, { TerriaErrorSeverity } from "../../Core/TerriaError";
 import GroupMixin from "../../ModelMixins/GroupMixin";
 import CommonStrata from "./CommonStrata";
 import createStubCatalogItem from "../Catalog/createStubCatalogItem";
@@ -48,10 +48,12 @@ export default function upsertModelFromJson(
   if (uniqueId === undefined) {
     const localId = json.localId || json.name;
     if (localId === undefined) {
-      return Result.error({
-        title: i18next.t("models.catalog.idForMatchingErrorTitle"),
-        message: i18next.t("models.catalog.idForMatchingErrorMessage")
-      });
+      return Result.error(
+        new TerriaError({
+          title: i18next.t("models.catalog.idForMatchingErrorTitle"),
+          message: i18next.t("models.catalog.idForMatchingErrorMessage")
+        })
+      );
     }
 
     let id = (parentId || "") + "/" + localId;
@@ -103,7 +105,7 @@ export default function upsertModelFromJson(
       try {
         model.terria.addModel(model, json.shareKeys);
       } catch (error) {
-        errors.push(TerriaError.from(error));
+        errors.push(error);
       }
     }
   }

@@ -78,7 +78,7 @@ export default class SdmxJsonCatalogItem
         disable:
           dim.disable ||
           this.columns.find(col => col.name === dim.id)?.type === "region",
-        setDimensionValue: (stratumId: string, value: string) => {
+        setDimensionValue: async (stratumId: string, value: string) => {
           let dimensionTraits = this.dimensions?.find(
             sdmxDim => sdmxDim.id === dim.id
           );
@@ -87,7 +87,7 @@ export default class SdmxJsonCatalogItem
           }
 
           dimensionTraits.setTrait(stratumId, "selectedId", value);
-          this.loadMapItems();
+          (await this.loadMapItems()).throwIfError();
         }
       };
     });
@@ -174,10 +174,7 @@ export default class SdmxJsonCatalogItem
         );
       } else {
         this.terria.raiseErrorToUser(
-          new TerriaError({
-            message: `Failed to load SDMX data for "${this.name ??
-              this.uniqueId}"`
-          })
+          `Failed to load SDMX data for "${this.name ?? this.uniqueId}"`
         );
       }
     }

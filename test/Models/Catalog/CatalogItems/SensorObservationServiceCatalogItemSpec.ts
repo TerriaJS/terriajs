@@ -133,12 +133,7 @@ describe("SensorObservationServiceCatalogItem", function() {
           "https://sos.example.com",
           /\<sos:GetFeatureOfInterest/
         ).andReturn({ responseText: EmptyGetFeatureOfInterestResponse });
-        let ex;
-        try {
-          await runInAction(() => item.loadMapItems());
-        } catch (e) {
-          ex = e;
-        }
+        let ex = (await item.loadMapItems()).error;
         expect(ex).toBeDefined();
       });
     });

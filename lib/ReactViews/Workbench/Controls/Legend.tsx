@@ -37,7 +37,7 @@ function checkMimeType(legend: Model<LegendTraits>) {
 
 @observer
 export default class Legend extends React.Component<{
-  item: CatalogMemberMixin.CatalogMemberMixin;
+  item: CatalogMemberMixin.Instance;
   forPrint?: boolean;
 }> {
   static defaultProps = {

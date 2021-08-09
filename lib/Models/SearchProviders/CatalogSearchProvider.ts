@@ -59,7 +59,7 @@ export function loadAndSearchCatalogRecursively(
       });
     }
 
-    if (ReferenceMixin.is(model) || GroupMixin.isMixedInto(model)) {
+    if (ReferenceMixin.isMixedInto(model) || GroupMixin.isMixedInto(model)) {
       return true;
     }
     // Could also check for loadMembers() here, but will be even slower
@@ -73,9 +73,10 @@ export function loadAndSearchCatalogRecursively(
   return new Promise(resolve => {
     autorun(reaction => {
       Promise.all(
-        referencesAndGroupsToLoad.map(model => {
-          if (ReferenceMixin.is(model)) {
-            return model.loadReference();
+        referencesAndGroupsToLoad.map(async model => {
+          if (ReferenceMixin.isMixedInto(model)) {
+            // TODO: could handle errors better here
+            (await model.loadReference()).throwIfError();
           }
           // TODO: investigate performant route for calling loadMembers on additional groupmixins
           // else if (GroupMixin.isMixedInto(model)) {

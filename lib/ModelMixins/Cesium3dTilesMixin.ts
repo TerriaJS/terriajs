@@ -39,9 +39,10 @@ import Cesium3DTilesCatalogItemTraits from "../Traits/TraitsClasses/Cesium3DTile
 import Cesium3dTilesTraits, {
   OptionsTraits
 } from "../Traits/TraitsClasses/Cesium3dTilesTraits";
-import CatalogMemberMixin from "./CatalogMemberMixin";
+import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
 import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
+import TerriaError from "../Core/TerriaError";
 
 const DEFAULT_HIGHLIGHT_COLOR = "#ff3f00";
 
@@ -71,8 +72,6 @@ export default function Cesium3dTilesMixin<
   abstract class Cesium3dTilesMixin extends ShadowMixin(
     MappableMixin(CatalogMemberMixin(Base))
   ) {
-    readonly canZoomTo = true;
-
     protected tileset?: ObservableCesium3DTileset;
 
     // Just a variable to save the original tileset.root.transform if it exists
@@ -80,9 +79,9 @@ export default function Cesium3dTilesMixin<
     private originalRootTransform: Matrix4 = Matrix4.IDENTITY.clone();
 
     protected async forceLoadMapItems() {
-      this.loadTileset();
-      if (this.tileset) {
-        try {
+      try {
+        this.loadTileset();
+        if (this.tileset) {
           const tileset = await makeRealPromise<Cesium3DTileset>(
             this.tileset.readyPromise
           );
@@ -99,18 +98,15 @@ export default function Cesium3dTilesMixin<
               );
             });
           }
-        } catch (e) {
-          // TODO: What should handle this error?
-          console.error(e);
         }
-      } else {
-        return Promise.resolve();
+      } catch (e) {
+        throw TerriaError.from(e, "Failed to load 3d-tiles tileset");
       }
     }
 
     private loadTileset() {
       if (!isDefined(this.url) && !isDefined(this.ionAssetId)) {
-        return;
+        throw `\`url\` and \`ionAssetId\` are not defined for ${getName(this)}`;
       }
 
       let resource = undefined;
@@ -216,7 +212,7 @@ export default function Cesium3dTilesMixin<
       }
 
       if (this.tileset.destroyed) {
-        this.loadTileset();
+        this.loadMapItems(true);
       }
 
       this.tileset.style = toJS(this.cesiumTileStyle);

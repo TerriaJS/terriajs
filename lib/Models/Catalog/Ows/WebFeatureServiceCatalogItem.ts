@@ -267,8 +267,6 @@ class WebFeatureServiceCatalogItem extends ExportableMixin(
   ];
 
   static readonly type = "wfs";
-  readonly canZoomTo = true;
-
   @observable
   private geojsonCatalogItem: GeoJsonCatalogItem | undefined;
 
@@ -433,7 +431,7 @@ class WebFeatureServiceCatalogItem extends ExportableMixin(
         );
     });
 
-    await this.geojsonCatalogItem!.loadMapItems();
+    (await this.geojsonCatalogItem!.loadMapItems()).throwIfError();
   }
 
   @computed

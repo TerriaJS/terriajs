@@ -21,11 +21,11 @@ describe("GeoRssCatalogItem", function() {
   });
 
   it("supports zooming to extent", function() {
-    expect(item.canZoomTo).toBeTruthy();
+    expect(item.disableZoomTo).toBeFalsy();
   });
 
   it("supports show info", function() {
-    expect(item.showsInfo).toBeTruthy();
+    expect(item.disableAboutData).toBeFalsy();
   });
   describe("georss 2.0", function() {
     it("properly loads rss2 file", async function() {

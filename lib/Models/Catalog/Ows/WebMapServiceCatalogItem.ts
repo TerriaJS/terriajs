@@ -731,6 +731,28 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
     return result;
   }
+
+  @computed get currentTime() {
+    // Get default times for all layers
+    const defaultTimes = filterOutUndefined(
+      Array.from(this.capabilitiesLayers).map(([layerName, layer]) => {
+        if (!layer) return;
+        const dimensions = this.capabilities.getInheritedValues(
+          layer,
+          "Dimension"
+        );
+
+        const timeDimension = dimensions.find(
+          dimension => dimension.name.toLowerCase() === "time"
+        );
+
+        return timeDimension?.default;
+      })
+    );
+
+    // Return first default time
+    return defaultTimes[0];
+  }
 }
 
 class DiffStratum extends LoadableStratum(WebMapServiceCatalogItemTraits) {
@@ -818,8 +840,6 @@ class WebMapServiceCatalogItem
   };
 
   static readonly type = "wms";
-  readonly canZoomTo = true;
-  readonly supportsSplitting = true;
 
   get type() {
     return WebMapServiceCatalogItem.type;

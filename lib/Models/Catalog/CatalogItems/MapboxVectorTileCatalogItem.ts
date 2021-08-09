@@ -69,7 +69,6 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
   get typeName() {
     return i18next.t("models.mapboxVectorTile.name");
   }
-  readonly canZoomTo = true;
 
   async forceLoadMetadata() {
     const stratum = await MapboxVectorTileLoadableStratum.load(this);

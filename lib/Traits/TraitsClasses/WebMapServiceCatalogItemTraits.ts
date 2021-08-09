@@ -1,5 +1,12 @@
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
+import objectArrayTrait from "../Decorators/objectArrayTrait";
+import objectTrait from "../Decorators/objectTrait";
+import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import ModelTraits from "../ModelTraits";
+import { traitClass } from "../Trait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import DiffableTraits from "./DiffableTraits";
 import ExportableTraits from "./ExportableTraits";
@@ -8,14 +15,7 @@ import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import LegendTraits from "./LegendTraits";
 import MappableTraits from "./MappableTraits";
-import mixTraits from "../mixTraits";
-import ModelTraits from "../ModelTraits";
-import objectArrayTrait from "../Decorators/objectArrayTrait";
-import objectTrait from "../Decorators/objectTrait";
-import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
-import primitiveTrait from "../Decorators/primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
-import SplitterTraits from "./SplitterTraits";
 import TimeFilterTraits from "./TimeFilterTraits";
 import UrlTraits from "./UrlTraits";
 
@@ -137,23 +137,22 @@ export class WebMapServiceAvailableLayerDimensionsTraits extends ModelTraits {
   dimensions?: WebMapServiceAvailableDimensionTraits[];
 }
 
-/**
- * Creates a single item in the catalog from one or many WMS layers.<br/>
- * <strong>Note:</strong> <i>To present all layers in an available WMS as individual items in the catalog use the \`WebMapServiceCatalogGroup\`.</i>
- * @example
- * {
- *   "type": "wms",
- *   "name": "Mangrove Cover",
- *   "url": "https://ows.services.dea.ga.gov.au",
- *   "layers": "mangrove_cover_v2_0_2"
- * }
- */
+@traitClass({
+  description: `Creates a single item in the catalog from one or many WMS layers.
+
+<strong>Note:</strong> <i>To present all layers in an available WMS as individual items in the catalog use the \`WebMapServiceCatalogGroup\`.</i>`,
+  example: {
+    type: "wms",
+    name: "Mangrove Cover",
+    url: "https://ows.services.dea.ga.gov.au",
+    layers: "mangrove_cover_v2_0_2"
+  }
+})
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
   ExportableTraits,
   DiffableTraits,
   FeatureInfoTraits,
   LayerOrderingTraits,
-  SplitterTraits,
   TimeFilterTraits,
   GetCapabilitiesTraits,
   RasterLayerTraits,

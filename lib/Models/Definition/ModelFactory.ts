@@ -4,10 +4,14 @@ import Terria from "../Terria";
 // TODO: ideally this would be Promise-based so that we can defer loading Model classes until they're needed.
 
 export default class ModelFactory {
-  private constructors = new Map<string, ModelConstructor<BaseModel>>();
+  private _constructors = new Map<string, ModelConstructor<BaseModel>>();
+
+  get constructorsArray() {
+    return Array.from(this._constructors);
+  }
 
   register(type: string, constructor: ModelConstructor<BaseModel>) {
-    this.constructors.set(type, constructor);
+    this._constructors.set(type, constructor);
   }
 
   create(
@@ -16,7 +20,7 @@ export default class ModelFactory {
     terria: Terria,
     sourceReference?: BaseModel
   ): BaseModel | undefined {
-    const Constructor = this.constructors.get(type);
+    const Constructor = this._constructors.get(type);
     if (Constructor === undefined) {
       return undefined;
     }
@@ -24,6 +28,6 @@ export default class ModelFactory {
   }
 
   find(type: string): ModelConstructor<BaseModel> | undefined {
-    return this.constructors.get(type);
+    return this._constructors.get(type);
   }
 }

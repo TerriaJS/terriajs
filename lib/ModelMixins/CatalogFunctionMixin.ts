@@ -60,7 +60,7 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
 
         newJob.setTrait(CommonStrata.user, "parameters", toJS(this.parameters));
 
-        await newJob.loadMetadata();
+        (await newJob.loadMetadata()).throwIfError();
 
         this.terria.addModel(newJob);
         this.terria.catalog.userAddedDataGroup.add(CommonStrata.user, newJob);
@@ -101,9 +101,9 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
 }
 
 namespace CatalogFunctionMixin {
-  export interface CatalogFunctionMixin
+  export interface Instance
     extends InstanceType<ReturnType<typeof CatalogFunctionMixin>> {}
-  export function isMixedInto(model: any): model is CatalogFunctionMixin {
+  export function isMixedInto(model: any): model is Instance {
     return model && model.hasCatalogFunctionMixin;
   }
 }

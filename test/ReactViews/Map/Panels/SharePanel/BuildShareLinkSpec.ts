@@ -210,11 +210,11 @@ describe("BuildShareLink", function() {
       //   // expect(viewState.activeTabCategory).toBe(USER_DATA_NAME);
       // });
 
-      it("viewing a previewed item", function() {
+      it("viewing a previewed item", async function() {
         let model = terria.catalog.userAddedDataGroup.memberModels[0];
 
         // preview the user added item & the share link should reflect that
-        viewState.viewCatalogMember(model);
+        await viewState.viewCatalogMember(model);
         const shareLink = buildShareLink(terria, viewState);
         let params = decodeAndParseStartHash(shareLink);
         let initSources = flattenInitSources(params.initSources);

@@ -382,18 +382,14 @@ export default class ArcGisMapServerCatalogItem extends MappableMixin(
     return i18next.t("models.arcGisMapServerCatalogItem.name");
   }
 
-  readonly supportsSplitting = true;
-  readonly canZoomTo = true;
-
   get type() {
     return ArcGisMapServerCatalogItem.type;
   }
 
-  protected forceLoadMetadata(): Promise<void> {
-    return MapServerStratum.load(this).then(stratum => {
-      runInAction(() => {
-        this.strata.set(MapServerStratum.stratumName, stratum);
-      });
+  protected async forceLoadMetadata(): Promise<void> {
+    const stratum = await MapServerStratum.load(this);
+    runInAction(() => {
+      this.strata.set(MapServerStratum.stratumName, stratum);
     });
   }
 

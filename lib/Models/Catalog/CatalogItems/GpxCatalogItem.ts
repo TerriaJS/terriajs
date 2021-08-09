@@ -34,14 +34,6 @@ class GpxCatalogItem extends MappableMixin(
 
   private _gpxFile?: File;
 
-  get canZoomTo(): boolean {
-    return true;
-  }
-
-  get showsInfo(): boolean {
-    return true;
-  }
-
   setFileInput(file: File) {
     this._gpxFile = file;
   }
@@ -56,8 +48,8 @@ class GpxCatalogItem extends MappableMixin(
     return toGeoJSON.gpx(dom);
   }
 
-  protected forceLoadMapItems(): Promise<void> {
-    return new Promise<string>(resolve => {
+  protected async forceLoadMapItems(): Promise<void> {
+    const data = await new Promise<string>(resolve => {
       if (isDefined(this.gpxString)) {
         resolve(this.gpxString);
       } else if (isDefined(this._gpxFile)) {
@@ -71,23 +63,19 @@ class GpxCatalogItem extends MappableMixin(
           message: i18next.t("models.gpx.errorLoadingMessage")
         });
       }
-    })
-      .then(data => {
-        return this.loadGpxText(data);
-      })
-      .then(geoJsonData => {
-        this._geoJsonItem.setTrait(
-          CommonStrata.definition,
-          "geoJsonData",
-          geoJsonData
-        );
-        this._geoJsonItem.setTrait(
-          CommonStrata.definition,
-          "attribution",
-          this.attribution
-        );
-        return this._geoJsonItem.loadMapItems();
-      });
+    });
+    const geoJsonData = this.loadGpxText(data);
+    this._geoJsonItem.setTrait(
+      CommonStrata.definition,
+      "geoJsonData",
+      geoJsonData
+    );
+    this._geoJsonItem.setTrait(
+      CommonStrata.definition,
+      "attribution",
+      this.attribution
+    );
+    return (await this._geoJsonItem.loadMapItems()).throwIfError();
   }
 
   protected forceLoadMetadata(): Promise<void> {

@@ -6,7 +6,22 @@ Change Log
 #### next release (8.0.0-alpha.88)
 
 - **Breaking changes**:
+  - Require `translate#` in front of translatable content id in `config.json` (i.e. `helpContent`).
   - `colorPalette` no longer supports a list of CSS colors (eg `rgb(0,0,255)-rgb(0,255,0)-rgb(255,0,0)`). Instead please use `binColors`.
+  - Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses`
+  - Renamed all mixin instance type definitions to `XMixin.Instance`.
+  - Basemaps are now defined as `baseMaps` object
+    - list of available basemaps is defined in `baseMaps.init`. This list is combined with default base maps so it's possible to override defaults
+    - definition of `initBaseMapId` and `initBaseMapName` are moved to `baseMaps.defaultBaseMapId` and `baseMaps.defaultBaseMapName`
+    - `previewBaseMapId` is moved to `baseMaps.previewBaseMapId`
+    - implemented `baseMaps.enabledBaseMaps` array of base map ids to define a list of baseMaps available to user
+    - updated docs for `baseMaps`
+  - `$color-splitter` and `theme.colorSplitter` has been replaced with `$color-secondary` and `theme.colorSecondary`
+  - `canZoomTo` has bee replaced with `disableZoomTo` in `MappableTraits`
+  - `showsInfo` has been replaced with `disableAboutData` in `CatalogMemberTraits`
+  - `AsyncLoader` loadXXX methods now return `Result` with `errors` **they no longer throw errors** - if you need errors to be thrown you can use `(await loadXX).throwIfError()`.
+  - Removed `openGroup()` - it is replaced by `viewState.viewCatalogMember`
+  - Renamed `ReferenceMixin.is` to `ReferenceMixin.isMixedInto`
 
 * Fixed a bug with numeric item search where it sometimes fails to return all matching values.
 * Respect order of objects from lower strata in `objectArrayTrait`.
@@ -27,6 +42,9 @@ Change Log
 * `WebMapServiceCatalogGroup` will now create layer auto-IDs using `Name` field to avoid ID clashes.
 * Added `GroupMixin` `shareKey` generation for members - if the group has `shareKeys`.
 * Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses 
+* Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses`
+* I18n-ify shadow options in 3DTiles and some strings in feature info panel.
+* Fix `StyledIcon` css `display` clash
 * Limit `SelectableDimension` options to 1000 values
 * Added support for `SocrataCatalogGroup` and `SocrataMapViewCatalogGroup`
   * Notes on v7 to v8 Socrata integration:
@@ -40,6 +58,45 @@ Change Log
     * Other Catalog items related files are moved to `Models/Catalog/CatalogGroups`
     * Catalog functions related files are moved to `Models/Catalog/CatalogFunction`
   * Removed unused Models files
+* Modified BadgeBar to be more tolerant to longer strings
+* Added `MapboxMapCatalogItem`.
+* Added `MapboxStyleCatalogItem`.
+* Fix splitter thumb icon vertical position
+* Renamed all mixin instance type definitions to `XMixin.Instance`.
+* Clean up `ViewControl` colors
+  * `$color-splitter` and `theme.colorSplitter` has been replaced with `$color-secondary` and `theme.colorSecondary`
+* Clean up `SplitterTraits`
+  * `SplitterTraits` is now included in `RasterLayerTraits`
+  * Removed `supportsSplitter` variable
+  * Added `disableSplitter` trait
+* Clean up `canZoomTo`
+  * Replaced with `disableZoomTo` in `MappableTraits`
+* Clean up `showsInfo`
+  * Replaced with `disableAboutData` in `CatalogMemberTraits`
+* Add `TerriaErrorSeverity` enum, values can be `Error` or `Warning`.
+  * Errors with severity `Error` are presented to the user. `Warning` will just be printed to console.
+  * By default, errors will use `Error`
+  * `TerriaErrorSeverity` will be copied through nested `TerriaErrors` on creation (eg if you call `TerriaError.from()` on a `Warning` then the parent error will also be `Warning`)
+  * Loading models from share links or stories will use `Warning` if the model is **not in the workbench**, otherwise it will use `Error`.
+* In `terriaErrorNotification` - show `error.message` (as well as `error.stack`) if `error.stack` is defined
+* `AsyncLoader` now has an observable `result` property.
+* `viewState.viewCatalogMember()` now handles loading catalog members, opening groups and showing "Add Data" window.
+* Fix `MagdaReference` `forceLoadReference` bug.
+* Clean up `CkanCatalogGroup` loading - errors are no-longer swallowed.
+* Clean up `3dTilesMixin` loading - errors are no-longer swallowed.
+* Fix `DataPreviewSections` info section bug.
+* Move `FeedbackForm` `z-index` to same as `Notification` - this is so it will appear above Data catalog.
+* Added `result.raiseError()`, `result.pushErrorTo()` and `result.clone()` helper methods - and `Result.combine()` convenience function
+* Fix `DiscreteColorMap` bug with `binColors` and added warning message if `colorPalette` is invalid.
+* Fix `EnumColorMap` bug with `binColors`
+* Moved d3-scale-chromatic code into `tableColorMap.colorScaleCategorical()` and `tableColorMap.colorScaleContinuous()`
+* Disabled welcome popup for shared stories
+* Add WMS support for default value of time dimension.
+* Add `description` and `example` static properties to `Trait`, and added `@traitClass` decorator.
+* Add `parent` property to `Trait`, which contains parent `TraitClass`.
+* New model-generated documentation in `generateDocs.ts`
+* Refactored some `Traits` classes so they use `mixTraits` instead of extending other `Traits` classes.
+* Allow translation of some components.
 * [The next improvement]
 
 #### 8.0.0-alpha.87

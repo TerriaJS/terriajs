@@ -3,6 +3,7 @@ import YDYRCatalogFunctionJob from "./CatalogFunctions/YDYRCatalogFunctionJob";
 import CatalogGroup from "./CatalogGroupNew";
 import CswCatalogGroup from "./CatalogGroups/CswCatalogGroup";
 import OpenDataSoftCatalogGroup from "./CatalogGroups/OpenDataSoftCatalogGroup";
+import SocrataCatalogGroup from "./CatalogGroups/SocrataCatalogGroup";
 import ThreddsCatalogGroup from "./CatalogGroups/ThreddsCatalogGroup";
 import { ApiTableCatalogItem } from "./CatalogItems/ApiTableCatalogItem";
 import BingMapsCatalogItem from "./CatalogItems/BingMapsCatalogItem";
@@ -18,12 +19,15 @@ import GltfCatalogItem from "./CatalogItems/GltfCatalogItem";
 import GpxCatalogItem from "./CatalogItems/GpxCatalogItem";
 import IonImageryCatalogItem from "./CatalogItems/IonImageryCatalogItem";
 import KmlCatalogItem from "./CatalogItems/KmlCatalogItem";
+import MapboxMapCatalogItem from "./CatalogItems/MapboxMapCatalogItem";
+import MapboxStyleCatalogItem from "./CatalogItems/MapboxStyleCatalogItem";
 import MapboxVectorTileCatalogItem from "./CatalogItems/MapboxVectorTileCatalogItem";
 import OpenDataSoftCatalogItem from "./CatalogItems/OpenDataSoftCatalogItem";
 import OpenStreetMapCatalogItem from "./CatalogItems/OpenStreetMapCatalogItem";
 import SenapsLocationsCatalogItem from "./CatalogItems/SenapsLocationsCatalogItem";
 import SensorObservationServiceCatalogItem from "./CatalogItems/SensorObservationServiceCatalogItem";
 import ShapefileCatalogItem from "./CatalogItems/ShapefileCatalogItem";
+import SocrataMapViewCatalogItem from "./CatalogItems/SocrataMapViewCatalogItem";
 import StubCatalogItem from "./CatalogItems/StubCatalogItem";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import CkanCatalogGroup from "./Ckan/CkanCatalogGroup";
@@ -49,8 +53,6 @@ import WebProcessingServiceCatalogFunctionJob from "./Ows/WebProcessingServiceCa
 import WebProcessingServiceCatalogGroup from "./Ows/WebProcessingServiceCatalogGroup";
 import SdmxJsonCatalogGroup from "./SdmxJson/SdmxJsonCatalogGroup";
 import SdmxJsonCatalogItem from "./SdmxJson/SdmxJsonCatalogItem";
-import SocrataCatalogGroup from "./CatalogGroups/SocrataCatalogGroup";
-import SocrataMapViewCatalogItem from "./CatalogItems/SocrataMapViewCatalogItem";
 import SplitItemReference from "./SplitItemReference";
 import UrlReference, { UrlToCatalogMemberMapping } from "./UrlReference";
 
@@ -199,6 +201,14 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(
     SocrataMapViewCatalogItem.type,
     SocrataMapViewCatalogItem
+  );
+  CatalogMemberFactory.register(
+    MapboxMapCatalogItem.type,
+    MapboxMapCatalogItem
+  );
+  CatalogMemberFactory.register(
+    MapboxStyleCatalogItem.type,
+    MapboxStyleCatalogItem
   );
 
   UrlToCatalogMemberMapping.register(

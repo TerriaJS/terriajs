@@ -10,7 +10,7 @@ export default interface Group {
   readonly members: ReadonlyArray<ModelReference>;
 
   toggleOpen(stratumId: string): void;
-  loadMembers(): Promise<void>;
+  loadMembers(): Promise<Result<void>>;
   refreshKnownContainerUniqueIds(uniqueId: string | undefined): void;
   add(stratumId: string, member: BaseModel): void;
   addMembersFromJson(stratumId: string, members: any): Result;

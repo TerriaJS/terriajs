@@ -22,7 +22,7 @@ import MappableMixin from "./MappableMixin";
 type ModelType = Model<
   MappableTraits & RasterLayerTraits & CatalogMemberTraits
 > &
-  MappableMixin.MappableMixin;
+  MappableMixin.Instance;
 
 /**
  * A mixin for handling tile errors in raster layers

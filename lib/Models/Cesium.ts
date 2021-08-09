@@ -101,7 +101,7 @@ export default class Cesium extends GlobeOrMap {
     | CameraView
     | Rectangle
     | DataSource
-    | MappableMixin.MappableMixin
+    | MappableMixin.Instance
     | /*TODO Cesium.Cesium3DTileset*/ any;
 
   // When true, feature picking is paused. This is useful for temporarily
@@ -1358,7 +1358,7 @@ export default class Cesium extends GlobeOrMap {
     return result;
   }
 
-  getImageryLayersForItem(item: MappableMixin.MappableMixin): ImageryLayer[] {
+  getImageryLayersForItem(item: MappableMixin.Instance): ImageryLayer[] {
     return filterOutUndefined(
       item.mapItems.map(m => {
         if (ImageryParts.is(m)) {
@@ -1370,7 +1370,7 @@ export default class Cesium extends GlobeOrMap {
 
   private _makeImageryLayerFromParts(
     parts: ImageryParts,
-    item: MappableMixin.MappableMixin
+    item: MappableMixin.Instance
   ): ImageryLayer {
     const layer = this._createImageryLayer(
       parts.imageryProvider,

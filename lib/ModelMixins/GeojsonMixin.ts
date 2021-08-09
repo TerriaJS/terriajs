@@ -66,8 +66,6 @@ export default function GeoJsonMixin<
   ) {
     protected readonly zipFileRegex = /(\.zip\b)/i;
 
-    readonly canZoomTo = true;
-
     private _dataSource: CzmlDataSource | GeoJsonDataSource | undefined;
     protected _file?: File;
 
@@ -108,10 +106,6 @@ export default function GeoJsonMixin<
       }
       this._dataSource.show = this.show;
       return [this._dataSource];
-    }
-
-    protected forceLoadMetadata(): Promise<void> {
-      return Promise.resolve();
     }
 
     protected async forceLoadMapItems(): Promise<void> {

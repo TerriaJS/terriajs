@@ -10,6 +10,7 @@ import {
   JsonObject
 } from "../../Core/Json";
 import loadJson from "../../Core/loadJson";
+import runLater from "../../Core/runLater";
 import TerriaError from "../../Core/TerriaError";
 import AccessControlMixin from "../../ModelMixins/AccessControlMixin";
 import GroupMixin from "../../ModelMixins/GroupMixin";
@@ -157,7 +158,7 @@ export default class MagdaReference extends AccessControlMixin(
     return access || super.accessType;
   }
 
-  protected forceLoadReference(
+  protected async forceLoadReference(
     previousTarget: BaseModel | undefined
   ): Promise<BaseModel | undefined> {
     const existingRecord = this.magdaRecord
@@ -168,33 +169,37 @@ export default class MagdaReference extends AccessControlMixin(
     const override = toJS(this.override);
     const distributionFormats = this.preparedDistributionFormats;
 
-    const target = MagdaReference.createMemberFromRecord(
-      this.terria,
-      this,
-      distributionFormats,
-      magdaUri,
-      this.uniqueId,
-      existingRecord,
-      override,
-      previousTarget
-    );
-    if (target !== undefined) {
-      return Promise.resolve(target);
-    }
+    // `runLater` is needed due to no actions in `AsyncLoader` computed promise (See AsyncLoader.ts)
+    return await runLater(async () => {
+      const target = MagdaReference.createMemberFromRecord(
+        this.terria,
+        this,
+        distributionFormats,
+        magdaUri,
+        this.uniqueId,
+        existingRecord,
+        override,
+        previousTarget
+      );
 
-    return this.loadMagdaRecord({
-      id: this.recordId,
-      optionalAspects: [
-        "terria",
-        "group",
-        "dcat-dataset-strings",
-        "dcat-distribution-strings",
-        "dataset-distributions",
-        "dataset-format"
-      ],
-      dereference: true,
-      magdaReferenceHeaders: this.terria.configParameters.magdaReferenceHeaders
-    }).then(record => {
+      if (target !== undefined) {
+        return target;
+      }
+
+      const record = await this.loadMagdaRecord({
+        id: this.recordId,
+        optionalAspects: [
+          "terria",
+          "group",
+          "dcat-dataset-strings",
+          "dcat-distribution-strings",
+          "dataset-distributions",
+          "dataset-format"
+        ],
+        dereference: true,
+        magdaReferenceHeaders: this.terria.configParameters
+          .magdaReferenceHeaders
+      });
       return MagdaReference.createMemberFromRecord(
         this.terria,
         this,

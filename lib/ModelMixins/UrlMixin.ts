@@ -25,8 +25,8 @@ function UrlMixin<T extends Constructor<UrlModel>>(Base: T) {
 }
 
 namespace UrlMixin {
-  export interface UrlMixin extends InstanceType<ReturnType<typeof UrlMixin>> {}
-  export function isMixedInto(model: any): model is UrlMixin {
+  export interface Instance extends InstanceType<ReturnType<typeof UrlMixin>> {}
+  export function isMixedInto(model: any): model is Instance {
     return model && model.hasUrlMixin;
   }
 }

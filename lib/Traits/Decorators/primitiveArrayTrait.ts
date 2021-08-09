@@ -1,4 +1,5 @@
 import Result from "../../Core/Result";
+import TerriaError from "../../Core/TerriaError";
 import { BaseModel } from "../../Models/Definition/Model";
 import Trait, { TraitOptions } from "../Trait";
 
@@ -19,7 +20,8 @@ export default function primitiveArrayTrait<T>(
     }
     constructor.traits[propertyKey] = new PrimitiveArrayTrait(
       propertyKey,
-      options
+      options,
+      constructor
     );
   };
 }
@@ -28,8 +30,8 @@ export class PrimitiveArrayTrait<T> extends Trait {
   readonly type: PrimitiveType;
   readonly isNullable: boolean;
 
-  constructor(id: string, options: PrimitiveArrayTraitOptions<T>) {
-    super(id, options);
+  constructor(id: string, options: PrimitiveArrayTraitOptions<T>, parent: any) {
+    super(id, options, parent);
     this.type = options.type;
     this.isNullable = options.isNullable || false;
   }
@@ -52,13 +54,15 @@ export class PrimitiveArrayTrait<T> extends Trait {
     jsonValue: any
   ): Result<T[] | undefined> {
     if (!this.isValidJson(jsonValue)) {
-      return Result.error({
-        title: "Invalid property",
-        message: `Property ${this.id} is expected to be of type ${this.type}[].`
-      });
+      return Result.error(
+        new TerriaError({
+          title: "Invalid property",
+          message: `Property ${this.id} is expected to be of type ${this.type}[].`
+        })
+      );
     }
 
-    return Result.return(jsonValue);
+    return new Result(jsonValue);
   }
 
   toJson(value: T[]): any {

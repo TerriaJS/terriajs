@@ -201,7 +201,7 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
   }
 
   @computed
-  get selectedTableCatalogMember(): TableMixin.TableMixin | undefined {
+  get selectedTableCatalogMember(): TableMixin.Instance | undefined {
     if (!isDefined(this.inputLayers?.value)) {
       return;
     }

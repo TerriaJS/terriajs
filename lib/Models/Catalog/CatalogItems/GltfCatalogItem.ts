@@ -34,10 +34,6 @@ export default class GltfCatalogItem extends MappableMixin(
     return GltfCatalogItem.type;
   }
 
-  get canZoomTo() {
-    return true;
-  }
-
   @computed
   private get cesiumUpAxis() {
     if (this.upAxis === undefined) {
@@ -86,13 +82,11 @@ export default class GltfCatalogItem extends MappableMixin(
   @computed
   private get orientation(): Quaternion {
     const { heading, pitch, roll } = this.rotation;
-
-    // If no hpr rotation defined, we default to no rotation
-    if (heading === undefined || pitch === undefined || roll === undefined) {
-      return Quaternion.IDENTITY.clone();
-    }
-
-    const hpr = HeadingPitchRoll.fromDegrees(heading, pitch, roll);
+    const hpr = HeadingPitchRoll.fromDegrees(
+      heading ?? 0,
+      pitch ?? 0,
+      roll ?? 0
+    );
     const orientation = Transforms.headingPitchRollQuaternion(
       this.cesiumPosition,
       hpr

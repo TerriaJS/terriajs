@@ -8,6 +8,7 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import NearFarScalar from "terriajs-cesium/Source/Core/NearFarScalar";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
+import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import DataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
@@ -18,27 +19,26 @@ import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import URI from "urijs";
 import loadArrayBuffer from "../../../Core/loadArrayBuffer";
 import TerriaError from "../../../Core/TerriaError";
-import MappableMixin from "../../../ModelMixins/MappableMixin";
 import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
+import MappableMixin from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import GtfsCatalogItemTraits from "../../../Traits/TraitsClasses/GtfsCatalogItemTraits";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
+import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
+import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
-import CreateModel from "../../Definition/CreateModel";
+import Terria from "../../Terria";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import {
   FeedEntity,
   FeedMessage,
   FeedMessageReader
 } from "./GtfsRealtimeProtoBufReaders";
 import prettyPrintGtfsEntityField from "./prettyPrintGtfsEntityField";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import Terria from "../../Terria";
 import VehicleData from "./VehicleData";
-import { BaseModel } from "../../Definition/Model";
-import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
@@ -86,7 +86,6 @@ export default class GtfsCatalogItem extends MappableMixin(
 ) {
   disposer: IReactionDisposer | undefined;
 
-  readonly canZoomTo = true;
   _bbox: RectangleExtent = {
     west: Infinity,
     south: Infinity,

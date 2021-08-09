@@ -24,6 +24,7 @@ import CustomComponent, {
   ProcessNodeContext
 } from "./CustomComponent";
 import ChartableMixin from "../../ModelMixins/ChartableMixin";
+import { getName } from "../../ModelMixins/CatalogMemberMixin";
 
 export interface ChartCustomComponentAttributes {
   /**  The title of the chart.  If not supplied, defaults to the name of the context-supplied feature, if available, or else simply "Chart". */
@@ -486,7 +487,10 @@ export default abstract class ChartCustomComponent<
     const terria = sourceItem.terria;
     const ref = new SplitItemReference(createGuid(), terria);
     ref.setTrait(CommonStrata.user, "splitSourceItemId", sourceItem.uniqueId);
-    await ref.loadReference();
+    (await ref.loadReference()).raiseError(
+      terria,
+      `Failed to create SplitItemReference for ${getName(sourceItem)}`
+    );
     if (ref.target) {
       terria.addModel(ref);
       return ref.target as CatalogItemType;

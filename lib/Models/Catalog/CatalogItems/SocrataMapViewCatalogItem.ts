@@ -174,7 +174,7 @@ export default class SocrataMapViewCatalogItem extends UrlMixin(
           this.geojsonUrl
         );
 
-        await this.geojsonCatalogItem!.loadMapItems();
+        (await this.geojsonCatalogItem!.loadMapItems()).throwIfError();
       });
     } else {
       this.geojsonCatalogItem = undefined;
