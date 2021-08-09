@@ -70,6 +70,7 @@ Change Log
 * Add `description` and `example` static properties to `Trait`, and added `@traitClass` decorator.
 * Add `parent` property to `Trait`, which contains parent `TraitClass`.
 * New model-generated documentation in `generateDocs.ts`
+* Refactored some `Traits` classes so they use `mixTraits` instead of extending other `Traits` classes.
 * Allow translation of some components.
 * [The next improvement]
 
