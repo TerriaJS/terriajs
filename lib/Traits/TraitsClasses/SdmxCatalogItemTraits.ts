@@ -10,7 +10,7 @@ import SdmxCommonTraits from "./SdmxCommonTraits";
 import TableTraits from "./TableTraits";
 import UrlTraits from "./UrlTraits";
 
-export class SdmxDimensionTraits extends DimensionTraits {
+export class SdmxDimensionTraits extends mixTraits(DimensionTraits) {
   @primitiveTrait({
     type: "string",
     name: "Position",

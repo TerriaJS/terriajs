@@ -183,7 +183,7 @@ export default class MagdaReference extends AccessControlMixin(
       );
 
       if (target !== undefined) {
-        return Promise.resolve(target);
+        return target;
       }
 
       const record = await this.loadMagdaRecord({

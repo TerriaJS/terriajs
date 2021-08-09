@@ -46,6 +46,12 @@ import TerriaError from "./TerriaError";
  * **Other tips**:
  *
  * - You can not nest together `AsyncLoaders`.
+ *
+ * **Examples**:
+ *
+ * See:
+ * - `MappableMixin`
+ * - `CatalogMemberMixin`
  */
 export default class AsyncLoader {
   @observable

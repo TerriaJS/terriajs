@@ -10,13 +10,17 @@ export default function anyTrait(options: TraitOptions) {
     if (!constructor.traits) {
       constructor.traits = {};
     }
-    constructor.traits[propertyKey] = new AnyTrait(propertyKey, options);
+    constructor.traits[propertyKey] = new AnyTrait(
+      propertyKey,
+      options,
+      constructor
+    );
   };
 }
 
 export class AnyTrait extends Trait {
-  constructor(id: string, options: AnyTraitOptions) {
-    super(id, options);
+  constructor(id: string, options: AnyTraitOptions, parent: any) {
+    super(id, options, parent);
   }
 
   getValue(model: BaseModel): any {

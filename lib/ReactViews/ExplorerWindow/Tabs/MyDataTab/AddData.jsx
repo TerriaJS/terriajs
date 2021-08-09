@@ -123,9 +123,13 @@ const AddData = createReactClass({
           message: `An error occurred trying to add data from URL: ${url}`
         });
         newItem.setTrait(CommonStrata.user, "url", url);
-        promise = newItem
-          .loadMetadata()
-          .then(result => result.throwIfError() && newItem);
+        promise = newItem.loadMetadata().then(result => {
+          if (result.error) {
+            return Promise.reject(result.error);
+          }
+
+          return Promise.resolve(newItem);
+        });
       } catch (e) {
         promise = Promise.reject(e);
       }
