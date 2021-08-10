@@ -683,8 +683,8 @@ export default class Terria {
   /**
    * Initialize errorService from config parameters.
    */
-  setupErrorServiceProvider() {
-    initializeErrorServiceProvider(this.configParameters.errorService)
+  setupErrorServiceProvider(errorService: any) {
+    initializeErrorServiceProvider(errorService)
       .then(errorService => {
         this.errorService = errorService;
       })
@@ -783,7 +783,9 @@ export default class Terria {
         if (isJsonObject(config) && isJsonObject(config.parameters)) {
           this.updateParameters(config.parameters);
         }
-        this.setupErrorServiceProvider();
+        if (this.configParameters.errorService) {
+          this.setupErrorServiceProvider(this.configParameters.errorService);
+        }
         this.setupInitializationUrls(baseUri, config);
       });
     } catch (error) {
