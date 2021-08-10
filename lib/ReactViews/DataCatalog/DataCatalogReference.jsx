@@ -1,5 +1,6 @@
 import createReactClass from "create-react-class";
 import { observer } from "mobx-react";
+import { runInAction } from "mobx";
 import PropTypes from "prop-types";
 import React from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
@@ -38,7 +39,9 @@ const DataCatalogReference = observer(
       }
 
       if (defined(this.props.viewState.storyShown)) {
-        this.props.viewState.storyShown = false;
+        runInAction(() => {
+          this.props.viewState.storyShown = false;
+        });
       }
 
       if (
