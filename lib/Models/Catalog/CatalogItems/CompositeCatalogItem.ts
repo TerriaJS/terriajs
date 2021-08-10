@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed } from "mobx";
+import { action, autorun, computed, runInAction } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
@@ -8,6 +8,7 @@ import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import ModelReference from "../../../Traits/ModelReference";
 import CompositeCatalogItemTraits from "../../../Traits/TraitsClasses/CompositeCatalogItemTraits";
+import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import { BaseModel } from "../../Definition/Model";
 
@@ -15,6 +16,10 @@ export default class CompositeCatalogItem extends MappableMixin(
   CatalogMemberMixin(CreateModel(CompositeCatalogItemTraits))
 ) {
   static readonly type = "composite";
+
+  private _visibilityDisposer = autorun(() => {
+    this.syncVisibilityToMembers();
+  });
 
   get type() {
     return CompositeCatalogItem.type;
@@ -62,13 +67,16 @@ export default class CompositeCatalogItem extends MappableMixin(
     ).throwIfError();
   }
 
-  @computed get mapItems() {
-    // this.memberModels.forEach(model => {
-    //   runInAction(() => {
-    //     model.setTrait(CommonStrata.definition, "show", this.show);
-    //   });
-    // });
+  syncVisibilityToMembers() {
+    const { show } = this;
+    this.memberModels.forEach(model => {
+      runInAction(() => {
+        model.setTrait(CommonStrata.user, "show", show);
+      });
+    });
+  }
 
+  @computed get mapItems() {
     const result: MapItem[] = [];
     this.memberModels.filter(MappableMixin.isMixedInto).forEach(model => {
       result.push(...model.mapItems);
@@ -94,5 +102,10 @@ export default class CompositeCatalogItem extends MappableMixin(
     } else {
       this.setTrait(stratumId, "members", [member.uniqueId]);
     }
+  }
+
+  dispose() {
+    super.dispose();
+    this._visibilityDisposer();
   }
 }

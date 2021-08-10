@@ -94,6 +94,7 @@ Change Log
 * Moved d3-scale-chromatic code into `tableColorMap.colorScaleCategorical()` and `tableColorMap.colorScaleContinuous()`
 * Disabled welcome popup for shared stories
 * Add WMS support for default value of time dimension.
+* Make CompositeCatalogItem sync visibility to its members.
 * Add `description` and `example` static properties to `Trait`, and added `@traitClass` decorator.
 * Add `parent` property to `Trait`, which contains parent `TraitClass`.
 * New model-generated documentation in `generateDocs.ts`
