@@ -34,8 +34,7 @@ import upsertModelFromJson from "../../Definition/upsertModelFromJson";
 
 const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
 
-const createGuid = require("../Esri/node_modules/terriajs-cesium/Source/Core/createGuid")
-  .default;
+const createGuid = require("terriajs-cesium/Source/Core/createGuid").default;
 
 class WpsLoadableStratum extends LoadableStratum(
   WebProcessingServiceCatalogFunctionJobTraits
