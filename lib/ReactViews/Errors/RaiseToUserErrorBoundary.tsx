@@ -24,7 +24,8 @@ export default class RaiseToUserErrorBoundary extends React.Component<
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.props.viewState.terria.raiseErrorToUser(
-      TerriaError.from(error, this.props.terriaErrorOptions)
+      error,
+      this.props.terriaErrorOptions
     );
   }
 

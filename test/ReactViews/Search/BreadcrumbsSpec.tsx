@@ -33,10 +33,8 @@ describe("Breadcrumbs", function() {
   });
 
   describe("with a prevewied catalog item", function() {
-    it("renders", function() {
-      runInAction(() => {
-        viewState.viewCatalogMember(catalogGroup);
-      });
+    it("renders", async function() {
+      await viewState.viewCatalogMember(catalogGroup);
 
       act(() => {
         testRenderer = create(

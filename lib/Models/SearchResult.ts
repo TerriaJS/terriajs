@@ -1,9 +1,8 @@
-import { BaseModel } from "./Model";
-import { observable, action } from "mobx";
+import { action, observable } from "mobx";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
-import raiseErrorOnRejectedPromise from "./raiseErrorOnRejectedPromise";
 import GroupMixin from "../ModelMixins/GroupMixin";
+import { BaseModel } from "./Model";
 
 export interface SearchResultOptions {
   name?: string;
@@ -43,10 +42,9 @@ export default class SearchResult {
 
     // Load this group's items (if we haven't already) when it is opened.
     if (this.isOpen && GroupMixin.isMixedInto(this.catalogItem)) {
-      raiseErrorOnRejectedPromise(
-        this.catalogItem.terria,
-        this.catalogItem.loadMembers()
-      );
+      this.catalogItem
+        .loadMembers()
+        .then(result => result.raiseError(this.catalogItem!.terria));
     }
   }
 }

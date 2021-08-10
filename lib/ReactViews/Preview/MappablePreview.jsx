@@ -15,6 +15,7 @@ import {
   Category,
   DataSourceAction
 } from "../../Core/AnalyticEvents/analyticEvents";
+import WarningBox from "./WarningBox";
 
 /**
  * @typedef {object} Props
@@ -69,7 +70,7 @@ class MappablePreview extends React.Component {
         );
       }
     } catch (e) {
-      this.props.terria.raiseErrorToUser(e);
+      this.props.terria.raiseErrorToUser(e, undefined, true);
     }
   }
 
@@ -129,6 +130,18 @@ class MappablePreview extends React.Component {
               </div>
             </If>
           </div>
+          <If condition={catalogItem.loadMetadataResult?.error}>
+            <WarningBox
+              error={catalogItem.loadMetadataResult?.error}
+              viewState={this.props.viewState}
+            />
+          </If>
+          <If condition={catalogItem.loadMapItemsResult?.error}>
+            <WarningBox
+              error={catalogItem.loadMapItemsResult?.error}
+              viewState={this.props.viewState}
+            />
+          </If>
           <Description item={catalogItem} />
         </div>
       </div>

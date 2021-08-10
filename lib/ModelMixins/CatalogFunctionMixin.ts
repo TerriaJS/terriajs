@@ -60,7 +60,7 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
 
         newJob.setTrait(CommonStrata.user, "parameters", toJS(this.parameters));
 
-        await newJob.loadMetadata();
+        (await newJob.loadMetadata()).throwIfError();
 
         this.terria.addModel(newJob);
         this.terria.catalog.userAddedDataGroup.add(CommonStrata.user, newJob);

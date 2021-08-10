@@ -92,7 +92,7 @@ export class ModelReferenceTrait extends Trait {
       );
     }
 
-    return Result.return(
+    return new Result(
       result,
       TerriaError.combine(
         errors,

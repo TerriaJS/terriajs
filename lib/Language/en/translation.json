@@ -463,6 +463,8 @@
     "selectToPreview": "<0>Select a dataset to see a preview </0><1>- OR -</1><2>Go to the map</2>",
     "loading": "PREVIEW LOADING...",
     "preview": "{{appName}} preview",
+    "previewItemErrorTitle": "Catalog item could not be previewed.",
+    "previewItemErrorMessage": "An error occurred while loading the catalog item.",
     "noPreviewAvailable": "NO PREVIEW AVAILABLE",
     "dataPreviewLoading": "DATA PREVIEW LOADING...",
     "dataPreview": "DATA PREVIEW",
@@ -730,6 +732,7 @@
     },
     "terriaError": {
       "defaultTitle": "An error occurred",
+      "defaultMessage": "Unknown error",
       "defaultCombineTitle": "Multiple errors occurred",
       "defaultCombineMessage": "Details of the errors are below"
     }
@@ -1128,7 +1131,7 @@
       "serviceErrorMessage": "This service does not have any details available.",
       "distributionDesc": "Distribution Description",
       "idsNotSpecifiedTitle": "recordId must be specified",
-      "idsNotSpecifiedMessage": "MagdaCatalogItem requires that recordId be specified.",
+      "idsNotSpecifiedMessage": "MagdaReference requires that recordId be specified.",
       "retrieveErrorTitle": "Error retrieving MAGDA record",
       "retrieveErrorMessage": "No distribution or dataset ID provided",
       "notCompatibleTitle": "No compatible distributions found",

@@ -364,8 +364,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
           }
         });
       });
-      await this.geoJsonItem!.loadMetadata();
-      await this.geoJsonItem!.loadMapItems();
+      (await this.geoJsonItem!.loadMapItems()).throwIfError;
     }
 
     runInAction(() => {
@@ -396,7 +395,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
   protected async forceLoadMapItems(): Promise<void> {
     if (isDefined(this.geoJsonItem)) {
       const geoJsonItem = this.geoJsonItem;
-      await runInAction(() => geoJsonItem.loadMapItems());
+      (await geoJsonItem.loadMapItems()).throwIfError();
     }
   }
 

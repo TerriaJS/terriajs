@@ -19,6 +19,9 @@ Change Log
   - `$color-splitter` and `theme.colorSplitter` has been replaced with `$color-secondary` and `theme.colorSecondary`
   - `canZoomTo` has bee replaced with `disableZoomTo` in `MappableTraits`
   - `showsInfo` has been replaced with `disableAboutData` in `CatalogMemberTraits`
+  - `AsyncLoader` loadXXX methods now return `Result` with `errors` **they no longer throw errors** - if you need errors to be thrown you can use `(await loadXX).throwIfError()`.
+  - Removed `openGroup()` - it is replaced by `viewState.viewCatalogMember`
+  - Renamed `ReferenceMixin.is` to `ReferenceMixin.isMixedInto`
 
 * Fixed a bug with numeric item search where it sometimes fails to return all matching values.
 * Respect order of objects from lower strata in `objectArrayTrait`.
@@ -51,7 +54,6 @@ Change Log
 * Added `MapboxStyleCatalogItem`.
 * Fix splitter thumb icon vertical position
 * Renamed all mixin instance type definitions to `XMixin.Instance`.
-* 
 * Clean up `ViewControl` colors
   * `$color-splitter` and `theme.colorSplitter` has been replaced with `$color-secondary` and `theme.colorSecondary`
 * Clean up `SplitterTraits`
@@ -62,6 +64,22 @@ Change Log
   * Replaced with `disableZoomTo` in `MappableTraits`
 * Clean up `showsInfo`
   * Replaced with `disableAboutData` in `CatalogMemberTraits`
+* Add `TerriaErrorSeverity` enum, values can be `Error` or `Warning`.
+  * Errors with severity `Error` are presented to the user. `Warning` will just be printed to console.
+  * By default, errors will use `Error`
+  * `TerriaErrorSeverity` will be copied through nested `TerriaErrors` on creation (eg if you call `TerriaError.from()` on a `Warning` then the parent error will also be `Warning`)
+  * Loading models from share links or stories will use `Warning` if the model is **not in the workbench**, otherwise it will use `Error`.
+* In `terriaErrorNotification` - show `error.message` (as well as `error.stack`) if `error.stack` is defined
+* `AsyncLoader` now has an observable `result` property.
+* `viewState.viewCatalogMember()` now handles loading catalog members, opening groups and showing "Add Data" window.
+* Fix `MagdaReference` `forceLoadReference` bug.
+* Clean up `CkanCatalogGroup` loading - errors are no-longer swallowed.
+* Clean up `3dTilesMixin` loading - errors are no-longer swallowed.
+* Fix `DataPreviewSections` info section bug.
+* Move `FeedbackForm` `z-index` to same as `Notification` - this is so it will appear above Data catalog.
+* Added `result.raiseError()`, `result.pushErrorTo()` and `result.clone()` helper methods - and `Result.combine()` convenience function
+* Renamed `ReferenceMixin.is` to `ReferenceMixin.isMixedInto`
+* Added support for logging to external error service and configuring it via config parameters. See `errorService` in [client configuration](doc/customizing/client-side-config.md).
 * Fix `DiscreteColorMap` bug with `binColors` and added warning message if `colorPalette` is invalid.
 * Fix `EnumColorMap` bug with `binColors`
 * Moved d3-scale-chromatic code into `tableColorMap.colorScaleCategorical()` and `tableColorMap.colorScaleContinuous()`
@@ -72,7 +90,7 @@ Change Log
 * New model-generated documentation in `generateDocs.ts`
 * Refactored some `Traits` classes so they use `mixTraits` instead of extending other `Traits` classes.
 * Allow translation of some components.
-* Add entries for translation in documentation nav.
+* Fixed a bug which prevented adding any reference catalog item while the story is playing.
 * [The next improvement]
 
 #### 8.0.0-alpha.87

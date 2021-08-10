@@ -1,6 +1,6 @@
 import { isObservableArray, runInAction } from "mobx";
 import Result from "../Core/Result";
-import TerriaError from "../Core/TerriaError";
+import TerriaError, { TerriaErrorSeverity } from "../Core/TerriaError";
 import createStratumInstance from "./createStratumInstance";
 import { BaseModel } from "./Model";
 import isDefined from "../Core/isDefined";
@@ -48,7 +48,7 @@ export default function updateModelFromJson(
       } else {
         let newTrait = trait
           .fromJson(model, stratumName, jsonValue)
-          .catchError(error => errors.push(error));
+          .pushErrorTo(errors);
 
         if (isDefined(newTrait)) {
           // We want to merge members of groups with the same name/id
@@ -66,7 +66,7 @@ export default function updateModelFromJson(
     });
   });
 
-  return Result.return(
+  return new Result(
     undefined,
     TerriaError.combine(
       errors,

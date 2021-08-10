@@ -1,13 +1,12 @@
 import createReactClass from "create-react-class";
 import { observer } from "mobx-react";
+import { runInAction } from "mobx";
 import PropTypes from "prop-types";
 import React from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import addedByUser from "../../Core/addedByUser";
 import getPath from "../../Core/getPath";
 import CommonStrata from "../../Models/CommonStrata";
-import openGroup from "../../Models/openGroup";
-import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
 import CatalogGroup from "./CatalogGroup";
 import CatalogItem from "./CatalogItem";
 
@@ -23,31 +22,12 @@ const DataCatalogReference = observer(
       isTopLevel: PropTypes.bool
     },
 
-    setPreviewedItem() {
-      // raiseErrorOnRejectedPromise(this.props.item.terria, this.props.item.load());
-      let loadPromise;
-      if (this.props.reference.loadReference) {
-        loadPromise = raiseErrorOnRejectedPromise(
-          this.props.terria,
-          this.props.reference.loadReference()
-        );
-      }
-      this.props.viewState.viewCatalogMember(this.props.reference);
-      // mobile switch to nowvewing, but only if this is a
-      // catalog item not a group.
-      if (loadPromise) {
-        loadPromise.then(() => {
-          if (
-            this.props.viewState.previewedItem === this.props.reference &&
-            this.props.reference.target &&
-            !this.props.reference.target.isGroup
-          ) {
-            this.props.viewState.switchMobileView(
-              this.props.viewState.mobileViewOptions.preview
-            );
-          }
-        });
-      }
+    async setPreviewedItem() {
+      await this.props.viewState.viewCatalogMember(
+        this.props.reference,
+        true,
+        CommonStrata.user
+      );
     },
 
     async add(event) {
@@ -59,14 +39,16 @@ const DataCatalogReference = observer(
       }
 
       if (defined(this.props.viewState.storyShown)) {
-        this.props.viewState.storyShown = false;
+        runInAction(() => {
+          this.props.viewState.storyShown = false;
+        });
       }
 
       if (
         defined(this.props.reference.invoke) ||
         this.props.viewState.useSmallScreenInterface
       ) {
-        this.setPreviewedItem();
+        await this.setPreviewedItem();
       } else {
         try {
           if (!this.props.terria.workbench.contains(this.props.reference)) {
@@ -84,17 +66,9 @@ const DataCatalogReference = observer(
             this.props.viewState.closeCatalog();
           }
         } catch (e) {
-          this.props.terria.raiseErrorToUser(e);
+          this.props.terria.raiseErrorToUser(e, undefined, true);
         }
       }
-    },
-
-    open() {
-      raiseErrorOnRejectedPromise(
-        this.props.terria,
-        openGroup(this.props.reference, true, CommonStrata.user)
-      );
-      this.setPreviewedItem();
     },
 
     isSelected() {
@@ -114,7 +88,7 @@ const DataCatalogReference = observer(
               text={reference.name || "..."}
               isPrivate={reference.isPrivate}
               title={path}
-              onClick={this.open}
+              onClick={this.setPreviewedItem}
               topLevel={this.props.isTopLevel}
               loading={this.props.reference.isLoadingReference}
               open={this.props.reference.isLoadingReference}
