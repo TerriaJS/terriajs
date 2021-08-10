@@ -3,10 +3,10 @@ import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import Terria from "../../../../lib/Models/Terria";
 import ArcGisPortalCatalogGroup, {
   ArcGisPortalStratum
-} from "../../../../lib/Models/Catalog/Esri/ArcGisPortalCatalogGroup";
+} from "../../../../lib/Models/Catalog/esri/ArcGisPortalCatalogGroup";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import i18next from "i18next";
-import ArcGisPortalItemReference from "../../../../lib/Models/Catalog/Esri/ArcGisPortalItemReference";
+import ArcGisPortalItemReference from "../../../../lib/Models/Catalog/esri/ArcGisPortalItemReference";
 import CatalogGroup from "../../../../lib/Models/Catalog/CatalogGroup";
 import { BaseModel } from "../../../../lib/Models/Definition/Model";
 

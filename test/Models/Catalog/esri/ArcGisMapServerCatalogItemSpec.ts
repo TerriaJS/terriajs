@@ -4,7 +4,7 @@ import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTili
 import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
 import isDefined from "../../../../lib/Core/isDefined";
 import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
-import ArcGisMapServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogItem";
+import ArcGisMapServerCatalogItem from "../../../../lib/Models/Catalog/esri/ArcGisMapServerCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 
 configure({

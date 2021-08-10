@@ -1,6 +1,6 @@
 import isDefined from "../../../lib/Core/isDefined";
 import loadBlob from "../../../lib/Core/loadBlob";
-import ArcGisFeatureServerCatalogItem from "../../../lib/Models/Catalog/Esri/ArcGisFeatureServerCatalogItem";
+import ArcGisFeatureServerCatalogItem from "../../../lib/Models/Catalog/esri/ArcGisFeatureServerCatalogItem";
 import createCatalogItemFromFileOrUrl from "../../../lib/Models/Catalog/createCatalogItemFromFileOrUrl";
 import createUrlReferenceFromUrl from "../../../lib/Models/Catalog/CatalogReferences/createUrlReferenceFromUrl";
 import CsvCatalogItem from "../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";

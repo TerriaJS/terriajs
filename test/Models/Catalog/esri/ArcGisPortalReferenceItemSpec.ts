@@ -7,8 +7,8 @@ import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import i18next from "i18next";
 import ArcGisPortalItemReference, {
   ArcGisPortalItemStratum
-} from "../../../../lib/Models/Catalog/Esri/ArcGisPortalItemReference";
-import ArcGisFeatureServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisFeatureServerCatalogItem";
+} from "../../../../lib/Models/Catalog/esri/ArcGisPortalItemReference";
+import ArcGisFeatureServerCatalogItem from "../../../../lib/Models/Catalog/esri/ArcGisFeatureServerCatalogItem";
 import InfoSectionTraits from "../../../../lib/Traits/TraitsClasses/CatalogMemberTraits";
 
 configure({
