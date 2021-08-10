@@ -17,7 +17,7 @@ import CswCatalogGroupTraits, {
   QueryPropertyName
 } from "../../../Traits/TraitsClasses/CswCatalogGroupTraits";
 import ModelReference from "../../../Traits/ModelReference";
-import ArcGisMapServerCatalogItem from "../Esri/ArcGisMapServerCatalogItem";
+import ArcGisMapServerCatalogItem from "../esri/ArcGisMapServerCatalogItem";
 import CatalogGroup from "../CatalogGroup";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
