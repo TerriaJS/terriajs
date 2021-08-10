@@ -13,7 +13,7 @@ import styled from "styled-components";
 import getAncestors from "../../Models/getAncestors";
 import getDereferencedIfExists from "../../Core/getDereferencedIfExists";
 import { runInAction } from "mobx";
-import CommonStrata from "../../Models/CommonStrata";
+import CommonStrata from "../../Models/Definition/CommonStrata";
 
 const RawButtonAndUnderline = styled(RawButton)`
   ${props => `
@@ -32,13 +32,13 @@ class Breadcrumbs extends React.Component {
     t: PropTypes.func.isRequired
   };
 
-  openInCatalog(items) {
+  async openInCatalog(items) {
     items.forEach(item => {
       runInAction(() => {
         item.setTrait(CommonStrata.user, "isOpen", true);
       });
     });
-    this.props.viewState.viewCatalogMember(items[0]);
+    await this.props.viewState.viewCatalogMember(items[0]);
     this.props.viewState.changeSearchState("");
   }
 

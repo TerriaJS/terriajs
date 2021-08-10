@@ -22,15 +22,15 @@ import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import MappableMixin, {
   ImageryParts
 } from "../../../ModelMixins/MappableMixin";
-import CommonStrata from "../../../Models/CommonStrata";
+import CommonStrata from "../../../Models/Definition/CommonStrata";
 import Feature from "../../../Models/Feature";
-import hasTraits, { HasTrait } from "../../../Models/hasTraits";
+import hasTraits, { HasTrait } from "../../../Models/Definition/hasTraits";
 import {
   getMarkerLocation,
   removeMarker
 } from "../../../Models/LocationMarkerUtils";
 import { DimensionOption } from "../../../Models/SelectableDimensions";
-import SplitItemReference from "../../../Models/SplitItemReference";
+import SplitItemReference from "../../../Models/Catalog/CatalogReferences/SplitItemReference";
 import Terria from "../../../Models/Terria";
 import ViewState from "../../../ReactViewModels/ViewState";
 import Box, { BoxSpan } from "../../../Styled/Box";

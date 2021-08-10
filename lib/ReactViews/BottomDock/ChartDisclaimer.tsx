@@ -2,7 +2,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import ChartView from "../../Charts/ChartView";
 import filterOutUndefined from "../../Core/filterOutUndefined";
-import hasTraits from "../../Models/hasTraits";
+import hasTraits from "../../Models/Definition/hasTraits";
 import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
 import DiscretelyTimeVaryingTraits from "../../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";

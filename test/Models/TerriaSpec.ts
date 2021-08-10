@@ -6,24 +6,23 @@ import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDire
 import hashEntity from "../../lib/Core/hashEntity";
 import PickedFeatures from "../../lib/Map/PickedFeatures";
 import CameraView from "../../lib/Models/CameraView";
+import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
+import MagdaReference from "../../lib/Models/Catalog/CatalogReferences/MagdaReference";
+import WebMapServiceCatalogGroup from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import UrlReference, {
+  UrlToCatalogMemberMapping
+} from "../../lib/Models/Catalog/CatalogReferences/UrlReference";
 import Cesium from "../../lib/Models/Cesium";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import { BaseModel } from "../../lib/Models/Definition/Model";
 import Feature from "../../lib/Models/Feature";
 import {
   isInitData,
   isInitDataPromise,
   isInitUrl
 } from "../../lib/Models/InitSource";
-import MagdaReference from "../../lib/Models/MagdaReference";
-import { BaseModel } from "../../lib/Models/Model";
-import openGroup from "../../lib/Models/openGroup";
 import Terria from "../../lib/Models/Terria";
-import UrlReference, {
-  UrlToCatalogMemberMapping
-} from "../../lib/Models/UrlReference";
-import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
@@ -397,10 +396,10 @@ describe("Terria", function() {
       const group = <WebMapServiceCatalogGroup>(
         terria.getModelById(BaseModel, "groupABC")
       );
-      await openGroup(group);
+      await viewState.viewCatalogMember(group);
       expect(group.isOpen).toBe(true);
       expect(group.members.length).toBeGreaterThan(0);
-      const shareLink = await buildShareLink(terria, viewState);
+      const shareLink = buildShareLink(terria, viewState);
       await newTerria.updateApplicationUrl(shareLink);
       await newTerria.loadInitSources();
       const newGroup = <WebMapServiceCatalogGroup>(

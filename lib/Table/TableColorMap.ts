@@ -10,8 +10,8 @@ import ConstantColorMap from "../Map/ConstantColorMap";
 import ContinuousColorMap from "../Map/ContinuousColorMap";
 import DiscreteColorMap from "../Map/DiscreteColorMap";
 import EnumColorMap from "../Map/EnumColorMap";
-import Model from "../Models/Model";
-import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
+import Model from "../Models/Definition/Model";
+import ModelPropertiesFromTraits from "../Models/Definition/ModelPropertiesFromTraits";
 import TableColorStyleTraits, {
   EnumColorTraits
 } from "../Traits/TraitsClasses/TableColorStyleTraits";

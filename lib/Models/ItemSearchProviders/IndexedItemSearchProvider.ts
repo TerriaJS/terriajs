@@ -6,7 +6,7 @@ import { SearchParameterTraits } from "../../Traits/TraitsClasses/SearchableItem
 import ItemSearchProvider, {
   ItemSearchParameter,
   ItemSearchResult
-} from "../ItemSearchProvider";
+} from "./ItemSearchProvider";
 import { Index, IndexRoot, IndexType, parseIndexRoot } from "./Index";
 import joinUrl from "./joinUrl";
 

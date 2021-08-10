@@ -1,4 +1,4 @@
-import { BaseModel } from "./Model";
+import { BaseModel } from "./Definition/Model";
 
 /**
  * Return the ancestors in the data catalog of the given catalog member,

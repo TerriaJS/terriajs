@@ -7,8 +7,8 @@ import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
-import Model from "../../../Models/Model";
-import proxyCatalogItemUrl from "../../../Models/proxyCatalogItemUrl";
+import Model from "../../../Models/Definition/Model";
+import proxyCatalogItemUrl from "../../../Models/Catalog/proxyCatalogItemUrl";
 import LegendTraits, {
   LegendItemTraits
 } from "../../../Traits/TraitsClasses/LegendTraits";

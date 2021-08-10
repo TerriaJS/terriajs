@@ -6,13 +6,13 @@ import URI from "urijs";
 import { USER_ADDED_CATEGORY_ID } from "../../../../../lib/Core/addedByUser";
 import loadBlob from "../../../../../lib/Core/loadBlob";
 import PickedFeatures from "../../../../../lib/Map/PickedFeatures";
-import addUserCatalogMember from "../../../../../lib/Models/addUserCatalogMember";
-import CommonStrata from "../../../../../lib/Models/CommonStrata";
+import addUserCatalogMember from "../../../../../lib/Models/Catalog/addUserCatalogMember";
+import CommonStrata from "../../../../../lib/Models/Definition/CommonStrata";
 import Feature from "../../../../../lib/Models/Feature";
-import GeoJsonCatalogItem from "../../../../../lib/Models/GeoJsonCatalogItem";
-import { BaseModel } from "../../../../../lib/Models/Model";
+import GeoJsonCatalogItem from "../../../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
+import { BaseModel } from "../../../../../lib/Models/Definition/Model";
 import Terria from "../../../../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../../../../lib/Models/WebMapServiceCatalogItem";
+import WebMapServiceCatalogItem from "../../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import ViewState from "../../../../../lib/ReactViewModels/ViewState";
 import {
   buildShareLink,
@@ -210,11 +210,11 @@ describe("BuildShareLink", function() {
       //   // expect(viewState.activeTabCategory).toBe(USER_DATA_NAME);
       // });
 
-      it("viewing a previewed item", function() {
+      it("viewing a previewed item", async function() {
         let model = terria.catalog.userAddedDataGroup.memberModels[0];
 
         // preview the user added item & the share link should reflect that
-        viewState.viewCatalogMember(model);
+        await viewState.viewCatalogMember(model);
         const shareLink = buildShareLink(terria, viewState);
         let params = decodeAndParseStartHash(shareLink);
         let initSources = flattenInitSources(params.initSources);

@@ -2,10 +2,10 @@ import { computed } from "mobx";
 import isDefined from "../../Core/isDefined";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
-import createStubCatalogItem from "../../Models/createStubCatalogItem";
-import { BaseModel } from "../../Models/Model";
-import ModelFactory from "../../Models/ModelFactory";
-import upsertModelFromJson from "../../Models/upsertModelFromJson";
+import createStubCatalogItem from "../../Models/Catalog/createStubCatalogItem";
+import { BaseModel } from "../../Models/Definition/Model";
+import ModelFactory from "../../Models/Definition/ModelFactory";
+import upsertModelFromJson from "../../Models/Definition/upsertModelFromJson";
 import ModelReference from "../ModelReference";
 import Trait, { TraitOptions } from "../Trait";
 
@@ -23,7 +23,8 @@ export default function modelReferenceArrayTrait<T>(
     }
     constructor.traits[propertyKey] = new ModelReferenceArrayTrait(
       propertyKey,
-      options
+      options,
+      constructor
     );
   };
 }
@@ -32,8 +33,8 @@ export class ModelReferenceArrayTrait extends Trait {
   readonly decoratorForFlattened = computed.struct;
   private factory: ModelFactory | undefined;
 
-  constructor(id: string, options: ModelArrayTraitOptions) {
-    super(id, options);
+  constructor(id: string, options: ModelArrayTraitOptions, parent: any) {
+    super(id, options, parent);
     this.factory = options.factory;
   }
 
@@ -83,12 +84,14 @@ export class ModelReferenceArrayTrait extends Trait {
     // TODO: support removals
 
     if (!Array.isArray(jsonValue)) {
-      return Result.error({
-        title: "Invalid property",
-        message: `Property ${
-          this.id
-        } is expected to be an array but instead it is of type ${typeof jsonValue}.`
-      });
+      return Result.error(
+        new TerriaError({
+          title: "Invalid property",
+          message: `Property ${
+            this.id
+          } is expected to be an array but instead it is of type ${typeof jsonValue}.`
+        })
+      );
     }
 
     const errors: TerriaError[] = [];
@@ -115,7 +118,7 @@ export class ModelReferenceArrayTrait extends Trait {
             stratumName,
             jsonElement,
             {}
-          ).catchError(error => errors.push(error));
+          ).pushErrorTo(errors);
 
           // Maybe this should throw if undefined?
           return (
@@ -134,7 +137,7 @@ export class ModelReferenceArrayTrait extends Trait {
         }
       })
       .filter(isDefined);
-    return Result.return(
+    return new Result(
       result,
       TerriaError.combine(
         errors,
