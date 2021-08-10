@@ -90,6 +90,7 @@ Change Log
 * New model-generated documentation in `generateDocs.ts`
 * Refactored some `Traits` classes so they use `mixTraits` instead of extending other `Traits` classes.
 * Allow translation of some components.
+* Fixed a bug which prevented adding any reference catalog item while the story is playing.
 * [The next improvement]
 
 #### 8.0.0-alpha.87
