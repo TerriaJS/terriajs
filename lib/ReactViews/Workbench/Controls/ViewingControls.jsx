@@ -24,7 +24,7 @@ import ExportableMixin from "../../../ModelMixins/ExportableMixin";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
 import addUserCatalogMember from "../../../Models/Catalog/addUserCatalogMember";
-import SplitItemReference from "../../../Models/Catalog/SplitItemReference";
+import SplitItemReference from "../../../Models/Catalog/CatalogReferences/SplitItemReference";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import hasTraits from "../../../Models/Definition/hasTraits";
 import getAncestors from "../../../Models/getAncestors";

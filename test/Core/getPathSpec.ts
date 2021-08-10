@@ -1,5 +1,5 @@
 import getPath from "../../lib/Core/getPath";
-import CatalogGroup from "../../lib/Models/Catalog/CatalogGroupNew";
+import CatalogGroup from "../../lib/Models/Catalog/CatalogGroup";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";

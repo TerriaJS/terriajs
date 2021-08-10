@@ -7,14 +7,14 @@ import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import ModelReference from "../../../Traits/ModelReference";
 import ThreddsCatalogGroupTraits from "../../../Traits/TraitsClasses/ThreddsCatalogGroupTraits";
-import CatalogGroup from "../CatalogGroupNew";
+import CatalogGroup from "../CatalogGroup";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import { proxyCatalogItemBaseUrl } from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
-import ThreddsItemReference from "./ThreddsItemReference";
+import ThreddsItemReference from "../CatalogReferences/ThreddsItemReference";
 
 interface ThreddsCatalog {
   id: string;

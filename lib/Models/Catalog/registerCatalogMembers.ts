@@ -1,7 +1,7 @@
 import YDYRCatalogFunction from "./CatalogFunctions/YDYRCatalogFunction";
 import YDYRCatalogFunctionJob from "./CatalogFunctions/YDYRCatalogFunctionJob";
-import CatalogGroup from "./CatalogGroupNew";
-import CswCatalogGroup from "./CatalogGroups/CswCatalogGroup";
+import CatalogGroup from "./CatalogGroup";
+import CswCatalogGroup from "./Ows/CswCatalogGroup";
 import OpenDataSoftCatalogGroup from "./CatalogGroups/OpenDataSoftCatalogGroup";
 import SocrataCatalogGroup from "./CatalogGroups/SocrataCatalogGroup";
 import ThreddsCatalogGroup from "./CatalogGroups/ThreddsCatalogGroup";
@@ -25,23 +25,23 @@ import MapboxVectorTileCatalogItem from "./CatalogItems/MapboxVectorTileCatalogI
 import OpenDataSoftCatalogItem from "./CatalogItems/OpenDataSoftCatalogItem";
 import OpenStreetMapCatalogItem from "./CatalogItems/OpenStreetMapCatalogItem";
 import SenapsLocationsCatalogItem from "./CatalogItems/SenapsLocationsCatalogItem";
-import SensorObservationServiceCatalogItem from "./CatalogItems/SensorObservationServiceCatalogItem";
+import SensorObservationServiceCatalogItem from "./Ows/SensorObservationServiceCatalogItem";
 import ShapefileCatalogItem from "./CatalogItems/ShapefileCatalogItem";
 import SocrataMapViewCatalogItem from "./CatalogItems/SocrataMapViewCatalogItem";
 import StubCatalogItem from "./CatalogItems/StubCatalogItem";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import CkanCatalogGroup from "./Ckan/CkanCatalogGroup";
 import CkanItemReference from "./Ckan/CkanItemReference";
-import ArcGisCatalogGroup from "./esri/ArcGisCatalogGroup";
-import ArcGisFeatureServerCatalogGroup from "./esri/ArcGisFeatureServerCatalogGroup";
-import ArcGisFeatureServerCatalogItem from "./esri/ArcGisFeatureServerCatalogItem";
-import ArcGisMapServerCatalogGroup from "./esri/ArcGisMapServerCatalogGroup";
-import ArcGisMapServerCatalogItem from "./esri/ArcGisMapServerCatalogItem";
-import ArcGisPortalCatalogGroup from "./esri/ArcGisPortalCatalogGroup";
-import ArcGisPortalItemReference from "./esri/ArcGisPortalItemReference";
-import ArcGisTerrainCatalogItem from "./esri/ArcGisTerrainCatalogItem";
+import ArcGisCatalogGroup from "./Esri/ArcGisCatalogGroup";
+import ArcGisFeatureServerCatalogGroup from "./Esri/ArcGisFeatureServerCatalogGroup";
+import ArcGisFeatureServerCatalogItem from "./Esri/ArcGisFeatureServerCatalogItem";
+import ArcGisMapServerCatalogGroup from "./Esri/ArcGisMapServerCatalogGroup";
+import ArcGisMapServerCatalogItem from "./Esri/ArcGisMapServerCatalogItem";
+import ArcGisPortalCatalogGroup from "./Esri/ArcGisPortalCatalogGroup";
+import ArcGisPortalItemReference from "./Esri/ArcGisPortalItemReference";
+import ArcGisTerrainCatalogItem from "./Esri/ArcGisTerrainCatalogItem";
 import GtfsCatalogItem from "./Gtfs/GtfsCatalogItem";
-import MagdaReference from "./MagdaReference";
+import MagdaReference from "./CatalogReferences/MagdaReference";
 import WebFeatureServiceCatalogGroup from "./Ows/WebFeatureServiceCatalogGroup";
 import WebFeatureServiceCatalogItem from "./Ows/WebFeatureServiceCatalogItem";
 import WebMapServiceCatalogGroup from "./Ows/WebMapServiceCatalogGroup";
@@ -53,8 +53,10 @@ import WebProcessingServiceCatalogFunctionJob from "./Ows/WebProcessingServiceCa
 import WebProcessingServiceCatalogGroup from "./Ows/WebProcessingServiceCatalogGroup";
 import SdmxJsonCatalogGroup from "./SdmxJson/SdmxJsonCatalogGroup";
 import SdmxJsonCatalogItem from "./SdmxJson/SdmxJsonCatalogItem";
-import SplitItemReference from "./SplitItemReference";
-import UrlReference, { UrlToCatalogMemberMapping } from "./UrlReference";
+import SplitItemReference from "./CatalogReferences/SplitItemReference";
+import UrlReference, {
+  UrlToCatalogMemberMapping
+} from "./CatalogReferences/UrlReference";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);

@@ -15,7 +15,7 @@ import {
 import SocrataCatalogGroupTraits, {
   FacetFilterTraits
 } from "../../../Traits/TraitsClasses/SocrataCatalogGroupTraits";
-import CatalogGroup from "../CatalogGroupNew";
+import CatalogGroup from "../CatalogGroup";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";

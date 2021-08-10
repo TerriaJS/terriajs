@@ -7,12 +7,12 @@ import hashEntity from "../../lib/Core/hashEntity";
 import PickedFeatures from "../../lib/Map/PickedFeatures";
 import CameraView from "../../lib/Models/CameraView";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
-import MagdaReference from "../../lib/Models/Catalog/MagdaReference";
+import MagdaReference from "../../lib/Models/Catalog/CatalogReferences/MagdaReference";
 import WebMapServiceCatalogGroup from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import UrlReference, {
   UrlToCatalogMemberMapping
-} from "../../lib/Models/Catalog/UrlReference";
+} from "../../lib/Models/Catalog/CatalogReferences/UrlReference";
 import Cesium from "../../lib/Models/Cesium";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import { BaseModel } from "../../lib/Models/Definition/Model";

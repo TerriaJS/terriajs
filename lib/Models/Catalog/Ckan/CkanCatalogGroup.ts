@@ -12,7 +12,7 @@ import UrlMixin from "../../../ModelMixins/UrlMixin";
 import CkanCatalogGroupTraits from "../../../Traits/TraitsClasses/CkanCatalogGroupTraits";
 import CkanSharedTraits from "../../../Traits/TraitsClasses/CkanSharedTraits";
 import ModelReference from "../../../Traits/ModelReference";
-import CatalogGroup from "../CatalogGroupNew";
+import CatalogGroup from "../CatalogGroup";
 import { CkanDataset, CkanServerResponse } from "./CkanDefinitions";
 import CkanItemReference from "./CkanItemReference";
 import CommonStrata from "../../Definition/CommonStrata";

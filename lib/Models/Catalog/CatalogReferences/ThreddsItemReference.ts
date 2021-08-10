@@ -4,7 +4,9 @@ import ReferenceMixin from "../../../ModelMixins/ReferenceMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import ThreddsItemReferenceTraits from "../../../Traits/TraitsClasses/ThreddsItemReferenceTraits";
 import ModelTraits from "../../../Traits/ModelTraits";
-import ThreddsCatalogGroup, { ThreddsDataset } from "./ThreddsCatalogGroup";
+import ThreddsCatalogGroup, {
+  ThreddsDataset
+} from "../CatalogGroups/ThreddsCatalogGroup";
 import CatalogMemberFactory from "../CatalogMemberFactory";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";

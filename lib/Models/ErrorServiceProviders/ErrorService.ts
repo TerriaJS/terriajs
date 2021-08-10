@@ -1,4 +1,4 @@
-import TerriaError from "../Core/TerriaError";
+import TerriaError from "../../Core/TerriaError";
 
 export interface ErrorServiceOptions {
   provider: string;
@@ -22,9 +22,7 @@ export async function initializeErrorServiceProvider(
   const configuration = options?.configuration;
 
   if (provider === "rollbar") {
-    const rollbarModule = await import(
-      "./ErrorServiceProviders/RollbarErrorServiceProvider"
-    );
+    const rollbarModule = await import("./RollbarErrorServiceProvider");
     const rollbarProvider = new rollbarModule.default(configuration);
     return rollbarProvider;
   } else {

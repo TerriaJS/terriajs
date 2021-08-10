@@ -1,5 +1,5 @@
 import { runInAction } from "mobx";
-import CatalogGroup from "../../../../lib/Models/Catalog/CatalogGroupNew";
+import CatalogGroup from "../../../../lib/Models/Catalog/CatalogGroup";
 import OpenDataSoftCatalogGroup from "../../../../lib/Models/Catalog/CatalogGroups/OpenDataSoftCatalogGroup";
 import OpenDataSoftCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/OpenDataSoftCatalogItem";
 import Terria from "../../../../lib/Models/Terria";

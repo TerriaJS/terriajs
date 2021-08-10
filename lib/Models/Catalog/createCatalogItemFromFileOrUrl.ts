@@ -5,7 +5,7 @@ import TerriaError from "../../Core/TerriaError";
 import ViewState from "../../ReactViewModels/ViewState";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import CommonStrata from "../Definition/CommonStrata";
-import createUrlReferenceFromUrl from "./createUrlReferenceFromUrl";
+import createUrlReferenceFromUrl from "./CatalogReferences/createUrlReferenceFromUrl";
 import { BaseModel } from "../Definition/Model";
 import Terria from "../Terria";
 import upsertModelFromJson from "../Definition/upsertModelFromJson";

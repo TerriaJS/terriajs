@@ -1,4 +1,4 @@
-import { initializeErrorServiceProvider } from "../../lib/Models/ErrorService";
+import { initializeErrorServiceProvider } from "../../lib/Models/ErrorServiceProviders/ErrorService";
 import RollbarErrorServiceProvider from "../../lib/Models/ErrorServiceProviders/RollbarErrorServiceProvider";
 
 describe("initializeErrorServiceProvider", function() {

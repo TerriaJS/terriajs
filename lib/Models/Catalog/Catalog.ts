@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { autorun, observable } from "mobx";
 import { USER_ADDED_CATEGORY_ID } from "../../Core/addedByUser";
-import CatalogGroup from "./CatalogGroupNew";
+import CatalogGroup from "./CatalogGroup";
 import CommonStrata from "../Definition/CommonStrata";
 import Terria from "../Terria";
 import Group from "./Group";

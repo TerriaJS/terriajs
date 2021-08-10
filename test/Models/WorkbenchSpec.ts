@@ -1,5 +1,5 @@
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
-import MagdaReference from "../../lib/Models/Catalog/MagdaReference";
+import MagdaReference from "../../lib/Models/Catalog/CatalogReferences/MagdaReference";
 import { BaseModel } from "../../lib/Models/Definition/Model";
 import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";

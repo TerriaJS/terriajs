@@ -1,8 +1,8 @@
-import getDereferencedIfExists from "../../Core/getDereferencedIfExists";
-import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
-import SplitItemReferenceTraits from "../../Traits/TraitsClasses/SplitItemReferenceTraits";
-import CreateModel from "../Definition/CreateModel";
-import { BaseModel } from "../Definition/Model";
+import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
+import ReferenceMixin from "../../../ModelMixins/ReferenceMixin";
+import SplitItemReferenceTraits from "../../../Traits/TraitsClasses/SplitItemReferenceTraits";
+import CreateModel from "../../Definition/CreateModel";
+import { BaseModel } from "../../Definition/Model";
 
 /**
  * This item is a reference to a copy of the original item from which it was created.

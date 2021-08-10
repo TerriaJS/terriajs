@@ -1,9 +1,9 @@
-import Terria from "../Terria";
-import CommonStrata from "../Definition/CommonStrata";
-import upsertModelFromJson from "../Definition/upsertModelFromJson";
-import CatalogMemberFactory from "./CatalogMemberFactory";
+import Terria from "../../Terria";
+import CommonStrata from "../../Definition/CommonStrata";
+import upsertModelFromJson from "../../Definition/upsertModelFromJson";
+import CatalogMemberFactory from "../CatalogMemberFactory";
 import UrlReference from "./UrlReference";
-import TerriaError from "../../Core/TerriaError";
+import TerriaError from "../../../Core/TerriaError";
 
 export default async function createUrlReferenceFromUrl(
   url: string,

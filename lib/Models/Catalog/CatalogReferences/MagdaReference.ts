@@ -1,35 +1,35 @@
 import i18next from "i18next";
 import { computed, toJS } from "mobx";
 import { createTransformer } from "mobx-utils";
-import filterOutUndefined from "../../Core/filterOutUndefined";
-import isDefined from "../../Core/isDefined";
+import filterOutUndefined from "../../../Core/filterOutUndefined";
+import isDefined from "../../../Core/isDefined";
 import {
   isJsonObject,
   isJsonString,
   JsonArray,
   JsonObject
-} from "../../Core/Json";
-import loadJson from "../../Core/loadJson";
-import runLater from "../../Core/runLater";
-import TerriaError from "../../Core/TerriaError";
-import AccessControlMixin from "../../ModelMixins/AccessControlMixin";
-import GroupMixin from "../../ModelMixins/GroupMixin";
-import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
-import UrlMixin from "../../ModelMixins/UrlMixin";
-import MagdaDistributionFormatTraits from "../../Traits/TraitsClasses/MagdaDistributionFormatTraits";
-import MagdaReferenceTraits from "../../Traits/TraitsClasses/MagdaReferenceTraits";
-import ModelTraits from "../../Traits/ModelTraits";
-import CatalogMemberFactory from "./CatalogMemberFactory";
-import CommonStrata from "../Definition/CommonStrata";
-import CreateModel from "../Definition/CreateModel";
-import createStratumInstance from "../Definition/createStratumInstance";
-import { BaseModel } from "../Definition/Model";
-import ModelPropertiesFromTraits from "../Definition/ModelPropertiesFromTraits";
-import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import StratumFromTraits from "../Definition/StratumFromTraits";
-import StratumOrder from "../Definition/StratumOrder";
-import Terria from "../Terria";
-import updateModelFromJson from "../Definition/updateModelFromJson";
+} from "../../../Core/Json";
+import loadJson from "../../../Core/loadJson";
+import runLater from "../../../Core/runLater";
+import TerriaError from "../../../Core/TerriaError";
+import AccessControlMixin from "../../../ModelMixins/AccessControlMixin";
+import GroupMixin from "../../../ModelMixins/GroupMixin";
+import ReferenceMixin from "../../../ModelMixins/ReferenceMixin";
+import UrlMixin from "../../../ModelMixins/UrlMixin";
+import MagdaDistributionFormatTraits from "../../../Traits/TraitsClasses/MagdaDistributionFormatTraits";
+import MagdaReferenceTraits from "../../../Traits/TraitsClasses/MagdaReferenceTraits";
+import ModelTraits from "../../../Traits/ModelTraits";
+import CatalogMemberFactory from "../CatalogMemberFactory";
+import CommonStrata from "../../Definition/CommonStrata";
+import CreateModel from "../../Definition/CreateModel";
+import createStratumInstance from "../../Definition/createStratumInstance";
+import { BaseModel } from "../../Definition/Model";
+import ModelPropertiesFromTraits from "../../Definition/ModelPropertiesFromTraits";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import StratumFromTraits from "../../Definition/StratumFromTraits";
+import StratumOrder from "../../Definition/StratumOrder";
+import Terria from "../../Terria";
+import updateModelFromJson from "../../Definition/updateModelFromJson";
 
 const magdaRecordStratum = "magda-record";
 StratumOrder.addDefaultStratum(magdaRecordStratum);

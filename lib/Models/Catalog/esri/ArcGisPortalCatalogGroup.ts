@@ -18,7 +18,7 @@ import {
   ArcGisPortalSearchResponse
 } from "./ArcGisPortalDefinitions";
 import ArcGisPortalItemReference from "./ArcGisPortalItemReference";
-import CatalogGroup from "../CatalogGroupNew";
+import CatalogGroup from "../CatalogGroup";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import LoadableStratum from "../../Definition/LoadableStratum";

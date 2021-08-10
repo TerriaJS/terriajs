@@ -1,10 +1,10 @@
 import { runInAction } from "mobx";
-import CatalogGroup from "../../lib/Models/Catalog/CatalogGroupNew";
+import CatalogGroup from "../../lib/Models/Catalog/CatalogGroup";
 import CatalogMemberFactory from "../../lib/Models/Catalog/CatalogMemberFactory";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import GeoJsonCatalogItem from "../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
-import MagdaReference from "../../lib/Models/Catalog/MagdaReference";
+import MagdaReference from "../../lib/Models/Catalog/CatalogReferences/MagdaReference";
 import Terria from "../../lib/Models/Terria";
 import StubCatalogItem from "../../lib/Models/Catalog/CatalogItems/StubCatalogItem";
 import { BaseModel } from "../../lib/Models/Definition/Model";

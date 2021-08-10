@@ -1,11 +1,11 @@
 import { configure, runInAction } from "mobx";
 import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import Terria from "../../../../lib/Models/Terria";
-import { getLineStyleCesium } from "../../../../lib/Models/Catalog/esri/esriLineStyle";
+import { getLineStyleCesium } from "../../../../lib/Models/Catalog/Esri/esriLineStyle";
 import ArcGisFeatureServerCatalogItem, {
   convertEsriPointSizeToPixels,
   convertEsriColorToCesiumColor
-} from "../../../../lib/Models/Catalog/esri/ArcGisFeatureServerCatalogItem";
+} from "../../../../lib/Models/Catalog/Esri/ArcGisFeatureServerCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import isDefined from "../../../../lib/Core/isDefined";
 import { JsonArray } from "../../../../lib/Core/Json";

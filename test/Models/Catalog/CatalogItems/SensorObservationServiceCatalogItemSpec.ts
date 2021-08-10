@@ -1,6 +1,6 @@
 import { runInAction } from "mobx";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
-import SensorObservationServiceCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/SensorObservationServiceCatalogItem";
+import SensorObservationServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/SensorObservationServiceCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import SimpleCatalogItem from "../../../Helpers/SimpleCatalogItem";
 import TableAutomaticStylesStratum from "../../../../lib/Table/TableAutomaticStylesStratum";

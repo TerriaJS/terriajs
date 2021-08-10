@@ -3,7 +3,7 @@ import { configure, runInAction } from "mobx";
 import URI from "urijs";
 import { JsonObject } from "../../../../lib/Core/Json";
 import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
-import CatalogGroup from "../../../../lib/Models/Catalog/CatalogGroupNew";
+import CatalogGroup from "../../../../lib/Models/Catalog/CatalogGroup";
 import CkanCatalogGroup, {
   CkanServerStratum
 } from "../../../../lib/Models/Catalog/Ckan/CkanCatalogGroup";

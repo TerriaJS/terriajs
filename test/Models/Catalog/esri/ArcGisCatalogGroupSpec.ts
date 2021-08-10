@@ -1,17 +1,17 @@
 import { configure, runInAction } from "mobx";
 import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import Terria from "../../../../lib/Models/Terria";
-import ArcGisCatalogGroup from "../../../../lib/Models/Catalog/esri/ArcGisCatalogGroup";
+import ArcGisCatalogGroup from "../../../../lib/Models/Catalog/Esri/ArcGisCatalogGroup";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import i18next from "i18next";
-import ArcGisMapServerCatalogItem from "../../../../lib/Models/Catalog/esri/ArcGisMapServerCatalogItem";
+import ArcGisMapServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogItem";
 import TerriaError from "../../../../lib/Core/TerriaError";
 import ArcGisMapServerCatalogGroup, {
   MapServerStratum
-} from "../../../../lib/Models/Catalog/esri/ArcGisMapServerCatalogGroup";
+} from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogGroup";
 import ArcGisFeatureServerCatalogGroup, {
   FeatureServerStratum
-} from "../../../../lib/Models/Catalog/esri/ArcGisFeatureServerCatalogGroup";
+} from "../../../../lib/Models/Catalog/Esri/ArcGisFeatureServerCatalogGroup";
 
 configure({
   enforceActions: "observed",

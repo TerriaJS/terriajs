@@ -17,8 +17,8 @@ import CswCatalogGroupTraits, {
   QueryPropertyName
 } from "../../../Traits/TraitsClasses/CswCatalogGroupTraits";
 import ModelReference from "../../../Traits/ModelReference";
-import ArcGisMapServerCatalogItem from "../esri/ArcGisMapServerCatalogItem";
-import CatalogGroup from "../CatalogGroupNew";
+import ArcGisMapServerCatalogItem from "../Esri/ArcGisMapServerCatalogItem";
+import CatalogGroup from "../CatalogGroup";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import CsvCatalogItem from "../CatalogItems/CsvCatalogItem";
@@ -26,10 +26,10 @@ import GeoJsonCatalogItem from "../CatalogItems/GeoJsonCatalogItem";
 import KmlCatalogItem from "../CatalogItems/KmlCatalogItem";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel, ModelConstructor } from "../../Definition/Model";
-import { BoundingBox } from "../Ows/OwsInterfaces";
+import { BoundingBox } from "./OwsInterfaces";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
-import WebMapServiceCatalogItem from "../Ows/WebMapServiceCatalogItem";
+import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
 
 const defaultGetRecordsTemplate = require("../Ows/CswGetRecordsTemplate.xml");
 // WPS is disabled until wps-group support

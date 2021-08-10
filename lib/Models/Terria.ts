@@ -58,13 +58,13 @@ import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import { BaseMapsModel } from "./BaseMaps/BaseMapsModel";
 import CameraView from "./CameraView";
-import CatalogGroup from "./Catalog/CatalogGroupNew";
+import CatalogGroup from "./Catalog/CatalogGroup";
 import CatalogMemberFactory from "./Catalog/CatalogMemberFactory";
-import Catalog from "./Catalog/CatalogNew";
+import Catalog from "./Catalog/Catalog";
 import MagdaReference, {
   MagdaReferenceHeaders
-} from "./Catalog/MagdaReference";
-import SplitItemReference from "./Catalog/SplitItemReference";
+} from "./Catalog/CatalogReferences/MagdaReference";
+import SplitItemReference from "./Catalog/CatalogReferences/SplitItemReference";
 import CommonStrata from "./Definition/CommonStrata";
 import hasTraits from "./Definition/hasTraits";
 import { BaseModel } from "./Definition/Model";
@@ -74,7 +74,7 @@ import {
   ErrorServiceOptions,
   ErrorServiceProvider,
   initializeErrorServiceProvider
-} from "./ErrorService";
+} from "./ErrorServiceProviders/ErrorService";
 import StubErrorServiceProvider from "./ErrorServiceProviders/StubErrorServiceProvider";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";

@@ -1,12 +1,12 @@
 import CommonStrata from "../../Models/Definition/CommonStrata";
-import SensorObservationServiceCatalogItem from "../../Models/Catalog/CatalogItems/SensorObservationServiceCatalogItem";
+import SensorObservationServiceCatalogItem from "../../Models/Catalog/Ows/SensorObservationServiceCatalogItem";
 import { ProcessNodeContext } from "./CustomComponent";
 import ChartCustomComponent, {
   ChartCustomComponentAttributes
 } from "./ChartCustomComponent";
 import { BaseModel } from "../../Models/Definition/Model";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import SplitItemReference from "../../Models/Catalog/SplitItemReference";
+import SplitItemReference from "../../Models/Catalog/CatalogReferences/SplitItemReference";
 interface SOSChartCustomComponentAttributes
   extends ChartCustomComponentAttributes {
   name?: string;

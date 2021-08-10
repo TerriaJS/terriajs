@@ -1,7 +1,7 @@
 import {
   getLineStyleCesium,
   getLineStyleLeaflet
-} from "../../../../lib/Models/Catalog/esri/esriLineStyle";
+} from "../../../../lib/Models/Catalog/Esri/esriLineStyle";
 
 describe("esriLineStyle", function() {
   describe("corect cesium values", function() {

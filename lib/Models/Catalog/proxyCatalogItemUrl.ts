@@ -2,7 +2,7 @@
 
 import UrlMixin from "../../ModelMixins/UrlMixin";
 import { BaseModel } from "../Definition/Model";
-import UrlReference from "./UrlReference";
+import UrlReference from "./CatalogReferences/UrlReference";
 import isDefined from "../../Core/isDefined";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 

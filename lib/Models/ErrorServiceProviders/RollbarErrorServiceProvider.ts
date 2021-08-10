@@ -1,6 +1,6 @@
 import Rollbar from "rollbar";
 import TerriaError from "../../Core/TerriaError";
-import { ErrorServiceProvider } from "../ErrorService";
+import { ErrorServiceProvider } from "./ErrorService";
 
 export default class RollbarErrorServiceProvider
   implements ErrorServiceProvider {
