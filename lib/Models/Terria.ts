@@ -70,6 +70,12 @@ import hasTraits from "./Definition/hasTraits";
 import { BaseModel } from "./Definition/Model";
 import updateModelFromJson from "./Definition/updateModelFromJson";
 import upsertModelFromJson from "./Definition/upsertModelFromJson";
+import {
+  ErrorServiceOptions,
+  ErrorServiceProvider,
+  initializeErrorServiceProvider
+} from "./ErrorService";
+import StubErrorServiceProvider from "./ErrorServiceProviders/StubErrorServiceProvider";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import IElementConfig from "./IElementConfig";
@@ -199,10 +205,12 @@ interface ConfigParameters {
    * A Google API key for [Google Analytics](https://analytics.google.com).  If specified, TerriaJS will send various events about how it's used to Google Analytics.
    */
   googleAnalyticsKey?: string;
+
   /**
-   * Your `post_client_item` from Rollbar - as of right now, TerriaMap also needs to be modified such that you construct `RollbarErrorProvider` in `index.js`
+   * Error service provider configuration.
    */
-  rollbarAccessToken?: string;
+  errorService?: ErrorServiceOptions;
+
   globalDisclaimer?: any;
   /**
    * True to display welcome message on startup.
@@ -405,7 +413,7 @@ export default class Terria {
     magdaReferenceHeaders: undefined,
     locationSearchBoundingBox: undefined,
     googleAnalyticsKey: undefined,
-    rollbarAccessToken: undefined,
+    errorService: undefined,
     globalDisclaimer: undefined,
     theme: {},
     showWelcomeMessage: false,
@@ -507,6 +515,13 @@ export default class Terria {
 
   private readonly developmentEnv = process?.env?.NODE_ENV === "development";
 
+  /**
+   * An error service instance. The instance can be configured by setting the
+   * `errorService` config parameter. Here we initialize it to stub provider so
+   * that the `terria.errorService` always exists.
+   */
+  errorService: ErrorServiceProvider = new StubErrorServiceProvider();
+
   constructor(options: TerriaOptions = {}) {
     if (options.baseUrl) {
       if (options.baseUrl.lastIndexOf("/") !== options.baseUrl.length - 1) {
@@ -543,6 +558,8 @@ export default class Terria {
   ) {
     const terriaError = TerriaError.from(error, overrides);
 
+    // Log error to error service
+    this.errorService.error(terriaError);
     if (
       forceRaiseToUser ||
       (this.userProperties.get("ignoreErrors") !== "1" &&
@@ -666,6 +683,19 @@ export default class Terria {
       this.modelIdShareKeysMap.set(id, [shareKey]);
   }
 
+  /**
+   * Initialize errorService from config parameters.
+   */
+  setupErrorServiceProvider() {
+    initializeErrorServiceProvider(this.configParameters.errorService)
+      .then(errorService => {
+        this.errorService = errorService;
+      })
+      .catch(e => {
+        console.error("Failed to initialize error service", e);
+      });
+  }
+
   setupInitializationUrls(baseUri: uri.URI, config: any) {
     const initializationUrls: string[] = config?.initializationUrls || [];
     const initSources: InitSource[] = initializationUrls.map(url => ({
@@ -756,6 +786,7 @@ export default class Terria {
         if (isJsonObject(config) && isJsonObject(config.parameters)) {
           this.updateParameters(config.parameters);
         }
+        this.setupErrorServiceProvider();
         this.setupInitializationUrls(baseUri, config);
       });
     } catch (error) {
