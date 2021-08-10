@@ -10,6 +10,7 @@ import { captureCurrentView, moveToSavedView } from "./ViewCapture";
 function RCPageEditor(props) {
   const [page, setPage] = useState(null);
   const [title, setTitle] = useState("");
+  const [section, setSection] = useState("");
   const [mapView, setMapView] = useState(null);
   const [message, setMessage] = useState("");
   const history = useHistory();
@@ -24,6 +25,7 @@ function RCPageEditor(props) {
         const data = story.data.getPage;
         setPage(data);
         setTitle(data.title);
+        setSection(data.section);
 
         // Map view settings
         const mapView = {
@@ -47,6 +49,7 @@ function RCPageEditor(props) {
     const pageDetails = {
       id: page.id,
       title: title,
+      section: section,
       camera: JSON.stringify(mapView.initialCamera),
       baseMapName: mapView.baseMapName,
       currentTime: {
@@ -89,7 +92,25 @@ function RCPageEditor(props) {
           />
           <span className={Styles.highlight} />
           <span className={Styles.bar} />
-          <label className={title && Styles.topLabel}>Story Title</label>
+          <label className={title && Styles.topLabel}>Page Title</label>
+        </div>
+
+        <div className={Styles.group}>
+          <select
+            required
+            className={Styles.RCSelect}
+            value={section}
+            onChange={e => setSection(e.target.value)}
+          >
+            <option value="INTRODUCTION">Introduction</option>
+            <option value="CONNECTION">Connection</option>
+            <option value="CLIMATE_EVENT">Climate event</option>
+            <option value="LOCAL_IMPACT">Local impact</option>
+            <option value="CONNECTION_IMPACT">Connection impact</option>
+            <option value="EU_IMPACT">EU impact</option>
+            <option value="GLOBAL_IMPACT">Global impact</option>
+          </select>
+          <label className={title && Styles.topLabel}>Section</label>
         </div>
 
         <div className={Styles.group}>
