@@ -5,10 +5,12 @@ import OpenDataSoftCatalogItem from "../../../../lib/Models/Catalog/CatalogItems
 import Terria from "../../../../lib/Models/Terria";
 import fetchMock from "fetch-mock";
 
-const facets = JSON.stringify(require("../../wwwroot/test/ods/facets.json"));
+const facets = JSON.stringify(
+  require("../../../../wwwroot/test/ods/facets.json")
+);
 
 const datasets = JSON.stringify(
-  require("../../wwwroot/test/ods/datasets.json")
+  require("../../../../wwwroot/test/ods/datasets.json")
 );
 
 describe("OpenDataSoftCatalogGroup", function() {

@@ -8,10 +8,10 @@ var TimeIntervalCollection = require("terriajs-cesium/Source/Core/TimeIntervalCo
 var WebMercatorTilingScheme = require("terriajs-cesium/Source/Core/WebMercatorTilingScheme")
   .default;
 
-var ImageryLayerCatalogItem = require("../../lib/Models/ImageryLayerCatalogItem");
-var LegendUrl = require("../../lib/Map/LegendUrl");
-var Terria = require("../../lib/Models/Terria");
-var WebMapTileServiceCatalogItem = require("../../lib/Models/WebMapTileServiceCatalogItem");
+var ImageryLayerCatalogItem = require("../../../../lib/Models/ImageryLayerCatalogItem");
+var LegendUrl = require("../../../../lib/Map/LegendUrl");
+var Terria = require("../../../../lib/Models/Terria");
+var WebMapTileServiceCatalogItem = require("../../../../lib/Models/WebMapTileServiceCatalogItem");
 
 var terria;
 var wmtsItem;

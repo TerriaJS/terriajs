@@ -1,4 +1,4 @@
-import StratumOrder from "../../lib/Models/Definition/StratumOrder";
+import StratumOrder from "../../../lib/Models/Definition/StratumOrder";
 
 describe("StratumOrder", function() {
   it("initially has a definition and a user stratum", function() {

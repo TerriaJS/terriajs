@@ -1,21 +1,21 @@
 import { configure, reaction, toJS } from "mobx";
-import addUserCatalogMember from "../../lib/Models/Catalog/addUserCatalogMember";
-import CommonStrata from "../../lib/Models/Definition/CommonStrata";
-import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
-import Terria from "../../lib/Models/Terria";
-import YDYRCatalogFunction from "../../lib/Models/Catalog/CatalogFunctions/YDYRCatalogFunction";
-import YDYRCatalogFunctionJob from "../../lib/Models/Catalog/CatalogFunctions/YDYRCatalogFunctionJob";
-import "../SpecHelpers";
+import addUserCatalogMember from "../../../../lib/Models/Catalog/addUserCatalogMember";
+import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
+import CsvCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
+import Terria from "../../../../lib/Models/Terria";
+import YDYRCatalogFunction from "../../../../lib/Models/Catalog/CatalogFunctions/YDYRCatalogFunction";
+import YDYRCatalogFunctionJob from "../../../../lib/Models/Catalog/CatalogFunctions/YDYRCatalogFunctionJob";
+import "../../../SpecHelpers";
 
 const regionMapping = JSON.stringify(
-  require("../../wwwroot/data/regionMapping.json")
+  require("../../../../wwwroot/data/regionMapping.json")
 );
 configure({
   enforceActions: "observed",
   computedRequiresReaction: true
 });
 
-const lga11Csv = require("raw-loader!../../wwwroot/test/csv/lga_code_2011.csv");
+const lga11Csv = require("raw-loader!../../../../wwwroot/test/csv/lga_code_2011.csv");
 
 describe("YDYRCatalogFunction", function() {
   let terria: Terria;

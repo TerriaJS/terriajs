@@ -1,7 +1,7 @@
 "use strict";
 
-var Terria = require("../../lib/Models/Terria");
-var WfsFeaturesCatalogGroup = require("../../lib/Models/WfsFeaturesCatalogGroup");
+var Terria = require("../../../../lib/Models/Terria");
+var WfsFeaturesCatalogGroup = require("../../../../lib/Models/WfsFeaturesCatalogGroup");
 
 var cedJson = {
   name: "Commonwealth Electoral Divisions (group from features)",

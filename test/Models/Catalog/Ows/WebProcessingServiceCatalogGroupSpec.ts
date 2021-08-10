@@ -1,12 +1,11 @@
 import i18next from "i18next";
-import TerriaError from "../../lib/Core/TerriaError";
-import CommonStrata from "../../lib/Models/Definition/CommonStrata";
-import Terria from "../../lib/Models/Terria";
-import WebProcessingServiceCatalogFunction from "../../lib/Models/Catalog/Ows/WebProcessingServiceCatalogFunction";
-import WebProcessingServiceCatalogGroup from "../../lib/Models/Catalog/Ows/WebProcessingServiceCatalogGroup";
-import "../SpecMain";
+import WebProcessingServiceCatalogFunction from "../../../../lib/Models/Catalog/Ows/WebProcessingServiceCatalogFunction";
+import WebProcessingServiceCatalogGroup from "../../../../lib/Models/Catalog/Ows/WebProcessingServiceCatalogGroup";
+import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
+import Terria from "../../../../lib/Models/Terria";
+import "../../../SpecMain";
 
-const GetCapabilitiesXml = require("raw-loader!../../wwwroot/test/WPS/GetCapabilities.xml");
+const GetCapabilitiesXml = require("raw-loader!../../../../wwwroot/test/WPS/GetCapabilities.xml");
 
 describe("WebProcessingServiceCatalogGroup", function() {
   let terria: Terria;

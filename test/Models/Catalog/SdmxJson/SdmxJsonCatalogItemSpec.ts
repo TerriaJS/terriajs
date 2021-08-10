@@ -1,27 +1,27 @@
 import { runInAction } from "mobx";
-import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
-import SdmxJsonCatalogItem from "../../lib/Models/Catalog/SdmxJson/SdmxJsonCatalogItem";
-import Terria from "../../lib/Models/Terria";
-import { ModelOverrideTraits } from "../../lib/Traits/TraitsClasses/SdmxCommonTraits";
+import createStratumInstance from "../../../../lib/Models/Definition/createStratumInstance";
+import SdmxJsonCatalogItem from "../../../../lib/Models/Catalog/SdmxJson/SdmxJsonCatalogItem";
+import Terria from "../../../../lib/Models/Terria";
+import { ModelOverrideTraits } from "../../../../lib/Traits/TraitsClasses/SdmxCommonTraits";
 
 const regionMapping = JSON.stringify(
-  require("../../wwwroot/data/regionMapping.json")
+  require("../../../../wwwroot/data/regionMapping.json")
 );
 
-const dataflowNoRegionData = require("raw-loader!../../wwwroot/test/SDMX-JSON/data-noregion.csv");
-const dataflowRegionData = require("raw-loader!../../wwwroot/test/SDMX-JSON/data-region.csv");
-const dataflowRegionTimeData = require("raw-loader!../../wwwroot/test/SDMX-JSON/data-region-time.csv");
+const dataflowNoRegionData = require("raw-loader!../../../../wwwroot/test/SDMX-JSON/data-noregion.csv");
+const dataflowRegionData = require("raw-loader!../../../../wwwroot/test/SDMX-JSON/data-region.csv");
+const dataflowRegionTimeData = require("raw-loader!../../../../wwwroot/test/SDMX-JSON/data-region-time.csv");
 
 const dataflowNoRegion = JSON.stringify(
-  require("../../wwwroot/test/SDMX-JSON/dataflow-noregion.json")
+  require("../../../../wwwroot/test/SDMX-JSON/dataflow-noregion.json")
 );
 
 const dataflowRegion = JSON.stringify(
-  require("../../wwwroot/test/SDMX-JSON/dataflow-region.json")
+  require("../../../../wwwroot/test/SDMX-JSON/dataflow-region.json")
 );
 
 const dataflowRegionTime = JSON.stringify(
-  require("../../wwwroot/test/SDMX-JSON/dataflow-region-time.json")
+  require("../../../../wwwroot/test/SDMX-JSON/dataflow-region-time.json")
 );
 
 describe("SdmxJsonCatalogItem", function() {

@@ -1,8 +1,8 @@
 import i18next from "i18next";
 import { runInAction } from "mobx";
-import CatalogMemberMixin from "../../lib/ModelMixins/CatalogMemberMixin";
-import Terria from "../../lib/Models/Terria";
-import WebFeatureServiceCatalogGroup from "../../lib/Models/Catalog/Ows/WebFeatureServiceCatalogGroup";
+import CatalogMemberMixin from "../../../../lib/ModelMixins/CatalogMemberMixin";
+import Terria from "../../../../lib/Models/Terria";
+import WebFeatureServiceCatalogGroup from "../../../../lib/Models/Catalog/Ows/WebFeatureServiceCatalogGroup";
 
 describe("WebFeatureServiceCatalogGroup", function() {
   let terria: Terria;

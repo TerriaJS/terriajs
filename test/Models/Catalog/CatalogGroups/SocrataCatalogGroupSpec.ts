@@ -5,11 +5,11 @@ import CatalogGroup from "../../../../lib/Models/Catalog/CatalogGroupNew";
 import SocrataMapViewCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/SocrataMapViewCatalogItem";
 
 const facets = JSON.stringify(
-  require("../../wwwroot/test/Socrata/facets.json")
+  require("../../../../wwwroot/test/Socrata/facets.json")
 );
 
 const search = JSON.stringify(
-  require("../../wwwroot/test/Socrata/search.json")
+  require("../../../../wwwroot/test/Socrata/search.json")
 );
 
 describe("SocrataCatalogGroup", function() {

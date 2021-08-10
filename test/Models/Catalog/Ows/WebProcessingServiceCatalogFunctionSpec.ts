@@ -1,39 +1,39 @@
 import { configure, reaction, runInAction } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
-import isDefined from "../../lib/Core/isDefined";
-import TerriaError from "../../lib/Core/TerriaError";
-import MappableMixin from "../../lib/ModelMixins/MappableMixin";
-import CommonStrata from "../../lib/Models/Definition/CommonStrata";
-import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
-import DateTimeParameter from "../../lib/Models/FunctionParameters/DateTimeParameter";
-import EnumerationParameter from "../../lib/Models/FunctionParameters/EnumerationParameter";
-import GeoJsonParameter from "../../lib/Models/FunctionParameters/GeoJsonParameter";
-import LineParameter from "../../lib/Models/FunctionParameters/LineParameter";
-import PointParameter from "../../lib/Models/FunctionParameters/PointParameter";
-import PolygonParameter from "../../lib/Models/FunctionParameters/PolygonParameter";
-import RectangleParameter from "../../lib/Models/FunctionParameters/RectangleParameter";
-import StringParameter from "../../lib/Models/FunctionParameters/StringParameter";
-import Terria from "../../lib/Models/Terria";
-import WebProcessingServiceCatalogFunction from "../../lib/Models/Catalog/Ows/WebProcessingServiceCatalogFunction";
-import WebProcessingServiceCatalogFunctionJob from "../../lib/Models/Catalog/Ows/WebProcessingServiceCatalogFunctionJob";
-import "../SpecHelpers";
+import isDefined from "../../../../lib/Core/isDefined";
+import TerriaError from "../../../../lib/Core/TerriaError";
+import MappableMixin from "../../../../lib/ModelMixins/MappableMixin";
+import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
+import CsvCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
+import DateTimeParameter from "../../../../lib/Models/FunctionParameters/DateTimeParameter";
+import EnumerationParameter from "../../../../lib/Models/FunctionParameters/EnumerationParameter";
+import GeoJsonParameter from "../../../../lib/Models/FunctionParameters/GeoJsonParameter";
+import LineParameter from "../../../../lib/Models/FunctionParameters/LineParameter";
+import PointParameter from "../../../../lib/Models/FunctionParameters/PointParameter";
+import PolygonParameter from "../../../../lib/Models/FunctionParameters/PolygonParameter";
+import RectangleParameter from "../../../../lib/Models/FunctionParameters/RectangleParameter";
+import StringParameter from "../../../../lib/Models/FunctionParameters/StringParameter";
+import Terria from "../../../../lib/Models/Terria";
+import WebProcessingServiceCatalogFunction from "../../../../lib/Models/Catalog/Ows/WebProcessingServiceCatalogFunction";
+import WebProcessingServiceCatalogFunctionJob from "../../../../lib/Models/Catalog/Ows/WebProcessingServiceCatalogFunctionJob";
+import "../../../SpecHelpers";
 
 const regionMapping = JSON.stringify(
-  require("../../wwwroot/data/regionMapping.json")
+  require("../../../../wwwroot/data/regionMapping.json")
 );
 configure({
   enforceActions: "observed",
   computedRequiresReaction: true
 });
 
-const processDescriptionsXml = require("raw-loader!../../wwwroot/test/WPS/ProcessDescriptions.xml");
+const processDescriptionsXml = require("raw-loader!../../../../wwwroot/test/WPS/ProcessDescriptions.xml");
 
-const executeResponseXml = require("raw-loader!../../wwwroot/test/WPS/ExecuteResponse.xml");
+const executeResponseXml = require("raw-loader!../../../../wwwroot/test/WPS/ExecuteResponse.xml");
 
-const failedExecuteResponseXml = require("raw-loader!../../wwwroot/test/WPS/FailedExecuteResponse.xml");
+const failedExecuteResponseXml = require("raw-loader!../../../../wwwroot/test/WPS/FailedExecuteResponse.xml");
 
-const pendingExecuteResponseXml = require("raw-loader!../../wwwroot/test/WPS/PendingExecuteResponse.xml");
+const pendingExecuteResponseXml = require("raw-loader!../../../../wwwroot/test/WPS/PendingExecuteResponse.xml");
 
 describe("WebProcessingServiceCatalogFunction", function() {
   let wps: WebProcessingServiceCatalogFunction;

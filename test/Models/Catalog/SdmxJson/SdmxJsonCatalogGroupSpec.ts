@@ -5,19 +5,19 @@ import CatalogGroup from "../../../../lib/Models/Catalog/CatalogGroupNew";
 import SdmxJsonCatalogItem from "../../../../lib/Models/Catalog/SdmxJson/SdmxJsonCatalogItem";
 
 const agencyScheme = JSON.stringify(
-  require("../../wwwroot/test/SDMX-JSON/agency-scheme.json")
+  require("../../../../wwwroot/test/SDMX-JSON/agency-scheme.json")
 );
 
 const categoryScheme = JSON.stringify(
-  require("../../wwwroot/test/SDMX-JSON/category-scheme.json")
+  require("../../../../wwwroot/test/SDMX-JSON/category-scheme.json")
 );
 
 const dataflowNoRegion = JSON.stringify(
-  require("../../wwwroot/test/SDMX-JSON/dataflow-noregion.json")
+  require("../../../../wwwroot/test/SDMX-JSON/dataflow-noregion.json")
 );
 
 const dataflowRegion = JSON.stringify(
-  require("../../wwwroot/test/SDMX-JSON/dataflow-region.json")
+  require("../../../../wwwroot/test/SDMX-JSON/dataflow-region.json")
 );
 
 describe("SdmxCatalogGroup", function() {
