@@ -15,7 +15,7 @@ import ItemSearchProvider, {
   ItemSearchResult,
   NumericItemSearchParameter,
   TextItemSearchParameter
-} from "../../../Models/ItemSearchProvider";
+} from "../../../Models/ItemSearchProviders/ItemSearchProvider";
 import ErrorComponent from "./ErrorComponent";
 import { ItemSearchQuery } from "./ItemSearchTool";
 import Loading from "./Loading";

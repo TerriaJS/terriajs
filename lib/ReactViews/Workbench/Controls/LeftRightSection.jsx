@@ -10,10 +10,9 @@ import { withTranslation } from "react-i18next";
 import styled from "styled-components";
 import defined from "terriajs-cesium/Source/Core/defined";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
-import CommonStrata from "../../../Models/CommonStrata";
-import hasTraits from "../../../Models/hasTraits";
+import CommonStrata from "../../../Models/Definition/CommonStrata";
+import hasTraits from "../../../Models/Definition/hasTraits";
 import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
-
 import Styles from "./left-right-section.scss";
 
 const LeftRightButton = styled.button`

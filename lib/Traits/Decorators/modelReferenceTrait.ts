@@ -1,10 +1,10 @@
 import { computed } from "mobx";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
-import createStubCatalogItem from "../../Models/createStubCatalogItem";
-import { BaseModel } from "../../Models/Model";
-import ModelFactory from "../../Models/ModelFactory";
-import upsertModelFromJson from "../../Models/upsertModelFromJson";
+import createStubCatalogItem from "../../Models/Catalog/createStubCatalogItem";
+import { BaseModel } from "../../Models/Definition/Model";
+import ModelFactory from "../../Models/Definition/ModelFactory";
+import upsertModelFromJson from "../../Models/Definition/upsertModelFromJson";
 import Trait, { TraitOptions } from "../Trait";
 
 export interface ModelTraitOptions extends TraitOptions {

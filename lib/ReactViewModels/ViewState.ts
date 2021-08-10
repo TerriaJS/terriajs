@@ -11,15 +11,16 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import addedByUser from "../Core/addedByUser";
 import { Category, HelpAction } from "../Core/AnalyticEvents/analyticEvents";
+import Result from "../Core/Result";
 import triggerResize from "../Core/triggerResize";
 import PickedFeatures from "../Map/PickedFeatures";
 import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
-import CommonStrata from "../Models/CommonStrata";
+import CommonStrata from "../Models/Definition/CommonStrata";
+import { BaseModel } from "../Models/Definition/Model";
 import getAncestors from "../Models/getAncestors";
-import { BaseModel } from "../Models/Model";
 import Terria from "../Models/Terria";
 import { SATELLITE_HELP_PROMPT_KEY } from "../ReactViews/HelpScreens/SatelliteHelpPrompt";
 import {
@@ -29,7 +30,6 @@ import {
 } from "./defaultTourPoints";
 import DisclaimerHandler from "./DisclaimerHandler";
 import SearchState from "./SearchState";
-import Result from "../Core/Result";
 
 export const DATA_CATALOG_NAME = "data-catalog";
 export const USER_DATA_NAME = "my-data";

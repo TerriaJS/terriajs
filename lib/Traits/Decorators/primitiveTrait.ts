@@ -1,6 +1,6 @@
 import Result from "../../Core/Result";
-import TerriaError, { TerriaErrorSeverity } from "../../Core/TerriaError";
-import { BaseModel } from "../../Models/Model";
+import TerriaError from "../../Core/TerriaError";
+import { BaseModel } from "../../Models/Definition/Model";
 import Trait, { TraitOptions } from "../Trait";
 
 type PrimitiveType = "string" | "number" | "boolean";

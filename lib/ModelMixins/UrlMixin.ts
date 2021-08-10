@@ -1,7 +1,7 @@
 import { computed } from "mobx";
 import URI from "urijs";
 import Constructor from "../Core/Constructor";
-import Model from "../Models/Model";
+import Model from "../Models/Definition/Model";
 import UrlTraits from "../Traits/TraitsClasses/UrlTraits";
 
 type UrlModel = Model<UrlTraits>;

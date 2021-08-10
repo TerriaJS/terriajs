@@ -1,7 +1,7 @@
 import { computed, runInAction } from "mobx";
 import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import Constructor from "../Core/Constructor";
-import Model from "../Models/Model";
+import Model from "../Models/Definition/Model";
 import { SelectableDimension } from "../Models/SelectableDimensions";
 import ShadowTraits, { Shadows } from "../Traits/TraitsClasses/ShadowTraits";
 import i18next from "i18next";

@@ -41,6 +41,7 @@ Change Log
 * Fix wms feature info returning only one feature
 * `WebMapServiceCatalogGroup` will now create layer auto-IDs using `Name` field to avoid ID clashes.
 * Added `GroupMixin` `shareKey` generation for members - if the group has `shareKeys`.
+* Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses 
 * Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses`
 * I18n-ify shadow options in 3DTiles and some strings in feature info panel.
 * Fix `StyledIcon` css `display` clash
@@ -49,6 +50,14 @@ Change Log
   * Notes on v7 to v8 Socrata integration:
     * Share links are not preserved
     * Added basic support for dataset resources
+* Organise `Models` directory into multiple sub-directories (#5626)
+  * New model related classes are moved to `Models/Definition`
+  * Catalog related files are moved to `Models/Catalog`
+    * ESRI, OWS, GTFS and CKAN related files are moved to their own sub-directories in `Models/Catalog/`
+    * Other Catalog items related files are moved to `Models/Catalog/CatalogItems`
+    * Other Catalog items related files are moved to `Models/Catalog/CatalogGroups`
+    * Catalog functions related files are moved to `Models/Catalog/CatalogFunction`
+  * Removed unused Models files
 * Modified BadgeBar to be more tolerant to longer strings
 * Added `MapboxMapCatalogItem`.
 * Added `MapboxStyleCatalogItem`.

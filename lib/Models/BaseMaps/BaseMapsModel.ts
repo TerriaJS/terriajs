@@ -8,12 +8,12 @@ import {
   BaseMapsTraits,
   BaseMapTraits
 } from "../../Traits/TraitsClasses/BaseMapTraits";
-import BingMapsCatalogItem from "../BingMapsCatalogItem";
-import CommonStrata from "../CommonStrata";
-import CreateModel from "../CreateModel";
-import { BaseModel } from "../Model";
+import BingMapsCatalogItem from "../Catalog/CatalogItems/BingMapsCatalogItem";
+import CommonStrata from "../Definition/CommonStrata";
+import CreateModel from "../Definition/CreateModel";
+import { BaseModel } from "../Definition/Model";
+import updateModelFromJson from "../Definition/updateModelFromJson";
 import Terria from "../Terria";
-import updateModelFromJson from "../updateModelFromJson";
 import filterOutUndefined from "./../../Core/filterOutUndefined";
 import { defaultBaseMaps } from "./defaultBaseMaps";
 

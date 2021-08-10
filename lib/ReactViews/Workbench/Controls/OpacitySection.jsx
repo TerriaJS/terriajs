@@ -7,8 +7,8 @@ import PropTypes from "prop-types";
 import Slider from "rc-slider";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import CommonStrata from "../../../Models/CommonStrata";
-import hasTraits from "../../../Models/hasTraits";
+import CommonStrata from "../../../Models/Definition/CommonStrata";
+import hasTraits from "../../../Models/Definition/hasTraits";
 import RasterLayerTraits from "../../../Traits/TraitsClasses/RasterLayerTraits";
 import Styles from "./opacity-section.scss";
 

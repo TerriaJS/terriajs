@@ -6,7 +6,7 @@ import React from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import addedByUser from "../../Core/addedByUser";
 import getPath from "../../Core/getPath";
-import CommonStrata from "../../Models/CommonStrata";
+import CommonStrata from "../../Models/Definition/CommonStrata";
 import CatalogGroup from "./CatalogGroup";
 import CatalogItem from "./CatalogItem";
 

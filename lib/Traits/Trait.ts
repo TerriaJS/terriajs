@@ -1,6 +1,6 @@
 import { JsonObject } from "../Core/Json";
 import Result from "../Core/Result";
-import { BaseModel } from "../Models/Model";
+import { BaseModel } from "../Models/Definition/Model";
 
 export interface TraitClassOptions {
   description?: string;

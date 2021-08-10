@@ -3,11 +3,11 @@ import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import Result from "../Core/Result";
-import Model, { BaseModel } from "../Models/Model";
+import Model, { BaseModel } from "../Models/Definition/Model";
+import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import SelectableDimensions, {
   SelectableDimension
 } from "../Models/SelectableDimensions";
-import updateModelFromJson from "../Models/updateModelFromJson";
 import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";
 import AccessControlMixin from "./AccessControlMixin";
 import GroupMixin from "./GroupMixin";

@@ -58,19 +58,26 @@ import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import { BaseMapsModel } from "./BaseMaps/BaseMapsModel";
 import CameraView from "./CameraView";
-import CatalogGroup from "./CatalogGroupNew";
-import CatalogMemberFactory from "./CatalogMemberFactory";
-import Catalog from "./CatalogNew";
-import CommonStrata from "./CommonStrata";
+import CatalogGroup from "./Catalog/CatalogGroup";
+import CatalogMemberFactory from "./Catalog/CatalogMemberFactory";
+import Catalog from "./Catalog/Catalog";
+import MagdaReference, {
+  MagdaReferenceHeaders
+} from "./Catalog/CatalogReferences/MagdaReference";
+import SplitItemReference from "./Catalog/CatalogReferences/SplitItemReference";
+import CommonStrata from "./Definition/CommonStrata";
+import hasTraits from "./Definition/hasTraits";
+import { BaseModel } from "./Definition/Model";
+import updateModelFromJson from "./Definition/updateModelFromJson";
+import upsertModelFromJson from "./Definition/upsertModelFromJson";
 import {
   ErrorServiceOptions,
   ErrorServiceProvider,
   initializeErrorServiceProvider
-} from "./ErrorService";
+} from "./ErrorServiceProviders/ErrorService";
 import StubErrorServiceProvider from "./ErrorServiceProviders/StubErrorServiceProvider";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
-import hasTraits from "./hasTraits";
 import IElementConfig from "./IElementConfig";
 import InitSource, {
   isInitData,
@@ -82,17 +89,13 @@ import Internationalization, {
   I18nStartOptions,
   LanguageConfiguration
 } from "./Internationalization";
-import MagdaReference, { MagdaReferenceHeaders } from "./MagdaReference";
 import MapInteractionMode from "./MapInteractionMode";
-import { BaseModel } from "./Model";
 import NoViewer from "./NoViewer";
 import ShareDataService from "./ShareDataService";
-import SplitItemReference from "./SplitItemReference";
 import TimelineStack from "./TimelineStack";
-import updateModelFromJson from "./updateModelFromJson";
-import upsertModelFromJson from "./upsertModelFromJson";
 import ViewerMode from "./ViewerMode";
 import Workbench from "./Workbench";
+
 // import overrides from "../Overrides/defaults.jsx";
 
 interface ConfigParameters {
