@@ -18,8 +18,8 @@ import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import Feature from "../../lib/Models/Feature";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
-import CompositeCatalogItem from "../../lib/Models/CompositeCatalogItem";
-import CommonStrata from "../../lib/Models/CommonStrata";
+import CompositeCatalogItem from "../../lib/Models/Catalog/CatalogItems/CompositeCatalogItem";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 
 // var separator = ',';
 // if (typeof Intl === 'object' && typeof Intl.NumberFormat === 'function') {
