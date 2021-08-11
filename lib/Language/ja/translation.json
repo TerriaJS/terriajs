@@ -1,31 +1,31 @@
 {
   "tour": {
     "exploreMapDataButton": {
-      "content": "## データを地図上で見る\n\nここでは、データカタログからデータを探し、地図に追加することができます。複数のデータも追加できます。追加したデータは、画面左側にリストとして表示されます。"
+      "content": "## データを見る\n\nここでは、データカタログからデータを探し、地図に追加することができます。複数のデータも追加できます。追加したデータは、ワークベンチ内にリストとして表示されます。"
     },
     "locationSearchInput": {
-      "content": "## 場所を検索\n\n地名や住所を入力するとその場所を地図上で検索できます。"
+      "content": "## 場所検索\n\n地図上の興味ある場所の名前や住所を入力してください。"
     },
     "previous": "前",
     "finish": "完了",
     "end": "ツアーを終了",
     "preface": {
-      "start": "操作方法を見る",
+      "start": "ツアーを開始",
       "close": "後で",
-      "content": "このアプリケーションの主要な機能の操作方法を紹介します。",
-      "title": "操作方法を見る"
+      "content": "どこから始めればよいかわからない場合は、主な機能を紹介するツアーをご利用ください。主要な機能を紹介しております。",
+      "title": "ツアーを始める"
     },
     "mapNavigationSplitterIcon": {
       "content": "## 比較\n\nTerriaでは、分割画面ビューを使用してデータセットを比較する強力な機能があります。衛星画像のように時系列要素を含むデータセットの場合、日付ピッカーをクリックして時間を進めたり戻したりしてデータの比較ができます。"
     },
     "mapNavigationCompassOuterRing": {
-      "content": "## 地図の向きや角度の操作\n\n外側の円を左クリックしながら回すことで地図の向きを変えたり、内側の円を左クリックしながら動かすことで、角度を変えることができます。詳しくは？ボタンをクリックしてください。"
+      "content": "## ビューの制御\n\n地図のビューを変更できます。二重円の外側を使用してビューの向きを変更したり、内側を使用してカメラアングルを傾けたりできます。ダブルクリックすればビューをリセットできます。"
     },
     "menuBarStoryButton": {
       "content": "## ストーリー\n\nストーリーを使用すると、データセットにコンテキスト情報を追加して、3Dのガイドマップやレポートが作れます。ストーリーエディタを使用して独自のデータストーリーを作成し、完了したら「共有」パネルで共有します。"
     },
     "menuBarMapSettingsButton": {
-      "content": "## 地図の設定\n\nベースとなる地図、2D/3D地形、画質などのオプションを設定できます。"
+      "content": "## 地図設定\n\nベースマップ、2D/3D地形、画質などのオプションを設定してパフォーマンスを上げることができます。"
     },
     "sidePanelUploadButton": {
       "content": "## 自データ\n\n手元にある独自のデータを他のデータセットと一緒に表示できます。CSV、GeoJSON、KML、GPX、CZMLなどのファイルフォーマットをサポートしています。"
@@ -242,15 +242,13 @@
     "groupRemove": "グループを削除"
   },
   "emptyWorkbench": {
-    "emptyArea": "「データを地図上で見る」ボタンから、表示するデータを追加できます",
-    "helpfulHintsThree": "一旦読み込んだデータは、表示・非表示の切り替え、透過度の調整、画面分割比較モードへの移行、スタイルの変更ができるほか、対応しているデータでは日時の変更も行えます。",
-    "helpfulHintsTwo": "データを地図に追加すると、データセットがここにリストされます。",
-    "helpfulHintsOne": "「データを地図上で見る」 を選択して登録済みのデータを探すか、「自分のデータを追加」 で手元のデータを地図に追加します。",
+    "emptyArea": "『データを見る』ボタンから、表示するデータを追加できます。",
+    "helpfulHintsThree": "ワークベンチからはデータの表示・非表示の切り替え、透過度の調整、画面分割比較モードへの移行、スタイルの変更のほか、サポートされているデータでは日時の変更も行えます。",
+    "helpfulHintsTwo": "データを地図に追加すると、アクティブなデータセットの一覧がこのワークベンチに表示されます。ワークベンチからデータを操作することができます。",
+    "helpfulHintsOne": "「データを見る」 を選択して登録済みのデータを探すか、「自分のデータを追加」 で手元のデータを地図に追加します。",
     "helpfulHints": "使い方"
   },
-  "loader": {
-    "loadingMessage": "読み込み中"
-  },
+  "loader": { "loadingMessage": "読み込み中" },
   "dragDrop": {
     "not": "<0>bbbb</0>",
     "text": "<0>ドラッグ&ドロップ</0><1>してあなたのデータをマップに表示<1>"
@@ -263,9 +261,7 @@
     "success": "クリップボードにコピーしました"
   },
   "workbench": {
-    "dimensionsSelector": {
-      "undefinedLabel": "未指定"
-    },
+    "dimensionsSelector": { "undefinedLabel": "未指定" },
     "addItemErrorMessage": "カタログのアイテム追加の際にエラーが発生しました。",
     "addItemErrorTitle": "カタログのアイテムをワークベンチに追加できませんでした。",
     "toggleVisibility": "データの表示/非表示",
@@ -353,16 +349,16 @@
     "viewMore": "より {{name}} 結果を表示",
     "viewLess": "{{name}} 少なく結果を表示",
     "search": "データカタログで '{{searchText}}' を検索",
-    "searchInDataCatalog": "データカタログで <1>「{{locationSearchText}}」</1> を検索",
-    "data": "データ",
+    "searchInDataCatalog": "データカタログで <1>'{{locationSearchText}}'</1> を検索",
+    "data": "データについて",
     "done": "終了",
     "resultsLabel": "検索結果"
   },
   "welcomeMessage": {
     "dismissText": "閉じて今後は表示しない",
-    "exploreDataBtnText": "データを地図上で見る",
+    "exploreDataBtnText": "データを見る",
     "helpBtnText": "ヘルプを見る",
-    "tourBtnText": "操作方法を見る",
+    "tourBtnText": "ツアーに参加",
     "welcomeMessage": "データを探して3D地図上に展開してみませんか？<br/>とにかく触ってみるか、ヘルプガイドで使い方の概要を見てみてください。",
     "title": "ようこそ"
   },
@@ -408,10 +404,10 @@
   },
   "helpPanel": {
     "menuPaneTitle": "使い方",
-    "takeTour": "操作方法を見る",
+    "takeTour": "ツアーを見る",
     "dismissText": "閉じる",
     "promptMessage": "ツアー、使い方のビデオなどのヘルプコンテンツがあります",
-    "menuPaneBody": "各種メニューの使い方は「操作方法を見る」からご確認ください。技術的な質問については、[info@terria.io](mailto:info@terria.io)で開発チームにご連絡ください。"
+    "menuPaneBody": "TerriaJS の使い方のヒントを得るには以下のガイドを読むか[info@terria.io](mailto:info@terria.io)で開発チームにメールしてください"
   },
   "settingPanel": {
     "performanceLabel": "パフォーマンス",
@@ -452,10 +448,7 @@
     "native": "ネイティブ",
     "nativeResolutionLabel": "ここを押すと解像度を{{resolution1}}から{{resolution2}}に変更します"
   },
-  "toolsPanel": {
-    "btnTitle": "高度なツールボックス",
-    "btnText": "ツール"
-  },
+  "toolsPanel": { "btnTitle": "高度なツールボックス", "btnText": "ツール" },
   "countDatasets": {
     "mapDataState": "{{count}} データセットが地図上で有効",
     "noMapDataEnabled": "データが表示されていません",
@@ -510,10 +503,7 @@
       "title": "{{toolName}} ツールを閉じる際にエラー発生"
     },
     "closeButtonTitle": "{{toolName}} ツールを閉じる",
-    "button": {
-      "closed": "{{toolName}}",
-      "open": "終了{{toolNameLowerCase}}"
-    },
+    "button": { "closed": "{{toolName}}", "open": "終了{{toolNameLowerCase}}" },
     "exitBtnTitle": "終了"
   },
   "zoomCotrol": {
@@ -552,34 +542,30 @@
     "searchPlaceholder": "カタログから検索する",
     "searchPlaceholderWhole": "カタログ全体から検索する",
     "dataCatalogue": "データカタログ",
-    "myData": "自分のデータを追加",
+    "myData": "自分のデータ",
     "done": "完了",
     "closeDataPanel": "データパネルを閉じる",
     "load": "ローカル/ウェブのデータを読み込む",
     "btnHide": "閉じる",
-    "addDataBtnText": "データを地図上で見る"
+    "addDataBtnText": "データを見る"
   },
   "feedback": {
-    "minLength": "ご意見・ご要望のコメントは最低でも{{minLength}}が必要です",
-    "feedbackBtnText": "ご意見・ご要望",
+    "minLength": "フィードバックコメントは最低でも{{minLength}}必要です",
+    "feedbackBtnText": "フィードバック",
     "send": "送信",
     "sending": "送信中...",
-    "captionText": "問題の解決に役立てるため、見ているものを開発者と共有します",
+    "captionText": "問題の解決に役立てるため、あなたが見ているものを開発者と共有します",
     "cancel": "キャンセル",
     "email": "メールアドレス（任意）<br/><em>メールアドレスがない場合は返信できません</em>",
     "shareWithDevelopers": "マップビューを{{appName}}の開発者と共有する",
     "commentQuestion": "コメントまたは質問",
     "yourName": "お名前（任意）",
-    "close": "ご意見・ご要望を閉じる",
-    "title": "ご意見・ご要望",
+    "close": "フィードバックを閉じる",
+    "title": "フィードバック",
     "feedbackPreamble": "ご意見をお聞かせください。"
   },
-  "languagePanel": {
-    "changeLanguage": "言語を変更"
-  },
-  "mobile": {
-    "toggleNavigation": "メニューの表示・非表示"
-  },
+  "languagePanel": { "changeLanguage": "言語を変更" },
+  "mobile": { "toggleNavigation": "メニューの表示・非表示" },
   "core": {
     "printWindow": {
       "errorMessage": "10秒経っても印刷が始まりませんでした。お使いのブラウザでは印刷がサポートされていないのかもしれません。",
@@ -628,12 +614,8 @@
     "serverConfig": {
       "failedToGet": "{{serverConfigUrl}} からサーバーの設定を取得できません。そのため、プロキシ、変換、URL短縮機能などが正しく機能しないかもしれません。"
     },
-    "readXml": {
-      "xmlError": "有効なXMLがファイルにありません。"
-    },
-    "readText": {
-      "fileRequired": "ファイルが必須です"
-    },
+    "readXml": { "xmlError": "有効なXMLがファイルにありません。" },
+    "readText": { "fileRequired": "ファイルが必須です" },
     "googleAnalytics": {
       "logEnabledOnDevelopment": "Google Analytics が `development` 環境で初期化されました",
       "log": "Google Analytics によるトラッキングは無効になっています。 terria.configParameters.googleAnalyticsKey が設定されていません"
@@ -682,23 +664,17 @@
     "closePanel": "パネルを閉じる",
     "sectionLabel": "図"
   },
-  "emptyWorkbenchMessage": "<0><0>「データを地図上でみる」ボタンから、表示するデータを追加できます。</0><1><strong>上の「$t(addData.addDataBtnText)」をクリック</strong>して</1><2><0>データカタログが開き、</0><1>自分のデータを地図上に展開できます</1></2><3><0></0><strong>使い方：</strong><2>アクティブなデータセットはすべてここに表示されます</2></3></0>",
+  "emptyWorkbenchMessage": "<0><0>『データを見る』ボタンから、表示するデータを追加できます。</0><1><strong>上の'$t(addData.addDataBtnText)'をクリック</strong>すると</1><2><0>データカタログを閲覧できます</0><1>自分のデータを地図上に展開できます</1></2><3><0></0><strong>ヒント</strong><2>アクティブなデータセットはすべてここに表示されます</2></3></0>",
   "concept": {
     "summary": {
       "addFirstText": "新しい条件を追加",
       "addMoreText": "条件を追加"
     },
-    "inactive": {
-      "newText": "新しい条件",
-      "cancel": "キャンセル"
-    },
-    "active": {
-      "remove": "条件を消去",
-      "edit": "条件を変更"
-    }
+    "inactive": { "newText": "新しい条件", "cancel": "キャンセル" },
+    "active": { "remove": "条件を消去", "edit": "条件を変更" }
   },
   "timer": {
-    "nextScheduledUpdateCountdown": "次のデータ更新まであと{{timeCountdown}}",
+    "nextScheduledUpdateCountdown": "次のデータ更新まであと{{timeCountdown}}}",
     "nextScheduledUpdateTime": "次のデータ更新予定時刻は{{scheduledUpdateTime}}です"
   },
   "satellite": {
@@ -831,9 +807,7 @@
       "asyncPendingDescription": "WCSを読み込んでいます<br/>{{timestamp}}における{{name}}サービス。",
       "asyncResultDescription": "以下の入力パラメータによる、{{timestamp}}における{{name}}からのデータのエクスポート結果です。"
     },
-    "bing": {
-      "name": "Bingマップ"
-    },
+    "bing": { "name": "Bingマップ" },
     "webMapTileServiceCatalogItem": {
       "dataDescription": "データの説明",
       "serviceDescription": "サービスの説明",
@@ -994,7 +968,7 @@
       "safari": "Apple Safari",
       "firefox": "Mozilla Firefox",
       "chrome": "Google Chrome",
-      "internetExplorer": "Internet Explorer 11",
+      "internetExplorer": "インターネットエクスプローラー１１",
       "legacyBrowserTitle": "古いタイプのブラウザはサポートしていません",
       "name": "不明 / GeoJSONに変換済み"
     },
@@ -1052,8 +1026,8 @@
       "name": "GeoJSON",
       "couldNotLoadMessage": "与えられたリンクからJSONデータを読み込むことができませんでした。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このエラーが発生する場合、サーバーが{{cors}}をサポートしていない可能性もあります。サーバーを管理しているのがあなたであれば、CORSが無効になっていないか確認し、無効になっている場合は有効にしてください。サーバーのコントロール権がない場合は、サーバー管理者に問い合わせてCORSを有効化してもらってください。または、{{appName}}の運営者に{{email}}から問い合わせいただければ、{{appName}}内のCORS非対応サーバーのリストにこのサーバーを加えることで{{appName}}自体がリクエストを中継できるかもしれません。 <p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>",
       "unsupportedBrowserMessage": "お使いのウェブブラウザは{{appName}}がファイルからデータを読み込む上で必要となるFile APIをサポートしていません。ブラウザをアップグレードしてください。最適な体験のためには、{{chrome}}、{{firefox}}または{{internetExplorer}}の最新版をお使いになることをおすすめします。",
-      "errorLoadingMessage": "GeoJSONファイルの読み込み中にエラーが発生しました。このファイルは無効または{{appName}}でサポートされていない可能性があります。サポートや詳しい情報が必要な場合は{{email}}にご連絡ください。",
-      "errorParsingMessage": "与えられたデータをJSONとしてパーズできませんでした。このファイルは無効またはサポートされていない可能性があります。"
+      "errorLoadingMessage": "GeoJSONファイルの読み込み中にエラーが発生しました。このファイルは無効または{{appName}}でサポートされていない可能性があります。サポートや詳しい情報が必要な場合は{{email}}にご連絡ください",
+      "errorParsingMessage": "与えられたデータをJSONとしてパーズできませんでした。このファイルは無効または{{appName}}でサポートされていない可能性があります。サポートや詳しい情報が必要な場合は{{email}}にご連絡ください"
     },
     "arcGisFeatureServer": {
       "groupNotAvailableTitle": "グループはありません",
@@ -1110,9 +1084,7 @@
       "invalidToken": "<p>トークンサーバーが無効なトークンだと報告しています。</p><p>以下のメールアドレスに報告して下さい {{email}}</p>",
       "errorTitle": "トークンエラー"
     },
-    "shapefile": {
-      "name": "Shapeファイル"
-    },
+    "shapefile": { "name": "Shapeファイル" },
     "function": {
       "unknownFormaterMessage": "ファンクションパラメタフォーマッター {{formatter}} が不明です。\n\n有効なフォーマッターは:\n\n",
       "unknownFormaterTitle": "不明なフォーマッター"
@@ -1121,9 +1093,7 @@
       "unsupportedErrorMessage": "不明なパラメタタイプ: {{type}}.",
       "unsupportedErrorTitle": "サポートしていないタイプのパラメタです"
     },
-    "ionImagery": {
-      "name": "Cesium Ion Imagery"
-    },
+    "ionImagery": { "name": "Cesium Ion Imagery" },
     "wfsFeatures": {
       "groupNotAvailableMessage": "WFSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このエラーが発生する場合、サーバーが <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>をサポートしていない可能性もあります。サーバーを管理しているのがあなたであれば、CORSが無効になっていないか確認し、無効になっている場合は有効にしてください。サーバーのコントロール権がない場合は、サーバー管理者に問い合わせてCORSを有効化してもらってください。または、{{appName}}の運営者に{{email}}から問い合わせいただければ、{{appName}}内のCORS非対応サーバーのリストにこのサーバーを加えることで{{appName}}自体がリクエストを中継できるかもしれません。 </p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>",
       "queryErrorMessage": "WFSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。サーバーの応答が有効なGetCapabilitiesドキュメントではないようです。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>",
@@ -1212,11 +1182,7 @@
       "generateErrorTitle": "短縮URLを生成できませんでした。"
     },
     "sdmxCatalogItem": {
-      "viewBy": {
-        "title": "閲覧者",
-        "region": "地域",
-        "time": "時系列"
-      },
+      "viewBy": { "title": "閲覧者", "region": "地域", "time": "時系列" },
       "loadDataErrorMessage": "{{csvUrl}} からの無効な反応",
       "loadDataErrorTitle": "SDMX CSV を読み込めません"
     },
@@ -1230,15 +1196,9 @@
       "missingKeyErrorMessage": "Senaps APIキーを appendParamToQueryString オプションを使って terriajs-server 設定に追加する必要があります",
       "generalErrorMessage": "Senaps データを処理中にエラーが発生しました"
     },
-    "mapboxStyle": {
-      "name": "Mapbox スタイル"
-    },
-    "mapboxVectorTile": {
-      "name": "Mapbox ベクタタイル"
-    },
-    "mapboxMap": {
-      "name": "Mapbox マップ"
-    },
+    "mapboxStyle": { "name": "Mapbox スタイル" },
+    "mapboxVectorTile": { "name": "Mapbox ベクタタイル" },
+    "mapboxMap": { "name": "Mapbox マップ" },
     "invokeAnalyticsService": {
       "invocationFailedMessage": "{{invocationName}} 計算中にサーバーでエラーが発生しました。",
       "invocationFailedTitle": "サービスの呼び出しに失敗しました"
@@ -1274,14 +1234,12 @@
       "property": "属性",
       "procedure": "プロシージャ"
     },
-    "resultPending": {
-      "name": "結果待ち"
-    },
+    "resultPending": { "name": "結果待ち" },
     "feedback": {
-      "unableToSendMessage": "恥ずかしい限りです。ご意見・ご要望を送ろうとした際にエラーが発生しました。申し訳ありませんが以下のメールアドレスにご意見・ご要望を送って下さい: {{email}}.",
-      "unableToSendTitle": "ご意見・ご要望を送れません",
-      "thanksMessage": "皆さんのご意見・ご要望が {{appName}} をより良いものにしていきます",
-      "thanksTitle": "ご意見・ご要望を頂き、ありがとうございます！"
+      "unableToSendMessage": "恥ずかしい限りです。フィードバックを送ろうとした際にエラーが発生しました。申し訳ありませんが以下のメールアドレスにフィードバックを送って下さい: {{email}}.",
+      "unableToSendTitle": "フィードバックを送れません",
+      "thanksMessage": "皆さんのフィードバックが {{appName}} をより良いものにしていきます",
+      "thanksTitle": "フィードバックを頂き、ありがとうございます！"
     },
     "regionMapping": {
       "issuesLoadingTitle": "{{name}} 読み込みに問題",
@@ -1300,7 +1258,7 @@
     },
     "raiseError": {
       "developerDetails": "開発者の詳細",
-      "notificationFeedback": "ご意見・ご要望はここをクリック。",
+      "notificationFeedback": "質問またはフィードバックはここをクリック。",
       "errorTitle": "エラーが発生しました"
     },
     "placesLikeMe": {
@@ -1318,9 +1276,7 @@
       "regionsLikeThisDescription": "与えられた条件に基づき_尤もらしい_ 地域を特定。",
       "regionsLikeThisName": "これに似た地域"
     },
-    "openStreetMap": {
-      "name": "Open Street Map"
-    },
+    "openStreetMap": { "name": "Open Street Map" },
     "terrainCatalog": {
       "notSupportedErrorMessage": "{{name}}は2Dビューでの表示に対応していません。3Dに切り替えてもう一度お試しください",
       "notSupportedErrorTitle": "2Dではサポートされていません"
@@ -1389,15 +1345,9 @@
       "messageHeader": "地図上に描画",
       "devError": "Terriaのインスタンスが必要です。"
     },
-    "urlTemplateMapServer": {
-      "name": "URL テンプレート地図サーバー"
-    },
-    "threddsItem": {
-      "name": "THREDDS アイテムリファレンス"
-    },
-    "thredds": {
-      "nameGroup": "THREDDS カタロググループ"
-    },
+    "urlTemplateMapServer": { "name": "URL テンプレート地図サーバー" },
+    "threddsItem": { "name": "THREDDS アイテムリファレンス" },
+    "thredds": { "nameGroup": "THREDDS カタロググループ" },
     "terria": {
       "buttonTitleConfirm": "同意します",
       "disclaimer": "免責事項",
@@ -1427,9 +1377,7 @@
       "datasetScaleErrorTitle": "このスケールではデータセットは表示されません",
       "3dTypeIn2dMode": "**備考:** このデータセットは2Dビュワーでは表示できません。3D地図モードで表示してください。"
     },
-    "openDataSoft": {
-      "viewDatasetPage": "データセットのページを見る"
-    }
+    "openDataSoft": { "viewDatasetPage": "データセットのページを見る" }
   },
   "map": {
     "cesium": {
@@ -1444,13 +1392,8 @@
       "csvRegionMappingMessageZeroFound": "リージョンタイプ{{regionType}}ではリージョン名が一つも見つかりませんでした",
       "csvRegionMappingTitle": "CSVリージョンマッピング"
     },
-    "drawExtentHelper": {
-      "extent": "範囲",
-      "drawExtent": "描画範囲"
-    },
-    "displayVariablesConcept": {
-      "defaultName": "表示パラメーター"
-    },
+    "drawExtentHelper": { "extent": "範囲", "drawExtent": "描画範囲" },
+    "displayVariablesConcept": { "defaultName": "表示パラメーター" },
     "mapboxVectorTileImageryProvider": {
       "maxLevelError": "最大レベルがデータセットに対し高すぎます",
       "moreThanFourTiles": "画像供給元の画像範囲と minimumLevel は最小レベルで {{tileCount}} タイルあるようです. 最小レベルで4タイル以上を提供する画像共有元はサポートしていません。",
@@ -1497,16 +1440,10 @@
       "dataAttribution": "データの帰属"
     }
   },
-  "toast": {
-    "mapIsZooming": "理想的なズームで読み込み..."
-  },
-  "notification": {
-    "title": "メッセージ"
-  },
+  "toast": { "mapIsZooming": "理想的なズームで読み込み..." },
+  "notification": { "title": "メッセージ" },
   "pedestrianMode": {
-    "controls": {
-      "title": "コントロール"
-    },
+    "controls": { "title": "コントロール" },
     "dropPedestrianTooltipMessage": "<b>左クリック</b>で位置決定 <br /><b>右クリック / Esc</b> でキャンセル",
     "toolButtonTitle": "歩行者モード"
   },
@@ -1523,10 +1460,7 @@
     "backBtnText": "もう一度検索",
     "resetBtnText": "入力のクリア",
     "searchBtnText": "検索",
-    "numericParameter": {
-      "maximum": "最大",
-      "minimum": "最小"
-    },
+    "numericParameter": { "maximum": "最大", "minimum": "最小" },
     "searchError": "検索失敗。エラーの詳細はコンソールを見てください。",
     "searching": "検索中",
     "noParameters": "検索に使えるパラメタが見つかりません",
@@ -1535,9 +1469,7 @@
     "title": "検索 {{itemName}}",
     "toolLoadError": "検索ツール読み込みエラー。"
   },
-  "term": {
-    "missingContent": "見つからないコンテンツ"
-  },
+  "term": { "missingContent": "見つからないコンテンツ" },
   "deltaTool": {
     "loadingError": {
       "message": "サーバーから delta ツールを読み込み時にエラー発生。もう一度試してください。",

@@ -161,10 +161,7 @@
     },
     "native": "original"
   },
-  "toolsPanel": {
-    "btnTitle": "Boîte à outils avancée",
-    "btnText": "Outil"
-  },
+  "toolsPanel": { "btnTitle": "Boîte à outils avancée", "btnText": "Outil" },
   "countDatasets": {
     "btnCount": "Compter les jeux de données",
     "title": "Compter les jeux de données",
@@ -297,15 +294,9 @@
       "missingSenapsBaseUrl": "Url de base Senaps non fournie. Vous êtes-vous connecté ?",
       "noStreamsMessageFeatureInfo": "Pas de flux à cet endroit."
     },
-    "mapboxStyle": {
-      "name": "Style Mapbox"
-    },
-    "mapboxVectorTile": {
-      "name": "Mosaïque vectorielle Mapbox"
-    },
-    "mapboxMap": {
-      "name": "Carte Mapbox"
-    },
+    "mapboxStyle": { "name": "Style Mapbox" },
+    "mapboxVectorTile": { "name": "Mosaïque vectorielle Mapbox" },
+    "mapboxMap": { "name": "Carte Mapbox" },
     "magda": {
       "notCompatibleMessageII": "L'ensemble de données MAGDA n'a aucune distribution avec un format pris en charge.",
       "notCompatibleMessageI": "L'ensemble de données MAGDA n'a pas de distribution avec l'ID {{distributionId}} ou il n'a pas de format pris en charge.",
@@ -330,9 +321,7 @@
       "dataSourceErrorMessage": "Cette source de données n'a pas de détails disponibles.",
       "name": "KML ou KMZ"
     },
-    "ionImagery": {
-      "name": "Imagerie par ion cesium"
-    },
+    "ionImagery": { "name": "Imagerie par ion cesium" },
     "invokeAnalyticsService": {
       "invocationFailedMessage": "Une erreur s'est produite sur le serveur lors du calcul de {{invocationName}}.",
       "invocationFailedTitle": "L'invocation du service a échoué"
@@ -395,9 +384,7 @@
       "invalidToken": "<p>Le serveur de jetons a répondu avec un jeton invalide.</p><p>Veuillez le signaler en envoyant un e-mail à {{email}}</p>",
       "errorTitle": "Erreur de jeton"
     },
-    "shapefile": {
-      "name": "Shapefile"
-    },
+    "shapefile": { "name": "Shapefile" },
     "geoJson": {
       "firefox": "Mozilla Firefox",
       "chrome": "Google Chrome",
@@ -537,9 +524,7 @@
       "asyncPendingDescription": "Chargement WCS : <br/>{{name}} service à {{timestamp}}.",
       "asyncResultDescription": "Ceci est le résultat de l'exportation des données du service {{name}} à {{timestamp}} avec les paramètres d'entrée ci-dessous."
     },
-    "bing": {
-      "name": "Cartes Bing"
-    },
+    "bing": { "name": "Cartes Bing" },
     "arcGisMapServerCatalogItem": {
       "noLayersFoundMessage": "Le serveur Esri ArcGIS MapServer '{{name}}' n'a aucune couche à afficher.",
       "noLayersFoundTitle": "Impossible de charger ArcGIS MapServer.",
@@ -776,15 +761,9 @@
       "messageHeader": "Dessiner sur la carte",
       "devError": "L'instance Terria est requise."
     },
-    "urlTemplateMapServer": {
-      "name": "Modèle d'URL Serveur de cartes"
-    },
-    "threddsItem": {
-      "name": "Référence de l'article THREDDS"
-    },
-    "thredds": {
-      "nameGroup": "Groupe du catalogue THREDDS"
-    },
+    "urlTemplateMapServer": { "name": "Modèle d'URL Serveur de cartes" },
+    "threddsItem": { "name": "Référence de l'article THREDDS" },
+    "thredds": { "nameGroup": "Groupe du catalogue THREDDS" },
     "terriaJSONcatalog": {
       "buttonTitleConfirm": "Je suis d'accord",
       "disclaimer": "Clause de non responsabilité",
@@ -852,9 +831,7 @@
       "noFeatures": "Il n'y a pas de fonctionnalités correspondant à votre requête.",
       "missingBody": "Le serveur a répondu avec le corps manquant."
     },
-    "resultPending": {
-      "name": "Résultat en attente"
-    },
+    "resultPending": { "name": "Résultat en attente" },
     "feedback": {
       "unableToSendMessage": "C'est vraiment embarrassant, mais une erreur s'est produite lors de la tentative d'envoi de vos commentaires. Veuillez plutôt l'envoyer par e-mail à {{email}}.",
       "unableToSendTitle": "Impossible d'envoyer des commentaires",
@@ -896,9 +873,7 @@
       "regionsLikeThisDescription": "Identifie les régions qui ressemblent le plus à une région donnée selon un ensemble donné de caractéristiques.",
       "regionsLikeThisName": "Des régions comme celle-ci"
     },
-    "openStreetMap": {
-      "name": "Open Street Map"
-    },
+    "openStreetMap": { "name": "Open Street Map" },
     "ogr": {
       "emailUs": "Si vous souhaitez obtenir de l'aide ou de plus amples informations, veuillez nous envoyer un courriel à l'adresse suivante : {{email}}",
       "errorConvertingToGeoJsonMessage": "Une erreur s'est produite lors de la tentative de conversion de ce fichier en GeoJson. ",
@@ -975,9 +950,7 @@
       "loadDataErrorTitle": "Échec du chargement du groupe SDMX",
       "sdmxStructureLoadErrorTitle": "La demande de structure SDMX a échoué"
     },
-    "openDataSoft": {
-      "viewDatasetPage": "Afficher la page du jeu de données"
-    }
+    "openDataSoft": { "viewDatasetPage": "Afficher la page du jeu de données" }
   },
   "emptyWorkbench": {
     "helpfulHintsThree": "Dans le plan de travail, vous pouvez activer et désactiver les ensembles de données, modifier leur opacité, activer la comparaison d'écran partagé, modifier les styles et parcourir les dates et les heures, si les données prennent en charge cette fonctionnalité.",
@@ -1110,9 +1083,7 @@
     "menuPaneBody": "Trouvez des conseils utiles sur l'utilisation de TerriaJS en consultant les guides ci-dessous ou en contactant l'équipe à [info@terria.io](mailto:info@terria.io)",
     "menuPaneTitle": "Nous sommes là pour vous aider"
   },
-  "languagePanel": {
-    "changeLanguage": "Changer la langue"
-  },
+  "languagePanel": { "changeLanguage": "Changer la langue" },
   "map": {
     "regionProvider": {
       "csvRegionMappingMessageLoadError": "Impossible de charger les limites de la région {{regionName}} {{exception}}",
@@ -1158,9 +1129,7 @@
       "extent": "Étendue",
       "drawExtent": "Dessiner l'étendue"
     },
-    "displayVariablesConcept": {
-      "defaultName": "Affichage de la variable"
-    },
+    "displayVariablesConcept": { "defaultName": "Affichage de la variable" },
     "computeRingWindingOrder": {
       "devError": "Points attendus de type {x:nombre, y:nombre}"
     },
@@ -1188,12 +1157,8 @@
     "serverConfig": {
       "failedToGet": "Échec de l'obtention de la configuration du serveur à partir de {{serverConfigUrl}}. Cela signifie que les services tels que le proxy, la conversion et le raccourcissement d'URL peuvent ne pas fonctionner."
     },
-    "readXml": {
-      "xmlError": "Le fichier ne contient pas de XML valide."
-    },
-    "readText": {
-      "fileRequired": "le fichier est requis"
-    },
+    "readXml": { "xmlError": "Le fichier ne contient pas de XML valide." },
+    "readText": { "fileRequired": "le fichier est requis" },
     "googleAnalytics": {
       "logEnabledOnDevelopment": "Google Analytics a été initialisé dans un environnement de « développement »",
       "log": "Le suivi de Google Analytics est désactivé car terria.configParameters.googleAnalyticsKey n'est pas spécifié"
@@ -1306,9 +1271,7 @@
     "groupRemove": "supprimer ce groupe"
   },
   "emptyWorkbenchMessage": "<0><0>Votre établi est vide</0><1><strong>Cliquez '$t(addData.addDataBtnText)' ci-dessus pour </strong></1><2><0>Consulter le catalogue de données</0><1>Chargez vos propres données sur la carte</1></2><3><0></0><strong>TIP.</strong><2>Tous vos ensembles de données actifs seront listés ici</2></3></0>",
-  "loader": {
-    "loadingMessage": "Chargement en cours"
-  },
+  "loader": { "loadingMessage": "Chargement en cours" },
   "dragDrop": {
     "not": "<0>bbbb</0>",
     "text": "<0>Drag & Drop</0><1>Vos données n'importe où pour les visualiser sur la carte<1>"
@@ -1325,10 +1288,7 @@
       "addFirstText": "Ajouter une nouvelle condition",
       "addMoreText": "Ajouter une condition"
     },
-    "inactive": {
-      "newText": "Nouvelle condition",
-      "cancel": "Annuler"
-    },
+    "inactive": { "newText": "Nouvelle condition", "cancel": "Annuler" },
     "active": {
       "remove": "Supprimer la condition",
       "edit": "Modifier la condition"
@@ -1366,9 +1326,7 @@
   "workbench": {
     "searchItemTitle": "rechercher",
     "searchItem": "Rechercher",
-    "dimensionsSelector": {
-      "undefinedLabel": "Non spécifié"
-    },
+    "dimensionsSelector": { "undefinedLabel": "Non spécifié" },
     "addItemErrorMessage": "Une erreur s'est produite lors du chargement de l'élément du catalogue.",
     "addItemErrorTitle": "L'élément du catalogue n'a pas pu être ajouté au plan de travail.",
     "toggleVisibility": "Afficher/masquer les données",
@@ -1448,9 +1406,7 @@
     "selectToPreview": "<0>Sélectionner un ensemble de données pour voir un aperçu </0><1>- OU -</1><2>Aller à la carte</2>",
     "doesNotContainGeospatialData": "Ce fichier ne contient pas de données géospatiales."
   },
-  "mobile": {
-    "toggleNavigation": "Basculer la navigation"
-  },
+  "mobile": { "toggleNavigation": "Basculer la navigation" },
   "search": {
     "searchCatalogue": "Recherche dans le catalogue",
     "placeholder": "Recherche de lieux",
@@ -1503,16 +1459,10 @@
     "dismissText": "Compris, Merci!",
     "menuTitle": "Vous pouvez accéder à tout moment aux guides cartographiques en consultant le <2>menu d'aide</2>."
   },
-  "toast": {
-    "mapIsZooming": "Chargement du zoom idéal..."
-  },
-  "notification": {
-    "title": "Message"
-  },
+  "toast": { "mapIsZooming": "Chargement du zoom idéal..." },
+  "notification": { "title": "Message" },
   "pedestrianMode": {
-    "controls": {
-      "title": "Contrôles"
-    },
+    "controls": { "title": "Contrôles" },
     "dropPedestrianTooltipMessage": "<b>Clic gauche </b> pour sélectionner l'emplacement du dépôt <br /><b>Clic droit / Esc </b> pour annuler",
     "toolButtonTitle": "Mode piéton"
   },
@@ -1530,10 +1480,7 @@
     "backBtnText": "Chercher à nouveau",
     "resetBtnText": "Effacer l'entrée",
     "searchBtnText": "Chercher",
-    "numericParameter": {
-      "maximum": "Maximum",
-      "minimum": "Minimum"
-    },
+    "numericParameter": { "maximum": "Maximum", "minimum": "Minimum" },
     "searchError": "La recherche a échoué. Vérifiez la console pour les erreurs détaillées.",
     "searching": "Recherche en cours",
     "noParameters": "Aucun paramètre de recherche trouvé",
@@ -1542,9 +1489,7 @@
     "title": "Recherche {{itemName}}",
     "toolLoadError": "Erreur de chargement de l'outil de recherche."
   },
-  "term": {
-    "missingContent": "contenu manquant"
-  },
+  "term": { "missingContent": "contenu manquant" },
   "deltaTool": {
     "loadingError": {
       "message": "Une erreur s'est produite lors de la tentative de chargement de l'outil delta depuis le serveur. Veuillez réessayer.",

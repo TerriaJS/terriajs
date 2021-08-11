@@ -77,10 +77,16 @@ const CesiumTimeline = createReactClass({
         );
       }
     });
+
+    this.resizeListener = () => {
+      this.cesiumTimeline && this.cesiumTimeline.resize();
+    };
+    window.addEventListener("resize", this.resizeListener, false);
   },
 
   componentWillUnmount() {
     this.disposeZoomAutorun();
+    window.removeEventListener("resize", this.resizeListener);
   },
 
   shouldComponentUpdate() {
