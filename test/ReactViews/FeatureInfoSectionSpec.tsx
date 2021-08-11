@@ -21,15 +21,13 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import loadJson from "../../lib/Core/loadJson";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import TimeIntervalCollectionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty";
-import CreateModel from "../../lib/Models/CreateModel";
-import CzmlCatalogItem from "../../lib/Models/CzmlCatalogItem";
+import CzmlCatalogItem from "../../lib/Models/Catalog/CatalogItems/CzmlCatalogItem";
 import { FeatureInfoSection } from "../../lib/ReactViews/FeatureInfo/FeatureInfoSection";
 import Terria from "../../lib/Models/Terria";
-
 import Styles from "../../lib/ReactViews/FeatureInfo/feature-info-section.scss";
-import upsertModelFromJson from "../../lib/Models/upsertModelFromJson";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
+import upsertModelFromJson from "../../lib/Models/Definition/upsertModelFromJson";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import CatalogMemberFactory from "../../lib/Models/Catalog/CatalogMemberFactory";
 import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
 import mixTraits from "../../lib/Traits/mixTraits";
 import FeatureInfoTraits from "../../lib/Traits/TraitsClasses/FeatureInfoTraits";
@@ -39,6 +37,7 @@ import MappableMixin, { MapItem } from "../../lib/ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../../lib/ModelMixins/CatalogMemberMixin";
 import { observable } from "mobx";
 import i18next from "i18next";
+import CreateModel from "../../lib/Models/Definition/CreateModel";
 
 let separator = ",";
 if (typeof Intl === "object" && typeof Intl.NumberFormat === "function") {

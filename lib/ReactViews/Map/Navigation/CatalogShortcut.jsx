@@ -1,12 +1,11 @@
 "use strict";
 
-import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import Styles from "./tool_button.scss";
-import Icon from "../../../Styled/Icon";
-
+import React from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
+import Icon from "../../../Styled/Icon";
+import Styles from "./tool_button.scss";
 
 const CatalogShortcut = createReactClass({
   displayName: "CatalogShortcut",
@@ -19,9 +18,11 @@ const CatalogShortcut = createReactClass({
     title: PropTypes.string
   },
 
-  handleClick() {
+  async handleClick() {
     if (defined(this.props.catalogMember)) {
-      this.props.viewState.viewCatalogMember(this.props.catalogMember);
+      (
+        await this.props.viewState.viewCatalogMember(this.props.catalogMember)
+      ).raiseError(this.props.terria);
     }
   },
 

@@ -1,7 +1,8 @@
 import primitiveTrait from "../Decorators/primitiveTrait";
 import MappableTraits from "./MappableTraits";
+import mixTraits from "../mixTraits";
 
-export default class AutoRefreshingTraits extends MappableTraits {
+export default class AutoRefreshingTraits extends mixTraits(MappableTraits) {
   @primitiveTrait({
     name: "Refresh interval",
     description: "How often the data in this model is refreshed, in seconds",

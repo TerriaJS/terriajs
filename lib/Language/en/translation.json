@@ -262,6 +262,7 @@
     "qualityLabel": "Quality",
     "performanceLabel": "Performance",
     "timeline": {
+      "title": "Timeline",
       "alwaysShowLabel": "Press to start only showing the timeline when there are time-varying datasets on the workbench",
       "hideLabel": "Press to start always showing the timeline, even when no time-varying datasets are on the workbench",
       "alwaysShow": "Always show"
@@ -292,6 +293,7 @@
     "minLength": "Minimum length of feedback comment is {{minLength}}"
   },
   "helpPanel": {
+    "btnText": "Help",
     "menuPaneTitle": "We're here to help",
     "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [info@terria.io](mailto:info@terria.io)",
     "promptMessage": "Find the Tour, how-to videos & other help content here",
@@ -452,13 +454,17 @@
     "searchCatalogue": "Search the catalogue"
   },
   "mobile": {
-    "toggleNavigation": "toggle navigation"
+    "toggleNavigation": "toggle navigation",
+    "addDataBtnText": "Data",
+    "doneBtnText": "Done"
   },
   "preview": {
     "doesNotContainGeospatialData": "This file does not contain geospatial data.",
     "selectToPreview": "<0>Select a dataset to see a preview </0><1>- OR -</1><2>Go to the map</2>",
     "loading": "PREVIEW LOADING...",
     "preview": "{{appName}} preview",
+    "previewItemErrorTitle": "Catalog item could not be previewed.",
+    "previewItemErrorMessage": "An error occurred while loading the catalog item.",
     "noPreviewAvailable": "NO PREVIEW AVAILABLE",
     "dataPreviewLoading": "DATA PREVIEW LOADING...",
     "dataPreview": "DATA PREVIEW",
@@ -726,6 +732,7 @@
     },
     "terriaError": {
       "defaultTitle": "An error occurred",
+      "defaultMessage": "Unknown error",
       "defaultCombineTitle": "Multiple errors occurred",
       "defaultCombineMessage": "Details of the errors are below"
     }
@@ -1124,7 +1131,7 @@
       "serviceErrorMessage": "This service does not have any details available.",
       "distributionDesc": "Distribution Description",
       "idsNotSpecifiedTitle": "recordId must be specified",
-      "idsNotSpecifiedMessage": "MagdaCatalogItem requires that recordId be specified.",
+      "idsNotSpecifiedMessage": "MagdaReference requires that recordId be specified.",
       "retrieveErrorTitle": "Error retrieving MAGDA record",
       "retrieveErrorMessage": "No distribution or dataset ID provided",
       "notCompatibleTitle": "No compatible distributions found",

@@ -10,5 +10,22 @@
   },
   "AR": {
     "manualAlignmentTitle": "Allineamento Manuale"
+  },
+  "workbench": {
+    "colorScaleRangeMinSmallerThanMax": "Il valore minimo deve essere inferiore del valore massimo.",
+    "colorScaleRangeMax": "Il valore massimo deve essere un numero.",
+    "colorScaleRangeMin": "Il valore minimo deve essere un numero."
+  },
+  "preview": {
+    "addToMap": "Aggiungi alla mappa",
+    "removeFromMap": "Rimuovi dalla mappa"
+  },
+  "story": {
+    "navBtnMobile": "vai alla storia {{title}}",
+    "nextBtn": "vai alla scena seguente",
+    "navBtn": "vai alla storia {{title}}",
+    "editor": {
+      "placeholder": "Inserisci un titolo"
+    }
   }
 }

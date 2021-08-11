@@ -1,4 +1,4 @@
-import TerriaError from "../../lib/Core/TerriaError";
+import TerriaError, { TerriaErrorSeverity } from "../../lib/Core/TerriaError";
 
 describe("TerriaError", function() {
   beforeEach(function() {});
@@ -38,7 +38,8 @@ describe("TerriaError", function() {
     const test = TerriaError.from(error);
     expect(test.message).toBe("some stringy object");
     expect(test.title).toBe("core.terriaError.defaultTitle");
-    expect(test.originalError?.[0]).toBeUndefined();
+    expect(test.originalError?.[0]).toEqual(new Error("some stringy object"));
+    console.log(test);
   });
 
   it("Can create chain of TerriaErrors and combine them", function() {

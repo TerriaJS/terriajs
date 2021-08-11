@@ -18,6 +18,7 @@ The following i18next plugins are used:
 Currently, the only available language is English, and it is configured as the default fallback language. Default fallback language can be changed in the [`config.json`] file.
 
 **List of available languages**
+
 |Abbreviation|Language|
 |------------|--------|
 |en|english|
