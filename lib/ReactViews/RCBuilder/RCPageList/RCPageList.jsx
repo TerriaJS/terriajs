@@ -1,32 +1,18 @@
-import { default as React, useEffect, useState } from "react";
-import { API, graphqlOperation } from "aws-amplify";
-import { listPages } from "../../../../api/graphql/queries";
+import { API } from "aws-amplify";
+import PropTypes from "prop-types";
+import { default as React } from "react";
+import { useHistory, useParams, withRouter } from "react-router-dom";
 import * as mutations from "../../../../api/graphql/mutations";
-import { useParams, withRouter, useHistory } from "react-router-dom";
-import Styles from "./RCPageList.scss";
-import RCAccordian from "../RCAccordian/RCAccordian";
 import Icon from "../../Icon";
-import orderList from "./RCOrderList";
+import RCAccordian from "../RCAccordian/RCAccordian";
+import Styles from "./RCPageList.scss";
 
-function RCPageList() {
-  const [pages, setPages] = useState(null);
+function RCPageList(props) {
+  const pages = props.pages;
   // get the story id from url
   const { id } = useParams();
   const history = useHistory();
 
-  // get all the pages for this story
-  // TODO: feth pages by story id
-  useEffect(() => {
-    try {
-      API.graphql(graphqlOperation(listPages)).then(data => {
-        const pageList = data.data.listPages.items;
-        setPages(pageList);
-        orderList("listContainer");
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
   // Create Page
   const addPage = () => {
     const newPage = {
@@ -47,7 +33,7 @@ function RCPageList() {
         // Add the new page to the story
         newPage.id = response.data.createPage.id;
         const newPages = Array.isArray(pages) ? [...pages, newPage] : [newPage];
-        setPages(newPages);
+        // setPages(newPages);
         console.log("pages saved", newPages);
       } else {
         console.log("Error", response.errors[0].message);
@@ -63,7 +49,7 @@ function RCPageList() {
         query: mutations.deletePage,
         variables: { input: { id } }
       });
-      setPages(pages.filter(page => page.id !== id));
+      // setPages(pages.filter(page => page.id !== id));
     } catch (error) {
       console.log(error);
     }
@@ -71,6 +57,7 @@ function RCPageList() {
   const toEditPage = pageId => {
     history.push(`/builder/story/${id}/page/${pageId}/edit`);
   };
+  console.log(pages);
   return pages ? (
     <RCAccordian
       title="Pages"
@@ -96,4 +83,8 @@ function RCPageList() {
     </RCAccordian>
   ) : null;
 }
+
+RCPageList.propTypes = {
+  pages: PropTypes.array
+};
 export default withRouter(RCPageList);

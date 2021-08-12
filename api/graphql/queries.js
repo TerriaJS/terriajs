@@ -37,6 +37,7 @@ export const getStory = /* GraphQL */ `
           camera
           baseMapName
           viewer_mode_3d
+          pageNr
           createdAt
           updatedAt
           owner
@@ -173,6 +174,7 @@ export const getPage = /* GraphQL */ `
           json
         }
       }
+      pageNr
       createdAt
       updatedAt
       owner
@@ -204,6 +206,7 @@ export const listPages = /* GraphQL */ `
           content
           split_map
         }
+        pageNr
         createdAt
         updatedAt
         owner

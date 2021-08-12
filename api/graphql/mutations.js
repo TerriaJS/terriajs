@@ -40,6 +40,7 @@ export const createStory = /* GraphQL */ `
           camera
           baseMapName
           viewer_mode_3d
+          pageNr
           createdAt
           updatedAt
           owner
@@ -136,6 +137,7 @@ export const updateStory = /* GraphQL */ `
           camera
           baseMapName
           viewer_mode_3d
+          pageNr
           createdAt
           updatedAt
           owner
@@ -232,6 +234,7 @@ export const deleteStory = /* GraphQL */ `
           camera
           baseMapName
           viewer_mode_3d
+          pageNr
           createdAt
           updatedAt
           owner
@@ -316,6 +319,7 @@ export const createPage = /* GraphQL */ `
           json
         }
       }
+      pageNr
       createdAt
       updatedAt
       owner
@@ -349,6 +353,7 @@ export const updatePage = /* GraphQL */ `
           json
         }
       }
+      pageNr
       createdAt
       updatedAt
       owner
@@ -382,6 +387,7 @@ export const deletePage = /* GraphQL */ `
           json
         }
       }
+      pageNr
       createdAt
       updatedAt
       owner
