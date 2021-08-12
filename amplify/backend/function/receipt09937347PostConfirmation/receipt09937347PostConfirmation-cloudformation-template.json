@@ -44,13 +44,13 @@
     "s3Key": {
       "Type": "String"
     },
-    "apireceiptAPIGraphQLAPIIdOutput": {
-      "Type": "String",
-      "Default": "apireceiptAPIGraphQLAPIIdOutput"
-    },
     "storagestorycontentBucketName": {
       "Type": "String",
       "Default": "storagestorycontentBucketName"
+    },
+    "apireceiptAPIGraphQLAPIIdOutput": {
+      "Type": "String",
+      "Default": "apireceiptAPIGraphQLAPIIdOutput"
     }
   },
   "Conditions": {
@@ -104,8 +104,8 @@
             "GROUP": {
               "Ref": "GROUP"
             },
-            "API_RECEIPTAPI_GRAPHQLAPIIDOUTPUT": {
-              "Ref": "apireceiptAPIGraphQLAPIIdOutput"
+            "STORAGE_STORYCONTENT_BUCKETNAME": {
+              "Ref": "storagestorycontentBucketName"
             },
             "API_RECEIPTAPI_STORYTABLE_NAME": {
               "Fn::ImportValue": {
@@ -133,6 +133,9 @@
                 ]
               ]
             },
+            "API_RECEIPTAPI_GRAPHQLAPIIDOUTPUT": {
+              "Ref": "apireceiptAPIGraphQLAPIIdOutput"
+            },
             "API_RECEIPTAPI_PAGETABLE_NAME": {
               "Fn::ImportValue": {
                 "Fn::Sub": "${apireceiptAPIGraphQLAPIIdOutput}:GetAtt:PageTable:Name"
@@ -158,9 +161,6 @@
                   }
                 ]
               ]
-            },
-            "STORAGE_STORYCONTENT_BUCKETNAME": {
-              "Ref": "storagestorycontentBucketName"
             }
           }
         },
@@ -300,7 +300,8 @@
               "Effect": "Allow",
               "Action": [
                 "s3:PutObject",
-                "s3:GetObject"
+                "s3:GetObject",
+                "s3:DeleteObject"
               ],
               "Resource": [
                 {

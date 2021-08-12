@@ -19,13 +19,14 @@ type Story
   sectors: [Sector!]!
   catalog: [CatalogItem]
   image: Image
-  pages: [Page]
+  pages: [Page] @connection(keyName: "byStory", fields: ["id"])
   microstories: [Story]
   state: State!
 }
 
 type Page
   @model
+  @key(name: "byStory", fields: ["storyID", "title"])
   @auth(
     rules: [
       {
@@ -37,6 +38,7 @@ type Page
     ]
   ) {
   id: ID!
+  storyID: ID!
   title: String!
   section: Section!
   camera: String!

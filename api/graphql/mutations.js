@@ -32,25 +32,19 @@ export const createStory = /* GraphQL */ `
         alt
       }
       pages {
-        id
-        title
-        section
-        camera
-        baseMapName
-        currentTime {
-          dayNumber
-          secondsOfDay
-        }
-        viewer_mode_3d
-        scenarios {
+        items {
           id
-          ssp
-          content
-          split_map
+          storyID
+          title
+          section
+          camera
+          baseMapName
+          viewer_mode_3d
+          createdAt
+          updatedAt
+          owner
         }
-        createdAt
-        updatedAt
-        owner
+        nextToken
       }
       microstories {
         id
@@ -78,15 +72,7 @@ export const createStory = /* GraphQL */ `
           alt
         }
         pages {
-          id
-          title
-          section
-          camera
-          baseMapName
-          viewer_mode_3d
-          createdAt
-          updatedAt
-          owner
+          nextToken
         }
         microstories {
           id
@@ -142,25 +128,19 @@ export const updateStory = /* GraphQL */ `
         alt
       }
       pages {
-        id
-        title
-        section
-        camera
-        baseMapName
-        currentTime {
-          dayNumber
-          secondsOfDay
-        }
-        viewer_mode_3d
-        scenarios {
+        items {
           id
-          ssp
-          content
-          split_map
+          storyID
+          title
+          section
+          camera
+          baseMapName
+          viewer_mode_3d
+          createdAt
+          updatedAt
+          owner
         }
-        createdAt
-        updatedAt
-        owner
+        nextToken
       }
       microstories {
         id
@@ -188,15 +168,7 @@ export const updateStory = /* GraphQL */ `
           alt
         }
         pages {
-          id
-          title
-          section
-          camera
-          baseMapName
-          viewer_mode_3d
-          createdAt
-          updatedAt
-          owner
+          nextToken
         }
         microstories {
           id
@@ -252,25 +224,19 @@ export const deleteStory = /* GraphQL */ `
         alt
       }
       pages {
-        id
-        title
-        section
-        camera
-        baseMapName
-        currentTime {
-          dayNumber
-          secondsOfDay
-        }
-        viewer_mode_3d
-        scenarios {
+        items {
           id
-          ssp
-          content
-          split_map
+          storyID
+          title
+          section
+          camera
+          baseMapName
+          viewer_mode_3d
+          createdAt
+          updatedAt
+          owner
         }
-        createdAt
-        updatedAt
-        owner
+        nextToken
       }
       microstories {
         id
@@ -298,15 +264,7 @@ export const deleteStory = /* GraphQL */ `
           alt
         }
         pages {
-          id
-          title
-          section
-          camera
-          baseMapName
-          viewer_mode_3d
-          createdAt
-          updatedAt
-          owner
+          nextToken
         }
         microstories {
           id
@@ -338,6 +296,7 @@ export const createPage = /* GraphQL */ `
   ) {
     createPage(input: $input, condition: $condition) {
       id
+      storyID
       title
       section
       camera
@@ -370,6 +329,7 @@ export const updatePage = /* GraphQL */ `
   ) {
     updatePage(input: $input, condition: $condition) {
       id
+      storyID
       title
       section
       camera
@@ -402,6 +362,7 @@ export const deletePage = /* GraphQL */ `
   ) {
     deletePage(input: $input, condition: $condition) {
       id
+      storyID
       title
       section
       camera

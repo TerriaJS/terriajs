@@ -21,7 +21,8 @@
       "storycontent": [
         "create",
         "read",
-        "update"
+        "update",
+        "delete"
       ],
       "Story:@model(appsync)": [
         "create",
