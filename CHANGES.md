@@ -939,10 +939,22 @@ Change Log
 * Update papaparse and improve handling for retrieveing CSVs via chunking that have no ContentLenth header
 
 
-### Next Release
+### v7.11.17
+
+* Moved strings in DateTimeSelector and FeatureInfoPanel into i18next translation file.
+
+### v7.11.16
+
+* Fixed a bug where the timeline would not update properly when the timeline panel was resized.
+
+### v7.11.15
+
+* Fixed a bug when clicking the expand button on a chart in feature info when the clicked feature was a polygon.
+
 ### v7.11.14
 
 * Update CARTO Basemaps CDN URL and attribution.
+* Fixed issue with node 12 & 14 introduced in Cesium upgrade.
 
 ### v7.11.13
 
