@@ -29,11 +29,15 @@ const ProgressBar = createReactClass({
       this.setProgress
     );
 
-    // Clear progress when the viewer changes so we're not left with an invalid progress bar hanging on the screen.
-    this.eventHelper.add(
-      this.props.terria.beforeViewerChanged,
-      this.setProgress.bind(this, 0, 0)
-    );
+    // TODO - is this actually needed now? load events always get called when
+    // changing viewer. if still reuqired,
+    // clear progress when new viewer observed, rather than mounting to a 'current viewer'
+
+    // // Clear progress when the viewer changes so we're not left with an invalid progress bar hanging on the screen.
+    // this.eventHelper.add(
+    //   this.props.terria.currentViewer.beforeViewerChanged,
+    //   this.setProgress.bind(this, 0, 0)
+    // );
   },
 
   setProgress(remaining, max) {

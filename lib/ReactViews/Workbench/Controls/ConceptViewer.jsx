@@ -2,7 +2,6 @@
 
 import SummaryConcept from "./SummaryConcept/SummaryConcept";
 import Concept from "./Concept";
-import ObserveModelMixin from "../../ObserveModelMixin";
 import SummaryConceptModel from "../../../Map/SummaryConcept";
 
 import React from "react";
@@ -12,7 +11,6 @@ import Styles from "./concept-viewer.scss";
 
 const ConceptViewer = createReactClass({
   displayName: "ConceptViewer",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     item: PropTypes.object.isRequired
@@ -24,7 +22,7 @@ const ConceptViewer = createReactClass({
     const nonSummaryConcept = this.props.item.concepts.filter(
       concept =>
         concept.isVisible &&
-        !SummaryConceptModel.prototype.isPrototypeOf(concept)
+        Object.prototype.isPrototypeOf.call(!SummaryConceptModel, concept)
     );
 
     return (
@@ -49,7 +47,7 @@ const ConceptViewer = createReactClass({
           of={this.props.item.concepts.filter(
             concept =>
               concept.isVisible &&
-              SummaryConceptModel.prototype.isPrototypeOf(concept)
+              Object.prototype.isPrototypeOf.call(SummaryConceptModel, concept)
           )}
         >
           <div className={Styles.section} key={i}>

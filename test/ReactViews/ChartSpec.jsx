@@ -1,6 +1,5 @@
 "use strict";
 
-/*global expect,fail*/
 import React from "react";
 import { getMountedInstance } from "./MoreShallowTools";
 
@@ -55,9 +54,15 @@ describe("Chart", function() {
   });
 
   it("can have an array of ChartData passed directly", function(done) {
-    const chartData = new ChartData([{ x: 2, y: 5 }, { x: 6, y: 2 }], {
-      name: "foo"
-    });
+    const chartData = new ChartData(
+      [
+        { x: 2, y: 5 },
+        { x: 6, y: 2 }
+      ],
+      {
+        name: "foo"
+      }
+    );
     const chart = <Chart data={[chartData]} />;
     const instance = getMountedInstance(chart);
     instance

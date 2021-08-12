@@ -17,7 +17,7 @@ $distance-bg: rgba($dark, 0.9);
   outline: 0;
   font-family: $font-mono;
   max-height: 21px;
-  margin-top: 5px;
+  margin-top: $padding-mini;
   &:hover {
     background: $faint-bg;
   }
@@ -34,10 +34,11 @@ $distance-bg: rgba($dark, 0.9);
 .distanceLegend {
   composes: baseLegend;
   // Adjust colors to match btn--map.
-  background-color: $charcoal-grey;
+  background-color: unset;
+  margin-bottom: $padding-mini;
   color: $text-light;
   &:hover {
-    background: $color-primary;
+    // background: $color-primary;
   }
   //
   margin-right: $padding-small;

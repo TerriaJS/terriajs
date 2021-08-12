@@ -2,7 +2,7 @@
 @import "~terriajs-variables";
 
 .workBench {
-  position: relative;
+  // position: relative;
 }
 .workbenchEmpty {
   color: $text-light;
@@ -41,26 +41,45 @@
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn-primary from "../../Sass/common/_buttons.scss";
   margin-left: 5px;
-  width: 45px;
+  width: 130px;
+  flex-shrink: 0;
+  position: relative;
+  // soz not soz
+  padding-left: 54px;
+  text-align: left;
+
   svg {
+    position: absolute;
+    //sozza
+    left: 27px;
     fill: $text-light;
+    width: 18px;
+    height: 18px;
   }
 }
 
 .button {
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn-primary from "../../Sass/common/_buttons.scss";
+  position: relative;
 
   line-height: $input-height;
   font-size: $font-size-mid-small;
   padding: 0;
+  // sorry
+  padding-left: 59px;
+  text-align: left;
 
   svg {
     position: absolute;
-    left: $padding-small;
-    height: $input-glyph-height;
-    width: $input-glyph-height;
-    margin: $input-glyph-margin;
+    // left: $padding-small;
+    left: 29px;
+    // height: $input-glyph-height;
+    // width: $input-glyph-height;
+    height: 20px;
+    width: 20px;
+    // margin: $input-glyph-margin;
+    margin: 10px 0;
     display: block;
     fill: #ffffff;
   }

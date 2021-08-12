@@ -1,5 +1,6 @@
 # Imagery Data
 
+**Warning: This section needs to be updated for TerriaJS version 8.**
 ## Overview
 
 Here's an example json file which places some sample WMS items in an open group called "WMS example", at the top of the catalog:

@@ -75,11 +75,11 @@
     font-weight: $font-weight-medium;
     width: 100%;
     padding: $padding 0;
-    color: $color-primary;
+    // color: $color-primary;
     &:hover,
     &:focus,
     &.is-active {
-      color: $grey;
+      // color: $grey;
     }
   }
 }
@@ -146,11 +146,11 @@
   border-radius: 2px;
   padding: 3px 10px;
   border: 1px solid #ddd;
-  color: $color-primary;
+  // color: $color-primary;
 
   &:hover,
   &:focus {
-    border: 1px solid $color-primary;
+    // border: 1px solid $color-primary;
   }
 
   svg {
@@ -159,7 +159,7 @@
     display: inline-block;
     vertical-align: baseline;
     margin-right: 8px;
-    fill: $color-primary;
+    // fill: $color-primary;
   }
 }
 

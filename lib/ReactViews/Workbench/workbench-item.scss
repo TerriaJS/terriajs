@@ -4,8 +4,8 @@
 $workbench-margin: $padding-small;
 
 .workbench-item {
-  background: $dark-with-overlay;
-  color: $text-light;
+  // background: $dark-with-overlay;
+  // color: $text-light;
   font-family: $font-pop;
   margin: $workbench-margin 0;
   border: 1px solid $overlay;
@@ -27,7 +27,7 @@ $workbench-margin: $padding-small;
 .inner {
   composes: clearfix from "../../Sass/common/_base.scss";
   padding: $padding;
-  border-top: 1px solid $border-color;
+  // border-top: 1px solid $border-color;
   img {
     max-width: 100%;
     height: auto;
@@ -37,6 +37,7 @@ $workbench-margin: $padding-small;
 .header {
   composes: list-reset from "../../Sass/common/_base.scss";
   width: 100%;
+  display: flex;
 }
 
 .header-clearfix {
@@ -44,9 +45,6 @@ $workbench-margin: $padding-small;
 }
 
 .visibilityColumn {
-  composes: col from "../../Sass/common/_base.scss";
-  composes: col-1 from "../../Sass/common/_base.scss";
-  padding: 8px 10px;
   //remove additional space below inline element
   button {
     display: block;
@@ -63,20 +61,16 @@ $workbench-margin: $padding-small;
 }
 
 .nameColumn {
-  composes: col from "../../Sass/common/_base.scss";
-  composes: col-10 from "../../Sass/common/_base.scss";
-  padding: 5px;
   text-align: left;
+  width: 85%;
+  overflow-wrap: break-word;
 }
 
 .toggleColumn {
-  composes: col from "../../Sass/common/_base.scss";
-  composes: col-1 from "../../Sass/common/_base.scss";
-  padding: 5px;
   //remove additional space below inline element
   svg {
-    height: 18px;
-    width: 18px;
+    height: 8px;
+    width: 8px;
     fill: #fff;
   }
 }
@@ -102,4 +96,5 @@ $workbench-margin: $padding-small;
 .draggable {
   font-size: $font-size-mid-small;
   cursor: move;
+  max-width: 100%;
 }

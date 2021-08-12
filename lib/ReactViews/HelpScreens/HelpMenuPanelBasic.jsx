@@ -1,9 +1,7 @@
 "use strict";
 
 import React from "react";
-import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import ObserveModelMixin from "../ObserveModelMixin";
 import classNames from "classnames";
 import MenuPanel from "../StandardUserInterface/customizable/MenuPanel.jsx";
 
@@ -12,32 +10,27 @@ import DropdownStyles from "../Map/Panels/panel.scss";
 import helpIcon from "../../../wwwroot/images/icons/help.svg";
 
 import { withTranslation } from "react-i18next";
+import { action } from "mobx";
+import { observer } from "mobx-react";
 
-const HelpMenuPanelBasic = createReactClass({
-  displayName: "HelpMenuPanelBasic",
-  mixins: [ObserveModelMixin],
-
-  propTypes: {
+@observer
+class HelpMenuPanelBasic extends React.Component {
+  static propTypes = {
     viewState: PropTypes.object.isRequired,
     t: PropTypes.func.isRequired
-  },
+  };
 
-  getInitialState() {
-    return {
+  constructor() {
+    super();
+    this.state = {
       isOpen: false
     };
-  },
+  }
 
-  toggleShowHelpMenu(bool) {
+  @action.bound
+  setShowHelpMenu(bool) {
     this.props.viewState.showHelpMenu = bool;
-  },
-
-  onOpenChanged(open) {
-    this.toggleShowHelpMenu(open);
-    this.setState({
-      isOpen: open
-    });
-  },
+  }
 
   render() {
     const dropdownTheme = {
@@ -57,10 +50,10 @@ const HelpMenuPanelBasic = createReactClass({
         viewState={this.props.viewState}
         isOpen={isOpen}
         onDismissed={() => {
-          this.toggleShowHelpMenu(false);
+          this.setShowHelpMenu(false);
         }}
         btnTitle={t("helpMenu.btnTitle")}
-        onOpenChanged={this.onOpenChanged}
+        onOpenChanged={this.setShowHelpMenu}
         // forceClosed={this.props.viewState.showSatelliteGuidance}
         smallScreen={this.props.viewState.useSmallScreenInterface}
       >
@@ -72,11 +65,11 @@ const HelpMenuPanelBasic = createReactClass({
             <ul className={Styles.viewerSelector}>
               <li className={Styles.listItem}>
                 <button
-                  onClick={() => {
-                    this.toggleShowHelpMenu(false);
+                  onClick={action(() => {
+                    this.setShowHelpMenu(false);
                     this.props.viewState.showWelcomeMessage = true;
                     this.props.viewState.topElement = "WelcomeMessage";
-                  }}
+                  })}
                   className={Styles.btnViewer}
                 >
                   {t("helpMenu.helpMenuOpenWelcome")}
@@ -84,11 +77,11 @@ const HelpMenuPanelBasic = createReactClass({
               </li>
               <li className={Styles.listItem}>
                 <button
-                  onClick={() => {
-                    this.toggleShowHelpMenu(false);
+                  onClick={action(() => {
+                    this.setShowHelpMenu(false);
                     this.props.viewState.showSatelliteGuidance = true;
                     this.props.viewState.topElement = "Guide";
-                  }}
+                  })}
                   className={Styles.btnViewer}
                 >
                   {t("helpMenu.helpMenuSatelliteGuideTitle")}
@@ -109,6 +102,6 @@ const HelpMenuPanelBasic = createReactClass({
       </MenuPanel>
     );
   }
-});
+}
 
 export default withTranslation()(HelpMenuPanelBasic);

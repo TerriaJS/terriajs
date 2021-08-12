@@ -8,10 +8,10 @@
 }
 
 .search-result.light .btn {
-  border-bottom: 1px solid rgba($grey, 0.4);
+  // border-bottom: 1px solid rgba($grey, 0.4);
   background: transparent;
   &:hover {
-    border-bottom: 1px solid $color-primary;
+    // border-bottom: 1px solid $color-primary;
     color: $color-primary;
   }
   svg {
@@ -38,10 +38,11 @@
   position: absolute;
   top: 5px;
   bottom: 0;
-  left: 1px;
+  // TODO: better icon management
+  left: -3px;
   height: 21px;
-  width: 18px;
-  margin: 6px;
+  width: 17px;
+  margin: 7px 0;
 }
 
 .resultName {
@@ -55,7 +56,9 @@
   right: 1px;
   height: 10px;
   width: 10px;
-  margin: $padding;
+  width: 14px;
+  margin: 8px;
+  // margin: $padding;
 
   svg {
     fill-opacity: 0;
@@ -67,20 +70,26 @@
   &.btn {
     position: relative;
     padding: $padding;
+    padding-left: 0;
     margin-bottom: $padding-mini;
     padding-right: $padding;
     width: 100%;
     border: 1px solid transparent;
-    @media (min-width: $sm) {
-      border: 1px solid $grey;
-    }
   }
   &:hover {
+    background-color: $grey-lighter;
     .arrow-icon svg {
       fill-opacity: 1;
     }
   }
   &.btnLocationName {
     padding: $padding $padding * 3;
+  }
+}
+.btnWithBorderBottom {
+  &.btnWithBorderBottom {
+    @media (min-width: $sm) {
+      border-bottom: 1px solid $grey;
+    }
   }
 }

@@ -2,8 +2,7 @@
 
 import classNames from "classnames";
 import Concept from "../Concept";
-import Icon from "../../../Icon.jsx";
-import ObserveModelMixin from "../../../ObserveModelMixin";
+import Icon from "../../../../Styled/Icon";
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
@@ -12,7 +11,6 @@ import Styles from "./summary-concept.scss";
 
 const OpenInactiveConcept = createReactClass({
   displayName: "OpenInactiveConcept",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     rootConcept: PropTypes.object.isRequired,
@@ -85,7 +83,6 @@ const OpenInactiveConcept = createReactClass({
 
 const ConceptParent = createReactClass({
   displayName: "ConceptParent",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     concept: PropTypes.object.isRequired

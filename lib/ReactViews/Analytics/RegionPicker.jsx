@@ -11,17 +11,16 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 
-import GeoJsonCatalogItem from "../../Models/GeoJsonCatalogItem";
-import ObserveModelMixin from "../ObserveModelMixin";
-import WebMapServiceCatalogItem from "../../Models/WebMapServiceCatalogItem";
+import GeoJsonCatalogItem from "../../Models/Catalog/CatalogItems/GeoJsonCatalogItem";
+import WebMapServiceCatalogItem from "../../Models/Catalog/Ows/WebMapServiceCatalogItem";
 import { withTranslation } from "react-i18next";
 
 import RegionTypeParameterEditor from "./RegionTypeParameterEditor";
 import Styles from "./parameter-editors.scss";
+import CommonStrata from "../../Models/Definition/CommonStrata";
 
 const RegionPicker = createReactClass({
   displayName: "RegionPicker",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     previewed: PropTypes.object,
@@ -69,7 +68,7 @@ const RegionPicker = createReactClass({
         if (defined(value) && defined(value.realRegion)) {
           value = value.realRegion;
         }
-        this.props.parameter.value = value;
+        this.props.parameter.setValue(CommonStrata.user, value);
       }
     });
 

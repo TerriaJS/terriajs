@@ -10,17 +10,16 @@ import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 
 import MapInteractionMode from "../../Models/MapInteractionMode";
-import ObserveModelMixin from "../ObserveModelMixin";
 
 import Styles from "./parameter-editors.scss";
+import { runInAction, autorun } from "mobx";
 import { withTranslation } from "react-i18next";
+import CommonStrata from "../../Models/Definition/CommonStrata";
 
 const PointParameterEditor = createReactClass({
   displayName: "PointParameterEditor",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     previewed: PropTypes.object,
@@ -109,7 +108,7 @@ PointParameterEditor.setValueFromText = function(e, parameter) {
   const text = e.target.value;
 
   if (text.trim().length === 0 && !parameter.isRequired) {
-    parameter.value = undefined;
+    parameter.setValue(CommonStrata.user, undefined);
     return true;
   }
 
@@ -133,9 +132,12 @@ PointParameterEditor.setValueFromText = function(e, parameter) {
     if (isNaN(longitude) || isNaN(latitude)) {
       return false;
     }
-    parameter.value = Cartographic.fromDegrees(
-      parseFloat(coordinates[0]),
-      parseFloat(coordinates[1])
+    parameter.setValue(
+      CommonStrata.user,
+      Cartographic.fromDegrees(
+        parseFloat(coordinates[0]),
+        parseFloat(coordinates[1])
+      )
     );
     return true;
   } else {
@@ -169,31 +171,48 @@ export function getDisplayValue(value) {
  * @param {FunctionParameter} parameter Parameter.
  */
 export function selectOnMap(terria, viewState, parameter, interactionMessage) {
-  // Cancel any feature picking already in progress.
-  terria.pickedFeatures = undefined;
+  runInAction(() => {
+    // Cancel any feature picking already in progress.
+    terria.pickedFeatures = undefined;
+  });
+
+  let pickedFeaturesSubscription;
   const pickPointMode = new MapInteractionMode({
     message: interactionMessage,
     onCancel: function() {
       terria.mapInteractionModeStack.pop();
       viewState.openAddData();
+      if (pickedFeaturesSubscription) {
+        pickedFeaturesSubscription.dispose();
+      }
     }
   });
-  terria.mapInteractionModeStack.push(pickPointMode);
 
-  knockout
-    .getObservable(pickPointMode, "pickedFeatures")
-    .subscribe(function(pickedFeatures) {
-      if (defined(pickedFeatures.pickPosition)) {
-        const value = Ellipsoid.WGS84.cartesianToCartographic(
-          pickedFeatures.pickPosition
-        );
-        terria.mapInteractionModeStack.pop();
-        parameter.value = value;
-        viewState.openAddData();
+  runInAction(() => {
+    terria.mapInteractionModeStack.push(pickPointMode);
+  });
+
+  autorun(reaction => {
+    pickedFeaturesSubscription = reaction;
+    if (pickPointMode.pickedFeatures) {
+      const pickedFeatures = pickPointMode.pickedFeatures;
+      if (pickedFeatures.pickPosition) {
+        runInAction(() => {
+          const value = Ellipsoid.WGS84.cartesianToCartographic(
+            pickedFeatures.pickPosition
+          );
+          terria.mapInteractionModeStack.pop();
+          parameter.setValue(CommonStrata.user, value);
+          viewState.openAddData();
+        });
       }
-    });
+      pickedFeaturesSubscription.dispose();
+    }
+  });
 
-  viewState.explorerPanelIsVisible = false;
+  runInAction(() => {
+    viewState.explorerPanelIsVisible = false;
+  });
 }
 
 export default withTranslation()(PointParameterEditor);

@@ -2,19 +2,19 @@
 TerriaJS
 ============
 
-# We will be deprecating our master branch (v7) of TerriaJS in early August 2021
-What this means:
-- The [Next branch (v8)](https://github.com/TerriaJS/terriajs/tree/next) will become our new main branch
-- We will be providing documentation on how to migrate from v7 to v8
-- We will be actively monitoring our issues in the [GitHub issue tracker](https://github.com/TerriaJS/terriajs/issues/new)
-
--------------------
-
-[![Join the chat at https://gitter.im/TerriaJS/terriajs](https://badges.gitter.im/TerriaJS/terriajs.svg)](https://gitter.im/TerriaJS/terriajs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Docs](https://img.shields.io/badge/docs-online-blue.svg)](https://docs.terria.io/)
+[![Build Status](https://github.com/TerriaJS/terriajs/actions/workflows/ci.yml/badge.svg?branch=next&event=push)](https://travis-ci.org/TerriaJS/terriajs) [![Docs](https://img.shields.io/badge/docs-online-blue.svg)](https://docs.terria.io/)
 
 ![Terria logo](terria-logo.png "Terria logo")
 
 TerriaJS is a library for building rich, web-based geospatial data explorers, used to drive [National Map](http://nationalmap.gov.au), [AREMI](http://nationalmap.gov.au/renewables) and [NEII Viewer](http://neii.gov.au/viewer/).  It uses [Cesium](https://cesiumjs.org) and WebGL for a full 3D globe in the browser with no plugins.  It gracefully falls back to 2D with [Leaflet](http://leafletjs.com/) on systems that can't run Cesium. It can handle catalogs of thousands of layers, with dozens of geospatial file and web service types supported. It is almost entirely JavaScript in the browser, meaning it can even be deployed as a static website, making it simple and cheap to host.
+
+--------------------
+
+**We have just released a brand new version of Terria &mdash; verson 8!**
+
+We've put together a list of things we've removed from version 8 and some steps to help you migrate to the new version in our [migration guide](https://docs.terria.io/guide/contributing/migration-guide/)
+
+**Not ready to move to version 8 yet? You can find terriajs version 7 here:** https://github.com/TerriaJS/terriajs/tree/v7.x.x
 
 --------------------
 
@@ -55,19 +55,19 @@ Sites we're aware of that are using TerriaJS. These are not endorsements or test
 * [AURIN Map](http://map.aurin.org.au/)
 * [Leylines](http://maps.leylines.ch/)
 * [PropellerAero](http://www.propelleraero.com/)
-* [USGS Protected Areas Database - PADUS](https://maps.usgs.gov/padus/)
-* [USGS GAP Species Habitat and Range Map](https://maps.usgs.gov/gap-species/)
+* [USGS Protected Areas database](https://maps.usgs.gov/beta/padus/) (beta)
 * [Map-N-Tour](http://mapntour.squarespace.com/news/?tag=3D+Map+Platforms)
 * [Innovisite France Beta](http://www.innovisite.com/map/france/)
+* [USGS The National Map Advanced Viewer](https://viewer.nationalmap.gov/advanced/terriajs-usgs/)
 * [Portale del suolo](http://www.sardegnaportalesuolo.it/webgis/)
 * [Find & Connect Map of Children's Homes](https://map.findandconnect.gov.au/)
-* [EWMI-ODI Open Development Mekong](https://data.opendevelopmentmekong.net/en/map-explorer)
 
 ### Technical
 
+* **Note: Please use NodeJS v10 until [#4617](https://github.com/TerriaJS/terriajs/issues/4617) is resolved**
 * Built in ECMAScript 2015, compiled with Babel to ES5.
 * Supports IE9 and later. A few features require IE11+.
-* [TerriaJS Server component](https://github.com/TerriajS/TerriaJS-Server) runs in NodeJS and provides proxying for web services that don't support CORS or require authentication.
+* [TerriaJS Server component](https://github.com/TerriajS/TerriaJS-Server) runs in NodeJS and provides proxying for web services that don't support CORS or require authentication. Instead of using TerriaJS-Sever proxy service, an alternative proxying service URL can be specified. See [Specify an alternative proxy server URL](/doc/connecting-to-data/cross-origin-resource-sharing.md)
 * Dependencies are [managed in NPM](https://www.npmjs.com/~terria) and assembled using WebPack.
 
 ### Getting Started ###
@@ -93,15 +93,12 @@ See [Getting Started](http://terria.io/Documentation/guide/getting-started/) in 
 
 ### Big Thanks
 
-Hosting and contribution framework for community translations of TerriaJS provided by [Weblate](https://weblate.org/en/) under the Libre plan for open source software. See our translation progress for different languages:
-
-<a href="https://hosted.weblate.org/engage/terriajs/">
-<img src="https://hosted.weblate.org/widgets/terriajs/-/terriajs/multi-auto.svg" alt="Translation status" />
-</a>
+Cross-browser Testing Platform and Open Source <3 Provided by [Sauce Labs](https://saucelabs.com)
 
 ### Join the community
 
 Get in touch!
 
-* Open a discussion to chat with us or ask a question in our [GitHub Discussions forum](https://github.com/TerriaJS/terriajs/discussions)
-* Raise issues in the [GitHub issue tracker](https://github.com/TerriaJS/terriajs/issues/new)
+* Chat in our [Gitter chat room](https://gitter.im/TerriaJS/terriajs)
+* Join the [TerriaJS Google Group](https://groups.google.com/forum/#!forum/terriajs)
+* Raise issues in the [Github issue tracker](https://github.com/TerriaJS/terriajs/issues/new)

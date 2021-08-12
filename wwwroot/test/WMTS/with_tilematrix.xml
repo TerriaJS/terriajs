@@ -1,133 +1,144 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Capabilities xmlns="http://www.opengis.net/wmts/1.0"
-    xmlns:ows="http://www.opengis.net/ows/1.1"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:gml="http://www.opengis.net/gml"
-    xsi:schemaLocation="http://www.opengis.net/wmts/1.0
-    http://schemas.opengis.net/wmts/1.0/wmtsGetCapabilities_response.xsd"
-    version="1.0.0">
-    <ows:ServiceIdentification>
-        <ows:Title xml:lang="en">Test WMTS</ows:Title>
-        <ows:Abstract xml:lang="en">
+<Capabilities xmlns="http://www.opengis.net/wmts/1.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://www.opengis.net/wmts/1.0
+    http://schemas.opengis.net/wmts/1.0/wmtsGetCapabilities_response.xsd" version="1.0.0">
+  <ows:ServiceIdentification>
+    <ows:Title xml:lang="en">Test WMTS</ows:Title>
+    <ows:Abstract xml:lang="en">
             Datum. Of the test variety.
-        </ows:Abstract>
-        <ows:Keywords>
-            <ows:Keyword>Datum</ows:Keyword>
-            <ows:Keyword>Test</ows:Keyword>
-        </ows:Keywords>
-        <ows:ServiceType>OGC WMTS</ows:ServiceType>
-        <ows:ServiceTypeVersion>1.0.0</ows:ServiceTypeVersion>
-        <ows:Fees>none</ows:Fees>
-        <ows:AccessConstraints>none</ows:AccessConstraints>
-    </ows:ServiceIdentification>
-    <ows:ServiceProvider>
-        <ows:ProviderName>Some Provider</ows:ProviderName>
-        <ows:ProviderSite xlink:href="https://some.provider/"/>
-        <ows:ServiceContact>
-            <ows:IndividualName></ows:IndividualName>
-            <ows:PositionName></ows:PositionName>
-            <ows:ContactInfo>
-                <ows:Address>
-                    <ows:DeliveryPoint></ows:DeliveryPoint>
-                    <ows:City></ows:City>
-                    <ows:AdministrativeArea></ows:AdministrativeArea>
-                    <ows:PostalCode></ows:PostalCode>
-                    <ows:Country></ows:Country>
-                    <ows:ElectronicMailAddress></ows:ElectronicMailAddress>
-                </ows:Address>
-            </ows:ContactInfo>
-        </ows:ServiceContact>
-    </ows:ServiceProvider>
-    <ows:OperationsMetadata>
-        <ows:Operation name="GetCapabilities">
-            <ows:DCP>
-                <ows:HTTP>
-                    <ows:Get xlink:href="https://some.provider/wmts/1.0.0/WMTSCapabilities.xml">
-                        <ows:Constraint name="GetEncoding">
-                            <ows:AllowedValues>
-                                <ows:Value>RESTful</ows:Value>
-                            </ows:AllowedValues>
-                        </ows:Constraint>
-                    </ows:Get>
-                    <ows:Get xlink:href="https://some.provider/wmts/wmts.cgi?">
-                        <ows:Constraint name="GetEncoding">
-                            <ows:AllowedValues>
-                                <ows:Value>KVP</ows:Value>
-                            </ows:AllowedValues>
-                        </ows:Constraint>
-                    </ows:Get>
-                </ows:HTTP>
-            </ows:DCP>
-        </ows:Operation>
-        <ows:Operation name="GetTile">
-            <ows:DCP>
-                <ows:HTTP>
-                    <ows:Get xlink:href="https://some.provider/wmts/">
-                        <ows:Constraint name="GetEncoding">
-                            <ows:AllowedValues>
-                                <ows:Value>RESTful</ows:Value>
-                            </ows:AllowedValues>
-                        </ows:Constraint>
-                    </ows:Get>
-                    <ows:Get xlink:href="https://some.provider/wmts/wmts.cgi?">
-                        <ows:Constraint name="GetEncoding">
-                            <ows:AllowedValues>
-                                <ows:Value>KVP</ows:Value>
-                            </ows:AllowedValues>
-                        </ows:Constraint>
-                    </ows:Get>
-                </ows:HTTP>
-            </ows:DCP>
-        </ows:Operation>
-    </ows:OperationsMetadata>
-    <Contents>
-      <Layer>
-         <ows:Title xml:lang="en">Some Layer 1</ows:Title>
-         <ows:WGS84BoundingBox crs="urn:ogc:def:crs:OGC:2:84">
-            <ows:LowerCorner>-180 -85.051129</ows:LowerCorner>
-            <ows:UpperCorner>180 85.051129</ows:UpperCorner>
-        </ows:WGS84BoundingBox>
-         <ows:BoundingBox crs="urn:ogc:def:crs:EPSG::3857">
-            <ows:LowerCorner>-20037508.34278925 -20037508.34278925</ows:LowerCorner>
-            <ows:UpperCorner>20037508.34278925 20037508.34278925</ows:UpperCorner>
-        </ows:BoundingBox>
-         <ows:Identifier>Some_Layer1</ows:Identifier>
-         <Style isDefault="true">
-             <ows:Title xml:lang="en">default</ows:Title>
-             <ows:Identifier>default</ows:Identifier>
-             
-             
-         </Style>
-         <Format>image/png</Format>
-         <TileMatrixSetLink>
-             <TileMatrixSet>GoogleMapsCompatible_Level9</TileMatrixSet>
-         </TileMatrixSetLink>
-         <ResourceURL format="image/png" resourceType="tile" template="https://some.provider/wmts/Some_Layer1/default/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png"/>
-      </Layer>
-      <Layer>
-         <ows:Title xml:lang="en">Some Layer 2</ows:Title>
-         <ows:WGS84BoundingBox crs="urn:ogc:def:crs:OGC:2:84">
-            <ows:LowerCorner>-180 -85.051129</ows:LowerCorner>
-            <ows:UpperCorner>180 85.051129</ows:UpperCorner>
-        </ows:WGS84BoundingBox>
-         <ows:BoundingBox crs="urn:ogc:def:crs:EPSG::3857">
-            <ows:LowerCorner>-20037508.34278925 -20037508.34278925</ows:LowerCorner>
-            <ows:UpperCorner>20037508.34278925 20037508.34278925</ows:UpperCorner>
-        </ows:BoundingBox>
-         <ows:Identifier>Layer_With_Bad_Tilematrixset</ows:Identifier>
-         <Style isDefault="true">
-             <ows:Title xml:lang="en">default</ows:Title>
-             <ows:Identifier>default</ows:Identifier>
-             
-             
-         </Style>
-         <Format>image/png</Format>
-         <TileMatrixSetLink>
-             <TileMatrixSet>non_existent_tilematrixset</TileMatrixSet>
-         </TileMatrixSetLink>
-         <ResourceURL format="image/png" resourceType="tile" template="https://some.provider/wmts/Layer_With_Bad_Tilematrixset/default/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png"/>
-      </Layer>
+    </ows:Abstract>
+    <ows:Keywords>
+      <ows:Keyword>Datum</ows:Keyword>
+      <ows:Keyword>Test</ows:Keyword>
+    </ows:Keywords>
+    <ows:ServiceType>OGC WMTS</ows:ServiceType>
+    <ows:ServiceTypeVersion>1.0.0</ows:ServiceTypeVersion>
+    <ows:Fees>test</ows:Fees>
+    <ows:AccessConstraints>test</ows:AccessConstraints>
+  </ows:ServiceIdentification>
+  <ows:ServiceProvider>
+    <ows:ProviderName>Some Provider</ows:ProviderName>
+    <ows:ProviderSite xlink:href="https://some.provider/" />
+    <ows:ServiceContact>
+      <ows:IndividualName></ows:IndividualName>
+      <ows:PositionName></ows:PositionName>
+      <ows:ContactInfo>
+        <ows:Address>
+          <ows:DeliveryPoint></ows:DeliveryPoint>
+          <ows:City></ows:City>
+          <ows:AdministrativeArea></ows:AdministrativeArea>
+          <ows:PostalCode></ows:PostalCode>
+          <ows:Country></ows:Country>
+          <ows:ElectronicMailAddress></ows:ElectronicMailAddress>
+        </ows:Address>
+      </ows:ContactInfo>
+    </ows:ServiceContact>
+  </ows:ServiceProvider>
+  <ows:OperationsMetadata>
+    <ows:Operation name="GetCapabilities">
+      <ows:DCP>
+        <ows:HTTP>
+          <ows:Get xlink:href="https://some.provider/wmts/1.0.0/WMTSCapabilities.xml">
+            <ows:Constraint name="GetEncoding">
+              <ows:AllowedValues>
+                <ows:Value>RESTful</ows:Value>
+              </ows:AllowedValues>
+            </ows:Constraint>
+          </ows:Get>
+          <ows:Get xlink:href="https://some.provider/wmts/wmts.cgi?">
+            <ows:Constraint name="GetEncoding">
+              <ows:AllowedValues>
+                <ows:Value>KVP</ows:Value>
+              </ows:AllowedValues>
+            </ows:Constraint>
+          </ows:Get>
+        </ows:HTTP>
+      </ows:DCP>
+    </ows:Operation>
+    <ows:Operation name="GetTile">
+      <ows:DCP>
+        <ows:HTTP>
+          <ows:Get xlink:href="https://some.provider/wmts/">
+            <ows:Constraint name="GetEncoding">
+              <ows:AllowedValues>
+                <ows:Value>RESTful</ows:Value>
+              </ows:AllowedValues>
+            </ows:Constraint>
+          </ows:Get>
+          <ows:Get xlink:href="https://some.provider/wmts/wmts.cgi?">
+            <ows:Constraint name="GetEncoding">
+              <ows:AllowedValues>
+                <ows:Value>KVP</ows:Value>
+              </ows:AllowedValues>
+            </ows:Constraint>
+          </ows:Get>
+        </ows:HTTP>
+      </ows:DCP>
+    </ows:Operation>
+  </ows:OperationsMetadata>
+  <Contents>
+    <Layer>
+      <ows:Title xml:lang="en">Some Layer 1</ows:Title>
+      <ows:Abstract>description foo bar baz</ows:Abstract>
+      <ows:WGS84BoundingBox crs="urn:ogc:def:crs:OGC:2:84">
+        <ows:LowerCorner>-180 -85.051129</ows:LowerCorner>
+        <ows:UpperCorner>180 85.051129</ows:UpperCorner>
+      </ows:WGS84BoundingBox>
+      <ows:BoundingBox crs="urn:ogc:def:crs:EPSG::3857">
+        <ows:LowerCorner>-20037508.34278925 -20037508.34278925</ows:LowerCorner>
+        <ows:UpperCorner>20037508.34278925 20037508.34278925</ows:UpperCorner>
+      </ows:BoundingBox>
+      <ows:Identifier>Some_Layer1</ows:Identifier>
+      <Style isDefault="true">
+        <ows:Title xml:lang="en">default</ows:Title>
+        <ows:Identifier>default</ows:Identifier>
+      </Style>
+      <Format>image/png</Format>
+      <TileMatrixSetLink>
+        <TileMatrixSet>GoogleMapsCompatible_Level9</TileMatrixSet>
+      </TileMatrixSetLink>
+      <ResourceURL format="image/png" resourceType="tile" template="https://some.provider/wmts/Some_Layer1/default/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png" />
+    </Layer>
+    <Layer>
+      <ows:Title xml:lang="en">Some Layer 2</ows:Title>
+      <ows:WGS84BoundingBox crs="urn:ogc:def:crs:OGC:2:84">
+        <ows:LowerCorner>-180 -85.051129</ows:LowerCorner>
+        <ows:UpperCorner>180 85.051129</ows:UpperCorner>
+      </ows:WGS84BoundingBox>
+      <ows:BoundingBox crs="urn:ogc:def:crs:EPSG::3857">
+        <ows:LowerCorner>-20037508.34278925 -20037508.34278925</ows:LowerCorner>
+        <ows:UpperCorner>20037508.34278925 20037508.34278925</ows:UpperCorner>
+      </ows:BoundingBox>
+      <ows:Identifier>Layer_With_Bad_Tilematrixset</ows:Identifier>
+      <Style isDefault="true">
+        <ows:Title xml:lang="en">default</ows:Title>
+        <ows:Identifier>default</ows:Identifier>
+      </Style>
+      <Format>image/png</Format>
+      <TileMatrixSetLink>
+        <TileMatrixSet>non_existent_tilematrixset</TileMatrixSet>
+      </TileMatrixSetLink>
+      <ResourceURL format="image/png" resourceType="tile" template="https://some.provider/wmts/Layer_With_Bad_Tilematrixset/default/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png" />
+    </Layer>
+    <Layer>
+      <ows:Title xml:lang="en">Some Layer 3</ows:Title>
+      <ows:WGS84BoundingBox crs="urn:ogc:def:crs:OGC:2:84">
+        <ows:LowerCorner>-180 -85.051129</ows:LowerCorner>
+        <ows:UpperCorner>180 85.051129</ows:UpperCorner>
+      </ows:WGS84BoundingBox>
+      <ows:BoundingBox crs="urn:ogc:def:crs:EPSG::3857">
+        <ows:LowerCorner>-20037508.34278925 -20037508.34278925</ows:LowerCorner>
+        <ows:UpperCorner>20037508.34278925 20037508.34278925</ows:UpperCorner>
+      </ows:BoundingBox>
+      <ows:Identifier>Some_Layer3</ows:Identifier>
+      <Style isDefault="true">
+        <ows:Title xml:lang="en">default</ows:Title>
+        <ows:Identifier>default</ows:Identifier>
+      </Style>
+      <Format>image/png</Format>
+      <TileMatrixSetLink>
+        <TileMatrixSet>GoogleMapsCompatible_Level9</TileMatrixSet>
+      </TileMatrixSetLink>
+    </Layer>
     <TileMatrixSet>
       <ows:Identifier>GoogleMapsCompatible_Level9</ows:Identifier>
       <ows:SupportedCRS>urn:ogc:def:crs:EPSG:6.18:3:3857</ows:SupportedCRS>
@@ -228,6 +239,6 @@
       <ows:SupportedCRS>urn:ogc:def:crs:EPSG:6.18:3:3857</ows:SupportedCRS>
       <WellKnownScaleSet>urn:ogc:def:wkss:OGC:1.0:GoogleMapsCompatible</WellKnownScaleSet>
     </TileMatrixSet>
-    </Contents>
-    <ServiceMetadataURL xlink:href="https://some.metadata1"/>
+  </Contents>
+  <ServiceMetadataURL xlink:href="https://some.metadata1" />
 </Capabilities>

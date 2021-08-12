@@ -3,15 +3,13 @@
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import ObserveModelMixin from "../ObserveModelMixin";
 import defined from "terriajs-cesium/Source/Core/defined";
 
-import HelpScreenWindow from "./HelpScreenWindow.jsx";
-import ObscureOverlay from "./ObscureOverlay.jsx";
+import HelpScreenWindow from "./HelpScreenWindow";
+import ObscureOverlay from "./ObscureOverlay";
 
 const HelpOverlay = createReactClass({
   displayName: "HelpOverlay",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     helpViewState: PropTypes.object.isRequired,

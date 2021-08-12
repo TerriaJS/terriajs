@@ -2,13 +2,12 @@ import React from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import ObserveModelMixin from "../ObserveModelMixin";
 
 import Styles from "./parameter-editors.scss";
+import CommonStrata from "../../Models/Definition/CommonStrata";
 
 const DateTimeParameterEditor = createReactClass({
   displayName: "DateTimeParameterEditor",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     previewed: PropTypes.object,
@@ -45,7 +44,7 @@ const DateTimeParameterEditor = createReactClass({
     if (dateTime.date && dateTime.time) {
       value = dateTime.date + "T" + dateTime.time;
     }
-    this.props.parameter.value = value;
+    this.props.parameter.setValue(CommonStrata.user, value);
   },
 
   onChangeDate(e) {

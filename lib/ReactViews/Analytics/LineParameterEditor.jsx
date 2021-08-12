@@ -1,21 +1,16 @@
-import React from "react";
-
 import createReactClass from "create-react-class";
-
 import PropTypes from "prop-types";
-
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import React from "react";
+import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import CommonStrata from "../../Models/Definition/CommonStrata";
 import UserDrawing from "../../Models/UserDrawing";
-import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./parameter-editors.scss";
-import { withTranslation } from "react-i18next";
 
 const LineParameterEditor = createReactClass({
   displayName: "LineParameterEditor",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     previewed: PropTypes.object,
@@ -48,8 +43,9 @@ const LineParameterEditor = createReactClass({
     const pointsLongLats = [];
     for (let i = 0; i < pointEnts.length; i++) {
       const currentPoint = pointEnts[i];
+
       const currentPointPos = currentPoint.position.getValue(
-        this.props.previewed.terria.clock.currentTime
+        this.props.previewed.terria.clock?.currentTime
       );
       const cartographic = Ellipsoid.WGS84.cartesianToCartographic(
         currentPointPos
@@ -59,12 +55,11 @@ const LineParameterEditor = createReactClass({
       points.push(CesiumMath.toDegrees(cartographic.latitude));
       pointsLongLats.push(points);
     }
-    this.props.parameter.value = pointsLongLats;
+    this.props.parameter.setValue(CommonStrata.user, pointsLongLats);
   },
 
   selectLineOnMap() {
     this.state.userDrawing.enterDrawMode();
-    this.props.viewState.explorerPanelIsVisible = false;
   },
 
   render() {
@@ -108,7 +103,7 @@ LineParameterEditor.setValueFromText = function(e, parameter) {
       pointsLongLats.push(points);
     }
   }
-  parameter.value = pointsLongLats;
+  parameter.setValue(CommonStrata.user, pointsLongLats);
 };
 
 /**

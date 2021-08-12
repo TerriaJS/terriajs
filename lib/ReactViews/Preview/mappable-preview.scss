@@ -32,17 +32,17 @@
   composes: clearfix from "../../Sass/common/_base.scss";
   @extend %wrap;
 
-  a {
-    @include link(
-      $modal-bg
-    ); // The background is taken from tabs.scss's panel-content.
-  }
+  // a {
+  //   @include link(
+  //     $modal-bg
+  //   ); // The background is taken from tabs.scss's panel-content.
+  // }
 }
 
 .link {
-  @include link(
-    $modal-bg
-  ); // The background is taken from tabs.scss's panel-content.
+  // @include link(
+  //   $modal-bg
+  // ); // The background is taken from tabs.scss's panel-content.
 }
 
 .title-and-share-wrapper {

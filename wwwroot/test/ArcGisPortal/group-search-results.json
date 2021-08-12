@@ -1,0 +1,92 @@
+{
+  "query": "orgid:0123456789ABCDEF",
+  "total": 7,
+  "start": 1,
+  "num": 100,
+  "nextStart": -1,
+  "results": [
+    {
+      "id": "2dfa6cfea7774d9585700059e1fc8219",
+      "title": "Spatial Services Basemaps",
+      "isInvitationOnly": true,
+      "owner": "admin",
+      "description": null,
+      "snippet": "A group for sharing Basemaps to for the Basemap Gallery",
+      "tags": [
+        "basemaps"
+      ],
+      "phone": null,
+      "sortField": "owner",
+      "sortOrder": "desc",
+      "isViewOnly": true,
+      "thumbnail": null,
+      "created": 1552951893316,
+      "modified": 1575248389940,
+      "access": "public",
+      "capabilities": [],
+      "isFav": false,
+      "isReadOnly": false,
+      "protected": false,
+      "autoJoin": false,
+      "notificationsEnabled": false,
+      "provider": null,
+      "providerGroupName": null
+    },
+    {
+      "id": "c86af18fa4a74336b1feee2a0ee4883d",
+      "title": "NSW Digital Twin",
+      "isInvitationOnly": false,
+      "owner": "ss-sds",
+      "description": null,
+      "snippet": "A group for sharing layers to the NSW Digital Twin",
+      "tags": [
+        "3D",
+        "data61",
+        "digital twin"
+      ],
+      "phone": null,
+      "sortField": "title",
+      "sortOrder": "asc",
+      "isViewOnly": true,
+      "thumbnail": null,
+      "created": 1571197828371,
+      "modified": 1578441770716,
+      "access": "public",
+      "capabilities": [],
+      "isFav": false,
+      "isReadOnly": false,
+      "protected": false,
+      "autoJoin": false,
+      "notificationsEnabled": false,
+      "provider": null,
+      "providerGroupName": null
+    },
+    {
+      "id": "c6bf5249df1448629db37636aa0c5880",
+      "title": "Spatial Services Gallery",
+      "isInvitationOnly": true,
+      "owner": "daniel.mccullock@customerservice.nsw.gov.au",
+      "description": null,
+      "snippet": "A group to share content which will be shown in the Gallery",
+      "tags": [
+        "gallery"
+      ],
+      "phone": null,
+      "sortField": "modified",
+      "sortOrder": "desc",
+      "isViewOnly": false,
+      "thumbnail": null,
+      "created": 1552951716546,
+      "modified": 1575255345005,
+      "access": "public",
+      "capabilities": [],
+      "isFav": false,
+      "isReadOnly": false,
+      "protected": false,
+      "autoJoin": false,
+      "notificationsEnabled": false,
+      "provider": null,
+      "providerGroupName": null
+    }
+]
+}

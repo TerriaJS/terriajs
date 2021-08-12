@@ -7,7 +7,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import { withTranslation } from "react-i18next";
 
 import Styles from "./panel.scss";
-import Icon from "../../Icon.jsx";
+import Icon from "../../../Styled/Icon";
 
 const InnerPanel = createReactClass({
   propTypes: {
@@ -20,6 +20,10 @@ const InnerPanel = createReactClass({
     onDismissed: PropTypes.func,
     /** Animate as modal instead of dropdown */
     showDropdownAsModal: PropTypes.bool,
+
+    /** show panel centered instead of offset toward the left */
+    showDropdownInCenter: PropTypes.bool,
+
     /** Relative width to draw from */
     modalWidth: PropTypes.number,
     /** Theme to style components */
@@ -94,28 +98,61 @@ const InnerPanel = createReactClass({
     return (
       <div
         className={classNames(
+          // Until we break these few components out of sass, we'll use regular ol classnames
+          "tjs-sc-InnerPanel",
           Styles.inner,
           this.props.theme.inner,
           { [Styles.isOpen]: this.state.isOpenCss },
-          { [Styles.showDropdownAsModal]: this.props.showDropdownAsModal }
+          { [Styles.showDropdownAsModal]: this.props.showDropdownAsModal },
+          { [Styles.showDropdownInCenter]: this.props.showDropdownInCenter }
         )}
+        css={`
+          background: ${p => p.theme.dark};
+        `}
         ref={this.props.innerRef}
         onClick={e => e.stopPropagation()}
         style={{
           width: this.props.modalWidth,
           left: this.props.dropdownOffset,
-          transformOrigin:
-            this.props.caretOffset && `${this.props.caretOffset} top`
+          // the modal should be right-aligned with the button
+          right: "0px",
+          transformOrigin: this.props.showDropdownInCenter
+            ? "0 top"
+            : this.props.caretOffset && `${this.props.caretOffset} top`
         }}
       >
         <button
           type="button"
-          className={classNames(Styles.innerCloseBtn, {
-            [Styles.innerCloseBtnForModal]: this.props.showDropdownAsModal
-          })}
+          className={classNames(
+            // Until we break these few components out of sass, we'll use regular ol classnames
+            "tjs-sc-InnerPanelCloseButton",
+            Styles.innerCloseBtn,
+            {
+              [Styles.innerCloseBtnForModal]: this.props.showDropdownAsModal
+            }
+          )}
           onClick={this.forceClose}
           title={t("general.close")}
           aria-label={t("general.close")}
+          showDropdownAsModal={this.props.showDropdownAsModal}
+          css={`
+            svg {
+              fill: ${p => p.theme.textLight};
+            }
+            &:hover,
+            &:focus {
+              svg {
+                fill: ${p => p.theme.colorPrimary};
+              }
+            }
+            ${p =>
+              p.showDropdownAsModal &&
+              `
+                svg {
+                  fill: ${p.theme.grey};
+                }
+            `}
+          `}
         >
           <Icon glyph={Icon.GLYPHS.close} />
         </button>
@@ -125,8 +162,11 @@ const InnerPanel = createReactClass({
           }
         >
           <span
-            className={Styles.caret}
+            className={classNames(Styles.caret, "tjs-sc-InnerPanel__caret")}
             style={{ left: this.props.caretOffset }}
+            css={`
+              background: ${p => p.theme.dark};
+            `}
           />
         </If>
         <div className={Styles.content}>{this.props.children}</div>

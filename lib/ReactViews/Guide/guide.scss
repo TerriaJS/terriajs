@@ -5,15 +5,15 @@
   background-color: $modal-bg;
   // shadow from design
   // box-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.12), 0 10px 20px 0 rgba(0, 0, 0, 0.05);
-  box-shadow: $box-shadow;
-  border-radius: 4px;
+  // box-shadow: $box-shadow;
+  // border-radius: 4px;
 
-  position: fixed;
-  top: 80px;
-  right: 80px;
-  z-index: 1000;
+  // position: fixed;
+  // top: 80px;
+  // right: 80px;
+  // z-index: 1000;
 
-  width: 384px;
+  // width: 384px;
 
   @media (max-width: $sm), (max-height: 540px) {
     width: 100%;
@@ -44,7 +44,7 @@
   justify-content: space-between;
 
   box-sizing: border-box;
-  background-color: $modal-bg;
+  // background-color: $modal-bg;
   padding: $padding-small * 5;
   color: $text-darker;
 

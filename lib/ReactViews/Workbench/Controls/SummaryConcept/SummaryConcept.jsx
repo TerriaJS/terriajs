@@ -3,8 +3,7 @@
 import flattenNested from "../../../../Core/flattenNested";
 import ActiveConcept from "./ActiveConcept";
 import OpenInactiveConcept from "./OpenInactiveConcept";
-import Icon from "../../../Icon.jsx";
-import ObserveModelMixin from "../../../ObserveModelMixin";
+import Icon from "../../../../Styled/Icon";
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
@@ -35,7 +34,6 @@ import { withTranslation } from "react-i18next";
  */
 const SummaryConcept = createReactClass({
   displayName: "SummaryConcept",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     concept: PropTypes.object.isRequired, // Must be a SummaryConcept.
@@ -170,7 +168,6 @@ function groupByParentId(nodes, idFunction) {
 
 const AddButton = createReactClass({
   displayName: "AddButton",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     rootConcept: PropTypes.object.isRequired,

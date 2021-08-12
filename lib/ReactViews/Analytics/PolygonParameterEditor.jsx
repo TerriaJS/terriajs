@@ -8,58 +8,61 @@ import PropTypes from "prop-types";
 
 import defined from "terriajs-cesium/Source/Core/defined";
 
-import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./parameter-editors.scss";
 
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import UserDrawing from "../../Models/UserDrawing";
 import { withTranslation } from "react-i18next";
+import { observer } from "mobx-react";
+import { runInAction } from "mobx";
+import CommonStrata from "../../Models/Definition/CommonStrata";
 
-const PolygonParameterEditor = createReactClass({
-  displayName: "PolygonParameterEditor",
-  mixins: [ObserveModelMixin],
+const PolygonParameterEditor = observer(
+  createReactClass({
+    displayName: "PolygonParameterEditor",
 
-  propTypes: {
-    previewed: PropTypes.object,
-    parameter: PropTypes.object,
-    viewState: PropTypes.object,
-    t: PropTypes.func.isRequired
-  },
+    propTypes: {
+      previewed: PropTypes.object,
+      parameter: PropTypes.object,
+      viewState: PropTypes.object,
+      t: PropTypes.func.isRequired
+    },
 
-  setValueFromText(e) {
-    PolygonParameterEditor.setValueFromText(e, this.props.parameter);
-  },
+    setValueFromText(e) {
+      PolygonParameterEditor.setValueFromText(e, this.props.parameter);
+    },
 
-  selectPolygonOnMap() {
-    selectOnMap(
-      this.props.previewed.terria,
-      this.props.viewState,
-      this.props.parameter
-    );
-  },
+    selectPolygonOnMap() {
+      selectOnMap(
+        this.props.previewed.terria,
+        this.props.viewState,
+        this.props.parameter
+      );
+    },
 
-  render() {
-    const { t } = this.props;
-    return (
-      <div>
-        <input
-          className={Styles.field}
-          type="text"
-          onChange={this.setValueFromText}
-          value={getDisplayValue(this.props.parameter.value)}
-        />
-        <button
-          type="button"
-          onClick={this.selectPolygonOnMap}
-          className={Styles.btnSelector}
-        >
-          {t("analytics.clickToDrawPolygon")}
-        </button>
-      </div>
-    );
-  }
-});
+    render() {
+      const { t } = this.props;
+      return (
+        <div>
+          <input
+            className={Styles.field}
+            type="text"
+            onChange={this.setValueFromText}
+            value={getDisplayValue(this.props.parameter.value)}
+          />
+          <button
+            type="button"
+            onClick={this.selectPolygonOnMap}
+            className={Styles.btnSelector}
+          >
+            {t("analytics.clickToDrawPolygon")}
+          </button>
+        </div>
+      );
+    }
+  })
+);
 
 /**
  * Triggered when user types value directly into field.
@@ -67,7 +70,7 @@ const PolygonParameterEditor = createReactClass({
  * @param {FunctionParameter} parameter Parameter to set value on.
  */
 PolygonParameterEditor.setValueFromText = function(e, parameter) {
-  parameter.value = [JSON.parse(e.target.value)];
+  parameter.setValue(CommonStrata.user, [JSON.parse(e.target.value)]);
 };
 
 /**
@@ -109,7 +112,7 @@ function getPointsLongLats(pointEntities, terria) {
   for (let i = 0; i < pointEnts.length; i++) {
     const currentPoint = pointEnts[i];
     const currentPointPos = currentPoint.position.getValue(
-      terria.clock.currentTime
+      terria.timelineClock.currentTime
     );
     const cartographic = Ellipsoid.WGS84.cartesianToCartographic(
       currentPointPos
@@ -138,16 +141,23 @@ export function selectOnMap(terria, viewState, parameter) {
   const userDrawing = new UserDrawing({
     terria: terria,
     onPointClicked: function(pointEntities) {
-      parameter.value = [getPointsLongLats(pointEntities, terria)];
+      runInAction(() => {
+        parameter.setValue(CommonStrata.user, [
+          getPointsLongLats(pointEntities, terria)
+        ]);
+      });
     },
     onCleanUp: function() {
       viewState.openAddData();
     },
     onPointMoved: function(customDataSource) {
-      parameter.value = [getPointsLongLats(customDataSource, terria)];
+      runInAction(() => {
+        parameter.setValue(CommonStrata.user, [
+          getPointsLongLats(customDataSource, terria)
+        ]);
+      });
     }
   });
-  viewState.explorerPanelIsVisible = false;
   userDrawing.enterDrawMode();
 }
 

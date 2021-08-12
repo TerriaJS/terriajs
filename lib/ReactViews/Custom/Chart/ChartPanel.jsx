@@ -1,82 +1,88 @@
 "use strict";
 
-import React from "react";
-
-import createReactClass from "create-react-class";
-
+import { computed } from "mobx";
+import { observer } from "mobx-react";
 import PropTypes from "prop-types";
-
-import defined from "terriajs-cesium/Source/Core/defined";
-import Chart from "./Chart.jsx";
-import ChartPanelDownloadButton from "./ChartPanelDownloadButton";
-import Loader from "../../Loader.jsx";
-import ObserveModelMixin from "../../ObserveModelMixin";
-import Icon from "../../Icon.jsx";
+import React from "react";
 import { withTranslation } from "react-i18next";
-
+import defined from "terriajs-cesium/Source/Core/defined";
+import ChartView from "../../../Charts/ChartView.ts";
+import MappableMixin from "../../../ModelMixins/MappableMixin";
+import Icon from "../../../Styled/Icon";
+import Loader from "../../Loader";
+import { Result } from "../../Tools/ItemSearchTool/SearchResults";
+import Chart from "./BottomDockChart";
 import Styles from "./chart-panel.scss";
+import ChartPanelDownloadButton from "./ChartPanelDownloadButton";
 
 const height = 300;
 
-const ChartPanel = createReactClass({
-  displayName: "ChartPanel",
-  mixins: [ObserveModelMixin],
+@observer
+class ChartPanel extends React.Component {
+  static displayName = "ChartPanel";
 
-  propTypes: {
+  static propTypes = {
     terria: PropTypes.object.isRequired,
     onHeightChange: PropTypes.func,
     viewState: PropTypes.object.isRequired,
     animationDuration: PropTypes.number,
     t: PropTypes.func.isRequired
-  },
+  };
+
+  @computed
+  get chartView() {
+    return new ChartView(this.props.terria);
+  }
 
   closePanel() {
-    this.props.viewState.chartIsOpen = false;
-  },
+    this.chartView.chartItems.forEach(chartItem => {
+      chartItem.updateIsSelectedInWorkbench(false);
+    });
+  }
 
   componentDidUpdate() {
     if (defined(this.props.onHeightChange)) {
       this.props.onHeightChange();
     }
-  },
+  }
 
   render() {
-    const chartableItems = this.props.terria.catalog.chartableItems;
-    if (this.props.viewState.chartIsOpen === false) {
+    const chartItems = this.chartView.chartItems.filter(
+      c => c.showInChartPanel
+    );
+    this.props.terria.currentViewer.notifyRepaintRequired();
+    if (chartItems.length === 0) {
       return null;
     }
-    let data = [];
-    let xUnits;
-    chartableItems.forEach(item => {
-      const thisData = item.chartData();
-      if (!defined(thisData)) {
-        return;
-      }
-      if (item.isEnabled) {
-        data = data.concat(thisData);
 
-        if (!defined(xUnits) && defined(item.xAxis)) {
-          xUnits = item.xAxis.units;
-        }
-      }
-    });
-
-    const isLoading =
-      chartableItems.length > 0 &&
-      chartableItems[chartableItems.length - 1].isLoading;
-
-    this.props.terria.currentViewer.notifyRepaintRequired();
+    const isLoading = false;
+    // const isLoading =
+    //   chartableItems.length > 0 &&
+    //   chartableItems[chartableItems.length - 1].isLoading;
 
     let loader;
     let chart;
     if (isLoading) {
       loader = <Loader className={Styles.loader} />;
     }
-    if (data.length > 0) {
+    const items = this.props.terria.workbench.items;
+    if (items.length > 0) {
+      // Load all items
+      Promise.all(
+        items
+          .filter(item => MappableMixin.isMixedInto(item))
+          .map(item => item.loadMapItems())
+      ).then(results =>
+        Result.combine(results, "Failed to load chart items").raiseError(
+          this.props.terria
+        )
+      );
+
       chart = (
         <Chart
-          data={data}
-          axisLabel={{ x: xUnits, y: undefined }}
+          terria={this.props.terria}
+          chartItems={chartItems}
+          xAxis={this.chartView.xAxis}
           height={height - 34}
         />
       );
@@ -91,14 +97,12 @@ const ChartPanel = createReactClass({
                 <label className={Styles.sectionLabel}>
                   {loader || t("chart.sectionLabel")}
                 </label>
-                <ChartPanelDownloadButton
-                  chartableItems={this.props.terria.catalog.chartableItems}
-                />
+                <ChartPanelDownloadButton chartableItems={chartItems} />
                 <button
                   type="button"
                   title={t("chart.closePanel")}
                   className={Styles.btnCloseChartPanel}
-                  onClick={this.closePanel}
+                  onClick={() => this.closePanel()}
                 >
                   <Icon glyph={Icon.GLYPHS.close} />
                 </button>
@@ -110,6 +114,6 @@ const ChartPanel = createReactClass({
       </div>
     );
   }
-});
+}
 
-module.exports = withTranslation()(ChartPanel);
+export default withTranslation()(ChartPanel);

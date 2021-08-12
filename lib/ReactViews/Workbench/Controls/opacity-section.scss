@@ -2,8 +2,9 @@
 
 .opacity {
   composes: clearfix from "../../../Sass/common/_base.scss";
-  padding: $padding 0;
-  border-bottom: 1px solid $border-color;
+  // padding: $padding 0;
+  padding: $padding + $padding-small 0 0;
+  // border-bottom: 1px solid $border-color;
   font-size: $font-size-mini;
   display: flex;
 

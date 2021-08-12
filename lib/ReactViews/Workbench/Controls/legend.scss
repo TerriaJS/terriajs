@@ -9,8 +9,18 @@
   li {
     display: block;
   }
-  .legendImagehasError {
-    display: none;
+
+  // Small font size prevents the font from dictating the table row height.
+  font-size: 5px;
+
+  .legendOpenExternally {
+    font-size: $font-size-small;
+    color: $text-light;
+  }
+
+  .legendTitle {
+    font-size: $font-size-small;
+    margin: 0px;
   }
 }
 
@@ -19,12 +29,15 @@
     // Only the actual legend should be clickable rather than the whole area
     display: inline-block;
   }
-  img {
-    display: inline-block;
-    background: #fff;
-    max-width: 100%;
-  }
   padding: $padding 0 0 0;
+}
+
+.legend__legendBoxImg {
+  display: inline-block;
+  background: #fff;
+  max-width: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .legend--svg {
@@ -53,4 +66,38 @@
 
 .imageAnchor {
   max-width: 100%;
+}
+
+.generatedLegend {
+  padding-top: $legend-padding;
+  padding-bottom: $legend-padding;
+}
+
+.legendTitles {
+  font-size: 12px;
+  line-height: $legend-item-height;
+  padding-left: 5px;
+}
+
+.legendTitleAbove {
+  position: absolute;
+  margin-top: -$legend-item-height;
+}
+
+.legendTitleAbove::before {
+  content: "-";
+  padding-left: -5px;
+}
+
+.legendTitleBelow {
+  position: absolute;
+  margin-top: 0px;
+}
+
+.legendTitleBelow::before {
+  content: "-";
+}
+
+.legendSpacer {
+  height: $legend-spacer-height;
 }

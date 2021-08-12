@@ -21,13 +21,18 @@
   background-color: #555;
   background: rgba(250, 250, 250, 0.2);
   position: relative;
-  margin-right: 5px;
+  // margin-right: 5px;
+  margin-right: 4px;
   border-radius: 2px;
   display: inline-block;
 }
 
 .time {
   padding-left: 5px;
+}
+
+.timeline-button:last-child {
+  margin-right: 0;
 }
 
 .timeline-button {
@@ -39,7 +44,8 @@
   width: 30px;
   height: 30px;
   border-radius: 2px;
-  margin-right: 5px;
+  // margin-right: 5px;
+  margin-right: 4px;
   svg {
     width: 20px;
     height: 20px;
@@ -51,11 +57,11 @@
 
 .timeline-active {
   // TODO: fix.
-  background-color: $color-primary;
-  color: #fff;
+  // background-color: $color-primary;
+  // color: #fff;
   &:hover,
   &:focus {
-    color: #fff;
+    // color: #fff;
   }
 }
 
@@ -78,7 +84,8 @@
   position: relative;
   width: 0;
   height: 0;
-  margin-right: 5px;
+  // margin-right: 5px;
+  margin-right: 4px;
 }
 
 .datetimePrevious,

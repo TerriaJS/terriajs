@@ -1,0 +1,92 @@
+// We reimport variables and then export it here so that it doesn't get consumed
+// in variables and update type files every time we make something accessible via JS
+
+// This is the webpack-aliased-and-overriden-from-TerriaMap one, otherwise
+// resolves back to our base one provided in terriajs
+@import "~terriajs-variables";
+
+:export {
+  // TODO: find a better solution for this - some of these we need to provide as
+  // numbers only so we can do math on them and add the unit afterwards 😵
+  // screen sizes for media queries
+  // mobile: $mobile;
+  // sm: $sm;
+  // md: $md;
+  // lg: $lg;
+  mobile: 767;
+  sm: 768;
+  md: 992;
+  lg: 1300;
+
+  // Compass styles
+  // compassWidth: $compass-width;
+  // We have to deviate from our "divide by 5" here, due to 55 being an odd number
+  // and thus meaning some things will scale to contain half pixels
+  // bumped up to 56 to hit an even number
+  compassWidth: 56;
+  ringWidth: 10;
+
+  spacing: 5;
+
+  frontComponentZIndex: $front-component-z-index;
+  notificationWindowZIndex: $notification-window-z-index;
+
+  // ..radius? (no standardised radius at the moment, pull in as needed from variables
+  radius40Button: 20;
+  radiusLarge: $radius-large;
+  radiusSmall: $radius-small;
+
+  overlay: $overlay;
+  overlayInvert: $overlay-invert;
+
+  // Colours
+  colorPrimary: $color-primary;
+  colorSecondary: $color-secondary;
+  textLight: $text-light; // essentially #fff until we sort out the colour palette from vic
+  textLightTranslucent: rgba($text-light, 0.5);
+  textLightDimmed: $text-light-dimmed;
+  textDark: $text-dark;
+  textDarker: $text-darker;
+  textBlack: $text-black;
+  dark: $dark;
+  darkWithOverlay: $dark-with-overlay;
+  darkLighter: $dark-lighter;
+  grey: $grey;
+  greyLighter: $grey-lighter;
+  greyLighter2: $grey-lighter2;
+  greyLightest: $grey-lightest;
+  charcoalGrey: $charcoal-grey;
+
+  // Fonts
+  fontPop: $font-pop;
+  fontBase: $font-base;
+  fontMono: $font-mono;
+  fontFeatureInfo: $font-feature-info;
+  font: $font;
+
+  modalBg: $modal-bg;
+  modalText: $modal-text;
+  modalHighlight: $modal-highlight;
+
+  // TODO: fix, these are stopgaps & should get merged in with something else(?)
+  mapButtonColor: $map-button-color;
+  mapButtonTop: 18;
+  mapNavigationTop: 80;
+
+  trainerHeight: 64;
+  workbenchWidth: 350;
+
+  toolPrimaryColor: $tool-primary-color;
+
+  // Branding
+  logoHeight: $logo-height;
+  logoPaddingVertical: 15px;
+  logoPaddingHorizontal: 5px;
+
+  logoSmallHeight: $input-height;
+  logoSmallPaddingHorizontal: 0;
+  logoSmallPaddingVertical: 5px;
+
+  inputHeight: $input-height;
+  inputHeightLarge: $input-height-large;
+}

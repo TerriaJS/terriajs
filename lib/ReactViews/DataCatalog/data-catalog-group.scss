@@ -9,10 +9,11 @@
 
 .trashGroup {
   composes: btn from "../../Sass/common/_buttons.scss";
-  position: absolute;
+  // position: absolute;
+  // right: 2px;
+  // top: 5px;
   color: $color-primary;
-  right: 2px;
-  top: 5px;
+  margin-right: 3px;
   @media (max-width: $sm) {
     top: 10px;
   }
@@ -31,6 +32,7 @@
   text-align: left;
   font-size: $font-size-small;
   padding: 8px 30px + $padding;
+  padding-right: 0;
   min-height: 35px;
   position: relative;
   width: 100%;
@@ -50,8 +52,8 @@
 
   &:hover,
   &:focus {
-    background: $modal-highlight;
-    color: #fff;
+    // background: $modal-highlight;
+    // color: #fff;
   }
 }
 
@@ -62,8 +64,8 @@
 }
 
 .isPreviewed {
-  background: $modal-highlight;
-  color: #ffffff;
+  // background: $modal-highlight;
+  // color: #ffffff;
 }
 
 .folder {
@@ -86,21 +88,20 @@
 }
 
 .caret {
-  position: absolute;
-  right: 2px;
-  top: 5px;
+  // position: absolute;
+  width: 15px;
+  right: 8px;
+  top: 10px;
+  margin: 0 5px 0 10px;
   svg {
     fill: $charcoal-grey;
-    opacity: 0.5;
-    height: 25px;
-    width: 25px;
   }
   @media (min-width: $sm) {
     right: 5px;
     top: 8px;
     svg {
-      height: 18px;
-      width: 18px;
+      height: 10px;
+      width: 10px;
     }
   }
   &.offsetRight {

@@ -3,16 +3,13 @@
 // proptypes are in mixin
 /* eslint react/prop-types:0*/
 
-import React from "react";
 import createReactClass from "create-react-class";
-import classNames from "classnames";
-import Icon from "../../../Icon.jsx";
-import InnerPanel from "../InnerPanel";
+import React from "react";
+import Button from "../../../../Styled/Button";
+import Icon from "../../../../Styled/Icon";
 import BaseOuterPanel from "../BaseOuterPanel";
-
-import Styles from "../panel.scss";
-
-import defined from "terriajs-cesium/Source/Core/defined";
+import InnerPanel from "../InnerPanel";
+import { StyledIcon } from "../../../../Styled/Icon";
 
 const StorySharePanel = createReactClass({
   displayName: "StorySharePanel",
@@ -28,23 +25,9 @@ const StorySharePanel = createReactClass({
 
   onInnerMounted(innerElement) {
     if (innerElement) {
-      // how much further right the panel is from the button
-      const offset = this.buttonElement.offsetLeft - innerElement.offsetLeft;
-      // if the panel is left of the button leave its offset as is, otherwise move it right so it's level with the button.
-      const dropdownOffset =
-        offset < innerElement.offsetLeft ? offset : innerElement.offsetLeft;
-      // offset the caret to line up with the middle of the button - note that the caret offset is relative to the panel, whereas
-      // the offsets for the button/panel are relative to their container.
-      const caretOffset = Math.max(
-        this.buttonElement.clientWidth / 2 -
-          10 -
-          (dropdownOffset - this.buttonElement.offsetLeft),
-        0
-      );
-
       this.setState({
-        caretOffset: caretOffset >= 0 && caretOffset + "px",
-        dropdownOffset: dropdownOffset + "px"
+        caretOffset: "0px",
+        dropdownOffset: "0px"
       });
     } else {
       this.setState({
@@ -62,56 +45,58 @@ const StorySharePanel = createReactClass({
   },
 
   openWithUserClick(e) {
-    if (this.props.userOnClick) {
-      this.props.userOnClick();
+    if (this.props.onUserClick) {
+      this.props.onUserClick();
     }
     this.openPanel(e);
   },
 
-  render() {
-    let iconGlyph;
-    if (defined(Icon.GLYPHS[this.props.theme.icon])) {
-      iconGlyph = Icon.GLYPHS[this.props.theme.icon];
-    } else {
-      iconGlyph = this.props.theme.icon;
+  onClose() {
+    if (this.props.onUserClick) {
+      this.props.onUserClick();
     }
+    this.onDismissed();
+  },
 
+  render() {
     return (
-      <div
-        className={classNames(Styles.panel, this.props.theme.outer, {
-          [Styles.isOpen]: this.isOpen()
-        })}
-      >
-        <button
-          onClick={this.openWithUserClick}
-          type="button"
+      <>
+        <Button
+          fullWidth
           disabled={this.props.btnDisabled}
-          className={classNames(this.props.theme.btn)}
           title={this.props.btnTitle}
-          ref={element => (this.buttonElement = element)}
+          primary
+          renderIcon={() => (
+            <StyledIcon glyph={Icon.GLYPHS.share} light styledWidth={"20px"} />
+          )}
+          textProps={{
+            large: true
+          }}
+          onClick={this.openWithUserClick}
         >
-          <If condition={this.props.theme.icon}>
-            <Icon glyph={iconGlyph} />
-          </If>
-          <If condition={this.props.btnText}>
-            <span>{this.props.btnText}</span>
-          </If>
-        </button>
+          {this.props.btnText ? this.props.btnText : ""}
+        </Button>
         <If condition={this.isOpen()}>
-          <InnerPanel
-            showDropdownAsModal={this.props.showDropdownAsModal}
-            modalWidth={this.props.modalWidth}
-            onDismissed={this.onDismissed}
-            innerRef={this.onInnerMounted}
-            doNotCloseFlag={this.getDoNotCloseFlag()}
-            theme={this.props.theme}
-            caretOffset={this.state.caretOffset}
-            dropdownOffset={this.state.dropdownOffset}
+          <div
+            css={`
+              margin-top: 35px;
+            `}
           >
-            {this.props.children}
-          </InnerPanel>
+            <InnerPanel
+              showDropdownAsModal={this.props.showDropdownAsModal}
+              modalWidth={this.props.modalWidth}
+              onDismissed={this.onClose}
+              innerRef={this.onInnerMounted}
+              doNotCloseFlag={this.getDoNotCloseFlag()}
+              theme={this.props.theme}
+              caretOffset={this.state.caretOffset}
+              dropdownOffset={this.state.dropdownOffset}
+            >
+              {this.props.children}
+            </InnerPanel>
+          </div>
         </If>
-      </div>
+      </>
     );
   }
 });

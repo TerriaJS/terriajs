@@ -1,14 +1,14 @@
 "use strict";
 import React from "react";
-import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import L from "leaflet";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import defined from "terriajs-cesium/Source/Core/defined";
 import EllipsoidGeodesic from "terriajs-cesium/Source/Core/EllipsoidGeodesic";
 import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
-import ObserveModelMixin from "../../ObserveModelMixin";
 import Styles from "./legend.scss";
+import { observer, disposeOnUnmount } from "mobx-react";
+import { autorun } from "mobx";
 
 const geodesic = new EllipsoidGeodesic();
 
@@ -47,20 +47,19 @@ const distances = [
   50000000
 ];
 
-const DistanceLegend = createReactClass({
-  displayName: "DistanceLegend",
-  mixins: [ObserveModelMixin],
-
-  propTypes: {
-    terria: PropTypes.object
-  },
-
-  getInitialState() {
-    return {
+@observer
+class DistanceLegend extends React.Component {
+  constructor() {
+    super();
+    this.state = {
       distanceLabel: undefined,
       barWidth: 0
     };
-  },
+  }
+  static displayName = "DistanceLegend";
+  static propTypes = {
+    terria: PropTypes.object
+  };
 
   /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
@@ -70,27 +69,23 @@ const DistanceLegend = createReactClass({
     this._lastLegendUpdate = undefined;
 
     this.viewerSubscriptions.push(
-      this.props.terria.beforeViewerChanged.addEventListener(() => {
+      this.props.terria.mainViewer.beforeViewerChanged.addEventListener(() => {
         if (defined(this.removeUpdateSubscription)) {
           this.removeUpdateSubscription();
           this.removeUpdateSubscription = undefined;
         }
       })
     );
-
-    this.addUpdateSubscription();
-
-    this.viewerSubscriptions.push(
-      this.props.terria.afterViewerChanged.addEventListener(() => {
-        this.addUpdateSubscription();
-      })
+    disposeOnUnmount(
+      this,
+      autorun(() => this.addUpdateSubscription())
     );
-  },
+  }
 
   componentWillUnmount() {
     this.removeUpdateSubscription && this.removeUpdateSubscription();
     this.viewerSubscriptions.forEach(remove => remove());
-  },
+  }
 
   addUpdateSubscription() {
     const that = this;
@@ -116,7 +111,7 @@ const DistanceLegend = createReactClass({
 
       that.updateDistanceLegendLeaflet(map);
     }
-  },
+  }
 
   updateDistanceLegendCesium(scene) {
     const now = getTimestamp();
@@ -186,7 +181,7 @@ const DistanceLegend = createReactClass({
         distanceLabel: undefined
       });
     }
-  },
+  }
 
   updateDistanceLegendLeaflet(map) {
     const halfHeight = map.getSize().y / 2;
@@ -202,7 +197,7 @@ const DistanceLegend = createReactClass({
       barWidth: (meters / maxMeters) * maxPixelWidth,
       distanceLabel: label
     });
-  },
+  }
 
   render() {
     const barStyle = {
@@ -220,5 +215,5 @@ const DistanceLegend = createReactClass({
 
     return distanceLabel;
   }
-});
+}
 module.exports = DistanceLegend;

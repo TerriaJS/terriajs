@@ -1,9 +1,15 @@
 var path = require('path');
 var StringReplacePlugin = require("string-replace-webpack-plugin");
+var ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+var ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
 var webpack = require('webpack');
 
 function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtractPlugin, disableStyleLoader) {
     const cesiumDir = path.dirname(require.resolve('terriajs-cesium/package.json'));
+    // const fontAwesomeDir = path.resolve(path.dirname(require.resolve('font-awesome/package.json')));
+    // const reactMdeDir = path.resolve(path.dirname(require.resolve('react-mde/package.json')));
+    // console.log(fontAwesomeDir);
+    // console.log(reactMdeDir);
 
     config.node = config.node || {};
 
@@ -11,7 +17,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
     config.node.fs = 'empty';
 
     config.resolve = config.resolve || {};
-    config.resolve.extensions = config.resolve.extensions || ['*', '.webpack.js', '.web.js', '.js'];
+    config.resolve.extensions = config.resolve.extensions || ['*', '.webpack.js', '.web.js', '.js', '.ts', '.tsx'];
     config.resolve.extensions.push('.jsx');
     config.resolve.alias = config.resolve.alias || {};
     config.resolve.modules = config.resolve.modules || [];
@@ -78,22 +84,70 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
     });
     // Use Babel to compile our JavaScript files.
     config.module.rules.push({
-        test: /\.jsx?$/,
+        test: /\.(ts|js)x?$/,
         include: [
             path.resolve(terriaJSBasePath, 'lib'),
-            path.resolve(terriaJSBasePath, 'test')
+            path.resolve(terriaJSBasePath, 'test'),
+            path.resolve(terriaJSBasePath, 'buildprocess', 'generateDocs.ts')
         ],
-        loader: require.resolve('babel-loader'),
-        options: {
-            sourceMap: false, // generated sourcemaps are currently bad, see https://phabricator.babeljs.io/T7257
-            presets: ['@babel/preset-env', '@babel/preset-react'],
-            plugins: [
-                'babel-plugin-jsx-control-statements',
-                '@babel/plugin-transform-modules-commonjs',
-                '@babel/plugin-syntax-dynamic-import',
-            ]
-        }
+        use: [
+            {
+                // Replace Babel's super.property getter with one that is MobX aware.
+                loader: require.resolve('string-replace-loader'),
+                options: {
+                    search: 'function _get\\(target, property, receiver\\).*',
+                    replace: 'var _get = require(\'' + path.resolve(terriaJSBasePath, 'lib').replace(/\\/g, "/") + '/Core/superGet\').default;',
+                    flags: 'g'
+                }
+            },
+            {
+                loader: 'babel-loader',
+                options: {
+                    cacheDirectory: true,
+                    presets: [
+                      [
+                        '@babel/preset-env',
+                        {
+                          corejs: 3,
+                          useBuiltIns: "usage"
+                        }
+                      ],
+                      '@babel/preset-react',
+                      ['@babel/typescript', {allowNamespaces: true}]
+                    ],
+                    plugins: [
+                        'babel-plugin-jsx-control-statements',
+                        '@babel/plugin-transform-modules-commonjs',
+                        ["@babel/plugin-proposal-decorators", { "legacy": true }],
+                        '@babel/proposal-class-properties',
+                        '@babel/proposal-object-rest-spread',
+                        'babel-plugin-styled-components',
+                        require.resolve('@babel/plugin-syntax-dynamic-import'),
+                        'babel-plugin-lodash'
+                    ]
+                }
+            },
+            // Re-enable this if we need to observe any differences in the
+            // transpilation via ts-loader, & babel's stripping of types,
+            // or if TypeScript has newer features that babel hasn't
+            // caught up with
+            // {
+            //     loader: 'ts-loader',
+            //     options: {
+            //       transpileOnly: true
+            //     }
+            // }
+        ]
     });
+
+    // config.module.loaders.push({
+    //     test: /\.(ts|js)$/,
+    //     include: [
+    //         path.resolve(terriaJSBasePath, 'lib'),
+    //         path.resolve(terriaJSBasePath, 'test')
+    //     ],
+    //     loader: require.resolve('ts-loader')
+    // });
 
     // Use the raw loader for our view HTML.  We don't use the html-loader because it
     // will doing things with images that we don't (currently) want.
@@ -174,6 +228,12 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
         loader: require.resolve('file-loader')
     });
 
+    // config.module.loaders.push({
+    //     test: /\.(ttf|eot|svg)(\?.+)?$/,
+    //     include: path.resolve(fontAwesomeDir, 'fonts'),
+    //     loader: require.resolve('file-loader')
+    // });
+
     config.module.rules.push({
         test: /\.svg$/,
         include: path.resolve(terriaJSBasePath, 'wwwroot', 'images', 'icons'),
@@ -186,6 +246,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
     config.devServer = config.devServer || {
         stats: 'minimal',
         port: 3003,
+        open: true,
         contentBase: 'wwwroot/',
         proxy: {
             '*': {
@@ -210,6 +271,26 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
     ]);
 
+    // Fork type checking to a separate thread
+    config.plugins.push(
+        new ForkTsCheckerWebpackPlugin({
+            typescript: {
+                configFile: path.resolve(__dirname, '..', 'tsconfig.json'),
+                diagnosticOptions: {
+                    semantic: true,
+                    syntactic: true,
+                },
+            },
+        })
+    );
+    config.plugins.push(
+        new ForkTsCheckerNotifierWebpackPlugin({
+            excludeWarnings: true,
+            // probably don't need to know first check worked as well - disable it
+            skipFirstNotification: true
+        })
+    );
+
     if (hot && !disableStyleLoader) {
         config.module.rules.push({
             include: path.resolve(terriaJSBasePath),
@@ -232,11 +313,15 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
         });
     } else if (MiniCssExtractPlugin) {
         config.module.rules.push({
-            exclude: path.resolve(terriaJSBasePath, 'lib', 'Sass'),
+            exclude: [
+                path.resolve(terriaJSBasePath, 'lib', 'Sass', 'common'),
+                path.resolve(terriaJSBasePath, 'lib', 'Sass', 'global'),
+            ],
             include: path.resolve(terriaJSBasePath, 'lib'),
             test: /\.scss$/,
             use: [
                 MiniCssExtractPlugin.loader,
+                'css-modules-typescript-loader',
                 {
                     loader: require.resolve('css-loader'),
                     options: {
@@ -251,6 +336,18 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
                 'sass-loader?sourceMap'
             ]
         });
+
+        // config.module.loaders.push({
+        //     include: [path.resolve(fontAwesomeDir, 'css'), path.resolve(reactMdeDir, 'lib', 'styles', 'css')],
+        //     test: /\.css$/,
+        //     loaders: ['style-loader', 'css-loader']
+        // });
+
+        // config.module.loaders.push({
+        //     include: path.resolve(fontAwesomeDir, 'fonts'),
+        //     test: /\.woff2?/,
+        //     loader: require.resolve('file-loader')
+        // });
     }
 
     config.resolve = config.resolve || {};
@@ -264,6 +361,9 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
     // called node_modules https://github.com/npm/npm/issues/2734
     config.resolve.alias['react'] = path.dirname(require.resolve('react'));
     config.resolve.alias['react-dom'] = path.dirname(require.resolve('react-dom'));
+
+    // Alias all lodash imports (including from our dependencies) to lodash-es
+    config.resolve.alias['lodash'] = 'lodash-es';
 
     return config;
 }

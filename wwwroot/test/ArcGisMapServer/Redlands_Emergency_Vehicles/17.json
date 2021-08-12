@@ -1,0 +1,71 @@
+{
+  "currentVersion": 10.71,
+  "id": 17,
+  "name": "911 Calls Hotspot",
+  "type": "Group Layer",
+  "description": "",
+  "geometryType": null,
+  "copyrightText": "",
+  "parentLayer": null,
+  "subLayers": [
+    {
+      "id": 23,
+      "name": "Output_Features"
+    },
+    {
+      "id": 27,
+      "name": "Hotspot Raster"
+    }
+  ],
+  "minScale": 0,
+  "maxScale": 0,
+  "defaultVisibility": true,
+  "extent": {
+    "xmin": 7588427.7690577805,
+    "ymin": 649862.7227071823,
+    "xmax": 7627018.742529226,
+    "ymax": 683245.9177516848,
+    "spatialReference": {
+      "wkid": 102726,
+      "latestWkid": 102726
+    }
+  },
+  "hasAttachments": false,
+  "htmlPopupType": "esriServerHTMLPopupTypeNone",
+  "displayField": "",
+  "typeIdField": null,
+  "subtypeFieldName": null,
+  "subtypeField": null,
+  "defaultSubtypeCode": null,
+  "fields": null,
+  "geometryField": {},
+  "indexes": [],
+  "subtypes": [],
+  "relationships": [],
+  "canModifyLayer": false,
+  "canScaleSymbols": false,
+  "hasLabels": false,
+  "capabilities": "Map,Query",
+  "supportsStatistics": false,
+  "supportsAdvancedQueries": false,
+  "supportedQueryFormats": "JSON, geoJSON",
+  "isDataVersioned": false,
+  "ownershipBasedAccessControlForFeatures": {
+    "allowOthersToQuery": true
+  },
+  "useStandardizedQueries": true,
+  "advancedQueryCapabilities": {
+    "useStandardizedQueries": true,
+    "supportsStatistics": false,
+    "supportsHavingClause": false,
+    "supportsCountDistinct": false,
+    "supportsOrderBy": false,
+    "supportsDistinct": false,
+    "supportsPagination": false,
+    "supportsTrueCurve": false,
+    "supportsReturningQueryExtent": true,
+    "supportsQueryWithDistance": true,
+    "supportsSqlExpression": false
+  },
+  "supportsCoordinatesQuantization": true
+}

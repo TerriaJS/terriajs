@@ -1,18 +1,32 @@
 "use strict";
 
-/*global require,describe,it,expect*/
 var combineData = require("../../lib/Core/combineData");
 
 describe("combineData", function() {
   it("works with one array", function() {
-    var data1 = [[1, 5], [3, 7], [6, 10], [9, -3]];
+    var data1 = [
+      [1, 5],
+      [3, 7],
+      [6, 10],
+      [9, -3]
+    ];
     var combined = combineData([data1]);
     expect(combined).toEqual(data1);
   });
 
   it("works with two sorted numerical arrays", function() {
-    var data1 = [[1, 5], [3, 7], [6, 10], [9, -3]];
-    var data2 = [[2, 12], [4, 8], [6, 5], [8, 7]];
+    var data1 = [
+      [1, 5],
+      [3, 7],
+      [6, 10],
+      [9, -3]
+    ];
+    var data2 = [
+      [2, 12],
+      [4, 8],
+      [6, 5],
+      [8, 7]
+    ];
     var target = [
       [1, 5, null],
       [2, null, 12],
@@ -27,8 +41,18 @@ describe("combineData", function() {
   });
 
   it("works with two unsorted numerical arrays", function() {
-    var data1 = [[1, 5], [6, 10], [3, 7], [9, -3]];
-    var data2 = [[6, 5], [4, 8], [8, 7], [2, 12]];
+    var data1 = [
+      [1, 5],
+      [6, 10],
+      [3, 7],
+      [9, -3]
+    ];
+    var data2 = [
+      [6, 5],
+      [4, 8],
+      [8, 7],
+      [2, 12]
+    ];
     var target = [
       [1, 5, null],
       [2, null, 12],
@@ -48,7 +72,10 @@ describe("combineData", function() {
       [new Date("2015-03-02"), 7],
       [new Date("2015-03-04"), 10]
     ];
-    var data2 = [[new Date("2015-02-28"), 12], [new Date("2015-03-02"), 8]];
+    var data2 = [
+      [new Date("2015-02-28"), 12],
+      [new Date("2015-03-02"), 8]
+    ];
     var target = [
       [new Date("2015-02-28"), null, 12],
       [new Date("2015-03-01"), 5, null],
@@ -60,9 +87,23 @@ describe("combineData", function() {
   });
 
   it("works with three sorted numerical arrays", function() {
-    var data1 = [[1, 5], [3, 7], [6, 10], [9, -3]];
-    var data2 = [[2, 12], [4, 8], [6, 5], [8, 7]];
-    var data3 = [[3, 18], [5, 19], [6, 16]];
+    var data1 = [
+      [1, 5],
+      [3, 7],
+      [6, 10],
+      [9, -3]
+    ];
+    var data2 = [
+      [2, 12],
+      [4, 8],
+      [6, 5],
+      [8, 7]
+    ];
+    var data3 = [
+      [3, 18],
+      [5, 19],
+      [6, 16]
+    ];
     var target = [
       [1, 5, null, null],
       [2, null, 12, null],

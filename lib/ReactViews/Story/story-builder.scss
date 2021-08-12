@@ -6,7 +6,7 @@
   max-width: 400px;
   color: $text-light;
   font-size: $font-size-mid-small;
-  background: $dark;
+  // background: $dark;
   display: block;
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -49,7 +49,7 @@
 
 .hide-button {
   composes: btn from "../../Sass/common/_buttons.scss";
-  color: $text-light;
+  // color: $text-light;
   font-size: $font-size-mid-small;
   text-transform: uppercase;
   padding: $padding $padding $padding 5 * $padding;
@@ -57,7 +57,7 @@
   svg {
     height: $font-size-mid-small;
     width: $font-size-mid-small;
-    fill: $text-light;
+    // fill: $text-light;
     vertical-align: middle;
     display: inline-block;
     use {
@@ -67,7 +67,7 @@
   &:hover,
   &:focus {
     svg {
-      fill: $color-primary;
+      // fill: $color-primary;
     }
   }
 }
@@ -150,21 +150,21 @@
 }
 
 .intro {
-  background: $dark-with-overlay;
-  color: $text-light;
+  // background: $dark-with-overlay;
+  // color: $text-light;
   font-family: $font-pop;
   margin: $padding $padding 0 $padding;
   border-radius: 4px;
   text-align: center;
   padding: 30px 10px;
-  color: $text-light-dimmed;
+  // color: $text-light-dimmed;
   strong {
-    color: $text-light;
+    // color: $text-light;
   }
   svg {
     width: 70px;
     height: 70px;
-    fill: $text-light-dimmed;
+    // fill: $text-light-dimmed;
     margin: 20px auto;
   }
 }

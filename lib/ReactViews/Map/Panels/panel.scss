@@ -22,7 +22,7 @@
   box-shadow: $box-shadow;
   z-index: 20;
   border-radius: $radius-small;
-  background: $dark;
+  // background: $dark;
   color: $text-light;
   border: $border-style;
   max-width: calc(100vw - 10px);
@@ -44,6 +44,14 @@
   &.is-open {
     @include transform(scale(1) translateZ(0));
   }
+
+  &.show-dropdown-in-center {
+    @include transform(scale(0) translate3d(-50%, 0, 0));
+  }
+  &.is-open.show-dropdown-in-center {
+    @include transform(scale(1) translate3d(-50%, 0, 0));
+  }
+
   &.show-dropdown-as-modal {
     @include transform(translate3d(0, -300px, 0));
     opacity: 0;
@@ -60,15 +68,16 @@
   top: $padding-small;
   right: $padding-small;
 
-  &:hover,
-  &:focus {
-    svg {
-      fill: $color-primary;
-    }
-  }
+  // &:hover,
+  // &:focus {
+  //   svg {
+  //     fill: $color-primary;
+  //   }
+  // }
 
   svg {
-    fill: $grey;
+    // fill: $grey;
+    // fill: $text-light;
     height: 10px;
     width: 10px;
   }
@@ -76,6 +85,10 @@
 .inner-close-btn--for-modal {
   top: 15px;
   right: 15px;
+
+  // svg {
+  //   fill: $grey;
+  // }
 }
 
 .caret {
@@ -83,7 +96,7 @@
   display: block;
   height: 20px;
   width: 20px;
-  background: $dark;
+  // background: $dark;
   position: absolute;
   top: -10px;
   z-index: -1;
@@ -115,26 +128,27 @@
   composes: btn from "../../../Sass/common/_buttons.scss";
   composes: btn--map from "../../../Sass/common/_buttons.scss";
 
-  border-radius: $radius-small;
+  // border-radius: $radius-small;
+  border-radius: 0;
   position: relative;
   border: 0;
 
   svg {
-    fill: #9ca1aa;
-    margin: 0 3px 1px 4px;
-    vertical-align: bottom;
+    // fill: #6487ae;
+    // margin: 0 3px 1px 4px;
+    // vertical-align: middle;
   }
 
   span {
     line-height: 1.3;
   }
 
-  .is-open & {
-    background: $color-primary;
-    svg {
-      fill: #ffffff;
-    }
-  }
+  // .is-open & {
+  //   background: $color-primary;
+  //   svg {
+  //     fill: #ffffff;
+  //   }
+  // }
 
   &:hover,
   &:focus {
@@ -142,6 +156,11 @@
     svg {
       fill: #ffffff;
     }
+  }
+}
+.button-for-modal-dropdown {
+  svg {
+    fill: $color-primary;
   }
 }
 

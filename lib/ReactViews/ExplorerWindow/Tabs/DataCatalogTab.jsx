@@ -1,63 +1,101 @@
-import React from "react";
-
-import createReactClass from "create-react-class";
-
+import { computed, runInAction } from "mobx";
+import { observer } from "mobx-react";
 import PropTypes from "prop-types";
-
-import DataCatalog from "../../DataCatalog/DataCatalog.jsx";
-import DataPreview from "../../Preview/DataPreview.jsx";
-import ObserveModelMixin from "../../ObserveModelMixin";
-import SearchBox from "../../Search/SearchBox.jsx";
+import React from "react";
 import { withTranslation } from "react-i18next";
-
+import { withTheme } from "styled-components";
+import DataCatalog from "../../DataCatalog/DataCatalog";
+import DataPreview from "../../Preview/DataPreview";
+import SearchBox, { DEBOUNCE_INTERVAL } from "../../Search/SearchBox.jsx";
 import Styles from "./data-catalog-tab.scss";
+import Breadcrumbs from "../../Search/Breadcrumbs";
+import Box from "../../../Styled/Box";
 
 // The DataCatalog Tab
-const DataCatalogTab = createReactClass({
-  displayName: "DataCatalogTab",
-  mixins: [ObserveModelMixin],
-
-  propTypes: {
+@observer
+class DataCatalogTab extends React.Component {
+  static propTypes = {
     terria: PropTypes.object,
     viewState: PropTypes.object,
     items: PropTypes.array,
+    searchPlaceholder: PropTypes.string,
+    overrideState: PropTypes.string,
+    onActionButtonClicked: PropTypes.func,
+    theme: PropTypes.object,
     t: PropTypes.func.isRequired
-  },
+  };
+
+  @computed
+  get searchPlaceholder() {
+    const { t } = this.props;
+    return this.props.searchPlaceholder || t("addData.searchPlaceholder");
+  }
 
   changeSearchText(newText) {
-    this.props.viewState.searchState.catalogSearchText = newText;
-  },
+    runInAction(() => {
+      this.props.viewState.searchState.catalogSearchText = newText;
+    });
+  }
 
   search() {
     this.props.viewState.searchState.searchCatalog();
-  },
+  }
 
   render() {
-    const { t } = this.props;
     const terria = this.props.terria;
+    const searchState = this.props.viewState.searchState;
+    const previewed = this.props.viewState.previewedItem;
+    const showBreadcrumbs = this.props.viewState.breadcrumbsShown;
     return (
       <div className={Styles.root}>
-        <div className={Styles.dataExplorer}>
-          <SearchBox
-            searchText={this.props.viewState.searchState.catalogSearchText}
-            onSearchTextChanged={this.changeSearchText}
-            onDoSearch={this.search}
-            placeholder={t("addData.searchPlaceholder")}
-          />
-          <DataCatalog
-            terria={this.props.terria}
-            viewState={this.props.viewState}
-            items={this.props.items}
-          />
-        </div>
-        <DataPreview
-          terria={terria}
-          viewState={this.props.viewState}
-          previewed={this.props.viewState.previewedItem}
-        />
+        <Box fullHeight column>
+          <Box fullHeight overflow="hidden">
+            <Box className={Styles.dataExplorer} styledWidth="40%">
+              {/* ~TODO: Put this back once we add a MobX DataCatalogSearch Provider~ */}
+              {/* TODO2: Implement a more generic MobX DataCatalogSearch */}
+              {searchState.catalogSearchProvider && (
+                <SearchBox
+                  searchText={searchState.catalogSearchText}
+                  onSearchTextChanged={val => this.changeSearchText(val)}
+                  onDoSearch={() => this.search()}
+                  placeholder={this.searchPlaceholder}
+                  debounceDuration={
+                    terria.catalogReferencesLoaded &&
+                    searchState.catalogSearchProvider
+                      ? searchState.catalogSearchProvider
+                          .debounceDurationOnceLoaded
+                      : DEBOUNCE_INTERVAL
+                  }
+                />
+              )}
+              <DataCatalog
+                terria={this.props.terria}
+                viewState={this.props.viewState}
+                overrideState={this.props.overrideState}
+                onActionButtonClicked={this.props.onActionButtonClicked}
+                items={this.props.items}
+              />
+            </Box>
+            <Box styledWidth="60%">
+              <DataPreview
+                terria={terria}
+                viewState={this.props.viewState}
+                previewed={previewed}
+              />
+            </Box>
+          </Box>
+
+          {showBreadcrumbs && (
+            <Breadcrumbs
+              terria={this.props.terria}
+              viewState={this.props.viewState}
+              previewed={previewed}
+            />
+          )}
+        </Box>
       </div>
     );
   }
-});
+}
 
-module.exports = withTranslation()(DataCatalogTab);
+export default withTranslation()(withTheme(DataCatalogTab));

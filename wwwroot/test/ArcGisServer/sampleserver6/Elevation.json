@@ -1,0 +1,26 @@
+{
+  "currentVersion": 10.71,
+  "folders": [],
+  "services": [
+    {
+      "name": "Elevation/earthquakedemoelevation",
+      "type": "ImageServer"
+    },
+    {
+      "name": "Elevation/ESRI_Elevation_World",
+      "type": "GPServer"
+    },
+    {
+      "name": "Elevation/GlacierBay",
+      "type": "MapServer"
+    },
+    {
+      "name": "Elevation/MtBaldy_Elevation",
+      "type": "FeatureServer"
+    },
+    {
+      "name": "Elevation/WorldElevations",
+      "type": "MapServer"
+    }
+  ]
+}

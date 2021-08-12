@@ -7,7 +7,7 @@ import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidg
 import TileCoordinatesImageryProvider from "terriajs-cesium/Source/Scene/TileCoordinatesImageryProvider";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import supportsWebGL from "../../lib/Core/supportsWebGL";
-import AugmentedVirtuality from "../../lib/Models/AugmentedVirtuality.js";
+import AugmentedVirtuality from "../../lib/Models/AugmentedVirtuality";
 
 var describeIfSupportsWebGL = supportsWebGL() ? describe : xdescribe;
 
@@ -195,9 +195,9 @@ describe("AugmentedVirtuality", function() {
     // Check when they are malformed.
     expect({}).not.closeOrientation(bod(0, 0, 0));
     expect(bod(0, 0, 0)).not.closeOrientation({});
-    expect({ orientation: { roll: 0, pitch: 0, heading: 0 } }).closeOrientation(
-      { orientation: { roll: 0, pitch: 0, heading: 0 } }
-    );
+    expect({
+      orientation: { roll: 0, pitch: 0, heading: 0 }
+    }).closeOrientation({ orientation: { roll: 0, pitch: 0, heading: 0 } });
     expect({ orientation: { pitch: 0, heading: 0 } }).not.closeOrientation({
       orientation: { roll: 0, pitch: 0, heading: 0 }
     });

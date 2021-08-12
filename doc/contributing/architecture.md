@@ -1,4 +1,10 @@
-TerriaJS is usually used in a single-page web application to provide mapping and catalog exploration capabilities.  It is written in ECMAScript (JavaScript) 2015+ and compiled to ECMAScript 5 in order to run in any relatively modern web browser, including Internet Explorer 9 or later.  Some features, such as 3D and vector tile region mapping, require more recent browsers, but TerriaJS can be expected to degrade gracefully in older browsers by disabling unsupported features or informing the user of the limitations of their browser. 
+**Warning: This page requires major changes to be updated for TerriaJS version 8.**
+
+TerriaJS is usually used in a single-page web application to provide mapping and catalog exploration capabilities.  It is written in TypeScript and compiled to ECMAScript 5 in order to run in Firefox, Chrome, Safari or Edge.
+
+Much of the following is outdated and maybe be explained better in [new model layer documentation](model-layer.md).
+
+------
 
 ## Layers
 
@@ -18,7 +24,7 @@ TerriaJS has a number of subdirectories of the `lib` directory, each of which co
 
 TerriaJS uses the [React](https://reactjs.org/) library as the basis for its user interface.  The top-level entry point is [StandardUserInterface.jsx](https://github.com/TerriaJS/terriajs/blob/master/lib/ReactViews/StandardUserInterface/StandardUserInterface.jsx).  It is expected that most applications will use this standard user interface, but a sophisticated TerriaJS application could use its own version instead in order to allow extreme customization of the interface.
 
-For styling, we use [Sass](http://sass-lang.com/) in CSS modules loaded via the Webpack `css-loader`, meaning that each React component imports its own local CSS styles from a `.scss` file.
+For styling, we use [Sass](http://sass-lang.com/) in CSS modules loaded via the Webpack `css-loader`, meaning that each React component imports its own local CSS styles from a `.scss` file. However in version 8, we will be removing Sass &  move toward `styled-components` - see the [frontend style guide](./frontend-style-guide.md#MobX-UI-refactor)
 
 The user interface is meant to be a thin layer with minimal domain-specific logic.  Ideally, all domain-specific logic would reside in the `Models` layer or perhaps in the `ViewModels` layer.  This approach allows the UI to be replaced (including by a user of TerriaJS rather than its developers) without needing to re-implement large chunks of TerriaJS logic.  In fact, the entire user interface can be viewed as optional.  A TerriaJS-based application could replace it with its own custom UI.
 

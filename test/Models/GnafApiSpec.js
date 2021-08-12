@@ -140,7 +140,10 @@ describe("GnafApi", function() {
 
     batchSize = 2;
     var innerSplitArray = GnafApi._splitIntoBatches(splitArray, batchSize);
-    expect(innerSplitArray[0]).toEqual([["a", "b", "c"], ["d", "e", "f"]]);
+    expect(innerSplitArray[0]).toEqual([
+      ["a", "b", "c"],
+      ["d", "e", "f"]
+    ]);
     expect(innerSplitArray[1]).toEqual([["g", "h"]]);
   });
 

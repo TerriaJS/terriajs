@@ -1,0 +1,605 @@
+{
+  "currentVersion": 10.7,
+  "id": 0,
+  "name": "lines_0",
+  "type": "Feature Layer",
+  "serviceItemId": "860abbb0931b4dd9889c6663fd6871ec",
+  "displayField": "",
+  "description": "",
+  "copyrightText": "",
+  "defaultVisibility": true,
+  "editingInfo": {
+    "lastEditDate": 1592137100185
+  },
+  "relationships": [],
+  "isDataVersioned": false,
+  "supportsAppend": true,
+  "supportsCalculate": true,
+  "supportsASyncCalculate": true,
+  "supportsTruncate": true,
+  "supportsAttachmentsByUploadId": true,
+  "supportsAttachmentsResizing": true,
+  "supportsRollbackOnFailureParameter": true,
+  "supportsStatistics": true,
+  "supportsExceedsLimitStatistics": true,
+  "supportsAdvancedQueries": true,
+  "supportsValidateSql": true,
+  "supportsCoordinatesQuantization": true,
+  "supportsFieldDescriptionProperty": true,
+  "supportsQuantizationEditMode": true,
+  "supportsApplyEditsWithGlobalIds": false,
+  "supportsMultiScaleGeometry": true,
+  "supportsReturningQueryGeometry": true,
+  "hasGeometryProperties": true,
+  "geometryProperties": {
+    "shapeLengthFieldName": "Shape__Length",
+    "units": "esriMeters"
+  },
+  "advancedQueryCapabilities": {
+    "supportsPagination": true,
+    "supportsPaginationOnAggregatedQueries": true,
+    "supportsQueryRelatedPagination": true,
+    "supportsQueryWithDistance": true,
+    "supportsReturningQueryExtent": true,
+    "supportsStatistics": true,
+    "supportsOrderBy": true,
+    "supportsDistinct": true,
+    "supportsQueryWithResultType": true,
+    "supportsSqlExpression": true,
+    "supportsAdvancedQueryRelated": true,
+    "supportsCountDistinct": true,
+    "supportsPercentileStatistics": true,
+    "supportsLod": true,
+    "supportsQueryWithLodSR": false,
+    "supportedLodTypes": [
+      "geohash"
+    ],
+    "supportsReturningGeometryCentroid": false,
+    "supportsReturningGeometryProperties": true,
+    "supportsQueryWithDatumTransformation": true,
+    "supportsHavingClause": true,
+    "supportsOutFieldSQLExpression": true,
+    "supportsMaxRecordCountFactor": true,
+    "supportsTopFeaturesQuery": true,
+    "supportsDisjointSpatialRel": true,
+    "supportsQueryWithCacheHint": true
+  },
+  "useStandardizedQueries": true,
+  "geometryType": "esriGeometryPolyline",
+  "minScale": 0,
+  "maxScale": 0,
+  "extent": {
+    "xmin": 14331025.559131123,
+    "ymin": -3304525.606824738,
+    "xmax": 15571139.906029824,
+    "ymax": -2230738.2334745838,
+    "spatialReference": {
+      "wkid": 102100,
+      "latestWkid": 3857
+    }
+  },
+  "drawingInfo": {
+    "renderer": {
+      "type": "uniqueValue",
+      "field1": "id1",
+      "defaultSymbol": {
+        "color": [
+          252,
+          146,
+          31,
+          255
+        ],
+        "width": 4.5,
+        "type": "esriSLS",
+        "style": "esriSLSDash"
+      },
+      "defaultLabel": "Other",
+      "uniqueValueInfos": [
+        {
+          "value": "1",
+          "symbol": {
+            "color": [
+              237,
+              81,
+              81,
+              255
+            ],
+            "width": 1.5,
+            "type": "esriSLS",
+            "style": "esriSLSSolid"
+          },
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "symbol": {
+            "color": [
+              20,
+              158,
+              206,
+              255
+            ],
+            "width": 1.5,
+            "type": "esriSLS",
+            "style": "esriSLSDot"
+          },
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "symbol": {
+            "color": [
+              167,
+              198,
+              54,
+              255
+            ],
+            "width": 1.5,
+            "type": "esriSLS",
+            "style": "esriSLSDash"
+          },
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "symbol": {
+            "color": [
+              158,
+              85,
+              156,
+              255
+            ],
+            "width": 1.5,
+            "type": "esriSLS",
+            "style": "esriSLSDashDot"
+          },
+          "label": "4"
+        },
+        {
+          "value": "5",
+          "symbol": {
+            "color": [
+              252,
+              146,
+              31,
+              255
+            ],
+            "width": 1.5,
+            "type": "esriSLS",
+            "style": "esriSLSDashDotDot"
+          },
+          "label": "5"
+        },
+        {
+          "value": "6",
+          "symbol": {
+            "color": [
+              255,
+              222,
+              62,
+              255
+            ],
+            "width": 1.5,
+            "type": "esriSLS",
+            "style": "esriSLSLongDash"
+          },
+          "label": "6"
+        },
+        {
+          "value": "7",
+          "symbol": {
+            "color": [
+              247,
+              137,
+              216,
+              255
+            ],
+            "width": 1.5,
+            "type": "esriSLS",
+            "style": "esriSLSLongDashDot"
+          },
+          "label": "7"
+        },
+        {
+          "value": "8",
+          "symbol": {
+            "color": [
+              183,
+              129,
+              74,
+              255
+            ],
+            "width": 1.5,
+            "type": "esriSLS",
+            "style": "esriSLSShortDash"
+          },
+          "label": "8"
+        },
+        {
+          "value": "9",
+          "symbol": {
+            "color": [
+              60,
+              175,
+              153,
+              255
+            ],
+            "width": 1.5,
+            "type": "esriSLS",
+            "style": "esriSLSShortDot"
+          },
+          "label": "9"
+        },
+        {
+          "value": "10",
+          "symbol": {
+            "color": [
+              107,
+              107,
+              214,
+              255
+            ],
+            "width": 1.5,
+            "type": "esriSLS",
+            "style": "esriSLSShortDashDot"
+          },
+          "label": "10"
+        },
+        {
+          "value": "11",
+          "symbol": {
+            "color": [
+              181,
+              71,
+              121,
+              255
+            ],
+            "width": 1.5,
+            "type": "esriSLS",
+            "style": "esriSLSShortDashDotDot"
+          },
+          "label": "11"
+        },
+        {
+          "value": "12",
+          "symbol": {
+            "color": null,
+            "width": 1.5,
+            "type": "esriSLS",
+            "style": "esriSLSNull"
+          },
+          "label": "12"
+        }
+      ]
+    },
+    "transparency": 0
+  },
+  "allowGeometryUpdates": true,
+  "hasAttachments": false,
+  "htmlPopupType": "esriServerHTMLPopupTypeNone",
+  "hasM": false,
+  "hasZ": false,
+  "objectIdField": "ObjectId",
+  "uniqueIdField": {
+    "name": "ObjectId",
+    "isSystemMaintained": true
+  },
+  "globalIdField": "",
+  "typeIdField": "id1",
+  "fields": [
+    {
+      "name": "id",
+      "type": "esriFieldTypeInteger",
+      "actualType": "int",
+      "alias": "id",
+      "sqlType": "sqlTypeInteger",
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+    },
+    {
+      "name": "ObjectId",
+      "type": "esriFieldTypeOID",
+      "actualType": "int",
+      "alias": "",
+      "sqlType": "sqlTypeInteger",
+      "nullable": false,
+      "editable": false,
+      "domain": null,
+      "defaultValue": null
+    },
+    {
+      "name": "Shape__Length",
+      "type": "esriFieldTypeDouble",
+      "actualType": "float",
+      "alias": "Shape__Length",
+      "sqlType": "sqlTypeFloat",
+      "nullable": true,
+      "editable": false,
+      "domain": null,
+      "defaultValue": null
+    },
+    {
+      "name": "id1",
+      "type": "esriFieldTypeInteger",
+      "alias": "id1",
+      "sqlType": "sqlTypeOther",
+      "nullable": true,
+      "editable": true,
+      "domain": null,
+      "defaultValue": null
+    }
+  ],
+  "indexes": [
+    {
+      "name": "Shape__Length_Index",
+      "fields": "Shape__Length",
+      "isAscending": true,
+      "isUnique": false,
+      "description": ""
+    },
+    {
+      "name": "PK__LINES_LI__9A619291CCDECCE4",
+      "fields": "ObjectId",
+      "isAscending": true,
+      "isUnique": true,
+      "description": "clustered, unique, primary key"
+    },
+    {
+      "name": "user_72398.LINES_LINES_0_Shape_sidx",
+      "fields": "Shape",
+      "isAscending": false,
+      "isUnique": false,
+      "description": "Shape Index"
+    },
+    {
+      "name": "undefined_Index",
+      "fields": "",
+      "isAscending": false,
+      "isUnique": false,
+      "description": ""
+    },
+    {
+      "name": "id_Index",
+      "fields": "id",
+      "isAscending": false,
+      "isUnique": true,
+      "description": ""
+    },
+    {
+      "name": "id1_Index",
+      "fields": "id1",
+      "isAscending": true,
+      "isUnique": false,
+      "description": "id1_Index"
+    }
+  ],
+  "types": [
+    {
+      "id": 1,
+      "name": "1",
+      "domains": {},
+      "templates": [
+        {
+          "name": "1",
+          "description": "",
+          "drawingTool": "esriFeatureEditToolNone",
+          "prototype": {
+            "attributes": {
+              "id1": 1,
+              "id": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "2",
+      "domains": {},
+      "templates": [
+        {
+          "name": "2",
+          "description": "",
+          "drawingTool": "esriFeatureEditToolNone",
+          "prototype": {
+            "attributes": {
+              "id1": 2,
+              "id": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "3",
+      "domains": {},
+      "templates": [
+        {
+          "name": "3",
+          "description": "",
+          "drawingTool": "esriFeatureEditToolNone",
+          "prototype": {
+            "attributes": {
+              "id1": 3,
+              "id": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "4",
+      "domains": {},
+      "templates": [
+        {
+          "name": "4",
+          "description": "",
+          "drawingTool": "esriFeatureEditToolNone",
+          "prototype": {
+            "attributes": {
+              "id1": 4,
+              "id": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "5",
+      "domains": {},
+      "templates": [
+        {
+          "name": "5",
+          "description": "",
+          "drawingTool": "esriFeatureEditToolNone",
+          "prototype": {
+            "attributes": {
+              "id1": 5,
+              "id": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "6",
+      "domains": {},
+      "templates": [
+        {
+          "name": "6",
+          "description": "",
+          "drawingTool": "esriFeatureEditToolNone",
+          "prototype": {
+            "attributes": {
+              "id1": 6,
+              "id": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "7",
+      "domains": {},
+      "templates": [
+        {
+          "name": "7",
+          "description": "",
+          "drawingTool": "esriFeatureEditToolNone",
+          "prototype": {
+            "attributes": {
+              "id1": 7,
+              "id": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "8",
+      "domains": {},
+      "templates": [
+        {
+          "name": "8",
+          "description": "",
+          "drawingTool": "esriFeatureEditToolNone",
+          "prototype": {
+            "attributes": {
+              "id1": 8,
+              "id": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "9",
+      "domains": {},
+      "templates": [
+        {
+          "name": "9",
+          "description": "",
+          "drawingTool": "esriFeatureEditToolNone",
+          "prototype": {
+            "attributes": {
+              "id1": 9,
+              "id": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "10",
+      "domains": {},
+      "templates": [
+        {
+          "name": "10",
+          "description": "",
+          "drawingTool": "esriFeatureEditToolNone",
+          "prototype": {
+            "attributes": {
+              "id1": 10,
+              "id": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "11",
+      "domains": {},
+      "templates": [
+        {
+          "name": "11",
+          "description": "",
+          "drawingTool": "esriFeatureEditToolNone",
+          "prototype": {
+            "attributes": {
+              "id1": 11,
+              "id": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "12",
+      "domains": {},
+      "templates": [
+        {
+          "name": "12",
+          "description": "",
+          "drawingTool": "esriFeatureEditToolNone",
+          "prototype": {
+            "attributes": {
+              "id1": 12,
+              "id": null
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "templates": [],
+  "supportedQueryFormats": "JSON, geoJSON, PBF",
+  "hasStaticData": true,
+  "maxRecordCount": 2000,
+  "standardMaxRecordCount": 4000,
+  "standardMaxRecordCountNoGeometry": 32000,
+  "tileMaxRecordCount": 4000,
+  "maxRecordCountFactor": 1,
+  "capabilities": "Query"
+}

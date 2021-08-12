@@ -1,63 +1,92 @@
-"use strict";
-
 import React from "react";
-import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import ObserveModelMixin from "../../ObserveModelMixin";
 import Styles from "./augmented_virtuality_tool.scss";
-import Icon from "../../Icon";
+import Icon from "../../../Styled/Icon";
 import ViewerMode from "../../../Models/ViewerMode";
-import defined from "terriajs-cesium/Source/Core/defined";
 import { withTranslation } from "react-i18next";
-
 import AugmentedVirtuality from "../../../Models/AugmentedVirtuality";
+import { observer } from "mobx-react";
+import { action, observable } from "mobx";
+import classNames from "classnames";
 
-const AugmentedVirtualityTool = createReactClass({
-  displayName: "AugmentedVirtualityTool",
-  mixins: [ObserveModelMixin],
+@withTranslation()
+@observer
+class AugmentedVirtualityTool extends React.Component {
+  @observable experimentalWarningShown = false;
+  @observable realignHelpShown = false;
+  @observable resetRealignHelpShown = false;
 
-  propTypes: {
+  static propTypes = {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
     experimentalWarning: PropTypes.bool,
     t: PropTypes.func.isRequired
-  },
+  };
 
-  getInitialState() {
-    return {
-      augmentedVirtuality: new AugmentedVirtuality(this.props.terria),
-      experimentalWarningShown: false,
-      realignHelpShown: false,
-      resetRealignHelpShown: false
-    };
-  },
+  static defaultProps = {
+    experimentalWarning: true
+  };
 
+  constructor(props) {
+    super(props);
+    this.augmentedVirtuality = new AugmentedVirtuality(this.props.terria);
+  }
+
+  @action.bound
   handleClickAVTool() {
     // Make the AugmentedVirtuality module avaliable elsewhere.
-    this.props.terria.augmentedVirtuality = this.state.augmentedVirtuality;
+    this.props.terria.augmentedVirtuality = this.augmentedVirtuality;
+    // feature detect for new ios 13
+    // it seems you don't need to ask for both, but who knows, ios 14 / something
+    // could change again
+    if (
+      window.DeviceMotionEvent &&
+      // exists on window by now?
+      typeof DeviceMotionEvent.requestPermission === "function"
+    ) {
+      DeviceMotionEvent.requestPermission()
+        .then(permissionState => {
+          if (permissionState !== "granted") {
+            console.error("couldn't get access for motion events");
+          }
+        })
+        .catch(console.error);
+    }
+    if (
+      window.DeviceOrientationEvent &&
+      // exists on window by now?
+      typeof DeviceOrientationEvent.requestPermission === "function"
+    ) {
+      DeviceOrientationEvent.requestPermission()
+        .then(permissionState => {
+          if (permissionState !== "granted") {
+            console.error("couldn't get access for orientation events");
+          }
+        })
+        .catch(console.error);
+    }
 
     if (
-      defined(this.props.experimentalWarning) &&
       this.props.experimentalWarning !== false &&
-      !this.state.experimentalWarningShown
+      !this.experimentalWarningShown
     ) {
-      this.setState({ experimentalWarningShown: true });
+      this.experimentalWarningShown = true;
       const { t } = this.props;
-      this.props.viewState.notifications.push({
+      this.props.viewState.terria.notificationState.addNotificationToQueue({
         title: t("AR.title"),
         message: t("AR.experimentalFeatureMessage"),
         confirmText: t("AR.confirmText")
       });
     }
+    this.augmentedVirtuality.toggleEnabled();
+  }
 
-    this.state.augmentedVirtuality.toggleEnabled();
-  },
-
+  @action.bound
   handleClickRealign() {
-    if (!this.state.realignHelpShown) {
-      this.setState({ realignHelpShown: true });
+    if (!this.realignHelpShown) {
+      this.realignHelpShown = true;
       const { t } = this.props;
-      this.props.viewState.notifications.push({
+      this.props.viewState.terria.notificationState.addNotificationToQueue({
         title: t("AR.manualAlignmentTitle"),
         message: t("AR.manualAlignmentMessage", {
           img:
@@ -67,29 +96,30 @@ const AugmentedVirtualityTool = createReactClass({
       });
     }
 
-    this.state.augmentedVirtuality.toggleManualAlignment();
-  },
+    this.augmentedVirtuality.toggleManualAlignment();
+  }
 
+  @action.bound
   handleClickResetRealign() {
-    if (!this.state.resetRealignHelpShown) {
-      this.setState({ resetRealignHelpShown: true });
+    if (!this.resetRealignHelpShown) {
+      this.resetRealignHelpShown = true;
       const { t } = this.props;
-      this.props.viewState.notifications.push({
+      this.props.viewState.terria.notificationState.addNotificationToQueue({
         title: t("AR.resetAlignmentTitle"),
         message: t("AR.resetAlignmentMessage"),
         confirmText: t("AR.confirmText")
       });
     }
 
-    this.state.augmentedVirtuality.resetAlignment();
-  },
+    this.augmentedVirtuality.resetAlignment();
+  }
 
   handleClickHover() {
-    this.state.augmentedVirtuality.toggleHoverHeight();
-  },
+    this.augmentedVirtuality.toggleHoverHeight();
+  }
 
   render() {
-    const enabled = this.state.augmentedVirtuality.enabled;
+    const enabled = this.augmentedVirtuality.isEnabled;
     let toggleImage = Icon.GLYPHS.arOff;
     let toggleStyle = Styles.btn;
     if (enabled) {
@@ -97,13 +127,13 @@ const AugmentedVirtualityTool = createReactClass({
       toggleStyle = Styles.btnPrimary;
     }
     const { t } = this.props;
-    const realignment = this.state.augmentedVirtuality.manualAlignment;
+    const realignment = this.augmentedVirtuality.manualAlignment;
     let realignmentStyle = Styles.btn;
     if (realignment) {
       realignmentStyle = Styles.btnBlink;
     }
 
-    const hoverLevel = this.state.augmentedVirtuality.hoverLevel;
+    const hoverLevel = this.augmentedVirtuality.hoverLevel;
     let hoverImage = Icon.GLYPHS.arHover0;
     // Note: We use the image of the next level that we will be changing to, not the level the we are currently at.
     switch (hoverLevel) {
@@ -120,7 +150,12 @@ const AugmentedVirtualityTool = createReactClass({
 
     return (
       <If condition={this.props.terria.viewerMode !== ViewerMode.Leaflet}>
-        <div className={Styles.augmentedVirtualityTool}>
+        <div
+          className={classNames(Styles.augmentedVirtualityTool, {
+            [Styles.withTimeSeriesControls]:
+              this.props.terria.timelineStack.top !== undefined
+          })}
+        >
           <button
             type="button"
             className={toggleStyle}
@@ -135,12 +170,12 @@ const AugmentedVirtualityTool = createReactClass({
               type="button"
               className={Styles.btn}
               title={t("AR.btnHover")}
-              onClick={this.handleClickHover}
+              onClick={() => this.handleClickHover()}
             >
               <Icon glyph={hoverImage} />
             </button>
 
-            <If condition={!this.state.augmentedVirtuality.manualAlignmentSet}>
+            <If condition={!this.augmentedVirtuality.manualAlignmentSet}>
               <button
                 type="button"
                 className={realignmentStyle}
@@ -153,8 +188,7 @@ const AugmentedVirtualityTool = createReactClass({
 
             <If
               condition={
-                this.state.augmentedVirtuality.manualAlignmentSet &&
-                !realignment
+                this.augmentedVirtuality.manualAlignmentSet && !realignment
               }
             >
               <button
@@ -171,6 +205,6 @@ const AugmentedVirtualityTool = createReactClass({
       </If>
     );
   }
-});
+}
 
-module.exports = withTranslation()(AugmentedVirtualityTool);
+export default AugmentedVirtualityTool;

@@ -1,45 +1,38 @@
 import React from "react";
-import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import Sortable from "react-anything-sortable";
 
-import WorkbenchItem from "./WorkbenchItem.jsx";
-import ObserveModelMixin from "./../ObserveModelMixin";
+import WorkbenchSplitScreen from "./WorkbenchSplitScreen";
+import WorkbenchItem from "./WorkbenchItem";
+import { observer } from "mobx-react";
+import { action } from "mobx";
 
 import Styles from "./workbench-list.scss";
 import "!!style-loader!css-loader?sourceMap!./sortable.css";
 
-const WorkbenchList = createReactClass({
-  displayName: "WorkbenchList",
-  mixins: [ObserveModelMixin],
-
-  propTypes: {
+@observer
+class WorkbenchList extends React.Component {
+  static propTypes = {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired
-  },
+  };
 
+  @action.bound
   onSort(sortedArray, currentDraggingSortData, currentDraggingIndex) {
-    let draggedItemIndex = this.props.terria.nowViewing.items.indexOf(
-      currentDraggingSortData
+    this.props.terria.workbench.moveItemToIndex(
+      currentDraggingSortData,
+      currentDraggingIndex
     );
-    const addAtIndex = currentDraggingIndex;
-
-    while (draggedItemIndex < addAtIndex) {
-      this.props.terria.nowViewing.lower(currentDraggingSortData);
-      ++draggedItemIndex;
-    }
-
-    while (draggedItemIndex > addAtIndex) {
-      this.props.terria.nowViewing.raise(currentDraggingSortData);
-      --draggedItemIndex;
-    }
-  },
+  }
 
   render() {
     return (
       <ul className={Styles.workbenchContent}>
+        {this.props.terria.showSplitter && (
+          <WorkbenchSplitScreen terria={this.props.terria} />
+        )}
         <Sortable onSort={this.onSort} direction="vertical" dynamic={true}>
-          <For each="item" of={this.props.terria.nowViewing.items}>
+          <For each="item" of={this.props.terria.workbench.items}>
             <WorkbenchItem
               item={item}
               sortData={item}
@@ -51,6 +44,6 @@ const WorkbenchList = createReactClass({
       </ul>
     );
   }
-});
+}
 
 module.exports = WorkbenchList;

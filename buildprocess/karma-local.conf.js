@@ -1,6 +1,5 @@
 'use strict';
 
-/*global require*/
 var createKarmaBaseConfig = require('./createKarmaBaseConfig');
 
 module.exports = function(config) {
@@ -12,6 +11,9 @@ module.exports = function(config) {
     });
 
     options.frameworks.push('detectBrowsers');
-
+    options.reporters.push('coverage-istanbul');
+    options.coverageIstanbulReporter = {
+      reports: ["html", "text-summary", "lcovonly"]
+    };
     config.set(options);
 };

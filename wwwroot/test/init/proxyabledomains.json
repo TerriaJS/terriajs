@@ -1,7 +1,0 @@
-{
-    "proxyableDomains": [
-        "example.com",
-        "csiro.au"
-    ],
-    "proxyAllDomains": false
-}

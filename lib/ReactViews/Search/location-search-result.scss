@@ -17,11 +17,11 @@
     color: $text-light;
   }
   svg {
-    height: 20px;
-    width: 20px;
+    height: 10px;
+    width: 10px;
     position: absolute;
-    right: $padding;
-    top: $padding;
+    right: $padding + $padding-small;
+    top: $padding + $padding-small;
   }
 }
 
@@ -47,7 +47,10 @@
 
 .provider-result {
   margin-top: $padding-small;
-  background-color: $dark-with-overlay;
+  @media (min-width: $md) {
+    color: $text-darker;
+  }
+  // background-color: $dark-with-overlay;
   .items {
     display: none;
   }
@@ -55,16 +58,16 @@
 
 // on mobile, we don't want the gap between search results
 .light {
-  background: #fff;
+  // background: #fff;
   margin-top: 0;
   svg {
-    fill: #000;
+    // fill: #000;
   }
 }
 
 .dark {
   svg {
-    fill: #ffffff;
+    // fill: #ffffff;
   }
 }
 

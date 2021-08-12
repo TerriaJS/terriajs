@@ -3,14 +3,13 @@
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import ObserveModelMixin from "../../ObserveModelMixin";
-import defined from "terriajs-cesium/Source/Core/defined";
+import isDefined from "../../../Core/isDefined";
 import { withTranslation } from "react-i18next";
 import Styles from "./colorscalerange-section.scss";
+import TerriaError from "../../../Core/TerriaError";
 
 const ColorScaleRangeSection = createReactClass({
   displayName: "ColorScaleRangeSection",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     item: PropTypes.object.isRequired,
@@ -47,36 +46,41 @@ const ColorScaleRangeSection = createReactClass({
     const min = parseFloat(this.state.minRange);
     if (min !== min) {
       // is NaN?
-      this.props.item.terria.error.raiseEvent({
-        sender: this.props.item,
-        title: t("workbench.colorScaleRangeTitle"),
-        message: t("workbench.colorScaleRangeMin")
-      });
+      this.props.item.terria.raiseErrorToUser(
+        new TerriaError({
+          sender: this.props.item,
+          title: t("workbench.colorScaleRangeTitle"),
+          message: t("workbench.colorScaleRangeMin")
+        })
+      );
       return;
     }
 
     const max = parseFloat(this.state.maxRange);
     if (max !== max) {
       // is NaN?
-      this.props.item.terria.error.raiseEvent({
-        sender: this.props.item,
-        title: t("workbench.colorScaleRangeTitle"),
-        message: t("workbench.colorScaleRangeMax")
-      });
+      this.props.item.terria.raiseErrorToUser(
+        new TerriaError({
+          sender: this.props.item,
+          title: t("workbench.colorScaleRangeTitle"),
+          message: t("workbench.colorScaleRangeMax")
+        })
+      );
       return;
     }
 
     if (max <= min) {
-      this.props.item.terria.error.raiseEvent({
-        sender: this.props.item,
-        title: t("workbench.colorScaleRangeTitle"),
-        message: t("workbench.colorScaleRangeMinSmallerThanMax")
-      });
+      this.props.item.terria.raiseErrorToUser(
+        new TerriaError({
+          sender: this.props.item,
+          title: t("workbench.colorScaleRangeTitle"),
+          message: t("workbench.colorScaleRangeMinSmallerThanMax")
+        })
+      );
       return;
     }
-
-    this.props.item.colorScaleMinimum = min;
-    this.props.item.colorScaleMaximum = max;
+    this.props.item.setTrait("user", "colorScaleMinimum", min);
+    this.props.item.setTrait("user", "colorScaleMaximum", max);
   },
 
   changeRangeMin(event) {
@@ -93,7 +97,11 @@ const ColorScaleRangeSection = createReactClass({
 
   render() {
     const item = this.props.item;
-    if (!defined(item.colorScaleMinimum) || !defined(item.colorScaleMaximum)) {
+    if (
+      !isDefined(item.colorScaleMinimum) ||
+      !isDefined(item.colorScaleMaximum) ||
+      !item.supportsColorScaleRange
+    ) {
       return null;
     }
     const { t } = this.props;

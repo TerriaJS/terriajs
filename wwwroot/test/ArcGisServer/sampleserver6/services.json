@@ -1,0 +1,41 @@
+{
+  "currentVersion": 10.71,
+  "folders": [
+    "AGP",
+    "Elevation"
+  ],
+  "services": [
+    {
+      "name": "911CallsHotspotGP",
+      "type": "GPServer"
+    },
+    {
+      "name": "911CallsHotspotMS",
+      "type": "MapServer"
+    },
+    {
+      "name": "CensusMS",
+      "type": "MapServer"
+    },
+    {
+      "name": "CharlotteLAS",
+      "type": "ImageServer"
+    },
+    {
+      "name": "CommercialDamageAssessmentFS",
+      "type": "FeatureServer"
+    },
+    {
+      "name": "CommercialDamageAssessmentMS",
+      "type": "MapServer"
+    },
+    {
+      "name": "CommunityAddressingFS",
+      "type": "FeatureServer"
+    },
+    {
+      "name": "CommunityAddressingMS",
+      "type": "MapServer"
+    }
+  ]
+}

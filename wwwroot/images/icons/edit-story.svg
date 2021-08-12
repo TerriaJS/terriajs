@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Shape</title>
+  <g id="TerriaJS" stroke="none" stroke-width="1" fill-rule="evenodd">
+    <g id="Stories-6" transform="translate(-1218.000000, -329.000000)" fill="nonzero">
+      <g id="Group-4" transform="translate(1208.000000, 286.000000)">
+        <g id="Group-31" transform="translate(10.000000, 41.000000)">
+          <path d="M0,14.7083052 L0,18 L3.2916948,18 L13,8.2916948 L9.7083052,5 L0,14.7083052 L0,14.7083052 Z M15.7509579,5.44189017 C16.083014,5.10983397 16.083014,4.5734355 15.7509579,4.24137931 L13.7586207,2.24904215 C13.4265645,1.91698595 12.890166,1.91698595 12.5581098,2.24904215 L11,3.80715198 L14.192848,7 L15.7509579,5.44189017 L15.7509579,5.44189017 Z" id="Shape"></path>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

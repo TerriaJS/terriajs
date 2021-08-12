@@ -2,14 +2,13 @@ import React from "react";
 
 import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
+import { withTranslation } from "react-i18next";
 
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 
 import DataUri from "../../Core/DataUri";
 import Dropdown from "../Generic/Dropdown";
-import { withTranslation } from "react-i18next";
-
-import Icon from "../Icon.jsx";
+import Icon from "../../Styled/Icon";
 
 import Styles from "./feature-info-download.scss";
 

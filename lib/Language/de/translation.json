@@ -8,7 +8,6 @@
     "imageOptimisation": "Bild-Optimierung",
     "baseMap": "Basis-Karte",
     "mapView": "Kartenansicht",
-    "btnText": "Karte",
     "btnTitle": "Ansicht ändern",
     "screen": "Bildschirm",
     "nativeResolutionLabel": "Klicken Sie hier, um die Verwendung der Auflösung {{resolution1}} zu beenden und mit der Auflösung {{resolution2}} fortzufahren",
@@ -23,10 +22,6 @@
       "CesiumTerrain": "3D-Gelände"
     },
     "none": "(Keine)"
-  },
-  "welcomeMessage": {
-    "WelcomeMessage": "Greifen Sie auf umfangreiche geografische Daten aus verschiedenen Datenquellen zu, alles von einem Ort aus.",
-    "title": "Geografische Daten <2>einfach gemacht.</2>"
   },
   "featureInfo": {
     "latLon": "Lat / Lon ",
@@ -76,7 +71,6 @@
     "captionText": "Dies hilft uns bei der Fehlerbehebung, da wir sehen können, was Sie sehen",
     "shareWithDevelopers": "Meine Kartenansicht mit {{appName}}-Entwicklern teilen",
     "commentQuestion": "Kommentar oder Frage",
-    "email": "E-Mail-Adresse (optional)<br/><2>Ohne können wir Sie nicht erreichen!</2>",
     "yourName": "Ihr Name (optional)",
     "close": "Feedback schließen",
     "title": "Feedback",
@@ -112,13 +106,11 @@
     "printExplanation": "Öffnen Sie eine druckbare Version dieser Karte.",
     "printTitle": "Karte drucken",
     "generatingUrl": "Freigabe-URL generieren…",
-    "localDataNote": "<0><0>Hinweis:</0></0><1>Die folgenden Datenquellen werden NICHT freigegeben, da sie Daten aus diesem lokalen System enthalten. Um diese Datenquellen freizugeben, veröffentlichen Sie ihre Daten auf einem Webserver und <2>fügen Sie sie mit einer URL</2> ein.</1>",
     "shortLinkError": "Beim Versuch, die URL zu kürzen, ist ein Fehler aufgetreten.  Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.",
     "shortLinkShortening": "URL kürzen…",
     "browserPrint": "Für bessere Druckergebnisse verwenden Sie bitte die Schaltfläche \"Drucken\" von {{appName}} anstelle der Druckfunktion Ihres Webbrowsers."
   },
   "location": {
-    "originError": "Ihr Browser kann Ihren Standort nur bei Verwendung von HTTPS bereitstellen. Möglicherweise können Sie stattdessen {{secureUrl}} verwenden.",
     "location": "Standort",
     "browserCannotProvide": "Ihr Browser kann Ihren Standort nicht zur Verfügung stellen.",
     "errorGettingLocation": "Fehler beim Abrufen des Standorts",

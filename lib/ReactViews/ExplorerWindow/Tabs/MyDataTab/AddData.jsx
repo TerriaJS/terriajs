@@ -1,43 +1,57 @@
-import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import Icon from "../../../Icon.jsx";
-import addUserCatalogMember from "../../../../Models/addUserCatalogMember";
-import createCatalogItemFromFileOrUrl from "../../../../Models/createCatalogItemFromFileOrUrl";
-import createCatalogMemberFromType from "../../../../Models/createCatalogMemberFromType";
-import Dropdown from "../../../Generic/Dropdown";
-import FileInput from "./FileInput.jsx";
+import React from "react";
+import { Trans, withTranslation } from "react-i18next";
+import {
+  Category,
+  DatatabAction
+} from "../../../../Core/AnalyticEvents/analyticEvents";
 import getDataType from "../../../../Core/getDataType";
-import ObserveModelMixin from "../../../ObserveModelMixin";
-import TerriaError from "../../../../Core/TerriaError";
-import addUserFiles from "../../../../Models/addUserFiles";
-import Styles from "./add-data.scss";
+import TimeVarying from "../../../../ModelMixins/TimeVarying";
+import addUserCatalogMember from "../../../../Models/Catalog/addUserCatalogMember";
+import addUserFiles from "../../../../Models/Catalog/addUserFiles";
+import CatalogMemberFactory from "../../../../Models/Catalog/CatalogMemberFactory";
+import createCatalogItemFromFileOrUrl from "../../../../Models/Catalog/createCatalogItemFromFileOrUrl";
+import CommonStrata from "../../../../Models/Definition/CommonStrata";
+import upsertModelFromJson from "../../../../Models/Definition/upsertModelFromJson";
+import Icon from "../../../../Styled/Icon";
+import Dropdown from "../../../Generic/Dropdown";
 import Loader from "../../../Loader";
-import { withTranslation, Trans } from "react-i18next";
+import Styles from "./add-data.scss";
+import FileInput from "./FileInput";
 
 // Local and remote data have different dataType options
-const remoteDataType = getDataType().remoteDataType;
-const localDataType = getDataType().localDataType;
+const defaultRemoteDataTypes = getDataType().remoteDataType;
+const defaultLocalDataTypes = getDataType().localDataType;
 
 /**
  * Add data panel in modal window -> My data tab
  */
 const AddData = createReactClass({
   displayName: "AddData",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     terria: PropTypes.object,
     viewState: PropTypes.object,
     resetTab: PropTypes.func,
     activeTab: PropTypes.string,
+    localDataTypes: PropTypes.arrayOf(PropTypes.object),
+    remoteDataTypes: PropTypes.arrayOf(PropTypes.object),
+    onFileAddFinished: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired
+  },
+
+  getDefaultProps() {
+    return {
+      remoteDataTypes: defaultRemoteDataTypes,
+      localDataTypes: defaultLocalDataTypes
+    };
   },
 
   getInitialState() {
     return {
-      localDataType: localDataType[0], // By default select the first item (auto)
-      remoteDataType: remoteDataType[0],
+      localDataType: this.props.localDataTypes[0], // By default select the first item (auto)
+      remoteDataType: this.props.remoteDataTypes[0],
       remoteUrl: "", // By default there's no remote url
       isLoading: false
     };
@@ -65,8 +79,8 @@ const AddData = createReactClass({
       this.props.viewState,
       this.state.localDataType
     ).then(addedCatalogItems => {
-      if (addedCatalogItems.length > 0) {
-        this.onFileAddFinished(addedCatalogItems[0]);
+      if (addedCatalogItems && addedCatalogItems.length > 0) {
+        this.props.onFileAddFinished(addedCatalogItems);
       }
       this.setState({
         isLoading: false
@@ -76,42 +90,65 @@ const AddData = createReactClass({
     });
   },
 
-  handleUrl(e) {
+  async handleUrl(e) {
     const url = this.state.remoteUrl;
     e.preventDefault();
-    this.props.terria.analytics.logEvent("addDataUrl", url);
-    const that = this;
+    this.props.terria.analytics?.logEvent(
+      Category.dataTab,
+      DatatabAction.addDataUrl,
+      url
+    );
     this.setState({
       isLoading: true
     });
     let promise;
-    if (that.state.remoteDataType.value === "auto") {
-      promise = loadFile(that);
-    } else {
-      const newItem = createCatalogMemberFromType(
-        that.state.remoteDataType.value,
-        that.props.terria
+    if (this.state.remoteDataType.value === "auto") {
+      promise = createCatalogItemFromFileOrUrl(
+        this.props.terria,
+        this.props.viewState,
+        this.state.remoteUrl,
+        this.state.remoteDataType.value,
+        true
       );
-      newItem.name = that.state.remoteUrl;
-      newItem.url = that.state.remoteUrl;
-      promise = newItem.load().then(function() {
-        return newItem;
-      });
+    } else {
+      try {
+        const newItem = upsertModelFromJson(
+          CatalogMemberFactory,
+          this.props.terria,
+          "",
+          CommonStrata.defaults,
+          { type: this.state.remoteDataType.value, name: url },
+          {}
+        ).throwIfUndefined({
+          message: `An error occurred trying to add data from URL: ${url}`
+        });
+        newItem.setTrait(CommonStrata.user, "url", url);
+        promise = newItem.loadMetadata().then(result => {
+          if (result.error) {
+            return Promise.reject(result.error);
+          }
+
+          return Promise.resolve(newItem);
+        });
+      } catch (e) {
+        promise = Promise.reject(e);
+      }
     }
     addUserCatalogMember(this.props.terria, promise).then(addedItem => {
-      if (addedItem && !(addedItem instanceof TerriaError)) {
-        this.onFileAddFinished(addedItem);
+      if (addedItem) {
+        this.props.onFileAddFinished([addedItem]);
+        if (TimeVarying.is(addedItem)) {
+          this.props.terria.timelineStack.addToTop(addedItem);
+        }
       }
+
+      // FIXME: Setting state here might result in a react warning if the
+      // component unmounts before the promise finishes
       this.setState({
         isLoading: false
       });
       this.props.resetTab();
     });
-  },
-
-  onFileAddFinished(fileToSelect) {
-    this.props.viewState.myDataIsUploadView = false;
-    this.props.viewState.viewCatalogMember(fileToSelect);
   },
 
   onRemoteUrlChange(event) {
@@ -129,7 +166,10 @@ const AddData = createReactClass({
       icon: <Icon glyph={Icon.GLYPHS.opened} />
     };
 
-    const dataTypes = localDataType.reduce(function(result, currentDataType) {
+    const dataTypes = this.props.localDataTypes.reduce(function(
+      result,
+      currentDataType
+    ) {
       if (currentDataType.extensions) {
         return result.concat(
           currentDataType.extensions.map(extension => "." + extension)
@@ -137,7 +177,8 @@ const AddData = createReactClass({
       } else {
         return result;
       }
-    }, []);
+    },
+    []);
 
     return (
       <div className={Styles.tabPanels}>
@@ -150,7 +191,7 @@ const AddData = createReactClass({
               </Trans>
             </label>
             <Dropdown
-              options={localDataType}
+              options={this.props.localDataTypes}
               selected={this.state.localDataType}
               selectOption={this.selectLocalOption}
               matchWidth={true}
@@ -177,7 +218,7 @@ const AddData = createReactClass({
               </Trans>
             </label>
             <Dropdown
-              options={remoteDataType}
+              options={this.props.remoteDataTypes}
               selected={this.state.remoteDataType}
               selectOption={this.selectRemoteOption}
               matchWidth={true}
@@ -216,18 +257,5 @@ const AddData = createReactClass({
     return <div className={Styles.inner}>{this.renderPanels()}</div>;
   }
 });
-
-/**
- * Loads a catalog item from a file.
- */
-function loadFile(viewModel) {
-  return createCatalogItemFromFileOrUrl(
-    viewModel.props.terria,
-    viewModel.props.viewState,
-    viewModel.state.remoteUrl,
-    viewModel.state.remoteDataType.value,
-    true
-  );
-}
 
 module.exports = withTranslation()(AddData);

@@ -47,23 +47,6 @@
   }
 }
 
-.btn--storyShare {
-  position: relative;
-  padding-left: 35px;
-  height: inherit;
-
-  composes: btn from "../../../../Sass/common/_buttons.scss";
-  composes: btn-primary from "../../../../Sass/common/_buttons.scss";
-  svg {
-    width: 15px;
-    height: 15px;
-    fill: #ffffff;
-    position: absolute;
-    left: 15px;
-    top: 13px;
-  }
-}
-
 .btn--withoutText {
   svg {
     fill: $text-darker;
@@ -108,7 +91,8 @@
   display: block;
 }
 
-.clipboard-for-catalog-share {
+.clipboard-for-catalog-share,
+.clipboard-for-story-share {
   margin: 15px;
 }
 
@@ -127,18 +111,21 @@
 }
 
 .shorten-url {
+  padding-right: 0;
   button {
     text-align: left;
     border: 0px;
     background: transparent;
     outline: 0;
+    padding-right: 0;
   }
   svg {
-    display: inline;
-    padding-right: 5px;
+    display: inline-block;
+    padding: 0 5px;
     fill: #fff;
-    height: 14px;
-    width: 14px;
+    height: 10px;
+    width: 10px;
+    box-sizing: content-box;
   }
 }
 

@@ -1,0 +1,2992 @@
+{
+  "data": {
+    "dataflows": [
+      {
+        "id": "DF_COMMODITY_PRICES",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Selected International Commodity Prices",
+        "names": {
+          "en": "Selected International Commodity Prices"
+        },
+        "description": "Nominal prices in USD for selected key international commodity prices relevant to Pacific Island Countries and Territories, extracted from World bank Commodity Prices (« pink sheets ») and from FAO GLOBEFISH European Fish Price Report.",
+        "descriptions": {
+          "en": "Nominal prices in USD for selected key international commodity prices relevant to Pacific Island Countries and Territories, extracted from World bank Commodity Prices (« pink sheets ») and from FAO GLOBEFISH European Fish Price Report."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "COMMODITY",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "FREQ=A,INDICATOR=COMPRICE,TIME_PERIOD_START=2010,TIME_PERIOD_END=2020",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/vbwmj|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/vbwmj|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_COMMODITY_PRICES(1.0)"
+      },
+      {
+        "id": "DF_CPI",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Inflation rates",
+        "names": {
+          "en": "Inflation rates"
+        },
+        "description": "Inflation rates for the Pacific island countries and territories per year.",
+        "descriptions": {
+          "en": "Inflation rates for the Pacific island countries and territories per year."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "UNIT_MEASURE,UNIT_MULT,BASE_PER",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "INDICATOR=INF",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/a2vsj|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/a2vsj|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_CPI(3.0)"
+      },
+      {
+        "id": "DF_CURRENCIES",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "2.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Currency exchange rates",
+        "names": {
+          "en": "Currency exchange rates"
+        },
+        "description": "Number of U.S. Dollars per domestic currency unit for currencies used in Pacific Island Countries and Territories. Monthly and yearly values for end-of-period and period-average exchange rates since 1950 are based on data from IMF International Financial Statistics.",
+        "descriptions": {
+          "en": "Number of U.S. Dollars per domestic currency unit for currencies used in Pacific Island Countries and Territories. Monthly and yearly values for end-of-period and period-average exchange rates since 1950 are based on data from IMF International Financial Statistics."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "RATE",
+            "type": "ROW_SECTION"
+          },
+          {
+            "title": "CURRENCY",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "FREQ=A,INDICATOR=ENDA,TIME_PERIOD_START=2010",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/mdsjd|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/mdsjd|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_CURRENCIES(2.0)"
+      },
+      {
+        "id": "DF_IMTS",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "International Merchandise Trade Statistics (IMTS)",
+        "names": {
+          "en": "International Merchandise Trade Statistics (IMTS)"
+        },
+        "description": "International Merchandise Trade Statistics for the Pacific island countries and territories since 2000, per year, primary partner area, trade flow, mode of transport to the border and type of commodity.",
+        "descriptions": {
+          "en": "International Merchandise Trade Statistics for the Pacific island countries and territories since 2000, per year, primary partner area, trade flow, mode of transport to the border and type of commodity."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "UNIT_MEASURE,UNIT_MULT",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "ROW_SECTION"
+          },
+          {
+            "title": "INDICATOR",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "INDICATOR=TB+X+M,COMMODITY=_T,COUNTERPART=_T,TRANSPORT=_T,CURRENCY=USD,TIME_PERIOD_START=2015",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/kjhk9|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/kjhk9|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_IMTS(3.0)"
+      },
+      {
+        "id": "DF_NATIONAL_ACCOUNTS",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Gross Domestic Product for Pacific Island Countries and Territories",
+        "names": {
+          "en": "Gross Domestic Product for Pacific Island Countries and Territories"
+        },
+        "description": "Gross Domestic Product (GDP) is a measure of the monetary value of all output (or production) by all firms, non-profit institutions, government bodies and households in a country for a specific time period.",
+        "descriptions": {
+          "en": "Gross Domestic Product (GDP) is a measure of the monetary value of all output (or production) by all firms, non-profit institutions, government bodies and households in a country for a specific time period."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "INDICATOR",
+            "type": "ROW_SECTION"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "INDICATOR=GDPC,CURRENCY=DOM",
+            "type": "DEFAULT"
+          },
+          {
+            "title": "UNIT_MEASURE,UNIT_MULT",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/vwrmu|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/vwrmu|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_NATIONAL_ACCOUNTS(1.0)"
+      },
+      {
+        "id": "DF_NMDI",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "National Minimum Development Indicators (NMDI) - All indicators",
+        "names": {
+          "en": "National Minimum Development Indicators (NMDI) - All indicators"
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "NMDI_INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "SEX=_T,AGE=_T,URBANIZATION=_T",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/yogx8|https://www.spc.int/nmdi/Images/info3.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/yogx8|https://www.spc.int/nmdi/Images/info3.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_NMDI(1.0)"
+      },
+      {
+        "id": "DF_NMDI_DEV",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "National Minimum Development Indicators (NMDI) for Human Development",
+        "names": {
+          "en": "National Minimum Development Indicators (NMDI) for Human Development"
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "NMDI_INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "SEX=_T,AGE=_T,URBANIZATION=_T",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/mzx92|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/mzx92|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_NMDI(1.0)"
+      },
+      {
+        "id": "DF_NMDI_EDU",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "National Minimum Development Indicators (NMDI) for Education",
+        "names": {
+          "en": "National Minimum Development Indicators (NMDI) for Education"
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "NMDI_INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "SEX=_T,AGE=_T,URBANIZATION=_T",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/2tfov|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/2tfov|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_NMDI(1.0)"
+      },
+      {
+        "id": "DF_NMDI_FIS",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "National Minimum Development Indicators (NMDI) for Fisheries, Aquaculture, Agriculture and Forestry",
+        "names": {
+          "en": "National Minimum Development Indicators (NMDI) for Fisheries, Aquaculture, Agriculture and Forestry"
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "NMDI_INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "SEX=_T,AGE=_T,URBANIZATION=_T",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/wk6nv|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/wk6nv|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_NMDI(1.0)"
+      },
+      {
+        "id": "DF_NMDI_HEA",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "National Minimum Development Indicators (NMDI) for Public Health",
+        "names": {
+          "en": "National Minimum Development Indicators (NMDI) for Public Health"
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "NMDI_INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "SEX=_T,AGE=_T,URBANIZATION=_T",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/avymv|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/avymv|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_NMDI(1.0)"
+      },
+      {
+        "id": "DF_NMDI_INF",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "National Minimum Development Indicators (NMDI) for Communication and Infrastructure",
+        "names": {
+          "en": "National Minimum Development Indicators (NMDI) for Communication and Infrastructure"
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "NMDI_INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "SEX=_T,AGE=_T,URBANIZATION=_T",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/74z57|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/74z57|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_NMDI(1.0)"
+      },
+      {
+        "id": "DF_NMDI_OTH",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "National Minimum Development Indicators (NMDI) for other topics not elsewhere classified",
+        "names": {
+          "en": "National Minimum Development Indicators (NMDI) for other topics not elsewhere classified"
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "NMDI_INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "SEX=_T,AGE=_T,URBANIZATION=_T",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/k7598|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/k7598|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_NMDI(1.0)"
+      },
+      {
+        "id": "DF_NMDI_POP",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "National Minimum Development Indicators (NMDI) for Population",
+        "names": {
+          "en": "National Minimum Development Indicators (NMDI) for Population"
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "NMDI_INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "SEX=_T,AGE=_T,URBANIZATION=_T",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/z2ece|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/z2ece|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_NMDI(1.0)"
+      },
+      {
+        "id": "DF_OVERSEAS_VISITORS",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "2.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Overseas visitors arrivals",
+        "names": {
+          "en": "Overseas visitors arrivals"
+        },
+        "description": "Overseas visitors include sea and air arrivals.  It includes excursionists/same-day-visitors i.e. visitors from the cruise ship as well. Data is available by year for Pacific Island Countries and Territories. A  breakdown per visitor type (tourists/excursionists) is availabnle from 2018.",
+        "descriptions": {
+          "en": "Overseas visitors include sea and air arrivals.  It includes excursionists/same-day-visitors i.e. visitors from the cruise ship as well. Data is available by year for Pacific Island Countries and Territories. A  breakdown per visitor type (tourists/excursionists) is availabnle from 2018."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD,OVERSEAS_VISITORS_TYPE",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "INDICATOR=NOSVA,OVERSEAS_VISITORS_TYPE=_T,TIME_PERIOD_START=2005,TIME_PERIOD_END=2019",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/w5knz|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/w5knz|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_OVERSEAS_VISITORS(2.0)"
+      },
+      {
+        "id": "DF_POCKET",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Pocket summary : yearly snapshots of latest available data",
+        "names": {
+          "en": "Pocket summary : yearly snapshots of latest available data"
+        },
+        "description": "The pocket summary presents a consolidated view of a set of key figures for Pacific island countries and territories. This PDH.Stat version of the pocket summary may differ from the printed version as it provides latest known values per year for each country and territory.",
+        "descriptions": {
+          "en": "The pocket summary presents a consolidated view of a set of key figures for Pacific island countries and territories. This PDH.Stat version of the pocket summary may differ from the printed version as it provides latest known values per year for each country and territory."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "UNIT_MEASURE,UNIT_MULT",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "ROW"
+          },
+          {
+            "title": "INDICATOR",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "TIME_PERIOD_START=2020,TIME_PERIOD_END=2020",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/7mju6|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/7mju6|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_POCKET(3.0)"
+      },
+      {
+        "id": "DF_POP_COAST",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "2.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Coastal Population (1, 5 and 10km from coast)",
+        "names": {
+          "en": "Coastal Population (1, 5 and 10km from coast)"
+        },
+        "description": "Proportion of population living in 1, 5 and 10km buffer zones for Pacific Island Countries and Territories, determined using most recent Population and Housing Census. Number of people living in 1,5 and 10km buffer zones determined by apportioning 2020 population projections.",
+        "descriptions": {
+          "en": "Proportion of population living in 1, 5 and 10km buffer zones for Pacific Island Countries and Territories, determined using most recent Population and Housing Census. Number of people living in 1,5 and 10km buffer zones determined by apportioning 2020 population projections."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "UNIT_MEASURE",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "INDICATOR,RANGE",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/df6ps|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/df6ps|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_POP_COAST(2.0)"
+      },
+      {
+        "id": "DF_POP_DENSITY",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Population densities",
+        "names": {
+          "en": "Population densities"
+        },
+        "description": "Population densities for Pacific Island Countries and Territories based on mid-year population projections for 2020 and available informaiton about land area.",
+        "descriptions": {
+          "en": "Population densities for Pacific Island Countries and Territories based on mid-year population projections for 2020 and available informaiton about land area."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "UNIT_MEASURE",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "INDICATOR,RANGE",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/94zk2|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/94zk2|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_POP_DENSITY(1.0)"
+      },
+      {
+        "id": "DF_POP_PROJ",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Population projections",
+        "names": {
+          "en": "Population projections"
+        },
+        "description": "Population projections for Pacific Island Countries and territories from 1950 to 2050, per sex and per 5-years age groups.",
+        "descriptions": {
+          "en": "Population projections for Pacific Island Countries and territories from 1950 to 2050, per sex and per 5-years age groups."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "UNIT_MEASURE",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "UNIT_MULTIPLIER",
+            "type": "NOT_DISPLAYED"
+          },
+          {
+            "title": "INDICATOR=MIDYEARPOPEST,SEX=_T,AGE=_T,TIME_PERIOD_START=2015,TIME_PERIOD_END=2025",
+            "type": "DEFAULT"
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_POP_PROJ(3.0)"
+      },
+      {
+        "id": "DF_SDG",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Sustainable Development Goals (all)",
+        "names": {
+          "en": "Sustainable Development Goals (all)"
+        },
+        "description": "Contains available data on Pacific Sustainable Development Indicators selected by the region and endorsed by Forum Leaders in the Pacific Roadmap for Sustainable Development. Data is collated from a number of sources, including national household collections, civil registry data, education management information systems, health information systems, treasury papers, and published reports from countries and development partners.",
+        "descriptions": {
+          "en": "Contains available data on Pacific Sustainable Development Indicators selected by the region and endorsed by Forum Leaders in the Pacific Roadmap for Sustainable Development. Data is collated from a number of sources, including national household collections, civil registry data, education management information systems, health information systems, treasury papers, and published reports from countries and development partners."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "UNIT_MEASURE",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "FREQ=A,SEX=_T,AGE=_T,URBANIZATION=_T,INCOME=_T,EDUCATION=_T,OCCUPATION=_T,COMPOSITE_BREAKDOWN=_Z,DISABILITY=_T,TIME_PERIOD_START=2010",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/dzitu|https://www.spc.int/nmdi/Images/info3.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/dzitu|https://www.spc.int/nmdi/Images/info3.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_SDG(3.0)"
+      },
+      {
+        "id": "DF_SDG_01",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Sustainable Development Goal 01 - No Poverty",
+        "names": {
+          "en": "Sustainable Development Goal 01 - No Poverty"
+        },
+        "description": "End poverty in all its forms everywhere : Poverty in the Pacific is focused on hardship and lack of economic opportunity and social exclusion. While food and extreme poverty remains relatively low, an estimated one in four Pacific islanders are likely to be living below their country’s basic-needs poverty line (BNPL).  Children are especially vulnerable to poverty and inequality because of their dependency on adults for care and protection, and for food.  Deprivation and lost opportunities in childhood can have detrimental effects that may persist throughout a child’s life. If a child does not receive adequate nutrition, stunting may result, and intellectual development may be impaired. Poorly nourished children are more vulnerable to disease, tend to perform worse in school, and less likely to be productive adults.",
+        "descriptions": {
+          "en": "End poverty in all its forms everywhere : Poverty in the Pacific is focused on hardship and lack of economic opportunity and social exclusion. While food and extreme poverty remains relatively low, an estimated one in four Pacific islanders are likely to be living below their country’s basic-needs poverty line (BNPL).  Children are especially vulnerable to poverty and inequality because of their dependency on adults for care and protection, and for food.  Deprivation and lost opportunities in childhood can have detrimental effects that may persist throughout a child’s life. If a child does not receive adequate nutrition, stunting may result, and intellectual development may be impaired. Poorly nourished children are more vulnerable to disease, tend to perform worse in school, and less likely to be productive adults."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "UNIT_MEASURE",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "FREQ=A,SEX=_T,AGE=_T,URBANIZATION=_T,INCOME=_T,EDUCATION=_T,OCCUPATION=_T,SDG_COMPOSITE_BREAKDOWN=_Z,DISABILITY=_T,TIME_PERIOD_START=2010",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/2ykbp|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/2ykbp|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_SDG(3.0)"
+      },
+      {
+        "id": "DF_SDG_02",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Sustainable Development Goal 02 - Zero Hunger",
+        "names": {
+          "en": "Sustainable Development Goal 02 - Zero Hunger"
+        },
+        "description": "End hunger, achieve food security and improved nutrition and promote sustainable agriculture : Stunting, which can occur when a child under five years of age and does not receive adequate nutrition, remains an issue in some of our Pacific countries.  One in four children in Vanuatu, one in three children in the Solomon Islands and one in two children in PNG are reported as being stunted. Poorly nourished children are more vulnerable to disease, tend to show lower performance in school, and are less likely to be productive adults. At the same time, the prevalence of obesity in young children is increasing in parts of the region, although there is insufficient data to give a complete picture.",
+        "descriptions": {
+          "en": "End hunger, achieve food security and improved nutrition and promote sustainable agriculture : Stunting, which can occur when a child under five years of age and does not receive adequate nutrition, remains an issue in some of our Pacific countries.  One in four children in Vanuatu, one in three children in the Solomon Islands and one in two children in PNG are reported as being stunted. Poorly nourished children are more vulnerable to disease, tend to show lower performance in school, and are less likely to be productive adults. At the same time, the prevalence of obesity in young children is increasing in parts of the region, although there is insufficient data to give a complete picture."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "UNIT_MEASURE",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "FREQ=A,SEX=_T,AGE=_T,URBANIZATION=_T,INCOME=_T,EDUCATION=_T,OCCUPATION=_T,SDG_COMPOSITE_BREAKDOWN=_Z,DISABILITY=_T,TIME_PERIOD_START=2010",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/cn9bz|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/cn9bz|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_SDG(3.0)"
+      },
+      {
+        "id": "DF_SDG_03",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Sustainable Development Goal 03 - Good Health and Well-Being",
+        "names": {
+          "en": "Sustainable Development Goal 03 - Good Health and Well-Being"
+        },
+        "description": "\"Ensure healthy lives and promote well-being for all at all ages : Some progress has been made against key mortality measures. Maternal mortality ratios have already fallen below the 2030 target in three-quarters of Pacific countries and territories, and one-half have achieved the under-five mortality rate target of fewer than 25 deaths per 100,000; The increasing burden of non-communicable diseases, both with respect to the risk of premature mortality and health care costs, is the dominant health issue in the Pacific region. A mixed pattern is found in the two lifestyle risk factors of alcohol and smoking, with three Pacific countries featuring among the top ten world countries in prevalence of current tobacco use among persons aged 15 years and older; Health worker density remains below WHO guidelines in most countries in the region; Malaria is still present in three countries (PNG, Solomon Islands and Vanuatu), although the incidence is decreasing due to awareness and preventative measures.",
+        "descriptions": {
+          "en": "\"Ensure healthy lives and promote well-being for all at all ages : Some progress has been made against key mortality measures. Maternal mortality ratios have already fallen below the 2030 target in three-quarters of Pacific countries and territories, and one-half have achieved the under-five mortality rate target of fewer than 25 deaths per 100,000; The increasing burden of non-communicable diseases, both with respect to the risk of premature mortality and health care costs, is the dominant health issue in the Pacific region. A mixed pattern is found in the two lifestyle risk factors of alcohol and smoking, with three Pacific countries featuring among the top ten world countries in prevalence of current tobacco use among persons aged 15 years and older; Health worker density remains below WHO guidelines in most countries in the region; Malaria is still present in three countries (PNG, Solomon Islands and Vanuatu), although the incidence is decreasing due to awareness and preventative measures."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "UNIT_MEASURE",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "FREQ=A,SEX=_T,AGE=_T,URBANIZATION=_T,INCOME=_T,EDUCATION=_T,OCCUPATION=_T,SDG_COMPOSITE_BREAKDOWN=_Z,DISABILITY=_T,TIME_PERIOD_START=2010",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/mden6|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/mden6|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_SDG(3.0)"
+      },
+      {
+        "id": "DF_SDG_04",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Sustainable Development Goal 04 - Quality Education",
+        "names": {
+          "en": "Sustainable Development Goal 04 - Quality Education"
+        },
+        "description": "Ensure inclusive and equitable quality education and promote lifelong learning opportunities for all : Access to education has improved, shown through increased attendance levels in early childhood, primary and secondary school in the Pacific region. Goal 4 highlights the need to focus on improving the quality and relevance of education and cognitive learning outcomes, since literacy and numeracy improvements have not made the expected gains for all. There is also a renewed focus on lifelong learning with early childhood care education and post-secondary education and training needing priority attention; The quality of educational facilities in some countries in the region, especially for girls and students with disabilities, is below standard.",
+        "descriptions": {
+          "en": "Ensure inclusive and equitable quality education and promote lifelong learning opportunities for all : Access to education has improved, shown through increased attendance levels in early childhood, primary and secondary school in the Pacific region. Goal 4 highlights the need to focus on improving the quality and relevance of education and cognitive learning outcomes, since literacy and numeracy improvements have not made the expected gains for all. There is also a renewed focus on lifelong learning with early childhood care education and post-secondary education and training needing priority attention; The quality of educational facilities in some countries in the region, especially for girls and students with disabilities, is below standard."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "UNIT_MEASURE",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "FREQ=A,SEX=_T,AGE=_T,URBANIZATION=_T,INCOME=_T,EDUCATION=_T,OCCUPATION=_T,SDG_COMPOSITE_BREAKDOWN=_Z,DISABILITY=_T,TIME_PERIOD_START=2010",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/pezn2|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/pezn2|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_SDG(3.0)"
+      },
+      {
+        "id": "DF_SDG_05",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Sustainable Development Goal 05 - Gender Equality",
+        "names": {
+          "en": "Sustainable Development Goal 05 - Gender Equality"
+        },
+        "description": "Achieve gender equality and empower all women and girls : The region has made progress in achieving gender equality and empowering women and girls, particularly in education and health and to a lesser extent women’s participation in formal employment and national policy making. This is attributed to growing awareness of the need to address gender inequalities; While almost all countries in the Pacific have adopted specific gender policies and strategies, the resources for integrating and implementing these priorities are limited. Budgets for national women’s offices are less than one percent of national appropriations; Gender inequality is highlighted by the high prevalence rates of violence against women (more than 60 percent in Melanesia, and more than 40 percent in Polynesia and Micronesia). Sexual and reproductive health and rights issues also remain substantial challenges to be addressed under Goal 5. Fertility rates, especially teenage fertility, remain high in some.",
+        "descriptions": {
+          "en": "Achieve gender equality and empower all women and girls : The region has made progress in achieving gender equality and empowering women and girls, particularly in education and health and to a lesser extent women’s participation in formal employment and national policy making. This is attributed to growing awareness of the need to address gender inequalities; While almost all countries in the Pacific have adopted specific gender policies and strategies, the resources for integrating and implementing these priorities are limited. Budgets for national women’s offices are less than one percent of national appropriations; Gender inequality is highlighted by the high prevalence rates of violence against women (more than 60 percent in Melanesia, and more than 40 percent in Polynesia and Micronesia). Sexual and reproductive health and rights issues also remain substantial challenges to be addressed under Goal 5. Fertility rates, especially teenage fertility, remain high in some."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "UNIT_MEASURE",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "FREQ=A,SEX=_T,AGE=_T,URBANIZATION=_T,INCOME=_T,EDUCATION=_T,OCCUPATION=_T,SDG_COMPOSITE_BREAKDOWN=_Z,DISABILITY=_T,TIME_PERIOD_START=2010",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/zzuoj|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/zzuoj|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_SDG(3.0)"
+      },
+      {
+        "id": "DF_SDG_06",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Sustainable Development Goal 06 - Clean Water and Sanitation",
+        "names": {
+          "en": "Sustainable Development Goal 06 - Clean Water and Sanitation"
+        },
+        "description": "Ensure availability and sustainable management of water and sanitation for all : Water and sanitation coverage in the Pacific is low, and accessibility varies widely across, and between, Pacific countries and territories. The combined coverage levels of basic water and basic sanitation are lower than in any other region in the world, and nearly one-third of Pacific people still rely on surface water sources for drinking (largely due to the high reliance of surface water in rural PNG); Children and their families are most vulnerable to the WASH-related impacts of climate change.",
+        "descriptions": {
+          "en": "Ensure availability and sustainable management of water and sanitation for all : Water and sanitation coverage in the Pacific is low, and accessibility varies widely across, and between, Pacific countries and territories. The combined coverage levels of basic water and basic sanitation are lower than in any other region in the world, and nearly one-third of Pacific people still rely on surface water sources for drinking (largely due to the high reliance of surface water in rural PNG); Children and their families are most vulnerable to the WASH-related impacts of climate change."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "UNIT_MEASURE",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "FREQ=A,SEX=_T,AGE=_T,URBANIZATION=_T,INCOME=_T,EDUCATION=_T,OCCUPATION=_T,SDG_COMPOSITE_BREAKDOWN=_Z,DISABILITY=_T,TIME_PERIOD_START=2010",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/njxkx|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/njxkx|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_SDG(3.0)"
+      },
+      {
+        "id": "DF_SDG_07",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Sustainable Development Goal 07 - Affordable and Clean Energy",
+        "names": {
+          "en": "Sustainable Development Goal 07 - Affordable and Clean Energy"
+        },
+        "description": "Ensure access to affordable, reliable, sustainable and modern energy for all : The following Pacific priority actions relate to Goal 7: a) reaching universal access to energy; b) increasing the share of renewables in the energy mix; c) energy efficiency measures in the transport, industry, and building sectors; d) institutional, legislative and regulatory reforms in the energy sector; e) collecting, centralizing, analysing and disseminating energy-related data and policy relevant information; Several countries have reported increases in the share of population accessing electricity over the last decade, with the increase in national electrification levels largely coming from household access to oﬀ-grid systems such as photovoltaic solar home systems. Many countries have achieved, or are close to achieving, universal access to electricity, resulting in gains in the average electrification rate in the region. In PNG, Vanuatu and the Solomon Islands however, there remain significant gaps in electricity and/or fossil fuel access; Some low-income households still use little petroleum fuel or electricity due to high costs, even though these can be easily accessed; Given the potential impact, overall energy efficiency investments at the national level appear more attractive than renewable energy but have generally not been a priority of countries nor development partners.",
+        "descriptions": {
+          "en": "Ensure access to affordable, reliable, sustainable and modern energy for all : The following Pacific priority actions relate to Goal 7: a) reaching universal access to energy; b) increasing the share of renewables in the energy mix; c) energy efficiency measures in the transport, industry, and building sectors; d) institutional, legislative and regulatory reforms in the energy sector; e) collecting, centralizing, analysing and disseminating energy-related data and policy relevant information; Several countries have reported increases in the share of population accessing electricity over the last decade, with the increase in national electrification levels largely coming from household access to oﬀ-grid systems such as photovoltaic solar home systems. Many countries have achieved, or are close to achieving, universal access to electricity, resulting in gains in the average electrification rate in the region. In PNG, Vanuatu and the Solomon Islands however, there remain significant gaps in electricity and/or fossil fuel access; Some low-income households still use little petroleum fuel or electricity due to high costs, even though these can be easily accessed; Given the potential impact, overall energy efficiency investments at the national level appear more attractive than renewable energy but have generally not been a priority of countries nor development partners."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "UNIT_MEASURE",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "FREQ=A,SEX=_T,AGE=_T,URBANIZATION=_T,INCOME=_T,EDUCATION=_T,OCCUPATION=_T,SDG_COMPOSITE_BREAKDOWN=_Z,DISABILITY=_T,TIME_PERIOD_START=2010",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/wduq8|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/wduq8|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_SDG(3.0)"
+      },
+      {
+        "id": "DF_SDG_08",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Sustainable Development Goal 08 - Decent Work and Economic Growth",
+        "names": {
+          "en": "Sustainable Development Goal 08 - Decent Work and Economic Growth"
+        },
+        "description": "Promote sustained, inclusive and sustainable economic growth, full and productive employment and decent work for all : Overall, economic trends in the Pacific region have been positive, yet inconsistent. The restricted economic bases of Pacific Island countries are highly sensitive to external economic shocks (including commodity price ﬂuctuations, supply chain disruptions and financial stress), natural events (such as cyclones, ﬂoods and droughts) and costs of adaptation to climate change; nternal employment factors in the Pacific compound these external factors. The size of the informal economy; gender gaps and imbalances; and high youth unemployment/underemployment are issues that can be monitored under Goal 8; Tourism is an important sector of growth and development in the Pacific, providing foreign exchange earnings, employment and income earning opportunities for many Pacifc islanders. Tourism is one of the region’s few economically viable sectors, and its share in national GDPs is monitored in this goal.",
+        "descriptions": {
+          "en": "Promote sustained, inclusive and sustainable economic growth, full and productive employment and decent work for all : Overall, economic trends in the Pacific region have been positive, yet inconsistent. The restricted economic bases of Pacific Island countries are highly sensitive to external economic shocks (including commodity price ﬂuctuations, supply chain disruptions and financial stress), natural events (such as cyclones, ﬂoods and droughts) and costs of adaptation to climate change; nternal employment factors in the Pacific compound these external factors. The size of the informal economy; gender gaps and imbalances; and high youth unemployment/underemployment are issues that can be monitored under Goal 8; Tourism is an important sector of growth and development in the Pacific, providing foreign exchange earnings, employment and income earning opportunities for many Pacifc islanders. Tourism is one of the region’s few economically viable sectors, and its share in national GDPs is monitored in this goal."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "UNIT_MEASURE",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "FREQ=A,SEX=_T,AGE=_T,URBANIZATION=_T,INCOME=_T,EDUCATION=_T,OCCUPATION=_T,SDG_COMPOSITE_BREAKDOWN=_Z,DISABILITY=_T,TIME_PERIOD_START=2010",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/s9zzt|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/s9zzt|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_SDG(3.0)"
+      },
+      {
+        "id": "DF_SDG_09",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Sustainable Development Goal 09 - Industry, Innovation and Infrastructure",
+        "names": {
+          "en": "Sustainable Development Goal 09 - Industry, Innovation and Infrastructure"
+        },
+        "description": "Build resilient infrastructure, promote inclusive and sustainable industrialization and foster innovation : Information and communications technology can mitigate the challenges of distance and isolation. Individual use of mobile phone technology is generally widespread, although the technology available varies significantly across the region. Manufacturing can be a key promoter of economic development and employment. In most Pacific countries however, formal employment in manufacturing remains low and value added manufacturing a small share of GDP.",
+        "descriptions": {
+          "en": "Build resilient infrastructure, promote inclusive and sustainable industrialization and foster innovation : Information and communications technology can mitigate the challenges of distance and isolation. Individual use of mobile phone technology is generally widespread, although the technology available varies significantly across the region. Manufacturing can be a key promoter of economic development and employment. In most Pacific countries however, formal employment in manufacturing remains low and value added manufacturing a small share of GDP."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "UNIT_MEASURE",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "FREQ=A,SEX=_T,AGE=_T,URBANIZATION=_T,INCOME=_T,EDUCATION=_T,OCCUPATION=_T,SDG_COMPOSITE_BREAKDOWN=_Z,DISABILITY=_T,TIME_PERIOD_START=2010",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/nhbez|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/nhbez|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_SDG(3.0)"
+      },
+      {
+        "id": "DF_SDG_10",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Sustainable Development Goal 10 - Reduced Inequalities",
+        "names": {
+          "en": "Sustainable Development Goal 10 - Reduced Inequalities"
+        },
+        "description": "Reduce inequality within and among countries : Pacific SIDS require special assistance to guarantee a share in the benefits of sustainable development. Their role in international organisations, with respect to membership and voting rights, is one element in this process; Goal 10 also seeks to measure inequality within countries, by looking at the change in per capita income or consumption of the poorest four-tenths of the population relative to the national average.",
+        "descriptions": {
+          "en": "Reduce inequality within and among countries : Pacific SIDS require special assistance to guarantee a share in the benefits of sustainable development. Their role in international organisations, with respect to membership and voting rights, is one element in this process; Goal 10 also seeks to measure inequality within countries, by looking at the change in per capita income or consumption of the poorest four-tenths of the population relative to the national average."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "UNIT_MEASURE",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "FREQ=A,SEX=_T,AGE=_T,URBANIZATION=_T,INCOME=_T,EDUCATION=_T,OCCUPATION=_T,SDG_COMPOSITE_BREAKDOWN=_Z,DISABILITY=_T,TIME_PERIOD_START=2010",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/ejxqy|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/ejxqy|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_SDG(3.0)"
+      },
+      {
+        "id": "DF_SDG_11",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Sustainable Development Goal 11 - Sustainable Cities and Communities",
+        "names": {
+          "en": "Sustainable Development Goal 11 - Sustainable Cities and Communities"
+        },
+        "description": "Make cities and human settlements inclusive, safe, resilient and sustainable : The 2017 World Risk Report identified the Pacific as the region of highest risk, measured over a five-year timeframe; In the last three years, the Pacific has faced a number of disaster events causing significant economic impacts, injury and loss of life. Post-disaster needs assessments indicated significant damages and losses, equivalent to 30% of national GDP in Fiji (2016), and 64% in Vanuatu (2015) for example.",
+        "descriptions": {
+          "en": "Make cities and human settlements inclusive, safe, resilient and sustainable : The 2017 World Risk Report identified the Pacific as the region of highest risk, measured over a five-year timeframe; In the last three years, the Pacific has faced a number of disaster events causing significant economic impacts, injury and loss of life. Post-disaster needs assessments indicated significant damages and losses, equivalent to 30% of national GDP in Fiji (2016), and 64% in Vanuatu (2015) for example."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "UNIT_MEASURE",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "FREQ=A,SEX=_T,AGE=_T,URBANIZATION=_T,INCOME=_T,EDUCATION=_T,OCCUPATION=_T,SDG_COMPOSITE_BREAKDOWN=_Z,DISABILITY=_T,TIME_PERIOD_START=2010",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/rx9bo|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/rx9bo|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_SDG(3.0)"
+      },
+      {
+        "id": "DF_SDG_12",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Sustainable Development Goal 12 - Responsible Consumption and Production",
+        "names": {
+          "en": "Sustainable Development Goal 12 - Responsible Consumption and Production"
+        },
+        "description": "Ensure sustainable consumption and production patterns : Inadequate waste management practices and restricted land availability are contributing to increased volumes of solid and hazardous wastes in the region; Organic waste constitutes approximately 44 per cent of the waste stream, and over 80 percent of ocean litter is derived from land-based sources; There is currently limited data on recycling rates and hazardous waste treatment in the Pacific, although these are identified as priorities for sustainable development.",
+        "descriptions": {
+          "en": "Ensure sustainable consumption and production patterns : Inadequate waste management practices and restricted land availability are contributing to increased volumes of solid and hazardous wastes in the region; Organic waste constitutes approximately 44 per cent of the waste stream, and over 80 percent of ocean litter is derived from land-based sources; There is currently limited data on recycling rates and hazardous waste treatment in the Pacific, although these are identified as priorities for sustainable development."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "UNIT_MEASURE",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "FREQ=A,SEX=_T,AGE=_T,URBANIZATION=_T,INCOME=_T,EDUCATION=_T,OCCUPATION=_T,SDG_COMPOSITE_BREAKDOWN=_Z,DISABILITY=_T,TIME_PERIOD_START=2010",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/9asb3|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/9asb3|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_SDG(3.0)"
+      },
+      {
+        "id": "DF_SDG_13",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Sustainable Development Goal 13 - Climate Action",
+        "names": {
+          "en": "Sustainable Development Goal 13 - Climate Action"
+        },
+        "description": "Take urgent action to combat climate change and its impacts : Climate change is a critical development challenge for the region. The key threats are sea level rise, saltwater intrusion of freshwater lenses and ocean acidification and their impact on people, water and food security, livelihoods, and the Pacific region’s biodiversity and culture. Climate induced mobility and migration across the region may be a required adaptation strategy; Goal 13 indicators still require development for effective monitoring to take place.",
+        "descriptions": {
+          "en": "Take urgent action to combat climate change and its impacts : Climate change is a critical development challenge for the region. The key threats are sea level rise, saltwater intrusion of freshwater lenses and ocean acidification and their impact on people, water and food security, livelihoods, and the Pacific region’s biodiversity and culture. Climate induced mobility and migration across the region may be a required adaptation strategy; Goal 13 indicators still require development for effective monitoring to take place."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "UNIT_MEASURE",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "FREQ=A,SEX=_T,AGE=_T,URBANIZATION=_T,INCOME=_T,EDUCATION=_T,OCCUPATION=_T,SDG_COMPOSITE_BREAKDOWN=_Z,DISABILITY=_T,TIME_PERIOD_START=2010",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/gsi55|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/gsi55|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_SDG(3.0)"
+      },
+      {
+        "id": "DF_SDG_14",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Sustainable Development Goal 14 - Life Below Water",
+        "names": {
+          "en": "Sustainable Development Goal 14 - Life Below Water"
+        },
+        "description": "Conserve and sustainably use the oceans, seas and marine resources for sustainable development : The Blue Pacific continent contains and supports the most extensive and diverse coral reefs in the world, the largest tuna fishery, the deepest oceanic trenches and the healthiest and in some cases, largest remaining populations of many globally threatened species such as whales and dolphins, sea turtles, dugongs, sharks and stingrays; Goal 14 will monitor regional efforts in integrated and sustainable ocean management and conservation, adaptation, mitigation and biodiversity activities.",
+        "descriptions": {
+          "en": "Conserve and sustainably use the oceans, seas and marine resources for sustainable development : The Blue Pacific continent contains and supports the most extensive and diverse coral reefs in the world, the largest tuna fishery, the deepest oceanic trenches and the healthiest and in some cases, largest remaining populations of many globally threatened species such as whales and dolphins, sea turtles, dugongs, sharks and stingrays; Goal 14 will monitor regional efforts in integrated and sustainable ocean management and conservation, adaptation, mitigation and biodiversity activities."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "UNIT_MEASURE",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "FREQ=A,SEX=_T,AGE=_T,URBANIZATION=_T,INCOME=_T,EDUCATION=_T,OCCUPATION=_T,SDG_COMPOSITE_BREAKDOWN=_Z,DISABILITY=_T,TIME_PERIOD_START=2010",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/9nnd8|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/9nnd8|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_SDG(3.0)"
+      },
+      {
+        "id": "DF_SDG_15",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Sustainable Development Goal 15 - Life on Land",
+        "names": {
+          "en": "Sustainable Development Goal 15 - Life on Land"
+        },
+        "description": "Protect, restore and promote sustainable use of terrestrial ecosystems, sustainably manage forests, combat desertification, and halt and reverse land degradation and halt biodiversity loss : Most countries in the region retain sizeable sections of forested area, although habitat loss continues to be a risk due to unsustainable logging practices and forest conversion for plantation and agricultural uses. Invasive species are the leading cause of species extinction on island ecosystems and can impact food and economic security. A regionally co-ordinated response is in place for the management of invasive species in the Pacific; Ecosystem-based approaches are being integrated into national and sector plans, with potential benefits including enhanced livelihood opportunities and food security; increased biodiversity conservation; and improved carbon sequestration and sustainable water management. The Red List Index, is an indicator of changes in biodiversity and species extinction risk over time.",
+        "descriptions": {
+          "en": "Protect, restore and promote sustainable use of terrestrial ecosystems, sustainably manage forests, combat desertification, and halt and reverse land degradation and halt biodiversity loss : Most countries in the region retain sizeable sections of forested area, although habitat loss continues to be a risk due to unsustainable logging practices and forest conversion for plantation and agricultural uses. Invasive species are the leading cause of species extinction on island ecosystems and can impact food and economic security. A regionally co-ordinated response is in place for the management of invasive species in the Pacific; Ecosystem-based approaches are being integrated into national and sector plans, with potential benefits including enhanced livelihood opportunities and food security; increased biodiversity conservation; and improved carbon sequestration and sustainable water management. The Red List Index, is an indicator of changes in biodiversity and species extinction risk over time."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "UNIT_MEASURE",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "FREQ=A,SEX=_T,AGE=_T,URBANIZATION=_T,INCOME=_T,EDUCATION=_T,OCCUPATION=_T,SDG_COMPOSITE_BREAKDOWN=_Z,DISABILITY=_T,TIME_PERIOD_START=2010",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/35gw4|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/35gw4|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_SDG(3.0)"
+      },
+      {
+        "id": "DF_SDG_16",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Sustainable Development Goal 16 - Peace, Justice and Strong Institutions",
+        "names": {
+          "en": "Sustainable Development Goal 16 - Peace, Justice and Strong Institutions"
+        },
+        "description": "Promote peaceful and inclusive societies for sustainable development, provide access to justice for all and build effective, accountable and inclusive institutions at all levels : The inclusiveness and transparency of institutions is addressed in Goal 16, although defining and measuring this is difficult. Associated with this is the adoption of legislation or policies to guarantee freedom of information, and while adoption is low in the Pacific, awareness is increasing; Birth registration is necessary to safeguard individual rights and promote access to justice and social services. The Pacific region has seen improved levels of registration of children under five years due to co-ordinated regional efforts under the Brisbane Accord Group (BAG); Violence in all its forms, and the official reporting of violence to competent authorities, is also a component of Goal 16. There is currently limited data to report on.",
+        "descriptions": {
+          "en": "Promote peaceful and inclusive societies for sustainable development, provide access to justice for all and build effective, accountable and inclusive institutions at all levels : The inclusiveness and transparency of institutions is addressed in Goal 16, although defining and measuring this is difficult. Associated with this is the adoption of legislation or policies to guarantee freedom of information, and while adoption is low in the Pacific, awareness is increasing; Birth registration is necessary to safeguard individual rights and promote access to justice and social services. The Pacific region has seen improved levels of registration of children under five years due to co-ordinated regional efforts under the Brisbane Accord Group (BAG); Violence in all its forms, and the official reporting of violence to competent authorities, is also a component of Goal 16. There is currently limited data to report on."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "UNIT_MEASURE",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "FREQ=A,SEX=_T,AGE=_T,URBANIZATION=_T,INCOME=_T,EDUCATION=_T,OCCUPATION=_T,SDG_COMPOSITE_BREAKDOWN=_Z,DISABILITY=_T,TIME_PERIOD_START=2010",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/5hz87|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/5hz87|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_SDG(3.0)"
+      },
+      {
+        "id": "DF_SDG_17",
+        "links": [
+          {
+            "rel": "self",
+            "type": "dataflow"
+          },
+          {
+            "rel": "structure",
+            "type": "datastructure"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Sustainable Development Goal 17 - Partnerships for the Goals",
+        "names": {
+          "en": "Sustainable Development Goal 17 - Partnerships for the Goals"
+        },
+        "description": "Strengthen the means of implementation and revitalize the Global Partnership for Sustainable Development Finance : Goal 17 encapsulates the need for a transformational approach to development if prosperity, equality for all and a protected environment, are to be achieved. This includes harnessing policy coherence, developing multi-stakeholder partnerships, accessing public and private finance, durable trading relationships, eﬀective adoption of science and technology, and improving collection and use of data; While understanding that Pacific countries are responsible for their own sustainable development, addressing many sustainable development challenges requires enhanced cooperation and international support. ODA and other external development financing streams remain significant in many countries; The integration of the SDGs into national and regional planning and budgeting brings an unprecedented demand for data and information. The strength and development of national statistical systems is covered in Goal 17.",
+        "descriptions": {
+          "en": "Strengthen the means of implementation and revitalize the Global Partnership for Sustainable Development Finance : Goal 17 encapsulates the need for a transformational approach to development if prosperity, equality for all and a protected environment, are to be achieved. This includes harnessing policy coherence, developing multi-stakeholder partnerships, accessing public and private finance, durable trading relationships, eﬀective adoption of science and technology, and improving collection and use of data; While understanding that Pacific countries are responsible for their own sustainable development, addressing many sustainable development challenges requires enhanced cooperation and international support. ODA and other external development financing streams remain significant in many countries; The integration of the SDGs into national and regional planning and budgeting brings an unprecedented demand for data and information. The strength and development of national statistical systems is covered in Goal 17."
+        },
+        "annotations": [
+          {
+            "type": "NonProductionDataflow",
+            "text": "true",
+            "texts": {
+              "en": "true"
+            }
+          },
+          {
+            "title": "UNIT_MEASURE",
+            "type": "UNIT_MEASURE_CONCEPTS"
+          },
+          {
+            "title": "GEO_PICT",
+            "type": "LAYOUT_ROW"
+          },
+          {
+            "title": "TIME_PERIOD",
+            "type": "LAYOUT_COLUMN"
+          },
+          {
+            "title": "INDICATOR",
+            "type": "LAYOUT_ROW_SECTION"
+          },
+          {
+            "title": "FREQ=A,SEX=_T,AGE=_T,URBANIZATION=_T,INCOME=_T,EDUCATION=_T,OCCUPATION=_T,SDG_COMPOSITE_BREAKDOWN=_Z,DISABILITY=_T,TIME_PERIOD_START=2010",
+            "type": "DEFAULT"
+          },
+          {
+            "type": "EXT_RESOURCE",
+            "text": "Metadata|http://purl.org/spc/digilib/doc/wzgq7|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png",
+            "texts": {
+              "en": "Metadata|http://purl.org/spc/digilib/doc/wzgq7|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+            }
+          }
+        ],
+        "structure": "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=SPC:DSD_SDG(3.0)"
+      }
+    ],
+    "categorySchemes": [
+      {
+        "id": "CAS_COM_DEV",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categoryscheme"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Development indicators",
+        "names": {
+          "en": "Development indicators"
+        },
+        "isPartial": false,
+        "categories": [
+          {
+            "id": "SDG",
+            "name": "Sustainable Development Goals",
+            "names": {
+              "en": "Sustainable Development Goals"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "10",
+                "texts": {
+                  "en": "10"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "category"
+              }
+            ]
+          },
+          {
+            "id": "NMDI",
+            "name": "National Minimum Development Indicators",
+            "names": {
+              "en": "National Minimum Development Indicators"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "20",
+                "texts": {
+                  "en": "20"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "category"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "CAS_COM_TOPIC",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categoryscheme"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Topic",
+        "names": {
+          "en": "Topic"
+        },
+        "isPartial": false,
+        "categories": [
+          {
+            "id": "ECO",
+            "name": "Economy",
+            "names": {
+              "en": "Economy"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "10",
+                "texts": {
+                  "en": "10"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "category"
+              }
+            ]
+          },
+          {
+            "id": "ENV",
+            "name": "Environment",
+            "names": {
+              "en": "Environment"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "20",
+                "texts": {
+                  "en": "20"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "category"
+              }
+            ]
+          },
+          {
+            "id": "HEA",
+            "name": "Health",
+            "names": {
+              "en": "Health"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "30",
+                "texts": {
+                  "en": "30"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "category"
+              }
+            ]
+          },
+          {
+            "id": "IND",
+            "name": "Industry and Services",
+            "names": {
+              "en": "Industry and Services"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "40",
+                "texts": {
+                  "en": "40"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "category"
+              }
+            ]
+          },
+          {
+            "id": "POP",
+            "name": "Population",
+            "names": {
+              "en": "Population"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "50",
+                "texts": {
+                  "en": "50"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "category"
+              }
+            ]
+          },
+          {
+            "id": "SOC",
+            "name": "Social",
+            "names": {
+              "en": "Social"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "60",
+                "texts": {
+                  "en": "60"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "category"
+              }
+            ]
+          },
+          {
+            "id": "XDO",
+            "name": "Multi-domain",
+            "names": {
+              "en": "Multi-domain"
+            },
+            "annotations": [
+              {
+                "type": "ORDER",
+                "text": "70",
+                "texts": {
+                  "en": "70"
+                }
+              }
+            ],
+            "links": [
+              {
+                "rel": "self",
+                "type": "category"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "categorisations": [
+      {
+        "id": "CAT_COMMODITY_PRICES",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for the Costal Population dataflow",
+        "names": {
+          "en": "Categorisation for the Costal Population dataflow"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_COMMODITY_PRICES(1.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_TOPIC(1.0).ECO"
+      },
+      {
+        "id": "CAT_CPI",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation of dataflow DF_CPI to category ECO of categrory scheme CAS_COM_TOPIC",
+        "names": {
+          "en": "Categorisation of dataflow DF_CPI to category ECO of categrory scheme CAS_COM_TOPIC"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_CPI(3.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_TOPIC(1.0).ECO"
+      },
+      {
+        "id": "CAT_CURRENCIES",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "2.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for the Currencies dataflow",
+        "names": {
+          "en": "Categorisation for the Currencies dataflow"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_CURRENCIES(2.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_TOPIC(1.0).ECO"
+      },
+      {
+        "id": "CAT_IMTS",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation of dataflow DF_IMTS to category ECO of caegrory scheme CAS_COM_TOPIC",
+        "names": {
+          "en": "Categorisation of dataflow DF_IMTS to category ECO of caegrory scheme CAS_COM_TOPIC"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_IMTS(3.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_TOPIC(1.0).ECO"
+      },
+      {
+        "id": "CAT_NATIONAL_ACCOUNTS",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for the NATIONAL_ACCOUNTS dataflow",
+        "names": {
+          "en": "Categorisation for the NATIONAL_ACCOUNTS dataflow"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_NATIONAL_ACCOUNTS(1.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_TOPIC(1.0).ECO"
+      },
+      {
+        "id": "CAT_NMDI",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for NMDI data",
+        "names": {
+          "en": "Categorisation for NMDI data"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_NMDI(1.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).NMDI"
+      },
+      {
+        "id": "CAT_NMDI_DEV",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for NMDI_DEV data",
+        "names": {
+          "en": "Categorisation for NMDI_DEV data"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_NMDI_DEV(1.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).NMDI"
+      },
+      {
+        "id": "CAT_NMDI_EDU",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for NMDI_EDU data",
+        "names": {
+          "en": "Categorisation for NMDI_EDU data"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_NMDI_EDU(1.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).NMDI"
+      },
+      {
+        "id": "CAT_NMDI_FIS",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for NMDI_FIS data",
+        "names": {
+          "en": "Categorisation for NMDI_FIS data"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_NMDI_FIS(1.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).NMDI"
+      },
+      {
+        "id": "CAT_NMDI_HEA",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for NMDI_HEA data",
+        "names": {
+          "en": "Categorisation for NMDI_HEA data"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_NMDI_HEA(1.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).NMDI"
+      },
+      {
+        "id": "CAT_NMDI_INF",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for NMDI_INF data",
+        "names": {
+          "en": "Categorisation for NMDI_INF data"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_NMDI_INF(1.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).NMDI"
+      },
+      {
+        "id": "CAT_NMDI_OTH",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for NMDI_OTH data",
+        "names": {
+          "en": "Categorisation for NMDI_OTH data"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_NMDI_OTH(1.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).NMDI"
+      },
+      {
+        "id": "CAT_NMDI_POP",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for NMDI_POP data",
+        "names": {
+          "en": "Categorisation for NMDI_POP data"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_NMDI_POP(1.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).NMDI"
+      },
+      {
+        "id": "CAT_OVERSEAS_VISITORS",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "2.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for the Costal Population dataflow",
+        "names": {
+          "en": "Categorisation for the Costal Population dataflow"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_OVERSEAS_VISITORS(2.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_TOPIC(1.0).ECO"
+      },
+      {
+        "id": "CAT_POCKET",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation of dataflow DF_POCKET to category ECO of caegrory scheme CAS_COM_TOPIC",
+        "names": {
+          "en": "Categorisation of dataflow DF_POCKET to category ECO of caegrory scheme CAS_COM_TOPIC"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_POCKET(3.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_TOPIC(1.0).XDO"
+      },
+      {
+        "id": "CAT_POP_COAST",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "2.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for the Costal Population dataflow",
+        "names": {
+          "en": "Categorisation for the Costal Population dataflow"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_POP_COAST(2.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_TOPIC(1.0).POP"
+      },
+      {
+        "id": "CAT_POP_DENSITY",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "1.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for the Costal Population dataflow",
+        "names": {
+          "en": "Categorisation for the Costal Population dataflow"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_POP_DENSITY(1.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_TOPIC(1.0).POP"
+      },
+      {
+        "id": "CAT_POP_PROJ_POP",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation of dataflow DF_POP_PROJ to category POP of categrory scheme CAS_COM_TOPIC",
+        "names": {
+          "en": "Categorisation of dataflow DF_POP_PROJ to category POP of categrory scheme CAS_COM_TOPIC"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_POP_PROJ(3.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_TOPIC(1.0).POP"
+      },
+      {
+        "id": "CAT_SDG",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for SDG data",
+        "names": {
+          "en": "Categorisation for SDG data"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_SDG(3.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).SDG"
+      },
+      {
+        "id": "CAT_SDG_01",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for Sustainable Development Indicator 1 - No Poverty",
+        "names": {
+          "en": "Categorisation for Sustainable Development Indicator 1 - No Poverty"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_SDG_01(3.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).SDG"
+      },
+      {
+        "id": "CAT_SDG_02",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for Sustainable Development Indicator 2 - Zero Hunger",
+        "names": {
+          "en": "Categorisation for Sustainable Development Indicator 2 - Zero Hunger"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_SDG_02(3.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).SDG"
+      },
+      {
+        "id": "CAT_SDG_03",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for Sustainable Development Indicator 3 - Good Health and Well-Being",
+        "names": {
+          "en": "Categorisation for Sustainable Development Indicator 3 - Good Health and Well-Being"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_SDG_03(3.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).SDG"
+      },
+      {
+        "id": "CAT_SDG_04",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for Sustainable Development Indicator 4 - Quality Education",
+        "names": {
+          "en": "Categorisation for Sustainable Development Indicator 4 - Quality Education"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_SDG_04(3.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).SDG"
+      },
+      {
+        "id": "CAT_SDG_05",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for Sustainable Development Indicator 5 - Gender Equality",
+        "names": {
+          "en": "Categorisation for Sustainable Development Indicator 5 - Gender Equality"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_SDG_05(3.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).SDG"
+      },
+      {
+        "id": "CAT_SDG_06",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for Sustainable Development Indicator 6 - Clean Water and Sanitation",
+        "names": {
+          "en": "Categorisation for Sustainable Development Indicator 6 - Clean Water and Sanitation"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_SDG_06(3.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).SDG"
+      },
+      {
+        "id": "CAT_SDG_07",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for Sustainable Development Indicator 7 - Affordable and Clean Energy",
+        "names": {
+          "en": "Categorisation for Sustainable Development Indicator 7 - Affordable and Clean Energy"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_SDG_07(3.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).SDG"
+      },
+      {
+        "id": "CAT_SDG_08",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for Sustainable Development Indicator 8 - Decent Work and Economic Growth",
+        "names": {
+          "en": "Categorisation for Sustainable Development Indicator 8 - Decent Work and Economic Growth"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_SDG_08(3.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).SDG"
+      },
+      {
+        "id": "CAT_SDG_09",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for Sustainable Development Indicator 9 - Industry, Innovation and Infrastructure",
+        "names": {
+          "en": "Categorisation for Sustainable Development Indicator 9 - Industry, Innovation and Infrastructure"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_SDG_09(3.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).SDG"
+      },
+      {
+        "id": "CAT_SDG_10",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for Sustainable Development Indicator 10 - Reduced Inequalities",
+        "names": {
+          "en": "Categorisation for Sustainable Development Indicator 10 - Reduced Inequalities"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_SDG_10(3.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).SDG"
+      },
+      {
+        "id": "CAT_SDG_11",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for Sustainable Development Indicator 11 - Sustainable Cities and Communities",
+        "names": {
+          "en": "Categorisation for Sustainable Development Indicator 11 - Sustainable Cities and Communities"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_SDG_11(3.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).SDG"
+      },
+      {
+        "id": "CAT_SDG_12",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for Sustainable Development Indicator 12 - Responsible Consumption and Production",
+        "names": {
+          "en": "Categorisation for Sustainable Development Indicator 12 - Responsible Consumption and Production"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_SDG_12(3.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).SDG"
+      },
+      {
+        "id": "CAT_SDG_13",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for Sustainable Development Indicator 13 - Climate Action",
+        "names": {
+          "en": "Categorisation for Sustainable Development Indicator 13 - Climate Action"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_SDG_13(3.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).SDG"
+      },
+      {
+        "id": "CAT_SDG_14",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for Sustainable Development Indicator 14 - Life Below Water",
+        "names": {
+          "en": "Categorisation for Sustainable Development Indicator 14 - Life Below Water"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_SDG_14(3.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).SDG"
+      },
+      {
+        "id": "CAT_SDG_15",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for Sustainable Development Indicator 15 - Life on Land",
+        "names": {
+          "en": "Categorisation for Sustainable Development Indicator 15 - Life on Land"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_SDG_15(3.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).SDG"
+      },
+      {
+        "id": "CAT_SDG_16",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for Sustainable Development Indicator 16 - Peace, Justice and Strong Institutions",
+        "names": {
+          "en": "Categorisation for Sustainable Development Indicator 16 - Peace, Justice and Strong Institutions"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_SDG_16(3.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).SDG"
+      },
+      {
+        "id": "CAT_SDG_17",
+        "links": [
+          {
+            "rel": "self",
+            "type": "categorisation"
+          }
+        ],
+        "version": "3.0",
+        "agencyID": "SPC",
+        "isFinal": false,
+        "name": "Categorisation for Sustainable Development Indicator 17 - Partnerships for the Goals",
+        "names": {
+          "en": "Categorisation for Sustainable Development Indicator 17 - Partnerships for the Goals"
+        },
+        "source": "urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=SPC:DF_SDG_17(3.0)",
+        "target": "urn:sdmx:org.sdmx.infomodel.categoryscheme.Category=SPC:CAS_COM_DEV(1.0).SDG"
+      }
+    ]
+  },
+  "meta": {
+    "schema": "https://raw.githubusercontent.com/sdmx-twg/sdmx-json/develop/structure-message/tools/schemas/1.0/sdmx-json-structure-schema.json",
+    "content-languages": [
+      "en"
+    ],
+    "id": "IDREF2928",
+    "prepared": "2020-09-22T03:36:47.5803137Z",
+    "test": false,
+    "sender": {
+      "id": "Unknown"
+    },
+    "receiver": [
+      {
+        "id": "Unknown"
+      }
+    ]
+  }
+}

@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require,describe,it,expect*/
 var DragPoints = require("../../lib/Map/DragPoints");
 var Terria = require("../../lib/Models/Terria");
 var ViewerMode = require("../../lib/Models/ViewerMode");
@@ -20,7 +19,7 @@ describe("DragPoints", function() {
     var dragPointsHelper = new DragPoints(terria);
     expect(dragPointsHelper._dragPointsHelper.type).toEqual("Cesium");
     terria.viewerMode = ViewerMode.Leaflet;
-    terria.afterViewerChanged.raiseEvent();
+    terria.mainViewer.afterViewerChanged.raiseEvent();
     expect(dragPointsHelper._dragPointsHelper.type).toEqual("Leaflet");
   });
 
@@ -29,7 +28,7 @@ describe("DragPoints", function() {
     var dragPointsHelper = new DragPoints(terria);
     expect(dragPointsHelper._dragPointsHelper.type).toEqual("Leaflet");
     terria.viewerMode = ViewerMode.CesiumTerrain;
-    terria.afterViewerChanged.raiseEvent();
+    terria.mainViewer.afterViewerChanged.raiseEvent();
     expect(dragPointsHelper._dragPointsHelper.type).toEqual("Cesium");
   });
 
