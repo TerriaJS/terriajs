@@ -76,7 +76,10 @@
     "title": "Feedback",
     "feedbackPreamble": "Wir würden uns freuen, von Ihnen zu hören!"
   },
-  "toolsPanel": { "btnTitle": "Erweiterte Werkzeuge", "btnText": "Werkzeug" },
+  "toolsPanel": {
+    "btnTitle": "Erweiterte Werkzeuge",
+    "btnText": "Werkzeug"
+  },
   "countDatasets": {
     "btnCount": "Datensätze zählen",
     "title": "Datensätze zählen",
@@ -126,7 +129,11 @@
     "open": "Öffnen",
     "close": "Schließen"
   },
-  "splitterTool": { "workbench": { "goright": "Rechts" } },
+  "splitterTool": {
+    "workbench": {
+      "goright": "Rechts"
+    }
+  },
   "AR": {
     "manualAlignmentTitle": "Manueller Abgleich",
     "title": "Experimentelles Merkmal: Erweiterte Realität (Augmented Reality)",
@@ -136,7 +143,9 @@
     "confirmText": "Verstanden",
     "experimentalFeatureMessage": "Der Augmented Reality-Modus befindet sich derzeit in der Betaphase. Dieser Modus ist nur für die Verwendung auf den neuesten High-End-Mobilgeräten vorgesehen. <br /><br />WARNUNG: Dieser Modus kann eine Menge Daten verbrauchen, bitte beachten Sie die Datennutzungsgebühren Ihres Netzbetreibers. <br /><br />Die Genauigkeit dieses Modus hängt von der Genauigkeit des internen Kompasses Ihres Mobilgeräts ab."
   },
-  "legend": { "e": "O" },
+  "legend": {
+    "e": "O"
+  },
   "zoomCotrol": {
     "zoomOut": "Herauszoomen",
     "zoomReset": "Zoom zurücksetzen",

@@ -129,7 +129,10 @@
     "lat": "လတ္တီကျု"
   },
   "concept": {
-    "inactive": { "newText": "အနေအထားအသစ်", "cancel": "ပယ်ဖျက်ရန်" },
+    "inactive": {
+      "newText": "အနေအထားအသစ်",
+      "cancel": "ပယ်ဖျက်ရန်"
+    },
     "active": {
       "remove": "အနေအထားကို ဖယ်ရှားရန်",
       "edit": "အနေအထားကို ပြင်ရန်"
@@ -257,7 +260,10 @@
     },
     "none": "(ဘာမှမရှိ)"
   },
-  "toolsPanel": { "btnTitle": "အဆင့်မြင့်ကိရိယာများ", "btnText": "ကိရိယာ" },
+  "toolsPanel": {
+    "btnTitle": "အဆင့်မြင့်ကိရိယာများ",
+    "btnText": "ကိရိယာ"
+  },
   "countDatasets": {
     "btnCount": "အချက်အလက်အစုများကို ရေတွက်ရန်",
     "countingMessage": "ရေတွက်နေပါပြီ၊ ခဏစောင့်ပါ…",

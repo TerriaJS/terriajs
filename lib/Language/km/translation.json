@@ -43,8 +43,13 @@
     "toggleSplitterTool": "បើកការប្រៀបធៀបបែបមួយចំហៀងៗ រវាងទិន្នន័យពីរផ្សេងគ្នា"
   },
   "map": {
-    "drawExtentHelper": { "extent": "វិសាលភាព", "drawExtent": "គូរវិសាលភាព" },
-    "displayVariablesConcept": { "defaultName": "បង្ហាញអថេរ" },
+    "drawExtentHelper": {
+      "extent": "វិសាលភាព",
+      "drawExtent": "គូរវិសាលភាព"
+    },
+    "displayVariablesConcept": {
+      "defaultName": "បង្ហាញអថេរ"
+    },
     "computeRingWindingOrder": {
       "devError": "ប្រភេទនៃចំនុចដែលបានរំពឹងទុក {អ៊ិច៖ លេខ, វ៉ាយ: លេខ}"
     },
@@ -98,7 +103,9 @@
     }
   },
   "core": {
-    "readXml": { "xmlError": "ឯកសារមិនមាន XML ត្រឹមត្រូវទេ។" },
+    "readXml": {
+      "xmlError": "ឯកសារមិនមាន XML ត្រឹមត្រូវទេ។"
+    },
     "googleAnalytics": {
       "log": "ការតាមដាន Google Analytics ត្រូវបានបិទពីព្រោះ terria.configParameters.googleAnalyticsKey មិនត្រូវបានកំណត់ទេ"
     },
@@ -287,7 +294,9 @@
     "groupEmpty": "ចំណាត់ក្រុមនេះទទេ",
     "groupRemove": "យកចំណាត់ក្រុមនេះចេញ"
   },
-  "loader": { "loadingMessage": "កំពុងផ្ទុក" },
+  "loader": {
+    "loadingMessage": "កំពុងផ្ទុក"
+  },
   "dragDrop": {
     "text": "<0>អូសនិងទម្លាក់</0><1>ទិន្នន័យរបស់គ្រប់ទីកន្លែងដើម្បីបង្ហាញនៅលើផែនទី<1>",
     "not": "&lt;0&gt;bbbb&lt;/0&gt;"
@@ -297,8 +306,14 @@
       "addFirstText": "បន្ថែមលក្ខខណ្ឌថ្មី",
       "addMoreText": "បន្ថែមលក្ខខណ្ឌ"
     },
-    "inactive": { "newText": "លក្ខខណ្ឌថ្មី", "cancel": "បោះបង់" },
-    "active": { "remove": "យកលក្ខខណ្ឌចេញ", "edit": "កែសម្រួលលក្ខខណ្ឌ" }
+    "inactive": {
+      "newText": "លក្ខខណ្ឌថ្មី",
+      "cancel": "បោះបង់"
+    },
+    "active": {
+      "remove": "យកលក្ខខណ្ឌចេញ",
+      "edit": "កែសម្រួលលក្ខខណ្ឌ"
+    }
   },
   "timer": {
     "nextScheduledUpdateCountdown": "ការធ្វើបច្ចុប្បន្នភាពទិន្នន័យបន្ទាប់នៅក្នុងរយៈពេល{{timeCountdown}}",
@@ -466,7 +481,10 @@
     },
     "none": "(គ្មាន)"
   },
-  "toolsPanel": { "btnTitle": "ឧបករណ៍កម្រិតខ្ពស់", "btnText": "ឧបករណ៍" },
+  "toolsPanel": {
+    "btnTitle": "ឧបករណ៍កម្រិតខ្ពស់",
+    "btnText": "ឧបករណ៍"
+  },
   "countDatasets": {
     "btnCount": "រាប់ចំនួនសំណុំទិន្នន័យ",
     "title": "រាប់ចំនួនសំណុំទិន្នន័យ",
@@ -552,7 +570,9 @@
       "exportFailedTitle": "ការនាំចេញទិន្នន័យបានបរាជ័យ",
       "asyncResultDescription": "នេះគឺជាលទ្ធផលនៃការនាំចេញទិន្នន័យពីសេវាកម្ម {{name}} នៅ {{timestamp}} ជាមួយនឹងការបញ្ចូលប៉ារ៉ាម៉ែត្រខាងក្រោម។"
     },
-    "bing": { "name": "ផែនទី Bing" },
+    "bing": {
+      "name": "ផែនទី Bing"
+    },
     "arcGisMapServerCatalogItem": {
       "copyrightText": "អត្ថបទរក្សាសិទ្ធិ",
       "serviceDescription": "ការពិពណ៌នាអំពីសេវាកម្ម",
@@ -755,7 +775,9 @@
       "noDataForDate": "មិនមានទិន្នន័យសម្រាប់កាលបរិច្ឆេទដែលបានជ្រើសរើសទេ។",
       "msg": "ប្រឹក្សាជាមួយ {{link}} ដើម្បីមើលពីរបៀបក្នុងការបង្កើតទម្រង់ឯកសារ។"
     },
-    "raiseError": { "errorTitle": "កំហុស​មួយ​បាន​កើត​ឡើង" },
+    "raiseError": {
+      "errorTitle": "កំហុស​មួយ​បាន​កើត​ឡើង"
+    },
     "placesLikeMe": {
       "placesLike": "កន្លែងដូចជា {{regionName}}",
       "regioNotSelectedDescription": "អ្នកត្រូវតែជ្រើសរើសតំបន់។",
@@ -788,9 +810,15 @@
       "loadError": "ទំហំឯកសារធំជាង{{maxConversionSizeMB}}មេកាបៃ ដែលមានកំណត់នៅក្នុងសេវាកម្មបម្លែង {{appName}}",
       "errorConvertingToGeoJsonMessage": "កំហុសឆ្គងមួយបានកើតឡើងខណៈពេលព្យាយាមបំលែងឯកសារនេះទៅជា GeoJSON ។ "
     },
-    "mapboxStyle": { "name": "ស្តាយ Mapbox" },
-    "mapboxVectorTile": { "name": "Mapbox Vector Tile" },
-    "mapboxMap": { "name": "ផែនទី Mapbox" },
+    "mapboxStyle": {
+      "name": "ស្តាយ Mapbox"
+    },
+    "mapboxVectorTile": {
+      "name": "Mapbox Vector Tile"
+    },
+    "mapboxMap": {
+      "name": "ផែនទី Mapbox"
+    },
     "magda": {
       "notCompatibleMessageII": "សំណុំទិន្នន័យ MAGDA មិនមានការចែកចាយណាមួយដែលមានទម្រង់គាំទ្រទេ។",
       "notCompatibleTitle": "រកមិនឃើញការចែកចាយដែលត្រូវគ្នាទេ",
@@ -810,7 +838,9 @@
       "errorLoadingMessage": "កំហុសឆ្គងមួយបានកើតឡើងខណៈពេលផ្ទុកឯកសារទម្រង់ KML ឬ KMZ ។ នេះអាចបង្ហាញថាទម្រង់ឯកសារមិនត្រឹមត្រូវឬថាវាមិនត្រូវបានគាំទ្រដោយ {{appName}} ។ ប្រសិនបើអ្នកត្រូវការជំនួយ ឬព័ត៌មានបន្ថែមសូមអ៊ីមែលមកយើងតាមរយៈ {{email}}។",
       "unexpectedTypeMessage": "KmlCatalogItem.data ត្រូវបានគេរំពឹងថាជាឯកសារ XML, Blob, ឬ File ប៉ុន្តែវាមិនមែនជាឯកសារទាំងនេះទេ។ នេះអាចបង្ហាញពីកំហុសនៅក្នុង {{appName}} ឬការប្រើប្រាស់មិនត្រឹមត្រូវនៃ {{appName}} API ។ ប្រសិនបើអ្នកជឿជាក់ថាវាជាកំហុសនៅក្នុង {{appName}} សូមរាយការណ៍តាមរយៈអ៊ីម៉ែល {{email}} ។"
     },
-    "ionImagery": { "name": "រូបភាព Cesium Ion" },
+    "ionImagery": {
+      "name": "រូបភាព Cesium Ion"
+    },
     "invokeAnalyticsService": {
       "invocationFailedMessage": "កំហុសមួយបានកើតឡើងនៅលើម៉ាស៊ីនមេខណៈពេលកំពុងគណនា {{invocationName}} ។",
       "invocationFailedTitle": "ការហៅចូលសេវាកម្មបានបរាជ័យ"
@@ -903,7 +933,9 @@
       "unsupportedErrorMessage": "ប្រភេទប៉ារ៉ាម៉ែត្រមុខងារដែលមិនស្គាល់: {{type}} ។",
       "unsupportedErrorTitle": "ប្រភេទប៉ារ៉ាម៉ែត្រមុខងារដែលមិនបានគាំទ្រ"
     },
-    "function": { "unknownFormaterTitle": "មិនស្គាល់ទម្រង់" },
+    "function": {
+      "unknownFormaterTitle": "មិនស្គាល់ទម្រង់"
+    },
     "shareData": {
       "expandErrorMessage": "សេវាកម្មចែករំលែកទិន្នន័យដែលត្រូវប្រើដើម្បីដំណើរការ {{appName}} មិនបានរកឃើញ។ នេះអាចបង្ហាញពីកំហុសរបស់តំណភ្ជាប់ ឬថាសេវាកម្មមិនអាចប្រើបានទេនៅពេលនេះ។ ប្រសិនបើអ្នកជឿថាវាជាកំហុសពី {{appName}} សូមរាយការណ៍តាមអ៊ីមែលកាន់{{email}}",
       "generateErrorMessage": "មានអ្វីមួយមិនប្រក្រតីនៅពេលដែលព្យាយាមប្រើសេវាកម្មចែករំលែកមទិន្នន័យដើម្បីបង្កើតតំណភ្ជាប់ខ្លី។ ប្រសិនបើអ្នកជឿថាវាជាកំហុស{{appName}} សូមរាយការណ៍តាមអ៊ីមែល {{email}} ។",
@@ -923,9 +955,15 @@
       "invalidWMTSServerTitle": "ម៉ាស៊ីនមេសេវាកម្មផែនទី WMTS មិនត្រឹមត្រូវ",
       "groupNotAvailableMessage": "កំហុសឆ្គងមួយបានកើតឡើងខណៈពេលកំពុងហៅ GetCapabilities នៅលើម៉ាស៊ីនមេផែនទី WMTS ។<p>ប្រសិនបើអ្នកបានបញ្ចូលតំណភ្ជាប់ដោយដៃសូមបញ្ជាក់ថាតំណភ្ជាប់ពិតជាត្រឹមត្រូវ។</p><p>កំហុសឆ្គងនេះក៏អាចបង្ហាញថា server មិនគាំទ្រ<a href=\"http://enable-cors.org / \" target=\"_ blank\">CORS</a>។ ប្រសិនបើនេះជា server របស់អ្នកសូមផ្ទៀងផ្ទាត់ថា CORS ត្រូវបានបើក និងបើកវាប្រសិនបើវាមិនបើកទេ។ ប្រសិនបើអ្នកមិនគ្រប់គ្រង server សូមទាក់ទងអ្នកគ្រប់គ្រង server ហើយស្នើសុំឱ្យពួកគេបើក CORS ។ ឬទាក់ទងក្រុមផែនទី '{{appName}}' ដោយផ្ញើអ៊ីមែល {{email}} ហើយស្នើសុំឱ្យយើងបន្ថែមម៉ាស៊ីនមេនេះទៅក្នុងបញ្ជីនៃម៉ាស៊ីនមេដែលមិនគាំទ្រ CORS ដែលអាចត្រូវបានប្រូកស៊ីដោយ '{{appName}}' ។</p><p>ប្រសិនបើអ្នកមិនបានបញ្ចូលបណ្តាញភ្ជាប់នេះដោយដៃទេកំហុសនេះអាចបង្ហាញថាក្រុមដែលអ្នកបានបើកដំណើរការមិនមានជាបណ្តោះអាសន្ន ឬមានបញ្ហាជាមួយនឹងការភ្ជាប់អ៊ីនធឺណិតរបស់អ្នក។ ព្យាយាមបើកក្រុមម្តងទៀតហើយប្រសិនបើបញ្ហានៅតែកើតមានសូមរាយការណ៍ដោយផ្ញើអ៊ីមែលទៅ {{email}}។</p>"
     },
-    "resultPending": { "name": "កំពុងរង់ចាំលទ្ធផល" },
-    "webFeatureServiceCatalogItem": { "wfs": "សេវាកម្មផែនទី (WFS)" },
-    "terrainCatalog": { "notSupportedErrorTitle": "មិនបានគាំទ្រ 2D" },
+    "resultPending": {
+      "name": "កំពុងរង់ចាំលទ្ធផល"
+    },
+    "webFeatureServiceCatalogItem": {
+      "wfs": "សេវាកម្មផែនទី (WFS)"
+    },
+    "terrainCatalog": {
+      "notSupportedErrorTitle": "មិនបានគាំទ្រ 2D"
+    },
     "tableData": {
       "bulkGeocoderErrorMessage": "មិនអាចបម្លែងអាសយដ្ឋានទៅជាកូអរដោនេរយៈទទឹងនិងរយៈបណ្តោយនៅក្នុងផែនទី ព្រោះមានកំហុសឆ្គងកើតឡើងខណៈពេលកំពុងទាញយកកូអរដោនេអាសយដ្ឋាន។ សូមពិនិត្យការភ្ជាប់អ៊ីនធឺណិតរបស់អ្នកឬព្យាយាមម្តងទៀតពេលក្រោយ។",
       "bulkGeocoderErrorTitle": "កំហុសក្នុងការគណនាលេខរយៈទទឹងនិងរយៈបណ្ដោយជាច្រើន",
@@ -958,7 +996,9 @@
       "invalidDate": "កាលបរិច្ឆេទមិនត្រឹមត្រូវ"
     }
   },
-  "mobile": { "toggleNavigation": "toggle navigation" },
+  "mobile": {
+    "toggleNavigation": "toggle navigation"
+  },
   "deltaTool": {
     "titlePrefix": "ការបង្ហាញពីការប្រែប្រួល",
     "generateDeltaBtn": "បង្កើតផែនទីផ្សេងទៀត",

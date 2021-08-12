@@ -92,7 +92,10 @@
     "mapView": "Visualizzazione Mappa",
     "nativeResolutionLabel": "Premi per fermare la risoluzione {{resolution1}} e iniziare ad usare la risoluzione{{resolution2}}"
   },
-  "toolsPanel": { "btnTitle": "Strumenti avanzati", "btnText": "Strumento" },
+  "toolsPanel": {
+    "btnTitle": "Strumenti avanzati",
+    "btnText": "Strumento"
+  },
   "share": {
     "btnMapShareTitle": "Condividi la mappa con altri",
     "btnStoryShareTitle": "Condividi storie con altri",
@@ -115,10 +118,17 @@
     "zoomOut": "Ridurre",
     "zoomIn": "Ingrandire"
   },
-  "location": { "location": "Posizione", "myLocation": "La mia posizione" },
+  "location": {
+    "location": "Posizione",
+    "myLocation": "La mia posizione"
+  },
   "models": {
-    "webProcessingService": { "errorDetails": "Dettagli dell'errore" },
-    "webMapServiceCatalogItem": { "missingDataTitle": "Dati mancanti" },
+    "webProcessingService": {
+      "errorDetails": "Dettagli dell'errore"
+    },
+    "webMapServiceCatalogItem": {
+      "missingDataTitle": "Dati mancanti"
+    },
     "userDrawing": {
       "btnDone": "Fatto",
       "btnCancel": "Annulla",
@@ -134,18 +144,34 @@
       "buttonTitleConfirm": "Accetto",
       "disclaimer": "Scarico di responsabilità"
     },
-    "time": { "invalidDate": "Data non valida" },
-    "sensorObservationService": { "property": "Proprietà" },
-    "feedback": { "thanksTitle": "Grazie per il tuo feedback!" },
-    "raiseError": { "errorTitle": "Si è verificato un errore" },
+    "time": {
+      "invalidDate": "Data non valida"
+    },
+    "sensorObservationService": {
+      "property": "Proprietà"
+    },
+    "feedback": {
+      "thanksTitle": "Grazie per il tuo feedback!"
+    },
+    "raiseError": {
+      "errorTitle": "Si è verificato un errore"
+    },
     "placesLikeMe": {
       "characteristics": "Caratteristiche",
       "regionName": "Paese"
     },
-    "gpx": { "name": "GPX" },
-    "getToken": { "errorTitle": "Errore token" },
-    "csv": { "name": "Valori separati da virgola (CSV)" },
-    "bing": { "name": "Bing Maps" },
+    "gpx": {
+      "name": "GPX"
+    },
+    "getToken": {
+      "errorTitle": "Errore token"
+    },
+    "csv": {
+      "name": "Valori separati da virgola (CSV)"
+    },
+    "bing": {
+      "name": "Bing Maps"
+    },
     "socrataServer": {
       "tags": "Etichette",
       "attributes": "Attributi",
@@ -156,8 +182,12 @@
       "unsupportedFileTzpe": "Tipo di file non supportato",
       "safari": "Apple Safari"
     },
-    "gltf": { "error": "Errore" },
-    "geoJson": { "firefox": "Mozilla Firefox" },
+    "gltf": {
+      "error": "Errore"
+    },
+    "geoJson": {
+      "firefox": "Mozilla Firefox"
+    },
     "csw": {
       "links": "Collegamenti",
       "dataResponsibility": "Resposabile dei dati"
@@ -185,8 +215,12 @@
       "chrome": "Google Chrome",
       "internetExplorer": "Internet Explorer 11"
     },
-    "spatialDetailing": { "name": "Dettaglio spaziale" },
-    "magda": { "distributionDesc": "Descrizione della distribuzione" }
+    "spatialDetailing": {
+      "name": "Dettaglio spaziale"
+    },
+    "magda": {
+      "distributionDesc": "Descrizione della distribuzione"
+    }
   },
   "map": {
     "gnafAddressGeocoder": {
@@ -199,7 +233,11 @@
     }
   },
   "core": {
-    "dataType": { "json": "JSON", "gpx": "GPX", "csv": "CSV" },
+    "dataType": {
+      "json": "JSON",
+      "gpx": "GPX",
+      "csv": "CSV"
+    },
     "printWindow": {
       "errorTitle": "Errore nella stampa",
       "printMediaEnd": "termina la stampa delle immagini",
@@ -238,7 +276,12 @@
     "addToMap": "Aggiungi alla mappa",
     "removeFromMap": "Rimuovi dalla mappa"
   },
-  "legend": { "n": "N", "e": "E", "lon": "Lon", "lat": "Lat" },
+  "legend": {
+    "n": "N",
+    "e": "E",
+    "lon": "Lon",
+    "lat": "Lat"
+  },
   "splitterTool": {
     "workbench": {
       "goright": "Destra",
@@ -270,15 +313,23 @@
     "removeFromMap": "Rimuovi dalla mappa",
     "trash": "Rimuovi questo catalogo"
   },
-  "loader": { "loadingMessage": "Caricamento" },
+  "loader": {
+    "loadingMessage": "Caricamento"
+  },
   "clipboard": {
     "copy": "Copia",
     "shareURL": "Condividi URL",
     "success": "Copiato negli appunti"
   },
   "concept": {
-    "inactive": { "cancel": "Annulla", "newText": "Nuova condizione" },
-    "active": { "edit": "Modifica condizione", "remove": "Rimuovi condizione" },
+    "inactive": {
+      "cancel": "Annulla",
+      "newText": "Nuova condizione"
+    },
+    "active": {
+      "edit": "Modifica condizione",
+      "remove": "Rimuovi condizione"
+    },
     "summary": {
       "addFirstText": "Aggiungi una nuova condizione",
       "addMoreText": "Aggiungi una condizione"
@@ -321,7 +372,9 @@
     "colorScaleRangeMax": "Il valore massimo deve essere un numero.",
     "colorScaleRangeMin": "Il valore minimo deve essere un numero."
   },
-  "mobile": { "toggleNavigation": "Attiva/disattiva la navigazione" },
+  "mobile": {
+    "toggleNavigation": "Attiva/disattiva la navigazione"
+  },
   "search": {
     "data": "Dati",
     "done": "Fatto",
@@ -385,10 +438,14 @@
     "navBtnMobile": "vai alla storia {{title}}",
     "nextBtn": "vai alla scena seguente"
   },
-  "dragDrop": { "not": "<0>bbbb</0>" },
+  "dragDrop": {
+    "not": "<0>bbbb</0>"
+  },
   "terriaViewer": {
     "webGLNotSupportedTitle": "WebGL non supportato",
     "slowWebGLAvailableTitle": "Scarse prestazioni WebGL"
   },
-  "dataCatalog": { "groupRemove": "rimuovi questo gruppo" }
+  "dataCatalog": {
+    "groupRemove": "rimuovi questo gruppo"
+  }
 }

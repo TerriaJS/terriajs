@@ -94,8 +94,14 @@
     "feedbackPreamble": "Kami ingin mendengar dari Anda!"
   },
   "settingPanel": {
-    "terrain": { "right": "Kanan", "both": "Keduanya", "left": "Kiri" },
-    "timeline": { "alwaysShow": "Selalu tampilkan" },
+    "terrain": {
+      "right": "Kanan",
+      "both": "Keduanya",
+      "left": "Kiri"
+    },
+    "timeline": {
+      "alwaysShow": "Selalu tampilkan"
+    },
     "performanceLabel": "Performa",
     "qualityLabel": "Kualitas",
     "btnTitle": "Ubah tampilan",
@@ -108,13 +114,18 @@
       "balancedPerformance": "Performa & kualitas seimbang",
       "maximumPerformance": "Performa maksimal, kualitas menurun"
     },
-    "viewerModeLabels": { "Leaflet": "2D", "CesiumEllipsoid": "3D Halus" },
+    "viewerModeLabels": {
+      "Leaflet": "2D",
+      "CesiumEllipsoid": "3D Halus"
+    },
     "none": "(Tidak Ada)",
     "mapQuality": "Kualitas Peta Raster:",
     "baseMap": "Peta Dasar",
     "mapView": "Tampilan Peta"
   },
-  "toolsPanel": { "btnText": "Alat" },
+  "toolsPanel": {
+    "btnText": "Alat"
+  },
   "countDatasets": {
     "mapDataState": "{{count}} dataset diaktifkan di peta",
     "noMapDataEnabled": "Tak ada data peta yang diaktifkan",
@@ -176,8 +187,16 @@
     "close": "Tutup",
     "prev": ""
   },
-  "languagePanel": { "changeLanguage": "Ubah Bahasa" },
-  "legend": { "n": "U", "e": "T", "zone": "ZONA", "lon": "Buj", "lat": "Lin" },
+  "languagePanel": {
+    "changeLanguage": "Ubah Bahasa"
+  },
+  "legend": {
+    "n": "U",
+    "e": "T",
+    "zone": "ZONA",
+    "lon": "Buj",
+    "lat": "Lin"
+  },
   "diffTool": {
     "datePicker": {
       "dateOutOfRange": "Saat ini di luar jangkauan",
@@ -195,9 +214,14 @@
       "locationSelected": {
         "description": "Untuk mengubah, klik titik lain di peta"
       },
-      "noLocationSelected": { "title": "Tidak ada lokasi yang dipilih" }
+      "noLocationSelected": {
+        "title": "Tidak ada lokasi yang dipilih"
+      }
     },
-    "labels": { "previewStyle": "Gaya tinjauan", "dates": "Tanggal-tanggal" },
+    "labels": {
+      "previewStyle": "Gaya tinjauan",
+      "dates": "Tanggal-tanggal"
+    },
     "choosePreview": "Pilih gaya tinjauan",
     "instructions": {
       "setDateB": "Tetapkan tanggal B",
@@ -265,7 +289,9 @@
       "pickFirst": "Pilih titik dengan mengklik peta"
     }
   },
-  "toast": { "mapIsZooming": "Memuat pembesaran yang ideal..." },
+  "toast": {
+    "mapIsZooming": "Memuat pembesaran yang ideal..."
+  },
   "satelliteGuidance": {
     "dismissText": "Mengerti, terima kasih!",
     "nextI": "Lihat panduan",
@@ -278,18 +304,26 @@
       "licence": "Lisensi",
       "description": "Deskripsi"
     },
-    "ogr": { "safari": "Apple Safari" },
+    "ogr": {
+      "safari": "Apple Safari"
+    },
     "gpx": {
       "serviceErrorMessage": "Layanan ini tidak memiliki keterangan apapun.",
       "dataSourceErrorMessage": "Sumber data ini tidak memiliki keterangan apapun."
     },
-    "gltf": { "error": "Galat" },
-    "geoJson": { "firefox": "Mozilla Firefox" },
+    "gltf": {
+      "error": "Galat"
+    },
+    "geoJson": {
+      "firefox": "Mozilla Firefox"
+    },
     "czml": {
       "serviceErrorMessage": "Layanan ini tidak memiliki keterangan apapun.",
       "dataSourceErrorMessage": "Sumber data ini tidak memiliki keterangan apapun."
     },
-    "csw": { "links": "Tautan" },
+    "csw": {
+      "links": "Tautan"
+    },
     "catalog": {
       "cancel": "Batal",
       "upload": "Unggah",
@@ -314,8 +348,12 @@
       "chrome": "Google Chrome",
       "internetExplorer": "Internet Explorer 11"
     },
-    "time": { "invalidDate": "Tanggal Tidak Valid" },
-    "resultPending": { "name": "Hasil Tertunda" },
+    "time": {
+      "invalidDate": "Tanggal Tidak Valid"
+    },
+    "resultPending": {
+      "name": "Hasil Tertunda"
+    },
     "feedback": {
       "unableToSendTitle": "Tak bisa mengirim umpan balik",
       "thanksMessage": "Umpan balik Anda membantu membuat {{appName}} lebih baik",
@@ -337,9 +375,15 @@
       "requestFailedMessage": "Permintaan gagal dengan kode status {{status}}.",
       "requestFailedTitle": "Permintaan Gagal"
     },
-    "terria": { "buttonTitleConfirm": "Saya Setuju" },
-    "mapboxMap": { "name": "Peta Mapbox" },
-    "cartoMap": { "noUrlTitle": "Tidak ada URL" }
+    "terria": {
+      "buttonTitleConfirm": "Saya Setuju"
+    },
+    "mapboxMap": {
+      "name": "Peta Mapbox"
+    },
+    "cartoMap": {
+      "noUrlTitle": "Tidak ada URL"
+    }
   },
   "viewModels": {
     "searchLocations": "Lokasi",
@@ -358,11 +402,22 @@
     "remove": "Hapus"
   },
   "concept": {
-    "inactive": { "cancel": "Batal" },
-    "active": { "edit": "Sunting kondisi" }
+    "inactive": {
+      "cancel": "Batal"
+    },
+    "active": {
+      "edit": "Sunting kondisi"
+    }
   },
-  "satellite": { "newLocation": "Lokasi baru", "removeFilter": "Hapus filter" },
-  "dateTime": { "timeline": { "togglePlay": "Putar" } },
+  "satellite": {
+    "newLocation": "Lokasi baru",
+    "removeFilter": "Hapus filter"
+  },
+  "dateTime": {
+    "timeline": {
+      "togglePlay": "Putar"
+    }
+  },
   "workbench": {
     "removeAll": "Hapus semua",
     "removeFromMap": "Hapus",
@@ -381,7 +436,9 @@
     "addToMap": "Tambahkan ke peta",
     "removeFromMap": "Hapus dari peta"
   },
-  "mobile": { "toggleNavigation": "Toggle Navigasi" },
+  "mobile": {
+    "toggleNavigation": "Toggle Navigasi"
+  },
   "addData": {
     "dragDrop": "Tarik dan Jatuhkan",
     "back": "Kembali",
@@ -391,9 +448,13 @@
     "done": "Selesai",
     "btnHide": "Sembunyikan"
   },
-  "notification": { "title": "Pesan" },
+  "notification": {
+    "title": "Pesan"
+  },
   "core": {
-    "printWindow": { "errorTitle": "Kesalahan mencetak" },
+    "printWindow": {
+      "errorTitle": "Kesalahan mencetak"
+    },
     "dataType": {
       "other": "Lainnya (gunakan layanan pengkonversi)",
       "json": "JSON",
@@ -422,14 +483,19 @@
     "webGLNotSupportedTitle": "WebGL tidak didukung",
     "slowWebGLAvailableTitle": "Performa WebGL buruk"
   },
-  "loader": { "loadingMessage": "Memuat" },
+  "loader": {
+    "loadingMessage": "Memuat"
+  },
   "clipboard": {
     "copy": "Salin",
     "shareExplanation": "Siapapun yang memiliki URL ini dapat mengakses peta ini.",
     "shareURL": "Bagikan URL",
     "success": "Disalin ke papan klip"
   },
-  "description": { "dataUrl": "URL Data", "name": "Keterangan" },
+  "description": {
+    "dataUrl": "URL Data",
+    "name": "Keterangan"
+  },
   "search": {
     "data": "Data",
     "done": "Selesai",

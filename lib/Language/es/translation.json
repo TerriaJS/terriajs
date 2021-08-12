@@ -41,8 +41,14 @@
       "addFirstText": "Añadir nueva condición",
       "addMoreText": "Añadir una condición"
     },
-    "active": { "remove": "Quitar condición", "edit": "Editar condición" },
-    "inactive": { "newText": "Nueva condición", "cancel": "Cancelar" }
+    "active": {
+      "remove": "Quitar condición",
+      "edit": "Editar condición"
+    },
+    "inactive": {
+      "newText": "Nueva condición",
+      "cancel": "Cancelar"
+    }
   },
   "satellite": {
     "filterByLocation": "Filtrar por localización",
@@ -65,9 +71,15 @@
       "licence": "Licencia",
       "description": "Descripción"
     },
-    "gltf": { "error": "Error" },
-    "geoJson": { "firefox": "Mozilla Firefox" },
-    "csw": { "links": "Enlaces" },
+    "gltf": {
+      "error": "Error"
+    },
+    "geoJson": {
+      "firefox": "Mozilla Firefox"
+    },
+    "csw": {
+      "links": "Enlaces"
+    },
     "catalog": {
       "cancel": "Cancelar",
       "upload": "Subir",
@@ -83,7 +95,9 @@
       "licence": "Licencia"
     }
   },
-  "analytics": { "selectLocation": "Seleccionar Localización" },
+  "analytics": {
+    "selectLocation": "Seleccionar Localización"
+  },
   "helpMenu": {
     "helpMenuMoreHelpTitle": "Más ayuda",
     "btnTitle": "Ayuda",
@@ -110,14 +124,19 @@
     "closePanel": "Cerrar panel",
     "sectionLabel": "Gráficos"
   },
-  "loader": { "loadingMessage": "Cargando" },
+  "loader": {
+    "loadingMessage": "Cargando"
+  },
   "clipboard": {
     "copy": "Copiar",
     "shareURL": "Compartir URL",
     "success": "Copiado al portapapeles"
   },
   "dateTime": {
-    "timeline": { "togglePlay": "Iniciar", "gotoStart": "Ir al principio" }
+    "timeline": {
+      "togglePlay": "Iniciar",
+      "gotoStart": "Ir al principio"
+    }
   },
   "workbench": {
     "removeAll": "Quitar Todos",
@@ -132,7 +151,10 @@
     "rangeMin": "Mínima:",
     "rangeMax": "Máxima:"
   },
-  "search": { "data": "Datos", "resultsLabel": "Resultados de búsqueda" },
+  "search": {
+    "data": "Datos",
+    "resultsLabel": "Resultados de búsqueda"
+  },
   "addData": {
     "back": "Atrás",
     "dragDrop": "Arrastrar y soltar",
@@ -142,7 +164,9 @@
     "done": "Hecho",
     "btnHide": "Ocultar"
   },
-  "satelliteGuidance": { "prevI": "No, gracias" },
+  "satelliteGuidance": {
+    "prevI": "No, gracias"
+  },
   "story": {
     "story": "Historia",
     "editor": {
@@ -303,5 +327,7 @@
     "layerName": "Nombre de capa",
     "dataServiceDetails": "Detalles del Servicio de Datos"
   },
-  "mobile": { "toggleNavigation": "Cambiar navegación" }
+  "mobile": {
+    "toggleNavigation": "Cambiar navegación"
+  }
 }

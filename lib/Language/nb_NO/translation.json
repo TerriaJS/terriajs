@@ -61,7 +61,9 @@
     "close": "Lukk"
   },
   "models": {
-    "sdmxJsonDataflowStratum": { "defaultUnitMeasure": "Enheter" },
+    "sdmxJsonDataflowStratum": {
+      "defaultUnitMeasure": "Enheter"
+    },
     "sensorObservationService": {
       "exceptionMessage": "Tjeneren rapporterte en feil:\n\n {{exceptionText}}",
       "noFeatures": "Ingen funksjoner samsvarer med ditt søk.",
@@ -156,7 +158,9 @@
       "serviceResponseErrorMessage": "TerriaJsonCatalogFunction skulle ha mottatt en JSON-streng, mottok {{xhr}}",
       "serviceResponseErrorTitle": "Tjenestesvaret er ikke en JSON-streng"
     },
-    "terrainCatalog": { "notSupportedErrorTitle": "Ikke støttet i 2D" },
+    "terrainCatalog": {
+      "notSupportedErrorTitle": "Ikke støttet i 2D"
+    },
     "socrataServer": {
       "name": "Socrata-tjener",
       "tags": "Etiketter",
@@ -249,7 +253,9 @@
       "error": "Feil",
       "notSupportedErrorTitle": "Ikke støttet i 2D"
     },
-    "mapboxVectorTile": { "name": "Mapbox-vektorflis" },
+    "mapboxVectorTile": {
+      "name": "Mapbox-vektorflis"
+    },
     "magda": {
       "retrieveErrorTitle": "Klarte ikke å hente MAGDA-oppføring",
       "distributionDesc": "Distribusjonsbeskrivelse",
@@ -276,7 +282,9 @@
       "couldNotLoadTitle": "Kunne ikke laste inn JSON",
       "name": "GeoJSON"
     },
-    "function": { "unknownFormaterTitle": "Ukjent formaterer" },
+    "function": {
+      "unknownFormaterTitle": "Ukjent formaterer"
+    },
     "czml": {
       "serviceErrorMessage": "Denne tjenesten har ingen tilgjengelige detaljer.",
       "dataSourceErrorMessage": "Denne datakilden har ingen tilgjengelige detaljer.",
@@ -354,7 +362,9 @@
       "noUrlTitle": "Ingen nettadresse",
       "noUrlMessage": "Fant ikke brukbar nettadresse for Carto-kartlaget."
     },
-    "bing": { "name": "Bing-kart" },
+    "bing": {
+      "name": "Bing-kart"
+    },
     "arcGisMapServerCatalogItem": {
       "copyrightText": "Opphavsrettstekst",
       "name": "Esri ArcGIS-karttjener",
@@ -400,8 +410,12 @@
       "urlLoadErrorMessage": "Et problem oppstod ved igangsetting av Terria med nettadresse-parameter.",
       "initErrorMessage": "Problem med Terria-tjeneren. Noen lag eller konverteringstgjenesten kan være utilgjengelig."
     },
-    "mapboxStyle": { "name": "Mapbox-stil" },
-    "mapboxMap": { "name": "Mapbox-kart" },
+    "mapboxStyle": {
+      "name": "Mapbox-stil"
+    },
+    "mapboxMap": {
+      "name": "Mapbox-kart"
+    },
     "getToken": {
       "errorTitle": "Symbolfeil",
       "unableToRequest": "<p>Kunne ikke forespørre symbol fra symboltjeneren.</p><p>Innrapporter det ved å sende en e-post til {{email}}</p>",
@@ -413,8 +427,12 @@
       "exportFailedMessage": "Vevdekningstjenesten mislyktes",
       "asyncResultDescription": "Dette er resultatet av eksport av data fra {{name}}-tjenesten klokken {{timestamp}} med inndataparamterne nedenfor."
     },
-    "webFeatureServiceCatalogItem": { "wfs": "Vevfunksjonstjeneste (WFS)" },
-    "raiseError": { "errorTitle": "En feil inntraff" },
+    "webFeatureServiceCatalogItem": {
+      "wfs": "Vevfunksjonstjeneste (WFS)"
+    },
+    "raiseError": {
+      "errorTitle": "En feil inntraff"
+    },
     "tableData": {
       "bulkGeocoderInfo2Message": "{{nullAddresses}} adresser mangler i CSV-en.",
       "bulkGeocoderInfoMessage": "CSV-en inneholder adresser, men finner ikke {{number}} på kartet: "
@@ -435,7 +453,9 @@
       "esri-group": "Esri ArcGIS-tjener",
       "auto": "Automatisk oppdagelse (anbefales)"
     },
-    "readXml": { "xmlError": "Filen inneholder ikke gyldig XML." },
+    "readXml": {
+      "xmlError": "Filen inneholder ikke gyldig XML."
+    },
     "googleAnalytics": {
       "log": "Google Analytics-overvåkning er avslått fordi terria.configParameters.googleAnalyticsKey ikke er angitt"
     },
@@ -502,8 +522,14 @@
     "copy": "Kopier"
   },
   "concept": {
-    "inactive": { "cancel": "Avbryt", "newText": "Nytt vilkår" },
-    "active": { "remove": "Fjern vilkår", "edit": "Rediger vilkår" },
+    "inactive": {
+      "cancel": "Avbryt",
+      "newText": "Nytt vilkår"
+    },
+    "active": {
+      "remove": "Fjern vilkår",
+      "edit": "Rediger vilkår"
+    },
     "summary": {
       "addFirstText": "Legg til nytt vilkår",
       "addMoreText": "Legg til et vilkår"
@@ -732,7 +758,10 @@
     "native": "innebygd",
     "mapQuality": "Rasterkart-kvalitet:"
   },
-  "toolsPanel": { "btnTitle": "Avansert verktøyskiste", "btnText": "Verktøy" },
+  "toolsPanel": {
+    "btnTitle": "Avansert verktøyskiste",
+    "btnText": "Verktøy"
+  },
   "countDatasets": {
     "btnCount": "Tell datasett",
     "title": "Tell datasett",
@@ -770,7 +799,9 @@
     "resetAlignmentTitle": "Tilbakestill justering",
     "manualAlignmentMessage": "Juster din mobilenhet slik at den samsvarer med kartets retning, og klikk så på det blinkende kompasset. Hvis ingen landemerker å justere mot er synlige på kartet, kan du flytte det ved å bruke dra og knip til et gjenkjennbart landemerke er synlig før du justerer enheten med kartet. <br /><div>{{img}}</div> <br />Tips: Solen eller månen er gode landemerker å justere mot hvis du er på et sted du ikke kjenner (vær forsiktig med å se på solen, det kan skade øyene dine)."
   },
-  "compass": { "title": "Klikk og dra for å rotere kameraet" },
+  "compass": {
+    "title": "Klikk og dra for å rotere kameraet"
+  },
   "zoomCotrol": {
     "zoomOut": "Forminsk",
     "zoomReset": "Tilbakestill forstørring",
@@ -809,7 +840,9 @@
     "pickLocation": "For å vise tilgjengelig bildedata, velg interessepunktet på kartet motstående."
   },
   "map": {
-    "regionProvider": { "csvRegionMappingTitle": "CSV-områdekartlegging" },
+    "regionProvider": {
+      "csvRegionMappingTitle": "CSV-områdekartlegging"
+    },
     "mapboxVectorTileImageryProvider": {
       "requireStyles": "MapboxVectorTileImageryProvider krever en stilfunksjon sendt som options.styleFunc",
       "requireLayerName": "MapboxVectorTileImageryProvider krever et lagnavn sendt som options.layerName"
@@ -856,15 +889,24 @@
     "nextScheduledUpdateCountdown": "Neste dataoppdatering om",
     "nextScheduledUpdateTime": "Neste dataoppdatering skjer"
   },
-  "legend": { "elev": "Høyd", "zone": "Sone", "lon": "Len", "lat": "Bre" },
+  "legend": {
+    "elev": "Høyd",
+    "zone": "Sone",
+    "lon": "Len",
+    "lat": "Bre"
+  },
   "dragDrop": {
     "text": "<0>Dra og slipp</0><1>din data hvor som helst for å vise den på kartet<1>",
     "not": "<0>bbbb</0>"
   },
-  "mobile": { "toggleNavigation": "veksle navigasjon" },
+  "mobile": {
+    "toggleNavigation": "veksle navigasjon"
+  },
   "dataCatalog": {
     "groupEmpty": "Denne gruppen er tom",
     "groupRemove": "fjern denne gruppen"
   },
-  "loader": { "loadingMessage": "Laster inn" }
+  "loader": {
+    "loadingMessage": "Laster inn"
+  }
 }
