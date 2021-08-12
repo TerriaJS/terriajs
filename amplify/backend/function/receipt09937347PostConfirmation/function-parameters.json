@@ -1,8 +1,7 @@
 {
   "trigger": true,
   "modules": [
-    "add-to-group",
-    "add-example-story"
+    "add-to-group"
   ],
   "parentResource": "receipt09937347",
   "functionName": "receipt09937347PostConfirmation",
@@ -16,24 +15,5 @@
   "skipEdit": true,
   "GROUP": "receipt-editors",
   "enableCors": false,
-  "permissions": {
-    "storage": {
-      "storycontent": [
-        "create",
-        "read",
-        "update",
-        "delete"
-      ],
-      "Story:@model(appsync)": [
-        "create",
-        "read",
-        "update"
-      ],
-      "Page:@model(appsync)": [
-        "create",
-        "read",
-        "update"
-      ]
-    }
-  }
+  "permissions": {}
 }
