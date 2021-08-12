@@ -2,7 +2,10 @@ name: npm-publish
 on:
   push:
     branches:
-      - next
+      - main
+
+env:
+  NPM_TAG: latest
 
 jobs:
   publish:
@@ -46,7 +49,7 @@ jobs:
 
       - name: Publish package to NPM
         if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
-        run: npm publish --tag next
+        run: npm publish --tag ${NPM_TAG}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 

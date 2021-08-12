@@ -22,6 +22,6 @@ Partially updated docs:
 
 Looking for help using a TerriaJS-based site? Try the [NationalMap user documentation](http://nationalmap.gov.au/help/help.html).
 
-This documentation is maintained at [github.com/TerriaJS/TerriaJS/tree/next/doc](https://github.com/TerriaJS/TerriaJS/tree/next/doc).
+This documentation is maintained at [github.com/TerriaJS/TerriaJS/tree/main/doc](https://github.com/TerriaJS/TerriaJS/tree/main/doc).
 
-It can be viewed at [docs-v8.terria.io](https://docs-v8.terria.io).
+It can be viewed at [docs.terria.io](https://docs.terria.io).
