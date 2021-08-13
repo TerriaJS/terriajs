@@ -888,7 +888,7 @@ describe("FeatureInfoSection", function() {
     });
   });
 
-  describe("raw data", function() {
+  xdescribe("raw data", function() {
     beforeEach(function() {
       feature.description = {
         getValue: function() {
