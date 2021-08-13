@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "8.0.0-alpha.87",
+  "version": "8.0.0",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
@@ -64,7 +64,7 @@
     "babel-loader": "^8.0.5",
     "babel-plugin-jsx-control-statements": "^4.0.0",
     "babel-plugin-lodash": "^3.3.4",
-    "catalog-converter": "^0.0.4",
+    "catalog-converter": "^0.0.9",
     "class-list": "^0.1.1",
     "classnames": "^2.3.1",
     "clipboard": "^2.0.8",
@@ -195,7 +195,7 @@
     "react-shallow-testutils": "^3.0.0",
     "react-test-renderer": "^16.3.2",
     "regenerator-runtime": "^0.13.2",
-    "terriajs-server": "^3.0.1",
+    "terriajs-server": "^3.3.3",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.1.14",
     "yaml": "^1.10.0"
