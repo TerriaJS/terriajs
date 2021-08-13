@@ -3,7 +3,10 @@ Change Log
 
 ### Next Release
 
+### v7.11.17
+
 * Moved strings in DateTimeSelector and FeatureInfoPanel into i18next translation file.
+* Bumped terriajs-server to ^3.3.3
 
 ### v7.11.16
 
