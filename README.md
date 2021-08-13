@@ -2,15 +2,15 @@
 TerriaJS
 ============
 
-# We will be deprecating our master branch (v7) of TerriaJS in early August 2021
+# v7 of TerriaJS is deprecated
 What this means:
-- The [Next branch (v8)](https://github.com/TerriaJS/terriajs/tree/next) will become our new main branch
-- We will be providing documentation on how to migrate from v7 to v8
-- We will be actively monitoring our issues in the [GitHub issue tracker](https://github.com/TerriaJS/terriajs/issues/new)
+- [Our new main branch](https://github.com/TerriaJS/terriajs/tree/main) now tracks TerriaJS v8+ development
+- We have a [migration guide](https://docs.terria.io/guide/contributing/migration-guide/) available for users of TerriaJS v7 to help them upgrade their applications to TerriaJS v8
+- Please chat to us and our community in our [GitHub discussions forum](https://github.com/TerriaJS/terriajs/discussions)
 
 -------------------
 
-[![Join the chat at https://gitter.im/TerriaJS/terriajs](https://badges.gitter.im/TerriaJS/terriajs.svg)](https://gitter.im/TerriaJS/terriajs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Docs](https://img.shields.io/badge/docs-online-blue.svg)](https://docs.terria.io/)
+[![Build Status](https://github.com/TerriaJS/terriajs/actions/workflows/ci.yml/badge.svg?branch=terriajs7&event=push)](https://github.com/TerriaJS/terriajs/actions/workflows/ci.yml) [![Docs](https://img.shields.io/badge/docs-online-blue.svg)](https://docs-v7.terria.io/)
 
 ![Terria logo](terria-logo.png "Terria logo")
 
