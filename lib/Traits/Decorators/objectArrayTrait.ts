@@ -1,12 +1,15 @@
 import { computed } from "mobx";
 import { computedFn } from "mobx-utils";
 import Result from "../../Core/Result";
-import TerriaError, { TerriaErrorSeverity } from "../../Core/TerriaError";
-import createStratumInstance from "../../Models/createStratumInstance";
-import Model, { BaseModel, ModelConstructor } from "../../Models/Model";
-import saveStratumToJson from "../../Models/saveStratumToJson";
-import StratumFromTraits from "../../Models/StratumFromTraits";
-import StratumOrder from "../../Models/StratumOrder";
+import TerriaError from "../../Core/TerriaError";
+import createStratumInstance from "../../Models/Definition/createStratumInstance";
+import Model, {
+  BaseModel,
+  ModelConstructor
+} from "../../Models/Definition/Model";
+import saveStratumToJson from "../../Models/Definition/saveStratumToJson";
+import StratumFromTraits from "../../Models/Definition/StratumFromTraits";
+import StratumOrder from "../../Models/Definition/StratumOrder";
 import ArrayNestedStrataMap, {
   getObjectId,
   TraitsConstructorWithRemoval
@@ -36,7 +39,8 @@ export default function objectArrayTrait<T extends ModelTraits>(
     }
     constructor.traits[propertyKey] = new ObjectArrayTrait(
       propertyKey,
-      options
+      options,
+      constructor
     );
   };
 }
@@ -48,8 +52,8 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
   readonly modelClass: ModelConstructor<Model<T>>;
   readonly merge: boolean;
 
-  constructor(id: string, options: ObjectArrayTraitOptions<T>) {
-    super(id, options);
+  constructor(id: string, options: ObjectArrayTraitOptions<T>, parent: any) {
+    super(id, options, parent);
     this.type = options.type;
     this.idProperty = options.idProperty;
     this.modelClass = options.modelClass || traitsClassToModelClass(this.type);

@@ -7,10 +7,10 @@ import {
   action
 } from "mobx";
 import Terria from "../Models/Terria";
-import SearchProviderResults from "../Models/SearchProviderResults";
-import SearchProvider from "../Models/SearchProvider";
+import SearchProviderResults from "../Models/SearchProviders/SearchProviderResults";
+import SearchProvider from "../Models/SearchProviders/SearchProvider";
 import filterOutUndefined from "../Core/filterOutUndefined";
-import CatalogSearchProvider from "../Models/CatalogSearchProvider";
+import CatalogSearchProvider from "../Models/SearchProviders/CatalogSearchProvider";
 
 interface SearchStateOptions {
   terria: Terria;

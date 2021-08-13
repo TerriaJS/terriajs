@@ -9,9 +9,9 @@ import { withTranslation } from "react-i18next";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import MappableMixin, { ImageryParts } from "../../ModelMixins/MappableMixin";
-import CommonStrata from "../../Models/CommonStrata";
-import CreateModel from "../../Models/CreateModel";
-import GeoJsonCatalogItem from "../../Models/GeoJsonCatalogItem";
+import CommonStrata from "../../Models/Definition/CommonStrata";
+import CreateModel from "../../Models/Definition/CreateModel";
+import GeoJsonCatalogItem from "../../Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import ViewerMode from "../../Models/ViewerMode";
 import MappableTraits from "../../Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../ViewModels/TerriaViewer";
@@ -132,19 +132,18 @@ class DataPreviewMap extends React.Component {
       "Initialising preview map. This might be expensive, so this should only show up when the preview map disappears and reappears"
     );
     this.isZoomedToExtent = false;
-
+    const baseMapItems = this.props.terria.baseMapsModel.baseMapItems;
     // Find preview basemap using `terria.previewBaseMapId`
-    const initPreviewBaseMap = this.props.terria.baseMaps.find(
+    const initPreviewBaseMap = baseMapItems.find(
       baseMap =>
-        baseMap.mappable.uniqueId === this.props.terria.previewBaseMapId
+        baseMap.item.uniqueId ===
+        this.props.terria.baseMapsModel.previewBaseMapId
     );
     if (initPreviewBaseMap !== undefined) {
-      this.previewViewer.setBaseMap(initPreviewBaseMap.mappable);
+      this.previewViewer.setBaseMap(initPreviewBaseMap.item);
     } else {
       this.previewViewer.setBaseMap(
-        this.props.terria.baseMaps.length > 0
-          ? this.props.terria.baseMaps[0].mappable
-          : undefined
+        baseMapItems.length > 0 ? baseMapItems[0].item : undefined
       );
     }
 

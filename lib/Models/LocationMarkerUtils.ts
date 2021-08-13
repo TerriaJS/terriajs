@@ -1,8 +1,8 @@
 import i18next from "i18next";
 import markerIcon from "./markerIcon";
 import prettifyCoordinates from "../Map/prettifyCoordinates";
-import CommonStrata from "./CommonStrata";
-import CzmlCatalogItem from "./CzmlCatalogItem";
+import CommonStrata from "./Definition/CommonStrata";
+import CzmlCatalogItem from "./Catalog/CatalogItems/CzmlCatalogItem";
 import Terria from "./Terria";
 import LatLonHeight from "../Core/LatLonHeight";
 import { toJS } from "mobx";

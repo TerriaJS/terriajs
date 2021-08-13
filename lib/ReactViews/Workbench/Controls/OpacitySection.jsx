@@ -7,9 +7,8 @@ import PropTypes from "prop-types";
 import Slider from "rc-slider";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import isDefined from "../../../Core/isDefined";
-import CommonStrata from "../../../Models/CommonStrata";
-import hasTraits from "../../../Models/hasTraits";
+import CommonStrata from "../../../Models/Definition/CommonStrata";
+import hasTraits from "../../../Models/Definition/hasTraits";
 import RasterLayerTraits from "../../../Traits/TraitsClasses/RasterLayerTraits";
 import Styles from "./opacity-section.scss";
 
@@ -36,7 +35,6 @@ const OpacitySection = observer(
       const { t } = this.props;
       if (
         !hasTraits(item, RasterLayerTraits, "opacity") ||
-        !isDefined(item.opacity) ||
         item.disableOpacityControl
       ) {
         return null;

@@ -2,7 +2,7 @@ const create: any = require("react-test-renderer").create;
 import React from "react";
 import { act } from "react-dom/test-utils";
 import Terria from "../../../lib/Models/Terria";
-import CatalogGroup from "../../../lib/Models/CatalogGroupNew";
+import CatalogGroup from "../../../lib/Models/Catalog/CatalogGroup";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import Breadcrumbs from "../../../lib/ReactViews/Search/Breadcrumbs";
 const DataCatalogTab: any = require("../../../lib/ReactViews/ExplorerWindow/Tabs/DataCatalogTab")

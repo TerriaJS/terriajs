@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import isDefined from "../../Core/isDefined";
-import CommonStrata from "../../Models/CommonStrata";
+import CommonStrata from "../../Models/Definition/CommonStrata";
 import Box from "../../Styled/Box";
 import { item } from "../Custom/Chart/tooltip.scss";
 import Collapsible from "../Custom/Collapsible/Collapsible";

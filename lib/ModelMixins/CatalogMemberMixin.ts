@@ -3,11 +3,11 @@ import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import Result from "../Core/Result";
-import Model, { BaseModel } from "../Models/Model";
+import Model, { BaseModel } from "../Models/Definition/Model";
+import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import SelectableDimensions, {
   SelectableDimension
 } from "../Models/SelectableDimensions";
-import updateModelFromJson from "../Models/updateModelFromJson";
 import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";
 import AccessControlMixin from "./AccessControlMixin";
 import GroupMixin from "./GroupMixin";
@@ -54,7 +54,9 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       );
     }
 
-    /** Calls AsyncLoader to load metadata.
+    /** Calls AsyncLoader to load metadata. It is safe to call this as often as necessary.
+     * If metadata is already loaded or already loading, it will
+     * return the existing promise.
      *
      * This returns a Result object, it will contain errors if they occur - they will not be thrown.
      * To throw errors, use `(await loadMetadata()).throwIfError()`
@@ -203,9 +205,7 @@ export default CatalogMemberMixin;
 /** Convenience function to get user readable name of a BaseModel */
 export function getName(model: BaseModel | undefined) {
   return (
-    (CatalogMemberMixin.isMixedInto(model)
-      ? model.nameInCatalog ?? model.name
-      : undefined) ??
+    (CatalogMemberMixin.isMixedInto(model) ? model.name : undefined) ??
     model?.uniqueId ??
     "Unknown model"
   );

@@ -12,7 +12,7 @@ import {
 } from "../../Core/AnalyticEvents/analyticEvents";
 import getPath from "../../Core/getPath";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
-import removeUserAddedData from "../../Models/removeUserAddedData";
+import removeUserAddedData from "../../Models/Catalog/removeUserAddedData";
 import CatalogItem from "./CatalogItem";
 
 // Individual dataset

@@ -2,9 +2,9 @@ import { action } from "mobx";
 import MapboxImageryProvider from "terriajs-cesium/Source/Scene/MapboxImageryProvider";
 import URI from "urijs";
 import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import MapboxMapCatalogItem from "../../lib/Models/MapboxMapCatalogItem";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import Terria from "../../lib/Models/Terria";
+import MapboxMapCatalogItem from "../../lib/Models/Catalog/CatalogItems/MapboxMapCatalogItem";
 
 describe("MapboxMapCatalogItem", function() {
   let terria: Terria;

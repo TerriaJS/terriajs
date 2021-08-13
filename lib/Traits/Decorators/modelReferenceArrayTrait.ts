@@ -1,11 +1,11 @@
 import { computed } from "mobx";
 import isDefined from "../../Core/isDefined";
 import Result from "../../Core/Result";
-import TerriaError, { TerriaErrorSeverity } from "../../Core/TerriaError";
-import createStubCatalogItem from "../../Models/createStubCatalogItem";
-import { BaseModel } from "../../Models/Model";
-import ModelFactory from "../../Models/ModelFactory";
-import upsertModelFromJson from "../../Models/upsertModelFromJson";
+import TerriaError from "../../Core/TerriaError";
+import createStubCatalogItem from "../../Models/Catalog/createStubCatalogItem";
+import { BaseModel } from "../../Models/Definition/Model";
+import ModelFactory from "../../Models/Definition/ModelFactory";
+import upsertModelFromJson from "../../Models/Definition/upsertModelFromJson";
 import ModelReference from "../ModelReference";
 import Trait, { TraitOptions } from "../Trait";
 
@@ -23,7 +23,8 @@ export default function modelReferenceArrayTrait<T>(
     }
     constructor.traits[propertyKey] = new ModelReferenceArrayTrait(
       propertyKey,
-      options
+      options,
+      constructor
     );
   };
 }
@@ -32,8 +33,8 @@ export class ModelReferenceArrayTrait extends Trait {
   readonly decoratorForFlattened = computed.struct;
   private factory: ModelFactory | undefined;
 
-  constructor(id: string, options: ModelArrayTraitOptions) {
-    super(id, options);
+  constructor(id: string, options: ModelArrayTraitOptions, parent: any) {
+    super(id, options, parent);
     this.factory = options.factory;
   }
 

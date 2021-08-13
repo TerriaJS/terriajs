@@ -9,7 +9,7 @@ import React from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import WrappedTimeline from "terriajs-cesium/Source/Widgets/Timeline/Timeline";
-import CommonStrata from "../../../Models/CommonStrata";
+import CommonStrata from "../../../Models/Definition/CommonStrata";
 import { formatDate, formatDateTime, formatTime } from "./DateFormats";
 
 const CesiumTimeline = createReactClass({
@@ -77,10 +77,16 @@ const CesiumTimeline = createReactClass({
         );
       }
     });
+
+    this.resizeListener = () => {
+      this.cesiumTimeline && this.cesiumTimeline.resize();
+    };
+    window.addEventListener("resize", this.resizeListener, false);
   },
 
   componentWillUnmount() {
     this.disposeZoomAutorun();
+    window.removeEventListener("resize", this.resizeListener);
   },
 
   shouldComponentUpdate() {

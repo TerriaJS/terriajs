@@ -3,7 +3,7 @@ import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import Result from "../Core/Result";
-import Model, { BaseModel, ModelInterface } from "../Models/Model";
+import Model, { BaseModel, ModelInterface } from "../Models/Definition/Model";
 import ModelTraits from "../Traits/ModelTraits";
 import { getName } from "./CatalogMemberMixin";
 
@@ -85,6 +85,8 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
     /**
      * Forces load of the reference. This method does _not_ need to consider
      * whether the reference is already loaded.
+     *
+     * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
      *
      * Errors can be thrown here.
      *

@@ -1,8 +1,8 @@
-import CommonStrata from "../../lib/Models/CommonStrata";
-import MagdaReference from "../../lib/Models/MagdaReference";
-import { BaseModel } from "../../lib/Models/Model";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import MagdaReference from "../../lib/Models/Catalog/CatalogReferences/MagdaReference";
+import { BaseModel } from "../../lib/Models/Definition/Model";
 import Terria from "../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Workbench from "../../lib/Models/Workbench";
 
 describe("Workbench", function() {

@@ -40,7 +40,7 @@ export class ObservablePropertyTraits extends ModelTraits {
   defaultDuration?: string;
 }
 
-export class ProcedureTraits extends ObservablePropertyTraits {}
+export class ProcedureTraits extends mixTraits(ObservablePropertyTraits) {}
 
 export default class SensorObservationCatalogItemTraits extends mixTraits(
   FeatureInfoTraits,

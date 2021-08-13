@@ -1,10 +1,13 @@
 import { computed } from "mobx";
 import Result from "../../Core/Result";
-import TerriaError, { TerriaErrorSeverity } from "../../Core/TerriaError";
-import createStratumInstance from "../../Models/createStratumInstance";
-import Model, { BaseModel, ModelConstructor } from "../../Models/Model";
-import saveStratumToJson from "../../Models/saveStratumToJson";
-import StratumFromTraits from "../../Models/StratumFromTraits";
+import TerriaError from "../../Core/TerriaError";
+import createStratumInstance from "../../Models/Definition/createStratumInstance";
+import Model, {
+  BaseModel,
+  ModelConstructor
+} from "../../Models/Definition/Model";
+import saveStratumToJson from "../../Models/Definition/saveStratumToJson";
+import StratumFromTraits from "../../Models/Definition/StratumFromTraits";
 import ModelTraits from "../ModelTraits";
 import NestedStrataMap from "../NestedStrataMap";
 import Trait, { TraitOptions } from "../Trait";
@@ -26,7 +29,11 @@ export default function objectTrait<T extends ModelTraits>(
     if (!constructor.traits) {
       constructor.traits = {};
     }
-    constructor.traits[propertyKey] = new ObjectTrait(propertyKey, options);
+    constructor.traits[propertyKey] = new ObjectTrait(
+      propertyKey,
+      options,
+      constructor
+    );
   };
 }
 
@@ -36,8 +43,8 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
   readonly decoratorForFlattened = computed.struct;
   readonly modelClass: ModelConstructor<Model<T>>;
 
-  constructor(id: string, options: ObjectTraitOptions<T>) {
-    super(id, options);
+  constructor(id: string, options: ObjectTraitOptions<T>, parent: any) {
+    super(id, options, parent);
     this.type = options.type;
     this.isNullable = options.isNullable || false;
     this.modelClass = options.modelClass || traitsClassToModelClass(this.type);

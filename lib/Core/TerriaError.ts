@@ -105,6 +105,7 @@ export default class TerriaError {
   /** `sender` isn't really used for anything at the moment... */
   readonly sender: unknown;
   readonly originalError?: (TerriaError | Error)[];
+  readonly stack: string;
 
   @observable showDetails = false;
 
@@ -211,6 +212,15 @@ export default class TerriaError {
       : [];
 
     this.severity = options.severity ?? TerriaErrorSeverity.Error;
+    this.stack = (new Error().stack ?? "")
+      .split("\n")
+      // Filter out some less useful lines in the stack trace
+      .filter(s =>
+        ["result.ts", "terriaerror.ts", "opendatasoft.apiclient.umd.js"].every(
+          remove => !s.toLowerCase().includes(remove)
+        )
+      )
+      .join("\n");
   }
 
   get message() {
@@ -221,7 +231,7 @@ export default class TerriaError {
     return resolveI18n(this._title);
   }
 
-  /** Show error to user if `severity` is `Error` */
+  /** True if `severity` is `Error` */
   get shouldRaiseToUser() {
     return (
       (typeof this.severity === "function"
@@ -278,5 +288,62 @@ export default class TerriaError {
           : []
       )
     ]);
+  }
+
+  /**
+   * Returns a plain error object for this TerriaError instance.
+   *
+   * The `message` string for the returned plain error will include the
+   * messages from all the nested `originalError`s for this instance.
+   */
+  toError(): Error {
+    // indentation required per nesting when stringifying nested error messages
+    const indentChar = "  ";
+    const buildNested: (
+      prop: "message" | "stack"
+    ) => (error: TerriaError, depth: number) => string | undefined = prop => (
+      error,
+      depth
+    ) => {
+      if (!Array.isArray(error.originalError)) {
+        return;
+      }
+
+      const indent = indentChar.repeat(depth);
+      const nestedMessage = error.originalError
+        .map(e => {
+          if (e instanceof TerriaError) {
+            // recursively build the message for nested errors
+            return `${e[prop]
+              ?.split("\n")
+              .map(s => indent + s)
+              .join("\n")}\n${buildNested(prop)(e, depth + 1)}`;
+          } else {
+            return `${e[prop]
+              ?.split("\n")
+              .map(s => indent + s)
+              .join("\n")}`;
+          }
+        })
+        .join("\n");
+      return nestedMessage;
+    };
+
+    let message = this.message;
+    const nestedMessage = buildNested("message")(this, 1);
+    if (nestedMessage) {
+      message = `${message}\nNested error:\n${nestedMessage}`;
+    }
+
+    const error = new Error(message);
+    error.name = this.title;
+
+    let stack = this.stack;
+    const nestedStack = buildNested("stack")(this, 1);
+    if (nestedStack) {
+      stack = `${stack}\n${nestedStack}`;
+    }
+    error.stack = stack;
+    return error;
   }
 }

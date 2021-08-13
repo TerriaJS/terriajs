@@ -8,12 +8,12 @@ import {
 } from "../../../../Core/AnalyticEvents/analyticEvents";
 import getDataType from "../../../../Core/getDataType";
 import TimeVarying from "../../../../ModelMixins/TimeVarying";
-import addUserCatalogMember from "../../../../Models/addUserCatalogMember";
-import addUserFiles from "../../../../Models/addUserFiles";
-import CatalogMemberFactory from "../../../../Models/CatalogMemberFactory";
-import CommonStrata from "../../../../Models/CommonStrata";
-import createCatalogItemFromFileOrUrl from "../../../../Models/createCatalogItemFromFileOrUrl";
-import upsertModelFromJson from "../../../../Models/upsertModelFromJson";
+import addUserCatalogMember from "../../../../Models/Catalog/addUserCatalogMember";
+import addUserFiles from "../../../../Models/Catalog/addUserFiles";
+import CatalogMemberFactory from "../../../../Models/Catalog/CatalogMemberFactory";
+import createCatalogItemFromFileOrUrl from "../../../../Models/Catalog/createCatalogItemFromFileOrUrl";
+import CommonStrata from "../../../../Models/Definition/CommonStrata";
+import upsertModelFromJson from "../../../../Models/Definition/upsertModelFromJson";
 import Icon from "../../../../Styled/Icon";
 import Dropdown from "../../../Generic/Dropdown";
 import Loader from "../../../Loader";
@@ -123,9 +123,13 @@ const AddData = createReactClass({
           message: `An error occurred trying to add data from URL: ${url}`
         });
         newItem.setTrait(CommonStrata.user, "url", url);
-        promise = newItem
-          .loadMetadata()
-          .then(result => result.throwIfError() && newItem);
+        promise = newItem.loadMetadata().then(result => {
+          if (result.error) {
+            return Promise.reject(result.error);
+          }
+
+          return Promise.resolve(newItem);
+        });
       } catch (e) {
         promise = Promise.reject(e);
       }
