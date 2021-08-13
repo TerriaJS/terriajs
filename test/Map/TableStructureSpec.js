@@ -6,14 +6,20 @@ var TableStructure = require("../../lib/Map/TableStructure");
 var TimeInterval = require("terriajs-cesium/Source/Core/TimeInterval").default;
 var VarType = require("../../lib/Map/VarType");
 
-var separator = ",";
-var decimalPoint = ".";
-if (typeof Intl === "object" && typeof Intl.NumberFormat === "function") {
-  separator = Intl.NumberFormat().format(1000)[1];
-  decimalPoint = Intl.NumberFormat().format(0.5)[1];
-}
-
 describe("TableStructure", function() {
+  var separator = ",";
+  var decimalPoint = ".";
+  if (typeof Intl === "object" && typeof Intl.NumberFormat === "function") {
+    var thousand = Intl.NumberFormat().format(1000);
+    if (thousand.length === 5) {
+      separator = thousand[1];
+    }
+    var decimal = Intl.NumberFormat().format(0.5);
+    if (decimal.length === 2) {
+      decimalPoint = decimal[1];
+    }
+  }
+
   it("can read from json object", function() {
     // Use a copy of data to make the column, because knockout adds stuff to data.
     // Also, test a "slice" of the column's values, to remove knockout stuff.

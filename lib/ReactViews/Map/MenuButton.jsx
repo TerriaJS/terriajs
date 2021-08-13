@@ -9,12 +9,19 @@ import Styles from "./menu-button.scss";
  * @constructor
  */
 function MenuButton(props) {
+  let target;
+  let rel;
+  if (props.href !== "#") {
+    target = "_blank";
+    rel = "noreferrer";
+  }
   return (
     <div>
       <a
         className={Styles.btnAboutLink}
         href={props.href}
-        target={props.href !== "#" ? "_blank" : undefined}
+        target={target}
+        rel={rel}
         title={props.caption}
       >
         {props.href !== "#" && <Icon glyph={Icon.GLYPHS.externalLink} />}

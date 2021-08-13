@@ -8,8 +8,14 @@ describe("formatNumberForLocale", function() {
     var separator = ",";
     var decimalPoint = ".";
     if (typeof Intl === "object" && typeof Intl.NumberFormat === "function") {
-      separator = Intl.NumberFormat().format(1000)[1];
-      decimalPoint = Intl.NumberFormat().format(0.5)[1];
+      var thousand = Intl.NumberFormat().format(1000);
+      if (thousand.length === 5) {
+        separator = thousand[1];
+      }
+      var decimal = Intl.NumberFormat().format(0.5);
+      if (decimal.length === 2) {
+        decimalPoint = decimal[1];
+      }
     }
 
     it("returns strings for small integers", function() {

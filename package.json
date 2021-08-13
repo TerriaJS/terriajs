@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "7.11.16",
+  "version": "7.11.17",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
@@ -124,7 +124,7 @@
     "react-shallow-testutils": "^3.0.0",
     "react-test-renderer": "^16.3.2",
     "terriajs-jasmine-ajax": "^3.2.1",
-    "terriajs-server": "^3.0.1",
+    "terriajs-server": "^3.3.3",
     "webpack-dev-server": "^3.1.14"
   },
   "scripts": {
