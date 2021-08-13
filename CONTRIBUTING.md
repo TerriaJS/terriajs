@@ -6,10 +6,9 @@ A pull request MUST:
 
 - pass all tests
 - pass lint
-- follow code style (4-space indents, maximum semicolons, single-quoted strings etc)
 - update CHANGES.md (add a new version at the top if needed)
 - be submitted by someone who has signed the [Contributor Licence Agreement](https://cla-assistant.io/TerriaJS/terriajs).
-- be a named branch (not master) which merges cleanly with master
+- be a named branch (not main) which merges cleanly with main
 
 It SHOULD:
 
@@ -31,7 +30,7 @@ Consider also:
 
 The three key rules:
 
-1. All code modifications MUST be made via GitHub pull requests.  No one ever commits directly to `master`. 
+1. All code modifications MUST be made via GitHub pull requests.  No one ever commits directly to `main`. 
 2. Every pull request  be reviewed by another developer with commit access to the repo. They will either merge it, or provide feedback on issues to be addressed. They may add additional commits to the pull request.
 3. Developers should not merge their own pull requests except in unusual circumstances.
 

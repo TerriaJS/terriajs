@@ -6,10 +6,12 @@ You may also be interested in how to [make your own map without writing any code
 
 ### Quick Start
 
+**These instructions are for making a map based on the deprecated version 7 of the TerriaJS library. Go to [Getting Started on our updated docs site](https://docs.terria.io/guide/getting-started/#quick-start)**
+
 If you've done this sort of thing before, you'll find it easy to clone and build TerriaMap with these quick instructions:
 
 ```bash
-git clone https://github.com/TerriaJS/TerriaMap.git
+git clone https://github.com/TerriaJS/TerriaMap.git -b terriajsv7
 
 cd TerriaMap
 
@@ -42,7 +44,7 @@ git clone https://github.com/TerriaJS/TerriaMap.git
 cd TerriaMap
 ```
 
-If you're unable to use git, you can also [download a ZIP file](https://github.com/TerriaJS/TerriaMap/archive/master.zip) and extract it somewhere on your system.  We recommend using git, though, because it makes it much easier to update to later versions in the future.
+If you're unable to use git, you can also [download a ZIP file](https://github.com/TerriaJS/TerriaMap/archive/terriajs7.zip) and extract it somewhere on your system.  We recommend using git, though, because it makes it much easier to update to later versions in the future.
 
 ### Installing Dependencies
 
