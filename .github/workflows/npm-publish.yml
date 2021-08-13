@@ -2,7 +2,10 @@ name: npm-publish
 on:
   push:
     branches:
-      - master
+      - terriajs7
+
+env:
+  NPM_TAG: terriajs7
 
 jobs:
   publish:
@@ -46,7 +49,7 @@ jobs:
 
       - name: Publish package to NPM
         if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
-        run: npm publish --tag latest
+        run: npm publish --tag ${NPM_TAG}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
