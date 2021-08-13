@@ -3,13 +3,12 @@ import { listPages } from "../../../../api/graphql/queries";
 import { default as React, useState, useEffect } from "react";
 import { useHistory, useParams, withRouter } from "react-router-dom";
 import * as mutations from "../../../../api/graphql/mutations";
-import Icon from "../../Icon";
 import RCAccordian from "../RCAccordian/RCAccordian";
-import Styles from "./RCPageList.scss";
-import orderList from "./RCOrderList";
-function RCPageList(props) {
+import RCPageListItem from "./RCPageListItem";
+function RCPageList() {
   const [pages, setPages] = useState(null);
-
+  const [dragId, setDragId] = useState();
+  // get story id from url
   const { id } = useParams();
   const history = useHistory();
 
@@ -21,7 +20,7 @@ function RCPageList(props) {
       API.graphql(graphqlOperation(listPages, { storyID: id })).then(data => {
         const pageList = data.data.listPages.items;
         setPages(pageList);
-        orderList("listContainer");
+        // orderList("listContainer");
       });
     } catch (error) {
       console.log(error);
@@ -73,7 +72,28 @@ function RCPageList(props) {
   const toEditPage = pageId => {
     history.push(`/builder/story/${id}/page/${pageId}/edit`);
   };
-  console.log(pages);
+  const handleDrag = ev => {
+    setDragId(ev.currentTarget.id);
+  };
+  const handleDrop = ev => {
+    debugger;
+    const dragItem = pages.find(page => page.id === dragId);
+    const dropItem = pages.find(page => page.id === ev.currentTarget.id);
+    const dragItemOrder = dragItem.pageNr;
+    const dropItemOrder = dropItem.pageNr;
+    const newPagesState = pages.map(page => {
+      if (page.id === dragId) {
+        page.pageNr = dropItemOrder;
+      }
+      if (page.id === ev.currentTarget.id) {
+        page.pageNr = dragItemOrder;
+      }
+      return page;
+    });
+    setPages(newPagesState);
+    console.log("reorder", newPagesState);
+  };
+
   return pages ? (
     <RCAccordian
       title="Pages"
@@ -82,20 +102,23 @@ function RCPageList(props) {
       action={addPage}
       enableReorder={true}
     >
-      {pages.map(page => {
-        return (
-          <li key={page.id} className={Styles.listItem}>
-            <Icon glyph={Icon.GLYPHS.reorder} class="reorder" />
-            <span>{page.title}</span>
-            <button onClick={() => toEditPage(page.id)}>
-              <Icon glyph={Icon.GLYPHS.edit} />
-            </button>
-            <button onClick={() => deletePage(page.id)}>
-              <Icon glyph={Icon.GLYPHS.trashcan} />
-            </button>
-          </li>
-        );
-      })}
+      {pages.map(page => (
+        <p key={page.id}>{page.id}</p>
+      ))}
+      {pages
+        .sort((a, b) => a.pageNr - b.pageNr)
+        .map(page => {
+          return (
+            <RCPageListItem
+              key={page.id}
+              page={page}
+              editPage={toEditPage}
+              deletePage={deletePage}
+              handleDrag={handleDrag}
+              handleDrop={handleDrop}
+            />
+          );
+        })}
     </RCAccordian>
   ) : null;
 }
