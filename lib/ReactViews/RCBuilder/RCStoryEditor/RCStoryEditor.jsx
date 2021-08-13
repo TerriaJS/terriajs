@@ -231,7 +231,7 @@ function RCStoryEditor(props) {
         </div>
 
         <div className={Styles.group}>
-          <RCPageList pages={story?.pages.items} />
+          <RCPageList />
         </div>
 
         <div className={Styles.container}>

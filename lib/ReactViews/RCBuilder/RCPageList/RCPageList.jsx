@@ -1,18 +1,32 @@
-import { API } from "aws-amplify";
-import PropTypes from "prop-types";
-import { default as React } from "react";
+import { API, graphqlOperation } from "aws-amplify";
+import { listPages } from "../../../../api/graphql/queries";
+import { default as React, useState, useEffect } from "react";
 import { useHistory, useParams, withRouter } from "react-router-dom";
 import * as mutations from "../../../../api/graphql/mutations";
 import Icon from "../../Icon";
 import RCAccordian from "../RCAccordian/RCAccordian";
 import Styles from "./RCPageList.scss";
-
+import orderList from "./RCOrderList";
 function RCPageList(props) {
-  const pages = props.pages;
-  // get the story id from url
+  const [pages, setPages] = useState(null);
+
   const { id } = useParams();
   const history = useHistory();
 
+  // get all the pages for this story
+  // This call is made here in order to update page list on add
+  useEffect(() => {
+    try {
+      console.log("id", id);
+      API.graphql(graphqlOperation(listPages, { storyID: id })).then(data => {
+        const pageList = data.data.listPages.items;
+        setPages(pageList);
+        orderList("listContainer");
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
   // Create Page
   const addPage = () => {
     const newPage = {
@@ -21,7 +35,9 @@ function RCPageList(props) {
       camera: [0, 0, 0, 0],
       baseMapName: "basemap",
       viewer_mode_3d: true,
-      scenarios: []
+      scenarios: [],
+      storyID: id,
+      pageNr: 1
     };
 
     // Create a new page
@@ -84,7 +100,4 @@ function RCPageList(props) {
   ) : null;
 }
 
-RCPageList.propTypes = {
-  pages: PropTypes.array
-};
 export default withRouter(RCPageList);
