@@ -169,7 +169,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
     const preamble = parseCustomMarkdownToReact(
       useTranslationIfExists(
         viewState.terria.configParameters.feedbackPreamble ||
-          "feedback.feedbackPreamble"
+          "translate#feedback.feedbackPreamble"
       )
     );
     return (
@@ -436,6 +436,7 @@ const FormWrapper = styled(Box).attrs(props => ({
   styledWidth: "350px",
   backgroundColor: props.theme.textLight
 }))`
+  z-index: ${props => props.theme.notificationWindowZIndex};
   border-radius: 5px;
   @media (min-width: ${props => props.theme.sm}px) {
     bottom: 75px;

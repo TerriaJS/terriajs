@@ -1,5 +1,5 @@
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-import { BaseModel } from "../../lib/Models/Model";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import { BaseModel } from "../../lib/Models/Definition/Model";
 import { autorun, runInAction, observable } from "mobx";
 import Terria from "../../lib/Models/Terria";
 

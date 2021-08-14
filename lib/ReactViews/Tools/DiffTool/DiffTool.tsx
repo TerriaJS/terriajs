@@ -22,15 +22,15 @@ import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import MappableMixin, {
   ImageryParts
 } from "../../../ModelMixins/MappableMixin";
-import CommonStrata from "../../../Models/CommonStrata";
+import CommonStrata from "../../../Models/Definition/CommonStrata";
 import Feature from "../../../Models/Feature";
-import hasTraits, { HasTrait } from "../../../Models/hasTraits";
+import hasTraits, { HasTrait } from "../../../Models/Definition/hasTraits";
 import {
   getMarkerLocation,
   removeMarker
 } from "../../../Models/LocationMarkerUtils";
 import { DimensionOption } from "../../../Models/SelectableDimensions";
-import SplitItemReference from "../../../Models/SplitItemReference";
+import SplitItemReference from "../../../Models/Catalog/CatalogReferences/SplitItemReference";
 import Terria from "../../../Models/Terria";
 import ViewState from "../../../ReactViewModels/ViewState";
 import Box, { BoxSpan } from "../../../Styled/Box";
@@ -38,7 +38,7 @@ import Button, { RawButton } from "../../../Styled/Button";
 import Select from "../../../Styled/Select";
 import Spacing from "../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../Styled/Text";
-import RasterLayerTraits from "../../../Traits/RasterLayerTraits";
+import RasterLayerTraits from "../../../Traits/TraitsClasses/RasterLayerTraits";
 import { parseCustomMarkdownToReactWithOptions } from "../../Custom/parseCustomMarkdownToReact";
 import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Loader from "../../Loader";
@@ -747,7 +747,7 @@ const DiffAccordion: React.FC<DiffAccordionProps> = props => {
         paddedHorizontally={2}
         centered
         justifySpaceBetween
-        backgroundColor={theme.colorSplitter}
+        backgroundColor={theme.colorSecondary}
       >
         <Box centered>
           <StyledIcon styledWidth="20px" light glyph={GLYPHS.difference} />

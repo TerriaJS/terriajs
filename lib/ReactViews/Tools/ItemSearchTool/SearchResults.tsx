@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useVirtual } from "react-virtual";
 import styled from "styled-components";
 import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
-import { ItemSearchResult } from "../../../Models/ItemSearchProvider";
+import { ItemSearchResult } from "../../../Models/ItemSearchProviders/ItemSearchProvider";
 import Box from "../../../Styled/Box";
 import Button from "../../../Styled/Button";
 import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact";

@@ -1,7 +1,7 @@
 import React from "react";
 import { act, create, ReactTestRenderer } from "react-test-renderer";
 import timeout from "../../../../lib/Core/timeout";
-import ItemSearchProvider from "../../../../lib/Models/ItemSearchProvider";
+import ItemSearchProvider from "../../../../lib/Models/ItemSearchProviders/ItemSearchProvider";
 import SearchForm, {
   SearchFormProps
 } from "../../../../lib/ReactViews/Tools/ItemSearchTool/SearchForm";

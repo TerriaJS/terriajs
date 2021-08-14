@@ -32,7 +32,11 @@ const ErrorsBox = (props: {
               depth={props.depth + 1}
             ></TerriaErrorBox>
           ) : (
-            <pre>{error.stack ?? error.message ?? error.toString()}</pre>
+            // Show error.message (as well as error.stack) if error.stack is defined
+            <div>
+              {error.stack ? <pre>{error.message}</pre> : null}
+              <pre>{error.stack ?? error.message ?? error.toString()}</pre>
+            </div>
           )}
         </Box>
       ))}
@@ -65,6 +69,9 @@ const TerriaErrorBox = (props: { error: TerriaError; depth: number }) => {
               title={i18next.t("models.raiseError.developerDetails")}
               titleTextProps={{ large: true }}
               bodyBoxProps={{ padded: true }}
+              isOpen={props.error.showDetails}
+              onToggle={show => () =>
+                runInAction(() => (props.error.showDetails = show))}
             >
               <ErrorsBox
                 errors={props.error.originalError}

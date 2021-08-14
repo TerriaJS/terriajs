@@ -3,11 +3,11 @@ import { observer } from "mobx-react";
 import React from "react";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import LatLonHeight from "../../../Core/LatLonHeight";
-import CommonStrata from "../../../Models/CommonStrata";
-import createStratumInstance from "../../../Models/createStratumInstance";
-import GeoJsonCatalogItem from "../../../Models/GeoJsonCatalogItem";
+import CommonStrata from "../../../Models/Definition/CommonStrata";
+import createStratumInstance from "../../../Models/Definition/createStratumInstance";
+import GeoJsonCatalogItem from "../../../Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import Terria from "../../../Models/Terria";
-import StyleTraits from "../../../Traits/StyleTraits";
+import StyleTraits from "../../../Traits/TraitsClasses/StyleTraits";
 
 interface PropsType {
   terria: Terria;
@@ -45,7 +45,6 @@ export default class PointOnMap extends React.Component<PropsType> {
     });
     props.terria.addModel(pointItem);
     props.terria.overlays.add(pointItem);
-    pointItem.loadMapItems();
     this.pointItem = pointItem;
   }
 

@@ -1,6 +1,6 @@
 import moment from "moment";
-import StratumFromTraits from "../Models/StratumFromTraits";
-import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
+import StratumFromTraits from "../Models/Definition/StratumFromTraits";
+import DiscreteTimeTraits from "../Traits/TraitsClasses/DiscreteTimeTraits";
 
 export default function createDiscreteTimesFromIsoSegments(
   result: StratumFromTraits<DiscreteTimeTraits>[],

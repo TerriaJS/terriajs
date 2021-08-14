@@ -1,8 +1,8 @@
 import { computed } from "mobx";
 import Constructor from "../Core/Constructor";
-import Model from "../Models/Model";
-import StratumOrder from "../Models/StratumOrder";
-import GetCapabilitiesTraits from "../Traits/GetCapabilitiesTraits";
+import Model from "../Models/Definition/Model";
+import StratumOrder from "../Models/Definition/StratumOrder";
+import GetCapabilitiesTraits from "../Traits/TraitsClasses/GetCapabilitiesTraits";
 
 type CapabilitiesModel = Model<GetCapabilitiesTraits>;
 

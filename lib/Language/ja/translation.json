@@ -1,34 +1,34 @@
 {
   "tour": {
     "exploreMapDataButton": {
-      "content": "## マップのデータを探す\n\nここでは、データカタログからデータを探し、地図に追加することができます。複数のデータも追加できます。追加したデータは、ワークベンチ内にリストとして表示されます。"
+      "content": "## データを地図上で見る\n\nここでは、データカタログからデータを探し、地図に追加することができます。複数のデータも追加できます。追加したデータは、画面左側にリストとして表示されます。"
     },
     "locationSearchInput": {
-      "content": "## 場所検索\n\n地図上の興味ある場所の名前や住所を入力してください。"
+      "content": "## 場所を検索\n\n地名や住所を入力するとその場所を地図上で検索できます。"
     },
     "previous": "前",
     "finish": "完了",
     "end": "ツアーを終了",
     "preface": {
-      "start": "ツアーを開始",
+      "start": "操作方法を見る",
       "close": "後で",
-      "content": "どこから始めればよいかわからない場合は、主な機能を紹介するツアーをご利用ください。主要な機能を紹介しております。",
-      "title": "ツアーを始める"
+      "content": "このアプリケーションの主要な機能の操作方法を紹介します。",
+      "title": "操作方法を見る"
     },
     "mapNavigationSplitterIcon": {
-      "content": "## 比較\n\nTerriaでは、分割画面ビューを使用してデータセットを比較する強力な機能があります。時系列/ 4Dコンポーネントを含むデータセットの場合、日付ピッカーを使用して、でもデータの比較ができます。"
+      "content": "## 比較\n\nTerriaでは、分割画面ビューを使用してデータセットを比較する強力な機能があります。衛星画像のように時系列要素を含むデータセットの場合、日付ピッカーをクリックして時間を進めたり戻したりしてデータの比較ができます。"
     },
     "mapNavigationCompassOuterRing": {
-      "content": "## ビューの制御\n\n地図のビューを変更できます。二重円の外側を使用してビューの向きを変更したり、内側を使用してカメラアングルを傾けたりできます。ダブルクリックすればビューをリセットできます。"
+      "content": "## 地図の向きや角度の操作\n\n外側の円を左クリックしながら回すことで地図の向きを変えたり、内側の円を左クリックしながら動かすことで、角度を変えることができます。詳しくは？ボタンをクリックしてください。"
     },
     "menuBarStoryButton": {
       "content": "## ストーリー\n\nストーリーを使用すると、データセットにコンテキスト情報を追加して、3Dのガイドマップやレポートが作れます。ストーリーエディタを使用して独自のデータストーリーを作成し、完了したら「共有」パネルで共有します。"
     },
     "menuBarMapSettingsButton": {
-      "content": "## 地図設定\n\nベース地図、画質などの地図オプションを設定したり、地表面（地形）を非表示にして地下にあるデータセットを見えるようにできます。"
+      "content": "## 地図の設定\n\nベースとなる地図、2D/3D地形、画質などのオプションを設定できます。"
     },
     "sidePanelUploadButton": {
-      "content": "## データアップロード\n\n独自のデータをアップロードして、他のデータセットと一緒に表示できます。ファイルまたはリンクを既存のオンラインデータセットまたはデータサービスにアップロードします。CSV、GeoJSON、KML、GPX、CZMLなどのファイルフォーマットをサポートしています。"
+      "content": "## 自データ\n\n手元にある独自のデータを他のデータセットと一緒に表示できます。CSV、GeoJSON、KML、GPX、CZMLなどのファイルフォーマットをサポートしています。"
     }
   },
   "trainer": {
@@ -65,7 +65,17 @@
     "title": "クリック＋ドラッグでカメラを回転",
     "guidanceBtnText": "コンパスの詳しい使い方を見る",
     "guidanceBtnTitle": "ジャイロスコープの使い方",
-    "description": "外側の輪：ビューを回転\n内側のジャイロスコープ：軌道の変更\nダブルクリック：ホームポジション\nヒント：軌道の変更はCtrlキーを押しながらマップをドラッグでも可能"
+    "description": "外側の輪：ビューを回転。\n内側のジャイロスコープ：軌道の変更。\nダブルクリック：ホームポジション。\nヒント：軌道の変更はCtrlキーを押しながらマップをドラッグでも可能。",
+    "guidance": {
+      "ctrlDragDescription": "CTRLキーを押しながらドラッグしても地図を傾けたり回したりできます。",
+      "dismissText": "閉じて今後は表示しない",
+      "innerCircleDescription2": "また、ここをダブルクリックすると表示が初期状態に戻ります。",
+      "innerCircleDescription1": "内側の丸い部分をクリックして上下左右にゆっくりとドラッグすると、一度に地図を傾けたり回したりできます。",
+      "innerCircleTitle": "内側の円",
+      "outerRingDescription": "外側のリングをドラッグして回すと地図が回転します。",
+      "outerRingTitle": "外側のリング",
+      "title": "ジャイロスコープコントロール"
+    }
   },
   "splitterTool": {
     "workbench": {
@@ -85,7 +95,7 @@
   "satelliteGuidance": {
     "bodyV": "ワークベンチからスタイルのドロップダウンをクリックすると、衛生画像にフォールスカラーをはじめとする様々なスタイルを適用することができます。",
     "titleV": "フォールスカラー (false color) 画像を見るには?",
-    "bodyIV": "場所や時期によっては衛星画像がないこともあります。特定の場所の衛星画像だけを見たい場合は、ワークベンチの 'filter by location' をクリックしてください。",
+    "bodyIV": "場所や時期によっては衛星画像がないこともあります。特定の場所の衛星画像だけを見たい場合は、ワークベンチの 「場所によるフィルタ」 をクリックしてください。",
     "titleIV": "場所から画像を絞り込む",
     "bodyIII": "ワークベンチで撮影日のドロップダウンをクリックして時期を選択すると過去の画像を読み込むことができます。",
     "titleIII": "過去の画像を読み込む",
@@ -105,7 +115,7 @@
     "storyEditor": "ストーリーエディタ",
     "mobileViewStory": "ストーリーを見る {{storiesLength}}",
     "dismissText": "了解しました。ありがとうございます!",
-    "story": "Story",
+    "story": "ストーリー",
     "promptHtml2": "<0><0>はじめに</0><1>データストーリー</1><2>地図からインタラクティブなストーリーを作成して共有できます。</2></0>",
     "promptHtml1": "<0>ここをクリックしていつでもストーリを見たり作成することができます。</0>",
     "navBtnMobile": "ストーリー {{title}} に進む",
@@ -135,7 +145,7 @@
     "delete": "削除",
     "deleteStory": "削除",
     "recapture": "再キャプチャ",
-    "recaptureStory": "再キャプチャ",
+    "recaptureStory": "リキャプチャ",
     "edit": "編集",
     "editStory": "編集",
     "view": "見る",
@@ -145,7 +155,7 @@
     "badgeBarLabel": "シーン",
     "gettingStartedTitle": "開始する",
     "gettingStarted": "開始する",
-    "panelBody": "地図を使ってストーリを作成し、共有することができます",
+    "panelBody": "地図を使ってストーリーを作成し、共有することができます",
     "panelTitle": "ストーリーエディタ"
   },
   "diffTool": {
@@ -232,11 +242,11 @@
     "groupRemove": "グループを削除"
   },
   "emptyWorkbench": {
-    "emptyArea": "ワークベンチは空です",
-    "helpfulHintsThree": "ワークベンチからはデータの表示・非表示の切り替え、透過度の調整、画面分割比較モードへの移行、スタイルの変更のほか、サポートされているデータでは日時の変更も行えます。",
-    "helpfulHintsTwo": "データを地図に追加すると、アクティブなデータセットの一覧がこのワークベンチに表示されます。ワークベンチからデータを操作することができます。",
-    "helpfulHintsOne": "'マップのデータを探す'を選択して使えるデータを探すか、'アップロード'をクリックして自分のデータを地図に追加します。",
-    "helpfulHints": "ヒント"
+    "emptyArea": "「データを地図上で見る」ボタンから、表示するデータを追加できます",
+    "helpfulHintsThree": "一旦読み込んだデータは、表示・非表示の切り替え、透過度の調整、画面分割比較モードへの移行、スタイルの変更ができるほか、対応しているデータでは日時の変更も行えます。",
+    "helpfulHintsTwo": "データを地図に追加すると、データセットがここにリストされます。",
+    "helpfulHintsOne": "「データを地図上で見る」 を選択して登録済みのデータを探すか、「自分のデータを追加」 で手元のデータを地図に追加します。",
+    "helpfulHints": "使い方"
   },
   "loader": {
     "loadingMessage": "読み込み中"
@@ -298,7 +308,7 @@
     "dataSourceDetails": "データソースの詳細",
     "downloadData": "データをダウンロード",
     "useTheLinkToDownload": "データを直接ダウンロードするには以下のリンクを使用してください。",
-    "downloadNotSupported": "残念ながらお使いのブラウザにはこのデータをファイルとしてダウンロードするための機能がありません。データをダウンロードするにはChrome、Firefox、Safariのどれかを使用してください。",
+    "downloadNotSupported": "残念ながらお使いのブラウザにはこのデータをファイルとしてダウンロードするための機能がありません。データをダウンロードするには Chrome、Firefox、Safari のどれかを使用してください。",
     "downloadInFormat": "選択中のデータを{{format}}フォーマットでダウンロード",
     "useLinkBelow": "データをダウンロードするには以下のリンクを使用してください。URLのクエリーパラメーターをカスタマイズする方法の詳細は{{link}}から確認してください。",
     "metadataUrls": "メタデータのリンク",
@@ -343,17 +353,17 @@
     "viewMore": "より {{name}} 結果を表示",
     "viewLess": "{{name}} 少なく結果を表示",
     "search": "データカタログで '{{searchText}}' を検索",
-    "searchInDataCatalog": "データカタログで <1>'{{locationSearchText}}'</1> を検索",
-    "data": "データについて",
+    "searchInDataCatalog": "データカタログで <1>「{{locationSearchText}}」</1> を検索",
+    "data": "データ",
     "done": "終了",
     "resultsLabel": "検索結果"
   },
   "welcomeMessage": {
     "dismissText": "閉じて今後は表示しない",
-    "exploreDataBtnText": "マップのデータを探す",
+    "exploreDataBtnText": "データを地図上で見る",
     "helpBtnText": "ヘルプを見る",
-    "tourBtnText": "ツアーに参加",
-    "welcomeMessage": " ",
+    "tourBtnText": "操作方法を見る",
+    "welcomeMessage": "データを探して3D地図上に展開してみませんか？<br/>とにかく触ってみるか、ヘルプガイドで使い方の概要を見てみてください。",
     "title": "ようこそ"
   },
   "featureInfo": {
@@ -366,7 +376,7 @@
     "locationMarker": "位置マーカー",
     "satelliteSuggestionBtn": "この地点の{{catalogItemName}}を表示する",
     "userSelection": "選択地点",
-    "clickToAddData": "データをマップに追加するには '$t(addData.addDataBtnText)' をクリックします。",
+    "clickToAddData": "データをマップに追加するには 「$t(addData.addDataBtnText)」 をクリックします。",
     "clickMap": "マップをクリックするとその地点の詳細が表示されます",
     "pickLocation": "地点を選択",
     "download": "この表をダウンロード",
@@ -398,10 +408,10 @@
   },
   "helpPanel": {
     "menuPaneTitle": "使い方",
-    "takeTour": "ツアーを見る",
+    "takeTour": "操作方法を見る",
     "dismissText": "閉じる",
     "promptMessage": "ツアー、使い方のビデオなどのヘルプコンテンツがあります",
-    "menuPaneBody": "TerriaJS の使い方のヒントを得るには以下のガイドを読むか[info@terria.io](mailto:info@terria.io)で開発チームにメールしてください"
+    "menuPaneBody": "各種メニューの使い方は「操作方法を見る」からご確認ください。技術的な質問については、[info@terria.io](mailto:info@terria.io)で開発チームにご連絡ください。"
   },
   "settingPanel": {
     "performanceLabel": "パフォーマンス",
@@ -437,7 +447,7 @@
       "hideLabel": "ここを押すとワークベンチに時系列データがない時も含めて常にタイムラインが表示されます",
       "alwaysShowLabel": "ここを押すとワークベンチに時系列データがある時にだけタイムラインが表示されます"
     },
-    "btnText": "マップ設定",
+    "btnText": "地図の設定",
     "screen": "スクリーン",
     "native": "ネイティブ",
     "nativeResolutionLabel": "ここを押すと解像度を{{resolution1}}から{{resolution2}}に変更します"
@@ -454,14 +464,14 @@
     "recount": "再カウント",
     "subTotals": "<div>{{name}}: {{items}}個のアイテム / {{groups}}個のグループ</div>",
     "totals": "<div>このカタログには{{groups}}個のグループと{{items}}個のアイテムが含まれています。</div>",
-    "countingMessage": "カウントしています...",
+    "countingMessage": "数えています、しばらくお待ちください…",
     "loadError": "読み込みに失敗しました。",
     "btnText": "カウントする"
   },
   "share": {
-    "btnMapShareTitle": "共有 / 印刷",
-    "btnStoryShareTitle": "ストーリーを他の人と共有",
-    "btnCatalogShareTitle": "カタログを他の人と共有",
+    "btnMapShareTitle": "地図を共有する",
+    "btnStoryShareTitle": "ストーリーを共有する",
+    "btnCatalogShareTitle": "カタログを共有する",
     "embedTitle": "HTMLページへの埋め込みは下記のコードをお使いください:",
     "btnAdvanced": "詳細設定",
     "printExplanation": "このマップを印刷できる状態で表示。",
@@ -527,7 +537,7 @@
   "addData": {
     "note": "<0>注意：</0>この方法で追加されたデータは保存されず、他の人に見せることもできません。",
     "back": "戻る",
-    "infoText": "<0>ファイルをここにドラッグ・アンド・ドロップすると、ローカルのマップ上で見ることができます</0><1>（データが保存またはインターネットにアップロードされることはありません）</1>",
+    "infoText": "<0>ファイルをここにドラッグ・アンド・ドロップすると、ローカル環境で自分のデータを見ることができます</0><1>（データが保存またはインターネットにアップロードされることはありません）</1>",
     "dragDrop": "ドラッグ・アンド・ドロップ",
     "webTitle": "ウェブからデータを追加する",
     "localTitle": "ローカルのデータを追加する",
@@ -542,26 +552,26 @@
     "searchPlaceholder": "カタログから検索する",
     "searchPlaceholderWhole": "カタログ全体から検索する",
     "dataCatalogue": "データカタログ",
-    "myData": "自分のデータ",
+    "myData": "自分のデータを追加",
     "done": "完了",
     "closeDataPanel": "データパネルを閉じる",
     "load": "ローカル/ウェブのデータを読み込む",
     "btnHide": "閉じる",
-    "addDataBtnText": "マップのデータを探す"
+    "addDataBtnText": "データを地図上で見る"
   },
   "feedback": {
-    "minLength": "フィードバックコメントは最低でも{{minLength}}必要です",
-    "feedbackBtnText": "フィードバック",
+    "minLength": "ご意見・ご要望のコメントは最低でも{{minLength}}が必要です",
+    "feedbackBtnText": "ご意見・ご要望",
     "send": "送信",
     "sending": "送信中...",
-    "captionText": "問題の解決に役立てるため、あなたが見ているものを開発者と共有します",
+    "captionText": "問題の解決に役立てるため、見ているものを開発者と共有します",
     "cancel": "キャンセル",
     "email": "メールアドレス（任意）<br/><em>メールアドレスがない場合は返信できません</em>",
     "shareWithDevelopers": "マップビューを{{appName}}の開発者と共有する",
     "commentQuestion": "コメントまたは質問",
     "yourName": "お名前（任意）",
-    "close": "フィードバックを閉じる",
-    "title": "フィードバック",
+    "close": "ご意見・ご要望を閉じる",
+    "title": "ご意見・ご要望",
     "feedbackPreamble": "ご意見をお聞かせください。"
   },
   "languagePanel": {
@@ -600,7 +610,9 @@
       "csv": "CSV",
       "kml": "KMLまたはKMZ",
       "geoRss": "GeoRSS",
-      "geojson": "GeoJSON"
+      "geojson": "GeoJSON",
+      "opendatasoft-group": "Opendatasoftポータル",
+      "sdmx-group": "SDMX-JSON"
     },
     "dataUri": {
       "errorMessage": "残念ながら、Microsoftのブラウザ（全てのバージョンのInternet ExplorerとEdge）では、データをファイルとしてダウンロードするのに必要となるdata URI機能がサポートされていません。ダウンロードするには、次のURLをChrome、Firefox、Safariなど別のブラウザにコピーしてください。{{href}}",
@@ -670,7 +682,7 @@
     "closePanel": "パネルを閉じる",
     "sectionLabel": "図"
   },
-  "emptyWorkbenchMessage": "<0><0>ワークベンチは空です</0><1><strong>上の'$t(addData.addDataBtnText)'をクリック</strong>すると</1><2><0>データカタログを閲覧できます</0><1>自分のデータを地図上に展開できます</1></2><3><0></0><strong>ヒント</strong><2>アクティブなデータセットはすべてここに表示されます</2></3></0>",
+  "emptyWorkbenchMessage": "<0><0>「データを地図上でみる」ボタンから、表示するデータを追加できます。</0><1><strong>上の「$t(addData.addDataBtnText)」をクリック</strong>して</1><2><0>データカタログが開き、</0><1>自分のデータを地図上に展開できます</1></2><3><0></0><strong>使い方：</strong><2>アクティブなデータセットはすべてここに表示されます</2></3></0>",
   "concept": {
     "summary": {
       "addFirstText": "新しい条件を追加",
@@ -686,7 +698,7 @@
     }
   },
   "timer": {
-    "nextScheduledUpdateCountdown": "次のデータ更新まであと{{timeCountdown}}}",
+    "nextScheduledUpdateCountdown": "次のデータ更新まであと{{timeCountdown}}",
     "nextScheduledUpdateTime": "次のデータ更新予定時刻は{{scheduledUpdateTime}}です"
   },
   "satellite": {
@@ -749,7 +761,7 @@
       "mustHaveType": "各アイテムにはタイプを指定する必要があります。",
       "useConversion": "変換サービスを使用しますか？",
       "cancel": "キャンセル",
-      "upload": "アップロード",
+      "upload": "自データ",
       "readyToUpload": "{{appName}}の変換サービスにアップロードする準備はできていますか？",
       "getConfirmationMessage": "このファイルは{{appName}}では直接サポートされていません。\n\n{{appName}}の変換サービスにアップロードしますか？ファイルサイズが小さく、かつzip化されたEsri ShapeファイルやMapInfo Tabファイルであればこの方法で表示できる可能性があります。",
       "unsupportedFileTypeMessageII": "このファイルフォーマットは{{appName}}ではサポートされていません。直接サポートされているフォーマットは <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (in {{link}})</li></ul>  です。オンライン変換サービスを通してサポートされているファイルフォーマットは <ul><li>Shapefile (.zip)</li><li>MapInfo TAB (.zip)</li><li>その他の {{linkII}}</li></ul> などです。",
@@ -952,7 +964,7 @@
       "errorLoadingTitle": "CSQを読み込めません",
       "exceptionMessage": "CSWサーバーがエラーを報告しています:\n\n {{exceptionText}}",
       "unknownError": "CSWサーバーが原因の特定できないエラーを報告しています。",
-      "checkCORSDomain": "<br/>",
+      "checkCORSDomain": "CSW サーバ上でGetDomainを実行できませんでした。<br/><br/> URLを手入力している場合は、もう一度URLをチェックしてください。<br/><br/> もしご自分のサーバーをお使いでしたら、 <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a> が有効になっていることを確認して下さい。<br/><br/> その上でリロードしても問題が解決しない場合は、以下のメールに問題を報告して下さい。 {{email}} その際、以下の詳細なテクニカル情報も送付してください。  よろしくお願いします!",
       "checkCORS": "CSW サーバー上で GetRecords を実行できません。<br/><br/> URLを手で入力した場合、URLをもう一度確認してみてください。<br/><br/> もしご自身のサーバーをお使いなら、 {{cors}} が有効になっているか確認してください。<br/><br/> 再読み込みしても問題が解決しない場合は、問題を {{email}} に報告して下さい",
       "checkCORSRecords": "この CWS サーバーでGetRecords を実行できません。<br/><br/> ご自身のサーバーである場合、 <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a> が有効になっていることを確認してください。<br/><br/> 再読み込みでも問題が解決しない場合は、この問題を {{email}} に問題の詳細を記載したうえで報告して下さい。ご協力お願いいたします!",
       "errorLoadingRecordsMessage": "CSW サーバーで GetRecords を読み込み中に無効なレスポンスが返ってきました。 <p>指定したカタログサーバーが一時的に利用できないか、インターネット接続に問題がある可能性があります。プロセッシングサーバーをもう一度開き、問題がそれでも解決しない場合は、メールでエラーを報告して下さい ",
@@ -982,7 +994,7 @@
       "safari": "Apple Safari",
       "firefox": "Mozilla Firefox",
       "chrome": "Google Chrome",
-      "internetExplorer": "インターネットエクスプローラー１１",
+      "internetExplorer": "Internet Explorer 11",
       "legacyBrowserTitle": "古いタイプのブラウザはサポートしていません",
       "name": "不明 / GeoJSONに変換済み"
     },
@@ -1040,8 +1052,8 @@
       "name": "GeoJSON",
       "couldNotLoadMessage": "与えられたリンクからJSONデータを読み込むことができませんでした。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このエラーが発生する場合、サーバーが{{cors}}をサポートしていない可能性もあります。サーバーを管理しているのがあなたであれば、CORSが無効になっていないか確認し、無効になっている場合は有効にしてください。サーバーのコントロール権がない場合は、サーバー管理者に問い合わせてCORSを有効化してもらってください。または、{{appName}}の運営者に{{email}}から問い合わせいただければ、{{appName}}内のCORS非対応サーバーのリストにこのサーバーを加えることで{{appName}}自体がリクエストを中継できるかもしれません。 <p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>",
       "unsupportedBrowserMessage": "お使いのウェブブラウザは{{appName}}がファイルからデータを読み込む上で必要となるFile APIをサポートしていません。ブラウザをアップグレードしてください。最適な体験のためには、{{chrome}}、{{firefox}}または{{internetExplorer}}の最新版をお使いになることをおすすめします。",
-      "errorLoadingMessage": "GeoJSONファイルの読み込み中にエラーが発生しました。このファイルは無効または{{appName}}でサポートされていない可能性があります。サポートや詳しい情報が必要な場合は{{email}}にご連絡ください",
-      "errorParsingMessage": "与えられたデータをJSONとしてパーズできませんでした。このファイルは無効または{{appName}}でサポートされていない可能性があります。サポートや詳しい情報が必要な場合は{{email}}にご連絡ください"
+      "errorLoadingMessage": "GeoJSONファイルの読み込み中にエラーが発生しました。このファイルは無効または{{appName}}でサポートされていない可能性があります。サポートや詳しい情報が必要な場合は{{email}}にご連絡ください。",
+      "errorParsingMessage": "与えられたデータをJSONとしてパーズできませんでした。このファイルは無効またはサポートされていない可能性があります。"
     },
     "arcGisFeatureServer": {
       "groupNotAvailableTitle": "グループはありません",
@@ -1266,10 +1278,10 @@
       "name": "結果待ち"
     },
     "feedback": {
-      "unableToSendMessage": "恥ずかしい限りです。フィードバックを送ろうとした際にエラーが発生しました。申し訳ありませんが以下のメールアドレスにフィードバックを送って下さい: {{email}}.",
-      "unableToSendTitle": "フィードバックを送れません",
-      "thanksMessage": "皆さんのフィードバックが {{appName}} をより良いものにしていきます",
-      "thanksTitle": "フィードバックを頂き、ありがとうございます！"
+      "unableToSendMessage": "恥ずかしい限りです。ご意見・ご要望を送ろうとした際にエラーが発生しました。申し訳ありませんが以下のメールアドレスにご意見・ご要望を送って下さい: {{email}}.",
+      "unableToSendTitle": "ご意見・ご要望を送れません",
+      "thanksMessage": "皆さんのご意見・ご要望が {{appName}} をより良いものにしていきます",
+      "thanksTitle": "ご意見・ご要望を頂き、ありがとうございます！"
     },
     "regionMapping": {
       "issuesLoadingTitle": "{{name}} 読み込みに問題",
@@ -1288,7 +1300,7 @@
     },
     "raiseError": {
       "developerDetails": "開発者の詳細",
-      "notificationFeedback": "質問またはフィードバックはここをクリック。",
+      "notificationFeedback": "ご意見・ご要望はここをクリック。",
       "errorTitle": "エラーが発生しました"
     },
     "placesLikeMe": {
@@ -1320,7 +1332,8 @@
       "bulkGeocoderInfoMessage": "CSVに含まれている住所のうち{{number}}個を地図で見つけることができませんでした ",
       "bulkGeocoderInfoTitle": "一括ジオコーダー",
       "unsupportedCharactersMessage": "{{longitude}}, {{latitude}}を緯度・経度の組として読み取ることができません",
-      "unsupportedCharactersTitle": "緯度・経度の列に無効な文字が含まれています"
+      "unsupportedCharactersTitle": "緯度・経度の列に無効な文字が含まれています",
+      "noData": "表示するデータがありません"
     },
     "terriaJSONcatalog": {
       "serviceResponseErrorMessage": "TerriaJsonCatalogFunction JSON を受け取るはずでしたが、{{xhr}} を受け取りました",
@@ -1413,6 +1426,9 @@
       "datasetScaleErrorMessage": "データセット {{name}} はあまりズームすると表示されないようにデータ提供者が設定しています。データセットの情報ボタンをクリックしてよし詳細な情報を参照してください。",
       "datasetScaleErrorTitle": "このスケールではデータセットは表示されません",
       "3dTypeIn2dMode": "**備考:** このデータセットは2Dビュワーでは表示できません。3D地図モードで表示してください。"
+    },
+    "openDataSoft": {
+      "viewDatasetPage": "データセットのページを見る"
     }
   },
   "map": {
@@ -1474,6 +1490,11 @@
     },
     "addressGeocoder": {
       "devError": "bulkConvertAddresses が derived class で実装されている必要があります。"
+    },
+    "extraCreditLinks": {
+      "basemap": "背景地図",
+      "disclaimer": "免責事項",
+      "dataAttribution": "データの帰属"
     }
   },
   "toast": {
@@ -1511,7 +1532,8 @@
     "noParameters": "検索に使えるパラメタが見つかりません",
     "loadError": "検索パラメタの読み込み時のエラー。エラーの詳細は、コンソールをチェックしてください。",
     "loading": "検索パラメタの読み込み",
-    "title": "検索 {{itemName}}"
+    "title": "検索 {{itemName}}",
+    "toolLoadError": "検索ツール読み込みエラー。"
   },
   "term": {
     "missingContent": "見つからないコンテンツ"

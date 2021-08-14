@@ -1,18 +1,19 @@
 import { runInAction } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import Terria from "../../lib/Models/Terria";
-import updateModelFromJson from "../../lib/Models/updateModelFromJson";
-import createStratumInstance from "../../lib/Models/createStratumInstance";
-import TableStyleTraits from "../../lib/Traits/TableStyleTraits";
-import TableTimeStyleTraits from "../../lib/Traits/TableTimeStyleTraits";
+import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
+import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
+import TableStyleTraits from "../../lib/Traits/TraitsClasses/TableStyleTraits";
+import TableTimeStyleTraits from "../../lib/Traits/TraitsClasses/TableTimeStyleTraits";
 
 const LatLonValCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_val.csv");
 const LatLonValCsvDuplicate = require("raw-loader!../../wwwroot/test/csv/lat_lon_val_with_duplicate_row.csv");
 const LatLonEnumDateIdCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum_date_id.csv");
 const ParkingSensorDataCsv = require("raw-loader!../../wwwroot/test/csv/parking-sensor-data.csv");
+const LegendDecimalPlacesCsv = require("raw-loader!../../wwwroot/test/csv/legend-decimal-places.csv");
 const regionMapping = JSON.stringify(
   require("../../wwwroot/data/regionMapping.json")
 );
@@ -338,6 +339,84 @@ describe("TableMixin", function() {
       await item.loadMapItems();
 
       expect(item.regionProviderList?.regionProviders.length).toBe(102);
+    });
+  });
+
+  describe("creates legend", function() {
+    it(" - correct decimal places for values [0,100]", async function() {
+      item.setTrait("definition", "csvString", LegendDecimalPlacesCsv);
+
+      item.setTrait("definition", "activeStyle", "0dp");
+
+      await item.loadMapItems();
+
+      expect(item.legends[0].items.length).toBe(7);
+      expect(item.legends[0].items.map(i => i.title)).toEqual([
+        "65",
+        "54",
+        "44",
+        "33",
+        "22",
+        "12",
+        "1"
+      ]);
+    });
+
+    it(" - correct decimal places for values [0,10]", async function() {
+      item.setTrait("definition", "csvString", LegendDecimalPlacesCsv);
+
+      item.setTrait("definition", "activeStyle", "1dp");
+
+      await item.loadMapItems();
+
+      expect(item.legends[0].items.length).toBe(7);
+      expect(item.legends[0].items.map(i => i.title)).toEqual([
+        "10.0",
+        "8.3",
+        "6.7",
+        "5.0",
+        "3.3",
+        "1.7",
+        "0.0"
+      ]);
+    });
+
+    it(" - correct decimal places for values [0,1]", async function() {
+      item.setTrait("definition", "csvString", LegendDecimalPlacesCsv);
+
+      item.setTrait("definition", "activeStyle", "2dp");
+
+      await item.loadMapItems();
+
+      expect(item.legends[0].items.length).toBe(7);
+      expect(item.legends[0].items.map(i => i.title)).toEqual([
+        "0.70",
+        "0.58",
+        "0.47",
+        "0.35",
+        "0.23",
+        "0.12",
+        "0.00"
+      ]);
+    });
+
+    it(" - correct decimal places for values [0,0.1]", async function() {
+      item.setTrait("definition", "csvString", LegendDecimalPlacesCsv);
+
+      item.setTrait("definition", "activeStyle", "3dp");
+
+      await item.loadMapItems();
+
+      expect(item.legends[0].items.length).toBe(7);
+      expect(item.legends[0].items.map(i => i.title)).toEqual([
+        "0.080",
+        "0.068",
+        "0.057",
+        "0.045",
+        "0.033",
+        "0.022",
+        "0.010"
+      ]);
     });
   });
 });

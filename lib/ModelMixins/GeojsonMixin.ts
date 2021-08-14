@@ -31,9 +31,9 @@ import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import Model from "../Models/Model";
-import proxyCatalogItemUrl from "../Models/proxyCatalogItemUrl";
-import { GeoJsonTraits } from "../Traits/GeoJsonTraits";
+import Model from "../Models/Definition/Model";
+import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
+import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
 import DiscretelyTimeVaryingMixin, {
   DiscreteTimeAsJS
 } from "./DiscretelyTimeVaryingMixin";
@@ -65,8 +65,6 @@ export default function GeoJsonMixin<
     MappableMixin(UrlMixin(Base))
   ) {
     protected readonly zipFileRegex = /(\.zip\b)/i;
-
-    readonly canZoomTo = true;
 
     private _dataSource: CzmlDataSource | GeoJsonDataSource | undefined;
     protected _file?: File;
@@ -108,10 +106,6 @@ export default function GeoJsonMixin<
       }
       this._dataSource.show = this.show;
       return [this._dataSource];
-    }
-
-    protected forceLoadMetadata(): Promise<void> {
-      return Promise.resolve();
     }
 
     protected async forceLoadMapItems(): Promise<void> {

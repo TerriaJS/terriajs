@@ -31,8 +31,8 @@ interface MarkdownOptions {
  */
 function markdownToHtml(
   markdownString: string,
-  allowUnsafeHtml: boolean,
-  domPurifyOptions: Object,
+  allowUnsafeHtml: boolean = false,
+  domPurifyOptions: Object = {},
   markdownOptions: MarkdownOptions = {}
 ) {
   if (!defined(markdownString) || markdownString.length === 0) {

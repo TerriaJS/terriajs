@@ -7,12 +7,12 @@ import isDefined from "../Core/isDefined";
 import JSRegionProvider from "../Map/RegionProvider";
 import JSRegionProviderList from "../Map/RegionProviderList";
 import { applyReplacements } from "../Map/RegionProviderTs";
-import createCombinedModel from "../Models/createCombinedModel";
-import Model from "../Models/Model";
+import createCombinedModel from "../Models/Definition/createCombinedModel";
+import Model from "../Models/Definition/Model";
 import TableColumnTraits, {
   THIS_COLUMN_EXPRESSION_TOKEN
-} from "../Traits/TableColumnTraits";
-import TableTraits from "../Traits/TableTraits";
+} from "../Traits/TraitsClasses/TableColumnTraits";
+import TableTraits from "../Traits/TraitsClasses/TableTraits";
 import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
 const naturalSort = require("javascript-natural-sort");
 naturalSort.insensitive = true;

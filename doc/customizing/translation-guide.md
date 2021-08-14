@@ -18,6 +18,7 @@ The following i18next plugins are used:
 Currently, the only available language is English, and it is configured as the default fallback language. Default fallback language can be changed in the [`config.json`] file.
 
 **List of available languages**
+
 |Abbreviation|Language|
 |------------|--------|
 |en|english|
@@ -46,9 +47,8 @@ This section describes how to use i18next to provide a translation of TerriaJS.
 
 ### Translation of configurable elements
 
-To translate configurable elements, the value itself must be formatted correctly (it is called a translation key). The formatted value must then be added to the translation files with the corresponding translation. Currently only elements that are available for translation are `helpContent` and `helpContentTerms`.
-
->***This is likely to be changed in the future by adding an additional parameter to specify which configurable elements should be changed. The reason for it is that there is a possible issue with using single words when specifying static names of items to get a `missing key` as translation.***
+To translate configurable elements, the value itself must be formatted correctly (it is called a translation key). The formatted value must then be added to the translation files with the corresponding translation. If the part of the config.json is considered for translations by the TerriaJS, the translation will take place. Elements that are available for translation are `helpContent`, and `helpContentTerms`.
+The translation key must be prefixed with `"translate#"`, so the structure of the key is `translate#[path.to.key]`, resulting in e.g. `translate#help.gettingstarted.content`
 
 **Translation file**
 ```json
@@ -68,13 +68,13 @@ To translate configurable elements, the value itself must be formatted correctly
 ```json
 "helpContent": [
   {
-    "title": "help.gettingstarted.title",
+    "title": "translate#help.gettingstarted.title",
     "itemName": "gettingstarted",
     "paneMode": "videoAndContent",
-    "markdownText": "help.gettingstarted.content",
+    "markdownText": "translate#help.gettingstarted.content",
     "icon": "video",
-    "videoUrl": "help.gettingstarted.video",
-    "placeholderImage": "help.gettingstarted.image"
+    "videoUrl": "translate#help.gettingstarted.video",
+    "placeholderImage": "translate#help.gettingstarted.image"
   }
 ]
 ```
