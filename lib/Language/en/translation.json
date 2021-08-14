@@ -1423,8 +1423,6 @@
       "defaultStyleLabel": "Default style",
       "noLayerFoundTitle": "No layer found",
       "noLayerFoundMessage": "The WMS dataset '{{name}}' has no layers matching '{{layers}}'. {{suggested}} {{line}}{{line}}Either the catalog file has been set up incorrectly, or the WMS server has changed.{{line}}{{line}}Please report this error by sending an email to {{email}}.",
-      "datasetScaleErrorTitle": "Dataset will not be shown at this scale",
-      "datasetScaleErrorMessage": "The {{name}} dataset will not be shown when zoomed in this close to the map because the data custodian has indicated that the data is not intended or suitable for display at this scale.  Click the dataset's Info button on the Now Viewing tab for more information about the dataset and the data custodian.",
       "badlyFormatedTitle": "Badly formatted periodicity",
       "badlyFormatedMessage": "The '{{name}}' dataset has a badly formed periodicity, '{{isoSegments}}'. Click the dataset's Info button for more information about the dataset and the data custodian.",
       "missingDataTitle": "Missing data",
@@ -1512,9 +1510,11 @@
       }
     },
     "commonModelErrors": {
-      "3dTypeIn2dMode": "**Note:** This dataset can not be displayed in the 2D viewer. Switch to one of the 3D map modes.",
-      "datasetScaleErrorTitle": "Dataset will not be shown at this scale",
-      "datasetScaleErrorMessage": "The {{name}} dataset will not be shown when zoomed in this close to the map because the data custodian has indicated that the data is not intended or suitable for display at this scale.  Click the dataset's Info button on the Now Viewing tab for more information about the dataset and the data custodian."
+      "3dTypeIn2dMode": "**Note:** This dataset can not be displayed in the 2D viewer. Switch to one of the 3D map modes."
+    },
+    "scaleDatasetNotVisible": {
+      "scaleZoomIn": "Dataset is not available at this scale, zoom in to see it",
+      "scaleZoomOut": "Dataset is not available at this scale, zoom out to see it"
     }
   },
   "deltaTool": {
