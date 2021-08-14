@@ -442,4 +442,72 @@ describe("WebMapServiceCatalogItem", function() {
       .then(done)
       .catch(done.fail);
   });
+
+  describe("imageryProvider", () => {
+    let item: WebMapServiceCatalogItem;
+    let imageryProvider: WebMapServiceImageryProvider;
+    const wmsUrl = "http://example.com";
+    beforeEach(async () => {
+      item = new WebMapServiceCatalogItem("test", new Terria());
+      runInAction(() => {
+        item.setTrait(CommonStrata.definition, "url", wmsUrl);
+        item.setTrait(
+          CommonStrata.definition,
+          "getCapabilitiesUrl",
+          "test/WMS/styles_and_dimensions.xml"
+        );
+
+        item.setTrait(CommonStrata.definition, "layers", "A,B");
+        item.setTrait(CommonStrata.definition, "minScaleDenominator", 1500000);
+        item.setTrait(
+          CommonStrata.definition,
+          "hideLayerAfterMinScaleDenominator",
+          true
+        );
+      });
+      imageryProvider = item.mapItems[0]
+        .imageryProvider as WebMapServiceImageryProvider;
+    });
+
+    it("should be an WebMapServiceImageryProvider", function() {
+      expect(
+        imageryProvider instanceof WebMapServiceImageryProvider
+      ).toBeTruthy();
+    });
+
+    it("sets the URL correctly", () => {
+      expect(imageryProvider.url).toBe(wmsUrl + "/");
+    });
+
+    it("sets the maximum level", () => {
+      expect(imageryProvider.maximumLevel).toBe(9);
+    });
+
+    it("show scaleWorkbenchInfo when hideLayerAfterMinScaleDenominator", () => {
+      runInAction(() => {
+        item.setTrait(
+          CommonStrata.definition,
+          "hideLayerAfterMinScaleDenominator",
+          true
+        );
+      });
+      spyOn(item.terria, "raiseErrorToUser");
+      imageryProvider.requestImage(0, 0, 100);
+      expect(item.scaleWorkbenchInfo).toBeDefined();
+    });
+
+    it("scaleWorkbenchInfo undefined when hideLayerAfterMinScaleDenominator false", async () => {
+      runInAction(() => {
+        item.setTrait(
+          CommonStrata.definition,
+          "hideLayerAfterMinScaleDenominator",
+          false
+        );
+      });
+      await item.loadMapItems();
+      spyOn(item.terria, "raiseErrorToUser");
+      imageryProvider.requestImage(0, 0, 100);
+      expect(item.scaleWorkbenchInfo).not.toBeDefined();
+    });
+  });
 });

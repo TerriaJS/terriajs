@@ -30,6 +30,6 @@ export function scaleDenominatorToLevel(
   } else {
     const ratio = level0ScaleDenominator / (scaleDenominator + 1e-6);
     const levelAtScaleDenominator = Math.log(ratio) / Math.log(2);
-    return levelAtScaleDenominator || undefined;
+    return levelAtScaleDenominator | 0;
   }
 }
