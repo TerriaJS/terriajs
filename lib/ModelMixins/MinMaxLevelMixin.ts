@@ -46,6 +46,9 @@ function MinMaxLevelMixin<T extends Constructor<Model<MinMaxLevelTraits>>>(
             (maximumLevel && level > maximumLevel) ||
             (minimumLevel && level < minimumLevel)
           ) {
+            if (isDefined((<any>imageryProvider).enablePickFeatures)) {
+              (<any>imageryProvider).enablePickFeatures = false;
+            }
             if (
               maximumLevel &&
               level > maximumLevel &&
@@ -70,7 +73,9 @@ function MinMaxLevelMixin<T extends Constructor<Model<MinMaxLevelTraits>>>(
           }
 
           this.setTrait(CommonStrata.defaults, "scaleWorkbenchInfo", undefined);
-
+          if (isDefined((<any>imageryProvider).enablePickFeatures)) {
+            (<any>imageryProvider).enablePickFeatures = true;
+          }
           return realRequestImage.call(imageryProvider, x, y, level);
         };
       }

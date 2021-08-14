@@ -3,6 +3,8 @@ Change Log
 
 #### next release (8.0.1)
 
+* Added `MinMaxLevelMixin` and `MinMaxLevelTraits` to handle defining min and max scale denominator for layers.
+* Extracted function `scaleToDenominator` to core - for conversion of scale to zoom level.
 * [The next improvement]
 
 #### 8.0.0
