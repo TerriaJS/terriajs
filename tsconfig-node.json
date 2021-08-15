@@ -7,7 +7,7 @@
       "module": "esNext",
       "moduleResolution": "node",
       "sourceMap": true,
-      "strict": true,
+      "strict": false,
       "allowJs": true,
       "jsx": "react",
       "esModuleInterop": true,
