@@ -3,6 +3,9 @@ Change Log
 
 #### next release (8.0.1)
 
+* Add Mapbox Vector Tile support. This is using [protomaps.js](https://github.com/protomaps/protomaps.js) in the new `ProtomapsImageryProvider`. This includes subset of MVT style specification JSON support.
+* `MapboxVectorCanvasTileLayer` is now called `ImageryProviderLeafletGridLayer`
+* `CesiumTileLayer` is now called `ImageryProviderLeafletTileLayer`.
 * [The next improvement]
 
 #### 8.0.0
