@@ -2,9 +2,13 @@ import { VectorTileFeature } from "@mapbox/vector-tile";
 import i18next from "i18next";
 import { clone } from "lodash-es";
 import { action, computed, observable, runInAction } from "mobx";
+import { json_style } from "protomaps/src/compat/json_style";
+import { LabelRule } from "protomaps/src/labeler";
+import { Rule as PaintRule } from "protomaps/src/painter";
+import { LineSymbolizer, PolygonSymbolizer } from "protomaps/src/symbolizer";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import isDefined from "../../../Core/isDefined";
-import MapboxVectorTileImageryProvider from "../../../Map/MapboxVectorTileImageryProvider";
+import ProtomapsImageryProvider from "../../../Map/ProtomapsImageryProvider";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
@@ -17,20 +21,6 @@ import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
-
-import Point from "@mapbox/point-geometry";
-import { ZxySource, PmtilesSource, TileCache } from "protomaps/src/tilecache";
-import { View } from "protomaps/src/view";
-import { painter } from "protomaps/src/painter";
-import { Labelers } from "protomaps/src/labeler";
-import {
-  paint_rules as lightPaintRules,
-  label_rules as lightLabelRules
-} from "protomaps/src/default_style/light";
-import {
-  paint_rules as darkPaintRules,
-  label_rules as darkLabelRules
-} from "protomaps/src/default_style/dark";
 
 class MapboxVectorTileLoadableStratum extends LoadableStratum(
   MapboxVectorTileCatalogItemTraits
@@ -51,7 +41,12 @@ class MapboxVectorTileLoadableStratum extends LoadableStratum(
     return new MapboxVectorTileLoadableStratum(item);
   }
 
+  get opacity() {
+    return 1;
+  }
+
   @computed get legends() {
+    if (!this.item.fillColor && !this.item.lineColor) return [];
     return [
       createStratumInstance(LegendTraits, {
         items: [
@@ -89,31 +84,79 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
     runInAction(() => {
       this.strata.set(MapboxVectorTileLoadableStratum.stratumName, stratum);
     });
-
-    // tpe_sample.pmtiles
   }
 
   @computed
-  get imageryProvider(): MapboxVectorTileImageryProvider | undefined {
-    if (this.url === undefined || this.layer === undefined) {
+  get parsedJsonStyle() {
+    if (this.style) {
+      return json_style(this.style, new Map());
+    }
+  }
+
+  @computed
+  /** Convert traits into paint rules:
+   * - `layer` and `fillColor`/`lineColor` into simple rules
+   * - `parsedJsonStyle`
+   */
+  get paintRules(): PaintRule[] {
+    let rules: PaintRule[] = [];
+
+    if (this.layer) {
+      if (this.fillColor) {
+        rules.push({
+          dataLayer: this.layer,
+          symbolizer: new PolygonSymbolizer({ fill: this.fillColor }),
+          minzoom: this.minimumZoom,
+          maxzoom: this.maximumZoom
+        });
+      }
+      if (this.lineColor) {
+        rules.push({
+          dataLayer: this.layer,
+          symbolizer: new LineSymbolizer({ color: this.lineColor }),
+          minzoom: this.minimumZoom,
+          maxzoom: this.maximumZoom
+        });
+      }
+    }
+
+    if (this.parsedJsonStyle) {
+      rules.push(
+        ...((<unknown>this.parsedJsonStyle.paint_rules) as PaintRule[])
+      );
+    }
+
+    return rules;
+  }
+
+  @computed
+  get labelRules(): LabelRule[] {
+    if (this.parsedJsonStyle) {
+      return (<unknown>this.parsedJsonStyle.label_rules) as LabelRule[];
+    }
+    return [];
+  }
+
+  @computed
+  get imageryProvider(): ProtomapsImageryProvider | undefined {
+    if (this.url === undefined) {
       return;
     }
 
-    return new MapboxVectorTileImageryProvider({
+    return new ProtomapsImageryProvider({
       url: this.url,
-      layerName: this.layer,
-      styleFunc: (opts => () => ({
-        ...opts,
-        lineJoin: "miter" as CanvasLineJoin,
-        lineWidth: 1
-      }))({ fillStyle: this.fillColor, strokeStyle: this.lineColor }),
       minimumZoom: this.minimumZoom,
       maximumNativeZoom: this.maximumNativeZoom,
       maximumZoom: this.maximumZoom,
-      uniqueIdProp: this.idProperty,
-      featureInfoFunc: this.featureInfoFromFeature,
-      credit: this.attribution
+      credit: this.attribution,
+      paintRules: this.paintRules,
+      labelRules: this.labelRules
+      // featureInfoFunc: this.featureInfoFromFeature,
     });
+
+    // this.fillColor, strokeStyle: this.lineColor
+
+    // https://api.mapbox.com/v4/mapbox.mapbox-streets-v8/{z}/{x}/{y}.vector.pbf?access_token=pk.eyJ1Ijoibmlja2ZvcmJlc3NtaXRoIiwiYSI6ImNraXd0MTEycjF6YXgzNHA0b21od2RkbWQifQ.LH6pdVXW-BKmoiQ5wV7i4w
   }
 
   protected forceLoadMapItems(): Promise<void> {
@@ -149,73 +192,6 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
       id: feature.properties[this.idProperty]
     }; // For highlight
     return featureInfo;
-  }
-
-  public async renderTile(
-    coords: { x: number; y: number; z: number },
-    element: HTMLCanvasElement
-  ) {
-    const tile_size = 256;
-    let BUF = 16;
-    let bbox = [
-      256 * coords.x - BUF,
-      256 * coords.y - BUF,
-      256 * (coords.x + 1) + BUF,
-      256 * (coords.y + 1) + BUF
-    ];
-    let origin = new Point(256 * coords.x, 256 * coords.y);
-
-    let ctx = element.getContext("2d");
-    if (!ctx) return;
-    ctx.setTransform(tile_size / 256, 0, 0, tile_size / 256, 0, 0);
-    ctx.clearRect(0, 0, 256, 256);
-
-    let painting_time = painter(
-      ctx,
-      [prepared_tile],
-      label_data,
-      darkPaintRules,
-      bbox,
-      origin,
-      false,
-      this.debug
-    );
-
-    // if (this.debug) {
-    //     let data_tile = prepared_tile.data_tile
-    //     ctx.save()
-    //     ctx.fillStyle = this.debug
-    //     ctx.font = '600 12px sans-serif'
-    //     ctx.fillText(coords.z + " " + coords.x + " " + coords.y,4,14)
-    //     ctx.font = '200 12px sans-serif'
-    //     if ((data_tile.x % 2 + data_tile.y % 2) % 2 == 0) {
-    //         ctx.font = '200 italic 12px sans-serif'
-    //     }
-    //     ctx.fillText(data_tile.z + " " + data_tile.x + " " + data_tile.y,4,28)
-    //     ctx.font = '600 10px sans-serif'
-    //     if (painting_time > 8) {
-    //         ctx.fillText(painting_time.toFixed() + " ms paint",4,42)
-    //     }
-    //     if (layout_time > 8) {
-    //         ctx.fillText(layout_time.toFixed() + " ms layout",4,56)
-    //     }
-    //     ctx.strokeStyle = this.debug
-    //     ctx.lineWidth = 0.5
-    //     ctx.strokeRect(0,0,256,256)
-    //     ctx.restore()
-    // }
-  }
-
-  public clearLayout() {
-    this.labelers = new Labelers(
-      this.scratch,
-      this.label_rules,
-      this.onTilesInvalidated
-    );
-  }
-
-  public queryFeatures(lng: number, lat: number) {
-    return this.view.queryFeatures(lng, lat, this._map.getZoom());
   }
 }
 

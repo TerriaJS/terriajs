@@ -22,6 +22,7 @@ import URITemplate from "urijs/src/URITemplate";
 import isDefined from "../Core/isDefined";
 import loadArrayBuffer from "../Core/loadArrayBuffer";
 import computeRingWindingOrder from "./computeRingWindingOrder";
+import { ImageryProviderWithGridLayerSupport } from "./ImageryProviderLeafletGridLayer";
 
 interface Coords {
   x: number;
@@ -53,7 +54,7 @@ interface MapboxVectorTileImageryProviderOptions {
 }
 
 export default class MapboxVectorTileImageryProvider
-  implements ImageryProvider {
+  implements ImageryProviderWithGridLayerSupport {
   private readonly _uriTemplate: uri.URITemplate;
   private readonly _layerName: string;
   private readonly _subdomains: string[];
@@ -260,10 +261,10 @@ export default class MapboxVectorTileImageryProvider
     const canvas = document.createElement("canvas");
     canvas.width = this._tileWidth;
     canvas.height = this._tileHeight;
-    return this._requestImage(x, y, level, canvas);
+    return this.requestImageForCanvas(x, y, level, canvas);
   }
 
-  _requestImage(
+  requestImageForCanvas(
     x: number,
     y: number,
     level: number,
