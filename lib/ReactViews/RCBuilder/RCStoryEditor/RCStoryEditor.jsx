@@ -14,6 +14,7 @@ import RCSectorSelection from "./RCSectorSelection/RCSectorSelection";
 import Styles from "./RCStoryEditor.scss";
 function RCStoryEditor(props) {
   const [story, setStory] = useState(null);
+  const [storyPages, setStoryPages] = useState([]);
   const [title, setTitle] = useState("");
   const [shortDescription, setShortDescription] = useState("");
   const [selectedSectors, setSelectedSectors] = useState([]);
@@ -40,9 +41,10 @@ function RCStoryEditor(props) {
         setSelectedSectors(data.sectors);
         setHotspotPoint(data.hotspotlocation);
         setImages([data.image]);
+        setStoryPages(data.pages.items);
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }, []);
 
@@ -61,7 +63,9 @@ function RCStoryEditor(props) {
       )
     );
   };
-
+  const updateStoryPages = pages => {
+    setStoryPages(pages);
+  };
   const { getRootProps, getInputProps } = useDropzone({
     accept: "image/*",
     onDrop: onDrop,
@@ -231,7 +235,7 @@ function RCStoryEditor(props) {
         </div>
 
         <div className={Styles.group}>
-          <RCPageList />
+          <RCPageList pages={storyPages} updatePages={updateStoryPages} />
         </div>
 
         <div className={Styles.container}>

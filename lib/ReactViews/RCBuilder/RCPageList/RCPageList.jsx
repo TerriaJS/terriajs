@@ -1,31 +1,17 @@
-import { API, graphqlOperation } from "aws-amplify";
-import { listPages } from "../../../../api/graphql/queries";
-import { default as React, useState, useEffect } from "react";
+import { API } from "aws-amplify";
+import { default as React, useState } from "react";
 import { useHistory, useParams, withRouter } from "react-router-dom";
 import * as mutations from "../../../../api/graphql/mutations";
 import RCAccordian from "../RCAccordian/RCAccordian";
 import RCPageListItem from "./RCPageListItem";
-function RCPageList() {
-  const [pages, setPages] = useState(null);
+import PropTypes from "prop-types";
+function RCPageList(props) {
+  const { pages, updatePages } = props;
   const [dragId, setDragId] = useState();
   // get story id from url
   const { id } = useParams();
   const history = useHistory();
 
-  // get all the pages for this story
-  // This call is made here in order to update page list on add
-  useEffect(() => {
-    try {
-      console.log("id", id);
-      API.graphql(graphqlOperation(listPages, { storyID: id })).then(data => {
-        const pageList = data.data.listPages.items;
-        setPages(pageList);
-        // orderList("listContainer");
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
   // Create Page
   const addPage = () => {
     const newPage = {
@@ -36,7 +22,7 @@ function RCPageList() {
       viewer_mode_3d: true,
       scenarios: [],
       storyID: id,
-      pageNr: 1
+      pageNr: pages.length + 1
     };
 
     // Create a new page
@@ -48,25 +34,39 @@ function RCPageList() {
         // Add the new page to the story
         newPage.id = response.data.createPage.id;
         const newPages = Array.isArray(pages) ? [...pages, newPage] : [newPage];
-        // setPages(newPages);
-        console.log("pages saved", newPages);
+        // Update state in parent component RCStoryEditor
+        updatePages(newPages);
       } else {
-        console.log("Error", response.errors[0].message);
+        console.error("Error", response.errors[0].message);
       }
     });
   };
   // Delete Page
   const deletePage = id => {
     try {
-      // const deletedPage = API.graphql(graphqlOperation(deletePage, { input: { id } }));
       // Delete page from DynamoDb
       API.graphql({
         query: mutations.deletePage,
         variables: { input: { id } }
       });
-      // setPages(pages.filter(page => page.id !== id));
+      updatePages(pages.filter(page => page.id !== id));
     } catch (error) {
-      console.log(error);
+      console.error(error);
+    }
+  };
+  const updatePageNr = page => {
+    try {
+      const pageDetails = {
+        id: page.id,
+        pageNr: page.pageNr
+      };
+      // Delete page from DynamoDb
+      API.graphql({
+        query: mutations.updatePage,
+        variables: { input: pageDetails }
+      });
+    } catch (error) {
+      console.error(error);
     }
   };
   const toEditPage = pageId => {
@@ -76,7 +76,6 @@ function RCPageList() {
     setDragId(ev.currentTarget.id);
   };
   const handleDrop = ev => {
-    debugger;
     const dragItem = pages.find(page => page.id === dragId);
     const dropItem = pages.find(page => page.id === ev.currentTarget.id);
     const dragItemOrder = dragItem.pageNr;
@@ -88,10 +87,12 @@ function RCPageList() {
       if (page.id === ev.currentTarget.id) {
         page.pageNr = dragItemOrder;
       }
+      // Update page numbers in database
+      updatePageNr(page);
       return page;
     });
-    setPages(newPagesState);
-    console.log("reorder", newPagesState);
+    // Update local state to display updated page order
+    updatePages(newPagesState);
   };
 
   return pages ? (
@@ -102,9 +103,6 @@ function RCPageList() {
       action={addPage}
       enableReorder={true}
     >
-      {pages.map(page => (
-        <p key={page.id}>{page.id}</p>
-      ))}
       {pages
         .sort((a, b) => a.pageNr - b.pageNr)
         .map(page => {
@@ -122,5 +120,8 @@ function RCPageList() {
     </RCAccordian>
   ) : null;
 }
-
+RCPageList.propTypes = {
+  pages: PropTypes.array,
+  updatePages: PropTypes.func
+};
 export default withRouter(RCPageList);
