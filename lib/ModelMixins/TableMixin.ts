@@ -626,7 +626,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     async loadRegionProviderList() {
       if (isDefined(this.regionProviderList)) return;
 
-      const regionProvidersPromise:
+      const regionProviderList:
         | RegionProviderList
         | undefined = await makeRealPromise(
         RegionProviderList.fromUrl(
@@ -634,7 +634,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           this.terria.corsProxy
         )
       );
-      runInAction(() => (this.regionProviderList = regionProvidersPromise));
+      runInAction(() => (this.regionProviderList = regionProviderList));
     }
 
     /*

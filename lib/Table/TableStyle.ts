@@ -11,6 +11,7 @@ import DiscreteColorMap from "../Map/DiscreteColorMap";
 import EnumColorMap from "../Map/EnumColorMap";
 import PointSizeMap from "../Map/PointSizeMap";
 import ScalePointSizeMap from "../Map/ScalePointSizeMap";
+import TableMixin from "../ModelMixins/TableMixin";
 import createCombinedModel from "../Models/Definition/createCombinedModel";
 import Model from "../Models/Definition/Model";
 import TableChartStyleTraits from "../Traits/TraitsClasses/TableChartStyleTraits";
@@ -18,27 +19,20 @@ import TableColorStyleTraits from "../Traits/TraitsClasses/TableColorStyleTraits
 import TablePointSizeStyleTraits from "../Traits/TraitsClasses/TablePointSizeStyleTraits";
 import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
 import TableTimeStyleTraits from "../Traits/TraitsClasses/TableTimeStyleTraits";
-import TableTraits from "../Traits/TraitsClasses/TableTraits";
 import TableColorMap from "./TableColorMap";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
 
 const DEFAULT_FINAL_DURATION_SECONDS = 3600 * 24 - 1; // one day less a second, if there is only one date.
 
-interface TableModel extends Model<TableTraits> {
-  readonly dataColumnMajor: string[][] | undefined;
-  readonly tableColumns: readonly TableColumn[];
-  readonly rowIds: number[];
-}
-
 /**
  * A style controlling how tabular data is displayed.
  */
 export default class TableStyle {
   readonly styleNumber: number;
-  readonly tableModel: TableModel;
+  readonly tableModel: TableMixin.Instance;
 
-  constructor(tableModel: TableModel, styleNumber: number) {
+  constructor(tableModel: TableMixin.Instance, styleNumber: number) {
     this.styleNumber = styleNumber;
     this.tableModel = tableModel;
   }

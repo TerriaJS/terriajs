@@ -7,12 +7,12 @@ import isDefined from "../Core/isDefined";
 import JSRegionProvider from "../Map/RegionProvider";
 import JSRegionProviderList from "../Map/RegionProviderList";
 import { applyReplacements } from "../Map/RegionProviderTs";
+import TableMixin from "../ModelMixins/TableMixin";
 import createCombinedModel from "../Models/Definition/createCombinedModel";
 import Model from "../Models/Definition/Model";
 import TableColumnTraits, {
   THIS_COLUMN_EXPRESSION_TOKEN
 } from "../Traits/TraitsClasses/TableColumnTraits";
-import TableTraits from "../Traits/TraitsClasses/TableTraits";
 import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
 const naturalSort = require("javascript-natural-sort");
 naturalSort.insensitive = true;
@@ -22,12 +22,6 @@ naturalSort.insensitive = true;
 // This is a dodgy workaround.
 class RegionProviderList extends JSRegionProviderList {}
 class RegionProvider extends JSRegionProvider {}
-
-interface TableModel extends Model<TableTraits> {
-  readonly dataColumnMajor: string[][] | undefined;
-  readonly regionProviderList: RegionProviderList | undefined;
-  readonly tableColumns: readonly TableColumn[];
-}
 
 export interface ColumnValuesAsNumbers {
   readonly values: ReadonlyArray<number | null>;
@@ -80,9 +74,9 @@ export interface UniqueColumnValues {
  */
 export default class TableColumn {
   readonly columnNumber: number;
-  readonly tableModel: TableModel;
+  readonly tableModel: TableMixin.Instance;
 
-  constructor(tableModel: TableModel, columnNumber: number) {
+  constructor(tableModel: TableMixin.Instance, columnNumber: number) {
     this.columnNumber = columnNumber;
     this.tableModel = tableModel;
   }
@@ -584,6 +578,7 @@ export default class TableColumn {
   ): string | null {
     // TODO: validate that the rowValue is actually a valid region, if possible.
     // TODO: implement serverReplacements and disambigDataReplacements replacements
+    // regionType.fin
 
     return rowValue.length > 0
       ? applyReplacements(regionType, rowValue, "dataReplacements") ?? null
