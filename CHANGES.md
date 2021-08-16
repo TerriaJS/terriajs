@@ -1,9 +1,11 @@
 Change Log
 ==========
 
-### MobX Development
+#### next release (8.0.1)
 
-#### next release (8.0.0-alpha.88)
+* [The next improvement]
+
+#### 8.0.0
 
 - **Breaking changes**:
   - Require `translate#` in front of translatable content id in `config.json` (i.e. `helpContent`).
@@ -102,7 +104,7 @@ Change Log
 * Refactored some `Traits` classes so they use `mixTraits` instead of extending other `Traits` classes.
 * Allow translation of some components.
 * Fixed a bug which prevented adding any reference catalog item while the story is playing.
-* [The next improvement]
+* Bumped terriajs-server to ^3.3.3
 
 #### 8.0.0-alpha.87
 
