@@ -39,6 +39,8 @@ import DiscretelyTimeVaryingMixin, {
 } from "./DiscretelyTimeVaryingMixin";
 import MappableMixin from "./MappableMixin";
 
+const geojsonvt = require("geojson-vt").default;
+
 const formatPropertyValue = require("../Core/formatPropertyValue");
 const hashFromString = require("../Core/hashFromString");
 const Reproject = require("../Map/Reproject");
@@ -142,6 +144,18 @@ export default function GeoJsonMixin<
         runInAction(() => {
           this._readyData = geoJsonWgs84;
         });
+
+        // build an initial index of tiles
+        var tileIndex = geojsonvt(geoJsonWgs84);
+
+        console.log(tileIndex);
+
+        // // request a particular tile
+        // var features = tileIndex.getTile(z, x, y).features;
+
+        // // show an array of tile coordinates created so far
+        // console.log(tileIndex.tileCoords); // [{z: 0, x: 0, y: 0}, ...]
+
         if (isDefined(this.czmlTemplate)) {
           this._dataSource = await this.loadCzmlDataSource(geoJsonWgs84);
         } else {
