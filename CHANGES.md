@@ -2,7 +2,7 @@ Change Log
 ==========
 
 #### next release (8.0.1)
-
+* add french Help button translation
 * [The next improvement]
 
 #### 8.0.0
