@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.0.1)
 
+* Added `catalog-converter` support for v7 `#start` data.
 * [The next improvement]
 
 #### 8.0.0
@@ -90,7 +91,6 @@ Change Log
 * Move `FeedbackForm` `z-index` to same as `Notification` - this is so it will appear above Data catalog.
 * Added `result.raiseError()`, `result.pushErrorTo()` and `result.clone()` helper methods - and `Result.combine()` convenience function
 * Renamed `ReferenceMixin.is` to `ReferenceMixin.isMixedInto`
-* Added `catalog-converter` support for v7 `#start` data.
 * Added support for logging to external error service and configuring it via config parameters. See `errorService` in [client configuration](doc/customizing/client-side-config.md).
 * Fix `DiscreteColorMap` bug with `binColors` and added warning message if `colorPalette` is invalid.
 * Fix `EnumColorMap` bug with `binColors`

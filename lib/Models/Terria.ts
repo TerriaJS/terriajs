@@ -1675,6 +1675,10 @@ async function interpretHash(
   userProperties: Map<string, any>,
   baseUri: uri.URI
 ) {
+  if (isDefined(hashProperties.clean)) {
+    terria.initSources.splice(0, terria.initSources.length);
+  }
+
   runInAction(() => {
     Object.keys(hashProperties).forEach(function(property) {
       if (["clean", "hideWelcomeMessage", "start", "share"].includes(property))
@@ -1696,10 +1700,6 @@ async function interpretHash(
       }
     });
   });
-
-  if (isDefined(hashProperties.clean)) {
-    terria.initSources.splice(0, terria.initSources.length);
-  }
 
   if (isDefined(hashProperties.hideWelcomeMessage)) {
     terria.configParameters.showWelcomeMessage = false;
