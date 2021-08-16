@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.0.1)
 
+* Added `catalog-converter` support for v7 `#start` data.
 * [The next improvement]
 
 #### 8.0.0
