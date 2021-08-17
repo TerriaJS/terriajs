@@ -34,6 +34,17 @@
     outline: none;
   }
 }
+.RCSelect {
+  background-color: white;
+  border: 1px solid #0c70a7;
+  box-sizing: border-box;
+  border-radius: 38px;
+  width: 100%;
+  height: 40px;
+  padding: 0 20px 0 10px;
+  min-width: 100px;
+  transition: all 100ms ease;
+}
 .container {
   display: flex;
   justify-content: space-between;
