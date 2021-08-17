@@ -24,7 +24,7 @@ function RCPageEditor(props) {
         setTitle(data.title);
       });
     } catch (error) {
-      console.log(error);
+      setMessage("Error", error.message);
     }
   }, []);
 
@@ -40,7 +40,6 @@ function RCPageEditor(props) {
       if (response.data.updatePage) {
         setMessage("Page details saved successfully!");
       } else {
-        console.log(response);
         setMessage("Error", response.errors[0].message);
       }
     });
