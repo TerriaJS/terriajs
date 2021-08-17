@@ -45,29 +45,35 @@ function RCHotspotSelector(props) {
 
   // Place hotspot marker on map
   useEffect(() => {
-    if (hotspotPoint === null) {
-      return;
-    }
     const { terria } = props.viewState;
     const catalogItem = terria.nowViewing.items.find(
       item => item.name === "hotspots"
     );
     if (catalogItem !== undefined) {
-      catalogItem._dataSource.load(
-        {
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: [hotspotPoint.longitude, hotspotPoint.latitude]
+      if (hotspotPoint === null) {
+        catalogItem._dataSource.entities.removeAll();
+      } else {
+        catalogItem._dataSource.load(
+          {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [hotspotPoint.longitude, hotspotPoint.latitude]
+            }
+          },
+          {
+            markerSymbol: "circle",
+            markerSize: 64,
+            markerColor: Color.fromRgba(0xee7755ff)
           }
-        },
-        {
-          markerSymbol: "circle",
-          markerSize: 64,
-          markerColor: Color.fromRgba(0xee7755ff)
-        }
-      );
+        );
+      }
     }
+    return () => {
+      if (catalogItem !== undefined) {
+        catalogItem._dataSource.entities.removeAll();
+      }
+    };
   }, [hotspotPoint]);
 
   const hotspotText = hotspotPoint
