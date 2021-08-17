@@ -26,17 +26,13 @@ const RCSectorSelection = props => {
                 <label>
                   <input
                     type="checkbox"
-                    value={sector.title}
+                    value={sector.id}
+                    checked={selectedSectors.includes(sector.id)}
                     onChange={onSectorSelected}
                   />
                   <Icon
                     glyph={
-                      selectedSectors.includes(
-                        sector.title
-                          .split(" ")
-                          .join("_")
-                          .toUpperCase()
-                      )
+                      selectedSectors.includes(sector.id)
                         ? sector.iconHover
                         : sector.icon
                     }
