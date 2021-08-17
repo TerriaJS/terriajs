@@ -4,9 +4,6 @@ import { computed } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
-import JSRegionProvider from "../Map/RegionProvider";
-import JSRegionProviderList from "../Map/RegionProviderList";
-import { applyReplacements } from "../Map/RegionProviderTs";
 import TableMixin from "../ModelMixins/TableMixin";
 import createCombinedModel from "../Models/Definition/createCombinedModel";
 import Model from "../Models/Definition/Model";
@@ -14,14 +11,9 @@ import TableColumnTraits, {
   THIS_COLUMN_EXPRESSION_TOKEN
 } from "../Traits/TraitsClasses/TableColumnTraits";
 import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
+import RegionProvider from "../Map/RegionProvider";
 const naturalSort = require("javascript-natural-sort");
 naturalSort.insensitive = true;
-
-// TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
-//   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
-// This is a dodgy workaround.
-class RegionProviderList extends JSRegionProviderList {}
-class RegionProvider extends JSRegionProvider {}
 
 export interface ColumnValuesAsNumbers {
   readonly values: ReadonlyArray<number | null>;
@@ -538,10 +530,11 @@ export default class TableColumn {
 
     for (let i = 0; i < values.length; ++i) {
       const value = values[i];
-      const regionId: string | null = this.findMatchingRegion(
-        regionType,
-        value
-      );
+      const regionId: string | null =
+        value.length > 0
+          ? regionType.applyReplacements(value, "dataReplacements") ?? null
+          : null;
+
       regionIds.push(regionId);
       if (regionId !== null) uniqueRegionIds.add(regionId);
 
@@ -570,19 +563,6 @@ export default class TableColumn {
       numberOfNonRegions: numberOfNonRegions,
       numberOfRegionsWithMultipleRows: numberOfRegionsWithMultipleRows
     };
-  }
-
-  findMatchingRegion(
-    regionType: RegionProvider,
-    rowValue: string
-  ): string | null {
-    // TODO: validate that the rowValue is actually a valid region, if possible.
-    // TODO: implement serverReplacements and disambigDataReplacements replacements
-    // regionType.fin
-
-    return rowValue.length > 0
-      ? applyReplacements(regionType, rowValue, "dataReplacements") ?? null
-      : null;
   }
 
   /**
