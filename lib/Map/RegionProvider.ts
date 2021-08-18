@@ -1,16 +1,9 @@
-import URI from "urijs";
+import { action, observable } from "mobx";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
-import CorsProxy from "../Core/CorsProxy";
-import loadJson from "../Core/loadJson";
-import loadText from "../Core/loadText";
-import xml2json from "../ThirdParty/xml2json";
-import TerriaError from "../Core/TerriaError";
-import i18next from "i18next";
-import isDefined from "../Core/isDefined";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
-import Terria from "../Models/Terria";
+import CorsProxy from "../Core/CorsProxy";
+import isDefined from "../Core/isDefined";
+import loadJson from "../Core/loadJson";
 
 /*
 Encapsulates one entry in regionMapping.json
@@ -150,21 +143,24 @@ export default class RegionProvider {
   /**
    * Array of attributes of each region, once retrieved from the server.
    */
-  regions: { [key: string]: string | number | undefined }[] = [];
+  @observable
+  regions: { id?: number; [key: string]: string | number | undefined }[] = [];
 
   /**
    * Look-up table of attributes, for speed.
    */
-  private _idIndex: any = {};
+  @observable
+  private _idIndex: { [key: string]: number | number[] } = {};
 
   disambigDataReplacements: [string, string, RegExp][] | undefined;
   disambigServerReplacements: [string, string, RegExp][] | undefined;
   disambigAliases: string[] | undefined;
 
   private _appliedReplacements = {
-    serverReplacements: {},
-    dataReplacements: {},
-    disambigDataReplacements: {}
+    serverReplacements: {} as any,
+    disambigServerReplacements: {} as any,
+    dataReplacements: {} as any,
+    disambigDataReplacements: {} as any
   };
 
   // Cache the loadRegionID promises so they are not regenerated each time until this.regions is defined.
@@ -289,98 +285,6 @@ The flow:
   }
 
   /**
-   * Maps this.regions to indices into the provided regionArray.
-   * Eg. If regionArray = ['Vic', 'Qld', 'NSW'], and this.regions = ['NSW', 'Vic', 'Qld', 'WA'], then returns [2, 0, 1, undefined].
-   *
-   * @param {Array} regionArray An array of the regions (eg. the column of State values from a csv file). Could be Strings or Numbers.
-   * @param {Array} [disambigValues] An array of disambiguating names/numbers for when regions alone are insufficient. Could be Strings or Numbers.
-   * @param {Array} [failedMatches] An optional empty array. If provided, indices of failed matches are appended to the array.
-   * @param {Array} [ambiguousMatches] An optional empty array. If provided, indices of matches which duplicate prior matches are appended to the array.
-   *                (Eg. these are not relevant if at different times.)
-   * @param {TimeInterval[]} [timeIntervals] The time intervals during which each value in `regionArray` applies.  If undefined, the data is not
-   *                         time-varying.
-   * @param {JulianDate} [time] The time at which to do the mapping.  If undefined, the data is not time-varying.
-   * @return {Array} Indices into this.region.
-   */
-  mapRegionsToIndicesInto(
-    regionArray: readonly string[] | number[],
-    disambigValues?: string[] | number[],
-    failedMatches?: number[] | undefined,
-    ambiguousMatches?: number[] | undefined,
-    timeIntervals?: TimeInterval[] | undefined,
-    time?: JulianDate | undefined
-  ) {
-    if (this.regions.length < 1) {
-      throw new DeveloperError(
-        "Region provider is not ready to match regions."
-      );
-    }
-    if (!isDefined(disambigValues)) {
-      disambigValues = []; // so that disambigValues[i] is undefined, not an error.
-    }
-
-    var result = new Array(this.regions.length);
-    for (var i = 0; i < regionArray.length; i++) {
-      if (!isDefined(regionArray[i])) {
-        // Skip over undefined or null values
-        continue;
-      }
-
-      // Is this row applicable at this time?
-      if (isDefined(timeIntervals) && isDefined(time)) {
-        var interval = timeIntervals![i];
-        if (!isDefined(interval)) {
-          // Row is not applicable at any time.
-          continue;
-        }
-        if (!TimeInterval.contains(interval, time!)) {
-          // Row is not applicable at this time.
-          continue;
-        }
-      }
-
-      var index = this.findRegionIndex(regionArray[i], disambigValues[i]);
-      if (index < 0) {
-        if (isDefined(failedMatches)) {
-          failedMatches.push(i);
-        }
-        continue;
-      }
-      if (isDefined(result[index])) {
-        // This region already has a value. In a time-varying dataset, intervals may
-        // overlap at their endpoints (i.e. the end of one interval is the start of the next).
-        // In that case, we want the later interval to apply.
-        if (isDefined(timeIntervals) && isDefined(time)) {
-          var existingInterval = timeIntervals![result[index]];
-          var newInterval = timeIntervals![i];
-          if (
-            JulianDate.greaterThan(newInterval.start, existingInterval.start)
-          ) {
-            // Use the current row as the value.
-            result[index] = i;
-            continue;
-          } else if (
-            JulianDate.lessThan(newInterval.start, existingInterval.start)
-          ) {
-            // Use the existing row as the value.
-            continue;
-          } else {
-            // The two rows have the same start date, so treat this as an ambiguous match.
-          }
-        }
-
-        if (isDefined(ambiguousMatches)) {
-          ambiguousMatches.push(i);
-        }
-        continue;
-      }
-
-      result[index] = i;
-    }
-    return result;
-  }
-
-  /**
    * Returns the region variable of the given name, matching against the aliases provided.
    *
    * @param {String} varNames Array of variable names.
@@ -412,6 +316,7 @@ The flow:
    * @param {String} [propertyName] The property on that.regions elements, on which to save the id. Defaults to 'id'.
    * @param {String} replacementsProp Used as the second argument in a call to applyReplacements.
    */
+  @action
   processRegionIds(
     values: number[] | string[],
     propertyName: string | undefined,
@@ -443,10 +348,10 @@ The flow:
           this._idIndex[value] = index;
         } else {
           // if we have already seen this value before, store an array of values, not one value.
-          if (typeof this._idIndex[value] === "object" /* meaning, array */) {
-            this._idIndex[value].push(index);
+          if (Array.isArray(this._idIndex[value])) {
+            (this._idIndex[value] as number[]).push(index);
           } else {
-            this._idIndex[value] = [this._idIndex[value], index];
+            this._idIndex[value] = [this._idIndex[value] as number, index];
           }
         }
 
@@ -485,14 +390,14 @@ The flow:
       return r;
     }
 
-    if ((this._appliedReplacements as any)[replacementsProp][r] !== undefined) {
-      return (this._appliedReplacements as any)[replacementsProp][r];
+    if (this._appliedReplacements[replacementsProp][r] !== undefined) {
+      return this._appliedReplacements[replacementsProp][r];
     }
 
     replacements.forEach(function(rep: any) {
       r = r.replace(rep[2], rep[1]);
     });
-    (this._appliedReplacements as any)[replacementsProp][s] = r;
+    this._appliedReplacements[replacementsProp][s] = r;
     return r;
   }
 
@@ -505,7 +410,7 @@ The flow:
    */
   findRegionIndex(
     code: string | number,
-    disambigCode: string | number
+    disambigCode: string | number | undefined
   ): number {
     if (!isDefined(code) || code === "") {
       // Note a code of 0 is ok

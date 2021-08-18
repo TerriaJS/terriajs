@@ -22,7 +22,7 @@ import makeRealPromise from "../Core/makeRealPromise";
 import TerriaError from "../Core/TerriaError";
 import ConstantColorMap from "../Map/ConstantColorMap";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
-import JSRegionProviderList from "../Map/RegionProviderList";
+import RegionProviderList from "../Map/RegionProviderList";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
 import SelectableDimensions, {
@@ -47,10 +47,6 @@ import DiscretelyTimeVaryingMixin, {
 import ExportableMixin, { ExportData } from "./ExportableMixin";
 import { ImageryParts } from "./MappableMixin";
 
-// TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
-//   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
-// This is a dodgy workaround.
-class RegionProviderList extends JSRegionProviderList {}
 function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
   abstract class TableMixin
     extends ExportableMixin(
@@ -822,7 +818,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         if (matchingTimeRows.length <= 1) {
           return matchingTimeRows[0];
         }
-        //In a time-varying dataset, intervals may
+        // In a time-varying dataset, intervals may
         // overlap at their endpoints (i.e. the end of one interval is the start of the next).
         // In that case, we want the later interval to apply.
         return matchingTimeRows.reduce((latestRow, currentRow) => {

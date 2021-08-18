@@ -510,7 +510,7 @@ export default class TableColumn {
     const map = new Map<string, number | number[]>();
 
     const regionType = this.regionType;
-    if (regionType === undefined) {
+    if (!isDefined(regionType)) {
       // No regions.
       return {
         numberOfValidRegions: 0,
@@ -530,10 +530,13 @@ export default class TableColumn {
 
     for (let i = 0; i < values.length; ++i) {
       const value = values[i];
-      const regionId: string | null =
-        value.length > 0
-          ? regionType.applyReplacements(value, "dataReplacements") ?? null
-          : null;
+
+      const index = this.regionType!.findRegionIndex(
+        value,
+        this.regionDisambiguationColumn?.values?.[i]
+      );
+
+      const regionId = this.regionType!.regions[index]?.id?.toString() ?? null;
 
       regionIds.push(regionId);
       if (regionId !== null) uniqueRegionIds.add(regionId);
@@ -690,6 +693,7 @@ export default class TableColumn {
 
   @computed
   get regionType(): RegionProvider | undefined {
+    let regionProvider: RegionProvider | undefined;
     const regions = this.tableModel.regionProviderList;
     if (regions === undefined) {
       return undefined;
@@ -698,17 +702,19 @@ export default class TableColumn {
     const regionType = this.traits.regionType;
     if (regionType !== undefined) {
       // Explicit region type specified, we just need to resolve it.
-      return regions.getRegionProvider(regionType);
+      regionProvider = regions.getRegionProvider(regionType);
     }
 
     // No region type specified, so match the column name against the region
     // aliases.
     const details = regions.getRegionDetails([this.name], undefined, undefined);
     if (details.length > 0) {
-      return details[0].regionProvider;
+      regionProvider = details[0].regionProvider;
     }
 
-    return undefined;
+    regionProvider?.loadRegionIDs();
+
+    return regionProvider;
   }
 
   @computed
@@ -727,7 +733,7 @@ export default class TableColumn {
 
     // See if the region provider likes any of the table's other columns for
     // disambiguation.
-    const disambigName = (<any>this.regionType).findDisambigVariable(
+    const disambigName = this.regionType.findDisambigVariable(
       this.tableModel.tableColumns.map(column => column.name)
     );
     if (disambigName === undefined) {

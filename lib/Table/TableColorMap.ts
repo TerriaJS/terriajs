@@ -107,7 +107,7 @@ export default class TableColorMap {
       if (
         isDefined(this.minimumValue) &&
         isDefined(this.maximumValue) &&
-        this.minimumValue !== this.maximumValue
+        this.minimumValue < this.maximumValue
       ) {
         // Get colorScale from `d3-scale-chromatic` library - all continuous color schemes start with "interpolate"
         // See https://github.com/d3/d3-scale-chromatic#diverging
