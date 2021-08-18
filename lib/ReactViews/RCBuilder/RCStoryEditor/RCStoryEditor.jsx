@@ -87,10 +87,7 @@ function RCStoryEditor(props) {
     setShortDescription(event.target.value);
   };
   const onSectorChanged = event => {
-    const sector = event.target.value
-      .split(" ")
-      .join("_")
-      .toUpperCase();
+    const sector = event.target.value;
     // check if the check box is checked or unchecked
     if (event.target.checked) {
       // add the  value of the checkbox to selectedSectors array
