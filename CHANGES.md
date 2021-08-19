@@ -4,6 +4,10 @@ Change Log
 #### next release (8.0.1)
 * Added `catalog-converter` support for v7 `#start` data.
 * add french Help button translation
+* Tsifyied and refactored `RegionProvider` and `RegionProviderList`, and re-enabled `loadRegionIDs`
+* `TableColorMap` `minimumValue` and `maximumValue` will now take into account valid regions.
+* `tableMixin.loadRegionProviderList()` is now called in `tableMixin.forceLoadMapItems()` instead of `mappableMixin.loadMapItems()`
+* Fix `ChartPanel` import `Result` bug.
 * [The next improvement]
 
 #### 8.0.0
