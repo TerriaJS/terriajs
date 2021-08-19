@@ -1,7 +1,7 @@
 import { VectorTileFeature } from "@mapbox/vector-tile";
 import i18next from "i18next";
 import { action, computed, observable, runInAction } from "mobx";
-import { createTransformer } from "mobx-utils";
+import { createTransformer, ITransformer } from "mobx-utils";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
@@ -254,6 +254,13 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      */
     @computed
     get mapItems(): (DataSource | ImageryParts)[] {
+      // Wait until regionType has finished loading
+      if (
+        isDefined(this.activeTableStyle.regionColumn?.regionType) &&
+        !this.activeTableStyle.regionColumn?.regionType?.loaded
+      )
+        return [];
+
       const numRegions =
         this.activeTableStyle.regionColumn?.valuesAsRegions?.uniqueRegionIds
           ?.length ?? 0;
@@ -602,6 +609,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     protected async forceLoadMapItems() {
       const dataColumnMajor = await this.forceLoadTableData();
 
+      // We need to make sure the region provider is loaded before loading
+      // region mapped tables.
+      await this.loadRegionProviderList();
+
       if (dataColumnMajor !== undefined && dataColumnMajor !== null) {
         runInAction(() => {
           this.dataColumnMajor = dataColumnMajor;
@@ -749,9 +760,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
             let rowNumber = catalogItem.getImageryLayerFilteredRows(
               input,
               currentTimeRows,
-              valuesAsRegions.regionIdToRowNumbersMap.get(
-                regionIdString.toLowerCase()
-              )
+              valuesAsRegions.regionIdToRowNumbersMap.get(regionIdString)
             );
             let value: string | number | null = isDefined(rowNumber)
               ? valueFunction(rowNumber)
@@ -858,7 +867,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
         const regionIds =
           input.style.regionColumn.valuesAsRegions.regionIdToRowNumbersMap.get(
-            feature.properties[regionType.regionProp].toLowerCase()
+            feature.properties[regionType.regionProp]
           ) ?? [];
 
         const filteredRegionId = this.getImageryLayerFilteredRows(
@@ -916,11 +925,17 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return result;
     }
 
-    private readonly getTableColumn = createTransformer((index: number) => {
+    private readonly getTableColumn: ITransformer<
+      number,
+      TableColumn
+    > = createTransformer((index: number) => {
       return new TableColumn(this, index);
     });
 
-    private readonly getTableStyle = createTransformer((index: number) => {
+    private readonly getTableStyle: ITransformer<
+      number,
+      TableStyle
+    > = createTransformer((index: number) => {
       return new TableStyle(this, index);
     });
   }

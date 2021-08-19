@@ -127,9 +127,6 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
         if (CatalogMemberMixin.isMixedInto(this))
           (await this.loadMetadata()).throwIfError();
 
-        // We need to make sure the region provider is loaded before loading
-        // region mapped tables.
-        if (TableMixin.isMixedInto(this)) await this.loadRegionProviderList();
         (await this._mapItemsLoader.load(force)).throwIfError();
       } catch (e) {
         return Result.error(e, `Failed to load \`${getName(this)}\` mapItems`);

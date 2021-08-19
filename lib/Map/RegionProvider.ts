@@ -1,4 +1,4 @@
-import { action, observable } from "mobx";
+import { action, observable, runInAction } from "mobx";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import CorsProxy from "../Core/CorsProxy";
@@ -8,7 +8,7 @@ import loadJson from "../Core/loadJson";
 /*
 Encapsulates one entry in regionMapping.json
 Responsibilities:
-- communicate with WFS or MVT server
+- communicate with MVT server
 - provide region IDs for a given region type
 - determine whether a given column name matches
 - identify region and disambiguation columns
@@ -118,6 +118,17 @@ export interface RegionProvierOptions {
   regionDisambigIdsFile: string;
 }
 
+interface Region {
+  fid?: number;
+  regionProp?: string | number | undefined;
+  regionPropWithServerReplacement?: string | number | undefined;
+  disambigProp?: string | number | undefined;
+  disambigPropWithServerReplacement?: string | number | undefined;
+}
+interface RegionIndex {
+  [key: string]: number | number[];
+}
+
 export default class RegionProvider {
   readonly corsProxy: CorsProxy;
   readonly regionType: string;
@@ -140,21 +151,9 @@ export default class RegionProvider {
   readonly regionIdsFile: string;
   readonly regionDisambigIdsFile: string;
 
-  /**
-   * Array of attributes of each region, once retrieved from the server.
-   */
-  @observable
-  regions: { id?: number; [key: string]: string | number | undefined }[] = [];
-
-  /**
-   * Look-up table of attributes, for speed.
-   */
-  @observable
-  private _idIndex: { [key: string]: number | number[] } = {};
-
-  disambigDataReplacements: [string, string, RegExp][] | undefined;
-  disambigServerReplacements: [string, string, RegExp][] | undefined;
-  disambigAliases: string[] | undefined;
+  private disambigDataReplacements: [string, string, RegExp][] | undefined;
+  private disambigServerReplacements: [string, string, RegExp][] | undefined;
+  private disambigAliases: string[] | undefined;
 
   private _appliedReplacements = {
     serverReplacements: {} as any,
@@ -163,8 +162,29 @@ export default class RegionProvider {
     disambigDataReplacements: {} as any
   };
 
-  // Cache the loadRegionID promises so they are not regenerated each time until this.regions is defined.
+  /**
+   * Array of attributes of each region, once retrieved from the server.
+   */
+  private _regions: Region[] = [];
+
+  get regions() {
+    return this._regions;
+  }
+
+  /**
+   * Look-up table of attributes, for speed.
+   */
+  private _idIndex: RegionIndex = {};
+
+  // Cache the loadRegionID promises so they are not regenerated each time until this._regions is defined.
   private _loadRegionIDsPromises: Promise<any>[] | undefined = undefined;
+
+  @observable
+  private _loaded = false;
+
+  get loaded() {
+    return this._loaded;
+  }
 
   constructor(
     regionType: string,
@@ -240,8 +260,9 @@ The flow:
    *
    * @return Promise with no return value.
    */
+  @action
   async loadRegionIDs() {
-    if (this.regions.length > 0) {
+    if (this._regions.length > 0) {
       return; // already loaded, so return insta-promise.
     }
     if (this.server === undefined) {
@@ -252,36 +273,20 @@ The flow:
     }
     // Check for a pre-calculated promise (which may not have resolved yet), and returned that if it exists.
     if (!isDefined(this._loadRegionIDsPromises)) {
+      const fetchAndProcess = async (idListFile: string, disambig: boolean) => {
+        if (!isDefined(idListFile)) {
+          return;
+        }
+
+        this.processRegionIds((await loadJson(idListFile)).values, disambig);
+      };
       this._loadRegionIDsPromises = [
-        this.fetchAndProcess(
-          this.regionIdsFile,
-          this.regionProp,
-          undefined,
-          "serverReplacements"
-        ),
-        this.fetchAndProcess(
-          this.regionDisambigIdsFile,
-          this.disambigProp,
-          this.disambigProp,
-          "disambigServerReplacements"
-        )
+        fetchAndProcess(this.regionIdsFile, false),
+        fetchAndProcess(this.regionDisambigIdsFile, true)
       ];
     }
-    return Promise.all(this._loadRegionIDsPromises);
-  }
-
-  async fetchAndProcess(
-    idListFile: string,
-    idProp: string | undefined,
-    propertyName: string | undefined,
-    replacementsVar: ReplacementVar
-  ) {
-    if (!isDefined(idListFile) && !isDefined(idProp)) {
-      return;
-    }
-    let json = await loadJson(idListFile);
-
-    this.processRegionIds(json.values, propertyName, replacementsVar);
+    await Promise.all(this._loadRegionIDsPromises);
+    runInAction(() => (this._loaded = true));
   }
 
   /**
@@ -308,59 +313,70 @@ The flow:
   }
 
   /**
-   * Given a list of region IDs in feature ID order, apply server replacements if needed, and build the this.regions array.
+   * Given a list of region IDs in feature ID order, apply server replacements if needed, and build the this._regions array.
    * If no propertyName is supplied, also builds this._idIndex (a lookup by attribute for performance).
    * @private
    * @param {RegionProvider} regionProvider The RegionProvider instance.
    * @param {Array} values An array of string or numeric region IDs, eg. [10050, 10110, 10150, ...] or ['2060', '2061', '2062', ...]
-   * @param {String} [propertyName] The property on that.regions elements, on which to save the id. Defaults to 'id'.
-   * @param {String} replacementsProp Used as the second argument in a call to applyReplacements.
    */
-  @action
-  processRegionIds(
-    values: number[] | string[],
-    propertyName: string | undefined,
-    replacementsProp: ReplacementVar
-  ) {
-    const isDisambiguation = isDefined(propertyName);
-
-    if (!isDefined(propertyName)) {
-      propertyName = "id";
-    }
+  processRegionIds(values: number[] | string[], disambig: boolean) {
     // There is also generally a `layer` and `property` property in this file, which we ignore for now.
     values.forEach((value: string | number | undefined, index: number) => {
-      if (!isDefined(this.regions[index])) {
-        this.regions[index] = {};
+      if (!isDefined(this._regions[index])) {
+        this._regions[index] = {};
       }
 
-      if (typeof value === "string") {
-        value = value.toLowerCase();
+      let valueAfterReplacement = value;
+
+      if (typeof valueAfterReplacement === "string") {
         // we apply server-side replacements while loading. If it ever turns out we need
         // to store the un-regexed version, we should add a line here.
-        value = this.applyReplacements(value, replacementsProp);
+        valueAfterReplacement = this.applyReplacements(
+          valueAfterReplacement.toLowerCase(),
+          disambig ? "disambigServerReplacements" : "serverReplacements"
+        );
       }
 
-      this.regions[index][propertyName!] = value;
+      // If disambig IDS - only set this._regions properties - not this._index properties
+      if (disambig) {
+        this._regions[index].disambigProp = value;
+        this._regions[
+          index
+        ].disambigPropWithServerReplacement = valueAfterReplacement;
+      } else {
+        this._regions[index].regionProp = value;
+        this._regions[
+          index
+        ].regionPropWithServerReplacement = valueAfterReplacement;
 
-      // store a lookup by attribute, for performance.
-      if (!isDisambiguation && isDefined(value)) {
-        if (!isDefined(this._idIndex[value])) {
-          this._idIndex[value] = index;
-        } else {
-          // if we have already seen this value before, store an array of values, not one value.
-          if (Array.isArray(this._idIndex[value])) {
-            (this._idIndex[value] as number[]).push(index);
-          } else {
-            this._idIndex[value] = [this._idIndex[value] as number, index];
+        // store a lookup by attribute, for performance.
+        // This is only used for region prop (not disambig prop)
+        if (isDefined(value) && isDefined(valueAfterReplacement)) {
+          // If value is different after replacement, then also add original value for _index
+          if (value !== valueAfterReplacement) {
+            this._idIndex[value] = index;
           }
-        }
+          if (!isDefined(this._idIndex[valueAfterReplacement])) {
+            this._idIndex[valueAfterReplacement] = index;
+          } else {
+            // if we have already seen this value before, store an array of values, not one value.
+            if (Array.isArray(this._idIndex[valueAfterReplacement])) {
+              (this._idIndex[valueAfterReplacement] as number[]).push(index);
+            } else {
+              this._idIndex[valueAfterReplacement] = [
+                this._idIndex[valueAfterReplacement] as number,
+                index
+              ];
+            }
+          }
 
-        // Here we make a big assumption that every region has a unique identifier (probably called FID), that it counts from zero,
-        // and that regions are provided in sorted order from FID 0. We do this to avoid having to explicitly request
-        // the FID column, which would double the amount of traffic per region dataset.
-        // It is needed to simplify reverse lookups from complex matches (regexes and disambigs)
-        this.regions[index][this.uniqueIdProp] = index;
-      } // else nothing, we don't maintain an index of disambiguation values (it wouldn't be helpful)
+          // Here we make a big assumption that every region has a unique identifier (probably called FID), that it counts from zero,
+          // and that regions are provided in sorted order from FID 0. We do this to avoid having to explicitly request
+          // the FID column, which would double the amount of traffic per region dataset.
+          // It is needed to simplify reverse lookups from complex matches (regexes and disambigs)
+          this._regions[index].fid = index;
+        }
+      }
     });
   }
 
@@ -375,10 +391,7 @@ The flow:
   applyReplacements(
     s: string | number,
     replacementsProp: ReplacementVar
-  ): string | undefined {
-    if (!isDefined(s)) {
-      return undefined;
-    }
+  ): string {
     let r: string;
     if (typeof s === "number") {
       r = String(s);
@@ -416,35 +429,48 @@ The flow:
       // Note a code of 0 is ok
       return -1;
     }
-    var processedCode = this.applyReplacements(code, "dataReplacements");
-    if (!isDefined(processedCode)) return -1;
-    var id = this._idIndex[processedCode];
-    if (!isDefined(id)) {
-      // didn't find anything
+
+    const codeAfterReplacement = this.applyReplacements(
+      code,
+      "dataReplacements"
+    );
+
+    let id = this._idIndex[code];
+    let idAfterReplacement = this._idIndex[codeAfterReplacement];
+
+    if (!isDefined(id) && !isDefined(idAfterReplacement)) {
       return -1;
-    } else if (typeof id === "number") {
-      // found an unambiguous match
+    }
+
+    if (typeof id === "number") {
+      // found an unambiguous match (without replacement)
       return id;
+    } else if (typeof idAfterReplacement === "number") {
+      // found an unambiguous match (with replacement)
+      return idAfterReplacement;
     } else {
-      var ids = id; // found an ambiguous match
+      const ids = id ?? idAfterReplacement; // found an ambiguous match
       if (!isDefined(disambigCode)) {
         // we have an ambiguous value, but nothing with which to disambiguate. We pick the first, warn.
         console.warn(
-          "Ambiguous value found in region mapping: " + processedCode
+          "Ambiguous value found in region mapping: " + codeAfterReplacement ??
+            code
         );
         return ids[0];
       }
 
       if (this.disambigProp) {
-        var processedDisambigCode = this.applyReplacements(
+        const processedDisambigCode = this.applyReplacements(
           disambigCode,
           "disambigDataReplacements"
         );
 
         // Check out each of the matching IDs to see if the disambiguation field matches the one we have.
-        for (var i = 0; i < ids.length; i++) {
+        for (let i = 0; i < ids.length; i++) {
           if (
-            this.regions[ids[i]][this.disambigProp] === processedDisambigCode
+            this._regions[ids[i]].disambigProp === processedDisambigCode ||
+            this._regions[ids[i]].disambigPropWithServerReplacement ===
+              processedDisambigCode
           ) {
             return ids[i];
           }
@@ -465,9 +491,9 @@ The flow:
  */
 
 function findVariableForAliases(varNames: string[], aliases: string[]) {
-  for (var j = 0; j < aliases.length; j++) {
-    var re = new RegExp("^" + aliases[j] + "$", "i");
-    for (var i = 0; i < varNames.length; i++) {
+  for (let j = 0; j < aliases.length; j++) {
+    const re = new RegExp("^" + aliases[j] + "$", "i");
+    for (let i = 0; i < varNames.length; i++) {
       if (re.test(varNames[i])) {
         return varNames[i];
       }

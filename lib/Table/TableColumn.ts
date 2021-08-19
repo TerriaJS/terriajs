@@ -32,13 +32,13 @@ export interface ColumnValuesAsDates {
 }
 
 export interface ColumnValuesAsRegions {
-  readonly regionIds: ReadonlyArray<string | null>;
-  readonly uniqueRegionIds: ReadonlyArray<string>;
+  readonly regionIds: ReadonlyArray<string | number | null>;
+  readonly uniqueRegionIds: ReadonlyArray<string | number>;
   readonly numberOfValidRegions: number;
   readonly numberOfNonRegions: number;
   readonly numberOfRegionsWithMultipleRows: number;
   readonly regionIdToRowNumbersMap: ReadonlyMap<
-    string,
+    string | number,
     number | readonly number[]
   >;
 }
@@ -510,7 +510,7 @@ export default class TableColumn {
     const map = new Map<string, number | number[]>();
 
     const regionType = this.regionType;
-    if (!isDefined(regionType)) {
+    if (!isDefined(regionType) || !regionType.loaded) {
       // No regions.
       return {
         numberOfValidRegions: 0,
@@ -522,8 +522,8 @@ export default class TableColumn {
       };
     }
 
-    const regionIds: (string | null)[] = [];
-    const uniqueRegionIds = new Set<string>();
+    const regionIds: (string | number | null)[] = [];
+    const uniqueRegionIds = new Set<number | string>();
     let numberOfValidRegions = 0;
     let numberOfNonRegions = 0;
     let numberOfRegionsWithMultipleRows = 0;
@@ -531,25 +531,26 @@ export default class TableColumn {
     for (let i = 0; i < values.length; ++i) {
       const value = values[i];
 
-      const index = this.regionType!.findRegionIndex(
+      const regionIndex = this.regionType!.findRegionIndex(
         value,
         this.regionDisambiguationColumn?.values?.[i]
       );
 
-      const regionId = this.regionType!.regions[index]?.id?.toString() ?? null;
+      const regionProp =
+        this.regionType?.regions?.[regionIndex]?.regionProp ?? null;
 
-      regionIds.push(regionId);
-      if (regionId !== null) uniqueRegionIds.add(regionId);
+      regionIds.push(regionProp);
+      if (regionProp !== null) uniqueRegionIds.add(regionProp);
 
-      if (regionId !== null) {
+      if (regionProp !== null) {
         ++numberOfValidRegions;
 
-        const rows = map.get(regionId);
+        const rows = map.get(regionProp.toString());
         if (rows === undefined) {
-          map.set(regionId, i);
+          map.set(regionProp.toString(), i);
         } else if (typeof rows === "number") {
           numberOfRegionsWithMultipleRows++;
-          map.set(regionId, [rows, i]);
+          map.set(regionProp.toString(), [rows, i]);
         } else {
           rows.push(i);
         }
@@ -705,11 +706,17 @@ export default class TableColumn {
       regionProvider = regions.getRegionProvider(regionType);
     }
 
-    // No region type specified, so match the column name against the region
-    // aliases.
-    const details = regions.getRegionDetails([this.name], undefined, undefined);
-    if (details.length > 0) {
-      regionProvider = details[0].regionProvider;
+    if (!isDefined(regionProvider)) {
+      // No region type specified, so match the column name against the region
+      // aliases.
+      const details = regions.getRegionDetails(
+        [this.name],
+        undefined,
+        undefined
+      );
+      if (details.length > 0) {
+        regionProvider = details[0].regionProvider;
+      }
     }
 
     regionProvider?.loadRegionIDs();
