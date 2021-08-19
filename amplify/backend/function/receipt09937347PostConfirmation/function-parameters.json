@@ -1,7 +1,8 @@
 {
   "trigger": true,
   "modules": [
-    "add-to-group"
+    "add-to-group",
+    "add-example-story"
   ],
   "parentResource": "receipt09937347",
   "functionName": "receipt09937347PostConfirmation",
@@ -15,5 +16,14 @@
   "skipEdit": true,
   "GROUP": "receipt-editors",
   "enableCors": false,
-  "permissions": {}
+  "permissions": {
+    "function": {
+      "addExampleStory": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  }
 }

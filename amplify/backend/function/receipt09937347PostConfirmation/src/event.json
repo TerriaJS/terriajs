@@ -1,8 +1,8 @@
 {
   "version": "1",
   "region": "eu-central-1",
-  "userPoolId": "eu-central-1_DZ8sz9dnt",
-  "userName": "44b9932c-11a8-4198-8a43-6bf78708271c",
+  "userPoolId": "eu-central-1_En0Ynowt7",
+  "userName": "96af7e7d-9cbe-4acb-b853-0207b93282e2",
   "callerContext": {
     "awsSdkVersion": "aws-sdk-js-2.474.0",
     "clientId": "61avn77vbef84rmjkdj3rickaa"
@@ -10,7 +10,7 @@
   "triggerSource": "PostConfirmation_ConfirmSignUp",
   "request": {
     "userAttributes": {
-      "sub": "44b9932c-11a8-4198-8a43-6bf78708271c",
+      "sub": "96af7e7d-9cbe-4acb-b853-0207b93282e2",
       "email_verified": "true",
       "cognito:user_status": "CONFIRMED",
       "cognito:email_alias": "berend.weel@gmail.com",
