@@ -58,7 +58,7 @@ function findAllWithHref(reactElement: any, text: any) {
 }
 
 // Takes the absolute value of the value and pads it to 2 digits i.e. 7->07, 17->17, -3->3, -13->13. It is expected that value is an integer is in the range [0, 99].
-function absPad2(value: any) {
+function absPad2(value: number) {
   return (Math.abs(value) < 10 ? "0" : "") + Math.abs(value);
 }
 
