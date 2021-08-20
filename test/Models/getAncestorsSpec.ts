@@ -1,7 +1,7 @@
 import getAncestors from "../../lib/Models/getAncestors";
 import Terria from "../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-import CatalogGroup from "../../lib/Models/CatalogGroupNew";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import CatalogGroup from "../../lib/Models/Catalog/CatalogGroup";
 
 describe("getAncestors", function() {
   let terria: Terria,

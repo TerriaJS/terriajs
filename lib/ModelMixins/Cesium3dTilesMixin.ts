@@ -29,19 +29,20 @@ import isDefined from "../Core/isDefined";
 import { isJsonObject, JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
 import runLater from "../Core/runLater";
-import CommonStrata from "../Models/CommonStrata";
-import createStratumInstance from "../Models/createStratumInstance";
+import CommonStrata from "../Models/Definition/CommonStrata";
+import createStratumInstance from "../Models/Definition/createStratumInstance";
 import Feature from "../Models/Feature";
-import Model from "../Models/Model";
-import proxyCatalogItemUrl from "../Models/proxyCatalogItemUrl";
+import Model from "../Models/Definition/Model";
+import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import { SelectableDimension } from "../Models/SelectableDimensions";
 import Cesium3DTilesCatalogItemTraits from "../Traits/TraitsClasses/Cesium3DTilesCatalogItemTraits";
 import Cesium3dTilesTraits, {
   OptionsTraits
 } from "../Traits/TraitsClasses/Cesium3dTilesTraits";
-import CatalogMemberMixin from "./CatalogMemberMixin";
+import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
 import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
+import TerriaError from "../Core/TerriaError";
 
 const DEFAULT_HIGHLIGHT_COLOR = "#ff3f00";
 
@@ -78,9 +79,9 @@ export default function Cesium3dTilesMixin<
     private originalRootTransform: Matrix4 = Matrix4.IDENTITY.clone();
 
     protected async forceLoadMapItems() {
-      this.loadTileset();
-      if (this.tileset) {
-        try {
+      try {
+        this.loadTileset();
+        if (this.tileset) {
           const tileset = await makeRealPromise<Cesium3DTileset>(
             this.tileset.readyPromise
           );
@@ -97,18 +98,15 @@ export default function Cesium3dTilesMixin<
               );
             });
           }
-        } catch (e) {
-          // TODO: What should handle this error?
-          console.error(e);
         }
-      } else {
-        return Promise.resolve();
+      } catch (e) {
+        throw TerriaError.from(e, "Failed to load 3d-tiles tileset");
       }
     }
 
     private loadTileset() {
       if (!isDefined(this.url) && !isDefined(this.ionAssetId)) {
-        return;
+        throw `\`url\` and \`ionAssetId\` are not defined for ${getName(this)}`;
       }
 
       let resource = undefined;
@@ -214,7 +212,7 @@ export default function Cesium3dTilesMixin<
       }
 
       if (this.tileset.destroyed) {
-        this.loadTileset();
+        this.loadMapItems(true);
       }
 
       this.tileset.style = toJS(this.cesiumTileStyle);

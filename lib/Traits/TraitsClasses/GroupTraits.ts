@@ -1,4 +1,4 @@
-import CatalogMemberFactory from "../../Models/CatalogMemberFactory";
+import CatalogMemberFactory from "../../Models/Catalog/CatalogMemberFactory";
 import ModelReference from "../ModelReference";
 import modelReferenceArrayTrait from "../Decorators/modelReferenceArrayTrait";
 import ModelTraits from "../ModelTraits";

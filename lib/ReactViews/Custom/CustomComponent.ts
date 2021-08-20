@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 import Feature from "../../Models/Feature";
-import { BaseModel } from "../../Models/Model";
+import { BaseModel } from "../../Models/Definition/Model";
 import Terria from "../../Models/Terria";
 
 /**

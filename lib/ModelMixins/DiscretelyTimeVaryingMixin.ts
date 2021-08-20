@@ -8,8 +8,8 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
 import { calculateDomain, ChartItem } from "../ModelMixins/ChartableMixin";
-import CommonStrata from "../Models/CommonStrata";
-import Model from "../Models/Model";
+import CommonStrata from "../Models/Definition/CommonStrata";
+import Model from "../Models/Definition/Model";
 import DiscretelyTimeVaryingTraits from "../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import TimeVarying from "./TimeVarying";
 

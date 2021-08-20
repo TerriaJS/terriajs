@@ -98,7 +98,6 @@ const SatelliteImageryTimeFilterSection = observer(
                 pickedFeatures.providerCoords
               );
             } catch (e) {
-              console.log(e);
               terria.raiseErrorToUser(e);
             }
           }

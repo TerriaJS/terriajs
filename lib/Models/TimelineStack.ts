@@ -6,7 +6,7 @@ import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import TimeVarying from "../ModelMixins/TimeVarying";
-import CommonStrata from "./CommonStrata";
+import CommonStrata from "./Definition/CommonStrata";
 
 /**
  * Manages a stack of all the time-varying datasets currently attached to the timeline. Provides
@@ -93,7 +93,7 @@ export default class TimelineStack {
     return (
       this.items.find(item => {
         const dereferenced: TimeVarying =
-          ReferenceMixin.is(item) && item.target
+          ReferenceMixin.isMixedInto(item) && item.target
             ? (item.target as TimeVarying)
             : item;
         return (
