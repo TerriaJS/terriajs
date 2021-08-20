@@ -20,6 +20,7 @@ Reach out to us if you are using these, we only know about the things we have se
 To migrate to TerriaJS version 8 you'll need to update each of these:
 
 * Your catalog files
+* Custom basemaps or basemap thumbnails
 * The TerriaMap code
 * Other modifications you've done
 
@@ -36,6 +37,10 @@ catalog-converter --help # To see all options
 ```
 
 Or [checkout the source code](https://github.com/TerriaJS/catalog-converter) to build & run it and/or contribute to it. (The source for the catalog converter UI can be found at [https://github.com/TerriaJS/catalog-converter-ui](https://github.com/TerriaJS/catalog-converter-ui)).
+
+### Customising the selection of basemaps or basemap thumbnails
+
+To customise the available basemaps or the thumbnails of basemaps in the basemap switcher, [add/edit the `baseMaps` property in your initialisation files](../customizing/initialization-files.md#base-maps)
 
 ### Upgrading TerriaMap code by git merge
 
