@@ -37,7 +37,7 @@ export async function activateStory(scene, terria) {
         try {
           await terria.applyInitData({
             initData: initSource,
-            replaceStratum: false,
+            replaceStratum: true,
             canUnsetFeaturePickingState: true
           });
         } catch (e) {
