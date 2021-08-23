@@ -1,6 +1,7 @@
 import { Feature, FeatureCollection, GeoJsonObject, Point } from "geojson";
 import i18next from "i18next";
 import { action, computed, observable, runInAction, toJS } from "mobx";
+import { LineSymbolizer, PolygonSymbolizer } from "protomaps";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -24,22 +25,22 @@ import PolylineGraphics from "terriajs-cesium/Source/DataSources/PolylineGraphic
 import Property from "terriajs-cesium/Source/DataSources/Property";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import Constructor from "../Core/Constructor";
+import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import JsonValue, { isJsonObject, JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
 import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError from "../Core/TerriaError";
+import ProtomapsImageryProvider from "../Map/ProtomapsImageryProvider";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import Model from "../Models/Definition/Model";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
+import Model from "../Models/Definition/Model";
 import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
 import DiscretelyTimeVaryingMixin, {
   DiscreteTimeAsJS
 } from "./DiscretelyTimeVaryingMixin";
 import MappableMixin from "./MappableMixin";
-
-const geojsonvt = require("geojson-vt").default;
 
 const formatPropertyValue = require("../Core/formatPropertyValue");
 const hashFromString = require("../Core/hashFromString");
@@ -69,6 +70,7 @@ export default function GeoJsonMixin<
     protected readonly zipFileRegex = /(\.zip\b)/i;
 
     private _dataSource: CzmlDataSource | GeoJsonDataSource | undefined;
+    private _imageryProvider: ProtomapsImageryProvider | undefined;
     protected _file?: File;
 
     @observable private _readyData?: JsonObject;
@@ -103,11 +105,24 @@ export default function GeoJsonMixin<
     }
 
     @computed get mapItems() {
-      if (this.isLoadingMapItems || this._dataSource === undefined) {
+      if (
+        this.isLoadingMapItems ||
+        (this._dataSource === undefined && this._imageryProvider === undefined)
+      ) {
         return [];
       }
-      this._dataSource.show = this.show;
-      return [this._dataSource];
+      this._dataSource ? (this._dataSource.show = this.show) : null;
+      return filterOutUndefined([
+        this._dataSource,
+        this._imageryProvider
+          ? {
+              imageryProvider: this._imageryProvider,
+              show: this.show,
+              alpha: 1,
+              clippingRectangle: undefined
+            }
+          : undefined
+      ]);
     }
 
     protected async forceLoadMapItems(): Promise<void> {
@@ -145,19 +160,14 @@ export default function GeoJsonMixin<
           this._readyData = geoJsonWgs84;
         });
 
-        // build an initial index of tiles
-        var tileIndex = geojsonvt(geoJsonWgs84);
-
-        console.log(tileIndex);
-
-        // // request a particular tile
-        // var features = tileIndex.getTile(z, x, y).features;
-
-        // // show an array of tile coordinates created so far
-        // console.log(tileIndex.tileCoords); // [{z: 0, x: 0, y: 0}, ...]
+        const mvt = true;
 
         if (isDefined(this.czmlTemplate)) {
           this._dataSource = await this.loadCzmlDataSource(geoJsonWgs84);
+        } else if (mvt) {
+          this._imageryProvider = this.createProtomapsImageryProvider(
+            geoJsonWgs84
+          );
         } else {
           this._dataSource = await this.loadGeoJsonDataSource(geoJsonWgs84);
         }
@@ -215,6 +225,32 @@ export default function GeoJsonMixin<
       }
     }
 
+    private createProtomapsImageryProvider(geoJson: JsonObject) {
+      return new ProtomapsImageryProvider({
+        url: geoJson as any,
+        paintRules: [
+          {
+            dataLayer: "layer",
+            symbolizer: new PolygonSymbolizer({
+              fill: this.stylesWithDefaults.fill.toCssColorString()
+            }),
+            minzoom: 0,
+            maxzoom: Infinity
+          },
+          {
+            dataLayer: "layer",
+            symbolizer: new LineSymbolizer({
+              color: this.stylesWithDefaults.polygonStroke.toCssColorString(),
+              width: this.stylesWithDefaults.strokeWidth
+            }),
+            minzoom: 0,
+            maxzoom: Infinity
+          }
+        ],
+        labelRules: []
+      });
+    }
+
     private async loadCzmlDataSource(
       geoJson: JsonObject
     ): Promise<CzmlDataSource> {
@@ -267,61 +303,8 @@ export default function GeoJsonMixin<
       return CzmlDataSource.load(rootCzml);
     }
 
-    private loadGeoJsonDataSource(
-      geoJson: JsonObject
-    ): Promise<GeoJsonDataSource | CzmlDataSource> {
-      /* Style information is applied as follows, in decreasing priority:
-             - simple-style properties set directly on individual features in the GeoJSON file
-             - simple-style properties set as the 'Style' property on the catalog item
-             - our 'options' set below (and point styling applied after Cesium loads the GeoJSON)
-             - if anything is underspecified there, then Cesium's defaults come in.
-             See https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0
-          */
-
-      this.addPerPropertyStyleToGeoJson(geoJson);
-
-      function defaultColor(
-        colorString: string | undefined,
-        name: string
-      ): Color {
-        if (colorString === undefined) {
-          const color = Color.fromCssColorString(
-            getRandomCssColor(StandardCssColors.highContrast, name)
-          );
-          color.alpha = 1;
-          return color;
-        } else {
-          return Color.fromCssColorString(colorString) ?? Color.GRAY;
-        }
-      }
-
-      function getColor(color: String | string | Color): Color {
-        if (typeof color === "string" || color instanceof String) {
-          return Color.fromCssColorString(color.toString()) ?? Color.GRAY;
-        } else {
-          return color;
-        }
-      }
-
-      function parseMarkerSize(sizeString?: string): number | undefined {
-        const sizes: { [name: string]: number } = {
-          small: 24,
-          medium: 48,
-          large: 64
-        };
-
-        if (sizeString === undefined) {
-          return undefined;
-        }
-
-        if (sizes[sizeString] !== undefined) {
-          return sizes[sizeString];
-        }
-        return parseInt(sizeString, 10); // SimpleStyle doesn't allow 'marker-size: 20', but people will do it.
-      }
-
+    private get stylesWithDefaults() {
       const style = this.style;
-      const now = JulianDate.now();
 
       const options = {
         describe: describeWithoutUnderscores,
@@ -351,8 +334,26 @@ export default function GeoJsonMixin<
         options.fill.alpha = 0.75;
       }
 
+      return options;
+    }
+
+    private loadGeoJsonDataSource(
+      geoJson: JsonObject
+    ): Promise<GeoJsonDataSource | CzmlDataSource> {
+      /* Style information is applied as follows, in decreasing priority:
+             - simple-style properties set directly on individual features in the GeoJSON file
+             - simple-style properties set as the 'Style' property on the catalog item
+             - our 'this.styles' set below (and point styling applied after Cesium loads the GeoJSON)
+             - if anything is underspecified there, then Cesium's defaults come in.
+             See https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0
+          */
+
+      this.addPerPropertyStyleToGeoJson(geoJson);
+
+      const now = JulianDate.now();
+
       return makeRealPromise<GeoJsonDataSource>(
-        GeoJsonDataSource.load(geoJson, options)
+        GeoJsonDataSource.load(geoJson, this.stylesWithDefaults)
       ).then(dataSource => {
         const entities = dataSource.entities;
         for (let i = 0; i < entities.values.length; ++i) {
@@ -389,9 +390,12 @@ export default function GeoJsonMixin<
           }
 
           // Billboard
-          if (isDefined(entity.billboard) && isDefined(options.markerUrl)) {
+          if (
+            isDefined(entity.billboard) &&
+            isDefined(this.stylesWithDefaults.markerUrl)
+          ) {
             entity.billboard = new BillboardGraphics({
-              image: new ConstantProperty(options.markerUrl),
+              image: new ConstantProperty(this.stylesWithDefaults.markerUrl),
               width:
                 properties && properties["marker-width"]
                   ? new ConstantProperty(properties["marker-width"])
@@ -404,7 +408,7 @@ export default function GeoJsonMixin<
                 properties && properties["marker-angle"]
                   ? new ConstantProperty(properties["marker-angle"])
                   : undefined,
-              heightReference: options.clampToGround
+              heightReference: this.stylesWithDefaults.clampToGround
                 ? new ConstantProperty(HeightReference.RELATIVE_TO_GROUND)
                 : undefined
             });
@@ -414,14 +418,14 @@ export default function GeoJsonMixin<
           } else if (
             isDefined(entity.billboard) &&
             (!properties || !isDefined(properties["marker-symbol"])) &&
-            !isDefined(options.markerSymbol)
+            !isDefined(this.stylesWithDefaults.markerSymbol)
           ) {
             entity.point = new PointGraphics({
               color: new ConstantProperty(
                 getColor(
                   defaultValue(
                     properties && properties["marker-color"]?.getValue(),
-                    options.markerColor
+                    this.stylesWithDefaults.markerColor
                   )
                 )
               ),
@@ -430,25 +434,25 @@ export default function GeoJsonMixin<
                   parseMarkerSize(
                     properties && properties["marker-size"]?.getValue()
                   ),
-                  options.markerSize / 2
+                  this.stylesWithDefaults.markerSize / 2
                 )
               ),
               outlineWidth: new ConstantProperty(
                 defaultValue(
                   properties && properties["stroke-width"]?.getValue(),
-                  options.strokeWidth
+                  this.stylesWithDefaults.strokeWidth
                 )
               ),
               outlineColor: new ConstantProperty(
                 getColor(
                   defaultValue(
                     properties && properties.stroke?.getValue(),
-                    options.polygonStroke
+                    this.stylesWithDefaults.polygonStroke
                   )
                 )
               ),
               heightReference: new ConstantProperty(
-                options.clampToGround
+                this.stylesWithDefaults.clampToGround
                   ? HeightReference.RELATIVE_TO_GROUND
                   : undefined
               )
@@ -884,4 +888,41 @@ function isPolygonOnTerrain(polygon: PolygonGraphics, now: JulianDate) {
     polygon.height && polygon.height.getValue(now) !== undefined;
 
   return isClamped || (!hasPerPositionHeight && !hasPolygonHeight);
+}
+
+function defaultColor(colorString: string | undefined, name: string): Color {
+  if (colorString === undefined) {
+    const color = Color.fromCssColorString(
+      getRandomCssColor(StandardCssColors.highContrast, name)
+    );
+    color.alpha = 1;
+    return color;
+  } else {
+    return Color.fromCssColorString(colorString) ?? Color.GRAY;
+  }
+}
+
+function getColor(color: String | string | Color): Color {
+  if (typeof color === "string" || color instanceof String) {
+    return Color.fromCssColorString(color.toString()) ?? Color.GRAY;
+  } else {
+    return color;
+  }
+}
+
+function parseMarkerSize(sizeString?: string): number | undefined {
+  const sizes: { [name: string]: number } = {
+    small: 24,
+    medium: 48,
+    large: 64
+  };
+
+  if (sizeString === undefined) {
+    return undefined;
+  }
+
+  if (sizes[sizeString] !== undefined) {
+    return sizes[sizeString];
+  }
+  return parseInt(sizeString, 10); // SimpleStyle doesn't allow 'marker-size: 20', but people will do it.
 }

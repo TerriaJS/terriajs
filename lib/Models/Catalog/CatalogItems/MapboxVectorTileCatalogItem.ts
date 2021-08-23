@@ -2,10 +2,13 @@ import { VectorTileFeature } from "@mapbox/vector-tile";
 import i18next from "i18next";
 import { clone } from "lodash-es";
 import { action, computed, observable, runInAction } from "mobx";
-import { json_style } from "protomaps/src/compat/json_style";
-import { LabelRule } from "protomaps/src/labeler";
-import { Rule as PaintRule } from "protomaps/src/painter";
-import { LineSymbolizer, PolygonSymbolizer } from "protomaps/src/symbolizer";
+import {
+  LineSymbolizer,
+  PolygonSymbolizer,
+  Rule as PaintRule,
+  LabelRule,
+  json_style
+} from "protomaps";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import isDefined from "../../../Core/isDefined";
 import ProtomapsImageryProvider from "../../../Map/ProtomapsImageryProvider";
@@ -153,10 +156,6 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
       labelRules: this.labelRules
       // featureInfoFunc: this.featureInfoFromFeature,
     });
-
-    // this.fillColor, strokeStyle: this.lineColor
-
-    // https://api.mapbox.com/v4/mapbox.mapbox-streets-v8/{z}/{x}/{y}.vector.pbf?access_token=pk.eyJ1Ijoibmlja2ZvcmJlc3NtaXRoIiwiYSI6ImNraXd0MTEycjF6YXgzNHA0b21od2RkbWQifQ.LH6pdVXW-BKmoiQ5wV7i4w
   }
 
   protected forceLoadMapItems(): Promise<void> {
