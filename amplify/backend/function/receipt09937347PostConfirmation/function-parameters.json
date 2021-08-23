@@ -19,10 +19,7 @@
   "permissions": {
     "function": {
       "addExampleStory": [
-        "create",
-        "read",
-        "update",
-        "delete"
+        "read"
       ]
     }
   }

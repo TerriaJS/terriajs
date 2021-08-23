@@ -223,15 +223,9 @@
             {
               "Effect": "Allow",
               "Action": [
-                "lambda:Create*",
-                "lambda:Put*",
-                "lambda:Add*",
                 "lambda:Get*",
                 "lambda:List*",
-                "lambda:Invoke*",
-                "lambda:Update*",
-                "lambda:Delete*",
-                "lambda:Remove*"
+                "lambda:Invoke*"
               ],
               "Resource": [
                 {

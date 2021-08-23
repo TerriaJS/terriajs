@@ -113,7 +113,10 @@ exports.handler = async (event) => {
           Item: newStory,
           TableName: process.env.API_RECEIPTAPI_STORYTABLE_NAME
         }).promise();
-        response.body = 'Created example story successfully';
+        response.body = {
+          message: 'Created example story successfully',
+          storyId: newStory.id
+        };
         console.log("Success");
       } else {
         response.statusCode = 500;
