@@ -1,9 +1,13 @@
 Change Log
 ==========
 
-### MobX Development
+#### next release (8.0.1)
+* Added `catalog-converter` support for v7 `#start` data.
+* add french Help button translation
+* Enable FeatureInfoSectionSpec tests
+* [The next improvement]
 
-#### next release (8.0.0-alpha.88)
+#### 8.0.0
 
 - **Breaking changes**:
   - Require `translate#` in front of translatable content id in `config.json` (i.e. `helpContent`).
@@ -105,7 +109,7 @@ Change Log
 * Refactored some `Traits` classes so they use `mixTraits` instead of extending other `Traits` classes.
 * Allow translation of some components.
 * Fixed a bug which prevented adding any reference catalog item while the story is playing.
-* [The next improvement]
+* Bumped terriajs-server to ^3.3.3
 
 #### 8.0.0-alpha.87
 
@@ -943,10 +947,22 @@ Change Log
 * Update papaparse and improve handling for retrieveing CSVs via chunking that have no ContentLenth header
 
 
-### Next Release
+### v7.11.17
+
+* Moved strings in DateTimeSelector and FeatureInfoPanel into i18next translation file.
+
+### v7.11.16
+
+* Fixed a bug where the timeline would not update properly when the timeline panel was resized.
+
+### v7.11.15
+
+* Fixed a bug when clicking the expand button on a chart in feature info when the clicked feature was a polygon.
+
 ### v7.11.14
 
 * Update CARTO Basemaps CDN URL and attribution.
+* Fixed issue with node 12 & 14 introduced in Cesium upgrade.
 
 ### v7.11.13
 

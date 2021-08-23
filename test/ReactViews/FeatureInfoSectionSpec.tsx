@@ -21,13 +21,13 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import loadJson from "../../lib/Core/loadJson";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import TimeIntervalCollectionProperty from "terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty";
+import CreateModel from "../../lib/Models/Definition/CreateModel";
 import CzmlCatalogItem from "../../lib/Models/Catalog/CatalogItems/CzmlCatalogItem";
 import { FeatureInfoSection } from "../../lib/ReactViews/FeatureInfo/FeatureInfoSection";
 import Terria from "../../lib/Models/Terria";
 import Styles from "../../lib/ReactViews/FeatureInfo/feature-info-section.scss";
 import upsertModelFromJson from "../../lib/Models/Definition/upsertModelFromJson";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
-import CatalogMemberFactory from "../../lib/Models/Catalog/CatalogMemberFactory";
 import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
 import mixTraits from "../../lib/Traits/mixTraits";
 import FeatureInfoTraits from "../../lib/Traits/TraitsClasses/FeatureInfoTraits";
@@ -37,7 +37,7 @@ import MappableMixin, { MapItem } from "../../lib/ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../../lib/ModelMixins/CatalogMemberMixin";
 import { observable } from "mobx";
 import i18next from "i18next";
-import CreateModel from "../../lib/Models/Definition/CreateModel";
+import CatalogMemberFactory from "../../lib/Models/Catalog/CatalogMemberFactory";
 
 let separator = ",";
 if (typeof Intl === "object" && typeof Intl.NumberFormat === "function") {
@@ -57,7 +57,7 @@ function findAllWithHref(reactElement: any, text: any) {
 }
 
 // Takes the absolute value of the value and pads it to 2 digits i.e. 7->07, 17->17, -3->3, -13->13. It is expected that value is an integer is in the range [0, 99].
-function absPad2(value: any) {
+function absPad2(value: number) {
   return (Math.abs(value) < 10 ? "0" : "") + Math.abs(value);
 }
 
