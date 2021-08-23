@@ -159,14 +159,7 @@ const StoryPanel = observer(
     },
 
     onCenterScene(story) {
-      if (story.shareData) {
-        this.props.terria
-          .updateFromStartData(
-            story.shareData,
-            `Story data: \`${story.title ?? story.id}\``
-          )
-          .raiseError(this.props.terria);
-      }
+      activateStory(story, this.props.terria);
     },
 
     goToPrevStory() {
