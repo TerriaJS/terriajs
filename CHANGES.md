@@ -5,6 +5,10 @@ Change Log
 * Added `catalog-converter` support for v7 `#start` data.
 * add french Help button translation
 * Enable FeatureInfoSectionSpec tests
+* Add `itemProperties` to `ArcGisMapServerCatalogGroupTraits` so that `ArcGisMapServerCatalogGroup` can override relevant traits of its layers.
+* Add `feature` object to `FeatureInfoSection.getTemplateData`
+* Add `mustacheReplaceTextFunction` function to `FeatureInfoSection`
+* Add a way to replace text in feature info templates, eg. `{{#terria.replaceText}}{"replaceText": true, "from": [0,1,2,3], "to": ["Zero","One","Two","Three"]}{{value}}{{/terria.replaceText}}`. The quotes around the keys are optional.
 * [The next improvement]
 
 #### 8.0.0
@@ -54,7 +58,6 @@ Change Log
   * Notes on v7 to v8 Socrata integration:
     * Share links are not preserved
     * Added basic support for dataset resources
-* Add `itemProperties` to `ArcGisMapServerCatalogGroupTraits` so that `ArcGisMapServerCatalogGroup` can override relevant traits of its layers.
 * Organise `Models` directory into multiple sub-directories (#5626)
   * New model related classes are moved to `Models/Definition`
   * Catalog related files are moved to `Models/Catalog`
@@ -78,9 +81,6 @@ Change Log
   * Replaced with `disableZoomTo` in `MappableTraits`
 * Clean up `showsInfo`
   * Replaced with `disableAboutData` in `CatalogMemberTraits`
-* Add `feature` object to `FeatureInfoSection.getTemplateData`
-* Add `mustacheReplaceTextFunction` function to `FeatureInfoSection`
-* Add a way to replace text in feature info templates, eg. `{{#terria.replaceText}}{"replaceText": true, "from": [0,1,2,3], "to": ["Zero","One","Two","Three"]}{{value}}{{/terria.replaceText}}`. The quotes around the keys are optional.
 * Add `TerriaErrorSeverity` enum, values can be `Error` or `Warning`.
   * Errors with severity `Error` are presented to the user. `Warning` will just be printed to console.
   * By default, errors will use `Error`
