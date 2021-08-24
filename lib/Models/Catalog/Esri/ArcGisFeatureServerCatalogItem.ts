@@ -1,5 +1,6 @@
 import i18next from "i18next";
 import { computed, runInAction } from "mobx";
+import { GeoJsonDataSource } from "terriajs-cesium";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
@@ -16,8 +17,8 @@ import replaceUnderscores from "../../../Core/replaceUnderscores";
 import TerriaError from "../../../Core/TerriaError";
 import featureDataToGeoJson from "../../../Map/featureDataToGeoJson";
 import proj4definitions from "../../../Map/Proj4Definitions";
-import MappableMixin from "../../../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
+import MappableMixin from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import ArcGisFeatureServerCatalogItemTraits from "../../../Traits/TraitsClasses/ArcGisFeatureServerCatalogItemTraits";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
@@ -28,13 +29,13 @@ import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import { getLineStyleCesium } from "./esriLineStyle";
-import GeoJsonCatalogItem from "../CatalogItems/GeoJsonCatalogItem";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
+import GeoJsonCatalogItem from "../CatalogItems/GeoJsonCatalogItem";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { getLineStyleCesium } from "./esriLineStyle";
 
 const proj4 = require("proj4").default;
 
@@ -406,6 +407,7 @@ export default class ArcGisFeatureServerCatalogItem extends MappableMixin(
         const renderer = featureServerData.drawingInfo.renderer;
         const rendererType = renderer.type;
         that.mapItems.forEach(mapItem => {
+          if (!(mapItem instanceof GeoJsonDataSource)) return;
           const entities = mapItem.entities;
           entities.suspendEvents();
 

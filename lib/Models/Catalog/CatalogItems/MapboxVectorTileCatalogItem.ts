@@ -1,17 +1,20 @@
 import { VectorTileFeature } from "@mapbox/vector-tile";
+import bbox from "@turf/bbox";
 import i18next from "i18next";
 import { clone } from "lodash-es";
 import { action, computed, observable, runInAction } from "mobx";
 import {
+  json_style,
+  LabelRule,
   LineSymbolizer,
   PolygonSymbolizer,
-  Rule as PaintRule,
-  LabelRule,
-  json_style
+  Rule as PaintRule
 } from "protomaps";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import isDefined from "../../../Core/isDefined";
-import ProtomapsImageryProvider from "../../../Map/ProtomapsImageryProvider";
+import ProtomapsImageryProvider, {
+  GeojsonSource
+} from "../../../Map/ProtomapsImageryProvider";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
@@ -19,6 +22,7 @@ import LegendTraits, {
   LegendItemTraits
 } from "../../../Traits/TraitsClasses/LegendTraits";
 import MapboxVectorTileCatalogItemTraits from "../../../Traits/TraitsClasses/MapboxVectorTileCatalogItemTraits";
+import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
@@ -61,6 +65,22 @@ class MapboxVectorTileLoadableStratum extends LoadableStratum(
         ]
       })
     ];
+  }
+
+  @computed
+  get rectangle() {
+    if (
+      this.item.imageryProvider?.source instanceof GeojsonSource &&
+      this.item.imageryProvider.source.geojsonObject
+    ) {
+      const geojsonBbox = bbox(this.item.imageryProvider.source.geojsonObject);
+      return createStratumInstance(RectangleTraits, {
+        west: geojsonBbox[0],
+        south: geojsonBbox[1],
+        east: geojsonBbox[2],
+        north: geojsonBbox[3]
+      });
+    }
   }
 }
 
@@ -147,6 +167,7 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
     }
 
     return new ProtomapsImageryProvider({
+      terria: this.terria,
       url: this.url,
       minimumZoom: this.minimumZoom,
       maximumNativeZoom: this.maximumNativeZoom,

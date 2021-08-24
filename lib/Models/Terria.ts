@@ -198,6 +198,9 @@ interface ConfigParameters {
 
   disablePedestrianMode?: boolean;
 
+  /** Temporary feature flag for experimental Geojson-Mapbox vector tiles */
+  enableGeojsonMvt?: boolean;
+
   experimentalFeatures?: boolean;
   magdaReferenceHeaders?: MagdaReferenceHeaders;
   locationSearchBoundingBox?: number[];
@@ -409,6 +412,7 @@ export default class Terria {
     disableMyLocation: undefined,
     disableSplitter: undefined,
     disablePedestrianMode: false,
+    enableGeojsonMvt: false,
     experimentalFeatures: undefined,
     magdaReferenceHeaders: undefined,
     locationSearchBoundingBox: undefined,

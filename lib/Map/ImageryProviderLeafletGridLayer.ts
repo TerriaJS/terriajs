@@ -53,12 +53,6 @@ export default class ImageryProviderLeafletGridLayer extends L.GridLayer {
         disposeSplitterReaction = undefined;
       }
     });
-
-    // Hack to fix "Space between tiles on fractional zoom levels in Webkit browsers" (https://github.com/Leaflet/Leaflet/issues/3575#issuecomment-688644225)
-    this.on("tileloadstart", (event: TileEvent) => {
-      event.tile.style.width = this.getTileSize().x + 0.5 + "px";
-      event.tile.style.height = this.getTileSize().y + 0.5 + "px";
-    });
   }
 
   _reactToSplitterChange() {

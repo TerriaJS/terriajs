@@ -1,9 +1,12 @@
 import Point from "@mapbox/point-geometry";
-import { GeoJsonObject } from "geojson";
+import booleanIntersects from "@turf/boolean-intersects";
+import circle from "@turf/circle";
+import { feature } from "@turf/helpers";
+import { Feature, GeoJSON } from "geojson";
 import i18next from "i18next";
 import {
   Bbox,
-  Feature,
+  Feature as ProtomapsFeature,
   GeomType,
   Labelers,
   LabelRule,
@@ -23,23 +26,20 @@ import DefaultProxy from "terriajs-cesium/Source/Core/DefaultProxy";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import TileDiscardPolicy from "terriajs-cesium/Source/Scene/TileDiscardPolicy";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import isDefined from "../Core/isDefined";
+import Terria from "../Models/Terria";
 import { ImageryProviderWithGridLayerSupport } from "./ImageryProviderLeafletGridLayer";
+import { observable, runInAction } from "mobx";
 
 type GeojsonVtFeature = {
   id: any;
-  type:
-    | "Point"
-    | "MultiPoint"
-    | "LineString"
-    | "MultiLineString"
-    | "Polygon"
-    | "MultiPolygon";
+  type: GeomType;
   geometry: [number, number][][] | [number, number][];
   tags: any;
 };
@@ -69,7 +69,8 @@ interface Coords {
 }
 
 interface Options {
-  url: string | GeoJsonObject;
+  terria: Terria;
+  url: string | GeoJSON;
   minimumZoom?: number;
   maximumZoom?: number;
   maximumNativeZoom?: number;
@@ -79,52 +80,67 @@ interface Options {
   labelRules: LabelRule[];
 }
 
-const BUF = 16;
+const BUF = 64;
 const tilesize = 256;
 const geojsonvtExtent = 4096;
 
+// Layer name to use with geojson-vt
+// This must be used in PaintRules/LabelRules (eg dataLayer: "layer")
+export const GEOJSON_SOURCE_LAYER_NAME = "layer";
+
 export class GeojsonSource implements TileSource {
-  private readonly geojsonUrlOrObject: string | GeoJsonObject;
-  geojsonObject: GeoJsonObject | undefined;
+  private readonly geojsonUrlOrObject: string | GeoJSON;
+  @observable.ref
+  geojsonObject: GeoJSON | undefined;
   controllers: any[];
   shouldCancelZooms: boolean;
 
   tileIndex: Promise<any> | undefined;
 
-  constructor(url: string | GeoJsonObject, shouldCancelZooms: boolean) {
+  constructor(url: string | GeoJSON, shouldCancelZooms: boolean) {
     this.geojsonUrlOrObject = url;
+    if (!(typeof url === "string")) {
+      this.geojsonObject = url;
+    }
     this.controllers = [];
     this.shouldCancelZooms = shouldCancelZooms;
   }
 
   private async fetchData() {
+    let result: GeoJSON | undefined;
     if (typeof this.geojsonUrlOrObject === "string") {
-      this.geojsonObject = await (await fetch(this.geojsonUrlOrObject)).json();
+      result = await (await fetch(this.geojsonUrlOrObject)).json();
     } else {
-      this.geojsonObject = this.geojsonUrlOrObject;
+      result = this.geojsonUrlOrObject;
     }
+
+    runInAction(() => (this.geojsonObject = result));
+
     return geojsonvt(this.geojsonObject, {
-      buffer: 64,
+      buffer: (BUF / tilesize) * geojsonvtExtent,
       extent: geojsonvtExtent,
       maxZoom: 24
     });
   }
 
-  public async get(c: Zxy, tileSize: number): Promise<Map<string, Feature[]>> {
+  public async get(
+    c: Zxy,
+    tileSize: number
+  ): Promise<Map<string, ProtomapsFeature[]>> {
     if (!this.tileIndex) {
       this.tileIndex = this.fetchData();
     }
 
     // // request a particular tile
     const tile = (await this.tileIndex).getTile(c.z, c.x, c.y) as GeojsonVtTile;
-    let result = new Map<string, Feature[]>();
+    let result = new Map<string, ProtomapsFeature[]>();
     const scale = tilesize / geojsonvtExtent;
 
     if (tile && tile.features && tile.features.length > 0) {
       result.set(
-        "layer",
+        GEOJSON_SOURCE_LAYER_NAME,
         tile.features.map(f => {
-          let transformedGeom: Point[] | Point[][] = [];
+          let transformedGeom: Point[][] = [];
           let numVertices = 0;
           let bbox: Bbox = {
             minX: Infinity,
@@ -164,39 +180,36 @@ export class GeojsonSource implements TileSource {
           // Flat geometry
           else {
             const geom = f.geometry as [number, number][];
-            transformedGeom = geom.map(g1 => {
-              g1 = [g1[0] * scale, g1[1] * scale];
+            transformedGeom = [
+              geom.map(g1 => {
+                g1 = [g1[0] * scale, g1[1] * scale];
 
-              if (bbox.minX > g1[0]) {
-                bbox.minX = g1[0];
-              }
+                if (bbox.minX > g1[0]) {
+                  bbox.minX = g1[0];
+                }
 
-              if (bbox.maxX < g1[0]) {
-                bbox.maxX = g1[0];
-              }
+                if (bbox.maxX < g1[0]) {
+                  bbox.maxX = g1[0];
+                }
 
-              if (bbox.minY > g1[1]) {
-                bbox.minY = g1[1];
-              }
+                if (bbox.minY > g1[1]) {
+                  bbox.minY = g1[1];
+                }
 
-              if (bbox.maxY < g1[1]) {
-                bbox.maxY = g1[1];
-              }
-              return new Point(g1[0], g1[1]);
-            });
+                if (bbox.maxY < g1[1]) {
+                  bbox.maxY = g1[1];
+                }
+                return new Point(g1[0], g1[1]);
+              })
+            ];
             numVertices = transformedGeom.length;
           }
 
-          const feature: Feature = {
+          const feature: ProtomapsFeature = {
             properties: f.tags,
             bbox,
-            geomType:
-              f.type === "Point" || f.type === "MultiPoint"
-                ? GeomType.Point
-                : f.type === "LineString" || f.type === "MultiLineString"
-                ? GeomType.Line
-                : GeomType.Polygon,
-            geom: transformedGeom as any,
+            geomType: f.type,
+            geom: transformedGeom,
             numVertices
           };
 
@@ -211,6 +224,7 @@ export class GeojsonSource implements TileSource {
 
 export default class ProtomapsImageryProvider
   implements ImageryProviderWithGridLayerSupport {
+  private readonly terria: Terria;
   private readonly _tilingScheme: WebMercatorTilingScheme;
   private readonly _tileWidth: number;
   private readonly _tileHeight: number;
@@ -225,17 +239,18 @@ export default class ProtomapsImageryProvider
   private readonly paintRules: PaintRule[];
   private readonly labelRules: LabelRule[];
   private readonly labelers: Labelers;
-  private readonly source: PmtilesSource | ZxySource | GeojsonSource;
+  readonly source: PmtilesSource | ZxySource | GeojsonSource;
   private readonly view: View | undefined;
 
   constructor(options: Options) {
+    this.terria = options.terria;
     this._tilingScheme = new WebMercatorTilingScheme();
 
     this._tileWidth = tilesize;
     this._tileHeight = tilesize;
 
     this._minimumLevel = defaultValue(options.minimumZoom, 0);
-    this._maximumLevel = defaultValue(options.maximumZoom, Infinity);
+    this._maximumLevel = defaultValue(options.maximumZoom, 24);
 
     this._rectangle = isDefined(options.rectangle)
       ? Rectangle.intersection(
@@ -474,19 +489,75 @@ export default class ProtomapsImageryProvider
     latitude: number
   ): Promise<ImageryLayerFeatureInfo[]> {
     if (this.view) {
-      return this.view.queryFeatures(longitude, latitude, level).map(f => {
+      return this.view
+        .queryFeatures(
+          CesiumMath.toDegrees(longitude),
+          CesiumMath.toDegrees(latitude),
+          level
+        )
+        .map(f => {
+          const featureInfo = new ImageryLayerFeatureInfo();
+
+          featureInfo.properties = f.properties;
+          featureInfo.position = new Cartographic(longitude, latitude);
+
+          featureInfo.configureDescriptionFromProperties(f.properties);
+          featureInfo.configureNameFromProperties(f.properties);
+
+          return featureInfo;
+        });
+    } else if (
+      this.source instanceof GeojsonSource &&
+      this.source.geojsonObject
+    ) {
+      // Create circle with 10 pixel radius to pick features
+      const buffer = circle(
+        [CesiumMath.toDegrees(longitude), CesiumMath.toDegrees(latitude)],
+        10 * this.terria.mainViewer.scale,
+        {
+          steps: 10,
+          units: "meters"
+        }
+      );
+
+      // Get array of all features
+      let features: Feature[] = [];
+
+      if (this.source.geojsonObject.type === "FeatureCollection") {
+        features = this.source.geojsonObject.features;
+      } else if (this.source.geojsonObject.type === "Feature") {
+        features = [this.source.geojsonObject];
+      } else {
+        features = [feature(this.source.geojsonObject)];
+      }
+
+      const pickedFeatures: Feature[] = [];
+
+      for (let index = 0; index < features.length; index++) {
+        const feature = features[index];
+        if (booleanIntersects(feature, buffer)) {
+          pickedFeatures.push(feature);
+        }
+      }
+
+      return pickedFeatures.map(f => {
         const featureInfo = new ImageryLayerFeatureInfo();
 
+        featureInfo.data = f;
         featureInfo.properties = f.properties;
-        featureInfo.position = new Cartographic(longitude, latitude);
+
+        if (f.geometry.type === "Point") {
+          featureInfo.position = Cartographic.fromDegrees(
+            f.geometry.coordinates[0],
+            f.geometry.coordinates[1]
+          );
+        }
 
         featureInfo.configureDescriptionFromProperties(f.properties);
         featureInfo.configureNameFromProperties(f.properties);
 
         return featureInfo;
       });
-    } else if (this.source instanceof GeojsonSource) {
-      // this.source.geojsonObject
     }
     return [];
   }

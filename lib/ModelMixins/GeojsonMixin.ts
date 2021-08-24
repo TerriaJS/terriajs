@@ -1,7 +1,13 @@
-import { Feature, FeatureCollection, GeoJsonObject, Point } from "geojson";
+import bbox from "@turf/bbox";
+import { Feature, FeatureCollection, GeoJSON, Point } from "geojson";
 import i18next from "i18next";
 import { action, computed, observable, runInAction, toJS } from "mobx";
-import { LineSymbolizer, PolygonSymbolizer } from "protomaps";
+import {
+  CircleSymbolizer,
+  GeomType,
+  LineSymbolizer,
+  PolygonSymbolizer
+} from "protomaps";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -31,12 +37,18 @@ import JsonValue, { isJsonObject, JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
 import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError from "../Core/TerriaError";
-import ProtomapsImageryProvider from "../Map/ProtomapsImageryProvider";
+import ProtomapsImageryProvider, {
+  GEOJSON_SOURCE_LAYER_NAME
+} from "../Map/ProtomapsImageryProvider";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
-import Model from "../Models/Definition/Model";
+import createStratumInstance from "../Models/Definition/createStratumInstance";
+import LoadableStratum from "../Models/Definition/LoadableStratum";
+import Model, { BaseModel } from "../Models/Definition/Model";
+import StratumOrder from "../Models/Definition/StratumOrder";
 import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
+import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import DiscretelyTimeVaryingMixin, {
   DiscreteTimeAsJS
 } from "./DiscretelyTimeVaryingMixin";
@@ -61,19 +73,51 @@ const simpleStyleIdentifiers = [
 
 type Coordinates = number[];
 
-export default function GeoJsonMixin<
-  T extends Constructor<Model<GeoJsonTraits>>
->(Base: T) {
+class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
+  static stratumName = "geojson";
+  constructor(private readonly _item: GeoJsonMixin.Instance) {
+    super();
+  }
+
+  duplicateLoadableStratum(newModel: BaseModel): this {
+    return new GeoJsonStratum(newModel as GeoJsonMixin.Instance) as this;
+  }
+
+  static async load(item: GeoJsonMixin.Instance) {
+    return new GeoJsonStratum(item);
+  }
+
+  @computed
+  get rectangle() {
+    if (this._item._readyData) {
+      const geojsonBbox = bbox(this._item._readyData);
+      return createStratumInstance(RectangleTraits, {
+        west: geojsonBbox[0],
+        south: geojsonBbox[1],
+        east: geojsonBbox[2],
+        north: geojsonBbox[3]
+      });
+    }
+  }
+}
+
+StratumOrder.addLoadStratum(GeoJsonStratum.stratumName);
+
+function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
   abstract class GeoJsonMixin extends DiscretelyTimeVaryingMixin(
     MappableMixin(UrlMixin(Base))
   ) {
+    get isGeoJson() {
+      return true;
+    }
+
     protected readonly zipFileRegex = /(\.zip\b)/i;
 
     private _dataSource: CzmlDataSource | GeoJsonDataSource | undefined;
     private _imageryProvider: ProtomapsImageryProvider | undefined;
     protected _file?: File;
 
-    @observable private _readyData?: JsonObject;
+    @observable.ref _readyData?: JsonObject;
 
     setFileInput(file: File) {
       this._file = file;
@@ -126,6 +170,13 @@ export default function GeoJsonMixin<
     }
 
     protected async forceLoadMapItems(): Promise<void> {
+      if (this.strata.get(GeoJsonStratum.stratumName) === undefined) {
+        GeoJsonStratum.load(this).then(stratum => {
+          runInAction(() => {
+            this.strata.set(GeoJsonStratum.stratumName, stratum);
+          });
+        });
+      }
       try {
         const geoJson = await new Promise<JsonValue | undefined>(
           (resolve, reject) => {
@@ -160,11 +211,24 @@ export default function GeoJsonMixin<
           this._readyData = geoJsonWgs84;
         });
 
-        const mvt = true;
+        // Pick which rendering mode:
+        // - CZML if czmlTemplate is defined
+        // - Mapbox vector tiles (see below)
+        // - Cesium primitives
+
+        // Only use MapboxVectorTiles (through geojson-vt and protomaps.js) if enabled and not using unsupported traits
+        const useMvt =
+          !this.forceCesiumPrimitives &&
+          this.terria.configParameters.enableGeojsonMvt &&
+          !isDefined(this.stylesWithDefaults.markerSymbol) &&
+          !isDefined(this.timeProperty) &&
+          !isDefined(this.heightProperty) &&
+          (!isDefined(this.perPropertyStyles) ||
+            this.perPropertyStyles.length === 0);
 
         if (isDefined(this.czmlTemplate)) {
           this._dataSource = await this.loadCzmlDataSource(geoJsonWgs84);
-        } else if (mvt) {
+        } else if (useMvt) {
           this._imageryProvider = this.createProtomapsImageryProvider(
             geoJsonWgs84
           );
@@ -180,8 +244,8 @@ export default function GeoJsonMixin<
     }
 
     @action
-    private addPerPropertyStyleToGeoJson(json: JsonObject | GeoJsonObject) {
-      const geojson = json as GeoJsonObject;
+    private addPerPropertyStyleToGeoJson(json: JsonObject | GeoJSON) {
+      const geojson = json as GeoJSON;
       if (geojson.type === "Feature") {
         const featureProperties = (geojson as Feature).properties;
         if (featureProperties === null) {
@@ -227,24 +291,55 @@ export default function GeoJsonMixin<
 
     private createProtomapsImageryProvider(geoJson: JsonObject) {
       return new ProtomapsImageryProvider({
+        terria: this.terria,
         url: geoJson as any,
         paintRules: [
           {
-            dataLayer: "layer",
+            dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new PolygonSymbolizer({
               fill: this.stylesWithDefaults.fill.toCssColorString()
             }),
             minzoom: 0,
-            maxzoom: Infinity
+            maxzoom: Infinity,
+            filter: (props, feature) => {
+              return feature?.geomType === GeomType.Polygon;
+            }
           },
           {
-            dataLayer: "layer",
+            dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new LineSymbolizer({
               color: this.stylesWithDefaults.polygonStroke.toCssColorString(),
               width: this.stylesWithDefaults.strokeWidth
             }),
             minzoom: 0,
-            maxzoom: Infinity
+            maxzoom: Infinity,
+            filter: (props, feature) => {
+              return feature?.geomType === GeomType.Polygon;
+            }
+          },
+          {
+            dataLayer: GEOJSON_SOURCE_LAYER_NAME,
+            symbolizer: new LineSymbolizer({
+              color: this.stylesWithDefaults.polylineStroke.toCssColorString(),
+              width: this.stylesWithDefaults.strokeWidth
+            }),
+            minzoom: 0,
+            maxzoom: Infinity,
+            filter: (props, feature) => {
+              return feature?.geomType === GeomType.Line;
+            }
+          },
+          {
+            dataLayer: GEOJSON_SOURCE_LAYER_NAME,
+            symbolizer: new CircleSymbolizer({
+              radius: this.stylesWithDefaults.markerSize,
+              fill: this.stylesWithDefaults.markerColor.toCssColorString()
+            }),
+            minzoom: 0,
+            maxzoom: Infinity,
+            filter: (props, feature) => {
+              return feature?.geomType === GeomType.Point;
+            }
           }
         ],
         labelRules: []
@@ -532,7 +627,7 @@ export default function GeoJsonMixin<
         return undefined;
       }
       const discreteTimesMap: Map<string, DiscreteTimeAsJS> = new Map();
-      const addFeatureToDiscreteTimes = (geojson: GeoJsonObject) => {
+      const addFeatureToDiscreteTimes = (geojson: GeoJSON) => {
         if (geojson.type === "Feature") {
           let feature = geojson as Feature;
           if (
@@ -556,7 +651,7 @@ export default function GeoJsonMixin<
         }
       };
 
-      addFeatureToDiscreteTimes((this.readyData as unknown) as GeoJsonObject);
+      addFeatureToDiscreteTimes((this.readyData as unknown) as GeoJSON);
 
       return Array.from(discreteTimesMap.values());
     }
@@ -571,6 +666,16 @@ export default function GeoJsonMixin<
   }
   return GeoJsonMixin;
 }
+
+namespace GeoJsonMixin {
+  export interface Instance
+    extends InstanceType<ReturnType<typeof GeoJsonMixin>> {}
+  export function isMixedInto(model: any): model is Instance {
+    return model && model.isGeoJson;
+  }
+}
+
+export default GeoJsonMixin;
 
 function createPolylineFromPolygon(
   entities: EntityCollection,

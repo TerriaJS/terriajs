@@ -47,7 +47,7 @@ export default class StyleTraits extends ModelTraits {
   "stroke"?: string;
 
   @primitiveTrait({
-    type: "string",
+    type: "number",
     name: "stroke-opacity",
     description: "Stroke opacity."
   })
