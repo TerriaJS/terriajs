@@ -48,6 +48,20 @@ export interface ChartPoint {
   isSelected?: boolean;
 }
 
+/**
+ * Glyph style to use when charting points (eg for momentPoints & lineAndPoint charts).
+ * Move this declaration to MomentPointChart once it is converted to tsx.
+ */
+export enum GlyphStyle {
+  circle = "circle",
+  cross = "cross",
+  diamond = "diamond",
+  square = "square",
+  star = "star",
+  triangle = "triangle",
+  wye = "wye"
+}
+
 export interface ChartItem {
   name: string;
   categoryName?: string;
@@ -63,6 +77,7 @@ export interface ChartItem {
   updateIsSelectedInWorkbench: (isSelected: boolean) => void; // Unselect the chart item in workbench
   onClick?: any;
   pointOnMap?: LatLonHeight;
+  glyphStyle?: GlyphStyle;
 }
 
 function ChartableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {

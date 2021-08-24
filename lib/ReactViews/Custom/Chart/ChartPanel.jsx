@@ -10,7 +10,7 @@ import ChartView from "../../../Charts/ChartView.ts";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import Icon from "../../../Styled/Icon";
 import Loader from "../../Loader";
-import { Result } from "../../Tools/ItemSearchTool/SearchResults";
+import Result from "../../../Core/Result";
 import Chart from "./BottomDockChart";
 import Styles from "./chart-panel.scss";
 import ChartPanelDownloadButton from "./ChartPanelDownloadButton";

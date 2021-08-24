@@ -391,6 +391,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
             categoryName: this.name,
             key: `key${this.uniqueId}-${this.name}-${yColumn.name}`,
             type: this.chartType ?? "line",
+            glyphStyle: this.chartGlyphStyle ?? "circle",
             xAxis,
             points,
             domain: calculateDomain(points),

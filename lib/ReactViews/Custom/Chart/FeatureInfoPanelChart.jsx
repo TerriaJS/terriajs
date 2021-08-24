@@ -1,7 +1,7 @@
-import { AxisBottom, AxisLeft } from "@vx/axis";
-import { Group } from "@vx/group";
-import { withParentSize } from "@vx/responsive";
-import { scaleLinear, scaleTime } from "@vx/scale";
+import { AxisBottom, AxisLeft } from "@visx/axis";
+import { Group } from "@visx/group";
+import { withParentSize } from "@visx/responsive";
+import { scaleLinear, scaleTime } from "@visx/scale";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";

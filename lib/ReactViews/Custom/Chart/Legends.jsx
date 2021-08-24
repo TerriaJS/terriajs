@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { LegendOrdinal, LegendItem, LegendLabel } from "@vx/legend";
-import { scaleOrdinal } from "@vx/scale";
+import { LegendOrdinal, LegendItem, LegendLabel } from "@visx/legend";
+import { scaleOrdinal } from "@visx/scale";
 import Styles from "./legends.scss";
 
 export default class Legends extends React.PureComponent {

@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import { computed } from "mobx";
-import { Tooltip as VxTooltip } from "@vx/tooltip";
+import { Tooltip as VxTooltip } from "@visx/tooltip";
 import { CSSTransition } from "react-transition-group";
 import PropTypes from "prop-types";
 import React from "react";

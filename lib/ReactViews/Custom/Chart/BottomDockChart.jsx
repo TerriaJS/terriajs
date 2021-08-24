@@ -1,13 +1,13 @@
 import { observer } from "mobx-react";
 import { action, computed, observable } from "mobx";
-import { AxisLeft, AxisBottom } from "@vx/axis";
-import { RectClipPath } from "@vx/clip-path";
-import { localPoint } from "@vx/event";
-import { GridRows } from "@vx/grid";
-import { Group } from "@vx/group";
-import { withParentSize } from "@vx/responsive";
-import { scaleLinear, scaleTime } from "@vx/scale";
-import { Line } from "@vx/shape";
+import { AxisLeft, AxisBottom } from "@visx/axis";
+import { RectClipPath } from "@visx/clip-path";
+import { localPoint } from "@visx/event";
+import { GridRows } from "@visx/grid";
+import { Group } from "@visx/group";
+import { withParentSize } from "@visx/responsive";
+import { scaleLinear, scaleTime } from "@visx/scale";
+import { Line } from "@visx/shape";
 import PropTypes from "prop-types";
 import React from "react";
 import groupBy from "lodash-es/groupBy";
@@ -370,7 +370,9 @@ class Plot extends React.Component {
           // Find a basis item to stick the points on, if we can't find one, we
           // vertically center the points
           const basisItemIndex = chartItems.findIndex(
-            item => item.type === "line" && item.xAxis.scale === "time"
+            item =>
+              (item.type === "line" || item.type === "lineAndPoint") &&
+              item.xAxis.scale === "time"
           );
           return (
             <MomentPointsChart
@@ -381,6 +383,7 @@ class Plot extends React.Component {
               scales={initialScales[i]}
               basisItem={chartItems[basisItemIndex]}
               basisItemScales={initialScales[basisItemIndex]}
+              glyph={chartItem.glyphStyle}
             />
           );
         }
@@ -403,6 +406,7 @@ class Plot extends React.Component {
               id={sanitizeIdString(chartItem.key)}
               chartItem={chartItem}
               scales={initialScales[i]}
+              glyph={chartItem.glyphStyle}
             />
           );
         }
@@ -415,7 +419,7 @@ class XAxis extends React.PureComponent {
   static propTypes = {
     top: PropTypes.number.isRequired,
     scale: PropTypes.func.isRequired,
-    label: PropTypes.bool.isRequired
+    label: PropTypes.string.isRequired
   };
 
   render() {
