@@ -272,6 +272,7 @@ interface ConfigParameters {
 
 interface StartOptions {
   configUrl: string;
+  privateParametersUrl: string;
   configUrlHeaders?: {
     [key: string]: string;
   };
@@ -772,11 +773,43 @@ export default class Terria {
     const launchUrlForAnalytics =
       options.applicationUrl?.href || getUriWithoutPath(baseUri);
 
+    // Reading the private parameters from the file wwwroot/private_parameters.json
+    let privateParameters: JsonObject = {};
+    try {
+      privateParameters = (await loadJson5(
+        options.privateParametersUrl
+      )) as JsonObject;
+    } catch (error) {
+      console.warn("Could not read the file private_parameters.json");
+    }
+
     try {
       const config = await loadJson5(
         options.configUrl,
         options.configUrlHeaders
       );
+
+      // Combining the private parameters with the open parameters from the file wwwroot/config.json
+
+      if (config !== null && typeof config === "object") {
+        if ("parameters" in config && typeof config.parameters === "object") {
+          config.parameters = {
+            ...config.parameters,
+            ...privateParameters
+          };
+        } else if (!("parameters" in config) && !Array.isArray(config)) {
+          config.parameters = privateParameters;
+        } else {
+          console.warn(
+            "Could not merge the private and public parameters, because of bad configuration of config"
+          );
+        }
+      } else {
+        console.warn(
+          "Could not merge the private and public parameters, because config is null or not an object"
+        );
+      }
+
       // If it's a magda config, we only load magda config and parameters should never be a property on the direct
       // config aspect (it would be under the `terria-config` aspect)
       if (isJsonObject(config) && config.aspects) {
