@@ -1,12 +1,11 @@
 import { maxBy, minBy } from "lodash-es";
-import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import LatLonHeight from "../Core/LatLonHeight";
 import Model from "../Models/Definition/Model";
+import { GlyphStyle } from "../ReactViews/Custom/Chart/Glyphs";
 import ModelTraits from "../Traits/ModelTraits";
-import CatalogMemberMixin from "./CatalogMemberMixin";
-import MappableMixin from "./MappableMixin";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
+import MappableMixin from "./MappableMixin";
 
 type Scale = "linear" | "time";
 
@@ -46,20 +45,6 @@ export interface ChartPoint {
   x: number | Date;
   y: number;
   isSelected?: boolean;
-}
-
-/**
- * Glyph style to use when charting points (eg for momentPoints & lineAndPoint charts).
- * Move this declaration to MomentPointChart once it is converted to tsx.
- */
-export enum GlyphStyle {
-  circle = "circle",
-  cross = "cross",
-  diamond = "diamond",
-  square = "square",
-  star = "star",
-  triangle = "triangle",
-  wye = "wye"
 }
 
 export interface ChartItem {

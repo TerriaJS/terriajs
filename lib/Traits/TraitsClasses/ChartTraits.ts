@@ -1,8 +1,9 @@
-import { ChartItemType, GlyphStyle } from "../../ModelMixins/ChartableMixin";
+import { ChartItemType } from "../../ModelMixins/ChartableMixin";
+import Glyphs, { GlyphStyle } from "../../ReactViews/Custom/Chart/Glyphs";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import ModelTraits from "../ModelTraits";
 
-const availableChartGlyphStyles = Object.keys(GlyphStyle).join(", ");
+const availableChartGlyphStyles = Object.keys(Glyphs).join(", ");
 
 export default class ChartTraits extends ModelTraits {
   @primitiveTrait({
@@ -36,5 +37,5 @@ export default class ChartTraits extends ModelTraits {
     name: "Chart glyph style",
     description: `The glyph style to use for points plotted on the chart. Allowed values include ${availableChartGlyphStyles}. Default is "circle".`
   })
-  chartGlyphStyle?: string;
+  chartGlyphStyle?: GlyphStyle;
 }

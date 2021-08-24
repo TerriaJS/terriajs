@@ -6,25 +6,7 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import styled from "styled-components";
-import {
-  GlyphCircle,
-  GlyphCross,
-  GlyphDiamond,
-  GlyphSquare,
-  GlyphStar,
-  GlyphTriangle,
-  GlyphWye
-} from "@visx/glyph";
-
-const Glyphs = {
-  circle: GlyphCircle,
-  cross: GlyphCross,
-  diamond: GlyphDiamond,
-  square: GlyphSquare,
-  star: GlyphStar,
-  triangle: GlyphTriangle,
-  wye: GlyphWye
-};
+import Glyphs from "./Glyphs";
 
 @observer
 class MomentPointsChart extends React.Component {
