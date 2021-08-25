@@ -558,7 +558,7 @@ class Main extends React.Component<MainPropsType> {
                       </TextSpan>
                     </RawButton>
                   )}
-                  {this.leftDate && this.rightDate && (
+                  {isShowingDiff === false && this.leftDate && this.rightDate && (
                     <RawButton onClick={this.unsetDates}>
                       <TextSpan isLink small>
                         {t("diffTool.instructions.changeDates")}
