@@ -5,6 +5,8 @@ Change Log
 * Added `catalog-converter` support for v7 `#start` data.
 * add french Help button translation
 * Enable FeatureInfoSectionSpec tests
+* Fixed unnecessary model reloads or recomputing of `mapItems` when switching between story scenes.
+* Fixed story reset button.
 * [The next improvement]
 
 #### 8.0.0

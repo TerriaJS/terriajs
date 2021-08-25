@@ -1045,10 +1045,12 @@ export default class Terria {
       })
     );
 
-    if (!this.mainViewer.baseMap) {
-      // Note: there is no "await" here - as basemaps can take a while to load and there is no need to wait for them to load before rendering Terria
-      this.loadPersistedOrInitBaseMap();
-    }
+    runInAction(() => {
+      if (!this.mainViewer.baseMap) {
+        // Note: there is no "await" here - as basemaps can take a while to load and there is no need to wait for them to load before rendering Terria
+        this.loadPersistedOrInitBaseMap();
+      }
+    });
 
     if (errors.length > 0) {
       // Note - this will get wrapped up in a Result object because it is called in AsyncLoader
