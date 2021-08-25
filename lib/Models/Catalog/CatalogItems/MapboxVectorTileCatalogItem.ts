@@ -9,7 +9,7 @@ import {
   LineSymbolizer,
   PolygonSymbolizer,
   Rule as PaintRule
-} from "protomaps";
+} from "terriajs-protomaps";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import isDefined from "../../../Core/isDefined";
 import ProtomapsImageryProvider, {

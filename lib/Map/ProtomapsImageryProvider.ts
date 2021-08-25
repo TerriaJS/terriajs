@@ -19,7 +19,7 @@ import {
   View,
   Zxy,
   ZxySource
-} from "protomaps";
+} from "terriajs-protomaps";
 import { Cartographic } from "terriajs-cesium";
 import Credit from "terriajs-cesium/Source/Core/Credit";
 import DefaultProxy from "terriajs-cesium/Source/Core/DefaultProxy";

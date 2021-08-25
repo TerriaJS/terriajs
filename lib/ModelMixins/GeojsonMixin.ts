@@ -7,7 +7,7 @@ import {
   GeomType,
   LineSymbolizer,
   PolygonSymbolizer
-} from "protomaps";
+} from "terriajs-protomaps";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
