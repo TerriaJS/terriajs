@@ -478,7 +478,8 @@ export default class ProtomapsImageryProvider
     ctx.setTransform(this.tileWidth / 256, 0, 0, this.tileHeight / 256, 0, 0);
     ctx.clearRect(0, 0, 256, 256);
 
-    painter(ctx, [tile], labelData, this.paintRules, bbox, origin, false, "");
+    if (labelData)
+      painter(ctx, [tile], labelData, this.paintRules, bbox, origin, false, "");
   }
 
   async pickFeatures(

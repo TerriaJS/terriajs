@@ -7,7 +7,7 @@
       "module": "esNext",
       "moduleResolution": "node",
       "sourceMap": true,
-      "strict": false,
+      "strict": true,
       "allowJs": true,
       "jsx": "react",
       "esModuleInterop": true,
@@ -26,7 +26,9 @@
           "mapbox__geojson-merge",
           "mapbox__point-geometry",
           "mapbox__vector-tile",
+          "pmtiles",
           "terriajs-html2canvas",
+          "rbush",
           "urijs",
           "styled-components", // eventually it will be required anyway for SSR.
           //"react"
