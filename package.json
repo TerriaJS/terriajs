@@ -58,7 +58,7 @@
     "@visx/grid": "^2.1.0",
     "@visx/group": "^2.1.0",
     "@visx/legend": "^2.1.0",
-    "@visx/responsive": "^2.1.0",
+    "@vx/responsive": "^0.0.199",
     "@visx/scale": "^2.1.0",
     "@visx/shape": "^2.1.0",
     "@visx/tooltip": "^2.1.0",

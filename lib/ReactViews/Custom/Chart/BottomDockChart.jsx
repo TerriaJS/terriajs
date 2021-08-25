@@ -5,7 +5,7 @@ import { RectClipPath } from "@visx/clip-path";
 import { localPoint } from "@visx/event";
 import { GridRows } from "@visx/grid";
 import { Group } from "@visx/group";
-import { withParentSize } from "@visx/responsive";
+import { withParentSize } from "@vx/responsive";
 import { scaleLinear, scaleTime } from "@visx/scale";
 import { Line } from "@visx/shape";
 import PropTypes from "prop-types";
