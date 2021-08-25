@@ -11,6 +11,7 @@ import GeoJsonCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GeoJ
 import Terria from "../../../../lib/Models/Terria";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
 import { JsonObject } from "../../../../lib/Core/Json";
+import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 
 describe("GeoJsonCatalogItem", function() {
   let terria: Terria;
@@ -32,10 +33,14 @@ describe("GeoJsonCatalogItem", function() {
       );
       await geojson.loadMapItems();
       expect(geojson.mapItems.length).toEqual(1);
-      expect(geojson.mapItems[0].entities.values.length).toEqual(1);
-      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
       expect(
-        geojson.mapItems[0].entities.values[0].position
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values.length
+      ).toEqual(1);
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values[0].position
+      ).toBeDefined();
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values[0].position
           ?.getValue(JulianDate.now())
           .equalsEpsilon(Cartesian3.fromDegrees(148.0, -31.3), 0.0001)
       ).toBeTruthy("Doesn't match first location");
@@ -47,10 +52,14 @@ describe("GeoJsonCatalogItem", function() {
       );
       await geojson.loadMapItems();
       expect(geojson.mapItems.length).toEqual(1);
-      expect(geojson.mapItems[0].entities.values.length).toEqual(1);
-      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
       expect(
-        geojson.mapItems[0].entities.values[0].position
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values.length
+      ).toEqual(1);
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values[0].position
+      ).toBeDefined();
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values[0].position
           ?.getValue(JulianDate.now())
           .equalsEpsilon(Cartesian3.fromDegrees(151.0, -33.8), 0.0001)
       ).toBeTruthy("Doesn't match updated location");
@@ -66,8 +75,12 @@ describe("GeoJsonCatalogItem", function() {
       );
       await geojson.loadMapItems();
       expect(geojson.mapItems.length).toEqual(1);
-      expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
-      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values.length
+      ).toBeGreaterThan(0);
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values[0].position
+      ).toBeDefined();
     });
 
     it("works by string", async function() {
@@ -75,8 +88,12 @@ describe("GeoJsonCatalogItem", function() {
       geojson.setTrait(CommonStrata.user, "geoJsonString", geojsonString);
       await geojson.loadMapItems();
       expect(geojson.mapItems.length).toEqual(1);
-      expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
-      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values.length
+      ).toBeGreaterThan(0);
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values[0].position
+      ).toBeDefined();
     });
 
     it("works by data object", async function() {
@@ -84,16 +101,24 @@ describe("GeoJsonCatalogItem", function() {
       geojson.setTrait(CommonStrata.user, "geoJsonData", geojsonObject);
       await geojson.loadMapItems();
       expect(geojson.mapItems.length).toEqual(1);
-      expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
-      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values.length
+      ).toBeGreaterThan(0);
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values[0].position
+      ).toBeDefined();
     });
 
     it("works with zip", async function() {
       geojson.setTrait(CommonStrata.user, "url", "test/GeoJSON/bike_racks.zip");
       await geojson.loadMapItems();
       expect(geojson.mapItems.length).toEqual(1);
-      expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
-      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values.length
+      ).toBeGreaterThan(0);
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values[0].position
+      ).toBeDefined();
     });
     /* it("have default dataUrl and dataUrlType", function() {
        geojson.updateFromJson({
@@ -135,8 +160,12 @@ describe("GeoJsonCatalogItem", function() {
       );
       await geojson.loadMapItems();
       expect(geojson.mapItems.length).toEqual(1);
-      expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
-      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values.length
+      ).toBeGreaterThan(0);
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values[0].position
+      ).toBeDefined();
     });
 
     it("works by string", async function() {
@@ -144,8 +173,12 @@ describe("GeoJsonCatalogItem", function() {
       geojson.setTrait(CommonStrata.user, "geoJsonString", geojsonString);
       await geojson.loadMapItems();
       expect(geojson.mapItems.length).toEqual(1);
-      expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
-      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values.length
+      ).toBeGreaterThan(0);
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values[0].position
+      ).toBeDefined();
     });
 
     it("works by blob", async function() {
@@ -153,16 +186,24 @@ describe("GeoJsonCatalogItem", function() {
       geojson.setTrait(CommonStrata.user, "geoJsonData", <JsonObject>blob);
       await geojson.loadMapItems();
       expect(geojson.mapItems.length).toEqual(1);
-      expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
-      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values.length
+      ).toBeGreaterThan(0);
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values[0].position
+      ).toBeDefined();
     });
 
     it("works with zip", async function() {
       geojson.setTrait(CommonStrata.user, "url", "test/GeoJSON/cemeteries.zip");
       await geojson.loadMapItems();
       expect(geojson.mapItems.length).toEqual(1);
-      expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
-      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values.length
+      ).toBeGreaterThan(0);
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values[0].position
+      ).toBeDefined();
     });
   });
 
@@ -171,8 +212,12 @@ describe("GeoJsonCatalogItem", function() {
       geojson.setTrait(CommonStrata.user, "url", "test/GeoJSON/gme.geojson");
       await geojson.loadMapItems();
       expect(geojson.mapItems.length).toEqual(1);
-      expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
-      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values.length
+      ).toBeGreaterThan(0);
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values[0].position
+      ).toBeDefined();
     });
 
     it("works by string", async function() {
@@ -180,8 +225,12 @@ describe("GeoJsonCatalogItem", function() {
       geojson.setTrait(CommonStrata.user, "geoJsonString", geojsonString);
       await geojson.loadMapItems();
       expect(geojson.mapItems.length).toEqual(1);
-      expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
-      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values.length
+      ).toBeGreaterThan(0);
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values[0].position
+      ).toBeDefined();
     });
 
     it("works by blob", async function() {
@@ -189,16 +238,24 @@ describe("GeoJsonCatalogItem", function() {
       geojson.setTrait(CommonStrata.user, "geoJsonData", <JsonObject>blob);
       await geojson.loadMapItems();
       expect(geojson.mapItems.length).toEqual(1);
-      expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
-      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values.length
+      ).toBeGreaterThan(0);
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values[0].position
+      ).toBeDefined();
     });
 
     it("works with zip", async function() {
       geojson.setTrait(CommonStrata.user, "url", "test/GeoJSON/cemeteries.zip");
       await geojson.loadMapItems();
       expect(geojson.mapItems.length).toEqual(1);
-      expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
-      expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values.length
+      ).toBeGreaterThan(0);
+      expect(
+        (geojson.mapItems[0] as GeoJsonDataSource).entities.values[0].position
+      ).toBeDefined();
     });
   });
 
@@ -211,8 +268,8 @@ describe("GeoJsonCatalogItem", function() {
   //     );
   //     await geojson.loadMapItems();
   //     expect(geojson.mapItems.length).toEqual(1);
-  //     expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
-  //     expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+  //     expect((geojson.mapItems[0] as GeoJsonDataSource).entities.values.length).toBeGreaterThan(0);
+  //     expect((geojson.mapItems[0] as GeoJsonDataSource).entities.values[0].position).toBeDefined();
   //   });
   //
   //   it("works by string", async function() {
@@ -220,8 +277,8 @@ describe("GeoJsonCatalogItem", function() {
   //     geojson.setTrait(CommonStrata.user, "geoJsonString", geojsonString);
   //     await geojson.loadMapItems();
   //     expect(geojson.mapItems.length).toEqual(1);
-  //     expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
-  //     expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+  //     expect((geojson.mapItems[0] as GeoJsonDataSource).entities.values.length).toBeGreaterThan(0);
+  //     expect((geojson.mapItems[0] as GeoJsonDataSource).entities.values[0].position).toBeDefined();
   //   });
   //
   //   it("works by blob", async function() {
@@ -229,8 +286,8 @@ describe("GeoJsonCatalogItem", function() {
   //     geojson.setTrait(CommonStrata.user, "geoJsonData", <JsonObject>blob);
   //     await geojson.loadMapItems();
   //     expect(geojson.mapItems.length).toEqual(1);
-  //     expect(geojson.mapItems[0].entities.values.length).toBeGreaterThan(0);
-  //     expect(geojson.mapItems[0].entities.values[0].position).toBeDefined();
+  //     expect((geojson.mapItems[0] as GeoJsonDataSource).entities.values.length).toBeGreaterThan(0);
+  //     expect((geojson.mapItems[0] as GeoJsonDataSource).entities.values[0].position).toBeDefined();
   //   });
   // });
 
@@ -327,7 +384,8 @@ describe("GeoJsonCatalogItem", function() {
       geojson.setTrait(CommonStrata.user, "timeProperty", "year");
       await geojson.loadMapItems();
       expect(geojson.mapItems.length).toEqual(1);
-      const entities = geojson.mapItems[0].entities.values;
+      const entities = (geojson.mapItems[0] as GeoJsonDataSource).entities
+        .values;
       expect(entities.length).toEqual(2);
 
       const entity1 = entities[0];
@@ -358,7 +416,8 @@ describe("GeoJsonCatalogItem", function() {
       geojson.setTrait(CommonStrata.user, "heightProperty", "someProperty");
       await geojson.loadMapItems();
       expect(geojson.mapItems.length).toEqual(1);
-      const entities = geojson.mapItems[0].entities.values;
+      const entities = (geojson.mapItems[0] as GeoJsonDataSource).entities
+        .values;
       expect(entities.length).toEqual(2);
 
       const entity1 = entities[0];
@@ -417,7 +476,8 @@ describe("GeoJsonCatalogItem", function() {
       });
       await geojson.loadMapItems();
 
-      const entities = geojson.mapItems[0].entities.values;
+      const entities = (geojson.mapItems[0] as GeoJsonDataSource).entities
+        .values;
       console.log(entities);
       expect(entities.length).toEqual(5);
 
@@ -467,7 +527,8 @@ describe("GeoJsonCatalogItem", function() {
       });
 
       await geojson.loadMapItems();
-      const entity = geojson.mapItems[0].entities.values.find(
+      const entity = (geojson
+        .mapItems[0] as GeoJsonDataSource).entities.values.find(
         e => e.properties?.getValue(JulianDate.now()).NAME === name
       );
       expect(entity).toBeDefined();

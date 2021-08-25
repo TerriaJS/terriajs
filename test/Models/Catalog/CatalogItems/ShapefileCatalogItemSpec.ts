@@ -1,6 +1,7 @@
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import ShapefileCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/ShapefileCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
+import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 
 describe("ShapefileCatalogItem", function() {
   let terria: Terria;
@@ -21,8 +22,12 @@ describe("ShapefileCatalogItem", function() {
     );
     await shapefile.loadMapItems();
     expect(shapefile.mapItems.length).toEqual(1);
-    expect(shapefile.mapItems[0].entities.values.length).toBeGreaterThan(0);
-    expect(shapefile.mapItems[0].entities.values[0].position).toBeDefined();
+    expect(
+      (shapefile.mapItems[0] as GeoJsonDataSource).entities.values.length
+    ).toBeGreaterThan(0);
+    expect(
+      (shapefile.mapItems[0] as GeoJsonDataSource).entities.values[0].position
+    ).toBeDefined();
   });
 
   it("works by URL in CRS:84", async function() {
@@ -33,7 +38,11 @@ describe("ShapefileCatalogItem", function() {
     );
     await shapefile.loadMapItems();
     expect(shapefile.mapItems.length).toEqual(1);
-    expect(shapefile.mapItems[0].entities.values.length).toBeGreaterThan(0);
-    expect(shapefile.mapItems[0].entities.values[0].position).toBeDefined();
+    expect(
+      (shapefile.mapItems[0] as GeoJsonDataSource).entities.values.length
+    ).toBeGreaterThan(0);
+    expect(
+      (shapefile.mapItems[0] as GeoJsonDataSource).entities.values[0].position
+    ).toBeDefined();
   });
 });

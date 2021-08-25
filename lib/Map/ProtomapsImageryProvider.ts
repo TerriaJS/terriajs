@@ -20,7 +20,6 @@ import {
   Zxy,
   ZxySource
 } from "terriajs-protomaps";
-import { Cartographic } from "terriajs-cesium";
 import Credit from "terriajs-cesium/Source/Core/Credit";
 import DefaultProxy from "terriajs-cesium/Source/Core/DefaultProxy";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
@@ -36,6 +35,7 @@ import isDefined from "../Core/isDefined";
 import Terria from "../Models/Terria";
 import { ImageryProviderWithGridLayerSupport } from "./ImageryProviderLeafletGridLayer";
 import { observable, runInAction } from "mobx";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 
 type GeojsonVtFeature = {
   id: any;

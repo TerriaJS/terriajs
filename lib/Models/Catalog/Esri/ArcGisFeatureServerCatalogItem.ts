@@ -1,6 +1,5 @@
 import i18next from "i18next";
 import { computed, runInAction } from "mobx";
-import { GeoJsonDataSource } from "terriajs-cesium";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
@@ -36,6 +35,7 @@ import StratumOrder from "../../Definition/StratumOrder";
 import GeoJsonCatalogItem from "../CatalogItems/GeoJsonCatalogItem";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { getLineStyleCesium } from "./esriLineStyle";
+import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 
 const proj4 = require("proj4").default;
 
