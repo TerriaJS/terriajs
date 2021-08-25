@@ -332,8 +332,10 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new CircleSymbolizer({
-              radius: this.stylesWithDefaults.markerSize,
-              fill: this.stylesWithDefaults.markerColor.toCssColorString()
+              radius: this.stylesWithDefaults.markerSize / 5,
+              fill: this.stylesWithDefaults.markerColor.toCssColorString(),
+              width: this.stylesWithDefaults.strokeWidth,
+              stroke: this.stylesWithDefaults.stroke.toCssColorString()
             }),
             minzoom: 0,
             maxzoom: Infinity,
