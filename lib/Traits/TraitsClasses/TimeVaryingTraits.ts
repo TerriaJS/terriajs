@@ -8,7 +8,7 @@ export default class TimeVaryingTraits extends mixTraits(CatalogMemberTraits) {
     description: "The current time at which to show this dataset.",
     type: "string"
   })
-  currentTime?: string;
+  currentTime?: string | null;
 
   @primitiveTrait({
     name: "Initial Time Source",
