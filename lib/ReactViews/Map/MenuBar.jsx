@@ -6,7 +6,7 @@ import classNames from "classnames";
 import SettingPanel from "./Panels/SettingPanel";
 import SharePanel from "./Panels/SharePanel/SharePanel";
 import ToolsPanel from "./Panels/ToolsPanel/ToolsPanel";
-import StoryPanel from "./Panels/StoryPanel/StoryPanel";
+import StoryButton from "./StoryButton/StoryButton";
 import LangPanel from "./Panels/LangPanel/LangPanel";
 import { withTranslation } from "react-i18next";
 import Styles from "./menu-bar.scss";
@@ -78,7 +78,7 @@ const MenuBar = observer(props => {
           </li>
           <If condition={storyEnabled}>
             <li className={Styles.menuItem}>
-              <StoryPanel terria={props.terria} viewState={props.viewState} />
+              <StoryButton terria={props.terria} viewState={props.viewState} theme={props.theme} />
             </li>
           </If>
           <If condition={!props.viewState.useSmallScreenInterface}>

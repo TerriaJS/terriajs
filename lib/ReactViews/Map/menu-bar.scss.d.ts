@@ -11,7 +11,6 @@ interface CssExports {
   'menuBarWorkbenchClosed': string;
   'menuItem': string;
   'rightPanel': string;
-  'storyBtn': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

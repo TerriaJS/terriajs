@@ -82,25 +82,6 @@
   margin-left: $padding;
 }
 
-.storyBtn {
-  composes: btn from "../../Sass/common/_buttons.scss";
-  composes: btn--map from "../../Sass/common/_buttons.scss";
-
-  // &[aria-expanded="true"] {
-  //   background: $color-primary;
-  //   svg {
-  //     fill: #ffffff;
-  //   }
-  // }
-
-  &:hover,
-  &:focus {
-    svg {
-      fill: #ffffff;
-    }
-  }
-}
-
 .langBtn {
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn--map from "../../Sass/common/_buttons.scss";

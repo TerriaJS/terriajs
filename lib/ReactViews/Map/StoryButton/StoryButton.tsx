@@ -1,18 +1,22 @@
 import React from "react";
 import { Trans, useTranslation } from "react-i18next";
-import triggerResize from "../../../../Core/triggerResize";
-import Terria from "../../../../Models/Terria";
-import ViewState from "../../../../ReactViewModels/ViewState";
-import Icon from "../../../../Styled/Icon";
-import Text from "../../../../Styled/Text";
-import Prompt from "../../../HelpScreens/Prompt";
-import { useRefForTerria } from "../../../Hooks/useRefForTerria";
-import Styles from "./story-panel.scss";
+import { DefaultTheme } from "styled-components";
+
+import triggerResize from "../../../Core/triggerResize";
+import Terria from "../../../Models/Terria";
+import ViewState from "../../../ReactViewModels/ViewState";
+import Icon from "../../../Styled/Icon";
+import Text from "../../../Styled/Text";
+import Prompt from "../../Generic/Prompt";
+import { useRefForTerria } from "../../Hooks/useRefForTerria";
+
+import Styles from "./story-button.scss";
 
 interface Props {
-  terria: Terria,
-  viewState: ViewState
-  animationDuration: number
+  terria: Terria;
+  theme: DefaultTheme;
+  viewState: ViewState;
+  animationDuration: number;
 }
 
 const STORY_BUTTON_NAME = "MenuBarStoryButton";
@@ -51,11 +55,12 @@ const promptHtml = (hasStories: boolean) => (
   </Text>
 );
 
+
 export default (props: Props) => {
   const storyButtonRef = useRefForTerria(STORY_BUTTON_NAME, props.viewState);
   const storyEnabled = props.terria.configParameters.storyEnabled;
 
-    const dismissAction = () => {
+  const dismissAction = () => {
     props.viewState.toggleFeaturePrompt("story", false, true);
   };
 
@@ -73,7 +78,7 @@ export default (props: Props) => {
         onClick={onStoryButtonClick(props)}
         aria-expanded={props.viewState.storyBuilderShown}
         css={`
-          ${p =>
+          ${(p) =>
             p["aria-expanded"] &&
             `&:not(.foo) {
                       background: ${p.theme.colorPrimary};
