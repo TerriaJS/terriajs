@@ -7,6 +7,8 @@ Change Log
 * Enable FeatureInfoSectionSpec tests
 * Fixed unnecessary model reloads or recomputing of `mapItems` when switching between story scenes.
 * Fixed story reset button.
+* Fixed a bug in difftool where difference image was showing with zero opacity in some situations.
+* Fixed `CzmlCatalogItem` to react correctly to input data changes.
 * [The next improvement]
 
 #### 8.0.0
