@@ -69,6 +69,7 @@ Specifies various options for configuring TerriaJS:
 |`displayOneBrand`|no|**number**|`0`|Index of which `brandBarElements` to show for mobile header. This will only be used if `brandBarSmallElements` is undefined.|
 |`disableMyLocation`|no|**boolean**|undefined|True to disable the "Centre map at your current location" button.|
 |`disableSplitter`|no|**boolean**|undefined|True to disable the use of the splitter control.|
+|`enableGeojsonMvt`|no|**boolean**|false|Feature flag for experimental Geojson-Mapbox vector tiles. If falsy, all `GeoJsonMixin` models will render cesium primitives. If truthy, [`geojson-vt`](https://github.com/mapbox/geojson-vt) will be used to tile GeoJson into Mapbox vector-tiles.|
 |`experimentalFeatures`|no|**boolean**|undefined||
 |`magdaReferenceHeaders`|no|**[MagdaReferenceHeaders](#magdareferenceheaders)**|undefined|
 |`locationSearchBoundingBox`|no|**number**|undefined|

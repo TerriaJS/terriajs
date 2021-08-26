@@ -198,7 +198,7 @@ interface ConfigParameters {
 
   disablePedestrianMode?: boolean;
 
-  /** Temporary feature flag for experimental Geojson-Mapbox vector tiles */
+  /** Feature flag for experimental Geojson-Mapbox vector tiles. If falsy, all GeoJsonMixin items will render cesium primitives. If truthy, geojson-vt will be used to tile GeoJson into Mapbox vector-tiles */
   enableGeojsonMvt?: boolean;
 
   experimentalFeatures?: boolean;
