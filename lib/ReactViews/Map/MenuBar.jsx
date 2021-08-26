@@ -8,7 +8,6 @@ import SharePanel from "./Panels/SharePanel/SharePanel";
 import ToolsPanel from "./Panels/ToolsPanel/ToolsPanel";
 import StoryButton from "./StoryButton/StoryButton";
 import LangPanel from "./Panels/LangPanel/LangPanel";
-import Icon from "../../Styled/Icon";
 
 import { useTranslation } from "react-i18next";
 import Styles from "./menu-bar.scss";
@@ -16,6 +15,7 @@ import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 
 import withControlledVisibility from "../../ReactViews/HOCs/withControlledVisibility";
+import HelpButton from "./HelpButton/HelpButton";
 
 const StyledMenuBar = styled.div`
   pointer-events: none;
@@ -73,17 +73,7 @@ const MenuBar = observer(props => {
             <SettingPanel terria={props.terria} viewState={props.viewState} />
           </li>
           <li className={Styles.menuItem}>
-            <button
-              className={Styles.helpBtn}
-              onClick={evt => {
-                evt.preventDefault();
-                evt.stopPropagation();
-                props.viewState.showHelpPanel();
-              }}
-            >
-              <Icon glyph={Icon.GLYPHS.helpThick} />
-              <span>{t("helpPanel.btnText")}</span>
-            </button>
+            <HelpButton viewState={props.viewState} />
           </li>
 
           {props.terria.configParameters?.languageConfiguration?.enabled ? (

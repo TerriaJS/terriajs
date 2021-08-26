@@ -22,13 +22,10 @@ import PedestrianMode from "../Tools/PedestrianMode/PedestrianMode";
 
 // import Icon from "../Icon";
 import Box from "../../Styled/Box";
-import Text from "../../Styled/Text";
-import MapIconButton from "../MapIconButton/MapIconButton";
 import FeedbackButton from "../Feedback/FeedbackButton";
 import CloseToolButton from "./Navigation/CloseToolButton";
-import Prompt from "../Generic/Prompt";
-import { runInAction } from "mobx";
-import { withTranslation, useTranslation } from "react-i18next";
+
+import { withTranslation } from "react-i18next";
 import Cesium from "../../Models/Cesium";
 
 /**
@@ -49,19 +46,7 @@ const StyledMapNavigation = styled.div`
   `}
 `;
 
-const HelpIcon = withControlledVisibility(props => {
-  const { t } = useTranslation();
-  return (
-    <MapIconButton
-      expandInPlace
-      iconElement={() => <Icon glyph={Icon.GLYPHS.helpThick} />}
-      onClick={() => props.viewState.showHelpPanel()}
-      neverCollapse={props.viewState.featurePrompts.indexOf("help") >= 0}
-    >
-      {t("helpPanel.btnText")}
-    </MapIconButton>
-  );
-});
+
 // The map navigation region
 @observer
 class MapNavigation extends React.Component {
@@ -185,43 +170,6 @@ class MapNavigation extends React.Component {
                     />
                   </div>
                 )}
-              <If condition={!this.props.viewState.useSmallScreenInterface}>
-                <div className={Styles.control}>
-                  <HelpIcon
-                    viewState={this.props.viewState}
-                    elementConfig={this.props.terria.elements.get("help")}
-                  />
-                </div>
-                <Prompt
-                  content={
-                    <div>
-                      <Text bold extraLarge textLight>
-                        {t("helpPanel.promptMessage")}
-                      </Text>
-                    </div>
-                  }
-                  displayDelay={500}
-                  dismissText={t("helpPanel.dismissText")}
-                  dismissAction={() => {
-                    runInAction(() =>
-                      this.props.viewState.toggleFeaturePrompt(
-                        "help",
-                        false,
-                        true
-                      )
-                    );
-                  }}
-                  caretTopOffset={75}
-                  caretLeftOffset={265}
-                  caretSize={15}
-                  promptWidth={273}
-                  promptTopOffset={-20}
-                  promptLeftOffset={-330}
-                  isVisible={
-                    this.props.viewState.featurePrompts.indexOf("help") >= 0
-                  }
-                />
-              </If>
             </div>
           </Box>
         </Box>
