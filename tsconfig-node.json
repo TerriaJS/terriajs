@@ -28,7 +28,6 @@
           "mapbox__vector-tile",
           "pmtiles",
           "terriajs-html2canvas",
-          "rbush",
           "urijs",
           "styled-components", // eventually it will be required anyway for SSR.
           //"react"

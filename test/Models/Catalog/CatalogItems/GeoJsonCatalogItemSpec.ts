@@ -13,7 +13,7 @@ import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFr
 import { JsonObject } from "../../../../lib/Core/Json";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 
-describe("GeoJsonCatalogItem", function() {
+describe("GeoJsonCatalogItem - with cesium primitives", function() {
   let terria: Terria;
   let geojson: GeoJsonCatalogItem;
 
@@ -22,6 +22,7 @@ describe("GeoJsonCatalogItem", function() {
       baseUrl: "./"
     });
     geojson = new GeoJsonCatalogItem("test-geojson", terria);
+    geojson.setTrait(CommonStrata.user, "forceCesiumPrimitives", true);
   });
 
   describe("GeoJsonCatalogItem", function() {
@@ -451,6 +452,51 @@ describe("GeoJsonCatalogItem", function() {
     });
   });
 
+  describe("Per features styling", function() {
+    it("Applies styles to features according to their properties, respecting string case", async function() {
+      const name = "PETER FAGANS GRAVE";
+      const fill = "#0000ff";
+      runInAction(() => {
+        updateModelFromJson(geojson, CommonStrata.override, {
+          name: "test",
+          type: "geojson",
+          url: "test/GeoJSON/cemeteries.geojson",
+          perPropertyStyles: [
+            {
+              properties: { NAME: name },
+              style: {
+                fill: fill
+              },
+              caseSensitive: true
+            }
+          ]
+        });
+      });
+
+      await geojson.loadMapItems();
+      const entity = (geojson
+        .mapItems[0] as GeoJsonDataSource).entities.values.find(
+        e => e.properties?.getValue(JulianDate.now()).NAME === name
+      );
+      expect(entity).toBeDefined();
+      expect(entity?.properties?.getValue(JulianDate.now())?.fill).toEqual(
+        fill
+      );
+    });
+  });
+});
+
+describe("GeoJsonCatalogItem - with CZML template", function() {
+  let terria: Terria;
+  let geojson: GeoJsonCatalogItem;
+
+  beforeEach(function() {
+    terria = new Terria({
+      baseUrl: "./"
+    });
+    geojson = new GeoJsonCatalogItem("test-geojson", terria);
+  });
+
   describe("Support for czml templating", () => {
     it("Sets polygon height properties correctly", async () => {
       geojson.setTrait(CommonStrata.user, "url", "test/GeoJSON/points.geojson");
@@ -502,39 +548,6 @@ describe("GeoJsonCatalogItem", function() {
         )
       ).toBe(5);
       expect(entity2.properties?.someOtherProp?.getValue()).toBe("ok");
-    });
-  });
-
-  describe("Per features styling", function() {
-    it("Applies styles to features according to their properties, respecting string case", async function() {
-      const name = "PETER FAGANS GRAVE";
-      const fill = "#0000ff";
-      runInAction(() => {
-        updateModelFromJson(geojson, CommonStrata.override, {
-          name: "test",
-          type: "geojson",
-          url: "test/GeoJSON/cemeteries.geojson",
-          perPropertyStyles: [
-            {
-              properties: { NAME: name },
-              style: {
-                fill: fill
-              },
-              caseSensitive: true
-            }
-          ]
-        });
-      });
-
-      await geojson.loadMapItems();
-      const entity = (geojson
-        .mapItems[0] as GeoJsonDataSource).entities.values.find(
-        e => e.properties?.getValue(JulianDate.now()).NAME === name
-      );
-      expect(entity).toBeDefined();
-      expect(entity?.properties?.getValue(JulianDate.now())?.fill).toEqual(
-        fill
-      );
     });
   });
 });

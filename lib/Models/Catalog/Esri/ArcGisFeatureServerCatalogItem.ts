@@ -220,6 +220,11 @@ class FeatureServerStratum extends LoadableStratum(
       "attribution",
       item.attribution
     );
+    geoJsonItem.setTrait(
+      CommonStrata.definition,
+      "forceCesiumPrimitives",
+      true
+    );
     let tempEsriJson: any = null;
     const esriJson = await loadGeoJson(item);
     const geoJsonData = featureDataToGeoJson(esriJson.layers[0]);

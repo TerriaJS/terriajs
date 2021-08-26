@@ -12,6 +12,7 @@ describe("ShapefileCatalogItem", function() {
       baseUrl: "./"
     });
     shapefile = new ShapefileCatalogItem("test-shapefile", terria);
+    shapefile.setTrait(CommonStrata.user, "forceCesiumPrimitives", true);
   });
 
   it("works by URL in EPSG:28356", async function() {
