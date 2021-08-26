@@ -10,7 +10,6 @@ interface CssExports {
   'menuBar': string;
   'menuBarWorkbenchClosed': string;
   'menuItem': string;
-  'rightPanel': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

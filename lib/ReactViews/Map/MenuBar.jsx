@@ -63,24 +63,42 @@ const MenuBar = observer(props => {
           </If>
         </ul>
       </section>
-
+      {/*(settings | help | lang ) (story) (share/print)*/}
       <section className={classNames(Styles.flex)}>
         <ul className={classNames(Styles.menu)}>
           <li className={Styles.menuItem}>
             <SettingPanel terria={props.terria} viewState={props.viewState} />
           </li>
           <li className={Styles.menuItem}>
-            <SharePanel
-              terria={props.terria}
-              viewState={props.viewState}
-              animationDuration={props.animationDuration}
-            />
+            Halp
           </li>
-          <If condition={storyEnabled}>
+
+          {props.terria.configParameters?.languageConfiguration?.enabled ? (
+            <li className={Styles.menuItem}>
+              <LangPanel
+                terria={props.terria}
+                smallScreen={props.viewState.useSmallScreenInterface}
+              />
+            </li>
+        ) : null}
+        </ul>
+        <If condition={storyEnabled}>
+          <ul className={classNames(Styles.menu)}>
+
             <li className={Styles.menuItem}>
               <StoryButton terria={props.terria} viewState={props.viewState} theme={props.theme} />
             </li>
+          </ul>
           </If>
+          <ul className={classNames(Styles.menu)}>
+            <li className={Styles.menuItem}>
+              <SharePanel
+                  terria={props.terria}
+                  viewState={props.viewState}
+                  animationDuration={props.animationDuration}
+                />
+            </li>
+          </ul>
           <If condition={!props.viewState.useSmallScreenInterface}>
             <For each="element" of={menuItems} index="i">
               <li className={Styles.menuItem} key={i}>
@@ -88,17 +106,6 @@ const MenuBar = observer(props => {
               </li>
             </For>
           </If>
-        </ul>
-        {props.terria.configParameters?.languageConfiguration?.enabled ? (
-          <ul className={classNames(Styles.menu, Styles.rightPanel)}>
-            <li className={Styles.menuItem}>
-              <LangPanel
-                terria={props.terria}
-                smallScreen={props.viewState.useSmallScreenInterface}
-              />
-            </li>
-          </ul>
-        ) : null}
       </section>
     </StyledMenuBar>
   );
