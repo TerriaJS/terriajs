@@ -37,7 +37,7 @@ export async function activateStory(scene, terria) {
         try {
           await terria.applyInitData({
             initData: initSource,
-            replaceStratum: false,
+            replaceStratum: true,
             canUnsetFeaturePickingState: true
           });
         } catch (e) {
@@ -159,14 +159,7 @@ const StoryPanel = observer(
     },
 
     onCenterScene(story) {
-      if (story.shareData) {
-        this.props.terria
-          .updateFromStartData(
-            story.shareData,
-            `Story data: \`${story.title ?? story.id}\``
-          )
-          .raiseError(this.props.terria);
-      }
+      activateStory(story, this.props.terria);
     },
 
     goToPrevStory() {

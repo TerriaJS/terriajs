@@ -1104,6 +1104,7 @@
     "title": "Commençons"
   },
   "helpPanel": {
+    "btnText": "Assistance",
     "takeTour": "Visite guidée",
     "dismissText": "Compris, Merci !",
     "promptMessage": "Trouvez la visite guidée, des vidéos pratiques et d'autres contenus d'aide ici",

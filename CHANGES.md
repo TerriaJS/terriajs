@@ -6,6 +6,11 @@ Change Log
 * Add Mapbox Vector Tile support. This is using [protomaps.js](https://github.com/protomaps/protomaps.js) in the new `ProtomapsImageryProvider`. This includes subset of MVT style specification JSON support.
 * `MapboxVectorCanvasTileLayer` is now called `ImageryProviderLeafletGridLayer`
 * `CesiumTileLayer` is now called `ImageryProviderLeafletTileLayer`.
+* Added `catalog-converter` support for v7 `#start` data.
+* add french Help button translation
+* Enable FeatureInfoSectionSpec tests
+* Fixed unnecessary model reloads or recomputing of `mapItems` when switching between story scenes.
+* Fixed story reset button.
 * [The next improvement]
 
 #### 8.0.0
