@@ -55,7 +55,6 @@ const promptHtml = (hasStories: boolean) => (
   </Text>
 );
 
-
 export default (props: Props) => {
   const storyButtonRef = useRefForTerria(STORY_BUTTON_NAME, props.viewState);
   const storyEnabled = props.terria.configParameters.storyEnabled;
@@ -78,7 +77,7 @@ export default (props: Props) => {
         onClick={onStoryButtonClick(props)}
         aria-expanded={props.viewState.storyBuilderShown}
         css={`
-          ${(p) =>
+          ${p =>
             p["aria-expanded"] &&
             `&:not(.foo) {
                       background: ${p.theme.colorPrimary};
@@ -94,8 +93,7 @@ export default (props: Props) => {
       <Prompt
         centered
         isVisible={
-          // storyEnabled && props.viewState.featurePrompts.indexOf("story") >= 0
-          true
+          storyEnabled && props.viewState.featurePrompts.indexOf("story") >= 0
         }
         content={promptHtml(props.terria.stories.length > 0)}
         displayDelay={delayTime}
