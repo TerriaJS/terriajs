@@ -169,7 +169,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       ]);
     }
 
-    protected async forceLoadMapItems(): Promise<void> {
+    protected async forceLoadMetadata(): Promise<void> {
       if (this.strata.get(GeoJsonStratum.stratumName) === undefined) {
         GeoJsonStratum.load(this).then(stratum => {
           runInAction(() => {
@@ -177,6 +177,9 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           });
         });
       }
+    }
+
+    protected async forceLoadMapItems(): Promise<void> {
       try {
         const geoJson = await new Promise<JsonValue | undefined>(
           (resolve, reject) => {

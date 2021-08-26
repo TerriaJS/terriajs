@@ -1,9 +1,23 @@
 import Point from "@mapbox/point-geometry";
+import bbox from "@turf/bbox";
 import booleanIntersects from "@turf/boolean-intersects";
 import circle from "@turf/circle";
 import { feature } from "@turf/helpers";
 import { Feature, GeoJSON } from "geojson";
 import i18next from "i18next";
+import { observable, runInAction } from "mobx";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import Credit from "terriajs-cesium/Source/Core/Credit";
+import DefaultProxy from "terriajs-cesium/Source/Core/DefaultProxy";
+import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
+import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import CesiumEvent from "terriajs-cesium/Source/Core/Event";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import TileDiscardPolicy from "terriajs-cesium/Source/Scene/TileDiscardPolicy";
+import when from "terriajs-cesium/Source/ThirdParty/when";
 import {
   Bbox,
   Feature as ProtomapsFeature,
@@ -20,22 +34,9 @@ import {
   Zxy,
   ZxySource
 } from "terriajs-protomaps";
-import Credit from "terriajs-cesium/Source/Core/Credit";
-import DefaultProxy from "terriajs-cesium/Source/Core/DefaultProxy";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-import TileDiscardPolicy from "terriajs-cesium/Source/Scene/TileDiscardPolicy";
-import when from "terriajs-cesium/Source/ThirdParty/when";
 import isDefined from "../Core/isDefined";
 import Terria from "../Models/Terria";
 import { ImageryProviderWithGridLayerSupport } from "./ImageryProviderLeafletGridLayer";
-import { observable, runInAction } from "mobx";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 
 type GeojsonVtFeature = {
   id: any;
@@ -520,6 +521,7 @@ export default class ProtomapsImageryProvider
           units: "meters"
         }
       );
+      const bufferBbox = bbox(buffer);
 
       // Get array of all features
       let features: Feature[] = [];
@@ -536,7 +538,16 @@ export default class ProtomapsImageryProvider
 
       for (let index = 0; index < features.length; index++) {
         const feature = features[index];
-        if (booleanIntersects(feature, buffer)) {
+        const featureBbox = feature.bbox ?? bbox(feature);
+
+        // Filter by bounding box and then intersection with buffer
+        if (
+          Math.max(featureBbox[0], bufferBbox[0]) <=
+            Math.min(featureBbox[2], bufferBbox[2]) &&
+          Math.max(featureBbox[1], bufferBbox[1]) <=
+            Math.min(featureBbox[3], bufferBbox[3]) &&
+          booleanIntersects(feature, buffer)
+        ) {
           pickedFeatures.push(feature);
         }
       }
