@@ -295,8 +295,10 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     private createProtomapsImageryProvider(geoJson: JsonObject) {
       return new ProtomapsImageryProvider({
         terria: this.terria,
-        url: geoJson as any,
+        data: geoJson as any,
+        // Create paintRules from `stylesWithDefaults` (which applies defaults ontop of StyleTraits)
         paintRules: [
+          // Polygon fill
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new PolygonSymbolizer({
@@ -308,6 +310,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               return feature?.geomType === GeomType.Polygon;
             }
           },
+          // Polygon stroke
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new LineSymbolizer({
@@ -320,6 +323,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               return feature?.geomType === GeomType.Polygon;
             }
           },
+          // Line stroke
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new LineSymbolizer({
@@ -332,6 +336,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               return feature?.geomType === GeomType.Line;
             }
           },
+          // Point circle
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new CircleSymbolizer({
