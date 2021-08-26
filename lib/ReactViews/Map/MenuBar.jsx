@@ -8,7 +8,9 @@ import SharePanel from "./Panels/SharePanel/SharePanel";
 import ToolsPanel from "./Panels/ToolsPanel/ToolsPanel";
 import StoryButton from "./StoryButton/StoryButton";
 import LangPanel from "./Panels/LangPanel/LangPanel";
-import { withTranslation } from "react-i18next";
+import Icon from "../../Styled/Icon";
+
+import { useTranslation } from "react-i18next";
 import Styles from "./menu-bar.scss";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
@@ -34,6 +36,8 @@ const MenuBar = observer(props => {
 
   const storyEnabled = props.terria.configParameters.storyEnabled;
   const enableTools = props.terria.getUserProperty("tools") === "1";
+
+  const { t } = useTranslation();
 
   return (
     <StyledMenuBar
@@ -63,14 +67,23 @@ const MenuBar = observer(props => {
           </If>
         </ul>
       </section>
-      {/*(settings | help | lang ) (story) (share/print)*/}
       <section className={classNames(Styles.flex)}>
         <ul className={classNames(Styles.menu)}>
           <li className={Styles.menuItem}>
             <SettingPanel terria={props.terria} viewState={props.viewState} />
           </li>
           <li className={Styles.menuItem}>
-            Halp
+            <button
+              className={Styles.helpBtn}
+              onClick={evt => {
+                evt.preventDefault();
+                evt.stopPropagation();
+                props.viewState.showHelpPanel();
+              }}
+            >
+              <Icon glyph={Icon.GLYPHS.helpThick} />
+              <span>{t("helpPanel.btnText")}</span>
+            </button>
           </li>
 
           {props.terria.configParameters?.languageConfiguration?.enabled ? (
@@ -80,32 +93,35 @@ const MenuBar = observer(props => {
                 smallScreen={props.viewState.useSmallScreenInterface}
               />
             </li>
-        ) : null}
+          ) : null}
         </ul>
         <If condition={storyEnabled}>
           <ul className={classNames(Styles.menu)}>
-
             <li className={Styles.menuItem}>
-              <StoryButton terria={props.terria} viewState={props.viewState} theme={props.theme} />
+              <StoryButton
+                terria={props.terria}
+                viewState={props.viewState}
+                theme={props.theme}
+              />
             </li>
           </ul>
-          </If>
-          <ul className={classNames(Styles.menu)}>
-            <li className={Styles.menuItem}>
-              <SharePanel
-                  terria={props.terria}
-                  viewState={props.viewState}
-                  animationDuration={props.animationDuration}
-                />
+        </If>
+        <ul className={classNames(Styles.menu)}>
+          <li className={Styles.menuItem}>
+            <SharePanel
+              terria={props.terria}
+              viewState={props.viewState}
+              animationDuration={props.animationDuration}
+            />
+          </li>
+        </ul>
+        <If condition={!props.viewState.useSmallScreenInterface}>
+          <For each="element" of={menuItems} index="i">
+            <li className={Styles.menuItem} key={i}>
+              {element}
             </li>
-          </ul>
-          <If condition={!props.viewState.useSmallScreenInterface}>
-            <For each="element" of={menuItems} index="i">
-              <li className={Styles.menuItem} key={i}>
-                {element}
-              </li>
-            </For>
-          </If>
+          </For>
+        </If>
       </section>
     </StyledMenuBar>
   );
@@ -117,8 +133,7 @@ MenuBar.propTypes = {
   allBaseMaps: PropTypes.array, // Not implemented yet
   animationDuration: PropTypes.number,
   menuItems: PropTypes.arrayOf(PropTypes.element),
-  menuLeftItems: PropTypes.arrayOf(PropTypes.element),
-  t: PropTypes.func.isRequired
+  menuLeftItems: PropTypes.arrayOf(PropTypes.element)
 };
 
-export default withTranslation()(withControlledVisibility(MenuBar));
+export default withControlledVisibility(MenuBar);

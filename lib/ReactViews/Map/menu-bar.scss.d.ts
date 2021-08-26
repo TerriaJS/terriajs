@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'flex': string;
+  'helpBtn': string;
   'langBtn': string;
   'menu': string;
   'menu-bar': string;
