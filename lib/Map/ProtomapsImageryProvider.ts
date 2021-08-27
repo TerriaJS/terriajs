@@ -560,14 +560,16 @@ export default class ProtomapsImageryProvider
 
       for (let index = 0; index < features.length; index++) {
         const feature = features[index];
-        const featureBbox = feature.bbox ?? bbox(feature);
+        if (!feature.bbox) {
+          feature.bbox = bbox(feature);
+        }
 
         // Filter by bounding box and then intersection with buffer
         if (
-          Math.max(featureBbox[0], bufferBbox[0]) <=
-            Math.min(featureBbox[2], bufferBbox[2]) &&
-          Math.max(featureBbox[1], bufferBbox[1]) <=
-            Math.min(featureBbox[3], bufferBbox[3]) &&
+          Math.max(feature.bbox[0], bufferBbox[0]) <=
+            Math.min(feature.bbox[2], bufferBbox[2]) &&
+          Math.max(feature.bbox[1], bufferBbox[1]) <=
+            Math.min(feature.bbox[3], bufferBbox[3]) &&
           booleanIntersects(feature, buffer)
         ) {
           pickedFeatures.push(feature);
