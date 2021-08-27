@@ -26,7 +26,6 @@ const chartMinWidth = 110;
 const defaultGridColor = "#efefef";
 const labelColor = "#efefef";
 
-@withParentSize
 @observer
 class BottomDockChart extends React.Component {
   static propTypes = {
@@ -56,7 +55,7 @@ class BottomDockChart extends React.Component {
   }
 }
 
-export default BottomDockChart;
+export default withParentSize(BottomDockChart);
 
 @observer
 class Chart extends React.Component {

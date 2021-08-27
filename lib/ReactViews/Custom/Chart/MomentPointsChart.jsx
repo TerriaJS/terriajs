@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import styled from "styled-components";
 import Glyphs from "./Glyphs";
+import { GlyphCircle } from "@visx/glyph";
 
 @observer
 class MomentPointsChart extends React.Component {
@@ -96,13 +97,6 @@ class MomentPointsChart extends React.Component {
     );
   }
 }
-
-const StyledCircle = styled(Circle)`
-  &:hover {
-    opacity: 1;
-    fill: white;
-  }
-`;
 
 /** Interpolates the given source point {x, y} to the closet point in the `sortedPoints` array.
  *

@@ -4,6 +4,7 @@ import { LegendOrdinal, LegendItem, LegendLabel } from "@visx/legend";
 import { scaleOrdinal } from "@visx/scale";
 import Styles from "./legends.scss";
 import Glyphs from "./Glyphs";
+import { GlyphCircle } from "@visx/glyph";
 
 export default class Legends extends React.PureComponent {
   static propTypes = {
