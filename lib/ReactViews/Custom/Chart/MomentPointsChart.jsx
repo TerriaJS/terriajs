@@ -1,11 +1,9 @@
 import { scaleLinear } from "@visx/scale";
-import { Circle } from "@visx/shape";
 import { interpolateNumber as d3InterpolateNumber } from "d3-interpolate";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
-import styled from "styled-components";
 import Glyphs from "./Glyphs";
 import { GlyphCircle } from "@visx/glyph";
 
