@@ -34,6 +34,7 @@ import {
   Zxy,
   ZxySource
 } from "terriajs-protomaps";
+import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import Terria from "../Models/Terria";
 import { ImageryProviderWithGridLayerSupport } from "./ImageryProviderLeafletGridLayer";
@@ -511,23 +512,38 @@ export default class ProtomapsImageryProvider
     // If view is set - this means we are using actual vector tiles (that is not GeoJson object)
     // So we use this.view.queryFeatures
     if (this.view) {
-      return this.view
-        .queryFeatures(
-          CesiumMath.toDegrees(longitude),
-          CesiumMath.toDegrees(latitude),
-          level
-        )
-        .map(f => {
-          const featureInfo = new ImageryLayerFeatureInfo();
+      // Get list of vector tile layers which are rendered
+      const renderedLayers = [...this.paintRules, ...this.labelRules].map(
+        r => r.dataLayer
+      );
 
-          featureInfo.properties = f.properties;
-          featureInfo.position = new Cartographic(longitude, latitude);
+      return filterOutUndefined(
+        this.view
+          .queryFeatures(
+            CesiumMath.toDegrees(longitude),
+            CesiumMath.toDegrees(latitude),
+            level
+          )
+          .map(f => {
+            // Only create FeatureInfo for visible features with properties
+            if (
+              !f.properties ||
+              f.properties === {} ||
+              !renderedLayers.includes(f.layerName)
+            )
+              return;
 
-          featureInfo.configureDescriptionFromProperties(f.properties);
-          featureInfo.configureNameFromProperties(f.properties);
+            const featureInfo = new ImageryLayerFeatureInfo();
 
-          return featureInfo;
-        });
+            featureInfo.properties = f.properties;
+            featureInfo.position = new Cartographic(longitude, latitude);
+
+            featureInfo.configureDescriptionFromProperties(f.properties);
+            featureInfo.configureNameFromProperties(f.properties);
+
+            return featureInfo;
+          })
+      );
       // No view is set and we have geoJSON object
       // So we pick feautures manually
     } else if (
