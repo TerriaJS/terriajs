@@ -53,7 +53,7 @@ export default function createRegionMappedImageryProvider(
     styleFunc: function(feature: any) {
       const regionId = feature.properties[regionType.uniqueIdProp];
 
-      let rowNumber = getImageryLayerFilteredRows(
+      let rowNumber = getImageryLayerFilteredRow(
         style,
         currentTimeRows,
         valuesAsRegions.regionIdToRowNumbersMap.get(regionId)
@@ -96,7 +96,7 @@ export default function createRegionMappedImageryProvider(
 /**
  * Filters row numbers by time (if applicable) - for a given region mapped ImageryLayer
  */
-const getImageryLayerFilteredRows = action(
+const getImageryLayerFilteredRow = action(
   (
     style: TableStyle,
     currentTimeRows: number[] | undefined,
@@ -156,20 +156,20 @@ const getImageryLayerFeatureInfo = action(
           feature.properties[regionType.uniqueIdProp]
         ) ?? [];
 
-      const filteredRowIds = getImageryLayerFilteredRows(
+      const rowId = getImageryLayerFilteredRow(
         style,
         currentTimeRows,
         regionRows
       );
 
-      if (!filteredRowIds) return;
+      if (!isDefined(rowId)) return;
 
       style.tableModel.tableColumns;
 
       const rowObject = style.tableModel.tableColumns.reduce<{
         [key: string]: string | number | null;
       }>((obj, column) => {
-        obj[column.title] = column.valueFunctionForType(filteredRowIds);
+        obj[column.title] = column.valueFunctionForType(rowId);
 
         return obj;
       }, {});
