@@ -220,16 +220,20 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         // - Cesium primitives
 
         // Only use MapboxVectorTiles (through geojson-vt and protomaps.js) if enabled and not using unsupported traits
-        const useMvt =
-          !this.forceCesiumPrimitives &&
-          this.terria.configParameters.enableGeojsonMvt &&
-          !isDefined(this.stylesWithDefaults.markerSymbol) &&
-          !isDefined(this.timeProperty) &&
-          !isDefined(this.heightProperty) &&
-          (!isDefined(this.perPropertyStyles) ||
-            this.perPropertyStyles.length === 0);
+        const useMvt = runInAction(
+          () =>
+            !this.forceCesiumPrimitives &&
+            this.terria.configParameters.enableGeojsonMvt &&
+            !isDefined(this.stylesWithDefaults().markerSymbol) &&
+            !isDefined(this.timeProperty) &&
+            !isDefined(this.heightProperty) &&
+            (!isDefined(this.perPropertyStyles) ||
+              this.perPropertyStyles.length === 0)
+        );
 
-        if (isDefined(this.czmlTemplate)) {
+        const czmlTempalte = runInAction(() => this.czmlTemplate);
+
+        if (isDefined(czmlTempalte)) {
           this._dataSource = await this.loadCzmlDataSource(geoJsonWgs84);
         } else if (useMvt) {
           this._imageryProvider = this.createProtomapsImageryProvider(
@@ -293,6 +297,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     }
 
     private createProtomapsImageryProvider(geoJson: JsonObject) {
+      const styles = this.stylesWithDefaults();
       return new ProtomapsImageryProvider({
         terria: this.terria,
         data: geoJson as any,
@@ -302,7 +307,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new PolygonSymbolizer({
-              fill: this.stylesWithDefaults.fill.toCssColorString()
+              fill: styles.fill.toCssColorString()
             }),
             minzoom: 0,
             maxzoom: Infinity,
@@ -314,8 +319,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new LineSymbolizer({
-              color: this.stylesWithDefaults.polygonStroke.toCssColorString(),
-              width: this.stylesWithDefaults.strokeWidth
+              color: styles.polygonStroke.toCssColorString(),
+              width: styles.strokeWidth
             }),
             minzoom: 0,
             maxzoom: Infinity,
@@ -327,8 +332,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new LineSymbolizer({
-              color: this.stylesWithDefaults.polylineStroke.toCssColorString(),
-              width: this.stylesWithDefaults.strokeWidth
+              color: styles.polylineStroke.toCssColorString(),
+              width: styles.strokeWidth
             }),
             minzoom: 0,
             maxzoom: Infinity,
@@ -340,10 +345,10 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new CircleSymbolizer({
-              radius: this.stylesWithDefaults.markerSize / 5,
-              fill: this.stylesWithDefaults.markerColor.toCssColorString(),
-              width: this.stylesWithDefaults.strokeWidth,
-              stroke: this.stylesWithDefaults.stroke.toCssColorString()
+              radius: styles.markerSize / 5,
+              fill: styles.markerColor.toCssColorString(),
+              width: styles.strokeWidth,
+              stroke: styles.stroke.toCssColorString()
             }),
             minzoom: 0,
             maxzoom: Infinity,
@@ -368,7 +373,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         );
       }
 
-      const czmlTemplate = toJS(this.czmlTemplate);
+      const czmlTemplate = runInAction(() => toJS(this.czmlTemplate));
 
       const rootCzml = [
         {
@@ -408,7 +413,9 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return CzmlDataSource.load(rootCzml);
     }
 
-    private get stylesWithDefaults() {
+    /** Note, this is not reactive */
+    @action
+    private stylesWithDefaults() {
       const style = this.style;
 
       const options = {
@@ -439,7 +446,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         options.fill.alpha = 0.75;
       }
 
-      return options;
+      return toJS(options);
     }
 
     private loadGeoJsonDataSource(
@@ -458,7 +465,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       const now = JulianDate.now();
 
       return makeRealPromise<GeoJsonDataSource>(
-        GeoJsonDataSource.load(geoJson, this.stylesWithDefaults)
+        GeoJsonDataSource.load(geoJson, this.stylesWithDefaults())
       ).then(dataSource => {
         const entities = dataSource.entities;
         for (let i = 0; i < entities.values.length; ++i) {
@@ -494,13 +501,12 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             }
           }
 
+          const styles = this.stylesWithDefaults();
+
           // Billboard
-          if (
-            isDefined(entity.billboard) &&
-            isDefined(this.stylesWithDefaults.markerUrl)
-          ) {
+          if (isDefined(entity.billboard) && isDefined(styles.markerUrl)) {
             entity.billboard = new BillboardGraphics({
-              image: new ConstantProperty(this.stylesWithDefaults.markerUrl),
+              image: new ConstantProperty(styles.markerUrl),
               width:
                 properties && properties["marker-width"]
                   ? new ConstantProperty(properties["marker-width"])
@@ -513,7 +519,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
                 properties && properties["marker-angle"]
                   ? new ConstantProperty(properties["marker-angle"])
                   : undefined,
-              heightReference: this.stylesWithDefaults.clampToGround
+              heightReference: styles.clampToGround
                 ? new ConstantProperty(HeightReference.RELATIVE_TO_GROUND)
                 : undefined
             });
@@ -523,14 +529,14 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           } else if (
             isDefined(entity.billboard) &&
             (!properties || !isDefined(properties["marker-symbol"])) &&
-            !isDefined(this.stylesWithDefaults.markerSymbol)
+            !isDefined(styles.markerSymbol)
           ) {
             entity.point = new PointGraphics({
               color: new ConstantProperty(
                 getColor(
                   defaultValue(
                     properties && properties["marker-color"]?.getValue(),
-                    this.stylesWithDefaults.markerColor
+                    styles.markerColor
                   )
                 )
               ),
@@ -539,25 +545,25 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
                   parseMarkerSize(
                     properties && properties["marker-size"]?.getValue()
                   ),
-                  this.stylesWithDefaults.markerSize / 2
+                  styles.markerSize / 2
                 )
               ),
               outlineWidth: new ConstantProperty(
                 defaultValue(
                   properties && properties["stroke-width"]?.getValue(),
-                  this.stylesWithDefaults.strokeWidth
+                  styles.strokeWidth
                 )
               ),
               outlineColor: new ConstantProperty(
                 getColor(
                   defaultValue(
                     properties && properties.stroke?.getValue(),
-                    this.stylesWithDefaults.polygonStroke
+                    styles.polygonStroke
                   )
                 )
               ),
               heightReference: new ConstantProperty(
-                this.stylesWithDefaults.clampToGround
+                styles.clampToGround
                   ? HeightReference.RELATIVE_TO_GROUND
                   : undefined
               )
