@@ -3,6 +3,7 @@ import ColorMap from "./ColorMap";
 
 export interface ContinuousColorMapOptions {
   readonly nullColor: Readonly<Color>;
+  readonly outlierColor: Readonly<Color>;
   readonly minValue: number;
   readonly maxValue: number;
   readonly colorScale: (t: number) => string;
@@ -11,6 +12,7 @@ export interface ContinuousColorMapOptions {
 export default class ContinuousColorMap extends ColorMap {
   readonly colorScale: (t: number) => string;
   readonly nullColor: Readonly<Color>;
+  readonly outlierColor: Readonly<Color>;
   readonly minValue: number;
   readonly maxValue: number;
 
@@ -27,6 +29,7 @@ export default class ContinuousColorMap extends ColorMap {
 
     this.colorScale = options.colorScale;
     this.nullColor = options.nullColor;
+    this.outlierColor = options.outlierColor;
     this.minValue = options.minValue;
     this.maxValue = options.maxValue;
   }
@@ -35,6 +38,9 @@ export default class ContinuousColorMap extends ColorMap {
     if (typeof value !== "number") {
       return this.nullColor;
     }
+
+    if (value > this.maxValue || value < this.minValue)
+      return this.outlierColor;
 
     return Color.fromCssColorString(
       this.colorScale((value - this.minValue) / (this.maxValue - this.minValue))
