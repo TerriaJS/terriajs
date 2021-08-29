@@ -3,6 +3,7 @@ import bbox from "@turf/bbox";
 import i18next from "i18next";
 import { clone } from "lodash-es";
 import { action, computed, observable, runInAction } from "mobx";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import {
   json_style,
   LabelRule,
@@ -10,8 +11,10 @@ import {
   PolygonSymbolizer,
   Rule as PaintRule
 } from "terriajs-protomaps";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import isDefined from "../../../Core/isDefined";
+import { JsonObject } from "../../../Core/Json";
+import loadJson from "../../../Core/loadJson";
+import TerriaError from "../../../Core/TerriaError";
 import ProtomapsImageryProvider, {
   GeojsonSource
 } from "../../../Map/ProtomapsImageryProvider";
@@ -28,24 +31,44 @@ import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 class MapboxVectorTileLoadableStratum extends LoadableStratum(
   MapboxVectorTileCatalogItemTraits
 ) {
   static stratumName = "MapboxVectorTileLoadable";
 
-  constructor(readonly item: MapboxVectorTileCatalogItem) {
+  constructor(
+    readonly item: MapboxVectorTileCatalogItem,
+    readonly styleJson: JsonObject | undefined
+  ) {
     super();
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
     return new MapboxVectorTileLoadableStratum(
-      newModel as MapboxVectorTileCatalogItem
+      newModel as MapboxVectorTileCatalogItem,
+      this.styleJson
     ) as this;
   }
 
   static async load(item: MapboxVectorTileCatalogItem) {
-    return new MapboxVectorTileLoadableStratum(item);
+    let styleJson: JsonObject | undefined;
+    if (item.styleUrl) {
+      try {
+        styleJson = await loadJson(proxyCatalogItemUrl(item, item.styleUrl));
+      } catch (e) {
+        throw TerriaError.from(
+          e,
+          `Failed to load style JSON from url ${item.styleUrl}`
+        );
+      }
+    }
+    return new MapboxVectorTileLoadableStratum(item, styleJson);
+  }
+
+  get style() {
+    return this.styleJson;
   }
 
   get opacity() {

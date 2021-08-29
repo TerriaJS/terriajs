@@ -77,6 +77,13 @@ For example:
 
   @primitiveTrait({
     type: "string",
+    name: "Style URL",
+    description: `URL to JSON file for styling. See \`style\` trait for more info.`
+  })
+  styleUrl?: string;
+
+  @primitiveTrait({
+    type: "string",
     name: "idProperty",
     description: "The name of the property that is a unique ID for features."
   })
