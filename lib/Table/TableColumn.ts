@@ -507,7 +507,7 @@ export default class TableColumn {
   @computed
   get valuesAsRegions(): ColumnValuesAsRegions {
     const values = this.values;
-    const map = new Map<string, number | number[]>();
+    const map = new Map<number, number | number[]>();
 
     const regionType = this.regionType;
     if (!isDefined(regionType) || !regionType.loaded) {
@@ -522,8 +522,8 @@ export default class TableColumn {
       };
     }
 
-    const regionIds: (string | number | null)[] = [];
-    const uniqueRegionIds = new Set<number | string>();
+    const regionIds: (number | null)[] = [];
+    const uniqueRegionIds = new Set<number>();
     let numberOfValidRegions = 0;
     let numberOfNonRegions = 0;
     let numberOfRegionsWithMultipleRows = 0;
@@ -531,26 +531,25 @@ export default class TableColumn {
     for (let i = 0; i < values.length; ++i) {
       const value = values[i];
 
-      const regionIndex = this.regionType!.findRegionIndex(
+      let regionIndex: number | null = this.regionType!.findRegionIndex(
         value,
         this.regionDisambiguationColumn?.values?.[i]
       );
 
-      const regionProp =
-        this.regionType?.regions?.[regionIndex]?.regionProp ?? null;
+      regionIndex = regionIndex === -1 ? null : regionIndex;
 
-      regionIds.push(regionProp);
-      if (regionProp !== null) uniqueRegionIds.add(regionProp);
+      regionIds.push(regionIndex);
+      if (regionIndex !== null) uniqueRegionIds.add(regionIndex);
 
-      if (regionProp !== null) {
+      if (regionIndex !== null) {
         ++numberOfValidRegions;
 
-        const rows = map.get(regionProp.toString());
+        const rows = map.get(regionIndex);
         if (rows === undefined) {
-          map.set(regionProp.toString(), i);
+          map.set(regionIndex, i);
         } else if (typeof rows === "number") {
           numberOfRegionsWithMultipleRows++;
-          map.set(regionProp.toString(), [rows, i]);
+          map.set(regionIndex, [rows, i]);
         } else {
           rows.push(i);
         }

@@ -720,7 +720,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
         let currentTimeRows: number[] | undefined;
 
-        // TODO: this is already implemented in RegionProvider.prototype.mapRegionsToIndicesInto, but regionTypes require "loading" for this to work. I think the whole RegionProvider thing needs to be re-done in TypeScript at some point and then we can move stuff into that.
         // If time varying, get row indices which match
         if (
           input.currentTime &&
@@ -747,16 +746,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           url: regionType.server,
           layerName: regionType.layerName,
           styleFunc: function(feature: any) {
-            const featureRegion = feature.properties[regionType.regionProp];
-            const regionIdString =
-              featureRegion !== undefined && featureRegion !== null
-                ? featureRegion.toString()
-                : "";
+            const regionId = feature.properties[regionType.uniqueIdProp];
 
             let rowNumber = catalogItem.getImageryLayerFilteredRows(
               input,
               currentTimeRows,
-              valuesAsRegions.regionIdToRowNumbersMap.get(regionIdString)
+              valuesAsRegions.regionIdToRowNumbersMap.get(regionId)
             );
             let value: string | number | null = isDefined(rowNumber)
               ? valueFunction(rowNumber)
@@ -855,7 +850,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       if (
         isDefined(input.style.regionColumn) &&
         isDefined(input.style.regionColumn.regionType) &&
-        isDefined(input.style.regionColumn.regionType.regionProp)
+        isDefined(input.style.regionColumn.regionType.uniqueIdProp)
       ) {
         const regionType = input.style.regionColumn.regionType;
 
@@ -863,17 +858,17 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
         const regionIds =
           input.style.regionColumn.valuesAsRegions.regionIdToRowNumbersMap.get(
-            feature.properties[regionType.regionProp]
+            feature.properties[regionType.uniqueIdProp]
           ) ?? [];
 
-        const filteredRegionId = this.getImageryLayerFilteredRows(
+        const filteredRowIds = this.getImageryLayerFilteredRows(
           input,
           currentTimeRows,
           regionIds
         );
 
-        let d: JsonObject | null = isDefined(filteredRegionId)
-          ? this.getRowValues(filteredRegionId)
+        let d: JsonObject | null = isDefined(filteredRowIds)
+          ? this.getRowValues(filteredRowIds)
           : null;
 
         if (d === null) return;
