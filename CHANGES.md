@@ -9,6 +9,9 @@ Change Log
 * `tableMixin.loadRegionProviderList()` is now called in `tableMixin.forceLoadMapItems()` instead of `mappableMixin.loadMapItems()`
 * Add TableColumn and TableStyle `ready` computed property. Columns will only be rendered if `ready` is `true`. At the moment it is only used to wait until `loadRegionIDs` has finished
 * Fix `ChartPanel` import `Result` bug.
+* Enable FeatureInfoSectionSpec tests
+* Fixed unnecessary model reloads or recomputing of `mapItems` when switching between story scenes.
+* Fixed story reset button.
 * [The next improvement]
 
 #### 8.0.0

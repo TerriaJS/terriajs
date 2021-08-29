@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed } from "mobx";
+import { computed, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
@@ -119,11 +119,13 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
      */
     async loadMapItems(force?: boolean): Promise<Result<void>> {
       try {
-        if (this.shouldShowInitialMessage) {
-          // Don't await the initialMessage because this causes cyclic dependency between loading
-          //  and user interaction (see https://github.com/TerriaJS/terriajs/issues/5528)
-          this.showInitialMessage();
-        }
+        runInAction(() => {
+          if (this.shouldShowInitialMessage) {
+            // Don't await the initialMessage because this causes cyclic dependency between loading
+            //  and user interaction (see https://github.com/TerriaJS/terriajs/issues/5528)
+            this.showInitialMessage();
+          }
+        });
         if (CatalogMemberMixin.isMixedInto(this))
           (await this.loadMetadata()).throwIfError();
 
