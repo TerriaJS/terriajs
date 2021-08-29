@@ -176,9 +176,11 @@ export default class RegionProvider {
    */
   private _idIndex: RegionIndex = {};
 
-  // Cache the loadRegionID promises so they are not regenerated each time until this._regions is defined.
+  /** Cache the loadRegionID promises so they are not regenerated each time until this._regions is defined. */
+
   private _loadRegionIDsPromises: Promise<any>[] | undefined = undefined;
 
+  /** Flag to indicate if loadRegionID has finished */
   @observable
   private _loaded = false;
 
@@ -240,15 +242,6 @@ export default class RegionProvider {
     this.regionDisambigIdsFile = properties.regionDisambigIdsFile;
   }
 
-  /**
-The flow:
-
-1. CsvCatalogItem wants to check for region mapping, DataTable.checkForRegionVariable
-2. which calls RegionProviderList on regionmapping.json
-3. RPL loads all RPs, then provides cross references to dab providers
-4. CSVCI calls RPL.getRegionDetails, which asks each RP to identify a region variable
-5. Based on response, it assigns RP to the right variable, sets this.selected.region.
-*/
   setDisambigProperties(dp: RegionProvider | undefined) {
     this.disambigDataReplacements = dp?.dataReplacements;
     this.disambigServerReplacements = dp?.serverReplacements;
@@ -256,9 +249,7 @@ The flow:
   }
 
   /**
-   * Given an entry from the region mapping config, load the IDs that correspond to it, and possibly to disambiguation properties.
-   *
-   * @return Promise with no return value.
+   * Given an entry from the region mapping config, load the IDs that correspond to it, and possibly the disambiguation properties.
    */
   @action
   async loadRegionIDs() {
@@ -300,8 +291,8 @@ The flow:
   /**
    * Returns the region variable of the given name, matching against the aliases provided.
    *
-   * @param {String} varNames Array of variable names.
-   * @returns {String} The name of the first column that matches any of the given aliases.
+   * @param {string[]} varNames Array of variable names.
+   * @returns {string} The name of the first column that matches any of the given aliases.
    */
   findRegionVariable(varNames: string[]) {
     return findVariableForAliases(varNames, [this.regionType, ...this.aliases]);
@@ -310,8 +301,8 @@ The flow:
   /**
    * If a disambiguation column is known for this provider, return a column matching its description.
    *
-   * @param {String} varNames Array of variable names.
-   * @returns {String} The name of the first column that matches any of the given disambiguation aliases.
+   * @param {string[]} varNames Array of variable names.
+   * @returns {string} The name of the first column that matches any of the given disambiguation aliases.
    */
   findDisambigVariable(varNames: string[]) {
     if (!isDefined(this.disambigAliases) || this.disambigAliases.length === 0) {
@@ -323,9 +314,8 @@ The flow:
   /**
    * Given a list of region IDs in feature ID order, apply server replacements if needed, and build the this._regions array.
    * If no propertyName is supplied, also builds this._idIndex (a lookup by attribute for performance).
-   * @private
-   * @param {RegionProvider} regionProvider The RegionProvider instance.
    * @param {Array} values An array of string or numeric region IDs, eg. [10050, 10110, 10150, ...] or ['2060', '2061', '2062', ...]
+   * @param {boolean} disambig True if processing region IDs for disambiguation
    */
   processRegionIds(values: number[] | string[], disambig: boolean) {
     // There is also generally a `layer` and `property` property in this file, which we ignore for now.
@@ -390,8 +380,6 @@ The flow:
 
   /**
    * Apply an array of regular expression replacements to a string. Also caches the applied replacements in regionProvider._appliedReplacements.
-   * @private
-   * @param {RegionProvider} regionProvider The RegionProvider instance.
    * @param {String} s The string.
    * @param {String} replacementsProp Name of a property containing [ [ regex, replacement], ... ], where replacement is a string which can contain '$1' etc.
    */
@@ -424,9 +412,8 @@ The flow:
 
   /**
    * Given a region code, try to find a region that matches it, using replacements, disambiguation, indexes and other wizardry.
-   * @private
-   * @param {RegionProvider} regionProvider The RegionProvider instance.
-   * @param {String} code Code to search for. Falsy codes return -1.
+   * @param {string | number} code Code to search for. Falsy codes return -1.
+   * @param {string | number | undefined} disambigCode Code to use if disambiguation is necessary
    * @returns {Number} Zero-based index in list of regions if successful, or -1.
    */
   findRegionIndex(
@@ -488,15 +475,6 @@ The flow:
     return -1;
   }
 }
-
-/**
- * Function interface for matching a URL to a {@link CatalogMember} constructor
- * for that URL.
- * @private
- * @callback RegionProvider~colorFunction
- * @param {Number} value The value for this region.
- * @returns {Number[]} Returns a colorArray in the form [r, g, b, a].
- */
 
 function findVariableForAliases(varNames: string[], aliases: string[]) {
   for (let j = 0; j < aliases.length; j++) {

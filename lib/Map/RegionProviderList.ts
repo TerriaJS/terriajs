@@ -1,16 +1,12 @@
 /**********************************************************************************************
 *  Region mapping support - turn CSVs into choropleths of regions like local government areas
 *  Implements most of https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au
-*  How this works:
-*  1. If there are 'lat' and 'lon' columns, use those instead to generate a point display.
-*  2. Look through all the column names in the CSV file until we find one that matches a defined region descriptor in
+*  1. Look through all the column names in the CSV file until we find one that matches a defined region descriptor in
       region mapping JSON file (not included in TerriaJS)
-*  3. Contact the WFS server defined in that file, fetch IDs for all regions of that type
+*  3. Fetch region IDS (using `regionIdsFile` URL)
 *  4. Based on values in the region variable column, generate a linear choropleth mapping
-*  5. Fetch specially prepared WMS tiles which are coloured with a unique colour per region.
-*  6. Recolor each tile, using the unique colour to determine its ID, then replacing that unique colour with a mapped color.
-*
-* Voilà - very fast client-side choroplething with no user data sent to servers, and no vector boundaries sent to client. */
+*  6. Recolor vector tile features
+*/
 
 import CorsProxy from "../Core/CorsProxy";
 import RegionProvider from "./RegionProvider";
@@ -22,7 +18,6 @@ import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
  * RegionProviderList encapsulates the regionMapping.json file and provides support for choosing the best region
  * provider for a given dataset.
  *
- * @alias RegionProviderList
  * @constructor
  * @param corsProxy A proxy to allow the region providers to make AJAX calls safely.
  */
@@ -77,8 +72,9 @@ export default class RegionProviderList {
    * You can optionally provide a prefered region variable name, and optionally its prefered type.
    * If specified, getRegionDetails will return that name as the first object in the returned array.
    *
-   * @param variableNames {String[]} Array of names of variables to choose amongst.
-   * @param variableNames {String[]} Array of names of variables to choose amongst.
+   * @param variableNames {string[]} Array of names of variables to choose amongst.
+   * @param preferedRegionVariableName {string} Prefered region variable name - this will be prioritised if there are multiple matches.
+   * @param preferedRegionType {string} Prefered region type - this will be prioritised if there are multiple matches.
    * @return {any[]} An array of objects with regionProvider (RegionProvider), regionVariable and disambigVariable properties, for each potential region variable in the list of names.
    */
   getRegionDetails(
