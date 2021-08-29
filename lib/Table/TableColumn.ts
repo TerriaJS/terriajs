@@ -692,6 +692,14 @@ export default class TableColumn {
     }
   }
 
+  /** Is column ready to be used.
+   * This will be false if regionType is not loaded
+   */
+  @computed
+  get ready() {
+    return !isDefined(this.regionType) || this.regionType.loaded;
+  }
+
   @computed
   get regionType(): RegionProvider | undefined {
     let regionProvider: RegionProvider | undefined;
@@ -719,6 +727,7 @@ export default class TableColumn {
       }
     }
 
+    // Load region IDs for region type
     regionProvider?.loadRegionIDs();
 
     return regionProvider;

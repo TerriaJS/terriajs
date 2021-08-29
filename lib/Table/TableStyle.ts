@@ -37,6 +37,24 @@ export default class TableStyle {
     this.tableModel = tableModel;
   }
 
+  /** Is style ready to be used.
+   * This will be false if any of dependent columns are not ready
+   */
+  @computed
+  get ready() {
+    return filterOutUndefined([
+      this.longitudeColumn,
+      this.latitudeColumn,
+      this.regionColumn,
+      this.timeColumn,
+      this.endTimeColumn,
+      this.xAxisColumn,
+      this.colorColumn,
+      this.pointSizeColumn,
+      ...(this.idColumns ?? [])
+    ]).every(col => col.ready);
+  }
+
   /**
    * Gets the ID of the style.
    */

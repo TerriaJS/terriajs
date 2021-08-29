@@ -254,12 +254,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      */
     @computed
     get mapItems(): (DataSource | ImageryParts)[] {
-      // Wait until regionType has finished loading
-      if (
-        isDefined(this.activeTableStyle.regionColumn?.regionType) &&
-        !this.activeTableStyle.regionColumn?.regionType?.loaded
-      )
-        return [];
+      // Wait for activeTableStyle to be ready
+      if (!this.activeTableStyle.ready) return [];
 
       const numRegions =
         this.activeTableStyle.regionColumn?.valuesAsRegions?.uniqueRegionIds

@@ -262,31 +262,39 @@ The flow:
    */
   @action
   async loadRegionIDs() {
-    if (this._regions.length > 0) {
-      return; // already loaded, so return insta-promise.
-    }
-    if (this.server === undefined) {
-      // technically this may not be a problem yet, but it will be when we want to actually fetch tiles.
-      throw new DeveloperError(
-        "No server for region mapping defined: " + this.regionType
-      );
-    }
-    // Check for a pre-calculated promise (which may not have resolved yet), and returned that if it exists.
-    if (!isDefined(this._loadRegionIDsPromises)) {
-      const fetchAndProcess = async (idListFile: string, disambig: boolean) => {
-        if (!isDefined(idListFile)) {
-          return;
-        }
+    try {
+      if (this._regions.length > 0) {
+        return; // already loaded, so return insta-promise.
+      }
+      if (this.server === undefined) {
+        // technically this may not be a problem yet, but it will be when we want to actually fetch tiles.
+        throw new DeveloperError(
+          "No server for region mapping defined: " + this.regionType
+        );
+      }
+      // Check for a pre-calculated promise (which may not have resolved yet), and returned that if it exists.
+      if (!isDefined(this._loadRegionIDsPromises)) {
+        const fetchAndProcess = async (
+          idListFile: string,
+          disambig: boolean
+        ) => {
+          if (!isDefined(idListFile)) {
+            return;
+          }
 
-        this.processRegionIds((await loadJson(idListFile)).values, disambig);
-      };
-      this._loadRegionIDsPromises = [
-        fetchAndProcess(this.regionIdsFile, false),
-        fetchAndProcess(this.regionDisambigIdsFile, true)
-      ];
+          this.processRegionIds((await loadJson(idListFile)).values, disambig);
+        };
+        this._loadRegionIDsPromises = [
+          fetchAndProcess(this.regionIdsFile, false),
+          fetchAndProcess(this.regionDisambigIdsFile, true)
+        ];
+      }
+      await Promise.all(this._loadRegionIDsPromises);
+    } catch (e) {
+      console.log(`Failed to load region IDS for ${this.regionType}`);
+    } finally {
+      runInAction(() => (this._loaded = true));
     }
-    await Promise.all(this._loadRegionIDsPromises);
-    runInAction(() => (this._loaded = true));
   }
 
   /**
