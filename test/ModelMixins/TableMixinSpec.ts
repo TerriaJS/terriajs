@@ -498,7 +498,7 @@ describe("TableMixin", function() {
       expect(
         item.activeTableStyle.regionColumn?.valuesAsRegions.uniqueRegionIds
           .length
-      ).toBe(7);
+      ).toBe(8);
     });
   });
 });
