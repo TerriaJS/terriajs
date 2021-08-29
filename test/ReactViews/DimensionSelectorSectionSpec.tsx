@@ -178,7 +178,7 @@ describe("DimensionSelectorSection", function() {
       "build/TerriaJS/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json"
     ).andReturn({
       responseText: JSON.stringify(
-        require("../../../../wwwroot/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json")
+        require("../../wwwroot/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json")
       )
     });
 
