@@ -54,6 +54,14 @@ export default class TableColorStyleTraits extends ModelTraits {
   nullColor?: string;
 
   @primitiveTrait({
+    name: "Outlier Color",
+    description:
+      'The color to use when the value is considered an "outlier" (and therefore not shown on color scale), specified as a CSS color string. This will only apply if `zScoreFilter` is defined',
+    type: "string"
+  })
+  outlierColor?: string;
+
+  @primitiveTrait({
     name: "Region Color",
     description:
       "The color to use when the styling the region, specified as a CSS color string.",
@@ -173,4 +181,12 @@ export default class TableColorStyleTraits extends ModelTraits {
     type: LegendTraits
   })
   legend?: LegendTraits;
+
+  @primitiveTrait({
+    name: "Z-score filter",
+    description:
+      "Treat values outside of specifed z-score as outliers, and therefore do not include in color scale. This value is magnitude of z-score - it will apply to positive and negative z-scores. For example a value of `2` will treat all values that are 2 or more standard deviations from the mean as outliers.",
+    type: "number"
+  })
+  zScoreFilter?: number;
 }
