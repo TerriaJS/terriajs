@@ -727,6 +727,8 @@ export default class TableColumn {
     }
 
     // Load region IDs for region type
+    // Note: loadRegionIDs is called in TableMixin.forceLoadMapItems()
+    // So this will only load region IDs if style/regionType changes after initial loadMapItems
     regionProvider?.loadRegionIDs();
 
     return regionProvider;

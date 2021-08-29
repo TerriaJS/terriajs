@@ -614,6 +614,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           this.dataColumnMajor = dataColumnMajor;
         });
       }
+
+      // Load region IDS if region mapping
+      const activeRegionType = this.activeTableStyle.regionColumn?.regionType;
+      if (activeRegionType) {
+        await activeRegionType.loadRegionIDs();
+      }
     }
 
     /**
