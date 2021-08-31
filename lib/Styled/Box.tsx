@@ -42,7 +42,7 @@ interface IBoxPropsBase {
   alignItemsFlexEnd?: boolean;
   rightSelf?: boolean;
   column?: boolean;
-  wrap?: boolean;
+  flexWrap?: boolean;
   whiteSpace?: WhiteSpace;
   flex?: any;
   flexShrinkZero?: boolean;
@@ -133,7 +133,7 @@ export const Box = styled.div<IBoxProps>`
   ${props => props.rightSelf && `align-self: flex-end;`}
 
   ${props => props.column && `flex-direction: column;`}
-  ${props => props.wrap && `flex-wrap: wrap;`}
+  ${props => props.flexWrap && `flex-wrap: wrap;`}
 
   ${props => props.flex && `flex: ${props.flex};`}
   ${props => props.flexShrinkZero && `flex-shrink: 0;`}
