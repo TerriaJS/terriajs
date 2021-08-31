@@ -1138,6 +1138,9 @@
       "notCompatibleMessageI": "The MAGDA dataset does not have a distribution with the ID {{distributionId}} or it does not have a supported format.",
       "notCompatibleMessageII": "The MAGDA dataset does not have any distributions with a supported format."
     },
+    "terria-reference": {
+      "failedToLoadTarget": "Failed to load member from external catalog"
+    },
     "mapboxMap": {
       "name": "Mapbox Map"
     },
