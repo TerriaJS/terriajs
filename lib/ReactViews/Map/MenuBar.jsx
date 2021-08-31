@@ -9,7 +9,6 @@ import ToolsPanel from "./Panels/ToolsPanel/ToolsPanel";
 import StoryButton from "./StoryButton/StoryButton";
 import LangPanel from "./Panels/LangPanel/LangPanel";
 
-import { useTranslation } from "react-i18next";
 import Styles from "./menu-bar.scss";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
@@ -36,8 +35,6 @@ const MenuBar = observer(props => {
 
   const storyEnabled = props.terria.configParameters.storyEnabled;
   const enableTools = props.terria.getUserProperty("tools") === "1";
-
-  const { t } = useTranslation();
 
   return (
     <StyledMenuBar
