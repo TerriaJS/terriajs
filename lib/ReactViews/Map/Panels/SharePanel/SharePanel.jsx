@@ -595,8 +595,7 @@ const SharePanel = observer(
           modalWidth={modalWidth}
           smallScreen={this.props.viewState.useSmallScreenInterface}
           onDismissed={() => {
-            if (catalogShare)
-              this.props.viewState.shareModalIsVisible = false;
+            if (catalogShare) this.props.viewState.shareModalIsVisible = false;
           }}
           onUserClick={this.props.onUserClick}
         >

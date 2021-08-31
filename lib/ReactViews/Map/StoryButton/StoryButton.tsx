@@ -1,4 +1,4 @@
-import React, {Ref} from "react";
+import React, { Ref } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { DefaultTheme } from "styled-components";
 
@@ -60,7 +60,10 @@ const promptHtml = (hasStories: boolean) => (
 );
 
 export default (props: Props) => {
-  const storyButtonRef:Ref<HTMLButtonElement> = useRefForTerria(STORY_BUTTON_NAME, props.viewState);
+  const storyButtonRef: Ref<HTMLButtonElement> = useRefForTerria(
+    STORY_BUTTON_NAME,
+    props.viewState
+  );
   const storyEnabled = props.terria.configParameters.storyEnabled;
 
   const dismissAction = () => {
@@ -81,7 +84,7 @@ export default (props: Props) => {
         onClick={onStoryButtonClick(props)}
         aria-expanded={props.viewState.storyBuilderShown}
         css={`
-          ${(p:ButtonProps) =>
+          ${(p: ButtonProps) =>
             p["aria-expanded"] &&
             `&:not(.foo) {
                       background: ${p.theme.colorPrimary};

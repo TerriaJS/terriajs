@@ -50,9 +50,7 @@ export default (props: Props) => {
         promptWidth={273}
         promptTopOffset={50}
         promptLeftOffset={-100}
-        isVisible={
-          props.viewState.featurePrompts.indexOf("help") >= 0
-        }
+        isVisible={props.viewState.featurePrompts.indexOf("help") >= 0}
       />
     </div>
   );

@@ -46,7 +46,6 @@ const StyledMapNavigation = styled.div`
   `}
 `;
 
-
 // The map navigation region
 @observer
 class MapNavigation extends React.Component {
