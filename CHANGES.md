@@ -7,6 +7,7 @@ Change Log
 * Enable FeatureInfoSectionSpec tests
 * Fixed unnecessary model reloads or recomputing of `mapItems` when switching between story scenes.
 * Fixed story reset button.
+* Moved help button to the top menu
 * [The next improvement]
 
 #### 8.0.0
