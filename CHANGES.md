@@ -7,6 +7,7 @@ Change Log
 * Enable FeatureInfoSectionSpec tests
 * Fixed unnecessary model reloads or recomputing of `mapItems` when switching between story scenes.
 * Fixed story reset button.
+* Added `TerriaReference` item, useful for mounting a catalog tree from an external init file at any position in the current map's catalog tree.
 * [The next improvement]
 
 #### 8.0.0
