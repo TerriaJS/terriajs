@@ -220,7 +220,7 @@ export class GeojsonSource implements TileSource {
           }
 
           const feature: ProtomapsFeature = {
-            properties: f.tags,
+            props: f.tags,
             bbox,
             geomType: f.type,
             geom: transformedGeom,
@@ -527,19 +527,19 @@ export default class ProtomapsImageryProvider
           .map(f => {
             // Only create FeatureInfo for visible features with properties
             if (
-              !f.properties ||
-              f.properties === {} ||
+              !f.feature.props ||
+              f.feature.props === {} ||
               !renderedLayers.includes(f.layerName)
             )
               return;
 
             const featureInfo = new ImageryLayerFeatureInfo();
 
-            featureInfo.properties = f.properties;
+            featureInfo.properties = f.feature.props;
             featureInfo.position = new Cartographic(longitude, latitude);
 
-            featureInfo.configureDescriptionFromProperties(f.properties);
-            featureInfo.configureNameFromProperties(f.properties);
+            featureInfo.configureDescriptionFromProperties(f.feature.props);
+            featureInfo.configureNameFromProperties(f.feature.props);
 
             return featureInfo;
           })
