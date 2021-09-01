@@ -38,7 +38,6 @@ class RCStoryCreator extends React.Component {
       query: mutations.createStory,
       variables: { input: this.storyDetails }
     });
-    console.log("story created", newStory);
   }
   render() {
     return <div>Creator</div>;

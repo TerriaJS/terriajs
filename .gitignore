@@ -15,7 +15,7 @@ terriajs.pid
 package-lock.json
 *.swp
 
-#amplify
+#amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
 amplify/.config/local-*
 amplify/logs
@@ -23,7 +23,6 @@ amplify/mock-data
 amplify/backend/amplify-meta.json
 amplify/backend/awscloudformation
 amplify/backend/.temp
-amplify/team-provider-info.json
 build/
 dist/
 node_modules/
@@ -35,3 +34,4 @@ amplify-build-config.json
 amplify-gradle-config.json
 amplifytools.xcconfig
 .secret-*
+#amplify-do-not-edit-end

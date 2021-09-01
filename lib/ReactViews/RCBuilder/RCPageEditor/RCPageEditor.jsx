@@ -6,13 +6,15 @@ import { updatePage } from "../../../../api/graphql/mutations";
 import Styles from "../RCStoryEditor/RCStoryEditor.scss";
 import { useParams, withRouter, useHistory } from "react-router-dom";
 import { captureCurrentView, moveToSavedView } from "./ViewCapture";
+import RCPageContent from "./RCPageContent/RCPageContent";
 
 function RCPageEditor(props) {
   const [page, setPage] = useState(null);
+  const [scenarios, setScenarios] = useState([]);
   const [title, setTitle] = useState("");
   const [section, setSection] = useState("");
   const [mapView, setMapView] = useState(null);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState({ success: 0, message: "" });
   const history = useHistory();
 
   // get the page id from url
@@ -24,6 +26,8 @@ function RCPageEditor(props) {
       API.graphql(graphqlOperation(getPage, { id: pageID })).then(story => {
         const data = story.data.getPage;
         setPage(data);
+        // TODO : set scenarios when there is default page content
+        setScenarios(data.scenarios);
         setTitle(data.title);
         setSection(data.section);
 
@@ -41,35 +45,50 @@ function RCPageEditor(props) {
         moveToSavedView(props.viewState, mapView);
       });
     } catch (error) {
-      setMessage("Error", error.message);
+      setMessage({ success: 0, message: error.message });
     }
   }, []);
-
-  const savePage = () => {
-    const pageDetails = {
-      id: page.id,
-      title: title,
-      section: section,
-      camera: JSON.stringify(mapView.initialCamera),
-      baseMapName: mapView.baseMapName,
-      currentTime: {
-        dayNumber: mapView.currentTime.dayNumber,
-        secondsOfDay: Math.floor(mapView.currentTime.secondsOfDay)
-      },
-      viewer_mode_3d: mapView.viewerMode === "3d"
-    };
-    API.graphql({
-      query: updatePage,
-      variables: { input: pageDetails }
-    }).then(response => {
-      if (response.data.updatePage) {
-        setMessage("Page details saved successfully!");
-      } else {
-        setMessage("Error", response.errors[0].message);
-      }
-    });
+  const isScenarioValid = () => {
+    return !scenarios.find(sc => sc.ssp === "Choose SSP");
   };
-
+  const savePage = () => {
+    if (isScenarioValid()) {
+      const pageDetails = {
+        id: page.id,
+        title: title,
+        section: section,
+        camera: JSON.stringify(mapView.initialCamera),
+        baseMapName: mapView.baseMapName,
+        currentTime: {
+          dayNumber: mapView.currentTime.dayNumber,
+          secondsOfDay: Math.floor(mapView.currentTime.secondsOfDay)
+        },
+        viewer_mode_3d: mapView.viewerMode === "3d",
+        scenarios: scenarios
+      };
+      API.graphql({
+        query: updatePage,
+        variables: { input: pageDetails }
+      }).then(response => {
+        if (response.data.updatePage) {
+          setMessage({
+            success: 1,
+            message: "Page details saved successfully!"
+          });
+        } else {
+          setMessage({
+            success: 0,
+            message: `Error ${response.errors[0].message}`
+          });
+        }
+      });
+    } else {
+      setMessage({ success: 0, message: "*Please choose valid scenario" });
+    }
+  };
+  const updateScenarios = scenarios => {
+    setScenarios(scenarios);
+  };
   return (
     <div className={Styles.RCStoryEditor}>
       <div className={Styles.container}>
@@ -128,12 +147,20 @@ function RCPageEditor(props) {
             Move to captured view
           </button>
         </div>
-
+        <div>
+          <RCPageContent
+            storyId={storyID}
+            scenarios={scenarios}
+            updateScenarios={updateScenarios}
+          />
+        </div>
         <div className={Styles.container}>
           <button className={Styles.RCButton} onClick={savePage}>
             Save
           </button>
-          <label>{message}</label>
+          <label className={message.success ? Styles.success : Styles.failed}>
+            {message.message}
+          </label>
         </div>
       </form>
     </div>
@@ -141,6 +168,7 @@ function RCPageEditor(props) {
 }
 
 RCPageEditor.propTypes = {
-  viewState: PropTypes.object
+  viewState: PropTypes.object,
+  storyID: PropTypes.object
 };
 export default withRouter(RCPageEditor);

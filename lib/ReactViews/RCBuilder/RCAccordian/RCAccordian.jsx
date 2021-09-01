@@ -32,7 +32,7 @@ const RCAccordian = props => {
       >
         <ul
           className={Styles.accordionContent}
-          id={enableReorder && "listContainer"}
+          id={enableReorder ? "listContainer" : undefined}
         >
           {children}
         </ul>

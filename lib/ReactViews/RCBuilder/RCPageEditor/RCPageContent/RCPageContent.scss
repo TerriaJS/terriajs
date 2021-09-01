@@ -1,0 +1,61 @@
+@import "~terriajs-variables";
+
+.listItem {
+  min-height: 30px;
+  padding: 5px;
+  margin-bottom: 12px;
+  background: #f6f6fa;
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: 1fr 40px 40px;
+  align-items: center;
+  cursor: grab;
+  button {
+    border: none;
+    background-color: transparent;
+  }
+  svg {
+    height: 18px;
+    width: 18px;
+    margin: 3px;
+    fill: $charcoal-grey;
+  }
+}
+
+.content {
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(1, 0, 1, 0);
+  height: auto;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.content.collapsed {
+  max-height: 0;
+  transition: max-height 0.3s cubic-bezier(0, 1, 0, 1);
+}
+// SSP Selction CSS
+.radioContainer {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 10px;
+  label {
+    padding: 5px;
+    border: 1px solid #106fa8;
+    cursor: pointer;
+  }
+  input {
+    display: none;
+  }
+}
+.disabledLabel {
+  pointer-events: none;
+  background-color: grey;
+}
+.selected {
+  background-color: #106fa8;
+}
+
+.radioContainer label:hover {
+  background: #106fa8;
+  color: #fff;
+}
