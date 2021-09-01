@@ -142,6 +142,16 @@ export default class Result<T = undefined> {
     return this.value;
   }
 
+  /** Log error to console if one has occurred, and then return value.
+   *
+   * @param errorOverrides can be used to add error context
+   */
+  logError(errorOverrides?: TerriaErrorOverrides) {
+    if (this._error)
+      console.error(TerriaError.from(this._error, errorOverrides).toError());
+    return this.value;
+  }
+
   /** Raise error if one has occurred, and then return value.
    *
    * @param errorOverrides can be used to add error context

@@ -76,7 +76,7 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
      *
      * {@see AsyncLoader}
      */
-    async loadReference(forceReload: boolean = false) {
+    async loadReference(forceReload: boolean = false): Promise<Result<void>> {
       return (await this._referenceLoader.load(forceReload)).clone(
         `Failed to load reference \`${getName(this)}\``
       );
@@ -105,10 +105,12 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
   return ReferenceMixin;
 }
 
-ReferenceMixin.isMixedInto = function(
-  model: BaseModel
-): model is ReferenceInterface {
-  return "loadReference" in model && "target" in model;
-};
+namespace ReferenceMixin {
+  export interface Instance
+    extends InstanceType<ReturnType<typeof ReferenceMixin>> {}
+  export function isMixedInto(model: any): model is Instance {
+    return "loadReference" in model && "target" in model;
+  }
+}
 
 export default ReferenceMixin;
