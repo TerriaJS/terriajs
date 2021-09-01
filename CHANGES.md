@@ -332,7 +332,7 @@ Change Log
 #### 8.0.0-alpha.69
 
 - **Breaking changes**: 
-  - Basemaps are now configured through catalog JSON instead of TerriaMap - see https://github.com/TerriaJS/terriajs/blob/next/doc/customizing/initialization-files.md#base-maps 
+  - Basemaps are now configured through catalog JSON instead of TerriaMap - see https://github.com/TerriaJS/terriajs/blob/13362e8b6e2a573b26e1697d9cfa5bae328f7cff/doc/customizing/initialization-files.md#basemaps 
   
 * Updated terriajs-cesium to version 1.79.1
 * Make base maps configurable from init files and update documentation for init files [#5140](https://github.com/TerriaJS/terriajs/pull/5140).
