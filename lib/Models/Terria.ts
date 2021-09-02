@@ -914,12 +914,18 @@ export default class Terria {
         )
       );
 
+    this.initializeSearchProviders().catchError(error =>
+      this.raiseErrorToUser(
+        TerriaError.from(error, "Failed to initialize searchProviders")
+      )
+    );
+
     if (options.applicationUrl) {
       (await this.updateApplicationUrl(options.applicationUrl.href)).raiseError(
         this
       );
     }
-    this.initializeSearchProviders();
+
     this.loadPersistedMapSettings();
   }
 
@@ -942,21 +948,33 @@ export default class Terria {
   }
 
   initializeSearchProviders() {
+    const errors: TerriaError[] = [];
     let searchProviders = this.configParameters.searchBar?.searchProviders;
-    if (!isObservableArray(searchProviders))
-      throw new TerriaError({
-        sender: SearchProviderFactory,
-        title: "SearchProviders",
-        message: ""
-      });
-    searchProviders.forEach(searchProvider => {
+    if (!isObservableArray(searchProviders)) {
+      errors.push(
+        new TerriaError({
+          sender: SearchProviderFactory,
+          title: "SearchProviders",
+          message: { key: "searchProvider.noSearchProviders" }
+        })
+      );
+    }
+    searchProviders?.forEach(searchProvider => {
       upsertSearchProviderFromJson(
         SearchProviderFactory,
         this,
         CommonStrata.definition,
         searchProvider
-      );
+      ).pushErrorTo(errors);
     });
+
+    return new Result(
+      undefined,
+      TerriaError.combine(
+        errors,
+        "An error occurred while loading search providers"
+      )
+    );
   }
 
   async loadPersistedOrInitBaseMap() {
