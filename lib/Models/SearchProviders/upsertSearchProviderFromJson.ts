@@ -1,9 +1,9 @@
-import Terria from "./../Terria";
-import ModelFactory from "./../ModelFactory";
-import { BaseModel } from "../Model";
 import i18next from "i18next";
 import TerriaError from "../../Core/TerriaError";
-import CommonStrata from "./../CommonStrata";
+import CommonStrata from "../CommonStrata";
+import { BaseModel } from "../Model";
+import ModelFactory from "../ModelFactory";
+import Terria from "../Terria";
 import updateModelFromJson from "../updateModelFromJson";
 import createStubSearchProvider from "./createStubSearchProvider";
 

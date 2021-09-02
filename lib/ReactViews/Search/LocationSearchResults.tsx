@@ -15,7 +15,8 @@ import {
 } from "react-i18next";
 import styled, { DefaultTheme } from "styled-components";
 import isDefined from "../../Core/isDefined";
-import SearchProviderResults from "../../Models/SearchProvider/SearchProviderResults";
+import LocationSearchProviderMixin from "../../ModelMixins/SearchProviders/LocationSearchProviderMixin";
+import SearchProviderResults from "../../Models/SearchProviders/SearchProviderResults";
 import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
 import Box, { BoxSpan } from "../../Styled/Box";
@@ -24,7 +25,6 @@ import Icon, { StyledIcon } from "../../Styled/Icon";
 import Ul from "../../Styled/List";
 import Text, { TextSpan } from "../../Styled/Text";
 import Loader from "../Loader";
-import LocationSearchProviderMixin from "./../../ModelMixins/SearchProvider/LocationSearchProviderMixin";
 import SearchHeader from "./SearchHeader";
 import SearchResult from "./SearchResult";
 

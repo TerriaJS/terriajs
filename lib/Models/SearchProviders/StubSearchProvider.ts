@@ -1,6 +1,6 @@
-import LocationSearchProviderTraits from "./../../Traits/SearchProvider/LocationSearchProviderTraits";
-import primitiveTrait from "./../../Traits/Decorators/primitiveTrait";
-import SearchProviderMixin from "../../ModelMixins/SearchProvider/SearchProviderMixin";
+import SearchProviderMixin from "../../ModelMixins/SearchProviders/SearchProviderMixin";
+import primitiveTrait from "../../Traits/Decorators/primitiveTrait";
+import LocationSearchProviderTraits from "../../Traits/SearchProviders/LocationSearchProviderTraits";
 import CreateModel from "../CreateModel";
 import SearchProviderResults from "./SearchProviderResults";
 

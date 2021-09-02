@@ -1,7 +1,7 @@
 import { observable } from "mobx";
-import SearchResult from "./SearchResult";
 import { fromPromise, IPromiseBasedObservable } from "mobx-utils";
-import SearchProviderMixin from "../../ModelMixins/SearchProvider/SearchProviderMixin";
+import SearchProviderMixin from "../../ModelMixins/SearchProviders/SearchProviderMixin";
+import SearchResult from "./SearchResult";
 
 export default class SearchProviderResults {
   @observable results: SearchResult[] = [];

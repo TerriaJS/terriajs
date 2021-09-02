@@ -5,8 +5,8 @@ import {
 } from "../../Core/AnalyticEvents/analyticEvents";
 import GroupMixin from "../../ModelMixins/GroupMixin";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
-import SearchProviderMixin from "../../ModelMixins/SearchProvider/SearchProviderMixin";
-import CatalogSearchProviderTraits from "../../Traits/SearchProvider/CatalogSearchProviderTraits";
+import SearchProviderMixin from "../../ModelMixins/SearchProviders/SearchProviderMixin";
+import CatalogSearchProviderTraits from "../../Traits/SearchProviders/CatalogSearchProviderTraits";
 import CreateModel from "../CreateModel";
 import Terria from "../Terria";
 import SearchProviderResults from "./SearchProviderResults";

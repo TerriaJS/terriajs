@@ -1,6 +1,6 @@
+import LocationSearchProviderMixin from "../../../lib/ModelMixins/SearchProviders/LocationSearchProviderMixin";
+import BingMapsSearchProvider from "../../../lib/Models/SearchProviders/BingMapsSearchProvider";
 import Terria from "../../../lib/Models/Terria";
-import BingMapsSearchProvider from "../../../lib/Models/SearchProvider/BingMapsSearchProvider";
-import LocationSearchProviderMixin from "../../../lib/ModelMixins/SearchProvider/LocationSearchProviderMixin";
 
 describe("BingMapsSearchProviderTraits", function() {
   let terria: Terria;

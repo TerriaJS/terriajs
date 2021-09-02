@@ -1,6 +1,6 @@
 import { configure } from "mobx";
+import AustralianGazetteerSearchProvider from "../../../lib/Models/SearchProviders/AustralianGazetteerSearchProvider";
 import Terria from "../../../lib/Models/Terria";
-import AustralianGazetteerSearchProvider from "../../../lib/Models/SearchProvider/AustralianGazetteerSearchProvider";
 
 const wfsResponseXml = require("raw-loader!../../../wwwroot/test/WFS/getWithFilter.xml");
 

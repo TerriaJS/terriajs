@@ -6,10 +6,10 @@ import Constructor from "../../Core/Constructor";
 import makeRealPromise from "../../Core/makeRealPromise";
 import zoomRectangleFromPoint from "../../Map/zoomRectangleFromPoint";
 import Model from "../../Models/Model";
-import SearchProviderResults from "../../Models/SearchProvider/SearchProviderResults";
-import SearchResult from "../../Models/SearchProvider/SearchResult";
+import SearchProviderResults from "../../Models/SearchProviders/SearchProviderResults";
+import SearchResult from "../../Models/SearchProviders/SearchResult";
 import xml2json from "../../ThirdParty/xml2json";
-import WebFeatureServiceSearchProviderTraits from "../../Traits/SearchProvider/WebFeatureServiceSearchProviderTraits";
+import WebFeatureServiceSearchProviderTraits from "../../Traits/SearchProviders/WebFeatureServiceSearchProviderTraits";
 import LocationSearchProviderMixin from "./LocationSearchProviderMixin";
 
 function WebFeatureServiceSearchProviderMixin<

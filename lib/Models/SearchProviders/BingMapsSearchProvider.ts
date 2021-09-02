@@ -3,20 +3,20 @@ import { runInAction } from "mobx";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Resource from "terriajs-cesium/Source/Core/Resource";
-import loadJsonp from "../../Core/loadJsonp";
-import LocationSearchProviderMixin, {
-  getMapCenter
-} from "../../ModelMixins/SearchProvider/LocationSearchProviderMixin";
-import BingMapsSearchProviderTraits from "../../Traits/SearchProvider/BingMapsSearchProviderTraits";
-import CreateModel from "../CreateModel";
-import SearchProviderResults from "./SearchProviderResults";
-import SearchResult from "./SearchResult";
-import CommonStrata from "./../CommonStrata";
-import Terria from "../Terria";
 import {
   Category,
   SearchAction
 } from "../../Core/AnalyticEvents/analyticEvents";
+import loadJsonp from "../../Core/loadJsonp";
+import LocationSearchProviderMixin, {
+  getMapCenter
+} from "../../ModelMixins/SearchProviders/LocationSearchProviderMixin";
+import BingMapsSearchProviderTraits from "../../Traits/SearchProviders/BingMapsSearchProviderTraits";
+import CommonStrata from "../CommonStrata";
+import CreateModel from "../CreateModel";
+import Terria from "../Terria";
+import SearchProviderResults from "./SearchProviderResults";
+import SearchResult from "./SearchResult";
 
 export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
   CreateModel(BingMapsSearchProviderTraits)

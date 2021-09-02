@@ -1,7 +1,7 @@
-import Terria from "./../Terria";
-import StubSearchProvider from "./StubSearchProvider";
-import CommonStrata from "./../CommonStrata";
+import CommonStrata from "../CommonStrata";
 import { BaseModel } from "../Model";
+import Terria from "../Terria";
+import StubSearchProvider from "./StubSearchProvider";
 
 const getUniqueStubSearchProviderName = (terria: Terria) => {
   const stubName = "[StubSearchProvider]";

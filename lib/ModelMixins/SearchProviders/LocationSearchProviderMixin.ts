@@ -3,10 +3,10 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Constructor from "../../Core/Constructor";
+import CommonStrata from "../../Models/CommonStrata";
 import Model from "../../Models/Model";
 import Terria from "../../Models/Terria";
-import CommonStrata from "../../Models/CommonStrata";
-import LocationSearchProviderTraits from "../../Traits/SearchProvider/LocationSearchProviderTraits";
+import LocationSearchProviderTraits from "../../Traits/SearchProviders/LocationSearchProviderTraits";
 import SearchProviderMixin from "./SearchProviderMixin";
 
 type LocationSearchProviderModel = Model<LocationSearchProviderTraits>;

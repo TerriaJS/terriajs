@@ -6,10 +6,10 @@ import {
   reaction
 } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
-import LocationSearchProviderMixin from "../ModelMixins/SearchProvider/LocationSearchProviderMixin";
-import SearchProviderMixin from "../ModelMixins/SearchProvider/SearchProviderMixin";
-import CatalogSearchProvider from "../Models/SearchProvider/CatalogSearchProvider";
-import SearchProviderResults from "../Models/SearchProvider/SearchProviderResults";
+import LocationSearchProviderMixin from "../ModelMixins/SearchProviders/LocationSearchProviderMixin";
+import SearchProviderMixin from "../ModelMixins/SearchProviders/SearchProviderMixin";
+import CatalogSearchProvider from "../Models/SearchProviders/CatalogSearchProvider";
+import SearchProviderResults from "../Models/SearchProviders/SearchProviderResults";
 import Terria from "../Models/Terria";
 
 interface SearchStateOptions {

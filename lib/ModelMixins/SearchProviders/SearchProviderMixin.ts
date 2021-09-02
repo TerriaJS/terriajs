@@ -1,10 +1,10 @@
+import i18next from "i18next";
 import { action } from "mobx";
 import { fromPromise } from "mobx-utils";
 import Constructor from "../../Core/Constructor";
 import Model from "../../Models/Model";
-import SearchProviderResults from "../../Models/SearchProvider/SearchProviderResults";
-import SearchProviderTraits from "../../Traits/SearchProvider/SearchProviderTraits";
-import i18next from "i18next";
+import SearchProviderResults from "../../Models/SearchProviders/SearchProviderResults";
+import SearchProviderTraits from "../../Traits/SearchProviders/SearchProviderTraits";
 
 type SearchProviderModel = Model<SearchProviderTraits>;
 

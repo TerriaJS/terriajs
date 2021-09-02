@@ -57,9 +57,7 @@ import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
 import { defaultTerms, Term } from "../ReactViewModels/defaultTerms";
-import NotificationState, {
-  Notification
-} from "../ReactViewModels/NotificationState";
+import NotificationState from "../ReactViewModels/NotificationState";
 import { shareConvertNotification } from "../ReactViews/Notification/shareConvertNotification";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
@@ -90,8 +88,8 @@ import MapInteractionMode from "./MapInteractionMode";
 import { BaseModel } from "./Model";
 import NoViewer from "./NoViewer";
 import openGroup from "./openGroup";
-import SearchProviderFactory from "./SearchProvider/SearchProviderFactory";
-import upsertSearchProviderFromJson from "./SearchProvider/upsertSearchProviderFromJson";
+import SearchProviderFactory from "./SearchProviders/SearchProviderFactory";
+import upsertSearchProviderFromJson from "./SearchProviders/upsertSearchProviderFromJson";
 import ShareDataService from "./ShareDataService";
 import SplitItemReference from "./SplitItemReference";
 import TimelineStack from "./TimelineStack";

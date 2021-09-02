@@ -1,11 +1,11 @@
-import WebFeatureServiceSearchProviderTraits from "../../Traits/SearchProvider/WebFeatureServiceSearchProviderTraits";
-import CreateModel from "../CreateModel";
-import WebFeatureServiceSearchProviderMixin from "../../ModelMixins/SearchProvider/WebFeatureServiceSearchProviderMixin";
-import SearchResult from "./SearchResult";
 import {
   Category,
   SearchAction
 } from "../../Core/AnalyticEvents/analyticEvents";
+import WebFeatureServiceSearchProviderMixin from "../../ModelMixins/SearchProviders/WebFeatureServiceSearchProviderMixin";
+import WebFeatureServiceSearchProviderTraits from "../../Traits/SearchProviders/WebFeatureServiceSearchProviderTraits";
+import CreateModel from "../CreateModel";
+import SearchResult from "./SearchResult";
 
 const featureCodesToNamesMap = new Map([
   ["AF", "Aviation"],
