@@ -7,7 +7,6 @@ Change Log
 * Enable FeatureInfoSectionSpec tests
 * Add `itemProperties` to `ArcGisMapServerCatalogGroupTraits` so that `ArcGisMapServerCatalogGroup` can override relevant traits of its layers.
 * Add `feature` object to `FeatureInfoSection.getTemplateData`
-* Add `mustacheRenderPartialByName` function to `FeatureInfoSection`
 * Add a way to replace text in feature info templates. See [Replace text](doc/connecting-to-data/customizing-data-appearance/feature-info-template.md) for details.
 * [The next improvement]
 
