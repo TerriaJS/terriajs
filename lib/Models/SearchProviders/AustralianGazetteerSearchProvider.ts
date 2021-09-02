@@ -4,7 +4,7 @@ import {
 } from "../../Core/AnalyticEvents/analyticEvents";
 import WebFeatureServiceSearchProviderMixin from "../../ModelMixins/SearchProviders/WebFeatureServiceSearchProviderMixin";
 import WebFeatureServiceSearchProviderTraits from "../../Traits/SearchProviders/WebFeatureServiceSearchProviderTraits";
-import CreateModel from "../CreateModel";
+import CreateModel from "../Definition/CreateModel";
 import SearchResult from "./SearchResult";
 
 const featureCodesToNamesMap = new Map([

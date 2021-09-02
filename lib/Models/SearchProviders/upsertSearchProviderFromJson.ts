@@ -1,10 +1,10 @@
 import i18next from "i18next";
 import TerriaError from "../../Core/TerriaError";
-import CommonStrata from "../CommonStrata";
-import { BaseModel } from "../Model";
-import ModelFactory from "../ModelFactory";
+import CommonStrata from "../Definition/CommonStrata";
+import { BaseModel } from "../Definition/Model";
+import ModelFactory from "../Definition/ModelFactory";
+import updateModelFromJson from "../Definition/updateModelFromJson";
 import Terria from "../Terria";
-import updateModelFromJson from "../updateModelFromJson";
 import createStubSearchProvider from "./createStubSearchProvider";
 
 export default function upsertSearchProviderFromJson(

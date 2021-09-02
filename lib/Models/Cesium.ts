@@ -67,7 +67,7 @@ import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
-import hasTraits from "./hasTraits";
+import hasTraits from "./Definition/hasTraits";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
 
@@ -101,7 +101,7 @@ export default class Cesium extends GlobeOrMap {
     | CameraView
     | Rectangle
     | DataSource
-    | MappableMixin.MappableMixin
+    | MappableMixin.Instance
     | /*TODO Cesium.Cesium3DTileset*/ any;
 
   // When true, feature picking is paused. This is useful for temporarily
@@ -951,9 +951,14 @@ export default class Cesium extends GlobeOrMap {
   @computed
   get _extraCredits() {
     const credits: { cesium?: Credit; terria?: Credit } = {};
-    if (this._terrainWithCredits.credit) {
-      credits.cesium = this._terrainWithCredits.credit;
-    }
+    // Disabling this for now as it doesn't seem to be used anywhere but
+    // results in mapItems being computed twice for all workbench items when
+    // cesium map is loaded. This happens because the reference to
+    // _extraCredits is from within the constructor for Cesium which itself is
+    // called inside an untracked() call in TerriaViewer.
+    // if (this._terrainWithCredits.credit) {
+    //   credits.cesium =  this._terrainWithCredits.credit;
+    //}
     if (!this.terria.configParameters.hideTerriaLogo) {
       const logo = require("../../wwwroot/images/terria-watermark.svg");
       credits.terria = new Credit(
@@ -1358,7 +1363,7 @@ export default class Cesium extends GlobeOrMap {
     return result;
   }
 
-  getImageryLayersForItem(item: MappableMixin.MappableMixin): ImageryLayer[] {
+  getImageryLayersForItem(item: MappableMixin.Instance): ImageryLayer[] {
     return filterOutUndefined(
       item.mapItems.map(m => {
         if (ImageryParts.is(m)) {
@@ -1370,7 +1375,7 @@ export default class Cesium extends GlobeOrMap {
 
   private _makeImageryLayerFromParts(
     parts: ImageryParts,
-    item: MappableMixin.MappableMixin
+    item: MappableMixin.Instance
   ): ImageryLayer {
     const layer = this._createImageryLayer(
       parts.imageryProvider,

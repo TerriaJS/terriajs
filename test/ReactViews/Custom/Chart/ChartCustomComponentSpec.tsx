@@ -1,9 +1,9 @@
 import { ReactChild } from "react";
 import ChartableMixin from "../../../../lib/ModelMixins/ChartableMixin";
-import CreateModel from "../../../../lib/Models/CreateModel";
+import CreateModel from "../../../../lib/Models/Definition/CreateModel";
 import Feature from "../../../../lib/Models/Feature";
-import { BaseModel } from "../../../../lib/Models/Model";
-import StubCatalogItem from "../../../../lib/Models/StubCatalogItem";
+import { BaseModel } from "../../../../lib/Models/Definition/Model";
+import StubCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/StubCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import ChartExpandAndDownloadButtons from "../../../../lib/ReactViews/Custom/Chart/ChartExpandAndDownloadButtons";
 import Chart from "../../../../lib/ReactViews/Custom/Chart/FeatureInfoPanelChart";
@@ -98,7 +98,7 @@ class TestChartCustomComponent extends ChartCustomComponent<
     id: string | undefined,
     context: ProcessNodeContext,
     sourceReference:
-      | import("../../../../lib/Models/Model").BaseModel
+      | import("../../../../lib/Models/Definition/Model").BaseModel
       | undefined
   ): TestCatalogItem {
     return new TestCatalogItem(id, context.terria, undefined);

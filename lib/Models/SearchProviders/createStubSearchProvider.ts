@@ -1,5 +1,5 @@
-import CommonStrata from "../CommonStrata";
-import { BaseModel } from "../Model";
+import CommonStrata from "../Definition/CommonStrata";
+import { BaseModel } from "../Definition/Model";
 import Terria from "../Terria";
 import StubSearchProvider from "./StubSearchProvider";
 

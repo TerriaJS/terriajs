@@ -1,8 +1,8 @@
-import CommonStrata from "../../lib/Models/CommonStrata";
-import MagdaReference from "../../lib/Models/MagdaReference";
-import { BaseModel } from "../../lib/Models/Model";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import MagdaReference from "../../lib/Models/Catalog/CatalogReferences/MagdaReference";
+import { BaseModel } from "../../lib/Models/Definition/Model";
 import Terria from "../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Workbench from "../../lib/Models/Workbench";
 
 describe("Workbench", function() {
@@ -136,15 +136,15 @@ describe("Workbench", function() {
 
     const wmsItem = item4 as WebMapServiceCatalogItem;
 
-    spyOn(wmsItem, "loadMetadata");
-    spyOn(wmsItem, "loadMapItems");
-
     await workbench.add(item4);
+
     expect(workbench.items).toEqual([item4, item1, item2, item3]);
     expect(workbench.itemIds).toEqual(["D", "A", "B", "C"]);
 
-    expect(wmsItem.loadMetadata).toHaveBeenCalledTimes(1);
-    expect(wmsItem.loadMapItems).toHaveBeenCalledTimes(1);
+    expect(wmsItem.loadMetadataResult).toBeDefined();
+    expect(wmsItem.loadMetadataResult?.error).toBeUndefined();
+    expect(wmsItem.loadMapItemsResult).toBeDefined();
+    expect(wmsItem.loadMapItemsResult?.error).toBeUndefined();
   });
 
   it("doesn't add duplicate model", async function() {

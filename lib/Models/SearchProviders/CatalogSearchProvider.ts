@@ -7,7 +7,7 @@ import GroupMixin from "../../ModelMixins/GroupMixin";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
 import SearchProviderMixin from "../../ModelMixins/SearchProviders/SearchProviderMixin";
 import CatalogSearchProviderTraits from "../../Traits/SearchProviders/CatalogSearchProviderTraits";
-import CreateModel from "../CreateModel";
+import CreateModel from "../Definition/CreateModel";
 import Terria from "../Terria";
 import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
@@ -58,7 +58,7 @@ export function loadAndSearchCatalogRecursively(
       });
     }
 
-    if (ReferenceMixin.is(model) || GroupMixin.isMixedInto(model)) {
+    if (ReferenceMixin.isMixedInto(model) || GroupMixin.isMixedInto(model)) {
       return true;
     }
     // Could also check for loadMembers() here, but will be even slower
@@ -72,9 +72,10 @@ export function loadAndSearchCatalogRecursively(
   return new Promise(resolve => {
     autorun(reaction => {
       Promise.all(
-        referencesAndGroupsToLoad.map(model => {
-          if (ReferenceMixin.is(model)) {
-            return model.loadReference();
+        referencesAndGroupsToLoad.map(async model => {
+          if (ReferenceMixin.isMixedInto(model)) {
+            // TODO: could handle errors better here
+            (await model.loadReference()).throwIfError();
           }
           // TODO: investigate performant route for calling loadMembers on additional groupmixins
           // else if (GroupMixin.isMixedInto(model)) {

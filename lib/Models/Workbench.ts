@@ -1,17 +1,17 @@
 import i18next from "i18next";
 import { action, computed, observable } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
-import TerriaError from "../Core/TerriaError";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import TerriaError, { TerriaErrorSeverity } from "../Core/TerriaError";
+import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
 import ChartableMixin from "../ModelMixins/ChartableMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
-import CommonStrata from "../Models/CommonStrata";
+import CommonStrata from "./Definition/CommonStrata";
 import LayerOrderingTraits from "../Traits/TraitsClasses/LayerOrderingTraits";
-import hasTraits from "./hasTraits";
-import { BaseModel } from "./Model";
+import hasTraits from "./Definition/hasTraits";
+import { BaseModel } from "./Definition/Model";
 
 const keepOnTop = (model: BaseModel) =>
   hasTraits(model, LayerOrderingTraits, "keepOnTop") && model.keepOnTop;
@@ -176,35 +176,38 @@ export default class Workbench {
     this.insertItem(item);
 
     try {
-      if (ReferenceMixin.is(item)) {
-        await item.loadReference();
+      if (ReferenceMixin.isMixedInto(item)) {
+        (await item.loadReference()).throwIfError();
 
         const target = item.target;
         if (
-          target &&
-          GroupMixin.isMixedInto(target) &&
-          !MappableMixin.isMixedInto(target) &&
-          !ChartableMixin.isMixedInto(target)
+          !target ||
+          (target &&
+            !MappableMixin.isMixedInto(target) &&
+            !ChartableMixin.isMixedInto(target))
         ) {
           this.remove(item);
+          throw `${getName(
+            item
+          )} cannot be added to the workbench - as there is nothing to visualize`;
         } else if (target) {
           return this.add(target);
         }
       }
 
-      if (CatalogMemberMixin.isMixedInto(item)) await item.loadMetadata();
+      if (CatalogMemberMixin.isMixedInto(item))
+        (await item.loadMetadata()).throwIfError();
 
       if (MappableMixin.isMixedInto(item)) {
-        await item.loadMapItems();
+        (await item.loadMapItems()).throwIfError();
       }
     } catch (e) {
       this.remove(item);
-      throw e instanceof TerriaError
-        ? e
-        : new TerriaError({
-            title: i18next.t("workbench.addItemErrorTitle"),
-            message: i18next.t("workbench.addItemErrorMessage")
-          });
+      throw TerriaError.from(e, {
+        title: i18next.t("workbench.addItemErrorTitle"),
+        message: i18next.t("workbench.addItemErrorMessage"),
+        severity: TerriaErrorSeverity.Error
+      });
     }
   }
 
@@ -245,7 +248,7 @@ export default class Workbench {
 }
 
 function dereferenceModel(model: BaseModel): BaseModel {
-  if (ReferenceMixin.is(model) && model.target !== undefined) {
+  if (ReferenceMixin.isMixedInto(model) && model.target !== undefined) {
     return model.target;
   }
   return model;

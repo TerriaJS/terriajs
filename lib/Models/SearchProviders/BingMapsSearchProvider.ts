@@ -12,9 +12,9 @@ import LocationSearchProviderMixin, {
   getMapCenter
 } from "../../ModelMixins/SearchProviders/LocationSearchProviderMixin";
 import BingMapsSearchProviderTraits from "../../Traits/SearchProviders/BingMapsSearchProviderTraits";
-import CommonStrata from "../CommonStrata";
-import CreateModel from "../CreateModel";
+import CreateModel from "../Definition/CreateModel";
 import Terria from "../Terria";
+import CommonStrata from "./../Definition/CommonStrata";
 import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
 

@@ -1,6 +1,6 @@
 import { configure } from "mobx";
-import CreateModel from "../../lib/Models/CreateModel";
-import createStratumInstance from "../../lib/Models/createStratumInstance";
+import CreateModel from "../../lib/Models/Definition/CreateModel";
+import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 import Terria from "../../lib/Models/Terria";
 import ModelTraits from "../../lib/Traits/ModelTraits";
 import objectArrayTrait from "../../lib/Traits/Decorators/objectArrayTrait";

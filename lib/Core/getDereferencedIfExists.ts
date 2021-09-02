@@ -1,11 +1,11 @@
-import { BaseModel } from "../Models/Model";
+import { BaseModel } from "../Models/Definition/Model";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 
 export default function getDereferencedIfExists(
-  item: BaseModel | GroupMixin.GroupMixin
-): BaseModel | GroupMixin.GroupMixin {
-  if (ReferenceMixin.is(item) && item.target) {
+  item: BaseModel | GroupMixin.Instance
+): BaseModel | GroupMixin.Instance {
+  if (ReferenceMixin.isMixedInto(item) && item.target) {
     return item.target;
   }
   return item;

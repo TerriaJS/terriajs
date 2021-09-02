@@ -2,7 +2,7 @@ import i18next from "i18next";
 import { action } from "mobx";
 import { fromPromise } from "mobx-utils";
 import Constructor from "../../Core/Constructor";
-import Model from "../../Models/Model";
+import Model from "../../Models/Definition/Model";
 import SearchProviderResults from "../../Models/SearchProviders/SearchProviderResults";
 import SearchProviderTraits from "../../Traits/SearchProviders/SearchProviderTraits";
 
