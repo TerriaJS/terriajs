@@ -2,19 +2,20 @@ import { reaction, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
-import { Trans } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { addMarker, removeMarker } from "../../Models/LocationMarkerUtils";
-import SearchBox from "../Search/SearchBox";
-import LocationSearchResults from "../Search/LocationSearchResults";
-import Icon, { StyledIcon } from "../../Styled/Icon";
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
+import LocationSearchResults from "../Search/LocationSearchResults";
+import SearchBox from "../Search/SearchBox";
 
 export function SearchInDataCatalog({ viewState, handleClick }) {
   const locationSearchText = viewState.searchState.locationSearchText;
+  const { t } = useTranslation();
   return (
     <RawButton
       fullWidth
@@ -32,12 +33,9 @@ export function SearchInDataCatalog({ viewState, handleClick }) {
         <StyledIcon styledWidth={"14px"} glyph={Icon.GLYPHS["dataCatalog"]} />
         <Spacing right={2} />
         <Text textAlignLeft textLight large fullWidth>
-          <Trans
-            i18nKey="search.searchInDataCatalog"
-            locationSearchText={locationSearchText}
-          >
-            Search <strong>{locationSearchText}</strong> in the Data Catalogue
-          </Trans>
+          {t("search.searchInDataCatalog", {
+            locationSearchText: locationSearchText
+          })}
         </Text>
         <StyledIcon glyph={Icon.GLYPHS.right2} styledWidth={"14px"} light />
       </Box>
