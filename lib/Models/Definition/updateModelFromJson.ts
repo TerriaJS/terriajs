@@ -2,7 +2,6 @@ import { isObservableArray, runInAction } from "mobx";
 import isDefined from "../../Core/isDefined";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
-import { useTranslationIfExists } from "./../../Language/languageHelpers";
 import createStratumInstance from "./createStratumInstance";
 import { BaseModel } from "./Model";
 
@@ -63,10 +62,6 @@ export default function updateModelFromJson(
           }
           model.setTrait(stratumName, propertyName, newTrait);
         }
-        if (propertyName === "name") {
-          newTrait = useTranslationIfExists(jsonValue);
-        }
-        model.setTrait(stratumName, propertyName, newTrait);
       }
     });
   });

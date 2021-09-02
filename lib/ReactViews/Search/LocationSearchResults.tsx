@@ -15,6 +15,7 @@ import {
 } from "react-i18next";
 import styled, { DefaultTheme } from "styled-components";
 import isDefined from "../../Core/isDefined";
+import { useTranslationIfExists } from "../../Language/languageHelpers";
 import LocationSearchProviderMixin from "../../ModelMixins/SearchProviders/LocationSearchProviderMixin";
 import SearchProviderResults from "../../Models/SearchProviders/SearchProviderResults";
 import Terria from "../../Models/Terria";
@@ -189,8 +190,9 @@ const NameWithLoader: React.FC<NameWithLoaderProps> = observer(
   (props: NameWithLoaderProps) => (
     <BoxSpan styledHeight={"25px"}>
       <BoxSpan verticalCenter>
-        <TextSpan textDarker uppercase>{`${props.name} (${props.length ||
-          0})`}</TextSpan>
+        <TextSpan textDarker uppercase>{`${useTranslationIfExists(
+          props.name
+        )} (${props.length || 0})`}</TextSpan>
       </BoxSpan>
       {!props.isOpen &&
         (props.search.isSearching || props.isWaitingForSearchToStart) && (
