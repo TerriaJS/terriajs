@@ -18,7 +18,6 @@ import { observer } from "mobx-react";
 import CustomComponent from "../Custom/CustomComponent";
 import FeatureInfoDownload from "./FeatureInfoDownload";
 import formatNumberForLocale from "../../Core/formatNumberForLocale";
-import formatPropertyValue from "../../Core/formatPropertyValue";
 import Icon from "../../Styled/Icon";
 import propertyGetTimeValues from "../../Core/propertyGetTimeValues";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
