@@ -446,7 +446,7 @@
     "resultsLabel": "Search Results",
     "done": "Done",
     "data": "Data",
-    "searchInDataCatalog": "Search <1>'{{locationSearchText}}'</1> in the Data Catalogue",
+    "searchInDataCatalog": "Search '{{locationSearchText}}' in the Data Catalogue",
     "search": "Search '{{searchText}}' in the Data Catalogue",
     "viewLess": "View less {{name}} results",
     "viewMore": "View more {{name}} results",
