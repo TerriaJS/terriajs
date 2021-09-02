@@ -1,3 +1,4 @@
+import { computed } from "mobx";
 import Result from "../../Core/Result";
 import { BaseModel } from "../../Models/Definition/Model";
 import Trait, { TraitOptions } from "../Trait";
@@ -19,6 +20,8 @@ export default function anyTrait(options: TraitOptions) {
 }
 
 export class AnyTrait extends Trait {
+  readonly decoratorForFlattened = computed.struct;
+
   constructor(id: string, options: AnyTraitOptions, parent: any) {
     super(id, options, parent);
   }

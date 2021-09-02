@@ -8,6 +8,8 @@ Change Log
 * Add `itemProperties` to `ArcGisMapServerCatalogGroupTraits` so that `ArcGisMapServerCatalogGroup` can override relevant traits of its layers.
 * Add `feature` object to `FeatureInfoSection.getTemplateData`
 * Add a way to replace text in feature info templates. See [Replace text](doc/connecting-to-data/customizing-data-appearance/feature-info-template.md) for details.
+* Fixed unnecessary model reloads or recomputing of `mapItems` when switching between story scenes.
+* Fixed story reset button.
 * [The next improvement]
 
 #### 8.0.0
@@ -327,7 +329,7 @@ Change Log
 #### 8.0.0-alpha.69
 
 - **Breaking changes**: 
-  - Basemaps are now configured through catalog JSON instead of TerriaMap - see https://github.com/TerriaJS/terriajs/blob/next/doc/customizing/initialization-files.md#base-maps 
+  - Basemaps are now configured through catalog JSON instead of TerriaMap - see https://github.com/TerriaJS/terriajs/blob/13362e8b6e2a573b26e1697d9cfa5bae328f7cff/doc/customizing/initialization-files.md#basemaps 
   
 * Updated terriajs-cesium to version 1.79.1
 * Make base maps configurable from init files and update documentation for init files [#5140](https://github.com/TerriaJS/terriajs/pull/5140).
