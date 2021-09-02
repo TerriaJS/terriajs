@@ -134,7 +134,9 @@ class HelpPanel extends React.Component {
             <Box styledMargin={"auto 25px"}>
               <Text semiBold extraLarge textDark uppercase>
                 <a
-                  href="//terriajs.gitbook.io/terriajs/"
+                  href="https://terriajs.gitbook.io/terriajs/"
+                  target="_blank"
+                  rel="noreferrer noopener"
                   onClick={() =>
                     this.props.terria.analytics?.logEvent(
                       Category.help,
