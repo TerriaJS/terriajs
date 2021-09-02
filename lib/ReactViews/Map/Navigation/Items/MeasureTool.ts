@@ -257,14 +257,4 @@ export default class MeasureTool extends MapNavigationItemController {
     this.userDrawing.enterDrawMode();
     super.activate();
   }
-
-  @action.bound
-  handleClick() {
-    if (this.active) {
-      this.deactivate();
-    } else {
-      //this.userDrawing.enterDrawMode();
-      this.activate();
-    }
-  }
 }

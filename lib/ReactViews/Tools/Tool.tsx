@@ -91,18 +91,19 @@ export class ToolButtonController extends MapNavigationItemController {
     );
   }
 
-  handleClick() {
-    const { viewState } = this.props;
-    if (this.active) {
-      viewState.closeTool();
-    } else {
-      viewState.openTool({
-        toolName: this.props.toolName,
-        getToolComponent: this.props.getToolComponent,
-        params: this.props.params,
-        showCloseButton: false
-      });
-    }
+  activate() {
+    this.props.viewState.openTool({
+      toolName: this.props.toolName,
+      getToolComponent: this.props.getToolComponent,
+      params: this.props.params,
+      showCloseButton: false
+    });
+    super.activate();
+  }
+
+  deactivate() {
+    this.props.viewState.closeTool();
+    super.deactivate();
   }
 }
 

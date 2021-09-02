@@ -1,9 +1,9 @@
+import { action } from "mobx";
+import ViewerMode from "../../Models/ViewerMode";
 import {
   CompositeBarItemController,
   ICompositeBarItemController
 } from "../CompositeBar/CompositeBarItemController";
-import ViewerMode from "../../Models/ViewerMode";
-import { action } from "mobx";
 
 export interface IMapNavigationItemController
   extends ICompositeBarItemController {
@@ -50,6 +50,14 @@ export default abstract class MapNavigationItemController extends CompositeBarIt
       return this.itemRef.current.offsetHeight;
     }
     return undefined;
+  }
+
+  handleClick() {
+    if (this.active) {
+      this.deactivate();
+    } else {
+      this.activate();
+    }
   }
 }
 

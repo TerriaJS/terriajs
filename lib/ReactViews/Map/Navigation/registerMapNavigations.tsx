@@ -201,7 +201,8 @@ export const registerMapNavigations = (viewState: ViewState) => {
 
   const helpController = new GenericMapNavigationItemController({
     icon: GLYPHS.helpThick,
-    handleClick: () => viewState.showHelpPanel()
+    activate: () => viewState.showHelpPanel(),
+    deactivate: () => viewState.hideHelpPanel()
   });
   mapNavigationModel.addItem({
     id: HELP_PANEL_ID,

@@ -1,6 +1,6 @@
 import { action, computed, observable } from "mobx";
 import isDefined from "../../Core/isDefined";
-import { ICompositeBarItemController } from "./CompositeBarItemController";
+import { CompositeBarItemController } from "./CompositeBarItemController";
 
 export type ScreenSize = "small" | "medium";
 
@@ -18,7 +18,7 @@ export interface ICompositeBarOptions {
 }
 
 export interface ICompositeBarItem<
-  ItemController extends ICompositeBarItemController
+  ItemController extends CompositeBarItemController
 > {
   id: string;
   name: string;
@@ -29,7 +29,7 @@ export interface ICompositeBarItem<
 }
 
 export abstract class CompositeBarModel<
-  CompositeBarItem extends ICompositeBarItem<ICompositeBarItemController>
+  CompositeBarItem extends ICompositeBarItem<CompositeBarItemController>
 > {
   @observable
   private _items: CompositeBarItem[] = [];
@@ -71,8 +71,7 @@ export abstract class CompositeBarModel<
       });
     } else {
       const existingItems = this.items;
-      for (let index = 0; index < items.length; index++) {
-        const newItem = items[index];
+      for (const newItem of items) {
         const existingItem = existingItems.filter(
           ({ id }) => id === newItem.id
         )[0];
@@ -118,7 +117,7 @@ export abstract class CompositeBarModel<
         while (
           index < this.items.length &&
           typeof this.items[index].order === "number" &&
-          this.items[index].order! < item.order
+          this.items[index].order < item.order
         ) {
           index++;
         }
@@ -221,7 +220,6 @@ export abstract class CompositeBarModel<
     const item = this.findItem(id);
     if (item) {
       item.controller.collapsed = collapsed;
-      return;
     }
   }
 

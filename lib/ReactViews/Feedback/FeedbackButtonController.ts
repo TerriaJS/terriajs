@@ -1,4 +1,4 @@
-import { action, computed } from "mobx";
+import { computed } from "mobx";
 import isDefined from "../../Core/isDefined";
 import ViewState from "../../ReactViewModels/ViewState";
 import { GLYPHS } from "../../Styled/Icon";
@@ -16,13 +16,15 @@ export class FeedbackButtonController extends MapNavigationItemController {
   get viewerMode() {
     return undefined;
   }
-  @action
-  handleClick(): void {
-    if (this.viewState.feedbackFormIsVisible) {
-      this.viewState.feedbackFormIsVisible = false;
-    } else {
-      this.viewState.feedbackFormIsVisible = true;
-    }
+
+  activate() {
+    this.viewState.feedbackFormIsVisible = false;
+    super.activate();
+  }
+
+  deactivate() {
+    this.viewState.feedbackFormIsVisible = true;
+    super.deactivate();
   }
 
   @computed

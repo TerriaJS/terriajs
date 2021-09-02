@@ -36,30 +36,18 @@ export class ToggleSplitterController extends MapNavigationItemController {
 
   @computed
   get active(): boolean {
-    return super.active;
-  }
-
-  @action
-  handleClick(): void {
-    const terria = this.viewState.terria;
-    if (terria.showSplitter) {
-      this.deactivate();
-    } else {
-      this.activate();
-    }
+    return this.viewState.terria.showSplitter;
   }
 
   @action
   activate() {
-    const terria = this.viewState.terria;
-    terria.showSplitter = true;
-    this._active = true;
+    this.viewState.terria.showSplitter = true;
+    super.activate();
   }
 
   @action
   deactivate() {
-    const terria = this.viewState.terria;
-    terria.showSplitter = false;
-    this._active = false;
+    this.viewState.terria.showSplitter = false;
+    super.deactivate();
   }
 }
