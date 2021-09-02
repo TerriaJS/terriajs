@@ -140,8 +140,6 @@ You can replace text by directly using `terria.partialByName` in the template an
         }
       }
 
-where the number array `[0,1,2,3]` can also be written as string array `["0","1","2","3"]`. 
-
 If `{{Pixel Value}}` equals to `150` and `{{feature.data.layerId}}` to `2`, the text `150 dwellings in 1km radius.` will be rendered.
 
 ## Time-series charts
