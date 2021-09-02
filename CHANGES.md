@@ -7,8 +7,8 @@ Change Log
 * Enable FeatureInfoSectionSpec tests
 * Add `itemProperties` to `ArcGisMapServerCatalogGroupTraits` so that `ArcGisMapServerCatalogGroup` can override relevant traits of its layers.
 * Add `feature` object to `FeatureInfoSection.getTemplateData`
-* Add `mustacheReplaceTextFunction` function to `FeatureInfoSection`
-* Add a way to replace text in feature info templates, eg. `{{#terria.replaceText}}{"replaceText": true, "from": [0,1,2,3], "to": ["Zero","One","Two","Three"]}{{value}}{{/terria.replaceText}}`. The quotes around the keys are optional.
+* Add `mustacheRenderPartialByName` function to `FeatureInfoSection`
+* Add a way to replace text in feature info templates. See [Replace text](doc/connecting-to-data/customizing-data-appearance/feature-info-template.md) for details.
 * [The next improvement]
 
 #### 8.0.0
