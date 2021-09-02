@@ -79,9 +79,11 @@ export const registerMapNavigations = (viewState: ViewState) => {
   mapNavigationModel.addItem({
     id: ToggleSplitterController.id,
     name: "translate#splitterTool.toggleSplitterToolTitle",
-    title: toggleSplitterController.disabled
-      ? "translate#splitterTool.toggleSplitterToolDisabled"
-      : "translate#splitterTool.toggleSplitterTool",
+    title: runInAction(() =>
+      toggleSplitterController.disabled
+        ? "translate#splitterTool.toggleSplitterToolDisabled"
+        : "translate#splitterTool.toggleSplitterTool"
+    ),
     location: "TOP",
     controller: toggleSplitterController,
     screenSize: undefined,
@@ -175,9 +177,11 @@ export const registerMapNavigations = (viewState: ViewState) => {
   });
   mapNavigationModel.addItem({
     id: `${AR_TOOL_ID}_realign`,
-    name: augmentedVirtuality.manualAlignmentSet
-      ? "translate#AR.btnRealign"
-      : "translate#AR.btnResetRealign",
+    name: runInAction(() =>
+      augmentedVirtuality.manualAlignmentSet
+        ? "translate#AR.btnRealign"
+        : "translate#AR.btnResetRealign"
+    ),
     location: "TOP",
     screenSize: "small",
     controller: arRealignController,

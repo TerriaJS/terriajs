@@ -23,10 +23,10 @@ import MapNavigationModel, {
 } from "../../../ViewModels/MapNavigation/MapNavigationModel";
 import Prompt from "../../Generic/Prompt";
 import { Medium } from "../../Generic/Responsive";
+import withControlledVisibility from "../../HOCs/withControlledVisibility";
 import MapIconButton from "../../MapIconButton/MapIconButton";
 import { Control, MapNavigationItem } from "./Items/MapNavigationItem";
 import { registerMapNavigations } from "./registerMapNavigations";
-import withControlledVisibility from "../../HOCs/withControlledVisibility";
 
 const OVERFLOW_ACTION_SIZE = 42;
 
@@ -108,9 +108,9 @@ class MapNavigation extends React.Component<PropTypes> {
     this.model = props.viewState.terria.mapNavigationModel;
     this.resizeListener = debounce(() => this.updateNavigation(), 250);
     this.itemSizeInBar = new Map<string, number>();
-    this.computeSizes(this.model.visibleItems);
-    this.overflows = this.model.visibleItems.some(
-      item => item.controller.collapsed
+    this.computeSizes();
+    this.overflows = runInAction(() =>
+      this.model.visibleItems.some(item => item.controller.collapsed)
     );
     this.viewerModeReactionDisposer = reaction(
       () => this.viewState.terria.currentViewer,
@@ -124,7 +124,7 @@ class MapNavigation extends React.Component<PropTypes> {
   }
 
   componentDidMount() {
-    this.computeSizes(this.model.visibleItems);
+    this.computeSizes();
     this.updateNavigation();
     window.addEventListener("resize", this.resizeListener, false);
   }
@@ -144,8 +144,8 @@ class MapNavigation extends React.Component<PropTypes> {
   }
 
   @action
-  private computeSizes(items: IMapNavigationItem[]): void {
-    items.forEach(item => {
+  private computeSizes(items?: IMapNavigationItem[]): void {
+    (items ?? this.model.visibleItems).forEach(item => {
       if (this.orientation === Orientation.VERTICAL) {
         if (item.controller.height && item.controller.height > 0) {
           this.itemSizeInBar.set(item.id, item.controller.height || 42);
@@ -168,7 +168,7 @@ class MapNavigation extends React.Component<PropTypes> {
       return;
     }
     if (this.computeSizes.length !== this.model.visibleItems.length) {
-      this.computeSizes(this.model.visibleItems);
+      this.computeSizes();
     }
     let itemsToShow = this.model.visibleItems.filter(item =>
       filterViewerAndScreenSize(item, this.viewState)
