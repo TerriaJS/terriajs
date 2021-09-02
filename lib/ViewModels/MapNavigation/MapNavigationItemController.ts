@@ -83,6 +83,7 @@ export class GenericMapNavigationItemController extends MapNavigationItemControl
     return this.options?.viewerMode;
   }
 
+  @action.bound
   activate() {
     if (this.options?.activate) {
       this.options.activate();
@@ -90,6 +91,7 @@ export class GenericMapNavigationItemController extends MapNavigationItemControl
     super.activate();
   }
 
+  @action.bound
   deactivate() {
     if (this.options?.deactivate) {
       this.options.deactivate();
@@ -100,6 +102,8 @@ export class GenericMapNavigationItemController extends MapNavigationItemControl
   handleClick(): void {
     if (this.options?.handleClick) {
       this.options.handleClick();
+    } else {
+      super.handleClick();
     }
   }
 }
