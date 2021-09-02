@@ -6,8 +6,8 @@ import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import isDefined from "../../../../Core/isDefined";
 import TerriaError from "../../../../Core/TerriaError";
-import CommonStrata from "../../../../Models/CommonStrata";
-import GeoJsonCatalogItem from "../../../../Models/GeoJsonCatalogItem";
+import GeoJsonCatalogItem from "../../../../Models/Catalog/CatalogItems/GeoJsonCatalogItem";
+import CommonStrata from "../../../../Models/Definition/CommonStrata";
 import Terria from "../../../../Models/Terria";
 import ViewerMode from "../../../../Models/ViewerMode";
 import { GLYPHS } from "../../../../Styled/Icon";
@@ -137,7 +137,6 @@ class MyLocation extends MapNavigationItemController {
         "fill-opacity": undefined
       });
 
-      this._marker.loadMapItems();
       this.terria.workbench.add(this._marker);
     });
   }

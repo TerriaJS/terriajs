@@ -6,8 +6,13 @@ import i18next from "i18next";
 export function useTranslationIfExists(
   keyOrString: string,
   options?: { [key: string]: string }
-): string {
-  return i18next.exists(keyOrString)
-    ? i18next.t(keyOrString, options)
-    : keyOrString;
+) {
+  if (keyOrString && keyOrString.indexOf("translate#") === 0) {
+    const translationKey = keyOrString.substr("translate#".length);
+    return i18next.exists(translationKey)
+      ? i18next.t(translationKey, options)
+      : translationKey;
+  } else {
+    return keyOrString || "";
+  }
 }

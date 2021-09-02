@@ -6,8 +6,8 @@ import ViewState from "../../../ReactViewModels/ViewState";
 import { GLYPHS } from "../../../Styled/Icon";
 import { GenericMapNavigationItemController } from "../../../ViewModels/MapNavigation/MapNavigationItemController";
 import {
-  FEEDBACK_TOOL_ID,
-  FeedbackButtonController
+  FeedbackButtonController,
+  FEEDBACK_TOOL_ID
 } from "../../Feedback/FeedbackButtonController";
 import PedestrianMode, {
   PEDESTRIAN_MODE_ID
@@ -41,7 +41,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
   compassController.pinned = true;
   mapNavigationModel.addItem({
     id: COMPASS_TOOL_ID,
-    name: "compass",
+    name: "translate#compass",
     controller: compassController,
     location: "TOP",
     order: 1,
@@ -56,7 +56,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
   zoomToolController.pinned = true;
   mapNavigationModel.addItem({
     id: ZOOM_CONTROL_ID,
-    name: "zoom",
+    name: "translate#zoom",
     controller: zoomToolController,
     location: "TOP",
     order: 2,
@@ -67,8 +67,8 @@ export const registerMapNavigations = (viewState: ViewState) => {
   const myLocation = new MyLocation({ terria });
   mapNavigationModel.addItem({
     id: MyLocation.id,
-    name: "location.location",
-    title: "location.centreMap",
+    name: "translate#location.location",
+    title: "translate#location.centreMap",
     location: "TOP",
     controller: myLocation,
     screenSize: undefined,
@@ -78,10 +78,10 @@ export const registerMapNavigations = (viewState: ViewState) => {
   const toggleSplitterController = new ToggleSplitterController(viewState);
   mapNavigationModel.addItem({
     id: ToggleSplitterController.id,
-    name: "splitterTool.toggleSplitterToolTitle",
+    name: "translate#splitterTool.toggleSplitterToolTitle",
     title: toggleSplitterController.disabled
-      ? "splitterTool.toggleSplitterToolDisabled"
-      : "splitterTool.toggleSplitterTool",
+      ? "translate#splitterTool.toggleSplitterToolDisabled"
+      : "translate#splitterTool.toggleSplitterTool",
     location: "TOP",
     controller: toggleSplitterController,
     screenSize: undefined,
@@ -98,8 +98,8 @@ export const registerMapNavigations = (viewState: ViewState) => {
   });
   mapNavigationModel.addItem({
     id: MeasureTool.id,
-    name: "measure.measureToolTitle",
-    title: "measure.measureDistance",
+    name: "translate#measure.measureToolTitle",
+    title: "translate#measure.measureDistance",
     location: "TOP",
     controller: measureTool,
     screenSize: undefined,
@@ -114,8 +114,8 @@ export const registerMapNavigations = (viewState: ViewState) => {
   });
   mapNavigationModel.addItem({
     id: PEDESTRIAN_MODE_ID,
-    name: "pedestrianMode.toolButtonTitle",
-    title: "pedestrianMode.toolButtonTitle",
+    name: "translate#pedestrianMode.toolButtonTitle",
+    title: "translate#pedestrianMode.toolButtonTitle",
     location: "TOP",
     screenSize: "medium",
     controller: pedestrianModeToolController,
@@ -130,7 +130,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
   });
   mapNavigationModel.addItem({
     id: CLOSE_TOOL_ID,
-    name: "close",
+    name: "translate#close",
     location: "TOP",
     screenSize: undefined,
     controller: closeToolButtonController,
@@ -147,7 +147,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
   });
   mapNavigationModel.addItem({
     id: AR_TOOL_ID,
-    name: "AR.arTool",
+    name: "translate#AR.arTool",
     location: "TOP",
     screenSize: "small",
     controller: arController,
@@ -160,7 +160,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
   });
   mapNavigationModel.addItem({
     id: `${AR_TOOL_ID}_hover`,
-    name: "AR.btnHover",
+    name: "translate#AR.btnHover",
     location: "TOP",
     screenSize: "small",
     controller: arControllerHover,
@@ -176,8 +176,8 @@ export const registerMapNavigations = (viewState: ViewState) => {
   mapNavigationModel.addItem({
     id: `${AR_TOOL_ID}_realign`,
     name: augmentedVirtuality.manualAlignmentSet
-      ? "AR.btnRealign"
-      : "AR.btnResetRealign",
+      ? "translate#AR.btnRealign"
+      : "translate#AR.btnResetRealign",
     location: "TOP",
     screenSize: "small",
     controller: arRealignController,
@@ -191,8 +191,8 @@ export const registerMapNavigations = (viewState: ViewState) => {
   const feedbackController = new FeedbackButtonController(viewState);
   mapNavigationModel.addItem({
     id: FEEDBACK_TOOL_ID,
-    name: "feedback.feedbackBtnText",
-    title: "feedback.feedbackBtnText",
+    name: "translate#feedback.feedbackBtnText",
+    title: "translate#feedback.feedbackBtnText",
     location: "BOTTOM",
     screenSize: "medium",
     controller: feedbackController,
@@ -205,8 +205,8 @@ export const registerMapNavigations = (viewState: ViewState) => {
   });
   mapNavigationModel.addItem({
     id: HELP_PANEL_ID,
-    name: "helpMenu.btnText",
-    title: "helpMenu.btnTitle",
+    name: "translate#helpMenu.btnText",
+    title: "translate#helpMenu.btnTitle",
     location: "BOTTOM",
     screenSize: "medium",
     controller: helpController,

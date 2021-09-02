@@ -25,7 +25,7 @@ class NoViewer extends GlobeOrMap {
   destroy() {}
 
   doZoomTo(
-    v: CameraView | Rectangle | MappableMixin.MappableMixin,
+    v: CameraView | Rectangle | MappableMixin.Instance,
     t: any
   ): Promise<void> {
     if (v instanceof CameraView) {

@@ -11,11 +11,9 @@ $color-primary-disabled: #595b60;
 @function get-hover-color($base-color) {
   @return lighten($base-color, 10%);
 }
-$color-secondary: #06ccff;
+$color-secondary: #ff6f00;
 
 $animation-fast: 0.1s;
-
-$color-splitter: #ff6f00;
 
 $dark: #3f4854;
 $dark-with-overlay: #667080;

@@ -1,0 +1,451 @@
+{
+  "featureInfo": {
+    "noDataAvailable": "Qui non è presente alcun dato - prova un altro punto",
+    "catalogItem": {
+      "featureInfoShown": "I primi {{maximum}} sono mostrati qui sotto."
+    },
+    "download": "Scarica la tabella",
+    "locationMarker": "Posizione del marker",
+    "siteData": "Posizione Dati",
+    "latLon": "Lat / Lon ",
+    "btnCloseFeature": "Chiudi pannello dati",
+    "pickLocation": "Seleziona posizione",
+    "noInfoAvailable": "Nessuna informazione disponibile",
+    "panelHeading": "Informazioni dell'elemento",
+    "userSelection": "Seleziona utente"
+  },
+  "countDatasets": {
+    "subTotals": "<div> {{name}}: {{items}} elementi / {{groups}} gruppi</div>",
+    "totals": "<div>Il catalogo contiene {{items}} oggetti in {{groups}} gruppi.</div>",
+    "loadError": "caricamento fallito.",
+    "btnText": "Avvia",
+    "btnCount": "Conta i dataset",
+    "title": "Conta i Dataset",
+    "recount": "Ricalcola"
+  },
+  "AR": {
+    "manualAlignmentTitle": "Allineamento Manuale",
+    "arTool": "strumento per la realtà aumentata",
+    "btnResetRealign": "reimposta allineamento bussola",
+    "confirmText": "Capito"
+  },
+  "measure": {
+    "measureDistance": "Misura la distanza fra punti",
+    "measureTool": "Strumento di misura"
+  },
+  "general": {
+    "cancel": "Cancella",
+    "delete": "Elimina",
+    "skip": "Salta",
+    "next": "Prossimo",
+    "prev": "Precedente",
+    "open": "Apri",
+    "close": "Chiudi"
+  },
+  "sui": {
+    "notifications": {
+      "denyText": "Forse più tardi",
+      "confirmText": "Si",
+      "title": "Questa mappa contiene una storia"
+    }
+  },
+  "helpMenu": {
+    "next": "Prossimo",
+    "done": "FATTO",
+    "helpMenuOpenWelcome": "Visualizza messaggio di benvenuto",
+    "helpMenuMoreHelpTitle": "Per maggiori informazioni",
+    "helpMenuHeader": "Cosa si vuole fare?",
+    "btnTitle": "Ricevi aiuto",
+    "btnText": "Guida"
+  },
+  "feedback": {
+    "send": "Invia",
+    "commentQuestion": "Commento o domanda",
+    "title": "Feedback",
+    "cancel": "Annulla",
+    "yourName": "Il tuo nome (opzionale)",
+    "shareWithDevelopers": "Condividi la mia mappa con gli sviluppatori di {{appName}}",
+    "close": "chiudi feedback",
+    "feedbackBtnText": "Fornite un feedback"
+  },
+  "settingPanel": {
+    "performanceLabel": "Prestazioni",
+    "qualityLabel": "Qualità",
+    "baseMap": "Mappa base",
+    "btnTitle": "Cambia vista",
+    "screen": "schermo",
+    "native": "nativa",
+    "qualityLabels": {
+      "lowerPerformance": "Qualità massima, performance ridotte",
+      "balancedPerformance": "Performance e qualità bilanciati",
+      "maximumPerformance": "Performance massime, qualità ridotta"
+    },
+    "viewerModeLabels": {
+      "Leaflet": "2D",
+      "CesiumTerrain": "Terreno 3D",
+      "CesiumEllipsoid": "3D Regolare"
+    },
+    "none": "(Nessuno)",
+    "mapQuality": "Qualità della mappa raster:",
+    "nativeResolutionHeader": "Utilizza risoluzione nativa del dispositivo",
+    "imageOptimisation": "Ottimizzazione dell'immagine",
+    "mapView": "Visualizzazione Mappa",
+    "nativeResolutionLabel": "Premi per fermare la risoluzione {{resolution1}} e iniziare ad usare la risoluzione{{resolution2}}"
+  },
+  "toolsPanel": {
+    "btnTitle": "Strumenti avanzati",
+    "btnText": "Strumento"
+  },
+  "share": {
+    "btnMapShareTitle": "Condividi la mappa con altri",
+    "btnStoryShareTitle": "Condividi storie con altri",
+    "btnCatalogShareTitle": "Condividi il catalogo con altri",
+    "btnMapShareText": "Condividi / Stampa",
+    "btnStoryShareText": "Condividi",
+    "btnCatalogShareText": "Condividi",
+    "btnAdvanced": "Opzioni avanzate",
+    "printButton": "Stampa",
+    "printExplanation": "Apri una versione stampabile della mappa.",
+    "printTitle": "Stampa mappa",
+    "shortLinkError": "Errore durante l'accorciamento dell'URL. Verificare la connessione internet e riprovare.",
+    "shortenUsingService": "Accorciate l'URL usando un servizio web",
+    "embedTitle": "Per includere questa mappa in una pagina HTML copiate questo codice:",
+    "printViewButton": "Mostra anteprima di stampa",
+    "browserPrint": "Per una stampa migliore, per favore usate il pulsante Stampa di {{appName}} invece di quello del browser."
+  },
+  "zoomCotrol": {
+    "zoomReset": "Reimposta zoom",
+    "zoomOut": "Ridurre",
+    "zoomIn": "Ingrandire"
+  },
+  "location": {
+    "location": "Posizione",
+    "myLocation": "La mia posizione"
+  },
+  "models": {
+    "webProcessingService": {
+      "errorDetails": "Dettagli dell'errore"
+    },
+    "webMapServiceCatalogItem": {
+      "missingDataTitle": "Dati mancanti"
+    },
+    "userDrawing": {
+      "btnDone": "Fatto",
+      "btnCancel": "Annulla",
+      "line": "Linea",
+      "pointEntities": "Punti"
+    },
+    "terriaJSONcatalog": {
+      "disclaimer": "Scarico di responsabilità",
+      "requestFailedTitle": "Richiesta fallita",
+      "buttonTitleConfirm": "Accetto"
+    },
+    "terria": {
+      "buttonTitleConfirm": "Accetto",
+      "disclaimer": "Scarico di responsabilità"
+    },
+    "time": {
+      "invalidDate": "Data non valida"
+    },
+    "sensorObservationService": {
+      "property": "Proprietà"
+    },
+    "feedback": {
+      "thanksTitle": "Grazie per il tuo feedback!"
+    },
+    "raiseError": {
+      "errorTitle": "Si è verificato un errore"
+    },
+    "placesLikeMe": {
+      "characteristics": "Caratteristiche",
+      "regionName": "Paese"
+    },
+    "gpx": {
+      "name": "GPX"
+    },
+    "getToken": {
+      "errorTitle": "Errore token"
+    },
+    "csv": {
+      "name": "Valori separati da virgola (CSV)"
+    },
+    "bing": {
+      "name": "Bing Maps"
+    },
+    "socrataServer": {
+      "tags": "Etichette",
+      "attributes": "Attributi",
+      "licence": "Licenza",
+      "description": "Descrizione"
+    },
+    "ogr": {
+      "unsupportedFileTzpe": "Tipo di file non supportato",
+      "safari": "Apple Safari"
+    },
+    "gltf": {
+      "error": "Errore"
+    },
+    "geoJson": {
+      "firefox": "Mozilla Firefox"
+    },
+    "csw": {
+      "links": "Collegamenti",
+      "dataResponsibility": "Resposabile dei dati"
+    },
+    "catalog": {
+      "cancel": "Annulla",
+      "upload": "Carica",
+      "unsupportedFileTypeTitle": "Tipo di file non supportato",
+      "group": "Gruppo",
+      "name": "Elemento senza nome"
+    },
+    "ckan": {
+      "update_freq": "Frequenza di aggiornamento",
+      "metadata_modified": "Modifica",
+      "metadata_created": "Creato",
+      "contact_point": "Contatti",
+      "author": "Autore",
+      "licence": "Licenza",
+      "resourceDescription": "Descrizione della risorsa",
+      "dataDescription": "Descrizione dei dati",
+      "datasetDescription": "Descrizione del dataset"
+    },
+    "userData": {
+      "firefox": "Mozilla Firefox",
+      "chrome": "Google Chrome",
+      "internetExplorer": "Internet Explorer 11"
+    },
+    "spatialDetailing": {
+      "name": "Dettaglio spaziale"
+    },
+    "magda": {
+      "distributionDesc": "Descrizione della distribuzione"
+    }
+  },
+  "map": {
+    "gnafAddressGeocoder": {
+      "score": "Punteggio",
+      "lat": "Lat",
+      "lon": "Lon",
+      "postcode": "Codice postale",
+      "state": "Stato",
+      "suburb": "Frazione"
+    }
+  },
+  "core": {
+    "dataType": {
+      "json": "JSON",
+      "gpx": "GPX",
+      "csv": "CSV"
+    },
+    "printWindow": {
+      "errorTitle": "Errore nella stampa",
+      "printMediaEnd": "termina la stampa delle immagini",
+      "printMediaStart": "inizia la stampa delle immagini"
+    }
+  },
+  "analytics": {
+    "polygon": "Poligono",
+    "selectLocation": "Seleziona posizione"
+  },
+  "description": {
+    "typeName": "Digita nome",
+    "layerName": "Nome layer",
+    "name": "Descrizione",
+    "dataCustodian": "Depositario dei dati",
+    "downloadData": "Scarica dati",
+    "dataUrl": "URL dei dati",
+    "dataServiceDetails": "Dettagli dei servizi dei dati",
+    "dataSourceDetails": "Dettagli della sorgente dei dati"
+  },
+  "preview": {
+    "updateFrequency": "Frequenza di aggiornamento",
+    "modified": "Modifica",
+    "created": "Creato",
+    "contact": "Contatti",
+    "author": "Autore",
+    "licence": "Licenza",
+    "disclaimer": "Scarico di responsabilità",
+    "datasetDescription": "Descrizione del dataset",
+    "dataDescription": "Descrizione dei dati",
+    "dataPreview": "ANTEPRIMA DATI",
+    "preview": "anteprima di {{appName}}",
+    "dataPreviewError": "ERRORE ANTEPRIMA DEI DATI",
+    "dataPreviewLoading": "CARICAMENTO ANTEPRIMA DEI DATI...",
+    "noPreviewAvailable": "NESSUNA ANTEPRIMA DISPONIBILE",
+    "addToMap": "Aggiungi alla mappa",
+    "removeFromMap": "Rimuovi dalla mappa"
+  },
+  "legend": {
+    "n": "N",
+    "e": "E",
+    "lon": "Lon",
+    "lat": "Lat"
+  },
+  "splitterTool": {
+    "workbench": {
+      "goright": "Destra",
+      "both": "Entrambi",
+      "goleft": "Sinistra"
+    }
+  },
+  "deltaTool": {
+    "cancelBtn": "Annulla",
+    "secondaryImage": "Immagine secondaria",
+    "primaryImage": "Immagine principale",
+    "selectedLocation": "Posizione selezionata"
+  },
+  "viewModels": {
+    "searchLocations": "Posizioni",
+    "searchAddresses": "Indirizzi",
+    "searchCatalogueItem": "Catalogo degli elementi",
+    "searchPlaceNames": "Nome ufficiale dei luoghi"
+  },
+  "chart": {
+    "download": "Scarica",
+    "expand": "Espandi",
+    "sectionLabel": "Grafici",
+    "closePanel": "Chiudi pannello"
+  },
+  "catalogItem": {
+    "add": "Aggiungi",
+    "remove": "Rimuovi",
+    "removeFromMap": "Rimuovi dalla mappa",
+    "trash": "Rimuovi questo catalogo"
+  },
+  "loader": {
+    "loadingMessage": "Caricamento"
+  },
+  "clipboard": {
+    "copy": "Copia",
+    "shareURL": "Condividi URL",
+    "success": "Copiato negli appunti"
+  },
+  "concept": {
+    "inactive": {
+      "cancel": "Annulla",
+      "newText": "Nuova condizione"
+    },
+    "active": {
+      "edit": "Modifica condizione",
+      "remove": "Rimuovi condizione"
+    },
+    "summary": {
+      "addFirstText": "Aggiungi una nuova condizione",
+      "addMoreText": "Aggiungi una condizione"
+    }
+  },
+  "satellite": {
+    "newLocation": "Nuova posizione",
+    "zoomTo": "Ingrandisci fino a",
+    "removeFilter": "Rimuovi filtro",
+    "filterByLocation": "Seleziona in base alla posizione"
+  },
+  "dateTime": {
+    "timeline": {
+      "togglePlay": "Riproduci",
+      "gotoStart": "Torna all'inizio",
+      "playFaster": "Riproduci più veloce",
+      "playSlower": "Riproduci più piano"
+    },
+    "useTimeline": "Utilizza barra del tempo",
+    "next": "Tempo successivo",
+    "previous": "Tempo precedente",
+    "selectTime": "Seleziona un tempo"
+  },
+  "workbench": {
+    "removeAll": "Rimuovi Tutto",
+    "removeFromMap": "Rimuovi",
+    "exportData": "Esporta",
+    "openFeature": "Ingradisci fino a",
+    "rangeMin": "Minimo:",
+    "rangeMax": "Massimo:",
+    "toggleVisibility": "Mostra/Nascondi dati",
+    "colorScaleUpdateRange": "Aggiorna scala",
+    "removeFromMapTitle": "Rimuovi questi dati",
+    "exportDataTitle": "Esporta i dati della mappa",
+    "openFeatureTitle": "Ingrandisci sui dati",
+    "zoomToTitle": "Ingrandisci all'estensione",
+    "opacity": "Opacità: {{opacity}} %",
+    "colorScaleRange": "Gamma della scala dei colori",
+    "colorScaleRangeMinSmallerThanMax": "Il valore minimo deve essere inferiore del valore massimo.",
+    "colorScaleRangeMax": "Il valore massimo deve essere un numero.",
+    "colorScaleRangeMin": "Il valore minimo deve essere un numero."
+  },
+  "mobile": {
+    "toggleNavigation": "Attiva/disattiva la navigazione"
+  },
+  "search": {
+    "data": "Dati",
+    "done": "Fatto",
+    "resultsLabel": "Cerca risultati",
+    "searchCatalogue": "Cerca il catalogo",
+    "placeholder": "Cerca posizioni"
+  },
+  "addData": {
+    "back": "Indietro",
+    "dragDrop": "Trascina e rilascia",
+    "urlInputBtn": "Aggiungi",
+    "done": "Fatto",
+    "btnHide": "Nascondi",
+    "dataCatalogue": "Catalogo dei dati",
+    "myData": "I miei dati",
+    "webTitle": "Aggiungi dati dal web",
+    "localTitle": "Aggiungi dati locali",
+    "webAdd": "Carica dati dal web",
+    "localAdd": "Carica dati locali",
+    "searchPlaceholder": "Cerca il catalogo",
+    "searchPlaceholderWhole": "Cerca in tutto il catalogo",
+    "closeDataPanel": "Chiudi pannello dati",
+    "load": "Carica dati locali/web"
+  },
+  "satelliteGuidance": {
+    "prevI": "No grazie",
+    "dismissText": "Capito, grazie!",
+    "nextI": "Mostra guida",
+    "titleIII": "Caricamento delle immagini storiche"
+  },
+  "story": {
+    "storyEditor": "Editor Storie",
+    "editor": {
+      "saveStory": "Salva",
+      "saveBtn": "salva",
+      "cancelEditing": "Annulla",
+      "cancelBtn": "annulla",
+      "placeholder": "Inserisci un titolo"
+    },
+    "removeAllStories": "Rimuovi Tutto",
+    "delete": "Elimina",
+    "deleteStory": "elimina",
+    "recapture": "Registrare nuovamente",
+    "recaptureStory": "Registrare nuovamente",
+    "edit": "Modifica",
+    "editStory": "modifica",
+    "view": "Visualizza",
+    "viewStory": "vista",
+    "hideStoryPanel": "nascondi il costruttore di storie",
+    "mobileViewStory": "Mostra Storie {{storiesLength}}",
+    "dismissText": "Capito, grazie!",
+    "captureSceneTitle": "cattura scena corrente",
+    "untitled": "scena senza nome",
+    "exitBtn": "esci dalla storia",
+    "locationBtn": "centra la scena",
+    "captureScene": "Cattura Scena",
+    "preview": "storie precedenti",
+    "untitledScene": "scena senza nome",
+    "story": "Storia",
+    "navBtn": "vai alla storia {{title}}",
+    "navBtnMobile": "vai alla storia {{title}}",
+    "nextBtn": "vai alla scena seguente"
+  },
+  "dragDrop": {
+    "not": "<0>bbbb</0>"
+  },
+  "terriaViewer": {
+    "webGLNotSupportedTitle": "WebGL non supportato",
+    "slowWebGLAvailableTitle": "Scarse prestazioni WebGL"
+  },
+  "dataCatalog": {
+    "groupRemove": "rimuovi questo gruppo"
+  }
+}

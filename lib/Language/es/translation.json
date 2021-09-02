@@ -1,0 +1,333 @@
+{
+  "legend": {
+    "elev": "Elev",
+    "n": "N",
+    "e": "E",
+    "zone": "ZONA",
+    "lon": "Lon",
+    "lat": "Lat"
+  },
+  "splitterTool": {
+    "workbench": {
+      "copyName": "{{name}}(copia)",
+      "goright": "Derecha",
+      "both": "Ambos",
+      "goleft": "Izquierda",
+      "gorightTitle": "Mostrar en el lado derecho",
+      "bothTitle": "Mostrar en ambos lados",
+      "goleftTitle": "Mostrar en el lado izquierdo"
+    },
+    "title": "Arrastrar a izquierda o derecha para ajustar vistas",
+    "toggleSplitterTool": "Habilitar comparación lado a lado entre diferentes conjuntos de datos"
+  },
+  "viewModels": {
+    "searchCatalogueItem": "Elementos del catálogo",
+    "searchLocations": "Localizaciones",
+    "searchAddresses": "Direcciones"
+  },
+  "catalogItem": {
+    "trash": "Quitar del catálogo",
+    "removeFromMap": "Quitar del mapa",
+    "add": "Añadir",
+    "remove": "Quitar",
+    "loading": "Cargando…"
+  },
+  "dataCatalog": {
+    "groupRemove": "quitar este grupo",
+    "groupEmpty": "Este grupo esta vacío"
+  },
+  "concept": {
+    "summary": {
+      "addFirstText": "Añadir nueva condición",
+      "addMoreText": "Añadir una condición"
+    },
+    "active": {
+      "remove": "Quitar condición",
+      "edit": "Editar condición"
+    },
+    "inactive": {
+      "newText": "Nueva condición",
+      "cancel": "Cancelar"
+    }
+  },
+  "satellite": {
+    "filterByLocation": "Filtrar por localización",
+    "newLocation": "Nueva localización",
+    "removeFilter": "Quitar filtro"
+  },
+  "models": {
+    "ogr": {
+      "safari": "Apple Safari",
+      "unsupportedFileTzpe": "Tipo de archivo no soportado"
+    },
+    "userData": {
+      "firefox": "Mozilla Firefox",
+      "chrome": "Google Chrome",
+      "internetExplorer": "Internet Explorer 11"
+    },
+    "socrataServer": {
+      "tags": "Etiquetas",
+      "attributes": "Atributos",
+      "licence": "Licencia",
+      "description": "Descripción"
+    },
+    "gltf": {
+      "error": "Error"
+    },
+    "geoJson": {
+      "firefox": "Mozilla Firefox"
+    },
+    "csw": {
+      "links": "Enlaces"
+    },
+    "catalog": {
+      "cancel": "Cancelar",
+      "upload": "Subir",
+      "unsupportedFileTypeTitle": "Tipo de archivo no soportado",
+      "group": "Grupo"
+    },
+    "ckan": {
+      "update_freq": "Frecuencia de actualización",
+      "metadata_modified": "Modificado",
+      "metadata_created": "Creado",
+      "contact_point": "Contacto",
+      "author": "Autor",
+      "licence": "Licencia"
+    }
+  },
+  "analytics": {
+    "selectLocation": "Seleccionar Localización"
+  },
+  "helpMenu": {
+    "helpMenuMoreHelpTitle": "Más ayuda",
+    "btnTitle": "Ayuda",
+    "next": "SIGUIENTE",
+    "done": "HECHO",
+    "helpMenuOpenWelcome": "Mostrar mensaje de bienvenida",
+    "helpMenuHeader": "¿Qué le gustaría hacer?",
+    "btnText": "Ayuda",
+    "helpMenuSatelliteGuideTitle": "Guía de la vista de imagen de satélite"
+  },
+  "sui": {
+    "notifications": {
+      "denyText": "Tal vez más tarde",
+      "confirmText": "Sí",
+      "message": "¿Le gustaría verlo ahora?",
+      "title": "Este mapa contiene una historia"
+    },
+    "showWorkbench": "Mostrar Banco de Trabajo",
+    "hideWorkbench": "Ocultar Banco de Trabajo"
+  },
+  "chart": {
+    "download": "Descargar",
+    "expand": "Expandir",
+    "closePanel": "Cerrar panel",
+    "sectionLabel": "Gráficos"
+  },
+  "loader": {
+    "loadingMessage": "Cargando"
+  },
+  "clipboard": {
+    "copy": "Copiar",
+    "shareURL": "Compartir URL",
+    "success": "Copiado al portapapeles"
+  },
+  "dateTime": {
+    "timeline": {
+      "togglePlay": "Iniciar",
+      "gotoStart": "Ir al principio"
+    }
+  },
+  "workbench": {
+    "removeAll": "Quitar Todos",
+    "removeFromMap": "Quitar",
+    "exportData": "Exportar",
+    "openFeature": "Zoom a",
+    "openFeatureTitle": "Zoom al dato",
+    "colorScaleUpdateRange": "Actualizar Rango",
+    "zoomToTitle": "Zoom a la Extensión",
+    "opacity": "Opacidad:{{opacity}}%",
+    "label": "Conjunto de Datos",
+    "rangeMin": "Mínima:",
+    "rangeMax": "Máxima:"
+  },
+  "search": {
+    "data": "Datos",
+    "resultsLabel": "Resultados de búsqueda"
+  },
+  "addData": {
+    "back": "Atrás",
+    "dragDrop": "Arrastrar y soltar",
+    "browse": "Navegar…",
+    "urlInputBtn": "Añadir",
+    "myData": "Mis datos",
+    "done": "Hecho",
+    "btnHide": "Ocultar"
+  },
+  "satelliteGuidance": {
+    "prevI": "No, gracias"
+  },
+  "story": {
+    "story": "Historia",
+    "editor": {
+      "saveStory": "Guardar",
+      "saveBtn": "guardar",
+      "cancelBtn": "cancelar"
+    },
+    "removeAllStories": "Eliminar Todos",
+    "delete": "Eliminar",
+    "deleteStory": "borrar",
+    "edit": "Editar",
+    "editStory": "editar",
+    "view": "Vista",
+    "viewStory": "vista",
+    "storyEditor": "Editor de historias"
+  },
+  "featureInfo": {
+    "noInfoAvailable": "No hay información disponible",
+    "latLon": "Lat / Lon ",
+    "siteData": "Datos del Sitio",
+    "locationMarker": "Marcador de Localización",
+    "satelliteSuggestionBtn": "Mostrar {{catalogItemName}} en esta localización",
+    "btnCloseFeature": "Cerrar el panel de dato",
+    "panelHeading": "Información del Elemento",
+    "userSelection": "Selección de usuario",
+    "clickToAddData": "Pinche'$t(addData.addDataBtnText)' para añadir dato al mapa.",
+    "noDataAvailable": "No hay datos disponibles aquí - pruebe otra localización.",
+    "clickMap": "Pinchar en el mapa para conocer más sobre esta localización",
+    "pickLocation": "Elegir localización",
+    "download": "Descargar esta Tabla",
+    "catalogItem": {
+      "featureInfoShown": "Los primeros{{maximum}} se muestran a continuación.",
+      "featuresFound": "{{featCount}} {catalogItemName} elementos fueron encontrados.",
+      "moreThanMax": "Se encontraron más de {{maximum}} {{catalogItemName}} elementos."
+    }
+  },
+  "feedback": {
+    "feedbackBtnText": "Danos tu opinión",
+    "send": "Enviar",
+    "sending": "Enviando…",
+    "cancel": "Cancelar",
+    "yourName": "Su nombre (opcional)",
+    "captionText": "Esto nos ayuda a solucionar fallos al permitirnos ver lo que está viendo",
+    "feedbackPreamble": "¡Nos encantaría saber de ti!",
+    "shareWithDevelopers": "Compartir mi vista del mapa con los desarrolladores de {{appName}}",
+    "commentQuestion": "Comentario o pregunta",
+    "close": "cerrar sugerencia",
+    "title": "Sugerencias"
+  },
+  "location": {
+    "centreMap": "Centrar mapa en su localización",
+    "errorGettingLocation": "Error obteniendo localización",
+    "location": "Localización",
+    "myLocation": "Mi localización",
+    "browserCannotProvide": "Su navegador no puede proporcionar su localización.",
+    "originError": "Su navegador solo puede proveer su localización cuando usa HTTPS. Usted posible que usar {{secureUrl}} en su lugar."
+  },
+  "countDatasets": {
+    "loadError": "No se pudo cargar.",
+    "btnText": "Iniciar",
+    "btnCount": "Contar conjuntos de datos",
+    "title": "Contado Conjunto de datos",
+    "recount": "Recontando",
+    "subTotals": "<div> {{name}}: {{items}} elementos/ {{groups}} grupos</div>",
+    "totals": "<div>El catálogo contiene {{items}} elementos en {{groups}} grupos.</div>",
+    "countingMessage": "Contando, por favor espere…"
+  },
+  "share": {
+    "printTitle": "Imprimir mapa",
+    "btnCatalogShareText": "Compartir",
+    "btnAdvanced": "Opciones avanzadas",
+    "printButton": "Imprimir",
+    "shortenUsingService": "Acortar la URL para compartir usando un servicio web",
+    "localDataNote": "<0><0>Nota:</0></0> <1> Las siguientes fuentes de datos NO se compartirán porque incluyen datos de este sistema local. Para compartir estas fuentes de datos, publique sus datos en un servidor web y <2> añádalos usando una URL </2>. </1>",
+    "shortLinkShortening": "Acortamiento…",
+    "embedTitle": "Para incrustar, copie este código para incrustar este mapa en una página HTML:",
+    "shortLinkError": "Se ha producido un error cuando se intentaba acortar la URL. Por favor revise sus opciones de conexión a internet y pruebe de nuevo.",
+    "browserPrint": "Para obtener mejores resultado de impresión, por favor use el botón de impresión de {{appName}} en vez de las opción de impresión del navegador.",
+    "generatingUrl": "Generando URL para compartir…",
+    "btnMapShareTitle": "Compartir sus mapas con otros",
+    "btnStoryShareTitle": "Compartir sus historias con otros",
+    "btnCatalogShareTitle": "Compartir su catálogo con otros",
+    "btnMapShareText": "Compartir / Imprimir",
+    "btnStoryShareText": "Compartir",
+    "creatingPrintView": "Creando vista de impresión…",
+    "printViewButton": "Mostrar Vista de Impresión",
+    "printExplanation": "Abrir una versión imprimible de este mapa."
+  },
+  "settingPanel": {
+    "performanceLabel": "Rendimiento",
+    "qualityLabel": "Calidad",
+    "mapView": "Vista del mapa",
+    "screen": "pantalla",
+    "native": "nativa",
+    "viewerModeLabels": {
+      "Leaflet": "2D",
+      "CesiumTerrain": "3D Terreno",
+      "CesiumEllipsoid": "3D Liso"
+    },
+    "none": "(Nada)",
+    "imageOptimisation": "Optimización de Imagen",
+    "nativeResolutionLabel": "Presione para dejar de usar la resolución {{resolution1}} y comenzar a usar la resolución {{resolution2}}",
+    "qualityLabels": {
+      "lowerPerformance": "Máxima calidad, bajo rendimiento",
+      "balancedPerformance": "Balance entre rendimiento y calidad",
+      "maximumPerformance": "Máximo rendimiento, baja calidad"
+    },
+    "mapQuality": "Calidad del Mapa Ráster:",
+    "nativeResolutionHeader": "Usar resolución nativa del dispositivo",
+    "btnTitle": "Cambiar vista",
+    "baseMap": "Mapa Base"
+  },
+  "toolsPanel": {
+    "btnText": "Herramienta",
+    "btnTitle": "Caja de Herramientas Avanzada"
+  },
+  "AR": {
+    "confirmText": "Lo tengo",
+    "manualAlignmentMessage": "Alinee su dispositivo móvil para que se corresponda con la alineación actual del mapa, luego haga clic en la brújula parpadeante. Si no hay puntos de referencia visibles con los que alinearse en el mapa, puede mover el mapa con las acciones de arrastrar y pellizcar hasta que se vea un punto de referencia reconocible antes de alinear el dispositivo con el mapa. <br /> <div> {{img}} </div> <br /> Consejo: El sol o la luna suelen ser buenos puntos de referencia para alinearse si se encuentra en un lugar con el que no está familiarizado (tenga cuidado de no mira al sol, puede lastimarte los ojos).",
+    "btnResetRealign": "restablecer la alineación de la brújula",
+    "btnRealign": "alternar alineación manual",
+    "btnHover": "alternar altura de desplazamiento",
+    "experimentalFeatureMessage": "El modo de realidad aumentada se encuentra actualmente en fase beta. Este modo solo está diseñado para su uso en los últimos dispositivos móviles de gama alta. <br /> <br /> ADVERTENCIA: Este modo puede consumir una gran cantidad de datos, tenga en cuenta los cargos por el uso de datos de su proveedor de red. <br /> <br /> La precisión de este modo depende de la precisión de la brújula interna de su dispositivo móvil.",
+    "arTool": "herramienta de realidad aumentada",
+    "resetAlignmentTitle": "Restablecer Alineación",
+    "manualAlignmentTitle": "Alineación Manual",
+    "title": "Funcionalidad Experimental: Realidad Aumentada"
+  },
+  "zoomCotrol": {
+    "zoomOut": "Zoom -",
+    "zoomReset": "Restablecer zoom",
+    "zoomIn": "Zoom +"
+  },
+  "general": {
+    "delete": "Eliminar",
+    "skip": "Saltar",
+    "cancel": "Cancelar",
+    "next": "Sig",
+    "prev": "Ant",
+    "open": "Abrir",
+    "close": "Cerrar"
+  },
+  "measure": {
+    "measureTool": "Herramienta de Medición",
+    "measureDistance": "Medir distancia entre localizaciones"
+  },
+  "compass": {
+    "description": "Arrastrar anillo exterior: rotar vista.\nArrastre el giroscopio interior: órbita libre.\nHacer doble clic: restablecer la vista.\nSUGERENCIA: también puede liberar la órbita manteniendo presionada la tecla CTRL y arrastrando el mapa.",
+    "title": "Pichar y mover para rotar la cámara"
+  },
+  "preview": {
+    "addToMap": "Añadir al mapa",
+    "licence": "Licencia",
+    "disclaimer": "Descargo de responsabilidad"
+  },
+  "description": {
+    "typeName": "Nombre del tipo",
+    "layerName": "Nombre de capa",
+    "dataServiceDetails": "Detalles del Servicio de Datos"
+  },
+  "mobile": {
+    "toggleNavigation": "Cambiar navegación"
+  }
+}

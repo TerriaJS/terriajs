@@ -6,11 +6,11 @@ import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import ChartableMixin from "../../../ModelMixins/ChartableMixin";
-import hasTraits from "../../../Models/hasTraits";
+import hasTraits from "../../../Models/Definition/hasTraits";
 import raiseErrorOnRejectedPromise from "../../../Models/raiseErrorOnRejectedPromise";
 import Terria from "../../../Models/Terria";
 import Icon from "../../../Styled/Icon";
-import UrlTraits from "../../../Traits/UrlTraits";
+import UrlTraits from "../../../Traits/TraitsClasses/UrlTraits";
 import Styles from "./chart-expand-and-download-buttons.scss";
 
 const Dropdown = require("../../Generic/Dropdown");

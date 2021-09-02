@@ -1,0 +1,154 @@
+{
+  "settingPanel": {
+    "native": "nativ",
+    "performanceLabel": "Leistung",
+    "qualityLabel": "Qualität",
+    "mapQuality": "Qualität der Rasterkarte:",
+    "nativeResolutionHeader": "Native Geräteauflösung verwenden",
+    "imageOptimisation": "Bild-Optimierung",
+    "baseMap": "Basis-Karte",
+    "mapView": "Kartenansicht",
+    "btnTitle": "Ansicht ändern",
+    "screen": "Bildschirm",
+    "nativeResolutionLabel": "Klicken Sie hier, um die Verwendung der Auflösung {{resolution1}} zu beenden und mit der Auflösung {{resolution2}} fortzufahren",
+    "qualityLabels": {
+      "lowerPerformance": "Maximale Qualität, geringere Leistung",
+      "balancedPerformance": "Ausgewogene Leistung & Qualität",
+      "maximumPerformance": "Maximale Leistung, geringere Qualität"
+    },
+    "viewerModeLabels": {
+      "Leaflet": "2D",
+      "CesiumEllipsoid": "3D Smooth",
+      "CesiumTerrain": "3D-Gelände"
+    },
+    "none": "(Keine)"
+  },
+  "featureInfo": {
+    "latLon": "Lat / Lon ",
+    "siteData": "Standortdaten",
+    "noInfoAvailable": "Keine Informationen verfügbar",
+    "locationMarker": "Standortmarker",
+    "satelliteSuggestionBtn": "{{catalogItemName}} an dieser Stelle anzeigen",
+    "btnCloseFeature": "Datenfeld schließen",
+    "catalogItem": {
+      "moreThanMax": "Es wurden mehr als {{maximum}} {{catalogItemName}} Features gefunden.",
+      "featuresFound": "Es wurden {{featCount}} {catalogItemName} Features gefunden.",
+      "featureInfoShown": "Die ersten {{maximum}} werden unten angezeigt."
+    },
+    "panelHeading": "Informationen zum Features",
+    "userSelection": "Benutzerauswahl",
+    "clickToAddData": "Klicken Sie auf '$t(addData.addDataBtnText)', um der Karte Daten hinzuzufügen.",
+    "noDataAvailable": "An diesem Standort sind keine Daten verfügbar - versuchen Sie einen anderen Standort.",
+    "clickMap": "Klicken Sie auf die Karte, um mehr über einen Standort zu erfahren",
+    "pickLocation": "Standort wählen",
+    "download": "Diese Tabelle herunterladen"
+  },
+  "sui": {
+    "hideWorkbench": "Arbeitsbereich ausblenden",
+    "showWorkbench": "Arbeitsbereich anzeigen",
+    "notifications": {
+      "denyText": "Vielleicht später",
+      "confirmText": "Ja",
+      "message": "Möchten Sie es jetzt ansehen?",
+      "title": "Diese Karte enthält eine Story"
+    }
+  },
+  "helpMenu": {
+    "next": "NÄCHSTER",
+    "done": "FERTIG",
+    "helpMenuMoreHelpTitle": "Weitere Hilfe",
+    "helpMenuSatelliteGuideTitle": "Anleitung zum Betrachten von Satellitenbildern",
+    "helpMenuOpenWelcome": "Willkommensnachricht anzeigen",
+    "helpMenuHeader": "Was möchten Sie tun?",
+    "btnTitle": "Hilfe erhalten",
+    "btnText": "Hilfe"
+  },
+  "feedback": {
+    "feedbackBtnText": "Feedback geben",
+    "send": "Senden",
+    "sending": "Senden…",
+    "cancel": "Abbruch",
+    "captionText": "Dies hilft uns bei der Fehlerbehebung, da wir sehen können, was Sie sehen",
+    "shareWithDevelopers": "Meine Kartenansicht mit {{appName}}-Entwicklern teilen",
+    "commentQuestion": "Kommentar oder Frage",
+    "yourName": "Ihr Name (optional)",
+    "close": "Feedback schließen",
+    "title": "Feedback",
+    "feedbackPreamble": "Wir würden uns freuen, von Ihnen zu hören!"
+  },
+  "toolsPanel": {
+    "btnTitle": "Erweiterte Werkzeuge",
+    "btnText": "Werkzeug"
+  },
+  "countDatasets": {
+    "btnCount": "Datensätze zählen",
+    "title": "Datensätze zählen",
+    "recount": "Neuberechnung",
+    "subTotals": "<div> {{name}}: {{items}} Elemente / {{groups}} Gruppen</div>",
+    "totals": "<div>Der Katalog enthält {{items}} Artikel in {{groups}} Gruppen.</div>",
+    "countingMessage": "Berechnung, bitte warten…",
+    "loadError": "konnte nicht geladen werden.",
+    "btnText": "Start"
+  },
+  "share": {
+    "btnMapShareTitle": "Teilen Sie Ihre Karte mit anderen",
+    "btnStoryShareTitle": "Teilen Sie Ihre Story mit anderen",
+    "btnCatalogShareTitle": "Teilen Sie Ihren Katalog mit anderen",
+    "btnMapShareText": "Teilen / Drucken",
+    "btnStoryShareText": "Teilen",
+    "btnCatalogShareText": "Teilen",
+    "shortenUsingService": "Kürzen der Freigabe-URL mit Hilfe eines Webdienstes",
+    "embedTitle": "Zum Einbetten kopieren Sie diesen Code, um diese Karte in eine HTML-Seite einzubetten:",
+    "btnAdvanced": "Erweiterte Optionen",
+    "creatingPrintView": "Druckansicht anzeigen…",
+    "printViewButton": "Druckansicht anzeigen",
+    "printButton": "Drucken",
+    "printExplanation": "Öffnen Sie eine druckbare Version dieser Karte.",
+    "printTitle": "Karte drucken",
+    "generatingUrl": "Freigabe-URL generieren…",
+    "shortLinkError": "Beim Versuch, die URL zu kürzen, ist ein Fehler aufgetreten.  Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.",
+    "shortLinkShortening": "URL kürzen…",
+    "browserPrint": "Für bessere Druckergebnisse verwenden Sie bitte die Schaltfläche \"Drucken\" von {{appName}} anstelle der Druckfunktion Ihres Webbrowsers."
+  },
+  "location": {
+    "location": "Standort",
+    "browserCannotProvide": "Ihr Browser kann Ihren Standort nicht zur Verfügung stellen.",
+    "errorGettingLocation": "Fehler beim Abrufen des Standorts",
+    "myLocation": "Mein Standort"
+  },
+  "measure": {
+    "measureDistance": "Abstand zwischen Standorten messen",
+    "measureTool": "Messwerkzeug"
+  },
+  "general": {
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "skip": "Überspringen",
+    "next": "Nächster",
+    "prev": "Vorheriger",
+    "open": "Öffnen",
+    "close": "Schließen"
+  },
+  "splitterTool": {
+    "workbench": {
+      "goright": "Rechts"
+    }
+  },
+  "AR": {
+    "manualAlignmentTitle": "Manueller Abgleich",
+    "title": "Experimentelles Merkmal: Erweiterte Realität (Augmented Reality)",
+    "btnResetRealign": "Kompassausrichtung zurücksetzen",
+    "arTool": "Augmented-Reality-Tool",
+    "manualAlignmentMessage": "Richten Sie Ihr mobiles Gerät so aus, dass es mit der aktuellen Ausrichtung der Karte übereinstimmt, und klicken Sie dann auf den blinkenden Kompass. Wenn derzeit keine Landmarken zum Ausrichten auf der Karte sichtbar sind, können Sie die Karte durch Ziehen und Aufziehen verschieben, bis eine erkennbare Landmarke sichtbar ist, bevor Sie das Gerät an der Karte ausrichten. <br /><div>{{img}}</div> <br />Tipp: Die Sonne oder der Mond sind oft gute Orientierungspunkte, an denen Sie sich ausrichten können, wenn Sie sich an einem Ort befinden, mit dem Sie nicht vertraut sind (achten Sie darauf, nicht in die Sonne zu schauen - sie kann Ihren Augen schaden).",
+    "confirmText": "Verstanden",
+    "experimentalFeatureMessage": "Der Augmented Reality-Modus befindet sich derzeit in der Betaphase. Dieser Modus ist nur für die Verwendung auf den neuesten High-End-Mobilgeräten vorgesehen. <br /><br />WARNUNG: Dieser Modus kann eine Menge Daten verbrauchen, bitte beachten Sie die Datennutzungsgebühren Ihres Netzbetreibers. <br /><br />Die Genauigkeit dieses Modus hängt von der Genauigkeit des internen Kompasses Ihres Mobilgeräts ab."
+  },
+  "legend": {
+    "e": "O"
+  },
+  "zoomCotrol": {
+    "zoomOut": "Herauszoomen",
+    "zoomReset": "Zoom zurücksetzen",
+    "zoomIn": "Heranzoomen"
+  }
+}

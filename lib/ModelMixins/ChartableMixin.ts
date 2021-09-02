@@ -2,11 +2,11 @@ import { maxBy, minBy } from "lodash-es";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import LatLonHeight from "../Core/LatLonHeight";
-import Model from "../Models/Model";
+import Model from "../Models/Definition/Model";
 import ModelTraits from "../Traits/ModelTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import MappableMixin from "./MappableMixin";
-import MappableTraits from "../Traits/MappableTraits";
+import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 
 type Scale = "linear" | "time";
 

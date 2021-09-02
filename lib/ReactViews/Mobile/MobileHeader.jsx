@@ -1,20 +1,20 @@
-import React from "react";
-import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
-import SearchBox from "../Search/SearchBox";
-import MobileModalWindow from "./MobileModalWindow";
-import Branding from "../SidePanel/Branding";
-import Styles from "./mobile-header.scss";
-import Icon, { StyledIcon } from "../../Styled/Icon";
-import MobileMenu from "./MobileMenu";
 import classNames from "classnames";
-import { removeMarker } from "../../Models/LocationMarkerUtils";
+import createReactClass from "create-react-class";
+import { runInAction } from "mobx";
+import { observer } from "mobx-react";
+import PropTypes from "prop-types";
+import React from "react";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
-import { observer } from "mobx-react";
-import { runInAction } from "mobx";
+import { removeMarker } from "../../Models/LocationMarkerUtils";
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
+import Icon, { StyledIcon } from "../../Styled/Icon";
+import SearchBox from "../Search/SearchBox";
+import Branding from "../SidePanel/Branding";
+import Styles from "./mobile-header.scss";
+import MobileMenu from "./MobileMenu";
+import MobileModalWindow from "./MobileModalWindow";
 
 const MobileHeader = observer(
   createReactClass({
@@ -210,7 +210,7 @@ const MobileHeader = observer(
                     className={Styles.btnAdd}
                     onClick={this.onMobileDataCatalogClicked}
                   >
-                    {t("mobile.header")}
+                    {t("mobile.addDataBtnText")}
                     <Icon glyph={Icon.GLYPHS.increase} />
                   </button>
                   <If condition={nowViewingLength > 0}>

@@ -1,7 +1,8 @@
 import { WithT } from "i18next";
 import { computed } from "mobx";
-import { default as React, Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import TerriaError from "../../Core/TerriaError";
 import { useTranslationIfExists } from "../../Language/languageHelpers";
 import Terria from "../../Models/Terria";
 import ViewerMode from "../../Models/ViewerMode";
@@ -83,7 +84,6 @@ export class ToolButtonController extends MapNavigationItemController {
   @computed
   get active() {
     const currentTool = this.props.viewState.currentTool;
-    currentTool && currentTool.toolName === this.props.toolName;
     return (
       super.active ||
       (currentTool && currentTool.toolName === this.props.toolName) ||
@@ -124,10 +124,12 @@ class ToolErrorBoundary extends React.Component<
 
   componentDidCatch() {
     const { terria, toolName, t } = this.props;
-    terria.raiseErrorToUser({
-      title: t("tool.loadingError.title", { toolName }),
-      message: t("tool.loadingError.message")
-    });
+    terria.raiseErrorToUser(
+      new TerriaError({
+        title: t("tool.loadingError.title", { toolName }),
+        message: t("tool.loadingError.message")
+      })
+    );
     this.setState({ hasError: true });
   }
 

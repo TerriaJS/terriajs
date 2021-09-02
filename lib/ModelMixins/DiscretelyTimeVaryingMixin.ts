@@ -8,9 +8,9 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
 import { calculateDomain, ChartItem } from "../ModelMixins/ChartableMixin";
-import CommonStrata from "../Models/CommonStrata";
-import Model from "../Models/Model";
-import DiscretelyTimeVaryingTraits from "../Traits/DiscretelyTimeVaryingTraits";
+import CommonStrata from "../Models/Definition/CommonStrata";
+import Model from "../Models/Definition/Model";
+import DiscretelyTimeVaryingTraits from "../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import TimeVarying from "./TimeVarying";
 
 type DiscretelyTimeVarying = Model<DiscretelyTimeVaryingTraits>;
@@ -374,10 +374,10 @@ function DiscretelyTimeVaryingMixin<
 }
 
 namespace DiscretelyTimeVaryingMixin {
-  export interface DiscretelyTimeVaryingMixin
+  export interface Instance
     extends InstanceType<ReturnType<typeof DiscretelyTimeVaryingMixin>> {}
 
-  export function isMixedInto(model: any): model is DiscretelyTimeVaryingMixin {
+  export function isMixedInto(model: any): model is Instance {
     return model && model.hasDiscreteTimes;
   }
 }

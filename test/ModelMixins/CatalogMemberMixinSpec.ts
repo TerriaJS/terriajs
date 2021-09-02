@@ -1,12 +1,12 @@
 import { runInAction, IReactionDisposer, reaction } from "mobx";
 import Terria from "../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-import updateModelFromJson from "../../lib/Models/updateModelFromJson";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import createStratumInstance from "../../lib/Models/createStratumInstance";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 import DimensionTraits, {
   DimensionOptionTraits
-} from "../../lib/Traits/DimensionTraits";
+} from "../../lib/Traits/TraitsClasses/DimensionTraits";
 
 describe("CatalogMemberMixin", function() {
   describe(" - infoWithoutSources", function() {
