@@ -5,7 +5,12 @@ import SearchResult from "./SearchResult";
 
 export default class SearchProviderResults {
   @observable results: SearchResult[] = [];
-  @observable message: string | undefined;
+  @observable message?: {
+    content: string;
+    params?: {
+      [key: string]: string | number | undefined;
+    };
+  };
   isCanceled = false;
   resultsCompletePromise: IPromiseBasedObservable<void> = fromPromise(
     Promise.resolve()

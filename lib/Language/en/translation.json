@@ -1520,6 +1520,7 @@
     }
   },
   "searchProvider": {
+    "noSearchProviders": "There is no configured search providers",
     "models": {
       "unsupportedTypeTitle": "Unknown type",
       "unsupportedTypeMessage": "Could not create unknown model type {{type}}.",

@@ -1,4 +1,3 @@
-import i18next from "i18next";
 import { action } from "mobx";
 import { fromPromise } from "mobx-utils";
 import Constructor from "../../Core/Constructor";
@@ -26,9 +25,12 @@ function SearchProviderMixin<T extends Constructor<SearchProviderModel>>(
       const result = new SearchProviderResults(this);
       if (!this.shouldRunSearch(searchText)) {
         result.resultsCompletePromise = fromPromise(Promise.resolve());
-        result.message = i18next.t("viewModels.searchMinCharacters", {
-          count: this.minCharacters
-        });
+        result.message = {
+          content: "translate#viewModels.searchMinCharacters",
+          params: {
+            count: this.minCharacters
+          }
+        };
         return result;
       }
       this.logEvent(searchText);

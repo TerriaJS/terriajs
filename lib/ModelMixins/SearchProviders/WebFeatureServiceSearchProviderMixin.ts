@@ -1,11 +1,10 @@
-import i18next from "i18next";
 import { runInAction } from "mobx";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
 import Constructor from "../../Core/Constructor";
 import makeRealPromise from "../../Core/makeRealPromise";
 import zoomRectangleFromPoint from "../../Map/zoomRectangleFromPoint";
-import Model from "../../Models/Model";
+import Model from "../../Models/Definition/Model";
 import SearchProviderResults from "../../Models/SearchProviders/SearchProviderResults";
 import SearchResult from "../../Models/SearchProviders/SearchResult";
 import xml2json from "../../ThirdParty/xml2json";
@@ -91,7 +90,9 @@ function WebFeatureServiceSearchProviderMixin<
           let json: any = xml2json(xml);
           let features: any[];
           if (json === undefined) {
-            results.message = i18next.t("viewModels.searchErrorOccurred");
+            results.message = {
+              content: "translate#viewModels.searchErrorOccurred"
+            };
             return;
           }
 
@@ -100,7 +101,9 @@ function WebFeatureServiceSearchProviderMixin<
           } else if (json.featureMember !== undefined) {
             features = json.featureMember;
           } else {
-            results.message = i18next.t("viewModels.searchNoPlaceNames");
+            results.message = {
+              content: "translate#translate#viewModels.searchNoPlaceNames"
+            };
             return;
           }
 
@@ -117,7 +120,9 @@ function WebFeatureServiceSearchProviderMixin<
             }
 
             if (features.length === 0) {
-              results.message = i18next.t("viewModels.searchNoPlaceNames");
+              results.message = {
+                content: "translate#viewModels.searchNoPlaceNames"
+              };
               return;
             }
 
@@ -174,7 +179,9 @@ function WebFeatureServiceSearchProviderMixin<
             // A new search has superseded this one, so ignore the result.
             return;
           }
-          results.message = i18next.t("viewModels.searchErrorOccurred");
+          results.message = {
+            content: "translate#viewModels.searchErrorOccurred"
+          };
         });
     }
 

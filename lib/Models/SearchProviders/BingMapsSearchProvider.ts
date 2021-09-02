@@ -1,4 +1,3 @@
-import i18next from "i18next";
 import { runInAction } from "mobx";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
@@ -8,6 +7,7 @@ import {
   SearchAction
 } from "../../Core/AnalyticEvents/analyticEvents";
 import loadJsonp from "../../Core/loadJsonp";
+import { useTranslationIfExists } from "../../Language/languageHelpers";
 import LocationSearchProviderMixin, {
   getMapCenter
 } from "../../ModelMixins/SearchProviders/LocationSearchProviderMixin";
@@ -43,7 +43,7 @@ export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
     if (!this.key || this.key === "") {
       console.warn(
         "The " +
-          this.name +
+          useTranslationIfExists(this.name) +
           " geocoder will always return no results because a Bing Maps key has not been provided. Please get a Bing Maps key from bingmapsportal.com and add it to parameters.bingMapsKey in config.json."
       );
     }
@@ -91,13 +91,17 @@ export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
         }
 
         if (result.resourceSets.length === 0) {
-          searchResults.message = i18next.t("viewModels.searchNoLocations");
+          searchResults.message = {
+            content: "translate#viewModels.searchNoLocations"
+          };
           return;
         }
 
         var resourceSet = result.resourceSets[0];
         if (resourceSet.resources.length === 0) {
-          searchResults.message = i18next.t("viewModels.searchNoLocations");
+          searchResults.message = {
+            content: "translate#viewModels.searchNoLocations"
+          };
           return;
         }
 
@@ -109,7 +113,9 @@ export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
         });
 
         if (searchResults.results.length === 0) {
-          searchResults.message = i18next.t("viewModels.searchNoLocations");
+          searchResults.message = {
+            content: "translate#viewModels.searchNoLocations"
+          };
         }
       })
       .catch(() => {
@@ -118,7 +124,9 @@ export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
           return;
         }
 
-        searchResults.message = i18next.t("viewModels.searchErrorOccurred");
+        searchResults.message = {
+          content: "translate#viewModels.searchErrorOccurred"
+        };
       });
   }
 

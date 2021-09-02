@@ -69,7 +69,7 @@ export function loadAndSearchCatalogRecursively(
   if (referencesAndGroupsToLoad.length === 0) {
     return Promise.resolve(terria);
   }
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     autorun(reaction => {
       Promise.all(
         referencesAndGroupsToLoad.map(async model => {
@@ -82,18 +82,22 @@ export function loadAndSearchCatalogRecursively(
           //   return model.loadMembers();
           // }
         })
-      ).then(() => {
-        // Then call this function again to see if new child references were loaded in
-        resolve(
-          loadAndSearchCatalogRecursively(
-            terria,
-            searchTextLowercase,
-            searchResults,
-            resultMap,
-            iteration + 1
-          )
-        );
-      });
+      )
+        .then(() => {
+          // Then call this function again to see if new child references were loaded in
+          resolve(
+            loadAndSearchCatalogRecursively(
+              terria,
+              searchTextLowercase,
+              searchResults,
+              resultMap,
+              iteration + 1
+            )
+          );
+        })
+        .catch(error => {
+          reject(error);
+        });
       reaction.dispose();
     });
   });
@@ -133,14 +137,12 @@ export default class CatalogSearchProvider extends SearchProviderMixin(
 
     const resultMap: ResultMap = new Map();
 
-    const promise: Promise<any> = loadAndSearchCatalogRecursively(
+    return loadAndSearchCatalogRecursively(
       this.terria,
       searchText.toLowerCase(),
       searchResults,
       resultMap
-    );
-
-    return promise
+    )
       .then(terria => {
         runInAction(() => {
           this.isSearching = false;
@@ -156,8 +158,9 @@ export default class CatalogSearchProvider extends SearchProviderMixin(
         });
 
         if (searchResults.results.length === 0) {
-          searchResults.message =
-            "Sorry, no locations match your search query.";
+          searchResults.message = {
+            content: "translate#viewModels.searchNoLocations"
+          };
         }
       })
       .catch(() => {
@@ -165,9 +168,13 @@ export default class CatalogSearchProvider extends SearchProviderMixin(
           // A new search has superseded this one, so ignore the result.
           return;
         }
+        runInAction(() => {
+          this.isSearching = false;
+        });
 
-        searchResults.message =
-          "An error occurred while searching.  Please check your internet connection or try again later.";
+        searchResults.message = {
+          content: "translate#viewModels.searchErrorOccurred"
+        };
       });
   }
 }

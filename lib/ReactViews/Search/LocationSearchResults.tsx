@@ -170,11 +170,11 @@ const SearchResultsFooter: React.FC<SearchResultsFooterProps> = (
   const { t } = useTranslation();
   if (props.isExpanded) {
     return t("search.viewLess", {
-      name: props.name
+      name: useTranslationIfExists(props.name)
     });
   }
   return t("search.viewMore", {
-    name: props.name
+    name: useTranslationIfExists(props.name)
   });
 };
 
