@@ -1,17 +1,12 @@
-import React from "react";
-import { observer } from "mobx-react";
-
 import createReactClass from "create-react-class";
-
+import { observer } from "mobx-react";
 import PropTypes from "prop-types";
+import React from "react";
 import { withTranslation } from "react-i18next";
-
 import defined from "terriajs-cesium/Source/Core/defined";
-
-import DataCatalogMember from "./DataCatalogMember";
 import SearchHeader from "../Search/SearchHeader";
-
 import Styles from "./data-catalog.scss";
+import DataCatalogMember from "./DataCatalogMember";
 
 // Displays the data catalog.
 export const DataCatalog = observer(
@@ -48,7 +43,7 @@ export const DataCatalog = observer(
           <If condition={isSearching && hasCatalogSearchProvider}>
             <label className={Styles.label}>{t("search.resultsLabel")}</label>
             <SearchHeader
-              searchResults={searchState.catalogSearchProvider}
+              searchResults={searchState.catalogSearchResults}
               isWaitingForSearchToStart={
                 searchState.isWaitingToStartCatalogSearch
               }

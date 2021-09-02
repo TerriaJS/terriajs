@@ -7,6 +7,7 @@ import GroupMixin from "../../ModelMixins/GroupMixin";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
 import SearchProviderMixin from "../../ModelMixins/SearchProviders/SearchProviderMixin";
 import CatalogSearchProviderTraits from "../../Traits/SearchProviders/CatalogSearchProviderTraits";
+import CommonStrata from "../Definition/CommonStrata";
 import CreateModel from "../Definition/CreateModel";
 import Terria from "../Terria";
 import SearchProviderResults from "./SearchProviderResults";
@@ -109,6 +110,15 @@ export default class CatalogSearchProvider extends SearchProviderMixin(
   static readonly type = "catalog-search-provider";
   @observable isSearching: boolean = false;
   @observable debounceDurationOnceLoaded: number = 300;
+
+  constructor(id: string | undefined, terria: Terria) {
+    super(id, terria);
+    this.setTrait(
+      CommonStrata.defaults,
+      "minCharacters",
+      terria.configParameters.searchBar!.minCharacters
+    );
+  }
 
   get type() {
     return CatalogSearchProvider.type;
