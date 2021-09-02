@@ -24,6 +24,8 @@ interface ReferenceInterface extends ModelInterface<RequiredTraits> {
  */
 function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
   abstract class ReferenceMixin extends Base implements ReferenceInterface {
+    protected readonly ignoreSourceReferece: boolean = false;
+
     @observable
     private _target: BaseModel | undefined;
 
@@ -32,7 +34,8 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
       return this.forceLoadReference(previousTarget).then(target => {
         if (
           target &&
-          (target.sourceReference !== this || target.uniqueId !== this.uniqueId)
+          ((!this.ignoreSourceReferece && target.sourceReference !== this) ||
+            target.uniqueId !== this.uniqueId)
         ) {
           throw new DeveloperError(
             "The model returned by `forceLoadReference` must be constructed " +

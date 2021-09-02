@@ -13,6 +13,7 @@ import ReferenceMixin from "../lib/ModelMixins/ReferenceMixin";
 import registerCatalogMembers from "../lib/Models/Catalog/registerCatalogMembers";
 import SdmxCatalogGroup from "../lib/Models/Catalog/SdmxJson/SdmxJsonCatalogGroup";
 import { BaseModel } from "../lib/Models/Definition/Model";
+import { CatalogIndex } from "../lib/Models/SearchProviders/CatalogSearchProvider";
 import Terria from "../lib/Models/Terria";
 
 export default async function generateCatalogIndex(argv: string[]) {
@@ -24,13 +25,6 @@ export default async function generateCatalogIndex(argv: string[]) {
   }
 
   console.log(`Config URL: ${configUrl}`);
-
-  interface CatalogIndex {
-    [id: string]: {
-      name: string;
-      knownContainerUniqueIds: string[];
-    };
-  }
 
   // Load 10 concurrent requests per second
   const limiter = new Bottleneck({

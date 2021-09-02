@@ -32,6 +32,7 @@ import JsonValue, {
   JsonObject
 } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
+import loadJson from "../Core/loadJson";
 import loadJson5 from "../Core/loadJson5";
 import Result from "../Core/Result";
 import ServerConfig from "../Core/ServerConfig";
@@ -58,13 +59,15 @@ import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import { BaseMapsModel } from "./BaseMaps/BaseMapsModel";
 import CameraView from "./CameraView";
+import Catalog from "./Catalog/Catalog";
 import CatalogGroup from "./Catalog/CatalogGroup";
 import CatalogMemberFactory from "./Catalog/CatalogMemberFactory";
-import Catalog from "./Catalog/Catalog";
+import CatalogIndexReference from "./Catalog/CatalogReferences/CatalogIndexReference";
 import MagdaReference, {
   MagdaReferenceHeaders
 } from "./Catalog/CatalogReferences/MagdaReference";
 import SplitItemReference from "./Catalog/CatalogReferences/SplitItemReference";
+import { proxyUrl } from "./Catalog/proxyCatalogItemUrl";
 import CommonStrata from "./Definition/CommonStrata";
 import hasTraits from "./Definition/hasTraits";
 import { BaseModel } from "./Definition/Model";
@@ -91,6 +94,7 @@ import Internationalization, {
 } from "./Internationalization";
 import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
+import { CatalogIndex } from "./SearchProviders/CatalogSearchProvider";
 import ShareDataService from "./ShareDataService";
 import TimelineStack from "./TimelineStack";
 import ViewerMode from "./ViewerMode";
@@ -111,6 +115,10 @@ interface ConfigParameters {
    * The maximum number of "feature info" boxes that can be displayed when clicking a point.
    */
   defaultMaximumShownFeatureInfos: number;
+  /**
+   * URL of the JSON file that contains index of catalog.
+   */
+  catalogIndexUrl?: string;
   /**
    * URL of the JSON file that defines region mapping for CSV files.
    */
@@ -323,11 +331,16 @@ interface HomeCameraInit {
 }
 
 export default class Terria {
-  private models = observable.map<string, BaseModel>();
+  private readonly models = observable.map<string, BaseModel>();
+  @computed get modelValues() {
+    return this.models.values();
+  }
   /** Map from share key -> id */
   readonly shareKeysMap = observable.map<string, string>();
   /** Map from id -> share keys */
   readonly modelIdShareKeysMap = observable.map<string, string[]>();
+
+  readonly catalogIndex = observable.map<string, CatalogIndexReference>();
 
   readonly baseUrl: string = "build/TerriaJS/";
   /** Use `terria.addErrorEventListener` or `terria.raiseErrorToUser` if you need to interact with errors outside this class*/
@@ -384,6 +397,7 @@ export default class Terria {
     appName: "TerriaJS App",
     supportEmail: "info@terria.io",
     defaultMaximumShownFeatureInfos: 100,
+    catalogIndexUrl: undefined,
     regionMappingDefinitionsUrl: "build/TerriaJS/data/regionMapping.json",
     conversionServiceBaseUrl: "convert/",
     proj4ServiceBaseUrl: "proj4/",
@@ -1045,12 +1059,15 @@ export default class Terria {
       })
     );
 
+    // Load basemap
     runInAction(() => {
       if (!this.mainViewer.baseMap) {
         // Note: there is no "await" here - as basemaps can take a while to load and there is no need to wait for them to load before rendering Terria
         this.loadPersistedOrInitBaseMap();
       }
     });
+
+    this.loadCatalogIndex();
 
     if (errors.length > 0) {
       // Note - this will get wrapped up in a Result object because it is called in AsyncLoader
@@ -1060,6 +1077,26 @@ export default class Terria {
           key: "models.terria.loadingInitSourcesErrorMessage",
           parameters: { appName: this.appName, email: this.supportEmail }
         }
+      });
+    }
+  }
+
+  @action
+  private async loadCatalogIndex() {
+    // Load catalog index
+    if (this.configParameters.catalogIndexUrl) {
+      const index = (await loadJson(
+        proxyUrl(this, this.configParameters.catalogIndexUrl)
+      )) as CatalogIndex;
+      Object.entries(index).forEach(([id, model]) => {
+        const reference = new CatalogIndexReference(id, this);
+        reference.setTrait(CommonStrata.definition, "name", model.name);
+        reference.setTrait(
+          CommonStrata.definition,
+          "memberKnownContainerUniqueIds",
+          model.knownContainerUniqueIds
+        );
+        this.catalogIndex.set(id, reference);
       });
     }
   }
