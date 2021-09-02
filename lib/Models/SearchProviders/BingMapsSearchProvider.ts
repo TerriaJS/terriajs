@@ -182,6 +182,6 @@ function createZoomToFunction(model: BingMapsSearchProvider, resource: any) {
 
   return function() {
     const terria = model.terria;
-    terria.currentViewer.zoomTo(rectangle, model.flightDurationSeconds!);
+    terria.currentViewer.zoomTo(rectangle, model.flightDurationSeconds);
   };
 }
