@@ -45,7 +45,7 @@ export class AugmentedVirtualityController extends MapNavigationItemController {
   }
 
   @action.bound
-  handleClick() {
+  activate() {
     // Make the AugmentedVirtuality module avaliable elsewhere.
     this.props.terria.augmentedVirtuality = this.props.augmentedVirtuality;
     // feature detect for new ios 13
@@ -87,7 +87,11 @@ export class AugmentedVirtualityController extends MapNavigationItemController {
         confirmText: i18next.t("AR.confirmText")
       });
     }
-    this.props.augmentedVirtuality.toggleEnabled();
+    this.props.augmentedVirtuality.activate();
+  }
+
+  deactivate() {
+    this.props.augmentedVirtuality.deactivate();
   }
 }
 
