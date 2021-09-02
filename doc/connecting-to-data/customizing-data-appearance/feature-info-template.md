@@ -125,15 +125,20 @@ As with number you can also use `terria.dateTimeformat` directly in the template
               "featureInfoTemplate": "template": "{{#terria.formatDateTime}}{format: \"dd-mm-yyyy HH:MM:ss\"}2017-11-23T08:47:53Z{{/terria.formatDateTime}}</b>."
 
 ## Replace text
-You can replace text by directly using `terria.replaceText` in the template and providing two arrays for matching and replacement. For example, with the following template,
- - If the value of `feature.data.layerId` matches an element (number treated as string) in the `from` array, it will be replaced by corresponding string in the `to` array.
- - If there is no matching in the `from` array, the value will not be replaced. 
- - The flag `replaceText` must be defined and set to `true`. Otherwise no replacement will happen.
- - Any unsafe string in the `to` array will be stripped off when being rendered.
+You can replace text by directly using `terria.partialByName` in the template and providing partials for matching and replacement. For example, with the following template and partials,
+ - If the value of `feature.data.layerId` matches a property name in the `partials`, it will be replaced by corresponding value.
+ - If there is no matching in the `partials`, the original value will be used. 
+ - Any unsafe values in the `partials` will be stripped off when being rendered.
 
-            "featureInfoTemplate": {
-              "template": '{{Pixel Value}} dwellings in {{#terria.replaceText}}{replaceText: true, from: [0,1,2,3], to: ["100m", "500m", "1km", "2km"]}{{feature.data.layerId}}{{/terria.replaceText}} radius.'
-            }
+     "featureInfoTemplate": {
+        "template": "{{Pixel Value}} dwellings in {{#terria.partialByName}}{{feature.data.layerId}}{{/terria.partialByName}} radius.",
+        "partials": {
+          "0": "100m",
+          "1": "500m",
+          "2": "1km",
+          "3": "2km"
+        }
+      }
 
 where the number array `[0,1,2,3]` can also be written as string array `["0","1","2","3"]`. 
 

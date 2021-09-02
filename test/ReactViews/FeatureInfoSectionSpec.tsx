@@ -796,10 +796,16 @@ describe("FeatureInfoSection", function() {
       expect(findAllEqualTo(result, "Clicked 44, 77").length).toEqual(1);
     });
 
-    it("can replace text, using terria.replaceText", function() {
+    it("can replace text, using terria.partialByName", function() {
       // Replace "Kay" of feature.properties.name with "Yak", or "This name" with "That name".
-      const template =
-        '{{#terria.replaceText}}{replaceText: true, from: ["Bar", "Kay", "This name"], to: ["Rab", "Yak", "That name"]}{{name}}{{/terria.replaceText}}';
+      const template = {
+        template: "{{#terria.partialByName}}{{name}}{{/terria.partialByName}}",
+        partials: {
+          Bar: "Rab",
+          Kay: "Yak",
+          "This name": "That name"
+        }
+      };
 
       let section = (
         <FeatureInfoSection
@@ -829,9 +835,15 @@ describe("FeatureInfoSection", function() {
       expect(findAllEqualTo(result, "Yak").length).toEqual(0);
     });
 
-    it("does not replace any text, using terria.replaceText but not defining replaceText flag in the options.", function() {
-      const template =
-        '{{#terria.replaceText}}{from: ["Bar", "Kay", "This name"], to: ["Rab", "Yak", "That name"]}{{name}}{{/terria.replaceText}}';
+    it("does not replace text if no matching, using terria.partialByName", function() {
+      const template = {
+        template: "{{#terria.partialByName}}{{name}}{{/terria.partialByName}}",
+        partials: {
+          Bar: "Rab",
+          NotKay: "Yak",
+          "This name": "That name"
+        }
+      };
 
       const section = (
         <FeatureInfoSection
@@ -847,46 +859,15 @@ describe("FeatureInfoSection", function() {
       expect(findAllEqualTo(result, "Kay").length).toEqual(1);
     });
 
-    it("does not replace any text, using terria.replaceText but setting replaceText flag to false in the options.", function() {
-      const template =
-        '{{#terria.replaceText}}{replaceText: false, from: ["Bar", "Kay", "This name"], to: ["Rab", "Yak", "That name"]}{{name}}{{/terria.replaceText}}';
-
-      const section = (
-        <FeatureInfoSection
-          feature={feature} // feature.properties.name === "Kay";
-          isOpen={true}
-          template={template}
-          viewState={viewState}
-          t={() => {}}
-        />
-      );
-      const result = getShallowRenderedOutput(section);
-      expect(findAllEqualTo(result, "Yak").length).toEqual(0);
-      expect(findAllEqualTo(result, "Kay").length).toEqual(1);
-    });
-
-    it("does not replace text if no matching, using terria.replaceText", function() {
-      // The value of feature.properties.name does not match any string in "from" array.
-      const template =
-        '{{#terria.replaceText}}{replaceText: true, from: ["Bar", "Kaykay", "This"], to: ["Rab", "Yak", "That"]}{{name}}{{/terria.replaceText}}';
-
-      const section = (
-        <FeatureInfoSection
-          feature={feature} // feature.properties.name === "Kay";
-          isOpen={true}
-          template={template}
-          viewState={viewState}
-          t={() => {}}
-        />
-      );
-      const result = getShallowRenderedOutput(section);
-      expect(findAllEqualTo(result, "Yak").length).toEqual(0);
-      expect(findAllEqualTo(result, "Kay").length).toEqual(1);
-    });
-
-    it("can replace text and filter out unsafe replacement, using terria.replaceText", function() {
-      const template =
-        '{{#terria.replaceText}}{replaceText: true, from: ["Bar", "Kay", "This"], to: ["Rab", "Yak!<script>alert(\'gotcha\')</script>", "That"]}{{name}}{{/terria.replaceText}}';
+    it("can replace text and filter out unsafe replacement, using terria.partialByName", function() {
+      const template = {
+        template: "{{#terria.partialByName}}{{name}}{{/terria.partialByName}}",
+        partials: {
+          Bar: "Rab",
+          Kay: "Yak!<script>alert('gotcha')</script>",
+          This: "That"
+        }
+      };
 
       const section = (
         <FeatureInfoSection
