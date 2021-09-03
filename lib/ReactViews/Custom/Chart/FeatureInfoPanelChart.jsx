@@ -140,16 +140,25 @@ class Chart extends React.Component {
         <Group top={margin.top} left={margin.left}>
           <AxisBottom
             top={this.plot.height}
-            scale={this.scales.x}
-            numTicks={2}
-            stroke="none"
-            tickStroke="none"
-            tickLabelProps={() => ({
-              ...textStyle,
-              // nudge the tick label a bit to the left so that we can fit
-              // values up to 8 chars long without getting clipped
-              dx: "-2em"
-            })}
+            // .nice() rounds the scale so that the aprox beginning and
+            // aprox end labels are shown
+            // See: https://stackoverflow.com/questions/21753126/d3-js-starting-and-ending-tick
+            scale={this.scales.x.nice()}
+            numTicks={4}
+            stroke="#a0a0a0"
+            tickStroke="#a0a0a0"
+            tickLabelProps={(value, i, ticks) => {
+              // To prevent the first and last values from getting clipped,
+              // we position the first label text to start at the tick position
+              // and the last label text to finish at the tick position. For all
+              // others, middle of the text will coincide with the tick position.
+              const textAnchor =
+                i === 0 ? "start" : i === ticks.length - 1 ? "end" : "middle";
+              return {
+                ...textStyle,
+                textAnchor
+              };
+            }}
             label={this.props.xAxisLabel}
             labelOffset={3}
             labelProps={textStyle}
