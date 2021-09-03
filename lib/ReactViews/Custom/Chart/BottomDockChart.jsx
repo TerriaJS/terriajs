@@ -422,6 +422,7 @@ class XAxis extends React.PureComponent {
   };
 
   render() {
+    const { scale, ...restProps } = this.props;
     return (
       <AxisBottom
         stroke="#efefef"
@@ -438,7 +439,11 @@ class XAxis extends React.PureComponent {
           textAnchor: "middle",
           fontFamily: "Arial"
         }}
-        {...this.props}
+        // .nice() rounds the scale so that the aprox beginning and
+        // aprox end labels are shown
+        // See: https://stackoverflow.com/questions/21753126/d3-js-starting-and-ending-tick
+        scale={scale.nice()}
+        {...restProps}
       />
     );
   }
