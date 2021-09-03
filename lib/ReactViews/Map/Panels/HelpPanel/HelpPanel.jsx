@@ -7,7 +7,7 @@ import { withTheme } from "styled-components";
 import Icon, { StyledIcon } from "../../../../Styled/Icon";
 import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
-import Box from "../../../../Styled/Box";
+import Box, { BoxSpan } from "../../../../Styled/Box";
 import parseCustomMarkdownToReact from "../../../Custom/parseCustomMarkdownToReact";
 import HelpPanelItem from "./HelpPanelItem";
 import Button, { RawButton } from "../../../../Styled/Button";
@@ -15,7 +15,6 @@ import {
   Category,
   HelpAction
 } from "../../../../Core/AnalyticEvents/analyticEvents";
-
 @observer
 class HelpPanel extends React.Component {
   static displayName = "HelpPanel";
@@ -118,18 +117,45 @@ class HelpPanel extends React.Component {
           </Box>
         </Box>
         <Spacing bottom={10} />
-        <Box centered displayInlineBlock fullWidth>
-          <Box displayInlineBlock fullWidth>
-            {helpItems && (
-              <For each="item" index="i" of={helpItems}>
+        <Box centered displayInlineBlock>
+          {helpItems && (
+            <For each="item" index="i" of={helpItems}>
+              <Box displayInlineBlock fullWidth styledHeight={"70px"}>
                 <HelpPanelItem
                   key={i}
                   terria={this.props.terria}
                   viewState={this.props.viewState}
                   content={item}
                 />
-              </For>
-            )}
+              </Box>
+            </For>
+          )}
+          <Box styledHeight={"64px"}>
+            <Box styledMargin={"auto 25px"}>
+              <Text semiBold extraLarge textDark uppercase>
+                <a
+                  href="https://terriajs.gitbook.io/terriajs/"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  onClick={() =>
+                    this.props.terria.analytics?.logEvent(
+                      Category.help,
+                      HelpAction.userGuideOpened
+                    )
+                  }
+                >
+                  <BoxSpan displayInlineBlock styledPadding={"0 10px 0 0"}>
+                    {t("helpPanel.terriaMapUserGuide")}
+                  </BoxSpan>
+                  <StyledIcon
+                    glyph={Icon.GLYPHS.externalLink}
+                    displayInline
+                    styledWidth={"15px"}
+                    fillColor={this.props.theme.textDark}
+                  />
+                </a>
+              </Text>
+            </Box>
           </Box>
         </Box>
       </Box>

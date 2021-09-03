@@ -298,7 +298,8 @@
     "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [info@terria.io](mailto:info@terria.io)",
     "promptMessage": "Find the Tour, how-to videos & other help content here",
     "dismissText": "Got it, thanks!",
-    "takeTour": "Take the tour"
+    "takeTour": "Take the tour",
+    "terriaMapUserGuide": "Terria maps user guide"
   },
   "helpMenu": {
     "btnText": "Help",
