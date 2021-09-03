@@ -14,6 +14,7 @@ Change Log
   - Terria exposes instance of navigation model to the world.
   - Converted all existing navigation items to utilise new navigation model, and registered them in terria navigation model (`registerMapNavigations.tsx`).
   - Resolved issue with some navigation items not being clickable on mobile due to overlap from others.
+* Moved help button to the top menu
 * [The next improvement]
 
 #### 8.0.0
