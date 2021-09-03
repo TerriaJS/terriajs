@@ -9,6 +9,8 @@ import React from "react";
 import ChartableMixin from "../../../ModelMixins/ChartableMixin";
 import Styles from "./chart-preview.scss";
 import LineChart from "./LineChart";
+import styled from "styled-components";
+import i18next from "i18next";
 
 @withParentSize
 @observer
@@ -54,15 +56,30 @@ class FeatureInfoPanelChart extends React.Component {
   }
 
   render() {
-    if (!ChartableMixin.isMixedInto(this.props.item)) return null;
-    if (!this.chartItem) return null;
+    const catalogItem = this.props.item;
+    const height = this.props.height || this.props.parentHeight;
+    const width = this.props.width || this.props.parentWidth;
+    if (!ChartableMixin.isMixedInto(catalogItem)) {
+      return null;
+    } else if (!this.chartItem && catalogItem.isLoadingMapItems) {
+      return (
+        <ChartStatusText width={width} height={height}>
+          {i18next.t("chart.loading")}
+        </ChartStatusText>
+      );
+    } else if (!this.chartItem || this.chartItem.points.length === 0) {
+      return (
+        <ChartStatusText width={width} height={height}>
+          {i18next.t("chart.noData")}
+        </ChartStatusText>
+      );
+    }
 
-    const { width, height, parentWidth, parentHeight } = this.props;
     return (
       <div className={Styles.previewChart}>
         <Chart
-          width={width || parentWidth}
-          height={height || parentHeight}
+          width={width}
+          height={height}
           margin={this.props.margin}
           chartItem={this.chartItem}
           baseColor={this.props.baseColor}
@@ -118,10 +135,6 @@ class Chart extends React.Component {
 
   render() {
     const { height, margin, chartItem, baseColor } = this.props;
-
-    if (chartItem.points.length === 0) {
-      return <div className={Styles.empty}>No data available</div>;
-    }
 
     // Make sure points are asc sorted by x value
     chartItem.points = chartItem.points.sort(
@@ -189,5 +202,13 @@ class Chart extends React.Component {
     );
   }
 }
+
+const ChartStatusText = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: ${p => p.width}px;
+  height: ${p => p.height}px;
+`;
 
 export default FeatureInfoPanelChart;

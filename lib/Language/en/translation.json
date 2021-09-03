@@ -626,7 +626,9 @@
     "sectionLabel": "Charts",
     "closePanel": "Close Panel",
     "expand": "Expand",
-    "download": "Download"
+    "download": "Download",
+    "loading": "Loading chart data...",
+    "noData": "No chartable data found."
   },
   "viewModels": {
     "searchNoLocations": "Sorry, no locations match your search query.",
