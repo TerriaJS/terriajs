@@ -404,7 +404,7 @@ export default class Terria {
     appName: "TerriaJS App",
     supportEmail: "info@terria.io",
     defaultMaximumShownFeatureInfos: 100,
-    catalogIndexUrl: "http://localhost:3001/catalog-index.json",
+    catalogIndexUrl: undefined,
     regionMappingDefinitionsUrl: "build/TerriaJS/data/regionMapping.json",
     conversionServiceBaseUrl: "convert/",
     proj4ServiceBaseUrl: "proj4/",
@@ -1092,16 +1092,20 @@ export default class Terria {
   private async loadCatalogIndex() {
     // Load catalog index
     if (this.configParameters.catalogIndexUrl) {
-      const index = (await loadJson(
-        this.configParameters.catalogIndexUrl
-      )) as CatalogIndex;
-      this.catalogIndex = observable.map<string, CatalogIndexReference>();
-      Object.entries(index).forEach(([id, model]) => {
-        const reference = new CatalogIndexReference(id, this);
-        updateModelFromJson(reference, CommonStrata.definition, model);
-        model.isOpenInWorkbench;
-        this.catalogIndex!.set(id, reference);
-      });
+      try {
+        const index = (await loadJson(
+          this.configParameters.catalogIndexUrl
+        )) as CatalogIndex;
+        this.catalogIndex = observable.map<string, CatalogIndexReference>();
+        Object.entries(index).forEach(([id, model]) => {
+          const reference = new CatalogIndexReference(id, this);
+          updateModelFromJson(reference, CommonStrata.definition, model);
+          model.isOpenInWorkbench;
+          this.catalogIndex!.set(id, reference);
+        });
+      } catch (error) {
+        this.raiseErrorToUser(error, "Failed to load catalog index");
+      }
     }
   }
 
