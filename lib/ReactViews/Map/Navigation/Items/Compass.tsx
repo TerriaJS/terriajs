@@ -193,7 +193,7 @@ class Compass extends React.Component<PropTypes, IStateTypes> {
 
   @computed
   get cesiumViewer() {
-    return this.props.terria.cesium!;
+    return this.props.terria.cesium;
   }
 
   cesiumLoaded() {
@@ -220,7 +220,7 @@ class Compass extends React.Component<PropTypes, IStateTypes> {
     this._unsubscribeFromViewerChange && this._unsubscribeFromViewerChange();
   }
 
-  handleMouseDown(e: React.MouseEvent) {
+  handleMouseDown(e: any) {
     if (e.stopPropagation) e.stopPropagation();
     if (e.preventDefault) e.preventDefault();
 
@@ -252,7 +252,7 @@ class Compass extends React.Component<PropTypes, IStateTypes> {
     }
   }
 
-  handleDoubleClick(e: React.MouseEvent) {
+  handleDoubleClick(e: any) {
     const scene = this.props.terria.cesium!.scene;
     const camera = scene.camera;
 
@@ -471,7 +471,7 @@ function rotate(
     cursorVector.x
   );
 
-  const scene = viewModel.cesiumViewer.scene;
+  const scene = viewModel.props.terria.cesium!.scene;
   let camera = scene.camera;
   const windowPosition = windowPositionScratch;
   windowPosition.x = scene.canvas.clientWidth / 2;
@@ -524,7 +524,7 @@ function rotate(
       viewModel.rotateInitialCameraAngle - angleDifference
     );
 
-    camera = viewModel.cesiumViewer.scene.camera;
+    camera = viewModel.props.terria.cesium!.scene.camera;
 
     oldTransform = Matrix4.clone(camera.transform, oldTransformScratch);
     camera.lookAtTransform(viewModel.rotateFrame!);
@@ -532,7 +532,7 @@ function rotate(
     camera.rotateRight(newCameraAngle - currentCameraAngle);
     camera.lookAtTransform(oldTransform);
 
-    // viewModel.cesiumViewer.notifyRepaintRequired();
+    // viewModel.props.terria.cesium.notifyRepaintRequired();
   };
 
   viewModel.rotateMouseUpFunction = function(e) {
@@ -596,7 +596,7 @@ function orbit(
   viewModel.isOrbiting = true;
   viewModel.orbitLastTimestamp = getTimestamp();
 
-  const scene = viewModel.cesiumViewer.scene;
+  const scene = viewModel.props.terria.cesium!.scene;
   const camera = scene.camera;
 
   const windowPosition = windowPositionScratch;
@@ -631,7 +631,7 @@ function orbit(
     const x = Math.cos(angle) * distance;
     const y = Math.sin(angle) * distance;
 
-    const scene = viewModel.cesiumViewer.scene;
+    const scene = viewModel.props.terria.cesium!.scene;
     const camera = scene.camera;
 
     const oldTransform = Matrix4.clone(camera.transform, oldTransformScratch);
@@ -648,7 +648,7 @@ function orbit(
 
     camera.lookAtTransform(oldTransform);
 
-    // viewModel.cesiumViewer.notifyRepaintRequired();
+    // viewModel.props.terria.cesium.notifyRepaintRequired();
 
     viewModel.orbitLastTimestamp = timestamp;
   };
@@ -667,7 +667,7 @@ function orbit(
       orbitCursorOpacity: easedOpacity
     });
 
-    // viewModel.cesiumViewer.notifyRepaintRequired();
+    // viewModel.props.terria.cesium.notifyRepaintRequired();
   }
 
   viewModel.orbitMouseMoveFunction = function(e) {
@@ -741,17 +741,17 @@ function subscribeToAnimationFrame(viewModel: Compass) {
 
 function viewerChange(viewModel: Compass) {
   runInAction(() => {
-    if (isDefined(viewModel.cesiumViewer)) {
+    if (isDefined(viewModel.props.terria.cesium)) {
       if (viewModel._unsubscribeFromPostRender) {
         viewModel._unsubscribeFromPostRender();
         viewModel._unsubscribeFromPostRender = undefined;
       }
 
-      viewModel._unsubscribeFromPostRender = viewModel.cesiumViewer.scene.postRender.addEventListener(
+      viewModel._unsubscribeFromPostRender = viewModel.props.terria.cesium.scene.postRender.addEventListener(
         function() {
           runInAction(() => {
             viewModel.setState({
-              heading: viewModel.cesiumViewer.scene.camera.heading
+              heading: viewModel.props.terria.cesium!.scene.camera.heading
             });
           });
         }
