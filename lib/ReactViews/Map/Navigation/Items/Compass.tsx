@@ -10,15 +10,13 @@
  */
 //
 import { TFunction } from "i18next";
-import { action, computed, observable, runInAction, when } from "mobx";
-import { observer } from "mobx-react";
+import { computed, runInAction, when } from "mobx";
 import PropTypes from "prop-types";
 import React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import defined from "terriajs-cesium/Source/Core/defined";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
@@ -27,8 +25,8 @@ import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import Ray from "terriajs-cesium/Source/Core/Ray";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import isDefined from "../../../../Core/isDefined";
-import Terria from "../../../../Models/Terria.js";
-import ViewState from "../../../../ReactViewModels/ViewState.js";
+import Terria from "../../../../Models/Terria";
+import ViewState from "../../../../ReactViewModels/ViewState";
 import Box from "../../../../Styled/Box";
 import Icon, { StyledIcon } from "../../../../Styled/Icon";
 import GyroscopeGuidance from "../../../GyroscopeGuidance/GyroscopeGuidance";
@@ -97,12 +95,7 @@ const getCompassScaleRatio = (compassWidth: string) =>
  * chrome, or if you want to develop a burning hatred for the compass 🙏🔥
  *
  **/
-interface StyledCompassOuterRingProps {
-  active: boolean;
-  theme: DefaultTheme;
-}
-
-const StyledCompassOuterRing = styled.div<StyledCompassOuterRingProps>`
+const StyledCompassOuterRing = styled.div<StyledCompassProps>`
   ${props => props.theme.centerWithoutFlex()}
   // override the transform provided in centerWithoutFlex()
   transform: translate(-50%,-50%) scale(0.9999);
@@ -141,22 +134,24 @@ const StyledCompassRotationMarker = styled.div`
   background-size: contain;
 `;
 
-interface PropTypes extends WithTranslation {
+type PropTypes = WithTranslation & {
   terria: Terria;
   viewState: ViewState;
   refFromHOC?: React.Ref<HTMLDivElement>;
   theme: DefaultTheme;
   t: TFunction;
-}
+};
+
+type IStateTypes = {
+  orbitCursorAngle: number;
+  heading: number;
+  orbitCursorOpacity: number;
+  active: boolean;
+  activeForTransition: boolean;
+};
 
 // the compass on map
-@observer
-class Compass extends React.Component<PropTypes> {
-  @observable orbitCursorAngle = 0;
-  @observable heading = 0;
-  @observable orbitCursorOpacity = 0;
-  @observable private active = false;
-  private activeForTransition = false;
+class Compass extends React.Component<PropTypes, IStateTypes> {
   _unsubscribeFromPostRender: any;
   _unsubscribeFromAnimationFrame: any;
   private _unsubscribeFromViewerChange?: CesiumEvent.RemoveCallback;
@@ -182,6 +177,13 @@ class Compass extends React.Component<PropTypes> {
    */
   constructor(props: PropTypes) {
     super(props);
+    this.state = {
+      orbitCursorAngle: 0,
+      heading: 0.0,
+      orbitCursorOpacity: 0,
+      active: false,
+      activeForTransition: false
+    };
 
     when(
       () => isDefined(this.cesiumViewer),
@@ -301,26 +303,27 @@ class Compass extends React.Component<PropTypes> {
     scene.tweens.add(flight);
   }
 
-  @action.bound
   resetRotater() {
-    this.orbitCursorOpacity = 0;
-    this.orbitCursorAngle = 0;
+    this.setState({
+      orbitCursorOpacity: 0,
+      orbitCursorAngle: 0
+    });
   }
 
   render() {
     const rotationMarkerStyle = {
-      transform: "rotate(-" + this.orbitCursorAngle + "rad)",
-      WebkitTransform: "rotate(-" + this.orbitCursorAngle + "rad)",
-      opacity: this.orbitCursorOpacity
+      transform: "rotate(-" + this.state.orbitCursorAngle + "rad)",
+      WebkitTransform: "rotate(-" + this.state.orbitCursorAngle + "rad)",
+      opacity: this.state.orbitCursorOpacity
     };
 
     const outerCircleStyle = {
-      transform: "rotate(-" + this.heading + "rad)",
-      WebkitTransform: "rotate(-" + this.heading + "rad)",
+      transform: "rotate(-" + this.state.heading + "rad)",
+      WebkitTransform: "rotate(-" + this.state.heading + "rad)",
       opacity: ""
     };
     const { t } = this.props;
-    const active = this.active;
+    const active = this.state.active;
     const description = t("compass.description");
     const showGuidance = !this.props.viewState.terria.getLocalProperty(
       COMPASS_LOCAL_PROPERTY_KEY
@@ -379,28 +382,18 @@ class Compass extends React.Component<PropTypes> {
           style={{
             backgroundImage: require("../../../../../wwwroot/images/compass-rotation-marker.svg")
           }}
-          onMouseOver={() => {
-            runInAction(() => {
-              this.active = true;
-            });
-          }}
+          onMouseOver={() => this.setState({ active: true })}
           onMouseOut={() => {
-            runInAction(() => {
-              if (showGuidance) {
-                this.active = true;
-              } else {
-                this.active = false;
-              }
-            });
+            if (showGuidance) {
+              this.setState({ active: true });
+            } else {
+              this.setState({ active: false });
+            }
           }}
           // do we give focus to this? given it's purely a mouse tool
           // focus it anyway..
           tabIndex={0}
-          onFocus={() => {
-            runInAction(() => {
-              this.active = false;
-            });
-          }}
+          onFocus={() => this.setState({ active: true })}
           // Gotta keep menu open if blurred, and close it with the close button
           // instead. otherwise it'll never focus on the help buttons
           // onBlur={() => this.setState({ active: false })}
@@ -431,11 +424,7 @@ class Compass extends React.Component<PropTypes> {
                 //   this.props.viewState.showHelpPanel();
                 //   this.props.viewState.selectHelpMenuItem("navigation");
                 // }}
-                onClose={() => {
-                  runInAction(() => {
-                    this.active = false;
-                  });
-                }}
+                onClose={() => this.setState({ active: false })}
               />
             </Box>
           </FadeIn>
@@ -607,15 +596,15 @@ function orbit(
   viewModel.isOrbiting = true;
   viewModel.orbitLastTimestamp = getTimestamp();
 
-  let scene = viewModel.cesiumViewer.scene;
-  let camera = scene.camera;
+  const scene = viewModel.cesiumViewer.scene;
+  const camera = scene.camera;
 
   const windowPosition = windowPositionScratch;
   windowPosition.x = scene.canvas.clientWidth / 2;
   windowPosition.y = scene.canvas.clientHeight / 2;
   const ray = camera.getPickRay(windowPosition, pickRayScratch);
 
-  let center = scene.globe.pick(ray, scene, centerScratch);
+  const center = scene.globe.pick(ray, scene, centerScratch);
   if (!isDefined(center)) {
     viewModel.orbitFrame = Transforms.eastNorthUpToFixedFrame(
       camera.positionWC,
@@ -635,15 +624,15 @@ function orbit(
   viewModel.orbitAnimationFrameFunction = function(e: any) {
     const timestamp = getTimestamp();
     const deltaT = timestamp - viewModel.orbitLastTimestamp;
-    const rate = ((viewModel.orbitCursorOpacity - 0.5) * 2.5) / 1000;
+    const rate = ((viewModel.state.orbitCursorOpacity - 0.5) * 2.5) / 1000;
     const distance = deltaT * rate;
 
-    const angle = viewModel.orbitCursorAngle + CesiumMath.PI_OVER_TWO;
+    const angle = viewModel.state.orbitCursorAngle + CesiumMath.PI_OVER_TWO;
     const x = Math.cos(angle) * distance;
     const y = Math.sin(angle) * distance;
 
-    scene = viewModel.cesiumViewer.scene;
-    camera = scene.camera;
+    const scene = viewModel.cesiumViewer.scene;
+    const camera = scene.camera;
 
     const oldTransform = Matrix4.clone(camera.transform, oldTransformScratch);
 
@@ -666,18 +655,16 @@ function orbit(
 
   function updateAngleAndOpacity(vector: Cartesian2, compassWidth: number) {
     const angle = Math.atan2(-vector.y, vector.x);
-    runInAction(() => {
-      viewModel.orbitCursorAngle = CesiumMath.zeroToTwoPi(
-        angle - CesiumMath.PI_OVER_TWO
-      );
+    viewModel.setState({
+      orbitCursorAngle: CesiumMath.zeroToTwoPi(angle - CesiumMath.PI_OVER_TWO)
     });
 
     const distance = Cartesian2.magnitude(vector);
     const maxDistance = compassWidth / 2.0;
     const distanceFraction = Math.min(distance / maxDistance, 1.0);
     const easedOpacity = 0.5 * distanceFraction * distanceFraction + 0.5;
-    runInAction(() => {
-      viewModel.orbitCursorOpacity = easedOpacity;
+    viewModel.setState({
+      orbitCursorOpacity: easedOpacity
     });
 
     // viewModel.cesiumViewer.notifyRepaintRequired();
@@ -754,7 +741,7 @@ function subscribeToAnimationFrame(viewModel: Compass) {
 
 function viewerChange(viewModel: Compass) {
   runInAction(() => {
-    if (defined(viewModel.cesiumViewer)) {
+    if (isDefined(viewModel.cesiumViewer)) {
       if (viewModel._unsubscribeFromPostRender) {
         viewModel._unsubscribeFromPostRender();
         viewModel._unsubscribeFromPostRender = undefined;
@@ -763,7 +750,9 @@ function viewerChange(viewModel: Compass) {
       viewModel._unsubscribeFromPostRender = viewModel.cesiumViewer.scene.postRender.addEventListener(
         function() {
           runInAction(() => {
-            viewModel.heading = viewModel.cesiumViewer.scene.camera.heading;
+            viewModel.setState({
+              heading: viewModel.cesiumViewer.scene.camera.heading
+            });
           });
         }
       );
