@@ -1,17 +1,12 @@
-require('jsdom-global')()
-global.XMLHttpRequest = window.XMLHttpRequest
-XMLHttpRequest = window.XMLHttpRequest
-global.DOMParser = window.DOMParser;
-global.fetch = require('node-fetch');
-
 import Bottleneck from "bottleneck";
 import * as fse from "fs-extra";
+import filterOutUndefined from "../lib/Core/filterOutUndefined";
 import TerriaError from "../lib/Core/TerriaError";
-import { getName } from "../lib/ModelMixins/CatalogMemberMixin";
+import CatalogMemberMixin, { getName } from "../lib/ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../lib/ModelMixins/GroupMixin";
+import MappableMixin from "../lib/ModelMixins/MappableMixin";
 import ReferenceMixin from "../lib/ModelMixins/ReferenceMixin";
 import registerCatalogMembers from "../lib/Models/Catalog/registerCatalogMembers";
-import SdmxCatalogGroup from "../lib/Models/Catalog/SdmxJson/SdmxJsonCatalogGroup";
 import { BaseModel } from "../lib/Models/Definition/Model";
 import { CatalogIndex } from "../lib/Models/SearchProviders/CatalogSearchProvider";
 import Terria from "../lib/Models/Terria";
@@ -24,6 +19,14 @@ export default async function generateCatalogIndex(argv: string[]) {
     process.exit(1);
   }
 
+  require('jsdom-global')(undefined, {
+    url: 'https://beta.nationalmap.terria.io'
+  })
+  global.XMLHttpRequest = window.XMLHttpRequest
+  XMLHttpRequest = window.XMLHttpRequest
+  global.DOMParser = window.DOMParser;
+  global.fetch = require('node-fetch');
+
   console.log(`Config URL: ${configUrl}`);
 
   // Load 10 concurrent requests per second
@@ -32,19 +35,28 @@ export default async function generateCatalogIndex(argv: string[]) {
     minTime: 100
   });
 
-  async function loadMember(terria: Terria, member: BaseModel) {
-    if (member.type === SdmxCatalogGroup.type) return
+  const errors:TerriaError[] = []
 
+  function getPath(terria: Terria, member: BaseModel | undefined): string {
+    return filterOutUndefined([...[member?.knownContainerUniqueIds.map(id => getPath(terria, terria.getModelById(BaseModel, id)))].reverse(), member?.uniqueId]).join("/")
+  }
+
+  async function loadMember(terria: Terria, member: BaseModel) {
     let name = getName(member)
+    let path = getPath(terria, member)
     if (ReferenceMixin.isMixedInto(member)) {
       try {
-        await limiter.schedule({ expiration: 10000 }, async () => {
-          console.log(`Loading Reference ${name}`);
-          (await (member as ReferenceMixin.Instance).loadReference()).logError(`FAILED to load Reference ${name}`)
+        // Timeout after 30 seconds
+        await limiter.schedule({ expiration: 30000 }, async () => {
+          console.log(`Loading Reference ${name} (${path})`);
+          const result = (await (member as ReferenceMixin.Instance).loadReference())
+          result.logError(`FAILED to load Reference ${name} (${path})`)
+          result.pushErrorTo(errors, `FAILED to load Reference ${name} (${path})`)
 
         })
       } catch (timeout) {
-        console.error(`TIMEOUT FAILED to load Reference ${name} `);
+        errors.push(TerriaError.from(`TIMEOUT FAILED to load Reference ${name}  (${path})`))
+        console.error(`TIMEOUT FAILED to load Reference ${name}`);
       }
 
       if (member.target)
@@ -55,12 +67,14 @@ export default async function generateCatalogIndex(argv: string[]) {
       console.log(`Loading Group ${name}`);
       try {
         await limiter.schedule({ expiration: 10000 }, async () => {
-          console.log(`Loading Group ${name}`);
-          (await (member as GroupMixin.Instance).loadMembers()).logError(`FAILED to load GROUP ${name}`)
-
+          console.log(`Loading Group ${name} (${path})`);
+          const result = (await (member as GroupMixin.Instance).loadMembers())
+          result.logError(`FAILED to load GROUP ${name} (${path})`)
+          result.pushErrorTo(errors, `FAILED to load GROUP ${name} (${path})`)
         })
       } catch (timeout) {
-        console.error(`TIMEOUT FAILED to load GROUP ${name} `);
+        errors.push(TerriaError.from(`TIMEOUT FAILED to load GROUP ${name} (${path})`))
+        console.error(`TIMEOUT FAILED to load GROUP ${name} (${path})`);
       }
 
       await Promise.all(
@@ -80,7 +94,10 @@ export default async function generateCatalogIndex(argv: string[]) {
     if (member.uniqueId && member.uniqueId !== "/" && member.uniqueId !== "__User-Added_Data__") {
       index[member.uniqueId] = {
         name: getName(member),
-        knownContainerUniqueIds,
+        description: CatalogMemberMixin.isMixedInto(member) ? member.description : undefined,
+        memberKnownContainerUniqueIds: knownContainerUniqueIds,
+        isGroup: GroupMixin.isMixedInto(member),
+        isMappable: MappableMixin.isMixedInto(member)
       };
     }
     if (GroupMixin.isMixedInto(member)) {
@@ -102,7 +119,8 @@ export default async function generateCatalogIndex(argv: string[]) {
   registerCatalogMembers();
 
   try {
-
+    terria.configParameters.serverConfigUrl = "https://beta.nationalmap.terria.io/serverconfig"
+    terria.configParameters.corsProxyBaseUrl = "https://beta.nationalmap.terria.io/proxy/"
     await terria.start({ configUrl })
 
     await terria.loadInitSources();
@@ -115,6 +133,11 @@ export default async function generateCatalogIndex(argv: string[]) {
   const index = indexModel(terria.catalog.group);
 
   fse.writeFileSync("catalog-index.json", JSON.stringify(index));
+
+  const terriaError = TerriaError.combine(errors, "Errors")?.toError()
+
+  if (terriaError?.stack)
+    fse.writeFileSync("catalog-index-errors.json", terriaError.stack);
 }
 
 generateCatalogIndex(process.argv);

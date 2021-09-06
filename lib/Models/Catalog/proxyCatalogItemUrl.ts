@@ -61,11 +61,3 @@ export function proxyCatalogItemBaseUrl(
     );
   }
 }
-
-export function proxyUrl(terria: Terria, url: string, cacheDuration?: string) {
-  const corsProxy = terria?.corsProxy;
-
-  if (isDefined(corsProxy) && corsProxy.shouldUseProxy(url)) {
-    return corsProxy.getURL(url, cacheDuration);
-  }
-}

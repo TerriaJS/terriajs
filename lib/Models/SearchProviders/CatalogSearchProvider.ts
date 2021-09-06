@@ -1,10 +1,12 @@
-import { autorun, observable, runInAction } from "mobx";
+import { autorun, computed, observable, runInAction } from "mobx";
 import {
   Category,
   SearchAction
 } from "../../Core/AnalyticEvents/analyticEvents";
+import isDefined from "../../Core/isDefined";
 import GroupMixin from "../../ModelMixins/GroupMixin";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
+import CatalogIndexReferenceTraits from "../../Traits/TraitsClasses/CatalogIndexReferenceTraits";
 import { BaseModel } from "../Definition/Model";
 import Terria from "../Terria";
 import SearchProvider from "./SearchProvider";
@@ -12,7 +14,7 @@ import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
 
 export interface CatalogIndex {
-  [id: string]: ModelIndex;
+  [id: string]: CatalogIndexReferenceTraits;
 }
 
 export interface ModelIndex {
@@ -33,6 +35,35 @@ export function loadAndSearchCatalogRecursively(
   loadMembers = true,
   iteration: number = 0
 ): Promise<void> {
+  // If not loading members, just do synchronous search of models
+  if (!loadMembers) {
+    let matches = 0;
+    const results: SearchResult[] = [];
+    for (let i = 0; i < models.length; i++) {
+      if (searchResults.isCanceled || matches > 100) break;
+
+      const model = models[i] as any;
+      if (!model.uniqueId) continue;
+      const modelToSave = model.target ?? model;
+
+      const searchString = `${modelToSave.name} ${modelToSave.uniqueId} ${modelToSave.description}`;
+      const matchesString =
+        searchString.toLowerCase().indexOf(searchTextLowercase) !== -1;
+      if (matchesString) {
+        results.push(
+          new SearchResult({
+            name: name,
+            catalogItem: modelToSave
+          })
+        );
+        matches++;
+      }
+    }
+
+    runInAction(() => (searchResults.results = results));
+    return Promise.resolve();
+  }
+
   // checkTerriaAgainstResults(terria, searchResults)
   // don't go further than 10 deep, but also if we have references that never
   // resolve to a target, might overflow
@@ -77,7 +108,7 @@ export function loadAndSearchCatalogRecursively(
   });
 
   // If we have no members to load
-  if (!loadMembers || referencesAndGroupsToLoad.length === 0) {
+  if (referencesAndGroupsToLoad.length === 0) {
     return Promise.resolve();
   }
   return new Promise(resolve => {
@@ -116,11 +147,22 @@ export default class CatalogSearchProvider extends SearchProvider {
   @observable isSearching: boolean = false;
   @observable debounceDurationOnceLoaded: number = 300;
 
+  @computed get usingCatalogIndex() {
+    return isDefined(this.terria.catalogIndex);
+  }
+
   constructor(options: CatalogSearchProviderOptions) {
     super();
 
     this.terria = options.terria;
     this.name = "Catalog Items";
+  }
+
+  @computed
+  get models() {
+    return this.terria.catalogIndex
+      ? Array.from(this.terria.catalogIndex.values())
+      : Array.from(this.terria.modelValues);
   }
 
   protected async doSearch(
@@ -145,13 +187,11 @@ export default class CatalogSearchProvider extends SearchProvider {
 
     try {
       await loadAndSearchCatalogRecursively(
-        this.terria.catalogIndex
-          ? Array.from(this.terria.catalogIndex.values())
-          : Array.from(this.terria.modelValues),
+        this.models,
         searchText.toLowerCase(),
         searchResults,
         resultMap,
-        !this.terria.catalogIndex
+        !this.usingCatalogIndex
       );
 
       runInAction(() => {

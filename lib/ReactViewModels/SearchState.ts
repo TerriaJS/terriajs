@@ -14,13 +14,13 @@ import CatalogSearchProvider from "../Models/SearchProviders/CatalogSearchProvid
 
 interface SearchStateOptions {
   terria: Terria;
-  catalogSearchProvider?: any;
-  locationSearchProviders?: any[];
+  catalogSearchProvider?: CatalogSearchProvider;
+  locationSearchProviders?: SearchProvider[];
 }
 
 export default class SearchState {
   @observable
-  catalogSearchProvider: SearchProvider | undefined;
+  catalogSearchProvider: CatalogSearchProvider | undefined;
 
   @observable locationSearchProviders: SearchProvider[];
 
@@ -93,10 +93,11 @@ export default class SearchState {
   }
 
   @computed
-  get unifiedSearchProviders() {
-    return filterOutUndefined(
-      [this.catalogSearchProvider].concat(this.locationSearchProviders)
-    );
+  get unifiedSearchProviders(): SearchProvider[] {
+    return filterOutUndefined([
+      this.catalogSearchProvider,
+      ...this.locationSearchProviders
+    ]);
   }
 
   @action

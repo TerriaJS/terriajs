@@ -1,5 +1,13 @@
 import i18next from "i18next";
-import { action, computed, observable, runInAction, toJS, when } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  runInAction,
+  toJS,
+  when,
+  ObservableMap
+} from "mobx";
 import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
@@ -67,7 +75,6 @@ import MagdaReference, {
   MagdaReferenceHeaders
 } from "./Catalog/CatalogReferences/MagdaReference";
 import SplitItemReference from "./Catalog/CatalogReferences/SplitItemReference";
-import { proxyUrl } from "./Catalog/proxyCatalogItemUrl";
 import CommonStrata from "./Definition/CommonStrata";
 import hasTraits from "./Definition/hasTraits";
 import { BaseModel } from "./Definition/Model";
@@ -340,7 +347,7 @@ export default class Terria {
   /** Map from id -> share keys */
   readonly modelIdShareKeysMap = observable.map<string, string[]>();
 
-  readonly catalogIndex = observable.map<string, CatalogIndexReference>();
+  catalogIndex: ObservableMap<string, CatalogIndexReference> | undefined;
 
   readonly baseUrl: string = "build/TerriaJS/";
   /** Use `terria.addErrorEventListener` or `terria.raiseErrorToUser` if you need to interact with errors outside this class*/
@@ -397,7 +404,7 @@ export default class Terria {
     appName: "TerriaJS App",
     supportEmail: "info@terria.io",
     defaultMaximumShownFeatureInfos: 100,
-    catalogIndexUrl: undefined,
+    catalogIndexUrl: "http://localhost:3001/catalog-index.json",
     regionMappingDefinitionsUrl: "build/TerriaJS/data/regionMapping.json",
     conversionServiceBaseUrl: "convert/",
     proj4ServiceBaseUrl: "proj4/",
@@ -1086,17 +1093,14 @@ export default class Terria {
     // Load catalog index
     if (this.configParameters.catalogIndexUrl) {
       const index = (await loadJson(
-        proxyUrl(this, this.configParameters.catalogIndexUrl)
+        this.configParameters.catalogIndexUrl
       )) as CatalogIndex;
+      this.catalogIndex = observable.map<string, CatalogIndexReference>();
       Object.entries(index).forEach(([id, model]) => {
         const reference = new CatalogIndexReference(id, this);
-        reference.setTrait(CommonStrata.definition, "name", model.name);
-        reference.setTrait(
-          CommonStrata.definition,
-          "memberKnownContainerUniqueIds",
-          model.knownContainerUniqueIds
-        );
-        this.catalogIndex.set(id, reference);
+        updateModelFromJson(reference, CommonStrata.definition, model);
+        model.isOpenInWorkbench;
+        this.catalogIndex!.set(id, reference);
       });
     }
   }

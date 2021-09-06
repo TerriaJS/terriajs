@@ -4,12 +4,10 @@ import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import Result from "../Core/Result";
 import Model, { BaseModel, ModelInterface } from "../Models/Definition/Model";
-import ModelTraits from "../Traits/ModelTraits";
+import ReferenceTraits from "../Traits/TraitsClasses/ReferenceTraits";
 import { getName } from "./CatalogMemberMixin";
 
-type RequiredTraits = ModelTraits;
-
-interface ReferenceInterface extends ModelInterface<RequiredTraits> {
+interface ReferenceInterface extends ModelInterface<ReferenceTraits> {
   readonly isLoadingReference: boolean;
   readonly target: BaseModel | undefined;
   loadReference(): Promise<Result<void>>;
@@ -22,7 +20,9 @@ interface ReferenceInterface extends ModelInterface<RequiredTraits> {
  * loaded, the `CkanCatalogItem` may be dereferenced to obtain the `WebMapServiceCatalogItem`,
  * `GeoJsonCatalogItem`, or whatever else representing the dataset.
  */
-function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
+function ReferenceMixin<T extends Constructor<Model<ReferenceTraits>>>(
+  Base: T
+) {
   abstract class ReferenceMixin extends Base implements ReferenceInterface {
     protected readonly ignoreSourceReferece: boolean = false;
 
@@ -112,7 +112,7 @@ namespace ReferenceMixin {
   export interface Instance
     extends InstanceType<ReturnType<typeof ReferenceMixin>> {}
   export function isMixedInto(model: any): model is Instance {
-    return "loadReference" in model && "target" in model;
+    return "loadReference" in model;
   }
 }
 
