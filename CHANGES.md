@@ -10,7 +10,7 @@ Change Log
 * Add a way to replace text in feature info templates. See [Replace text](doc/connecting-to-data/customizing-data-appearance/feature-info-template.md) for details.
 * Fixed unnecessary model reloads or recomputing of `mapItems` when switching between story scenes.
 * Fixed story reset button.
-* Fixed a bug in difftool where difference image was showing with zero opacity in some situations.
+* Fixed a bug in Difference tool where difference image was showing with zero opacity in some situations.
 * Fixed `CzmlCatalogItem` to react correctly to input data changes.
 * Moved help button to the top menu
 * [The next improvement]
