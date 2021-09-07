@@ -359,8 +359,8 @@ class Main extends React.Component<MainPropsType> {
   @action.bound
   unsetDates() {
     const { leftItem, rightItem } = this.props;
-    leftItem.setTrait(CommonStrata.user, "currentTime", undefined);
-    rightItem.setTrait(CommonStrata.user, "currentTime", undefined);
+    leftItem.setTrait(CommonStrata.user, "currentTime", null);
+    rightItem.setTrait(CommonStrata.user, "currentTime", null);
     this.hideItem(leftItem);
     this.hideItem(rightItem);
   }
@@ -558,7 +558,7 @@ class Main extends React.Component<MainPropsType> {
                       </TextSpan>
                     </RawButton>
                   )}
-                  {this.leftDate && this.rightDate && (
+                  {isShowingDiff === false && this.leftDate && this.rightDate && (
                     <RawButton onClick={this.unsetDates}>
                       <TextSpan isLink small>
                         {t("diffTool.instructions.changeDates")}
@@ -958,7 +958,7 @@ async function createSplitItem(
     const newItem = ref.target as DiffableItem;
     newItem.setTrait(CommonStrata.user, "show", true);
     newItem.setTrait(CommonStrata.user, "splitDirection", splitDirection);
-    newItem.setTrait(CommonStrata.user, "currentTime", undefined);
+    newItem.setTrait(CommonStrata.user, "currentTime", null);
     newItem.setTrait(CommonStrata.user, "initialTimeSource", "none");
     if (hasOpacity(newItem)) {
       // We want to show the item on the map only after date selection. At the
