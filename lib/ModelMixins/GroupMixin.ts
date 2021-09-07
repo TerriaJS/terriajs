@@ -270,7 +270,13 @@ namespace GroupMixin {
   export interface Instance
     extends InstanceType<ReturnType<typeof GroupMixin>> {}
   export function isMixedInto(model: any): model is Instance {
-    return model && "isGroup" in model && model.isGroup;
+    return (
+      model &&
+      "isGroup" in model &&
+      model.isGroup &&
+      "forceLoadMembers" in model &&
+      typeof model.forceLoadMembers === "function"
+    );
   }
 }
 

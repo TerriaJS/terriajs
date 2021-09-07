@@ -32,38 +32,8 @@ export function loadAndSearchCatalogRecursively(
   searchTextLowercase: string,
   searchResults: SearchProviderResults,
   resultMap: ResultMap,
-  loadMembers = true,
   iteration: number = 0
 ): Promise<void> {
-  // If not loading members, just do synchronous search of models
-  if (!loadMembers) {
-    let matches = 0;
-    const results: SearchResult[] = [];
-    for (let i = 0; i < models.length; i++) {
-      if (searchResults.isCanceled || matches > 100) break;
-
-      const model = models[i] as any;
-      if (!model.uniqueId) continue;
-      const modelToSave = model.target ?? model;
-
-      const searchString = `${modelToSave.name} ${modelToSave.uniqueId} ${modelToSave.description}`;
-      const matchesString =
-        searchString.toLowerCase().indexOf(searchTextLowercase) !== -1;
-      if (matchesString) {
-        results.push(
-          new SearchResult({
-            name: name,
-            catalogItem: modelToSave
-          })
-        );
-        matches++;
-      }
-    }
-
-    runInAction(() => (searchResults.results = results));
-    return Promise.resolve();
-  }
-
   // checkTerriaAgainstResults(terria, searchResults)
   // don't go further than 10 deep, but also if we have references that never
   // resolve to a target, might overflow
@@ -132,7 +102,6 @@ export function loadAndSearchCatalogRecursively(
             searchTextLowercase,
             searchResults,
             resultMap,
-            loadMembers,
             iteration + 1
           )
         );
@@ -160,9 +129,7 @@ export default class CatalogSearchProvider extends SearchProvider {
 
   @computed
   get models() {
-    return this.terria.catalogIndex
-      ? Array.from(this.terria.catalogIndex.values())
-      : Array.from(this.terria.modelValues);
+    return Array.from(this.terria.modelValues);
   }
 
   protected async doSearch(
@@ -186,13 +153,44 @@ export default class CatalogSearchProvider extends SearchProvider {
     const resultMap: ResultMap = new Map();
 
     try {
-      await loadAndSearchCatalogRecursively(
-        this.models,
-        searchText.toLowerCase(),
-        searchResults,
-        resultMap,
-        !this.usingCatalogIndex
-      );
+      if (this.usingCatalogIndex) {
+        /** Example results object
+         * [
+            {
+              "field": "name",
+              "result": [
+                "some-id-1"
+              ]
+            },
+            {
+              "field": "description",
+              "result": [
+                "some-id-2"
+              ]
+            }
+          ]
+         */
+        const results = this.terria.catalogSearchIndex.search(searchText);
+        results.forEach((fieldResult: any) => {
+          fieldResult.result.forEach((id: string) => {
+            const indexReference = this.terria.catalogIndex?.get(id);
+            if (indexReference)
+              searchResults.results.push(
+                new SearchResult({
+                  name: indexReference.name ?? indexReference.uniqueId,
+                  catalogItem: indexReference
+                })
+              );
+          });
+        });
+      } else {
+        await loadAndSearchCatalogRecursively(
+          this.models,
+          searchText.toLowerCase(),
+          searchResults,
+          resultMap
+        );
+      }
 
       runInAction(() => {
         this.isSearching = false;

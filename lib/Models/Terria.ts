@@ -107,6 +107,8 @@ import TimelineStack from "./TimelineStack";
 import ViewerMode from "./ViewerMode";
 import Workbench from "./Workbench";
 
+const { Document } = require("flexsearch");
+
 // import overrides from "../Overrides/defaults.jsx";
 
 interface ConfigParameters {
@@ -348,6 +350,7 @@ export default class Terria {
   readonly modelIdShareKeysMap = observable.map<string, string[]>();
 
   catalogIndex: ObservableMap<string, CatalogIndexReference> | undefined;
+  catalogSearchIndex: any; // Flex-search document index
 
   readonly baseUrl: string = "build/TerriaJS/";
   /** Use `terria.addErrorEventListener` or `terria.raiseErrorToUser` if you need to interact with errors outside this class*/
@@ -1097,12 +1100,39 @@ export default class Terria {
           this.configParameters.catalogIndexUrl
         )) as CatalogIndex;
         this.catalogIndex = observable.map<string, CatalogIndexReference>();
+
+        console.time("index");
+
+        this.catalogSearchIndex = new Document({
+          id: "id",
+          index: [
+            {
+              field: "name",
+              tokenize: "full",
+              resolution: 9
+            },
+            {
+              field: "description",
+              tokenize: "strict",
+              resolution: 5
+            }
+          ]
+        });
+
         Object.entries(index).forEach(([id, model]) => {
           const reference = new CatalogIndexReference(id, this);
           updateModelFromJson(reference, CommonStrata.definition, model);
           model.isOpenInWorkbench;
           this.catalogIndex!.set(id, reference);
+
+          this.catalogSearchIndex.add({
+            id,
+            name: model.name ?? "",
+            description: model.description ?? ""
+          });
         });
+
+        console.timeEnd("index");
       } catch (error) {
         this.raiseErrorToUser(error, "Failed to load catalog index");
       }

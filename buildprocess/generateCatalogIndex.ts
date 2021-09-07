@@ -52,7 +52,6 @@ export default async function generateCatalogIndex(argv: string[]) {
           const result = (await (member as ReferenceMixin.Instance).loadReference())
           result.logError(`FAILED to load Reference ${name} (${path})`)
           result.pushErrorTo(errors, `FAILED to load Reference ${name} (${path})`)
-
         })
       } catch (timeout) {
         errors.push(TerriaError.from(`TIMEOUT FAILED to load Reference ${name}  (${path})`))
