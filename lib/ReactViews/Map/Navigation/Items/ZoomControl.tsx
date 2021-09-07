@@ -1,39 +1,54 @@
-"use strict";
-const React = require("react");
-const PropTypes = require("prop-types");
-import createReactClass from "create-react-class";
-const defined = require("terriajs-cesium/Source/Core/defined").default;
-const Ray = require("terriajs-cesium/Source/Core/Ray").default;
-const IntersectionTests = require("terriajs-cesium/Source/Core/IntersectionTests")
-  .default;
-const Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid").default;
-const Tween = require("terriajs-cesium/Source/ThirdParty/Tween").default;
-const CesiumMath = require("terriajs-cesium/Source/Core/Math").default;
-const Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3").default;
-import Icon from "../../../Styled/Icon";
-import Styles from "./zoom_control.scss";
-import withControlledVisibility from "../../../ReactViews/HOCs/withControlledVisibility";
-import { withTranslation } from "react-i18next";
+import { TFunction } from "i18next";
+import React from "react";
+import { withTranslation, WithTranslation } from "react-i18next";
+import styled, { DefaultTheme, withTheme } from "styled-components";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import IntersectionTests from "terriajs-cesium/Source/Core/IntersectionTests";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import Ray from "terriajs-cesium/Source/Core/Ray";
+import Scene from "terriajs-cesium/Source/Scene/Scene";
 import {
   Category,
   ViewAction
-} from "../../../Core/AnalyticEvents/analyticEvents";
+} from "../../../../Core/AnalyticEvents/analyticEvents";
+import isDefined from "../../../../Core/isDefined";
+import Box from "../../../../Styled/Box";
+import { RawButton } from "../../../../Styled/Button";
+import Icon, { GLYPHS } from "../../../../Styled/Icon";
+import Ul, { Li } from "../../../../Styled/List";
+import Terria from "./../../../../Models/Terria";
 
-// Map zoom control
-const ZoomControl = createReactClass({
-  propTypes: {
-    terria: PropTypes.object,
-    t: PropTypes.func.isRequired
-  },
+const Tween = require("terriajs-cesium/Source/ThirdParty/Tween").default;
 
-  flyToPosition(scene, position, durationMilliseconds) {
+interface PropTypes extends WithTranslation {
+  terria: Terria;
+  theme: DefaultTheme;
+  t: TFunction;
+}
+
+export const ZOOM_CONTROL_ID = "zoom";
+
+class ZoomControl extends React.Component<PropTypes> {
+  static displayName = "ZoomControl";
+
+  constructor(props: PropTypes) {
+    super(props);
+  }
+
+  flyToPosition(
+    scene: Scene,
+    position: Cartesian3,
+    durationMilliseconds?: number
+  ) {
     const camera = scene.camera;
     const startPosition = camera.position;
     const endPosition = position;
 
     // temp
-    durationMilliseconds = 200;
-
+    if (!durationMilliseconds) {
+      durationMilliseconds = 200;
+    }
     const controller = scene.screenSpaceCameraController;
     controller.enableInputs = false;
 
@@ -46,7 +61,7 @@ const ZoomControl = createReactClass({
       stopObject: {
         time: 1.0
       },
-      update(value) {
+      update(value: any) {
         if (scene.isDestroyed()) {
           return;
         }
@@ -79,28 +94,28 @@ const ZoomControl = createReactClass({
         controller.enableInputs = true;
       }
     });
-  },
+  }
 
-  getCameraFocus(scene) {
+  getCameraFocus(scene: Scene) {
     const ray = new Ray(scene.camera.positionWC, scene.camera.directionWC);
     const intersections = IntersectionTests.rayEllipsoid(ray, Ellipsoid.WGS84);
-    if (defined(intersections)) {
+    if (isDefined(intersections)) {
       return Ray.getPoint(ray, intersections.start);
     }
     // Camera direction is not pointing at the globe, so use the ellipsoid horizon point as
     // the focal point.
     return IntersectionTests.grazingAltitudeLocation(ray, Ellipsoid.WGS84);
-  },
+  }
 
   zoomIn() {
     const cartesian3Scratch = new Cartesian3();
     this.props.terria.analytics?.logEvent(Category.view, ViewAction.zoomIn);
 
-    if (defined(this.props.terria.leaflet)) {
+    if (isDefined(this.props.terria.leaflet)) {
       this.props.terria.leaflet.map.zoomIn(1);
     }
 
-    if (defined(this.props.terria.cesium)) {
+    if (isDefined(this.props.terria.cesium)) {
       const scene = this.props.terria.cesium.scene;
       const camera = scene.camera;
       const focus = this.getCameraFocus(scene);
@@ -123,17 +138,17 @@ const ZoomControl = createReactClass({
     }
 
     // this.props.terria.currentViewer.notifyRepaintRequired();
-  },
+  }
 
   zoomOut() {
     const cartesian3Scratch = new Cartesian3();
     this.props.terria.analytics?.logEvent(Category.view, ViewAction.zoomOut);
 
-    if (defined(this.props.terria.leaflet)) {
+    if (isDefined(this.props.terria.leaflet)) {
       this.props.terria.leaflet.map.zoomOut(1);
     }
 
-    if (defined(this.props.terria.cesium)) {
+    if (isDefined(this.props.terria.cesium)) {
       const scene = this.props.terria.cesium.scene;
       const camera = scene.camera;
       const focus = this.getCameraFocus(scene);
@@ -155,7 +170,7 @@ const ZoomControl = createReactClass({
       this.flyToPosition(scene, endPosition);
     }
     // this.props.terria.currentViewer.notifyRepaintRequired();
-  },
+  }
 
   zoomReset() {
     this.props.terria.analytics?.logEvent(Category.view, ViewAction.reset);
@@ -163,46 +178,59 @@ const ZoomControl = createReactClass({
       this.props.terria.mainViewer.homeCamera,
       1.5
     );
-  },
+  }
 
   render() {
-    const { t } = this.props;
+    const { t, theme } = this.props;
     return (
-      <div className={Styles.zoomControl}>
-        <ul className={Styles.list}>
-          <li>
-            <button
+      <StyledZoomControl>
+        <Ul>
+          <Li>
+            <RawButton
               type="button"
-              onClick={this.zoomIn}
-              className={Styles.increase}
+              onClick={this.zoomIn.bind(this)}
               title={t("zoomCotrol.zoomIn")}
             >
               <Icon glyph={Icon.GLYPHS.plusThick} />
-            </button>
-          </li>
-          <li>
-            <button
+            </RawButton>
+          </Li>
+          <Li>
+            <RawButton
               type="button"
-              onClick={this.zoomReset}
-              className={Styles.refresh}
+              onClick={this.zoomReset.bind(this)}
               title={t("zoomCotrol.zoomReset")}
             >
               <Icon glyph={Icon.GLYPHS.refreshThick} />
-            </button>
-          </li>
-          <li>
-            <button
+            </RawButton>
+          </Li>
+          <Li>
+            <RawButton
               type="button"
-              onClick={this.zoomOut}
-              className={Styles.decrease}
+              onClick={this.zoomOut.bind(this)}
               title={t("zoomCotrol.zoomOut")}
             >
-              <Icon glyph={Icon.GLYPHS.minusThick} />
-            </button>
-          </li>
-        </ul>
-      </div>
+              <Icon glyph={GLYPHS.minusThick} />
+            </RawButton>
+          </Li>
+        </Ul>
+      </StyledZoomControl>
     );
   }
-});
-module.exports = withTranslation()(withControlledVisibility(ZoomControl));
+}
+
+const StyledZoomControl = styled(Box).attrs(props => ({
+  backgroundColor: props.theme.textLight,
+  centered: true,
+  column: true,
+  styledWidth: "24px",
+  styledHeight: "60px"
+}))`
+  border-radius: 100px;
+  svg {
+    height: 10px;
+    width: 10px;
+    fill: ${props => props.theme.darkWithOverlay};
+  }
+`;
+
+export default withTranslation()(withTheme(ZoomControl));
