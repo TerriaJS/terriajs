@@ -1,15 +1,11 @@
 Change Log
 ==========
 
-#### next release (8.0.1)
-* Added `catalog-converter` support for v7 `#start` data.
-* add french Help button translation
-* Enable FeatureInfoSectionSpec tests
-* Add `itemProperties` to `ArcGisMapServerCatalogGroupTraits` so that `ArcGisMapServerCatalogGroup` can override relevant traits of its layers.
-* Add `feature` object to `FeatureInfoSection.getTemplateData`
-* Add a way to replace text in feature info templates. See [Replace text](doc/connecting-to-data/customizing-data-appearance/feature-info-template.md) for details.
-* Fixed unnecessary model reloads or recomputing of `mapItems` when switching between story scenes.
-* Fixed story reset button.
+#### next release (8.1.0)
+
+* **Breaking changes:**
+  * Overhaul of map navigation: items no longer added inside UserInterface using <Nav> jsx.
+
 * New version of map navigation ([#5062](https://github.com/TerriaJS/terriajs/pull/5062))
   - It consists of 
     - a high level api `MapNavigationModel` for managing the navigation items, which is responsible for managing the state of navigation items. It is passing commands to invidual item controller.
@@ -19,8 +15,18 @@ Change Log
   - Resolved issue with some navigation items not being clickable on mobile due to overlap from others.
 * Fixed a bug in Difference tool where difference image was showing with zero opacity in some situations.
 * Fixed `CzmlCatalogItem` to react correctly to input data changes.
+
+#### 8.0.1
+
+* Added `catalog-converter` support for v7 `#start` data.
+* add french Help button translation
+* Enable FeatureInfoSectionSpec tests
+* Add `itemProperties` to `ArcGisMapServerCatalogGroupTraits` so that `ArcGisMapServerCatalogGroup` can override relevant traits of its layers.
+* Add `feature` object to `FeatureInfoSection.getTemplateData`
+* Add a way to replace text in feature info templates. See [Replace text](doc/connecting-to-data/customizing-data-appearance/feature-info-template.md) for details.
+* Fixed unnecessary model reloads or recomputing of `mapItems` when switching between story scenes.
+* Fixed story reset button.
 * Moved help button to the top menu
-* [The next improvement]
 
 #### 8.0.0
 
