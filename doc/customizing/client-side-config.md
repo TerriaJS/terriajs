@@ -1,4 +1,4 @@
-The file `wwwroot/config.json` in TerriaMap contains client-side configuration parameters. See [this file for an example](https://github.com/TerriaJS/TerriaMap/blob/next/wwwroot/config.json).
+The file `wwwroot/config.json` in TerriaMap contains client-side configuration parameters. See [this file for an example](https://github.com/TerriaJS/TerriaMap/blob/main/wwwroot/config.json).
 
 It has following structure:
 
@@ -36,7 +36,7 @@ It is also possible to add version 7 init files &mdash; these will be converted 
 
 ## Parameters
 
-**The following table has not been updated for TerriaJS v8. Most should still work as they did in version 7 however we may have removed some and added new ones. The best reference for now is [`interface ConfigParameters`](https://github.com/TerriaJS/terriajs/blob/next/lib/Models/Terria.ts#L115) (you may have to search for `interface ConfigParameters` on that page to find it if future code changes change line numbers).** 
+**The best reference for now is [`interface ConfigParameters`](https://github.com/TerriaJS/terriajs/blob/main/lib/Models/Terria.ts#L101) (you may have to search for `interface ConfigParameters` on that page to find it if future code changes change line numbers).** 
 
 Specifies various options for configuring TerriaJS:
 
@@ -150,7 +150,7 @@ Configuration of items to appear in the search bar
 |Name|Required|Type|Default|Description|
 |----|--------|----|-------|-----------|
 |provider|yes|**string**|`undefined`|A string identifying the error service provider to use. Currently only `rollbar` is supported.|
-|configuration|no|**any**|`undefined`|The configuration object to pass as constructor parameters to the error service provider instance. See the [provider implementation](https://github.com/TerriaJS/terriajs/blob/next/lib/Models/ErrorServiceProviders/) for supported configuration parameters.|
+|configuration|no|**any**|`undefined`|The configuration object to pass as constructor parameters to the error service provider instance. See the [provider implementation](https://github.com/TerriaJS/terriajs/blob/main/lib/Models/ErrorServiceProviders/) for supported configuration parameters.|
 
 **Example**
 

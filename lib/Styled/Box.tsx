@@ -54,6 +54,7 @@ interface IBoxPropsBase {
   paddedHorizontally?: number | boolean;
   paddedVertically?: number | boolean;
   styledPadding?: string;
+  styledMargin?: string;
   backgroundImage?: any;
   backgroundBlackOverlay?: number;
   wordBreak?: WordBreak;
@@ -171,6 +172,8 @@ export const Box = styled.div<IBoxProps>`
         (props.paddedVertically === true ? 1 : props.paddedVertically)}px;
     `}
   ${props => props.styledPadding && `padding: ${props.styledPadding};`}
+
+  ${props => props.styledMargin && `margin: ${props.styledMargin};`}
 
   ${props =>
     props.backgroundImage &&

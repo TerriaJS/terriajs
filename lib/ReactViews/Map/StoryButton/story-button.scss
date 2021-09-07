@@ -1,0 +1,13 @@
+@import "~terriajs-variables";
+
+.storyBtn {
+  composes: btn from "../../../Sass/common/_buttons.scss";
+  composes: btn--map from "../../../Sass/common/_buttons.scss";
+
+  &:hover,
+  &:focus {
+    svg {
+      fill: #ffffff;
+    }
+  }
+}
