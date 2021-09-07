@@ -5,6 +5,9 @@ Change Log
 * Added `catalog-converter` support for v7 `#start` data.
 * add french Help button translation
 * Enable FeatureInfoSectionSpec tests
+* Add `itemProperties` to `ArcGisMapServerCatalogGroupTraits` so that `ArcGisMapServerCatalogGroup` can override relevant traits of its layers.
+* Add `feature` object to `FeatureInfoSection.getTemplateData`
+* Add a way to replace text in feature info templates. See [Replace text](doc/connecting-to-data/customizing-data-appearance/feature-info-template.md) for details.
 * Fixed unnecessary model reloads or recomputing of `mapItems` when switching between story scenes.
 * Fixed story reset button.
 * New version of map navigation ([#5062](https://github.com/TerriaJS/terriajs/pull/5062))
@@ -14,6 +17,8 @@ Change Log
   - Terria exposes instance of navigation model to the world.
   - Converted all existing navigation items to utilise new navigation model, and registered them in terria navigation model (`registerMapNavigations.tsx`).
   - Resolved issue with some navigation items not being clickable on mobile due to overlap from others.
+* Fixed a bug in Difference tool where difference image was showing with zero opacity in some situations.
+* Fixed `CzmlCatalogItem` to react correctly to input data changes.
 * Moved help button to the top menu
 * [The next improvement]
 
