@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "8.0.0",
+  "version": "8.0.1",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
@@ -109,7 +109,7 @@
     "mini-css-extract-plugin": "^0.5.0",
     "minisearch": "^3.0.2",
     "mobx": "^4.15.4",
-    "mobx-react": "^6.2.2",
+    "mobx-react": "^6.3.1",
     "mobx-utils": "^5.4.1",
     "moment": "2.24.0",
     "mustache": "^2.2.1",

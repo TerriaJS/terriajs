@@ -4,7 +4,7 @@ import Clock from "terriajs-cesium/Source/Core/Clock";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CzmlDataSource from "terriajs-cesium/Source/DataSources/CzmlDataSource";
 import isDefined from "../../../Core/isDefined";
-import { JsonObject } from "../../../Core/Json";
+import makeRealPromise from "../../../Core/makeRealPromise";
 import readJson from "../../../Core/readJson";
 import TerriaError from "../../../Core/TerriaError";
 import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
@@ -16,8 +16,8 @@ import CzmlCatalogItemTraits from "../../../Traits/TraitsClasses/CzmlCatalogItem
 import CreateModel from "../../Definition/CreateModel";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 /**
  * A loadable stratum for CzmlCatalogItemTraits that derives TimeVaryingTraits
@@ -89,34 +89,35 @@ export default class CzmlCatalogItem
     return isDefined(this._czmlFile);
   }
 
-  @action
   protected forceLoadMapItems(): Promise<void> {
     const attribution = this.attribution;
-    return new Promise<string | readonly JsonObject[]>(resolve => {
-      if (isDefined(this.czmlData)) {
-        resolve(toJS(this.czmlData));
-      } else if (isDefined(this.czmlString)) {
-        resolve(JSON.parse(this.czmlString));
-      } else if (isDefined(this._czmlFile)) {
-        resolve(readJson(this._czmlFile));
-      } else if (isDefined(this.url)) {
-        resolve(proxyCatalogItemUrl(this, this.url, this.cacheDuration));
-      } else {
-        throw new TerriaError({
-          sender: this,
-          title: i18next.t("models.czml.unableToLoadItemTitle"),
-          message: i18next.t("models.czml.unableToLoadItemMessage")
-        });
-      }
-    })
-      .then(czmlLoadInput =>
-        CzmlDataSource.load(czmlLoadInput, {
-          credit: attribution
-        })
-      )
+    let loadableData: any = undefined;
+    if (isDefined(this.czmlData)) {
+      loadableData = toJS(this.czmlData);
+    } else if (isDefined(this.czmlString)) {
+      loadableData = JSON.parse(this.czmlString);
+    } else if (isDefined(this._czmlFile)) {
+      loadableData = readJson(this._czmlFile);
+    } else if (isDefined(this.url)) {
+      loadableData = proxyCatalogItemUrl(this, this.url, this.cacheDuration);
+    }
+
+    if (loadableData === undefined) {
+      throw new TerriaError({
+        sender: this,
+        title: i18next.t("models.czml.unableToLoadItemTitle"),
+        message: i18next.t("models.czml.unableToLoadItemMessage")
+      });
+    }
+
+    return makeRealPromise<CzmlDataSource>(
+      CzmlDataSource.load(loadableData, {
+        credit: attribution
+      })
+    )
       .then(
-        action(czml => {
-          this._dataSource = czml;
+        action(czmlDataSource => {
+          this._dataSource = czmlDataSource;
           this.strata.set(
             CzmlTimeVaryingStratum.stratumName,
             new CzmlTimeVaryingStratum(this)
@@ -184,6 +185,8 @@ export default class CzmlCatalogItem
   }
 }
 
-function toJulianDate(time: string | undefined): JulianDate | undefined {
-  return time === undefined ? undefined : JulianDate.fromIso8601(time);
+function toJulianDate(time: string | undefined | null): JulianDate | undefined {
+  return time === undefined || time === null
+    ? undefined
+    : JulianDate.fromIso8601(time);
 }
