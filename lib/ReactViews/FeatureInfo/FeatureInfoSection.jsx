@@ -109,7 +109,13 @@ export const FeatureInfoSection = observer(
           value
         })
       );
+
+      // Add entire feature object
+      propertyData.feature = this.props.feature;
+
+      const partials = this.props.template?.partials ?? {};
       propertyData.terria = {
+        partialByName: mustacheRenderPartialByName(partials, propertyData),
         formatNumber: mustacheFormatNumberFunction,
         formatDateTime: mustacheFormatDateTime,
         urlEncodeComponent: mustacheURLEncodeTextComponent,
@@ -626,6 +632,40 @@ function mustacheJsonSubOptions(customProcessing) {
  */
 function mustacheFormatNumberFunction() {
   return mustacheJsonSubOptions(formatNumberForLocale);
+}
+
+/**
+ * Returns a function that replaces value in Mustache templates, using this syntax:
+ * {
+ *   "template": {{#terria.partialByName}}{{value}}{{/terria.partialByName}}.
+ *   "partials": {
+ *     "value1": "replacement1",
+ *     ...
+ *   }
+ * }
+ * 
+ * E.g. {{#terria.partialByName}}{{value}}{{/terria.partialByName}}
+     "featureInfoTemplate": {
+        "template": "{{Pixel Value}} dwellings in {{#terria.partialByName}}{{feature.data.layerId}}{{/terria.partialByName}} radius.",
+        "partials": {
+          "0": "100m",
+          "1": "500m",
+          "2": "1km",
+          "3": "2km"
+        }
+      }
+ * @private
+ */
+function mustacheRenderPartialByName(partials, templateData) {
+  return () => {
+    return mustacheJsonSubOptions((value, options) => {
+      if (partials && typeof partials[value] === "string") {
+        return Mustache.render(partials[value], templateData);
+      } else {
+        return Mustache.render(value, templateData);
+      }
+    });
+  };
 }
 
 /**
