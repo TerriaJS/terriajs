@@ -190,6 +190,7 @@ To generate the catalog index:
 - `node .\build\generateCatalogIndex.js config-url base-url` where
   - `config-url` is URL to client-side-config file
   - `base-url` is URL to terriajs-server (this is used to load `server-config` and to proxy requests)
+  - For example `node .\build\generateCatalogIndex.js http://localhost:3001/config.json http://localhost:3001`
 - This will output two files
   - `catalog-index.json`
   - `catalog-index-errors.json` with any error messages which occurred while loading catalog members

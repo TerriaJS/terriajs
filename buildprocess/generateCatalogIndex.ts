@@ -20,7 +20,7 @@ export default async function generateCatalogIndex(argv: string[]) {
 
   let [configUrl, baseUrl] = argv.slice(2);
 
-  if (!configUrl || baseUrl) {
+  if (!configUrl || !baseUrl) {
     console.error(`\nUSAGE: node ./build/generateCatalogIndex.js <config-url> <base-url>\n`);
     process.exit(1);
   }
