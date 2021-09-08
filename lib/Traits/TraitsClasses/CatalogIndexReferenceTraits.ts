@@ -7,8 +7,9 @@ export default class CatalogIndexReferenceTraits extends mixTraits(
 ) {
   @primitiveArrayTrait({
     type: "string",
-    name: "Member knownContainerUniqueIds",
-    description: "Member knownContainerUniqueIds."
+    name: "Member known container unique IDs",
+    description:
+      "These are used to load models which this model depends on (eg parent groups)."
   })
   memberKnownContainerUniqueIds: string[] = [];
 }

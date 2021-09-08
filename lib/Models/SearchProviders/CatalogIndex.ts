@@ -30,8 +30,10 @@ export default class CatalogIndex {
     return this._searchIndex;
   }
 
+  readonly loadPromise: Promise<void>;
+
   constructor(private readonly terria: Terria, private readonly url: string) {
-    this.loadCatalogIndex();
+    this.loadPromise = this.loadCatalogIndex();
   }
 
   @action
@@ -108,16 +110,19 @@ export default class CatalogIndex {
     ```
 */
     const matches = this.searchIndex.search(q);
+    const matchedIds = new Set<string>();
     matches.forEach((fieldResult: any) => {
       fieldResult.result.forEach((id: string) => {
-        const indexReference = this.terria.catalogIndex?.models?.get(id);
-        if (indexReference)
+        const indexReference = this.models?.get(id);
+        if (indexReference && !matchedIds.has(id)) {
+          matchedIds.add(id);
           results.push(
             new SearchResult({
               name: indexReference.name ?? indexReference.uniqueId,
               catalogItem: indexReference
             })
           );
+        }
       });
     });
 

@@ -2,11 +2,17 @@ Change Log
 ==========
 
 #### next release (8.0.1)
+
 * Added `catalog-converter` support for v7 `#start` data.
 * add french Help button translation
 * Enable FeatureInfoSectionSpec tests
 * Fixed unnecessary model reloads or recomputing of `mapItems` when switching between story scenes.
 * Fixed story reset button.
+* Add `CatalogIndex`, `CatalogIndexReference` and `generateCatalogIndex()` script. These can be used to generate a static JSON in dex of a terria catalog - which can then be searched through using `flexsearch`
+* Added `weakReference` flag `ReferenceMixin`, this can be used to treat References more like a shortcut (this means that `sourceReference` isn't used when models are shared/added to the workbench - the `target` is used instead)
+* GroupMixin.isMixedInto and MappableMixin.isMixedInto are now more strict - and won't pass for for References with `isMappable` or `isGroup`.
+* `Workbench.add` can now handle nested `References` (eg `CatalogIndexReference -> CkanReference -> WMSCatalogItem`).
+* Add `description` trait to `CatalogMemberReferenceTraits`
 * [The next improvement]
 
 #### 8.0.0
@@ -689,7 +695,7 @@ Change Log
 * Ensure `CkanCatalogGroup` doesn't keep re-requesting data when opening and closing groups.
 * Add `typeName` to `CatalogMemberMixin`
 * Add `header` option to `loadText`
-* Add `isMixtedInto` function for `AsyncMappableMixin` and `AsyncChartableMixin`
+* Add `isMixedInto` function for `AsyncMappableMixin` and `AsyncChartableMixin`
 * Added file upload support for `GltfCatalogItem`. The supported extension is glb.
 * Improve runtime themeing via styled components across main UI components
 * Updated default welcome video defaults to a newer, slower video
