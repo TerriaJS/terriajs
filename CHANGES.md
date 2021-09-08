@@ -12,6 +12,7 @@ Change Log
 * Fixed story reset button.
 * Moved help button to the top menu
 * Extend input field for search in mobile view to full width of the page.
+* Automatically hide mobile modal window when user is interacting with the map (like picking a point or drawing a shape).
 * [The next improvement]
 
 #### 8.0.0
