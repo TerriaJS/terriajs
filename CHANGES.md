@@ -15,6 +15,8 @@ Change Log
   - Resolved issue with some navigation items not being clickable on mobile due to overlap from others.
 * Fixed a bug in Difference tool where difference image was showing with zero opacity in some situations.
 * Fixed `CzmlCatalogItem` to react correctly to input data changes.
+* Extend input field for search in mobile view to full width of the page.
+* Automatically hide mobile modal window when user is interacting with the map (like picking a point or drawing a shape).
 
 #### 8.0.1
 
@@ -27,8 +29,6 @@ Change Log
 * Fixed unnecessary model reloads or recomputing of `mapItems` when switching between story scenes.
 * Fixed story reset button.
 * Moved help button to the top menu
-* Extend input field for search in mobile view to full width of the page.
-* Automatically hide mobile modal window when user is interacting with the map (like picking a point or drawing a shape).
 * [The next improvement]
 
 #### 8.0.0
