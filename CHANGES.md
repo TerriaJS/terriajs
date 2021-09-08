@@ -1,7 +1,9 @@
 Change Log
 ==========
 
-#### next release (8.1.0)
+#### next release (8.1.1)
+
+#### 8.1.0
 
 * **Breaking changes:**
   * Overhaul of map navigation: items no longer added inside UserInterface using <Nav> jsx.
