@@ -15,6 +15,9 @@ import {
   Category,
   HelpAction
 } from "../../../../Core/AnalyticEvents/analyticEvents";
+
+export const HELP_PANEL_ID = "help";
+
 @observer
 class HelpPanel extends React.Component {
   static displayName = "HelpPanel";
