@@ -87,7 +87,7 @@
     "guidanceBtnTitle": "Gyroscope Guidance",
     "guidanceBtnText": "View detailed instructions on how to use the compass",
     "guidance": {
-      "title": "Gyroscope Contols",
+      "title": "Gyroscope Controls",
       "outerRingTitle": "Outer Ring",
       "outerRingDescription": "Drag the outer ring in a circular motion to rotate the map view 360˚.",
       "innerCircleTitle": "Inner Circle",
@@ -298,7 +298,8 @@
     "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [info@terria.io](mailto:info@terria.io)",
     "promptMessage": "Find the Tour, how-to videos & other help content here",
     "dismissText": "Got it, thanks!",
-    "takeTour": "Take the tour"
+    "takeTour": "Take the tour",
+    "terriaMapUserGuide": "Terria maps user guide"
   },
   "helpMenu": {
     "btnText": "Help",
@@ -1002,7 +1003,7 @@
       "unknownError": "The CSW server reported an unknown error.",
       "exceptionMessage": "The CSW server reported an error:\n\n {{exceptionText}}",
       "errorLoadingTitle": "Could not load CSW",
-      "notUseableTitle": "Catalogue service is not useable",
+      "notUseableTitle": "Catalogue service is not usable",
       "notUseableMessage": "Invalid response obtained when invoking GetDomain on the CSW server. <p>This error may indicate that the catalogue server you specified is temporarily unavailable or there is a problem with your internet connection.  Try opening the processing server again, and if the problem persists, please report it by sending an email to ",
       "errorLoadingRecordsTitle": "Failed to load CSW records.",
       "errorLoadingRecordsMessage": "Invalid response obtained when invoking GetRecords on the CSW server. <p>This error may indicate that the catalogue server you specified is temporarily unavailable or there is a problem with your internet connection.  Try opening the processing server again, and if the problem persists, please report it by sending an email to ",
@@ -1320,7 +1321,7 @@
       "initErrorMessage": "A problem occurred with the Terria server. This may cause some layers or the conversion service to be unavailable.",
       "urlLoadErrorTitle": "Problem loading URL",
       "urlLoadErrorMessage": "A problem occurred while initialising Terria with URL parameters.",
-      "loadModelErrorMessage": "An error ocurred while loading model `{{model}}`.",
+      "loadModelErrorMessage": "An error occurred while loading model `{{model}}`.",
       "loadingMagdaInitSourceErrorTitle": "Error loading Magda initialization source",
       "loadingMagdaInitSourceErrorMessage": "An error occurred while loading initialization information from Magda record `{{url}}`.",
       "loadingInitSourcesErrorTitle": "Error loading map configuration",
@@ -1544,6 +1545,10 @@
   },
   "term": {
     "missingContent": "missing content"
+  },
+  "mapNavigation": {
+    "additionalTools": "Additional tools",
+    "additionalToolsTitle": "Open additional tools"
   },
   "itemSearchTool": {
     "toolLoadError": "Error loading search tool.",

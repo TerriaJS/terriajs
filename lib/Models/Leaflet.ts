@@ -46,9 +46,9 @@ import RasterLayerTraits from "../Traits/TraitsClasses/RasterLayerTraits";
 import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
+import hasTraits from "./Definition/hasTraits";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
-import hasTraits from "./Definition/hasTraits";
 import MapInteractionMode from "./MapInteractionMode";
 import Terria from "./Terria";
 
@@ -439,13 +439,12 @@ export default class Leaflet extends GlobeOrMap {
 
   doZoomTo(
     target: CameraView | Rectangle | DataSource | MappableMixin.Instance | any,
-    flightDurationSeconds: number
+    flightDurationSeconds: number = 3.0
   ): Promise<void> {
     if (!isDefined(target)) {
       return Promise.resolve();
       //throw new DeveloperError("target is required.");
     }
-
     let bounds;
 
     // Target is a KML data source

@@ -584,26 +584,23 @@ const SharePanel = observer(
         : t("share.btnMapShareTitle");
 
       return !storyShare ? (
-        <div>
-          <MenuPanel
-            theme={dropdownTheme}
-            btnText={catalogShareWithoutText ? null : btnText}
-            viewState={this.props.viewState}
-            btnTitle={btnTitle}
-            isOpen={this.state.isOpen}
-            onOpenChanged={this.changeOpenState}
-            showDropdownAsModal={catalogShare}
-            modalWidth={modalWidth}
-            smallScreen={this.props.viewState.useSmallScreenInterface}
-            onDismissed={() => {
-              if (catalogShare)
-                this.props.viewState.shareModalIsVisible = false;
-            }}
-            onUserClick={this.props.onUserClick}
-          >
-            <If condition={this.state.isOpen}>{this.renderContent()}</If>
-          </MenuPanel>
-        </div>
+        <MenuPanel
+          theme={dropdownTheme}
+          btnText={catalogShareWithoutText ? null : btnText}
+          viewState={this.props.viewState}
+          btnTitle={btnTitle}
+          isOpen={this.state.isOpen}
+          onOpenChanged={this.changeOpenState}
+          showDropdownAsModal={catalogShare}
+          modalWidth={modalWidth}
+          smallScreen={this.props.viewState.useSmallScreenInterface}
+          onDismissed={() => {
+            if (catalogShare) this.props.viewState.shareModalIsVisible = false;
+          }}
+          onUserClick={this.props.onUserClick}
+        >
+          <If condition={this.state.isOpen}>{this.renderContent()}</If>
+        </MenuPanel>
       ) : (
         <StorySharePanel
           btnText={catalogShareWithoutText ? null : btnText}

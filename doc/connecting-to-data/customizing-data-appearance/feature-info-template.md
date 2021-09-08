@@ -124,6 +124,24 @@ As with number you can also use `terria.dateTimeformat` directly in the template
 
               "featureInfoTemplate": "template": "{{#terria.formatDateTime}}{format: \"dd-mm-yyyy HH:MM:ss\"}2017-11-23T08:47:53Z{{/terria.formatDateTime}}</b>."
 
+## Replace text
+You can replace text by directly using `terria.partialByName` in the template and providing partials for matching and replacement. For example, with the following template and partials,
+ - If the value of `feature.data.layerId` matches a property name in the `partials`, it will be replaced by corresponding value.
+ - If there is no matching in the `partials`, the original value will be used. 
+ - Any unsafe values in the `partials` will be stripped off when being rendered.
+
+     "featureInfoTemplate": {
+        "template": "{{Pixel Value}} dwellings in {{#terria.partialByName}}{{feature.data.layerId}}{{/terria.partialByName}} radius.",
+        "partials": {
+          "0": "100m",
+          "1": "500m",
+          "2": "1km",
+          "3": "2km"
+        }
+      }
+
+If `{{Pixel Value}}` equals to `150` and `{{feature.data.layerId}}` to `2`, the text `150 dwellings in 1km radius.` will be rendered.
+
 ## Time-series charts
 
 For features with time-varying table-based data structures (eg. CSV, SOS2, SDMX-JSON, if there is a time column), the feature info panel also includes a chart of the data over time, eg.
