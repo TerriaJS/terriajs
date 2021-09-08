@@ -15,6 +15,10 @@ Change Log
   - Resolved issue with some navigation items not being clickable on mobile due to overlap from others.
 * Fixed a bug in Difference tool where difference image was showing with zero opacity in some situations.
 * Fixed `CzmlCatalogItem` to react correctly to input data changes.
+* Adjusted styling of x-axis labels in feature info panel to prevent its clipping.
+* When expanding charts from the same catalog item, we now create a new item if the expanded chart has a different title from the previously expanded chart for the same item. This behavior matches the behavior in `v7`.
+* Improve status message when feature info panel chart is loading
+* Fix broken chart panel download button.
 
 #### 8.0.1
 
@@ -221,7 +225,6 @@ Change Log
 * GeoJSON Mixin based catalog items can now call an API to retrieve their data as well as fetching it from a url.
 * Changes to loadJson and loadJsonBlob to POST a request body rather than always make a GET request.
 * Added ApiRequestTraits, and refactor ApiTableCatalogItemTraits to use it. `apiUrl` is now `url`.
-* Adjusted styling of x-axis labels in feature info panel to prevent its clipping.
 
 #### 8.0.0-alpha.81
 
