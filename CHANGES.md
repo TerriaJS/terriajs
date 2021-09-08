@@ -11,6 +11,7 @@ Change Log
 * Fixed unnecessary model reloads or recomputing of `mapItems` when switching between story scenes.
 * Fixed story reset button.
 * Moved help button to the top menu
+* Extend input field for search in mobile view to full width of the page.
 * [The next improvement]
 
 #### 8.0.0
