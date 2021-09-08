@@ -59,6 +59,7 @@ export const DataCatalog = observer(
                 viewState={this.props.viewState}
                 member={item}
                 // manage group `isOpen` flag locally if searching through models dynamically (i.e. not using catalog index)
+                // This must be false if usingCatalogIndex - so group references open correctly in the search
                 manageIsOpenLocally={
                   isSearching && !catalogSearchProvider.usingCatalogIndex
                 }

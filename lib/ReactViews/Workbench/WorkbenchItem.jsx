@@ -130,7 +130,6 @@ export const WorkbenchItemRaw = observer(
                 >
                   <If condition={!workbenchItem.isMappable && !isLoading}>
                     <span className={Styles.iconLineChart}>
-                      {console.log(workbenchItem.type)}
                       <Icon glyph={Icon.GLYPHS.lineChart} />
                     </span>
                   </If>

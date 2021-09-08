@@ -1,26 +1,16 @@
-import { autorun, computed, observable, runInAction } from "mobx";
+import { autorun, observable, runInAction, computed } from "mobx";
 import {
   Category,
   SearchAction
 } from "../../Core/AnalyticEvents/analyticEvents";
-import isDefined from "../../Core/isDefined";
 import GroupMixin from "../../ModelMixins/GroupMixin";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
-import CatalogIndexReferenceTraits from "../../Traits/TraitsClasses/CatalogIndexReferenceTraits";
 import { BaseModel } from "../Definition/Model";
 import Terria from "../Terria";
 import SearchProvider from "./SearchProvider";
 import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
-
-export interface CatalogIndex {
-  [id: string]: CatalogIndexReferenceTraits;
-}
-
-export interface ModelIndex {
-  name: string;
-  knownContainerUniqueIds: string[];
-}
+import isDefined from "../../Core/isDefined";
 interface CatalogSearchProviderOptions {
   terria: Terria;
 }
@@ -116,10 +106,6 @@ export default class CatalogSearchProvider extends SearchProvider {
   @observable isSearching: boolean = false;
   @observable debounceDurationOnceLoaded: number = 300;
 
-  @computed get usingCatalogIndex() {
-    return isDefined(this.terria.catalogIndex);
-  }
-
   constructor(options: CatalogSearchProviderOptions) {
     super();
 
@@ -127,9 +113,8 @@ export default class CatalogSearchProvider extends SearchProvider {
     this.name = "Catalog Items";
   }
 
-  @computed
-  get models() {
-    return Array.from(this.terria.modelValues);
+  @computed get usingCatalogIndex() {
+    return isDefined(this.terria.catalogIndex);
   }
 
   protected async doSearch(
@@ -153,39 +138,12 @@ export default class CatalogSearchProvider extends SearchProvider {
     const resultMap: ResultMap = new Map();
 
     try {
-      if (this.usingCatalogIndex) {
-        /** Example results object
-         * [
-            {
-              "field": "name",
-              "result": [
-                "some-id-1"
-              ]
-            },
-            {
-              "field": "description",
-              "result": [
-                "some-id-2"
-              ]
-            }
-          ]
-         */
-        const results = this.terria.catalogSearchIndex.search(searchText);
-        results.forEach((fieldResult: any) => {
-          fieldResult.result.forEach((id: string) => {
-            const indexReference = this.terria.catalogIndex?.get(id);
-            if (indexReference)
-              searchResults.results.push(
-                new SearchResult({
-                  name: indexReference.name ?? indexReference.uniqueId,
-                  catalogItem: indexReference
-                })
-              );
-          });
-        });
+      if (this.terria.catalogIndex) {
+        const results = this.terria.catalogIndex?.search(searchText);
+        searchResults.results = results;
       } else {
         await loadAndSearchCatalogRecursively(
-          this.models,
+          this.terria.modelValues,
           searchText.toLowerCase(),
           searchResults,
           resultMap

@@ -156,11 +156,19 @@ Some rules:
 
 * The target model of a `ReferenceMixin` may be obtained from the `target` property, but it may be undefined until the promise returned by `loadReference` resolves. It may also be stale if a relevant trait of the reference has changed but `loadReference` hasn't yet been called or hasn't yet finished.
 * For simplicity, a particular model may _only_ be the target of a single reference. Multiple references cannot point to the same target. The reference that points to a particular model may be obtained from the model's `sourceReference` property.
-  * There is one exception to this rule - if `weakReference` is `true`. If so, the reference will be treated more like a shortcut. In this case, `sourceReference` must not be set.
 * The `uniqueId` of the `target` model must be the same as the `uniqueId` of the model with `ReferenceMixin`.
 * The model with `ReferenceMixin` _may_ be in `terria.models`.
 * The `target` model must _not_ be in `terria.models`.
 * The instance referred to by the `target` property should remain stable (the same instance) whenever possible. But if something drastic changes (e.g. we need an instance of a different model class), it's possible for the `target` property to switch to pointing at an entirely new instance. So it's important to only hold on to references to the `ReferenceMixin` model and access the `target` as needed, rather than holding a reference to the `target` directly.
+
+### Weak Reference
+
+If `weakReference` is `true`, the reference will be treated more like a shortcut. 
+
+In this case:
+
+- `sourceReference` must not be set.
+- If the reference is shared or added to the workbench, the target will be used in instead of `sourceReference`.
 
 ## AsyncLoader
 

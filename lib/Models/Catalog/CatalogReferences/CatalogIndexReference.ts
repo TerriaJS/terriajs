@@ -32,13 +32,15 @@ export default class CatalogIndexReference extends ReferenceMixin(
 
     const errors: TerriaError[] = [];
 
+    // No member exists, so try to load containers
+    // Get full list of containers by recursively searching for parent models
     const findContainers = (model: CatalogIndexReference): string[] => {
       const knownContainerUniqueIds: string[] = [
         ...model.memberKnownContainerUniqueIds,
         ...flatten(
           filterOutUndefined(
             model.memberKnownContainerUniqueIds.map(parentId => {
-              const parent = this.terria.catalogIndex?.get(parentId);
+              const parent = this.terria.catalogIndex?.models?.get(parentId);
               if (parent) {
                 return findContainers(parent);
               }
@@ -51,7 +53,7 @@ export default class CatalogIndexReference extends ReferenceMixin(
 
     const containers = findContainers(this).reverse();
 
-    // No member exists, so try to load containers (parent groups)
+    // Load containers
     if (containers) {
       for (let i = 0; i < containers.length; i++) {
         const containerId = containers[i];
@@ -89,7 +91,8 @@ export default class CatalogIndexReference extends ReferenceMixin(
     // No member exists - throw error
     throw TerriaError.combine(
       errors,
-      `Failed to find member ${this.uniqueId}`
-    ) ?? TerriaError.from(`Failed to find member ${this.uniqueId}`);
+      `Failed to find member ${this.name ?? this.uniqueId}`
+    ) ??
+      TerriaError.from(`Failed to find member ${this.name ?? this.uniqueId}`);
   }
 }

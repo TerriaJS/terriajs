@@ -1,13 +1,5 @@
 import i18next from "i18next";
-import {
-  action,
-  computed,
-  observable,
-  runInAction,
-  toJS,
-  when,
-  ObservableMap
-} from "mobx";
+import { action, computed, observable, runInAction, toJS, when } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
@@ -40,7 +32,6 @@ import JsonValue, {
   JsonObject
 } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
-import loadJson from "../Core/loadJson";
 import loadJson5 from "../Core/loadJson5";
 import Result from "../Core/Result";
 import ServerConfig from "../Core/ServerConfig";
@@ -70,7 +61,6 @@ import CameraView from "./CameraView";
 import Catalog from "./Catalog/Catalog";
 import CatalogGroup from "./Catalog/CatalogGroup";
 import CatalogMemberFactory from "./Catalog/CatalogMemberFactory";
-import CatalogIndexReference from "./Catalog/CatalogReferences/CatalogIndexReference";
 import MagdaReference, {
   MagdaReferenceHeaders
 } from "./Catalog/CatalogReferences/MagdaReference";
@@ -101,13 +91,11 @@ import Internationalization, {
 } from "./Internationalization";
 import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
-import { CatalogIndex } from "./SearchProviders/CatalogSearchProvider";
+import CatalogIndex from "./SearchProviders/CatalogIndex";
 import ShareDataService from "./ShareDataService";
 import TimelineStack from "./TimelineStack";
 import ViewerMode from "./ViewerMode";
 import Workbench from "./Workbench";
-
-const { Document } = require("flexsearch");
 
 // import overrides from "../Overrides/defaults.jsx";
 
@@ -341,16 +329,11 @@ interface HomeCameraInit {
 
 export default class Terria {
   private readonly models = observable.map<string, BaseModel>();
-  @computed get modelValues() {
-    return this.models.values();
-  }
+
   /** Map from share key -> id */
   readonly shareKeysMap = observable.map<string, string>();
   /** Map from id -> share keys */
   readonly modelIdShareKeysMap = observable.map<string, string[]>();
-
-  catalogIndex: ObservableMap<string, CatalogIndexReference> | undefined;
-  catalogSearchIndex: any; // Flex-search document index
 
   readonly baseUrl: string = "build/TerriaJS/";
   /** Use `terria.addErrorEventListener` or `terria.raiseErrorToUser` if you need to interact with errors outside this class*/
@@ -362,6 +345,8 @@ export default class Terria {
   readonly baseMapsModel = new BaseMapsModel("basemaps", this);
   readonly timelineClock = new Clock({ shouldAnimate: false });
   // readonly overrides: any = overrides; // TODO: add options.functionOverrides like in master
+
+  catalogIndex: CatalogIndex | undefined;
 
   readonly elements = observable.map<string, IElementConfig>();
 
@@ -620,6 +605,10 @@ export default class Terria {
     ) {
       return this.mainViewer.currentViewer as import("./Leaflet").default;
     }
+  }
+
+  @computed get modelValues() {
+    return Array.from(this.models.values());
   }
 
   @computed
@@ -1077,7 +1066,13 @@ export default class Terria {
       }
     });
 
-    this.loadCatalogIndex();
+    // Load catalog index if catalogIndexUrl is set and it hasn't been loaded yet
+    if (this.configParameters.catalogIndexUrl && !this.catalogIndex) {
+      this.catalogIndex = new CatalogIndex(
+        this,
+        this.configParameters.catalogIndexUrl
+      );
+    }
 
     if (errors.length > 0) {
       // Note - this will get wrapped up in a Result object because it is called in AsyncLoader
@@ -1088,54 +1083,6 @@ export default class Terria {
           parameters: { appName: this.appName, email: this.supportEmail }
         }
       });
-    }
-  }
-
-  @action
-  private async loadCatalogIndex() {
-    // Load catalog index
-    if (this.configParameters.catalogIndexUrl) {
-      try {
-        const index = (await loadJson(
-          this.configParameters.catalogIndexUrl
-        )) as CatalogIndex;
-        this.catalogIndex = observable.map<string, CatalogIndexReference>();
-
-        console.time("index");
-
-        this.catalogSearchIndex = new Document({
-          id: "id",
-          index: [
-            {
-              field: "name",
-              tokenize: "full",
-              resolution: 9
-            },
-            {
-              field: "description",
-              tokenize: "strict",
-              resolution: 5
-            }
-          ]
-        });
-
-        Object.entries(index).forEach(([id, model]) => {
-          const reference = new CatalogIndexReference(id, this);
-          updateModelFromJson(reference, CommonStrata.definition, model);
-          model.isOpenInWorkbench;
-          this.catalogIndex!.set(id, reference);
-
-          this.catalogSearchIndex.add({
-            id,
-            name: model.name ?? "",
-            description: model.description ?? ""
-          });
-        });
-
-        console.timeEnd("index");
-      } catch (error) {
-        this.raiseErrorToUser(error, "Failed to load catalog index");
-      }
     }
   }
 

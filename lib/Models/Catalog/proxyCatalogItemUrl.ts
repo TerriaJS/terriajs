@@ -4,7 +4,6 @@ import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import isDefined from "../../Core/isDefined";
 import UrlMixin from "../../ModelMixins/UrlMixin";
 import { BaseModel } from "../Definition/Model";
-import Terria from "../Terria";
 import UrlReference from "./CatalogReferences/UrlReference";
 
 /**
