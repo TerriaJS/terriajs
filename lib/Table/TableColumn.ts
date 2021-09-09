@@ -654,10 +654,8 @@ export default class TableColumn {
       // or zero are counted as neither failed nor successful.
 
       if (
-        // We need at least one value
-        this.valuesAsNumbers.numberOfValidNumbers >= 1 &&
         this.valuesAsNumbers.numberOfNonNumbers <=
-          Math.ceil(this.valuesAsNumbers.numberOfValidNumbers * 0.1)
+        Math.ceil(this.valuesAsNumbers.numberOfValidNumbers * 0.1)
       ) {
         type = TableColumnType.scalar;
       } else {
