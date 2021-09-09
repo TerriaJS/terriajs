@@ -20,7 +20,8 @@ Change Log
 * Changed @vx/* dependencies to @visx/* which is the new home of the chart library
 * The glyph style used for chart points can now be customized.
 * Added `TerriaReference` item, useful for mounting a catalog tree from an external init file at any position in the current map's catalog tree.
-
+* Changed @vx/* dependencies to @visx/* which is the new home of the chart library
+* The glyph style used for chart points can now be customized.
 
 #### 8.0.1
 
