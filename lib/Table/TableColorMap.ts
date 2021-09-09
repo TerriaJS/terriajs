@@ -120,6 +120,18 @@ export default class TableColorMap {
           maxValue: this.maximumValue,
           nullColor
         });
+
+        // If we only have one value, create color map with single value
+      } else if (this.colorColumn?.uniqueValues.values.length === 1) {
+        return new EnumColorMap({
+          enumColors: [
+            {
+              color: Color.fromCssColorString(this.colorScaleContinuous()(1)),
+              value: this.colorColumn.uniqueValues.values[0]
+            }
+          ],
+          nullColor: this.nullColor
+        });
       }
     }
 
