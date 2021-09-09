@@ -11,10 +11,7 @@ import Spacing from "../../Styled/Spacing";
 import { RawButton } from "../../Styled/Button";
 import { Text, TextSpan } from "../../Styled/Text";
 
-const ErrorsBox = (props: {
-  errors: (Error | TerriaError)[];
-  depth: number;
-}) => {
+const ErrorsBox = (props: { errors: (Error | TerriaError)[] }) => {
   return (
     <>
       {props.errors.map((error, idx) => (
@@ -27,10 +24,7 @@ const ErrorsBox = (props: {
           key={idx}
         >
           {error instanceof TerriaError ? (
-            <TerriaErrorBox
-              error={error}
-              depth={props.depth + 1}
-            ></TerriaErrorBox>
+            <TerriaErrorBox error={error}></TerriaErrorBox>
           ) : (
             // Show error.message (as well as error.stack) if error.stack is defined
             <div>
@@ -44,7 +38,7 @@ const ErrorsBox = (props: {
   );
 };
 
-const TerriaErrorBox = (props: { error: TerriaError; depth: number }) => {
+const TerriaErrorBox = (props: { error: TerriaError }) => {
   return (
     <>
       <Text
@@ -61,30 +55,7 @@ const TerriaErrorBox = (props: { error: TerriaError; depth: number }) => {
 
       {Array.isArray(props.error.originalError) &&
       props.error.originalError.length > 0 ? (
-        props.depth === 0 ? (
-          <>
-            <Spacing bottom={2} />
-            <Collapsible
-              btnRight={true}
-              title={i18next.t("models.raiseError.developerDetails")}
-              titleTextProps={{ large: true }}
-              bodyBoxProps={{ padded: true }}
-              isOpen={props.error.showDetails}
-              onToggle={show => () =>
-                runInAction(() => (props.error.showDetails = show))}
-            >
-              <ErrorsBox
-                errors={props.error.originalError}
-                depth={props.depth}
-              ></ErrorsBox>
-            </Collapsible>
-          </>
-        ) : (
-          <ErrorsBox
-            errors={props.error.originalError}
-            depth={props.depth}
-          ></ErrorsBox>
-        )
+        <ErrorsBox errors={props.error.originalError}></ErrorsBox>
       ) : null}
     </>
   );
@@ -102,7 +73,26 @@ export const terriaErrorNotification = (error: TerriaError) => (
 
   return (
     <>
-      <TerriaErrorBox error={error} depth={0}></TerriaErrorBox>
+      <Text
+        css={`
+          p {
+            margin: 5px 0px;
+          }
+        `}
+      >
+        {parseCustomMarkdownToReact(error.highestImportanceError.message)}
+      </Text>
+      <Spacing bottom={2} />
+      <Collapsible
+        btnRight={true}
+        title={i18next.t("models.raiseError.developerDetails")}
+        titleTextProps={{ large: true }}
+        bodyBoxProps={{ padded: true }}
+        isOpen={error.showDetails}
+        onToggle={show => () => runInAction(() => (error.showDetails = show))}
+      >
+        <ErrorsBox errors={[error]}></ErrorsBox>
+      </Collapsible>
 
       {viewState.terria.configParameters.feedbackUrl ? (
         <RawButton

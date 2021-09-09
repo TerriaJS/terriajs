@@ -37,8 +37,12 @@ const WarningBox: React.FC<{
     <Box backgroundColor="#ffffff" rounded fullWidth paddedRatio={3}>
       {props.error ? (
         <div>
-          {parseCustomMarkdownToReact(`### ${props.error.title}`)}
-          {parseCustomMarkdownToReact(props.error.message)}
+          {parseCustomMarkdownToReact(
+            `### ${props.error?.highestImportanceError?.title}`
+          )}
+          {parseCustomMarkdownToReact(
+            props.error?.highestImportanceError?.message
+          )}
 
           {/* Add "show details" button if there are nested errors */}
           {props.viewState &&
