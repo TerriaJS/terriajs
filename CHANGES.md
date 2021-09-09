@@ -15,6 +15,7 @@ Change Log
 * `workbench.add()` will now keep items which only return `Warning` severity `TerriaErrors` after loading.
 * Improve SDMX error messages for no results
 * SDMX will now disable the region column if less than 2 valid regions have been found
+* `TableMixin` will now remove data if an error occurs while calling `forceLoadTableData`
 * [The next improvement]
 
 #### 8.1.0
