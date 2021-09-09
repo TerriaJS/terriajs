@@ -338,6 +338,7 @@ function DiscretelyTimeVaryingMixin<
         categoryName: this.name,
         key: `key${this.uniqueId}-${this.name}`,
         type: this.chartType || "momentLines",
+        glyphStyle: this.chartGlyphStyle,
         xAxis: { scale: "time" },
         points,
         domain: { ...calculateDomain(points), y: [0, 1] },

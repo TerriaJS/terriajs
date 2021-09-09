@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import { Line } from "@vx/shape";
+import { Line } from "@visx/shape";
 import PropTypes from "prop-types";
 import React from "react";
 
