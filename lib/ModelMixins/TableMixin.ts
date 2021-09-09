@@ -598,22 +598,30 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     protected async forceLoadMapItems() {
-      const dataColumnMajor = await this.forceLoadTableData();
+      try {
+        const dataColumnMajor = await this.forceLoadTableData();
 
-      // We need to make sure the region provider is loaded before loading
-      // region mapped tables.
-      await this.loadRegionProviderList();
+        // We need to make sure the region provider is loaded before loading
+        // region mapped tables.
+        await this.loadRegionProviderList();
 
-      if (dataColumnMajor !== undefined && dataColumnMajor !== null) {
+        if (dataColumnMajor !== undefined && dataColumnMajor !== null) {
+          runInAction(() => {
+            this.dataColumnMajor = dataColumnMajor;
+          });
+        }
+
+        // Load region IDS if region mapping
+        const activeRegionType = this.activeTableStyle.regionColumn?.regionType;
+        if (activeRegionType) {
+          await activeRegionType.loadRegionIDs();
+        }
+      } catch (e) {
+        // Clear data if error occurs
         runInAction(() => {
-          this.dataColumnMajor = dataColumnMajor;
+          this.dataColumnMajor = [[]];
         });
-      }
-
-      // Load region IDS if region mapping
-      const activeRegionType = this.activeTableStyle.regionColumn?.regionType;
-      if (activeRegionType) {
-        await activeRegionType.loadRegionIDs();
+        throw e;
       }
     }
 
