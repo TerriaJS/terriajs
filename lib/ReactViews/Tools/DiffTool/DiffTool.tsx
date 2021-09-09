@@ -711,7 +711,7 @@ class Main extends React.Component<MainPropsType> {
         {!isShowingDiff &&
           ReactDOM.createPortal(
             // Bottom Panel
-            <Box centered fullWidth wrap backgroundColor={theme.dark}>
+            <Box centered fullWidth flexWrap backgroundColor={theme.dark}>
               <DatePicker
                 heading={t("diffTool.labels.dateComparisonA")}
                 item={this.props.leftItem}
