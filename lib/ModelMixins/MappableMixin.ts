@@ -133,7 +133,7 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
       } catch (e) {
         return Result.error(e, {
           message: `Failed to load \`${getName(this)}\` mapItems`,
-          messageImportance: -1
+          importance: -1
         });
       }
 

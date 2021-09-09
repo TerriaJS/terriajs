@@ -16,6 +16,7 @@ Change Log
 * Extracted function `scaleToDenominator` to core - for conversion of scale to zoom level.
 * Share/start data conversion will now only occur if `version` property is `0.x.x`. Previously, it was `version` property is **not** `8.x.x`
 * Added `terriaError.messageImportance` property. This can be set to adjust which error messages are presented to the user.
+* Added `terriaError.importance` property. This can be set to adjust which error messages are presented to the user.
   * `terriaErrorNotification` and `WarningBox` will use the error message with highest importance to show to the user ("Developer details" remains unchanged)
 * Add `terriaError.shouldRaiseToUser` override, this can be used to raise errors with `Warning` severity.
 * `workbench.add()` will now keep items which only return `Warning` severity `TerriaErrors` after loading.
