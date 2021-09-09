@@ -19,6 +19,7 @@ Change Log
 * Added `terriaError.importance` property. This can be set to adjust which error messages are presented to the user.
   * `terriaErrorNotification` and `WarningBox` will use the error message with highest importance to show to the user ("Developer details" remains unchanged)
 * Add `terriaError.shouldRaiseToUser` override, this can be used to raise errors with `Warning` severity.
+* `terriaError.raisedToError` will now check if **any** `TerriaError` has been raised to the user in the tree.
 * `workbench.add()` will now keep items which only return `Warning` severity `TerriaErrors` after loading.
 * Improve SDMX error messages for no results
 * [The next improvement]
