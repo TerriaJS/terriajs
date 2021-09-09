@@ -613,6 +613,22 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   @computed
   get styles() {
     if (this.primaryMeasureColumn) {
+      // Disable region column if less than 2 valid regions have been found
+      let regionColumnName:
+        | string
+        | undefined
+        | null = this.dimensionColumns.find(col => col.type === "region")?.name;
+
+      const regionColumn = regionColumnName
+        ? this.catalogItem.tableColumns.find(
+            col => col.name === regionColumnName
+          )
+        : undefined;
+
+      if ((regionColumn?.valuesAsRegions.uniqueRegionIds.length ?? 0) <= 1) {
+        regionColumnName = null;
+      }
+
       return [
         createStratumInstance(TableStyleTraits, {
           id: this.primaryMeasureColumn.name,
@@ -627,8 +643,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
           }),
           // Add chart if there is a time column but no region column
           chart:
-            this.timeColumns.length > 0 &&
-            !this.dimensionColumns.find(col => col.type === "region")
+            this.timeColumns.length > 0 && !regionColumnName
               ? createStratumInstance(TableChartStyleTraits, {
                   xAxisColumn: this.timeColumns[0].name,
                   lines: [
@@ -639,8 +654,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
                   ]
                 })
               : undefined,
-          regionColumn: this.dimensionColumns.find(col => col.type === "region")
-            ?.name
+          regionColumn: regionColumnName
         })
       ];
     }
