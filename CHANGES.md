@@ -1,7 +1,9 @@
 Change Log
 ==========
 
-#### next release (8.1.0)
+#### next release (8.1.1)
+
+#### 8.1.0
 
 * **Breaking changes:**
   * Overhaul of map navigation: items no longer added inside UserInterface using <Nav> jsx.
@@ -19,6 +21,11 @@ Change Log
 * When expanding charts from the same catalog item, we now create a new item if the expanded chart has a different title from the previously expanded chart for the same item. This behavior matches the behavior in `v7`.
 * Improve status message when feature info panel chart is loading
 * Fix broken chart panel download button.
+* Changed @vx/* dependencies to @visx/* which is the new home of the chart library
+* The glyph style used for chart points can now be customized.
+* Added `TerriaReference` item, useful for mounting a catalog tree from an external init file at any position in the current map's catalog tree.
+* Changed @vx/* dependencies to @visx/* which is the new home of the chart library
+* The glyph style used for chart points can now be customized.
 
 #### 8.0.1
 

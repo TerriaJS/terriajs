@@ -57,6 +57,7 @@ import SplitItemReference from "./CatalogReferences/SplitItemReference";
 import UrlReference, {
   UrlToCatalogMemberMapping
 } from "./CatalogReferences/UrlReference";
+import TerriaReference from "./CatalogReferences/TerriaReference";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -144,6 +145,7 @@ export default function registerCatalogMembers() {
     OpenStreetMapCatalogItem
   );
   CatalogMemberFactory.register(MagdaReference.type, MagdaReference);
+  CatalogMemberFactory.register(TerriaReference.type, TerriaReference);
   CatalogMemberFactory.register(KmlCatalogItem.type, KmlCatalogItem);
   CatalogMemberFactory.register(
     MapboxVectorTileCatalogItem.type,
