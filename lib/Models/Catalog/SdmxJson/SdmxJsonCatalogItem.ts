@@ -81,7 +81,6 @@ export default class SdmxJsonCatalogItem
           dim.disable ||
           this.columns.find(col => col.name === dim.id)?.type === "region",
         setDimensionValue: async (stratumId: string, value: string) => {
-          const previousValue = dim.selectedId;
           let dimensionTraits = this.dimensions?.find(
             sdmxDim => sdmxDim.id === dim.id
           );
@@ -91,17 +90,7 @@ export default class SdmxJsonCatalogItem
 
           dimensionTraits.setTrait(stratumId, "selectedId", value);
 
-          const result = await this.loadMapItems();
-
-          console.log(result);
-
-          // If error after loading, reset value
-          if (result.error) {
-            runInAction(() =>
-              dimensionTraits?.setTrait(stratumId, "selectedId", previousValue)
-            );
-            throw result.error;
-          }
+          (await this.loadMapItems()).raiseError(this.terria);
         }
       };
     });
