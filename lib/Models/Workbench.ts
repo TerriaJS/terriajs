@@ -202,12 +202,18 @@ export default class Workbench {
         (await item.loadMapItems()).throwIfError();
       }
     } catch (e) {
-      this.remove(item);
-      throw TerriaError.from(e, {
+      const terriaError = TerriaError.from(e, {
         title: i18next.t("workbench.addItemErrorTitle"),
         message: i18next.t("workbench.addItemErrorMessage"),
-        severity: TerriaErrorSeverity.Error
+        messageImportance: -1
       });
+
+      // Remove item if TerriaError severity is Error
+      if (terriaError.severity === TerriaErrorSeverity.Error) {
+        this.remove(item);
+      }
+
+      throw terriaError;
     }
   }
 
