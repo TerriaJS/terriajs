@@ -1,8 +1,6 @@
 "use strict";
-import React, { useState, useRef } from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-
+import React, { useRef, useState } from "react";
+import styled, { useTheme } from "styled-components";
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
 import { TextSpan } from "../../Styled/Text";
@@ -55,6 +53,7 @@ const StyledMapIconButton = styled(RawButton)<IStyledMapIconButtonProps>`
     color: ${props.theme.textLight};
     svg {
       fill: ${props.theme.textLight};
+      stroke: ${props.theme.textLight};
     }
   `}
   ${props =>
@@ -101,6 +100,7 @@ interface IMapIconButtonProps extends IStyledMapIconButtonProps {
   children?: React.ReactNode;
   className?: string;
   buttonRef?: React.RefObject<any>;
+  noExpand?: boolean;
 }
 
 function MapIconButton(props: IMapIconButtonProps) {
@@ -115,10 +115,12 @@ function MapIconButton(props: IMapIconButtonProps) {
     primary,
     splitter,
     inverted,
-    disabled
+    disabled,
+    noExpand = false
   } = props;
-  const expanded = (isExpanded || neverCollapse) && children;
+  const expanded = !noExpand && (isExpanded || neverCollapse) && children;
   const buttonRef = props.buttonRef || useRef();
+  const theme = useTheme();
 
   // const handleAway = () => setTimeout(() => setExpanded(false), 1000);
   const handleAway = () => setExpanded(false);
@@ -168,8 +170,9 @@ function MapIconButton(props: IMapIconButtonProps) {
             medium
             css={`
               display: block;
-              transition: max-width 0.3s ease, margin-right 0.3s ease,
-                opacity 0.3s ease;
+              transition: visibility 0.3s ease, max-width 0.3s ease,
+                margin-right 0.3s ease, opacity 0.3s ease;
+              visibility: ${expanded ? `visible` : `hidden`};
               max-width: ${expanded ? `150px` : `0px`};
               margin-right: ${expanded ? `10px` : `0px`};
               opacity: ${expanded ? `1.0` : `0`};
@@ -202,6 +205,13 @@ function MapIconButton(props: IMapIconButtonProps) {
             width: 32px;
             height: 32px;
             margin:auto;
+            @media (max-width: ${theme.mobile}px) {
+              width: ${
+                primary && !!props.closeIconElement && !isExpanded
+                  ? "64px"
+                  : "32px"
+              };
+            }
           `
         }
       >

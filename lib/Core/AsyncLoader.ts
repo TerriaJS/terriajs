@@ -100,6 +100,7 @@ export default class AsyncLoader {
     return this._result;
   }
 
+  @action
   async load(forceReload: boolean = false): Promise<Result<void>> {
     if (forceReload) {
       runInAction(() => ++this._forceReloadCount);
