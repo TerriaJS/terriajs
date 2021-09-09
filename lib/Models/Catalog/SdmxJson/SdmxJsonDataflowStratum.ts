@@ -625,7 +625,10 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
           )
         : undefined;
 
-      if ((regionColumn?.valuesAsRegions.uniqueRegionIds.length ?? 0) <= 1) {
+      if (
+        regionColumn?.ready &&
+        (regionColumn?.valuesAsRegions.uniqueRegionIds.length ?? 0) <= 1
+      ) {
         regionColumnName = null;
       }
 
