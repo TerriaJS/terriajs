@@ -1261,8 +1261,9 @@
         "time": "Time-series",
         "region": "Region"
       },
-      "loadDataErrorTitle": "Could not load SDMX CSV",
-      "loadDataErrorMessage": "Invalid response from {{csvUrl}}"
+      "loadDataErrorTitle": "Failed to load SDMX data for {{name}}",
+      "loadDataErrorMessage": "Invalid response from {{csvUrl}}",
+      "noResultsWithDimensions": "No results have been found. Please select different dimension values in the workbench than the following:  \n\n{{dimensions}}"
     },
     "time": {
       "invalidDate": "Invalid Date",

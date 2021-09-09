@@ -9,6 +9,12 @@ Change Log
 * Add TableColumn and TableStyle `ready` computed property. Columns will only be rendered if `ready` is `true`. At the moment it is only used to wait until `loadRegionIDs` has finished.
 * Moved region mapping `ImageryProvider` code to `lib/Table/createRegionMappedImageryProvider.ts`
 * Fix `ChartPanel` import `Result` bug.
+* Added `terriaError.messageImportance` property. This can be set to adjust which error messages are presented to the user.
+  * `terriaErrorNotification` and `WarningBox` will use the error message with highest importance to show to the user ("Developer details" remains unchanged)
+* Add `terriaError.shouldRaiseToUser` override, this can be used to raise errors with `Warning` severity.
+* `workbench.add()` will now keep items which only return `Warning` severity `TerriaErrors` after loading.
+* Improve SDMX error messages for no results
+* SDMX will now disable the region column if less than 2 valid regions have been found
 * [The next improvement]
 
 #### 8.1.0
