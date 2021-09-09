@@ -7,6 +7,18 @@ import EnumColorMap from "../../lib/Map/EnumColorMap";
 import TableStyleTraits from "../../lib/Traits/TraitsClasses/TableStyleTraits";
 import TableColorStyleTraits from "../../lib/Traits/TraitsClasses/TableColorStyleTraits";
 
+const regionMapping = JSON.stringify(
+  require("../../wwwroot/data/regionMapping.json")
+);
+
+const SedCods = JSON.stringify(
+  require("../../wwwroot/data/regionids/region_map-SED_CODE18_SED_2018.json")
+);
+
+const LatLonCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum_date_id.csv");
+const SedCsv = require("raw-loader!../../wwwroot/test/csv/SED_2018_SED_CODE18.csv");
+const YouthUnEmployCsv = require("raw-loader!../../wwwroot/test/csv/youth-unemployment-rate-2018.csv");
+
 describe("Table Style", function() {
   let terria: Terria;
 
@@ -15,7 +27,21 @@ describe("Table Style", function() {
       baseUrl: "./"
     });
     terria.configParameters.regionMappingDefinitionsUrl =
-      "data/regionMapping.json";
+      "build/TerriaJS/data/regionMapping.json";
+
+    jasmine.Ajax.install();
+
+    jasmine.Ajax.stubRequest(
+      "build/TerriaJS/data/regionMapping.json"
+    ).andReturn({ responseText: regionMapping });
+
+    jasmine.Ajax.stubRequest(
+      "build/TerriaJS/data/regionids/region_map-SED_CODE18_SED_2018.json"
+    ).andReturn({ responseText: SedCods });
+  });
+
+  afterEach(() => {
+    jasmine.Ajax.uninstall();
   });
 
   describe(" - Scalar", function() {
@@ -26,11 +52,8 @@ describe("Table Style", function() {
     });
 
     it(" - uses DiscreteColorMap if set numberOfBins", async function() {
-      csvItem.setTrait(
-        "definition",
-        "url",
-        "/test/csv/SED_2018_SED_CODE18.csv"
-      );
+      csvItem.setTrait("definition", "csvString", SedCsv);
+
       csvItem.setTrait("definition", "styles", [
         createStratumInstance(TableStyleTraits, {
           id: "Value",
@@ -67,11 +90,8 @@ describe("Table Style", function() {
     });
 
     it(" - uses DiscreteColorMap if set binMaximums", async function() {
-      csvItem.setTrait(
-        "definition",
-        "url",
-        "/test/csv/youth-unemployment-rate-2018.csv"
-      );
+      csvItem.setTrait("definition", "csvString", YouthUnEmployCsv);
+
       csvItem.setTrait("definition", "styles", [
         createStratumInstance(TableStyleTraits, {
           id: "youth unemployment (%)",
@@ -108,11 +128,8 @@ describe("Table Style", function() {
     });
 
     it(" - uses ContinuousColorMap by default", async function() {
-      csvItem.setTrait(
-        "definition",
-        "url",
-        "/test/csv/SED_2018_SED_CODE18.csv"
-      );
+      csvItem.setTrait("definition", "csvString", SedCsv);
+
       await csvItem.loadMapItems();
 
       const activeStyle = csvItem.activeTableStyle;
@@ -133,11 +150,7 @@ describe("Table Style", function() {
     });
 
     it(" - uses EnumColorMap by default", async function() {
-      csvItem.setTrait(
-        "definition",
-        "url",
-        "/test/csv/lat_lon_enum_date_id.csv"
-      );
+      csvItem.setTrait("definition", "csvString", LatLonCsv);
 
       csvItem.setTrait("definition", "activeStyle", "enum");
       await csvItem.loadMapItems();
@@ -165,11 +178,7 @@ describe("Table Style", function() {
     });
 
     it(" - uses EnumColorMap with specified colorPalette", async function() {
-      csvItem.setTrait(
-        "definition",
-        "url",
-        "/test/csv/lat_lon_enum_date_id.csv"
-      );
+      csvItem.setTrait("definition", "csvString", LatLonCsv);
 
       csvItem.setTrait(
         "definition",
