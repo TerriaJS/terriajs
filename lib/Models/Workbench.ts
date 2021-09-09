@@ -205,7 +205,7 @@ export default class Workbench {
       const terriaError = TerriaError.from(e, {
         title: i18next.t("workbench.addItemErrorTitle"),
         message: i18next.t("workbench.addItemErrorMessage"),
-        messageImportance: -1
+        importance: -1
       });
 
       // Remove item if TerriaError severity is Error

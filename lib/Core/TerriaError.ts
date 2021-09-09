@@ -39,10 +39,10 @@ export interface TerriaErrorOptions {
   /**  A detailed message describing the error.  This message may be HTML and it should be sanitized before display to the user. */
   message: string | I18nTranslateString;
 
-  /** Importance of the message, this is used to determine which messge is displayed to the user if multiple error messages exist.
+  /** Importance of the error message, this is used to determine which messge is displayed to the user if multiple error messages exist.
    * Higher importance messages are shown to user over lower importance. Default value is 0
    */
-  messageImportance?: number;
+  importance?: number;
 
   /** A short title describing the error. */
   title?: string | I18nTranslateString;
@@ -111,7 +111,7 @@ export default class TerriaError {
   private readonly _shouldRaiseToUser: boolean | undefined;
   private _raisedToUser: boolean;
 
-  readonly messageImportance: number = 0;
+  readonly importance: number = 0;
   readonly severity: TerriaErrorSeverity | (() => TerriaErrorSeverity);
   /** `sender` isn't really used for anything at the moment... */
   readonly sender: unknown;
@@ -221,12 +221,12 @@ export default class TerriaError {
 
   constructor(options: TerriaErrorOptions) {
     this._message = options.message;
-    this.messageImportance = options.messageImportance ?? 0;
     this._title = options.title ?? { key: "core.terriaError.defaultTitle" };
     this.sender = options.sender;
     this._raisedToUser = options.raisedToUser ?? false;
-    this.showDetails = options.showDetails ?? false;
     this._shouldRaiseToUser = options.shouldRaiseToUser;
+    this.importance = options.importance ?? 0;
+    this.showDetails = options.showDetails ?? false;
 
     // Transform originalError to an array if needed
     this.originalError = isDefined(options.originalError)
@@ -236,6 +236,7 @@ export default class TerriaError {
       : [];
 
     this.severity = options.severity ?? TerriaErrorSeverity.Error;
+
     this.stack = (new Error().stack ?? "")
       .split("\n")
       // Filter out some less useful lines in the stack trace
@@ -253,9 +254,7 @@ export default class TerriaError {
 
   /** Return error with message of highest importance in Error tree */
   get highestImportanceError() {
-    return this.flatten().sort(
-      (a, b) => b.messageImportance - a.messageImportance
-    )[0];
+    return this.flatten().sort((a, b) => b.importance - a.importance)[0];
   }
 
   get title() {

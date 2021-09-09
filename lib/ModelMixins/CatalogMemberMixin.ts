@@ -66,7 +66,7 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
     async loadMetadata(): Promise<Result<void>> {
       return (await this._metadataLoader.load()).clone({
         message: `Failed to load \`${getName(this)}\` metadata`,
-        messageImportance: -1
+        importance: -1
       });
     }
 
