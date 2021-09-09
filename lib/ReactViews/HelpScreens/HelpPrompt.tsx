@@ -28,7 +28,7 @@ interface PromptProps {
   isVisible: boolean;
 }
 
-export const Prompt: React.FC<PromptProps> = ({
+export const HelpPrompt: React.FC<PromptProps> = ({
   title,
   content,
   dismissLabel,
@@ -122,4 +122,4 @@ export const Prompt: React.FC<PromptProps> = ({
   );
 };
 
-export default Prompt;
+export default HelpPrompt;

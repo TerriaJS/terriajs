@@ -1,19 +1,47 @@
 Change Log
 ==========
 
-#### next release (8.0.1)
-* Added `catalog-converter` support for v7 `#start` data.
-* add french Help button translation
+#### next release (8.1.1)
+
 * Tsifyied and refactored `RegionProvider` and `RegionProviderList`, and re-enabled `loadRegionIDs`
 * `TableColorMap` `minimumValue` and `maximumValue` will now take into account valid regions.
 * `tableMixin.loadRegionProviderList()` is now called in `tableMixin.forceLoadMapItems()` instead of `mappableMixin.loadMapItems()`
 * Add TableColumn and TableStyle `ready` computed property. Columns will only be rendered if `ready` is `true`. At the moment it is only used to wait until `loadRegionIDs` has finished.
 * Moved region mapping `ImageryProvider` code to `lib/Table/createRegionMappedImageryProvider.ts`
 * Fix `ChartPanel` import `Result` bug.
+* [The next improvement]
+
+#### 8.1.0
+
+* **Breaking changes:**
+  * Overhaul of map navigation: items no longer added inside UserInterface using <Nav> jsx.
+
+* New version of map navigation ([#5062](https://github.com/TerriaJS/terriajs/pull/5062))
+  - It consists of 
+    - a high level api `MapNavigationModel` for managing the navigation items, which is responsible for managing the state of navigation items. It is passing commands to invidual item controller.
+    - a `MapNavigationItemController` that holds and control the state of navigation item. When new navigation item is created it should extend controller and provide the definition on how it state should be updated.
+  - Terria exposes instance of navigation model to the world.
+  - Converted all existing navigation items to utilise new navigation model, and registered them in terria navigation model (`registerMapNavigations.tsx`).
+  - Resolved issue with some navigation items not being clickable on mobile due to overlap from others.
+* Fixed a bug in Difference tool where difference image was showing with zero opacity in some situations.
+* Fixed `CzmlCatalogItem` to react correctly to input data changes.
+* Changed @vx/* dependencies to @visx/* which is the new home of the chart library
+* The glyph style used for chart points can now be customized.
+* Added `TerriaReference` item, useful for mounting a catalog tree from an external init file at any position in the current map's catalog tree.
+* Changed @vx/* dependencies to @visx/* which is the new home of the chart library
+* The glyph style used for chart points can now be customized.
+
+#### 8.0.1
+
+* Added `catalog-converter` support for v7 `#start` data.
+* add french Help button translation
 * Enable FeatureInfoSectionSpec tests
+* Add `itemProperties` to `ArcGisMapServerCatalogGroupTraits` so that `ArcGisMapServerCatalogGroup` can override relevant traits of its layers.
+* Add `feature` object to `FeatureInfoSection.getTemplateData`
+* Add a way to replace text in feature info templates. See [Replace text](doc/connecting-to-data/customizing-data-appearance/feature-info-template.md) for details.
 * Fixed unnecessary model reloads or recomputing of `mapItems` when switching between story scenes.
 * Fixed story reset button.
-* [The next improvement]
+* Moved help button to the top menu
 
 #### 8.0.0
 

@@ -44,6 +44,7 @@ import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Loader from "../../Loader";
 import DatePicker from "./DatePicker";
 import LocationPicker from "./LocationPicker";
+import { CLOSE_TOOL_ID } from "../../Map/Navigation/registerMapNavigations";
 
 const dateFormat = require("dateformat");
 
@@ -117,6 +118,11 @@ class DiffTool extends React.Component<PropsType> {
     terria.showSplitter = true;
     viewState.setIsMapFullScreen(true);
     this.sourceItem.setTrait(CommonStrata.user, "show", false);
+    terria.mapNavigationModel.show(CLOSE_TOOL_ID);
+    const closeTool = terria.mapNavigationModel.findItem(CLOSE_TOOL_ID);
+    if (closeTool) {
+      closeTool.controller.activate();
+    }
   }
 
   @action
@@ -129,6 +135,11 @@ class DiffTool extends React.Component<PropsType> {
     terria.showSplitter = originalSettings.showSplitter;
     viewState.setIsMapFullScreen(originalSettings.isMapFullScreen);
     this.sourceItem.setTrait(CommonStrata.user, "show", true);
+    terria.mapNavigationModel.hide(CLOSE_TOOL_ID);
+    const closeTool = terria.mapNavigationModel.findItem(CLOSE_TOOL_ID);
+    if (closeTool) {
+      closeTool.controller.deactivate();
+    }
   }
 
   componentDidMount() {
@@ -359,8 +370,8 @@ class Main extends React.Component<MainPropsType> {
   @action.bound
   unsetDates() {
     const { leftItem, rightItem } = this.props;
-    leftItem.setTrait(CommonStrata.user, "currentTime", undefined);
-    rightItem.setTrait(CommonStrata.user, "currentTime", undefined);
+    leftItem.setTrait(CommonStrata.user, "currentTime", null);
+    rightItem.setTrait(CommonStrata.user, "currentTime", null);
     this.hideItem(leftItem);
     this.hideItem(rightItem);
   }
@@ -558,7 +569,7 @@ class Main extends React.Component<MainPropsType> {
                       </TextSpan>
                     </RawButton>
                   )}
-                  {this.leftDate && this.rightDate && (
+                  {isShowingDiff === false && this.leftDate && this.rightDate && (
                     <RawButton onClick={this.unsetDates}>
                       <TextSpan isLink small>
                         {t("diffTool.instructions.changeDates")}
@@ -700,7 +711,7 @@ class Main extends React.Component<MainPropsType> {
         {!isShowingDiff &&
           ReactDOM.createPortal(
             // Bottom Panel
-            <Box centered fullWidth wrap backgroundColor={theme.dark}>
+            <Box centered fullWidth flexWrap backgroundColor={theme.dark}>
               <DatePicker
                 heading={t("diffTool.labels.dateComparisonA")}
                 item={this.props.leftItem}
@@ -958,7 +969,7 @@ async function createSplitItem(
     const newItem = ref.target as DiffableItem;
     newItem.setTrait(CommonStrata.user, "show", true);
     newItem.setTrait(CommonStrata.user, "splitDirection", splitDirection);
-    newItem.setTrait(CommonStrata.user, "currentTime", undefined);
+    newItem.setTrait(CommonStrata.user, "currentTime", null);
     newItem.setTrait(CommonStrata.user, "initialTimeSource", "none");
     if (hasOpacity(newItem)) {
       // We want to show the item on the map only after date selection. At the

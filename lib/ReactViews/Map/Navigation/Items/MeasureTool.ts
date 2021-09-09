@@ -1,57 +1,67 @@
 "use strict";
+import i18next from "i18next";
+import { action, observable } from "mobx";
 import React from "react";
-import PropTypes from "prop-types";
-import Styles from "./tool_button.scss";
-import { withTranslation } from "react-i18next";
-import Icon from "../../../Styled/Icon";
-import { observer } from "mobx-react";
-import { observable, action } from "mobx";
-
-import UserDrawing from "../../../Models/UserDrawing";
-import EllipsoidGeodesic from "terriajs-cesium/Source/Core/EllipsoidGeodesic";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import EllipsoidTangentPlane from "terriajs-cesium/Source/Core/EllipsoidTangentPlane";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import PolygonGeometryLibrary from "terriajs-cesium/Source/Core/PolygonGeometryLibrary";
-import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import EllipsoidGeodesic from "terriajs-cesium/Source/Core/EllipsoidGeodesic";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
 import VertexFormat from "terriajs-cesium/Source/Core/VertexFormat";
+import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import Terria from "../../../../Models/Terria";
+import UserDrawing from "../../../../Models/UserDrawing";
+import ViewerMode from "../../../../Models/ViewerMode";
+import { GLYPHS } from "../../../../Styled/Icon";
+import MapNavigationItemController from "../../../../ViewModels/MapNavigation/MapNavigationItemController";
 
-import MapIconButton from "../../MapIconButton/MapIconButton";
-import withControlledVisibility from "../../HOCs/withControlledVisibility";
+const EllipsoidTangentPlane = require("terriajs-cesium/Source/Core/EllipsoidTangentPlane");
+const PolygonGeometryLibrary = require("terriajs-cesium/Source/Core/PolygonGeometryLibrary");
 
-@observer
-class MeasureTool extends React.Component {
-  @observable
-  totalDistanceMetres = 0;
+interface PropTypes {
+  terria: Terria;
 
-  @observable
-  totalAreaMetresSquared = 0;
+  onClose(): void;
+}
 
-  @observable
-  userDrawing;
-
+export default class MeasureTool extends MapNavigationItemController {
+  static id = "measure-tool";
   static displayName = "MeasureTool";
+  readonly terria: Terria;
+  @observable
+  totalDistanceMetres: number = 0;
+  @observable
+  totalAreaMetresSquared: number = 0;
+  @observable
+  userDrawing: UserDrawing;
+  onClose: () => void;
+  itemRef: React.RefObject<HTMLDivElement> = React.createRef();
 
-  static propTypes = {
-    terria: PropTypes.object,
-    t: PropTypes.func.isRequired
-  };
-
-  constructor(props) {
-    super(props);
+  constructor(props: PropTypes) {
+    super();
+    const t = i18next.t.bind(i18next);
+    this.terria = props.terria;
     this.userDrawing = new UserDrawing({
       terria: props.terria,
-      messageHeader: props.t("measure.measureTool"),
+      messageHeader: i18next.t("measure.measureTool"),
       allowPolygon: false,
       onPointClicked: this.onPointClicked,
       onPointMoved: this.onPointMoved,
       onCleanUp: this.onCleanUp,
       onMakeDialogMessage: this.onMakeDialogMessage
     });
+    this.onClose = props.onClose;
   }
 
-  prettifyNumber(number, squared) {
+  get glyph(): any {
+    return GLYPHS.measure;
+  }
+
+  get viewerMode(): ViewerMode | undefined {
+    return undefined;
+  }
+
+  prettifyNumber(number: number, squared: boolean) {
     if (number <= 0) {
       return "";
     }
@@ -68,10 +78,10 @@ class MeasureTool extends React.Component {
         number = number / 1000.0;
       }
     }
-    number = number.toFixed(2);
+    let numberStr = number.toFixed(2);
     // http://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
-    number = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    let numberStr = number + " " + label;
+    numberStr.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    numberStr = `${numberStr} ${label}`;
     if (squared) {
       numberStr += "\u00B2";
     }
@@ -79,20 +89,20 @@ class MeasureTool extends React.Component {
   }
 
   @action
-  updateDistance(pointEntities) {
+  updateDistance(pointEntities: CustomDataSource) {
     this.totalDistanceMetres = 0;
     if (pointEntities.entities.values.length < 1) {
       return;
     }
 
     const prevPoint = pointEntities.entities.values[0];
-    let prevPointPos = prevPoint.position.getValue(
-      this.props.terria.timelineClock.currentTime
+    let prevPointPos = prevPoint.position!.getValue(
+      this.terria.timelineClock.currentTime
     );
     for (let i = 1; i < pointEntities.entities.values.length; i++) {
       const currentPoint = pointEntities.entities.values[i];
-      const currentPointPos = currentPoint.position.getValue(
-        this.props.terria.timelineClock.currentTime
+      const currentPointPos = currentPoint.position!.getValue(
+        this.terria.timelineClock.currentTime
       );
 
       this.totalDistanceMetres =
@@ -103,8 +113,8 @@ class MeasureTool extends React.Component {
     }
     if (this.userDrawing.closeLoop) {
       const firstPoint = pointEntities.entities.values[0];
-      const firstPointPos = firstPoint.position.getValue(
-        this.props.terria.timelineClock.currentTime
+      const firstPointPos = firstPoint.position!.getValue(
+        this.terria.timelineClock.currentTime
       );
       this.totalDistanceMetres =
         this.totalDistanceMetres +
@@ -113,7 +123,7 @@ class MeasureTool extends React.Component {
   }
 
   @action
-  updateArea(pointEntities) {
+  updateArea(pointEntities: CustomDataSource) {
     this.totalAreaMetresSquared = 0;
     if (!this.userDrawing.closeLoop) {
       // Not a closed polygon? Don't calculate area.
@@ -127,8 +137,8 @@ class MeasureTool extends React.Component {
     const positions = [];
     for (let i = 0; i < pointEntities.entities.values.length; i++) {
       const currentPoint = pointEntities.entities.values[i];
-      const currentPointPos = currentPoint.position.getValue(
-        this.props.terria.timelineClock.currentTime
+      const currentPointPos = currentPoint.position!.getValue(
+        this.terria.timelineClock.currentTime
       );
       positions.push(currentPointPos);
     }
@@ -187,7 +197,7 @@ class MeasureTool extends React.Component {
     this.totalAreaMetresSquared = area;
   }
 
-  getGeodesicDistance(pointOne, pointTwo) {
+  getGeodesicDistance(pointOne: Cartesian3, pointTwo: Cartesian3) {
     // Note that Cartesian.distance gives the straight line distance between the two points, ignoring
     // curvature. This is not what we want.
     const pickedPointCartographic = Ellipsoid.WGS84.cartesianToCartographic(
@@ -207,16 +217,17 @@ class MeasureTool extends React.Component {
   onCleanUp() {
     this.totalDistanceMetres = 0;
     this.totalAreaMetresSquared = 0;
+    super.deactivate();
   }
 
   @action.bound
-  onPointClicked(pointEntities) {
+  onPointClicked(pointEntities: CustomDataSource) {
     this.updateDistance(pointEntities);
     this.updateArea(pointEntities);
   }
 
   @action.bound
-  onPointMoved(pointEntities) {
+  onPointMoved(pointEntities: CustomDataSource) {
     // This is no different to clicking a point.
     this.onPointClicked(pointEntities);
   }
@@ -231,25 +242,19 @@ class MeasureTool extends React.Component {
     return message;
   };
 
-  @action.bound
-  handleClick() {
-    this.userDrawing.enterDrawMode();
+  /**
+   * @overrides
+   */
+  deactivate() {
+    this.userDrawing.endDrawing();
+    super.deactivate();
   }
 
-  render() {
-    const { t } = this.props;
-    return (
-      <div className={Styles.toolButton}>
-        <MapIconButton
-          expandInPlace
-          title={t("measure.measureDistance")}
-          onClick={this.handleClick}
-          iconElement={() => <Icon glyph={Icon.GLYPHS.measure} />}
-        >
-          {t("measure.measureToolTitle")}
-        </MapIconButton>
-      </div>
-    );
+  /**
+   * @overrides
+   */
+  activate() {
+    this.userDrawing.enterDrawMode();
+    super.activate();
   }
 }
-export default withTranslation()(withControlledVisibility(MeasureTool));
