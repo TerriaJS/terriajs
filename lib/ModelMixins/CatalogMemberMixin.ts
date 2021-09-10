@@ -1,4 +1,4 @@
-import { computed, runInAction } from "mobx";
+import { action, computed, runInAction } from "mobx";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
@@ -203,10 +203,10 @@ namespace CatalogMemberMixin {
 export default CatalogMemberMixin;
 
 /** Convenience function to get user readable name of a BaseModel */
-export function getName(model: BaseModel | undefined) {
+export const getName = action((model: BaseModel | undefined) => {
   return (
     (CatalogMemberMixin.isMixedInto(model) ? model.name : undefined) ??
     model?.uniqueId ??
     "Unknown model"
   );
-}
+});

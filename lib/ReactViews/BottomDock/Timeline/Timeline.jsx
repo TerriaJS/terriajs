@@ -32,16 +32,6 @@ export const Timeline = observer(
       };
     },
 
-    /* eslint-disable-next-line camelcase */
-    UNSAFE_componentWillMount() {
-      this.resizeListener = () => this.timeline && this.timeline.resize();
-      window.addEventListener("resize", this.resizeListener, false);
-    },
-
-    componentWillUnmount() {
-      window.removeEventListener("resize", this.resizeListener);
-    },
-
     changeDateTime(time) {
       this.props.terria.timelineClock.currentTime = JulianDate.fromDate(
         new Date(time)

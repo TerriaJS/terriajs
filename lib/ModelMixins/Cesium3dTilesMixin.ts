@@ -29,11 +29,12 @@ import isDefined from "../Core/isDefined";
 import { isJsonObject, JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
 import runLater from "../Core/runLater";
+import TerriaError from "../Core/TerriaError";
+import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
-import Feature from "../Models/Feature";
 import Model from "../Models/Definition/Model";
-import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
+import Feature from "../Models/Feature";
 import { SelectableDimension } from "../Models/SelectableDimensions";
 import Cesium3DTilesCatalogItemTraits from "../Traits/TraitsClasses/Cesium3DTilesCatalogItemTraits";
 import Cesium3dTilesTraits, {
@@ -42,7 +43,6 @@ import Cesium3dTilesTraits, {
 import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
 import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
-import TerriaError from "../Core/TerriaError";
 
 const DEFAULT_HIGHLIGHT_COLOR = "#ff3f00";
 
