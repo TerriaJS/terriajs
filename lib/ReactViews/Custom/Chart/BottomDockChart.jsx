@@ -184,17 +184,13 @@ class Chart extends React.Component {
       items: this.pointsNearMouse
     };
 
-    if (!this.mouseCoords || this.mouseCoords.x < this.plotWidth * 0.75) {
+    if (!this.mouseCoords || this.mouseCoords.x < this.plotWidth * 0.5) {
       tooltip.right = this.props.width - (this.plotWidth + margin.right);
     } else {
       tooltip.left = margin.left;
     }
 
-    if (!this.mouseCoords || this.mouseCoords.y < this.plotHeight * 0.5) {
-      tooltip.bottom = this.props.height - (margin.top + this.plotHeight);
-    } else {
-      tooltip.top = margin.top;
-    }
+    tooltip.bottom = this.props.height - (margin.top + this.plotHeight);
     return tooltip;
   }
 
