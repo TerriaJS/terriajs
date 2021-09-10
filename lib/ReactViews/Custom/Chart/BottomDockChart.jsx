@@ -254,9 +254,7 @@ class Chart extends React.Component {
         ]}
         onZoom={zoomedScale => this.setZoomedXScale(zoomedScale)}
       >
-        <Legends
-          chartItems={this.chartItems.length > 4 ? [] : this.chartItems}
-        />
+        <Legends width={this.plotWidth} chartItems={this.chartItems} />
         <div style={{ position: "relative" }}>
           <svg
             width="100%"

@@ -1,14 +1,15 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { LegendOrdinal, LegendItem, LegendLabel } from "@visx/legend";
 import { scaleOrdinal } from "@visx/scale";
-import Styles from "./legends.scss";
+import { LegendOrdinal } from "@visx/legend";
 import Glyphs from "./Glyphs";
 import { GlyphCircle } from "@visx/glyph";
+import styled from "styled-components";
 
 export default class Legends extends React.PureComponent {
   static propTypes = {
-    chartItems: PropTypes.array.isRequired
+    chartItems: PropTypes.array.isRequired,
+    width: PropTypes.number.isRequired
   };
 
   static maxHeightPx = 33;
@@ -21,10 +22,7 @@ export default class Legends extends React.PureComponent {
     });
 
     return (
-      <div
-        className={Styles.legends}
-        style={{ maxHeight: `${Legends.maxHeightPx}px` }}
-      >
+      <Container style={{ maxWidth: this.props.width }}>
         <LegendOrdinal scale={colorScale}>
           {labels =>
             labels.map((label, i) => (
@@ -36,7 +34,7 @@ export default class Legends extends React.PureComponent {
             ))
           }
         </LegendOrdinal>
-      </div>
+      </Container>
     );
   }
 }
@@ -52,14 +50,41 @@ class Legend extends React.PureComponent {
     const squareSize = 20;
     const Glyph = Glyphs[this.props.glyph] ?? GlyphCircle;
     return (
-      <LegendItem margin="0 5px">
-        <svg width={`${squareSize}px`} height={`${squareSize}px`}>
+      <Label title={label.text}>
+        <svg
+          width={`${squareSize}px`}
+          height={`${squareSize}px`}
+          style={{ flexShrink: 0 }}
+        >
           <Glyph top={10} left={10} fill={label.value} size={100} />
         </svg>
-        <LegendLabel className={Styles.label} align="left" margin="0 0 0 4px">
-          {label.text}
-        </LegendLabel>
-      </LegendItem>
+        <LabelText>{label.text}</LabelText>
+      </Label>
     );
   }
 }
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: auto;
+  padding: 7px;
+  border: "1px solid red";
+  font-size: 0.8em;
+`;
+
+const Label = styled.div`
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-width: 0px;
+  border: "1px solid blue";
+`;
+
+const LabelText = styled.span`
+  margin-left: 4px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`;
