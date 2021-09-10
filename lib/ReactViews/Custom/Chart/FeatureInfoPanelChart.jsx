@@ -60,7 +60,11 @@ class FeatureInfoPanelChart extends React.Component {
     const height = this.props.height || this.props.parentHeight;
     const width = this.props.width || this.props.parentWidth;
     if (!ChartableMixin.isMixedInto(catalogItem)) {
-      return null;
+      return (
+        <ChartStatusText width={width} height={height}>
+          {i18next.t("chart.noData")}
+        </ChartStatusText>
+      );
     } else if (!this.chartItem && catalogItem.isLoadingMapItems) {
       return (
         <ChartStatusText width={width} height={height}>
