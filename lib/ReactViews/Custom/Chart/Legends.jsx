@@ -70,7 +70,6 @@ const Container = styled.div`
   justify-content: center;
   margin: auto;
   padding: 7px;
-  border: "1px solid red";
   font-size: 0.8em;
 `;
 
@@ -78,8 +77,8 @@ const Label = styled.div`
   display: flex;
   flex: 1;
   align-items: center;
+  justify-content: center;
   min-width: 0px;
-  border: "1px solid blue";
 `;
 
 const LabelText = styled.span`
