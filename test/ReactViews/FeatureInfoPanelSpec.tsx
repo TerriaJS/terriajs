@@ -4,15 +4,22 @@
 import React from "react";
 import { findWithType } from "react-shallow-testutils";
 import { getShallowRenderedOutput } from "./MoreShallowTools";
+import { runInAction } from "mobx";
 
 // import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 
-import { FeatureInfoPanel } from "../../lib/ReactViews/FeatureInfo/FeatureInfoPanel";
+import {
+  FeatureInfoPanel,
+  determineCatalogItem
+} from "../../lib/ReactViews/FeatureInfo/FeatureInfoPanel";
 import Loader from "../../lib/ReactViews/Loader";
 import PickedFeatures from "../../lib/Map/PickedFeatures";
-import runLater from "../../lib/Core/runLater";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
+import Feature from "../../lib/Models/Feature";
+import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
+import CompositeCatalogItem from "../../lib/Models/Catalog/CatalogItems/CompositeCatalogItem";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 
 // var separator = ',';
 // if (typeof Intl === 'object' && typeof Intl.NumberFormat === 'function') {
@@ -20,16 +27,18 @@ import ViewState from "../../lib/ReactViewModels/ViewState";
 // }
 
 describe("FeatureInfoPanel", function() {
-  let terria;
+  let terria: Terria;
   // let feature;
-  let viewState;
+  let viewState: ViewState;
 
   beforeEach(function() {
     terria = new Terria({
       baseUrl: "./"
     });
     viewState = new ViewState({
-      terria: terria
+      terria: terria,
+      catalogSearchProvider: null,
+      locationSearchProviders: []
     });
   });
 
@@ -44,8 +53,10 @@ describe("FeatureInfoPanel", function() {
 
   it("displays loader while asychronously loading feature information", function() {
     var pickedFeatures = new PickedFeatures();
-    pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
-    terria.pickedFeatures = pickedFeatures;
+    pickedFeatures.allFeaturesAvailablePromise = Promise.resolve();
+    runInAction(() => {
+      terria.pickedFeatures = pickedFeatures;
+    });
     const panel = (
       <FeatureInfoPanel terria={terria} viewState={viewState} t={() => {}} />
     );
@@ -84,4 +95,34 @@ describe("FeatureInfoPanel", function() {
   //     expect(sections.length).toEqual(2);
   //     expect(sections[0].props.isOpen).toBe(true);
   // });
+
+  describe("determineCatalogItem", function() {
+    let simple1: SimpleCatalogItem,
+      simple2: SimpleCatalogItem,
+      composite: CompositeCatalogItem;
+    let feature1: Feature, feature2: Feature;
+    beforeEach(function() {
+      feature1 = new Feature({});
+      simple1 = new SimpleCatalogItem("simple1", terria);
+      feature1._catalogItem = simple1;
+      feature2 = new Feature({});
+      simple2 = new SimpleCatalogItem("simple2", terria);
+      feature2._catalogItem = simple2;
+      composite = new CompositeCatalogItem("composite", terria);
+      composite.add(CommonStrata.definition, simple1);
+      composite.add(CommonStrata.definition, simple2);
+    });
+    it("determines which catalog item a feature belongs to", function() {
+      terria.workbench.items = [simple1, simple2];
+      expect(determineCatalogItem(terria.workbench, feature1)).toBe(simple1);
+      expect(determineCatalogItem(terria.workbench, feature2)).toBe(simple2);
+    });
+    it("special cases features from composite models", function() {
+      terria.workbench.items = [composite];
+      expect(determineCatalogItem(terria.workbench, feature1)).toBe(simple1);
+      expect(determineCatalogItem(terria.workbench, feature2)).toBe(simple2);
+      // Features from a member of a composite model are determined to belong to
+      // the member model, instead of the composite one.
+    });
+  });
 });

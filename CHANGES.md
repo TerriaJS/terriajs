@@ -9,6 +9,7 @@ Change Log
 * Add TableColumn and TableStyle `ready` computed property. Columns will only be rendered if `ready` is `true`. At the moment it is only used to wait until `loadRegionIDs` has finished.
 * Moved region mapping `ImageryProvider` code to `lib/Table/createRegionMappedImageryProvider.ts`
 * Fix `ChartPanel` import `Result` bug.
+* Improve handling of featureInfoTemplate for composite catalog items.
 * [The next improvement]
 
 #### 8.1.0
