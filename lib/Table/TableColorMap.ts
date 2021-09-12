@@ -52,21 +52,38 @@ export default class TableColorMap {
   }
 
   @computed
+  get filteredValues() {
+    const values =
+      this.regionValues ?? this.colorColumn?.valuesAsNumbers.values ?? [];
+    const numValues = values.filter(val => val !== null) as number[];
+    if (numValues.length === 0) return [];
+
+    // Filter by z-score if applicable
+    // This will filter out values which are outside of `zScoreFilter` standard deviations from the mean
+    if (this.colorTraits.zScoreFilter) {
+      const std = getStandardDeviation(numValues);
+      const mean = getMean(numValues);
+
+      return numValues.filter(
+        val => Math.abs((val - mean) / std) <= this.colorTraits.zScoreFilter!
+      );
+    }
+
+    return numValues;
+  }
+
+  @computed
   get minimumValue() {
     if (isDefined(this.colorTraits.minimumValue))
       return this.colorTraits.minimumValue;
-    return this.regionValues
-      ? Math.min(...this.regionValues)
-      : this.colorColumn?.valuesAsNumbers.minimum;
+    return Math.min(...this.filteredValues);
   }
 
   @computed
   get maximumValue() {
     if (isDefined(this.colorTraits.maximumValue))
       return this.colorTraits.maximumValue;
-    return this.regionValues
-      ? Math.max(...this.regionValues)
-      : this.colorColumn?.valuesAsNumbers.maximum;
+    return Math.max(...this.filteredValues);
   }
 
   /**
@@ -86,6 +103,10 @@ export default class TableColorMap {
     const nullColor = colorTraits.nullColor
       ? Color.fromCssColorString(colorTraits.nullColor) ?? Color.TRANSPARENT
       : Color.TRANSPARENT;
+
+    const outlierColor = colorTraits.outlierColor
+      ? Color.fromCssColorString(colorTraits.outlierColor) ?? Color.BLACK
+      : Color.BLACK;
 
     // If column type is `scalar` - use DiscreteColorMap or ContinuousColorMap
     if (colorColumn && colorColumn.type === TableColumnType.scalar) {
@@ -118,7 +139,8 @@ export default class TableColorMap {
           colorScale,
           minValue: this.minimumValue,
           maxValue: this.maximumValue,
-          nullColor
+          nullColor,
+          outlierColor
         });
 
         // If we only have one value, create color map with single value
@@ -459,4 +481,17 @@ export default class TableColorMap {
       );
     }
   }
+}
+
+function getMean(array: number[]) {
+  return array.reduce((a, b) => a + b) / array.length;
+}
+
+// https://stackoverflow.com/a/53577159
+function getStandardDeviation(array: number[]) {
+  const n = array.length;
+  const mean = getMean(array);
+  return Math.sqrt(
+    array.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n
+  );
 }
