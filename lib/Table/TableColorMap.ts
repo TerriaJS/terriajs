@@ -32,8 +32,7 @@ export default class TableColorMap {
   ) {}
 
   /** Get values of colorColumn with valid regions if:
-   * - colorColumn is scalar
-   * - and the activeStyle has a regionColumn
+   * - colorColumn is scalar and the activeStyle has a regionColumn
    */
   @computed get regionValues() {
     if (this.colorColumn?.type !== TableColumnType.scalar) return;
@@ -41,13 +40,36 @@ export default class TableColorMap {
     const regionCol = this.colorColumn?.tableModel.activeTableStyle
       .regionColumn;
     if (regionCol) {
-      return regionCol.valuesAsRegions.regionIds
-        .map((region, rowIndex) => {
+      const values = regionCol.valuesAsRegions.regionIds.map(
+        (region, rowIndex) => {
           if (region !== null) {
-            return this.colorColumn?.valuesAsNumbers.values?.[rowIndex];
+            return this.colorColumn?.valuesAsNumbers.values[rowIndex] ?? null;
           }
-        })
-        .filter(num => isDefined(num) && num !== null) as number[];
+
+          return null;
+        }
+      );
+
+      return values;
+    }
+  }
+
+  /** Returns a map of regionID to average for that region if:
+   * - colorColumn is scalar and the activeStyle has a regionColumn
+   * This is useful for filtering out regions in time-serie data if the values are considered to be "outliers"
+   */
+  @computed get regionAverageValues() {
+    if (this.colorColumn?.type !== TableColumnType.scalar) return;
+
+    const regionCol = this.colorColumn?.tableModel.activeTableStyle
+      .regionColumn;
+    if (regionCol) {
+      return Array.from(
+        regionCol.valuesAsRegions.regionIdToRowNumbersMap.entries()
+      ).reduce<{ [key: string]: number }>((agg, [key, value]) => {
+        agg[key] = getMean(Array.isArray(value) ? value : [value]);
+        return agg;
+      }, {});
     }
   }
 
@@ -61,12 +83,19 @@ export default class TableColorMap {
     // Filter by z-score if applicable
     // This will filter out values which are outside of `zScoreFilter` standard deviations from the mean
     if (this.colorTraits.zScoreFilter) {
-      const std = getStandardDeviation(numValues);
-      const mean = getMean(numValues);
+      if (this.colorColumn?.tableModel.activeTableStyle.timeColumn) {
+        // Filter out region IDs with outliers/
+        /////////////////// TTOOOODDOO
+        // Legend for outliers
+        // How to disable outliers?
+      } else {
+        const std = getStandardDeviation(numValues);
+        const mean = getMean(numValues);
 
-      return numValues.filter(
-        val => Math.abs((val - mean) / std) <= this.colorTraits.zScoreFilter!
-      );
+        return numValues.filter(
+          val => Math.abs((val - mean) / std) <= this.colorTraits.zScoreFilter!
+        );
+      }
     }
 
     return numValues;
