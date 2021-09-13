@@ -642,7 +642,9 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
             })
           }),
           time: createStratumInstance(TableTimeStyleTraits, {
-            timeColumn: this.timeColumns[0].name
+            timeColumn: this.timeColumns[0].name,
+            spreadStartTime: true,
+            spreadFinishTime: true
           }),
           // Add chart if there is a time column but no region column
           chart:
