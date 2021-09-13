@@ -1,0 +1,68 @@
+{
+  "general": {
+    "open": "เปิด",
+    "close": "ปิด",
+    "cancel": "ยกเลิก",
+    "delete": "ลบ",
+    "skip": "ข้าม",
+    "next": "ถัดไป",
+    "prev": "ก่อนหน้า"
+  },
+  "share": {
+    "btnMapShareText": "แบ่งปัน / พิมพ์",
+    "btnStoryShareText": "แบ่งปัน",
+    "btnCatalogShareText": "แบ่งปัน",
+    "shortenUsingService": "ย่อ URL เพื่อแชร์โดยใช้บริการบนเว็บ",
+    "printViewButton": "แสดงมุมมองการพิมพ์",
+    "printButton": "พิมพ์",
+    "printExplanation": "เปิดแผนที่เวอร์ชันสำหรับคำสั่งพิมพ์",
+    "printTitle": "พิมพ์แผนที่",
+    "btnAdvanced": "ตัวเลือกขั้นสูง",
+    "creatingPrintView": "สร้างมุมมองการพิมพ์…"
+  },
+  "legend": {
+    "n": "น.",
+    "e": "ต.อ.",
+    "lon": "ลองจิจูด",
+    "lat": "ละติจูด"
+  },
+  "zoomCotrol": {
+    "zoomOut": "ซูมออก",
+    "zoomReset": "ตั้งค่าการซูมใหม่",
+    "zoomIn": "ซูมเข้า"
+  },
+  "splitterTool": {
+    "workbench": {
+      "both": "ทั้งสอง",
+      "bothTitle": "แสดงผลทั้งสองด้าน",
+      "goleftTitle": "แสดงผลทางซ้าย",
+      "gorightTitle": "แสดงผลทางขวา",
+      "goleft": "ซ้าย",
+      "copyName": "{{name}} (สำเนา)",
+      "goright": "ขวา"
+    },
+    "title": "ลากไปทางซ้ายหรือขวาเพื่อปรับมุมมอง",
+    "toggleSplitterTool": "เปิดใช้งานการเปรียบเทียบแบบเคียงข้างระหว่างชุดข้อมูลที่ต่างกันสองชุด"
+  },
+  "location": {
+    "errorGettingLocation": "เกิดข้อผิดพลาดในการรับตำแหน่ง",
+    "location": "ตำแหน่ง",
+    "myLocation": "ตำแหน่งของฉัน",
+    "browserCannotProvide": "เบราว์เซอร์ของคุณไม่รองรับการแสดงตำแหน่งของคุณได้",
+    "centreMap": "กำหนดให้ศูนย์กลางแผนที่เป็นตำแหน่งปัจจุบันของคุณ"
+  },
+  "map": {
+    "gnafAddressGeocoder": {
+      "postcode": "รหัสไปรษณีย์",
+      "lon": "ลองจิจูด",
+      "lat": "ละติจูด"
+    },
+    "imageryProviderHooks": {
+      "devError": "ไม่มีบริบทให้เปลี่ยนสีรูปภาพ"
+    }
+  },
+  "measure": {
+    "measureTool": "เครื่องมือวัด",
+    "measureDistance": "วัดระยะทางระหว่างสถานที่"
+  }
+}

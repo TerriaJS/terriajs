@@ -4,17 +4,20 @@ import {
   IComputedValue,
   IObservableValue,
   observable,
-  untracked
+  untracked,
+  runInAction
 } from "mobx";
 import { fromPromise, FULFILLED } from "mobx-utils";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import CameraView from "../Models/CameraView";
 import GlobeOrMap from "../Models/GlobeOrMap";
-import Mappable from "../Models/Mappable";
 import NoViewer from "../Models/NoViewer";
 import Terria from "../Models/Terria";
 import ViewerMode from "../Models/ViewerMode";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import TerriaError from "../Core/TerriaError";
 
 // A class that deals with initialising, destroying and switching between viewers
 // Each map-view should have it's own TerriaViewer
@@ -33,10 +36,39 @@ export default class TerriaViewer {
   readonly terria: Terria;
 
   @observable
-  baseMap: Mappable | undefined;
+  private _baseMap: MappableMixin.Instance | undefined;
+
+  get baseMap() {
+    return this._baseMap;
+  }
+
+  async setBaseMap(baseMap?: MappableMixin.Instance) {
+    if (!baseMap) return;
+
+    if (baseMap) {
+      const result = await baseMap.loadMapItems();
+      if (result.error) {
+        result.raiseError(this.terria, {
+          title: {
+            key: "models.terria.loadingBaseMapErrorTitle",
+            parameters: {
+              name:
+                (CatalogMemberMixin.isMixedInto(baseMap)
+                  ? baseMap.name
+                  : baseMap.uniqueId) ?? "Unknown item"
+            }
+          }
+        });
+      } else {
+        runInAction(() => (this._baseMap = baseMap));
+      }
+    }
+  }
 
   // This is a "view" of a workbench/other
-  readonly items: IComputedValue<Mappable[]> | IObservableValue<Mappable[]>;
+  readonly items:
+    | IComputedValue<MappableMixin.Instance[]>
+    | IObservableValue<MappableMixin.Instance[]>;
 
   @observable
   viewerMode: ViewerMode | undefined = ViewerMode.Cesium;
@@ -59,7 +91,7 @@ export default class TerriaViewer {
   readonly beforeViewerChanged = new CesiumEvent();
   readonly afterViewerChanged = new CesiumEvent();
 
-  constructor(terria: Terria, items: IComputedValue<Mappable[]>) {
+  constructor(terria: Terria, items: IComputedValue<MappableMixin.Instance[]>) {
     this.terria = terria;
     this.items = items;
   }

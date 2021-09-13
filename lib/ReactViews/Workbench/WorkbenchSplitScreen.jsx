@@ -7,7 +7,7 @@ import { observer } from "mobx-react";
 
 import classNames from "classnames";
 
-import Icon from "../Icon";
+import Icon from "../../Styled/Icon";
 
 import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
@@ -113,7 +113,7 @@ class WorkbenchSplitScreen extends React.Component {
             centered
             justifySpaceBetween
             css={`
-              background: ${p => p.theme.colorSplitter};
+              background: ${p => p.theme.colorSecondary};
               padding: 0 10px;
               font-weight: bold;
               font-size: 14px;
@@ -178,7 +178,7 @@ class WorkbenchSplitScreen extends React.Component {
 
                           &:hover,
                           &:focus {
-                            background-color: ${p => p.theme.colorSplitter};
+                            background-color: ${p => p.theme.colorSecondary};
                           }
                         }
                       `}

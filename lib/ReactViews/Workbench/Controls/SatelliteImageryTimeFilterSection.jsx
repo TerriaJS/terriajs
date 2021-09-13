@@ -5,7 +5,6 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import MapInteractionMode from "../../../Models/MapInteractionMode";
-import raiseErrorToUser from "../../../Models/raiseErrorToUser";
 import Loader from "../../Loader";
 import LocationItem from "../../LocationItem.jsx";
 import { withTranslation } from "react-i18next";
@@ -99,8 +98,7 @@ const SatelliteImageryTimeFilterSection = observer(
                 pickedFeatures.providerCoords
               );
             } catch (e) {
-              console.log(e);
-              raiseErrorToUser(terria, e);
+              terria.raiseErrorToUser(e);
             }
           }
 

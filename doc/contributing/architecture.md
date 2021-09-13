@@ -1,4 +1,10 @@
-TerriaJS is usually used in a single-page web application to provide mapping and catalog exploration capabilities.  It is written in ECMAScript (JavaScript) 2015+ and compiled to ECMAScript 5 in order to run in any relatively modern web browser, including Internet Explorer 9 or later.  Some features, such as 3D and vector tile region mapping, require more recent browsers, but TerriaJS can be expected to degrade gracefully in older browsers by disabling unsupported features or informing the user of the limitations of their browser. 
+**Warning: This page requires major changes to be updated for TerriaJS version 8.**
+
+TerriaJS is usually used in a single-page web application to provide mapping and catalog exploration capabilities.  It is written in TypeScript and compiled to ECMAScript 5 in order to run in Firefox, Chrome, Safari or Edge.
+
+Much of the following is outdated and maybe be explained better in [new model layer documentation](model-layer.md).
+
+------
 
 ## Layers
 
@@ -104,4 +110,4 @@ In some specialized cases, such as [CesiumTerrainCatalogItem](http://localhost:3
 
 TerriaJS and TerriaJS-based applications are built using [Webpack](https://webpack.js.org/).  A number of Webpack loaders are used to handle the various types of assets and transformations that TerriaJS requires.  An application that uses TerriaJS is expected to set up Webpack for its own needs and then call [configureWebpack](https://github.com/TerriaJS/terriajs/blob/master/buildprocess/configureWebpack.js) to configure Webpack for TerriaJS.  `configureWebpack` takes care to avoid impacting Webpack configuration outside of TerriaJS itself.
 
-It may be possible to build a TerriaJS application using a tool other than Webpack, such as Browserify or Rollup, but it is unlikely to be easy.  If you decide to attempt this, consider dropping by [Gitter](https://gitter.im/TerriaJS/terriajs) or the [TerriaJS forum](https://groups.google.com/forum/#!forum/terriajs).
+It may be possible to build a TerriaJS application using a tool other than Webpack, such as Browserify or Rollup, but it is unlikely to be easy.  If you decide to attempt this, consider dropping by the [TerriaJS GitHub Discussions forum](https://github.com/TerriaJS/terriajs/discussions).

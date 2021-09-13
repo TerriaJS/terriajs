@@ -15,8 +15,8 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import DateTimePicker from "../../BottomDock/Timeline/DateTimePicker";
 import { formatDateTime } from "../../BottomDock/Timeline/DateFormats";
 import Styles from "./datetime-selector-section.scss";
-import Icon from "../../Icon";
-import CommonStrata from "../../../Models/CommonStrata";
+import Icon from "../../../Styled/Icon";
+import CommonStrata from "../../../Models/Definition/CommonStrata";
 import { runInAction } from "mobx";
 import { withTranslation } from "react-i18next";
 

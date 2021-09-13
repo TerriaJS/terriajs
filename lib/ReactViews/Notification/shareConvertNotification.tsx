@@ -5,17 +5,15 @@ import isDefined from "../../Core/isDefined";
 import ViewState from "../../ReactViewModels/ViewState";
 import Collapsible from "../Custom/Collapsible/Collapsible";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
+import Text, { TextSpan } from "../../Styled/Text";
+import { RawButton } from "../../Styled/Button";
+import Spacing from "../../Styled/Spacing";
 
-const Text: any = require("../../Styled/Text").default;
-const Spacing: any = require("../../Styled/Spacing").Spacing;
-const RawButton: any = require("../../Styled/Button").RawButton;
-const TextSpan: any = require("../../Styled/Text").TextSpan;
-
-export const shareConvertNotification = (shareProps: any) => (
-  viewState: ViewState
-) => {
+export const shareConvertNotification = (
+  messages: import("catalog-converter").ShareResult["messages"]
+) => (viewState: ViewState) => {
   const messagesForPath: { [path: string]: string[] } = {};
-  shareProps.messages?.forEach((message: any) => {
+  messages?.forEach((message: any) => {
     let pathString = message.path?.join(": ");
     if (!pathString || pathString === null || pathString === "")
       pathString = "root";
@@ -30,14 +28,14 @@ export const shareConvertNotification = (shareProps: any) => (
   const showHelp = () => {
     viewState.showHelpPanel();
     viewState.selectHelpMenuItem("storymigration");
-    runInAction(() => viewState.notifications.splice(0, 1));
+    viewState.terria.notificationState.dismissCurrentNotification();
   };
 
   const showFeedback = () => {
     runInAction(() => {
       viewState.feedbackFormIsVisible = true;
-      viewState.notifications.splice(0, 1);
     });
+    viewState.terria.notificationState.dismissCurrentNotification();
   };
 
   return (

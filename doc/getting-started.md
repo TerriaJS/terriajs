@@ -1,6 +1,6 @@
 The easiest way to get started with TerriaJS is to use [TerriaMap](https://github.com/TerriaJS/TerriaMap).  TerriaMap is a full-featured application built on TerriaJS, ready to be customized with your own branding and catalog.  It is also a great starting point for more in-depth customization.
 
-This guide explains how to build and run TerriaMap locally.  See [Deploying](deploying) to learn how to deploy it for use by others.
+This guide explains how to build and run TerriaMap locally.  See [Deploying](deploying/README.md) to learn how to deploy it for use by others.
 
 You may also be interested in how to [make your own map without writing any code](http://stevebennett.me/2015/07/02/your-own-personal-national-map-with-terriajs-no-coding-and-nothing-to-deploy/).
 
@@ -42,7 +42,7 @@ git clone https://github.com/TerriaJS/TerriaMap.git
 cd TerriaMap
 ```
 
-If you're unable to use git, you can also [download a ZIP file](https://github.com/TerriaJS/TerriaMap/archive/master.zip) and extract it somewhere on your system.  We recommend using git, though, because it makes it much easier to update to later versions in the future.
+If you're unable to use git, you can also [download a ZIP file](https://github.com/TerriaJS/TerriaMap/archive/main.zip) and extract it somewhere on your system.  We recommend using git, though, because it makes it much easier to update to later versions in the future.
 
 ### Installing Dependencies
 
@@ -74,7 +74,7 @@ To watch for changes and automatically do an incremental build when any are dete
 npm run gulp watch
 ```
 
-`npm run gulp` simply runs `gulp`, so you can use that directly if you prefer (run `npm install -g gulp` to install it globally).
+`npm run gulp` simply runs `gulp`, so you can use that directly if you prefer (run `npm install -g gulp-cli` to install it globally).
 
 _If any of the above fail with an error that includes `Allocation failed - JavaScript heap out of memory` (see e.g. [the stack trace in this issue](https://github.com/TerriaJS/TerriaMap/issues/374)) run the task again after setting a higher Node.js allocation limit:_
 ```bash
@@ -104,31 +104,10 @@ rm -rf node_modules
 npm install
 ```
 
-#### Prettier
+### Having trouble? 
 
-[Prettier](https://prettier.io/) is used to format this codebase.
-
-If you've forked TerriaMap prior to prettier being applied, merging will be a hassle. Here's how to do it (relatively) painlessly:
-
-* Create a new branch for your merge: `git checkout -b whatever-merge`
-* If you haven't already installed `npm-merge-driver`, add it to your local git config via `npx npm-merge-driver install`.
-* Merge the last commit before prettier into your branch: `git merge pre-prettier`. Resolve any conflicts as usual. If utilising yarn, it will resolve any `yarn-lock.json` conflicts automatically with another `yarn install`
-* Commit the merge above.
-* Merge the commit that ran prettier on all the source files into your branch. This is likely to cause heaps of conflicts, but because you've already merged the last commit before prettier, and because the prettier commit only changes formatting, you can safely accept your version any time there is a conflict. `git merge post-prettier --strategy=ours --no-commit`
-* Run prettier on the result of the merge before committing it: `npm run prettier`
-* Commit the merged result.
-* Merge master into your branch in order to pick up any changes in master that happened after the prettiergeddon: `git merge origin/master`. Resolve any conflicts as normal.
-* Commit and push your branch.
-* Open a pull request of your merge branch into the original one. It should merge cleanly.
-
-If you're merging a branch-that-has-already-followed-this-procedure into your branch, you can follow the procedure above except that you need to use different commits instead of `pre-prettier` and `post-prettier`. Look at the commits in the source branch and you should see two that look like this:
-
-<img src="../contributing/img/prettier-commits.png" />
-
-Use the commit hash of the commit that merged `pre-prettier` in place of `pre-prettier` above. Use the commit hash of the commit that merged `post-prettier` in place of `post-prettier` above.
-
-Having trouble? Drop by the TerriaJS [gitter](https://gitter.im/TerriaJS/terriajs) or [forum](https://groups.google.com/forum/#!forum/terriajs) and we'll be happy to help!
+Checkout the [Problems and Solutions](contributing/problems-and-solutions.md) page to see if we have them covered. You are also welcome to post your problem on the [TerriaJS Discussions](https://github.com/TerriaJS/terriajs/discussions) forum and we'll be happy to help!
 
 ### Next Steps
 
-Now that you have a working local build of TerriaMap, you may want to [customize it](customizing) or [deploy it](deploying) for others to use.
+Now that you have a working local build of TerriaMap, you may want to [customize it](customizing/README.md) or [deploy it](deploying/README.md) for others to use.

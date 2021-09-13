@@ -1,8 +1,64 @@
-import { observable, computed, runInAction, toJS, action } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
+import Result from "./Result";
+import TerriaError from "./TerriaError";
 
+/**
+ *
+ * The AsyncLoader class provides a way to memoize (of sorts) async requests. In a `forceLoadX` function you should load from an asynchronous service, transform the data into something that can be stored in 1 or multiple observables and then set those observables.
+ *
+ * It works by calling `loadCallback` in `@computed loadKeepAlive`. This `@computed` will update if observables change that were used in `loadCallback()`.Because we are using a `@computed` in this way - it is **very important** that no changes to `observables` are made **before an async call**.
+ *
+ * A **correct** example:
+ * ```ts
+ * async function loadX() {
+ *    const url = this.someObservableUrl
+ *    const someData = await loadText(url)
+ *    runInAction(() => this.someOtherObservable = someData)
+ * }
+ * ```
+ *
+ * This function will only be called *again* when `someObservableUrl` changes.
+ *
+ * ------------------------
+ *
+ * If there is any synchronous processing present it should be pulled out of forceLoadX and placed into 1 or multiple computeds.
+ *
+ * An **incorrect** example:
+ * ```ts
+ * async function loadX() {
+ *    const arg = this.someObservable
+ *    const someData = someSynchronousFn(arg)
+ *    runInAction(() => this.someOtherObservable = someData)
+ * }
+ * ```
+ *
+ * Instead this should be in a `@computed`:
+ *
+ * ```ts
+ * @computed
+ * get newComputed {
+ *    return someSynchronousFn(this.someObservable);
+ * }
+ * ```
+ *
+ * ------------------------
+ *
+ * **Other tips**:
+ *
+ * - You can not nest together `AsyncLoaders`.
+ *
+ * **Examples**:
+ *
+ * See:
+ * - `MappableMixin`
+ * - `CatalogMemberMixin`
+ */
 export default class AsyncLoader {
   @observable
   private _isLoading: boolean = false;
+
+  @observable
+  private _result: Result<void> | undefined = undefined;
 
   @observable
   private _forceReloadCount: number = 0;
@@ -28,6 +84,7 @@ export default class AsyncLoader {
   }
 
   constructor(
+    /** {@see AsyncLoader} */
     readonly loadCallback: () => Promise<void>,
     readonly disposeCallback?: () => Promise<void>
   ) {}
@@ -39,9 +96,14 @@ export default class AsyncLoader {
     return this._isLoading;
   }
 
-  load(forceReload: boolean = false): Promise<void> {
+  get result() {
+    return this._result;
+  }
+
+  @action
+  async load(forceReload: boolean = false): Promise<Result<void>> {
     if (forceReload) {
-      ++this._forceReloadCount;
+      runInAction(() => ++this._forceReloadCount);
     }
 
     const newPromise = this.loadKeepAlive;
@@ -56,25 +118,22 @@ export default class AsyncLoader {
       runInAction(() => {
         this._isLoading = true;
       });
-      newPromise
-        .then(result => {
-          runInAction(() => {
-            this._isLoading = false;
-          });
-          return result;
-        })
-        .catch(e => {
-          runInAction(() => {
-            this._isLoading = false;
-          });
-
-          // Do not re-throw the exception because it's guaranteed to be
-          // unhandled. We're returning the original `newPromise`, not the
-          // result of the `.then` and `.catch` above.
-        });
     }
 
-    return newPromise;
+    let error: TerriaError | undefined;
+
+    try {
+      await newPromise;
+    } catch (e) {
+      error = TerriaError.from(e);
+    }
+
+    runInAction(() => {
+      this._result = Result.none(error);
+      this._isLoading = false;
+    });
+
+    return this._result!;
   }
 
   /**

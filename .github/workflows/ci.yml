@@ -1,0 +1,37 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run.
+on: [push, pull_request]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2-beta
+        with:
+          node-version: '10'
+
+      - run: npm install
+
+      - name: Check formatting with prettier
+        run: npm run prettier-check
+
+      - name: Build TerriaJS tests
+        run: npm run gulp lint release -- --continue
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
+
+      - name: Run tests using xvfb
+        uses: GabrielBB/xvfb-action@v1
+        with:
+          run: npm run gulp test-firefox

@@ -1,30 +1,38 @@
-import { runInAction } from "mobx";
+import { action, runInAction } from "mobx";
+import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import hashEntity from "../../lib/Core/hashEntity";
 import PickedFeatures from "../../lib/Map/PickedFeatures";
 import CameraView from "../../lib/Models/CameraView";
-import Cesium from "../../lib/Models/Cesium";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
-import Feature from "../../lib/Models/Feature";
-import { isInitData, isInitUrl } from "../../lib/Models/InitSource";
-import MagdaReference from "../../lib/Models/MagdaReference";
-import { BaseModel } from "../../lib/Models/Model";
-import openGroup from "../../lib/Models/openGroup";
-import Terria, { makeModelsMagdaCompatible } from "../../lib/Models/Terria";
+import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
+import MagdaReference from "../../lib/Models/Catalog/CatalogReferences/MagdaReference";
+import WebMapServiceCatalogGroup from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import UrlReference, {
   UrlToCatalogMemberMapping
-} from "../../lib/Models/UrlReference";
-import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+} from "../../lib/Models/Catalog/CatalogReferences/UrlReference";
+import Cesium from "../../lib/Models/Cesium";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import { BaseModel } from "../../lib/Models/Definition/Model";
+import Feature from "../../lib/Models/Feature";
+import {
+  isInitData,
+  isInitDataPromise,
+  isInitUrl
+} from "../../lib/Models/InitSource";
+import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
+import { defaultBaseMaps } from "./../../lib/Models/BaseMaps/defaultBaseMaps";
 
 const mapConfigBasicJson = require("../../wwwroot/test/Magda/map-config-basic.json");
 const mapConfigBasicString = JSON.stringify(mapConfigBasicJson);
+
+const mapConfigV7Json = require("../../wwwroot/test/Magda/map-config-v7.json");
+const mapConfigV7String = JSON.stringify(mapConfigV7Json);
 
 const mapConfigInlineInitJson = require("../../wwwroot/test/Magda/map-config-inline-init.json");
 const mapConfigInlineInitString = JSON.stringify(mapConfigInlineInitJson);
@@ -32,55 +40,18 @@ const mapConfigInlineInitString = JSON.stringify(mapConfigInlineInitJson);
 const mapConfigDereferencedJson = require("../../wwwroot/test/Magda/map-config-dereferenced.json");
 const mapConfigDereferencedString = JSON.stringify(mapConfigDereferencedJson);
 
+// i18nOptions for CI
+const i18nOptions = {
+  // Skip calling i18next.init in specs
+  skipInit: true
+};
+
 describe("Terria", function() {
   let terria: Terria;
 
   beforeEach(function() {
     terria = new Terria({
       baseUrl: "./"
-    });
-  });
-
-  describe("makeModelsMagdaCompatible", function() {
-    it("should return models", function() {
-      const models = {
-        foo: {
-          knownContainerUniqueIds: ["mochi-is-fluffy"]
-        },
-        bar: {
-          knownContainerUniqueIds: ["neko-is-hungry"]
-        },
-        cat: {
-          knownContainerUniqueIds: [""]
-        }
-      };
-      expect(makeModelsMagdaCompatible(models)).toEqual(models);
-    });
-
-    it("should inject `/` to `knownContainerUniqueIds` if map-config exists", function() {
-      const models = {
-        foo: {
-          knownContainerUniqueIds: ["map-config"]
-        },
-        bar: {
-          knownContainerUniqueIds: ["map-config-another"]
-        },
-        cat: {
-          knownContainerUniqueIds: ["bar"]
-        }
-      };
-      const expected = {
-        foo: {
-          knownContainerUniqueIds: ["map-config", "/"]
-        },
-        bar: {
-          knownContainerUniqueIds: ["map-config-another", "/"]
-        },
-        cat: {
-          knownContainerUniqueIds: ["bar"]
-        }
-      };
-      expect(makeModelsMagdaCompatible(models)).toEqual(expected);
     });
   });
 
@@ -99,6 +70,10 @@ describe("Terria", function() {
       // from `terria.start()`
       jasmine.Ajax.stubRequest("test/Magda/map-config-basic.json").andReturn({
         responseText: mapConfigBasicString
+      });
+
+      jasmine.Ajax.stubRequest("test/Magda/map-config-v7.json").andReturn({
+        responseText: mapConfigV7String
       });
 
       // terria's "Magda derived url"
@@ -133,7 +108,8 @@ describe("Terria", function() {
 
         terria
           .start({
-            configUrl: "test/Magda/map-config-basic.json"
+            configUrl: "test/Magda/map-config-basic.json",
+            i18nOptions
           })
           .then(function() {
             expect(terria.catalog.group.uniqueId).toEqual("/");
@@ -153,7 +129,8 @@ describe("Terria", function() {
 
         terria
           .start({
-            configUrl: "test/Magda/map-config-basic.json"
+            configUrl: "test/Magda/map-config-basic.json",
+            i18nOptions
           })
           .then(function() {
             expect(terria.initSources.length).toEqual(1);
@@ -172,6 +149,48 @@ describe("Terria", function() {
             done.fail(error);
           });
       });
+      it("works with v7initializationUrls", async function() {
+        jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
+          // terria's "Magda derived url"
+          responseText: mapConfigBasicString
+        });
+        const groupName = "Simple converter test";
+        jasmine.Ajax.stubRequest(
+          "https://example.foo.bar/initv7.json"
+        ).andReturn({
+          // terria's "Magda derived url"
+          responseText: JSON.stringify({
+            catalog: [{ name: groupName, type: "group", items: [] }]
+          })
+        });
+        // no init sources before starting
+        expect(terria.initSources.length).toBe(0);
+
+        await terria.start({
+          configUrl: "test/Magda/map-config-v7.json",
+          i18nOptions
+        });
+
+        expect(terria.initSources.length).toBe(1);
+        expect(isInitDataPromise(terria.initSources[0])).toBeTruthy(
+          "Expected initSources[0] to be an InitDataPromise"
+        );
+        if (isInitDataPromise(terria.initSources[0])) {
+          const data = await terria.initSources[0].data;
+          // JSON parse & stringify to avoid a problem where I think catalog-converter
+          //  can return {"id": undefined} instead of no "id"
+          expect(
+            JSON.parse(JSON.stringify(data.ignoreError()?.data.catalog))
+          ).toEqual([
+            {
+              name: groupName,
+              type: "group",
+              members: [],
+              shareKeys: [`Root Group/${groupName}`]
+            }
+          ]);
+        }
+      });
       it("works with inline init", async function() {
         // inline init
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
@@ -180,7 +199,8 @@ describe("Terria", function() {
         // no init sources before starting
         expect(terria.initSources.length).toEqual(0);
         await terria.start({
-          configUrl: "test/Magda/map-config-inline-init.json"
+          configUrl: "test/Magda/map-config-inline-init.json",
+          i18nOptions
         });
 
         const inlineInit = mapConfigInlineInitJson.aspects["terria-init"];
@@ -209,7 +229,8 @@ describe("Terria", function() {
         });
         terria
           .start({
-            configUrl: "test/Magda/map-config-dereferenced.json"
+            configUrl: "test/Magda/map-config-dereferenced.json",
+            i18nOptions
           })
           .then(function() {
             const groupAspect = mapConfigDereferencedJson.aspects["group"];
@@ -287,6 +308,7 @@ describe("Terria", function() {
 
       const shareLink = buildShareLink(terria, viewState);
       await newTerria.updateApplicationUrl(shareLink);
+      await newTerria.loadInitSources();
       expect(newTerria.catalog.userAddedDataGroup.members).toContain("itemABC");
       expect(newTerria.catalog.userAddedDataGroup.members).toContain(
         "groupABC"
@@ -305,6 +327,7 @@ describe("Terria", function() {
 
       const shareLink = buildShareLink(terria, viewState);
       await newTerria.updateApplicationUrl(shareLink);
+      await newTerria.loadInitSources();
       expect(newTerria.catalog.userAddedDataGroup.members).toContain(
         "url_test"
       );
@@ -333,6 +356,7 @@ describe("Terria", function() {
 
       const shareLink = buildShareLink(terria, viewState);
       await newTerria.updateApplicationUrl(shareLink);
+      await newTerria.loadInitSources();
       expect(newTerria.workbench.itemIds).toEqual(terria.workbench.itemIds);
     });
 
@@ -354,6 +378,7 @@ describe("Terria", function() {
 
       const shareLink = buildShareLink(terria, viewState);
       await newTerria.updateApplicationUrl(shareLink);
+      await newTerria.loadInitSources();
       expect(newTerria.showSplitter).toEqual(true);
       expect(newTerria.splitPosition).toEqual(0.7);
       expect(newTerria.workbench.itemIds).toEqual(["itemABC"]);
@@ -371,11 +396,12 @@ describe("Terria", function() {
       const group = <WebMapServiceCatalogGroup>(
         terria.getModelById(BaseModel, "groupABC")
       );
-      await openGroup(group);
+      await viewState.viewCatalogMember(group);
       expect(group.isOpen).toBe(true);
       expect(group.members.length).toBeGreaterThan(0);
-      const shareLink = await buildShareLink(terria, viewState);
+      const shareLink = buildShareLink(terria, viewState);
       await newTerria.updateApplicationUrl(shareLink);
+      await newTerria.loadInitSources();
       const newGroup = <WebMapServiceCatalogGroup>(
         newTerria.getModelById(BaseModel, "groupABC")
       );
@@ -406,7 +432,9 @@ describe("Terria", function() {
           locationSearchProviders: []
         });
 
-        await Promise.all([terria, newTerria].map(t => t.start({ configUrl })));
+        await Promise.all(
+          [terria, newTerria].map(t => t.start({ configUrl, i18nOptions }))
+        );
 
         terria.catalog.group.addMembersFromJson(CommonStrata.definition, [
           {
@@ -455,6 +483,7 @@ describe("Terria", function() {
         csv?.setTrait(CommonStrata.user, "opacity", 0.5);
         const shareLink = buildShareLink(terria, viewState);
         await newTerria.updateApplicationUrl(shareLink);
+        await newTerria.loadInitSources();
 
         const newCsv = newTerria.getModelById(
           CsvCatalogItem,
@@ -477,6 +506,7 @@ describe("Terria", function() {
         terria.timelineStack.addToTop(csv);
         const shareLink = buildShareLink(terria, viewState);
         await newTerria.updateApplicationUrl(shareLink);
+        await newTerria.loadInitSources();
 
         const newCsv = newTerria.getModelById(
           CsvCatalogItem,
@@ -560,7 +590,8 @@ describe("Terria", function() {
         });
 
         await terria.start({
-          configUrl
+          configUrl,
+          i18nOptions
         });
         jasmine.Ajax.stubRequest(configUrl).andReturn({
           responseText: JSON.stringify(
@@ -569,7 +600,8 @@ describe("Terria", function() {
         });
 
         await newTerria.start({
-          configUrl
+          configUrl,
+          i18nOptions
         });
         // Don't allow more requests to configUrl once Terrias are set up
         jasmine.Ajax.stubRequest(configUrl).andError({});
@@ -617,6 +649,7 @@ describe("Terria", function() {
         await newGroupRef.loadReference();
 
         await newTerria.updateApplicationUrl(shareLink);
+        await newTerria.loadInitSources();
 
         // Why does this return a CSV item (when above hack isn't added)? It returns a brand new csv item without data or URL
         // Does serialisation save enough attributes that upsertModelFromJson thinks it can create a new model?
@@ -678,6 +711,7 @@ describe("Terria", function() {
         await newGroupRef.loadReference();
 
         await newTerria.updateApplicationUrl(shareLink);
+        await newTerria.loadInitSources();
 
         // Why does this return a CSV item (when above hack isn't added)? It returns a brand new csv item without data or URL
         // Does serialisation save enough attributes that upsertModelFromJson thinks it can create a new model?
@@ -729,7 +763,8 @@ describe("Terria", function() {
     it("initializes proxy with parameters from config file", function(done) {
       terria
         .start({
-          configUrl: "test/init/configProxy.json"
+          configUrl: "test/init/configProxy.json",
+          i18nOptions
         })
         .then(function() {
           expect(terria.corsProxy.baseProxyUrl).toBe("/myproxy/");
@@ -758,14 +793,19 @@ describe("Terria", function() {
       expect(terria.workbench).not.toContain(model);
     });
 
-    it("it removes picked features that contain the model", function() {
-      terria.pickedFeatures = new PickedFeatures();
-      const feature = new Feature({});
-      feature._catalogItem = model;
-      terria.pickedFeatures.features.push(feature);
-      terria.removeModelReferences(model);
-      expect(terria.pickedFeatures.features.length).toBe(0);
-    });
+    it(
+      "it removes picked features & selected feature for the model",
+      action(function() {
+        terria.pickedFeatures = new PickedFeatures();
+        const feature = new Feature({});
+        terria.selectedFeature = feature;
+        feature._catalogItem = model;
+        terria.pickedFeatures.features.push(feature);
+        terria.removeModelReferences(model);
+        expect(terria.pickedFeatures.features.length).toBe(0);
+        expect(terria.selectedFeature).toBeUndefined();
+      })
+    );
 
     it("unregisters the model from Terria", function() {
       terria.removeModelReferences(model);
@@ -776,7 +816,8 @@ describe("Terria", function() {
   //   it("tells us there's a time enabled WMS with `checkNowViewingForTimeWms()`", function(done) {
   //     terria
   //       .start({
-  //         configUrl: "test/init/configProxy.json"
+  //         configUrl: "test/init/configProxy.json",
+  //         i18nOptions
   //       })
   //       .then(function() {
   //         expect(terria.checkNowViewingForTimeWms()).toEqual(false);
@@ -803,10 +844,10 @@ describe("Terria", function() {
 
   describe("applyInitData", function() {
     describe("when pickedFeatures is not present in initData", function() {
-      it("unsets the feature picking state if `canUnsetFeaturePickingState` is `true`", function() {
+      it("unsets the feature picking state if `canUnsetFeaturePickingState` is `true`", async function() {
         terria.pickedFeatures = new PickedFeatures();
         terria.selectedFeature = new Entity({ name: "selected" }) as Feature;
-        terria.applyInitData({
+        await terria.applyInitData({
           initData: {},
           canUnsetFeaturePickingState: true
         });
@@ -814,15 +855,73 @@ describe("Terria", function() {
         expect(terria.selectedFeature).toBeUndefined();
       });
 
-      it("otherwise, should not unset feature picking state", function() {
+      it("otherwise, should not unset feature picking state", async function() {
         terria.pickedFeatures = new PickedFeatures();
         terria.selectedFeature = new Entity({ name: "selected" }) as Feature;
-        terria.applyInitData({
+        await terria.applyInitData({
           initData: {}
         });
         expect(terria.pickedFeatures).toBeDefined();
         expect(terria.selectedFeature).toBeDefined();
       });
+    });
+  });
+
+  describe("basemaps", function() {
+    it("when no base maps are specified load defaultBaseMaps", async function() {
+      await terria.start({ configUrl: "" });
+      terria.applyInitData({
+        initData: {}
+      });
+      await terria.loadInitSources();
+      const _defaultBaseMaps = defaultBaseMaps(terria);
+      expect(terria.baseMapsModel).toBeDefined();
+      expect(terria.baseMapsModel.baseMapItems.length).toBe(
+        _defaultBaseMaps.length
+      );
+    });
+
+    it("propperly loads base maps", async function() {
+      await terria.start({ configUrl: "" });
+      terria.applyInitData({
+        initData: {
+          baseMaps: {
+            items: [
+              {
+                item: {
+                  id: "basemap-positron",
+                  name: "Positron (Light)",
+                  type: "open-street-map",
+                  url: "https://basemaps.cartocdn.com/light_all/",
+                  attribution:
+                    "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
+                  subdomains: ["a", "b", "c", "d"],
+                  opacity: 1.0
+                },
+                image: "/images/positron.png"
+              },
+              {
+                item: {
+                  id: "basemap-darkmatter1",
+                  name: "Dark Matter",
+                  type: "open-street-map",
+                  url: "https://basemaps.cartocdn.com/dark_all/",
+                  attribution:
+                    "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
+                  subdomains: ["a", "b", "c", "d"],
+                  opacity: 1.0
+                },
+                image: "/images/dark-matter.png"
+              }
+            ]
+          }
+        }
+      });
+      const _defaultBaseMaps = defaultBaseMaps(terria);
+      expect(terria.baseMapsModel).toBeDefined();
+      expect(terria.baseMapsModel.baseMapItems.length).toEqual(
+        _defaultBaseMaps.length + 1
+      );
     });
   });
 
@@ -893,5 +992,19 @@ describe("Terria", function() {
       expect(terria.selectedFeature).toBeDefined();
       expect(terria.selectedFeature?.name).toBe("foo");
     });
+  });
+  it("customRequestSchedulerLimits sets RequestScheduler limits for domains", async function() {
+    const configUrl = `data:application/json;base64,${btoa(
+      JSON.stringify({
+        initializationUrls: [],
+        parameters: {
+          customRequestSchedulerLimits: {
+            "test.domain:333": 12
+          }
+        }
+      })
+    )}`;
+    await terria.start({ configUrl, i18nOptions });
+    expect(RequestScheduler.requestsByServer["test.domain:333"]).toBe(12);
   });
 });

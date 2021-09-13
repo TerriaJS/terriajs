@@ -4,12 +4,13 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
 import Constructor from "../Core/Constructor";
+import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
-import { calculateDomain, ChartItem } from "../Models/Chartable";
-import CommonStrata from "../Models/CommonStrata";
-import Model from "../Models/Model";
-import DiscretelyTimeVaryingTraits from "../Traits/DiscretelyTimeVaryingTraits";
+import { calculateDomain, ChartItem } from "../ModelMixins/ChartableMixin";
+import CommonStrata from "../Models/Definition/CommonStrata";
+import Model from "../Models/Definition/Model";
+import DiscretelyTimeVaryingTraits from "../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import TimeVarying from "./TimeVarying";
 
 type DiscretelyTimeVarying = Model<DiscretelyTimeVaryingTraits>;
@@ -37,7 +38,7 @@ function DiscretelyTimeVaryingMixin<
     @computed
     get currentTime(): string | undefined {
       const time = super.currentTime;
-      if (time === undefined) {
+      if (time === undefined || time === null) {
         if (this.initialTimeSource === "now") {
           return JulianDate.toIso8601(JulianDate.now());
         } else if (this.initialTimeSource === "start") {
@@ -118,16 +119,19 @@ function DiscretelyTimeVaryingMixin<
         return undefined;
       }
 
+      // Where does `time` fit in our sequence of discrete times?
       const exactIndex = binarySearch(
         discreteTimes,
         time,
         (candidate, currentTime) =>
           JulianDate.compare(candidate.time, currentTime)
       );
+      // We have this exact time in our discrete times
       if (exactIndex >= 0) {
         return exactIndex;
       }
 
+      // This is where `time` could be inserted into the discrete times list so that they're all in sorted order
       const nextIndex = ~exactIndex;
       if (nextIndex === 0 || this.fromContinuous === "next") {
         // Before the first, or we want the next time no matter which is closest
@@ -139,6 +143,7 @@ function DiscretelyTimeVaryingMixin<
         // After the last, or we want the previous time no matter which is closest
         return nextIndex - 1;
       } else {
+        // Get the closest discrete time
         const previousTime = discreteTimes[nextIndex - 1].time;
         const nextTime = discreteTimes[nextIndex].time;
 
@@ -268,7 +273,8 @@ function DiscretelyTimeVaryingMixin<
       if (
         !isDefined(this.startTimeAsJulianDate) ||
         !isDefined(this.stopTimeAsJulianDate) ||
-        !isDefined(this.multiplierDefaultDeltaStep)
+        !isDefined(this.multiplierDefaultDeltaStep) ||
+        !isDefined(this.discreteTimesAsSortedJulianDates)
       )
         return;
 
@@ -281,7 +287,7 @@ function DiscretelyTimeVaryingMixin<
         this.stopTimeAsJulianDate.secondsOfDay -
         this.startTimeAsJulianDate.secondsOfDay;
       const meanDSeconds =
-        dSeconds / this.discreteTimesAsSortedJulianDates!.length;
+        dSeconds / this.discreteTimesAsSortedJulianDates.length;
 
       return meanDSeconds / this.multiplierDefaultDeltaStep;
     }
@@ -312,9 +318,9 @@ function DiscretelyTimeVaryingMixin<
       );
     }
 
-    @computed get chartItems(): ChartItem[] {
+    @computed get momentChart(): ChartItem | undefined {
       if (!this.showInChartPanel || !this.discreteTimesAsSortedJulianDates)
-        return [];
+        return;
       const points: ChartPoint[] = this.discreteTimesAsSortedJulianDates.map(
         dt => ({
           x: JulianDate.toDate(dt.time),
@@ -326,39 +332,42 @@ function DiscretelyTimeVaryingMixin<
       );
 
       const colorId = `color-${this.name}`;
-      return [
-        {
-          item: this,
-          name: this.name || "",
-          categoryName: this.name,
-          key: `key${this.uniqueId}-${this.name}`,
-          type: this.chartType || "momentLines",
-          xAxis: { scale: "time" },
-          points,
-          domain: { ...calculateDomain(points), y: [0, 1] },
-          showInChartPanel: this.show && this.showInChartPanel,
-          isSelectedInWorkbench: this.showInChartPanel,
-          updateIsSelectedInWorkbench: (isSelected: boolean) => {
-            runInAction(() => {
-              this.setTrait(CommonStrata.user, "showInChartPanel", isSelected);
-            });
-          },
-          getColor: () => {
-            return this.chartColor
-              ? this.chartColor
-              : getChartColorForId(colorId);
-          },
-          onClick: (point: any) => {
-            runInAction(() => {
-              this.setTrait(
-                CommonStrata.user,
-                "currentTime",
-                point.x.toISOString()
-              );
-            });
-          }
+      return {
+        item: this,
+        name: this.name || "",
+        categoryName: this.name,
+        key: `key${this.uniqueId}-${this.name}`,
+        type: this.chartType || "momentLines",
+        glyphStyle: this.chartGlyphStyle,
+        xAxis: { scale: "time" },
+        points,
+        domain: { ...calculateDomain(points), y: [0, 1] },
+        showInChartPanel: this.show && this.showInChartPanel,
+        isSelectedInWorkbench: this.showInChartPanel,
+        updateIsSelectedInWorkbench: (isSelected: boolean) => {
+          runInAction(() => {
+            this.setTrait(CommonStrata.user, "showInChartPanel", isSelected);
+          });
+        },
+        getColor: () => {
+          return this.chartColor
+            ? this.chartColor
+            : getChartColorForId(colorId);
+        },
+        onClick: (point: any) => {
+          runInAction(() => {
+            this.setTrait(
+              CommonStrata.user,
+              "currentTime",
+              point.x.toISOString()
+            );
+          });
         }
-      ];
+      };
+    }
+
+    @computed get chartItems(): ChartItem[] {
+      return filterOutUndefined([this.momentChart]);
     }
   }
 
@@ -366,10 +375,10 @@ function DiscretelyTimeVaryingMixin<
 }
 
 namespace DiscretelyTimeVaryingMixin {
-  export interface DiscretelyTimeVaryingMixin
+  export interface Instance
     extends InstanceType<ReturnType<typeof DiscretelyTimeVaryingMixin>> {}
 
-  export function isMixedInto(model: any): model is DiscretelyTimeVaryingMixin {
+  export function isMixedInto(model: any): model is Instance {
     return model && model.hasDiscreteTimes;
   }
 }
@@ -377,7 +386,7 @@ namespace DiscretelyTimeVaryingMixin {
 export default DiscretelyTimeVaryingMixin;
 
 function toJulianDate(time: string | undefined): JulianDate | undefined {
-  if (time === undefined) {
+  if (time === undefined || time === null) {
     return undefined;
   }
   return JulianDate.fromIso8601(time);

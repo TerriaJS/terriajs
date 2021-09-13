@@ -1,26 +1,23 @@
 import classNames from "classnames";
+import { TFunction } from "i18next";
 import { action, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
-import PropTypes from "prop-types";
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import clone from "terriajs-cesium/Source/Core/clone";
-import raiseErrorOnRejectedPromise from "../../../Models/raiseErrorOnRejectedPromise";
-import Styles from "./chart-expand-and-download-buttons.scss";
-import Icon from "../../Icon";
-import defined from "terriajs-cesium/Source/Core/defined";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
-import Chartable from "../../../Models/Chartable";
+import ChartableMixin from "../../../ModelMixins/ChartableMixin";
+import hasTraits from "../../../Models/Definition/hasTraits";
+import raiseErrorOnRejectedPromise from "../../../Models/raiseErrorOnRejectedPromise";
 import Terria from "../../../Models/Terria";
-import { TFunction } from "i18next";
-import hasTraits from "../../../Models/hasTraits";
-import UrlTraits from "../../../Traits/UrlTraits";
+import Icon from "../../../Styled/Icon";
+import UrlTraits from "../../../Traits/TraitsClasses/UrlTraits";
+import Styles from "./chart-expand-and-download-buttons.scss";
 
 const Dropdown = require("../../Generic/Dropdown");
 
 interface PropsType extends WithTranslation {
   terria: Terria;
-  sourceItems: Promise<Chartable | undefined>[]; // Array of items or Promise returning item
+  sourceItems: Promise<ChartableMixin.Instance | undefined>[]; // Array of items or Promise returning item
   sourceNames?: string[];
   canDownload: boolean;
   downloads?: string[];
@@ -31,7 +28,7 @@ interface PropsType extends WithTranslation {
 
 @observer
 class ChartExpandAndDownloadButtons extends React.Component<PropsType> {
-  @observable sourceItems: Chartable[] = [];
+  @observable sourceItems: ChartableMixin.Instance[] = [];
 
   @action.bound
   private expandButton() {
@@ -71,12 +68,10 @@ class ChartExpandAndDownloadButtons extends React.Component<PropsType> {
           });
         });
 
-        workbench.add(itemToExpand);
-
         try {
           terria.addModel(itemToExpand);
         } catch {}
-        return itemToExpand.loadChartItems();
+        return workbench.add(itemToExpand);
       })
     );
   }

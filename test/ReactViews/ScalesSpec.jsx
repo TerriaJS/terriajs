@@ -1,6 +1,5 @@
 "use strict";
 
-/*global expect,fail*/
 import React from "react";
 import { getMountedInstance } from "./MoreShallowTools";
 

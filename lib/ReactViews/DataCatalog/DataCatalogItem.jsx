@@ -6,10 +6,14 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import addedByUser from "../../Core/addedByUser";
+import {
+  Category,
+  DataSourceAction
+} from "../../Core/AnalyticEvents/analyticEvents";
 import getPath from "../../Core/getPath";
-import removeUserAddedData from "../../Models/removeUserAddedData";
+import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
+import removeUserAddedData from "../../Models/Catalog/removeUserAddedData";
 import CatalogItem from "./CatalogItem";
-import raiseErrorToUser from "../../Models/raiseErrorToUser";
 
 // Individual dataset
 export const DataCatalogItem = observer(
@@ -38,7 +42,7 @@ export const DataCatalogItem = observer(
         }
 
         if (
-          defined(this.props.item.invoke) ||
+          CatalogFunctionMixin.isMixedInto(this.props.item) ||
           this.props.viewState.useSmallScreenInterface
         ) {
           this.setPreviewedItem();
@@ -71,31 +75,20 @@ export const DataCatalogItem = observer(
         ) {
           this.props.viewState.closeCatalog();
           this.props.terria.analytics?.logEvent(
-            "dataSource",
-            toAdd ? "addFromCatalogue" : "removeFromCatalogue",
+            Category.dataSource,
+            toAdd
+              ? DataSourceAction.addFromCatalogue
+              : DataSourceAction.removeFromCatalogue,
             getPath(this.props.item)
           );
         }
       } catch (e) {
-        raiseErrorToUser(this.props.terria, e);
+        this.props.terria.raiseErrorToUser(e, undefined, true);
       }
     },
 
-    setPreviewedItem() {
-      // raiseErrorOnRejectedPromise(this.props.item.terria, this.props.item.load());
-      if (this.props.item.loadMetadata) {
-        runInAction(() => {
-          this.props.item.loadMetadata();
-        });
-      }
-      if (this.props.item.loadReference) {
-        this.props.item.loadReference();
-      }
-      this.props.viewState.viewCatalogMember(this.props.item);
-      // mobile switch to nowvewing
-      this.props.viewState.switchMobileView(
-        this.props.viewState.mobileViewOptions.preview
-      );
+    async setPreviewedItem() {
+      await this.props.viewState.viewCatalogMember(this.props.item);
     },
 
     isSelected() {
@@ -146,10 +139,10 @@ export const DataCatalogItem = observer(
         return "preview";
       } else if (this.props.item.terria.workbench.contains(this.props.item)) {
         return "remove";
-      } else if (!defined(this.props.item.invoke)) {
-        return "add";
-      } else {
+      } else if (CatalogFunctionMixin.isMixedInto(this.props.item)) {
         return "stats";
+      } else {
+        return "add";
       }
     }
   })

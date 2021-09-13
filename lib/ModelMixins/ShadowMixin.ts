@@ -1,14 +1,13 @@
 import { computed, runInAction } from "mobx";
 import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import Constructor from "../Core/Constructor";
-import Model from "../Models/Model";
-import SelectableDimensions, {
-  SelectableDimension
-} from "../Models/SelectableDimensions";
-import ShadowTraits, { Shadows } from "../Traits/ShadowTraits";
+import Model from "../Models/Definition/Model";
+import { SelectableDimension } from "../Models/SelectableDimensions";
+import ShadowTraits, { Shadows } from "../Traits/TraitsClasses/ShadowTraits";
+import i18next from "i18next";
 
 function ShadowMixin<T extends Constructor<Model<ShadowTraits>>>(Base: T) {
-  abstract class ShadowMixin extends Base implements SelectableDimensions {
+  abstract class ShadowMixin extends Base {
     get hasShadows() {
       return true;
     }
@@ -28,24 +27,23 @@ function ShadowMixin<T extends Constructor<Model<ShadowTraits>>>(Base: T) {
       }
     }
 
+    /** Shadow SelectableDimension. This has to be added to a catalog member's `selectableDimension` array */
     @computed
-    get selectableDimensions(): SelectableDimension[] {
-      return [
-        {
-          id: "shadows",
-          name: "Shadows",
-          options: [
-            { id: "NONE", name: "None" },
-            { id: "CAST", name: "Cast Only" },
-            { id: "RECEIVE", name: "Receive Only" },
-            { id: "BOTH", name: "Cast and Receive" }
-          ],
-          selectedId: this.shadows,
-          disable: !this.showShadowUi,
-          setDimensionValue: (strata: string, shadow: Shadows) =>
-            runInAction(() => this.setTrait(strata, "shadows", shadow))
-        }
-      ];
+    get shadowDimension(): SelectableDimension {
+      return {
+        id: "shadows",
+        name: i18next.t("models.shadow.name"),
+        options: [
+          { id: "NONE", name: i18next.t("models.shadow.options.none") },
+          { id: "CAST", name: i18next.t("models.shadow.options.cast") },
+          { id: "RECEIVE", name: i18next.t("models.shadow.options.receive") },
+          { id: "BOTH", name: i18next.t("models.shadow.options.both") }
+        ],
+        selectedId: this.shadows,
+        disable: !this.showShadowUi,
+        setDimensionValue: (strata: string, shadow: Shadows) =>
+          runInAction(() => this.setTrait(strata, "shadows", shadow))
+      };
     }
   }
 
@@ -53,9 +51,9 @@ function ShadowMixin<T extends Constructor<Model<ShadowTraits>>>(Base: T) {
 }
 
 namespace ShadowMixin {
-  export interface ShadowsMixin
+  export interface Instance
     extends InstanceType<ReturnType<typeof ShadowMixin>> {}
-  export function isMixedInto(model: any): model is ShadowsMixin {
+  export function isMixedInto(model: any): model is Instance {
     return model && model.hasShadows;
   }
 }

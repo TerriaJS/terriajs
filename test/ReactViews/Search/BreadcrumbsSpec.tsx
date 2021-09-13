@@ -2,12 +2,12 @@ const create: any = require("react-test-renderer").create;
 import React from "react";
 import { act } from "react-dom/test-utils";
 import Terria from "../../../lib/Models/Terria";
-import CatalogGroup from "../../../lib/Models/CatalogGroupNew";
+import CatalogGroup from "../../../lib/Models/Catalog/CatalogGroup";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import Breadcrumbs from "../../../lib/ReactViews/Search/Breadcrumbs";
 const DataCatalogTab: any = require("../../../lib/ReactViews/ExplorerWindow/Tabs/DataCatalogTab")
   .default;
-import Icon from "../../../lib/ReactViews/Icon";
+import Icon from "../../../lib/Styled/Icon";
 import { ThemeProvider } from "styled-components";
 import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface/StandardTheme";
 import { runInAction } from "mobx";
@@ -33,10 +33,8 @@ describe("Breadcrumbs", function() {
   });
 
   describe("with a prevewied catalog item", function() {
-    it("renders", function() {
-      runInAction(() => {
-        viewState.viewCatalogMember(catalogGroup);
-      });
+    it("renders", async function() {
+      await viewState.viewCatalogMember(catalogGroup);
 
       act(() => {
         testRenderer = create(

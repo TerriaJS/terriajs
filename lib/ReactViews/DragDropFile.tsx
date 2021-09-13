@@ -1,16 +1,17 @@
 import classNames from "classnames";
-import { action, flow } from "mobx";
+import { action, flow, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { Trans, withTranslation, WithTranslation } from "react-i18next";
 import isDefined from "../Core/isDefined";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import addUserFiles from "../Models/addUserFiles";
-import Mappable from "../Models/Mappable";
-import { BaseModel } from "../Models/Model";
+import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
+import addUserFiles from "../Models/Catalog/addUserFiles";
+import { BaseModel } from "../Models/Definition/Model";
 import Terria from "../Models/Terria";
 import ViewState from "../ReactViewModels/ViewState";
 import Styles from "./drag-drop-file.scss";
+import Result from "../Core/Result";
 
 interface PropsType extends WithTranslation {
   terria: Terria;
@@ -21,36 +22,45 @@ interface PropsType extends WithTranslation {
 class DragDropFile extends React.Component<PropsType> {
   target: EventTarget | undefined;
 
-  handleDrop(e: React.DragEvent) {
+  async handleDrop(e: React.DragEvent) {
     e.preventDefault();
     e.stopPropagation();
 
     const props = this.props;
-    flow(function*() {
-      const addedCatalogItems: BaseModel[] | undefined = yield addUserFiles(
+
+    try {
+      const addedCatalogItems: BaseModel[] | undefined = await addUserFiles(
         e.dataTransfer.files,
         props.terria,
         props.viewState
       );
 
       if (isDefined(addedCatalogItems) && addedCatalogItems.length > 0) {
-        props.viewState.myDataIsUploadView = false;
+        runInAction(() => (props.viewState.myDataIsUploadView = false));
         if (props.viewState.explorerPanelIsVisible) {
-          props.viewState.viewCatalogMember(addedCatalogItems[0]);
+          (
+            await props.viewState.viewCatalogMember(addedCatalogItems[0])
+          ).throwIfError(`Failed to view ${getName(addedCatalogItems[0])}`);
           props.viewState.openUserData();
         } else {
           // update last batch of uploaded files
-          props.viewState.lastUploadedFiles = addedCatalogItems.map(item =>
-            CatalogMemberMixin.isMixedInto(item) ? item.name : item.uniqueId
+          runInAction(
+            () =>
+              (props.viewState.lastUploadedFiles = addedCatalogItems.map(item =>
+                CatalogMemberMixin.isMixedInto(item) ? item.name : item.uniqueId
+              ))
           );
         }
 
         // Add load all mapable items
-        const mappableItems = addedCatalogItems.filter(Mappable.is);
-
-        yield Promise.all(
-          mappableItems.map(f => f.loadMapItems()).filter(p => isDefined(p))
+        const mappableItems = addedCatalogItems.filter(
+          MappableMixin.isMixedInto
         );
+
+        Result.combine(
+          await Promise.all(mappableItems.map(f => f.loadMapItems())),
+          "Failed to load uploaded files"
+        ).raiseError(props.terria);
 
         // Zoom to first item
         const firstZoomableItem = mappableItems.find(i =>
@@ -58,11 +68,15 @@ class DragDropFile extends React.Component<PropsType> {
         );
 
         isDefined(firstZoomableItem) &&
-          props.terria.currentViewer.zoomTo(firstZoomableItem, 1);
+          runInAction(() =>
+            props.terria.currentViewer.zoomTo(firstZoomableItem, 1)
+          );
       }
 
-      props.viewState.isDraggingDroppingFile = false;
-    })();
+      runInAction(() => (props.viewState.isDraggingDroppingFile = false));
+    } catch (e) {
+      props.terria.raiseErrorToUser(e, "Failed to upload files");
+    }
   }
 
   @action

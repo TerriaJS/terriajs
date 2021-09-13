@@ -3,16 +3,30 @@
 interface CssExports {
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
+  'colorSecondary': string;
   'compassWidth': string;
   'dark': string;
+  'darkLighter': string;
   'darkWithOverlay': string;
+  'font': string;
+  'fontBase': string;
+  'fontFeatureInfo': string;
+  'fontMono': string;
+  'fontPop': string;
   'frontComponentZIndex': string;
   'grey': string;
   'greyLighter': string;
   'greyLighter2': string;
   'greyLightest': string;
+  'inputHeight': string;
+  'inputHeightLarge': string;
   'lg': string;
+  'logoHeight': string;
+  'logoPaddingHorizontal': string;
+  'logoPaddingVertical': string;
+  'logoSmallHeight': string;
+  'logoSmallPaddingHorizontal': string;
+  'logoSmallPaddingVertical': string;
   'mapButtonColor': string;
   'mapButtonTop': string;
   'mapNavigationTop': string;
@@ -21,6 +35,7 @@ interface CssExports {
   'modalBg': string;
   'modalHighlight': string;
   'modalText': string;
+  'notificationWindowZIndex': string;
   'overlay': string;
   'overlayInvert': string;
   'radius40Button': string;
@@ -35,6 +50,7 @@ interface CssExports {
   'textLight': string;
   'textLightDimmed': string;
   'textLightTranslucent': string;
+  'toolPrimaryColor': string;
   'trainerHeight': string;
   'workbenchWidth': string;
 }

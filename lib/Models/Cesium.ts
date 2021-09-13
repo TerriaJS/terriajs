@@ -1,9 +1,11 @@
+import i18next from "i18next";
 import { autorun, computed, runInAction } from "mobx";
-import { createTransformer } from "mobx-utils";
+import { computedFn } from "mobx-utils";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import createWorldTerrain from "terriajs-cesium/Source/Core/createWorldTerrain";
 import Credit from "terriajs-cesium/Source/Core/Credit";
@@ -16,18 +18,22 @@ import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import HeadingPitchRange from "terriajs-cesium/Source/Core/HeadingPitchRange";
 import Ion from "terriajs-cesium/Source/Core/Ion";
+import IonResource from "terriajs-cesium/Source/Core/IonResource";
+import KeyboardEventModifier from "terriajs-cesium/Source/Core/KeyboardEventModifier";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import PerspectiveFrustum from "terriajs-cesium/Source/Core/PerspectiveFrustum";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import sampleTerrain from "terriajs-cesium/Source/Core/sampleTerrain";
 import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
+import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import BoundingSphereState from "terriajs-cesium/Source/DataSources/BoundingSphereState";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
 import DataSourceDisplay from "terriajs-cesium/Source/DataSources/DataSourceDisplay";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import Camera from "terriajs-cesium/Source/Scene/Camera";
 import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
@@ -35,36 +41,35 @@ import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDire
 import Scene from "terriajs-cesium/Source/Scene/Scene";
 import SceneTransforms from "terriajs-cesium/Source/Scene/SceneTransforms";
 import SingleTileImageryProvider from "terriajs-cesium/Source/Scene/SingleTileImageryProvider";
-import when from "terriajs-cesium/Source/ThirdParty/when";
 import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
+import getElement from "terriajs-cesium/Source/Widgets/getElement";
+import filterOutUndefined from "../Core/filterOutUndefined";
+import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
+import LatLonHeight from "../Core/LatLonHeight";
+import makeRealPromise from "../Core/makeRealPromise";
 import pollToPromise from "../Core/pollToPromise";
+import waitForDataSourceToLoad from "../Core/waitForDataSourceToLoad";
 import CesiumRenderLoopPauser from "../Map/CesiumRenderLoopPauser";
 import CesiumSelectionIndicator from "../Map/CesiumSelectionIndicator";
+import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import PickedFeatures, { ProviderCoordsMap } from "../Map/PickedFeatures";
-import SplitterTraits from "../Traits/SplitterTraits";
-import TerriaViewer from "../ViewModels/TerriaViewer";
-import CameraView from "./CameraView";
-import Feature from "./Feature";
-import GlobeOrMap from "./GlobeOrMap";
-import hasTraits from "./hasTraits";
-import Mappable, {
+import MappableMixin, {
   ImageryParts,
   isCesium3DTileset,
   isDataSource,
   isTerrainProvider,
   MapItem
-} from "./Mappable";
-import Terria from "./Terria";
-import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
-import getElement from "terriajs-cesium/Source/Widgets/getElement";
-import LatLonHeight from "../Core/LatLonHeight";
-import filterOutUndefined from "../Core/filterOutUndefined";
-import KeyboardEventModifier from "terriajs-cesium/Source/Core/KeyboardEventModifier";
-import UserDrawing from "./UserDrawing";
-import i18next from "i18next";
-import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
+} from "../ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
+import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
+import TerriaViewer from "../ViewModels/TerriaViewer";
+import CameraView from "./CameraView";
+import Feature from "./Feature";
+import GlobeOrMap from "./GlobeOrMap";
+import hasTraits from "./Definition/hasTraits";
+import Terria from "./Terria";
+import UserDrawing from "./UserDrawing";
 
 //import Cesium3DTilesInspector from "terriajs-cesium/Source/Widgets/Cesium3DTilesInspector/Cesium3DTilesInspector";
 
@@ -92,11 +97,11 @@ export default class Cesium extends GlobeOrMap {
   readonly canShowSplitter = true;
   private readonly _eventHelper: EventHelper;
   private _pauseMapInteractionCount = 0;
-  private _lastTarget:
+  private _lastZoomTarget:
     | CameraView
     | Rectangle
     | DataSource
-    | Mappable
+    | MappableMixin.Instance
     | /*TODO Cesium.Cesium3DTileset*/ any;
 
   // When true, feature picking is paused. This is useful for temporarily
@@ -112,9 +117,12 @@ export default class Cesium extends GlobeOrMap {
   private readonly _disposeSplitterReaction: () => void;
 
   private _createImageryLayer: (
-    ip: ImageryProvider
-  ) => ImageryLayer = createTransformer((ip: ImageryProvider) => {
-    return new ImageryLayer(ip);
+    ip: ImageryProvider,
+    clippingRectangle: Rectangle | undefined
+  ) => ImageryLayer = computedFn((ip, clippingRectangle) => {
+    return new ImageryLayer(ip, {
+      rectangle: clippingRectangle
+    });
   });
 
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
@@ -193,7 +201,7 @@ export default class Cesium extends GlobeOrMap {
     //             console.log('Switching to EllipsoidTerrainProvider.');
     //             that.terria.viewerMode = ViewerMode.CesiumEllipsoid;
     //             if (!defined(that.TerrainMessageViewed)) {
-    //                 that.terria.error.raiseEvent({
+    //                 that.terria.raiseErrorToUser({
     //                     title : 'Terrain Server Not Responding',
     //                     message : '\
     // The terrain server is not responding at the moment.  You can still use all the features of '+that.terria.appName+' \
@@ -231,28 +239,21 @@ export default class Cesium extends GlobeOrMap {
         );
       }
       if (expandLink) {
-        let attributionToAboutPage = document.createElement("div");
-        attributionToAboutPage.innerHTML = `<a href="about.html#data-attribution" target="_blank" rel="noopener noreferrer">Data attribution</a>`;
-        let disclaimerToAboutPage = document.createElement("div");
-        disclaimerToAboutPage.innerHTML = `<a href="about.html#disclaimer" target="_blank" rel="noopener noreferrer">Disclaimer</a>`;
-
-        if (logoContainer && logoContainer.parentNode) {
-          if (disclaimerToAboutPage && disclaimerToAboutPage.firstChild) {
-            logoContainer.parentNode.insertBefore(
-              disclaimerToAboutPage.firstChild,
-              logoContainer.nextSibling
-            );
-          }
-
-          if (attributionToAboutPage && attributionToAboutPage.firstChild) {
-            logoContainer.parentNode.insertBefore(
-              attributionToAboutPage.firstChild,
-              logoContainer.nextSibling
-            );
-          }
-        }
-
-        expandLink.innerText = "Basemap";
+        this.terria.configParameters.extraCreditLinks
+          ?.slice()
+          .reverse()
+          .forEach(({ url, text }) => {
+            // Create a link and insert it after the logo node
+            // Defaults to the given text if no translation is provided
+            const translatedText = i18next.t(text);
+            const a = document.createElement("a");
+            a.href = url;
+            a.target = "_blank";
+            a.rel = "noopener noreferrer";
+            a.innerText = translatedText;
+            logoContainer?.insertAdjacentElement("afterend", a);
+          });
+        expandLink.innerText = i18next.t("map.extraCreditLinks.basemap");
       }
     }
 
@@ -510,11 +511,13 @@ export default class Cesium extends GlobeOrMap {
       ...this.terriaViewer.items.get(),
       this.terriaViewer.baseMap
     ];
-    // Flatmap
-    return ([] as { item: Mappable; mapItem: MapItem }[]).concat(
-      ...catalogItems
-        .filter(isDefined)
-        .map(item => item.mapItems.map(mapItem => ({ mapItem, item })))
+    return flatten(
+      filterOutUndefined(
+        catalogItems.map(item => {
+          if (isDefined(item) && MappableMixin.isMixedInto(item))
+            return item.mapItems.map(mapItem => ({ mapItem, item }));
+        })
+      )
     );
   }
 
@@ -619,125 +622,118 @@ export default class Cesium extends GlobeOrMap {
     }
   }
 
-  zoomTo(
-    target:
-      | CameraView
-      | Rectangle
-      | DataSource
-      | Mappable
-      | /*TODO Cesium.Cesium3DTileset*/ any,
-    flightDurationSeconds?: number
-  ): void {
-    if (!defined(target)) {
-      return;
-      //throw new DeveloperError("viewOrExtent is required.");
-    }
-    flightDurationSeconds = defaultValue(flightDurationSeconds, 3.0);
+  doZoomTo(target: any, flightDurationSeconds = 3.0): Promise<void> {
+    this._lastZoomTarget = target;
 
-    var that = this;
-    that._lastTarget = target;
-    return when()
-      .then(function() {
-        if (target instanceof Rectangle) {
-          var camera = that.scene.camera;
+    const _zoom: () => Promise<void> = async () => {
+      const camera = this.scene.camera;
 
-          // Work out the destination that the camera would naturally fly to
-          var destinationCartesian = camera.getRectangleCameraCoordinates(
-            target
+      if (target instanceof Rectangle) {
+        // target is a Rectangle
+
+        // Work out the destination that the camera would naturally fly to
+        const destinationCartesian = camera.getRectangleCameraCoordinates(
+          target
+        );
+        const destination = Ellipsoid.WGS84.cartesianToCartographic(
+          destinationCartesian
+        );
+        const terrainProvider = this.scene.globe.terrainProvider;
+        // A sufficiently coarse tile level that still has approximately accurate height
+        const level = 6;
+        const center = Rectangle.center(target);
+
+        // Perform an elevation query at the centre of the rectangle
+        let terrainSample: Cartographic;
+        try {
+          [terrainSample] = await makeRealPromise<Cartographic[]>(
+            sampleTerrain(terrainProvider, level, [center])
           );
-          var destination = Ellipsoid.WGS84.cartesianToCartographic(
-            destinationCartesian
-          );
-          var terrainProvider = that.scene.globe.terrainProvider;
-          var level = 6; // A sufficiently coarse tile level that still has approximately accurate height
-          var positions = [Rectangle.center(target)];
-
-          // Perform an elevation query at the centre of the rectangle
-          return sampleTerrain(terrainProvider, level, positions).then(function(
-            results
-          ) {
-            if (that._lastTarget !== target) {
-              return;
-            }
-
-            var finalDestinationCartographic = new Cartographic(
-              destination.longitude,
-              destination.latitude,
-              destination.height + results[0].height
-            );
-
-            var finalDestination = Ellipsoid.WGS84.cartographicToCartesian(
-              finalDestinationCartographic
-            );
-
-            camera.flyTo({
-              duration: flightDurationSeconds,
-              destination: finalDestination
-            });
-          });
-        } else if (defined(target.entities)) {
-          // Zooming to a DataSource
-          if (target.isLoading && defined(target.loadingEvent)) {
-            var deferred = when.defer();
-            var removeEvent = target.loadingEvent.addEventListener(function() {
-              removeEvent();
-              deferred.resolve();
-            });
-            return deferred.promise.then(function() {
-              if (that._lastTarget !== target) {
-                return;
-              }
-              return zoomToDataSource(that, target, flightDurationSeconds);
-            });
-          }
-          return zoomToDataSource(that, target);
-        } else if (defined(target.readyPromise)) {
-          return target.readyPromise.then(function() {
-            if (defined(target.boundingSphere) && that._lastTarget === target) {
-              zoomToBoundingSphere(that, target, flightDurationSeconds);
-            }
-          });
-        } else if (defined(target.boundingSphere)) {
-          return zoomToBoundingSphere(that, target);
-        } else if (target.position !== undefined) {
-          that.scene.camera.flyTo({
-            duration: flightDurationSeconds,
-            destination: target.position,
-            orientation: {
-              direction: target.direction,
-              up: target.up
-            }
-          });
-        } else if (Mappable.is(target)) {
-          if (isDefined(target.rectangle)) {
-            const { west, south, east, north } = target.rectangle;
-            if (
-              isDefined(west) &&
-              isDefined(south) &&
-              isDefined(east) &&
-              isDefined(north)
-            ) {
-              return that.scene.camera.flyTo({
-                duration: flightDurationSeconds,
-                destination: Rectangle.fromDegrees(west, south, east, north)
-              });
-            }
-          }
-
-          if (target.mapItems.length > 0) {
-            // Zoom to the first item!
-            return that.zoomTo(target.mapItems[0], flightDurationSeconds);
-          }
-        } else if (defined(target.rectangle)) {
-          that.scene.camera.flyTo({
-            duration: flightDurationSeconds,
-            destination: target.rectangle
-          });
+        } catch {
+          // if the request fails just use center with height=0
+          terrainSample = center;
         }
-      })
-      .then(function() {
-        that.notifyRepaintRequired();
-      });
+
+        if (this._lastZoomTarget !== target) {
+          return;
+        }
+
+        const finalDestinationCartographic = new Cartographic(
+          destination.longitude,
+          destination.latitude,
+          destination.height + terrainSample.height
+        );
+
+        const finalDestination = Ellipsoid.WGS84.cartographicToCartesian(
+          finalDestinationCartographic
+        );
+
+        return flyToPromise(camera, {
+          duration: flightDurationSeconds,
+          destination: finalDestination
+        });
+      } else if (defined(target.entities)) {
+        // target is some DataSource
+        return waitForDataSourceToLoad(target).then(() => {
+          if (this._lastZoomTarget === target) {
+            return zoomToDataSource(this, target, flightDurationSeconds);
+          }
+        });
+      } else if (
+        // check for readyPromise first because cesium raises an exception when
+        // accessing `.boundingSphere` before ready
+        defined(target.readyPromise) ||
+        defined(target.boundingSphere)
+      ) {
+        // target is some object like a Model with boundingSphere and possibly a readyPromise
+        return Promise.resolve(target.readyPromise).then(() => {
+          if (this._lastZoomTarget === target) {
+            return flyToBoundingSpherePromise(camera, target.boundingSphere, {
+              // By passing range=0, cesium calculates an appropriate zoom distance
+              offset: new HeadingPitchRange(0, -0.5, 0),
+              duration: flightDurationSeconds
+            });
+          }
+        });
+      } else if (target.position !== undefined) {
+        // target is a CameraView or an Entity
+        return flyToPromise(camera, {
+          duration: flightDurationSeconds,
+          destination: target.position,
+          orientation: {
+            direction: target.direction,
+            up: target.up
+          }
+        });
+      } else if (MappableMixin.isMixedInto(target)) {
+        // target is a Mappable
+        if (isDefined(target.cesiumRectangle)) {
+          return flyToPromise(camera, {
+            duration: flightDurationSeconds,
+            destination: target.cesiumRectangle
+          });
+        } else if (target.mapItems.length > 0) {
+          // Zoom to the first item!
+          return this.doZoomTo(target.mapItems[0], flightDurationSeconds);
+        } else {
+          return Promise.resolve();
+        }
+      } else if (defined(target.rectangle)) {
+        // target has a rectangle
+        return flyToPromise(camera, {
+          duration: flightDurationSeconds,
+          destination: target.rectangle
+        });
+      } else {
+        return Promise.resolve();
+      }
+    };
+
+    // we call notifyRepaintRequired before and after the zoom
+    // to wake the cesium render loop which might pause itself after
+    // some idle time
+    this.notifyRepaintRequired();
+    return _zoom().finally(() => this.notifyRepaintRequired());
   }
 
   notifyRepaintRequired() {
@@ -756,7 +752,10 @@ export default class Cesium extends GlobeOrMap {
       const items = this.terria.mainViewer.items.get();
       const showSplitter = this.terria.showSplitter;
       items.forEach(item => {
-        if (hasTraits(item, SplitterTraits, "splitDirection")) {
+        if (
+          MappableMixin.isMixedInto(item) &&
+          hasTraits(item, SplitterTraits, "splitDirection")
+        ) {
           const layers = this.getImageryLayersForItem(item);
           const splitDirection = item.splitDirection;
 
@@ -909,8 +908,27 @@ export default class Cesium extends GlobeOrMap {
     if (!this.terriaViewer.viewerOptions.useTerrain) {
       return { terrain: new EllipsoidTerrainProvider() };
     }
+    if (this.terria.configParameters.cesiumTerrainAssetId !== undefined) {
+      return {
+        terrain: new CesiumTerrainProvider({
+          url: IonResource.fromAssetId(
+            this.terria.configParameters.cesiumTerrainAssetId,
+            {
+              accessToken: this.terria.configParameters.cesiumIonAccessToken
+            }
+          )
+        })
+      };
+    }
+    if (this.terria.configParameters.cesiumTerrainUrl) {
+      return {
+        terrain: new CesiumTerrainProvider({
+          url: this.terria.configParameters.cesiumTerrainUrl
+        })
+      };
+    }
     // Check if there's a TerrainProvider in map items and use that if there is
-    if (this._firstMapItemTerrainProviders) {
+    else if (this._firstMapItemTerrainProviders) {
       return { terrain: this._firstMapItemTerrainProviders };
     } else if (this.terria.configParameters.useCesiumIonTerrain) {
       const logo = require("terriajs-cesium/Source/Assets/Images/ion-credit.png");
@@ -933,9 +951,14 @@ export default class Cesium extends GlobeOrMap {
   @computed
   get _extraCredits() {
     const credits: { cesium?: Credit; terria?: Credit } = {};
-    if (this._terrainWithCredits.credit) {
-      credits.cesium = this._terrainWithCredits.credit;
-    }
+    // Disabling this for now as it doesn't seem to be used anywhere but
+    // results in mapItems being computed twice for all workbench items when
+    // cesium map is loaded. This happens because the reference to
+    // _extraCredits is from within the constructor for Cesium which itself is
+    // called inside an untracked() call in TerriaViewer.
+    // if (this._terrainWithCredits.credit) {
+    //   credits.cesium =  this._terrainWithCredits.credit;
+    //}
     if (!this.terria.configParameters.hideTerriaLogo) {
       const logo = require("../../wwwroot/images/terria-watermark.svg");
       credits.terria = new Credit(
@@ -1151,18 +1174,11 @@ export default class Cesium extends GlobeOrMap {
         id = picked.primitive.id;
       }
 
-      if (id instanceof Entity && vectorFeatures.indexOf(id) === -1) {
-        const feature = Feature.fromEntityCollectionOrEntity(id);
-        if (picked.primitive) {
-          feature.cesiumPrimitive = picked.primitive;
-        }
-        vectorFeatures.push(feature);
-      } else if (
-        picked.primitive &&
-        picked.primitive._catalogItem &&
-        picked.primitive._catalogItem.getFeaturesFromPickResult
-      ) {
-        const result = picked.primitive._catalogItem.getFeaturesFromPickResult(
+      // Try to find catalogItem for picked feature, and use catalogItem.getFeaturesFromPickResult() if it exists - this is used by FeatureInfoMixin
+      const catalogItem = picked?.primitive?._catalogItem ?? id?._catalogItem;
+
+      if (typeof catalogItem?.getFeaturesFromPickResult === "function") {
+        const result = catalogItem.getFeaturesFromPickResult.bind(catalogItem)(
           screenPosition,
           picked
         );
@@ -1173,6 +1189,12 @@ export default class Cesium extends GlobeOrMap {
             vectorFeatures.push(result);
           }
         }
+      } else if (id instanceof Entity && vectorFeatures.indexOf(id) === -1) {
+        const feature = Feature.fromEntityCollectionOrEntity(id);
+        if (picked.primitive) {
+          feature.cesiumPrimitive = picked.primitive;
+        }
+        vectorFeatures.push(feature);
       }
     }
 
@@ -1341,7 +1363,7 @@ export default class Cesium extends GlobeOrMap {
     return result;
   }
 
-  getImageryLayersForItem(item: Mappable): ImageryLayer[] {
+  getImageryLayersForItem(item: MappableMixin.Instance): ImageryLayer[] {
     return filterOutUndefined(
       item.mapItems.map(m => {
         if (ImageryParts.is(m)) {
@@ -1353,9 +1375,12 @@ export default class Cesium extends GlobeOrMap {
 
   private _makeImageryLayerFromParts(
     parts: ImageryParts,
-    item: Mappable
+    item: MappableMixin.Instance
   ): ImageryLayer {
-    const layer = this._createImageryLayer(parts.imageryProvider);
+    const layer = this._createImageryLayer(
+      parts.imageryProvider,
+      parts.clippingRectangle
+    );
     if (TileErrorHandlerMixin.isMixedInto(item)) {
       // because this code path can run multiple times, make sure we remove the
       // handler if it is already registered
@@ -1470,7 +1495,8 @@ function zoomToDataSource(
   target: DataSource,
   flightDurationSeconds?: number
 ): Promise<void> {
-  return pollToPromise(
+  let flyToPromise: Promise<void> | undefined;
+  const pollPromise = pollToPromise(
     function() {
       const dataSourceDisplay = cesium.dataSourceDisplay;
       if (dataSourceDisplay === undefined) {
@@ -1498,38 +1524,60 @@ function zoomToDataSource(
         }
       }
 
+      const _lastZoomTarget = (cesium as any)._lastZoomTarget;
+
       // Test if boundingSpheres is empty to avoid zooming to nowhere
-      if (boundingSpheres.length > 0) {
+      if (boundingSpheres.length > 0 && _lastZoomTarget === target) {
         var boundingSphere = BoundingSphere.fromBoundingSpheres(
           boundingSpheres
         );
-        cesium.scene.camera.flyToBoundingSphere(boundingSphere, {
-          duration: flightDurationSeconds,
-          // By passing range=0, cesium calculates an appropriate zoom distance
-          offset: new HeadingPitchRange(0, -0.5, 0)
-        });
+        flyToPromise = flyToBoundingSpherePromise(
+          cesium.scene.camera,
+          boundingSphere,
+          {
+            duration: flightDurationSeconds,
+            // By passing range=0, cesium calculates an appropriate zoom distance
+            offset: new HeadingPitchRange(0, -0.5, 0)
+          }
+        );
         cesium.scene.camera.lookAtTransform(Matrix4.IDENTITY);
       }
       return true;
     },
     {
       pollInterval: 100,
-      timeout: 5000
+      timeout: 30000
     }
   );
+  return pollPromise.then(() => flyToPromise);
 }
 
-function zoomToBoundingSphere(
-  cesium: Cesium,
-  target: {
-    boundingSphere: BoundingSphere;
-  },
-  flightDurationSeconds?: number
-) {
-  var boundingSphere = target.boundingSphere;
-  cesium.scene.camera.flyToBoundingSphere(boundingSphere, {
-    // By passing range=0, cesium calculates an appropriate zoom distance
-    offset: new HeadingPitchRange(0, -0.5, 0),
-    duration: flightDurationSeconds
+type FlyToOptions = Parameters<InstanceType<typeof Camera>["flyTo"]>[0];
+
+function flyToPromise(camera: Camera, options: FlyToOptions): Promise<void> {
+  return new Promise((complete, cancel) => {
+    camera.flyTo({
+      ...options,
+      complete,
+      cancel
+    });
+  });
+}
+
+type FlyToBoundingSphereOptions = Parameters<
+  InstanceType<typeof Camera>["flyToBoundingSphere"]
+>[1];
+
+function flyToBoundingSpherePromise(
+  camera: Camera,
+  boundingSphere: BoundingSphere,
+  options: FlyToBoundingSphereOptions
+): Promise<void> {
+  return new Promise((complete, cancel) => {
+    camera.flyToBoundingSphere(boundingSphere, {
+      ...options,
+      complete,
+      cancel
+    });
   });
 }

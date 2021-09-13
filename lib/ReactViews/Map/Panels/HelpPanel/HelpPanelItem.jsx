@@ -3,11 +3,16 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import Icon, { StyledIcon } from "../../../Icon.jsx";
-import Styles from "./help-panel.scss";
-import Text from "../../../../Styled/Text";
-import Box from "../../../../Styled/Box";
 import styled, { withTheme } from "styled-components";
+import {
+  Category,
+  HelpAction
+} from "../../../../Core/AnalyticEvents/analyticEvents";
+import Box from "../../../../Styled/Box";
+import Icon, { StyledIcon } from "../../../../Styled/Icon";
+import Text from "../../../../Styled/Text";
+import { useTranslationIfExists } from "./../../../../Language/languageHelpers";
+import Styles from "./help-panel.scss";
 import HelpVideoPanel from "./HelpVideoPanel";
 
 @observer
@@ -27,7 +32,6 @@ class HelpPanelItem extends React.Component {
   }
 
   render() {
-    const { t } = this.props;
     const { icon } = this.props.content;
     const MenuIconWrapper = styled(Box).attrs({
       centered: true
@@ -49,18 +53,21 @@ class HelpPanelItem extends React.Component {
     // `content.icon` is user defined and can possibly force the UI to lookup a
     // nonexistant icon.
     const iconGlyph = Icon.GLYPHS[icon] || Icon.GLYPHS.video;
-    const title = t(this.props.content.title) || "";
+    const title = useTranslationIfExists(this.props.content.title);
     return (
-      <div
-        css={`
-          height: 70px;
-        `}
-      >
+      <div>
         <button
           className={className}
-          onClick={() =>
-            this.props.viewState.selectHelpMenuItem(this.props.content.itemName)
-          }
+          onClick={() => {
+            this.props.terria.analytics?.logEvent(
+              Category.help,
+              HelpAction.itemSelected,
+              title
+            );
+            this.props.viewState.selectHelpMenuItem(
+              this.props.content.itemName
+            );
+          }}
         >
           <Box
             left
@@ -102,16 +109,10 @@ class HelpPanelItem extends React.Component {
           itemString={this.props.content.itemName}
           paneMode={this.props.content.paneMode}
           markdownContent={this.props.content.markdownText}
-          videoUrl={
-            this.props.content.videoUrl
-              ? t(this.props.content.videoUrl)
-              : this.props.content.videoUrl
-          }
-          placeholderImage={
+          videoUrl={useTranslationIfExists(this.props.content.videoUrl)}
+          placeholderImage={useTranslationIfExists(
             this.props.content.placeholderImage
-              ? t(this.props.content.placeholderImage)
-              : this.props.content.placeholderImage
-          }
+          )}
         />
       </div>
     );

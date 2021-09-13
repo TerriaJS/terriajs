@@ -1,6 +1,6 @@
 import React from "react";
 import classNames from "classnames";
-import Icon from "../Icon.jsx";
+import Icon from "../../Styled/Icon";
 import PropTypes from "prop-types";
 import Styles from "./menu-button.scss";
 
@@ -10,13 +10,16 @@ import Styles from "./menu-button.scss";
  * @constructor
  */
 function MenuButton(props) {
+  const target = props.href !== "#" ? "_blank" : undefined;
+  const rel = target === "_blank" ? "noreferrer" : undefined;
   return (
     <a
       className={classNames(Styles.btnAboutLink, {
         [Styles.aboutTweak]: props.href === "about.html"
       })}
       href={props.href}
-      target={props.href !== "#" ? "_blank" : undefined}
+      target={target}
+      rel={rel}
       title={props.caption}
     >
       {props.href !== "#" && <Icon glyph={Icon.GLYPHS.externalLink} />}

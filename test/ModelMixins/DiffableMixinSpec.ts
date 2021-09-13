@@ -2,17 +2,16 @@ import { computed, action } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import DiffableMixin from "../../lib/ModelMixins/DiffableMixin";
 import TimeFilterMixin from "../../lib/ModelMixins/TimeFilterMixin";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import CreateModel from "../../lib/Models/CreateModel";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import CreateModel from "../../lib/Models/Definition/CreateModel";
 import Terria from "../../lib/Models/Terria";
-import CatalogMemberTraits from "../../lib/Traits/CatalogMemberTraits";
-import DiffableTraits from "../../lib/Traits/DiffableTraits";
-import DiscretelyTimeVaryingTraits from "../../lib/Traits/DiscretelyTimeVaryingTraits";
-import MappableTraits from "../../lib/Traits/MappableTraits";
+import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
+import DiffableTraits from "../../lib/Traits/TraitsClasses/DiffableTraits";
+import DiscretelyTimeVaryingTraits from "../../lib/Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
+import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
 import mixTraits from "../../lib/Traits/mixTraits";
-import ShowableTraits from "../../lib/Traits/ShowableTraits";
-import SplitterTraits from "../../lib/Traits/SplitterTraits";
-import TimeFilterTraits from "../../lib/Traits/TimeFilterTraits";
+import SplitterTraits from "../../lib/Traits/TraitsClasses/SplitterTraits";
+import TimeFilterTraits from "../../lib/Traits/TraitsClasses/TimeFilterTraits";
 import { SelectableDimension } from "../../lib/Models/SelectableDimensions";
 
 describe("DiffableMixin", function() {
@@ -49,7 +48,6 @@ class TestDiffableItem extends DiffableMixin(
     CreateModel(
       mixTraits(
         DiffableTraits,
-        ShowableTraits,
         CatalogMemberTraits,
         SplitterTraits,
         TimeFilterTraits,

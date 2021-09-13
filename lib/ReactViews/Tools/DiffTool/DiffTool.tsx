@@ -19,35 +19,34 @@ import LatLonHeight from "../../../Core/LatLonHeight";
 import PickedFeatures from "../../../Map/PickedFeatures";
 import prettifyCoordinates from "../../../Map/prettifyCoordinates";
 import DiffableMixin from "../../../ModelMixins/DiffableMixin";
-import CommonStrata from "../../../Models/CommonStrata";
+import MappableMixin, {
+  ImageryParts
+} from "../../../ModelMixins/MappableMixin";
+import CommonStrata from "../../../Models/Definition/CommonStrata";
 import Feature from "../../../Models/Feature";
-import hasTraits, { HasTrait } from "../../../Models/hasTraits";
+import hasTraits, { HasTrait } from "../../../Models/Definition/hasTraits";
 import {
-  removeMarker,
-  getMarkerLocation
+  getMarkerLocation,
+  removeMarker
 } from "../../../Models/LocationMarkerUtils";
-import Mappable, { ImageryParts } from "../../../Models/Mappable";
 import { DimensionOption } from "../../../Models/SelectableDimensions";
-import SplitItemReference from "../../../Models/SplitItemReference";
+import SplitItemReference from "../../../Models/Catalog/CatalogReferences/SplitItemReference";
 import Terria from "../../../Models/Terria";
 import ViewState from "../../../ReactViewModels/ViewState";
+import Box, { BoxSpan } from "../../../Styled/Box";
+import Button, { RawButton } from "../../../Styled/Button";
 import Select from "../../../Styled/Select";
-import RasterLayerTraits from "../../../Traits/RasterLayerTraits";
-import { GLYPHS, StyledIcon } from "../../Icon";
-import DatePicker from "./DatePicker";
-import Styles from "./diff-tool.scss";
-import LocationPicker from "./LocationPicker";
+import Spacing from "../../../Styled/Spacing";
+import Text, { TextSpan } from "../../../Styled/Text";
+import RasterLayerTraits from "../../../Traits/TraitsClasses/RasterLayerTraits";
 import { parseCustomMarkdownToReactWithOptions } from "../../Custom/parseCustomMarkdownToReact";
+import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
+import Loader from "../../Loader";
+import DatePicker from "./DatePicker";
+import LocationPicker from "./LocationPicker";
+import { CLOSE_TOOL_ID } from "../../Map/Navigation/registerMapNavigations";
 
-const Box: any = require("../../../Styled/Box").default;
-const BoxSpan: any = require("../../../Styled/Box").BoxSpan;
-const Button: any = require("../../../Styled/Button").default;
-const RawButton: any = require("../../../Styled/Button").RawButton;
-const Text: any = require("../../../Styled/Text").default;
-const Spacing: any = require("../../../Styled/Spacing").default;
-const TextSpan: any = require("../../../Styled/Text").TextSpan;
 const dateFormat = require("dateformat");
-const Loader = require("../../Loader");
 
 type DiffableItem = DiffableMixin.Instance;
 
@@ -119,6 +118,11 @@ class DiffTool extends React.Component<PropsType> {
     terria.showSplitter = true;
     viewState.setIsMapFullScreen(true);
     this.sourceItem.setTrait(CommonStrata.user, "show", false);
+    terria.mapNavigationModel.show(CLOSE_TOOL_ID);
+    const closeTool = terria.mapNavigationModel.findItem(CLOSE_TOOL_ID);
+    if (closeTool) {
+      closeTool.controller.activate();
+    }
   }
 
   @action
@@ -131,6 +135,11 @@ class DiffTool extends React.Component<PropsType> {
     terria.showSplitter = originalSettings.showSplitter;
     viewState.setIsMapFullScreen(originalSettings.isMapFullScreen);
     this.sourceItem.setTrait(CommonStrata.user, "show", true);
+    terria.mapNavigationModel.hide(CLOSE_TOOL_ID);
+    const closeTool = terria.mapNavigationModel.findItem(CLOSE_TOOL_ID);
+    if (closeTool) {
+      closeTool.controller.deactivate();
+    }
   }
 
   componentDidMount() {
@@ -361,8 +370,8 @@ class Main extends React.Component<MainPropsType> {
   @action.bound
   unsetDates() {
     const { leftItem, rightItem } = this.props;
-    leftItem.setTrait(CommonStrata.user, "currentTime", undefined);
-    rightItem.setTrait(CommonStrata.user, "currentTime", undefined);
+    leftItem.setTrait(CommonStrata.user, "currentTime", null);
+    rightItem.setTrait(CommonStrata.user, "currentTime", null);
     this.hideItem(leftItem);
     this.hideItem(rightItem);
   }
@@ -414,7 +423,7 @@ class Main extends React.Component<MainPropsType> {
     // imagery at that location
     const markerLocation = getMarkerLocation(this.props.terria);
     const sourceItem = this.props.sourceItem;
-    if (markerLocation && Mappable.is(sourceItem)) {
+    if (markerLocation && MappableMixin.isMixedInto(sourceItem)) {
       const part = sourceItem.mapItems.find(p => ImageryParts.is(p));
       const imageryProvider =
         part && ImageryParts.is(part) && part.imageryProvider;
@@ -560,7 +569,7 @@ class Main extends React.Component<MainPropsType> {
                       </TextSpan>
                     </RawButton>
                   )}
-                  {this.leftDate && this.rightDate && (
+                  {isShowingDiff === false && this.leftDate && this.rightDate && (
                     <RawButton onClick={this.unsetDates}>
                       <TextSpan isLink small>
                         {t("diffTool.instructions.changeDates")}
@@ -702,7 +711,7 @@ class Main extends React.Component<MainPropsType> {
         {!isShowingDiff &&
           ReactDOM.createPortal(
             // Bottom Panel
-            <Box centered fullWidth wrap backgroundColor={theme.dark}>
+            <Box centered fullWidth flexWrap backgroundColor={theme.dark}>
               <DatePicker
                 heading={t("diffTool.labels.dateComparisonA")}
                 item={this.props.leftItem}
@@ -715,7 +724,7 @@ class Main extends React.Component<MainPropsType> {
                 isPickingNewLocation={this._isPickingNewLocation}
               />
               <DatePicker
-                heading={t("diffTool.labels.dateComparisonA")}
+                heading={t("diffTool.labels.dateComparisonB")}
                 item={this.props.rightItem}
                 externalOpenButton={this.openRightDatePickerButton}
                 onDateSet={() => this.showItem(this.props.rightItem)}
@@ -749,7 +758,7 @@ const DiffAccordion: React.FC<DiffAccordionProps> = props => {
         paddedHorizontally={2}
         centered
         justifySpaceBetween
-        backgroundColor={theme.colorSplitter}
+        backgroundColor={theme.colorSecondary}
       >
         <Box centered>
           <StyledIcon styledWidth="20px" light glyph={GLYPHS.difference} />
@@ -792,17 +801,16 @@ const DiffAccordion: React.FC<DiffAccordionProps> = props => {
 
 const DiffAccordionWrapper = styled(Box).attrs({
   column: true,
-  positionAbsolute: true,
+  position: "absolute",
   styledWidth: "340px"
   // charcoalGreyBg: true
-})`
+})<{ isMapFullScreen: boolean }>`
   top: 70px;
   left: 0px;
   min-height: 220px;
   // background: ${p => p.theme.dark};
   margin-left: ${props =>
     props.isMapFullScreen ? 16 : parseInt(props.theme.workbenchWidth) + 40}px;
-  // TODO: Transitioning on margin-left incurs an expensive layout re-calculation, consider disabling
   transition: margin-left 0.25s;
 `;
 
@@ -810,7 +818,7 @@ const MainPanel = styled(Box).attrs({
   column: true,
   overflowY: "auto",
   paddedRatio: 2
-})`
+})<{ isMapFullScreen: boolean }>`
   ${({ theme }) => theme.borderRadiusBottom(theme.radius40Button)}
   background-color: ${p => p.theme.darkWithOverlay};
 `;
@@ -961,7 +969,7 @@ async function createSplitItem(
     const newItem = ref.target as DiffableItem;
     newItem.setTrait(CommonStrata.user, "show", true);
     newItem.setTrait(CommonStrata.user, "splitDirection", splitDirection);
-    newItem.setTrait(CommonStrata.user, "currentTime", undefined);
+    newItem.setTrait(CommonStrata.user, "currentTime", null);
     newItem.setTrait(CommonStrata.user, "initialTimeSource", "none");
     if (hasOpacity(newItem)) {
       // We want to show the item on the map only after date selection. At the
@@ -1022,7 +1030,7 @@ function doesFeatureBelongToItem(
   feature: Feature,
   item: DiffableItem
 ): Boolean {
-  if (!Mappable.is(item)) return false;
+  if (!MappableMixin.isMixedInto(item)) return false;
   const imageryProvider = feature.imageryLayer?.imageryProvider;
   if (imageryProvider === undefined) return false;
   return (

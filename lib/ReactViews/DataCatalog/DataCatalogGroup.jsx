@@ -1,12 +1,12 @@
 import createReactClass from "create-react-class";
+import { comparer, reaction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import addedByUser from "../../Core/addedByUser";
 import getPath from "../../Core/getPath";
-import openGroup from "../../Models/openGroup";
-import removeUserAddedData from "../../Models/removeUserAddedData";
+import removeUserAddedData from "../../Models/Catalog/removeUserAddedData";
 import CatalogGroup from "./CatalogGroup";
 import DataCatalogMember from "./DataCatalogMember";
 
@@ -42,12 +42,6 @@ const DataCatalogGroup = observer(
       };
     },
 
-    toggleStateIsOpen() {
-      this.setState({
-        isOpen: !this.state.isOpen
-      });
-    },
-
     isOpen() {
       if (this.props.manageIsOpenLocally) {
         return this.state.isOpen;
@@ -55,18 +49,16 @@ const DataCatalogGroup = observer(
       return this.props.group.isOpen;
     },
 
-    toggleOpen() {
+    async clickGroup() {
       if (this.props.manageIsOpenLocally) {
-        this.toggleStateIsOpen();
-      } else {
-        openGroup(this.props.group, !this.props.group.isOpen);
+        this.setState({
+          isOpen: !this.state.isOpen
+        });
       }
-    },
-
-    clickGroup() {
-      this.toggleOpen();
-      this.props.group.loadMembers();
-      this.props.viewState.viewCatalogMember(this.props.group);
+      this.props.viewState.viewCatalogMember(
+        this.props.group,
+        !this.props.group.isOpen
+      );
     },
 
     isSelected() {
@@ -89,15 +81,19 @@ const DataCatalogGroup = observer(
     },
 
     componentDidMount() {
-      if (this.props.group.isOpen) {
-        this.props.group.loadMembers();
-      }
+      this._cleanupLoadMembersReaction = reaction(
+        () => [this.props.group, this.isOpen()],
+        ([group, isOpen]) => {
+          if (isOpen) {
+            group.loadMembers();
+          }
+        },
+        { equals: comparer.shallow, fireImmediately: true }
+      );
     },
 
-    componentDidUpdate() {
-      if (this.props.group.isOpen) {
-        this.props.group.loadMembers();
-      }
+    componentWillUnmount() {
+      this._cleanupLoadMembersReaction();
     },
 
     render() {

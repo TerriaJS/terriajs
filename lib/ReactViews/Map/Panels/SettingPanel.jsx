@@ -14,7 +14,7 @@ import Terria from "../../../Models/Terria";
 import ViewerMode from "../../../Models/ViewerMode";
 // eslint-disable-next-line no-unused-vars
 import ViewState from "../../../ReactViewModels/ViewState";
-import Icon from "../../Icon";
+import Icon from "../../../Styled/Icon";
 import MenuPanel from "../../StandardUserInterface/customizable/MenuPanel";
 // import { provideRef } from "../../HOCs/provideRef";
 import withTerriaRef from "../../HOCs/withTerriaRef";
@@ -28,6 +28,13 @@ import Styles from "./setting-panel.scss";
  *
  * @extends {React.Component<Props>}
  */
+
+const sides = {
+  left: "settingPanel.terrain.left",
+  both: "settingPanel.terrain.both",
+  right: "settingPanel.terrain.right"
+};
+
 @observer
 class SettingPanel extends React.Component {
   static propTypes = {
@@ -58,15 +65,13 @@ class SettingPanel extends React.Component {
 
   selectBaseMap(baseMap, event) {
     event.stopPropagation();
-    runInAction(() => {
-      this.props.terria.mainViewer.baseMap = baseMap.mappable;
-    });
+    this.props.terria.mainViewer.setBaseMap(baseMap);
     // this.props.terria.baseMapContrastColor = baseMap.contrastColor;
 
     // We store the user's chosen basemap for future use, but it's up to the instance to decide
     // whether to use that at start up.
-    if (baseMap.mappable) {
-      const baseMapId = baseMap.mappable.uniqueId;
+    if (baseMap) {
+      const baseMapId = baseMap.uniqueId;
       if (baseMapId) {
         this.props.terria.setLocalProperty("basemap", baseMapId);
       }
@@ -75,7 +80,7 @@ class SettingPanel extends React.Component {
 
   mouseEnterBaseMap(baseMap) {
     runInAction(() => {
-      this._hoverBaseMap = baseMap.mappable.name;
+      this._hoverBaseMap = baseMap.item.name;
     });
   }
 
@@ -107,15 +112,15 @@ class SettingPanel extends React.Component {
     event.stopPropagation();
 
     switch (side) {
-      case "Left":
+      case sides.left:
         this.props.terria.terrainSplitDirection = ImagerySplitDirection.LEFT;
         this.props.terria.showSplitter = true;
         break;
-      case "Right":
+      case sides.right:
         this.props.terria.terrainSplitDirection = ImagerySplitDirection.RIGHT;
         this.props.terria.showSplitter = true;
         break;
-      case "Both":
+      case sides.both:
         this.props.terria.terrainSplitDirection = ImagerySplitDirection.NONE;
         break;
     }
@@ -181,9 +186,9 @@ class SettingPanel extends React.Component {
       supportsDepthTestAgainstTerrain &&
       this.props.terria.depthTestAgainstTerrainEnabled;
 
-    const depthTestAgainstTerrainLabel = `Press to start ${
-      depthTestAgainstTerrainEnabled ? "showing" : "hiding"
-    } features that are underneath the terrain surface`;
+    const depthTestAgainstTerrainLabel = depthTestAgainstTerrainEnabled
+      ? t("settingPanel.terrain.showUndergroundFeatures")
+      : t("settingPanel.terrain.hideUndergroundFeatures");
 
     const viewerModes = [];
 
@@ -197,16 +202,15 @@ class SettingPanel extends React.Component {
     viewerModes.push("3dsmooth", "2d");
 
     const supportsSide = isCesiumWithTerrain;
-    const sides = ["Left", "Both", "Right"];
 
-    let currentSide = "Both";
+    let currentSide = sides.both;
     if (supportsSide) {
       switch (this.props.terria.terrainSplitDirection) {
         case ImagerySplitDirection.LEFT:
-          currentSide = "Left";
+          currentSide = sides.left;
           break;
         case ImagerySplitDirection.RIGHT:
-          currentSide = "Right";
+          currentSide = sides.right;
           break;
       }
     }
@@ -219,8 +223,8 @@ class SettingPanel extends React.Component {
       timelineStack.defaultTimeVarying.currentTimeAsJulianDate !== undefined;
 
     const alwaysShowTimelineLabel = alwaysShowTimeline
-      ? "Press to start only showing the timeline when there are time-varying datasets on the workbench"
-      : "Press to start always showing the timeline, even when no time-varying datasets are on the workbench";
+      ? t("settingPanel.timeline.alwaysShowLabel")
+      : t("settingPanel.timeline.hideLabel");
 
     return (
       <MenuPanel
@@ -254,10 +258,10 @@ class SettingPanel extends React.Component {
         <If condition={supportsSide}>
           <div className={classNames(Styles.viewer, DropdownStyles.section)}>
             <label className={DropdownStyles.heading}>
-              Show Terrain on the
+              {t("settingPanel.terrain.sideLabel")}
             </label>
             <ul className={Styles.viewerSelector}>
-              <For each="side" of={sides}>
+              {Object.values(sides).map(side => (
                 <li key={side} className={Styles.listItemThreeCols}>
                   <button
                     onClick={this.showTerrainOnSide.bind(this, side)}
@@ -265,10 +269,10 @@ class SettingPanel extends React.Component {
                       [Styles.isActive]: side === currentSide
                     })}
                   >
-                    {side}
+                    {t(side)}
                   </button>
                 </li>
-              </For>
+              ))}
             </ul>
           </div>
         </If>
@@ -299,7 +303,7 @@ class SettingPanel extends React.Component {
                   Styles.nativeResolutionHeader
                 )}
               >
-                Terrain hides underground features
+                {t("settingPanel.terrain.hideUnderground")}
               </label>
             </section>
           </div>
@@ -313,29 +317,38 @@ class SettingPanel extends React.Component {
             {this.activeMapName}
           </label>
           <ul className={Styles.baseMapSelector}>
-            <For each="baseMap" index="i" of={this.props.terria.baseMaps}>
+            <For
+              each="baseMap"
+              index="i"
+              of={this.props.terria.baseMapsModel.baseMapItems}
+            >
               <li key={i} className={Styles.listItemFourCols}>
                 <button
                   className={classNames(Styles.btnBaseMap, {
                     [Styles.isActive]:
-                      baseMap.mappable === this.props.terria.mainViewer.baseMap
+                      baseMap.item === this.props.terria.mainViewer.baseMap
                   })}
-                  onClick={this.selectBaseMap.bind(this, baseMap)}
+                  onClick={this.selectBaseMap.bind(this, baseMap.item)}
                   onMouseEnter={this.mouseEnterBaseMap.bind(this, baseMap)}
                   onMouseLeave={this.mouseLeaveBaseMap.bind(this, baseMap)}
                   onFocus={this.mouseEnterBaseMap.bind(this, baseMap)}
                 >
-                  {baseMap.mappable === this.props.terria.mainViewer.baseMap ? (
+                  {baseMap.item === this.props.terria.mainViewer.baseMap ? (
                     <Icon glyph={Icon.GLYPHS.selected} />
                   ) : null}
-                  <img alt={baseMap.mappable.name} src={baseMap.image} />
+                  <img
+                    alt={baseMap.item ? baseMap.item.name : ""}
+                    src={baseMap.image}
+                  />
                 </button>
               </li>
             </For>
           </ul>
         </div>
         <div className={DropdownStyles.section}>
-          <label className={DropdownStyles.heading}>Timeline</label>
+          <label className={DropdownStyles.heading}>
+            {t("settingPanel.timeline.title")}
+          </label>
           <section
             className={Styles.nativeResolutionWrapper}
             title={qualityLabels[this.props.terria.quality]}
@@ -369,7 +382,7 @@ class SettingPanel extends React.Component {
                 Styles.nativeResolutionHeader
               )}
             >
-              Always show
+              {t("settingPanel.timeline.alwaysShow")}
             </label>
           </section>
         </div>

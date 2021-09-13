@@ -17,11 +17,14 @@ export default class Csv {
    */
   static parseString(
     csv: string,
-    columnMajor: boolean = false
+    columnMajor: boolean = false,
+    filterOutComments: boolean = false,
+    options: papaparse.ParseConfig = {}
   ): Promise<string[][]> {
     return new Promise<string[][]>((resolve, reject) => {
       papaparse.parse(csv, {
-        ...getParseOptions(columnMajor, resolve, reject)
+        ...getParseOptions(columnMajor, filterOutComments, resolve, reject),
+        ...options
       });
     });
   }
@@ -34,11 +37,14 @@ export default class Csv {
    */
   static parseFile(
     file: File,
-    columnMajor: boolean = false
+    columnMajor: boolean = false,
+    filterOutComments: boolean = false,
+    options: papaparse.ParseConfig = {}
   ): Promise<string[][]> {
     return new Promise<string[][]>((resolve, reject) => {
       papaparse.parse(file, {
-        ...getParseOptions(columnMajor, resolve, reject)
+        ...getParseOptions(columnMajor, filterOutComments, resolve, reject),
+        ...options
       });
     });
   }
@@ -51,11 +57,13 @@ export default class Csv {
    */
   static parseUrl(
     url: string,
-    columnMajor: boolean = false
+    columnMajor: boolean = false,
+    filterOutComments: boolean = false,
+    options: papaparse.ParseConfig = {}
   ): Promise<string[][]> {
     return loadWithXhr({ url }).then(csv => {
       if (typeof csv === "string") {
-        return Csv.parseString(csv, columnMajor);
+        return Csv.parseString(csv, columnMajor, filterOutComments, options);
       } else {
         throw "Request failed";
       }
@@ -73,15 +81,17 @@ export default class Csv {
 
 function getParseOptions(
   columnMajor: boolean,
+  filterOutComments: boolean,
   resolve: (value: string[][]) => void,
   reject: (reason?: any) => void
 ): papaparse.ParseConfig {
   return columnMajor
-    ? getParseOptionsColumnMajor(resolve, reject)
-    : getParseOptionsRowMajor(resolve, reject);
+    ? getParseOptionsColumnMajor(filterOutComments, resolve, reject)
+    : getParseOptionsRowMajor(filterOutComments, resolve, reject);
 }
 
 function getParseOptionsRowMajor(
+  filterOutComments: boolean,
   resolve: (value: string[][]) => void,
   reject: (reason?: any) => void
 ): papaparse.ParseConfig {
@@ -89,6 +99,7 @@ function getParseOptionsRowMajor(
   let parser: any = null;
 
   return {
+    comments: filterOutComments,
     skipEmptyLines: true,
     worker: useWorker,
     chunk: function(results, p) {
@@ -111,6 +122,7 @@ function getParseOptionsRowMajor(
 }
 
 function getParseOptionsColumnMajor(
+  filterOutComments: boolean,
   resolve: (value: string[][]) => void,
   reject: (reason?: any) => void
 ): papaparse.ParseConfig {
@@ -118,6 +130,7 @@ function getParseOptionsColumnMajor(
   let parser: any = null;
 
   return {
+    comments: filterOutComments,
     skipEmptyLines: true,
     worker: useWorker,
     chunk: function(results, p) {

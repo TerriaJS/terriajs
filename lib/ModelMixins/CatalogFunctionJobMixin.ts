@@ -1,31 +1,29 @@
 import { action, computed, observable, runInAction } from "mobx";
+import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Constructor from "../Core/Constructor";
+import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
-import CommonStrata from "../Models/CommonStrata";
-import createStratumInstance from "../Models/createStratumInstance";
-import LoadableStratum from "../Models/LoadableStratum";
-import Mappable, { MapItem } from "../Models/Mappable";
-import Model, { BaseModel } from "../Models/Model";
-import StratumOrder from "../Models/StratumOrder";
-import CatalogFunctionJobTraits from "../Traits/CatalogFunctionJobTraits";
-import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
+import TerriaError from "../Core/TerriaError";
+import MappableMixin, { MapItem } from "./MappableMixin";
+import CommonStrata from "../Models/Definition/CommonStrata";
+import createStratumInstance from "../Models/Definition/createStratumInstance";
+import LoadableStratum from "../Models/Definition/LoadableStratum";
+import Model, { BaseModel } from "../Models/Definition/Model";
+import StratumOrder from "../Models/Definition/StratumOrder";
+import CatalogFunctionJobTraits from "../Traits/TraitsClasses/CatalogFunctionJobTraits";
+import { InfoSectionTraits } from "../Traits/TraitsClasses/CatalogMemberTraits";
 import AutoRefreshingMixin from "./AutoRefreshingMixin";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import GroupMixin from "./GroupMixin";
-import filterOutUndefined from "../Core/filterOutUndefined";
-import TerriaError from "../Core/TerriaError";
-import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 
 class FunctionJobStratum extends LoadableStratum(CatalogFunctionJobTraits) {
-  constructor(
-    readonly catalogFunctionJob: CatalogFunctionJobMixin.CatalogFunctionJobMixin
-  ) {
+  constructor(readonly catalogFunctionJob: CatalogFunctionJobMixin.Instance) {
     super();
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
     return new FunctionJobStratum(
-      model as CatalogFunctionJobMixin.CatalogFunctionJobMixin
+      model as CatalogFunctionJobMixin.Instance
     ) as this;
   }
 
@@ -212,7 +210,7 @@ function CatalogFunctionJobMixin<
         this.downloadingResults = true;
         this.results = (await this.downloadResults()) || [];
         this.results.forEach(result => {
-          if (Mappable.is(result))
+          if (MappableMixin.isMixedInto(result))
             result.setTrait(CommonStrata.user, "show", true);
           if (addResultsToWorkbench) this.terria.workbench.add(result);
 
@@ -235,14 +233,14 @@ function CatalogFunctionJobMixin<
      * Job result CatalogMembers - set from calling {@link CatalogFunctionJobMixin#downloadResults}
      */
     @observable
-    public results: CatalogMemberMixin.CatalogMemberMixin[] = [];
+    public results: CatalogMemberMixin.Instance[] = [];
 
     /**
      * Called in {@link CatalogFunctionJobMixin#onJobFinish}
      * @returns catalog members to add to workbench
      */
     abstract async downloadResults(): Promise<
-      CatalogMemberMixin.CatalogMemberMixin[] | void
+      CatalogMemberMixin.Instance[] | void
     >;
 
     @action
@@ -308,9 +306,9 @@ function CatalogFunctionJobMixin<
 
 namespace CatalogFunctionJobMixin {
   StratumOrder.addLoadStratum(FunctionJobStratum.name);
-  export interface CatalogFunctionJobMixin
+  export interface Instance
     extends InstanceType<ReturnType<typeof CatalogFunctionJobMixin>> {}
-  export function isMixedInto(model: any): model is CatalogFunctionJobMixin {
+  export function isMixedInto(model: any): model is Instance {
     return model && model.hasCatalogFunctionJobMixin;
   }
 }

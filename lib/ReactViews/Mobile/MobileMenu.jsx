@@ -17,6 +17,7 @@ import ViewState from "../../ReactViewModels/ViewState";
 
 import Styles from "./mobile-menu.scss";
 import { runInAction } from "mobx";
+import LangPanel from "../Map/Panels/LangPanel/LangPanel";
 
 const MobileMenu = observer(
   createReactClass({
@@ -28,6 +29,7 @@ const MobileMenu = observer(
       viewState: PropTypes.instanceOf(ViewState).isRequired,
       showFeedback: PropTypes.bool,
       terria: PropTypes.instanceOf(Terria).isRequired,
+      i18n: PropTypes.object,
       allBaseMaps: PropTypes.array.isRequired,
       t: PropTypes.func.isRequired
     },
@@ -64,9 +66,11 @@ const MobileMenu = observer(
     },
 
     runStories() {
-      this.props.viewState.storyBuilderShown = false;
-      this.props.viewState.storyShown = true;
-      this.props.viewState.mobileMenuVisible = false;
+      runInAction(() => {
+        this.props.viewState.storyBuilderShown = false;
+        this.props.viewState.storyShown = true;
+        this.props.viewState.mobileMenuVisible = false;
+      });
     },
 
     dismissSatelliteGuidanceAction() {
@@ -110,12 +114,6 @@ const MobileMenu = observer(
                 viewState={this.props.viewState}
               />
             </div>
-            {/* <div onClick={this.hideMenu}>
-              <HelpMenuPanelBasic
-                terria={this.props.terria}
-                viewState={this.props.viewState}
-              />
-            </div> */}
             <For each="menuItem" of={this.props.menuItems}>
               <div
                 onClick={this.hideMenu}
@@ -137,7 +135,20 @@ const MobileMenu = observer(
                   storiesLength: this.props.terria.stories.length
                 })}
               />
-            </If>{" "}
+            </If>
+            <If
+              condition={
+                this.props.terria.configParameters.languageConfiguration
+                  ?.enabled
+              }
+            >
+              <div onClick={this.hideMenu}>
+                <LangPanel
+                  terria={this.props.terria}
+                  smallScreen={this.props.viewState.useSmallScreenInterface}
+                />
+              </div>
+            </If>
           </div>
         </div>
       );

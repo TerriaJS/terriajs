@@ -1,14 +1,14 @@
-import { computed, runInAction } from "mobx";
-import { observer } from "mobx-react";
-import { AxisLeft, AxisBottom } from "@vx/axis";
-import { Group } from "@vx/group";
+import { AxisBottom, AxisLeft } from "@visx/axis";
+import { Group } from "@visx/group";
 import { withParentSize } from "@vx/responsive";
-import { scaleLinear, scaleTime } from "@vx/scale";
+import { scaleLinear, scaleTime } from "@visx/scale";
+import { computed } from "mobx";
+import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
-import Chartable from "../../../Models/Chartable";
-import LineChart from "./LineChart";
+import ChartableMixin from "../../../ModelMixins/ChartableMixin";
 import Styles from "./chart-preview.scss";
+import LineChart from "./LineChart";
 
 @withParentSize
 @observer
@@ -34,24 +34,27 @@ class FeatureInfoPanelChart extends React.Component {
   @computed
   get chartItem() {
     return this.props.item.chartItems.find(
-      chartItem => chartItem.type === "line"
+      chartItem =>
+        chartItem.type === "line" || chartItem.type === "lineAndPoint"
     );
   }
 
-  componentDidUpdate() {
-    runInAction(() => {
-      this.props.item.loadChartItems();
-    });
+  async componentDidUpdate() {
+    (await this.props.item.loadMapItems()).raiseError(
+      this.props.item.terria,
+      `Failed to load chart for ${this.props.item.name}`
+    );
   }
 
-  componentDidMount() {
-    runInAction(() => {
-      this.props.item.loadChartItems();
-    });
+  async componentDidMount() {
+    (await this.props.item.loadMapItems()).raiseError(
+      this.props.item.terria,
+      `Failed to load chart for ${this.props.item.name}`
+    );
   }
 
   render() {
-    if (!Chartable.is(this.props.item)) return null;
+    if (!ChartableMixin.isMixedInto(this.props.item)) return null;
     if (!this.chartItem) return null;
 
     const { width, height, parentWidth, parentHeight } = this.props;
@@ -120,6 +123,11 @@ class Chart extends React.Component {
       return <div className={Styles.empty}>No data available</div>;
     }
 
+    // Make sure points are asc sorted by x value
+    chartItem.points = chartItem.points.sort(
+      (a, b) => this.scales.x(a.x) - this.scales.x(b.x)
+    );
+
     const id = `featureInfoPanelChart-${chartItem.name}`;
     const textStyle = {
       fill: baseColor,
@@ -136,7 +144,12 @@ class Chart extends React.Component {
             numTicks={2}
             stroke="none"
             tickStroke="none"
-            tickLabelProps={() => textStyle}
+            tickLabelProps={() => ({
+              ...textStyle,
+              // nudge the tick label a bit to the left so that we can fit
+              // values up to 8 chars long without getting clipped
+              dx: "-2em"
+            })}
             label={this.props.xAxisLabel}
             labelOffset={3}
             labelProps={textStyle}

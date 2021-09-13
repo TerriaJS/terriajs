@@ -1,22 +1,18 @@
 "use strict";
 
-import createReactClass from "create-react-class";
 import { observer } from "mobx-react";
-import PropTypes from "prop-types";
 import React, { SyntheticEvent } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
-import proxyCatalogItemUrl from "../../../Models/proxyCatalogItemUrl";
-import LegendTraits, { LegendItemTraits } from "../../../Traits/LegendTraits";
-import Styles from "./legend.scss";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
-import Mappable from "../../../Models/Mappable";
-import AsyncMappableMixin from "../../../ModelMixins/AsyncMappableMixin";
-import Model from "../../../Models/Model";
-
-const Loader = require("../../Loader");
+import Model from "../../../Models/Definition/Model";
+import proxyCatalogItemUrl from "../../../Models/Catalog/proxyCatalogItemUrl";
+import LegendTraits, {
+  LegendItemTraits
+} from "../../../Traits/TraitsClasses/LegendTraits";
+import Styles from "./legend.scss";
 
 /* A lookup map for displayable mime types */
 const DISPLAYABLE_MIME_TYPES = [
@@ -33,33 +29,40 @@ const DISPLAYABLE_MIME_TYPES = [
 const IMAGE_URL_REGEX = /[.\/](png|jpg|jpeg|gif|svg)/i;
 
 function checkMimeType(legend: Model<LegendTraits>) {
-  if (legend.urlMimeType) {
-    return !!DISPLAYABLE_MIME_TYPES[legend.urlMimeType];
-  }
-
-  return !!legend.url?.match(IMAGE_URL_REGEX);
+  return (
+    (legend.urlMimeType && !!DISPLAYABLE_MIME_TYPES[legend.urlMimeType]) ||
+    !!legend.url?.match(IMAGE_URL_REGEX)
+  );
 }
 
 @observer
 export default class Legend extends React.Component<{
-  item: CatalogMemberMixin.CatalogMemberMixin;
+  item: CatalogMemberMixin.Instance;
   forPrint?: boolean;
 }> {
   static defaultProps = {
     forPrint: false
   };
 
-  // If we legends need scaling, this is the only way to do it :/
-  // See https://stackoverflow.com/questions/7699621/display-image-at-50-of-its-native-size
-  // or https://stackoverflow.com/questions/35711807/display-high-dpi-image-at-50-scaling-using-just-css
-  resizeLegendImage(
-    evt: SyntheticEvent<HTMLObjectElement>,
+  onImageLoad(
+    evt: SyntheticEvent<HTMLImageElement>,
     legend: Model<LegendTraits>
   ) {
-    if (!isDefined(legend.imageScaling) || legend.imageScaling === 1) return;
     const image = evt.target as HTMLObjectElement;
+    image.style.display = "none";
+    image.style.maxWidth = "none";
 
-    image.style.width = `${legend.imageScaling * image.offsetWidth}px`;
+    if (evt.type === "error") {
+      return;
+    }
+
+    image.style.display = "initial";
+
+    // If legend need scaling, this is the only way to do it :/
+    // See https://stackoverflow.com/questions/7699621/display-image-at-50-of-its-native-size
+    // or https://stackoverflow.com/questions/35711807/display-high-dpi-image-at-50-scaling-using-just-css
+
+    image.style.width = `${(legend.imageScaling ?? 1) * image.offsetWidth}px`;
     // Must set maxWidth *after* setting width, as it may change offsetWidth
     image.style.maxWidth = "100%";
   }
@@ -112,17 +115,17 @@ export default class Legend extends React.Component<{
             target="_blank"
             rel="noreferrer noopener"
           >
-            <object
-              data={proxiedUrl}
-              type={legend.urlMimeType}
-              // Set maxWidth to 100% if no scaling required (otherwise - see resizeLegendImage)
+            <img
+              src={proxiedUrl}
+              // Set maxWidth to 100% if no scaling required (otherwise - see onImageLoad)
               style={{
                 maxWidth:
                   !isDefined(legend.imageScaling) || legend.imageScaling === 1
                     ? "100%"
                     : undefined
               }}
-              onLoad={evt => this.resizeLegendImage.bind(this, evt, legend)()}
+              onError={evt => this.onImageLoad.bind(this, evt, legend)()}
+              onLoad={evt => this.onImageLoad.bind(this, evt, legend)()}
             />
           </a>
         </li>
@@ -248,17 +251,6 @@ export default class Legend extends React.Component<{
 
   render() {
     if (this.props.item.hideLegendInWorkbench) return null;
-
-    if (
-      AsyncMappableMixin.isMixedInto(this.props.item) &&
-      this.props.item.isLoadingMapItems
-    ) {
-      return (
-        <li className={Styles.loader}>
-          <Loader />
-        </li>
-      );
-    }
 
     if (
       isDefined(this.props.item.legends) &&

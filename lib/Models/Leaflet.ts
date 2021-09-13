@@ -1,6 +1,7 @@
+import i18next from "i18next";
 import L, { GridLayer } from "leaflet";
-import { autorun, action, runInAction } from "mobx";
-import { createTransformer } from "mobx-utils";
+import { action, autorun, observable, runInAction } from "mobx";
+import { computedFn } from "mobx-utils";
 import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -8,72 +9,54 @@ import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import cesiumRequestAnimationFrame from "terriajs-cesium/Source/Core/requestAnimationFrame";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import html2canvas from "terriajs-html2canvas";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
+import LatLonHeight from "../Core/LatLonHeight";
 import runLater from "../Core/runLater";
 import CesiumTileLayer from "../Map/CesiumTileLayer";
 import LeafletDataSourceDisplay from "../Map/LeafletDataSourceDisplay";
 import LeafletScene from "../Map/LeafletScene";
 import LeafletSelectionIndicator from "../Map/LeafletSelectionIndicator";
 import LeafletVisualizer from "../Map/LeafletVisualizer";
+import MapboxVectorCanvasTileLayer from "../Map/MapboxVectorCanvasTileLayer";
+import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import PickedFeatures, {
   ProviderCoords,
   ProviderCoordsMap
 } from "../Map/PickedFeatures";
 import rectangleToLatLngBounds from "../Map/rectangleToLatLngBounds";
-import SplitterTraits from "../Traits/SplitterTraits";
+import MappableMixin, {
+  ImageryParts,
+  MapItem
+} from "../ModelMixins/MappableMixin";
+import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
+import RasterLayerTraits from "../Traits/TraitsClasses/RasterLayerTraits";
+import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
+import hasTraits from "./Definition/hasTraits";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
-import hasTraits from "./hasTraits";
-import Mappable, { ImageryParts, MapItem } from "./Mappable";
-import Terria from "./Terria";
-import MapboxVectorCanvasTileLayer from "../Map/MapboxVectorCanvasTileLayer";
-import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
-import LatLonHeight from "../Core/LatLonHeight";
 import MapInteractionMode from "./MapInteractionMode";
-import i18next from "i18next";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import RasterLayerTraits from "../Traits/RasterLayerTraits";
-import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
+import Terria from "./Terria";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
 // we still maintain the type checking, without TS screaming with errors
 const FeatureDetection: FeatureDetection = require("terriajs-cesium/Source/Core/FeatureDetection")
   .default;
-
-interface SplitterClips {
-  left: string;
-  right: string;
-  clipPositionWithinMap?: number;
-  clipX?: number;
-}
-
-// As of Internet Explorer 11.483.15063.0 and Edge 40.15063.0.0 (EdgeHTML 15.15063) there is an apparent
-// bug in both browsers where setting the `clip` CSS style on our Leaflet layers does not consistently
-// cause the new clip to be applied.  The change shows up in the DOM inspector, but it is not reflected
-// in the rendered view.  You can reproduce it by adding a layer and toggling it between left/both/right
-// repeatedly, and you will quickly see it fail to update sometimes.  Unfortunateely my attempts to
-// reproduce this in jsfiddle were unsuccessful, so presumably there is something unusual about our
-// setup.  In any case, we do the usually-horrible thing here of detecting these browsers by their user
-// agent, and then work around the bug by hiding the DOM element, forcing it to updated by asking for
-// its bounding client rectangle, and then showing it again.  There's a bit of a performance hit to
-// this, so we don't do it on other browsers that do not experience this bug.
-const useClipUpdateWorkaround =
-  FeatureDetection.isInternetExplorer() || FeatureDetection.isEdge();
 
 // This class is an observer. It probably won't contain any observables itself
 
@@ -101,17 +84,36 @@ export default class Leaflet extends GlobeOrMap {
   private _disposeSelectedFeatureSubscription?: () => void;
   private _disposeSplitterReaction: () => void;
 
+  // These are used to split CesiumTileLayer and MapboxCanvasVectorTileLayer
+  @observable size: L.Point | undefined;
+  @observable nw: L.Point | undefined;
+  @observable se: L.Point | undefined;
+
+  @action
+  private updateMapObservables() {
+    this.size = this.map.getSize();
+    this.nw = this.map.containerPointToLayerPoint([0, 0]);
+    this.se = this.map.containerPointToLayerPoint(this.size);
+  }
+
   private _createImageryLayer: (
-    ip: ImageryProvider
-  ) => GridLayer = createTransformer((ip: ImageryProvider) => {
+    ip: ImageryProvider,
+    clippingRectangle: Rectangle | undefined
+  ) => GridLayer = computedFn((ip, clippingRectangle) => {
+    const layerOptions = {
+      bounds: clippingRectangle && rectangleToLatLngBounds(clippingRectangle)
+    };
     if (ip instanceof MapboxVectorTileImageryProvider) {
-      return new MapboxVectorCanvasTileLayer(ip, {});
+      return new MapboxVectorCanvasTileLayer(this, ip, layerOptions);
     } else {
-      return new CesiumTileLayer(ip);
+      return new CesiumTileLayer(this, ip, layerOptions);
     }
   });
 
-  private _makeImageryLayerFromParts(parts: ImageryParts, item: Mappable) {
+  private _makeImageryLayerFromParts(
+    parts: ImageryParts,
+    item: MappableMixin.Instance
+  ) {
     if (TileErrorHandlerMixin.isMixedInto(item)) {
       // because this code path can run multiple times, make sure we remove the
       // handler if it is already registered
@@ -124,7 +126,10 @@ export default class Leaflet extends GlobeOrMap {
         item
       );
     }
-    return this._createImageryLayer(parts.imageryProvider);
+    return this._createImageryLayer(
+      parts.imageryProvider,
+      parts.clippingRectangle
+    );
   }
 
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
@@ -138,6 +143,9 @@ export default class Leaflet extends GlobeOrMap {
       preferCanvas: true,
       worldCopyJump: false
     }).setView([-28.5, 135], 5);
+
+    this.map.on("move", () => this.updateMapObservables());
+    this.map.on("zoom", () => this.updateMapObservables());
 
     this.scene = new LeafletScene(this.map);
 
@@ -332,6 +340,8 @@ export default class Leaflet extends GlobeOrMap {
       cesiumCancelAnimationFrame(this._cesiumReqAnimFrameId);
     }
     this.dataSourceDisplay.destroy();
+    this.map.off("move");
+    this.map.off("zoom");
     this.map.remove();
   }
 
@@ -343,7 +353,7 @@ export default class Leaflet extends GlobeOrMap {
       ];
       // Flatmap
       const allImageryMapItems = ([] as {
-        item: Mappable;
+        item: MappableMixin.Instance;
         parts: ImageryParts;
       }[]).concat(
         ...catalogItems
@@ -351,7 +361,7 @@ export default class Leaflet extends GlobeOrMap {
           .map(item =>
             item.mapItems
               .filter(ImageryParts.is)
-              .map(parts => ({ item, parts }))
+              .map((parts: ImageryParts) => ({ item, parts }))
           )
       );
 
@@ -427,67 +437,56 @@ export default class Leaflet extends GlobeOrMap {
     });
   }
 
-  zoomTo(
-    target: CameraView | Rectangle | DataSource | Mappable | any,
-    flightDurationSeconds: number
-  ): void {
+  doZoomTo(
+    target: CameraView | Rectangle | DataSource | MappableMixin.Instance | any,
+    flightDurationSeconds: number = 3.0
+  ): Promise<void> {
     if (!isDefined(target)) {
-      return;
+      return Promise.resolve();
       //throw new DeveloperError("target is required.");
     }
+    let bounds;
 
-    const that = this;
+    // Target is a KML data source
+    if (isDefined(target.entities)) {
+      if (isDefined(this.dataSourceDisplay)) {
+        bounds = this.dataSourceDisplay.getLatLngBounds(target);
+      }
+    } else {
+      let extent;
 
-    return when().then(function() {
-      var bounds;
-
-      // Target is a KML data source
-      if (isDefined(target.entities)) {
-        if (isDefined(that.dataSourceDisplay)) {
-          bounds = that.dataSourceDisplay.getLatLngBounds(target);
+      if (target instanceof Rectangle) {
+        extent = target;
+      } else if (target instanceof CameraView) {
+        extent = target.rectangle;
+      } else if (MappableMixin.isMixedInto(target)) {
+        if (isDefined(target.cesiumRectangle)) {
+          extent = target.cesiumRectangle;
+        }
+        if (!isDefined(extent)) {
+          // Zoom to the first item!
+          return this.doZoomTo(target.mapItems[0], flightDurationSeconds);
         }
       } else {
-        let extent;
-
-        if (target instanceof Rectangle) {
-          extent = target;
-        } else if (target instanceof CameraView) {
-          extent = target.rectangle;
-        } else if (Mappable.is(target)) {
-          if (isDefined(target.rectangle)) {
-            const { west, south, east, north } = target.rectangle;
-            if (
-              isDefined(west) &&
-              isDefined(south) &&
-              isDefined(east) &&
-              isDefined(north)
-            ) {
-              extent = Rectangle.fromDegrees(west, south, east, north);
-            }
-          }
-          if (!isDefined(extent)) {
-            // Zoom to the first item!
-            return that.zoomTo(target.mapItems[0], flightDurationSeconds);
-          }
-        } else {
-          extent = target.rectangle;
-        }
-
-        // Account for a bounding box crossing the date line.
-        if (extent.east < extent.west) {
-          extent = Rectangle.clone(extent);
-          extent.east += CesiumMath.TWO_PI;
-        }
-        bounds = rectangleToLatLngBounds(extent);
+        extent = target.rectangle;
       }
 
-      if (isDefined(bounds)) {
-        that.map.flyToBounds(bounds, {
-          animate: flightDurationSeconds > 0.0,
-          duration: flightDurationSeconds
-        });
+      // Account for a bounding box crossing the date line.
+      if (extent.east < extent.west) {
+        extent = Rectangle.clone(extent);
+        extent.east += CesiumMath.TWO_PI;
       }
-    });
+      bounds = rectangleToLatLngBounds(extent);
+    }
+
+    if (isDefined(bounds)) {
+      this.map.flyToBounds(bounds, {
+        animate: flightDurationSeconds > 0.0,
+        duration: flightDurationSeconds
+      });
+    }
+
+    return Promise.resolve();
   }
 
   getCurrentCameraView(): CameraView {
@@ -658,6 +657,21 @@ export default class Leaflet extends GlobeOrMap {
         }
       });
     }
+
+    // we need items sorted in reverse order by their zIndex to get correct ordering of feature info
+    imageryLayers.sort((a: CesiumTileLayer, b: CesiumTileLayer) => {
+      if (!isDefined(a.options.zIndex) || !isDefined(b.options.zIndex)) {
+        return 0;
+      }
+      if (a.options.zIndex < b.options.zIndex) {
+        return 1;
+      }
+      if (a.options.zIndex > b.options.zIndex) {
+        return -1;
+      }
+      return 0;
+    });
+
     tileCoordinates = defaultValue(tileCoordinates, {});
 
     const pickedLocation = Cartographic.fromDegrees(latlng.lng, latlng.lat);
@@ -668,35 +682,33 @@ export default class Leaflet extends GlobeOrMap {
     // We want the all available promise to return after the cleanup one to
     // make sure all vector click events have resolved.
     const promises = [cleanup].concat(
-      imageryLayers.map(imageryLayer => {
+      imageryLayers.map(async imageryLayer => {
         const imageryLayerUrl = (<any>imageryLayer.imageryProvider).url;
         const longRadians = CesiumMath.toRadians(latlng.lng);
         const latRadians = CesiumMath.toRadians(latlng.lat);
 
-        return Promise.resolve(
-          tileCoordinates[imageryLayerUrl] ||
-            imageryLayer.getFeaturePickingCoords(
-              this.map,
-              longRadians,
-              latRadians
-            )
-        ).then(coords => {
-          return imageryLayer
-            .pickFeatures(
-              coords.x,
-              coords.y,
-              coords.level,
-              longRadians,
-              latRadians
-            )
-            .then(features => {
-              return {
-                features: features,
-                imageryLayer: imageryLayer,
-                coords: coords
-              };
-            });
-        });
+        if (tileCoordinates[imageryLayerUrl])
+          return tileCoordinates[imageryLayerUrl];
+
+        const coords = await imageryLayer.getFeaturePickingCoords(
+          this.map,
+          longRadians,
+          latRadians
+        );
+
+        const features = await imageryLayer.pickFeatures(
+          coords.x,
+          coords.y,
+          coords.level,
+          longRadians,
+          latRadians
+        );
+
+        return {
+          features: features,
+          imageryLayer: imageryLayer,
+          coords: coords
+        };
       })
     );
 
@@ -803,12 +815,15 @@ export default class Leaflet extends GlobeOrMap {
       const showSplitter = this.terria.showSplitter;
       const splitPosition = this.terria.splitPosition;
       items.forEach(item => {
-        if (hasTraits(item, SplitterTraits, "splitDirection")) {
+        if (
+          MappableMixin.isMixedInto(item) &&
+          hasTraits(item, SplitterTraits, "splitDirection")
+        ) {
           const layers = this.getImageryLayersForItem(item);
           const splitDirection = item.splitDirection;
 
           layers.forEach(
-            action((layer: CesiumTileLayer) => {
+            action(layer => {
               if (showSplitter) {
                 layer.splitDirection = splitDirection;
                 layer.splitPosition = splitPosition;
@@ -824,12 +839,17 @@ export default class Leaflet extends GlobeOrMap {
     });
   }
 
-  getImageryLayersForItem(item: Mappable): CesiumTileLayer[] {
+  getImageryLayersForItem(
+    item: MappableMixin.Instance
+  ): (CesiumTileLayer | MapboxVectorCanvasTileLayer)[] {
     return filterOutUndefined(
       item.mapItems.map(m => {
         if (ImageryParts.is(m)) {
           const layer = this._makeImageryLayerFromParts(m, item);
-          return layer instanceof CesiumTileLayer ? layer : undefined;
+          return layer instanceof CesiumTileLayer ||
+            layer instanceof MapboxVectorCanvasTileLayer
+            ? layer
+            : undefined;
         }
       })
     );
@@ -1020,7 +1040,11 @@ export default class Leaflet extends GlobeOrMap {
       options.maxZoom = map.options.maxZoom;
     }
 
-    const layer = new MapboxVectorCanvasTileLayer(imageryProvider, options);
+    const layer = new MapboxVectorCanvasTileLayer(
+      this,
+      imageryProvider,
+      options
+    );
     layer.addTo(map);
     layer.bringToFront();
 

@@ -1,10 +1,9 @@
 "use strict";
 
-/*global require,describe,it,expect,beforeEach*/
 var CatalogGroup = require("../../lib/Models/CatalogGroup");
 var CatalogItem = require("../../lib/Models/CatalogItem");
-var WebMapServiceCatalogItem = require("../../lib/Models/WebMapServiceCatalogItem");
-var GeoJsonCatalogItem = require("../../lib/Models/GeoJsonCatalogItem");
+var WebMapServiceCatalogItem = require("../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem");
+var GeoJsonCatalogItem = require("../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem");
 var CatalogItemNameSearchProviderViewModel = require("../../lib/ViewModels/CatalogItemNameSearchProviderViewModel");
 var inherit = require("../../lib/Core/inherit");
 var runLater = require("../../lib/Core/runLater");

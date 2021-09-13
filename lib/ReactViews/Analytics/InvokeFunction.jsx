@@ -10,6 +10,7 @@ import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import Loader from "../Loader";
 import Styles from "./invoke-function.scss";
 import ParameterEditor from "./ParameterEditor";
+import WarningBox from "../Preview/WarningBox";
 
 class FunctionViewModel {
   constructor(catalogFunction) {
@@ -71,7 +72,7 @@ const InvokeFunction = observer(
       this.props.previewed.submitJob().catch(e => {
         if (e instanceof TerriaError) {
           runInAction(() => {
-            this.props.terria.notification.raiseEvent({
+            this.props.terria.notificationState.addNotificationToQueue({
               title: e.title,
               message: e.message,
               confirmText: "Ok",
@@ -142,6 +143,12 @@ const InvokeFunction = observer(
         <div className={Styles.invokeFunction}>
           <div className={Styles.content}>
             <h3>{this.props.previewed.name}</h3>
+            <If condition={this.props.previewed.loadMetadataResult?.error}>
+              <WarningBox
+                error={this.props.previewed.loadMetadataResult?.error}
+                viewState={this.props.viewState}
+              />
+            </If>
             <div className={Styles.description}>
               {parseCustomMarkdownToReact(this.props.previewed.description, {
                 catalogItem: this.props.previewed

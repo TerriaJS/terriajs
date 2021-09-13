@@ -2,14 +2,14 @@ import { observer } from "mobx-react";
 import React from "react";
 import ChartView from "../../Charts/ChartView";
 import filterOutUndefined from "../../Core/filterOutUndefined";
-import hasTraits from "../../Models/hasTraits";
+import hasTraits from "../../Models/Definition/hasTraits";
 import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
-import DiscretelyTimeVaryingTraits from "../../Traits/DiscretelyTimeVaryingTraits";
+import DiscretelyTimeVaryingTraits from "../../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
-const Spacing: any = require("../../Styled/Spacing").default;
-const Text: any = require("../../Styled/Text").default;
-const Box: any = require("../../Styled/Box").default;
+import Box from "../../Styled/Box";
+import Spacing from "../../Styled/Spacing";
+import Text from "../../Styled/Text";
 
 interface ChartDisclaimerProps {
   terria: Terria;

@@ -7,7 +7,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import { withTranslation } from "react-i18next";
 
 import Styles from "./panel.scss";
-import Icon from "../../Icon.jsx";
+import Icon from "../../../Styled/Icon";
 
 const InnerPanel = createReactClass({
   propTypes: {

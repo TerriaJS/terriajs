@@ -1,10 +1,12 @@
-import { DomElement } from "domhandler";
-import CsvCatalogItem from "../../../../lib/Models/CsvCatalogItem";
+import CsvCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import Feature from "../../../../lib/Models/Feature";
-import StubCatalogItem from "../../../../lib/Models/StubCatalogItem";
+import StubCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/StubCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import CsvChartCustomComponent from "../../../../lib/ReactViews/Custom/CsvChartCustomComponent";
-import { ProcessNodeContext } from "../../../../lib/ReactViews/Custom/CustomComponent";
+import {
+  DomElement,
+  ProcessNodeContext
+} from "../../../../lib/ReactViews/Custom/CustomComponent";
 
 describe("CsvChartCustomComponent", function() {
   let terria: Terria;

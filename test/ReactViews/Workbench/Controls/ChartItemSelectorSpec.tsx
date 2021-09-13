@@ -1,14 +1,25 @@
 import React from "react";
 import { act } from "react-dom/test-utils";
 import TestRenderer, { ReactTestRenderer } from "react-test-renderer";
-import Chartable, { ChartItem } from "../../../../lib/Models/Chartable";
-import CreateModel from "../../../../lib/Models/CreateModel";
+import ChartableMixin, {
+  ChartItem
+} from "../../../../lib/ModelMixins/ChartableMixin";
+import CreateModel from "../../../../lib/Models/Definition/CreateModel";
 import Terria from "../../../../lib/Models/Terria";
 import ChartItemSelector from "../../../../lib/ReactViews/Workbench/Controls/ChartItemSelector";
-import UrlTraits from "../../../../lib/Traits/UrlTraits";
+import UrlTraits from "../../../../lib/Traits/TraitsClasses/UrlTraits";
+import mixTraits from "../../../../lib/Traits/mixTraits";
+import MappableTraits from "../../../../lib/Traits/TraitsClasses/MappableTraits";
 
-class SomeChartableItem extends CreateModel(UrlTraits) implements Chartable {
-  async loadChartItems() {}
+class SomeChartableItem extends ChartableMixin(
+  CreateModel(mixTraits(UrlTraits, MappableTraits))
+) {
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
+  }
+  get mapItems() {
+    return [];
+  }
   get chartItems() {
     return [
       {

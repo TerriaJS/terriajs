@@ -1,8 +1,21 @@
-import { DomElement } from "domhandler";
 import { ReactElement } from "react";
 import Feature from "../../Models/Feature";
-import { BaseModel } from "../../Models/Model";
+import { BaseModel } from "../../Models/Definition/Model";
 import Terria from "../../Models/Terria";
+
+/**
+ * DomElement type from @types/domhandler
+ */
+export interface DomElement {
+  attribs?: { [s: string]: string };
+  children?: DomElement[];
+  data?: any;
+  name?: string;
+  next?: DomElement;
+  parent?: DomElement;
+  prev?: DomElement;
+  type?: string;
+}
 
 /**
  * The context for a transformation of custom components to React.

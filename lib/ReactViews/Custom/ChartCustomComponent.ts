@@ -1,29 +1,30 @@
-import { DomElement } from "domhandler";
 import { runInAction } from "mobx";
 import React, { ReactElement } from "react";
+import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import filterOutUndefined from "../../Core/filterOutUndefined";
-import CommonStrata from "../../Models/CommonStrata";
+import LatLonHeight from "../../Core/LatLonHeight";
+import CommonStrata from "../../Models/Definition/CommonStrata";
+import createStratumInstance from "../../Models/Definition/createStratumInstance";
+import Feature from "../../Models/Feature";
+import hasTraits from "../../Models/Definition/hasTraits";
+import { BaseModel } from "../../Models/Definition/Model";
+import SplitItemReference from "../../Models/Catalog/CatalogReferences/SplitItemReference";
+import ChartPointOnMapTraits from "../../Traits/TraitsClasses/ChartPointOnMapTraits";
+import DiscretelyTimeVaryingTraits from "../../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
+import LatLonHeightTraits from "../../Traits/TraitsClasses/LatLonHeightTraits";
 import ChartPreviewStyles from "./Chart/chart-preview.scss";
 import ChartExpandAndDownloadButtons from "./Chart/ChartExpandAndDownloadButtons";
 import Chart from "./Chart/FeatureInfoPanelChart";
-import CustomComponent, { ProcessNodeContext } from "./CustomComponent";
-import Model, { BaseModel } from "../../Models/Model";
-import CatalogMemberTraits from "../../Traits/CatalogMemberTraits";
-import hasTraits from "../../Models/hasTraits";
-import SplitItemReference from "../../Models/SplitItemReference";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import DiscretelyTimeVaryingTraits from "../../Traits/DiscretelyTimeVaryingTraits";
-import Chartable from "../../Models/Chartable";
-import LatLonHeight from "../../Core/LatLonHeight";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import Feature from "../../Models/Feature";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import ChartPointOnMapTraits from "../../Traits/ChartPointOnMapTraits";
-import LatLonHeightTraits from "../../Traits/LatLonHeightTraits";
-import createStratumInstance from "../../Models/createStratumInstance";
-import ModelTraits from "../../Traits/ModelTraits";
+import CustomComponent, {
+  DomElement,
+  ProcessNodeContext
+} from "./CustomComponent";
+import ChartableMixin from "../../ModelMixins/ChartableMixin";
+import { getName } from "../../ModelMixins/CatalogMemberMixin";
 
 export interface ChartCustomComponentAttributes {
   /**  The title of the chart.  If not supplied, defaults to the name of the context-supplied feature, if available, or else simply "Chart". */
@@ -116,7 +117,7 @@ export interface ChartCustomComponentAttributes {
  */
 
 export default abstract class ChartCustomComponent<
-  CatalogItemType extends Chartable
+  CatalogItemType extends ChartableMixin.Instance
 > extends CustomComponent {
   get attributes(): Array<string> {
     return [
@@ -486,7 +487,10 @@ export default abstract class ChartCustomComponent<
     const terria = sourceItem.terria;
     const ref = new SplitItemReference(createGuid(), terria);
     ref.setTrait(CommonStrata.user, "splitSourceItemId", sourceItem.uniqueId);
-    await ref.loadReference();
+    (await ref.loadReference()).raiseError(
+      terria,
+      `Failed to create SplitItemReference for ${getName(sourceItem)}`
+    );
     if (ref.target) {
       terria.addModel(ref);
       return ref.target as CatalogItemType;

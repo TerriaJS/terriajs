@@ -1,6 +1,6 @@
-import CommonStrata from "../../lib/Models/CommonStrata";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import Terria from "../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 
 describe("DiscretelyTimeVaryingMixin", () => {
   let terria: Terria;
@@ -40,7 +40,7 @@ describe("DiscretelyTimeVaryingMixin", () => {
     wmsItem.setTrait(CommonStrata.definition, "layers", "single_period");
     wmsItem.setTrait(CommonStrata.user, "showInChartPanel", true);
     wmsItem.setTrait(CommonStrata.user, "chartColor", "#efefef");
-    await wmsItem.loadChartItems();
+    await wmsItem.loadMapItems();
     expect(wmsItem.chartItems[0].getColor()).toBe("#efefef");
   });
 

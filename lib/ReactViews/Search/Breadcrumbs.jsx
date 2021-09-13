@@ -6,14 +6,14 @@ import { withTheme } from "styled-components";
 import Box from "../../Styled/Box";
 import { getParentGroups } from "../../Core/getPath";
 import Text from "../../Styled/Text";
-import Icon, { StyledIcon } from "../Icon";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import Spacing from "../../Styled/Spacing";
 import { RawButton } from "../../Styled/Button";
 import styled from "styled-components";
 import getAncestors from "../../Models/getAncestors";
 import getDereferencedIfExists from "../../Core/getDereferencedIfExists";
 import { runInAction } from "mobx";
-import CommonStrata from "../../Models/CommonStrata";
+import CommonStrata from "../../Models/Definition/CommonStrata";
 
 const RawButtonAndUnderline = styled(RawButton)`
   ${props => `
@@ -32,13 +32,13 @@ class Breadcrumbs extends React.Component {
     t: PropTypes.func.isRequired
   };
 
-  openInCatalog(items) {
+  async openInCatalog(items) {
     items.forEach(item => {
       runInAction(() => {
         item.setTrait(CommonStrata.user, "isOpen", true);
       });
     });
-    this.props.viewState.viewCatalogMember(items[0]);
+    await this.props.viewState.viewCatalogMember(items[0]);
     this.props.viewState.changeSearchState("");
   }
 
@@ -66,7 +66,7 @@ class Breadcrumbs extends React.Component {
           glyph={Icon.GLYPHS.globe}
         />
         <Spacing right={1.2} />
-        <Box wrap>
+        <Box flexWrap>
           {parentGroups && (
             <For each="parent" index="i" of={parentGroups}>
               <Choose>

@@ -2,7 +2,7 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import { withTranslation } from "react-i18next";
-import Icon from "../Icon";
+import { GLYPHS, StyledIcon } from "../../Styled/Icon";
 import Styles from "./splitter.scss";
 import { observer } from "mobx-react";
 import { runInAction } from "mobx";
@@ -219,7 +219,7 @@ const Splitter = observer(
             onTouchStart={this.startDrag}
             title={t("splitterTool.title")}
           >
-            <Icon glyph={Icon.GLYPHS.splitter} />
+            <StyledIcon glyph={GLYPHS.splitter} />
           </button>
         </div>
       );

@@ -87,7 +87,8 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
         test: /\.(ts|js)x?$/,
         include: [
             path.resolve(terriaJSBasePath, 'lib'),
-            path.resolve(terriaJSBasePath, 'test')
+            path.resolve(terriaJSBasePath, 'test'),
+            path.resolve(terriaJSBasePath, 'buildprocess', 'generateDocs.ts')
         ],
         use: [
             {
@@ -121,7 +122,8 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
                         '@babel/proposal-class-properties',
                         '@babel/proposal-object-rest-spread',
                         'babel-plugin-styled-components',
-                        require.resolve('@babel/plugin-syntax-dynamic-import')
+                        require.resolve('@babel/plugin-syntax-dynamic-import'),
+                        'babel-plugin-lodash'
                     ]
                 }
             },
@@ -244,6 +246,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
     config.devServer = config.devServer || {
         stats: 'minimal',
         port: 3003,
+        open: true,
         contentBase: 'wwwroot/',
         proxy: {
             '*': {
@@ -358,6 +361,9 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
     // called node_modules https://github.com/npm/npm/issues/2734
     config.resolve.alias['react'] = path.dirname(require.resolve('react'));
     config.resolve.alias['react-dom'] = path.dirname(require.resolve('react-dom'));
+
+    // Alias all lodash imports (including from our dependencies) to lodash-es
+    config.resolve.alias['lodash'] = 'lodash-es';
 
     return config;
 }

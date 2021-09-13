@@ -1,20 +1,20 @@
-import React from "react";
-import Mustache from "mustache";
-
 import createReactClass from "create-react-class";
-
-import PropTypes from "prop-types";
-
 import naturalSort from "javascript-natural-sort";
-import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
+import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-
-import Styles from "./data-preview.scss";
+import Mustache from "mustache";
+import PropTypes from "prop-types";
+import React from "react";
+import { withTranslation } from "react-i18next";
+import isDefined from "../../Core/isDefined";
+import CommonStrata from "../../Models/Definition/CommonStrata";
+import Box from "../../Styled/Box";
+import { item } from "../Custom/Chart/tooltip.scss";
+import Collapsible from "../Custom/Collapsible/Collapsible";
+import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import MetadataTable from "./MetadataTable";
 
 naturalSort.insensitive = true;
-import { withTranslation } from "react-i18next";
-import { item } from "../Custom/Chart/tooltip.scss";
 
 Mustache.escape = function(string) {
   return string;
@@ -49,7 +49,24 @@ const DataPreviewSections = observer(
         return aIndex - bIndex;
       });
 
-      return items;
+      return items.filter(
+        item =>
+          isDefined(item.content ?? item.contentAsObject) &&
+          (item.content ?? item.contentAsObject) !== null &&
+          item.content !== ""
+      );
+    },
+
+    clickInfoSection(reportName, isOpen) {
+      const info = this.props.metadataItem.info;
+      const clickedInfo = info.find(report => report.name === reportName);
+
+      if (isDefined(clickedInfo)) {
+        runInAction(() => {
+          clickedInfo.setTrait(CommonStrata.user, "show", isOpen);
+        });
+      }
+      return false;
     },
 
     render() {
@@ -58,26 +75,47 @@ const DataPreviewSections = observer(
         ? metadataItem.infoWithoutSources
         : metadataItem.info.slice();
 
+      const renderSection = item => {
+        let content = item.content;
+        try {
+          content = Mustache.render(content, metadataItem);
+        } catch (error) {
+          console.log(
+            `FAILED to parse info section ${item.name} for ${metadataItem.name}`
+          );
+          console.log(error);
+        }
+        return parseCustomMarkdownToReact(content, {
+          catalogItem: metadataItem
+        });
+      };
+
       return (
         <div>
           <For each="item" index="i" of={this.sortInfoSections(items)}>
-            <Choose>
-              <When condition={item.content?.length > 0}>
-                <div key={i}>
-                  <h4 className={Styles.h4}>{item.name}</h4>
-                  {parseCustomMarkdownToReact(
-                    Mustache.render(item.content, metadataItem),
-                    {
-                      catalogItem: metadataItem
-                    }
-                  )}
-                </div>
-              </When>
-              <When condition={item.contentAsObject !== undefined}>
-                <h4 className={Styles.h4}>{item.name}</h4>
-                <MetadataTable metadataItem={item.contentAsObject} />
-              </When>
-            </Choose>
+            <Box paddedVertically displayInlineBlock fullWidth key={i}>
+              <Collapsible
+                key={i}
+                light={false}
+                title={item.name}
+                isOpen={item.show}
+                onToggle={show =>
+                  this.clickInfoSection.bind(this, item.name, show)()
+                }
+                bodyTextProps={{ medium: true }}
+              >
+                <Choose>
+                  <When condition={item.content?.length > 0}>
+                    {renderSection(item)}
+                  </When>
+                  <When condition={item.contentAsObject !== undefined}>
+                    <Box paddedVertically={3} fullWidth>
+                      <MetadataTable metadataItem={item.contentAsObject} />
+                    </Box>
+                  </When>
+                </Choose>
+              </Collapsible>
+            </Box>
           </For>
         </div>
       );

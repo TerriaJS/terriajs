@@ -139,7 +139,7 @@ This handles downloading job results, it can be triggered three ways:
 
 ```ts
     abstract async downloadResults(): Promise<
-      CatalogMemberMixin.CatalogMemberMixin[] | void
+      CatalogMemberMixin.Instance[] | void
     >;
 ```
 
@@ -149,7 +149,7 @@ returns catalog members which are added to the workbench
 #### `results`
 
 ```ts
-results: CatalogMemberMixin.CatalogMemberMixin[]
+results: CatalogMemberMixin.Instance[]
 ```
 
 Job result `CatalogMembers` - set from calling `CatalogFunctionJobMixin#downloadResults` (in `CatalogFunctionJobMixin#onJobFinish`)

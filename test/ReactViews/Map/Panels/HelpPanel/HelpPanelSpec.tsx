@@ -5,7 +5,6 @@ import { ThemeProvider } from "styled-components";
 import { terriaTheme } from "../../../../../lib/ReactViews/StandardUserInterface/StandardTheme";
 import Terria from "../../../../../lib/Models/Terria";
 import ViewState from "../../../../../lib/ReactViewModels/ViewState";
-// import HelpPanel from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/HelpPanel";
 const HelpPanel: any = require("../../../../../lib/ReactViews/Map/Panels/HelpPanel/HelpPanel")
   .default;
 import HelpPanelItem from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/HelpPanelItem";
@@ -13,7 +12,7 @@ import HelpVideoPanel from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/H
 import Text from "../../../../../lib/Styled/Text";
 import StyledHtml from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/StyledHtml";
 import { runInAction } from "mobx";
-import Icon, { StyledIcon } from "../../../../../lib/ReactViews/Icon";
+import Icon, { StyledIcon } from "../../../../../lib/Styled/Icon";
 
 describe("HelpPanel", function() {
   let terria: Terria;
@@ -109,7 +108,7 @@ describe("HelpPanel", function() {
             markdownText:
               "# Test\n\nHello, this is just a test\n\nThis is another paragraph",
             icon: "datePicker",
-            videoUrl: "https://www.youtube.com/embed/NTtSM70rIvI",
+            videoUrl: "https://www.youtube-nocookie.com/embed/NTtSM70rIvI",
             placeholderImage:
               "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
           }

@@ -1,10 +1,10 @@
 import { configure } from "mobx";
-import CreateModel from "../../lib/Models/CreateModel";
-import createStratumInstance from "../../lib/Models/createStratumInstance";
+import CreateModel from "../../lib/Models/Definition/CreateModel";
+import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 import Terria from "../../lib/Models/Terria";
 import ModelTraits from "../../lib/Traits/ModelTraits";
-import objectArrayTrait from "../../lib/Traits/objectArrayTrait";
-import primitiveTrait from "../../lib/Traits/primitiveTrait";
+import objectArrayTrait from "../../lib/Traits/Decorators/objectArrayTrait";
+import primitiveTrait from "../../lib/Traits/Decorators/primitiveTrait";
 
 configure({
   enforceActions: true,
@@ -55,7 +55,26 @@ class OuterTraits extends ModelTraits {
   other?: string;
 }
 
+class OuterTraitsNoMerge extends ModelTraits {
+  @objectArrayTrait({
+    type: InnerTraits,
+    name: "Inner",
+    description: "Inner",
+    idProperty: "foo",
+    merge: false
+  })
+  inner?: InnerTraits[];
+
+  @primitiveTrait({
+    type: "string",
+    name: "Other",
+    description: "Other"
+  })
+  other?: string;
+}
+
 class TestModel extends CreateModel(OuterTraits) {}
+class TestModelNoMerge extends CreateModel(OuterTraitsNoMerge) {}
 
 describe("objectArrayTrait", function() {
   it("returns an empty model if all strata are undefined", function() {
@@ -161,7 +180,7 @@ describe("objectArrayTrait", function() {
     }
   });
 
-  it("allows strata to remove elements", function() {
+  it("allows strata to remove elements from top level", function() {
     const terria = new Terria();
     const model = new TestModel("test", terria);
 
@@ -182,14 +201,75 @@ describe("objectArrayTrait", function() {
 
     user.inner = [
       createStratumInstance(InnerTraits),
+      createStratumInstance(InnerTraits),
       createStratumInstance(InnerTraits)
     ];
     user.inner[0].foo = "b";
     user.inner[0].bar = 42; // indicates removed, according to InnerTraits.isRemoval.
     user.inner[1].foo = "c";
     user.inner[1].bar = 3;
+    user.inner[2].foo = "a";
+    user.inner[2].bar = 11;
 
-    expect(definition.inner.length).toEqual(2);
+    // Here we expect the order to be "a" and then "c" as "a" is defined in a lower strata to "c"
+    expect(model.inner.length).toEqual(2);
+    expect(model.inner[0].foo).toEqual("a");
+    expect(model.inner[0].bar).toEqual(11);
+    expect(model.inner[1].foo).toEqual("c");
+  });
+
+  it("allows strata to remove elements from bottom level", function() {
+    const terria = new Terria();
+    const model = new TestModel("test", terria);
+
+    const definition = createStratumInstance(OuterTraits);
+    const user = createStratumInstance(OuterTraits);
+    model.strata.set("definition", definition);
+    model.strata.set("user", user);
+
+    definition.inner = [
+      createStratumInstance(InnerTraits),
+      createStratumInstance(InnerTraits)
+    ];
+
+    // Order is important here:
+    // - b (with removal)
+    // - a
+    definition.inner[0].foo = "b";
+    definition.inner[0].bar = 42; // indicates removed, according to InnerTraits.isRemoval.
+    definition.inner[0].baz = true;
+    definition.inner[1].foo = "a";
+    definition.inner[1].bar = 1;
+
+    user.inner = [
+      createStratumInstance(InnerTraits),
+      createStratumInstance(InnerTraits),
+      createStratumInstance(InnerTraits)
+    ];
+
+    // Order:
+    // - b (removed in "definition")
+    // - c
+    // - a (exists in "definition")
+    user.inner[0].foo = "b";
+    user.inner[0].bar = 100;
+    user.inner[1].foo = "c";
+    user.inner[1].bar = 3;
+    user.inner[2].foo = "a";
+    user.inner[2].bar = 11;
+
+    // So we expect this order:
+    // - a (because it is in "definition")
+    // - b (removed in "definition" so treated as from "user")
+    // - c (from "user")
+    expect(model.inner.length).toEqual(3);
+    expect(model.inner[0].foo).toEqual("a");
+    expect(model.inner[0].bar).toEqual(11);
+    expect(model.inner[1].foo).toEqual("b");
+    expect(model.inner[1].bar).toEqual(100);
+    expect(model.inner[2].foo).toEqual("c");
+    expect(model.inner[2].bar).toEqual(3);
+    expect(model.inner[2].baz).toBeUndefined();
   });
 
   it("updates to reflect new strata added after evaluation", function() {
@@ -212,4 +292,29 @@ describe("objectArrayTrait", function() {
     expect(model.inner[0].bar).toBe(4);
     expect(model.inner[0].baz).toBe(true);
   });
+
+  it("updates to reflect new strata added after evaluation (with no merge)", function() {
+    const terria = new Terria();
+    const model = new TestModelNoMerge("test", terria);
+
+    const newObj = model.addObject("user", "inner", "test");
+    expect(newObj).toBeDefined();
+
+    if (newObj) {
+      expect(newObj.foo).toBe("test");
+      newObj.setTrait("user", "bar", 4);
+      expect(newObj.bar).toBe(4);
+      newObj.setTrait("definition", "baz", true);
+      expect(newObj.baz).toBeUndefined();
+      newObj.setTrait("user", "baz", true);
+      expect(newObj.baz).toBeTruthy();
+    }
+
+    expect(model.inner.length).toBe(1);
+    expect(model.inner[0].foo).toBe("test");
+    expect(model.inner[0].bar).toBe(4);
+    expect(model.inner[0].baz).toBe(true);
+  });
+
+  OuterTraitsNoMerge;
 });

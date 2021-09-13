@@ -1,8 +1,10 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { LegendOrdinal, LegendItem, LegendLabel } from "@vx/legend";
-import { scaleOrdinal } from "@vx/scale";
+import { LegendOrdinal, LegendItem, LegendLabel } from "@visx/legend";
+import { scaleOrdinal } from "@visx/scale";
 import Styles from "./legends.scss";
+import Glyphs from "./Glyphs";
+import { GlyphCircle } from "@visx/glyph";
 
 export default class Legends extends React.PureComponent {
   static propTypes = {
@@ -24,11 +26,15 @@ export default class Legends extends React.PureComponent {
         style={{ maxHeight: `${Legends.maxHeightPx}px` }}
       >
         <LegendOrdinal scale={colorScale}>
-          {labels => (
-            <For each="label" of={labels}>
-              <Legend key={`legend-${label.text}`} label={label} />
-            </For>
-          )}
+          {labels =>
+            labels.map((label, i) => (
+              <Legend
+                key={`legend-${label.text}`}
+                label={label}
+                glyph={chartItems[i]?.glyphStyle ?? "circle"}
+              />
+            ))
+          }
         </LegendOrdinal>
       </div>
     );
@@ -37,16 +43,18 @@ export default class Legends extends React.PureComponent {
 
 class Legend extends React.PureComponent {
   static propTypes = {
-    label: PropTypes.object.isRequired
+    label: PropTypes.object.isRequired,
+    glyph: PropTypes.string
   };
 
   render() {
     const label = this.props.label;
-    const squareSize = 15;
+    const squareSize = 20;
+    const Glyph = Glyphs[this.props.glyph] ?? GlyphCircle;
     return (
       <LegendItem margin="0 5px">
-        <svg width={squareSize} height={squareSize}>
-          <rect fill={label.value} width={squareSize} height={squareSize} />
+        <svg width={`${squareSize}px`} height={`${squareSize}px`}>
+          <Glyph top={10} left={10} fill={label.value} size={100} />
         </svg>
         <LegendLabel className={Styles.label} align="left" margin="0 0 0 4px">
           {label.text}
