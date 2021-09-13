@@ -174,6 +174,14 @@ describe("DimensionSelectorSection", function() {
       )
     });
 
+    jasmine.Ajax.stubRequest(
+      "build/TerriaJS/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json"
+    ).andReturn({
+      responseText: JSON.stringify(
+        require("../../wwwroot/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json")
+      )
+    });
+
     jasmine.Ajax.stubRequest("test/csv/lga_code_2015.csv").andReturn({
       responseText: require("raw-loader!../../wwwroot/test/csv/lga_code_2015.csv")
     });

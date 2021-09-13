@@ -52,6 +52,8 @@ export default class SdmxJsonCatalogItem
         this.strata.set(SdmxJsonDataflowStratum.stratumName, stratum);
       });
     }
+
+    await this.loadRegionProviderList();
   }
 
   get type() {
