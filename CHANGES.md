@@ -10,6 +10,7 @@ Change Log
 * Moved region mapping `ImageryProvider` code to `lib/Table/createRegionMappedImageryProvider.ts`
 * Fix `ChartPanel` import `Result` bug.
 * Improve handling of featureInfoTemplate for composite catalog items.
+* Fixed the layout of items in mobile navigation
 * [The next improvement]
 
 #### 8.1.0
