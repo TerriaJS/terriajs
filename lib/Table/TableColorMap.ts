@@ -3,6 +3,7 @@ import { computed } from "mobx";
 import Color from "terriajs-cesium/Source/Core/Color";
 import createColorForIdTransformer from "../Core/createColorForIdTransformer";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
 import runLater from "../Core/runLater";
 import StandardCssColors from "../Core/StandardCssColors";
@@ -37,10 +38,8 @@ export default class TableColorMap {
   @computed get regionValues() {
     if (this.colorColumn?.type !== TableColumnType.scalar) return;
 
-    const regionCol = this.colorColumn?.tableModel.activeTableStyle
-      .regionColumn;
-    if (regionCol) {
-      const values = regionCol.valuesAsRegions.regionIds.map(
+    return (
+      this.colorColumn?.tableModel.activeTableStyle.regionColumn?.valuesAsRegions.regionIds.map(
         (region, rowIndex) => {
           if (region !== null) {
             return this.colorColumn?.valuesAsNumbers.values[rowIndex] ?? null;
@@ -48,54 +47,57 @@ export default class TableColorMap {
 
           return null;
         }
-      );
-
-      return values;
-    }
-  }
-
-  /** Returns a map of regionID to average for that region if:
-   * - colorColumn is scalar and the activeStyle has a regionColumn
-   * This is useful for filtering out regions in time-serie data if the values are considered to be "outliers"
-   */
-  @computed get regionAverageValues() {
-    if (this.colorColumn?.type !== TableColumnType.scalar) return;
-
-    const regionCol = this.colorColumn?.tableModel.activeTableStyle
-      .regionColumn;
-    if (regionCol) {
-      return Array.from(
-        regionCol.valuesAsRegions.regionIdToRowNumbersMap.entries()
-      ).reduce<{ [key: string]: number }>((agg, [key, value]) => {
-        agg[key] = getMean(Array.isArray(value) ? value : [value]);
-        return agg;
-      }, {});
-    }
+      ) ?? []
+    );
   }
 
   @computed
   get filteredValues() {
-    const values =
-      this.regionValues ?? this.colorColumn?.valuesAsNumbers.values ?? [];
+    if (!this.colorColumn) return [];
+    const values = this.regionValues ?? this.colorColumn.valuesAsNumbers.values;
+
     const numValues = values.filter(val => val !== null) as number[];
     if (numValues.length === 0) return [];
 
     // Filter by z-score if applicable
     // This will filter out values which are outside of `zScoreFilter` standard deviations from the mean
     if (this.colorTraits.zScoreFilter) {
-      if (this.colorColumn?.tableModel.activeTableStyle.timeColumn) {
-        // Filter out region IDs with outliers/
-        /////////////////// TTOOOODDOO
-        // Legend for outliers
-        // How to disable outliers?
-      } else {
-        const std = getStandardDeviation(numValues);
-        const mean = getMean(numValues);
+      const rowGroups = this.colorColumn.tableModel.activeTableStyle.rowGroups;
+      // Array of row group values
+      const rowGroupValues = rowGroups.map(
+        group =>
+          group[1]
+            .map(row => values[row])
+            .filter(val => val !== null) as number[]
+      );
 
-        return numValues.filter(
-          val => Math.abs((val - mean) / std) <= this.colorTraits.zScoreFilter!
-        );
-      }
+      // Get average value for each row group
+      const rowGroupAverages = rowGroupValues.map(values => getMean(values));
+      const std = getStandardDeviation(filterOutUndefined(rowGroupAverages));
+      const mean = getMean(filterOutUndefined(rowGroupAverages));
+
+      if (!isDefined(std) && !isDefined(mean)) return numValues;
+
+      // Filter out rowGroups which have average values are outside of `zScoreFilter` standard deviations from the mean
+      return flatten(
+        rowGroupAverages.map((rowGroupMean, idx) => {
+          if (
+            isDefined(rowGroupMean) &&
+            Math.abs((rowGroupMean - mean!) / std!) <=
+              this.colorTraits.zScoreFilter!
+          ) {
+            return rowGroupValues[idx];
+          } else {
+            console.log(rowGroups[idx][0]);
+            console.log(Math.abs(((rowGroupMean ?? 0) - mean!) / std!));
+          }
+          return [];
+        })
+      );
+
+      /////////////////// TTOOOODDOO
+      // Legend for outliers
+      // How to disable outliers?
     }
 
     return numValues;
@@ -501,14 +503,18 @@ export default class TableColorMap {
 }
 
 function getMean(array: number[]) {
-  return array.reduce((a, b) => a + b) / array.length;
+  return array.length === 0
+    ? undefined
+    : array.reduce((a, b) => a + b) / array.length;
 }
 
 // https://stackoverflow.com/a/53577159
 function getStandardDeviation(array: number[]) {
   const n = array.length;
   const mean = getMean(array);
-  return Math.sqrt(
-    array.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n
-  );
+  return isDefined(mean)
+    ? Math.sqrt(
+        array.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n
+      )
+    : undefined;
 }
