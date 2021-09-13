@@ -502,7 +502,15 @@ export default class TableStyle {
     defaultFinalDurationSeconds: number
   ) {
     const sortedStartDates: JulianDate[] = sortedUniqueDates(startDates);
-    const lastDate = this.timeColumn?.valuesAsJulianDates.maximum;
+
+    // Calculate last date based on if spreadFinishTime is true:
+    // - If true, use the maximum date in the entire timeColumn
+    // - If false, use the last date in startDates - which is the last date in the current row group
+    const lastDate =
+      this.timeTraits.spreadFinishTime &&
+      this.timeColumn?.valuesAsJulianDates.maximum
+        ? this.timeColumn.valuesAsJulianDates.maximum
+        : sortedStartDates[sortedStartDates.length - 1];
 
     return startDates.map(date => {
       if (!date) {
@@ -517,18 +525,12 @@ export default class TableStyle {
       const nextDate = sortedStartDates[nextDateIndex + 1];
       if (nextDate) {
         return nextDate;
-      } else if (this.timeTraits.spreadFinishTime && lastDate) {
-        return lastDate;
       } else {
         // This is the last date in the row, so calculate a final date
         const finalDurationSeconds =
           estimateFinalDurationSeconds(sortedStartDates) ||
           defaultFinalDurationSeconds;
-        const finalDate = addSecondsToDate(
-          sortedStartDates[sortedStartDates.length - 1],
-          finalDurationSeconds
-        );
-        return finalDate;
+        return addSecondsToDate(lastDate, finalDurationSeconds);
       }
     });
   }
