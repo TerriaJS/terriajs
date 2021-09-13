@@ -256,7 +256,9 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           ?.length ?? 0;
 
       // Estimate number of points based off number of rowGroups
-      const numPoints = this.activeTableStyle.rowGroups.length;
+      const numPoints = this.activeTableStyle.isPoints()
+        ? this.activeTableStyle.rowGroups.length
+        : 0;
 
       // If we have more points than regions OR we have points are are using a ConstantColorMap - show points instead of regions
       // (Using ConstantColorMap with regions will result in all regions being the same color - which isn't useful)
