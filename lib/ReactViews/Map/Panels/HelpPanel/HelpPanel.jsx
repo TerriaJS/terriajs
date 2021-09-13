@@ -120,46 +120,17 @@ class HelpPanel extends React.Component {
           </Box>
         </Box>
         <Spacing bottom={10} />
-        <Box centered displayInlineBlock>
+        <Box centered displayInlineBlock fullWidth styledPadding="0 26px">
           {helpItems && (
             <For each="item" index="i" of={helpItems}>
-              <Box displayInlineBlock fullWidth styledHeight={"70px"}>
-                <HelpPanelItem
-                  key={i}
-                  terria={this.props.terria}
-                  viewState={this.props.viewState}
-                  content={item}
-                />
-              </Box>
+              <HelpPanelItem
+                key={i}
+                terria={this.props.terria}
+                viewState={this.props.viewState}
+                content={item}
+              />
             </For>
           )}
-          <Box styledHeight={"64px"}>
-            <Box styledMargin={"auto 25px"}>
-              <Text semiBold extraLarge textDark uppercase>
-                <a
-                  href="https://terriajs.gitbook.io/terriajs/"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  onClick={() =>
-                    this.props.terria.analytics?.logEvent(
-                      Category.help,
-                      HelpAction.userGuideOpened
-                    )
-                  }
-                >
-                  <BoxSpan displayInlineBlock styledPadding={"0 10px 0 0"}>
-                    {t("helpPanel.terriaMapUserGuide")}
-                  </BoxSpan>
-                  <StyledIcon
-                    glyph={Icon.GLYPHS.externalLink}
-                    displayInline
-                    styledWidth={"15px"}
-                    fillColor={this.props.theme.textDark}
-                  />
-                </a>
-              </Text>
-            </Box>
-          </Box>
         </Box>
       </Box>
     );
