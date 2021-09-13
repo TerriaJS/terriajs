@@ -1,21 +1,32 @@
 import { runInAction } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
-import Terria from "../../lib/Models/Terria";
-import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
+import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
+import Terria from "../../lib/Models/Terria";
 import TableStyleTraits from "../../lib/Traits/TraitsClasses/TableStyleTraits";
 import TableTimeStyleTraits from "../../lib/Traits/TraitsClasses/TableTimeStyleTraits";
 
 const LatLonValCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_val.csv");
 const LatLonValCsvDuplicate = require("raw-loader!../../wwwroot/test/csv/lat_lon_val_with_duplicate_row.csv");
 const LatLonEnumDateIdCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum_date_id.csv");
+const LgaWithDisambigCsv = require("raw-loader!../../wwwroot/test/csv/lga_state_disambig.csv");
 const ParkingSensorDataCsv = require("raw-loader!../../wwwroot/test/csv/parking-sensor-data.csv");
 const LegendDecimalPlacesCsv = require("raw-loader!../../wwwroot/test/csv/legend-decimal-places.csv");
 const regionMapping = JSON.stringify(
   require("../../wwwroot/data/regionMapping.json")
+);
+const regionIdsSte = JSON.stringify(
+  require("../../wwwroot/data/regionids/region_map-STE_2016_AUST_STE_NAME16.json")
+);
+const regionIdsLgaName = JSON.stringify(
+  require("../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json")
+);
+const regionIdsLgaNameStates = JSON.stringify(
+  require("../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json")
 );
 
 describe("TableMixin", function() {
@@ -34,6 +45,18 @@ describe("TableMixin", function() {
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionMapping.json"
     ).andReturn({ responseText: regionMapping });
+
+    jasmine.Ajax.stubRequest(
+      "build/TerriaJS/data/regionids/region_map-STE_2016_AUST_STE_NAME16.json"
+    ).andReturn({ responseText: regionIdsSte });
+
+    jasmine.Ajax.stubRequest(
+      "build/TerriaJS/data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json"
+    ).andReturn({ responseText: regionIdsLgaName });
+
+    jasmine.Ajax.stubRequest(
+      "build/TerriaJS/data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json"
+    ).andReturn({ responseText: regionIdsLgaNameStates });
   });
 
   afterEach(function() {
@@ -144,7 +167,6 @@ describe("TableMixin", function() {
     });
 
     it("creates one entity per id", async function() {
-      console.log(item);
       expect(dataSource.entities.values.length).toBe(21);
     });
 
@@ -417,6 +439,66 @@ describe("TableMixin", function() {
         "0.022",
         "0.010"
       ]);
+    });
+  });
+
+  describe("region mapping - LGA with disambig", function() {
+    beforeEach(async function() {
+      item.setTrait(CommonStrata.user, "csvString", LgaWithDisambigCsv);
+      await item.loadMapItems();
+
+      await item.regionProviderList
+        ?.getRegionProvider("LGA_NAME_2011")
+        ?.loadRegionIDs();
+      await item.regionProviderList
+        ?.getRegionProvider("STE_NAME_2016")
+        ?.loadRegionIDs();
+    });
+
+    it("creates imagery parts", async function() {
+      expect(ImageryParts.is(item.mapItems[0])).toBeTruthy();
+    });
+
+    it("with default style (state)", async function() {
+      expect(item.activeTableStyle.regionColumn?.name).toBe("State");
+      expect(item.activeTableStyle.regionColumn?.regionType?.regionType).toBe(
+        "STE_NAME_2016"
+      );
+
+      expect(
+        item.activeTableStyle.regionColumn?.valuesAsRegions.numberOfValidRegions
+      ).toBe(8);
+      expect(
+        item.activeTableStyle.regionColumn?.valuesAsRegions.uniqueRegionIds
+          .length
+      ).toBe(3);
+    });
+
+    it("with lga_name", async function() {
+      updateModelFromJson(item, CommonStrata.user, {
+        columns: [
+          {
+            name: "LGA_NAME",
+            regionType: "LGA_NAME_2011"
+          }
+        ],
+        defaultStyle: {
+          regionColumn: "LGA_NAME"
+        }
+      });
+
+      expect(item.activeTableStyle.regionColumn?.name).toBe("LGA_NAME");
+      expect(item.activeTableStyle.regionColumn?.regionType?.regionType).toBe(
+        "LGA_NAME_2011"
+      );
+
+      expect(
+        item.activeTableStyle.regionColumn?.valuesAsRegions.numberOfValidRegions
+      ).toBe(8);
+      expect(
+        item.activeTableStyle.regionColumn?.valuesAsRegions.uniqueRegionIds
+          .length
+      ).toBe(8);
     });
   });
 });

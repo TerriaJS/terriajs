@@ -445,13 +445,12 @@ export default class Leaflet extends GlobeOrMap {
 
   doZoomTo(
     target: CameraView | Rectangle | DataSource | MappableMixin.Instance | any,
-    flightDurationSeconds: number
+    flightDurationSeconds: number = 3.0
   ): Promise<void> {
     if (!isDefined(target)) {
       return Promise.resolve();
       //throw new DeveloperError("target is required.");
     }
-
     let bounds;
 
     // Target is a KML data source

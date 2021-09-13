@@ -55,11 +55,7 @@ class HelpPanelItem extends React.Component {
     const iconGlyph = Icon.GLYPHS[icon] || Icon.GLYPHS.video;
     const title = useTranslationIfExists(this.props.content.title);
     return (
-      <div
-        css={`
-          height: 70px;
-        `}
-      >
+      <div>
         <button
           className={className}
           onClick={() => {

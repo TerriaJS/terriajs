@@ -167,10 +167,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
   render() {
     const { t, viewState, theme } = this.props;
     const preamble = parseCustomMarkdownToReact(
-      useTranslationIfExists(
-        viewState.terria.configParameters.feedbackPreamble ||
-          "translate#feedback.feedbackPreamble"
-      )
+      useTranslationIfExists(viewState.terria.configParameters.feedbackPreamble)
     );
     return (
       <FormWrapper>

@@ -259,6 +259,12 @@ export class MapServerStratum extends LoadableStratum(
 
     var uri = new URI(this._catalogGroup.url).segment(layer.id + ""); // Convert layer id to string as segment(0) means sthg different.
     model.setTrait(stratum, "url", uri.toString());
+
+    if (this._catalogGroup.itemProperties !== undefined) {
+      Object.keys(this._catalogGroup.itemProperties).map((k: any) =>
+        model.setTrait(stratum, k, this._catalogGroup.itemProperties![k])
+      );
+    }
   }
 }
 
