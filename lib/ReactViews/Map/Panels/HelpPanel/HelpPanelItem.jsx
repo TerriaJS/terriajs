@@ -1,4 +1,3 @@
-import classNames from "classnames";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -8,11 +7,9 @@ import {
   Category,
   HelpAction
 } from "../../../../Core/AnalyticEvents/analyticEvents";
-import Box from "../../../../Styled/Box";
 import Icon, { StyledIcon } from "../../../../Styled/Icon";
 import Text from "../../../../Styled/Text";
 import { useTranslationIfExists } from "./../../../../Language/languageHelpers";
-import Styles from "./help-panel.scss";
 import HelpVideoPanel from "./HelpVideoPanel";
 
 @observer
@@ -32,17 +29,6 @@ class HelpPanelItem extends React.Component {
   }
 
   render() {
-    const { icon } = this.props.content;
-    const MenuIconWrapper = styled(Box).attrs({
-      centered: true
-    })`
-      flex-shrink: 0;
-      width: 64px;
-      height: 64px;
-      display: table-cell;
-      vertical-align: middle;
-      padding-left: 25px;
-    `;
     const itemSelected =
       this.props.viewState.selectedHelpMenuItem === this.props.content.itemName;
 
@@ -50,7 +36,7 @@ class HelpPanelItem extends React.Component {
     // nonexistant icon.
     const title = useTranslationIfExists(this.props.content.title);
     const paneMode = this.props.content.paneMode;
-    const opensInPanel = paneMode === "externalLink" ? false : true;
+    const opensInPanel = paneMode !== "externalLink";
     const iconGlyph = opensInPanel
       ? Icon.GLYPHS.right
       : Icon.GLYPHS.externalLink;

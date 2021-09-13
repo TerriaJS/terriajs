@@ -7,7 +7,7 @@ import { withTheme } from "styled-components";
 import Icon, { StyledIcon } from "../../../../Styled/Icon";
 import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
-import Box, { BoxSpan } from "../../../../Styled/Box";
+import Box from "../../../../Styled/Box";
 import parseCustomMarkdownToReact from "../../../Custom/parseCustomMarkdownToReact";
 import HelpPanelItem from "./HelpPanelItem";
 import Button, { RawButton } from "../../../../Styled/Button";
