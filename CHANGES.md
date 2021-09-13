@@ -1,10 +1,6 @@
 Change Log
 ==========
 
-### MobX Development
-
-#### next release (8.0.0-alpha.63)
-* Fixed the layout of items in mobile navigation
 #### next release (8.1.1)
 
 * Tsifyied and refactored `RegionProvider` and `RegionProviderList`, and re-enabled `loadRegionIDs`
@@ -14,6 +10,7 @@ Change Log
 * Moved region mapping `ImageryProvider` code to `lib/Table/createRegionMappedImageryProvider.ts`
 * Fix `ChartPanel` import `Result` bug.
 * Improve handling of featureInfoTemplate for composite catalog items.
+* Fixed the layout of items in mobile navigation
 * [The next improvement]
 
 #### 8.1.0
