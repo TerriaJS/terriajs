@@ -188,5 +188,5 @@ export default class TableColorStyleTraits extends ModelTraits {
       "Treat values outside of specifed z-score as outliers, and therefore do not include in color scale. This value is magnitude of z-score - it will apply to positive and negative z-scores. For example a value of `2` will treat all values that are 2 or more standard deviations from the mean as outliers.",
     type: "number"
   })
-  zScoreFilter?: number;
+  zScoreFilter?: number = 3;
 }
