@@ -17,6 +17,8 @@ Change Log
 * Improve SDMX error messages for no results
 * SDMX will now disable the region column if less than 2 valid regions have been found
 * `TableMixin` will now remove data if an error occurs while calling `forceLoadTableData`
+* Improve handling of featureInfoTemplate for composite catalog items.
+* Fixed the layout of items in mobile navigation
 * [The next improvement]
 
 #### 8.1.0

@@ -2,7 +2,7 @@
 *  Region mapping support - turn CSVs into choropleths of regions like local government areas
 *  Implements most of https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au
 *  1. Look through all the column names in the CSV file until we find one that matches a defined region descriptor in
-      region mapping JSON file (not included in TerriaJS)
+      region mapping JSON file
 *  3. Fetch region IDS (using `regionIdsFile` URL)
 *  4. Based on values in the region variable column, generate a linear choropleth mapping
 *  6. Recolor vector tile features
