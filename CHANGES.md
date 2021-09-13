@@ -10,6 +10,7 @@ Change Log
 * Moved region mapping `ImageryProvider` code to `lib/Table/createRegionMappedImageryProvider.ts`
 * Fix `ChartPanel` import `Result` bug.
 * Improve handling of featureInfoTemplate for composite catalog items.
+* Mobile help menu will now show a link to map user guide if it is configured in `Terria.configParameters.helpItems`.
 * [The next improvement]
 
 #### 8.1.0
