@@ -453,17 +453,38 @@ export default class TableStyle {
     return finishDates;
   }
 
-  /** Get rows grouped by id. Id will be calculated using idColumns or latitude/longitude columns
+  /** Get rows grouped by id. Id will be calculated using idColumns, latitude/longitude columns or region column
    */
   @computed get rowGroups() {
+    if (!this.ready) return [];
+
     const groupByCols =
-      this.idColumns ||
-      filterOutUndefined([this.latitudeColumn, this.longitudeColumn]);
+      this.idColumns ??
+      // If points use lat long
+      this.isPoints()
+        ? [this.latitudeColumn!, this.longitudeColumn!]
+        : // If region - use region col
+        this.regionColumn
+        ? [this.regionColumn]
+        : [];
     const tableRowIds = this.tableModel.rowIds;
-    return Object.entries(
-      groupBy(tableRowIds, rowId =>
-        groupByCols.map(col => col.values[rowId]).join("-")
+
+    return (
+      Object.entries(
+        groupBy(tableRowIds, rowId =>
+          groupByCols
+            .map(col => {
+              // If using region column as ID - only use valid regions
+              if (col.type === TableColumnType.region) {
+                return col.valuesAsRegions.regionIds[rowId];
+              }
+              return col.values[rowId];
+            })
+            .join("-")
+        )
       )
+        // Filter out bad IDs
+        .filter(value => value[0] !== "")
     );
   }
 
