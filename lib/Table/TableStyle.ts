@@ -457,8 +457,6 @@ export default class TableStyle {
   /** Get rows grouped by id. Id will be calculated using idColumns, latitude/longitude columns or region column
    */
   @computed get rowGroups() {
-    if (!this.ready) return [];
-
     const groupByCols =
       this.idColumns ??
       // If points use lat long

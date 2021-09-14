@@ -76,6 +76,13 @@ export default class TableColorStyleTraits extends ModelTraits {
   })
   nullLabel?: string;
 
+  @primitiveTrait({
+    name: "Outlier Label",
+    description: "The label to use in the legend for outlier values.",
+    type: "string"
+  })
+  outlierLabel?: string = "Outliers";
+
   // @primitiveTrait({
   //   name: "Bin Method",
   //   description:
@@ -188,5 +195,20 @@ export default class TableColorStyleTraits extends ModelTraits {
       "Treat values outside of specifed z-score as outliers, and therefore do not include in color scale. This value is magnitude of z-score - it will apply to positive and negative z-scores. For example a value of `2` will treat all values that are 2 or more standard deviations from the mean as outliers.",
     type: "number"
   })
-  zScoreFilter?: number = 4;
+  zScoreFilter: number = 4;
+
+  @primitiveTrait({
+    name: "Z-score filter enabled",
+    description: "True, if z-score filter is enabled.",
+    type: "boolean"
+  })
+  zScoreFilterEnabled: boolean = true;
+
+  @primitiveTrait({
+    name: "Range filter",
+    description:
+      "This is applied after the `zScoreFilter`. It is used to effectively 'disable' the zScoreFilter if it doesn't cut at least the specified percange of the range of values (for both minimum and maximum value). For exmaple if `rangeFilter = 0.2`, then the zScoreFilter will only be effective if it cuts at least 20% of the range of values from the minimum and maximum value",
+    type: "number"
+  })
+  rangeFilter: number = 0.2;
 }
