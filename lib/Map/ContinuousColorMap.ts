@@ -7,6 +7,7 @@ export interface ContinuousColorMapOptions {
   readonly minValue: number;
   readonly maxValue: number;
   readonly colorScale: (t: number) => string;
+  readonly isDiverging: boolean;
 }
 
 export default class ContinuousColorMap extends ColorMap {
@@ -15,6 +16,10 @@ export default class ContinuousColorMap extends ColorMap {
   readonly outlierColor: Readonly<Color>;
   readonly minValue: number;
   readonly maxValue: number;
+  readonly isDivering: boolean;
+
+  private readonly colorMapMinValue: number;
+  private readonly colorMapMaxValue: number;
 
   constructor(options: ContinuousColorMapOptions) {
     super();
@@ -32,6 +37,23 @@ export default class ContinuousColorMap extends ColorMap {
     this.outlierColor = options.outlierColor;
     this.minValue = options.minValue;
     this.maxValue = options.maxValue;
+    this.isDivering = options.isDiverging;
+
+    // If color scale is divering
+    // We want Math.abs(minValue) === Math.abs(maxValue)
+    // This is so the neutral color in the middle of the color map (usually white) is at 0
+    if (this.isDivering) {
+      this.colorMapMinValue = this.minValue;
+      this.colorMapMaxValue = this.maxValue;
+      if (-this.colorMapMinValue > this.colorMapMaxValue) {
+        this.colorMapMaxValue = -this.colorMapMinValue;
+      } else {
+        this.colorMapMinValue = -this.colorMapMaxValue;
+      }
+    } else {
+      this.colorMapMinValue = this.minValue;
+      this.colorMapMaxValue = this.maxValue;
+    }
   }
 
   mapValueToColor(value: string | number | null | undefined): Readonly<Color> {
@@ -39,11 +61,14 @@ export default class ContinuousColorMap extends ColorMap {
       return this.nullColor;
     }
 
-    if (value > this.maxValue || value < this.minValue)
+    if (value > this.colorMapMaxValue || value < this.colorMapMinValue)
       return this.outlierColor;
 
     return Color.fromCssColorString(
-      this.colorScale((value - this.minValue) / (this.maxValue - this.minValue))
+      this.colorScale(
+        (value - this.colorMapMinValue) /
+          (this.colorMapMaxValue - this.colorMapMinValue)
+      )
     );
   }
 }

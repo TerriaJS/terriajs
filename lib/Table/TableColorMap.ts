@@ -220,7 +220,8 @@ export default class TableColorMap {
           minValue,
           maxValue,
           nullColor: this.nullColor,
-          outlierColor: this.outlierColor
+          outlierColor: this.outlierColor,
+          isDiverging: this.isDiverging
         });
 
         // If we only have one value, create color map with single value
@@ -421,6 +422,13 @@ export default class TableColorMap {
     return Color.fromCssColorString(this.colorTraits.regionColor);
   }
 
+  @computed get isDiverging() {
+    return (
+      (this.filteredMinimumValue || 0.0) < 0.0 &&
+      (this.filteredMaximumValue || 0.0) > 0.0
+    );
+  }
+
   /** Get default colorPalete name.
    * Follows https://github.com/d3/d3-scale-chromatic#api-reference
    * If Enum or Region - use custom HighContrast (See StandardCssColors.highContrast)
@@ -447,11 +455,7 @@ export default class TableColorMap {
       return "HighContrast";
     } else if (colorColumn.type === TableColumnType.scalar) {
       const valuesAsNumbers = colorColumn.valuesAsNumbers;
-      if (
-        valuesAsNumbers !== undefined &&
-        (this.filteredMinimumValue || 0.0) < 0.0 &&
-        (this.filteredMaximumValue || 0.0) > 0.0
-      ) {
+      if (valuesAsNumbers !== undefined && this.isDiverging) {
         // Values cross zero, so use a diverging palette
         return "PuOr";
       } else {
