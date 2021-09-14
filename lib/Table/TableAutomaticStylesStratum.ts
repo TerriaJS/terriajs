@@ -205,20 +205,29 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
       return [];
     }
 
+    let items: StratumFromTraits<LegendItemTraits>[] = [];
+
     const colorMap = activeStyle.colorMap;
     if (colorMap instanceof DiscreteColorMap) {
-      return this._createLegendItemsFromDiscreteColorMap(activeStyle, colorMap);
+      items = this._createLegendItemsFromDiscreteColorMap(
+        activeStyle,
+        colorMap
+      );
     } else if (colorMap instanceof ContinuousColorMap) {
-      return this._createLegendItemsFromContinuousColorMap(
+      items = this._createLegendItemsFromContinuousColorMap(
         activeStyle,
         colorMap
       );
     } else if (colorMap instanceof EnumColorMap) {
-      return this._createLegendItemsFromEnumColorMap(activeStyle, colorMap);
+      items = this._createLegendItemsFromEnumColorMap(activeStyle, colorMap);
     } else if (colorMap instanceof ConstantColorMap) {
-      return this._createLegendItemsFromConstantColorMap(activeStyle, colorMap);
+      items = this._createLegendItemsFromConstantColorMap(
+        activeStyle,
+        colorMap
+      );
     }
-    return [];
+
+    return items;
   }
 
   @computed get numberFormatOptions():
@@ -297,6 +306,18 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
           ]
         : [];
 
+    const outlierBin =
+      activeStyle.tableColorMap.hasOutliers &&
+      activeStyle.colorTraits.zScoreFilterEnabled
+        ? [
+            createStratumInstance(LegendItemTraits, {
+              color: activeStyle.tableColorMap.outlierColor.toCssColorString(),
+              addSpacingAbove: true,
+              title: activeStyle.colorTraits.outlierLabel || "Outliers"
+            })
+          ]
+        : [];
+
     return new Array(7)
       .fill(0)
       .map((_, i) => {
@@ -308,7 +329,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
         });
       })
       .reverse()
-      .concat(nullBin);
+      .concat(nullBin, outlierBin);
   }
 
   private _createLegendItemsFromDiscreteColorMap(

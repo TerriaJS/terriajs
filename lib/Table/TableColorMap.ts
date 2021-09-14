@@ -3,7 +3,6 @@ import { computed } from "mobx";
 import Color from "terriajs-cesium/Source/Core/Color";
 import createColorForIdTransformer from "../Core/createColorForIdTransformer";
 import filterOutUndefined from "../Core/filterOutUndefined";
-import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
 import runLater from "../Core/runLater";
 import StandardCssColors from "../Core/StandardCssColors";
@@ -51,70 +50,125 @@ export default class TableColorMap {
     );
   }
 
-  @computed
-  get filteredValues() {
-    if (!this.colorColumn) return [];
-    const values = this.regionValues ?? this.colorColumn.valuesAsNumbers.values;
+  @computed get validValues() {
+    const values =
+      this.regionValues ?? this.colorColumn?.valuesAsNumbers.values;
+    if (values) {
+      return values.filter(val => val !== null) as number[];
+    }
+  }
 
-    const numValues = values.filter(val => val !== null) as number[];
-    if (numValues.length === 0) return [];
+  @computed
+  get filteredValues(): number[] | undefined {
+    if (
+      !this.colorColumn ||
+      !this.validValues ||
+      this.validValues.length === 0 ||
+      !isDefined(this.colorTraits.zScoreFilter)
+    )
+      return;
+
+    const values =
+      this.regionValues ?? this.colorColumn?.valuesAsNumbers.values;
 
     // Filter by z-score if applicable
     // This will filter out values which are outside of `zScoreFilter` standard deviations from the mean
-    if (this.colorTraits.zScoreFilter) {
-      const rowGroups = this.colorColumn.tableModel.activeTableStyle.rowGroups;
-      // Array of row group values
-      const rowGroupValues = rowGroups.map(
-        group =>
-          group[1]
-            .map(row => values[row])
-            .filter(val => val !== null) as number[]
-      );
 
-      // Get average value for each row group
-      const rowGroupAverages = rowGroupValues.map(values => getMean(values));
-      const std = getStandardDeviation(filterOutUndefined(rowGroupAverages));
-      const mean = getMean(filterOutUndefined(rowGroupAverages));
+    const rowGroups = this.colorColumn.tableModel.activeTableStyle.rowGroups;
+    // Array of row group values
+    const rowGroupValues = rowGroups.map(
+      group =>
+        group[1].map(row => values[row]).filter(val => val !== null) as number[]
+    );
 
-      if (!isDefined(std) && !isDefined(mean)) return numValues;
+    // Get average value for each row group
+    const rowGroupAverages = rowGroupValues.map(val => getMean(val));
+    const std = getStandardDeviation(filterOutUndefined(rowGroupAverages));
+    const mean = getMean(filterOutUndefined(rowGroupAverages));
 
-      // Filter out rowGroups which have average values are outside of `zScoreFilter` standard deviations from the mean
-      return flatten(
-        rowGroupAverages.map((rowGroupMean, idx) => {
-          if (
-            isDefined(rowGroupMean) &&
-            Math.abs((rowGroupMean - mean!) / std!) <=
-              this.colorTraits.zScoreFilter!
-          ) {
-            return rowGroupValues[idx];
-          } else {
-            console.log(rowGroups[idx][0]);
-            console.log(Math.abs(((rowGroupMean ?? 0) - mean!) / std!));
-          }
-          return [];
-        })
-      );
+    // No std or mean - so return unfiltered values
+    if (!isDefined(std) && !isDefined(mean)) return this.validValues;
 
-      /////////////////// TTOOOODDOO
-      // Legend for outliers
-      // How to disable outliers?
-    }
+    // Filter out rowGroups which have average values are outside of `zScoreFilter` standard deviations from the mean
+    const filteredValues: number[] = [];
 
-    return numValues;
+    rowGroupAverages.forEach((rowGroupMean, idx) => {
+      if (
+        isDefined(rowGroupMean) &&
+        Math.abs((rowGroupMean - mean!) / std!) <=
+          this.colorTraits.zScoreFilter!
+      ) {
+        filteredValues.push(...rowGroupValues[idx]);
+      }
+    });
+
+    return filteredValues;
+
+    /////////////////// TTOOOODDOO
+    // How to disable outliers?
+  }
+
+  /** Have outlier values been filtered out? This is only applicate to continuous color maps */
+  @computed get hasOutliers() {
+    if (!this.validValues) return false;
+    return (
+      this.filteredMinimumValue !== this.minimumValue ||
+      this.filteredMaximumValue !== this.maximumValue
+    );
   }
 
   @computed
   get minimumValue() {
-    if (isDefined(this.colorTraits.minimumValue))
-      return this.colorTraits.minimumValue;
-    return Math.min(...this.filteredValues);
+    if (this.validValues) return Math.min(...this.validValues);
   }
 
   @computed
   get maximumValue() {
+    if (this.validValues) return Math.max(...this.validValues);
+  }
+
+  @computed
+  get range() {
+    if (!isDefined(this.maximumValue) || !isDefined(this.minimumValue)) return;
+    return this.maximumValue - this.minimumValue;
+  }
+
+  @computed
+  get filteredMinimumValue() {
+    if (isDefined(this.colorTraits.minimumValue))
+      return this.colorTraits.minimumValue;
+
+    if (!this.filteredValues) return this.minimumValue;
+
+    if (isDefined(this.minimumValue) && isDefined(this.range)) {
+      const filteredMinimumValue = Math.min(...this.filteredValues);
+      if (
+        filteredMinimumValue <=
+        this.minimumValue + this.range * this.colorTraits.rangeFilter
+      ) {
+        return this.minimumValue;
+      }
+      return filteredMinimumValue;
+    }
+  }
+
+  @computed
+  get filteredMaximumValue() {
     if (isDefined(this.colorTraits.maximumValue))
       return this.colorTraits.maximumValue;
-    return Math.max(...this.filteredValues);
+
+    if (!this.filteredValues) return this.maximumValue;
+
+    if (isDefined(this.maximumValue) && isDefined(this.range)) {
+      const filteredMaximumValue = Math.max(...this.filteredValues);
+      if (
+        filteredMaximumValue >=
+        this.maximumValue - this.range * this.colorTraits.rangeFilter
+      ) {
+        return this.maximumValue;
+      }
+      return filteredMaximumValue;
+    }
   }
 
   /**
@@ -131,14 +185,6 @@ export default class TableColorMap {
     const colorColumn = this.colorColumn;
     const colorTraits = this.colorTraits;
 
-    const nullColor = colorTraits.nullColor
-      ? Color.fromCssColorString(colorTraits.nullColor) ?? Color.TRANSPARENT
-      : Color.TRANSPARENT;
-
-    const outlierColor = colorTraits.outlierColor
-      ? Color.fromCssColorString(colorTraits.outlierColor) ?? Color.BLACK
-      : Color.BLACK;
-
     // If column type is `scalar` - use DiscreteColorMap or ContinuousColorMap
     if (colorColumn && colorColumn.type === TableColumnType.scalar) {
       // If column type is `scalar` and we have binMaximums - use DiscreteColorMap
@@ -151,16 +197,19 @@ export default class TableColorMap {
               includeMinimumInThisBin: false
             };
           }),
-          nullColor
+          nullColor: this.nullColor
         });
       }
 
+      const minValue = this.colorTraits.zScoreFilterEnabled
+        ? this.filteredMinimumValue
+        : this.minimumValue;
+      const maxValue = this.colorTraits.zScoreFilterEnabled
+        ? this.filteredMaximumValue
+        : this.maximumValue;
+
       // If column type is `scalar` and we have a valid minValue and maxValue - use ContinuousColorMap
-      if (
-        isDefined(this.minimumValue) &&
-        isDefined(this.maximumValue) &&
-        this.minimumValue < this.maximumValue
-      ) {
+      if (isDefined(minValue) && isDefined(maxValue) && minValue < maxValue) {
         // Get colorScale from `d3-scale-chromatic` library - all continuous color schemes start with "interpolate"
         // See https://github.com/d3/d3-scale-chromatic#diverging
         // d3 continuous color schemes are represented as a function which map a value [0,1] to a color]
@@ -168,10 +217,10 @@ export default class TableColorMap {
 
         return new ContinuousColorMap({
           colorScale,
-          minValue: this.minimumValue,
-          maxValue: this.maximumValue,
-          nullColor,
-          outlierColor
+          minValue,
+          maxValue,
+          nullColor: this.nullColor,
+          outlierColor: this.outlierColor
         });
       }
     }
@@ -342,6 +391,13 @@ export default class TableColorMap {
     });
   }
 
+  @computed get outlierColor() {
+    return this.colorTraits.outlierColor
+      ? Color.fromCssColorString(this.colorTraits.outlierColor) ??
+          Color.AQUAMARINE
+      : Color.AQUAMARINE;
+  }
+
   @computed get nullColor() {
     return this.colorTraits.nullColor
       ? Color.fromCssColorString(this.colorTraits.nullColor) ??
@@ -381,8 +437,8 @@ export default class TableColorMap {
       const valuesAsNumbers = colorColumn.valuesAsNumbers;
       if (
         valuesAsNumbers !== undefined &&
-        (this.minimumValue || 0.0) < 0.0 &&
-        (this.maximumValue || 0.0) > 0.0
+        (this.filteredMinimumValue || 0.0) < 0.0 &&
+        (this.filteredMaximumValue || 0.0) > 0.0
       ) {
         // Values cross zero, so use a diverging palette
         return "PuOr";

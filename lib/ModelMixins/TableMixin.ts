@@ -422,6 +422,9 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     @computed
     get chartItems() {
+      // Wait for activeTableStyle to be ready
+      if (!this.activeTableStyle.ready) return [];
+
       return filterOutUndefined([
         // If time-series region mapping - show time points chart
         this.activeTableStyle.isRegions() && this.discreteTimes?.length
@@ -437,7 +440,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         ...super.selectableDimensions,
         this.regionColumnDimensions,
         this.regionProviderDimensions,
-        this.styleDimensions
+        this.styleDimensions,
+        this.outlierFilterDimension
       ]);
     }
 
@@ -542,6 +546,36 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         selectedId: this.activeTableStyle.regionColumn?.name,
         setDimensionValue: (stratumId: string, regionCol: string) => {
           this.defaultStyle.setTrait(stratumId, "regionColumn", regionCol);
+        }
+      };
+    }
+
+    /**
+     * Creates SelectableDimension for region column - the options contains a list of all columns.
+     * {@link TableTraits#enableManualRegionMapping} must be enabled.
+     */
+    @computed
+    get outlierFilterDimension(): SelectableDimension | undefined {
+      if (
+        !this.activeTableStyle.colorTraits.zScoreFilter ||
+        !this.activeTableStyle.tableColorMap.hasOutliers
+      ) {
+        return;
+      }
+
+      return {
+        id: "zFilterEnabled",
+        name: "Filter Outliers",
+        options: [{ id: "Enabled" }, { id: "Disabled" }],
+        selectedId: this.activeTableStyle.colorTraits.zScoreFilterEnabled
+          ? "Enabled"
+          : "Disabled",
+        setDimensionValue: (stratumId: string, value: string) => {
+          this.defaultStyle.color.setTrait(
+            stratumId,
+            "zScoreFilterEnabled",
+            value === "Enabled"
+          );
         }
       };
     }
