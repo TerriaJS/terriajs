@@ -55,8 +55,8 @@ class DimensionSelectorSection extends React.Component<PropsType> {
       <Box displayInlineBlock fullWidth>
         <Spacing bottom={2} />
         {selectableDimensions.map((dim, i) => (
-          <React.Fragment key={dim.id}>
-            <label htmlFor={`${this.props.item.uniqueId}-${dim.id}`}>
+          <React.Fragment key={`${item.uniqueId}-${dim.id}-fragment`}>
+            <label htmlFor={`${item.uniqueId}-${dim.id}`}>
               <Text textLight medium as="span">
                 {dim.name || dim.id}:
               </Text>
@@ -65,7 +65,7 @@ class DimensionSelectorSection extends React.Component<PropsType> {
             <Select
               light
               name={dim.id}
-              id={`${this.props.item.uniqueId}-${dim.id}`}
+              id={`${item.uniqueId}-${dim.id}`}
               value={
                 typeof dim.selectedId === "undefined"
                   ? "__undefined__"
