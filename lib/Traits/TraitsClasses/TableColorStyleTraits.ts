@@ -210,5 +210,5 @@ export default class TableColorStyleTraits extends ModelTraits {
       "This is applied after the `zScoreFilter`. It is used to effectively 'disable' the zScoreFilter if it doesn't cut at least the specified percange of the range of values (for both minimum and maximum value). For exmaple if `rangeFilter = 0.2`, then the zScoreFilter will only be effective if it cuts at least 20% of the range of values from the minimum and maximum value",
     type: "number"
   })
-  rangeFilter: number = 0.2;
+  rangeFilter: number = 0.3;
 }
