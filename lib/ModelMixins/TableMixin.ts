@@ -25,6 +25,7 @@ import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvi
 import RegionProviderList from "../Map/RegionProviderList";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
+import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import SelectableDimensions, {
   SelectableDimension
 } from "../Models/SelectableDimensions";
@@ -571,11 +572,11 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           ? "Enabled"
           : "Disabled",
         setDimensionValue: (stratumId: string, value: string) => {
-          this.defaultStyle.color.setTrait(
-            stratumId,
-            "zScoreFilterEnabled",
-            value === "Enabled"
-          );
+          updateModelFromJson(this, stratumId, {
+            defaultStyle: {
+              color: { zScoreFilterEnabled: value === "Enabled" }
+            }
+          });
         }
       };
     }
