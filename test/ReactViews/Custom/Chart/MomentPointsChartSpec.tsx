@@ -1,10 +1,10 @@
-import { scaleLinear, scaleTime } from "@vx/scale";
+import { scaleLinear, scaleTime } from "@visx/scale";
+import { Glyph, GlyphSquare } from "@visx/glyph";
 import maxBy from "lodash-es/maxBy";
 import minBy from "lodash-es/minBy";
 import React from "react";
 import TestRenderer from "react-test-renderer";
 import MomentPointsChart from "../../../../lib/ReactViews/Custom/Chart/MomentPointsChart";
-import { Circle } from "@vx/shape";
 
 describe("MomentPointsChart", function() {
   const chartItem = {
@@ -31,18 +31,26 @@ describe("MomentPointsChart", function() {
 
   it("renders all points", function() {
     const renderer = TestRenderer.create(<MomentPointsChart {...props} />);
-    const points = renderer.root.findAllByType(Circle);
-    expect(points.length).toBe(6);
+    const glyphs = renderer.root.findAllByType(Glyph);
+    expect(glyphs.length).toBe(6);
   });
 
   it("renders the points at the correct positions", function() {
     const renderer = TestRenderer.create(<MomentPointsChart {...props} />);
-    const points = renderer.root.findAllByType(Circle);
+    const glyphs = renderer.root.findAllByType(Glyph);
     const xs = [0, 2, 4, 6, 8, 10];
-    points.forEach((point, i) => {
-      expect(point.props.cx).toEqual(xs[i]);
-      expect(point.props.cy).toEqual(5);
+    glyphs.forEach((glyph, i) => {
+      expect(glyph.props.left).toEqual(xs[i]);
+      expect(glyph.props.top).toEqual(5);
     });
+  });
+
+  it("renders the correct type of glyph", function() {
+    const renderer = TestRenderer.create(
+      <MomentPointsChart {...props} glyph="square" />
+    );
+    const glyphs = renderer.root.findAllByType(GlyphSquare);
+    expect(glyphs.length).toBe(6);
   });
 
   describe("when a basis item is provided", function() {
@@ -64,12 +72,12 @@ describe("MomentPointsChart", function() {
       const renderer = TestRenderer.create(
         <MomentPointsChart {...propsWithBasisItem} />
       );
-      const points = renderer.root.findAllByType(Circle);
+      const glyphs = renderer.root.findAllByType(Glyph);
       const xs = [0, 2, 4, 6, 8, 10];
       const ys = [0, 10, 2, 5, 8, 6];
-      points.forEach((point, i) => {
-        expect(point.props.cx).toEqual(xs[i]);
-        expect(Math.ceil(point.props.cy)).toEqual(ys[i]);
+      glyphs.forEach((point, i) => {
+        expect(point.props.left).toEqual(xs[i]);
+        expect(point.props.top).toEqual(ys[i]);
       });
     });
   });
