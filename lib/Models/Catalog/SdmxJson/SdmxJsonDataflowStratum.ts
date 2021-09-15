@@ -202,7 +202,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     ) {
       return [
         createStratumInstance(ShortReportTraits, {
-          name: this.unitMeasure,
+          name: this.chartTitle,
           content: primaryCol?.valuesAsNumbers.values[0].toLocaleString(
             undefined,
             primaryCol.traits.format
@@ -622,6 +622,45 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     ]);
   }
 
+  /** Get region TableColumn by matching dimensionColmns */
+  @computed get regionColumn() {
+    return this.catalogItem.tableColumns.find(
+      col =>
+        col.name ===
+        this.dimensionColumns.find(col => col.type === "region")?.name
+    );
+  }
+
+  /** Get nice title to use for chart
+   * If we have a region column with a single region, it will append the region name to the title
+   */
+  @computed get chartTitle() {
+    // If we only have a single region (or no regions)
+    // We want to:
+    // - disable the region column so we get a chart instaed
+    // - get region name for chart title (if single region)
+    if (
+      this.regionColumn?.ready &&
+      (this.regionColumn?.valuesAsRegions.uniqueRegionIds.length ?? 0) <= 1
+    ) {
+      // Get region ID from RegionProvider
+      let regionId = this.regionColumn.regionType?.regions[
+        this.regionColumn.valuesAsRegions.uniqueRegionIds[0] ?? -1
+      ]?.regionProp;
+
+      if (isDefined(regionId)) {
+        // Try to get human readable region name from dimension with "region" override
+        const regionName =
+          this.getDimensionsWithOverrideType("region")[0]?.options.find(
+            option => option.id === regionId
+          )?.name ?? regionId;
+        return `${regionName} ${this.unitMeasure}`;
+      }
+    }
+
+    return this.unitMeasure;
+  }
+
   /**
    * Set TableStyleTraits for primary measure column:
    * - Legend title is set to `unitMeasure` to add context - eg "AUD (Quaterly)"
@@ -634,25 +673,10 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   @computed
   get styles() {
     if (this.primaryMeasureColumn) {
-      // Disable region column if less than 2 valid regions have been found
-      let regionColumnName:
-        | string
-        | undefined
-        | null = this.dimensionColumns.find(col => col.type === "region")?.name;
-
-      const regionColumn = regionColumnName
-        ? this.catalogItem.tableColumns.find(
-            col => col.name === regionColumnName
-          )
-        : undefined;
-
-      if (
-        regionColumn?.ready &&
-        (regionColumn?.valuesAsRegions.uniqueRegionIds.length ?? 0) <= 1
-      ) {
-        regionColumnName = null;
-      }
-
+      // Disable region column if 1 or 0 matches regions
+      const disableRegion =
+        this.regionColumn?.ready &&
+        (this.regionColumn?.valuesAsRegions.uniqueRegionIds.length ?? 0) <= 1;
       return [
         createStratumInstance(TableStyleTraits, {
           id: this.primaryMeasureColumn.name,
@@ -669,18 +693,18 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
           }),
           // Add chart if there is a time column but no region column
           chart:
-            this.timeColumns.length > 0 && !regionColumnName
+            this.timeColumns.length > 0 && disableRegion
               ? createStratumInstance(TableChartStyleTraits, {
                   xAxisColumn: this.timeColumns[0].name,
                   lines: [
                     createStratumInstance(TableChartLineStyleTraits, {
-                      name: this.unitMeasure,
+                      name: this.chartTitle,
                       yAxisColumn: this.primaryMeasureColumn.name
                     })
                   ]
                 })
               : undefined,
-          regionColumn: regionColumnName
+          regionColumn: disableRegion ? null : this.regionColumn?.name
         })
       ];
     }
@@ -705,8 +729,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    */
   @computed
   get featureInfoTemplate() {
-    const regionType = this.catalogItem.activeTableStyle.regionColumn
-      ?.regionType;
+    const regionType = this.regionColumn?.regionType;
     if (!regionType) return;
 
     let template = '<table class="cesium-infoBox-defaultTable">';
