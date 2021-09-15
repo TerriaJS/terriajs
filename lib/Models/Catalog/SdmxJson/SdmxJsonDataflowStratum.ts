@@ -3,7 +3,10 @@ import { computed } from "mobx";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import TerriaError from "../../../Core/TerriaError";
-import { ShortReportTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
+import {
+  ShortReportTraits,
+  MetadataUrlTraits
+} from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import { DimensionOptionTraits } from "../../../Traits/TraitsClasses/DimensionTraits";
 import { FeatureInfoTemplateTraits } from "../../../Traits/TraitsClasses/FeatureInfoTraits";
 import LegendTraits from "../../../Traits/TraitsClasses/LegendTraits";
@@ -136,6 +139,24 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   @computed
   get description() {
     return this.sdmxJsonDataflow.dataflow.description;
+  }
+
+  /** Transform dataflow annotations with type "EXT_RESOURCE"
+   * These can be of format:
+   * - ${title}|${url}|${imageUrl}
+   * - EG "Metadata|http://purl.org/spc/digilib/doc/7thdz|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+   */
+  @computed get metadataUrls() {
+    return filterOutUndefined(
+      this.sdmxJsonDataflow?.dataflow.annotations
+        ?.filter(a => a.type === "EXT_RESOURCE" && a.text)
+        .map(annotation => {
+          let text = annotation.texts?.[i18next.language] ?? annotation.text!;
+          const title = text.includes("|") ? text.split("|")[0] : undefined;
+          const url = text.includes("|") ? text.split("|")[1] : text;
+          return createStratumInstance(MetadataUrlTraits, { title, url });
+        }) ?? []
+    );
   }
 
   get sdmxAttributes() {
