@@ -32,8 +32,8 @@ export interface ColumnValuesAsDates {
 }
 
 export interface ColumnValuesAsRegions {
-  readonly regionIds: ReadonlyArray<string | number | null>;
-  readonly uniqueRegionIds: ReadonlyArray<string | number>;
+  readonly regionIds: ReadonlyArray<number | null>;
+  readonly uniqueRegionIds: ReadonlyArray<number>;
   readonly numberOfValidRegions: number;
   readonly numberOfNonRegions: number;
   readonly numberOfRegionsWithMultipleRows: number;
