@@ -11,6 +11,7 @@ Change Log
 * Fix `ChartPanel` import `Result` bug.
 * Improve handling of featureInfoTemplate for composite catalog items.
 * Fixed the layout of items in mobile navigation
+* Fixed `withControlledVisibility` method to inherit `propTypes` of its wrapped component.
 * [The next improvement]
 
 #### 8.1.0
