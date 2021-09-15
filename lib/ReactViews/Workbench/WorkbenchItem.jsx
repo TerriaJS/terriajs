@@ -8,7 +8,6 @@ import PropTypes from "prop-types";
 import React from "react";
 import { sortable } from "react-anything-sortable";
 import { withTranslation } from "react-i18next";
-import defined from "terriajs-cesium/Source/Core/defined";
 import getPath from "../../Core/getPath";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
 import CommonStrata from "../../Models/Definition/CommonStrata";
@@ -18,7 +17,6 @@ import Loader from "../Loader";
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
 import ChartItemSelector from "./Controls/ChartItemSelector";
 import ColorScaleRangeSection from "./Controls/ColorScaleRangeSection";
-import ConceptViewer from "./Controls/ConceptViewer";
 import DateTimeSelectorSection from "./Controls/DateTimeSelectorSection";
 import DimensionSelectorSection from "./Controls/DimensionSelectorSection";
 import DisplayAsPercentSection from "./Controls/DisplayAsPercentSection";
@@ -171,15 +169,6 @@ export const WorkbenchItemRaw = observer(
               <ScaleWorkbenchInfo item={workbenchItem} />
               <LeftRightSection item={workbenchItem} />
               <TimerSection item={workbenchItem} />
-              <If
-                condition={
-                  defined(workbenchItem.concepts) &&
-                  workbenchItem.concepts.length > 0 &&
-                  workbenchItem.displayChoicesBeforeLegend
-                }
-              >
-                <ConceptViewer item={workbenchItem} />
-              </If>
               <ChartItemSelector item={workbenchItem} />
               <FilterSection item={workbenchItem} />
               <DateTimeSelectorSection item={workbenchItem} />
@@ -201,15 +190,7 @@ export const WorkbenchItemRaw = observer(
                 <ShortReport item={workbenchItem} />
               </If>
               <Legend item={workbenchItem} />
-              <If
-                condition={
-                  defined(workbenchItem.concepts) &&
-                  workbenchItem.concepts.length > 0 &&
-                  !workbenchItem.displayChoicesBeforeLegend
-                }
-              >
-                <ConceptViewer item={workbenchItem} />
-              </If>
+
               {CatalogMemberMixin.isMixedInto(this.props.item) &&
               this.props.item.isLoading ? (
                 <Box paddedVertically>
