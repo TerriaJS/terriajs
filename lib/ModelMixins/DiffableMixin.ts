@@ -2,7 +2,7 @@ import { computed } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Definition/Model";
-import { SelectableDimension } from "../Models/SelectableDimensions";
+import { SelectableDimensionSelect } from "../Models/SelectableDimensions";
 import StratumOrder from "../Models/Definition/StratumOrder";
 import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";
 import DiffableTraits from "../Traits/TraitsClasses/DiffableTraits";
@@ -17,7 +17,9 @@ type MixinModel = Model<
 
 function DiffableMixin<T extends Constructor<MixinModel>>(Base: T) {
   abstract class DiffableMixin extends Base {
-    abstract get styleSelectableDimensions(): SelectableDimension[] | undefined;
+    abstract get styleSelectableDimensions():
+      | SelectableDimensionSelect[]
+      | undefined;
 
     get hasDiffableMixin() {
       return true;

@@ -6,7 +6,9 @@ import CatalogMemberMixin from "../../lib/ModelMixins/CatalogMemberMixin";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import CreateModel from "../../lib/Models/Definition/CreateModel";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
-import SelectableDimensions from "../../lib/Models/SelectableDimensions";
+import SelectableDimensions, {
+  DEFAULT_PLACEMENT
+} from "../../lib/Models/SelectableDimensions";
 import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface/StandardTheme";
@@ -76,7 +78,10 @@ describe("DimensionSelectorSection", function() {
 
     const section = TestRenderer.create(
       <ThemeProvider theme={terriaTheme}>
-        <DimensionSelectorSection item={mockItem} />
+        <DimensionSelectorSection
+          item={mockItem}
+          placement={DEFAULT_PLACEMENT}
+        />
       </ThemeProvider>
     );
 
@@ -126,7 +131,10 @@ describe("DimensionSelectorSection", function() {
       .then(function() {
         const section = TestRenderer.create(
           <ThemeProvider theme={terriaTheme}>
-            <DimensionSelectorSection item={wmsItem} />
+            <DimensionSelectorSection
+              item={wmsItem}
+              placement={DEFAULT_PLACEMENT}
+            />
           </ThemeProvider>
         );
 
@@ -206,7 +214,10 @@ describe("DimensionSelectorSection", function() {
 
     const section = TestRenderer.create(
       <ThemeProvider theme={terriaTheme}>
-        <DimensionSelectorSection item={csvItem} />
+        <DimensionSelectorSection
+          item={csvItem}
+          placement={DEFAULT_PLACEMENT}
+        />
       </ThemeProvider>
     );
 
