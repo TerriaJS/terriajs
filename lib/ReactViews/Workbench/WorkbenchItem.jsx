@@ -19,7 +19,6 @@ import ChartItemSelector from "./Controls/ChartItemSelector";
 import ColorScaleRangeSection from "./Controls/ColorScaleRangeSection";
 import DateTimeSelectorSection from "./Controls/DateTimeSelectorSection";
 import DimensionSelectorSection from "./Controls/DimensionSelectorSection";
-import DisplayAsPercentSection from "./Controls/DisplayAsPercentSection";
 import FilterSection from "./Controls/FilterSection";
 import LeftRightSection from "./Controls/LeftRightSection";
 import Legend from "./Controls/Legend";
@@ -177,7 +176,6 @@ export const WorkbenchItemRaw = observer(
                 minValue={workbenchItem.colorScaleMinimum}
                 maxValue={workbenchItem.colorScaleMaximum}
               />
-              <DisplayAsPercentSection item={workbenchItem} />
               <If
                 condition={
                   workbenchItem.shortReport ||
