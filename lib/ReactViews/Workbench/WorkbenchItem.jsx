@@ -11,6 +11,7 @@ import { withTranslation } from "react-i18next";
 import getPath from "../../Core/getPath";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
 import CommonStrata from "../../Models/Definition/CommonStrata";
+import { DEFAULT_PLACEMENT } from "../../Models/SelectableDimensions";
 import Box from "../../Styled/Box";
 import Icon from "../../Styled/Icon";
 import Loader from "../Loader";
@@ -172,7 +173,10 @@ export const WorkbenchItemRaw = observer(
               <FilterSection item={workbenchItem} />
               <DateTimeSelectorSection item={workbenchItem} />
               <SatelliteImageryTimeFilterSection item={workbenchItem} />
-              <DimensionSelectorSection item={workbenchItem} />
+              <DimensionSelectorSection
+                item={workbenchItem}
+                placement={DEFAULT_PLACEMENT}
+              />
               <ColorScaleRangeSection
                 item={workbenchItem}
                 minValue={workbenchItem.colorScaleMinimum}
@@ -188,7 +192,10 @@ export const WorkbenchItemRaw = observer(
                 <ShortReport item={workbenchItem} />
               </If>
               <Legend item={workbenchItem} />
-
+              <DimensionSelectorSection
+                item={workbenchItem}
+                placement={"belowLegend"}
+              />
               {CatalogMemberMixin.isMixedInto(this.props.item) &&
               this.props.item.isLoading ? (
                 <Box paddedVertically>

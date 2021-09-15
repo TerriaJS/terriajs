@@ -565,19 +565,23 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       }
 
       return {
-        id: "zFilterEnabled",
-        name: "Filter Outliers",
-        options: [{ id: "Enabled" }, { id: "Disabled" }],
+        id: "outlierFilter",
+        options: [
+          { id: "true", name: "Outliers filtered (click to disable)" },
+          { id: "false", name: "Outliers detected (click to filter out)" }
+        ],
         selectedId: this.activeTableStyle.colorTraits.zScoreFilterEnabled
-          ? "Enabled"
-          : "Disabled",
+          ? "true"
+          : "false",
         setDimensionValue: (stratumId: string, value: string) => {
           updateModelFromJson(this, stratumId, {
             defaultStyle: {
-              color: { zScoreFilterEnabled: value === "Enabled" }
+              color: { zScoreFilterEnabled: value === "true" }
             }
           });
-        }
+        },
+        placement: "belowLegend",
+        type: "checkbox"
       };
     }
 
