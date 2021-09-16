@@ -184,17 +184,13 @@ class Chart extends React.Component {
       items: this.pointsNearMouse
     };
 
-    if (!this.mouseCoords || this.mouseCoords.x < this.plotWidth * 0.75) {
+    if (!this.mouseCoords || this.mouseCoords.x < this.plotWidth * 0.5) {
       tooltip.right = this.props.width - (this.plotWidth + margin.right);
     } else {
       tooltip.left = margin.left;
     }
 
-    if (!this.mouseCoords || this.mouseCoords.y < this.plotHeight * 0.5) {
-      tooltip.bottom = this.props.height - (margin.top + this.plotHeight);
-    } else {
-      tooltip.top = margin.top;
-    }
+    tooltip.bottom = this.props.height - (margin.top + this.plotHeight);
     return tooltip;
   }
 
@@ -258,9 +254,7 @@ class Chart extends React.Component {
         ]}
         onZoom={zoomedScale => this.setZoomedXScale(zoomedScale)}
       >
-        <Legends
-          chartItems={this.chartItems.length > 4 ? [] : this.chartItems}
-        />
+        <Legends width={this.plotWidth} chartItems={this.chartItems} />
         <div style={{ position: "relative" }}>
           <svg
             width="100%"
@@ -422,6 +416,7 @@ class XAxis extends React.PureComponent {
   };
 
   render() {
+    const { scale, ...restProps } = this.props;
     return (
       <AxisBottom
         stroke="#efefef"
@@ -438,7 +433,11 @@ class XAxis extends React.PureComponent {
           textAnchor: "middle",
           fontFamily: "Arial"
         }}
-        {...this.props}
+        // .nice() rounds the scale so that the aprox beginning and
+        // aprox end labels are shown
+        // See: https://stackoverflow.com/questions/21753126/d3-js-starting-and-ending-tick
+        scale={scale.nice()}
+        {...restProps}
       />
     );
   }

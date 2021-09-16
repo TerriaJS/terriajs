@@ -47,6 +47,7 @@ class ChartPanel extends React.Component {
   }
 
   render() {
+    const chartableCatalogItems = this.chartView.chartableItems;
     const chartItems = this.chartView.chartItems.filter(
       c => c.showInChartPanel
     );
@@ -97,7 +98,9 @@ class ChartPanel extends React.Component {
                 <label className={Styles.sectionLabel}>
                   {loader || t("chart.sectionLabel")}
                 </label>
-                <ChartPanelDownloadButton chartableItems={chartItems} />
+                <ChartPanelDownloadButton
+                  chartableItems={chartableCatalogItems}
+                />
                 <button
                   type="button"
                   title={t("chart.closePanel")}

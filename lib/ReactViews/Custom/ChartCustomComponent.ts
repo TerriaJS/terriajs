@@ -224,7 +224,15 @@ export default abstract class ChartCustomComponent<
       // Build expand/download buttons
       const sourceItems = (attrs.downloads || attrs.sources || [""]).map(
         (source: string, i: number) => {
-          const id = `${context.catalogItem.uniqueId}:${source}`;
+          // When expanding a chart for this item and there is already an
+          // expanded chart for the item, there are 2 possibilities.
+          // 1. Remove it an show the new chart
+          // 2. Show the new chart alongside the existing chart
+          //
+          // If title & source names for the two expanded charts are the same then
+          // we only show the latest one, otherwise we show both.
+          // To do this we make the id dependant on the parentId, title & source.
+          const id = `${context.catalogItem.uniqueId}:${attrs.title}:${source}`;
 
           const itemOrPromise = this.constructShareableCatalogItem
             ? this.constructShareableCatalogItem(id, context, undefined)

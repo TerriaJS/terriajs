@@ -78,7 +78,7 @@ class Tooltip extends React.Component {
     return (
       <CSSTransition
         in={show}
-        classNames={{ ...Styles }}
+        classNames="transition"
         timeout={1000}
         unmountOnExit
       >
