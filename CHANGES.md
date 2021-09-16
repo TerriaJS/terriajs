@@ -16,7 +16,7 @@ Change Log
 
 #### 8.1.0
 
-* **Breaking changes:**
+- **Breaking changes:**
   * Overhaul of map navigation: items no longer added inside UserInterface using <Nav> jsx.
 
 * New version of map navigation ([#5062](https://github.com/TerriaJS/terriajs/pull/5062))
