@@ -4,6 +4,7 @@ import { scaleOrdinal } from "@visx/scale";
 import { LegendOrdinal } from "@visx/legend";
 import Glyphs from "./Glyphs";
 import { GlyphCircle } from "@visx/glyph";
+import { TextSpan } from "../../../Styled/Text";
 import styled from "styled-components";
 
 export default class Legends extends React.PureComponent {
@@ -22,7 +23,7 @@ export default class Legends extends React.PureComponent {
     });
 
     return (
-      <Container style={{ maxWidth: this.props.width }}>
+      <LegendsContainer style={{ maxWidth: this.props.width }}>
         <LegendOrdinal scale={colorScale}>
           {labels =>
             labels.map((label, i) => (
@@ -34,7 +35,7 @@ export default class Legends extends React.PureComponent {
             ))
           }
         </LegendOrdinal>
-      </Container>
+      </LegendsContainer>
     );
   }
 }
@@ -50,7 +51,7 @@ class Legend extends React.PureComponent {
     const squareSize = 20;
     const Glyph = Glyphs[this.props.glyph] ?? GlyphCircle;
     return (
-      <Label title={label.text}>
+      <Label ariaLabel={label.text}>
         <svg
           width={`${squareSize}px`}
           height={`${squareSize}px`}
@@ -64,7 +65,7 @@ class Legend extends React.PureComponent {
   }
 }
 
-const Container = styled.div`
+const LegendsContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -81,9 +82,11 @@ const Label = styled.div`
   min-width: 0px;
 `;
 
-const LabelText = styled.span`
+const LabelText = styled(TextSpan).attrs({
+  noWrap: true,
+  overflowEllipsis: true,
+  overflowHide: true,
+  medium: true
+})`
   margin-left: 4px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
 `;
