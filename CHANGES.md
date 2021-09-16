@@ -20,7 +20,6 @@ Change Log
 * Add `terriaError.shouldRaiseToUser` override, this can be used to raise errors with `Warning` severity.
 * `workbench.add()` will now keep items which only return `Warning` severity `TerriaErrors` after loading.
 * Improve SDMX error messages for no results
-* SDMX will now disable the region column if less than 2 valid regions have been found
 * [The next improvement]
 
 #### 8.1.0
