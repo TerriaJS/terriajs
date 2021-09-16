@@ -51,7 +51,7 @@ class Legend extends React.PureComponent {
     const squareSize = 20;
     const Glyph = Glyphs[this.props.glyph] ?? GlyphCircle;
     return (
-      <Label ariaLabel={label.text}>
+      <LegendWrapper title={label.text} ariaLabel={label.text}>
         <svg
           width={`${squareSize}px`}
           height={`${squareSize}px`}
@@ -59,8 +59,8 @@ class Legend extends React.PureComponent {
         >
           <Glyph top={10} left={10} fill={label.value} size={100} />
         </svg>
-        <LabelText>{label.text}</LabelText>
-      </Label>
+        <LegendText>{label.text}</LegendText>
+      </LegendWrapper>
     );
   }
 }
@@ -74,7 +74,7 @@ const LegendsContainer = styled.div`
   font-size: 0.8em;
 `;
 
-const Label = styled.div`
+const LegendWrapper = styled.div`
   display: flex;
   flex: 1;
   align-items: center;
@@ -82,7 +82,7 @@ const Label = styled.div`
   min-width: 0px;
 `;
 
-const LabelText = styled(TextSpan).attrs({
+const LegendText = styled(TextSpan).attrs({
   noWrap: true,
   overflowEllipsis: true,
   overflowHide: true,
