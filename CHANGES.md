@@ -15,6 +15,7 @@ Change Log
 * Added `MinMaxLevelMixin` and `MinMaxLevelTraits` to handle defining min and max scale denominator for layers.
 * Extracted function `scaleToDenominator` to core - for conversion of scale to zoom level.
 * Share/start data conversion will now only occur if `version` property is `0.x.x`. Previously, it was `version` property is **not** `8.x.x`
+* Fix diverging `ContinuousColorMap` - it will now center color scale around 0.
 * [The next improvement]
 
 #### 8.1.0
