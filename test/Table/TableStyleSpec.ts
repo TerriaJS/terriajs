@@ -190,9 +190,9 @@ describe("Table Style", function() {
       expect((activeStyle.colorMap as ContinuousColorMap).maxValue).toBe(50);
       expect(
         (activeStyle.colorMap as ContinuousColorMap)
-          .mapValueToColor(1)
+          .mapValueToColor(0)
           .toCssColorString()
-      ).toBe("rgb(243, 238, 234)");
+      ).toBe("rgb(243,238,234)");
       expect(
         (activeStyle.colorMap as ContinuousColorMap)
           .mapValueToColor(-50)
