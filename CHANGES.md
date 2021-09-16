@@ -12,11 +12,13 @@ Change Log
 * Improve handling of featureInfoTemplate for composite catalog items.
 * Fixed the layout of items in mobile navigation
 * Fixed `withControlledVisibility` method to inherit `propTypes` of its wrapped component.
+* Added `MinMaxLevelMixin` and `MinMaxLevelTraits` to handle defining min and max scale denominator for layers.
+* Extracted function `scaleToDenominator` to core - for conversion of scale to zoom level.
 * [The next improvement]
 
 #### 8.1.0
 
-* **Breaking changes:**
+- **Breaking changes:**
   * Overhaul of map navigation: items no longer added inside UserInterface using <Nav> jsx.
 
 * New version of map navigation ([#5062](https://github.com/TerriaJS/terriajs/pull/5062))
