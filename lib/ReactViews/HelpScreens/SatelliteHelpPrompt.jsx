@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { observer } from "mobx-react";
 
-import Prompt from "./Prompt";
+import HelpPrompt from "./HelpPrompt";
 
 export const SATELLITE_HELP_PROMPT_KEY = "satelliteGuidance";
 export const SatelliteHelpPrompt = observer(({ viewState }) => {
@@ -15,7 +15,7 @@ export const SatelliteHelpPrompt = observer(({ viewState }) => {
   };
 
   return (
-    <Prompt
+    <HelpPrompt
       isVisible={showHelp}
       viewState={viewState}
       title={t("satelliteGuidance.titleI")}

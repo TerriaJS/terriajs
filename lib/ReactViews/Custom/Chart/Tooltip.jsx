@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import { computed } from "mobx";
-import { Tooltip as VxTooltip } from "@vx/tooltip";
+import { Tooltip as VisxTooltip } from "@visx/tooltip";
 import { CSSTransition } from "react-transition-group";
 import PropTypes from "prop-types";
 import React from "react";
@@ -63,10 +63,12 @@ class Tooltip extends React.Component {
   get style() {
     const { left, right, top, bottom } = this.props;
     return {
-      left: left === undefined ? undefined : `${left}px`,
-      right: right === undefined ? undefined : `${right}px`,
-      top: top === undefined ? undefined : `${top}px`,
-      bottom: bottom === undefined ? undefined : `${bottom}px`
+      left: left === undefined ? "" : `${left}px`,
+      right: right === undefined ? "" : `${right}px`,
+      top: top === undefined ? "" : `${top}px`,
+      bottom: bottom === undefined ? "" : `${bottom}px`,
+      position: "absolute",
+      boxShadow: "0 1px 2px rgba(33,33,33,0.2)"
     };
   }
 
@@ -76,11 +78,11 @@ class Tooltip extends React.Component {
     return (
       <CSSTransition
         in={show}
-        classNames={{ ...Styles }}
+        classNames="transition"
         timeout={1000}
         unmountOnExit
       >
-        <VxTooltip
+        <VisxTooltip
           className={Styles.tooltip}
           key={Math.random()}
           style={this.style}
@@ -95,7 +97,7 @@ class Tooltip extends React.Component {
               />
             </For>
           </div>
-        </VxTooltip>
+        </VisxTooltip>
       </CSSTransition>
     );
   }

@@ -10,6 +10,15 @@ import "../../../SpecHelpers";
 const regionMapping = JSON.stringify(
   require("../../../../wwwroot/data/regionMapping.json")
 );
+
+const sa4regionCodes = JSON.stringify(
+  require("../../../../wwwroot/data/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json")
+);
+
+const lga2011RegionCodes = JSON.stringify(
+  require("../../../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_LGA_CODE11.json")
+);
+
 configure({
   enforceActions: "observed",
   computedRequiresReaction: true
@@ -52,6 +61,14 @@ describe("YDYRCatalogFunction", function() {
         });
       }
     });
+
+    jasmine.Ajax.stubRequest(
+      "build/TerriaJS/data/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json"
+    ).andReturn({ responseText: sa4regionCodes });
+
+    jasmine.Ajax.stubRequest(
+      "build/TerriaJS/data/regionids/region_map-FID_LGA_2011_AUST_LGA_CODE11.json"
+    ).andReturn({ responseText: lga2011RegionCodes });
 
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionMapping.json"

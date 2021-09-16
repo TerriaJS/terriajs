@@ -951,9 +951,14 @@ export default class Cesium extends GlobeOrMap {
   @computed
   get _extraCredits() {
     const credits: { cesium?: Credit; terria?: Credit } = {};
-    if (this._terrainWithCredits.credit) {
-      credits.cesium = this._terrainWithCredits.credit;
-    }
+    // Disabling this for now as it doesn't seem to be used anywhere but
+    // results in mapItems being computed twice for all workbench items when
+    // cesium map is loaded. This happens because the reference to
+    // _extraCredits is from within the constructor for Cesium which itself is
+    // called inside an untracked() call in TerriaViewer.
+    // if (this._terrainWithCredits.credit) {
+    //   credits.cesium =  this._terrainWithCredits.credit;
+    //}
     if (!this.terria.configParameters.hideTerriaLogo) {
       const logo = require("../../wwwroot/images/terria-watermark.svg");
       credits.terria = new Credit(

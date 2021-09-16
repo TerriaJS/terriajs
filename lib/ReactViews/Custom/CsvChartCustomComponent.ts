@@ -7,6 +7,7 @@ import ChartCustomComponent, {
   splitStringIfDefined
 } from "./ChartCustomComponent";
 import { ProcessNodeContext } from "./CustomComponent";
+import { GlyphStyle } from "./Chart/Glyphs";
 
 interface CsvChartCustomComponentAttributes
   extends ChartCustomComponentAttributes {
@@ -25,6 +26,9 @@ interface CsvChartCustomComponentAttributes
 
   /** Set the chart type. Note that only "line" and "lineAndPoint" are supported. */
   chartType?: string;
+
+  /** The chart glyph style. */
+  chartGlyphStyle?: string;
 }
 
 // Any chart type not listed here won't work, because FeatureInfoPanelChart only draws line charts.
@@ -44,7 +48,8 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<
       "poll-sources",
       "poll-replace",
       "chart-disclaimer",
-      "chart-type"
+      "chart-type",
+      "chart-glyph-style"
     ]);
   }
 
@@ -147,6 +152,14 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<
       );
     }
 
+    if (attrs.chartGlyphStyle !== undefined) {
+      item.setTrait(
+        CommonStrata.user,
+        "chartGlyphStyle",
+        attrs.chartGlyphStyle as GlyphStyle
+      );
+    }
+
     // Set chart axes
     if (attrs.xColumn || attrs.yColumns) {
       chartStyle.chart.setTrait(
@@ -178,6 +191,7 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<
     parsed.pollReplace = nodeAttrs["poll-replace"] === "true";
     parsed.chartDisclaimer = nodeAttrs["chart-disclaimer"] || undefined;
     parsed.chartType = nodeAttrs["chart-type"];
+    parsed.chartGlyphStyle = nodeAttrs["chart-glyph-style"];
     return parsed;
   }
 }

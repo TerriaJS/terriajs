@@ -66,7 +66,7 @@ class Breadcrumbs extends React.Component {
           glyph={Icon.GLYPHS.globe}
         />
         <Spacing right={1.2} />
-        <Box wrap>
+        <Box flexWrap>
           {parentGroups && (
             <For each="parent" index="i" of={parentGroups}>
               <Choose>
