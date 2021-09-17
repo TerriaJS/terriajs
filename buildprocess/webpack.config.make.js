@@ -34,14 +34,14 @@ module.exports = function(hot, dev) {
                     loader: 'imports-loader?require=>false'
                 },
 
-                {
-                  test: /\.(ts|js)x?$/,
-                  include: [path.resolve(terriaJSBasePath, "lib")],
-                  use: {
-                    loader: "istanbul-instrumenter-loader"
-                  },
-                  enforce: "post"
-                }
+                // {
+                //   test: /\.(ts|js)x?$/,
+                //   include: [path.resolve(terriaJSBasePath, "lib")],
+                //   use: {
+                //     loader: "istanbul-instrumenter-loader"
+                //   },
+                //   enforce: "post"
+                // }
             ]
         },
         devServer: {
