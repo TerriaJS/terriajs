@@ -16,6 +16,7 @@ import { RawButton } from "../../Styled/Button";
 import Checkbox from "../../Styled/Checkbox/Checkbox";
 import Icon, { StyledIcon } from "../../Styled/Icon";
 import { Li } from "../../Styled/List";
+import Spacing from "../../Styled/Spacing";
 import { TextSpan } from "../../Styled/Text";
 import Loader from "../Loader";
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
@@ -86,22 +87,6 @@ class WorkbenchItemRaw extends React.Component<IProps> {
       <StyledLi style={this.props.style} className={this.props.className}>
         <Box fullWidth justifySpaceBetween padded>
           <Box fullWidth>
-            {(true || item.supportsToggleShown) && (
-              <Box
-                left
-                verticalCenter
-                css={`
-                  padding-left: 5px;
-                `}
-              >
-                <Checkbox
-                  id="workbenchtoggleVisibility"
-                  isChecked={item.show}
-                  title={t("workbench.toggleVisibility")}
-                  onChange={() => this.toggleVisibility()}
-                />
-              </Box>
-            )}
             <Box left fullWidth paddedHorizontally centered>
               <DraggableBox
                 onMouseDown={this.props.onMouseDown}
@@ -120,15 +105,37 @@ class WorkbenchItemRaw extends React.Component<IProps> {
                     </Box>
                   </BoxSpan>
                 )}
-                <TextSpan
-                  large
-                  textLight
-                  css={`
-                    overflow-wrap: anywhere;
-                  `}
-                >
-                  {item.name}
-                </TextSpan>
+                {true || item.supportsToggleShown ? (
+                  <Box
+                    left
+                    verticalCenter
+                    css={`
+                      padding-left: 5px;
+                    `}
+                  >
+                    <Checkbox
+                      id="workbenchtoggleVisibility"
+                      isChecked={item.show}
+                      title={t("workbench.toggleVisibility")}
+                      onChange={() => this.toggleVisibility()}
+                      label={item.name}
+                      medium
+                      css={`
+                        overflow-wrap: anywhere;
+                      `}
+                    />
+                  </Box>
+                ) : (
+                  <TextSpan
+                    medium
+                    textLight
+                    css={`
+                      overflow-wrap: anywhere;
+                    `}
+                  >
+                    {item.name}
+                  </TextSpan>
+                )}
               </DraggableBox>
             </Box>
           </Box>
@@ -158,38 +165,42 @@ class WorkbenchItemRaw extends React.Component<IProps> {
           </Box>
         </Box>
         {item.isOpenInWorkbench && (
-          <Box column paddedRatio={2}>
-            <ViewingControls item={item} viewState={this.props.viewState} />
-            <OpacitySection item={item} />
-            <ScaleWorkbenchInfo item={item} />
-            <LeftRightSection item={item} />
-            <TimerSection item={item} />
-            {item.displayChoicesBeforeLegend && this.conceptViewer()}
-            <ChartItemSelector item={item} />
-            <FilterSection item={item} />
-            <DateTimeSelectorSection item={item} />
-            <SatelliteImageryTimeFilterSection item={item} />
-            <DimensionSelectorSection item={item} />
-            <ColorScaleRangeSection
-              item={item}
-              minValue={item.colorScaleMinimum}
-              maxValue={item.colorScaleMaximum}
-            />
-            <DisplayAsPercentSection item={item} />
-            {(item.shortReport ||
-              (item.shortReportSections &&
-                item.shortReportSections.length > 0)) && (
-              <ShortReport item={item} />
-            )}
-            <Legend item={item} />
-            {!item.displayChoicesBeforeLegend && this.conceptViewer()}
-            {CatalogMemberMixin.isMixedInto(this.props.item) &&
-            this.props.item.isLoading ? (
-              <Box paddedVertically>
-                <Loader light />
-              </Box>
-            ) : null}
-          </Box>
+          <>
+            <Spacing bottom={1} />
+            <Box column paddedHorizontally={2}>
+              <ViewingControls item={item} viewState={this.props.viewState} />
+              <OpacitySection item={item} />
+              <ScaleWorkbenchInfo item={item} />
+              <LeftRightSection item={item} />
+              <TimerSection item={item} />
+              {item.displayChoicesBeforeLegend && this.conceptViewer()}
+              <ChartItemSelector item={item} />
+              <FilterSection item={item} />
+              <DateTimeSelectorSection item={item} />
+              <SatelliteImageryTimeFilterSection item={item} />
+              <DimensionSelectorSection item={item} />
+              <ColorScaleRangeSection
+                item={item}
+                minValue={item.colorScaleMinimum}
+                maxValue={item.colorScaleMaximum}
+              />
+              <DisplayAsPercentSection item={item} />
+              {(item.shortReport ||
+                (item.shortReportSections &&
+                  item.shortReportSections.length > 0)) && (
+                <ShortReport item={item} />
+              )}
+              <Legend item={item} />
+              {!item.displayChoicesBeforeLegend && this.conceptViewer()}
+              {CatalogMemberMixin.isMixedInto(this.props.item) &&
+              this.props.item.isLoading ? (
+                <Box paddedVertically>
+                  <Loader light />
+                </Box>
+              ) : null}
+            </Box>
+            <Spacing bottom={2} />
+          </>
         )}
       </StyledLi>
     );

@@ -1,6 +1,7 @@
 import React from "react";
+import { ITextProps } from "../Text";
 
-export interface ICheckboxProps {
+export type ICheckboxProps = {
   /** Sets whether the checkbox begins checked. */
   defaultChecked?: boolean;
   /** id assigned to input */
@@ -34,7 +35,7 @@ export interface ICheckboxProps {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => any;
   /** The value to be used in the checkbox input. This is the value that will be returned on form submission. */
   value?: number | string;
-}
+} & ITextProps;
 
 export interface CheckboxIconProps {
   /** Sets whether the checkbox is checked or unchecked. */

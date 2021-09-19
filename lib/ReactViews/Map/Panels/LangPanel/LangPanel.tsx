@@ -8,8 +8,6 @@ import Ul, { Li } from "../../../../Styled/List";
 import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
 import Styles from "../../menu-bar.scss";
 
-
-
 const stripLangLocale = (lang: string = ""): string => lang.split("-")[0];
 
 type Props = {
@@ -40,7 +38,15 @@ export default (props: Props) => {
       smallScreen={props.smallScreen}
     >
       <Box styledPadding={"20px 10px 10px 10px"}>
-        <Ul spaced lined fullWidth column css={`padding-left: 0;`}>
+        <Ul
+          spaced
+          lined
+          fullWidth
+          column
+          css={`
+            padding-left: 0;
+          `}
+        >
           {Object.entries(
             props.terria.configParameters.languageConfiguration.languages
           ).map(([key, value]) => (

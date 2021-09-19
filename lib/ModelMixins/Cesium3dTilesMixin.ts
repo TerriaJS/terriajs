@@ -556,7 +556,9 @@ export default function Cesium3dTilesMixin<
 
 function normalizeShowExpression(
   show: any
-): { conditions: [string, boolean][] } {
+): {
+  conditions: [string, boolean][];
+} {
   let conditions;
   if (Array.isArray(show?.conditions?.slice())) {
     conditions = [...show.conditions];
@@ -570,7 +572,10 @@ function normalizeShowExpression(
 
 function normalizeColorExpression(
   expr: any
-): { expression?: string; conditions: [string, string][] } {
+): {
+  expression?: string;
+  conditions: [string, string][];
+} {
   const normalized: { expression?: string; conditions: [string, string][] } = {
     conditions: []
   };

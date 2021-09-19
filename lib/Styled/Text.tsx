@@ -48,7 +48,7 @@ interface ITextPropsBase {
   style?: any;
 }
 
-type ITextProps = ITextPropsBase &
+export type ITextProps = ITextPropsBase &
   OneKeyFrom<ITextSize> &
   OneKeyFrom<ITextColor> &
   OneKeyFrom<ITextWeight>;

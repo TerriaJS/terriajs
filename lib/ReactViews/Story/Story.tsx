@@ -12,7 +12,6 @@ import Spacing from "../../Styled/Spacing";
 import Text from "../../Styled/Text";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 
-
 export interface Story {
   title: string;
   text: string;
