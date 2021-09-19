@@ -1,6 +1,6 @@
 import { Ref } from "react";
-import styled, { css } from "styled-components";
-import { Overflow, WordBreak, WhiteSpace, OneKeyFrom } from "./Styled.types";
+import styled from "styled-components";
+import { OneKeyFrom, Overflow, WhiteSpace, WordBreak } from "./Styled.types";
 
 interface Column {
   col1?: boolean;

@@ -1,16 +1,16 @@
-import React from "react";
 import { runInAction } from "mobx";
+import { observer } from "mobx-react";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { useTheme } from "styled-components";
+import ChartView from "../../../Charts/ChartView";
 import ChartableMixin, {
   axesMatch,
   ChartAxis
 } from "../../../ModelMixins/ChartableMixin";
-import { BaseModel } from "../../../Models/Model";
-import { observer } from "mobx-react";
-import ChartView from "../../../Charts/ChartView";
-import { Ul, Li } from "../../../Styled/List";
+import { BaseModel } from "../../../Models/Definition/Model";
 import Checkbox from "../../../Styled/Checkbox/Checkbox";
-import { useTheme } from "styled-components";
-import { useTranslation } from "react-i18next";
+import { Li, Ul } from "../../../Styled/List";
 
 interface IChartItem {
   chartItem: any;
@@ -71,6 +71,7 @@ const ChartItemSelector: React.FC<IChartItemSelector> = observer(
         fullWidth
         spaced
         padded
+        column
         rounded
         backgroundColor={theme?.overlay}
         css={`
