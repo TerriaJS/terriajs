@@ -1,14 +1,11 @@
-import { scaleLinear } from "@vx/scale";
-import { Circle } from "@vx/shape";
+import { scaleLinear } from "@visx/scale";
 import { interpolateNumber as d3InterpolateNumber } from "d3-interpolate";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
-import styled from "styled-components";
-
-const markerRadiusSmall = 2;
-const markerRadiusLarge = 5;
+import Glyphs from "./Glyphs";
+import { GlyphCircle } from "@visx/glyph";
 
 @observer
 class MomentPointsChart extends React.Component {
@@ -17,7 +14,12 @@ class MomentPointsChart extends React.Component {
     chartItem: PropTypes.object.isRequired,
     basisItem: PropTypes.object,
     basisItemScales: PropTypes.object,
-    scales: PropTypes.object.isRequired
+    scales: PropTypes.object.isRequired,
+    glyph: PropTypes.string
+  };
+
+  static defaultProps = {
+    glyph: "circle"
   };
 
   @computed
@@ -31,36 +33,37 @@ class MomentPointsChart extends React.Component {
         domain: basisItemScales.y.domain(),
         range: scales.y.domain()
       });
-      const interpolatedPoints = chartItem.points.map(p =>
-        interpolate(p, basisItem.points, basisToSourceScale)
-      );
+      const interpolatedPoints = chartItem.points.map(p => ({
+        ...p,
+        ...interpolate(p, basisItem.points, basisToSourceScale)
+      }));
       return interpolatedPoints;
     }
     return chartItem.points;
   }
 
   doZoom(scales) {
-    const points = this.props.chartItem.points;
-    if (points.length === 0) return;
-    const n = points.length;
-    const spacing = (scales.x(points[n - 1].x) - scales.x(points[0].x)) / n;
-    const dots = document.querySelectorAll(`g#${this.props.id} circle`);
-    dots.forEach((dot, i) => {
+    const points = this.points;
+    if (points.length === 0) {
+      return;
+    }
+    const glyphs = document.querySelectorAll(
+      `g#${this.props.id} > g.visx-glyph`
+    );
+    glyphs.forEach((glyph, i) => {
       const point = points[i];
       if (point) {
-        const radius =
-          (spacing <= markerRadiusSmall
-            ? markerRadiusSmall
-            : markerRadiusLarge) + (point.isSelected ? 3 : 0);
-        dot.setAttribute("cx", scales.x(point.x));
-        dot.setAttribute("r", radius);
-        dot.setAttribute("opacity", point.isSelected ? 1.0 : 0.3);
+        const left = scales.x(point.x);
+        const top = scales.y(point.y);
+        const scale = point.isSelected ? "scale(1.4, 1.4)" : "";
+        glyph.setAttribute("transform", `translate(${left}, ${top}) ${scale}`);
+        glyph.setAttribute("fill-opacity", point.isSelected ? 1.0 : 0.3);
       }
     });
   }
 
   render() {
-    const { id, chartItem, scales } = this.props;
+    const { id, chartItem, scales, glyph } = this.props;
     const baseKey = `moment-point-${chartItem.categoryName}-${chartItem.name}`;
     const fillColor = chartItem.getColor();
     const isClickable = chartItem.onClick !== undefined;
@@ -74,16 +77,17 @@ class MomentPointsChart extends React.Component {
       }
       return {};
     };
+    const Glyph = Glyphs[glyph] ?? GlyphCircle;
     return (
       <g id={id}>
         <For each="p" index="i" of={this.points}>
-          <StyledCircle
+          <Glyph
             key={`${baseKey}-${i}`}
-            cx={scales.x(p.x)}
-            cy={scales.y(p.y)}
-            r={3}
+            left={scales.x(p.x)}
+            top={scales.y(p.y)}
+            size={100}
             fill={fillColor}
-            opacity={p.isSelected ? 1.0 : 0.3}
+            fillOpacity={p.isSelected ? 1.0 : 0.3}
             {...clickProps(p)}
           />
         </For>
@@ -91,13 +95,6 @@ class MomentPointsChart extends React.Component {
     );
   }
 }
-
-const StyledCircle = styled(Circle)`
-  &:hover {
-    opacity: 1;
-    fill: white;
-  }
-`;
 
 /** Interpolates the given source point {x, y} to the closet point in the `sortedPoints` array.
  *

@@ -1,4 +1,4 @@
-import StratumFromTraits from "../../lib/Models/StratumFromTraits";
+import StratumFromTraits from "../../lib/Models/Definition/StratumFromTraits";
 import TraitsForTesting from "./TraitsForTesting";
 import { expectFalse, expectTrue } from "./TypeChecks";
 import {

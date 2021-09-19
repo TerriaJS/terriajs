@@ -5,10 +5,13 @@ import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import defined from "terriajs-cesium/Source/Core/defined";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
-import CommonStrata from "../../../Models/CommonStrata";
+import CommonStrata from "../../../Models/Definition/CommonStrata";
+import hasTraits from "../../../Models/Definition/hasTraits";
+import Model from "../../../Models/Definition/Model";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import Spacing from "../../../Styled/Spacing";
+import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
 
 interface ILeftRightButton {
   isActive: boolean;
@@ -24,16 +27,16 @@ const LeftRightButton = styled(RawButton).attrs({ fullWidth: true })<
   ${p =>
     p.isActive &&
     `
-    background-color: ${p.theme.colorSplitter};
+    background-color: ${p.theme.colorSecondary};
   `}
   &:hover,
   &:focus {
-    background-color: ${p => p.theme.colorSplitter};
+    background-color: ${p => p.theme.colorSecondary};
   }
 `;
 
 interface ILeftRightSection {
-  item: any;
+  item: Model<SplitterTraits>;
 }
 
 const LeftRightSection: React.FC<ILeftRightSection> = observer(
@@ -72,7 +75,8 @@ const LeftRightSection: React.FC<ILeftRightSection> = observer(
     const splitDirection = item.splitDirection;
 
     if (
-      !item.supportsSplitting ||
+      !hasTraits(item, SplitterTraits, "splitDirection") ||
+      item.disableSplitter ||
       !defined(splitDirection) ||
       !item.terria.showSplitter
     ) {

@@ -5,7 +5,7 @@ interface CssExports {
   'btnDone': string;
   'btnList': string;
   'colorPrimary': string;
-  'colorSplitter': string;
+  'colorSecondary': string;
   'dark': string;
   'darkWithOverlay': string;
   'greyLightest': string;

@@ -2,15 +2,17 @@ import { observable, runInAction, untracked } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
-import Model, { BaseModel, ModelInterface } from "../Models/Model";
+import Result from "../Core/Result";
+import Model, { BaseModel, ModelInterface } from "../Models/Definition/Model";
 import ModelTraits from "../Traits/ModelTraits";
+import { getName } from "./CatalogMemberMixin";
 
 type RequiredTraits = ModelTraits;
 
 interface ReferenceInterface extends ModelInterface<RequiredTraits> {
   readonly isLoadingReference: boolean;
   readonly target: BaseModel | undefined;
-  loadReference(): Promise<void>;
+  loadReference(): Promise<Result<void>>;
 }
 /**
  * A mixin for a Model that acts as a "reference" to another Model, which is its "true"
@@ -44,13 +46,9 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
       });
     });
 
-    /**
-     * Forces load of the reference. This method does _not_ need to consider
-     * whether the reference is already loaded.
-     */
-    protected abstract forceLoadReference(
-      previousTarget: BaseModel | undefined
-    ): Promise<BaseModel | undefined>;
+    get loadReferenceResult() {
+      return this._referenceLoader.result;
+    }
 
     /**
      * Gets a value indicating whether the reference is currently loading. While this is true,
@@ -72,10 +70,31 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
      * {@link ReferenceMixin#target} should return the target of the reference.
      * @param forceReload True to force the load to happen again, even if nothing
      *        appears to have changed since the last time it was loaded.
+     *
+     * This returns a Result object, it will contain errors if they occur - they will not be thrown.
+     * To throw errors, use `(await loadMetadata()).throwIfError()`
+     *
+     * {@see AsyncLoader}
      */
-    loadReference(forceReload: boolean = false): Promise<void> {
-      return this._referenceLoader.load(forceReload);
+    async loadReference(forceReload: boolean = false) {
+      return (await this._referenceLoader.load(forceReload)).clone(
+        `Failed to load reference \`${getName(this)}\``
+      );
     }
+
+    /**
+     * Forces load of the reference. This method does _not_ need to consider
+     * whether the reference is already loaded.
+     *
+     * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
+     *
+     * Errors can be thrown here.
+     *
+     * {@see AsyncLoader}
+     */
+    protected abstract forceLoadReference(
+      previousTarget: BaseModel | undefined
+    ): Promise<BaseModel | undefined>;
 
     dispose() {
       super.dispose();
@@ -86,7 +105,9 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
   return ReferenceMixin;
 }
 
-ReferenceMixin.is = function(model: BaseModel): model is ReferenceInterface {
+ReferenceMixin.isMixedInto = function(
+  model: BaseModel
+): model is ReferenceInterface {
   return "loadReference" in model && "target" in model;
 };
 

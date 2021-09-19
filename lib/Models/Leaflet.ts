@@ -46,9 +46,9 @@ import RasterLayerTraits from "../Traits/TraitsClasses/RasterLayerTraits";
 import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
+import hasTraits from "./Definition/hasTraits";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
-import hasTraits from "./hasTraits";
 import MapInteractionMode from "./MapInteractionMode";
 import Terria from "./Terria";
 
@@ -112,7 +112,7 @@ export default class Leaflet extends GlobeOrMap {
 
   private _makeImageryLayerFromParts(
     parts: ImageryParts,
-    item: MappableMixin.MappableMixin
+    item: MappableMixin.Instance
   ) {
     if (TileErrorHandlerMixin.isMixedInto(item)) {
       // because this code path can run multiple times, make sure we remove the
@@ -353,7 +353,7 @@ export default class Leaflet extends GlobeOrMap {
       ];
       // Flatmap
       const allImageryMapItems = ([] as {
-        item: MappableMixin.MappableMixin;
+        item: MappableMixin.Instance;
         parts: ImageryParts;
       }[]).concat(
         ...catalogItems
@@ -438,19 +438,13 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   doZoomTo(
-    target:
-      | CameraView
-      | Rectangle
-      | DataSource
-      | MappableMixin.MappableMixin
-      | any,
-    flightDurationSeconds: number
+    target: CameraView | Rectangle | DataSource | MappableMixin.Instance | any,
+    flightDurationSeconds: number = 3.0
   ): Promise<void> {
     if (!isDefined(target)) {
       return Promise.resolve();
       //throw new DeveloperError("target is required.");
     }
-
     let bounds;
 
     // Target is a KML data source
@@ -688,35 +682,33 @@ export default class Leaflet extends GlobeOrMap {
     // We want the all available promise to return after the cleanup one to
     // make sure all vector click events have resolved.
     const promises = [cleanup].concat(
-      imageryLayers.map(imageryLayer => {
+      imageryLayers.map(async imageryLayer => {
         const imageryLayerUrl = (<any>imageryLayer.imageryProvider).url;
         const longRadians = CesiumMath.toRadians(latlng.lng);
         const latRadians = CesiumMath.toRadians(latlng.lat);
 
-        return Promise.resolve(
-          tileCoordinates[imageryLayerUrl] ||
-            imageryLayer.getFeaturePickingCoords(
-              this.map,
-              longRadians,
-              latRadians
-            )
-        ).then(coords => {
-          return imageryLayer
-            .pickFeatures(
-              coords.x,
-              coords.y,
-              coords.level,
-              longRadians,
-              latRadians
-            )
-            .then(features => {
-              return {
-                features: features,
-                imageryLayer: imageryLayer,
-                coords: coords
-              };
-            });
-        });
+        if (tileCoordinates[imageryLayerUrl])
+          return tileCoordinates[imageryLayerUrl];
+
+        const coords = await imageryLayer.getFeaturePickingCoords(
+          this.map,
+          longRadians,
+          latRadians
+        );
+
+        const features = await imageryLayer.pickFeatures(
+          coords.x,
+          coords.y,
+          coords.level,
+          longRadians,
+          latRadians
+        );
+
+        return {
+          features: features,
+          imageryLayer: imageryLayer,
+          coords: coords
+        };
       })
     );
 
@@ -848,7 +840,7 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   getImageryLayersForItem(
-    item: MappableMixin.MappableMixin
+    item: MappableMixin.Instance
   ): (CesiumTileLayer | MapboxVectorCanvasTileLayer)[] {
     return filterOutUndefined(
       item.mapItems.map(m => {

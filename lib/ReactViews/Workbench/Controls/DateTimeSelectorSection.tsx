@@ -8,14 +8,14 @@ import styled from "styled-components";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import isDefined from "../../../Core/isDefined";
 import DiscretelyTimeVaryingMixin from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
-import CommonStrata from "../../../Models/CommonStrata";
+import CommonStrata from "../../../Models/Definition/CommonStrata";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
+import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Spacing from "../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../Styled/Text";
 import { formatDateTime } from "../../BottomDock/Timeline/DateFormats";
 import DateTimePicker from "../../BottomDock/Timeline/DateTimePicker";
-import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 
 interface IState {
   isOpen: boolean;

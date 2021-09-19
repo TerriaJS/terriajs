@@ -5,13 +5,13 @@ import { observer } from "mobx-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "styled-components";
+import Terria from "../../Models/Terria";
 import ViewerMode from "../../Models/ViewerMode";
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
 import { GLYPHS, StyledIcon } from "../../Styled/Icon";
 import Spacing from "../../Styled/Spacing";
 import { TerrainSide } from "../Map/Panels/TerrainSide";
-import Terria from "../../Models/Terria";
 
 interface IWorkbenchSplitScreenProps {
   terria: Terria;
@@ -44,7 +44,7 @@ const WorkbenchSplitScreen: React.FC<IWorkbenchSplitScreenProps> = observer(
             centered
             justifySpaceBetween
             css={`
-              background: ${theme.colorSplitter};
+              background: ${theme.colorSecondary};
               border-radius: 2px 2px 0 0;
               padding: 0 10px;
               font-weight: bold;
@@ -76,7 +76,7 @@ const WorkbenchSplitScreen: React.FC<IWorkbenchSplitScreenProps> = observer(
                 padding: 8px 0;
               `
               }}
-              activeColor={theme.colorSplitter}
+              activeColor={theme.colorSecondary}
             ></TerrainSide>
           </Box>
         </Box>

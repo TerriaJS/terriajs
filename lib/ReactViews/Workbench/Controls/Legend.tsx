@@ -7,12 +7,13 @@ import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
-import Model from "../../../Models/Model";
-import proxyCatalogItemUrl from "../../../Models/proxyCatalogItemUrl";
+import Model from "../../../Models/Definition/Model";
+import proxyCatalogItemUrl from "../../../Models/Catalog/proxyCatalogItemUrl";
 import LegendTraits, {
   LegendItemTraits
 } from "../../../Traits/TraitsClasses/LegendTraits";
 import Styles from "./legend.scss";
+import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
 
 /* A lookup map for displayable mime types */
 const DISPLAYABLE_MIME_TYPES = [
@@ -37,7 +38,7 @@ function checkMimeType(legend: Model<LegendTraits>) {
 
 @observer
 export default class Legend extends React.Component<{
-  item: CatalogMemberMixin.CatalogMemberMixin;
+  item: CatalogMemberMixin.Instance;
   forPrint?: boolean;
 }> {
   static defaultProps = {
@@ -250,7 +251,12 @@ export default class Legend extends React.Component<{
   }
 
   render() {
-    if (this.props.item.hideLegendInWorkbench) return null;
+    if (
+      this.props.item.hideLegendInWorkbench ||
+      (MinMaxLevelMixin.isMixedInto(this.props.item) &&
+        this.props.item.scaleWorkbenchInfo)
+    )
+      return null;
 
     if (
       isDefined(this.props.item.legends) &&

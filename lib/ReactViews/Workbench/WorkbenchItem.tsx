@@ -9,14 +9,14 @@ import styled, { DefaultTheme } from "styled-components";
 import getPath from "../../Core/getPath";
 import isDefined from "../../Core/isDefined";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
-import CommonStrata from "../../Models/CommonStrata";
+import CommonStrata from "../../Models/Definition/CommonStrata";
 import ViewState from "../../ReactViewModels/ViewState";
 import Box, { BoxSpan } from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
+import Checkbox from "../../Styled/Checkbox/Checkbox";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import { Li } from "../../Styled/List";
 import { TextSpan } from "../../Styled/Text";
-import Icon, { StyledIcon } from "../../Styled/Icon";
-import Checkbox from "../../Styled/Checkbox/Checkbox";
 import Loader from "../Loader";
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
 import ChartItemSelector from "./Controls/ChartItemSelector";
@@ -30,6 +30,7 @@ import LeftRightSection from "./Controls/LeftRightSection";
 import Legend from "./Controls/Legend";
 import OpacitySection from "./Controls/OpacitySection";
 import SatelliteImageryTimeFilterSection from "./Controls/SatelliteImageryTimeFilterSection";
+import { ScaleWorkbenchInfo } from "./Controls/ScaleWorkbenchInfo";
 import ShortReport from "./Controls/ShortReport";
 import TimerSection from "./Controls/TimerSection";
 import ViewingControls from "./Controls/ViewingControls";
@@ -160,6 +161,7 @@ class WorkbenchItemRaw extends React.Component<IProps> {
           <Box column paddedRatio={2}>
             <ViewingControls item={item} viewState={this.props.viewState} />
             <OpacitySection item={item} />
+            <ScaleWorkbenchInfo item={item} />
             <LeftRightSection item={item} />
             <TimerSection item={item} />
             {item.displayChoicesBeforeLegend && this.conceptViewer()}

@@ -1,18 +1,19 @@
 "use strict";
 
-import { observer } from "mobx-react";
 import { computed } from "mobx";
+import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
-import raiseErrorOnRejectedPromise from "../../../Models/raiseErrorOnRejectedPromise";
-import Icon from "../../../Styled/Icon";
-import ChartPanelDownloadButton from "./ChartPanelDownloadButton";
-import Loader from "../../Loader";
-import Styles from "./chart-panel.scss";
-import Chart from "./BottomDockChart";
 import ChartView from "../../../Charts/ChartView.ts";
+import Result from "../../../Core/Result";
+import MappableMixin from "../../../ModelMixins/MappableMixin";
+import Icon from "../../../Styled/Icon";
+import Loader from "../../Loader";
+import Chart from "./BottomDockChart";
+import Styles from "./chart-panel.scss";
+import ChartPanelDownloadButton from "./ChartPanelDownloadButton";
 
 const height = 300;
 
@@ -46,6 +47,7 @@ class ChartPanel extends React.Component {
   }
 
   render() {
+    const chartableCatalogItems = this.chartView.chartableItems;
     const chartItems = this.chartView.chartItems.filter(
       c => c.showInChartPanel
     );
@@ -66,10 +68,16 @@ class ChartPanel extends React.Component {
     }
     const items = this.props.terria.workbench.items;
     if (items.length > 0) {
-      const loadPromises = items.map(
-        item => item.loadMapItems && item.loadMapItems()
+      // Load all items
+      Promise.all(
+        items
+          .filter(item => MappableMixin.isMixedInto(item))
+          .map(item => item.loadMapItems())
+      ).then(results =>
+        Result.combine(results, "Failed to load chart items").raiseError(
+          this.props.terria
+        )
       );
-      raiseErrorOnRejectedPromise(this.props.terria, Promise.all(loadPromises));
 
       chart = (
         <Chart
@@ -90,7 +98,9 @@ class ChartPanel extends React.Component {
                 <label className={Styles.sectionLabel}>
                   {loader || t("chart.sectionLabel")}
                 </label>
-                <ChartPanelDownloadButton chartableItems={chartItems} />
+                <ChartPanelDownloadButton
+                  chartableItems={chartableCatalogItems}
+                />
                 <button
                   type="button"
                   title={t("chart.closePanel")}

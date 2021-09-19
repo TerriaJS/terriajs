@@ -341,7 +341,6 @@ const StoryBuilder = observer(
       return (
         <Box displayInlineBlock>
           <BadgeBar
-            smallBadge
             label={t("story.badgeBarLabel")}
             badge={this.props.terria.stories.length}
           >

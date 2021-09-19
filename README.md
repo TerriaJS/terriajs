@@ -2,10 +2,7 @@
 TerriaJS
 ============
 
-## v7.x.x deprecations going into 8.0.0
-[Things are deprecating! See here for migration guide & more details.](/doc/contributing/migration-guide.md)
-
-[![Build Status](https://travis-ci.org/TerriaJS/terriajs.svg?branch=next)](https://travis-ci.org/TerriaJS/terriajs) [![Join the chat at https://gitter.im/TerriaJS/terriajs](https://badges.gitter.im/TerriaJS/terriajs.svg)](https://gitter.im/TerriaJS/terriajs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Docs](https://img.shields.io/badge/docs-online-blue.svg)](https://docs.terria.io/)
+[![Build Status](https://github.com/TerriaJS/terriajs/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/TerriaJS/terriajs/actions/workflows/ci.yml) [![Docs](https://img.shields.io/badge/docs-online-blue.svg)](https://docs.terria.io/)
 
 ![Terria logo](terria-logo.png "Terria logo")
 
@@ -13,17 +10,11 @@ TerriaJS is a library for building rich, web-based geospatial data explorers, us
 
 --------------------
 
-**We are currently working on a brand new version of Terria &mdash; verson 8!**
+**We have just released a brand new version of Terria &mdash; verson 8!**
 
-We will soon be posting docs outlining this new version: 
+We've put together a list of things we've removed from version 8 and some steps to help you migrate to the new version in our [migration guide](https://docs.terria.io/guide/contributing/migration-guide/)
 
-- how it differs from the current version 
-- how it will impact users (including guides and tools to help you upgrade)
-- release roadmap (including which features are supported or in development)
-
-Stay tuned!
-
-**Can't wait? Go here for the *next* Terria:** https://github.com/TerriaJS/terriajs/tree/next
+**Not ready to move to version 8 yet? You can find terriajs version 7 here:** https://github.com/TerriaJS/terriajs/tree/terriajs7
 
 --------------------
 

@@ -121,11 +121,11 @@ export default class CorsProxy {
    *       the cache headers with. E.g. '2d' for 2 days.
    * @returns The proxied URL
    */
-  getURL(resource: string, proxyFlag: string) {
+  getURL(resource: string, proxyFlag?: string) {
     return this.getProxyBaseURL(proxyFlag) + resource;
   }
 
-  getProxyBaseURL(proxyFlag: string) {
+  getProxyBaseURL(proxyFlag: string | undefined) {
     var flag = proxyFlag === undefined ? "" : "_" + proxyFlag + "/";
     return this.baseProxyUrl + flag;
   }

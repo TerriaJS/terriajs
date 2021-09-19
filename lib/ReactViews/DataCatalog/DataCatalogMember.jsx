@@ -30,12 +30,12 @@ export default observer(
 
     render() {
       const member =
-        ReferenceMixin.is(this.props.member) &&
+        ReferenceMixin.isMixedInto(this.props.member) &&
         this.props.member.target !== undefined
           ? this.props.member.target
           : this.props.member;
 
-      if (ReferenceMixin.is(member)) {
+      if (ReferenceMixin.isMixedInto(member)) {
         return (
           <DataCatalogReference
             reference={member}
