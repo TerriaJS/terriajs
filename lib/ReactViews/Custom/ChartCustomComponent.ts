@@ -7,15 +7,15 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import LatLonHeight from "../../Core/LatLonHeight";
-import CommonStrata from "../../Models/CommonStrata";
-import createStratumInstance from "../../Models/createStratumInstance";
+import CommonStrata from "../../Models/Definition/CommonStrata";
+import createStratumInstance from "../../Models/Definition/createStratumInstance";
 import Feature from "../../Models/Feature";
-import hasTraits from "../../Models/hasTraits";
-import { BaseModel } from "../../Models/Model";
-import SplitItemReference from "../../Models/SplitItemReference";
-import ChartPointOnMapTraits from "../../Traits/ChartPointOnMapTraits";
-import DiscretelyTimeVaryingTraits from "../../Traits/DiscretelyTimeVaryingTraits";
-import LatLonHeightTraits from "../../Traits/LatLonHeightTraits";
+import hasTraits from "../../Models/Definition/hasTraits";
+import { BaseModel } from "../../Models/Definition/Model";
+import SplitItemReference from "../../Models/Catalog/CatalogReferences/SplitItemReference";
+import ChartPointOnMapTraits from "../../Traits/TraitsClasses/ChartPointOnMapTraits";
+import DiscretelyTimeVaryingTraits from "../../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
+import LatLonHeightTraits from "../../Traits/TraitsClasses/LatLonHeightTraits";
 import ChartPreviewStyles from "./Chart/chart-preview.scss";
 import ChartExpandAndDownloadButtons from "./Chart/ChartExpandAndDownloadButtons";
 import Chart from "./Chart/FeatureInfoPanelChart";
@@ -24,6 +24,7 @@ import CustomComponent, {
   ProcessNodeContext
 } from "./CustomComponent";
 import ChartableMixin from "../../ModelMixins/ChartableMixin";
+import { getName } from "../../ModelMixins/CatalogMemberMixin";
 
 export interface ChartCustomComponentAttributes {
   /**  The title of the chart.  If not supplied, defaults to the name of the context-supplied feature, if available, or else simply "Chart". */
@@ -223,7 +224,15 @@ export default abstract class ChartCustomComponent<
       // Build expand/download buttons
       const sourceItems = (attrs.downloads || attrs.sources || [""]).map(
         (source: string, i: number) => {
-          const id = `${context.catalogItem.uniqueId}:${source}`;
+          // When expanding a chart for this item and there is already an
+          // expanded chart for the item, there are 2 possibilities.
+          // 1. Remove it an show the new chart
+          // 2. Show the new chart alongside the existing chart
+          //
+          // If title & source names for the two expanded charts are the same then
+          // we only show the latest one, otherwise we show both.
+          // To do this we make the id dependant on the parentId, title & source.
+          const id = `${context.catalogItem.uniqueId}:${attrs.title}:${source}`;
 
           const itemOrPromise = this.constructShareableCatalogItem
             ? this.constructShareableCatalogItem(id, context, undefined)
@@ -486,7 +495,10 @@ export default abstract class ChartCustomComponent<
     const terria = sourceItem.terria;
     const ref = new SplitItemReference(createGuid(), terria);
     ref.setTrait(CommonStrata.user, "splitSourceItemId", sourceItem.uniqueId);
-    await ref.loadReference();
+    (await ref.loadReference()).raiseError(
+      terria,
+      `Failed to create SplitItemReference for ${getName(sourceItem)}`
+    );
     if (ref.target) {
       terria.addModel(ref);
       return ref.target as CatalogItemType;

@@ -3,7 +3,6 @@
 interface CssExports {
   'flex': string;
   'langBtn': string;
-  'langPanel': string;
   'menu': string;
   'menu-bar': string;
   'menu-bar--workbenchClosed': string;
@@ -11,7 +10,6 @@ interface CssExports {
   'menuBar': string;
   'menuBarWorkbenchClosed': string;
   'menuItem': string;
-  'storyBtn': string;
 }
 declare var cssExports: CssExports;
 export = cssExports;

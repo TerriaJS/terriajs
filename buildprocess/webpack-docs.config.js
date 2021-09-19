@@ -5,7 +5,7 @@ var path = require("path");
 module.exports = function() {
   const config = {
     mode: "development",
-    entry: path.resolve(__dirname, "generateDocs.js"),
+    entry: path.resolve(__dirname, "generateDocs.ts"),
     output: {
       path: path.resolve(__dirname, "..", "build"),
       filename: "generateDocs.js",

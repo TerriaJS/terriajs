@@ -62,12 +62,12 @@ import MappableMixin, {
   MapItem
 } from "../ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
-import SplitterTraits from "../Traits/SplitterTraits";
+import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
-import hasTraits from "./hasTraits";
+import hasTraits from "./Definition/hasTraits";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
 
@@ -101,7 +101,7 @@ export default class Cesium extends GlobeOrMap {
     | CameraView
     | Rectangle
     | DataSource
-    | MappableMixin.MappableMixin
+    | MappableMixin.Instance
     | /*TODO Cesium.Cesium3DTileset*/ any;
 
   // When true, feature picking is paused. This is useful for temporarily
@@ -239,28 +239,21 @@ export default class Cesium extends GlobeOrMap {
         );
       }
       if (expandLink) {
-        let attributionToAboutPage = document.createElement("div");
-        attributionToAboutPage.innerHTML = `<a href="about.html#data-attribution" target="_blank" rel="noopener noreferrer">Data attribution</a>`;
-        let disclaimerToAboutPage = document.createElement("div");
-        disclaimerToAboutPage.innerHTML = `<a href="about.html#disclaimer" target="_blank" rel="noopener noreferrer">Disclaimer</a>`;
-
-        if (logoContainer && logoContainer.parentNode) {
-          if (disclaimerToAboutPage && disclaimerToAboutPage.firstChild) {
-            logoContainer.parentNode.insertBefore(
-              disclaimerToAboutPage.firstChild,
-              logoContainer.nextSibling
-            );
-          }
-
-          if (attributionToAboutPage && attributionToAboutPage.firstChild) {
-            logoContainer.parentNode.insertBefore(
-              attributionToAboutPage.firstChild,
-              logoContainer.nextSibling
-            );
-          }
-        }
-
-        expandLink.innerText = "Basemap";
+        this.terria.configParameters.extraCreditLinks
+          ?.slice()
+          .reverse()
+          .forEach(({ url, text }) => {
+            // Create a link and insert it after the logo node
+            // Defaults to the given text if no translation is provided
+            const translatedText = i18next.t(text);
+            const a = document.createElement("a");
+            a.href = url;
+            a.target = "_blank";
+            a.rel = "noopener noreferrer";
+            a.innerText = translatedText;
+            logoContainer?.insertAdjacentElement("afterend", a);
+          });
+        expandLink.innerText = i18next.t("map.extraCreditLinks.basemap");
       }
     }
 
@@ -958,9 +951,14 @@ export default class Cesium extends GlobeOrMap {
   @computed
   get _extraCredits() {
     const credits: { cesium?: Credit; terria?: Credit } = {};
-    if (this._terrainWithCredits.credit) {
-      credits.cesium = this._terrainWithCredits.credit;
-    }
+    // Disabling this for now as it doesn't seem to be used anywhere but
+    // results in mapItems being computed twice for all workbench items when
+    // cesium map is loaded. This happens because the reference to
+    // _extraCredits is from within the constructor for Cesium which itself is
+    // called inside an untracked() call in TerriaViewer.
+    // if (this._terrainWithCredits.credit) {
+    //   credits.cesium =  this._terrainWithCredits.credit;
+    //}
     if (!this.terria.configParameters.hideTerriaLogo) {
       const logo = require("../../wwwroot/images/terria-watermark.svg");
       credits.terria = new Credit(
@@ -1176,18 +1174,11 @@ export default class Cesium extends GlobeOrMap {
         id = picked.primitive.id;
       }
 
-      if (id instanceof Entity && vectorFeatures.indexOf(id) === -1) {
-        const feature = Feature.fromEntityCollectionOrEntity(id);
-        if (picked.primitive) {
-          feature.cesiumPrimitive = picked.primitive;
-        }
-        vectorFeatures.push(feature);
-      } else if (
-        picked.primitive &&
-        picked.primitive._catalogItem &&
-        picked.primitive._catalogItem.getFeaturesFromPickResult
-      ) {
-        const result = picked.primitive._catalogItem.getFeaturesFromPickResult(
+      // Try to find catalogItem for picked feature, and use catalogItem.getFeaturesFromPickResult() if it exists - this is used by FeatureInfoMixin
+      const catalogItem = picked?.primitive?._catalogItem ?? id?._catalogItem;
+
+      if (typeof catalogItem?.getFeaturesFromPickResult === "function") {
+        const result = catalogItem.getFeaturesFromPickResult.bind(catalogItem)(
           screenPosition,
           picked
         );
@@ -1198,6 +1189,12 @@ export default class Cesium extends GlobeOrMap {
             vectorFeatures.push(result);
           }
         }
+      } else if (id instanceof Entity && vectorFeatures.indexOf(id) === -1) {
+        const feature = Feature.fromEntityCollectionOrEntity(id);
+        if (picked.primitive) {
+          feature.cesiumPrimitive = picked.primitive;
+        }
+        vectorFeatures.push(feature);
       }
     }
 
@@ -1366,7 +1363,7 @@ export default class Cesium extends GlobeOrMap {
     return result;
   }
 
-  getImageryLayersForItem(item: MappableMixin.MappableMixin): ImageryLayer[] {
+  getImageryLayersForItem(item: MappableMixin.Instance): ImageryLayer[] {
     return filterOutUndefined(
       item.mapItems.map(m => {
         if (ImageryParts.is(m)) {
@@ -1378,7 +1375,7 @@ export default class Cesium extends GlobeOrMap {
 
   private _makeImageryLayerFromParts(
     parts: ImageryParts,
-    item: MappableMixin.MappableMixin
+    item: MappableMixin.Instance
   ): ImageryLayer {
     const layer = this._createImageryLayer(
       parts.imageryProvider,

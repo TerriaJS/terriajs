@@ -6,10 +6,10 @@ import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import loadJson from "../Core/loadJson";
 import Feature from "../Models/Feature";
-import Model from "../Models/Model";
-import FeatureInfoTraits from "../Traits/FeatureInfoTraits";
+import Model from "../Models/Definition/Model";
+import FeatureInfoTraits from "../Traits/TraitsClasses/FeatureInfoTraits";
 import { action } from "mobx";
-import proxyCatalogItemUrl from "../Models/proxyCatalogItemUrl";
+import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 
 type Target = Model<FeatureInfoTraits>;
 

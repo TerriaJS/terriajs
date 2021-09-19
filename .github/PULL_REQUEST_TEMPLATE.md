@@ -7,4 +7,5 @@ This is a description of what I've done in this PR, especially explaining choice
 ### Checklist
 
 -   [ ] There are unit tests to verify my changes are correct or unit tests aren't applicable (if so, write quick reason why unit tests don't exist)
+-   [ ] I've updated relevant documentation in `doc/`.
 -   [ ] I've updated CHANGES.md with what I changed.

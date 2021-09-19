@@ -11,11 +11,16 @@ import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
 import DataPreviewMap from "./DataPreviewMap";
 import Description from "./Description";
 import Styles from "./mappable-preview.scss";
+import {
+  Category,
+  DataSourceAction
+} from "../../Core/AnalyticEvents/analyticEvents";
+import WarningBox from "./WarningBox";
 
 /**
  * @typedef {object} Props
  * @prop {Terria} terria
- * @prop {MappableMixin.MappableMixin} previewed
+ * @prop {MappableMixin.Instance} previewed
  * @prop {ViewState} viewState
  *
  */
@@ -57,13 +62,15 @@ class MappablePreview extends React.Component {
       ) {
         this.props.viewState.closeCatalog();
         this.props.terria.analytics?.logEvent(
-          "dataSource",
-          toAdd ? "addFromPreviewButton" : "removeFromPreviewButton",
+          Category.dataSource,
+          toAdd
+            ? DataSourceAction.addFromPreviewButton
+            : DataSourceAction.removeFromPreviewButton,
           getPath(this.props.previewed)
         );
       }
     } catch (e) {
-      this.props.terria.raiseErrorToUser(e);
+      this.props.terria.raiseErrorToUser(e, undefined, true);
     }
   }
 
@@ -123,6 +130,18 @@ class MappablePreview extends React.Component {
               </div>
             </If>
           </div>
+          <If condition={catalogItem.loadMetadataResult?.error}>
+            <WarningBox
+              error={catalogItem.loadMetadataResult?.error}
+              viewState={this.props.viewState}
+            />
+          </If>
+          <If condition={catalogItem.loadMapItemsResult?.error}>
+            <WarningBox
+              error={catalogItem.loadMapItemsResult?.error}
+              viewState={this.props.viewState}
+            />
+          </If>
           <Description item={catalogItem} />
         </div>
       </div>

@@ -1,3 +1,4 @@
+import { Share } from "catalog-converter";
 import i18next from "i18next";
 import { action, computed, observable, runInAction, toJS, when } from "mobx";
 import { createTransformer } from "mobx-utils";
@@ -12,6 +13,7 @@ import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import URI from "urijs";
+import { Category, LaunchAction } from "../Core/AnalyticEvents/analyticEvents";
 import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
 import ConsoleAnalytics from "../Core/ConsoleAnalytics";
@@ -34,37 +36,50 @@ import { isLatLonHeight } from "../Core/LatLonHeight";
 import loadJson5 from "../Core/loadJson5";
 import Result from "../Core/Result";
 import ServerConfig from "../Core/ServerConfig";
-import TerriaError from "../Core/TerriaError";
+import TerriaError, {
+  TerriaErrorOverrides,
+  TerriaErrorSeverity
+} from "../Core/TerriaError";
 import { Complete } from "../Core/TypeModifiers";
 import { getUriWithoutPath } from "../Core/uriHelpers";
 import PickedFeatures, {
   featureBelongsToCatalogItem,
   isProviderCoordsMap
 } from "../Map/PickedFeatures";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import MappableMixin, { isDataSource } from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
 import { defaultTerms, Term } from "../ReactViewModels/defaultTerms";
-import NotificationState, {
-  Notification
-} from "../ReactViewModels/NotificationState";
+import NotificationState from "../ReactViewModels/NotificationState";
 import { shareConvertNotification } from "../ReactViews/Notification/shareConvertNotification";
-import MappableTraits from "../Traits/MappableTraits";
-import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
+import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
+import MapNavigationModel from "../ViewModels/MapNavigation/MapNavigationModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
-import { BaseMapModel, processBaseMaps } from "./BaseMaps/BaseMapModel";
-import { defaultBaseMaps } from "./BaseMaps/defaultBaseMaps";
+import { BaseMapsModel } from "./BaseMaps/BaseMapsModel";
 import CameraView from "./CameraView";
-import CatalogGroup from "./CatalogGroupNew";
-import CatalogMemberFactory from "./CatalogMemberFactory";
-import Catalog from "./CatalogNew";
-import CommonStrata from "./CommonStrata";
+import Catalog from "./Catalog/Catalog";
+import CatalogGroup from "./Catalog/CatalogGroup";
+import CatalogMemberFactory from "./Catalog/CatalogMemberFactory";
+import MagdaReference, {
+  MagdaReferenceHeaders
+} from "./Catalog/CatalogReferences/MagdaReference";
+import SplitItemReference from "./Catalog/CatalogReferences/SplitItemReference";
+import CommonStrata from "./Definition/CommonStrata";
+import hasTraits from "./Definition/hasTraits";
+import { BaseModel } from "./Definition/Model";
+import updateModelFromJson from "./Definition/updateModelFromJson";
+import upsertModelFromJson from "./Definition/upsertModelFromJson";
+import {
+  ErrorServiceOptions,
+  ErrorServiceProvider,
+  initializeErrorServiceProvider
+} from "./ErrorServiceProviders/ErrorService";
+import StubErrorServiceProvider from "./ErrorServiceProviders/StubErrorServiceProvider";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
-import hasTraits from "./hasTraits";
 import IElementConfig from "./IElementConfig";
 import InitSource, {
   isInitData,
@@ -76,18 +91,13 @@ import Internationalization, {
   I18nStartOptions,
   LanguageConfiguration
 } from "./Internationalization";
-import MagdaReference, { MagdaReferenceHeaders } from "./MagdaReference";
 import MapInteractionMode from "./MapInteractionMode";
-import { BaseModel } from "./Model";
 import NoViewer from "./NoViewer";
-import openGroup from "./openGroup";
 import ShareDataService from "./ShareDataService";
-import SplitItemReference from "./SplitItemReference";
 import TimelineStack from "./TimelineStack";
-import updateModelFromJson from "./updateModelFromJson";
-import upsertModelFromJson from "./upsertModelFromJson";
 import ViewerMode from "./ViewerMode";
 import Workbench from "./Workbench";
+
 // import overrides from "../Overrides/defaults.jsx";
 
 interface ConfigParameters {
@@ -102,7 +112,7 @@ interface ConfigParameters {
   /**
    * The maximum number of "feature info" boxes that can be displayed when clicking a point.
    */
-  defaultMaximumShownFeatureInfos?: number;
+  defaultMaximumShownFeatureInfos: number;
   /**
    * URL of the JSON file that defines region mapping for CSV files.
    */
@@ -197,10 +207,12 @@ interface ConfigParameters {
    * A Google API key for [Google Analytics](https://analytics.google.com).  If specified, TerriaJS will send various events about how it's used to Google Analytics.
    */
   googleAnalyticsKey?: string;
+
   /**
-   * Your `post_client_item` from Rollbar - as of right now, TerriaMap also needs to be modified such that you construct `RollbarErrorProvider` in `index.js`
+   * Error service provider configuration.
    */
-  rollbarAccessToken?: string;
+  errorService?: ErrorServiceOptions;
+
   globalDisclaimer?: any;
   /**
    * True to display welcome message on startup.
@@ -253,6 +265,11 @@ interface ConfigParameters {
    * Minimum length of feedback comment.
    */
   feedbackMinLength?: number;
+
+  /**
+   * Extra links to show in the credit line at the bottom of the map (currently only the Cesium map).
+   */
+  extraCreditLinks?: { url: string; text: string }[];
 }
 
 interface StartOptions {
@@ -270,7 +287,21 @@ interface StartOptions {
   i18nOptions?: I18nStartOptions;
 }
 
-type Analytics = any;
+interface Analytics {
+  start: (
+    userParameters: Partial<{
+      logToConsole: boolean;
+      googleAnalyticsKey: any;
+      googleAnalyticsOptions: any;
+    }>
+  ) => void;
+  logEvent: (
+    category: string,
+    action: string,
+    label?: string,
+    value?: string
+  ) => void;
+}
 
 interface TerriaOptions {
   baseUrl?: string;
@@ -307,6 +338,7 @@ export default class Terria {
   readonly workbench = new Workbench();
   readonly overlays = new Workbench();
   readonly catalog = new Catalog(this);
+  readonly baseMapsModel = new BaseMapsModel("basemaps", this);
   readonly timelineClock = new Clock({ shouldAnimate: false });
   // readonly overrides: any = overrides; // TODO: add options.functionOverrides like in master
 
@@ -342,7 +374,7 @@ export default class Terria {
    * If a global `ga` function is defined, this defaults to `GoogleAnalytics`.  Otherwise, it defaults
    * to `ConsoleAnalytics`.
    */
-  readonly analytics: Analytics;
+  readonly analytics: Analytics | undefined;
 
   /**
    * Gets the stack of layers active on the timeline.
@@ -383,7 +415,7 @@ export default class Terria {
     magdaReferenceHeaders: undefined,
     locationSearchBoundingBox: undefined,
     googleAnalyticsKey: undefined,
-    rollbarAccessToken: undefined,
+    errorService: undefined,
     globalDisclaimer: undefined,
     theme: {},
     showWelcomeMessage: false,
@@ -401,19 +433,16 @@ export default class Terria {
     persistViewerMode: true,
     openAddData: false,
     feedbackPreamble: "feedback.feedbackPreamble",
-    feedbackMinLength: 0
+    feedbackMinLength: 0,
+    extraCreditLinks: [
+      // Default credit links (shown at the bottom of the Cesium map)
+      {
+        text: "map.extraCreditLinks.dataAttribution",
+        url: "about.html#data-attribution"
+      },
+      { text: "map.extraCreditLinks.disclaimer", url: "about.html#disclaimer" }
+    ]
   };
-
-  @observable
-  baseMaps: BaseMapViewModel[] = [];
-
-  /** ID of basemap pulled from initData - this wil be used **before** `initBaseMapName` */
-  initBaseMapId: string | undefined;
-
-  /** Name of basemap pulled from initData - this is for compatibility with sharelinks which use baseMapName instead of baseMapId. This will be used if `initBaseMapId` can't be resolved */
-  initBaseMapName: string | undefined;
-
-  previewBaseMapId: string = "basemap-positron";
 
   @observable
   pickedFeatures: PickedFeatures | undefined;
@@ -456,19 +485,28 @@ export default class Terria {
 
   @observable stories: any[] = [];
 
-  // TODO: this is duplicated with properties on ViewState, which is
-  //       kind of terrible.
   /**
    * Gets or sets the ID of the catalog member that is currently being
-   * previewed.
+   * previewed. This is observed in ViewState. It is used to open "Add data" if a catalog member is open in a share link.
+   * This should stay private - use viewState.viewCatalogMember() instead
    */
-  @observable previewedItemId: string | undefined;
+  @observable private _previewedItemId: string | undefined;
+  get previewedItemId() {
+    return this._previewedItemId;
+  }
 
   /**
    * Base ratio for maximumScreenSpaceError
    * @type {number}
    */
   @observable baseMaximumScreenSpaceError = 2;
+
+  /**
+   * Model to use for map navigation
+   */
+  @observable mapNavigationModel: MapNavigationModel = new MapNavigationModel(
+    this
+  );
 
   /**
    * Gets or sets whether to use the device's native resolution (sets cesium.viewer.resolutionScale to a ratio of devicePixelRatio)
@@ -482,9 +520,18 @@ export default class Terria {
    */
   @observable catalogReferencesLoaded: boolean = false;
 
+  augmentedVirtuality?: any;
+
   readonly notificationState: NotificationState = new NotificationState();
 
   private readonly developmentEnv = process?.env?.NODE_ENV === "development";
+
+  /**
+   * An error service instance. The instance can be configured by setting the
+   * `errorService` config parameter. Here we initialize it to stub provider so
+   * that the `terria.errorService` always exists.
+   */
+  errorService: ErrorServiceProvider = new StubErrorServiceProvider();
 
   constructor(options: TerriaOptions = {}) {
     if (options.baseUrl) {
@@ -509,14 +556,31 @@ export default class Terria {
     return this.error.addEventListener(e => fn(e));
   }
 
-  raiseErrorToUser(error: unknown) {
-    if (this.userProperties.get("ignoreErrors") === "1") {
-      return;
-    }
-    const terriaError = TerriaError.from(error);
-    if (!terriaError.raisedToUser) {
+  /** Raise error to user.
+   *
+   * This accepts same arguments as `TerriaError.from` - but also has:
+   *
+   * @param forceRaiseToUser - which can be used to force raise the error
+   */
+  raiseErrorToUser(
+    error: unknown,
+    overrides?: TerriaErrorOverrides,
+    forceRaiseToUser = false
+  ) {
+    const terriaError = TerriaError.from(error, overrides);
+
+    // Log error to error service
+    this.errorService.error(terriaError);
+    if (
+      forceRaiseToUser ||
+      (this.userProperties.get("ignoreErrors") !== "1" &&
+        terriaError.shouldRaiseToUser &&
+        !terriaError.raisedToUser)
+    ) {
       terriaError.raisedToUser = true;
       this.error.raiseEvent(terriaError);
+    } else {
+      console.log(terriaError);
     }
   }
 
@@ -567,7 +631,9 @@ export default class Terria {
     }
 
     if (this.models.has(model.uniqueId)) {
-      throw new RuntimeError("A model with the specified ID already exists.");
+      throw new RuntimeError(
+        `A model with the specified ID already exists: \`${model.uniqueId}\``
+      );
     }
 
     this.models.set(model.uniqueId, model);
@@ -628,10 +694,24 @@ export default class Terria {
       this.modelIdShareKeysMap.set(id, [shareKey]);
   }
 
+  /**
+   * Initialize errorService from config parameters.
+   */
+  setupErrorServiceProvider(errorService: any) {
+    initializeErrorServiceProvider(errorService)
+      .then(errorService => {
+        this.errorService = errorService;
+      })
+      .catch(e => {
+        console.error("Failed to initialize error service", e);
+      });
+  }
+
   setupInitializationUrls(baseUri: uri.URI, config: any) {
     const initializationUrls: string[] = config?.initializationUrls || [];
     const initSources: InitSource[] = initializationUrls.map(url => ({
       name: `Init URL from config ${url}`,
+      errorSeverity: TerriaErrorSeverity.Error,
       ...generateInitializationUrl(
         baseUri,
         this.configParameters.initFragmentPaths,
@@ -646,6 +726,7 @@ export default class Terria {
           .filter(isJsonString)
           .map(v7initUrl => ({
             name: `V7 Init URL from config ${v7initUrl}`,
+            errorSeverity: TerriaErrorSeverity.Error,
             data: (async () => {
               try {
                 const [{ convertCatalog }, catalog] = await Promise.all([
@@ -663,15 +744,13 @@ export default class Terria {
                   data: (convert.result as JsonObject | null) || {}
                 });
               } catch (error) {
-                return Result.error(
-                  TerriaError.from(error, {
-                    title: { key: "models.catalog.convertErrorTitle" },
-                    message: {
-                      key: "models.catalog.convertErrorMessage",
-                      parameters: { url: v7initUrl }
-                    }
-                  })
-                );
+                return Result.error(error, {
+                  title: { key: "models.catalog.convertErrorTitle" },
+                  message: {
+                    key: "models.catalog.convertErrorMessage",
+                    parameters: { url: v7initUrl }
+                  }
+                });
               }
             })()
           }))
@@ -718,16 +797,18 @@ export default class Terria {
         if (isJsonObject(config) && isJsonObject(config.parameters)) {
           this.updateParameters(config.parameters);
         }
+        if (this.configParameters.errorService) {
+          this.setupErrorServiceProvider(this.configParameters.errorService);
+        }
         this.setupInitializationUrls(baseUri, config);
       });
     } catch (error) {
-      this.raiseErrorToUser(
-        TerriaError.from(error, {
-          sender: this,
-          title: { key: "models.terria.loadConfigErrorTitle" },
-          message: `Couldn't load ${options.configUrl}`
-        })
-      );
+      this.raiseErrorToUser(error, {
+        sender: this,
+        title: { key: "models.terria.loadConfigErrorTitle" },
+        message: `Couldn't load ${options.configUrl}`,
+        severity: TerriaErrorSeverity.Error
+      });
     } finally {
       if (!options.i18nOptions?.skipInit) {
         Internationalization.initLanguage(
@@ -741,7 +822,11 @@ export default class Terria {
     );
 
     this.analytics?.start(this.configParameters);
-    this.analytics?.logEvent("launch", "url", launchUrlForAnalytics);
+    this.analytics?.logEvent(
+      Category.launch,
+      LaunchAction.url,
+      launchUrlForAnalytics
+    );
     this.serverConfig = new ServerConfig();
     const serverConfig = await this.serverConfig.init(
       this.configParameters.serverConfigUrl
@@ -750,8 +835,19 @@ export default class Terria {
     if (this.shareDataService && this.serverConfig.config) {
       this.shareDataService.init(this.serverConfig.config);
     }
+
+    this.baseMapsModel
+      .initializeDefaultBaseMaps()
+      .catchError(error =>
+        this.raiseErrorToUser(
+          TerriaError.from(error, "Failed to load default basemaps")
+        )
+      );
+
     if (options.applicationUrl) {
-      await this.updateApplicationUrl(options.applicationUrl.href);
+      (await this.updateApplicationUrl(options.applicationUrl.href)).raiseError(
+        this
+      );
     }
     this.loadPersistedMapSettings();
   }
@@ -775,31 +871,36 @@ export default class Terria {
   }
 
   async loadPersistedOrInitBaseMap() {
+    const baseMapItems = this.baseMapsModel.baseMapItems;
     // Set baseMap fallback to first option
-    let baseMap = this.baseMaps[0].mappable;
+    let baseMap = baseMapItems[0];
     const persistedBaseMapId = this.getLocalProperty("basemap");
-    const baseMapSearch = this.baseMaps.find(
-      baseMap => baseMap.mappable.uniqueId === persistedBaseMapId
+    const baseMapSearch = baseMapItems.find(
+      baseMapItem => baseMapItem.item?.uniqueId === persistedBaseMapId
     );
-    if (baseMapSearch) {
-      baseMap = baseMapSearch.mappable;
+    if (baseMapSearch?.item && MappableMixin.isMixedInto(baseMapSearch.item)) {
+      baseMap = baseMapSearch;
     } else {
-      // Try to find basemap using initBaseMapId and initBaseMapName
+      // Try to find basemap using defaultBaseMapId and defaultBaseMapName
       const baseMapSearch =
-        this.baseMaps.find(
-          baseMap => baseMap.mappable.uniqueId === this.initBaseMapId
+        baseMapItems.find(
+          baseMapItem =>
+            baseMapItem.item?.uniqueId === this.baseMapsModel.defaultBaseMapId
         ) ??
-        this.baseMaps.find(
-          baseMap =>
-            CatalogMemberMixin.isMixedInto(baseMap.mappable) &&
-            baseMap.mappable.name === this.initBaseMapName
+        baseMapItems.find(
+          baseMapItem =>
+            CatalogMemberMixin.isMixedInto(baseMapItem) &&
+            (<any>baseMapItem.item).name ===
+              this.baseMapsModel.defaultBaseMapName
         );
-      if (baseMapSearch) {
-        baseMap = baseMapSearch.mappable;
+      if (
+        baseMapSearch?.item &&
+        MappableMixin.isMixedInto(baseMapSearch.item)
+      ) {
+        baseMap = baseMapSearch;
       }
     }
-
-    await this.mainViewer.setBaseMap(baseMap);
+    await this.mainViewer.setBaseMap(<MappableMixin.Instance>baseMap.item);
   }
 
   get isLoadingInitSources(): boolean {
@@ -809,7 +910,7 @@ export default class Terria {
   /**
    * Asynchronously loads init sources
    */
-  loadInitSources(): Promise<void> {
+  loadInitSources() {
     return this._initSourceLoader.load();
   }
 
@@ -817,9 +918,20 @@ export default class Terria {
     this._initSourceLoader.dispose();
   }
 
-  updateFromStartData(startData: any, name: string = "Application start data") {
-    interpretStartData(this, startData, name);
-    return this.loadInitSources();
+  async updateFromStartData(
+    startData: any,
+    /** Name for startData initSources - this is only used for debugging purposes */
+    name: string = "Application start data",
+    /** Error severity to use for loading startData init sources - default will be `TerriaErrorSeverity.Error` */
+    errorSeverity?: TerriaErrorSeverity
+  ) {
+    try {
+      await interpretStartData(this, startData, name, errorSeverity);
+    } catch (e) {
+      return Result.error(e);
+    }
+
+    return await this.loadInitSources();
   }
 
   async updateApplicationUrl(newUrl: string) {
@@ -841,7 +953,7 @@ export default class Terria {
       this.raiseErrorToUser(e);
     }
 
-    await this.loadInitSources();
+    return await this.loadInitSources();
   }
 
   @action
@@ -900,16 +1012,18 @@ export default class Terria {
 
     const errors: TerriaError[] = [];
 
-    const initSources = await Promise.all(
+    // Load all init sources
+    const loadedInitSources = await Promise.all(
       this.initSources.map(async initSource => {
         try {
           return {
-            name: initSource.name,
+            ...initSource,
             data: await loadInitSource(initSource)
           };
         } catch (e) {
           errors.push(
             TerriaError.from(e, {
+              severity: initSource.errorSeverity,
               message: {
                 key: "models.terria.loadingInitSourceError2Message",
                 parameters: { loadSource: initSource.name ?? "Unknown source" }
@@ -920,8 +1034,9 @@ export default class Terria {
       })
     );
 
+    // Apply all init sources
     await Promise.all(
-      initSources.map(async initSource => {
+      loadedInitSources.map(async initSource => {
         if (!isDefined(initSource?.data)) return;
         try {
           await this.applyInitData({
@@ -930,6 +1045,7 @@ export default class Terria {
         } catch (e) {
           errors.push(
             TerriaError.from(e, {
+              severity: initSource?.errorSeverity,
               message: {
                 key: "models.terria.loadingInitSourceError2Message",
                 parameters: { loadSource: initSource!.name ?? "Unknown source" }
@@ -940,27 +1056,22 @@ export default class Terria {
       })
     );
 
-    if (this.baseMaps.length === 0) {
-      processBaseMaps(defaultBaseMaps(this), this).catchError(e =>
-        errors.push(e)
-      );
-    }
-
-    if (!this.mainViewer.baseMap) {
-      // Note: there is no "await" here - as basemaps can take a while to load and there is no need to wait for them to load before rendering Terria
-      this.loadPersistedOrInitBaseMap();
-    }
+    runInAction(() => {
+      if (!this.mainViewer.baseMap) {
+        // Note: there is no "await" here - as basemaps can take a while to load and there is no need to wait for them to load before rendering Terria
+        this.loadPersistedOrInitBaseMap();
+      }
+    });
 
     if (errors.length > 0) {
-      this.raiseErrorToUser(
-        TerriaError.combine(errors, {
-          title: { key: "models.terria.loadingInitSourcesErrorTitle" },
-          message: {
-            key: "models.terria.loadingInitSourcesErrorMessage",
-            parameters: { appName: this.appName, email: this.supportEmail }
-          }
-        })
-      );
+      // Note - this will get wrapped up in a Result object because it is called in AsyncLoader
+      throw TerriaError.combine(errors, {
+        title: { key: "models.terria.loadingInitSourcesErrorTitle" },
+        message: {
+          key: "models.terria.loadingInitSourcesErrorMessage",
+          parameters: { appName: this.appName, email: this.supportEmail }
+        }
+      });
     }
   }
 
@@ -1000,29 +1111,17 @@ export default class Terria {
               allModelStratumData,
               replaceStratum
             )
-          ).catchError(error =>
-            errors.push(
-              error.createParentError({
-                message: `Failed to load container ${containerId}`
-              })
-            )
-          );
+          ).pushErrorTo(errors, `Failed to load container ${containerId}`);
 
           if (container) {
-            const dereferenced = ReferenceMixin.is(container)
+            const dereferenced = ReferenceMixin.isMixedInto(container)
               ? container.target
               : container;
             if (GroupMixin.isMixedInto(dereferenced)) {
-              try {
-                await dereferenced.loadMembers();
-              } catch (error) {
-                errors.push(
-                  TerriaError.from(
-                    error,
-                    `Failed to load group ${dereferenced.uniqueId}`
-                  )
-                );
-              }
+              (await dereferenced.loadMembers()).pushErrorTo(
+                errors,
+                `Failed to load group ${dereferenced.uniqueId}`
+              );
             }
           }
         })
@@ -1042,12 +1141,9 @@ export default class Terria {
           allModelStratumData,
           replaceStratum
         )
-      ).catchError(error =>
-        errors.push(
-          error.createParentError({
-            message: `Failed to load SplitItemReference ${splitSourceId}`
-          })
-        )
+      ).pushErrorTo(
+        errors,
+        `Failed to load SplitItemReference ${splitSourceId}`
       );
     }
     const loadedModel = upsertModelFromJson(
@@ -1063,7 +1159,7 @@ export default class Terria {
         replaceStratum,
         matchByShareKey: true
       }
-    ).catchError(error => errors.push(error));
+    ).pushErrorTo(errors);
 
     if (loadedModel && Array.isArray(containerIds)) {
       containerIds.forEach(containerId => {
@@ -1083,22 +1179,16 @@ export default class Terria {
       loadedModel &&
       replaceStratum &&
       dereferenced === undefined &&
-      ReferenceMixin.is(loadedModel) &&
+      ReferenceMixin.isMixedInto(loadedModel) &&
       loadedModel.target !== undefined
     ) {
       dereferenced = {};
     }
-    if (loadedModel && ReferenceMixin.is(loadedModel)) {
-      try {
-        await loadedModel.loadReference();
-      } catch (e) {
-        errors.push(
-          TerriaError.from(
-            e,
-            `Failed to load reference ${loadedModel.uniqueId}`
-          )
-        );
-      }
+    if (loadedModel && ReferenceMixin.isMixedInto(loadedModel)) {
+      (await loadedModel.loadReference()).pushErrorTo(
+        errors,
+        `Failed to load reference ${loadedModel.uniqueId}`
+      );
 
       if (isDefined(loadedModel.target)) {
         updateModelFromJson(
@@ -1106,37 +1196,28 @@ export default class Terria {
           stratumId,
           dereferenced || {},
           replaceStratum
-        ).catchError(e =>
-          errors.push(
-            TerriaError.from(
-              e,
-              `Failed to update model from JSON: ${
-                loadedModel.target!.uniqueId
-              }`
-            )
-          )
+        ).pushErrorTo(
+          errors,
+          `Failed to update model from JSON: ${loadedModel.target!.uniqueId}`
         );
       }
     } else if (dereferenced) {
       throw new TerriaError({
         sender: this,
         title: "Model cannot be dereferenced",
-        message:
-          "The stratum has a `dereferenced` property, but the model cannot be dereferenced."
+        message: `Model ${getName(
+          loadedModel
+        )} has a \`dereferenced\` property, but the model cannot be dereferenced.`
       });
     }
 
     if (loadedModel) {
       const dereferencedGroup = getDereferencedIfExists(loadedModel);
       if (GroupMixin.isMixedInto(dereferencedGroup)) {
-        try {
-          await openGroup(dereferencedGroup, dereferencedGroup.isOpen);
-        } catch (error) {
-          errors.push(
-            TerriaError.from(
-              error,
-              `Failed to open group ${dereferencedGroup.uniqueId}`
-            )
+        if (dereferencedGroup.isOpen) {
+          (await dereferencedGroup.loadMembers()).pushErrorTo(
+            errors,
+            `Failed to open group ${dereferencedGroup.uniqueId}`
           );
         }
       }
@@ -1145,6 +1226,13 @@ export default class Terria {
     return new Result(
       loadedModel,
       TerriaError.combine(errors, {
+        // This will set TerriaErrorSeverity to Error if the model which FAILED to load is in the workbench.
+        severity: () =>
+          this.workbench.items.find(
+            workbenchItem => workbenchItem.uniqueId === modelId
+          )
+            ? TerriaErrorSeverity.Error
+            : TerriaErrorSeverity.Warning,
         message: {
           key: "models.terria.loadModelErrorMessage",
           parameters: { model: modelId }
@@ -1176,13 +1264,23 @@ export default class Terria {
     if (initData.catalog !== undefined) {
       this.catalog.group
         .addMembersFromJson(stratumId, initData.catalog)
-        .catchError(error => {
-          errors.push(error);
-        });
+        .pushErrorTo(errors);
     }
 
     if (isJsonObject(initData.elements)) {
       this.elements.merge(initData.elements);
+      // we don't want to go through all elements unless they are added.
+      if (this.mapNavigationModel.items.length > 0) {
+        this.elements.forEach((element, key) => {
+          if (isDefined(element.visible)) {
+            if (element.visible) {
+              this.mapNavigationModel.show(key);
+            } else {
+              this.mapNavigationModel.hide(key);
+            }
+          }
+        });
+      }
     }
 
     if (Array.isArray(initData.stories)) {
@@ -1205,27 +1303,10 @@ export default class Terria {
       }
     }
 
-    if (isJsonString(initData.baseMapId)) {
-      this.initBaseMapId = initData.baseMapId;
-    }
-
-    if (isJsonString(initData.baseMapName)) {
-      this.initBaseMapName = initData.baseMapName;
-    }
-
-    if (isJsonString(initData.previewBaseMapId)) {
-      this.previewBaseMapId = initData.previewBaseMapId;
-    }
-
-    if (
-      initData.baseMaps &&
-      Array.isArray(initData.baseMaps) &&
-      initData.baseMaps.length > 0
-    ) {
-      processBaseMaps(
-        <BaseMapModel[]>(<unknown>initData.baseMaps),
-        this
-      ).catchError(e => errors.push(e));
+    if (isJsonObject(initData.baseMaps)) {
+      this.baseMapsModel
+        .loadFromJson(CommonStrata.definition, initData.baseMaps)
+        .pushErrorTo(errors);
     }
 
     if (isJsonObject(initData.homeCamera)) {
@@ -1266,16 +1347,14 @@ export default class Terria {
               models,
               replaceStratum
             )
-          ).catchError(error => {
-            errors.push(error);
-          });
+          ).pushErrorTo(errors);
         })
       );
     }
 
     runInAction(() => {
       if (isJsonString(initData.previewedItemId)) {
-        this.previewedItemId = initData.previewedItemId;
+        this._previewedItemId = initData.previewedItemId;
       }
     });
 
@@ -1339,24 +1418,22 @@ export default class Terria {
     await Promise.all(
       newItems.map(async model => {
         try {
-          if (ReferenceMixin.is(model)) {
-            await model.loadReference();
+          if (ReferenceMixin.isMixedInto(model)) {
+            (await model.loadReference()).throwIfError();
             model = model.target || model;
           }
 
           if (MappableMixin.isMixedInto(model)) {
-            await model.loadMapItems();
+            (await model.loadMapItems()).throwIfError();
           }
         } catch (e) {
           errors.push(
             TerriaError.from(e, {
-              title: {
+              severity: TerriaErrorSeverity.Error,
+              message: {
                 key: "models.terria.loadingWorkbenchItemErrorTitle",
                 parameters: {
-                  name:
-                    (CatalogMemberMixin.isMixedInto(model)
-                      ? model.name
-                      : model.uniqueId) ?? "Unknown item"
+                  name: getName(model) ?? "Unknown Model"
                 }
               }
             })
@@ -1414,15 +1491,13 @@ export default class Terria {
           initData: initObjWithoutCatalog
         });
       } catch (e) {
-        this.raiseErrorToUser(
-          TerriaError.from(e, {
-            title: { key: "models.terria.loadingMagdaInitSourceErrorMessage" },
-            message: {
-              key: "models.terria.loadingMagdaInitSourceErrorMessage",
-              parameters: { url: configUrl }
-            }
-          })
-        );
+        this.raiseErrorToUser(e, {
+          title: { key: "models.terria.loadingMagdaInitSourceErrorMessage" },
+          message: {
+            key: "models.terria.loadingMagdaInitSourceErrorMessage",
+            parameters: { url: configUrl }
+          }
+        });
       }
     }
 
@@ -1443,7 +1518,10 @@ export default class Terria {
       reference.setTrait(CommonStrata.definition, "url", magdaRoot);
       reference.setTrait(CommonStrata.definition, "recordId", id);
       reference.setTrait(CommonStrata.definition, "magdaRecord", config);
-      await reference.loadReference();
+      (await reference.loadReference()).raiseError(
+        this,
+        `Failed to load MagdaReference for record ${id}`
+      );
       if (reference.target instanceof CatalogGroup) {
         runInAction(() => {
           this.catalog.group = <CatalogGroup>reference.target;
@@ -1456,6 +1534,7 @@ export default class Terria {
       const { catalog, ...rest } = initObj;
       this.initSources.push({
         name: `Magda map-config aspect terria-init from ${configUrl}`,
+        errorSeverity: TerriaErrorSeverity.Error,
         data: {
           catalog: catalog
         }
@@ -1475,7 +1554,7 @@ export default class Terria {
           hasTraits(item, MappableTraits, "show") &&
           item.show &&
           MappableMixin.isMixedInto(item)
-      ) as MappableMixin.MappableMixin[];
+      ) as MappableMixin.Instance[];
 
       relevantItems.forEach(item => {
         const entities: Entity[] = item.mapItems
@@ -1621,24 +1700,16 @@ async function interpretHash(
   userProperties: Map<string, any>,
   baseUri: uri.URI
 ) {
+  if (isDefined(hashProperties.clean)) {
+    terria.initSources.splice(0, terria.initSources.length);
+  }
+
   runInAction(() => {
     Object.keys(hashProperties).forEach(function(property) {
+      if (["clean", "hideWelcomeMessage", "start", "share"].includes(property))
+        return;
       const propertyValue = hashProperties[property];
-      if (property === "clean") {
-        terria.initSources.splice(0, terria.initSources.length);
-      } else if (property === "hideWelcomeMessage") {
-        terria.configParameters.showWelcomeMessage = false;
-      } else if (property === "start") {
-        try {
-          // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
-          const startData = JSON.parse(propertyValue);
-          interpretStartData(terria, startData, "Start data from hash");
-        } catch (e) {
-          throw TerriaError.from(e, {
-            message: { key: "parsingStartDataErrorMessage" }
-          });
-        }
-      } else if (defined(propertyValue) && propertyValue.length > 0) {
+      if (defined(propertyValue) && propertyValue.length > 0) {
         userProperties.set(property, propertyValue);
       } else {
         const initSourceFile = generateInitializationUrl(
@@ -1648,11 +1719,34 @@ async function interpretHash(
         );
         terria.initSources.push({
           name: `InitUrl from applicationURL hash ${property}`,
+          errorSeverity: TerriaErrorSeverity.Error,
           ...initSourceFile
         });
       }
     });
   });
+
+  if (isDefined(hashProperties.hideWelcomeMessage)) {
+    terria.configParameters.showWelcomeMessage = false;
+  }
+
+  // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
+  if (isDefined(hashProperties.start)) {
+    try {
+      const startData = JSON.parse(hashProperties.start);
+      await interpretStartData(
+        terria,
+        startData,
+        'Start data from hash `"#start"` value',
+        TerriaErrorSeverity.Error,
+        false // Hide conversion warning message - as we assume that people using #start are embedding terria.
+      );
+    } catch (e) {
+      throw TerriaError.from(e, {
+        message: { key: "parsingStartDataErrorMessage" }
+      });
+    }
+  }
 
   // Resolve #share=xyz with the share data service.
   if (
@@ -1662,82 +1756,77 @@ async function interpretHash(
     const shareProps = await terria.shareDataService.resolveData(
       hashProperties.share
     );
-    if (isDefined(shareProps) && shareProps !== {}) {
-      // Convert shareProps to v8 if neccessary
-      const { convertShare } = await import("catalog-converter");
 
-      try {
-        const result = convertShare(shareProps);
+    if (shareProps) {
+      await interpretStartData(
+        terria,
+        shareProps,
+        `Start data from sharelink \`"${hashProperties.share}"\``
+      );
+    }
+  }
+}
+
+async function interpretStartData(
+  terria: Terria,
+  startData: any,
+  /** Name for startData initSources - this is only used for debugging purposes */
+  name: string,
+  /** Error severity to use for loading startData init sources - if not set, TerriaError will be propagated normally */
+  errorSeverity?: TerriaErrorSeverity,
+  showConversionWarning = true
+) {
+  const containsStory = (initSource: any) =>
+    Array.isArray(initSource.stories) && initSource.stories.length;
+  if (isDefined(startData) && startData !== {}) {
+    // Convert startData to v8 if neccessary
+    let startDataV8: Share | null;
+
+    try {
+      if (
+        // If startData.version has version 0.x.x - user catalog-converter to convert startData
+        "version" in startData &&
+        typeof startData.version === "string" &&
+        startData.version.startsWith("0")
+      ) {
+        const { convertShare } = await import("catalog-converter");
+        const result = convertShare(startData);
 
         // Show warning messages if converted
-        if (result.converted) {
+        if (result.converted && showConversionWarning) {
           terria.notificationState.addNotificationToQueue({
             title: i18next.t("share.convertNotificationTitle"),
             message: shareConvertNotification(result.messages)
           });
         }
-
-        if (result.result !== null) {
-          interpretStartData(
-            terria,
-            result.result,
-            `Share data from link: ${hashProperties.share}`
-          );
-        }
-      } catch (error) {
-        throw TerriaError.from(error, {
-          title: { key: "share.convertErrorTitle" },
-          message: { key: "share.convertErrorMessage" }
-        });
+        startDataV8 = result.result;
+      } else {
+        startDataV8 = startData;
       }
+
+      if (startDataV8 !== null && Array.isArray(startDataV8.initSources)) {
+        runInAction(() => {
+          terria.initSources.push(
+            ...startDataV8!.initSources.map((initSource: any) => {
+              return {
+                name,
+                data: initSource,
+                errorSeverity
+              };
+            })
+          );
+        });
+        if (startData.initSources.some(containsStory)) {
+          terria.configParameters.showWelcomeMessage = false;
+        }
+      }
+    } catch (error) {
+      throw TerriaError.from(error, {
+        title: { key: "share.convertErrorTitle" },
+        message: { key: "share.convertErrorMessage" }
+      });
     }
   }
-}
-
-function interpretStartData(terria: Terria, startData: any, name: string) {
-  // TODO: version check, filtering, etc.
-
-  if (startData.initSources) {
-    runInAction(() => {
-      terria.initSources.push(
-        ...startData.initSources.map((initSource: any) => {
-          return {
-            name,
-            data: initSource
-          };
-        })
-      );
-    });
-  }
-
-  // if (defined(startData.version) && startData.version !== latestStartVersion) {
-  //   adjustForBackwardCompatibility(startData);
-  // }
-
-  // if (defined(terria.filterStartDataCallback)) {
-  //   startData = terria.filterStartDataCallback(startData) || startData;
-  // }
-
-  // // Include any initSources specified in the URL.
-  // if (defined(startData.initSources)) {
-  //   for (var i = 0; i < startData.initSources.length; ++i) {
-  //     var initSource = startData.initSources[i];
-  //     // avoid loading terria.json twice
-  //     if (
-  //       temporaryInitSources.indexOf(initSource) < 0 &&
-  //       !initFragmentExists(temporaryInitSources, initSource)
-  //     ) {
-  //       temporaryInitSources.push(initSource);
-  //       // Only add external files to the application's list of init sources.
-  //       if (
-  //         typeof initSource === "string" &&
-  //         persistentInitSources.indexOf(initSource) < 0
-  //       ) {
-  //         persistentInitSources.push(initSource);
-  //       }
-  //     }
-  //   }
-  // }
 }
 
 function setCustomRequestSchedulerDomainLimits(

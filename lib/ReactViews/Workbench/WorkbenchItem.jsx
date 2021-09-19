@@ -11,7 +11,7 @@ import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import getPath from "../../Core/getPath";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
-import CommonStrata from "../../Models/CommonStrata";
+import CommonStrata from "../../Models/Definition/CommonStrata";
 import Box from "../../Styled/Box";
 import Icon from "../../Styled/Icon";
 import Loader from "../Loader";
@@ -31,6 +31,7 @@ import ShortReport from "./Controls/ShortReport";
 import TimerSection from "./Controls/TimerSection";
 import ViewingControls from "./Controls/ViewingControls";
 import Styles from "./workbench-item.scss";
+import { ScaleWorkbenchInfo } from "./Controls/ScaleWorkbenchInfo";
 
 export const WorkbenchItemRaw = observer(
   createReactClass({
@@ -167,6 +168,7 @@ export const WorkbenchItemRaw = observer(
                 viewState={this.props.viewState}
               />
               <OpacitySection item={workbenchItem} />
+              <ScaleWorkbenchInfo item={workbenchItem} />
               <LeftRightSection item={workbenchItem} />
               <TimerSection item={workbenchItem} />
               <If

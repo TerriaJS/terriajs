@@ -1,0 +1,12 @@
+{
+  "models": {
+    "webProcessingService": {
+      "errorDetails": "දෝෂ විස්තර"
+    }
+  },
+  "zoomCotrol": {
+    "zoomOut": "කුඩාලනය කරන්න",
+    "zoomReset": "විශාලනය නැවත සකසන්න",
+    "zoomIn": "විශාලනය කරන්න"
+  }
+}

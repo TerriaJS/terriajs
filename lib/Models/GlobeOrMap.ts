@@ -23,10 +23,10 @@ import MappableMixin from "../ModelMixins/MappableMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import MouseCoords from "../ReactViewModels/MouseCoords";
 import CameraView from "./CameraView";
-import Cesium3DTilesCatalogItem from "./Cesium3DTilesCatalogItem";
-import CommonStrata from "./CommonStrata";
+import Cesium3DTilesCatalogItem from "./Catalog/CatalogItems/Cesium3DTilesCatalogItem";
+import GeoJsonCatalogItem from "./Catalog/CatalogItems/GeoJsonCatalogItem";
+import CommonStrata from "./Definition/CommonStrata";
 import Feature from "./Feature";
-import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import Terria from "./Terria";
 
 require("./ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureDescriptionFromProperties
@@ -34,6 +34,7 @@ require("./ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureD
 export default abstract class GlobeOrMap {
   abstract readonly type: string;
   abstract readonly terria: Terria;
+  abstract readonly canShowSplitter: boolean;
   protected static _featureHighlightName = "___$FeatureHighlight&__";
 
   private _removeHighlightCallback?: () => Promise<void> | void;
@@ -56,7 +57,7 @@ export default abstract class GlobeOrMap {
   abstract destroy(): void;
 
   abstract doZoomTo(
-    target: CameraView | Rectangle | MappableMixin.MappableMixin,
+    target: CameraView | Rectangle | MappableMixin.Instance,
     flightDurationSeconds: number
   ): Promise<void>;
 
@@ -69,8 +70,8 @@ export default abstract class GlobeOrMap {
    */
   @action
   zoomTo(
-    target: CameraView | Rectangle | MappableMixin.MappableMixin,
-    flightDurationSeconds: number
+    target: CameraView | Rectangle | MappableMixin.Instance,
+    flightDurationSeconds: number = 3.0
   ): Promise<void> {
     this.isMapZooming = true;
     const zoomId = createGuid();

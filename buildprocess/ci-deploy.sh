@@ -1,39 +1,18 @@
 #!/bin/sh
 
+set -e
+
+GITHUB_BRANCH=${GITHUB_REF##*/}
+
 # Don't run for greenkeeper branches; there are too many!
-if [[ $TRAVIS_BRANCH =~ ^greenkeeper/ ]]; then
+if [[ $GITHUB_BRANCH =~ ^greenkeeper/ ]]; then
     exit 0
 fi
 
-set -e
-sudo apt-get update
-sudo apt-get install -y httpie
-
 # A version of the branch name that can be used as a DNS name once we prepend and append some stuff.
-SAFE_BRANCH_NAME=$(printf '%s' "${TRAVIS_BRANCH,,:0:40}" | sed 's/[^-a-z0-9]/-/g')
+SAFE_BRANCH_NAME=$(printf '%s' "${GITHUB_BRANCH,,:0:40}" | sed 's/[^-a-z0-9]/-/g')
 
-http POST "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/statuses/${TRAVIS_COMMIT}" "Authorization:token ${GITHUB_TOKEN}" state=pending context=deployment "target_url=${TRAVIS_JOB_WEB_URL}"
-
-# Install gcloud, kubectl, and helm
-mkdir bin
-cd bin
-
-curl -LO https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-191.0.0-linux-x86_64.tar.gz
-tar xzf google-cloud-sdk-191.0.0-linux-x86_64.tar.gz
-source ./google-cloud-sdk/path.bash.inc
-
-curl -LO https://get.helm.sh/helm-v3.3.1-linux-amd64.tar.gz
-tar xzf helm-v3.3.1-linux-amd64.tar.gz
-mv linux-amd64/helm helm
-
-export PATH=$PATH:$PWD
-cd ..
-
-# Authorize use of gcloud and our cluster
-openssl aes-256-cbc -K $encrypted_2ae4d6eff2fd_key -iv $encrypted_2ae4d6eff2fd_iv -in buildprocess/ci-google-cloud-key.json.enc -out buildprocess/ci-google-cloud-key.json -d
-gcloud auth activate-service-account --key-file buildprocess/ci-google-cloud-key.json
-gcloud components install kubectl --quiet
-gcloud container clusters get-credentials terriajs-ci --zone australia-southeast1-a --project terriajs-automated-deployment
+gh api /repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA} -f state=pending -f context=deployment -f target_url=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
 
 # Install some tools we need from npm
 npm install -g https://github.com/terriajs/sync-dependencies
@@ -41,11 +20,13 @@ npm install request@^2.83.0
 
 # Clone and build TerriaMap, using this version of TerriaJS
 TERRIAJS_COMMIT_HASH=$(git rev-parse HEAD)
-git clone -b next https://github.com/TerriaJS/TerriaMap.git
+git clone -b main https://github.com/TerriaJS/TerriaMap.git
 cd TerriaMap
 TERRIAMAP_COMMIT_HASH=$(git rev-parse HEAD)
-sed -i -e 's@"terriajs": ".*"@"terriajs": "'$TRAVIS_REPO_SLUG'#'$TRAVIS_BRANCH'"@g' package.json
+sed -i -e 's@"terriajs": ".*"@"terriajs": "'$GITHUB_REPOSITORY'#'${GITHUB_BRANCH}'"@g' package.json
 sync-dependencies --source terriajs
+git config --global user.email "info@terria.io"
+git config --global user.name "GitHub Actions"
 git commit -a -m 'temporary commit' # so the version doesn't indicate local modifications
 git tag -a "TerriaMap-$TERRIAMAP_COMMIT_HASH--TerriaJS-$TERRIAJS_COMMIT_HASH" -m 'temporary tag'
 rm package-lock.json # because TerriaMap's package-lock.json won't reflect terriajs dependencies
@@ -54,10 +35,11 @@ npm install moment@2.24.0
 npm run gulp build
 
 npm run "--terriajs-map:docker_name=terriajs-ci" docker-build-ci -- --tag "asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME"
-gcloud docker -- push "asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME"
+gcloud auth configure-docker asia.gcr.io --quiet
+docker push "asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME"
 helm upgrade --install --recreate-pods -f ../buildprocess/ci-values.yml --set global.exposeNodePorts=true --set "terriamap.image.full=asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME" --set "terriamap.serverConfig.shareUrlPrefixes.s.accessKeyId=$SHARE_S3_ACCESS_KEY_ID" --set "terriamap.serverConfig.shareUrlPrefixes.s.secretAccessKey=$SHARE_S3_SECRET_ACCESS_KEY" --set "terriamap.serverConfig.feedback.accessToken=$FEEDBACK_GITHUB_TOKEN" "terriajs-$SAFE_BRANCH_NAME" deploy/helm/terria
 
 cd ..
 node buildprocess/ci-cleanup.js
 
-http POST "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/statuses/${TRAVIS_COMMIT}" "Authorization:token ${GITHUB_TOKEN}" state=success context=deployment "target_url=http://ci.terria.io/${SAFE_BRANCH_NAME}/"
+gh api /repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA} -f state=success -f context=deployment -f target_url=http://ci.terria.io/${SAFE_BRANCH_NAME}/

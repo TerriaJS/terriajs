@@ -1,5 +1,6 @@
+import { Ref } from "react";
 import styled, { css } from "styled-components";
-import { Overflow, WordBreak, OneKeyFrom } from "./Styled.types";
+import { Overflow, WordBreak, WhiteSpace, OneKeyFrom } from "./Styled.types";
 
 interface Column {
   col1?: boolean;
@@ -26,6 +27,7 @@ interface IBoxPropsBase {
   styledWidth?: string;
   styledHeight?: string;
   styledMinWidth?: string;
+  styledMaxWidth?: string;
   styledMinHeight?: string;
   styledMaxHeight?: string;
   col?: boolean;
@@ -40,7 +42,8 @@ interface IBoxPropsBase {
   alignItemsFlexEnd?: boolean;
   rightSelf?: boolean;
   column?: boolean;
-  wrap?: boolean;
+  flexWrap?: boolean;
+  whiteSpace?: WhiteSpace;
   flex?: any;
   flexShrinkZero?: boolean;
   boxShadow?: boolean;
@@ -51,11 +54,13 @@ interface IBoxPropsBase {
   paddedHorizontally?: number | boolean;
   paddedVertically?: number | boolean;
   styledPadding?: string;
+  styledMargin?: string;
   backgroundImage?: any;
   backgroundBlackOverlay?: number;
   wordBreak?: WordBreak;
   overflow?: Overflow;
   overflowY?: Overflow;
+  ref?: Ref<any>;
   scroll?: boolean;
   style?: any;
   as?: React.ElementType | keyof JSX.IntrinsicElements;
@@ -86,6 +91,7 @@ export const Box = styled.div<IBoxProps>`
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
   ${props => props.styledHeight && `height: ${props.styledHeight};`}
   ${props => props.styledMinWidth && `min-width: ${props.styledMinWidth};`}
+  ${props => props.styledMaxWidth && `max-width: ${props.styledMaxWidth};`}
   ${props => props.styledMinHeight && `min-height: ${props.styledMinHeight};`}
   ${props => props.styledMaxHeight && `max-height: ${props.styledMaxHeight};`}
 
@@ -128,7 +134,7 @@ export const Box = styled.div<IBoxProps>`
   ${props => props.rightSelf && `align-self: flex-end;`}
 
   ${props => props.column && `flex-direction: column;`}
-  ${props => props.wrap && `flex-wrap: wrap;`}
+  ${props => props.flexWrap && `flex-wrap: wrap;`}
 
   ${props => props.flex && `flex: ${props.flex};`}
   ${props => props.flexShrinkZero && `flex-shrink: 0;`}
@@ -167,6 +173,8 @@ export const Box = styled.div<IBoxProps>`
     `}
   ${props => props.styledPadding && `padding: ${props.styledPadding};`}
 
+  ${props => props.styledMargin && `margin: ${props.styledMargin};`}
+
   ${props =>
     props.backgroundImage &&
     `
@@ -186,6 +194,7 @@ export const Box = styled.div<IBoxProps>`
     `}
 
   ${props => props.wordBreak && `word-break: ${props.wordBreak};`}
+  ${props => props.whiteSpace && `white-space: ${props.whiteSpace};`}
   ${props =>
     props.overflow &&
     `

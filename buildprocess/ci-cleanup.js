@@ -24,16 +24,11 @@ function getAllBranches(repo) {
         ++page;
 
         let url = baseUrl + '?page=' + page;
-        if (process.env.GITHUB_CLIENT_ID) {
-            url += '&client_id=' + process.env.GITHUB_CLIENT_ID;
-        }
-        if (process.env.GITHUB_CLIENT_SECRET) {
-            url += '&client_secret=' + process.env.GITHUB_CLIENT_SECRET;
-        }
         return requestPromise({
             url: url,
             headers: {
-                'User-Agent': 'TerriaJS CI'
+                'User-Agent': 'TerriaJS CI',
+                'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`
             }
         }).then(pageResponse => {
             const pageOfBranches = JSON.parse(pageResponse.body);

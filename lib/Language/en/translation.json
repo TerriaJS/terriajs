@@ -36,7 +36,7 @@
       "content": "## Upload Data\n\nYou can upload your own data to the map to view it with other data sets. Upload a file or link to an existing online data set or data service. Supported data formats include CSV, GeoJSON, KML, GPX and CZML."
     },
     "menuBarMapSettingsButton": {
-      "content": "## Map Settings\n\nCustomise map options such as base maps, map image quality or remove the ground (terrain) to interrogate underground datasets."
+      "content": "## Map Settings\n\nCustomise map settings such as base maps, 2D/3D Terrain, and map image quality for improved performance."
     },
     "menuBarStoryButton": {
       "content": "## Stories\n\nStories allow you to add contextual information to a dataset to bring a narrative to life. Create your own data story using the Story Editor, and share it via the ‘Share’ panel once you’re done."
@@ -45,7 +45,7 @@
       "content": "## View controls\n\nHere you can change the view of the map. You can change the orientation of your view by using the outer ring, and you can tilt the camera angle using the inner ring. Double click to reset the view."
     },
     "mapNavigationSplitterIcon": {
-      "content": "## Compare\n\nA powerful feature of Terria is the ability to compare datasets using a split screen view. For datasets with a time-series/4D component, you can compare dates backwards and forwards in time using the date picker."
+      "content": "## Compare\n\nA powerful feature of Terria is the ability to compare datasets using a split screen view. For datasets with a time-series component, such as satellite images, you can compare dates backwards and forwards in time by clicking on the date picker/selector."
     }
   },
   "measure": {
@@ -85,7 +85,17 @@
     "description": "Drag outer ring: rotate view.\nDrag inner gyroscope: free orbit.\nDouble-click: reset view.\nTIP: You can also free orbit by holding the CTRL key and dragging the map.",
     "title": "Click and drag to rotate the camera",
     "guidanceBtnTitle": "Gyroscope Guidance",
-    "guidanceBtnText": "View detailed instructions on how to use the compass"
+    "guidanceBtnText": "View detailed instructions on how to use the compass",
+    "guidance": {
+      "title": "Gyroscope Controls",
+      "outerRingTitle": "Outer Ring",
+      "outerRingDescription": "Drag the outer ring in a circular motion to rotate the map view 360˚.",
+      "innerCircleTitle": "Inner Circle",
+      "innerCircleDescription1": "Click in the centre and slowly drag up, down, left or right to tilt and rotate the map at the same time.",
+      "innerCircleDescription2": "Double click in here to reset view to its default state.",
+      "ctrlDragDescription": "You can also tilt and rotate the map by holding the CTRL key and dragging the map.",
+      "dismissText": "Close and don't show again"
+    }
   },
   "AR": {
     "title": "Experimental Feature: Augmented Reality",
@@ -252,6 +262,7 @@
     "qualityLabel": "Quality",
     "performanceLabel": "Performance",
     "timeline": {
+      "title": "Timeline",
       "alwaysShowLabel": "Press to start only showing the timeline when there are time-varying datasets on the workbench",
       "hideLabel": "Press to start always showing the timeline, even when no time-varying datasets are on the workbench",
       "alwaysShow": "Always show"
@@ -282,11 +293,13 @@
     "minLength": "Minimum length of feedback comment is {{minLength}}"
   },
   "helpPanel": {
+    "btnText": "Help",
     "menuPaneTitle": "We're here to help",
     "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [info@terria.io](mailto:info@terria.io)",
     "promptMessage": "Find the Tour, how-to videos & other help content here",
     "dismissText": "Got it, thanks!",
-    "takeTour": "Take the tour"
+    "takeTour": "Take the tour",
+    "terriaMapUserGuide": "Terria maps user guide"
   },
   "helpMenu": {
     "btnText": "Help",
@@ -326,7 +339,9 @@
     "locationMarker": "Location Marker",
     "noInfoAvailable": "No information available",
     "siteData": "Site Data",
-    "latLon": "Lat / Lon "
+    "latLon": "Lat / Lon ",
+    "showRawData": "Show Raw Data",
+    "showCuratedData": "Show Curated Data"
   },
   "welcomeMessage": {
     "title": "Let's get you started",
@@ -440,13 +455,17 @@
     "searchCatalogue": "Search the catalogue"
   },
   "mobile": {
-    "toggleNavigation": "toggle navigation"
+    "toggleNavigation": "toggle navigation",
+    "addDataBtnText": "Data",
+    "doneBtnText": "Done"
   },
   "preview": {
     "doesNotContainGeospatialData": "This file does not contain geospatial data.",
     "selectToPreview": "<0>Select a dataset to see a preview </0><1>- OR -</1><2>Go to the map</2>",
     "loading": "PREVIEW LOADING...",
     "preview": "{{appName}} preview",
+    "previewItemErrorTitle": "Catalog item could not be previewed.",
+    "previewItemErrorMessage": "An error occurred while loading the catalog item.",
     "noPreviewAvailable": "NO PREVIEW AVAILABLE",
     "dataPreviewLoading": "DATA PREVIEW LOADING...",
     "dataPreview": "DATA PREVIEW",
@@ -608,7 +627,9 @@
     "sectionLabel": "Charts",
     "closePanel": "Close Panel",
     "expand": "Expand",
-    "download": "Download"
+    "download": "Download",
+    "loading": "Loading chart data...",
+    "noData": "No chartable data found."
   },
   "viewModels": {
     "searchNoLocations": "Sorry, no locations match your search query.",
@@ -672,6 +693,8 @@
       "esri-featureServer": "Esri ArcGIS FeatureServer (single layer)",
       "3d-tiles": "3D Tiles",
       "open-street-map": "Open Street Map Server",
+      "sdmx-group": "SDMX-JSON",
+      "opendatasoft-group": "Opendatasoft Portal",
       "geojson": "GeoJSON",
       "geoRss": "GeoRSS",
       "kml": "KML or KMZ",
@@ -712,6 +735,7 @@
     },
     "terriaError": {
       "defaultTitle": "An error occurred",
+      "defaultMessage": "Unknown error",
       "defaultCombineTitle": "Multiple errors occurred",
       "defaultCombineMessage": "Details of the errors are below"
     }
@@ -775,6 +799,11 @@
       "csvRegionMappingMessageZeroFound": "Zero region names found for region type {{regionType}}",
       "csvRegionMappingMessageZeroBoundariesFound": "Zero region boundaries found for region {{regionName}}",
       "csvRegionMappingMessageLoadError": "Couldn't load region boundaries for region {{regionName}} {{exception}}"
+    },
+    "extraCreditLinks": {
+      "dataAttribution": "Data attribution",
+      "disclaimer": "Disclaimer",
+      "basemap": "Basemap"
     }
   },
   "models": {
@@ -976,7 +1005,7 @@
       "unknownError": "The CSW server reported an unknown error.",
       "exceptionMessage": "The CSW server reported an error:\n\n {{exceptionText}}",
       "errorLoadingTitle": "Could not load CSW",
-      "notUseableTitle": "Catalogue service is not useable",
+      "notUseableTitle": "Catalogue service is not usable",
       "notUseableMessage": "Invalid response obtained when invoking GetDomain on the CSW server. <p>This error may indicate that the catalogue server you specified is temporarily unavailable or there is a problem with your internet connection.  Try opening the processing server again, and if the problem persists, please report it by sending an email to ",
       "errorLoadingRecordsTitle": "Failed to load CSW records.",
       "errorLoadingRecordsMessage": "Invalid response obtained when invoking GetRecords on the CSW server. <p>This error may indicate that the catalogue server you specified is temporarily unavailable or there is a problem with your internet connection.  Try opening the processing server again, and if the problem persists, please report it by sending an email to ",
@@ -1008,8 +1037,8 @@
       "dataSourceErrorMessage": "This data source does not have any details available.",
       "serviceErrorMessage": "This service does not have any details available.",
       "errorLoadingTitle": "Error loading GeoJSON",
-      "errorParsingMessage": "An error occurred parsing the provided data as JSON.  This may indicate that the file is invalid or that it is not supported by {{appName}}. If you would like assistance or further information, please email us at {{email}}",
-      "errorLoadingMessage": "An error occurred while loading a GeoJSON file.  This may indicate that the file is invalid or that it is not supported by {{appName}}. If you would like assistance or further information, please email us at {{email}}",
+      "errorParsingMessage": "An error occurred parsing the provided data as JSON.  This may indicate that the file is invalid or that it is not supported.",
+      "errorLoadingMessage": "An error occurred while loading a GeoJSON file.  This may indicate that the file is invalid or that it is not supported.",
       "couldNotLoadTitle": "Could not load JSON",
       "couldNotLoadMessage": "An error occurred while retrieving JSON data from the provided link. <p>If you entered the link manually, please verify that the link is correct.</p><p>This error may also indicate that the server does not support {{cors}}.  If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by 'appName' itself. <p>If you did not enter this link manually, this error may indicate that the data source you're trying to add is temporarily unavailable or there is a problem with your internet connection.  Try adding the data source again, and if the problem persists, please report it by sending an email to {{email}}.</p>",
       "unableToLoadItemTitle": "No GeoJSON available",
@@ -1105,12 +1134,15 @@
       "serviceErrorMessage": "This service does not have any details available.",
       "distributionDesc": "Distribution Description",
       "idsNotSpecifiedTitle": "recordId must be specified",
-      "idsNotSpecifiedMessage": "MagdaCatalogItem requires that recordId be specified.",
+      "idsNotSpecifiedMessage": "MagdaReference requires that recordId be specified.",
       "retrieveErrorTitle": "Error retrieving MAGDA record",
       "retrieveErrorMessage": "No distribution or dataset ID provided",
       "notCompatibleTitle": "No compatible distributions found",
       "notCompatibleMessageI": "The MAGDA dataset does not have a distribution with the ID {{distributionId}} or it does not have a supported format.",
       "notCompatibleMessageII": "The MAGDA dataset does not have any distributions with a supported format."
+    },
+    "terria-reference": {
+      "failedToLoadTarget": "Failed to load member from external catalog"
     },
     "mapboxMap": {
       "name": "Mapbox Map"
@@ -1208,6 +1240,9 @@
       "unknownFormat": "The server responded with an unknown feature format.",
       "noMatchingFeatures": "The Sensor Observation Service did not return any features matching your query."
     },
+    "openDataSoft": {
+      "viewDatasetPage": "View dataset page"
+    },
     "sdmxServerStratum": {
       "sdmxStructureLoadErrorTitle": "SDMX structure request failed",
       "loadDataErrorTitle": "Failed to load SDMX group",
@@ -1268,6 +1303,7 @@
       "wrongNumberOfElements": "The list of values and the list of region codes do not contain the same number of elements"
     },
     "tableData": {
+      "noData": "No data to show",
       "unsupportedCharactersTitle": "Invalid characters in latitude and longitude columns",
       "unsupportedCharactersMessage": "Could not interpret latitude and longitude pair {{longitude}}, {{latitude}}",
       "bulkGeocoderInfoTitle": "Bulk Geocoder Information",
@@ -1287,7 +1323,7 @@
       "initErrorMessage": "A problem occurred with the Terria server. This may cause some layers or the conversion service to be unavailable.",
       "urlLoadErrorTitle": "Problem loading URL",
       "urlLoadErrorMessage": "A problem occurred while initialising Terria with URL parameters.",
-      "loadModelErrorMessage": "An error ocurred while loading model `{{model}}`.",
+      "loadModelErrorMessage": "An error occurred while loading model `{{model}}`.",
       "loadingMagdaInitSourceErrorTitle": "Error loading Magda initialization source",
       "loadingMagdaInitSourceErrorMessage": "An error occurred while loading initialization information from Magda record `{{url}}`.",
       "loadingInitSourcesErrorTitle": "Error loading map configuration",
@@ -1393,8 +1429,6 @@
       "defaultStyleLabel": "Default style",
       "noLayerFoundTitle": "No layer found",
       "noLayerFoundMessage": "The WMS dataset '{{name}}' has no layers matching '{{layers}}'. {{suggested}} {{line}}{{line}}Either the catalog file has been set up incorrectly, or the WMS server has changed.{{line}}{{line}}Please report this error by sending an email to {{email}}.",
-      "datasetScaleErrorTitle": "Dataset will not be shown at this scale",
-      "datasetScaleErrorMessage": "The {{name}} dataset will not be shown when zoomed in this close to the map because the data custodian has indicated that the data is not intended or suitable for display at this scale.  Click the dataset's Info button on the Now Viewing tab for more information about the dataset and the data custodian.",
       "badlyFormatedTitle": "Badly formatted periodicity",
       "badlyFormatedMessage": "The '{{name}}' dataset has a badly formed periodicity, '{{isoSegments}}'. Click the dataset's Info button for more information about the dataset and the data custodian.",
       "missingDataTitle": "Missing data",
@@ -1472,10 +1506,21 @@
       "groupNotAvailableTitle": "Group is not available",
       "groupNotAvailableMessage": "An error occurred while invoking GetFeature on the WFS server. <p>If you entered the link manually, please verify that the link is correct.</p><p>This error may also indicate that the server does not support <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  If this is your server, verify that CORS is enabled and enable it if it is not. If you do not control the server, please contact the administrator of the server and ask them to enable CORS.  Or, contact the '{{appName}}' Map team by emailing {{email}} and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by '{{appName}}' itself.</p><p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by sending an email to {{email}}.</p>"
     },
+    "shadow": {
+      "name": "Shadows",
+      "options": {
+        "none": "None",
+        "cast": "Cast Only",
+        "receive": "Receive Only",
+        "both": "Cast and Receive"
+      }
+    },
     "commonModelErrors": {
-      "3dTypeIn2dMode": "**Note:** This dataset can not be displayed in the 2D viewer. Switch to one of the 3D map modes.",
-      "datasetScaleErrorTitle": "Dataset will not be shown at this scale",
-      "datasetScaleErrorMessage": "The {{name}} dataset will not be shown when zoomed in this close to the map because the data custodian has indicated that the data is not intended or suitable for display at this scale.  Click the dataset's Info button on the Now Viewing tab for more information about the dataset and the data custodian."
+      "3dTypeIn2dMode": "**Note:** This dataset can not be displayed in the 2D viewer. Switch to one of the 3D map modes."
+    },
+    "scaleDatasetNotVisible": {
+      "scaleZoomIn": "Dataset is not available at this scale, zoom in to see it",
+      "scaleZoomOut": "Dataset is not available at this scale, zoom out to see it"
     }
   },
   "deltaTool": {
@@ -1503,7 +1548,12 @@
   "term": {
     "missingContent": "missing content"
   },
+  "mapNavigation": {
+    "additionalTools": "Additional tools",
+    "additionalToolsTitle": "Open additional tools"
+  },
   "itemSearchTool": {
+    "toolLoadError": "Error loading search tool.",
     "title": "Search {{itemName}}",
     "loading": "Loading search parameters",
     "loadError": "Error loading search parameters. Check console for detailed errors.",

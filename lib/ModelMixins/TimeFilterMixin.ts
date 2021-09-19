@@ -9,14 +9,14 @@ import LatLonHeight from "../Core/LatLonHeight";
 import runLater from "../Core/runLater";
 import { ProviderCoords, ProviderCoordsMap } from "../Map/PickedFeatures";
 import MappableMixin, { ImageryParts } from "./MappableMixin";
-import CommonStrata from "../Models/CommonStrata";
-import createStratumInstance from "../Models/createStratumInstance";
-import Model from "../Models/Model";
-import DiscretelyTimeVaryingTraits from "../Traits/DiscretelyTimeVaryingTraits";
-import MappableTraits from "../Traits/MappableTraits";
+import CommonStrata from "../Models/Definition/CommonStrata";
+import createStratumInstance from "../Models/Definition/createStratumInstance";
+import Model from "../Models/Definition/Model";
+import DiscretelyTimeVaryingTraits from "../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
+import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import TimeFilterTraits, {
   TimeFilterCoordinates
-} from "../Traits/TimeFilterTraits";
+} from "../Traits/TraitsClasses/TimeFilterTraits";
 import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
 import TimeVarying from "./TimeVarying";
 
@@ -208,7 +208,7 @@ namespace TimeFilterMixin {
  * Return the feature at position containing the time filter property.
  */
 const resolveFeature = action(async function(
-  model: MappableMixin.MappableMixin & TimeVarying,
+  model: MappableMixin.Instance & TimeVarying,
   propertyName: string,
   position: LatLonHeight,
   tileCoords: ProviderCoords

@@ -2,11 +2,11 @@ import i18next from "i18next";
 import { action } from "mobx";
 import loadCsv from "../../Core/loadCsv";
 import loadJson5 from "../../Core/loadJson5";
-import { SearchParameterTraits } from "../../Traits/SearchableItemTraits";
+import { SearchParameterTraits } from "../../Traits/TraitsClasses/SearchableItemTraits";
 import ItemSearchProvider, {
   ItemSearchParameter,
   ItemSearchResult
-} from "../ItemSearchProvider";
+} from "./ItemSearchProvider";
 import { Index, IndexRoot, IndexType, parseIndexRoot } from "./Index";
 import joinUrl from "./joinUrl";
 

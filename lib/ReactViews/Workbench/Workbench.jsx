@@ -13,6 +13,10 @@ import BadgeBar from "../BadgeBar";
 import Icon from "../../Styled/Icon";
 import Styles from "./workbench.scss";
 import WorkbenchList from "./WorkbenchList";
+import {
+  Category,
+  DataSourceAction
+} from "../../Core/AnalyticEvents/analyticEvents";
 
 /**
  * @typedef {object} Props
@@ -45,8 +49,8 @@ const Workbench = observer(
     removeAll() {
       this.props.terria.workbench.items.forEach(item => {
         this.props.terria.analytics?.logEvent(
-          "dataSource",
-          "removeAllFromWorkbench",
+          Category.dataSource,
+          DataSourceAction.removeAllFromWorkbench,
           getPath(item)
         );
       });
@@ -63,7 +67,6 @@ const Workbench = observer(
       return (
         <div className={Styles.workbench}>
           <BadgeBar
-            smallBadge
             label={t("workbench.label")}
             badge={this.props.terria.workbench.items.length}
           >
