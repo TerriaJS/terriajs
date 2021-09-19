@@ -1,5 +1,4 @@
 import { FC } from "react";
-
 import Text from "../../../Styled/Text";
 
 const ErrorComponent: FC = ({ children }) => {

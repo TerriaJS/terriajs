@@ -2,8 +2,8 @@ import { FC } from "react";
 import { useTheme } from "styled-components";
 import { BoxSpan } from "../../../Styled/Box";
 import Button from "../../../Styled/Button";
-import { TextSpan } from "../../../Styled/Text";
 import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
+import { TextSpan } from "../../../Styled/Text";
 
 const BackButton: FC<{ onClick: () => void }> = ({ children, onClick }) => {
   const theme = useTheme();

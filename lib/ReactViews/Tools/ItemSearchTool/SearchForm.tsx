@@ -1,6 +1,6 @@
 import { WithT } from "i18next";
 import isEmpty from "lodash-es/isEmpty";
-import { FC, FormEvent, ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
 import {
   useTranslation,
   WithTranslation,
@@ -16,12 +16,12 @@ import ItemSearchProvider, {
   NumericItemSearchParameter,
   TextItemSearchParameter
 } from "../../../Models/ItemSearchProviders/ItemSearchProvider";
+import Box from "../../../Styled/Box";
+import Button from "../../../Styled/Button";
+import Text from "../../../Styled/Text";
 import ErrorComponent from "./ErrorComponent";
 import { ItemSearchQuery } from "./ItemSearchTool";
 import Loading from "./Loading";
-import Text from "../../../Styled/Text";
-import Box from "../../../Styled/Box";
-import Button from "../../../Styled/Button";
 
 export interface SearchFormProps extends WithTranslation {
   itemSearchProvider: ItemSearchProvider;
