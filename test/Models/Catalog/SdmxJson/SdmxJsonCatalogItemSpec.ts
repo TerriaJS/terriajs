@@ -190,6 +190,32 @@ describe("SdmxJsonCatalogItem", function() {
     expect(sdmxItem.columns[0].name).toBe("OBS_VALUE");
   });
 
+  it("loadsDataflow-region-metadataUrls", async function() {
+    runInAction(() => {
+      sdmxItem.setTrait("definition", "agencyId", "SPC");
+      sdmxItem.setTrait("definition", "dataflowId", "DF_CPI");
+      sdmxItem.setTrait("definition", "modelOverrides", [
+        createStratumInstance(ModelOverrideTraits, {
+          id:
+            "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).GEO_PICT",
+          type: "region",
+          regionType: "CNT2"
+        })
+      ]);
+    });
+
+    await sdmxItem.loadMapItems();
+    await sdmxItem.regionProviderList
+      ?.getRegionProvider("CNT2")
+      ?.loadRegionIDs();
+
+    expect(sdmxItem.metadataUrls.length).toBe(1);
+    expect(sdmxItem.metadataUrls[0].title).toBe("Metadata");
+    expect(sdmxItem.metadataUrls[0].url).toBe(
+      "http://purl.org/spc/digilib/doc/a2vsj"
+    );
+  });
+
   it("uses SDMX common concepts", async function() {
     runInAction(() => {
       sdmxItem.setTrait("definition", "agencyId", "ABS");
