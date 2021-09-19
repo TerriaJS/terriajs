@@ -1,36 +1,40 @@
 {
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:jsx-control-statements/recommended"
-  ],
-  "parser": "@babel/eslint-parser",
-  "parserOptions": {
-    "requireConfigFile": false,
-    "ecmaVersion": 2018,
-    "ecmaFeatures": {
-      "jsx": true,
-      "modules": true,
-      "legacyDecorators": true
-    }
-  },
-  "env": {
-    "browser": true,
-    "commonjs": true,
-    "es6": true
-  },
-  "plugins": ["react", "jsx-control-statements"],
-  "globals": {
-    "process": true
-  },
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
-  },
-  "rules": {
-    "jsx-control-statements/jsx-use-if-tag": 0,
-    "react/jsx-no-undef": 0,
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:jsx-control-statements/recommended",
+        "plugin:react/jsx-runtime"
+    ],
+    "parser": "@babel/eslint-parser",
+    "parserOptions": {
+      "requireConfigFile": false,
+      "ecmaVersion": 2018,
+      "ecmaFeatures": {
+        "jsx": true,
+        "modules": true,
+        "legacyDecorators": true
+      }
+    },
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es6": true
+    },
+    "plugins": [
+        "react",
+        "jsx-control-statements"
+    ],
+    "globals": {
+        "process": true
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
+    "rules": {
+        "jsx-control-statements/jsx-use-if-tag": 0,
+        "react/jsx-no-undef": 0,
 
     /*Possible Errors */
     "no-cond-assign": [1, "except-parens"],
