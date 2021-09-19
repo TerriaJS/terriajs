@@ -140,7 +140,7 @@ function configureWebpack(
                 useBuiltIns: "usage"
               }
             ],
-            "@babel/preset-react",
+            ["@babel/preset-react", { runtime: "automatic" }],
             ["@babel/typescript", { allowNamespaces: true }]
           ],
           plugins: [
