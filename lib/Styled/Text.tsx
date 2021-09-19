@@ -39,7 +39,7 @@ interface ITextPropsBase {
   primary?: boolean;
   fullWidth?: boolean;
   noWrap?: boolean;
-  as?: keyof JSX.IntrinsicElements;
+  as?: React.ElementType | keyof JSX.IntrinsicElements;
   styledLineHeight?: string;
   highlightLinks?: boolean;
   overflowHide?: boolean;
