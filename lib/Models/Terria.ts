@@ -1,3 +1,4 @@
+import { Share } from "catalog-converter";
 import i18next from "i18next";
 import { action, computed, observable, runInAction, toJS, when } from "mobx";
 import { createTransformer } from "mobx-utils";
@@ -1779,23 +1780,34 @@ async function interpretStartData(
     Array.isArray(initSource.stories) && initSource.stories.length;
   if (isDefined(startData) && startData !== {}) {
     // Convert startData to v8 if neccessary
-    const { convertShare } = await import("catalog-converter");
+    let startDataV8: Share | null;
 
     try {
-      const result = convertShare(startData);
+      if (
+        // If startData.version has version 0.x.x - user catalog-converter to convert startData
+        "version" in startData &&
+        typeof startData.version === "string" &&
+        startData.version.startsWith("0")
+      ) {
+        const { convertShare } = await import("catalog-converter");
+        const result = convertShare(startData);
 
-      // Show warning messages if converted
-      if (result.converted && showConversionWarning) {
-        terria.notificationState.addNotificationToQueue({
-          title: i18next.t("share.convertNotificationTitle"),
-          message: shareConvertNotification(result.messages)
-        });
+        // Show warning messages if converted
+        if (result.converted && showConversionWarning) {
+          terria.notificationState.addNotificationToQueue({
+            title: i18next.t("share.convertNotificationTitle"),
+            message: shareConvertNotification(result.messages)
+          });
+        }
+        startDataV8 = result.result;
+      } else {
+        startDataV8 = startData;
       }
 
-      if (result.result !== null && Array.isArray(result.result.initSources)) {
+      if (startDataV8 !== null && Array.isArray(startDataV8.initSources)) {
         runInAction(() => {
           terria.initSources.push(
-            ...result.result!.initSources.map((initSource: any) => {
+            ...startDataV8!.initSources.map((initSource: any) => {
               return {
                 name,
                 data: initSource,

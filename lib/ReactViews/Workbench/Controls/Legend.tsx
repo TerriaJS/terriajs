@@ -13,6 +13,7 @@ import LegendTraits, {
   LegendItemTraits
 } from "../../../Traits/TraitsClasses/LegendTraits";
 import Styles from "./legend.scss";
+import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
 
 /* A lookup map for displayable mime types */
 const DISPLAYABLE_MIME_TYPES = [
@@ -250,7 +251,12 @@ export default class Legend extends React.Component<{
   }
 
   render() {
-    if (this.props.item.hideLegendInWorkbench) return null;
+    if (
+      this.props.item.hideLegendInWorkbench ||
+      (MinMaxLevelMixin.isMixedInto(this.props.item) &&
+        this.props.item.scaleWorkbenchInfo)
+    )
+      return null;
 
     if (
       isDefined(this.props.item.legends) &&
