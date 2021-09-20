@@ -356,7 +356,11 @@ const ViewingControls = observer(
             </li>
           </If>
           <If
-            condition={SearchableItemMixin.isMixedInto(item) && item.canSearch}
+            condition={
+              viewState.useSmallScreenInterface === false &&
+              SearchableItemMixin.isMixedInto(item) &&
+              item.canSearch
+            }
           >
             <li>
               <ViewingControlMenuButton
