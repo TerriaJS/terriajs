@@ -31,15 +31,21 @@ class HelpPanel extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      isAnimatingOpen: true
+    };
+  }
+
+  componentDidMount() {
+    // The animation timing is controlled in the CSS so the timeout can be 0 here.
+    setTimeout(() => this.setState({ isAnimatingOpen: false }), 0);
   }
 
   render() {
     const { t } = this.props;
     const helpItems = this.props.terria.configParameters.helpContent;
-    const isVisible =
-      this.props.viewState.showHelpMenu &&
-      this.props.viewState.topElement === "HelpPanel";
     const isExpanded = this.props.viewState.helpPanelExpanded;
+    const isAnimatingOpen = this.state.isAnimatingOpen;
     return (
       <Box
         displayInlineBlock
@@ -54,7 +60,7 @@ class HelpPanel extends React.Component {
             : 110};
           transition: right 0.25s;
           transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-          right: ${isVisible ? (isExpanded ? 490 : 0) : -320}px;
+          right: ${isAnimatingOpen ? -320 : isExpanded ? 490 : 0}px;
         `}
       >
         <Box position="absolute" paddedRatio={3} topRight>
