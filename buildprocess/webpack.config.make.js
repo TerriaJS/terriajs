@@ -22,9 +22,9 @@ module.exports = function(hot, dev) {
             filename: 'TerriaJS-specs.js',
             publicPath: 'build/'
         },
-        devtool: 'source-map',
+        // devtool: 'source-map',
         // Use eval cheap module source map for quicker incremental tests
-        // devtool: dev ? 'eval-cheap-module-source-map' : 'source-map',
+        devtool: dev ? 'eval-cheap-module-source-map' : 'source-map',
         module: {
             rules: [
                 {
@@ -62,5 +62,5 @@ module.exports = function(hot, dev) {
     };
 
     config.plugins = [new MiniCssExtractPlugin({filename: "nationalmap.css", disable: false, ignoreOrder: true})];
-    return configureWebpack(terriaJSBasePath, config, hot, hot, MiniCssExtractPlugin, true);
+    return configureWebpack(terriaJSBasePath, config, dev, hot, MiniCssExtractPlugin, true);
 };
