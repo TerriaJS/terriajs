@@ -341,7 +341,11 @@ const ViewingControls = observer(
             </li>
           </If>
           <If
-            condition={ExportableMixin.isMixedInto(item) && item.canExportData}
+            condition={
+              viewState.useSmallScreenInterface === false &&
+              ExportableMixin.isMixedInto(item) &&
+              item.canExportData
+            }
           >
             <li>
               <ViewingControlMenuButton
