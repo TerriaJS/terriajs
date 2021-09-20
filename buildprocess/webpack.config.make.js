@@ -62,5 +62,5 @@ module.exports = function(hot, dev) {
     };
 
     config.plugins = [new MiniCssExtractPlugin({filename: "nationalmap.css", disable: false, ignoreOrder: true})];
-    return configureWebpack(terriaJSBasePath, config, dev, hot, MiniCssExtractPlugin, true);
+    return configureWebpack(terriaJSBasePath, config, (dev || hot), hot, MiniCssExtractPlugin, true);
 };
