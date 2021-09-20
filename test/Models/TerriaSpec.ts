@@ -4,6 +4,7 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import hashEntity from "../../lib/Core/hashEntity";
+import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import PickedFeatures from "../../lib/Map/PickedFeatures";
 import CameraView from "../../lib/Models/CameraView";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
@@ -863,6 +864,98 @@ describe("Terria", function() {
         });
         expect(terria.pickedFeatures).toBeDefined();
         expect(terria.selectedFeature).toBeDefined();
+      });
+    });
+
+    describe("Parse model IDs in workbench correctly", function() {
+      interface ExtendedLoadWithXhr {
+        (): any;
+        load: { (...args: any[]): any; calls: any };
+      }
+      const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
+      const mapServerUrl =
+        "http://some.service.gov.au/arcgis/rest/services/NSWmouseAlert/MapServer";
+      const magdaUrl = "http://another.service.gov.au";
+
+      beforeEach(function() {
+        const realLoadWithXhr = loadWithXhr.load;
+        // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
+        spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
+          let url = args[0];
+
+          if (url.match("some.service.gov.au")) {
+            if (
+              url ===
+              "http://some.service.gov.au/arcgis/rest/services/NSWmouseAlert/MapServer?f=json"
+            ) {
+              args[0] =
+                "test/Terria/applyInitData/NSWmouseAlert/mapServer.json";
+            } else if (
+              url ===
+              "http://some.service.gov.au/arcgis/rest/services/NSWmouseAlert/MapServer/0?f=json"
+            ) {
+              args[0] = "test/Terria/applyInitData/NSWmouseAlert/0.json";
+            } else {
+              args[0] = "test/Terria/applyInitData/empty.json";
+            }
+          } else if (url.match("another.service.gov.au")) {
+            args[0] =
+              "test/Terria/applyInitData/MagdaReference/magda_record.json";
+          } else if (url.match("services2.arcgis.com")) {
+            if (
+              url ===
+              "https://services2.arcgis.com/iCBB4zKDwkw2iwDD/arcgis/rest/services/Forest_Management_Zones/FeatureServer?f=json"
+            ) {
+              args[0] =
+                "test/Terria/applyInitData/FeatureServer/esri_feature_server.json";
+            } else if (
+              url ===
+              "https://services2.arcgis.com/iCBB4zKDwkw2iwDD/arcgis/rest/services/Forest_Management_Zones/FeatureServer/0?f=json"
+            ) {
+              args[0] = "test/Terria/applyInitData/FeatureServer/0.json";
+            } else {
+              args[0] = "test/Terria/applyInitData/empty.json";
+            }
+          }
+
+          const result = realLoadWithXhr(...args);
+          return result;
+        });
+      });
+
+      it("when the workbench item resolves to a server group", async function() {
+        await terria.applyInitData({
+          initData: {
+            catalog: [
+              {
+                type: "esri-mapServer-group",
+                name: "Mouse Alert",
+                url: mapServerUrl,
+                id: "a-test-server-group"
+              }
+            ],
+            workbench: ["a-test-server-group"]
+          }
+        });
+        expect(terria.workbench.itemIds).toEqual(["a-test-server-group/0"]);
+      });
+
+      it("when the workbench item resolves to a referenced server group", async function() {
+        await terria.applyInitData({
+          initData: {
+            catalog: [
+              {
+                type: "magda",
+                name: "Magda test reference",
+                url: magdaUrl,
+                recordId: "magda-record-test",
+                id: "a-test-magda-record"
+              }
+            ],
+            workbench: ["a-test-magda-record"]
+          }
+        });
+        expect(terria.workbench.itemIds).toEqual(["a-test-magda-record/0"]);
       });
     });
   });

@@ -1,0 +1,291 @@
+{
+  "currentVersion": 10.71,
+  "id": 0,
+  "name": "Mouse_Sites",
+  "type": "Feature Layer",
+  "description": "Data is sourced from DPI.https://www.feralscan.org.au/mousealert/default.aspx. The data is not QA'ed by anyone. Its referential purpose only.",
+  "geometryType": "esriGeometryPoint",
+  "sourceSpatialReference": {
+    "wkid": 4326,
+    "latestWkid": 4326
+  },
+  "copyrightText": "",
+  "parentLayer": null,
+  "subLayers": [],
+  "minScale": 0,
+  "maxScale": 63360.00000000351,
+  "drawingInfo": {
+    "renderer": {
+      "type": "uniqueValue",
+      "field1": "mouse_abundance",
+      "field2": null,
+      "field3": null,
+      "defaultSymbol": null,
+      "defaultLabel": null,
+      "uniqueValueInfos": [
+        {
+          "symbol": {
+            "type": "esriPMS",
+            "url": "ce17669a32bce60200e905137398d882",
+            "imageData": "iVBORw0KGgoAAAANSUhEUgAAABMAAAAQCAYAAAD0xERiAAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAVlJREFUOI2t0z9IVVEcwPGP8uBSiMhd4oENUhJKPV9Db4lQKAla7I/PJQyNisTIEgdRCOLhlEtLECTEI1reZIuuzhG05B5EdwjO1nCWaHp0IbX7tO/445zPOcuv5D9WKnCmu0rzM3fw60jYGPPLjL7k/havj4L1TSTJ7asx9u8ys8U7/DwUVqdxN8YKzFLZYXWTlcNgw5Nc7OUY9HH8VpKMb8b4Ct86wqZZu0k1P5uKsbpN4z2znWATjzhTois/TCjNMLKdphdCCB+LYMkCT2oM7fXKZc7fCGF1g+v/xE6zuMSpfX6sGwsMblBH6yCs/IBr/ZzcD4NzDC9xb50PiHtiYzTmqBwEtVtksMXjr7z4C0vTtPYwhKEeeotgZQbmuLLMW/zIY12XQng2Sa0I1G6ekVaSrHyK8Wkem65S2ym2+PlOnI2x/r1cfpNl2Zf25eZzmh1Cf8oy8Bu7sVI5KdJkKgAAAABJRU5ErkJggg==",
+            "contentType": "image/png",
+            "width": 14,
+            "height": 12,
+            "angle": 0,
+            "xoffset": 0,
+            "yoffset": 0
+          },
+          "value": "High: widespread and obvious in paddocks",
+          "label": "High: widespread and obvious in paddocks",
+          "description": ""
+        },
+        {
+          "symbol": {
+            "type": "esriPMS",
+            "url": "016a0468566c0ed59fc2eafd79636fcc",
+            "imageData": "iVBORw0KGgoAAAANSUhEUgAAABMAAAAQCAYAAAD0xERiAAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAYVJREFUOI2t000og3EcwPHv1lMPEnouWg3JJOLZJCuWzFtjDsPMRYQQkbd2WJTScuLiohSlebnsIEocHDhwkVqJXBd5Duq5OTwOcpqe8vYM3+Ov///z/19+Av+YYOCM2WEhElPoBV7/hLnzGAt1U7uyw9BRnLW/YFk+t9jtsWvW23v6jrbYBp5/hQUqCA/UaTJAfz3y2TVz+zFmf4OVdLpwZaSSCpCVRpq/Wmzaj2mrwENSWE8Nix1VOPSzLpfmOI4R3r2gPxnMN95MkWDGpB+KAkKfG/vxnVSpquqlEUyc9DDltFH82SsNMuXtsjq3cUrbj5hNZCbYRsEXP8ZsgkkvhRunBIDod5hl2I/XKpHzFQZQlkdJsJXB5UMOAO1TzG0jPOpB/g5KNOOjMHrCRFxj6QMmSZJzxKsWp6eQYQSzZJI/6qcxtMsm8KTHTDW56nxnFU4jUKKxFuzRc3H2Kq5N67EeRz7OsxtDi68vuzRXCzy+WNYVRblJXI4s7BFhL0nqPQWAN17CYq1EqYDRAAAAAElFTkSuQmCC",
+            "contentType": "image/png",
+            "width": 14,
+            "height": 12,
+            "angle": 0,
+            "xoffset": 0,
+            "yoffset": 0
+          },
+          "value": "Medium: recent patchy mouse activity in paddocks",
+          "label": "Medium: recent patchy mouse activity in paddocks",
+          "description": ""
+        },
+        {
+          "symbol": {
+            "type": "esriPMS",
+            "url": "189aa819db923658f908c1118119244f",
+            "imageData": "iVBORw0KGgoAAAANSUhEUgAAABMAAAAQCAYAAAD0xERiAAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAZlJREFUOI1jYaAiYCFCDZOQpMGid88vxDEwMPyjyDAhdYds+4gK+4NrJqa+u7p9JiWGCWhb+Ucrm7jLvHlyLeHw1e1LGBgYvpJlmLxVaLOeR5IeAwMDg55Lot6dswern1/YWEWOYVo61iHWnFx8nAwMDAycPAJceo7Brs8vbJzGwMDwhCTD5B1iW9WsgwyQxTRswgzuntzRfOfYskRSDPO39s5RZ2ZmYUQWZGVjZ9F3S9B/d2OH6bt3704TYxi7gXd+gZSGmSZWFxs6G4oaBFa/2zc3gKBh7JIqRWahJco4XMzAxMTEYBaYr3pz39xQBgaG1fgMkzR2SfPiE5aRxWUYAwMDg7iCrpaBb0nKhc09mxgYGH5iNUxe26HZyDdTD59BMGAZUqR6fdfqvJ8/H3ZjGCYkJGSm45WhycHJw0eMYdxCkopmEZkuhxdWLGBgYHiNbBgju5xtnbp1iBkxBsGAvk+2/tUDq6vePTxbiGxYrJSagdnDKweJyfjIQFxIUSeU/dezOc+fP78K07zo7KrGRWdXkWgUGgAAORBx6ct6Qf0AAAAASUVORK5CYII=",
+            "contentType": "image/png",
+            "width": 14,
+            "height": 12,
+            "angle": 0,
+            "xoffset": 0,
+            "yoffset": 0
+          },
+          "value": "Low: few around in paddocks",
+          "label": "Low: few around in paddocks",
+          "description": ""
+        },
+        {
+          "symbol": {
+            "type": "esriPMS",
+            "url": "ed39618817e56d6d32253e484057b655",
+            "imageData": "iVBORw0KGgoAAAANSUhEUgAAABMAAAAQCAYAAAD0xERiAAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAZtJREFUOI1jYaAiYCFCDRODCsMihjsMcQwMDP8oMkzIWChbLtbA/tHiC6nvzr6bSYlhAqJ2ctHSVtIyX+6/THh39t0SBgaGr2QZJuQk1Kzgp6HHwMDAoOinrff43Lvqn4efV5FjmJaki4Y1CzcrJwMDAwMbLzuXirOi69XDz6cxMDA8IckwSU/JVjlHRQNkMTlXBYPnx+83v9v5PJEUw/zlwvXUmZiZGJEFmViZWeR81PUZTv80fffu3WliDGOXD1MpENES08Rmi7SZrOFL6/vVDJvfBRA2TJK9SDneUBmHixkYGBkYFCP1VJ9vfhjKwMCwGp9hkirBKl6cohyyOA1jYGAQVBHQko9SSXm47M4mBgaGn1gNEzIQalYO0dXDZxAMqMXqqz5ceyeP4SdDN4ZhQkJCZqKhGposXKx8xBjGJsylqJKi7XJn6tUFDAwMr5ENY/yqwV5n7qxoRoxBMKAcpq3/eM+dqp83fxYiGxYrocln9ursc2IyPjIQZ1ASCpX8xDDn+fPnV2GaFz2ce3PRw7k3STQLAp5DaQCkdGwMBnt/2gAAAABJRU5ErkJggg==",
+            "contentType": "image/png",
+            "width": 14,
+            "height": 12,
+            "angle": 0,
+            "xoffset": 0,
+            "yoffset": 0
+          },
+          "value": "None seen",
+          "label": "None seen",
+          "description": ""
+        }
+      ],
+      "fieldDelimiter": ","
+    },
+    "transparency": 0,
+    "labelingInfo": null
+  },
+  "defaultVisibility": true,
+  "extent": {
+    "xmin": 114.63501625000004,
+    "ymin": -43.051829999999995,
+    "xmax": 153.54042793999997,
+    "ymax": -19.316838913000026,
+    "spatialReference": {
+      "wkid": 4326,
+      "latestWkid": 4326
+    }
+  },
+  "hasAttachments": false,
+  "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+  "displayField": "id",
+  "typeIdField": null,
+  "subtypeFieldName": null,
+  "subtypeField": null,
+  "defaultSubtypeCode": null,
+  "fields": [
+    {
+      "name": "id",
+      "type": "esriFieldTypeString",
+      "alias": "id",
+      "length": 200,
+      "domain": null
+    },
+    {
+      "name": "date_entered",
+      "type": "esriFieldTypeString",
+      "alias": "date_entered",
+      "length": 200,
+      "domain": null
+    },
+    {
+      "name": "obsolete",
+      "type": "esriFieldTypeString",
+      "alias": "obsolete",
+      "length": 200,
+      "domain": null
+    },
+    {
+      "name": "state",
+      "type": "esriFieldTypeString",
+      "alias": "state",
+      "length": 200,
+      "domain": null
+    },
+    {
+      "name": "start_date_time",
+      "type": "esriFieldTypeString",
+      "alias": "start_date_time",
+      "length": 200,
+      "domain": null
+    },
+    {
+      "name": "test_data",
+      "type": "esriFieldTypeString",
+      "alias": "test_data",
+      "length": 200,
+      "domain": null
+    },
+    {
+      "name": "mouse_cropping_stage",
+      "type": "esriFieldTypeString",
+      "alias": "mouse_cropping_stage",
+      "length": 200,
+      "domain": null
+    },
+    {
+      "name": "mouse_abundance_not_assessed",
+      "type": "esriFieldTypeString",
+      "alias": "mouse_abundance_not_assessed",
+      "length": 200,
+      "domain": null
+    },
+    {
+      "name": "mouse_abundance",
+      "type": "esriFieldTypeString",
+      "alias": "mouse_abundance",
+      "length": 200,
+      "domain": null
+    },
+    {
+      "name": "damage",
+      "type": "esriFieldTypeString",
+      "alias": "damage",
+      "length": 200,
+      "domain": null
+    },
+    {
+      "name": "poison_bait_application",
+      "type": "esriFieldTypeString",
+      "alias": "poison_bait_application",
+      "length": 200,
+      "domain": null
+    },
+    {
+      "name": "comments",
+      "type": "esriFieldTypeString",
+      "alias": "comments",
+      "length": 200,
+      "domain": null
+    },
+    {
+      "name": "platform_type",
+      "type": "esriFieldTypeString",
+      "alias": "platform_type",
+      "length": 200,
+      "domain": null
+    },
+    {
+      "name": "markerurl",
+      "type": "esriFieldTypeString",
+      "alias": "markerurl",
+      "length": 200,
+      "domain": null
+    },
+    {
+      "name": "user_is_member_of_community_gro",
+      "type": "esriFieldTypeString",
+      "alias": "user_is_member_of_community_gro",
+      "length": 200,
+      "domain": null
+    },
+    {
+      "name": "data_last_updated",
+      "type": "esriFieldTypeString",
+      "alias": "data_last_updated",
+      "length": 200,
+      "domain": null
+    },
+    {
+      "name": "objectid",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID",
+      "domain": null
+    },
+    {
+      "name": "shape",
+      "type": "esriFieldTypeGeometry",
+      "alias": "SHAPE",
+      "domain": null
+    }
+  ],
+  "geometryField": {
+    "name": "shape",
+    "type": "esriFieldTypeGeometry",
+    "alias": "SHAPE"
+  },
+  "indexes": [
+    {
+      "name": "r6442_sde_rowid_uk",
+      "fields": "objectid",
+      "isAscending": true,
+      "isUnique": true,
+      "description": ""
+    },
+    {
+      "name": "a6251_ix1",
+      "fields": "shape",
+      "isAscending": true,
+      "isUnique": true,
+      "description": ""
+    }
+  ],
+  "subtypes": [],
+  "relationships": [],
+  "canModifyLayer": true,
+  "canScaleSymbols": false,
+  "hasLabels": false,
+  "capabilities": "Map,Query,Data",
+  "maxRecordCount": 1000,
+  "supportsStatistics": true,
+  "supportsAdvancedQueries": true,
+  "supportedQueryFormats": "JSON, geoJSON",
+  "isDataVersioned": false,
+  "ownershipBasedAccessControlForFeatures": {
+    "allowOthersToQuery": true
+  },
+  "useStandardizedQueries": true,
+  "advancedQueryCapabilities": {
+    "useStandardizedQueries": true,
+    "supportsStatistics": true,
+    "supportsHavingClause": true,
+    "supportsCountDistinct": true,
+    "supportsOrderBy": true,
+    "supportsDistinct": true,
+    "supportsPagination": true,
+    "supportsTrueCurve": true,
+    "supportsReturningQueryExtent": true,
+    "supportsQueryWithDistance": true,
+    "supportsSqlExpression": true
+  },
+  "supportsDatumTransformation": true,
+  "supportsCoordinatesQuantization": true
+}
