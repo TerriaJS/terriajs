@@ -23,6 +23,10 @@ export default <P extends object>(WrappedComponent: React.ComponentType<P>) => {
   }
 
   WithControlledVisibility.propTypes = {
+    // Extend the wrapped components propTypes
+    // because some methods like `processCustomElements` checks for propTypes
+    // before deciding to forward certain props
+    ...WrappedComponent.propTypes,
     elementConfig: PropTypes.object
   };
 

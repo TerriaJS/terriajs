@@ -6,6 +6,7 @@ import isDefined from "../../../../lib/Core/isDefined";
 import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import ArcGisMapServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
+import CommonStrata from "./../../../../lib/Models/Definition/CommonStrata";
 
 configure({
   enforceActions: "observed",
@@ -80,7 +81,7 @@ describe("ArcGisMapServerCatalogItem", function() {
     it("can load all layers", async function() {
       runInAction(() => {
         item = new ArcGisMapServerCatalogItem("test", new Terria());
-        item.setTrait("definition", "url", mapServerUrl);
+        item.setTrait(CommonStrata.definition, "url", mapServerUrl);
       });
       await item.loadMapItems();
       expect(item.allSelectedLayers.length).toBe(74);
@@ -89,8 +90,8 @@ describe("ArcGisMapServerCatalogItem", function() {
     it("can load specific layers", async function() {
       runInAction(() => {
         item = new ArcGisMapServerCatalogItem("test", new Terria());
-        item.setTrait("definition", "url", mapServerUrl);
-        item.setTrait("definition", "layers", "31,32");
+        item.setTrait(CommonStrata.definition, "url", mapServerUrl);
+        item.setTrait(CommonStrata.definition, "layers", "31,32");
       });
       await item.loadMapItems();
       expect(item.allSelectedLayers.length).toBe(2);
@@ -99,7 +100,7 @@ describe("ArcGisMapServerCatalogItem", function() {
     it("can load a single layer given in the URL", async function() {
       runInAction(() => {
         item = new ArcGisMapServerCatalogItem("test", new Terria());
-        item.setTrait("definition", "url", singleLayerUrl);
+        item.setTrait(CommonStrata.definition, "url", singleLayerUrl);
       });
       await item.loadMapItems();
       expect(item.allSelectedLayers.length).toBe(1);
@@ -110,8 +111,12 @@ describe("ArcGisMapServerCatalogItem", function() {
       beforeEach(() => {
         runInAction(() => {
           item = new ArcGisMapServerCatalogItem("test", new Terria());
-          item.setTrait("definition", "url", singleLayerUrl);
-          item.setTrait("definition", "tokenUrl", "http://example.com/token");
+          item.setTrait(CommonStrata.definition, "url", singleLayerUrl);
+          item.setTrait(
+            CommonStrata.definition,
+            "tokenUrl",
+            "http://example.com/token"
+          );
         });
       });
 
@@ -142,7 +147,7 @@ describe("ArcGisMapServerCatalogItem", function() {
     beforeEach(async function() {
       runInAction(() => {
         item = new ArcGisMapServerCatalogItem("test", new Terria());
-        item.setTrait("definition", "url", mapServerUrl);
+        item.setTrait(CommonStrata.definition, "url", mapServerUrl);
       });
       await item.loadMapItems();
     });
@@ -153,12 +158,16 @@ describe("ArcGisMapServerCatalogItem", function() {
 
     describe("the mapItem", function() {
       it("correctly sets `alpha`", function() {
-        runInAction(() => item.setTrait("definition", "opacity", 0.42));
+        runInAction(() =>
+          item.setTrait(CommonStrata.definition, "opacity", 0.42)
+        );
         expect(item.mapItems[0].alpha).toBe(0.42);
       });
 
       it("correctly sets `show`", function() {
-        runInAction(() => item.setTrait("definition", "show", false));
+        runInAction(() =>
+          item.setTrait(CommonStrata.definition, "show", false)
+        );
         expect(item.mapItems[0].show).toBe(false);
       });
 
@@ -167,9 +176,16 @@ describe("ArcGisMapServerCatalogItem", function() {
 
         beforeEach(function() {
           runInAction(() => {
-            item.setTrait("definition", "layers", "31");
-            item.setTrait("definition", "parameters", { foo: "bar" });
-            item.setTrait("definition", "maximumScaleBeforeMessage", 1);
+            item.setTrait(CommonStrata.definition, "layers", "31");
+            item.setTrait(CommonStrata.definition, "parameters", {
+              foo: "bar"
+            });
+            item.setTrait(CommonStrata.definition, "minScaleDenominator", 1);
+            item.setTrait(
+              CommonStrata.definition,
+              "hideLayerAfterMinScaleDenominator",
+              true
+            );
           });
 
           imageryProvider = item.mapItems[0]
@@ -191,7 +207,11 @@ describe("ArcGisMapServerCatalogItem", function() {
         });
 
         it("converts layer names to layer ids when constructing imagery provider", function() {
-          item.setTrait("definition", "layers", "Offshore_Rocks_And_Wrecks");
+          item.setTrait(
+            CommonStrata.definition,
+            "layers",
+            "Offshore_Rocks_And_Wrecks"
+          );
           const imageryProvider = item.mapItems[0]
             .imageryProvider as ArcGisMapServerImageryProvider;
           expect(imageryProvider.layers).toBe("31");
@@ -215,10 +235,15 @@ describe("ArcGisMapServerCatalogItem", function() {
           expect(imageryProvider.enablePickFeatures).toBe(true);
         });
 
-        it("raise an error if requested level is above maximumScaleBeforeMessage", function() {
+        it("show scaleWorkbenchInfo when hideLayerAfterMinScaleDenominator", function() {
+          item.setTrait(
+            CommonStrata.definition,
+            "hideLayerAfterMinScaleDenominator",
+            true
+          );
           spyOn(item.terria, "raiseErrorToUser");
           imageryProvider.requestImage(0, 0, 100);
-          expect(item.terria.raiseErrorToUser).toHaveBeenCalled();
+          expect(item.scaleWorkbenchInfo).toBeDefined();
         });
       });
     });
@@ -265,7 +290,7 @@ describe("ArcGisMapServerCatalogItem", function() {
       runInAction(() => {
         item = new ArcGisMapServerCatalogItem("test", new Terria());
         item.setTrait(
-          "definition",
+          CommonStrata.definition,
           "url",
           "http://example.com/cadastre_history/MapServer"
         );
