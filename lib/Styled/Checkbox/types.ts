@@ -1,6 +1,8 @@
+import { TFunctionResult } from "i18next";
 import React from "react";
+import { ITextProps } from "../Text";
 
-export interface ICheckboxProps {
+export type ICheckboxProps = {
   /** Sets whether the checkbox begins checked. */
   defaultChecked?: boolean;
   /** id assigned to input */
@@ -18,11 +20,13 @@ export interface ICheckboxProps {
   isIndeterminate?: boolean;
   /** Sets whether the checkbox should take up the full width of the parent. */
   isFullWidth?: boolean;
+  /** Title of the html component */
+  title?: string;
   /**
    * The label to be displayed to the right of the checkbox. The label is part
    * of the clickable element to select the checkbox.
    */
-  label?: React.ReactChild;
+  label?: React.ReactChild | TFunctionResult;
   /** The name of the submitted field in a checkbox. */
   name?: string;
   /**
@@ -32,7 +36,7 @@ export interface ICheckboxProps {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => any;
   /** The value to be used in the checkbox input. This is the value that will be returned on form submission. */
   value?: number | string;
-}
+} & ITextProps;
 
 export interface CheckboxIconProps {
   /** Sets whether the checkbox is checked or unchecked. */
@@ -44,6 +48,4 @@ export interface CheckboxIconProps {
    * style and does not modify the isChecked property.
    */
   isIndeterminate?: boolean;
-  /** The label for icon to be displayed */
-  label: any;
 }

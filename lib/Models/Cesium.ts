@@ -65,9 +65,9 @@ import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
 import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
+import hasTraits from "./Definition/hasTraits";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
-import hasTraits from "./Definition/hasTraits";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
 
@@ -115,6 +115,7 @@ export default class Cesium extends GlobeOrMap {
   private readonly _disposeWorkbenchMapItemsSubscription: () => void;
   private readonly _disposeTerrainReaction: () => void;
   private readonly _disposeSplitterReaction: () => void;
+  private readonly _disposeResolutionReaction: () => void;
 
   private _createImageryLayer: (
     ip: ImageryProvider,
@@ -432,7 +433,7 @@ export default class Cesium extends GlobeOrMap {
     });
     this._disposeSplitterReaction = this._reactToSplitterChanges();
 
-    autorun(() => {
+    this._disposeResolutionReaction = autorun(() => {
       (this.cesiumWidget as any).useBrowserRecommendedResolution = !this.terria
         .useNativeResolution;
       this.cesiumWidget.scene.globe.maximumScreenSpaceError = this.terria.baseMaximumScreenSpaceError;
@@ -499,6 +500,7 @@ export default class Cesium extends GlobeOrMap {
     this.dataSourceDisplay.destroy();
 
     this._disposeTerrainReaction();
+    this._disposeResolutionReaction();
 
     this._disposeSelectedFeatureSubscription();
     this._disposeSplitterReaction();
