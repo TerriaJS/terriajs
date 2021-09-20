@@ -1,7 +1,8 @@
 import { runInAction } from "mobx";
-import createStratumInstance from "../../../../lib/Models/Definition/createStratumInstance";
 import SdmxJsonCatalogItem from "../../../../lib/Models/Catalog/SdmxJson/SdmxJsonCatalogItem";
+import createStratumInstance from "../../../../lib/Models/Definition/createStratumInstance";
 import Terria from "../../../../lib/Models/Terria";
+import TableColumnType from "../../../../lib/Table/TableColumnType";
 import { ModelOverrideTraits } from "../../../../lib/Traits/TraitsClasses/SdmxCommonTraits";
 
 const regionMapping = JSON.stringify(
@@ -19,6 +20,7 @@ const isoCodes = JSON.stringify(
 const dataflowNoRegionData = require("raw-loader!../../../../wwwroot/test/SDMX-JSON/data-noregion.csv");
 const dataflowRegionData = require("raw-loader!../../../../wwwroot/test/SDMX-JSON/data-region.csv");
 const dataflowRegionTimeData = require("raw-loader!../../../../wwwroot/test/SDMX-JSON/data-region-time.csv");
+const dataflowSingleRegionTimeData = require("raw-loader!../../../../wwwroot/test/SDMX-JSON/data-single-region-time.csv");
 
 const dataflowNoRegion = JSON.stringify(
   require("../../../../wwwroot/test/SDMX-JSON/dataflow-noregion.json")
@@ -259,6 +261,47 @@ describe("SdmxJsonCatalogItem", function() {
     expect(primaryCol?.transformation.dependencies[0]).toBe("UNIT_MULT");
     expect(sdmxItem.activeTableStyle.colorTraits.legend.title).toBe(
       "Australian Dollars (Monthly)"
+    );
+  });
+
+  it("handles single region gracefully", async function() {
+    jasmine.Ajax.stubRequest(
+      "http://www.example.com/data/RT/M1.20.10..M"
+    ).andReturn({ responseText: dataflowSingleRegionTimeData });
+
+    runInAction(() => {
+      sdmxItem.setTrait("definition", "agencyId", "ABS");
+      sdmxItem.setTrait("definition", "dataflowId", "RT");
+      sdmxItem.setTrait("definition", "modelOverrides", [
+        createStratumInstance(ModelOverrideTraits, {
+          id:
+            "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ABS:CL_STATE(1.0.0)",
+          type: "region",
+          regionType: "STE_2016"
+        })
+      ]);
+    });
+
+    await sdmxItem.regionProviderList
+      ?.getRegionProvider("STE_2016")
+      ?.loadRegionIDs();
+
+    await sdmxItem.loadMapItems();
+
+    expect(sdmxItem.mapItems.length).toBe(0);
+
+    expect(sdmxItem.activeTableStyle.regionColumn).toBeUndefined();
+
+    const regionCol = sdmxItem.tableColumns.filter(
+      col => col.type === TableColumnType.region
+    )[0];
+
+    expect(regionCol).toBeDefined();
+    expect(regionCol.valuesAsRegions.uniqueRegionIds.length).toBe(1);
+
+    expect(sdmxItem.chartItems.length).toBe(1);
+    expect(sdmxItem.chartItems[0].name).toBe(
+      "Australian Capital Territory Australian Dollars (Monthly)"
     );
   });
 });
