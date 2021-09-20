@@ -21,7 +21,7 @@ export const MapViewers = Object.seal({
   "2d": {
     viewerMode: ViewerMode.Leaflet,
     terrain: false,
-    label: "settingPanel.viewerModeLabels.CesiumEllipsoid",
+    label: "settingPanel.viewerModeLabels.Leaflet",
     available: true
   }
 });
