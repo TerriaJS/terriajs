@@ -192,10 +192,10 @@ export default class TableColorStyleTraits extends ModelTraits {
   @primitiveTrait({
     name: "Z-score filter",
     description:
-      "Treat values outside of specifed z-score as outliers, and therefore do not include in color scale. This value is magnitude of z-score - it will apply to positive and negative z-scores. For example a value of `2` will treat all values that are 2 or more standard deviations from the mean as outliers.",
+      "Treat values outside of specifed z-score as outliers, and therefore do not include in color scale. This value is magnitude of z-score - it will apply to positive and negative z-scores. For example a value of `2` will treat all values that are 2 or more standard deviations from the mean as outliers. This must be defined for it to be enabled",
     type: "number"
   })
-  zScoreFilter: number = 4;
+  zScoreFilter?: number;
 
   @primitiveTrait({
     name: "Z-score filter enabled",

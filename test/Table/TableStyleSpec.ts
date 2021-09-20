@@ -1,11 +1,13 @@
-import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
-import Terria from "../../lib/Models/Terria";
-import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
-import DiscreteColorMap from "../../lib/Map/DiscreteColorMap";
 import ContinuousColorMap from "../../lib/Map/ContinuousColorMap";
+import DiscreteColorMap from "../../lib/Map/DiscreteColorMap";
 import EnumColorMap from "../../lib/Map/EnumColorMap";
-import TableStyleTraits from "../../lib/Traits/TraitsClasses/TableStyleTraits";
+import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
+import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
+import Terria from "../../lib/Models/Terria";
 import TableColorStyleTraits from "../../lib/Traits/TraitsClasses/TableColorStyleTraits";
+import TableStyleTraits from "../../lib/Traits/TraitsClasses/TableStyleTraits";
 
 const regionMapping = JSON.stringify(
   require("../../wwwroot/data/regionMapping.json")
@@ -14,12 +16,18 @@ const regionMapping = JSON.stringify(
 const SedCods = JSON.stringify(
   require("../../wwwroot/data/regionids/region_map-SED_CODE18_SED_2018.json")
 );
+const Sa4Codes = JSON.stringify(
+  require("../../wwwroot/data/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json")
+);
+const Sa4Names = JSON.stringify(
+  require("../../wwwroot/data/regionids/region_map-SA4_2016_AUST_SA4_NAME16.json")
+);
 
 const LatLonCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum_date_id.csv");
 const SedCsv = require("raw-loader!../../wwwroot/test/csv/SED_2018_SED_CODE18.csv");
 const YouthUnEmployCsv = require("raw-loader!../../wwwroot/test/csv/youth-unemployment-rate-2018.csv");
 
-describe("Table Style", function() {
+describe("TableStyle", function() {
   let terria: Terria;
 
   beforeEach(async function() {
@@ -38,6 +46,14 @@ describe("Table Style", function() {
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionids/region_map-SED_CODE18_SED_2018.json"
     ).andReturn({ responseText: SedCods });
+
+    jasmine.Ajax.stubRequest(
+      "build/TerriaJS/data/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json"
+    ).andReturn({ responseText: Sa4Codes });
+
+    jasmine.Ajax.stubRequest(
+      "build/TerriaJS/data/regionids/region_map-SA4_2016_AUST_SA4_NAME16.json"
+    ).andReturn({ responseText: Sa4Names });
   });
 
   afterEach(() => {
@@ -213,6 +229,75 @@ describe("Table Style", function() {
         "#9467bd",
         "#8c564b"
       ]);
+    });
+
+    it(" - applies zScoreFilter correctly", async function() {
+      updateModelFromJson(csvItem, CommonStrata.definition, {
+        csvString: SedCsv,
+        activeStyle: "Value",
+        defaultStyle: { color: { zScoreFilter: 2, rangeFilter: 0.1 } }
+      });
+
+      await csvItem.loadMapItems();
+      await csvItem.activeTableStyle.regionColumn?.regionType?.loadRegionIDs();
+
+      const activeStyle = csvItem.activeTableStyle;
+
+      expect(activeStyle.colorColumn?.valuesAsNumbers.minimum).toBe(0);
+      expect(activeStyle.colorColumn?.valuesAsNumbers.maximum).toBe(100);
+
+      expect(activeStyle.tableColorMap.zScoreFilterValues).toEqual({
+        min: 22,
+        max: 100
+      });
+
+      let colorMap = activeStyle.colorMap as ContinuousColorMap;
+
+      expect(colorMap instanceof ContinuousColorMap).toBeTruthy();
+      expect(colorMap.minValue).toBe(22);
+      expect(colorMap.maxValue).toBe(100);
+
+      // Check legend for no outlier item
+      expect(csvItem.legends.length).toBe(1);
+      expect(csvItem.legends[0].items.length).toBe(8);
+      expect(csvItem.legends[0].items[7].title).toBe("Outliers");
+      expect(csvItem.legends[0].items[7].addSpacingAbove).toBeTruthy();
+      expect(csvItem.legends[0].items[7].color).toBe(
+        activeStyle.tableColorMap.outlierColor.toCssColorString()
+      );
+
+      // Change zScoreFilter and rangeFilter
+      updateModelFromJson(csvItem, CommonStrata.definition, {
+        defaultStyle: { color: { zScoreFilter: 2, rangeFilter: 0.25 } }
+      });
+
+      expect(activeStyle.tableColorMap.zScoreFilterValues).toBeUndefined();
+      colorMap = activeStyle.colorMap as ContinuousColorMap;
+      expect(colorMap instanceof ContinuousColorMap).toBeTruthy();
+      expect(colorMap.minValue).toBe(0);
+      expect(colorMap.maxValue).toBe(100);
+
+      // Check legend for no outlier item
+      expect(csvItem.legends.length).toBe(1);
+      expect(csvItem.legends[0].items.length).toBe(7);
+
+      updateModelFromJson(csvItem, CommonStrata.definition, {
+        defaultStyle: { color: { zScoreFilter: 1, rangeFilter: 0.1 } }
+      });
+
+      // Change zScoreFilter and rangeFilter again
+      expect(activeStyle.tableColorMap.zScoreFilterValues).toEqual({
+        min: 22,
+        max: 80
+      });
+      colorMap = activeStyle.colorMap as ContinuousColorMap;
+      expect(colorMap instanceof ContinuousColorMap).toBeTruthy();
+      expect(colorMap.minValue).toBe(22);
+      expect(colorMap.maxValue).toBe(80);
+
+      // Check legend for outlier item
+      expect(csvItem.legends.length).toBe(1);
+      expect(csvItem.legends[0].items.length).toBe(8);
     });
   });
 });

@@ -31,146 +31,6 @@ export default class TableColorMap {
     readonly colorTraits: Model<TableColorStyleTraits>
   ) {}
 
-  /** Get values of colorColumn with valid regions if:
-   * - colorColumn is scalar and the activeStyle has a regionColumn
-   */
-  @computed get regionValues() {
-    if (this.colorColumn?.type !== TableColumnType.scalar) return;
-
-    return (
-      this.colorColumn?.tableModel.activeTableStyle.regionColumn?.valuesAsRegions.regionIds.map(
-        (region, rowIndex) => {
-          if (region !== null) {
-            return this.colorColumn?.valuesAsNumbers.values[rowIndex] ?? null;
-          }
-
-          return null;
-        }
-      ) ?? []
-    );
-  }
-
-  @computed get validValues() {
-    const values =
-      this.regionValues ?? this.colorColumn?.valuesAsNumbers.values;
-    if (values) {
-      return values.filter(val => val !== null) as number[];
-    }
-  }
-
-  @computed
-  get filteredValues(): number[] | undefined {
-    if (
-      !this.colorColumn ||
-      !this.validValues ||
-      this.validValues.length === 0 ||
-      !isDefined(this.colorTraits.zScoreFilter)
-    )
-      return;
-
-    const values =
-      this.regionValues ?? this.colorColumn?.valuesAsNumbers.values;
-
-    // Filter by z-score if applicable
-    // This will filter out values which are outside of `zScoreFilter` standard deviations from the mean
-
-    const rowGroups = this.colorColumn.tableModel.activeTableStyle.rowGroups;
-    // Array of row group values
-    const rowGroupValues = rowGroups.map(
-      group =>
-        group[1].map(row => values[row]).filter(val => val !== null) as number[]
-    );
-
-    // Get average value for each row group
-    const rowGroupAverages = rowGroupValues.map(val => getMean(val));
-    const std = getStandardDeviation(filterOutUndefined(rowGroupAverages));
-    const mean = getMean(filterOutUndefined(rowGroupAverages));
-
-    // No std or mean - so return unfiltered values
-    if (!isDefined(std) && !isDefined(mean)) return this.validValues;
-
-    // Filter out rowGroups which have average values are outside of `zScoreFilter` standard deviations from the mean
-    const filteredValues: number[] = [];
-
-    rowGroupAverages.forEach((rowGroupMean, idx) => {
-      if (
-        isDefined(rowGroupMean) &&
-        Math.abs((rowGroupMean - mean!) / std!) <=
-          this.colorTraits.zScoreFilter!
-      ) {
-        filteredValues.push(...rowGroupValues[idx]);
-      }
-    });
-
-    return filteredValues;
-
-    /////////////////// TTOOOODDOO
-    // How to disable outliers?
-  }
-
-  /** Have outlier values been filtered out? This is only applicate to continuous color maps */
-  @computed get hasOutliers() {
-    if (!this.validValues) return false;
-    return (
-      this.filteredMinimumValue !== this.minimumValue ||
-      this.filteredMaximumValue !== this.maximumValue
-    );
-  }
-
-  @computed
-  get minimumValue() {
-    if (this.validValues) return Math.min(...this.validValues);
-  }
-
-  @computed
-  get maximumValue() {
-    if (this.validValues) return Math.max(...this.validValues);
-  }
-
-  @computed
-  get range() {
-    if (!isDefined(this.maximumValue) || !isDefined(this.minimumValue)) return;
-    return this.maximumValue - this.minimumValue;
-  }
-
-  @computed
-  get filteredMinimumValue() {
-    if (isDefined(this.colorTraits.minimumValue))
-      return this.colorTraits.minimumValue;
-
-    if (!this.filteredValues) return this.minimumValue;
-
-    if (isDefined(this.minimumValue) && isDefined(this.range)) {
-      const filteredMinimumValue = Math.min(...this.filteredValues);
-      if (
-        filteredMinimumValue <=
-        this.minimumValue + this.range * this.colorTraits.rangeFilter
-      ) {
-        return this.minimumValue;
-      }
-      return filteredMinimumValue;
-    }
-  }
-
-  @computed
-  get filteredMaximumValue() {
-    if (isDefined(this.colorTraits.maximumValue))
-      return this.colorTraits.maximumValue;
-
-    if (!this.filteredValues) return this.maximumValue;
-
-    if (isDefined(this.maximumValue) && isDefined(this.range)) {
-      const filteredMaximumValue = Math.max(...this.filteredValues);
-      if (
-        filteredMaximumValue >=
-        this.maximumValue - this.range * this.colorTraits.rangeFilter
-      ) {
-        return this.maximumValue;
-      }
-      return filteredMaximumValue;
-    }
-  }
-
   /**
    * Gets an object used to map values in {@link #colorColumn} to colors
    * for this style.
@@ -201,15 +61,12 @@ export default class TableColorMap {
         });
       }
 
-      const minValue = this.colorTraits.zScoreFilterEnabled
-        ? this.filteredMinimumValue
-        : this.minimumValue;
-      const maxValue = this.colorTraits.zScoreFilterEnabled
-        ? this.filteredMaximumValue
-        : this.maximumValue;
-
       // If column type is `scalar` and we have a valid minValue and maxValue - use ContinuousColorMap
-      if (isDefined(minValue) && isDefined(maxValue) && minValue < maxValue) {
+      if (
+        isDefined(this.minimumValue) &&
+        isDefined(this.maximumValue) &&
+        this.minimumValue < this.maximumValue
+      ) {
         // Get colorScale from `d3-scale-chromatic` library - all continuous color schemes start with "interpolate"
         // See https://github.com/d3/d3-scale-chromatic#diverging
         // d3 continuous color schemes are represented as a function which map a value [0,1] to a color]
@@ -217,8 +74,8 @@ export default class TableColorMap {
 
         return new ContinuousColorMap({
           colorScale,
-          minValue,
-          maxValue,
+          minValue: this.minimumValue,
+          maxValue: this.maximumValue,
           nullColor: this.nullColor,
           outlierColor: this.outlierColor
         });
@@ -437,8 +294,8 @@ export default class TableColorMap {
       const valuesAsNumbers = colorColumn.valuesAsNumbers;
       if (
         valuesAsNumbers !== undefined &&
-        (this.filteredMinimumValue || 0.0) < 0.0 &&
-        (this.filteredMaximumValue || 0.0) > 0.0
+        (this.minimumValue || 0.0) < 0.0 &&
+        (this.maximumValue || 0.0) > 0.0
       ) {
         // Values cross zero, so use a diverging palette
         return "PuOr";
@@ -449,6 +306,123 @@ export default class TableColorMap {
     }
 
     return "Reds";
+  }
+
+  /** Minimum value - with filters if applicable
+   * This will only apply to ContinuousColorMaps
+   */
+  @computed
+  get minimumValue() {
+    if (this.zScoreFilterValues && this.colorTraits.zScoreFilterEnabled)
+      return this.zScoreFilterValues.min;
+    if (this.validValues) return Math.min(...this.validValues);
+  }
+
+  /** Maximum value - with filters if applicable
+   * This will only apply to ContinuousColorMaps
+   */
+  @computed
+  get maximumValue() {
+    if (this.zScoreFilterValues && this.colorTraits.zScoreFilterEnabled)
+      return this.zScoreFilterValues.max;
+    if (this.validValues) return Math.max(...this.validValues);
+  }
+
+  /** Get values of colorColumn with valid regions if:
+   * - colorColumn is scalar and the activeStyle has a regionColumn
+   */
+  @computed get regionValues() {
+    const regionColumn = this.colorColumn?.tableModel.activeTableStyle
+      .regionColumn;
+    if (this.colorColumn?.type !== TableColumnType.scalar || !regionColumn)
+      return;
+
+    return regionColumn.valuesAsRegions.regionIds.map((region, rowIndex) => {
+      // Only return values which have a valid region in the same row
+      if (region !== null) {
+        return this.colorColumn?.valuesAsNumbers.values[rowIndex] ?? null;
+      }
+
+      return null;
+    });
+  }
+
+  /** Filter out null values from color column */
+  @computed get validValues() {
+    const values =
+      this.regionValues ?? this.colorColumn?.valuesAsNumbers.values;
+    if (values) {
+      return values.filter(val => val !== null) as number[];
+    }
+  }
+
+  /** Filter by z-score if applicable
+   * This will treat values outside of specifed z-score as outliers, and therefore will not include in color scale. This value is magnitude of z-score - it will apply to positive and negative z-scores. For example a value of `2` will treat all values that are 2 or more standard deviations from the mean as outliers.
+   * This will only apply to ContinuousColorMaps
+   * */
+
+  @computed
+  get zScoreFilterValues(): { max: number; min: number } | undefined {
+    if (
+      !this.colorColumn ||
+      !this.validValues ||
+      this.validValues.length === 0 ||
+      !isDefined(this.colorTraits.zScoreFilter)
+    )
+      return;
+
+    const values =
+      this.regionValues ?? this.colorColumn?.valuesAsNumbers.values;
+
+    const rowGroups = this.colorColumn.tableModel.activeTableStyle.rowGroups;
+
+    // Array of row group values
+    const rowGroupValues = rowGroups.map(
+      group =>
+        group[1].map(row => values[row]).filter(val => val !== null) as number[]
+    );
+
+    // Get average value for each row group
+    const rowGroupAverages = rowGroupValues.map(val => getMean(val));
+    const std = getStandardDeviation(filterOutUndefined(rowGroupAverages));
+    const mean = getMean(filterOutUndefined(rowGroupAverages));
+
+    // No std or mean - so return unfiltered values
+    if (!isDefined(std) && !isDefined(mean)) return;
+
+    let filteredMax = -Infinity;
+    let filteredMin = Infinity;
+
+    rowGroupAverages.forEach((rowGroupMean, idx) => {
+      if (
+        isDefined(rowGroupMean) &&
+        Math.abs((rowGroupMean - mean!) / std!) <=
+          this.colorTraits.zScoreFilter!
+      ) {
+        // If mean is within zscore filter, update min/max
+        const rowGroupMin = Math.min(...rowGroupValues[idx]);
+        filteredMin = filteredMin > rowGroupMin ? rowGroupMin : filteredMax;
+        const rowGroupMax = Math.max(...rowGroupValues[idx]);
+        filteredMax = filteredMax < rowGroupMax ? rowGroupMax : filteredMax;
+      }
+    });
+
+    const actualMin = Math.min(...this.validValues);
+    const actualMax = Math.max(...this.validValues);
+    const actualRange = actualMax - actualMin;
+
+    // Only apply filtered min/max if it reduces range by factor of `rangeFilter` (eg if `rangeFilter = 0.1`, then the filter must reduce the range by at least 10% to be applied)
+    // This applies to min and max independently
+    if (filteredMin < actualMin + actualRange * this.colorTraits.rangeFilter) {
+      filteredMin = actualMin;
+    }
+
+    if (filteredMax > actualMax - actualRange * this.colorTraits.rangeFilter) {
+      filteredMax = actualMax;
+    }
+
+    if (filteredMin !== actualMin || filteredMax !== actualMax)
+      return { max: filteredMax, min: filteredMin };
   }
 
   /**

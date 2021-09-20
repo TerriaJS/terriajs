@@ -307,7 +307,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
         : [];
 
     const outlierBin =
-      activeStyle.tableColorMap.hasOutliers &&
+      activeStyle.tableColorMap.zScoreFilterValues &&
       activeStyle.colorTraits.zScoreFilterEnabled
         ? [
             createStratumInstance(LegendItemTraits, {

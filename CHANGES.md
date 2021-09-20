@@ -16,7 +16,7 @@ Change Log
 * Extracted function `scaleToDenominator` to core - for conversion of scale to zoom level.
 * Share/start data conversion will now only occur if `version` property is `0.x.x`. Previously, it was `version` property is **not** `8.x.x`
 * Filter table column values by Z Score. This is controlled by the following `TableColorStyleTraits`:
-  * `zScoreFilter` - Treat values outside of specifed z-score as outliers, and therefore do not include in color scale. This value is magnitude of z-score - it will apply to positive and negative z-scores. For example a value of `2` will treat all values that are 2 or more standard deviations from the mean as outliers.
+  * `zScoreFilter` - Treat values outside of specifed z-score as outliers, and therefore do not include in color scale. This value is magnitude of z-score - it will apply to positive and negative z-scores. For example a value of `2` will treat all values that are 2 or more standard deviations from the mean as outliers. This must be defined to be enabled - currently it is only enabled for SDMX (with `zScoreFilter=4`).
   * `zScoreFilterEnabled - True, if z-score filter is enabled
   * `rangeFilter` - This is applied after the `zScoreFilter`. It is used to effectively 'disable' the zScoreFilter if it doesn't cut at least the specified percange of the range of values (for both minimum and maximum value). For exmaple if `rangeFilter = 0.2`, then the zScoreFilter will only be effective if it cuts at least 20% of the range of values from the minimum and maximum value
 * Add `outlierColor` to `ContinuousColorMap`

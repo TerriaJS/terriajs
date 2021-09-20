@@ -3,16 +3,18 @@ import React from "react";
 import TestRenderer from "react-test-renderer";
 import { ThemeProvider } from "styled-components";
 import CatalogMemberMixin from "../../lib/ModelMixins/CatalogMemberMixin";
+import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import CreateModel from "../../lib/Models/Definition/CreateModel";
-import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import SelectableDimensions, {
-  DEFAULT_PLACEMENT
+  DEFAULT_PLACEMENT,
+  SelectableDimension
 } from "../../lib/Models/SelectableDimensions";
 import Terria from "../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface/StandardTheme";
 import DimensionSelectorSection from "../../lib/ReactViews/Workbench/Controls/DimensionSelectorSection";
+import Checkbox from "../../lib/Styled/Checkbox/Checkbox";
 import Select from "../../lib/Styled/Select";
 import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
 
@@ -24,7 +26,7 @@ export default class TestCatalogItem
     return "test";
   }
 
-  selectableDimensions = [
+  selectableDimensions: SelectableDimension[] = [
     {
       id: "some-id",
       name: "Some name",
@@ -60,6 +62,17 @@ export default class TestCatalogItem
       allowUndefined: false,
       setDimensionValue: (stratumId: string, newStyle: string) => {},
       disable: true
+    },
+    {
+      id: "some-id-4",
+      name: "Some name 4",
+      options: [
+        { id: "true", name: "Option 1" },
+        { id: "false", name: "Option 2" }
+      ],
+      selectedId: "false",
+      type: "checkbox",
+      setDimensionValue: (stratumId: string, newStyle: string) => {}
     }
   ];
 }
@@ -92,14 +105,17 @@ describe("DimensionSelectorSection", function() {
     expect(dim1.props.name).toContain("some-id");
     expect(dim1.props.value).toBe("option-2");
 
-    const elevationOptions = dim1.findAllByType("option");
-    expect(elevationOptions.length).toBe(3); // This contains an 'undefined' option
+    const options = dim1.findAllByType("option");
+    expect(options.length).toBe(3); // This contains an 'undefined' option
 
     const dim2 = selects[1];
     expect(dim2.props.name).toContain("some-id-2");
     expect(dim2.props.value).toBe("option-3");
     const customOptions = dim2.findAllByType("option");
     expect(customOptions.length).toBe(3);
+
+    const checkboxes = section.root.findAllByType(Checkbox);
+    expect(checkboxes.length).toBe(1);
 
     done();
   });

@@ -164,6 +164,7 @@ export default class TableStyle {
    */
   @computed
   get regionColumn(): TableColumn | undefined {
+    if (this.styleTraits.regionColumn === null) return;
     return this.resolveColumn(this.styleTraits.regionColumn);
   }
 
@@ -456,21 +457,24 @@ export default class TableStyle {
   /** Get rows grouped by id. Id will be calculated using idColumns, latitude/longitude columns or region column
    */
   @computed get rowGroups() {
-    const groupByCols =
-      this.idColumns ??
+    let groupByCols = this.idColumns;
+
+    if (!groupByCols) {
       // If points use lat long
-      this.isPoints()
-        ? [this.latitudeColumn!, this.longitudeColumn!]
-        : // If region - use region col
-        this.regionColumn
-        ? [this.regionColumn]
-        : [];
+      if (this.latitudeColumn && this.longitudeColumn) {
+        groupByCols = [this.latitudeColumn, this.longitudeColumn];
+        // If region - use region col
+      } else if (this.regionColumn) groupByCols = [this.regionColumn];
+    }
+
+    if (!groupByCols) groupByCols = [];
+
     const tableRowIds = this.tableModel.rowIds;
 
     return (
       Object.entries(
         groupBy(tableRowIds, rowId =>
-          groupByCols
+          groupByCols!
             .map(col => {
               // If using region column as ID - only use valid regions
               if (col.type === TableColumnType.region) {
