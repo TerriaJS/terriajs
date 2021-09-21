@@ -6,11 +6,10 @@ import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import Result from "../Core/Result";
-import TerriaError from "../Core/TerriaError";
 import Group from "../Models/Catalog/Group";
 import Model, { BaseModel } from "../Models/Definition/Model";
-import GroupTraits from "../Traits/TraitsClasses/GroupTraits";
 import ModelReference from "../Traits/ModelReference";
+import GroupTraits from "../Traits/TraitsClasses/GroupTraits";
 import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
 
 function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
@@ -32,6 +31,20 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
       return this._memberLoader.result;
     }
 
+    /** Get merged blacklist from all parent groups. This will go through all knownContainerUniqueIds and merge all blacklist arrays */
+    @computed get mergedBlacklist(): string[] {
+      const blacklistSet = new Set(this.blacklist ?? []);
+
+      this.knownContainerUniqueIds.forEach(containerId => {
+        const container = this.terria.getModelById(BaseModel, containerId);
+        if (container && GroupMixin.isMixedInto(container)) {
+          container.mergedBlacklist.forEach(s => blacklistSet.add(s));
+        }
+      });
+
+      return Array.from(blacklistSet);
+    }
+
     @computed
     get memberModels(): ReadonlyArray<BaseModel> {
       const members = this.members;
@@ -39,11 +52,35 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
         return [];
       }
       return filterOutUndefined(
-        members.map(id =>
-          ModelReference.isRemoved(id)
-            ? undefined
-            : this.terria.getModelById(BaseModel, id)
-        )
+        members.map(id => {
+          if (!ModelReference.isRemoved(id)) {
+            const model = this.terria.getModelById(BaseModel, id);
+            if (this.mergedBlacklist.length == 0) {
+              return model;
+            }
+
+            // Get model name and apply blacklist
+            const modelName = CatalogMemberMixin.isMixedInto(model)
+              ? model.name
+              : undefined;
+            if (
+              model &&
+              // Does blacklist not include model ID
+              !this.mergedBlacklist.find(
+                name =>
+                  model.uniqueId?.toLowerCase().trim() ===
+                  name.toLowerCase().trim()
+              ) &&
+              // Does blacklist not include model name
+              (!modelName ||
+                !this.mergedBlacklist.find(
+                  name =>
+                    modelName.toLowerCase().trim() === name.toLowerCase().trim()
+                ))
+            )
+              return model;
+          }
+        })
       );
     }
 

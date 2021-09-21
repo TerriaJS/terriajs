@@ -165,4 +165,84 @@ describe("CatalogGroup", function() {
       throw "bad";
     }
   });
+
+  it("removes blacklisted items/groups from memberModels", function() {
+    json = {
+      type: "group",
+      id: "grandmama",
+      name: "Test Group",
+      blacklist: ["grandchild1", "parent3"]
+    };
+    upsertModelFromJson(
+      CatalogMemberFactory,
+      terria,
+      "",
+      "definition",
+      json,
+      {}
+    ).throwIfUndefined();
+
+    const item = <CatalogGroup>terria.getModelById(CatalogGroup, "grandmama");
+
+    item.addMembersFromJson(CommonStrata.definition, [
+      {
+        type: "group",
+        id: "parent1",
+        blacklist: ["grandchild4"],
+        members: [
+          {
+            type: "group",
+            id: "grandchild1"
+          },
+          {
+            type: "group",
+            id: "grandchild2"
+          },
+          {
+            type: "group",
+            id: "grandchild3"
+          },
+          {
+            type: "group",
+            id: "grandchild4"
+          }
+        ]
+      },
+      {
+        type: "group",
+        id: "parent2"
+      },
+      {
+        type: "group",
+        id: "parent3"
+      }
+    ]);
+
+    console.log(item);
+
+    expect(item.blacklist).toEqual(["grandchild1", "parent3"]);
+    expect(item.mergedBlacklist).toEqual(["grandchild1", "parent3"]);
+
+    const parent1 = <CatalogGroup>terria.getModelById(CatalogGroup, "parent1");
+    expect(item).toBeDefined();
+    expect(item.type).toBe("group");
+    expect(item.memberModels.map(member => member.uniqueId)).toEqual([
+      "parent1",
+      "parent2"
+    ]);
+
+    expect(parent1).toBeDefined();
+    expect(parent1.type).toBe("group");
+    expect(parent1.memberModels.map(member => member.uniqueId)).toEqual([
+      "grandchild2",
+      "grandchild3"
+    ]);
+
+    expect(parent1.blacklist).toEqual(["grandchild4"]);
+    expect(parent1.mergedBlacklist).toEqual([
+      "grandchild4",
+      "grandchild1",
+      "parent3"
+    ]);
+  });
 });

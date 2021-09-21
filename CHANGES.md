@@ -15,6 +15,7 @@ Change Log
 * Added `MinMaxLevelMixin` and `MinMaxLevelTraits` to handle defining min and max scale denominator for layers.
 * Extracted function `scaleToDenominator` to core - for conversion of scale to zoom level.
 * Share/start data conversion will now only occur if `version` property is `0.x.x`. Previously, it was `version` property is **not** `8.x.x`
+* Added `blacklist` property to `GroupTraits`. It is an array of strings of blacklisted group and item names. A group or item name that appears in this list will not be shown to the user. This is case-insensitive and will also apply to all child/nested groups
 * [The next improvement]
 
 #### 8.1.0
