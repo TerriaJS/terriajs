@@ -961,7 +961,7 @@ describe("Terria", function() {
             }
           } else if (url.match("mapprod1.environment.nsw.gov.au")) {
             if (url.indexOf("request=GetCapabilities") !== -1) {
-              args[0] = "test/Terria/applyInitData/WmsServer/capacities.xml";
+              args[0] = "test/Terria/applyInitData/WmsServer/capabilities.xml";
             } else {
               args[0] = "test/Terria/applyInitData/empty.json";
             }
