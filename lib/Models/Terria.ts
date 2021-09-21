@@ -1378,9 +1378,27 @@ export default class Terria {
     const newItems: BaseModel[] = [];
 
     async function pushAndLoadMapItems(model: BaseModel) {
-      if (MappableMixin.isMixedInto(model)) {
+      if (ReferenceMixin.isMixedInto(model)) {
+        (await model.loadReference()).throwIfError();
+
+        if (model.target !== undefined) {
+          await pushAndLoadMapItems(model.target);
+        } else {
+          errors.push(
+            TerriaError.from(
+              "Reference model has no target. Model Id: " + model.uniqueId
+            )
+          );
+        }
+      } else if (GroupMixin.isMixedInto(model)) {
+        (await model.loadMembers()).throwIfError();
+
+        model.memberModels.map(async m => {
+          await pushAndLoadMapItems(m);
+        });
+      } else if (MappableMixin.isMixedInto(model)) {
         newItems.push(model);
-        (await model.loadMapItems()).pushErrorTo(errors);
+        (await model.loadMapItems()).throwIfError();
       } else {
         errors.push(
           TerriaError.from(
@@ -1394,27 +1412,7 @@ export default class Terria {
     await Promise.all(
       newItemsRaw.map(async model => {
         try {
-          if (ReferenceMixin.isMixedInto(model)) {
-            (await model.loadReference()).throwIfError();
-
-            if (GroupMixin.isMixedInto(model.target)) {
-              (await model.target.loadMembers()).throwIfError();
-
-              model.target.memberModels.map(async m => {
-                await pushAndLoadMapItems(m);
-              });
-            } else if (model.target) {
-              await pushAndLoadMapItems(model.target);
-            }
-          } else if (GroupMixin.isMixedInto(model)) {
-            (await model.loadMembers()).throwIfError();
-
-            model.memberModels.map(async m => {
-              await pushAndLoadMapItems(m);
-            });
-          } else {
-            await pushAndLoadMapItems(model);
-          }
+          await pushAndLoadMapItems(model);
         } catch (e) {
           errors.push(
             TerriaError.from(e, {

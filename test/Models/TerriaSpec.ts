@@ -867,19 +867,18 @@ describe("Terria", function() {
       });
     });
 
-    describe("Parse model IDs in workbench correctly", function() {
+    describe("Sets workbench contents correctly", function() {
       interface ExtendedLoadWithXhr {
         (): any;
         load: { (...args: any[]): any; calls: any };
       }
       const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
-      const mapServerUrl =
+      const simpleMapServerGroupUrl =
         "http://some.service.gov.au/arcgis/rest/services/NSWmouseAlert/MapServer";
       const magdaUrl = "http://another.service.gov.au";
 
       beforeEach(function() {
         const realLoadWithXhr = loadWithXhr.load;
-        // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
         spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
           let url = args[0];
 
@@ -923,14 +922,14 @@ describe("Terria", function() {
         });
       });
 
-      it("when the workbench item resolves to a server group", async function() {
+      it("when a workbench item resolves to a simple server group", async function() {
         await terria.applyInitData({
           initData: {
             catalog: [
               {
                 type: "esri-mapServer-group",
                 name: "Mouse Alert",
-                url: mapServerUrl,
+                url: simpleMapServerGroupUrl,
                 id: "a-test-server-group"
               }
             ],
@@ -940,7 +939,7 @@ describe("Terria", function() {
         expect(terria.workbench.itemIds).toEqual(["a-test-server-group/0"]);
       });
 
-      it("when the workbench item resolves to a referenced server group", async function() {
+      it("when a workbench item resolves to a referenced server group", async function() {
         await terria.applyInitData({
           initData: {
             catalog: [
@@ -956,6 +955,33 @@ describe("Terria", function() {
           }
         });
         expect(terria.workbench.itemIds).toEqual(["a-test-magda-record/0"]);
+      });
+
+      it("when the workbench has more than one items", async function() {
+        await terria.applyInitData({
+          initData: {
+            catalog: [
+              {
+                type: "esri-mapServer-group",
+                name: "Mouse Alert",
+                url: simpleMapServerGroupUrl,
+                id: "a-test-server-group"
+              },
+              {
+                type: "magda",
+                name: "Magda test reference",
+                url: magdaUrl,
+                recordId: "magda-record-test",
+                id: "a-test-magda-record"
+              }
+            ],
+            workbench: ["a-test-server-group", "a-test-magda-record"]
+          }
+        });
+        expect(terria.workbench.itemIds).toEqual([
+          "a-test-server-group/0",
+          "a-test-magda-record/0"
+        ]);
       });
     });
   });
