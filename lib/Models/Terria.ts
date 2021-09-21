@@ -1379,7 +1379,7 @@ export default class Terria {
 
     async function pushAndLoadMapItems(model: BaseModel) {
       if (ReferenceMixin.isMixedInto(model)) {
-        (await model.loadReference()).throwIfError();
+        (await model.loadReference()).pushErrorTo(errors);
 
         if (model.target !== undefined) {
           await pushAndLoadMapItems(model.target);
@@ -1391,14 +1391,14 @@ export default class Terria {
           );
         }
       } else if (GroupMixin.isMixedInto(model)) {
-        (await model.loadMembers()).throwIfError();
+        (await model.loadMembers()).pushErrorTo(errors);
 
         model.memberModels.map(async m => {
           await pushAndLoadMapItems(m);
         });
       } else if (MappableMixin.isMixedInto(model)) {
         newItems.push(model);
-        (await model.loadMapItems()).throwIfError();
+        (await model.loadMapItems()).pushErrorTo(errors);
       } else {
         errors.push(
           TerriaError.from(
@@ -1411,21 +1411,7 @@ export default class Terria {
 
     await Promise.all(
       newItemsRaw.map(async model => {
-        try {
-          await pushAndLoadMapItems(model);
-        } catch (e) {
-          errors.push(
-            TerriaError.from(e, {
-              severity: TerriaErrorSeverity.Error,
-              message: {
-                key: "models.terria.loadingWorkbenchItemErrorTitle",
-                parameters: {
-                  name: getName(model) ?? "Unknown Model"
-                }
-              }
-            })
-          );
-        }
+        await pushAndLoadMapItems(model);
       })
     );
 
