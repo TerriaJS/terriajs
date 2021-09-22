@@ -68,6 +68,7 @@ import WebMapServiceCapabilities, {
   MetadataURL
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
+import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
 
 const dateFormat = require("dateformat");
 class GetCapabilitiesStratum extends LoadableStratum(
@@ -806,9 +807,13 @@ class WebMapServiceCatalogItem
       DiffableMixin(
         TimeFilterMixin(
           ChartableMixin(
-            GetCapabilitiesMixin(
-              UrlMixin(
-                CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))
+            MinMaxLevelMixin(
+              GetCapabilitiesMixin(
+                UrlMixin(
+                  CatalogMemberMixin(
+                    CreateModel(WebMapServiceCatalogItemTraits)
+                  )
+                )
               )
             )
           )
@@ -1168,7 +1173,7 @@ class WebMapServiceCatalogItem
       }
       Object.assign(parameters, diffModeParameters);
 
-      const maximumLevel = scaleDenominatorToLevel(this.minScaleDenominator);
+      const maximumLevel = this.getMaximumLevel(true);
 
       const queryParametersToRemove = [
         "request",
@@ -1201,7 +1206,7 @@ class WebMapServiceCatalogItem
       const imageryOptions: WebMapServiceImageryProvider.ConstructorOptions = {
         url: proxyCatalogItemUrl(this, baseUrl.toString()),
         layers: lyrs.length > 0 ? lyrs.join(",") : "",
-        parameters: parameters,
+        parameters,
         getFeatureInfoParameters: {
           ...dimensionParameters,
           feature_count:
@@ -1213,7 +1218,7 @@ class WebMapServiceCatalogItem
         tileWidth: this.tileWidth,
         tileHeight: this.tileHeight,
         tilingScheme: this.tilingScheme,
-        maximumLevel: maximumLevel,
+        maximumLevel,
         credit: this.attribution
       };
 
@@ -1226,44 +1231,7 @@ class WebMapServiceCatalogItem
       }
 
       const imageryProvider = new WebMapServiceImageryProvider(imageryOptions);
-      if (
-        maximumLevel !== undefined &&
-        this.hideLayerAfterMinScaleDenominator
-      ) {
-        const realRequestImage = imageryProvider.requestImage;
-        let messageDisplayed = false;
-
-        imageryProvider.requestImage = (
-          x: number,
-          y: number,
-          level: number
-        ) => {
-          if (level > maximumLevel) {
-            if (!messageDisplayed) {
-              this.terria.raiseErrorToUser(
-                new TerriaError({
-                  title: i18next.t(
-                    "models.webMapServiceCatalogItem.datasetScaleErrorTitle"
-                  ),
-                  message: i18next.t(
-                    "models.webMapServiceCatalogItem.datasetScaleErrorMessage",
-                    { name: this.name }
-                  )
-                })
-              );
-              messageDisplayed = true;
-            }
-            // cast to any because @types/cesium currently has the wrong signature for this function.
-            return (<any>ImageryProvider).loadImage(
-              imageryProvider,
-              this.terria.baseUrl + "images/blank.png"
-            );
-          }
-          return realRequestImage.call(imageryProvider, x, y, level);
-        };
-      }
-
-      return imageryProvider;
+      return this.updateRequestImage(imageryProvider);
     }
   );
 
@@ -1408,26 +1376,6 @@ class WebMapServiceCatalogItem
       ...this.styleSelectableDimensions
     ]);
   }
-}
-
-function scaleDenominatorToLevel(
-  minScaleDenominator: number | undefined
-): number | undefined {
-  if (minScaleDenominator == undefined || minScaleDenominator <= 0.0) {
-    return undefined;
-  }
-
-  var metersPerPixel = 0.00028; // from WMS 1.3.0 spec section 7.2.4.6.9
-  var tileWidth = 256;
-
-  var circumferenceAtEquator = 2 * Math.PI * Ellipsoid.WGS84.maximumRadius;
-  var distancePerPixelAtLevel0 = circumferenceAtEquator / tileWidth;
-  var level0ScaleDenominator = distancePerPixelAtLevel0 / metersPerPixel;
-
-  // 1e-6 epsilon from WMS 1.3.0 spec, section 7.2.4.6.9.
-  var ratio = level0ScaleDenominator / (minScaleDenominator - 1e-6);
-  var levelAtMinScaleDenominator = Math.log(ratio) / Math.log(2);
-  return levelAtMinScaleDenominator | 0;
 }
 
 /**

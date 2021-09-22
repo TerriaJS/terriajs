@@ -12,7 +12,8 @@ export default class LineAndPointChart extends React.PureComponent {
     id: PropTypes.string.isRequired,
     chartItem: PropTypes.object.isRequired,
     scales: PropTypes.object.isRequired,
-    color: PropTypes.string
+    color: PropTypes.string,
+    glyph: PropTypes.string
   };
 
   constructor() {
@@ -41,6 +42,7 @@ export default class LineAndPointChart extends React.PureComponent {
           id={this.props.id + "-point"}
           chartItem={this.props.chartItem}
           scales={this.props.scales}
+          glyph={this.props.glyph}
         />
       </>
     );

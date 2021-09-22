@@ -31,6 +31,7 @@ import CatalogMemberFactory from "./CatalogMemberFactory";
 import CatalogIndexReference from "./CatalogReferences/CatalogIndexReference";
 import MagdaReference from "./CatalogReferences/MagdaReference";
 import SplitItemReference from "./CatalogReferences/SplitItemReference";
+import TerriaReference from "./CatalogReferences/TerriaReference";
 import UrlReference, {
   UrlToCatalogMemberMapping
 } from "./CatalogReferences/UrlReference";
@@ -145,6 +146,7 @@ export default function registerCatalogMembers() {
     OpenStreetMapCatalogItem
   );
   CatalogMemberFactory.register(MagdaReference.type, MagdaReference);
+  CatalogMemberFactory.register(TerriaReference.type, TerriaReference);
   CatalogMemberFactory.register(KmlCatalogItem.type, KmlCatalogItem);
   CatalogMemberFactory.register(
     MapboxVectorTileCatalogItem.type,
