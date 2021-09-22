@@ -919,7 +919,7 @@ describe("Terria", function() {
         "another-test-magda-record"
       ];
 
-      let loadModelItems: any = undefined;
+      let loadMapItems: any = undefined;
       beforeEach(function() {
         const realLoadWithXhr = loadWithXhr.load;
         spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
@@ -971,7 +971,7 @@ describe("Terria", function() {
           const result = realLoadWithXhr(...args);
           return result;
         });
-        loadModelItems = spyOn(terria, "loadModelItems").and.callThrough();
+        loadMapItems = spyOn(terria, "loadMapItems").and.callThrough();
       });
 
       it("when a workbench item is a simple map server group", async function() {
@@ -982,7 +982,7 @@ describe("Terria", function() {
           }
         });
         expect(terria.workbench.itemIds).toEqual(["a-test-server-group/0"]);
-        expect(loadModelItems).toHaveBeenCalledTimes(1);
+        expect(loadMapItems).toHaveBeenCalledTimes(1);
       });
 
       it("when a workbench item is a referenced map server group", async function() {
@@ -993,7 +993,7 @@ describe("Terria", function() {
           }
         });
         expect(terria.workbench.itemIds).toEqual(["a-test-magda-record/0"]);
-        expect(loadModelItems).toHaveBeenCalledTimes(1);
+        expect(loadMapItems).toHaveBeenCalledTimes(1);
       });
 
       it("when a workbench item is a referenced wms", async function() {
@@ -1004,7 +1004,7 @@ describe("Terria", function() {
           }
         });
         expect(terria.workbench.itemIds).toEqual(["another-test-magda-record"]);
-        expect(loadModelItems).toHaveBeenCalledTimes(1);
+        expect(loadMapItems).toHaveBeenCalledTimes(1);
       });
 
       it("when the workbench has more than one items", async function() {
@@ -1027,7 +1027,7 @@ describe("Terria", function() {
         terria.workbench.itemIds.forEach(id => {
           expect(theItemsIds).toContain(id);
         });
-        expect(loadModelItems).toHaveBeenCalledTimes(3);
+        expect(loadMapItems).toHaveBeenCalledTimes(3);
       });
 
       it("when the workbench has an unknown item", async function() {
@@ -1051,7 +1051,7 @@ describe("Terria", function() {
         terria.workbench.itemIds.forEach(id => {
           expect(theItemsIds).toContain(id);
         });
-        expect(loadModelItems).toHaveBeenCalledTimes(3);
+        expect(loadMapItems).toHaveBeenCalledTimes(3);
       });
 
       it("when a workbench item has errors", async function() {
@@ -1082,7 +1082,7 @@ describe("Terria", function() {
           terria.workbench.itemIds.forEach(id => {
             expect(theItemsIds).toContain(id);
           });
-          expect(loadModelItems).toHaveBeenCalledTimes(3);
+          expect(loadMapItems).toHaveBeenCalledTimes(3);
         }
       });
     });

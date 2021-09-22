@@ -1241,8 +1241,8 @@ export default class Terria {
     );
   }
 
-  // To support unit tests, do not make this method private.
-  async loadModelItems(model: BaseModel, errors: TerriaError[]) {
+  // This method is created to support unit tests.
+  async loadMapItems(model: BaseModel, errors: TerriaError[]) {
     (await (<any>model).loadMapItems()).pushErrorTo(errors);
   }
 
@@ -1271,7 +1271,7 @@ export default class Terria {
       });
     } else if (MappableMixin.isMixedInto(model)) {
       newItems.push(model);
-      await this.loadModelItems(model, errors);
+      await this.loadMapItems(model, errors);
     } else {
       errors.push(
         TerriaError.from(
