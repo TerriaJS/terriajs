@@ -40,7 +40,6 @@ export class GeoJsonTraits extends mixTraits(
   FeatureInfoTraits,
   UrlTraits,
   MappableTraits,
-  CatalogMemberTraits,
   DiscretelyTimeVaryingTraits
 ) {
   @objectTrait({
