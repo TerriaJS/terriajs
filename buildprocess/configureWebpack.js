@@ -104,7 +104,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
                 loader: 'babel-loader',
                 options: {
                     cacheDirectory: true,
-                    sourceMaps: !!devMode,
+                    sourceMaps: true,
                     presets: [
                       [
                         '@babel/preset-env',
