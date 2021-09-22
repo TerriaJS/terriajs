@@ -1241,6 +1241,47 @@ export default class Terria {
     );
   }
 
+  // To support unit tests, do not make this method private.
+  async loadModelItems(model: BaseModel, errors: TerriaError[]) {
+    (await (<any>model).loadMapItems()).pushErrorTo(errors);
+  }
+
+  private async pushAndLoadMapItems(
+    model: BaseModel,
+    newItems: BaseModel[],
+    errors: TerriaError[]
+  ) {
+    if (ReferenceMixin.isMixedInto(model)) {
+      (await model.loadReference()).pushErrorTo(errors);
+
+      if (model.target !== undefined) {
+        await this.pushAndLoadMapItems(model.target, newItems, errors);
+      } else {
+        errors.push(
+          TerriaError.from(
+            "Reference model has no target. Model Id: " + model.uniqueId
+          )
+        );
+      }
+    } else if (GroupMixin.isMixedInto(model)) {
+      (await model.loadMembers()).pushErrorTo(errors);
+
+      model.memberModels.map(async m => {
+        await this.pushAndLoadMapItems(m, newItems, errors);
+      });
+    } else if (MappableMixin.isMixedInto(model)) {
+      newItems.push(model);
+      await this.loadModelItems(model, errors);
+    } else {
+      errors.push(
+        TerriaError.from(
+          "Can not load an un-mappable item to the map. Item Id: " +
+            model.uniqueId
+        )
+      );
+    }
+  }
+
   @action
   async applyInitData({
     initData,
@@ -1377,41 +1418,9 @@ export default class Terria {
 
     const newItems: BaseModel[] = [];
 
-    async function pushAndLoadMapItems(model: BaseModel) {
-      if (ReferenceMixin.isMixedInto(model)) {
-        (await model.loadReference()).pushErrorTo(errors);
-
-        if (model.target !== undefined) {
-          await pushAndLoadMapItems(model.target);
-        } else {
-          errors.push(
-            TerriaError.from(
-              "Reference model has no target. Model Id: " + model.uniqueId
-            )
-          );
-        }
-      } else if (GroupMixin.isMixedInto(model)) {
-        (await model.loadMembers()).pushErrorTo(errors);
-
-        model.memberModels.map(async m => {
-          await pushAndLoadMapItems(m);
-        });
-      } else if (MappableMixin.isMixedInto(model)) {
-        newItems.push(model);
-        (await model.loadMapItems()).pushErrorTo(errors);
-      } else {
-        errors.push(
-          TerriaError.from(
-            "Can not load an un-mappable item to the map. Item Id: " +
-              model.uniqueId
-          )
-        );
-      }
-    }
-
     await Promise.all(
       newItemsRaw.map(async model => {
-        await pushAndLoadMapItems(model);
+        await this.pushAndLoadMapItems(model, newItems, errors);
       })
     );
 
