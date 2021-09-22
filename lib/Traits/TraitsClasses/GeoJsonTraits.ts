@@ -55,7 +55,7 @@ export class GeoJsonTraits extends mixTraits(
     type: "boolean",
     name: "Clamp to Ground",
     description:
-      "Whether the features in this GeoJSON should be clamped to the terrain surface. If `forceCesiumPrimitives is false, this will be `true`"
+      "Whether the features in this GeoJSON should be clamped to the terrain surface. If `forceCesiumPrimitives` is false, this will be `true`"
   })
   clampToGround: boolean = true;
 
