@@ -113,8 +113,11 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
     protected readonly zipFileRegex = /(\.zip\b)/i;
 
+    @observable
     private _dataSource: CzmlDataSource | GeoJsonDataSource | undefined;
+    @observable
     private _imageryProvider: ProtomapsImageryProvider | undefined;
+
     protected _file?: File;
 
     @observable.ref _readyData?: JsonObject;
@@ -180,6 +183,23 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     }
 
     protected async forceLoadMapItems(): Promise<void> {
+      // Pick which rendering mode:
+      // - CZML if czmlTemplate is defined
+      // - Mapbox vector tiles (see below)
+      // - Cesium primitives
+
+      // Only use MapboxVectorTiles (through geojson-vt and protomaps.js) if enabled and not using unsupported traits
+      const useMvt =
+        !this.forceCesiumPrimitives &&
+        this.terria.configParameters.enableGeojsonMvt &&
+        !isDefined(this.stylesWithDefaults().markerSymbol) &&
+        !isDefined(this.timeProperty) &&
+        !isDefined(this.heightProperty) &&
+        (!isDefined(this.perPropertyStyles) ||
+          this.perPropertyStyles.length === 0);
+
+      const czmlTempalte = this.czmlTemplate;
+
       try {
         const geoJson = await new Promise<JsonValue | undefined>(
           (resolve, reject) => {
@@ -214,33 +234,25 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           this._readyData = geoJsonWgs84;
         });
 
-        // Pick which rendering mode:
-        // - CZML if czmlTemplate is defined
-        // - Mapbox vector tiles (see below)
-        // - Cesium primitives
-
-        // Only use MapboxVectorTiles (through geojson-vt and protomaps.js) if enabled and not using unsupported traits
-        const useMvt = runInAction(
-          () =>
-            !this.forceCesiumPrimitives &&
-            this.terria.configParameters.enableGeojsonMvt &&
-            !isDefined(this.stylesWithDefaults().markerSymbol) &&
-            !isDefined(this.timeProperty) &&
-            !isDefined(this.heightProperty) &&
-            (!isDefined(this.perPropertyStyles) ||
-              this.perPropertyStyles.length === 0)
-        );
-
-        const czmlTempalte = runInAction(() => this.czmlTemplate);
-
         if (isDefined(czmlTempalte)) {
-          this._dataSource = await this.loadCzmlDataSource(geoJsonWgs84);
+          const dataSource = await this.loadCzmlDataSource(geoJsonWgs84);
+          runInAction(() => {
+            this._dataSource = dataSource;
+            this._imageryProvider = undefined;
+          });
         } else if (useMvt) {
-          this._imageryProvider = this.createProtomapsImageryProvider(
-            geoJsonWgs84
-          );
+          runInAction(() => {
+            this._imageryProvider = this.createProtomapsImageryProvider(
+              geoJsonWgs84
+            );
+            this._dataSource = undefined;
+          });
         } else {
-          this._dataSource = await this.loadGeoJsonDataSource(geoJsonWgs84);
+          const dataSource = await this.loadGeoJsonDataSource(geoJsonWgs84);
+          runInAction(() => {
+            this._dataSource = dataSource;
+            this._imageryProvider = undefined;
+          });
         }
       } catch (e) {
         throw TerriaError.from(e, {
