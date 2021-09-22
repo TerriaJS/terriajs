@@ -34,14 +34,14 @@ module.exports = function(hot, dev) {
                     loader: 'imports-loader?require=>false'
                 },
 
-                {
-                  test: /\.(ts|js)x?$/,
-                  include: [path.resolve(terriaJSBasePath, "lib")],
-                  use: {
-                    loader: "istanbul-instrumenter-loader"
-                  },
-                  enforce: "post"
-                }
+                // {
+                //   test: /\.(ts|js)x?$/,
+                //   include: [path.resolve(terriaJSBasePath, "lib")],
+                //   use: {
+                //     loader: "istanbul-instrumenter-loader"
+                //   },
+                //   enforce: "post"
+                // }
             ]
         },
         devServer: {
@@ -62,5 +62,5 @@ module.exports = function(hot, dev) {
     };
 
     config.plugins = [new MiniCssExtractPlugin({filename: "nationalmap.css", disable: false, ignoreOrder: true})];
-    return configureWebpack(terriaJSBasePath, config, hot, hot, MiniCssExtractPlugin, true);
+    return configureWebpack(terriaJSBasePath, config, (dev || hot), hot, MiniCssExtractPlugin, true);
 };
