@@ -15,6 +15,12 @@ Change Log
 * Added `MinMaxLevelMixin` and `MinMaxLevelTraits` to handle defining min and max scale denominator for layers.
 * Extracted function `scaleToDenominator` to core - for conversion of scale to zoom level.
 * Share/start data conversion will now only occur if `version` property is `0.x.x`. Previously, it was `version` property is **not** `8.x.x`
+* Made search location bar span full width in mobile view.
+* Automatically hide mobile modal window when user is interacting with the map. 
+* Disabled feature search in mobile 
+* Disabled export (clip&ship) in mobile
+* Fixed misplaced search icon in mobile safari.
+* Prevents story text from covering the whole screen in mobile devices.
 * [The next improvement]
 
 #### 8.1.0
