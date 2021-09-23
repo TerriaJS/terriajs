@@ -18,7 +18,7 @@ export interface ModelIndex {
 }
 
 export default class CatalogIndex {
-  private _models: ObservableMap<string, CatalogIndexReference> | undefined;
+  private _models: Map<string, CatalogIndexReference> | undefined;
 
   get models() {
     return this._models;
@@ -35,12 +35,14 @@ export default class CatalogIndex {
     this.loadPromise = this.loadCatalogIndex();
   }
 
+  /** The catalog index is loaded automatically on startup.
+   * It is loaded the first time loadInitSources is called (see Terria.forceLoadInitSources) */
   @action
   private async loadCatalogIndex() {
     // Load catalog index
     try {
       const index = (await loadJson(this.url)) as CatalogIndexFile;
-      this._models = observable.map<string, CatalogIndexReference>();
+      this._models = new Map<string, CatalogIndexReference>();
 
       /**
        * https://github.com/nextapps-de/flexsearch
