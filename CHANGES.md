@@ -3,6 +3,9 @@ Change Log
 
 #### next release (8.1.1)
 
+- **Breaking changes:**
+  * `blacklist` has been renamed to `excludeMembers` for `ArcGisPortalCatalogGroup` and `CkanCatalogGroup`.
+
 * Tsifyied and refactored `RegionProvider` and `RegionProviderList`, and re-enabled `loadRegionIDs`
 * `TableColorMap` `minimumValue` and `maximumValue` will now take into account valid regions.
 * `tableMixin.loadRegionProviderList()` is now called in `tableMixin.forceLoadMapItems()` instead of `mappableMixin.loadMapItems()`
@@ -28,6 +31,7 @@ Change Log
 * GroupMixin.isMixedInto and MappableMixin.isMixedInto are now more strict - and won't pass for for References with `isMappable` or `isGroup`.
 * `Workbench.add` can now handle nested `References` (eg `CatalogIndexReference -> CkanReference -> WMSCatalogItem`).
 * Add `description` trait to `CatalogMemberReferenceTraits`
+* Added `excludeMembers` property to `GroupTraits` (this replaced the `blacklist` property in v7). It is an array of strings of excluded group and item names. A group or item name that appears in this list will not be shown to the user. This is case-insensitive and will also apply to all child/nested groups
 * Fixes an app crash on load in iOS-Safari mobile which was happening when rendering help panel tooltips.
 * [The next improvement]
 
