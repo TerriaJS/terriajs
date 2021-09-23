@@ -12,7 +12,6 @@ import HelpVideoPanel from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/H
 import Text from "../../../../../lib/Styled/Text";
 import StyledHtml from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/StyledHtml";
 import { runInAction } from "mobx";
-import Icon, { StyledIcon } from "../../../../../lib/Styled/Icon";
 
 describe("HelpPanel", function() {
   let terria: Terria;
@@ -46,7 +45,7 @@ describe("HelpPanel", function() {
     });
   });
 
-  describe("with no text, icon, videos and images in helpContent", function() {
+  describe("with no text, videos and images in helpContent", function() {
     beforeEach(() => {
       runInAction(() => {
         terria.configParameters.helpContent = [
@@ -67,13 +66,6 @@ describe("HelpPanel", function() {
     it("renders 1 help menu item", function() {
       const helpItems = testRenderer.root.findAllByType(HelpPanelItem);
       expect(helpItems.length).toBe(1);
-    });
-
-    it("renders the default video icon", function() {
-      const helpItem = testRenderer.root.findByType(HelpPanelItem);
-      const menuIcon = helpItem.findByType(Icon);
-      // Not sure how to compare icons so I just used the gylph.id
-      expect(menuIcon.props.glyph.id).toBe("video");
     });
 
     it("does not render any text on the help menu buttons", function() {
@@ -99,7 +91,7 @@ describe("HelpPanel", function() {
     });
   });
 
-  describe("with text, icon, video and image in helpContent", function() {
+  describe("with text, video and image in helpContent", function() {
     beforeEach(() => {
       runInAction(() => {
         terria.configParameters.helpContent = [
@@ -107,7 +99,6 @@ describe("HelpPanel", function() {
             itemName: "test",
             markdownText:
               "# Test\n\nHello, this is just a test\n\nThis is another paragraph",
-            icon: "datePicker",
             videoUrl: "https://www.youtube-nocookie.com/embed/NTtSM70rIvI",
             placeholderImage:
               "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
@@ -127,13 +118,6 @@ describe("HelpPanel", function() {
       const styledHtml = testRenderer.root.findByType(StyledHtml);
       expect(styledHtml).toBeDefined();
       expect(styledHtml.findAllByType(Text).length).toBe(3);
-    });
-
-    it("renders the desired icon on the help menu button", function() {
-      const helpItem = testRenderer.root.findByType(HelpPanelItem);
-      const menuIcon = helpItem.findByType(StyledIcon);
-      // Not sure how to compare icons so I just used the gylph.id
-      expect(menuIcon.props.glyph.id).toBe("date-picker-icon");
     });
 
     it("renders the video component", function() {
