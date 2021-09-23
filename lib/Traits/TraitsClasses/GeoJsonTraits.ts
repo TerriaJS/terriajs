@@ -55,14 +55,23 @@ export class GeoJsonTraits extends mixTraits(
     type: "boolean",
     name: "Clamp to Ground",
     description:
-      "Whether the features in this GeoJSON should be clamped to the terrain surface."
+      "Whether the features in this GeoJSON should be clamped to the terrain surface. If `forceCesiumPrimitives` is false, this will be `true`"
   })
   clampToGround: boolean = true;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Force cesium primitives",
+    description:
+      "Force rendering GeoJSON features as Cesium primitives. This will be true if you are using `perPropertyStyles`, `timeProperty`, `heightProperty` or `czmlTemplate`. If undefined, it will look at configParameters.enableGeojsonMvt"
+  })
+  forceCesiumPrimitives?: boolean;
 
   @objectArrayTrait({
     name: "Per property styles",
     type: PerPropertyGeoJsonStyleTraits,
-    description: "Override feature styles according to their properties.",
+    description:
+      "Override feature styles according to their properties. This is only supported for cesium primitives (see `forceCesiumPrimitives`)",
     idProperty: "index"
   })
   perPropertyStyles: PerPropertyGeoJsonStyleTraits[] = [];
@@ -71,7 +80,7 @@ export class GeoJsonTraits extends mixTraits(
     name: "Time property",
     type: "string",
     description:
-      "The property of each GeoJSON feature that specifies which point in time that feature is associated with. If not specified, it is assumed that the dataset is constant throughout time."
+      "The property of each GeoJSON feature that specifies which point in time that feature is associated with. If not specified, it is assumed that the dataset is constant throughout time. This is only supported for cesium primitives (see `forceCesiumPrimitives`)"
   })
   timeProperty?: string;
 
@@ -79,7 +88,7 @@ export class GeoJsonTraits extends mixTraits(
     name: "Height property",
     type: "string",
     description:
-      "The property of each GeoJSON feature that specifies the height. If defined, polygons will be extruded to this property (in meters) above terrain."
+      "The property of each GeoJSON feature that specifies the height. If defined, polygons will be extruded to this property (in meters) above terrain. This is only supported for cesium primitives (see `forceCesiumPrimitives`)"
   })
   heightProperty?: string;
 
