@@ -46,6 +46,7 @@ Specifies various options for configuring TerriaJS:
 |`supportEmail`|no|**string**|`"info@terria.io"`|The email address shown when things go wrong.|
 |`defaultMaximumShownFeatureInfos`|no|**number**|`100`|The maximum number of "feature info" boxes that can be displayed when clicking a point.|
 |`regionMappingDefinitionsUrl`|yes|**string**|`"build/TerriaJS/data/regionMapping.json"`|URL of the JSON file that defines region mapping for CSV files. This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.|
+|`catalogIndexUrl`|no|**string**||URL of the JSON file that contains index of catalog. See [CatalogIndex](#catalogindex)|
 |`conversionServiceBaseUrl`|no|**string**|`"convert/"`|URL of OGR2OGR conversion service (part of TerriaJS-Server). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.|
 |`proj4ServiceBaseUrl`|no|**string**|`"proj4/"`|URL of Proj4 projection lookup service (part of TerriaJS-Server). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.|
 |`corsProxyBaseUrl`|no|**string**|`"proxy/"`|URL of CORS proxy service (part of TerriaJS-Server). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.|
@@ -175,3 +176,30 @@ Configuration of items to appear in the search bar
   ]
 }
 ```
+
+***
+
+### CatalogIndex
+
+If your TerriaMap has many (>50) dynamic groups (groups which need to be loaded - for example CKAN, WMS-group...) it may be worth generating a static catalog index JSON file. This file will contain ID, name and description fields of all catalog items, which can be used to search through the catalog very quickly without needing to load dynamic groups.
+
+The https://github.com/nextapps-de/flexsearch library is used to index and search the catalog index file.
+
+**Note** NodeJS v10 is not supported, please use v12 or v14.
+
+To generate the catalog index:
+
+- `npm run build-tools`
+- `node .\build\generateCatalogIndex.js config-url base-url` where
+  - `config-url` is URL to client-side-config file
+  - `base-url` is URL to terriajs-server (this is used to load `server-config` and to proxy requests)
+  - For example `node .\build\generateCatalogIndex.js http://localhost:3001/config.json http://localhost:3001`
+- This will output two files
+  - `catalog-index.json`
+  - `catalog-index-errors.json` with any error messages which occurred while loading catalog members
+- Set `catalogIndexUrl` config parameter
+
+This file will have to be re-generated manually every time the catalog structure changes - for example:
+
+- if items are renamed, or moved
+- dynamic groups are updated (for example, WMS server publishes new layers)

@@ -188,7 +188,12 @@ namespace MappableMixin {
   export interface Instance
     extends InstanceType<ReturnType<typeof MappableMixin>> {}
   export function isMixedInto(model: any): model is Instance {
-    return model && model.isMappable;
+    return (
+      model &&
+      model.isMappable &&
+      "forceLoadMapItems" in model &&
+      typeof model.forceLoadMapItems === "function"
+    );
   }
 }
 
