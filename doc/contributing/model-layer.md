@@ -161,6 +161,15 @@ Some rules:
 * The `target` model must _not_ be in `terria.models`.
 * The instance referred to by the `target` property should remain stable (the same instance) whenever possible. But if something drastic changes (e.g. we need an instance of a different model class), it's possible for the `target` property to switch to pointing at an entirely new instance. So it's important to only hold on to references to the `ReferenceMixin` model and access the `target` as needed, rather than holding a reference to the `target` directly.
 
+### Weak Reference
+
+If `weakReference` is `true`, the reference will be treated more like a shortcut. 
+
+In this case:
+
+- `sourceReference` must not be set.
+- If the reference is shared or added to the workbench, the target will be used in instead of `sourceReference`.
+
 ## AsyncLoader
 
 The AsyncLoader class provides a way to memoize (of sorts) async requests. 
