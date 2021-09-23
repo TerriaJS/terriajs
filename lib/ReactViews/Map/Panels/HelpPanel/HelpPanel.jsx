@@ -7,7 +7,7 @@ import { withTheme } from "styled-components";
 import Icon, { StyledIcon } from "../../../../Styled/Icon";
 import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
-import Box, { BoxSpan } from "../../../../Styled/Box";
+import Box from "../../../../Styled/Box";
 import parseCustomMarkdownToReact from "../../../Custom/parseCustomMarkdownToReact";
 import HelpPanelItem from "./HelpPanelItem";
 import Button, { RawButton } from "../../../../Styled/Button";
@@ -31,15 +31,21 @@ class HelpPanel extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      isAnimatingOpen: true
+    };
+  }
+
+  componentDidMount() {
+    // The animation timing is controlled in the CSS so the timeout can be 0 here.
+    setTimeout(() => this.setState({ isAnimatingOpen: false }), 0);
   }
 
   render() {
     const { t } = this.props;
     const helpItems = this.props.terria.configParameters.helpContent;
-    const isVisible =
-      this.props.viewState.showHelpMenu &&
-      this.props.viewState.topElement === "HelpPanel";
     const isExpanded = this.props.viewState.helpPanelExpanded;
+    const isAnimatingOpen = this.state.isAnimatingOpen;
     return (
       <Box
         displayInlineBlock
@@ -54,7 +60,7 @@ class HelpPanel extends React.Component {
             : 110};
           transition: right 0.25s;
           transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-          right: ${isVisible ? (isExpanded ? 490 : 0) : -320}px;
+          right: ${isAnimatingOpen ? -320 : isExpanded ? 490 : 0}px;
         `}
       >
         <Box position="absolute" paddedRatio={3} topRight>
@@ -120,46 +126,17 @@ class HelpPanel extends React.Component {
           </Box>
         </Box>
         <Spacing bottom={10} />
-        <Box centered displayInlineBlock>
+        <Box centered displayInlineBlock fullWidth styledPadding="0 26px">
           {helpItems && (
             <For each="item" index="i" of={helpItems}>
-              <Box displayInlineBlock fullWidth styledHeight={"70px"}>
-                <HelpPanelItem
-                  key={i}
-                  terria={this.props.terria}
-                  viewState={this.props.viewState}
-                  content={item}
-                />
-              </Box>
+              <HelpPanelItem
+                key={i}
+                terria={this.props.terria}
+                viewState={this.props.viewState}
+                content={item}
+              />
             </For>
           )}
-          <Box styledHeight={"64px"}>
-            <Box styledMargin={"auto 25px"}>
-              <Text semiBold extraLarge textDark uppercase>
-                <a
-                  href="https://terriajs.gitbook.io/terriajs/"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  onClick={() =>
-                    this.props.terria.analytics?.logEvent(
-                      Category.help,
-                      HelpAction.userGuideOpened
-                    )
-                  }
-                >
-                  <BoxSpan displayInlineBlock styledPadding={"0 10px 0 0"}>
-                    {t("helpPanel.terriaMapUserGuide")}
-                  </BoxSpan>
-                  <StyledIcon
-                    glyph={Icon.GLYPHS.externalLink}
-                    displayInline
-                    styledWidth={"15px"}
-                    fillColor={this.props.theme.textDark}
-                  />
-                </a>
-              </Text>
-            </Box>
-          </Box>
         </Box>
       </Box>
     );
