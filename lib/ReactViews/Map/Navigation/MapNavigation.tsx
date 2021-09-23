@@ -286,7 +286,8 @@ class MapNavigation extends React.Component<PropTypes> {
             column={this.orientation === Orientation.VERTICAL}
             css={`
               ${this.orientation === Orientation.HORIZONTAL &&
-                `margin-bottom: 5px;`}
+                `margin-bottom: 5px;
+                flex-wrap: wrap;`}
             `}
           >
             {items.map(item => {
