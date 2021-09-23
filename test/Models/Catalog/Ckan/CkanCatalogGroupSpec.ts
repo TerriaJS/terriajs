@@ -135,7 +135,9 @@ describe("CkanCatalogGroup", function() {
         );
         ckanCatalogGroup.setTrait("definition", "groupBy", "group");
         ckanCatalogGroup.setTrait("definition", "ungroupedTitle", "Blah");
-        ckanCatalogGroup.setTrait("definition", "blacklist", ["Geography"]);
+        ckanCatalogGroup.setTrait("definition", "excludeMembers", [
+          "Geography"
+        ]);
         ckanCatalogGroup.setTrait("definition", "itemProperties", {
           layers: "abc"
         });
