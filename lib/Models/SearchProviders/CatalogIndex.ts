@@ -1,13 +1,12 @@
-import { ObservableMap, action, observable } from "mobx";
-import CatalogIndexReference from "../Catalog/CatalogReferences/CatalogIndexReference";
+import { Document } from "flexsearch";
+import { action, observable, ObservableMap } from "mobx";
 import loadJson from "../../Core/loadJson";
-import updateModelFromJson from "../Definition/updateModelFromJson";
-import CommonStrata from "../Definition/CommonStrata";
-import Terria from "../Terria";
 import CatalogIndexReferenceTraits from "../../Traits/TraitsClasses/CatalogIndexReferenceTraits";
+import CatalogIndexReference from "../Catalog/CatalogReferences/CatalogIndexReference";
+import CommonStrata from "../Definition/CommonStrata";
+import updateModelFromJson from "../Definition/updateModelFromJson";
+import Terria from "../Terria";
 import SearchResult from "./SearchResult";
-
-const { Document } = require("flexsearch");
 
 export interface CatalogIndexFile {
   [id: string]: CatalogIndexReferenceTraits;
@@ -52,19 +51,21 @@ export default class CatalogIndex {
        *  - resolution property = score resolution
        */
       this._searchIndex = new Document({
-        id: "id",
-        index: [
-          {
-            field: "name",
-            tokenize: "full",
-            resolution: 9
-          },
-          {
-            field: "description",
-            tokenize: "strict",
-            resolution: 1
-          }
-        ]
+        document: {
+          id: "id",
+          index: [
+            {
+              field: "name",
+              tokenize: "full",
+              resolution: 9
+            },
+            {
+              field: "description",
+              tokenize: "strict",
+              resolution: 1
+            }
+          ]
+        }
       });
 
       const indexModels = Object.entries(index);
