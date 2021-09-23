@@ -26,6 +26,11 @@ Change Log
 * Added `MinMaxLevelMixin` and `MinMaxLevelTraits` to handle defining min and max scale denominator for layers.
 * Extracted function `scaleToDenominator` to core - for conversion of scale to zoom level.
 * Share/start data conversion will now only occur if `version` property is `0.x.x`. Previously, it was `version` property is **not** `8.x.x`
+* Add `CatalogIndex`, `CatalogIndexReference` and `generateCatalogIndex()` script. These can be used to generate a static JSON in dex of a terria catalog - which can then be searched through using `flexsearch`
+* Added `weakReference` flag `ReferenceMixin`, this can be used to treat References more like a shortcut (this means that `sourceReference` isn't used when models are shared/added to the workbench - the `target` is used instead)
+* GroupMixin.isMixedInto and MappableMixin.isMixedInto are now more strict - and won't pass for for References with `isMappable` or `isGroup`.
+* `Workbench.add` can now handle nested `References` (eg `CatalogIndexReference -> CkanReference -> WMSCatalogItem`).
+* Add `description` trait to `CatalogMemberReferenceTraits`
 * Added `excludeMembers` property to `GroupTraits` (this replaced the `blacklist` property in v7). It is an array of strings of excluded group and item names. A group or item name that appears in this list will not be shown to the user. This is case-insensitive and will also apply to all child/nested groups
 * Fixes an app crash on load in iOS-Safari mobile which was happening when rendering help panel tooltips.
 * [The next improvement]
@@ -746,7 +751,7 @@ Change Log
 * Ensure `CkanCatalogGroup` doesn't keep re-requesting data when opening and closing groups.
 * Add `typeName` to `CatalogMemberMixin`
 * Add `header` option to `loadText`
-* Add `isMixtedInto` function for `AsyncMappableMixin` and `AsyncChartableMixin`
+* Add `isMixedInto` function for `AsyncMappableMixin` and `AsyncChartableMixin`
 * Added file upload support for `GltfCatalogItem`. The supported extension is glb.
 * Improve runtime themeing via styled components across main UI components
 * Updated default welcome video defaults to a newer, slower video

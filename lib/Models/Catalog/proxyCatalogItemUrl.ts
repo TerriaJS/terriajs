@@ -1,10 +1,10 @@
 "use strict";
 
+import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
+import isDefined from "../../Core/isDefined";
 import UrlMixin from "../../ModelMixins/UrlMixin";
 import { BaseModel } from "../Definition/Model";
 import UrlReference from "./CatalogReferences/UrlReference";
-import isDefined from "../../Core/isDefined";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 
 /**
  * The terriajs-server is the default server that proxies a URL associated with a catalog item, if necessary.

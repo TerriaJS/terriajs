@@ -4,8 +4,9 @@ import JsonObject from "../../Core/Json";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import CkanResourceFormatTraits from "./CkanResourceFormatTraits";
 import mixTraits from "../mixTraits";
+import ReferenceTraits from "./ReferenceTraits";
 
-export default class CkanSharedTraits extends mixTraits() {
+export default class CkanSharedTraits extends mixTraits(ReferenceTraits) {
   @anyTrait({
     name: "Item Properties",
     description:

@@ -93,6 +93,7 @@ import Internationalization, {
 } from "./Internationalization";
 import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
+import CatalogIndex from "./SearchProviders/CatalogIndex";
 import ShareDataService from "./ShareDataService";
 import TimelineStack from "./TimelineStack";
 import ViewerMode from "./ViewerMode";
@@ -113,6 +114,10 @@ interface ConfigParameters {
    * The maximum number of "feature info" boxes that can be displayed when clicking a point.
    */
   defaultMaximumShownFeatureInfos: number;
+  /**
+   * URL of the JSON file that contains index of catalog.
+   */
+  catalogIndexUrl?: string;
   /**
    * URL of the JSON file that defines region mapping for CSV files.
    */
@@ -328,7 +333,8 @@ interface HomeCameraInit {
 }
 
 export default class Terria {
-  private models = observable.map<string, BaseModel>();
+  private readonly models = observable.map<string, BaseModel>();
+
   /** Map from share key -> id */
   readonly shareKeysMap = observable.map<string, string>();
   /** Map from id -> share keys */
@@ -344,6 +350,8 @@ export default class Terria {
   readonly baseMapsModel = new BaseMapsModel("basemaps", this);
   readonly timelineClock = new Clock({ shouldAnimate: false });
   // readonly overrides: any = overrides; // TODO: add options.functionOverrides like in master
+
+  catalogIndex: CatalogIndex | undefined;
 
   readonly elements = observable.map<string, IElementConfig>();
 
@@ -389,6 +397,7 @@ export default class Terria {
     appName: "TerriaJS App",
     supportEmail: "info@terria.io",
     defaultMaximumShownFeatureInfos: 100,
+    catalogIndexUrl: undefined,
     regionMappingDefinitionsUrl: "build/TerriaJS/data/regionMapping.json",
     conversionServiceBaseUrl: "convert/",
     proj4ServiceBaseUrl: "proj4/",
@@ -611,6 +620,10 @@ export default class Terria {
     ) {
       return this.mainViewer.currentViewer as import("./Leaflet").default;
     }
+  }
+
+  @computed get modelValues() {
+    return Array.from(this.models.values());
   }
 
   @computed
@@ -1060,12 +1073,21 @@ export default class Terria {
       })
     );
 
+    // Load basemap
     runInAction(() => {
       if (!this.mainViewer.baseMap) {
         // Note: there is no "await" here - as basemaps can take a while to load and there is no need to wait for them to load before rendering Terria
         this.loadPersistedOrInitBaseMap();
       }
     });
+
+    // Load catalog index if catalogIndexUrl is set and it hasn't been loaded yet
+    if (this.configParameters.catalogIndexUrl && !this.catalogIndex) {
+      this.catalogIndex = new CatalogIndex(
+        this,
+        this.configParameters.catalogIndexUrl
+      );
+    }
 
     if (errors.length > 0) {
       // Note - this will get wrapped up in a Result object because it is called in AsyncLoader
