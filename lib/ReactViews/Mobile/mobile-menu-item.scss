@@ -16,6 +16,7 @@
   border-bottom: 1px solid $grey-lighter;
   font-weight: 400;
   display: flex;
+  justify-content: space-between;
   svg {
     fill: $text-dark;
     width: 14px;

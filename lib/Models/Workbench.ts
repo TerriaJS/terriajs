@@ -178,21 +178,20 @@ export default class Workbench {
     try {
       if (ReferenceMixin.isMixedInto(item)) {
         (await item.loadReference()).throwIfError();
-
-        const target = item.target;
-        if (
-          !target ||
-          (target &&
-            !MappableMixin.isMixedInto(target) &&
-            !ChartableMixin.isMixedInto(target))
-        ) {
+        if (item.target) {
           this.remove(item);
-          throw `${getName(
-            item
-          )} cannot be added to the workbench - as there is nothing to visualize`;
-        } else if (target) {
-          return this.add(target);
+          return this.add(item.target);
         }
+      }
+
+      if (
+        !MappableMixin.isMixedInto(item) &&
+        !ChartableMixin.isMixedInto(item)
+      ) {
+        this.remove(item);
+        throw `${getName(
+          item
+        )} cannot be added to the workbench - as there is nothing to visualize`;
       }
 
       if (CatalogMemberMixin.isMixedInto(item))

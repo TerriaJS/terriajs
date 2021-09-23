@@ -482,11 +482,11 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
         );
       };
 
-      let observationData = response.observationData;
-      observationData =
-        observationData === undefined || Array.isArray(observationData)
-          ? observationData
-          : [observationData];
+      const observationData =
+        response.observationData === undefined ||
+        Array.isArray(response.observationData)
+          ? response.observationData
+          : [response.observationData];
       if (!observationData) {
         return [];
       }

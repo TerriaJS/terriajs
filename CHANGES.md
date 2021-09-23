@@ -3,6 +3,9 @@ Change Log
 
 #### next release (8.1.1)
 
+- **Breaking changes:**
+  * `blacklist` has been renamed to `excludeMembers` for `ArcGisPortalCatalogGroup` and `CkanCatalogGroup`.
+
 * Tsifyied and refactored `RegionProvider` and `RegionProviderList`, and re-enabled `loadRegionIDs`
 * `TableColorMap` `minimumValue` and `maximumValue` will now take into account valid regions.
 * `tableMixin.loadRegionProviderList()` is now called in `tableMixin.forceLoadMapItems()` instead of `mappableMixin.loadMapItems()`
@@ -10,7 +13,15 @@ Change Log
 * Moved region mapping `ImageryProvider` code to `lib/Table/createRegionMappedImageryProvider.ts`
 * Fix `ChartPanel` import `Result` bug.
 * Improve handling of featureInfoTemplate for composite catalog items.
+* Mobile help menu will now show a link to map user guide if it is configured in `Terria.configParameters.helpItems`.
 * Fixed the layout of items in mobile navigation
+* Add Mapbox Vector Tile support. This is using [protomaps.js](https://github.com/protomaps/protomaps.js) in the new `ProtomapsImageryProvider`. This includes subset of MVT style specification JSON support.
+* `MapboxVectorCanvasTileLayer` is now called `ImageryProviderLeafletGridLayer`
+* `CesiumTileLayer` is now called `ImageryProviderLeafletTileLayer`.
+* Added `geojson-vt` support to `GeoJsonMixin`, which will tile geojson into vector tiles on the fly, and use the new `ProtomapsImageryProvider`.
+* Added `configParameter.enableGeojsonMvt` temporary feature flag for experimental Geojson-Mapbox vector tiles. Default is `false`.
+* Added `forceCesiumPrimitives` to `GeoJsonTraits`. This can be used to render cesium primitives instead of Mapbox vector-tiles (if `configParameter.enableGeojsonMvt` is `true`)
+* Add `scale` observable to `TerriaViewer`. This will give distance between two pixels at the bottom center of the screen in meters.
 * Fixed `withControlledVisibility` method to inherit `propTypes` of its wrapped component.
 * Added `MinMaxLevelMixin` and `MinMaxLevelTraits` to handle defining min and max scale denominator for layers.
 * Extracted function `scaleToDenominator` to core - for conversion of scale to zoom level.
@@ -22,6 +33,13 @@ Change Log
 * `terriaError.raisedToError` will now check if **any** `TerriaError` has been raised to the user in the tree.
 * `workbench.add()` will now keep items which only return `Warning` severity `TerriaErrors` after loading.
 * Improve SDMX error messages for no results
+* Add `CatalogIndex`, `CatalogIndexReference` and `generateCatalogIndex()` script. These can be used to generate a static JSON in dex of a terria catalog - which can then be searched through using `flexsearch`
+* Added `weakReference` flag `ReferenceMixin`, this can be used to treat References more like a shortcut (this means that `sourceReference` isn't used when models are shared/added to the workbench - the `target` is used instead)
+* GroupMixin.isMixedInto and MappableMixin.isMixedInto are now more strict - and won't pass for for References with `isMappable` or `isGroup`.
+* `Workbench.add` can now handle nested `References` (eg `CatalogIndexReference -> CkanReference -> WMSCatalogItem`).
+* Add `description` trait to `CatalogMemberReferenceTraits`
+* Added `excludeMembers` property to `GroupTraits` (this replaced the `blacklist` property in v7). It is an array of strings of excluded group and item names. A group or item name that appears in this list will not be shown to the user. This is case-insensitive and will also apply to all child/nested groups
+* Fixes an app crash on load in iOS-Safari mobile which was happening when rendering help panel tooltips.
 * [The next improvement]
 
 #### 8.1.0
@@ -740,7 +758,7 @@ Change Log
 * Ensure `CkanCatalogGroup` doesn't keep re-requesting data when opening and closing groups.
 * Add `typeName` to `CatalogMemberMixin`
 * Add `header` option to `loadText`
-* Add `isMixtedInto` function for `AsyncMappableMixin` and `AsyncChartableMixin`
+* Add `isMixedInto` function for `AsyncMappableMixin` and `AsyncChartableMixin`
 * Added file upload support for `GltfCatalogItem`. The supported extension is glb.
 * Improve runtime themeing via styled components across main UI components
 * Updated default welcome video defaults to a newer, slower video
