@@ -299,7 +299,7 @@
     "promptMessage": "Find the Tour, how-to videos & other help content here",
     "dismissText": "Got it, thanks!",
     "takeTour": "Take the tour",
-    "terriaMapUserGuide": "Terria maps user guide"
+    "mapUserGuide": "Map user guide"
   },
   "helpMenu": {
     "btnText": "Help",
