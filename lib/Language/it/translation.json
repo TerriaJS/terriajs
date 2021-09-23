@@ -28,11 +28,14 @@
     "manualAlignmentTitle": "Allineamento Manuale",
     "arTool": "strumento per la realtà aumentata",
     "btnResetRealign": "reimposta allineamento bussola",
-    "confirmText": "Fatto"
+    "confirmText": "Fatto",
+    "resetAlignmentTitle": "Ripristina Allineamento",
+    "manualAlignmentMessage": "Allinea il tuo dispositivo mobile in modo che corrisponda all'allineamento corrente della mappa, quindi clicca sulla bussola lampeggiante. Se nessun punto di riferimento con cui allinearsi è attualmente visibile sulla mappa, è possibile spostare la mappa utilizzando le azioni di trascinamento e pizzicamento fino a quando un punto di riferimento riconoscibile è visibile prima di allineare il dispositivo con la mappa. <br /><div>{{img}}</div> <br />Suggerimento: Il sole o la luna sono spesso dei buoni punti di riferimento con cui allinearsi se ci si trova in un luogo che non si conosce (fare attenzione a non guardare il sole - può far male agli occhi)."
   },
   "measure": {
     "measureDistance": "Misura la distanza fra punti",
-    "measureTool": "Strumento di misura"
+    "measureTool": "Strumento di misura",
+    "measureToolTitle": "Misuratore lineare"
   },
   "general": {
     "cancel": "Annulla",
@@ -50,7 +53,9 @@
       "denyText": "Forse più tardi",
       "confirmText": "Sì",
       "title": "Questa mappa contiene una storia"
-    }
+    },
+    "hideWorkbench": "Nascondi Workbench",
+    "showWorkbench": "Mostra Workbench"
   },
   "helpMenu": {
     "next": "SUCCESSIVO",
@@ -127,7 +132,9 @@
     "printViewButton": "Mostra anteprima di stampa",
     "browserPrint": "Per una stampa migliore, per favore usate il pulsante Stampa di {{appName}} invece di quello del browser.",
     "creatingPrintView": "Creazione della vista di stampa in corso…",
-    "generatingUrl": "Generazione dell'URL per la condivisione in corso…"
+    "generatingUrl": "Generazione dell'URL per la condivisione in corso…",
+    "convertNotificationWarningsTitle": "Dettagli tecnici",
+    "shortLinkShortening": "Accorciamento..."
   },
   "zoomCotrol": {
     "zoomReset": "Ripristina lo zoom",
@@ -136,23 +143,36 @@
   },
   "location": {
     "location": "Posizione",
-    "myLocation": "La mia posizione"
+    "myLocation": "La mia posizione",
+    "centreMap": "Mappa centrata nella tua posizione attuale",
+    "originError": "Il tuo browser può fornire la tua posizione solo quando usi https. Potresti invece usare {{secureUrl}}.",
+    "browserCannotProvide": "Il tuo browser non può fornire la tua posizione.",
+    "errorGettingLocation": "Errore nell'ottenere la posizione"
   },
   "models": {
     "webProcessingService": {
-      "errorDetails": "Dettagli errore"
+      "errorDetails": "Dettagli errore",
+      "regionParameterName": "Parametro della regione",
+      "regionTypeName": "Tipo di regione"
     },
     "webMapServiceCatalogItem": {
       "missingDataTitle": "Dati mancanti",
       "defaultStyleLabel": "Stile predefinito",
       "serviceDescription": "Descrizione del Servizio",
-      "dataDescription": "Descrizione dei Dati"
+      "dataDescription": "Descrizione dei Dati",
+      "getCapabilitiesUrl": "GetCapabilities URL",
+      "serviceContact": "Contatto assistenza",
+      "accessConstraints": "Vincoli di accesso",
+      "metadataUrls": "Link ai metadati"
     },
     "userDrawing": {
       "btnDone": "Fatto",
       "btnCancel": "Annulla",
       "line": "Linea",
-      "pointEntities": "Punti"
+      "pointEntities": "Punti",
+      "userPolygon": "Poligono dell'utente",
+      "anotherPoint": "Un altro punto",
+      "firstPoint": "Primo punto"
     },
     "terriaJSONcatalog": {
       "disclaimer": "Scarico di responsabilità",
@@ -168,17 +188,20 @@
     },
     "sensorObservationService": {
       "property": "Proprietà",
-      "procedure": "Procedura"
+      "procedure": "Procedura",
+      "sos": "SOS"
     },
     "feedback": {
       "thanksTitle": "Grazie per il tuo feedback!"
     },
     "raiseError": {
-      "errorTitle": "Si è verificato un errore"
+      "errorTitle": "Si è verificato un errore",
+      "developerDetails": "Dettagli dello sviluppatore"
     },
     "placesLikeMe": {
       "characteristics": "Caratteristiche",
-      "regionName": "Regione"
+      "regionName": "Regione",
+      "regionTypeName": "Tipo di regione"
     },
     "gpx": {
       "name": "GPX"
@@ -196,7 +219,8 @@
       "tags": "Etichette",
       "attributes": "Attributi",
       "licence": "Licenza",
-      "description": "Descrizione"
+      "description": "Descrizione",
+      "name": "Server Socrata"
     },
     "ogr": {
       "unsupportedFileTzpe": "Tipo di file non supportato",
@@ -211,11 +235,13 @@
     "geoJson": {
       "firefox": "Mozilla Firefox",
       "chrome": "Google Chrome",
-      "internetExplorer": "Internet Explorer 11"
+      "internetExplorer": "Internet Explorer 11",
+      "couldNotLoadMessage": "Si è verificato un errore durante il recupero dei dati JSON dal link fornito. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p><p>Questo errore può anche indicare che il server non supporta {{cors}}.  Se questo è il tuo server, verifica che CORS sia abilitato e abilitalo se non lo è.  Se non controlli il server, contatta l'amministratore del server e chiedigli di abilitare CORS.  Oppure, contatta il team di '{{appName}}' inviando un'email a {{email}} e chiedici di aggiungere questo server alla lista dei server che non supportano CORS e che possono essere proxy da 'appName' stesso. <p>Se non hai inserito questo link manualmente, questo errore potrebbe indicare che l'origine dati che stai cercando di aggiungere è temporaneamente non disponibile o c'è un problema con la tua connessione internet.  Prova ad aggiungere di nuovo l'origine dati, e se il problema persiste, segnalalo inviando un'email a {{email}}.</p>"
     },
     "csw": {
       "links": "Collegamenti",
-      "dataResponsibility": "Resposabile dei dati"
+      "dataResponsibility": "Resposabile dei dati",
+      "cors": "CORS"
     },
     "catalog": {
       "cancel": "Annulla",
@@ -223,7 +249,8 @@
       "unsupportedFileTypeTitle": "Tipo di file non supportato",
       "group": "Gruppo",
       "name": "Elemento senza nome",
-      "unsupportedTypeTitle": "Tipo sconosciuto"
+      "unsupportedTypeTitle": "Tipo sconosciuto",
+      "idForMatchingErrorTitle": "Proprietà mancante"
     },
     "ckan": {
       "update_freq": "Frequenza di aggiornamento",
@@ -235,18 +262,24 @@
       "resourceDescription": "Descrizione della risorsa",
       "dataDescription": "Descrizione dei dati",
       "datasetDescription": "Descrizione del dataset",
-      "datasetCustodian": "Depositario dei Dati"
+      "datasetCustodian": "Depositario dei Dati",
+      "name": "Risorsa CKAN",
+      "nameServer": "Server CKAN"
     },
     "userData": {
       "firefox": "Mozilla Firefox",
       "chrome": "Google Chrome",
-      "internetExplorer": "Internet Explorer 11"
+      "internetExplorer": "Internet Explorer 11",
+      "edge": "Microsoft Edge"
     },
     "spatialDetailing": {
-      "name": "Dettaglio spaziale"
+      "name": "Dettaglio spaziale",
+      "aggregationTrueName": "Aggregazione media",
+      "aggregationName": "Aggregazione"
     },
     "magda": {
-      "distributionDesc": "Descrizione della distribuzione"
+      "distributionDesc": "Descrizione della distribuzione",
+      "name": "Distribuzione MAGDA"
     },
     "shadow": {
       "options": {
@@ -257,12 +290,19 @@
     "webMapTileServiceCatalogItem": {
       "noUsableTileMatrixTitle": "Avvertimento",
       "serviceDescription": "Descrizione del Servizio",
-      "dataDescription": "Descrizione dei dati"
+      "dataDescription": "Descrizione dei dati",
+      "getCapabilitiesUrl": "GetCapabilities URL",
+      "serviceContact": "Contatto assistenza",
+      "accessConstraints": "Vincoli di accesso"
     },
     "webFeatureServiceCatalogItem": {
       "missingDataTitle": "Dati mancanti",
       "serviceDescription": "Descrizione del Servizio",
-      "dataDescription": "Descrizione dei dati"
+      "dataDescription": "Descrizione dei dati",
+      "getCapabilitiesUrl": "GetCapabilities URL",
+      "serviceContact": "Contatto assistenza",
+      "accessConstraints": "Vincoli di accesso",
+      "metadataUrls": "Collegamenti ai metadati"
     },
     "tableData": {
       "noData": "Non ci sono dati da mostrare"
@@ -270,14 +310,17 @@
     "sdmxCatalogItem": {
       "viewBy": {
         "region": "Regione",
-        "title": "Vista da"
+        "title": "Vista da",
+        "time": "Serie temporali"
       }
     },
     "sdmxJsonDataflowStratum": {
       "defaultUnitMeasure": "Unità"
     },
     "senaps": {
-      "locationHeadingFeatureInfo": "Posizione"
+      "locationHeadingFeatureInfo": "Posizione",
+      "availableStreamsHeadingFeatureInfo": "Flussi disponibili",
+      "name": "Sedi di Senaps"
     },
     "georss": {
       "author": "Autore",
@@ -285,7 +328,10 @@
       "description": "Descrizione",
       "category": "Categoria",
       "updated": "Aggiornato",
-      "subtitle": "Sottotitolo"
+      "subtitle": "Sottotitolo",
+      "copyrightText": "Testo del copyright",
+      "name": "GeoRSS",
+      "errorLoadingMessage": "Si è verificato un errore durante il caricamento di un file GeoRSS. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p><p>Questo errore può anche indicare che il server non supporta {{cors}}.  Se questo è il tuo server, verifica che CORS sia abilitato e abilitalo se non lo è.  Se non controlli il server, contatta l'amministratore del server e chiedigli di abilitare CORS.  Oppure, contatta il team di '{{appName}}' inviando un'email a {{email}} e chiedici di aggiungere questo server alla lista dei server che non supportano CORS e che possono essere proxy da 'appName' stesso. <p>Se non hai inserito questo link manualmente, questo errore potrebbe indicare che l'origine dati che stai cercando di aggiungere è temporaneamente non disponibile o c'è un problema con la tua connessione internet.  Prova ad aggiungere di nuovo l'origine dati, e se il problema persiste, segnalalo inviando un'email a {{email}}."
     },
     "arcgisPortal": {
       "licence": "Licenza",
@@ -293,19 +339,86 @@
     },
     "arcGisMapServerCatalogItem": {
       "serviceDescription": "Descrizione del Servizio",
-      "dataDescription": "Descrizione dei Dati"
+      "dataDescription": "Descrizione dei Dati",
+      "copyrightText": "Testo del copyright"
     },
     "arcGisMapServerCatalogGroup": {
       "serviceDescription": "Descrizione del Servizio",
-      "dataDescription": "Descrizione dei Dati"
+      "dataDescription": "Descrizione dei Dati",
+      "copyrightText": "Testo del copyright",
+      "cors": "CORS",
+      "groupNotAvailableMessage": "Si è verificato un errore durante il richiamo di ArcGIS Map Service. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Questo errore può anche indicare che il server non supporta {{cors}}. Se si tratta del server, verificare che CORS sia abilitato e abilitarlo in caso contrario.  Se non si controlla il server, contattare l'amministratore del server e chiedere loro di abilitare CORS.  In alternativa, contattare il team {{appName}} inviando un'e-mail a {{email}} e chiederci di aggiungere questo server all'elenco dei server non supportati da CORS che potrebbero essere inoltrati da {{appName}} stesso. <p>Se non hai inserito questo link manualmente, questo errore potrebbe indicare che il gruppo aperto è temporaneamente non disponibile o che si è presente un problema con la tua connessione Internet.  Prova ad aprire nuovamente il gruppo e, se il problema persiste, segnalalo inviando un'e-mail a {{email}}.</p>"
     },
     "arcGisFeatureServerCatalogItem": {
       "serviceDescription": "Descrizione del Servizio",
-      "dataDescription": "Descrizione dei Dati"
+      "dataDescription": "Descrizione dei Dati",
+      "copyrightText": "Testo del copyright"
     },
     "arcGisFeatureServerCatalogGroup": {
       "serviceDescription": "Descrizione del Servizio",
-      "dataDescription": "Descrizione dei Dati"
+      "dataDescription": "Descrizione dei Dati",
+      "copyrightText": "Testo del copyright",
+      "cors": "CORS",
+      "groupNotAvailableMessage": "Si è verificato un errore durante l'invocazione di ArcGIS Feature Service. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Questo errore può anche indicare che il server non supporta {{cors}}. Se questo è il tuo server, verifica che CORS sia abilitato e abilitalo se non lo è.  Se non controlli il server, contatta l'amministratore del server e chiedigli di abilitare CORS.  Oppure, contattate il team di {{appName}} inviando un'email a {{email}} e chiedeteci di aggiungere questo server alla lista dei server che non supportano il CORS e che possono essere proxiati da {{appName}} stesso. <p>Se non hai inserito questo link manualmente, questo errore può indicare che il gruppo che hai aperto è temporaneamente non disponibile o che c'è un problema con la tua connessione internet.  Prova ad aprire di nuovo il gruppo, e se il problema persiste, segnalalo inviando un'e-mail a {{email}}.</p>"
+    },
+    "arcGisFeatureServer": {
+      "invalidServiceMessage": "Si è verificato un errore durante l'invocazione di ArcGIS Feature Service.  La risposta del server non sembra essere un documento Feature Service valido. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Se non hai inserito il link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto non è temporaneamente disponibile o che c'è un problema con la tua connessione Internet.  Prova ad aprire di nuovo il gruppo, e se il problema persiste, per favore segnalalo inviando un'e-mail a {{email}}.</p>",
+      "groupNotAvailableMessage": "Si è verificato un errore durante l'invocazione di ArcGIS Feature Service. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Questo errore può anche indicare che il server non supporta {{cors}}.  Se questo è il tuo server, verifica che CORS sia abilitato e abilitalo se non lo è.  Se non controlli il server, contatta l'amministratore del server e chiedigli di abilitare CORS.  Oppure, contattate il team di {{appName}} inviando un'email a {{email}} e chiedeteci di aggiungere questo server alla lista dei server che non supportano il CORS e che possono essere proxy da {{appName}} stesso. <p>Se non hai inserito questo link manualmente, questo errore può indicare che il gruppo che hai aperto è temporaneamente non disponibile o che c'è un problema con la tua connessione internet.  Prova ad aprire di nuovo il gruppo, e se il problema persiste, segnalalo inviando un'e-mail a {{email}}.</p>"
+    },
+    "czml": {
+      "errorLoadingMessage": "Si è verificato un errore durante il caricamento di un file CZML. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p><p>Questo errore può anche indicare che il server non supporta {{cors}}.  Se questo è il tuo server, verifica che CORS sia abilitato e abilitalo se non lo è.  Se non controlli il server, contatta l'amministratore del server e chiedigli di abilitare CORS.  Oppure, contattate il team '{{appName}}' inviando un'email a {{email}} e chiedeteci di aggiungere questo server alla lista dei server che non supportano CORS e che possono essere proxy da 'appName' stesso. <p>Se non hai inserito questo link manualmente, questo errore potrebbe indicare che l'origine dati che stai cercando di aggiungere è temporaneamente non disponibile o c'è un problema con la tua connessione internet.  Prova ad aggiungere di nuovo l'origine dati e se il problema persiste, segnalalo inviando un'e-mail a {{email}}. Vedi i dettagli tecnici qui sotto.</p>\n<pre>${stackTrace}</pre>"
+    },
+    "webProcessingServiceCatalogGroup": {
+      "invalidCapabilitiesTitle": "GetCapabilities non valido"
+    },
+    "webMapTileServiceCatalogGroup": {
+      "invalidCapabilitiesTitle": "GetCapabilities non valido",
+      "groupNotAvailableMessage": "Si è verificato un errore durante l'invocazione di GetCapabilities sul server WMTS. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Questo errore potrebbe anche indicare che il server non supporta <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  Se questo è il tuo server, verifica che CORS sia abilitato e abilitalo se non lo è.  Se non controlli il server, contatta l'amministratore del server e chiedigli di abilitare CORS.  Oppure, contatta il team di '{{appName}}' Map inviando un'email a {{email}} e chiedici di aggiungere questo server alla lista dei server che non supportano CORS e che possono essere proxy da '{{appName}}' stesso.</p> <p>Se non hai inserito questo link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto è temporaneamente non disponibile o che c'è un problema con la tua connessione internet. Prova ad aprire di nuovo il gruppo, e se il problema persiste, segnalalo inviando un'e-mail a {{email}}.</p>"
+    },
+    "resultPending": {
+      "name": "Risultato in sospeso"
+    },
+    "regionMapping": {
+      "csvSpecification": "Specifiche CSV-geo-au",
+      "notRecognisedText": "non riconosciuto"
+    },
+    "mapboxStyle": {
+      "name": "Stile Mapbox"
+    },
+    "mapboxMap": {
+      "name": "Mappa Mapbox"
+    },
+    "imageryLayer": {
+      "tileErrorTitle": "Errore Tile"
+    },
+    "function": {
+      "unknownFormaterTitle": "Formattazione sconosciuta"
+    },
+    "cesiumTerrain": {
+      "name": "Cesium Terrain"
+    },
+    "cartoMap": {
+      "noUrlTitle": "Nessun URL",
+      "name": "Mappa Carto"
+    },
+    "shapefile": {
+      "name": "Shapefile"
+    },
+    "abs": {
+      "name": "ABS.Stat"
+    },
+    "arcGisService": {
+      "invalidServerMessage": "Si è verificato un errore durante il richiamo del servizio ArcGIS REST.  La risposta del server non sembra essere un documento ARCGIS REST valido. <p> Se hai inserito il link manualmente, verifica che sia corretto. </p> <p> Se non hai inserito questo link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto è temporaneamente non disponibile o che si è presente un problema con la tua connessione Internet.  Prova ad aprire nuovamente il gruppo e, se il problema persiste, segnalalo inviando un'e-mail a {{email}}. </p>",
+      "groupNotAvailableMessage": "Si è verificato un errore durante l'invocazione del servizio ArcGIS REST. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p><p>Questo errore può anche indicare che il server non supporta {{cors}} .  Se questo è il tuo server, verifica che CORS sia abilitato e abilitalo se non lo è.  Se non controlli il server, contatta l'amministratore del server e chiedigli di abilitare CORS.  Oppure, contattate il team di {{appName}} inviando un'email a {{email}} e chiedeteci di aggiungere questo server alla lista dei server che non supportano il CORS e che possono essere proxiati da {{appName}} stesso. <p>Se non hai inserito questo link manualmente, questo errore può indicare che il gruppo che hai aperto è temporaneamente non disponibile o che c'è un problema con la tua connessione internet.  Prova ad aprire di nuovo il gruppo, e se il problema persiste, segnalalo inviando un'e-mail a {{email}}.</p>"
+    },
+    "wfsFeatures": {
+      "groupNotAvailableMessage": "Si è verificato un errore durante l'invocazione di GetFeature sul server WFS. [Se hai inserito il link manualmente, verifica che il link sia corretto.</p><p>Questo errore potrebbe anche indicare che il server non supporta <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  Se questo è il tuo server, verifica che CORS sia abilitato e abilitalo se non lo è. Se non controlli il server, contatta l'amministratore del server e chiedigli di abilitare CORS.  Oppure, contatta il team di '{{appName}}' Map inviando un'email a {{email}} e chiedici di aggiungere questo server alla lista dei server che non supportano CORS e che possono essere proxy da '{{appName}}' stesso.</p><p>Se non hai inserito questo link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto non è temporaneamente disponibile o che c'è un problema con la tua connessione internet.  Prova ad aprire di nuovo il gruppo, e se il problema persiste, segnalalo inviando un'e-mail a {{email}}.</p>"
+    },
+    "webMapServiceCatalogGroup": {
+      "groupNotAvailableMessage": "Si è verificato un errore durante l'invocazione di GetCapabilities sul server WMS. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Questo errore potrebbe anche indicare che il server non supporta <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  Se questo è il tuo server, verifica che CORS sia abilitato e abilitalo se non lo è.  Se non controlli il server, contatta l'amministratore del server e chiedigli di abilitare CORS.  Oppure, contatta il team di '{{appName}}' Map inviando un'email a {{email}} e chiedici di aggiungere questo server alla lista dei server che non supportano CORS e che possono essere proxy da '{{appName}}' stesso.</p> <p>Se non hai inserito questo link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto non è temporaneamente disponibile o che c'è un problema con la tua connessione internet. Prova ad aprire di nuovo il gruppo, e se il problema persiste, per favore segnalalo inviando un'e-mail a {{email}}.</p>"
+    },
+    "webFeatureServiceCatalogGroup": {
+      "groupNotAvailableMessage": "Si è verificato un errore durante l'invocazione di GetCapabilities sul server WFS. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Questo errore potrebbe anche indicare che il server non supporta <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  Se questo è il tuo server, verifica che CORS sia abilitato e abilitalo se non lo è.  Se non controlli il server, contatta l'amministratore del server e chiedigli di abilitare CORS.  Oppure, contatta il team di '{{appName}}' Map inviando un'email a {{email}} e chiedici di aggiungere questo server alla lista dei server che non supportano CORS e che possono essere proxy da '{{appName}}' stesso.</p> <p>Se non hai inserito questo link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto è temporaneamente non disponibile o che c'è un problema con la tua connessione internet. Prova ad aprire di nuovo il gruppo, e se il problema persiste, per favore segnalalo inviando un'e-mail a {{email}}.</p>"
     }
   },
   "map": {
@@ -315,31 +428,60 @@
       "lon": "Lon",
       "postcode": "Codice postale",
       "state": "Stato",
-      "suburb": "Frazione"
+      "suburb": "Frazione",
+      "poBox": "casella postale",
+      "matchedAddresses": "Indirizzo assegnato"
     },
     "extraCreditLinks": {
-      "disclaimer": "Scarico di responsabilità"
+      "disclaimer": "Scarico di responsabilità",
+      "dataAttribution": "Attribuzione dei dati",
+      "basemap": "Mappa di base"
+    },
+    "drawExtentHelper": {
+      "drawExtent": "Disegnare l'estensione",
+      "extent": "Estensione"
+    },
+    "displayVariablesConcept": {
+      "defaultName": "Visualizza Variabile"
     }
   },
   "core": {
     "dataType": {
       "json": "JSON",
       "gpx": "GPX",
-      "csv": "CSV"
+      "csv": "CSV",
+      "opendatasoft-group": "Portale Opendatasoft",
+      "shp": "Shapefile (zip)",
+      "3d-tiles": "Tile 3D",
+      "auto": "Rilevamento automatico (raccomandato)",
+      "sdmx-group": "SDMX-JSON",
+      "gltf": "GLTF",
+      "carto": "Carto",
+      "czml": "CZML",
+      "geoRss": "GeoRSS"
     },
     "printWindow": {
       "errorTitle": "Errore nella stampa",
       "printMediaEnd": "termina la stampa delle immagini",
-      "printMediaStart": "inizia la stampa delle immagini"
+      "printMediaStart": "inizia la stampa delle immagini",
+      "onafterprint": "dopo la stampa",
+      "onbeforeprint": "prima della stampa"
     },
     "terriaError": {
       "defaultMessage": "Errore sconosciuto",
       "defaultTitle": "È successo un errore"
-    }
+    },
+    "chartData": "Dati del grafico",
+    "userAddedData": "Dati aggiunti dall'utente"
   },
   "analytics": {
     "polygon": "Poligono",
-    "selectLocation": "Seleziona posizione"
+    "selectLocation": "Seleziona posizione",
+    "regionName": "Nome della regione",
+    "selectedPolygon": "Poligono selezionato",
+    "runAnalysis": "Esegui analisi",
+    "existingPolygon": "Poligono esistente",
+    "point": "Punto (lat/lon)"
   },
   "description": {
     "typeName": "Digita nome",
@@ -350,7 +492,8 @@
     "dataUrl": "URL dei dati",
     "dataServiceDetails": "Dettagli dei servizi dei dati",
     "dataSourceDetails": "Dettagli della sorgente dei dati",
-    "downloadNotSupported": "Sfortunatamente il browser non supporta le funzionalità necessarie per il download di questi dati. Riprova usando i browser Chrome, Firefox o Safari per scaricare questi dati."
+    "downloadNotSupported": "Sfortunatamente il browser non supporta le funzionalità necessarie per il download di questi dati. Riprova usando i browser Chrome, Firefox o Safari per scaricare questi dati.",
+    "metadataUrls": "Collegamenti ai metadati"
   },
   "preview": {
     "updateFrequency": "Frequenza di aggiornamento",
@@ -373,27 +516,38 @@
     "fees": "Commissioni",
     "resourceDescription": "Descrizione della Risorsa",
     "serviceDescription": "Descrizione del Servizio",
-    "loading": "ANTEPRIMA IN CARICAMENTO…"
+    "loading": "ANTEPRIMA IN CARICAMENTO…",
+    "accessConstraints": "Vincoli di accesso"
   },
   "legend": {
     "n": "N",
     "e": "E",
     "lon": "Lon",
-    "lat": "Lat"
+    "lat": "Lat",
+    "zone": "ZONA",
+    "elev": "Elev"
   },
   "splitterTool": {
     "workbench": {
       "goright": "Destra",
       "both": "Entrambi",
-      "goleft": "Sinistra"
+      "goleft": "Sinistra",
+      "copyName": "{{name}} (copia)",
+      "gorightTitle": "Mostra nel lato destro",
+      "goleftTitle": "Mostra nel lato sinistro",
+      "bothTitle": "Mostra in entrambi i lati"
     },
-    "toggleSplitterToolTitle": "Confronta"
+    "toggleSplitterToolTitle": "Confronta",
+    "title": "Trascina a sinistra o a destra per regolare le viste",
+    "toggleSplitterToolDisabled": "Si prega di disabilitare le altre funzionalità di confronto fianco a fianco per abilitare il confronto standard",
+    "toggleSplitterTool": "Abilita il confronto affiancato tra due diversi set di dati"
   },
   "deltaTool": {
     "cancelBtn": "Annulla",
     "secondaryImage": "Immagine secondaria",
     "primaryImage": "Immagine principale",
-    "selectedLocation": "Posizione selezionata"
+    "selectedLocation": "Posizione selezionata",
+    "titlePrefix": "Rilevamento delle modifiche"
   },
   "viewModels": {
     "searchLocations": "Posizioni",
@@ -413,7 +567,8 @@
     "remove": "Rimuovi",
     "removeFromMap": "Rimuovi dalla mappa",
     "trash": "Rimuovi questo catalogo",
-    "loading": "In caricamento..."
+    "loading": "In caricamento...",
+    "privateIndicatorTitle": "Set di dati privato"
   },
   "loader": {
     "loadingMessage": "Caricamento"
@@ -487,7 +642,9 @@
     "diffImage": "Differenza",
     "splitItem": "Confronta",
     "showMoreActionsTitle": "Mostra altre opzioni",
-    "previewItemTitle": "Informazioni su questi dati"
+    "previewItemTitle": "Informazioni su questi dati",
+    "previewItem": "Informazioni sui dati",
+    "zoomTo": "Zoom ideale"
   },
   "mobile": {
     "toggleNavigation": "Attiva/disattiva la navigazione",
@@ -563,7 +720,8 @@
     "badgeBarLabel": "Scene",
     "gettingStartedTitle": "Per iniziare",
     "gettingStarted": "Per iniziare",
-    "panelTitle": "Editor Storie"
+    "panelTitle": "Editor Storie",
+    "shareTitle": "condividi storie"
   },
   "dragDrop": {
     "not": "<0>bbbb</0>"
@@ -585,7 +743,8 @@
   "pedestrianMode": {
     "controls": {
       "title": "Comandi"
-    }
+    },
+    "toolButtonTitle": "Modalità pedonale"
   },
   "itemSearchTool": {
     "resetBtnText": "Cancella input",
@@ -594,7 +753,12 @@
       "maximum": "Massimo",
       "minimum": "Minimo"
     },
-    "searching": "Ricerca"
+    "searching": "Ricerca",
+    "actions": {
+      "highlightAll": "Evidenzia tutti"
+    },
+    "backBtnText": "Cerca di nuovo",
+    "title": "Cerca {{itemName}}"
   },
   "languagePanel": {
     "changeLanguage": "Cambia Lingua"
@@ -602,30 +766,73 @@
   "diffTool": {
     "datePicker": {
       "dateButtonTitle": "Seleziona una data",
-      "back": "Torna indietro"
+      "back": "Torna indietro",
+      "nextDateTitle": "Data successiva",
+      "previousDateTitle": "Data precedente"
     },
     "labels": {
       "dates": "Date",
-      "area": "Area"
+      "area": "Area",
+      "differenceOutput": "Differenza uscita",
+      "previewStyle": "Anteprima stile",
+      "sourceDataset": "Origine del set di dati"
     },
     "exit": "Esci",
-    "title": "Differenza"
+    "title": "Differenza",
+    "instructions": {
+      "changeDates": "Cambia date"
+    }
   },
   "tool": {
-    "exitBtnTitle": "Esci"
+    "exitBtnTitle": "Esci",
+    "button": {
+      "open": "Esci da {{toolNameLowerCase}}",
+      "closed": "{{toolName}}"
+    }
   },
   "compass": {
     "guidance": {
-      "outerRingTitle": "Anello esterno"
-    }
+      "outerRingTitle": "Anello esterno",
+      "innerCircleTitle": "Cerchio interno",
+      "outerRingDescription": "Trascina l'anello esterno con un movimento circolare per ruotare la vista della mappa di 360˚.",
+      "title": "Controlli del Giroscopio"
+    },
+    "guidanceBtnTitle": "Navigazione con Giroscopio",
+    "guidanceBtnText": "Visualizza le istruzioni dettagliate su come usare la bussola",
+    "title": "Clicca e trascina per ruotare la telecamera",
+    "description": "Trascina l'anello esterno: ruota la vista.\nTrascina il giroscopio interno: orbita libera.\nDoppio clic: ripristina la vista.\nSUGGERIMENTO: Puoi anche liberare l'orbita tenendo premuto il tasto CTRL e trascinando la mappa."
   },
   "tour": {
     "previous": "Precedente",
     "finish": "Fine",
     "preface": {
       "start": "Inizia il tour",
-      "close": "Forse più tardi"
-    }
+      "close": "Forse più tardi",
+      "content": "Non sai da dove cominciare? Fai un rapido tour delle caratteristiche principali del nostro software, e impara alcune delle funzioni chiave per aiutarti ad andare avanti.",
+      "title": "Fai il tour"
+    },
+    "mapNavigationSplitterIcon": {
+      "content": "## Confronta\n\nUna potente caratteristica di Terria è la possibilità di confrontare i set di dati utilizzando una visualizzazione a schermo diviso. Per i set di dati con un componente di serie temporali, ad esempio le immagini satellitari, è possibile confrontare le date a diversi istani temporali facendo clic sul selettore di data."
+    },
+    "mapNavigationCompassOuterRing": {
+      "content": "## Controlli di visualizzazione\n\nQui puoi cambiare la vista della mappa. Puoi cambiare l'orientamento della vista usando l'anello esterno, e puoi inclinare l'angolo della telecamera usando l'anello interno. Fai doppio clic per ripristinare la vista."
+    },
+    "menuBarStoryButton": {
+      "content": "## Storie\n\nLe storie ti permettono di aggiungere informazioni contestuali a un set di dati per dare vita a una narrazione. Crea la tua storia di dati usando lo Story Editor, e condividila tramite il pannello 'Share' una volta che hai finito."
+    },
+    "menuBarMapSettingsButton": {
+      "content": "## Impostazioni della mappa\n\nPersonalizza le impostazioni della mappa come le mappe di base, la visualizzazione 2D/3D e la qualità dell'immagine della mappa per migliorare le prestazioni."
+    },
+    "sidePanelUploadButton": {
+      "content": "## Carica i dati\n\nPuoi caricare i tuoi dati sulla mappa per visualizzarli con altri set di dati. Carica un file o un link a un set di dati online esistente o a un servizio dati. I formati di dati supportati includono CSV, GeoJSON, KML, GPX e CZML."
+    },
+    "exploreMapDataButton": {
+      "content": "## Esplora i dati della mappa\n\nSfoglia il catalogo dei dati disponibili e aggiungili alla mappa qui. Puoi aggiungere più set di dati alla volta, e li vedrai elencati in basso nel Workbench."
+    },
+    "locationSearchInput": {
+      "content": "## Ricerca della posizione\n\nInserisci una località o un indirizzo per localizzare facilmente un punto di interesse sulla mappa."
+    },
+    "end": "Fine tour"
   },
   "welcomeMessage": {
     "exploreDataBtnText": "Esporta i dati della mappa"
@@ -633,5 +840,17 @@
   "helpPanel": {
     "dismissText": "Capito, grazie!",
     "btnText": "Aiuto"
+  },
+  "term": {
+    "missingContent": "contenuto mancante"
+  },
+  "emptyWorkbench": {
+    "helpfulHints": "Suggerimenti utili"
+  },
+  "trainer": {
+    "collapseTrainer": "Nascondi i dettagli del passaggio",
+    "expandTrainer": "Mostra altri dettagli del passaggio",
+    "showAllSteps": "Mostra tutti i passaggi",
+    "hideAllSteps": "Nascondi tutti i passaggi"
   }
 }
