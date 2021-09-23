@@ -220,7 +220,7 @@ describe("CatalogGroup", function() {
 
     console.log(item);
 
-    expect(item.blacklist).toEqual(["grandchild1", "parent3"]);
+    expect(item.excludeMembers).toEqual(["grandchild1", "parent3"]);
     expect(item.mergedBlacklist).toEqual(["grandchild1", "parent3"]);
 
     const parent1 = <CatalogGroup>terria.getModelById(CatalogGroup, "parent1");
@@ -238,7 +238,7 @@ describe("CatalogGroup", function() {
       "grandchild3"
     ]);
 
-    expect(parent1.blacklist).toEqual(["grandchild4"]);
+    expect(parent1.excludeMembers).toEqual(["grandchild4"]);
     expect(parent1.mergedBlacklist).toEqual([
       "grandchild4",
       "grandchild1",

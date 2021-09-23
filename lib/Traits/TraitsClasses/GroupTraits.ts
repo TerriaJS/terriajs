@@ -7,11 +7,11 @@ import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 
 export default class GroupTraits extends ModelTraits {
   @primitiveArrayTrait({
-    name: "Blacklist",
+    name: "Exclude members",
     type: "string",
-    description: `An array of strings of blacklisted group and item names. A group or item name that appears in this list will not be shown to the user. This is case-insensitive and will also apply to all child/nested groups`
+    description: `An array of strings of excluded group and item names. A group or item name that appears in this list will not be shown to the user. This is case-insensitive and will also apply to all child/nested groups`
   })
-  blacklist?: string[];
+  excludeMembers?: string[];
 
   @primitiveTrait({
     name: "Is Open",

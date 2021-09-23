@@ -156,8 +156,8 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
 
   protected getFilteredDatasets(): CkanDataset[] {
     if (this.datasets.length === 0) return [];
-    if (this._catalogGroup.blacklist !== undefined) {
-      const bl = this._catalogGroup.blacklist;
+    if (this._catalogGroup.excludeMembers !== undefined) {
+      const bl = this._catalogGroup.excludeMembers;
       return this.datasets.filter(ds => bl.indexOf(ds.title) === -1);
     }
     return this.datasets;
@@ -190,8 +190,8 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
 
   protected getFilteredGroups(): CatalogGroup[] {
     if (this.groups.length === 0) return [];
-    if (this._catalogGroup.blacklist !== undefined) {
-      const bl = this._catalogGroup.blacklist;
+    if (this._catalogGroup.excludeMembers !== undefined) {
+      const bl = this._catalogGroup.excludeMembers;
       return this.groups.filter(group => {
         if (group.name === undefined) return false;
         else return bl.indexOf(group.name) === -1;

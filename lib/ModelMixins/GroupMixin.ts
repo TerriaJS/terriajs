@@ -33,7 +33,7 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
 
     /** Get merged blacklist from all parent groups. This will go through all knownContainerUniqueIds and merge all blacklist arrays */
     @computed get mergedBlacklist(): string[] {
-      const blacklistSet = new Set(this.blacklist ?? []);
+      const blacklistSet = new Set(this.excludeMembers ?? []);
 
       this.knownContainerUniqueIds.forEach(containerId => {
         const container = this.terria.getModelById(BaseModel, containerId);
