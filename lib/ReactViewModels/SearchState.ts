@@ -20,7 +20,7 @@ interface SearchStateOptions {
 
 export default class SearchState {
   @observable
-  catalogSearchProvider: CatalogSearchProvider | undefined;
+  catalogSearchProvider: SearchProvider | undefined;
 
   @observable locationSearchProviders: SearchProvider[];
 

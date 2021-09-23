@@ -113,7 +113,7 @@ export default class CatalogSearchProvider extends SearchProvider {
     this.name = "Catalog Items";
   }
 
-  @computed get usingCatalogIndex() {
+  @computed get resultsAreReferences() {
     return isDefined(this.terria.catalogIndex);
   }
 
