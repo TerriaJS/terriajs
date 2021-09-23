@@ -3,6 +3,9 @@ Change Log
 
 #### next release (8.1.1)
 
+- **Breaking changes:**
+  * `blacklist` has been renamed to `excludeMembers` for `ArcGisPortalCatalogGroup` and `CkanCatalogGroup`.
+
 * Tsifyied and refactored `RegionProvider` and `RegionProviderList`, and re-enabled `loadRegionIDs`
 * `TableColorMap` `minimumValue` and `maximumValue` will now take into account valid regions.
 * `tableMixin.loadRegionProviderList()` is now called in `tableMixin.forceLoadMapItems()` instead of `mappableMixin.loadMapItems()`
@@ -10,6 +13,7 @@ Change Log
 * Moved region mapping `ImageryProvider` code to `lib/Table/createRegionMappedImageryProvider.ts`
 * Fix `ChartPanel` import `Result` bug.
 * Improve handling of featureInfoTemplate for composite catalog items.
+* Mobile help menu will now show a link to map user guide if it is configured in `Terria.configParameters.helpItems`.
 * Fixed the layout of items in mobile navigation
 * Add Mapbox Vector Tile support. This is using [protomaps.js](https://github.com/protomaps/protomaps.js) in the new `ProtomapsImageryProvider`. This includes subset of MVT style specification JSON support.
 * `MapboxVectorCanvasTileLayer` is now called `ImageryProviderLeafletGridLayer`
@@ -23,6 +27,8 @@ Change Log
 * Extracted function `scaleToDenominator` to core - for conversion of scale to zoom level.
 * Share/start data conversion will now only occur if `version` property is `0.x.x`. Previously, it was `version` property is **not** `8.x.x`
 * Added location search button to welcome modal in mobile view.
+* Added `excludeMembers` property to `GroupTraits` (this replaced the `blacklist` property in v7). It is an array of strings of excluded group and item names. A group or item name that appears in this list will not be shown to the user. This is case-insensitive and will also apply to all child/nested groups
+* Fixes an app crash on load in iOS-Safari mobile which was happening when rendering help panel tooltips.
 * [The next improvement]
 
 #### 8.1.0
