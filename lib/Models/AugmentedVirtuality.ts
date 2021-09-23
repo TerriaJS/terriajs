@@ -62,20 +62,7 @@ export default class AugmentedVirtuality {
   // (and increment) we cycle and go to the first height.
   @observable hoverLevel = AugmentedVirtuality.PRESET_HEIGHTS.length - 1;
 
-  constructor(readonly terria: Terria) {
-    // Always run the device orientation event, this way as soon as we enable we
-    // know where we are and set the orientation rather then having to wait for
-    // the next update.  The following is disabled because chrome does not
-    // currently support deviceorientationabsolute correctly: if
-    // ('ondeviceorientationabsolute' in window) {
-    // window.addEventListener('deviceorientationabsolute', function(event)
-    // {that._orientationUpdate(event);} ); } else
-    if ("ondeviceorientation" in window) {
-      window.addEventListener("deviceorientation", event =>
-        this.storeOrientation(event)
-      );
-    }
-  }
+  constructor(readonly terria: Terria) {}
 
   toggleEnabled() {
     if (this.active) {
@@ -338,9 +325,19 @@ export default class AugmentedVirtuality {
         () => runInAction(() => this.updateOrientation()),
         intervalMs
       );
+      if ("ondeviceorientation" in window) {
+        window.addEventListener(
+          "deviceorientation",
+          this.boundStoreOrientation
+        );
+      }
       this.eventLoopState = { intervalId: id };
     } else {
       clearInterval(this.eventLoopState.intervalId);
+      window.removeEventListener(
+        "deviceorientation",
+        this.boundStoreOrientation
+      );
       this.eventLoopState = {};
     }
   }
@@ -360,6 +357,12 @@ export default class AugmentedVirtuality {
       this.orientationUpdated = true;
     }
   }
+
+  /**
+   * A bound version of `storeOrientation` that makes it easy to pass to
+   * add/removeEventListener calls.
+   */
+  private boundStoreOrientation = this.storeOrientation.bind(this);
 
   /**
    * This function updates the cameras orientation using the last orientation
