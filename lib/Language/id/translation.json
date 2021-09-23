@@ -167,7 +167,7 @@
     "preface": {
       "start": "Mulai tur",
       "close": "Mungkin nanti",
-      "content": "Tidak yakin di mana untuk mulai? Ikuti tur singkat dari fitur-fitur utama dari perangkat lunak kami, dan belajar tentang beberapa fungsi utama untuk membantumu pergi.",
+      "content": "Tidak yakin di mana untuk mulai? Ikuti tur singkat dari fitur-fitur utama dari perangkat lunak kami, dan belajar tentang beberapa fungsi utama untuk membantumu.",
       "title": "Ikuti turnya"
     }
   },
@@ -185,7 +185,8 @@
     "skip": "Lewati",
     "open": "Buka",
     "close": "Tutup",
-    "prev": ""
+    "prev": "Sebelumnya",
+    "next": "Selanjutnya"
   },
   "languagePanel": {
     "changeLanguage": "Ubah Bahasa"
@@ -280,14 +281,20 @@
     "searchBtnText": "Cari",
     "searchError": "Pencarian gagal. Lihat konsol untuk keterangan kesalahan.",
     "searching": "Mencari",
-    "title": "Cari {{itemName}}"
+    "title": "Cari {{itemName}}",
+    "numericParameter": {
+      "maximum": "Maksimum",
+      "minimum": "Minimum"
+    }
   },
   "deltaTool": {
     "cancelBtn": "Batal",
     "pickerMessage": {
       "pickAnother": "Klik titik lain untuk mengubah pilihan",
       "pickFirst": "Pilih titik dengan mengklik peta"
-    }
+    },
+    "secondaryImage": "Gambar Kedua",
+    "primaryImage": "Gambar Utama"
   },
   "toast": {
     "mapIsZooming": "Memuat pembesaran yang ideal..."
@@ -383,6 +390,27 @@
     },
     "cartoMap": {
       "noUrlTitle": "Tidak ada URL"
+    },
+    "webMapServiceCatalogGroup": {
+      "missingUrlTitle": "Tidak dapat memuat GetCapabilities"
+    },
+    "webMapServiceCatalogItem": {
+      "noLayerFoundTitle": "Tidak ada layer yang ditemukan",
+      "defaultStyleLabel": "Gaya Bawaan"
+    },
+    "webMapTileServiceCatalogGroup": {
+      "groupNotAvailableTitle": "Grup tidak tersedia"
+    },
+    "webMapTileServiceCatalogItem": {
+      "serviceDescription": "Keterangan Layanan",
+      "dataDescription": "Keterangan Data",
+      "noUsableTileMatrixTitle": "Peringatan"
+    },
+    "shadow": {
+      "name": "Bayangan",
+      "options": {
+        "none": "Kosong"
+      }
     }
   },
   "viewModels": {
@@ -500,5 +528,17 @@
     "data": "Data",
     "done": "Selesai",
     "resultsLabel": "Hasil Pencarian"
+  },
+  "mapNavigation": {
+    "additionalToolsTitle": "Buka alat tambahan",
+    "additionalTools": "Alat tambahan"
+  },
+  "term": {
+    "missingContent": "konten hilang"
+  },
+  "pedestrianMode": {
+    "controls": {
+      "title": "Kontrol"
+    }
   }
 }
