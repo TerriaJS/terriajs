@@ -3,6 +3,9 @@ Change Log
 
 #### next release (8.1.1)
 
+- **Breaking changes:**
+  * `blacklist` has been renamed to `excludeMembers` for `ArcGisPortalCatalogGroup` and `CkanCatalogGroup`.
+
 * Tsifyied and refactored `RegionProvider` and `RegionProviderList`, and re-enabled `loadRegionIDs`
 * `TableColorMap` `minimumValue` and `maximumValue` will now take into account valid regions.
 * `tableMixin.loadRegionProviderList()` is now called in `tableMixin.forceLoadMapItems()` instead of `mappableMixin.loadMapItems()`

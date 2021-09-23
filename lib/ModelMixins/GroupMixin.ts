@@ -31,14 +31,14 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
       return this._memberLoader.result;
     }
 
-    /** Get merged blacklist from all parent groups. This will go through all knownContainerUniqueIds and merge all blacklist arrays */
-    @computed get mergedBlacklist(): string[] {
+    /** Get merged excludeMembers from all parent groups. This will go through all knownContainerUniqueIds and merge all excludeMembers arrays */
+    @computed get mergedExcludeMembers(): string[] {
       const blacklistSet = new Set(this.excludeMembers ?? []);
 
       this.knownContainerUniqueIds.forEach(containerId => {
         const container = this.terria.getModelById(BaseModel, containerId);
         if (container && GroupMixin.isMixedInto(container)) {
-          container.mergedBlacklist.forEach(s => blacklistSet.add(s));
+          container.mergedExcludeMembers.forEach(s => blacklistSet.add(s));
         }
       });
 
@@ -55,25 +55,25 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
         members.map(id => {
           if (!ModelReference.isRemoved(id)) {
             const model = this.terria.getModelById(BaseModel, id);
-            if (this.mergedBlacklist.length == 0) {
+            if (this.mergedExcludeMembers.length == 0) {
               return model;
             }
 
-            // Get model name and apply blacklist
+            // Get model name and apply excludeMembers
             const modelName = CatalogMemberMixin.isMixedInto(model)
               ? model.name
               : undefined;
             if (
               model &&
-              // Does blacklist not include model ID
-              !this.mergedBlacklist.find(
+              // Does excludeMembers not include model ID
+              !this.mergedExcludeMembers.find(
                 name =>
                   model.uniqueId?.toLowerCase().trim() ===
                   name.toLowerCase().trim()
               ) &&
-              // Does blacklist not include model name
+              // Does excludeMembers not include model name
               (!modelName ||
-                !this.mergedBlacklist.find(
+                !this.mergedExcludeMembers.find(
                   name =>
                     modelName.toLowerCase().trim() === name.toLowerCase().trim()
                 ))

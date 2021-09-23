@@ -171,7 +171,7 @@ describe("CatalogGroup", function() {
       type: "group",
       id: "grandmama",
       name: "Test Group",
-      blacklist: ["grandchild1", "parent3"]
+      excludeMembers: ["grandchild1", "parent3"]
     };
     upsertModelFromJson(
       CatalogMemberFactory,
@@ -188,7 +188,7 @@ describe("CatalogGroup", function() {
       {
         type: "group",
         id: "parent1",
-        blacklist: ["grandchild4"],
+        excludeMembers: ["grandchild4"],
         members: [
           {
             type: "group",
@@ -221,7 +221,7 @@ describe("CatalogGroup", function() {
     console.log(item);
 
     expect(item.excludeMembers).toEqual(["grandchild1", "parent3"]);
-    expect(item.mergedBlacklist).toEqual(["grandchild1", "parent3"]);
+    expect(item.mergedExcludeMembers).toEqual(["grandchild1", "parent3"]);
 
     const parent1 = <CatalogGroup>terria.getModelById(CatalogGroup, "parent1");
     expect(item).toBeDefined();
@@ -239,7 +239,7 @@ describe("CatalogGroup", function() {
     ]);
 
     expect(parent1.excludeMembers).toEqual(["grandchild4"]);
-    expect(parent1.mergedBlacklist).toEqual([
+    expect(parent1.mergedExcludeMembers).toEqual([
       "grandchild4",
       "grandchild1",
       "parent3"
