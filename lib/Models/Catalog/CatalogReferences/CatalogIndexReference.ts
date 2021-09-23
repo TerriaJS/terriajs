@@ -7,6 +7,15 @@ import CatalogIndexReferenceTraits from "../../../Traits/TraitsClasses/CatalogIn
 import CreateModel from "../../Definition/CreateModel";
 import { BaseModel } from "../../Definition/Model";
 
+/** The `CatalogIndexReference` is used to resolve items in the `catalogIndex` to actual models in terria.models.
+ *
+ * The `catalogIndex` is a "stripped-down" fully resolved tree of models generated using the `generateCatalogIndex` script.
+ * An item in the `catalogIndex` will have `CatalogMemberReferenceTraits` with an additional `memberKnownContainerUniqueIds`.
+ *
+ * This means we can use the `catalogIndex` to search the entire catalog without loading models.
+ *
+ * When `loadReference` is called, it will attempt to load all parent models first (using `memberKnownContainerUniqueIds`)
+ */
 export default class CatalogIndexReference extends ReferenceMixin(
   CreateModel(CatalogIndexReferenceTraits)
 ) {
