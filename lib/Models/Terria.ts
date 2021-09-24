@@ -1241,47 +1241,6 @@ export default class Terria {
     );
   }
 
-  // This method is created to support unit tests.
-  async loadMapItems(model: BaseModel, errors: TerriaError[]) {
-    (await (<any>model).loadMapItems()).pushErrorTo(errors);
-  }
-
-  private async pushAndLoadMapItems(
-    model: BaseModel,
-    newItems: BaseModel[],
-    errors: TerriaError[]
-  ) {
-    if (ReferenceMixin.isMixedInto(model)) {
-      (await model.loadReference()).pushErrorTo(errors);
-
-      if (model.target !== undefined) {
-        await this.pushAndLoadMapItems(model.target, newItems, errors);
-      } else {
-        errors.push(
-          TerriaError.from(
-            "Reference model has no target. Model Id: " + model.uniqueId
-          )
-        );
-      }
-    } else if (GroupMixin.isMixedInto(model)) {
-      (await model.loadMembers()).pushErrorTo(errors);
-
-      model.memberModels.map(async m => {
-        await this.pushAndLoadMapItems(m, newItems, errors);
-      });
-    } else if (MappableMixin.isMixedInto(model)) {
-      newItems.push(model);
-      await this.loadMapItems(model, errors);
-    } else {
-      errors.push(
-        TerriaError.from(
-          "Can not load an un-mappable item to the map. Item Id: " +
-            model.uniqueId
-        )
-      );
-    }
-  }
-
   @action
   async applyInitData({
     initData,
@@ -1416,15 +1375,10 @@ export default class Terria {
       })
     );
 
-    const newItems: BaseModel[] = [];
-
-    await Promise.all(
-      newItemsRaw.map(async model => {
-        await this.pushAndLoadMapItems(model, newItems, errors);
-      })
-    );
-
-    runInAction(() => (this.workbench.items = newItems));
+    const result = await this.workbench.add(newItemsRaw);
+    if (result.error) {
+      errors.push(result.error);
+    }
 
     // For ids that don't correspond to models resolve an id by share keys
     const timelineWithShareKeysResolved = new Set(

@@ -12,6 +12,7 @@ import CommonStrata from "./Definition/CommonStrata";
 import LayerOrderingTraits from "../Traits/TraitsClasses/LayerOrderingTraits";
 import hasTraits from "./Definition/hasTraits";
 import { BaseModel } from "./Definition/Model";
+import Result from "terriajs/lib/Core/Result";
 
 const keepOnTop = (model: BaseModel) =>
   hasTraits(model, LayerOrderingTraits, "keepOnTop") && model.keepOnTop;
@@ -109,7 +110,7 @@ export default class Workbench {
    * @param item The model to add.
    */
   @action
-  private insertItem(item: BaseModel, index: number = 0) {
+  private async insertItem(item: BaseModel, index: number = 0) {
     if (this.contains(item)) {
       return;
     }
@@ -159,6 +160,12 @@ export default class Workbench {
     this._items.splice(index, 0, referenceItem);
   }
 
+  // This method is created to support unit tests.
+  async loadMapItems(model: BaseModel, errors: TerriaError[]) {
+    (await (<any>model).loadMapItems()).pushErrorTo(errors);
+  }
+
+  private errors: TerriaError[] = [];
   /**
    * Adds or removes a model to/from the workbench. If the model is a reference,
    * it will also be dereferenced. If, after dereferencing, the item turns out not to
@@ -167,47 +174,67 @@ export default class Workbench {
    *
    * @param item The item to add to or remove from the workbench.
    */
-  public async add(item: BaseModel | BaseModel[]): Promise<void> {
+  public async add(item: BaseModel | BaseModel[]): Promise<Result> {
     if (Array.isArray(item)) {
       await Promise.all(item.reverse().map(i => this.add(i)));
-      return;
-    }
+    } else if (ReferenceMixin.isMixedInto(item)) {
+      (await item.loadReference()).pushErrorTo(this.errors);
 
-    this.insertItem(item);
-
-    try {
-      if (ReferenceMixin.isMixedInto(item)) {
-        (await item.loadReference()).throwIfError();
-
-        const target = item.target;
-        if (
-          !target ||
-          (target &&
-            !MappableMixin.isMixedInto(target) &&
-            !ChartableMixin.isMixedInto(target))
-        ) {
-          this.remove(item);
-          throw `${getName(
-            item
-          )} cannot be added to the workbench - as there is nothing to visualize`;
-        } else if (target) {
-          return this.add(target);
-        }
+      const target = item.target;
+      if (
+        !target ||
+        (target &&
+          !MappableMixin.isMixedInto(target) &&
+          !ChartableMixin.isMixedInto(target) &&
+          !GroupMixin.isMixedInto(target))
+      ) {
+        this.remove(item);
+        this.errors.push(
+          TerriaError.from(
+            `${getName(
+              item
+            )} cannot be added to the workbench - as there is nothing to visualize`
+          )
+        );
+      } else if (target) {
+        this.add(target);
       }
-
-      if (CatalogMemberMixin.isMixedInto(item))
-        (await item.loadMetadata()).throwIfError();
+    } else {
+      if (CatalogMemberMixin.isMixedInto(item)) {
+        (await item.loadMetadata()).pushErrorTo(this.errors);
+      }
 
       if (MappableMixin.isMixedInto(item)) {
-        (await item.loadMapItems()).throwIfError();
+        await this.loadMapItems(item, this.errors);
+        await this.insertItem(item);
+      } else if (GroupMixin.isMixedInto(item)) {
+        (await item.loadMembers()).pushErrorTo(this.errors);
+        item.memberModels.map(async m => {
+          await this.add(m);
+        });
       }
-    } catch (e) {
-      this.remove(item);
-      throw TerriaError.from(e, {
+    }
+
+    if (this.errors.length > 0) {
+      TerriaError.combine(this.errors, {
         title: i18next.t("workbench.addItemErrorTitle"),
         message: i18next.t("workbench.addItemErrorMessage"),
         severity: TerriaErrorSeverity.Error
       });
+
+      const result = Result.error(
+        undefined,
+        TerriaError.combine(this.errors, {
+          title: i18next.t("workbench.addItemErrorTitle"),
+          message: i18next.t("workbench.addItemErrorMessage"),
+          severity: TerriaErrorSeverity.Error
+        })
+      );
+
+      // this.errors = [];
+      return result;
+    } else {
+      return new Result(undefined);
     }
   }
 
