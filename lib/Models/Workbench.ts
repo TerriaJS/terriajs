@@ -12,7 +12,7 @@ import CommonStrata from "./Definition/CommonStrata";
 import LayerOrderingTraits from "../Traits/TraitsClasses/LayerOrderingTraits";
 import hasTraits from "./Definition/hasTraits";
 import { BaseModel } from "./Definition/Model";
-import Result from "terriajs/lib/Core/Result";
+import Result from "../Core/Result";
 
 const keepOnTop = (model: BaseModel) =>
   hasTraits(model, LayerOrderingTraits, "keepOnTop") && model.keepOnTop;
