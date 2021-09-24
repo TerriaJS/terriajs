@@ -110,7 +110,7 @@ export default class Workbench {
    * @param item The model to add.
    */
   @action
-  private async insertItem(item: BaseModel, index: number = 0) {
+  private insertItem(item: BaseModel, index: number = 0) {
     if (this.contains(item)) {
       return;
     }
@@ -165,7 +165,6 @@ export default class Workbench {
     (await (<any>model).loadMapItems()).pushErrorTo(errors);
   }
 
-  private errors: TerriaError[] = [];
   /**
    * Adds or removes a model to/from the workbench. If the model is a reference,
    * it will also be dereferenced. If, after dereferencing, the item turns out not to
@@ -175,10 +174,11 @@ export default class Workbench {
    * @param item The item to add to or remove from the workbench.
    */
   public async add(item: BaseModel | BaseModel[]): Promise<Result> {
+    const errors: TerriaError[] = [];
     if (Array.isArray(item)) {
       await Promise.all(item.reverse().map(i => this.add(i)));
     } else if (ReferenceMixin.isMixedInto(item)) {
-      (await item.loadReference()).pushErrorTo(this.errors);
+      (await item.loadReference()).pushErrorTo(errors);
 
       const target = item.target;
       if (
@@ -189,7 +189,7 @@ export default class Workbench {
           !GroupMixin.isMixedInto(target))
       ) {
         this.remove(item);
-        this.errors.push(
+        errors.push(
           TerriaError.from(
             `${getName(
               item
@@ -201,22 +201,22 @@ export default class Workbench {
       }
     } else {
       if (CatalogMemberMixin.isMixedInto(item)) {
-        (await item.loadMetadata()).pushErrorTo(this.errors);
+        (await item.loadMetadata()).pushErrorTo(errors);
       }
 
       if (MappableMixin.isMixedInto(item)) {
-        await this.loadMapItems(item, this.errors);
-        await this.insertItem(item);
+        await this.loadMapItems(item, errors);
+        this.insertItem(item);
       } else if (GroupMixin.isMixedInto(item)) {
-        (await item.loadMembers()).pushErrorTo(this.errors);
+        (await item.loadMembers()).pushErrorTo(errors);
         item.memberModels.map(async m => {
           await this.add(m);
         });
       }
     }
 
-    if (this.errors.length > 0) {
-      TerriaError.combine(this.errors, {
+    if (errors.length > 0) {
+      TerriaError.combine(errors, {
         title: i18next.t("workbench.addItemErrorTitle"),
         message: i18next.t("workbench.addItemErrorMessage"),
         severity: TerriaErrorSeverity.Error
@@ -224,14 +224,13 @@ export default class Workbench {
 
       const result = Result.error(
         undefined,
-        TerriaError.combine(this.errors, {
+        TerriaError.combine(errors, {
           title: i18next.t("workbench.addItemErrorTitle"),
           message: i18next.t("workbench.addItemErrorMessage"),
           severity: TerriaErrorSeverity.Error
         })
       );
 
-      // this.errors = [];
       return result;
     } else {
       return new Result(undefined);
