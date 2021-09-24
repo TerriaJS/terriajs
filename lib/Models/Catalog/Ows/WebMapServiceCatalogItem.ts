@@ -1209,6 +1209,7 @@ class WebMapServiceCatalogItem
         parameters,
         getFeatureInfoParameters: {
           ...dimensionParameters,
+          ...this.parameters,
           feature_count:
             1 +
             (this.maximumShownFeatureInfos ??
