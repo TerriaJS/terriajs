@@ -15,6 +15,8 @@ export interface Notification {
   width?: number | string;
   height?: number | string;
   key?: string;
+  /** If notification should not be shown to the user */
+  ignore?: boolean | (() => boolean);
 }
 
 /**
@@ -39,7 +41,11 @@ export default class NotificationState {
       !this.alreadyNotifiedKeys.has(notification.key);
 
     if (!alreadyQueued && keyNotSeenBefore) {
-      this.notifications.push(notification);
+      const ignore =
+        typeof notification.ignore === "function"
+          ? notification.ignore()
+          : notification.ignore ?? false;
+      if (!ignore) this.notifications.push(notification);
     }
 
     if (notification.key !== undefined) {
@@ -49,7 +55,13 @@ export default class NotificationState {
 
   @action
   dismissCurrentNotification(): Notification | undefined {
-    return this.notifications.shift();
+    const removed = this.notifications.shift();
+    // Remove all ignored notifications
+    // This is needed here as the action of dismissing the current notification may change "ignore" status of notifications in stack
+    this.notifications = this.notifications.filter(
+      n => !(typeof n.ignore === "function" ? n.ignore() : n.ignore ?? false)
+    );
+    return removed;
   }
 
   @computed
