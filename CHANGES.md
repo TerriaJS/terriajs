@@ -26,6 +26,7 @@ Change Log
 * Added `MinMaxLevelMixin` and `MinMaxLevelTraits` to handle defining min and max scale denominator for layers.
 * Extracted function `scaleToDenominator` to core - for conversion of scale to zoom level.
 * Share/start data conversion will now only occur if `version` property is `0.x.x`. Previously, it was `version` property is **not** `8.x.x`
+* Add `DataUrlTraits` to `CatalogMemberTraits.dataUrls`. It contains an array of data URLS (with optional `title` which will render a button). It is handled the same as `MetadataUrls` except there is a `type` property which can be set to `wcs`, `wfs`... to show info about the URL.
 * Made search location bar span full width in mobile view.
 * Automatically hide mobile modal window when user is interacting with the map. 
 * Disabled feature search in mobile 
