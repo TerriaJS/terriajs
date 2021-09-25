@@ -1,6 +1,5 @@
-import { action, computed, observable, runInAction } from "mobx";
+import { action, computed, observable } from "mobx";
 import { ReactNode } from "react";
-
 import ViewState from "./ViewState";
 
 export interface Notification {
@@ -17,6 +16,8 @@ export interface Notification {
   key?: string;
   /** If notification should not be shown to the user */
   ignore?: boolean | (() => boolean);
+  /** Called when notification is dismissed, this will also be triggered for confirm/deny actions */
+  onDismiss?: () => void;
 }
 
 /**
@@ -56,6 +57,7 @@ export default class NotificationState {
   @action
   dismissCurrentNotification(): Notification | undefined {
     const removed = this.notifications.shift();
+    removed?.onDismiss && removed.onDismiss();
     // Remove all ignored notifications
     // This is needed here as the action of dismissing the current notification may change "ignore" status of notifications in stack
     this.notifications = this.notifications.filter(

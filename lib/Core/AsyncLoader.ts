@@ -1,4 +1,4 @@
-import { action, computed, observable, runInAction } from "mobx";
+import { action, computed, observable, runInAction, trace } from "mobx";
 import Result from "./Result";
 import TerriaError from "./TerriaError";
 
@@ -118,20 +118,27 @@ export default class AsyncLoader {
       runInAction(() => {
         this._isLoading = true;
       });
+
+      let error: TerriaError | undefined;
+
+      try {
+        await newPromise;
+      } catch (e) {
+        console.log("create new error");
+        error = TerriaError.from(e);
+      }
+
+      runInAction(() => {
+        this._result = Result.none(error);
+        this._isLoading = false;
+      });
+
+      // Make sure we have a result object defined
+    } else if (!this._result) {
+      runInAction(() => {
+        this._result = Result.none();
+      });
     }
-
-    let error: TerriaError | undefined;
-
-    try {
-      await newPromise;
-    } catch (e) {
-      error = TerriaError.from(e);
-    }
-
-    runInAction(() => {
-      this._result = Result.none(error);
-      this._isLoading = false;
-    });
 
     return this._result!;
   }

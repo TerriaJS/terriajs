@@ -583,29 +583,21 @@ export default class Terria {
     overrides?: TerriaErrorOverrides,
     forceRaiseToUser = false
   ) {
-    let shouldRaiseToUser = forceRaiseToUser
+    const terriaError = TerriaError.from(error, overrides);
+
+    // Set shouldRaiseToUser:
+    // - `true` if forceRaiseToUser agrument is true
+    // - `false` if ignoreErrors userProperties is set
+    terriaError.shouldRaiseToUser = forceRaiseToUser
       ? true
       : this.userProperties.get("ignoreErrors") === "1"
       ? false
       : undefined;
-    const terriaError = TerriaError.from(error, {
-      ...parseOverrides(overrides),
-      shouldRaiseToUser
-    });
 
     // Log error to error service
     this.errorService.error(terriaError);
-    if (
-      forceRaiseToUser ||
-      (this.userProperties.get("ignoreErrors") !== "1" &&
-        terriaError.shouldRaiseToUser &&
-        !terriaError.raisedToUser)
-    ) {
-      terriaError.raisedToUser = true;
-      this.error.raiseEvent(terriaError);
-    } else {
-      console.log(terriaError);
-    }
+    this.error.raiseEvent(terriaError);
+    console.log(terriaError.toError());
   }
 
   @computed

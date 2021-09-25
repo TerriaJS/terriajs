@@ -108,7 +108,7 @@ export default class TerriaError {
   private readonly _message: string | I18nTranslateString;
   private readonly _title: string | I18nTranslateString;
   /** Override shouldRaiseToUser (see `get shouldRaiseToUser()`) */
-  private readonly _shouldRaiseToUser: boolean | undefined;
+  private _shouldRaiseToUser: boolean | undefined;
   private _raisedToUser: boolean;
 
   readonly importance: number = 0;
@@ -261,6 +261,10 @@ export default class TerriaError {
     return resolveI18n(this._title);
   }
 
+  set shouldRaiseToUser(s: boolean | undefined) {
+    this._shouldRaiseToUser = s;
+  }
+
   /** True if `severity` is `Error` - or return this._shouldRaiseToUser if it is defined */
   get shouldRaiseToUser() {
     return (
@@ -290,7 +294,11 @@ export default class TerriaError {
   toNotification(): Notification {
     return {
       title: () => this.highestImportanceError.title, // Title may need to be resolved when error is raised to user (for example after i18next initialisation)
-      message: terriaErrorNotification(this)
+      message: terriaErrorNotification(this),
+      // Don't show TerriaError Notification if shouldRaiseToUser is false, or we have already raisedToUser
+      ignore: (() => !this.shouldRaiseToUser || this.raisedToUser).bind(this),
+      // Set raisedToUser to true on dismiss
+      onDismiss: (() => (this.raisedToUser = true)).bind(this)
     };
   }
 
