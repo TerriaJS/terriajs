@@ -740,7 +740,7 @@ function createPolylineFromPolygon(
   createEntitiesFromHoles(entities, hierarchy.holes, entity);
 }
 
-function reprojectToGeographic(
+async function reprojectToGeographic(
   geoJson: JsonObject,
   proj4ServiceBaseUrl?: string
 ): Promise<JsonObject> {
@@ -773,10 +773,12 @@ function reprojectToGeographic(
     return Promise.resolve(geoJson);
   }
 
-  return makeRealPromise<boolean>(
+  const needsReprojection = await makeRealPromise<boolean>(
     Reproject.checkProjection(proj4ServiceBaseUrl, code)
-  ).then(function(result: boolean) {
-    if (result) {
+  );
+
+  if (needsReprojection) {
+    try {
       filterValue(geoJson, "coordinates", function(obj, prop) {
         obj[prop] = filterArray(obj[prop], function(pts) {
           if (pts.length === 0) return [];
@@ -785,12 +787,14 @@ function reprojectToGeographic(
         });
       });
       return geoJson;
-    } else {
-      throw new DeveloperError(
-        "The crs code for this datasource is unsupported."
-      );
+    } catch (e) {
+      throw TerriaError.from(e, "Failed to reproject geoJSON");
     }
-  });
+  } else {
+    throw new DeveloperError(
+      "The crs code for this datasource is unsupported."
+    );
+  }
 }
 
 // Reproject a point list based on the supplied crs code.
