@@ -3,11 +3,13 @@ import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import Result from "../Core/Result";
+import hasTraits from "../Models/Definition/hasTraits";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import SelectableDimensions, {
   SelectableDimension
 } from "../Models/SelectableDimensions";
+import CatalogMemberReferenceTraits from "../Traits/TraitsClasses/CatalogMemberReferenceTraits";
 import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";
 import AccessControlMixin from "./AccessControlMixin";
 import GroupMixin from "./GroupMixin";
@@ -206,6 +208,9 @@ export default CatalogMemberMixin;
 export const getName = action((model: BaseModel | undefined) => {
   return (
     (CatalogMemberMixin.isMixedInto(model) ? model.name : undefined) ??
+    (hasTraits(model, CatalogMemberReferenceTraits, "name")
+      ? model.name
+      : undefined) ??
     model?.uniqueId ??
     "Unknown model"
   );

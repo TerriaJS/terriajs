@@ -15,6 +15,7 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import PolylineDashMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty";
 import Color from "terriajs-cesium/Source/Core/Color";
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
+import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 
 configure({
   enforceActions: "observed",
@@ -180,7 +181,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
 
       const aTime = new JulianDate();
       item.mapItems.map(mapItem => {
-        mapItem.entities.values.map(entity => {
+        (mapItem as GeoJsonDataSource).entities.values.map(entity => {
           expect(entity.polygon).toBeDefined();
 
           if (entity.polygon !== undefined) {
@@ -266,7 +267,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
       expect(item.mapItems.length).toEqual(1);
 
       const mapItem = item.mapItems[0];
-      const entities = mapItem.entities.values;
+      const entities = (mapItem as GeoJsonDataSource).entities.values;
 
       expect(entities).toBeDefined();
       expect(entities.length).toEqual(13);
