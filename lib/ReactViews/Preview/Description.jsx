@@ -196,11 +196,11 @@ const Description = observer(
                 <Choose>
                   <When
                     condition={
-                      dataUrl.type?.indexOf("wfs") === 0 ||
-                      dataUrl.type?.indexOf("wcs") === 0
+                      dataUrl.type?.startsWith("wfs") ||
+                      dataUrl.type?.startsWith("wcs")
                     }
                   >
-                    {dataUrl.type?.indexOf("wfs") === 0 &&
+                    {dataUrl.type?.startsWith("wfs") &&
                       parseCustomMarkdownToReact(
                         t("description.useLinkBelow", {
                           link: `
@@ -215,7 +215,7 @@ const Description = observer(
                         `
                         })
                       )}
-                    {dataUrl.type?.indexOf("wcs") === 0 &&
+                    {dataUrl.type?.startsWith("wcs") &&
                       parseCustomMarkdownToReact(
                         t("description.useLinkBelow", {
                           link: `
