@@ -401,7 +401,7 @@ export default class TableColorMap {
       ) {
         // If mean is within zscore filter, update min/max
         const rowGroupMin = Math.min(...rowGroupValues[idx]);
-        filteredMin = filteredMin > rowGroupMin ? rowGroupMin : filteredMax;
+        filteredMin = filteredMin > rowGroupMin ? rowGroupMin : filteredMin;
         const rowGroupMax = Math.max(...rowGroupValues[idx]);
         filteredMax = filteredMax < rowGroupMax ? rowGroupMax : filteredMax;
       }
