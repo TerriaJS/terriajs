@@ -631,30 +631,44 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     );
   }
 
+  /** If we only have a single region (or no regions)
+   * We want to:
+   * - disable the region column so we get a chart instead - see `get styles()`
+   * - get region name for chart title (if single region) - see `get chartTitle()`
+   **/
+  @computed get disableRegion() {
+    return (
+      !this.catalogItem.isLoading &&
+      this.regionColumn?.ready &&
+      (this.regionColumn?.valuesAsRegions.uniqueRegionIds.length ?? 0) <= 1
+    );
+  }
+
   /** Get nice title to use for chart
    * If we have a region column with a single region, it will append the region name to the title
    */
   @computed get chartTitle() {
-    // If we only have a single region (or no regions)
-    // We want to:
-    // - disable the region column so we get a chart instaed
-    // - get region name for chart title (if single region)
-    if (
-      this.regionColumn?.ready &&
-      (this.regionColumn?.valuesAsRegions.uniqueRegionIds.length ?? 0) <= 1
-    ) {
-      // Get region ID from RegionProvider
-      let regionId = this.regionColumn.regionType?.regions[
-        this.regionColumn.valuesAsRegions.uniqueRegionIds[0] ?? -1
-      ]?.regionProp;
-
-      if (isDefined(regionId)) {
-        // Try to get human readable region name from dimension with "region" override
-        const regionName =
-          this.getDimensionsWithOverrideType("region")[0]?.options.find(
-            option => option.id === regionId
-          )?.name ?? regionId;
-        return `${regionName} ${this.unitMeasure}`;
+    if (this.disableRegion) {
+      const regionValues = this.regionColumn?.uniqueValues.values;
+      if (regionValues && regionValues.length === 1) {
+        // Get region dimension ID
+        const regionDimensionId = this.getDimensionsWithOverrideType(
+          "region"
+        )[0]?.id;
+        // Lookup in sdmxDimensions to get codelist (this is needed because region dimensions which have more options than MAX_SELECTABLE_DIMENSION_OPTIONS will not return any dimension.options)
+        const regionDimension = this.sdmxDimensions.find(
+          dim => dim.id === regionDimensionId
+        );
+        if (regionDimension) {
+          // Try to get human readable region name from codelist
+          const codelist = this.getCodelistByUrn(
+            regionDimension.localRepresentation?.enumeration
+          );
+          const regionName =
+            codelist?.codes?.find(c => c.id === regionValues[0])?.name ??
+            regionValues[0];
+          return `${regionName} ${this.unitMeasure}`;
+        }
       }
     }
 
@@ -673,10 +687,6 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   @computed
   get styles() {
     if (this.primaryMeasureColumn) {
-      // Disable region column if 1 or 0 matches regions
-      const disableRegion =
-        this.regionColumn?.ready &&
-        (this.regionColumn?.valuesAsRegions.uniqueRegionIds.length ?? 0) <= 1;
       return [
         createStratumInstance(TableStyleTraits, {
           id: this.primaryMeasureColumn.name,
@@ -693,7 +703,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
           }),
           // Add chart if there is a time column but no region column
           chart:
-            this.timeColumns.length > 0 && disableRegion
+            this.timeColumns.length > 0 && this.disableRegion
               ? createStratumInstance(TableChartStyleTraits, {
                   xAxisColumn: this.timeColumns[0].name,
                   lines: [
@@ -704,7 +714,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
                   ]
                 })
               : undefined,
-          regionColumn: disableRegion ? null : this.regionColumn?.name
+          regionColumn: this.disableRegion ? null : this.regionColumn?.name
         })
       ];
     }

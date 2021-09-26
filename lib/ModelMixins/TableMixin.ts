@@ -249,7 +249,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     @computed
     get mapItems(): (DataSource | ImageryParts)[] {
       // Wait for activeTableStyle to be ready
-      if (!this.activeTableStyle.ready) return [];
+      if (!this.activeTableStyle.ready || this.isLoadingMapItems) return [];
 
       const numRegions =
         this.activeTableStyle.regionColumn?.valuesAsRegions?.uniqueRegionIds
@@ -413,6 +413,9 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     @computed
     get chartItems() {
+      // Wait for activeTableStyle to be ready
+      if (!this.activeTableStyle.ready || this.isLoadingMapItems) return [];
+
       return filterOutUndefined([
         // If time-series region mapping - show time points chart
         this.activeTableStyle.isRegions() && this.discreteTimes?.length
