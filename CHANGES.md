@@ -27,6 +27,7 @@ Change Log
 * `SocrataCatalogGroup` will not not return groups for Facets if there is only one - so it skips an unnecessary group level.
 * Update protomaps.js to `1.5.0`
 * `TableMixin` will now not return `mapItems` or `chartItems` if `isLoading` 
+* SDMX will now use `initialTimeSource = stop`
 * [The next improvement]
 
 #### 8.1.0

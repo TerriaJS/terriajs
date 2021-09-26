@@ -528,12 +528,13 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
 
           // Next try fetching reigon type from another dimension (only if this modelOverride type 'region')
           // It will look through dimensions which have modelOverrides of type `region-type` and have a selectedId, if one is found - it will be used as the regionType of this column
-          if (!isDefined(regionType) && modelOverride?.type === "region") {
+          // Note this will override previous regionType
+          if (modelOverride?.type === "region") {
             // Use selectedId of first dimension with one
             regionType = this.catalogItem.matchRegionType(
               this.getDimensionsWithOverrideType("region-type").find(d =>
                 isDefined(d.selectedId)
-              )?.selectedId
+              )?.selectedId ?? regionType
             );
           }
 
@@ -565,6 +566,9 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
           return createStratumInstance(TableColumnTraits, {
             name: dim.id,
             title: concept?.name,
+            // We set columnType to hidden for all columns except for region columns - as we are never interested in visualising them
+            // For "time" columns see `get timeColumns()`
+            // For primary measure ("scalar") column - see `get primaryMeasureColumn()`
             type: isDefined(regionType) ? "region" : "hidden",
             regionType
           });
@@ -622,8 +626,11 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     ]);
   }
 
-  /** Get region TableColumn by matching dimensionColmns */
-  @computed get regionColumn() {
+  /** Get region TableColumn by searching catalogItem.tableColumns for region dimension
+   * NOTE: this is searching through catalogItem.tableColumns to find the completely resolved regionColumn
+   * This can only be used in computeds/fns outside of ColumnTraits - or you will get infinite recursion
+   */
+  @computed get resolvedRegionColumn() {
     return this.catalogItem.tableColumns.find(
       col =>
         col.name ===
@@ -639,8 +646,9 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   @computed get disableRegion() {
     return (
       !this.catalogItem.isLoading &&
-      this.regionColumn?.ready &&
-      (this.regionColumn?.valuesAsRegions.uniqueRegionIds.length ?? 0) <= 1
+      this.resolvedRegionColumn?.ready &&
+      (this.resolvedRegionColumn?.valuesAsRegions.uniqueRegionIds.length ??
+        0) <= 1
     );
   }
 
@@ -649,7 +657,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    */
   @computed get chartTitle() {
     if (this.disableRegion) {
-      const regionValues = this.regionColumn?.uniqueValues.values;
+      const regionValues = this.resolvedRegionColumn?.uniqueValues.values;
       if (regionValues && regionValues.length === 1) {
         // Get region dimension ID
         const regionDimensionId = this.getDimensionsWithOverrideType(
@@ -714,7 +722,9 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
                   ]
                 })
               : undefined,
-          regionColumn: this.disableRegion ? null : this.regionColumn?.name
+          regionColumn: this.disableRegion
+            ? null
+            : this.resolvedRegionColumn?.name
         })
       ];
     }
@@ -730,6 +740,14 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   }
 
   /**
+   * Set default time to last time of dataset
+   */
+  @computed
+  get initialTimeSource() {
+    return "stop";
+  }
+
+  /**
    * Formats feature info table to add:
    * - Current time (if time-series)
    * - Selected region (if region-mapped)
@@ -739,7 +757,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    */
   @computed
   get featureInfoTemplate() {
-    const regionType = this.regionColumn?.regionType;
+    const regionType = this.resolvedRegionColumn?.regionType;
     if (!regionType) return;
 
     let template = '<table class="cesium-infoBox-defaultTable">';
