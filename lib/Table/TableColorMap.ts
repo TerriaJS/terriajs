@@ -315,7 +315,7 @@ export default class TableColorMap {
   get minimumValue() {
     if (this.zScoreFilterValues && this.colorTraits.zScoreFilterEnabled)
       return this.zScoreFilterValues.min;
-    if (this.validValues) return Math.min(...this.validValues);
+    if (this.validValues) return getMin(this.validValues);
   }
 
   /** Maximum value - with filters if applicable
@@ -325,7 +325,7 @@ export default class TableColorMap {
   get maximumValue() {
     if (this.zScoreFilterValues && this.colorTraits.zScoreFilterEnabled)
       return this.zScoreFilterValues.max;
-    if (this.validValues) return Math.max(...this.validValues);
+    if (this.validValues) return getMax(this.validValues);
   }
 
   /** Get values of colorColumn with valid regions if:
@@ -400,15 +400,15 @@ export default class TableColorMap {
           this.colorTraits.zScoreFilter!
       ) {
         // If mean is within zscore filter, update min/max
-        const rowGroupMin = Math.min(...rowGroupValues[idx]);
+        const rowGroupMin = getMin(rowGroupValues[idx]);
         filteredMin = filteredMin > rowGroupMin ? rowGroupMin : filteredMin;
-        const rowGroupMax = Math.max(...rowGroupValues[idx]);
+        const rowGroupMax = getMax(rowGroupValues[idx]);
         filteredMax = filteredMax < rowGroupMax ? rowGroupMax : filteredMax;
       }
     });
 
-    const actualMin = Math.min(...this.validValues);
-    const actualMax = Math.max(...this.validValues);
+    const actualMin = getMin(this.validValues);
+    const actualMax = getMax(this.validValues);
     const actualRange = actualMax - actualMin;
 
     // Only apply filtered min/max if it reduces range by factor of `rangeFilter` (eg if `rangeFilter = 0.1`, then the filter must reduce the range by at least 10% to be applied)
@@ -530,6 +530,14 @@ export default class TableColorMap {
       );
     }
   }
+}
+
+function getMin(array: number[]) {
+  return array.reduce((a, b) => (b < a ? b : a), Infinity);
+}
+
+function getMax(array: number[]) {
+  return array.reduce((a, b) => (a < b ? b : a), -Infinity);
 }
 
 function getMean(array: number[]) {
