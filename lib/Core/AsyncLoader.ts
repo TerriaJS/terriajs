@@ -1,4 +1,4 @@
-import { action, computed, observable, runInAction, trace } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
 import Result from "./Result";
 import TerriaError from "./TerriaError";
 
@@ -124,7 +124,6 @@ export default class AsyncLoader {
       try {
         await newPromise;
       } catch (e) {
-        console.log("create new error");
         error = TerriaError.from(e);
       }
 

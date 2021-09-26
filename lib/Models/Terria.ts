@@ -38,8 +38,7 @@ import Result from "../Core/Result";
 import ServerConfig from "../Core/ServerConfig";
 import TerriaError, {
   TerriaErrorOverrides,
-  TerriaErrorSeverity,
-  parseOverrides
+  TerriaErrorSeverity
 } from "../Core/TerriaError";
 import { Complete } from "../Core/TypeModifiers";
 import { getUriWithoutPath } from "../Core/uriHelpers";
@@ -342,10 +341,7 @@ export default class Terria {
   readonly modelIdShareKeysMap = observable.map<string, string[]>();
 
   readonly baseUrl: string = "build/TerriaJS/";
-  /** Use `terria.addErrorEventListener` or `terria.raiseErrorToUser` if you need to interact with errors outside this class
-   * These are converted to Notifications to show to the user in ViewState
-   */
-  private readonly error = new CesiumEvent();
+
   readonly tileLoadProgressEvent = new CesiumEvent();
   readonly workbench = new Workbench();
   readonly overlays = new Workbench();
@@ -568,10 +564,6 @@ export default class Terria {
     }
   }
 
-  addErrorEventListener(fn: (e: TerriaError) => void) {
-    return this.error.addEventListener(e => fn(e));
-  }
-
   /** Raise error to user.
    *
    * This accepts same arguments as `TerriaError.from` - but also has:
@@ -596,7 +588,7 @@ export default class Terria {
 
     // Log error to error service
     this.errorService.error(terriaError);
-    this.error.raiseEvent(terriaError);
+    this.notificationState.addNotificationToQueue(terriaError.toNotification());
     console.log(terriaError.toError());
   }
 
