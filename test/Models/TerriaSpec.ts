@@ -913,7 +913,7 @@ describe("Terria", function() {
         id: "a-test-server-with-error"
       };
 
-      const theItemsIds = [
+      const theOrderedItemsIds = [
         "a-test-server-group/0",
         "a-test-magda-record/0",
         "another-test-magda-record"
@@ -923,26 +923,20 @@ describe("Terria", function() {
       beforeEach(function() {
         const realLoadWithXhr = loadWithXhr.load;
         spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
-          let url = args[0];
+          const url = args[0];
 
-          if (url.match("mapServerSimpleGroup")) {
-            if (url.indexOf("MapServer?f=json") !== -1) {
-              args[0] =
-                "test/Terria/applyInitData/MapServer/mapServerSimpleGroup.json";
-            } else if (url.indexOf("MapServer/0?f=json") !== -1) {
-              args[0] = "test/Terria/applyInitData/MapServer/0.json";
-            } else {
-              args[0] = "test/Terria/applyInitData/empty.json";
-            }
-          } else if (url.match("mapServerWithError")) {
-            if (url.indexOf("MapServer?f=json") !== -1) {
-              args[0] =
-                "test/Terria/applyInitData/MapServer/mapServerWithError.json";
-            } else if (url.indexOf("MapServer/0?f=json") !== -1) {
-              args[0] = "test/Terria/applyInitData/MapServer/0.json";
-            } else {
-              args[0] = "test/Terria/applyInitData/empty.json";
-            }
+          if (
+            url.match("mapServerSimpleGroup") &&
+            url.indexOf("MapServer?f=json") !== -1
+          ) {
+            args[0] =
+              "test/Terria/applyInitData/MapServer/mapServerSimpleGroup.json";
+          } else if (
+            url.match("mapServerWithError") &&
+            url.indexOf("MapServer?f=json") !== -1
+          ) {
+            args[0] =
+              "test/Terria/applyInitData/MapServer/mapServerWithError.json";
           } else if (
             url.match("magda-record-id-dereferenced-to-feature-server-group")
           ) {
@@ -951,27 +945,25 @@ describe("Terria", function() {
           } else if (url.match("magda-record-id-dereferenced-to-wms")) {
             args[0] =
               "test/Terria/applyInitData/MagdaReference/wms_record.json";
-          } else if (url.match("services2.arcgis.com")) {
-            if (url.indexOf("FeatureServer?f=json") !== -1) {
-              args[0] =
-                "test/Terria/applyInitData/FeatureServer/esri_feature_server.json";
-            } else if (url.indexOf("FeatureServer/0?f=json") !== -1) {
-              args[0] = "test/Terria/applyInitData/FeatureServer/0.json";
-            } else {
-              args[0] = "test/Terria/applyInitData/empty.json";
-            }
-          } else if (url.match("mapprod1.environment.nsw.gov.au")) {
-            if (url.indexOf("request=GetCapabilities") !== -1) {
-              args[0] = "test/Terria/applyInitData/WmsServer/capabilities.xml";
-            } else {
-              args[0] = "test/Terria/applyInitData/empty.json";
-            }
+          } else if (
+            url.match("services2.arcgis.com") &&
+            url.indexOf("FeatureServer?f=json") !== -1
+          ) {
+            args[0] =
+              "test/Terria/applyInitData/FeatureServer/esri_feature_server.json";
+          } else if (
+            url.match("mapprod1.environment.nsw.gov.au") &&
+            url.indexOf("request=GetCapabilities") !== -1
+          ) {
+            args[0] = "test/Terria/applyInitData/WmsServer/capabilities.xml";
           }
 
           const result = realLoadWithXhr(...args);
           return result;
         });
-        loadMapItems = spyOn(terria, "loadMapItems").and.callThrough();
+
+        // Do not call through.
+        loadMapItems = spyOn(terria, "loadMapItems");
       });
 
       it("when a workbench item is a simple map server group", async function() {
@@ -1023,10 +1015,7 @@ describe("Terria", function() {
           }
         });
 
-        expect(terria.workbench.itemIds.length).toEqual(3);
-        terria.workbench.itemIds.forEach(id => {
-          expect(theItemsIds).toContain(id);
-        });
+        expect(terria.workbench.itemIds).toEqual(theOrderedItemsIds);
         expect(loadMapItems).toHaveBeenCalledTimes(3);
       });
 
@@ -1047,10 +1036,7 @@ describe("Terria", function() {
           }
         });
 
-        expect(terria.workbench.itemIds.length).toEqual(3);
-        terria.workbench.itemIds.forEach(id => {
-          expect(theItemsIds).toContain(id);
-        });
+        expect(terria.workbench.itemIds).toEqual(theOrderedItemsIds);
         expect(loadMapItems).toHaveBeenCalledTimes(3);
       });
 
@@ -1078,10 +1064,7 @@ describe("Terria", function() {
           expect(error.message === "models.terria.loadingInitSourceErrorTitle");
         } finally {
           expect(error).not.toEqual(undefined);
-          expect(terria.workbench.itemIds.length).toEqual(3);
-          terria.workbench.itemIds.forEach(id => {
-            expect(theItemsIds).toContain(id);
-          });
+          expect(terria.workbench.itemIds).toEqual(theOrderedItemsIds);
           expect(loadMapItems).toHaveBeenCalledTimes(3);
         }
       });

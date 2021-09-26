@@ -1243,7 +1243,9 @@ export default class Terria {
 
   // This method is created to support unit tests.
   async loadMapItems(model: BaseModel, errors: TerriaError[]) {
-    (await (<any>model).loadMapItems()).pushErrorTo(errors);
+    if (MappableMixin.isMixedInto(model)) {
+      (await model.loadMapItems()).pushErrorTo(errors);
+    }
   }
 
   private async pushAndLoadMapItems(
@@ -1418,11 +1420,15 @@ export default class Terria {
 
     const newItems: BaseModel[] = [];
 
-    await Promise.all(
-      newItemsRaw.map(async model => {
+    // Maintain the model order in the workbench.
+    while (true) {
+      const model = newItemsRaw.shift();
+      if (model) {
         await this.pushAndLoadMapItems(model, newItems, errors);
-      })
-    );
+      } else {
+        break;
+      }
+    }
 
     runInAction(() => (this.workbench.items = newItems));
 
