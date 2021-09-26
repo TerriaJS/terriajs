@@ -60,30 +60,30 @@ export const DataCatalogItem = observer(
       const keepCatalogOpen = event.shiftKey || event.ctrlKey;
       const toAdd = !this.props.terria.workbench.contains(this.props.item);
 
-      try {
-        if (toAdd) {
-          this.props.terria.timelineStack.addToTop(this.props.item);
-          await this.props.terria.workbench.add(this.props.item);
-        } else {
-          this.props.terria.timelineStack.remove(this.props.item);
-          await this.props.terria.workbench.remove(this.props.item);
-        }
+      if (toAdd) {
+        this.props.terria.timelineStack.addToTop(this.props.item);
+        (await this.props.terria.workbench.add(this.props.item)).raiseError(
+          this.props.terria,
+          undefined,
+          true // Force show error to user
+        );
+      } else {
+        this.props.terria.timelineStack.remove(this.props.item);
+        await this.props.terria.workbench.remove(this.props.item);
+      }
 
-        if (
-          this.props.terria.workbench.contains(this.props.item) &&
-          !keepCatalogOpen
-        ) {
-          this.props.viewState.closeCatalog();
-          this.props.terria.analytics?.logEvent(
-            Category.dataSource,
-            toAdd
-              ? DataSourceAction.addFromCatalogue
-              : DataSourceAction.removeFromCatalogue,
-            getPath(this.props.item)
-          );
-        }
-      } catch (e) {
-        this.props.terria.raiseErrorToUser(e, undefined, true);
+      if (
+        this.props.terria.workbench.contains(this.props.item) &&
+        !keepCatalogOpen
+      ) {
+        this.props.viewState.closeCatalog();
+        this.props.terria.analytics?.logEvent(
+          Category.dataSource,
+          toAdd
+            ? DataSourceAction.addFromCatalogue
+            : DataSourceAction.removeFromCatalogue,
+          getPath(this.props.item)
+        );
       }
     },
 

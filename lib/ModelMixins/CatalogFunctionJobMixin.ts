@@ -212,7 +212,10 @@ function CatalogFunctionJobMixin<
         this.results.forEach(result => {
           if (MappableMixin.isMixedInto(result))
             result.setTrait(CommonStrata.user, "show", true);
-          if (addResultsToWorkbench) this.terria.workbench.add(result);
+          if (addResultsToWorkbench)
+            this.terria.workbench
+              .add(result)
+              .then(r => r.raiseError(this.terria));
 
           this.terria.addModel(result);
         });

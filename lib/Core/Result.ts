@@ -99,7 +99,9 @@ export default class Result<T = undefined> {
 
   /** Combine array of Results.
    * The new Result will have an error if at least one error has occurred in array of results
-   * The value will be array of result values
+   * The value will be array of result values.
+   *
+   * To combine empty Results - see `combineEmpty`
    */
   static combine<U>(
     results: Result<U>[],
@@ -107,6 +109,22 @@ export default class Result<T = undefined> {
   ): Result<U[]> {
     return new Result(
       results.map(r => r.value),
+      TerriaError.combine(
+        results.map(r => r.error),
+        errorOverrides
+      )
+    );
+  }
+
+  /** Combine array of empty Results (results with no value).
+   * The new Result will have an error if at least one error has occurred in array of results
+   * The value will be undefined
+   */
+  static combineEmpty(
+    results: Result<undefined>[],
+    errorOverrides: TerriaErrorOverrides
+  ): Result<undefined> {
+    return Result.error(
       TerriaError.combine(
         results.map(r => r.error),
         errorOverrides
@@ -155,9 +173,15 @@ export default class Result<T = undefined> {
   /** Raise error if one has occurred, and then return value.
    *
    * @param errorOverrides can be used to add error context
+   * @param forceRaiseToUser true to force show error to user
    */
-  raiseError(terria: Terria, errorOverrides?: TerriaErrorOverrides): T {
-    if (this._error) terria.raiseErrorToUser(this.error, errorOverrides);
+  raiseError(
+    terria: Terria,
+    errorOverrides?: TerriaErrorOverrides,
+    forceRaiseToUser?: boolean
+  ): T {
+    if (this._error)
+      terria.raiseErrorToUser(this.error, errorOverrides, forceRaiseToUser);
     return this.value;
   }
 

@@ -394,7 +394,9 @@ export default abstract class GlobeOrMap {
 
             catalogItem.setTrait(CommonStrata.user, "show", true);
 
-            this._highlightPromise = this.terria.overlays.add(catalogItem);
+            this._highlightPromise = this.terria.overlays
+              .add(catalogItem)
+              .then(r => r.throwIfError());
           }
         }
       }

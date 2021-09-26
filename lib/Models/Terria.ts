@@ -580,11 +580,12 @@ export default class Terria {
     // Set shouldRaiseToUser:
     // - `true` if forceRaiseToUser agrument is true
     // - `false` if ignoreErrors userProperties is set
-    terriaError.shouldRaiseToUser = forceRaiseToUser
+    const raiseToUser = forceRaiseToUser
       ? true
       : this.userProperties.get("ignoreErrors") === "1"
       ? false
       : undefined;
+    if (isDefined(raiseToUser)) terriaError.shouldRaiseToUser = raiseToUser;
 
     // Log error to error service
     this.errorService.error(terriaError);

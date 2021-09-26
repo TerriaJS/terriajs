@@ -265,13 +265,16 @@ export default class TerriaError {
     this._shouldRaiseToUser = s;
   }
 
-  /** True if `severity` is `Error` - or return this._shouldRaiseToUser if it is defined */
+  /** True if `severity` is `Error` and the error hasn't been raised yet - or return this._shouldRaiseToUser if it is defined */
   get shouldRaiseToUser() {
     return (
+      // Return this._shouldRaiseToUser override if it is defined
       this._shouldRaiseToUser ??
-      (typeof this.severity === "function"
-        ? this.severity()
-        : this.severity) === TerriaErrorSeverity.Error
+      // Otherwise, we should raise the error if it hasn't already been raised and the severity is ERROR
+      (!this.raisedToUser &&
+        (typeof this.severity === "function"
+          ? this.severity()
+          : this.severity) === TerriaErrorSeverity.Error)
     );
   }
 
@@ -296,7 +299,7 @@ export default class TerriaError {
       title: () => this.highestImportanceError.title, // Title may need to be resolved when error is raised to user (for example after i18next initialisation)
       message: terriaErrorNotification(this),
       // Don't show TerriaError Notification if shouldRaiseToUser is false, or we have already raisedToUser
-      ignore: (() => !this.shouldRaiseToUser || this.raisedToUser).bind(this),
+      ignore: (() => !this.shouldRaiseToUser).bind(this),
       // Set raisedToUser to true on dismiss
       onDismiss: (() => (this.raisedToUser = true)).bind(this)
     };
