@@ -50,6 +50,7 @@ Change Log
 * Add notification `onDismiss` and `ignore` properties.
 * Fix AsyncLoader result bug
 * Remove Terria.error Event handler
+* Refactor workbench.add to return Result
 * [The next improvement]
 
 #### 8.1.0
