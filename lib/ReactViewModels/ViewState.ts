@@ -735,6 +735,15 @@ export default class ViewState {
   get isMapZooming() {
     return this.terria.currentViewer.isMapZooming;
   }
+
+  /**
+   * Returns true if the user is currently interacting with the map - like
+   * picking a point or drawing a shape.
+   */
+  @computed
+  get isMapInteractionActive() {
+    return this.terria.mapInteractionModeStack.length > 0;
+  }
 }
 
 interface Tool {

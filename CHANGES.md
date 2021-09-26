@@ -33,6 +33,13 @@ Change Log
 * `terriaError.raisedToError` will now check if **any** `TerriaError` has been raised to the user in the tree.
 * `workbench.add()` will now keep items which only return `Warning` severity `TerriaErrors` after loading.
 * Improve SDMX error messages for no results
+* Add `DataUrlTraits` to `CatalogMemberTraits.dataUrls`. It contains an array of data URLS (with optional `title` which will render a button). It is handled the same as `MetadataUrls` except there is a `type` property which can be set to `wcs`, `wfs`... to show info about the URL.
+* Made search location bar span full width in mobile view.
+* Automatically hide mobile modal window when user is interacting with the map. 
+* Disabled feature search in mobile 
+* Disabled export (clip&ship) in mobile
+* Fixed misplaced search icon in mobile safari.
+* Prevents story text from covering the whole screen in mobile devices.
 * Add `CatalogIndex`, `CatalogIndexReference` and `generateCatalogIndex()` script. These can be used to generate a static JSON in dex of a terria catalog - which can then be searched through using `flexsearch`
 * Added `weakReference` flag `ReferenceMixin`, this can be used to treat References more like a shortcut (this means that `sourceReference` isn't used when models are shared/added to the workbench - the `target` is used instead)
 * GroupMixin.isMixedInto and MappableMixin.isMixedInto are now more strict - and won't pass for for References with `isMappable` or `isGroup`.
@@ -59,6 +66,8 @@ Change Log
   - Resolved issue with some navigation items not being clickable on mobile due to overlap from others.
 * Fixed a bug in Difference tool where difference image was showing with zero opacity in some situations.
 * Fixed `CzmlCatalogItem` to react correctly to input data changes.
+* Extend input field for search in mobile view to full width of the page.
+* Automatically hide mobile modal window when user is interacting with the map (like picking a point or drawing a shape).
 * Adjusted styling of x-axis labels in feature info panel to prevent its clipping.
 * When expanding charts from the same catalog item, we now create a new item if the expanded chart has a different title from the previously expanded chart for the same item. This behavior matches the behavior in `v7`.
 * Improve status message when feature info panel chart is loading
@@ -81,6 +90,7 @@ Change Log
 * Fixed unnecessary model reloads or recomputing of `mapItems` when switching between story scenes.
 * Fixed story reset button.
 * Moved help button to the top menu
+* [The next improvement]
 
 #### 8.0.0
 
