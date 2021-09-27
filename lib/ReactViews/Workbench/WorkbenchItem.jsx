@@ -10,6 +10,7 @@ import { sortable } from "react-anything-sortable";
 import { withTranslation } from "react-i18next";
 import getPath from "../../Core/getPath";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
+import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import { DEFAULT_PLACEMENT } from "../../Models/SelectableDimensions";
 import Box from "../../Styled/Box";
@@ -25,11 +26,11 @@ import LeftRightSection from "./Controls/LeftRightSection";
 import Legend from "./Controls/Legend";
 import OpacitySection from "./Controls/OpacitySection";
 import SatelliteImageryTimeFilterSection from "./Controls/SatelliteImageryTimeFilterSection";
+import { ScaleWorkbenchInfo } from "./Controls/ScaleWorkbenchInfo";
 import ShortReport from "./Controls/ShortReport";
 import TimerSection from "./Controls/TimerSection";
 import ViewingControls from "./Controls/ViewingControls";
 import Styles from "./workbench-item.scss";
-import { ScaleWorkbenchInfo } from "./Controls/ScaleWorkbenchInfo";
 
 export const WorkbenchItemRaw = observer(
   createReactClass({
@@ -77,6 +78,11 @@ export const WorkbenchItemRaw = observer(
     render() {
       const workbenchItem = this.props.item;
       const { t } = this.props;
+      const isLoading =
+        (CatalogMemberMixin.isMixedInto(this.props.item) &&
+          this.props.item.isLoading) ||
+        (ReferenceMixin.isMixedInto(this.props.item) &&
+          this.props.item.isLoadingReference);
       return (
         <li
           style={this.props.style}
@@ -121,7 +127,7 @@ export const WorkbenchItemRaw = observer(
                   className={Styles.draggable}
                   title={getPath(workbenchItem, " → ")}
                 >
-                  <If condition={!workbenchItem.isMappable}>
+                  <If condition={!workbenchItem.isMappable && !isLoading}>
                     <span className={Styles.iconLineChart}>
                       <Icon glyph={Icon.GLYPHS.lineChart} />
                     </span>
@@ -196,8 +202,7 @@ export const WorkbenchItemRaw = observer(
                 item={workbenchItem}
                 placement={"belowLegend"}
               />
-              {CatalogMemberMixin.isMixedInto(this.props.item) &&
-              this.props.item.isLoading ? (
+              {isLoading ? (
                 <Box paddedVertically>
                   <Loader light />
                 </Box>

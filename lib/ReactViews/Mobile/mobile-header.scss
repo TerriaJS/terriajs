@@ -131,4 +131,7 @@
   }
 }
 
-@include empty-module("form-search-data");
+.formSearchData {
+  width: 90%;
+  margin: auto;
+}
