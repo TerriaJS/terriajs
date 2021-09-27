@@ -46,6 +46,7 @@ export default class CompositeCatalogItem extends MappableMixin(
   }
 
   protected async forceLoadMetadata(): Promise<void> {
+    await Promise.resolve();
     Result.combine(
       await Promise.all(
         this.memberModels
@@ -57,6 +58,7 @@ export default class CompositeCatalogItem extends MappableMixin(
   }
 
   async forceLoadMapItems(): Promise<void> {
+    await Promise.resolve();
     Result.combine(
       await Promise.all(
         this.memberModels
