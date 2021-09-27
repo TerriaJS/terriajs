@@ -421,7 +421,10 @@ export default class TableColorMap {
       filteredMax = actualMax;
     }
 
-    if (filteredMin !== actualMin || filteredMax !== actualMax)
+    if (
+      filteredMin < filteredMax &&
+      (filteredMin !== actualMin || filteredMax !== actualMax)
+    )
       return { max: filteredMax, min: filteredMin };
   }
 
