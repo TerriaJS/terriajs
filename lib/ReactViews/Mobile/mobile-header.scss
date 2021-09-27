@@ -42,6 +42,7 @@
   width: auto;
   text-align: right;
   font-size: 0.95rem;
+  border-radius: 4px;
 
   svg {
     position: absolute;
@@ -60,6 +61,8 @@
   padding-right: $padding;
   position: relative;
   width: 40px;
+  border-radius: 4px;
+
   svg {
     height: 28px;
     width: 28px;

@@ -175,9 +175,10 @@ const MobileHeader = observer(
                     onClick={() => this.props.viewState.toggleMobileMenu()}
                     title={t("mobile.toggleNavigation")}
                     css={`
-                      border-radius: 2px;
+                      border-radius: 4px;
                       padding: 0 5px;
                       margin-right: 3px;
+                      background: ${this.props.theme.darkLighter};
                       &:hover,
                       &:focus,
                       & {
