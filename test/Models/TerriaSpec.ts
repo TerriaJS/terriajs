@@ -5,15 +5,19 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import hashEntity from "../../lib/Core/hashEntity";
 import _loadWithXhr from "../../lib/Core/loadWithXhr";
+import Result from "../../lib/Core/Result";
+import TerriaError from "../../lib/Core/TerriaError";
 import PickedFeatures from "../../lib/Map/PickedFeatures";
 import CameraView from "../../lib/Models/CameraView";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import MagdaReference from "../../lib/Models/Catalog/CatalogReferences/MagdaReference";
-import WebMapServiceCatalogGroup from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
-import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import UrlReference, {
   UrlToCatalogMemberMapping
 } from "../../lib/Models/Catalog/CatalogReferences/UrlReference";
+import ArcGisFeatureServerCatalogItem from "../../lib/Models/Catalog/Esri/ArcGisFeatureServerCatalogItem";
+import ArcGisMapServerCatalogItem from "../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogItem";
+import WebMapServiceCatalogGroup from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Cesium from "../../lib/Models/Cesium";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import { BaseModel } from "../../lib/Models/Definition/Model";
@@ -28,7 +32,6 @@ import ViewState from "../../lib/ReactViewModels/ViewState";
 import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
 import { defaultBaseMaps } from "./../../lib/Models/BaseMaps/defaultBaseMaps";
-import TerriaError from "../../lib/Core/TerriaError";
 
 const mapConfigBasicJson = require("../../wwwroot/test/Magda/map-config-basic.json");
 const mapConfigBasicString = JSON.stringify(mapConfigBasicJson);
@@ -919,7 +922,9 @@ describe("Terria", function() {
         "another-test-magda-record"
       ];
 
-      let loadMapItems: any = undefined;
+      let loadMapItemsWms: any = undefined;
+      let loadMapItemsArcGisMap: any = undefined;
+      let loadMapItemsArcGisFeature: any = undefined;
       beforeEach(function() {
         const realLoadWithXhr = loadWithXhr.load;
         spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
@@ -963,7 +968,18 @@ describe("Terria", function() {
         });
 
         // Do not call through.
-        loadMapItems = spyOn(terria, "loadMapItems");
+        loadMapItemsArcGisMap = spyOn(
+          ArcGisMapServerCatalogItem.prototype,
+          "loadMapItems"
+        ).and.returnValue(Result.none());
+        loadMapItemsArcGisFeature = spyOn(
+          ArcGisFeatureServerCatalogItem.prototype,
+          "loadMapItems"
+        ).and.returnValue(Result.none());
+        loadMapItemsWms = spyOn(
+          WebMapServiceCatalogItem.prototype,
+          "loadMapItems"
+        ).and.returnValue(Result.none());
       });
 
       it("when a workbench item is a simple map server group", async function() {
@@ -974,7 +990,8 @@ describe("Terria", function() {
           }
         });
         expect(terria.workbench.itemIds).toEqual(["a-test-server-group/0"]);
-        expect(loadMapItems).toHaveBeenCalledTimes(1);
+        console.log(terria.workbench.items[0]);
+        expect(loadMapItemsArcGisMap).toHaveBeenCalledTimes(1);
       });
 
       it("when a workbench item is a referenced map server group", async function() {
@@ -985,7 +1002,7 @@ describe("Terria", function() {
           }
         });
         expect(terria.workbench.itemIds).toEqual(["a-test-magda-record/0"]);
-        expect(loadMapItems).toHaveBeenCalledTimes(1);
+        expect(loadMapItemsArcGisFeature).toHaveBeenCalledTimes(1);
       });
 
       it("when a workbench item is a referenced wms", async function() {
@@ -996,7 +1013,8 @@ describe("Terria", function() {
           }
         });
         expect(terria.workbench.itemIds).toEqual(["another-test-magda-record"]);
-        expect(loadMapItems).toHaveBeenCalledTimes(1);
+        console.log(terria.workbench.items[0]);
+        expect(loadMapItemsWms).toHaveBeenCalledTimes(1);
       });
 
       it("when the workbench has more than one items", async function() {
@@ -1016,7 +1034,9 @@ describe("Terria", function() {
         });
 
         expect(terria.workbench.itemIds).toEqual(theOrderedItemsIds);
-        expect(loadMapItems).toHaveBeenCalledTimes(3);
+        expect(loadMapItemsWms).toHaveBeenCalledTimes(1);
+        expect(loadMapItemsArcGisMap).toHaveBeenCalledTimes(1);
+        expect(loadMapItemsArcGisFeature).toHaveBeenCalledTimes(1);
       });
 
       it("when the workbench has an unknown item", async function() {
@@ -1037,7 +1057,9 @@ describe("Terria", function() {
         });
 
         expect(terria.workbench.itemIds).toEqual(theOrderedItemsIds);
-        expect(loadMapItems).toHaveBeenCalledTimes(3);
+        expect(loadMapItemsWms).toHaveBeenCalledTimes(1);
+        expect(loadMapItemsArcGisMap).toHaveBeenCalledTimes(1);
+        expect(loadMapItemsArcGisFeature).toHaveBeenCalledTimes(1);
       });
 
       it("when a workbench item has errors", async function() {
@@ -1065,7 +1087,9 @@ describe("Terria", function() {
         } finally {
           expect(error).not.toEqual(undefined);
           expect(terria.workbench.itemIds).toEqual(theOrderedItemsIds);
-          expect(loadMapItems).toHaveBeenCalledTimes(3);
+          expect(loadMapItemsWms).toHaveBeenCalledTimes(1);
+          expect(loadMapItemsArcGisMap).toHaveBeenCalledTimes(1);
+          expect(loadMapItemsArcGisFeature).toHaveBeenCalledTimes(1);
         }
       });
     });

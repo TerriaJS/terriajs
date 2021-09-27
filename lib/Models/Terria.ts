@@ -1241,13 +1241,6 @@ export default class Terria {
     );
   }
 
-  // This method is created to support unit tests.
-  async loadMapItems(model: BaseModel, errors: TerriaError[]) {
-    if (MappableMixin.isMixedInto(model)) {
-      (await model.loadMapItems()).pushErrorTo(errors);
-    }
-  }
-
   private async pushAndLoadMapItems(
     model: BaseModel,
     newItems: BaseModel[],
@@ -1273,7 +1266,7 @@ export default class Terria {
       });
     } else if (MappableMixin.isMixedInto(model)) {
       newItems.push(model);
-      await this.loadMapItems(model, errors);
+      (await model.loadMapItems()).pushErrorTo(errors);
     } else {
       errors.push(
         TerriaError.from(
