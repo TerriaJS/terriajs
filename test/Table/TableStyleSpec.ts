@@ -243,32 +243,25 @@ describe("TableStyle", function() {
 
       const activeStyle = csvItem.activeTableStyle;
 
+      // First example - should expect no filter applied
       expect(activeStyle.colorColumn?.valuesAsNumbers.minimum).toBe(0);
       expect(activeStyle.colorColumn?.valuesAsNumbers.maximum).toBe(100);
 
-      expect(activeStyle.tableColorMap.zScoreFilterValues).toEqual({
-        min: 22,
-        max: 100
-      });
+      expect(activeStyle.tableColorMap.zScoreFilterValues).toBeUndefined();
 
       let colorMap = activeStyle.colorMap as ContinuousColorMap;
 
       expect(colorMap instanceof ContinuousColorMap).toBeTruthy();
-      expect(colorMap.minValue).toBe(22);
+      expect(colorMap.minValue).toBe(0);
       expect(colorMap.maxValue).toBe(100);
 
       // Check legend for no outlier item
       expect(csvItem.legends.length).toBe(1);
-      expect(csvItem.legends[0].items.length).toBe(8);
-      expect(csvItem.legends[0].items[7].title).toBe("Outliers");
-      expect(csvItem.legends[0].items[7].addSpacingAbove).toBeTruthy();
-      expect(csvItem.legends[0].items[7].color).toBe(
-        activeStyle.tableColorMap.outlierColor.toCssColorString()
-      );
+      expect(csvItem.legends[0].items.length).toBe(7);
 
-      // Change zScoreFilter and rangeFilter
+      // Change zScoreFilter and rangeFilter - should also expect not to be applied
       updateModelFromJson(csvItem, CommonStrata.definition, {
-        defaultStyle: { color: { zScoreFilter: 2, rangeFilter: 0.25 } }
+        defaultStyle: { color: { zScoreFilter: 1, rangeFilter: 0.25 } }
       });
 
       expect(activeStyle.tableColorMap.zScoreFilterValues).toBeUndefined();
@@ -285,7 +278,7 @@ describe("TableStyle", function() {
         defaultStyle: { color: { zScoreFilter: 1, rangeFilter: 0.1 } }
       });
 
-      // Change zScoreFilter and rangeFilter again
+      // Change zScoreFilter and rangeFilter again - should be applied this time
       expect(activeStyle.tableColorMap.zScoreFilterValues).toEqual({
         min: 22,
         max: 80
@@ -298,6 +291,11 @@ describe("TableStyle", function() {
       // Check legend for outlier item
       expect(csvItem.legends.length).toBe(1);
       expect(csvItem.legends[0].items.length).toBe(8);
+      expect(csvItem.legends[0].items[7].title).toBe("Outliers");
+      expect(csvItem.legends[0].items[7].addSpacingAbove).toBeTruthy();
+      expect(csvItem.legends[0].items[7].color).toBe(
+        activeStyle.tableColorMap.outlierColor.toCssColorString()
+      );
     });
   });
 });
