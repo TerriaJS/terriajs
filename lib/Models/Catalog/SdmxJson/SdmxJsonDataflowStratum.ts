@@ -675,7 +675,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
           const regionName =
             codelist?.codes?.find(c => c.id === regionValues[0])?.name ??
             regionValues[0];
-          return `${regionName} ${this.unitMeasure}`;
+          return `${regionName} - ${this.unitMeasure}`;
         }
       }
     }
@@ -711,7 +711,8 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
           }),
           // Add chart if there is a time column but no region column
           chart:
-            this.timeColumns.length > 0 && this.disableRegion
+            this.timeColumns.length > 0 &&
+            (this.disableRegion || !this.resolvedRegionColumn)
               ? createStratumInstance(TableChartStyleTraits, {
                   xAxisColumn: this.timeColumns[0].name,
                   lines: [
