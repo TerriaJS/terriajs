@@ -28,6 +28,7 @@ Change Log
 * Update protomaps.js to `1.5.0`
 * `TableMixin` will now not return `mapItems` or `chartItems` if `isLoading` 
 * SDMX will now use `initialTimeSource = stop`
+* Fix `duplicateModels` duplicating observables across multiple models
 * [The next improvement]
 
 #### 8.1.0
