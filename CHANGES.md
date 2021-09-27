@@ -23,9 +23,6 @@ Change Log
 * Make `regionColumn` `isNullable` - this means region column can be disabled by setting to `null`.
 * Fix scalar column color map with a single value
 * TableMixin will now clear data if an error occurs while calling `forceLoadTableData`
-* Refactor `SocrataMapViewCatalogItem` to use `GeoJsonMixin`
-* `SocrataCatalogGroup` will not not return groups for Facets if there is only one - so it skips an unnecessary group level.
-* Update protomaps.js to `1.5.0`
 * `TableMixin` will now not return `mapItems` or `chartItems` if `isLoading` 
 * SDMX will now use `initialTimeSource = stop`
 * Fix `duplicateModels` duplicating observables across multiple models
