@@ -301,7 +301,7 @@ describe("SdmxJsonCatalogItem", function() {
 
     expect(sdmxItem.chartItems.length).toBe(1);
     expect(sdmxItem.chartItems[0].name).toBe(
-      "Australian Capital Territory Australian Dollars (Monthly)"
+      "Australian Capital Territory - Australian Dollars (Monthly)"
     );
   });
 });
