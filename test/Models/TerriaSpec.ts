@@ -990,7 +990,6 @@ describe("Terria", function() {
           }
         });
         expect(terria.workbench.itemIds).toEqual(["a-test-server-group/0"]);
-        console.log(terria.workbench.items[0]);
         expect(loadMapItemsArcGisMap).toHaveBeenCalledTimes(1);
       });
 
@@ -1013,7 +1012,6 @@ describe("Terria", function() {
           }
         });
         expect(terria.workbench.itemIds).toEqual(["another-test-magda-record"]);
-        console.log(terria.workbench.items[0]);
         expect(loadMapItemsWms).toHaveBeenCalledTimes(1);
       });
 
