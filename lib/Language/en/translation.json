@@ -499,7 +499,7 @@
     "layerName": "Layer name",
     "typeName": "Type name",
     "metadataUrls": "Metadata Links",
-    "dataUrl": "Data URL",
+    "dataUrl": "Data Links",
     "useLinkBelow": "Use the link below to download the data. See the {{link}} for more information on customising URL query parameters.",
     "downloadInFormat": "Download the currently selected data in {{format}} format",
     "downloadNotSupported": "Unfortunately your browser does not support the functionality needed to download this data as a file. Please use Chrome, Firefox or Safari to download this data.",
