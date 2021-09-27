@@ -56,7 +56,7 @@ export NODE_OPTIONS=--max_old_space_size=4096
 
 ### Installing Dependencies
 
-All of the dependencies required to build and run TerriaMap, other than the prerequisites listed above, are installed using `npm`. :
+All of the dependencies required to build and run TerriaMap, other than the prerequisites listed above, are installed using `npm`:
 
 ```bash
 npm install
