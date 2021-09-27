@@ -181,7 +181,7 @@ export const WelcomeMessagePure = props => {
               styledWidth={"667px"}
               styledMinHeight={"504px"}
               displayInlineBlock
-              paddedRatio={6}
+              paddedRatio={viewState.useSmallScreenInterface ? 2 : 6}
               onClick={e => {
                 viewState.setTopElement("WelcomeMessage");
                 e.stopPropagation();
@@ -200,17 +200,29 @@ export const WelcomeMessagePure = props => {
                 />
               </RawButton>
               <Spacing bottom={7} />
-              <Box displayInlineBlock col10>
+              <Box
+                displayInlineBlock
+                styledWidth={
+                  viewState.useSmallScreenInterface ? "100%" : "83.33333%"
+                }
+              >
                 <Text
                   bold
                   textLight
-                  styledFontSize={"36px"}
+                  styledFontSize={
+                    viewState.useSmallScreenInterface ? "26px" : "36px"
+                  }
+                  textAlignCenter={viewState.useSmallScreenInterface}
                   styledLineHeight={"49px"}
                 >
                   {t("welcomeMessage.title")}
                 </Text>
                 <Spacing bottom={3} />
-                <Text textLight medium>
+                <Text
+                  textLight
+                  medium
+                  textAlignCenter={viewState.useSmallScreenInterface}
+                >
                   {viewState.useSmallScreenInterface === false && (
                     <Trans i18nKey="welcomeMessage.welcomeMessage">
                       Interested in data discovery and exploration?
@@ -266,12 +278,7 @@ export const WelcomeMessagePure = props => {
                   </Box>
                   <Spacing right={5} />
                 </If>
-                <Box
-                  styledWidth={
-                    viewState.useSmallScreenInterface ? "100%" : "37%"
-                  }
-                  displayInlineBlock
-                >
+                <Box styledMargin={"0 auto"} displayInlineBlock>
                   <If condition={!viewState.useSmallScreenInterface}>
                     <WelcomeMessageButton
                       onClick={() => {
