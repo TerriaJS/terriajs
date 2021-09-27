@@ -6,6 +6,8 @@ import mixTraits from "../mixTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
 import UrlTraits from "./UrlTraits";
+import { JsonObject } from "../../Core/Json";
+import anyTrait from "../Decorators/anyTrait";
 
 export default class MapboxVectorTileCatalogItemTraits extends mixTraits(
   LayerOrderingTraits,
@@ -19,24 +21,66 @@ export default class MapboxVectorTileCatalogItemTraits extends mixTraits(
     type: "string",
     name: "lineColor",
     description:
-      "The outline color of the features, specified as a CSS color string."
+      "This propery exists for backward compatibility. The outline color of the features, specified as a CSS color string. This will only be used if `layer` trait has been set. For more complex styling - see `style` trait."
   })
-  lineColor = "#000000";
+  lineColor?: string;
 
   @primitiveTrait({
     type: "string",
     name: "fillColor",
     description:
-      "The fill color of the features, specified as a CSS color string."
+      "This propery exists for backward compatibility. The fill color of the features, specified as a CSS color string. This will only be used if `layer` trait has been set. For more complex styling - see `style` trait."
   })
-  fillColor = "rgba(0,0,0,0)";
+  fillColor?: string;
 
   @primitiveTrait({
     type: "string",
     name: "layer",
-    description: "The name of the layer to use the Mapbox vector tiles."
+    description:
+      "This propery exists for backward compatibility. It can be used to only show a particular layer in the tileset."
   })
   layer?: string;
+
+  @anyTrait({
+    name: "style",
+    description: `JSON style spec for MVT. This supports subset of Mapbox style spec (https://docs.mapbox.com/mapbox-gl-js/style-spec/layers/).
+
+For supported properties - refer to https://github.com/protomaps/protomaps.js/blob/master/src/compat/json_style.ts.
+
+For example:
+\`\`\`json
+{
+  "layers": [
+    {
+      "type": "fill",
+      "source-layer": "buildings",
+      "paint": {
+        "fill-color": "black"
+      }
+    },
+    {
+      "type": "symbol",
+      "source-layer": "places",
+      "layout": {
+        "text-size": 20,
+        "text-font": "sans-serif"
+      },
+      "paint": {
+        "text-color": "red"
+      }
+    }
+  ]
+}
+\`\`\``
+  })
+  style?: JsonObject;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Style URL",
+    description: `URL to JSON file for styling. See \`style\` trait for more info.`
+  })
+  styleUrl?: string;
 
   @primitiveTrait({
     type: "string",

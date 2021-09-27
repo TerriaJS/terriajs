@@ -286,12 +286,22 @@ class MapNavigation extends React.Component<PropTypes> {
             column={this.orientation === Orientation.VERTICAL}
             css={`
               ${this.orientation === Orientation.HORIZONTAL &&
-                `margin-bottom: 5px;`}
+                `margin-bottom: 5px;
+                flex-wrap: wrap;`}
             `}
           >
-            {items.map(item => (
-              <MapNavigationItem key={item.id} item={item} terria={terria} />
-            ))}
+            {items.map(item => {
+              // Do not expand in place for horizontal orientation
+              // as it results in buttons overlapping and hiding neighboring buttons.
+              return (
+                <MapNavigationItem
+                  expandInPlace={this.orientation !== Orientation.HORIZONTAL}
+                  key={item.id}
+                  item={item}
+                  terria={terria}
+                />
+              );
+            })}
             {this.overflows && (
               <Control key={OVERFLOW_ITEM_ID}>
                 <MapIconButton

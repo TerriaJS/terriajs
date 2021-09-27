@@ -275,10 +275,15 @@ const MobileHeader = observer(
             terria={this.props.terria}
             showFeedback={!!this.props.terria.configParameters.feedbackUrl}
           />
-          <MobileModalWindow
-            terria={this.props.terria}
-            viewState={this.props.viewState}
-          />
+          {/* Don't show mobile modal window if user is currently interacting
+              with map - like picking a point or drawing shapes
+           */}
+          {!this.props.viewState.isMapInteractionActive && (
+            <MobileModalWindow
+              terria={this.props.terria}
+              viewState={this.props.viewState}
+            />
+          )}
         </div>
       );
     }

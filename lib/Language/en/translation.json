@@ -299,7 +299,7 @@
     "promptMessage": "Find the Tour, how-to videos & other help content here",
     "dismissText": "Got it, thanks!",
     "takeTour": "Take the tour",
-    "terriaMapUserGuide": "Terria maps user guide"
+    "mapUserGuide": "Map user guide"
   },
   "helpMenu": {
     "btnText": "Help",
@@ -346,9 +346,11 @@
   "welcomeMessage": {
     "title": "Let's get you started",
     "welcomeMessage": "Interested in data discovery and exploration?<br/>Dive right in and get started or check the following help guide options.",
+    "welcomeMessageOnMobile": "Interested in data discovery and exploration?",
     "tourBtnText": "Take the tour",
     "helpBtnText": "I'll need some help",
     "exploreDataBtnText": "Explore map data",
+    "searchBtnText": "Search for a location",
     "dismissText": "Close message and don't show me this again"
   },
   "story": {
@@ -497,7 +499,7 @@
     "layerName": "Layer name",
     "typeName": "Type name",
     "metadataUrls": "Metadata Links",
-    "dataUrl": "Data URL",
+    "dataUrl": "Data Links",
     "useLinkBelow": "Use the link below to download the data. See the {{link}} for more information on customising URL query parameters.",
     "downloadInFormat": "Download the currently selected data in {{format}} format",
     "downloadNotSupported": "Unfortunately your browser does not support the functionality needed to download this data as a file. Please use Chrome, Firefox or Safari to download this data.",

@@ -1,11 +1,10 @@
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import CkanSharedTraits from "./CkanSharedTraits";
 import GroupTraits from "./GroupTraits";
-import mixTraits from "../mixTraits";
-import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
-import primitiveTrait from "../Decorators/primitiveTrait";
 import UrlTraits from "./UrlTraits";
 
 export default class CkanCatalogGroupTraits extends mixTraits(
@@ -14,14 +13,6 @@ export default class CkanCatalogGroupTraits extends mixTraits(
   CatalogMemberTraits,
   CkanSharedTraits
 ) {
-  @primitiveArrayTrait({
-    name: "Blacklist",
-    type: "string",
-    description: `An array of strings of blacklisted group names and dataset titles.
-      A group or dataset that appears in this list will not be shown to the user.`
-  })
-  blacklist?: string[];
-
   @anyTrait({
     name: "Filter Query",
     description: `Gets or sets the filter query to pass to CKAN when querying the available data sources and their groups. Each item in the

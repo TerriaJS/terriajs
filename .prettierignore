@@ -22,7 +22,7 @@
 
 # Unignore new files
 !buildprocess/
-!buildprocess/webpack-docs.config.js
+!buildprocess/webpack-tools.config.js
 !buildprocess/generateDocs.js
 
 !wwwroot
