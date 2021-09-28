@@ -1,6 +1,8 @@
 # This is a basic workflow to help you get started with Actions
 
 name: CI
+env:
+  NODE_OPTIONS: '--max_old_space_size=4096'
 
 # Controls when the action will run.
 on: [push, pull_request]

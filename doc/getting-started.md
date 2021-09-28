@@ -13,6 +13,8 @@ git clone https://github.com/TerriaJS/TerriaMap.git
 
 cd TerriaMap
 
+export NODE_OPTIONS=--max_old_space_size=4096
+
 npm install && npm run gulp && npm start
 
 # Open at http://localhost:3001
@@ -43,6 +45,14 @@ cd TerriaMap
 ```
 
 If you're unable to use git, you can also [download a ZIP file](https://github.com/TerriaJS/TerriaMap/archive/main.zip) and extract it somewhere on your system.  We recommend using git, though, because it makes it much easier to update to later versions in the future.
+
+### Increase NodeJS memory limit
+
+To avoid running out of memory when installing dependencies and building TerriaMap, increase the memory limit of node:
+
+```bash
+export NODE_OPTIONS=--max_old_space_size=4096
+```
 
 ### Installing Dependencies
 

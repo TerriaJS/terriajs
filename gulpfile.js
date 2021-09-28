@@ -138,7 +138,7 @@ gulp.task('code-attribution', function userAttribution(done) {
 gulp.task('build-for-doc-generation', function buildForDocGeneration(done) {
     var runWebpack = require('./buildprocess/runWebpack.js');
     var webpack = require('webpack');
-    var webpackConfig = require('./buildprocess/webpack-docs.config.js')();
+    var webpackConfig = require('./buildprocess/webpack-tools.config.js')();
 
     runWebpack(webpack, webpackConfig, done);
 });

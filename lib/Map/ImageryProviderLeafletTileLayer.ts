@@ -33,7 +33,7 @@ class Credit extends CesiumCredit {
   _shownInLeafletLastUpdate?: boolean;
 }
 
-export default class CesiumTileLayer extends L.TileLayer {
+export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
   readonly tileSize = 256;
   readonly errorEvent = new CesiumEvent();
 

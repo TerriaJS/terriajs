@@ -8,7 +8,7 @@ import EllipsoidGeodesic from "terriajs-cesium/Source/Core/EllipsoidGeodesic";
 import getTimestamp from "terriajs-cesium/Source/Core/getTimestamp";
 import Styles from "./legend.scss";
 import { observer, disposeOnUnmount } from "mobx-react";
-import { autorun } from "mobx";
+import { autorun, runInAction } from "mobx";
 
 const geodesic = new EllipsoidGeodesic();
 
@@ -153,6 +153,7 @@ class DistanceLegend extends React.Component {
 
     geodesic.setEndPoints(leftCartographic, rightCartographic);
     const pixelDistance = geodesic.surfaceDistance;
+    runInAction(() => (this.props.terria.mainViewer.scale = pixelDistance));
 
     // Find the first distance that makes the scale bar less than 100 pixels.
     const maxBarWidth = 100;
@@ -189,6 +190,8 @@ class DistanceLegend extends React.Component {
     const maxMeters = map
       .containerPointToLatLng([0, halfHeight])
       .distanceTo(map.containerPointToLatLng([maxPixelWidth, halfHeight]));
+
+    runInAction(() => (this.props.terria.mainViewer.scale = maxMeters / 100));
 
     const meters = L.control.scale()._getRoundNum(maxMeters);
     const label = meters < 1000 ? meters + " m" : meters / 1000 + " km";

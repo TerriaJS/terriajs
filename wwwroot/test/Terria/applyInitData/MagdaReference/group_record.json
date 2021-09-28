@@ -1,0 +1,79 @@
+{
+  "aspects": {
+    "dataset-distributions": {
+      "distributions": [
+        {},
+        {},
+        {},
+        {
+          "aspects": {
+            "ckan-resource": {
+              "created": "2019-08-19T03:00:12.615137",
+              "datastore_active": false,
+              "datastore_contains_all_records_of_source_file": false,
+              "description": "",
+              "format": "ARCGIS REST SERVICE",
+              "hash": "",
+              "id": "5b60f75a-5ee7-4ba5-8fec-a91a7154a5eb",
+              "metadata_modified": "2019-08-19T03:00:12.615137",
+              "name": "ArcGIS REST SERVICE - Forest Management Zones",
+              "package_id": "d7d778d5-2760-498c-8863-5dfc96fddb26",
+              "position": 3,
+              "state": "active",
+              "url": "https://services2.arcgis.com/iCBB4zKDwkw2iwDD/arcgis/rest/services/Forest_Management_Zones/FeatureServer"
+            },
+            "dataset-format": {
+              "confidenceLevel": 70,
+              "format": "ESRI FEATURESERVER"
+            },
+            "dcat-distribution-strings": {
+              "downloadURL": "https://services2.arcgis.com/iCBB4zKDwkw2iwDD/arcgis/rest/services/Forest_Management_Zones/FeatureServer",
+              "format": "ARCGIS REST SERVICE",
+              "issued": "2019-08-19T03:00:12Z",
+              "license": "Creative Commons Attribution",
+              "title": "ArcGIS REST SERVICE - Forest Management Zones"
+            },
+            "source": {
+              "id": "nsw-ckan",
+              "name": "data.nsw.gov.au",
+              "type": "ckan-resource",
+              "url": "https://uatweb.datansw.links.com.au/data/api/3/action/resource_show?id=5b60f75a-5ee7-4ba5-8fec-a91a7154a5eb"
+            },
+            "source-link-status": {
+              "httpStatusCode": 200,
+              "status": "active"
+            }
+          },
+          "id": "dist-nsw-ckan-5b60f75a-5ee7-4ba5-8fec-a91a7154a5eb",
+          "name": "ArcGIS REST SERVICE - Forest Management Zones"
+        }
+      ]
+    },
+    "dcat-dataset-strings": {
+      "accrualPeriodicity": "Irregular",
+      "contactPoint": "todd.walmsley@fcnsw.com.au",
+      "description": "Forest Management Zones (97mb full extent shapefile download) created by FCNSW from a range of environmental data sets from environmental modelling processes and continually updated due to improved data, mapping and environmental surveys.",
+      "issued": "2018-09-06T07:52:18Z",
+      "keywords": [
+        "Environment",
+        "Forests",
+        "Management",
+        "Zones"
+      ],
+      "landingPage": "https://datasets.seed.nsw.gov.au/dataset/forest-management-zones",
+      "languages": [],
+      "modified": "2019-08-19T03:00:12Z",
+      "publisher": "Forestry Corporation of NSW",
+      "spatial": "{\"type\": \"Polygon\", \"coordinates\": [[[154.3535, -37.8093], [154.3535, -27.8628], [140.5986, -27.8628], [140.5986, -37.8093], [154.3535, -37.8093]]]}",
+      "temporal": {
+        "start": ""
+      },
+      "themes": [],
+      "title": "Forest Management Zones"
+    }
+  },
+  "id": "ds-nsw-ckan-d7d778d5-2760-498c-8863-5dfc96fddb26",
+  "name": "Forest Management Zones",
+  "sourceTag": "99476546-aff8-4af2-9656-73c0c94e3b04",
+  "tenantId": 0
+}

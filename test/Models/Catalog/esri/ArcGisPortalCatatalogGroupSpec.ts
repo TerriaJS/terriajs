@@ -96,7 +96,7 @@ describe("ArcGisPortalCatalogGroup", function() {
           "organisationsGroups"
         );
         portalCatalogGroup.setTrait("definition", "hideEmptyGroups", false);
-        portalCatalogGroup.setTrait("definition", "blacklist", [
+        portalCatalogGroup.setTrait("definition", "excludeMembers", [
           "Spatial Services Gallery"
         ]);
       });

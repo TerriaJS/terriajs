@@ -1,8 +1,5 @@
-import URI from "urijs";
-
 import defined from "terriajs-cesium/Source/Core/defined";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
-import loadJson from "./loadJson";
+import URI from "urijs";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
