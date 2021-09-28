@@ -622,7 +622,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       } catch (e) {
         // Clear data if error occurs
         runInAction(() => {
-          this.dataColumnMajor = [[]];
+          this.dataColumnMajor = undefined;
         });
         throw e;
       }
