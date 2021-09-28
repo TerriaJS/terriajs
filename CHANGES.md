@@ -26,6 +26,17 @@ Change Log
 * Added `MinMaxLevelMixin` and `MinMaxLevelTraits` to handle defining min and max scale denominator for layers.
 * Extracted function `scaleToDenominator` to core - for conversion of scale to zoom level.
 * Share/start data conversion will now only occur if `version` property is `0.x.x`. Previously, it was `version` property is **not** `8.x.x`
+* SDMX will now disable the region column if less than 2 valid regions have been found
+* Set `spreadStartTime` and `spreadFinishTime` to `true` for SDMX
+* Add SDMX `metadataURLs` from dataflow annotations
+* Improve SDMX chart titles
+* `TableMixin` will now remove data if an error occurs while calling `forceLoadTableData`
+* Make `regionColumn` `isNullable` - this means region column can be disabled by setting to `null`.
+* Fix scalar column color map with a single value
+* TableMixin will now clear data if an error occurs while calling `forceLoadTableData`
+* `TableMixin` will now not return `mapItems` or `chartItems` if `isLoading` 
+* SDMX will now use `initialTimeSource = stop`
+* Fix `duplicateModels` duplicating observables across multiple models
 * Support group models in workbench -- All members will be automatically added to the map.
 * Added location search button to welcome modal in mobile view.
 * Add `DataUrlTraits` to `CatalogMemberTraits.dataUrls`. It contains an array of data URLS (with optional `title` which will render a button). It is handled the same as `MetadataUrls` except there is a `type` property which can be set to `wcs`, `wfs`... to show info about the URL.

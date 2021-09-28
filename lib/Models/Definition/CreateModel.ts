@@ -1,9 +1,10 @@
-import { action, computed, observable, runInAction } from "mobx";
+import { action, computed, observable, runInAction, toJS } from "mobx";
 import { getObjectId } from "../../Traits/ArrayNestedStrataMap";
+import { ObjectArrayTrait } from "../../Traits/Decorators/objectArrayTrait";
 import { ModelId } from "../../Traits/ModelReference";
 import ModelTraits from "../../Traits/ModelTraits";
-import { ObjectArrayTrait } from "../../Traits/Decorators/objectArrayTrait";
 import TraitsConstructor from "../../Traits/TraitsConstructor";
+import Terria from "../Terria";
 import addModelStrataView from "./addModelStrataView";
 import createStratumInstance from "./createStratumInstance";
 import { isLoadableStratum } from "./LoadableStratum";
@@ -15,7 +16,6 @@ import ModelType, {
 } from "./Model";
 import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
-import Terria from "../Terria";
 
 export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
   Traits: T
@@ -97,7 +97,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
       this.strata.forEach((stratum, stratumId) => {
         const newStratum = isLoadableStratum(stratum)
           ? stratum.duplicateLoadableStratum(newModel)
-          : createStratumInstance(Traits, stratum);
+          : createStratumInstance(Traits, toJS(stratum));
         newModel.strata.set(stratumId, newStratum);
       });
       return newModel;
