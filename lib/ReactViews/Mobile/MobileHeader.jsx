@@ -1,20 +1,20 @@
-import React from "react";
-import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
-import SearchBox from "../Search/SearchBox";
-import MobileModalWindow from "./MobileModalWindow";
-import Branding from "../SidePanel/Branding";
-import Styles from "./mobile-header.scss";
-import Icon, { StyledIcon } from "../../Styled/Icon";
-import MobileMenu from "./MobileMenu";
 import classNames from "classnames";
-import { removeMarker } from "../../Models/LocationMarkerUtils";
+import createReactClass from "create-react-class";
+import { runInAction } from "mobx";
+import { observer } from "mobx-react";
+import PropTypes from "prop-types";
+import React from "react";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
-import { observer } from "mobx-react";
-import { runInAction } from "mobx";
+import { removeMarker } from "../../Models/LocationMarkerUtils";
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
+import Icon, { StyledIcon } from "../../Styled/Icon";
+import SearchBox from "../Search/SearchBox";
+import Branding from "../SidePanel/Branding";
+import Styles from "./mobile-header.scss";
+import MobileMenu from "./MobileMenu";
+import MobileModalWindow from "./MobileModalWindow";
 
 const MobileHeader = observer(
   createReactClass({
@@ -69,10 +69,12 @@ const MobileHeader = observer(
     },
 
     onMobileDataCatalogClicked() {
+      this.props.viewState.setTopElement("DataCatalog");
       this.toggleView(this.props.viewState.mobileViewOptions.data);
     },
 
     onMobileNowViewingClicked() {
+      this.props.viewState.setTopElement("NowViewing");
       this.toggleView(this.props.viewState.mobileViewOptions.nowViewing);
     },
 
@@ -273,10 +275,15 @@ const MobileHeader = observer(
             terria={this.props.terria}
             showFeedback={!!this.props.terria.configParameters.feedbackUrl}
           />
-          <MobileModalWindow
-            terria={this.props.terria}
-            viewState={this.props.viewState}
-          />
+          {/* Don't show mobile modal window if user is currently interacting
+              with map - like picking a point or drawing shapes
+           */}
+          {!this.props.viewState.isMapInteractionActive && (
+            <MobileModalWindow
+              terria={this.props.terria}
+              viewState={this.props.viewState}
+            />
+          )}
         </div>
       );
     }

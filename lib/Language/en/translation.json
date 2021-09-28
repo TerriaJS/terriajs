@@ -87,7 +87,7 @@
     "guidanceBtnTitle": "Gyroscope Guidance",
     "guidanceBtnText": "View detailed instructions on how to use the compass",
     "guidance": {
-      "title": "Gyroscope Contols",
+      "title": "Gyroscope Controls",
       "outerRingTitle": "Outer Ring",
       "outerRingDescription": "Drag the outer ring in a circular motion to rotate the map view 360˚.",
       "innerCircleTitle": "Inner Circle",
@@ -298,7 +298,8 @@
     "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [info@terria.io](mailto:info@terria.io)",
     "promptMessage": "Find the Tour, how-to videos & other help content here",
     "dismissText": "Got it, thanks!",
-    "takeTour": "Take the tour"
+    "takeTour": "Take the tour",
+    "mapUserGuide": "Map user guide"
   },
   "helpMenu": {
     "btnText": "Help",
@@ -345,9 +346,11 @@
   "welcomeMessage": {
     "title": "Let's get you started",
     "welcomeMessage": "Interested in data discovery and exploration?<br/>Dive right in and get started or check the following help guide options.",
+    "welcomeMessageOnMobile": "Interested in data discovery and exploration?",
     "tourBtnText": "Take the tour",
     "helpBtnText": "I'll need some help",
     "exploreDataBtnText": "Explore map data",
+    "searchBtnText": "Search for a location",
     "dismissText": "Close message and don't show me this again"
   },
   "story": {
@@ -496,7 +499,7 @@
     "layerName": "Layer name",
     "typeName": "Type name",
     "metadataUrls": "Metadata Links",
-    "dataUrl": "Data URL",
+    "dataUrl": "Data Links",
     "useLinkBelow": "Use the link below to download the data. See the {{link}} for more information on customising URL query parameters.",
     "downloadInFormat": "Download the currently selected data in {{format}} format",
     "downloadNotSupported": "Unfortunately your browser does not support the functionality needed to download this data as a file. Please use Chrome, Firefox or Safari to download this data.",
@@ -626,7 +629,9 @@
     "sectionLabel": "Charts",
     "closePanel": "Close Panel",
     "expand": "Expand",
-    "download": "Download"
+    "download": "Download",
+    "loading": "Loading chart data...",
+    "noData": "No chartable data found."
   },
   "viewModels": {
     "searchNoLocations": "Sorry, no locations match your search query.",
@@ -1002,7 +1007,7 @@
       "unknownError": "The CSW server reported an unknown error.",
       "exceptionMessage": "The CSW server reported an error:\n\n {{exceptionText}}",
       "errorLoadingTitle": "Could not load CSW",
-      "notUseableTitle": "Catalogue service is not useable",
+      "notUseableTitle": "Catalogue service is not usable",
       "notUseableMessage": "Invalid response obtained when invoking GetDomain on the CSW server. <p>This error may indicate that the catalogue server you specified is temporarily unavailable or there is a problem with your internet connection.  Try opening the processing server again, and if the problem persists, please report it by sending an email to ",
       "errorLoadingRecordsTitle": "Failed to load CSW records.",
       "errorLoadingRecordsMessage": "Invalid response obtained when invoking GetRecords on the CSW server. <p>This error may indicate that the catalogue server you specified is temporarily unavailable or there is a problem with your internet connection.  Try opening the processing server again, and if the problem persists, please report it by sending an email to ",
@@ -1137,6 +1142,9 @@
       "notCompatibleTitle": "No compatible distributions found",
       "notCompatibleMessageI": "The MAGDA dataset does not have a distribution with the ID {{distributionId}} or it does not have a supported format.",
       "notCompatibleMessageII": "The MAGDA dataset does not have any distributions with a supported format."
+    },
+    "terria-reference": {
+      "failedToLoadTarget": "Failed to load member from external catalog"
     },
     "mapboxMap": {
       "name": "Mapbox Map"
@@ -1317,7 +1325,7 @@
       "initErrorMessage": "A problem occurred with the Terria server. This may cause some layers or the conversion service to be unavailable.",
       "urlLoadErrorTitle": "Problem loading URL",
       "urlLoadErrorMessage": "A problem occurred while initialising Terria with URL parameters.",
-      "loadModelErrorMessage": "An error ocurred while loading model `{{model}}`.",
+      "loadModelErrorMessage": "An error occurred while loading model `{{model}}`.",
       "loadingMagdaInitSourceErrorTitle": "Error loading Magda initialization source",
       "loadingMagdaInitSourceErrorMessage": "An error occurred while loading initialization information from Magda record `{{url}}`.",
       "loadingInitSourcesErrorTitle": "Error loading map configuration",
@@ -1423,8 +1431,6 @@
       "defaultStyleLabel": "Default style",
       "noLayerFoundTitle": "No layer found",
       "noLayerFoundMessage": "The WMS dataset '{{name}}' has no layers matching '{{layers}}'. {{suggested}} {{line}}{{line}}Either the catalog file has been set up incorrectly, or the WMS server has changed.{{line}}{{line}}Please report this error by sending an email to {{email}}.",
-      "datasetScaleErrorTitle": "Dataset will not be shown at this scale",
-      "datasetScaleErrorMessage": "The {{name}} dataset will not be shown when zoomed in this close to the map because the data custodian has indicated that the data is not intended or suitable for display at this scale.  Click the dataset's Info button on the Now Viewing tab for more information about the dataset and the data custodian.",
       "badlyFormatedTitle": "Badly formatted periodicity",
       "badlyFormatedMessage": "The '{{name}}' dataset has a badly formed periodicity, '{{isoSegments}}'. Click the dataset's Info button for more information about the dataset and the data custodian.",
       "missingDataTitle": "Missing data",
@@ -1512,9 +1518,11 @@
       }
     },
     "commonModelErrors": {
-      "3dTypeIn2dMode": "**Note:** This dataset can not be displayed in the 2D viewer. Switch to one of the 3D map modes.",
-      "datasetScaleErrorTitle": "Dataset will not be shown at this scale",
-      "datasetScaleErrorMessage": "The {{name}} dataset will not be shown when zoomed in this close to the map because the data custodian has indicated that the data is not intended or suitable for display at this scale.  Click the dataset's Info button on the Now Viewing tab for more information about the dataset and the data custodian."
+      "3dTypeIn2dMode": "**Note:** This dataset can not be displayed in the 2D viewer. Switch to one of the 3D map modes."
+    },
+    "scaleDatasetNotVisible": {
+      "scaleZoomIn": "Dataset is not available at this scale, zoom in to see it",
+      "scaleZoomOut": "Dataset is not available at this scale, zoom out to see it"
     }
   },
   "deltaTool": {
@@ -1541,6 +1549,10 @@
   },
   "term": {
     "missingContent": "missing content"
+  },
+  "mapNavigation": {
+    "additionalTools": "Additional tools",
+    "additionalToolsTitle": "Open additional tools"
   },
   "itemSearchTool": {
     "toolLoadError": "Error loading search tool.",

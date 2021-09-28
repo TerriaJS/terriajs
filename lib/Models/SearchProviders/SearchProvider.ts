@@ -3,6 +3,11 @@ import { fromPromise } from "mobx-utils";
 import SearchProviderResults from "./SearchProviderResults";
 
 export default abstract class SearchProvider {
+  /** If search results are References to models in terria.models - set this to true.
+   * This is so groups/references are opened and loaded properly
+   */
+  readonly resultsAreReferences: boolean = false;
+
   @observable name = "Unknown";
   @observable isOpen = true;
 

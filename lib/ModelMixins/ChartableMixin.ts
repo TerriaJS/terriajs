@@ -1,12 +1,11 @@
 import { maxBy, minBy } from "lodash-es";
-import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import LatLonHeight from "../Core/LatLonHeight";
 import Model from "../Models/Definition/Model";
+import { GlyphStyle } from "../ReactViews/Custom/Chart/Glyphs";
 import ModelTraits from "../Traits/ModelTraits";
-import CatalogMemberMixin from "./CatalogMemberMixin";
-import MappableMixin from "./MappableMixin";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
+import MappableMixin from "./MappableMixin";
 
 type Scale = "linear" | "time";
 
@@ -63,6 +62,7 @@ export interface ChartItem {
   updateIsSelectedInWorkbench: (isSelected: boolean) => void; // Unselect the chart item in workbench
   onClick?: any;
   pointOnMap?: LatLonHeight;
+  glyphStyle?: GlyphStyle;
 }
 
 function ChartableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {

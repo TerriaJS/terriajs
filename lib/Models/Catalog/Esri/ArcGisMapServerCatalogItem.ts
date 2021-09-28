@@ -35,6 +35,8 @@ import { BaseModel } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
+import MinMaxLevelMixin from "./../../../ModelMixins/MinMaxLevelMixin";
+import { scaleDenominatorToLevel } from "../../../Core/scaleToDenominator";
 
 const proj4 = require("proj4").default;
 
@@ -373,7 +375,9 @@ StratumOrder.addLoadStratum(MapServerStratum.stratumName);
 export default class ArcGisMapServerCatalogItem extends MappableMixin(
   UrlMixin(
     DiscretelyTimeVaryingMixin(
-      CatalogMemberMixin(CreateModel(ArcGisMapServerCatalogItemTraits))
+      MinMaxLevelMixin(
+        CatalogMemberMixin(CreateModel(ArcGisMapServerCatalogItemTraits))
+      )
     )
   )
 ) {
@@ -472,7 +476,11 @@ export default class ArcGisMapServerCatalogItem extends MappableMixin(
         params.time = time;
       }
 
-      const maximumLevel = maximumScaleToLevel(this.maximumScale);
+      const maximumLevel = scaleDenominatorToLevel(
+        this.maximumScale,
+        true,
+        false
+      );
       const dynamicRequired = this.layers && this.layers.length > 0;
       const layers = this.layerIds || this.layers;
       const imageryProvider = new ArcGisMapServerImageryProvider({
@@ -488,43 +496,7 @@ export default class ArcGisMapServerCatalogItem extends MappableMixin(
         credit: this.attribution
       });
 
-      const maximumLevelBeforeMessage = maximumScaleToLevel(
-        this.maximumScaleBeforeMessage
-      );
-
-      if (isDefined(maximumLevelBeforeMessage)) {
-        const realRequestImage = imageryProvider.requestImage;
-        let messageDisplayed = false;
-
-        imageryProvider.requestImage = (x, y, level) => {
-          if (level > maximumLevelBeforeMessage) {
-            if (!messageDisplayed) {
-              this.terria.raiseErrorToUser(
-                new TerriaError({
-                  title: "Dataset will not be shown at this scale",
-                  message:
-                    'The "' +
-                    this.name +
-                    '" dataset will not be shown when zoomed in this close to the map because the data custodian has ' +
-                    "indicated that the data is not intended or suitable for display at this scale.  Click the dataset's Info button on the " +
-                    "Now Viewing tab for more information about the dataset and the data custodian."
-                })
-              );
-              messageDisplayed = true;
-            }
-
-            if (!this.showTilesAfterMessage) {
-              return (<any>ImageryProvider.loadImage)(
-                imageryProvider,
-                this.terria.baseUrl + "images/blank.png"
-              );
-            }
-          }
-          return realRequestImage.call(imageryProvider, x, y, level);
-        };
-      }
-
-      return imageryProvider;
+      return this.updateRequestImage(imageryProvider, false);
     }
   );
 
@@ -634,27 +606,6 @@ function findLayers(layers: Layer[], names: string | undefined) {
   return names.split(",").map(function(id) {
     return findLayer(layers, id);
   });
-}
-
-function maximumScaleToLevel(maximumScale: number | undefined) {
-  if (!isDefined(maximumScale) || maximumScale <= 0.0) {
-    return undefined;
-  }
-
-  const dpi = 96; // Esri default DPI, unless we specify otherwise.
-  const centimetersPerInch = 2.54;
-  const centimetersPerMeter = 100;
-  const dotsPerMeter = (dpi * centimetersPerMeter) / centimetersPerInch;
-  const tileWidth = 256;
-
-  const circumferenceAtEquator = 2 * Math.PI * Ellipsoid.WGS84.maximumRadius;
-  const distancePerPixelAtLevel0 = circumferenceAtEquator / tileWidth;
-  const level0ScaleDenominator = distancePerPixelAtLevel0 * dotsPerMeter;
-
-  // 1e-6 epsilon from WMS 1.3.0 spec, section 7.2.4.6.9.
-  const ratio = level0ScaleDenominator / (maximumScale - 1e-6);
-  const levelAtMinScaleDenominator = Math.log(ratio) / Math.log(2);
-  return levelAtMinScaleDenominator | 0;
 }
 
 function updateBbox(extent: Extent, rectangle: RectangleExtent) {

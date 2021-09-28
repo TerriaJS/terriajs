@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed } from "mobx";
+import { computed, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
@@ -119,17 +119,16 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
      */
     async loadMapItems(force?: boolean): Promise<Result<void>> {
       try {
-        if (this.shouldShowInitialMessage) {
-          // Don't await the initialMessage because this causes cyclic dependency between loading
-          //  and user interaction (see https://github.com/TerriaJS/terriajs/issues/5528)
-          this.showInitialMessage();
-        }
+        runInAction(() => {
+          if (this.shouldShowInitialMessage) {
+            // Don't await the initialMessage because this causes cyclic dependency between loading
+            //  and user interaction (see https://github.com/TerriaJS/terriajs/issues/5528)
+            this.showInitialMessage();
+          }
+        });
         if (CatalogMemberMixin.isMixedInto(this))
           (await this.loadMetadata()).throwIfError();
 
-        // We need to make sure the region provider is loaded before loading
-        // region mapped tables.
-        if (TableMixin.isMixedInto(this)) await this.loadRegionProviderList();
         (await this._mapItemsLoader.load(force)).throwIfError();
       } catch (e) {
         return Result.error(e, `Failed to load \`${getName(this)}\` mapItems`);
@@ -189,7 +188,12 @@ namespace MappableMixin {
   export interface Instance
     extends InstanceType<ReturnType<typeof MappableMixin>> {}
   export function isMixedInto(model: any): model is Instance {
-    return model && model.isMappable;
+    return (
+      model &&
+      model.isMappable &&
+      "forceLoadMapItems" in model &&
+      typeof model.forceLoadMapItems === "function"
+    );
   }
 }
 

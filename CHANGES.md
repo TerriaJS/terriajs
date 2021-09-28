@@ -1,9 +1,87 @@
 Change Log
 ==========
 
-#### next release (8.0.1)
+#### next release (8.1.1)
+
+- **Breaking changes:**
+  * `blacklist` has been renamed to `excludeMembers` for `ArcGisPortalCatalogGroup` and `CkanCatalogGroup`.
+
+* Tsifyied and refactored `RegionProvider` and `RegionProviderList`, and re-enabled `loadRegionIDs`
+* `TableColorMap` `minimumValue` and `maximumValue` will now take into account valid regions.
+* `tableMixin.loadRegionProviderList()` is now called in `tableMixin.forceLoadMapItems()` instead of `mappableMixin.loadMapItems()`
+* Add TableColumn and TableStyle `ready` computed property. Columns will only be rendered if `ready` is `true`. At the moment it is only used to wait until `loadRegionIDs` has finished.
+* Moved region mapping `ImageryProvider` code to `lib/Table/createRegionMappedImageryProvider.ts`
+* Fix `ChartPanel` import `Result` bug.
+* Improve handling of featureInfoTemplate for composite catalog items.
+* Mobile help menu will now show a link to map user guide if it is configured in `Terria.configParameters.helpItems`.
+* Fixed the layout of items in mobile navigation
+* Add Mapbox Vector Tile support. This is using [protomaps.js](https://github.com/protomaps/protomaps.js) in the new `ProtomapsImageryProvider`. This includes subset of MVT style specification JSON support.
+* `MapboxVectorCanvasTileLayer` is now called `ImageryProviderLeafletGridLayer`
+* `CesiumTileLayer` is now called `ImageryProviderLeafletTileLayer`.
+* Added `geojson-vt` support to `GeoJsonMixin`, which will tile geojson into vector tiles on the fly, and use the new `ProtomapsImageryProvider`.
+* Added `configParameter.enableGeojsonMvt` temporary feature flag for experimental Geojson-Mapbox vector tiles. Default is `false`.
+* Added `forceCesiumPrimitives` to `GeoJsonTraits`. This can be used to render cesium primitives instead of Mapbox vector-tiles (if `configParameter.enableGeojsonMvt` is `true`)
+* Add `scale` observable to `TerriaViewer`. This will give distance between two pixels at the bottom center of the screen in meters.
+* Fixed `withControlledVisibility` method to inherit `propTypes` of its wrapped component.
+* Added `MinMaxLevelMixin` and `MinMaxLevelTraits` to handle defining min and max scale denominator for layers.
+* Extracted function `scaleToDenominator` to core - for conversion of scale to zoom level.
+* Share/start data conversion will now only occur if `version` property is `0.x.x`. Previously, it was `version` property is **not** `8.x.x`
+* Support group models in workbench -- All members will be automatically added to the map.
+* Added location search button to welcome modal in mobile view.
+* Add `DataUrlTraits` to `CatalogMemberTraits.dataUrls`. It contains an array of data URLS (with optional `title` which will render a button). It is handled the same as `MetadataUrls` except there is a `type` property which can be set to `wcs`, `wfs`... to show info about the URL.
+* Made search location bar span full width in mobile view.
+* Automatically hide mobile modal window when user is interacting with the map. 
+* Disabled feature search in mobile 
+* Disabled export (clip&ship) in mobile
+* Fixed misplaced search icon in mobile safari.
+* Prevents story text from covering the whole screen in mobile devices.
+* Add `CatalogIndex`, `CatalogIndexReference` and `generateCatalogIndex()` script. These can be used to generate a static JSON in dex of a terria catalog - which can then be searched through using `flexsearch`
+* Added `weakReference` flag `ReferenceMixin`, this can be used to treat References more like a shortcut (this means that `sourceReference` isn't used when models are shared/added to the workbench - the `target` is used instead)
+* GroupMixin.isMixedInto and MappableMixin.isMixedInto are now more strict - and won't pass for for References with `isMappable` or `isGroup`.
+* `Workbench.add` can now handle nested `References` (eg `CatalogIndexReference -> CkanReference -> WMSCatalogItem`).
+* Add `description` trait to `CatalogMemberReferenceTraits`
+* Added `excludeMembers` property to `GroupTraits` (this replaced the `blacklist` property in v7). It is an array of strings of excluded group and item names. A group or item name that appears in this list will not be shown to the user. This is case-insensitive and will also apply to all child/nested groups
+* Fixes an app crash on load in iOS-Safari mobile which was happening when rendering help panel tooltips.
+* [The next improvement]
+
+#### 8.1.0
+
+- **Breaking changes:**
+  * Overhaul of map navigation: items no longer added inside UserInterface using <Nav> jsx.
+
+* New version of map navigation ([#5062](https://github.com/TerriaJS/terriajs/pull/5062))
+  - It consists of 
+    - a high level api `MapNavigationModel` for managing the navigation items, which is responsible for managing the state of navigation items. It is passing commands to invidual item controller.
+    - a `MapNavigationItemController` that holds and control the state of navigation item. When new navigation item is created it should extend controller and provide the definition on how it state should be updated.
+  - Terria exposes instance of navigation model to the world.
+  - Converted all existing navigation items to utilise new navigation model, and registered them in terria navigation model (`registerMapNavigations.tsx`).
+  - Resolved issue with some navigation items not being clickable on mobile due to overlap from others.
+* Fixed a bug in Difference tool where difference image was showing with zero opacity in some situations.
+* Fixed `CzmlCatalogItem` to react correctly to input data changes.
+* Extend input field for search in mobile view to full width of the page.
+* Automatically hide mobile modal window when user is interacting with the map (like picking a point or drawing a shape).
+* Adjusted styling of x-axis labels in feature info panel to prevent its clipping.
+* When expanding charts from the same catalog item, we now create a new item if the expanded chart has a different title from the previously expanded chart for the same item. This behavior matches the behavior in `v7`.
+* Improve status message when feature info panel chart is loading
+* Fix broken chart panel download button.
+* Changed @vx/* dependencies to @visx/* which is the new home of the chart library
+* The glyph style used for chart points can now be customized.
+* Added `TerriaReference` item, useful for mounting a catalog tree from an external init file at any position in the current map's catalog tree.
+* Changed @vx/* dependencies to @visx/* which is the new home of the chart library
+* The glyph style used for chart points can now be customized.
+* Chart tooltip and legend bar can now fit more legends gracefully.
+
+#### 8.0.1
+
 * Added `catalog-converter` support for v7 `#start` data.
 * add french Help button translation
+* Enable FeatureInfoSectionSpec tests
+* Add `itemProperties` to `ArcGisMapServerCatalogGroupTraits` so that `ArcGisMapServerCatalogGroup` can override relevant traits of its layers.
+* Add `feature` object to `FeatureInfoSection.getTemplateData`
+* Add a way to replace text in feature info templates. See [Replace text](doc/connecting-to-data/customizing-data-appearance/feature-info-template.md) for details.
+* Fixed unnecessary model reloads or recomputing of `mapItems` when switching between story scenes.
+* Fixed story reset button.
+* Moved help button to the top menu
 * [The next improvement]
 
 #### 8.0.0
@@ -199,7 +277,6 @@ Change Log
 * GeoJSON Mixin based catalog items can now call an API to retrieve their data as well as fetching it from a url.
 * Changes to loadJson and loadJsonBlob to POST a request body rather than always make a GET request.
 * Added ApiRequestTraits, and refactor ApiTableCatalogItemTraits to use it. `apiUrl` is now `url`.
-* Adjusted styling of x-axis labels in feature info panel to prevent its clipping.
 
 #### 8.0.0-alpha.81
 
@@ -323,7 +400,7 @@ Change Log
 #### 8.0.0-alpha.69
 
 - **Breaking changes**: 
-  - Basemaps are now configured through catalog JSON instead of TerriaMap - see https://github.com/TerriaJS/terriajs/blob/next/doc/customizing/initialization-files.md#base-maps 
+  - Basemaps are now configured through catalog JSON instead of TerriaMap - see https://github.com/TerriaJS/terriajs/blob/13362e8b6e2a573b26e1697d9cfa5bae328f7cff/doc/customizing/initialization-files.md#basemaps 
   
 * Updated terriajs-cesium to version 1.79.1
 * Make base maps configurable from init files and update documentation for init files [#5140](https://github.com/TerriaJS/terriajs/pull/5140).
@@ -686,7 +763,7 @@ Change Log
 * Ensure `CkanCatalogGroup` doesn't keep re-requesting data when opening and closing groups.
 * Add `typeName` to `CatalogMemberMixin`
 * Add `header` option to `loadText`
-* Add `isMixtedInto` function for `AsyncMappableMixin` and `AsyncChartableMixin`
+* Add `isMixedInto` function for `AsyncMappableMixin` and `AsyncChartableMixin`
 * Added file upload support for `GltfCatalogItem`. The supported extension is glb.
 * Improve runtime themeing via styled components across main UI components
 * Updated default welcome video defaults to a newer, slower video

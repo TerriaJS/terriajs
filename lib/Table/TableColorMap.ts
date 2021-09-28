@@ -4,7 +4,9 @@ import Color from "terriajs-cesium/Source/Core/Color";
 import createColorForIdTransformer from "../Core/createColorForIdTransformer";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
+import runLater from "../Core/runLater";
 import StandardCssColors from "../Core/StandardCssColors";
+import TerriaError from "../Core/TerriaError";
 import ColorMap from "../Map/ColorMap";
 import ConstantColorMap from "../Map/ConstantColorMap";
 import ContinuousColorMap from "../Map/ContinuousColorMap";
@@ -17,8 +19,6 @@ import TableColorStyleTraits, {
 } from "../Traits/TraitsClasses/TableColorStyleTraits";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
-import TerriaError from "../Core/TerriaError";
-import runLater from "../Core/runLater";
 
 const getColorForId = createColorForIdTransformer();
 const defaultColor = "yellow";
@@ -30,6 +30,44 @@ export default class TableColorMap {
     readonly colorColumn: TableColumn | undefined,
     readonly colorTraits: Model<TableColorStyleTraits>
   ) {}
+
+  /** Get values of colorColumn with valid regions if:
+   * - colorColumn is scalar
+   * - and the activeStyle has a regionColumn
+   */
+  @computed get regionValues() {
+    if (this.colorColumn?.type !== TableColumnType.scalar) return;
+
+    const regionCol = this.colorColumn?.tableModel.activeTableStyle
+      .regionColumn;
+    if (regionCol) {
+      return regionCol.valuesAsRegions.regionIds
+        .map((region, rowIndex) => {
+          if (region !== null) {
+            return this.colorColumn?.valuesAsNumbers.values?.[rowIndex];
+          }
+        })
+        .filter(num => isDefined(num) && num !== null) as number[];
+    }
+  }
+
+  @computed
+  get minimumValue() {
+    if (isDefined(this.colorTraits.minimumValue))
+      return this.colorTraits.minimumValue;
+    return this.regionValues
+      ? Math.min(...this.regionValues)
+      : this.colorColumn?.valuesAsNumbers.minimum;
+  }
+
+  @computed
+  get maximumValue() {
+    if (isDefined(this.colorTraits.maximumValue))
+      return this.colorTraits.maximumValue;
+    return this.regionValues
+      ? Math.max(...this.regionValues)
+      : this.colorColumn?.valuesAsNumbers.maximum;
+  }
 
   /**
    * Gets an object used to map values in {@link #colorColumn} to colors
@@ -66,12 +104,11 @@ export default class TableColorMap {
       }
 
       // If column type is `scalar` and we have a valid minValue and maxValue - use ContinuousColorMap
-      const minValue =
-        colorTraits.minimumValue ?? colorColumn?.valuesAsNumbers.minimum;
-      const maxValue =
-        colorTraits.maximumValue ?? colorColumn?.valuesAsNumbers.maximum;
-
-      if (isDefined(minValue) && isDefined(maxValue) && minValue !== maxValue) {
+      if (
+        isDefined(this.minimumValue) &&
+        isDefined(this.maximumValue) &&
+        this.minimumValue < this.maximumValue
+      ) {
         // Get colorScale from `d3-scale-chromatic` library - all continuous color schemes start with "interpolate"
         // See https://github.com/d3/d3-scale-chromatic#diverging
         // d3 continuous color schemes are represented as a function which map a value [0,1] to a color]
@@ -79,8 +116,8 @@ export default class TableColorMap {
 
         return new ContinuousColorMap({
           colorScale,
-          minValue,
-          maxValue,
+          minValue: this.minimumValue,
+          maxValue: this.maximumValue,
           nullColor
         });
       }
@@ -291,8 +328,8 @@ export default class TableColorMap {
       const valuesAsNumbers = colorColumn.valuesAsNumbers;
       if (
         valuesAsNumbers !== undefined &&
-        (valuesAsNumbers.minimum || 0.0) < 0.0 &&
-        (valuesAsNumbers.maximum || 0.0) > 0.0
+        (this.minimumValue || 0.0) < 0.0 &&
+        (this.maximumValue || 0.0) > 0.0
       ) {
         // Values cross zero, so use a diverging palette
         return "PuOr";

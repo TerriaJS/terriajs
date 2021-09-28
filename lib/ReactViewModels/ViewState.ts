@@ -183,6 +183,7 @@ export default class ViewState {
   @observable showTour: boolean = false;
   @observable appRefs: Map<string, Ref<HTMLElement>> = new Map();
   @observable currentTourIndex: number = -1;
+  @observable showCollapsedNavigation: boolean = false;
 
   get tourPointsWithValidRefs() {
     // should viewstate.ts reach into document? seems unavoidable if we want
@@ -231,6 +232,10 @@ export default class ViewState {
     } else {
       this.currentTourIndex = currentIndex + 1;
     }
+  }
+  @action
+  closeCollapsedNavigation() {
+    this.showCollapsedNavigation = false;
   }
 
   @action
@@ -285,6 +290,8 @@ export default class ViewState {
    * The currently open tool
    */
   @observable currentTool?: Tool;
+
+  @observable panel: React.ReactNode;
 
   private _unsubscribeErrorListener: CesiumEvent.RemoveCallback;
   private _pickedFeaturesSubscription: IReactionDisposer;
@@ -707,6 +714,7 @@ export default class ViewState {
 
   @action
   toggleMobileMenu() {
+    this.setTopElement("mobileMenu");
     this.mobileMenuVisible = !this.mobileMenuVisible;
   }
 
@@ -734,11 +742,21 @@ export default class ViewState {
   get isMapZooming() {
     return this.terria.currentViewer.isMapZooming;
   }
+
+  /**
+   * Returns true if the user is currently interacting with the map - like
+   * picking a point or drawing a shape.
+   */
+  @computed
+  get isMapInteractionActive() {
+    return this.terria.mapInteractionModeStack.length > 0;
+  }
 }
 
 interface Tool {
   toolName: string;
   getToolComponent: () => React.ComponentType | Promise<React.ComponentType>;
+
   showCloseButton: boolean;
   params?: any;
 }

@@ -87,6 +87,12 @@ export default class TerriaViewer {
   @observable
   mapContainer: string | HTMLElement | undefined;
 
+  /**
+   * The distance between two pixels at the bottom center of the screen.
+   * Set in lib/ReactViews/Map/Legend/DistanceLegend.jsx
+   */
+  @observable scale: number = 1;
+
   // TODO: hook these up
   readonly beforeViewerChanged = new CesiumEvent();
   readonly afterViewerChanged = new CesiumEvent();

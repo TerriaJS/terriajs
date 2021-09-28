@@ -1,3 +1,4 @@
+import { Share } from "catalog-converter";
 import i18next from "i18next";
 import { action, computed, observable, runInAction, toJS, when } from "mobx";
 import { createTransformer } from "mobx-utils";
@@ -55,12 +56,13 @@ import { defaultTerms, Term } from "../ReactViewModels/defaultTerms";
 import NotificationState from "../ReactViewModels/NotificationState";
 import { shareConvertNotification } from "../ReactViews/Notification/shareConvertNotification";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
+import MapNavigationModel from "../ViewModels/MapNavigation/MapNavigationModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import { BaseMapsModel } from "./BaseMaps/BaseMapsModel";
 import CameraView from "./CameraView";
+import Catalog from "./Catalog/Catalog";
 import CatalogGroup from "./Catalog/CatalogGroup";
 import CatalogMemberFactory from "./Catalog/CatalogMemberFactory";
-import Catalog from "./Catalog/Catalog";
 import MagdaReference, {
   MagdaReferenceHeaders
 } from "./Catalog/CatalogReferences/MagdaReference";
@@ -91,6 +93,7 @@ import Internationalization, {
 } from "./Internationalization";
 import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
+import CatalogIndex from "./SearchProviders/CatalogIndex";
 import ShareDataService from "./ShareDataService";
 import TimelineStack from "./TimelineStack";
 import ViewerMode from "./ViewerMode";
@@ -111,6 +114,10 @@ interface ConfigParameters {
    * The maximum number of "feature info" boxes that can be displayed when clicking a point.
    */
   defaultMaximumShownFeatureInfos: number;
+  /**
+   * URL of the JSON file that contains index of catalog.
+   */
+  catalogIndexUrl?: string;
   /**
    * URL of the JSON file that defines region mapping for CSV files.
    */
@@ -197,6 +204,9 @@ interface ConfigParameters {
   disableSplitter?: boolean;
 
   disablePedestrianMode?: boolean;
+
+  /** Feature flag for experimental Geojson-Mapbox vector tiles. If falsy, all GeoJsonMixin items will render cesium primitives. If truthy, geojson-vt will be used to tile GeoJson into Mapbox vector-tiles */
+  enableGeojsonMvt?: boolean;
 
   experimentalFeatures?: boolean;
   magdaReferenceHeaders?: MagdaReferenceHeaders;
@@ -324,7 +334,8 @@ interface HomeCameraInit {
 }
 
 export default class Terria {
-  private models = observable.map<string, BaseModel>();
+  private readonly models = observable.map<string, BaseModel>();
+
   /** Map from share key -> id */
   readonly shareKeysMap = observable.map<string, string>();
   /** Map from id -> share keys */
@@ -340,6 +351,8 @@ export default class Terria {
   readonly baseMapsModel = new BaseMapsModel("basemaps", this);
   readonly timelineClock = new Clock({ shouldAnimate: false });
   // readonly overrides: any = overrides; // TODO: add options.functionOverrides like in master
+
+  catalogIndex: CatalogIndex | undefined;
 
   readonly elements = observable.map<string, IElementConfig>();
 
@@ -385,6 +398,7 @@ export default class Terria {
     appName: "TerriaJS App",
     supportEmail: "info@terria.io",
     defaultMaximumShownFeatureInfos: 100,
+    catalogIndexUrl: undefined,
     regionMappingDefinitionsUrl: "build/TerriaJS/data/regionMapping.json",
     conversionServiceBaseUrl: "convert/",
     proj4ServiceBaseUrl: "proj4/",
@@ -410,6 +424,7 @@ export default class Terria {
     disableMyLocation: undefined,
     disableSplitter: undefined,
     disablePedestrianMode: false,
+    enableGeojsonMvt: false,
     experimentalFeatures: undefined,
     magdaReferenceHeaders: undefined,
     locationSearchBoundingBox: undefined,
@@ -501,6 +516,13 @@ export default class Terria {
   @observable baseMaximumScreenSpaceError = 2;
 
   /**
+   * Model to use for map navigation
+   */
+  @observable mapNavigationModel: MapNavigationModel = new MapNavigationModel(
+    this
+  );
+
+  /**
    * Gets or sets whether to use the device's native resolution (sets cesium.viewer.resolutionScale to a ratio of devicePixelRatio)
    * @type {boolean}
    */
@@ -511,6 +533,8 @@ export default class Terria {
    * @type {boolean}
    */
   @observable catalogReferencesLoaded: boolean = false;
+
+  augmentedVirtuality?: any;
 
   readonly notificationState: NotificationState = new NotificationState();
 
@@ -597,6 +621,10 @@ export default class Terria {
     ) {
       return this.mainViewer.currentViewer as import("./Leaflet").default;
     }
+  }
+
+  @computed get modelValues() {
+    return Array.from(this.models.values());
   }
 
   @computed
@@ -1078,9 +1106,20 @@ export default class Terria {
       })
     );
 
-    if (!this.mainViewer.baseMap) {
-      // Note: there is no "await" here - as basemaps can take a while to load and there is no need to wait for them to load before rendering Terria
-      this.loadPersistedOrInitBaseMap();
+    // Load basemap
+    runInAction(() => {
+      if (!this.mainViewer.baseMap) {
+        // Note: there is no "await" here - as basemaps can take a while to load and there is no need to wait for them to load before rendering Terria
+        this.loadPersistedOrInitBaseMap();
+      }
+    });
+
+    // Load catalog index if catalogIndexUrl is set and it hasn't been loaded yet
+    if (this.configParameters.catalogIndexUrl && !this.catalogIndex) {
+      this.catalogIndex = new CatalogIndex(
+        this,
+        this.configParameters.catalogIndexUrl
+      );
     }
 
     if (errors.length > 0) {
@@ -1261,6 +1300,42 @@ export default class Terria {
     );
   }
 
+  private async pushAndLoadMapItems(
+    model: BaseModel,
+    newItems: BaseModel[],
+    errors: TerriaError[]
+  ) {
+    if (ReferenceMixin.isMixedInto(model)) {
+      (await model.loadReference()).pushErrorTo(errors);
+
+      if (model.target !== undefined) {
+        await this.pushAndLoadMapItems(model.target, newItems, errors);
+      } else {
+        errors.push(
+          TerriaError.from(
+            "Reference model has no target. Model Id: " + model.uniqueId
+          )
+        );
+      }
+    } else if (GroupMixin.isMixedInto(model)) {
+      (await model.loadMembers()).pushErrorTo(errors);
+
+      model.memberModels.map(async m => {
+        await this.pushAndLoadMapItems(m, newItems, errors);
+      });
+    } else if (MappableMixin.isMixedInto(model)) {
+      newItems.push(model);
+      (await model.loadMapItems()).pushErrorTo(errors);
+    } else {
+      errors.push(
+        TerriaError.from(
+          "Can not load an un-mappable item to the map. Item Id: " +
+            model.uniqueId
+        )
+      );
+    }
+  }
+
   @action
   async applyInitData({
     initData,
@@ -1289,6 +1364,18 @@ export default class Terria {
 
     if (isJsonObject(initData.elements)) {
       this.elements.merge(initData.elements);
+      // we don't want to go through all elements unless they are added.
+      if (this.mapNavigationModel.items.length > 0) {
+        this.elements.forEach((element, key) => {
+          if (isDefined(element.visible)) {
+            if (element.visible) {
+              this.mapNavigationModel.show(key);
+            } else {
+              this.mapNavigationModel.hide(key);
+            }
+          }
+        });
+      }
     }
 
     if (Array.isArray(initData.stories)) {
@@ -1367,7 +1454,7 @@ export default class Terria {
     });
 
     // Set the new contents of the workbench.
-    const newItems = filterOutUndefined(
+    const newItemsRaw = filterOutUndefined(
       workbench.map(modelId => {
         if (typeof modelId !== "string") {
           errors.push(
@@ -1382,6 +1469,18 @@ export default class Terria {
         }
       })
     );
+
+    const newItems: BaseModel[] = [];
+
+    // Maintain the model order in the workbench.
+    while (true) {
+      const model = newItemsRaw.shift();
+      if (model) {
+        await this.pushAndLoadMapItems(model, newItems, errors);
+      } else {
+        break;
+      }
+    }
 
     runInAction(() => (this.workbench.items = newItems));
 
@@ -1420,34 +1519,6 @@ export default class Terria {
             // && TODO: what is a good way to test if an item is of type TimeVarying.
           })
           .map(item => <TimeVarying>item))
-    );
-
-    // Load the items on the workbench
-    await Promise.all(
-      newItems.map(async model => {
-        try {
-          if (ReferenceMixin.isMixedInto(model)) {
-            (await model.loadReference()).throwIfError();
-            model = model.target || model;
-          }
-
-          if (MappableMixin.isMixedInto(model)) {
-            (await model.loadMapItems()).throwIfError();
-          }
-        } catch (e) {
-          errors.push(
-            TerriaError.from(e, {
-              severity: TerriaErrorSeverity.Error,
-              message: {
-                key: "models.terria.loadingWorkbenchItemErrorTitle",
-                parameters: {
-                  name: getName(model) ?? "Unknown Model"
-                }
-              }
-            })
-          );
-        }
-      })
     );
 
     if (isJsonObject(initData.pickedFeatures)) {
@@ -1788,23 +1859,34 @@ async function interpretStartData(
     Array.isArray(initSource.stories) && initSource.stories.length;
   if (isDefined(startData) && startData !== {}) {
     // Convert startData to v8 if neccessary
-    const { convertShare } = await import("catalog-converter");
+    let startDataV8: Share | null;
 
     try {
-      const result = convertShare(startData);
+      if (
+        // If startData.version has version 0.x.x - user catalog-converter to convert startData
+        "version" in startData &&
+        typeof startData.version === "string" &&
+        startData.version.startsWith("0")
+      ) {
+        const { convertShare } = await import("catalog-converter");
+        const result = convertShare(startData);
 
-      // Show warning messages if converted
-      if (result.converted && showConversionWarning) {
-        terria.notificationState.addNotificationToQueue({
-          title: i18next.t("share.convertNotificationTitle"),
-          message: shareConvertNotification(result.messages)
-        });
+        // Show warning messages if converted
+        if (result.converted && showConversionWarning) {
+          terria.notificationState.addNotificationToQueue({
+            title: i18next.t("share.convertNotificationTitle"),
+            message: shareConvertNotification(result.messages)
+          });
+        }
+        startDataV8 = result.result;
+      } else {
+        startDataV8 = startData;
       }
 
-      if (result.result !== null && Array.isArray(result.result.initSources)) {
+      if (startDataV8 !== null && Array.isArray(startDataV8.initSources)) {
         runInAction(() => {
           terria.initSources.push(
-            ...result.result!.initSources.map((initSource: any) => {
+            ...startDataV8!.initSources.map((initSource: any) => {
               return {
                 name,
                 data: initSource,

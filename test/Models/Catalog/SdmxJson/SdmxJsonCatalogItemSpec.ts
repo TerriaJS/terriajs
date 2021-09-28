@@ -8,6 +8,14 @@ const regionMapping = JSON.stringify(
   require("../../../../wwwroot/data/regionMapping.json")
 );
 
+const steCodes = JSON.stringify(
+  require("../../../../wwwroot/data/regionids/region_map-STE_2016_AUST_STE_CODE16.json")
+);
+
+const isoCodes = JSON.stringify(
+  require("../../../../wwwroot/data/regionids/region_map-FID_TM_WORLD_BORDERS_ISO2.json")
+);
+
 const dataflowNoRegionData = require("raw-loader!../../../../wwwroot/test/SDMX-JSON/data-noregion.csv");
 const dataflowRegionData = require("raw-loader!../../../../wwwroot/test/SDMX-JSON/data-region.csv");
 const dataflowRegionTimeData = require("raw-loader!../../../../wwwroot/test/SDMX-JSON/data-region-time.csv");
@@ -28,12 +36,20 @@ describe("SdmxJsonCatalogItem", function() {
   let terria: Terria;
   let sdmxItem: SdmxJsonCatalogItem;
 
-  beforeEach(function() {
+  beforeEach(async function() {
     jasmine.Ajax.install();
 
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionMapping.json"
     ).andReturn({ responseText: regionMapping });
+
+    jasmine.Ajax.stubRequest(
+      "build/TerriaJS/data/regionids/region_map-STE_2016_AUST_STE_CODE16.json"
+    ).andReturn({ responseText: steCodes });
+
+    jasmine.Ajax.stubRequest(
+      "build/TerriaJS/data/regionids/region_map-FID_TM_WORLD_BORDERS_ISO2.json"
+    ).andReturn({ responseText: isoCodes });
 
     jasmine.Ajax.stubRequest(
       "http://www.example.com/dataflow/SPC/DF_COMMODITY_PRICES?references=all"
@@ -62,6 +78,8 @@ describe("SdmxJsonCatalogItem", function() {
     terria = new Terria();
     sdmxItem = new SdmxJsonCatalogItem("test", terria, undefined);
     sdmxItem.setTrait("definition", "url", "http://www.example.com");
+
+    await sdmxItem.loadRegionProviderList();
   });
 
   afterEach(function() {
@@ -130,6 +148,9 @@ describe("SdmxJsonCatalogItem", function() {
     });
 
     await sdmxItem.loadMapItems();
+    await sdmxItem.regionProviderList
+      ?.getRegionProvider("CNT2")
+      ?.loadRegionIDs();
 
     expect(sdmxItem.mapItems.length).toBe(1);
 
@@ -182,6 +203,12 @@ describe("SdmxJsonCatalogItem", function() {
         })
       ]);
     });
+
+    await sdmxItem.regionProviderList
+      ?.getRegionProvider("STE_2016")
+      ?.loadRegionIDs();
+
+    console.log(sdmxItem);
 
     await sdmxItem.loadMapItems();
 

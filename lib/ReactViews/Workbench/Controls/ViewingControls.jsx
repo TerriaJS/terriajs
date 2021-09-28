@@ -341,7 +341,11 @@ const ViewingControls = observer(
             </li>
           </If>
           <If
-            condition={ExportableMixin.isMixedInto(item) && item.canExportData}
+            condition={
+              viewState.useSmallScreenInterface === false &&
+              ExportableMixin.isMixedInto(item) &&
+              item.canExportData
+            }
           >
             <li>
               <ViewingControlMenuButton
@@ -356,7 +360,11 @@ const ViewingControls = observer(
             </li>
           </If>
           <If
-            condition={SearchableItemMixin.isMixedInto(item) && item.canSearch}
+            condition={
+              viewState.useSmallScreenInterface === false &&
+              SearchableItemMixin.isMixedInto(item) &&
+              item.canSearch
+            }
           >
             <li>
               <ViewingControlMenuButton

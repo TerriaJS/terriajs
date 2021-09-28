@@ -72,19 +72,29 @@ describe("ChartCustomComponent", function() {
     const component = new TestComponentWithShareableChartItem();
     const context: ProcessNodeContext = {
       terria: terria,
-      catalogItem: new StubCatalogItem(undefined, terria, undefined),
+      catalogItem: new StubCatalogItem("parent", terria, undefined),
       feature: new Feature({})
     };
     const node: DomElement = {
       name: component.name,
       attribs: {
+        title: "Foo",
         data: '[["x","y","z"],[1,10,3],[2,15,9],[3,8,12],[5,25,4]]',
         sources: "a, b"
       }
     };
-    spyOn(component, "constructShareableCatalogItem").and.callThrough();
+    const spy = spyOn(
+      component,
+      "constructShareableCatalogItem"
+    ).and.callThrough();
     component.processNode(context, node, [], 0);
     expect(component.constructShareableCatalogItem).toHaveBeenCalledTimes(2);
+    // Make sure the id is dependent on parent, title & source name
+    expect(component.constructShareableCatalogItem).toHaveBeenCalledWith(
+      "parent:Foo:a",
+      jasmine.any(Object),
+      undefined
+    );
   });
 });
 
