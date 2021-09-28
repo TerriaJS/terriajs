@@ -266,14 +266,14 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   linkedWcsCoverage?: string;
 
   @primitiveTrait({
-    type: "string",
+    type: "boolean",
     name: "Is GeoServer",
     description: "True if this WMS is a GeoServer; otherwise, false."
   })
   isGeoServer: boolean = false;
 
   @primitiveTrait({
-    type: "string",
+    type: "boolean",
     name: "Is Esri",
     description: "True if this WMS is from Esri; otherwise, false."
   })

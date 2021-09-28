@@ -1,27 +1,21 @@
-import { VectorTileFeature } from "@mapbox/vector-tile";
 import i18next from "i18next";
 import { action, computed, observable, runInAction } from "mobx";
 import { createTransformer, ITransformer } from "mobx-utils";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
-import { JsonObject } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
 import makeRealPromise from "../Core/makeRealPromise";
 import TerriaError from "../Core/TerriaError";
 import ConstantColorMap from "../Map/ConstantColorMap";
-import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import RegionProviderList from "../Map/RegionProviderList";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
@@ -30,7 +24,7 @@ import SelectableDimensions, {
 } from "../Models/SelectableDimensions";
 import createLongitudeLatitudeFeaturePerId from "../Table/createLongitudeLatitudeFeaturePerId";
 import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
-import getChartDetailsFn from "../Table/getChartDetailsFn";
+import createRegionMappedImageryProvider from "../Table/createRegionMappedImageryProvider";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
@@ -46,7 +40,6 @@ import DiscretelyTimeVaryingMixin, {
 } from "./DiscretelyTimeVaryingMixin";
 import ExportableMixin, { ExportData } from "./ExportableMixin";
 import { ImageryParts } from "./MappableMixin";
-import createRegionMappedImageryProvider from "../Table/createRegionMappedImageryProvider";
 
 function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
   abstract class TableMixin
@@ -256,7 +249,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     @computed
     get mapItems(): (DataSource | ImageryParts)[] {
       // Wait for activeTableStyle to be ready
-      if (!this.activeTableStyle.ready) return [];
+      if (!this.activeTableStyle.ready || this.isLoadingMapItems) return [];
 
       const numRegions =
         this.activeTableStyle.regionColumn?.valuesAsRegions?.uniqueRegionIds
@@ -420,6 +413,9 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     @computed
     get chartItems() {
+      // Wait for activeTableStyle to be ready
+      if (!this.activeTableStyle.ready || this.isLoadingMapItems) return [];
+
       return filterOutUndefined([
         // If time-series region mapping - show time points chart
         this.activeTableStyle.isRegions() && this.discreteTimes?.length
@@ -605,22 +601,30 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     protected async forceLoadMapItems() {
-      const dataColumnMajor = await this.forceLoadTableData();
+      try {
+        const dataColumnMajor = await this.forceLoadTableData();
 
-      // We need to make sure the region provider is loaded before loading
-      // region mapped tables.
-      await this.loadRegionProviderList();
+        // We need to make sure the region provider is loaded before loading
+        // region mapped tables.
+        await this.loadRegionProviderList();
 
-      if (dataColumnMajor !== undefined && dataColumnMajor !== null) {
+        if (dataColumnMajor !== undefined && dataColumnMajor !== null) {
+          runInAction(() => {
+            this.dataColumnMajor = dataColumnMajor;
+          });
+        }
+
+        // Load region IDS if region mapping
+        const activeRegionType = this.activeTableStyle.regionColumn?.regionType;
+        if (activeRegionType) {
+          await activeRegionType.loadRegionIDs();
+        }
+      } catch (e) {
+        // Clear data if error occurs
         runInAction(() => {
-          this.dataColumnMajor = dataColumnMajor;
+          this.dataColumnMajor = undefined;
         });
-      }
-
-      // Load region IDS if region mapping
-      const activeRegionType = this.activeTableStyle.regionColumn?.regionType;
-      if (activeRegionType) {
-        await activeRegionType.loadRegionIDs();
+        throw e;
       }
     }
 
