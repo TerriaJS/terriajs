@@ -191,7 +191,10 @@
       "unsupportedParameterErrorTitle": "Tipo di parametro non supportato",
       "invalidWPSServerTitle": "Server WPS non valido",
       "invalidResponseErrorMessage": "Si è verificato un errore durante l'accesso alla posizione di stato sul server WPS per il nome del processo {{name}}.  La risposta del server non sembra essere un documento ExecuteResponse valido. <p>Questo errore può anche indicare che il server di elaborazione che hai specificato non è temporaneamente disponibile o che c'è un problema con la tua connessione internet.  Se il problema persiste, segnalalo inviando un'e-mail a {{email}}.</p>",
-      "invalidWPSServerMessage": "Si è verificato un errore durante l'invocazione di {{endpoint}} sul server WPS per il nome del processo {{name}}. La risposta del server non sembra essere un documento {{endpoint}} valido. <p>Questo errore può anche indicare che il server di elaborazione che hai specificato non è temporaneamente disponibile o che c'è un problema con la tua connessione internet.  Prova ad aprire nuovamente il server di elaborazione e, se il problema persiste, segnalalo inviando un'e-mail a {{email}}.</p>"
+      "invalidWPSServerMessage": "Si è verificato un errore durante l'invocazione di {{endpoint}} sul server WPS per il nome del processo {{name}}. La risposta del server non sembra essere un documento {{endpoint}} valido. <p>Questo errore può anche indicare che il server di elaborazione che hai specificato non è temporaneamente disponibile o che c'è un problema con la tua connessione internet.  Prova ad aprire nuovamente il server di elaborazione e, se il problema persiste, segnalalo inviando un'e-mail a {{email}}.</p>",
+      "wpsResult": "Risultato Web Processing Service",
+      "invalidResponseErrorTitle": "Risposta del server WPS non valida",
+      "wps": "Web Processing Service (WPS)"
     },
     "webMapServiceCatalogItem": {
       "missingDataTitle": "Dati mancanti",
@@ -204,7 +207,9 @@
       "metadataUrls": "Link ai metadati",
       "badlyFormatedTitle": "Periodicità mal formattata",
       "noLayerFoundTitle": "Nessun livello trovato",
-      "noLayerFoundMessage": "Il set di dati WMS '{{name}}' non ha livelli corrispondenti a '{{layers}}'. {{suggested}} {{line}}{{line}}Il file di catalogo è stato impostato in modo errato o il server WMS è cambiato.{{line}}{{line}}Per favore segnala questo errore inviando un'e-mail a {{email}}."
+      "noLayerFoundMessage": "Il set di dati WMS '{{name}}' non ha livelli corrispondenti a '{{layers}}'. {{suggested}} {{line}}{{line}}Il file di catalogo è stato impostato in modo errato o il server WMS è cambiato.{{line}}{{line}}Per favore segnala questo errore inviando un'e-mail a {{email}}.",
+      "missingUrlTitle": "Impossibile caricare GetCapabilities",
+      "wms": "Web Map Service (WMS)"
     },
     "userDrawing": {
       "btnDone": "Fatto",
@@ -275,7 +280,9 @@
     "csv": {
       "name": "Valori separati da virgola (CSV)",
       "unableToLoadItemTitle": "Nessun CSV disponibile",
-      "unexpectedTypeMessage": "I dati di CsvCatalogItem dovrebbero essere un Blob, un File o una Stringa, ma non erano nessuno di questi. Questo potrebbe indicare un bug in terriajs o un uso scorretto delle API di terriajs. Se credi che sia un bug in {{appName}} per favore segnalalo via email "
+      "unexpectedTypeMessage": "I dati di CsvCatalogItem dovrebbero essere un Blob, un File o una Stringa, ma non erano nessuno di questi. Questo potrebbe indicare un bug in terriajs o un uso scorretto delle API di terriajs. Se credi che sia un bug in {{appName}} per favore segnalalo via email ",
+      "unableToLoadTitle": "Impossibile caricare il file CSV",
+      "unexpectedTypeTitle": "Tipo inatteso di dati CSV"
     },
     "bing": {
       "name": "Bing Maps"
@@ -324,7 +331,9 @@
       "checkCORSRecords": "Impossibile eseguire GetRecords su questo server CSW.<br/><br/> Se è il tuo server, assicurati che <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a> sia abilitato.<br/><br/> Altrimenti, se ricaricare non risolve il problema, per favore segnala il problema inviando una email a {{email}} con i dettagli tecnici qui sotto.  Grazie!",
       "checkCORSDomain": "Impossibile eseguire GetDomain su questo server CSW.<br/><br/> Se hai inserito l'URL manualmente, per favore ricontrolla.<br/><br/> Se è il tuo server, assicurati che <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a> sia abilitato.<br/><br/> Altrimenti, se ricaricare non risolve il problema, per favore segnala il problema inviando una email a {{email}} con i dettagli tecnici qui sotto.  Grazie!",
       "errorLoadingRecordsMessage": "Risposta non valida ottenuta quando si invoca GetRecords sul server CSW. <p>Questo errore può indicare che il server di catalogo che hai specificato non è temporaneamente disponibile o che c'è un problema con la tua connessione internet.  Prova ad aprire nuovamente il server di elaborazione, e se il problema persiste, segnalalo inviando una mail a ",
-      "notUseableMessage": "Risposta non valida ottenuta quando si invoca GetDomain sul server CSW. <p>Questo errore può indicare che il server di catalogo che hai specificato non è temporaneamente disponibile o che c'è un problema con la tua connessione internet.  Prova ad aprire nuovamente il server di elaborazione, e se il problema persiste, segnalalo inviando una mail a "
+      "notUseableMessage": "Risposta non valida ottenuta quando si invoca GetDomain sul server CSW. <p>Questo errore può indicare che il server di catalogo che hai specificato non è temporaneamente disponibile o che c'è un problema con la tua connessione internet.  Prova ad aprire nuovamente il server di elaborazione, e se il problema persiste, segnalalo inviando una mail a ",
+      "errorLoadingRecordsTitle": "Impossibile caricare i record CSW.",
+      "notUseableTitle": "Il servizio del catalogo non è utilizzabile"
     },
     "catalog": {
       "cancel": "Annulla",
@@ -334,7 +343,9 @@
       "name": "Elemento senza nome",
       "unsupportedTypeTitle": "Tipo sconosciuto",
       "idForMatchingErrorTitle": "Proprietà mancante",
-      "useConversion": "Utilizzare il servizio di conversione?"
+      "useConversion": "Utilizzare il servizio di conversione?",
+      "compositesError": "I compositi non possono includere elementi compositi.",
+      "chartDataGroup": "Un gruppo per i dati del grafico."
     },
     "ckan": {
       "update_freq": "Frequenza di aggiornamento",
@@ -361,7 +372,8 @@
       "internetExplorer": "Internet Explorer 11",
       "edge": "Microsoft Edge",
       "fileApiNotSupportedTitle": "File API non supportato",
-      "fileApiNotSupportedMessage": "Spiacenti, il tuo browser web non supporta l'API File, che {{appName}} richiede per aggiungere dati da un file sul tuo sistema.  Per favore aggiorna il tuo browser web.  Per la migliore esperienza, raccomandiamo l'ultima versione di {{chrome}}, {{firefox}} o {{edge}}."
+      "fileApiNotSupportedMessage": "Spiacenti, il tuo browser web non supporta l'API File, che {{appName}} richiede per aggiungere dati da un file sul tuo sistema.  Per favore aggiorna il tuo browser web.  Per la migliore esperienza, raccomandiamo l'ultima versione di {{chrome}}, {{firefox}} o {{edge}}.",
+      "addingDataErrorTitle": "I dati non possono essere aggiunti"
     },
     "spatialDetailing": {
       "name": "Dettaglio spaziale",
@@ -392,7 +404,8 @@
       "dataDescription": "Descrizione dei dati",
       "getCapabilitiesUrl": "GetCapabilities URL",
       "serviceContact": "Contatto assistenza",
-      "accessConstraints": "Vincoli di accesso"
+      "accessConstraints": "Vincoli di accesso",
+      "missingUrlTitle": "Impossibile caricare GetCapabilities"
     },
     "webFeatureServiceCatalogItem": {
       "missingDataTitle": "Dati mancanti",
@@ -452,7 +465,9 @@
       "openInPortal": "Aprire in ArcGIS Portal",
       "name": "Elemento del Portale ArcGIS",
       "nameGroup": "Gruppo Portale ArcGIS",
-      "corsErrorMessage": "Impossibile recuperare i pacchetti da questo server di ArcGIS Portal.<br/><br/>Se hai inserito l'URL manualmente, ricontrolla.<br/><br/>Se è il tuo server, assicurati che {{corsLink}} sia abilitato.<br/><br/> Altrimenti, se ricaricare non risolve il problema, segnala il problema inviando un'e-mail a {{email}} con i dettagli tecnici qui sotto.  Grazie!<br/><br/>"
+      "corsErrorMessage": "Impossibile recuperare i pacchetti da questo server di ArcGIS Portal.<br/><br/>Se hai inserito l'URL manualmente, ricontrolla.<br/><br/>Se è il tuo server, assicurati che {{corsLink}} sia abilitato.<br/><br/> Altrimenti, se ricaricare non risolve il problema, segnala il problema inviando un'e-mail a {{email}} con i dettagli tecnici qui sotto.  Grazie!<br/><br/>",
+      "errorRetrievingUrlTitle": "Errore nel recupero dell'URL da ArcGIS Portal",
+      "errorLoadingTitle": "Errore nel caricamento del catalogo di ArcGIS Portal"
     },
     "arcGisMapServerCatalogItem": {
       "serviceDescription": "Descrizione del Servizio",
@@ -460,7 +475,9 @@
       "copyrightText": "Testo del copyright",
       "invalidUrlTitle": "Impossibile caricare MapServer",
       "unusableMetadataTitle": "Errore di ArcGIS Mapserver",
-      "name": "Esri ArcGIS MapServer"
+      "name": "Esri ArcGIS MapServer",
+      "noLayersFoundTitle": "Impossibile caricare ArcGIS MapServer.",
+      "unusableMetadataDefaultMessage": "Questo set di dati ha restituito metadati inutilizzabili."
     },
     "arcGisMapServerCatalogGroup": {
       "serviceDescription": "Descrizione del Servizio",
@@ -479,7 +496,9 @@
       "copyrightText": "Testo del copyright",
       "missingUrlTitle": "Impossibile caricare FeatureServer",
       "unusableMetadataTitle": "Errore di ArcGIS FeatureServer",
-      "name": "Esri ArcGIS FeatureServer"
+      "name": "Esri ArcGIS FeatureServer",
+      "unusableMetadataDefaultMessage": "Questo set di dati ha restituito metadati inutilizzabili.",
+      "invalidServiceTitle": "Strato di ArcGIS Feature Service non valido"
     },
     "arcGisFeatureServerCatalogGroup": {
       "serviceDescription": "Descrizione del Servizio",
@@ -510,14 +529,20 @@
       "invalidCapabilitiesTitle": "GetCapabilities non valido",
       "invalidServerTitle": "Server WPS non valido",
       "invalidCapabilitiesMessage": "L'URL {{url}} è stato recuperato con successo ma non sembra essere un documento GetCapabilities WPS (Web Processing Service) valido.\n\nO il file di catalogo è stato impostato in modo errato, o l'indirizzo del server è cambiato.",
-      "invalidServerMessage": "Si è verificato un errore durante l'invocazione di GetCapabilities sul server WPS. La risposta del server non sembra essere un documento GetCapabilities valido. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Se non hai inserito il link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto non è temporaneamente disponibile o che c'è un problema con la tua connessione Internet.  Prova ad aprire di nuovo il gruppo, e se il problema persiste, per favore segnalalo inviando un'e-mail a {{email}}.</p>"
+      "invalidServerMessage": "Si è verificato un errore durante l'invocazione di GetCapabilities sul server WPS. La risposta del server non sembra essere un documento GetCapabilities valido. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Se non hai inserito il link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto non è temporaneamente disponibile o che c'è un problema con la tua connessione Internet.  Prova ad aprire di nuovo il gruppo, e se il problema persiste, per favore segnalalo inviando un'e-mail a {{email}}.</p>",
+      "fees": "Tariffe Web Processing Service",
+      "abstract": "Descrizione Web Processing Service",
+      "missingUrlTitle": "Impossibile caricare GetCapabilities"
     },
     "webMapTileServiceCatalogGroup": {
       "invalidCapabilitiesTitle": "GetCapabilities non valido",
       "groupNotAvailableMessage": "Si è verificato un errore durante l'invocazione di GetCapabilities sul server WMTS. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Questo errore potrebbe anche indicare che il server non supporta <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  Se questo è il tuo server, verifica che CORS sia abilitato e abilitalo se non lo è.  Se non controlli il server, contatta l'amministratore del server e chiedigli di abilitare CORS.  Oppure, contatta il team di '{{appName}}' Map inviando un'email a {{email}} e chiedici di aggiungere questo server alla lista dei server che non supportano CORS e che possono essere proxy da '{{appName}}' stesso.</p> <p>Se non hai inserito questo link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto è temporaneamente non disponibile o che c'è un problema con la tua connessione internet. Prova ad aprire di nuovo il gruppo, e se il problema persiste, segnalalo inviando un'e-mail a {{email}}.</p>",
       "invalidWMTSServerTitle": "Server WMTS non valido",
       "invalidCapabilitiesMessage": "L'URL {{url}} è stato recuperato con successo ma non sembra essere un documento GetCapabilities del Web Map Tile Service (WMTS) valido.\n\nO il file di catalogo è stato impostato in modo errato, o l'indirizzo del server è cambiato.",
-      "invalidWMTSServerMessage": "Si è verificato un errore durante l'invocazione di GetCapabilities sul server WMTS. La risposta del server non sembra essere un documento GetCapabilities valido. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Se non hai inserito il link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto non è temporaneamente disponibile o che c'è un problema con la tua connessione Internet.  Prova ad aprire di nuovo il gruppo, e se il problema persiste, per favore segnalalo inviando un'e-mail a {{email}}.</p>"
+      "invalidWMTSServerMessage": "Si è verificato un errore durante l'invocazione di GetCapabilities sul server WMTS. La risposta del server non sembra essere un documento GetCapabilities valido. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Se non hai inserito il link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto non è temporaneamente disponibile o che c'è un problema con la tua connessione Internet.  Prova ad aprire di nuovo il gruppo, e se il problema persiste, per favore segnalalo inviando un'e-mail a {{email}}.</p>",
+      "fees": "Tariffe Web Map Service",
+      "abstract": "Descrizione Web Map Service",
+      "groupNotAvailableTitle": "Il gruppo non è disponibile"
     },
     "resultPending": {
       "name": "Risultato in sospeso"
@@ -548,7 +573,8 @@
       "tileErrorMessage": "La tile con l'URL:\n{{url}}\n è riuscita quando è stata caricata con XMLHttpRequest ma è fallita più volte quando è stata caricata direttamente da Cesium o Leaflet.\n Questo può indicare che il server è molto sensibile alle intestazioni di richiesta fornite o è semplicemente inaffidabile.",
       "unknownTileErrorMessage": "Durante l'accesso all'URL:\n{{url}}\nQuesto probabilmente indica uno dei seguenti problemi:\n* L'hostname del server non può essere risolto,\n* Il server non ha risposto alla richiesta, o\n* Il server ha negato l'accesso Cross-Origin Resource Sharing (CORS) a questo URL (Vedi https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/).",
       "accessingBaseMapErrorMessage": "Si è verificato un errore durante il tentativo di scaricare le tile per la mappa base:<p><center>{{name}} </center></p> Questo potrebbe indicare che c'è un problema con la tua connessione internet, che la mappa base non è temporaneamente disponibile o che la mappa base non è valida.  Seleziona un'altra mappa di base usando il pulsante Mappa nell'angolo in alto a destra.  Ulteriori dettagli tecnici possono essere trovati qui sotto.<br/><br/>",
-      "accessingCatalogItemErrorMessage": "Si è verificato un errore durante il tentativo di scaricare le tile per l'articolo di catalogo:<p><center>{{name}}</center></p> Questo potrebbe indicare che c'è un problema con la tua connessione internet, che l'elemento del catalogo non è temporaneamente disponibile o che l'elemento del catalogo non è valido.  L'elemento del catalogo è stato nascosto dalla mappa.  Puoi mostrarlo di nuovo nel pannello Visualizzazione attuale per riprovare.  Ulteriori dettagli tecnici possono essere trovati qui sotto.<br/><br/>"
+      "accessingCatalogItemErrorMessage": "Si è verificato un errore durante il tentativo di scaricare le tile per l'articolo di catalogo:<p><center>{{name}}</center></p> Questo potrebbe indicare che c'è un problema con la tua connessione internet, che l'elemento del catalogo non è temporaneamente disponibile o che l'elemento del catalogo non è valido.  L'elemento del catalogo è stato nascosto dalla mappa.  Puoi mostrarlo di nuovo nel pannello Visualizzazione attuale per riprovare.  Ulteriori dettagli tecnici possono essere trovati qui sotto.<br/><br/>",
+      "resolvingAvailability": "Risoluzione della disponibilità in un luogo..."
     },
     "function": {
       "unknownFormaterTitle": "Formattazione sconosciuta"
@@ -586,14 +612,18 @@
     },
     "wfsFeatures": {
       "groupNotAvailableMessage": "Si è verificato un errore durante l'invocazione di GetFeature sul server WFS. [Se hai inserito il link manualmente, verifica che il link sia corretto.</p><p>Questo errore potrebbe anche indicare che il server non supporta <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  Se questo è il tuo server, verifica che CORS sia abilitato e abilitalo se non lo è. Se non controlli il server, contatta l'amministratore del server e chiedigli di abilitare CORS.  Oppure, contatta il team di '{{appName}}' Map inviando un'email a {{email}} e chiedici di aggiungere questo server alla lista dei server che non supportano CORS e che possono essere proxy da '{{appName}}' stesso.</p><p>Se non hai inserito questo link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto non è temporaneamente disponibile o che c'è un problema con la tua connessione internet.  Prova ad aprire di nuovo il gruppo, e se il problema persiste, segnalalo inviando un'e-mail a {{email}}.</p>",
-      "queryErrorMessage": "Si è verificato un errore durante l'invocazione di GetFeature sul server WFS. La risposta del server non sembra essere un documento GeoJSON valido. <p>Se hai inserito il link manualmente, per favore verifica che il link sia corretto.</p><p>Se non hai inserito il link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto non è temporaneamente disponibile o che c'è un problema con la tua connessione Internet.  Prova ad aprire di nuovo il gruppo, e se il problema persiste, segnalalo inviando un'e-mail a {{email}}.</p>"
+      "queryErrorMessage": "Si è verificato un errore durante l'invocazione di GetFeature sul server WFS. La risposta del server non sembra essere un documento GeoJSON valido. <p>Se hai inserito il link manualmente, per favore verifica che il link sia corretto.</p><p>Se non hai inserito il link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto non è temporaneamente disponibile o che c'è un problema con la tua connessione Internet.  Prova ad aprire di nuovo il gruppo, e se il problema persiste, segnalalo inviando un'e-mail a {{email}}.</p>",
+      "groupNotAvailableTitle": "Il gruppo non è disponibile",
+      "queryErrorTitle": "Errore nell'interrogazione del server WFS"
     },
     "webMapServiceCatalogGroup": {
       "groupNotAvailableMessage": "Si è verificato un errore durante l'invocazione di GetCapabilities sul server WMS. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Questo errore potrebbe anche indicare che il server non supporta <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  Se questo è il tuo server, verifica che CORS sia abilitato e abilitalo se non lo è.  Se non controlli il server, contatta l'amministratore del server e chiedigli di abilitare CORS.  Oppure, contatta il team di '{{appName}}' Map inviando un'email a {{email}} e chiedici di aggiungere questo server alla lista dei server che non supportano CORS e che possono essere proxy da '{{appName}}' stesso.</p> <p>Se non hai inserito questo link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto non è temporaneamente disponibile o che c'è un problema con la tua connessione internet. Prova ad aprire di nuovo il gruppo, e se il problema persiste, per favore segnalalo inviando un'e-mail a {{email}}.</p>",
       "invalidWMSServerTitle": "Server WMS non valido",
       "invalidWMSServerMessage": "Si è verificato un errore durante l'invocazione di GetCapabilities sul server WMS. La risposta del server non sembra essere un documento GetCapabilities valido. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Se non hai inserito il link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto non è temporaneamente disponibile o che c'è un problema con la tua connessione Internet.  Prova ad aprire di nuovo il gruppo, e se il problema persiste, per favore segnalalo inviando un'e-mail a {{email}}.</p>",
       "missingUrlTitle": "Impossibile caricare GetCapabilities",
-      "groupNotAvailableTitle": "Il gruppo non è disponibile"
+      "groupNotAvailableTitle": "Il gruppo non è disponibile",
+      "fees": "Tariffe Web Map Service",
+      "abstract": "Descrizione Web Map Service"
     },
     "webFeatureServiceCatalogGroup": {
       "groupNotAvailableMessage": "Si è verificato un errore durante l'invocazione di GetCapabilities sul server WFS. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Questo errore potrebbe anche indicare che il server non supporta <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  Se questo è il tuo server, verifica che CORS sia abilitato e abilitalo se non lo è.  Se non controlli il server, contatta l'amministratore del server e chiedigli di abilitare CORS.  Oppure, contatta il team di '{{appName}}' Map inviando un'email a {{email}} e chiedici di aggiungere questo server alla lista dei server che non supportano CORS e che possono essere proxy da '{{appName}}' stesso.</p> <p>Se non hai inserito questo link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto è temporaneamente non disponibile o che c'è un problema con la tua connessione internet. Prova ad aprire di nuovo il gruppo, e se il problema persiste, per favore segnalalo inviando un'e-mail a {{email}}.</p>",
@@ -622,7 +652,8 @@
       "urlNotLocatedMessage": "L'URL abbreviato di condivisione usato per lanciare {{appName}} non è stato trovato. Questo può indicare un errore nel link o che il servizio di abbreviazione non è disponibile in questo momento. Se credi che si tratti di un bug in {{appName}} , per favore segnalalo via e-mail a {{email}}"
     },
     "createParameter": {
-      "unsupportedErrorTitle": "Tipo di parametro di funzione non supportato"
+      "unsupportedErrorTitle": "Tipo di parametro di funzione non supportato",
+      "unsupportedErrorMessage": "Tipo di parametro di funzione sconosciuto: {{type}}."
     },
     "openDataSoft": {
       "viewDatasetPage": "Visualizza la pagina dei dati"
@@ -652,7 +683,9 @@
       "invocationFailedTitle": "Invocazione del servizio fallita"
     },
     "wcs": {
-      "exportFailedTitle": "Esportazione dati non riuscita"
+      "exportFailedTitle": "Esportazione dati non riuscita",
+      "exportFailedMessage": "Il Web Coverage Service non è riuscito",
+      "asyncPendingDescription": "Caricamento WCS:<br/>{{name}} servizio a {{timestamp}}."
     }
   },
   "map": {
@@ -665,7 +698,8 @@
       "suburb": "Frazione",
       "poBox": "casella postale",
       "matchedAddresses": "Indirizzo assegnato",
-      "postOfficeBox": "casella postale"
+      "postOfficeBox": "casella postale",
+      "noAddresses": "Questa tableStructure non ha indirizzi!"
     },
     "extraCreditLinks": {
       "disclaimer": "Scarico di responsabilità",
@@ -684,6 +718,9 @@
     },
     "cesium": {
       "devError": "cesium è richiesto."
+    },
+    "imageryProviderHooks": {
+      "devError": "Nessun contesto per la ricolorazione dell'immagine."
     }
   },
   "core": {
@@ -704,7 +741,12 @@
       "open-street-map": "Server OpenStreetMap",
       "kml": "KML o KMZ",
       "esri-group": "Esri ArcGIS Server",
-      "geojson": "GeoJSON"
+      "geojson": "GeoJSON",
+      "esri-featureServer": "Esri ArcGIS FeatureServer (singolo livello)",
+      "esri-mapServer": "Esri ArcGIS MapServer (singolo livello)",
+      "wps-getCapabilities": "Server Web Processing Service (WPS)",
+      "wfs-group": "Server Web Feature Service (WFS)",
+      "wms-group": "Server Web Map Service (WMS)"
     },
     "printWindow": {
       "errorTitle": "Errore nella stampa",
@@ -753,7 +795,14 @@
     "dataServiceDetails": "Dettagli dei servizi dei dati",
     "dataSourceDetails": "Dettagli della sorgente dei dati",
     "downloadNotSupported": "Sfortunatamente il browser non supporta le funzionalità necessarie per il download di questi dati. Riprova usando i browser Chrome, Firefox o Safari per scaricare questi dati.",
-    "metadataUrls": "Collegamenti ai metadati"
+    "metadataUrls": "Collegamenti ai metadati",
+    "useTheLinkToDownload": "Usa il link qui sotto per scaricare direttamente i dati.",
+    "downloadInFormat": "Scaricare i dati attualmente selezionati nel formato {{format}}",
+    "useLinkBelow": "Usa il link qui sotto per scaricare i dati. Vedi il {{link}} per maggiori informazioni sulla personalizzazione dei parametri di query dell'URL.",
+    "wfs": "Questo è un <1>servizio WFS</1>, che trasferisce dati spaziali grezzi su richiesta. Può essere usato nei software GIS con questo URL:",
+    "wms": "Questo è un <1>servizio WMS</1>, che genera immagini di mappe su richiesta. Può essere usato nei software GIS con questo URL:",
+    "dataNotLocal": "Si prega di contattare il fornitore di questi dati per ulteriori informazioni, comprese quelle relative ai diritti e ai vincoli di utilizzo.",
+    "dataLocal": "Questo file esiste solo nel tuo browser. Per condividerlo, devi caricarlo su un web server pubblico."
   },
   "preview": {
     "updateFrequency": "Frequenza di aggiornamento",
@@ -777,7 +826,12 @@
     "resourceDescription": "Descrizione della Risorsa",
     "serviceDescription": "Descrizione del Servizio",
     "loading": "ANTEPRIMA IN CARICAMENTO…",
-    "accessConstraints": "Vincoli di accesso"
+    "accessConstraints": "Vincoli di accesso",
+    "mayBeExperiencingIssues": "Questo set di dati potrebbe attualmente avere dei problemi",
+    "previewItemErrorMessage": "Si è verificato un errore durante il caricamento dell'elemento del catalogo.",
+    "previewItemErrorTitle": "L'articolo del catalogo non può essere visualizzato in anteprima.",
+    "selectToPreview": "<0>Seleziona un set di dati per vedere un'anteprima </0><1>- O -</1><2>Vai alla mappa</2>",
+    "doesNotContainGeospatialData": "Questo file non contiene dati geospaziali."
   },
   "legend": {
     "n": "N",
@@ -808,7 +862,10 @@
     "primaryImage": "Immagine principale",
     "selectedLocation": "Posizione selezionata",
     "titlePrefix": "Rilevamento delle modifiche",
-    "generateDeltaBtn": "Generare la mappa delle differenze"
+    "generateDeltaBtn": "Generare la mappa delle differenze",
+    "loadingError": {
+      "title": "Errore nel caricamento dello strumento Delta"
+    }
   },
   "viewModels": {
     "searchLocations": "Posizioni",
@@ -823,7 +880,8 @@
     "expand": "Espandi",
     "sectionLabel": "Grafici",
     "closePanel": "Chiudi pannello",
-    "loading": "Caricamento dei dati del grafico..."
+    "loading": "Caricamento dei dati del grafico...",
+    "noData": "Non sono stati trovati dati cartografici."
   },
   "catalogItem": {
     "add": "Aggiungi",
@@ -840,7 +898,8 @@
     "copy": "Copia",
     "shareURL": "Condividi URL",
     "success": "Copiato negli appunti",
-    "unsuccessful": "Copia senza successo…"
+    "unsuccessful": "Copia senza successo…",
+    "shareExplanation": "Chiunque abbia questo URL potrà accedere a questa mappa."
   },
   "concept": {
     "inactive": {
@@ -861,21 +920,25 @@
     "zoomTo": "Ingrandisci fino a",
     "removeFilter": "Rimuovi filtro",
     "filterByLocation": "Seleziona in base alla posizione",
-    "querying": "Ricerca della posizione…"
+    "querying": "Ricerca della posizione…",
+    "infoGroup": "Mostra solo i tempi di cattura disponibili per:",
+    "pickPoint": "Seleziona un punto cliccando sulla mappa."
   },
   "dateTime": {
     "timeline": {
       "togglePlay": "Riproduci",
       "gotoStart": "Torna all'inizio",
       "playFaster": "Riproduci più veloce",
-      "playSlower": "Riproduci più piano"
+      "playSlower": "Riproduci più piano",
+      "textCell": "Nome del set di dati di cui viene mostrato l'intervallo di tempo"
     },
     "useTimeline": "Utilizza barra del tempo",
     "next": "Tempo successivo",
     "previous": "Tempo precedente",
     "selectTime": "Seleziona un tempo",
     "back": "Torna indietro",
-    "outOfRange": "Attualmente fuori portata."
+    "outOfRange": "Attualmente fuori portata.",
+    "availableTimeChart": "Mostra gli orari disponibili sul grafico"
   },
   "workbench": {
     "removeAll": "Rimuovi Tutto",
@@ -910,7 +973,11 @@
     "previewItem": "Informazioni sui dati",
     "zoomTo": "Zoom ideale",
     "splitItemTitle": "Duplicare e mostrare lo splitter",
-    "colorScaleRangeTitle": "Gamma di scala di colore non valida"
+    "colorScaleRangeTitle": "Gamma di scala di colore non valida",
+    "addItemErrorMessage": "Si è verificato un errore durante il caricamento dell'elemento del catalogo.",
+    "addItemErrorTitle": "L'articolo del catalogo non può essere aggiunto alla workbench.",
+    "diffImageTitle": "Visualizza le differenze nelle immagini tra le due date",
+    "displayPercent": "Visualizzazione come percentuale del totale della regione"
   },
   "mobile": {
     "toggleNavigation": "Attiva/disattiva la navigazione",
@@ -924,7 +991,9 @@
     "searchCatalogue": "Cerca il catalogo",
     "placeholder": "Cerca posizioni",
     "viewMore": "Visualizza più risultati {{name}}",
-    "viewLess": "Visualizza meno risultati {{name}}"
+    "viewLess": "Visualizza meno risultati {{name}}",
+    "search": "Cerca '{{searchText}}' nel catalogo dei dati",
+    "searchInDataCatalog": "Cerca <1>'{{locationSearchText}}'</1> nel catalogo dei dati"
   },
   "addData": {
     "back": "Indietro",
@@ -943,15 +1012,29 @@
     "closeDataPanel": "Chiudi pannello dati",
     "load": "Carica dati locali/web",
     "browse": "Sfoglia...",
-    "addDataBtnText": "Mostra i dati della mappa",
-    "localFile": "<0>Passo 2:</0> Selezionare il file"
+    "addDataBtnText": "Esplora i dati della mappa",
+    "localFile": "<0>Passo 2:</0> Selezionare il file",
+    "note": "<0>Nota: </0>I dati aggiunti in questo modo non vengono salvati o resi visibili agli altri.",
+    "infoText": "<0>Trascina un file qui per visualizzarlo localmente sulla mappa</0><1>(non sarà salvato o caricato su internet)</1>",
+    "webFile": "<0>Passo 2:</0> Inserisci l'URL del file di dati o del servizio web",
+    "webFileType": "<0>Passo 1:</0> Selezionare il tipo di file (opzionale)",
+    "localFileType": "<0>Passo 1:</0> Selezionare il tipo di file (opzionale)"
   },
   "satelliteGuidance": {
     "prevI": "No grazie",
     "dismissText": "Capito, grazie!",
     "nextI": "Mostra guida",
     "titleIII": "Caricamento delle immagini storiche",
-    "titleIV": "Filtrare le immagini per località"
+    "titleIV": "Filtrare le immagini per località",
+    "bodyV": "Puoi applicare una serie di stili, come il falso colore, alle immagini satellitari cliccando sul menu a tendina degli stili nella workbench dei dati.",
+    "titleV": "Come si visualizzano le immagini in falso colore?",
+    "bodyIV": "Le immagini satellitari potrebbero non essere sempre disponibili nel momento e nella località che preferisci. Se vuoi visualizzare solo le immagini di una particolare località, clicca su 'filtro per località' nella workbench dei dati.",
+    "bodyIII": "Nella tua workbench dei dati, clicca sul menu a tendina della data di acquisizione e seleziona uno dei tempi disponibili per caricare le immagini storiche.",
+    "bodyII": "Potrebbe essere necessario regolare il livello di zoom per rendere le immagini satellitari visibili sulla mappa.",
+    "titleII": "Dove sono le mie immagini satellitari?",
+    "bodyI": "Una guida super-veloce per ottenere il massimo dalle immagini satellitari storiche.",
+    "titleI": "Immagini satellitari: Come faccio a...?",
+    "menuTitle": "È possibile accedere alle guide delle mappe in qualsiasi momento cercando nel <2>menù aiuto</2>."
   },
   "story": {
     "storyEditor": "Editor Storie",
@@ -1000,10 +1083,13 @@
     "removeAllStoriesDialog": "Siete sicuri di voler cancellare {{ count }} scena?",
     "removeAllStoriesDialog_plural": "Siete sicuri di voler cancellare {{ count }} scene?",
     "message": "<2>Questo è il tuo editor di storie</2><1>Crea e condividi storie interattive direttamente dalla tua mappa<1><0><0></0>Iniziare </0></1></1>",
-    "panelBody": "Crea e condividi storie interattive direttamente dalla tua mappa"
+    "panelBody": "Crea e condividi storie interattive direttamente dalla tua mappa",
+    "loadSceneErrorMessage": "Si è verificato un errore durante il caricamento dei dati per la scena della storia: `{{title}}`.",
+    "promptHtml2": "<0><0>INTRODUZIONE</0><1>Storie dei dati</1><2>Crea e condividi storie interattive direttamente dalla tua mappa.</2></0>"
   },
   "dragDrop": {
-    "not": "<0>bbbb</0>"
+    "not": "<0>bbbb</0>",
+    "text": "<0>Trascina e rilascia</0><1>I tuoi dati ovunque per visualizzarli sulla mappa<1>"
   },
   "terriaViewer": {
     "webGLNotSupportedTitle": "WebGL non supportato",
@@ -1045,7 +1131,9 @@
     "title": "Cerca {{itemName}}",
     "resultsCount": "{{count}} corrispondenza trovata",
     "resultsCount_plural": "{{count}} corrispondenze trovate",
-    "loading": "Caricamento dei parametri di ricerca"
+    "loading": "Caricamento dei parametri di ricerca",
+    "toolLoadError": "Errore nel caricamento dello strumento di ricerca.",
+    "noParameters": "Nessun parametro ricercabile trovato"
   },
   "languagePanel": {
     "changeLanguage": "Cambia Lingua"
@@ -1170,7 +1258,7 @@
     "end": "Fine tour"
   },
   "welcomeMessage": {
-    "exploreDataBtnText": "Esporta i dati della mappa",
+    "exploreDataBtnText": "Esplora i dati della mappa",
     "helpBtnText": "Avrò bisogno di aiuto",
     "title": "Iniziamo",
     "tourBtnText": "Fai il tour",
@@ -1193,7 +1281,8 @@
   },
   "emptyWorkbench": {
     "helpfulHints": "Suggerimenti utili",
-    "emptyArea": "La tua workbench è vuota"
+    "emptyArea": "La tua workbench è vuota",
+    "helpfulHintsOne": "Sfoglia i dati disponibili selezionando 'Esplora i dati della mappa' o clicca su 'Carica' per aggiungere i tuoi dati alla mappa."
   },
   "trainer": {
     "collapseTrainer": "Nascondi i dettagli del passaggio",
@@ -1207,5 +1296,10 @@
   },
   "toast": {
     "mapIsZooming": "Caricamento dello zoom ideale..."
+  },
+  "emptyWorkbenchMessage": "<0><0>Il tuo workbench è vuoto</0><1><strong>Fai clic su \"$t(addData.addDataBtnText)\" sopra per </strong></1><2><0>Sfogliare il Catalogo dati</0> <1>Caricare i tuoi dati sulla mappa</1></2><3><0></0><strong>SUGGERIMENTO.</strong><2>Tutti i tuoi set di dati attivi verranno elencati qui< /2></3></0>",
+  "timer": {
+    "nextScheduledUpdateCountdown": "Prossimo aggiornamento dati tra {{timeCountdown}}",
+    "nextScheduledUpdateTime": "Prossimo aggiornamento dei dati a {{scheduledUpdateTime}}"
   }
 }
