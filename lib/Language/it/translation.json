@@ -783,7 +783,10 @@
     "clickToDrawRectangle": "Clicca per disegnare un rettangolo",
     "clickToDrawPolygon": "Clicca per disegnare il poligono",
     "clickToDrawLine": "Clicca per disegnare la linea",
-    "selectExistingPolygon": "Seleziona il poligono esistente"
+    "selectExistingPolygon": "Seleziona il poligono esistente",
+    "selectPoint": "Seleziona un punto cliccando sulla mappa.",
+    "enterValidCoords": "Inserisci delle coordinate valide (ad esempio 131.0361, -25.3450).",
+    "nothingSelected": "Non è stato selezionato nulla, usa i pulsanti qui sopra per fare una selezione."
   },
   "description": {
     "typeName": "Digita nome",
@@ -873,7 +876,11 @@
     "searchCatalogueItem": "Catalogo degli elementi",
     "searchPlaceNames": "Nome ufficiale dei luoghi",
     "inDataCatalogue": "Nel Catalogo di Dati",
-    "inMultipleLocations": "In diverse località, tra cui: "
+    "inMultipleLocations": "In diverse località, tra cui: ",
+    "searchNoPlaceNames": "Spiacenti, nessun nome di luogo ufficiale corrisponde alla tua richiesta di ricerca.",
+    "searchNoCatalogueItem": "Spiacenti, nessun articolo del catalogo corrisponde alla tua richiesta di ricerca.",
+    "searchErrorOccurred": "Si è verificato un errore durante la ricerca.  Per favore controlla la tua connessione internet o riprova più tardi.",
+    "searchNoLocations": "Spiacente, nessuna località corrisponde alla tua richiesta di ricerca."
   },
   "chart": {
     "download": "Scarica",
@@ -1100,7 +1107,8 @@
     "internetExplorer": "Internet Explorer 11",
     "slowWebGLAvailableMessageII": "{{appName}} funziona meglio con un browser web che supporta {{webGL}}, comprese le ultime versioni di {{chrome}}, {{firefox}}, {{safari}} e {{internetExplorer}}. Il tuo browser web non sembra supportare WebGL, quindi vedrai un'esperienza limitata al solo 2D.",
     "slowWebGLAvailableMessage": "Il tuo browser web riferisce di avere problemi di prestazioni nella visualizzazione di {{appName}} in 3D, quindi vedrai un'esperienza limitata al solo 2D. Per un'esperienza 3D completa, prova ad usare un browser web diverso, ad aggiornare i tuoi driver video o a migliorare il tuo sistema operativo.",
-    "webGLNotSupportedOrSlowMessage": "Il tuo browser web non può visualizzare la mappa in 3D, o perché non supporta WebGL o perché il tuo browser web ha segnalato che WebGL è estremamente lento. Per favore prova un browser web diverso, come l'ultima versione di {{chrome}}, {{firefox}}, {{safari}}, {{internetExplorer}}. In alcuni casi, potrebbe essere necessario aggiornare il driver video del tuo computer o il sistema operativo per ottenere la visualizzazione 3D in {{appName}}."
+    "webGLNotSupportedOrSlowMessage": "Il tuo browser web non può visualizzare la mappa in 3D, o perché non supporta WebGL o perché il tuo browser web ha segnalato che WebGL è estremamente lento. Per favore prova un browser web diverso, come l'ultima versione di {{chrome}}, {{firefox}}, {{safari}}, {{internetExplorer}}. In alcuni casi, potrebbe essere necessario aggiornare il driver video del tuo computer o il sistema operativo per ottenere la visualizzazione 3D in {{appName}}.",
+    "webGLNotSupportedOrSlowTitle": "WebGL non supportato o troppo lento"
   },
   "dataCatalog": {
     "groupRemove": "rimuovi questo gruppo",
@@ -1282,7 +1290,9 @@
   "emptyWorkbench": {
     "helpfulHints": "Suggerimenti utili",
     "emptyArea": "La tua workbench è vuota",
-    "helpfulHintsOne": "Sfoglia i dati disponibili selezionando 'Esplora i dati della mappa' o clicca su 'Carica' per aggiungere i tuoi dati alla mappa."
+    "helpfulHintsOne": "Sfoglia i dati disponibili selezionando 'Esplora i dati della mappa' o clicca su 'Carica' per aggiungere i tuoi dati alla mappa.",
+    "helpfulHintsThree": "Nella workbench puoi attivare e disattivare i set di dati, cambiare la loro opacità, attivare il confronto a schermo diviso, cambiare gli stili e navigare attraverso date e orari, se i dati supportano questa funzionalità.",
+    "helpfulHintsTwo": "Una volta aggiunti i dati alla mappa, i tuoi set di dati attivi sono elencati qui nella tua workbench. La workbench ti aiuterà a interagire con i dati."
   },
   "trainer": {
     "collapseTrainer": "Nascondi i dettagli del passaggio",
