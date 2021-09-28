@@ -632,9 +632,9 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    */
   @computed get resolvedRegionColumn() {
     return this.catalogItem.tableColumns.find(
-      col =>
-        col.name ===
-        this.dimensionColumns.find(col => col.type === "region")?.name
+      tableCol =>
+        tableCol.name ===
+        this.dimensionColumns.find(dimCol => dimCol.type === "region")?.name
     );
   }
 
