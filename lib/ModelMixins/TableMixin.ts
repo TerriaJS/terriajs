@@ -418,7 +418,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     get chartItems() {
       // Wait for activeTableStyle to be ready
       if (!this.activeTableStyle.ready || this.isLoadingMapItems) return [];
-      
+
       return filterOutUndefined([
         // If time-series region mapping - show time points chart
         this.activeTableStyle.isRegions() && this.discreteTimes?.length
