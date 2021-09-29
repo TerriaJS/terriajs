@@ -212,6 +212,12 @@ export class SocrataCatalogStratum extends LoadableStratum(
 
   @computed
   get members(): ModelReference[] {
+    // If we only have one facet, return it's children instead of a single facet group
+    if (this.facets.length === 1)
+      return this.facets[0].values.map(
+        facetValue => `${this.getFacetId(this.facets[0])}/${facetValue.value}`
+      );
+
     return [
       ...this.facets.map(f => this.getFacetId(f)),
       ...this.results.map(r => this.getResultId(r))
