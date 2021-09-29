@@ -57,6 +57,7 @@ Change Log
 * Added `excludeMembers` property to `GroupTraits` (this replaced the `blacklist` property in v7). It is an array of strings of excluded group and item names. A group or item name that appears in this list will not be shown to the user. This is case-insensitive and will also apply to all child/nested groups
 * Fixes an app crash on load in iOS-Safari mobile which was happening when rendering help panel tooltips.
 * Fixed a problem with computeds and AsyncLoader when loading `mapItems` (and hence children's `mapItems`) of a CompositeCatalogItem.
+* Fix `YDYRCatalogFunction` `description`
 * [The next improvement]
 
 #### 8.1.0
