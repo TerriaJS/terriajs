@@ -1,5 +1,3 @@
-"use strict";
-
 import classNames from "classnames";
 import Icon from "../../../Styled/Icon";
 import React from "react";

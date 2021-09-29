@@ -1,5 +1,3 @@
-"use strict";
-
 import ObserverModelMixin from "../ObserveModelMixin";
 import React from "react";
 import createReactClass from "create-react-class";

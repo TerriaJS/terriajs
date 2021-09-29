@@ -1,4 +1,3 @@
-"use strict";
 import classNames from "classnames";
 import createReactClass from "create-react-class";
 import { observer } from "mobx-react";

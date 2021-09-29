@@ -1,4 +1,3 @@
-"use strict";
 import i18next from "i18next";
 import { action, observable } from "mobx";
 import React from "react";

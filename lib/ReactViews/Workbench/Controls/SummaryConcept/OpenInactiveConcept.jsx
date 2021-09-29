@@ -1,5 +1,3 @@
-"use strict";
-
 import classNames from "classnames";
 import Concept from "../Concept";
 import Icon from "../../../../Styled/Icon";

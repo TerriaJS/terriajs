@@ -1,4 +1,3 @@
-"use strict";
 import createReactClass from "create-react-class";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";

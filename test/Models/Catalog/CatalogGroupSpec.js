@@ -1,5 +1,3 @@
-"use strict";
-
 var CatalogGroup = require("../../lib/Models/CatalogGroup");
 var CatalogItem = require("../../lib/Models/CatalogItem");
 var createCatalogMemberFromType = require("../../lib/Models/createCatalogMemberFromType");

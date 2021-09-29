@@ -1,5 +1,3 @@
-"use strict";
-
 import defined from "terriajs-cesium/Source/Core/defined";
 import Terria from "../../lib/Models/Terria";
 import Cesium from "../../lib/Models/Cesium";

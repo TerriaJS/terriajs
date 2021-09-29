@@ -1,5 +1,3 @@
-"use strict";
-
 var CatalogMember = require("../../lib/Models/CatalogMember");
 var Terria = require("../../../lib/Models/Terria");
 var when = require("terriajs-cesium/Source/ThirdParty/when").default;

@@ -1,5 +1,3 @@
-"use strict";
-
 import URI from "urijs";
 import i18next from "i18next";
 import { runInAction } from "mobx";

@@ -1,5 +1,3 @@
-"use strict";
-
 var Terria = require("../../../lib/Models/Terria");
 var loadJson = require("../../../lib/Core/loadJson").default;
 var CHART_DATA_CATEGORY_NAME = require("../../../lib/Core/addedForCharts")

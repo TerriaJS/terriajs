@@ -1,5 +1,3 @@
-"use strict";
-
 var Reproject = require("../../lib/Map/Reproject");
 
 describe("Reproject", function() {

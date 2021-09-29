@@ -1,5 +1,3 @@
-"use strict";
-
 import Mustache from "mustache";
 import React from "react";
 

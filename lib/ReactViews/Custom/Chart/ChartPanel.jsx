@@ -1,5 +1,3 @@
-"use strict";
-
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";

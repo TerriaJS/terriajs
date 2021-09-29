@@ -1,5 +1,3 @@
-"use strict";
-
 type NestedArray<T> = NestedArray<T>[] | T[];
 
 /**

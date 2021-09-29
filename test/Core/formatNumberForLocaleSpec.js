@@ -1,5 +1,4 @@
 /* eslint-disable no-native-reassign */
-"use strict";
 
 var formatNumberForLocale = require("../../lib/Core/formatNumberForLocale");
 

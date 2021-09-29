@@ -1,24 +1,29 @@
+// This tsconfig is used to build the model layer only for use in a node.js app.
+// Build with ./node_modules/.bin/tsc -p tsconfig-models.json
 {
     "compilerOptions": {
         "target": "es2018",
         "experimentalDecorators": true,
+        "declaration": true,
         "module": "esNext",
         "moduleResolution": "node",
         "sourceMap": true,
         "strict": true,
         "allowJs": true,
-        "jsx": "preserve",
+        "jsx": "react",
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
-        "outDir": "ts-out",
+        "outDir": "dist",
         "resolveJsonModule": true,
-        "typeRoots": ["./lib/ThirdParty/**/*.d.ts"],
-        "types": ["terriajs-cesium"]
+        "alwaysStrict": true,
+        "baseUrl": ".",
+        "forceConsistentCasingInFileNames": true,
+        "paths": {
+            "terriajs-cesium/*": ["node_modules/terriajs-cesium/Source/Cesium.d.ts"]
+        }
     },
     "include": [
-        "./lib/**/*",
-        "./test/**/*",
-        "./buildprocess/generateDocs.ts",
-        "./buildprocess/**/*",
+        "./lib"
     ]
-}
+  }
+  

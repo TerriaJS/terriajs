@@ -1,5 +1,3 @@
-"use strict";
-
 var DragPoints = require("../../lib/Map/DragPoints");
 var Terria = require("../../lib/Models/Terria");
 var ViewerMode = require("../../lib/Models/ViewerMode");

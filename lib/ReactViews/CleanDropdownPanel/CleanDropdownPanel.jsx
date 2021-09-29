@@ -1,5 +1,3 @@
-"use strict";
-
 // Ref now needs to be passed in via refForCaret as there is no longer a button
 // in CleanDropdownPanel
 

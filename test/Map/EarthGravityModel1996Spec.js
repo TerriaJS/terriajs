@@ -1,5 +1,3 @@
-"use strict";
-
 var Cartographic = require("terriajs-cesium/Source/Core/Cartographic").default;
 var EarthGravityModel1996 = require("../../lib/Map/EarthGravityModel1996");
 

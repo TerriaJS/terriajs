@@ -1,4 +1,3 @@
-"use strict";
 import React from "react";
 import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";

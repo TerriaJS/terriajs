@@ -1,5 +1,3 @@
-"use strict";
-
 import flattenNested from "../../../../Core/flattenNested";
 import ActiveConcept from "./ActiveConcept";
 import OpenInactiveConcept from "./OpenInactiveConcept";

@@ -1,5 +1,3 @@
-"use strict";
-
 // proptypes are in mixin
 /* eslint react/prop-types:0*/
 

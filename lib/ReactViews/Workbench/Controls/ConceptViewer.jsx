@@ -1,5 +1,3 @@
-"use strict";
-
 import SummaryConcept from "./SummaryConcept/SummaryConcept";
 import Concept from "./Concept";
 import SummaryConceptModel from "../../../Map/SummaryConcept";

@@ -1,4 +1,3 @@
-"use strict";
 // import Chart from "../Custom/Chart/Chart";
 import createReactClass from "create-react-class";
 import { runInAction } from "mobx";

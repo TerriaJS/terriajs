@@ -1,5 +1,3 @@
-"use strict";
-
 var when = require("terriajs-cesium/Source/ThirdParty/when").default;
 var Rectangle = require("terriajs-cesium/Source/Core/Rectangle").default;
 var loadWithXhr = require("../../lib/Core/loadWithXhr");
