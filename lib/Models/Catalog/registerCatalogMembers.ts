@@ -1,7 +1,6 @@
 import YDYRCatalogFunction from "./CatalogFunctions/YDYRCatalogFunction";
 import YDYRCatalogFunctionJob from "./CatalogFunctions/YDYRCatalogFunctionJob";
 import CatalogGroup from "./CatalogGroup";
-import CswCatalogGroup from "./Ows/CswCatalogGroup";
 import OpenDataSoftCatalogGroup from "./CatalogGroups/OpenDataSoftCatalogGroup";
 import SocrataCatalogGroup from "./CatalogGroups/SocrataCatalogGroup";
 import ThreddsCatalogGroup from "./CatalogGroups/ThreddsCatalogGroup";
@@ -25,11 +24,17 @@ import MapboxVectorTileCatalogItem from "./CatalogItems/MapboxVectorTileCatalogI
 import OpenDataSoftCatalogItem from "./CatalogItems/OpenDataSoftCatalogItem";
 import OpenStreetMapCatalogItem from "./CatalogItems/OpenStreetMapCatalogItem";
 import SenapsLocationsCatalogItem from "./CatalogItems/SenapsLocationsCatalogItem";
-import SensorObservationServiceCatalogItem from "./Ows/SensorObservationServiceCatalogItem";
 import ShapefileCatalogItem from "./CatalogItems/ShapefileCatalogItem";
 import SocrataMapViewCatalogItem from "./CatalogItems/SocrataMapViewCatalogItem";
 import StubCatalogItem from "./CatalogItems/StubCatalogItem";
 import CatalogMemberFactory from "./CatalogMemberFactory";
+import CatalogIndexReference from "./CatalogReferences/CatalogIndexReference";
+import MagdaReference from "./CatalogReferences/MagdaReference";
+import SplitItemReference from "./CatalogReferences/SplitItemReference";
+import TerriaReference from "./CatalogReferences/TerriaReference";
+import UrlReference, {
+  UrlToCatalogMemberMapping
+} from "./CatalogReferences/UrlReference";
 import CkanCatalogGroup from "./Ckan/CkanCatalogGroup";
 import CkanItemReference from "./Ckan/CkanItemReference";
 import ArcGisCatalogGroup from "./Esri/ArcGisCatalogGroup";
@@ -41,7 +46,8 @@ import ArcGisPortalCatalogGroup from "./Esri/ArcGisPortalCatalogGroup";
 import ArcGisPortalItemReference from "./Esri/ArcGisPortalItemReference";
 import ArcGisTerrainCatalogItem from "./Esri/ArcGisTerrainCatalogItem";
 import GtfsCatalogItem from "./Gtfs/GtfsCatalogItem";
-import MagdaReference from "./CatalogReferences/MagdaReference";
+import CswCatalogGroup from "./Ows/CswCatalogGroup";
+import SensorObservationServiceCatalogItem from "./Ows/SensorObservationServiceCatalogItem";
 import WebFeatureServiceCatalogGroup from "./Ows/WebFeatureServiceCatalogGroup";
 import WebFeatureServiceCatalogItem from "./Ows/WebFeatureServiceCatalogItem";
 import WebMapServiceCatalogGroup from "./Ows/WebMapServiceCatalogGroup";
@@ -53,11 +59,6 @@ import WebProcessingServiceCatalogFunctionJob from "./Ows/WebProcessingServiceCa
 import WebProcessingServiceCatalogGroup from "./Ows/WebProcessingServiceCatalogGroup";
 import SdmxJsonCatalogGroup from "./SdmxJson/SdmxJsonCatalogGroup";
 import SdmxJsonCatalogItem from "./SdmxJson/SdmxJsonCatalogItem";
-import SplitItemReference from "./CatalogReferences/SplitItemReference";
-import UrlReference, {
-  UrlToCatalogMemberMapping
-} from "./CatalogReferences/UrlReference";
-import TerriaReference from "./CatalogReferences/TerriaReference";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -213,6 +214,10 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(
     MapboxStyleCatalogItem.type,
     MapboxStyleCatalogItem
+  );
+  CatalogMemberFactory.register(
+    CatalogIndexReference.type,
+    CatalogIndexReference
   );
 
   UrlToCatalogMemberMapping.register(

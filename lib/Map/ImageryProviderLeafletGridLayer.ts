@@ -5,9 +5,24 @@ import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import Leaflet from "../Models/Leaflet";
-import MapboxVectorTileImageryProvider from "./MapboxVectorTileImageryProvider";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 
-export default class MapboxVectorCanvasTileLayer extends L.GridLayer {
+export interface ImageryProviderWithGridLayerSupport extends ImageryProvider {
+  requestImageForCanvas: (
+    x: number,
+    y: number,
+    level: number,
+    canvas: HTMLCanvasElement
+  ) => Promise<HTMLCanvasElement>;
+}
+
+export const isImageryProviderGridLayer = (
+  obj: any
+): obj is ImageryProviderWithGridLayerSupport => {
+  return typeof obj.requestImageForCanvas === "function";
+};
+
+export default class ImageryProviderLeafletGridLayer extends L.GridLayer {
   readonly errorEvent: CesiumEvent = new CesiumEvent();
   readonly initialized: boolean = false;
   readonly _usable: boolean = false;
@@ -20,7 +35,7 @@ export default class MapboxVectorCanvasTileLayer extends L.GridLayer {
 
   constructor(
     private leaflet: Leaflet,
-    readonly imageryProvider: MapboxVectorTileImageryProvider,
+    readonly imageryProvider: ImageryProviderWithGridLayerSupport,
     options: L.GridLayerOptions
   ) {
     super(Object.assign(options, { async: true, tileSize: 256 }));
@@ -37,12 +52,6 @@ export default class MapboxVectorCanvasTileLayer extends L.GridLayer {
         disposeSplitterReaction();
         disposeSplitterReaction = undefined;
       }
-    });
-
-    // Hack to fix "Space between tiles on fractional zoom levels in Webkit browsers" (https://github.com/Leaflet/Leaflet/issues/3575#issuecomment-688644225)
-    this.on("tileloadstart", (event: TileEvent) => {
-      event.tile.style.width = this.getTileSize().x + 0.5 + "px";
-      event.tile.style.height = this.getTileSize().y + 0.5 + "px";
     });
   }
 
@@ -110,7 +119,7 @@ export default class MapboxVectorCanvasTileLayer extends L.GridLayer {
         const n = this.imageryProvider.tilingScheme.getNumberOfXTilesAtLevel(
           tilePoint.z
         );
-        return this.imageryProvider._requestImage(
+        return this.imageryProvider.requestImageForCanvas(
           CesiumMath.mod(tilePoint.x, n),
           tilePoint.y,
           tilePoint.z,

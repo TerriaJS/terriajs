@@ -255,6 +255,24 @@ describe("Table Style", function() {
       expect(activeStyle.colorMap instanceof ContinuousColorMap).toBeTruthy();
       expect(activeStyle.tableColorMap.isDiverging).toBeTruthy();
     });
+
+    it(" - handles ContinuousColorMap with single value ", async function() {
+      csvItem.setTrait(
+        "definition",
+        "csvString",
+        `SED_CODE18,Value\na,23\nb,23\nc,23\nd,23`
+      );
+
+      await csvItem.loadMapItems();
+
+      const activeStyle = csvItem.activeTableStyle;
+      const colorColumn = activeStyle.colorColumn;
+      expect(colorColumn).toBeDefined();
+      expect(colorColumn!.type).toBe(4);
+      expect(colorColumn!.values.length).toBe(4);
+
+      expect(activeStyle.colorMap instanceof EnumColorMap).toBeTruthy();
+    });
   });
 
   describe(" - Enum", function() {

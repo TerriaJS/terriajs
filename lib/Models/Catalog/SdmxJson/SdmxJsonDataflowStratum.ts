@@ -3,7 +3,10 @@ import { computed } from "mobx";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import TerriaError from "../../../Core/TerriaError";
-import { ShortReportTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
+import {
+  ShortReportTraits,
+  MetadataUrlTraits
+} from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import { DimensionOptionTraits } from "../../../Traits/TraitsClasses/DimensionTraits";
 import { FeatureInfoTemplateTraits } from "../../../Traits/TraitsClasses/FeatureInfoTraits";
 import LegendTraits from "../../../Traits/TraitsClasses/LegendTraits";
@@ -138,6 +141,24 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     return this.sdmxJsonDataflow.dataflow.description;
   }
 
+  /** Transform dataflow annotations with type "EXT_RESOURCE"
+   * These can be of format:
+   * - ${title}|${url}|${imageUrl}
+   * - EG "Metadata|http://purl.org/spc/digilib/doc/7thdz|https://sdd.spc.int/themes/custom/sdd/images/icons/metadata.png"
+   */
+  @computed get metadataUrls() {
+    return filterOutUndefined(
+      this.sdmxJsonDataflow?.dataflow.annotations
+        ?.filter(a => a.type === "EXT_RESOURCE" && a.text)
+        .map(annotation => {
+          let text = annotation.texts?.[i18next.language] ?? annotation.text!;
+          const title = text.includes("|") ? text.split("|")[0] : undefined;
+          const url = text.includes("|") ? text.split("|")[1] : text;
+          return createStratumInstance(MetadataUrlTraits, { title, url });
+        }) ?? []
+    );
+  }
+
   get sdmxAttributes() {
     return (
       this.sdmxJsonDataflow.dataStructure.dataStructureComponents?.attributeList
@@ -181,7 +202,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     ) {
       return [
         createStratumInstance(ShortReportTraits, {
-          name: this.unitMeasure,
+          name: this.chartTitle,
           content: primaryCol?.valuesAsNumbers.values[0].toLocaleString(
             undefined,
             primaryCol.traits.format
@@ -507,12 +528,13 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
 
           // Next try fetching reigon type from another dimension (only if this modelOverride type 'region')
           // It will look through dimensions which have modelOverrides of type `region-type` and have a selectedId, if one is found - it will be used as the regionType of this column
-          if (!isDefined(regionType) && modelOverride?.type === "region") {
+          // Note this will override previous regionType
+          if (modelOverride?.type === "region") {
             // Use selectedId of first dimension with one
             regionType = this.catalogItem.matchRegionType(
               this.getDimensionsWithOverrideType("region-type").find(d =>
                 isDefined(d.selectedId)
-              )?.selectedId
+              )?.selectedId ?? regionType
             );
           }
 
@@ -544,6 +566,9 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
           return createStratumInstance(TableColumnTraits, {
             name: dim.id,
             title: concept?.name,
+            // We set columnType to hidden for all columns except for region columns - as we are never interested in visualising them
+            // For "time" columns see `get timeColumns()`
+            // For primary measure ("scalar") column - see `get primaryMeasureColumn()`
             type: isDefined(regionType) ? "region" : "hidden",
             regionType
           });
@@ -601,6 +626,63 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     ]);
   }
 
+  /** Get region TableColumn by searching catalogItem.tableColumns for region dimension
+   * NOTE: this is searching through catalogItem.tableColumns to find the completely resolved regionColumn
+   * This can only be used in computeds/fns outside of ColumnTraits - or you will get infinite recursion
+   */
+  @computed get resolvedRegionColumn() {
+    return this.catalogItem.tableColumns.find(
+      tableCol =>
+        tableCol.name ===
+        this.dimensionColumns.find(dimCol => dimCol.type === "region")?.name
+    );
+  }
+
+  /** If we only have a single region (or no regions)
+   * We want to:
+   * - disable the region column so we get a chart instead - see `get styles()`
+   * - get region name for chart title (if single region) - see `get chartTitle()`
+   **/
+  @computed get disableRegion() {
+    return (
+      !this.catalogItem.isLoading &&
+      this.resolvedRegionColumn?.ready &&
+      (this.resolvedRegionColumn?.valuesAsRegions.uniqueRegionIds.length ??
+        0) <= 1
+    );
+  }
+
+  /** Get nice title to use for chart
+   * If we have a region column with a single region, it will append the region name to the title
+   */
+  @computed get chartTitle() {
+    if (this.disableRegion) {
+      const regionValues = this.resolvedRegionColumn?.uniqueValues.values;
+      if (regionValues && regionValues.length === 1) {
+        // Get region dimension ID
+        const regionDimensionId = this.getDimensionsWithOverrideType(
+          "region"
+        )[0]?.id;
+        // Lookup in sdmxDimensions to get codelist (this is needed because region dimensions which have more options than MAX_SELECTABLE_DIMENSION_OPTIONS will not return any dimension.options)
+        const regionDimension = this.sdmxDimensions.find(
+          dim => dim.id === regionDimensionId
+        );
+        if (regionDimension) {
+          // Try to get human readable region name from codelist
+          const codelist = this.getCodelistByUrn(
+            regionDimension.localRepresentation?.enumeration
+          );
+          const regionName =
+            codelist?.codes?.find(c => c.id === regionValues[0])?.name ??
+            regionValues[0];
+          return `${regionName} - ${this.unitMeasure}`;
+        }
+      }
+    }
+
+    return this.unitMeasure;
+  }
+
   /**
    * Set TableStyleTraits for primary measure column:
    * - Legend title is set to `unitMeasure` to add context - eg "AUD (Quaterly)"
@@ -623,24 +705,27 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
             })
           }),
           time: createStratumInstance(TableTimeStyleTraits, {
-            timeColumn: this.timeColumns[0].name
+            timeColumn: this.timeColumns[0].name,
+            spreadStartTime: true,
+            spreadFinishTime: true
           }),
           // Add chart if there is a time column but no region column
           chart:
             this.timeColumns.length > 0 &&
-            !this.dimensionColumns.find(col => col.type === "region")
+            (this.disableRegion || !this.resolvedRegionColumn)
               ? createStratumInstance(TableChartStyleTraits, {
                   xAxisColumn: this.timeColumns[0].name,
                   lines: [
                     createStratumInstance(TableChartLineStyleTraits, {
-                      name: this.unitMeasure,
+                      name: this.chartTitle,
                       yAxisColumn: this.primaryMeasureColumn.name
                     })
                   ]
                 })
               : undefined,
-          regionColumn: this.dimensionColumns.find(col => col.type === "region")
-            ?.name
+          regionColumn: this.disableRegion
+            ? null
+            : this.resolvedRegionColumn?.name
         })
       ];
     }
@@ -656,6 +741,14 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
   }
 
   /**
+   * Set default time to last time of dataset
+   */
+  @computed
+  get initialTimeSource() {
+    return "stop";
+  }
+
+  /**
    * Formats feature info table to add:
    * - Current time (if time-series)
    * - Selected region (if region-mapped)
@@ -665,8 +758,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
    */
   @computed
   get featureInfoTemplate() {
-    const regionType = this.catalogItem.activeTableStyle.regionColumn
-      ?.regionType;
+    const regionType = this.resolvedRegionColumn?.regionType;
     if (!regionType) return;
 
     let template = '<table class="cesium-infoBox-defaultTable">';
@@ -712,7 +804,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
       this.catalogItem.discreteTimes.length > 1
     ) {
       const chartName = `${this.catalogItem.name}: {{${regionType.nameProp}}}`;
-      template += `</table><chart sources="${chartName}" title="${chartName}" x-column="{{terria.timeSeries.xName}}" y-column="${this.unitMeasure}" >{{terria.timeSeries.data}}</chart>`;
+      template += `</table><chart title="${chartName}" x-column="{{terria.timeSeries.xName}}" y-column="${this.unitMeasure}" >{{terria.timeSeries.data}}</chart>`;
     }
 
     return createStratumInstance(FeatureInfoTemplateTraits, { template });

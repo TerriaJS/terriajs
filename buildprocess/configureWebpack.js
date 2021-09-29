@@ -88,7 +88,8 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
         include: [
             path.resolve(terriaJSBasePath, 'lib'),
             path.resolve(terriaJSBasePath, 'test'),
-            path.resolve(terriaJSBasePath, 'buildprocess', 'generateDocs.ts')
+            path.resolve(terriaJSBasePath, 'buildprocess', 'generateDocs.ts'),
+            path.resolve(terriaJSBasePath, 'buildprocess', 'generateCatalogIndex.ts')
         ],
         use: [
             {
@@ -104,6 +105,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
                 loader: 'babel-loader',
                 options: {
                     cacheDirectory: true,
+                    sourceMaps: !!devMode,
                     presets: [
                       [
                         '@babel/preset-env',

@@ -74,4 +74,72 @@ describe("DescriptionSpec", function() {
 
     expect(child.props.children).toBe("Some Title");
   });
+
+  it("renders dataUrls", function() {
+    runInAction(() => {
+      updateModelFromJson(wmsItem, "definition", {
+        metadataUrls: [{ title: "Some Title" }],
+        dataUrls: [
+          {
+            url: "http://exampledata.com",
+            type: "wfs-complete"
+          }
+        ]
+      });
+    });
+
+    act(() => {
+      testRenderer = create(
+        <ThemeProvider theme={terriaTheme}>
+          <Description item={wmsItem} />
+        </ThemeProvider>
+      );
+    });
+
+    const dataUrls = testRenderer.root.findAll(
+      node =>
+        node.props.className?.includes("description-dataUrls") &&
+        node.type === "a"
+    );
+
+    expect(dataUrls.length).toEqual(1);
+
+    expect(dataUrls[0].children[0]).toBe("http://exampledata.com");
+  });
+
+  it("renders metadataUrl button", function() {
+    runInAction(() => {
+      updateModelFromJson(wmsItem, "definition", {
+        metadataUrls: [{ title: "Some Title" }],
+        dataUrls: [
+          {
+            url: "http://exampledata.com",
+            type: "wfs-complete",
+            title: "some link"
+          }
+        ]
+      });
+    });
+
+    act(() => {
+      testRenderer = create(
+        <ThemeProvider theme={terriaTheme}>
+          <Description item={wmsItem} />
+        </ThemeProvider>
+      );
+    });
+
+    const dataUrls = testRenderer.root.findAll(
+      node =>
+        node.props.className?.includes("description-dataUrls") &&
+        node.type === "a"
+    );
+
+    expect(dataUrls.length).toEqual(1);
+    expect(typeof dataUrls[0].children[0] !== "string").toBeTruthy();
+
+    const child: any = dataUrls[0].children[0];
+
+    expect(child.props.children).toBe("some link");
+  });
 });

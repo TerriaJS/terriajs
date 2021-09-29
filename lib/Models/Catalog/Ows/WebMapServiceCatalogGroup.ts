@@ -151,7 +151,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         if (subLayer && isReadOnlyArray(subLayer)) {
           rootLayers = subLayer;
         } else if (subLayer) {
-          rootLayers = [subLayer];
+          rootLayers = [subLayer as CapabilitiesLayer];
         } else {
           break;
         }

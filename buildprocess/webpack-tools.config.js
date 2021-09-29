@@ -1,14 +1,18 @@
-var configureWebpackForTerriaJS = require("./configureWebpack");
-var MiniCssExtractPlugin = require("mini-css-extract-plugin");
-var path = require("path");
+const configureWebpackForTerriaJS = require("./configureWebpack");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const path = require("path");
+const { IgnorePlugin } = require("webpack");
 
 module.exports = function() {
   const config = {
     mode: "development",
-    entry: path.resolve(__dirname, "generateDocs.ts"),
+    entry: {
+      generateDocs: path.resolve(__dirname, "generateDocs.ts"),
+      generateCatalogIndex: path.resolve(__dirname, "generateCatalogIndex.ts")
+    },
     output: {
       path: path.resolve(__dirname, "..", "build"),
-      filename: "generateDocs.js",
+      filename: "[name].js",
       sourcePrefix: "", // to avoid breaking multi-line string literals by inserting extra tabs.
       globalObject: "(self || window)" // to avoid breaking in web worker (https://github.com/webpack/webpack/issues/6642)
     },
@@ -26,7 +30,9 @@ module.exports = function() {
         filename: "TerriaJS.css",
         disable: false,
         ignoreOrder: true
-      })
+      }),
+      // This is needed for a jsdom issue
+      new IgnorePlugin(/canvas/, /jsdom$/)
     ]
   };
   return configureWebpackForTerriaJS(

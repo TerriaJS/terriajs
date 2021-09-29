@@ -93,6 +93,7 @@ import Internationalization, {
 } from "./Internationalization";
 import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
+import CatalogIndex from "./SearchProviders/CatalogIndex";
 import ShareDataService from "./ShareDataService";
 import TimelineStack from "./TimelineStack";
 import ViewerMode from "./ViewerMode";
@@ -113,6 +114,10 @@ interface ConfigParameters {
    * The maximum number of "feature info" boxes that can be displayed when clicking a point.
    */
   defaultMaximumShownFeatureInfos: number;
+  /**
+   * URL of the JSON file that contains index of catalog.
+   */
+  catalogIndexUrl?: string;
   /**
    * URL of the JSON file that defines region mapping for CSV files.
    */
@@ -199,6 +204,9 @@ interface ConfigParameters {
   disableSplitter?: boolean;
 
   disablePedestrianMode?: boolean;
+
+  /** Feature flag for experimental Geojson-Mapbox vector tiles. If falsy, all GeoJsonMixin items will render cesium primitives. If truthy, geojson-vt will be used to tile GeoJson into Mapbox vector-tiles */
+  enableGeojsonMvt?: boolean;
 
   experimentalFeatures?: boolean;
   magdaReferenceHeaders?: MagdaReferenceHeaders;
@@ -325,7 +333,8 @@ interface HomeCameraInit {
 }
 
 export default class Terria {
-  private models = observable.map<string, BaseModel>();
+  private readonly models = observable.map<string, BaseModel>();
+
   /** Map from share key -> id */
   readonly shareKeysMap = observable.map<string, string>();
   /** Map from id -> share keys */
@@ -341,6 +350,8 @@ export default class Terria {
   readonly baseMapsModel = new BaseMapsModel("basemaps", this);
   readonly timelineClock = new Clock({ shouldAnimate: false });
   // readonly overrides: any = overrides; // TODO: add options.functionOverrides like in master
+
+  catalogIndex: CatalogIndex | undefined;
 
   readonly elements = observable.map<string, IElementConfig>();
 
@@ -386,6 +397,7 @@ export default class Terria {
     appName: "TerriaJS App",
     supportEmail: "info@terria.io",
     defaultMaximumShownFeatureInfos: 100,
+    catalogIndexUrl: undefined,
     regionMappingDefinitionsUrl: "build/TerriaJS/data/regionMapping.json",
     conversionServiceBaseUrl: "convert/",
     proj4ServiceBaseUrl: "proj4/",
@@ -411,6 +423,7 @@ export default class Terria {
     disableMyLocation: undefined,
     disableSplitter: undefined,
     disablePedestrianMode: false,
+    enableGeojsonMvt: false,
     experimentalFeatures: undefined,
     magdaReferenceHeaders: undefined,
     locationSearchBoundingBox: undefined,
@@ -607,6 +620,10 @@ export default class Terria {
     ) {
       return this.mainViewer.currentViewer as import("./Leaflet").default;
     }
+  }
+
+  @computed get modelValues() {
+    return Array.from(this.models.values());
   }
 
   @computed
@@ -1056,12 +1073,21 @@ export default class Terria {
       })
     );
 
+    // Load basemap
     runInAction(() => {
       if (!this.mainViewer.baseMap) {
         // Note: there is no "await" here - as basemaps can take a while to load and there is no need to wait for them to load before rendering Terria
         this.loadPersistedOrInitBaseMap();
       }
     });
+
+    // Load catalog index if catalogIndexUrl is set and it hasn't been loaded yet
+    if (this.configParameters.catalogIndexUrl && !this.catalogIndex) {
+      this.catalogIndex = new CatalogIndex(
+        this,
+        this.configParameters.catalogIndexUrl
+      );
+    }
 
     if (errors.length > 0) {
       // Note - this will get wrapped up in a Result object because it is called in AsyncLoader
@@ -1241,6 +1267,42 @@ export default class Terria {
     );
   }
 
+  private async pushAndLoadMapItems(
+    model: BaseModel,
+    newItems: BaseModel[],
+    errors: TerriaError[]
+  ) {
+    if (ReferenceMixin.isMixedInto(model)) {
+      (await model.loadReference()).pushErrorTo(errors);
+
+      if (model.target !== undefined) {
+        await this.pushAndLoadMapItems(model.target, newItems, errors);
+      } else {
+        errors.push(
+          TerriaError.from(
+            "Reference model has no target. Model Id: " + model.uniqueId
+          )
+        );
+      }
+    } else if (GroupMixin.isMixedInto(model)) {
+      (await model.loadMembers()).pushErrorTo(errors);
+
+      model.memberModels.map(async m => {
+        await this.pushAndLoadMapItems(m, newItems, errors);
+      });
+    } else if (MappableMixin.isMixedInto(model)) {
+      newItems.push(model);
+      (await model.loadMapItems()).pushErrorTo(errors);
+    } else {
+      errors.push(
+        TerriaError.from(
+          "Can not load an un-mappable item to the map. Item Id: " +
+            model.uniqueId
+        )
+      );
+    }
+  }
+
   @action
   async applyInitData({
     initData,
@@ -1359,7 +1421,7 @@ export default class Terria {
     });
 
     // Set the new contents of the workbench.
-    const newItems = filterOutUndefined(
+    const newItemsRaw = filterOutUndefined(
       workbench.map(modelId => {
         if (typeof modelId !== "string") {
           errors.push(
@@ -1374,6 +1436,18 @@ export default class Terria {
         }
       })
     );
+
+    const newItems: BaseModel[] = [];
+
+    // Maintain the model order in the workbench.
+    while (true) {
+      const model = newItemsRaw.shift();
+      if (model) {
+        await this.pushAndLoadMapItems(model, newItems, errors);
+      } else {
+        break;
+      }
+    }
 
     runInAction(() => (this.workbench.items = newItems));
 
@@ -1412,34 +1486,6 @@ export default class Terria {
             // && TODO: what is a good way to test if an item is of type TimeVarying.
           })
           .map(item => <TimeVarying>item))
-    );
-
-    // Load the items on the workbench
-    await Promise.all(
-      newItems.map(async model => {
-        try {
-          if (ReferenceMixin.isMixedInto(model)) {
-            (await model.loadReference()).throwIfError();
-            model = model.target || model;
-          }
-
-          if (MappableMixin.isMixedInto(model)) {
-            (await model.loadMapItems()).throwIfError();
-          }
-        } catch (e) {
-          errors.push(
-            TerriaError.from(e, {
-              severity: TerriaErrorSeverity.Error,
-              message: {
-                key: "models.terria.loadingWorkbenchItemErrorTitle",
-                parameters: {
-                  name: getName(model) ?? "Unknown Model"
-                }
-              }
-            })
-          );
-        }
-      })
     );
 
     if (isJsonObject(initData.pickedFeatures)) {
