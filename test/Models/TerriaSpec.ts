@@ -4,15 +4,20 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import hashEntity from "../../lib/Core/hashEntity";
+import _loadWithXhr from "../../lib/Core/loadWithXhr";
+import Result from "../../lib/Core/Result";
+import TerriaError from "../../lib/Core/TerriaError";
 import PickedFeatures from "../../lib/Map/PickedFeatures";
 import CameraView from "../../lib/Models/CameraView";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import MagdaReference from "../../lib/Models/Catalog/CatalogReferences/MagdaReference";
-import WebMapServiceCatalogGroup from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
-import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import UrlReference, {
   UrlToCatalogMemberMapping
 } from "../../lib/Models/Catalog/CatalogReferences/UrlReference";
+import ArcGisFeatureServerCatalogItem from "../../lib/Models/Catalog/Esri/ArcGisFeatureServerCatalogItem";
+import ArcGisMapServerCatalogItem from "../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogItem";
+import WebMapServiceCatalogGroup from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Cesium from "../../lib/Models/Cesium";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import { BaseModel } from "../../lib/Models/Definition/Model";
@@ -863,6 +868,227 @@ describe("Terria", function() {
         });
         expect(terria.pickedFeatures).toBeDefined();
         expect(terria.selectedFeature).toBeDefined();
+      });
+    });
+
+    describe("Sets workbench contents correctly", function() {
+      interface ExtendedLoadWithXhr {
+        (): any;
+        load: { (...args: any[]): any; calls: any };
+      }
+      const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
+      const mapServerSimpleGroupUrl =
+        "http://some.service.gov.au/arcgis/rest/services/mapServerSimpleGroup/MapServer";
+      const mapServerWithErrorUrl =
+        "http://some.service.gov.au/arcgis/rest/services/mapServerWithError/MapServer";
+      const magdaRecordFeatureServerGroupUrl =
+        "http://magda.reference.group.service.gov.au";
+      const magdaRecordDerefencedToWmsUrl =
+        "http://magda.references.wms.gov.au";
+
+      const mapServerGroupModel = {
+        type: "esri-mapServer-group",
+        name: "A simple map server group",
+        url: mapServerSimpleGroupUrl,
+        id: "a-test-server-group"
+      };
+
+      const magdaRecordDerefencedToFeatureServerGroup = {
+        type: "magda",
+        name: "A magda record derefenced to a simple feature server group",
+        url: magdaRecordFeatureServerGroupUrl,
+        recordId: "magda-record-id-dereferenced-to-feature-server-group",
+        id: "a-test-magda-record"
+      };
+
+      const magdaRecordDerefencedToWms = {
+        type: "magda",
+        name: "A magda record derefenced to wms",
+        url: magdaRecordDerefencedToWmsUrl,
+        recordId: "magda-record-id-dereferenced-to-wms",
+        id: "another-test-magda-record"
+      };
+
+      const mapServerModelWithError = {
+        type: "esri-mapServer-group",
+        name: "A map server with error",
+        url: mapServerWithErrorUrl,
+        id: "a-test-server-with-error"
+      };
+
+      const theOrderedItemsIds = [
+        "a-test-server-group/0",
+        "a-test-magda-record/0",
+        "another-test-magda-record"
+      ];
+
+      let loadMapItemsWms: any = undefined;
+      let loadMapItemsArcGisMap: any = undefined;
+      let loadMapItemsArcGisFeature: any = undefined;
+      beforeEach(function() {
+        const realLoadWithXhr = loadWithXhr.load;
+        spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
+          const url = args[0];
+
+          if (
+            url.match("mapServerSimpleGroup") &&
+            url.indexOf("MapServer?f=json") !== -1
+          ) {
+            args[0] =
+              "test/Terria/applyInitData/MapServer/mapServerSimpleGroup.json";
+          } else if (
+            url.match("mapServerWithError") &&
+            url.indexOf("MapServer?f=json") !== -1
+          ) {
+            args[0] =
+              "test/Terria/applyInitData/MapServer/mapServerWithError.json";
+          } else if (
+            url.match("magda-record-id-dereferenced-to-feature-server-group")
+          ) {
+            args[0] =
+              "test/Terria/applyInitData/MagdaReference/group_record.json";
+          } else if (url.match("magda-record-id-dereferenced-to-wms")) {
+            args[0] =
+              "test/Terria/applyInitData/MagdaReference/wms_record.json";
+          } else if (
+            url.match("services2.arcgis.com") &&
+            url.indexOf("FeatureServer?f=json") !== -1
+          ) {
+            args[0] =
+              "test/Terria/applyInitData/FeatureServer/esri_feature_server.json";
+          } else if (
+            url.match("mapprod1.environment.nsw.gov.au") &&
+            url.indexOf("request=GetCapabilities") !== -1
+          ) {
+            args[0] = "test/Terria/applyInitData/WmsServer/capabilities.xml";
+          }
+
+          const result = realLoadWithXhr(...args);
+          return result;
+        });
+
+        // Do not call through.
+        loadMapItemsArcGisMap = spyOn(
+          ArcGisMapServerCatalogItem.prototype,
+          "loadMapItems"
+        ).and.returnValue(Result.none());
+        loadMapItemsArcGisFeature = spyOn(
+          ArcGisFeatureServerCatalogItem.prototype,
+          "loadMapItems"
+        ).and.returnValue(Result.none());
+        loadMapItemsWms = spyOn(
+          WebMapServiceCatalogItem.prototype,
+          "loadMapItems"
+        ).and.returnValue(Result.none());
+      });
+
+      it("when a workbench item is a simple map server group", async function() {
+        await terria.applyInitData({
+          initData: {
+            catalog: [mapServerGroupModel],
+            workbench: ["a-test-server-group"]
+          }
+        });
+        expect(terria.workbench.itemIds).toEqual(["a-test-server-group/0"]);
+        expect(loadMapItemsArcGisMap).toHaveBeenCalledTimes(1);
+      });
+
+      it("when a workbench item is a referenced map server group", async function() {
+        await terria.applyInitData({
+          initData: {
+            catalog: [magdaRecordDerefencedToFeatureServerGroup],
+            workbench: ["a-test-magda-record"]
+          }
+        });
+        expect(terria.workbench.itemIds).toEqual(["a-test-magda-record/0"]);
+        expect(loadMapItemsArcGisFeature).toHaveBeenCalledTimes(1);
+      });
+
+      it("when a workbench item is a referenced wms", async function() {
+        await terria.applyInitData({
+          initData: {
+            catalog: [magdaRecordDerefencedToWms],
+            workbench: ["another-test-magda-record"]
+          }
+        });
+        expect(terria.workbench.itemIds).toEqual(["another-test-magda-record"]);
+        expect(loadMapItemsWms).toHaveBeenCalledTimes(1);
+      });
+
+      it("when the workbench has more than one items", async function() {
+        await terria.applyInitData({
+          initData: {
+            catalog: [
+              mapServerGroupModel,
+              magdaRecordDerefencedToFeatureServerGroup,
+              magdaRecordDerefencedToWms
+            ],
+            workbench: [
+              "a-test-server-group",
+              "a-test-magda-record",
+              "another-test-magda-record"
+            ]
+          }
+        });
+
+        expect(terria.workbench.itemIds).toEqual(theOrderedItemsIds);
+        expect(loadMapItemsWms).toHaveBeenCalledTimes(1);
+        expect(loadMapItemsArcGisMap).toHaveBeenCalledTimes(1);
+        expect(loadMapItemsArcGisFeature).toHaveBeenCalledTimes(1);
+      });
+
+      it("when the workbench has an unknown item", async function() {
+        await terria.applyInitData({
+          initData: {
+            catalog: [
+              mapServerGroupModel,
+              magdaRecordDerefencedToFeatureServerGroup,
+              magdaRecordDerefencedToWms
+            ],
+            workbench: [
+              "id_of_unknown_model",
+              "a-test-server-group",
+              "a-test-magda-record",
+              "another-test-magda-record"
+            ]
+          }
+        });
+
+        expect(terria.workbench.itemIds).toEqual(theOrderedItemsIds);
+        expect(loadMapItemsWms).toHaveBeenCalledTimes(1);
+        expect(loadMapItemsArcGisMap).toHaveBeenCalledTimes(1);
+        expect(loadMapItemsArcGisFeature).toHaveBeenCalledTimes(1);
+      });
+
+      it("when a workbench item has errors", async function() {
+        let error: TerriaError | undefined = undefined;
+        try {
+          await terria.applyInitData({
+            initData: {
+              catalog: [
+                mapServerModelWithError,
+                mapServerGroupModel,
+                magdaRecordDerefencedToFeatureServerGroup,
+                magdaRecordDerefencedToWms
+              ],
+              workbench: [
+                "a-test-server-with-error",
+                "a-test-server-group",
+                "a-test-magda-record",
+                "another-test-magda-record"
+              ]
+            }
+          });
+        } catch (e) {
+          error = <TerriaError>e;
+          expect(error.message === "models.terria.loadingInitSourceErrorTitle");
+        } finally {
+          expect(error).not.toEqual(undefined);
+          expect(terria.workbench.itemIds).toEqual(theOrderedItemsIds);
+          expect(loadMapItemsWms).toHaveBeenCalledTimes(1);
+          expect(loadMapItemsArcGisMap).toHaveBeenCalledTimes(1);
+          expect(loadMapItemsArcGisFeature).toHaveBeenCalledTimes(1);
+        }
       });
     });
   });
