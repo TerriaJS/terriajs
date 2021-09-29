@@ -313,8 +313,27 @@ export default class TableColorMap {
     return Color.fromCssColorString(this.colorTraits.regionColor);
   }
 
+  /** We treat color map as "diverging" if the range cross 0 - (the color scale has positive and negative values)
+   * We also check to make sure colorPalette ColorTrait is set to a diverging color palette (see https://github.com/d3/d3-scale-chromatic#diverging)
+   */
   @computed get isDiverging() {
-    return (this.minimumValue || 0.0) < 0.0 && (this.maximumValue || 0.0) > 0.0;
+    return (
+      (this.minimumValue || 0.0) < 0.0 &&
+      (this.maximumValue || 0.0) > 0.0 &&
+      [
+        // If colorPalette is undefined, defaultColorPaletteName will return a diverging color scale
+        undefined,
+        "BrBG",
+        "PRGn",
+        "PiYG",
+        "PuOr",
+        "RdBu",
+        "RdGy",
+        "RdYlBu",
+        "RdYlGn",
+        "Spectral"
+      ].includes(this.colorTraits.colorPalette)
+    );
   }
 
   /** Get default colorPalete name.

@@ -204,6 +204,57 @@ describe("Table Style", function() {
           .toCssColorString()
       ).toBe("rgb(127,59,8)");
     });
+
+    it(" - uses ContinuousColorMap with diverging color scale only for diverging color scales", async function() {
+      csvItem.setTrait("definition", "csvString", SedCsv);
+
+      // Add value transformation to turn column values to be [-50,50]
+      csvItem.setTrait("definition", "columns", [
+        createStratumInstance(TableColumnTraits, {
+          name: "Value",
+          transformation: createStratumInstance(ColumnTransformationTraits, {
+            expression: "x-50"
+          })
+        })
+      ]);
+
+      await csvItem.loadMapItems();
+
+      const activeStyle = csvItem.activeTableStyle;
+      const colorColumn = activeStyle.colorColumn;
+      expect(colorColumn).toBeDefined();
+      expect(colorColumn!.type).toBe(4);
+      expect(colorColumn!.values.length).toBe(450);
+
+      expect(activeStyle.colorMap instanceof ContinuousColorMap).toBeTruthy();
+      expect(activeStyle.tableColorMap.isDiverging).toBeTruthy();
+
+      csvItem.setTrait(
+        "definition",
+        "defaultStyle",
+        createStratumInstance(TableStyleTraits, {
+          color: createStratumInstance(TableColorStyleTraits, {
+            colorPalette: "Reds"
+          })
+        })
+      );
+
+      expect(activeStyle.colorMap instanceof ContinuousColorMap).toBeTruthy();
+      expect(activeStyle.tableColorMap.isDiverging).toBeFalsy();
+
+      csvItem.setTrait(
+        "definition",
+        "defaultStyle",
+        createStratumInstance(TableStyleTraits, {
+          color: createStratumInstance(TableColorStyleTraits, {
+            colorPalette: "RdYlBu"
+          })
+        })
+      );
+
+      expect(activeStyle.colorMap instanceof ContinuousColorMap).toBeTruthy();
+      expect(activeStyle.tableColorMap.isDiverging).toBeTruthy();
+    });
   });
 
   describe(" - Enum", function() {
