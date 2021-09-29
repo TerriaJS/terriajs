@@ -4,6 +4,7 @@
   "compilerOptions": {
       "target": "es2018",
       "experimentalDecorators": true,
+      "declaration": true,
       "module": "esNext",
       "moduleResolution": "node",
       "sourceMap": true,
