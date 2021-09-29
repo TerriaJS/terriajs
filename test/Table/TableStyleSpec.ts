@@ -205,7 +205,7 @@ describe("Table Style", function() {
       ).toBe("rgb(127,59,8)");
     });
 
-    it(" - uses ContinuousColorMap with diverging color scale only for diverging color scales", async function() {
+    it(" - uses ContinuousColorMap with diverging color map only for diverging color palettes", async function() {
       csvItem.setTrait("definition", "csvString", SedCsv);
 
       // Add value transformation to turn column values to be [-50,50]
@@ -229,6 +229,7 @@ describe("Table Style", function() {
       expect(activeStyle.colorMap instanceof ContinuousColorMap).toBeTruthy();
       expect(activeStyle.tableColorMap.isDiverging).toBeTruthy();
 
+      // Set colorpalette to Reds - which is not diverging
       csvItem.setTrait(
         "definition",
         "defaultStyle",
@@ -242,6 +243,7 @@ describe("Table Style", function() {
       expect(activeStyle.colorMap instanceof ContinuousColorMap).toBeTruthy();
       expect(activeStyle.tableColorMap.isDiverging).toBeFalsy();
 
+      // Set colorpalette to RdYlBu - which is diverging
       csvItem.setTrait(
         "definition",
         "defaultStyle",
