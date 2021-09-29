@@ -1,5 +1,3 @@
-"use strict";
-
 import dateFormat from "dateformat";
 
 import React from "react";

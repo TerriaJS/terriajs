@@ -1,5 +1,3 @@
-"use strict";
-
 var CorsProxy = require("../../lib/Core/CorsProxy");
 var when = require("when");
 

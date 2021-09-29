@@ -1,5 +1,3 @@
-"use strict";
-
 var clone = require("terriajs-cesium/Source/Core/clone").default;
 var Color = require("terriajs-cesium/Source/Core/Color").default;
 var JulianDate = require("terriajs-cesium/Source/Core/JulianDate").default;

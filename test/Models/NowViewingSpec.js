@@ -1,5 +1,3 @@
-"use strict";
-
 var NowViewing = require("../../lib/Models/NowViewing");
 var Terria = require("../../lib/Models/Terria");
 var Cesium = require("../../lib/Models/Cesium");

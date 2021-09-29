@@ -1,5 +1,3 @@
-"use strict";
-
 import { createRenderer } from "react-test-renderer/shallow";
 import { findAll } from "react-shallow-testutils";
 

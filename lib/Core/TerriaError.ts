@@ -1,5 +1,3 @@
-"use strict";
-
 import i18next from "i18next";
 import { Notification } from "../ReactViewModels/NotificationState";
 import { terriaErrorNotification } from "../ReactViews/Notification/terriaErrorNotification";

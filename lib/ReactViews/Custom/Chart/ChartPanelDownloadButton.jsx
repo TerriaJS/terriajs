@@ -1,4 +1,3 @@
-"use strict";
 import createReactClass from "create-react-class";
 import FileSaver from "file-saver";
 import PropTypes from "prop-types";

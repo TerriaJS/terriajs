@@ -1,5 +1,3 @@
-"use strict";
-
 // import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import React from "react";
 import { findWithType } from "react-shallow-testutils";

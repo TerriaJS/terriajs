@@ -1,5 +1,3 @@
-"use strict";
-
 var combineFilters = require("../../lib/Core/combineFilters");
 
 describe("combineFilters", function() {

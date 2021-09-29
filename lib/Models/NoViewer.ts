@@ -1,5 +1,3 @@
-"use strict";
-
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import LatLonHeight from "../Core/LatLonHeight";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";

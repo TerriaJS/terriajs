@@ -1,5 +1,3 @@
-"use strict";
-
 import defined from "terriajs-cesium/Source/Core/defined";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";

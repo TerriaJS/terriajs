@@ -1,5 +1,3 @@
-"use strict";
-
 import i18next from "i18next";
 import { action } from "mobx";
 import { observer } from "mobx-react";

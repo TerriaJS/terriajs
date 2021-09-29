@@ -1,5 +1,3 @@
-"use strict";
-
 var sortedIndices = require("../../lib/Core/sortedIndices");
 
 describe("sortedIndices", function() {

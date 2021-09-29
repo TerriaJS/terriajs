@@ -1,5 +1,3 @@
-"use strict";
-
 var CameraView = require("../../lib/Models/CameraView");
 var Cartesian3 = require("terriajs-cesium/Source/Core/Cartesian3").default;
 var Cartographic = require("terriajs-cesium/Source/Core/Cartographic").default;

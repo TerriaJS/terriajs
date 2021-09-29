@@ -1,5 +1,3 @@
-"use strict";
-
 var Rectangle = require("terriajs-cesium/Source/Core/Rectangle").default;
 
 var CatalogItem = require("../../lib/Models/CatalogItem");

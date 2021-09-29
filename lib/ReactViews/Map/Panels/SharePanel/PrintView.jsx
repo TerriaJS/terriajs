@@ -1,5 +1,3 @@
-"use strict";
-
 import { formatDateTime } from "../../../BottomDock/Timeline/DateFormats";
 import createReactClass from "create-react-class";
 import Description from "../../../Preview/Description";

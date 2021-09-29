@@ -1,5 +1,3 @@
-"use strict";
-
 import { observer } from "mobx-react";
 import React from "react";
 import Box from "../../../Styled/Box";

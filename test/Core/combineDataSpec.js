@@ -1,5 +1,3 @@
-"use strict";
-
 var combineData = require("../../lib/Core/combineData");
 
 describe("combineData", function() {

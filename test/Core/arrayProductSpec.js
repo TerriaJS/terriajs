@@ -1,5 +1,3 @@
-"use strict";
-
 var arrayProduct = require("../../lib/Core/arrayProduct");
 
 describe("arrayProduct", function() {

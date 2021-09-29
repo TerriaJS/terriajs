@@ -1,5 +1,3 @@
-"use strict";
-
 var Rectangle = require("terriajs-cesium/Source/Core/Rectangle").default;
 
 var unionRectangles = require("../../lib/Map/unionRectangles");

@@ -1,5 +1,3 @@
-"use strict";
-
 var CatalogGroup = require("../../lib/Models/CatalogGroup");
 var createCatalogMemberFromType = require("../../lib/Models/Catalog/createCatalogMemberFromType");
 var Terria = require("../../lib/Models/Terria");

@@ -1,5 +1,3 @@
-"use strict";
-
 import classNames from "classnames";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";

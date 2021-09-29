@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Flattens an array of arrays, into an array, eg. [[0, 1], [2, 3], [4, 5]] => [0, 1, 2, 3, 4, 5].
  * Based on the example at

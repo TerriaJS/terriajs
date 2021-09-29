@@ -1,5 +1,3 @@
-"use strict";
-
 import Chart from "../../lib/ReactViews/Custom/Chart/Chart";
 import Collapsible from "../../lib/ReactViews/Custom/Collapsible/Collapsible";
 import parseCustomHtmlToReact from "../../lib/ReactViews/Custom/parseCustomHtmlToReact";

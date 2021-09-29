@@ -1,5 +1,3 @@
-"use strict";
-
 const CesiumEvent = require("terriajs-cesium/Source/Core/Event").default;
 const ImageryLayer = require("terriajs-cesium/Source/Scene/ImageryLayer")
   .default;

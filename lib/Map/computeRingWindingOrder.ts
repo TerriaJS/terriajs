@@ -1,5 +1,3 @@
-"use strict";
-
 import i18next from "i18next";
 import WindingOrder from "terriajs-cesium/Source/Core/WindingOrder";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";

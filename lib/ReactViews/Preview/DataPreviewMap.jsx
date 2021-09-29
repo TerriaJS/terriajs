@@ -1,5 +1,3 @@
-"use strict";
-
 import classNames from "classnames";
 import { action, autorun, computed, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
