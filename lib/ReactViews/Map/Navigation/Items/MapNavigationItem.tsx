@@ -12,6 +12,7 @@ interface PropTypes {
   item: IMapNavigationItem;
   terria: Terria;
   closeTool?: boolean;
+  expandInPlace?: boolean;
 }
 
 @observer
@@ -21,7 +22,7 @@ export class MapNavigationItem extends React.Component<PropTypes> {
   }
 
   render() {
-    const { closeTool = true, item } = this.props;
+    const { closeTool = true, item, expandInPlace } = this.props;
     if (item.render)
       return (
         <Control key={item.id} ref={item.controller.itemRef}>
@@ -30,8 +31,9 @@ export class MapNavigationItem extends React.Component<PropTypes> {
       );
     return (
       <Control ref={item.controller.itemRef}>
+        {/* in small screens, do not expand in place to avoid overlapping buttons */}
         <MapIconButton
-          expandInPlace
+          expandInPlace={expandInPlace === undefined ? true : expandInPlace}
           noExpand={item.noExpand}
           iconElement={() => <Icon glyph={item.controller.glyph} />}
           title={useTranslationIfExists(item.title || item.name)}

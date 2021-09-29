@@ -1,0 +1,19 @@
+{
+  "aspects": {
+    "dcat-distribution-strings": {
+      "downloadURL": "https://mapprod1.environment.nsw.gov.au/arcgis/services/VIS/Vegetation_SouthCoast_SCIVI_V14_E_2230/MapServer/WMSServer?request=GetCapabilities&service=WMS",
+      "format": "WMS",
+      "issued": "2021-03-09T00:20:21Z",
+      "license": "Creative Commons Attribution",
+      "title": "WMS"
+    },
+    "dataset-format": {
+      "confidenceLevel": 70,
+      "format": "WMS"
+    }
+  },
+  "id": "dist-nsw-ckan-1145c7a7-0222-453c-9742-13c4e889c550",
+  "name": "WMS",
+  "sourceTag": "d3cfb8ae-f114-40f9-a6dd-91034d0d229f",
+  "tenantId": 0
+}

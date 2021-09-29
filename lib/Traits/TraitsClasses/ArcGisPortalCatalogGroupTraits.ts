@@ -1,11 +1,10 @@
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
-import CatalogMemberTraits from "./CatalogMemberTraits";
-import ArcGisPortalSharedTraits from "./ArcGisPortalSharedTraits";
-import GroupTraits from "./GroupTraits";
-import mixTraits from "../mixTraits";
-import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import ArcGisPortalSharedTraits from "./ArcGisPortalSharedTraits";
+import CatalogMemberTraits from "./CatalogMemberTraits";
+import GroupTraits from "./GroupTraits";
 import UrlTraits from "./UrlTraits";
 
 export default class ArcGisPortalCatalogGroupTraits extends mixTraits(
@@ -14,14 +13,6 @@ export default class ArcGisPortalCatalogGroupTraits extends mixTraits(
   CatalogMemberTraits,
   ArcGisPortalSharedTraits
 ) {
-  @primitiveArrayTrait({
-    name: "Blacklist",
-    type: "string",
-    description: `An array of strings of blacklisted group names and dataset titles.
-      A group or dataset that appears in this list will not be shown to the user.`
-  })
-  blacklist?: string[];
-
   @anyTrait({
     name: "Search Parameters",
     description: `An object containing parameters matching the ArcGIS Rest API params, see https://developers.arcgis.com/rest/users-groups-and-items/search-reference.htm`
