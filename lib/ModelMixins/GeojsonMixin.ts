@@ -83,7 +83,7 @@ class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
     return new GeoJsonStratum(newModel as GeoJsonMixin.Instance) as this;
   }
 
-  static async load(item: GeoJsonMixin.Instance) {
+  static load(item: GeoJsonMixin.Instance) {
     return new GeoJsonStratum(item);
   }
 
@@ -107,6 +107,18 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
   abstract class GeoJsonMixin extends DiscretelyTimeVaryingMixin(
     MappableMixin(UrlMixin(Base))
   ) {
+    constructor(...args: any[]) {
+      super(...args);
+      if (this.strata.get(GeoJsonStratum.stratumName) === undefined) {
+        runInAction(() => {
+          this.strata.set(
+            GeoJsonStratum.stratumName,
+            GeoJsonStratum.load(this)
+          );
+        });
+      }
+    }
+
     get isGeoJson() {
       return true;
     }
@@ -154,7 +166,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     @computed get mapItems() {
       if (
         this.isLoadingMapItems ||
-        (this._dataSource === undefined && this._imageryProvider === undefined)
+        (!isDefined(this._dataSource) && !isDefined(this._imageryProvider))
       ) {
         return [];
       }
@@ -170,16 +182,6 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             }
           : undefined
       ]);
-    }
-
-    protected async forceLoadMetadata(): Promise<void> {
-      if (this.strata.get(GeoJsonStratum.stratumName) === undefined) {
-        GeoJsonStratum.load(this).then(stratum => {
-          runInAction(() => {
-            this.strata.set(GeoJsonStratum.stratumName, stratum);
-          });
-        });
-      }
     }
 
     protected async forceLoadMapItems(): Promise<void> {
@@ -198,7 +200,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         (!isDefined(this.perPropertyStyles) ||
           this.perPropertyStyles.length === 0);
 
-      const czmlTempalte = this.czmlTemplate;
+      const czmlTemplate = this.czmlTemplate;
 
       try {
         const geoJson = await new Promise<JsonValue | undefined>(
@@ -234,7 +236,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           this._readyData = geoJsonWgs84;
         });
 
-        if (isDefined(czmlTempalte)) {
+        if (isDefined(czmlTemplate)) {
           const dataSource = await this.loadCzmlDataSource(geoJsonWgs84);
           runInAction(() => {
             this._dataSource = dataSource;

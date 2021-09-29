@@ -26,6 +26,9 @@ Change Log
 * Added `MinMaxLevelMixin` and `MinMaxLevelTraits` to handle defining min and max scale denominator for layers.
 * Extracted function `scaleToDenominator` to core - for conversion of scale to zoom level.
 * Share/start data conversion will now only occur if `version` property is `0.x.x`. Previously, it was `version` property is **not** `8.x.x`
+* Refactor `SocrataMapViewCatalogItem` to use `GeoJsonMixin`
+* `SocrataCatalogGroup` will not not return groups for Facets if there is only one - so it skips an unnecessary group level.
+* Update protomaps.js to `1.5.0`
 * SDMX will now disable the region column if less than 2 valid regions have been found
 * Set `spreadStartTime` and `spreadFinishTime` to `true` for SDMX
 * Add SDMX `metadataURLs` from dataflow annotations
