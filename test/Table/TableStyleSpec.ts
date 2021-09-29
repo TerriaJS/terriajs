@@ -1,11 +1,14 @@
-import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
-import Terria from "../../lib/Models/Terria";
-import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
-import DiscreteColorMap from "../../lib/Map/DiscreteColorMap";
 import ContinuousColorMap from "../../lib/Map/ContinuousColorMap";
+import DiscreteColorMap from "../../lib/Map/DiscreteColorMap";
 import EnumColorMap from "../../lib/Map/EnumColorMap";
-import TableStyleTraits from "../../lib/Traits/TraitsClasses/TableStyleTraits";
+import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
+import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
+import Terria from "../../lib/Models/Terria";
 import TableColorStyleTraits from "../../lib/Traits/TraitsClasses/TableColorStyleTraits";
+import TableColumnTraits, {
+  ColumnTransformationTraits
+} from "../../lib/Traits/TraitsClasses/TableColumnTraits";
+import TableStyleTraits from "../../lib/Traits/TraitsClasses/TableStyleTraits";
 
 const regionMapping = JSON.stringify(
   require("../../wwwroot/data/regionMapping.json")
@@ -139,6 +142,120 @@ describe("Table Style", function() {
       expect(colorColumn!.values.length).toBe(450);
 
       expect(activeStyle.colorMap instanceof ContinuousColorMap).toBeTruthy();
+      expect((activeStyle.colorMap as ContinuousColorMap).minValue).toBe(0);
+
+      expect(activeStyle.tableColorMap.isDiverging).toBeFalsy();
+      expect((activeStyle.colorMap as ContinuousColorMap).maxValue).toBe(100);
+      expect(
+        (activeStyle.colorMap as ContinuousColorMap)
+          .mapValueToColor(0)
+          .toCssColorString()
+      ).toBe("rgb(255,245,240)");
+      expect(
+        (activeStyle.colorMap as ContinuousColorMap)
+          .mapValueToColor(50)
+          .toCssColorString()
+      ).toBe("rgb(249,105,76)");
+      expect(
+        (activeStyle.colorMap as ContinuousColorMap)
+          .mapValueToColor(100)
+          .toCssColorString()
+      ).toBe("rgb(103,0,13)");
+    });
+
+    it(" - uses ContinuousColorMap with diverging color scale if appropriate", async function() {
+      csvItem.setTrait("definition", "csvString", SedCsv);
+
+      // Add value transformation to turn column values to be [-50,50]
+      csvItem.setTrait("definition", "columns", [
+        createStratumInstance(TableColumnTraits, {
+          name: "Value",
+          transformation: createStratumInstance(ColumnTransformationTraits, {
+            expression: "x-50"
+          })
+        })
+      ]);
+
+      await csvItem.loadMapItems();
+
+      const activeStyle = csvItem.activeTableStyle;
+      const colorColumn = activeStyle.colorColumn;
+      expect(colorColumn).toBeDefined();
+      expect(colorColumn!.type).toBe(4);
+      expect(colorColumn!.values.length).toBe(450);
+
+      expect(activeStyle.colorMap instanceof ContinuousColorMap).toBeTruthy();
+      expect(activeStyle.tableColorMap.isDiverging).toBeTruthy();
+      expect((activeStyle.colorMap as ContinuousColorMap).minValue).toBe(-50);
+      expect((activeStyle.colorMap as ContinuousColorMap).maxValue).toBe(50);
+      expect(
+        (activeStyle.colorMap as ContinuousColorMap)
+          .mapValueToColor(0)
+          .toCssColorString()
+      ).toBe("rgb(243,238,234)");
+      expect(
+        (activeStyle.colorMap as ContinuousColorMap)
+          .mapValueToColor(-50)
+          .toCssColorString()
+      ).toBe("rgb(45,0,75)");
+      expect(
+        (activeStyle.colorMap as ContinuousColorMap)
+          .mapValueToColor(50)
+          .toCssColorString()
+      ).toBe("rgb(127,59,8)");
+    });
+
+    it(" - uses ContinuousColorMap with diverging color map only for diverging color palettes", async function() {
+      csvItem.setTrait("definition", "csvString", SedCsv);
+
+      // Add value transformation to turn column values to be [-50,50]
+      csvItem.setTrait("definition", "columns", [
+        createStratumInstance(TableColumnTraits, {
+          name: "Value",
+          transformation: createStratumInstance(ColumnTransformationTraits, {
+            expression: "x-50"
+          })
+        })
+      ]);
+
+      await csvItem.loadMapItems();
+
+      const activeStyle = csvItem.activeTableStyle;
+      const colorColumn = activeStyle.colorColumn;
+      expect(colorColumn).toBeDefined();
+      expect(colorColumn!.type).toBe(4);
+      expect(colorColumn!.values.length).toBe(450);
+
+      expect(activeStyle.colorMap instanceof ContinuousColorMap).toBeTruthy();
+      expect(activeStyle.tableColorMap.isDiverging).toBeTruthy();
+
+      // Set colorpalette to Reds - which is not diverging
+      csvItem.setTrait(
+        "definition",
+        "defaultStyle",
+        createStratumInstance(TableStyleTraits, {
+          color: createStratumInstance(TableColorStyleTraits, {
+            colorPalette: "Reds"
+          })
+        })
+      );
+
+      expect(activeStyle.colorMap instanceof ContinuousColorMap).toBeTruthy();
+      expect(activeStyle.tableColorMap.isDiverging).toBeFalsy();
+
+      // Set colorpalette to RdYlBu - which is diverging
+      csvItem.setTrait(
+        "definition",
+        "defaultStyle",
+        createStratumInstance(TableStyleTraits, {
+          color: createStratumInstance(TableColorStyleTraits, {
+            colorPalette: "RdYlBu"
+          })
+        })
+      );
+
+      expect(activeStyle.colorMap instanceof ContinuousColorMap).toBeTruthy();
+      expect(activeStyle.tableColorMap.isDiverging).toBeTruthy();
     });
 
     it(" - handles ContinuousColorMap with single value ", async function() {
