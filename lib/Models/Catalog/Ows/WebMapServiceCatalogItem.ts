@@ -1209,6 +1209,7 @@ class WebMapServiceCatalogItem
         layers: lyrs.length > 0 ? lyrs.join(",") : "",
         parameters,
         getFeatureInfoParameters: {
+          ...this.parameters,
           ...dimensionParameters,
           feature_count:
             1 +

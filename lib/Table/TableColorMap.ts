@@ -83,7 +83,8 @@ export default class TableColorMap {
           minValue: this.minimumValue,
           maxValue: this.maximumValue,
           nullColor: this.nullColor,
-          outlierColor: this.outlierColor
+          outlierColor: this.outlierColor,
+          isDiverging: this.isDiverging
         });
 
         // Edge case: if we only have one value, create color map with single value
@@ -290,6 +291,29 @@ export default class TableColorMap {
     return Color.fromCssColorString(this.colorTraits.regionColor);
   }
 
+  /** We treat color map as "diverging" if the range cross 0 - (the color scale has positive and negative values)
+   * We also check to make sure colorPalette ColorTrait is set to a diverging color palette (see https://github.com/d3/d3-scale-chromatic#diverging)
+   */
+  @computed get isDiverging() {
+    return (
+      (this.minimumValue || 0.0) < 0.0 &&
+      (this.maximumValue || 0.0) > 0.0 &&
+      [
+        // If colorPalette is undefined, defaultColorPaletteName will return a diverging color scale
+        undefined,
+        "BrBG",
+        "PRGn",
+        "PiYG",
+        "PuOr",
+        "RdBu",
+        "RdGy",
+        "RdYlBu",
+        "RdYlGn",
+        "Spectral"
+      ].includes(this.colorTraits.colorPalette)
+    );
+  }
+
   /** Get default colorPalete name.
    * Follows https://github.com/d3/d3-scale-chromatic#api-reference
    * If Enum or Region - use custom HighContrast (See StandardCssColors.highContrast)
@@ -316,11 +340,7 @@ export default class TableColorMap {
       return "HighContrast";
     } else if (colorColumn.type === TableColumnType.scalar) {
       const valuesAsNumbers = colorColumn.valuesAsNumbers;
-      if (
-        valuesAsNumbers !== undefined &&
-        (this.minimumValue || 0.0) < 0.0 &&
-        (this.maximumValue || 0.0) > 0.0
-      ) {
+      if (valuesAsNumbers !== undefined && this.isDiverging) {
         // Values cross zero, so use a diverging palette
         return "PuOr";
       } else {
