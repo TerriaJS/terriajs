@@ -2,16 +2,15 @@ import { runInAction } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+import { JsonObject } from "../../../../lib/Core/Json";
 import loadJson from "../../../../lib/Core/loadJson";
 import loadText from "../../../../lib/Core/loadText";
-import TerriaError from "../../../../lib/Core/TerriaError";
-import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import GeoJsonCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
-import Terria from "../../../../lib/Models/Terria";
+import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
-import { JsonObject } from "../../../../lib/Core/Json";
-import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
+import Terria from "../../../../lib/Models/Terria";
 
 describe("GeoJsonCatalogItem - with cesium primitives", function() {
   let terria: Terria;

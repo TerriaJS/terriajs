@@ -183,10 +183,12 @@ export default class GeoRssCatalogItem extends GeoJsonMixin(
     }
   }
 
-  protected async customDataLoader(): Promise<any> {
+  protected async dataLoader(): Promise<any> {
     if (isDefined(this.geoRssString)) {
       const parser = new DOMParser();
       return parser.parseFromString(this.geoRssString, "text/xml");
+    } else {
+      return super.dataLoader();
     }
   }
 }

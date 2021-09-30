@@ -63,10 +63,6 @@ class ShapefileCatalogItem extends GeoJsonMixin(
       return loadZipFileFromUrl(proxyCatalogItemUrl(this, url));
     }
   }
-
-  protected async customDataLoader(): Promise<any> {
-    return Promise.resolve();
-  }
 }
 
 function loadZipFileFromUrl(url: string): Promise<JsonValue> {

@@ -206,23 +206,6 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       }
     }
 
-    private async loadData() {
-      const geojsonData = await this.customDataLoader();
-      if (isDefined(geojsonData)) return geojsonData;
-      if (isDefined(this._file)) {
-        return await this.loadFromFile(this._file);
-      } else if (isDefined(this.url)) {
-        // try loading from a zip file url or a regular url
-        return await this.loadFromUrl(this.url);
-      } else {
-        throw new TerriaError({
-          sender: this,
-          title: i18next.t("models.geoJson.unableToLoadItemTitle"),
-          message: i18next.t("models.geoJson.unableToLoadItemMessage")
-        });
-      }
-    }
-
     protected async forceLoadMapItems(): Promise<void> {
       // Pick which rendering mode:
       // - CZML if czmlTemplate is defined
@@ -242,7 +225,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       const czmlTemplate = this.czmlTemplate;
 
       try {
-        const geoJson = await this.loadData();
+        const geoJson = await this.dataLoader();
+
         if (!isJsonObject(geoJson)) {
           throw new TerriaError({
             title: i18next.t("models.geoJson.errorLoadingTitle"),
@@ -708,7 +692,20 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return Array.from(discreteTimesMap.values());
     }
 
-    protected abstract async customDataLoader(): Promise<JsonValue | undefined>;
+    protected async dataLoader(): Promise<JsonValue | undefined> {
+      if (isDefined(this._file)) {
+        return this.loadFromFile(this._file);
+      } else if (isDefined(this.url)) {
+        // try loading from a zip file url or a regular url
+        return this.loadFromUrl(this.url);
+      } else {
+        throw new TerriaError({
+          sender: this,
+          title: i18next.t("models.geoJson.unableToLoadItemTitle"),
+          message: i18next.t("models.geoJson.unableToLoadItemMessage")
+        });
+      }
+    }
 
     protected abstract async loadFromFile(
       file: File

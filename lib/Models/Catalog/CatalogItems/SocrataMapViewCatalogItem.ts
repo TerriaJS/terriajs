@@ -147,7 +147,7 @@ export default class SocrataMapViewCatalogItem extends GeoJsonMixin(
     }
   }
 
-  protected async customDataLoader() {
+  protected async dataLoader() {
     if (this.geojsonUrl) {
       try {
         return loadJson(proxyCatalogItemUrl(this, this.geojsonUrl));
@@ -164,12 +164,12 @@ export default class SocrataMapViewCatalogItem extends GeoJsonMixin(
     }
   }
 
-  // Method not used - everything is in customDataLoader
+  // Method not used - everything is in dataLoader
   protected loadFromFile(file: File): Promise<any> {
     throw new Error("Method not implemented.");
   }
 
-  // Method not used - everything is in customDataLoader
+  // Method not used - everything is in dataLoader
   protected loadFromUrl(url: string): Promise<any> {
     throw new Error("Method not implemented.");
   }

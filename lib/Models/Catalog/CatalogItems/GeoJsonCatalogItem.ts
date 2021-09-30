@@ -29,11 +29,13 @@ class GeoJsonCatalogItem extends GeoJsonMixin(
     return i18next.t("models.geoJson.name");
   }
 
-  protected async customDataLoader(): Promise<JsonObject | undefined> {
+  protected async dataLoader(): Promise<JsonValue | undefined> {
     if (isDefined(this.geoJsonData)) {
-      return toJS(this.geoJsonData);
+      return Promise.resolve(toJS(this.geoJsonData));
     } else if (isDefined(this.geoJsonString)) {
-      return <JsonObject>JSON.parse(this.geoJsonString);
+      return Promise.resolve(<JsonObject>JSON.parse(this.geoJsonString));
+    } else {
+      return super.dataLoader();
     }
   }
 
