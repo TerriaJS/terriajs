@@ -1,6 +1,6 @@
 import React from "react";
 import { act, create, ReactTestRenderer } from "react-test-renderer";
-import { ItemSearchResult } from "../../../../lib/Models/ItemSearchProvider";
+import { ItemSearchResult } from "../../../../lib/Models/ItemSearchProviders/ItemSearchProvider";
 import Terria from "../../../../lib/Models/Terria";
 import SearchResults, {
   ResultsCount,

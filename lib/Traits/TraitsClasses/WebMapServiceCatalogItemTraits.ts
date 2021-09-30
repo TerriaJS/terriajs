@@ -1,5 +1,12 @@
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
+import objectArrayTrait from "../Decorators/objectArrayTrait";
+import objectTrait from "../Decorators/objectTrait";
+import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import ModelTraits from "../ModelTraits";
+import { traitClass } from "../Trait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import DiffableTraits from "./DiffableTraits";
 import ExportableTraits from "./ExportableTraits";
@@ -8,16 +15,10 @@ import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import LegendTraits from "./LegendTraits";
 import MappableTraits from "./MappableTraits";
-import mixTraits from "../mixTraits";
-import ModelTraits from "../ModelTraits";
-import objectArrayTrait from "../Decorators/objectArrayTrait";
-import objectTrait from "../Decorators/objectTrait";
-import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
-import primitiveTrait from "../Decorators/primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
-import SplitterTraits from "./SplitterTraits";
 import TimeFilterTraits from "./TimeFilterTraits";
 import UrlTraits from "./UrlTraits";
+import { MinMaxLevelTraits } from "./MinMaxLevelTraits";
 
 export const SUPPORTED_CRS_3857 = ["EPSG:3857", "EPSG:900913"];
 export const SUPPORTED_CRS_4326 = ["EPSG:4326", "CRS:84", "EPSG:4283"];
@@ -137,29 +138,29 @@ export class WebMapServiceAvailableLayerDimensionsTraits extends ModelTraits {
   dimensions?: WebMapServiceAvailableDimensionTraits[];
 }
 
-/**
- * Creates a single item in the catalog from one or many WMS layers.<br/>
- * <strong>Note:</strong> <i>To present all layers in an available WMS as individual items in the catalog use the \`WebMapServiceCatalogGroup\`.</i>
- * @example
- * {
- *   "type": "wms",
- *   "name": "Mangrove Cover",
- *   "url": "https://ows.services.dea.ga.gov.au",
- *   "layers": "mangrove_cover_v2_0_2"
- * }
- */
+@traitClass({
+  description: `Creates a single item in the catalog from one or many WMS layers.
+
+<strong>Note:</strong> <i>To present all layers in an available WMS as individual items in the catalog use the \`WebMapServiceCatalogGroup\`.</i>`,
+  example: {
+    type: "wms",
+    name: "Mangrove Cover",
+    url: "https://ows.services.dea.ga.gov.au",
+    layers: "mangrove_cover_v2_0_2"
+  }
+})
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
   ExportableTraits,
   DiffableTraits,
   FeatureInfoTraits,
   LayerOrderingTraits,
-  SplitterTraits,
   TimeFilterTraits,
   GetCapabilitiesTraits,
   RasterLayerTraits,
   UrlTraits,
   MappableTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  MinMaxLevelTraits
 ) {
   @primitiveTrait({
     type: "string",
@@ -233,26 +234,6 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
 
   @primitiveTrait({
     type: "number",
-    name: "Minimum Scale Denominator",
-    description:
-      "The denominator of the largest scale (smallest denominator) for which tiles should be requested. " +
-      "For example, if this value is 1000, then tiles representing a scale larger than 1:1000 (i.e. " +
-      "numerically smaller denominator, when zooming in closer) will not be requested.  Instead, tiles of " +
-      "the largest-available scale, as specified by this property, will be used and will simply get " +
-      "blurier as the user zooms in closer."
-  })
-  minScaleDenominator?: number;
-
-  @primitiveTrait({
-    type: "boolean",
-    name: "Hide Layer After Minimum Scale Denominator",
-    description:
-      "True to hide tiles when the `Minimum Scale Denominator` is exceeded. If false, we can zoom in arbitrarily close to the (increasingly blurry) layer."
-  })
-  hideLayerAfterMinScaleDenominator: boolean = false;
-
-  @primitiveTrait({
-    type: "number",
     name: "Maximum Refresh Intervals",
     description:
       "The maximum number of discrete times that can be created by a single " +
@@ -285,14 +266,14 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   linkedWcsCoverage?: string;
 
   @primitiveTrait({
-    type: "string",
+    type: "boolean",
     name: "Is GeoServer",
     description: "True if this WMS is a GeoServer; otherwise, false."
   })
   isGeoServer: boolean = false;
 
   @primitiveTrait({
-    type: "string",
+    type: "boolean",
     name: "Is Esri",
     description: "True if this WMS is from Esri; otherwise, false."
   })

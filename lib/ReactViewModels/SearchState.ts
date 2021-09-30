@@ -7,15 +7,15 @@ import {
   action
 } from "mobx";
 import Terria from "../Models/Terria";
-import SearchProviderResults from "../Models/SearchProviderResults";
-import SearchProvider from "../Models/SearchProvider";
+import SearchProviderResults from "../Models/SearchProviders/SearchProviderResults";
+import SearchProvider from "../Models/SearchProviders/SearchProvider";
 import filterOutUndefined from "../Core/filterOutUndefined";
-import CatalogSearchProvider from "../Models/CatalogSearchProvider";
+import CatalogSearchProvider from "../Models/SearchProviders/CatalogSearchProvider";
 
 interface SearchStateOptions {
   terria: Terria;
-  catalogSearchProvider?: any;
-  locationSearchProviders?: any[];
+  catalogSearchProvider?: CatalogSearchProvider;
+  locationSearchProviders?: SearchProvider[];
 }
 
 export default class SearchState {
@@ -93,10 +93,11 @@ export default class SearchState {
   }
 
   @computed
-  get unifiedSearchProviders() {
-    return filterOutUndefined(
-      [this.catalogSearchProvider].concat(this.locationSearchProviders)
-    );
+  get unifiedSearchProviders(): SearchProvider[] {
+    return filterOutUndefined([
+      this.catalogSearchProvider,
+      ...this.locationSearchProviders
+    ]);
   }
 
   @action

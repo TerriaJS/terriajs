@@ -1,26 +1,26 @@
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import MappableTraits from "./MappableTraits";
-import mixTraits from "../mixTraits";
-import primitiveTrait from "../Decorators/primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
-import SplitterTraits from "./SplitterTraits";
 import UrlTraits from "./UrlTraits";
+import { MinMaxLevelTraits } from "./MinMaxLevelTraits";
 
 export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
   MappableTraits,
   FeatureInfoTraits,
-  SplitterTraits,
   RasterLayerTraits,
   LayerOrderingTraits,
   MappableTraits,
   UrlTraits,
   CatalogMemberTraits,
-  DiscretelyTimeVaryingTraits
+  DiscretelyTimeVaryingTraits,
+  MinMaxLevelTraits
 ) {
   @primitiveTrait({
     type: "string",
@@ -52,22 +52,6 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
       "Indicates whether features in this catalog item can be selected by clicking them on the map."
   })
   allowFeaturePicking = true;
-
-  @primitiveTrait({
-    name: "Maximum scale before showing a message",
-    description:
-      "The denominator of the largest scale (smallest denominator) beyond which to show a message explaining that no further zoom levels are available, at the request",
-    type: "number"
-  })
-  maximumScaleBeforeMessage?: number;
-
-  @primitiveTrait({
-    name: "Show tiles after message",
-    description:
-      "Value indicating whether to continue showing tiles when the `maximumScaleBeforeMessage` is exceeded.",
-    type: "boolean"
-  })
-  showTilesAfterMessage = true;
 
   @primitiveTrait({
     name: "Token URL",

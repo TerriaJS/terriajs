@@ -6,29 +6,15 @@ import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import Result from "../Core/Result";
-import TerriaError from "../Core/TerriaError";
-import Group from "../Models/Group";
-import Model, { BaseModel } from "../Models/Model";
-import GroupTraits from "../Traits/TraitsClasses/GroupTraits";
+import Group from "../Models/Catalog/Group";
+import Model, { BaseModel } from "../Models/Definition/Model";
 import ModelReference from "../Traits/ModelReference";
-import CatalogMemberMixin from "./CatalogMemberMixin";
+import GroupTraits from "../Traits/TraitsClasses/GroupTraits";
+import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
 
 function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
   abstract class Klass extends Base implements Group {
     private _memberLoader = new AsyncLoader(this.forceLoadMembers.bind(this));
-
-    /**
-     * Forces load of the group members. This method does _not_ need to consider
-     * whether the group members are already loaded. When the promise returned
-     * by this function resolves, the list of members in `GroupMixin#members`
-     * and `GroupMixin#memberModels` should be complete, but the individual
-     * members will not necessarily be loaded themselves.
-     *
-     * It is guaranteed that `loadMetadata` has finished before this is called.
-     *
-     * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
-     */
-    protected abstract async forceLoadMembers(): Promise<void>;
 
     get isGroup() {
       return true;
@@ -41,6 +27,24 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
       return this._memberLoader.isLoading;
     }
 
+    get loadMembersResult() {
+      return this._memberLoader.result;
+    }
+
+    /** Get merged excludeMembers from all parent groups. This will go through all knownContainerUniqueIds and merge all excludeMembers arrays */
+    @computed get mergedExcludeMembers(): string[] {
+      const blacklistSet = new Set(this.excludeMembers ?? []);
+
+      this.knownContainerUniqueIds.forEach(containerId => {
+        const container = this.terria.getModelById(BaseModel, containerId);
+        if (container && GroupMixin.isMixedInto(container)) {
+          container.mergedExcludeMembers.forEach(s => blacklistSet.add(s));
+        }
+      });
+
+      return Array.from(blacklistSet);
+    }
+
     @computed
     get memberModels(): ReadonlyArray<BaseModel> {
       const members = this.members;
@@ -48,17 +52,36 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
         return [];
       }
       return filterOutUndefined(
-        members.map(id =>
-          ModelReference.isRemoved(id)
-            ? undefined
-            : this.terria.getModelById(BaseModel, id)
-        )
-      );
-    }
+        members.map(id => {
+          if (!ModelReference.isRemoved(id)) {
+            const model = this.terria.getModelById(BaseModel, id);
+            if (this.mergedExcludeMembers.length == 0) {
+              return model;
+            }
 
-    @action
-    toggleOpen(stratumId: string) {
-      this.setTrait(stratumId, "isOpen", !this.isOpen);
+            // Get model name and apply excludeMembers
+            const modelName = CatalogMemberMixin.isMixedInto(model)
+              ? model.name
+              : undefined;
+            if (
+              model &&
+              // Does excludeMembers not include model ID
+              !this.mergedExcludeMembers.find(
+                name =>
+                  model.uniqueId?.toLowerCase().trim() ===
+                  name.toLowerCase().trim()
+              ) &&
+              // Does excludeMembers not include model name
+              (!modelName ||
+                !this.mergedExcludeMembers.find(
+                  name =>
+                    modelName.toLowerCase().trim() === name.toLowerCase().trim()
+                ))
+            )
+              return model;
+          }
+        })
+      );
     }
 
     /**
@@ -69,15 +92,50 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
      * list of members in `GroupMixin#members` and `GroupMixin#memberModels`
      * should be complete, but the individual members will not necessarily be
      * loaded themselves.
+     *
+     * This returns a Result object, it will contain errors if they occur - they will not be thrown.
+     * To throw errors, use `(await loadMetadata()).throwIfError()`
+     *
+     * {@see AsyncLoader}
      */
-    async loadMembers(): Promise<void> {
+    async loadMembers(): Promise<Result<void>> {
       try {
-        if (CatalogMemberMixin.isMixedInto(this)) await this.loadMetadata();
-        await this._memberLoader.load();
-      } finally {
+        // Call loadMetadata if CatalogMemberMixin
+        if (CatalogMemberMixin.isMixedInto(this))
+          (await this.loadMetadata()).throwIfError();
+
+        // Call Group AsyncLoader if no errors occurred while loading metadata
+        (await this._memberLoader.load()).throwIfError();
+
         this.refreshKnownContainerUniqueIds(this.uniqueId);
         this.addShareKeysToMembers();
+      } catch (e) {
+        return Result.error(e, `Failed to load group \`${getName(this)}\``);
       }
+
+      return Result.none();
+    }
+
+    /**
+     * Forces load of the group members. This method does _not_ need to consider
+     * whether the group members are already loaded. When the promise returned
+     * by this function resolves, the list of members in `GroupMixin#members`
+     * and `GroupMixin#memberModels` should be complete, but the individual
+     * members will not necessarily be loaded themselves.
+     *
+     * It is guaranteed that `loadMetadata` has finished before this is called.
+     *
+     * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
+     *
+     * Errors can be thrown here.
+     *
+     * {@see AsyncLoader}
+     */
+    protected abstract async forceLoadMembers(): Promise<void>;
+
+    @action
+    toggleOpen(stratumId: string) {
+      this.setTrait(stratumId, "isOpen", !this.isOpen);
     }
 
     @action
@@ -180,10 +238,8 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
 
       if (newMemberIds.error)
         return Result.error(
-          TerriaError.from(
-            newMemberIds.error,
-            `Failed to add members from JSON for model \`${this.uniqueId}\``
-          )
+          newMemberIds.error,
+          `Failed to add members from JSON for model \`${this.uniqueId}\``
         );
 
       return Result.none();
@@ -248,10 +304,16 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
 }
 
 namespace GroupMixin {
-  export interface GroupMixin
+  export interface Instance
     extends InstanceType<ReturnType<typeof GroupMixin>> {}
-  export function isMixedInto(model: any): model is GroupMixin {
-    return model && "isGroup" in model && model.isGroup;
+  export function isMixedInto(model: any): model is Instance {
+    return (
+      model &&
+      "isGroup" in model &&
+      model.isGroup &&
+      "forceLoadMembers" in model &&
+      typeof model.forceLoadMembers === "function"
+    );
   }
 }
 

@@ -1,5 +1,6 @@
 import Result from "../../Core/Result";
-import { BaseModel } from "../../Models/Model";
+import TerriaError from "../../Core/TerriaError";
+import { BaseModel } from "../../Models/Definition/Model";
 import Trait, { TraitOptions } from "../Trait";
 
 type PrimitiveType = "string" | "number" | "boolean";
@@ -15,7 +16,11 @@ export default function primitiveTrait<T>(options: PrimitiveTraitOptions<T>) {
     if (!constructor.traits) {
       constructor.traits = {};
     }
-    constructor.traits[propertyKey] = new PrimitiveTrait(propertyKey, options);
+    constructor.traits[propertyKey] = new PrimitiveTrait(
+      propertyKey,
+      options,
+      constructor
+    );
   };
 }
 
@@ -23,8 +28,8 @@ export class PrimitiveTrait<T> extends Trait {
   readonly type: PrimitiveType;
   readonly isNullable: boolean;
 
-  constructor(id: string, options: PrimitiveTraitOptions<T>) {
-    super(id, options);
+  constructor(id: string, options: PrimitiveTraitOptions<T>, parent: any) {
+    super(id, options, parent);
     this.type = options.type;
     this.isNullable = options.isNullable || false;
   }
@@ -50,15 +55,17 @@ export class PrimitiveTrait<T> extends Trait {
       typeof jsonValue !== this.type &&
       (!this.isNullable || jsonValue !== null)
     ) {
-      return Result.error({
-        title: "Invalid property",
-        message: `Property ${this.id} is expected to be of type ${
-          this.type
-        } but instead it is of type ${typeof jsonValue}.`
-      });
+      return Result.error(
+        new TerriaError({
+          title: "Invalid property",
+          message: `Property ${this.id} is expected to be of type ${
+            this.type
+          } but instead it is of type ${typeof jsonValue}.`
+        })
+      );
     }
 
-    return Result.return(jsonValue);
+    return new Result(jsonValue);
   }
 
   toJson(value: T): any {

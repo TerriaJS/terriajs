@@ -1,12 +1,13 @@
 import i18next from "i18next";
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
-import DimensionTraits from "./DimensionTraits";
-import LegendTraits from "./LegendTraits";
-import ModelTraits from "../ModelTraits";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import ModelTraits from "../ModelTraits";
+import DimensionTraits from "./DimensionTraits";
+import LegendTraits from "./LegendTraits";
 
 export class MetadataUrlTraits extends ModelTraits {
   @primitiveTrait({
@@ -22,6 +23,23 @@ export class MetadataUrlTraits extends ModelTraits {
     description: "Title used for metadata URL button."
   })
   title?: string;
+}
+
+export class DataUrlTraits extends mixTraits(MetadataUrlTraits) {
+  @primitiveTrait({
+    type: "string",
+    name: "Type",
+    description: `Type of data URL. This value will be used to provide context or instruction on how to use the data URL. For example \`wcs\` will provide a link to WCS docs.
+    Current supported values are:
+    - \`wfs\` = A Web Feature Service (WFS) base URL
+    - \`wcs\` = A Web Coverage Service (WCS) base URL
+    - \`wfs-complete\` = A complete, ready-to-use link to download features from a WCS server
+    -  \`wcs-complete\` = A complete, ready-to-use link to download features from a WFS server
+    -  \`direct\` = Direct URL to dataset (this is the default if no \`type\` is specified)
+    -  \`none\` = Hide data URL
+    `
+  })
+  type?: "wfs" | "wcs" | "wfs-complete" | "wcs-complete" | "direct" | "none";
 }
 
 export class InfoSectionTraits extends ModelTraits {
@@ -199,6 +217,14 @@ export default class CatalogMemberTraits extends ModelTraits {
   })
   metadataUrls?: MetadataUrlTraits[];
 
+  @objectArrayTrait({
+    type: DataUrlTraits,
+    name: "Data URLs",
+    description: "Data URLs to show in data catalog.",
+    idProperty: "index"
+  })
+  dataUrls?: DataUrlTraits[];
+
   @primitiveTrait({
     name: "Data Custodian",
     type: "string",
@@ -215,4 +241,11 @@ export default class CatalogMemberTraits extends ModelTraits {
       "This provides ability to set model JSON through SelectableDimensions (a dropdown)."
   })
   modelDimensions?: DimensionTraits[];
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Disable about data",
+    description: "Disables the 'About Data' button in the workbench."
+  })
+  disableAboutData: boolean = false;
 }

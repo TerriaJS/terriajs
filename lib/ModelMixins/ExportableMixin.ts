@@ -1,4 +1,4 @@
-import Model from "../Models/Model";
+import Model from "../Models/Definition/Model";
 import Constructor from "../Core/Constructor";
 import ExportableTraits from "../Traits/TraitsClasses/ExportableTraits";
 import { computed } from "mobx";
@@ -34,9 +34,9 @@ function ExportableMixin<T extends Constructor<Model<ExportableTraits>>>(
 }
 
 namespace ExportableMixin {
-  export interface ExportableMixin
+  export interface Instance
     extends InstanceType<ReturnType<typeof ExportableMixin>> {}
-  export function isMixedInto(model: any): model is ExportableMixin {
+  export function isMixedInto(model: any): model is Instance {
     return model && "exportData" in model && "canExportData" in model;
   }
 }

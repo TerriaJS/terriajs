@@ -26,12 +26,14 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import LatLonHeight from "../Core/LatLonHeight";
 import runLater from "../Core/runLater";
-import CesiumTileLayer from "../Map/CesiumTileLayer";
+import ImageryProviderLeafletGridLayer, {
+  isImageryProviderGridLayer as supportsImageryProviderGridLayer
+} from "../Map/ImageryProviderLeafletGridLayer";
+import ImageryProviderLeafletTileLayer from "../Map/ImageryProviderLeafletTileLayer";
 import LeafletDataSourceDisplay from "../Map/LeafletDataSourceDisplay";
 import LeafletScene from "../Map/LeafletScene";
 import LeafletSelectionIndicator from "../Map/LeafletSelectionIndicator";
 import LeafletVisualizer from "../Map/LeafletVisualizer";
-import MapboxVectorCanvasTileLayer from "../Map/MapboxVectorCanvasTileLayer";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import PickedFeatures, {
   ProviderCoords,
@@ -47,9 +49,9 @@ import RasterLayerTraits from "../Traits/TraitsClasses/RasterLayerTraits";
 import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
+import hasTraits from "./Definition/hasTraits";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
-import hasTraits from "./hasTraits";
 import MapInteractionMode from "./MapInteractionMode";
 import Terria from "./Terria";
 
@@ -104,16 +106,20 @@ export default class Leaflet extends GlobeOrMap {
     const layerOptions = {
       bounds: clippingRectangle && rectangleToLatLngBounds(clippingRectangle)
     };
-    if (ip instanceof MapboxVectorTileImageryProvider) {
-      return new MapboxVectorCanvasTileLayer(this, ip, layerOptions);
+    // We have two different kinds of ImageryProviderLeaflet layers
+    // - Grid layer will use the ImageryProvider in the more traditional way - calling `requestImage` to draw the image on to a canvas
+    // - Tile layer will pass tile URLs to leaflet objects - which is a bit more "Leaflety" than Grid layer
+    // Tile layer is preferred. Grid layer mainly exists for custom Imagery Providers which aren't just a tile of image URLs
+    if (supportsImageryProviderGridLayer(ip)) {
+      return new ImageryProviderLeafletGridLayer(this, ip, layerOptions);
     } else {
-      return new CesiumTileLayer(this, ip, layerOptions);
+      return new ImageryProviderLeafletTileLayer(this, ip, layerOptions);
     }
   });
 
   private _makeImageryLayerFromParts(
     parts: ImageryParts,
-    item: MappableMixin.MappableMixin
+    item: MappableMixin.Instance
   ) {
     if (TileErrorHandlerMixin.isMixedInto(item)) {
       // because this code path can run multiple times, make sure we remove the
@@ -354,7 +360,7 @@ export default class Leaflet extends GlobeOrMap {
       ];
       // Flatmap
       const allImageryMapItems = ([] as {
-        item: MappableMixin.MappableMixin;
+        item: MappableMixin.Instance;
         parts: ImageryParts;
       }[]).concat(
         ...catalogItems
@@ -381,7 +387,7 @@ export default class Leaflet extends GlobeOrMap {
       this.map.eachLayer(mapLayer => {
         if (
           isImageryLayer(mapLayer) ||
-          mapLayer instanceof MapboxVectorCanvasTileLayer
+          mapLayer instanceof ImageryProviderLeafletGridLayer
         ) {
           const index = allImagery.findIndex(im => im.layer === mapLayer);
           if (index === -1) {
@@ -439,19 +445,13 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   doZoomTo(
-    target:
-      | CameraView
-      | Rectangle
-      | DataSource
-      | MappableMixin.MappableMixin
-      | any,
-    flightDurationSeconds: number
+    target: CameraView | Rectangle | DataSource | MappableMixin.Instance | any,
+    flightDurationSeconds: number = 3.0
   ): Promise<void> {
     if (!isDefined(target)) {
       return Promise.resolve();
       //throw new DeveloperError("target is required.");
     }
-
     let bounds;
 
     // Target is a KML data source
@@ -673,7 +673,7 @@ export default class Leaflet extends GlobeOrMap {
       this._pickedFeatures = undefined;
     });
 
-    const imageryLayers: CesiumTileLayer[] = [];
+    const imageryLayers: ImageryProviderLeafletTileLayer[] = [];
     if (this.terria.allowFeatureInfoRequests) {
       this.map.eachLayer(layer => {
         if (isImageryLayer(layer)) {
@@ -683,18 +683,23 @@ export default class Leaflet extends GlobeOrMap {
     }
 
     // we need items sorted in reverse order by their zIndex to get correct ordering of feature info
-    imageryLayers.sort((a: CesiumTileLayer, b: CesiumTileLayer) => {
-      if (!isDefined(a.options.zIndex) || !isDefined(b.options.zIndex)) {
+    imageryLayers.sort(
+      (
+        a: ImageryProviderLeafletTileLayer,
+        b: ImageryProviderLeafletTileLayer
+      ) => {
+        if (!isDefined(a.options.zIndex) || !isDefined(b.options.zIndex)) {
+          return 0;
+        }
+        if (a.options.zIndex < b.options.zIndex) {
+          return 1;
+        }
+        if (a.options.zIndex > b.options.zIndex) {
+          return -1;
+        }
         return 0;
       }
-      if (a.options.zIndex < b.options.zIndex) {
-        return 1;
-      }
-      if (a.options.zIndex > b.options.zIndex) {
-        return -1;
-      }
-      return 0;
-    });
+    );
 
     tileCoordinates = defaultValue(tileCoordinates, {});
 
@@ -706,35 +711,33 @@ export default class Leaflet extends GlobeOrMap {
     // We want the all available promise to return after the cleanup one to
     // make sure all vector click events have resolved.
     const promises = [cleanup].concat(
-      imageryLayers.map(imageryLayer => {
+      imageryLayers.map(async imageryLayer => {
         const imageryLayerUrl = (<any>imageryLayer.imageryProvider).url;
         const longRadians = CesiumMath.toRadians(latlng.lng);
         const latRadians = CesiumMath.toRadians(latlng.lat);
 
-        return Promise.resolve(
-          tileCoordinates[imageryLayerUrl] ||
-            imageryLayer.getFeaturePickingCoords(
-              this.map,
-              longRadians,
-              latRadians
-            )
-        ).then(coords => {
-          return imageryLayer
-            .pickFeatures(
-              coords.x,
-              coords.y,
-              coords.level,
-              longRadians,
-              latRadians
-            )
-            .then(features => {
-              return {
-                features: features,
-                imageryLayer: imageryLayer,
-                coords: coords
-              };
-            });
-        });
+        if (tileCoordinates[imageryLayerUrl])
+          return tileCoordinates[imageryLayerUrl];
+
+        const coords = await imageryLayer.getFeaturePickingCoords(
+          this.map,
+          longRadians,
+          latRadians
+        );
+
+        const features = await imageryLayer.pickFeatures(
+          coords.x,
+          coords.y,
+          coords.level,
+          longRadians,
+          latRadians
+        );
+
+        return {
+          features: features,
+          imageryLayer: imageryLayer,
+          coords: coords
+        };
       })
     );
 
@@ -745,7 +748,7 @@ export default class Leaflet extends GlobeOrMap {
         // Get rid of the cleanup promise
         const promiseResult: {
           features: ImageryLayerFeatureInfo[];
-          imageryLayer: CesiumTileLayer;
+          imageryLayer: ImageryProviderLeafletTileLayer;
           coords: ProviderCoords;
         }[] = results.slice(1);
 
@@ -866,14 +869,14 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   getImageryLayersForItem(
-    item: MappableMixin.MappableMixin
-  ): (CesiumTileLayer | MapboxVectorCanvasTileLayer)[] {
+    item: MappableMixin.Instance
+  ): (ImageryProviderLeafletTileLayer | ImageryProviderLeafletGridLayer)[] {
     return filterOutUndefined(
       item.mapItems.map(m => {
         if (ImageryParts.is(m)) {
           const layer = this._makeImageryLayerFromParts(m, item);
-          return layer instanceof CesiumTileLayer ||
-            layer instanceof MapboxVectorCanvasTileLayer
+          return layer instanceof ImageryProviderLeafletTileLayer ||
+            layer instanceof ImageryProviderLeafletGridLayer
             ? layer
             : undefined;
         }
@@ -1066,7 +1069,7 @@ export default class Leaflet extends GlobeOrMap {
       options.maxZoom = map.options.maxZoom;
     }
 
-    const layer = new MapboxVectorCanvasTileLayer(
+    const layer = new ImageryProviderLeafletGridLayer(
       this,
       imageryProvider,
       options
@@ -1080,7 +1083,9 @@ export default class Leaflet extends GlobeOrMap {
   }
 }
 
-function isImageryLayer(someLayer: L.Layer): someLayer is CesiumTileLayer {
+function isImageryLayer(
+  someLayer: L.Layer
+): someLayer is ImageryProviderLeafletTileLayer {
   return "imageryProvider" in someLayer;
 }
 

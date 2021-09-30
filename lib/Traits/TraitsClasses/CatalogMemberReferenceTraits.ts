@@ -1,7 +1,10 @@
-import ModelTraits from "../ModelTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import ReferenceTraits from "./ReferenceTraits";
 
-export default class CatalogMemberReferenceTraits extends ModelTraits {
+export default class CatalogMemberReferenceTraits extends mixTraits(
+  ReferenceTraits
+) {
   @primitiveTrait({
     name: "Name",
     description:
@@ -9,6 +12,14 @@ export default class CatalogMemberReferenceTraits extends ModelTraits {
     type: "string"
   })
   name?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Description",
+    description:
+      "The description to use for this catalog member before the reference is loaded. Markdown and HTML may be used."
+  })
+  description?: string;
 
   @primitiveTrait({
     name: "Data Custodian",

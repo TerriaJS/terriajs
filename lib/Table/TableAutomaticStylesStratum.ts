@@ -7,10 +7,10 @@ import ContinuousColorMap from "../Map/ContinuousColorMap";
 import DiscreteColorMap from "../Map/DiscreteColorMap";
 import EnumColorMap from "../Map/EnumColorMap";
 import TableMixin from "../ModelMixins/TableMixin";
-import createStratumInstance from "../Models/createStratumInstance";
-import LoadableStratum from "../Models/LoadableStratum";
-import { BaseModel } from "../Models/Model";
-import StratumFromTraits from "../Models/StratumFromTraits";
+import createStratumInstance from "../Models/Definition/createStratumInstance";
+import LoadableStratum from "../Models/Definition/LoadableStratum";
+import { BaseModel } from "../Models/Definition/Model";
+import StratumFromTraits from "../Models/Definition/StratumFromTraits";
 import LegendTraits, {
   LegendItemTraits
 } from "../Traits/TraitsClasses/LegendTraits";
@@ -205,20 +205,29 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
       return [];
     }
 
+    let items: StratumFromTraits<LegendItemTraits>[] = [];
+
     const colorMap = activeStyle.colorMap;
     if (colorMap instanceof DiscreteColorMap) {
-      return this._createLegendItemsFromDiscreteColorMap(activeStyle, colorMap);
+      items = this._createLegendItemsFromDiscreteColorMap(
+        activeStyle,
+        colorMap
+      );
     } else if (colorMap instanceof ContinuousColorMap) {
-      return this._createLegendItemsFromContinuousColorMap(
+      items = this._createLegendItemsFromContinuousColorMap(
         activeStyle,
         colorMap
       );
     } else if (colorMap instanceof EnumColorMap) {
-      return this._createLegendItemsFromEnumColorMap(activeStyle, colorMap);
+      items = this._createLegendItemsFromEnumColorMap(activeStyle, colorMap);
     } else if (colorMap instanceof ConstantColorMap) {
-      return this._createLegendItemsFromConstantColorMap(activeStyle, colorMap);
+      items = this._createLegendItemsFromConstantColorMap(
+        activeStyle,
+        colorMap
+      );
     }
-    return [];
+
+    return items;
   }
 
   @computed get numberFormatOptions():
@@ -297,6 +306,18 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
           ]
         : [];
 
+    const outlierBin =
+      activeStyle.tableColorMap.zScoreFilterValues &&
+      activeStyle.colorTraits.zScoreFilterEnabled
+        ? [
+            createStratumInstance(LegendItemTraits, {
+              color: activeStyle.tableColorMap.outlierColor.toCssColorString(),
+              addSpacingAbove: true,
+              title: activeStyle.colorTraits.outlierLabel || "Outliers"
+            })
+          ]
+        : [];
+
     return new Array(7)
       .fill(0)
       .map((_, i) => {
@@ -308,7 +329,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
         });
       })
       .reverse()
-      .concat(nullBin);
+      .concat(nullBin, outlierBin);
   }
 
   private _createLegendItemsFromDiscreteColorMap(

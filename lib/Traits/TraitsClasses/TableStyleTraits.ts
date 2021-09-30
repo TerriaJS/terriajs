@@ -5,7 +5,7 @@ import TableTimeStyleTraits from "./TableTimeStyleTraits";
 import ModelTraits from "../ModelTraits";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
-import StratumFromTraits from "../../Models/StratumFromTraits";
+import StratumFromTraits from "../../Models/Definition/StratumFromTraits";
 
 export default class TableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -35,9 +35,10 @@ export default class TableStyleTraits extends ModelTraits {
   @primitiveTrait({
     name: "Region Column",
     description: "The column to use for region mapping.",
-    type: "string"
+    type: "string",
+    isNullable: true
   })
-  regionColumn?: string;
+  regionColumn?: string | null;
 
   @primitiveTrait({
     name: "Latitude Column",

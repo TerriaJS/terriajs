@@ -5,7 +5,7 @@ export function defaultBaseMaps(terria: Terria): any[] {
 
   if (
     terria.configParameters.bingMapsKey &&
-    terria.configParameters.useCesiumIonBingImagery !== true
+    !terria.configParameters.useCesiumIonBingImagery
   ) {
     baseMaps.push({
       item: {
@@ -38,7 +38,7 @@ export function defaultBaseMaps(terria: Terria): any[] {
       },
       image: "build/TerriaJS/images/bing-maps-roads.png"
     });
-  } else if (terria.configParameters.useCesiumIonBingImagery !== false) {
+  } else if (terria.configParameters.useCesiumIonBingImagery === true) {
     baseMaps.push({
       item: {
         id: "basemap-bing-aerial-with-labels",

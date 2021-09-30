@@ -14,8 +14,10 @@ export default function(terria: Terria, window: Window) {
     "hashchange",
     async function() {
       try {
-        await terria.updateApplicationUrl(window.location.toString());
-        await terria.loadInitSources();
+        (
+          await terria.updateApplicationUrl(window.location.toString())
+        ).throwIfError();
+        (await terria.loadInitSources()).throwIfError();
       } catch (e) {
         terria.raiseErrorToUser(e);
       }
