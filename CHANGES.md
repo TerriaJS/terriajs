@@ -1,7 +1,11 @@
 Change Log
 ==========
 
-#### next release (8.1.1)
+#### next release (8.1.2)
+
+* [The next improvement]
+
+#### 8.1.1
 
 - **Breaking changes:**
   * `blacklist` has been renamed to `excludeMembers` for `ArcGisPortalCatalogGroup` and `CkanCatalogGroup`.
@@ -26,6 +30,16 @@ Change Log
 * Added `MinMaxLevelMixin` and `MinMaxLevelTraits` to handle defining min and max scale denominator for layers.
 * Extracted function `scaleToDenominator` to core - for conversion of scale to zoom level.
 * Share/start data conversion will now only occur if `version` property is `0.x.x`. Previously, it was `version` property is **not** `8.x.x`
+* Filter table column values by Z Score. This is controlled by the following `TableColorStyleTraits`:
+  * `zScoreFilter` - Treat values outside of specifed z-score as outliers, and therefore do not include in color scale. This value is magnitude of z-score - it will apply to positive and negative z-scores. For example a value of `2` will treat all values that are 2 or more standard deviations from the mean as outliers. This must be defined to be enabled - currently it is only enabled for SDMX (with `zScoreFilter=4`).
+  * `zScoreFilterEnabled - True, if z-score filter is enabled
+  * `rangeFilter` - This is applied after the `zScoreFilter`. It is used to effectively 'disable' the zScoreFilter if it doesn't cut at least the specified percange of the range of values (for both minimum and maximum value). For exmaple if `rangeFilter = 0.2`, then the zScoreFilter will only be effective if it cuts at least 20% of the range of values from the minimum and maximum value
+* Add `outlierColor` to `ContinuousColorMap`
+* Add `placement` to `SelectableDimension`. This can be used to put `SelectableDimension` below legend using `placement = "belowLegend`
+* Add `SelectableDimensionCheckbox` (and rename `SelectableDimension` to `SelectableDimensionSelect`)
+* Add `outlierFilterDimension` checkbox `SelectableDimension` to workbench to enable/disable dimension
+* Extend `tableStyle.rowGroups` to regions
+* Fix `spreadFinishTime` bug
 * Fix diverging `ContinuousColorMap` - it will now center color scale around 0.
 * Refactor `SocrataMapViewCatalogItem` to use `GeoJsonMixin`
 * `SocrataCatalogGroup` will not not return groups for Facets if there is only one - so it skips an unnecessary group level.
@@ -50,7 +64,7 @@ Change Log
 * Disabled export (clip&ship) in mobile
 * Fixed misplaced search icon in mobile safari.
 * Prevents story text from covering the whole screen in mobile devices.
-* Add `CatalogIndex`, `CatalogIndexReference` and `generateCatalogIndex()` script. These can be used to generate a static JSON in dex of a terria catalog - which can then be searched through using `flexsearch`
+* Add `CatalogIndex`, `CatalogIndexReference` and `generateCatalogIndex()` script. These can be used to generate a static JSON index of a terria catalog - which can then be searched through using `flexsearch`
 * Added `weakReference` flag `ReferenceMixin`, this can be used to treat References more like a shortcut (this means that `sourceReference` isn't used when models are shared/added to the workbench - the `target` is used instead)
 * GroupMixin.isMixedInto and MappableMixin.isMixedInto are now more strict - and won't pass for for References with `isMappable` or `isGroup`.
 * `Workbench.add` can now handle nested `References` (eg `CatalogIndexReference -> CkanReference -> WMSCatalogItem`).
@@ -61,7 +75,18 @@ Change Log
 * Changed mobile header icons and improved styling.
 * Fixed a problem with computeds and AsyncLoader when loading `mapItems` (and hence children's `mapItems`) of a CompositeCatalogItem.
 * Fix `YDYRCatalogFunction` `description`
-* [The next improvement]
+* Extend input field for search in mobile view to full width of the page.
+* Automatically hide mobile modal window when user is interacting with the map (like picking a point or drawing a shape).
+* Adjusted styling of x-axis labels in feature info panel to prevent its clipping.
+* When expanding charts from the same catalog item, we now create a new item if the expanded chart has a different title from the previously expanded chart for the same item. This behavior matches the behavior in `v7`.
+* Improve status message when feature info panel chart is loading
+* Fix broken chart panel download button.
+* Changed @vx/* dependencies to @visx/* which is the new home of the chart library
+* The glyph style used for chart points can now be customized.
+* Added `TerriaReference` item, useful for mounting a catalog tree from an external init file at any position in the current map's catalog tree.
+* Changed @vx/* dependencies to @visx/* which is the new home of the chart library
+* The glyph style used for chart points can now be customized.
+* Chart tooltip and legend bar can now fit more legends gracefully.
 
 #### 8.1.0
 
@@ -77,18 +102,6 @@ Change Log
   - Resolved issue with some navigation items not being clickable on mobile due to overlap from others.
 * Fixed a bug in Difference tool where difference image was showing with zero opacity in some situations.
 * Fixed `CzmlCatalogItem` to react correctly to input data changes.
-* Extend input field for search in mobile view to full width of the page.
-* Automatically hide mobile modal window when user is interacting with the map (like picking a point or drawing a shape).
-* Adjusted styling of x-axis labels in feature info panel to prevent its clipping.
-* When expanding charts from the same catalog item, we now create a new item if the expanded chart has a different title from the previously expanded chart for the same item. This behavior matches the behavior in `v7`.
-* Improve status message when feature info panel chart is loading
-* Fix broken chart panel download button.
-* Changed @vx/* dependencies to @visx/* which is the new home of the chart library
-* The glyph style used for chart points can now be customized.
-* Added `TerriaReference` item, useful for mounting a catalog tree from an external init file at any position in the current map's catalog tree.
-* Changed @vx/* dependencies to @visx/* which is the new home of the chart library
-* The glyph style used for chart points can now be customized.
-* Chart tooltip and legend bar can now fit more legends gracefully.
 
 #### 8.0.1
 
@@ -101,7 +114,6 @@ Change Log
 * Fixed unnecessary model reloads or recomputing of `mapItems` when switching between story scenes.
 * Fixed story reset button.
 * Moved help button to the top menu
-* [The next improvement]
 
 #### 8.0.0
 

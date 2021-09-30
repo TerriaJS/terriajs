@@ -19,6 +19,7 @@ import ConstantColorMap from "../Map/ConstantColorMap";
 import RegionProviderList from "../Map/RegionProviderList";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
+import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import SelectableDimensions, {
   SelectableDimension
 } from "../Models/SelectableDimensions";
@@ -256,7 +257,9 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           ?.length ?? 0;
 
       // Estimate number of points based off number of rowGroups
-      const numPoints = this.activeTableStyle.rowGroups.length;
+      const numPoints = this.activeTableStyle.isPoints()
+        ? this.activeTableStyle.rowGroups.length
+        : 0;
 
       // If we have more points than regions OR we have points are are using a ConstantColorMap - show points instead of regions
       // (Using ConstantColorMap with regions will result in all regions being the same color - which isn't useful)
@@ -431,7 +434,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         ...super.selectableDimensions,
         this.regionColumnDimensions,
         this.regionProviderDimensions,
-        this.styleDimensions
+        this.styleDimensions,
+        this.outlierFilterDimension
       ]);
     }
 
@@ -537,6 +541,40 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         setDimensionValue: (stratumId: string, regionCol: string) => {
           this.defaultStyle.setTrait(stratumId, "regionColumn", regionCol);
         }
+      };
+    }
+
+    /**
+     * Creates SelectableDimension for region column - the options contains a list of all columns.
+     * {@link TableTraits#enableManualRegionMapping} must be enabled.
+     */
+    @computed
+    get outlierFilterDimension(): SelectableDimension | undefined {
+      if (
+        !this.activeTableStyle.colorTraits.zScoreFilter ||
+        !this.activeTableStyle.tableColorMap.zScoreFilterValues
+      ) {
+        return;
+      }
+
+      return {
+        id: "outlierFilter",
+        options: [
+          { id: "true", name: "Outliers filtered (click to disable)" },
+          { id: "false", name: "Outliers detected (click to filter out)" }
+        ],
+        selectedId: this.activeTableStyle.colorTraits.zScoreFilterEnabled
+          ? "true"
+          : "false",
+        setDimensionValue: (stratumId: string, value: string) => {
+          updateModelFromJson(this, stratumId, {
+            defaultStyle: {
+              color: { zScoreFilterEnabled: value === "true" }
+            }
+          });
+        },
+        placement: "belowLegend",
+        type: "checkbox"
       };
     }
 

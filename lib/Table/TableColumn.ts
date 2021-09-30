@@ -4,6 +4,8 @@ import { computed } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
+import runLater from "../Core/runLater";
+import RegionProvider from "../Map/RegionProvider";
 import TableMixin from "../ModelMixins/TableMixin";
 import createCombinedModel from "../Models/Definition/createCombinedModel";
 import Model from "../Models/Definition/Model";
@@ -11,7 +13,6 @@ import TableColumnTraits, {
   THIS_COLUMN_EXPRESSION_TOKEN
 } from "../Traits/TraitsClasses/TableColumnTraits";
 import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
-import RegionProvider from "../Map/RegionProvider";
 const naturalSort = require("javascript-natural-sort");
 naturalSort.insensitive = true;
 
@@ -727,7 +728,7 @@ export default class TableColumn {
     // Load region IDs for region type
     // Note: loadRegionIDs is called in TableMixin.forceLoadMapItems()
     // So this will only load region IDs if style/regionType changes after initial loadMapItems
-    regionProvider?.loadRegionIDs();
+    runLater(() => regionProvider?.loadRegionIDs());
 
     return regionProvider;
   }
