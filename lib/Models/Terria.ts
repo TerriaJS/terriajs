@@ -877,7 +877,7 @@ export default class Terria {
       this.setViewerMode(hashViewerMode);
     } else if (persistViewerMode) {
       const viewerMode = <string>this.getLocalProperty("viewermode");
-      this.setViewerMode(viewerMode);
+      if (isDefined(viewerMode)) this.setViewerMode(viewerMode);
     }
   }
 

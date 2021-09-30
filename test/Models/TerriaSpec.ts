@@ -28,6 +28,7 @@ import {
   isInitUrl
 } from "../../lib/Models/InitSource";
 import Terria from "../../lib/Models/Terria";
+import ViewerMode from "../../lib/Models/ViewerMode";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
@@ -1090,6 +1091,47 @@ describe("Terria", function() {
           expect(loadMapItemsArcGisFeature).toHaveBeenCalledTimes(1);
         }
       });
+    });
+  });
+
+  describe("mapSettings", function() {
+    it("properly interprets map hash parameter", async () => {
+      const getLocalPropertySpy = spyOn(terria, "getLocalProperty");
+      //@ts-ignore
+      const location: Location = {
+        href: "http://test.com/#map=2d"
+      };
+      await terria.start({ configUrl: "", applicationUrl: location });
+      await terria.loadPersistedMapSettings();
+      expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
+      expect(getLocalPropertySpy).not.toHaveBeenCalledWith("viewermode");
+    });
+
+    it("properly resolves persisted map viewer", async () => {
+      const getLocalPropertySpy = spyOn(
+        terria,
+        "getLocalProperty"
+      ).and.returnValue("2d");
+      await terria.start({ configUrl: "" });
+      await terria.loadPersistedMapSettings();
+      expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
+      expect(getLocalPropertySpy).toHaveBeenCalledWith("viewermode");
+    });
+
+    it("properly interprets wrong map hash parameter and resolves persisted value", async () => {
+      const getLocalPropertySpy = spyOn(
+        terria,
+        "getLocalProperty"
+      ).and.returnValue("3dsmooth");
+      //@ts-ignore
+      const location: Location = {
+        href: "http://test.com/#map=4d"
+      };
+      await terria.start({ configUrl: "", applicationUrl: location });
+      await terria.loadPersistedMapSettings();
+      expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Cesium);
+      expect(terria.mainViewer.viewerOptions.useTerrain).toBe(false);
+      expect(getLocalPropertySpy).toHaveBeenCalledWith("viewermode");
     });
   });
 
