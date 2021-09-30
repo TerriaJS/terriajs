@@ -1,7 +1,9 @@
 import { runInAction } from "mobx";
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import { JsonObject } from "../../../../lib/Core/Json";
@@ -482,6 +484,15 @@ describe("GeoJsonCatalogItem - with cesium primitives", function() {
         fill
       );
     });
+  });
+
+  it("correctly builds `Feature` from picked Entity", function() {
+    const picked = new Entity();
+    const feature = geojson.buildFeatureFromPickResult(Cartesian2.ZERO, picked);
+    expect(feature).toBeDefined();
+    if (feature) {
+      expect(feature.cesiumEntity).toBe(picked);
+    }
   });
 });
 
