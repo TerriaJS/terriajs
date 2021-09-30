@@ -23,13 +23,15 @@ const MobileSearch = observer(
     },
 
     onLocationClick(result) {
-      result.clickAction();
+      runInAction(() => {
+        result.clickAction();
 
-      addMarker(this.props.terria, result);
+        addMarker(this.props.terria, result);
 
-      // Close modal window
-      this.props.viewState.switchMobileView(null);
-      this.props.viewState.searchState.showMobileLocationSearch = false;
+        // Close modal window
+        this.props.viewState.switchMobileView(null);
+        this.props.viewState.searchState.showMobileLocationSearch = false;
+      });
     },
 
     searchInDataCatalog() {

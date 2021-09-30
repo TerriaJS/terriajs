@@ -21,7 +21,7 @@ import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
 
 const getColorForId = createColorForIdTransformer();
-const defaultColor = "yellow";
+const DEFAULT_COLOR = "yellow";
 
 export default class TableColorMap {
   constructor(
@@ -73,10 +73,16 @@ export default class TableColorMap {
    * Gets an object used to map values in {@link #colorColumn} to colors
    * for this style.
    * Will try to create most appropriate colorMap given colorColumn:
-   * - If column type is `scalar` and we have binMaximums - use DiscreteColorMap
-   * - If column type is `scalar` and we have a valid minValue and maxValue - use ContinuousColorMap
-   * - If column type is enum or region - and we have enough binColors to represent uniqueValues - use EnumColorMap
-   * - Otherwise, use ConstantColorMap
+   *
+   * - If column type is `scalar`
+   *   - and we have binMaximums - use DiscreteColorMap
+   *   - and we have a valid minValue and maxValue - use ContinuousColorMap
+   *   - and only a single value - use EnumColorMap
+   *
+   * - If column type is `enum` or `region`
+   *   - and we have enough binColors to represent uniqueValues - use EnumColorMap
+   *
+   * - If none of the above conditions are met - use ConstantColorMap
    */
   @computed
   get colorMap(): ColorMap {
@@ -118,13 +124,41 @@ export default class TableColorMap {
           colorScale,
           minValue: this.minimumValue,
           maxValue: this.maximumValue,
-          nullColor
+          nullColor: this.nullColor,
+          isDiverging: this.isDiverging
+        });
+
+        // If we only have one value, create color map with single value
+      } else if (this.colorColumn?.uniqueValues.values.length === 1) {
+        return new EnumColorMap({
+          enumColors: [
+            {
+              color: Color.fromCssColorString(this.colorScaleContinuous()(1)),
+              value: this.colorColumn.uniqueValues.values[0]
+            }
+          ],
+          nullColor: this.nullColor
+        });
+
+        // Edge case: if we only have one value, create color map with single value
+        // This is because ContinuousColorMap can't handle minimumValue === maximumValue
+      } else if (this.colorColumn?.uniqueValues.values.length === 1) {
+        return new EnumColorMap({
+          enumColors: [
+            {
+              color: Color.fromCssColorString(this.colorScaleContinuous()(1)),
+              value: this.colorColumn.uniqueValues.values[0]
+            }
+          ],
+          nullColor: this.nullColor
         });
       }
+
+      // If no useful ColorMap could be found for the scalar column - we will create a ConstantColorMap at the end of the function
     }
 
-    // If column type is enum or region - and we have enough binColors to represent uniqueValues - use EnumColorMap
-    if (
+    // If column type is `enum` or `region` - and we have enough binColors to represent uniqueValues - use EnumColorMap
+    else if (
       colorColumn &&
       (colorColumn.type === TableColumnType.enum ||
         colorColumn.type === TableColumnType.region) &&
@@ -149,12 +183,15 @@ export default class TableColorMap {
       });
     }
 
-    // No useful colorMap can be generated - so use the same color for everything.
+    // No useful colorMap can be generated - so create a ConstantColorMap (the same color for everything.
 
-    // Try to find a useful color to use
+    // Try to find a useful color to use in this order
+    // - If colorColumn is of type region - use regionColor
+    // - If binColors trait it set - use it
+    // - If we have a title, use it to generate a unique color for this style
+    // - Or use DEFAULT_COLOR
     let color: Color | undefined;
 
-    // If colorColumn is of type region - use regionColor
     if (colorColumn?.type === TableColumnType.region && this.regionColor) {
       color = this.regionColor;
     } else if (colorTraits.nullColor) {
@@ -166,7 +203,7 @@ export default class TableColorMap {
     }
 
     if (!color) {
-      color = Color.fromCssColorString(defaultColor);
+      color = Color.fromCssColorString(DEFAULT_COLOR);
     }
 
     return new ConstantColorMap({
@@ -300,6 +337,29 @@ export default class TableColorMap {
     return Color.fromCssColorString(this.colorTraits.regionColor);
   }
 
+  /** We treat color map as "diverging" if the range cross 0 - (the color scale has positive and negative values)
+   * We also check to make sure colorPalette ColorTrait is set to a diverging color palette (see https://github.com/d3/d3-scale-chromatic#diverging)
+   */
+  @computed get isDiverging() {
+    return (
+      (this.minimumValue || 0.0) < 0.0 &&
+      (this.maximumValue || 0.0) > 0.0 &&
+      [
+        // If colorPalette is undefined, defaultColorPaletteName will return a diverging color scale
+        undefined,
+        "BrBG",
+        "PRGn",
+        "PiYG",
+        "PuOr",
+        "RdBu",
+        "RdGy",
+        "RdYlBu",
+        "RdYlGn",
+        "Spectral"
+      ].includes(this.colorTraits.colorPalette)
+    );
+  }
+
   /** Get default colorPalete name.
    * Follows https://github.com/d3/d3-scale-chromatic#api-reference
    * If Enum or Region - use custom HighContrast (See StandardCssColors.highContrast)
@@ -326,11 +386,7 @@ export default class TableColorMap {
       return "HighContrast";
     } else if (colorColumn.type === TableColumnType.scalar) {
       const valuesAsNumbers = colorColumn.valuesAsNumbers;
-      if (
-        valuesAsNumbers !== undefined &&
-        (this.minimumValue || 0.0) < 0.0 &&
-        (this.maximumValue || 0.0) > 0.0
-      ) {
+      if (valuesAsNumbers !== undefined && this.isDiverging) {
         // Values cross zero, so use a diverging palette
         return "PuOr";
       } else {
