@@ -1,7 +1,11 @@
 Change Log
 ==========
 
-#### next release (8.1.1)
+#### next release (8.1.2)
+
+* [The next improvement]
+
+#### 8.1.1
 
 - **Breaking changes:**
   * `blacklist` has been renamed to `excludeMembers` for `ArcGisPortalCatalogGroup` and `CkanCatalogGroup`.
@@ -61,7 +65,6 @@ Change Log
 * Changed mobile header icons and improved styling.
 * Fixed a problem with computeds and AsyncLoader when loading `mapItems` (and hence children's `mapItems`) of a CompositeCatalogItem.
 * Fix `YDYRCatalogFunction` `description`
-* [The next improvement]
 
 #### 8.1.0
 
