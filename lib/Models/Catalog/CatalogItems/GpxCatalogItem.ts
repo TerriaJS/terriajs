@@ -53,7 +53,7 @@ class GpxCatalogItem extends GeoJsonMixin(
 
   protected async customDataLoader(): Promise<string | undefined> {
     if (isDefined(this.gpxString)) {
-      return this.gpxString;
+      return this.parseGpxText(this.gpxString);
     }
   }
 }
