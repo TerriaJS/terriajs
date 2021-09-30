@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.1.2)
 
+* Wrap clean initSources with action.
 * [The next improvement]
 
 #### 8.1.1
