@@ -1,8 +1,8 @@
-import AttributionTraits from "./AttributionTraits";
-import mixTraits from "../mixTraits";
-import ModelTraits from "../ModelTraits";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import ModelTraits from "../ModelTraits";
+import AttributionTraits from "./AttributionTraits";
 
 export class RectangleTraits extends ModelTraits {
   @primitiveTrait({
@@ -111,6 +111,14 @@ export default class MappableTraits extends mixTraits(AttributionTraits) {
       "Disables the zoom to (aka 'Ideal Zoom') button in the workbench."
   })
   disableZoomTo: boolean = false;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Zoom on enable",
+    description:
+      "Zoom to dataset when added to workbench. Doesn't work if `disableZoomTo` is true."
+  })
+  zoomOnEnable: boolean = false;
 
   @primitiveTrait({
     type: "boolean",

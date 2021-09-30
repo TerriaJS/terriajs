@@ -4,12 +4,11 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import TerriaError, { TerriaErrorSeverity } from "../Core/TerriaError";
 import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
 import ChartableMixin from "../ModelMixins/ChartableMixin";
-import GroupMixin from "../ModelMixins/GroupMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
-import CommonStrata from "./Definition/CommonStrata";
 import LayerOrderingTraits from "../Traits/TraitsClasses/LayerOrderingTraits";
+import CommonStrata from "./Definition/CommonStrata";
 import hasTraits from "./Definition/hasTraits";
 import { BaseModel } from "./Definition/Model";
 
@@ -199,6 +198,9 @@ export default class Workbench {
 
       if (MappableMixin.isMixedInto(item)) {
         (await item.loadMapItems()).throwIfError();
+      }
+      if (item.zoomOnEnable && !item.disableZoomTo) {
+        item.terria.currentViewer.zoomTo(item);
       }
     } catch (e) {
       this.remove(item);

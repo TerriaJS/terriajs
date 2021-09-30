@@ -3,6 +3,8 @@ Change Log
 
 #### next release (8.1.2)
 
+* Reimplement option to zoom on item when adding it to workbench, `zoomOnEnable`
+  is added to `MappableTraits`.
 * [The next improvement]
 
 #### 8.1.1
