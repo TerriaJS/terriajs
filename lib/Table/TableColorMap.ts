@@ -428,8 +428,9 @@ export default class TableColorMap {
 
     // Get average value for each row group
     const rowGroupAverages = rowGroupValues.map(val => getMean(val));
-    const std = getStandardDeviation(filterOutUndefined(rowGroupAverages));
-    const mean = getMean(filterOutUndefined(rowGroupAverages));
+    const definedRowGroupAverages = filterOutUndefined(rowGroupAverages);
+    const std = getStandardDeviation(definedRowGroupAverages);
+    const mean = getMean(definedRowGroupAverages);
 
     // No std or mean - so return unfiltered values
     if (!isDefined(std) && !isDefined(mean)) return;
