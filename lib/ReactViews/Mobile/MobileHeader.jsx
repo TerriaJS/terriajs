@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
-import { withTheme } from "styled-components";
+import styled, { withTheme } from "styled-components";
 import { removeMarker } from "../../Models/LocationMarkerUtils";
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
@@ -170,29 +170,18 @@ const MobileHeader = observer(
                     left: 5px;
                   `}
                 >
-                  <RawButton
+                  <HamburgerButton
                     type="button"
                     onClick={() => this.props.viewState.toggleMobileMenu()}
                     title={t("mobile.toggleNavigation")}
-                    css={`
-                      border-radius: 2px;
-                      padding: 0 5px;
-                      margin-right: 3px;
-                      &:hover,
-                      &:focus,
-                      & {
-                        border: 1px solid
-                          ${this.props.theme.textLightTranslucent};
-                      }
-                    `}
                   >
                     <StyledIcon
                       light
                       glyph={Icon.GLYPHS.menu}
-                      styledWidth={"37px"}
-                      styledHeight={"37px"}
+                      styledWidth="20px"
+                      styledHeight="20px"
                     />
-                  </RawButton>
+                  </HamburgerButton>
                   <Branding
                     terria={this.props.terria}
                     viewState={this.props.viewState}
@@ -211,7 +200,11 @@ const MobileHeader = observer(
                     onClick={this.onMobileDataCatalogClicked}
                   >
                     {t("mobile.addDataBtnText")}
-                    <Icon glyph={Icon.GLYPHS.increase} />
+                    <StyledIcon
+                      glyph={Icon.GLYPHS.increase}
+                      styledWidth="20px"
+                      styledHeight="20px"
+                    />
                   </button>
                   <If condition={nowViewingLength > 0}>
                     <button
@@ -234,7 +227,11 @@ const MobileHeader = observer(
                     type="button"
                     onClick={this.showSearch}
                   >
-                    <Icon glyph={Icon.GLYPHS.search} />
+                    <StyledIcon
+                      glyph={Icon.GLYPHS.search}
+                      styledWidth="20px"
+                      styledHeight="20px"
+                    />
                   </button>
                 </div>
               </When>
@@ -289,4 +286,23 @@ const MobileHeader = observer(
     }
   })
 );
+
+const HamburgerButton = styled(RawButton)`
+  border-radius: 4px;
+  padding: 0 5px;
+  margin-right: 3px;
+  background: ${p => p.theme.darkLighter};
+  width: 50px;
+  height: 38px;
+  box-sizing: content-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &:hover,
+  &:focus,
+  & {
+    border: 1px solid ${p => p.theme.textLightTranslucent};
+  }
+`;
+
 module.exports = withTranslation()(withTheme(MobileHeader));
