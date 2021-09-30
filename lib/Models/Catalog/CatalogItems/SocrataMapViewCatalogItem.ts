@@ -147,16 +147,12 @@ export default class SocrataMapViewCatalogItem extends GeoJsonMixin(
     }
   }
 
-  protected async customDataLoader(
-    resolve: (value: any) => void,
-    reject: (reason: any) => void
-  ): Promise<any> {
+  protected async customDataLoader() {
     if (this.geojsonUrl) {
       try {
-        const result = loadJson(proxyCatalogItemUrl(this, this.geojsonUrl));
-        resolve(result);
+        return loadJson(proxyCatalogItemUrl(this, this.geojsonUrl));
       } catch (e) {
-        reject(
+        return Promise.reject(
           TerriaError.from(
             e,
             `Failed to load Socrata GeoJSON ${this.geojsonUrl}`
@@ -164,7 +160,7 @@ export default class SocrataMapViewCatalogItem extends GeoJsonMixin(
         );
       }
     } else {
-      resolve(undefined);
+      return Promise.resolve(undefined);
     }
   }
 
