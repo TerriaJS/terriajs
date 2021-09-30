@@ -3,6 +3,11 @@ Change Log
 
 #### next release (8.1.2)
 
+* Fix select when clicking on multiple features in 2D (#5660)
+* Implemented support for `featureInfoUrlTemplate` on 2D vector features (#5660)
+* Implemented FeatureInfoMixin in GeojsonMixin (#5660)
+* `GpxCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
+* `GeoRssCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
 * [The next improvement]
 
 #### 8.1.1
@@ -174,11 +179,6 @@ Change Log
 * Added `MapboxMapCatalogItem`.
 * Added `MapboxStyleCatalogItem`.
 * Fix splitter thumb icon vertical position
-* Fix select when clicking on multiple features in 2D (#5660)
-* Implemented support for `featureInfoUrlTemplate` on 2D vector features (#5660)
-* Implemented FeatureInfoMixin in GeojsonMixin (#5660)
-* `GpxCatalogItem` now use `GeojsonMixin` for loading data. 
-* [The next improvement]
 * Renamed all mixin instance type definitions to `XMixin.Instance`.
 * Clean up `ViewControl` colors
   * `$color-splitter` and `theme.colorSplitter` has been replaced with `$color-secondary` and `theme.colorSecondary`
