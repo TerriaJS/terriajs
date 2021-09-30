@@ -51,11 +51,11 @@ class GpxCatalogItem extends GeoJsonMixin(
     }
   }
 
-  protected async dataLoader(): Promise<string | undefined> {
+  protected async dataLoader() {
     if (isDefined(this.gpxString)) {
       return this.parseGpxText(this.gpxString);
     } else {
-      super.dataLoader();
+      return super.dataLoader();
     }
   }
 }
