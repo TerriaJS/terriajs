@@ -454,17 +454,39 @@ export default class TableStyle {
     return finishDates;
   }
 
-  /** Get rows grouped by id. Id will be calculated using idColumns or latitude/longitude columns
+  /** Get rows grouped by id. Id will be calculated using idColumns, latitude/longitude columns or region column
    */
   @computed get rowGroups() {
-    const groupByCols =
-      this.idColumns ||
-      filterOutUndefined([this.latitudeColumn, this.longitudeColumn]);
+    let groupByCols = this.idColumns;
+
+    if (!groupByCols) {
+      // If points use lat long
+      if (this.latitudeColumn && this.longitudeColumn) {
+        groupByCols = [this.latitudeColumn, this.longitudeColumn];
+        // If region - use region col
+      } else if (this.regionColumn) groupByCols = [this.regionColumn];
+    }
+
+    if (!groupByCols) groupByCols = [];
+
     const tableRowIds = this.tableModel.rowIds;
-    return Object.entries(
-      groupBy(tableRowIds, rowId =>
-        groupByCols.map(col => col.values[rowId]).join("-")
+
+    return (
+      Object.entries(
+        groupBy(tableRowIds, rowId =>
+          groupByCols!
+            .map(col => {
+              // If using region column as ID - only use valid regions
+              if (col.type === TableColumnType.region) {
+                return col.valuesAsRegions.regionIds[rowId];
+              }
+              return col.values[rowId];
+            })
+            .join("-")
+        )
       )
+        // Filter out bad IDs
+        .filter(value => value[0] !== "")
     );
   }
 
@@ -481,7 +503,15 @@ export default class TableStyle {
     defaultFinalDurationSeconds: number
   ) {
     const sortedStartDates: JulianDate[] = sortedUniqueDates(startDates);
-    const lastDate = this.timeColumn?.valuesAsJulianDates.maximum;
+
+    // Calculate last date based on if spreadFinishTime is true:
+    // - If true, use the maximum date in the entire timeColumn
+    // - If false, use the last date in startDates - which is the last date in the current row group
+    const lastDate =
+      this.timeTraits.spreadFinishTime &&
+      this.timeColumn?.valuesAsJulianDates.maximum
+        ? this.timeColumn.valuesAsJulianDates.maximum
+        : sortedStartDates[sortedStartDates.length - 1];
 
     return startDates.map(date => {
       if (!date) {
@@ -496,18 +526,12 @@ export default class TableStyle {
       const nextDate = sortedStartDates[nextDateIndex + 1];
       if (nextDate) {
         return nextDate;
-      } else if (this.timeTraits.spreadFinishTime && lastDate) {
-        return lastDate;
       } else {
         // This is the last date in the row, so calculate a final date
         const finalDurationSeconds =
           estimateFinalDurationSeconds(sortedStartDates) ||
           defaultFinalDurationSeconds;
-        const finalDate = addSecondsToDate(
-          sortedStartDates[sortedStartDates.length - 1],
-          finalDurationSeconds
-        );
-        return finalDate;
+        return addSecondsToDate(lastDate, finalDurationSeconds);
       }
     });
   }
