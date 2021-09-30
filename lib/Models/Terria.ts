@@ -1267,6 +1267,42 @@ export default class Terria {
     );
   }
 
+  private async pushAndLoadMapItems(
+    model: BaseModel,
+    newItems: BaseModel[],
+    errors: TerriaError[]
+  ) {
+    if (ReferenceMixin.isMixedInto(model)) {
+      (await model.loadReference()).pushErrorTo(errors);
+
+      if (model.target !== undefined) {
+        await this.pushAndLoadMapItems(model.target, newItems, errors);
+      } else {
+        errors.push(
+          TerriaError.from(
+            "Reference model has no target. Model Id: " + model.uniqueId
+          )
+        );
+      }
+    } else if (GroupMixin.isMixedInto(model)) {
+      (await model.loadMembers()).pushErrorTo(errors);
+
+      model.memberModels.map(async m => {
+        await this.pushAndLoadMapItems(m, newItems, errors);
+      });
+    } else if (MappableMixin.isMixedInto(model)) {
+      newItems.push(model);
+      (await model.loadMapItems()).pushErrorTo(errors);
+    } else {
+      errors.push(
+        TerriaError.from(
+          "Can not load an un-mappable item to the map. Item Id: " +
+            model.uniqueId
+        )
+      );
+    }
+  }
+
   @action
   async applyInitData({
     initData,
@@ -1385,7 +1421,7 @@ export default class Terria {
     });
 
     // Set the new contents of the workbench.
-    const newItems = filterOutUndefined(
+    const newItemsRaw = filterOutUndefined(
       workbench.map(modelId => {
         if (typeof modelId !== "string") {
           errors.push(
@@ -1400,6 +1436,18 @@ export default class Terria {
         }
       })
     );
+
+    const newItems: BaseModel[] = [];
+
+    // Maintain the model order in the workbench.
+    while (true) {
+      const model = newItemsRaw.shift();
+      if (model) {
+        await this.pushAndLoadMapItems(model, newItems, errors);
+      } else {
+        break;
+      }
+    }
 
     runInAction(() => (this.workbench.items = newItems));
 
@@ -1438,34 +1486,6 @@ export default class Terria {
             // && TODO: what is a good way to test if an item is of type TimeVarying.
           })
           .map(item => <TimeVarying>item))
-    );
-
-    // Load the items on the workbench
-    await Promise.all(
-      newItems.map(async model => {
-        try {
-          if (ReferenceMixin.isMixedInto(model)) {
-            (await model.loadReference()).throwIfError();
-            model = model.target || model;
-          }
-
-          if (MappableMixin.isMixedInto(model)) {
-            (await model.loadMapItems()).throwIfError();
-          }
-        } catch (e) {
-          errors.push(
-            TerriaError.from(e, {
-              severity: TerriaErrorSeverity.Error,
-              message: {
-                key: "models.terria.loadingWorkbenchItemErrorTitle",
-                parameters: {
-                  name: getName(model) ?? "Unknown Model"
-                }
-              }
-            })
-          );
-        }
-      })
     );
 
     if (isJsonObject(initData.pickedFeatures)) {

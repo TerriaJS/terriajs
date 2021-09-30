@@ -1,12 +1,10 @@
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import MappableTraits from "./MappableTraits";
-import UrlTraits from "./UrlTraits";
+import { GeoJsonTraits } from "./GeoJsonTraits";
 
 export default class SocrataMapViewCatalogItemTraits extends mixTraits(
-  UrlTraits,
-  MappableTraits,
+  GeoJsonTraits,
   CatalogMemberTraits
 ) {
   @primitiveTrait({

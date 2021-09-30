@@ -26,6 +26,22 @@ Change Log
 * Added `MinMaxLevelMixin` and `MinMaxLevelTraits` to handle defining min and max scale denominator for layers.
 * Extracted function `scaleToDenominator` to core - for conversion of scale to zoom level.
 * Share/start data conversion will now only occur if `version` property is `0.x.x`. Previously, it was `version` property is **not** `8.x.x`
+* Fix diverging `ContinuousColorMap` - it will now center color scale around 0.
+* Refactor `SocrataMapViewCatalogItem` to use `GeoJsonMixin`
+* `SocrataCatalogGroup` will not not return groups for Facets if there is only one - so it skips an unnecessary group level.
+* Update protomaps.js to `1.5.0`
+* SDMX will now disable the region column if less than 2 valid regions have been found
+* Set `spreadStartTime` and `spreadFinishTime` to `true` for SDMX
+* Add SDMX `metadataURLs` from dataflow annotations
+* Improve SDMX chart titles
+* `TableMixin` will now remove data if an error occurs while calling `forceLoadTableData`
+* Make `regionColumn` `isNullable` - this means region column can be disabled by setting to `null`.
+* Fix scalar column color map with a single value
+* TableMixin will now clear data if an error occurs while calling `forceLoadTableData`
+* `TableMixin` will now not return `mapItems` or `chartItems` if `isLoading` 
+* SDMX will now use `initialTimeSource = stop`
+* Fix `duplicateModels` duplicating observables across multiple models
+* Support group models in workbench -- All members will be automatically added to the map.
 * Added location search button to welcome modal in mobile view.
 * Add `DataUrlTraits` to `CatalogMemberTraits.dataUrls`. It contains an array of data URLS (with optional `title` which will render a button). It is handled the same as `MetadataUrls` except there is a `type` property which can be set to `wcs`, `wfs`... to show info about the URL.
 * Made search location bar span full width in mobile view.
@@ -42,6 +58,8 @@ Change Log
 * Added `excludeMembers` property to `GroupTraits` (this replaced the `blacklist` property in v7). It is an array of strings of excluded group and item names. A group or item name that appears in this list will not be shown to the user. This is case-insensitive and will also apply to all child/nested groups
 * Fixes an app crash on load in iOS-Safari mobile which was happening when rendering help panel tooltips.
 * Changed mobile header icons and improved styling.
+* Fixed a problem with computeds and AsyncLoader when loading `mapItems` (and hence children's `mapItems`) of a CompositeCatalogItem.
+* Fix `YDYRCatalogFunction` `description`
 * [The next improvement]
 
 #### 8.1.0
