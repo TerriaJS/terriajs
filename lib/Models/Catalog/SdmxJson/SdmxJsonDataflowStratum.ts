@@ -702,7 +702,9 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
           color: createStratumInstance(TableColorStyleTraits, {
             legend: createStratumInstance(LegendTraits, {
               title: this.unitMeasure
-            })
+            }),
+            /** Enable z-score filtering (see TableColorStyleTraits.zScoreFilter) */
+            zScoreFilter: 4
           }),
           time: createStratumInstance(TableTimeStyleTraits, {
             timeColumn: this.timeColumns[0].name,
