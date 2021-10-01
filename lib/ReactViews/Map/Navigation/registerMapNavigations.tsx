@@ -13,7 +13,6 @@ import PedestrianMode, {
   PEDESTRIAN_MODE_ID
 } from "../../Tools/PedestrianMode/PedestrianMode";
 import { ToolButtonController } from "../../Tools/Tool";
-import { HELP_PANEL_ID } from "../Panels/HelpPanel/HelpPanel";
 import {
   AR_TOOL_ID,
   AugmentedVirtualityController,
@@ -201,19 +200,5 @@ export const registerMapNavigations = (viewState: ViewState) => {
     screenSize: "medium",
     controller: feedbackController,
     order: 8
-  });
-
-  const helpController = new GenericMapNavigationItemController({
-    icon: GLYPHS.helpThick,
-    handleClick: () => viewState.showHelpPanel()
-  });
-  mapNavigationModel.addItem({
-    id: HELP_PANEL_ID,
-    name: "translate#helpMenu.btnText",
-    title: "translate#helpMenu.btnTitle",
-    location: "BOTTOM",
-    screenSize: "medium",
-    controller: helpController,
-    order: 9
   });
 };

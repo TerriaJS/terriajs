@@ -16,13 +16,10 @@ import isDefined from "../../../Core/isDefined";
 import ViewState from "../../../ReactViewModels/ViewState";
 import Box from "../../../Styled/Box";
 import Icon, { GLYPHS } from "../../../Styled/Icon";
-import Text from "../../../Styled/Text";
 import MapNavigationModel, {
   IMapNavigationItem,
   OVERFLOW_ITEM_ID
 } from "../../../ViewModels/MapNavigation/MapNavigationModel";
-import Prompt from "../../Generic/Prompt";
-import { Medium } from "../../Generic/Responsive";
 import withControlledVisibility from "../../HOCs/withControlledVisibility";
 import MapIconButton from "../../MapIconButton/MapIconButton";
 import { Control, MapNavigationItem } from "./Items/MapNavigationItem";
@@ -323,31 +320,6 @@ class MapNavigation extends React.Component<PropTypes> {
             {bottomItems?.map(item => (
               <MapNavigationItem key={item.id} item={item} terria={terria} />
             ))}
-            <Medium>
-              <Prompt
-                content={
-                  <div>
-                    <Text bold extraLarge textLight>
-                      {t("helpPanel.promptMessage")}
-                    </Text>
-                  </div>
-                }
-                displayDelay={500}
-                dismissText={t("helpPanel.dismissText")}
-                dismissAction={() => {
-                  runInAction(() =>
-                    viewState.toggleFeaturePrompt("help", false, true)
-                  );
-                }}
-                caretTopOffset={75}
-                caretLeftOffset={265}
-                caretSize={15}
-                promptWidth={273}
-                promptTopOffset={20}
-                promptLeftOffset={-330}
-                isVisible={viewState.featurePrompts.indexOf("help") >= 0}
-              />
-            </Medium>
           </ControlWrapper>
         </Box>
       </StyledMapNavigation>

@@ -2,7 +2,7 @@ Change Log
 ==========
 
 #### next release (8.1.2)
-
+* Removed duplicate Help icon and tooltip from the map navigation menu at the bottom as it is now shown in the top menu.
 * [The next improvement]
 
 #### 8.1.1
