@@ -41,7 +41,9 @@ export default class CatalogIndex {
   private async loadCatalogIndex() {
     // Load catalog index
     try {
-      const index = (await loadJson(this.url)) as CatalogIndexFile;
+      const index = (await loadJson(
+        this.terria.corsProxy.getURLProxyIfNecessary(this.url)
+      )) as CatalogIndexFile;
       this._models = new Map<string, CatalogIndexReference>();
 
       /**
