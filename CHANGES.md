@@ -2,7 +2,7 @@ Change Log
 ==========
 
 #### next release (8.1.2)
-
+* Fixed a bug where the app shows a scrollbar in some instances.
 * [The next improvement]
 
 #### 8.1.1
