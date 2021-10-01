@@ -1747,7 +1747,9 @@ async function interpretHash(
   baseUri: uri.URI
 ) {
   if (isDefined(hashProperties.clean)) {
-    terria.initSources.splice(0, terria.initSources.length);
+    runInAction(() => {
+      terria.initSources.splice(0, terria.initSources.length);
+    });
   }
 
   runInAction(() => {
