@@ -4,6 +4,7 @@ Change Log
 #### next release (8.1.2)
 
 * Wrap clean initSources with action.
+* Modified `TerriaReference` to retain its name when expanded. Previously, when the reference is expanded, it will assume the name of the group or item of the target.
 * [The next improvement]
 
 #### 8.1.1
