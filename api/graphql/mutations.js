@@ -314,10 +314,7 @@ export const createPage = /* GraphQL */ `
         ssp
         content
         split_map
-        enabled_catalog_items {
-          id
-          json
-        }
+        enabled_catalog_items
       }
       pageNr
       createdAt
@@ -348,10 +345,7 @@ export const updatePage = /* GraphQL */ `
         ssp
         content
         split_map
-        enabled_catalog_items {
-          id
-          json
-        }
+        enabled_catalog_items
       }
       pageNr
       createdAt
@@ -382,10 +376,7 @@ export const deletePage = /* GraphQL */ `
         ssp
         content
         split_map
-        enabled_catalog_items {
-          id
-          json
-        }
+        enabled_catalog_items
       }
       pageNr
       createdAt

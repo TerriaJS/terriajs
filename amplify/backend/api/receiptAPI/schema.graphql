@@ -60,7 +60,7 @@ type PageContent {
   ssp: SSP!
   content: String!
   split_map: Boolean!
-  enabled_catalog_items: [CatalogItem!]
+  enabled_catalog_items: [String!]
   split_catalog_items: SplitCatalog
 }
 

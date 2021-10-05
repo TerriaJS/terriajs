@@ -169,10 +169,7 @@ export const getPage = /* GraphQL */ `
         ssp
         content
         split_map
-        enabled_catalog_items {
-          id
-          json
-        }
+        enabled_catalog_items
       }
       pageNr
       createdAt
@@ -205,6 +202,7 @@ export const listPages = /* GraphQL */ `
           ssp
           content
           split_map
+          enabled_catalog_items
         }
         pageNr
         createdAt

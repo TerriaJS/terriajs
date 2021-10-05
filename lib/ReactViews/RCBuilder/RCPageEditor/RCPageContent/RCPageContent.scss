@@ -59,3 +59,23 @@
   background: #106fa8;
   color: #fff;
 }
+
+.RCButton {
+  background-color: white;
+  border: 1px solid #0c70a7;
+  box-sizing: border-box;
+  border-radius: 38px;
+  height: 40px;
+  padding: 0 10px;
+  min-width: 100px;
+  transition: all 100ms ease;
+
+  &:hover {
+    color: white;
+    background-color: #0c70a7;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}

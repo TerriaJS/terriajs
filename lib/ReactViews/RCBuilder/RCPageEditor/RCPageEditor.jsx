@@ -1,21 +1,23 @@
 import { API, graphqlOperation } from "aws-amplify";
 import PropTypes from "prop-types";
-import { default as React, useEffect, useState } from "react";
+import { default as React, useEffect, useRef, useState } from "react";
 import { getPage } from "../../../../api/graphql/queries";
 import { updatePage } from "../../../../api/graphql/mutations";
 import Styles from "../RCStoryEditor/RCStoryEditor.scss";
 import { useParams, withRouter, useHistory } from "react-router-dom";
 import { captureCurrentView, moveToSavedView } from "./ViewCapture";
 import RCPageContent from "./RCPageContent/RCPageContent";
+import SettingPanel from "./../../Map/Panels/SettingPanel.jsx";
 
 function RCPageEditor(props) {
   const [page, setPage] = useState(null);
   const [scenarios, setScenarios] = useState([]);
   const [title, setTitle] = useState("");
   const [section, setSection] = useState("");
-  const [mapView, setMapView] = useState(null);
   const [message, setMessage] = useState({ success: 0, message: "" });
   const history = useHistory();
+  const viewState = props.viewState;
+  const contentRef = useRef(null);
 
   // get the page id from url
   const { story_id: storyID, page_id: pageID } = useParams();
@@ -41,7 +43,6 @@ function RCPageEditor(props) {
         if (Array.isArray(mapView.initialCamera)) {
           delete mapView.initialCamera;
         }
-        setMapView(mapView);
         moveToSavedView(props.viewState, mapView);
       });
     } catch (error) {
@@ -51,8 +52,15 @@ function RCPageEditor(props) {
   const isScenarioValid = () => {
     return !scenarios.find(sc => sc.ssp === "Choose SSP");
   };
+  const captureEnabledCatalogItems = () => {
+    if (contentRef.current !== null) {
+      contentRef.current.saveEnabledCatalogItems();
+    }
+  };
   const savePage = () => {
     if (isScenarioValid()) {
+      const mapView = captureCurrentView(viewState);
+      captureEnabledCatalogItems();
       const pageDetails = {
         id: page.id,
         title: title,
@@ -133,25 +141,19 @@ function RCPageEditor(props) {
 
         <div className={Styles.group}>
           <label className={Styles.topLabel}>Map view</label>
-          <button
-            className={Styles.RCButton}
-            onClick={() => setMapView(captureCurrentView(props.viewState))}
-          >
-            Capture current view
-          </button>
-          &nbsp;
-          <button
-            className={Styles.RCButton}
-            onClick={() => moveToSavedView(props.viewState, mapView)}
-          >
-            Move to captured view
-          </button>
         </div>
+        <SettingPanel
+          terria={viewState.terria}
+          allBaseMaps={viewState.terria.allBaseMaps}
+          viewState={viewState}
+        />
         <div>
           <RCPageContent
+            ref={contentRef}
             storyId={storyID}
             scenarios={scenarios}
             updateScenarios={updateScenarios}
+            viewState={viewState}
           />
         </div>
         <div className={Styles.container}>

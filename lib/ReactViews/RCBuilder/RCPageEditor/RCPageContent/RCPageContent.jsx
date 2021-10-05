@@ -1,4 +1,10 @@
-import { default as React, useState } from "react";
+import {
+  default as React,
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useState
+} from "react";
 import { API } from "aws-amplify";
 import * as mutations from "../../../../../api/graphql/mutations";
 import PropTypes from "prop-types";
@@ -9,8 +15,8 @@ import RCPageContentItem from "./RCPageContentItem";
 
 import Styles from "./RCPageContent.scss";
 import RCSSPSelection from "./RCSSPSelction";
-function RCPageContent(props) {
-  const { storyId, scenarios, updateScenarios } = props;
+const RCPageContent = forwardRef((props, ref) => {
+  const { storyId, scenarios, updateScenarios, viewState } = props;
   const [showEditor, setShowEditor] = useState(false);
   const [content, setContent] = useState({});
   const [selectedSSP, setSelectedSSP] = useState("");
@@ -20,6 +26,8 @@ function RCPageContent(props) {
   const showContent = scenario => {
     setShowEditor(true);
     setSelectedSSP("");
+    captureEnabledCatalogItems(currentScenario);
+    restoreEnabledCatalogItems(scenario);
     setCurrentScenario(scenario);
   };
   const contentChanged = content => {
@@ -58,7 +66,8 @@ function RCPageContent(props) {
       id: maxId + 1,
       ssp: "Choose SSP",
       content: originalContent,
-      split_map: false
+      split_map: false,
+      enabled_catalog_items: defaultCatalogItems
     };
     updateScenarios(scenario => [...scenario, content]);
   };
@@ -66,6 +75,33 @@ function RCPageContent(props) {
     // Page content will be deleted from dynamodb on page save.
     updateScenarios(scenarios.filter(sc => sc.id !== id));
   };
+
+  const defaultCatalogItems = ["EU Lines!- Mapbox Style", "hotspots"];
+
+  const captureEnabledCatalogItems = scenario => {
+    const enabledItems = viewState.terria.nowViewing.items
+      .filter(item => item.isShown)
+      .map(item => item.name);
+    scenario.enabled_catalog_items = enabledItems;
+  };
+
+  const restoreEnabledCatalogItems = scenario => {
+    if (!Array.isArray(scenario.enabled_catalog_items)) {
+      scenario.enabled_catalog_items = defaultCatalogItems;
+    }
+    viewState.terria.nowViewing.items.forEach(item => {
+      item.isShown = scenario.enabled_catalog_items.includes(item.name);
+    });
+  };
+
+  // Basically exposes captureEnabledCatalogItems on the component
+  // to be called from parent
+  useImperativeHandle(ref, () => ({
+    saveEnabledCatalogItems() {
+      captureEnabledCatalogItems(currentScenario);
+    }
+  }));
+
   return (
     <RCAccordian
       title="Content"
@@ -105,6 +141,15 @@ function RCPageContent(props) {
                   onContentChange={contentChanged}
                   storyID={storyId}
                 />
+                <button
+                  className={Styles.RCButton}
+                  onClick={() => {
+                    viewState.doShowSidePanel = true;
+                    viewState.isMapFullScreen = true;
+                  }}
+                >
+                  Configure map data
+                </button>
               </div>
             ) : null}
           </div>
@@ -112,10 +157,11 @@ function RCPageContent(props) {
       })}
     </RCAccordian>
   );
-}
+});
 RCPageContent.propTypes = {
   storyId: PropTypes.string,
   scenarios: PropTypes.array,
-  updateScenarios: PropTypes.func
+  updateScenarios: PropTypes.func,
+  viewState: PropTypes.object
 };
 export default RCPageContent;
