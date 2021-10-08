@@ -139,7 +139,7 @@ export default class CatalogSearchProvider extends SearchProvider {
 
     try {
       if (this.terria.catalogIndex) {
-        const results = this.terria.catalogIndex?.search(searchText);
+        const results = await this.terria.catalogIndex?.search(searchText);
         searchResults.results = results;
       } else {
         await loadAndSearchCatalogRecursively(
