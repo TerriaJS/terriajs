@@ -4,6 +4,7 @@ import { initReactI18next } from "react-i18next";
 import HttpApi from "i18next-http-backend";
 import translationEN from "../Language/en/translation.json";
 import translationFR from "../Language/fr/translation.json";
+import translationNB from "../Language/nb_NO/translation.json";
 
 export interface I18nBackendOptions {
   /**
@@ -127,6 +128,9 @@ class Internationalization {
           },
           fr: {
             translation: translationFR
+          },
+          nb: {
+            translation: translationNB
           }
         },
 
