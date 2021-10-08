@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.1.3)
 
+* Reimplement map viewer url param
 * [The next improvement]
 
 #### 8.1.2

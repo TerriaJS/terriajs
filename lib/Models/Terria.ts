@@ -871,19 +871,27 @@ export default class Terria {
 
   loadPersistedMapSettings(): void {
     const persistViewerMode = this.configParameters.persistViewerMode;
+    const hashViewerMode = this.userProperties.get("map");
+    const viewerModes = ["3d", "3dsmooth", "2d"];
+    if (hashViewerMode && viewerModes.includes(hashViewerMode)) {
+      this.setViewerMode(hashViewerMode);
+    } else if (persistViewerMode) {
+      const viewerMode = <string>this.getLocalProperty("viewermode");
+      if (isDefined(viewerMode)) this.setViewerMode(viewerMode);
+    }
+  }
+
+  setViewerMode(viewerMode: string): void {
     const mainViewer = this.mainViewer;
-    const viewerMode = this.getLocalProperty("viewermode");
-    if (persistViewerMode && defined(viewerMode)) {
-      if (viewerMode === "3d" || viewerMode === "3dsmooth") {
-        mainViewer.viewerMode = ViewerMode.Cesium;
-        mainViewer.viewerOptions.useTerrain = viewerMode === "3d";
-      } else if (viewerMode === "2d") {
-        mainViewer.viewerMode = ViewerMode.Leaflet;
-      } else {
-        console.error(
-          `Trying to select ViewerMode ${viewerMode} that doesn't exist`
-        );
-      }
+    if (viewerMode === "3d" || viewerMode === "3dsmooth") {
+      mainViewer.viewerMode = ViewerMode.Cesium;
+      mainViewer.viewerOptions.useTerrain = viewerMode === "3d";
+    } else if (viewerMode === "2d") {
+      mainViewer.viewerMode = ViewerMode.Leaflet;
+    } else {
+      console.error(
+        `Trying to select ViewerMode ${viewerMode} that doesn't exist`
+      );
     }
   }
 
