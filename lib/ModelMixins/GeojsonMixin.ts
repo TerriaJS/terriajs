@@ -1,13 +1,14 @@
 import bbox from "@turf/bbox";
 import { Feature, FeatureCollection, GeoJSON, Point } from "geojson";
 import i18next from "i18next";
-import { action, computed, observable, runInAction, toJS } from "mobx";
 import {
-  CircleSymbolizer,
-  GeomType,
-  LineSymbolizer,
-  PolygonSymbolizer
-} from "terriajs-protomaps";
+  action,
+  computed,
+  observable,
+  reaction,
+  runInAction,
+  toJS
+} from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -30,6 +31,13 @@ import PolygonGraphics from "terriajs-cesium/Source/DataSources/PolygonGraphics"
 import PolylineGraphics from "terriajs-cesium/Source/DataSources/PolylineGraphics";
 import Property from "terriajs-cesium/Source/DataSources/Property";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+import {
+  CircleSymbolizer,
+  Feature as ProtomapsFeature,
+  GeomType,
+  LineSymbolizer,
+  PolygonSymbolizer
+} from "terriajs-protomaps";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
@@ -47,12 +55,11 @@ import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
+import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
 import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
-import DiscretelyTimeVaryingMixin, {
-  DiscreteTimeAsJS
-} from "./DiscretelyTimeVaryingMixin";
-import MappableMixin from "./MappableMixin";
+import { DiscreteTimeAsJS } from "./DiscretelyTimeVaryingMixin";
+import TableMixin from "./TableMixin";
 
 const formatPropertyValue = require("../Core/formatPropertyValue");
 const hashFromString = require("../Core/hashFromString");
@@ -104,9 +111,20 @@ class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
 StratumOrder.addLoadStratum(GeoJsonStratum.stratumName);
 
 function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
-  abstract class GeoJsonMixin extends DiscretelyTimeVaryingMixin(
-    MappableMixin(UrlMixin(Base))
+  abstract class GeoJsonMixin extends TableMixin(
+    UrlMixin(CatalogMemberMixin(Base))
   ) {
+    @observable
+    private _dataSource: CzmlDataSource | GeoJsonDataSource | undefined;
+
+    @observable
+    private _imageryProvider: ProtomapsImageryProvider | undefined;
+
+    protected readonly zipFileRegex = /(\.zip\b)/i;
+    protected _file?: File;
+
+    @observable.ref _readyData?: JsonObject;
+
     constructor(...args: any[]) {
       super(...args);
       if (this.strata.get(GeoJsonStratum.stratumName) === undefined) {
@@ -117,22 +135,32 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           );
         });
       }
+
+      this.strata.set(
+        TableAutomaticStylesStratum.stratumName,
+        new TableAutomaticStylesStratum(this)
+      );
+
+      reaction(
+        () =>
+          this.readyData &&
+          this.activeTableStyle &&
+          this.activeTableStyle.colorMap,
+        () => {
+          if (this._imageryProvider && this.readyData) {
+            runInAction(() => {
+              this._imageryProvider = this.createProtomapsImageryProvider(
+                this.readyData!
+              );
+            });
+          }
+        }
+      );
     }
 
     get isGeoJson() {
       return true;
     }
-
-    protected readonly zipFileRegex = /(\.zip\b)/i;
-
-    @observable
-    private _dataSource: CzmlDataSource | GeoJsonDataSource | undefined;
-    @observable
-    private _imageryProvider: ProtomapsImageryProvider | undefined;
-
-    protected _file?: File;
-
-    @observable.ref _readyData?: JsonObject;
 
     setFileInput(file: File) {
       this._file = file;
@@ -184,6 +212,11 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       ]);
     }
 
+    /** Remove chart items */
+    @computed get chartItems() {
+      return [];
+    }
+
     protected async forceLoadMapItems(): Promise<void> {
       // Pick which rendering mode:
       // - CZML if czmlTemplate is defined
@@ -232,6 +265,15 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           geoJson,
           this.terria.configParameters.proj4ServiceBaseUrl
         );
+        if (geoJsonWgs84.type === "FeatureCollection") {
+          const featureCollection = (geoJsonWgs84 as any) as FeatureCollection;
+          for (let i = 0; i < featureCollection.features.length; i++) {
+            if (!featureCollection.features[i].properties) {
+              featureCollection.features[i].properties = {};
+            }
+            featureCollection.features[i].properties!["_id_"] = i;
+          }
+        }
         runInAction(() => {
           this._readyData = geoJsonWgs84;
         });
@@ -312,6 +354,24 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
     private createProtomapsImageryProvider(geoJson: JsonObject) {
       const styles = this.stylesWithDefaults();
+      const colValues =
+        runInAction(() => this.activeTableStyle.colorColumn?.valuesForType) ??
+        [];
+      const colorMap = runInAction(() => this.activeTableStyle.colorMap);
+      const nullColor = runInAction(
+        () => this.activeTableStyle.tableColorMap.nullColor
+      );
+      const getValue = (z: number, f?: ProtomapsFeature) => {
+        const rowId = f?.props["_id_"];
+        if (typeof rowId === "number") {
+          return (
+            colorMap.mapValueToColor(colValues[rowId])?.toCssColorString() ??
+            nullColor.toCssColorString()
+          );
+        }
+        return nullColor.toCssColorString();
+      };
+
       return new ProtomapsImageryProvider({
         terria: this.terria,
         data: geoJson as any,
@@ -321,11 +381,11 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new PolygonSymbolizer({
-              fill: styles.fill.toCssColorString()
+              fill: getValue
             }),
             minzoom: 0,
             maxzoom: Infinity,
-            filter: (props, feature) => {
+            filter: (zoom, feature) => {
               return feature?.geomType === GeomType.Polygon;
             }
           },
@@ -338,7 +398,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             }),
             minzoom: 0,
             maxzoom: Infinity,
-            filter: (props, feature) => {
+            filter: (zoom, feature) => {
               return feature?.geomType === GeomType.Polygon;
             }
           },
@@ -346,12 +406,12 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new LineSymbolizer({
-              color: styles.polylineStroke.toCssColorString(),
+              color: getValue,
               width: styles.strokeWidth
             }),
             minzoom: 0,
             maxzoom: Infinity,
-            filter: (props, feature) => {
+            filter: (zoom, feature) => {
               return feature?.geomType === GeomType.Line;
             }
           },
@@ -360,13 +420,13 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new CircleSymbolizer({
               radius: styles.markerSize / 5,
-              fill: styles.markerColor.toCssColorString(),
+              fill: getValue,
               width: styles.strokeWidth,
               stroke: styles.stroke.toCssColorString()
             }),
             minzoom: 0,
             maxzoom: Infinity,
-            filter: (props, feature) => {
+            filter: (zoom, feature) => {
               return feature?.geomType === GeomType.Point;
             }
           }
@@ -653,37 +713,123 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
     @computed
     get discreteTimes(): DiscreteTimeAsJS[] | undefined {
-      if (this.timeProperty === undefined || this.readyData === undefined) {
+      if (this.readyData === undefined) {
         return undefined;
       }
-      const discreteTimesMap: Map<string, DiscreteTimeAsJS> = new Map();
-      const addFeatureToDiscreteTimes = (geojson: GeoJSON) => {
-        if (geojson.type === "Feature") {
-          let feature = geojson as Feature;
-          if (
-            feature.properties !== null &&
-            feature.properties !== undefined &&
-            feature.properties[this.timeProperty!] !== undefined
-          ) {
-            const dt = {
-              time: new Date(
-                `${feature.properties[this.timeProperty!]}`
-              ).toISOString(),
-              tag: feature.properties[this.timeProperty!]
-            };
-            discreteTimesMap.set(dt.tag, dt);
+
+      if (this.timeProperty) {
+        const discreteTimesMap: Map<string, DiscreteTimeAsJS> = new Map();
+        const addFeatureToDiscreteTimes = (geojson: GeoJSON) => {
+          if (geojson.type === "Feature") {
+            let feature = geojson as Feature;
+            if (
+              feature.properties !== null &&
+              feature.properties !== undefined &&
+              feature.properties[this.timeProperty!] !== undefined
+            ) {
+              const dt = {
+                time: new Date(
+                  `${feature.properties[this.timeProperty!]}`
+                ).toISOString(),
+                tag: feature.properties[this.timeProperty!]
+              };
+              discreteTimesMap.set(dt.tag, dt);
+            }
+          } else if (geojson.type === "FeatureCollection") {
+            const featureCollection = geojson as FeatureCollection;
+            featureCollection.features.forEach(feature =>
+              addFeatureToDiscreteTimes(feature)
+            );
           }
-        } else if (geojson.type === "FeatureCollection") {
-          const featureCollection = geojson as FeatureCollection;
-          featureCollection.features.forEach(feature =>
-            addFeatureToDiscreteTimes(feature)
-          );
+        };
+
+        addFeatureToDiscreteTimes((this.readyData as unknown) as GeoJSON);
+
+        return Array.from(discreteTimesMap.values());
+      }
+
+      if (!this.activeTableStyle.moreThanOneTimeInterval) return;
+      const dates = this.activeTableStyle.timeColumn?.valuesAsDates.values;
+      if (dates === undefined) {
+        return;
+      }
+      const times = filterOutUndefined(
+        dates.map(d =>
+          d ? { time: d.toISOString(), tag: undefined } : undefined
+        )
+      ).reduce(
+        // is it correct for discrete times to remove duplicates?
+        // see discussion on https://github.com/TerriaJS/terriajs/pull/4577
+        // duplicates will mess up the indexing problem as our `<DateTimePicker />`
+        // will eliminate duplicates on the UI front, so given the datepicker
+        // expects uniques, return uniques here
+        (acc: DiscreteTimeAsJS[], time) =>
+          !acc.some(
+            accTime => accTime.time === time.time && accTime.tag === time.tag
+          )
+            ? [...acc, time]
+            : acc,
+        []
+      );
+      return times;
+    }
+
+    /**
+     * The raw data table in column-major format, i.e. the outer array is an
+     * array of columns.
+     */
+    @computed
+    get dataColumnMajor(): string[][] | undefined {
+      if (!this.readyData) return [];
+
+      if (this.readyData.type !== "FeatureCollection") return [];
+
+      const fc = (this.readyData as any) as FeatureCollection;
+
+      // Map from property name (column name) to column index
+      const colMap = new Map<string, number>();
+
+      const dataColumnMajor: string[][] = [];
+
+      dataColumnMajor[0] = new Array(fc.features.length + 1).fill("");
+
+      for (let i = 0; i < fc.features.length; i++) {
+        const feature = fc.features[i];
+
+        // Loop through feature properties
+        if (feature.properties) {
+          for (let j = 0; j < Object.keys(feature.properties).length; j++) {
+            const prop = Object.keys(feature.properties)[j];
+            const value = feature.properties[prop];
+            let colIndex = colMap.get(prop);
+
+            // If column isn't in colMap - we need to create it
+            if (!isDefined(colIndex)) {
+              colIndex = colMap.size;
+              colMap.set(prop, colIndex);
+              dataColumnMajor[colIndex] = new Array(
+                fc.features.length + 1
+              ).fill("");
+            }
+            if (typeof value === "string") {
+              dataColumnMajor[colIndex][i + 1] = value;
+            } else if (typeof value === "number") {
+              dataColumnMajor[colIndex][i + 1] = value.toString();
+            }
+          }
         }
-      };
+      }
 
-      addFeatureToDiscreteTimes((this.readyData as unknown) as GeoJSON);
+      // Set column titles
+      colMap.forEach((index, prop) => {
+        dataColumnMajor[index][0] = prop;
+      });
 
-      return Array.from(discreteTimesMap.values());
+      return dataColumnMajor;
+    }
+
+    async forceLoadTableData() {
+      return undefined;
     }
 
     protected abstract async customDataLoader(
@@ -693,10 +839,11 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
     protected abstract async loadFromFile(file: File): Promise<any>;
     protected abstract async loadFromUrl(url: string): Promise<any>;
+
+    // Start Table styling...
   }
   return GeoJsonMixin;
 }
-
 namespace GeoJsonMixin {
   export interface Instance
     extends InstanceType<ReturnType<typeof GeoJsonMixin>> {}

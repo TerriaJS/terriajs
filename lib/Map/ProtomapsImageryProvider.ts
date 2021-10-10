@@ -329,6 +329,7 @@ export default class ProtomapsImageryProvider
     this.labelers = new Labelers(
       document.createElement("canvas").getContext("2d"),
       this.labelRules,
+      16,
       () => undefined
     );
   }

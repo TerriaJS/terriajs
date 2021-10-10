@@ -782,6 +782,14 @@ export default class TableColumn {
     };
   }
 
+  @computed get valuesForType() {
+    if (this.type === TableColumnType.scalar) {
+      return this.valuesAsNumbers.values;
+    }
+
+    return this.values;
+  }
+
   @computed
   get scaledValueFunctionForType(): (rowIndex: number) => number | null {
     if (this.type === TableColumnType.scalar) {

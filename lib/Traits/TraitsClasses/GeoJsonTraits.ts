@@ -1,15 +1,15 @@
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
-import CatalogMemberTraits from "./CatalogMemberTraits";
-import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
-import MappableTraits from "./MappableTraits";
-import mixTraits from "../mixTraits";
-import ModelTraits from "../ModelTraits";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import ModelTraits from "../ModelTraits";
+import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
+import FeatureInfoTraits from "./FeatureInfoTraits";
+import MappableTraits from "./MappableTraits";
 import StyleTraits from "./StyleTraits";
+import TableTraits from "./TableTraits";
 import UrlTraits from "./UrlTraits";
 
 export class PerPropertyGeoJsonStyleTraits extends ModelTraits {
@@ -36,7 +36,9 @@ export class PerPropertyGeoJsonStyleTraits extends ModelTraits {
   })
   caseSensitive?: boolean = false;
 }
+
 export class GeoJsonTraits extends mixTraits(
+  TableTraits,
   FeatureInfoTraits,
   UrlTraits,
   MappableTraits,
