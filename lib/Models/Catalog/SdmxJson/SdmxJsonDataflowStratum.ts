@@ -806,7 +806,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
       this.catalogItem.discreteTimes.length > 1
     ) {
       const chartName = `${this.catalogItem.name}: {{${regionType.nameProp}}}`;
-      template += `</table><chart title="${chartName}" x-column="{{terria.timeSeries.xName}}" y-column="${this.unitMeasure}" >{{terria.timeSeries.data}}</chart>`;
+      template += `</table>{{#terria.timeSeries.data}}<chart title="${chartName}" x-column="{{terria.timeSeries.xName}}" y-column="${this.unitMeasure}" >{{terria.timeSeries.data}}</chart>{{/terria.timeSeries.data}}`;
     }
 
     return createStratumInstance(FeatureInfoTemplateTraits, { template });
