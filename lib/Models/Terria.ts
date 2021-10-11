@@ -1358,19 +1358,7 @@ export default class Terria {
     }
 
     if (isJsonString(initData.viewerMode)) {
-      switch (initData.viewerMode.toLowerCase()) {
-        case "3d".toLowerCase():
-          this.mainViewer.viewerOptions.useTerrain = true;
-          this.mainViewer.viewerMode = ViewerMode.Cesium;
-          break;
-        case "3dSmooth".toLowerCase():
-          this.mainViewer.viewerOptions.useTerrain = false;
-          this.mainViewer.viewerMode = ViewerMode.Cesium;
-          break;
-        case "2d".toLowerCase():
-          this.mainViewer.viewerMode = ViewerMode.Leaflet;
-          break;
-      }
+      this.setViewerMode(initData.viewerMode.toLowerCase());
     }
 
     if (isJsonObject(initData.baseMaps)) {
