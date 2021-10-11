@@ -1,12 +1,5 @@
 import { observer } from "mobx-react";
-import {
-  action,
-  computed,
-  observable,
-  makeObservable,
-  toJS,
-  trace
-} from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
 import { AxisLeft, AxisBottom } from "@visx/axis";
 import { RectClipPath } from "@visx/clip-path";
 import { localPoint } from "@visx/event";
