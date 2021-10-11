@@ -99,7 +99,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
       !Array.isArray(dataflowStructure.data.dataflows) ||
       dataflowStructure.data.dataflows.length === 0
     ) {
-      throw networkRequestMessage({
+      throw networkRequestError({
         title: i18next.t("models.sdmxJsonDataflowStratum.loadDataErrorTitle"),
         message: i18next.t(
           "models.sdmxJsonDataflowStratum.loadDataErrorMessage.noDataflow",
@@ -111,7 +111,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
       !Array.isArray(dataflowStructure.data.dataStructures) ||
       dataflowStructure.data.dataStructures.length === 0
     ) {
-      throw networkRequestMessage({
+      throw networkRequestError({
         title: i18next.t("models.sdmxJsonDataflowStratum.loadDataErrorTitle"),
         message: i18next.t(
           "models.sdmxJsonDataflowStratum.loadDataErrorMessage.noDatastructure",
