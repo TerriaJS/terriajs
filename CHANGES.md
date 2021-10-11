@@ -4,6 +4,18 @@ Change Log
 #### next release (8.1.3)
 
 * Reimplement map viewer url param
+* Added `terriaError.importance` property. This can be set to adjust which error messages are presented to the user.
+  * `terriaErrorNotification` and `WarningBox` will use the error message with highest importance to show to the user ("Developer details" remains unchanged)
+* Add `terriaError.shouldRaiseToUser` override, this can be used to raise errors with `Warning` severity.
+* `terriaError.raisedToError` will now check if **any** `TerriaError` has been raised to the user in the tree.
+* `workbench.add()` will now keep items which only return `Warning` severity `TerriaErrors` after loading.
+* Improve SDMX error messages for no results
+* Fix SDMX FeatureInfoSection time-series chart to only show if data exists.
+* Improve GeoJSON CRS projection error messages
+* Add `Notification` `onDismiss` and `ignore` properties.
+* Fix `AsyncLoader` result bug
+* Remove `Terria.error` event handler
+* Refactor `workbench.add` to return `Result`
 * [The next improvement]
 
 #### 8.1.2
@@ -39,13 +51,6 @@ Change Log
 * Added `MinMaxLevelMixin` and `MinMaxLevelTraits` to handle defining min and max scale denominator for layers.
 * Extracted function `scaleToDenominator` to core - for conversion of scale to zoom level.
 * Share/start data conversion will now only occur if `version` property is `0.x.x`. Previously, it was `version` property is **not** `8.x.x`
-* Added `terriaError.messageImportance` property. This can be set to adjust which error messages are presented to the user.
-* Added `terriaError.importance` property. This can be set to adjust which error messages are presented to the user.
-  * `terriaErrorNotification` and `WarningBox` will use the error message with highest importance to show to the user ("Developer details" remains unchanged)
-* Add `terriaError.shouldRaiseToUser` override, this can be used to raise errors with `Warning` severity.
-* `terriaError.raisedToError` will now check if **any** `TerriaError` has been raised to the user in the tree.
-* `workbench.add()` will now keep items which only return `Warning` severity `TerriaErrors` after loading.
-* Improve SDMX error messages for no results
 * Filter table column values by Z Score. This is controlled by the following `TableColorStyleTraits`:
   * `zScoreFilter` - Treat values outside of specifed z-score as outliers, and therefore do not include in color scale. This value is magnitude of z-score - it will apply to positive and negative z-scores. For example a value of `2` will treat all values that are 2 or more standard deviations from the mean as outliers. This must be defined to be enabled - currently it is only enabled for SDMX (with `zScoreFilter=4`).
   * `zScoreFilterEnabled - True, if z-score filter is enabled
@@ -87,11 +92,6 @@ Change Log
 * Add `description` trait to `CatalogMemberReferenceTraits`
 * Added `excludeMembers` property to `GroupTraits` (this replaced the `blacklist` property in v7). It is an array of strings of excluded group and item names. A group or item name that appears in this list will not be shown to the user. This is case-insensitive and will also apply to all child/nested groups
 * Fixes an app crash on load in iOS-Safari mobile which was happening when rendering help panel tooltips.
-* Add notification `onDismiss` and `ignore` properties.
-* Fix AsyncLoader result bug
-* Remove Terria.error Event handler
-* Refactor workbench.add to return Result
-* [The next improvement]
 * Fixed `WebMapServiceCatalogItem` not sending additional `parameters` in `GetFeatureInfo` queries.
 * Changed mobile header icons and improved styling.
 * Fixed a problem with computeds and AsyncLoader when loading `mapItems` (and hence children's `mapItems`) of a CompositeCatalogItem.
