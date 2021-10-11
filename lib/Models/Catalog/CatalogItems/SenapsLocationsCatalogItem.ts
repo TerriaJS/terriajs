@@ -77,7 +77,6 @@ export class SenapsLocationsStratum extends LoadableStratum(
     private readonly geojsonItem: GeoJsonCatalogItem
   ) {
     super();
-    makeObservable(this);
     this.geojsonItem = geojsonItem;
   }
 

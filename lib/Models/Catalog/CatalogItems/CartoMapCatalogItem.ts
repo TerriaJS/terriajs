@@ -26,7 +26,6 @@ export class CartoLoadableStratum extends LoadableStratum(
     readonly tileSubdomains: string[]
   ) {
     super();
-    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {

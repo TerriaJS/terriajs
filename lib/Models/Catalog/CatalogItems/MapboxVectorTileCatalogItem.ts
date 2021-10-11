@@ -121,8 +121,9 @@ StratumOrder.addLoadStratum(MapboxVectorTileLoadableStratum.stratumName);
 class MapboxVectorTileCatalogItem extends MappableMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(MapboxVectorTileCatalogItemTraits)))
 ) {
-  @observable
-  public readonly forceProxy = true;
+  get forceProxy() {
+    return true;
+  }
 
   static readonly type = "mvt";
 

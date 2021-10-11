@@ -53,7 +53,6 @@ export default class PointOnMap extends React.Component<PropsType> {
     this.pointItem = pointItem;
   }
 
-  @action
   componentWillUnmount() {
     if (this.pointItem) {
       this.props.terria.overlays.remove(this.pointItem);

@@ -26,55 +26,57 @@ export default class TestCatalogItem
     return "test";
   }
 
-  selectableDimensions: SelectableDimension[] = [
-    {
-      id: "some-id",
-      name: "Some name",
-      options: [
-        { id: "option-1", name: "Option 1" },
-        { id: "option-2", name: "Option 2" }
-      ],
-      selectedId: "option-2",
-      allowUndefined: true,
-      setDimensionValue: (stratumId: string, newStyle: string) => {}
-    },
-    {
-      id: "some-id-2",
-      name: "Some name 2",
-      options: [
-        { id: "option-3", name: "Option 3" },
-        { id: "option-4", name: "Option 4" },
-        { id: "option-5", name: "Option 5" }
-      ],
-      selectedId: "option-3",
-      allowUndefined: false,
-      setDimensionValue: (stratumId: string, newStyle: string) => {}
-    },
-    {
-      id: "some-id-3",
-      name: "Some name 3",
-      options: [
-        { id: "option-6", name: "Neko" },
-        { id: "option-7", name: "Mochi" },
-        { id: "option-8", name: "A dog" }
-      ],
-      selectedId: "option-8",
-      allowUndefined: false,
-      setDimensionValue: (stratumId: string, newStyle: string) => {},
-      disable: true
-    },
-    {
-      id: "some-id-4",
-      name: "Some name 4",
-      options: [
-        { id: "true", name: "Option 1" },
-        { id: "false", name: "Option 2" }
-      ],
-      selectedId: "false",
-      type: "checkbox",
-      setDimensionValue: (stratumId: string, newStyle: string) => {}
-    }
-  ];
+  get selectableDimensions(): SelectableDimension[] {
+    return [
+      {
+        id: "some-id",
+        name: "Some name",
+        options: [
+          { id: "option-1", name: "Option 1" },
+          { id: "option-2", name: "Option 2" }
+        ],
+        selectedId: "option-2",
+        allowUndefined: true,
+        setDimensionValue: (stratumId: string, newStyle: string) => {}
+      },
+      {
+        id: "some-id-2",
+        name: "Some name 2",
+        options: [
+          { id: "option-3", name: "Option 3" },
+          { id: "option-4", name: "Option 4" },
+          { id: "option-5", name: "Option 5" }
+        ],
+        selectedId: "option-3",
+        allowUndefined: false,
+        setDimensionValue: (stratumId: string, newStyle: string) => {}
+      },
+      {
+        id: "some-id-3",
+        name: "Some name 3",
+        options: [
+          { id: "option-6", name: "Neko" },
+          { id: "option-7", name: "Mochi" },
+          { id: "option-8", name: "A dog" }
+        ],
+        selectedId: "option-8",
+        allowUndefined: false,
+        setDimensionValue: (stratumId: string, newStyle: string) => {},
+        disable: true
+      },
+      {
+        id: "some-id-4",
+        name: "Some name 4",
+        options: [
+          { id: "true", name: "Option 1" },
+          { id: "false", name: "Option 2" }
+        ],
+        selectedId: "false",
+        type: "checkbox",
+        setDimensionValue: (stratumId: string, newStyle: string) => {}
+      }
+    ];
+  }
 }
 
 describe("DimensionSelectorSection", function() {
