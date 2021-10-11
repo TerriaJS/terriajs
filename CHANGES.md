@@ -18,6 +18,7 @@ Change Log
 * Refactor `workbench.add` to return `Result`
 * Consolidated network request / CORS error message - it is now in `t("core.terriaError.networkRequestMessage")`. It can be injected into other translation strings like so:
   * `"groupNotAvailableMessage": "An error occurred while invoking the ArcGIS REST service.  \n\n$t(core.terriaError.networkRequestMessage)"`
+* Fix incorrect default `configParameters.feedbackPreamble`
 * [The next improvement]
 
 #### 8.1.2
