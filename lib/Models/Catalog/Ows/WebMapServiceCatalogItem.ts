@@ -35,7 +35,8 @@ import TileErrorHandlerMixin from "../../../ModelMixins/TileErrorHandlerMixin";
 import TimeFilterMixin from "../../../ModelMixins/TimeFilterMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import SelectableDimensions, {
-  SelectableDimension
+  SelectableDimension,
+  SelectableDimensionSelect
 } from "../../SelectableDimensions";
 import { terriaTheme } from "../../../ReactViews/StandardUserInterface/StandardTheme";
 import {
@@ -1208,6 +1209,7 @@ class WebMapServiceCatalogItem
         layers: lyrs.length > 0 ? lyrs.join(",") : "",
         parameters,
         getFeatureInfoParameters: {
+          ...this.parameters,
           ...dimensionParameters,
           feature_count:
             1 +
@@ -1236,7 +1238,7 @@ class WebMapServiceCatalogItem
   );
 
   @computed
-  get styleSelectableDimensions(): SelectableDimension[] {
+  get styleSelectableDimensions(): SelectableDimensionSelect[] {
     return this.availableStyles.map((layer, layerIndex) => {
       let name = "Styles";
 

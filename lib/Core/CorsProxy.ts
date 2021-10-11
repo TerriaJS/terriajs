@@ -140,7 +140,7 @@ export default class CorsProxy {
    *       the cache headers with. E.g. '2d' for 2 days.
    * @returns Either the URL passed in or a proxied URL if it should be proxied.
    */
-  getURLProxyIfNecessary(resource: string, proxyFlag: string) {
+  getURLProxyIfNecessary(resource: string, proxyFlag?: string) {
     if (this.shouldUseProxy(resource)) {
       return this.getURL(resource, proxyFlag);
     }

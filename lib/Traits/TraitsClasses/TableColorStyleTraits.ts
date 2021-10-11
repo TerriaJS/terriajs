@@ -54,6 +54,14 @@ export default class TableColorStyleTraits extends ModelTraits {
   nullColor?: string;
 
   @primitiveTrait({
+    name: "Outlier Color",
+    description:
+      'The color to use when the value is considered an "outlier" (and therefore not shown on color scale), specified as a CSS color string. This will only apply if `zScoreFilter` is defined',
+    type: "string"
+  })
+  outlierColor?: string;
+
+  @primitiveTrait({
     name: "Region Color",
     description:
       "The color to use when the styling the region, specified as a CSS color string.",
@@ -67,6 +75,13 @@ export default class TableColorStyleTraits extends ModelTraits {
     type: "string"
   })
   nullLabel?: string;
+
+  @primitiveTrait({
+    name: "Outlier Label",
+    description: "The label to use in the legend for outlier values.",
+    type: "string"
+  })
+  outlierLabel?: string = "Outliers";
 
   // @primitiveTrait({
   //   name: "Bin Method",
@@ -173,4 +188,27 @@ export default class TableColorStyleTraits extends ModelTraits {
     type: LegendTraits
   })
   legend?: LegendTraits;
+
+  @primitiveTrait({
+    name: "Z-score filter",
+    description:
+      "Treat values outside of specifed z-score as outliers, and therefore do not include in color scale. This value is magnitude of z-score - it will apply to positive and negative z-scores. For example a value of `2` will treat all values that are 2 or more standard deviations from the mean as outliers. This must be defined for it to be enabled",
+    type: "number"
+  })
+  zScoreFilter?: number;
+
+  @primitiveTrait({
+    name: "Z-score filter enabled",
+    description: "True, if z-score filter is enabled.",
+    type: "boolean"
+  })
+  zScoreFilterEnabled: boolean = true;
+
+  @primitiveTrait({
+    name: "Range filter",
+    description:
+      "This is applied after the `zScoreFilter`. It is used to effectively 'disable' the zScoreFilter if it doesn't cut at least the specified percange of the range of values (for both minimum and maximum value). For exmaple if `rangeFilter = 0.2`, then the zScoreFilter will only be effective if it cuts at least 20% of the range of values from the minimum and maximum value",
+    type: "number"
+  })
+  rangeFilter: number = 0.3;
 }
