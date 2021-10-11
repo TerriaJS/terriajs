@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, makeObservable, runInAction } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
@@ -36,6 +36,8 @@ import GeoJsonCatalogItem from "../CatalogItems/GeoJsonCatalogItem";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { getLineStyleCesium } from "./esriLineStyle";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
+import ModelTraits from "../../../Traits/ModelTraits";
+import Terria from "../../Terria";
 
 const proj4 = require("proj4").default;
 
@@ -176,6 +178,7 @@ class FeatureServerStratum extends LoadableStratum(
     private _esriJson: any
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -382,6 +385,16 @@ export default class ArcGisFeatureServerCatalogItem extends MappableMixin(
   )
 ) {
   static readonly type = "esri-featureServer";
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+    makeObservable(this);
+  }
 
   get type(): string {
     return ArcGisFeatureServerCatalogItem.type;

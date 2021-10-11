@@ -2,6 +2,7 @@ import {
   action,
   computed,
   IReactionDisposer,
+  makeObservable,
   observable,
   reaction,
   runInAction
@@ -445,6 +446,8 @@ export default class ViewState {
         }
       }
     );
+
+    makeObservable(this);
   }
 
   dispose() {

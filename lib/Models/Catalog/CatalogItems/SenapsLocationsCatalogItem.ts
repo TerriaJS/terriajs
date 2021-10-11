@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, makeObservable, runInAction } from "mobx";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import { JsonObject } from "../../../Core/Json";
@@ -18,6 +18,8 @@ import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
+import Terria from "../../Terria";
+import ModelTraits from "../../../Traits/ModelTraits";
 
 export interface SenapsFeature {
   type: string;
@@ -75,6 +77,7 @@ export class SenapsLocationsStratum extends LoadableStratum(
     private readonly geojsonItem: GeoJsonCatalogItem
   ) {
     super();
+    makeObservable(this);
     this.geojsonItem = geojsonItem;
   }
 
@@ -237,6 +240,16 @@ class SenapsLocationsCatalogItem extends MappableMixin(
 
   get type() {
     return SenapsLocationsCatalogItem.type;
+  }
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+    makeObservable(this);
   }
 
   get typeName() {

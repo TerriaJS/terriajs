@@ -1,5 +1,11 @@
 import i18next from "i18next";
-import { action, computed, observable, runInAction } from "mobx";
+import {
+  action,
+  computed,
+  makeObservable,
+  observable,
+  runInAction
+} from "mobx";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import { JsonObject } from "../../../Core/Json";
@@ -23,6 +29,7 @@ import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
+import ModelTraits from "../../../Traits/ModelTraits";
 
 export function createInheritedCkanSharedTraitsStratum(
   model: Model<CkanSharedTraits>
@@ -59,6 +66,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
     private readonly _ckanResponse: CkanServerResponse
   ) {
     super();
+    makeObservable(this);
     this.datasets = this.getDatasets();
     this.filteredDatasets = this.getFilteredDatasets();
     this.groups = this.getGroups();
@@ -299,6 +307,16 @@ export default class CkanCatalogGroup extends UrlMixin(
 
   get type() {
     return CkanCatalogGroup.type;
+  }
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+    makeObservable(this);
   }
 
   get typeName() {

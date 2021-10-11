@@ -1,15 +1,14 @@
 import i18next from "i18next";
-import { action, computed, observable } from "mobx";
+import { action, computed, makeObservable, observable } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import TerriaError, { TerriaErrorSeverity } from "../Core/TerriaError";
 import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
 import ChartableMixin from "../ModelMixins/ChartableMixin";
-import GroupMixin from "../ModelMixins/GroupMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
-import CommonStrata from "./Definition/CommonStrata";
 import LayerOrderingTraits from "../Traits/TraitsClasses/LayerOrderingTraits";
+import CommonStrata from "./Definition/CommonStrata";
 import hasTraits from "./Definition/hasTraits";
 import { BaseModel } from "./Definition/Model";
 
@@ -21,6 +20,10 @@ const supportsReordering = (model: BaseModel) =>
 
 export default class Workbench {
   private readonly _items = observable.array<BaseModel>();
+
+  construtor() {
+    makeObservable(this);
+  }
 
   /**
    * Gets or sets the list of items on the workbench.

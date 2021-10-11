@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, makeObservable, runInAction } from "mobx";
 import URI from "urijs";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
@@ -24,6 +24,8 @@ import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
+import Terria from "../../Terria";
+import ModelTraits from "../../../Traits/ModelTraits";
 
 interface DocumentInfo {
   Title?: string;
@@ -51,6 +53,7 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
     private readonly _arcgisServer: ArcGisServer
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -261,6 +264,16 @@ export default class ArcGisCatalogGroup extends UrlMixin(
 
   get type() {
     return ArcGisCatalogGroup.type;
+  }
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+    makeObservable(this);
   }
 
   get typeName() {

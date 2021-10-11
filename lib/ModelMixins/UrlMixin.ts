@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import URI from "urijs";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Definition/Model";
@@ -8,6 +8,12 @@ type UrlModel = Model<UrlTraits>;
 
 function UrlMixin<T extends Constructor<UrlModel>>(Base: T) {
   class UrlMixin extends Base {
+    constructor(...args: any[]) {
+      super(...args);
+
+      makeObservable(this);
+    }
+
     get hasUrlMixin() {
       return true;
     }

@@ -1,13 +1,16 @@
-import { action, runInAction } from "mobx";
+import { action, runInAction, makeObservable } from "mobx";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import loadWithXhr from "../../../Core/loadWithXhr";
 import CatalogFunctionJobMixin from "../../../ModelMixins/CatalogFunctionJobMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
+import ModelTraits from "../../../Traits/ModelTraits";
 import YDYRCatalogFunctionJobTraits from "../../../Traits/TraitsClasses/YDYRCatalogFunctionJobTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
+import { BaseModel } from "../../Definition/Model";
+import Terria from "../../Terria";
 import CsvCatalogItem from "../CatalogItems/CsvCatalogItem";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { ALGORITHMS, DATASETS } from "./YDYRCatalogFunction";
@@ -18,6 +21,18 @@ export default class YDYRCatalogFunctionJob extends CatalogFunctionJobMixin(
   readonly typeName = "YourDataYourRegions Job";
 
   static readonly type = "ydyr-job";
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+
+    makeObservable(this);
+  }
+
   get type() {
     return YDYRCatalogFunctionJob.type;
   }

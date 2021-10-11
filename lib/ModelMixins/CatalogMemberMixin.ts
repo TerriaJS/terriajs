@@ -1,4 +1,4 @@
-import { action, computed, runInAction } from "mobx";
+import { action, computed, runInAction, makeObservable } from "mobx";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
@@ -19,6 +19,10 @@ import ReferenceMixin from "./ReferenceMixin";
 type CatalogMember = Model<CatalogMemberTraits>;
 
 function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
+  if (Base.prototype.hasCatalogMemberMixin) {
+    return (Base as any) as Constructor<CatalogMemberMixin> & T;
+  }
+
   abstract class CatalogMemberMixin extends AccessControlMixin(Base)
     implements SelectableDimensions {
     abstract get type(): string;
@@ -26,6 +30,12 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
     // The names of items in the CatalogMember's info array that contain details of the source of this CatalogMember's data.
     // This should be overridden by children of this class. For an example see the WebMapServiceCatalogItem
     _sourceInfoItemNames: string[] | undefined = undefined;
+
+    constructor(...args: any[]) {
+      super(...args);
+
+      makeObservable(this);
+    }
 
     get typeName(): string | undefined {
       return;

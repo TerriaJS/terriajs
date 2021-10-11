@@ -6,7 +6,7 @@ import { terriaErrorNotification } from "../ReactViews/Notification/terriaErrorN
 import filterOutUndefined from "./filterOutUndefined";
 import flatten from "./flatten";
 import isDefined from "./isDefined";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 
 /** This is used for I18n translation strings so we can "resolve" them when the Error is displayed to the user.
  * This means we can create TerriaErrors before i18next has been initialised.
@@ -198,6 +198,7 @@ export default class TerriaError {
   }
 
   constructor(options: TerriaErrorOptions) {
+    makeObservable(this);
     this._message = options.message;
     this._title = options.title ?? { key: "core.terriaError.defaultTitle" };
     this.sender = options.sender;

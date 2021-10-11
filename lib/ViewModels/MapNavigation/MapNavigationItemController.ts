@@ -1,4 +1,4 @@
-import { action } from "mobx";
+import { action, makeObservable, override } from "mobx";
 import ViewerMode from "../../Models/ViewerMode";
 import {
   CompositeBarItemController,
@@ -12,11 +12,18 @@ export interface IMapNavigationItemController
 }
 
 export default abstract class MapNavigationItemController extends CompositeBarItemController {
+  constructor() {
+    // TODO: [mobx-undecorate] verify the constructor arguments and the arguments of this automatically generated super call
+    super();
+
+    makeObservable(this);
+  }
+
   /**
    * Set this item to active state. If used it's recommended to override this method and a proper logic
    * for activating this item, so it's easier to programmatically control the item from other places.
    */
-  @action
+  @action.bound
   activate() {
     this._active = true;
   }
@@ -25,7 +32,7 @@ export default abstract class MapNavigationItemController extends CompositeBarIt
    * Set this item to inactive state. If used it's recommended to override this method and a proper logic
    * for deactivating this item, so it's easier to programmatically control the item from other places.
    */
-  @action
+  @action.bound
   deactivate() {
     this._active = false;
   }
@@ -73,6 +80,7 @@ interface IOptions {
 export class GenericMapNavigationItemController extends MapNavigationItemController {
   constructor(private options: IOptions) {
     super();
+    makeObservable(this);
   }
 
   get glyph(): { id: string } {
@@ -83,7 +91,7 @@ export class GenericMapNavigationItemController extends MapNavigationItemControl
     return this.options?.viewerMode;
   }
 
-  @action.bound
+  @override
   activate() {
     if (this.options?.activate) {
       this.options.activate();
@@ -91,7 +99,7 @@ export class GenericMapNavigationItemController extends MapNavigationItemControl
     super.activate();
   }
 
-  @action.bound
+  @override
   deactivate() {
     if (this.options?.deactivate) {
       this.options.deactivate();

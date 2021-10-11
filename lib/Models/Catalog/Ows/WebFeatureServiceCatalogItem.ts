@@ -1,5 +1,11 @@
 import i18next from "i18next";
-import { computed, isObservableArray, observable, runInAction } from "mobx";
+import {
+  computed,
+  isObservableArray,
+  observable,
+  runInAction,
+  makeObservable
+} from "mobx";
 import combine from "terriajs-cesium/Source/Core/combine";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import containsAny from "../../../Core/containsAny";
@@ -29,6 +35,8 @@ import WebFeatureServiceCapabilities, {
   FeatureType,
   getRectangleFromLayer
 } from "./WebFeatureServiceCapabilities";
+import Terria from "../../Terria";
+import ModelTraits from "../../../Traits/ModelTraits";
 
 class GetCapabilitiesStratum extends LoadableStratum(
   WebFeatureServiceCatalogItemTraits
@@ -63,6 +71,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     readonly capabilities: WebFeatureServiceCapabilities
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -269,6 +278,17 @@ class WebFeatureServiceCatalogItem extends ExportableMixin(
   static readonly type = "wfs";
   @observable
   private geojsonCatalogItem: GeoJsonCatalogItem | undefined;
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+
+    makeObservable(this);
+  }
 
   get type() {
     return WebFeatureServiceCatalogItem.type;

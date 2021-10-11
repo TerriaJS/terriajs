@@ -4,6 +4,7 @@ import {
   computed,
   isObservableArray,
   observable,
+  override,
   runInAction,
   toJS
 } from "mobx";
@@ -247,7 +248,7 @@ export default function Cesium3dTilesMixin<
       return [this.tileset];
     }
 
-    @computed get selectableDimensions(): SelectableDimension[] {
+    @override get selectableDimensions(): SelectableDimension[] {
       return [...super.selectableDimensions, this.shadowDimension];
     }
 

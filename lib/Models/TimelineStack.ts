@@ -1,4 +1,11 @@
-import { action, autorun, computed, IReactionDisposer, observable } from "mobx";
+import {
+  action,
+  autorun,
+  computed,
+  IReactionDisposer,
+  observable,
+  makeObservable
+} from "mobx";
 import ClockRange from "terriajs-cesium/Source/Core/ClockRange";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import filterOutUndefined from "../Core/filterOutUndefined";
@@ -30,6 +37,7 @@ export default class TimelineStack {
   private _disposeTickSubscription: CesiumEvent.RemoveCallback | undefined;
 
   constructor(readonly clock: Clock) {
+    makeObservable(this);
     // Keep the Cesium clock in sync with the top layer's clock.
     this._disposeClockAutorun = autorun(() => {
       const topLayer = this.top;

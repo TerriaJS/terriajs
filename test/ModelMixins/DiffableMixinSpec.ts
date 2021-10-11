@@ -1,12 +1,14 @@
-import { action, computed } from "mobx";
+import { action, computed, makeObservable } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import DiffableMixin from "../../lib/ModelMixins/DiffableMixin";
 import TimeFilterMixin from "../../lib/ModelMixins/TimeFilterMixin";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import CreateModel from "../../lib/Models/Definition/CreateModel";
+import { BaseModel } from "../../lib/Models/Definition/Model";
 import { SelectableDimensionSelect } from "../../lib/Models/SelectableDimensions";
 import Terria from "../../lib/Models/Terria";
 import mixTraits from "../../lib/Traits/mixTraits";
+import ModelTraits from "../../lib/Traits/ModelTraits";
 import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
 import DiffableTraits from "../../lib/Traits/TraitsClasses/DiffableTraits";
 import DiscretelyTimeVaryingTraits from "../../lib/Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
@@ -61,6 +63,17 @@ class TestDiffableItem extends DiffableMixin(
     | SelectableDimensionSelect[]
     | undefined = undefined;
 
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+
+    makeObservable(this);
+  }
+
   get canDiffImages() {
     return true;
   }
@@ -88,5 +101,9 @@ class TestDiffableItem extends DiffableMixin(
   @computed
   get mapItems() {
     return [];
+  }
+
+  forceLoadMapItems() {
+    return Promise.resolve();
   }
 }

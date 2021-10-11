@@ -5,7 +5,7 @@ import Sortable from "react-anything-sortable";
 import WorkbenchSplitScreen from "./WorkbenchSplitScreen";
 import WorkbenchItem from "./WorkbenchItem";
 import { observer } from "mobx-react";
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 
 import Styles from "./workbench-list.scss";
 import "!!style-loader!css-loader?sourceMap!./sortable.css";
@@ -16,6 +16,11 @@ class WorkbenchList extends React.Component {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired
   };
+
+  constructor(props) {
+    super(props);
+    makeObservable(this);
+  }
 
   @action.bound
   onSort(sortedArray, currentDraggingSortData, currentDraggingIndex) {

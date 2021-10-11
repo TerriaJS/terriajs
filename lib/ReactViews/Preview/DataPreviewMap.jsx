@@ -1,7 +1,14 @@
 "use strict";
 
 import classNames from "classnames";
-import { action, autorun, computed, observable, runInAction } from "mobx";
+import {
+  action,
+  autorun,
+  computed,
+  observable,
+  runInAction,
+  makeObservable
+} from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -19,6 +26,12 @@ import Styles from "./data-preview-map.scss";
 
 class AdaptForPreviewMap extends MappableMixin(CreateModel(MappableTraits)) {
   previewed;
+
+  constructor(id, terria, sourceReference, strata) {
+    super(id, terria, sourceReference, strata);
+
+    makeObservable(this);
+  }
 
   async forceLoadMapItems() {}
 
@@ -90,6 +103,8 @@ class DataPreviewMap extends React.Component {
 
   constructor(props) {
     super(props);
+
+    makeObservable(this);
 
     /**
      * @param {HTMLElement | null} container

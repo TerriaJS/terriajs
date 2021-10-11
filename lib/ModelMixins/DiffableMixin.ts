@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, makeObservable, override } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Constructor from "../Core/Constructor";
 import Model from "../Models/Definition/Model";
@@ -21,6 +21,12 @@ function DiffableMixin<T extends Constructor<MixinModel>>(Base: T) {
       | SelectableDimensionSelect[]
       | undefined;
 
+    constructor(...args: any[]) {
+      super(...args);
+
+      makeObservable(this);
+    }
+
     get hasDiffableMixin() {
       return true;
     }
@@ -41,7 +47,7 @@ function DiffableMixin<T extends Constructor<MixinModel>>(Base: T) {
       secondDate?: JulianDate
     ): string;
 
-    @computed
+    @override
     get canFilterTimeByFeature() {
       // Hides the SatelliteImageryTimeFilterSection for the item if it is
       // currently showing difference image

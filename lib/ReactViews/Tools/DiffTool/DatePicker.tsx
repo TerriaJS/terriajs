@@ -1,4 +1,4 @@
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
@@ -25,6 +25,11 @@ interface PropsType extends WithTranslation {
 @observer
 class DatePicker extends React.Component<PropsType> {
   @observable private isOpen = false;
+
+  constructor(props: PropsType) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed
   get currentDate(): Date | undefined {

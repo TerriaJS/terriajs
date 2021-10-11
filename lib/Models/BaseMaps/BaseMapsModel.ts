@@ -1,9 +1,10 @@
-import { action, computed } from "mobx";
+import { action, computed, makeObservable } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import isDefined from "../../Core/isDefined";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
 import ModelReference from "../../Traits/ModelReference";
+import ModelTraits from "../../Traits/ModelTraits";
 import {
   BaseMapsTraits,
   BaseMapTraits
@@ -20,6 +21,15 @@ import { defaultBaseMaps } from "./defaultBaseMaps";
 export class BaseMapModel extends CreateModel(BaseMapTraits) {}
 
 export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+    makeObservable(this);
+  }
   /**
    * List of the basemaps to show in setting panel
    */

@@ -1,5 +1,5 @@
 import dateFormat from "dateformat";
-import { computed, observable, runInAction } from "mobx";
+import { computed, observable, runInAction, makeObservable } from "mobx";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
@@ -32,6 +32,7 @@ export class ApiTableStratum extends LoadableStratum(
 
   constructor(private readonly catalogItem: ApiTableCatalogItem) {
     super();
+    makeObservable(this);
   }
 
   // Set time id columns to `idKey`
@@ -68,6 +69,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
 
   constructor(id: string | undefined, terria: Terria) {
     super(id, terria);
+    makeObservable(this);
     this.strata.set(
       TableAutomaticStylesStratum.stratumName,
       new TableAutomaticStylesStratum(this)

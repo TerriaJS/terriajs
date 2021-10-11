@@ -1,9 +1,12 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import MapboxImageryProvider from "terriajs-cesium/Source/Scene/MapboxImageryProvider";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
+import ModelTraits from "../../../Traits/ModelTraits";
 import MapboxMapCatalogItemTraits from "../../../Traits/TraitsClasses/MapboxMapCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
+import { BaseModel } from "../../Definition/Model";
+import Terria from "../../Terria";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 /**
@@ -14,6 +17,17 @@ export default class MapboxMapCatalogItem extends CatalogMemberMixin(
 ) {
   static readonly type = "mapbox-map";
   readonly type = MapboxMapCatalogItem.type;
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+
+    makeObservable(this);
+  }
 
   @computed
   private get imageryProvider(): MapboxImageryProvider | undefined {

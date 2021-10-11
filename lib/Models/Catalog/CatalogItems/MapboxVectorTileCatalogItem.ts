@@ -2,7 +2,13 @@ import { VectorTileFeature } from "@mapbox/vector-tile";
 import bbox from "@turf/bbox";
 import i18next from "i18next";
 import { clone } from "lodash-es";
-import { action, computed, observable, runInAction } from "mobx";
+import {
+  action,
+  computed,
+  makeObservable,
+  observable,
+  runInAction
+} from "mobx";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import {
   json_style,
@@ -21,6 +27,7 @@ import ProtomapsImageryProvider, {
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
+import ModelTraits from "../../../Traits/ModelTraits";
 import LegendTraits, {
   LegendItemTraits
 } from "../../../Traits/TraitsClasses/LegendTraits";
@@ -31,6 +38,7 @@ import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
+import Terria from "../../Terria";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 class MapboxVectorTileLoadableStratum extends LoadableStratum(
@@ -43,6 +51,7 @@ class MapboxVectorTileLoadableStratum extends LoadableStratum(
     readonly styleJson: JsonObject | undefined
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -119,6 +128,16 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
 
   get type() {
     return MapboxVectorTileCatalogItem.type;
+  }
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+    makeObservable(this);
   }
 
   get typeName() {

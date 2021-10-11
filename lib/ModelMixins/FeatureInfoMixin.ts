@@ -8,7 +8,7 @@ import loadJson from "../Core/loadJson";
 import Feature from "../Models/Feature";
 import Model from "../Models/Definition/Model";
 import FeatureInfoTraits from "../Traits/TraitsClasses/FeatureInfoTraits";
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 
 type Target = Model<FeatureInfoTraits>;
@@ -24,6 +24,12 @@ export default function FeatureInfoMixin<T extends Constructor<Target>>(
       screenPosition: Cartesian2,
       pickResult: any
     ): Feature | undefined;
+
+    constructor(...args: any[]) {
+      super(...args);
+
+      makeObservable(this);
+    }
 
     /**
      * Returns a {@link Feature} for the pick result. If `featureInfoUrlTemplate` is set,

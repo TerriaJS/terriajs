@@ -7,7 +7,7 @@ import objectArrayTrait from "../../lib/Traits/Decorators/objectArrayTrait";
 import primitiveTrait from "../../lib/Traits/Decorators/primitiveTrait";
 
 configure({
-  enforceActions: true,
+  enforceActions: "observed",
   computedRequiresReaction: true
 });
 

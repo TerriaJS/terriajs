@@ -1,7 +1,14 @@
 import bbox from "@turf/bbox";
 import { Feature, FeatureCollection, GeoJSON, Point } from "geojson";
 import i18next from "i18next";
-import { action, computed, observable, runInAction, toJS } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  runInAction,
+  toJS,
+  makeObservable
+} from "mobx";
 import {
   CircleSymbolizer,
   GeomType,
@@ -77,6 +84,7 @@ class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
   static stratumName = "geojson";
   constructor(private readonly _item: GeoJsonMixin.Instance) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -109,6 +117,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
   ) {
     constructor(...args: any[]) {
       super(...args);
+      makeObservable(this);
       if (this.strata.get(GeoJsonStratum.stratumName) === undefined) {
         runInAction(() => {
           this.strata.set(

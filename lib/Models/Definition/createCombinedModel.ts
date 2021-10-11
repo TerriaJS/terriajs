@@ -1,11 +1,12 @@
-import ModelTraits from "../../Traits/ModelTraits";
-import Model, { BaseModel, ModelConstructor } from "./Model";
+import { computed, makeObservable } from "mobx";
+import { Annotation } from "mobx/dist/api/annotation";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import ModelTraits from "../../Traits/ModelTraits";
 import traitsClassToModelClass from "../../Traits/traitsClassToModelClass";
-import StratumFromTraits from "./StratumFromTraits";
-import createStratumInstance from "./createStratumInstance";
-import { computed, decorate } from "mobx";
 import TraitsConstructor from "../../Traits/TraitsConstructor";
+import createStratumInstance from "./createStratumInstance";
+import Model, { BaseModel, ModelConstructor } from "./Model";
+import StratumFromTraits from "./StratumFromTraits";
 
 /**
  * Creates a model by combining two other models in the usual
@@ -191,7 +192,7 @@ function createCombinedStratum<T extends ModelTraits>(
   };
 
   const traits = TraitsClass.traits;
-  const decorators: { [id: string]: PropertyDecorator } = {};
+  const annotations: { [id: string]: Annotation } = {};
 
   Object.keys(traits).forEach(traitName => {
     const trait = traits[traitName];
@@ -226,10 +227,10 @@ function createCombinedStratum<T extends ModelTraits>(
       configurable: true
     });
 
-    decorators[traitName] = trait.decoratorForFlattened || computed;
+    annotations[traitName] = trait.decoratorForFlattened || computed;
   });
 
-  decorate(result, decorators);
+  makeObservable(result, annotations);
 
   return <StratumFromTraits<T>>(<unknown>result);
 }

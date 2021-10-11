@@ -6,9 +6,8 @@ import i18next from "i18next";
 import registerCatalogMembers from "../lib/Models/Catalog/registerCatalogMembers";
 
 configure({
-  enforceActions: true,
-  computedRequiresReaction: true,
-  computedConfigurable: true // so that we can spy on computed items
+  enforceActions: "observed",
+  computedRequiresReaction: true
 });
 
 registerCatalogMembers();

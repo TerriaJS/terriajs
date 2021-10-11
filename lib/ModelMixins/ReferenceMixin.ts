@@ -1,4 +1,4 @@
-import { observable, runInAction, untracked } from "mobx";
+import { observable, runInAction, untracked, makeObservable } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
@@ -55,6 +55,12 @@ function ReferenceMixin<T extends Constructor<Model<ReferenceTraits>>>(
         });
       });
     });
+
+    constructor(...args: any[]) {
+      super(...args);
+
+      makeObservable(this);
+    }
 
     get loadReferenceResult() {
       return this._referenceLoader.result;

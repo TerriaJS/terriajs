@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { flatten } from "lodash-es";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, makeObservable, runInAction } from "mobx";
 import URI from "urijs";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
@@ -30,6 +30,8 @@ import { BoundingBox } from "./OwsInterfaces";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
+import Terria from "../../Terria";
+import ModelTraits from "../../../Traits/ModelTraits";
 
 const defaultGetRecordsTemplate = require("../Ows/CswGetRecordsTemplate.xml");
 // WPS is disabled until wps-group support
@@ -353,6 +355,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
     readonly records: Records
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -705,6 +708,16 @@ export default class CswCatalogGroup extends UrlMixin(
   GroupMixin(CatalogMemberMixin(CreateModel(CswCatalogGroupTraits)))
 ) {
   static readonly type = "csw-group";
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+    makeObservable(this);
+  }
 
   get type() {
     return CswCatalogGroup.type;

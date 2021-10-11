@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, autorun, computed, runInAction } from "mobx";
+import { action, autorun, computed, runInAction, makeObservable } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
@@ -7,10 +7,12 @@ import Result from "../../../Core/Result";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import ModelReference from "../../../Traits/ModelReference";
+import ModelTraits from "../../../Traits/ModelTraits";
 import CompositeCatalogItemTraits from "../../../Traits/TraitsClasses/CompositeCatalogItemTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import { BaseModel } from "../../Definition/Model";
+import Terria from "../../Terria";
 
 export default class CompositeCatalogItem extends MappableMixin(
   CatalogMemberMixin(CreateModel(CompositeCatalogItemTraits))
@@ -20,6 +22,17 @@ export default class CompositeCatalogItem extends MappableMixin(
   private _visibilityDisposer = autorun(() => {
     this.syncVisibilityToMembers();
   });
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+
+    makeObservable(this);
+  }
 
   get type() {
     return CompositeCatalogItem.type;

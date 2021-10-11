@@ -8,7 +8,7 @@
 //  Solution: think in terms of pipelines with computed observables, document patterns.
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, runInAction, makeObservable, override } from "mobx";
 import combine from "terriajs-cesium/Source/Core/combine";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
@@ -70,6 +70,8 @@ import WebMapServiceCapabilities, {
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
+import Terria from "../../Terria";
+import ModelTraits from "../../../Traits/ModelTraits";
 
 const dateFormat = require("dateformat");
 class GetCapabilitiesStratum extends LoadableStratum(
@@ -103,6 +105,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     readonly capabilities: WebMapServiceCapabilities
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -760,6 +763,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
 class DiffStratum extends LoadableStratum(WebMapServiceCatalogItemTraits) {
   constructor(readonly catalogItem: WebMapServiceCatalogItem) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -846,6 +850,17 @@ class WebMapServiceCatalogItem
   };
 
   static readonly type = "wms";
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+
+    makeObservable(this);
+  }
 
   get type() {
     return WebMapServiceCatalogItem.type;
@@ -1366,7 +1381,7 @@ class WebMapServiceCatalogItem
     return dimensions;
   }
 
-  @computed
+  @override
   get selectableDimensions() {
     if (this.disableDimensionSelectors) {
       return super.selectableDimensions;

@@ -23,7 +23,7 @@ import i18next from "i18next";
 import Styles from "./feature-info-panel.scss";
 import classNames from "classnames";
 import { observer, disposeOnUnmount } from "mobx-react";
-import { action, reaction, runInAction } from "mobx";
+import { action, reaction, runInAction, makeObservable } from "mobx";
 
 @observer
 class FeatureInfoPanel extends React.Component {
@@ -36,6 +36,7 @@ class FeatureInfoPanel extends React.Component {
 
   constructor(props) {
     super(props);
+    makeObservable(this);
     this.state = {
       left: null,
       right: null,

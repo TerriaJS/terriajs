@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import TerriaError from "../../../Core/TerriaError";
@@ -134,6 +134,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     private readonly sdmxJsonDataflow: SdmxJsonDataflow
   ) {
     super();
+    makeObservable(this);
   }
 
   @computed

@@ -3,7 +3,9 @@ import {
   action,
   computed,
   isObservableArray,
+  makeObservable,
   observable,
+  override,
   runInAction,
   toJS
 } from "mobx";
@@ -31,6 +33,8 @@ import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import updateModelFromJson from "../../Definition/updateModelFromJson";
 import upsertModelFromJson from "../../Definition/upsertModelFromJson";
+import Terria from "../../Terria";
+import ModelTraits from "../../../Traits/ModelTraits";
 
 const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
 
@@ -43,6 +47,7 @@ class WpsLoadableStratum extends LoadableStratum(
 
   constructor(readonly item: WebProcessingServiceCatalogFunctionJob) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -154,6 +159,16 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
   }
 
   readonly proxyCacheDuration = "1d";
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+    makeObservable(this);
+  }
 
   @observable
   public geoJsonItem?: GeoJsonCatalogItem;
@@ -374,7 +389,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
     return results;
   }
 
-  @computed get mapItems() {
+  @override get mapItems() {
     if (isDefined(this.geoJsonItem)) {
       return this.geoJsonItem.mapItems.map(mapItem => {
         mapItem.show = this.show;

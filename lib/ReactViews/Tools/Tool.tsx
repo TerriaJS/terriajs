@@ -1,5 +1,5 @@
 import { WithT } from "i18next";
-import { computed } from "mobx";
+import { computed, makeObservable, override } from "mobx";
 import React, { Suspense, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import TerriaError from "../../Core/TerriaError";
@@ -61,6 +61,7 @@ interface ToolButtonProps extends ToolProps {
 export class ToolButtonController extends MapNavigationItemController {
   constructor(private props: ToolButtonProps) {
     super();
+    makeObservable(this);
   }
   get glyph() {
     return this.props.icon;
@@ -81,7 +82,7 @@ export class ToolButtonController extends MapNavigationItemController {
     });
   }
 
-  @computed
+  @override
   get active() {
     const currentTool = this.props.viewState.currentTool;
     return (

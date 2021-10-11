@@ -1,4 +1,4 @@
-import { observable, runInAction } from "mobx";
+import { observable, runInAction, makeObservable } from "mobx";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -35,6 +35,8 @@ export default class BingMapsSearchProvider extends SearchProvider {
 
   constructor(options: BingMapsSearchProviderOptions) {
     super();
+
+    makeObservable(this);
 
     this.terria = options.terria;
     this.name = i18next.t("viewModels.searchLocations");

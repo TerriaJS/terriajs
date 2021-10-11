@@ -1,3 +1,4 @@
+import { Annotation } from "mobx/dist/internal";
 import { JsonObject } from "../Core/Json";
 import Result from "../Core/Result";
 import { BaseModel } from "../Models/Definition/Model";
@@ -27,7 +28,7 @@ export default abstract class Trait {
   readonly id: string;
   readonly name: string;
   readonly description: string;
-  readonly decoratorForFlattened?: PropertyDecorator;
+  readonly decoratorForFlattened?: Annotation;
   readonly parent: any;
 
   constructor(id: string, options: TraitOptions, parent: any) {

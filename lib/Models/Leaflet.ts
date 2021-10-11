@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import L, { GridLayer } from "leaflet";
-import { action, autorun, observable, runInAction } from "mobx";
+import { action, autorun, makeObservable, observable, runInAction } from "mobx";
 import { computedFn } from "mobx-utils";
 import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -140,6 +140,9 @@ export default class Leaflet extends GlobeOrMap {
 
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
     super();
+
+    makeObservable(this);
+
     this.terria = terriaViewer.terria;
     this.terriaViewer = terriaViewer;
     this.map = L.map(container, {

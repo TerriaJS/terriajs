@@ -2,7 +2,7 @@ import React from "react";
 import { observer } from "mobx-react";
 
 import Styles from "./parameter-editors.scss";
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import EnumerationParameter from "../../Models/FunctionParameters/EnumerationParameter";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import isDefined from "../../Core/isDefined";
@@ -11,6 +11,11 @@ import isDefined from "../../Core/isDefined";
 export default class EnumerationParameterEditor extends React.Component<{
   parameter: EnumerationParameter;
 }> {
+  constructor(props: { parameter: EnumerationParameter }) {
+    super(props);
+    makeObservable(this);
+  }
+
   @action
   onChange(e: React.ChangeEvent<HTMLSelectElement>) {
     this.props.parameter.setValue(CommonStrata.user, e.target.value);

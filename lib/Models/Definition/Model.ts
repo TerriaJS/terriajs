@@ -34,7 +34,7 @@ export abstract class BaseModel {
      * This instance will also be that model's {@link ReferenceMixin#target}
      * property. If undefined, this model is not the target of a reference.
      */
-    readonly sourceReference: BaseModel | undefined
+    readonly sourceReference?: BaseModel | undefined
   ) {}
 
   dispose() {}
@@ -81,7 +81,7 @@ export interface ModelInterface<T extends ModelTraits> {
    * This instance will also be that model's {@link ReferenceMixin#target}
    * property. If undefined, this model is not the target of a reference.
    */
-  readonly sourceReference: BaseModel | undefined;
+  readonly sourceReference?: BaseModel | undefined;
 
   readonly strataTopToBottom: ReadonlyMap<string, StratumFromTraits<T>>;
   readonly strataBottomToTop: ReadonlyMap<string, StratumFromTraits<T>>;
