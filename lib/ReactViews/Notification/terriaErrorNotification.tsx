@@ -71,6 +71,19 @@ export const terriaErrorNotification = (error: TerriaError) => (
     });
   };
 
+  // Get "detailed" errors - these can be expanded if the user wants to see more "detail"
+
+  let detailedErrors: (Error | TerriaError)[] | undefined;
+
+  // If the top level error is the highestImportanceError, then don't show it in detailedErrors (as it will just duplicate the top level error message)
+  if (error.message !== error.highestImportanceError.message) {
+    detailedErrors = [error];
+  } else if (error.originalError) {
+    detailedErrors = Array.isArray(error.originalError)
+      ? error.originalError
+      : [error.originalError];
+  }
+
   return (
     <>
       <Text
@@ -82,17 +95,24 @@ export const terriaErrorNotification = (error: TerriaError) => (
       >
         {parseCustomMarkdownToReact(error.highestImportanceError.message)}
       </Text>
-      <Spacing bottom={2} />
-      <Collapsible
-        btnRight={true}
-        title={i18next.t("models.raiseError.developerDetails")}
-        titleTextProps={{ large: true }}
-        bodyBoxProps={{ padded: true }}
-        isOpen={error.showDetails}
-        onToggle={show => () => runInAction(() => (error.showDetails = show))}
-      >
-        <ErrorsBox errors={[error]}></ErrorsBox>
-      </Collapsible>
+
+      {/* Show error details if there are more errors to show */}
+      {detailedErrors ? (
+        <>
+          <Spacing bottom={2} />
+          <Collapsible
+            btnRight={true}
+            title={i18next.t("models.raiseError.developerDetails")}
+            titleTextProps={{ large: true }}
+            bodyBoxProps={{ padded: true }}
+            isOpen={error.showDetails}
+            onToggle={show => () =>
+              runInAction(() => (error.showDetails = show))}
+          >
+            <ErrorsBox errors={detailedErrors}></ErrorsBox>
+          </Collapsible>
+        </>
+      ) : null}
 
       {viewState.terria.configParameters.feedbackUrl ? (
         <RawButton

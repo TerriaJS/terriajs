@@ -7,7 +7,7 @@ import isDefined from "../../../Core/isDefined";
 import loadWithXhr from "../../../Core/loadWithXhr";
 import loadXML from "../../../Core/loadXML";
 import runLater from "../../../Core/runLater";
-import TerriaError from "../../../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
@@ -209,7 +209,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
         domainResponse = xml2json(xml) as GetDomainResponseType;
       } catch (error) {
         console.log(error);
-        throw new TerriaError({
+        throw networkRequestError({
           sender: catalogGroup,
           title: i18next.t("models.csw.notUseableTitle"),
           message: i18next.t("models.csw.notUseableMessage")
@@ -217,7 +217,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
       }
 
       if (!domainResponse) {
-        throw new TerriaError({
+        throw networkRequestError({
           sender: catalogGroup,
           title: i18next.t("models.csw.errorLoadingTitle"),
           message: i18next.t("models.csw.checkCORSDomain")
@@ -276,7 +276,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
       });
 
       if (!isDefined(xml)) {
-        throw new TerriaError({
+        throw networkRequestError({
           sender: catalogGroup,
           title: i18next.t("models.csw.errorLoadingRecordsTitle"),
           message: i18next.t("models.csw.errorLoadingRecordsMessage")

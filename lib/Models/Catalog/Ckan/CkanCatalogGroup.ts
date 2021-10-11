@@ -5,7 +5,7 @@ import isDefined from "../../../Core/isDefined";
 import { JsonObject } from "../../../Core/Json";
 import loadJson from "../../../Core/loadJson";
 import runLater from "../../../Core/runLater";
-import TerriaError from "../../../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
@@ -423,7 +423,7 @@ async function paginateThroughResults(
     !ckanServerResponse ||
     !ckanServerResponse.help
   ) {
-    throw new TerriaError({
+    throw networkRequestError({
       title: i18next.t("models.ckan.errorLoadingTitle"),
       message: i18next.t("models.ckan.errorLoadingMessage")
     });

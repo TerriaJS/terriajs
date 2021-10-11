@@ -12,7 +12,7 @@ import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
-import TerriaError from "../../../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import proj4definitions from "../../../Map/Proj4Definitions";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
@@ -166,7 +166,7 @@ class MapServerStratum extends LoadableStratum(
     const serviceMetadata = await getJson(item, serviceUri);
 
     if (!isDefined(serviceMetadata)) {
-      throw new TerriaError({
+      throw networkRequestError({
         title: i18next.t("models.arcGisService.invalidServerTitle"),
         message: i18next.t("models.arcGisService.invalidServerMessage")
       });
@@ -195,7 +195,7 @@ class MapServerStratum extends LoadableStratum(
     }
 
     if (!isDefined(layers) || layers.length === 0) {
-      throw new TerriaError({
+      throw networkRequestError({
         title: i18next.t(
           "models.arcGisMapServerCatalogItem.noLayersFoundTitle"
         ),

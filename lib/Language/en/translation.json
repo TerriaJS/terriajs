@@ -740,8 +740,9 @@
       "defaultMessage": "Unknown error",
       "defaultCombineTitle": "Multiple errors occurred",
       "defaultCombineMessage": "Details of the errors are below",
-      "networkRequestTitle": "Request has failed",
-      "networkRequestMessage": "{{message}}This may indicate one of the following:\n\n* The server hostname could not be resolved\n* The server did not respond to the request - or is temporarily unavailable\n* The server denied [Cross-Origin Resource Sharing (CORS)](https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/) access to this URL\n* There is a problem with your internet connection\n\nIf you entered the link manually, please verify that the link is correct.\n\nPlease try again later, and if the problem persists, please report it through the \"Feedback\" feature.\n"
+      "networkRequestTitle": "A network request error occurred",
+      "networkRequestMessage": "Data may not be available or display correctly due to data custodian's service outage. Please try reloading the map, accessing the data at a later stage, or selecting a different dataset. If the problem persists, please submit feedback here.",
+      "networkRequestMessageDetailed": "This may indicate one of the following:\n\n* The server hostname could not be resolved\n* The server did not respond to the request - or is temporarily unavailable\n* The server denied [Cross-Origin Resource Sharing (CORS)](https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/) access to this URL\n* There is a problem with your internet connection\n\nIf you entered the link manually, please verify that the link is correct.\n\nPlease try again later, and if the problem persists, please report it through the \"Feedback\" feature.\n"
     }
   },
   "map": {
@@ -824,17 +825,17 @@
     "arcGisService": {
       "name": "ArcGIS Service Group",
       "invalidServerTitle": "Invalid ArcGIS Server",
-      "invalidServerMessage": "An error occurred while invoking the ArcGIS REST service.  The server's response does not appear to be a valid ArcGIS REST document.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "invalidServerMessage": "An error occurred while invoking the ArcGIS REST service.  The server's response does not appear to be a valid ArcGIS REST document.",
       "groupNotAvailableTitle": "Group is not available",
-      "groupNotAvailableMessage": "An error occurred while invoking the ArcGIS REST service.  \n\n$t(core.terriaError.networkRequestMessage)"
+      "groupNotAvailableMessage": "An error occurred while invoking the ArcGIS REST service."
     },
     "arcGisFeatureServer": {
       "name": "ArcGIS Feature Server",
       "nameGroup": "ArcGIS Feature Server Group",
       "invalidServiceTitle": "Invalid ArcGIS Feature Service",
-      "invalidServiceMessage": "An error occurred while invoking the ArcGIS Feature Service.  The server's response does not appear to be a valid Feature Service document.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "invalidServiceMessage": "An error occurred while invoking the ArcGIS Feature Service.  The server's response does not appear to be a valid Feature Service document.",
       "groupNotAvailableTitle": "Group is not available",
-      "groupNotAvailableMessage": "An error occurred while invoking the ArcGIS Feature Service.  \n\n$t(core.terriaError.networkRequestMessage)"
+      "groupNotAvailableMessage": "An error occurred while invoking the ArcGIS Feature Service."
     },
     "arcGisFeatureServerCatalogGroup": {
       "name": "ArcGIS Feature Server Group",
@@ -842,9 +843,9 @@
       "serviceDescription": "Service Description",
       "copyrightText": "Copyright Text",
       "invalidServiceTitle": "Invalid ArcGIS Feature Service",
-      "invalidServiceMessage": "An error occurred while invoking the ArcGIS Feature Service.  The server's response does not appear to be a valid Feature Service document.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "invalidServiceMessage": "An error occurred while invoking the ArcGIS Feature Service.  The server's response does not appear to be a valid Feature Service document.",
       "groupNotAvailableTitle": "Group is not available",
-      "groupNotAvailableMessage": "An error occurred while invoking the ArcGIS Feature Service.  \n\n$t(core.terriaError.networkRequestMessage)"
+      "groupNotAvailableMessage": "An error occurred while invoking the ArcGIS Feature Service."
     },
     "arcGisFeatureServerCatalogItem": {
       "name": "Esri ArcGIS FeatureServer",
@@ -854,7 +855,7 @@
       "missingUrlTitle": "Unable to load FeatureServer",
       "missingUrlMessage": "Could not load the ArcGis FeatureServer endpoint because the catalog item does not have a `url`.",
       "invalidServiceTitle": "Invalid ArcGIS Feature Service layer",
-      "invalidServiceMessage": "An error occurred while invoking the ArcGIS Feature Service.  The server's response does not appear to be a valid Feature Service layer.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "invalidServiceMessage": "An error occurred while invoking the ArcGIS Feature Service.  The server's response does not appear to be a valid Feature Service layer.",
       "reachedMaxFeatureLimit": "Warning: This layer has reached the FeatureService feature limit."
     },
     "arcGisMapServerCatalogGroup": {
@@ -863,9 +864,9 @@
       "serviceDescription": "Service Description",
       "copyrightText": "Copyright Text",
       "invalidServiceTitle": "Invalid ArcGIS Map Service",
-      "invalidServiceMessage": "An error occurred while invoking the ArcGIS Map Service.  The server's response does not appear to be a valid Map Service document.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "invalidServiceMessage": "An error occurred while invoking the ArcGIS Map Service.  The server's response does not appear to be a valid Map Service document.",
       "groupNotAvailableTitle": "Group is not available",
-      "groupNotAvailableMessage": "An error occurred while invoking the ArcGIS Map Service.  \n\n$t(core.terriaError.networkRequestMessage)"
+      "groupNotAvailableMessage": "An error occurred while invoking the ArcGIS Map Service."
     },
     "arcGisMapServerCatalogItem": {
       "name": "Esri ArcGIS MapServer",
@@ -903,8 +904,8 @@
     "ckan": {
       "nameServer": "CKAN Server",
       "errorLoadingTitle": "Error loading CKAN catalogue",
-      "errorLoadingMessage": "The definition for this CKAN catalogue does not have a valid filter query.  \n\n$t(core.terriaError.networkRequestMessage)",
-      "corsErrorMessage": "Couldn't retrieve packages from this CKAN server.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "errorLoadingMessage": "The definition for this CKAN catalogue does not have a valid filter query.",
+      "corsErrorMessage": "Couldn't retrieve packages from this CKAN server.",
       "name": "CKAN Resource",
       "dataSourceErrorMessage": "This data source does not have any details available.",
       "serviceErrorMessage": "This service does not have any details available.",
@@ -931,8 +932,8 @@
     "arcgisPortal": {
       "nameGroup": "ArcGIS Portal Group",
       "errorLoadingTitle": "Error loading ArcGIS Portal catalogue",
-      "errorLoadingMessage": "The definition for this ArcGIS Portal catalogue does not have a valid filter query.  \n\n$t(core.terriaError.networkRequestMessage)",
-      "corsErrorMessage": "Couldn't retrieve packages from this ArcGIS Portal server.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "errorLoadingMessage": "The definition for this ArcGIS Portal catalogue does not have a valid filter query.",
+      "corsErrorMessage": "Couldn't retrieve packages from this ArcGIS Portal server. ",
       "name": "ArcGIS Portal Item",
       "dataSourceErrorMessage": "This data source does not have any details available.",
       "serviceErrorMessage": "This service does not have any details available.",
@@ -992,15 +993,15 @@
       "exceptionMessage": "The CSW server reported an error:\n\n {{exceptionText}}",
       "errorLoadingTitle": "Could not load CSW",
       "notUseableTitle": "Catalogue service is not usable.  \n\n {{message}}",
-      "notUseableMessage": "Invalid response obtained when invoking GetDomain on the CSW server.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "notUseableMessage": "Invalid response obtained when invoking GetDomain on the CSW server.",
       "errorLoadingRecordsTitle": "Failed to load CSW records.",
-      "errorLoadingRecordsMessage": "Invalid response obtained when invoking GetRecords on the CSW server.  \n\n$t(core.terriaError.networkRequestMessage)",
-      "checkCORSDomain": "Couldn't execute GetDomain on this CSW server.  \n\n$t(core.terriaError.networkRequestMessage)",
-      "checkCORSRecords": "Couldn't execute GetRecords on this CSW server.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "errorLoadingRecordsMessage": "Invalid response obtained when invoking GetRecords on the CSW",
+      "checkCORSDomain": "Couldn't execute GetDomain on this CSW server.",
+      "checkCORSRecords": "Couldn't execute GetRecords on this CSW server.",
       "dataResponsibility": "Data Responsibility",
       "links": "Links",
       "metadataURL": "Metadata Record URL",
-      "checkCORS": "Couldn't execute GetRecords on this CSW server.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "checkCORS": "Couldn't execute GetRecords on this CSW server.",
       "cors": "CORS",
       "missingUrlTitle": "Unable to load Catalogue Service (CSW)",
       "missingUrlMessage": "Could not load the Catalogue Service (CSW) because the catalog group does not have a `url`."
@@ -1010,7 +1011,7 @@
       "dataSourceErrorMessage": "This data source does not have any details available.",
       "serviceErrorMessage": "This service does not have any details available.",
       "errorLoadingTitle": "Could not load CZML",
-      "errorLoadingMessage": "An error occurred while loading a CZML file.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "errorLoadingMessage": "An error occurred while loading a CZML file.",
       "unableToLoadItemTitle": "No CZML available",
       "unableToLoadItemMessage": "The CZML catalog item cannot be loaded because it was not configured with a `url`, `czmlData`, or `czmlString` property."
     },
@@ -1024,7 +1025,7 @@
       "serviceErrorMessage": "This service does not have any details available.",
       "errorLoadingTitle": "Error loading GeoJSON",
       "errorParsingMessage": "An error occurred parsing the provided data as JSON.  This may indicate that the file is invalid or that it is not supported.",
-      "errorLoadingMessage": "An error occurred while loading a GeoJSON file.  This may indicate that the file is invalid or that it is not supported.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "errorLoadingMessage": "An error occurred while loading a GeoJSON file.  This may indicate that the file is invalid or that it is not supported.",
       "couldNotLoadTitle": "Could not load JSON",
       "couldNotLoadMessage": "An error occurred while retrieving JSON data from the provided link.CORS",
       "unableToLoadItemTitle": "No GeoJSON available",
@@ -1057,7 +1058,7 @@
       "dataSourceErrorMessage": "This data source does not have any details available.",
       "serviceErrorMessage": "This service does not have any details available.",
       "errorLoadingTitle": "Error loading GPX",
-      "errorLoadingMessage": "An error occurred while loading a GPX file.  This may indicate that the file is invalid or that it is not supported by {{appName}}.  \n\n$t(core.terriaError.networkRequestMessage)"
+      "errorLoadingMessage": "An error occurred while loading a GPX file.  This may indicate that the file is invalid or that it is not supported by {{appName}}."
     },
     "georss": {
       "name": "GeoRSS",
@@ -1069,7 +1070,7 @@
       "link": "Link",
       "author": "Author",
       "errorLoadingTitle": "Could not load GeoRSS",
-      "errorLoadingMessage": "An error occurred while loading a GeoRSS file.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "errorLoadingMessage": "An error occurred while loading a GeoRSS file.",
       "unableToLoadItemTitle": "No GeoRSS available",
       "unableToLoadItemMessage": "The GeoRSS catalog item cannot be loaded because it was not configured with a `url`, or `geoRss` property."
     },
@@ -1078,9 +1079,9 @@
       "intervalSupportErrorMessage": "Sorry, {{typeName}} ({{type}}) catalog items cannot currently be made time-varying by specifying the \"intervals\" property.",
       "resolvingAvailability": "Resolving availability at a location...",
       "accessingBaseMapErrorTitle": "Error accessing base map",
-      "accessingBaseMapErrorMessage": "An error occurred while attempting to download tiles for base map:<p><center>{{name}} </center></p> Please select a different base map using the Map button in the top-right corner.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "accessingBaseMapErrorMessage": "An error occurred while attempting to download tiles for base map:<p><center>{{name}} </center></p> Please select a different base map using the Map button in the top-right corner.",
       "accessingCatalogItemErrorTitle": "Error accessing catalogue item",
-      "accessingCatalogItemErrorMessage": "An error occurred while attempting to download tiles for catalogue item:<p><center>{{name}}</center></p> The catalogue item has been hidden from the map.  You may re-show it in the Now Viewing panel to try again.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "accessingCatalogItemErrorMessage": "An error occurred while attempting to download tiles for catalogue item:<p><center>{{name}}</center></p> The catalogue item has been hidden from the map.  You may re-show it in the Now Viewing panel to try again.",
       "tileErrorTitle": "Tile Error",
       "tileErrorMessage": "The tile with the URL:\n{{url}}\n succeeded when loaded with XMLHttpRequest but failed multiple times when loaded directly by Cesium or Leaflet.\n This may indicate that the server is very sensitive to the request headers provided or is simply unreliable.",
       "tileErrorMessageII": "Got a 200 (OK) response from URL:\n{{url}}\nbut it could not be loaded as an image.",
@@ -1105,7 +1106,7 @@
       "unexpectedTypeTitle": "Unexpected type of KML data",
       "unexpectedTypeMessage": "KmlCatalogItem.data is expected to be an XML Document, Blob, or File, but it was none of these. This may indicate a bug in {{appName}} or incorrect use of the {{appName}} API.",
       "errorLoadingTitle": "Error loading KML or KMZ",
-      "errorLoadingMessage": "An error occurred while loading a KML or KMZ file.  This may indicate that the file is invalid or that it is not supported by {{appName}}.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "errorLoadingMessage": "An error occurred while loading a KML or KMZ file.  This may indicate that the file is invalid or that it is not supported by {{appName}}.",
       "unableToLoadItemTitle": "No KML available",
       "unableToLoadItemMessage": "The KML/KMZ catalog item cannot be loaded because it was not configured with a `url`, `kmlData` or `kmlString` property."
     },
@@ -1232,7 +1233,7 @@
     "sdmxJsonDataflowStratum": {
       "loadDataErrorTitle": "Could not load SDMX dataflow",
       "loadDataErrorMessage": {
-        "invalidResponse": "Invalid JSON object  \n\n$t(core.terriaError.networkRequestMessage)",
+        "invalidResponse": "Invalid JSON object",
         "noDatastructure": "No data structures could be found for dataflow {{catalogItem.dataflowId}}",
         "noDataflow": "Dataflow {{catalogItem.dataflowId}} is invalid"
       },
@@ -1245,7 +1246,7 @@
         "region": "Region"
       },
       "loadDataErrorTitle": "Failed to load SDMX data for {{name}}",
-      "loadDataErrorMessage": "Invalid response from {{csvUrl}}  \n\n$t(core.terriaError.networkRequestMessage)",
+      "loadDataErrorMessage": "Invalid response from {{csvUrl}}",
       "noResultsWithDimensions": "No results have been found. Please select different dimension values in the workbench than the following:  \n\n{{dimensions}}"
     },
     "time": {
@@ -1260,7 +1261,7 @@
     },
     "socrataServer": {
       "name": "Socrata Server",
-      "retrieveErrorMessage": "Couldn't retrieve packages from this Socrata server.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "retrieveErrorMessage": "Couldn't retrieve packages from this Socrata server.",
       "description": "Description",
       "licence": "Licence",
       "attributes": "Attributes",
@@ -1309,7 +1310,7 @@
       "loadingMagdaInitSourceErrorTitle": "Error loading Magda initialization source",
       "loadingMagdaInitSourceErrorMessage": "An error occurred while loading initialization information from Magda record `{{url}}`.",
       "loadingInitSourcesErrorTitle": "Error loading map configuration",
-      "loadingInitSourcesErrorMessage": "An error occurred while loading {{appName}} map configuration &mdash; it may not display correctly. Please try reloading the map, and if the problem persists, please report it by sending an email to {{email}}, or you can press the button below.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "loadingInitSourcesErrorMessage": "An error occurred while loading {{appName}} map configuration &mdash; it may not display correctly. Please try reloading the map, and if the problem persists, please report it by sending an email to {{email}}, or you can press the button below.",
       "loadingInitSourceErrorTitle": "Error loading initialization source",
       "loadingInitSourceErrorMessage": "Could not load initialization information from `{{fragment}}` because no initFragmentPaths are defined.",
       "loadingInitSourceError2Message": "An error occurred while loading initialization information from:  \n*`{{loadSource}}`*.",
@@ -1364,9 +1365,9 @@
     "webFeatureServiceCatalogGroup": {
       "wfsServer": "Web Feature Service (WFS) Server",
       "invalidWFSServerTitle": "Invalid WFS server",
-      "invalidWFSServerMessage": "An error occurred while invoking GetCapabilities on the WFS server.  The server's response does not appear to be a valid GetCapabilities document.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "invalidWFSServerMessage": "An error occurred while invoking GetCapabilities on the WFS server.  The server's response does not appear to be a valid GetCapabilities document.",
       "groupNotAvailableTitle": "Group is not available",
-      "groupNotAvailableMessage": "An error occurred while invoking GetCapabilities on the WFS server.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "groupNotAvailableMessage": "An error occurred while invoking GetCapabilities on the WFS server.",
       "abstract": "Web Feature Service Description",
       "accessConstraints": "Web Feature Service Access Constraints",
       "fees": "Web Feature Service Fees"
@@ -1393,7 +1394,7 @@
       "invalidWMSServerTitle": "Invalid WMS server",
       "invalidWMSServerMessage": "An error occurred while invoking GetCapabilities on the WMS server. The server's response does not appear to be a valid GetCapabilities document.",
       "groupNotAvailableTitle": "Group is not available",
-      "groupNotAvailableMessage": "An error occurred while invoking GetCapabilities on the WMS server.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "groupNotAvailableMessage": "An error occurred while invoking GetCapabilities on the WMS server.",
       "missingUrlTitle": "Unable to load GetCapabilities",
       "missingUrlMessage": "Could not load the Web Map Service (WMS) GetCapabilities document because the catalog item does not have a `url`.",
       "abstract": "Web Map Service Description",
@@ -1421,9 +1422,9 @@
     "webMapTileServiceCatalogGroup": {
       "wmtsServer": "Web Map Tile Service (WMTS) Server",
       "invalidWMTSServerTitle": "Invalid WMTS server",
-      "invalidWMTSServerMessage": "An error occurred while invoking GetCapabilities on the WMTS server. The server's response does not appear to be a valid GetCapabilities document. \n\n$t(core.terriaError.networkRequestMessage)",
+      "invalidWMTSServerMessage": "An error occurred while invoking GetCapabilities on the WMTS server. The server's response does not appear to be a valid GetCapabilities document.",
       "groupNotAvailableTitle": "Group is not available",
-      "groupNotAvailableMessage": "An error occurred while invoking GetCapabilities on the WMTS server.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "groupNotAvailableMessage": "An error occurred while invoking GetCapabilities on the WMTS server.",
       "abstract": "Web Map Service Description",
       "accessConstraints": "Web Map Service Access Constraints",
       "fees": "Web Map Service Fees",
@@ -1446,7 +1447,7 @@
     "webProcessingService": {
       "wps": "Web Processing Service (WPS)",
       "invalidWPSServerTitle": "Invalid WPS server",
-      "invalidWPSServerMessage": "An error occurred while invoking {{endpoint}} on the WPS server for process name {{name}}. The server's response does not appear to be a valid {{endpoint}} document.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "invalidWPSServerMessage": "An error occurred while invoking {{endpoint}} on the WPS server for process name {{name}}. The server's response does not appear to be a valid {{endpoint}} document.",
       "processDescriptionErrorTitle": "Process does not have a process description",
       "processDescriptionErrorMessage": "The WPS DescribeProcess for this process does not include a ProcessDescription.",
       "processInputErrorTitle": "Process does not have any inputs",
@@ -1454,7 +1455,7 @@
       "unsupportedParameterErrorTitle": "Unsupported parameter type",
       "unsupportedParameterErrorMessage": "The parameter {{identifier}} is not a supported type of parameter.",
       "invalidResponseErrorTitle": "Invalid WPS server response",
-      "invalidResponseErrorMessage": "An error occurred while accessing the status location on the WPS server for process name {{name}}.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "invalidResponseErrorMessage": "An error occurred while accessing the status location on the WPS server for process name {{name}}.",
       "invalidResponseError2Title": "Invalid response from WPS server",
       "invalidResponseError2Message": "The response from the WPS server does not include a Status element.",
       "failureReasonUnknowError": "The reason for failure is unknown.",
@@ -1474,7 +1475,7 @@
       "invalidCapabilitiesTitle": "Invalid GetCapabilities",
       "invalidCapabilitiesMessage": "The URL {{url}} was retrieved successfully but it does not appear to be a valid Web Processing Service (WPS) GetCapabilities document. \n\nEither the catalog file has been set up incorrectly, or the server address has changed.",
       "invalidServerTitle": "Invalid WPS server",
-      "invalidServerMessage": "An error occurred while invoking GetCapabilities on the WPS server. The server's response does not appear to be a valid GetCapabilities document.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "invalidServerMessage": "An error occurred while invoking GetCapabilities on the WPS server. The server's response does not appear to be a valid GetCapabilities document.",
       "abstract": "Web Processing Service Description",
       "accessConstraints": "Web Processing Service Access Constraints",
       "fees": "Web Processing Service Fees",
@@ -1484,9 +1485,9 @@
     "wfsFeatures": {
       "featuresGroup": "Group of features in a Web Feature Service (WFS) Server",
       "queryErrorTitle": "Error querying WFS server",
-      "queryErrorMessage": "An error occurred while invoking GetFeature on the WFS server. The server's response does not appear to be a valid GeoJSON document.  \n\n$t(core.terriaError.networkRequestMessage)",
+      "queryErrorMessage": "An error occurred while invoking GetFeature on the WFS server. The server's response does not appear to be a valid GeoJSON document.",
       "groupNotAvailableTitle": "Group is not available",
-      "groupNotAvailableMessage": "An error occurred while invoking GetFeature on the WFS server.  \n\n$t(core.terriaError.networkRequestMessage)"
+      "groupNotAvailableMessage": "An error occurred while invoking GetFeature on the WFS server."
     },
     "shadow": {
       "name": "Shadows",

@@ -6,7 +6,7 @@ import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import runLater from "../../../Core/runLater";
-import TerriaError from "../../../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
@@ -126,7 +126,7 @@ export class FeatureServerStratum extends LoadableStratum(
       .then((featureServer: FeatureServer) => {
         // Is this really a FeatureServer REST response?
         if (!featureServer || !featureServer.layers) {
-          throw new TerriaError({
+          throw networkRequestError({
             title: i18next.t(
               "models.arcGisFeatureServerCatalogGroup.invalidServiceTitle"
             ),
@@ -140,7 +140,7 @@ export class FeatureServerStratum extends LoadableStratum(
         return stratum;
       })
       .catch(() => {
-        throw new TerriaError({
+        throw networkRequestError({
           sender: catalogGroup,
           title: i18next.t(
             "models.arcGisFeatureServerCatalogGroup.groupNotAvailableTitle"

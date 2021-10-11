@@ -12,7 +12,7 @@ import KmlDataSource from "terriajs-cesium/Source/DataSources/KmlDataSource";
 import Property from "terriajs-cesium/Source/DataSources/Property";
 import isDefined from "../../../Core/isDefined";
 import readXml from "../../../Core/readXml";
-import TerriaError from "../../../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
@@ -51,15 +51,6 @@ class KmlCatalogItem extends MappableMixin(
   }
 
   protected forceLoadMapItems(): Promise<void> {
-    const createLoadError = () =>
-      new TerriaError({
-        sender: this,
-        title: i18next.t("models.kml.errorLoadingTitle"),
-        message: i18next.t("models.kml.errorLoadingMessage", {
-          appName: this.terria.appName
-        })
-      });
-
     return new Promise<string | Resource | Document | Blob>(resolve => {
       if (isDefined(this.kmlString)) {
         const parser = new DOMParser();
@@ -73,7 +64,7 @@ class KmlCatalogItem extends MappableMixin(
       } else if (isDefined(this.url)) {
         resolve(proxyCatalogItemUrl(this, this.url));
       } else {
-        throw new TerriaError({
+        throw networkRequestError({
           sender: this,
           title: i18next.t("models.kml.unableToLoadItemTitle"),
           message: i18next.t("models.kml.unableToLoadItemMessage")
@@ -88,11 +79,15 @@ class KmlCatalogItem extends MappableMixin(
         this.doneLoading(dataSource); // Unsure if this is necessary
       })
       .catch(e => {
-        if (e instanceof TerriaError) {
-          throw e;
-        } else {
-          throw createLoadError();
-        }
+        throw networkRequestError(
+          TerriaError.from(e, {
+            sender: this,
+            title: i18next.t("models.kml.errorLoadingTitle"),
+            message: i18next.t("models.kml.errorLoadingMessage", {
+              appName: this.terria.appName
+            })
+          })
+        );
       });
   }
 

@@ -6,7 +6,7 @@ import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import runLater from "../../../Core/runLater";
-import TerriaError from "../../../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
@@ -122,7 +122,7 @@ export class MapServerStratum extends LoadableStratum(
       .then((mapServer: MapServer) => {
         // Is this really a MapServer REST response?
         if (!mapServer || (!mapServer.layers && !mapServer.subLayers)) {
-          throw new TerriaError({
+          throw networkRequestError({
             title: i18next.t(
               "models.arcGisMapServerCatalogGroup.invalidServiceTitle"
             ),
@@ -135,7 +135,7 @@ export class MapServerStratum extends LoadableStratum(
         return stratum;
       })
       .catch(() => {
-        throw new TerriaError({
+        throw networkRequestError({
           sender: catalogGroup,
           title: i18next.t(
             "models.arcGisMapServerCatalogGroup.groupNotAvailableTitle"

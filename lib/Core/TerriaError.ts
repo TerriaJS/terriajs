@@ -169,9 +169,9 @@ export default class TerriaError {
     else if (error instanceof RequestErrorEvent) {
       title = { key: "core.terriaError.networkRequestTitle" };
       message = {
-        key: "core.terriaError.networkRequestMessage",
-        parameters: { message: `${error.toString()}\n\n` }
+        key: "core.terriaError.networkRequestMessage"
       };
+      originalError = new Error(error.toString());
     } else if (error instanceof Error) {
       message = error.message;
       originalError = error;
@@ -404,4 +404,24 @@ export default class TerriaError {
     error.stack = stack;
     return error;
   }
+}
+
+/** Wrap up network requets error with user-friendly message */
+export function networkRequestError(error: TerriaError | TerriaErrorOptions) {
+  return TerriaError.combine(
+    [
+      error instanceof TerriaError ? error : new TerriaError(error),
+      new TerriaError({
+        message: {
+          key: "core.terriaError.networkRequestMessageDetailed"
+        }
+      })
+    ],
+    {
+      title: { key: "core.terriaError.networkRequestTitle" },
+      message: {
+        key: "core.terriaError.networkRequestMessage"
+      }
+    }
+  );
 }
