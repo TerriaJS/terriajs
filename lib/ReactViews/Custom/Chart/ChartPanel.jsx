@@ -76,7 +76,7 @@ class ChartPanel extends React.Component {
       ).then(results =>
         Result.combine(results, {
           message: "Failed to load chart items",
-          messageImportance: -1
+          importance: -1
         }).raiseError(this.props.terria)
       );
 
