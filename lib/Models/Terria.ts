@@ -444,7 +444,7 @@ export default class Terria {
     customRequestSchedulerLimits: undefined,
     persistViewerMode: true,
     openAddData: false,
-    feedbackPreamble: "feedback.feedbackPreamble",
+    feedbackPreamble: "translate#feedback.feedbackPreamble",
     feedbackMinLength: 0,
     extraCreditLinks: [
       // Default credit links (shown at the bottom of the Cesium map)
