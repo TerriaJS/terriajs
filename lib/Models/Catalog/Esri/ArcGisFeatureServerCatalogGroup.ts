@@ -131,15 +131,7 @@ export class FeatureServerStratum extends LoadableStratum(
               "models.arcGisFeatureServerCatalogGroup.invalidServiceTitle"
             ),
             message: i18next.t(
-              "models.arcGisFeatureServerCatalogGroup.invalidServiceTitle",
-              {
-                email:
-                  '<a href="mailto:' +
-                  terria.supportEmail +
-                  '">' +
-                  terria.supportEmail +
-                  "</a>"
-              }
+              "models.arcGisFeatureServerCatalogGroup.invalidServiceMessage"
             )
           });
         }
@@ -154,18 +146,7 @@ export class FeatureServerStratum extends LoadableStratum(
             "models.arcGisFeatureServerCatalogGroup.groupNotAvailableTitle"
           ),
           message: i18next.t(
-            "models.arcGisFeatureServerCatalogGroup.groupNotAvailableMessage",
-            {
-              cors:
-                '<a href="http://enable-cors.org/" target="_blank">CORS</a>',
-              appName: terria.appName,
-              email:
-                '<a href="mailto:' +
-                terria.supportEmail +
-                '">' +
-                terria.supportEmail +
-                "</a>"
-            }
+            "models.arcGisFeatureServerCatalogGroup.groupNotAvailableMessage"
           )
         });
       });

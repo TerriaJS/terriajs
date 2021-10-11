@@ -131,16 +131,7 @@ export default class CzmlCatalogItem
           throw new TerriaError({
             sender: this,
             title: i18next.t("models.czml.errorLoadingTitle"),
-            message: i18next.t("models.czml.errorLoadingMessage", {
-              appName: this.terria.appName,
-              email:
-                '<a href="mailto:' +
-                this.terria.supportEmail +
-                '">' +
-                this.terria.supportEmail +
-                "</a>.",
-              stackTrace: e.stack || e.toString()
-            })
+            message: i18next.t("models.czml.errorLoadingMessage")
           });
         }
       });

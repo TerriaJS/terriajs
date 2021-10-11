@@ -1783,7 +1783,8 @@ async function interpretHash(
       );
     } catch (e) {
       throw TerriaError.from(e, {
-        message: { key: "parsingStartDataErrorMessage" }
+        message: { key: "models.terria.parsingStartDataErrorMessage" },
+        importance: -1
       });
     }
   }

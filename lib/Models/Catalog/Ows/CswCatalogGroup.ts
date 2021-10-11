@@ -212,13 +212,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
         throw new TerriaError({
           sender: catalogGroup,
           title: i18next.t("models.csw.notUseableTitle"),
-          message:
-            i18next.t("models.csw.notUseableMessage") +
-            '<a href="mailto:' +
-            catalogGroup.terria.supportEmail +
-            '">' +
-            catalogGroup.terria.supportEmail +
-            "</a>."
+          message: i18next.t("models.csw.notUseableMessage")
         });
       }
 
@@ -226,18 +220,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
         throw new TerriaError({
           sender: catalogGroup,
           title: i18next.t("models.csw.errorLoadingTitle"),
-          message: i18next.t("models.csw.checkCORSDomain", {
-            cors:
-              '<a href="http://enable-cors.org/" target="_blank">' +
-              i18next.t("models.csw.cors") +
-              "</a>",
-            email:
-              '<a href="mailto:' +
-              catalogGroup.terria.supportEmail +
-              '">' +
-              catalogGroup.terria.supportEmail +
-              "</a>."
-          })
+          message: i18next.t("models.csw.checkCORSDomain")
         });
       }
 
@@ -296,13 +279,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
         throw new TerriaError({
           sender: catalogGroup,
           title: i18next.t("models.csw.errorLoadingRecordsTitle"),
-          message:
-            i18next.t("models.csw.errorLoadingRecordsMessage") +
-            '<a href="mailto:' +
-            catalogGroup.terria.supportEmail +
-            '">' +
-            catalogGroup.terria.supportEmail +
-            "</a>."
+          message: i18next.t("models.csw.errorLoadingRecordsMessage")
         });
       }
 

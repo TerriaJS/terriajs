@@ -425,14 +425,7 @@ async function paginateThroughResults(
   ) {
     throw new TerriaError({
       title: i18next.t("models.ckan.errorLoadingTitle"),
-      message: i18next.t("models.ckan.errorLoadingMessage", {
-        email:
-          '<a href="mailto:' +
-          catalogGroup.terria.supportEmail +
-          '">' +
-          catalogGroup.terria.supportEmail +
-          "</a>"
-      })
+      message: i18next.t("models.ckan.errorLoadingMessage")
     });
   }
   let nextResultStart = 1001;

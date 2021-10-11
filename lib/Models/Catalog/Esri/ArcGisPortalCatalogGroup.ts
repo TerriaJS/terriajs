@@ -466,16 +466,8 @@ async function paginateThroughResults(
   if (arcgisPortalResponse === undefined || !arcgisPortalResponse) {
     throw new TerriaError({
       title: i18next.t("models.arcgisPortal.errorLoadingTitle"),
-      message: i18next.t("models.arcgisPortal.errorLoadingMessage", {
-        email:
-          '<a href="mailto:' +
-          catalogGroup.terria.supportEmail +
-          '">' +
-          catalogGroup.terria.supportEmail +
-          "</a>"
-      })
+      message: i18next.t("models.arcgisPortal.errorLoadingMessage")
     });
-    return;
   }
   let nextStart: number = arcgisPortalResponse.nextStart;
   while (nextStart !== -1) {

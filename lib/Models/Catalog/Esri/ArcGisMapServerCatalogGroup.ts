@@ -127,15 +127,7 @@ export class MapServerStratum extends LoadableStratum(
               "models.arcGisMapServerCatalogGroup.invalidServiceTitle"
             ),
             message: i18next.t(
-              "models.arcGisMapServerCatalogGroup.invalidServiceTitle",
-              {
-                email:
-                  '<a href="mailto:' +
-                  terria.supportEmail +
-                  '">' +
-                  terria.supportEmail +
-                  "</a>"
-              }
+              "models.arcGisMapServerCatalogGroup.invalidServiceMessage"
             )
           });
         }
@@ -149,18 +141,7 @@ export class MapServerStratum extends LoadableStratum(
             "models.arcGisMapServerCatalogGroup.groupNotAvailableTitle"
           ),
           message: i18next.t(
-            "models.arcGisMapServerCatalogGroup.groupNotAvailableMessage",
-            {
-              cors:
-                '<a href="http://enable-cors.org/" target="_blank">CORS</a>',
-              appName: terria.appName,
-              email:
-                '<a href="mailto:' +
-                terria.supportEmail +
-                '">' +
-                terria.supportEmail +
-                "</a>"
-            }
+            "models.arcGisMapServerCatalogGroup.groupNotAvailableMessage"
           )
         });
       });

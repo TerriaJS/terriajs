@@ -621,12 +621,6 @@ function throwInvalidWpsServerError(
     title: i18next.t("models.webProcessingService.invalidWPSServerTitle"),
     message: i18next.t("models.webProcessingService.invalidWPSServerMessage", {
       name: wps.name,
-      email:
-        '<a href="mailto:' +
-        wps.terria.supportEmail +
-        '">' +
-        wps.terria.supportEmail +
-        "</a>.",
       endpoint
     })
   });

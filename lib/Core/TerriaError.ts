@@ -1,12 +1,13 @@
 "use strict";
 
 import i18next from "i18next";
+import { observable } from "mobx";
+import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import { Notification } from "../ReactViewModels/NotificationState";
 import { terriaErrorNotification } from "../ReactViews/Notification/terriaErrorNotification";
 import filterOutUndefined from "./filterOutUndefined";
 import flatten from "./flatten";
 import isDefined from "./isDefined";
-import { observable } from "mobx";
 
 /** This is used for I18n translation strings so we can "resolve" them when the Error is displayed to the user.
  * This means we can create TerriaErrors before i18next has been initialised.
@@ -150,14 +151,27 @@ export default class TerriaError {
       return isDefined(overrides) ? error.createParentError(overrides) : error;
     }
 
-    // Try to find message from error object
-    let message: string | undefined;
+    // Try to find message/title from error object
+    let message: string | I18nTranslateString = {
+      key: "core.terriaError.defaultMessage"
+    };
+    let title: string | I18nTranslateString = {
+      key: "core.terriaError.defaultTitle"
+    };
     // Create original Error from `error` object
     let originalError: Error | undefined;
 
     if (typeof error === "string") {
       message = error;
       originalError = new Error(message);
+    }
+    // If error is RequestErrorEvent - use networkRequestTitle and networkRequestMessage
+    else if (error instanceof RequestErrorEvent) {
+      title = { key: "core.terriaError.networkRequestTitle" };
+      message = {
+        key: "core.terriaError.networkRequestMessage",
+        parameters: { message: `${error.toString()}\n\n` }
+      };
     } else if (error instanceof Error) {
       message = error.message;
       originalError = error;
@@ -167,8 +181,8 @@ export default class TerriaError {
     }
 
     return new TerriaError({
-      title: { key: "core.terriaError.defaultTitle" },
-      message: message ?? { key: "core.terriaError.defaultMessage" },
+      title,
+      message,
       originalError,
       ...parseOverrides(overrides)
     });

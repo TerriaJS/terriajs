@@ -168,16 +168,7 @@ class MapServerStratum extends LoadableStratum(
     if (!isDefined(serviceMetadata)) {
       throw new TerriaError({
         title: i18next.t("models.arcGisService.invalidServerTitle"),
-        message: i18next.t("models.arcGisService.invalidServerMessage", {
-          cors: '<a href="http://enable-cors.org/" target="_blank">CORS</a>',
-          appName: item.terria.appName,
-          email:
-            '<a href="mailto:' +
-            item.terria.supportEmail +
-            '">' +
-            item.terria.supportEmail +
-            "</a>"
-        })
+        message: i18next.t("models.arcGisService.invalidServerMessage")
       });
     }
 
@@ -206,7 +197,7 @@ class MapServerStratum extends LoadableStratum(
     if (!isDefined(layers) || layers.length === 0) {
       throw new TerriaError({
         title: i18next.t(
-          "models.arcGisMapServerCatalogItem.noLayersFoundMessage"
+          "models.arcGisMapServerCatalogItem.noLayersFoundTitle"
         ),
         message: i18next.t(
           "models.arcGisMapServerCatalogItem.noLayersFoundMessage",

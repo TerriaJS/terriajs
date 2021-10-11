@@ -78,14 +78,7 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
         ) {
           throw new TerriaError({
             title: i18next.t("models.arcGisService.invalidServiceTitle"),
-            message: i18next.t("models.arcGisService.invalidServiceTitle", {
-              email:
-                '<a href="mailto:' +
-                terria.supportEmail +
-                '">' +
-                terria.supportEmail +
-                "</a>"
-            })
+            message: i18next.t("models.arcGisService.invalidServiceMessage")
           });
         }
 
@@ -96,16 +89,7 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
         throw new TerriaError({
           sender: catalogGroup,
           title: i18next.t("models.arcGisService.groupNotAvailableTitle"),
-          message: i18next.t("models.arcGisService.groupNotAvailableMessage", {
-            cors: '<a href="http://enable-cors.org/" target="_blank">CORS</a>',
-            appName: terria.appName,
-            email:
-              '<a href="mailto:' +
-              terria.supportEmail +
-              '">' +
-              terria.supportEmail +
-              "</a>"
-          })
+          message: i18next.t("models.arcGisService.groupNotAvailableMessage")
         });
       });
   }
