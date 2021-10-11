@@ -299,9 +299,9 @@ export default class TerriaError {
       title: () => this.highestImportanceError.title, // Title may need to be resolved when error is raised to user (for example after i18next initialisation)
       message: terriaErrorNotification(this),
       // Don't show TerriaError Notification if shouldRaiseToUser is false, or we have already raisedToUser
-      ignore: (() => !this.shouldRaiseToUser).bind(this),
+      ignore: () => !this.shouldRaiseToUser,
       // Set raisedToUser to true on dismiss
-      onDismiss: (() => (this.raisedToUser = true)).bind(this)
+      onDismiss: () => (this.raisedToUser = true)
     };
   }
 

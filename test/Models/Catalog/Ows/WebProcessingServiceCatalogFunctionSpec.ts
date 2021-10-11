@@ -2,10 +2,13 @@ import { configure, reaction, runInAction } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import isDefined from "../../../../lib/Core/isDefined";
+import Result from "../../../../lib/Core/Result";
 import TerriaError from "../../../../lib/Core/TerriaError";
 import MappableMixin from "../../../../lib/ModelMixins/MappableMixin";
-import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import CsvCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
+import WebProcessingServiceCatalogFunction from "../../../../lib/Models/Catalog/Ows/WebProcessingServiceCatalogFunction";
+import WebProcessingServiceCatalogFunctionJob from "../../../../lib/Models/Catalog/Ows/WebProcessingServiceCatalogFunctionJob";
+import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import DateTimeParameter from "../../../../lib/Models/FunctionParameters/DateTimeParameter";
 import EnumerationParameter from "../../../../lib/Models/FunctionParameters/EnumerationParameter";
 import GeoJsonParameter from "../../../../lib/Models/FunctionParameters/GeoJsonParameter";
@@ -15,8 +18,6 @@ import PolygonParameter from "../../../../lib/Models/FunctionParameters/PolygonP
 import RectangleParameter from "../../../../lib/Models/FunctionParameters/RectangleParameter";
 import StringParameter from "../../../../lib/Models/FunctionParameters/StringParameter";
 import Terria from "../../../../lib/Models/Terria";
-import WebProcessingServiceCatalogFunction from "../../../../lib/Models/Catalog/Ows/WebProcessingServiceCatalogFunction";
-import WebProcessingServiceCatalogFunctionJob from "../../../../lib/Models/Catalog/Ows/WebProcessingServiceCatalogFunctionJob";
 import "../../../SpecHelpers";
 
 const regionMapping = JSON.stringify(
@@ -228,7 +229,9 @@ describe("WebProcessingServiceCatalogFunction", function() {
     });
 
     it("stops polling if pendingItem is removed from the workbench", async function() {
-      spyOn(wps.terria.workbench, "add"); // do nothing
+      spyOn(wps.terria.workbench, "add").and.returnValue(
+        Promise.resolve(Result.none())
+      ); // do nothing
       jasmine.Ajax.stubRequest(
         "http://example.com/wps?service=WPS&request=Execute&version=1.0.0"
       ).andReturn({ responseText: pendingExecuteResponseXml });

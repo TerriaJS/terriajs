@@ -118,26 +118,22 @@ export default class AsyncLoader {
       runInAction(() => {
         this._isLoading = true;
       });
-
-      let error: TerriaError | undefined;
-
-      try {
-        await newPromise;
-      } catch (e) {
-        error = TerriaError.from(e);
-      }
-
-      runInAction(() => {
-        this._result = Result.none(error);
-        this._isLoading = false;
-      });
-
-      // Make sure we have a result object defined
-    } else if (!this._result) {
-      runInAction(() => {
-        this._result = Result.none();
-      });
     }
+
+    let error: TerriaError | undefined;
+
+    try {
+      await newPromise;
+    } catch (e) {
+      error = TerriaError.from(e);
+    }
+
+    runInAction(() => {
+      this._result = Result.none(error);
+      if (this._isLoading) {
+        this._isLoading = false;
+      }
+    });
 
     return this._result!;
   }
