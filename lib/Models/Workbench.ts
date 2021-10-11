@@ -165,6 +165,8 @@ export default class Workbench {
    * be {@link AsyncMappableMixin} or {@link ChartableMixin} but it is a {@link GroupMixin}, it will
    * be removed from the workbench. If it is mappable, `loadMapItems` will be called.
    *
+   * If an error occurs, it will only be added to the workbench if the severity is TerriaError.Warning - otherwise it will not be added
+   *
    * @param item The item to add to or remove from the workbench.
    */
   public async add(item: BaseModel | BaseModel[]): Promise<Result<undefined>> {
