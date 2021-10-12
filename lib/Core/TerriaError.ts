@@ -159,7 +159,7 @@ export default class TerriaError {
       key: "core.terriaError.defaultTitle"
     };
     // Create original Error from `error` object
-    let originalError: Error | undefined;
+    let originalError: TerriaError[] | Error | undefined;
 
     if (typeof error === "string") {
       message = error;
@@ -171,7 +171,15 @@ export default class TerriaError {
       message = {
         key: "core.terriaError.networkRequestMessage"
       };
-      originalError = new Error(error.toString());
+      // Combine network error with "networkRequestMessageDetailed" - this contains extra info about what could cause network error
+      originalError = [
+        new TerriaError({ message: error.toString() }),
+        new TerriaError({
+          message: {
+            key: "core.terriaError.networkRequestMessageDetailed"
+          }
+        })
+      ];
     } else if (error instanceof Error) {
       message = error.message;
       originalError = error;
@@ -408,6 +416,7 @@ export default class TerriaError {
 
 /** Wrap up network requets error with user-friendly message */
 export function networkRequestError(error: TerriaError | TerriaErrorOptions) {
+  // Combine network error with "networkRequestMessageDetailed" - this contains extra info about what could cause network error
   return TerriaError.combine(
     [
       error instanceof TerriaError ? error : new TerriaError(error),
@@ -417,11 +426,13 @@ export function networkRequestError(error: TerriaError | TerriaErrorOptions) {
         }
       })
     ],
+    // Override combined error with user-friendly title and message
     {
       title: { key: "core.terriaError.networkRequestTitle" },
       message: {
         key: "core.terriaError.networkRequestMessage"
-      }
+      },
+      importance: 1
     }
   );
 }
