@@ -130,9 +130,7 @@ export default class AsyncLoader {
 
     runInAction(() => {
       this._result = Result.none(error);
-      if (this._isLoading) {
-        this._isLoading = false;
-      }
+      this._isLoading = false;
     });
 
     return this._result!;
