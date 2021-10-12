@@ -20,7 +20,7 @@ describe("parseCustomHtmlToReact and registerCustomComponentTypes", function() {
     terria = new Terria({
       baseUrl: "./"
     });
-    registerCustomComponentTypes(terria);
+    registerCustomComponentTypes();
   });
 
   it("parses a div", function() {

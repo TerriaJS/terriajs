@@ -3,15 +3,19 @@ import { runInAction } from "mobx";
 import React from "react";
 import TerriaError from "../../Core/TerriaError";
 import ViewState from "../../ReactViewModels/ViewState";
-import Collapsible from "../Custom/Collapsible/Collapsible";
-import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
-
 import Box from "../../Styled/Box";
 import Spacing from "../../Styled/Spacing";
-import { RawButton } from "../../Styled/Button";
-import { Text, TextSpan } from "../../Styled/Text";
+import { Text } from "../../Styled/Text";
+import Collapsible from "../Custom/Collapsible/Collapsible";
+import FeedbackLinkCustomComponent, {
+  FeedbackLink
+} from "../Custom/FeedbackLinkCustomComponent";
+import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 
-const ErrorsBox = (props: { errors: (Error | TerriaError)[] }) => {
+const ErrorsBox = (props: {
+  errors: (Error | TerriaError)[];
+  viewState: ViewState;
+}) => {
   return (
     <>
       {props.errors.map((error, idx) => (
@@ -24,7 +28,10 @@ const ErrorsBox = (props: { errors: (Error | TerriaError)[] }) => {
           key={idx}
         >
           {error instanceof TerriaError ? (
-            <TerriaErrorBox error={error}></TerriaErrorBox>
+            <TerriaErrorBox
+              error={error}
+              viewState={props.viewState}
+            ></TerriaErrorBox>
           ) : (
             // Show error.message (as well as error.stack) if error.stack is defined
             <div>
@@ -38,7 +45,10 @@ const ErrorsBox = (props: { errors: (Error | TerriaError)[] }) => {
   );
 };
 
-const TerriaErrorBox = (props: { error: TerriaError }) => {
+const TerriaErrorBox = (props: {
+  error: TerriaError;
+  viewState: ViewState;
+}) => {
   return (
     <>
       <Text
@@ -48,14 +58,20 @@ const TerriaErrorBox = (props: { error: TerriaError }) => {
           }
         `}
       >
-        {parseCustomMarkdownToReact(props.error.message)}
+        {parseCustomMarkdownToReact(props.error.message, {
+          viewState: props.viewState,
+          terria: props.viewState.terria
+        })}
       </Text>
 
       <Spacing bottom={1} />
 
       {Array.isArray(props.error.originalError) &&
       props.error.originalError.length > 0 ? (
-        <ErrorsBox errors={props.error.originalError}></ErrorsBox>
+        <ErrorsBox
+          errors={props.error.originalError}
+          viewState={props.viewState}
+        ></ErrorsBox>
       ) : null}
     </>
   );
@@ -64,13 +80,6 @@ const TerriaErrorBox = (props: { error: TerriaError }) => {
 export const terriaErrorNotification = (error: TerriaError) => (
   viewState: ViewState
 ) => {
-  const showFeedback = () => {
-    runInAction(() => {
-      viewState.feedbackFormIsVisible = true;
-      viewState.terria.notificationState.dismissCurrentNotification();
-    });
-  };
-
   // Get "detailed" errors - these can be expanded if the user wants to see more "detail"
 
   let detailedErrors: (Error | TerriaError)[] | undefined;
@@ -84,6 +93,11 @@ export const terriaErrorNotification = (error: TerriaError) => (
       : [error.originalError];
   }
 
+  // We only show FeedbankLink if the error message doesn't include the <feedbacklink> custom component (so we don't get duplicates)
+  const includesFeedbackLink = error.highestImportanceError.message.includes(
+    `<${FeedbackLinkCustomComponent.componentName}`
+  );
+
   return (
     <>
       <Text
@@ -93,9 +107,11 @@ export const terriaErrorNotification = (error: TerriaError) => (
           }
         `}
       >
-        {parseCustomMarkdownToReact(error.highestImportanceError.message)}
+        {parseCustomMarkdownToReact(error.highestImportanceError.message, {
+          viewState: viewState,
+          terria: viewState.terria
+        })}
       </Text>
-
       {/* Show error details if there are more errors to show */}
       {detailedErrors ? (
         <>
@@ -109,31 +125,16 @@ export const terriaErrorNotification = (error: TerriaError) => (
             onToggle={show => () =>
               runInAction(() => (error.showDetails = show))}
           >
-            <ErrorsBox errors={detailedErrors}></ErrorsBox>
+            <ErrorsBox
+              errors={detailedErrors}
+              viewState={viewState}
+            ></ErrorsBox>
           </Collapsible>
         </>
       ) : null}
-
-      {viewState.terria.configParameters.feedbackUrl ? (
-        <RawButton
-          fullWidth
-          onClick={showFeedback}
-          css={`
-            text-align: left;
-          `}
-        >
-          <TextSpan textLight bold medium>
-            {parseCustomMarkdownToReact(
-              i18next.t("models.raiseError.notificationFeedback")
-            )}
-          </TextSpan>
-        </RawButton>
-      ) : (
-        <Text>
-          Please report it by sending an email to{" "}
-          {viewState.terria.supportEmail}
-        </Text>
-      )}
+      {!includesFeedbackLink ? (
+        <FeedbackLink viewState={viewState}></FeedbackLink>
+      ) : null}
     </>
   );
 };
