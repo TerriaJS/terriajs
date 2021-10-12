@@ -52,7 +52,7 @@ class MappablePreview extends React.Component {
       (await this.props.terria.workbench.add(this.props.previewed)).raiseError(
         this.props.terria,
         undefined,
-        true // Force show error to user
+        true // We want to force show error to user here - because this function is called when a user clicks the "Add to workbench"  buttons
       );
     } else {
       this.props.terria.timelineStack.remove(this.props.previewed);

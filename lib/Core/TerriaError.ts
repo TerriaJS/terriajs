@@ -40,7 +40,7 @@ export interface TerriaErrorOptions {
   /**  A detailed message describing the error.  This message may be HTML and it should be sanitized before display to the user. */
   message: string | I18nTranslateString;
 
-  /** Importance of the error message, this is used to determine which messge is displayed to the user if multiple error messages exist.
+  /** Importance of the error message, this is used to determine which message is displayed to the user if multiple error messages exist.
    * Higher importance messages are shown to user over lower importance. Default value is 0
    */
   importance?: number;
@@ -51,7 +51,7 @@ export interface TerriaErrorOptions {
   /** The object that raised the error. */
   sender?: unknown;
 
-  /** True if error message should be shown to user *regardless* of error severity. If this is undefined, then error severity will be used to determine if shouldRaiseToUser */
+  /** True if error message should be shown to user *regardless* of error severity. If this is undefined, then error severity will be used to determine if shouldRaiseToUser (severity `Error` are presented to the user. `Warning` will just be printed to console) */
   shouldRaiseToUser?: boolean;
 
   /** True if the user has seen this error; otherwise, false. */
