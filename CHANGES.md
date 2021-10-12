@@ -16,8 +16,9 @@ Change Log
 * Fix `AsyncLoader` result bug
 * Remove `Terria.error` event handler
 * Refactor `workbench.add` to return `Result`
-* Consolidated network request / CORS error message - it is now in `t("core.terriaError.networkRequestMessage")`. It can be injected into other translation strings like so:
-  * `"groupNotAvailableMessage": "An error occurred while invoking the ArcGIS REST service.  \n\n$t(core.terriaError.networkRequestMessage)"`
+* Consolidated network request / CORS error message - it is now in `t("core.terriaError.networkRequestMessage")`. 
+  * It can be injected into other translation strings like so: `"groupNotAvailableMessage": "$t(core.terriaError.networkRequestMessage)"`
+  * Or, you can use `networkRequestError(error)` to wrap up existing `TerriaError` objects
 * Fix incorrect default `configParameters.feedbackPreamble`
 * Fix incorrect default `configParameters.proj4def` - it is now `"proj4def/"`
 * Fix Branding component. It wasn't wrapped in `observer` so it kept getting re-rendered
