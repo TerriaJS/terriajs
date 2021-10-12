@@ -257,10 +257,12 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           });
         }
       } catch (e) {
-        throw TerriaError.from(e, {
-          title: i18next.t("models.geoJson.errorLoadingTitle"),
-          message: i18next.t("models.geoJson.errorParsingMessage")
-        });
+        throw networkRequestError(
+          TerriaError.from(e, {
+            title: i18next.t("models.geoJson.errorLoadingTitle"),
+            message: i18next.t("models.geoJson.errorParsingMessage")
+          })
+        );
       }
     }
 

@@ -46,6 +46,10 @@ const WarningBox: React.FC<{
               { viewState: props.viewState, terria: props.viewState?.terria }
             )}
 
+            {props.viewState && !includesFeedbackLink ? (
+              <FeedbackLink viewState={props.viewState}></FeedbackLink>
+            ) : null}
+
             {/* Add "show details" button if there are nested errors */}
             {props.viewState &&
             Array.isArray(props.error!.originalError) &&
@@ -60,10 +64,6 @@ const WarningBox: React.FC<{
                   <TextSpan primary>See details</TextSpan>
                 </RawButton>
               </div>
-            ) : null}
-
-            {props.viewState && !includesFeedbackLink ? (
-              <FeedbackLink viewState={props.viewState}></FeedbackLink>
             ) : null}
           </div>
         ) : (
