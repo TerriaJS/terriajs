@@ -206,7 +206,7 @@ export default class TerriaError {
     const filteredErrors = errors.filter(e => isDefined(e)) as TerriaError[];
     if (filteredErrors.length === 0) return;
 
-    // If only one error, just create parent error
+    // If only one error, just create parent error - this is so we don't get unnecessary levels of TerriaError created
     if (filteredErrors.length === 1) {
       return filteredErrors[0].createParentError(overrides);
     }
