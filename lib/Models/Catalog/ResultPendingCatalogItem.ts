@@ -8,7 +8,14 @@ import Terria from "../Terria";
 export default class ResultPendingCatalogItem extends CatalogMemberMixin(
   CreateModel(ResultPendingCatalogItemTraits)
 ) {
-  @observable disableAboutData = true;
+  /**
+   * FIXME: Ideally we should override the trait in
+   * ResultPendingCatalogItemTraits with a helper decorator like @overrideTrait
+   * to minimize duplication.
+   */
+  get disableAboutData(): boolean {
+    return false;
+  }
 
   loadPromise: Promise<any> = Promise.resolve();
 
