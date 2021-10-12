@@ -159,7 +159,7 @@ export default class TerriaError {
       key: "core.terriaError.defaultTitle"
     };
     // Create original Error from `error` object
-    let originalError: TerriaError[] | Error | undefined;
+    let originalError: Error | undefined;
 
     if (typeof error === "string") {
       message = error;
@@ -171,15 +171,7 @@ export default class TerriaError {
       message = {
         key: "core.terriaError.networkRequestMessage"
       };
-      // Combine network error with "networkRequestMessageDetailed" - this contains extra info about what could cause network error
-      originalError = [
-        new TerriaError({ message: error.toString() }),
-        new TerriaError({
-          message: {
-            key: "core.terriaError.networkRequestMessageDetailed"
-          }
-        })
-      ];
+      originalError = new Error(error.toString());
     } else if (error instanceof Error) {
       message = error.message;
       originalError = error;
