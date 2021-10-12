@@ -321,8 +321,12 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
     return new Array(7)
       .fill(0)
       .map((_, i) => {
+        // Use maxValue if i === 6 so we don't get funky JS precision
         const value =
-          colorMap.minValue + (colorMap.maxValue - colorMap.minValue) * (i / 6);
+          i === 6
+            ? colorMap.maxValue
+            : colorMap.minValue +
+              (colorMap.maxValue - colorMap.minValue) * (i / 6);
         return createStratumInstance(LegendItemTraits, {
           color: colorMap.mapValueToColor(value).toCssColorString(),
           title: this._formatValue(value, this.numberFormatOptions)
