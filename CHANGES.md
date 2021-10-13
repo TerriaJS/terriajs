@@ -23,6 +23,7 @@ Change Log
 * Fix incorrect default `configParameters.proj4def` - it is now `"proj4def/"`
 * Fix Branding component. It wasn't wrapped in `observer` so it kept getting re-rendered
 * Add `FeedbackLink` and `<feedbacklink>` custom component - this can be used to add a button to open feedback dialog (or show `supportEmail` in feedback is disabled)
+* Fix `ContinuousColorMap` `Legend` issue due to funky JS precision
 * [The next improvement]
 
 #### 8.1.2
