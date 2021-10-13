@@ -2,6 +2,7 @@ import {
   action,
   computed,
   IReactionDisposer,
+  makeObservable,
   observable,
   reaction,
   runInAction
@@ -192,6 +193,7 @@ export default class ViewState {
     // properly clean up your refs - so we'll leave that up to the UI to
     // provide valid refs
     return this.tourPoints
+      .slice()
       .sort((a, b) => {
         return a.priority - b.priority;
       })
@@ -445,6 +447,8 @@ export default class ViewState {
         }
       }
     );
+
+    makeObservable(this);
   }
 
   dispose() {

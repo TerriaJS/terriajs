@@ -1,5 +1,5 @@
 import groupBy from "lodash-es/groupBy";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
@@ -33,6 +33,7 @@ export default class TableStyle {
   readonly tableModel: TableMixin.Instance;
 
   constructor(tableModel: TableMixin.Instance, styleNumber: number) {
+    makeObservable(this);
     this.styleNumber = styleNumber;
     this.tableModel = tableModel;
   }

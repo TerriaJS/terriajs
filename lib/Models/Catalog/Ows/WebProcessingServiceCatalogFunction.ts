@@ -1,5 +1,11 @@
 import i18next from "i18next";
-import { action, computed, isObservableArray, runInAction } from "mobx";
+import {
+  action,
+  computed,
+  isObservableArray,
+  makeObservable,
+  runInAction
+} from "mobx";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import URI from "urijs";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
@@ -35,6 +41,8 @@ import StratumOrder from "../../Definition/StratumOrder";
 import updateModelFromJson from "../../Definition/updateModelFromJson";
 import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalogFunctionJob";
 import flatten from "lodash-es/flatten";
+import Terria from "../../Terria";
+import ModelTraits from "../../../Traits/ModelTraits";
 
 type AllowedValues = {
   Value?: string | string[];
@@ -96,6 +104,7 @@ class WpsLoadableStratum extends LoadableStratum(
     readonly processDescription: ProcessDescription
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -183,6 +192,16 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
 
   get typeName() {
     return "Web Processing Service (WPS)";
+  }
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+    makeObservable(this);
   }
 
   @computed get cacheDuration(): string {

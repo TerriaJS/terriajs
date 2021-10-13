@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, makeObservable, runInAction } from "mobx";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
@@ -26,6 +26,7 @@ import { BaseModel } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
+import ModelTraits from "../../../Traits/ModelTraits";
 
 export class ArcGisPortalStratum extends LoadableStratum(
   ArcGisPortalCatalogGroupTraits
@@ -42,6 +43,7 @@ export class ArcGisPortalStratum extends LoadableStratum(
     readonly _arcgisGroupResponse: ArcGisPortalGroupSearchResponse | undefined
   ) {
     super();
+    makeObservable(this);
     this.datasets = this.getDatasets();
     this.filteredDatasets = this.getFilteredDatasets();
     this.groups = this.getGroups();
@@ -355,6 +357,16 @@ export default class ArcGisPortalCatalogGroup extends UrlMixin(
   GroupMixin(CatalogMemberMixin(CreateModel(ArcGisPortalCatalogGroupTraits)))
 ) {
   static readonly type = "arcgis-portal-group";
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+    makeObservable(this);
+  }
 
   get type() {
     return ArcGisPortalCatalogGroup.type;

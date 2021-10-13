@@ -1,7 +1,8 @@
 import { Feature, Polygon } from "geojson";
-import { computed, isObservableArray } from "mobx";
+import { computed, isObservableArray, makeObservable } from "mobx";
 import { JsonObject } from "../../Core/Json";
-import FunctionParameter from "./FunctionParameter";
+import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
+import FunctionParameter, { Options } from "./FunctionParameter";
 import { GeoJsonFunctionParameter } from "./GeoJsonParameter";
 /**
  * A parameter that specifies an arbitrary polygon on the globe, which has been selected from a different layer.
@@ -10,6 +11,15 @@ export default class SelectAPolygonParameter
   extends FunctionParameter<JsonObject[]>
   implements GeoJsonFunctionParameter {
   readonly type = "polygon";
+
+  constructor(
+    protected readonly catalogFunction: CatalogFunctionMixin,
+    options: Options
+  ) {
+    super(catalogFunction, options);
+
+    makeObservable(this);
+  }
 
   static formatValueForUrl(value: Feature[]) {
     if (!(Array.isArray(value) || isObservableArray(value))) {

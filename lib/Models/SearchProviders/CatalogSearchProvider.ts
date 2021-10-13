@@ -1,4 +1,10 @@
-import { autorun, observable, runInAction, computed } from "mobx";
+import {
+  autorun,
+  observable,
+  runInAction,
+  computed,
+  makeObservable
+} from "mobx";
 import {
   Category,
   SearchAction
@@ -108,6 +114,8 @@ export default class CatalogSearchProvider extends SearchProvider {
 
   constructor(options: CatalogSearchProviderOptions) {
     super();
+
+    makeObservable(this);
 
     this.terria = options.terria;
     this.name = "Catalog Items";

@@ -35,9 +35,10 @@ import DiscretelyTimeVaryingTraits from "../../lib/Traits/TraitsClasses/Discrete
 import DiscretelyTimeVaryingMixin from "../../lib/ModelMixins/DiscretelyTimeVaryingMixin";
 import MappableMixin, { MapItem } from "../../lib/ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../../lib/ModelMixins/CatalogMemberMixin";
-import { observable } from "mobx";
+import { observable, makeObservable } from "mobx";
 import i18next from "i18next";
 import CatalogMemberFactory from "../../lib/Models/Catalog/CatalogMemberFactory";
+import { BaseModel } from "../../lib/Models/Definition/Model";
 
 let separator = ",";
 if (typeof Intl === "object" && typeof Intl.NumberFormat === "function") {
@@ -890,7 +891,7 @@ describe("FeatureInfoSection", function() {
 
     /*
     // v8 version does not support this feature at the moment. See https://github.com/TerriaJS/terriajs/issues/5685
-     
+
     it("can access the current time", function() {
       const template = "<div class='rrrr'>Time: {{terria.currentTime}}</div>";
       catalogItem._discreteTimes = ["2017-11-23", "2018-01-03"];
@@ -1160,6 +1161,17 @@ class TestModelTraits extends mixTraits(
 class TestModel extends MappableMixin(
   DiscretelyTimeVaryingMixin(CatalogMemberMixin(CreateModel(TestModelTraits)))
 ) {
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, TestModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+
+    makeObservable(this);
+  }
+
   get mapItems(): MapItem[] {
     throw new Error("Method not implemented.");
   }

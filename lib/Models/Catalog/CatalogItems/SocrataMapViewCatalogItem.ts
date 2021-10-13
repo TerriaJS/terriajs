@@ -1,4 +1,4 @@
-import { computed, runInAction } from "mobx";
+import { computed, runInAction, makeObservable } from "mobx";
 import loadJson from "../../../Core/loadJson";
 import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
@@ -120,6 +120,7 @@ export class SocrataMapViewStratum extends LoadableStratum(
     private readonly view: View
   ) {
     super();
+    makeObservable(this);
   }
 }
 

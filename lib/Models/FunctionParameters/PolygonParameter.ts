@@ -1,8 +1,9 @@
-import FunctionParameter from "./FunctionParameter";
-import { observable, computed } from "mobx";
+import FunctionParameter, { Options } from "./FunctionParameter";
+import { observable, computed, makeObservable } from "mobx";
 import isDefined from "../../Core/isDefined";
 import { Feature, Polygon } from "geojson";
 import { GeoJsonFunctionParameter } from "./GeoJsonParameter";
+import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 
 type Coordinates = number[];
 type LinearRing = Coordinates[];
@@ -13,6 +14,15 @@ export default class PolygonParameter
   implements GeoJsonFunctionParameter {
   static readonly type = "polygon";
   readonly type = "polygon";
+
+  constructor(
+    protected readonly catalogFunction: CatalogFunctionMixin,
+    options: Options
+  ) {
+    super(catalogFunction, options);
+
+    makeObservable(this);
+  }
 
   static formatValueForUrl(value: PolygonCoordinates) {
     return JSON.stringify({

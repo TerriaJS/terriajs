@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, makeObservable, runInAction } from "mobx";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
@@ -26,6 +26,8 @@ import { BaseModel } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import SocrataMapViewCatalogItem from "../CatalogItems/SocrataMapViewCatalogItem";
 import StratumOrder from "../../Definition/StratumOrder";
+import Terria from "../../Terria";
+import ModelTraits from "../../../Traits/ModelTraits";
 
 export interface Facet {
   facet: string;
@@ -208,6 +210,7 @@ export class SocrataCatalogStratum extends LoadableStratum(
     private readonly results: Result[]
   ) {
     super();
+    makeObservable(this);
   }
 
   @computed
@@ -441,6 +444,16 @@ export default class SocrataCatalogGroup extends UrlMixin(
   GroupMixin(CatalogMemberMixin(CreateModel(SocrataCatalogGroupTraits)))
 ) {
   static readonly type = "socrata-group";
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+    makeObservable(this);
+  }
 
   get type() {
     return SocrataCatalogGroup.type;

@@ -1,6 +1,14 @@
 import { Share } from "catalog-converter";
 import i18next from "i18next";
-import { action, computed, observable, runInAction, toJS, when } from "mobx";
+import {
+  action,
+  computed,
+  makeObservable,
+  observable,
+  runInAction,
+  toJS,
+  when
+} from "mobx";
 import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
@@ -547,6 +555,8 @@ export default class Terria {
   errorService: ErrorServiceProvider = new StubErrorServiceProvider();
 
   constructor(options: TerriaOptions = {}) {
+    makeObservable(this);
+
     if (options.baseUrl) {
       if (options.baseUrl.lastIndexOf("/") !== options.baseUrl.length - 1) {
         this.baseUrl = options.baseUrl + "/";

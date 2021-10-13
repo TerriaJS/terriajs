@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, makeObservable, runInAction } from "mobx";
 import defined from "terriajs-cesium/Source/Core/defined";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import WebMapTileServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapTileServiceImageryProvider";
@@ -32,6 +32,8 @@ import WebMapTileServiceCapabilities, {
   WmtsCapabilitiesLegend,
   WmtsLayer
 } from "./WebMapTileServiceCapabilities";
+import Terria from "../../Terria";
+import ModelTraits from "../../../Traits/ModelTraits";
 
 interface UsableTileMatrixSets {
   identifiers: string[];
@@ -74,6 +76,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     readonly capabilities: WebMapTileServiceCapabilities
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -440,6 +443,16 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
 
   get type() {
     return WebMapTileServiceCatalogItem.type;
+  }
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+    makeObservable(this);
   }
 
   async createGetCapabilitiesStratumFromParent(

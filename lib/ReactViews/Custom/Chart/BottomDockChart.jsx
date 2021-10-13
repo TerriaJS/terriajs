@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, makeObservable } from "mobx";
 import { AxisLeft, AxisBottom } from "@visx/axis";
 import { RectClipPath } from "@visx/clip-path";
 import { localPoint } from "@visx/event";
@@ -72,8 +72,17 @@ class Chart extends React.Component {
     margin: { left: 20, right: 30, top: 10, bottom: 50 }
   };
 
-  @observable zoomedXScale;
+  // Using ref here because there is an odd behavior resulting in an app crash
+  // when using regular observable to store a d3-scale which is a function. Does
+  // mobx6 auto convert function values to actions?
+  @observable.ref zoomedXScale;
+
   @observable mouseCoords;
+
+  constructor(props) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed
   get chartItems() {
@@ -331,6 +340,11 @@ class Plot extends React.Component {
     initialScales: PropTypes.array.isRequired,
     zoomedScales: PropTypes.array.isRequired
   };
+
+  constructor(props) {
+    super(props);
+    makeObservable(this);
+  }
 
   @computed
   get chartRefs() {

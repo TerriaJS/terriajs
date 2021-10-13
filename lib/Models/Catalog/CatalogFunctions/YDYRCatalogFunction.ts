@@ -1,17 +1,20 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import CatalogFunctionMixin from "../../../ModelMixins/CatalogFunctionMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
 import TableColumnType from "../../../Table/TableColumnType";
+import ModelTraits from "../../../Traits/ModelTraits";
 import YDYRCatalogFunctionTraits from "../../../Traits/TraitsClasses/YDYRCatalogFunctionTraits";
 import CreateModel from "../../Definition/CreateModel";
+import { BaseModel } from "../../Definition/Model";
 import BooleanParameter from "../../FunctionParameters/BooleanParameter";
 import EnumerationParameter from "../../FunctionParameters/EnumerationParameter";
 import FunctionParameter from "../../FunctionParameters/FunctionParameter";
 import InfoParameter from "../../FunctionParameters/InfoParameter";
 import StringParameter from "../../FunctionParameters/StringParameter";
+import Terria from "../../Terria";
 import YDYRCatalogFunctionJob from "./YDYRCatalogFunctionJob";
 
 export const DATASETS: {
@@ -179,6 +182,18 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
   CreateModel(YDYRCatalogFunctionTraits)
 ) {
   static readonly type = "ydyr";
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+
+    makeObservable(this);
+  }
+
   get type(): string {
     return YDYRCatalogFunction.type;
   }

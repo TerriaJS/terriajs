@@ -1,6 +1,6 @@
 "use strict";
 import i18next from "i18next";
-import { action, observable } from "mobx";
+import { action, observable, makeObservable } from "mobx";
 import React from "react";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -39,6 +39,7 @@ export default class MeasureTool extends MapNavigationItemController {
 
   constructor(props: PropTypes) {
     super();
+    makeObservable(this);
     const t = i18next.t.bind(i18next);
     this.terria = props.terria;
     this.userDrawing = new UserDrawing({

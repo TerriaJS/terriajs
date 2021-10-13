@@ -1,9 +1,12 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import MapboxStyleImageryProvider from "terriajs-cesium/Source/Scene/MapboxStyleImageryProvider";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
+import ModelTraits from "../../../Traits/ModelTraits";
 import MapboxStyleCatalogItemTraits from "../../../Traits/TraitsClasses/MapboxStyleCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
+import { BaseModel } from "../../Definition/Model";
+import Terria from "../../Terria";
 
 /**
  *  A raster catalog item for rendering styled mapbox layers.
@@ -13,6 +16,17 @@ export default class MapboxStyleCatalogItem extends MappableMixin(
 ) {
   static readonly type = "mapbox-style";
   readonly type = MapboxStyleCatalogItem.type;
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+
+    makeObservable(this);
+  }
 
   forceLoadMapItems() {
     return Promise.resolve();

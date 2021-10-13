@@ -1,7 +1,13 @@
 "use strict";
 
 import classNames from "classnames";
-import { action, runInAction, observable, computed } from "mobx";
+import {
+  action,
+  runInAction,
+  observable,
+  computed,
+  makeObservable
+} from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import Slider from "rc-slider";
@@ -50,6 +56,7 @@ class SettingPanel extends React.Component {
    */
   constructor(props) {
     super(props);
+    makeObservable(this);
   }
 
   @observable _hoverBaseMap = null;

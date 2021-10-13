@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
@@ -15,9 +15,12 @@ import FeatureInfoMixin from "../../../ModelMixins/FeatureInfoMixin";
 import SearchableItemMixin, {
   ItemSelectionDisposer
 } from "../../../ModelMixins/SearchableItemMixin";
+import ModelTraits from "../../../Traits/ModelTraits";
 import Cesium3DTilesCatalogItemTraits from "../../../Traits/TraitsClasses/Cesium3DTilesCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
+import { BaseModel } from "../../Definition/Model";
 import { ItemSearchResult } from "../../ItemSearchProviders/ItemSearchProvider";
+import Terria from "../../Terria";
 
 // A property name used for tagging a search result feature for highlighting/hiding.
 const SEARCH_RESULT_TAG = "terriajs_search_result";
@@ -31,6 +34,18 @@ export default class Cesium3DTilesCatalogItem extends SearchableItemMixin(
 ) {
   static readonly type = "3d-tiles";
   readonly type = Cesium3DTilesCatalogItem.type;
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+
+    makeObservable(this);
+  }
+
   get typeName() {
     return i18next.t("models.cesiumTerrain.name3D");
   }

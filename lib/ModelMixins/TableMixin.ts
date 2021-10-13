@@ -1,5 +1,12 @@
 import i18next from "i18next";
-import { action, computed, observable, runInAction } from "mobx";
+import {
+  action,
+  computed,
+  observable,
+  runInAction,
+  makeObservable,
+  override
+} from "mobx";
 import { createTransformer, ITransformer } from "mobx-utils";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -48,6 +55,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       ChartableMixin(DiscretelyTimeVaryingMixin(CatalogMemberMixin(Base)))
     )
     implements SelectableDimensions {
+    constructor(...args: any[]) {
+      super(...args);
+
+      makeObservable(this);
+    }
+
     get hasTableMixin() {
       return true;
     }
@@ -414,7 +427,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       );
     }
 
-    @computed
+    @override
     get chartItems() {
       // Wait for activeTableStyle to be ready
       if (!this.activeTableStyle.ready || this.isLoadingMapItems) return [];
@@ -428,7 +441,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       ]);
     }
 
-    @computed
+    @override
     get selectableDimensions(): SelectableDimension[] {
       return filterOutUndefined([
         ...super.selectableDimensions,

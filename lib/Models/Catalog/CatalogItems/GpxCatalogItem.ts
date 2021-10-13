@@ -1,19 +1,22 @@
 import i18next from "i18next";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import getFilenameFromUri from "terriajs-cesium/Source/Core/getFilenameFromUri";
 import isDefined from "../../../Core/isDefined";
 import loadText from "../../../Core/loadText";
 import readText from "../../../Core/readText";
 import TerriaError from "../../../Core/TerriaError";
-import MappableMixin from "../../../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
+import MappableMixin from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
+import ModelTraits from "../../../Traits/ModelTraits";
 import GpxCatalogItemTraits from "../../../Traits/TraitsClasses/GpxCatalogItemTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
-import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
+import { BaseModel } from "../../Definition/Model";
+import Terria from "../../Terria";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 
 const toGeoJSON = require("@mapbox/togeojson");
 
@@ -21,6 +24,17 @@ class GpxCatalogItem extends MappableMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(GpxCatalogItemTraits)))
 ) {
   static readonly type = "gpx";
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+
+    makeObservable(this);
+  }
 
   get type() {
     return GpxCatalogItem.type;

@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, observable, toJS } from "mobx";
+import { action, computed, observable, toJS, makeObservable } from "mobx";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CzmlDataSource from "terriajs-cesium/Source/DataSources/CzmlDataSource";
@@ -12,11 +12,13 @@ import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import TimeVarying from "../../../ModelMixins/TimeVarying";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
+import ModelTraits from "../../../Traits/ModelTraits";
 import CzmlCatalogItemTraits from "../../../Traits/TraitsClasses/CzmlCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
+import Terria from "../../Terria";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 /**
@@ -28,6 +30,7 @@ class CzmlTimeVaryingStratum extends LoadableStratum(CzmlCatalogItemTraits) {
 
   constructor(readonly catalogItem: CzmlCatalogItem) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -73,6 +76,18 @@ export default class CzmlCatalogItem
   )
   implements TimeVarying {
   static readonly type = "czml";
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+
+    makeObservable(this);
+  }
+
   get type() {
     return CzmlCatalogItem.type;
   }

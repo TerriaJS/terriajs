@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, makeObservable, runInAction } from "mobx";
 import URI from "urijs";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import { isJsonObject } from "../../../Core/Json";
@@ -24,6 +24,8 @@ import WebProcessingServiceCapabilities, {
   Process
 } from "./WebProcessingServiceCapabilities";
 import WebProcessingServiceCatalogFunction from "./WebProcessingServiceCatalogFunction";
+import Terria from "../../Terria";
+import ModelTraits from "../../../Traits/ModelTraits";
 
 class GetCapabilitiesStratum extends LoadableStratum(
   WebProcessingServiceCatalogGroupTraits
@@ -33,6 +35,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     readonly capabilities: WebProcessingServiceCapabilities
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -224,6 +227,16 @@ export default class WebProcessingServiceCatalogGroup extends GroupMixin(
 
   get typeName() {
     return i18next.t("models.webProcessingServiceCatalogGroup.typeName");
+  }
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+    makeObservable(this);
   }
 
   async forceLoadMetadata(): Promise<void> {

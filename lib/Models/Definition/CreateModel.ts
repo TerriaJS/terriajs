@@ -1,4 +1,12 @@
-import { action, computed, observable, runInAction, toJS } from "mobx";
+import {
+  action,
+  computed,
+  makeObservable,
+  observable,
+  runInAction,
+  toJS
+} from "mobx";
+import { Annotation } from "mobx/dist/api/annotation";
 import { getObjectId } from "../../Traits/ArrayNestedStrataMap";
 import { ObjectArrayTrait } from "../../Traits/Decorators/objectArrayTrait";
 import { ModelId } from "../../Traits/ModelReference";
@@ -42,7 +50,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
      *
      * instead of what we had expected with TypeScript's treatment of this class
      * property being:
-     * `readonly sourceReference: BaseModel | undefined;`
+     * `readonly sourceReference?: BaseModel | undefined;`
      *
      * whereas ts-loader strips the type completely along with the implicit
      * undefined assignment getting removed entirely before it hits
@@ -52,7 +60,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
      * call in `BaseModel`, it feels more correct to remove this annotation
      * rather than declare it here + re-assigning it in the `Model` constructor
      */
-    // readonly sourceReference: BaseModel | undefined;
+    // readonly sourceReference?: BaseModel | undefined;
 
     /**
      * Gets the uniqueIds of models that are known to contain this one.
@@ -67,11 +75,21 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     constructor(
       id: string | undefined,
       terria: Terria,
-      sourceReference: BaseModel | undefined,
-      strata: Map<string, StratumTraits> | undefined
+      sourceReference?: BaseModel | undefined,
+      strata?: Map<string, StratumTraits> | undefined
     ) {
       super(id, terria, sourceReference);
       this.strata = strata || observable.map<string, StratumTraits>();
+
+      const annotations: { [id: string]: Annotation } = {};
+      Object.keys(this.traits).forEach(traitName => {
+        annotations[traitName] =
+          this.traits[traitName].decoratorForFlattened || computed;
+      });
+
+      // Casting is required because makeObservable cannot see the traits we added
+      // as part of this model in the call to addModelStrataView
+      makeObservable(this, annotations as any);
     }
 
     dispose() {}

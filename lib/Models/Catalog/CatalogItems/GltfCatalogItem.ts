@@ -1,4 +1,4 @@
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, makeObservable, override } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
@@ -13,10 +13,13 @@ import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import ShadowMixin from "../../../ModelMixins/ShadowMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
+import ModelTraits from "../../../Traits/ModelTraits";
 import GltfCatalogItemTraits from "../../../Traits/TraitsClasses/GltfCatalogItemTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
+import { BaseModel } from "../../Definition/Model";
 import { SelectableDimension } from "../../SelectableDimensions";
+import Terria from "../../Terria";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
@@ -29,6 +32,17 @@ export default class GltfCatalogItem extends MappableMixin(
   static readonly type = "gltf";
 
   @observable hasLocalData = false;
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+
+    makeObservable(this);
+  }
 
   get type() {
     return GltfCatalogItem.type;
@@ -145,7 +159,7 @@ export default class GltfCatalogItem extends MappableMixin(
     return [dataSource];
   }
 
-  @computed get selectableDimensions(): SelectableDimension[] {
+  @override get selectableDimensions(): SelectableDimension[] {
     return [...super.selectableDimensions, this.shadowDimension];
   }
 }

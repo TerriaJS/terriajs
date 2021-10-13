@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -19,6 +19,9 @@ import UrlMixin from "../../../ModelMixins/UrlMixin";
 import KmlCatalogItemTraits from "../../../Traits/TraitsClasses/KmlCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import Terria from "../../Terria";
+import { BaseModel } from "../../Definition/Model";
+import ModelTraits from "../../../Traits/ModelTraits";
 
 const kmzRegex = /\.kmz$/i;
 
@@ -26,6 +29,18 @@ class KmlCatalogItem extends MappableMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(KmlCatalogItemTraits)))
 ) {
   static readonly type = "kml";
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+
+    makeObservable(this);
+  }
+
   get type() {
     return KmlCatalogItem.type;
   }

@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import { createTransformer } from "mobx-utils";
 import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
@@ -36,6 +36,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
   static stratumName = "automaticTableStyles";
   constructor(readonly catalogItem: TableCatalogItem) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -180,6 +181,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
 export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
   constructor(readonly catalogItem: TableCatalogItem, readonly index: number) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {

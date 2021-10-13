@@ -1,7 +1,8 @@
 import { Feature, LineString } from "geojson";
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import isDefined from "../../Core/isDefined";
-import FunctionParameter from "./FunctionParameter";
+import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
+import FunctionParameter, { Options } from "./FunctionParameter";
 import { GeoJsonFunctionParameter } from "./GeoJsonParameter";
 
 type Coordinates = number[];
@@ -11,6 +12,15 @@ export default class LineParameter extends FunctionParameter<Line>
   implements GeoJsonFunctionParameter {
   static readonly type = "line";
   readonly type = "line";
+
+  constructor(
+    protected readonly catalogFunction: CatalogFunctionMixin,
+    options: Options
+  ) {
+    super(catalogFunction, options);
+
+    makeObservable(this);
+  }
 
   static formatValueForUrl(value: Line) {
     return JSON.stringify({

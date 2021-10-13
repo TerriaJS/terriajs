@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, runInAction, makeObservable, override } from "mobx";
 import isDefined from "../../../Core/isDefined";
 import TerriaError from "../../../Core/TerriaError";
 import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
@@ -39,9 +39,10 @@ export default class CsvCatalogItem extends TableMixin(
   constructor(
     id: string | undefined,
     terria: Terria,
-    sourceReference: BaseModel | undefined
+    sourceReference?: BaseModel | undefined
   ) {
     super(id, terria, sourceReference);
+    makeObservable(this);
     this.strata.set(
       TableAutomaticStylesStratum.stratumName,
       new TableAutomaticStylesStratum(this)
@@ -61,7 +62,7 @@ export default class CsvCatalogItem extends TableMixin(
     return isDefined(this._csvFile);
   }
 
-  @computed
+  @override
   get _canExportData() {
     return (
       isDefined(this._csvFile) ||

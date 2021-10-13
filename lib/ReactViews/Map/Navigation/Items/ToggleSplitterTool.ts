@@ -1,4 +1,4 @@
-import { action, computed } from "mobx";
+import { action, computed, makeObservable, override } from "mobx";
 import ViewerMode from "../../../../Models/ViewerMode";
 import ViewState from "../../../../ReactViewModels/ViewState";
 import Icon from "../../../../Styled/Icon";
@@ -9,6 +9,7 @@ export class ToggleSplitterController extends MapNavigationItemController {
 
   constructor(private viewState: ViewState) {
     super();
+    makeObservable(this);
   }
 
   get glyph(): any {
@@ -22,30 +23,30 @@ export class ToggleSplitterController extends MapNavigationItemController {
     return undefined;
   }
 
-  @computed
+  @override
   get visible() {
     return super.visible || this.viewState.terria.currentViewer.canShowSplitter;
   }
 
-  @computed
+  @override
   get disabled() {
     const toolIsDifference =
       this.viewState.currentTool?.toolName === "Difference";
     return this.viewState.isToolOpen && toolIsDifference;
   }
 
-  @computed
+  @override
   get active(): boolean {
     return this.viewState.terria.showSplitter;
   }
 
-  @action
+  @override
   activate() {
     this.viewState.terria.showSplitter = true;
     super.activate();
   }
 
-  @action
+  @override
   deactivate() {
     this.viewState.terria.showSplitter = false;
     super.deactivate();

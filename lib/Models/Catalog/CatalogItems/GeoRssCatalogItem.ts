@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { computed, runInAction } from "mobx";
+import { computed, makeObservable, runInAction } from "mobx";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import getFilenameFromUri from "terriajs-cesium/Source/Core/getFilenameFromUri";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
@@ -24,6 +24,8 @@ import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
+import Terria from "../../Terria";
+import ModelTraits from "../../../Traits/ModelTraits";
 
 enum GeoRssFormat {
   RSS = "rss",
@@ -64,6 +66,7 @@ class GeoRssStratum extends LoadableStratum(GeoRssCatalogItemTraits) {
     private readonly _feed: Feed
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -180,6 +183,17 @@ export default class GeoRssCatalogItem extends MappableMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(GeoRssCatalogItemTraits)))
 ) {
   static readonly type = "georss";
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+    makeObservable(this);
+  }
+
   get type() {
     return GeoRssCatalogItem.type;
   }

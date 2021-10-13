@@ -1,5 +1,5 @@
 import { Feature as GeoJSONFeature, Position } from "geojson";
-import { action, observable, runInAction } from "mobx";
+import { action, makeObservable, observable, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
@@ -53,6 +53,10 @@ export default abstract class GlobeOrMap {
   // http://stackoverflow.com/questions/17818493/mousemove-event-repeating-every-second/17819113
   // I (Kevin Ring) see this consistently on my laptop when Windows Media Player is running.
   @observable mouseCoords: MouseCoords = new MouseCoords();
+
+  constructor() {
+    makeObservable(this);
+  }
 
   abstract destroy(): void;
 

@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, runInAction, makeObservable } from "mobx";
 import threddsCrawler from "thredds-catalog-crawler/src/entryBrowser";
 import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
@@ -15,6 +15,8 @@ import { BaseModel } from "../../Definition/Model";
 import { proxyCatalogItemBaseUrl } from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
 import ThreddsItemReference from "../CatalogReferences/ThreddsItemReference";
+import Terria from "../../Terria";
+import ModelTraits from "../../../Traits/ModelTraits";
 
 interface ThreddsCatalog {
   id: string;
@@ -51,6 +53,7 @@ export class ThreddsStratum extends LoadableStratum(ThreddsCatalogGroupTraits) {
 
   constructor(readonly _catalogGroup: ThreddsCatalogGroup) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -181,6 +184,17 @@ export default class ThreddsCatalogGroup extends UrlMixin(
   GroupMixin(CatalogMemberMixin(CreateModel(ThreddsCatalogGroupTraits)))
 ) {
   static readonly type = "thredds-group";
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+
+    makeObservable(this);
+  }
 
   get type() {
     return ThreddsCatalogGroup.type;

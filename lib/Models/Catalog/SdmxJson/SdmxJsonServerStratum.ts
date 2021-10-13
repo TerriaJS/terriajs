@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed } from "mobx";
+import { action, computed, makeObservable } from "mobx";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
@@ -104,6 +104,8 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
     private readonly sdmxServer: SdmxServer
   ) {
     super();
+
+    makeObservable(this);
 
     // If categorisations exist => organise Dataflows into a tree!
     if (isDefined(this.sdmxServer.categorisations)) {

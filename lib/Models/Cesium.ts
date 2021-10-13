@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { autorun, computed, runInAction } from "mobx";
+import { autorun, computed, makeObservable, runInAction } from "mobx";
 import { computedFn } from "mobx-utils";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -127,6 +127,8 @@ export default class Cesium extends GlobeOrMap {
 
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
     super();
+
+    makeObservable(this);
 
     this.terriaViewer = terriaViewer;
     this.terria = terriaViewer.terria;

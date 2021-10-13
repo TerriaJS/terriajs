@@ -1,17 +1,31 @@
-import { computed } from "mobx";
+import { computed, makeObservable } from "mobx";
 import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplateImageryProvider";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
+import ModelTraits from "../../../Traits/ModelTraits";
 import OpenStreetMapCatalogItemTraits from "../../../Traits/TraitsClasses/OpenStreetMapCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
+import { BaseModel } from "../../Definition/Model";
+import Terria from "../../Terria";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 export default class OpenStreetMapCatalogItem extends MappableMixin(
   CatalogMemberMixin(CreateModel(OpenStreetMapCatalogItemTraits))
 ) {
   static readonly type = "open-street-map";
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+
+    makeObservable(this);
+  }
 
   get type() {
     return OpenStreetMapCatalogItem.type;

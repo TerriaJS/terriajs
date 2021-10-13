@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, makeObservable, runInAction } from "mobx";
 import containsAny from "../../../Core/containsAny";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
@@ -24,6 +24,8 @@ import WebFeatureServiceCapabilities, {
   FeatureType
 } from "./WebFeatureServiceCapabilities";
 import WebFeatureServiceCatalogItem from "./WebFeatureServiceCatalogItem";
+import Terria from "../../Terria";
+import ModelTraits from "../../../Traits/ModelTraits";
 
 class GetCapabilitiesStratum extends LoadableStratum(
   WebFeatureServiceCatalogGroupTraits
@@ -58,6 +60,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     readonly capabilities: WebFeatureServiceCapabilities
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -222,6 +225,16 @@ export default class WebFeatureServiceCatalogGroup extends GetCapabilitiesMixin(
 
   get type() {
     return WebFeatureServiceCatalogGroup.type;
+  }
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+    makeObservable(this);
   }
 
   protected async forceLoadMetadata(): Promise<void> {

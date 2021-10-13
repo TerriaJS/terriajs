@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, makeObservable, runInAction } from "mobx";
 import containsAny from "../../../Core/containsAny";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
@@ -26,6 +26,8 @@ import WebMapServiceCapabilities, {
   CapabilitiesLayer
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
+import Terria from "../../Terria";
+import ModelTraits from "../../../Traits/ModelTraits";
 
 class GetCapabilitiesStratum extends LoadableStratum(
   WebMapServiceCatalogGroupTraits
@@ -55,6 +57,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     readonly capabilities: WebMapServiceCapabilities
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
@@ -323,6 +326,16 @@ export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(
 
   get type() {
     return WebMapServiceCatalogGroup.type;
+  }
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+    makeObservable(this);
   }
 
   protected async forceLoadMetadata(): Promise<void> {

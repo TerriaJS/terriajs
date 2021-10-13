@@ -1,7 +1,7 @@
 import { ApiClient, fromCatalog } from "@opendatasoft/api-client";
 import { Dataset, Facet } from "@opendatasoft/api-client/dist/client/types";
 import i18next from "i18next";
-import { action, computed, runInAction } from "mobx";
+import { action, computed, makeObservable, runInAction } from "mobx";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import runLater from "../../../Core/runLater";
@@ -20,6 +20,8 @@ import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import OpenDataSoftCatalogItem from "../CatalogItems/OpenDataSoftCatalogItem";
 import StratumOrder from "../../Definition/StratumOrder";
+import Terria from "../../Terria";
+import ModelTraits from "../../../Traits/ModelTraits";
 
 // "Valid" types which force some properties to be defined
 export type ValidDataset = Dataset & { dataset_id: string };
@@ -100,6 +102,7 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
     readonly datasets: ValidDataset[]
   ) {
     super();
+    makeObservable(this);
   }
 
   @computed
@@ -241,6 +244,16 @@ export default class OpenDataSoftCatalogGroup extends UrlMixin(
   GroupMixin(CatalogMemberMixin(CreateModel(OpenDataSoftCatalogGroupTraits)))
 ) {
   static readonly type = "opendatasoft-group";
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+    makeObservable(this);
+  }
 
   get type() {
     return OpenDataSoftCatalogGroup.type;

@@ -1,7 +1,7 @@
 "use strict";
 
 import i18next from "i18next";
-import { action } from "mobx";
+import { action, makeObservable } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
@@ -28,6 +28,11 @@ interface PropsType extends WithTranslation {
 
 @observer
 class DimensionSelectorSection extends React.Component<PropsType> {
+  constructor(props: PropsType) {
+    super(props);
+    makeObservable(this);
+  }
+
   @action
   setDimensionValue(dimension: SelectableDimension, value: string) {
     dimension.setDimensionValue(CommonStrata.user, value);

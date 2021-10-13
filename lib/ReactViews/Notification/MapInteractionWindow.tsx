@@ -9,7 +9,7 @@ import Styles from "./map-interaction-window.scss";
 import classNames from "classnames";
 import { observer } from "mobx-react";
 import MapInteractionMode, { UIMode } from "../../Models/MapInteractionMode";
-import { observable, Lambda, reaction } from "mobx";
+import { observable, Lambda, reaction, makeObservable } from "mobx";
 import isDefined from "../../Core/isDefined";
 import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
@@ -46,6 +46,11 @@ export default class MapInteractionWindow extends React.Component<{
   private disposeMapInteractionObserver?: Lambda;
 
   @observable currentInteractionMode?: MapInteractionMode;
+
+  constructor(props: { terria: Terria; viewState: ViewState }) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentWillUnmount() {
     // this.removeContextItem();

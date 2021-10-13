@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import uniqWith from "lodash-es/uniqWith";
-import { computed, runInAction } from "mobx";
+import { computed, makeObservable, runInAction } from "mobx";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
@@ -37,6 +37,8 @@ import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import MinMaxLevelMixin from "./../../../ModelMixins/MinMaxLevelMixin";
 import { scaleDenominatorToLevel } from "../../../Core/scaleToDenominator";
+import Terria from "../../Terria";
+import ModelTraits from "../../../Traits/ModelTraits";
 
 const proj4 = require("proj4").default;
 
@@ -114,6 +116,7 @@ class MapServerStratum extends LoadableStratum(
     readonly token: string | undefined
   ) {
     super();
+    makeObservable(this);
   }
 
   duplicateLoadableStratum(newModel: BaseModel): this {
@@ -382,6 +385,17 @@ export default class ArcGisMapServerCatalogItem extends MappableMixin(
   )
 ) {
   static readonly type = "esri-mapServer";
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel | undefined,
+    strata?: Map<string, ModelTraits> | undefined
+  ) {
+    super(id, terria, sourceReference, strata);
+    makeObservable(this);
+  }
+
   get typeName() {
     return i18next.t("models.arcGisMapServerCatalogItem.name");
   }
