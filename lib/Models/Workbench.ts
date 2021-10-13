@@ -169,10 +169,10 @@ export default class Workbench {
    *
    * @param item The item to add to or remove from the workbench.
    */
-  public async add(item: BaseModel | BaseModel[]): Promise<Result<undefined>> {
+  public async add(item: BaseModel | BaseModel[]): Promise<Result<unknown>> {
     if (Array.isArray(item)) {
       const results = await Promise.all(item.reverse().map(i => this.add(i)));
-      return Result.combineEmpty(results, {
+      return Result.combine(results, {
         title: i18next.t("workbench.addItemErrorTitle"),
         message: i18next.t("workbench.addItemErrorMessage"),
         importance: -1

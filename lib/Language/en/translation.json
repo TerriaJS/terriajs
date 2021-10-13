@@ -899,7 +899,7 @@
       "notSupportedErrorTitle": "Not supported in 2D",
       "notSupportedErrorMessage": "\"{{name}}\" cannot be show in the 2D view. Switch to 3D and try again.",
       "errorRenderingTitle": "Error rendering in 3D",
-      "errorRenderingMessage": "<p>An error occurred while rendering in 3D.  This probably indicates a bug in {{appName}} or an incompatibility with your system or web browser.  We'll now switch you to 2D so that you can continue your work.</p>"
+      "errorRenderingMessage": "An error occurred while rendering in 3D.  This probably indicates a bug in {{appName}} or an incompatibility with your system or web browser.  We'll now switch you to 2D so that you can continue your work."
     },
     "ckan": {
       "nameServer": "CKAN Server",

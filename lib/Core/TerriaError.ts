@@ -42,6 +42,7 @@ export interface TerriaErrorOptions {
 
   /** Importance of the error message, this is used to determine which message is displayed to the user if multiple error messages exist.
    * Higher importance messages are shown to user over lower importance. Default value is 0
+   * If two errors of equal importance are found - the first error found through depth-first search will be shown
    */
   importance?: number;
 
@@ -323,7 +324,9 @@ export default class TerriaError {
    * Create a new parent `TerriaError` from this error. This essentially "clones" the `TerriaError` and applied `overrides` on top. It will also set `originalError` so we get a nice tree of `TerriaErrors`
    */
   createParentError(overrides?: TerriaErrorOverrides): TerriaError {
-    // Note: we don't copy over `raisedToUser` here
+    // Note: we don't copy over `raisedToUser` or `importance` here
+    // We don't need `raisedToUser` as the getter will check all errors in the tree when called
+    // We don't want `importance` copied over, as it may vary between errors in the tree - and we want to be able to find errors with highest importance when diplaying the entire error tree to the user
     return new TerriaError({
       message: this._message,
       title: this._title,
@@ -335,6 +338,7 @@ export default class TerriaError {
     });
   }
 
+  /** Depth-first flatten */
   flatten(): TerriaError[] {
     return filterOutUndefined([
       this,

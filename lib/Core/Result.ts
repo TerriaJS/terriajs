@@ -101,7 +101,6 @@ export default class Result<T = undefined> {
    * The new Result will have an error if at least one error has occurred in array of results
    * The value will be array of result values.
    *
-   * To combine empty Results - see `combineEmpty`
    */
   static combine<U>(
     results: Result<U>[],
@@ -109,22 +108,6 @@ export default class Result<T = undefined> {
   ): Result<U[]> {
     return new Result(
       results.map(r => r.value),
-      TerriaError.combine(
-        results.map(r => r.error),
-        errorOverrides
-      )
-    );
-  }
-
-  /** Combine array of empty Results (results with no value).
-   * The new Result will have an error if at least one error has occurred in array of results
-   * The value will be undefined
-   */
-  static combineEmpty(
-    results: Result<undefined>[],
-    errorOverrides: TerriaErrorOverrides
-  ): Result<undefined> {
-    return Result.error(
       TerriaError.combine(
         results.map(r => r.error),
         errorOverrides
