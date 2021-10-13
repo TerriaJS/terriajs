@@ -4,6 +4,7 @@ Change Log
 #### next release (8.1.3)
 
 * Reimplement map viewer url param
+* Fix `ContinuousColorMap` `Legend` issue due to funky JS precision
 * [The next improvement]
 
 #### 8.1.2
