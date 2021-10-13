@@ -347,22 +347,24 @@ class WebFeatureServiceCatalogItem extends ExportableMixin(
 
     // Check if geojson output is supported (by checking GetCapabilities OutputTypes OR FeatureType OutputTypes)
     const hasOutputFormat = (outputFormats: string[] | undefined) => {
-      return isDefined(
-        outputFormats?.find(format =>
-          ["json", "JSON", "application/json"].includes(format)
-        )
-      );
+      let value = outputFormats?.find(format => {
+        return ["json", "JSON", "application/json"].includes(format);
+      });
+      let returnValue = isDefined(value);
+      return returnValue;
     };
 
-    const supportsGeojson =
-      hasOutputFormat(getCapabilitiesStratum.capabilities.outputTypes) ||
-      [...getCapabilitiesStratum.capabilitiesFeatureTypes.values()].reduce<
-        boolean
-      >(
-        (hasGeojson, current) =>
-          hasGeojson && hasOutputFormat(current?.OutputFormats),
-        true
-      );
+    const supportsGeojson = hasOutputFormat(
+      getCapabilitiesStratum.capabilities.outputTypes
+    );
+    // ||
+    // [...getCapabilitiesStratum.capabilitiesFeatureTypes.values()].reduce<
+    //   boolean
+    // >(
+    //   (hasGeojson, current) =>
+    //     hasGeojson && hasOutputFormat(current?.OutputFormats),
+    //   true
+    // );
 
     const url = this.uri
       .clone()
@@ -373,7 +375,9 @@ class WebFeatureServiceCatalogItem extends ExportableMixin(
             request: "GetFeature",
             typeName: this.typeNames,
             version: "1.1.0",
-            outputFormat: supportsGeojson ? "JSON" : "gml3",
+            outputFormat: supportsGeojson
+              ? "JSON"
+              : "application/gml+xml; version=3.2",
             srsName: "urn:ogc:def:crs:EPSG::4326", // srsName must be formatted like this for correct lat/long order  >:(
             maxFeatures: this.maxFeatures
           },
