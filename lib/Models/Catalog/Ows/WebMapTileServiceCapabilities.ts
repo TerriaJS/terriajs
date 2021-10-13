@@ -2,7 +2,7 @@ import i18next from "i18next";
 import { createTransformer } from "mobx-utils";
 import defined from "terriajs-cesium/Source/Core/defined";
 import loadXML from "../../../Core/loadXML";
-import TerriaError from "../../../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import xml2json from "../../../ThirdParty/xml2json";
 import {
   BoundingBox,
@@ -134,7 +134,7 @@ export default class WebMapTileServiceCapabilities {
       return Promise.resolve(loadXML(url)).then(function(capabilitiesXml) {
         const json = xml2json(capabilitiesXml);
         if (!defined(json.ServiceIdentification)) {
-          throw new TerriaError({
+          throw networkRequestError({
             title: i18next.t(
               "models.webMapTileServiceCatalogGroup.invalidCapabilitiesTitle"
             ),

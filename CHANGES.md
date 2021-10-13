@@ -4,6 +4,25 @@ Change Log
 #### next release (8.1.3)
 
 * Reimplement map viewer url param
+* Added `terriaError.importance` property. This can be set to adjust which error messages are presented to the user.
+  * `terriaErrorNotification` and `WarningBox` will use the error message with highest importance to show to the user ("Developer details" remains unchanged)
+* Add `terriaError.shouldRaiseToUser` override, this can be used to raise errors with `Warning` severity.
+* `terriaError.raisedToError` will now check if **any** `TerriaError` has been raised to the user in the tree.
+* `workbench.add()` will now keep items which only return `Warning` severity `TerriaErrors` after loading.
+* Improve SDMX error messages for no results
+* Fix SDMX FeatureInfoSection time-series chart to only show if data exists.
+* Improve GeoJSON CRS projection error messages
+* Add `Notification` `onDismiss` and `ignore` properties.
+* Fix `AsyncLoader` result bug
+* Remove `Terria.error` event handler
+* Refactor `workbench.add` to return `Result`
+* Consolidated network request / CORS error message - it is now in `t("core.terriaError.networkRequestMessage")`. 
+  * It can be injected into other translation strings like so: `"groupNotAvailableMessage": "$t(core.terriaError.networkRequestMessage)"`
+  * Or, you can use `networkRequestError(error)` to wrap up existing `TerriaError` objects
+* Fix incorrect default `configParameters.feedbackPreamble`
+* Fix incorrect default `configParameters.proj4def` - it is now `"proj4def/"`
+* Fix Branding component. It wasn't wrapped in `observer` so it kept getting re-rendered
+* Add `FeedbackLink` and `<feedbacklink>` custom component - this can be used to add a button to open feedback dialog (or show `supportEmail` in feedback is disabled)
 * Fix `ContinuousColorMap` `Legend` issue due to funky JS precision
 * [The next improvement]
 

@@ -26,6 +26,7 @@ import { BaseModel } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import SocrataMapViewCatalogItem from "../CatalogItems/SocrataMapViewCatalogItem";
 import StratumOrder from "../../Definition/StratumOrder";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 
 export interface Facet {
   facet: string;
@@ -447,11 +448,19 @@ export default class SocrataCatalogGroup extends UrlMixin(
   }
 
   protected async forceLoadMetadata(): Promise<void> {
-    if (!this.strata.has(SocrataCatalogStratum.stratumName)) {
-      const stratum = await SocrataCatalogStratum.load(this);
-      runInAction(() => {
-        this.strata.set(SocrataCatalogStratum.stratumName, stratum);
-      });
+    try {
+      if (!this.strata.has(SocrataCatalogStratum.stratumName)) {
+        const stratum = await SocrataCatalogStratum.load(this);
+        runInAction(() => {
+          this.strata.set(SocrataCatalogStratum.stratumName, stratum);
+        });
+      }
+    } catch (e) {
+      networkRequestError(
+        TerriaError.from(e, {
+          message: { key: "models.socrataServer.retrieveErrorMessage" }
+        })
+      );
     }
   }
 

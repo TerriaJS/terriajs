@@ -4,6 +4,8 @@ import { BaseModel } from "../../lib/Models/Definition/Model";
 import Terria from "../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Workbench from "../../lib/Models/Workbench";
+import Result from "../../lib/Core/Result";
+import TerriaError, { TerriaErrorSeverity } from "../../lib/Core/TerriaError";
 
 describe("Workbench", function() {
   let terria: Terria;
@@ -145,6 +147,41 @@ describe("Workbench", function() {
     expect(wmsItem.loadMetadataResult?.error).toBeUndefined();
     expect(wmsItem.loadMapItemsResult).toBeDefined();
     expect(wmsItem.loadMapItemsResult?.error).toBeUndefined();
+  });
+
+  it("doesn't add item if Error occurs, but adds item in Warning occurs", async function() {
+    workbench.items = [item1, item2];
+
+    const wmsItem3 = item3 as WebMapServiceCatalogItem;
+    const wmsItem4 = item4 as WebMapServiceCatalogItem;
+
+    (wmsItem3 as any).loadMapItems = () =>
+      Result.error(
+        new TerriaError({
+          message: "Failed to Load",
+          severity: TerriaErrorSeverity.Error
+        })
+      );
+
+    (wmsItem4 as any).loadMapItems = () =>
+      Result.error(
+        new TerriaError({
+          message: "Some warning",
+          severity: TerriaErrorSeverity.Warning
+        })
+      );
+
+    const addResult1 = await workbench.add(wmsItem3);
+
+    expect(addResult1.error).toBeDefined();
+    expect(addResult1.error?.severity).toEqual(TerriaErrorSeverity.Error);
+    expect(workbench.itemIds).toEqual(["A", "B"]);
+
+    const addResult2 = await workbench.add(wmsItem4);
+
+    expect(addResult2.error).toBeDefined();
+    expect(addResult2.error?.severity).toEqual(TerriaErrorSeverity.Warning);
+    expect(workbench.itemIds).toEqual(["D", "A", "B"]);
   });
 
   it("doesn't add duplicate model", async function() {

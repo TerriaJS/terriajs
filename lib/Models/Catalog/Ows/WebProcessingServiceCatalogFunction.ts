@@ -4,7 +4,7 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import URI from "urijs";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
-import TerriaError from "../../../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import Reproject from "../../../Map/Reproject";
 import CatalogFunctionMixin from "../../../ModelMixins/CatalogFunctionMixin";
 import XmlRequestMixin from "../../../ModelMixins/XmlRequestMixin";
@@ -122,7 +122,7 @@ class WpsLoadableStratum extends LoadableStratum(
 
     const json = xml2json(xml);
     if (!isDefined(json.ProcessDescription)) {
-      throw new TerriaError({
+      throw networkRequestError({
         sender: this,
         title: i18next.t(
           "models.webProcessingService.processDescriptionErrorTitle"
@@ -146,7 +146,7 @@ class WpsLoadableStratum extends LoadableStratum(
 
     const dataInputs = this.processDescription.DataInputs;
     if (!isDefined(dataInputs) || !isDefined(dataInputs.Input)) {
-      throw new TerriaError({
+      throw networkRequestError({
         sender: this,
         title: i18next.t("models.webProcessingService.processInputErrorTitle"),
         message: i18next.t(
@@ -617,16 +617,10 @@ function throwInvalidWpsServerError(
   wps: WebProcessingServiceCatalogFunction,
   endpoint: string
 ) {
-  throw new TerriaError({
+  throw networkRequestError({
     title: i18next.t("models.webProcessingService.invalidWPSServerTitle"),
     message: i18next.t("models.webProcessingService.invalidWPSServerMessage", {
       name: wps.name,
-      email:
-        '<a href="mailto:' +
-        wps.terria.supportEmail +
-        '">' +
-        wps.terria.supportEmail +
-        "</a>.",
       endpoint
     })
   });

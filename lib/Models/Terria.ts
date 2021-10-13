@@ -341,8 +341,7 @@ export default class Terria {
   readonly modelIdShareKeysMap = observable.map<string, string[]>();
 
   readonly baseUrl: string = "build/TerriaJS/";
-  /** Use `terria.addErrorEventListener` or `terria.raiseErrorToUser` if you need to interact with errors outside this class*/
-  private readonly error = new CesiumEvent();
+
   readonly tileLoadProgressEvent = new CesiumEvent();
   readonly workbench = new Workbench();
   readonly overlays = new Workbench();
@@ -400,7 +399,7 @@ export default class Terria {
     catalogIndexUrl: undefined,
     regionMappingDefinitionsUrl: "build/TerriaJS/data/regionMapping.json",
     conversionServiceBaseUrl: "convert/",
-    proj4ServiceBaseUrl: "proj4/",
+    proj4ServiceBaseUrl: "proj4def/",
     corsProxyBaseUrl: "proxy/",
     proxyableDomainsUrl: "proxyabledomains/", // deprecated, will be determined from serverconfig
     serverConfigUrl: "serverconfig/",
@@ -445,7 +444,7 @@ export default class Terria {
     customRequestSchedulerLimits: undefined,
     persistViewerMode: true,
     openAddData: false,
-    feedbackPreamble: "feedback.feedbackPreamble",
+    feedbackPreamble: "translate#feedback.feedbackPreamble",
     feedbackMinLength: 0,
     extraCreditLinks: [
       // Default credit links (shown at the bottom of the Cesium map)
@@ -565,10 +564,6 @@ export default class Terria {
     }
   }
 
-  addErrorEventListener(fn: (e: TerriaError) => void) {
-    return this.error.addEventListener(e => fn(e));
-  }
-
   /** Raise error to user.
    *
    * This accepts same arguments as `TerriaError.from` - but also has:
@@ -582,19 +577,17 @@ export default class Terria {
   ) {
     const terriaError = TerriaError.from(error, overrides);
 
+    // Set shouldRaiseToUser:
+    // - `true` if forceRaiseToUser agrument is true
+    // - `false` if ignoreErrors userProperties is set
+    if (forceRaiseToUser) terriaError.shouldRaiseToUser = true;
+    else if (this.userProperties.get("ignoreErrors") === "1")
+      terriaError.shouldRaiseToUser = false;
+
     // Log error to error service
     this.errorService.error(terriaError);
-    if (
-      forceRaiseToUser ||
-      (this.userProperties.get("ignoreErrors") !== "1" &&
-        terriaError.shouldRaiseToUser &&
-        !terriaError.raisedToUser)
-    ) {
-      terriaError.raisedToUser = true;
-      this.error.raiseEvent(terriaError);
-    } else {
-      console.log(terriaError);
-    }
+    this.notificationState.addNotificationToQueue(terriaError.toNotification());
+    console.log(terriaError.toError());
   }
 
   @computed
@@ -1787,7 +1780,8 @@ async function interpretHash(
       );
     } catch (e) {
       throw TerriaError.from(e, {
-        message: { key: "parsingStartDataErrorMessage" }
+        message: { key: "models.terria.parsingStartDataErrorMessage" },
+        importance: -1
       });
     }
   }
