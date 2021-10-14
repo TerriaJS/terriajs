@@ -573,7 +573,7 @@ export default class Terria {
   raiseErrorToUser(
     error: unknown,
     overrides?: TerriaErrorOverrides,
-    forceRaiseToUser = true
+    forceRaiseToUser = false
   ) {
     const terriaError = TerriaError.from(error, overrides);
 
@@ -1106,8 +1106,7 @@ export default class Terria {
     modelId: string,
     stratumId: string,
     allModelStratumData: JsonObject,
-    replaceStratum: boolean,
-    errorSeverity?: TerriaErrorSeverity
+    replaceStratum: boolean
   ): Promise<Result<BaseModel | undefined>> {
     const thisModelStratumData = allModelStratumData[modelId] || {};
     if (!isJsonObject(thisModelStratumData)) {
@@ -1137,8 +1136,7 @@ export default class Terria {
               containerId,
               stratumId,
               allModelStratumData,
-              replaceStratum,
-              errorSeverity
+              replaceStratum
             )
           ).pushErrorTo(errors, `Failed to load container ${containerId}`);
 
@@ -1168,8 +1166,7 @@ export default class Terria {
           splitSourceId,
           stratumId,
           allModelStratumData,
-          replaceStratum,
-          errorSeverity
+          replaceStratum
         )
       ).pushErrorTo(
         errors,
@@ -1257,14 +1254,12 @@ export default class Terria {
       loadedModel,
       TerriaError.combine(errors, {
         // This will set TerriaErrorSeverity to Error if the model which FAILED to load is in the workbench.
-        severity:
-          errorSeverity ??
-          (() =>
-            this.workbench.items.find(
-              workbenchItem => workbenchItem.uniqueId === modelId
-            )
-              ? TerriaErrorSeverity.Error
-              : TerriaErrorSeverity.Warning),
+        severity: () =>
+          this.workbench.items.find(
+            workbenchItem => workbenchItem.uniqueId === modelId
+          )
+            ? TerriaErrorSeverity.Error
+            : TerriaErrorSeverity.Warning,
         message: {
           key: "models.terria.loadModelErrorMessage",
           parameters: { model: modelId }
@@ -1401,11 +1396,7 @@ export default class Terria {
               modelId,
               stratumId,
               models,
-              replaceStratum,
-              // Set error severity to Error if model is in workbench array
-              workbench.includes(modelId)
-                ? TerriaErrorSeverity.Error
-                : undefined
+              replaceStratum
             )
           ).pushErrorTo(errors);
         })
