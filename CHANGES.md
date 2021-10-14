@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+#### next release (8.1.4)
+
+* [The next improvement]
+
 #### next release (8.1.3)
 
 * Reimplement map viewer url param
@@ -25,7 +29,6 @@ Change Log
 * Add `FeedbackLink` and `<feedbacklink>` custom component - this can be used to add a button to open feedback dialog (or show `supportEmail` in feedback is disabled)
 * Fix `ContinuousColorMap` `Legend` issue due to funky JS precision
 * Fix mobx computed cycle in `CkanDatasetStratum` which was making error messages for failed loading of CKAN items worse.
-* [The next improvement]
 
 #### 8.1.2
 
