@@ -24,6 +24,7 @@ Change Log
 * Fix Branding component. It wasn't wrapped in `observer` so it kept getting re-rendered
 * Add `FeedbackLink` and `<feedbacklink>` custom component - this can be used to add a button to open feedback dialog (or show `supportEmail` in feedback is disabled)
 * Fix `ContinuousColorMap` `Legend` issue due to funky JS precision
+* Fix mobx computed cycle in `CkanDatasetStratum` which was making error messages for failed loading of CKAN items worse.
 * [The next improvement]
 
 #### 8.1.2
