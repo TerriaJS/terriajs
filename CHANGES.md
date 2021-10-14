@@ -33,6 +33,7 @@ Change Log
 * Wrap clean initSources with action.
 * Modified `TerriaReference` to retain its name when expanded. Previously, when the reference is expanded, it will assume the name of the group or item of the target.
 * Proxy `catalogIndex.url`
+* Make flex-search usage (for `CatalogIndex`) web-worker based
 
 #### 8.1.1
 
