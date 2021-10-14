@@ -27,7 +27,6 @@ Change Log
 * Fix mobx computed cycle in `CkanDatasetStratum` which was making error messages for failed loading of CKAN items worse.
 * Make flex-search usage (for `CatalogIndex`) web-worker based
 * Add `completeKnownContainerUniqueIds` to `Model` class - This will recursively travese tree of knownContainerUniqueIds models to return full list of dependencies
-* Add all `completeKnownContainerUniqueIds` to shareData.models
 * Add all models from `completeKnownContainerUniqueIds` to shareData.models (even if they are empty)
 * [The next improvement]
 
