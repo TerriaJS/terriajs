@@ -1,5 +1,5 @@
 import { Document } from "flexsearch";
-import { action, observable, ObservableMap } from "mobx";
+import { action, runInAction } from "mobx";
 import loadJson from "../../Core/loadJson";
 import CatalogIndexReferenceTraits from "../../Traits/TraitsClasses/CatalogIndexReferenceTraits";
 import CatalogIndexReference from "../Catalog/CatalogReferences/CatalogIndexReference";
@@ -129,10 +129,13 @@ export default class CatalogIndex {
         if (indexReference && !matchedIds.has(id)) {
           matchedIds.add(id);
           results.push(
-            new SearchResult({
-              name: indexReference.name ?? indexReference.uniqueId,
-              catalogItem: indexReference
-            })
+            runInAction(
+              () =>
+                new SearchResult({
+                  name: indexReference.name ?? indexReference.uniqueId,
+                  catalogItem: indexReference
+                })
+            )
           );
         }
       });
