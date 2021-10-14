@@ -25,7 +25,7 @@ Change Log
 * Add `FeedbackLink` and `<feedbacklink>` custom component - this can be used to add a button to open feedback dialog (or show `supportEmail` in feedback is disabled)
 * Fix `ContinuousColorMap` `Legend` issue due to funky JS precision
 * Fix mobx computed cycle in `CkanDatasetStratum` which was making error messages for failed loading of CKAN items worse.
-* Change flexsearch to use web workers
+* Make flex-search usage (for `CatalogIndex`) web-worker based
 * Add `completeKnownContainerUniqueIds` to `Model` class - This will recursively travese tree of knownContainerUniqueIds models to return full list of dependencies
 * Add all `completeKnownContainerUniqueIds` to shareData.models
 * Add all models from `completeKnownContainerUniqueIds` to shareData.models (even if they are empty)
@@ -38,7 +38,6 @@ Change Log
 * Wrap clean initSources with action.
 * Modified `TerriaReference` to retain its name when expanded. Previously, when the reference is expanded, it will assume the name of the group or item of the target.
 * Proxy `catalogIndex.url`
-* Make flex-search usage (for `CatalogIndex`) web-worker based
 
 #### 8.1.1
 
