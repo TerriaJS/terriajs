@@ -25,6 +25,10 @@ Change Log
 * Add `FeedbackLink` and `<feedbacklink>` custom component - this can be used to add a button to open feedback dialog (or show `supportEmail` in feedback is disabled)
 * Fix `ContinuousColorMap` `Legend` issue due to funky JS precision
 * Fix mobx computed cycle in `CkanDatasetStratum` which was making error messages for failed loading of CKAN items worse.
+* Change flexsearch to use web workers
+* Add `completeKnownContainerUniqueIds` to `Model` class - This will recursively travese tree of knownContainerUniqueIds models to return full list of dependencies
+* Add all `completeKnownContainerUniqueIds` to shareData.models
+* Add all models from `completeKnownContainerUniqueIds` to shareData.models (even if they are empty)
 * [The next improvement]
 
 #### 8.1.2
