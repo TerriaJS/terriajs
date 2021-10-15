@@ -5,7 +5,7 @@ import isDefined from "../../../Core/isDefined";
 import { JsonObject } from "../../../Core/Json";
 import loadJson from "../../../Core/loadJson";
 import runLater from "../../../Core/runLater";
-import TerriaError from "../../../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
@@ -156,8 +156,8 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
 
   protected getFilteredDatasets(): CkanDataset[] {
     if (this.datasets.length === 0) return [];
-    if (this._catalogGroup.blacklist !== undefined) {
-      const bl = this._catalogGroup.blacklist;
+    if (this._catalogGroup.excludeMembers !== undefined) {
+      const bl = this._catalogGroup.excludeMembers;
       return this.datasets.filter(ds => bl.indexOf(ds.title) === -1);
     }
     return this.datasets;
@@ -190,8 +190,8 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
 
   protected getFilteredGroups(): CatalogGroup[] {
     if (this.groups.length === 0) return [];
-    if (this._catalogGroup.blacklist !== undefined) {
-      const bl = this._catalogGroup.blacklist;
+    if (this._catalogGroup.excludeMembers !== undefined) {
+      const bl = this._catalogGroup.excludeMembers;
       return this.groups.filter(group => {
         if (group.name === undefined) return false;
         else return bl.indexOf(group.name) === -1;
@@ -423,16 +423,9 @@ async function paginateThroughResults(
     !ckanServerResponse ||
     !ckanServerResponse.help
   ) {
-    throw new TerriaError({
+    throw networkRequestError({
       title: i18next.t("models.ckan.errorLoadingTitle"),
-      message: i18next.t("models.ckan.errorLoadingMessage", {
-        email:
-          '<a href="mailto:' +
-          catalogGroup.terria.supportEmail +
-          '">' +
-          catalogGroup.terria.supportEmail +
-          "</a>"
-      })
+      message: i18next.t("models.ckan.errorLoadingMessage")
     });
   }
   let nextResultStart = 1001;

@@ -248,6 +248,9 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
       return;
     }
 
+    // Replace the stratum inherited from the parent group.
+    const stratum = CommonStrata.underride;
+
     // If has nested layers -> create model for CatalogGroup
     if (node.members && Object.keys(node.members).length > 0) {
       // Create nested layers
@@ -270,25 +273,18 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
         groupModel = existingGroupModel;
       }
 
+      groupModel.setTrait(stratum, "name", node.item.name || node.item.id);
       groupModel.setTrait(
-        CommonStrata.underride,
-        "name",
-        node.item.name || node.item.id
-      );
-      groupModel.setTrait(
-        CommonStrata.underride,
+        stratum,
         "members",
         filterOutUndefined(
           Object.values(node.members).map(member => this.getMemberId(member))
         )
       );
 
-      // Set group `info` trait if applicable
+      // Set group description
       if (node.item.description) {
-        createStratumInstance(InfoSectionTraits, {
-          name: "Description",
-          content: node.item.description
-        });
+        groupModel.setTrait(stratum, "description", node.item.description);
       }
 
       return;
@@ -319,13 +315,14 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
       itemModel = existingItemModel;
     }
 
-    // Replace the stratum inherited from the parent group.
-    const stratum = CommonStrata.underride;
-
     itemModel.strata.delete(stratum);
 
     itemModel.setTrait(stratum, "name", node.item.name || node.item.id);
     itemModel.setTrait(stratum, "url", this.catalogGroup.url);
+    // Set group description
+    if (node.item.description) {
+      itemModel.setTrait(stratum, "description", node.item.description);
+    }
 
     itemModel.setTrait(stratum, "agencyId", node.item.agencyID as string);
     itemModel.setTrait(stratum, "dataflowId", node.item.id);

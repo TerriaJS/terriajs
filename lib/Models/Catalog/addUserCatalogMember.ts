@@ -55,7 +55,7 @@ export default async function addUserCatalogMember(
       defaultValue(options.enable, true) &&
       !GroupMixin.isMixedInto(dereferenced)
     ) {
-      await terria.workbench.add(dereferenced);
+      (await terria.workbench.add(dereferenced)).throwIfError();
     }
     return newCatalogItem;
   } catch (e) {

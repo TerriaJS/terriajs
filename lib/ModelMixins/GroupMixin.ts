@@ -6,11 +6,10 @@ import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import Result from "../Core/Result";
-import TerriaError from "../Core/TerriaError";
 import Group from "../Models/Catalog/Group";
 import Model, { BaseModel } from "../Models/Definition/Model";
-import GroupTraits from "../Traits/TraitsClasses/GroupTraits";
 import ModelReference from "../Traits/ModelReference";
+import GroupTraits from "../Traits/TraitsClasses/GroupTraits";
 import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
 
 function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
@@ -32,6 +31,20 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
       return this._memberLoader.result;
     }
 
+    /** Get merged excludeMembers from all parent groups. This will go through all knownContainerUniqueIds and merge all excludeMembers arrays */
+    @computed get mergedExcludeMembers(): string[] {
+      const blacklistSet = new Set(this.excludeMembers ?? []);
+
+      this.knownContainerUniqueIds.forEach(containerId => {
+        const container = this.terria.getModelById(BaseModel, containerId);
+        if (container && GroupMixin.isMixedInto(container)) {
+          container.mergedExcludeMembers.forEach(s => blacklistSet.add(s));
+        }
+      });
+
+      return Array.from(blacklistSet);
+    }
+
     @computed
     get memberModels(): ReadonlyArray<BaseModel> {
       const members = this.members;
@@ -39,11 +52,35 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
         return [];
       }
       return filterOutUndefined(
-        members.map(id =>
-          ModelReference.isRemoved(id)
-            ? undefined
-            : this.terria.getModelById(BaseModel, id)
-        )
+        members.map(id => {
+          if (!ModelReference.isRemoved(id)) {
+            const model = this.terria.getModelById(BaseModel, id);
+            if (this.mergedExcludeMembers.length == 0) {
+              return model;
+            }
+
+            // Get model name and apply excludeMembers
+            const modelName = CatalogMemberMixin.isMixedInto(model)
+              ? model.name
+              : undefined;
+            if (
+              model &&
+              // Does excludeMembers not include model ID
+              !this.mergedExcludeMembers.find(
+                name =>
+                  model.uniqueId?.toLowerCase().trim() ===
+                  name.toLowerCase().trim()
+              ) &&
+              // Does excludeMembers not include model name
+              (!modelName ||
+                !this.mergedExcludeMembers.find(
+                  name =>
+                    modelName.toLowerCase().trim() === name.toLowerCase().trim()
+                ))
+            )
+              return model;
+          }
+        })
       );
     }
 
@@ -270,7 +307,13 @@ namespace GroupMixin {
   export interface Instance
     extends InstanceType<ReturnType<typeof GroupMixin>> {}
   export function isMixedInto(model: any): model is Instance {
-    return model && "isGroup" in model && model.isGroup;
+    return (
+      model &&
+      "isGroup" in model &&
+      model.isGroup &&
+      "forceLoadMembers" in model &&
+      typeof model.forceLoadMembers === "function"
+    );
   }
 }
 

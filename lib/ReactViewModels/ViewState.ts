@@ -293,7 +293,6 @@ export default class ViewState {
 
   @observable panel: React.ReactNode;
 
-  private _unsubscribeErrorListener: CesiumEvent.RemoveCallback;
   private _pickedFeaturesSubscription: IReactionDisposer;
   private _disclaimerVisibleSubscription: IReactionDisposer;
   private _isMapFullScreenSubscription: IReactionDisposer;
@@ -317,11 +316,6 @@ export default class ViewState {
       ? options.errorHandlingProvider
       : null;
     this.terria = terria;
-
-    // Show errors to the user as notifications.
-    this._unsubscribeErrorListener = terria.addErrorEventListener(error =>
-      terria.notificationState.addNotificationToQueue(error.toNotification())
-    );
 
     // When features are picked, show the feature info panel.
     this._pickedFeaturesSubscription = reaction(
@@ -450,7 +444,6 @@ export default class ViewState {
   dispose() {
     this._pickedFeaturesSubscription();
     this._disclaimerVisibleSubscription();
-    this._unsubscribeErrorListener();
     this._mobileMenuSubscription();
     this._isMapFullScreenSubscription();
     this._showStoriesSubscription();
@@ -741,6 +734,15 @@ export default class ViewState {
 
   get isMapZooming() {
     return this.terria.currentViewer.isMapZooming;
+  }
+
+  /**
+   * Returns true if the user is currently interacting with the map - like
+   * picking a point or drawing a shape.
+   */
+  @computed
+  get isMapInteractionActive() {
+    return this.terria.mapInteractionModeStack.length > 0;
   }
 }
 

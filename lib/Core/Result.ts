@@ -99,7 +99,8 @@ export default class Result<T = undefined> {
 
   /** Combine array of Results.
    * The new Result will have an error if at least one error has occurred in array of results
-   * The value will be array of result values
+   * The value will be array of result values.
+   *
    */
   static combine<U>(
     results: Result<U>[],
@@ -142,12 +143,28 @@ export default class Result<T = undefined> {
     return this.value;
   }
 
-  /** Raise error if one has occurred, and then return value.
+  /** Log error to console if one has occurred, and then return value.
    *
    * @param errorOverrides can be used to add error context
    */
-  raiseError(terria: Terria, errorOverrides?: TerriaErrorOverrides): T {
-    if (this._error) terria.raiseErrorToUser(this.error, errorOverrides);
+  logError(errorOverrides?: TerriaErrorOverrides) {
+    if (this._error)
+      console.error(TerriaError.from(this._error, errorOverrides).toError());
+    return this.value;
+  }
+
+  /** Raise error if one has occurred, and then return value.
+   *
+   * @param errorOverrides can be used to add error context
+   * @param forceRaiseToUser true to force show error to user
+   */
+  raiseError(
+    terria: Terria,
+    errorOverrides?: TerriaErrorOverrides,
+    forceRaiseToUser?: boolean
+  ): T {
+    if (this._error)
+      terria.raiseErrorToUser(this.error, errorOverrides, forceRaiseToUser);
     return this.value;
   }
 

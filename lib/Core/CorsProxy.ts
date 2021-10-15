@@ -1,8 +1,5 @@
-import URI from "urijs";
-
 import defined from "terriajs-cesium/Source/Core/defined";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
-import loadJson from "./loadJson";
+import URI from "urijs";
 
 // We want TS to look at the type declared in lib/ThirdParty/terriajs-cesium-extra/index.d.ts
 // and import doesn't allows us to do that, so instead we use require + type casting to ensure
@@ -143,7 +140,7 @@ export default class CorsProxy {
    *       the cache headers with. E.g. '2d' for 2 days.
    * @returns Either the URL passed in or a proxied URL if it should be proxied.
    */
-  getURLProxyIfNecessary(resource: string, proxyFlag: string) {
+  getURLProxyIfNecessary(resource: string, proxyFlag?: string) {
     if (this.shouldUseProxy(resource)) {
       return this.getURL(resource, proxyFlag);
     }

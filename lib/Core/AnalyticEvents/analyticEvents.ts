@@ -26,8 +26,7 @@ export enum LaunchAction {
 
 export enum HelpAction {
   panelOpened = "Panel opened",
-  takeTour = "Take tour",
-  userGuideOpened = "Terriamaps user guide opened"
+  takeTour = "Take tour"
 }
 
 export enum TimeLineAction {

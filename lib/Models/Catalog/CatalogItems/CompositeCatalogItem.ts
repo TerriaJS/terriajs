@@ -46,23 +46,21 @@ export default class CompositeCatalogItem extends MappableMixin(
   }
 
   protected async forceLoadMetadata(): Promise<void> {
+    const members = this.memberModels.filter(CatalogMemberMixin.isMixedInto);
+    // Avoid calling loadX functions in a computed context
+    await Promise.resolve();
     Result.combine(
-      await Promise.all(
-        this.memberModels
-          .filter(CatalogMemberMixin.isMixedInto)
-          .map(async model => await model.loadMetadata())
-      ),
+      await Promise.all(members.map(async model => await model.loadMetadata())),
       "Failed to load composite catalog items metadata"
     ).throwIfError();
   }
 
   async forceLoadMapItems(): Promise<void> {
+    const members = this.memberModels.filter(MappableMixin.isMixedInto);
+    // Avoid calling loadX functions in a computed context
+    await Promise.resolve();
     Result.combine(
-      await Promise.all(
-        this.memberModels
-          .filter(MappableMixin.isMixedInto)
-          .map(model => model.loadMapItems())
-      ),
+      await Promise.all(members.map(model => model.loadMapItems())),
       "Failed to load composite catalog items mapItems"
     ).throwIfError();
   }
