@@ -9,7 +9,10 @@ import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDire
 import Cesium from "../../../Models/Cesium";
 import DefaultTimelineModel from "../../../Models/DefaultTimelineModel";
 import Terria from "../../../Models/Terria";
-import ViewerMode, { MapViewers } from "../../../Models/ViewerMode";
+import ViewerMode, {
+  MapViewers,
+  setViewerMode
+} from "../../../Models/ViewerMode";
 import ViewState from "../../../ReactViewModels/ViewState";
 import Box from "../../../Styled/Box";
 import Button, { RawButton } from "../../../Styled/Button";
@@ -17,7 +20,6 @@ import Checkbox from "../../../Styled/Checkbox";
 import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Spacing from "../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../Styled/Text";
-import TerriaViewer from "../../../ViewModels/TerriaViewer";
 import withTerriaRef from "../../HOCs/withTerriaRef";
 import MenuPanel from "../../StandardUserInterface/customizable/MenuPanel";
 import Styles from "./setting-panel.scss";
@@ -447,19 +449,3 @@ const StyledImage = styled(Box).attrs({
 })<ComponentProps<"img">>`
   border-radius: inherit;
 `;
-
-export function setViewerMode(
-  viewerMode: keyof typeof MapViewers,
-  viewer: TerriaViewer
-) {
-  if (viewerMode === "3d" || viewerMode === "3dsmooth") {
-    viewer.viewerMode = ViewerMode.Cesium;
-    viewer.viewerOptions.useTerrain = viewerMode === "3d";
-  } else if (viewerMode === "2d") {
-    viewer.viewerMode = ViewerMode.Leaflet;
-  } else {
-    console.error(
-      `Trying to select ViewerMode ${viewerMode} that doesn't exist`
-    );
-  }
-}

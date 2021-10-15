@@ -1,4 +1,5 @@
-"use strict";
+import isDefined from "../Core/isDefined";
+import TerriaViewer from "../ViewModels/TerriaViewer";
 
 enum ViewerMode {
   Cesium = "cesium",
@@ -25,5 +26,24 @@ export const MapViewers = Object.seal({
     available: true
   }
 });
+
+export const isViewerMode = (mode: string): mode is keyof typeof MapViewers =>
+  mode in MapViewers;
+
+export function setViewerMode(
+  viewerMode: keyof typeof MapViewers,
+  viewer: TerriaViewer
+): void {
+  if (viewerMode === "3d" || viewerMode === "3dsmooth") {
+    viewer.viewerMode = ViewerMode.Cesium;
+    viewer.viewerOptions.useTerrain = viewerMode === "3d";
+  } else if (viewerMode === "2d") {
+    viewer.viewerMode = ViewerMode.Leaflet;
+  } else {
+    console.error(
+      `Trying to select ViewerMode ${viewerMode} that doesn't exist`
+    );
+  }
+}
 
 export default ViewerMode;

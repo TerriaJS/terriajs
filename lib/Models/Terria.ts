@@ -96,7 +96,7 @@ import NoViewer from "./NoViewer";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
 import ShareDataService from "./ShareDataService";
 import TimelineStack from "./TimelineStack";
-import ViewerMode from "./ViewerMode";
+import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 
 // import overrides from "../Overrides/defaults.jsx";
@@ -865,26 +865,13 @@ export default class Terria {
   loadPersistedMapSettings(): void {
     const persistViewerMode = this.configParameters.persistViewerMode;
     const hashViewerMode = this.userProperties.get("map");
-    const viewerModes = ["3d", "3dsmooth", "2d"];
-    if (hashViewerMode && viewerModes.includes(hashViewerMode)) {
-      this.setViewerMode(hashViewerMode);
+    if (hashViewerMode && isViewerMode(hashViewerMode)) {
+      setViewerMode(hashViewerMode, this.mainViewer);
     } else if (persistViewerMode) {
       const viewerMode = <string>this.getLocalProperty("viewermode");
-      if (isDefined(viewerMode)) this.setViewerMode(viewerMode);
-    }
-  }
-
-  setViewerMode(viewerMode: string): void {
-    const mainViewer = this.mainViewer;
-    if (viewerMode === "3d" || viewerMode === "3dsmooth") {
-      mainViewer.viewerMode = ViewerMode.Cesium;
-      mainViewer.viewerOptions.useTerrain = viewerMode === "3d";
-    } else if (viewerMode === "2d") {
-      mainViewer.viewerMode = ViewerMode.Leaflet;
-    } else {
-      console.error(
-        `Trying to select ViewerMode ${viewerMode} that doesn't exist`
-      );
+      if (isDefined(viewerMode) && isViewerMode(viewerMode)) {
+        setViewerMode(viewerMode, this.mainViewer);
+      }
     }
   }
 
@@ -1351,7 +1338,8 @@ export default class Terria {
     }
 
     if (isJsonString(initData.viewerMode)) {
-      this.setViewerMode(initData.viewerMode.toLowerCase());
+      const viewerMode = initData.viewerMode.toLowerCase();
+      if (isViewerMode(viewerMode)) setViewerMode(viewerMode, this.mainViewer);
     }
 
     if (isJsonObject(initData.baseMaps)) {

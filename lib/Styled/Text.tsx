@@ -41,7 +41,7 @@ interface ITextPropsBase {
   primary?: boolean;
   fullWidth?: boolean;
   noWrap?: boolean;
-  as?: keyof JSX.IntrinsicElements;
+  as?: React.ElementType | keyof JSX.IntrinsicElements;
   styledLineHeight?: string;
   highlightLinks?: boolean;
   overflowHide?: boolean;
@@ -206,12 +206,11 @@ export const Text = styled.div<ITextProps>`
 
   ${props => props.overflowHide && ` overflow: hidden;`}
   ${props => props.overflowEllipsis && ` text-overflow: ellipsis;`}
-
 `;
 
 export const TextSpan = styled(Text).attrs<{
-  as?: keyof JSX.IntrinsicElements;
-}>((props: { as?: keyof JSX.IntrinsicElements }) => ({
+  as?: React.ElementType | keyof JSX.IntrinsicElements;
+}>((props: { as?: React.ElementType | keyof JSX.IntrinsicElements }) => ({
   as: props.as || "span"
 }))``;
 
