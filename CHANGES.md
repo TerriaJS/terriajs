@@ -3,6 +3,9 @@ Change Log
 
 #### next release (8.1.4)
 
+* Make flex-search usage (for `CatalogIndex`) web-worker based
+* Add `completeKnownContainerUniqueIds` to `Model` class - This will recursively travese tree of knownContainerUniqueIds models to return full list of dependencies
+* Add all models from `completeKnownContainerUniqueIds` to shareData.models (even if they are empty)
 * [The next improvement]
 
 #### next release (8.1.3)
