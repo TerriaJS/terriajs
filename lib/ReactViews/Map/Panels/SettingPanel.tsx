@@ -13,10 +13,10 @@ import ViewerMode, { MapViewers } from "../../../Models/ViewerMode";
 import ViewState from "../../../ReactViewModels/ViewState";
 import Box from "../../../Styled/Box";
 import Button, { RawButton } from "../../../Styled/Button";
-import Checkbox from "../../../Styled/Checkbox/Checkbox";
+import Checkbox from "../../../Styled/Checkbox";
 import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Spacing from "../../../Styled/Spacing";
-import Text from "../../../Styled/Text";
+import Text, { TextSpan } from "../../../Styled/Text";
 import TerriaViewer from "../../../ViewModels/TerriaViewer";
 import withTerriaRef from "../../HOCs/withTerriaRef";
 import MenuPanel from "../../StandardUserInterface/customizable/MenuPanel";
@@ -256,15 +256,18 @@ class SettingPanel extends React.Component<PropTypes> {
                 <>
                   <Spacing bottom={2} />
                   <Checkbox
-                    small
+                    textProps={{ small: true }}
                     id="depthTestAgainstTerrain"
                     title={depthTestAgainstTerrainLabel}
                     isChecked={depthTestAgainstTerrainEnabled}
-                    label={t("settingPanel.terrain.hideUnderground")}
                     onChange={this.toggleDepthTestAgainstTerrainEnabled.bind(
                       this
                     )}
-                  />
+                  >
+                    <TextSpan>
+                      {t("settingPanel.terrain.hideUnderground")}
+                    </TextSpan>
+                  </Checkbox>
                 </>
               )}
             </>
@@ -318,10 +321,9 @@ class SettingPanel extends React.Component<PropTypes> {
                 <Text as="label">{t("settingPanel.timeline.title")}</Text>
               </Box>
               <Checkbox
-                small
+                textProps={{ small: true }}
                 id="alwaysShowTimeline"
                 isChecked={alwaysShowTimeline}
-                label={t("settingPanel.timeline.alwaysShow")}
                 title={alwaysShowTimelineLabel}
                 onChange={() => {
                   runInAction(() => {
@@ -335,7 +337,9 @@ class SettingPanel extends React.Component<PropTypes> {
                     }
                   });
                 }}
-              />
+              >
+                <TextSpan>{t("settingPanel.timeline.alwaysShow")}</TextSpan>
+              </Checkbox>
             </Box>
           </>
           {this.props.terria.mainViewer.viewerMode !== ViewerMode.Leaflet && (
@@ -350,17 +354,20 @@ class SettingPanel extends React.Component<PropTypes> {
                       </Text>
                     </Box>
                     <Checkbox
-                      small
+                      textProps={{ small: true }}
                       id="mapUseNativeResolution"
                       isChecked={useNativeResolution}
-                      label={t("settingPanel.nativeResolutionHeader")}
                       title={nativeResolutionLabel}
                       onChange={() => {
                         runInAction(() => {
                           this.props.terria.useNativeResolution = !useNativeResolution;
                         });
                       }}
-                    />
+                    >
+                      <TextSpan>
+                        {t("settingPanel.nativeResolutionHeader")}
+                      </TextSpan>
+                    </Checkbox>
                     <Spacing bottom={2} />
                   </>
                 )}
