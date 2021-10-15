@@ -6,6 +6,7 @@ import styled from "styled-components";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import filterOutUndefined from "../../Core/filterOutUndefined";
+import MappableMixin from "../../ModelMixins/MappableMixin";
 import SplitItemReference from "../../Models/Catalog/CatalogReferences/SplitItemReference";
 import { Comparable, isComparableItem } from "../../Models/Comparable";
 import CommonStrata from "../../Models/Definition/CommonStrata";
@@ -17,14 +18,14 @@ import ViewState from "../../ReactViewModels/ViewState";
 import { GLYPHS } from "../../Styled/Icon";
 import Text from "../../Styled/Text";
 import WorkflowPanel, { Box } from "../../Styled/WorkflowPanel";
-import CatalogMemberTraits from "../../Traits/TraitsClasses/CatalogMemberTraits";
 import MappableTraits from "../../Traits/TraitsClasses/MappableTraits";
 import SplitterTraits from "../../Traits/TraitsClasses/SplitterTraits";
 import CompareItemControls from "./CompareItemControls";
 import DatePicker from "./DatePicker";
-import ItemList, { MappableCatalogItem } from "./ItemList";
+import ItemList from "./ItemList";
 import ItemSelector from "./ItemSelector";
 import LocationDateFilter from "./LocationDateFilter";
+import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
 
 export type PropsType = {
   viewState: ViewState;
@@ -126,10 +127,9 @@ const Compare: React.FC<PropsType> = observer(props => {
     )
     .filter(item => isCloneItem(item) === false)
     .filter(
-      (item): item is MappableCatalogItem =>
-        hasTraits(item, CatalogMemberTraits, "name") &&
-        hasTraits(item, MappableTraits, "show")
-    );
+      item =>
+        MappableMixin.isMixedInto(item) && CatalogMemberMixin.isMixedInto(item)
+    ) as (MappableMixin.Instance & CatalogMemberMixin.Instance)[];
 
   const changeLeftItem = async (leftItemId: string) => {
     // Hide the previous item
@@ -155,7 +155,10 @@ const Compare: React.FC<PropsType> = observer(props => {
     props.changeRightItem(itemId);
   };
 
-  const changeItemInBothPanels = (item: MappableCatalogItem, show: boolean) => {
+  const changeItemInBothPanels = (
+    item: MappableMixin.Instance,
+    show: boolean
+  ) => {
     show ? showItem(item, ImagerySplitDirection.NONE) : hideItem(item);
   };
 
@@ -198,7 +201,8 @@ const Compare: React.FC<PropsType> = observer(props => {
         <Box icon={GLYPHS.bothPanels} title={t("compare.bothPanels")}>
           <ItemList
             items={itemsInBothPanels}
-            onChange={changeItemInBothPanels}
+            onChangeSelection={changeItemInBothPanels}
+            viewState={viewState}
           />
         </Box>
       </WorkflowPanel>

@@ -1,4 +1,3 @@
-"use strict";
 import createReactClass from "create-react-class";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
@@ -497,4 +496,4 @@ const ViewingControls = observer(
     }
   })
 );
-module.exports = withTranslation()(ViewingControls);
+export default withTranslation()(ViewingControls);

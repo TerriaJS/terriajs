@@ -17,19 +17,7 @@ import Box from "../../Styled/Box";
 import Icon from "../../Styled/Icon";
 import Loader from "../Loader";
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
-import ChartItemSelector from "./Controls/ChartItemSelector";
-import ColorScaleRangeSection from "./Controls/ColorScaleRangeSection";
-import DateTimeSelectorSection from "./Controls/DateTimeSelectorSection";
-import DimensionSelectorSection from "./Controls/DimensionSelectorSection";
-import FilterSection from "./Controls/FilterSection";
-import LeftRightSection from "./Controls/LeftRightSection";
-import Legend from "./Controls/Legend";
-import OpacitySection from "./Controls/OpacitySection";
-import SatelliteImageryTimeFilterSection from "./Controls/SatelliteImageryTimeFilterSection";
-import { ScaleWorkbenchInfo } from "./Controls/ScaleWorkbenchInfo";
-import ShortReport from "./Controls/ShortReport";
-import TimerSection from "./Controls/TimerSection";
-import ViewingControls from "./Controls/ViewingControls";
+import WorkbenchItemControls from "./Controls/WorkbenchItemControls";
 import Styles from "./workbench-item.scss";
 
 export const WorkbenchItemRaw = observer(
@@ -167,39 +155,9 @@ export const WorkbenchItemRaw = observer(
 
           <If condition={workbenchItem.isOpenInWorkbench}>
             <div className={Styles.inner}>
-              <ViewingControls
-                item={workbenchItem}
+              <WorkbenchItemControls
+                item={this.props.item}
                 viewState={this.props.viewState}
-              />
-              <OpacitySection item={workbenchItem} />
-              <ScaleWorkbenchInfo item={workbenchItem} />
-              <TimerSection item={workbenchItem} />
-              <ChartItemSelector item={workbenchItem} />
-              <FilterSection item={workbenchItem} />
-              <DateTimeSelectorSection item={workbenchItem} />
-              <SatelliteImageryTimeFilterSection item={workbenchItem} />
-              <DimensionSelectorSection
-                item={workbenchItem}
-                placement={DEFAULT_PLACEMENT}
-              />
-              <ColorScaleRangeSection
-                item={workbenchItem}
-                minValue={workbenchItem.colorScaleMinimum}
-                maxValue={workbenchItem.colorScaleMaximum}
-              />
-              <If
-                condition={
-                  workbenchItem.shortReport ||
-                  (workbenchItem.shortReportSections &&
-                    workbenchItem.shortReportSections.length)
-                }
-              >
-                <ShortReport item={workbenchItem} />
-              </If>
-              <Legend item={workbenchItem} />
-              <DimensionSelectorSection
-                item={workbenchItem}
-                placement={"belowLegend"}
               />
               {isLoading ? (
                 <Box paddedVertically>

@@ -183,7 +183,6 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
       this._mapItemsLoader.dispose();
     }
   }
-
   return MappableMixin;
 }
 
@@ -199,5 +198,7 @@ namespace MappableMixin {
     );
   }
 }
+
+const foo: MappableMixin.Instance = undefined as any;
 
 export default MappableMixin;

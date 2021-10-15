@@ -1,43 +1,77 @@
 import { observer } from "mobx-react";
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import Model from "../../Models/Definition/Model";
+import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
+import MappableMixin from "../../ModelMixins/MappableMixin";
 import Checkbox from "../../Styled/Checkbox/Checkbox";
-import CatalogMemberTraits from "../../Traits/TraitsClasses/CatalogMemberTraits";
-import MappableTraits from "../../Traits/TraitsClasses/MappableTraits";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import Text from "../../Styled/Text";
+import WorkbenchItemControls from "../Workbench/Controls/WorkbenchItemControls";
+import ViewState from "../../ReactViewModels/ViewState";
 
-export type MappableCatalogItem = Model<MappableTraits & CatalogMemberTraits>;
+type Selectable = MappableMixin.Instance & CatalogMemberMixin.Instance;
 
 type PropsType = {
-  items: MappableCatalogItem[];
-  onChange: (item: MappableCatalogItem, show: boolean) => void;
+  items: Selectable[];
+  onChangeSelection: (item: Selectable, show: boolean) => void;
+  viewState: ViewState;
 };
 
-const ItemList: React.FC<PropsType> = observer(({ items, onChange }) => {
-  return (
-    <UList>
-      {items.map(
-        item =>
-          item.uniqueId && (
-            <li key={item.uniqueId}>
-              <Checkbox
-                isChecked={item.show}
-                onChange={ev => onChange(item, ev.target.checked)}
-                label={<SelectorText medium>{item.name}</SelectorText>}
-              />
-            </li>
-          )
-      )}
-    </UList>
-  );
-});
+const ItemList: React.FC<PropsType> = observer(
+  ({ items, onChangeSelection, viewState }) => {
+    return (
+      <UList>
+        {items.map(
+          item =>
+            item.uniqueId && (
+              <li key={item.uniqueId}>
+                <Item
+                  item={item}
+                  onChangeSelection={onChangeSelection}
+                  viewState={viewState}
+                />
+              </li>
+            )
+        )}
+      </UList>
+    );
+  }
+);
 
-type SelectorProps = {
-  item: MappableCatalogItem;
-  selected: boolean;
-  onChange: (selected: boolean) => void;
+type ItemProps = {
+  item: Selectable;
+  onChangeSelection: PropsType["onChangeSelection"];
+  viewState: ViewState;
 };
+
+const Item: React.FC<ItemProps> = observer(
+  ({ item, onChangeSelection, viewState }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    return (
+      <>
+        <ItemTitle>
+          <div
+            css={`
+              flex-grow: 1;
+            `}
+          >
+            <Checkbox
+              isChecked={item.show}
+              onChange={ev => onChangeSelection(item, ev.target.checked)}
+              label={<SelectorText medium>{item.name}</SelectorText>}
+            />
+          </div>
+          <OpenButton isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
+        </ItemTitle>
+        {isOpen && (
+          <div>
+            <WorkbenchItemControls item={item} viewState={viewState} />
+          </div>
+        )}
+      </>
+    );
+  }
+);
 
 const UList = styled.ul`
   list-style: none;
@@ -46,22 +80,42 @@ const UList = styled.ul`
 
   > li {
     display: flex;
-    align-items: center;
-    height: 32px;
+    flex-direction: column;
   }
 `;
 
-const Label = styled.label`
+const ItemTitle = styled.div`
   display: flex;
-  flex-direction: row;
+  width: 100%;
+  height: 32px;
   align-items: center;
-  > div {
-    flex-grow: 1;
-  }
 `;
 
 const SelectorText = styled(Text)`
   margin-left: 10px;
 `;
+
+const OpenButton: React.FC<{
+  isOpen: boolean;
+  onClick: () => void;
+}> = ({ isOpen, onClick }) => {
+  return (
+    <button
+      onClick={onClick}
+      css={`
+        background: none;
+        margin: 0;
+        border: 0;
+      `}
+    >
+      <StyledIcon
+        styledWidth="10px"
+        styledHeight="10px"
+        light
+        glyph={isOpen ? Icon.GLYPHS.opened : Icon.GLYPHS.closed}
+      />
+    </button>
+  );
+};
 
 export default ItemList;

@@ -1,5 +1,3 @@
-"use strict";
-
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
@@ -11,13 +9,18 @@ import Spacing from "../../../Styled/Spacing";
 import Text from "../../../Styled/Text";
 import Collapsible from "../../Custom/Collapsible/Collapsible";
 import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact";
+import { BaseModel } from "../../../Models/Definition/Model";
 
 @observer
 export default class ShortReport extends React.Component<{
-  item: CatalogMemberMixin.Instance;
+  item: BaseModel;
 }> {
-  clickShortReport(reportName: string | undefined, isOpen: boolean) {
-    const shortReportSections = this.props.item.shortReportSections;
+  clickShortReport(
+    item: CatalogMemberMixin.Instance,
+    reportName: string | undefined,
+    isOpen: boolean
+  ) {
+    const shortReportSections = item.shortReportSections;
     const clickedReport = shortReportSections.find(
       report => report.name === reportName
     );
@@ -40,13 +43,18 @@ export default class ShortReport extends React.Component<{
   }
 
   render() {
-    const shortReportSections = this.props.item?.shortReportSections?.filter(
-      r => isDefined(r.name)
+    if (!CatalogMemberMixin.isMixedInto(this.props.item)) {
+      return null;
+    }
+
+    const item: CatalogMemberMixin.Instance = this.props.item;
+
+    const shortReportSections = item?.shortReportSections?.filter(r =>
+      isDefined(r.name)
     );
 
     if (
-      (!isDefined(this.props.item.shortReport) ||
-        this.props.item.shortReport === "") &&
+      (!isDefined(item.shortReport) || item.shortReport === "") &&
       (!isDefined(shortReportSections) || shortReportSections.length === 0)
     ) {
       return null;
@@ -55,9 +63,9 @@ export default class ShortReport extends React.Component<{
     return (
       <Box fullWidth displayInlineBlock padded>
         {/* Show shortReport */}
-        {isDefined(this.props.item.shortReport) && (
+        {isDefined(item.shortReport) && (
           <Text textLight medium>
-            {parseCustomMarkdownToReact(this.props.item.shortReport, {
+            {parseCustomMarkdownToReact(item.shortReport, {
               catalogItem: this.props.item
             })}
           </Text>
@@ -72,7 +80,7 @@ export default class ShortReport extends React.Component<{
                 title={r.name!}
                 isOpen={r.show}
                 onToggle={show =>
-                  this.clickShortReport.bind(this, r.name, show)()
+                  this.clickShortReport.bind(this, item, r.name, show)()
                 }
               >
                 {parseCustomMarkdownToReact(r.content!, {
@@ -86,5 +94,3 @@ export default class ShortReport extends React.Component<{
     );
   }
 }
-
-module.exports = ShortReport;
