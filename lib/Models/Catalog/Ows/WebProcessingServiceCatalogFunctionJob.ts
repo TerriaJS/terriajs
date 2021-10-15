@@ -253,13 +253,7 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
         message: i18next.t(
           "models.webProcessingService.invalidResponseErrorMessage",
           {
-            name: this.name,
-            email:
-              '<a href="mailto:' +
-              this.terria.supportEmail +
-              '">' +
-              this.terria.supportEmail +
-              "</a>."
+            name: this.name
           }
         )
       });

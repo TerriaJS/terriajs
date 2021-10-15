@@ -2,7 +2,7 @@ import i18next from "i18next";
 import { computed } from "mobx";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
-import TerriaError from "../../../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import {
   ShortReportTraits,
   MetadataUrlTraits
@@ -88,7 +88,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
 
     // Check response
     if (!isDefined(dataflowStructure.data)) {
-      throw new TerriaError({
+      throw networkRequestError({
         title: i18next.t("models.sdmxJsonDataflowStratum.loadDataErrorTitle"),
         message: i18next.t(
           "models.sdmxJsonDataflowStratum.loadDataErrorMessage.invalidResponse"
@@ -99,7 +99,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
       !Array.isArray(dataflowStructure.data.dataflows) ||
       dataflowStructure.data.dataflows.length === 0
     ) {
-      throw new TerriaError({
+      throw networkRequestError({
         title: i18next.t("models.sdmxJsonDataflowStratum.loadDataErrorTitle"),
         message: i18next.t(
           "models.sdmxJsonDataflowStratum.loadDataErrorMessage.noDataflow",
@@ -111,7 +111,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
       !Array.isArray(dataflowStructure.data.dataStructures) ||
       dataflowStructure.data.dataStructures.length === 0
     ) {
-      throw new TerriaError({
+      throw networkRequestError({
         title: i18next.t("models.sdmxJsonDataflowStratum.loadDataErrorTitle"),
         message: i18next.t(
           "models.sdmxJsonDataflowStratum.loadDataErrorMessage.noDatastructure",
@@ -702,7 +702,9 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
           color: createStratumInstance(TableColorStyleTraits, {
             legend: createStratumInstance(LegendTraits, {
               title: this.unitMeasure
-            })
+            }),
+            /** Enable z-score filtering (see TableColorStyleTraits.zScoreFilter) */
+            zScoreFilter: 4
           }),
           time: createStratumInstance(TableTimeStyleTraits, {
             timeColumn: this.timeColumns[0].name,
@@ -804,7 +806,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
       this.catalogItem.discreteTimes.length > 1
     ) {
       const chartName = `${this.catalogItem.name}: {{${regionType.nameProp}}}`;
-      template += `</table><chart title="${chartName}" x-column="{{terria.timeSeries.xName}}" y-column="${this.unitMeasure}" >{{terria.timeSeries.data}}</chart>`;
+      template += `</table>{{#terria.timeSeries.data}}<chart title="${chartName}" x-column="{{terria.timeSeries.xName}}" y-column="${this.unitMeasure}" >{{terria.timeSeries.data}}</chart>{{/terria.timeSeries.data}}`;
     }
 
     return createStratumInstance(FeatureInfoTemplateTraits, { template });

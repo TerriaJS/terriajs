@@ -1,11 +1,16 @@
-import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
-import Terria from "../../lib/Models/Terria";
-import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
-import DiscreteColorMap from "../../lib/Map/DiscreteColorMap";
 import ContinuousColorMap from "../../lib/Map/ContinuousColorMap";
+import DiscreteColorMap from "../../lib/Map/DiscreteColorMap";
 import EnumColorMap from "../../lib/Map/EnumColorMap";
-import TableStyleTraits from "../../lib/Traits/TraitsClasses/TableStyleTraits";
+import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
+import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
+import Terria from "../../lib/Models/Terria";
 import TableColorStyleTraits from "../../lib/Traits/TraitsClasses/TableColorStyleTraits";
+import TableColumnTraits, {
+  ColumnTransformationTraits
+} from "../../lib/Traits/TraitsClasses/TableColumnTraits";
+import TableStyleTraits from "../../lib/Traits/TraitsClasses/TableStyleTraits";
 
 const regionMapping = JSON.stringify(
   require("../../wwwroot/data/regionMapping.json")
@@ -14,12 +19,18 @@ const regionMapping = JSON.stringify(
 const SedCods = JSON.stringify(
   require("../../wwwroot/data/regionids/region_map-SED_CODE18_SED_2018.json")
 );
+const Sa4Codes = JSON.stringify(
+  require("../../wwwroot/data/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json")
+);
+const Sa4Names = JSON.stringify(
+  require("../../wwwroot/data/regionids/region_map-SA4_2016_AUST_SA4_NAME16.json")
+);
 
 const LatLonCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_enum_date_id.csv");
 const SedCsv = require("raw-loader!../../wwwroot/test/csv/SED_2018_SED_CODE18.csv");
 const YouthUnEmployCsv = require("raw-loader!../../wwwroot/test/csv/youth-unemployment-rate-2018.csv");
 
-describe("Table Style", function() {
+describe("TableStyle", function() {
   let terria: Terria;
 
   beforeEach(async function() {
@@ -38,6 +49,14 @@ describe("Table Style", function() {
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionids/region_map-SED_CODE18_SED_2018.json"
     ).andReturn({ responseText: SedCods });
+
+    jasmine.Ajax.stubRequest(
+      "build/TerriaJS/data/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json"
+    ).andReturn({ responseText: Sa4Codes });
+
+    jasmine.Ajax.stubRequest(
+      "build/TerriaJS/data/regionids/region_map-SA4_2016_AUST_SA4_NAME16.json"
+    ).andReturn({ responseText: Sa4Names });
   });
 
   afterEach(() => {
@@ -139,6 +158,120 @@ describe("Table Style", function() {
       expect(colorColumn!.values.length).toBe(450);
 
       expect(activeStyle.colorMap instanceof ContinuousColorMap).toBeTruthy();
+      expect((activeStyle.colorMap as ContinuousColorMap).minValue).toBe(0);
+
+      expect(activeStyle.tableColorMap.isDiverging).toBeFalsy();
+      expect((activeStyle.colorMap as ContinuousColorMap).maxValue).toBe(100);
+      expect(
+        (activeStyle.colorMap as ContinuousColorMap)
+          .mapValueToColor(0)
+          .toCssColorString()
+      ).toBe("rgb(255,245,240)");
+      expect(
+        (activeStyle.colorMap as ContinuousColorMap)
+          .mapValueToColor(50)
+          .toCssColorString()
+      ).toBe("rgb(249,105,76)");
+      expect(
+        (activeStyle.colorMap as ContinuousColorMap)
+          .mapValueToColor(100)
+          .toCssColorString()
+      ).toBe("rgb(103,0,13)");
+    });
+
+    it(" - uses ContinuousColorMap with diverging color scale if appropriate", async function() {
+      csvItem.setTrait("definition", "csvString", SedCsv);
+
+      // Add value transformation to turn column values to be [-50,50]
+      csvItem.setTrait("definition", "columns", [
+        createStratumInstance(TableColumnTraits, {
+          name: "Value",
+          transformation: createStratumInstance(ColumnTransformationTraits, {
+            expression: "x-50"
+          })
+        })
+      ]);
+
+      await csvItem.loadMapItems();
+
+      const activeStyle = csvItem.activeTableStyle;
+      const colorColumn = activeStyle.colorColumn;
+      expect(colorColumn).toBeDefined();
+      expect(colorColumn!.type).toBe(4);
+      expect(colorColumn!.values.length).toBe(450);
+
+      expect(activeStyle.colorMap instanceof ContinuousColorMap).toBeTruthy();
+      expect(activeStyle.tableColorMap.isDiverging).toBeTruthy();
+      expect((activeStyle.colorMap as ContinuousColorMap).minValue).toBe(-50);
+      expect((activeStyle.colorMap as ContinuousColorMap).maxValue).toBe(50);
+      expect(
+        (activeStyle.colorMap as ContinuousColorMap)
+          .mapValueToColor(0)
+          .toCssColorString()
+      ).toBe("rgb(243,238,234)");
+      expect(
+        (activeStyle.colorMap as ContinuousColorMap)
+          .mapValueToColor(-50)
+          .toCssColorString()
+      ).toBe("rgb(45,0,75)");
+      expect(
+        (activeStyle.colorMap as ContinuousColorMap)
+          .mapValueToColor(50)
+          .toCssColorString()
+      ).toBe("rgb(127,59,8)");
+    });
+
+    it(" - uses ContinuousColorMap with diverging color map only for diverging color palettes", async function() {
+      csvItem.setTrait("definition", "csvString", SedCsv);
+
+      // Add value transformation to turn column values to be [-50,50]
+      csvItem.setTrait("definition", "columns", [
+        createStratumInstance(TableColumnTraits, {
+          name: "Value",
+          transformation: createStratumInstance(ColumnTransformationTraits, {
+            expression: "x-50"
+          })
+        })
+      ]);
+
+      await csvItem.loadMapItems();
+
+      const activeStyle = csvItem.activeTableStyle;
+      const colorColumn = activeStyle.colorColumn;
+      expect(colorColumn).toBeDefined();
+      expect(colorColumn!.type).toBe(4);
+      expect(colorColumn!.values.length).toBe(450);
+
+      expect(activeStyle.colorMap instanceof ContinuousColorMap).toBeTruthy();
+      expect(activeStyle.tableColorMap.isDiverging).toBeTruthy();
+
+      // Set colorpalette to Reds - which is not diverging
+      csvItem.setTrait(
+        "definition",
+        "defaultStyle",
+        createStratumInstance(TableStyleTraits, {
+          color: createStratumInstance(TableColorStyleTraits, {
+            colorPalette: "Reds"
+          })
+        })
+      );
+
+      expect(activeStyle.colorMap instanceof ContinuousColorMap).toBeTruthy();
+      expect(activeStyle.tableColorMap.isDiverging).toBeFalsy();
+
+      // Set colorpalette to RdYlBu - which is diverging
+      csvItem.setTrait(
+        "definition",
+        "defaultStyle",
+        createStratumInstance(TableStyleTraits, {
+          color: createStratumInstance(TableColorStyleTraits, {
+            colorPalette: "RdYlBu"
+          })
+        })
+      );
+
+      expect(activeStyle.colorMap instanceof ContinuousColorMap).toBeTruthy();
+      expect(activeStyle.tableColorMap.isDiverging).toBeTruthy();
     });
 
     it(" - handles ContinuousColorMap with single value ", async function() {
@@ -231,6 +364,73 @@ describe("Table Style", function() {
         "#9467bd",
         "#8c564b"
       ]);
+    });
+
+    it(" - applies zScoreFilter correctly", async function() {
+      updateModelFromJson(csvItem, CommonStrata.definition, {
+        csvString: SedCsv,
+        activeStyle: "Value",
+        defaultStyle: { color: { zScoreFilter: 2, rangeFilter: 0.1 } }
+      });
+
+      await csvItem.loadMapItems();
+      await csvItem.activeTableStyle.regionColumn?.regionType?.loadRegionIDs();
+
+      const activeStyle = csvItem.activeTableStyle;
+
+      // First example - should expect no filter applied
+      expect(activeStyle.colorColumn?.valuesAsNumbers.minimum).toBe(0);
+      expect(activeStyle.colorColumn?.valuesAsNumbers.maximum).toBe(100);
+
+      expect(activeStyle.tableColorMap.zScoreFilterValues).toBeUndefined();
+
+      let colorMap = activeStyle.colorMap as ContinuousColorMap;
+
+      expect(colorMap instanceof ContinuousColorMap).toBeTruthy();
+      expect(colorMap.minValue).toBe(0);
+      expect(colorMap.maxValue).toBe(100);
+
+      // Check legend for no outlier item
+      expect(csvItem.legends.length).toBe(1);
+      expect(csvItem.legends[0].items.length).toBe(7);
+
+      // Change zScoreFilter and rangeFilter - should also expect not to be applied
+      updateModelFromJson(csvItem, CommonStrata.definition, {
+        defaultStyle: { color: { zScoreFilter: 1, rangeFilter: 0.25 } }
+      });
+
+      expect(activeStyle.tableColorMap.zScoreFilterValues).toBeUndefined();
+      colorMap = activeStyle.colorMap as ContinuousColorMap;
+      expect(colorMap instanceof ContinuousColorMap).toBeTruthy();
+      expect(colorMap.minValue).toBe(0);
+      expect(colorMap.maxValue).toBe(100);
+
+      // Check legend for no outlier item
+      expect(csvItem.legends.length).toBe(1);
+      expect(csvItem.legends[0].items.length).toBe(7);
+
+      updateModelFromJson(csvItem, CommonStrata.definition, {
+        defaultStyle: { color: { zScoreFilter: 1, rangeFilter: 0.1 } }
+      });
+
+      // Change zScoreFilter and rangeFilter again - should be applied this time
+      expect(activeStyle.tableColorMap.zScoreFilterValues).toEqual({
+        min: 22,
+        max: 80
+      });
+      colorMap = activeStyle.colorMap as ContinuousColorMap;
+      expect(colorMap instanceof ContinuousColorMap).toBeTruthy();
+      expect(colorMap.minValue).toBe(22);
+      expect(colorMap.maxValue).toBe(80);
+
+      // Check legend for outlier item
+      expect(csvItem.legends.length).toBe(1);
+      expect(csvItem.legends[0].items.length).toBe(8);
+      expect(csvItem.legends[0].items[7].title).toBe("Outliers");
+      expect(csvItem.legends[0].items[7].addSpacingAbove).toBeTruthy();
+      expect(csvItem.legends[0].items[7].color).toBe(
+        activeStyle.tableColorMap.outlierColor.toCssColorString()
+      );
     });
   });
 });

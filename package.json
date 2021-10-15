@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "8.1.0",
+  "version": "8.1.4",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
@@ -155,7 +155,7 @@
     "svg-sprite-loader": "4.1.3",
     "terriajs-cesium": "1.81.0",
     "terriajs-html2canvas": "1.0.0-alpha.12-terriajs-1",
-    "terriajs-protomaps": "1.0.1",
+    "terriajs-protomaps": "1.5.0",
     "thredds-catalog-crawler": "0.0.5",
     "ts-loader": "^5.3.3",
     "ts-node": "^5.0.1",

@@ -5,7 +5,7 @@ import getFilenameFromUri from "terriajs-cesium/Source/Core/getFilenameFromUri";
 import isDefined from "../../../Core/isDefined";
 import loadText from "../../../Core/loadText";
 import readText from "../../../Core/readText";
-import TerriaError from "../../../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
@@ -57,10 +57,12 @@ class GpxCatalogItem extends MappableMixin(
       } else if (isDefined(this.url)) {
         resolve(loadText(proxyCatalogItemUrl(this, this.url)));
       } else {
-        throw new TerriaError({
+        throw networkRequestError({
           sender: this,
           title: i18next.t("models.gpx.errorLoadingTitle"),
-          message: i18next.t("models.gpx.errorLoadingMessage")
+          message: i18next.t("models.gpx.errorLoadingMessage", {
+            appName: this.terria.appName
+          })
         });
       }
     });

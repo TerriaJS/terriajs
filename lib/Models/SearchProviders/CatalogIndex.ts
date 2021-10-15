@@ -1,5 +1,5 @@
 import { Document } from "flexsearch";
-import { action, observable, ObservableMap } from "mobx";
+import { action, runInAction } from "mobx";
 import loadJson from "../../Core/loadJson";
 import CatalogIndexReferenceTraits from "../../Traits/TraitsClasses/CatalogIndexReferenceTraits";
 import CatalogIndexReference from "../Catalog/CatalogReferences/CatalogIndexReference";
@@ -23,7 +23,9 @@ export default class CatalogIndex {
   get models() {
     return this._models;
   }
-  private _searchIndex: any; // Flex-search document index
+  private _searchIndex:
+    | Document<{ id: string; name: string; description: string }>
+    | undefined; // Flex-search document index
 
   get searchIndex() {
     return this._searchIndex;
@@ -41,7 +43,9 @@ export default class CatalogIndex {
   private async loadCatalogIndex() {
     // Load catalog index
     try {
-      const index = (await loadJson(this.url)) as CatalogIndexFile;
+      const index = (await loadJson(
+        this.terria.corsProxy.getURLProxyIfNecessary(this.url)
+      )) as CatalogIndexFile;
       this._models = new Map<string, CatalogIndexReference>();
 
       /**
@@ -51,8 +55,11 @@ export default class CatalogIndex {
        *    - "full" = index every possible combination
        *    - "strict" = index whole words
        *  - resolution property = score resolution
+       *
+       * Note: beacuse we have set `worker: true`, we must use async calls
        */
       this._searchIndex = new Document({
+        worker: true,
         document: {
           id: "id",
           index: [
@@ -81,7 +88,7 @@ export default class CatalogIndex {
         this._models!.set(id, reference);
 
         // Add document to search index
-        this._searchIndex.add({
+        this._searchIndex.addAsync(id, {
           id,
           name: model.name ?? "",
           description: model.description ?? ""
@@ -92,7 +99,7 @@ export default class CatalogIndex {
     }
   }
 
-  public search(q: string) {
+  public async search(q: string) {
     const results: SearchResult[] = [];
     /** Example matches object
     ```json
@@ -112,7 +119,9 @@ export default class CatalogIndex {
     ]
     ```
 */
-    const matches = this.searchIndex.search(q);
+    if (!this.searchIndex) return [];
+
+    const matches = await this.searchIndex.searchAsync(q);
     const matchedIds = new Set<string>();
     matches.forEach((fieldResult: any) => {
       fieldResult.result.forEach((id: string) => {
@@ -120,10 +129,13 @@ export default class CatalogIndex {
         if (indexReference && !matchedIds.has(id)) {
           matchedIds.add(id);
           results.push(
-            new SearchResult({
-              name: indexReference.name ?? indexReference.uniqueId,
-              catalogItem: indexReference
-            })
+            runInAction(
+              () =>
+                new SearchResult({
+                  name: indexReference.name ?? indexReference.uniqueId,
+                  catalogItem: indexReference
+                })
+            )
           );
         }
       });

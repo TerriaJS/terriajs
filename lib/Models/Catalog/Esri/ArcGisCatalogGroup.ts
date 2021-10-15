@@ -6,7 +6,7 @@ import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import runLater from "../../../Core/runLater";
-import TerriaError from "../../../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
@@ -76,16 +76,9 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
           !arcgisServer ||
           (!arcgisServer.folders && !arcgisServer.services)
         ) {
-          throw new TerriaError({
+          throw networkRequestError({
             title: i18next.t("models.arcGisService.invalidServiceTitle"),
-            message: i18next.t("models.arcGisService.invalidServiceTitle", {
-              email:
-                '<a href="mailto:' +
-                terria.supportEmail +
-                '">' +
-                terria.supportEmail +
-                "</a>"
-            })
+            message: i18next.t("models.arcGisService.invalidServiceMessage")
           });
         }
 
@@ -93,19 +86,10 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
         return stratum;
       })
       .catch(() => {
-        throw new TerriaError({
+        throw networkRequestError({
           sender: catalogGroup,
           title: i18next.t("models.arcGisService.groupNotAvailableTitle"),
-          message: i18next.t("models.arcGisService.groupNotAvailableMessage", {
-            cors: '<a href="http://enable-cors.org/" target="_blank">CORS</a>',
-            appName: terria.appName,
-            email:
-              '<a href="mailto:' +
-              terria.supportEmail +
-              '">' +
-              terria.supportEmail +
-              "</a>"
-          })
+          message: i18next.t("models.arcGisService.groupNotAvailableMessage")
         });
       });
   }

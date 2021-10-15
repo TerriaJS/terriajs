@@ -76,22 +76,40 @@ describe("upsertModelFromJson", function() {
       return;
     }
 
-    expect(group.isLoadingMetadata).toBe(false);
-    expect(group.isLoadingMembers).toBe(false);
+    expect(group.isLoadingMetadata).toBe(
+      false,
+      "group.isLoadingMetadata - before calling loadMembers"
+    );
+    expect(group.isLoadingMembers).toBe(
+      false,
+      "group.isLoadingMembers - before calling loadMembers"
+    );
     expect(group.memberModels.length).toBe(1);
     expect(group.memberModels[0]).toBe(item);
     expect(item.name).toBe("Override");
     expect(item.layers).toBeUndefined();
-    expect(item.isGeoServer).toBe(false);
+    expect(item.isGeoServer).toBe(
+      false,
+      "item.isGeoServer - before calling loadMembers"
+    );
 
     // loadMembers will call loadMetadata first, so check isLoadingMetadata and then await loadMetadata
     const loadMembersPromise = group.loadMembers();
-    expect(group.isLoadingMetadata).toBe(true);
+    expect(group.isLoadingMetadata).toBe(
+      true,
+      "group.isLoadingMetadata - after calling loadMembers"
+    );
     await group.loadMetadata();
-    expect(group.isLoadingMembers).toBe(true);
+    expect(group.isLoadingMetadata).toBe(
+      false,
+      "group.isLoadingMetadata - after loading"
+    );
+    expect(group.isLoadingMembers).toBe(
+      true,
+      "group.isLoadingMembers - after calling loadMetadata"
+    );
     await loadMembersPromise;
 
-    expect(group.isLoadingMetadata).toBe(false);
     expect(group.memberModels.length).toBeGreaterThan(1);
     expect(group.memberModels.indexOf(item)).toBeGreaterThanOrEqual(0);
     expect(item.name).toBe("Override");
@@ -101,7 +119,7 @@ describe("upsertModelFromJson", function() {
 
     await item.loadMetadata();
 
-    expect(item.isGeoServer).toBe(true);
+    expect(item.isGeoServer).toBe(true, "item.isGeoServer");
   });
 
   it("can update a model by shareKey", function() {

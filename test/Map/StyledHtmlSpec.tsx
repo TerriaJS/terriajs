@@ -44,7 +44,7 @@ describe("StyledHtml", function() {
       expect(renderer).toBeDefined();
     });
     it("creates TooltipWithButtonLauncher when there are terms to inject", function() {
-      registerCustomComponentTypes(terria);
+      registerCustomComponentTypes();
       const spatialDataTerm = {
         term: "spatial data",
         content: "data that is spatial, spluh"

@@ -342,8 +342,7 @@ export default class Terria {
   readonly modelIdShareKeysMap = observable.map<string, string[]>();
 
   readonly baseUrl: string = "build/TerriaJS/";
-  /** Use `terria.addErrorEventListener` or `terria.raiseErrorToUser` if you need to interact with errors outside this class*/
-  private readonly error = new CesiumEvent();
+
   readonly tileLoadProgressEvent = new CesiumEvent();
   readonly workbench = new Workbench();
   readonly overlays = new Workbench();
@@ -401,7 +400,7 @@ export default class Terria {
     catalogIndexUrl: undefined,
     regionMappingDefinitionsUrl: "build/TerriaJS/data/regionMapping.json",
     conversionServiceBaseUrl: "convert/",
-    proj4ServiceBaseUrl: "proj4/",
+    proj4ServiceBaseUrl: "proj4def/",
     corsProxyBaseUrl: "proxy/",
     proxyableDomainsUrl: "proxyabledomains/", // deprecated, will be determined from serverconfig
     serverConfigUrl: "serverconfig/",
@@ -446,7 +445,7 @@ export default class Terria {
     customRequestSchedulerLimits: undefined,
     persistViewerMode: true,
     openAddData: false,
-    feedbackPreamble: "feedback.feedbackPreamble",
+    feedbackPreamble: "translate#feedback.feedbackPreamble",
     feedbackMinLength: 0,
     extraCreditLinks: [
       // Default credit links (shown at the bottom of the Cesium map)
@@ -566,10 +565,6 @@ export default class Terria {
     }
   }
 
-  addErrorEventListener(fn: (e: TerriaError) => void) {
-    return this.error.addEventListener(e => fn(e));
-  }
-
   /** Raise error to user.
    *
    * This accepts same arguments as `TerriaError.from` - but also has:
@@ -583,19 +578,17 @@ export default class Terria {
   ) {
     const terriaError = TerriaError.from(error, overrides);
 
+    // Set shouldRaiseToUser:
+    // - `true` if forceRaiseToUser agrument is true
+    // - `false` if ignoreErrors userProperties is set
+    if (forceRaiseToUser) terriaError.shouldRaiseToUser = true;
+    else if (this.userProperties.get("ignoreErrors") === "1")
+      terriaError.shouldRaiseToUser = false;
+
     // Log error to error service
     this.errorService.error(terriaError);
-    if (
-      forceRaiseToUser ||
-      (this.userProperties.get("ignoreErrors") !== "1" &&
-        terriaError.shouldRaiseToUser &&
-        !terriaError.raisedToUser)
-    ) {
-      terriaError.raisedToUser = true;
-      this.error.raiseEvent(terriaError);
-    } else {
-      console.log(terriaError);
-    }
+    this.notificationState.addNotificationToQueue(terriaError.toNotification());
+    console.log(terriaError.toError());
   }
 
   @computed
@@ -904,19 +897,27 @@ export default class Terria {
 
   loadPersistedMapSettings(): void {
     const persistViewerMode = this.configParameters.persistViewerMode;
+    const hashViewerMode = this.userProperties.get("map");
+    const viewerModes = ["3d", "3dsmooth", "2d"];
+    if (hashViewerMode && viewerModes.includes(hashViewerMode)) {
+      this.setViewerMode(hashViewerMode);
+    } else if (persistViewerMode) {
+      const viewerMode = <string>this.getLocalProperty("viewermode");
+      if (isDefined(viewerMode)) this.setViewerMode(viewerMode);
+    }
+  }
+
+  setViewerMode(viewerMode: string): void {
     const mainViewer = this.mainViewer;
-    const viewerMode = this.getLocalProperty("viewermode");
-    if (persistViewerMode && defined(viewerMode)) {
-      if (viewerMode === "3d" || viewerMode === "3dsmooth") {
-        mainViewer.viewerMode = ViewerMode.Cesium;
-        mainViewer.viewerOptions.useTerrain = viewerMode === "3d";
-      } else if (viewerMode === "2d") {
-        mainViewer.viewerMode = ViewerMode.Leaflet;
-      } else {
-        console.error(
-          `Trying to select ViewerMode ${viewerMode} that doesn't exist`
-        );
-      }
+    if (viewerMode === "3d" || viewerMode === "3dsmooth") {
+      mainViewer.viewerMode = ViewerMode.Cesium;
+      mainViewer.viewerOptions.useTerrain = viewerMode === "3d";
+    } else if (viewerMode === "2d") {
+      mainViewer.viewerMode = ViewerMode.Leaflet;
+    } else {
+      console.error(
+        `Trying to select ViewerMode ${viewerMode} that doesn't exist`
+      );
     }
   }
 
@@ -1383,19 +1384,7 @@ export default class Terria {
     }
 
     if (isJsonString(initData.viewerMode)) {
-      switch (initData.viewerMode.toLowerCase()) {
-        case "3d".toLowerCase():
-          this.mainViewer.viewerOptions.useTerrain = true;
-          this.mainViewer.viewerMode = ViewerMode.Cesium;
-          break;
-        case "3dSmooth".toLowerCase():
-          this.mainViewer.viewerOptions.useTerrain = false;
-          this.mainViewer.viewerMode = ViewerMode.Cesium;
-          break;
-        case "2d".toLowerCase():
-          this.mainViewer.viewerMode = ViewerMode.Leaflet;
-          break;
-      }
+      this.setViewerMode(initData.viewerMode.toLowerCase());
     }
 
     if (isJsonObject(initData.baseMaps)) {
@@ -1780,7 +1769,9 @@ async function interpretHash(
   baseUri: uri.URI
 ) {
   if (isDefined(hashProperties.clean)) {
-    terria.initSources.splice(0, terria.initSources.length);
+    runInAction(() => {
+      terria.initSources.splice(0, terria.initSources.length);
+    });
   }
 
   runInAction(() => {
@@ -1822,7 +1813,8 @@ async function interpretHash(
       );
     } catch (e) {
       throw TerriaError.from(e, {
-        message: { key: "parsingStartDataErrorMessage" }
+        message: { key: "models.terria.parsingStartDataErrorMessage" },
+        importance: -1
       });
     }
   }

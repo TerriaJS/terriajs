@@ -6,7 +6,7 @@ import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import isDefined from "../../../Core/isDefined";
 import loadXML from "../../../Core/loadXML";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
-import TerriaError from "../../../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import {
   geoRss2ToGeoJson,
   geoRssAtomToGeoJson
@@ -113,10 +113,12 @@ class GeoRssStratum extends LoadableStratum(GeoRssCatalogItemTraits) {
 
       return new GeoRssStratum(item, geoJsonItem, feed);
     } catch (e) {
-      throw TerriaError.from(e, {
-        title: i18next.t("models.georss.errorLoadingTitle"),
-        message: i18next.t("models.georss.errorLoadingMessage")
-      });
+      throw networkRequestError(
+        TerriaError.from(e, {
+          title: i18next.t("models.georss.errorLoadingTitle"),
+          message: i18next.t("models.georss.errorLoadingMessage")
+        })
+      );
     }
   }
 

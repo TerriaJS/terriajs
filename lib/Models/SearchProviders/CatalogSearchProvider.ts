@@ -1,8 +1,10 @@
-import { autorun, observable, runInAction, computed } from "mobx";
+import { autorun, computed, observable, runInAction } from "mobx";
 import {
   Category,
   SearchAction
 } from "../../Core/AnalyticEvents/analyticEvents";
+import isDefined from "../../Core/isDefined";
+import { TerriaErrorSeverity } from "../../Core/TerriaError";
 import GroupMixin from "../../ModelMixins/GroupMixin";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
 import { BaseModel } from "../Definition/Model";
@@ -10,7 +12,6 @@ import Terria from "../Terria";
 import SearchProvider from "./SearchProvider";
 import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
-import isDefined from "../../Core/isDefined";
 interface CatalogSearchProviderOptions {
   terria: Terria;
 }
@@ -139,8 +140,8 @@ export default class CatalogSearchProvider extends SearchProvider {
 
     try {
       if (this.terria.catalogIndex) {
-        const results = this.terria.catalogIndex?.search(searchText);
-        searchResults.results = results;
+        const results = await this.terria.catalogIndex?.search(searchText);
+        runInAction(() => (searchResults.results = results));
       } else {
         await loadAndSearchCatalogRecursively(
           this.terria.modelValues,
@@ -167,6 +168,10 @@ export default class CatalogSearchProvider extends SearchProvider {
         searchResults.message = "Sorry, no locations match your search query.";
       }
     } catch (e) {
+      this.terria.raiseErrorToUser(e, {
+        message: "An error occurred while searching",
+        severity: TerriaErrorSeverity.Warning
+      });
       if (searchResults.isCanceled) {
         // A new search has superseded this one, so ignore the result.
         return;
