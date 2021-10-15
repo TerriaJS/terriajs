@@ -1,6 +1,4 @@
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-import { BaseModel } from "../../lib/Models/Model";
-import { autorun, runInAction, observable, when } from "mobx";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Terria from "../../lib/Models/Terria";
 
 describe("TimelineStack", function() {

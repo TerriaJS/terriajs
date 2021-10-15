@@ -1,10 +1,11 @@
 import { observer } from "mobx-react";
 import React from "react";
 import styled from "styled-components";
-import Model from "../../Models/Model";
+import Model from "../../Models/Definition/Model";
 import Checkbox from "../../Styled/Checkbox/Checkbox";
-import CatalogMemberTraits from "../../Traits/CatalogMemberTraits";
-import MappableTraits from "../../Traits/MappableTraits";
+import CatalogMemberTraits from "../../Traits/TraitsClasses/CatalogMemberTraits";
+import MappableTraits from "../../Traits/TraitsClasses/MappableTraits";
+import Text from "../../Styled/Text";
 
 export type MappableCatalogItem = Model<MappableTraits & CatalogMemberTraits>;
 
@@ -20,10 +21,10 @@ const ItemList: React.FC<PropsType> = observer(({ items, onChange }) => {
         item =>
           item.uniqueId && (
             <li key={item.uniqueId}>
-              <Selector
-                item={item}
-                selected={item.show}
-                onChange={show => onChange(item, show)}
+              <Checkbox
+                isChecked={item.show}
+                onChange={ev => onChange(item, ev.target.checked)}
+                label={<SelectorText medium>{item.name}</SelectorText>}
               />
             </li>
           )
@@ -38,19 +39,6 @@ type SelectorProps = {
   onChange: (selected: boolean) => void;
 };
 
-const Selector: React.FC<SelectorProps> = observer(props => {
-  const { item, selected, onChange } = props;
-  return (
-    <Label>
-      <Checkbox
-        isChecked={selected}
-        onChange={ev => onChange(ev.target.checked)}
-      />
-      <div>{item.name}</div>
-    </Label>
-  );
-});
-
 const UList = styled.ul`
   list-style: none;
   padding: 0px;
@@ -59,6 +47,7 @@ const UList = styled.ul`
   > li {
     display: flex;
     align-items: center;
+    height: 32px;
   }
 `;
 
@@ -69,6 +58,10 @@ const Label = styled.label`
   > div {
     flex-grow: 1;
   }
+`;
+
+const SelectorText = styled(Text)`
+  margin-left: 10px;
 `;
 
 export default ItemList;

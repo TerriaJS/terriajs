@@ -6,8 +6,8 @@ import { useTranslation } from "react-i18next";
 import styled, { DefaultTheme, ThemeProvider } from "styled-components";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import DiscretelyTimeVaryingMixin from "../../ModelMixins/DiscretelyTimeVaryingMixin";
-import CommonStrata from "../../Models/CommonStrata";
 import { Comparable } from "../../Models/Comparable";
+import CommonStrata from "../../Models/Definition/CommonStrata";
 import Button from "../../Styled/Button";
 import Icon, { StyledIcon } from "../../Styled/Icon";
 import { formatDateTime } from "../BottomDock/Timeline/DateFormats";
@@ -40,9 +40,7 @@ const DatePicker: React.FC<PropsType> = observer(props => {
   const [isPickerOpen, setIsPickerOpen] = useState(false);
 
   // Check if the item has dates, otherwise render nothing
-  const item:
-    | DiscretelyTimeVaryingMixin.DiscretelyTimeVaryingMixin
-    | undefined =
+  const item: DiscretelyTimeVaryingMixin.Instance | undefined =
     DiscretelyTimeVaryingMixin.isMixedInto(props.item) &&
     (props.item.discreteTimes?.length ?? 0) > 0
       ? props.item

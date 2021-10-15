@@ -1,6 +1,6 @@
+import classNames from "classnames";
 import React from "react";
 import styled from "styled-components";
-import classNames from "classnames";
 
 // Icon
 export const GLYPHS = {
@@ -128,7 +128,8 @@ export const GLYPHS = {
   leftSmall: require("../../wwwroot/images/icons/left-small.svg"),
   rightSmall: require("../../wwwroot/images/icons/right-small.svg"),
   bothPanels: require("../../wwwroot/images/icons/both-panels.svg"),
-  closeCircle: require("../../wwwroot/images/icons/close-circle.svg")
+  closeCircle: require("../../wwwroot/images/icons/close-circle.svg"),
+  moreItems: require("../../wwwroot/images/icons/more-items.svg")
 };
 
 export interface IconProps {
@@ -143,9 +144,6 @@ export const Icon: React.FC<IconProps> = (props: IconProps) => {
       viewBox="0 0 100 100"
       className={classNames("icon", props.className)}
       style={props.style}
-      css={`
-        display: block;
-      `}
       transform={`rotate(${props.rotation ?? 0})`}
     >
       <use xlinkHref={"#" + props.glyph.id} />
@@ -160,18 +158,19 @@ interface IStyledIconProps {
   light?: boolean;
   dark?: boolean;
   realDark?: boolean;
-  fillColor?: boolean;
+  fillColor?: string;
   opacity?: number;
 }
 
 export const StyledIcon = styled(Icon)<IStyledIconProps>`
   display: ${props => (props.displayInline ? `inline` : `block`)};
   ${props =>
-    props.displayInline &&
-    `
+    props.displayInline
+      ? `
   display: inline;
-  vertical-align: middle;
-  `}
+  vertical-align: middle;`
+      : `
+  display: block;`}
 
   flex-shrink: 0;
   ${props => props.styledWidth && `width: ${props.styledWidth};`}

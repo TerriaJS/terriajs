@@ -15,7 +15,7 @@ import ItemSearchProvider, {
   ItemSearchResult,
   NumericItemSearchParameter,
   TextItemSearchParameter
-} from "../../../Models/ItemSearchProvider";
+} from "../../../Models/ItemSearchProviders/ItemSearchProvider";
 import ErrorComponent from "./ErrorComponent";
 import { ItemSearchQuery } from "./ItemSearchTool";
 import Loading from "./Loading";
@@ -315,6 +315,8 @@ const Input = styled.input`
   color: ${p => p.theme.dark};
   box-sizing: border-box;
   width: 100%;
+  height: 38px;
+  font-size: 1.1em;
 `;
 
 const Select = styled(ReactSelect).attrs({

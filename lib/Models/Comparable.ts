@@ -1,16 +1,16 @@
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
-import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
-import MappableTraits from "../Traits/MappableTraits";
-import SplitterTraits from "../Traits/SplitterTraits";
-import hasTraits from "./hasTraits";
-import Model from "./Model";
+import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";
+import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
+import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
+import hasTraits from "./Definition/hasTraits";
+import Model from "./Definition/Model";
 
 export type Comparable = Model<
   SplitterTraits & CatalogMemberTraits & MappableTraits
 > &
-  MappableMixin.MappableMixin &
-  CatalogMemberMixin.CatalogMemberMixin;
+  MappableMixin.Instance &
+  CatalogMemberMixin.Instance;
 
 /**
  * Returns true if the item is Comparable.
@@ -20,7 +20,6 @@ export function isComparableItem(item: any): item is Comparable {
     item &&
     MappableMixin.isMixedInto(item) &&
     CatalogMemberMixin.isMixedInto(item) &&
-    (item as any).supportsSplitting &&
     hasTraits(item, MappableTraits, "show") &&
     hasTraits(item, CatalogMemberTraits, "name") &&
     hasTraits(item, SplitterTraits, "splitDirection");

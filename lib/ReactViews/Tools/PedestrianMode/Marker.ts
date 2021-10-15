@@ -4,9 +4,9 @@ import CallbackProperty from "terriajs-cesium/Source/DataSources/CallbackPropert
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
-import CreateModel from "../../../Models/CreateModel";
+import CreateModel from "../../../Models/Definition/CreateModel";
 import Terria from "../../../Models/Terria";
-import MappableTraits from "../../../Traits/MappableTraits";
+import MappableTraits from "../../../Traits/TraitsClasses/MappableTraits";
 
 export default class Marker extends MappableMixin(CreateModel(MappableTraits)) {
   private dataSource: CustomDataSource;

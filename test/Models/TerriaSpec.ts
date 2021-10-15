@@ -4,29 +4,35 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import hashEntity from "../../lib/Core/hashEntity";
+import _loadWithXhr from "../../lib/Core/loadWithXhr";
+import Result from "../../lib/Core/Result";
+import TerriaError from "../../lib/Core/TerriaError";
 import PickedFeatures from "../../lib/Map/PickedFeatures";
 import CameraView from "../../lib/Models/CameraView";
+import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
+import MagdaReference from "../../lib/Models/Catalog/CatalogReferences/MagdaReference";
+import UrlReference, {
+  UrlToCatalogMemberMapping
+} from "../../lib/Models/Catalog/CatalogReferences/UrlReference";
+import ArcGisFeatureServerCatalogItem from "../../lib/Models/Catalog/Esri/ArcGisFeatureServerCatalogItem";
+import ArcGisMapServerCatalogItem from "../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogItem";
+import WebMapServiceCatalogGroup from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Cesium from "../../lib/Models/Cesium";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import { BaseModel } from "../../lib/Models/Definition/Model";
 import Feature from "../../lib/Models/Feature";
 import {
   isInitData,
   isInitDataPromise,
   isInitUrl
 } from "../../lib/Models/InitSource";
-import MagdaReference from "../../lib/Models/MagdaReference";
-import { BaseModel } from "../../lib/Models/Model";
-import openGroup from "../../lib/Models/openGroup";
 import Terria from "../../lib/Models/Terria";
-import UrlReference, {
-  UrlToCatalogMemberMapping
-} from "../../lib/Models/UrlReference";
-import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import ViewerMode from "../../lib/Models/ViewerMode";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
+import { defaultBaseMaps } from "./../../lib/Models/BaseMaps/defaultBaseMaps";
 
 const mapConfigBasicJson = require("../../wwwroot/test/Magda/map-config-basic.json");
 const mapConfigBasicString = JSON.stringify(mapConfigBasicJson);
@@ -396,10 +402,10 @@ describe("Terria", function() {
       const group = <WebMapServiceCatalogGroup>(
         terria.getModelById(BaseModel, "groupABC")
       );
-      await openGroup(group);
+      await viewState.viewCatalogMember(group);
       expect(group.isOpen).toBe(true);
       expect(group.members.length).toBeGreaterThan(0);
-      const shareLink = await buildShareLink(terria, viewState);
+      const shareLink = buildShareLink(terria, viewState);
       await newTerria.updateApplicationUrl(shareLink);
       await newTerria.loadInitSources();
       const newGroup = <WebMapServiceCatalogGroup>(
@@ -865,53 +871,325 @@ describe("Terria", function() {
         expect(terria.selectedFeature).toBeDefined();
       });
     });
+
+    describe("Sets workbench contents correctly", function() {
+      interface ExtendedLoadWithXhr {
+        (): any;
+        load: { (...args: any[]): any; calls: any };
+      }
+      const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
+      const mapServerSimpleGroupUrl =
+        "http://some.service.gov.au/arcgis/rest/services/mapServerSimpleGroup/MapServer";
+      const mapServerWithErrorUrl =
+        "http://some.service.gov.au/arcgis/rest/services/mapServerWithError/MapServer";
+      const magdaRecordFeatureServerGroupUrl =
+        "http://magda.reference.group.service.gov.au";
+      const magdaRecordDerefencedToWmsUrl =
+        "http://magda.references.wms.gov.au";
+
+      const mapServerGroupModel = {
+        type: "esri-mapServer-group",
+        name: "A simple map server group",
+        url: mapServerSimpleGroupUrl,
+        id: "a-test-server-group"
+      };
+
+      const magdaRecordDerefencedToFeatureServerGroup = {
+        type: "magda",
+        name: "A magda record derefenced to a simple feature server group",
+        url: magdaRecordFeatureServerGroupUrl,
+        recordId: "magda-record-id-dereferenced-to-feature-server-group",
+        id: "a-test-magda-record"
+      };
+
+      const magdaRecordDerefencedToWms = {
+        type: "magda",
+        name: "A magda record derefenced to wms",
+        url: magdaRecordDerefencedToWmsUrl,
+        recordId: "magda-record-id-dereferenced-to-wms",
+        id: "another-test-magda-record"
+      };
+
+      const mapServerModelWithError = {
+        type: "esri-mapServer-group",
+        name: "A map server with error",
+        url: mapServerWithErrorUrl,
+        id: "a-test-server-with-error"
+      };
+
+      const theOrderedItemsIds = [
+        "a-test-server-group/0",
+        "a-test-magda-record/0",
+        "another-test-magda-record"
+      ];
+
+      let loadMapItemsWms: any = undefined;
+      let loadMapItemsArcGisMap: any = undefined;
+      let loadMapItemsArcGisFeature: any = undefined;
+      beforeEach(function() {
+        const realLoadWithXhr = loadWithXhr.load;
+        spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
+          const url = args[0];
+
+          if (
+            url.match("mapServerSimpleGroup") &&
+            url.indexOf("MapServer?f=json") !== -1
+          ) {
+            args[0] =
+              "test/Terria/applyInitData/MapServer/mapServerSimpleGroup.json";
+          } else if (
+            url.match("mapServerWithError") &&
+            url.indexOf("MapServer?f=json") !== -1
+          ) {
+            args[0] =
+              "test/Terria/applyInitData/MapServer/mapServerWithError.json";
+          } else if (
+            url.match("magda-record-id-dereferenced-to-feature-server-group")
+          ) {
+            args[0] =
+              "test/Terria/applyInitData/MagdaReference/group_record.json";
+          } else if (url.match("magda-record-id-dereferenced-to-wms")) {
+            args[0] =
+              "test/Terria/applyInitData/MagdaReference/wms_record.json";
+          } else if (
+            url.match("services2.arcgis.com") &&
+            url.indexOf("FeatureServer?f=json") !== -1
+          ) {
+            args[0] =
+              "test/Terria/applyInitData/FeatureServer/esri_feature_server.json";
+          } else if (
+            url.match("mapprod1.environment.nsw.gov.au") &&
+            url.indexOf("request=GetCapabilities") !== -1
+          ) {
+            args[0] = "test/Terria/applyInitData/WmsServer/capabilities.xml";
+          }
+
+          const result = realLoadWithXhr(...args);
+          return result;
+        });
+
+        // Do not call through.
+        loadMapItemsArcGisMap = spyOn(
+          ArcGisMapServerCatalogItem.prototype,
+          "loadMapItems"
+        ).and.returnValue(Result.none());
+        loadMapItemsArcGisFeature = spyOn(
+          ArcGisFeatureServerCatalogItem.prototype,
+          "loadMapItems"
+        ).and.returnValue(Result.none());
+        loadMapItemsWms = spyOn(
+          WebMapServiceCatalogItem.prototype,
+          "loadMapItems"
+        ).and.returnValue(Result.none());
+      });
+
+      it("when a workbench item is a simple map server group", async function() {
+        await terria.applyInitData({
+          initData: {
+            catalog: [mapServerGroupModel],
+            workbench: ["a-test-server-group"]
+          }
+        });
+        expect(terria.workbench.itemIds).toEqual(["a-test-server-group/0"]);
+        expect(loadMapItemsArcGisMap).toHaveBeenCalledTimes(1);
+      });
+
+      it("when a workbench item is a referenced map server group", async function() {
+        await terria.applyInitData({
+          initData: {
+            catalog: [magdaRecordDerefencedToFeatureServerGroup],
+            workbench: ["a-test-magda-record"]
+          }
+        });
+        expect(terria.workbench.itemIds).toEqual(["a-test-magda-record/0"]);
+        expect(loadMapItemsArcGisFeature).toHaveBeenCalledTimes(1);
+      });
+
+      it("when a workbench item is a referenced wms", async function() {
+        await terria.applyInitData({
+          initData: {
+            catalog: [magdaRecordDerefencedToWms],
+            workbench: ["another-test-magda-record"]
+          }
+        });
+        expect(terria.workbench.itemIds).toEqual(["another-test-magda-record"]);
+        expect(loadMapItemsWms).toHaveBeenCalledTimes(1);
+      });
+
+      it("when the workbench has more than one items", async function() {
+        await terria.applyInitData({
+          initData: {
+            catalog: [
+              mapServerGroupModel,
+              magdaRecordDerefencedToFeatureServerGroup,
+              magdaRecordDerefencedToWms
+            ],
+            workbench: [
+              "a-test-server-group",
+              "a-test-magda-record",
+              "another-test-magda-record"
+            ]
+          }
+        });
+
+        expect(terria.workbench.itemIds).toEqual(theOrderedItemsIds);
+        expect(loadMapItemsWms).toHaveBeenCalledTimes(1);
+        expect(loadMapItemsArcGisMap).toHaveBeenCalledTimes(1);
+        expect(loadMapItemsArcGisFeature).toHaveBeenCalledTimes(1);
+      });
+
+      it("when the workbench has an unknown item", async function() {
+        await terria.applyInitData({
+          initData: {
+            catalog: [
+              mapServerGroupModel,
+              magdaRecordDerefencedToFeatureServerGroup,
+              magdaRecordDerefencedToWms
+            ],
+            workbench: [
+              "id_of_unknown_model",
+              "a-test-server-group",
+              "a-test-magda-record",
+              "another-test-magda-record"
+            ]
+          }
+        });
+
+        expect(terria.workbench.itemIds).toEqual(theOrderedItemsIds);
+        expect(loadMapItemsWms).toHaveBeenCalledTimes(1);
+        expect(loadMapItemsArcGisMap).toHaveBeenCalledTimes(1);
+        expect(loadMapItemsArcGisFeature).toHaveBeenCalledTimes(1);
+      });
+
+      it("when a workbench item has errors", async function() {
+        let error: TerriaError | undefined = undefined;
+        try {
+          await terria.applyInitData({
+            initData: {
+              catalog: [
+                mapServerModelWithError,
+                mapServerGroupModel,
+                magdaRecordDerefencedToFeatureServerGroup,
+                magdaRecordDerefencedToWms
+              ],
+              workbench: [
+                "a-test-server-with-error",
+                "a-test-server-group",
+                "a-test-magda-record",
+                "another-test-magda-record"
+              ]
+            }
+          });
+        } catch (e) {
+          error = <TerriaError>e;
+          expect(error.message === "models.terria.loadingInitSourceErrorTitle");
+        } finally {
+          expect(error).not.toEqual(undefined);
+          expect(terria.workbench.itemIds).toEqual(theOrderedItemsIds);
+          expect(loadMapItemsWms).toHaveBeenCalledTimes(1);
+          expect(loadMapItemsArcGisMap).toHaveBeenCalledTimes(1);
+          expect(loadMapItemsArcGisFeature).toHaveBeenCalledTimes(1);
+        }
+      });
+    });
+  });
+
+  describe("mapSettings", function() {
+    it("properly interprets map hash parameter", async () => {
+      const getLocalPropertySpy = spyOn(terria, "getLocalProperty");
+      //@ts-ignore
+      const location: Location = {
+        href: "http://test.com/#map=2d"
+      };
+      await terria.start({ configUrl: "", applicationUrl: location });
+      await terria.loadPersistedMapSettings();
+      expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
+      expect(getLocalPropertySpy).not.toHaveBeenCalledWith("viewermode");
+    });
+
+    it("properly resolves persisted map viewer", async () => {
+      const getLocalPropertySpy = spyOn(
+        terria,
+        "getLocalProperty"
+      ).and.returnValue("2d");
+      await terria.start({ configUrl: "" });
+      await terria.loadPersistedMapSettings();
+      expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
+      expect(getLocalPropertySpy).toHaveBeenCalledWith("viewermode");
+    });
+
+    it("properly interprets wrong map hash parameter and resolves persisted value", async () => {
+      const getLocalPropertySpy = spyOn(
+        terria,
+        "getLocalProperty"
+      ).and.returnValue("3dsmooth");
+      //@ts-ignore
+      const location: Location = {
+        href: "http://test.com/#map=4d"
+      };
+      await terria.start({ configUrl: "", applicationUrl: location });
+      await terria.loadPersistedMapSettings();
+      expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Cesium);
+      expect(terria.mainViewer.viewerOptions.useTerrain).toBe(false);
+      expect(getLocalPropertySpy).toHaveBeenCalledWith("viewermode");
+    });
   });
 
   describe("basemaps", function() {
     it("when no base maps are specified load defaultBaseMaps", async function() {
+      await terria.start({ configUrl: "" });
       terria.applyInitData({
         initData: {}
       });
       await terria.loadInitSources();
-      expect(terria.baseMaps).toBeDefined();
-      expect(terria.baseMaps.length).toBeGreaterThan(1);
+      const _defaultBaseMaps = defaultBaseMaps(terria);
+      expect(terria.baseMapsModel).toBeDefined();
+      expect(terria.baseMapsModel.baseMapItems.length).toBe(
+        _defaultBaseMaps.length
+      );
     });
 
-    it("propperly loads base maps", function() {
+    it("propperly loads base maps", async function() {
+      await terria.start({ configUrl: "" });
       terria.applyInitData({
         initData: {
-          baseMaps: [
-            {
-              item: {
-                id: "basemap-positron",
-                name: "Positron (Light)",
-                type: "open-street-map",
-                url: "https://basemaps.cartocdn.com/light_all/",
-                attribution:
-                  "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
-                subdomains: ["a", "b", "c", "d"],
-                opacity: 1.0
+          baseMaps: {
+            items: [
+              {
+                item: {
+                  id: "basemap-positron",
+                  name: "Positron (Light)",
+                  type: "open-street-map",
+                  url: "https://basemaps.cartocdn.com/light_all/",
+                  attribution:
+                    "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
+                  subdomains: ["a", "b", "c", "d"],
+                  opacity: 1.0
+                },
+                image: "/images/positron.png"
               },
-              image: "/images/positron.png"
-            },
-            {
-              item: {
-                id: "basemap-darkmatter",
-                name: "Dark Matter",
-                type: "open-street-map",
-                url: "https://basemaps.cartocdn.com/dark_all/",
-                attribution:
-                  "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
-                subdomains: ["a", "b", "c", "d"],
-                opacity: 1.0
-              },
-              image: "/images/dark-matter.png"
-            }
-          ]
+              {
+                item: {
+                  id: "basemap-darkmatter1",
+                  name: "Dark Matter",
+                  type: "open-street-map",
+                  url: "https://basemaps.cartocdn.com/dark_all/",
+                  attribution:
+                    "© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>, © <a href='https://carto.com/about-carto/'>CARTO</a>",
+                  subdomains: ["a", "b", "c", "d"],
+                  opacity: 1.0
+                },
+                image: "/images/dark-matter.png"
+              }
+            ]
+          }
         }
       });
-      expect(terria.baseMaps).toBeDefined();
-      expect(terria.baseMaps.length).toEqual(2);
+      const _defaultBaseMaps = defaultBaseMaps(terria);
+      expect(terria.baseMapsModel).toBeDefined();
+      expect(terria.baseMapsModel.baseMapItems.length).toEqual(
+        _defaultBaseMaps.length + 1
+      );
     });
   });
 

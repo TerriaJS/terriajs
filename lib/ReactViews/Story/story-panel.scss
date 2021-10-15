@@ -92,7 +92,13 @@
   padding: $padding * 1.5 $padding;
   color: $dark;
   font-size: 1rem;
-  max-height: 400px;
+  max-height: 100px;
+  @media (min-height: 700px) {
+    max-height: 200px;
+  }
+  @media (min-height: 900px) {
+    max-height: 400px;
+  }
   overflow-y: auto;
   img {
     max-width: 100%;

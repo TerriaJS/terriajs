@@ -1,49 +1,44 @@
-import React from "react";
+import classNames from "classnames";
 import createReactClass from "create-react-class";
-import { ThemeProvider, createGlobalStyle } from "styled-components";
+import "inobounce";
+import { action, runInAction } from "mobx";
+import { observer } from "mobx-react";
 import PropTypes from "prop-types";
+import React from "react";
+import { withTranslation } from "react-i18next";
+import { createGlobalStyle, ThemeProvider } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
-
-import { terriaTheme } from "./StandardTheme";
 import arrayContains from "../../Core/arrayContains";
-import Branding from "../SidePanel/Branding";
+import LazyCompare from "../Compare/LazyCompare";
+import Disclaimer from "../Disclaimer";
 import DragDropFile from "../DragDropFile";
-import DragDropNotification from "./../DragDropNotification";
 import ExplorerWindow from "../ExplorerWindow/ExplorerWindow";
 import FeatureInfoPanel from "../FeatureInfo/FeatureInfoPanel";
 import FeedbackForm from "../Feedback/FeedbackForm";
-import MapColumn from "./MapColumn";
-import MapInteractionWindow from "../Notification/MapInteractionWindow";
-import TrainerBar from "../Map/TrainerBar/TrainerBar";
-import ExperimentalFeatures from "../Map/ExperimentalFeatures";
-import MobileHeader from "../Mobile/MobileHeader";
-import Notification from "../Notification/Notification";
-import ProgressBar from "../Map/ProgressBar";
-import SidePanel from "../SidePanel/SidePanel";
-import processCustomElements from "./processCustomElements";
-import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
-import StoryPanel from "./../Story/StoryPanel.jsx";
-import StoryBuilder from "./../Story/StoryBuilder.jsx";
-
-import withFallback from "../HOCs/withFallback";
-import TourPortal from "../Tour/TourPortal";
+import { Medium, Small } from "../Generic/Responsive";
 import SatelliteHelpPrompt from "../HelpScreens/SatelliteHelpPrompt";
-import WelcomeMessage from "../WelcomeMessage/WelcomeMessage";
-
-import { Small, Medium } from "../Generic/Responsive";
-import classNames from "classnames";
-import "inobounce";
-
-import { withTranslation } from "react-i18next";
-
-import Styles from "./standard-user-interface.scss";
-// import Variables from "../../Sass/common/variables";
-import { observer } from "mobx-react";
-import { action, runInAction } from "mobx";
+import withFallback from "../HOCs/withFallback";
+import ExperimentalFeatures from "../Map/ExperimentalFeatures";
+import CollapsedNavigation from "../Map/Navigation/Items/OverflowNavigationItem";
 import HelpPanel from "../Map/Panels/HelpPanel/HelpPanel";
-import Tool from "../Tool";
-import Disclaimer from "../Disclaimer";
-import LazyCompare from "../Compare/LazyCompare";
+import ProgressBar from "../Map/ProgressBar";
+import TrainerBar from "../Map/TrainerBar/TrainerBar";
+import MobileHeader from "../Mobile/MobileHeader";
+import MapInteractionWindow from "../Notification/MapInteractionWindow";
+import Notification from "../Notification/Notification";
+import Branding from "../SidePanel/Branding";
+import SidePanel from "../SidePanel/SidePanel";
+import Tool from "../Tools/Tool";
+import TourPortal from "../Tour/TourPortal";
+import WelcomeMessage from "../WelcomeMessage/WelcomeMessage";
+import DragDropNotification from "./../DragDropNotification";
+import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
+import StoryBuilder from "./../Story/StoryBuilder.jsx";
+import StoryPanel from "./../Story/StoryPanel.jsx";
+import MapColumn from "./MapColumn";
+import processCustomElements from "./processCustomElements";
+import Styles from "./standard-user-interface.scss";
+import { terriaTheme } from "./StandardTheme";
 
 export const showStoryPrompt = (viewState, terria) => {
   terria.configParameters.showFeaturePrompts &&
@@ -260,6 +255,10 @@ const StandardUserInterface = observer(
             }
           />
           <TourPortal terria={terria} viewState={this.props.viewState} />
+          <CollapsedNavigation
+            terria={terria}
+            viewState={this.props.viewState}
+          />
           <SatelliteHelpPrompt
             terria={terria}
             viewState={this.props.viewState}
@@ -401,12 +400,9 @@ const StandardUserInterface = observer(
                   />
                 </Medium>
               </If>
-              {this.props.viewState.terria.configParameters
-                .useExperimentalCompareWorkflow && (
-                <Medium>
-                  <LazyCompare viewState={this.props.viewState} />
-                </Medium>
-              )}
+              <Medium>
+                <LazyCompare viewState={this.props.viewState} />
+              </Medium>
               <Medium>
                 {/* I think this does what the previous boolean condition does, but without the console error */}
                 <If condition={this.props.viewState.isToolOpen}>
@@ -417,6 +413,11 @@ const StandardUserInterface = observer(
                   />
                 </If>
               </Medium>
+
+              <If condition={this.props.viewState.panel}>
+                {this.props.viewState.panel}
+              </If>
+
               <Notification viewState={this.props.viewState} />
               <MapInteractionWindow
                 terria={terria}
@@ -471,7 +472,10 @@ const StandardUserInterface = observer(
                   animationDuration={animationDuration}
                 />
               )}
-            <HelpPanel terria={terria} viewState={this.props.viewState} />
+            {this.props.viewState.showHelpMenu &&
+              this.props.viewState.topElement === "HelpPanel" && (
+                <HelpPanel terria={terria} viewState={this.props.viewState} />
+              )}
             <Disclaimer viewState={this.props.viewState} />
           </div>
         </ThemeProvider>

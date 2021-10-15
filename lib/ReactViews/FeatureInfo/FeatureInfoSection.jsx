@@ -95,10 +95,10 @@ export const FeatureInfoSection = observer(
           .filter(col => col.name && col.title && col.name !== col.title)
           .map(col => [col.name, col.title]);
       }
-      // Only assign alias if it is undefined
-      aliases.forEach(aliasMap => {
-        propertyData[aliasMap[0]] =
-          propertyData[aliasMap[0]] ?? propertyData[aliasMap[1]];
+
+      // Always overwrite using aliases so that applying titles to columns doesn't break feature info templates
+      aliases.forEach(([name, title]) => {
+        propertyData[name] = propertyData[title];
       });
 
       // Properties accessible as {name, value} array; useful when you want
@@ -109,7 +109,13 @@ export const FeatureInfoSection = observer(
           value
         })
       );
+
+      // Add entire feature object
+      propertyData.feature = this.props.feature;
+
+      const partials = this.props.template?.partials ?? {};
       propertyData.terria = {
+        partialByName: mustacheRenderPartialByName(partials, propertyData),
         formatNumber: mustacheFormatNumberFunction,
         formatDateTime: mustacheFormatDateTime,
         urlEncodeComponent: mustacheURLEncodeTextComponent,
@@ -154,16 +160,7 @@ export const FeatureInfoSection = observer(
       const { t } = this.props;
       const template = this.props.template;
       const templateData = this.getTemplateData();
-      // If property names were changed, let the template access the original property names too.
-      if (
-        defined(templateData) &&
-        defined(templateData._terria_columnAliases)
-      ) {
-        for (let i = 0; i < templateData._terria_columnAliases.length; i++) {
-          const alias = templateData._terria_columnAliases[i];
-          templateData[alias.id] = templateData[alias.name];
-        }
-      }
+
       // templateData may not be defined if a re-render gets triggered in the middle of a feature updating.
       // (Recall we re-render whenever feature.definitionChanged triggers.)
       if (defined(templateData)) {
@@ -297,8 +294,8 @@ export const FeatureInfoSection = observer(
                   onClick={this.toggleRawData}
                 >
                   {this.state.showRawData
-                    ? "Show Curated Data"
-                    : "Show Raw Data"}
+                    ? t("featureInfo.showCuratedData")
+                    : t("featureInfo.showRawData")}
                 </button>
               </If>
               <div>
@@ -638,6 +635,40 @@ function mustacheFormatNumberFunction() {
 }
 
 /**
+ * Returns a function that replaces value in Mustache templates, using this syntax:
+ * {
+ *   "template": {{#terria.partialByName}}{{value}}{{/terria.partialByName}}.
+ *   "partials": {
+ *     "value1": "replacement1",
+ *     ...
+ *   }
+ * }
+ * 
+ * E.g. {{#terria.partialByName}}{{value}}{{/terria.partialByName}}
+     "featureInfoTemplate": {
+        "template": "{{Pixel Value}} dwellings in {{#terria.partialByName}}{{feature.data.layerId}}{{/terria.partialByName}} radius.",
+        "partials": {
+          "0": "100m",
+          "1": "500m",
+          "2": "1km",
+          "3": "2km"
+        }
+      }
+ * @private
+ */
+function mustacheRenderPartialByName(partials, templateData) {
+  return () => {
+    return mustacheJsonSubOptions((value, options) => {
+      if (partials && typeof partials[value] === "string") {
+        return Mustache.render(partials[value], templateData);
+      } else {
+        return Mustache.render(value, templateData);
+      }
+    });
+  };
+}
+
+/**
  * Formats the date according to the date format string.
  * If the date expression can't be parsed using Date.parse() it will be returned unmodified.
  *
@@ -802,8 +833,8 @@ function getTimeSeriesChartContext(catalogItem, feature, getChartDetails) {
     if (chartDetails) {
       const result = {
         ...chartDetails,
-        id: featureId.replace(/\"/g, ""),
-        data: csvData.replace(/\\n/g, "\\n")
+        id: featureId?.replace(/\"/g, ""),
+        data: csvData?.replace(/\\n/g, "\\n")
       };
       const idAttr = 'id="' + result.id + '" ';
       const sourceAttr = 'sources="1"';

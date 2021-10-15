@@ -8,7 +8,7 @@ import { Comparable } from "../../Models/Comparable";
 import doesImageryFeatureBelongToItem from "../../Models/doesImageryFeatureBelongToCatalogItem";
 import Feature from "../../Models/Feature";
 import ViewState from "../../ReactViewModels/ViewState";
-import { TimeFilterCoordinates } from "../../Traits/TimeFilterTraits";
+import { TimeFilterCoordinates } from "../../Traits/TraitsClasses/TimeFilterTraits";
 import LocationPicker from "./LocationPicker";
 
 type PropsType = {

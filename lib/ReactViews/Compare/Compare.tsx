@@ -6,23 +6,22 @@ import styled from "styled-components";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import filterOutUndefined from "../../Core/filterOutUndefined";
-import CommonStrata from "../../Models/CommonStrata";
+import SplitItemReference from "../../Models/Catalog/CatalogReferences/SplitItemReference";
 import { Comparable, isComparableItem } from "../../Models/Comparable";
-import hasTraits from "../../Models/hasTraits";
-import { BaseModel } from "../../Models/Model";
-import SplitItemReference from "../../Models/SplitItemReference";
+import CommonStrata from "../../Models/Definition/CommonStrata";
+import hasTraits from "../../Models/Definition/hasTraits";
+import { BaseModel } from "../../Models/Definition/Model";
 import Terria from "../../Models/Terria";
 import Workbench from "../../Models/Workbench";
 import ViewState from "../../ReactViewModels/ViewState";
 import { GLYPHS } from "../../Styled/Icon";
 import Text from "../../Styled/Text";
 import WorkflowPanel, { Box } from "../../Styled/WorkflowPanel";
-import CatalogMemberTraits from "../../Traits/CatalogMemberTraits";
-import MappableTraits from "../../Traits/MappableTraits";
-import SplitterTraits from "../../Traits/SplitterTraits";
-import Legend from "../Workbench/Controls/Legend";
+import CatalogMemberTraits from "../../Traits/TraitsClasses/CatalogMemberTraits";
+import MappableTraits from "../../Traits/TraitsClasses/MappableTraits";
+import SplitterTraits from "../../Traits/TraitsClasses/SplitterTraits";
+import CompareItemControls from "./CompareItemControls";
 import DatePicker from "./DatePicker";
-import DimensionSelectors from "./DimensionSelectors";
 import ItemList, { MappableCatalogItem } from "./ItemList";
 import ItemSelector from "./ItemSelector";
 import LocationDateFilter from "./LocationDateFilter";
@@ -182,8 +181,7 @@ const Compare: React.FC<PropsType> = observer(props => {
             }
             onChange={changeLeftItem}
           />
-          {leftItem && <DimensionSelectors item={leftItem} />}
-          {leftItem && <Legend item={leftItem} />}
+          {leftItem && <CompareItemControls item={leftItem} />}
         </Box>
         <Box icon={GLYPHS.rightSmall} title={t("compare.rightPanel")}>
           <ItemSelector
@@ -195,15 +193,9 @@ const Compare: React.FC<PropsType> = observer(props => {
             }
             onChange={changeRightItem}
           />
-          {rightItem && <DimensionSelectors item={rightItem} />}
-          {rightItem && <Legend item={rightItem} />}
+          {rightItem && <CompareItemControls item={rightItem} />}
         </Box>
-        <Box
-          icon={GLYPHS.bothPanels}
-          title={t("compare.bothPanels")}
-          collapsible
-          isCollapsed
-        >
+        <Box icon={GLYPHS.bothPanels} title={t("compare.bothPanels")}>
           <ItemList
             items={itemsInBothPanels}
             onChange={changeItemInBothPanels}
@@ -291,7 +283,7 @@ async function cloneItem(item: Comparable): Promise<string | undefined> {
   try {
     terria.addModel(ref);
     // Insert below the parent item in the workbench
-    await terria.workbench.add(ref, terria.workbench.indexOf(item) + 1);
+    await terria.workbench.add(ref /*terria.workbench.indexOf(item) + 1*/);
   } catch (e) {
     return undefined;
   }

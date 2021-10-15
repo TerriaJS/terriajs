@@ -1,8 +1,8 @@
 import { observer } from "mobx-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import CommonStrata from "../../Models/CommonStrata";
 import { Comparable } from "../../Models/Comparable";
+import CommonStrata from "../../Models/Definition/CommonStrata";
 import SelectableDimensions, {
   SelectableDimension
 } from "../../Models/SelectableDimensions";

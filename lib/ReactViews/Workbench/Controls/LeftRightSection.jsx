@@ -2,19 +2,18 @@
 
 import classNames from "classnames";
 import createReactClass from "create-react-class";
+import { runInAction } from "mobx";
+import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
+import { withTranslation } from "react-i18next";
 import styled from "styled-components";
-
 import defined from "terriajs-cesium/Source/Core/defined";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
-import { withTranslation } from "react-i18next";
-
-// import Icon from '../../Icon';
+import CommonStrata from "../../../Models/Definition/CommonStrata";
+import hasTraits from "../../../Models/Definition/hasTraits";
+import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
 import Styles from "./left-right-section.scss";
-import { observer } from "mobx-react";
-import CommonStrata from "../../../Models/CommonStrata";
-import { runInAction } from "mobx";
 
 const LeftRightButton = styled.button`
   text-align: center;
@@ -23,11 +22,11 @@ const LeftRightButton = styled.button`
   ${p =>
     p.isActive &&
     `
-    background-color: ${p.theme.colorSplitter};
+    background-color: ${p.theme.colorSecondary};
   `}
   &:hover,
   &:focus {
-    background-color: ${p => p.theme.colorSplitter};
+    background-color: ${p => p.theme.colorSecondary};
   }
 `;
 
@@ -75,7 +74,8 @@ const LeftRightSection = observer(
       const splitDirection = item.splitDirection;
       const { t } = this.props;
       if (
-        !item.supportsSplitting ||
+        !hasTraits(item, SplitterTraits, "splitDirection") ||
+        item.disableSplitter ||
         !defined(splitDirection) ||
         !item.terria.showSplitter
       ) {

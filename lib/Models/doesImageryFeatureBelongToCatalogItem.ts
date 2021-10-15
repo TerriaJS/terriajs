@@ -1,6 +1,6 @@
 import MappableMixin, { ImageryParts } from "../ModelMixins/MappableMixin";
+import { BaseModel } from "./Definition/Model";
 import Feature from "./Feature";
-import { BaseModel } from "./Model";
 
 /**
  * Returns true if the given feature belongs to the catalog item

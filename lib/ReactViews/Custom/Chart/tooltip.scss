@@ -40,20 +40,20 @@
   }
 }
 
-.enter {
+.transition-enter {
   opacity: 0;
 }
 
-.enterActive {
+.transition-enter-active {
   opacity: 1;
-  transition: opacity 1000ms;
+  transition: opacity 200ms;
 }
 
-.exit {
+.transition-exit {
   opacity: 1;
 }
 
-.exitActive {
+.transition-exit-active {
   opacity: 0;
-  transition: opacity 1000ms;
+  transition: opacity 200ms;
 }

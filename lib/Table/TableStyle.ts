@@ -1,54 +1,58 @@
 import groupBy from "lodash-es/groupBy";
 import { computed } from "mobx";
 import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
-import Color from "terriajs-cesium/Source/Core/Color";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
-import createColorForIdTransformer from "../Core/createColorForIdTransformer";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
-import ColorMap from "../Map/ColorMap";
 import ConstantColorMap from "../Map/ConstantColorMap";
 import ConstantPointSizeMap from "../Map/ConstantPointSizeMap";
 import DiscreteColorMap from "../Map/DiscreteColorMap";
 import EnumColorMap from "../Map/EnumColorMap";
 import PointSizeMap from "../Map/PointSizeMap";
 import ScalePointSizeMap from "../Map/ScalePointSizeMap";
-import createCombinedModel from "../Models/createCombinedModel";
-import Model from "../Models/Model";
-import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
-import TableChartStyleTraits from "../Traits/TableChartStyleTraits";
-import TableColorStyleTraits, {
-  EnumColorTraits
-} from "../Traits/TableColorStyleTraits";
-import TablePointSizeStyleTraits from "../Traits/TablePointSizeStyleTraits";
-import TableStyleTraits from "../Traits/TableStyleTraits";
-import TableTimeStyleTraits from "../Traits/TableTimeStyleTraits";
-import TableTraits from "../Traits/TableTraits";
-import ColorPalette from "./ColorPalette";
+import TableMixin from "../ModelMixins/TableMixin";
+import createCombinedModel from "../Models/Definition/createCombinedModel";
+import Model from "../Models/Definition/Model";
+import TableChartStyleTraits from "../Traits/TraitsClasses/TableChartStyleTraits";
+import TableColorStyleTraits from "../Traits/TraitsClasses/TableColorStyleTraits";
+import TablePointSizeStyleTraits from "../Traits/TraitsClasses/TablePointSizeStyleTraits";
+import TableStyleTraits from "../Traits/TraitsClasses/TableStyleTraits";
+import TableTimeStyleTraits from "../Traits/TraitsClasses/TableTimeStyleTraits";
+import TableColorMap from "./TableColorMap";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
 
-const getColorForId = createColorForIdTransformer();
-const defaultColor = "yellow";
 const DEFAULT_FINAL_DURATION_SECONDS = 3600 * 24 - 1; // one day less a second, if there is only one date.
-
-interface TableModel extends Model<TableTraits> {
-  readonly dataColumnMajor: string[][] | undefined;
-  readonly tableColumns: readonly TableColumn[];
-  readonly rowIds: number[];
-}
 
 /**
  * A style controlling how tabular data is displayed.
  */
 export default class TableStyle {
   readonly styleNumber: number;
-  readonly tableModel: TableModel;
+  readonly tableModel: TableMixin.Instance;
 
-  constructor(tableModel: TableModel, styleNumber: number) {
+  constructor(tableModel: TableMixin.Instance, styleNumber: number) {
     this.styleNumber = styleNumber;
     this.tableModel = tableModel;
+  }
+
+  /** Is style ready to be used.
+   * This will be false if any of dependent columns are not ready
+   */
+  @computed
+  get ready() {
+    return filterOutUndefined([
+      this.longitudeColumn,
+      this.latitudeColumn,
+      this.regionColumn,
+      this.timeColumn,
+      this.endTimeColumn,
+      this.xAxisColumn,
+      this.colorColumn,
+      this.pointSizeColumn,
+      ...(this.idColumns ?? [])
+    ]).every(col => col.ready);
   }
 
   /**
@@ -66,6 +70,21 @@ export default class TableStyle {
       this.tableModel.tableColumns.find(col => col.name === this.id)?.title ??
       this.id
     );
+  }
+
+  /** Hide style from "Display Variable" selector if number of colors (EnumColorMap or DiscreteColorMapw) is less than 2. As a ColorMap with a single color isn't super useful. */
+  @computed
+  get hidden() {
+    if (isDefined(this.styleTraits.hidden)) return this.styleTraits.hidden;
+
+    if (this.colorMap instanceof ConstantColorMap) return true;
+
+    if (
+      (this.colorMap instanceof EnumColorMap ||
+        this.colorMap instanceof DiscreteColorMap) &&
+      this.colorMap.colors.length < 2
+    )
+      return true;
   }
 
   /**
@@ -145,6 +164,7 @@ export default class TableStyle {
    */
   @computed
   get regionColumn(): TableColumn | undefined {
+    if (this.styleTraits.regionColumn === null) return;
     return this.resolveColumn(this.styleTraits.regionColumn);
   }
 
@@ -231,7 +251,8 @@ export default class TableStyle {
       this.latitudeColumn !== undefined &&
       this.idColumns !== undefined &&
       this.timeColumn !== undefined &&
-      this.timeIntervals !== undefined
+      this.timeIntervals !== undefined &&
+      this.moreThanOneTimeInterval
     );
   }
 
@@ -251,222 +272,24 @@ export default class TableStyle {
     return this.xAxisColumn !== undefined && this.chartTraits.lines.length > 0;
   }
 
-  @computed
-  get colorPalette(): ColorPalette {
-    const colorColumn = this.colorColumn;
-
-    if (colorColumn === undefined) {
-      return new ColorPalette([]);
-    }
-
-    let paletteName = this.colorTraits.colorPalette;
-    const numberOfBins = this.numberOfBins;
-
-    if (
-      colorColumn.type === TableColumnType.enum ||
-      colorColumn.type === TableColumnType.region ||
-      colorColumn.type === TableColumnType.text
-    ) {
-      // Enumerated values, so use a large, high contrast palette.
-      paletteName = paletteName || "HighContrast";
-    } else if (colorColumn.type === TableColumnType.scalar) {
-      if (paletteName === undefined) {
-        const valuesAsNumbers = colorColumn.valuesAsNumbers;
-        if (
-          valuesAsNumbers !== undefined &&
-          (valuesAsNumbers.minimum || 0.0) < 0.0 &&
-          (valuesAsNumbers.maximum || 0.0) > 0.0
-        ) {
-          // Values cross zero, so use a diverging palette
-          paletteName = "PuOr";
-        } else {
-          // Values do not cross zero so use a sequential palette.
-          paletteName = "YlOrRd";
-        }
-      }
-    }
-
-    if (paletteName !== undefined && numberOfBins !== undefined) {
-      return ColorPalette.fromString(paletteName, numberOfBins);
-    } else {
-      return new ColorPalette([]);
-    }
+  /** Style isSampled by default. TimeTraits.isSampled will be used if defined. If not, and color column is binary - isSampled will be false. */
+  @computed get isSampled() {
+    if (isDefined(this.timeTraits.isSampled)) return this.timeTraits.isSampled;
+    if (isDefined(this.colorColumn) && this.colorColumn.isScalarBinary)
+      return false;
+    return true;
   }
 
-  @computed
-  get numberOfBins(): number {
-    const colorColumn = this.colorColumn;
-    if (colorColumn === undefined) return this.binMaximums.length;
-    if (
-      colorColumn.type === TableColumnType.enum ||
-      colorColumn.type === TableColumnType.region ||
-      colorColumn.type === TableColumnType.text
-    ) {
-      return colorColumn.uniqueValues.values.length;
-    } else if (colorColumn.type === TableColumnType.scalar) {
-      return colorColumn.uniqueValues.values.length < this.binMaximums.length
-        ? colorColumn.uniqueValues.values.length
-        : this.binMaximums.length;
-    }
-    return this.binMaximums.length;
+  @computed get tableColorMap() {
+    return new TableColorMap(
+      this.tableModel.name ?? this.tableModel.uniqueId,
+      this.colorColumn,
+      this.colorTraits
+    );
   }
 
-  /**
-   * Gets the color to use for each bin. The length of the returned array
-   * will be equal to {@link #numberOfColorBins}.
-   */
-  @computed
-  get binColors(): readonly Readonly<Color>[] {
-    const numberOfBins = this.numberOfBins;
-
-    // Pick a color for every bin.
-    const binColors = this.colorTraits.binColors || [];
-    const result: Color[] = [];
-    for (let i = 0; i < numberOfBins; ++i) {
-      if (i < binColors.length) {
-        result.push(
-          Color.fromCssColorString(binColors[i]) ?? Color.TRANSPARENT
-        );
-      } else {
-        result.push(this.colorPalette.selectColor(i));
-      }
-    }
-    return result;
-  }
-
-  @computed
-  get binMaximums(): readonly number[] {
-    const colorColumn = this.colorColumn;
-    if (colorColumn === undefined) {
-      return this.colorTraits.binMaximums || [];
-    }
-
-    const binMaximums = this.colorTraits.binMaximums;
-    if (binMaximums !== undefined) {
-      if (
-        colorColumn.type === TableColumnType.scalar &&
-        colorColumn.valuesAsNumbers.maximum !== undefined &&
-        (binMaximums.length === 0 ||
-          colorColumn.valuesAsNumbers.maximum >
-            binMaximums[binMaximums.length - 1])
-      ) {
-        // Add an extra bin to accomodate the maximum value of the dataset.
-        return binMaximums.concat([colorColumn.valuesAsNumbers.maximum]);
-      }
-      return binMaximums;
-    } else {
-      // TODO: compute maximums according to ckmeans, quantile, etc.
-      const asNumbers = colorColumn.valuesAsNumbers;
-      const min = asNumbers.minimum;
-      const max = asNumbers.maximum;
-      if (min === undefined || max === undefined) {
-        return [];
-      }
-      const numberOfBins =
-        colorColumn.uniqueValues.values.length < this.colorTraits.numberOfBins
-          ? colorColumn.uniqueValues.values.length
-          : this.colorTraits.numberOfBins;
-      let next = min;
-      const step = (max - min) / numberOfBins;
-
-      const result: number[] = [];
-      for (let i = 0; i < numberOfBins - 1; ++i) {
-        next += step;
-        result.push(next);
-      }
-
-      result.push(max);
-
-      return result;
-    }
-  }
-
-  @computed
-  get enumColors(): readonly ModelPropertiesFromTraits<EnumColorTraits>[] {
-    if (this.colorTraits.enumColors.length > 0) {
-      return this.colorTraits.enumColors;
-    }
-
-    const colorColumn = this.colorColumn;
-    if (colorColumn === undefined) {
-      return [];
-    }
-
-    // Create a color for each unique value
-    const uniqueValues = colorColumn.uniqueValues.values;
-    const palette = this.colorPalette;
-    return uniqueValues.map((value, i) => {
-      return {
-        value: value,
-        color: palette.selectColor(i).toCssColorString()
-      };
-    });
-  }
-
-  /**
-   * Gets an object used to map values in {@link #colorColumn} to colors
-   * for this style.
-   */
-  @computed
-  get colorMap(): ColorMap {
-    const colorColumn = this.colorColumn;
-    const colorTraits = this.colorTraits;
-
-    if (colorColumn && colorColumn.type === TableColumnType.scalar) {
-      const maximums = this.binMaximums;
-      return new DiscreteColorMap({
-        bins: this.binColors.map((color, i) => {
-          return {
-            color: color,
-            maximum: maximums[i],
-            includeMinimumInThisBin: false
-          };
-        }),
-        nullColor: colorTraits.nullColor
-          ? Color.fromCssColorString(colorTraits.nullColor) ?? Color.TRANSPARENT
-          : Color.TRANSPARENT
-      });
-    } else if (
-      colorColumn &&
-      (colorColumn.type === TableColumnType.enum ||
-        colorColumn.type === TableColumnType.region ||
-        colorColumn.type === TableColumnType.text)
-    ) {
-      const regionColor =
-        Color.fromCssColorString(this.colorTraits.regionColor) ??
-        Color.TRANSPARENT;
-      return new EnumColorMap({
-        enumColors: filterOutUndefined(
-          this.enumColors.map(e => {
-            if (e.value === undefined || e.color === undefined) {
-              return undefined;
-            }
-            return {
-              value: e.value,
-              color:
-                colorColumn.type !== TableColumnType.region
-                  ? Color.fromCssColorString(e.color) ?? Color.TRANSPARENT
-                  : regionColor
-            };
-          })
-        ),
-        nullColor: colorTraits.nullColor
-          ? Color.fromCssColorString(colorTraits.nullColor) ?? Color.TRANSPARENT
-          : Color.TRANSPARENT
-      });
-    } else {
-      // No column to color by, so use the same color for everything.
-      let color = Color.fromCssColorString(defaultColor);
-      const colorId = this.tableModel.uniqueId || this.tableModel.name;
-      if (colorTraits.nullColor) {
-        color = Color.fromCssColorString(colorTraits.nullColor);
-      } else if (this.binColors.length > 0) {
-        color = this.binColors[0];
-      } else if (colorId) {
-        color = Color.fromCssColorString(getColorForId(colorId));
-      }
-      return new ConstantColorMap(color, this.tableModel.name);
-    }
+  @computed get colorMap() {
+    return this.tableColorMap.colorMap;
   }
 
   @computed
@@ -521,6 +344,26 @@ export default class TableStyle {
       });
     });
     return intervals;
+  }
+
+  /** Is there more than one unique time interval */
+  @computed get moreThanOneTimeInterval() {
+    if (this.timeIntervals) {
+      // Find first non-null time interval
+      const firstInterval = this.timeIntervals?.find(t => t) as
+        | TimeInterval
+        | undefined;
+      if (firstInterval) {
+        // Does there exist an interval which is different from firstInterval (that is to say, does there exist at least two unique intervals)
+        return !!this.timeIntervals?.find(
+          t =>
+            t &&
+            (!firstInterval.start.equals(t.start) ||
+              !firstInterval.stop.equals(t.stop))
+        );
+      }
+    }
+    return false;
   }
 
   /**
@@ -584,48 +427,66 @@ export default class TableStyle {
       );
     }
 
+    const finishDates: (JulianDate | null)[] = [];
+
     // Otherwise estimate a final duration value to calculate the end date for groups
     // that have only one row. Fallback to a global default if an estimate
     // cannot be found.
-    let finalDurationSeconds = DEFAULT_FINAL_DURATION_SECONDS;
     for (let i = 0; i < this.rowGroups.length; i++) {
       const rowIds = this.rowGroups[i][1];
-      const startDates = rowIds.map(
-        id => timeColumn.valuesAsJulianDates.values[id]
+      const sortedStartDates = sortedUniqueDates(
+        rowIds.map(id => timeColumn.valuesAsJulianDates.values[id])
       );
-      const sortedStartDates = sortedUniqueDates(startDates);
-      const finalDuration = estimateFinalDurationSeconds(sortedStartDates);
-      if (finalDuration) {
-        finalDurationSeconds = finalDuration;
-        break;
-      }
-    }
+      const finalDuration =
+        estimateFinalDurationSeconds(sortedStartDates) ??
+        DEFAULT_FINAL_DURATION_SECONDS;
 
-    const finishDates: (JulianDate | null)[] = [];
-    this.rowGroups.forEach(([groupId, rowIds]) => {
       const startDatesForGroup = rowIds.map(id => startDates[id]);
       const finishDatesForGroup = this.calculateFinishDatesFromStartDates(
         startDatesForGroup,
-        finalDurationSeconds
+        finalDuration
       );
       finishDatesForGroup.forEach((date, i) => {
         finishDates[rowIds[i]] = date;
       });
-    });
+    }
+
     return finishDates;
   }
 
-  /** Get rows grouped by id. Id will be calculated using idColumns or latitude/longitude columns
+  /** Get rows grouped by id. Id will be calculated using idColumns, latitude/longitude columns or region column
    */
   @computed get rowGroups() {
-    const groupByCols =
-      this.idColumns ||
-      filterOutUndefined([this.latitudeColumn, this.longitudeColumn]);
+    let groupByCols = this.idColumns;
+
+    if (!groupByCols) {
+      // If points use lat long
+      if (this.latitudeColumn && this.longitudeColumn) {
+        groupByCols = [this.latitudeColumn, this.longitudeColumn];
+        // If region - use region col
+      } else if (this.regionColumn) groupByCols = [this.regionColumn];
+    }
+
+    if (!groupByCols) groupByCols = [];
+
     const tableRowIds = this.tableModel.rowIds;
-    return Object.entries(
-      groupBy(tableRowIds, rowId =>
-        groupByCols.map(col => col.values[rowId]).join("-")
+
+    return (
+      Object.entries(
+        groupBy(tableRowIds, rowId =>
+          groupByCols!
+            .map(col => {
+              // If using region column as ID - only use valid regions
+              if (col.type === TableColumnType.region) {
+                return col.valuesAsRegions.regionIds[rowId];
+              }
+              return col.values[rowId];
+            })
+            .join("-")
+        )
       )
+        // Filter out bad IDs
+        .filter(value => value[0] !== "")
     );
   }
 
@@ -642,6 +503,16 @@ export default class TableStyle {
     defaultFinalDurationSeconds: number
   ) {
     const sortedStartDates: JulianDate[] = sortedUniqueDates(startDates);
+
+    // Calculate last date based on if spreadFinishTime is true:
+    // - If true, use the maximum date in the entire timeColumn
+    // - If false, use the last date in startDates - which is the last date in the current row group
+    const lastDate =
+      this.timeTraits.spreadFinishTime &&
+      this.timeColumn?.valuesAsJulianDates.maximum
+        ? this.timeColumn.valuesAsJulianDates.maximum
+        : sortedStartDates[sortedStartDates.length - 1];
+
     return startDates.map(date => {
       if (!date) {
         return null;
@@ -660,11 +531,7 @@ export default class TableStyle {
         const finalDurationSeconds =
           estimateFinalDurationSeconds(sortedStartDates) ||
           defaultFinalDurationSeconds;
-        const finalDate = addSecondsToDate(
-          sortedStartDates[sortedStartDates.length - 1],
-          finalDurationSeconds
-        );
-        return finalDate;
+        return addSecondsToDate(lastDate, finalDurationSeconds);
       }
     });
   }
