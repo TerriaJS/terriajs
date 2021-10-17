@@ -4,12 +4,6 @@ import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import Terria from "../../../Models/Terria";
-import {
-  HelpContentItem,
-  PaneMode,
-  StepItem,
-  TrainerItem
-} from "../../../ReactViewModels/defaultHelpContent";
 import ViewState from "../../../ReactViewModels/ViewState";
 import Select from "../../../Styled/Select";
 import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact";
@@ -20,6 +14,15 @@ import Box from "../../../Styled/Box";
 import Button, { RawButton } from "../../../Styled/Button";
 import Spacing from "../../../Styled/Spacing";
 import { useTranslationIfExists } from "./../../../Language/languageHelpers";
+import {
+  HelpContentItemTraits,
+  PaneMode,
+  StepItemTraits,
+  TrainerItemTraits
+} from "../../../Traits/Configuration/HelpContentTraits";
+import Model from "../../../Models/Definition/Model";
+import StratumFromTraits from "../../../Models/Definition/StratumFromTraits";
+import FlattenedFromTraits from "../../../Models/Definition/FlattenedFromTraits";
 
 const StyledHtml: any = require("../../Map/Panels/HelpPanel/StyledHtml")
   .default;
@@ -36,7 +39,7 @@ const BoxTrainerExpandedSteps = styled(Box)``;
 
 const getSelectedTrainerFromHelpContent = (
   viewState: ViewState,
-  helpContent: HelpContentItem[]
+  helpContent: readonly StratumFromTraits<HelpContentItemTraits>[]
 ) => {
   const selected = viewState.selectedTrainerItem;
   const found = helpContent.find(item => item.itemName === selected);
@@ -67,7 +70,7 @@ const StepText = styled(Text).attrs({})`
 `;
 
 const renderStep = (
-  step: StepItem,
+  step: Model<StepItemTraits>,
   number: number,
   viewState: ViewState,
   options: {
@@ -112,10 +115,10 @@ const renderStep = (
 };
 
 const renderOrderedStepList = function(
-  steps: StepItem[],
+  steps: Model<StepItemTraits[]>,
   viewState: ViewState
 ) {
-  return steps.map((step: StepItem, index: number) => (
+  return steps.map((step, index) => (
     <React.Fragment key={index}>
       {renderStep(step, index + 1, viewState)}
       {index + 1 !== steps.length && <Spacing bottom={3} />}
@@ -125,10 +128,10 @@ const renderOrderedStepList = function(
 
 interface StepAccordionProps {
   viewState: ViewState;
-  selectedTrainerSteps: StepItem[];
+  selectedTrainerSteps: Model<StepItemTraits[]>;
   t: TFunction;
   theme: DefaultTheme;
-  selectedTrainer: TrainerItem;
+  selectedTrainer: Model<TrainerItemTraits>;
   isShowingAllSteps: boolean;
   setIsShowingAllSteps: (bool: boolean) => void;
   isExpanded: boolean;
@@ -313,7 +316,8 @@ export const TrainerBar = observer((props: TrainerBarProps) => {
 
   const selectedTrainer = getSelectedTrainerFromHelpContent(
     viewState,
-    helpContent
+    //@ts-ignore
+    helpContent.items
   );
   const selectedTrainerItems = selectedTrainer?.trainerItems;
 

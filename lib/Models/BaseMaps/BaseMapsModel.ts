@@ -116,7 +116,7 @@ export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
 }
 
 function addBingMapsKey(item: BingMapsCatalogItem, terria: Terria) {
-  if (!item.key) {
+  if (!item.key && terria.configParameters.bingMapsKey !== null) {
     item.setTrait(
       CommonStrata.defaults,
       "key",

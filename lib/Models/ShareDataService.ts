@@ -89,7 +89,7 @@ export default class ShareDataService {
         new TerriaError({
           title: i18next.t("models.shareData.expandErrorTitle"),
           message: i18next.t("models.shareData.expandErrorMessage", {
-            appName: this.terria.appName
+            appName: this.terria.configParameters.appName
           })
         })
       );

@@ -45,7 +45,7 @@ export default function createCatalogItemFromFileOrUrl(
       viewState,
       confirmConversion,
       "Ready to upload your file to the " +
-        terria.appName +
+        terria.configParameters.appName +
         " conversion service?"
     ).then(confirmed => {
       return confirmed
@@ -92,7 +92,7 @@ function tryConversionService(
       new TerriaError({
         title: i18next.t("models.catalog.unsupportedFileTypeTitle"),
         message: i18next.t("models.catalog.unsupportedFileTypeMessage", {
-          appName: terria.appName,
+          appName: terria.configParameters.appName,
           link:
             '<a href="https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au">csv-geo-au format</a>'
         })
@@ -106,7 +106,7 @@ function tryConversionService(
       new TerriaError({
         title: i18next.t("models.catalog.unsupportedFileTypeTitle"),
         message: i18next.t("models.catalog.unsupportedFileTypeMessageII", {
-          appName: terria.appName,
+          appName: terria.configParameters.appName,
           link:
             '<a href="https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au">csv-geo-au format</a>',
           linkII:
@@ -120,7 +120,7 @@ function tryConversionService(
     viewState,
     confirmConversion,
     i18next.t("models.catalog.getConfirmationMessage", {
-      appName: terria.appName
+      appName: terria.configParameters.appName
     })
   ).then(confirmed => {
     return undefined;

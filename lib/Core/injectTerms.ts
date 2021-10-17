@@ -1,10 +1,10 @@
-import { Term } from "../ReactViewModels/defaultTerms";
 import i18next from "i18next";
 import { useTranslationIfExists } from "../Language/languageHelpers";
+import { TermTraits } from "../Traits/Configuration/HelpContentTraits";
 
 const findFirstTerm = (
   text: string,
-  terms: Map<string, Term>,
+  terms: Map<string, TermTraits>,
   fromIndex: number
 ) => {
   let termIndex = Infinity;
@@ -68,11 +68,11 @@ const findFirstTerm = (
   return { termToReplace, termIndex, ignore };
 };
 
-const injectTerms = (string: string, termDictionary: Term[]): string => {
+const injectTerms = (string: string, termDictionary: TermTraits[]): string => {
   let injectIndex = 0;
   const injectedBoldSet = new Set();
   while (1) {
-    let tooltipTerms = new Map<string, Term>();
+    let tooltipTerms = new Map<string, TermTraits>();
 
     termDictionary.forEach((item: any) =>
       tooltipTerms.set(useTranslationIfExists(item.term).toLowerCase(), item)

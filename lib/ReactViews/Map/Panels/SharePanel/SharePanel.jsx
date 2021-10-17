@@ -111,7 +111,7 @@ const SharePanel = observer(
       this.afterBrowserPrint();
       this._message = document.createElement("div");
       this._message.innerText = t("share.browserPrint", {
-        appName: this.props.terria.appName
+        appName: this.props.terria.configParameters.appName
       });
       window.document.body.insertBefore(
         this._message,

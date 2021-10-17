@@ -1,6 +1,6 @@
 import TerriaError from "../../Core/TerriaError";
 
-export interface ErrorServiceOptions {
+export interface ErrorServiceOptionsTraits {
   provider: string;
   configuration: any;
 }
@@ -16,7 +16,7 @@ export type ErrorServiceProvider = {
  * Asynchronously loads and returns an error service provider instance for the given options.
  */
 export async function initializeErrorServiceProvider(
-  options?: ErrorServiceOptions
+  options?: ErrorServiceOptionsTraits
 ): Promise<ErrorServiceProvider> {
   const provider = options?.provider;
   const configuration = options?.configuration;

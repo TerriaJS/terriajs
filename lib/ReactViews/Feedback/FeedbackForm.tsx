@@ -77,7 +77,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
     window.addEventListener("keydown", this.escKeyListener, true);
     this.setState({
       commentIsValid:
-        this.props.viewState.terria.configParameters.feedbackMinLength === 0
+        this.props.viewState.terria.configParameters.feedback.minLength === 0
     });
   }
 
@@ -114,7 +114,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
     });
     if (
       this.state.comment.replace(/\s+/g, " ").length >=
-      this.props.viewState.terria.configParameters.feedbackMinLength!
+      this.props.viewState.terria.configParameters.feedback.minLength
     ) {
       this.setState({
         commentIsValid: true
@@ -137,7 +137,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
 
     if (
       this.state.comment.length >=
-      this.props.viewState.terria.configParameters.feedbackMinLength!
+      this.props.viewState.terria.configParameters.feedback.minLength
     ) {
       this.state.isSending = true;
       sendFeedback({
@@ -167,7 +167,9 @@ class FeedbackForm extends React.Component<IProps, IState> {
   render() {
     const { t, viewState, theme } = this.props;
     const preamble = parseCustomMarkdownToReact(
-      useTranslationIfExists(viewState.terria.configParameters.feedbackPreamble)
+      useTranslationIfExists(
+        viewState.terria.configParameters.feedback.preamble
+      )
     );
     return (
       <FormWrapper>
@@ -256,7 +258,8 @@ class FeedbackForm extends React.Component<IProps, IState> {
             {!this.state.commentIsValid && (
               <WarningText>
                 {t("feedback.minLength", {
-                  minLength: viewState.terria.configParameters.feedbackMinLength
+                  minLength:
+                    viewState.terria.configParameters.feedback.minLength
                 })}
               </WarningText>
             )}
@@ -266,7 +269,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
             value="sendShareUrl"
             label={
               t("feedback.shareWithDevelopers", {
-                appName: this.props.viewState.terria.appName
+                appName: this.props.viewState.terria.configParameters.appName
               })!
             }
             onChange={this.changeSendShareUrl}
@@ -291,7 +294,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
               styledMinWidth={"80px"}
               disabled={
                 this.state.comment.length <
-                  viewState.terria.configParameters.feedbackMinLength! ||
+                  viewState.terria.configParameters.feedback.minLength ||
                 this.state.isSending
               }
             >
@@ -409,7 +412,7 @@ const StyledLabel: React.FC<StyledLabelProps> = (props: StyledLabelProps) => {
         <Text as={"label"} htmlFor={id} css={"p {margin: 0;}"} {...textProps}>
           {parseCustomMarkdownToReactWithOptions(`${label}:`, {
             injectTermsAsTooltips: true,
-            tooltipTerms: viewState.terria.configParameters.helpContentTerms
+            tooltipTerms: viewState.terria.configParameters.helpContent.terms
           })}
         </Text>
       )}

@@ -4,6 +4,8 @@ import { initReactI18next } from "react-i18next";
 import HttpApi from "i18next-http-backend";
 import translationEN from "../Language/en/translation.json";
 import translationFR from "../Language/fr/translation.json";
+import { LanguageConfigurationTraits } from "../Traits/Configuration/LanguageConfigurationTraits";
+import Model from "./Definition/Model";
 
 export interface I18nBackendOptions {
   /**
@@ -28,35 +30,9 @@ export interface I18nStartOptions {
   skipInit?: boolean; // skip initialising i18next. Used in CI
 }
 
-export interface LanguageConfiguration {
-  enabled: boolean;
-  debug: boolean;
-  react: ReactOptions;
-  languages: Object;
-  fallbackLanguage: string;
-  changeLanguageOnStartWhen: string[];
-}
-const defaultLanguageConfiguration = {
-  enabled: false,
-  debug: false,
-  react: {
-    useSuspense: false
-  },
-  languages: {
-    en: "english"
-  },
-  fallbackLanguage: "en",
-  changeLanguageOnStartWhen: [
-    "querystring",
-    "localStorage",
-    "navigator",
-    "htmlTag"
-  ]
-};
-
 class Internationalization {
   static initLanguage(
-    languageConfiguration: LanguageConfiguration | undefined,
+    languageConfig: Model<LanguageConfigurationTraits>,
     /**
      * i18nOptions is explicitly a separate option from `languageConfiguration`,
      * as `languageConfiguration` can be serialised, but `i18nOptions` may have
@@ -64,10 +40,6 @@ class Internationalization {
      */
     i18StartOptions: I18nStartOptions | undefined
   ): void {
-    const languageConfig = Object.assign(
-      defaultLanguageConfiguration,
-      languageConfiguration
-    );
     /**
      * initialization of the language with i18next
      *
@@ -84,7 +56,7 @@ class Internationalization {
       .use(initReactI18next)
       .init({
         debug: languageConfig.debug,
-        react: languageConfig.react,
+        react: languageConfig.react as any,
         fallbackLng: languageConfig.fallbackLanguage,
         // whitelist: Object.keys(languageConfig.languages),
         // deprecated

@@ -37,8 +37,11 @@ describe("TableStyle", function() {
     terria = new Terria({
       baseUrl: "./"
     });
-    terria.configParameters.regionMappingDefinitionsUrl =
-      "build/TerriaJS/data/regionMapping.json";
+    terria.configParameters.setTrait(
+      CommonStrata.user,
+      "regionMappingDefinitionsUrl",
+      "build/TerriaJS/data/regionMapping.json"
+    );
 
     jasmine.Ajax.install();
 

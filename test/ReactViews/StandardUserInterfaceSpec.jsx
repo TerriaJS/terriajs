@@ -9,6 +9,7 @@ import {
 } from "../../lib/ReactViews/StandardUserInterface/StandardUserInterface";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 
 describe("StandardUserInterface", function() {
   let terria;
@@ -88,13 +89,21 @@ describe("StandardUserInterface", function() {
   });
 
   it("shows story prompt when showFeaturePrompts is set to true in config file", function() {
-    terria.configParameters.showFeaturePrompts = true;
+    terria.configParameters.setTrait(
+      CommonStrata.user,
+      "showFeaturePrompts",
+      true
+    );
     showStoryPrompt(viewState, terria);
     expect(viewState.featurePrompts).toContain("story");
   });
 
   it("does not show story prompt when showFeaturePrompts is set to false in config file", function() {
-    terria.configParameters.showFeaturePrompts = false;
+    terria.configParameters.setTrait(
+      CommonStrata.user,
+      "showFeaturePrompts",
+      false
+    );
     showStoryPrompt(viewState, terria);
     expect(viewState.featurePrompts).not.toContain("story");
   });

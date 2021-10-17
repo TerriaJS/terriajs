@@ -168,10 +168,10 @@ export const WelcomeMessagePure = props => {
           <VideoGuide
             viewState={viewState}
             videoLink={
-              viewState.terria.configParameters.welcomeMessageVideo.videoUrl
+              viewState.terria.configParameters.welcomeMessage.video.url
             }
             background={
-              viewState.terria.configParameters.welcomeMessageVideo
+              viewState.terria.configParameters.welcomeMessage.video
                 .placeholderImage
             }
             videoName={WELCOME_MESSAGE_VIDEO}
@@ -242,8 +242,8 @@ export const WelcomeMessagePure = props => {
               <If condition={!viewState.useSmallScreenInterface}>
                 <Text bold textLight extraLarge>
                   {
-                    viewState.terria.configParameters.welcomeMessageVideo
-                      .videoTitle
+                    viewState.terria.configParameters.welcomeMessage.video
+                      .title
                   }
                 </Text>
                 <Spacing bottom={2} />
@@ -254,7 +254,7 @@ export const WelcomeMessagePure = props => {
                     col6
                     centered
                     backgroundImage={
-                      viewState.terria.configParameters.welcomeMessageVideo
+                      viewState.terria.configParameters.welcomeMessage.video
                         .placeholderImage
                     }
                     backgroundBlackOverlay={"50%"}

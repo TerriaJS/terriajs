@@ -84,7 +84,7 @@ class KmlCatalogItem extends MappableMixin(
             sender: this,
             title: i18next.t("models.kml.errorLoadingTitle"),
             message: i18next.t("models.kml.errorLoadingMessage", {
-              appName: this.terria.appName
+              appName: this.terria.configParameters.appName
             })
           })
         );

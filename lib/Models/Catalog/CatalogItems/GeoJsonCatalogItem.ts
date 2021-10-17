@@ -65,7 +65,7 @@ class GeoJsonCatalogItem extends GeoJsonMixin(
         throw new TerriaError({
           title: i18next.t("models.userData.fileApiNotSupportedTitle"),
           message: i18next.t("models.userData.fileApiNotSupportedTitle", {
-            appName: this.terria.appName,
+            appName: this.terria.configParameters.appName,
             chrome:
               '<a href="http://www.google.com/chrome" target="_blank">' +
               i18next.t("models.userData.chrome") +
@@ -77,8 +77,8 @@ class GeoJsonCatalogItem extends GeoJsonMixin(
             edge:
               '<a href="http://www.microsoft.com/edge" target="_blank">' +
               i18next.t("models.userData.edge") +
-              "</a>"
-          })
+              "</a>",
+          }),
         });
       }
       return this.loadZipFileFromUrl(proxyCatalogItemUrl(this, url));
@@ -97,14 +97,14 @@ function parseBlob(blob: Blob): Promise<JsonValue> {
   return new Promise((resolve, reject) => {
     zip.createReader(
       new zip.BlobReader(blob),
-      function(reader: any) {
+      function (reader: any) {
         // Look for a file with a .geojson extension.
-        reader.getEntries(function(entries: any) {
+        reader.getEntries(function (entries: any) {
           let resolved = false;
           for (let i = 0; i < entries.length; i++) {
             const entry = entries[i];
             if (geoJsonRegex.test(entry.filename)) {
-              entry.getData(new zip.Data64URIWriter(), function(uri: string) {
+              entry.getData(new zip.Data64URIWriter(), function (uri: string) {
                 resolve(loadJson(uri));
               });
               resolved = true;

@@ -279,7 +279,7 @@ PrintView.create = function(options) {
 
   printWindow.document.head.innerHTML = `
         <meta charset="UTF-8">
-        <title>${terria.appName} Print View</title>
+        <title>${terria.configParameters.appName} Print View</title>
         <style>${PrintView.Styles}</style>
         `;
   printWindow.document.body.innerHTML = '<div id="print"></div>';

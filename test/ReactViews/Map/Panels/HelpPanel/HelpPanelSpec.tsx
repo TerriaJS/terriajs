@@ -12,6 +12,7 @@ import HelpVideoPanel from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/H
 import Text from "../../../../../lib/Styled/Text";
 import StyledHtml from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/StyledHtml";
 import { runInAction } from "mobx";
+import CommonStrata from "../../../../../lib/Models/Definition/CommonStrata";
 
 describe("HelpPanel", function() {
   let terria: Terria;
@@ -48,11 +49,16 @@ describe("HelpPanel", function() {
   describe("with no text, videos and images in helpContent", function() {
     beforeEach(() => {
       runInAction(() => {
-        terria.configParameters.helpContent = [
-          {
-            itemName: "test"
-          }
-        ];
+        terria.configParameters.helpContent.setTrait(
+          CommonStrata.user,
+          "items",
+          [
+            //@ts-ignore
+            {
+              itemName: "test"
+            }
+          ]
+        );
       });
       act(() => {
         testRenderer = create(
@@ -94,16 +100,21 @@ describe("HelpPanel", function() {
   describe("with text, video and image in helpContent", function() {
     beforeEach(() => {
       runInAction(() => {
-        terria.configParameters.helpContent = [
-          {
-            itemName: "test",
-            markdownText:
-              "# Test\n\nHello, this is just a test\n\nThis is another paragraph",
-            videoUrl: "https://www.youtube-nocookie.com/embed/NTtSM70rIvI",
-            placeholderImage:
-              "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
-          }
-        ];
+        terria.configParameters.helpContent.setTrait(
+          CommonStrata.user,
+          "items",
+          [
+            //@ts-ignore
+            {
+              itemName: "test",
+              markdownText:
+                "# Test\n\nHello, this is just a test\n\nThis is another paragraph",
+              videoUrl: "https://www.youtube-nocookie.com/embed/NTtSM70rIvI",
+              placeholderImage:
+                "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
+            }
+          ]
+        );
       });
       act(() => {
         testRenderer = create(

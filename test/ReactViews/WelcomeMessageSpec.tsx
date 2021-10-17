@@ -7,6 +7,7 @@ import { runInAction } from "mobx";
 const WelcomeMessage: any = require("../../lib/ReactViews/WelcomeMessage/WelcomeMessage")
   .default;
 import { WelcomeMessagePure } from "../../lib/ReactViews/WelcomeMessage/WelcomeMessage";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 
 describe("WelcomeMessage", function() {
   let terria: Terria;
@@ -25,8 +26,14 @@ describe("WelcomeMessage", function() {
     });
   });
 
-  it("renders when showWelcomeMessage is set to true in config file", function() {
-    runInAction(() => (terria.configParameters.showWelcomeMessage = true));
+  it("renders when welcomeMessage.show is set to true in config file", function() {
+    runInAction(() =>
+      terria.configParameters.welcomeMessage.setTrait(
+        CommonStrata.user,
+        "show",
+        true
+      )
+    );
     act(() => {
       testRenderer = create(<WelcomeMessage viewState={viewState} />);
     });
@@ -34,8 +41,14 @@ describe("WelcomeMessage", function() {
     expect(welcomeMessagePure.props.showWelcomeMessage).toEqual(true);
   });
 
-  it("doesn't render when showWelcomeMessage is set to true in config file", function() {
-    runInAction(() => (terria.configParameters.showWelcomeMessage = false));
+  it("doesn't render when welcomeMessage.show is set to false in config file", function() {
+    runInAction(() =>
+      terria.configParameters.welcomeMessage.setTrait(
+        CommonStrata.user,
+        "show",
+        false
+      )
+    );
     act(() => {
       testRenderer = create(<WelcomeMessage viewState={viewState} />);
     });
