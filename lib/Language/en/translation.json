@@ -1303,7 +1303,7 @@
     "terria": {
       "loadConfigErrorTitle": "Failed to load Terria Map config",
       "loadConfigErrorMessage": "Couldn't load {{configUrl}}",
-      "parseConfigErrorMessage": "Config loaded from {{configUrl}} is not correct",
+      "parseConfigErrorMessage": "Config loaded from {{configUrl}} is invalid",
       "proxyableDomainsDeprecation": "`proxyableDomainsUrl` is no longer supported in v8",
       "initErrorTitle": "Failed to initialize services",
       "initErrorMessage": "A problem occurred with the Terria server. This may cause some layers or the conversion service to be unavailable.",
