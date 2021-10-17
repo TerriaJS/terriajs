@@ -89,6 +89,8 @@ Specifies various options for configuring TerriaJS:
 |feedbackPreamble|no|**string**|feedback.feedbackPreamble|Text showing at the top of feedback form, supports the internationalization using the translation key.|
 |feedbackMinLength|no|**number**|0|Minimum length of feedback comment.| 
 |`theme`|no|**any**|`{}`|An object used to override theme properties - for example `{"logoHeight": "70px"}`.|
+|`searchBar`|no|**[SearchBar](#searchbar)**|`new SearchBar()`|Search bar configuration|
+|`searchProviders`|no|**[SearchProviders](#searchbarproviders)|`[]`|Search providers that will be used for search|
 
 
 ### MagdaReferenceHeaders
@@ -149,6 +151,7 @@ Configuration of items to appear in the search bar
 ***
 
 ### ErrorServiceOptions
+
 |Name|Required|Type|Default|Description|
 |----|--------|----|-------|-----------|
 |provider|yes|**string**|`undefined`|A string identifying the error service provider to use. Currently only `rollbar` is supported.|
@@ -203,3 +206,16 @@ This file will have to be re-generated manually every time the catalog structure
 
 - if items are renamed, or moved
 - dynamic groups are updated (for example, WMS server publishes new layers)
+
+### SearchBar
+
+Configuration for the search bar. Some of the values will be used as default for
+search provider values.
+
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|placeholder|no|**string**|`translate#search.placeholder`|Input text field placeholder shown when no input has been given yet. The string is translateable.|
+|recommendedListLength|no|**number**|`5`|Maximum amount of entries in the suggestion list.|
+|flightDurationSeconds|no|**number**|`1.5`|The duration of the camera flight to an entered location, in seconds.|
+|minCharacters|no|**number**|3|Minimum number of characters required for search to start|
+|boundingBoxLimit|no|**Rectangle**|`Cesium.Rectangle.MAX_VALUE`|Bounding box limits for the search results {west, south, east, north}|
