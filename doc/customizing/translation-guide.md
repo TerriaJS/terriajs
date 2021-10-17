@@ -47,7 +47,7 @@ This section describes how to use i18next to provide a translation of TerriaJS.
 
 ### Translation of configurable elements
 
-To translate configurable elements, the value itself must be formatted correctly (it is called a translation key). The formatted value must then be added to the translation files with the corresponding translation. If the part of the config.json is considered for translations by the TerriaJS, the translation will take place. Elements that are available for translation are `helpContent`, and `helpContentTerms`.
+To translate configurable elements, the value itself must be formatted correctly (it is called a translation key). The formatted value must then be added to the translation files with the corresponding translation. If the part of the config.json is considered for translations by the TerriaJS, the translation will take place. Elements that are available for translation are `helpItems`, and `helpTerms`.
 The translation key must be prefixed with `"translate#"`, so the structure of the key is `translate#[path.to.key]`, resulting in e.g. `translate#help.gettingstarted.content`
 
 **Translation file**
@@ -66,7 +66,7 @@ The translation key must be prefixed with `"translate#"`, so the structure of th
 
 **Translateable content**
 ```json
-"helpContent": [
+"helpItems": [
   {
     "title": "translate#help.gettingstarted.title",
     "itemName": "gettingstarted",

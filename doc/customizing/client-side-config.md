@@ -77,17 +77,15 @@ Specifies various options for configuring TerriaJS:
 |`googleAnalyticsKey`|no|**string**|undefined|A Google API key for [Google Analytics](https://analytics.google.com).  If specified, TerriaJS will send various events about how it's used to Google Analytics.|
 |`errorService`|no|**[ErrorServiceOptions](#errorserviceoptions)**|undefined|Optional configuration for the remote error logging service that Terria should log errors to.|
 |`globalDisclaimer`|no|**any**|undefined||
-|`showWelcomeMessage`|no|**boolean**|`false`|True to display welcome message on startup.|
-|`welcomeMessageVideo`|no|**any**||Video to show in welcome message.|
+|`welcomeMessage`|no|**[WelcomeMessage](#welcomemessage)**|`false`||
 |`showInAppGuides`|no|**boolean**|`false`|True to display in-app guides.|
-|`helpContent`|no|**[HelpContentItem](#helpcontentitem)**|`[]`|The content to be displayed in the help panel.|
-|`helpContentTerms`|no|**[Term](#term)**|||
+|`helpItems`|no|**[HelpItem](#helpitem)**|`[]`|The content to be displayed in the help panel.|
+|`helpTerms`|no|**[Term](#term)**|||
 |`languageConfiguration`|no|**[LanguageConfiguration](#languageconfiguration)**|undefined|Language configuration of TerriaJS.|
 |`customRequestSchedulerLimits`|no|**[RequestScheduler](https://cesium.com/docs/cesiumjs-ref-doc/RequestScheduler.html#.requestsByServer)**|undefined|Custom concurrent request limits for domains in Cesium's RequestScheduler.|
 |`persistViewerMode`|no|**boolean**|`true`|Whether to load persisted viewer mode from local storage.|
 |`openAddData`|no|**boolean**|`false`|Whether to open the add data explorer panel on load.|
-|feedbackPreamble|no|**string**|feedback.feedbackPreamble|Text showing at the top of feedback form, supports the internationalization using the translation key.|
-|feedbackMinLength|no|**number**|0|Minimum length of feedback comment.| 
+|`feedback`|no|**[Feedback](#feedback)**||Feedback configuration.|
 |`theme`|no|**any**|`{}`|An object used to override theme properties - for example `{"logoHeight": "70px"}`.|
 
 
@@ -95,7 +93,23 @@ Specifies various options for configuring TerriaJS:
 
 ***
 
-### HelpContentItem
+### WelcomeMessage
+Welcome message configuration
+
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|`show`|yes|**boolean**|false|True to display welcome message on startup.|
+|`video`|yes|**[WelcomeMessageVideo](#welcomemessagevideo) to show in welcome message.|
+
+#### WelcomeMessageVideo
+
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|`title`|yes|**string**|undefined|Title of the video|
+|`url`|yes|**string**|undefined|Url of the video|
+|`placeholderImage`|yes|**string**|undefined|Placeholder image.|
+
+### HelpItem
 Configuration of items to appear in the search bar
 
 |Name|Required|Type|Default|Description|
@@ -148,7 +162,15 @@ Configuration of items to appear in the search bar
 
 ***
 
+### Feedback
+
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|`preamble`|no|**string**|feedback.feedbackPreamble|Text showing at the top of feedback form, supports the internationalization using the translation key.|
+|`minLength`|no|**number**|0|Minimum length of feedback comment.|
+
 ### ErrorServiceOptions
+
 |Name|Required|Type|Default|Description|
 |----|--------|----|-------|-----------|
 |provider|yes|**string**|`undefined`|A string identifying the error service provider to use. Currently only `rollbar` is supported.|
