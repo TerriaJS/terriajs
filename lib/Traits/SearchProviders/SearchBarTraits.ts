@@ -37,8 +37,9 @@ export class SearchBarTraits extends ModelTraits {
 
   @objectTrait({
     type: RectangleTraits,
-    name: "Minimum characters",
-    description: "Minimum number of characters required for search to start"
+    name: "Bounding box limit",
+    description:
+      "Bounding box limits for the search results {west, south, east, north}"
   })
   boundingBoxLimit?: RectangleTraits = Rectangle.MAX_VALUE;
 }
