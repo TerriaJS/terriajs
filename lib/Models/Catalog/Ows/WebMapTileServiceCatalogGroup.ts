@@ -5,7 +5,7 @@ import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import runLater from "../../../Core/runLater";
-import TerriaError from "../../../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GetCapabilitiesMixin from "../../../ModelMixins/GetCapabilitiesMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
@@ -32,7 +32,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     catalogItem: WebMapTileServiceCatalogGroup
   ): Promise<GetCapabilitiesStratum> {
     if (catalogItem.getCapabilitiesUrl === undefined) {
-      throw new TerriaError({
+      throw networkRequestError({
         title: i18next.t(
           "models.webMapTileServiceCatalogGroup.invalidWMTSServerTitle"
         ),

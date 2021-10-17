@@ -1,0 +1,96 @@
+{
+  "currentVersion": 10.61,
+  "serviceDescription": "Residential Dwelling Density",
+  "mapName": "NEXIS Residential Dwelling Density",
+  "description": "Residential Dwelling Density description.",
+  "copyrightText": "Residential Dwelling Density Copyright",
+  "supportsDynamicLayers": true,
+  "layers": [
+    {
+      "id": 0,
+      "name": "Number_of_residential_dwellings_per_100m",
+      "parentLayerId": -1,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 250000,
+      "maxScale": 0
+    },
+    {
+      "id": 1,
+      "name": "Number_of_residential_dwellings_per_500m",
+      "parentLayerId": -1,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 700000,
+      "maxScale": 250001
+    },
+    {
+      "id": 2,
+      "name": "Number_of_residential_dwellings_per_1km",
+      "parentLayerId": -1,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 3000000,
+      "maxScale": 700001
+    },
+    {
+      "id": 3,
+      "name": "Number_of_residential_dwellings_per_2km",
+      "parentLayerId": -1,
+      "defaultVisibility": true,
+      "subLayerIds": null,
+      "minScale": 0,
+      "maxScale": 3000001
+    }
+  ],
+  "tables": [
+    
+  ],
+  "spatialReference": {
+    "wkid": 3112,
+    "latestWkid": 3112
+  },
+  "singleFusedMapCache": false,
+  "initialExtent": {
+    "xmin": -4449731.015830827,
+    "ymin": -5166939.921030828,
+    "xmax": 3613268.9841691735,
+    "ymax": -909939.9210308276,
+    "spatialReference": {
+      "wkid": 3112,
+      "latestWkid": 3112
+    }
+  },
+  "fullExtent": {
+    "xmin": -4083231.015830827,
+    "ymin": -4973439.921030828,
+    "xmax": 3246768.984169173,
+    "ymax": -1103439.9210308278,
+    "spatialReference": {
+      "wkid": 3112,
+      "latestWkid": 3112
+    }
+  },
+  "minScale": 0,
+  "maxScale": 0,
+  "units": "esriMeters",
+  "supportedImageFormatTypes": "PNG32,PNG24,PNG,JPG,DIB,TIFF,EMF,PS,PDF,GIF,SVG,SVGZ,BMP",
+  "documentInfo": {
+    "Title": "NEXIS Residential Dwelling Density",
+    "Author": "Geoscience Australia",
+    "Comments": "NEXIS (National Exposure Information System) Residential Dwelling Density web service is a set of four raster layers representing the density of residential dwellings across Australia at different scales and resolutions.",
+    "Subject": "NEXIS Residential Dwelling Density",
+    "Category": "",
+    "AntialiasingMode": "None",
+    "TextAntialiasingMode": "None",
+    "Keywords": "web service,australia,buildings,residential,density"
+  },
+  "capabilities": "Map,Query,Data",
+  "supportedQueryFormats": "JSON, AMF, geoJSON",
+  "exportTilesAllowed": false,
+  "supportsDatumTransformation": true,
+  "maxRecordCount": 1000,
+  "maxImageHeight": 4096,
+  "maxImageWidth": 4096,
+  "supportedExtensions": "WCSServer, WMSServer"
+}

@@ -69,6 +69,18 @@ class DatePicker extends React.Component<PropsType> {
   }
 
   @action.bound
+  moveToPreviousDate() {
+    this.props.item.moveToPreviousDiscreteTime(CommonStrata.user);
+    this.props.onDateSet();
+  }
+
+  @action.bound
+  moveToNextDate() {
+    this.props.item.moveToNextDiscreteTime(CommonStrata.user);
+    this.props.onDateSet();
+  }
+
+  @action.bound
   onClickExternalButton(event: MouseEvent) {
     this.setIsOpen(true);
     // stopPropagation is required to prevent the datetime picker popup from closing when
@@ -127,7 +139,7 @@ class DatePicker extends React.Component<PropsType> {
           <PrevButton
             disabled={item.isPreviousDiscreteTimeAvailable === false}
             title={t("diffTool.datePicker.previousDateTitle")}
-            onClick={() => item.moveToPreviousDiscreteTime(CommonStrata.user)}
+            onClick={this.moveToPreviousDate}
           />
           <DateButton
             primary
@@ -140,7 +152,7 @@ class DatePicker extends React.Component<PropsType> {
           <NextButton
             disabled={item.isNextDiscreteTimeAvailable === false}
             title={t("diffTool.datePicker.nextDateTitle")}
-            onClick={() => item.moveToNextDiscreteTime(CommonStrata.user)}
+            onClick={this.moveToNextDate}
           />
         </Box>
         <div

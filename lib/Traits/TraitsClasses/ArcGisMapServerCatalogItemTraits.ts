@@ -9,6 +9,7 @@ import LayerOrderingTraits from "./LayerOrderingTraits";
 import MappableTraits from "./MappableTraits";
 import RasterLayerTraits from "./RasterLayerTraits";
 import UrlTraits from "./UrlTraits";
+import { MinMaxLevelTraits } from "./MinMaxLevelTraits";
 
 export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
   MappableTraits,
@@ -18,7 +19,8 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
   MappableTraits,
   UrlTraits,
   CatalogMemberTraits,
-  DiscretelyTimeVaryingTraits
+  DiscretelyTimeVaryingTraits,
+  MinMaxLevelTraits
 ) {
   @primitiveTrait({
     type: "string",
@@ -50,22 +52,6 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
       "Indicates whether features in this catalog item can be selected by clicking them on the map."
   })
   allowFeaturePicking = true;
-
-  @primitiveTrait({
-    name: "Maximum scale before showing a message",
-    description:
-      "The denominator of the largest scale (smallest denominator) beyond which to show a message explaining that no further zoom levels are available, at the request",
-    type: "number"
-  })
-  maximumScaleBeforeMessage?: number;
-
-  @primitiveTrait({
-    name: "Show tiles after message",
-    description:
-      "Value indicating whether to continue showing tiles when the `maximumScaleBeforeMessage` is exceeded.",
-    type: "boolean"
-  })
-  showTilesAfterMessage = true;
 
   @primitiveTrait({
     name: "Token URL",

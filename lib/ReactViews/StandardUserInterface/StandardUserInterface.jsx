@@ -41,8 +41,9 @@ import Styles from "./standard-user-interface.scss";
 import { observer } from "mobx-react";
 import { action, runInAction } from "mobx";
 import HelpPanel from "../Map/Panels/HelpPanel/HelpPanel";
-import Tool from "../Tool";
+import Tool from "../Tools/Tool";
 import Disclaimer from "../Disclaimer";
+import CollapsedNavigation from "../Map/Navigation/Items/OverflowNavigationItem";
 
 export const showStoryPrompt = (viewState, terria) => {
   terria.configParameters.showFeaturePrompts &&
@@ -247,7 +248,7 @@ const StandardUserInterface = observer(
         !this.shouldUseMobileInterface();
       const showStoryPanel =
         this.props.terria.configParameters.storyEnabled &&
-        this.props.terria.stories.length &&
+        this.props.terria.stories.length > 0 &&
         this.props.viewState.storyShown &&
         !this.props.viewState.explorerPanelIsVisible &&
         !this.props.viewState.storyBuilderShown;
@@ -259,6 +260,10 @@ const StandardUserInterface = observer(
             }
           />
           <TourPortal terria={terria} viewState={this.props.viewState} />
+          <CollapsedNavigation
+            terria={terria}
+            viewState={this.props.viewState}
+          />
           <SatelliteHelpPrompt
             terria={terria}
             viewState={this.props.viewState}
@@ -405,6 +410,10 @@ const StandardUserInterface = observer(
                 </If>
               </Medium>
 
+              <If condition={this.props.viewState.panel}>
+                {this.props.viewState.panel}
+              </If>
+
               <Notification viewState={this.props.viewState} />
               <MapInteractionWindow
                 terria={terria}
@@ -461,7 +470,10 @@ const StandardUserInterface = observer(
                   animationDuration={animationDuration}
                 />
               )}
-            <HelpPanel terria={terria} viewState={this.props.viewState} />
+            {this.props.viewState.showHelpMenu &&
+              this.props.viewState.topElement === "HelpPanel" && (
+                <HelpPanel terria={terria} viewState={this.props.viewState} />
+              )}
             <Disclaimer viewState={this.props.viewState} />
           </div>
         </ThemeProvider>

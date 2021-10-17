@@ -84,4 +84,39 @@ describe("TerriaError", function() {
     ).toBe(0);
     expect(combined?.flatten().length).toBe(7);
   });
+
+  it("Correctly uses importance and highestImportanceError", function() {
+    const error = new TerriaError({ message: "some message" });
+    const test = TerriaError.from(error);
+    expect(test).toBe(error);
+
+    const error2 = new TerriaError({ message: "some message", importance: -1 });
+    const test2 = TerriaError.from(error2, "Some other message");
+
+    expect(test2.message).toBe("Some other message");
+    expect(test2.highestImportanceError).toBe(test2);
+
+    const test3 = TerriaError.from(test2, { title: "A title", importance: 10 });
+    expect(test3.highestImportanceError).toBe(test3);
+  });
+
+  it("If one error is shown to user in tree, it will flag all errors in tree", function() {
+    const error = new TerriaError({ message: "some message" });
+    const test = TerriaError.from(error);
+    expect(test).toBe(error);
+
+    const error2 = new TerriaError({ message: "some message" });
+    const test2 = TerriaError.from(error2, "Some other message");
+
+    expect(test2.shouldRaiseToUser).toBeTruthy();
+    test2.toNotification().onDismiss?.();
+    expect(test2.shouldRaiseToUser).toBeFalsy();
+
+    const test3 = TerriaError.from(test2, { title: "A title" });
+    expect(test3.shouldRaiseToUser).toBeFalsy();
+    const ignoreErrorFn = test2.toNotification().ignore;
+    expect(
+      typeof ignoreErrorFn === "function" ? ignoreErrorFn() : ignoreErrorFn
+    ).toBeTruthy();
+  });
 });

@@ -1,6 +1,7 @@
-import { action } from "mobx";
+import { action, computed } from "mobx";
 import { fromPromise } from "mobx-utils";
 import Constructor from "../../Core/Constructor";
+import isDefined from "../../Core/isDefined";
 import Model from "../../Models/Definition/Model";
 import SearchProviderResults from "../../Models/SearchProviders/SearchProviderResults";
 import SearchProviderTraits from "../../Traits/SearchProviders/SearchProviderTraits";
@@ -56,6 +57,10 @@ function SearchProviderMixin<T extends Constructor<SearchProviderModel>>(
 
     get hasSearchProviderMixin() {
       return true;
+    }
+
+    @computed get resultsAreReferences() {
+      return isDefined(this.terria.catalogIndex);
     }
   }
 

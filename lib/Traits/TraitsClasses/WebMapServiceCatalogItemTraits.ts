@@ -18,6 +18,7 @@ import MappableTraits from "./MappableTraits";
 import RasterLayerTraits from "./RasterLayerTraits";
 import TimeFilterTraits from "./TimeFilterTraits";
 import UrlTraits from "./UrlTraits";
+import { MinMaxLevelTraits } from "./MinMaxLevelTraits";
 
 export const SUPPORTED_CRS_3857 = ["EPSG:3857", "EPSG:900913"];
 export const SUPPORTED_CRS_4326 = ["EPSG:4326", "CRS:84", "EPSG:4283"];
@@ -158,7 +159,8 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   RasterLayerTraits,
   UrlTraits,
   MappableTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  MinMaxLevelTraits
 ) {
   @primitiveTrait({
     type: "string",
@@ -232,26 +234,6 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
 
   @primitiveTrait({
     type: "number",
-    name: "Minimum Scale Denominator",
-    description:
-      "The denominator of the largest scale (smallest denominator) for which tiles should be requested. " +
-      "For example, if this value is 1000, then tiles representing a scale larger than 1:1000 (i.e. " +
-      "numerically smaller denominator, when zooming in closer) will not be requested.  Instead, tiles of " +
-      "the largest-available scale, as specified by this property, will be used and will simply get " +
-      "blurier as the user zooms in closer."
-  })
-  minScaleDenominator?: number;
-
-  @primitiveTrait({
-    type: "boolean",
-    name: "Hide Layer After Minimum Scale Denominator",
-    description:
-      "True to hide tiles when the `Minimum Scale Denominator` is exceeded. If false, we can zoom in arbitrarily close to the (increasingly blurry) layer."
-  })
-  hideLayerAfterMinScaleDenominator: boolean = false;
-
-  @primitiveTrait({
-    type: "number",
     name: "Maximum Refresh Intervals",
     description:
       "The maximum number of discrete times that can be created by a single " +
@@ -284,14 +266,14 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   linkedWcsCoverage?: string;
 
   @primitiveTrait({
-    type: "string",
+    type: "boolean",
     name: "Is GeoServer",
     description: "True if this WMS is a GeoServer; otherwise, false."
   })
   isGeoServer: boolean = false;
 
   @primitiveTrait({
-    type: "string",
+    type: "boolean",
     name: "Is Esri",
     description: "True if this WMS is from Esri; otherwise, false."
   })

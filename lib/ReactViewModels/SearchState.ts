@@ -14,8 +14,8 @@ import Terria from "../Models/Terria";
 
 interface SearchStateOptions {
   terria: Terria;
-  catalogSearchProvider?: any;
-  locationSearchProviders?: any[];
+  catalogSearchProvider?: CatalogSearchProvider;
+  locationSearchProviders?: LocationSearchProviderMixin.LocationSearchProviderMixin[];
 }
 
 export default class SearchState {
@@ -96,10 +96,11 @@ export default class SearchState {
   }
 
   @computed
-  get unifiedSearchProviders() {
-    return filterOutUndefined(
-      [this.catalogSearchProvider].concat(this.locationSearchProviders)
-    );
+  get unifiedSearchProviders(): SearchProviderMixin.SearchProviderMixin[] {
+    return filterOutUndefined([
+      this.catalogSearchProvider,
+      ...this.locationSearchProviders
+    ]);
   }
 
   @action

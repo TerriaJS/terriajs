@@ -50,23 +50,25 @@ const DataCatalogReference = observer(
       ) {
         await this.setPreviewedItem();
       } else {
-        try {
-          if (!this.props.terria.workbench.contains(this.props.reference)) {
-            this.props.terria.timelineStack.addToTop(this.props.reference);
-            await this.props.terria.workbench.add(this.props.reference);
-          } else {
-            this.props.terria.timelineStack.remove(this.props.reference);
-            await this.props.terria.workbench.remove(this.props.reference);
-          }
+        if (!this.props.terria.workbench.contains(this.props.reference)) {
+          this.props.terria.timelineStack.addToTop(this.props.reference);
+          (
+            await this.props.terria.workbench.add(this.props.reference)
+          ).raiseError(
+            this.props.terria,
+            undefined,
+            true // We want to force show error to user here - because this function is called when a user clicks the "Add to workbench"  buttons
+          );
+        } else {
+          this.props.terria.timelineStack.remove(this.props.reference);
+          await this.props.terria.workbench.remove(this.props.reference);
+        }
 
-          if (
-            this.props.terria.workbench.contains(this.props.reference) &&
-            !keepCatalogOpen
-          ) {
-            this.props.viewState.closeCatalog();
-          }
-        } catch (e) {
-          this.props.terria.raiseErrorToUser(e, undefined, true);
+        if (
+          this.props.terria.workbench.contains(this.props.reference) &&
+          !keepCatalogOpen
+        ) {
+          this.props.viewState.closeCatalog();
         }
       }
     },

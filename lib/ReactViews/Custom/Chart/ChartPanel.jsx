@@ -7,10 +7,10 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import ChartView from "../../../Charts/ChartView.ts";
+import Result from "../../../Core/Result";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import Icon from "../../../Styled/Icon";
 import Loader from "../../Loader";
-import { Result } from "../../Tools/ItemSearchTool/SearchResults";
 import Chart from "./BottomDockChart";
 import Styles from "./chart-panel.scss";
 import ChartPanelDownloadButton from "./ChartPanelDownloadButton";
@@ -47,6 +47,7 @@ class ChartPanel extends React.Component {
   }
 
   render() {
+    const chartableCatalogItems = this.chartView.chartableItems;
     const chartItems = this.chartView.chartItems.filter(
       c => c.showInChartPanel
     );
@@ -73,9 +74,10 @@ class ChartPanel extends React.Component {
           .filter(item => MappableMixin.isMixedInto(item))
           .map(item => item.loadMapItems())
       ).then(results =>
-        Result.combine(results, "Failed to load chart items").raiseError(
-          this.props.terria
-        )
+        Result.combine(results, {
+          message: "Failed to load chart items",
+          importance: -1
+        }).raiseError(this.props.terria)
       );
 
       chart = (
@@ -97,7 +99,9 @@ class ChartPanel extends React.Component {
                 <label className={Styles.sectionLabel}>
                   {loader || t("chart.sectionLabel")}
                 </label>
-                <ChartPanelDownloadButton chartableItems={chartItems} />
+                <ChartPanelDownloadButton
+                  chartableItems={chartableCatalogItems}
+                />
                 <button
                   type="button"
                   title={t("chart.closePanel")}

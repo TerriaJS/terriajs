@@ -66,7 +66,7 @@ const SearchResult: React.FC<SearchResultProps> = (
               {props.icon && (
                 <StyledIcon
                   // (You need light text on a dark theme, and vice versa)
-                  fillColor={isLightTheme ? theme.textDarker : false}
+                  fillColor={isLightTheme && theme.textDarker}
                   light={isDarkTheme}
                   styledWidth={"16px"}
                   // @ts-ignore
@@ -81,7 +81,7 @@ const SearchResult: React.FC<SearchResultProps> = (
               </BoxSpan>
               <StyledIcon
                 // (You need light text on a dark theme, and vice versa)
-                fillColor={isLightTheme ? theme.textDarker : false}
+                fillColor={isLightTheme && theme.textDarker}
                 light={isDarkTheme}
                 styledWidth={"14px"}
                 css={"fill-opacity:0;"}

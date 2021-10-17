@@ -1,16 +1,26 @@
 import { runInAction } from "mobx";
-import createStratumInstance from "../../../../lib/Models/Definition/createStratumInstance";
 import SdmxJsonCatalogItem from "../../../../lib/Models/Catalog/SdmxJson/SdmxJsonCatalogItem";
+import createStratumInstance from "../../../../lib/Models/Definition/createStratumInstance";
 import Terria from "../../../../lib/Models/Terria";
+import TableColumnType from "../../../../lib/Table/TableColumnType";
 import { ModelOverrideTraits } from "../../../../lib/Traits/TraitsClasses/SdmxCommonTraits";
 
 const regionMapping = JSON.stringify(
   require("../../../../wwwroot/data/regionMapping.json")
 );
 
+const steCodes = JSON.stringify(
+  require("../../../../wwwroot/data/regionids/region_map-STE_2016_AUST_STE_CODE16.json")
+);
+
+const isoCodes = JSON.stringify(
+  require("../../../../wwwroot/data/regionids/region_map-FID_TM_WORLD_BORDERS_ISO2.json")
+);
+
 const dataflowNoRegionData = require("raw-loader!../../../../wwwroot/test/SDMX-JSON/data-noregion.csv");
 const dataflowRegionData = require("raw-loader!../../../../wwwroot/test/SDMX-JSON/data-region.csv");
 const dataflowRegionTimeData = require("raw-loader!../../../../wwwroot/test/SDMX-JSON/data-region-time.csv");
+const dataflowSingleRegionTimeData = require("raw-loader!../../../../wwwroot/test/SDMX-JSON/data-single-region-time.csv");
 
 const dataflowNoRegion = JSON.stringify(
   require("../../../../wwwroot/test/SDMX-JSON/dataflow-noregion.json")
@@ -28,12 +38,20 @@ describe("SdmxJsonCatalogItem", function() {
   let terria: Terria;
   let sdmxItem: SdmxJsonCatalogItem;
 
-  beforeEach(function() {
+  beforeEach(async function() {
     jasmine.Ajax.install();
 
     jasmine.Ajax.stubRequest(
       "build/TerriaJS/data/regionMapping.json"
     ).andReturn({ responseText: regionMapping });
+
+    jasmine.Ajax.stubRequest(
+      "build/TerriaJS/data/regionids/region_map-STE_2016_AUST_STE_CODE16.json"
+    ).andReturn({ responseText: steCodes });
+
+    jasmine.Ajax.stubRequest(
+      "build/TerriaJS/data/regionids/region_map-FID_TM_WORLD_BORDERS_ISO2.json"
+    ).andReturn({ responseText: isoCodes });
 
     jasmine.Ajax.stubRequest(
       "http://www.example.com/dataflow/SPC/DF_COMMODITY_PRICES?references=all"
@@ -62,6 +80,8 @@ describe("SdmxJsonCatalogItem", function() {
     terria = new Terria();
     sdmxItem = new SdmxJsonCatalogItem("test", terria, undefined);
     sdmxItem.setTrait("definition", "url", "http://www.example.com");
+
+    await sdmxItem.loadRegionProviderList();
   });
 
   afterEach(function() {
@@ -130,6 +150,9 @@ describe("SdmxJsonCatalogItem", function() {
     });
 
     await sdmxItem.loadMapItems();
+    await sdmxItem.regionProviderList
+      ?.getRegionProvider("CNT2")
+      ?.loadRegionIDs();
 
     expect(sdmxItem.mapItems.length).toBe(1);
 
@@ -169,6 +192,32 @@ describe("SdmxJsonCatalogItem", function() {
     expect(sdmxItem.columns[0].name).toBe("OBS_VALUE");
   });
 
+  it("loadsDataflow-region-metadataUrls", async function() {
+    runInAction(() => {
+      sdmxItem.setTrait("definition", "agencyId", "SPC");
+      sdmxItem.setTrait("definition", "dataflowId", "DF_CPI");
+      sdmxItem.setTrait("definition", "modelOverrides", [
+        createStratumInstance(ModelOverrideTraits, {
+          id:
+            "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=SPC:CS_COMMON(2.0).GEO_PICT",
+          type: "region",
+          regionType: "CNT2"
+        })
+      ]);
+    });
+
+    await sdmxItem.loadMapItems();
+    await sdmxItem.regionProviderList
+      ?.getRegionProvider("CNT2")
+      ?.loadRegionIDs();
+
+    expect(sdmxItem.metadataUrls.length).toBe(1);
+    expect(sdmxItem.metadataUrls[0].title).toBe("Metadata");
+    expect(sdmxItem.metadataUrls[0].url).toBe(
+      "http://purl.org/spc/digilib/doc/a2vsj"
+    );
+  });
+
   it("uses SDMX common concepts", async function() {
     runInAction(() => {
       sdmxItem.setTrait("definition", "agencyId", "ABS");
@@ -182,6 +231,12 @@ describe("SdmxJsonCatalogItem", function() {
         })
       ]);
     });
+
+    await sdmxItem.regionProviderList
+      ?.getRegionProvider("STE_2016")
+      ?.loadRegionIDs();
+
+    console.log(sdmxItem);
 
     await sdmxItem.loadMapItems();
 
@@ -206,6 +261,47 @@ describe("SdmxJsonCatalogItem", function() {
     expect(primaryCol?.transformation.dependencies[0]).toBe("UNIT_MULT");
     expect(sdmxItem.activeTableStyle.colorTraits.legend.title).toBe(
       "Australian Dollars (Monthly)"
+    );
+  });
+
+  it("handles single region gracefully", async function() {
+    jasmine.Ajax.stubRequest(
+      "http://www.example.com/data/RT/M1.20.10..M"
+    ).andReturn({ responseText: dataflowSingleRegionTimeData });
+
+    runInAction(() => {
+      sdmxItem.setTrait("definition", "agencyId", "ABS");
+      sdmxItem.setTrait("definition", "dataflowId", "RT");
+      sdmxItem.setTrait("definition", "modelOverrides", [
+        createStratumInstance(ModelOverrideTraits, {
+          id:
+            "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=ABS:CL_STATE(1.0.0)",
+          type: "region",
+          regionType: "STE_2016"
+        })
+      ]);
+    });
+
+    await sdmxItem.regionProviderList
+      ?.getRegionProvider("STE_2016")
+      ?.loadRegionIDs();
+
+    await sdmxItem.loadMapItems();
+
+    expect(sdmxItem.mapItems.length).toBe(0);
+
+    expect(sdmxItem.activeTableStyle.regionColumn).toBeUndefined();
+
+    const regionCol = sdmxItem.tableColumns.filter(
+      col => col.type === TableColumnType.region
+    )[0];
+
+    expect(regionCol).toBeDefined();
+    expect(regionCol.valuesAsRegions.uniqueRegionIds.length).toBe(1);
+
+    expect(sdmxItem.chartItems.length).toBe(1);
+    expect(sdmxItem.chartItems[0].name).toBe(
+      "Australian Capital Territory - Australian Dollars (Monthly)"
     );
   });
 });

@@ -129,12 +129,12 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
         if (CatalogMemberMixin.isMixedInto(this))
           (await this.loadMetadata()).throwIfError();
 
-        // We need to make sure the region provider is loaded before loading
-        // region mapped tables.
-        if (TableMixin.isMixedInto(this)) await this.loadRegionProviderList();
         (await this._mapItemsLoader.load(force)).throwIfError();
       } catch (e) {
-        return Result.error(e, `Failed to load \`${getName(this)}\` mapItems`);
+        return Result.error(e, {
+          message: `Failed to load \`${getName(this)}\` mapItems`,
+          importance: -1
+        });
       }
 
       return Result.none();
@@ -191,7 +191,12 @@ namespace MappableMixin {
   export interface Instance
     extends InstanceType<ReturnType<typeof MappableMixin>> {}
   export function isMixedInto(model: any): model is Instance {
-    return model && model.isMappable;
+    return (
+      model &&
+      model.isMappable &&
+      "forceLoadMapItems" in model &&
+      typeof model.forceLoadMapItems === "function"
+    );
   }
 }
 

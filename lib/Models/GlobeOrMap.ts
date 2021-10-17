@@ -34,10 +34,11 @@ require("./ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureD
 export default abstract class GlobeOrMap {
   abstract readonly type: string;
   abstract readonly terria: Terria;
+  abstract readonly canShowSplitter: boolean;
   protected static _featureHighlightName = "___$FeatureHighlight&__";
 
   private _removeHighlightCallback?: () => Promise<void> | void;
-  private _highlightPromise: Promise<void> | undefined;
+  private _highlightPromise: Promise<unknown> | undefined;
   private _tilesLoadingCountMax: number = 0;
   protected supportsPolylinesOnTerrain?: boolean;
 
@@ -393,7 +394,9 @@ export default abstract class GlobeOrMap {
 
             catalogItem.setTrait(CommonStrata.user, "show", true);
 
-            this._highlightPromise = this.terria.overlays.add(catalogItem);
+            this._highlightPromise = this.terria.overlays
+              .add(catalogItem)
+              .then(r => r.throwIfError());
           }
         }
       }

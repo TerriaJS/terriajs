@@ -796,8 +796,100 @@ describe("FeatureInfoSection", function() {
       expect(findAllEqualTo(result, "Clicked 44, 77").length).toEqual(1);
     });
 
+    it("can replace text, using terria.partialByName", function() {
+      // Replace "Kay" of feature.properties.name with "Yak", or "This name" with "That name".
+      const template = {
+        template: "{{#terria.partialByName}}{{name}}{{/terria.partialByName}}",
+        partials: {
+          Bar: "Rab",
+          Kay: "Yak",
+          "This name": "That name"
+        }
+      };
+
+      let section = (
+        <FeatureInfoSection
+          feature={feature} // feature.properties.name === "Kay";
+          isOpen={true}
+          template={template}
+          viewState={viewState}
+          t={() => {}}
+        />
+      );
+      let result = getShallowRenderedOutput(section);
+      expect(findAllEqualTo(result, "Yak").length).toEqual(1);
+      expect(findAllEqualTo(result, "Kay").length).toEqual(0);
+
+      feature.properties.name = "This name";
+      section = (
+        <FeatureInfoSection
+          feature={feature}
+          isOpen={true}
+          template={template}
+          viewState={viewState}
+          t={() => {}}
+        />
+      );
+      result = getShallowRenderedOutput(section);
+      expect(findAllEqualTo(result, "That name").length).toEqual(1);
+      expect(findAllEqualTo(result, "Yak").length).toEqual(0);
+    });
+
+    it("does not replace text if no matching, using terria.partialByName", function() {
+      const template = {
+        template: "{{#terria.partialByName}}{{name}}{{/terria.partialByName}}",
+        partials: {
+          Bar: "Rab",
+          NotKay: "Yak",
+          "This name": "That name"
+        }
+      };
+
+      const section = (
+        <FeatureInfoSection
+          feature={feature} // feature.properties.name === "Kay";
+          isOpen={true}
+          template={template}
+          viewState={viewState}
+          t={() => {}}
+        />
+      );
+      const result = getShallowRenderedOutput(section);
+      expect(findAllEqualTo(result, "Yak").length).toEqual(0);
+      expect(findAllEqualTo(result, "Kay").length).toEqual(1);
+    });
+
+    it("can replace text and filter out unsafe replacement, using terria.partialByName", function() {
+      const template = {
+        template: "{{#terria.partialByName}}{{name}}{{/terria.partialByName}}",
+        partials: {
+          Bar: "Rab",
+          Kay: "Yak!<script>alert('gotcha')</script>",
+          This: "That"
+        }
+      };
+
+      const section = (
+        <FeatureInfoSection
+          feature={feature} // feature.properties.name === "Kay";
+          isOpen={true}
+          template={template}
+          viewState={viewState}
+          t={() => {}}
+        />
+      );
+      const result = getShallowRenderedOutput(section);
+      expect(findAllEqualTo(result, "Yak!").length).toEqual(1);
+      expect(findAllEqualTo(result, "Yak!alert('gotcha')").length).toEqual(0);
+      expect(findAllEqualTo(result, "alert('gotcha')").length).toEqual(0);
+      expect(
+        findAllEqualTo(result, "Yak!<script>alert('gotcha')</script>").length
+      ).toEqual(0);
+      expect(findAllEqualTo(result, "Kay").length).toEqual(0);
+    });
+
     /*
-    v8 version does not support this feature at the moment. Need more work.
+    // v8 version does not support this feature at the moment. See https://github.com/TerriaJS/terriajs/issues/5685
      
     it("can access the current time", function() {
       const template = "<div class='rrrr'>Time: {{terria.currentTime}}</div>";

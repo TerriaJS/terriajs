@@ -1,11 +1,11 @@
-import { observable, action, computed, runInAction } from "mobx";
+import { action, computed, observable, runInAction } from "mobx";
+import CesiumCartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import CesiumMatrix3 from "terriajs-cesium/Source/Core/Matrix3";
-import CesiumCartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
 import Camera from "terriajs-cesium/Source/Scene/Camera";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Terria from "./Terria";
 
 const sampleTerrainMostDetailed = require("terriajs-cesium/Source/Core/sampleTerrainMostDetailed")
@@ -45,7 +45,7 @@ export default class AugmentedVirtuality {
    */
   static readonly PRESET_HEIGHTS = [1000, 250, 20];
 
-  @observable private manualAlignment = false;
+  @observable manualAlignment = false;
   @observable private eventLoopState: EventLoopState = {};
   @observable private orientationUpdated = false;
   @observable private alpha = 0;
@@ -60,21 +60,15 @@ export default class AugmentedVirtuality {
 
   // Set the default height to be the last height so that when we first toggle
   // (and increment) we cycle and go to the first height.
-  @observable private hoverLevel =
-    AugmentedVirtuality.PRESET_HEIGHTS.length - 1;
+  @observable hoverLevel = AugmentedVirtuality.PRESET_HEIGHTS.length - 1;
 
-  constructor(readonly terria: Terria) {
-    // Always run the device orientation event, this way as soon as we enable we
-    // know where we are and set the orientation rather then having to wait for
-    // the next update.  The following is disabled because chrome does not
-    // currently support deviceorientationabsolute correctly: if
-    // ('ondeviceorientationabsolute' in window) {
-    // window.addEventListener('deviceorientationabsolute', function(event)
-    // {that._orientationUpdate(event);} ); } else
-    if ("ondeviceorientation" in window) {
-      window.addEventListener("deviceorientation", event =>
-        this.storeOrientation(event)
-      );
+  constructor(readonly terria: Terria) {}
+
+  toggleEnabled() {
+    if (this.active) {
+      this.deactivate();
+    } else {
+      this.activate();
     }
   }
 
@@ -89,21 +83,21 @@ export default class AugmentedVirtuality {
   }
 
   @computed
-  get isEnabled() {
+  get active() {
     return this.isEventLoopRunning || this.manualAlignment;
   }
 
   @action
-  setEnabled(enable: boolean) {
-    if (enable === false) this.resetAlignment();
-    if (enable !== this.isEnabled) {
-      this.manualAlignment = false;
-      this.startEventLoop(enable);
-    }
+  activate() {
+    this.manualAlignment = false;
+    this.startEventLoop(true);
   }
 
-  toggleEnabled() {
-    this.setEnabled(!this.isEnabled);
+  @action
+  deactivate() {
+    this.resetAlignment();
+    this.manualAlignment = false;
+    this.startEventLoop(false);
   }
 
   /**
@@ -268,7 +262,7 @@ export default class AugmentedVirtuality {
    * @return Whether the user is currently setting a manual alignment (true) or not (false).
    */
   private getManualAlignment(): boolean {
-    return this.isEnabled && this.manualAlignment;
+    return this.active && this.manualAlignment;
   }
 
   /**
@@ -293,7 +287,7 @@ export default class AugmentedVirtuality {
    */
   private setManualAlignment(startEnd: boolean) {
     // Only allow manual alignment changes when the module is enabled.
-    if (this.isEnabled === false) return;
+    if (this.active === false) return;
 
     if (startEnd === false && this.camera !== undefined) {
       this.realignAlpha = this.alpha;
@@ -309,7 +303,7 @@ export default class AugmentedVirtuality {
   /**
    * Resets the alignment so that the alignement matches the devices absolute alignment.
    */
-  private resetAlignment() {
+  resetAlignment() {
     this.orientationUpdated = true;
     this.realignAlpha = 0;
     this.realignHeading = 0;
@@ -331,9 +325,19 @@ export default class AugmentedVirtuality {
         () => runInAction(() => this.updateOrientation()),
         intervalMs
       );
+      if ("ondeviceorientation" in window) {
+        window.addEventListener(
+          "deviceorientation",
+          this.boundStoreOrientation
+        );
+      }
       this.eventLoopState = { intervalId: id };
     } else {
       clearInterval(this.eventLoopState.intervalId);
+      window.removeEventListener(
+        "deviceorientation",
+        this.boundStoreOrientation
+      );
       this.eventLoopState = {};
     }
   }
@@ -353,6 +357,12 @@ export default class AugmentedVirtuality {
       this.orientationUpdated = true;
     }
   }
+
+  /**
+   * A bound version of `storeOrientation` that makes it easy to pass to
+   * add/removeEventListener calls.
+   */
+  private boundStoreOrientation = this.storeOrientation.bind(this);
 
   /**
    * This function updates the cameras orientation using the last orientation

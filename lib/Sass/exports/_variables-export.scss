@@ -43,7 +43,7 @@
   colorPrimary: $color-primary;
   colorSecondary: $color-secondary;
   textLight: $text-light; // essentially #fff until we sort out the colour palette from vic
-  textLightTranslucent: rgba($text-light, 0.5);
+  textLightTranslucent: rgba($text-light, 0.3);
   textLightDimmed: $text-light-dimmed;
   textDark: $text-dark;
   textDarker: $text-darker;

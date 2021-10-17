@@ -4,7 +4,9 @@ import Color from "terriajs-cesium/Source/Core/Color";
 import createColorForIdTransformer from "../Core/createColorForIdTransformer";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
+import runLater from "../Core/runLater";
 import StandardCssColors from "../Core/StandardCssColors";
+import TerriaError from "../Core/TerriaError";
 import ColorMap from "../Map/ColorMap";
 import ConstantColorMap from "../Map/ConstantColorMap";
 import ContinuousColorMap from "../Map/ContinuousColorMap";
@@ -17,11 +19,9 @@ import TableColorStyleTraits, {
 } from "../Traits/TraitsClasses/TableColorStyleTraits";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
-import TerriaError from "../Core/TerriaError";
-import runLater from "../Core/runLater";
 
 const getColorForId = createColorForIdTransformer();
-const defaultColor = "yellow";
+const DEFAULT_COLOR = "yellow";
 
 export default class TableColorMap {
   constructor(
@@ -35,19 +35,21 @@ export default class TableColorMap {
    * Gets an object used to map values in {@link #colorColumn} to colors
    * for this style.
    * Will try to create most appropriate colorMap given colorColumn:
-   * - If column type is `scalar` and we have binMaximums - use DiscreteColorMap
-   * - If column type is `scalar` and we have a valid minValue and maxValue - use ContinuousColorMap
-   * - If column type is enum or region - and we have enough binColors to represent uniqueValues - use EnumColorMap
-   * - Otherwise, use ConstantColorMap
+   *
+   * - If column type is `scalar`
+   *   - and we have binMaximums - use DiscreteColorMap
+   *   - and we have a valid minValue and maxValue - use ContinuousColorMap
+   *   - and only a single value - use EnumColorMap
+   *
+   * - If column type is `enum` or `region`
+   *   - and we have enough binColors to represent uniqueValues - use EnumColorMap
+   *
+   * - If none of the above conditions are met - use ConstantColorMap
    */
   @computed
   get colorMap(): ColorMap {
     const colorColumn = this.colorColumn;
     const colorTraits = this.colorTraits;
-
-    const nullColor = colorTraits.nullColor
-      ? Color.fromCssColorString(colorTraits.nullColor) ?? Color.TRANSPARENT
-      : Color.TRANSPARENT;
 
     // If column type is `scalar` - use DiscreteColorMap or ContinuousColorMap
     if (colorColumn && colorColumn.type === TableColumnType.scalar) {
@@ -61,17 +63,16 @@ export default class TableColorMap {
               includeMinimumInThisBin: false
             };
           }),
-          nullColor
+          nullColor: this.nullColor
         });
       }
 
       // If column type is `scalar` and we have a valid minValue and maxValue - use ContinuousColorMap
-      const minValue =
-        colorTraits.minimumValue ?? colorColumn?.valuesAsNumbers.minimum;
-      const maxValue =
-        colorTraits.maximumValue ?? colorColumn?.valuesAsNumbers.maximum;
-
-      if (isDefined(minValue) && isDefined(maxValue) && minValue !== maxValue) {
+      if (
+        isDefined(this.minimumValue) &&
+        isDefined(this.maximumValue) &&
+        this.minimumValue < this.maximumValue
+      ) {
         // Get colorScale from `d3-scale-chromatic` library - all continuous color schemes start with "interpolate"
         // See https://github.com/d3/d3-scale-chromatic#diverging
         // d3 continuous color schemes are represented as a function which map a value [0,1] to a color]
@@ -79,15 +80,32 @@ export default class TableColorMap {
 
         return new ContinuousColorMap({
           colorScale,
-          minValue,
-          maxValue,
-          nullColor
+          minValue: this.minimumValue,
+          maxValue: this.maximumValue,
+          nullColor: this.nullColor,
+          outlierColor: this.outlierColor,
+          isDiverging: this.isDiverging
+        });
+
+        // Edge case: if we only have one value, create color map with single value
+        // This is because ContinuousColorMap can't handle minimumValue === maximumValue
+      } else if (this.colorColumn?.uniqueValues.values.length === 1) {
+        return new EnumColorMap({
+          enumColors: [
+            {
+              color: Color.fromCssColorString(this.colorScaleContinuous()(1)),
+              value: this.colorColumn.uniqueValues.values[0]
+            }
+          ],
+          nullColor: this.nullColor
         });
       }
+
+      // If no useful ColorMap could be found for the scalar column - we will create a ConstantColorMap at the end of the function
     }
 
-    // If column type is enum or region - and we have enough binColors to represent uniqueValues - use EnumColorMap
-    if (
+    // If column type is `enum` or `region` - and we have enough binColors to represent uniqueValues - use EnumColorMap
+    else if (
       colorColumn &&
       (colorColumn.type === TableColumnType.enum ||
         colorColumn.type === TableColumnType.region) &&
@@ -112,12 +130,15 @@ export default class TableColorMap {
       });
     }
 
-    // No useful colorMap can be generated - so use the same color for everything.
+    // No useful colorMap can be generated - so create a ConstantColorMap (the same color for everything.
 
-    // Try to find a useful color to use
+    // Try to find a useful color to use in this order
+    // - If colorColumn is of type region - use regionColor
+    // - If binColors trait it set - use it
+    // - If we have a title, use it to generate a unique color for this style
+    // - Or use DEFAULT_COLOR
     let color: Color | undefined;
 
-    // If colorColumn is of type region - use regionColor
     if (colorColumn?.type === TableColumnType.region && this.regionColor) {
       color = this.regionColor;
     } else if (colorTraits.nullColor) {
@@ -129,7 +150,7 @@ export default class TableColorMap {
     }
 
     if (!color) {
-      color = Color.fromCssColorString(defaultColor);
+      color = Color.fromCssColorString(DEFAULT_COLOR);
     }
 
     return new ConstantColorMap({
@@ -252,6 +273,13 @@ export default class TableColorMap {
     });
   }
 
+  @computed get outlierColor() {
+    return this.colorTraits.outlierColor
+      ? Color.fromCssColorString(this.colorTraits.outlierColor) ??
+          Color.AQUAMARINE
+      : Color.AQUAMARINE;
+  }
+
   @computed get nullColor() {
     return this.colorTraits.nullColor
       ? Color.fromCssColorString(this.colorTraits.nullColor) ??
@@ -261,6 +289,29 @@ export default class TableColorMap {
 
   @computed get regionColor() {
     return Color.fromCssColorString(this.colorTraits.regionColor);
+  }
+
+  /** We treat color map as "diverging" if the range cross 0 - (the color scale has positive and negative values)
+   * We also check to make sure colorPalette ColorTrait is set to a diverging color palette (see https://github.com/d3/d3-scale-chromatic#diverging)
+   */
+  @computed get isDiverging() {
+    return (
+      (this.minimumValue || 0.0) < 0.0 &&
+      (this.maximumValue || 0.0) > 0.0 &&
+      [
+        // If colorPalette is undefined, defaultColorPaletteName will return a diverging color scale
+        undefined,
+        "BrBG",
+        "PRGn",
+        "PiYG",
+        "PuOr",
+        "RdBu",
+        "RdGy",
+        "RdYlBu",
+        "RdYlGn",
+        "Spectral"
+      ].includes(this.colorTraits.colorPalette)
+    );
   }
 
   /** Get default colorPalete name.
@@ -289,11 +340,7 @@ export default class TableColorMap {
       return "HighContrast";
     } else if (colorColumn.type === TableColumnType.scalar) {
       const valuesAsNumbers = colorColumn.valuesAsNumbers;
-      if (
-        valuesAsNumbers !== undefined &&
-        (valuesAsNumbers.minimum || 0.0) < 0.0 &&
-        (valuesAsNumbers.maximum || 0.0) > 0.0
-      ) {
+      if (valuesAsNumbers !== undefined && this.isDiverging) {
         // Values cross zero, so use a diverging palette
         return "PuOr";
       } else {
@@ -303,6 +350,127 @@ export default class TableColorMap {
     }
 
     return "Reds";
+  }
+
+  /** Minimum value - with filters if applicable
+   * This will only apply to ContinuousColorMaps
+   */
+  @computed
+  get minimumValue() {
+    if (this.zScoreFilterValues && this.colorTraits.zScoreFilterEnabled)
+      return this.zScoreFilterValues.min;
+    if (this.validValues) return getMin(this.validValues);
+  }
+
+  /** Maximum value - with filters if applicable
+   * This will only apply to ContinuousColorMaps
+   */
+  @computed
+  get maximumValue() {
+    if (this.zScoreFilterValues && this.colorTraits.zScoreFilterEnabled)
+      return this.zScoreFilterValues.max;
+    if (this.validValues) return getMax(this.validValues);
+  }
+
+  /** Get values of colorColumn with valid regions if:
+   * - colorColumn is scalar and the activeStyle has a regionColumn
+   */
+  @computed get regionValues() {
+    const regionColumn = this.colorColumn?.tableModel.activeTableStyle
+      .regionColumn;
+    if (this.colorColumn?.type !== TableColumnType.scalar || !regionColumn)
+      return;
+
+    return regionColumn.valuesAsRegions.regionIds.map((region, rowIndex) => {
+      // Only return values which have a valid region in the same row
+      if (region !== null) {
+        return this.colorColumn?.valuesAsNumbers.values[rowIndex] ?? null;
+      }
+
+      return null;
+    });
+  }
+
+  /** Filter out null values from color column */
+  @computed get validValues() {
+    const values =
+      this.regionValues ?? this.colorColumn?.valuesAsNumbers.values;
+    if (values) {
+      return values.filter(val => val !== null) as number[];
+    }
+  }
+
+  /** Filter by z-score if applicable
+   * This will treat values outside of specifed z-score as outliers, and therefore will not include in color scale. This value is magnitude of z-score - it will apply to positive and negative z-scores. For example a value of `2` will treat all values that are 2 or more standard deviations from the mean as outliers.
+   * This will only apply to ContinuousColorMaps
+   * */
+
+  @computed
+  get zScoreFilterValues(): { max: number; min: number } | undefined {
+    if (
+      !this.colorColumn ||
+      !this.validValues ||
+      this.validValues.length === 0 ||
+      !isDefined(this.colorTraits.zScoreFilter)
+    )
+      return;
+
+    const values =
+      this.regionValues ?? this.colorColumn?.valuesAsNumbers.values;
+
+    const rowGroups = this.colorColumn.tableModel.activeTableStyle.rowGroups;
+
+    // Array of row group values
+    const rowGroupValues = rowGroups.map(
+      group =>
+        group[1].map(row => values[row]).filter(val => val !== null) as number[]
+    );
+
+    // Get average value for each row group
+    const rowGroupAverages = rowGroupValues.map(val => getMean(val));
+    const definedRowGroupAverages = filterOutUndefined(rowGroupAverages);
+    const std = getStandardDeviation(definedRowGroupAverages);
+    const mean = getMean(definedRowGroupAverages);
+
+    // No std or mean - so return unfiltered values
+    if (!isDefined(std) && !isDefined(mean)) return;
+
+    let filteredMax = -Infinity;
+    let filteredMin = Infinity;
+
+    rowGroupAverages.forEach((rowGroupMean, idx) => {
+      if (
+        isDefined(rowGroupMean) &&
+        Math.abs((rowGroupMean - mean!) / std!) <=
+          this.colorTraits.zScoreFilter!
+      ) {
+        // If mean is within zscore filter, update min/max
+        const rowGroupMin = getMin(rowGroupValues[idx]);
+        filteredMin = filteredMin > rowGroupMin ? rowGroupMin : filteredMin;
+        const rowGroupMax = getMax(rowGroupValues[idx]);
+        filteredMax = filteredMax < rowGroupMax ? rowGroupMax : filteredMax;
+      }
+    });
+
+    const actualMin = getMin(this.validValues);
+    const actualMax = getMax(this.validValues);
+    const actualRange = actualMax - actualMin;
+
+    // Only apply filtered min/max if it reduces range by factor of `rangeFilter` (eg if `rangeFilter = 0.1`, then the filter must reduce the range by at least 10% to be applied)
+    // This applies to min and max independently
+    if (filteredMin < actualMin + actualRange * this.colorTraits.rangeFilter) {
+      filteredMin = actualMin;
+    }
+
+    if (filteredMax > actualMax - actualRange * this.colorTraits.rangeFilter) {
+      filteredMax = actualMax;
+    }
+
+    if (
+      filteredMin < filteredMax &&
+      (filteredMin !== actualMin || filteredMax !== actualMax)
+    )
+      return { max: filteredMax, min: filteredMin };
   }
 
   /**
@@ -410,4 +578,29 @@ export default class TableColorMap {
       );
     }
   }
+}
+
+function getMin(array: number[]) {
+  return array.reduce((a, b) => (b < a ? b : a), Infinity);
+}
+
+function getMax(array: number[]) {
+  return array.reduce((a, b) => (a < b ? b : a), -Infinity);
+}
+
+function getMean(array: number[]) {
+  return array.length === 0
+    ? undefined
+    : array.reduce((a, b) => a + b) / array.length;
+}
+
+// https://stackoverflow.com/a/53577159
+function getStandardDeviation(array: number[]) {
+  const n = array.length;
+  const mean = getMean(array);
+  return isDefined(mean)
+    ? Math.sqrt(
+        array.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n
+      )
+    : undefined;
 }

@@ -1,7 +1,8 @@
 import { ChartItemType } from "../../ModelMixins/ChartableMixin";
-import CommonStrata from "../../Models/Definition/CommonStrata";
 import CsvCatalogItem from "../../Models/Catalog/CatalogItems/CsvCatalogItem";
+import CommonStrata from "../../Models/Definition/CommonStrata";
 import { BaseModel } from "../../Models/Definition/Model";
+import { GlyphStyle } from "./Chart/Glyphs";
 import ChartCustomComponent, {
   ChartCustomComponentAttributes,
   splitStringIfDefined
@@ -25,6 +26,9 @@ interface CsvChartCustomComponentAttributes
 
   /** Set the chart type. Note that only "line" and "lineAndPoint" are supported. */
   chartType?: string;
+
+  /** The chart glyph style. */
+  chartGlyphStyle?: string;
 }
 
 // Any chart type not listed here won't work, because FeatureInfoPanelChart only draws line charts.
@@ -44,7 +48,8 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<
       "poll-sources",
       "poll-replace",
       "chart-disclaimer",
-      "chart-type"
+      "chart-type",
+      "chart-glyph-style"
     ]);
   }
 
@@ -52,8 +57,10 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<
     id: string | undefined,
     context: ProcessNodeContext,
     sourceReference: BaseModel | undefined
-  ): CsvCatalogItem {
-    return new CsvCatalogItem(id, context.terria, sourceReference);
+  ) {
+    return context.terria
+      ? new CsvCatalogItem(id, context.terria, sourceReference)
+      : undefined;
   }
 
   protected setTraitsFromAttrs(
@@ -147,6 +154,14 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<
       );
     }
 
+    if (attrs.chartGlyphStyle !== undefined) {
+      item.setTrait(
+        CommonStrata.user,
+        "chartGlyphStyle",
+        attrs.chartGlyphStyle as GlyphStyle
+      );
+    }
+
     // Set chart axes
     if (attrs.xColumn || attrs.yColumns) {
       chartStyle.chart.setTrait(
@@ -178,6 +193,7 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<
     parsed.pollReplace = nodeAttrs["poll-replace"] === "true";
     parsed.chartDisclaimer = nodeAttrs["chart-disclaimer"] || undefined;
     parsed.chartType = nodeAttrs["chart-type"];
+    parsed.chartGlyphStyle = nodeAttrs["chart-glyph-style"];
     return parsed;
   }
 }

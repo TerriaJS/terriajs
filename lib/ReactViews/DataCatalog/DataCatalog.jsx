@@ -26,12 +26,11 @@ export const DataCatalog = observer(
     render() {
       const searchState = this.props.viewState.searchState;
       const isSearching = searchState.catalogSearchText.length > 0;
-      const hasCatalogSearchProvider = searchState.catalogSearchProvider;
+      const catalogSearchProvider = searchState.catalogSearchProvider;
       const unfilteredItems =
         isSearching &&
-        searchState.catalogSearchProvider &&
-        searchState.catalogSearchResults &&
-        searchState.catalogSearchResults.results
+        catalogSearchProvider &&
+        searchState.catalogSearchResults?.results
           ? searchState.catalogSearchResults.results.map(
               result => result.catalogItem
             )
@@ -40,7 +39,7 @@ export const DataCatalog = observer(
       const { t } = this.props;
       return (
         <ul className={Styles.dataCatalog}>
-          <If condition={isSearching && hasCatalogSearchProvider}>
+          <If condition={isSearching && catalogSearchProvider}>
             <label className={Styles.label}>{t("search.resultsLabel")}</label>
             <SearchHeader
               searchResults={searchState.catalogSearchResults}
@@ -54,7 +53,11 @@ export const DataCatalog = observer(
               <DataCatalogMember
                 viewState={this.props.viewState}
                 member={item}
-                manageIsOpenLocally={isSearching}
+                // manage group `isOpen` flag locally if searching through models dynamically (i.e. not using catalog index)
+                // This must be false if resultsAreReferences - so group references open correctly in the search
+                manageIsOpenLocally={
+                  isSearching && !catalogSearchProvider.resultsAreReferences
+                }
                 key={item.uniqueId}
                 overrideState={this.props.overrideState}
                 onActionButtonClicked={this.props.onActionButtonClicked}

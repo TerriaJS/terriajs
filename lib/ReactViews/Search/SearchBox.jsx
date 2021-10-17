@@ -162,11 +162,15 @@ export const SearchBox = createReactClass({
           `}
         >
           <Box paddedRatio={2}>
+            {/* Without position:absolute the icon runs away from the search bar in safari. Ideally we should redo the search bar using simple flexbox */}
             <StyledIcon
               glyph={Icon.GLYPHS.search}
               styledWidth={"20px"}
               fillColor={this.props.theme.charcoalGrey}
               opacity={"0.5"}
+              css={`
+                position: absolute;
+              `}
             />
           </Box>
         </label>
