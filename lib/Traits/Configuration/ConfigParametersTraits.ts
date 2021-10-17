@@ -363,22 +363,17 @@ export class ConfigParametersTraits extends ModelTraits {
   openAddData: boolean = false;
 
   @objectTrait({
-    name: "Open add data",
+    name: "Feedback",
     type: FeedbackTraits,
-    description: "Whether to open the add data explorer panel on load."
+    description: "Feedback configuration"
   })
   feedback?: FeedbackTraits;
 
-  @primitiveTrait({
-    name: "Open add data",
-    type: "boolean",
-    description:
-      "Extra links to show in the credit line at the bottom of the map (currently only the Cesium map)."
-  })
   @objectArrayTrait({
-    name: "Open add data",
+    name: "Extra credit links",
     type: ExtraCreditLinksTraits,
-    description: "Whether to open the add data explorer panel on load.",
+    description:
+      "Extra links to show in the credit line at the bottom of the map (currently only the Cesium map).",
     idProperty: "index"
   })
   extraCreditLinks?: ExtraCreditLinksTraits[] = [

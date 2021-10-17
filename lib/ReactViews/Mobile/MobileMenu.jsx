@@ -9,7 +9,6 @@ import classNames from "classnames";
 import MobileMenuItem from "./MobileMenuItem";
 import SettingPanel from "../Map/Panels/SettingPanel";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel";
-// import HelpMenuPanelBasic from "../HelpScreens/HelpMenuPanelBasic";
 import Terria from "../../Models/Terria";
 import { withTranslation } from "react-i18next";
 
@@ -84,7 +83,7 @@ const MobileMenu = observer(
      * method returns props for showing it in the mobile menu.
      */
     mapUserGuide() {
-      const helpItems = this.props.terria.configParameters.helpContent;
+      const helpItems = this.props.terria.configParameters.helpContent.items;
       const mapUserGuideItem = helpItems?.find(
         ({ itemName }) => itemName === "mapuserguide"
       );

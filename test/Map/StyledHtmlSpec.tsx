@@ -54,7 +54,9 @@ describe("StyledHtml", function() {
           regionMappingDefinitionsUrl: "",
           initFragmentPaths: [],
           storyEnabled: false,
-          helpContentTerms: [spatialDataTerm]
+          helpContent: {
+            terms: [spatialDataTerm]
+          }
         });
       });
       act(() => {

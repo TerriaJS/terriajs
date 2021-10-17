@@ -39,12 +39,12 @@ const BoxTrainerExpandedSteps = styled(Box)``;
 
 const getSelectedTrainerFromHelpContent = (
   viewState: ViewState,
-  helpContent: readonly StratumFromTraits<HelpContentItemTraits>[]
+  helpItems: readonly StratumFromTraits<HelpContentItemTraits>[]
 ) => {
   const selected = viewState.selectedTrainerItem;
-  const found = helpContent.find(item => item.itemName === selected);
+  const found = helpItems.find(item => item.itemName === selected);
   // Try and find the item that we selected, otherwise find the first trainer pane
-  return found || helpContent.find(item => item.paneMode === PaneMode.trainer);
+  return found || helpItems.find(item => item.paneMode === PaneMode.trainer);
 };
 
 // Ripped from StyledHtml.jsx
@@ -306,18 +306,18 @@ interface TrainerBarProps extends WithTranslation {
 
 export const TrainerBar = observer((props: TrainerBarProps) => {
   const { t, terria, theme, viewState } = props;
-  const { helpContent } = terria.configParameters;
+  const { items: helpItems } = terria.configParameters.helpContent;
 
   // All these null guards are because we are rendering based on nested
   // map-owner defined (helpContent)content which could be malformed
-  if (!viewState.trainerBarVisible || !helpContent) {
+  if (!viewState.trainerBarVisible || !helpItems) {
     return null;
   }
 
   const selectedTrainer = getSelectedTrainerFromHelpContent(
     viewState,
     //@ts-ignore
-    helpContent.items
+    helpItems
   );
   const selectedTrainerItems = selectedTrainer?.trainerItems;
 

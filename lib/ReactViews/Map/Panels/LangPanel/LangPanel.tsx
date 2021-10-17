@@ -20,7 +20,10 @@ type Props = {
 export default (props: Props) => {
   const { t, i18n } = useTranslation();
 
-  if (!props.terria.configParameters.languageConfiguration?.languages) {
+  if (
+    !props.terria.configParameters.languageConfiguration?.languages ||
+    !props.terria.configParameters.languageConfiguration?.enabled
+  ) {
     return null;
   }
 
