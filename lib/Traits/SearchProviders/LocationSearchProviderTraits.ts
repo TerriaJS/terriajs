@@ -1,8 +1,11 @@
-import ModelTraits from "../ModelTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import ModelTraits from "../ModelTraits";
 import SearchProviderTraits from "./SearchProviderTraits";
 
-export default class LocationSearchProviderTraits extends SearchProviderTraits {
+export default class LocationSearchProviderTraits extends mixTraits(
+  SearchProviderTraits
+) {
   @primitiveTrait({
     type: "string",
     name: "URL",

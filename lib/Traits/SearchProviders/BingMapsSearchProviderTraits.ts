@@ -1,5 +1,5 @@
-import mixTraits from "../mixTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
 import LocationSearchProviderTraits, {
   SearchProviderMapCenterTraits
 } from "./LocationSearchProviderTraits";

@@ -1,7 +1,10 @@
 import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
 import LocationSearchProviderTraits from "./LocationSearchProviderTraits";
 
-export default class WebFeatureServiceSearchProviderTraits extends LocationSearchProviderTraits {
+export default class WebFeatureServiceSearchProviderTraits extends mixTraits(
+  LocationSearchProviderTraits
+) {
   @primitiveTrait({
     type: "string",
     name: "Search property name",
