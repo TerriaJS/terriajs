@@ -322,7 +322,9 @@
       "error": "Galat"
     },
     "geoJson": {
-      "firefox": "Mozilla Firefox"
+      "firefox": "Mozilla Firefox",
+      "internetExplorer": "Internet Explorer 11",
+      "unsupportedBrowserTitle": "Peramban web tidak didukung"
     },
     "czml": {
       "serviceErrorMessage": "Layanan ini tidak memiliki keterangan apapun.",
@@ -539,6 +541,7 @@
   "pedestrianMode": {
     "controls": {
       "title": "Kontrol"
-    }
+    },
+    "toolButtonTitle": "Mode pejalan kaki"
   }
 }
