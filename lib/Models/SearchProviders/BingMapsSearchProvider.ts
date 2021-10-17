@@ -29,22 +29,24 @@ export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
 
   constructor(uniqueId: string | undefined, terria: Terria) {
     super(uniqueId, terria);
-    if (!this.key && this.terria.configParameters.bingMapsKey) {
-      this.setTrait(
-        CommonStrata.defaults,
-        "key",
-        this.terria.configParameters.bingMapsKey
-      );
-    }
-    this.showWarning();
+    runInAction(() => {
+      if (!this.key && this.terria.configParameters.bingMapsKey) {
+        this.setTrait(
+          CommonStrata.defaults,
+          "key",
+          this.terria.configParameters.bingMapsKey
+        );
+      }
+      this.showWarning();
+    });
   }
 
   showWarning() {
     if (!this.key || this.key === "") {
       console.warn(
-        "The " +
-          useTranslationIfExists(this.name) +
-          " geocoder will always return no results because a Bing Maps key has not been provided. Please get a Bing Maps key from bingmapsportal.com and add it to parameters.bingMapsKey in config.json."
+        `The ${useTranslationIfExists(this.name)}(${
+          this.type
+        }) geocoder will always return no results because a Bing Maps key has not been provided. Please get a Bing Maps key from bingmapsportal.com and add it to parameters.bingMapsKey in config.json.`
       );
     }
   }
