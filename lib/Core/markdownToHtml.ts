@@ -3,7 +3,7 @@
 var defined = require("terriajs-cesium/Source/Core/defined").default;
 var MarkdownIt = require("markdown-it");
 var DOMPurify = require("dompurify/dist/purify");
-import { TermTraits } from "../Traits/Configuration/HelpContentTraits";
+import { TermTraits } from "../Traits/Configuration/TermTraits";
 import injectTerms from "./injectTerms";
 
 var md = new MarkdownIt({

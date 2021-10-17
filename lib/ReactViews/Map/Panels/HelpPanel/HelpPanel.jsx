@@ -43,7 +43,7 @@ class HelpPanel extends React.Component {
 
   render() {
     const { t } = this.props;
-    const helpItems = this.props.terria.configParameters.helpContent.items;
+    const helpItems = this.props.terria.configParameters.helpItems;
     const isExpanded = this.props.viewState.helpPanelExpanded;
     const isAnimatingOpen = this.state.isAnimatingOpen;
     return (

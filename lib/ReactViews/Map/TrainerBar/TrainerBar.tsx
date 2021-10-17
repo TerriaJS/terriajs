@@ -1,28 +1,26 @@
-import i18next, { TFunction } from "i18next";
+import { TFunction } from "i18next";
 import { observer } from "mobx-react";
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
+import Model from "../../../Models/Definition/Model";
+import StratumFromTraits from "../../../Models/Definition/StratumFromTraits";
 import Terria from "../../../Models/Terria";
 import ViewState from "../../../ReactViewModels/ViewState";
-import Select from "../../../Styled/Select";
-import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact";
-import measureElement from "../../HOCs/measureElement";
-import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
-import Text from "../../../Styled/Text";
 import Box from "../../../Styled/Box";
 import Button, { RawButton } from "../../../Styled/Button";
+import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
+import Select from "../../../Styled/Select";
 import Spacing from "../../../Styled/Spacing";
-import { useTranslationIfExists } from "./../../../Language/languageHelpers";
+import Text from "../../../Styled/Text";
 import {
-  HelpContentItemTraits,
+  HelpItemTraits,
   PaneMode,
   StepItemTraits,
   TrainerItemTraits
-} from "../../../Traits/Configuration/HelpContentTraits";
-import Model from "../../../Models/Definition/Model";
-import StratumFromTraits from "../../../Models/Definition/StratumFromTraits";
-import FlattenedFromTraits from "../../../Models/Definition/FlattenedFromTraits";
+} from "../../../Traits/Configuration/HelpItemTraits";
+import measureElement from "../../HOCs/measureElement";
+import { useTranslationIfExists } from "./../../../Language/languageHelpers";
 
 const StyledHtml: any = require("../../Map/Panels/HelpPanel/StyledHtml")
   .default;
@@ -39,7 +37,7 @@ const BoxTrainerExpandedSteps = styled(Box)``;
 
 const getSelectedTrainerFromHelpContent = (
   viewState: ViewState,
-  helpItems: readonly StratumFromTraits<HelpContentItemTraits>[]
+  helpItems: readonly StratumFromTraits<HelpItemTraits>[]
 ) => {
   const selected = viewState.selectedTrainerItem;
   const found = helpItems.find(item => item.itemName === selected);
@@ -306,10 +304,10 @@ interface TrainerBarProps extends WithTranslation {
 
 export const TrainerBar = observer((props: TrainerBarProps) => {
   const { t, terria, theme, viewState } = props;
-  const { items: helpItems } = terria.configParameters.helpContent;
+  const { helpItems } = terria.configParameters;
 
   // All these null guards are because we are rendering based on nested
-  // map-owner defined (helpContent)content which could be malformed
+  // map-owner defined (helpItems)content which could be malformed
   if (!viewState.trainerBarVisible || !helpItems) {
     return null;
   }

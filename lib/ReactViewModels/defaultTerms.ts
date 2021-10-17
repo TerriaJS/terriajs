@@ -1,4 +1,4 @@
-import { TermTraits } from "../Traits/Configuration/HelpContentTraits";
+import { TermTraits } from "../Traits/Configuration/TermTraits";
 
 export const defaultTerms: TermTraits[] = [
   {

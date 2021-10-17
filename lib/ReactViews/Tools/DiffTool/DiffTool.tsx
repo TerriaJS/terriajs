@@ -849,8 +849,7 @@ const Selector = (props: any) => (
       <Text textLight css={"p {margin: 0;}"}>
         {parseCustomMarkdownToReactWithOptions(`${props.label}:`, {
           injectTermsAsTooltips: true,
-          tooltipTerms:
-            props.viewState.terria.configParameters.helpContent.terms
+          tooltipTerms: props.viewState.terria.configParameters.helpTerms
         })}
       </Text>
       <Spacing bottom={1} />

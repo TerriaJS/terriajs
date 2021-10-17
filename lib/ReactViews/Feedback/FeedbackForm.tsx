@@ -412,7 +412,7 @@ const StyledLabel: React.FC<StyledLabelProps> = (props: StyledLabelProps) => {
         <Text as={"label"} htmlFor={id} css={"p {margin: 0;}"} {...textProps}>
           {parseCustomMarkdownToReactWithOptions(`${label}:`, {
             injectTermsAsTooltips: true,
-            tooltipTerms: viewState.terria.configParameters.helpContent.terms
+            tooltipTerms: viewState.terria.configParameters.helpTerms
           })}
         </Text>
       )}

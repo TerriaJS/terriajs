@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { useTranslationIfExists } from "../Language/languageHelpers";
-import { TermTraits } from "../Traits/Configuration/HelpContentTraits";
+import { TermTraits } from "../Traits/Configuration/TermTraits";
 
 const findFirstTerm = (
   text: string,

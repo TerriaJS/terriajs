@@ -1,4 +1,5 @@
 import { MagdaReferenceHeaders } from "../../Models/Catalog/CatalogReferences/MagdaReference";
+import defaultTerms from "../../ReactViewModels/defaultTerms";
 import anyTrait from "../Decorators/anyTrait";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import objectTrait from "../Decorators/objectTrait";
@@ -7,8 +8,9 @@ import primitiveTrait from "../Decorators/primitiveTrait";
 import ModelTraits from "../ModelTraits";
 import { ErrorServiceOptionsTraits } from "./ErrorServiceOptionsTraits";
 import { FeedbackTraits } from "./FeedbackTraits";
-import { HelpContentTraits } from "./HelpContentTraits";
+import { HelpItemTraits } from "./HelpItemTraits";
 import { LanguageConfigurationTraits } from "./LanguageConfigurationTraits";
+import { TermTraits } from "./TermTraits";
 import { WelcomeMessageTraits } from "./WelcomeMessageTraits";
 
 export class ExtraCreditLinksTraits extends ModelTraits {
@@ -316,7 +318,7 @@ export class ConfigParametersTraits extends ModelTraits {
   @anyTrait({
     name: "Theme",
     description:
-      "Theme overrides, this is applied in StandardUserInterface and merged in order of highest priority: `StandardUserInterface.jsx` `themeOverrides` prop -> `theme` config parameter (this object) -> default `terriaTheme` (see `StandardTheme.jsx`)"
+      'An object used to override theme properties - for example `{"logoHeight": "70px"}`.T his is applied in StandardUserInterface and merged in order of highest priority: `StandardUserInterface.jsx` `themeOverrides` prop -> `theme` config parameter (this object) -> default `terriaTheme` (see `StandardTheme.jsx`)'
   })
   theme: any = {};
 
@@ -327,12 +329,21 @@ export class ConfigParametersTraits extends ModelTraits {
   })
   showInAppGuides?: boolean = false;
 
-  @objectTrait({
-    name: "Help content",
-    type: HelpContentTraits,
-    description: "The content to be displayed in the help panel."
+  @objectArrayTrait({
+    type: HelpItemTraits,
+    name: "Help content items",
+    description: "The content to be displayed in the help panel.",
+    idProperty: "index"
   })
-  helpContent?: HelpContentTraits;
+  helpItems?: HelpItemTraits[];
+
+  @objectArrayTrait({
+    name: "Help content terms",
+    type: TermTraits,
+    description: "The content to be displayed in the help panel.",
+    idProperty: "index"
+  })
+  helpTerms: TermTraits[] = defaultTerms;
 
   @objectTrait({
     name: "Language configuration",

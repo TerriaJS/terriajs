@@ -64,7 +64,7 @@ export class StyledHtmlRaw extends React.Component {
 
     const parsed = parseCustomMarkdownToReactWithOptions(markdownToParse, {
       injectTermsAsTooltips: injectTooltips,
-      tooltipTerms: viewState.terria.configParameters.helpContent.terms
+      tooltipTerms: viewState.terria.configParameters.helpTerms
     });
     const content = Array.isArray(parsed.props.children)
       ? parsed.props.children

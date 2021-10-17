@@ -83,7 +83,7 @@ const MobileMenu = observer(
      * method returns props for showing it in the mobile menu.
      */
     mapUserGuide() {
-      const helpItems = this.props.terria.configParameters.helpContent.items;
+      const { helpItems } = this.props.terria.configParameters;
       const mapUserGuideItem = helpItems?.find(
         ({ itemName }) => itemName === "mapuserguide"
       );

@@ -1,6 +1,4 @@
-import defaultTerms from "../../ReactViewModels/defaultTerms";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
-import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import ModelTraits from "../ModelTraits";
 
@@ -50,7 +48,7 @@ export class TrainerItemTraits extends ModelTraits {
   steps?: StepItemTraits[];
 }
 
-export class HelpContentItemTraits extends ModelTraits {
+export class HelpItemTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
     name: "Item name",
@@ -107,45 +105,4 @@ export class HelpContentItemTraits extends ModelTraits {
     description: "Icon to show for the help content item."
   })
   icon?: string;
-}
-
-export class TermTraits extends ModelTraits {
-  @primitiveTrait({
-    type: "string",
-    name: "Term",
-    description: "Term to search for."
-  })
-  term!: string;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Content",
-    description: "Content to show to user on term hover."
-  })
-  content!: string;
-
-  @primitiveArrayTrait({
-    type: "string",
-    name: "Aliases",
-    description: "Term aliases to look for."
-  })
-  aliases?: string[];
-}
-
-export class HelpContentTraits extends ModelTraits {
-  @objectArrayTrait({
-    type: HelpContentItemTraits,
-    name: "Help content items",
-    description: "The content to be displayed in the help panel.",
-    idProperty: "index"
-  })
-  items?: HelpContentItemTraits[];
-
-  @objectArrayTrait({
-    name: "Help content terms",
-    type: TermTraits,
-    description: "The content to be displayed in the help panel.",
-    idProperty: "index"
-  })
-  terms: TermTraits[] = defaultTerms;
 }
