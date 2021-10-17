@@ -1,9 +1,8 @@
-import { autorun, computed, observable, runInAction } from "mobx";
+import { autorun, observable, runInAction } from "mobx";
 import {
   Category,
   SearchAction
 } from "../../Core/AnalyticEvents/analyticEvents";
-import isDefined from "../../Core/isDefined";
 import { TerriaErrorSeverity } from "../../Core/TerriaError";
 import GroupMixin from "../../ModelMixins/GroupMixin";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
@@ -119,7 +118,7 @@ export default class CatalogSearchProvider extends SearchProviderMixin(
     this.setTrait(
       CommonStrata.defaults,
       "minCharacters",
-      terria.configParameters.searchBar!.minCharacters
+      terria.configParameters.searchBarModel!.minCharacters
     );
   }
 

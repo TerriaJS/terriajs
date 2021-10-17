@@ -1,6 +1,7 @@
 import i18next from "i18next";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
+import { useTranslationIfExists } from "../../Language/languageHelpers";
 import CommonStrata from "../Definition/CommonStrata";
 import { BaseModel } from "../Definition/Model";
 import ModelFactory from "../Definition/ModelFactory";
@@ -52,7 +53,7 @@ export default function upsertSearchProviderFromJson(
 
     if (model.type !== StubSearchProvider.type) {
       try {
-        model.terria.addSearchProvider(model);
+        model.terria.configParameters.searchBarModel?.addSearchProvider(model);
       } catch (error) {
         errors.push(error);
       }
@@ -70,7 +71,9 @@ export default function upsertSearchProviderFromJson(
     model,
     TerriaError.combine(
       errors,
-      `Error upserting search provider JSON: \`${uniqueId}\``
+      `Error upserting search provider JSON: \`${useTranslationIfExists(
+        uniqueId
+      )}\``
     )
   );
 }
@@ -81,18 +84,18 @@ function setDefaultTraits(model: BaseModel) {
   model.setTrait(
     CommonStrata.defaults,
     "flightDurationSeconds",
-    terria.configParameters.searchBar!.flightDurationSeconds
+    terria.configParameters.searchBarModel?.flightDurationSeconds
   );
 
   model.setTrait(
     CommonStrata.defaults,
     "minCharacters",
-    terria.configParameters.searchBar!.minCharacters
+    terria.configParameters.searchBarModel?.minCharacters
   );
 
   model.setTrait(
     CommonStrata.defaults,
     "recommendedListLength",
-    terria.configParameters.searchBar!.recommendedListLength
+    terria.configParameters.searchBarModel?.recommendedListLength
   );
 }

@@ -245,7 +245,7 @@ const MobileHeader = observer(
                         onSearchTextChanged={this.changeLocationSearchText}
                         onDoSearch={this.searchLocations}
                         placeholder={useTranslationIfExists(
-                          terria.configParameters.searchBar.placeholder
+                          terria.configParameters.searchBarModel.placeholder
                         )}
                         alwaysShowClear={true}
                         onClear={this.closeLocationSearch}

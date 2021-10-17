@@ -5,16 +5,15 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import styled, { withTheme } from "styled-components";
 import { useTranslationIfExists } from "../../Language/languageHelpers";
-import { useRefForTerria } from "../Hooks/useRefForTerria";
+import Box from "../../Styled/Box";
+import Button from "../../Styled/Button";
 import Icon, { StyledIcon } from "../../Styled/Icon";
+import Spacing from "../../Styled/Spacing";
+import Text from "../../Styled/Text";
+import { useRefForTerria } from "../Hooks/useRefForTerria";
 import SearchBoxAndResults from "../Search/SearchBoxAndResults";
 import Workbench from "../Workbench/Workbench";
 import FullScreenButton from "./FullScreenButton";
-
-import Box from "../../Styled/Box";
-import Spacing from "../../Styled/Spacing";
-import Text from "../../Styled/Text";
-import Button from "../../Styled/Button";
 
 const BoxHelpfulHints = styled(Box)``;
 
@@ -172,7 +171,7 @@ const SidePanel = observer(
               viewState={this.props.viewState}
               terria={this.props.terria}
               placeholder={useTranslationIfExists(
-                this.props.terria.configParameters.searchBar.placeholder
+                this.props.terria.configParameters.searchBarModel.placeholder
               )}
             />
             <Spacing bottom={2} />

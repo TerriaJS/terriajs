@@ -1,14 +1,6 @@
 import { Share } from "catalog-converter";
 import i18next from "i18next";
-import {
-  action,
-  computed,
-  isObservableArray,
-  observable,
-  runInAction,
-  toJS,
-  when
-} from "mobx";
+import { action, computed, observable, runInAction, toJS, when } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
@@ -101,9 +93,8 @@ import Internationalization, {
 } from "./Internationalization";
 import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
-import SearchProviderFactory from "./SearchProviders/SearchProviderFactory";
-import upsertSearchProviderFromJson from "./SearchProviders/upsertSearchProviderFromJson";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
+import { SearchBarModel } from "./SearchProviders/SearchBarModel";
 import ShareDataService from "./ShareDataService";
 import TimelineStack from "./TimelineStack";
 import ViewerMode from "./ViewerMode";
@@ -292,36 +283,7 @@ interface ConfigParameters {
   /**
    * The search bar allows requesting information from various search services at once.
    */
-  searchBar?: SearchBar;
-}
-
-interface SearchBar {
-  /**
-   * Input text field placeholder shown when no input has been given yet. The string is translateable.
-   * @default "translate#search.placeholder"
-   */
-  placeholder: string;
-  /**
-   * Maximum amount of entries in the suggestion list.
-   * @default 5
-   */
-  recommendedListLength: number;
-  /**
-   * The duration of the camera flight to an entered location, in seconds.
-   * @default 1.5
-   */
-  flightDurationSeconds: number;
-  /**
-   * Minimum number of characters to start search.
-   */
-  minCharacters: number;
-  /**
-   * Bounding box limits for the search results.
-   */
-  boundingBoxLimit?: number[];
-  /**
-   * Array of search providers to be used.
-   */
+  searchBarModel?: SearchBarModel;
   searchProviders: any[];
 }
 
@@ -379,7 +341,7 @@ interface HomeCameraInit {
 
 export default class Terria {
   private readonly models = observable.map<string, BaseModel>();
-  private locationSearchProviders = observable.map<string, BaseModel>();
+  private searchProviders: any[] = [];
   /** Map from share key -> id */
   readonly shareKeysMap = observable.map<string, string>();
   /** Map from id -> share keys */
@@ -499,13 +461,8 @@ export default class Terria {
       },
       { text: "map.extraCreditLinks.disclaimer", url: "about.html#disclaimer" }
     ],
-    searchBar: {
-      placeholder: "translate#search.placeholder",
-      recommendedListLength: 5,
-      flightDurationSeconds: 1.5,
-      minCharacters: 3,
-      searchProviders: []
-    }
+    searchBarModel: new SearchBarModel(this),
+    searchProviders: []
   };
 
   @observable
@@ -703,34 +660,6 @@ export default class Terria {
   }
 
   /**
-   * Add new SearchProvider to the list of SearchProviders.
-   */
-  @action
-  addSearchProvider(model: BaseModel) {
-    if (model.uniqueId === undefined) {
-      throw new DeveloperError(
-        "A SearchProvider without a `uniqueId` cannot be added."
-      );
-    }
-
-    if (this.locationSearchProviders.has(model.uniqueId)) {
-      console.log(
-        new DeveloperError(
-          "A SearchProvider with the specified ID already exists."
-        )
-      );
-    }
-
-    this.locationSearchProviders.set(model.uniqueId, model);
-  }
-
-  get locationSearchProvidersArray() {
-    return [...this.locationSearchProviders.entries()].map(function(entry) {
-      return entry[1];
-    });
-  }
-
-  /**
    * Remove references to a model from Terria.
    */
   @action
@@ -887,6 +816,8 @@ export default class Terria {
         if (isJsonObject(config) && isJsonObject(config.parameters)) {
           this.updateParameters(config.parameters);
         }
+        if (isJsonObject(config) && Array.isArray(config.searchProviders)) {
+        }
         if (this.configParameters.errorService) {
           this.setupErrorServiceProvider(this.configParameters.errorService);
         }
@@ -934,11 +865,13 @@ export default class Terria {
         )
       );
 
-    this.initializeSearchProviders().catchError(error =>
-      this.raiseErrorToUser(
-        TerriaError.from(error, "Failed to initialize searchProviders")
-      )
-    );
+    this.configParameters.searchBarModel
+      ?.initializeSearchProviders()
+      .catchError(error =>
+        this.raiseErrorToUser(
+          TerriaError.from(error, "Failed to initialize searchProviders")
+        )
+      );
 
     if (options.applicationUrl) {
       (await this.updateApplicationUrl(options.applicationUrl.href)).raiseError(
@@ -973,36 +906,6 @@ export default class Terria {
         `Trying to select ViewerMode ${viewerMode} that doesn't exist`
       );
     }
-  }
-
-  initializeSearchProviders() {
-    const errors: TerriaError[] = [];
-    let searchProviders = this.configParameters.searchBar?.searchProviders;
-    if (!isObservableArray(searchProviders)) {
-      errors.push(
-        new TerriaError({
-          sender: SearchProviderFactory,
-          title: "SearchProviders",
-          message: { key: "searchProvider.noSearchProviders" }
-        })
-      );
-    }
-    searchProviders?.forEach(searchProvider => {
-      upsertSearchProviderFromJson(
-        SearchProviderFactory,
-        this,
-        CommonStrata.definition,
-        searchProvider
-      ).pushErrorTo(errors);
-    });
-
-    return new Result(
-      undefined,
-      TerriaError.combine(
-        errors,
-        "An error occurred while loading search providers"
-      )
-    );
   }
 
   async loadPersistedOrInitBaseMap() {
@@ -1095,13 +998,15 @@ export default class Terria {
   updateParameters(parameters: ConfigParameters | JsonObject): void {
     Object.entries(parameters).forEach(([key, value]) => {
       if (this.configParameters.hasOwnProperty(key)) {
-        if (key === "searchBar") {
-          // merge default and new
-          //@ts-ignore
-          this.configParameters[key] = {
-            ...this.configParameters[key],
-            ...value
-          };
+        if (key === "searchBarModel") {
+          if (!isDefined(this.configParameters.searchBarModel)) {
+            this.configParameters.searchBarModel = new SearchBarModel(this);
+          }
+          updateModelFromJson(
+            this.configParameters.searchBarModel!,
+            CommonStrata.definition,
+            value
+          );
         } else {
           (this.configParameters as any)[key] = value;
         }

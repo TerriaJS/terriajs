@@ -222,7 +222,7 @@ function createZoomToFunction(
 
   const flightDurationSeconds: number =
     model.flightDurationSeconds ||
-    model.terria.configParameters.searchBar!.flightDurationSeconds;
+    model.terria.configParameters.searchBarModel!.flightDurationSeconds;
 
   return function() {
     model.terria.currentViewer.zoomTo(rectangle, flightDurationSeconds);

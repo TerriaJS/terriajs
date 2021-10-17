@@ -218,7 +218,7 @@ export default class TerriaError {
 
     // shouldRaiseToUser will be true if at least one error includes shouldRaiseToUser = true
     const shouldRaiseToUser = filteredErrors
-      .map(error => error._shouldRaiseToUser ?? false)
+      .map(error => error.shouldRaiseToUser ?? false)
       .includes(true);
 
     return new TerriaError({

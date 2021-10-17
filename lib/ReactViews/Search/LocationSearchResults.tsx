@@ -62,14 +62,29 @@ class LocationSearchResults extends React.Component<PropsType> {
   get validResults() {
     const { search, terria } = this.props;
     const locationSearchBoundingBox =
-      terria.configParameters.searchBar?.boundingBoxLimit;
-    const validResults = isDefined(locationSearchBoundingBox)
+      terria.configParameters.searchBarModel?.boundingBoxLimit;
+    let filterResults = false;
+    let west: number | undefined,
+      east: number | undefined,
+      south: number | undefined,
+      north: number | undefined;
+    if (locationSearchBoundingBox) {
+      ({ west, east, south, north } = locationSearchBoundingBox);
+
+      filterResults =
+        isDefined(west) &&
+        isDefined(east) &&
+        isDefined(south) &&
+        isDefined(north);
+    }
+
+    const validResults = filterResults
       ? search.results.filter(function(r: any) {
           return (
-            r.location.longitude > locationSearchBoundingBox[0] &&
-            r.location.longitude < locationSearchBoundingBox[2] &&
-            r.location.latitude > locationSearchBoundingBox[1] &&
-            r.location.latitude < locationSearchBoundingBox[3]
+            r.location.longitude > west! &&
+            r.location.longitude < east! &&
+            r.location.latitude > south! &&
+            r.location.latitude < north!
           );
         })
       : search.results;
