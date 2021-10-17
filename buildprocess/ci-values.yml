@@ -47,7 +47,8 @@ terriamap:
             useCesiumIonBingImagery: true
             googleAnalyticsKey:
             appName: "TerriaJS Continuous Integration"
-            brandBarElements: ["", "<a target=\"_blank\" href=\"http://terria.io\"><img src=\"images/terria_logo.png\" height=\"52\" title=\"Version: {{version}}\" /></a>", ""]
+            brandBar:
+                elements: ["", "<a target=\"_blank\" href=\"http://terria.io\"><img src=\"images/terria_logo.png\" height=\"52\" title=\"Version: {{version}}\" /></a>", ""]
             supportEmail: "info@terria.io"
             experimentalFeatures: true
             feedback: 

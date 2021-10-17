@@ -65,9 +65,7 @@ Specifies various options for configuring TerriaJS:
 |`useCesiumIonBingImagery`|no|**boolean**|`true`|True to use Bing Maps from Cesium ion (Cesium World Imagery). By default, Ion will be used, unless the `bingMapsKey` property is specified, in which case that will be used instead. To disable the Bing Maps layers entirely, set this property to false and set `bingMapsKey` to null.|
 |`bingMapsKey`|no|**string**|undefined|A [Bing Maps API key](https://msdn.microsoft.com/en-us/library/ff428642.aspx) used for requesting Bing Maps base maps and using the Bing Maps geocoder for searching. It is your responsibility to request a key and comply with all terms and conditions.|
 |`hideTerriaLogo`|no|**boolean**|`false`|
-|`brandBarElements`|no|**string[]**|undefined|An array of strings of HTML that fill up the top left logo space (see `brandBarSmallElements` or `displayOneBrand` for small screens).|
-|`brandBarSmallElements`|no|**string[]**|undefined|An array of strings of HTML that fill up the top left logo space - used for small screens.|
-|`displayOneBrand`|no|**number**|`0`|Index of which `brandBarElements` to show for mobile header. This will only be used if `brandBarSmallElements` is undefined.|
+|`brandBar`|no|**[BrandBar](#brandbar)|`new BrandBarTraits()`|Branding bar configuration|
 |`disableMyLocation`|no|**boolean**|undefined|True to disable the "Centre map at your current location" button.|
 |`disableSplitter`|no|**boolean**|undefined|True to disable the use of the splitter control.|
 |`enableGeojsonMvt`|no|**boolean**|false|Feature flag for experimental Geojson-Mapbox vector tiles. If falsy, all `GeoJsonMixin` models will render cesium primitives. If truthy, [`geojson-vt`](https://github.com/mapbox/geojson-vt) will be used to tile GeoJson into Mapbox vector-tiles.|
@@ -92,6 +90,15 @@ Specifies various options for configuring TerriaJS:
 ### MagdaReferenceHeaders
 
 ***
+
+### BrandBar
+Branding bar configuration
+
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|`elements`|no|**string[]**|undefined|An array of strings of HTML that fill up the top left logo space (see `smallElements` or `displayOneBrand` for small screens).|
+|`smallElements`|no|**string[]**|undefined|An array of strings of HTML that fill up the top left logo space - used for small screens.|
+|`displayOneBrand`|no|**number**|`0`|Index of which `elements` to show for mobile header. This will only be used if `smallElements` is undefined.|
 
 ### WelcomeMessage
 Welcome message configuration

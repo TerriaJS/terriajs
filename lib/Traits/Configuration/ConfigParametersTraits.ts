@@ -6,6 +6,7 @@ import objectTrait from "../Decorators/objectTrait";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import ModelTraits from "../ModelTraits";
+import { BrandBarTraits } from "./BrandBarTraits";
 import { ErrorServiceOptionsTraits } from "./ErrorServiceOptionsTraits";
 import { FeedbackTraits } from "./FeedbackTraits";
 import { HelpItemTraits } from "./HelpItemTraits";
@@ -211,29 +212,12 @@ export class ConfigParametersTraits extends ModelTraits {
   })
   hideTerriaLogo?: boolean;
 
-  @primitiveArrayTrait({
-    name: "Brand bar elements",
-    type: "string",
-    description:
-      "An array of strings of HTML that fill up the top left logo space (see `brandBarSmallElements` or `displayOneBrand` for small screens)."
+  @objectTrait({
+    type: BrandBarTraits,
+    name: "Branding",
+    description: "Branding bar configuration"
   })
-  brandBarElements?: string[];
-
-  @primitiveArrayTrait({
-    name: "Brand bar small elements",
-    type: "string",
-    description:
-      "An array of strings of HTML that fill up the top left logo space - used for small screens."
-  })
-  brandBarSmallElements?: string[];
-
-  @primitiveTrait({
-    name: "Display one brand",
-    type: "number",
-    description:
-      "Index of which `brandBarElements` to show for mobile header. This will be used if `this.brandBarSmallElements` is undefined."
-  })
-  displayOneBrand: number = 0;
+  brandBar: BrandBarTraits = new BrandBarTraits();
 
   @primitiveTrait({
     name: "Disable my location",
