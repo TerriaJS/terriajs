@@ -328,7 +328,8 @@
     },
     "czml": {
       "serviceErrorMessage": "Layanan ini tidak memiliki keterangan apapun.",
-      "dataSourceErrorMessage": "Sumber data ini tidak memiliki keterangan apapun."
+      "dataSourceErrorMessage": "Sumber data ini tidak memiliki keterangan apapun.",
+      "errorLoadingTitle": "Tidak dapat memuat CZML"
     },
     "csw": {
       "links": "Tautan"
@@ -413,6 +414,9 @@
       "options": {
         "none": "Kosong"
       }
+    },
+    "function": {
+      "unknownFormaterTitle": "Formatter tidak dikenal"
     }
   },
   "viewModels": {
