@@ -241,10 +241,7 @@ export const WelcomeMessagePure = props => {
               <Spacing bottom={6} />
               <If condition={!viewState.useSmallScreenInterface}>
                 <Text bold textLight extraLarge>
-                  {
-                    viewState.terria.configParameters.welcomeMessage.video
-                      .title
-                  }
+                  {viewState.terria.configParameters.welcomeMessage.video.title}
                 </Text>
                 <Spacing bottom={2} />
               </If>

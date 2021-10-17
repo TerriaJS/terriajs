@@ -49,7 +49,7 @@ class GpxCatalogItem extends MappableMixin(
   }
 
   protected async forceLoadMapItems(): Promise<void> {
-    const data = await new Promise<string>((resolve) => {
+    const data = await new Promise<string>(resolve => {
       if (isDefined(this.gpxString)) {
         resolve(this.gpxString);
       } else if (isDefined(this._gpxFile)) {
@@ -61,8 +61,8 @@ class GpxCatalogItem extends MappableMixin(
           sender: this,
           title: i18next.t("models.gpx.errorLoadingTitle"),
           message: i18next.t("models.gpx.errorLoadingMessage", {
-            appName: this.terria.configParameters.appName,
-          }),
+            appName: this.terria.configParameters.appName
+          })
         });
       }
     });
@@ -86,7 +86,7 @@ class GpxCatalogItem extends MappableMixin(
 
   get mapItems() {
     if (isDefined(this._geoJsonItem)) {
-      return this._geoJsonItem.mapItems.map((mapItem) => {
+      return this._geoJsonItem.mapItems.map(mapItem => {
         mapItem.show = this.show;
         return mapItem;
       });

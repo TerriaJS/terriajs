@@ -59,7 +59,7 @@ import MappableMixin, {
   isCesium3DTileset,
   isDataSource,
   isTerrainProvider,
-  MapItem,
+  MapItem
 } from "../ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
 import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
@@ -121,7 +121,7 @@ export default class Cesium extends GlobeOrMap {
     clippingRectangle: Rectangle | undefined
   ) => ImageryLayer = computedFn((ip, clippingRectangle) => {
     return new ImageryLayer(ip, {
-      rectangle: clippingRectangle,
+      rectangle: clippingRectangle
     });
   });
 
@@ -132,8 +132,7 @@ export default class Cesium extends GlobeOrMap {
     this.terria = terriaViewer.terria;
 
     if (this.terria.configParameters.cesiumIonAccessToken !== undefined) {
-      Ion.defaultAccessToken =
-        this.terria.configParameters.cesiumIonAccessToken;
+      Ion.defaultAccessToken = this.terria.configParameters.cesiumIonAccessToken;
     }
 
     //An arbitrary base64 encoded image used to populate the placeholder SingleTileImageryProvider
@@ -148,14 +147,14 @@ export default class Cesium extends GlobeOrMap {
       imageryProvider: new SingleTileImageryProvider({ url: img }),
       scene3DOnly: true,
       shadows: true,
-      useBrowserRecommendedResolution: !this.terria.useNativeResolution,
+      useBrowserRecommendedResolution: !this.terria.useNativeResolution
     };
 
     // Workaround for Firefox bug with WebGL and printing:
     // https://bugzilla.mozilla.org/show_bug.cgi?id=976173
     const firefoxBugOptions = (<any>FeatureDetection).isFirefox()
       ? {
-          contextOptions: { webgl: { preserveDrawingBuffer: true } },
+          contextOptions: { webgl: { preserveDrawingBuffer: true } }
         }
       : undefined;
 
@@ -169,7 +168,7 @@ export default class Cesium extends GlobeOrMap {
 
     this.dataSourceDisplay = new DataSourceDisplay({
       scene: this.scene,
-      dataSourceCollection: this.dataSources,
+      dataSourceCollection: this.dataSources
     });
 
     this._selectionIndicator = new CesiumSelectionIndicator(this);
@@ -286,12 +285,12 @@ export default class Cesium extends GlobeOrMap {
     //     ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT);
 
     // Handle mouse move
-    inputHandler.setInputAction((e) => {
+    inputHandler.setInputAction(e => {
       this.mouseCoords.updateCoordinatesFromCesium(this.terria, e.endPosition);
     }, ScreenSpaceEventType.MOUSE_MOVE);
 
     inputHandler.setInputAction(
-      (e) => {
+      e => {
         this.mouseCoords.updateCoordinatesFromCesium(
           this.terria,
           e.endPosition
@@ -302,7 +301,7 @@ export default class Cesium extends GlobeOrMap {
     );
 
     // Handle left click by picking objects from the map.
-    inputHandler.setInputAction((e) => {
+    inputHandler.setInputAction(e => {
       if (!this.isFeaturePickingPaused)
         this.pickFromScreenPosition(e.position, false);
     }, ScreenSpaceEventType.LEFT_CLICK);
@@ -311,7 +310,7 @@ export default class Cesium extends GlobeOrMap {
 
     // Handle zooming on SHIFT + MOUSE DOWN
     inputHandler.setInputAction(
-      (e) => {
+      e => {
         if (!this.isFeaturePickingPaused && !isDefined(zoomUserDrawing)) {
           this.pauseMapInteraction();
 
@@ -359,7 +358,7 @@ export default class Cesium extends GlobeOrMap {
             },
             allowPolygon: false,
             drawRectangle: true,
-            invisible: true,
+            invisible: true
           });
 
           zoomUserDrawing.enterDrawMode();
@@ -375,7 +374,7 @@ export default class Cesium extends GlobeOrMap {
     // Handle SHIFT + CLICK for zooming
 
     inputHandler.setInputAction(
-      (e) => {
+      e => {
         if (isDefined(zoomUserDrawing)) {
           this.pickFromScreenPosition(e.position, false);
         }
@@ -426,20 +425,17 @@ export default class Cesium extends GlobeOrMap {
       this.scene.globe.splitDirection = this.terria.showSplitter
         ? this.terria.terrainSplitDirection
         : ImagerySplitDirection.NONE;
-      this.scene.globe.depthTestAgainstTerrain =
-        this.terria.depthTestAgainstTerrainEnabled;
+      this.scene.globe.depthTestAgainstTerrain = this.terria.depthTestAgainstTerrainEnabled;
       if (this.scene.skyAtmosphere) {
-        this.scene.skyAtmosphere.splitDirection =
-          this.scene.globe.splitDirection;
+        this.scene.skyAtmosphere.splitDirection = this.scene.globe.splitDirection;
       }
     });
     this._disposeSplitterReaction = this._reactToSplitterChanges();
 
     autorun(() => {
-      (this.cesiumWidget as any).useBrowserRecommendedResolution =
-        !this.terria.useNativeResolution;
-      this.cesiumWidget.scene.globe.maximumScreenSpaceError =
-        this.terria.baseMaximumScreenSpaceError;
+      (this.cesiumWidget as any).useBrowserRecommendedResolution = !this.terria
+        .useNativeResolution;
+      this.cesiumWidget.scene.globe.maximumScreenSpaceError = this.terria.baseMaximumScreenSpaceError;
     });
   }
 
@@ -513,13 +509,13 @@ export default class Cesium extends GlobeOrMap {
   private get _allMappables() {
     const catalogItems = [
       ...this.terriaViewer.items.get(),
-      this.terriaViewer.baseMap,
+      this.terriaViewer.baseMap
     ];
     return flatten(
       filterOutUndefined(
-        catalogItems.map((item) => {
+        catalogItems.map(item => {
           if (isDefined(item) && MappableMixin.isMixedInto(item))
-            return item.mapItems.map((mapItem) => ({ mapItem, item }));
+            return item.mapItems.map(mapItem => ({ mapItem, item }));
         })
       )
     );
@@ -547,17 +543,17 @@ export default class Cesium extends GlobeOrMap {
       }
 
       // Add new data sources
-      allDataSources.forEach((d) => {
+      allDataSources.forEach(d => {
         if (!dataSources.contains(d)) {
           dataSources.add(d);
         }
       });
 
       // Ensure stacking order matches order in allDataSources - first item appears on top.
-      allDataSources.forEach((d) => dataSources.raiseToTop(d));
+      allDataSources.forEach(d => dataSources.raiseToTop(d));
 
       const allImageryParts = this._allMappables
-        .map((m) =>
+        .map(m =>
           ImageryParts.is(m.mapItem)
             ? this._makeImageryLayerFromParts(m.mapItem, m.item)
             : undefined
@@ -610,7 +606,7 @@ export default class Cesium extends GlobeOrMap {
       }
 
       // Add new tilesets
-      allCesium3DTilesets.forEach((tileset) => {
+      allCesium3DTilesets.forEach(tileset => {
         if (!primitives.contains(tileset)) {
           primitives.add(tileset);
         }
@@ -636,10 +632,12 @@ export default class Cesium extends GlobeOrMap {
         // target is a Rectangle
 
         // Work out the destination that the camera would naturally fly to
-        const destinationCartesian =
-          camera.getRectangleCameraCoordinates(target);
-        const destination =
-          Ellipsoid.WGS84.cartesianToCartographic(destinationCartesian);
+        const destinationCartesian = camera.getRectangleCameraCoordinates(
+          target
+        );
+        const destination = Ellipsoid.WGS84.cartesianToCartographic(
+          destinationCartesian
+        );
         const terrainProvider = this.scene.globe.terrainProvider;
         // A sufficiently coarse tile level that still has approximately accurate height
         const level = 6;
@@ -672,7 +670,7 @@ export default class Cesium extends GlobeOrMap {
 
         return flyToPromise(camera, {
           duration: flightDurationSeconds,
-          destination: finalDestination,
+          destination: finalDestination
         });
       } else if (defined(target.entities)) {
         // target is some DataSource
@@ -693,7 +691,7 @@ export default class Cesium extends GlobeOrMap {
             return flyToBoundingSpherePromise(camera, target.boundingSphere, {
               // By passing range=0, cesium calculates an appropriate zoom distance
               offset: new HeadingPitchRange(0, -0.5, 0),
-              duration: flightDurationSeconds,
+              duration: flightDurationSeconds
             });
           }
         });
@@ -704,15 +702,15 @@ export default class Cesium extends GlobeOrMap {
           destination: target.position,
           orientation: {
             direction: target.direction,
-            up: target.up,
-          },
+            up: target.up
+          }
         });
       } else if (MappableMixin.isMixedInto(target)) {
         // target is a Mappable
         if (isDefined(target.cesiumRectangle)) {
           return flyToPromise(camera, {
             duration: flightDurationSeconds,
-            destination: target.cesiumRectangle,
+            destination: target.cesiumRectangle
           });
         } else if (target.mapItems.length > 0) {
           // Zoom to the first item!
@@ -724,7 +722,7 @@ export default class Cesium extends GlobeOrMap {
         // target has a rectangle
         return flyToPromise(camera, {
           duration: flightDurationSeconds,
-          destination: target.rectangle,
+          destination: target.rectangle
         });
       } else {
         return Promise.resolve();
@@ -753,7 +751,7 @@ export default class Cesium extends GlobeOrMap {
     const disposeSplitDirectionChange = autorun(() => {
       const items = this.terria.mainViewer.items.get();
       const showSplitter = this.terria.showSplitter;
-      items.forEach((item) => {
+      items.forEach(item => {
         if (
           MappableMixin.isMixedInto(item) &&
           hasTraits(item, SplitterTraits, "splitDirection")
@@ -761,7 +759,7 @@ export default class Cesium extends GlobeOrMap {
           const layers = this.getImageryLayersForItem(item);
           const splitDirection = item.splitDirection;
 
-          layers.forEach((layer) => {
+          layers.forEach(layer => {
             if (showSplitter) {
               layer.splitDirection = splitDirection;
             } else {
@@ -773,7 +771,7 @@ export default class Cesium extends GlobeOrMap {
       this.notifyRepaintRequired();
     });
 
-    return function () {
+    return function() {
       disposeSplitPositionChange();
       disposeSplitDirectionChange();
     };
@@ -916,17 +914,17 @@ export default class Cesium extends GlobeOrMap {
           url: IonResource.fromAssetId(
             this.terria.configParameters.cesiumTerrainAssetId,
             {
-              accessToken: this.terria.configParameters.cesiumIonAccessToken,
+              accessToken: this.terria.configParameters.cesiumIonAccessToken
             }
-          ),
-        }),
+          )
+        })
       };
     }
     if (this.terria.configParameters.cesiumTerrainUrl) {
       return {
         terrain: new CesiumTerrainProvider({
-          url: this.terria.configParameters.cesiumTerrainUrl,
-        }),
+          url: this.terria.configParameters.cesiumTerrainUrl
+        })
       };
     }
     // Check if there's a TerrainProvider in map items and use that if there is
@@ -942,7 +940,7 @@ export default class Cesium extends GlobeOrMap {
       );
       return {
         terrain: createWorldTerrain({}),
-        credit: ionCredit,
+        credit: ionCredit
       };
     }
     return { terrain: new EllipsoidTerrainProvider() };
@@ -1033,8 +1031,9 @@ export default class Cesium extends GlobeOrMap {
         latLngHeight.height
       )
     );
-    const pickPositionCartographic =
-      Ellipsoid.WGS84.cartesianToCartographic(pickPosition);
+    const pickPositionCartographic = Ellipsoid.WGS84.cartesianToCartographic(
+      pickPosition
+    );
 
     const promises: (Promise<ImageryLayerFeatureInfo[]> | undefined)[] = [];
     const imageryLayers: ImageryLayer[] = [];
@@ -1104,8 +1103,9 @@ export default class Cesium extends GlobeOrMap {
         latLngHeight.height
       )
     );
-    const pickPositionCartographic =
-      Ellipsoid.WGS84.cartesianToCartographic(pickPosition);
+    const pickPositionCartographic = Ellipsoid.WGS84.cartesianToCartographic(
+      pickPosition
+    );
 
     const promises = [];
     const imageryLayers: ImageryLayer[] = [];
@@ -1213,7 +1213,7 @@ export default class Cesium extends GlobeOrMap {
   private _attachProviderCoordHooks() {
     const providerCoords: ProviderCoordsMap = {};
 
-    const pickFeaturesHook = function (
+    const pickFeaturesHook = function(
       imageryProvider: ImageryProvider,
       oldPick: (
         x: number,
@@ -1242,7 +1242,7 @@ export default class Cesium extends GlobeOrMap {
         providerCoords[(<any>imageryProvider).url] = {
           x: x,
           y: y,
-          level: level,
+          level: level
         };
       }
 
@@ -1291,7 +1291,7 @@ export default class Cesium extends GlobeOrMap {
     result.pickPosition = pickPosition;
 
     result.allFeaturesAvailablePromise = Promise.all(featurePromises)
-      .then((allFeatures) => {
+      .then(allFeatures => {
         runInAction(() => {
           result.isLoading = false;
           result.features = allFeatures.reduce(
@@ -1300,7 +1300,7 @@ export default class Cesium extends GlobeOrMap {
                 return resultFeaturesSoFar;
               }
 
-              let features = imageryLayerFeatures.map((feature) => {
+              let features = imageryLayerFeatures.map(feature => {
                 if (isDefined(imageryLayers)) {
                   (<any>feature).imageryLayer = imageryLayers[i];
                 }
@@ -1333,10 +1333,11 @@ export default class Cesium extends GlobeOrMap {
                 const screenPosition = this._computePositionOnScreen(
                   result.pickPosition
                 );
-                const pickedSide =
-                  this._getSplitterSideForScreenPosition(screenPosition);
+                const pickedSide = this._getSplitterSideForScreenPosition(
+                  screenPosition
+                );
 
-                features = features.filter((feature) => {
+                features = features.filter(feature => {
                   const splitDirection = (<any>feature).imageryLayer
                     .splitDirection;
                   return (
@@ -1364,7 +1365,7 @@ export default class Cesium extends GlobeOrMap {
 
   getImageryLayersForItem(item: MappableMixin.Instance): ImageryLayer[] {
     return filterOutUndefined(
-      item.mapItems.map((m) => {
+      item.mapItems.map(m => {
         if (ImageryParts.is(m)) {
           return this._makeImageryLayerFromParts(m, item) as ImageryLayer;
         }
@@ -1476,12 +1477,12 @@ export default class Cesium extends GlobeOrMap {
   ): () => void {
     const result = new ImageryLayer(imageryProvider, {
       show: true,
-      alpha: 1,
+      alpha: 1
     });
     const scene = this.scene;
     scene.imageryLayers.add(result);
 
-    return function () {
+    return function() {
       scene.imageryLayers.remove(result);
     };
   }
@@ -1496,7 +1497,7 @@ function zoomToDataSource(
 ): Promise<void> {
   let flyToPromise: Promise<void> | undefined;
   const pollPromise = pollToPromise(
-    function () {
+    function() {
       const dataSourceDisplay = cesium.dataSourceDisplay;
       if (dataSourceDisplay === undefined) {
         return false;
@@ -1527,15 +1528,16 @@ function zoomToDataSource(
 
       // Test if boundingSpheres is empty to avoid zooming to nowhere
       if (boundingSpheres.length > 0 && _lastZoomTarget === target) {
-        var boundingSphere =
-          BoundingSphere.fromBoundingSpheres(boundingSpheres);
+        var boundingSphere = BoundingSphere.fromBoundingSpheres(
+          boundingSpheres
+        );
         flyToPromise = flyToBoundingSpherePromise(
           cesium.scene.camera,
           boundingSphere,
           {
             duration: flightDurationSeconds,
             // By passing range=0, cesium calculates an appropriate zoom distance
-            offset: new HeadingPitchRange(0, -0.5, 0),
+            offset: new HeadingPitchRange(0, -0.5, 0)
           }
         );
         cesium.scene.camera.lookAtTransform(Matrix4.IDENTITY);
@@ -1544,7 +1546,7 @@ function zoomToDataSource(
     },
     {
       pollInterval: 100,
-      timeout: 30000,
+      timeout: 30000
     }
   );
   return pollPromise.then(() => flyToPromise);
@@ -1557,7 +1559,7 @@ function flyToPromise(camera: Camera, options: FlyToOptions): Promise<void> {
     camera.flyTo({
       ...options,
       complete,
-      cancel,
+      cancel
     });
   });
 }
@@ -1575,7 +1577,7 @@ function flyToBoundingSpherePromise(
     camera.flyToBoundingSphere(boundingSphere, {
       ...options,
       complete,
-      cancel,
+      cancel
     });
   });
 }

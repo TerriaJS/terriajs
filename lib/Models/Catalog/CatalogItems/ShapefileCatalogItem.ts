@@ -17,7 +17,7 @@ export function isJsonArrayOrDeepArrayOfObjects(
   return (
     Array.isArray(value) &&
     value.every(
-      (child) => isJsonObject(child) || isJsonArrayOrDeepArrayOfObjects(child)
+      child => isJsonObject(child) || isJsonArrayOrDeepArrayOfObjects(child)
     )
   );
 }
@@ -56,8 +56,8 @@ class ShapefileCatalogItem extends GeoJsonMixin(
             edge:
               '<a href="http://www.microsoft.com/edge" target="_blank">' +
               i18next.t("models.userData.edge") +
-              "</a>",
-          }),
+              "</a>"
+          })
         });
       }
       return loadZipFileFromUrl(proxyCatalogItemUrl(this, url));
