@@ -1,5 +1,5 @@
 import { action, isObservableArray, observable } from "mobx";
-import { DeveloperError } from "terriajs-cesium";
+import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
 import { SearchBarTraits } from "../../Traits/SearchProviders/SearchBarTraits";
