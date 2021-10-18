@@ -9,7 +9,7 @@ import sendFeedback from "../../Models/sendFeedback";
 import ViewState from "../../ReactViewModels/ViewState";
 import Box from "../../Styled/Box";
 import Button, { RawButton } from "../../Styled/Button";
-import Checkbox from "../../Styled/Checkbox/Checkbox";
+import Checkbox from "../../Styled/Checkbox";
 import { GLYPHS, StyledIcon } from "../../Styled/Icon";
 import Input, { StyledInput } from "../../Styled/Input";
 import Spacing from "../../Styled/Spacing";
@@ -264,13 +264,16 @@ class FeedbackForm extends React.Component<IProps, IState> {
           <Checkbox
             isChecked={this.state.sendShareURL}
             value="sendShareUrl"
-            label={
-              t("feedback.shareWithDevelopers", {
-                appName: this.props.viewState.terria.appName
-              })!
-            }
             onChange={this.changeSendShareUrl}
-          />
+          >
+            <Text>
+              {
+                t("feedback.shareWithDevelopers", {
+                  appName: this.props.viewState.terria.appName
+                })!
+              }
+            </Text>
+          </Checkbox>
           <Spacing bottom={2} />
           <Box right>
             <Button
