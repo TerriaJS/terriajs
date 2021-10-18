@@ -80,6 +80,8 @@ export default class ViewState {
   @observable topElement: string = "FeatureInfo";
   @observable lastUploadedFiles: any[] = [];
   @observable storyBuilderShown: boolean = false;
+  // Tracks whether the compare workflow was opened by the user or restored from share
+  @observable isCompareUserTriggered: boolean = false;
 
   // Flesh out later
   @observable showHelpMenu: boolean = false;

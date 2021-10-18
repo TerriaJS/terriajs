@@ -225,6 +225,7 @@ const ViewingControls = observer(
     compareItem() {
       runInAction(() => {
         this.props.viewState.terria.compareLeftItemId = this.props.item.uniqueId;
+        this.props.viewState.isCompareUserTriggered = true;
         this.props.viewState.terria.showSplitter = true;
       });
     },

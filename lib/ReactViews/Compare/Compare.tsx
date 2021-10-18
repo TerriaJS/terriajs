@@ -6,6 +6,7 @@ import styled from "styled-components";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import filterOutUndefined from "../../Core/filterOutUndefined";
+import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../../ModelMixins/MappableMixin";
 import SplitItemReference from "../../Models/Catalog/CatalogReferences/SplitItemReference";
 import { Comparable, isComparableItem } from "../../Models/Comparable";
@@ -25,7 +26,6 @@ import DatePicker from "./DatePicker";
 import ItemList from "./ItemList";
 import ItemSelector from "./ItemSelector";
 import LocationDateFilter from "./LocationDateFilter";
-import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
 
 export type PropsType = {
   viewState: ViewState;
@@ -61,11 +61,15 @@ const Compare: React.FC<PropsType> = observer(props => {
       // hide MapDataCount
       terria.elements.set("map-data-count", { visible: false });
       terria.elements.set("bottom-dock", { visible: false });
-      // hide all workbench items except the left & right items
+      // Hide all workbench items except the left & right items,
+      // but do it only when the user launches the compare workflow
+      // otherwise, if we are restoring from share data then respect the
+      // current visibility state of items.
       terria.workbench.items.forEach(item => {
         if (
           item.uniqueId !== props.leftItemId &&
-          item.uniqueId !== props.rightItemId
+          item.uniqueId !== props.rightItemId &&
+          viewState.isCompareUserTriggered
         )
           hideItem(item);
       });
@@ -73,6 +77,7 @@ const Compare: React.FC<PropsType> = observer(props => {
         terria.showSplitter = false;
         terria.elements.set("map-data-count", { visible: true });
         terria.elements.set("bottom-dock", { visible: true });
+        viewState.isCompareUserTriggered = false;
       });
     }),
     []
@@ -155,12 +160,11 @@ const Compare: React.FC<PropsType> = observer(props => {
     props.changeRightItem(itemId);
   };
 
-  const changeItemInBothPanels = (
-    item: MappableMixin.Instance,
-    show: boolean
-  ) => {
-    show ? showItem(item, ImagerySplitDirection.NONE) : hideItem(item);
-  };
+  const changeItemInBothPanels = action(
+    (item: MappableMixin.Instance, show: boolean) => {
+      show ? showItem(item, ImagerySplitDirection.NONE) : hideItem(item);
+    }
+  );
 
   return (
     <>
