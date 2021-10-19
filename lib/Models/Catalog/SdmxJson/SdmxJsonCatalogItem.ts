@@ -194,7 +194,7 @@ export default class SdmxJsonCatalogItem
             title: i18next.t("models.sdmxCatalogItem.loadDataErrorTitle", this),
             severity: TerriaErrorSeverity.Warning,
             importance: 1,
-            shouldRaiseToUser: true
+            forceRaiseToUser: true
           });
         }
         throw new TerriaError({
