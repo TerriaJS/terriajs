@@ -53,7 +53,7 @@ export interface TerriaErrorOptions {
   sender?: unknown;
 
   /** True if error message should be shown to user *regardless* of error severity. If this is undefined, then error severity will be used to determine if forceRaiseToUser (severity `Error` are presented to the user. `Warning` will just be printed to console) */
-  forceRaiseToUser?: boolean;
+  forceRaiseToUser?: true;
 
   /** True if the user has seen this error; otherwise, false. */
   raisedToUser?: boolean;
@@ -119,7 +119,7 @@ export default class TerriaError {
   readonly stack: string;
 
   /** Override shouldRaiseToUser (see `get shouldRaiseToUser()`) */
-  forceRaiseToUser: boolean | undefined;
+  forceRaiseToUser: true | undefined;
   @observable showDetails: boolean;
 
   /**
@@ -217,9 +217,9 @@ export default class TerriaError {
         : TerriaErrorSeverity.Warning;
 
     // forceRaiseToUser will be true if at least one error includes forceRaiseToUser = true
-    const forceRaiseToUser = filteredErrors
-      .map(error => error.forceRaiseToUser ?? false)
-      .includes(true);
+    const forceRaiseToUser =
+      filteredErrors.map(error => error.forceRaiseToUser).includes(true) ||
+      undefined;
 
     return new TerriaError({
       // Set default title and message

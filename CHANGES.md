@@ -4,6 +4,7 @@ Change Log
 #### next release (8.1.5)
 
 * Rename `TerriaError._shouldRaiseToUser` to `forceRaiseToUser`
+* Fix `forceRaiseToUser` bug
 * [The next improvement]
 
 #### 8.1.4
