@@ -595,7 +595,8 @@ export default class Cesium extends GlobeOrMap {
 
       // Remove deleted tilesets
       const primitives = this.scene.primitives;
-      for (let i = 0; i < this.scene.primitives.length; i++) {
+      // Iterate backwards because we're removing items.
+      for (let i = this.scene.primitives.length - 1; i >= 0; i--) {
         const prim = primitives.get(i);
         if (
           isCesium3DTileset(prim) &&

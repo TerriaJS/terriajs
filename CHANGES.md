@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.1.5)
 
+* Fix an internal bug where Cesium.prototype.observeModelLayer() fails to remove 3D tilesets in certain cases.
 * [The next improvement]
 
 #### 8.1.4
