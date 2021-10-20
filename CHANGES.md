@@ -3,8 +3,8 @@ Change Log
 
 #### next release (8.1.5)
 
-* Rename `TerriaError._shouldRaiseToUser` to `forceRaiseToUser`
-* Fix `forceRaiseToUser` bug
+* Rename `TerriaError._shouldRaiseToUser` to `overrideRaiseToUser`
+* Fix `overrideRaiseToUser` bug causeing `overrideRaiseToUser` to be set to `true` in `TerriaError.combine`
 * [The next improvement]
 
 #### 8.1.4
