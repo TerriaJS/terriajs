@@ -89,7 +89,7 @@ const DataPreview = observer(
     render() {
       const { t } = this.props;
       let previewed = this.props.previewed;
-      if (previewed !== undefined && ReferenceMixin.is(previewed)) {
+      if (previewed !== undefined && ReferenceMixin.isMixedInto(previewed)) {
         if (previewed.target === undefined) {
           // Reference is not available yet.
           return this.renderUnloadedReference();
@@ -124,6 +124,12 @@ const DataPreview = observer(
             </Helmet>
           </If>
           <Choose>
+            <When condition={previewed && previewed.isLoadingMetadata}>
+              <div className={Styles.previewInner}>
+                <h3 className={Styles.h3}>{previewed.name}</h3>
+                <Loader />
+              </div>
+            </When>
             <When condition={previewed && previewed.isMappable}>
               <div className={Styles.previewInner}>
                 <MappablePreview
@@ -196,8 +202,10 @@ const DataPreview = observer(
               <div className={Styles.placeholder}>
                 <h2>Unable to resolve reference</h2>
                 <p>
-                  This reference could not be resolved because it is invalid or
-                  because it points to something that cannot be visualised.
+                  {this.props.previewed.loadReferenceResult?.error
+                    ? this.props.previewed.loadReferenceResult?.error?.message
+                    : `This reference could not be resolved because it is invalid or
+                  because it points to something that cannot be visualised.`}
                 </p>
               </div>
             )}

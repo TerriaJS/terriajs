@@ -8,8 +8,7 @@ import { withRouter } from "react-router-dom";
 import URI from "urijs";
 import addedByUser from "../../Core/addedByUser";
 import getPath from "../../Core/getPath";
-import openGroup from "../../Models/openGroup";
-import removeUserAddedData from "../../Models/removeUserAddedData";
+import removeUserAddedData from "../../Models/Catalog/removeUserAddedData";
 import CatalogGroup from "./CatalogGroup";
 import DataCatalogMember from "./DataCatalogMember";
 
@@ -46,12 +45,6 @@ const DataCatalogGroup = observer(
       };
     },
 
-    toggleStateIsOpen() {
-      this.setState({
-        isOpen: !this.state.isOpen
-      });
-    },
-
     isOpen() {
       if (this.props.manageIsOpenLocally) {
         return this.state.isOpen;
@@ -59,18 +52,16 @@ const DataCatalogGroup = observer(
       return this.props.group.isOpen;
     },
 
-    toggleOpen() {
+    async clickGroup() {
       if (this.props.manageIsOpenLocally) {
-        this.toggleStateIsOpen();
-      } else {
-        openGroup(this.props.group, !this.props.group.isOpen);
+        this.setState({
+          isOpen: !this.state.isOpen
+        });
       }
-    },
-
-    clickGroup() {
-      this.toggleOpen();
-      this.props.group.loadMembers();
-      this.props.viewState.viewCatalogMember(this.props.group);
+      this.props.viewState.viewCatalogMember(
+        this.props.group,
+        !this.props.group.isOpen
+      );
     },
 
     isSelected() {

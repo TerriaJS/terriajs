@@ -1,16 +1,16 @@
 "use strict";
 
 import createReactClass from "create-react-class";
+import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import Slider from "rc-slider";
 import React from "react";
-import CommonStrata from "../../../Models/CommonStrata";
-import hasTraits from "../../../Models/hasTraits";
-import RasterLayerTraits from "../../../Traits/RasterLayerTraits";
-import Styles from "./opacity-section.scss";
 import { withTranslation } from "react-i18next";
-import { runInAction } from "mobx";
+import CommonStrata from "../../../Models/Definition/CommonStrata";
+import hasTraits from "../../../Models/Definition/hasTraits";
+import RasterLayerTraits from "../../../Traits/TraitsClasses/RasterLayerTraits";
+import Styles from "./opacity-section.scss";
 
 const OpacitySection = observer(
   createReactClass({

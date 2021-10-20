@@ -8,25 +8,25 @@ import PropTypes from "prop-types";
 import React from "react";
 import { sortable } from "react-anything-sortable";
 import { withTranslation } from "react-i18next";
-import defined from "terriajs-cesium/Source/Core/defined";
 import getPath from "../../Core/getPath";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
-import CommonStrata from "../../Models/CommonStrata";
+import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
+import CommonStrata from "../../Models/Definition/CommonStrata";
+import { DEFAULT_PLACEMENT } from "../../Models/SelectableDimensions";
 import Box from "../../Styled/Box";
 import Icon from "../../Styled/Icon";
 import Loader from "../Loader";
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
 import ChartItemSelector from "./Controls/ChartItemSelector";
 import ColorScaleRangeSection from "./Controls/ColorScaleRangeSection";
-import ConceptViewer from "./Controls/ConceptViewer";
 import DateTimeSelectorSection from "./Controls/DateTimeSelectorSection";
 import DimensionSelectorSection from "./Controls/DimensionSelectorSection";
-import DisplayAsPercentSection from "./Controls/DisplayAsPercentSection";
 import FilterSection from "./Controls/FilterSection";
 import LeftRightSection from "./Controls/LeftRightSection";
 import Legend from "./Controls/Legend";
 import OpacitySection from "./Controls/OpacitySection";
 import SatelliteImageryTimeFilterSection from "./Controls/SatelliteImageryTimeFilterSection";
+import { ScaleWorkbenchInfo } from "./Controls/ScaleWorkbenchInfo";
 import ShortReport from "./Controls/ShortReport";
 import TimerSection from "./Controls/TimerSection";
 import ViewingControls from "./Controls/ViewingControls";
@@ -78,6 +78,11 @@ export const WorkbenchItemRaw = observer(
     render() {
       const workbenchItem = this.props.item;
       const { t } = this.props;
+      const isLoading =
+        (CatalogMemberMixin.isMixedInto(this.props.item) &&
+          this.props.item.isLoading) ||
+        (ReferenceMixin.isMixedInto(this.props.item) &&
+          this.props.item.isLoadingReference);
       return (
         <li
           style={this.props.style}
@@ -122,7 +127,7 @@ export const WorkbenchItemRaw = observer(
                   className={Styles.draggable}
                   title={getPath(workbenchItem, " → ")}
                 >
-                  <If condition={!workbenchItem.isMappable}>
+                  <If condition={!workbenchItem.isMappable && !isLoading}>
                     <span className={Styles.iconLineChart}>
                       <Icon glyph={Icon.GLYPHS.lineChart} />
                     </span>
@@ -167,28 +172,22 @@ export const WorkbenchItemRaw = observer(
                 viewState={this.props.viewState}
               />
               <OpacitySection item={workbenchItem} />
+              <ScaleWorkbenchInfo item={workbenchItem} />
               <LeftRightSection item={workbenchItem} />
               <TimerSection item={workbenchItem} />
-              <If
-                condition={
-                  defined(workbenchItem.concepts) &&
-                  workbenchItem.concepts.length > 0 &&
-                  workbenchItem.displayChoicesBeforeLegend
-                }
-              >
-                <ConceptViewer item={workbenchItem} />
-              </If>
               <ChartItemSelector item={workbenchItem} />
               <FilterSection item={workbenchItem} />
               <DateTimeSelectorSection item={workbenchItem} />
               <SatelliteImageryTimeFilterSection item={workbenchItem} />
-              <DimensionSelectorSection item={workbenchItem} />
+              <DimensionSelectorSection
+                item={workbenchItem}
+                placement={DEFAULT_PLACEMENT}
+              />
               <ColorScaleRangeSection
                 item={workbenchItem}
                 minValue={workbenchItem.colorScaleMinimum}
                 maxValue={workbenchItem.colorScaleMaximum}
               />
-              <DisplayAsPercentSection item={workbenchItem} />
               <If
                 condition={
                   workbenchItem.shortReport ||
@@ -199,17 +198,11 @@ export const WorkbenchItemRaw = observer(
                 <ShortReport item={workbenchItem} />
               </If>
               <Legend item={workbenchItem} />
-              <If
-                condition={
-                  defined(workbenchItem.concepts) &&
-                  workbenchItem.concepts.length > 0 &&
-                  !workbenchItem.displayChoicesBeforeLegend
-                }
-              >
-                <ConceptViewer item={workbenchItem} />
-              </If>
-              {CatalogMemberMixin.isMixedInto(this.props.item) &&
-              this.props.item.isLoading ? (
+              <DimensionSelectorSection
+                item={workbenchItem}
+                placement={"belowLegend"}
+              />
+              {isLoading ? (
                 <Box paddedVertically>
                   <Loader light />
                 </Box>

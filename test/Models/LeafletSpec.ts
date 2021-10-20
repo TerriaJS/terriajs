@@ -1,12 +1,12 @@
 import L from "leaflet";
 import { computed } from "mobx";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import createStratumInstance from "../../lib/Models/createStratumInstance";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 import Leaflet from "../../lib/Models/Leaflet";
 import Terria from "../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-import { RectangleTraits } from "../../lib/Traits/MappableTraits";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import { RectangleTraits } from "../../lib/Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 
 describe("Leaflet Model", function() {

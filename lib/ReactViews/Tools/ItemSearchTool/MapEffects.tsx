@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
-import { ItemSearchResult } from "../../../Models/ItemSearchProvider";
+import { ItemSearchResult } from "../../../Models/ItemSearchProviders/ItemSearchProvider";
 
 export type MapEffect =
   | { is: "none" }

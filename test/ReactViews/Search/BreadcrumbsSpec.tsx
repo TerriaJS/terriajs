@@ -2,7 +2,7 @@ const create: any = require("react-test-renderer").create;
 import React from "react";
 import { act } from "react-dom/test-utils";
 import Terria from "../../../lib/Models/Terria";
-import CatalogGroup from "../../../lib/Models/CatalogGroupNew";
+import CatalogGroup from "../../../lib/Models/Catalog/CatalogGroup";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import Breadcrumbs from "../../../lib/ReactViews/Search/Breadcrumbs";
 import { BrowserRouter as Router } from "react-router-dom";
@@ -34,10 +34,8 @@ describe("Breadcrumbs", function() {
   });
 
   describe("with a prevewied catalog item", function() {
-    it("renders", function() {
-      runInAction(() => {
-        viewState.viewCatalogMember(catalogGroup);
-      });
+    it("renders", async function() {
+      await viewState.viewCatalogMember(catalogGroup);
 
       act(() => {
         testRenderer = create(

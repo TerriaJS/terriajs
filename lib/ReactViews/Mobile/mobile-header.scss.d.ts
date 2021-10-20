@@ -6,11 +6,9 @@ interface CssExports {
   'btn-now-viewing': string;
   'btn-search': string;
   'btnAdd': string;
-  'btnMenu': string;
   'btnNowViewing': string;
   'btnSearch': string;
   'doubleDigit': string;
-  'form-search-data': string;
   'formSearchData': string;
   'group-left': string;
   'group-right': string;

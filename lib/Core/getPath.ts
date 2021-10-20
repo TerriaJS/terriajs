@@ -1,6 +1,6 @@
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import getAncestors from "../Models/getAncestors";
-import { BaseModel } from "../Models/Model";
+import { BaseModel } from "../Models/Definition/Model";
 import getDereferencedIfExists from "./getDereferencedIfExists";
 import isDefined from "./isDefined";
 

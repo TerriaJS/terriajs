@@ -104,6 +104,7 @@ class TooltipWrapperRaw extends React.Component<Props, State> {
         parseFloat(launcherElementStyle.paddingLeft)) /
       2;
     // only update if the difference is big enough to prevent indefinite loop caused by browser sub pixel error
+    // FIXME: this test however passes in safari mobile each time resulting in a inifinite render loop
     if (Math.abs(this.state.offset - offset) > 5) {
       this.setState({
         offset: offset

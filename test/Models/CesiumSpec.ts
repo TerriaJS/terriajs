@@ -2,11 +2,11 @@ import { computed } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Cesium from "../../lib/Models/Cesium";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import createStratumInstance from "../../lib/Models/createStratumInstance";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 import Terria from "../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-import { RectangleTraits } from "../../lib/Traits/MappableTraits";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import { RectangleTraits } from "../../lib/Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 
 const supportsWebGL = require("../../lib/Core/supportsWebGL");

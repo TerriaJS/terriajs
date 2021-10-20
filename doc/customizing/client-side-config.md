@@ -1,11 +1,11 @@
-The file `wwwroot/config.json` in TerriaMap contains client-side configuration parameters. See [this file for an example](https://github.com/TerriaJS/TerriaMap/blob/next/wwwroot/config.json).
+The file `wwwroot/config.json` in TerriaMap contains client-side configuration parameters. See [this file for an example](https://github.com/TerriaJS/TerriaMap/blob/main/wwwroot/config.json).
 
 It has following structure:
 
 |Name|Required|Type|Default|Description|
 |----|--------|----|-------|-----------|
 |[initializationUrls](#intializationurls)|yes|**string[]**|[]|The list of initialization files which define the catalog content, for more details check [below](#intializationurls).|
-|[v7initializationUrls](#v7initializationUrls)|yes|**string[]**|[]|The list of v7 initialization files &mdash; these will be converted to v8 on the fly using [`catalog-converter`](https://github.com/TerriaJS/catalog-converter). For more details check [below](#v7initializationUrls).|
+|[v7initializationUrls](#v7initializationurls)|yes|**string[]**|[]|The list of v7 initialization files &mdash; these will be converted to v8 on the fly using [`catalog-converter`](https://github.com/TerriaJS/catalog-converter). For more details check [below](#v7initializationUrls).|
 |parameters|yes|**[Parameters](#parameters)**||TerriaJS configuration options|
 
 **Example**
@@ -36,7 +36,7 @@ It is also possible to add version 7 init files &mdash; these will be converted 
 
 ## Parameters
 
-**The following table has not been updated for TerriaJS v8. Most should still work as they did in version 7 however we may have removed some and added new ones. The best reference for now is [`interface ConfigParameters`](https://github.com/TerriaJS/terriajs/blob/next/lib/Models/Terria.ts#L115) (you may have to search for `interface ConfigParameters` on that page to find it if future code changes change line numbers).** 
+**The best reference for now is [`interface ConfigParameters`](https://github.com/TerriaJS/terriajs/blob/main/lib/Models/Terria.ts#L101) (you may have to search for `interface ConfigParameters` on that page to find it if future code changes change line numbers).** 
 
 Specifies various options for configuring TerriaJS:
 
@@ -46,8 +46,9 @@ Specifies various options for configuring TerriaJS:
 |`supportEmail`|no|**string**|`"info@terria.io"`|The email address shown when things go wrong.|
 |`defaultMaximumShownFeatureInfos`|no|**number**|`100`|The maximum number of "feature info" boxes that can be displayed when clicking a point.|
 |`regionMappingDefinitionsUrl`|yes|**string**|`"build/TerriaJS/data/regionMapping.json"`|URL of the JSON file that defines region mapping for CSV files. This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.|
+|`catalogIndexUrl`|no|**string**||URL of the JSON file that contains index of catalog. See [CatalogIndex](#catalogindex)|
 |`conversionServiceBaseUrl`|no|**string**|`"convert/"`|URL of OGR2OGR conversion service (part of TerriaJS-Server). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.|
-|`proj4ServiceBaseUrl`|no|**string**|`"proj4/"`|URL of Proj4 projection lookup service (part of TerriaJS-Server). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.|
+|`proj4ServiceBaseUrl`|no|**string**|`"proj4def/"`|URL of Proj4 projection lookup service (part of TerriaJS-Server). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.|
 |`corsProxyBaseUrl`|no|**string**|`"proxy/"`|URL of CORS proxy service (part of TerriaJS-Server). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.|
 |`proxyableDomainsUrl`|no|**string**|`"proxyabledomains/"`|Deprecated, will be determined from serverconfig.|
 |`serverConfigUrl`|no|**string**|`"serverconfig/"`|
@@ -69,18 +70,19 @@ Specifies various options for configuring TerriaJS:
 |`displayOneBrand`|no|**number**|`0`|Index of which `brandBarElements` to show for mobile header. This will only be used if `brandBarSmallElements` is undefined.|
 |`disableMyLocation`|no|**boolean**|undefined|True to disable the "Centre map at your current location" button.|
 |`disableSplitter`|no|**boolean**|undefined|True to disable the use of the splitter control.|
+|`enableGeojsonMvt`|no|**boolean**|false|Feature flag for experimental Geojson-Mapbox vector tiles. If falsy, all `GeoJsonMixin` models will render cesium primitives. If truthy, [`geojson-vt`](https://github.com/mapbox/geojson-vt) will be used to tile GeoJson into Mapbox vector-tiles.|
 |`experimentalFeatures`|no|**boolean**|undefined||
-|`magdaReferenceHeaders`|no|**[MagdaReferenceHeaders](#MagdaReferenceHeaders)**|undefined|
+|`magdaReferenceHeaders`|no|**[MagdaReferenceHeaders](#magdareferenceheaders)**|undefined|
 |`locationSearchBoundingBox`|no|**number**|undefined|
 |`googleAnalyticsKey`|no|**string**|undefined|A Google API key for [Google Analytics](https://analytics.google.com).  If specified, TerriaJS will send various events about how it's used to Google Analytics.|
-|`rollbarAccessToken`|no|**string**|undefined|Your `post_client_item` from Rollbar - as of right now, TerriaMap also needs to be modified such that you construct `RollbarErrorProvider` in `index.js`|
+|`errorService`|no|**[ErrorServiceOptions](#errorserviceoptions)**|undefined|Optional configuration for the remote error logging service that Terria should log errors to.|
 |`globalDisclaimer`|no|**any**|undefined||
 |`showWelcomeMessage`|no|**boolean**|`false`|True to display welcome message on startup.|
 |`welcomeMessageVideo`|no|**any**||Video to show in welcome message.|
 |`showInAppGuides`|no|**boolean**|`false`|True to display in-app guides.|
-|`helpContent`|no|**[HelpContentItem](#HelpContentItem)**|`[]`|The content to be displayed in the help panel.|
-|`helpContentTerms`|no|**[Term](#Term)**|||
-|`languageConfiguration`|no|**[LanguageConfiguration](#LanguageConfiguration)**|undefined|Language configuration of TerriaJS.|
+|`helpContent`|no|**[HelpContentItem](#helpcontentitem)**|`[]`|The content to be displayed in the help panel.|
+|`helpContentTerms`|no|**[Term](#term)**|||
+|`languageConfiguration`|no|**[LanguageConfiguration](#languageconfiguration)**|undefined|Language configuration of TerriaJS.|
 |`customRequestSchedulerLimits`|no|**[RequestScheduler](https://cesium.com/docs/cesiumjs-ref-doc/RequestScheduler.html#.requestsByServer)**|undefined|Custom concurrent request limits for domains in Cesium's RequestScheduler.|
 |`persistViewerMode`|no|**boolean**|`true`|Whether to load persisted viewer mode from local storage.|
 |`openAddData`|no|**boolean**|`false`|Whether to open the add data explorer panel on load.|
@@ -103,7 +105,7 @@ Configuration of items to appear in the search bar
 |`videoUrl`|no|**string**|undefined|The video to show on the top of help item.|
 |`placeholderImage`|no|**string**|undefined|Placeholder image for the video.|
 |`paneMode`|no|**enum["videoAndContent","slider","trainer"]**|`"videoAndContent"`|
-|`trainerItems`|no|**[TrainerItem[]](#TrainerItem)**|undefined|List of the trainer steps|
+|`trainerItems`|no|**[TrainerItem[]](#traineritem)**|undefined|List of the trainer steps|
 |`markdownText`|no|**string**|undefined|The content of the help item, can use Markdown syntax.|
 |`icon`|no|**string**|undefined|Icon to show next to the itemName.|
 
@@ -144,6 +146,14 @@ Configuration of items to appear in the search bar
 |fallbackLanguage|yes|**string**|`"en"`|Fallback language used if contents are not available in the currently selected language.|
 |changeLanguageOnStartWhen|yes|**string[]**|`["querystring", "localStorage", "navigator", "htmlTag"]`|Order of user language detection. See [i18next browser language detection documentation](https://github.com/i18next/i18next-browser-languageDetector) for details.|
 
+***
+
+### ErrorServiceOptions
+|Name|Required|Type|Default|Description|
+|----|--------|----|-------|-----------|
+|provider|yes|**string**|`undefined`|A string identifying the error service provider to use. Currently only `rollbar` is supported.|
+|configuration|no|**any**|`undefined`|The configuration object to pass as constructor parameters to the error service provider instance. See the [provider implementation](https://github.com/TerriaJS/terriajs/blob/main/lib/Models/ErrorServiceProviders/) for supported configuration parameters.|
+
 **Example**
 
 ```json
@@ -166,3 +176,30 @@ Configuration of items to appear in the search bar
   ]
 }
 ```
+
+***
+
+### CatalogIndex
+
+If your TerriaMap has many (>50) dynamic groups (groups which need to be loaded - for example CKAN, WMS-group...) it may be worth generating a static catalog index JSON file. This file will contain ID, name and description fields of all catalog items, which can be used to search through the catalog very quickly without needing to load dynamic groups.
+
+The https://github.com/nextapps-de/flexsearch library is used to index and search the catalog index file.
+
+**Note** NodeJS v10 is not supported, please use v12 or v14.
+
+To generate the catalog index:
+
+- `npm run build-tools`
+- `node .\build\generateCatalogIndex.js config-url base-url` where
+  - `config-url` is URL to client-side-config file
+  - `base-url` is URL to terriajs-server (this is used to load `server-config` and to proxy requests)
+  - For example `node .\build\generateCatalogIndex.js http://localhost:3001/config.json http://localhost:3001`
+- This will output two files
+  - `catalog-index.json`
+  - `catalog-index-errors.json` with any error messages which occurred while loading catalog members
+- Set `catalogIndexUrl` config parameter
+
+This file will have to be re-generated manually every time the catalog structure changes - for example:
+
+- if items are renamed, or moved
+- dynamic groups are updated (for example, WMS server publishes new layers)

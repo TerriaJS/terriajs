@@ -1,10 +1,79 @@
+import { runInAction } from "mobx";
 import React from "react";
-import styled from "styled-components";
+import TerriaError from "../../Core/TerriaError";
+import ViewState from "../../ReactViewModels/ViewState";
 import Box from "../../Styled/Box";
+import { RawButton } from "../../Styled/Button";
 import Spacing from "../../Styled/Spacing";
+import { TextSpan } from "../../Styled/Text";
+import FeedbackLinkCustomComponent, {
+  FeedbackLink
+} from "../Custom/FeedbackLinkCustomComponent";
+import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
+import styled from "styled-components";
 
 // Hard code colour for now
 const warningColor = "#f69900";
+
+const showErrorNotification = (viewState: ViewState, error: TerriaError) => {
+  runInAction(() => {
+    error.showDetails = true;
+  });
+  viewState.terria.raiseErrorToUser(error, undefined, true);
+};
+
+const WarningBox: React.FC<{
+  error?: TerriaError;
+  viewState?: ViewState;
+}> = props => {
+  // We only show FeedbankLink if the error message doesn't include the <feedbacklink> custom component (so we don't get duplicates)
+  const includesFeedbackLink = props.error?.highestImportanceError.message.includes(
+    `<${FeedbackLinkCustomComponent.componentName}`
+  );
+
+  return (
+    <Box backgroundColor={warningColor} rounded padded>
+      <Spacing right={1} />
+      <WarningIcon />
+      <Spacing right={2} />
+      <Box backgroundColor="#ffffff" rounded fullWidth paddedRatio={3}>
+        {props.error ? (
+          <div>
+            {parseCustomMarkdownToReact(
+              `### ${props.error?.highestImportanceError?.title}`
+            )}
+            {parseCustomMarkdownToReact(
+              props.error?.highestImportanceError?.message,
+              { viewState: props.viewState, terria: props.viewState?.terria }
+            )}
+
+            {props.viewState && !includesFeedbackLink ? (
+              <FeedbackLink viewState={props.viewState}></FeedbackLink>
+            ) : null}
+
+            {/* Add "show details" button if there are nested errors */}
+            {props.viewState &&
+            Array.isArray(props.error!.originalError) &&
+            props.error!.originalError.length > 0 ? (
+              <div>
+                <RawButton
+                  activeStyles
+                  onClick={() =>
+                    showErrorNotification(props.viewState!, props.error!)
+                  }
+                >
+                  <TextSpan primary>See details</TextSpan>
+                </RawButton>
+              </div>
+            ) : null}
+          </div>
+        ) : (
+          props.children
+        )}
+      </Box>
+    </Box>
+  );
+};
 
 const Triangle = styled.p`
   width: 0px;
@@ -20,16 +89,5 @@ const Triangle = styled.p`
 
 // Equilateral triangle
 const WarningIcon = () => <Triangle>!</Triangle>;
-
-const WarningBox: React.FC = ({ children }) => (
-  <Box backgroundColor={warningColor} rounded padded>
-    <Spacing right={1} />
-    <WarningIcon />
-    <Spacing right={2} />
-    <Box backgroundColor="#ffffff" rounded fullWidth paddedRatio={3}>
-      {children}
-    </Box>
-  </Box>
-);
 
 export default WarningBox;

@@ -7,10 +7,10 @@ import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import when from "terriajs-cesium/Source/ThirdParty/when";
+import Result from "../../Core/Result";
 import featureDataToGeoJson from "../../Map/featureDataToGeoJson";
-import CommonStrata from "../../Models/CommonStrata";
-import GeoJsonCatalogItem from "../../Models/GeoJsonCatalogItem";
+import CommonStrata from "../../Models/Definition/CommonStrata";
+import GeoJsonCatalogItem from "../../Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import MapInteractionMode from "../../Models/MapInteractionMode";
 import Styles from "./parameter-editors.scss";
 
@@ -74,78 +74,83 @@ export function selectOnMap(terria, viewState, parameter) {
 
   reaction(
     () => pickPolygonMode.pickedFeatures,
-    (pickedFeatures, reaction) => {
+    async (pickedFeatures, reaction) => {
       pickedFeaturesSubscription = reaction;
-      (pickedFeatures.allFeaturesAvailablePromise || Promise.resolve())
-        .then(function() {
-          if (!defined(pickedFeatures.pickPosition)) {
-            return [];
-          }
+      if (pickedFeatures.allFeaturesAvailablePromise) {
+        await pickedFeatures.allFeaturesAvailablePromise;
+      }
 
-          const catalogItems = pickedFeatures.features
-            .map(function(feature) {
-              let geojson;
-              if (feature.data) {
-                geojson = featureDataToGeoJson(feature.data);
-                if (
-                  defined(geojson) &&
-                  !defined(geojson.id) &&
-                  defined(feature.id)
-                ) {
-                  geojson.id = feature.id;
-                }
-              } else if (defined(feature.polygon)) {
-                const positions = feature.polygon.hierarchy
-                  .getValue()
-                  .positions.map(function(position) {
-                    const cartographic = Ellipsoid.WGS84.cartesianToCartographic(
-                      position
-                    );
-                    return [
-                      CesiumMath.toDegrees(cartographic.longitude),
-                      CesiumMath.toDegrees(cartographic.latitude)
-                    ];
-                  });
+      if (!defined(pickedFeatures.pickPosition)) {
+        return [];
+      }
 
-                geojson = {
-                  id: feature.id,
-                  type: "Feature",
-                  properties: feature.properties
-                    ? feature.properties.getValue(terria.timelineClock)
-                    : undefined,
-                  geometry: {
-                    coordinates: [[positions]],
-                    type: "MultiPolygon"
-                  }
-                };
-              }
-
-              if (defined(geojson)) {
-                const catalogItem = new GeoJsonCatalogItem(
-                  createGuid(),
-                  terria
+      const catalogItems = pickedFeatures.features
+        .map(function(feature) {
+          let geojson;
+          if (feature.data) {
+            geojson = featureDataToGeoJson(feature.data);
+            if (
+              defined(geojson) &&
+              !defined(geojson.id) &&
+              defined(feature.id)
+            ) {
+              geojson.id = feature.id;
+            }
+          } else if (defined(feature.polygon)) {
+            const positions = feature.polygon.hierarchy
+              .getValue()
+              .positions.map(function(position) {
+                const cartographic = Ellipsoid.WGS84.cartesianToCartographic(
+                  position
                 );
-                catalogItem.setTrait(CommonStrata.user, "geoJsonData", geojson);
-                return catalogItem;
+                return [
+                  CesiumMath.toDegrees(cartographic.longitude),
+                  CesiumMath.toDegrees(cartographic.latitude)
+                ];
+              });
+
+            geojson = {
+              id: feature.id,
+              type: "Feature",
+              properties: feature.properties
+                ? feature.properties.getValue(terria.timelineClock)
+                : undefined,
+              geometry: {
+                coordinates: [[positions]],
+                type: "MultiPolygon"
               }
-            })
-            .filter(item => defined(item));
-          const promises = catalogItems.map(item => item.loadMapItems());
-          return when.all(promises).then(() => catalogItems);
-        })
-        .then(function(catalogItems) {
-          runInAction(() => {
-            parameter.setValue(
-              CommonStrata.user,
-              catalogItems.map(item => item.readyData)
-            );
-            terria.mapInteractionModeStack.pop();
-            viewState.openAddData();
-          });
-          if (pickedFeaturesSubscription) {
-            pickedFeaturesSubscription.dispose();
+            };
           }
+
+          if (defined(geojson)) {
+            const catalogItem = new GeoJsonCatalogItem(createGuid(), terria);
+            catalogItem.setTrait(CommonStrata.user, "geoJsonData", geojson);
+            return catalogItem;
+          }
+        })
+        .filter(item => defined(item));
+
+      const result = Result.combine(
+        await Promise.all(catalogItems.map(model => model.loadMapItems())),
+        "Failed to load picked polygons"
+      );
+
+      if (result.error) {
+        terria.raiseErrorToUser(result.error, "Failed to select polygons");
+      } else {
+        runInAction(() => {
+          parameter.setValue(
+            CommonStrata.user,
+            catalogItems.map(item => item.readyData)
+          );
+          terria.mapInteractionModeStack.pop();
+          viewState.openAddData();
         });
+      }
+
+      if (pickedFeaturesSubscription) {
+        pickedFeaturesSubscription.dispose();
+      }
     }
   );
 

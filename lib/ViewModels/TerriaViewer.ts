@@ -36,24 +36,19 @@ export default class TerriaViewer {
   readonly terria: Terria;
 
   @observable
-  private _baseMap: MappableMixin.MappableMixin | undefined;
+  private _baseMap: MappableMixin.Instance | undefined;
 
   get baseMap() {
     return this._baseMap;
   }
 
-  async setBaseMap(baseMap?: MappableMixin.MappableMixin) {
+  async setBaseMap(baseMap?: MappableMixin.Instance) {
     if (!baseMap) return;
 
-    try {
-      if (CatalogMemberMixin.isMixedInto(baseMap)) await baseMap.loadMetadata();
-
-      if (baseMap) await baseMap.loadMapItems();
-
-      runInAction(() => (this._baseMap = baseMap));
-    } catch (e) {
-      this.terria.raiseErrorToUser(
-        TerriaError.from(e, {
+    if (baseMap) {
+      const result = await baseMap.loadMapItems();
+      if (result.error) {
+        result.raiseError(this.terria, {
           title: {
             key: "models.terria.loadingBaseMapErrorTitle",
             parameters: {
@@ -63,15 +58,17 @@ export default class TerriaViewer {
                   : baseMap.uniqueId) ?? "Unknown item"
             }
           }
-        })
-      );
+        });
+      } else {
+        runInAction(() => (this._baseMap = baseMap));
+      }
     }
   }
 
   // This is a "view" of a workbench/other
   readonly items:
-    | IComputedValue<MappableMixin.MappableMixin[]>
-    | IObservableValue<MappableMixin.MappableMixin[]>;
+    | IComputedValue<MappableMixin.Instance[]>
+    | IObservableValue<MappableMixin.Instance[]>;
 
   @observable
   viewerMode: ViewerMode | undefined = ViewerMode.Cesium;
@@ -90,14 +87,17 @@ export default class TerriaViewer {
   @observable
   mapContainer: string | HTMLElement | undefined;
 
+  /**
+   * The distance between two pixels at the bottom center of the screen.
+   * Set in lib/ReactViews/Map/Legend/DistanceLegend.jsx
+   */
+  @observable scale: number = 1;
+
   // TODO: hook these up
   readonly beforeViewerChanged = new CesiumEvent();
   readonly afterViewerChanged = new CesiumEvent();
 
-  constructor(
-    terria: Terria,
-    items: IComputedValue<MappableMixin.MappableMixin[]>
-  ) {
+  constructor(terria: Terria, items: IComputedValue<MappableMixin.Instance[]>) {
     this.terria = terria;
     this.items = items;
   }

@@ -108,7 +108,7 @@ const StyledButton = styled.button<IStyledButtonProps>`
   ${props =>
     props.splitter &&
     `
-    background-color: ${props.theme.colorSplitter};
+    background-color: ${props.theme.colorSecondary};
     color: ${props.theme.textLight};
   `}
 

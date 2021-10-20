@@ -105,7 +105,10 @@ To do this, we need a reverse map of `id` -> `shareKeys`.
 
 ### Revert v8 WMS-group member ids to match v7
 
-This means we don't need to add manual `shareKeys` to WMS-groups.
+~~This means we don't need to add manual `shareKeys` to WMS-groups.~~
+
+WMS-group IDs will now use `Layer.Name` if is defined - otherwise `Layer.Title`.
+Sharekeys will be added so both cases are covered.
 
 ## Consequences
 

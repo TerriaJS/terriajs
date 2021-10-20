@@ -124,7 +124,8 @@ export const GLYPHS = {
   pedestrian: require("../../wwwroot/images/icons/pedestrian.svg"),
   minimize: require("../../wwwroot/images/icons/minimize.svg"),
   maximize: require("../../wwwroot/images/icons/maximize.svg"),
-  closeTool: require("../../wwwroot/images/icons/close-tool.svg")
+  closeTool: require("../../wwwroot/images/icons/close-tool.svg"),
+  moreItems: require("../../wwwroot/images/icons/more-items.svg")
 };
 
 interface IconProps {
@@ -139,9 +140,6 @@ export const Icon: React.FC<IconProps> = (props: IconProps) => {
       viewBox="0 0 100 100"
       className={classNames("icon", props.className)}
       style={props.style}
-      css={`
-        display: block;
-      `}
       transform={`rotate(${props.rotation ?? 0})`}
     >
       <use xlinkHref={"#" + props.glyph.id} />
@@ -156,19 +154,20 @@ interface IStyledIconProps {
   light?: boolean;
   dark?: boolean;
   realDark?: boolean;
-  fillColor?: boolean;
+  fillColor?: string;
   opacity?: number;
 }
 
 export const StyledIcon = styled(Icon)<IStyledIconProps>`
   display: ${props => (props.displayInline ? `inline` : `block`)};
   ${props =>
-    props.displayInline &&
-    `
-  display: inline; 
-  vertical-align: middle;
-  `}
-  
+    props.displayInline
+      ? `
+  display: inline;
+  vertical-align: middle;`
+      : `
+  display: block;`}
+
   flex-shrink: 0;
   ${props => props.styledWidth && `width: ${props.styledWidth};`}
   ${props => props.styledHeight && `height: ${props.styledHeight};`}

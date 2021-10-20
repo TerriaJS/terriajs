@@ -26,7 +26,6 @@ export const getMetaDescriptionSummary = catalogItem => {
   const source =
     (catalogItem.url && `sourced from "${catalogItem.url}" `) || "";
   // Don't need local data info as it won't exist from the server for prerendering
-
   return `${description}${custodian}${type}${source}`;
 };
 
@@ -46,22 +45,10 @@ const Description = observer(
     render() {
       const { t } = this.props;
       const catalogItem = this.props.item;
-      const dataUrlType = catalogItem.dataUrlType;
-      let hasDataUriCapability;
-      let dataUri;
-      let dataUriFormat;
-      if (dataUrlType === "data-uri" || dataUrlType === "local") {
-        hasDataUriCapability = DataUri.checkCompatibility();
-        if (hasDataUriCapability) {
-          dataUri = catalogItem.dataUrl;
-          if (dataUri) {
-            dataUriFormat = getDataUriFormat(dataUri);
-          }
-        }
-      }
 
-      // Make sure all metadataUrls have `url` set
+      // Make sure all data and metadata URLs have `url` set
       const metadataUrls = catalogItem.metadataUrls?.filter(m => m.url);
+      const dataUrls = catalogItem.dataUrls?.filter(m => m.url);
 
       return (
         <div
@@ -218,25 +205,20 @@ const Description = observer(
               </Choose>
             </If>
 
-            <If
-              condition={
-                catalogItem.dataUrlType &&
-                catalogItem.dataUrlType !== "none" &&
-                catalogItem.dataUrl
-              }
-            >
+            <If condition={dataUrls && dataUrls.length > 0}>
               <h4 className={Styles.h4}>{t("description.dataUrl")}</h4>
-              <p>
+              <For each="dataUrl" index="i" of={dataUrls}>
                 <Choose>
                   <When
                     condition={
-                      catalogItem.dataUrlType.indexOf("wfs") === 0 ||
-                      catalogItem.dataUrlType.indexOf("wcs") === 0
+                      dataUrl.type?.startsWith("wfs") ||
+                      dataUrl.type?.startsWith("wcs")
                     }
                   >
-                    {catalogItem.dataUrlType.indexOf("wfs") === 0 &&
-                      t("description.useLinkBelow", {
-                        link: (
+                    {dataUrl.type?.startsWith("wfs") &&
+                      parseCustomMarkdownToReact(
+                        t("description.useLinkBelow", {
+                          link: `
                           <a
                             href="http://docs.geoserver.org/latest/en/user/services/wfs/reference.html"
                             target="_blank"
@@ -245,11 +227,13 @@ const Description = observer(
                           >
                             Web Feature Service (WFS) documentation
                           </a>
-                        )
-                      })}
-                    {catalogItem.dataUrlType.indexOf("wcs") === 0 &&
-                      t("description.useLinkBelow", {
-                        link: (
+                        `
+                        })
+                      )}
+                    {dataUrl.type?.startsWith("wcs") &&
+                      parseCustomMarkdownToReact(
+                        t("description.useLinkBelow", {
+                          link: `
                           <a
                             href="http://docs.geoserver.org/latest/en/user/services/wcs/reference.html"
                             target="_blank"
@@ -258,54 +242,28 @@ const Description = observer(
                           >
                             Web Coverage Service (WCS) documentation
                           </a>
-                        )
-                      })}
-                    <br />
-                    <Link
-                      url={catalogItem.dataUrl}
-                      text={catalogItem.dataUrl}
-                    />
+                        `
+                        })
+                      )}
                   </When>
-                  <When
-                    condition={
-                      dataUrlType === "data-uri" || dataUrlType === "local"
-                    }
-                  >
-                    <If condition={hasDataUriCapability}>
-                      <Link
-                        url={dataUri}
-                        text={t("description.downloadInFormat", {
-                          format: dataUriFormat.toUpperCase()
-                        })}
-                        download={getBetterFileName(
-                          dataUrlType,
-                          catalogItem.name,
-                          dataUriFormat
-                        )}
-                      />
-                    </If>
-                    <If condition={!hasDataUriCapability}>
-                      {t("description.downloadNotSupported")}
-                    </If>
-                  </When>
-                  <Otherwise>
-                    {t("description.useTheLinkToDownload")}
-                    <br />
-                    {catalogItem.dataUrl.startsWith("data:") && (
-                      <Link
-                        url={catalogItem.dataUrl}
-                        text={t("description.exportData")}
-                      />
-                    )}
-                    {!catalogItem.dataUrl.startsWith("data:") && (
-                      <Link
-                        url={catalogItem.dataUrl}
-                        text={catalogItem.dataUrl}
-                      />
-                    )}
-                  </Otherwise>
                 </Choose>
-              </p>
+                <Box paddedVertically key={dataUrl.url}>
+                  <a
+                    href={dataUrl.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`${Styles.link} description-dataUrls`}
+                    css={`
+                      color: ${p => p.theme.colorPrimary};
+                    `}
+                  >
+                    <If condition={dataUrl.title}>
+                      <Button primary={true}>{dataUrl.title}</Button>
+                    </If>
+                    <If condition={!dataUrl.title}>{dataUrl.url}</If>
+                  </a>
+                </Box>
+              </For>
             </If>
 
             <If
@@ -365,66 +323,6 @@ const Description = observer(
           </If>
           <ExportData item={catalogItem}></ExportData>
         </div>
-      );
-    }
-  })
-);
-
-/**
- * Read the format from the start of a data uri, eg. data:attachment/csv,...
- * @param  {String} dataUri The data URI.
- * @return {String} The format string, eg. 'csv', or undefined if none found.
- */
-function getDataUriFormat(dataUri) {
-  if (defined(dataUri)) {
-    const slashIndex = dataUri.indexOf("/");
-    const commaIndex = dataUri.indexOf(",");
-    // Don't look into the data itself. Assume the format is somewhere in the first 40 chars.
-    if (slashIndex < commaIndex && commaIndex < 40) {
-      return dataUri.slice(slashIndex + 1, commaIndex);
-    }
-  }
-}
-
-/**
- * Return a nicer filename for this file.
- * @private
- */
-function getBetterFileName(dataUrlType, itemName, format) {
-  let name = itemName;
-  const extension = "." + format;
-  // Only add the extension if it's not already there.
-  if (name.indexOf(extension) !== name.length - extension.length) {
-    name = name + extension;
-  }
-  // For local files, the file already exists on the user's computer with the original name, so give it a modified name.
-  if (dataUrlType === "local") {
-    name = "processed " + name;
-  }
-  return name;
-}
-
-const Link = observer(
-  createReactClass({
-    displayName: "Link",
-
-    propTypes: {
-      url: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired,
-      download: PropTypes.string
-    },
-
-    render() {
-      return (
-        <a
-          href={this.props.url}
-          className={Styles.link}
-          download={this.props.download}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {this.props.text}
-        </a>
       );
     }
   })

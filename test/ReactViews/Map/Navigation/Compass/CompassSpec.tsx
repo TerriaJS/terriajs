@@ -7,7 +7,7 @@ import ViewState from "../../../../../lib/ReactViewModels/ViewState";
 import { ThemeProvider } from "styled-components";
 import { terriaTheme } from "../../../../../lib/ReactViews/StandardUserInterface/StandardTheme";
 // import Compass from "../../../../../lib/ReactViews/Map/Navigation/Compass";
-const Compass: any = require("../../../../../lib/ReactViews/Map/Navigation/Compass")
+const Compass: any = require("../../../../../lib/ReactViews/Map/Navigation/Items/Compass")
   .default;
 import { StyledIcon } from "../../../../../lib/Styled/Icon";
 
