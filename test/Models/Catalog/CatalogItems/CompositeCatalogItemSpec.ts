@@ -102,10 +102,20 @@ describe("CompositeCatalogItem", function() {
     composite.add(CommonStrata.definition, item1);
     composite.add(CommonStrata.definition, item2);
 
-    composite.setTrait(CommonStrata.user, "show", false);
+    // The visibility flag should be synced on a per stratum basis.
+    // Setting a value to one stratum should only affect the corresponding
+    // stratum of each member.
+    composite.setTrait(CommonStrata.definition, "show", false);
+    expect(item1.getTrait(CommonStrata.definition, "show")).toEqual(false);
+    expect(item2.getTrait(CommonStrata.definition, "show")).toEqual(false);
+    expect(item1.getTrait(CommonStrata.user, "show")).toEqual(undefined);
+    expect(item2.getTrait(CommonStrata.user, "show")).toEqual(undefined);
 
-    expect(item1.show).toEqual(false);
-    expect(item2.show).toEqual(false);
+    composite.setTrait(CommonStrata.user, "show", true);
+    expect(item1.getTrait(CommonStrata.definition, "show")).toEqual(false);
+    expect(item2.getTrait(CommonStrata.definition, "show")).toEqual(false);
+    expect(item1.getTrait(CommonStrata.user, "show")).toEqual(true);
+    expect(item2.getTrait(CommonStrata.user, "show")).toEqual(true);
   });
 
   // it("concatenates legends", function(done) {

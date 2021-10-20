@@ -66,10 +66,10 @@ export default class CompositeCatalogItem extends MappableMixin(
   }
 
   syncVisibilityToMembers() {
-    const { show } = this;
-    this.memberModels.forEach(model => {
-      runInAction(() => {
-        model.setTrait(CommonStrata.user, "show", show);
+    this.strata.forEach((stratum, stratumId) => {
+      const show = this.getTrait(stratumId, "show");
+      this.memberModels.forEach(model => {
+        model.setTrait(stratumId, "show", show);
       });
     });
   }
