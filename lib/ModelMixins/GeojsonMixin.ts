@@ -500,7 +500,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         markerSymbol: style["marker-symbol"], // and undefined if none
         markerColor: defaultColor(style["marker-color"], this.name || ""),
         stroke: getColor(defaultValue(style.stroke, "#000000")),
-        strokeWidth: defaultValue(style["stroke-width"], 2),
+        strokeWidth: defaultValue(style["stroke-width"], 1),
         polygonStroke: getColor(defaultValue(style.stroke, "#000000")),
         polylineStroke: defaultColor(style.stroke, this.name || ""),
         markerOpacity: style["marker-opacity"], // not in SimpleStyle spec or supported by Cesium but see below
