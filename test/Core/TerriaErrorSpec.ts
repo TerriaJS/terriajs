@@ -85,6 +85,63 @@ describe("TerriaError", function() {
     expect(combined?.flatten().length).toBe(7);
   });
 
+  it("Combines correctly with overrideRaiseToUser", function() {
+    const error = new TerriaError({
+      message: "some message",
+      overrideRaiseToUser: true,
+      severity: TerriaErrorSeverity.Error
+    });
+    expect(error.shouldRaiseToUser).toBe(true);
+
+    const error2 = new TerriaError({
+      message: "some message",
+      overrideRaiseToUser: false,
+      severity: TerriaErrorSeverity.Error
+    });
+    expect(error2.shouldRaiseToUser).toBe(false);
+
+    const test3 = TerriaError.from(error2, {
+      title: "A title",
+      severity: TerriaErrorSeverity.Error
+    });
+    expect(error2.shouldRaiseToUser).toBe(false);
+
+    const errors = test3.flatten();
+
+    const combined = TerriaError.combine(errors, "A big error");
+    expect(combined?.message).toBe("A big error");
+    expect(combined?.shouldRaiseToUser).toBeTruthy();
+  });
+
+  it("Combines correctly with overrideRaiseToUser and severity", function() {
+    const error = new TerriaError({
+      message: "some message",
+      overrideRaiseToUser: true,
+      severity: TerriaErrorSeverity.Warning
+    });
+    expect(error.shouldRaiseToUser).toBe(true);
+
+    const error2 = new TerriaError({
+      message: "some message",
+      severity: TerriaErrorSeverity.Warning
+    });
+    expect(error2.shouldRaiseToUser).toBe(false);
+
+    const test3 = TerriaError.from(error2, { title: "A title" });
+    expect(error2.shouldRaiseToUser).toBe(false);
+    expect(error2.severity).toBe(TerriaErrorSeverity.Warning);
+
+    test3.overrideRaiseToUser = false;
+    expect(error2.shouldRaiseToUser).toBe(false);
+
+    const errors = test3.flatten();
+
+    const combined = TerriaError.combine(errors, "A big error");
+    expect(combined?.message).toBe("A big error");
+    expect(combined?.severity).toBe(TerriaErrorSeverity.Warning);
+    expect(combined?.shouldRaiseToUser).toBeTruthy();
+  });
+
   it("Correctly uses importance and highestImportanceError", function() {
     const error = new TerriaError({ message: "some message" });
     const test = TerriaError.from(error);
