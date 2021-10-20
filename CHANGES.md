@@ -14,6 +14,7 @@ Change Log
   * Replace `CompositeBarItemController` `visible` setter with `setVisible` function
 * Use `yarn` in CI scripts (and upgrade node to v14)
 * Fix app crash when previewing a nested reference in the catalog (eg when viewing an indexed search result where the result is a reference).
+* `mapItems` can now return arbitrary Cesium primitives.
 * [The next improvement]
 
 #### 8.1.4
