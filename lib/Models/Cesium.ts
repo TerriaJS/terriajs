@@ -56,7 +56,7 @@ import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvi
 import PickedFeatures, { ProviderCoordsMap } from "../Map/PickedFeatures";
 import MappableMixin, {
   ImageryParts,
-  isCesium3DTileset,
+  isPrimitive,
   isDataSource,
   isTerrainProvider,
   MapItem
@@ -591,24 +591,21 @@ export default class Cesium extends GlobeOrMap {
         }
       }
 
-      const allCesium3DTilesets = this._allMapItems.filter(isCesium3DTileset);
+      const allPrimitives = this._allMapItems.filter(isPrimitive);
 
-      // Remove deleted tilesets
+      // Remove deleted primitives
       const primitives = this.scene.primitives;
       for (let i = 0; i < this.scene.primitives.length; i++) {
         const prim = primitives.get(i);
-        if (
-          isCesium3DTileset(prim) &&
-          allCesium3DTilesets.indexOf(prim) === -1
-        ) {
+        if (isPrimitive(prim) && allPrimitives.indexOf(prim) === -1) {
           this.scene.primitives.remove(prim);
         }
       }
 
-      // Add new tilesets
-      allCesium3DTilesets.forEach(tileset => {
-        if (!primitives.contains(tileset)) {
-          primitives.add(tileset);
+      // Add new primitives
+      allPrimitives.forEach(primitive => {
+        if (!primitives.contains(primitive)) {
+          primitives.add(primitive);
         }
       });
 
