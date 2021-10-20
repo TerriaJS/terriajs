@@ -52,8 +52,8 @@ export interface TerriaErrorOptions {
   /** The object that raised the error. */
   sender?: unknown;
 
-  /** True if error message should be shown to user *regardless* of error severity. If this is undefined, then error severity will be used to determine if shouldRaiseToUser (severity `Error` are presented to the user. `Warning` will just be printed to console) */
-  shouldRaiseToUser?: boolean;
+  /** True if error message should be shown to user *regardless* of error severity. If this is undefined, then error severity will be used to determine if overrideRaiseToUser (severity `Error` are presented to the user. `Warning` will just be printed to console) */
+  overrideRaiseToUser?: boolean;
 
   /** True if the user has seen this error; otherwise, false. */
   raisedToUser?: boolean;
@@ -109,8 +109,6 @@ export function parseOverrides(
 export default class TerriaError {
   private readonly _message: string | I18nTranslateString;
   private readonly _title: string | I18nTranslateString;
-  /** Override shouldRaiseToUser (see `get shouldRaiseToUser()`) */
-  private _shouldRaiseToUser: boolean | undefined;
   private _raisedToUser: boolean;
 
   readonly importance: number = 0;
@@ -120,6 +118,8 @@ export default class TerriaError {
   readonly originalError?: (TerriaError | Error)[];
   readonly stack: string;
 
+  /** Override shouldRaiseToUser (see `get shouldRaiseToUser()`) */
+  overrideRaiseToUser: boolean | undefined;
   @observable showDetails: boolean;
 
   /**
@@ -216,10 +216,20 @@ export default class TerriaError {
         ? TerriaErrorSeverity.Error
         : TerriaErrorSeverity.Warning;
 
-    // shouldRaiseToUser will be true if at least one error includes shouldRaiseToUser = true
-    const shouldRaiseToUser = filteredErrors
-      .map(error => error.shouldRaiseToUser ?? false)
-      .includes(true);
+    // overrideRaiseToUser will be true if at least one error includes overrideRaiseToUser = true
+    let overrideRaiseToUser: boolean | undefined =
+      filteredErrors.map(error => error.overrideRaiseToUser).includes(true) ||
+      undefined;
+
+    // overrideRaiseToUser will be false if:
+    // - NO errors includes overrideRaiseToUser = true
+    // - and at least one error includes overrideRaiseToUser = true
+    if (
+      !isDefined(overrideRaiseToUser) &&
+      filteredErrors.map(error => error.overrideRaiseToUser).includes(false)
+    ) {
+      overrideRaiseToUser = false;
+    }
 
     return new TerriaError({
       // Set default title and message
@@ -229,7 +239,7 @@ export default class TerriaError {
       // Add original errors and overrides
       originalError: filteredErrors,
       severity,
-      shouldRaiseToUser,
+      overrideRaiseToUser,
       ...parseOverrides(overrides)
     });
   }
@@ -239,7 +249,7 @@ export default class TerriaError {
     this._title = options.title ?? { key: "core.terriaError.defaultTitle" };
     this.sender = options.sender;
     this._raisedToUser = options.raisedToUser ?? false;
-    this._shouldRaiseToUser = options.shouldRaiseToUser;
+    this.overrideRaiseToUser = options.overrideRaiseToUser;
     this.importance = options.importance ?? 0;
     this.showDetails = options.showDetails ?? false;
 
@@ -276,15 +286,11 @@ export default class TerriaError {
     return resolveI18n(this._title);
   }
 
-  set shouldRaiseToUser(s: boolean | undefined) {
-    this._shouldRaiseToUser = s;
-  }
-
-  /** True if `severity` is `Error` and the error hasn't been raised yet - or return this._shouldRaiseToUser if it is defined */
+  /** True if `severity` is `Error` and the error hasn't been raised yet - or return this.overrideRaiseToUser if it is defined */
   get shouldRaiseToUser() {
     return (
-      // Return this._shouldRaiseToUser override if it is defined
-      this._shouldRaiseToUser ??
+      // Return this.overrideRaiseToUser override if it is defined
+      this.overrideRaiseToUser ??
       // Otherwise, we should raise the error if it hasn't already been raised and the severity is ERROR
       (!this.raisedToUser &&
         (typeof this.severity === "function"
@@ -333,7 +339,7 @@ export default class TerriaError {
       sender: this.sender,
       originalError: this,
       severity: this.severity,
-      shouldRaiseToUser: this._shouldRaiseToUser,
+      overrideRaiseToUser: this.overrideRaiseToUser,
       ...parseOverrides(overrides)
     });
   }
