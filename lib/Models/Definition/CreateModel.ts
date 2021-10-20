@@ -1,4 +1,6 @@
 import { action, computed, observable, runInAction, toJS } from "mobx";
+import filterOutUndefined from "../../Core/filterOutUndefined";
+import flatten from "../../Core/flatten";
 import { getObjectId } from "../../Traits/ArrayNestedStrataMap";
 import { ObjectArrayTrait } from "../../Traits/Decorators/objectArrayTrait";
 import { ModelId } from "../../Traits/ModelReference";
@@ -156,6 +158,28 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
       return models.find(
         (o: any, i: number) => getObjectId(trait.idProperty, o, i) === objectId
       );
+    }
+
+    /** Return full list of knownContainerUniqueIds.
+     * This will recursively travese tree of knownContainerUniqueIds models to return full list of dependencies
+     */
+    @computed
+    get completeKnownContainerUniqueIds(): string[] {
+      const findContainers = (model: BaseModel): string[] => [
+        ...model.knownContainerUniqueIds,
+        ...flatten(
+          filterOutUndefined(
+            model.knownContainerUniqueIds.map(parentId => {
+              const parent = this.terria.getModelById(BaseModel, parentId);
+              if (parent) {
+                return findContainers(parent);
+              }
+            })
+          )
+        )
+      ];
+
+      return findContainers(this).reverse();
     }
   }
 

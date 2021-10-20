@@ -4,7 +4,7 @@ import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
-import TerriaError from "../../../Core/TerriaError";
+import TerriaError, { TerriaErrorSeverity } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import ChartableMixin from "../../../ModelMixins/ChartableMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
@@ -21,7 +21,7 @@ import SelectableDimensions, {
 import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
 import { SdmxJsonDataflowStratum } from "./SdmxJsonDataflowStratum";
-import { sdmxErrorString } from "./SdmxJsonServerStratum";
+import { sdmxErrorString, SdmxHttpErrorCodes } from "./SdmxJsonServerStratum";
 
 export default class SdmxJsonCatalogItem
   extends ChartableMixin(
@@ -89,7 +89,8 @@ export default class SdmxJsonCatalogItem
           }
 
           dimensionTraits.setTrait(stratumId, "selectedId", value);
-          (await this.loadMapItems()).throwIfError();
+
+          (await this.loadMapItems()).raiseError(this.terria);
         }
       };
     });
@@ -155,7 +156,10 @@ export default class SdmxJsonCatalogItem
       if (!isDefined(csvString)) {
         throw new TerriaError({
           title: i18next.t("models.sdmxCatalogItem.loadDataErrorTitle"),
-          message: i18next.t("models.sdmxCatalogItem.loadDataErrorTitle", this)
+          message: i18next.t(
+            "models.sdmxCatalogItem.loadDataErrorMessage",
+            this
+          )
         });
       }
 
@@ -165,19 +169,44 @@ export default class SdmxJsonCatalogItem
         error instanceof RequestErrorEvent &&
         typeof error.response === "string"
       ) {
-        this.terria.raiseErrorToUser(
-          new TerriaError({
-            message: sdmxErrorString.has(error.statusCode)
-              ? `${sdmxErrorString.get(error.statusCode)}: ${error.response}`
-              : `${error.response}`,
-            title: `Failed to load SDMX data for "${this.name ??
-              this.uniqueId}"`
-          })
-        );
+        // If no results and we have selcetable dimensions, give message regarding dimensions
+        // This message will include values for each selectable dimension
+        if (
+          error.statusCode === SdmxHttpErrorCodes.NoResults &&
+          this.selectableDimensions.length > 0
+        ) {
+          throw new TerriaError({
+            message: i18next.t(
+              "models.sdmxCatalogItem.noResultsWithDimensions",
+              {
+                dimensions: this.selectableDimensions
+                  .filter(dim => !dim.disable && dim.options?.length !== 1)
+                  .map(
+                    dim =>
+                      // Format string into `${dimenion name} = ${dimenion selected value}
+                      `- ${dim.name} = \`${dim.options?.find(
+                        option => option.id === dim.selectedId
+                      )?.name ?? dim.selectedId}\``
+                  )
+                  .join("\n")
+              }
+            ),
+            title: i18next.t("models.sdmxCatalogItem.loadDataErrorTitle", this),
+            severity: TerriaErrorSeverity.Warning,
+            importance: 1,
+            shouldRaiseToUser: true
+          });
+        }
+        throw new TerriaError({
+          message: sdmxErrorString.has(error.statusCode)
+            ? `${sdmxErrorString.get(error.statusCode)}: ${error.response}`
+            : `${error.response}`,
+          title: i18next.t("models.sdmxCatalogItem.loadDataErrorTitle", this)
+        });
       } else {
-        this.terria.raiseErrorToUser(
-          `Failed to load SDMX data for "${this.name ?? this.uniqueId}"`
-        );
+        throw TerriaError.from(error, {
+          message: i18next.t("models.sdmxCatalogItem.loadDataErrorTitle", this)
+        });
       }
     }
   }

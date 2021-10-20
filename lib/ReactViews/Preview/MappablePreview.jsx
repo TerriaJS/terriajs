@@ -48,29 +48,28 @@ class MappablePreview extends React.Component {
     const keepCatalogOpen = event.shiftKey || event.ctrlKey;
     const toAdd = !this.props.terria.workbench.contains(this.props.previewed);
 
-    try {
-      if (toAdd) {
-        this.props.terria.timelineStack.addToTop(this.props.previewed);
-        await this.props.terria.workbench.add(this.props.previewed);
-      } else {
-        this.props.terria.timelineStack.remove(this.props.previewed);
-        this.props.terria.workbench.remove(this.props.previewed);
-      }
-      if (
-        this.props.terria.workbench.contains(this.props.previewed) &&
-        !keepCatalogOpen
-      ) {
-        this.props.viewState.closeCatalog();
-        this.props.terria.analytics?.logEvent(
-          Category.dataSource,
-          toAdd
-            ? DataSourceAction.addFromPreviewButton
-            : DataSourceAction.removeFromPreviewButton,
-          getPath(this.props.previewed)
-        );
-      }
-    } catch (e) {
-      this.props.terria.raiseErrorToUser(e, undefined, true);
+    if (toAdd) {
+      (await this.props.terria.workbench.add(this.props.previewed)).raiseError(
+        this.props.terria,
+        undefined,
+        true // We want to force show error to user here - because this function is called when a user clicks the "Add to workbench"  buttons
+      );
+    } else {
+      this.props.terria.timelineStack.remove(this.props.previewed);
+      this.props.terria.workbench.remove(this.props.previewed);
+    }
+    if (
+      this.props.terria.workbench.contains(this.props.previewed) &&
+      !keepCatalogOpen
+    ) {
+      this.props.viewState.closeCatalog();
+      this.props.terria.analytics?.logEvent(
+        Category.dataSource,
+        toAdd
+          ? DataSourceAction.addFromPreviewButton
+          : DataSourceAction.removeFromPreviewButton,
+        getPath(this.props.previewed)
+      );
     }
   }
 

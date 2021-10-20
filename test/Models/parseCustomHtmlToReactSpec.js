@@ -1,26 +1,19 @@
 "use strict";
 
+import ReactDOMServer from "react-dom/server";
+import { findAll, findAllWithType } from "react-shallow-testutils";
 import Chart from "../../lib/ReactViews/Custom/Chart/Chart";
 import Collapsible from "../../lib/ReactViews/Custom/Collapsible/Collapsible";
 import parseCustomHtmlToReact from "../../lib/ReactViews/Custom/parseCustomHtmlToReact";
 import registerCustomComponentTypes from "../../lib/ReactViews/Custom/registerCustomComponentTypes";
-import Terria from "../../lib/Models/Terria";
-import ReactDOMServer from "react-dom/server";
-
-import { findAllWithType, findAll } from "react-shallow-testutils";
 
 function findAllEqualTo(reactElement, text) {
   return findAll(reactElement, element => element && element === text);
 }
 
 describe("parseCustomHtmlToReact and registerCustomComponentTypes", function() {
-  let terria;
-
   beforeEach(function() {
-    terria = new Terria({
-      baseUrl: "./"
-    });
-    registerCustomComponentTypes(terria);
+    registerCustomComponentTypes();
   });
 
   it("parses a div", function() {

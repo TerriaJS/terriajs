@@ -1,9 +1,10 @@
 "use strict";
 
 import CollapsibleCustomComponent from "./CollapsibleCustomComponent";
-import CustomComponent from "./CustomComponent";
-import SOSChartCustomComponent from "./SOSChartCustomComponent";
 import CsvChartCustomComponent from "./CsvChartCustomComponent";
+import CustomComponent from "./CustomComponent";
+import FeedbackLinkCustomComponent from "./FeedbackLinkCustomComponent";
+import SOSChartCustomComponent from "./SOSChartCustomComponent";
 import TerriaTooltipCustomComponent from "./TerriaTooltip";
 
 /**
@@ -13,11 +14,10 @@ import TerriaTooltipCustomComponent from "./TerriaTooltip";
  * {@CustomComponent.register} here or in separate source file executed
  * at startup.
  */
-const registerCustomComponentTypes = function(terria) {
+export default function registerCustomComponentTypes() {
   CustomComponent.register(new CsvChartCustomComponent());
   CustomComponent.register(new SOSChartCustomComponent());
   CustomComponent.register(new CollapsibleCustomComponent());
+  CustomComponent.register(new FeedbackLinkCustomComponent());
   CustomComponent.register(new TerriaTooltipCustomComponent());
-};
-
-export default registerCustomComponentTypes;
+}

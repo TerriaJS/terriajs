@@ -44,7 +44,7 @@ import isDefined from "../Core/isDefined";
 import JsonValue, { isJsonObject, JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
 import StandardCssColors from "../Core/StandardCssColors";
-import TerriaError from "../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../Core/TerriaError";
 import ProtomapsImageryProvider, {
   GEOJSON_SOURCE_LAYER_NAME
 } from "../Map/ProtomapsImageryProvider";
@@ -247,7 +247,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               // try loading from a zip file url or a regular url
               resolve(this.loadFromUrl(this.url));
             } else {
-              throw new TerriaError({
+              throw networkRequestError({
                 sender: this,
                 title: i18next.t("models.geoJson.unableToLoadItemTitle"),
                 message: i18next.t("models.geoJson.unableToLoadItemMessage")
@@ -256,7 +256,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           }
         );
         if (!isJsonObject(geoJson)) {
-          throw new TerriaError({
+          throw networkRequestError({
             title: i18next.t("models.geoJson.errorLoadingTitle"),
             message: i18next.t("models.geoJson.errorParsingMessage")
           });
@@ -299,10 +299,12 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           });
         }
       } catch (e) {
-        throw TerriaError.from(e, {
-          title: i18next.t("models.geoJson.errorLoadingTitle"),
-          message: i18next.t("models.geoJson.errorParsingMessage")
-        });
+        throw networkRequestError(
+          TerriaError.from(e, {
+            title: i18next.t("models.geoJson.errorLoadingTitle"),
+            message: i18next.t("models.geoJson.errorParsingMessage")
+          })
+        );
       }
     }
 
@@ -889,7 +891,7 @@ function createPolylineFromPolygon(
   createEntitiesFromHoles(entities, hierarchy.holes, entity);
 }
 
-function reprojectToGeographic(
+async function reprojectToGeographic(
   geoJson: JsonObject,
   proj4ServiceBaseUrl?: string
 ): Promise<JsonObject> {
@@ -922,10 +924,12 @@ function reprojectToGeographic(
     return Promise.resolve(geoJson);
   }
 
-  return makeRealPromise<boolean>(
+  const needsReprojection = await makeRealPromise<boolean>(
     Reproject.checkProjection(proj4ServiceBaseUrl, code)
-  ).then(function(result: boolean) {
-    if (result) {
+  );
+
+  if (needsReprojection) {
+    try {
       filterValue(geoJson, "coordinates", function(obj, prop) {
         obj[prop] = filterArray(obj[prop], function(pts) {
           if (pts.length === 0) return [];
@@ -934,12 +938,14 @@ function reprojectToGeographic(
         });
       });
       return geoJson;
-    } else {
-      throw new DeveloperError(
-        "The crs code for this datasource is unsupported."
-      );
+    } catch (e) {
+      throw TerriaError.from(e, "Failed to reproject geoJSON");
     }
-  });
+  } else {
+    throw new DeveloperError(
+      "The crs code for this datasource is unsupported."
+    );
+  }
 }
 
 // Reproject a point list based on the supplied crs code.

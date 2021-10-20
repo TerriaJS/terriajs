@@ -2,7 +2,7 @@ import { createTransformer } from "mobx-utils";
 import defined from "terriajs-cesium/Source/Core/defined";
 import isReadOnlyArray from "../../../Core/isReadOnlyArray";
 import loadXML from "../../../Core/loadXML";
-import TerriaError from "../../../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import xml2json from "../../../ThirdParty/xml2json";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import {
@@ -148,7 +148,7 @@ export default class WebMapServiceCapabilities {
     return Promise.resolve(loadXML(url)).then(function(capabilitiesXml) {
       const json = xml2json(capabilitiesXml);
       if (!defined(json.Capability)) {
-        throw new TerriaError({
+        throw networkRequestError({
           title: "Invalid GetCapabilities",
           message:
             `The URL ${url} was retrieved successfully but it does not appear to be a valid Web Map Service (WMS) GetCapabilities document.` +

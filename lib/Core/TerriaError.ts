@@ -1,12 +1,13 @@
 "use strict";
 
 import i18next from "i18next";
+import { observable } from "mobx";
+import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import { Notification } from "../ReactViewModels/NotificationState";
 import { terriaErrorNotification } from "../ReactViews/Notification/terriaErrorNotification";
 import filterOutUndefined from "./filterOutUndefined";
 import flatten from "./flatten";
 import isDefined from "./isDefined";
-import { observable } from "mobx";
 
 /** This is used for I18n translation strings so we can "resolve" them when the Error is displayed to the user.
  * This means we can create TerriaErrors before i18next has been initialised.
@@ -39,11 +40,20 @@ export interface TerriaErrorOptions {
   /**  A detailed message describing the error.  This message may be HTML and it should be sanitized before display to the user. */
   message: string | I18nTranslateString;
 
+  /** Importance of the error message, this is used to determine which message is displayed to the user if multiple error messages exist.
+   * Higher importance messages are shown to user over lower importance. Default value is 0
+   * If two errors of equal importance are found - the first error found through depth-first search will be shown
+   */
+  importance?: number;
+
   /** A short title describing the error. */
   title?: string | I18nTranslateString;
 
   /** The object that raised the error. */
   sender?: unknown;
+
+  /** True if error message should be shown to user *regardless* of error severity. If this is undefined, then error severity will be used to determine if shouldRaiseToUser (severity `Error` are presented to the user. `Warning` will just be printed to console) */
+  shouldRaiseToUser?: boolean;
 
   /** True if the user has seen this error; otherwise, false. */
   raisedToUser?: boolean;
@@ -60,7 +70,7 @@ export interface TerriaErrorOptions {
   showDetails?: boolean;
 }
 
-/** Object used to clone an existing TerriaError (see `TerriaError.clone()`).
+/** Object used to clone an existing TerriaError (see `TerriaError.createParentError()`).
  *
  * If this is a `string` it will be used to set `TerriaError.message`
  * If this is `TerriaErrorSeverity` it will be used to set `TerriaError.severity`
@@ -99,15 +109,18 @@ export function parseOverrides(
 export default class TerriaError {
   private readonly _message: string | I18nTranslateString;
   private readonly _title: string | I18nTranslateString;
-  private _raisedToUser: boolean = false;
+  /** Override shouldRaiseToUser (see `get shouldRaiseToUser()`) */
+  private _shouldRaiseToUser: boolean | undefined;
+  private _raisedToUser: boolean;
 
+  readonly importance: number = 0;
   readonly severity: TerriaErrorSeverity | (() => TerriaErrorSeverity);
   /** `sender` isn't really used for anything at the moment... */
   readonly sender: unknown;
   readonly originalError?: (TerriaError | Error)[];
   readonly stack: string;
 
-  @observable showDetails = false;
+  @observable showDetails: boolean;
 
   /**
    * Convenience function to generate a TerriaError from some unknown error. It will try to extract a meaningful message from whatever object it is given.
@@ -139,14 +152,27 @@ export default class TerriaError {
       return isDefined(overrides) ? error.createParentError(overrides) : error;
     }
 
-    // Try to find message from error object
-    let message: string | undefined;
+    // Try to find message/title from error object
+    let message: string | I18nTranslateString = {
+      key: "core.terriaError.defaultMessage"
+    };
+    let title: string | I18nTranslateString = {
+      key: "core.terriaError.defaultTitle"
+    };
     // Create original Error from `error` object
     let originalError: Error | undefined;
 
     if (typeof error === "string") {
       message = error;
       originalError = new Error(message);
+    }
+    // If error is RequestErrorEvent - use networkRequestTitle and networkRequestMessage
+    else if (error instanceof RequestErrorEvent) {
+      title = { key: "core.terriaError.networkRequestTitle" };
+      message = {
+        key: "core.terriaError.networkRequestMessage"
+      };
+      originalError = new Error(error.toString());
     } else if (error instanceof Error) {
       message = error.message;
       originalError = error;
@@ -156,8 +182,8 @@ export default class TerriaError {
     }
 
     return new TerriaError({
-      title: { key: "core.terriaError.defaultTitle" },
-      message: message ?? { key: "core.terriaError.defaultMessage" },
+      title,
+      message,
       originalError,
       ...parseOverrides(overrides)
     });
@@ -173,6 +199,11 @@ export default class TerriaError {
     const filteredErrors = errors.filter(e => isDefined(e)) as TerriaError[];
     if (filteredErrors.length === 0) return;
 
+    // If only one error, just create parent error - this is so we don't get unnecessary levels of TerriaError created
+    if (filteredErrors.length === 1) {
+      return filteredErrors[0].createParentError(overrides);
+    }
+
     // Find highest severity across errors (eg if one if `Error`, then the new TerriaError will also be `Error`)
     const severity = () =>
       filteredErrors
@@ -185,6 +216,11 @@ export default class TerriaError {
         ? TerriaErrorSeverity.Error
         : TerriaErrorSeverity.Warning;
 
+    // shouldRaiseToUser will be true if at least one error includes shouldRaiseToUser = true
+    const shouldRaiseToUser = filteredErrors
+      .map(error => error._shouldRaiseToUser ?? false)
+      .includes(true);
+
     return new TerriaError({
       // Set default title and message
       title: { key: "core.terriaError.defaultCombineTitle" },
@@ -193,6 +229,7 @@ export default class TerriaError {
       // Add original errors and overrides
       originalError: filteredErrors,
       severity,
+      shouldRaiseToUser,
       ...parseOverrides(overrides)
     });
   }
@@ -202,6 +239,8 @@ export default class TerriaError {
     this._title = options.title ?? { key: "core.terriaError.defaultTitle" };
     this.sender = options.sender;
     this._raisedToUser = options.raisedToUser ?? false;
+    this._shouldRaiseToUser = options.shouldRaiseToUser;
+    this.importance = options.importance ?? 0;
     this.showDetails = options.showDetails ?? false;
 
     // Transform originalError to an array if needed
@@ -212,6 +251,7 @@ export default class TerriaError {
       : [];
 
     this.severity = options.severity ?? TerriaErrorSeverity.Error;
+
     this.stack = (new Error().stack ?? "")
       .split("\n")
       // Filter out some less useful lines in the stack trace
@@ -227,21 +267,35 @@ export default class TerriaError {
     return resolveI18n(this._message);
   }
 
+  /** Return error with message of highest importance in Error tree */
+  get highestImportanceError() {
+    return this.flatten().sort((a, b) => b.importance - a.importance)[0];
+  }
+
   get title() {
     return resolveI18n(this._title);
   }
 
-  /** True if `severity` is `Error` */
+  set shouldRaiseToUser(s: boolean | undefined) {
+    this._shouldRaiseToUser = s;
+  }
+
+  /** True if `severity` is `Error` and the error hasn't been raised yet - or return this._shouldRaiseToUser if it is defined */
   get shouldRaiseToUser() {
     return (
-      (typeof this.severity === "function"
-        ? this.severity()
-        : this.severity) === TerriaErrorSeverity.Error
+      // Return this._shouldRaiseToUser override if it is defined
+      this._shouldRaiseToUser ??
+      // Otherwise, we should raise the error if it hasn't already been raised and the severity is ERROR
+      (!this.raisedToUser &&
+        (typeof this.severity === "function"
+          ? this.severity()
+          : this.severity) === TerriaErrorSeverity.Error)
     );
   }
 
+  /** Has any error in the error tree been raised to the user? */
   get raisedToUser() {
-    return this._raisedToUser;
+    return this.flatten().find(error => error._raisedToUser) ? true : false;
   }
 
   /** Set raisedToUser value for **all** `TerriaErrors` in this tree. */
@@ -257,8 +311,12 @@ export default class TerriaError {
   /** Convert `TerriaError` to `Notification` */
   toNotification(): Notification {
     return {
-      title: () => this.title, // Title may need to be resolved when error is raised to user (for example after i18next initialisation)
-      message: terriaErrorNotification(this)
+      title: () => this.highestImportanceError.title, // Title may need to be resolved when error is raised to user (for example after i18next initialisation)
+      message: terriaErrorNotification(this),
+      // Don't show TerriaError Notification if shouldRaiseToUser is false, or we have already raisedToUser
+      ignore: () => !this.shouldRaiseToUser,
+      // Set raisedToUser to true on dismiss
+      onDismiss: () => (this.raisedToUser = true)
     };
   }
 
@@ -266,17 +324,21 @@ export default class TerriaError {
    * Create a new parent `TerriaError` from this error. This essentially "clones" the `TerriaError` and applied `overrides` on top. It will also set `originalError` so we get a nice tree of `TerriaErrors`
    */
   createParentError(overrides?: TerriaErrorOverrides): TerriaError {
-    // Note: we don't copy over `raisedToUser` here
+    // Note: we don't copy over `raisedToUser` or `importance` here
+    // We don't need `raisedToUser` as the getter will check all errors in the tree when called
+    // We don't want `importance` copied over, as it may vary between errors in the tree - and we want to be able to find errors with highest importance when diplaying the entire error tree to the user
     return new TerriaError({
       message: this._message,
       title: this._title,
       sender: this.sender,
       originalError: this,
       severity: this.severity,
+      shouldRaiseToUser: this._shouldRaiseToUser,
       ...parseOverrides(overrides)
     });
   }
 
+  /** Depth-first flatten */
   flatten(): TerriaError[] {
     return filterOutUndefined([
       this,
@@ -346,4 +408,27 @@ export default class TerriaError {
     error.stack = stack;
     return error;
   }
+}
+
+/** Wrap up network requets error with user-friendly message */
+export function networkRequestError(error: TerriaError | TerriaErrorOptions) {
+  // Combine network error with "networkRequestMessageDetailed" - this contains extra info about what could cause network error
+  return TerriaError.combine(
+    [
+      error instanceof TerriaError ? error : new TerriaError(error),
+      new TerriaError({
+        message: {
+          key: "core.terriaError.networkRequestMessageDetailed"
+        }
+      })
+    ],
+    // Override combined error with user-friendly title and message
+    {
+      title: { key: "core.terriaError.networkRequestTitle" },
+      message: {
+        key: "core.terriaError.networkRequestMessage"
+      },
+      importance: 1
+    }
+  );
 }

@@ -124,7 +124,7 @@ export class CkanDatasetStratum extends LoadableStratum(
   }
 
   @computed get name() {
-    if (this.ckanResource === undefined) return this.ckanItemReference.name;
+    if (this.ckanResource === undefined) return undefined;
     if (this.ckanItemReference.useResourceName) return this.ckanResource.name;
     // via @steve9164
     /** Switched the order [check `useCombinationNameWhereMultipleResources`

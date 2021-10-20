@@ -13,7 +13,7 @@ import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
-import TerriaError from "../../../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import featureDataToGeoJson from "../../../Map/featureDataToGeoJson";
 import proj4definitions from "../../../Map/Proj4Definitions";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
@@ -761,7 +761,7 @@ function buildGeoJsonUrl(catalogItem: ArcGisFeatureServerCatalogItem) {
   const layerId = urlComponents.layerId;
 
   if (!isDefined(layerId)) {
-    throw new TerriaError({
+    throw networkRequestError({
       title: i18next.t(
         "models.arcGisFeatureServerCatalogItem.invalidServiceTitle"
       ),

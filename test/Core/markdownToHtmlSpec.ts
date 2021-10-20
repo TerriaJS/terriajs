@@ -10,7 +10,7 @@ describe("markdownToHtml", function() {
     terria = new Terria({
       baseUrl: "./"
     });
-    registerCustomComponentTypes(terria);
+    registerCustomComponentTypes();
   });
   it("correctly injects terria's custom tooltips", function() {
     const spatialDataTerm = {
