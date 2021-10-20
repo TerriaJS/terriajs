@@ -6,13 +6,7 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 import { withRouter } from "react-router-dom";
 import defined from "terriajs-cesium/Source/Core/defined";
-import addedByUser from "../../Core/addedByUser";
-import getPath from "../../Core/getPath";
-import removeUserAddedData from "../../Models/removeUserAddedData";
-import CatalogItem from "./CatalogItem";
-import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import URI from "urijs";
-import addedByUser from "../../Core/addedByUser";
 import {
   Category,
   DataSourceAction
@@ -21,7 +15,6 @@ import getPath from "../../Core/getPath";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import removeUserAddedData from "../../Models/removeUserAddedData";
 import { ROOT_ROUTE } from "../../ReactViewModels/TerriaRouting";
-import removeUserAddedData from "../../Models/Catalog/removeUserAddedData";
 import CatalogItem from "./CatalogItem";
 
 // Individual dataset

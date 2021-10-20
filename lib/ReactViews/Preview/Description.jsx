@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import React from "react";
 import { Trans, withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
-import DataUri from "../../Core/DataUri";
 import Box from "../../Styled/Box";
 import Button from "../../Styled/Button";
 import Collapsible from "../Custom/Collapsible/Collapsible";

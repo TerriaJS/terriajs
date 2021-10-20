@@ -65,8 +65,8 @@ class MappablePreview extends React.Component {
       !keepCatalogOpen
     ) {
       this.props.viewState.closeCatalog();
-// TODO: Remove routing references wherever possible and move inside viewState functions (like closeCatalog)
-        this.props.viewState.history?.push(ROOT_ROUTE);
+      // TODO: Remove routing references wherever possible and move inside viewState functions (like closeCatalog)
+      this.props.viewState.history?.push(ROOT_ROUTE);
 
       this.props.terria.analytics?.logEvent(
         Category.dataSource,

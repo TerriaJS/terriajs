@@ -29,8 +29,6 @@ import SplitItemReference from "../../../Models/Catalog/CatalogReferences/SplitI
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import hasTraits from "../../../Models/Definition/hasTraits";
 import getAncestors from "../../../Models/getAncestors";
-import SplitItemReference from "../../../Models/SplitItemReference";
-import SplitItemReference from "../../../Models/SplitItemReference";
 import { CATALOG_ROUTE } from "../../../ReactViewModels/TerriaRouting";
 import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
 import Box from "../../../Styled/Box";
