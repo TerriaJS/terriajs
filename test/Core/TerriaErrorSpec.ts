@@ -91,6 +91,7 @@ describe("TerriaError", function() {
       overrideRaiseToUser: true,
       severity: TerriaErrorSeverity.Error
     });
+    expect(error.overrideRaiseToUser).toBe(true);
     expect(error.shouldRaiseToUser).toBe(true);
 
     const error2 = new TerriaError({
@@ -98,6 +99,7 @@ describe("TerriaError", function() {
       overrideRaiseToUser: false,
       severity: TerriaErrorSeverity.Error
     });
+    expect(error2.overrideRaiseToUser).toBe(false);
     expect(error2.shouldRaiseToUser).toBe(false);
 
     const test3 = TerriaError.from(error2, {
@@ -106,7 +108,7 @@ describe("TerriaError", function() {
     });
     expect(error2.shouldRaiseToUser).toBe(false);
 
-    const errors = test3.flatten();
+    const errors = [error, ...test3.flatten()];
 
     const combined = TerriaError.combine(errors, "A big error");
     expect(combined?.message).toBe("A big error");
@@ -134,11 +136,15 @@ describe("TerriaError", function() {
     test3.overrideRaiseToUser = false;
     expect(error2.shouldRaiseToUser).toBe(false);
 
-    const errors = test3.flatten();
+    const errors = [error, ...test3.flatten()];
 
     const combined = TerriaError.combine(errors, "A big error");
     expect(combined?.message).toBe("A big error");
-    expect(combined?.severity).toBe(TerriaErrorSeverity.Warning);
+    expect(
+      typeof combined?.severity === "function"
+        ? combined?.severity()
+        : combined?.severity
+    ).toBe(TerriaErrorSeverity.Warning);
     expect(combined?.shouldRaiseToUser).toBeTruthy();
   });
 
