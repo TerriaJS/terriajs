@@ -189,7 +189,7 @@ The https://github.com/nextapps-de/flexsearch library is used to index and searc
 
 To generate the catalog index:
 
-- `npm run build-tools`
+- `yarn build-tools`
 - `node .\build\generateCatalogIndex.js config-url base-url` where
   - `config-url` is URL to client-side-config file
   - `base-url` is URL to terriajs-server (this is used to load `server-config` and to proxy requests)

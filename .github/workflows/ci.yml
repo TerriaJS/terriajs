@@ -25,14 +25,14 @@ jobs:
       - run: npm install -g yarn@^1.19.0 && yarn install
 
       - name: Check formatting with prettier
-        run: npm run prettier-check
+        run: yarn prettier-check
 
       - name: Build TerriaJS tests
-        run: npm run gulp lint release -- --continue
+        run: yarn gulp lint release -- --continue
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
       - name: Run tests using xvfb
         uses: GabrielBB/xvfb-action@v1
         with:
-          run: npm run gulp test-firefox
+          run: yarn gulp test-firefox

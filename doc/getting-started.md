@@ -17,7 +17,7 @@ export NODE_OPTIONS=--max_old_space_size=4096
 
 npm install -g yarn
 
-yarn install && npm run gulp && npm start
+yarn install && yarn gulp && yarn start
 
 # Open at http://localhost:3001
 ```
@@ -72,22 +72,22 @@ The dependencies are installed in the `node_modules` subdirectory.  No global ch
 Do a standard build of TerriaMap with:
 
 ```bash
-npm run gulp
+yarn gulp
 ```
 
 Or, you can create a minified release build with:
 
 ```bash
-npm run gulp release
+yarn gulp release
 ```
 
 To watch for changes and automatically do an incremental build when any are detected, use:
 
 ```bash
-npm run gulp watch
+yarn gulp watch
 ```
 
-`npm run gulp` simply runs `gulp`, so you can use that directly if you prefer (run `npm install -g gulp-cli` to install it globally).
+`yarn gulp` simply runs `gulp`, so you can use that directly if you prefer (run `npm install -g gulp-cli` to install it globally).
 
 _If any of the above fail with an error that includes `Allocation failed - JavaScript heap out of memory` (see e.g. [the stack trace in this issue](https://github.com/TerriaJS/TerriaMap/issues/374)) run the task again after setting a higher Node.js allocation limit:_
 ```bash
@@ -101,7 +101,7 @@ The full set of `gulp` tasks can be found on the [Development Environment](contr
 TerriaMap includes a simple Node.js-based web server, called [terriajs-server](https://github.com/TerriaJS/terriajs-server).  To start it, run:
 
 ```bash
-npm start
+yarn start
 ```
 
 Then, open a web browser on `http://localhost:3001` to use TerriaMap.
