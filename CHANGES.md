@@ -4,6 +4,7 @@ Change Log
 #### next release (8.1.5)
 
 * Rename `TerriaError._shouldRaiseToUser` to `overrideRaiseToUser`
+  * Note: `userProperties.ignoreError = "1"` will take precedence over `overrideRaiseToUser = true`
 * Fix `overrideRaiseToUser` bug causing `overrideRaiseToUser` to be set to `true` in `TerriaError.combine`
 * Add `rollbar.warning` for `TerriaErrorSeverity.Warning`
 * Disable `zFilter` by default

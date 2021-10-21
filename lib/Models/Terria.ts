@@ -577,16 +577,19 @@ export default class Terria {
   ) {
     const terriaError = TerriaError.from(error, overrides);
 
-    // Set shouldRaiseToUser:
-    // - `true` if forceRaiseToUser agrument is true
-    // - `false` if ignoreErrors userProperties is set
+    // Set shouldRaiseToUser true if forceRaiseToUser agrument is true
     if (forceRaiseToUser) terriaError.overrideRaiseToUser = true;
-    else if (this.userProperties.get("ignoreErrors") === "1")
-      terriaError.overrideRaiseToUser = false;
 
     // Log error to error service
     this.errorService.error(terriaError);
-    this.notificationState.addNotificationToQueue(terriaError.toNotification());
+
+    // Only show error to user if `ignoreError` flag hasn't been set to "1"
+    // Note: this will take precedence over forceRaiseToUser/overrideRaiseToUser
+    if (this.userProperties.get("ignoreErrors") !== "1")
+      this.notificationState.addNotificationToQueue(
+        terriaError.toNotification()
+      );
+
     console.log(terriaError.toError());
   }
 
