@@ -15,7 +15,9 @@ cd TerriaMap
 
 export NODE_OPTIONS=--max_old_space_size=4096
 
-npm install && npm run gulp && npm start
+npm install -g yarn
+
+yarn install && npm run gulp && npm start
 
 # Open at http://localhost:3001
 ```
@@ -29,6 +31,7 @@ TerriaJS can be built and run on almost any macOS, Linux, or Windows system.  Th
 * The Bash command shell. On macOS or Linux you almost certainly already have this. On Windows, you can easily get it by installing [Git for Windows](https://gitforwindows.org/). In the instructions below, we assume you're using a Bash command prompt.
 * [Node.js](https://nodejs.org) v10.0 or later.  You can check your node version by running `node --version` on the command-line.
 * [npm](https://www.npmjs.com/) v6.0 or later.  npm is usually installed automatically alongside the above.  You can check your npm version by running `npm --version`.
+* [yarn](https://yarnpkg.com/) v1.19.0 or later. This can be installed using `npm install -g yarn@^1.19.0`
 
 The following components are optional:
 
@@ -56,10 +59,10 @@ export NODE_OPTIONS=--max_old_space_size=4096
 
 ### Installing Dependencies
 
-All of the dependencies required to build and run TerriaMap, other than the prerequisites listed above, are installed using `npm`:
+All of the dependencies required to build and run TerriaMap, other than the prerequisites listed above, are installed using `yarn`:
 
 ```bash
-npm install
+yarn install
 ```
 
 The dependencies are installed in the `node_modules` subdirectory.  No global changes are made to your system.
@@ -107,11 +110,11 @@ Then, open a web browser on `http://localhost:3001` to use TerriaMap.
 
 If you're building an application by using TerriaMap as a starting point, you will want to keep in sync as TerriaMap is improved and updated to use new versions of TerriaJS.  Forking the TerriaMap repo and using git to keep it in sync is outside the scope of this document, but GitHub has a [nice explanation](https://help.github.com/articles/fork-a-repo/).
 
-After pulling new changes, you will need to run `npm install` again to pick up any changed dependencies and then build TerriaMap.  If you have problems building or running, it is sometimes helpful to remove and reinstall the dependencies from npm:
+After pulling new changes, you will need to run `yarn install` again to pick up any changed dependencies and then build TerriaMap.  If you have problems building or running, it is sometimes helpful to remove and reinstall the dependencies from npm:
 
 ```bash
 rm -rf node_modules
-npm install
+yarn install
 ```
 
 ### Having trouble? 

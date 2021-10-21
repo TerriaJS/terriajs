@@ -17,6 +17,7 @@ gh api /repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA} -f state=pending -f co
 # Install some tools we need from npm
 npm install -g https://github.com/terriajs/sync-dependencies
 npm install request@^2.83.0
+npm install -g yarn@^1.19.0
 
 # Clone and build TerriaMap, using this version of TerriaJS
 TERRIAJS_COMMIT_HASH=$(git rev-parse HEAD)
@@ -29,9 +30,9 @@ git config --global user.email "info@terria.io"
 git config --global user.name "GitHub Actions"
 git commit -a -m 'temporary commit' # so the version doesn't indicate local modifications
 git tag -a "TerriaMap-$TERRIAMAP_COMMIT_HASH--TerriaJS-$TERRIAJS_COMMIT_HASH" -m 'temporary tag'
-rm package-lock.json # because TerriaMap's package-lock.json won't reflect terriajs dependencies
-npm install
-npm install moment@2.24.0
+rm yarn.lock # because TerriaMap's package-lock.json won't reflect terriajs dependencies
+yarn install
+yarn install moment@2.24.0
 npm run gulp build
 
 npm run "--terriajs-map:docker_name=terriajs-ci" docker-build-ci -- --tag "asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME"

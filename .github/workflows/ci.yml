@@ -22,8 +22,7 @@ jobs:
       - uses: actions/setup-node@v2-beta
         with:
           node-version: '10'
-
-      - run: npm install
+      - run: npm install -g yarn@^1.19.0 && yarn install
 
       - name: Check formatting with prettier
         run: npm run prettier-check
