@@ -8,6 +8,7 @@ Change Log
 * Remove use of word "outlier" in zFilter dimension and legend item (we now use "Extreme values")
 * Add `cursor:pointer` to `Checkbox`
 * Use `yarn` in CI scripts (and upgrade node to v14)
+* `GeoJsonMixin.style["stroke-opacity"]` will now also set `polygonStroke.alpha`
 * [The next improvement]
 
 #### 8.1.4

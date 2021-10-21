@@ -514,6 +514,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
       if (isDefined(style["stroke-opacity"])) {
         options.stroke.alpha = style["stroke-opacity"];
+        options.polygonStroke.alpha = style["stroke-opacity"];
       }
 
       if (isDefined(style["fill-opacity"])) {
