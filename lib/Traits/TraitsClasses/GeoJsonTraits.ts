@@ -44,6 +44,15 @@ export class GeoJsonTraits extends mixTraits(
   MappableTraits,
   DiscretelyTimeVaryingTraits
 ) {
+  /** Override TableTraits which aren't applicable to GeoJsonTraits */
+  @primitiveTrait({
+    name: "Enable manual region mapping (Disabled for GeoJsonTraits)",
+    description:
+      "If enabled, there will be controls to set region column and region type.",
+    type: "boolean"
+  })
+  enableManualRegionMapping: false = false;
+
   @objectTrait({
     type: StyleTraits,
     name: "Style",
