@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.1.5)
 
+* Add `rollbar.warning` for `TerriaErrorSeverity.Warning`
 * [The next improvement]
 
 #### 8.1.4

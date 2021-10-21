@@ -1,5 +1,5 @@
 import Rollbar from "rollbar";
-import TerriaError from "../../Core/TerriaError";
+import TerriaError, { TerriaErrorSeverity } from "../../Core/TerriaError";
 import { ErrorServiceProvider } from "./ErrorService";
 
 export default class RollbarErrorServiceProvider
@@ -21,6 +21,12 @@ export default class RollbarErrorServiceProvider
   }
 
   error(error: string | Error | TerriaError) {
-    this.rollbar.error(error instanceof TerriaError ? error.toError() : error);
+    if (error instanceof TerriaError) {
+      error.severity === TerriaErrorSeverity.Error
+        ? this.rollbar.error(error.toError())
+        : this.rollbar.warning(error.toError());
+    } else {
+      this.rollbar.error(error);
+    }
   }
 }
