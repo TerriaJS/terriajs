@@ -152,6 +152,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         // Update protomaps imagery provider if activeTableStyle changes
         this.tableStyleReactionDisposer = reaction(
           () => [
+            this.useMvt,
             this.readyData,
             this.currentTimeAsJulianDate,
             this.activeTableStyle.timeIntervals,
@@ -232,6 +233,22 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       ]);
     }
 
+    /** Only use MapboxVectorTiles (through geojson-vt and protomaps.js) if enabled and not using unsupported traits
+     * For more info see GeoJsonMixin.forceLoadMapItems
+     */
+    @computed
+    get useMvt() {
+      return (
+        !this.forceCesiumPrimitives &&
+        this.terria.configParameters.enableGeojsonMvt &&
+        !isDefined(this.stylesWithDefaults().markerSymbol) &&
+        !isDefined(this.timeProperty) &&
+        !isDefined(this.heightProperty) &&
+        (!isDefined(this.perPropertyStyles) ||
+          this.perPropertyStyles.length === 0)
+      );
+    }
+
     /** Remove chart items from TableMixin.chartItems */
     @computed get chartItems() {
       return [];
@@ -247,16 +264,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
      *    - Using `timeProperty` or `heightProperty` or `perPropertyStyles` or simple-style `marker-symbol`
      */
     protected async forceLoadMapItems(): Promise<void> {
-      // Only use MapboxVectorTiles (through geojson-vt and protomaps.js) if enabled and not using unsupported traits
-      const useMvt =
-        !this.forceCesiumPrimitives &&
-        this.terria.configParameters.enableGeojsonMvt &&
-        !isDefined(this.stylesWithDefaults().markerSymbol) &&
-        !isDefined(this.timeProperty) &&
-        !isDefined(this.heightProperty) &&
-        (!isDefined(this.perPropertyStyles) ||
-          this.perPropertyStyles.length === 0);
-
+      const useMvt = this.useMvt;
       const czmlTemplate = this.czmlTemplate;
 
       try {
@@ -289,6 +297,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           geoJson,
           this.terria.configParameters.proj4ServiceBaseUrl
         );
+        // Add feature index to "_id_" feature property
+        // This is used to refer to each feature in TableMixin (as row ID)
         if (geoJsonWgs84.type === "FeatureCollection") {
           const featureCollection = (geoJsonWgs84 as any) as FeatureCollection;
           for (let i = 0; i < featureCollection.features.length; i++) {
@@ -308,7 +318,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             this._dataSource = dataSource;
             this._imageryProvider = undefined;
           });
-        } else if (useMvt) {
+        } else if (this.useMvt) {
           runInAction(() => {
             this._imageryProvider = this.createProtomapsImageryProvider(
               geoJsonWgs84
@@ -398,6 +408,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       let currentTimeRows: number[] | undefined;
 
       // If time varying, get row indices which match
+      // This is used to filter feature["_id_"]
       if (currentTime && timeIntervals && moreThanOneTimeInterval) {
         currentTimeRows = timeIntervals.reduce<number[]>(
           (rows, timeInterval, index) => {
@@ -413,6 +424,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         );
       }
 
+      // Style function which applied activeTableStyle colorMap
       const getValue = (z: number, f?: ProtomapsFeature) => {
         const rowId = f?.props["_id_"];
         if (typeof rowId === "number") {
@@ -814,17 +826,17 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         return Array.from(discreteTimesMap.values());
       }
 
-      // Otherwise return TableMixin.discreteTimes
-      return super.discreteTimes;
+      // Otherwise, if we are using mvt (mapbox vector tiles / protomaps imagery provider) return TableMixin.discreteTimes
+      if (this.useMvt) return super.discreteTimes;
     }
 
     /**
-     * The raw data table in column-major format, i.e. the outer array is an
-     * array of columns.
+     * Transform feature properties into column-major format.
+     * This only supports FeatureCollection
      */
     @computed
     get dataColumnMajor(): string[][] | undefined {
-      if (!this.readyData) return [];
+      if (!this.readyData || !this.useMvt) return [];
 
       if (this.readyData.type !== "FeatureCollection") return [];
 
@@ -872,6 +884,9 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return dataColumnMajor;
     }
 
+    /** Override TableMixin forceLoadTableData
+     * We implement `get dataColumnMajor()` instead
+     */
     async forceLoadTableData() {
       return undefined;
     }
@@ -883,11 +898,10 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
     protected abstract async loadFromFile(file: File): Promise<any>;
     protected abstract async loadFromUrl(url: string): Promise<any>;
-
-    // Start Table styling...
   }
   return GeoJsonMixin;
 }
+
 namespace GeoJsonMixin {
   export interface Instance
     extends InstanceType<ReturnType<typeof GeoJsonMixin>> {}
@@ -1058,11 +1072,11 @@ function getRandomCssColor(cssColors: string[], name: string): string {
 
 const simpleStyleIdentifiers = [
   "title",
-  "description", //
+  "description",
   "marker-size",
   "marker-symbol",
   "marker-color",
-  "stroke", //
+  "stroke",
   "stroke-opacity",
   "stroke-width",
   "fill",
