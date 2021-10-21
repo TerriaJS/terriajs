@@ -22,9 +22,15 @@ export default class RollbarErrorServiceProvider
 
   error(error: string | Error | TerriaError) {
     if (error instanceof TerriaError) {
-      error.severity === TerriaErrorSeverity.Error
-        ? this.rollbar.error(error.toError())
-        : this.rollbar.warning(error.toError());
+      if (
+        (typeof error.severity === "function"
+          ? error.severity()
+          : error.severity) === TerriaErrorSeverity.Error
+      ) {
+        this.rollbar.error(error.toError());
+      } else {
+        this.rollbar.warning(error.toError());
+      }
     } else {
       this.rollbar.error(error);
     }
