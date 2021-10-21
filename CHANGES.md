@@ -5,6 +5,9 @@ Change Log
 
 * Rename `TerriaError._shouldRaiseToUser` to `overrideRaiseToUser`
 * Fix `overrideRaiseToUser` bug causing `overrideRaiseToUser` to be set to `true` in `TerriaError.combine`
+* Disable `zFilter` by default
+* Remove use of word "outlier" in zFilter dimension and legend item (we now use "Extreme values")
+* Add `cursor:pointer` to `Checkbox`
 * [The next improvement]
 
 #### 8.1.4
