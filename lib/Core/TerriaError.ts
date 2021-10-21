@@ -223,7 +223,7 @@ export default class TerriaError {
 
     // overrideRaiseToUser will be false if:
     // - NO errors includes overrideRaiseToUser = true
-    // - and at least one error includes overrideRaiseToUser = true
+    // - and at least one error includes overrideRaiseToUser = false
     if (
       !isDefined(overrideRaiseToUser) &&
       filteredErrors.map(error => error.overrideRaiseToUser).includes(false)
