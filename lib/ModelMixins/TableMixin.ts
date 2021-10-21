@@ -560,8 +560,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return {
         id: "outlierFilter",
         options: [
-          { id: "true", name: "Outliers filtered (click to disable)" },
-          { id: "false", name: "Outliers detected (click to filter out)" }
+          { id: "true", name: i18next.t("models.tableData.zFilterEnabled") },
+          { id: "false", name: i18next.t("models.tableData.zFilterDisabled") }
         ],
         selectedId: this.activeTableStyle.colorTraits.zScoreFilterEnabled
           ? "true"

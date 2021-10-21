@@ -81,7 +81,7 @@ export default class TableColorStyleTraits extends ModelTraits {
     description: "The label to use in the legend for outlier values.",
     type: "string"
   })
-  outlierLabel?: string = "Outliers";
+  outlierLabel?: string;
 
   // @primitiveTrait({
   //   name: "Bin Method",
@@ -202,7 +202,7 @@ export default class TableColorStyleTraits extends ModelTraits {
     description: "True, if z-score filter is enabled.",
     type: "boolean"
   })
-  zScoreFilterEnabled: boolean = true;
+  zScoreFilterEnabled: boolean = false;
 
   @primitiveTrait({
     name: "Range filter",

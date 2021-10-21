@@ -3,6 +3,9 @@ Change Log
 
 #### next release (8.1.5)
 
+* Disable `zFilter` by default
+* Remove use of word "outlier" in zFilter dimension and legend item (we now use "Extreme values")
+* Add `cursor:pointer` to `Checkbox`
 * [The next improvement]
 
 #### 8.1.4
