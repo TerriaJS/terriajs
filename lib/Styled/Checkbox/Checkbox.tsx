@@ -62,6 +62,7 @@ const Checkbox = memo(
           }
           ${!isDisabled &&
             `
+            cursor: pointer;
             &:hover svg {
               opacity: 0.6;
             }
