@@ -107,10 +107,10 @@ export abstract class CompositeBarItemController
 
   /**
    * Whether this item is visible on the screen.
-   * @private
+   * @protected
    */
   @observable
-  private _visible: boolean = true;
+  protected _visible: boolean = true;
 
   /**
    * Gets the {@link this._visible}

@@ -119,7 +119,11 @@ export class AugmentedVirtualityRealignController extends MapNavigationItemContr
 
   @computed
   get visible(): boolean {
-    return this.props.augmentedVirtuality.active;
+    return this.props.augmentedVirtuality.active && this._visible;
+  }
+
+  set visible(value: boolean) {
+    this._visible = value;
   }
 
   handleClick(): void {
@@ -215,7 +219,11 @@ export class AugmentedVirtualityHoverController extends MapNavigationItemControl
 
   @computed
   get visible(): boolean {
-    return this.props.augmentedVirtuality.active;
+    return this.props.augmentedVirtuality.active && this._visible;
+  }
+
+  set visible(v: boolean) {
+    this._visible = v;
   }
 
   handleClick(): void {
