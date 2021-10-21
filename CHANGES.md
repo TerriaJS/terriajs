@@ -3,6 +3,11 @@ Change Log
 
 #### next release (8.1.5)
 
+* Add `rollbar.warning` for `TerriaErrorSeverity.Warning`
+* Disable `zFilter` by default
+* Remove use of word "outlier" in zFilter dimension and legend item (we now use "Extreme values")
+* Add `cursor:pointer` to `Checkbox`
+* Use `yarn` in CI scripts (and upgrade node to v14)
 * [The next improvement]
 
 #### 8.1.4

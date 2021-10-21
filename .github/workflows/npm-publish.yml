@@ -37,9 +37,13 @@ jobs:
         with:
           registry-url: 'https://registry.npmjs.org'
 
+      - name: Install yarn
+        if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
+        run: npm install -g yarn@^1.19.0
+
       - name: Install dependencies
         if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
-        run: npm install
+        run: yarn install
 
       - name: Lint and build terriajs
         if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
