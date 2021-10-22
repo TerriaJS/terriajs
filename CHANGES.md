@@ -8,6 +8,7 @@ Change Log
 * Remove use of word "outlier" in zFilter dimension and legend item (we now use "Extreme values")
 * Add `cursor:pointer` to `Checkbox`
 * Fix `MapNavigation` getter/setter `visible` bug.
+  * Replace `CompositeBarItemController` `visible` setter with `setVisible` function
 * Use `yarn` in CI scripts (and upgrade node to v14)
 * [The next improvement]
 

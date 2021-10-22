@@ -141,7 +141,7 @@ export abstract class CompositeBarModel<
     for (const item of this.items) {
       if (item.id === id) {
         if (item.controller.visible) {
-          item.controller.visible = false;
+          item.controller.setVisible(false);
           return;
         }
         return;
@@ -154,7 +154,7 @@ export abstract class CompositeBarModel<
     for (const item of this.items) {
       if (item.id === id) {
         if (!item.controller.visible) {
-          item.controller.visible = true;
+          item.controller.setVisible(true);
           return;
         }
         return;

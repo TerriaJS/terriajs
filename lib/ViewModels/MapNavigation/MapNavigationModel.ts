@@ -34,7 +34,7 @@ export default class MapNavigationModel extends CompositeBarModel<
   addItem(newItem: IMapNavigationItem, requestedIndex?: number) {
     const elementConfig = this.terria.elements.get(newItem.id);
     if (elementConfig && isDefined(elementConfig.visible)) {
-      newItem.controller.visible = elementConfig.visible;
+      newItem.controller.setVisible(elementConfig.visible);
     }
     super.add(newItem, requestedIndex);
   }
