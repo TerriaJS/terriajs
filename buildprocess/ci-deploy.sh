@@ -34,7 +34,10 @@ rm yarn.lock # because TerriaMap's yarn.lock won't reflect terriajs dependencies
 yarn install
 yarn add -W moment@2.24.0
 # add branch name, taking "baseHref": "/", and replacing with safe branch name
-sed -i "s|\"baseHref\": \"\/\"|\"baseHref\": \"\/$SAFE_BRANCH_NAME\/\"|g" devserverconfig.json
+# This doesn't change the serverconfig that's present on the CI server, but the build uses baseHref to template index.html
+mv devserverconfig.json jqin_devserverconfig.json
+jq "setpath([\"baseHref\"];\"\/$SAFE_BRANCH_NAME\/\")" jqin_devserverconfig.json > devserverconfig.json
+rm jqin_devserverconfig.json
 yarn gulp build
 
 yarn "--terriajs-map:docker_name=terriajs-ci" docker-build-ci -- --tag "asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME"

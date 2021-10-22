@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import URI from "urijs";
 
-import { BaseModel } from "../../../Models/Model";
+import { BaseModel } from "../../../Models/Definition/Model";
 import { withRouter } from "react-router-dom";
 import DataCatalog from "../../DataCatalog/DataCatalog.jsx";
 import DataPreview from "../../Preview/DataPreview.jsx";

@@ -13,7 +13,7 @@ import {
 } from "../../Core/AnalyticEvents/analyticEvents";
 import getPath from "../../Core/getPath";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
-import removeUserAddedData from "../../Models/removeUserAddedData";
+import removeUserAddedData from "../../Models/Catalog/removeUserAddedData";
 import { ROOT_ROUTE } from "../../ReactViewModels/TerriaRouting";
 import CatalogItem from "./CatalogItem";
 
