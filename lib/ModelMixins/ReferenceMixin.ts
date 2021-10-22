@@ -1,4 +1,4 @@
-import { observable, runInAction, untracked } from "mobx";
+import { observable, runInAction, untracked, computed } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
@@ -23,7 +23,8 @@ interface ReferenceInterface extends ModelInterface<ReferenceTraits> {
 function ReferenceMixin<T extends Constructor<Model<ReferenceTraits>>>(
   Base: T
 ) {
-  abstract class ReferenceMixin extends Base implements ReferenceInterface {
+  abstract class ReferenceMixinClass extends Base
+    implements ReferenceInterface {
     /** A "weak" reference has a target which doesn't include the `sourceReference` property.
      * This means the reference is treated more like a shortcut to the target. So share links, for example, will use the target instead of sourceReference. */
     protected readonly weakReference: boolean = false;
@@ -76,6 +77,16 @@ function ReferenceMixin<T extends Constructor<Model<ReferenceTraits>>>(
     }
 
     /**
+     * If this a nested reference return the target of the final reference.
+     */
+    @computed
+    get nestedTarget(): BaseModel | undefined {
+      return ReferenceMixin.isMixedInto(this._target)
+        ? this._target.nestedTarget
+        : this._target;
+    }
+
+    /**
      * Asynchronously loads the reference. When the returned promise resolves,
      * {@link ReferenceMixin#target} should return the target of the reference.
      * @param forceReload True to force the load to happen again, even if nothing
@@ -112,7 +123,7 @@ function ReferenceMixin<T extends Constructor<Model<ReferenceTraits>>>(
     }
   }
 
-  return ReferenceMixin;
+  return ReferenceMixinClass;
 }
 
 namespace ReferenceMixin {
