@@ -164,7 +164,7 @@
     "shortLinkShortening": "Accorciamento...",
     "convertNotificationTitle": "Avviso: link di condivisione aggiornato",
     "localDataNote": "<0><0>Nota:</0></0><1>Le seguenti fonti di dati NON saranno condivise perché includono dati da questo sistema locale. Per condividere queste fonti di dati, pubblica i loro dati su un server web e <2>aggiungili usando un url</2>.</1>",
-    "convertErrorMessage": "<p>Questo link di condivisione è basato su una vecchia versione di TerriaJS - il software che alimenta questa mappa web. Si è verificato un errore nel tentativo di aggiornare i dati della condivisione. I dettagli dell'errore sono qui sotto.</p><p><pre>{{error}}</pre></p><p><details><summary>Stack trace:</summary><pre>{{stackTrace}}</pre></details></p><p>Per favore segnalalo inviando una email a {{email}}.</p>",
+    "convertErrorMessage": "Questo link di condivisione è basato su una vecchia versione di TerriaJS - il software che alimenta questa mappa web. Si è verificato un errore nel tentativo di aggiornare i dati della condivisione.",
     "convertNotificationMessage": "Questo link di condivisione è basato su una vecchia versione di TerriaJS - il software che alimenta questa mappa web. Anche se sono stati fatti i migliori sforzi per preservare il link, potresti incontrare problemi con la visualizzazione dei dati.  \n\nSe sei l'utente che ha condiviso il link, clicca su OK per far scomparire il messaggio di avviso e continuare ad accedere ai dati.",
     "convertErrorTitle": "Impossibile aggiornare il link di condivisione alla versione 8",
     "convertNotificationFeedback": "Per domande o feedback, clicca qui.",
@@ -190,8 +190,8 @@
       "regionTypeName": "Tipo di regione",
       "unsupportedParameterErrorTitle": "Tipo di parametro non supportato",
       "invalidWPSServerTitle": "Server WPS non valido",
-      "invalidResponseErrorMessage": "Si è verificato un errore durante l'accesso alla posizione di stato sul server WPS per il nome del processo {{name}}.  La risposta del server non sembra essere un documento ExecuteResponse valido. <p>Questo errore può anche indicare che il server di elaborazione che hai specificato non è temporaneamente disponibile o che c'è un problema con la tua connessione internet.  Se il problema persiste, segnalalo inviando un'e-mail a {{email}}.</p>",
-      "invalidWPSServerMessage": "Si è verificato un errore durante l'invocazione di {{endpoint}} sul server WPS per il nome del processo {{name}}. La risposta del server non sembra essere un documento {{endpoint}} valido. <p>Questo errore può anche indicare che il server di elaborazione che hai specificato non è temporaneamente disponibile o che c'è un problema con la tua connessione internet.  Prova ad aprire nuovamente il server di elaborazione e, se il problema persiste, segnalalo inviando un'e-mail a {{email}}.</p>",
+      "invalidResponseErrorMessage": "Si è verificato un errore durante l'accesso alla posizione di stato sul server WPS per il nome del processo {{name}}.",
+      "invalidWPSServerMessage": "Si è verificato un errore durante l'invocazione di {{endpoint}} sul server WPS per il nome del processo {{name}}. La risposta del server non sembra essere un documento {{endpoint}} valido.",
       "wpsResult": "Risultato Web Processing Service",
       "invalidResponseErrorTitle": "Risposta del server WPS non valida",
       "wps": "Web Processing Service (WPS)",
@@ -219,12 +219,12 @@
       "metadataUrls": "Link ai metadati",
       "badlyFormatedTitle": "Periodicità mal formattata",
       "noLayerFoundTitle": "Nessun livello trovato",
-      "noLayerFoundMessage": "Il set di dati WMS '{{name}}' non ha livelli corrispondenti a '{{layers}}'. {{suggested}} {{line}}{{line}}Il file di catalogo è stato impostato in modo errato o il server WMS è cambiato.{{line}}{{line}}Per favore segnala questo errore inviando un'e-mail a {{email}}.",
+      "noLayerFoundMessage": "Il set di dati WMS '{{name}}' non ha livelli corrispondenti a '{{layers}}'. {{suggested}} {{line}}{{line}}Il file di catalogo è stato impostato in modo errato o il server WMS è cambiato.",
       "missingUrlTitle": "Impossibile caricare GetCapabilities",
       "wms": "Web Map Service (WMS)",
       "missingUrlMessage": "Impossibile caricare il documento Web Map Service (WMS) GetCapabilities perché l'elemento del catalogo non ha un `url`.",
       "badlyFormatedMessage": "Il set di dati '{{name}}' ha una periodicità mal formata, '{{isoSegments}}'. Clicca sul pulsante Info del set di dati per maggiori informazioni sul set di dati e sul custode dei dati.",
-      "missingDataMessage": "Il set di dati WMS '{{name}}' non ha restituito alcun dato.{{line}}{{line}}Il file di catalogo è stato impostato in modo errato o l'indirizzo del server è cambiato.{{line}}{{line}}Per favore segnala questo errore via e-mail a {{email}}."
+      "missingDataMessage": "Il set di dati WMS '{{name}}' non ha restituito alcun dato.{{line}}{{line}}Il file di catalogo è stato impostato in modo errato o l'indirizzo del server è cambiato."
     },
     "userDrawing": {
       "btnDone": "Fatto",
@@ -306,7 +306,8 @@
     "raiseError": {
       "errorTitle": "Si è verificato un errore",
       "developerDetails": "Dettagli dello sviluppatore",
-      "notificationFeedback": "Per domande o feedback, clicca qui."
+      "notificationFeedback": "Per domande o feedback, clicca qui.",
+      "notificationFeedbackEmail": "Per domande o feedback, contattate {{email}}"
     },
     "placesLikeMe": {
       "characteristics": "Caratteristiche",
@@ -326,7 +327,7 @@
     "gpx": {
       "name": "GPX",
       "errorLoadingTitle": "Errore nel caricamento di GPX",
-      "errorLoadingMessage": "Si è verificato un errore durante il caricamento di un file GPX.  Questo può indicare che il file non è valido o che non è supportato da {{appName}}. Se desideri assistenza o ulteriori informazioni, inviaci un'e-mail a {{email}}",
+      "errorLoadingMessage": "Si è verificato un errore durante il caricamento di un file GPX.  Questo può indicare che il file non è valido o che non è supportato da {{appName}}.",
       "serviceErrorMessage": "Questo servizio non ha dettagli disponibili.",
       "dataSourceErrorMessage": "Questa fonte di dati non ha dettagli disponibili."
     },
@@ -338,7 +339,7 @@
     "csv": {
       "name": "Valori separati da virgola (CSV)",
       "unableToLoadItemTitle": "Nessun CSV disponibile",
-      "unexpectedTypeMessage": "I dati di CsvCatalogItem dovrebbero essere un Blob, un File o una Stringa, ma non erano nessuno di questi. Questo potrebbe indicare un bug in terriajs o un uso scorretto delle API di terriajs. Se credi che sia un bug in {{appName}} per favore segnalalo via email ",
+      "unexpectedTypeMessage": "I dati di CsvCatalogItem dovrebbero essere un Blob, un File o una Stringa, ma non erano nessuno di questi.",
       "unableToLoadTitle": "Impossibile caricare il file CSV",
       "unexpectedTypeTitle": "Tipo inatteso di dati CSV",
       "unableToLoadItemMessage": "L'elemento del catalogo CSV non può essere caricato perché non è stato configurato con una proprietà `url` o `csvString`.",
@@ -355,7 +356,7 @@
       "licence": "Licenza",
       "description": "Descrizione",
       "name": "Server Socrata",
-      "retrieveErrorMessage": "Impossibile recuperare i pacchetti da questo server Socrata.<br/><br/>Se hai inserito l'URL manualmente, ricontrolla.<br/><br/> Altrimenti, se ricaricare non risolve il problema, segnala il problema inviando un'email a {{email}} con i dettagli tecnici qui sotto.  Grazie!<br/><br/><pre>{{formatError}}</pre>"
+      "retrieveErrorMessage": "Impossibile recuperare i pacchetti da questo server Socrata."
     },
     "ogr": {
       "unsupportedFileTzpe": "Tipo di file non supportato",
@@ -387,7 +388,7 @@
       "firefox": "Mozilla Firefox",
       "chrome": "Google Chrome",
       "internetExplorer": "Internet Explorer 11",
-      "couldNotLoadMessage": "Si è verificato un errore durante il recupero dei dati JSON dal link fornito. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p><p>Questo errore può anche indicare che il server non supporta {{cors}}.  Se questo è il tuo server, verifica che CORS sia abilitato e abilitalo se non lo è.  Se non controlli il server, contatta l'amministratore del server e chiedigli di abilitare CORS.  Oppure, contatta il team di '{{appName}}' inviando un'email a {{email}} e chiedici di aggiungere questo server alla lista dei server che non supportano CORS e che possono essere proxy da 'appName' stesso. <p>Se non hai inserito questo link manualmente, questo errore potrebbe indicare che l'origine dati che stai cercando di aggiungere è temporaneamente non disponibile o c'è un problema con la tua connessione internet.  Prova ad aggiungere di nuovo l'origine dati, e se il problema persiste, segnalalo inviando un'email a {{email}}.</p>",
+      "couldNotLoadMessage": "Si è verificato un errore durante il recupero dei dati JSON dal link fornito. CORS",
       "couldNotLoadTitle": "Impossibile caricare JSON",
       "unsupportedBrowserTitle": "Browser web non supportato",
       "unableToLoadItemTitle": "Nessun GeoJSON disponibile",
@@ -407,13 +408,13 @@
       "errorLoadingTitle": "Impossibile caricare CSW",
       "metadataURL": "URL del record di metadati",
       "name": "Servizio Catalogo (CSW)",
-      "checkCORS": "Impossibile eseguire GetRecords su questo server CSW.<br/><br/> Se hai inserito l'URL manualmente, ricontrolla.<br/><br/> Se è il tuo server, assicurati che {{cors}} sia abilitato.<br/><br/> Altrimenti, se il ricaricamento non risolve il problema, segnalalo inviando una mail a {{email}}",
-      "checkCORSRecords": "Impossibile eseguire GetRecords su questo server CSW.<br/><br/> Se è il tuo server, assicurati che <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a> sia abilitato.<br/><br/> Altrimenti, se ricaricare non risolve il problema, per favore segnala il problema inviando una email a {{email}} con i dettagli tecnici qui sotto.  Grazie!",
-      "checkCORSDomain": "Impossibile eseguire GetDomain su questo server CSW.<br/><br/> Se hai inserito l'URL manualmente, per favore ricontrolla.<br/><br/> Se è il tuo server, assicurati che <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a> sia abilitato.<br/><br/> Altrimenti, se ricaricare non risolve il problema, per favore segnala il problema inviando una email a {{email}} con i dettagli tecnici qui sotto.  Grazie!",
-      "errorLoadingRecordsMessage": "Risposta non valida ottenuta quando si invoca GetRecords sul server CSW. <p>Questo errore può indicare che il server di catalogo che hai specificato non è temporaneamente disponibile o che c'è un problema con la tua connessione internet.  Prova ad aprire nuovamente il server di elaborazione, e se il problema persiste, segnalalo inviando una mail a ",
-      "notUseableMessage": "Risposta non valida ottenuta quando si invoca GetDomain sul server CSW. <p>Questo errore può indicare che il server di catalogo che hai specificato non è temporaneamente disponibile o che c'è un problema con la tua connessione internet.  Prova ad aprire nuovamente il server di elaborazione, e se il problema persiste, segnalalo inviando una mail a ",
+      "checkCORS": "Impossibile eseguire GetRecords su questo server CSW.",
+      "checkCORSRecords": "Impossibile eseguire GetRecords su questo server CSW.",
+      "checkCORSDomain": "Impossibile eseguire GetDomain su questo server CSW.",
+      "errorLoadingRecordsMessage": "Risposta non valida ottenuta quando si invoca GetRecords sul CSW",
+      "notUseableMessage": "Risposta non valida ottenuta quando si invoca GetDomain sul server CSW.",
       "errorLoadingRecordsTitle": "Impossibile caricare i record CSW.",
-      "notUseableTitle": "Il servizio del catalogo non è utilizzabile",
+      "notUseableTitle": "Il servizio del catalogo non è utilizzabile.\n\n {{message}}",
       "unknownError": "Il server CSW ha riportato un errore sconosciuto.",
       "missingUrlMessage": "Impossibile caricare il Servizio Catalogo (CSW) perché il gruppo catalogo non ha un `url`.",
       "missingUrlTitle": "Impossibile caricare il servizio di catalogo (CSW)",
@@ -463,7 +464,7 @@
       "invalidCkanTitle": "Risorsa CKAN non valida JSON",
       "errorRetrievingUrlTitle": "Errore nel recupero dell'URL CKAN",
       "errorLoadingTitle": "Errore nel caricamento del catalogo CKAN",
-      "corsErrorMessage": "Impossibile recuperare i pacchetti da questo server CKAN.<br/><br/>Se hai inserito l'URL manualmente, per favore ricontrolla.<br/><br/>Se è il tuo server, assicurati che {{corsLink}} sia abilitato.<br/><br/> Altrimenti, se ricaricare non risolve il problema, per favore segnala il problema inviando una email a {{email}} con i dettagli tecnici qui sotto.  Grazie!<br/><br/>",
+      "corsErrorMessage": "Impossibile recuperare i pacchetti da questo server CKAN.",
       "notCompatibleMessageII": "Il set di dati CKAN non ha risorse con un formato supportato.",
       "notCompatibleMessageI": "Il set di dati CKAN non ha una risorsa con l'ID {{resourceId}} o non ha un formato supportato.",
       "invalidCkanMessage": "La risorsa restituita dal server CKAN non sembra avere un package_id.",
@@ -548,11 +549,11 @@
       "abstract": "Descrizione Web Feature Service",
       "wfs": "Web Feature Service (WFS)",
       "noLayerFoundTitle": "Nessun livello trovato",
-      "noLayerFoundMessage": "Il set di dati WFS '{{name}}' non ha livelli corrispondenti a '{{typeNames}}'. {{suggested}} {{line}}{{line}}Il file di catalogo è stato impostato in modo errato o il server WFS è cambiato.{{line}}{{line}}Per favore segnala questo errore inviando un'e-mail a {{email}}.",
+      "noLayerFoundMessage": "Il set di dati WFS '{{name}}' non ha livelli corrispondenti a '{{typeNames}}'. {{suggested}} {{line}}{{line}}Il file di catalogo è stato impostato in modo errato o il server WFS è cambiato.",
       "missingUrlTitle": "Impossibile caricare GetCapabilities",
       "reachedMaxFeatureLimit": "Attenzione: Questo livello ha raggiunto il limite di funzionalità WFS ({{maxFeatures}})",
       "missingUrlMessage": "Impossibile caricare il documento Web Feature Service (WFS) GetCapabilities perché la voce di catalogo non ha un `url`.",
-      "missingDataMessage": "Il set di dati WFS '{{name}}' non ha restituito alcun dato.{{line}}{{line}}Il file di catalogo è stato impostato in modo errato o l'indirizzo del server è cambiato.{{line}}{{line}}Per favore segnala questo errore via e-mail a {{email}}."
+      "missingDataMessage": "Il set di dati WFS '{{name}}' non ha restituito alcun dato.{{line}}{{line}}Il file di catalogo è stato impostato in modo errato o l'indirizzo del server è cambiato."
     },
     "tableData": {
       "noData": "Non ci sono dati da mostrare",
@@ -571,7 +572,8 @@
         "time": "Serie temporali"
       },
       "loadDataErrorMessage": "Risposta non valida da {{csvUrl}}",
-      "loadDataErrorTitle": "Impossibile caricare SDMX CSV"
+      "loadDataErrorTitle": "Impossibile caricare i dati SDMX per {{name}}",
+      "noResultsWithDimensions": "Non sono stati trovati risultati. Si prega di selezionare nella workbench valori di dimensione diversi dai seguenti:  \n\n{{dimensions}}"
     },
     "sdmxJsonDataflowStratum": {
       "defaultUnitMeasure": "Unità",
@@ -601,7 +603,7 @@
       "subtitle": "Sottotitolo",
       "copyrightText": "Testo del copyright",
       "name": "GeoRSS",
-      "errorLoadingMessage": "Si è verificato un errore durante il caricamento di un file GeoRSS. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p><p>Questo errore può anche indicare che il server non supporta {{cors}}.  Se questo è il tuo server, verifica che CORS sia abilitato e abilitalo se non lo è.  Se non controlli il server, contatta l'amministratore del server e chiedigli di abilitare CORS.  Oppure, contatta il team di '{{appName}}' inviando un'email a {{email}} e chiedici di aggiungere questo server alla lista dei server che non supportano CORS e che possono essere proxy da 'appName' stesso. <p>Se non hai inserito questo link manualmente, questo errore potrebbe indicare che l'origine dati che stai cercando di aggiungere è temporaneamente non disponibile o c'è un problema con la tua connessione internet.  Prova ad aggiungere di nuovo l'origine dati, e se il problema persiste, segnalalo inviando un'email a {{email}}.",
+      "errorLoadingMessage": "Si è verificato un errore durante il caricamento di un file GeoRSS.",
       "errorLoadingTitle": "Impossibile caricare GeoRSS",
       "unableToLoadItemTitle": "Nessun GeoRSS disponibile",
       "unableToLoadItemMessage": "L'elemento del catalogo GeoRSS non può essere caricato perché non è stato configurato con una proprietà `url` o `geoRss`."
@@ -612,7 +614,7 @@
       "openInPortal": "Aprire in ArcGIS Portal",
       "name": "Elemento del Portale ArcGIS",
       "nameGroup": "Gruppo Portale ArcGIS",
-      "corsErrorMessage": "Impossibile recuperare i pacchetti da questo server di ArcGIS Portal.<br/><br/>Se hai inserito l'URL manualmente, ricontrolla.<br/><br/>Se è il tuo server, assicurati che {{corsLink}} sia abilitato.<br/><br/> Altrimenti, se ricaricare non risolve il problema, segnala il problema inviando un'e-mail a {{email}} con i dettagli tecnici qui sotto.  Grazie!<br/><br/>",
+      "corsErrorMessage": "Impossibile recuperare i pacchetti da questo server di ArcGIS Portal. ",
       "errorRetrievingUrlTitle": "Errore nel recupero dell'URL da ArcGIS Portal",
       "errorLoadingTitle": "Errore nel caricamento del catalogo di ArcGIS Portal",
       "errorRetrievingUrlMessage": "Impossibile recuperare l'URL come JSON: {{url}}.",
@@ -639,11 +641,11 @@
       "dataDescription": "Descrizione dei Dati",
       "copyrightText": "Testo del copyright",
       "cors": "CORS",
-      "groupNotAvailableMessage": "Si è verificato un errore durante il richiamo di ArcGIS Map Service. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Questo errore può anche indicare che il server non supporta {{cors}}. Se si tratta del server, verificare che CORS sia abilitato e abilitarlo in caso contrario.  Se non si controlla il server, contattare l'amministratore del server e chiedere loro di abilitare CORS.  In alternativa, contattare il team {{appName}} inviando un'e-mail a {{email}} e chiederci di aggiungere questo server all'elenco dei server non supportati da CORS che potrebbero essere inoltrati da {{appName}} stesso. <p>Se non hai inserito questo link manualmente, questo errore potrebbe indicare che il gruppo aperto è temporaneamente non disponibile o che si è presente un problema con la tua connessione Internet.  Prova ad aprire nuovamente il gruppo e, se il problema persiste, segnalalo inviando un'e-mail a {{email}}.</p>",
+      "groupNotAvailableMessage": "Si è verificato un errore durante il richiamo di ArcGIS Map Service.",
       "groupNotAvailableTitle": "Il gruppo non è disponibile",
       "invalidServiceTitle": "ArcGIS Map Service non valido",
       "name": "Gruppo ArcGIS Map Server",
-      "invalidServiceMessage": "Si è verificato un errore durante l'invocazione di ArcGIS Map Service.  La risposta del server non sembra essere un documento Map Service valido. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Se non hai inserito il link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto non è temporaneamente disponibile o che c'è un problema con la tua connessione Internet.  Prova ad aprire di nuovo il gruppo, e se il problema persiste, per favore segnalalo inviando un'e-mail a {{email}}.</p>"
+      "invalidServiceMessage": "Si è verificato un errore durante l'invocazione di ArcGIS Map Service.  La risposta del server non sembra essere un documento Map Service valido."
     },
     "arcGisFeatureServerCatalogItem": {
       "serviceDescription": "Descrizione del Servizio",
@@ -663,22 +665,22 @@
       "dataDescription": "Descrizione dei Dati",
       "copyrightText": "Testo del copyright",
       "cors": "CORS",
-      "groupNotAvailableMessage": "Si è verificato un errore durante l'invocazione di ArcGIS Feature Service. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Questo errore può anche indicare che il server non supporta {{cors}}. Se questo è il tuo server, verifica che CORS sia abilitato e abilitalo se non lo è.  Se non controlli il server, contatta l'amministratore del server e chiedigli di abilitare CORS.  Oppure, contattate il team di {{appName}} inviando un'email a {{email}} e chiedeteci di aggiungere questo server alla lista dei server che non supportano il CORS e che possono essere proxiati da {{appName}} stesso. <p>Se non hai inserito questo link manualmente, questo errore può indicare che il gruppo che hai aperto è temporaneamente non disponibile o che c'è un problema con la tua connessione internet.  Prova ad aprire di nuovo il gruppo, e se il problema persiste, segnalalo inviando un'e-mail a {{email}}.</p>",
+      "groupNotAvailableMessage": "Si è verificato un errore durante l'invocazione di ArcGIS Feature Service.",
       "groupNotAvailableTitle": "Il gruppo non è disponibile",
       "invalidServiceTitle": "ArcGIS Feature Service non valido",
       "name": "Gruppo ArcGIS Feature Server",
-      "invalidServiceMessage": "Si è verificato un errore durante l'invocazione di ArcGIS Feature Service.  La risposta del server non sembra essere un documento Feature Service valido. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Se non hai inserito il link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto non è temporaneamente disponibile o che c'è un problema con la tua connessione Internet.  Prova ad aprire di nuovo il gruppo, e se il problema persiste, per favore segnalalo inviando un'e-mail a {{email}}.</p>"
+      "invalidServiceMessage": "Si è verificato un errore durante l'invocazione di ArcGIS Feature Service.  La risposta del server non sembra essere un documento Feature Service valido."
     },
     "arcGisFeatureServer": {
-      "invalidServiceMessage": "Si è verificato un errore durante l'invocazione di ArcGIS Feature Service.  La risposta del server non sembra essere un documento Feature Service valido. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Se non hai inserito il link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto non è temporaneamente disponibile o che c'è un problema con la tua connessione Internet.  Prova ad aprire di nuovo il gruppo, e se il problema persiste, per favore segnalalo inviando un'e-mail a {{email}}.</p>",
-      "groupNotAvailableMessage": "Si è verificato un errore durante l'invocazione di ArcGIS Feature Service. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Questo errore può anche indicare che il server non supporta {{cors}}.  Se questo è il tuo server, verifica che CORS sia abilitato e abilitalo se non lo è.  Se non controlli il server, contatta l'amministratore del server e chiedigli di abilitare CORS.  Oppure, contattate il team di {{appName}} inviando un'email a {{email}} e chiedeteci di aggiungere questo server alla lista dei server che non supportano il CORS e che possono essere proxy da {{appName}} stesso. <p>Se non hai inserito questo link manualmente, questo errore può indicare che il gruppo che hai aperto è temporaneamente non disponibile o che c'è un problema con la tua connessione internet.  Prova ad aprire di nuovo il gruppo, e se il problema persiste, segnalalo inviando un'e-mail a {{email}}.</p>",
+      "invalidServiceMessage": "Si è verificato un errore durante l'invocazione di ArcGIS Feature Service.  La risposta del server non sembra essere un documento Feature Service valido.",
+      "groupNotAvailableMessage": "Si è verificato un errore durante l'invocazione di ArcGIS Feature Service.",
       "invalidServiceTitle": "ArcGIS Feature Service non valido",
       "nameGroup": "Gruppo ArcGIS Feature Server",
       "name": "ArcGIS Feature Server",
       "groupNotAvailableTitle": "Il gruppo non è disponibile"
     },
     "czml": {
-      "errorLoadingMessage": "Si è verificato un errore durante il caricamento di un file CZML. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p><p>Questo errore può anche indicare che il server non supporta {{cors}}.  Se questo è il tuo server, verifica che CORS sia abilitato e abilitalo se non lo è.  Se non controlli il server, contatta l'amministratore del server e chiedigli di abilitare CORS.  Oppure, contattate il team '{{appName}}' inviando un'email a {{email}} e chiedeteci di aggiungere questo server alla lista dei server che non supportano CORS e che possono essere proxy da 'appName' stesso. <p>Se non hai inserito questo link manualmente, questo errore potrebbe indicare che l'origine dati che stai cercando di aggiungere è temporaneamente non disponibile o c'è un problema con la tua connessione internet.  Prova ad aggiungere di nuovo l'origine dati e se il problema persiste, segnalalo inviando un'e-mail a {{email}}. Vedi i dettagli tecnici qui sotto.</p>\n<pre>${stackTrace}</pre>",
+      "errorLoadingMessage": "Si è verificato un errore durante il caricamento di un file CZML.",
       "errorLoadingTitle": "Impossibile caricare CZML",
       "unableToLoadItemTitle": "Nessun CZML disponibile",
       "name": "Linguaggio Cesium (CZML)",
@@ -690,7 +692,7 @@
       "invalidCapabilitiesTitle": "GetCapabilities non valido",
       "invalidServerTitle": "Server WPS non valido",
       "invalidCapabilitiesMessage": "L'URL {{url}} è stato recuperato con successo ma non sembra essere un documento GetCapabilities WPS (Web Processing Service) valido.\n\nO il file di catalogo è stato impostato in modo errato, o l'indirizzo del server è cambiato.",
-      "invalidServerMessage": "Si è verificato un errore durante l'invocazione di GetCapabilities sul server WPS. La risposta del server non sembra essere un documento GetCapabilities valido. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Se non hai inserito il link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto non è temporaneamente disponibile o che c'è un problema con la tua connessione Internet.  Prova ad aprire di nuovo il gruppo, e se il problema persiste, per favore segnalalo inviando un'e-mail a {{email}}.</p>",
+      "invalidServerMessage": "Si è verificato un errore durante l'invocazione di GetCapabilities sul server WPS. La risposta del server non sembra essere un documento GetCapabilities valido.",
       "fees": "Tariffe Web Processing Service",
       "abstract": "Descrizione Web Processing Service",
       "missingUrlTitle": "Impossibile caricare GetCapabilities",
@@ -702,10 +704,10 @@
     },
     "webMapTileServiceCatalogGroup": {
       "invalidCapabilitiesTitle": "GetCapabilities non valido",
-      "groupNotAvailableMessage": "Si è verificato un errore durante l'invocazione di GetCapabilities sul server WMTS. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Questo errore potrebbe anche indicare che il server non supporta <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  Se questo è il tuo server, verifica che CORS sia abilitato e abilitalo se non lo è.  Se non controlli il server, contatta l'amministratore del server e chiedigli di abilitare CORS.  Oppure, contatta il team di '{{appName}}' Map inviando un'email a {{email}} e chiedici di aggiungere questo server alla lista dei server che non supportano CORS e che possono essere proxy da '{{appName}}' stesso.</p> <p>Se non hai inserito questo link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto è temporaneamente non disponibile o che c'è un problema con la tua connessione internet. Prova ad aprire di nuovo il gruppo, e se il problema persiste, segnalalo inviando un'e-mail a {{email}}.</p>",
+      "groupNotAvailableMessage": "Si è verificato un errore durante l'invocazione di GetCapabilities sul server WMTS.",
       "invalidWMTSServerTitle": "Server WMTS non valido",
       "invalidCapabilitiesMessage": "L'URL {{url}} è stato recuperato con successo ma non sembra essere un documento GetCapabilities del Web Map Tile Service (WMTS) valido.\n\nO il file di catalogo è stato impostato in modo errato, o l'indirizzo del server è cambiato.",
-      "invalidWMTSServerMessage": "Si è verificato un errore durante l'invocazione di GetCapabilities sul server WMTS. La risposta del server non sembra essere un documento GetCapabilities valido. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Se non hai inserito il link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto non è temporaneamente disponibile o che c'è un problema con la tua connessione Internet.  Prova ad aprire di nuovo il gruppo, e se il problema persiste, per favore segnalalo inviando un'e-mail a {{email}}.</p>",
+      "invalidWMTSServerMessage": "Si è verificato un errore durante l'invocazione di GetCapabilities sul server WMTS. La risposta del server non sembra essere un documento GetCapabilities valido.",
       "fees": "Tariffe Web Map Service",
       "abstract": "Descrizione Web Map Service",
       "groupNotAvailableTitle": "Il gruppo non è disponibile",
@@ -722,7 +724,7 @@
       "moreThanOneValue": "Queste regioni avevano {{moreThanOneValueText}}",
       "issuesLoadingTitle": "Problemi di caricamento {{name}}",
       "outdatedBrowserTitle": "Browser Web obsoleto",
-      "outdatedBrowserMessage": "Stai usando un browser web molto vecchio che non può visualizzare set di dati \"mappati a livello regionale\" come questo.  Si prega di aggiornare all'ultima versione di Google Chrome, Mozilla Firefox, Microsoft Edge, Microsoft Internet Explorer 11, o Apple Safari il più presto possibile.  Per favore contattaci a {{email}} se hai dei dubbi.",
+      "outdatedBrowserMessage": "Stai usando un browser web molto vecchio che non può visualizzare set di dati \"mappati a livello regionale\" come questo.  Si prega di aggiornare all'ultima versione di Google Chrome, Mozilla Firefox, Microsoft Edge, Microsoft Internet Explorer 11, o Apple Safari il più presto possibile.",
       "notRecognised": "Questi nomi di regioni erano {{notRecognisedText}} ",
       "invalidServerTypeTitle": "ServerType non valido {{serverType}} in regionMapping.json",
       "noDataForRegion": "Nessun dato per la regione selezionata.",
@@ -746,8 +748,8 @@
       "unableToDisplayMessage": "{{name}} non può essere mostrato in 2D perché non supporta la proiezione standard Web Mercator (EPSG:3857). Per favore passa al 3D se è supportato dal tuo sistema, aggiorna il set di dati per supportare la proiezione, o usa un set di dati diverso.",
       "tileErrorMessage": "La tile con l'URL:\n{{url}}\n è riuscita quando è stata caricata con XMLHttpRequest ma è fallita più volte quando è stata caricata direttamente da Cesium o Leaflet.\n Questo può indicare che il server è molto sensibile alle intestazioni di richiesta fornite o è semplicemente inaffidabile.",
       "unknownTileErrorMessage": "Durante l'accesso all'URL:\n{{url}}\nQuesto probabilmente indica uno dei seguenti problemi:\n* L'hostname del server non può essere risolto,\n* Il server non ha risposto alla richiesta, o\n* Il server ha negato l'accesso Cross-Origin Resource Sharing (CORS) a questo URL (Vedi https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/).",
-      "accessingBaseMapErrorMessage": "Si è verificato un errore durante il tentativo di scaricare le tile per la mappa base:<p><center>{{name}} </center></p> Questo potrebbe indicare che c'è un problema con la tua connessione internet, che la mappa base non è temporaneamente disponibile o che la mappa base non è valida.  Seleziona un'altra mappa di base usando il pulsante Mappa nell'angolo in alto a destra.  Ulteriori dettagli tecnici possono essere trovati qui sotto.<br/><br/>",
-      "accessingCatalogItemErrorMessage": "Si è verificato un errore durante il tentativo di scaricare le tile per l'articolo di catalogo:<p><center>{{name}}</center></p> Questo potrebbe indicare che c'è un problema con la tua connessione internet, che l'elemento del catalogo non è temporaneamente disponibile o che l'elemento del catalogo non è valido.  L'elemento del catalogo è stato nascosto dalla mappa.  Puoi mostrarlo di nuovo nel pannello Visualizzazione attuale per riprovare.  Ulteriori dettagli tecnici possono essere trovati qui sotto.<br/><br/>",
+      "accessingBaseMapErrorMessage": "Si è verificato un errore durante il tentativo di scaricare le tile per la mappa base:<p><center>{{name}} </center></p> Seleziona un'altra mappa di base usando il pulsante Mappa nell'angolo in alto a destra.",
+      "accessingCatalogItemErrorMessage": "Si è verificato un errore durante il tentativo di scaricare le tile per l'articolo di catalogo:<p><center>{{name}}</center></p> L'elemento del catalogo è stato nascosto dalla mappa.  Puoi mostrarlo di nuovo nel pannello Visualizzazione attuale per riprovare.",
       "resolvingAvailability": "Risoluzione della disponibilità in un luogo...",
       "unableToShowLocTitle": "Impossibile mostrare questa posizione",
       "intervalSupportErrorMessage": "Spiacente, gli elementi del catalogo {{typeName}} ({{type}}) non possono attualmente essere resi variabili nel tempo specificando la proprietà \"intervalli\".",
@@ -763,7 +765,7 @@
       "errorRenderingTitle": "Errore di rendering in 3D",
       "notSupportedErrorTitle": "Non supportato in 2D",
       "name3D": "Cesium Tile 3D",
-      "errorRenderingMessage": "<p>Si è verificato un errore durante il rendering in 3D.  Questo probabilmente indica un bug in {{appName}} o un'incompatibilità con il tuo sistema o browser web.  Ora ti passeremo al 2D in modo che tu possa continuare il tuo lavoro. Ti saremmo grati se segnalassi questo errore inviando un'e-mail a {{email}} con i dettagli tecnici qui sotto.  Grazie!</p>",
+      "errorRenderingMessage": "Si è verificato un errore durante il rendering in 3D.  Questo probabilmente indica un bug in {{appName}} o un'incompatibilità con il tuo sistema o browser web.  Ora ti passeremo al 2D in modo che tu possa continuare il tuo lavoro.",
       "notSupportedErrorMessage": "\"{{name}}\" non può essere visualizzato nella vista 2D. Passa al 3D e riprova."
     },
     "cartoMap": {
@@ -787,23 +789,23 @@
       "unexpectedFormtMessage": "Si è verificato un errore mentre si invocava GetGenericData sul server ABS ITT: il formato dei dati è cambiato. <p>Si prega di segnalare questo errore inviando una mail a {{email}}.</p>"
     },
     "arcGisService": {
-      "invalidServerMessage": "Si è verificato un errore durante il richiamo del servizio ArcGIS REST.  La risposta del server non sembra essere un documento ARCGIS REST valido. <p> Se hai inserito il link manualmente, verifica che sia corretto. </p> <p> Se non hai inserito questo link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto è temporaneamente non disponibile o che si è presente un problema con la tua connessione Internet.  Prova ad aprire nuovamente il gruppo e, se il problema persiste, segnalalo inviando un'e-mail a {{email}}. </p>",
-      "groupNotAvailableMessage": "Si è verificato un errore durante l'invocazione del servizio ArcGIS REST. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p><p>Questo errore può anche indicare che il server non supporta {{cors}} .  Se questo è il tuo server, verifica che CORS sia abilitato e abilitalo se non lo è.  Se non controlli il server, contatta l'amministratore del server e chiedigli di abilitare CORS.  Oppure, contattate il team di {{appName}} inviando un'email a {{email}} e chiedeteci di aggiungere questo server alla lista dei server che non supportano il CORS e che possono essere proxiati da {{appName}} stesso. <p>Se non hai inserito questo link manualmente, questo errore può indicare che il gruppo che hai aperto è temporaneamente non disponibile o che c'è un problema con la tua connessione internet.  Prova ad aprire di nuovo il gruppo, e se il problema persiste, segnalalo inviando un'e-mail a {{email}}.</p>",
+      "invalidServerMessage": "Si è verificato un errore durante il richiamo del servizio ArcGIS REST.  La risposta del server non sembra essere un documento ARCGIS REST valido.",
+      "groupNotAvailableMessage": "Si è verificato un errore durante l'invocazione del servizio ArcGIS REST.",
       "groupNotAvailableTitle": "Il gruppo non è disponibile",
       "invalidServerTitle": "Server ArcGIS non valido",
       "name": "Gruppo di servizi ArcGIS"
     },
     "wfsFeatures": {
-      "groupNotAvailableMessage": "Si è verificato un errore durante l'invocazione di GetFeature sul server WFS. [Se hai inserito il link manualmente, verifica che il link sia corretto.</p><p>Questo errore potrebbe anche indicare che il server non supporta <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  Se questo è il tuo server, verifica che CORS sia abilitato e abilitalo se non lo è. Se non controlli il server, contatta l'amministratore del server e chiedigli di abilitare CORS.  Oppure, contatta il team di '{{appName}}' Map inviando un'email a {{email}} e chiedici di aggiungere questo server alla lista dei server che non supportano CORS e che possono essere proxy da '{{appName}}' stesso.</p><p>Se non hai inserito questo link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto non è temporaneamente disponibile o che c'è un problema con la tua connessione internet.  Prova ad aprire di nuovo il gruppo, e se il problema persiste, segnalalo inviando un'e-mail a {{email}}.</p>",
-      "queryErrorMessage": "Si è verificato un errore durante l'invocazione di GetFeature sul server WFS. La risposta del server non sembra essere un documento GeoJSON valido. <p>Se hai inserito il link manualmente, per favore verifica che il link sia corretto.</p><p>Se non hai inserito il link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto non è temporaneamente disponibile o che c'è un problema con la tua connessione Internet.  Prova ad aprire di nuovo il gruppo, e se il problema persiste, segnalalo inviando un'e-mail a {{email}}.</p>",
+      "groupNotAvailableMessage": "Si è verificato un errore durante l'invocazione di GetFeature sul server WFS.",
+      "queryErrorMessage": "Si è verificato un errore durante l'invocazione di GetFeature sul server WFS. La risposta del server non sembra essere un documento GeoJSON valido.",
       "groupNotAvailableTitle": "Il gruppo non è disponibile",
       "queryErrorTitle": "Errore nell'interrogazione del server WFS",
       "featuresGroup": "Gruppo di funzioni in un server Web Feature Service (WFS)"
     },
     "webMapServiceCatalogGroup": {
-      "groupNotAvailableMessage": "Si è verificato un errore durante l'invocazione di GetCapabilities sul server WMS. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Questo errore potrebbe anche indicare che il server non supporta <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  Se questo è il tuo server, verifica che CORS sia abilitato e abilitalo se non lo è.  Se non controlli il server, contatta l'amministratore del server e chiedigli di abilitare CORS.  Oppure, contatta il team di '{{appName}}' Map inviando un'email a {{email}} e chiedici di aggiungere questo server alla lista dei server che non supportano CORS e che possono essere proxy da '{{appName}}' stesso.</p> <p>Se non hai inserito questo link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto non è temporaneamente disponibile o che c'è un problema con la tua connessione internet. Prova ad aprire di nuovo il gruppo, e se il problema persiste, per favore segnalalo inviando un'e-mail a {{email}}.</p>",
+      "groupNotAvailableMessage": "Si è verificato un errore durante l'invocazione di GetCapabilities sul server WMS.",
       "invalidWMSServerTitle": "Server WMS non valido",
-      "invalidWMSServerMessage": "Si è verificato un errore durante l'invocazione di GetCapabilities sul server WMS. La risposta del server non sembra essere un documento GetCapabilities valido. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Se non hai inserito il link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto non è temporaneamente disponibile o che c'è un problema con la tua connessione Internet.  Prova ad aprire di nuovo il gruppo, e se il problema persiste, per favore segnalalo inviando un'e-mail a {{email}}.</p>",
+      "invalidWMSServerMessage": "Si è verificato un errore durante l'invocazione di GetCapabilities sul server WMS. La risposta del server non sembra essere un documento GetCapabilities valido.",
       "missingUrlTitle": "Impossibile caricare GetCapabilities",
       "groupNotAvailableTitle": "Il gruppo non è disponibile",
       "fees": "Tariffe Web Map Service",
@@ -813,12 +815,12 @@
       "missingUrlMessage": "Impossibile caricare il documento Web Map Service (WMS) GetCapabilities perché l'elemento del catalogo non ha un `url`."
     },
     "webFeatureServiceCatalogGroup": {
-      "groupNotAvailableMessage": "Si è verificato un errore durante l'invocazione di GetCapabilities sul server WFS. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Questo errore potrebbe anche indicare che il server non supporta <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>.  Se questo è il tuo server, verifica che CORS sia abilitato e abilitalo se non lo è.  Se non controlli il server, contatta l'amministratore del server e chiedigli di abilitare CORS.  Oppure, contatta il team di '{{appName}}' Map inviando un'email a {{email}} e chiedici di aggiungere questo server alla lista dei server che non supportano CORS e che possono essere proxy da '{{appName}}' stesso.</p> <p>Se non hai inserito questo link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto è temporaneamente non disponibile o che c'è un problema con la tua connessione internet. Prova ad aprire di nuovo il gruppo, e se il problema persiste, per favore segnalalo inviando un'e-mail a {{email}}.</p>",
+      "groupNotAvailableMessage": "Si è verificato un errore durante l'invocazione di GetCapabilities sul server WFS.",
       "fees": "Tariffe per il servizio di funzioni web",
       "abstract": "Descrizione del servizio di funzioni web",
       "groupNotAvailableTitle": "Il gruppo non è disponibile",
       "invalidWFSServerTitle": "Server WFS non valido",
-      "invalidWFSServerMessage": "Si è verificato un errore durante l'invocazione di GetCapabilities sul server WFS.  La risposta del server non sembra essere un documento GetCapabilities valido. <p>Se hai inserito il link manualmente, verifica che il link sia corretto.</p> <p>Se non hai inserito questo link manualmente, questo errore potrebbe indicare che il gruppo che hai aperto non è temporaneamente disponibile o che c'è un problema con la tua connessione Internet. Prova ad aprire di nuovo il gruppo, e se il problema persiste, per favore segnalalo inviando un'e-mail a {{email}}.</p>",
+      "invalidWFSServerMessage": "Si è verificato un errore durante l'invocazione di GetCapabilities sul server WFS.  La risposta del server non sembra essere un documento GetCapabilities valido.",
       "accessConstraints": "Vincoli di accesso Web Feature Service",
       "wfsServer": "Server Web Feature Service (WFS)"
     },
@@ -832,8 +834,8 @@
     "shareData": {
       "generateErrorTitle": "Impossibile generare un URL breve.",
       "expandErrorTitle": "Impossibile espandere l'URL",
-      "expandErrorMessage": "Il servizio di dati condivisi usato per lanciare {{appName}} non è stato trovato. Questo può indicare un errore nel collegamento o che il servizio non è disponibile in questo momento. Se credi che si tratti di un bug in {{appName}}, per favore segnalalo via e-mail a {{email}}",
-      "generateErrorMessage": "Qualcosa è andato storto quando si è cercato di utilizzare il servizio di condivisione dei dati per generare un breve URL. Se credi che sia un bug in {{appName}}, per favore segnalalo via e-mail a {{email}}."
+      "expandErrorMessage": "Il servizio di dati condivisi usato per lanciare {{appName}} non è stato trovato. Questo può indicare un errore nel collegamento o che il servizio non è disponibile in questo momento.",
+      "generateErrorMessage": "Qualcosa è andato storto quando si è cercato di utilizzare il servizio di condivisione dei dati per generare un breve URL."
     },
     "sdmxServerStratum": {
       "sdmxStructureLoadErrorTitle": "Richiesta di struttura SDMX fallita",
@@ -867,8 +869,8 @@
     "kml": {
       "unableToLoadItemTitle": "Nessun KML disponibile",
       "name": "KML o KMZ",
-      "errorLoadingMessage": "Si è verificato un errore durante il caricamento di un file KML o KMZ.  Questo può indicare che il file non è valido o che non è supportato da {{appName}}. Se desideri assistenza o ulteriori informazioni, inviaci un'e-mail a {{email}}.",
-      "unexpectedTypeMessage": "KmlCatalogItem.data dovrebbe essere un documento XML, un Blob o un file, ma non era nessuno di questi. Questo potrebbe indicare un bug in {{appName}} o un uso scorretto dell'API {{appName}}. Se credi che sia un bug in {{appName}}, per favore segnalalo via e-mail a {{email}}.",
+      "errorLoadingMessage": "Si è verificato un errore durante il caricamento di un file KML o KMZ.  Questo può indicare che il file non è valido o che non è supportato da {{appName}}.",
+      "unexpectedTypeMessage": "KmlCatalogItem.data dovrebbe essere un documento XML, un Blob o un file, ma non era nessuno di questi. Questo potrebbe indicare un bug in {{appName}} o un uso scorretto dell'API {{appName}}.",
       "errorLoadingTitle": "Errore nel caricamento di KML o KMZ",
       "unexpectedTypeTitle": "Tipo inatteso di dati KML",
       "serviceErrorMessage": "Questo servizio non ha dettagli disponibili.",
@@ -1004,7 +1006,10 @@
       "defaultMessage": "Errore sconosciuto",
       "defaultTitle": "È successo un errore",
       "defaultCombineTitle": "Si sono verificati più errori",
-      "defaultCombineMessage": "I dettagli degli errori sono qui sotto"
+      "defaultCombineMessage": "I dettagli degli errori sono qui sotto",
+      "networkRequestTitle": "Si è verificato un errore nella richiesta di rete",
+      "networkRequestMessage": "I dati potrebbero non essere disponibili o visualizzati correttamente a causa di un'interruzione del servizio del custode dei dati. Prova a ricaricare la mappa, ad accedere ai dati in un secondo momento o a selezionare un altro set di dati. <feedbacklink feedback-message='If the problem persists, please submit feedback here.' email-message='If the problem persists, please report to {{email}}'/>",
+      "networkRequestMessageDetailed": "Questo può indicare una delle seguenti cose:\n\n* L'hostname del server non può essere risolto\n* Il server non ha risposto alla richiesta - o è temporaneamente non disponibile\n* Il server ha negato l'accesso [Cross-Origin Resource Sharing (CORS)](https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/) a questo URL\n* C'è un problema con la tua connessione internet\n\nSe hai inserito il link manualmente, verifica che il link sia corretto."
     },
     "chartData": "Dati del grafico",
     "userAddedData": "Dati aggiunti dall'utente",
@@ -1251,7 +1256,7 @@
     "splitItem": "Confronta",
     "showMoreActionsTitle": "Mostra altre opzioni",
     "previewItemTitle": "Informazioni su questi dati",
-    "previewItem": "Informazioni sui dati",
+    "previewItem": "Informazioni",
     "zoomTo": "Zoom ideale",
     "splitItemTitle": "Duplicare e mostrare lo splitter",
     "colorScaleRangeTitle": "Gamma di scala di colore non valida",
