@@ -93,7 +93,11 @@ See [Getting Started](http://terria.io/Documentation/guide/getting-started/) in 
 
 ### Big Thanks
 
-Cross-browser Testing Platform and Open Source <3 Provided by [Sauce Labs](https://saucelabs.com)
+Hosting and contribution framework for community translations of TerriaJS provided by [Weblate](https://weblate.org/en/) under the Libre plan for open source software. See our translation progress for different languages:
+
+<a href="https://hosted.weblate.org/engage/terriajs/">
+<img src="https://hosted.weblate.org/widgets/terriajs/-/terriajsnext/multi-auto.svg" alt="Translation status" />
+</a>
 
 ### Join the community
 
