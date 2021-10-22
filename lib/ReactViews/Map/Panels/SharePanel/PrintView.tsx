@@ -1,32 +1,44 @@
-"use strict";
-
 import { formatDateTime } from "../../../BottomDock/Timeline/DateFormats";
-import createReactClass from "create-react-class";
 import Description from "../../../Preview/Description";
-import DOMPurify from "dompurify/dist/purify";
 import FeatureInfoPanel from "../../../FeatureInfo/FeatureInfoPanel";
 import Legend from "../../../Workbench/Controls/Legend";
-import PropTypes from "prop-types";
 import React from "react";
 import ReactDOM from "react-dom";
+import Terria from "../../../../Models/Terria";
+import ViewState from "../../../../ReactViewModels/ViewState";
 
-const PrintView = createReactClass({
-  displayName: "PrintView",
+interface Props {
+  terria: Terria;
+  viewState: ViewState;
+  window: Window;
+  readyCallback: (window:Window) => void;
+}
 
-  propTypes: {
-    terria: PropTypes.object,
-    viewState: PropTypes.object,
-    window: PropTypes.object,
-    readyCallback: PropTypes.func
-  },
+interface State {
+  mapImageDataUrl: string | undefined;
+  ready: boolean;
+  printingStarted: boolean;
+  isCheckingForImages: boolean;
+}
 
-  getInitialState() {
-    return {
+class PrintView extends React.Component<Props, State> {
+  printWindowIntervalId: number | undefined;
+  mainWindowIntervalId: number | undefined;
+  mainWindow: Window;
+  printWindow: Window;
+
+  constructor(props:Props) {
+    super(props);
+    this.state = {
       mapImageDataUrl: undefined,
       ready: false,
-      printingStarted: false
+      printingStarted: false,
+      isCheckingForImages: true
     };
-  },
+
+    this.mainWindow = window;
+    this.printWindow = props.window;
+  }
 
   componentDidMount() {
     return this.props.terria.currentViewer
@@ -44,30 +56,24 @@ const PrintView = createReactClass({
         const printWindow = this.props.window;
         const mainWindow = window;
 
-        const printWindowIntervalId = printWindow.setInterval(
+        this.printWindowIntervalId = printWindow.setInterval(
           this.checkForImagesReady,
           200
         );
-        const mainWindowIntervalId = mainWindow.setInterval(
+        this.mainWindowIntervalId = mainWindow.setInterval(
           this.checkForImagesReady,
           200
         );
-
-        this._stopCheckingForImages = () => {
-          printWindow.clearInterval(printWindowIntervalId);
-          mainWindow.clearInterval(mainWindowIntervalId);
-          this._stopCheckingForImages = undefined;
-        };
 
         this.setState({
           mapImageDataUrl: mapImageDataUrl
         });
       });
-  },
+  }
 
   componentWillUnmount() {
     this.stopCheckingForImages();
-  },
+  }
 
   componentDidUpdate() {
     if (this.state.ready && !this.state.printingStarted) {
@@ -78,13 +84,19 @@ const PrintView = createReactClass({
         printingStarted: true
       });
     }
-  },
+  }
+
+  _stopCheckingForImages (){
+    this.printWindow.clearInterval(this.printWindowIntervalId);
+    this.mainWindow.clearInterval(this.mainWindowIntervalId);
+  }
+
 
   stopCheckingForImages() {
     if (this._stopCheckingForImages) {
       this._stopCheckingForImages();
     }
-  },
+  }
 
   checkForImagesReady() {
     if (this.state.ready) {
@@ -107,7 +119,7 @@ const PrintView = createReactClass({
         ready: allImagesReady
       });
     }
-  },
+  }
 
   render() {
     if (!this.state.mapImageDataUrl) {
@@ -130,23 +142,15 @@ const PrintView = createReactClass({
         {this.props.terria.workbench.items.map(this.renderDetails)}
         <h1>Map Credits</h1>
         {/* TODO: We don't have a way of getting credits yet*/}
-        <If condition={this.props.terria.configParameters.printDisclaimer}>
+        {this.props.terria.configParameters.printDisclaimer? <>
           <h1>Print Disclaimer</h1>
           <p>{this.props.terria.configParameters.printDisclaimer.text}</p>
-        </If>
+          </>: null}
       </div>
     );
-  },
+  }
 
-  renderAttribution(attribution) {
-    // For reasons I don't entirely understanding, using parseCustomHtmlToReact instead
-    // of dangerouslySetInnerHTML here doesn't work in IE11 or Edge. All elements after
-    // the first attribution end up just completely missing from the DOM.
-    const html = { __html: DOMPurify.sanitize(attribution) };
-    return <li key={attribution} dangerouslySetInnerHTML={html} />;
-  },
-
-  renderLegend(catalogItem) {
+  renderLegend(catalogItem:any) {
     if (!catalogItem.isMappable) {
       return null;
     }
@@ -162,9 +166,9 @@ const PrintView = createReactClass({
         <Legend forPrint={true} item={catalogItem} />
       </div>
     );
-  },
+  }
 
-  renderDetails(catalogItem) {
+  renderDetails(catalogItem: any) {
     if (!catalogItem.isMappable) {
       return null;
     }
@@ -176,7 +180,7 @@ const PrintView = createReactClass({
         <Description item={nowViewingItem} printView={true} />
       </div>
     );
-  },
+  }
 
   renderFeatureInfo() {
     if (
@@ -199,9 +203,66 @@ const PrintView = createReactClass({
       </div>
     );
   }
-});
 
-PrintView.Styles = `
+  /**
+ * Creates a new printable view.
+ *
+ * @param {Terria} options.terria The Terria instance.
+ * @param {ViewState} options.viewState The terria ViewState instance.
+ * @param {Window} [options.printWindow] The window in which to create the print view. This is usually a new window created with
+ *                 `window.open()` or an iframe's `contentWindow`. If undefined, a new window (tab) will be created.
+ * @param {Function} [options.readyCallback] A function that is called when the print view is ready to be used. The function is
+ *                   given the print view window as its only parameter.
+ * @param {Function} [options.closeCallback] A function that is called when the print view is closed. The function is given
+ *                   the print view window as its only parameter.
+ */
+  create(options:any){
+    const {
+      terria,
+      viewState,
+      printWindow = window.open(),
+      readyCallback,
+      closeCallback
+    } = options;
+
+    if (closeCallback) {
+      printWindow.addEventListener("unload", () => {
+        closeCallback(printWindow);
+      });
+    }
+
+    // Open and immediately close the document. This works around a problem in Firefox that is
+    // captured here: https://bugzilla.mozilla.org/show_bug.cgi?id=667227.
+    // Essentially, when we first create an iframe, it has no document loaded and asynchronously
+    // starts a load of "about:blank". If we access the document object and start manipulating it
+    // before that async load completes, a new document will be automatically created. But then
+    // when the async load completes, the original, automatically-created document gets unloaded
+    // and the new "about:blank" gets swapped in. End result: everything we add to the DOM before
+    // the async load complete gets lost and Firefox ends up printing a blank page.
+    // Explicitly opening and then closing a new document _seems_ to avoid this.
+    printWindow.document.open();
+    printWindow.document.close();
+
+    printWindow.document.head.innerHTML = `
+          <meta charset="UTF-8">
+          <title>${terria.appName} Print View</title>
+          <style>${styles}</style>
+          `;
+    printWindow.document.body.innerHTML = '<div id="print"></div>';
+
+    const printView = (
+      <PrintView
+        terria={terria}
+        viewState={viewState}
+        window={printWindow}
+        readyCallback={readyCallback}
+      />
+    );
+    ReactDOM.render(printView, printWindow.document.getElementById("print"));
+  }
+}
+
+export const styles = `
     .tjs-_base__list-reset {
         list-style: none;
         padding-left: 0;
@@ -238,61 +299,4 @@ PrintView.Styles = `
     }
 `;
 
-/**
- * Creates a new printable view.
- *
- * @param {Terria} options.terria The Terria instance.
- * @param {ViewState} options.viewState The terria ViewState instance.
- * @param {Window} [options.printWindow] The window in which to create the print view. This is usually a new window created with
- *                 `window.open()` or an iframe's `contentWindow`. If undefined, a new window (tab) will be created.
- * @param {Function} [options.readyCallback] A function that is called when the print view is ready to be used. The function is
- *                   given the print view window as its only parameter.
- * @param {Function} [options.closeCallback] A function that is called when the print view is closed. The function is given
- *                   the print view window as its only parameter.
- */
-PrintView.create = function(options) {
-  const {
-    terria,
-    viewState,
-    printWindow = window.open(),
-    readyCallback,
-    closeCallback
-  } = options;
-
-  if (closeCallback) {
-    printWindow.addEventListener("unload", () => {
-      closeCallback(printWindow);
-    });
-  }
-
-  // Open and immediately close the document. This works around a problem in Firefox that is
-  // captured here: https://bugzilla.mozilla.org/show_bug.cgi?id=667227.
-  // Essentially, when we first create an iframe, it has no document loaded and asynchronously
-  // starts a load of "about:blank". If we access the document object and start manipulating it
-  // before that async load completes, a new document will be automatically created. But then
-  // when the async load completes, the original, automatically-created document gets unloaded
-  // and the new "about:blank" gets swapped in. End result: everything we add to the DOM before
-  // the async load complete gets lost and Firefox ends up printing a blank page.
-  // Explicitly opening and then closing a new document _seems_ to avoid this.
-  printWindow.document.open();
-  printWindow.document.close();
-
-  printWindow.document.head.innerHTML = `
-        <meta charset="UTF-8">
-        <title>${terria.appName} Print View</title>
-        <style>${PrintView.Styles}</style>
-        `;
-  printWindow.document.body.innerHTML = '<div id="print"></div>';
-
-  const printView = (
-    <PrintView
-      terria={terria}
-      viewState={viewState}
-      window={printWindow}
-      readyCallback={readyCallback}
-    />
-  );
-  ReactDOM.render(printView, printWindow.document.getElementById("print"));
-};
-
-module.exports = PrintView;
+export default PrintView;
