@@ -35,7 +35,6 @@ yarn install
 yarn add -W moment@2.24.0
 # add branch name, taking "baseHref": "/", and replacing with safe branch name
 # This doesn't change the serverconfig that's present on the CI server, but the build uses baseHref to template index.html
-# baseHref is also set in values in the helm upgrade command below
 mv devserverconfig.json jqin_devserverconfig.json
 jq "setpath([\"baseHref\"];\"\/$SAFE_BRANCH_NAME\/\")" jqin_devserverconfig.json > devserverconfig.json
 rm jqin_devserverconfig.json
@@ -44,7 +43,7 @@ yarn gulp build
 yarn "--terriajs-map:docker_name=terriajs-ci" docker-build-ci -- --tag "asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME"
 gcloud auth configure-docker asia.gcr.io --quiet
 docker push "asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME"
-helm upgrade --install --recreate-pods -f ../buildprocess/ci-values.yml --set global.exposeNodePorts=true --set "terriamap.image.full=asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME" --set "terriamap.serverConfig.baseHref=/$SAFE_BRANCH_NAME/" --set "terriamap.serverConfig.shareUrlPrefixes.s.accessKeyId=$SHARE_S3_ACCESS_KEY_ID" --set "terriamap.serverConfig.shareUrlPrefixes.s.secretAccessKey=$SHARE_S3_SECRET_ACCESS_KEY" --set "terriamap.serverConfig.feedback.accessToken=$FEEDBACK_GITHUB_TOKEN" --set "terriamap.serverConfig.baseHref=\/$SAFE_BRANCH_NAME\/" "terriajs-$SAFE_BRANCH_NAME" deploy/helm/terria
+helm upgrade --install --recreate-pods -f ../buildprocess/ci-values.yml --set global.exposeNodePorts=true --set "terriamap.image.full=asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME" --set "terriamap.serverConfig.baseHref=/$SAFE_BRANCH_NAME/" --set "terriamap.serverConfig.shareUrlPrefixes.s.accessKeyId=$SHARE_S3_ACCESS_KEY_ID" --set "terriamap.serverConfig.shareUrlPrefixes.s.secretAccessKey=$SHARE_S3_SECRET_ACCESS_KEY" --set "terriamap.serverConfig.feedback.accessToken=$FEEDBACK_GITHUB_TOKEN" "terriajs-$SAFE_BRANCH_NAME" deploy/helm/terria
 
 cd ..
 node buildprocess/ci-cleanup.js
