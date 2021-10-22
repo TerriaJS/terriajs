@@ -282,7 +282,7 @@ interface ConfigParameters {
   /**
    * Configurable discalimer that shows up in print view
    */
-   printDisclaimer?: { url: string; text: string };
+  printDisclaimer?: { url: string; text: string };
 }
 
 interface StartOptions {

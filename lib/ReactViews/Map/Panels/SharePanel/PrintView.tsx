@@ -11,7 +11,7 @@ interface Props {
   terria: Terria;
   viewState: ViewState;
   window: Window;
-  readyCallback: (window:Window) => void;
+  readyCallback: (window: Window) => void;
 }
 
 interface State {
@@ -27,7 +27,7 @@ class PrintView extends React.Component<Props, State> {
   mainWindow: Window;
   printWindow: Window;
 
-  constructor(props:Props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       mapImageDataUrl: undefined,
@@ -86,11 +86,10 @@ class PrintView extends React.Component<Props, State> {
     }
   }
 
-  _stopCheckingForImages (){
+  _stopCheckingForImages() {
     this.printWindow.clearInterval(this.printWindowIntervalId);
     this.mainWindow.clearInterval(this.mainWindowIntervalId);
   }
-
 
   stopCheckingForImages() {
     if (this._stopCheckingForImages) {
@@ -142,15 +141,17 @@ class PrintView extends React.Component<Props, State> {
         {this.props.terria.workbench.items.map(this.renderDetails)}
         <h1>Map Credits</h1>
         {/* TODO: We don't have a way of getting credits yet*/}
-        {this.props.terria.configParameters.printDisclaimer? <>
-          <h1>Print Disclaimer</h1>
-          <p>{this.props.terria.configParameters.printDisclaimer.text}</p>
-          </>: null}
+        {this.props.terria.configParameters.printDisclaimer ? (
+          <>
+            <h1>Print Disclaimer</h1>
+            <p>{this.props.terria.configParameters.printDisclaimer.text}</p>
+          </>
+        ) : null}
       </div>
     );
   }
 
-  renderLegend(catalogItem:any) {
+  renderLegend(catalogItem: any) {
     if (!catalogItem.isMappable) {
       return null;
     }
@@ -205,18 +206,18 @@ class PrintView extends React.Component<Props, State> {
   }
 
   /**
- * Creates a new printable view.
- *
- * @param {Terria} options.terria The Terria instance.
- * @param {ViewState} options.viewState The terria ViewState instance.
- * @param {Window} [options.printWindow] The window in which to create the print view. This is usually a new window created with
- *                 `window.open()` or an iframe's `contentWindow`. If undefined, a new window (tab) will be created.
- * @param {Function} [options.readyCallback] A function that is called when the print view is ready to be used. The function is
- *                   given the print view window as its only parameter.
- * @param {Function} [options.closeCallback] A function that is called when the print view is closed. The function is given
- *                   the print view window as its only parameter.
- */
-  create(options:any){
+   * Creates a new printable view.
+   *
+   * @param {Terria} options.terria The Terria instance.
+   * @param {ViewState} options.viewState The terria ViewState instance.
+   * @param {Window} [options.printWindow] The window in which to create the print view. This is usually a new window created with
+   *                 `window.open()` or an iframe's `contentWindow`. If undefined, a new window (tab) will be created.
+   * @param {Function} [options.readyCallback] A function that is called when the print view is ready to be used. The function is
+   *                   given the print view window as its only parameter.
+   * @param {Function} [options.closeCallback] A function that is called when the print view is closed. The function is given
+   *                   the print view window as its only parameter.
+   */
+  create(options: any) {
     const {
       terria,
       viewState,
