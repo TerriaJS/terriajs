@@ -217,16 +217,17 @@ export default class TerriaError {
         : TerriaErrorSeverity.Warning;
 
     // overrideRaiseToUser will be true if at least one error includes overrideRaiseToUser = true
+    // Otherwise, it will be undefined
     let overrideRaiseToUser: boolean | undefined =
-      filteredErrors.map(error => error.overrideRaiseToUser).includes(true) ||
+      filteredErrors.some(error => error.overrideRaiseToUser === true) ||
       undefined;
 
     // overrideRaiseToUser will be false if:
     // - NO errors includes overrideRaiseToUser = true
-    // - and at least one error includes overrideRaiseToUser = true
+    // - and at least one error includes overrideRaiseToUser = false
     if (
       !isDefined(overrideRaiseToUser) &&
-      filteredErrors.map(error => error.overrideRaiseToUser).includes(false)
+      filteredErrors.some(error => error.overrideRaiseToUser === false)
     ) {
       overrideRaiseToUser = false;
     }

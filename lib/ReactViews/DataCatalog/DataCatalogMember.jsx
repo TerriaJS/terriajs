@@ -31,8 +31,8 @@ export default observer(
     render() {
       const member =
         ReferenceMixin.isMixedInto(this.props.member) &&
-        this.props.member.target !== undefined
-          ? this.props.member.target
+        this.props.member.nestedTarget !== undefined
+          ? this.props.member.nestedTarget
           : this.props.member;
 
       if (ReferenceMixin.isMixedInto(member)) {

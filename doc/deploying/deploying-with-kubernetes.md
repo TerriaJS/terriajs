@@ -36,7 +36,7 @@ terriamap:
 ```
 
 # Building Your Own Image
-You can build your own TerriaMap image by changing the `config.docker.name` key in `package.json`, then running `npm run docker-build-prod`.
+You can build your own TerriaMap image by changing the `config.docker.name` key in `package.json`, then running `yarn docker-build-prod`.
 
 # Working Locally
 If you want to run a local version of TerriaMap then you can use [minikube](https://kubernetes.io/docs/getting-started-guides/minikube/).
@@ -51,9 +51,9 @@ helm repo update
 helm install --name docker-registry -f deploy/helm/docker-registry.yml stable/docker-registry
 helm install --name kube-registry-proxy -f deploy/helm/kube-registry-proxy.yml incubator/kube-registry-proxy
 
-npm run docker-build-local
+yarn docker-build-local
 
 helm upgrade --install -f deploy/helm/example-prod.yml terria deploy/helm/terria
 ```
 
-This will set you up with helm on your local minikube instance, install a local docker registry that will be pushed to with `npm run docker-build-local` and then installs a chart for terria that will use that docker image. You can keep running `npm run docker-build-local` and deleting the terria-server pod to update it. Keep in mind that you have to run `npm run gulp` to rebuild each time you redeploy. You can modify or copy `example-prod.yml` to change the config.
+This will set you up with helm on your local minikube instance, install a local docker registry that will be pushed to with `yarn docker-build-local` and then installs a chart for terria that will use that docker image. You can keep running `yarn docker-build-local` and deleting the terria-server pod to update it. Keep in mind that you have to run `yarn gulp` to rebuild each time you redeploy. You can modify or copy `example-prod.yml` to change the config.

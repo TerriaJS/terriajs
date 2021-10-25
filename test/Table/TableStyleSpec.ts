@@ -373,7 +373,13 @@ describe("TableStyle", function() {
       updateModelFromJson(csvItem, CommonStrata.definition, {
         csvString: SedCsv,
         activeStyle: "Value",
-        defaultStyle: { color: { zScoreFilter: 2, rangeFilter: 0.1 } }
+        defaultStyle: {
+          color: {
+            zScoreFilter: 2,
+            rangeFilter: 0.1,
+            zScoreFilterEnabled: true
+          }
+        }
       });
 
       await csvItem.loadMapItems();
@@ -399,7 +405,13 @@ describe("TableStyle", function() {
 
       // Change zScoreFilter and rangeFilter - should also expect not to be applied
       updateModelFromJson(csvItem, CommonStrata.definition, {
-        defaultStyle: { color: { zScoreFilter: 1, rangeFilter: 0.25 } }
+        defaultStyle: {
+          color: {
+            zScoreFilter: 1,
+            rangeFilter: 0.25,
+            zScoreFilterEnabled: true
+          }
+        }
       });
 
       expect(activeStyle.tableColorMap.zScoreFilterValues).toBeUndefined();
@@ -413,7 +425,13 @@ describe("TableStyle", function() {
       expect(csvItem.legends[0].items.length).toBe(7);
 
       updateModelFromJson(csvItem, CommonStrata.definition, {
-        defaultStyle: { color: { zScoreFilter: 1, rangeFilter: 0.1 } }
+        defaultStyle: {
+          color: {
+            zScoreFilter: 1,
+            rangeFilter: 0.1,
+            zScoreFilterEnabled: true
+          }
+        }
       });
 
       // Change zScoreFilter and rangeFilter again - should be applied this time
@@ -429,7 +447,9 @@ describe("TableStyle", function() {
       // Check legend for outlier item
       expect(csvItem.legends.length).toBe(1);
       expect(csvItem.legends[0].items.length).toBe(8);
-      expect(csvItem.legends[0].items[7].title).toBe("Outliers");
+      expect(csvItem.legends[0].items[7].title).toBe(
+        "models.tableData.legendZFilterLabel"
+      );
       expect(csvItem.legends[0].items[7].addSpacingAbove).toBeTruthy();
       expect(csvItem.legends[0].items[7].color).toBe(
         activeStyle.tableColorMap.outlierColor.toCssColorString()
