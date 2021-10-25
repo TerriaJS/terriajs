@@ -1296,7 +1296,11 @@
       "bulkGeocoderInfoMessage": "The CSV contains addresses, but {{number}} can't be located on the map: ",
       "bulkGeocoderInfo2Message": "{{nullAddresses}} addresses are missing from the CSV.",
       "bulkGeocoderErrorTitle": "Bulk Geocoder Error",
-      "bulkGeocoderErrorMessage": "Unable to map addresses to lat-long coordinates, as an error occurred while retrieving address coordinates. Please check your internet connection or try again later."
+      "bulkGeocoderErrorMessage": "Unable to map addresses to lat-long coordinates, as an error occurred while retrieving address coordinates. Please check your internet connection or try again later.",
+      "legendZFilterLabel": "Extreme values",
+      "legendNullLabel": "(No value)",
+      "zFilterEnabled": "Extreme values hidden (click to show)",
+      "zFilterDisabled": "Extreme values detected (click to hide)"
     },
     "terrainCatalog": {
       "notSupportedErrorTitle": "Not supported in 2D",

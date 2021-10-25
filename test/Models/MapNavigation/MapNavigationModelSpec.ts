@@ -59,7 +59,7 @@ describe("MapNavigationModel", function() {
       screenSize: undefined,
       location: "TOP"
     };
-    item3.controller.visible = false;
+    item3.controller.setVisible(false);
 
     item4 = {
       id: "item4",
@@ -98,7 +98,7 @@ describe("MapNavigationModel", function() {
       screenSize: undefined,
       location: "TOP"
     };
-    item2Duplicate.controller.visible = false;
+    item2Duplicate.controller.setVisible(false);
   });
 
   it("properly constructs model", function() {
