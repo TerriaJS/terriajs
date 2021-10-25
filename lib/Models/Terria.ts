@@ -742,9 +742,14 @@ export default class Terria {
 
   @action
   updateParameters(parameters: Model<ConfigParametersTraits> | JsonObject) {
+    // convert deprecated options to new ones
+    const updatedParameters: any = this.configParameters.convertDeprecatedParameters(
+      parameters
+    );
+
     return this.configParameters.updateFromJson(
       CommonStrata.definition,
-      parameters
+      updatedParameters
     );
   }
 

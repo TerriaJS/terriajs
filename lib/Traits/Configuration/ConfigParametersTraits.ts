@@ -278,6 +278,12 @@ export class ConfigParametersTraits extends ModelTraits {
   })
   googleAnalyticsKey?: string;
 
+  @anyTrait({
+    name: "Google analytics options",
+    description: "Google analytics options."
+  })
+  googleAnalyticsOptions?: any;
+
   @objectTrait({
     name: "Error service",
     type: ErrorServiceOptionsTraits,
