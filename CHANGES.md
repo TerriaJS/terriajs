@@ -10,8 +10,11 @@ Change Log
 * Disable `zFilter` by default
 * Remove use of word "outlier" in zFilter dimension and legend item (we now use "Extreme values")
 * Add `cursor:pointer` to `Checkbox`
+* Fix `MapNavigation` getter/setter `visible` bug.
+  * Replace `CompositeBarItemController` `visible` setter with `setVisible` function
 * Use `yarn` in CI scripts (and upgrade node to v14)
 * TSXified PrintView
+* Fix app crash when previewing a nested reference in the catalog (eg when viewing an indexed search result where the result is a reference).
 * [The next improvement]
 
 #### 8.1.4
