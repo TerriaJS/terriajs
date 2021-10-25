@@ -21,6 +21,14 @@ interface State {
   isCheckingForImages: boolean;
 }
 
+interface CreateOptions {
+  terria: Terria;
+  viewState: ViewState;
+  printWindow: Window;
+  readyCallback: (printWindow: Window) => void;
+  closeCallback: (printWindow: Window) => void;
+}
+
 class PrintView extends React.Component<Props, State> {
   printWindowIntervalId: number | undefined;
   mainWindowIntervalId: number | undefined;
@@ -217,7 +225,7 @@ class PrintView extends React.Component<Props, State> {
    * @param {Function} [options.closeCallback] A function that is called when the print view is closed. The function is given
    *                   the print view window as its only parameter.
    */
-  create(options: any) {
+  create(options: CreateOptions) {
     const {
       terria,
       viewState,
@@ -226,8 +234,13 @@ class PrintView extends React.Component<Props, State> {
       closeCallback
     } = options;
 
+    if (!printWindow) {
+      console.error("Unable to open new window");
+      return;
+    }
+
     if (closeCallback) {
-      printWindow.addEventListener("unload", () => {
+      printWindow?.addEventListener("unload", () => {
         closeCallback(printWindow);
       });
     }
