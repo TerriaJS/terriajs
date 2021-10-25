@@ -240,7 +240,7 @@ class PrintView extends React.Component<Props, State> {
     }
 
     if (closeCallback) {
-      printWindow?.addEventListener("unload", () => {
+      printWindow.addEventListener("unload", () => {
         closeCallback(printWindow);
       });
     }
