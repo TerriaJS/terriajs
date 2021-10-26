@@ -19,7 +19,7 @@ Change Log
 * Fix `MapNavigation` getter/setter `visible` bug.
   * Replace `CompositeBarItemController` `visible` setter with `setVisible` function
 * Use `yarn` in CI scripts (and upgrade node to v14)
-* `GeoJsonMixin.style["stroke-opacity"]` will now also set `polygonStroke.alpha`
+* `GeoJsonMixin.style["stroke-opacity"]` will now also set `polygonStroke.alpha` and `polylineStroke.alpha`
 * Reduce `GeoJsonMixin` default stroke width from `2` to `1`
 * Add `TableMixin` styling to `GeoJsonMixin` - it will treat geojson feature properties as "rows" in a table - which can be styled in the same way as `TableMixin` (eg CSV). This is only enabled for geojson-vt/Protomaps (which requires `Terria.configParameters.enableGeojsonVt = true`). For more info see `GeojsonMixin.forceLoadMapItems()`
   * This can be disabled using `GeojsonTraits.disableTableStyle`
@@ -30,8 +30,8 @@ Change Log
 * Exporting `GeojsonMixin` will now add proper file extensions
 * `WebFeatureServiceCatalogItem` now uses `GeoJsonMixin`
 * Fix `ProtomapsImageryProvider` geojson feature picking over antimeridian
-* Fix app crash when previewing a nested reference in the catalog (eg when viewing an indexed search result where the result is a reference).
 * Add Socrata group to "Add web data"
+* Fix app crash when previewing a nested reference in the catalog (eg when viewing an indexed search result where the result is a reference).
 * [The next improvement]
 
 #### 8.1.4
