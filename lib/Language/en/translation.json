@@ -549,6 +549,7 @@
     "searchItemTitle": "Search"
   },
   "dateTime": {
+    "selectorLabel": "Time:",
     "back": "Go back",
     "previous": "Previous time",
     "selectTime": "Select a time",
@@ -1298,7 +1299,9 @@
       "legendZFilterLabel": "Extreme values",
       "legendNullLabel": "(No value)",
       "zFilterEnabled": "Extreme values hidden (click to show)",
-      "zFilterDisabled": "Extreme values detected (click to hide)"
+      "zFilterDisabled": "Extreme values detected (click to hide)",
+      "timeDimensionEnabled": "Time enabled (click to disable)",
+      "timeDimensionDisabled": "Time disabled (click to enable)"
     },
     "terrainCatalog": {
       "notSupportedErrorTitle": "Not supported in 2D",

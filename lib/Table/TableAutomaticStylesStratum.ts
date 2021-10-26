@@ -171,6 +171,15 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
     return "start";
   }
 
+  /** Return title of timeColumn if defined
+   * This will be displayed on DateTimeSelectorSection in the workbench
+   */
+  @computed get timeLabel() {
+    if (this.catalogItem.activeTableStyle.timeColumn) {
+      return `${this.catalogItem.activeTableStyle.timeColumn.title}: `;
+    }
+  }
+
   private readonly _createLegendForColorStyle = createTransformer(
     (i: number) => {
       return new ColorStyleLegend(this.catalogItem, i);

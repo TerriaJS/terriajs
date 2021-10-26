@@ -12,9 +12,6 @@ import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
 import DiscretelyTimeVaryingTraits from "../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import TimeVarying from "./TimeVarying";
-
-type DiscretelyTimeVarying = Model<DiscretelyTimeVaryingTraits>;
-
 export interface AsJulian {
   time: JulianDate;
   tag: string;
@@ -26,7 +23,7 @@ export interface DiscreteTimeAsJS {
 }
 
 function DiscretelyTimeVaryingMixin<
-  T extends Constructor<DiscretelyTimeVarying>
+  T extends Constructor<Model<DiscretelyTimeVaryingTraits>>
 >(Base: T) {
   abstract class DiscretelyTimeVaryingMixin extends Base
     implements TimeVarying {

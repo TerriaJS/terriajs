@@ -19,6 +19,7 @@ import ConstantColorMap from "../Map/ConstantColorMap";
 import RegionProviderList from "../Map/RegionProviderList";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
+import StratumFromTraits from "../Models/Definition/StratumFromTraits";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import SelectableDimensions, {
   SelectableDimension
@@ -138,7 +139,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      * with this ID actually exists. If no active style is explicitly
      * specified, the ID of the first style with a scalar color column is used.
      * If there is no such style the id of the first style of the {@link #styles}
-     * is used.
+     * is used. This will try to use columns which aren't named "id" or "_id_"
      */
     @computed
     get activeStyle(): string | undefined {
@@ -146,16 +147,26 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       if (value !== undefined) {
         return value;
       } else if (this.styles && this.styles.length > 0) {
-        // Find and return a style with scalar color column if it exists,
-        // otherwise just return the first available style id.
-        const styleWithScalarColorColumn = this.styles.find(s => {
+        const scalarStyles = this.styles.filter(s => {
           const colName = s.color.colorColumn;
           return (
             colName &&
             this.findColumnByName(colName)?.type === TableColumnType.scalar
           );
         });
-        return styleWithScalarColorColumn?.id || this.styles[0].id;
+
+        // Try to use scalar style if one exists
+        // return first matching column that isn't "id" or "_id_"
+        return (
+          [...scalarStyles, ...this.styles].find(
+            col =>
+              !["id", "_id_"].find(
+                name =>
+                  col.id?.toLowerCase() === name ||
+                  col.title?.toLowerCase() === name
+              )
+          )?.id || this.styles[0].id
+        );
       }
       return undefined;
     }
@@ -196,12 +207,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     @computed
-    get disableOpacityControl() {
-      // disable opacity control for point tables - or if no mapItems
-      return this.activeTableStyle.isPoints() || this.mapItems.length === 0;
-    }
-
-    @computed
     get _canExportData() {
       return isDefined(this.dataColumnMajor);
     }
@@ -215,6 +220,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           )
           .join("\n");
 
+        // Make sure we have .csv file extension
+        let name = this.name || this.uniqueId || "data.csv";
+        if (!/(\.csv\b)/i.test(name)) {
+          name = `${name}.csv`;
+        }
+
         return {
           name: (this.name || this.uniqueId)!,
           file: new Blob([csvString])
@@ -225,6 +236,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         sender: this,
         message: "No data available to download."
       });
+    }
+
+    @computed
+    get disableOpacityControl() {
+      // disable opacity control for point tables - or if no mapItems
+      return this.activeTableStyle.isPoints() || this.mapItems.length === 0;
     }
 
     @computed
@@ -431,6 +448,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     @computed
     get selectableDimensions(): SelectableDimension[] {
       return filterOutUndefined([
+        this.timeDisableDimension,
         ...super.selectableDimensions,
         this.regionColumnDimensions,
         this.regionProviderDimensions,
@@ -546,7 +564,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     /**
      * Creates SelectableDimension for region column - the options contains a list of all columns.
-     * {@link TableTraits#enableManualRegionMapping} must be enabled.
+     * {@link TableColorStyleTraits#zScoreFilter} must be enabled and {@link TableColorMap#zScoreFilterValues} must detect extreme (outlier) values
      */
     @computed
     get outlierFilterDimension(): SelectableDimension | undefined {
@@ -574,6 +592,58 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           });
         },
         placement: "belowLegend",
+        type: "checkbox"
+      };
+    }
+
+    /**
+     * Creates SelectableDimension to disable time - this will show if each rowGroup only has a single time
+     */
+    @computed
+    get timeDisableDimension(): SelectableDimension | undefined {
+      // Return nothing if no active time column and if the active time column has been explicitly hidden (using this.defaultStyle.time.timeColumn = null)
+      // or if time column doesn't have at least one interval
+      if (
+        this.mapItems.length === 0 ||
+        (this.disableDateTimeSelector &&
+          this.defaultStyle.time.timeColumn !== null) ||
+        (this.activeTableStyle.timeColumn &&
+          !this.activeTableStyle.moreThanOneTimeInterval) ||
+        !this.activeTableStyle.flatDates
+      )
+        return;
+
+      // This selector only works if timeColumn hasn't been set to null outside user stratum
+      if (
+        !Array.from(this.strata.entries()).every(
+          ([name, strata]) =>
+            (strata as StratumFromTraits<TableTraits>)?.defaultStyle?.time
+              ?.timeColumn !== null || name === CommonStrata.user
+        )
+      )
+        return;
+
+      return {
+        id: "disableTime",
+        options: [
+          {
+            id: "true",
+            name: i18next.t("models.tableData.timeDimensionEnabled")
+          },
+          {
+            id: "false",
+            name: i18next.t("models.tableData.timeDimensionDisabled")
+          }
+        ],
+        selectedId:
+          this.defaultStyle.time.timeColumn === null ? "false" : "true",
+        setDimensionValue: (stratumId: string, value: string) => {
+          this.defaultStyle.time.setTrait(
+            stratumId,
+            "timeColumn",
+            value === "true" ? undefined : null
+          );
+        },
         type: "checkbox"
       };
     }

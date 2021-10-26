@@ -147,7 +147,9 @@ const DateTimeSelectorSection = observer(
 
       return (
         <div className={Styles.datetimeSelector}>
-          <div className={Styles.title}>Time:</div>
+          <div className={Styles.title}>
+            {item.timeLabel ?? t("dateTime.selectorLabel")}
+          </div>
           <div className={Styles.datetimeSelectorInner}>
             <div className={Styles.datetimeAndPicker}>
               <button

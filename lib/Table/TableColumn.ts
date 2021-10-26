@@ -592,7 +592,16 @@ export default class TableColumn {
     return (
       this.tableModel.columnTitles[this.columnNumber] ??
       this.traits.title ??
+      // If no title set, use `name` and:
+      // - un-camel case
+      // - remove underscores
+      // - capitalise
       this.name
+        .replace(/[A-Z][a-z]/g, letter => ` ${letter.toLowerCase()}`)
+        .replace(/_/g, " ")
+        .trim()
+        .toLowerCase()
+        .replace(/(^\w|\s\w)/g, m => m.toUpperCase())
     );
   }
 
@@ -655,8 +664,9 @@ export default class TableColumn {
       // or zero are counted as neither failed nor successful.
 
       if (
+        this.valuesAsNumbers.numberOfValidNumbers > 1 &&
         this.valuesAsNumbers.numberOfNonNumbers <=
-        Math.ceil(this.valuesAsNumbers.numberOfValidNumbers * 0.1)
+          Math.ceil(this.valuesAsNumbers.numberOfValidNumbers * 0.1)
       ) {
         type = TableColumnType.scalar;
       } else {
@@ -666,8 +676,10 @@ export default class TableColumn {
         // free-form text.
         const uniqueValues = this.uniqueValues.values;
         if (
-          uniqueValues.length <= 7 ||
-          uniqueValues.length < this.values.length / 10
+          // We need more than 1 unique value (including nulls)
+          (this.uniqueValues.numberOfNulls ? 1 : 0 + uniqueValues.length) > 1 &&
+          (uniqueValues.length <= 7 ||
+            uniqueValues.length < this.values.length / 10)
         ) {
           type = TableColumnType.enum;
         } else {
@@ -826,6 +838,9 @@ export default class TableColumn {
     const typeHintSet = [
       { hint: /^(lon|long|longitude|lng)$/i, type: TableColumnType.longitude },
       { hint: /^(lat|latitude)$/i, type: TableColumnType.latitude },
+      { hint: /^(easting|eastings)$/i, type: TableColumnType.hidden },
+      { hint: /^(northing|northings)$/i, type: TableColumnType.hidden },
+      { hint: /^(_id_|id)$/i, type: TableColumnType.hidden },
       { hint: /^(address|addr)$/i, type: TableColumnType.address },
       {
         hint: /^(.*[_ ])?(depth|height|elevation|altitude)$/i,
