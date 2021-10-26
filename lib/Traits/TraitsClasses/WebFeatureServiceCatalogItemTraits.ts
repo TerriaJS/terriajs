@@ -5,14 +5,10 @@ import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import { GeoJsonTraits } from "./GeoJsonTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
-import LayerOrderingTraits from "./LayerOrderingTraits";
-import SplitterTraits from "./SplitterTraits";
 import StyleTraits from "./StyleTraits";
 
 export default class WebFeatureServiceCatalogItemTraits extends mixTraits(
   GeoJsonTraits,
-  LayerOrderingTraits,
-  SplitterTraits,
   GetCapabilitiesTraits
 ) {
   @primitiveTrait({

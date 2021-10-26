@@ -180,7 +180,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             this.activeTableStyle.colorMap
           ],
           () => {
-            if (this._imageryProvider && this.readyData) {
+            if (this._imageryProvider && this.readyData && this.useMvt) {
               runInAction(() => {
                 this._imageryProvider = this.createProtomapsImageryProvider(
                   this.readyData!
@@ -287,6 +287,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return (
         !this.forceCesiumPrimitives &&
         this.terria.configParameters.enableGeojsonMvt &&
+        !isDefined(this.czmlTemplate) &&
         !isDefined(this.stylesWithDefaults().markerSymbol) &&
         !isDefined(this.timeProperty) &&
         !isDefined(this.heightProperty) &&

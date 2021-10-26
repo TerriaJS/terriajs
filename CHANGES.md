@@ -26,6 +26,7 @@ Change Log
 * `WebFeatureServiceCatalogItem` now uses `GeoJsonMixin`
 * Fix `ProtomapsImageryProvider` geojson feature picking over antimeridian
 * Fix app crash when previewing a nested reference in the catalog (eg when viewing an indexed search result where the result is a reference).
+* Add Socrata group to "Add web data"
 * [The next improvement]
 
 #### 8.1.4

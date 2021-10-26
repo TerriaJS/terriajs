@@ -5,9 +5,7 @@ import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
-import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
-import MappableTraits from "./MappableTraits";
 import StyleTraits from "./StyleTraits";
 import TableTraits from "./TableTraits";
 import UrlTraits from "./UrlTraits";
@@ -40,9 +38,7 @@ export class PerPropertyGeoJsonStyleTraits extends ModelTraits {
 export class GeoJsonTraits extends mixTraits(
   TableTraits,
   FeatureInfoTraits,
-  UrlTraits,
-  MappableTraits,
-  DiscretelyTimeVaryingTraits
+  UrlTraits
 ) {
   /** Override TableTraits which aren't applicable to GeoJsonTraits */
   @primitiveTrait({
