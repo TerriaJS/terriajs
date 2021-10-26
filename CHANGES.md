@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.1.5)
 
+* Fix an internal bug where Cesium.prototype.observeModelLayer() fails to remove 3D tilesets in certain cases.
 * Rename `TerriaError._shouldRaiseToUser` to `overrideRaiseToUser`
   * Note: `userProperties.ignoreError = "1"` will take precedence over `overrideRaiseToUser = true`
 * Fix `overrideRaiseToUser` bug causing `overrideRaiseToUser` to be set to `true` in `TerriaError.combine`
