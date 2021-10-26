@@ -22,7 +22,6 @@ import {
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -54,12 +53,13 @@ import formatPropertyValue from "../Core/formatPropertyValue";
 import hashFromString from "../Core/hashFromString";
 import isDefined from "../Core/isDefined";
 import { isJsonObject, JsonObject } from "../Core/Json";
+import { isJson } from "../Core/loadBlob";
 import makeRealPromise from "../Core/makeRealPromise";
 import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError, { networkRequestError } from "../Core/TerriaError";
 import ProtomapsImageryProvider, {
-  GEOJSON_SOURCE_LAYER_NAME,
   GeojsonSource,
+  GEOJSON_SOURCE_LAYER_NAME,
   ProtomapsData
 } from "../Map/ProtomapsImageryProvider";
 import Reproject from "../Map/Reproject";
@@ -74,9 +74,8 @@ import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
 import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import { DiscreteTimeAsJS } from "./DiscretelyTimeVaryingMixin";
-import TableMixin from "./TableMixin";
 import { ExportData } from "./ExportableMixin";
-import { isJson } from "../Core/loadBlob";
+import TableMixin from "./TableMixin";
 
 export type FeatureCollectionWithCrs = FeatureCollection & {
   crs: JsonObject | undefined;
@@ -511,7 +510,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new LineSymbolizer({
               color: defaultStyles.polygonStroke.toCssColorString(),
-              width: defaultStyles.strokeWidth
+              width: defaultStyles.polygonStrokeWidth
             }),
             minzoom: 0,
             maxzoom: Infinity,
@@ -528,7 +527,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new LineSymbolizer({
               color: getValue(defaultStyles.polylineStroke.toCssColorString()),
-              width: defaultStyles.strokeWidth
+              width: defaultStyles.polylineStrokeWidth
             }),
             minzoom: 0,
             maxzoom: Infinity,
@@ -546,7 +545,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             symbolizer: new CircleSymbolizer({
               radius: Math.round(defaultStyles.markerSize / 5),
               fill: getValue(defaultStyles.markerColor.toCssColorString()),
-              width: defaultStyles.strokeWidth,
+              width: defaultStyles.markerStrokeWidth,
               stroke: defaultStyles.stroke.toCssColorString(),
               opacity: defaultStyles.markerOpacity
             }),
@@ -617,13 +616,22 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
       const options = {
         describe: describeWithoutUnderscores,
-        markerSize: defaultValue(parseMarkerSize(style["marker-size"]), 20),
+        markerSize: parseMarkerSize(style["marker-size"]) ?? 20,
         markerSymbol: style["marker-symbol"], // and undefined if none
-        markerColor: defaultColor(style["marker-color"], this.name || ""),
-        stroke: getColor(defaultValue(style.stroke, "#000000")),
-        strokeWidth: defaultValue(style["stroke-width"], 1),
-        polygonStroke: getColor(defaultValue(style.stroke, "#000000")),
+        markerColor: defaultColor(style["marker-color"], this.name ?? ""),
+        stroke: getColor(style.stroke ?? "#000000"),
+        polygonStroke: getColor(style.stroke ?? "#000000"),
         polylineStroke: defaultColor(style.stroke, this.name || ""),
+        strokeWidth: style["stroke-width"] ?? 2,
+
+        // Note these specific stroke widths are only used for geojson-vt
+        markerStrokeWidth:
+          style["marker-stroke-width"] ?? style["stroke-width"] ?? 1,
+        polylineStrokeWidth:
+          style["polyline-stroke-width"] ?? style["stroke-width"] ?? 2,
+        polygonStrokeWidth:
+          style["polygon-stroke-width"] ?? style["stroke-width"] ?? 1,
+
         markerOpacity: style["marker-opacity"], // not in SimpleStyle spec or supported by Cesium but see below
         fill: defaultColor(style.fill, (this.name || "") + " fill"),
         clampToGround: this.clampToGround,
@@ -731,33 +739,19 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           entity.point = new PointGraphics({
             color: new ConstantProperty(
               getColor(
-                defaultValue(
-                  properties && properties["marker-color"]?.getValue(),
-                  styles.markerColor
-                )
+                properties?.["marker-color"]?.getValue() ?? styles.markerColor
               )
             ),
             pixelSize: new ConstantProperty(
-              defaultValue(
-                parseMarkerSize(
-                  properties && properties["marker-size"]?.getValue()
-                ),
-                styles.markerSize / 2
-              )
+              parseMarkerSize(
+                properties && properties["marker-size"]?.getValue()
+              ) ?? styles.markerSize / 2
             ),
             outlineWidth: new ConstantProperty(
-              defaultValue(
-                properties && properties["stroke-width"]?.getValue(),
-                styles.strokeWidth
-              )
+              properties?.["stroke-width"]?.getValue() ?? styles.strokeWidth
             ),
             outlineColor: new ConstantProperty(
-              getColor(
-                defaultValue(
-                  properties && properties.stroke?.getValue(),
-                  styles.polygonStroke
-                )
-              )
+              getColor(properties?.stroke?.getValue() ?? styles.polygonStroke)
             ),
             heightReference: new ConstantProperty(
               styles.clampToGround

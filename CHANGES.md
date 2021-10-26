@@ -32,6 +32,7 @@ Change Log
 * Fix `ProtomapsImageryProvider` geojson feature picking over antimeridian
 * Add Socrata group to "Add web data"
 * Fix app crash when previewing a nested reference in the catalog (eg when viewing an indexed search result where the result is a reference).
+* Added "marker-stroke-width", "polyline-stroke-width", "polygon-stroke-width" to `GeojsonStyleTraits` (Note these are not apart of [simplestyle-spec](https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0) and can only be used with `geojson-vt`)
 * [The next improvement]
 
 #### 8.1.4
