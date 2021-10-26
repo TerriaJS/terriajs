@@ -1,11 +1,10 @@
+import range from "lodash-es/range";
 import { computed, observable, runInAction } from "mobx";
-import {
-  Cesium3DTileset,
-  GeoJsonDataSource,
-  WebMapServiceImageryProvider
-} from "terriajs-cesium";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
+import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
+import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
 import filterOutUndefined from "../../lib/Core/filterOutUndefined";
 import runLater from "../../lib/Core/runLater";
 import MappableMixin from "../../lib/ModelMixins/MappableMixin";
@@ -19,7 +18,6 @@ import MappableTraits, {
   RectangleTraits
 } from "../../lib/Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
-import range from "lodash-es/range";
 
 const supportsWebGL = require("../../lib/Core/supportsWebGL");
 
