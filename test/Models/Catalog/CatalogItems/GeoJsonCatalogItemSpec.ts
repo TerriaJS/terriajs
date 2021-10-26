@@ -705,7 +705,7 @@ describe("GeoJsonCatalogItem - with geojson-vt and protomaps", function() {
           geomType: GeomType.Polygon,
           props: { _id_: rowId }
         })
-      ).toBe(col);
+      ).toBe("rgb(0,0,0)");
 
       expect(
         polygonLineSymbo.color.get(1, {

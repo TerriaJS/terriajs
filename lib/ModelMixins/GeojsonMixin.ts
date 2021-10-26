@@ -510,7 +510,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new LineSymbolizer({
-              color: getValue(defaultStyles.polygonStroke.toCssColorString()),
+              color: defaultStyles.polygonStroke.toCssColorString(),
               width: defaultStyles.strokeWidth
             }),
             minzoom: 0,
