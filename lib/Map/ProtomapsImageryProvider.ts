@@ -2,13 +2,12 @@ import Point from "@mapbox/point-geometry";
 import bbox from "@turf/bbox";
 import booleanIntersects from "@turf/boolean-intersects";
 import circle from "@turf/circle";
-import { feature } from "@turf/helpers";
-import { Feature, GeoJSON } from "geojson";
+import { Feature } from "@turf/helpers";
 import i18next from "i18next";
+import { cloneDeep } from "lodash-es";
 import { observable, runInAction } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Credit from "terriajs-cesium/Source/Core/Credit";
-import DefaultProxy from "terriajs-cesium/Source/Core/DefaultProxy";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
@@ -16,7 +15,6 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-import TileDiscardPolicy from "terriajs-cesium/Source/Scene/TileDiscardPolicy";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import {
   Bbox,
@@ -36,6 +34,10 @@ import {
 } from "terriajs-protomaps";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
+import {
+  FeatureCollectionWithCrs,
+  toFeatureCollection
+} from "../ModelMixins/GeojsonMixin";
 import Terria from "../Models/Terria";
 import { ImageryProviderWithGridLayerSupport } from "./ImageryProviderLeafletGridLayer";
 
@@ -69,13 +71,18 @@ interface Coords {
   x: number;
   y: number;
 }
+
+/** Data object can be:
+ * - URL of geojson, pmtiles or pbf template (eg `something.com/{z}/{x}/{y}.pbf`)
+ * - GeoJsonObject object
+ * -Source object (PmtilesSource | ZxySource | GeojsonSource)
+ */
+export type ProtomapsData = string | FeatureCollectionWithCrs | Source;
+
 interface Options {
   terria: Terria;
-  /** Data object can be:
-   * - URL of geojson, pmtiles or pbf template (eg `something.com/{z}/{x}/{y}.pbf`)
-   * - GeoJSON object
-   */
-  data: string | GeoJSON;
+
+  data: ProtomapsData;
   minimumZoom?: number;
   maximumZoom?: number;
   maximumNativeZoom?: number;
@@ -99,16 +106,16 @@ export const GEOJSON_SOURCE_LAYER_NAME = "layer";
 
 export class GeojsonSource implements TileSource {
   /** Data object from Options */
-  private readonly data: string | GeoJSON;
+  private readonly data: string | FeatureCollectionWithCrs;
 
   /** Resolved geosjonObject (if applicable) */
   @observable.ref
-  geojsonObject: GeoJSON | undefined;
+  geojsonObject: FeatureCollectionWithCrs | undefined;
 
   /** Geojson-vt tileIndex (if aplicable) */
   tileIndex: Promise<any> | undefined;
 
-  constructor(url: string | GeoJSON) {
+  constructor(url: string | FeatureCollectionWithCrs) {
     this.data = url;
     if (!(typeof url === "string")) {
       this.geojsonObject = url;
@@ -117,16 +124,16 @@ export class GeojsonSource implements TileSource {
 
   /** Fetch geoJSON data (if required) and tile with geojson-vt */
   private async fetchData() {
-    let result: GeoJSON | undefined;
+    let result: FeatureCollectionWithCrs | undefined;
     if (typeof this.data === "string") {
-      result = await (await fetch(this.data)).json();
+      result = toFeatureCollection(await (await fetch(this.data)).json());
     } else {
       result = this.data;
     }
 
     runInAction(() => (this.geojsonObject = result));
 
-    return geojsonvt(this.geojsonObject, {
+    return geojsonvt(result, {
       buffer: (BUF / tilesize) * geojsonvtExtent,
       extent: geojsonvtExtent,
       maxZoom: 24
@@ -236,53 +243,73 @@ export class GeojsonSource implements TileSource {
   }
 }
 
+type Source = PmtilesSource | ZxySource | GeojsonSource;
+
 export default class ProtomapsImageryProvider
   implements ImageryProviderWithGridLayerSupport {
   private readonly terria: Terria;
-  private readonly _tilingScheme: WebMercatorTilingScheme;
-  private readonly _tileWidth: number;
-  private readonly _tileHeight: number;
-  private readonly _minimumLevel: number;
-  private readonly _maximumLevel: number;
-  private readonly _rectangle: Rectangle;
-  private readonly _errorEvent = new CesiumEvent();
-  private readonly _ready = true;
-  private readonly _credit?: Credit | string;
+
+  // Imagery provider properties
+  readonly tilingScheme: WebMercatorTilingScheme;
+  readonly tileWidth: number;
+  readonly tileHeight: number;
+  readonly minimumLevel: number;
+  readonly maximumLevel: number;
+  readonly rectangle: Rectangle;
+  readonly errorEvent = new CesiumEvent();
+  readonly ready = true;
+  readonly credit: Credit;
+
+  // Set values to please poor cesium types
+  readonly defaultNightAlpha = undefined;
+  readonly defaultDayAlpha = undefined;
+  readonly hasAlphaChannel = true;
+  readonly defaultAlpha = <any>undefined;
+  readonly defaultBrightness = <any>undefined;
+  readonly defaultContrast = <any>undefined;
+  readonly defaultGamma = <any>undefined;
+  readonly defaultHue = <any>undefined;
+  readonly defaultSaturation = <any>undefined;
+  readonly defaultMagnificationFilter = undefined as any;
+  readonly defaultMinificationFilter = undefined as any;
+  readonly proxy = <any>undefined;
+  readonly readyPromise = when(true);
+  readonly tileDiscardPolicy = <any>undefined;
 
   // Protomaps properties
   private readonly paintRules: PaintRule[];
   private readonly labelRules: LabelRule[];
   private readonly labelers: Labelers;
-  readonly source: PmtilesSource | ZxySource | GeojsonSource;
   private readonly view: View | undefined;
+  readonly source: Source;
 
   constructor(options: Options) {
     this.terria = options.terria;
-    this._tilingScheme = new WebMercatorTilingScheme();
+    this.tilingScheme = new WebMercatorTilingScheme();
 
-    this._tileWidth = tilesize;
-    this._tileHeight = tilesize;
+    this.tileWidth = tilesize;
+    this.tileHeight = tilesize;
 
-    this._minimumLevel = defaultValue(options.minimumZoom, 0);
-    this._maximumLevel = defaultValue(options.maximumZoom, 24);
+    this.minimumLevel = defaultValue(options.minimumZoom, 0);
+    this.maximumLevel = defaultValue(options.maximumZoom, 24);
 
-    this._rectangle = isDefined(options.rectangle)
+    this.rectangle = isDefined(options.rectangle)
       ? Rectangle.intersection(
           options.rectangle,
-          this._tilingScheme.rectangle
-        ) || this._tilingScheme.rectangle
-      : this._tilingScheme.rectangle;
+          this.tilingScheme.rectangle
+        ) || this.tilingScheme.rectangle
+      : this.tilingScheme.rectangle;
 
     // Check the number of tiles at the minimum level.  If it's more than four,
     // throw an exception, because starting at the higher minimum
     // level will cause too many tiles to be downloaded and rendered.
-    const swTile = this._tilingScheme.positionToTileXY(
-      Rectangle.southwest(this._rectangle),
-      this._minimumLevel
+    const swTile = this.tilingScheme.positionToTileXY(
+      Rectangle.southwest(this.rectangle),
+      this.minimumLevel
     );
-    const neTile = this._tilingScheme.positionToTileXY(
-      Rectangle.northeast(this._rectangle),
-      this._minimumLevel
+    const neTile = this.tilingScheme.positionToTileXY(
+      Rectangle.northeast(this.rectangle),
+      this.minimumLevel
     );
     const tileCount =
       (Math.abs(neTile.x - swTile.x) + 1) * (Math.abs(neTile.y - swTile.y) + 1);
@@ -294,11 +321,14 @@ export default class ProtomapsImageryProvider
       );
     }
 
-    this._errorEvent = new CesiumEvent();
+    this.errorEvent = new CesiumEvent();
 
-    this._ready = true;
+    this.ready = true;
 
-    this._credit = options.credit;
+    this.credit =
+      typeof options.credit == "string"
+        ? new Credit(options.credit)
+        : (options.credit as Credit);
 
     // Protomaps
     this.paintRules = options.paintRules;
@@ -321,8 +351,17 @@ export default class ProtomapsImageryProvider
         let cache = new TileCache(this.source, 1024);
         this.view = new View(cache, 14, 2);
       }
-      // - GeoJSON object
-    } else {
+    }
+    // Source object
+    else if (
+      options.data instanceof GeojsonSource ||
+      options.data instanceof PmtilesSource ||
+      options.data instanceof ZxySource
+    ) {
+      this.source = options.data;
+    }
+    // - GeoJsonObject object
+    else {
       this.source = new GeojsonSource(options.data);
     }
 
@@ -332,104 +371,6 @@ export default class ProtomapsImageryProvider
       16,
       () => undefined
     );
-  }
-
-  get tileWidth() {
-    return this._tileWidth;
-  }
-
-  get tileHeight() {
-    return this._tileHeight;
-  }
-
-  get maximumLevel() {
-    return this._maximumLevel;
-  }
-
-  get minimumLevel() {
-    return this._minimumLevel;
-  }
-
-  get tilingScheme() {
-    return this._tilingScheme;
-  }
-
-  get rectangle() {
-    return this._rectangle;
-  }
-
-  get errorEvent() {
-    return this._errorEvent;
-  }
-
-  get ready() {
-    return this._ready;
-  }
-
-  get defaultNightAlpha() {
-    return undefined;
-  }
-
-  get defaultDayAlpha() {
-    return undefined;
-  }
-
-  get hasAlphaChannel() {
-    return true;
-  }
-
-  get credit(): Credit {
-    let credit = this._credit;
-    if (credit === undefined) {
-      return <any>undefined;
-    } else if (typeof credit === "string") {
-      credit = new Credit(credit);
-    }
-    return credit;
-  }
-
-  get defaultAlpha(): number {
-    return <any>undefined;
-  }
-
-  get defaultBrightness(): number {
-    return <any>undefined;
-  }
-
-  get defaultContrast(): number {
-    return <any>undefined;
-  }
-
-  get defaultGamma(): number {
-    return <any>undefined;
-  }
-
-  get defaultHue(): number {
-    return <any>undefined;
-  }
-
-  get defaultSaturation(): number {
-    return <any>undefined;
-  }
-
-  get defaultMagnificationFilter(): any {
-    return undefined;
-  }
-
-  get defaultMinificationFilter(): any {
-    return undefined;
-  }
-
-  get proxy(): DefaultProxy {
-    return <any>undefined;
-  }
-
-  get readyPromise(): Promise<boolean> {
-    return when(true);
-  }
-
-  get tileDiscardPolicy(): TileDiscardPolicy {
-    return <any>undefined;
   }
 
   getTileCredits(x: number, y: number, level: number): Credit[] {
@@ -460,7 +401,6 @@ export default class ProtomapsImageryProvider
 
   public async renderTile(coords: Coords, canvas: HTMLCanvasElement) {
     // Adapted from https://github.com/protomaps/protomaps.js/blob/master/src/frontends/leaflet.ts
-
     let tile: PreparedTile | undefined = undefined;
 
     // Get PreparedTile from source or view
@@ -560,18 +500,19 @@ export default class ProtomapsImageryProvider
           units: "meters"
         }
       );
+
+      // Create wrappedBuffer with only positive coordinates - this is needed for features which overlap antimeridian
+      const wrappedBuffer = cloneDeep(buffer);
+      wrappedBuffer.geometry.coordinates.forEach(ring =>
+        ring.forEach(point => {
+          point[0] = point[0] < 0 ? point[0] + 360 : point[0];
+        })
+      );
+
       const bufferBbox = bbox(buffer);
 
       // Get array of all features
-      let features: Feature[] = [];
-
-      if (this.source.geojsonObject.type === "FeatureCollection") {
-        features = this.source.geojsonObject.features;
-      } else if (this.source.geojsonObject.type === "Feature") {
-        features = [this.source.geojsonObject];
-      } else {
-        features = [feature(this.source.geojsonObject)];
-      }
+      let features: Feature[] = this.source.geojsonObject.features;
 
       const pickedFeatures: Feature[] = [];
 
@@ -581,15 +522,27 @@ export default class ProtomapsImageryProvider
           feature.bbox = bbox(feature);
         }
 
-        // Filter by bounding box and then intersection with buffer
+        // Filter by bounding box and then intersection with buffer (to minimise calls to booleanIntersects)
         if (
-          Math.max(feature.bbox[0], bufferBbox[0]) <=
-            Math.min(feature.bbox[2], bufferBbox[2]) &&
+          Math.max(
+            feature.bbox[0],
+            // Wrap bufferbbox if necessary
+            feature.bbox[0] > 180 ? bufferBbox[0] + 360 : bufferBbox[0]
+          ) <=
+            Math.min(
+              feature.bbox[2],
+              // Wrap bufferbbox if necessary
+              feature.bbox[2] > 180 ? bufferBbox[2] + 360 : bufferBbox[2]
+            ) &&
           Math.max(feature.bbox[1], bufferBbox[1]) <=
-            Math.min(feature.bbox[3], bufferBbox[3]) &&
-          booleanIntersects(feature, buffer)
+            Math.min(feature.bbox[3], bufferBbox[3])
         ) {
-          pickedFeatures.push(feature);
+          // If we have longitudes greater than 180 - used wrappedBuffer
+          if (feature.bbox[0] > 180 || feature.bbox[2] > 180) {
+            if (booleanIntersects(feature, wrappedBuffer))
+              pickedFeatures.push(feature);
+          } else if (booleanIntersects(feature, buffer))
+            pickedFeatures.push(feature);
         }
       }
 
@@ -600,7 +553,11 @@ export default class ProtomapsImageryProvider
         featureInfo.data = f;
         featureInfo.properties = f.properties;
 
-        if (f.geometry.type === "Point") {
+        if (
+          f.geometry.type === "Point" &&
+          typeof f.geometry.coordinates[0] === "number" &&
+          typeof f.geometry.coordinates[1] === "number"
+        ) {
           featureInfo.position = Cartographic.fromDegrees(
             f.geometry.coordinates[0],
             f.geometry.coordinates[1]
