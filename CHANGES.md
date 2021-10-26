@@ -3,6 +3,11 @@ Change Log
 
 #### next release (8.1.5)
 
+* Tsified `SettingPanel`
+* Moved `setViewerMode` function from `Terria` class to `ViewerMode`
+* Refactored checkbox to use children elements for label instead of label
+  property, `isDisabled`, `isChecked` and `font-size: inherit` style is passed
+  to each child element (so propper styling is maintained)
 * Fix an internal bug where Cesium.prototype.observeModelLayer() fails to remove 3D tilesets in certain cases.
 * Rename `TerriaError._shouldRaiseToUser` to `overrideRaiseToUser`
   * Note: `userProperties.ignoreError = "1"` will take precedence over `overrideRaiseToUser = true`
