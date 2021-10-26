@@ -4,7 +4,7 @@ First, read [Getting Started](../getting-started.md).
 
 What if you need to make changes to [TerriaJS](https://github.com/TerriaJS/terriajs) while working on a site that depends on it?
 
-In the process described in [Getting Started](../getting-started.md), the [TerriaJS package](https://www.npmjs.com/package/terriajs) is installed to the `node_modules` directory by `npm install`.  Please do not edit TerriaJS directly in the `node_modules` directory, because changes will be clobbered the next time you run `npm install`.
+In the process described in [Getting Started](../getting-started.md), the [TerriaJS package](https://www.npmjs.com/package/terriajs) is installed to the `node_modules` directory by `yarn install`.  Please do not edit TerriaJS directly in the `node_modules` directory, because changes will be clobbered the next time you run `yarn install`.
 
 Instead, we want to clone TerriaJS from its [GitHub repo](https://github.com/TerriaJS/terriajs) and use that in our TerriaMap build.  Traditionally, `npm link` is the way to do this.  However, we do not recommend use of `npm link` because it frequently leads to multiple copies of some libraries being installed, which in turn leads to all sorts of frustrating build problems.  Instead, we recommend [yarn](https://yarnpkg.com) and its [workspaces](https://yarnpkg.com/lang/en/docs/workspaces/) feature.  `yarn` workspaces let us safely clone a git repo into the `packages` directory and wire it into any other packages that use it.
 
@@ -107,7 +107,7 @@ The `package.json` in the `master` branch of TerriaMap should point to official 
 Documentation is automatically generated from the source via JSDoc (reference) and MkDocs (user guide) by running:
 
 ```
-npm run gulp docs
+yarn gulp docs
 ```
 
 It will be placed in the `wwwroot/doc` folder.
@@ -123,20 +123,20 @@ pip install -r doc/requirements.txt
 We use [Jasmine](https://jasmine.github.io/) for the TerriaJS tests, called specs in Jasmine parlance.  To run the specs, you first need to build them by running this in the TerriaJS  (not TerriaMap!) directory:
 
 ```
-npm run gulp
+yarn gulp
 ```
 
 And start the development web server by running (also from the TerriaJS and not TerriaMap! directory):
 
 ```
-npm start
+yarn start
 ```
 
 The test suite is run by opening a web browser on [http://localhost:3002/SpecRunner.html](http://localhost:3002/SpecRunner.html).  The source code for the specs is found in the `test/` directory.
 
 ## TerriaJS Gulp Tasks
 
-Run any of these tasks with `npm run gulp <task name>` from within the TerriaJS directory:
+Run any of these tasks with `yarn gulp <task name>` from within the TerriaJS directory:
 
 * default - Invoked by running gulp without any arguments, this task invokes the `build` and `lint` tasks.
 * `build` - Builds a non-minified version of the TerriaJS tests.  This task may take 10 seconds or more, which is the main reason for the next task.
@@ -154,7 +154,7 @@ See `gulpfile.js` for more gulp tasks.
 
 ## TerriaMap Gulp Tasks
 
-Run any of these tasks with `npm run gulp <task name>` from within the TerriaMap directory:
+Run any of these tasks with `yarn gulp <task name>` from within the TerriaMap directory:
 
 * default - Invoked by running gulp without any arguments, this task invokes the `build` and `lint` tasks.
 * `build` - Builds a non-minified version of TerriaMap, TerriaJS, Cesium, and all other dependencies, together in one JS file (called `wwwroot/build/TerriaMap.js`). Only the parts of TerriaJS and Cesium that we use (directly or indirectly) are pulled in.  Web Workers, CSS, and other resources are also built by this task.  This task may take 10 seconds or more, which is the main reason for the next task.
@@ -165,7 +165,7 @@ Run any of these tasks with `npm run gulp <task name>` from within the TerriaMap
 
 | Argument | Description |
 |----------|-------------|
-| `--packageName <name>` | The name of the package.  If not specified, the name is `<npm_package_name>-<git_describe>`, where `<npm_package_name>` is the value of the `npm_package_name` environment variable and `<git_describe>` is the output of running `git describe`.  If you invoke this task using `npm run gulp make-package` instead of simply `gulp make-package`, the `npm_package_name` environment variable will be automatically set to the name of the project in `package.json`. |
+| `--packageName <name>` | The name of the package.  If not specified, the name is `<npm_package_name>-<git_describe>`, where `<npm_package_name>` is the value of the `npm_package_name` environment variable and `<git_describe>` is the output of running `git describe`.  If you invoke this task using `yarn gulp make-package` instead of simply `gulp make-package`, the `npm_package_name` environment variable will be automatically set to the name of the project in `package.json`. |
 | `--serverConfigOverride <file>` | The path to a file with overrides of the `devserverconfig.json` file.  If not specified, `devserverconfig.json` is used unmodified. |
 | `--clientConfigOverride <file>` | The path to a file with overrides of the `wwwroot/config.json` file.  If not specified, `wwwroot/config.json` is used unmodified. |
 

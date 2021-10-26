@@ -1,5 +1,7 @@
+import { TFunctionResult } from "i18next";
 import React from "react";
 import { ITextProps } from "../Text";
+
 export type ICheckboxProps = {
   /** Sets whether the checkbox begins checked. */
   defaultChecked?: boolean;
