@@ -26,10 +26,12 @@ import { ProviderCoordsMap } from "../Map/PickedFeatures";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import MouseCoords from "../ReactViewModels/MouseCoords";
+import StyleTraits from "../Traits/TraitsClasses/StyleTraits";
 import CameraView from "./CameraView";
 import Cesium3DTilesCatalogItem from "./Catalog/CatalogItems/Cesium3DTilesCatalogItem";
 import GeoJsonCatalogItem from "./Catalog/CatalogItems/GeoJsonCatalogItem";
 import CommonStrata from "./Definition/CommonStrata";
+import createStratumInstance from "./Definition/createStratumInstance";
 import Feature from "./Feature";
 import Terria from "./Terria";
 
@@ -370,18 +372,16 @@ export default abstract class GlobeOrMap {
               <any>geoJson
             );
             catalogItem.setTrait(CommonStrata.user, "disableTableStyle", true);
-            catalogItem.setTrait(CommonStrata.user, "style", {
-              "stroke-width": 2,
-              stroke: this.terria.baseMapContrastColor,
-              fill: undefined,
-              "fill-opacity": 0,
-              "marker-color": this.terria.baseMapContrastColor,
-              "marker-size": undefined,
-              "marker-symbol": undefined,
-              "marker-opacity": undefined,
-              "stroke-opacity": undefined,
-              "marker-url": undefined
-            });
+            catalogItem.setTrait(
+              CommonStrata.user,
+              "style",
+              createStratumInstance(StyleTraits, {
+                "stroke-width": 2,
+                stroke: this.terria.baseMapContrastColor,
+                "fill-opacity": 0,
+                "marker-color": this.terria.baseMapContrastColor
+              })
+            );
 
             const removeCallback = (this._removeHighlightCallback = () => {
               if (!isDefined(this._highlightPromise)) {
