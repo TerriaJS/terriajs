@@ -1,4 +1,8 @@
-import { Feature as GeoJSONFeature, Position } from "geojson";
+import {
+  Feature as GeoJSONFeature,
+  MultiPolygon,
+  Position
+} from "@turf/helpers";
 import { action, observable, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -339,9 +343,11 @@ export default abstract class GlobeOrMap {
 
               if (geoJson.geometry.type === "MultiPolygon") {
                 const newCoordinates: Position[][] = [];
-                geoJson.geometry.coordinates.forEach(polygon => {
-                  newCoordinates.push(...polygon);
-                });
+                (geoJson.geometry as MultiPolygon).coordinates.forEach(
+                  polygon => {
+                    newCoordinates.push(...polygon);
+                  }
+                );
                 (<any>geoJson).geometry.coordinates = newCoordinates;
               }
 
@@ -363,7 +369,7 @@ export default abstract class GlobeOrMap {
               "geoJsonData",
               <any>geoJson
             );
-            catalogItem.setTrait(CommonStrata.user, "clampToGround", true);
+            catalogItem.setTrait(CommonStrata.user, "disableTableStyle", true);
             catalogItem.setTrait(CommonStrata.user, "style", {
               "stroke-width": 2,
               stroke: this.terria.baseMapContrastColor,
