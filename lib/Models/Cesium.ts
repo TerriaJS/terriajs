@@ -534,11 +534,10 @@ export default class Cesium extends GlobeOrMap {
 
       // Remove deleted data sources
       let dataSources = this.dataSources;
-      for (let i = 0; i < dataSources.length; i++) {
+      for (let i = dataSources.length - 1; i >= 0; i--) {
         const d = dataSources.get(i);
         if (allDataSources.indexOf(d) === -1) {
           dataSources.remove(d);
-          --i;
         }
       }
 
@@ -561,11 +560,10 @@ export default class Cesium extends GlobeOrMap {
         .filter(isDefined);
 
       // Delete imagery layers that are no longer in the model
-      for (let i = 0; i < this.scene.imageryLayers.length; i++) {
+      for (let i = this.scene.imageryLayers.length - 1; i >= 0; i--) {
         const imageryLayer = this.scene.imageryLayers.get(i);
         if (allImageryParts.indexOf(imageryLayer) === -1) {
           this.scene.imageryLayers.remove(imageryLayer);
-          --i;
         }
       }
       // Iterate backwards so that adding multiple layers adds them in increasing cesium index order
@@ -592,7 +590,6 @@ export default class Cesium extends GlobeOrMap {
       }
 
       const allCesium3DTilesets = this._allMapItems.filter(isCesium3DTileset);
-
       // Remove deleted tilesets
       const primitives = this.scene.primitives;
       // Iterate backwards because we're removing items.
