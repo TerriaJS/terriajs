@@ -532,8 +532,9 @@ export default class Cesium extends GlobeOrMap {
       //       That way the supported types of map items is extensible.
       const allDataSources = this._allMapItems.filter(isDataSource);
 
-      // Remove deleted data sources
       let dataSources = this.dataSources;
+      // Remove deleted data sources
+      // Iterate backwards because we're removing items.
       for (let i = dataSources.length - 1; i >= 0; i--) {
         const d = dataSources.get(i);
         if (allDataSources.indexOf(d) === -1) {
@@ -560,6 +561,7 @@ export default class Cesium extends GlobeOrMap {
         .filter(isDefined);
 
       // Delete imagery layers that are no longer in the model
+      // Iterate backwards because we're removing items.
       for (let i = this.scene.imageryLayers.length - 1; i >= 0; i--) {
         const imageryLayer = this.scene.imageryLayers.get(i);
         if (allImageryParts.indexOf(imageryLayer) === -1) {
