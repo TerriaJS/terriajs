@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { computed } from "mobx";
 import { createTransformer } from "mobx-utils";
 import isDefined from "../Core/isDefined";
@@ -301,7 +302,9 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
             createStratumInstance(LegendItemTraits, {
               color: activeStyle.colorTraits.nullColor || "rgba(0, 0, 0, 0)",
               addSpacingAbove: true,
-              title: activeStyle.colorTraits.nullLabel || "(No value)"
+              title:
+                activeStyle.colorTraits.nullLabel ||
+                i18next.t("models.tableData.legendNullLabel")
             })
           ]
         : [];
@@ -313,7 +316,9 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
             createStratumInstance(LegendItemTraits, {
               color: activeStyle.tableColorMap.outlierColor.toCssColorString(),
               addSpacingAbove: true,
-              title: activeStyle.colorTraits.outlierLabel || "Outliers"
+              title:
+                activeStyle.colorTraits.outlierLabel ||
+                i18next.t("models.tableData.legendZFilterLabel")
             })
           ]
         : [];

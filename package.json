@@ -225,13 +225,13 @@
     "hot": "webpack-dev-server --inline --config buildprocess/webpack.config.hot.js --hot --host 0.0.0.0",
     "build-tools": "webpack --config buildprocess/webpack-tools.config.js",
     "watch-tools": "webpack --watch --config buildprocess/webpack-tools.config.js",
-    "build-docs": "npm run build-tools && node build/generateDocs.js",
+    "build-docs": "yarn build-tools && node build/generateDocs.js",
     "publish-doc": "bash -c \"rm -rf wwwroot/doc && mkdir wwwroot/doc && cp doc/index-built.html wwwroot/doc/index.html && cp doc/CNAME wwwroot/doc/CNAME && gulp docs && cd wwwroot/doc && git init && git remote add origin $npm_package_config_docRepo && git add . && git commit -m 'Generate Documentation' && git push -f origin HEAD:gh-pages\"",
     "prettier": "prettier --write \"**/*\"",
     "pretty-quick": "pretty-quick",
     "prettier-check": "prettier --check \"**/*\"",
     "build-for-node": "tsc -b tsconfig-node.json",
-    "prepare": "npm run build-for-node"
+    "prepare": "yarn build-for-node"
   },
   "husky": {
     "hooks": {
