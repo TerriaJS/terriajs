@@ -277,11 +277,11 @@ export default class ProtomapsImageryProvider
   readonly tileDiscardPolicy = <any>undefined;
 
   // Protomaps properties
-  private readonly paintRules: PaintRule[];
-  private readonly labelRules: LabelRule[];
   private readonly labelers: Labelers;
   private readonly view: View | undefined;
   readonly source: Source;
+  readonly paintRules: PaintRule[];
+  readonly labelRules: LabelRule[];
 
   constructor(options: Options) {
     this.terria = options.terria;

@@ -289,6 +289,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         this.terria.configParameters.enableGeojsonMvt &&
         !isDefined(this.czmlTemplate) &&
         !isDefined(this.stylesWithDefaults().markerSymbol) &&
+        !isDefined(this.stylesWithDefaults().markerUrl) &&
         !isDefined(this.timeProperty) &&
         !isDefined(this.heightProperty) &&
         (!isDefined(this.perPropertyStyles) ||
@@ -543,10 +544,11 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new CircleSymbolizer({
-              radius: defaultStyles.markerSize / 5,
+              radius: Math.round(defaultStyles.markerSize / 5),
               fill: getValue(defaultStyles.markerColor.toCssColorString()),
               width: defaultStyles.strokeWidth,
-              stroke: defaultStyles.stroke.toCssColorString()
+              stroke: defaultStyles.stroke.toCssColorString(),
+              opacity: defaultStyles.markerOpacity
             }),
             minzoom: 0,
             maxzoom: Infinity,
@@ -634,6 +636,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       if (isDefined(style["stroke-opacity"])) {
         options.stroke.alpha = style["stroke-opacity"];
         options.polygonStroke.alpha = style["stroke-opacity"];
+        options.polylineStroke.alpha = style["stroke-opacity"];
       }
 
       if (isDefined(style["fill-opacity"])) {
