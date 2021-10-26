@@ -17,20 +17,19 @@ export default class TableTraits extends mixTraits(
   DiscretelyTimeVaryingTraits,
   ExportableTraits,
   LayerOrderingTraits,
-  CatalogMemberTraits,
   MappableTraits,
   RasterLayerTraits,
   ChartPointOnMapTraits,
   CatalogMemberTraits
 ) {
   // Not implemented in v8
-  // @primitiveTrait({
-  //   name: "Show Warning for Unmatched Regions",
-  //   description:
-  //     "True to show a warning when some of the region IDs in the CSV file could not be matched to a region. False to silently ignore unmatched regions.",
-  //   type: "boolean"
-  // })
-  // showUnmatchedRegionsWarning: boolean | undefined = true;
+  @primitiveTrait({
+    name: "Show Warning for Unmatched Regions",
+    description:
+      "True to show a warning when some of the region IDs in the CSV file could not be matched to a region. False to silently ignore unmatched regions.",
+    type: "boolean"
+  })
+  showUnmatchedRegionsWarning: boolean | undefined = true;
 
   @objectArrayTrait({
     name: "Columns",

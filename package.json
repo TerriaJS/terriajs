@@ -39,7 +39,6 @@
     "@types/dateformat": "^3.0.1",
     "@types/dompurify": "^2.0.2",
     "@types/flexsearch": "^0.7.1",
-    "@types/geojson": "^7946.0.7",
     "@types/jasmine": "^2.8.8",
     "@types/jasmine-ajax": "^3.3.0",
     "@types/json5": "^0.0.30",

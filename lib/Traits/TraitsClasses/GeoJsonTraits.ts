@@ -57,9 +57,17 @@ export class GeoJsonTraits extends mixTraits(
     type: StyleTraits,
     name: "Style",
     description:
-      "Styling rules that follow [simplestyle-spec](https://github.com/mapbox/simplestyle-spec)"
+      "Styling rules that follow [simplestyle-spec](https://github.com/mapbox/simplestyle-spec). If using geojson-vt/TableStyleTraits, then this style will be used as the default style (which will be overriden by TableStyleTraits). To disable TableStyleTraits, see `disableTableStyle`."
   })
   style?: StyleTraits;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Disable table style",
+    description:
+      "If true, all table styling will be disabled. This only applies to geojson-vt/protomaps (see `terria.configParameters.enableGeojsonMvt` and `forceCesiumPrimitives`). It disabled, `style` rules will be used instead"
+  })
+  disableTableStyle: boolean = false;
 
   @primitiveTrait({
     type: "boolean",
@@ -73,7 +81,7 @@ export class GeoJsonTraits extends mixTraits(
     type: "boolean",
     name: "Force cesium primitives",
     description:
-      "Force rendering GeoJSON features as Cesium primitives. This will be true if you are using `perPropertyStyles`, `timeProperty`, `heightProperty` or `czmlTemplate`. If undefined, it will look at configParameters.enableGeojsonMvt"
+      "Force rendering GeoJSON features as Cesium primitives. This will be true if you are using `perPropertyStyles`, `timeProperty`, `heightProperty` or `czmlTemplate`. If undefined, it will look at terria.configParameters.enableGeojsonMvt"
   })
   forceCesiumPrimitives?: boolean;
 
@@ -90,7 +98,7 @@ export class GeoJsonTraits extends mixTraits(
     name: "Time property",
     type: "string",
     description:
-      "The property of each GeoJSON feature that specifies which point in time that feature is associated with. If not specified, it is assumed that the dataset is constant throughout time. This is only supported for cesium primitives (see `forceCesiumPrimitives`)"
+      "The property of each GeoJSON feature that specifies which point in time that feature is associated with. If not specified, it is assumed that the dataset is constant throughout time. This is only supported for cesium primitives (see `forceCesiumPrimitives`). If using geojson-vt styling, use TableTraits instead (see `TableStyleTraits` and `TableTimeStyleTraits`)"
   })
   timeProperty?: string;
 
@@ -104,7 +112,7 @@ export class GeoJsonTraits extends mixTraits(
 
   @anyTrait({
     name: "CZML template",
-    description: `CZML template to be used to replace each GeoJSON Point feature. Feature coordinates and properties will automatically be applied to CZML packet, so they can be used as references. If this is defined, \`clampToGround\`, \`style\`, \`perPropertyStyles\`, \`timeProperty\` and \`heightProperty\` will be ignored.
+    description: `CZML template to be used to replace each GeoJSON **Point** feature. Feature coordinates and properties will automatically be applied to CZML packet, so they can be used as references. If this is defined, \`clampToGround\`, \`style\`, \`perPropertyStyles\`, \`timeProperty\` and \`heightProperty\` will be ignored.
 
     For example - this will render a cylinder for every point (and use the length and radius feature properties)
       \`\`\`json

@@ -1,27 +1,19 @@
 import { JsonObject } from "../../Core/Json";
 import anyTrait from "../Decorators/anyTrait";
-import CatalogMemberTraits from "./CatalogMemberTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
+import objectTrait from "../Decorators/objectTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import { GeoJsonTraits } from "./GeoJsonTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
-import MappableTraits from "./MappableTraits";
-import mixTraits from "../mixTraits";
-import primitiveTrait from "../Decorators/primitiveTrait";
 import SplitterTraits from "./SplitterTraits";
-import UrlTraits from "./UrlTraits";
-import objectTrait from "../Decorators/objectTrait";
 import StyleTraits from "./StyleTraits";
-import ExportableTraits from "./ExportableTraits";
 
 export default class WebFeatureServiceCatalogItemTraits extends mixTraits(
-  ExportableTraits,
-  FeatureInfoTraits,
+  GeoJsonTraits,
   LayerOrderingTraits,
   SplitterTraits,
-  GetCapabilitiesTraits,
-  UrlTraits,
-  MappableTraits,
-  CatalogMemberTraits
+  GetCapabilitiesTraits
 ) {
   @primitiveTrait({
     type: "string",
