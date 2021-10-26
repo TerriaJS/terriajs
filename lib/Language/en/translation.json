@@ -1298,6 +1298,7 @@
       "bulkGeocoderErrorMessage": "Unable to map addresses to lat-long coordinates, as an error occurred while retrieving address coordinates. Please check your internet connection or try again later.",
       "legendZFilterLabel": "Extreme values",
       "legendNullLabel": "(No value)",
+      "styleDisabledLabel": "Disable style",
       "zFilterEnabled": "Extreme values hidden (click to show)",
       "zFilterDisabled": "Extreme values detected (click to hide)",
       "timeDimensionEnabled": "Time enabled (click to disable)",

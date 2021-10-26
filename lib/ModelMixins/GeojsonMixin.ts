@@ -112,6 +112,10 @@ class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
   get opacity() {
     return 1;
   }
+
+  get showDisableStyleOption() {
+    return true;
+  }
 }
 
 StratumOrder.addLoadStratum(GeoJsonStratum.stratumName);

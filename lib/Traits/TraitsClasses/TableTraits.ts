@@ -75,6 +75,14 @@ export default class TableTraits extends mixTraits(
   })
   enableManualRegionMapping?: boolean | undefined;
 
+  @primitiveTrait({
+    name: "Show disable styling option",
+    description:
+      "If enabled, there will be an option in styleDimension to disable styling.",
+    type: "boolean"
+  })
+  showDisableStyleOption?: boolean | undefined;
+
   @primitiveArrayTrait({
     name: "Column titles",
     description:
