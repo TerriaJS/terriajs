@@ -69,7 +69,7 @@ export default function createRegionMappedImageryProvider(
 
       return {
         fillStyle: color.toCssColorString(),
-        strokeStyle: baseMapContrastColor,
+        strokeStyle: value !== null ? baseMapContrastColor : "transparent",
         lineWidth: 1,
         lineJoin: "miter"
       };
