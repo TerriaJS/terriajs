@@ -1,4 +1,5 @@
 import i18next from "i18next";
+import { uniq } from "lodash-es";
 import { computed } from "mobx";
 import { createTransformer } from "mobx-utils";
 import isDefined from "../Core/isDefined";
@@ -164,6 +165,40 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
       !this.catalogItem.activeTableStyle.moreThanOneTimeInterval
     )
       return true;
+  }
+
+  @computed get showDisableTimeOption() {
+    // Return nothing if no row groups or if time column doesn't have at least one interval
+    if (
+      this.catalogItem.activeTableStyle.rowGroups.length === 0 ||
+      !this.catalogItem.activeTableStyle.moreThanOneTimeInterval
+    )
+      return undefined;
+
+    // Return true if 90% of rowGroups only have one unique time interval (i.e. they don't change over time)
+    let flat = 0;
+
+    for (
+      let i = 0;
+      i < this.catalogItem.activeTableStyle.rowGroups.length;
+      i++
+    ) {
+      const group = this.catalogItem.activeTableStyle.rowGroups[i];
+      const dates = group[1]
+        .map(
+          row =>
+            this.catalogItem.activeTableStyle.timeColumn?.valuesAsDates.values[
+              row
+            ]
+        )
+        .filter(date => date) as Date[];
+      if (uniq(dates).length <= 1) flat++;
+    }
+
+    if (flat / this.catalogItem.activeTableStyle.rowGroups.length >= 0.9)
+      return true;
+
+    return undefined;
   }
 
   @computed

@@ -19,7 +19,6 @@ import ConstantColorMap from "../Map/ConstantColorMap";
 import RegionProviderList from "../Map/RegionProviderList";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
-import StratumFromTraits from "../Models/Definition/StratumFromTraits";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import SelectableDimensions, {
   SelectableDimension
@@ -607,25 +606,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     get timeDisableDimension(): SelectableDimension | undefined {
       // Return nothing if no active time column and if the active time column has been explicitly hidden (using this.defaultStyle.time.timeColumn = null)
       // or if time column doesn't have at least one interval
-      if (
-        this.mapItems.length === 0 ||
-        (this.disableDateTimeSelector &&
-          this.defaultStyle.time.timeColumn !== null) ||
-        (this.activeTableStyle.timeColumn &&
-          !this.activeTableStyle.moreThanOneTimeInterval) ||
-        !this.activeTableStyle.flatDates
-      )
-        return;
-
-      // This selector only works if timeColumn hasn't been set to null outside user stratum
-      if (
-        !Array.from(this.strata.entries()).every(
-          ([name, strata]) =>
-            (strata as StratumFromTraits<TableTraits>)?.defaultStyle?.time
-              ?.timeColumn !== null || name === CommonStrata.user
-        )
-      )
-        return;
+      if (this.mapItems.length === 0 || !this.showDisableTimeOption) return;
 
       return {
         id: "disableTime",
@@ -642,6 +623,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         selectedId:
           this.defaultStyle.time.timeColumn === null ? "false" : "true",
         setDimensionValue: (stratumId: string, value: string) => {
+          // We have to set showDisableTimeOption to true - or this will hide when time column is disabled
+          this.setTrait(stratumId, "showDisableTimeOption", true);
           this.defaultStyle.time.setTrait(
             stratumId,
             "timeColumn",

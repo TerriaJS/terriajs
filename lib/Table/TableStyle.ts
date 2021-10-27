@@ -22,7 +22,6 @@ import TableTimeStyleTraits from "../Traits/TraitsClasses/TableTimeStyleTraits";
 import TableColorMap from "./TableColorMap";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
-import { uniq } from "lodash-es";
 
 const DEFAULT_FINAL_DURATION_SECONDS = 3600 * 24 - 1; // one day less a second, if there is only one date.
 
@@ -477,20 +476,6 @@ export default class TableStyle {
     }
 
     return finishDates;
-  }
-
-  /** Returns true if rowGroups only have one unique date (i.e. they don't change over time) */
-  @computed get flatDates() {
-    if (this.rowGroups.length === 0) return false;
-
-    for (let i = 0; i < this.rowGroups.length; i++) {
-      const group = this.rowGroups[i];
-      const dates = group[1]
-        .map(row => this.timeColumn?.valuesAsDates.values[row])
-        .filter(date => date) as Date[];
-      if (uniq(dates).length > 1) return false;
-    }
-    return true;
   }
 
   /** Get rows grouped by id. Id will be calculated using idColumns, latitude/longitude columns or region column
