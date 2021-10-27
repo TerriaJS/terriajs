@@ -46,6 +46,7 @@ Change Log
 * Added "marker-stroke-width", "polyline-stroke-width", "polygon-stroke-width" to `GeojsonStyleTraits` (Note these are not apart of [simplestyle-spec](https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0) and can only be used with `geojson-vt`)
 * Remove border from region mapping if no data
 * Tweak automatic `TableColumn.type = Enum` for wider range of values
+* Add `baseMapContrastColor` and `constrastColor` to `BaseMapModel`
 * [The next improvement]
 
 #### 8.1.4

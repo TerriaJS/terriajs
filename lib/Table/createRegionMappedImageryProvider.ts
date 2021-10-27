@@ -24,7 +24,7 @@ export default function createRegionMappedImageryProvider(
     return undefined;
   }
 
-  const baseMapContrastColor = "white"; //this.terria.baseMapContrastColor;
+  const baseMapContrastColor = style.tableModel.terria.baseMapContrastColor;
 
   const colorColumn = style.colorColumn;
   const valueFunction =

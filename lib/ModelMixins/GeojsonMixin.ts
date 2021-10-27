@@ -623,8 +623,10 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         markerSize: parseMarkerSize(style["marker-size"]) ?? 20,
         markerSymbol: style["marker-symbol"], // and undefined if none
         markerColor: defaultColor(style["marker-color"], this.name ?? ""),
-        stroke: getColor(style.stroke ?? "#000000"),
-        polygonStroke: getColor(style.stroke ?? "#000000"),
+        stroke: getColor(style.stroke ?? this.terria.baseMapContrastColor),
+        polygonStroke: getColor(
+          style.stroke ?? this.terria.baseMapContrastColor
+        ),
         polylineStroke: defaultColor(style.stroke, this.name || ""),
         strokeWidth: style["stroke-width"] ?? 2,
 

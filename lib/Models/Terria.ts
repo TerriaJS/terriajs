@@ -472,7 +472,16 @@ export default class Terria {
   @observable
   mapInteractionModeStack: MapInteractionMode[] = [];
 
-  baseMapContrastColor: string = "#ffffff";
+  @computed
+  get baseMapContrastColor() {
+    return (
+      this.baseMapsModel.baseMapItems.find(
+        basemap =>
+          isDefined(basemap.item?.uniqueId) &&
+          basemap.item?.uniqueId === this.mainViewer.baseMap?.uniqueId
+      )?.contrastColor ?? "#ffffff"
+    );
+  }
 
   @observable
   readonly userProperties = new Map<string, any>();
