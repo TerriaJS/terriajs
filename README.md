@@ -106,3 +106,6 @@ Get in touch!
 * Chat in our [Gitter chat room](https://gitter.im/TerriaJS/terriajs)
 * Join the [TerriaJS Google Group](https://groups.google.com/forum/#!forum/terriajs)
 * Raise issues in the [Github issue tracker](https://github.com/TerriaJS/terriajs/issues/new)
+
+
+for testing
