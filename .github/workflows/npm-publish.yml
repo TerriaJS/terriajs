@@ -57,6 +57,7 @@ jobs:
         if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
         run: npm publish --tag ${NPM_TAG}
         env:
+          NODE_OPTIONS: '--max_old_space_size=8192'
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # These slack success and failure message actions can be combined but it means there'll be no notification on a failed
