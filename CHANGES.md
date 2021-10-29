@@ -24,9 +24,6 @@ Change Log
 * Fix app crash when previewing a nested reference in the catalog (eg when viewing an indexed search result where the result is a reference).
 * Ported feaure from v7 to set WMS layers property from the value of `LAYERS`, `layers` or `typeName` from query string of CKAN resource URL.
 
-#### 8.1.5
-This version number is skipped.
-
 #### 8.1.4
 
 * Make flex-search usage (for `CatalogIndex`) web-worker based
