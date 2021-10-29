@@ -44,6 +44,8 @@ jobs:
       - name: Install dependencies
         if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
         run: yarn install --ignore-engines
+        env:
+          NODE_OPTIONS: '--max_old_space_size=8192'
 
       - name: Lint and build terriajs
         if: steps.detect.outputs.previous-version != steps.detect.outputs.current-version
@@ -83,4 +85,3 @@ jobs:
           if_mention: always
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
-
