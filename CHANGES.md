@@ -20,6 +20,7 @@ Change Log
   * Replace `CompositeBarItemController` `visible` setter with `setVisible` function
 * Use `yarn` in CI scripts (and upgrade node to v14)
 * Fix app crash when previewing a nested reference in the catalog (eg when viewing an indexed search result where the result is a reference).
+* Ported feaure from v7 to set WMS layers property from the value of `LAYERS`, `layers` or `typeName` from query string of CKAN resource URL.
 * [The next improvement]
 
 #### 8.1.4
