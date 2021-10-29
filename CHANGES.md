@@ -1,10 +1,10 @@
 Change Log
 ==========
 
-#### next release (8.1.7)
+#### next release (8.1.8)
 * [The next improvement]
 
-#### 8.1.6
+#### 8.1.7
 * Tsified `SettingPanel`
 * Moved `setViewerMode` function from `Terria` class to `ViewerMode`
 * Refactored checkbox to use children elements for label instead of label
