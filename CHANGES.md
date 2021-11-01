@@ -2,6 +2,7 @@ Change Log
 ==========
 
 #### next release (8.1.9)
+* Fix app crash when opening AR tool.
 * [The next improvement]
 
 #### 8.1.8
