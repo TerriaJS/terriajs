@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.1.9)
 * TSify workbench splitter control and fix broken styling.
+* Fix app crash when opening AR tool.
 * [The next improvement]
 
 #### 8.1.8
