@@ -6,6 +6,10 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Terria from "../../../../Models/Terria";
 import ViewState from "../../../../ReactViewModels/ViewState";
+import CatalogMemeberMixin from "../../../../ModelMixins/CatalogMemberMixin";
+import MappableMixin from "../../../../ModelMixins/MappableMixin";
+import { BaseModel } from "../../../../Models/Definition/Model";
+import DiscretelyTimeVaryingMixin from "../../../../ModelMixins/DiscretelyTimeVaryingMixin";
 
 interface Props {
   terria: Terria;
@@ -65,11 +69,11 @@ class PrintView extends React.Component<Props, State> {
         const mainWindow = window;
 
         this.printWindowIntervalId = printWindow.setInterval(
-          this.checkForImagesReady,
+          this.checkForImagesReady.bind(this),
           200
         );
         this.mainWindowIntervalId = mainWindow.setInterval(
-          this.checkForImagesReady,
+          this.checkForImagesReady.bind(this),
           200
         );
 
@@ -142,7 +146,6 @@ class PrintView extends React.Component<Props, State> {
             alt="Map snapshot"
           />
         </p>
-        <h1>Legends</h1>
         {this.props.terria.workbench.items.map(this.renderLegend)}
         {this.renderFeatureInfo()}
         <h1>Dataset Details</h1>
@@ -159,7 +162,13 @@ class PrintView extends React.Component<Props, State> {
     );
   }
 
-  renderLegend(catalogItem: any) {
+  renderLegend(
+    catalogItem: MappableMixin.Instance &
+      DiscretelyTimeVaryingMixin.Instance &
+      CatalogMemeberMixin.Instance &
+      BaseModel &
+      any
+  ) {
     if (!catalogItem.isMappable) {
       return null;
     }
@@ -167,10 +176,8 @@ class PrintView extends React.Component<Props, State> {
     return (
       <div key={catalogItem.uniqueId} className="layer-legends">
         <div className="layer-title">{catalogItem.name}</div>
-        {catalogItem.discreteTime && (
-          <div className="layer-time">
-            Time: {formatDateTime(catalogItem.discreteTime)}
-          </div>
+        {catalogItem.currentTime && (
+          <div className="layer-time">Time: {catalogItem.currentTime}</div>
         )}
         <Legend forPrint={true} item={catalogItem} />
       </div>
@@ -225,7 +232,7 @@ class PrintView extends React.Component<Props, State> {
    * @param {Function} [options.closeCallback] A function that is called when the print view is closed. The function is given
    *                   the print view window as its only parameter.
    */
-  create(options: CreateOptions) {
+  static create(options: CreateOptions) {
     const {
       terria,
       viewState,
