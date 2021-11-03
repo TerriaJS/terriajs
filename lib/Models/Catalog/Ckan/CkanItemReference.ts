@@ -124,7 +124,7 @@ export class CkanDatasetStratum extends LoadableStratum(
   }
 
   @computed get name() {
-    if (this.ckanResource === undefined) return this.ckanItemReference.name;
+    if (this.ckanResource === undefined) return undefined;
     if (this.ckanItemReference.useResourceName) return this.ckanResource.name;
     // via @steve9164
     /** Switched the order [check `useCombinationNameWhereMultipleResources`
@@ -467,15 +467,19 @@ export default class CkanItemReference extends UrlMixin(
     }
 
     // Overrides for specific catalog types
-    if (
-      model instanceof WebMapServiceCatalogItem &&
-      this._ckanResource?.wms_layer
-    ) {
-      model.setTrait(
-        CommonStrata.definition,
-        "layers",
-        this._ckanResource.wms_layer
-      );
+    if (model instanceof WebMapServiceCatalogItem) {
+      const params:
+        | Record<string, string | undefined>
+        | undefined = model.uri?.search(true);
+
+      // Mixing ?? and || because for params we don't want to use empty string params if there are non-empty string parameters
+      const layers =
+        this._ckanResource?.wms_layer ??
+        (params?.LAYERS || params?.layers || params?.typeName);
+
+      if (layers) {
+        model.setTrait(CommonStrata.definition, "layers", layers);
+      }
     }
 
     // Tried to make this sequence an updateModelFromJson but wouldn't work?

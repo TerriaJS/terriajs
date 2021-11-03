@@ -6,7 +6,7 @@ import MappableMixin from "../../ModelMixins/MappableMixin";
 import ViewState from "../../ReactViewModels/ViewState";
 import Checkbox from "../../Styled/Checkbox/Checkbox";
 import Icon, { StyledIcon } from "../../Styled/Icon";
-import { TextSpan } from "../../Styled/Text";
+import Text from "../../Styled/Text";
 import WorkbenchItemControls from "../Workbench/Controls/WorkbenchItemControls";
 
 type Selectable = MappableMixin.Instance & CatalogMemberMixin.Instance;
@@ -59,8 +59,9 @@ const Item: React.FC<ItemProps> = observer(
             <Checkbox
               isChecked={item.show}
               onChange={ev => onChangeSelection(item, ev.target.checked)}
-              label={<SelectorText medium>{item.name}</SelectorText>}
-            />
+            >
+              <SelectorText medium>{item.name}</SelectorText>
+            </Checkbox>
           </div>
           <OpenButton isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
         </ItemTitle>
@@ -98,7 +99,7 @@ const ItemBody = styled.div`
   padding: 10px 5px;
 `;
 
-const SelectorText = styled(TextSpan)`
+const SelectorText = styled(Text)`
   margin-left: 10px;
 `;
 

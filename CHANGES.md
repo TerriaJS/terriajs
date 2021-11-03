@@ -1,7 +1,40 @@
 Change Log
 ==========
 
-#### next release (8.1.3)
+#### next release (8.1.10)
+* [The next improvement]
+
+#### 8.1.9
+* TSify workbench splitter control and fix broken styling.
+* Fix app crash when opening AR tool.
+
+#### 8.1.8
+* Tsified `SettingPanel`
+* Moved `setViewerMode` function from `Terria` class to `ViewerMode`
+* Refactored checkbox to use children elements for label instead of label
+  property, `isDisabled`, `isChecked` and `font-size: inherit` style is passed
+  to each child element (so propper styling is maintained)
+* Fix an internal bug where Cesium.prototype.observeModelLayer() fails to remove 3D tilesets in certain cases.
+* Rename `TerriaError._shouldRaiseToUser` to `overrideRaiseToUser`
+  * Note: `userProperties.ignoreError = "1"` will take precedence over `overrideRaiseToUser = true`
+* Fix `overrideRaiseToUser` bug causing `overrideRaiseToUser` to be set to `true` in `TerriaError.combine`
+* Add `rollbar.warning` for `TerriaErrorSeverity.Warning`
+* Disable `zFilter` by default
+* Remove use of word "outlier" in zFilter dimension and legend item (we now use "Extreme values")
+* Add `cursor:pointer` to `Checkbox`
+* Fix `MapNavigation` getter/setter `visible` bug.
+  * Replace `CompositeBarItemController` `visible` setter with `setVisible` function
+* Use `yarn` in CI scripts (and upgrade node to v14)
+* Fix app crash when previewing a nested reference in the catalog (eg when viewing an indexed search result where the result is a reference).
+* Ported feaure from v7 to set WMS layers property from the value of `LAYERS`, `layers` or `typeName` from query string of CKAN resource URL.
+
+#### 8.1.4
+
+* Make flex-search usage (for `CatalogIndex`) web-worker based
+* Add `completeKnownContainerUniqueIds` to `Model` class - This will recursively travese tree of knownContainerUniqueIds models to return full list of dependencies
+* Add all models from `completeKnownContainerUniqueIds` to shareData.models (even if they are empty)
+
+#### 8.1.3
 
 * Reimplement map viewer url param
 * Added `terriaError.importance` property. This can be set to adjust which error messages are presented to the user.
@@ -24,7 +57,7 @@ Change Log
 * Fix Branding component. It wasn't wrapped in `observer` so it kept getting re-rendered
 * Add `FeedbackLink` and `<feedbacklink>` custom component - this can be used to add a button to open feedback dialog (or show `supportEmail` in feedback is disabled)
 * Fix `ContinuousColorMap` `Legend` issue due to funky JS precision
-* [The next improvement]
+* Fix mobx computed cycle in `CkanDatasetStratum` which was making error messages for failed loading of CKAN items worse.
 
 #### 8.1.2
 
@@ -151,8 +184,8 @@ Change Log
   - `colorPalette` no longer supports a list of CSS colors (eg `rgb(0,0,255)-rgb(0,255,0)-rgb(255,0,0)`). Instead please use `binColors`.
   - Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses`
   - Renamed all mixin instance type definitions to `XMixin.Instance`.
-  - Basemaps are now defined as `baseMaps` object
-    - list of available basemaps is defined in `baseMaps.init`. This list is combined with default base maps so it's possible to override defaults
+  - Basemaps are now defined as `baseMaps` object (see [baseMaps object docs](./doc/customizing/initialization-files.md#basemaps))
+    - list of available basemaps is defined in `baseMaps.items`. This list is combined with default base maps so it's possible to override defaults
     - definition of `initBaseMapId` and `initBaseMapName` are moved to `baseMaps.defaultBaseMapId` and `baseMaps.defaultBaseMapName`
     - `previewBaseMapId` is moved to `baseMaps.previewBaseMapId`
     - implemented `baseMaps.enabledBaseMaps` array of base map ids to define a list of baseMaps available to user
