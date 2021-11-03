@@ -16,10 +16,11 @@ const ItemSelector: React.FC<PropsType> = props => {
   const [t] = useTranslation();
   const onChange = (ev: React.ChangeEvent<HTMLSelectElement>) =>
     props.onChange(ev.target.value);
+  const placeholderValue = "-tjs-select-one";
   return (
-    <Select onChange={onChange} value={selectedItem}>
+    <Select onChange={onChange} value={selectedItem ?? placeholderValue}>
       {selectedItem === undefined && (
-        <option key="-select-one-" value="-select-one-">
+        <option key={placeholderValue} value={placeholderValue}>
           {t("compare.dataset.selectOne")}
         </option>
       )}

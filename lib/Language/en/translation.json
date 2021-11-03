@@ -1581,6 +1581,10 @@
     "leftPanel": "Left panel",
     "rightPanel": "Right panel",
     "bothPanels": "Both panels",
+    "bothPanelsMenu": {
+      "browse": "Browse map data",
+      "hideAll": "Hide all"
+    },
     "info": "Compare spatial datasets from your workbench side-by-side on the map.",
     "dataset": {
       "label": "Dataset",

@@ -24,18 +24,19 @@ import MappableMixin from "../../../ModelMixins/MappableMixin";
 import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
 import addUserCatalogMember from "../../../Models/Catalog/addUserCatalogMember";
 import SplitItemReference from "../../../Models/Catalog/CatalogReferences/SplitItemReference";
+import {
+  createCompareConfig,
+  isComparableItem
+} from "../../../Models/Comparable.ts";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
-import hasTraits from "../../../Models/Definition/hasTraits";
 import getAncestors from "../../../Models/getAncestors";
 import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import Icon, { StyledIcon } from "../../../Styled/Icon";
-import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
 import { exportData } from "../../Preview/ExportData";
 import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
 import WorkbenchButton from "../WorkbenchButton";
-import { isComparableItem } from "../../../Models/Comparable.ts";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -224,9 +225,9 @@ const ViewingControls = observer(
 
     compareItem() {
       runInAction(() => {
-        this.props.viewState.terria.compareLeftItemId = this.props.item.uniqueId;
-        this.props.viewState.isCompareUserTriggered = true;
-        this.props.viewState.terria.showSplitter = true;
+        this.props.viewState.terria.compareConfig = createCompareConfig({
+          leftPanelItemId: this.props.item.uniqueId
+        });
       });
     },
 

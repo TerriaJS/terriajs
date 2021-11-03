@@ -3,11 +3,11 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../../ModelMixins/MappableMixin";
+import ViewState from "../../ReactViewModels/ViewState";
 import Checkbox from "../../Styled/Checkbox/Checkbox";
 import Icon, { StyledIcon } from "../../Styled/Icon";
-import Text from "../../Styled/Text";
+import { TextSpan } from "../../Styled/Text";
 import WorkbenchItemControls from "../Workbench/Controls/WorkbenchItemControls";
-import ViewState from "../../ReactViewModels/ViewState";
 
 type Selectable = MappableMixin.Instance & CatalogMemberMixin.Instance;
 
@@ -53,6 +53,7 @@ const Item: React.FC<ItemProps> = observer(
           <div
             css={`
               flex-grow: 1;
+              display: flex;
             `}
           >
             <Checkbox
@@ -64,9 +65,9 @@ const Item: React.FC<ItemProps> = observer(
           <OpenButton isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
         </ItemTitle>
         {isOpen && (
-          <div>
+          <ItemBody>
             <WorkbenchItemControls item={item} viewState={viewState} />
-          </div>
+          </ItemBody>
         )}
       </>
     );
@@ -81,17 +82,23 @@ const UList = styled.ul`
   > li {
     display: flex;
     flex-direction: column;
+    border-bottom: 1px solid ${p => p.theme.darkLighter};
+    padding: 0.2em 0.4em;
   }
 `;
 
 const ItemTitle = styled.div`
   display: flex;
   width: 100%;
-  height: 32px;
+  min-height: 32px;
   align-items: center;
 `;
 
-const SelectorText = styled(Text)`
+const ItemBody = styled.div`
+  padding: 10px 5px;
+`;
+
+const SelectorText = styled(TextSpan)`
   margin-left: 10px;
 `;
 

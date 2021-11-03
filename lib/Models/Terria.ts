@@ -67,6 +67,7 @@ import MagdaReference, {
   MagdaReferenceHeaders
 } from "./Catalog/CatalogReferences/MagdaReference";
 import SplitItemReference from "./Catalog/CatalogReferences/SplitItemReference";
+import { CompareConfig, createCompareConfig } from "./Comparable";
 import CommonStrata from "./Definition/CommonStrata";
 import hasTraits from "./Definition/hasTraits";
 import { BaseModel } from "./Definition/Model";
@@ -533,14 +534,9 @@ export default class Terria {
   @observable catalogReferencesLoaded: boolean = false;
 
   /**
-   * Left item in the compare workflow
+   * Configuration for the compare workflow
    */
-  @observable compareLeftItemId?: string;
-
-  /**
-   * Right item in the compare workflow
-   */
-  @observable compareRightItemId?: string;
+  @observable compareConfig: CompareConfig | undefined = undefined;
 
   augmentedVirtuality?: any;
 
@@ -1387,12 +1383,8 @@ export default class Terria {
       this.splitPosition = initData.splitPosition;
     }
 
-    if (isJsonString(initData.compareLeftItemId)) {
-      this.compareLeftItemId = initData.compareLeftItemId;
-    }
-
-    if (isJsonString(initData.compareRightItemId)) {
-      this.compareRightItemId = initData.compareRightItemId;
+    if (isJsonObject(initData.compareConfig)) {
+      this.compareConfig = createCompareConfig(initData.compareConfig);
     }
 
     // Copy but don't yet load the workbench.

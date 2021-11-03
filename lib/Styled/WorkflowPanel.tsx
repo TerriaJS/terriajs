@@ -1,9 +1,9 @@
 import { runInAction } from "mobx";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import ViewState from "../ReactViewModels/ViewState";
 import Button from "./Button";
-import { GLYPHS, IconProps, StyledIcon } from "./Icon";
+import { IconProps, StyledIcon } from "./Icon";
 import { addTerriaScrollbarStyles } from "./mixins";
 import Text from "./Text";
 
@@ -92,90 +92,6 @@ const CloseButton = styled(Button).attrs({
   border-radius: 3px;
   min-height: 0;
   padding: 3px 12px;
-`;
-
-export type BoxProps = {
-  title?: string;
-  icon?: IconProps["glyph"];
-  collapsible?: boolean;
-  isCollapsed?: boolean;
-  children?: React.ReactNode;
-  className?: string;
-};
-
-export const Box: React.FC<BoxProps> = props => {
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(
-    props.isCollapsed ?? false
-  );
-  const toggleCollapse = () => setIsCollapsed(!isCollapsed);
-  return (
-    <BoxWrap className={props.className}>
-      {props.title !== undefined && props.icon !== undefined && (
-        <BoxTitleBar>
-          <BoxIcon glyph={props.icon} styledWidth="16px" styledHeight="16px" />
-          <BoxTitle>{props.title}</BoxTitle>
-          {props.collapsible && (
-            <CollapseToggle
-              onClick={toggleCollapse}
-              isCollapsed={isCollapsed}
-            />
-          )}
-        </BoxTitleBar>
-      )}
-      {!isCollapsed && <BoxContent>{props.children}</BoxContent>}
-    </BoxWrap>
-  );
-};
-
-const CollapseToggle = styled(Button).attrs(props => ({
-  renderIcon: () => (
-    <StyledIcon
-      light
-      glyph={props.isCollapsed ? GLYPHS.closed : GLYPHS.opened}
-      styledWidth="10px"
-      styledHeight="10px"
-    />
-  )
-}))<{ isCollapsed: boolean }>`
-  min-height: 0px;
-  padding: 0.7em;
-  background: transparent;
-  border: 0px;
-`;
-
-const BoxWrap = styled.div`
-  background-color: ${p => p.theme.darkWithOverlay};
-  margin: 10px;
-  border-radius: 5px;
-`;
-
-const BoxTitleBar = styled.div`
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid ${p => p.theme.darkLighter};
-  padding-left: 0.4em;
-`;
-
-const BoxTitle = styled(Text).attrs({
-  textLight: true,
-  bold: true
-})`
-  flex-grow: 1;
-  padding: 0.7em 0.4em;
-`;
-
-const BoxIcon = styled(StyledIcon).attrs({
-  styledWidth: "18px",
-  styledHeight: "18px",
-  light: true
-})``;
-
-const BoxContent = styled.div`
-  padding: 0.4em;
-  color: ${p => p.theme.textLight};
 `;
 
 export default WorkflowPanel;

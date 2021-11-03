@@ -1,3 +1,5 @@
+import { isArrayLike } from "mobx";
+import { isJsonObject } from "../Core/Json";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";
@@ -24,4 +26,38 @@ export function isComparableItem(item: any): item is Comparable {
     hasTraits(item, CatalogMemberTraits, "name") &&
     hasTraits(item, SplitterTraits, "splitDirection");
   return isComparable;
+}
+
+/**
+ * Object used to store compare workflow configuration
+ */
+export type CompareConfig = {
+  // ID of the item to show in the left panel
+  leftPanelItemId: string | undefined;
+  // ID of the item to show in the right panel
+  rightPanelItemId: string | undefined;
+  // IDs of context items (items appearing in both panels).
+  contextItemIds: string[];
+};
+
+export function createCompareConfig(json: any = {}): CompareConfig | undefined {
+  if (!isJsonObject(json)) {
+    return undefined;
+  }
+
+  const leftPanelItemId =
+    typeof json.leftPanelItemId === "string" ? json.leftPanelItemId : undefined;
+  const rightPanelItemId =
+    typeof json.rightPanelItemId === "string"
+      ? json.rightPanelItemId
+      : undefined;
+  const contextItemIds = isArrayLike(json.contextItemIds)
+    ? (json.contextItemIds.filter(id => typeof id === "string") as string[])
+    : [];
+
+  return {
+    leftPanelItemId,
+    rightPanelItemId,
+    contextItemIds
+  };
 }

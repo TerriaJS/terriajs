@@ -1,4 +1,4 @@
-import { action } from "mobx";
+import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -9,7 +9,11 @@ import filterOutUndefined from "../../Core/filterOutUndefined";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../../ModelMixins/MappableMixin";
 import SplitItemReference from "../../Models/Catalog/CatalogReferences/SplitItemReference";
-import { Comparable, isComparableItem } from "../../Models/Comparable";
+import {
+  Comparable,
+  CompareConfig,
+  isComparableItem
+} from "../../Models/Comparable";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import hasTraits from "../../Models/Definition/hasTraits";
 import { BaseModel } from "../../Models/Definition/Model";
@@ -18,7 +22,7 @@ import Workbench from "../../Models/Workbench";
 import ViewState from "../../ReactViewModels/ViewState";
 import { GLYPHS } from "../../Styled/Icon";
 import Text from "../../Styled/Text";
-import WorkflowPanel, { Box } from "../../Styled/WorkflowPanel";
+import WorkflowPanel from "../../Styled/WorkflowPanel";
 import MappableTraits from "../../Traits/TraitsClasses/MappableTraits";
 import SplitterTraits from "../../Traits/TraitsClasses/SplitterTraits";
 import CompareItemControls from "./CompareItemControls";
@@ -26,14 +30,11 @@ import DatePicker from "./DatePicker";
 import ItemList from "./ItemList";
 import ItemSelector from "./ItemSelector";
 import LocationDateFilter from "./LocationDateFilter";
+import { Panel, PanelMenu } from "./Panel";
 
 export type PropsType = {
   viewState: ViewState;
-  leftItemId?: string;
-  rightItemId?: string;
-  changeLeftItem: (id: string | undefined) => void;
-  changeRightItem: (id: string | undefined) => void;
-  onClose: () => void;
+  compareConfig: CompareConfig;
 };
 
 /**
@@ -46,7 +47,7 @@ export type PropsType = {
  * any of the selectors.
  */
 const Compare: React.FC<PropsType> = observer(props => {
-  const viewState = props.viewState;
+  const { viewState, compareConfig: config } = props;
   const terria = viewState.terria;
 
   const [t] = useTranslation();
@@ -67,8 +68,8 @@ const Compare: React.FC<PropsType> = observer(props => {
       // current visibility state of items.
       terria.workbench.items.forEach(item => {
         if (
-          item.uniqueId !== props.leftItemId &&
-          item.uniqueId !== props.rightItemId &&
+          item.uniqueId !== config.leftPanelItemId &&
+          item.uniqueId !== config.rightPanelItemId &&
           viewState.isCompareUserTriggered
         )
           hideItem(item);
@@ -84,17 +85,19 @@ const Compare: React.FC<PropsType> = observer(props => {
   );
 
   useEffect(
+    // Reacts to change of leftPanelItemId and rightPanelItemId by
+    // showing/hiding them and updating their split direction.
     function setLeftAndRightItems() {
       const leftItem =
-        props.leftItemId !== undefined
-          ? findComparableItemById(terria.workbench, props.leftItemId)
+        config.leftPanelItemId !== undefined
+          ? findComparableItemById(terria.workbench, config.leftPanelItemId)
           : undefined;
       if (leftItem) showItem(leftItem, ImagerySplitDirection.LEFT);
       setLeftItem(leftItem);
 
       const rightItem =
-        props.rightItemId !== undefined
-          ? findComparableItemById(terria.workbench, props.rightItemId)
+        config.rightPanelItemId !== undefined
+          ? findComparableItemById(terria.workbench, config.rightPanelItemId)
           : undefined;
       if (rightItem) showItem(rightItem, ImagerySplitDirection.RIGHT);
       setRightItem(rightItem);
@@ -105,10 +108,10 @@ const Compare: React.FC<PropsType> = observer(props => {
         if (rightItem && isCloneItem(rightItem)) removeItem(rightItem);
       };
     },
-    [props.leftItemId, props.rightItemId]
+    [config.leftPanelItemId, config.rightPanelItemId]
   );
 
-  // Generate a list of comparable items to pass to the dataset selector (exclude the clones)
+  // Generate a list of comparable items to pass to the dataset selector (excluding the clones)
   const comparableItems: { id: string; name: string }[] = filterOutUndefined(
     terria.workbench.items
       .filter(isComparableItem)
@@ -120,15 +123,15 @@ const Compare: React.FC<PropsType> = observer(props => {
       )
   );
 
-  // Generate a list of items that can be shown on in both panels.
+  // Generate a list of items that can be shown in both panels.
   // Do not show an item if the item or a clone of it is show in left or right panels
-  const itemsInBothPanels = terria.workbench.items
+  const contextItems = terria.workbench.items
     .filter(
       item =>
         sourceItemId(terria, item.uniqueId ?? "") !==
-          sourceItemId(terria, props.leftItemId ?? "") &&
+          sourceItemId(terria, config.leftPanelItemId ?? "") &&
         sourceItemId(terria, item.uniqueId ?? "") !==
-          sourceItemId(terria, props.rightItemId ?? "")
+          sourceItemId(terria, config.rightPanelItemId ?? "")
     )
     .filter(item => isCloneItem(item) === false)
     .filter(
@@ -136,6 +139,7 @@ const Compare: React.FC<PropsType> = observer(props => {
         MappableMixin.isMixedInto(item) && CatalogMemberMixin.isMixedInto(item)
     ) as (MappableMixin.Instance & CatalogMemberMixin.Instance)[];
 
+  // Change the item on the left panel
   const changeLeftItem = async (leftItemId: string) => {
     // Hide the previous item
     if (leftItem) hideItem(leftItem);
@@ -145,9 +149,12 @@ const Compare: React.FC<PropsType> = observer(props => {
       rightItem && leftItemId === rightItem.uniqueId
         ? await cloneItem(rightItem)
         : leftItemId;
-    props.changeLeftItem(itemId);
+    runInAction(() => {
+      config.leftPanelItemId = itemId;
+    });
   };
 
+  // Change the item on the right panel
   const changeRightItem = async (rightItemId: string) => {
     // Hide the previous item
     if (rightItem) hideItem(rightItem);
@@ -157,14 +164,76 @@ const Compare: React.FC<PropsType> = observer(props => {
       leftItem && rightItemId === leftItem.uniqueId
         ? await cloneItem(leftItem)
         : rightItemId;
-    props.changeRightItem(itemId);
+    runInAction(() => {
+      config.rightPanelItemId = itemId;
+    });
   };
 
-  const changeItemInBothPanels = action(
+  useEffect(
+    // When new context items are added to the workbench via the browse map option,
+    // they are enabled by default so we need to update the contextItemIds array.
+    action(function autoEnableNewWorkbenchItems() {
+      contextItems.forEach(
+        item =>
+          item.show &&
+          item.uniqueId &&
+          config.contextItemIds.push(item.uniqueId)
+      );
+    }),
+    [terria.workbench.items]
+  );
+
+  useEffect(
+    // If a context item ID is present in config.contextItemIds, enable it,
+    // otherwise disable it.
+    action(function showOrHideContextItem() {
+      contextItems.forEach(item =>
+        item.uniqueId && config.contextItemIds.includes(item.uniqueId)
+          ? showItem(item, ImagerySplitDirection.NONE)
+          : hideItem(item)
+      );
+    }),
+    [
+      // Because we don't iterate contextItemIds anywhere else, we have to call
+      // slice() so that mobx will react when contextItemIds change. Without
+      // the slice() call, mobx will react only if the array value changes as a
+      // whole, not if new values are pushed or removed from it.
+      config.contextItemIds.slice()
+    ]
+  );
+
+  // Add or remove item ID to config.contextItemIds when user actions it.
+  const toggleContextItem = action(
     (item: MappableMixin.Instance, show: boolean) => {
-      show ? showItem(item, ImagerySplitDirection.NONE) : hideItem(item);
+      if (show) {
+        if (item.uniqueId && !config.contextItemIds.includes(item.uniqueId!)) {
+          config.contextItemIds.push(item.uniqueId!);
+        }
+      } else {
+        const index = config.contextItemIds.findIndex(
+          id => id === item.uniqueId
+        );
+        if (index >= 0) config.contextItemIds.splice(index, 1);
+      }
     }
   );
+
+  const onClose = action(() => {
+    terria.compareConfig = undefined;
+  });
+
+  const openCatalogExplorer = action(() => {
+    viewState.explorerPanelIsVisible = true;
+  });
+
+  const hideAllContextItems = () => {
+    contextItems.forEach(hideItem);
+  };
+
+  const bothPanelsMenuOptions = [
+    { text: t("compare.bothPanelsMenu.browse"), onSelect: openCatalogExplorer },
+    { text: t("compare.bothPanelsMenu.hideAll"), onSelect: hideAllContextItems }
+  ];
 
   return (
     <>
@@ -173,42 +242,52 @@ const Compare: React.FC<PropsType> = observer(props => {
         icon={GLYPHS.compare}
         title={t("compare.title")}
         closeButtonText={t("compare.done")}
-        onClose={props.onClose}
+        onClose={onClose}
       >
-        <Box>
+        <Panel>
           <InfoText>{t("compare.info")}</InfoText>
-        </Box>
-        <Box icon={GLYPHS.leftSmall} title={t("compare.leftPanel")}>
-          <ItemSelector
-            selectableItems={comparableItems}
-            selectedItem={
-              props.leftItemId
-                ? sourceItemId(terria, props.leftItemId)
-                : undefined
-            }
-            onChange={changeLeftItem}
-          />
-          {leftItem && <CompareItemControls item={leftItem} />}
-        </Box>
-        <Box icon={GLYPHS.rightSmall} title={t("compare.rightPanel")}>
-          <ItemSelector
-            selectableItems={comparableItems}
-            selectedItem={
-              props.rightItemId
-                ? sourceItemId(terria, props.rightItemId)
-                : undefined
-            }
-            onChange={changeRightItem}
-          />
-          {rightItem && <CompareItemControls item={rightItem} />}
-        </Box>
-        <Box icon={GLYPHS.bothPanels} title={t("compare.bothPanels")}>
+        </Panel>
+        <Panel icon={GLYPHS.leftSmall} title={t("compare.leftPanel")}>
+          <PanelBody>
+            <DatasetLabel>{t("compare.dataset.label")}:</DatasetLabel>
+            <ItemSelector
+              selectableItems={comparableItems}
+              selectedItem={
+                config.leftPanelItemId
+                  ? sourceItemId(terria, config.leftPanelItemId)
+                  : undefined
+              }
+              onChange={changeLeftItem}
+            />
+            {leftItem && <CompareItemControls item={leftItem} />}
+          </PanelBody>
+        </Panel>
+        <Panel icon={GLYPHS.rightSmall} title={t("compare.rightPanel")}>
+          <PanelBody>
+            <DatasetLabel>{t("compare.dataset.label")}:</DatasetLabel>
+            <ItemSelector
+              selectableItems={comparableItems}
+              selectedItem={
+                config.rightPanelItemId
+                  ? sourceItemId(terria, config.rightPanelItemId)
+                  : undefined
+              }
+              onChange={changeRightItem}
+            />
+            {rightItem && <CompareItemControls item={rightItem} />}
+          </PanelBody>
+        </Panel>
+        <Panel
+          icon={GLYPHS.bothPanels}
+          title={t("compare.bothPanels")}
+          menuComponent={<PanelMenu options={bothPanelsMenuOptions} />}
+        >
           <ItemList
-            items={itemsInBothPanels}
-            onChangeSelection={changeItemInBothPanels}
+            items={contextItems}
+            onChangeSelection={toggleContextItem}
             viewState={viewState}
           />
-        </Box>
+        </Panel>
       </WorkflowPanel>
       <MapOverlay>
         <Left>
@@ -255,6 +334,14 @@ const MapOverlay = styled.div`
     display: flex;
     justify-content: flex-start;
   }
+`;
+
+const DatasetLabel = styled(Text).attrs({ medium: true })`
+  padding-bottom: 5px;
+`;
+
+const PanelBody = styled.div`
+  padding: 0.4em;
 `;
 
 /**
