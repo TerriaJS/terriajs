@@ -2,13 +2,23 @@ Change Log
 ==========
 
 #### next release (8.1.10)
+
+* Re-allowed models to be added to `workbench` if the are not `Mappable` or `Chartable`
+* Moved `WebMapServiceCatalogItem.GetCapbilitiesStratum` to `lib\Models\Catalog\Ows\WebMapServiceCapabilitiesStratum.ts`
+* Moved `WebMapServiceCatalogItem.DiffStratum` to `DiffableMixin`
+* `callWebCoverageService` now uses version `2.0.0`
+  * Added `WebCoverageServiceParameterTraits` to `WebMapServiceCatalogItemTraits.linkedWcsParameters`. It includes `outputFormat` and `outputCrs`
+  * Will attempt to use native CRS
+  * No longer sets `width` or `height` - so export will now return native resolution
 * [The next improvement]
 
 #### 8.1.9
+
 * TSify workbench splitter control and fix broken styling.
 * Fix app crash when opening AR tool.
 
 #### 8.1.8
+
 * Tsified `SettingPanel`
 * Moved `setViewerMode` function from `Terria` class to `ViewerMode`
 * Refactored checkbox to use children elements for label instead of label
