@@ -41,6 +41,7 @@ class ChartPanel extends React.Component {
   }
 
   componentDidUpdate() {
+    this.props.viewState.triggerResizeEvent();
     if (defined(this.props.onHeightChange)) {
       this.props.onHeightChange();
     }

@@ -1,11 +1,15 @@
-import { runInAction } from "mobx";
+import { action } from "mobx";
 import React, { useEffect } from "react";
+import ReactDOM from "react-dom";
 import styled from "styled-components";
 import ViewState from "../ReactViewModels/ViewState";
 import Button from "./Button";
 import { IconProps, StyledIcon } from "./Icon";
 import { addTerriaScrollbarStyles } from "./mixins";
 import Text from "./Text";
+import Portal from "../ReactViews/StandardUserInterface/Portal";
+
+export const WorkflowPanelPortalId = "worfklow-panel-portal";
 
 type PropsType = {
   viewState: ViewState;
@@ -17,37 +21,63 @@ type PropsType = {
 
 const WorkflowPanel: React.FC<PropsType> = props => {
   const viewState = props.viewState;
-  useEffect(function hideTerriaSidePanel() {
-    runInAction(() => {
+
+  useEffect(
+    action(function hideTerriaSidePanelOnMount() {
       viewState.showTerriaSidePanel = false;
-    });
-    return () =>
-      runInAction(() => {
-        viewState.showTerriaSidePanel = true;
-      });
-  }, []);
+      return action(() => (viewState.showTerriaSidePanel = true));
+    })
+  );
 
   return (
-    <Container>
-      <TitleBar>
-        <Icon glyph={props.icon} />
-        <Title>{props.title}</Title>
-        <CloseButton onClick={props.onClose}>
-          {props.closeButtonText}
-        </CloseButton>
-      </TitleBar>
-      <Content>{props.children}</Content>
-    </Container>
+    <Portal viewState={viewState} id={WorkflowPanelPortalId}>
+      <Container>
+        <TitleBar>
+          <Icon glyph={props.icon} />
+          <Title>{props.title}</Title>
+          <CloseButton onClick={props.onClose}>
+            {props.closeButtonText}
+          </CloseButton>
+        </TitleBar>
+        <Content>
+          <ErrorBoundary viewState={viewState}>{props.children}</ErrorBoundary>
+        </Content>
+      </Container>
+    </Portal>
   );
 };
 
+type ErrorBoundaryProps = {
+  viewState: ViewState;
+};
+
+class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: unknown) {
+    this.props.viewState.terria.raiseErrorToUser(error);
+  }
+
+  render() {
+    return this.state.hasError ? (
+      <Error>
+        An error occured when running the workflow. Please try re-loading the
+        app if the error persists.
+      </Error>
+    ) : (
+      this.props.children
+    );
+  }
+}
+
 const Container = styled.div`
-  position: absolute;
-  top: 0px;
-  z-index: 100000;
-  font-family: ${p => p.theme.fontPop}px;
   display: flex;
   flex-direction: column;
+  font-family: ${p => p.theme.fontPop}px;
   width: ${p => p.theme.workflowPanelWidth}px;
   height: 100vh;
   max-width: ${p => p.theme.workflowPanelWidth}px;
@@ -78,6 +108,7 @@ const Icon = styled(StyledIcon).attrs({
 })``;
 
 const Content = styled.div`
+  flex-grow: 1;
   overflow: auto;
   display: flex;
   flex-direction: column;
@@ -92,6 +123,16 @@ const CloseButton = styled(Button).attrs({
   border-radius: 3px;
   min-height: 0;
   padding: 3px 12px;
+`;
+
+const Error = styled.div`
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: ${p => p.theme.textLight};
+  font-size: 14px;
 `;
 
 export default WorkflowPanel;

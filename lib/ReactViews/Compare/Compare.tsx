@@ -1,6 +1,7 @@
 import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import ReactDOM from "react-dom";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
@@ -22,7 +23,6 @@ import Workbench from "../../Models/Workbench";
 import ViewState from "../../ReactViewModels/ViewState";
 import { GLYPHS } from "../../Styled/Icon";
 import Text from "../../Styled/Text";
-import WorkflowPanel from "../../Styled/WorkflowPanel";
 import MappableTraits from "../../Traits/TraitsClasses/MappableTraits";
 import SplitterTraits from "../../Traits/TraitsClasses/SplitterTraits";
 import CompareItemControls from "./CompareItemControls";
@@ -61,7 +61,7 @@ const Compare: React.FC<PropsType> = observer(props => {
       terria.showSplitter = true;
       // hide MapDataCount
       terria.elements.set("map-data-count", { visible: false });
-      terria.elements.set("bottom-dock", { visible: false });
+      terria.elements.set("timeline", { visible: false });
       // Hide all workbench items except the left & right items,
       // but do it only when the user launches the compare workflow
       // otherwise, if we are restoring from share data then respect the
@@ -77,7 +77,7 @@ const Compare: React.FC<PropsType> = observer(props => {
       return action(function onUnmount() {
         terria.showSplitter = false;
         terria.elements.set("map-data-count", { visible: true });
-        terria.elements.set("bottom-dock", { visible: true });
+        terria.elements.set("timeline", { visible: true });
         viewState.isCompareUserTriggered = false;
       });
     }),
@@ -169,58 +169,32 @@ const Compare: React.FC<PropsType> = observer(props => {
     });
   };
 
+  const isFirstRun = useRef(true);
   useEffect(
-    // When new context items are added to the workbench via the browse map option,
-    // they are enabled by default so we need to update the contextItemIds array.
-    action(function autoEnableNewWorkbenchItems() {
+    function updateContextItems() {
       contextItems.forEach(
         item =>
-          item.show &&
-          item.uniqueId &&
-          config.contextItemIds.push(item.uniqueId)
+          hasTraits(item, SplitterTraits, "splitDirection") &&
+          item.setTrait(
+            CommonStrata.user,
+            "splitDirection",
+            ImagerySplitDirection.NONE
+          )
       );
-    }),
-    [terria.workbench.items]
-  );
-
-  useEffect(
-    // If a context item ID is present in config.contextItemIds, enable it,
-    // otherwise disable it.
-    action(function showOrHideContextItem() {
-      contextItems.forEach(item =>
-        item.uniqueId && config.contextItemIds.includes(item.uniqueId)
-          ? showItem(item, ImagerySplitDirection.NONE)
-          : hideItem(item)
-      );
-    }),
-    [
-      // Because we don't iterate contextItemIds anywhere else, we have to call
-      // slice() so that mobx will react when contextItemIds change. Without
-      // the slice() call, mobx will react only if the array value changes as a
-      // whole, not if new values are pushed or removed from it.
-      config.contextItemIds.slice()
-    ]
-  );
-
-  // Add or remove item ID to config.contextItemIds when user actions it.
-  const toggleContextItem = action(
-    (item: MappableMixin.Instance, show: boolean) => {
-      if (show) {
-        if (item.uniqueId && !config.contextItemIds.includes(item.uniqueId!)) {
-          config.contextItemIds.push(item.uniqueId!);
-        }
-      } else {
-        const index = config.contextItemIds.findIndex(
-          id => id === item.uniqueId
-        );
-        if (index >= 0) config.contextItemIds.splice(index, 1);
+      // Disable all context items by default, the first time the user triggers
+      // the compare workflow.
+      if (isFirstRun.current && config.isUserTriggered) {
+        isFirstRun.current = false;
+        contextItems.forEach(hideItem);
       }
-    }
+    },
+    [config, contextItems]
   );
 
-  const onClose = action(() => {
-    terria.compareConfig = undefined;
-  });
+  const toggleContextItem = action(
+    (item: MappableMixin.Instance, show: boolean) =>
+      show ? showItem(item, ImagerySplitDirection.NONE) : hideItem(item)
+  );
 
   const openCatalogExplorer = action(() => {
     viewState.explorerPanelIsVisible = true;
@@ -237,17 +211,11 @@ const Compare: React.FC<PropsType> = observer(props => {
 
   return (
     <>
-      <WorkflowPanel
-        viewState={viewState}
-        icon={GLYPHS.compare}
-        title={t("compare.title")}
-        closeButtonText={t("compare.done")}
-        onClose={onClose}
-      >
+      <div>
         <Panel>
           <InfoText>{t("compare.info")}</InfoText>
         </Panel>
-        <Panel icon={GLYPHS.leftSmall} title={t("compare.leftPanel")}>
+        <Panel icon={GLYPHS.compareLeftPanel} title={t("compare.leftPanel")}>
           <PanelBody>
             <DatasetLabel>{t("compare.dataset.label")}:</DatasetLabel>
             <ItemSelector
@@ -262,7 +230,7 @@ const Compare: React.FC<PropsType> = observer(props => {
             {leftItem && <CompareItemControls item={leftItem} />}
           </PanelBody>
         </Panel>
-        <Panel icon={GLYPHS.rightSmall} title={t("compare.rightPanel")}>
+        <Panel icon={GLYPHS.compareRightPanel} title={t("compare.rightPanel")}>
           <PanelBody>
             <DatasetLabel>{t("compare.dataset.label")}:</DatasetLabel>
             <ItemSelector
@@ -278,7 +246,7 @@ const Compare: React.FC<PropsType> = observer(props => {
           </PanelBody>
         </Panel>
         <Panel
-          icon={GLYPHS.bothPanels}
+          icon={GLYPHS.compareBothPanels}
           title={t("compare.bothPanels")}
           menuComponent={<PanelMenu options={bothPanelsMenuOptions} />}
         >
@@ -288,20 +256,22 @@ const Compare: React.FC<PropsType> = observer(props => {
             viewState={viewState}
           />
         </Panel>
-      </WorkflowPanel>
-      <MapOverlay>
-        <Left>
-          <DatePicker side="left" item={leftItem} />
-        </Left>
-        <LocationDateFilter
-          viewState={viewState}
-          leftItem={leftItem}
-          rightItem={rightItem}
-        />
-        <Right>
-          <DatePicker side="right" item={rightItem} />
-        </Right>
-      </MapOverlay>
+      </div>
+      <BottomDockFirstPortal>
+        <MapOverlay>
+          <Left>
+            <DatePicker side="left" item={leftItem} />
+          </Left>
+          <LocationDateFilter
+            viewState={viewState}
+            leftItem={leftItem}
+            rightItem={rightItem}
+          />
+          <Right>
+            <DatePicker side="right" item={rightItem} />
+          </Right>
+        </MapOverlay>
+      </BottomDockFirstPortal>
     </>
   );
 });
@@ -309,19 +279,27 @@ const Compare: React.FC<PropsType> = observer(props => {
 const Left = styled.div``;
 const Right = styled.div``;
 
+const BottomDockFirstPortal: React.FC<{}> = props => {
+  // defined in BottomDock component
+  const portalContainer = document.getElementById("TJS-BottomDockFirstPortal");
+  return portalContainer
+    ? ReactDOM.createPortal(<>{props.children}</>, portalContainer)
+    : null;
+};
+
 /**
  * Overlays the children on top of the map
  */
 const MapOverlay = styled.div`
-  --map-width: calc(100% - ${p => p.theme.workflowPanelWidth}px);
-  width: var(--map-width);
   display: flex;
   justify-content: center;
 
-  position: absolute;
-  left: ${p => p.theme.workflowPanelWidth}px;
-  bottom: 40px;
-  z-index: 1000;
+  width: 100%;
+  /* bottom dock has a grey background, by setting height to 0 we prevent it from showing through */
+  height: 0px;
+
+  position: relative;
+  bottom: 80px;
 
   & > ${Left} {
     width: 50%;

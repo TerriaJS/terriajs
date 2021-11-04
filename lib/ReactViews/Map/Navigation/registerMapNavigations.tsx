@@ -24,7 +24,6 @@ import CloseToolButton from "./Items/CloseToolButton";
 import Compass, { COMPASS_TOOL_ID } from "./Items/Compass";
 import MeasureTool from "./Items/MeasureTool";
 import MyLocation from "./Items/MyLocation";
-import { ToggleSplitterController } from "./Items/ToggleSplitterTool";
 import ZoomControl, { ZOOM_CONTROL_ID } from "./Items/ZoomControl";
 
 export const CLOSE_TOOL_ID = "close-tool";
@@ -72,21 +71,6 @@ export const registerMapNavigations = (viewState: ViewState) => {
     controller: myLocation,
     screenSize: undefined,
     order: 3
-  });
-
-  const toggleSplitterController = new ToggleSplitterController(viewState);
-  mapNavigationModel.addItem({
-    id: ToggleSplitterController.id,
-    name: "translate#splitterTool.toggleSplitterToolTitle",
-    title: runInAction(() =>
-      toggleSplitterController.disabled
-        ? "translate#splitterTool.toggleSplitterToolDisabled"
-        : "translate#splitterTool.toggleSplitterTool"
-    ),
-    location: "TOP",
-    controller: toggleSplitterController,
-    screenSize: undefined,
-    order: 4
   });
 
   const measureTool = new MeasureTool({

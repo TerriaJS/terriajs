@@ -22,6 +22,7 @@ export function isComparableItem(item: any): item is Comparable {
     item &&
     MappableMixin.isMixedInto(item) &&
     CatalogMemberMixin.isMixedInto(item) &&
+    item.mapItems.length > 0 &&
     hasTraits(item, MappableTraits, "show") &&
     hasTraits(item, CatalogMemberTraits, "name") &&
     hasTraits(item, SplitterTraits, "splitDirection");
@@ -36,10 +37,16 @@ export type CompareConfig = {
   leftPanelItemId: string | undefined;
   // ID of the item to show in the right panel
   rightPanelItemId: string | undefined;
-  // IDs of context items (items appearing in both panels).
-  contextItemIds: string[];
+  // True if the comparison was directly invoked by the user as opposed to
+  // invoked by restoring a share link state. When directly invoked by the user
+  // context items will be hidden on launch. Otherwise they retain the state
+  // from the share link.
+  isUserTriggered?: boolean;
 };
 
+/**
+ * Create a ComapreConfig object from the given json.
+ */
 export function createCompareConfig(json: any = {}): CompareConfig | undefined {
   if (!isJsonObject(json)) {
     return undefined;
@@ -47,17 +54,20 @@ export function createCompareConfig(json: any = {}): CompareConfig | undefined {
 
   const leftPanelItemId =
     typeof json.leftPanelItemId === "string" ? json.leftPanelItemId : undefined;
+
   const rightPanelItemId =
     typeof json.rightPanelItemId === "string"
       ? json.rightPanelItemId
       : undefined;
-  const contextItemIds = isArrayLike(json.contextItemIds)
-    ? (json.contextItemIds.filter(id => typeof id === "string") as string[])
-    : [];
+
+  const isUserTriggered =
+    typeof json.isUserTriggered === "boolean"
+      ? json.isUserTriggered
+      : undefined;
 
   return {
     leftPanelItemId,
     rightPanelItemId,
-    contextItemIds
+    isUserTriggered
   };
 }

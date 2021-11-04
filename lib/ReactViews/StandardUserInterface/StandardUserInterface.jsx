@@ -39,6 +39,8 @@ import MapColumn from "./MapColumn";
 import processCustomElements from "./processCustomElements";
 import Styles from "./standard-user-interface.scss";
 import { terriaTheme } from "./StandardTheme";
+import { WorkflowPanelPortalId } from "../../Styled/WorkflowPanel";
+import PortalContainer from "./PortalContainer";
 
 export const showStoryPrompt = (viewState, terria) => {
   terria.configParameters.showFeaturePrompts &&
@@ -263,6 +265,9 @@ const StandardUserInterface = observer(
             terria={terria}
             viewState={this.props.viewState}
           />
+          <Medium>
+            <LazyCompare viewState={this.props.viewState} />
+          </Medium>
           <div className={Styles.storyWrapper}>
             <If condition={!this.props.viewState.disclaimerVisible}>
               <WelcomeMessage viewState={this.props.viewState} />
@@ -296,45 +301,49 @@ const StandardUserInterface = observer(
                       />
                     </Small>
                     <Medium>
-                      <div
-                        className={classNames(
-                          Styles.sidePanel,
-                          this.props.viewState.topElement === "SidePanel"
-                            ? "top-element"
-                            : "",
-                          {
-                            [Styles.sidePanelHide]: this.props.viewState
-                              .isMapFullScreen
-                          }
-                        )}
-                        tabIndex={0}
-                        onClick={action(() => {
-                          this.props.viewState.topElement = "SidePanel";
-                        })}
-                        // TODO: debounce/batch
-                        onTransitionEnd={() =>
-                          this.props.viewState.triggerResizeEvent()
-                        }
-                      >
-                        {/* Conditionally shows the default terria side panel elements.
-                            By hiding it other workflow tools can draw over the sidepanel to show
-                            workflow specific components
-                          */}
-                        {this.props.viewState.showTerriaSidePanel && (
-                          <>
-                            <Branding
-                              terria={terria}
-                              viewState={this.props.viewState}
-                              version={this.props.version}
-                            />
-                            <SidePanel
-                              terria={terria}
-                              viewState={this.props.viewState}
-                            />
-                          </>
-                        )}
-                      </div>
+                      <PortalContainer
+                        viewState={viewState}
+                        id={WorkflowPanelPortalId}
+                      />
                     </Medium>
+                    {/* Conditionally renders the terria side panel elements. By hiding it
+                        other workflow tools can replace sidepanel with workflow specific
+                        components
+                      */}
+                    {this.props.viewState.showTerriaSidePanel && (
+                      <Medium>
+                        <div
+                          className={classNames(
+                            Styles.sidePanel,
+                            this.props.viewState.topElement === "SidePanel"
+                              ? "top-element"
+                              : "",
+                            {
+                              [Styles.sidePanelHide]: this.props.viewState
+                                .isMapFullScreen
+                            }
+                          )}
+                          tabIndex={0}
+                          onClick={action(() => {
+                            this.props.viewState.topElement = "SidePanel";
+                          })}
+                          // TODO: debounce/batch
+                          onTransitionEnd={() =>
+                            this.props.viewState.triggerResizeEvent()
+                          }
+                        >
+                          <Branding
+                            terria={terria}
+                            viewState={this.props.viewState}
+                            version={this.props.version}
+                          />
+                          <SidePanel
+                            terria={terria}
+                            viewState={this.props.viewState}
+                          />
+                        </div>
+                      </Medium>
+                    )}
                   </If>
                   <Medium>
                     <div
@@ -400,9 +409,6 @@ const StandardUserInterface = observer(
                   />
                 </Medium>
               </If>
-              <Medium>
-                <LazyCompare viewState={this.props.viewState} />
-              </Medium>
               <Medium>
                 {/* I think this does what the previous boolean condition does, but without the console error */}
                 <If condition={this.props.viewState.isToolOpen}>
