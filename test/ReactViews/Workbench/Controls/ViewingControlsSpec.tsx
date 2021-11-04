@@ -3,7 +3,7 @@ import React from "react";
 import { act } from "react-dom/test-utils";
 import TestRenderer, { ReactTestRenderer } from "react-test-renderer";
 import Terria from "../../../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../../../lib/Models/WebMapServiceCatalogItem";
+import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import ViewState from "../../../../lib/ReactViewModels/ViewState";
 
 const ViewingControls = require("../../../../lib/ReactViews/Workbench/Controls/ViewingControls");
@@ -25,7 +25,6 @@ describe("ViewingControls", function() {
       catalogSearchProvider: undefined,
       locationSearchProviders: []
     });
-    terria.configParameters.useExperimentalCompareWorkflow = true;
   });
 
   describe("compare", function() {
@@ -64,9 +63,9 @@ describe("ViewingControls", function() {
       const compareItemMenuOption = testRenderer.root.findByProps({
         title: "workbench.splitItemTitle"
       });
-      expect(terria.compareLeftItemId).toBeUndefined();
+      expect(terria.compareConfig?.leftPanelItemId).toBeUndefined();
       compareItemMenuOption.props.onClick();
-      expect(terria.compareLeftItemId).toBe("mywms");
+      expect(terria.compareConfig?.rightPanelItemId).toBe("mywms");
     });
   });
 });

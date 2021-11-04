@@ -1,5 +1,6 @@
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Terria from "../../lib/Models/Terria";
+import { when } from "mobx";
 
 describe("TimelineStack", function() {
   let terria: Terria;

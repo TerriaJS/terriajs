@@ -2,7 +2,7 @@ import React from "react";
 import TestRenderer, { act, ReactTestRenderer } from "react-test-renderer";
 import { ThemeProvider } from "styled-components";
 import Terria from "../../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../../lib/Models/WebMapServiceCatalogItem";
+import WebMapServiceCatalogItem from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import Compare, { PropsType } from "../../../lib/ReactViews/Compare/Compare";
 import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface/StandardTheme";
@@ -11,9 +11,9 @@ describe("Compare", function() {
   let terria: Terria;
   let viewState: ViewState;
   let leftItem: WebMapServiceCatalogItem;
-  let defaultProps: Omit<PropsType, "leftItemId" | "rightItemId">;
+  let defaultProps: Omit<PropsType, "compareConfig">;
 
-  const leftItemId: string = "mywms";
+  const leftPanelItemId: string = "mywms";
 
   beforeEach(function() {
     terria = new Terria({
@@ -27,7 +27,7 @@ describe("Compare", function() {
       catalogSearchProvider: undefined,
       locationSearchProviders: []
     });
-    leftItem = new WebMapServiceCatalogItem(leftItemId, terria);
+    leftItem = new WebMapServiceCatalogItem(leftPanelItemId, terria);
     leftItem.setTrait(
       "definition",
       "url",
@@ -35,17 +35,17 @@ describe("Compare", function() {
     );
 
     defaultProps = {
-      viewState,
-      changeLeftItem: () => {},
-      changeRightItem: () => {},
-      onClose: () => {}
+      viewState
     };
   });
 
   describe("when entering compare mode", function() {
     it("turns on the splitter", async function() {
       expect(terria.showSplitter).toBe(false);
-      await renderCompare({ ...defaultProps, leftItemId });
+      await renderCompare({
+        ...defaultProps,
+        compareConfig: { leftPanelItemId, rightPanelItemId: undefined }
+      });
       expect(terria.showSplitter).toBe(true);
     });
   });
@@ -54,7 +54,7 @@ describe("Compare", function() {
     it("turns off the splitter", async function() {
       const renderer = await renderCompare({
         ...defaultProps,
-        leftItemId
+        compareConfig: { leftPanelItemId, rightPanelItemId: undefined }
       });
       expect(terria.showSplitter).toBe(true);
       renderer.unmount();

@@ -1,13 +1,12 @@
-import { action } from "mobx";
+import { runInAction } from "mobx";
 import React, { useEffect } from "react";
-import ReactDOM from "react-dom";
 import styled from "styled-components";
 import ViewState from "../ReactViewModels/ViewState";
+import Portal from "../ReactViews/StandardUserInterface/Portal";
 import Button from "./Button";
 import { IconProps, StyledIcon } from "./Icon";
 import { addTerriaScrollbarStyles } from "./mixins";
 import Text from "./Text";
-import Portal from "../ReactViews/StandardUserInterface/Portal";
 
 export const WorkflowPanelPortalId = "worfklow-panel-portal";
 
@@ -22,12 +21,15 @@ type PropsType = {
 const WorkflowPanel: React.FC<PropsType> = props => {
   const viewState = props.viewState;
 
-  useEffect(
-    action(function hideTerriaSidePanelOnMount() {
+  useEffect(function hideTerriaSidePanelOnMount() {
+    runInAction(() => {
       viewState.showTerriaSidePanel = false;
-      return action(() => (viewState.showTerriaSidePanel = true));
-    })
-  );
+    });
+    return () =>
+      runInAction(() => {
+        viewState.showTerriaSidePanel = true;
+      });
+  });
 
   return (
     <Portal viewState={viewState} id={WorkflowPanelPortalId}>
