@@ -125,6 +125,8 @@ export const GLYPHS = {
   minimize: require("../../wwwroot/images/icons/minimize.svg"),
   maximize: require("../../wwwroot/images/icons/maximize.svg"),
   closeTool: require("../../wwwroot/images/icons/close-tool.svg"),
+  leftSmall: require("../../wwwroot/images/icons/left-small.svg"),
+  rightSmall: require("../../wwwroot/images/icons/right-small.svg"),
   compareLeftPanel: require("../../wwwroot/images/icons/compare-left-panel.svg"),
   compareRightPanel: require("../../wwwroot/images/icons/compare-right-panel.svg"),
   compareBothPanels: require("../../wwwroot/images/icons/compare-both-panels.svg"),
