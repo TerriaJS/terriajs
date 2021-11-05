@@ -13,7 +13,10 @@ import {
   InfoSectionTraits,
   MetadataUrlTraits
 } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
-import { WebCoverageServiceParameterTraits } from "../../../Traits/TraitsClasses/ExportWebCoverageServiceTraits";
+import {
+  KeyValueTraits,
+  WebCoverageServiceParameterTraits
+} from "../../../Traits/TraitsClasses/ExportWebCoverageServiceTraits";
 import LegendTraits from "../../../Traits/TraitsClasses/LegendTraits";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import WebMapServiceCatalogItemTraits, {
@@ -732,6 +735,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
   }
 
   @computed get linkedWcsParameters() {
+    // Get outputCrs
     let outputCrs = this.availableCrs[0];
 
     // Unless it is Web Mercator of course - that would be stupid
@@ -741,8 +745,48 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
         ? "EPSG:4326"
         : outputCrs;
 
+    // Get WCS subsets from time and WMS dimensions
+    // These are used to "subset" WCS coverage (dataset)
+
+    // This is used to flag subsets (dimensions) which have multiple values
+    // Each element in this array represents the **actual** value used for a subset which has multiple values
+    let duplicateSubsetValues: StratumFromTraits<KeyValueTraits>[] = [];
+
+    // Get dimensionSubsets
+    const dimensionSubsets: { key: string; value: string }[] = [];
+    if (this.catalogItem.dimensions) {
+      Object.entries(this.catalogItem.dimensions).forEach(([key, values]) => {
+        if (isDefined(values)) {
+          // If we have multiple values for a particular dimension, they will be comma separated
+          // WCS only supports a single value per dimension - so we take the first value
+          const valuesArray = values.split(",");
+          const value = valuesArray[0];
+
+          if (valuesArray.length > 1) {
+            duplicateSubsetValues.push(
+              createStratumInstance(KeyValueTraits, { key, value })
+            );
+          }
+
+          // Wrap string values in double quotes
+          dimensionSubsets.push({ key, value });
+        }
+      });
+    }
+
+    const subsets = filterOutUndefined([
+      // Add time dimension
+      this.catalogItem.currentDiscreteTimeTag
+        ? { key: "time", value: this.catalogItem.currentDiscreteTimeTag }
+        : undefined,
+      // Add other dimensions
+      ...dimensionSubsets
+    ]).map(subset => createStratumInstance(KeyValueTraits, subset));
+
     return createStratumInstance(WebCoverageServiceParameterTraits, {
-      outputCrs
+      outputCrs,
+      subsets,
+      duplicateSubsetValues
     });
   }
 }

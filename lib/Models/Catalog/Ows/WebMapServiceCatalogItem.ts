@@ -21,7 +21,7 @@ import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import ChartableMixin from "../../../ModelMixins/ChartableMixin";
 import DiffableMixin from "../../../ModelMixins/DiffableMixin";
-import ExportableMixin from "../../../ModelMixins/ExportableMixin";
+import ExportWebCoverageServiceMixin from "../../../ModelMixins/ExportWebCoverageServiceMixin";
 import GetCapabilitiesMixin from "../../../ModelMixins/GetCapabilitiesMixin";
 import { ImageryParts } from "../../../ModelMixins/MappableMixin";
 import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
@@ -38,14 +38,13 @@ import SelectableDimensions, {
   SelectableDimensionSelect
 } from "../../SelectableDimensions";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import { callWebCoverageService } from "./callWebCoverageService";
 import WebMapServiceCapabilities from "./WebMapServiceCapabilities";
 import WebMapServiceCapabilitiesStratum from "./WebMapServiceCapabilitiesStratum";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
 
 class WebMapServiceCatalogItem
   extends TileErrorHandlerMixin(
-    ExportableMixin(
+    ExportWebCoverageServiceMixin(
       DiffableMixin(
         ChartableMixin(
           MinMaxLevelMixin(
@@ -136,15 +135,6 @@ class WebMapServiceCatalogItem
       return super.cacheDuration;
     }
     return "0d";
-  }
-
-  @computed
-  get _canExportData() {
-    return isDefined(this.linkedWcsCoverage) && isDefined(this.linkedWcsUrl);
-  }
-
-  _exportData() {
-    return callWebCoverageService(this);
   }
 
   @computed

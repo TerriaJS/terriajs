@@ -1,8 +1,25 @@
+import objectArrayTrait from "../Decorators/objectArrayTrait";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
 import ExportableTraits from "./ExportableTraits";
+
+export class KeyValueTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "string",
+    name: "Key",
+    description: "Key string."
+  })
+  key?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Value",
+    description: "Value string."
+  })
+  value?: string;
+}
 
 export class WebCoverageServiceParameterTraits extends ModelTraits {
   @primitiveTrait({
@@ -18,6 +35,24 @@ export class WebCoverageServiceParameterTraits extends ModelTraits {
     description: "File format of output (defaults to GeoTIFF)."
   })
   outputFormat: string = "image/geotiff";
+
+  @objectArrayTrait({
+    type: KeyValueTraits,
+    idProperty: "key",
+    name: "WCS subsets",
+    description:
+      'Array of key-value pairs for subsets to be included in query parameters. For example `{key: "Time", value: "2020"}` will add query parameter `subset=Time("2020")`'
+  })
+  subsets?: KeyValueTraits[];
+
+  @objectArrayTrait({
+    type: KeyValueTraits,
+    idProperty: "key",
+    name: "Duplicate subset values",
+    description:
+      "If multiple values have been detected for a particular subset ID (key), then we can only use the first one as WCS only supports one value per subset. Each element in this array represents the **actual** value used for a subset which has multiple values."
+  })
+  duplicateSubsetValues?: KeyValueTraits[];
 }
 
 export default class ExportWebCoverageServiceTraits extends mixTraits(

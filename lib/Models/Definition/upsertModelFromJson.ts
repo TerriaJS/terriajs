@@ -85,40 +85,41 @@ export default function upsertModelFromJson(
     }
   }
   if (model === undefined) {
-    model = factory.create(json.type, uniqueId, terria);
-    if (model === undefined) {
-      errors.push(
-        new TerriaError({
-          title: i18next.t("models.catalog.unsupportedTypeTitle"),
-          message: i18next.t("models.catalog.unsupportedTypeMessage", {
-            type: json.type
+    try {
+      model = factory.create(json.type, uniqueId, terria);
+      if (model === undefined) {
+        errors.push(
+          new TerriaError({
+            title: i18next.t("models.catalog.unsupportedTypeTitle"),
+            message: i18next.t("models.catalog.unsupportedTypeMessage", {
+              type: json.type
+            })
           })
-        })
-      );
-      model = createStubCatalogItem(terria, uniqueId);
-      const stub = model;
-      stub.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
-      stub.setTrait(CommonStrata.override, "name", `${uniqueId} (Stub)`);
-    }
-
-    if (model.type !== StubCatalogItem.type && options.addModelToTerria) {
-      try {
-        model.terria.addModel(model, json.shareKeys);
-      } catch (error) {
-        errors.push(error);
+        );
+        model = createStubCatalogItem(terria, uniqueId);
+        const stub = model;
+        stub.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
+        stub.setTrait(CommonStrata.override, "name", `${uniqueId} (Stub)`);
       }
+
+      if (model.type !== StubCatalogItem.type && options.addModelToTerria) {
+        model.terria.addModel(model, json.shareKeys);
+      }
+    } catch (e) {
+      errors.push(TerriaError.from(e, `Failed to create model`));
     }
   }
 
-  updateModelFromJson(
-    model,
-    stratumName,
-    json,
-    options.replaceStratum
-  ).catchError(error => {
-    errors.push(error);
-    model!.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
-  });
+  if (model)
+    updateModelFromJson(
+      model,
+      stratumName,
+      json,
+      options.replaceStratum
+    ).catchError(error => {
+      errors.push(error);
+      model!.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
+    });
 
   return new Result(
     model,

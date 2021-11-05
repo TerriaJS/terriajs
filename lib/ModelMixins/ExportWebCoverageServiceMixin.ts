@@ -1,42 +1,181 @@
+import i18next from "i18next";
+import { computed, runInAction } from "mobx";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
+import URI from "urijs";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
-import Model, { BaseModel } from "../Models/Definition/Model";
-import ExportWebCoverageServiceTraits from "../Traits/TraitsClasses/ExportWebCoverageServiceTraits";
-import ExportableMixin from "./ExportableMixin";
-import LoadableStratum from "../Models/Definition/LoadableStratum";
-import { computed } from "mobx";
+import isDefined from "../Core/isDefined";
+import loadBlob from "../Core/loadBlob";
+import loadXML from "../Core/loadXML";
 import Result from "../Core/Result";
 import TerriaError, { networkRequestError } from "../Core/TerriaError";
-import { getName } from "./CatalogMemberMixin";
-import loadXML from "../Core/loadXML";
+import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
+import ResultPendingCatalogItem from "../Models/Catalog/ResultPendingCatalogItem";
+import CommonStrata from "../Models/Definition/CommonStrata";
+import createStratumInstance from "../Models/Definition/createStratumInstance";
+import LoadableStratum from "../Models/Definition/LoadableStratum";
+import Model, { BaseModel } from "../Models/Definition/Model";
+import StratumOrder from "../Models/Definition/StratumOrder";
+import UserDrawing from "../Models/UserDrawing";
 import xml2json from "../ThirdParty/xml2json";
-import { defined } from "terriajs-cesium";
+import { InfoSectionTraits } from "../Traits/TraitsClasses/CatalogMemberTraits";
+import ExportWebCoverageServiceTraits, {
+  WebCoverageServiceParameterTraits
+} from "../Traits/TraitsClasses/ExportWebCoverageServiceTraits";
+import { getName } from "./CatalogMemberMixin";
+import ExportableMixin from "./ExportableMixin";
+import filterOutUndefined from "../Core/filterOutUndefined";
 
+const sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf").default;
+
+type Coverage = {
+  CoverageId: string;
+  CoverageSubtype: string;
+  Title: string;
+  WGS84BoundingBox: {
+    LowerCorner: string;
+    UpperCorner: string;
+    dimension: string;
+  };
+};
+
+/** Call WCS GetCapabilities to get list of:
+ * - available coverages
+ * - available CRS
+ * - available file formats
+ */
 class WebCoverageServiceCapabilitiesStratum extends LoadableStratum(
   ExportWebCoverageServiceTraits
 ) {
   static stratumName = "wcsCapabilitiesStratum";
 
-  // static async load(catalogItem: ExportWebCoverageServiceMixin.Instance) {
-  //   if (!catalogItem.linkedWcsUrl) throw "`linkedWcsUrl` is undefined"
-  //   const capabilitiesXml = await loadXML(url)
-  //   const json = xml2json(capabilitiesXml);
-  //   if (!defined(json.Capability)) {
-  //     throw networkRequestError({
-  //       title: "Invalid GetCapabilities",
-  //       message: `The URL ${url} was retrieved successfully but it does not appear to be a valid Web Coverage Service (WCS) GetCapabilities document.` +
-  //         `\n\nEither the catalog file has been set up incorrectly, or the server address has changed.`
-  //     });
-  //   }
-  // }
+  static async load(catalogItem: ExportWebCoverageServiceMixin.Instance) {
+    if (!catalogItem.linkedWcsUrl) throw "`linkedWcsUrl` is undefined";
 
-  constructor(readonly catalogItem: ExportWebCoverageServiceMixin.Instance) {
+    const url = new URI(catalogItem.linkedWcsUrl)
+      .query({
+        service: "WCS",
+        request: "GetCapabilities",
+        version: "2.0.0"
+      })
+      .toString();
+    const capabilitiesXml = await loadXML(url);
+    const json = xml2json(capabilitiesXml);
+    if (!isDefined(json.ServiceMetadata)) {
+      throw networkRequestError({
+        title: "Invalid GetCapabilities",
+        message:
+          `The URL ${url} was retrieved successfully but it does not appear to be a valid Web Coverage Service (WCS) GetCapabilities document.` +
+          `\n\nEither the catalog file has been set up incorrectly, or the server address has changed.`
+      });
+    }
+
+    const coverages: Coverage[] = json.Contents?.CoverageSummary ?? [];
+    const formats: string[] = json.ServiceMetadata?.formatSupported ?? [];
+    const crs: string[] =
+      json.ServiceMetadata?.Extension?.CrsMetadata?.crsSupported ?? [];
+
+    return new WebCoverageServiceCapabilitiesStratum(catalogItem, {
+      coverages,
+      formats,
+      crs
+    });
+  }
+
+  constructor(
+    readonly catalogItem: ExportWebCoverageServiceMixin.Instance,
+    readonly capabilities: {
+      coverages: Coverage[];
+      formats: string[];
+      crs: string[];
+    }
+  ) {
     super();
   }
 
   duplicateLoadableStratum(model: BaseModel): this {
     return new WebCoverageServiceCapabilitiesStratum(
-      model as ExportWebCoverageServiceMixin.Instance
+      model as ExportWebCoverageServiceMixin.Instance,
+      this.capabilities
+    ) as this;
+  }
+}
+
+/** Call WCS DescribeCoverage for a specific coverageId to get:
+ * - Native CRS
+ * - Native format
+ */
+class WebCoverageServiceDescribeCoverageStratum extends LoadableStratum(
+  ExportWebCoverageServiceTraits
+) {
+  static stratumName = "wcsDescribeCoverageStratum";
+
+  static async load(catalogItem: ExportWebCoverageServiceMixin.Instance) {
+    if (!catalogItem.linkedWcsUrl) throw "`linkedWcsUrl` is undefined";
+    if (!catalogItem.linkedWcsCoverage)
+      throw "`linkedWcsCoverage` is undefined";
+
+    const url = new URI(catalogItem.linkedWcsUrl)
+      .query({
+        service: "WCS",
+        request: "DescribeCoverage",
+        version: "2.0.0",
+        coverageId: catalogItem.linkedWcsCoverage
+      })
+      .toString();
+
+    const capabilitiesXml = await loadXML(url);
+    const json = xml2json(capabilitiesXml);
+    if (
+      json.CoverageDescription?.CoverageId?.toLowerCase() !==
+      catalogItem.linkedWcsCoverage.toLowerCase()
+    ) {
+      throw networkRequestError({
+        title: "Invalid DescribeCoverage",
+        message:
+          `The URL ${url} was retrieved successfully but it does not appear to be a valid Web Coverage Service (WCS) DescribeCoverage document.` +
+          `\n\nEither the catalog file has been set up incorrectly, or the server address has changed.`
+      });
+    }
+
+    const nativeFormat: string | undefined =
+      json.CoverageDescription?.ServiceParameters?.nativeFormat;
+
+    // Try get native CRS from domainSet and then boundedBy
+    const nativeCrs: string | undefined =
+      json.CoverageDescription?.domainSet?.Grid?.srsName ??
+      json.CoverageDescription?.boundedBy?.EnvelopeWithTimePeriod?.srsName ??
+      json.CoverageDescription?.boundedBy?.Envelope?.srsName;
+
+    return new WebCoverageServiceDescribeCoverageStratum(catalogItem, {
+      nativeFormat,
+      nativeCrs
+    });
+  }
+
+  constructor(
+    readonly catalogItem: ExportWebCoverageServiceMixin.Instance,
+    readonly coverage: {
+      nativeFormat: string | undefined;
+      nativeCrs: string | undefined;
+    }
+  ) {
+    super();
+  }
+
+  @computed get linkedWcsParameters() {
+    return createStratumInstance(WebCoverageServiceParameterTraits, {
+      outputCrs: this.coverage.nativeCrs,
+      outputFormat: this.coverage.nativeFormat
+    });
+  }
+
+  duplicateLoadableStratum(model: BaseModel): this {
+    return new WebCoverageServiceDescribeCoverageStratum(
+      model as ExportWebCoverageServiceMixin.Instance,
+      this.coverage
     ) as this;
   }
 }
@@ -61,9 +200,6 @@ function ExportWebCoverageServiceMixin<
       );
     }
 
-    /**
-     *
-     */
     async loadWcsMetadata(force?: boolean) {
       const results = await Promise.all([
         this._wcsCapabilitiesLoader.load(force),
@@ -78,8 +214,38 @@ function ExportWebCoverageServiceMixin<
       });
     }
 
-    private async loadWcsCapabilities() {}
-    private async loadWcsDescribeCoverage() {}
+    private async loadWcsCapabilities() {
+      const capabilities = await WebCoverageServiceCapabilitiesStratum.load(
+        this
+      );
+
+      runInAction(() =>
+        this.strata.set(
+          WebCoverageServiceCapabilitiesStratum.stratumName,
+          capabilities
+        )
+      );
+    }
+    private async loadWcsDescribeCoverage() {
+      const describeCoverage = await WebCoverageServiceDescribeCoverageStratum.load(
+        this
+      );
+      runInAction(() =>
+        this.strata.set(
+          WebCoverageServiceDescribeCoverageStratum.stratumName,
+          describeCoverage
+        )
+      );
+    }
+
+    @computed
+    get _canExportData() {
+      return isDefined(this.linkedWcsCoverage) && isDefined(this.linkedWcsUrl);
+    }
+
+    _exportData() {
+      return callWebCoverageService(this);
+    }
 
     dispose() {
       super.dispose();
@@ -101,6 +267,239 @@ namespace ExportWebCoverageServiceMixin {
       typeof model.loadWcsMetadata === "function"
     );
   }
+
+  StratumOrder.addLoadStratum(
+    WebCoverageServiceCapabilitiesStratum.stratumName
+  );
+  StratumOrder.addLoadStratum(
+    WebCoverageServiceDescribeCoverageStratum.stratumName
+  );
 }
 
 export default ExportWebCoverageServiceMixin;
+
+function callWebCoverageService(
+  model: ExportWebCoverageServiceMixin.Instance
+): Promise<undefined | { name: string; file: Blob }> {
+  return new Promise((resolve, reject) => {
+    const terria = model.terria;
+    runInAction(() => (terria.pickedFeatures = undefined));
+
+    let rectangle: Rectangle | undefined;
+
+    const userDrawing = new UserDrawing({
+      terria: model.terria,
+      messageHeader: "Click two points to draw a retangle extent.",
+      buttonText: "Download Extent",
+      onPointClicked: () => {
+        if (userDrawing.pointEntities.entities.values.length >= 2) {
+          rectangle = userDrawing?.otherEntities?.entities
+            ?.getById("rectangle")
+            ?.rectangle?.coordinates?.getValue(
+              model.terria.timelineClock.currentTime
+            );
+        }
+      },
+      onCleanUp: async () => {
+        if (isDefined(rectangle)) {
+          launch(model, rectangle)
+            .then(resolve)
+            .catch(reject);
+        } else {
+          reject("Invalid drawn extent.");
+        }
+      },
+      allowPolygon: false,
+      drawRectangle: true
+    });
+
+    userDrawing.enterDrawMode();
+  });
+}
+
+async function launch(
+  wmsCatalogItem: ExportWebCoverageServiceMixin.Instance,
+  bbox: Rectangle
+) {
+  if (!wmsCatalogItem.linkedWcsUrl || !wmsCatalogItem.linkedWcsCoverage) return;
+
+  const url = getCoverageUrl(wmsCatalogItem, bbox).raiseError(
+    wmsCatalogItem.terria,
+    `Error occurred while generating WCS GetCoverage URL`
+  );
+
+  if (url) {
+    return callUrl(wmsCatalogItem, url);
+  }
+}
+
+function getCoverageUrl(
+  model: ExportWebCoverageServiceMixin.Instance,
+  bbox: Rectangle
+): Result<string | undefined> {
+  try {
+    let error: TerriaError | undefined = undefined;
+
+    if (
+      model.linkedWcsParameters.duplicateSubsetValues &&
+      model.linkedWcsParameters.duplicateSubsetValues.length > 0
+    ) {
+      let message = `WebCoverageService (WCS) only supports one value per dimension.\n\n  `;
+
+      // Add message for each duplicate subset
+      message += model.linkedWcsParameters.duplicateSubsetValues.map(
+        subset =>
+          `- Multiple dimension values have been set for \`${subset.key}\`. WCS GetCoverage request will use the first value (\`${subset.key} = "${subset.value}"\`).`
+      );
+
+      error = new TerriaError({
+        title: "Warning: export may not reflect displayed data",
+        message,
+        importance: 1
+      });
+    }
+
+    // Make query parameter object
+
+    const query = {
+      service: "WCS",
+      request: "GetCoverage",
+      version: "2.0.0",
+      coverageId: model.linkedWcsCoverage,
+      format: model.linkedWcsParameters.outputFormat,
+
+      // Add subsets for bbox, time and dimensions
+      subset: [
+        `Long(${CesiumMath.toDegrees(bbox.west)},${CesiumMath.toDegrees(
+          bbox.east
+        )})`,
+        `Lat(${CesiumMath.toDegrees(bbox.south)},${CesiumMath.toDegrees(
+          bbox.north
+        )})`,
+        ...filterOutUndefined(
+          (model.linkedWcsParameters.subsets ?? []).map(subset =>
+            subset.key && subset.value
+              ? `${subset.key}(${
+                  typeof subset.value === "string"
+                    ? `"${subset.value}"`
+                    : subset.value
+                })`
+              : undefined
+          )
+        )
+      ],
+
+      subsettingCrs: "EPSG:4326",
+      outputCrs: model.linkedWcsParameters.outputCrs
+    };
+
+    return new Result(
+      new URI(model.linkedWcsUrl).query(query).toString(),
+      error
+    );
+  } catch (e) {
+    return Result.error(e);
+  }
+}
+
+async function callUrl(
+  model: ExportWebCoverageServiceMixin.Instance,
+  url: string
+): Promise<{ name: string; file: Blob }> {
+  const now = new Date();
+  const timestamp = sprintf(
+    "%04d-%02d-%02dT%02d:%02d:%02d",
+    now.getFullYear(),
+    now.getMonth() + 1,
+    now.getDate(),
+    now.getHours(),
+    now.getMinutes(),
+    now.getSeconds()
+  );
+
+  const pendingWorkbenchItem = new ResultPendingCatalogItem(
+    `WCS: ${getName(model)} ${timestamp}`,
+    model.terria
+  );
+
+  runInAction(() => {
+    pendingWorkbenchItem.setTrait(
+      CommonStrata.user,
+      "shortReport",
+      i18next.t("models.wcs.asyncPendingDescription", {
+        name: getName(model),
+        timestamp: timestamp
+      })
+    );
+
+    // Create info section from URL query parameters
+    const info = createStratumInstance(InfoSectionTraits, {
+      name: "Inputs",
+      content: `<table class="cesium-infoBox-defaultTable">${Object.entries(
+        new URI(url).query(true)
+      ).reduce<string>(
+        (previousValue, [key, value]) =>
+          `${previousValue}<tr><td style="vertical-align: middle">${key}</td><td>${value}</td></tr>`,
+        ""
+      )}</table>`
+    });
+
+    pendingWorkbenchItem.setTrait(CommonStrata.user, "info", [info]);
+  });
+
+  pendingWorkbenchItem.terria.workbench.add(pendingWorkbenchItem);
+  try {
+    const blob = await loadBlob(proxyCatalogItemUrl(model, url));
+
+    runInAction(() =>
+      pendingWorkbenchItem.terria.workbench.remove(pendingWorkbenchItem)
+    );
+
+    return { name: `${getName(model)} clip.tiff`, file: blob };
+  } catch (error) {
+    if (error instanceof TerriaError) {
+      throw error;
+    }
+
+    // Attempt to get error message out of XML response
+    if (
+      error instanceof RequestErrorEvent &&
+      isDefined(error?.response?.type) &&
+      error.response.type?.indexOf("xml") !== -1
+    ) {
+      try {
+        const xml = new DOMParser().parseFromString(
+          await error.response.text(),
+          "text/xml"
+        );
+
+        if (
+          xml.documentElement.localName === "ServiceExceptionReport" ||
+          xml.documentElement.localName === "ExceptionReport"
+        ) {
+          const message =
+            xml.getElementsByTagName("ServiceException")?.[0]?.innerHTML ??
+            xml.getElementsByTagName("ows:ExceptionText")?.[0]?.innerHTML;
+          if (isDefined(message)) {
+            error = message;
+          }
+        }
+      } catch (xmlParseError) {
+        console.log("Failed to parse WCS response");
+        console.log(xmlParseError);
+      }
+    }
+
+    throw new TerriaError({
+      sender: model,
+      title: i18next.t("models.wcs.exportFailedTitle"),
+      message: i18next.t("models.wcs.exportFailedMessageII", {
+        error
+      })
+    });
+  } finally {
+    runInAction(() =>
+      pendingWorkbenchItem.terria.workbench.remove(pendingWorkbenchItem)
+    );
+  }
+}

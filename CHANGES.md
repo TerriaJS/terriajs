@@ -7,8 +7,9 @@ Change Log
 * Moved `WebMapServiceCatalogItem.GetCapbilitiesStratum` to `lib\Models\Catalog\Ows\WebMapServiceCapabilitiesStratum.ts`
 * Moved `WebMapServiceCatalogItem.DiffStratum` to `DiffableMixin`
 * `callWebCoverageService` now uses version `2.0.0`
+  * All WCS export functionality is now in `ExportWebCoverageServiceMixin`
   * Added `WebCoverageServiceParameterTraits` to `WebMapServiceCatalogItemTraits.linkedWcsParameters`. It includes `outputFormat` and `outputCrs`
-  * Will attempt to use native CRS
+  * Will attempt to use native CRS and format (from `DescribeCoverage`)
   * No longer sets `width` or `height` - so export will now return native resolution
 * [The next improvement]
 
