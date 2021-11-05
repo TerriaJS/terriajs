@@ -202,7 +202,8 @@ function ExportWebCoverageServiceMixin<
 
     async loadWcsMetadata(force?: boolean) {
       const results = await Promise.all([
-        this._wcsCapabilitiesLoader.load(force),
+        // Disable GetCapabilities loader until we need it
+        // this._wcsCapabilitiesLoader.load(force),
         this._wcsDescribeCoverageLoader.load(force)
       ]);
 
@@ -302,7 +303,9 @@ function callWebCoverageService(
       },
       onCleanUp: async () => {
         if (isDefined(rectangle)) {
-          launch(model, rectangle)
+          if (!model.linkedWcsUrl || !model.linkedWcsCoverage) return;
+
+          return makeGetCoverageRequest(model, rectangle)
             .then(resolve)
             .catch(reject);
         } else {
@@ -315,22 +318,6 @@ function callWebCoverageService(
 
     userDrawing.enterDrawMode();
   });
-}
-
-async function launch(
-  wmsCatalogItem: ExportWebCoverageServiceMixin.Instance,
-  bbox: Rectangle
-) {
-  if (!wmsCatalogItem.linkedWcsUrl || !wmsCatalogItem.linkedWcsCoverage) return;
-
-  const url = getCoverageUrl(wmsCatalogItem, bbox).raiseError(
-    wmsCatalogItem.terria,
-    `Error occurred while generating WCS GetCoverage URL`
-  );
-
-  if (url) {
-    return callUrl(wmsCatalogItem, url);
-  }
 }
 
 function getCoverageUrl(
@@ -402,10 +389,11 @@ function getCoverageUrl(
   }
 }
 
-async function callUrl(
+async function makeGetCoverageRequest(
   model: ExportWebCoverageServiceMixin.Instance,
-  url: string
+  bbox: Rectangle
 ): Promise<{ name: string; file: Blob }> {
+  // Create pending workbench item
   const now = new Date();
   const timestamp = sprintf(
     "%04d-%02d-%02dT%02d:%02d:%02d",
@@ -423,6 +411,37 @@ async function callUrl(
   );
 
   runInAction(() => {
+    pendingWorkbenchItem.loadPromise = new Promise(() => {});
+    pendingWorkbenchItem.loadMetadata();
+
+    // Add WCS loading metadata message to shortReport
+    pendingWorkbenchItem.setTrait(
+      CommonStrata.user,
+      "shortReport",
+      i18next.t("models.wcs.asyncResultLoadingMetadata", {
+        name: getName(model),
+        timestamp: timestamp
+      })
+    );
+  });
+
+  pendingWorkbenchItem.terria.workbench.add(pendingWorkbenchItem);
+
+  // Load WCS metadata (DescribeCoverage request)
+  (await model.loadWcsMetadata()).throwIfError();
+
+  // Get WCS URL
+  const url = getCoverageUrl(model, bbox).raiseError(
+    model.terria,
+    `Error occurred while generating WCS GetCoverage URL`
+  );
+
+  if (!url) {
+    throw TerriaError.from(`Failed to generate WCS GetCoverage request URL`);
+  }
+
+  runInAction(() => {
+    // Add WCS "pending" message to shortReport
     pendingWorkbenchItem.setTrait(
       CommonStrata.user,
       "shortReport",
@@ -446,8 +465,6 @@ async function callUrl(
 
     pendingWorkbenchItem.setTrait(CommonStrata.user, "info", [info]);
   });
-
-  pendingWorkbenchItem.terria.workbench.add(pendingWorkbenchItem);
   try {
     const blob = await loadBlob(proxyCatalogItemUrl(model, url));
 
