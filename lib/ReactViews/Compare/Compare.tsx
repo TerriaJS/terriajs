@@ -55,6 +55,10 @@ const Compare: React.FC<PropsType> = observer(props => {
   const [leftItem, setLeftItem] = useState<Comparable | undefined>();
   // The item active in the right panel
   const [rightItem, setRightItem] = useState<Comparable | undefined>();
+  const [
+    showCompareItemsInFrontOfContextItems,
+    setShowCompareItemsInFrontOfContextItems
+  ] = useState(true);
 
   useEffect(
     action(function onMount() {
@@ -191,6 +195,25 @@ const Compare: React.FC<PropsType> = observer(props => {
     [config, contextItems]
   );
 
+  // Maintains the stacking order of left, right and context items.
+  useEffect(
+    function sendContextItemsToFrontOrBack() {
+      if (showCompareItemsInFrontOfContextItems) {
+        leftItem && sendItemToFront(leftItem);
+        rightItem && sendItemToFront(rightItem);
+      } else {
+        leftItem && sendItemToBack(leftItem);
+        rightItem && sendItemToBack(rightItem);
+      }
+    },
+    [
+      showCompareItemsInFrontOfContextItems,
+      leftItem,
+      rightItem,
+      contextItems.length
+    ]
+  );
+
   const toggleContextItem = action(
     (item: MappableMixin.Instance, show: boolean) =>
       show ? showItem(item, ImagerySplitDirection.NONE) : hideItem(item)
@@ -206,7 +229,22 @@ const Compare: React.FC<PropsType> = observer(props => {
 
   const bothPanelsMenuOptions = [
     { text: t("compare.bothPanelsMenu.browse"), onSelect: openCatalogExplorer },
-    { text: t("compare.bothPanelsMenu.hideAll"), onSelect: hideAllContextItems }
+    showCompareItemsInFrontOfContextItems
+      ? {
+          text: t("compare.bothPanelsMenu.sendAllToFront"),
+          onSelect: () => setShowCompareItemsInFrontOfContextItems(false),
+          disabled: contextItems.length === 0
+        }
+      : {
+          text: t("compare.bothPanelsMenu.sendAllToBack"),
+          onSelect: () => setShowCompareItemsInFrontOfContextItems(true),
+          disabled: contextItems.length === 0
+        },
+    {
+      text: t("compare.bothPanelsMenu.hideAll"),
+      onSelect: hideAllContextItems,
+      disabled: contextItems.length === 0
+    }
   ];
 
   return (
@@ -399,6 +437,16 @@ function hideItem(item: BaseModel) {
       ImagerySplitDirection.NONE
     );
   }
+}
+
+function sendItemToFront(item: BaseModel) {
+  const workbench = item.terria.workbench;
+  workbench.moveItemToIndex(item, 0);
+}
+
+function sendItemToBack(item: BaseModel) {
+  const workbench = item.terria.workbench;
+  workbench.moveItemToIndex(item, workbench.items.length - 1);
 }
 
 /**

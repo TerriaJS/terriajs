@@ -65,16 +65,14 @@ const Content = styled.div`
 `;
 
 type PanelMenuProps = {
-  options: { text: string; onSelect: () => void }[];
+  options: { text: string; onSelect: () => void; disabled?: boolean }[];
 };
 
 /**
  * A popup overflow menu for the panel
  */
 export const PanelMenu: React.FC<PanelMenuProps> = ({ options }) => {
-  const [t] = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
-
   const hideMenu = () => setIsOpen(false);
 
   useEffect(
@@ -94,9 +92,9 @@ export const PanelMenu: React.FC<PanelMenuProps> = ({ options }) => {
       </PanelMenuButton>
       {isOpen && (
         <ul>
-          {options.map(({ text, onSelect }) => (
+          {options.map(({ text, onSelect, disabled }) => (
             <li>
-              <PanelMenuItem key={text} onClick={onSelect}>
+              <PanelMenuItem key={text} onClick={onSelect} disabled={disabled}>
                 <Text noWrap medium textLight>
                   {text}
                 </Text>
@@ -120,6 +118,7 @@ const PanelMenuContainer = styled.div`
     padding: 0;
     list-style: none;
     border-radius: 3px;
+    border: 1px solid ${p => p.theme.grey};
     background-color: ${p => p.theme.dark};
   }
 
@@ -140,6 +139,10 @@ const PanelMenuItem = styled.button`
   border: 0;
   border-radius: 2px;
   background-color: ${p => p.theme.dark};
+
+  :disabled > ${Text} {
+    color: ${p => p.theme.textLightDimmed};
+  }
 `;
 
 const PanelMenuButton = styled.button<{ isOpen: boolean }>`

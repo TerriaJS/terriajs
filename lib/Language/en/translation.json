@@ -1587,6 +1587,8 @@
     "bothPanels": "Both panels",
     "bothPanelsMenu": {
       "browse": "Browse map data",
+      "sendAllToFront": "Send all to front",
+      "sendAllToBack": "Send all to back",
       "hideAll": "Hide all"
     },
     "info": "Compare spatial datasets from your workbench side-by-side on the map.",
