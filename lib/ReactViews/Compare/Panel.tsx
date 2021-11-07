@@ -143,6 +143,10 @@ const PanelMenuItem = styled.button`
   :disabled > ${Text} {
     color: ${p => p.theme.textLightDimmed};
   }
+
+  :hover {
+    background-color: ${p => p.theme.colorPrimary};
+  }
 `;
 
 const PanelMenuButton = styled.button<{ isOpen: boolean }>`
