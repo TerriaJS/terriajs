@@ -176,7 +176,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             this.currentTimeAsJulianDate,
             this.activeTableStyle.timeIntervals,
             this.activeTableStyle,
-            this.activeTableStyle.colorMap
+            this.activeTableStyle.colorMap,
+            this.style
           ],
           () => {
             if (this._imageryProvider && this.readyData && this.useMvt) {
@@ -488,7 +489,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         terria: this.terria,
         data: protomapsData,
         // Create paintRules from `stylesWithDefaults` (which applies defaults ontop of StyleTraits)
-        paintRules: [
+        paintRules: filterOutUndefined([
           // Polygon fill
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
@@ -505,40 +506,46 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               );
             }
           },
-          // Polygon stroke
-          {
-            dataLayer: GEOJSON_SOURCE_LAYER_NAME,
-            symbolizer: new LineSymbolizer({
-              color: defaultStyles.polygonStroke.toCssColorString(),
-              width: defaultStyles.polygonStrokeWidth
-            }),
-            minzoom: 0,
-            maxzoom: Infinity,
-            filter: (zoom, feature) => {
-              return (
-                feature?.geomType === GeomType.Polygon &&
-                (!currentTimeRows ||
-                  currentTimeRows.includes(feature?.props["_id_"]))
-              );
-            }
-          },
-          // Line stroke
-          {
-            dataLayer: GEOJSON_SOURCE_LAYER_NAME,
-            symbolizer: new LineSymbolizer({
-              color: getValue(defaultStyles.polylineStroke.toCssColorString()),
-              width: defaultStyles.polylineStrokeWidth
-            }),
-            minzoom: 0,
-            maxzoom: Infinity,
-            filter: (zoom, feature) => {
-              return (
-                feature?.geomType === GeomType.Line &&
-                (!currentTimeRows ||
-                  currentTimeRows.includes(feature?.props["_id_"]))
-              );
-            }
-          },
+          // Polygon stroke (hide if 0)
+          defaultStyles.polygonStrokeWidth !== 0
+            ? {
+                dataLayer: GEOJSON_SOURCE_LAYER_NAME,
+                symbolizer: new LineSymbolizer({
+                  color: defaultStyles.polygonStroke.toCssColorString(),
+                  width: defaultStyles.polygonStrokeWidth
+                }),
+                minzoom: 0,
+                maxzoom: Infinity,
+                filter: (zoom, feature) => {
+                  return (
+                    feature?.geomType === GeomType.Polygon &&
+                    (!currentTimeRows ||
+                      currentTimeRows.includes(feature?.props["_id_"]))
+                  );
+                }
+              }
+            : undefined,
+          // Line stroke (hide if 0)
+          defaultStyles.polylineStrokeWidth !== 0
+            ? {
+                dataLayer: GEOJSON_SOURCE_LAYER_NAME,
+                symbolizer: new LineSymbolizer({
+                  color: getValue(
+                    defaultStyles.polylineStroke.toCssColorString()
+                  ),
+                  width: defaultStyles.polylineStrokeWidth
+                }),
+                minzoom: 0,
+                maxzoom: Infinity,
+                filter: (zoom, feature) => {
+                  return (
+                    feature?.geomType === GeomType.Line &&
+                    (!currentTimeRows ||
+                      currentTimeRows.includes(feature?.props["_id_"]))
+                  );
+                }
+              }
+            : undefined,
           // Point circle
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
@@ -559,7 +566,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               );
             }
           }
-        ],
+        ]),
         labelRules: []
       });
     }
