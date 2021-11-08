@@ -61,18 +61,6 @@
   opacity: 0.3;
 }
 
-.sidePanel {
-  position: relative;
-  font-family: $font-pop;
-  width: $work-bench-width;
-  flex-basis: $work-bench-width;
-  max-width: $work-bench-width;
-  box-sizing: border-box;
-  h1 {
-    margin: 0;
-  }
-}
-
 .map {
   @include transition(left $animation-fast ease-in);
   position: absolute;
@@ -137,19 +125,6 @@
 
 .featureInfoFullScreen {
   left: 0;
-}
-
-.sidePanel {
-  transition: all 0.25s;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  // border-right: 1px solid rgba(255, 255, 255, 0.2);
-  visibility: visible;
-}
-
-.sidePanelHide {
-  display: block;
-  margin-left: 0-$work-bench-width;
-  visibility: hidden;
 }
 
 .showWorkbenchButton {

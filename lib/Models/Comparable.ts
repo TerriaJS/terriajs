@@ -1,4 +1,3 @@
-import { isArrayLike } from "mobx";
 import { isJsonObject } from "../Core/Json";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
@@ -33,6 +32,8 @@ export function isComparableItem(item: any): item is Comparable {
  * Object used to store compare workflow configuration
  */
 export type CompareConfig = {
+  // Activates the compare workflow when true
+  showCompare: boolean;
   // ID of the item to show in the left panel
   leftPanelItemId: string | undefined;
   // ID of the item to show in the right panel
@@ -52,6 +53,8 @@ export function createCompareConfig(json: any = {}): CompareConfig | undefined {
     return undefined;
   }
 
+  const showCompare = json.showCompare === true ? true : false;
+
   const leftPanelItemId =
     typeof json.leftPanelItemId === "string" ? json.leftPanelItemId : undefined;
 
@@ -66,6 +69,7 @@ export function createCompareConfig(json: any = {}): CompareConfig | undefined {
       : undefined;
 
   return {
+    showCompare,
     leftPanelItemId,
     rightPanelItemId,
     isUserTriggered

@@ -18,7 +18,7 @@ const LazyCompare: React.FC<PropsType> = observer(
   ({ viewState }: PropsType) => {
     const terria = viewState.terria;
     const [t] = useTranslation();
-    return terria.compareConfig ? (
+    return terria.compareConfig?.showCompare ? (
       <WorkflowPanel
         viewState={viewState}
         icon={GLYPHS.compare}

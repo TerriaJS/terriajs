@@ -226,6 +226,7 @@ const ViewingControls = observer(
     compareItem() {
       runInAction(() => {
         this.props.viewState.terria.compareConfig = createCompareConfig({
+          showCompare: true,
           leftPanelItemId: this.props.item.uniqueId,
           isUserTriggered: true
         });

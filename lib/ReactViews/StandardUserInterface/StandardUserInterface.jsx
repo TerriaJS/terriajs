@@ -39,8 +39,8 @@ import MapColumn from "./MapColumn";
 import processCustomElements from "./processCustomElements";
 import Styles from "./standard-user-interface.scss";
 import { terriaTheme } from "./StandardTheme";
-import { WorkflowPanelPortalId } from "../../Styled/WorkflowPanel";
-import PortalContainer from "./PortalContainer";
+import SidePanelContainer from "./SidePanelContainer";
+import WorkflowPanelContainer from "./WorkflowPanelContainer";
 
 export const showStoryPrompt = (viewState, terria) => {
   terria.configParameters.showFeaturePrompts &&
@@ -301,49 +301,29 @@ const StandardUserInterface = observer(
                       />
                     </Small>
                     <Medium>
-                      <PortalContainer
-                        viewState={viewState}
-                        id={WorkflowPanelPortalId}
+                      <WorkflowPanelContainer
+                        viewState={this.props.viewState}
+                        show={this.props.terria.showWorkflowPanel}
                       />
+                      <SidePanelContainer
+                        viewState={viewState}
+                        tabIndex={0}
+                        show={
+                          this.props.viewState.isMapFullScreen === false &&
+                          this.props.terria.showWorkflowPanel === false
+                        }
+                      >
+                        <Branding
+                          terria={terria}
+                          viewState={this.props.viewState}
+                          version={this.props.version}
+                        />
+                        <SidePanel
+                          terria={terria}
+                          viewState={this.props.viewState}
+                        />
+                      </SidePanelContainer>
                     </Medium>
-                    {/* Conditionally renders the terria side panel elements. By hiding it
-                        other workflow tools can replace sidepanel with workflow specific
-                        components
-                      */}
-                    {this.props.viewState.showTerriaSidePanel && (
-                      <Medium>
-                        <div
-                          className={classNames(
-                            Styles.sidePanel,
-                            this.props.viewState.topElement === "SidePanel"
-                              ? "top-element"
-                              : "",
-                            {
-                              [Styles.sidePanelHide]: this.props.viewState
-                                .isMapFullScreen
-                            }
-                          )}
-                          tabIndex={0}
-                          onClick={action(() => {
-                            this.props.viewState.topElement = "SidePanel";
-                          })}
-                          // TODO: debounce/batch
-                          onTransitionEnd={() =>
-                            this.props.viewState.triggerResizeEvent()
-                          }
-                        >
-                          <Branding
-                            terria={terria}
-                            viewState={this.props.viewState}
-                            version={this.props.version}
-                          />
-                          <SidePanel
-                            terria={terria}
-                            viewState={this.props.viewState}
-                          />
-                        </div>
-                      </Medium>
-                    )}
                   </If>
                   <Medium>
                     <div

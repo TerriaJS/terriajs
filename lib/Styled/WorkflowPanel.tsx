@@ -1,4 +1,4 @@
-import { runInAction } from "mobx";
+import { runInAction, action } from "mobx";
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import ViewState from "../ReactViewModels/ViewState";
@@ -7,6 +7,7 @@ import Button from "./Button";
 import { IconProps, StyledIcon } from "./Icon";
 import { addTerriaScrollbarStyles } from "./mixins";
 import Text from "./Text";
+import { observer } from "mobx-react";
 
 export const WorkflowPanelPortalId = "worfklow-panel-portal";
 
@@ -18,22 +19,29 @@ type PropsType = {
   closeButtonText: string;
 };
 
-const WorkflowPanel: React.FC<PropsType> = props => {
+const WorkflowPanel: React.FC<PropsType> = observer(props => {
   const viewState = props.viewState;
 
   useEffect(function hideTerriaSidePanelOnMount() {
     runInAction(() => {
-      viewState.showTerriaSidePanel = false;
+      viewState.terria.showWorkflowPanel = true;
     });
     return () =>
       runInAction(() => {
-        viewState.showTerriaSidePanel = true;
+        viewState.terria.showWorkflowPanel = false;
       });
   });
 
   return (
     <Portal viewState={viewState} id={WorkflowPanelPortalId}>
-      <Container>
+      <Container
+        className={
+          viewState.topElement === "WorkflowPanel" ? "top-element" : ""
+        }
+        onClick={action(() => {
+          viewState.topElement = "WorkflowPanel";
+        })}
+      >
         <TitleBar>
           <Icon glyph={props.icon} />
           <Title>{props.title}</Title>
@@ -47,7 +55,7 @@ const WorkflowPanel: React.FC<PropsType> = props => {
       </Container>
     </Portal>
   );
-};
+});
 
 type ErrorBoundaryProps = {
   viewState: ViewState;
@@ -77,6 +85,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
 }
 
 const Container = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   font-family: ${p => p.theme.fontPop}px;
