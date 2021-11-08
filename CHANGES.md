@@ -1,8 +1,14 @@
 Change Log
 ==========
 
-#### next release (8.1.5)
+#### next release (8.1.10)
+* [The next improvement]
 
+#### 8.1.9
+* TSify workbench splitter control and fix broken styling.
+* Fix app crash when opening AR tool.
+
+#### 8.1.8
 * Tsified `SettingPanel`
 * Moved `setViewerMode` function from `Terria` class to `ViewerMode`
 * Refactored checkbox to use children elements for label instead of label
@@ -34,6 +40,7 @@ Change Log
 * Fix app crash when previewing a nested reference in the catalog (eg when viewing an indexed search result where the result is a reference).
 * Added "marker-stroke-width", "polyline-stroke-width", "polygon-stroke-width" to `GeojsonStyleTraits` (Note these are not apart of [simplestyle-spec](https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0) and can only be used with `geojson-vt`)
 * [The next improvement]
+* Ported feaure from v7 to set WMS layers property from the value of `LAYERS`, `layers` or `typeName` from query string of CKAN resource URL.
 
 #### 8.1.4
 
@@ -191,8 +198,8 @@ Change Log
   - `colorPalette` no longer supports a list of CSS colors (eg `rgb(0,0,255)-rgb(0,255,0)-rgb(255,0,0)`). Instead please use `binColors`.
   - Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses`
   - Renamed all mixin instance type definitions to `XMixin.Instance`.
-  - Basemaps are now defined as `baseMaps` object
-    - list of available basemaps is defined in `baseMaps.init`. This list is combined with default base maps so it's possible to override defaults
+  - Basemaps are now defined as `baseMaps` object (see [baseMaps object docs](./doc/customizing/initialization-files.md#basemaps))
+    - list of available basemaps is defined in `baseMaps.items`. This list is combined with default base maps so it's possible to override defaults
     - definition of `initBaseMapId` and `initBaseMapName` are moved to `baseMaps.defaultBaseMapId` and `baseMaps.defaultBaseMapName`
     - `previewBaseMapId` is moved to `baseMaps.previewBaseMapId`
     - implemented `baseMaps.enabledBaseMaps` array of base map ids to define a list of baseMaps available to user
