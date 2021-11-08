@@ -118,6 +118,8 @@ class WebMapServiceCatalogItem
     });
   }
 
+  protected async forceLoadMapItems(): Promise<void> {}
+
   protected async forceLoadMetadata(): Promise<void> {
     if (
       this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName) !==
