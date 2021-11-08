@@ -88,33 +88,6 @@ const Compare: React.FC<PropsType> = observer(props => {
     []
   );
 
-  useEffect(
-    // Reacts to change of leftPanelItemId and rightPanelItemId by
-    // showing/hiding them and updating their split direction.
-    function setLeftAndRightItems() {
-      const leftItem =
-        config.leftPanelItemId !== undefined
-          ? findComparableItemById(terria.workbench, config.leftPanelItemId)
-          : undefined;
-      if (leftItem) showItem(leftItem, ImagerySplitDirection.LEFT);
-      setLeftItem(leftItem);
-
-      const rightItem =
-        config.rightPanelItemId !== undefined
-          ? findComparableItemById(terria.workbench, config.rightPanelItemId)
-          : undefined;
-      if (rightItem) showItem(rightItem, ImagerySplitDirection.RIGHT);
-      setRightItem(rightItem);
-
-      return function cleanup() {
-        // remove any clones we have added
-        if (leftItem && isCloneItem(leftItem)) removeItem(leftItem);
-        if (rightItem && isCloneItem(rightItem)) removeItem(rightItem);
-      };
-    },
-    [config.leftPanelItemId, config.rightPanelItemId]
-  );
-
   // Generate a list of comparable items to pass to the dataset selector (excluding the clones)
   const comparableItems: { id: string; name: string }[] = filterOutUndefined(
     terria.workbench.items
@@ -125,6 +98,43 @@ const Compare: React.FC<PropsType> = observer(props => {
           ? { id: item.uniqueId, name: item.name ?? item.uniqueId }
           : undefined
       )
+  );
+
+  useEffect(
+    // Reacts to change of leftPanelItemId and rightPanelItemId by
+    // showing/hiding them and updating their split direction.
+    action(function setLeftAndRightItems() {
+      const leftItem =
+        config.leftPanelItemId !== undefined
+          ? findComparableItemById(terria.workbench, config.leftPanelItemId)
+          : undefined;
+      if (leftItem) {
+        showItem(leftItem, ImagerySplitDirection.LEFT);
+      } else {
+        // unsetting because we couldn't find an item with this id
+        config.leftPanelItemId = undefined;
+      }
+      setLeftItem(leftItem);
+
+      const rightItem =
+        config.rightPanelItemId !== undefined
+          ? findComparableItemById(terria.workbench, config.rightPanelItemId)
+          : undefined;
+      if (rightItem) {
+        showItem(rightItem, ImagerySplitDirection.RIGHT);
+      } else {
+        // unsetting because we couldn't find an item with this id
+        config.rightPanelItemId = undefined;
+      }
+      setRightItem(rightItem);
+
+      return function cleanup() {
+        // remove any clones we have added
+        if (leftItem && isCloneItem(leftItem)) removeItem(leftItem);
+        if (rightItem && isCloneItem(rightItem)) removeItem(rightItem);
+      };
+    }),
+    [config.leftPanelItemId, config.rightPanelItemId, comparableItems.length]
   );
 
   // Generate a list of items that can be shown in both panels.
