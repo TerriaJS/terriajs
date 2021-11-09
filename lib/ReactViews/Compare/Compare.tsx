@@ -31,6 +31,7 @@ import ItemList from "./ItemList";
 import ItemSelector from "./ItemSelector";
 import LocationDateFilter from "./LocationDateFilter";
 import { Panel, PanelMenu } from "./Panel";
+import { ExplorerWindowElementName } from "../ExplorerWindow/ExplorerWindow";
 
 export type PropsType = {
   viewState: ViewState;
@@ -229,9 +230,18 @@ const Compare: React.FC<PropsType> = observer(props => {
       show ? showItem(item, ImagerySplitDirection.NONE) : hideItem(item)
   );
 
-  const openCatalogExplorer = action(() => {
-    viewState.explorerPanelIsVisible = true;
-  });
+  const openCatalogExplorer = action(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      viewState.explorerPanelIsVisible = true;
+      viewState.setTopElement(ExplorerWindowElementName);
+      // Call to stopPropagation is required to prevent the parent
+      // WorkflowPanel from capturing the click and setting itself as the top
+      // element. If that happens the ExplorerWindow modal will no longer be
+      // the top element and will not hide itself when clicking the workflow
+      // panel.
+      event.stopPropagation();
+    }
+  );
 
   const hideAllContextItems = () => {
     contextItems.forEach(hideItem);

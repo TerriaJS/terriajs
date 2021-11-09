@@ -14,6 +14,7 @@ import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
 import { TourPortalDisplayName } from "../Tour/TourPortal";
 import FadeIn from "../Transitions/FadeIn/FadeIn";
 import SlideUpFadeIn from "../Transitions/SlideUpFadeIn/SlideUpFadeIn";
+import { ExplorerWindowElementName } from "../ExplorerWindow/ExplorerWindow";
 
 export const WELCOME_MESSAGE_NAME = "welcomeMessage";
 export const LOCAL_PROPERTY_KEY = `${WELCOME_MESSAGE_NAME}Prompted`;
@@ -128,7 +129,7 @@ export const WelcomeMessagePure = props => {
           if (shouldExploreData) {
             setShouldExploreData(false);
             viewState.openAddData();
-            viewState.setTopElement("AddData");
+            viewState.setTopElement(ExplorerWindowElementName);
           }
           if (shouldOpenHelp) {
             setShouldOpenHelp(false);

@@ -65,7 +65,11 @@ const Content = styled.div`
 `;
 
 type PanelMenuProps = {
-  options: { text: string; onSelect: () => void; disabled?: boolean }[];
+  options: {
+    text: string;
+    onSelect: React.MouseEventHandler<HTMLButtonElement>;
+    disabled?: boolean;
+  }[];
 };
 
 /**
@@ -85,6 +89,17 @@ export const PanelMenu: React.FC<PanelMenuProps> = ({ options }) => {
     [isOpen]
   );
 
+  const handleClick = (
+    onSelect: React.MouseEventHandler<HTMLButtonElement>,
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    // If onSelect decides to stop event propogation,
+    // clickAnywhereToCloseMenu() will not work. So we close the menu before
+    // calling onSelect.
+    setIsOpen(false);
+    onSelect(event);
+  };
+
   return (
     <PanelMenuContainer>
       <PanelMenuButton isOpen={isOpen} onClick={() => setIsOpen(true)}>
@@ -93,8 +108,11 @@ export const PanelMenu: React.FC<PanelMenuProps> = ({ options }) => {
       {isOpen && (
         <ul>
           {options.map(({ text, onSelect, disabled }) => (
-            <li>
-              <PanelMenuItem key={text} onClick={onSelect} disabled={disabled}>
+            <li key={text}>
+              <PanelMenuItem
+                onClick={e => handleClick(onSelect, e)}
+                disabled={disabled}
+              >
                 <Text noWrap medium textLight>
                   {text}
                 </Text>
