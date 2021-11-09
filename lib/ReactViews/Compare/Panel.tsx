@@ -34,6 +34,7 @@ const Wrapper = styled.div`
   background-color: ${p => p.theme.darkWithOverlay};
   margin: 10px 5px;
   border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
 `;
 
 const TitleBar = styled.div`

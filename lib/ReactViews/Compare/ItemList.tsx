@@ -86,6 +86,9 @@ const UList = styled.ul`
     border-bottom: 1px solid ${p => p.theme.darkLighter};
     padding: 0.2em 0.4em;
   }
+  > li:last-child {
+    border-bottom: 0px;
+  }
 `;
 
 const ItemTitle = styled.div`

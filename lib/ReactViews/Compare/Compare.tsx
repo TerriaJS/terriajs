@@ -269,7 +269,7 @@ const Compare: React.FC<PropsType> = observer(props => {
 
   return (
     <>
-      <div>
+      <Container>
         <Panel>
           <InfoText>{t("compare.info")}</InfoText>
         </Panel>
@@ -314,7 +314,7 @@ const Compare: React.FC<PropsType> = observer(props => {
             viewState={viewState}
           />
         </Panel>
-      </div>
+      </Container>
       <BottomDockFirstPortal>
         <MapOverlay>
           <Left>
@@ -333,6 +333,10 @@ const Compare: React.FC<PropsType> = observer(props => {
     </>
   );
 });
+
+const Container = styled.div`
+  padding-bottom: 4em;
+`;
 
 const Left = styled.div``;
 const Right = styled.div``;
