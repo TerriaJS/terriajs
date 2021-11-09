@@ -786,7 +786,9 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     return createStratumInstance(WebCoverageServiceParameterTraits, {
       outputCrs,
       subsets,
-      duplicateSubsetValues
+      duplicateSubsetValues,
+      // Add styles parameter for OpenDataCube WCS
+      additionalParameters: [{ key: "styles", value: this.catalogItem.styles }]
     });
   }
 }

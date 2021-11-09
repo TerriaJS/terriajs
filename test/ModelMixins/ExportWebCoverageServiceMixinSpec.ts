@@ -79,5 +79,35 @@ describe("ExportWebCoverageServiceMixin", function() {
     ).toBe(
       "https://some.ows.service/wcs?service=WCS&request=GetCoverage&version=2.0.0&coverageId=some_layer&format=image%2Fgeotiff&subset=Long%28115.17328262329103%2C115.21156311035162%29&subset=Lat%28-33.66078176164941%2C-33.633201589849314%29&subset=time%28%222018-01-01%22%29&subsettingCrs=EPSG%3A4326&outputCrs=EPSG%3A3577"
     );
+
+    // Set some custom parameters
+
+    wms.linkedWcsParameters.setTrait("definition", "additionalParameters", [
+      { key: "someKey", value: "someValue" }
+    ]);
+    wms.linkedWcsParameters.setTrait("definition", "outputCrs", "someCrs");
+    wms.linkedWcsParameters.setTrait(
+      "definition",
+      "outputFormat",
+      "someFormat"
+    );
+    wms.linkedWcsParameters.setTrait("definition", "subsets", [
+      { key: "someSubsetKey", value: "someSubsetValue" }
+    ]);
+
+    expect(
+      wms
+        .getCoverageUrl(
+          new Rectangle(
+            2.0101529921064003,
+            -0.5874914705360393,
+            2.0108211126448747,
+            -0.587010105729862
+          )
+        )
+        .ignoreError()
+    ).toBe(
+      "https://some.ows.service/wcs?someKey=someValue&service=WCS&request=GetCoverage&version=2.0.0&coverageId=some_layer&format=someFormat&subset=Long%28115.17328262329103%2C115.21156311035162%29&subset=Lat%28-33.66078176164941%2C-33.633201589849314%29&subset=time%28%222018-01-01%22%29&subset=someSubsetKey%28%22someSubsetValue%22%29&subsettingCrs=EPSG%3A4326&outputCrs=someCrs"
+    );
   });
 });

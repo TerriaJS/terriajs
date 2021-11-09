@@ -53,6 +53,16 @@ export class WebCoverageServiceParameterTraits extends ModelTraits {
       "If multiple values have been detected for a particular subset ID (key), then we can only use the first one as WCS only supports one value per subset. Each element in this array represents the **actual** value used for a subset which has multiple values."
   })
   duplicateSubsetValues?: KeyValueTraits[];
+
+  @objectArrayTrait({
+    type: KeyValueTraits,
+    idProperty: "index",
+    merge: false,
+    name: "Additional key-value parameters to add as URL query parameters",
+    description:
+      "Each key-value will be added to URL like so - `someurl.com?key=value`."
+  })
+  additionalParameters?: KeyValueTraits[];
 }
 
 export default class ExportWebCoverageServiceTraits extends mixTraits(

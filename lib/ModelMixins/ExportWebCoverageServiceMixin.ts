@@ -45,6 +45,8 @@ type Coverage = {
  * - available coverages
  * - available CRS
  * - available file formats
+ *
+ * Note: not currently used
  */
 class WebCoverageServiceCapabilitiesStratum extends LoadableStratum(
   ExportWebCoverageServiceTraits
@@ -306,8 +308,19 @@ function ExportWebCoverageServiceMixin<
         }
 
         // Make query parameter object
+        // Start by adding additionalParameters
 
-        const query = {
+        const query = (
+          this.linkedWcsParameters.additionalParameters ?? []
+        ).reduce<{ [key: string]: string | undefined }>((q, current) => {
+          if (typeof current.key === "string") {
+            q[current.key] = current.value;
+          }
+          return q;
+        }, {});
+
+        // Add other query paraemters
+        Object.assign(query, {
           service: "WCS",
           request: "GetCoverage",
           version: "2.0.0",
@@ -337,7 +350,7 @@ function ExportWebCoverageServiceMixin<
 
           subsettingCrs: "EPSG:4326",
           outputCrs: this.linkedWcsParameters.outputCrs
-        };
+        });
 
         return new Result(
           new URI(this.linkedWcsUrl).query(query).toString(),
