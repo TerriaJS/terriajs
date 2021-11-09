@@ -107,7 +107,7 @@ describe("ExportWebCoverageServiceMixin", function() {
         )
         .ignoreError()
     ).toBe(
-      "https://some.ows.service/wcs?someKey=someValue&service=WCS&request=GetCoverage&version=2.0.0&coverageId=some_layer&format=someFormat&subset=Long%28115.17328262329103%2C115.21156311035162%29&subset=Lat%28-33.66078176164941%2C-33.633201589849314%29&subset=time%28%222018-01-01%22%29&subset=someSubsetKey%28%22someSubsetValue%22%29&subsettingCrs=EPSG%3A4326&outputCrs=someCrs"
+      "https://some.ows.service/wcs?service=WCS&request=GetCoverage&version=2.0.0&coverageId=some_layer&format=someFormat&subset=Long%28115.17328262329103%2C115.21156311035162%29&subset=Lat%28-33.66078176164941%2C-33.633201589849314%29&subset=time%28%222018-01-01%22%29&subset=someSubsetKey%28%22someSubsetValue%22%29&subsettingCrs=EPSG%3A4326&outputCrs=someCrs&someKey=someValue"
     );
   });
 });
