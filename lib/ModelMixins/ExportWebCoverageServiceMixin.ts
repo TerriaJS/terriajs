@@ -128,10 +128,7 @@ class WebCoverageServiceDescribeCoverageStratum extends LoadableStratum(
 
     const capabilitiesXml = await loadXML(url);
     const json = xml2json(capabilitiesXml);
-    if (
-      json.CoverageDescription?.CoverageId?.toLowerCase() !==
-      catalogItem.linkedWcsCoverage.toLowerCase()
-    ) {
+    if (typeof json.CoverageDescription?.CoverageId !== "string") {
       throw networkRequestError({
         title: "Invalid DescribeCoverage",
         message:
@@ -239,13 +236,257 @@ function ExportWebCoverageServiceMixin<
       );
     }
 
+    // ExportableMixin overrides
     @computed
     get _canExportData() {
       return isDefined(this.linkedWcsCoverage) && isDefined(this.linkedWcsUrl);
     }
 
-    _exportData() {
-      return callWebCoverageService(this);
+    _exportData(): Promise<undefined | { name: string; file: Blob }> {
+      return new Promise((resolve, reject) => {
+        const terria = this.terria;
+        runInAction(() => (terria.pickedFeatures = undefined));
+
+        let rectangle: Rectangle | undefined;
+
+        const userDrawing = new UserDrawing({
+          terria: this.terria,
+          messageHeader: "Click two points to draw a retangle extent.",
+          buttonText: "Download Extent",
+          onPointClicked: () => {
+            if (userDrawing.pointEntities.entities.values.length >= 2) {
+              rectangle = userDrawing?.otherEntities?.entities
+                ?.getById("rectangle")
+                ?.rectangle?.coordinates?.getValue(
+                  this.terria.timelineClock.currentTime
+                );
+            }
+          },
+          onCleanUp: async () => {
+            if (isDefined(rectangle)) {
+              if (!this.linkedWcsUrl || !this.linkedWcsCoverage) return;
+
+              return this.downloadCoverage(rectangle)
+                .then(resolve)
+                .catch(reject);
+            } else {
+              reject("Invalid drawn extent.");
+            }
+          },
+          allowPolygon: false,
+          drawRectangle: true
+        });
+
+        userDrawing.enterDrawMode();
+      });
+    }
+
+    /** Generate WCS GetCoverage URL */
+    getCoverageUrl(bbox: Rectangle): Result<string | undefined> {
+      try {
+        let error: TerriaError | undefined = undefined;
+
+        if (
+          this.linkedWcsParameters.duplicateSubsetValues &&
+          this.linkedWcsParameters.duplicateSubsetValues.length > 0
+        ) {
+          let message = `WebCoverageService (WCS) only supports one value per dimension.\n\n  `;
+
+          // Add message for each duplicate subset
+          message += this.linkedWcsParameters.duplicateSubsetValues.map(
+            subset =>
+              `- Multiple dimension values have been set for \`${subset.key}\`. WCS GetCoverage request will use the first value (\`${subset.key} = "${subset.value}"\`).`
+          );
+
+          error = new TerriaError({
+            title: "Warning: export may not reflect displayed data",
+            message,
+            importance: 1
+          });
+        }
+
+        // Make query parameter object
+
+        const query = {
+          service: "WCS",
+          request: "GetCoverage",
+          version: "2.0.0",
+          coverageId: this.linkedWcsCoverage,
+          format: this.linkedWcsParameters.outputFormat,
+
+          // Add subsets for bbox, time and dimensions
+          subset: [
+            `Long(${CesiumMath.toDegrees(bbox.west)},${CesiumMath.toDegrees(
+              bbox.east
+            )})`,
+            `Lat(${CesiumMath.toDegrees(bbox.south)},${CesiumMath.toDegrees(
+              bbox.north
+            )})`,
+            ...filterOutUndefined(
+              (this.linkedWcsParameters.subsets ?? []).map(subset =>
+                subset.key && subset.value
+                  ? `${subset.key}(${
+                      typeof subset.value === "string"
+                        ? `"${subset.value}"`
+                        : subset.value
+                    })`
+                  : undefined
+              )
+            )
+          ],
+
+          subsettingCrs: "EPSG:4326",
+          outputCrs: this.linkedWcsParameters.outputCrs
+        };
+
+        return new Result(
+          new URI(this.linkedWcsUrl).query(query).toString(),
+          error
+        );
+      } catch (e) {
+        return Result.error(e);
+      }
+    }
+
+    /** This function downloads WCS coverage for a given bbox (in radians)
+     * It will also create a "pendingWorkbenchItem" with loading indicator and short description.
+     */
+    async downloadCoverage(
+      bbox: Rectangle
+    ): Promise<{ name: string; file: Blob }> {
+      // Create pending workbench item
+      const now = new Date();
+      const timestamp = sprintf(
+        "%04d-%02d-%02dT%02d:%02d:%02d",
+        now.getFullYear(),
+        now.getMonth() + 1,
+        now.getDate(),
+        now.getHours(),
+        now.getMinutes(),
+        now.getSeconds()
+      );
+
+      const pendingWorkbenchItem = new ResultPendingCatalogItem(
+        `WCS: ${getName(this)} ${timestamp}`,
+        this.terria
+      );
+
+      runInAction(() => {
+        pendingWorkbenchItem.loadPromise = new Promise(() => {});
+        pendingWorkbenchItem.loadMetadata();
+
+        // Add WCS loading metadata message to shortReport
+        pendingWorkbenchItem.setTrait(
+          CommonStrata.user,
+          "shortReport",
+          i18next.t("models.wcs.asyncResultLoadingMetadata", {
+            name: getName(this),
+            timestamp: timestamp
+          })
+        );
+      });
+
+      pendingWorkbenchItem.terria.workbench.add(pendingWorkbenchItem);
+
+      // Load WCS metadata (DescribeCoverage request)
+      const metdataError = (await this.loadWcsMetadata()).error;
+
+      if (metdataError) {
+        pendingWorkbenchItem.terria.workbench.remove(pendingWorkbenchItem);
+        throw metdataError;
+      }
+
+      // Get WCS URL
+      const url = this.getCoverageUrl(bbox).raiseError(
+        this.terria,
+        `Error occurred while generating WCS GetCoverage URL`
+      );
+
+      if (!url) {
+        throw TerriaError.from(
+          `Failed to generate WCS GetCoverage request URL`
+        );
+      }
+
+      runInAction(() => {
+        // Add WCS "pending" message to shortReport
+        pendingWorkbenchItem.setTrait(
+          CommonStrata.user,
+          "shortReport",
+          i18next.t("models.wcs.asyncPendingDescription", {
+            name: getName(this),
+            timestamp: timestamp
+          })
+        );
+
+        // Create info section from URL query parameters
+        const info = createStratumInstance(InfoSectionTraits, {
+          name: "Inputs",
+          content: `<table class="cesium-infoBox-defaultTable">${Object.entries(
+            new URI(url).query(true)
+          ).reduce<string>(
+            (previousValue, [key, value]) =>
+              `${previousValue}<tr><td style="vertical-align: middle">${key}</td><td>${value}</td></tr>`,
+            ""
+          )}</table>`
+        });
+
+        pendingWorkbenchItem.setTrait(CommonStrata.user, "info", [info]);
+      });
+      try {
+        const blob = await loadBlob(proxyCatalogItemUrl(this, url));
+
+        runInAction(() =>
+          pendingWorkbenchItem.terria.workbench.remove(pendingWorkbenchItem)
+        );
+
+        return { name: `${getName(this)} clip.tiff`, file: blob };
+      } catch (error) {
+        if (error instanceof TerriaError) {
+          throw error;
+        }
+
+        // Attempt to get error message out of XML response
+        if (
+          error instanceof RequestErrorEvent &&
+          isDefined(error?.response?.type) &&
+          error.response.type?.indexOf("xml") !== -1
+        ) {
+          try {
+            const xml = new DOMParser().parseFromString(
+              await error.response.text(),
+              "text/xml"
+            );
+
+            if (
+              xml.documentElement.localName === "ServiceExceptionReport" ||
+              xml.documentElement.localName === "ExceptionReport"
+            ) {
+              const message =
+                xml.getElementsByTagName("ServiceException")?.[0]?.innerHTML ??
+                xml.getElementsByTagName("ows:ExceptionText")?.[0]?.innerHTML;
+              if (isDefined(message)) {
+                error = message;
+              }
+            }
+          } catch (xmlParseError) {
+            console.log("Failed to parse WCS response");
+            console.log(xmlParseError);
+          }
+        }
+
+        throw new TerriaError({
+          sender: this,
+          title: i18next.t("models.wcs.exportFailedTitle"),
+          message: i18next.t("models.wcs.exportFailedMessageII", {
+            error
+          })
+        });
+      } finally {
+        runInAction(() =>
+          pendingWorkbenchItem.terria.workbench.remove(pendingWorkbenchItem)
+        );
+      }
     }
 
     dispose() {
@@ -278,245 +519,3 @@ namespace ExportWebCoverageServiceMixin {
 }
 
 export default ExportWebCoverageServiceMixin;
-
-function callWebCoverageService(
-  model: ExportWebCoverageServiceMixin.Instance
-): Promise<undefined | { name: string; file: Blob }> {
-  return new Promise((resolve, reject) => {
-    const terria = model.terria;
-    runInAction(() => (terria.pickedFeatures = undefined));
-
-    let rectangle: Rectangle | undefined;
-
-    const userDrawing = new UserDrawing({
-      terria: model.terria,
-      messageHeader: "Click two points to draw a retangle extent.",
-      buttonText: "Download Extent",
-      onPointClicked: () => {
-        if (userDrawing.pointEntities.entities.values.length >= 2) {
-          rectangle = userDrawing?.otherEntities?.entities
-            ?.getById("rectangle")
-            ?.rectangle?.coordinates?.getValue(
-              model.terria.timelineClock.currentTime
-            );
-        }
-      },
-      onCleanUp: async () => {
-        if (isDefined(rectangle)) {
-          if (!model.linkedWcsUrl || !model.linkedWcsCoverage) return;
-
-          return makeGetCoverageRequest(model, rectangle)
-            .then(resolve)
-            .catch(reject);
-        } else {
-          reject("Invalid drawn extent.");
-        }
-      },
-      allowPolygon: false,
-      drawRectangle: true
-    });
-
-    userDrawing.enterDrawMode();
-  });
-}
-
-function getCoverageUrl(
-  model: ExportWebCoverageServiceMixin.Instance,
-  bbox: Rectangle
-): Result<string | undefined> {
-  try {
-    let error: TerriaError | undefined = undefined;
-
-    if (
-      model.linkedWcsParameters.duplicateSubsetValues &&
-      model.linkedWcsParameters.duplicateSubsetValues.length > 0
-    ) {
-      let message = `WebCoverageService (WCS) only supports one value per dimension.\n\n  `;
-
-      // Add message for each duplicate subset
-      message += model.linkedWcsParameters.duplicateSubsetValues.map(
-        subset =>
-          `- Multiple dimension values have been set for \`${subset.key}\`. WCS GetCoverage request will use the first value (\`${subset.key} = "${subset.value}"\`).`
-      );
-
-      error = new TerriaError({
-        title: "Warning: export may not reflect displayed data",
-        message,
-        importance: 1
-      });
-    }
-
-    // Make query parameter object
-
-    const query = {
-      service: "WCS",
-      request: "GetCoverage",
-      version: "2.0.0",
-      coverageId: model.linkedWcsCoverage,
-      format: model.linkedWcsParameters.outputFormat,
-
-      // Add subsets for bbox, time and dimensions
-      subset: [
-        `Long(${CesiumMath.toDegrees(bbox.west)},${CesiumMath.toDegrees(
-          bbox.east
-        )})`,
-        `Lat(${CesiumMath.toDegrees(bbox.south)},${CesiumMath.toDegrees(
-          bbox.north
-        )})`,
-        ...filterOutUndefined(
-          (model.linkedWcsParameters.subsets ?? []).map(subset =>
-            subset.key && subset.value
-              ? `${subset.key}(${
-                  typeof subset.value === "string"
-                    ? `"${subset.value}"`
-                    : subset.value
-                })`
-              : undefined
-          )
-        )
-      ],
-
-      subsettingCrs: "EPSG:4326",
-      outputCrs: model.linkedWcsParameters.outputCrs
-    };
-
-    return new Result(
-      new URI(model.linkedWcsUrl).query(query).toString(),
-      error
-    );
-  } catch (e) {
-    return Result.error(e);
-  }
-}
-
-async function makeGetCoverageRequest(
-  model: ExportWebCoverageServiceMixin.Instance,
-  bbox: Rectangle
-): Promise<{ name: string; file: Blob }> {
-  // Create pending workbench item
-  const now = new Date();
-  const timestamp = sprintf(
-    "%04d-%02d-%02dT%02d:%02d:%02d",
-    now.getFullYear(),
-    now.getMonth() + 1,
-    now.getDate(),
-    now.getHours(),
-    now.getMinutes(),
-    now.getSeconds()
-  );
-
-  const pendingWorkbenchItem = new ResultPendingCatalogItem(
-    `WCS: ${getName(model)} ${timestamp}`,
-    model.terria
-  );
-
-  runInAction(() => {
-    pendingWorkbenchItem.loadPromise = new Promise(() => {});
-    pendingWorkbenchItem.loadMetadata();
-
-    // Add WCS loading metadata message to shortReport
-    pendingWorkbenchItem.setTrait(
-      CommonStrata.user,
-      "shortReport",
-      i18next.t("models.wcs.asyncResultLoadingMetadata", {
-        name: getName(model),
-        timestamp: timestamp
-      })
-    );
-  });
-
-  pendingWorkbenchItem.terria.workbench.add(pendingWorkbenchItem);
-
-  // Load WCS metadata (DescribeCoverage request)
-  (await model.loadWcsMetadata()).throwIfError();
-
-  // Get WCS URL
-  const url = getCoverageUrl(model, bbox).raiseError(
-    model.terria,
-    `Error occurred while generating WCS GetCoverage URL`
-  );
-
-  if (!url) {
-    throw TerriaError.from(`Failed to generate WCS GetCoverage request URL`);
-  }
-
-  runInAction(() => {
-    // Add WCS "pending" message to shortReport
-    pendingWorkbenchItem.setTrait(
-      CommonStrata.user,
-      "shortReport",
-      i18next.t("models.wcs.asyncPendingDescription", {
-        name: getName(model),
-        timestamp: timestamp
-      })
-    );
-
-    // Create info section from URL query parameters
-    const info = createStratumInstance(InfoSectionTraits, {
-      name: "Inputs",
-      content: `<table class="cesium-infoBox-defaultTable">${Object.entries(
-        new URI(url).query(true)
-      ).reduce<string>(
-        (previousValue, [key, value]) =>
-          `${previousValue}<tr><td style="vertical-align: middle">${key}</td><td>${value}</td></tr>`,
-        ""
-      )}</table>`
-    });
-
-    pendingWorkbenchItem.setTrait(CommonStrata.user, "info", [info]);
-  });
-  try {
-    const blob = await loadBlob(proxyCatalogItemUrl(model, url));
-
-    runInAction(() =>
-      pendingWorkbenchItem.terria.workbench.remove(pendingWorkbenchItem)
-    );
-
-    return { name: `${getName(model)} clip.tiff`, file: blob };
-  } catch (error) {
-    if (error instanceof TerriaError) {
-      throw error;
-    }
-
-    // Attempt to get error message out of XML response
-    if (
-      error instanceof RequestErrorEvent &&
-      isDefined(error?.response?.type) &&
-      error.response.type?.indexOf("xml") !== -1
-    ) {
-      try {
-        const xml = new DOMParser().parseFromString(
-          await error.response.text(),
-          "text/xml"
-        );
-
-        if (
-          xml.documentElement.localName === "ServiceExceptionReport" ||
-          xml.documentElement.localName === "ExceptionReport"
-        ) {
-          const message =
-            xml.getElementsByTagName("ServiceException")?.[0]?.innerHTML ??
-            xml.getElementsByTagName("ows:ExceptionText")?.[0]?.innerHTML;
-          if (isDefined(message)) {
-            error = message;
-          }
-        }
-      } catch (xmlParseError) {
-        console.log("Failed to parse WCS response");
-        console.log(xmlParseError);
-      }
-    }
-
-    throw new TerriaError({
-      sender: model,
-      title: i18next.t("models.wcs.exportFailedTitle"),
-      message: i18next.t("models.wcs.exportFailedMessageII", {
-        error
-      })
-    });
-  } finally {
-    runInAction(() =>
-      pendingWorkbenchItem.terria.workbench.remove(pendingWorkbenchItem)
-    );
-  }
-}
