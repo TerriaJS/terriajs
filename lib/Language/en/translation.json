@@ -1584,8 +1584,11 @@
     "done": "Done",
     "leftPanel": "Left panel",
     "rightPanel": "Right panel",
-    "bothPanels": "Both panels",
-    "bothPanelsMenu": {
+    "entireMap": {
+      "title": "Entire map",
+      "emptyText": "Add new data to show across the entire map via the dotted menu above."
+    },
+    "entireMapMenu": {
       "browse": "Browse map data",
       "sendAllToFront": "Send all to front",
       "sendAllToBack": "Send all to back",

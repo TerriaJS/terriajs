@@ -247,21 +247,21 @@ const Compare: React.FC<PropsType> = observer(props => {
     contextItems.forEach(hideItem);
   };
 
-  const bothPanelsMenuOptions = [
-    { text: t("compare.bothPanelsMenu.browse"), onSelect: openCatalogExplorer },
+  const entireMapMenuOptions = [
+    { text: t("compare.entireMapMenu.browse"), onSelect: openCatalogExplorer },
     showCompareItemsInFrontOfContextItems
       ? {
-          text: t("compare.bothPanelsMenu.sendAllToFront"),
+          text: t("compare.entireMapMenu.sendAllToFront"),
           onSelect: () => setShowCompareItemsInFrontOfContextItems(false),
           disabled: contextItems.length === 0
         }
       : {
-          text: t("compare.bothPanelsMenu.sendAllToBack"),
+          text: t("compare.entireMapMenu.sendAllToBack"),
           onSelect: () => setShowCompareItemsInFrontOfContextItems(true),
           disabled: contextItems.length === 0
         },
     {
-      text: t("compare.bothPanelsMenu.hideAll"),
+      text: t("compare.entireMapMenu.hideAll"),
       onSelect: hideAllContextItems,
       disabled: contextItems.length === 0
     }
@@ -305,14 +305,19 @@ const Compare: React.FC<PropsType> = observer(props => {
         </Panel>
         <Panel
           icon={GLYPHS.compareBothPanels}
-          title={t("compare.bothPanels")}
-          menuComponent={<PanelMenu options={bothPanelsMenuOptions} />}
+          title={t("compare.entireMap.title")}
+          menuComponent={<PanelMenu options={entireMapMenuOptions} />}
         >
-          <ItemList
-            items={contextItems}
-            onChangeSelection={toggleContextItem}
-            viewState={viewState}
-          />
+          {contextItems.length === 0 && (
+            <EmptyText>{t("compare.entireMap.emptyText")}</EmptyText>
+          )}
+          {contextItems.length > 0 && (
+            <ItemList
+              items={contextItems}
+              onChangeSelection={toggleContextItem}
+              viewState={viewState}
+            />
+          )}
         </Panel>
       </Container>
       <BottomDockFirstPortal>
@@ -382,6 +387,10 @@ const DatasetLabel = styled(Text).attrs({ medium: true })`
 
 const PanelBody = styled.div`
   padding: 0.4em;
+`;
+
+const EmptyText = styled(Text).attrs({ medium: true })`
+  padding: 10px;
 `;
 
 /**
