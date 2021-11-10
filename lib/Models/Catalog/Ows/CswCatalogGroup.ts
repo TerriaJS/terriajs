@@ -306,10 +306,15 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
         typeof json?.SearchResults?.nextRecord === "string"
           ? parseInt(json?.SearchResults?.nextRecord ?? "0")
           : json?.SearchResults?.nextRecord;
+
+      const numberOfRecordsMatched =
+        typeof json?.SearchResults?.numberOfRecordsMatched === "string"
+          ? parseInt(json?.SearchResults?.numberOfRecordsMatched ?? "0")
+          : json?.SearchResults?.numberOfRecordsMatched;
       if (
         !isDefined(nextRecord) ||
         nextRecord === 0 ||
-        nextRecord >= json?.SearchResults?.numberOfRecordsMatched
+        nextRecord >= numberOfRecordsMatched
       ) {
         paging = false;
       } else {
