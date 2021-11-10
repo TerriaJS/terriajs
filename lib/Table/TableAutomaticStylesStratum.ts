@@ -309,19 +309,17 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
           ]
         : [];
 
-    const outlierBin =
-      activeStyle.tableColorMap.zScoreFilterValues &&
-      activeStyle.colorTraits.zScoreFilterEnabled
-        ? [
-            createStratumInstance(LegendItemTraits, {
-              color: activeStyle.tableColorMap.outlierColor.toCssColorString(),
-              addSpacingAbove: true,
-              title:
-                activeStyle.colorTraits.outlierLabel ||
-                i18next.t("models.tableData.legendZFilterLabel")
-            })
-          ]
-        : [];
+    const outlierBin = activeStyle.tableColorMap.outlierColor
+      ? [
+          createStratumInstance(LegendItemTraits, {
+            color: activeStyle.tableColorMap.outlierColor.toCssColorString(),
+            addSpacingAbove: true,
+            title:
+              activeStyle.colorTraits.outlierLabel ||
+              i18next.t("models.tableData.legendZFilterLabel")
+          })
+        ]
+      : [];
 
     return new Array(7)
       .fill(0)
