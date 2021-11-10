@@ -2,6 +2,7 @@ Change Log
 ==========
 
 #### next release (8.1.10)
+* Fix `CswCatalogGroup` XML types
 * [The next improvement]
 
 #### 8.1.9
@@ -213,8 +214,6 @@ Change Log
 * Fix sharing user added data of type "Auto-detect".
 * #5605 tidy up format string used in `MagdaReference`
 * Fix wms feature info returning only one feature
-* Fix `CswCatalogGroup` XML types
-* [The next improvement]
 * `WebMapServiceCatalogGroup` will now create layer auto-IDs using `Name` field to avoid ID clashes.
 * Added `GroupMixin` `shareKey` generation for members - if the group has `shareKeys`.
 * Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses 
