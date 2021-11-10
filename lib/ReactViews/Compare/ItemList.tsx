@@ -56,12 +56,12 @@ const Item: React.FC<ItemProps> = observer(
               display: flex;
             `}
           >
-            <Checkbox
+            <ItemCheckbox
               isChecked={item.show}
               onChange={ev => onChangeSelection(item, ev.target.checked)}
             >
               <SelectorText medium>{item.name}</SelectorText>
-            </Checkbox>
+            </ItemCheckbox>
           </div>
           <OpenButton isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
         </ItemTitle>
@@ -104,6 +104,10 @@ const ItemBody = styled.div`
 
 const SelectorText = styled(Text)`
   margin-left: 10px;
+`;
+
+const ItemCheckbox = styled(Checkbox)`
+  flex-basis: 300px;
 `;
 
 const OpenButton: React.FC<{
