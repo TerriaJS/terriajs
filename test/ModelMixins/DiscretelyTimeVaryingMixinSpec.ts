@@ -1,6 +1,6 @@
-import CommonStrata from "../../lib/Models/CommonStrata";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import Terria from "../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 
 describe("DiscretelyTimeVaryingMixin", () => {
   let terria: Terria;

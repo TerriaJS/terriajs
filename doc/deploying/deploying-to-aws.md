@@ -59,7 +59,7 @@ git push origin 2016-05-17
 Deployment is initiated via `npm` scripts.  A full production deployment may be initiated with:
 
 ```
-npm run deploy
+yarn deploy
 ```
 
 Once the stack starts up, it will be available at `terriajs-map-2016-05-17.terria.io`, where `terriajs-map` is the name of the project in `package.json` and `2016-05-17` is the output of `git describe` (that's why you should tag before starting a deployment).

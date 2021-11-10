@@ -5,13 +5,9 @@ interface CssExports {
   'help-panel-shifted': string;
   'helpPanel': string;
   'helpPanelShifted': string;
-  'is-selected': string;
   'isHidden': string;
-  'isSelected': string;
   'isVisible': string;
   'link': string;
-  'panel-item': string;
-  'panelItem': string;
   'shiftedToRight': string;
   'story-fade-in': string;
   'story-fade-out': string;

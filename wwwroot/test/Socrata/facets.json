@@ -1,0 +1,1162 @@
+[
+  {
+    "facet": "datatypes",
+    "count": 197,
+    "values": [
+      {
+        "value": "dataset",
+        "count": 135
+      },
+      {
+        "value": "map",
+        "count": 62
+      }
+    ]
+  },
+  {
+    "facet": "categories",
+    "count": 197,
+    "values": [
+      {
+        "value": "Environment",
+        "count": 48
+      },
+      {
+        "value": "Transport",
+        "count": 40
+      },
+      {
+        "value": "Business",
+        "count": 29
+      },
+      {
+        "value": "City Council",
+        "count": 29
+      },
+      {
+        "value": "People",
+        "count": 24
+      },
+      {
+        "value": "Property",
+        "count": 24
+      },
+      {
+        "value": "Events",
+        "count": 3
+      }
+    ]
+  },
+  {
+    "facet": "tags",
+    "count": 814,
+    "values": [
+      {
+        "value": "accessibility",
+        "count": 44
+      },
+      {
+        "value": "cityreactivation",
+        "count": 40
+      },
+      {
+        "value": "transport",
+        "count": 26
+      },
+      {
+        "value": "safemobility",
+        "count": 23
+      },
+      {
+        "value": "census of land use and employment",
+        "count": 22
+      },
+      {
+        "value": "clue",
+        "count": 22
+      },
+      {
+        "value": "parking",
+        "count": 22
+      },
+      {
+        "value": "sensors",
+        "count": 21
+      },
+      {
+        "value": "stats",
+        "count": 21
+      },
+      {
+        "value": "citizenreporter",
+        "count": 16
+      },
+      {
+        "value": "travel",
+        "count": 16
+      },
+      {
+        "value": "business",
+        "count": 14
+      },
+      {
+        "value": "eventsplanner",
+        "count": 14
+      },
+      {
+        "value": "assets",
+        "count": 13
+      },
+      {
+        "value": "#urbanforest",
+        "count": 12
+      },
+      {
+        "value": "budget",
+        "count": 12
+      },
+      {
+        "value": "energy",
+        "count": 12
+      },
+      {
+        "value": "industry",
+        "count": 12
+      },
+      {
+        "value": "buildings",
+        "count": 11
+      },
+      {
+        "value": "property",
+        "count": 11
+      },
+      {
+        "value": "tree",
+        "count": 11
+      },
+      {
+        "value": "urban forest",
+        "count": 11
+      },
+      {
+        "value": "climate",
+        "count": 9
+      },
+      {
+        "value": "entrepreneur",
+        "count": 9
+      },
+      {
+        "value": "residents",
+        "count": 9
+      },
+      {
+        "value": "waste",
+        "count": 9
+      },
+      {
+        "value": "building managment",
+        "count": 8
+      },
+      {
+        "value": "changemaker",
+        "count": 8
+      },
+      {
+        "value": "electricity",
+        "count": 8
+      },
+      {
+        "value": "energy management",
+        "count": 8
+      },
+      {
+        "value": "energy performance",
+        "count": 8
+      },
+      {
+        "value": "environment",
+        "count": 8
+      },
+      {
+        "value": "green buildings",
+        "count": 8
+      },
+      {
+        "value": "property management",
+        "count": 8
+      },
+      {
+        "value": "recycling",
+        "count": 8
+      },
+      {
+        "value": "water",
+        "count": 8
+      },
+      {
+        "value": "building",
+        "count": 7
+      },
+      {
+        "value": "census",
+        "count": 7
+      },
+      {
+        "value": "community profiles",
+        "count": 7
+      },
+      {
+        "value": "dsrf",
+        "count": 7
+      },
+      {
+        "value": "employment",
+        "count": 7
+      },
+      {
+        "value": "food",
+        "count": 7
+      },
+      {
+        "value": "population",
+        "count": 7
+      },
+      {
+        "value": "biodiversity",
+        "count": 6
+      },
+      {
+        "value": "clue2017",
+        "count": 6
+      },
+      {
+        "value": "floor space",
+        "count": 6
+      },
+      {
+        "value": "forest",
+        "count": 6
+      },
+      {
+        "value": "greening",
+        "count": 6
+      },
+      {
+        "value": "health",
+        "count": 6
+      },
+      {
+        "value": "indicators",
+        "count": 6
+      },
+      {
+        "value": "sensor",
+        "count": 6
+      },
+      {
+        "value": "signs",
+        "count": 6
+      },
+      {
+        "value": "vegetation",
+        "count": 6
+      },
+      {
+        "value": "3d",
+        "count": 5
+      },
+      {
+        "value": "anzsic",
+        "count": 5
+      },
+      {
+        "value": "development",
+        "count": 5
+      },
+      {
+        "value": "jobs",
+        "count": 5
+      },
+      {
+        "value": "liveability",
+        "count": 5
+      },
+      {
+        "value": "movement",
+        "count": 5
+      },
+      {
+        "value": "planning",
+        "count": 5
+      },
+      {
+        "value": "safety",
+        "count": 5
+      },
+      {
+        "value": "small areas",
+        "count": 5
+      },
+      {
+        "value": "street",
+        "count": 5
+      },
+      {
+        "value": "temperature",
+        "count": 5
+      },
+      {
+        "value": "trees",
+        "count": 5
+      },
+      {
+        "value": "wellbeing",
+        "count": 5
+      },
+      {
+        "value": "activity",
+        "count": 4
+      },
+      {
+        "value": "beverage",
+        "count": 4
+      },
+      {
+        "value": "bicycle",
+        "count": 4
+      },
+      {
+        "value": "finance",
+        "count": 4
+      },
+      {
+        "value": "fountain",
+        "count": 4
+      },
+      {
+        "value": "ghg",
+        "count": 4
+      },
+      {
+        "value": "growth city",
+        "count": 4
+      },
+      {
+        "value": "house prices",
+        "count": 4
+      },
+      {
+        "value": "innovation",
+        "count": 4
+      },
+      {
+        "value": "melbourne",
+        "count": 4
+      },
+      {
+        "value": "office",
+        "count": 4
+      },
+      {
+        "value": "parks",
+        "count": 4
+      },
+      {
+        "value": "research",
+        "count": 4
+      },
+      {
+        "value": "residence",
+        "count": 4
+      },
+      {
+        "value": "restrictions",
+        "count": 4
+      },
+      {
+        "value": "retail",
+        "count": 4
+      },
+      {
+        "value": "age",
+        "count": 3
+      },
+      {
+        "value": "art",
+        "count": 3
+      },
+      {
+        "value": "asset",
+        "count": 3
+      },
+      {
+        "value": "bike",
+        "count": 3
+      },
+      {
+        "value": "boundaries",
+        "count": 3
+      },
+      {
+        "value": "car",
+        "count": 3
+      },
+      {
+        "value": "carbon",
+        "count": 3
+      },
+      {
+        "value": "clue blocks",
+        "count": 3
+      },
+      {
+        "value": "covid-19",
+        "count": 3
+      },
+      {
+        "value": "diversity",
+        "count": 3
+      },
+      {
+        "value": "environmental monitoring",
+        "count": 3
+      },
+      {
+        "value": "events",
+        "count": 3
+      },
+      {
+        "value": "expenditure",
+        "count": 3
+      },
+      {
+        "value": "food security",
+        "count": 3
+      },
+      {
+        "value": "foot traffic",
+        "count": 3
+      },
+      {
+        "value": "footpath",
+        "count": 3
+      },
+      {
+        "value": "forecast",
+        "count": 3
+      },
+      {
+        "value": "green",
+        "count": 3
+      }
+    ]
+  },
+  {
+    "facet": "Data-management_Source-data-update-frequency",
+    "count": 197,
+    "values": [
+      {
+        "value": "Annually",
+        "count": 71
+      },
+      {
+        "value": "Static (not updated)",
+        "count": 45
+      },
+      {
+        "value": "Daily",
+        "count": 21
+      },
+      {
+        "value": "Monthly",
+        "count": 20
+      },
+      {
+        "value": "Weekly",
+        "count": 17
+      },
+      {
+        "value": "Every two years",
+        "count": 7
+      },
+      {
+        "value": "Real-time",
+        "count": 7
+      },
+      {
+        "value": "Hourly",
+        "count": 5
+      },
+      {
+        "value": "15 Minutes",
+        "count": 2
+      },
+      {
+        "value": "Quarterly",
+        "count": 2
+      }
+    ]
+  },
+  {
+    "facet": "Quality_Update-frequency",
+    "count": 197,
+    "values": [
+      {
+        "value": "Static (not updated)",
+        "count": 93
+      },
+      {
+        "value": "Annually",
+        "count": 40
+      },
+      {
+        "value": "Daily",
+        "count": 40
+      },
+      {
+        "value": "Every two years",
+        "count": 7
+      },
+      {
+        "value": "Monthly",
+        "count": 7
+      },
+      {
+        "value": "Quarterly",
+        "count": 5
+      },
+      {
+        "value": "Hourly",
+        "count": 3
+      },
+      {
+        "value": "15 Minutes",
+        "count": 1
+      },
+      {
+        "value": "2 Minutes",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "facet": "Quality_Reliability-level",
+    "count": 165,
+    "values": [
+      {
+        "value": "Useful with caveats",
+        "count": 113
+      },
+      {
+        "value": "Reliable and timely",
+        "count": 52
+      }
+    ]
+  },
+  {
+    "facet": "Quality_What's-included",
+    "count": 126,
+    "values": [
+      {
+        "value": "All data held by the City of Melbourne has been included",
+        "count": 31
+      },
+      {
+        "value": "Only raw data tables from the annual plan and budget have been included, tables that are calculations from this data has not been included",
+        "count": 12
+      },
+      {
+        "value": "Full dataset has been included",
+        "count": 7
+      },
+      {
+        "value": "Modelled energy consumption for every block in City of Melbourne municipality",
+        "count": 7
+      },
+      {
+        "value": "Full dataset has been included.",
+        "count": 6
+      },
+      {
+        "value": "All data has been included",
+        "count": 4
+      },
+      {
+        "value": "Complete",
+        "count": 4
+      },
+      {
+        "value": "This dataset has been confidentialised to protect the commercially sensitive information of individual businesses. Data in cells which pertain to two or fewer businesses have been suppressed and are shown as a blank cell. The row and column totals refer to the true total, including those suppressed cells.",
+        "count": 4
+      },
+      {
+        "value": "Some information has been removed due to contractual agreements with suppliers",
+        "count": 3
+      },
+      {
+        "value": "All data fields that contain data have been included",
+        "count": 2
+      },
+      {
+        "value": "Resident indicator results derived from the City of Melbourne Social Indicator Survey (CoMSIS).",
+        "count": 2
+      },
+      {
+        "value": "2011 and 2016 Census profile data for City of Melbourne residents and households by City of Melbourne small areas ",
+        "count": 1
+      },
+      {
+        "value": "2016 Census profile data for families with their youngest child aged 0-12 years living in the City of Melbourne",
+        "count": 1
+      },
+      {
+        "value": "2016 Census profile data for multicultural groups living in the City of Melbourne",
+        "count": 1
+      },
+      {
+        "value": "2016 Census profile data for older people aged 60 years and over living in the City of Melbourne",
+        "count": 1
+      },
+      {
+        "value": "2016 Census profile data for people living in high rise buildings in the City of Melbourne",
+        "count": 1
+      },
+      {
+        "value": "2016 Census profile data for people working in the City of Melbourne",
+        "count": 1
+      },
+      {
+        "value": "2016 Census profile data for younger people aged 15-24 years living in the City of Melbourne",
+        "count": 1
+      },
+      {
+        "value": "2016-2019 statistics for tertiary students living and/or studying in the City of Melbourne",
+        "count": 1
+      },
+      {
+        "value": "All active sensor readings. Number of sensor readings may fluctuate as sensor connections connect/reconnect to the network. ",
+        "count": 1
+      },
+      {
+        "value": "All council managed parking meter assets",
+        "count": 1
+      },
+      {
+        "value": "All data has been provided",
+        "count": 1
+      },
+      {
+        "value": "All data is included",
+        "count": 1
+      },
+      {
+        "value": "All known information has been provided, however, some organisations may not have complete data for all fields",
+        "count": 1
+      },
+      {
+        "value": "All known major developments",
+        "count": 1
+      },
+      {
+        "value": "All monthly waste data from April 2009 - March 2020",
+        "count": 1
+      },
+      {
+        "value": "All parking event data from Jan 2020 - May 26 2020",
+        "count": 1
+      },
+      {
+        "value": "All parking signs that have a relevant mapped parking bay.",
+        "count": 1
+      },
+      {
+        "value": "All records held relating to bike share dock readings",
+        "count": 1
+      },
+      {
+        "value": "All soil moisture sensor readings managed by the City of Melbourne",
+        "count": 1
+      },
+      {
+        "value": "All surveyed parking bay data",
+        "count": 1
+      },
+      {
+        "value": "City events and works permit information that have date and location information. Confidential entries and free text has been removed. ",
+        "count": 1
+      },
+      {
+        "value": "Data has been completed with information availible at the time of publish",
+        "count": 1
+      },
+      {
+        "value": "Data includes only requests with spatial information, confidential requests have also been removed. ",
+        "count": 1
+      },
+      {
+        "value": "Data on butterfly biodiversity and flower-butterfly interactions",
+        "count": 1
+      },
+      {
+        "value": "Data relating to stations with accessibility information",
+        "count": 1
+      },
+      {
+        "value": "Events represented in this data are those which are coordinated in City of Melbourne public space and require a permit, as per criteria on the City of Melbourne's website: http://www.melbourne.vic.gov.au/community/organising-events/event-permits/pages/event-permits.aspx. ",
+        "count": 1
+      },
+      {
+        "value": "Liveability indicators on city services and quality of life and social indicators on the health, wellbeing, participation and connection of residents in our city.",
+        "count": 1
+      },
+      {
+        "value": "Modelled energy consumption for properties in the City of Melbourne municipality",
+        "count": 1
+      },
+      {
+        "value": "Only includes assets valued at over $2.5 million. Other assets have not been cleared for release.",
+        "count": 1
+      },
+      {
+        "value": "Only listing coworking spaces within the City of Melbourne municipal boundary. This is not an exhaustive dataset. These are only coworking spaces the City of Melbourne is aware of. The may be others that the City of Melbourne is not aware of.",
+        "count": 1
+      },
+      {
+        "value": "Polygons representing the canopy cover extent with the City of Melbourne municipal area, including public and private property.",
+        "count": 1
+      },
+      {
+        "value": "Polygons representing the canopy cover extent within the land areas managed by City of Melbourne. ",
+        "count": 1
+      },
+      {
+        "value": "Polygons representing tree canopy cover >3m throughout the City of melbourne municipal area. ",
+        "count": 1
+      },
+      {
+        "value": "Requests received within the Salesforce system",
+        "count": 1
+      },
+      {
+        "value": "Resident indicator results for 2020 derived from the City of Melbourne Social Indicator Survey (CoMSIS).",
+        "count": 1
+      },
+      {
+        "value": "Some larger event venues have been excluded due to only being available for premier events, if you consider your event to meet this classification, please contact the City of Melbourne to discuss.",
+        "count": 1
+      },
+      {
+        "value": "The latest City of Melbourne population forecasts by age and gender. Forecasts are provided for Melbourne LGA and Census of Land Use and Employment small areas.",
+        "count": 1
+      },
+      {
+        "value": "The latest City of Melbourne population forecasts for household types. Forecasts are provided for Melbourne LGA and Census of Land Use and Employment small areas.",
+        "count": 1
+      },
+      {
+        "value": "The latest City of Melbourne population forecasts for private dwellings and households. Forecasts are provided for Melbourne LGA and Census of Land Use and Employment small areas.",
+        "count": 1
+      },
+      {
+        "value": "The whole dataset has been included (many non meaningful fields will be removed over time)",
+        "count": 1
+      },
+      {
+        "value": "These are indicators and in most cases City of Melbourne keeps or has access to more detailed data or underlying unit records and historical data.",
+        "count": 1
+      },
+      {
+        "value": "This data set has been confidentialised to protect the commercially sensitive information of individual businesses. Data in cells which pertain to two or fewer businesses have been suppressed and are shown as a blank cell. The row and column totals refer to the true total, including those suppressed cells. CLUE unique codes for residential, vacant, open space and common area floor space are not included in ANZSIC1 classification and not found in this data set.",
+        "count": 1
+      },
+      {
+        "value": "This data set has been confidentialised to protect the commercially sensitive information of individual businesses. Data in cells which pertain to two or fewer businesses have been suppressed and are shown as a blank cell. The row and column totals refer to the true total, including those suppressed cells. CLUE unique codes for residential, vacant, open space and common area floor space are not included in ANZSIC1 classification and not found in this data set. ",
+        "count": 1
+      },
+      {
+        "value": "This survey was only conducted for a small segment of the CBD",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "facet": "Quality_Data-quality-statement",
+    "count": 54,
+    "values": [
+      {
+        "value": "This dataset is from the figures provided in the Annual plan and budget each financial year",
+        "count": 12
+      },
+      {
+        "value": "A team of 4 census officers conduct field interviews which involves visiting every establishment in every building in the Census area (City of Melbourne municipality). Every commercial property is surveyed at least once every two years.",
+        "count": 10
+      },
+      {
+        "value": "A team of up to 6 surveyors conducts a field survey which involves visiting every establishment in every building in the Census area (City of Melbourne municipality). Every commercial property is surveyed at least once every two years.",
+        "count": 2
+      },
+      {
+        "value": "Building accessibility data is collected to track accessibility for internal City of Melbourne purposes. This data is provided as a community service by the City of Melbourne. It is not and does not purport to be a complete guide. There may be errors or omissions. Data is liable to change. The City of Melbourne accepts no responsibility in respect of any claim arising from use or reliance upon this data.",
+        "count": 2
+      },
+      {
+        "value": "Some of the dataset is not as meaningful as could be, we are continually working on improving this dataset and value your feedback",
+        "count": 2
+      },
+      {
+        "value": " A team of 4 census officers conduct field interviews which involves visiting every establishment in every building in the Census area (City of Melbourne municipality). Every commercial property is surveyed at least once every two years.",
+        "count": 1
+      },
+      {
+        "value": " team of up to 6 surveyors conducts a field survey which involves visiting every establishment in every building in the Census area (City of Melbourne municipality). Every commercial property is surveyed at least once every two years.",
+        "count": 1
+      },
+      {
+        "value": "A team of 4 census officers conduct field interviews which involves visiting every establishment in every building in the Census area (City of Melbourne municipality). Every commercial property is surveyed at least once every two years. Information about residential properties is based on the Council's property rates database.",
+        "count": 1
+      },
+      {
+        "value": "A team of up to 6 surveyors conducts a field survey which involves visiting every establishment in every building in the Census area (City of Melbourne municipality).   Every commercial property is surveyed at least once every two years.",
+        "count": 1
+      },
+      {
+        "value": "A team of up to 6 surveyors conducts a field survey which involves visiting every establishment in every building in the Census area (City of Melbourne municipality). Every commercial property is surveyed at least once every two years. Information about residential properties is based on the Council's property rates database.",
+        "count": 1
+      },
+      {
+        "value": "Actual canopy size may exceed extent of canopy polygons in some cases, particularly young trees. Polygons on private property may require verification to confirm if they represent tree canopy or other vegetation types. ",
+        "count": 1
+      },
+      {
+        "value": "All parking event data from Jan 2018 - Dec 2018",
+        "count": 1
+      },
+      {
+        "value": "All parking event data from Jan 2019 - Dec 2019",
+        "count": 1
+      },
+      {
+        "value": "Data has been quality assured ",
+        "count": 1
+      },
+      {
+        "value": "Data is complete and accurate",
+        "count": 1
+      },
+      {
+        "value": "Data is extracted from the system at the end of each month. Previous month's data is not refreshed. ",
+        "count": 1
+      },
+      {
+        "value": "Data is summarised from the City of Melbourne's property rates database. ",
+        "count": 1
+      },
+      {
+        "value": "Data may not be complete",
+        "count": 1
+      },
+      {
+        "value": "Data timestamps may vary as sensors are disconnected or reconnected to the network. This data has not yet been validated. Please send feedback to opendata@melbourne.vic.gov.au",
+        "count": 1
+      },
+      {
+        "value": "Dates and locations provide approximate time and location information and may change without notice. ",
+        "count": 1
+      },
+      {
+        "value": "Polygons are digitised through aerial imagery or lidar. Some polygons may not reflect the full extent of canopy growth. ",
+        "count": 1
+      },
+      {
+        "value": "Reliable and recent",
+        "count": 1
+      },
+      {
+        "value": "The information is believed to be accurate, as of when the original register was published in 2014.",
+        "count": 1
+      },
+      {
+        "value": "The location of these signs are completely accurate, however the dataset is not as meaningful as could be, we are continually working on improving this dataset and value your feedback",
+        "count": 1
+      },
+      {
+        "value": "This data contains all spatially mapped on-street car parking bays. There is a large number of bays which have not yet been mapped. Data has been collected from a number of years, there may be parking bays that no longer exist that still show in dataset. Users are advised to contact council using the email listed to report data errors. ",
+        "count": 1
+      },
+      {
+        "value": "This data does not include events which are held in built venues, privately managed open spaces or those activities which do not require a permit from the City of Melbourne.",
+        "count": 1
+      },
+      {
+        "value": "This data has been retrofitted from the original helping out booklet, please feel free to contact us to notify of any data issues",
+        "count": 1
+      },
+      {
+        "value": "This data is not exhaustive and updated on an irregular basis. The information provided is seen as a useful first step for someone interested in locating a coworking space.",
+        "count": 1
+      },
+      {
+        "value": "This data set has been verified by independent verifiers for accreditation under ISO. Where City of Melbourne didn't have data to report the indicators were left blank.",
+        "count": 1
+      },
+      {
+        "value": "This data was produced through a joint project with the City of Melbourne and RMIT University Researchers",
+        "count": 1
+      },
+      {
+        "value": "This dataset is not as meaningful as could be, we are continually working on improving this dataset and value your feedback",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "facet": "How-to-use_Further-information",
+    "count": 43,
+    "values": [
+      {
+        "value": "http://www.melbourne.vic.gov.au/clue",
+        "count": 16
+      },
+      {
+        "value": "http://imap.vic.gov.au/uploads/Meeting%20Agendas/2014%20August/Att%207a_IMAP_Energy_Map_-_CSIRO_-_Energy_Use_2011-2026_Report_-_2014June30_-Final_pdf_11.2MB.pdf",
+        "count": 8
+      },
+      {
+        "value": "http://www.melbourne.vic.gov.au/AboutCouncil/financegovernance/Budget/Documents/Annual_Plan_Budget_Document_2014_2015.pdf",
+        "count": 5
+      },
+      {
+        "value": "City Research Branch",
+        "count": 1
+      },
+      {
+        "value": "Data is updated yearly (but refreshed overnight)",
+        "count": 1
+      },
+      {
+        "value": "Data will be availible for duration of Open Innovation Competition only. ",
+        "count": 1
+      },
+      {
+        "value": "To create a spatial dataset use the road_segment and the seg_id fields to join the two datasets",
+        "count": 1
+      },
+      {
+        "value": "http://melbourne.vic.gov.au/clue",
+        "count": 1
+      },
+      {
+        "value": "http://open.dataforcities.org/",
+        "count": 1
+      },
+      {
+        "value": "http://www.arborcarbon.com.au/",
+        "count": 1
+      },
+      {
+        "value": "http://www.melbourne.vic.gov.au/ParkingTransportandRoads/Parking/Pages/InGroundSensors.aspx",
+        "count": 1
+      },
+      {
+        "value": "http://www.melbourne.vic.gov.au/arts-and-culture/events-partnerships/melbourne-conversations/Pages/melbourne-conversations.aspx",
+        "count": 1
+      },
+      {
+        "value": "http://www.melbourne.vic.gov.au/parking-and-transport/parking/Pages/parking-faqs.aspx",
+        "count": 1
+      },
+      {
+        "value": "https://data.melbourne.vic.gov.au/api/views/gh7s-qda8/files/51e3db26-a063-4825-ae6c-1a40c0259c75?download=true&filename=DAM_-_Info_-_DAM_May_2016_Meta_Data_Info.pdf",
+        "count": 1
+      },
+      {
+        "value": "https://www.melbourne.vic.gov.au/CommunityServices/SocialSupport/Documents/Helping_Out_Booklet.pdf",
+        "count": 1
+      },
+      {
+        "value": "https://www.melbourne.vic.gov.au/about-council/vision-goals/Pages/annual-plan-budget.aspx",
+        "count": 1
+      },
+      {
+        "value": "https://www.melbourne.vic.gov.au/business/waste-recycling/Pages/degraves-street-recycling-facility.aspx",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "facet": "Quality_Known-Issues",
+    "count": 24,
+    "values": [
+      {
+        "value": "None",
+        "count": 14
+      },
+      {
+        "value": "Dataset contains 'duration in minutes' field which differs from other parking sensor datasets which contain 'duration in seconds'.",
+        "count": 2
+      },
+      {
+        "value": "A number of the date fields are in ePoch date formats",
+        "count": 1
+      },
+      {
+        "value": "Dataset contains 'duration in minutes' field which differs from other parking sensor datasets which contain 'duration in seconds'. Dataset was extracted from system so some active readings may not have been received from sensors towards the end of the dataset (May 26th). ",
+        "count": 1
+      },
+      {
+        "value": "Date and year planted fields may have missing date values. ",
+        "count": 1
+      },
+      {
+        "value": "Docks have since been removed after the end of the program in Nov 2019",
+        "count": 1
+      },
+      {
+        "value": "Listed branches will be different in subsequent years due to organisational restructuring",
+        "count": 1
+      },
+      {
+        "value": "Note this dataset may not contain a reading for every sensor for every 15 minutes as the sensor devices might not have a reading for each value. There may be situations where no readings are reported for all sensors or only some readings are reported at a particular site. ",
+        "count": 1
+      },
+      {
+        "value": "Parking Sensors are not operational on Public Holidays. Parking Sensors will show car parks as vacant when blocked by construction zones. ",
+        "count": 1
+      },
+      {
+        "value": "Some historical readings may not be available (April - July 2020 across some sensors)",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "facet": "How-to-use_Linked-to",
+    "count": 13,
+    "values": [
+      {
+        "value": "https://data.melbourne.vic.gov.au/Economy/Census-of-Land-Use-and-Employment-Blocks/aia8-ryiq",
+        "count": 4
+      },
+      {
+        "value": "Environmental Data - Assets, Environmental Data - Billing Data",
+        "count": 1
+      },
+      {
+        "value": "Environmental Data - Assets, Environmental Data - GHG Factors",
+        "count": 1
+      },
+      {
+        "value": "Environmental Data - Billing, Environmental Data - GHG Factors",
+        "count": 1
+      },
+      {
+        "value": "N/A",
+        "count": 1
+      },
+      {
+        "value": "Road Corridor",
+        "count": 1
+      },
+      {
+        "value": "http://biodiversity.melbourne.vic.gov.au/insects/#/butterflies",
+        "count": 1
+      },
+      {
+        "value": "http://www.pedestrian.melbourne.vic.gov.au/",
+        "count": 1
+      },
+      {
+        "value": "https://data.melbourne.vic.gov.au/Economy/Census-Of-Land-Use-And-Employment-CLUE-Small-Areas/gei8-3w86",
+        "count": 1
+      },
+      {
+        "value": "https://data.melbourne.vic.gov.au/Economy/Employment-and-floor-space-forecasts-by-suburb/gb88-t7zc",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "facet": "Quality_Source-data-update-frequency",
+    "count": 7,
+    "values": [
+      {
+        "value": "Daily",
+        "count": 4
+      },
+      {
+        "value": "Annually",
+        "count": 1
+      },
+      {
+        "value": "Monthly",
+        "count": 1
+      },
+      {
+        "value": "Quarterly",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "facet": "How-to-use_Applicable-standard-(URL)",
+    "count": 1,
+    "values": [
+      {
+        "value": "http://standards.opencouncildata.org/#/dogzones",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "facet": "Internal-management_IMGF-risk-level",
+    "count": 1,
+    "values": [
+      {
+        "value": "Low risk",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "facet": "Internal-management_Source-system-(GIS,-AssetMaster,-etc)",
+    "count": 1,
+    "values": [
+      {
+        "value": "GIS, AssetMaster",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "facet": "Internal-management_Update-mechanism",
+    "count": 1,
+    "values": [
+      {
+        "value": "Scheduled FME job",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "facet": "Melbourne-Metadata_Further-Information",
+    "count": 1,
+    "values": [
+      {
+        "value": "https://www.melbourne.vic.gov.au/CommunityServices/SocialSupport/Documents/Helping_Out_Booklet.pdf",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "facet": "provenance",
+    "count": 197,
+    "values": [
+      {
+        "value": "official",
+        "count": 197
+      }
+    ]
+  }
+]

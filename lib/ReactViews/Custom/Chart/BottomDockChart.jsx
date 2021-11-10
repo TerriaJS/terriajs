@@ -1,13 +1,13 @@
 import { observer } from "mobx-react";
 import { action, computed, observable } from "mobx";
-import { AxisLeft, AxisBottom } from "@vx/axis";
-import { RectClipPath } from "@vx/clip-path";
-import { localPoint } from "@vx/event";
-import { GridRows } from "@vx/grid";
-import { Group } from "@vx/group";
+import { AxisLeft, AxisBottom } from "@visx/axis";
+import { RectClipPath } from "@visx/clip-path";
+import { localPoint } from "@visx/event";
+import { GridRows } from "@visx/grid";
+import { Group } from "@visx/group";
 import { withParentSize } from "@vx/responsive";
-import { scaleLinear, scaleTime } from "@vx/scale";
-import { Line } from "@vx/shape";
+import { scaleLinear, scaleTime } from "@visx/scale";
+import { Line } from "@visx/shape";
 import PropTypes from "prop-types";
 import React from "react";
 import groupBy from "lodash-es/groupBy";
@@ -26,7 +26,6 @@ const chartMinWidth = 110;
 const defaultGridColor = "#efefef";
 const labelColor = "#efefef";
 
-@withParentSize
 @observer
 class BottomDockChart extends React.Component {
   static propTypes = {
@@ -56,7 +55,7 @@ class BottomDockChart extends React.Component {
   }
 }
 
-export default BottomDockChart;
+export default withParentSize(BottomDockChart);
 
 @observer
 class Chart extends React.Component {
@@ -185,17 +184,13 @@ class Chart extends React.Component {
       items: this.pointsNearMouse
     };
 
-    if (!this.mouseCoords || this.mouseCoords.x < this.plotWidth * 0.75) {
+    if (!this.mouseCoords || this.mouseCoords.x < this.plotWidth * 0.5) {
       tooltip.right = this.props.width - (this.plotWidth + margin.right);
     } else {
       tooltip.left = margin.left;
     }
 
-    if (!this.mouseCoords || this.mouseCoords.y < this.plotHeight * 0.5) {
-      tooltip.bottom = this.props.height - (margin.top + this.plotHeight);
-    } else {
-      tooltip.top = margin.top;
-    }
+    tooltip.bottom = this.props.height - (margin.top + this.plotHeight);
     return tooltip;
   }
 
@@ -259,9 +254,7 @@ class Chart extends React.Component {
         ]}
         onZoom={zoomedScale => this.setZoomedXScale(zoomedScale)}
       >
-        <Legends
-          chartItems={this.chartItems.length > 4 ? [] : this.chartItems}
-        />
+        <Legends width={this.plotWidth} chartItems={this.chartItems} />
         <div style={{ position: "relative" }}>
           <svg
             width="100%"
@@ -370,7 +363,9 @@ class Plot extends React.Component {
           // Find a basis item to stick the points on, if we can't find one, we
           // vertically center the points
           const basisItemIndex = chartItems.findIndex(
-            item => item.type === "line" && item.xAxis.scale === "time"
+            item =>
+              (item.type === "line" || item.type === "lineAndPoint") &&
+              item.xAxis.scale === "time"
           );
           return (
             <MomentPointsChart
@@ -381,6 +376,7 @@ class Plot extends React.Component {
               scales={initialScales[i]}
               basisItem={chartItems[basisItemIndex]}
               basisItemScales={initialScales[basisItemIndex]}
+              glyph={chartItem.glyphStyle}
             />
           );
         }
@@ -403,6 +399,7 @@ class Plot extends React.Component {
               id={sanitizeIdString(chartItem.key)}
               chartItem={chartItem}
               scales={initialScales[i]}
+              glyph={chartItem.glyphStyle}
             />
           );
         }
@@ -415,10 +412,11 @@ class XAxis extends React.PureComponent {
   static propTypes = {
     top: PropTypes.number.isRequired,
     scale: PropTypes.func.isRequired,
-    label: PropTypes.bool.isRequired
+    label: PropTypes.string.isRequired
   };
 
   render() {
+    const { scale, ...restProps } = this.props;
     return (
       <AxisBottom
         stroke="#efefef"
@@ -435,7 +433,11 @@ class XAxis extends React.PureComponent {
           textAnchor: "middle",
           fontFamily: "Arial"
         }}
-        {...this.props}
+        // .nice() rounds the scale so that the aprox beginning and
+        // aprox end labels are shown
+        // See: https://stackoverflow.com/questions/21753126/d3-js-starting-and-ending-tick
+        scale={scale.nice()}
+        {...restProps}
       />
     );
   }

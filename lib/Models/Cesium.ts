@@ -62,12 +62,12 @@ import MappableMixin, {
   MapItem
 } from "../ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
-import SplitterTraits from "../Traits/SplitterTraits";
+import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
+import hasTraits from "./Definition/hasTraits";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
-import hasTraits from "./hasTraits";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
 
@@ -101,7 +101,7 @@ export default class Cesium extends GlobeOrMap {
     | CameraView
     | Rectangle
     | DataSource
-    | MappableMixin.MappableMixin
+    | MappableMixin.Instance
     | /*TODO Cesium.Cesium3DTileset*/ any;
 
   // When true, feature picking is paused. This is useful for temporarily
@@ -115,6 +115,7 @@ export default class Cesium extends GlobeOrMap {
   private readonly _disposeWorkbenchMapItemsSubscription: () => void;
   private readonly _disposeTerrainReaction: () => void;
   private readonly _disposeSplitterReaction: () => void;
+  private readonly _disposeResolutionReaction: () => void;
 
   private _createImageryLayer: (
     ip: ImageryProvider,
@@ -432,7 +433,7 @@ export default class Cesium extends GlobeOrMap {
     });
     this._disposeSplitterReaction = this._reactToSplitterChanges();
 
-    autorun(() => {
+    this._disposeResolutionReaction = autorun(() => {
       (this.cesiumWidget as any).useBrowserRecommendedResolution = !this.terria
         .useNativeResolution;
       this.cesiumWidget.scene.globe.maximumScreenSpaceError = this.terria.baseMaximumScreenSpaceError;
@@ -499,6 +500,7 @@ export default class Cesium extends GlobeOrMap {
     this.dataSourceDisplay.destroy();
 
     this._disposeTerrainReaction();
+    this._disposeResolutionReaction();
 
     this._disposeSelectedFeatureSubscription();
     this._disposeSplitterReaction();
@@ -532,13 +534,13 @@ export default class Cesium extends GlobeOrMap {
       //       That way the supported types of map items is extensible.
       const allDataSources = this._allMapItems.filter(isDataSource);
 
-      // Remove deleted data sources
       let dataSources = this.dataSources;
-      for (let i = 0; i < dataSources.length; i++) {
+      // Remove deleted data sources
+      // Iterate backwards because we're removing items.
+      for (let i = dataSources.length - 1; i >= 0; i--) {
         const d = dataSources.get(i);
         if (allDataSources.indexOf(d) === -1) {
           dataSources.remove(d);
-          --i;
         }
       }
 
@@ -561,11 +563,11 @@ export default class Cesium extends GlobeOrMap {
         .filter(isDefined);
 
       // Delete imagery layers that are no longer in the model
-      for (let i = 0; i < this.scene.imageryLayers.length; i++) {
+      // Iterate backwards because we're removing items.
+      for (let i = this.scene.imageryLayers.length - 1; i >= 0; i--) {
         const imageryLayer = this.scene.imageryLayers.get(i);
         if (allImageryParts.indexOf(imageryLayer) === -1) {
           this.scene.imageryLayers.remove(imageryLayer);
-          --i;
         }
       }
       // Iterate backwards so that adding multiple layers adds them in increasing cesium index order
@@ -592,10 +594,10 @@ export default class Cesium extends GlobeOrMap {
       }
 
       const allCesium3DTilesets = this._allMapItems.filter(isCesium3DTileset);
-
       // Remove deleted tilesets
       const primitives = this.scene.primitives;
-      for (let i = 0; i < this.scene.primitives.length; i++) {
+      // Iterate backwards because we're removing items.
+      for (let i = this.scene.primitives.length - 1; i >= 0; i--) {
         const prim = primitives.get(i);
         if (
           isCesium3DTileset(prim) &&
@@ -951,9 +953,14 @@ export default class Cesium extends GlobeOrMap {
   @computed
   get _extraCredits() {
     const credits: { cesium?: Credit; terria?: Credit } = {};
-    if (this._terrainWithCredits.credit) {
-      credits.cesium = this._terrainWithCredits.credit;
-    }
+    // Disabling this for now as it doesn't seem to be used anywhere but
+    // results in mapItems being computed twice for all workbench items when
+    // cesium map is loaded. This happens because the reference to
+    // _extraCredits is from within the constructor for Cesium which itself is
+    // called inside an untracked() call in TerriaViewer.
+    // if (this._terrainWithCredits.credit) {
+    //   credits.cesium =  this._terrainWithCredits.credit;
+    //}
     if (!this.terria.configParameters.hideTerriaLogo) {
       const logo = require("../../wwwroot/images/terria-watermark.svg");
       credits.terria = new Credit(
@@ -1358,7 +1365,7 @@ export default class Cesium extends GlobeOrMap {
     return result;
   }
 
-  getImageryLayersForItem(item: MappableMixin.MappableMixin): ImageryLayer[] {
+  getImageryLayersForItem(item: MappableMixin.Instance): ImageryLayer[] {
     return filterOutUndefined(
       item.mapItems.map(m => {
         if (ImageryParts.is(m)) {
@@ -1370,7 +1377,7 @@ export default class Cesium extends GlobeOrMap {
 
   private _makeImageryLayerFromParts(
     parts: ImageryParts,
-    item: MappableMixin.MappableMixin
+    item: MappableMixin.Instance
   ): ImageryLayer {
     const layer = this._createImageryLayer(
       parts.imageryProvider,

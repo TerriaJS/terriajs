@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Loader from "../Loader";
 import Styles from "./parameter-editors.scss";
-import CommonStrata from "../../Models/CommonStrata";
+import CommonStrata from "../../Models/Definition/CommonStrata";
 
 const RegionTypeParameterEditor = createReactClass({
   displayName: "RegionTypeParameterEditor",

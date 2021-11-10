@@ -1,8 +1,8 @@
 import { computed } from "mobx";
 import URI from "urijs";
 import Constructor from "../Core/Constructor";
-import Model from "../Models/Model";
-import UrlTraits from "../Traits/UrlTraits";
+import Model from "../Models/Definition/Model";
+import UrlTraits from "../Traits/TraitsClasses/UrlTraits";
 
 type UrlModel = Model<UrlTraits>;
 
@@ -25,8 +25,8 @@ function UrlMixin<T extends Constructor<UrlModel>>(Base: T) {
 }
 
 namespace UrlMixin {
-  export interface UrlMixin extends InstanceType<ReturnType<typeof UrlMixin>> {}
-  export function isMixedInto(model: any): model is UrlMixin {
+  export interface Instance extends InstanceType<ReturnType<typeof UrlMixin>> {}
+  export function isMixedInto(model: any): model is Instance {
     return model && model.hasUrlMixin;
   }
 }

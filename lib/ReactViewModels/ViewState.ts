@@ -11,10 +11,16 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import addedByUser from "../Core/addedByUser";
 import { Category, HelpAction } from "../Core/AnalyticEvents/analyticEvents";
+import Result from "../Core/Result";
 import triggerResize from "../Core/triggerResize";
 import PickedFeatures from "../Map/PickedFeatures";
+import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
+import GroupMixin from "../ModelMixins/GroupMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
+import ReferenceMixin from "../ModelMixins/ReferenceMixin";
+import CommonStrata from "../Models/Definition/CommonStrata";
+import { BaseModel } from "../Models/Definition/Model";
 import getAncestors from "../Models/getAncestors";
-import { BaseModel } from "../Models/Model";
 import Terria from "../Models/Terria";
 import { SATELLITE_HELP_PROMPT_KEY } from "../ReactViews/HelpScreens/SatelliteHelpPrompt";
 import {
@@ -55,7 +61,10 @@ export default class ViewState {
   readonly terria: Terria;
   readonly relativePosition = RelativePosition;
 
-  @observable previewedItem: BaseModel | undefined;
+  @observable private _previewedItem: BaseModel | undefined;
+  get previewedItem() {
+    return this._previewedItem;
+  }
   @observable userDataPreviewedItem: BaseModel | undefined;
   @observable explorerPanelIsVisible: boolean = false;
   @observable activeTabCategory: string = DATA_CATALOG_NAME;
@@ -174,6 +183,7 @@ export default class ViewState {
   @observable showTour: boolean = false;
   @observable appRefs: Map<string, Ref<HTMLElement>> = new Map();
   @observable currentTourIndex: number = -1;
+  @observable showCollapsedNavigation: boolean = false;
 
   get tourPointsWithValidRefs() {
     // should viewstate.ts reach into document? seems unavoidable if we want
@@ -222,6 +232,10 @@ export default class ViewState {
     } else {
       this.currentTourIndex = currentIndex + 1;
     }
+  }
+  @action
+  closeCollapsedNavigation() {
+    this.showCollapsedNavigation = false;
   }
 
   @action
@@ -277,7 +291,8 @@ export default class ViewState {
    */
   @observable currentTool?: Tool;
 
-  private _unsubscribeErrorListener: CesiumEvent.RemoveCallback;
+  @observable panel: React.ReactNode;
+
   private _pickedFeaturesSubscription: IReactionDisposer;
   private _disclaimerVisibleSubscription: IReactionDisposer;
   private _isMapFullScreenSubscription: IReactionDisposer;
@@ -301,11 +316,6 @@ export default class ViewState {
       ? options.errorHandlingProvider
       : null;
     this.terria = terria;
-
-    // Show errors to the user as notifications.
-    this._unsubscribeErrorListener = terria.addErrorEventListener(error =>
-      terria.notificationState.addNotificationToQueue(error.toNotification())
-    );
 
     // When features are picked, show the feature info panel.
     this._pickedFeaturesSubscription = reaction(
@@ -434,7 +444,6 @@ export default class ViewState {
   dispose() {
     this._pickedFeaturesSubscription();
     this._disclaimerVisibleSubscription();
-    this._unsubscribeErrorListener();
     this._mobileMenuSubscription();
     this._isMapFullScreenSubscription();
     this._showStoriesSubscription();
@@ -509,25 +518,85 @@ export default class ViewState {
   @action
   clearPreviewedItem() {
     this.userDataPreviewedItem = undefined;
-    this.previewedItem = undefined;
+    this._previewedItem = undefined;
   }
 
-  @action
-  viewCatalogMember(catalogMember: BaseModel) {
-    if (addedByUser(catalogMember)) {
-      this.userDataPreviewedItem = catalogMember;
-      this.openUserData();
-    } else {
-      this.previewedItem = catalogMember;
-      this.openAddData();
-      if (this.terria.configParameters.tabbedCatalog) {
-        const parentGroups = getAncestors(catalogMember);
-        if (parentGroups.length > 0) {
-          // Go to specific tab
-          this.activeTabIdInCategory = parentGroups[0].uniqueId;
+  /**
+   * Views a model in the catalog. If model is a
+   *
+   * - `Reference` - it will be dereferenced first.
+   * - `CatalogMember` - `loadMetadata` will be called
+   * - `Group` - its `isOpen` trait will be set according to the value of the `isOpen` parameter in the `stratum` indicated.
+   *   - If after doing this the group is open, its members will be loaded with a call to `loadMembers`.
+   * - `Mappable` - `loadMapItems` will be called
+   *
+   * Then (if no errors have occurred) it will open the catalog.
+   * Note - `previewItem` is set at the start of the function, regardless of errors.
+   *
+   * @param item The model to view in catalog.
+   * @param [isOpen=true] True if the group should be opened. False if it should be closed.
+   * @param stratum The stratum in which to mark the group opened or closed.
+   * @param openAddData True if data catalog window should be opened.
+   */
+  async viewCatalogMember(
+    item: BaseModel,
+    isOpen: boolean = true,
+    stratum: string = CommonStrata.user,
+    openAddData = true
+  ): Promise<Result<void>> {
+    try {
+      // Set preview item
+      runInAction(() => (this._previewedItem = item));
+
+      // Open "Add Data"
+      if (openAddData) {
+        if (addedByUser(item)) {
+          runInAction(() => (this.userDataPreviewedItem = item));
+
+          this.openUserData();
+        } else {
+          runInAction(() => {
+            this.openAddData();
+            if (this.terria.configParameters.tabbedCatalog) {
+              const parentGroups = getAncestors(item);
+              if (parentGroups.length > 0) {
+                // Go to specific tab
+                this.activeTabIdInCategory = parentGroups[0].uniqueId;
+              }
+            }
+          });
+        }
+
+        // mobile switch to nowvewing if not viewing a group
+        if (!GroupMixin.isMixedInto(item)) {
+          this.switchMobileView(this.mobileViewOptions.preview);
         }
       }
+
+      // Load preview item
+      if (ReferenceMixin.isMixedInto(item)) {
+        (await item.loadReference()).throwIfError();
+
+        // call viewCatalogMember on reference.target
+        if (item.target) {
+          return await this.viewCatalogMember(item.target, isOpen, stratum);
+        }
+        return Result.error(`Failed to resolve reference for ${getName(item)}`);
+      }
+
+      if (GroupMixin.isMixedInto(item)) {
+        item.setTrait(stratum, "isOpen", isOpen);
+        if (item.isOpen) {
+          (await item.loadMembers()).throwIfError();
+        }
+      } else if (MappableMixin.isMixedInto(item))
+        (await item.loadMapItems()).throwIfError();
+      else if (CatalogMemberMixin.isMixedInto(item))
+        (await item.loadMetadata()).throwIfError();
+    } catch (e) {
+      return Result.error(e, `Could not view catalog member ${getName(item)}`);
     }
+    return Result.none();
   }
 
   @action
@@ -590,7 +659,7 @@ export default class ViewState {
    */
   @action
   removeModelReferences(model: BaseModel) {
-    if (this.previewedItem === model) this.previewedItem = undefined;
+    if (this._previewedItem === model) this._previewedItem = undefined;
     if (this.userDataPreviewedItem === model)
       this.userDataPreviewedItem = undefined;
   }
@@ -638,6 +707,7 @@ export default class ViewState {
 
   @action
   toggleMobileMenu() {
+    this.setTopElement("mobileMenu");
     this.mobileMenuVisible = !this.mobileMenuVisible;
   }
 
@@ -665,11 +735,21 @@ export default class ViewState {
   get isMapZooming() {
     return this.terria.currentViewer.isMapZooming;
   }
+
+  /**
+   * Returns true if the user is currently interacting with the map - like
+   * picking a point or drawing a shape.
+   */
+  @computed
+  get isMapInteractionActive() {
+    return this.terria.mapInteractionModeStack.length > 0;
+  }
 }
 
 interface Tool {
   toolName: string;
   getToolComponent: () => React.ComponentType | Promise<React.ComponentType>;
+
   showCloseButton: boolean;
   params?: any;
 }

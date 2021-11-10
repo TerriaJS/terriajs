@@ -4,30 +4,17 @@ import { computed } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
-import JSRegionProvider from "../Map/RegionProvider";
-import JSRegionProviderList from "../Map/RegionProviderList";
-import { applyReplacements } from "../Map/RegionProviderTs";
-import createCombinedModel from "../Models/createCombinedModel";
-import Model from "../Models/Model";
+import runLater from "../Core/runLater";
+import RegionProvider from "../Map/RegionProvider";
+import TableMixin from "../ModelMixins/TableMixin";
+import createCombinedModel from "../Models/Definition/createCombinedModel";
+import Model from "../Models/Definition/Model";
 import TableColumnTraits, {
   THIS_COLUMN_EXPRESSION_TOKEN
-} from "../Traits/TableColumnTraits";
-import TableTraits from "../Traits/TableTraits";
+} from "../Traits/TraitsClasses/TableColumnTraits";
 import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
 const naturalSort = require("javascript-natural-sort");
 naturalSort.insensitive = true;
-
-// TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
-//   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
-// This is a dodgy workaround.
-class RegionProviderList extends JSRegionProviderList {}
-class RegionProvider extends JSRegionProvider {}
-
-interface TableModel extends Model<TableTraits> {
-  readonly dataColumnMajor: string[][] | undefined;
-  readonly regionProviderList: RegionProviderList | undefined;
-  readonly tableColumns: readonly TableColumn[];
-}
 
 export interface ColumnValuesAsNumbers {
   readonly values: ReadonlyArray<number | null>;
@@ -46,13 +33,13 @@ export interface ColumnValuesAsDates {
 }
 
 export interface ColumnValuesAsRegions {
-  readonly regionIds: ReadonlyArray<string | null>;
-  readonly uniqueRegionIds: ReadonlyArray<string>;
+  readonly regionIds: ReadonlyArray<number | null>;
+  readonly uniqueRegionIds: ReadonlyArray<number>;
   readonly numberOfValidRegions: number;
   readonly numberOfNonRegions: number;
   readonly numberOfRegionsWithMultipleRows: number;
   readonly regionIdToRowNumbersMap: ReadonlyMap<
-    string,
+    string | number,
     number | readonly number[]
   >;
 }
@@ -80,9 +67,9 @@ export interface UniqueColumnValues {
  */
 export default class TableColumn {
   readonly columnNumber: number;
-  readonly tableModel: TableModel;
+  readonly tableModel: TableMixin.Instance;
 
-  constructor(tableModel: TableModel, columnNumber: number) {
+  constructor(tableModel: TableMixin.Instance, columnNumber: number) {
     this.columnNumber = columnNumber;
     this.tableModel = tableModel;
   }
@@ -521,10 +508,10 @@ export default class TableColumn {
   @computed
   get valuesAsRegions(): ColumnValuesAsRegions {
     const values = this.values;
-    const map = new Map<string, number | number[]>();
+    const map = new Map<number, number | number[]>();
 
     const regionType = this.regionType;
-    if (regionType === undefined) {
+    if (!isDefined(regionType) || !regionType.loaded) {
       // No regions.
       return {
         numberOfValidRegions: 0,
@@ -536,30 +523,34 @@ export default class TableColumn {
       };
     }
 
-    const regionIds: (string | null)[] = [];
-    const uniqueRegionIds = new Set<string>();
+    const regionIds: (number | null)[] = [];
+    const uniqueRegionIds = new Set<number>();
     let numberOfValidRegions = 0;
     let numberOfNonRegions = 0;
     let numberOfRegionsWithMultipleRows = 0;
 
     for (let i = 0; i < values.length; ++i) {
       const value = values[i];
-      const regionId: string | null = this.findMatchingRegion(
-        regionType,
-        value
-      );
-      regionIds.push(regionId);
-      if (regionId !== null) uniqueRegionIds.add(regionId);
 
-      if (regionId !== null) {
+      let regionIndex: number | null = this.regionType!.findRegionIndex(
+        value,
+        this.regionDisambiguationColumn?.values?.[i]
+      );
+
+      regionIndex = regionIndex === -1 ? null : regionIndex;
+
+      regionIds.push(regionIndex);
+      if (regionIndex !== null) uniqueRegionIds.add(regionIndex);
+
+      if (regionIndex !== null) {
         ++numberOfValidRegions;
 
-        const rows = map.get(regionId);
+        const rows = map.get(regionIndex);
         if (rows === undefined) {
-          map.set(regionId, i);
+          map.set(regionIndex, i);
         } else if (typeof rows === "number") {
           numberOfRegionsWithMultipleRows++;
-          map.set(regionId, [rows, i]);
+          map.set(regionIndex, [rows, i]);
         } else {
           rows.push(i);
         }
@@ -576,18 +567,6 @@ export default class TableColumn {
       numberOfNonRegions: numberOfNonRegions,
       numberOfRegionsWithMultipleRows: numberOfRegionsWithMultipleRows
     };
-  }
-
-  findMatchingRegion(
-    regionType: RegionProvider,
-    rowValue: string
-  ): string | null {
-    // TODO: validate that the rowValue is actually a valid region, if possible.
-    // TODO: implement serverReplacements and disambigDataReplacements replacements
-
-    return rowValue.length > 0
-      ? applyReplacements(regionType, rowValue, "dataReplacements") ?? null
-      : null;
   }
 
   /**
@@ -676,10 +655,8 @@ export default class TableColumn {
       // or zero are counted as neither failed nor successful.
 
       if (
-        // We need at least one value
-        this.valuesAsNumbers.numberOfValidNumbers >= 1 &&
         this.valuesAsNumbers.numberOfNonNumbers <=
-          Math.ceil(this.valuesAsNumbers.numberOfValidNumbers * 0.1)
+        Math.ceil(this.valuesAsNumbers.numberOfValidNumbers * 0.1)
       ) {
         type = TableColumnType.scalar;
       } else {
@@ -713,8 +690,17 @@ export default class TableColumn {
     }
   }
 
+  /** Is column ready to be used.
+   * This will be false if regionType is not loaded
+   */
+  @computed
+  get ready() {
+    return !isDefined(this.regionType) || this.regionType.loaded;
+  }
+
   @computed
   get regionType(): RegionProvider | undefined {
+    let regionProvider: RegionProvider | undefined;
     const regions = this.tableModel.regionProviderList;
     if (regions === undefined) {
       return undefined;
@@ -723,17 +709,28 @@ export default class TableColumn {
     const regionType = this.traits.regionType;
     if (regionType !== undefined) {
       // Explicit region type specified, we just need to resolve it.
-      return regions.getRegionProvider(regionType);
+      regionProvider = regions.getRegionProvider(regionType);
     }
 
-    // No region type specified, so match the column name against the region
-    // aliases.
-    const details = regions.getRegionDetails([this.name], undefined, undefined);
-    if (details.length > 0) {
-      return details[0].regionProvider;
+    if (!isDefined(regionProvider)) {
+      // No region type specified, so match the column name against the region
+      // aliases.
+      const details = regions.getRegionDetails(
+        [this.name],
+        undefined,
+        undefined
+      );
+      if (details.length > 0) {
+        regionProvider = details[0].regionProvider;
+      }
     }
 
-    return undefined;
+    // Load region IDs for region type
+    // Note: loadRegionIDs is called in TableMixin.forceLoadMapItems()
+    // So this will only load region IDs if style/regionType changes after initial loadMapItems
+    runLater(() => regionProvider?.loadRegionIDs());
+
+    return regionProvider;
   }
 
   @computed
@@ -752,7 +749,7 @@ export default class TableColumn {
 
     // See if the region provider likes any of the table's other columns for
     // disambiguation.
-    const disambigName = (<any>this.regionType).findDisambigVariable(
+    const disambigName = this.regionType.findDisambigVariable(
       this.tableModel.tableColumns.map(column => column.name)
     );
     if (disambigName === undefined) {

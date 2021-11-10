@@ -1,17 +1,17 @@
 import i18next from "i18next";
 import { action, computed, observable } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
-import TerriaError from "../Core/TerriaError";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import Result from "../Core/Result";
+import TerriaError, { TerriaErrorSeverity } from "../Core/TerriaError";
+import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
 import ChartableMixin from "../ModelMixins/ChartableMixin";
-import GroupMixin from "../ModelMixins/GroupMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
-import CommonStrata from "../Models/CommonStrata";
-import LayerOrderingTraits from "../Traits/LayerOrderingTraits";
-import hasTraits from "./hasTraits";
-import { BaseModel } from "./Model";
+import LayerOrderingTraits from "../Traits/TraitsClasses/LayerOrderingTraits";
+import CommonStrata from "./Definition/CommonStrata";
+import hasTraits from "./Definition/hasTraits";
+import { BaseModel } from "./Definition/Model";
 
 const keepOnTop = (model: BaseModel) =>
   hasTraits(model, LayerOrderingTraits, "keepOnTop") && model.keepOnTop;
@@ -165,47 +165,60 @@ export default class Workbench {
    * be {@link AsyncMappableMixin} or {@link ChartableMixin} but it is a {@link GroupMixin}, it will
    * be removed from the workbench. If it is mappable, `loadMapItems` will be called.
    *
+   * If an error occurs, it will only be added to the workbench if the severity is TerriaError.Warning - otherwise it will not be added
+   *
    * @param item The item to add to or remove from the workbench.
    */
-  public async add(item: BaseModel | BaseModel[]): Promise<void> {
+  public async add(item: BaseModel | BaseModel[]): Promise<Result<unknown>> {
     if (Array.isArray(item)) {
-      await Promise.all(item.reverse().map(i => this.add(i)));
-      return;
+      const results = await Promise.all(item.reverse().map(i => this.add(i)));
+      return Result.combine(results, {
+        title: i18next.t("workbench.addItemErrorTitle"),
+        message: i18next.t("workbench.addItemErrorMessage"),
+        importance: -1
+      });
     }
 
     this.insertItem(item);
 
-    try {
-      if (ReferenceMixin.is(item)) {
-        await item.loadReference();
+    let error: TerriaError | undefined;
 
-        const target = item.target;
-        if (
-          target &&
-          GroupMixin.isMixedInto(target) &&
-          !MappableMixin.isMixedInto(target) &&
-          !ChartableMixin.isMixedInto(target)
-        ) {
-          this.remove(item);
-        } else if (target) {
-          return this.add(target);
-        }
+    if (ReferenceMixin.isMixedInto(item)) {
+      error = (await item.loadReference()).error;
+      if (item.target) {
+        this.remove(item);
+        return this.add(item.target);
       }
-
-      if (CatalogMemberMixin.isMixedInto(item)) await item.loadMetadata();
-
-      if (MappableMixin.isMixedInto(item)) {
-        await item.loadMapItems();
-      }
-    } catch (e) {
-      this.remove(item);
-      throw e instanceof TerriaError
-        ? e
-        : new TerriaError({
-            title: i18next.t("workbench.addItemErrorTitle"),
-            message: i18next.t("workbench.addItemErrorMessage")
-          });
     }
+
+    if (
+      !error &&
+      !MappableMixin.isMixedInto(item) &&
+      !ChartableMixin.isMixedInto(item)
+    ) {
+      this.remove(item);
+      throw `${getName(
+        item
+      )} cannot be added to the workbench - as there is nothing to visualize`;
+    }
+
+    if (!error && CatalogMemberMixin.isMixedInto(item))
+      error = (await item.loadMetadata()).error;
+
+    if (!error && MappableMixin.isMixedInto(item)) {
+      error = (await item.loadMapItems()).error;
+    }
+
+    // Remove item if TerriaError severity is Error
+    if (error?.severity === TerriaErrorSeverity.Error) {
+      this.remove(item);
+    }
+
+    return Result.none(error, {
+      title: i18next.t("workbench.addItemErrorTitle"),
+      message: i18next.t("workbench.addItemErrorMessage"),
+      importance: -1
+    });
   }
 
   /**
@@ -245,7 +258,7 @@ export default class Workbench {
 }
 
 function dereferenceModel(model: BaseModel): BaseModel {
-  if (ReferenceMixin.is(model) && model.target !== undefined) {
+  if (ReferenceMixin.isMixedInto(model) && model.target !== undefined) {
     return model.target;
   }
   return model;

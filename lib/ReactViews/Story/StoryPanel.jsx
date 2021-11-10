@@ -6,18 +6,16 @@ import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import { Swipeable } from "react-swipeable";
-import getPath from "../../Core/getPath";
-// eslint-disable-next-line no-unused-vars
-import Terria from "../../Models/Terria";
-import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
-import { Medium, Small } from "../Generic/Responsive";
-import Icon from "../../Styled/Icon";
-import Styles from "./story-panel.scss";
-import TerriaError from "../../Core/TerriaError";
 import {
   Category,
   StoryAction
 } from "../../Core/AnalyticEvents/analyticEvents";
+import getPath from "../../Core/getPath";
+import TerriaError from "../../Core/TerriaError";
+import Icon from "../../Styled/Icon";
+import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
+import { Medium, Small } from "../Generic/Responsive";
+import Styles from "./story-panel.scss";
 
 /**
  *
@@ -39,20 +37,11 @@ export async function activateStory(scene, terria) {
         try {
           await terria.applyInitData({
             initData: initSource,
-            replaceStratum: false,
+            replaceStratum: true,
             canUnsetFeaturePickingState: true
           });
         } catch (e) {
-          errors.push(
-            TerriaError.from(e, {
-              message: {
-                key: "models.terria.loadingInitSourceError2Message",
-                parameters: {
-                  loadSource: initSource.name ?? "Unknown source"
-                }
-              }
-            })
-          );
+          errors.push(TerriaError.from(e));
         }
       })
     );
@@ -170,18 +159,7 @@ const StoryPanel = observer(
     },
 
     onCenterScene(story) {
-      if (story.shareData) {
-        runInAction(() => {
-          this.props.terria
-            .updateFromStartData(
-              story.shareData,
-              `Story data: \`${story.title ?? story.id}\``
-            )
-            .catch(function(e) {
-              this.props.terria.raiseErrorToUser(e);
-            });
-        });
-      }
+      activateStory(story, this.props.terria);
     },
 
     goToPrevStory() {

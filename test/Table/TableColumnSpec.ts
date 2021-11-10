@@ -1,9 +1,9 @@
-import CommonStrata from "../../lib/Models/CommonStrata";
-import createStratumInstance from "../../lib/Models/createStratumInstance";
-import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
+import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import TableColumn from "../../lib/Table/TableColumn";
-import TableColumnTraits from "../../lib/Traits/TableColumnTraits";
+import TableColumnTraits from "../../lib/Traits/TraitsClasses/TableColumnTraits";
 
 const regionMapping = JSON.stringify(
   require("../../wwwroot/data/regionMapping.json")

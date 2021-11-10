@@ -3,7 +3,7 @@
 interface CssExports {
   'charcoalGrey': string;
   'colorPrimary': string;
-  'colorSplitter': string;
+  'colorSecondary': string;
   'compassWidth': string;
   'dark': string;
   'darkLighter': string;
@@ -35,6 +35,7 @@ interface CssExports {
   'modalBg': string;
   'modalHighlight': string;
   'modalText': string;
+  'notificationWindowZIndex': string;
   'overlay': string;
   'overlayInvert': string;
   'radius40Button': string;
@@ -51,6 +52,7 @@ interface CssExports {
   'textLightTranslucent': string;
   'toolPrimaryColor': string;
   'trainerHeight': string;
+  'turquoiseBlue': string;
   'workbenchWidth': string;
 }
 declare var cssExports: CssExports;
