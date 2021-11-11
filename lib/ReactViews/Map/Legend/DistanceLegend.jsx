@@ -219,4 +219,4 @@ class DistanceLegend extends React.Component {
     return distanceLabel;
   }
 }
-module.exports = DistanceLegend;
+export default DistanceLegend;

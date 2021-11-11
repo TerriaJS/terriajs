@@ -20,7 +20,7 @@ import {
   canShorten,
   isShareable
 } from "./BuildShareLink";
-import PrintView from "./PrintView";
+import PrintView from "./Print/PrintView";
 import Styles from "./share-panel.scss";
 import StorySharePanel from "./StorySharePanel";
 import {

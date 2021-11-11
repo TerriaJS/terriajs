@@ -1,15 +1,20 @@
-import { formatDateTime } from "../../../BottomDock/Timeline/DateFormats";
-import Description from "../../../Preview/Description";
-import FeatureInfoPanel from "../../../FeatureInfo/FeatureInfoPanel";
-import Legend from "../../../Workbench/Controls/Legend";
+import Description from "../../../../Preview/Description";
+import FeatureInfoPanel from "../../../../FeatureInfo/FeatureInfoPanel";
+import Legend from "../../../../Workbench/Controls/Legend";
 import React from "react";
 import ReactDOM from "react-dom";
-import Terria from "../../../../Models/Terria";
-import ViewState from "../../../../ReactViewModels/ViewState";
-import CatalogMemeberMixin from "../../../../ModelMixins/CatalogMemberMixin";
-import MappableMixin from "../../../../ModelMixins/MappableMixin";
-import { BaseModel } from "../../../../Models/Definition/Model";
-import DiscretelyTimeVaryingMixin from "../../../../ModelMixins/DiscretelyTimeVaryingMixin";
+import Terria from "../../../../../Models/Terria";
+import ViewState from "../../../../../ReactViewModels/ViewState";
+import CatalogMemeberMixin from "../../../../../ModelMixins/CatalogMemberMixin";
+import MappableMixin from "../../../../../ModelMixins/MappableMixin";
+import { BaseModel } from "../../../../../Models/Definition/Model";
+import DiscretelyTimeVaryingMixin from "../../../../../ModelMixins/DiscretelyTimeVaryingMixin";
+
+import DistanceLegend from "../../../Legend/DistanceLegend";
+import PrintViewButtons from "./PrintViewButtons";
+import { terriaTheme } from"../../../../StandardUserInterface/StandardTheme";
+import { StyleSheetManager, ThemeProvider } from "styled-components";
+
 
 interface Props {
   terria: Terria;
@@ -136,9 +141,9 @@ class PrintView extends React.Component<Props, State> {
     if (!this.state.mapImageDataUrl) {
       return <div>Creating print view...</div>;
     }
-
     return (
-      <div>
+      <ThemeProvider theme={terriaTheme}>
+        <PrintViewButtons />
         <p>
           <img
             className="map-image"
@@ -146,6 +151,7 @@ class PrintView extends React.Component<Props, State> {
             alt="Map snapshot"
           />
         </p>
+        <DistanceLegend terria={this.props.terria} />
         {this.props.terria.workbench.items.map(this.renderLegend)}
         {this.renderFeatureInfo()}
         <h1>Dataset Details</h1>
@@ -158,7 +164,7 @@ class PrintView extends React.Component<Props, State> {
             <p>{this.props.terria.configParameters.printDisclaimer.text}</p>
           </>
         ) : null}
-      </div>
+      </ThemeProvider>
     );
   }
 
@@ -264,21 +270,28 @@ class PrintView extends React.Component<Props, State> {
     printWindow.document.open();
     printWindow.document.close();
 
+
+
+    const printView = (
+      <StyleSheetManager target={printWindow.document.body}>
+        
+        <PrintView
+          terria={terria}
+          viewState={viewState}
+          window={printWindow}
+          readyCallback={readyCallback}
+        />
+      </StyleSheetManager>
+    );
+
     printWindow.document.head.innerHTML = `
           <meta charset="UTF-8">
           <title>${terria.appName} Print View</title>
-          <style>${styles}</style>
-          `;
+          <style>${styles}</style>`;
     printWindow.document.body.innerHTML = '<div id="print"></div>';
 
-    const printView = (
-      <PrintView
-        terria={terria}
-        viewState={viewState}
-        window={printWindow}
-        readyCallback={readyCallback}
-      />
-    );
+
+
     ReactDOM.render(printView, printWindow.document.getElementById("print"));
   }
 }

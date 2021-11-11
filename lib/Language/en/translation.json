@@ -1578,5 +1578,8 @@
   },
   "toast": {
     "mapIsZooming": "Loading ideal zoom..."
+  },
+  "printView": {
+    "loading": "Creating print view..."
   }
 }
