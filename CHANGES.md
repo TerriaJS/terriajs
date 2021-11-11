@@ -1,8 +1,15 @@
 Change Log
 ==========
 
-#### next release (8.1.5)
+#### next release (8.1.10)
+* Added `MAINCODE` aliases for all ABS Statistical Area regions that were missing them.
+* [The next improvement]
 
+#### 8.1.9
+* TSify workbench splitter control and fix broken styling.
+* Fix app crash when opening AR tool.
+
+#### 8.1.8
 * Tsified `SettingPanel`
 * Moved `setViewerMode` function from `Terria` class to `ViewerMode`
 * Refactored checkbox to use children elements for label instead of label
@@ -48,6 +55,7 @@ Change Log
 * Tweak automatic `TableColumn.type = Enum` for wider range of values
 * Add `baseMapContrastColor` and `constrastColor` to `BaseMapModel`
 * [The next improvement]
+* Ported feaure from v7 to set WMS layers property from the value of `LAYERS`, `layers` or `typeName` from query string of CKAN resource URL.
 
 #### 8.1.4
 
