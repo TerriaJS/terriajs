@@ -174,3 +174,13 @@
     flex-basis: calc(100% - #{$work-bench-width});
   }
 }
+
+:global {
+  .cesium-timeline {
+    &-needle,
+    &-trackContainer,
+    &-ruler {
+      display: none !important;
+    }
+  }
+}

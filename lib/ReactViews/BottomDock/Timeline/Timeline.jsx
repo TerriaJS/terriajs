@@ -33,18 +33,11 @@ export const Timeline = observer(
       };
     },
 
-    /* eslint-disable-next-line camelcase */
-    UNSAFE_componentWillMount() {
-      this.resizeListener = () => this.timeline && this.timeline.resize();
-      window.addEventListener("resize", this.resizeListener, false);
-    },
-
     componentDidMount() {
       this.props.terria.timelineStack.activate();
     },
 
     componentWillUnmount() {
-      window.removeEventListener("resize", this.resizeListener);
       this.props.terria.timelineStack.deactivate();
     },
 

@@ -41,6 +41,8 @@ class ChartPanel extends React.Component {
   }
 
   componentDidUpdate() {
+    // Required so that components like the splitter that depend on screen
+    // height will re-adjust.
     this.props.viewState.triggerResizeEvent();
     if (defined(this.props.onHeightChange)) {
       this.props.onHeightChange();
