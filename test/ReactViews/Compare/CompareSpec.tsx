@@ -44,7 +44,11 @@ describe("Compare", function() {
       expect(terria.showSplitter).toBe(false);
       await renderCompare({
         ...defaultProps,
-        compareConfig: { leftPanelItemId, rightPanelItemId: undefined }
+        compareConfig: {
+          showCompare: true,
+          leftPanelItemId,
+          rightPanelItemId: undefined
+        }
       });
       expect(terria.showSplitter).toBe(true);
     });
@@ -54,7 +58,11 @@ describe("Compare", function() {
     it("turns off the splitter", async function() {
       const renderer = await renderCompare({
         ...defaultProps,
-        compareConfig: { leftPanelItemId, rightPanelItemId: undefined }
+        compareConfig: {
+          showCompare: true,
+          leftPanelItemId,
+          rightPanelItemId: undefined
+        }
       });
       expect(terria.showSplitter).toBe(true);
       renderer.unmount();

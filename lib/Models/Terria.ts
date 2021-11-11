@@ -494,8 +494,8 @@ export default class Terria {
   @observable terrainSplitDirection: ImagerySplitDirection =
     ImagerySplitDirection.NONE;
 
-  // When true, reveals the workflow panel and hides the workbench side panel.
-  @observable showWorkflowPanel = false;
+  // Is true when the workflow panel is active
+  @observable isWorkflowPanelActive = false;
 
   @observable depthTestAgainstTerrainEnabled = false;
 
@@ -1377,7 +1377,7 @@ export default class Terria {
       this.splitPosition = initData.splitPosition;
     }
 
-    this.showWorkflowPanel = Boolean(initData.showWorkflowPanel);
+    this.isWorkflowPanelActive = Boolean(initData.isWorkflowPanelActive);
 
     if (isJsonObject(initData.compareConfig)) {
       this.compareConfig = createCompareConfig(initData.compareConfig);

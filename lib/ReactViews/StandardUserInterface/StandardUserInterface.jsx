@@ -301,28 +301,30 @@ const StandardUserInterface = observer(
                       />
                     </Small>
                     <Medium>
-                      <WorkflowPanelContainer
-                        viewState={this.props.viewState}
-                        show={this.props.terria.showWorkflowPanel}
-                      />
-                      <SidePanelContainer
-                        viewState={viewState}
-                        tabIndex={0}
-                        show={
-                          this.props.viewState.isMapFullScreen === false &&
-                          this.props.terria.showWorkflowPanel === false
-                        }
-                      >
-                        <Branding
-                          terria={terria}
+                      <>
+                        <WorkflowPanelContainer
                           viewState={this.props.viewState}
-                          version={this.props.version}
+                          show={this.props.terria.isWorkflowPanelActive}
                         />
-                        <SidePanel
-                          terria={terria}
-                          viewState={this.props.viewState}
-                        />
-                      </SidePanelContainer>
+                        <SidePanelContainer
+                          viewState={viewState}
+                          tabIndex={0}
+                          show={
+                            this.props.viewState.isMapFullScreen === false &&
+                            this.props.terria.isWorkflowPanelActive === false
+                          }
+                        >
+                          <Branding
+                            terria={terria}
+                            viewState={this.props.viewState}
+                            version={this.props.version}
+                          />
+                          <SidePanel
+                            terria={terria}
+                            viewState={this.props.viewState}
+                          />
+                        </SidePanelContainer>
+                      </>
                     </Medium>
                   </If>
                   <Medium>

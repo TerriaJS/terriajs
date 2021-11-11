@@ -2,11 +2,10 @@ import { action } from "mobx";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import TestRenderer, { ReactTestRenderer } from "react-test-renderer";
-import Terria from "../../../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import Terria from "../../../../lib/Models/Terria";
 import ViewState from "../../../../lib/ReactViewModels/ViewState";
-
-const ViewingControls = require("../../../../lib/ReactViews/Workbench/Controls/ViewingControls");
+import ViewingControls from "../../../../lib/ReactViews/Workbench/Controls/ViewingControls";
 
 describe("ViewingControls", function() {
   let terria: Terria;
@@ -65,7 +64,7 @@ describe("ViewingControls", function() {
       });
       expect(terria.compareConfig?.leftPanelItemId).toBeUndefined();
       compareItemMenuOption.props.onClick();
-      expect(terria.compareConfig?.rightPanelItemId).toBe("mywms");
+      expect(terria.compareConfig?.leftPanelItemId).toBe("mywms");
     });
   });
 });

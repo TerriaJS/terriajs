@@ -22,8 +22,8 @@ describe("WorkflowPanel", function() {
     });
   });
 
-  it("hides the terria sidepanel when opened", async function() {
-    expect(viewState.showTerriaSidePanel).toBe(true);
+  it("sets isWorkflowPanelActive when opened", async function() {
+    expect(viewState.terria.isWorkflowPanelActive).toBe(false);
     await act(() => {
       TestRenderer.create(
         <WorkflowPanel
@@ -35,10 +35,10 @@ describe("WorkflowPanel", function() {
         />
       );
     });
-    expect(viewState.showTerriaSidePanel).toBe(false);
+    expect(viewState.terria.isWorkflowPanelActive).toBe(true);
   });
 
-  it("shows the terria sidepanel when closed", async function() {
+  it("unsets isWorkflowPanelActive sidepanel when closed", async function() {
     await act(() => {
       testRenderer = TestRenderer.create(
         <WorkflowPanel
@@ -50,8 +50,8 @@ describe("WorkflowPanel", function() {
         />
       );
     });
-    expect(viewState.showTerriaSidePanel).toBe(false);
+    expect(viewState.terria.isWorkflowPanelActive).toBe(true);
     testRenderer.unmount();
-    expect(viewState.showTerriaSidePanel).toBe(true);
+    expect(viewState.terria.isWorkflowPanelActive).toBe(false);
   });
 });

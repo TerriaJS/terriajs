@@ -130,9 +130,21 @@ const Compare: React.FC<PropsType> = observer(props => {
       setRightItem(rightItem);
 
       return function cleanup() {
-        // remove any clones we have added
-        if (leftItem && isCloneItem(leftItem)) removeItem(leftItem);
-        if (rightItem && isCloneItem(rightItem)) removeItem(rightItem);
+        // remove any clones we have added that are not in use
+        if (
+          leftItem &&
+          isCloneItem(leftItem) &&
+          leftItem.uniqueId !== config.leftPanelItemId
+        ) {
+          removeItem(leftItem);
+        }
+        if (
+          rightItem &&
+          isCloneItem(rightItem) &&
+          rightItem.uniqueId !== config.rightPanelItemId
+        ) {
+          removeItem(rightItem);
+        }
       };
     }),
     [config.leftPanelItemId, config.rightPanelItemId, comparableItems.length]
@@ -184,7 +196,6 @@ const Compare: React.FC<PropsType> = observer(props => {
     });
   };
 
-  const isFirstRun = useRef(true);
   useEffect(
     function updateContextItems() {
       contextItems.forEach(
@@ -196,12 +207,6 @@ const Compare: React.FC<PropsType> = observer(props => {
             ImagerySplitDirection.NONE
           )
       );
-      // Disable all context items by default, the first time the user triggers
-      // the compare workflow.
-      if (isFirstRun.current && config.isUserTriggered) {
-        isFirstRun.current = false;
-        contextItems.forEach(hideItem);
-      }
     },
     [config, contextItems]
   );
@@ -320,21 +325,23 @@ const Compare: React.FC<PropsType> = observer(props => {
           )}
         </Panel>
       </Container>
-      <BottomDockFirstPortal>
-        <MapOverlay>
-          <Left>
-            <DatePicker side="left" item={leftItem} />
-          </Left>
-          <LocationDateFilter
-            viewState={viewState}
-            leftItem={leftItem}
-            rightItem={rightItem}
-          />
-          <Right>
-            <DatePicker side="right" item={rightItem} />
-          </Right>
-        </MapOverlay>
-      </BottomDockFirstPortal>
+      {terria.elements.get("timeline")?.visible === false && (
+        <BottomDockFirstPortal>
+          <MapOverlay>
+            <Left>
+              <DatePicker side="left" item={leftItem} />
+            </Left>
+            <LocationDateFilter
+              viewState={viewState}
+              leftItem={leftItem}
+              rightItem={rightItem}
+            />
+            <Right>
+              <DatePicker side="right" item={rightItem} />
+            </Right>
+          </MapOverlay>
+        </BottomDockFirstPortal>
+      )}
     </>
   );
 });
@@ -357,13 +364,51 @@ const BottomDockFirstPortal: React.FC<{}> = props => {
 /**
  * Overlays the children on top of the map
  */
-const MapOverlay = styled.div`
+const MapOverlay: React.FC = ({ children }) => {
+  return (
+    <div
+      css={`
+        width: 100%;
+        /* bottom dock has a grey background, by setting height to 0 we prevent it from showing through */
+        /*height: 0px;*/
+        /*line-height: 0px;*/
+        position: relative;
+      `}
+    >
+      <div
+        css={`
+          width: 100%;
+          position: absolute;
+          bottom: 50px;
+          display: flex;
+          justify-content: center;
+
+          & > ${Left} {
+            width: 50%;
+            display: flex;
+            justify-content: flex-end;
+          }
+
+          & > ${Right} {
+            width: 50%;
+            display: flex;
+            justify-content: flex-start;
+          }
+        `}
+      >
+        {children}
+      </div>
+    </div>
+  );
+};
+const MapOverlay2 = styled.div`
   display: flex;
   justify-content: center;
 
   width: 100%;
   /* bottom dock has a grey background, by setting height to 0 we prevent it from showing through */
   height: 0px;
+  line-height: 0px;
 
   position: relative;
   bottom: 80px;

@@ -37,6 +37,8 @@ import Icon, { StyledIcon } from "../../../Styled/Icon";
 import { exportData } from "../../Preview/ExportData";
 import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
 import WorkbenchButton from "../WorkbenchButton";
+import MappableTraits from "../../../Traits/TraitsClasses/MappableTraits";
+import hasTraits from "../../../Models/Definition/hasTraits";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -225,11 +227,20 @@ const ViewingControls = observer(
 
     compareItem() {
       runInAction(() => {
-        this.props.viewState.terria.compareConfig = createCompareConfig({
+        const terria = this.props.viewState.terria;
+        terria.compareConfig = createCompareConfig({
           showCompare: true,
           leftPanelItemId: this.props.item.uniqueId,
           isUserTriggered: true
         });
+
+        // Disable all other workbench items before launching compare workflow.
+        terria.workbench.items.forEach(
+          item =>
+            item !== this.props.item &&
+            hasTraits(item, MappableTraits, "show") &&
+            item.setTrait(CommonStrata.user, "show", false)
+        );
       });
     },
 
@@ -302,6 +313,7 @@ const ViewingControls = observer(
         isComparableItem(item) &&
         !item.disableSplitter &&
         defined(item.splitDirection);
+
       return (
         <ul ref={e => (this.menuRef = e)}>
           <If

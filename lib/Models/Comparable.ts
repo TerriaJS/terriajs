@@ -21,7 +21,6 @@ export function isComparableItem(item: any): item is Comparable {
     item &&
     MappableMixin.isMixedInto(item) &&
     CatalogMemberMixin.isMixedInto(item) &&
-    item.mapItems.length > 0 &&
     hasTraits(item, MappableTraits, "show") &&
     hasTraits(item, CatalogMemberTraits, "name") &&
     hasTraits(item, SplitterTraits, "splitDirection");
@@ -63,15 +62,9 @@ export function createCompareConfig(json: any = {}): CompareConfig | undefined {
       ? json.rightPanelItemId
       : undefined;
 
-  const isUserTriggered =
-    typeof json.isUserTriggered === "boolean"
-      ? json.isUserTriggered
-      : undefined;
-
   return {
     showCompare,
     leftPanelItemId,
-    rightPanelItemId,
-    isUserTriggered
+    rightPanelItemId
   };
 }

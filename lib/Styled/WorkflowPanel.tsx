@@ -24,11 +24,11 @@ const WorkflowPanel: React.FC<PropsType> = observer(props => {
 
   useEffect(function hideTerriaSidePanelOnMount() {
     runInAction(() => {
-      viewState.terria.showWorkflowPanel = true;
+      viewState.terria.isWorkflowPanelActive = true;
     });
     return () =>
       runInAction(() => {
-        viewState.terria.showWorkflowPanel = false;
+        viewState.terria.isWorkflowPanelActive = false;
       });
   });
 
