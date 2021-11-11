@@ -545,6 +545,9 @@ export default class Terria {
    */
   errorService: ErrorServiceProvider = new StubErrorServiceProvider();
 
+  config: JsonValue = {};
+  magdaRoot: string = "/";
+
   constructor(options: TerriaOptions = {}) {
     if (options.baseUrl) {
       if (options.baseUrl.lastIndexOf("/") !== options.baseUrl.length - 1) {
@@ -797,23 +800,24 @@ export default class Terria {
       options.applicationUrl?.href || getUriWithoutPath(baseUri);
 
     try {
-      const config = await loadJson5(
+      this.config = await loadJson5(
         options.configUrl,
         options.configUrlHeaders
       );
+
       // If it's a magda config, we only load magda config and parameters should never be a property on the direct
       // config aspect (it would be under the `terria-config` aspect)
-      if (isJsonObject(config) && config.aspects) {
-        await this.loadMagdaConfig(options.configUrl, config, baseUri);
+      if (isJsonObject(this.config) && this.config.aspects) {
+        await this.loadMagdaConfig(options.configUrl, this.config, baseUri);
       }
       runInAction(() => {
-        if (isJsonObject(config) && isJsonObject(config.parameters)) {
-          this.updateParameters(config.parameters);
+        if (isJsonObject(this.config) && isJsonObject(this.config.parameters)) {
+          this.updateParameters(this.config.parameters);
         }
         if (this.configParameters.errorService) {
           this.setupErrorServiceProvider(this.configParameters.errorService);
         }
-        this.setupInitializationUrls(baseUri, config);
+        this.setupInitializationUrls(baseUri, this.config);
       });
     } catch (error) {
       this.raiseErrorToUser(error, {
@@ -1494,8 +1498,40 @@ export default class Terria {
     this.mainViewer.homeCamera = CameraView.fromJson(homeCameraInit);
   }
 
+  async refreshCatalogMembersFromMagda(aspects?: any) {
+    // force config (root group) id to be `/`
+    const id = "/";
+    this.removeModelReferences(this.catalog.group);
+
+    let existingReference = this.getModelById(MagdaReference, id);
+    if (existingReference === undefined) {
+      existingReference = new MagdaReference(id, this);
+      // Add model with terria aspects shareKeys
+      this.addModel(existingReference, aspects?.terria?.shareKeys);
+    }
+
+    const reference = existingReference;
+
+    reference.setTrait(CommonStrata.definition, "url", this.magdaRoot);
+    reference.setTrait(CommonStrata.definition, "recordId", id);
+    reference.setTrait(
+      CommonStrata.definition,
+      "magdaRecord",
+      this.config as JsonObject
+    );
+    (await reference.loadReference()).raiseError(
+      this,
+      `Failed to load MagdaReference for record ${id}`
+    );
+    if (reference.target instanceof CatalogGroup) {
+      runInAction(() => {
+        this.catalog.group = <CatalogGroup>reference.target;
+      });
+    }
+  }
+
   async loadMagdaConfig(configUrl: string, config: any, baseUri: uri.URI) {
-    const magdaRoot = new URI(configUrl)
+    this.magdaRoot = new URI(configUrl)
       .path("")
       .query("")
       .toString();
@@ -1528,32 +1564,9 @@ export default class Terria {
     }
 
     if (aspects.group && aspects.group.members) {
-      // force config (root group) id to be `/`
-      const id = "/";
-      this.removeModelReferences(this.catalog.group);
-
-      let existingReference = this.getModelById(MagdaReference, id);
-      if (existingReference === undefined) {
-        existingReference = new MagdaReference(id, this);
-        // Add model with terria aspects shareKeys
-        this.addModel(existingReference, aspects?.terria?.shareKeys);
-      }
-
-      const reference = existingReference;
-
-      reference.setTrait(CommonStrata.definition, "url", magdaRoot);
-      reference.setTrait(CommonStrata.definition, "recordId", id);
-      reference.setTrait(CommonStrata.definition, "magdaRecord", config);
-      (await reference.loadReference()).raiseError(
-        this,
-        `Failed to load MagdaReference for record ${id}`
-      );
-      if (reference.target instanceof CatalogGroup) {
-        runInAction(() => {
-          this.catalog.group = <CatalogGroup>reference.target;
-        });
-      }
+      this.refreshCatalogMembersFromMagda(aspects);
     }
+
     this.setupInitializationUrls(baseUri, config.aspects?.["terria-config"]);
     /** Load up rest of terria catalog if one is inlined in terria-init */
     if (config.aspects?.["terria-init"]) {
