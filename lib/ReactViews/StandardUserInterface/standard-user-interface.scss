@@ -175,6 +175,10 @@
   }
 }
 
+// TODO: In v7 this is specified only in cesium-timeline.scss In v8 we have to
+// additionally specify it here to prevent ugly timeline height readjustments
+// when page loads with active timeline (especially in firefox but also visible
+// in chrome).
 :global {
   .cesium-timeline {
     &-needle,
