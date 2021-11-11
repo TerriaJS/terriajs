@@ -545,7 +545,10 @@ export default class Terria {
    */
   errorService: ErrorServiceProvider = new StubErrorServiceProvider();
 
-  config: JsonValue = {};
+  startOptions: StartOptions = {
+    configUrl: "",
+    configUrlHeaders: {}
+  };
   magdaRoot: string = "/";
 
   constructor(options: TerriaOptions = {}) {
@@ -799,25 +802,34 @@ export default class Terria {
     const launchUrlForAnalytics =
       options.applicationUrl?.href || getUriWithoutPath(baseUri);
 
+    this.startOptions = {
+      configUrl: options.configUrl,
+      configUrlHeaders: options.configUrlHeaders
+    };
+
     try {
-      this.config = await loadJson5(
-        options.configUrl,
-        options.configUrlHeaders
+      const config = await loadJson5(
+        this.startOptions.configUrl,
+        this.startOptions.configUrlHeaders
       );
 
       // If it's a magda config, we only load magda config and parameters should never be a property on the direct
       // config aspect (it would be under the `terria-config` aspect)
-      if (isJsonObject(this.config) && this.config.aspects) {
-        await this.loadMagdaConfig(options.configUrl, this.config, baseUri);
+      if (isJsonObject(config) && config.aspects) {
+        await this.loadMagdaConfig(
+          this.startOptions.configUrl,
+          config,
+          baseUri
+        );
       }
       runInAction(() => {
-        if (isJsonObject(this.config) && isJsonObject(this.config.parameters)) {
-          this.updateParameters(this.config.parameters);
+        if (isJsonObject(config) && isJsonObject(config.parameters)) {
+          this.updateParameters(config.parameters);
         }
         if (this.configParameters.errorService) {
           this.setupErrorServiceProvider(this.configParameters.errorService);
         }
-        this.setupInitializationUrls(baseUri, this.config);
+        this.setupInitializationUrls(baseUri, config);
       });
     } catch (error) {
       this.raiseErrorToUser(error, {
@@ -1499,6 +1511,11 @@ export default class Terria {
   }
 
   async refreshCatalogMembersFromMagda(aspects?: any) {
+    const config = await loadJson5(
+      this.startOptions.configUrl,
+      this.startOptions.configUrlHeaders
+    );
+
     // force config (root group) id to be `/`
     const id = "/";
     this.removeModelReferences(this.catalog.group);
@@ -1517,9 +1534,9 @@ export default class Terria {
     reference.setTrait(
       CommonStrata.definition,
       "magdaRecord",
-      this.config as JsonObject
+      config as JsonObject
     );
-    (await reference.loadReference()).raiseError(
+    (await reference.loadReference(true)).raiseError(
       this,
       `Failed to load MagdaReference for record ${id}`
     );
