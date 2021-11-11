@@ -2,6 +2,7 @@ Change Log
 ==========
 
 #### next release (8.1.10)
+* Add a method refreshCatalogMembersFromMagda to Terria class.
 * [The next improvement]
 
 #### 8.1.9
