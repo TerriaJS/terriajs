@@ -11,6 +11,7 @@ Change Log
   * Added `WebCoverageServiceParameterTraits` to `WebMapServiceCatalogItemTraits.linkedWcsParameters`. It includes `outputFormat` and `outputCrs`
   * Will attempt to use native CRS and format (from `DescribeCoverage`)
   * No longer sets `width` or `height` - so export will now return native resolution
+* `Result.throwIfUndefined()` will now only throw if `result.value` is undefined - regardless of `result.error`
 * [The next improvement]
 
 #### 8.1.9

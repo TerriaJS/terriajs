@@ -736,6 +736,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
 
   @computed get linkedWcsParameters() {
     // Get outputCrs
+    // Note: this will be overriden by `WebCoverageServiceDescribeCoverageStratum` if a better outputCrs is found
     let outputCrs = this.availableCrs[0];
 
     // Unless it is Web Mercator of course - that would be stupid

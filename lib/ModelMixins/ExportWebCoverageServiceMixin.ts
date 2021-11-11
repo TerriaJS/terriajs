@@ -312,8 +312,6 @@ function ExportWebCoverageServiceMixin<
         }
 
         // Make query parameter object
-        // Start by adding
-
         const query = {
           service: "WCS",
           request: "GetCoverage",
@@ -329,10 +327,12 @@ function ExportWebCoverageServiceMixin<
             `Lat(${CesiumMath.toDegrees(bbox.south)},${CesiumMath.toDegrees(
               bbox.north
             )})`,
+            // Turn subsets into `key=(value)` format
             ...filterOutUndefined(
               (this.linkedWcsParameters.subsets ?? []).map(subset =>
                 subset.key && subset.value
                   ? `${subset.key}(${
+                      // Wrap string values in double quotes
                       typeof subset.value === "string"
                         ? `"${subset.value}"`
                         : subset.value
@@ -390,70 +390,66 @@ function ExportWebCoverageServiceMixin<
         `WCS: ${getName(this)} ${timestamp}`,
         this.terria
       );
+      try {
+        runInAction(() => {
+          pendingWorkbenchItem.loadPromise = new Promise(() => {});
+          pendingWorkbenchItem.loadMetadata();
 
-      runInAction(() => {
-        pendingWorkbenchItem.loadPromise = new Promise(() => {});
-        pendingWorkbenchItem.loadMetadata();
-
-        // Add WCS loading metadata message to shortReport
-        pendingWorkbenchItem.setTrait(
-          CommonStrata.user,
-          "shortReport",
-          i18next.t("models.wcs.asyncResultLoadingMetadata", {
-            name: getName(this),
-            timestamp: timestamp
-          })
-        );
-      });
-
-      pendingWorkbenchItem.terria.workbench.add(pendingWorkbenchItem);
-
-      // Load WCS metadata (DescribeCoverage request)
-      const metdataError = (await this.loadWcsMetadata()).error;
-
-      if (metdataError) {
-        pendingWorkbenchItem.terria.workbench.remove(pendingWorkbenchItem);
-        throw metdataError;
-      }
-
-      // Get WCS URL
-      const url = this.getCoverageUrl(bbox).raiseError(
-        this.terria,
-        `Error occurred while generating WCS GetCoverage URL`
-      );
-
-      if (!url) {
-        throw TerriaError.from(
-          `Failed to generate WCS GetCoverage request URL`
-        );
-      }
-
-      runInAction(() => {
-        // Add WCS "pending" message to shortReport
-        pendingWorkbenchItem.setTrait(
-          CommonStrata.user,
-          "shortReport",
-          i18next.t("models.wcs.asyncPendingDescription", {
-            name: getName(this),
-            timestamp: timestamp
-          })
-        );
-
-        // Create info section from URL query parameters
-        const info = createStratumInstance(InfoSectionTraits, {
-          name: "Inputs",
-          content: `<table class="cesium-infoBox-defaultTable">${Object.entries(
-            new URI(url).query(true)
-          ).reduce<string>(
-            (previousValue, [key, value]) =>
-              `${previousValue}<tr><td style="vertical-align: middle">${key}</td><td>${value}</td></tr>`,
-            ""
-          )}</table>`
+          // Add WCS loading metadata message to shortReport
+          pendingWorkbenchItem.setTrait(
+            CommonStrata.user,
+            "shortReport",
+            i18next.t("models.wcs.asyncResultLoadingMetadata", {
+              name: getName(this),
+              timestamp: timestamp
+            })
+          );
         });
 
-        pendingWorkbenchItem.setTrait(CommonStrata.user, "info", [info]);
-      });
-      try {
+        pendingWorkbenchItem.terria.workbench.add(pendingWorkbenchItem);
+
+        // Load WCS metadata (DescribeCoverage request)
+        (await this.loadWcsMetadata()).throwIfError();
+
+        // Get WCS URL
+        // This will throw an error if URL is undefined
+        // It will raise an error if URL is defined, but an error has occurred
+        const urlResult = this.getCoverageUrl(bbox);
+        const url = urlResult.throwIfUndefined({
+          message: "Failed to generate WCS GetCoverage request URL",
+          importance: 2 // Higher importance than error message in `getCoverageUrl()`
+        });
+        urlResult.raiseError(
+          this.terria,
+          `Error occurred while generating WCS GetCoverage URL`
+        );
+
+        runInAction(() => {
+          // Add WCS "pending" message to shortReport
+          pendingWorkbenchItem.setTrait(
+            CommonStrata.user,
+            "shortReport",
+            i18next.t("models.wcs.asyncPendingDescription", {
+              name: getName(this),
+              timestamp: timestamp
+            })
+          );
+
+          // Create info section from URL query parameters
+          const info = createStratumInstance(InfoSectionTraits, {
+            name: "Inputs",
+            content: `<table class="cesium-infoBox-defaultTable">${Object.entries(
+              new URI(url).query(true)
+            ).reduce<string>(
+              (previousValue, [key, value]) =>
+                `${previousValue}<tr><td style="vertical-align: middle">${key}</td><td>${value}</td></tr>`,
+              ""
+            )}</table>`
+          });
+
+          pendingWorkbenchItem.setTrait(CommonStrata.user, "info", [info]);
+        });
+
         const blob = await loadBlob(proxyCatalogItemUrl(this, url));
 
         runInAction(() =>
