@@ -549,7 +549,6 @@ export default class Terria {
     configUrl: "",
     configUrlHeaders: {}
   };
-  magdaRoot: string = "/";
 
   constructor(options: TerriaOptions = {}) {
     if (options.baseUrl) {
@@ -1529,7 +1528,12 @@ export default class Terria {
 
     const reference = existingReference;
 
-    reference.setTrait(CommonStrata.definition, "url", this.magdaRoot);
+    const magdaRoot = new URI(this.startOptions.configUrl)
+      .path("")
+      .query("")
+      .toString();
+
+    reference.setTrait(CommonStrata.definition, "url", magdaRoot);
     reference.setTrait(CommonStrata.definition, "recordId", id);
     reference.setTrait(
       CommonStrata.definition,
@@ -1548,11 +1552,6 @@ export default class Terria {
   }
 
   async loadMagdaConfig(configUrl: string, config: any, baseUri: uri.URI) {
-    this.magdaRoot = new URI(configUrl)
-      .path("")
-      .query("")
-      .toString();
-
     const aspects = config.aspects;
     const configParams = aspects["terria-config"]?.parameters;
 
