@@ -80,4 +80,4 @@ const BottomDock = observer(
   })
 );
 
-export default measureElement(BottomDock, false);
+export default withControlledVisibility(measureElement(BottomDock, false));

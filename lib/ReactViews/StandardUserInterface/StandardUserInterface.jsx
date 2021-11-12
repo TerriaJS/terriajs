@@ -307,7 +307,7 @@ const StandardUserInterface = observer(
                           show={this.props.terria.isWorkflowPanelActive}
                         />
                         <SidePanelContainer
-                          viewState={viewState}
+                          viewState={this.props.viewState}
                           tabIndex={0}
                           show={
                             this.props.viewState.isMapFullScreen === false &&

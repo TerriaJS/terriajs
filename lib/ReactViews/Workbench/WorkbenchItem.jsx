@@ -12,7 +12,6 @@ import getPath from "../../Core/getPath";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
 import CommonStrata from "../../Models/Definition/CommonStrata";
-import { DEFAULT_PLACEMENT } from "../../Models/SelectableDimensions";
 import Box from "../../Styled/Box";
 import Icon from "../../Styled/Icon";
 import Loader from "../Loader";
