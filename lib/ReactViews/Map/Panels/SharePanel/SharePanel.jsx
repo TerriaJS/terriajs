@@ -209,7 +209,7 @@ const SharePanel = observer(
     },
 
     print() {
-      this.createPrintView(true, true);
+      //TODO: no immediate printing for now;
     },
 
     showPrintView() {
@@ -227,44 +227,44 @@ const SharePanel = observer(
         document.body.appendChild(iframe);
       }
 
-      PrintView.create({
-        terria: this.props.terria,
-        viewState: this.props.viewState,
-        printWindow: iframe ? iframe.contentWindow : undefined,
-        readyCallback: windowToPrint => {
-          if (printAutomatically) {
-            printWindow(windowToPrint)
-              .then(null, e => {
-                // If the print promise rejects, raise an error
-                this.props.terria.raiseErrorToUser(e);
-              })
-              .then(() => {
-                // whether there was an error or not, clean up
-                if (iframe) {
-                  document.body.removeChild(iframe);
-                }
-                if (hidden) {
-                  this.setState({
-                    creatingPrintView: false
-                  });
-                }
-              });
-          }
-        },
-        closeCallback: windowToPrint => {
-          if (hidden) {
-            this.setState({
-              creatingPrintView: false
-            });
-          }
-        }
-      });
+      // PrintView.create({
+      //   terria: this.props.terria,
+      //   viewState: this.props.viewState,
+      //   isHidden: hidden,
+      //   readyCallback: windowToPrint => {
+      //     if (printAutomatically) {
+      //       printWindow(windowToPrint)
+      //         .then(null, e => {
+      //           // If the print promise rejects, raise an error
+      //           this.props.terria.raiseErrorToUser(e);
+      //         })
+      //         .then(() => {
+      //           // whether there was an error or not, clean up
+      //           if (iframe) {
+      //             document.body.removeChild(iframe);
+      //           }
+      //           if (hidden) {
+      //             this.setState({
+      //               creatingPrintView: false
+      //             });
+      //           }
+      //         });
+      //     }
+      //   },
+      //   closeCallback: windowToPrint => {
+      //     if (hidden) {
+      //       this.setState({
+      //         creatingPrintView: false
+      //       });
+      //     }
+      //   }
+      // });
 
-      if (!hidden) {
-        this.setState({
-          creatingPrintView: false
-        });
-      }
+      // if (!hidden) {
+      //   this.setState({
+      //     creatingPrintView: false
+      //   });
+      // }
     },
 
     getShareUrlInput(theme) {
@@ -522,6 +522,7 @@ const SharePanel = observer(
               </If>
             </If>
           </div>
+          {this.state.creatingPrintView? <PrintView terria={this.props.terria} viewState={this.props.viewState} window={null} readyCallback={() => null}/> : null}
         </div>
       );
     },
