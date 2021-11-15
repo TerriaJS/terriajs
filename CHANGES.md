@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.1.11)
 
+* Fix `SettingsPanel` type issue
 * [The next improvement]
 
 #### 8.1.10
