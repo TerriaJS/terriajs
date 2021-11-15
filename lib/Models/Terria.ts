@@ -1495,6 +1495,14 @@ export default class Terria {
     this.mainViewer.homeCamera = CameraView.fromJson(homeCameraInit);
   }
 
+  /**
+   * This method can be used to refresh magda based catalogue configuration. Useful if the catalogue
+   * have items that are only available to authorised users.
+   *
+   * @param magdaCatalogConfigUrl URL of load magda based catalogue configuration
+   * @param config Optional. If present, use this magda based catalogue config instead of reloading.
+   * @param configUrlHeaders  Optional. If present, the headers are added to above URL request.
+   */
   async refreshCatalogMembersFromMagda(
     magdaCatalogConfigUrl: string,
     config?: any,
