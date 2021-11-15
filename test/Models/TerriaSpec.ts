@@ -227,13 +227,13 @@ describe("Terria", function() {
           throw "not init source";
         }
       });
-      it("parses dereferenced group aspect", function(done) {
+      it("parses dereferenced group aspect", async function(done) {
         expect(terria.catalog.group.uniqueId).toEqual("/");
         // dereferenced res
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
           responseText: mapConfigDereferencedString
         });
-        terria
+        await terria
           .start({
             configUrl: "test/Magda/map-config-dereferenced.json",
             i18nOptions
