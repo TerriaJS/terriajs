@@ -1,7 +1,16 @@
 Change Log
 ==========
 
-#### next release (8.1.10)
+#### next release (8.1.12)
+
+* Bigger zoom control icons.
+* [The next improvement]
+
+#### next release (8.1.11)
+
+* Fix `SettingsPanel` type issue
+
+#### 8.1.10
 
 * Re-allowed models to be added to `workbench` if the are not `Mappable` or `Chartable`
 * Moved `WebMapServiceCatalogItem.GetCapbilitiesStratum` to `lib\Models\Catalog\Ows\WebMapServiceCapabilitiesStratum.ts`
@@ -15,7 +24,6 @@ Change Log
 * Fix `CswCatalogGroup` XML types
 * Added `MAINCODE` aliases for all ABS Statistical Area regions that were missing them.
 * Fixed `superGet` replacement in webpack builds with babel versions `7.16.0` and above.
-* [The next improvement]
 
 #### 8.1.9
 
