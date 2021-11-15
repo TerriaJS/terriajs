@@ -191,7 +191,7 @@ class ZoomControl extends React.Component<PropTypes> {
               onClick={this.zoomIn.bind(this)}
               title={t("zoomCotrol.zoomIn")}
             >
-              <Icon glyph={Icon.GLYPHS.plusThick} />
+              <Icon glyph={Icon.GLYPHS.zoomIn} />
             </RawButton>
           </Li>
           <Li>
@@ -200,7 +200,7 @@ class ZoomControl extends React.Component<PropTypes> {
               onClick={this.zoomReset.bind(this)}
               title={t("zoomCotrol.zoomReset")}
             >
-              <Icon glyph={Icon.GLYPHS.refreshThick} />
+              <Icon glyph={Icon.GLYPHS.zoomReset} />
             </RawButton>
           </Li>
           <Li>
@@ -209,7 +209,7 @@ class ZoomControl extends React.Component<PropTypes> {
               onClick={this.zoomOut.bind(this)}
               title={t("zoomCotrol.zoomOut")}
             >
-              <Icon glyph={GLYPHS.minusThick} />
+              <Icon glyph={GLYPHS.zoomOut} />
             </RawButton>
           </Li>
         </Ul>
