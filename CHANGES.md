@@ -4,14 +4,6 @@ Change Log
 #### next release (8.1.12)
 
 * Bigger zoom control icons.
-* [The next improvement]
-
-#### next release (8.1.11)
-
-* Fix `SettingsPanel` type issue
-
-#### 8.1.10
-
 * `GeoJsonMixin.style["stroke-opacity"]` will now also set `polygonStroke.alpha` and `polylineStroke.alpha`
 * Reduce `GeoJsonMixin` default stroke width from `2` to `1`
 * Add `TableMixin` styling to `GeoJsonMixin` - it will treat geojson feature properties as "rows" in a table - which can be styled in the same way as `TableMixin` (eg CSV). This is only enabled for geojson-vt/Protomaps (which requires `Terria.configParameters.enableGeojsonMvt = true`). For more info see `GeojsonMixin.forceLoadMapItems()`
@@ -25,6 +17,14 @@ Change Log
 * Fix `ProtomapsImageryProvider` geojson feature picking over antimeridian
 * Add Socrata group to "Add web data
 * Added "marker-stroke-width", "polyline-stroke-width", "polygon-stroke-width" to `GeojsonStyleTraits` (Note these are not apart of [simplestyle-spec](https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0) and can only be used with `geojson-vt`)
+* [The next improvement]
+
+#### next release (8.1.11)
+
+* Fix `SettingsPanel` type issue
+
+#### 8.1.10
+
 * Fix `CswCatalogGroup` XML types
 * Added `MAINCODE` aliases for all ABS Statistical Area regions that were missing them.
 * Fixed `superGet` replacement in webpack builds with babel versions `7.16.0` and above.
