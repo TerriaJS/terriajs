@@ -233,7 +233,7 @@ const StyledZoomControl = styled(Box).attrs(props => ({
   }
 
   ${Li} {
-    margin: 10px 0;
+    margin: 5px 0;
   }
 `;
 
