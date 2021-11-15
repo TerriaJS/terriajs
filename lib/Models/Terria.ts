@@ -545,11 +545,6 @@ export default class Terria {
    */
   errorService: ErrorServiceProvider = new StubErrorServiceProvider();
 
-  startOptions: StartOptions = {
-    configUrl: "",
-    configUrlHeaders: {}
-  };
-
   constructor(options: TerriaOptions = {}) {
     if (options.baseUrl) {
       if (options.baseUrl.lastIndexOf("/") !== options.baseUrl.length - 1) {
@@ -801,25 +796,16 @@ export default class Terria {
     const launchUrlForAnalytics =
       options.applicationUrl?.href || getUriWithoutPath(baseUri);
 
-    this.startOptions = {
-      configUrl: options.configUrl,
-      configUrlHeaders: options.configUrlHeaders
-    };
-
     try {
       const config = await loadJson5(
-        this.startOptions.configUrl,
-        this.startOptions.configUrlHeaders
+        options.configUrl,
+        options.configUrlHeaders
       );
 
       // If it's a magda config, we only load magda config and parameters should never be a property on the direct
       // config aspect (it would be under the `terria-config` aspect)
       if (isJsonObject(config) && config.aspects) {
-        await this.loadMagdaConfig(
-          this.startOptions.configUrl,
-          config,
-          baseUri
-        );
+        await this.loadMagdaConfig(options.configUrl, config, baseUri);
       }
       runInAction(() => {
         if (isJsonObject(config) && isJsonObject(config.parameters)) {
@@ -1509,11 +1495,14 @@ export default class Terria {
     this.mainViewer.homeCamera = CameraView.fromJson(homeCameraInit);
   }
 
-  async refreshCatalogMembersFromMagda(aspects?: any) {
-    const config = await loadJson5(
-      this.startOptions.configUrl,
-      this.startOptions.configUrlHeaders
-    );
+  async refreshCatalogMembersFromMagda(
+    magdaCatalogConfigUrl: string,
+    config?: any,
+    configUrlHeaders?: { [key: string]: string }
+  ) {
+    const theConfig = config
+      ? config
+      : await loadJson5(magdaCatalogConfigUrl, configUrlHeaders);
 
     // force config (root group) id to be `/`
     const id = "/";
@@ -1522,13 +1511,14 @@ export default class Terria {
     let existingReference = this.getModelById(MagdaReference, id);
     if (existingReference === undefined) {
       existingReference = new MagdaReference(id, this);
+      const aspects = config.aspects;
       // Add model with terria aspects shareKeys
       this.addModel(existingReference, aspects?.terria?.shareKeys);
     }
 
     const reference = existingReference;
 
-    const magdaRoot = new URI(this.startOptions.configUrl)
+    const magdaRoot = new URI(magdaCatalogConfigUrl)
       .path("")
       .query("")
       .toString();
@@ -1538,7 +1528,7 @@ export default class Terria {
     reference.setTrait(
       CommonStrata.definition,
       "magdaRecord",
-      config as JsonObject
+      theConfig as JsonObject
     );
     (await reference.loadReference(true)).raiseError(
       this,
@@ -1580,7 +1570,7 @@ export default class Terria {
     }
 
     if (aspects.group && aspects.group.members) {
-      this.refreshCatalogMembersFromMagda(aspects);
+      this.refreshCatalogMembersFromMagda(configUrl, config);
     }
 
     this.setupInitializationUrls(baseUri, config.aspects?.["terria-config"]);
