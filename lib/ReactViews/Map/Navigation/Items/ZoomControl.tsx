@@ -222,14 +222,17 @@ const StyledZoomControl = styled(Box).attrs(props => ({
   backgroundColor: props.theme.textLight,
   centered: true,
   column: true,
-  styledWidth: "24px",
-  styledHeight: "60px"
+  styledWidth: "32px"
 }))`
   border-radius: 100px;
   svg {
-    height: 10px;
-    width: 10px;
+    height: 20px;
+    width: 20px;
     fill: ${props => props.theme.darkWithOverlay};
+  }
+
+  ${Li} {
+    margin: 10px 0;
   }
 `;
 
