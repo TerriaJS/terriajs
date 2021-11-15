@@ -16,6 +16,9 @@ Change Log
 * Fix `ProtomapsImageryProvider` geojson feature picking over antimeridian
 * Add Socrata group to "Add web data
 * Added "marker-stroke-width", "polyline-stroke-width", "polygon-stroke-width" to `GeojsonStyleTraits` (Note these are not apart of [simplestyle-spec](https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0) and can only be used with `geojson-vt`)
+* Fix `CswCatalogGroup` XML types
+* Added `MAINCODE` aliases for all ABS Statistical Area regions that were missing them.
+* Fixed `superGet` replacement in webpack builds with babel versions `7.16.0` and above.
 * [The next improvement]
 
 #### 8.1.9
