@@ -1511,9 +1511,8 @@ export default class Terria {
     let existingReference = this.getModelById(MagdaReference, id);
     if (existingReference === undefined) {
       existingReference = new MagdaReference(id, this);
-      const aspects = config.aspects;
       // Add model with terria aspects shareKeys
-      this.addModel(existingReference, aspects?.terria?.shareKeys);
+      this.addModel(existingReference, theConfig.aspects?.terria?.shareKeys);
     }
 
     const reference = existingReference;
