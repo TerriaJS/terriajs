@@ -1557,6 +1557,13 @@ export default class Terria {
     }
 
     const initObj = aspects["terria-init"];
+
+    // Do this first to satisfy the unit test. Otherwise the obserable this.catalog.group
+    // wrapped in action might not be updated quick enough in the test, causing test failures.
+    if (aspects.group && aspects.group.members) {
+      await this.refreshCatalogMembersFromMagda(configUrl, config);
+    }
+
     if (isJsonObject(initObj)) {
       const { catalog, ...initObjWithoutCatalog } = initObj;
       /** Load the init data without the catalog yet, as we'll push the catalog
@@ -1574,10 +1581,6 @@ export default class Terria {
           }
         });
       }
-    }
-
-    if (aspects.group && aspects.group.members) {
-      this.refreshCatalogMembersFromMagda(configUrl, config);
     }
 
     this.setupInitializationUrls(baseUri, config.aspects?.["terria-config"]);
