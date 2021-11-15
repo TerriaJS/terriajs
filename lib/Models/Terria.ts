@@ -1499,7 +1499,7 @@ export default class Terria {
    * This method can be used to refresh magda based catalogue configuration. Useful if the catalogue
    * has items that are only available to authorised users.
    *
-   * @param magdaCatalogConfigUrl URL of load magda based catalogue configuration
+   * @param magdaCatalogConfigUrl URL of magda based catalogue configuration
    * @param config Optional. If present, use this magda based catalogue config instead of reloading.
    * @param configUrlHeaders  Optional. If present, the headers are added to above URL request.
    */
