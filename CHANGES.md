@@ -3,6 +3,10 @@ Change Log
 
 #### next release (8.1.10)
 * Add a method refreshCatalogMembersFromMagda to Terria class.
+
+* Fix `CswCatalogGroup` XML types
+* Added `MAINCODE` aliases for all ABS Statistical Area regions that were missing them.
+* Fixed `superGet` replacement in webpack builds with babel versions `7.16.0` and above.
 * [The next improvement]
 
 #### 8.1.9
