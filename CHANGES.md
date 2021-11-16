@@ -4,6 +4,7 @@ Change Log
 #### next release (8.1.12)
 
 * Bigger zoom control icons.
+* Added `configParameters.feedbackPostamble`. Text showing at the bottom of feedback form, supports the internationalization using the translation key
 * `GeoJsonMixin.style["stroke-opacity"]` will now also set `polygonStroke.alpha` and `polylineStroke.alpha`
 * Reduce `GeoJsonMixin` default stroke width from `2` to `1`
 * Add `TableMixin` styling to `GeoJsonMixin` - it will treat geojson feature properties as "rows" in a table - which can be styled in the same way as `TableMixin` (eg CSV). This is only enabled for geojson-vt/Protomaps (which requires `Terria.configParameters.enableGeojsonMvt = true`). For more info see `GeojsonMixin.forceLoadMapItems()`
