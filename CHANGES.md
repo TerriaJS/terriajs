@@ -5,9 +5,10 @@ Change Log
 
 * Bigger zoom control icons.
 * Modified "ideal zoom" to zoom closer to tilesets and datasources.
+* Add a method refreshCatalogMembersFromMagda to Terria class.
 * [The next improvement]
 
-#### next release (8.1.11)
+#### 8.1.11
 
 * Fix `SettingsPanel` type issue
 
