@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 import Slider from "rc-slider";
 import React, { ChangeEvent, ComponentProps, MouseEvent } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
-import styled, { withTheme } from "styled-components";
+import styled, { DefaultTheme, withTheme } from "styled-components";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import Cesium from "../../../Models/Cesium";
 import DefaultTimelineModel from "../../../Models/DefaultTimelineModel";
@@ -32,8 +32,9 @@ const sides = {
 
 type PropTypes = WithTranslation & {
   terria: Terria;
-  refFromHOC?: React.Ref<any>;
   viewState: ViewState;
+  refFromHOC?: React.Ref<HTMLDivElement>;
+  theme: DefaultTheme;
   t: TFunction;
 };
 
@@ -408,7 +409,7 @@ class SettingPanel extends React.Component<PropTypes> {
 
 export const SETTING_PANEL_NAME = "MenuBarMapSettingsButton";
 export default withTranslation()(
-  withTheme(withTerriaRef(SettingPanel, SETTING_PANEL_NAME) as any)
+  withTheme(withTerriaRef(SettingPanel, SETTING_PANEL_NAME))
 );
 
 type IFlexGrid = {
