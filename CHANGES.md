@@ -17,9 +17,10 @@ Change Log
 * Fix `ProtomapsImageryProvider` geojson feature picking over antimeridian
 * Add Socrata group to "Add web data
 * Added "marker-stroke-width", "polyline-stroke-width", "polygon-stroke-width" to `GeojsonStyleTraits` (Note these are not apart of [simplestyle-spec](https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0) and can only be used with `geojson-vt`)
+* Add a method refreshCatalogMembersFromMagda to Terria class.
 * [The next improvement]
 
-#### next release (8.1.11)
+#### 8.1.11
 
 * Fix `SettingsPanel` type issue
 
