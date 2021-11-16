@@ -4,6 +4,7 @@ Change Log
 #### next release (8.1.12)
 
 * Bigger zoom control icons.
+* Modified "ideal zoom" to zoom closer to tilesets and datasources.
 * [The next improvement]
 
 #### next release (8.1.11)
