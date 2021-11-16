@@ -27,6 +27,14 @@ export default class CkanResourceFormatTraits extends ModelTraits {
   })
   urlRegex?: string;
 
+  @primitiveTrait({
+    name: "Maximum file size (MB)",
+    description:
+      "The maximum allowed file size for this format (in megabytes).",
+    type: "number"
+  })
+  maxFileSize?: number;
+
   @anyTrait({
     name: "Definition",
     description:
