@@ -842,7 +842,7 @@ export default class TableColumn {
       { hint: /^(lat|latitude)$/i, type: TableColumnType.latitude },
       { hint: /^(easting|eastings)$/i, type: TableColumnType.hidden },
       { hint: /^(northing|northings)$/i, type: TableColumnType.hidden },
-      { hint: /^(_id_|id|fid)$/i, type: TableColumnType.hidden },
+      { hint: /^(_id_|id|fid|objectid)$/i, type: TableColumnType.hidden },
       { hint: /^(address|addr)$/i, type: TableColumnType.address },
       {
         hint: /^(.*[_ ])?(depth|height|elevation|altitude)$/i,
