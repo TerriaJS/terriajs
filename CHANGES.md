@@ -4,6 +4,7 @@ Change Log
 #### next release (8.1.12)
 
 * Bigger zoom control icons.
+* Modified "ideal zoom" to zoom closer to tilesets and datasources.
 * Added `configParameters.feedbackPostamble`. Text showing at the bottom of feedback form, supports the internationalization using the translation key
 * `GeoJsonMixin.style["stroke-opacity"]` will now also set `polygonStroke.alpha` and `polylineStroke.alpha`
 * Reduce `GeoJsonMixin` default stroke width from `2` to `1`
