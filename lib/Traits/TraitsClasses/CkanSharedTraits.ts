@@ -45,4 +45,11 @@ export default class CkanSharedTraits extends mixTraits(ReferenceTraits) {
     idProperty: "id"
   })
   supportedResourceFormats?: CkanResourceFormatTraits[];
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Use single resource",
+    description: `Only use a single resource for each dataset. If multiple resources exist, the highest match from \`supportedResourceFormats\` will be used`
+  })
+  useSingleResource: boolean = false;
 }

@@ -277,10 +277,40 @@ export default class CkanItemReference extends UrlMixin(
     CkanResourceFormatTraits
   >[] = [
     createStratumInstance(CkanResourceFormatTraits, {
+      id: "GeoJson",
+      formatRegex: "^geojson$",
+      definition: {
+        type: "geojson"
+      }
+    }),
+    createStratumInstance(CkanResourceFormatTraits, {
       id: "WMS",
       formatRegex: "^wms$",
       definition: {
         type: "wms"
+      }
+    }),
+    createStratumInstance(CkanResourceFormatTraits, {
+      id: "ArcGIS MapServer",
+      formatRegex: "^esri rest$|^arcgis geoservices rest api$",
+      urlRegex: "MapServer",
+      definition: {
+        type: "esri-mapServer"
+      }
+    }),
+    createStratumInstance(CkanResourceFormatTraits, {
+      id: "Czml",
+      formatRegex: "^czml$",
+      definition: {
+        type: "czml"
+      }
+    }),
+    createStratumInstance(CkanResourceFormatTraits, {
+      id: "ArcGIS FeatureServer",
+      formatRegex: "^esri rest$|^arcgis geoservices rest api$",
+      urlRegex: "FeatureServer",
+      definition: {
+        type: "esri-featureServer"
       }
     }),
     createStratumInstance(CkanResourceFormatTraits, {
@@ -291,38 +321,10 @@ export default class CkanItemReference extends UrlMixin(
       }
     }),
     createStratumInstance(CkanResourceFormatTraits, {
-      id: "GeoJson",
-      formatRegex: "^geojson$",
-      definition: {
-        type: "geojson"
-      }
-    }),
-    createStratumInstance(CkanResourceFormatTraits, {
-      id: "ArcGIS MapServer",
-      formatRegex: "^esri rest$",
-      definition: {
-        type: "esri-mapServer"
-      }
-    }),
-    createStratumInstance(CkanResourceFormatTraits, {
-      id: "ArcGIS FeatureServer",
-      formatRegex: "^esri rest$",
-      definition: {
-        type: "esri-featureServer"
-      }
-    }),
-    createStratumInstance(CkanResourceFormatTraits, {
       id: "Kml",
       formatRegex: "^km[lz]$",
       definition: {
         type: "kml"
-      }
-    }),
-    createStratumInstance(CkanResourceFormatTraits, {
-      id: "Czml",
-      formatRegex: "^czml$",
-      definition: {
-        type: "czml"
       }
     })
   ];
@@ -370,10 +372,19 @@ export default class CkanItemReference extends UrlMixin(
     if (resource === undefined) return undefined;
     for (let i = 0; i < this.preparedSupportedFormats.length; ++i) {
       const format = this.preparedSupportedFormats[i];
-      if (format.formatRegex === undefined) continue;
+      let match = false;
+      if (!isDefined(format.formatRegex)) continue;
       if (format.formatRegex.test(resource.format)) {
-        return format;
+        match = true;
       }
+      if (
+        match &&
+        isDefined(format.urlRegex) &&
+        !format.urlRegex.test(resource.url)
+      ) {
+        match = false;
+      }
+      if (match) return format;
     }
     return undefined;
   }
@@ -506,6 +517,7 @@ interface CkanResourceWithFormat {
 
 interface PreparedSupportedFormat {
   formatRegex: RegExp | undefined;
+  urlRegex: RegExp | undefined;
   definition: JsonObject;
 }
 
@@ -552,6 +564,7 @@ const prepareSupportedFormat = createTransformer(
       formatRegex: format.formatRegex
         ? new RegExp(format.formatRegex, "i")
         : undefined,
+      urlRegex: format.urlRegex ? new RegExp(format.urlRegex, "i") : undefined,
       definition: format.definition || {}
     };
   }

@@ -68,6 +68,7 @@ interface MapServer {
 
 interface SpatialReference {
   wkid?: number;
+  latestWkid?: number;
 }
 
 interface Extent {
@@ -607,21 +608,19 @@ function updateBbox(extent: Extent, rectangle: RectangleExtent) {
 }
 
 function getRectangleFromLayer(extent: Extent, rectangle: RectangleExtent) {
-  if (
-    isDefined(extent) &&
-    extent.spatialReference &&
-    extent.spatialReference.wkid
-  ) {
-    const wkid = "EPSG:" + extent.spatialReference.wkid;
-    if (extent.spatialReference.wkid === 4326) {
+  const wkidCode =
+    extent?.spatialReference?.latestWkid ?? extent?.spatialReference?.wkid;
+
+  if (isDefined(extent) && isDefined(wkidCode)) {
+    if (wkidCode === 4326) {
       return updateBbox(extent, rectangle);
     }
 
-    if (!isDefined((proj4definitions as any)[wkid])) {
+    if (!isDefined((proj4definitions as any)[wkidCode])) {
       return;
     }
 
-    const source = new proj4.Proj((proj4definitions as any)[wkid]);
+    const source = new proj4.Proj((proj4definitions as any)[wkidCode]);
     const dest = new proj4.Proj("EPSG:4326");
 
     let p = proj4(source, dest, [extent.xmin, extent.ymin]);
