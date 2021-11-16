@@ -19,7 +19,7 @@ Change Log
 * Add Socrata group to "Add web data
 * Added "marker-stroke-width", "polyline-stroke-width", "polygon-stroke-width" to `GeojsonStyleTraits` (Note these are not apart of [simplestyle-spec](https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0) and can only be used with `geojson-vt`)
 * Add a method refreshCatalogMembersFromMagda to Terria class.
-* `TableMixin.activeStyle` will now try to pick columns which aren't labelled `"id"` or `"_id_"` by default
+* `TableMixin.activeStyle` will set `TableColumnType = hidden` for columns are labelled `"id"`, `"_id_"` or `"fid"`
 * Table columns named `"easting"` and `"northing"` are now hidden by default from styles
 * Exporting `TableMixin` will now add proper file extensions
 * Added `TimeVaryingTraits.timeLabel` trait to change label on `DateTimeSelectorSection` (defaults to "Time:")
@@ -34,6 +34,8 @@ Change Log
 * Remove border from region mapping if no data
 * Tweak automatic `TableColumn.type = Enum` for wider range of values
 * Add `baseMapContrastColor` and `constrastColor` to `BaseMapModel`
+* Treat `TableColumnType.height` as `scalar` until we actually do something with the height data.
+* Fixed `TableMixin.defaultTableStyle.legends` - `defaultTableStyle` is now not observable - it is created once in the `contructor`
 * [The next improvement]
 
 #### 8.1.11

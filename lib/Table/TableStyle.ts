@@ -72,7 +72,7 @@ export default class TableStyle {
     );
   }
 
-  /** Hide style from "Display Variable" selector if number of colors (EnumColorMap or DiscreteColorMapw) is less than 2. As a ColorMap with a single color isn't super useful. */
+  /** Hide style from "Display Variable" selector if number of colors (EnumColorMap or DiscreteColorMap) is less than 2. As a ColorMap with a single color isn't super useful. */
   @computed
   get hidden() {
     if (isDefined(this.styleTraits.hidden)) return this.styleTraits.hidden;

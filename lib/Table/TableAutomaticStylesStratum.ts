@@ -137,13 +137,6 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
       );
     }
 
-    // If still no styles - try to create a style using text columns
-    if (columns.length === 0) {
-      columns = this.catalogItem.tableColumns.filter(
-        column => column.type === TableColumnType.text
-      );
-    }
-
     return columns.map((column, i) =>
       createStratumInstance(TableStyleTraits, {
         id: column.name,
