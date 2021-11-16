@@ -4,6 +4,7 @@ Change Log
 #### next release (8.1.12)
 
 * Bigger zoom control icons.
+* Added `configParameters.feedbackPostamble`. Text showing at the bottom of feedback form, supports the internationalization using the translation key
 * [The next improvement]
 
 #### next release (8.1.11)

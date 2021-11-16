@@ -270,6 +270,10 @@ interface ConfigParameters {
   feedbackPreamble?: string;
 
   /**
+   * Text showing at the bottom of feedback form.
+   */
+  feedbackPostamble?: string;
+  /**
    * Minimum length of feedback comment.
    */
   feedbackMinLength?: number;
@@ -445,6 +449,7 @@ export default class Terria {
     persistViewerMode: true,
     openAddData: false,
     feedbackPreamble: "translate#feedback.feedbackPreamble",
+    feedbackPostamble: undefined,
     feedbackMinLength: 0,
     extraCreditLinks: [
       // Default credit links (shown at the bottom of the Cesium map)
