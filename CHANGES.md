@@ -1,9 +1,35 @@
 Change Log
 ==========
 
-#### next release (8.1.10)
-* Added `MAINCODE` aliases for all ABS Statistical Area regions that were missing them.
+#### next release (8.1.12)
+
+* Bigger zoom control icons.
+* Added `configParameters.feedbackPostamble`. Text showing at the bottom of feedback form, supports the internationalization using the translation key
+* `GeoJsonMixin.style["stroke-opacity"]` will now also set `polygonStroke.alpha` and `polylineStroke.alpha`
+* Reduce `GeoJsonMixin` default stroke width from `2` to `1`
+* Add `TableMixin` styling to `GeoJsonMixin` - it will treat geojson feature properties as "rows" in a table - which can be styled in the same way as `TableMixin` (eg CSV). This is only enabled for geojson-vt/Protomaps (which requires `Terria.configParameters.enableGeojsonMvt = true`). For more info see `GeojsonMixin.forceLoadMapItems()`
+  * This can be disabled using `GeojsonTraits.disableTableStyle`
+* Opacity and splitting is enabled for Geojson (if using geojson-vt/protomaps)
+* Replaced `@types/geojson` Geojson types with `@turf/helpers`
+* In `GeojsonMixin` replaced with `customDataLoader`, `loadFromFile` and `loadFromUrl` with `forceLoadGeojsonData`
+* `GeojsonMixin` will now convert all geojson objects to FeatureCollection
+* Exporting `GeojsonMixin` will now add proper file extensions
+* `WebFeatureServiceCatalogItem` now uses `GeoJsonMixin`
+* Fix `ProtomapsImageryProvider` geojson feature picking over antimeridian
+* Add Socrata group to "Add web data
+* Added "marker-stroke-width", "polyline-stroke-width", "polygon-stroke-width" to `GeojsonStyleTraits` (Note these are not apart of [simplestyle-spec](https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0) and can only be used with `geojson-vt`)
+* Add a method refreshCatalogMembersFromMagda to Terria class.
 * [The next improvement]
+
+#### 8.1.11
+
+* Fix `SettingsPanel` type issue
+
+#### 8.1.10
+
+* Fix `CswCatalogGroup` XML types
+* Added `MAINCODE` aliases for all ABS Statistical Area regions that were missing them.
+* Fixed `superGet` replacement in webpack builds with babel versions `7.16.0` and above.
 
 #### 8.1.9
 * TSify workbench splitter control and fix broken styling.
@@ -26,18 +52,6 @@ Change Log
 * Fix `MapNavigation` getter/setter `visible` bug.
   * Replace `CompositeBarItemController` `visible` setter with `setVisible` function
 * Use `yarn` in CI scripts (and upgrade node to v14)
-* `GeoJsonMixin.style["stroke-opacity"]` will now also set `polygonStroke.alpha` and `polylineStroke.alpha`
-* Reduce `GeoJsonMixin` default stroke width from `2` to `1`
-* Add `TableMixin` styling to `GeoJsonMixin` - it will treat geojson feature properties as "rows" in a table - which can be styled in the same way as `TableMixin` (eg CSV). This is only enabled for geojson-vt/Protomaps (which requires `Terria.configParameters.enableGeojsonVt = true`). For more info see `GeojsonMixin.forceLoadMapItems()`
-  * This can be disabled using `GeojsonTraits.disableTableStyle`
-* Opacity and splitting is enabled for Geojson (if using geojson-vt/protomaps)
-* Replaced `@types/geojson` Geojson types with `@turf/helpers`
-* In `GeojsonMixin` replaced with `customDataLoader`, `loadFromFile` and `loadFromUrl` with `forceLoadGeojsonData`
-* `GeojsonMixin` will now convert all geojson objects to FeatureCollection
-* Exporting `GeojsonMixin` will now add proper file extensions
-* `WebFeatureServiceCatalogItem` now uses `GeoJsonMixin`
-* Fix `ProtomapsImageryProvider` geojson feature picking over antimeridian
-* Add Socrata group to "Add web data"
 * Fix app crash when previewing a nested reference in the catalog (eg when viewing an indexed search result where the result is a reference).
 * `TableMixin.activeStyle` will now try to pick columns which aren't labelled `"id"` or `"_id_"` by default
 * Table columns named `"easting"` and `"northing"` are now hidden by default from styles

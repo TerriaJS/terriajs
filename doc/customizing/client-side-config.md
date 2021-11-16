@@ -87,6 +87,7 @@ Specifies various options for configuring TerriaJS:
 |`persistViewerMode`|no|**boolean**|`true`|Whether to load persisted viewer mode from local storage.|
 |`openAddData`|no|**boolean**|`false`|Whether to open the add data explorer panel on load.|
 |feedbackPreamble|no|**string**|feedback.feedbackPreamble|Text showing at the top of feedback form, supports the internationalization using the translation key.|
+|feedbackPostamble|no|**string**|feedback.feedbackPostamble|Text showing at the bottom of feedback form, supports the internationalization using the translation key.|
 |feedbackMinLength|no|**number**|0|Minimum length of feedback comment.| 
 |`theme`|no|**any**|`{}`|An object used to override theme properties - for example `{"logoHeight": "70px"}`.|
 
