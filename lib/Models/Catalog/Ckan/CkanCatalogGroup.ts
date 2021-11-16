@@ -323,7 +323,7 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
         );
 
         // If resource IS specified, at it is equivalent to firstValidResource
-        // add shareKey to map from $datasetId => $datasetId/$resourceId
+        // add shareKey to map from $datasetId/$resourceId => $datasetId
       } else if (resource && resource?.id === firstValidResource?.id) {
         this._catalogGroup.terria.addShareKey(
           itemId,
