@@ -4,9 +4,10 @@ Change Log
 #### next release (8.1.12)
 
 * Bigger zoom control icons.
+* Add a method refreshCatalogMembersFromMagda to Terria class.
 * [The next improvement]
 
-#### next release (8.1.11)
+#### 8.1.11
 
 * Fix `SettingsPanel` type issue
 
