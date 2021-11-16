@@ -5,9 +5,10 @@ Change Log
 
 * Bigger zoom control icons.
 * Added `configParameters.feedbackPostamble`. Text showing at the bottom of feedback form, supports the internationalization using the translation key
+* Add a method refreshCatalogMembersFromMagda to Terria class.
 * [The next improvement]
 
-#### next release (8.1.11)
+#### 8.1.11
 
 * Fix `SettingsPanel` type issue
 
