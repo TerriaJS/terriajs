@@ -168,7 +168,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
     )
       return undefined;
 
-    // Return true if 90% of rowGroups only have one unique time interval (i.e. they don't change over time)
+    // Return true if at least 50% of rowGroups only have one unique time interval (i.e. they don't change over time)
     let flat = 0;
 
     for (
@@ -188,7 +188,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
       if (uniq(dates).length <= 1) flat++;
     }
 
-    if (flat / this.catalogItem.activeTableStyle.rowGroups.length >= 0.9)
+    if (flat / this.catalogItem.activeTableStyle.rowGroups.length >= 0.5)
       return true;
 
     return undefined;
