@@ -2,7 +2,9 @@ import { computed, runInAction } from "mobx";
 import loadJson from "../../../Core/loadJson";
 import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
-import GeoJsonMixin from "../../../ModelMixins/GeojsonMixin";
+import GeoJsonMixin, {
+  toFeatureCollection
+} from "../../../ModelMixins/GeojsonMixin";
 import SocrataMapViewCatalogItemTraits from "../../../Traits/TraitsClasses/SocrataMapViewCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import LoadableStratum from "../../Definition/LoadableStratum";
@@ -147,34 +149,15 @@ export default class SocrataMapViewCatalogItem extends GeoJsonMixin(
     }
   }
 
-  protected async customDataLoader(
-    resolve: (value: any) => void,
-    reject: (reason: any) => void
-  ): Promise<any> {
+  protected async forceLoadGeojsonData() {
     if (this.geojsonUrl) {
-      try {
-        const result = loadJson(proxyCatalogItemUrl(this, this.geojsonUrl));
-        resolve(result);
-      } catch (e) {
-        reject(
-          TerriaError.from(
-            e,
-            `Failed to load Socrata GeoJSON ${this.geojsonUrl}`
-          )
-        );
-      }
-    } else {
-      resolve(undefined);
+      const result = await loadJson(proxyCatalogItemUrl(this, this.geojsonUrl));
+
+      const fc = toFeatureCollection(result);
+      if (fc) return fc;
+      else throw TerriaError.from("Failed to parse geoJSON");
     }
-  }
 
-  // Method not used - everything is in customDataLoader
-  protected loadFromFile(file: File): Promise<any> {
-    throw new Error("Method not implemented.");
-  }
-
-  // Method not used - everything is in customDataLoader
-  protected loadFromUrl(url: string): Promise<any> {
-    throw new Error("Method not implemented.");
+    throw TerriaError.from("Failed to fetch geoJSON - no URL was provided");
   }
 }

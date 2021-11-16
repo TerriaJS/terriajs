@@ -782,6 +782,17 @@ export default class TableColumn {
     };
   }
 
+  /** Gets value as a type appropriate for the column {@link #type}. For
+   * example, if {@link #type} is {@link TableColumnType#scalar}, the values
+   * will be number or null. */
+  @computed get valuesForType() {
+    if (this.type === TableColumnType.scalar) {
+      return this.valuesAsNumbers.values;
+    }
+
+    return this.values;
+  }
+
   @computed
   get scaledValueFunctionForType(): (rowIndex: number) => number | null {
     if (this.type === TableColumnType.scalar) {

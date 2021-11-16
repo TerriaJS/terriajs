@@ -1,15 +1,18 @@
 import * as geoJsonMerge from "@mapbox/geojson-merge";
 import i18next from "i18next";
+import { computed } from "mobx";
 import * as shp from "shpjs";
+import isDefined from "../../../Core/isDefined";
 import JsonValue, { isJsonObject, JsonArray } from "../../../Core/Json";
+import loadBlob, { isZip } from "../../../Core/loadBlob";
+import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
-import GeoJsonMixin from "../../../ModelMixins/GeojsonMixin";
+import GeoJsonMixin, {
+  FeatureCollectionWithCrs
+} from "../../../ModelMixins/GeojsonMixin";
 import ShapefileCatalogItemTraits from "../../../Traits/TraitsClasses/ShapefileCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
-import makeRealPromise from "../../../Core/makeRealPromise";
-import TerriaError from "../../../Core/TerriaError";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import loadBlob from "../../../Core/loadBlob";
+import { fileApiNotSupportedError } from "./GeoJsonCatalogItem";
 
 export function isJsonArrayOrDeepArrayOfObjects(
   value: JsonValue | undefined
@@ -34,49 +37,44 @@ class ShapefileCatalogItem extends GeoJsonMixin(
     return i18next.t("models.shapefile.name");
   }
 
-  protected async loadFromFile(file: File): Promise<any> {
-    return parseShapefile(file);
+  protected _file?: File;
+
+  setFileInput(file: File) {
+    this._file = file;
   }
 
-  protected async loadFromUrl(url: string): Promise<any> {
-    if (this.zipFileRegex.test(url)) {
-      if (typeof FileReader === "undefined") {
-        throw new TerriaError({
-          title: i18next.t("models.userData.fileApiNotSupportedTitle"),
-          message: i18next.t("models.userData.fileApiNotSupportedTitle", {
-            appName: this.terria.appName,
-            chrome:
-              '<a href="http://www.google.com/chrome" target="_blank">' +
-              i18next.t("models.userData.chrome") +
-              "</a>",
-            firefox:
-              '<a href="http://www.mozilla.org/firefox" target="_blank">' +
-              i18next.t("models.userData.firefox") +
-              "</a>",
-            edge:
-              '<a href="http://www.microsoft.com/edge" target="_blank">' +
-              i18next.t("models.userData.edge") +
-              "</a>"
-          })
-        });
-      }
-      return loadZipFileFromUrl(proxyCatalogItemUrl(this, url));
+  @computed get hasLocalData(): boolean {
+    return isDefined(this._file);
+  }
+
+  protected async forceLoadGeojsonData() {
+    // ShapefileCatalogItem._file
+    if (this._file) {
+      return await parseShapefile(this._file);
     }
+    // GeojsonTraits.url
+    else if (this.url) {
+      // URL to zipped fle
+      if (isZip(this.url)) {
+        if (typeof FileReader === "undefined") {
+          throw fileApiNotSupportedError(this.terria);
+        }
+        const blob = await loadBlob(this.url);
+        return await parseShapefile(blob);
+      } else {
+        throw TerriaError.from(
+          "Invalid URL: Only zipped shapefiles are supported (the extension must be `.zip`)"
+        );
+      }
+    }
+
+    throw TerriaError.from(
+      "Failed to load shapefile - no URL of file has been defined"
+    );
   }
-
-  protected async customDataLoader(
-    resolve: (value: any) => void,
-    reject: (reason: any) => void
-  ): Promise<any> {}
 }
 
-function loadZipFileFromUrl(url: string): Promise<JsonValue> {
-  return makeRealPromise<Blob>(loadBlob(url)).then((blob: Blob) => {
-    return parseShapefile(blob);
-  });
-}
-
-async function parseShapefile(blob: Blob) {
+async function parseShapefile(blob: Blob): Promise<FeatureCollectionWithCrs> {
   let json: any;
   const asAb = await blob.arrayBuffer();
   json = await shp.parseZip(asAb);
