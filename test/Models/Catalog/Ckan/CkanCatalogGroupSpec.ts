@@ -430,12 +430,47 @@ describe("CkanCatalogGroup", function() {
       expect(items[0].name).toBe(
         "Murray-Darling Basin Water Resource Plan Areas – Surface Water - GeoJSON"
       );
+      expect(items[1].name).toBe(
+        "Murray-Darling Basin Water Resource Plan Areas – Surface Water - GeoJSON"
+      );
       expect(items[0]._ckanResource?.id).toBe(
         "49e8da1c-1ce6-4008-bdcb-af8552a305c2"
       );
       expect(items[1]._ckanResource?.id).toBe(
         "49e8da1c-1ce6-4008-bdcb-af8552a305c2-2"
       );
+    });
+
+    it("useSingleResource", async function() {
+      updateModelFromJson(ckanCatalogGroup, CommonStrata.definition, {
+        useSingleResource: true
+      });
+
+      await ckanCatalogGroup.loadMembers();
+      ckanServerStratum = <CkanServerStratum>(
+        ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
+      );
+
+      console.log(ckanCatalogGroup);
+
+      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+
+      expect(group1.memberModels.length).toBe(2);
+
+      const items = group1.memberModels as CkanItemReference[];
+      expect(items[0].name).toBe(
+        "Murray-Darling Basin Water Resource Plan Areas – Surface Water"
+      );
+      expect(items[0]._ckanResource?.id).toBe(
+        "49e8da1c-1ce6-4008-bdcb-af8552a305c2"
+      );
+      expect(items[0]._ckanResource?.format).toBe("GeoJSON");
+
+      expect(items[1].name).toBe("Groundwater SDL Resource Units");
+      expect(items[1]._ckanResource?.id).toBe(
+        "4e221b55-1702-4f3a-8066-c7dd13bc4cd7"
+      );
+      expect(items[1]._ckanResource?.format).toBe("GeoJSON");
     });
   });
 });

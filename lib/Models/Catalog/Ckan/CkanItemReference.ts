@@ -500,10 +500,10 @@ export function getSupportedFormats(
 ) {
   if (!dataset) return [];
   const supported: CkanResourceWithFormat[] = [];
-  for (let i = 0; i < dataset.resources.length; ++i) {
-    const resource = dataset.resources[i];
-    for (let j = 0; j < formats.length; ++j) {
-      const format = formats[j];
+  for (let i = 0; i < formats.length; ++i) {
+    const format = formats[i];
+    for (let j = 0; j < dataset.resources.length; ++j) {
+      const resource = dataset.resources[j];
       if (resourceIsSupported(resource, format)) {
         supported.push({ resource: resource, format: format });
       }
