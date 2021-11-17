@@ -35,6 +35,20 @@ export default class CkanResourceFormatTraits extends ModelTraits {
   })
   maxFileSize?: number;
 
+  @primitiveTrait({
+    type: "boolean",
+    name: "Only use if sole resource",
+    description: `This resource will only match if no other resource types match for a given dataset. Like a "last-resort" resource. This will be ignored if \`useSingleResource\` is used`
+  })
+  onlyUseIfSoleResource?: boolean = false;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "First match per resource",
+    description: `Only use the first match per resource. If true, and a dataset has mupltiple resources which match this format, then the newest resource will be used (according to created property)`
+  })
+  firstMatchPerResource?: boolean = true;
+
   @anyTrait({
     name: "Definition",
     description:

@@ -1,6 +1,7 @@
 import i18next from "i18next";
 import { action, computed, observable, runInAction } from "mobx";
 import URI from "urijs";
+import flatten from "../../../Core/flatten";
 import isDefined from "../../../Core/isDefined";
 import { JsonObject } from "../../../Core/Json";
 import loadJson from "../../../Core/loadJson";
@@ -21,13 +22,18 @@ import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
 import CatalogGroup from "../CatalogGroup";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import CkanDefaultFormatsStratum from "./CkanDefaultFormatsStratum";
 import {
   CkanDataset,
   CkanResource,
   CkanServerResponse
 } from "./CkanDefinitions";
-import CkanItemReference from "./CkanItemReference";
-import flatten from "../../../Core/flatten";
+import CkanItemReference, {
+  CkanResourceWithFormat,
+  getSupportedFormats,
+  PreparedSupportedFormat,
+  prepareSupportedFormat
+} from "./CkanItemReference";
 
 export function createInheritedCkanSharedTraitsStratum(
   model: Model<CkanSharedTraits>
@@ -48,9 +54,9 @@ export function createInheritedCkanSharedTraitsStratum(
 createInheritedCkanSharedTraitsStratum.stratumName =
   "ckanItemReferenceInheritedPropertiesStratum";
 
-StratumOrder.addDefinitionStratum(
-  createInheritedCkanSharedTraitsStratum.stratumName
-);
+// This can't be definition stratum, as then it will sit on top of underride/definition/override
+// CkanServerStratum.createMemberFromDataset will use `underride`
+StratumOrder.addLoadStratum(createInheritedCkanSharedTraitsStratum.stratumName);
 
 export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
   static stratumName = "ckanServer";
@@ -126,6 +132,13 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
   }
 
   @computed
+  get preparedSupportedFormats(): PreparedSupportedFormat[] {
+    return this._catalogGroup.supportedResourceFormats
+      ? this._catalogGroup.supportedResourceFormats.map(prepareSupportedFormat)
+      : [];
+  }
+
+  @computed
   get members(): ModelReference[] {
     // When data is grouped (most circumstances) return group id's
     // for those which have content
@@ -142,15 +155,6 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
       return groupIds;
     }
 
-    // If using single resource per dataset
-    // Return ids of form:
-    // - $datasetId
-    if (this._catalogGroup.useSingleResource) {
-      return this.filteredDatasets.map(dataset => this.getItemId(dataset));
-    }
-
-    // Otherwise ids of form:
-    // - $datasetId/$resourceId
     return flatten(
       this.filteredDatasets.map(dataset =>
         dataset.resources.map(resource => this.getItemId(dataset, resource))
@@ -254,104 +258,104 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
       return;
     }
 
+    // Get list of resources to turn into CkanItemReferences
+    const supportedResources = getSupportedFormats(
+      ckanDataset,
+      this.preparedSupportedFormats
+    );
+    let filteredResources: CkanResourceWithFormat[] = [];
+
+    if (this._catalogGroup.useSingleResource) {
+      filteredResources = supportedResources[0] ? [supportedResources[0]] : [];
+    } else {
+      // Apply CkanResourceFormatTraits constraints
+      // - onlyUseIfSoleResource
+      // - firstMatchPerResource
+
+      this.preparedSupportedFormats.forEach(supportedFormat => {
+        const matchingResources = supportedResources.filter(
+          format => format.format.id === supportedFormat.id
+        );
+        if (matchingResources.length === 0) return;
+
+        if (supportedFormat.onlyUseIfSoleResource) {
+          if (supportedResources.length === matchingResources.length) {
+            if (supportedFormat.firstMatchPerResource) {
+              filteredResources.push(matchingResources[0]);
+            } else {
+              filteredResources.push(...matchingResources);
+            }
+          }
+        } else if (supportedFormat.firstMatchPerResource) {
+          filteredResources.push(
+            // Add resource with latest "created" date
+            matchingResources.sort((a, b) =>
+              b.resource.created.localeCompare(a.resource.created)
+            )[0]
+          );
+        } else {
+          filteredResources.push(...matchingResources);
+        }
+      });
+    }
+
+    // Create CkanItemReference for each filteredResource
+
     // Create a computed stratum to pass shared configuration down to items
     const inheritedPropertiesStratum = createInheritedCkanSharedTraitsStratum(
       this._catalogGroup
     );
 
-    // Create CkanItemReference with first resource match
-    if (this._catalogGroup.useSingleResource) {
-      this.createMemberFromDatasetResource(
-        ckanDataset,
-        undefined,
-        inheritedPropertiesStratum
+    for (var i = 0; i < filteredResources.length; ++i) {
+      const { resource, format } = filteredResources[i];
+
+      const itemId = this.getItemId(ckanDataset, resource);
+
+      let item = this._catalogGroup.terria.getModelById(
+        CkanItemReference,
+        itemId
       );
-    }
-    // Create CkanItemReference for every resource
-    else {
-      for (var i = 0; i < ckanDataset.resources.length; ++i) {
-        const resource = ckanDataset.resources[i];
-        this.createMemberFromDatasetResource(
-          ckanDataset,
-          resource,
-          inheritedPropertiesStratum
-        );
+      if (item === undefined) {
+        item = new CkanItemReference(itemId, this._catalogGroup.terria);
+
+        // If we only have one resources for this dataset - disable these traits which change name
+        if (filteredResources.length === 1) {
+          item.setTrait(
+            CommonStrata.override,
+            "useCombinationNameWhereMultipleResources",
+            false
+          );
+          item.setTrait(
+            CommonStrata.override,
+            "useDatasetNameAndFormatWhereMultipleResources",
+            false
+          );
+        }
+
+        item.setDataset(ckanDataset);
+        item.setCkanCatalog(this._catalogGroup);
+        item.setSharedStratum(inheritedPropertiesStratum);
+
+        item.setResource(resource);
+        item.setSupportedFormat(format);
+
+        item.setCkanStrata(item);
+        item.terria.addModel(item);
+
+        if (this._catalogGroup.groupBy === "organization") {
+          const groupId = ckanDataset.organization
+            ? this._catalogGroup.uniqueId + "/" + ckanDataset.organization.id
+            : this._catalogGroup.uniqueId + "/ungrouped";
+          this.addCatalogItemToCatalogGroup(item, ckanDataset, groupId);
+        } else if (this._catalogGroup.groupBy === "group") {
+          this.addCatalogItemByCkanGroupsToCatalogGroup(item, ckanDataset);
+        }
       }
     }
   }
 
-  /** If a resource is specified, itemID will have form:
-   * - $datasetId/$resourceId
-   * Otherwise
-   * - $datasetId
-   */
-  getItemId(ckanDataset: CkanDataset, resource?: CkanResource) {
-    return `${this._catalogGroup.uniqueId}/${ckanDataset.id}${
-      resource?.id ? `/${resource!.id}` : ""
-    }`;
-  }
-
-  @action
-  createMemberFromDatasetResource(
-    ckanDataset: CkanDataset,
-    resource: CkanResource | undefined,
-    inheritedPropertiesStratum: Readonly<StratumFromTraits<CkanSharedTraits>>
-  ) {
-    const itemId = this.getItemId(ckanDataset, resource);
-
-    let item = this._catalogGroup.terria.getModelById(
-      CkanItemReference,
-      itemId
-    );
-    if (item === undefined) {
-      item = new CkanItemReference(itemId, this._catalogGroup.terria);
-      item.setDataset(ckanDataset);
-      item.setCkanCatalog(this._catalogGroup);
-      item.setSharedStratum(inheritedPropertiesStratum);
-
-      const firstValidResource = item.findFirstValidResource(ckanDataset)
-        ?.ckanResource;
-
-      // If no resource specified, use firstValidResource
-      // and add shareKey to map from $datasetId => $datasetId/$resourceId
-      if (!resource && firstValidResource) {
-        resource = firstValidResource;
-
-        this._catalogGroup.terria.addShareKey(
-          itemId,
-          this.getItemId(ckanDataset, resource)
-        );
-
-        // If resource IS specified, at it is equivalent to firstValidResource
-        // add shareKey to map from $datasetId/$resourceId => $datasetId
-      } else if (resource && resource?.id === firstValidResource?.id) {
-        this._catalogGroup.terria.addShareKey(
-          itemId,
-          this.getItemId(ckanDataset)
-        );
-      }
-
-      if (!resource) return;
-
-      item.setResource(resource);
-
-      item.setSupportedFormatFromResource(resource);
-      if (item._supportedFormat === undefined) {
-        return;
-      }
-
-      item.setCkanStrata(item);
-      item.terria.addModel(item);
-
-      if (this._catalogGroup.groupBy === "organization") {
-        const groupId = ckanDataset.organization
-          ? this._catalogGroup.uniqueId + "/" + ckanDataset.organization.id
-          : this._catalogGroup.uniqueId + "/ungrouped";
-        this.addCatalogItemToCatalogGroup(item, ckanDataset, groupId);
-      } else if (this._catalogGroup.groupBy === "group") {
-        this.addCatalogItemByCkanGroupsToCatalogGroup(item, ckanDataset);
-      }
-    }
+  getItemId(ckanDataset: CkanDataset, resource: CkanResource) {
+    return `${this._catalogGroup.uniqueId}/${ckanDataset.id}/${resource.id}`;
   }
 }
 
@@ -361,6 +365,19 @@ export default class CkanCatalogGroup extends UrlMixin(
   GroupMixin(CatalogMemberMixin(CreateModel(CkanCatalogGroupTraits)))
 ) {
   static readonly type = "ckan-group";
+
+  constructor(
+    uniqueId: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel
+  ) {
+    super(uniqueId, terria, sourceReference);
+
+    this.strata.set(
+      CkanDefaultFormatsStratum.stratumName,
+      new CkanDefaultFormatsStratum()
+    );
+  }
 
   get type() {
     return CkanCatalogGroup.type;
