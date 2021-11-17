@@ -43,6 +43,7 @@ export default class CkanDefaultFormatsStratum extends LoadableStratum(
       {
         id: "Czml",
         formatRegex: "^czml$",
+        maxFileSize: 50,
         definition: {
           type: "czml"
         }
@@ -65,6 +66,7 @@ export default class CkanDefaultFormatsStratum extends LoadableStratum(
       {
         id: "Kml",
         formatRegex: "^km[lz]$",
+        maxFileSize: 30,
         definition: {
           type: "kml"
         }

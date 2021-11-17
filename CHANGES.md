@@ -20,10 +20,15 @@ Change Log
 * Add Socrata group to "Add web data
 * Added "marker-stroke-width", "polyline-stroke-width", "polygon-stroke-width" to `GeojsonStyleTraits` (Note these are not apart of [simplestyle-spec](https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0) and can only be used with `geojson-vt`)
 * Add a method refreshCatalogMembersFromMagda to Terria class.
+* Moved CKAN default `supportedFormats` to `CkanDefaultFormatsStratum`
+* Add properties to `CkanResourceFormatTraits`
+  * `maxFileSize` to filter out resources with large files (default values: GeoJSON = 150MB, KML = 30MB, CZML = 50MB)
+  * `firstMatchPerResource` (which defaults to true) so we don't get duplicate formats for a dataset
+    * If there are multiple matches, then the newest (from resource.created property) will be used
+  * `onlyUseIfSoleResource` to give a given resource format unless that is all that exists for a dataset
+* Add CKAN `useSingleResource`, if `true`, then the highest match from `supportedResourceFormats` will be used for each dataset
 * ArcGis Map/Feature Service will now set CRS from `latestWkid` if it exists (over `wkid`)
 * Fix CKAN ArcGisFeatureService resources
-* Add CKAN `useSingleResource`, if `true`, then the highest match from `supportedResourceFormats` will be used for each dataset
-* Add `maxFileSize` to `supportedResourceFormats` - this can be used to filter out resources with large files
 * [The next improvement]
 
 #### 8.1.11
