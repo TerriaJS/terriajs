@@ -4,6 +4,7 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import hashEntity from "../../lib/Core/hashEntity";
+import JsonValue, { JsonObject } from "../../lib/Core/Json";
 import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import Result from "../../lib/Core/Result";
 import TerriaError from "../../lib/Core/TerriaError";
@@ -46,6 +47,11 @@ const mapConfigInlineInitString = JSON.stringify(mapConfigInlineInitJson);
 const mapConfigDereferencedJson = require("../../wwwroot/test/Magda/map-config-dereferenced.json");
 const mapConfigDereferencedString = JSON.stringify(mapConfigDereferencedJson);
 
+const mapConfigDereferencedNewJson = require("../../wwwroot/test/Magda/map-config-dereferenced-new.json");
+const mapConfigDereferencedNewString = JSON.stringify(
+  mapConfigDereferencedNewJson
+);
+
 // i18nOptions for CI
 const i18nOptions = {
   // Skip calling i18next.init in specs
@@ -58,6 +64,58 @@ describe("Terria", function() {
   beforeEach(function() {
     terria = new Terria({
       baseUrl: "./"
+    });
+  });
+
+  describe("terria refresh catalog members from magda", function() {
+    it("refreshes group aspect with given URL", async function(done) {
+      // Use its own terria instance to avoid interfering with other tests.
+      const theTerria = new Terria({
+        baseUrl: "./"
+      });
+
+      function verifyGroups(groupAspect: any, groupNum: number) {
+        const ids = groupAspect.members.map((member: any) => member.id);
+        expect(theTerria.catalog.group.uniqueId).toEqual("/");
+        // ensure user added data co-exists with dereferenced magda members
+        expect(theTerria.catalog.group.members.length).toEqual(groupNum);
+        expect(theTerria.catalog.userAddedDataGroup).toBeDefined();
+        ids.forEach((id: string) => {
+          const model = theTerria.getModelById(MagdaReference, id);
+          if (!model) {
+            throw `no record id. ID = ${id}`;
+          }
+          expect(theTerria.modelIds).toContain(id);
+          expect(model.recordId).toEqual(id);
+        });
+      }
+
+      await theTerria
+        .start({
+          configUrl: "test/Magda/map-config-dereferenced.json",
+          i18nOptions
+        })
+        .then(function() {
+          const groupAspect = mapConfigDereferencedJson.aspects["group"];
+          verifyGroups(groupAspect, 3);
+          done();
+        })
+        .catch(error => {
+          done.fail(error);
+        });
+
+      await theTerria
+        .refreshCatalogMembersFromMagda(
+          "test/Magda/map-config-dereferenced-new.json"
+        )
+        .then(function() {
+          const groupAspect = mapConfigDereferencedNewJson.aspects["group"];
+          verifyGroups(groupAspect, 2);
+          done();
+        })
+        .catch(error => {
+          done.fail(error);
+        });
     });
   });
 
@@ -94,6 +152,9 @@ describe("Terria", function() {
       // inline init
       jasmine.Ajax.stubRequest(/.*map-config-dereferenced.*/).andReturn({
         responseText: mapConfigDereferencedString
+      });
+      jasmine.Ajax.stubRequest(/.*map-config-dereferenced-new.*/).andReturn({
+        responseText: mapConfigDereferencedNewString
       });
     });
 
@@ -227,13 +288,13 @@ describe("Terria", function() {
           throw "not init source";
         }
       });
-      it("parses dereferenced group aspect", function(done) {
+      it("parses dereferenced group aspect", async function(done) {
         expect(terria.catalog.group.uniqueId).toEqual("/");
         // dereferenced res
         jasmine.Ajax.stubRequest(/.*api\/v0\/registry.*/).andReturn({
           responseText: mapConfigDereferencedString
         });
-        terria
+        await terria
           .start({
             configUrl: "test/Magda/map-config-dereferenced.json",
             i18nOptions
@@ -248,7 +309,7 @@ describe("Terria", function() {
             ids.forEach((id: string) => {
               const model = terria.getModelById(MagdaReference, id);
               if (!model) {
-                throw "no record id";
+                throw "no record id.";
               }
               expect(terria.modelIds).toContain(id);
               expect(model.recordId).toEqual(id);
@@ -261,6 +322,7 @@ describe("Terria", function() {
       });
     });
   });
+
   describe("updateApplicationUrl", function() {
     let newTerria: Terria;
     let viewState: ViewState;

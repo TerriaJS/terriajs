@@ -26,6 +26,7 @@ import SelectableDimensions, {
 import createLongitudeLatitudeFeaturePerId from "../Table/createLongitudeLatitudeFeaturePerId";
 import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
 import createRegionMappedImageryProvider from "../Table/createRegionMappedImageryProvider";
+import { ColorStyleLegend } from "../Table/TableAutomaticStylesStratum";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
@@ -48,6 +49,24 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       ChartableMixin(DiscretelyTimeVaryingMixin(CatalogMemberMixin(Base)))
     )
     implements SelectableDimensions {
+    /**
+     * The default {@link TableStyle}, which is used for styling
+     * only when there are no styles defined.
+     */
+    private readonly defaultTableStyle: TableStyle;
+
+    constructor(...args: any[]) {
+      super(...args);
+
+      const tableStyle = new TableStyle(this, -1);
+      tableStyle.colorTraits.setTrait(
+        CommonStrata.defaults,
+        "legend",
+        new ColorStyleLegend(this, -1)
+      );
+      this.defaultTableStyle = tableStyle;
+    }
+
     get hasTableMixin() {
       return true;
     }
@@ -121,15 +140,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         return [];
       }
       return this.styles.map((_, i) => this.getTableStyle(i));
-    }
-
-    /**
-     * Gets the default {@link TableStyle}, which is used for styling
-     * only when there are no styles defined.
-     */
-    @computed
-    get defaultTableStyle(): TableStyle {
-      return new TableStyle(this, -1);
     }
 
     /**

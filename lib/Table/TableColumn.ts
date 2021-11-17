@@ -842,11 +842,13 @@ export default class TableColumn {
       { hint: /^(lat|latitude)$/i, type: TableColumnType.latitude },
       { hint: /^(easting|eastings)$/i, type: TableColumnType.hidden },
       { hint: /^(northing|northings)$/i, type: TableColumnType.hidden },
-      { hint: /^(_id_|id)$/i, type: TableColumnType.hidden },
+      { hint: /^(_id_|id|fid|objectid)$/i, type: TableColumnType.hidden },
       { hint: /^(address|addr)$/i, type: TableColumnType.address },
       {
         hint: /^(.*[_ ])?(depth|height|elevation|altitude)$/i,
-        type: TableColumnType.height
+        // Treat height as scalar, until we actually do something with the height data
+        // type: TableColumnType.height
+        type: TableColumnType.scalar
       },
       { hint: /^(.*[_ ])?(time|date)/i, type: TableColumnType.time }, // Quite general, eg. matches "Start date (AEST)".
       { hint: /^(year)$/i, type: TableColumnType.time } // Match "year" only, not "Final year" or "0-4 years".
