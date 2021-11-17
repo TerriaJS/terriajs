@@ -10,6 +10,8 @@ import CkanCatalogGroup, {
 import CkanItemReference from "../../../../lib/Models/Catalog/Ckan/CkanItemReference";
 import Terria from "../../../../lib/Models/Terria";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
+import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 
 configure({
   enforceActions: "observed",
@@ -64,14 +66,14 @@ describe("CkanCatalogGroup", function() {
     filterQueries.forEach((filterQuery, i) => {
       const uri = new URI("https://somewhere.com");
       CkanServerStratum.addFilterQuery(uri, filterQuery);
-      expect(uri.query() === expectedQueryStrings[i]);
+      expect(uri.query() === expectedQueryStrings[i]).toBeTruthy();
     });
 
     filterQueries.forEach((filterQuery, i) => {
       const uri = new URI("https://somewhere.com");
       uri.addQuery({ start: 0 });
       CkanServerStratum.addFilterQuery(uri, filterQuery);
-      expect(uri.query() === "start=0&" + expectedQueryStrings[i]);
+      expect(uri.query() === "start=0&" + expectedQueryStrings[i]).toBeTruthy();
     });
   });
 
@@ -210,7 +212,7 @@ describe("CkanCatalogGroup", function() {
       if (group1.memberModels && group1.memberModels.length === 6) {
         const items = group1.memberModels as CkanItemReference[];
         expect(items[0].name).toBe(
-          "Murray-Darling Basin Water Resource Plan Areas – Surface Water - KMZ"
+          "Murray-Darling Basin Water Resource Plan Areas – Surface Water - GeoJSON"
         );
         expect(items[1].name).toBe(
           "Murray-Darling Basin Water Resource Plan Areas – Surface Water - WMS"
@@ -239,7 +241,7 @@ describe("CkanCatalogGroup", function() {
         // These items include their Dataset name in their Resource name, so it's not the greatest demonstration
         //  of useCombinationNameWhereMultipleResources, but it works for an automated test
         const items = group1.memberModels as CkanItemReference[];
-        expect(items[0].name).toBe(
+        expect(items[2].name).toBe(
           "Murray-Darling Basin Water Resource Plan Areas – Surface Water - Murray-Darling Basin Water Resource Plan Areas – Surface Water for Google Earth"
         );
         expect(items[1].name).toBe(
@@ -263,13 +265,177 @@ describe("CkanCatalogGroup", function() {
       ).toBeTruthy();
       if (group1.memberModels && group1.memberModels.length === 6) {
         const items = group1.memberModels as CkanItemReference[];
-        expect(items[0].name).toBe(
+        expect(items[2].name).toBe(
           "Murray-Darling Basin Water Resource Plan Areas – Surface Water for Google Earth"
         );
         expect(items[1].name).toBe(
           "Murray-Darling Basin Water Resource Plan Areas – Surface Water - Preview this Dataset (WMS)"
         );
       }
+    });
+  });
+
+  describe("filters resources according to supportedResourceFormats", function() {
+    beforeEach(async function() {
+      runInAction(() => {
+        ckanCatalogGroup.setTrait(
+          "definition",
+          "url",
+          "test/CKAN/search-result.json"
+        );
+      });
+    });
+
+    it("urlRegex", async function() {
+      updateModelFromJson(ckanCatalogGroup, CommonStrata.definition, {
+        supportedResourceFormats: [
+          {
+            id: "WMS",
+            urlRegex: "^((?!data.gov.au/geoserver).)*$"
+          }
+        ]
+      });
+
+      await ckanCatalogGroup.loadMembers();
+      ckanServerStratum = <CkanServerStratum>(
+        ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
+      );
+
+      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+
+      expect(group1.memberModels.length).toBe(4);
+
+      const items = group1.memberModels as CkanItemReference[];
+      expect(items[0].name).toBe(
+        "Murray-Darling Basin Water Resource Plan Areas – Surface Water - GeoJSON"
+      );
+      expect(items[1].name).toBe(
+        "Murray-Darling Basin Water Resource Plan Areas – Surface Water - KMZ"
+      );
+    });
+
+    it("onlyUseIfSoleResource - with multiple resources", async function() {
+      updateModelFromJson(ckanCatalogGroup, CommonStrata.definition, {
+        supportedResourceFormats: [
+          {
+            id: "Kml",
+            onlyUseIfSoleResource: true
+          }
+        ]
+      });
+
+      await ckanCatalogGroup.loadMembers();
+      ckanServerStratum = <CkanServerStratum>(
+        ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
+      );
+
+      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+
+      expect(group1.memberModels.length).toBe(4);
+
+      const items = group1.memberModels as CkanItemReference[];
+      expect(items[0].name).toBe(
+        "Murray-Darling Basin Water Resource Plan Areas – Surface Water - GeoJSON"
+      );
+      expect(items[1].name).toBe(
+        "Murray-Darling Basin Water Resource Plan Areas – Surface Water - WMS"
+      );
+    });
+
+    it("onlyUseIfSoleResource - with single resources", async function() {
+      updateModelFromJson(ckanCatalogGroup, CommonStrata.definition, {
+        supportedResourceFormats: [
+          {
+            id: "Kml",
+            onlyUseIfSoleResource: true
+          },
+          {
+            id: "GeoJson",
+            formatRegex: "somethingIncorrect"
+          },
+          {
+            id: "WMS",
+            formatRegex: "somethingIncorrect"
+          }
+        ]
+      });
+
+      await ckanCatalogGroup.loadMembers();
+      ckanServerStratum = <CkanServerStratum>(
+        ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
+      );
+
+      let group0 = <CatalogGroup>ckanCatalogGroup.memberModels[0];
+
+      expect(group0.memberModels.length).toBe(2);
+
+      const items = group0.memberModels as CkanItemReference[];
+      expect(items[0].name).toBe(
+        "Murray-Darling Basin Water Resource Plan Areas – Surface Water"
+      );
+      expect(items[0]._supportedFormat?.id).toBe("Kml");
+
+      expect(items[1].name).toBe("Groundwater SDL Resource Units");
+      expect(items[1]._supportedFormat?.id).toBe("Kml");
+    });
+
+    it("maxFileSize", async function() {
+      updateModelFromJson(ckanCatalogGroup, CommonStrata.definition, {
+        supportedResourceFormats: [
+          {
+            id: "Kml",
+            maxFileSize: 3
+          }
+        ]
+      });
+
+      await ckanCatalogGroup.loadMembers();
+      ckanServerStratum = <CkanServerStratum>(
+        ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
+      );
+
+      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+
+      expect(group1.memberModels.length).toBe(5);
+
+      const items = group1.memberModels as CkanItemReference[];
+      expect(items[0].name).toBe(
+        "Murray-Darling Basin Water Resource Plan Areas – Surface Water - GeoJSON"
+      );
+      expect(items[1].name).toBe(
+        "Murray-Darling Basin Water Resource Plan Areas – Surface Water - WMS"
+      );
+    });
+
+    it("firstMatchPerResource", async function() {
+      updateModelFromJson(ckanCatalogGroup, CommonStrata.definition, {
+        supportedResourceFormats: [
+          {
+            id: "GeoJson",
+            firstMatchPerResource: false
+          }
+        ]
+      });
+
+      await ckanCatalogGroup.loadMembers();
+      ckanServerStratum = <CkanServerStratum>(
+        ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
+      );
+
+      let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
+
+      expect(group1.memberModels.length).toBe(7);
+
+      const items = group1.memberModels as CkanItemReference[];
+      expect(items[0].name).toBe(
+        "Murray-Darling Basin Water Resource Plan Areas – Surface Water - GeoJSON"
+      );
+      expect(items[0]._ckanResource?.id).toBe(
+        "49e8da1c-1ce6-4008-bdcb-af8552a305c2"
+      );
+      expect(items[1]._ckanResource?.id).toBe(
+        "49e8da1c-1ce6-4008-bdcb-af8552a305c2-2"
+      );
     });
   });
 });

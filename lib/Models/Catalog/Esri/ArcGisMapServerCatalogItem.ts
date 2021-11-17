@@ -616,11 +616,13 @@ function getRectangleFromLayer(extent: Extent, rectangle: RectangleExtent) {
       return updateBbox(extent, rectangle);
     }
 
-    if (!isDefined((proj4definitions as any)[wkidCode])) {
+    const wkid = "EPSG:" + wkidCode;
+
+    if (!isDefined((proj4definitions as any)[wkid])) {
       return;
     }
 
-    const source = new proj4.Proj((proj4definitions as any)[wkidCode]);
+    const source = new proj4.Proj((proj4definitions as any)[wkid]);
     const dest = new proj4.Proj("EPSG:4326");
 
     let p = proj4(source, dest, [extent.xmin, extent.ymin]);
