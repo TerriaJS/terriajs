@@ -407,12 +407,12 @@ describe("CkanCatalogGroup", function() {
       );
     });
 
-    it("firstMatchPerResource", async function() {
+    it("removeDuplicates", async function() {
       updateModelFromJson(ckanCatalogGroup, CommonStrata.definition, {
         supportedResourceFormats: [
           {
             id: "GeoJson",
-            firstMatchPerResource: false
+            removeDuplicates: false
           }
         ]
       });

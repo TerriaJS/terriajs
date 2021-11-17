@@ -479,7 +479,7 @@ export const prepareSupportedFormat = createTransformer(
       id: format.id,
       definition: format.definition,
       maxFileSize: format.maxFileSize,
-      firstMatchPerResource: format.firstMatchPerResource,
+      removeDuplicates: format.removeDuplicates,
       onlyUseIfSoleResource: format.onlyUseIfSoleResource,
       formatRegex: format.formatRegex,
       urlRegex: format.urlRegex,

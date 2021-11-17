@@ -44,10 +44,10 @@ export default class CkanResourceFormatTraits extends ModelTraits {
 
   @primitiveTrait({
     type: "boolean",
-    name: "First match per resource",
-    description: `Only use the first match per resource. If true, and a dataset has mupltiple resources which match this format, then the newest resource will be used (according to created property)`
+    name: "Remove duplicate resources",
+    description: `Remove resources if they have the same \`name\`. If duplicates are found, then the newest resource will be used (according to created property). This is applied per format`
   })
-  firstMatchPerResource?: boolean = true;
+  removeDuplicates?: boolean = true;
 
   @anyTrait({
     name: "Definition",

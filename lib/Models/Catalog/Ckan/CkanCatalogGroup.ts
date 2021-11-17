@@ -264,37 +264,56 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
       this.preparedSupportedFormats
     );
     let filteredResources: CkanResourceWithFormat[] = [];
+    // Track format IDS which multiple resources
+    // As if they do, we will need to make sure that CkanItemReference uses resource name (instead of dataset name)
+    let formatsWithMultipleResources = new Set<string>();
 
     if (this._catalogGroup.useSingleResource) {
       filteredResources = supportedResources[0] ? [supportedResources[0]] : [];
     } else {
       // Apply CkanResourceFormatTraits constraints
       // - onlyUseIfSoleResource
-      // - firstMatchPerResource
+      // - removeDuplicates
 
       this.preparedSupportedFormats.forEach(supportedFormat => {
-        const matchingResources = supportedResources.filter(
+        let matchingResources = supportedResources.filter(
           format => format.format.id === supportedFormat.id
         );
         if (matchingResources.length === 0) return;
 
+        // Remove duplicate resources (by name property)
+        // If multiple are found, use newest resource (by created property)
+        if (supportedFormat.removeDuplicates) {
+          matchingResources = matchingResources.reduce<
+            CkanResourceWithFormat[]
+          >((uniqueResources, currentResource) => {
+            const dupe = uniqueResources.findIndex(
+              r => r.resource.name === currentResource.resource.name
+            );
+            // If found duplicate, and current is a "newer" resource, replace it in uniqueResources
+            if (
+              dupe !== -1 &&
+              uniqueResources[dupe].resource.created <
+                currentResource.resource.created
+            ) {
+              uniqueResources[dupe] = currentResource;
+            } else if (dupe === -1) {
+              uniqueResources.push(currentResource);
+            }
+            return uniqueResources;
+          }, []);
+        }
+
         if (supportedFormat.onlyUseIfSoleResource) {
           if (supportedResources.length === matchingResources.length) {
-            if (supportedFormat.firstMatchPerResource) {
-              filteredResources.push(matchingResources[0]);
-            } else {
-              filteredResources.push(...matchingResources);
-            }
+            filteredResources.push(...matchingResources);
           }
-        } else if (supportedFormat.firstMatchPerResource) {
-          filteredResources.push(
-            // Add resource with latest "created" date
-            matchingResources.sort((a, b) =>
-              b.resource.created.localeCompare(a.resource.created)
-            )[0]
-          );
         } else {
           filteredResources.push(...matchingResources);
+        }
+
+        if (matchingResources.length > 1 && supportedFormat.id) {
+          formatsWithMultipleResources.add(supportedFormat.id);
         }
       });
     }
@@ -330,6 +349,10 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
             "useDatasetNameAndFormatWhereMultipleResources",
             false
           );
+        }
+        // If we have multiple resources for a given format, make sure we use resource name
+        else if (format.id && formatsWithMultipleResources.has(format.id)) {
+          item.setTrait(CommonStrata.override, "useResourceName", true);
         }
 
         item.setDataset(ckanDataset);
