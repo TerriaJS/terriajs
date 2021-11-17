@@ -19,7 +19,7 @@ export default class CkanDefaultFormatsStratum extends LoadableStratum(
       {
         id: "GeoJson",
         formatRegex: "^geojson$",
-        // Limit geojson files to 120
+        // Limit geojson files to 120 MB
         maxFileSize: 120,
         definition: {
           type: "geojson"
@@ -43,6 +43,7 @@ export default class CkanDefaultFormatsStratum extends LoadableStratum(
       {
         id: "Czml",
         formatRegex: "^czml$",
+        // Limit CZML files to 50 MB
         maxFileSize: 50,
         definition: {
           type: "czml"
@@ -66,6 +67,7 @@ export default class CkanDefaultFormatsStratum extends LoadableStratum(
       {
         id: "Kml",
         formatRegex: "^km[lz]$",
+        // Limit KML files to 30 MB
         maxFileSize: 30,
         definition: {
           type: "kml"
