@@ -1,8 +1,6 @@
 Change Log
 ==========
 
-#### next release (8.1.10)
-* Added `MAINCODE` aliases for all ABS Statistical Area regions that were missing them.
 #### next release (8.1.12)
 
 * Bigger zoom control icons.
