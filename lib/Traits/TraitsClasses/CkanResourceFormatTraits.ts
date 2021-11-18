@@ -31,9 +31,10 @@ export default class CkanResourceFormatTraits extends ModelTraits {
     name: "Maximum file size (MB)",
     description:
       "The maximum allowed file size for this format (in megabytes).",
-    type: "number"
+    type: "number",
+    isNullable: true
   })
-  maxFileSize?: number;
+  maxFileSize?: number | null;
 
   @primitiveTrait({
     type: "boolean",

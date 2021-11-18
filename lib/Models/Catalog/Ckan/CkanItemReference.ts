@@ -552,6 +552,7 @@ export function resourceIsSupported(
   if (
     match &&
     isDefined(format.maxFileSize) &&
+    format.maxFileSize !== null &&
     isDefined(resource.size) &&
     resource.size !== null &&
     resource.size / (1024 * 1024) > format.maxFileSize
