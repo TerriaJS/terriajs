@@ -776,6 +776,7 @@ function buildGeoJsonUrl(catalogItem: ArcGisFeatureServerCatalogItem) {
       .segment("query")
       .addQuery("f", "json")
       .addQuery("layerDefs", "{" + layerId + ':"' + catalogItem.layerDef + '"}')
+      .addQuery("outSR", "4326")
       .toString()
   );
 }

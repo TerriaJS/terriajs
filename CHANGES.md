@@ -29,6 +29,7 @@ Change Log
 * Add CKAN `useSingleResource`, if `true`, then the highest match from `supportedResourceFormats` will be used for each dataset
 * ArcGis Map/Feature Service will now set CRS from `latestWkid` if it exists (over `wkid`)
 * Fix CKAN ArcGisFeatureService resources
+* ArcGisFeatureServer will now set `outSR=4326` so we don't need to reproject client-side
 * [The next improvement]
 
 #### 8.1.11
