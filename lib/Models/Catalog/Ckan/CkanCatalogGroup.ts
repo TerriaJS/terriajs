@@ -284,24 +284,26 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
         // Remove duplicate resources (by name property)
         // If multiple are found, use newest resource (by created property)
         if (supportedFormat.removeDuplicates) {
-          matchingResources = matchingResources.reduce<
-            CkanResourceWithFormat[]
-          >((uniqueResources, currentResource) => {
-            const dupe = uniqueResources.findIndex(
-              r => r.resource.name === currentResource.resource.name
-            );
-            // If found duplicate, and current is a "newer" resource, replace it in uniqueResources
-            if (
-              dupe !== -1 &&
-              uniqueResources[dupe].resource.created <
-                currentResource.resource.created
-            ) {
-              uniqueResources[dupe] = currentResource;
-            } else if (dupe === -1) {
-              uniqueResources.push(currentResource);
-            }
-            return uniqueResources;
-          }, []);
+          matchingResources = Object.values(
+            matchingResources.reduce<{
+              [name: string]: CkanResourceWithFormat;
+            }>((uniqueResources, currentResource) => {
+              const currentResourceName = currentResource.resource.name;
+              // If found duplicate, and current is a "newer" resource, replace it in uniqueResources
+              if (
+                uniqueResources[currentResourceName] &&
+                uniqueResources[currentResourceName].resource.created <
+                  currentResource.resource.created
+              ) {
+                uniqueResources[currentResourceName] = currentResource;
+              }
+
+              if (!uniqueResources[currentResourceName]) {
+                uniqueResources[currentResourceName] = currentResource;
+              }
+              return uniqueResources;
+            }, {})
+          );
         }
 
         if (supportedFormat.onlyUseIfSoleResource) {
