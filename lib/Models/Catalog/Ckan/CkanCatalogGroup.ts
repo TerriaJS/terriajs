@@ -289,16 +289,14 @@ export class CkanServerStratum extends LoadableStratum(CkanCatalogGroupTraits) {
               [name: string]: CkanResourceWithFormat;
             }>((uniqueResources, currentResource) => {
               const currentResourceName = currentResource.resource.name;
-              // If found duplicate, and current is a "newer" resource, replace it in uniqueResources
+              // Set resource if none found for currentResourceName
+              // Or if found duplicate, and current is a "newer" resource, replace it in uniqueResources
               if (
-                uniqueResources[currentResourceName] &&
-                uniqueResources[currentResourceName].resource.created <
-                  currentResource.resource.created
+                !uniqueResources[currentResourceName] ||
+                (uniqueResources[currentResourceName] &&
+                  uniqueResources[currentResourceName].resource.created <
+                    currentResource.resource.created)
               ) {
-                uniqueResources[currentResourceName] = currentResource;
-              }
-
-              if (!uniqueResources[currentResourceName]) {
                 uniqueResources[currentResourceName] = currentResource;
               }
               return uniqueResources;
