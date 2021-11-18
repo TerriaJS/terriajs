@@ -22,6 +22,16 @@ Change Log
 * Add a method refreshCatalogMembersFromMagda to Terria class.
 * Renable `useNativeResolution` on mobile
 * Store `useNativeResolution`, `baseMaximumScreenSpaceError` as local properties
+* Moved CKAN default `supportedFormats` to `CkanDefaultFormatsStratum`
+* Add properties to `CkanResourceFormatTraits`
+  * `maxFileSize` to filter out resources with large files (default values: GeoJSON = 150MB, KML = 30MB, CZML = 50MB)
+  * `removeDuplicates` (which defaults to true) so we don't get duplicate formats for a dataset (it will check `resource.name`)
+    * If there are multiple matches, then the newest (from resource.created property) will be used
+  * `onlyUseIfSoleResource` to give a given resource format unless that is all that exists for a dataset
+* Add CKAN `useSingleResource`, if `true`, then the highest match from `supportedResourceFormats` will be used for each dataset
+* ArcGis Map/Feature Service will now set CRS from `latestWkid` if it exists (over `wkid`)
+* Fix CKAN ArcGisFeatureService resources
+* ArcGisFeatureServer will now set `outSR=4326` so we don't need to reproject client-side
 * [The next improvement]
 
 #### 8.1.11
