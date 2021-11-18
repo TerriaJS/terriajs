@@ -130,12 +130,10 @@ class SettingPanel extends React.Component<PropTypes> {
 
   onBaseMaximumScreenSpaceErrorChange(bmsse: number) {
     this.props.terria.setBaseMaximumScreenSpaceError(bmsse);
-    if (bmsse) {
-      this.props.terria.setLocalProperty(
-        "baseMaximumScreenSpaceError",
-        bmsse.toString()
-      );
-    }
+    this.props.terria.setLocalProperty(
+      "baseMaximumScreenSpaceError",
+      bmsse.toString()
+    );
   }
 
   toggleUseNativeResolution() {

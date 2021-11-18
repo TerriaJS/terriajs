@@ -892,11 +892,7 @@ export default class Terria {
     const baseMaximumScreenSpaceError = parseFloat(
       this.getLocalProperty("baseMaximumScreenSpaceError")?.toString() || ""
     );
-    if (
-      isDefined(baseMaximumScreenSpaceError) &&
-      baseMaximumScreenSpaceError !== null &&
-      baseMaximumScreenSpaceError !== NaN
-    ) {
+    if (!isNaN(baseMaximumScreenSpaceError)) {
       this.setBaseMaximumScreenSpaceError(baseMaximumScreenSpaceError);
     }
   }
