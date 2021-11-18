@@ -882,6 +882,27 @@ export default class Terria {
         setViewerMode(viewerMode, this.mainViewer);
       }
     }
+    const useNativeResolution = this.getLocalProperty("useNativeResolution");
+    if (typeof useNativeResolution === "boolean") {
+      this.setUseNativeResolution(useNativeResolution);
+    }
+
+    const baseMaximumScreenSpaceError = parseFloat(
+      this.getLocalProperty("baseMaximumScreenSpaceError")?.toString() || ""
+    );
+    if (!isNaN(baseMaximumScreenSpaceError)) {
+      this.setBaseMaximumScreenSpaceError(baseMaximumScreenSpaceError);
+    }
+  }
+
+  @action
+  setUseNativeResolution(useNativeResolution: boolean) {
+    this.useNativeResolution = useNativeResolution;
+  }
+
+  @action
+  setBaseMaximumScreenSpaceError(baseMaximumScreenSpaceError: number): void {
+    this.baseMaximumScreenSpaceError = baseMaximumScreenSpaceError;
   }
 
   async loadPersistedOrInitBaseMap() {
