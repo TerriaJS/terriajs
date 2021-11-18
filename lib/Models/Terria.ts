@@ -882,10 +882,8 @@ export default class Terria {
         setViewerMode(viewerMode, this.mainViewer);
       }
     }
-    const useNativeResolution = <boolean>(
-      this.getLocalProperty("useNativeResolution")
-    );
-    if (isDefined(useNativeResolution) && useNativeResolution !== null) {
+    const useNativeResolution = this.getLocalProperty("useNativeResolution");
+    if (typeof useNativeResolution === "boolean") {
       this.setUseNativeResolution(useNativeResolution);
     }
 
