@@ -1,7 +1,11 @@
 Change Log
 ==========
 
-#### next release (8.1.12)
+#### next release (8.1.13)
+
+* [The next improvement]
+
+#### 8.1.12
 
 * Bigger zoom control icons.
 * Modified "ideal zoom" to zoom closer to tilesets and datasources.
@@ -32,7 +36,6 @@ Change Log
 * ArcGis Map/Feature Service will now set CRS from `latestWkid` if it exists (over `wkid`)
 * Fix CKAN ArcGisFeatureService resources
 * ArcGisFeatureServer will now set `outSR=4326` so we don't need to reproject client-side
-* [The next improvement]
 
 #### 8.1.11
 
