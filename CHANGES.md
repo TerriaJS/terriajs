@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.1.13)
 
+* Add an external link icon to any hyperlink that will open a new tag or window.
 * [The next improvement]
 
 #### 8.1.12
