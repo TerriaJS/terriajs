@@ -83,7 +83,7 @@ export default observer(
           <React.Fragment key={idx}>
             {parseCustomHtmlToReact(
               element.replace(/\{\{\s*version\s*\}\}/g, version),
-              { disableIcon: true }
+              { disableExternalLinkIcon: true }
             )}
           </React.Fragment>
         ))}
