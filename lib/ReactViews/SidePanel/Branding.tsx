@@ -82,7 +82,8 @@ export default observer(
         {brandingHtmlElements.map((element, idx) => (
           <React.Fragment key={idx}>
             {parseCustomHtmlToReact(
-              element.replace(/\{\{\s*version\s*\}\}/g, version)
+              element.replace(/\{\{\s*version\s*\}\}/g, version),
+              { disableIcon: true }
             )}
           </React.Fragment>
         ))}
