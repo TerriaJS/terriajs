@@ -1,30 +1,28 @@
 import i18next from "i18next";
-import { computed, isObservableArray, observable, runInAction } from "mobx";
+import { computed, isObservableArray, runInAction } from "mobx";
 import combine from "terriajs-cesium/Source/Core/combine";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import containsAny from "../../../Core/containsAny";
 import isDefined from "../../../Core/isDefined";
 import isReadOnlyArray from "../../../Core/isReadOnlyArray";
 import loadText from "../../../Core/loadText";
 import TerriaError from "../../../Core/TerriaError";
 import gmlToGeoJson from "../../../Map/gmlToGeoJson";
-import MappableMixin from "../../../ModelMixins/MappableMixin";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
-import ExportableMixin from "../../../ModelMixins/ExportableMixin";
+import GeoJsonMixin, {
+  FeatureCollectionWithCrs,
+  toFeatureCollection
+} from "../../../ModelMixins/GeojsonMixin";
 import GetCapabilitiesMixin from "../../../ModelMixins/GetCapabilitiesMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import xml2json from "../../../ThirdParty/xml2json";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import WebFeatureServiceCatalogItemTraits from "../../../Traits/TraitsClasses/WebFeatureServiceCatalogItemTraits";
-import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import GeoJsonCatalogItem from "../CatalogItems/GeoJsonCatalogItem";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import WebFeatureServiceCapabilities, {
   FeatureType,
   getRectangleFromLayer
@@ -242,14 +240,8 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 }
 
-class WebFeatureServiceCatalogItem extends ExportableMixin(
-  MappableMixin(
-    GetCapabilitiesMixin(
-      UrlMixin(
-        CatalogMemberMixin(CreateModel(WebFeatureServiceCatalogItemTraits))
-      )
-    )
-  )
+class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
+  UrlMixin(GeoJsonMixin(CreateModel(WebFeatureServiceCatalogItemTraits)))
 ) {
   /**
    * The collection of strings that indicate an Abstract property should be ignored.  If these strings occur anywhere
@@ -267,8 +259,6 @@ class WebFeatureServiceCatalogItem extends ExportableMixin(
   ];
 
   static readonly type = "wfs";
-  @observable
-  private geojsonCatalogItem: GeoJsonCatalogItem | undefined;
 
   get type() {
     return WebFeatureServiceCatalogItem.type;
@@ -310,7 +300,7 @@ class WebFeatureServiceCatalogItem extends ExportableMixin(
     });
   }
 
-  async forceLoadMapItems(): Promise<void> {
+  protected async forceLoadGeojsonData(): Promise<FeatureCollectionWithCrs> {
     const getCapabilitiesStratum:
       | GetCapabilitiesStratum
       | undefined = this.strata.get(
@@ -410,28 +400,11 @@ class WebFeatureServiceCatalogItem extends ExportableMixin(
       ? JSON.parse(getFeatureResponse)
       : gmlToGeoJson(getFeatureResponse);
 
-    runInAction(() => {
-      this.geojsonCatalogItem = new GeoJsonCatalogItem(
-        createGuid(),
-        this.terria,
-        this
-      );
-
-      this.geojsonCatalogItem.setTrait(
-        CommonStrata.definition,
-        "geoJsonData",
-        geojsonData
-      );
-
-      if (isDefined(this.style))
-        this.geojsonCatalogItem.setTrait(
-          CommonStrata.definition,
-          "style",
-          this.style
-        );
-    });
-
-    (await this.geojsonCatalogItem!.loadMapItems()).throwIfError();
+    const fc = toFeatureCollection(geojsonData);
+    if (fc) return fc;
+    throw TerriaError.from(
+      "Invalid geojson data - only FeatureCollection and Feature are supported"
+    );
   }
 
   @computed
@@ -446,37 +419,11 @@ class WebFeatureServiceCatalogItem extends ExportableMixin(
   }
 
   @computed
-  get _canExportData() {
-    return isDefined(this.geojsonCatalogItem?.geoJsonData);
-  }
-
-  async _exportData() {
-    if (isDefined(this.geojsonCatalogItem?.geoJsonData)) {
-      return {
-        name: `${this.name} export.json`,
-        file: new Blob([JSON.stringify(this.geojsonCatalogItem!.geoJsonData)])
-      };
-    }
-    return;
-  }
-
-  @computed
-  get mapItems() {
-    if (this.geojsonCatalogItem) {
-      return this.geojsonCatalogItem.mapItems.map(mapItem => {
-        mapItem.show = this.show;
-        return mapItem;
-      });
-    }
-    return [];
-  }
-
-  @computed
   get shortReport(): string | undefined {
     // Show notice if reached
     if (
-      isObservableArray(this.geojsonCatalogItem?.geoJsonData?.features) &&
-      this.geojsonCatalogItem!.geoJsonData!.features.length >= this.maxFeatures
+      isObservableArray(this.readyData?.features) &&
+      this.readyData!.features.length >= this.maxFeatures
     ) {
       return i18next.t(
         "models.webFeatureServiceCatalogItem.reachedMaxFeatureLimit",

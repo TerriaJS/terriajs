@@ -1,8 +1,51 @@
 Change Log
 ==========
 
-#### next release (8.1.10)
+#### next release (8.1.13)
+
 * [The next improvement]
+
+#### 8.1.12
+
+* Bigger zoom control icons.
+* Modified "ideal zoom" to zoom closer to tilesets and datasources.
+* Added `configParameters.feedbackPostamble`. Text showing at the bottom of feedback form, supports the internationalization using the translation key
+* `GeoJsonMixin.style["stroke-opacity"]` will now also set `polygonStroke.alpha` and `polylineStroke.alpha`
+* Reduce `GeoJsonMixin` default stroke width from `2` to `1`
+* Add `TableMixin` styling to `GeoJsonMixin` - it will treat geojson feature properties as "rows" in a table - which can be styled in the same way as `TableMixin` (eg CSV). This is only enabled for geojson-vt/Protomaps (which requires `Terria.configParameters.enableGeojsonMvt = true`). For more info see `GeojsonMixin.forceLoadMapItems()`
+  * This can be disabled using `GeojsonTraits.disableTableStyle`
+* Opacity and splitting is enabled for Geojson (if using geojson-vt/protomaps)
+* Replaced `@types/geojson` Geojson types with `@turf/helpers`
+* In `GeojsonMixin` replaced with `customDataLoader`, `loadFromFile` and `loadFromUrl` with `forceLoadGeojsonData`
+* `GeojsonMixin` will now convert all geojson objects to FeatureCollection
+* Exporting `GeojsonMixin` will now add proper file extensions
+* `WebFeatureServiceCatalogItem` now uses `GeoJsonMixin`
+* Fix `ProtomapsImageryProvider` geojson feature picking over antimeridian
+* Add Socrata group to "Add web data
+* Added "marker-stroke-width", "polyline-stroke-width", "polygon-stroke-width" to `GeojsonStyleTraits` (Note these are not apart of [simplestyle-spec](https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0) and can only be used with `geojson-vt`)
+* Add a method refreshCatalogMembersFromMagda to Terria class.
+* Renable `useNativeResolution` on mobile
+* Store `useNativeResolution`, `baseMaximumScreenSpaceError` as local properties
+* Moved CKAN default `supportedFormats` to `CkanDefaultFormatsStratum`
+* Add properties to `CkanResourceFormatTraits`
+  * `maxFileSize` to filter out resources with large files (default values: GeoJSON = 150MB, KML = 30MB, CZML = 50MB)
+  * `removeDuplicates` (which defaults to true) so we don't get duplicate formats for a dataset (it will check `resource.name`)
+    * If there are multiple matches, then the newest (from resource.created property) will be used
+  * `onlyUseIfSoleResource` to give a given resource format unless that is all that exists for a dataset
+* Add CKAN `useSingleResource`, if `true`, then the highest match from `supportedResourceFormats` will be used for each dataset
+* ArcGis Map/Feature Service will now set CRS from `latestWkid` if it exists (over `wkid`)
+* Fix CKAN ArcGisFeatureService resources
+* ArcGisFeatureServer will now set `outSR=4326` so we don't need to reproject client-side
+
+#### 8.1.11
+
+* Fix `SettingsPanel` type issue
+
+#### 8.1.10
+
+* Fix `CswCatalogGroup` XML types
+* Added `MAINCODE` aliases for all ABS Statistical Area regions that were missing them.
+* Fixed `superGet` replacement in webpack builds with babel versions `7.16.0` and above.
 
 #### 8.1.9
 * TSify workbench splitter control and fix broken styling.
