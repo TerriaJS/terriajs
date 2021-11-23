@@ -86,7 +86,7 @@ const SharePanel = observer(
         if (window.matchMedia) {
           const matcher = window.matchMedia("print");
           matcher.addListener(handlePrintMediaChange);
-          this._unsubscribeFromPrintMediaChange = function () {
+          this._unsubscribeFromPrintMediaChange = function() {
             matcher.removeListener(handlePrintMediaChange);
           };
         }
@@ -176,8 +176,9 @@ const SharePanel = observer(
     },
 
     shouldShorten() {
-      const localStoragePref =
-        this.props.terria.getLocalProperty("shortenShareUrls");
+      const localStoragePref = this.props.terria.getLocalProperty(
+        "shortenShareUrls"
+      );
 
       return (
         this.isUrlShortenable() &&
@@ -319,10 +320,9 @@ const SharePanel = observer(
     },
 
     renderWarning() {
-      const unshareableItems =
-        this.props.terria.catalog.userAddedDataGroup.memberModels.filter(
-          model => !isShareable(this.props.terria)(model.uniqueId)
-        );
+      const unshareableItems = this.props.terria.catalog.userAddedDataGroup.memberModels.filter(
+        model => !isShareable(this.props.terria)(model.uniqueId)
+      );
 
       return (
         <If condition={unshareableItems.length > 0}>
@@ -553,8 +553,12 @@ const SharePanel = observer(
 
     render() {
       const { t } = this.props;
-      const { catalogShare, storyShare, catalogShareWithoutText, modalWidth } =
-        this.props;
+      const {
+        catalogShare,
+        storyShare,
+        catalogShareWithoutText,
+        modalWidth
+      } = this.props;
       const dropdownTheme = {
         btn: classNames({
           [Styles.btnCatalogShare]: catalogShare,

@@ -79,7 +79,8 @@ export function defaultBaseMaps(terria: Terria): any[] {
       id: "basemap-natural-earth-II",
       name: "Natural Earth II",
       type: "wms",
-      url: "http://geoserver.nationalmap.nicta.com.au/imagery/natural-earth-ii/wms",
+      url:
+        "http://geoserver.nationalmap.nicta.com.au/imagery/natural-earth-ii/wms",
       layers: "NE2_HR_LC_SR_W_DR",
       opacity: 1.0
     },
@@ -91,7 +92,8 @@ export function defaultBaseMaps(terria: Terria): any[] {
       id: "basemap-black-marble",
       name: "NASA Black Marble",
       type: "wms",
-      url: "http://geoserver.nationalmap.nicta.com.au/imagery/nasa-black-marble/wms",
+      url:
+        "http://geoserver.nationalmap.nicta.com.au/imagery/nasa-black-marble/wms",
       layers: "nasa-black-marble:dnb_land_ocean_ice.2012.54000x27000_geo",
       opacity: 1.0
     },

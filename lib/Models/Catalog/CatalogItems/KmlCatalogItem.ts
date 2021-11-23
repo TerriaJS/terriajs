@@ -116,7 +116,7 @@ class KmlCatalogItem extends MappableMixin(
 
         const polygon = entity.polygon;
         if (isDefined(polygon)) {
-          polygon.perPositionHeight = true as unknown as Property;
+          polygon.perPositionHeight = (true as unknown) as Property;
           const polygonHierarchy = getPropertyValue<PolygonHierarchy>(
             polygon.hierarchy
           );
@@ -130,7 +130,7 @@ class KmlCatalogItem extends MappableMixin(
         }
       }
       const terrainProvider = this.terria.cesium.scene.globe.terrainProvider;
-      sampleTerrain(terrainProvider, 11, positionsToSample).then(function () {
+      sampleTerrain(terrainProvider, 11, positionsToSample).then(function() {
         for (let i = 0; i < positionsToSample.length; ++i) {
           const position = positionsToSample[i];
           if (!isDefined(position.height)) {
