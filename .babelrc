@@ -15,7 +15,7 @@
     "@babel/plugin-transform-modules-commonjs",
     ["@babel/plugin-proposal-decorators", { "legacy": true }],
     "@babel/proposal-class-properties",
-    ["@babel/plugin-proposal-object-rest-spread", { "useBuiltIns": true }],
+    "@babel/proposal-object-rest-spread",
     "babel-plugin-styled-components",
     "@babel/plugin-syntax-dynamic-import",
     "babel-plugin-lodash"
