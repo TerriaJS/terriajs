@@ -125,10 +125,11 @@ Configuration of items to appear in the search bar
 |`title`|no|**string**|undefined|Title of the help item|
 |`videoUrl`|no|**string**|undefined|The video to show on the top of help item.|
 |`placeholderImage`|no|**string**|undefined|Placeholder image for the video.|
-|`paneMode`|no|**enum["videoAndContent","slider","trainer"]**|`"videoAndContent"`|
+|`paneMode`|no|**enum["videoAndContent","slider","trainer", "externalLink"]**|`"videoAndContent"`|
 |`trainerItems`|no|**[TrainerItem[]](#traineritem)**|undefined|List of the trainer steps|
 |`markdownText`|no|**string**|undefined|The content of the help item, can use Markdown syntax.|
 |`icon`|no|**string**|undefined|Icon to show next to the itemName.|
+|`url|no|**string**|undefined|External url for the help content item.|
 
 #### TrainerItem
 

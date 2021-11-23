@@ -5,7 +5,8 @@ import ModelTraits from "../ModelTraits";
 export enum PaneMode {
   videoAndContent = "videoAndContent",
   slider = "slider",
-  trainer = "trainer"
+  trainer = "trainer",
+  externalLink = "externalLink"
 }
 
 export class StepItemTraits extends ModelTraits {
@@ -82,7 +83,7 @@ export class HelpItemTraits extends ModelTraits {
     name: "Placeholder image",
     description: "Url of the placeholder image for the help content item."
   })
-  paneMode!: "videoAndContent" | "slider" | "trainer";
+  paneMode!: "videoAndContent" | "slider" | "trainer" | "externalLink";
 
   @objectArrayTrait({
     type: TrainerItemTraits,
@@ -105,4 +106,11 @@ export class HelpItemTraits extends ModelTraits {
     description: "Icon to show for the help content item."
   })
   icon?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "url",
+    description: "External url for the help content item."
+  })
+  url?: string;
 }
