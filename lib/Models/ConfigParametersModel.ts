@@ -126,6 +126,13 @@ export class ConfigParametersModel extends CreateModel(ConfigParametersTraits) {
       );
     }
 
+    if ("mobileDefaultViewerMode" in params) {
+      delete params.mobileDefaultViewerMode;
+      console.warn(
+        "Config parameter mobileDefaultViewerMode is not implemented. Check docs for updated usage."
+      );
+    }
+
     return params;
   }
 }
