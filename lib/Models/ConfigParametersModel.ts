@@ -1,3 +1,4 @@
+import { action } from "mobx";
 import { JsonObject } from "../Core/Json";
 import Result from "../Core/Result";
 import TerriaError from "../Core/TerriaError";
@@ -19,6 +20,7 @@ export class ConfigParametersModel extends CreateModel(ConfigParametersTraits) {
     return new Result(undefined, TerriaError.combine(errors, 0));
   }
 
+  @action
   convertDeprecatedParameters(params: any) {
     if ("showWelcomeMessage" in params || "welcomeMessageVideo" in params) {
       if (!("welcomeMessage.show" in params)) {

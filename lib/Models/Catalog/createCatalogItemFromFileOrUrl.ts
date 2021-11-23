@@ -2,14 +2,14 @@ import i18next from "i18next";
 import { runInAction } from "mobx";
 import isDefined from "../../Core/isDefined";
 import TerriaError from "../../Core/TerriaError";
-import ViewState from "../../ReactViewModels/ViewState";
-import CatalogMemberFactory from "./CatalogMemberFactory";
-import CommonStrata from "../Definition/CommonStrata";
-import createUrlReferenceFromUrl from "./CatalogReferences/createUrlReferenceFromUrl";
-import { BaseModel } from "../Definition/Model";
-import Terria from "../Terria";
-import upsertModelFromJson from "../Definition/upsertModelFromJson";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
+import ViewState from "../../ReactViewModels/ViewState";
+import CommonStrata from "../Definition/CommonStrata";
+import { BaseModel } from "../Definition/Model";
+import upsertModelFromJson from "../Definition/upsertModelFromJson";
+import Terria from "../Terria";
+import CatalogMemberFactory from "./CatalogMemberFactory";
+import createUrlReferenceFromUrl from "./CatalogReferences/createUrlReferenceFromUrl";
 
 export default function createCatalogItemFromFileOrUrl(
   terria: Terria,
@@ -45,7 +45,7 @@ export default function createCatalogItemFromFileOrUrl(
       viewState,
       confirmConversion,
       "Ready to upload your file to the " +
-        terria.configParameters.appName +
+        terria.appName +
         " conversion service?"
     ).then(confirmed => {
       return confirmed
@@ -92,7 +92,7 @@ function tryConversionService(
       new TerriaError({
         title: i18next.t("models.catalog.unsupportedFileTypeTitle"),
         message: i18next.t("models.catalog.unsupportedFileTypeMessage", {
-          appName: terria.configParameters.appName,
+          appName: terria.appName,
           link:
             '<a href="https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au">csv-geo-au format</a>'
         })
@@ -106,7 +106,7 @@ function tryConversionService(
       new TerriaError({
         title: i18next.t("models.catalog.unsupportedFileTypeTitle"),
         message: i18next.t("models.catalog.unsupportedFileTypeMessageII", {
-          appName: terria.configParameters.appName,
+          appName: terria.appName,
           link:
             '<a href="https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au">csv-geo-au format</a>',
           linkII:
@@ -120,7 +120,7 @@ function tryConversionService(
     viewState,
     confirmConversion,
     i18next.t("models.catalog.getConfirmationMessage", {
-      appName: terria.configParameters.appName
+      appName: terria.appName
     })
   ).then(confirmed => {
     return undefined;

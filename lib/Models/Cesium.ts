@@ -133,7 +133,8 @@ export default class Cesium extends GlobeOrMap {
     this.terria = terriaViewer.terria;
 
     if (this.terria.configParameters.cesiumIonAccessToken !== undefined) {
-      Ion.defaultAccessToken = this.terria.configParameters.cesiumIonAccessToken;
+      Ion.defaultAccessToken =
+        this.terria.configParameters.cesiumIonAccessToken;
     }
 
     //An arbitrary base64 encoded image used to populate the placeholder SingleTileImageryProvider
@@ -205,7 +206,7 @@ export default class Cesium extends GlobeOrMap {
     //                 that.terria.raiseErrorToUser({
     //                     title : 'Terrain Server Not Responding',
     //                     message : '\
-    // The terrain server is not responding at the moment.  You can still use all the features of '+that.terria.configParameters.appName+' \
+    // The terrain server is not responding at the moment.  You can still use all the features of '+that.terria.appName+' \
     // but there will be no terrain detail in 3D mode.  We\'re sorry for the inconvenience.  Please try \
     // again later and the terrain server should be responding as expected.  If the issue persists, please contact \
     // us via email at '+that.terria.configParameters.supportEmail+'.'
@@ -426,17 +427,20 @@ export default class Cesium extends GlobeOrMap {
       this.scene.globe.splitDirection = this.terria.showSplitter
         ? this.terria.terrainSplitDirection
         : ImagerySplitDirection.NONE;
-      this.scene.globe.depthTestAgainstTerrain = this.terria.depthTestAgainstTerrainEnabled;
+      this.scene.globe.depthTestAgainstTerrain =
+        this.terria.depthTestAgainstTerrainEnabled;
       if (this.scene.skyAtmosphere) {
-        this.scene.skyAtmosphere.splitDirection = this.scene.globe.splitDirection;
+        this.scene.skyAtmosphere.splitDirection =
+          this.scene.globe.splitDirection;
       }
     });
     this._disposeSplitterReaction = this._reactToSplitterChanges();
 
     this._disposeResolutionReaction = autorun(() => {
-      (this.cesiumWidget as any).useBrowserRecommendedResolution = !this.terria
-        .useNativeResolution;
-      this.cesiumWidget.scene.globe.maximumScreenSpaceError = this.terria.baseMaximumScreenSpaceError;
+      (this.cesiumWidget as any).useBrowserRecommendedResolution =
+        !this.terria.useNativeResolution;
+      this.cesiumWidget.scene.globe.maximumScreenSpaceError =
+        this.terria.baseMaximumScreenSpaceError;
     });
   }
 
@@ -634,12 +638,10 @@ export default class Cesium extends GlobeOrMap {
         // target is a Rectangle
 
         // Work out the destination that the camera would naturally fly to
-        const destinationCartesian = camera.getRectangleCameraCoordinates(
-          target
-        );
-        const destination = Ellipsoid.WGS84.cartesianToCartographic(
-          destinationCartesian
-        );
+        const destinationCartesian =
+          camera.getRectangleCameraCoordinates(target);
+        const destination =
+          Ellipsoid.WGS84.cartesianToCartographic(destinationCartesian);
         const terrainProvider = this.scene.globe.terrainProvider;
         // A sufficiently coarse tile level that still has approximately accurate height
         const level = 6;
@@ -782,7 +784,7 @@ export default class Cesium extends GlobeOrMap {
       this.notifyRepaintRequired();
     });
 
-    return function() {
+    return function () {
       disposeSplitPositionChange();
       disposeSplitDirectionChange();
     };
@@ -1042,9 +1044,8 @@ export default class Cesium extends GlobeOrMap {
         latLngHeight.height
       )
     );
-    const pickPositionCartographic = Ellipsoid.WGS84.cartesianToCartographic(
-      pickPosition
-    );
+    const pickPositionCartographic =
+      Ellipsoid.WGS84.cartesianToCartographic(pickPosition);
 
     const promises: (Promise<ImageryLayerFeatureInfo[]> | undefined)[] = [];
     const imageryLayers: ImageryLayer[] = [];
@@ -1114,9 +1115,8 @@ export default class Cesium extends GlobeOrMap {
         latLngHeight.height
       )
     );
-    const pickPositionCartographic = Ellipsoid.WGS84.cartesianToCartographic(
-      pickPosition
-    );
+    const pickPositionCartographic =
+      Ellipsoid.WGS84.cartesianToCartographic(pickPosition);
 
     const promises = [];
     const imageryLayers: ImageryLayer[] = [];
@@ -1224,7 +1224,7 @@ export default class Cesium extends GlobeOrMap {
   private _attachProviderCoordHooks() {
     const providerCoords: ProviderCoordsMap = {};
 
-    const pickFeaturesHook = function(
+    const pickFeaturesHook = function (
       imageryProvider: ImageryProvider,
       oldPick: (
         x: number,
@@ -1344,9 +1344,8 @@ export default class Cesium extends GlobeOrMap {
                 const screenPosition = this._computePositionOnScreen(
                   result.pickPosition
                 );
-                const pickedSide = this._getSplitterSideForScreenPosition(
-                  screenPosition
-                );
+                const pickedSide =
+                  this._getSplitterSideForScreenPosition(screenPosition);
 
                 features = features.filter(feature => {
                   const splitDirection = (<any>feature).imageryLayer
@@ -1493,7 +1492,7 @@ export default class Cesium extends GlobeOrMap {
     const scene = this.scene;
     scene.imageryLayers.add(result);
 
-    return function() {
+    return function () {
       scene.imageryLayers.remove(result);
     };
   }
@@ -1508,7 +1507,7 @@ function zoomToDataSource(
 ): Promise<void> {
   let flyToPromise: Promise<void> | undefined;
   const pollPromise = pollToPromise(
-    function() {
+    function () {
       const dataSourceDisplay = cesium.dataSourceDisplay;
       if (dataSourceDisplay === undefined) {
         return false;
@@ -1539,9 +1538,8 @@ function zoomToDataSource(
 
       // Test if boundingSpheres is empty to avoid zooming to nowhere
       if (boundingSpheres.length > 0 && _lastZoomTarget === target) {
-        var boundingSphere = BoundingSphere.fromBoundingSpheres(
-          boundingSpheres
-        );
+        var boundingSphere =
+          BoundingSphere.fromBoundingSpheres(boundingSpheres);
         flyToPromise = flyToBoundingSpherePromise(
           cesium.scene.camera,
           boundingSphere,

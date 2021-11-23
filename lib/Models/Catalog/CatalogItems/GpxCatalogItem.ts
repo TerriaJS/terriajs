@@ -5,15 +5,15 @@ import getFilenameFromUri from "terriajs-cesium/Source/Core/getFilenameFromUri";
 import isDefined from "../../../Core/isDefined";
 import loadText from "../../../Core/loadText";
 import readText from "../../../Core/readText";
-import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
-import MappableMixin from "../../../ModelMixins/MappableMixin";
+import { networkRequestError } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
+import MappableMixin from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import GpxCatalogItemTraits from "../../../Traits/TraitsClasses/GpxCatalogItemTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
-import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 
 const toGeoJSON = require("@mapbox/togeojson");
 
@@ -61,7 +61,7 @@ class GpxCatalogItem extends MappableMixin(
           sender: this,
           title: i18next.t("models.gpx.errorLoadingTitle"),
           message: i18next.t("models.gpx.errorLoadingMessage", {
-            appName: this.terria.configParameters.appName
+            appName: this.terria.appName
           })
         });
       }

@@ -1,4 +1,4 @@
-import { action, computed } from "mobx";
+import { action, computed, runInAction } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import isDefined from "../../Core/isDefined";
 import Result from "../../Core/Result";
@@ -116,11 +116,13 @@ export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
 }
 
 function addBingMapsKey(item: BingMapsCatalogItem, terria: Terria) {
-  if (!item.key && terria.configParameters.bingMapsKey !== null) {
-    item.setTrait(
-      CommonStrata.defaults,
-      "key",
-      terria.configParameters.bingMapsKey
-    );
-  }
+  runInAction(() => {
+    if (!item.key && terria.configParameters.bingMapsKey !== null) {
+      item.setTrait(
+        CommonStrata.defaults,
+        "key",
+        terria.configParameters.bingMapsKey
+      );
+    }
+  });
 }

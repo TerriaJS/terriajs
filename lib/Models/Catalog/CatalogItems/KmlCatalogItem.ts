@@ -13,8 +13,8 @@ import Property from "terriajs-cesium/Source/DataSources/Property";
 import isDefined from "../../../Core/isDefined";
 import readXml from "../../../Core/readXml";
 import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
-import MappableMixin from "../../../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
+import MappableMixin from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import KmlCatalogItemTraits from "../../../Traits/TraitsClasses/KmlCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
@@ -84,7 +84,7 @@ class KmlCatalogItem extends MappableMixin(
             sender: this,
             title: i18next.t("models.kml.errorLoadingTitle"),
             message: i18next.t("models.kml.errorLoadingMessage", {
-              appName: this.terria.configParameters.appName
+              appName: this.terria.appName
             })
           })
         );
@@ -116,7 +116,7 @@ class KmlCatalogItem extends MappableMixin(
 
         const polygon = entity.polygon;
         if (isDefined(polygon)) {
-          polygon.perPositionHeight = (true as unknown) as Property;
+          polygon.perPositionHeight = true as unknown as Property;
           const polygonHierarchy = getPropertyValue<PolygonHierarchy>(
             polygon.hierarchy
           );
@@ -130,7 +130,7 @@ class KmlCatalogItem extends MappableMixin(
         }
       }
       const terrainProvider = this.terria.cesium.scene.globe.terrainProvider;
-      sampleTerrain(terrainProvider, 11, positionsToSample).then(function() {
+      sampleTerrain(terrainProvider, 11, positionsToSample).then(function () {
         for (let i = 0; i < positionsToSample.length; ++i) {
           const position = positionsToSample[i];
           if (!isDefined(position.height)) {

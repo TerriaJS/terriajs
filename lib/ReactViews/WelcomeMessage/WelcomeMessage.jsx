@@ -61,10 +61,12 @@ class WelcomeMessage extends React.Component {
   constructor(props) {
     super(props);
     const viewState = this.props.viewState;
-    const shouldShow =
-      (viewState.terria.configParameters.welcomeMessage.show &&
-        !viewState.terria.getLocalProperty(LOCAL_PROPERTY_KEY)) ||
-      false;
+    const shouldShow = runInAction(
+      () =>
+        (viewState.terria.configParameters.welcomeMessage.show &&
+          !viewState.terria.getLocalProperty(LOCAL_PROPERTY_KEY)) ||
+        false
+    );
 
     this.props.viewState.setShowWelcomeMessage(shouldShow);
   }
@@ -84,7 +86,7 @@ class WelcomeMessage extends React.Component {
   }
 }
 
-export const WelcomeMessagePure = props => {
+export const WelcomeMessagePure = observer(props => {
   const { showWelcomeMessage, setShowWelcomeMessage, viewState } = props;
   const { t } = useTranslation();
   // This is required so we can do nested animations
@@ -93,6 +95,7 @@ export const WelcomeMessagePure = props => {
   const [shouldExploreData, setShouldExploreData] = useState(false);
   const [shouldOpenHelp, setShouldOpenHelp] = useState(false);
   const [shouldOpenSearch, setShouldOpenSearch] = useState(false);
+  const welcomeMessage = viewState.terria.configParameters.welcomeMessage;
   // const {
   //   WelcomeMessagePrimaryBtnClick,
   //   WelcomeMessageSecondaryBtnClick
@@ -167,13 +170,8 @@ export const WelcomeMessagePure = props => {
         >
           <VideoGuide
             viewState={viewState}
-            videoLink={
-              viewState.terria.configParameters.welcomeMessage.video.url
-            }
-            background={
-              viewState.terria.configParameters.welcomeMessage.video
-                .placeholderImage
-            }
+            videoLink={welcomeMessage.video.url}
+            background={welcomeMessage.video.placeholderImage}
             videoName={WELCOME_MESSAGE_VIDEO}
           />
           <SlideUpFadeIn isVisible={welcomeVisible}>
@@ -241,7 +239,7 @@ export const WelcomeMessagePure = props => {
               <Spacing bottom={6} />
               <If condition={!viewState.useSmallScreenInterface}>
                 <Text bold textLight extraLarge>
-                  {viewState.terria.configParameters.welcomeMessage.video.title}
+                  {welcomeMessage.video.title}
                 </Text>
                 <Spacing bottom={2} />
               </If>
@@ -250,10 +248,7 @@ export const WelcomeMessagePure = props => {
                   <Box
                     col6
                     centered
-                    backgroundImage={
-                      viewState.terria.configParameters.welcomeMessage.video
-                        .placeholderImage
-                    }
+                    backgroundImage={welcomeMessage.video.placeholderImage}
                     backgroundBlackOverlay={"50%"}
                   >
                     <RawButton
@@ -342,7 +337,7 @@ export const WelcomeMessagePure = props => {
       </WelcomeModalWrapper>
     </FadeIn>
   );
-};
+});
 
 WelcomeMessagePure.propTypes = {
   showWelcomeMessage: PropTypes.bool.isRequired,

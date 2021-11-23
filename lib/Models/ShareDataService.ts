@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import { JsonObject } from "../Core/Json";
@@ -5,7 +6,6 @@ import loadJson from "../Core/loadJson";
 import loadWithXhr from "../Core/loadWithXhr";
 import TerriaError from "../Core/TerriaError";
 import Terria from "./Terria";
-import i18next from "i18next";
 
 interface ShareDataServiceOptions {
   terria: Terria;
@@ -89,7 +89,7 @@ export default class ShareDataService {
         new TerriaError({
           title: i18next.t("models.shareData.expandErrorTitle"),
           message: i18next.t("models.shareData.expandErrorMessage", {
-            appName: this.terria.configParameters.appName
+            appName: this.terria.appName
           })
         })
       );

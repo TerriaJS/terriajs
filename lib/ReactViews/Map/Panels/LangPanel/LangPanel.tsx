@@ -1,14 +1,13 @@
+import { observer } from "mobx-react";
 import React from "react";
+import { useTranslation } from "react-i18next";
+import Terria from "../../../../Models/Terria";
 import Box from "../../../../Styled/Box";
 import { RawButton } from "../../../../Styled/Button";
-import Ul, { Li } from "../../../../Styled/List";
-
-import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
-import Terria from "../../../../Models/Terria";
-
-import Styles from "../../menu-bar.scss";
 import Icon from "../../../../Styled/Icon";
-import { useTranslation } from "react-i18next";
+import Ul, { Li } from "../../../../Styled/List";
+import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
+import Styles from "../../menu-bar.scss";
 
 const stripLangLocale = (lang: string = ""): string => lang.split("-")[0];
 
@@ -17,7 +16,7 @@ type Props = {
   smallScreen: boolean;
 };
 
-export default (props: Props) => {
+export default observer((props: Props) => {
   const { t, i18n } = useTranslation();
 
   if (
@@ -57,4 +56,4 @@ export default (props: Props) => {
       </Box>
     </MenuPanel>
   );
-};
+});

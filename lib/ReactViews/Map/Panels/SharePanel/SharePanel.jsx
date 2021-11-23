@@ -2,14 +2,19 @@
 
 import classNames from "classnames";
 import createReactClass from "create-react-class";
+import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { Trans, withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
+import {
+  Category,
+  ShareAction
+} from "../../../../Core/AnalyticEvents/analyticEvents";
 import printWindow from "../../../../Core/printWindow";
-import Clipboard from "../../../Clipboard";
 import Icon from "../../../../Styled/Icon";
+import Clipboard from "../../../Clipboard";
 import Loader from "../../../Loader";
 import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
 import Input from "../../../Styled/Input/Input.jsx";
@@ -23,10 +28,6 @@ import {
 import PrintView from "./PrintView";
 import Styles from "./share-panel.scss";
 import StorySharePanel from "./StorySharePanel";
-import {
-  Category,
-  ShareAction
-} from "../../../../Core/AnalyticEvents/analyticEvents";
 
 const SharePanel = observer(
   createReactClass({
@@ -67,7 +68,10 @@ const SharePanel = observer(
     },
 
     componentDidMount() {
-      if (this.props.terria.configParameters.interceptBrowserPrint) {
+      const interceptBrowserPrint = runInAction(
+        () => this.props.terria.configParameters.interceptBrowserPrint
+      );
+      if (interceptBrowserPrint) {
         window.addEventListener("beforeprint", this.beforeBrowserPrint, false);
         window.addEventListener("afterprint", this.afterBrowserPrint, false);
 
@@ -82,7 +86,7 @@ const SharePanel = observer(
         if (window.matchMedia) {
           const matcher = window.matchMedia("print");
           matcher.addListener(handlePrintMediaChange);
-          this._unsubscribeFromPrintMediaChange = function() {
+          this._unsubscribeFromPrintMediaChange = function () {
             matcher.removeListener(handlePrintMediaChange);
           };
         }
@@ -111,7 +115,7 @@ const SharePanel = observer(
       this.afterBrowserPrint();
       this._message = document.createElement("div");
       this._message.innerText = t("share.browserPrint", {
-        appName: this.props.terria.configParameters.appName
+        appName: this.props.terria.appName
       });
       window.document.body.insertBefore(
         this._message,
@@ -172,9 +176,8 @@ const SharePanel = observer(
     },
 
     shouldShorten() {
-      const localStoragePref = this.props.terria.getLocalProperty(
-        "shortenShareUrls"
-      );
+      const localStoragePref =
+        this.props.terria.getLocalProperty("shortenShareUrls");
 
       return (
         this.isUrlShortenable() &&
@@ -316,9 +319,10 @@ const SharePanel = observer(
     },
 
     renderWarning() {
-      const unshareableItems = this.props.terria.catalog.userAddedDataGroup.memberModels.filter(
-        model => !isShareable(this.props.terria)(model.uniqueId)
-      );
+      const unshareableItems =
+        this.props.terria.catalog.userAddedDataGroup.memberModels.filter(
+          model => !isShareable(this.props.terria)(model.uniqueId)
+        );
 
       return (
         <If condition={unshareableItems.length > 0}>
@@ -549,12 +553,8 @@ const SharePanel = observer(
 
     render() {
       const { t } = this.props;
-      const {
-        catalogShare,
-        storyShare,
-        catalogShareWithoutText,
-        modalWidth
-      } = this.props;
+      const { catalogShare, storyShare, catalogShareWithoutText, modalWidth } =
+        this.props;
       const dropdownTheme = {
         btn: classNames({
           [Styles.btnCatalogShare]: catalogShare,

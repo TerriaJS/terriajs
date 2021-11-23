@@ -284,6 +284,10 @@ export default class Terria {
 
   private readonly developmentEnv = process?.env?.NODE_ENV === "development";
 
+  get appName(): string {
+    return runInAction(() => this.configParameters.appName);
+  }
+
   /**
    * An error service instance. The instance can be configured by setting the
    * `errorService` config parameter. Here we initialize it to stub provider so
@@ -591,15 +595,19 @@ export default class Terria {
       });
     } finally {
       if (!options.i18nOptions?.skipInit) {
-        Internationalization.initLanguage(
-          this.configParameters.languageConfiguration,
-          options.i18nOptions
-        );
+        runInAction(() => {
+          Internationalization.initLanguage(
+            this.configParameters.languageConfiguration,
+            options.i18nOptions
+          );
+        });
       }
     }
-    setCustomRequestSchedulerDomainLimits(
-      this.configParameters.customRequestSchedulerLimits
-    );
+    runInAction(() => {
+      setCustomRequestSchedulerDomainLimits(
+        this.configParameters.customRequestSchedulerLimits
+      );
+    });
 
     this.analytics?.start(this.configParameters);
     this.analytics?.logEvent(
@@ -609,7 +617,7 @@ export default class Terria {
     );
     this.serverConfig = new ServerConfig();
     const serverConfig = await this.serverConfig.init(
-      this.configParameters.serverConfigUrl
+      toJS(this.configParameters.serverConfigUrl)
     );
     await this.initCorsProxy(this.configParameters, serverConfig);
     if (this.shareDataService && this.serverConfig.config) {
@@ -633,7 +641,9 @@ export default class Terria {
   }
 
   loadPersistedMapSettings(): void {
-    const persistViewerMode = this.configParameters.persistViewerMode;
+    const persistViewerMode = runInAction(
+      () => this.configParameters.persistViewerMode
+    );
     const hashViewerMode = this.userProperties.get("map");
     if (hashViewerMode && isViewerMode(hashViewerMode)) {
       setViewerMode(hashViewerMode, this.mainViewer);
@@ -859,12 +869,14 @@ export default class Terria {
     });
 
     // Load catalog index if catalogIndexUrl is set and it hasn't been loaded yet
-    if (this.configParameters.catalogIndexUrl && !this.catalogIndex) {
-      this.catalogIndex = new CatalogIndex(
-        this,
-        this.configParameters.catalogIndexUrl
-      );
-    }
+    runInAction(() => {
+      if (this.configParameters.catalogIndexUrl && !this.catalogIndex) {
+        this.catalogIndex = new CatalogIndex(
+          this,
+          this.configParameters.catalogIndexUrl
+        );
+      }
+    });
 
     if (errors.length > 0) {
       // Note - this will get wrapped up in a Result object because it is called in AsyncLoader
@@ -873,7 +885,7 @@ export default class Terria {
         message: {
           key: "models.terria.loadingInitSourcesErrorMessage",
           parameters: {
-            appName: this.configParameters.appName,
+            appName: this.appName,
             email: this.configParameters.supportEmail
           }
         }
@@ -1467,6 +1479,7 @@ export default class Terria {
     });
   }
 
+  @action
   async initCorsProxy(config: ConfigParametersModel, serverConfig: any) {
     if (config.proxyableDomainsUrl) {
       console.warn(i18next.t("models.terria.proxyableDomainsDeprecation"));
@@ -1487,9 +1500,7 @@ export default class Terria {
       // SecurityError can arise if 3rd party cookies are blocked in Chrome and we're served in an iFrame
       return null;
     }
-    var v = window.localStorage.getItem(
-      this.configParameters.appName + "." + key
-    );
+    var v = window.localStorage.getItem(this.appName + "." + key);
     if (v === "true") {
       return true;
     } else if (v === "false") {
@@ -1506,10 +1517,7 @@ export default class Terria {
     } catch (e) {
       return false;
     }
-    window.localStorage.setItem(
-      this.configParameters.appName + "." + key,
-      value.toString()
-    );
+    window.localStorage.setItem(this.appName + "." + key, value.toString());
     return true;
   }
 }

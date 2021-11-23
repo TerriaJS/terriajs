@@ -1,12 +1,14 @@
+import { runInAction } from "mobx";
 import Terria from "../Terria";
 
 export function defaultBaseMaps(terria: Terria): any[] {
   const baseMaps: any[] = [];
+  const bingMapsKey = runInAction(() => terria.configParameters.bingMapsKey);
+  const useCesiumIonBingImagery = runInAction(
+    () => terria.configParameters.useCesiumIonBingImagery
+  );
 
-  if (
-    terria.configParameters.bingMapsKey &&
-    !terria.configParameters.useCesiumIonBingImagery
-  ) {
+  if (bingMapsKey && !useCesiumIonBingImagery) {
     baseMaps.push({
       item: {
         id: "basemap-bing-aerial-with-labels",
@@ -38,7 +40,7 @@ export function defaultBaseMaps(terria: Terria): any[] {
       },
       image: "build/TerriaJS/images/bing-maps-roads.png"
     });
-  } else if (terria.configParameters.useCesiumIonBingImagery === true) {
+  } else if (useCesiumIonBingImagery === true) {
     baseMaps.push({
       item: {
         id: "basemap-bing-aerial-with-labels",
@@ -77,8 +79,7 @@ export function defaultBaseMaps(terria: Terria): any[] {
       id: "basemap-natural-earth-II",
       name: "Natural Earth II",
       type: "wms",
-      url:
-        "http://geoserver.nationalmap.nicta.com.au/imagery/natural-earth-ii/wms",
+      url: "http://geoserver.nationalmap.nicta.com.au/imagery/natural-earth-ii/wms",
       layers: "NE2_HR_LC_SR_W_DR",
       opacity: 1.0
     },
@@ -90,8 +91,7 @@ export function defaultBaseMaps(terria: Terria): any[] {
       id: "basemap-black-marble",
       name: "NASA Black Marble",
       type: "wms",
-      url:
-        "http://geoserver.nationalmap.nicta.com.au/imagery/nasa-black-marble/wms",
+      url: "http://geoserver.nationalmap.nicta.com.au/imagery/nasa-black-marble/wms",
       layers: "nasa-black-marble:dnb_land_ocean_ice.2012.54000x27000_geo",
       opacity: 1.0
     },

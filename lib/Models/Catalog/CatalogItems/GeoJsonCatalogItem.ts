@@ -94,7 +94,7 @@ export function fileApiNotSupportedError(terria: Terria) {
   return new TerriaError({
     title: i18next.t("models.userData.fileApiNotSupportedTitle"),
     message: i18next.t("models.userData.fileApiNotSupportedTitle", {
-      appName: terria.configParameters.appName,
+      appName: terria.appName,
       chrome:
         '<a href="http://www.google.com/chrome" target="_blank">' +
         i18next.t("models.userData.chrome") +

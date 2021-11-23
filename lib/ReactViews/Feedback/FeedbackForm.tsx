@@ -279,7 +279,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
             <Text>
               {
                 t("feedback.shareWithDevelopers", {
-                  appName: this.props.viewState.terria.configParameters.appName
+                  appName: this.props.viewState.terria.appName
                 })!
               }
             </Text>
@@ -406,32 +406,34 @@ interface StyledLabelProps {
   spacingBottom?: boolean;
 }
 
-const StyledLabel: React.FC<StyledLabelProps> = (props: StyledLabelProps) => {
-  const { viewState, label, textProps } = props;
-  const id = useUID();
-  const childrenWithId = React.Children.map(props.children, child => {
-    // checking isValidElement is the safe way and avoids a typescript error too
-    if (React.isValidElement(child)) {
-      return React.cloneElement(child, { id: id });
-    }
-    return child;
-  });
+const StyledLabel: React.FC<StyledLabelProps> = observer(
+  (props: StyledLabelProps) => {
+    const { viewState, label, textProps } = props;
+    const id = useUID();
+    const childrenWithId = React.Children.map(props.children, child => {
+      // checking isValidElement is the safe way and avoids a typescript error too
+      if (React.isValidElement(child)) {
+        return React.cloneElement(child, { id: id });
+      }
+      return child;
+    });
 
-  return (
-    <Box column>
-      {label && (
-        <Text as={"label"} htmlFor={id} css={"p {margin: 0;}"} {...textProps}>
-          {parseCustomMarkdownToReactWithOptions(`${label}:`, {
-            injectTermsAsTooltips: true,
-            tooltipTerms: viewState.terria.configParameters.helpTerms
-          })}
-        </Text>
-      )}
-      {childrenWithId}
-      {props.spacingBottom && <Spacing bottom={2} />}
-    </Box>
-  );
-};
+    return (
+      <Box column>
+        {label && (
+          <Text as={"label"} htmlFor={id} css={"p {margin: 0;}"} {...textProps}>
+            {parseCustomMarkdownToReactWithOptions(`${label}:`, {
+              injectTermsAsTooltips: true,
+              tooltipTerms: viewState.terria.configParameters.helpTerms
+            })}
+          </Text>
+        )}
+        {childrenWithId}
+        {props.spacingBottom && <Spacing bottom={2} />}
+      </Box>
+    );
+  }
+);
 
 const Form = styled(Box).attrs({
   overflowY: "auto",
