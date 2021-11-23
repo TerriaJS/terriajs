@@ -123,7 +123,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
                         '@babel/plugin-transform-modules-commonjs',
                         ["@babel/plugin-proposal-decorators", { "legacy": true }],
                         '@babel/proposal-class-properties',
-                        '@babel/proposal-object-rest-spread',
+                        ['@babel/plugin-proposal-object-rest-spread', { 'useBuiltIns': true }],
                         'babel-plugin-styled-components',
                         require.resolve('@babel/plugin-syntax-dynamic-import'),
                         'babel-plugin-lodash'
