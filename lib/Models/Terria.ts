@@ -88,7 +88,7 @@ import NoViewer from "./NoViewer";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
 import ShareDataService from "./ShareDataService";
 import TimelineStack from "./TimelineStack";
-import ViewerMode from "./ViewerMode";
+import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 
 interface StartOptions {
@@ -547,6 +547,7 @@ export default class Terria {
         options.configUrl,
         options.configUrlHeaders
       );
+
       // If it's a magda config, we only load magda config and parameters should never be a property on the direct
       // config aspect (it would be under the `terria-config` aspect)
       if (isJsonObject(config) && config.aspects) {
@@ -634,27 +635,35 @@ export default class Terria {
   loadPersistedMapSettings(): void {
     const persistViewerMode = this.configParameters.persistViewerMode;
     const hashViewerMode = this.userProperties.get("map");
-    const viewerModes = ["3d", "3dsmooth", "2d"];
-    if (hashViewerMode && viewerModes.includes(hashViewerMode)) {
-      this.setViewerMode(hashViewerMode);
+    if (hashViewerMode && isViewerMode(hashViewerMode)) {
+      setViewerMode(hashViewerMode, this.mainViewer);
     } else if (persistViewerMode) {
       const viewerMode = <string>this.getLocalProperty("viewermode");
-      if (isDefined(viewerMode)) this.setViewerMode(viewerMode);
+      if (isDefined(viewerMode) && isViewerMode(viewerMode)) {
+        setViewerMode(viewerMode, this.mainViewer);
+      }
+    }
+    const useNativeResolution = this.getLocalProperty("useNativeResolution");
+    if (typeof useNativeResolution === "boolean") {
+      this.setUseNativeResolution(useNativeResolution);
+    }
+
+    const baseMaximumScreenSpaceError = parseFloat(
+      this.getLocalProperty("baseMaximumScreenSpaceError")?.toString() || ""
+    );
+    if (!isNaN(baseMaximumScreenSpaceError)) {
+      this.setBaseMaximumScreenSpaceError(baseMaximumScreenSpaceError);
     }
   }
 
-  setViewerMode(viewerMode: string): void {
-    const mainViewer = this.mainViewer;
-    if (viewerMode === "3d" || viewerMode === "3dsmooth") {
-      mainViewer.viewerMode = ViewerMode.Cesium;
-      mainViewer.viewerOptions.useTerrain = viewerMode === "3d";
-    } else if (viewerMode === "2d") {
-      mainViewer.viewerMode = ViewerMode.Leaflet;
-    } else {
-      console.error(
-        `Trying to select ViewerMode ${viewerMode} that doesn't exist`
-      );
-    }
+  @action
+  setUseNativeResolution(useNativeResolution: boolean) {
+    this.useNativeResolution = useNativeResolution;
+  }
+
+  @action
+  setBaseMaximumScreenSpaceError(baseMaximumScreenSpaceError: number): void {
+    this.baseMaximumScreenSpaceError = baseMaximumScreenSpaceError;
   }
 
   async loadPersistedOrInitBaseMap() {
@@ -1121,7 +1130,8 @@ export default class Terria {
     }
 
     if (isJsonString(initData.viewerMode)) {
-      this.setViewerMode(initData.viewerMode.toLowerCase());
+      const viewerMode = initData.viewerMode.toLowerCase();
+      if (isViewerMode(viewerMode)) setViewerMode(viewerMode, this.mainViewer);
     }
 
     if (isJsonObject(initData.baseMaps)) {
@@ -1273,12 +1283,60 @@ export default class Terria {
     this.mainViewer.homeCamera = CameraView.fromJson(homeCameraInit);
   }
 
-  async loadMagdaConfig(configUrl: string, config: any, baseUri: uri.URI) {
-    const magdaRoot = new URI(configUrl)
+  /**
+   * This method can be used to refresh magda based catalogue configuration. Useful if the catalogue
+   * has items that are only available to authorised users.
+   *
+   * @param magdaCatalogConfigUrl URL of magda based catalogue configuration
+   * @param config Optional. If present, use this magda based catalogue config instead of reloading.
+   * @param configUrlHeaders  Optional. If present, the headers are added to above URL request.
+   */
+  async refreshCatalogMembersFromMagda(
+    magdaCatalogConfigUrl: string,
+    config?: any,
+    configUrlHeaders?: { [key: string]: string }
+  ) {
+    const theConfig = config
+      ? config
+      : await loadJson5(magdaCatalogConfigUrl, configUrlHeaders);
+
+    // force config (root group) id to be `/`
+    const id = "/";
+    this.removeModelReferences(this.catalog.group);
+
+    let existingReference = this.getModelById(MagdaReference, id);
+    if (existingReference === undefined) {
+      existingReference = new MagdaReference(id, this);
+      // Add model with terria aspects shareKeys
+      this.addModel(existingReference, theConfig.aspects?.terria?.shareKeys);
+    }
+
+    const reference = existingReference;
+
+    const magdaRoot = new URI(magdaCatalogConfigUrl)
       .path("")
       .query("")
       .toString();
 
+    reference.setTrait(CommonStrata.definition, "url", magdaRoot);
+    reference.setTrait(CommonStrata.definition, "recordId", id);
+    reference.setTrait(
+      CommonStrata.definition,
+      "magdaRecord",
+      theConfig as JsonObject
+    );
+    (await reference.loadReference(true)).raiseError(
+      this,
+      `Failed to load MagdaReference for record ${id}`
+    );
+    if (reference.target instanceof CatalogGroup) {
+      runInAction(() => {
+        this.catalog.group = <CatalogGroup>reference.target;
+      });
+    }
+  }
+
+  async loadMagdaConfig(configUrl: string, config: any, baseUri: uri.URI) {
     const aspects = config.aspects;
     const configParams = aspects["terria-config"]?.parameters;
 
@@ -1307,32 +1365,9 @@ export default class Terria {
     }
 
     if (aspects.group && aspects.group.members) {
-      // force config (root group) id to be `/`
-      const id = "/";
-      this.removeModelReferences(this.catalog.group);
-
-      let existingReference = this.getModelById(MagdaReference, id);
-      if (existingReference === undefined) {
-        existingReference = new MagdaReference(id, this);
-        // Add model with terria aspects shareKeys
-        this.addModel(existingReference, aspects?.terria?.shareKeys);
-      }
-
-      const reference = existingReference;
-
-      reference.setTrait(CommonStrata.definition, "url", magdaRoot);
-      reference.setTrait(CommonStrata.definition, "recordId", id);
-      reference.setTrait(CommonStrata.definition, "magdaRecord", config);
-      (await reference.loadReference()).raiseError(
-        this,
-        `Failed to load MagdaReference for record ${id}`
-      );
-      if (reference.target instanceof CatalogGroup) {
-        runInAction(() => {
-          this.catalog.group = <CatalogGroup>reference.target;
-        });
-      }
+      await this.refreshCatalogMembersFromMagda(configUrl, config);
     }
+
     this.setupInitializationUrls(baseUri, config.aspects?.["terria-config"]);
     /** Load up rest of terria catalog if one is inlined in terria-init */
     if (config.aspects?.["terria-init"]) {

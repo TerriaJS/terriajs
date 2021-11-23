@@ -39,8 +39,8 @@ export const CollapseIcon: React.FC<CollapsibleIconProps> = props => (
     glyph={
       props.btnStyle === "plus"
         ? props.isOpen
-          ? GLYPHS.minusThick
-          : GLYPHS.plusThick
+          ? GLYPHS.minus
+          : GLYPHS.plus
         : GLYPHS.opened
     }
     opacity={props.isOpen ? 1 : 0.4}

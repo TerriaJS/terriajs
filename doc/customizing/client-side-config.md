@@ -173,7 +173,8 @@ Configuration of items to appear in the search bar
 
 |Name|Required|Type|Default|Description|
 |----|--------|----|-------|-----------|
-|`preamble`|no|**string**|feedback.feedbackPreamble|Text showing at the top of feedback form, supports the internationalization using the translation key.|
+|`preamble`|no|**string**|`translate#feedback.feedbackPreamble`|Text showing at the top of feedback form, supports the internationalization using the translation key.|
+|`postamble`|no|**string**|`undefined`|Text showing at the bottom of feedback form, supports the internationalization using the translation key.|
 |`minLength`|no|**number**|0|Minimum length of feedback comment.|
 
 ### ErrorServiceOptions

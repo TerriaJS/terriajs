@@ -50,7 +50,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
 
   const zoomToolController = new GenericMapNavigationItemController({
     viewerMode: undefined,
-    icon: GLYPHS.plusThick
+    icon: GLYPHS.zoomIn
   });
   zoomToolController.pinned = true;
   mapNavigationModel.addItem({

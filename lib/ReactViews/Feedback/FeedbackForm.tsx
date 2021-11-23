@@ -9,7 +9,7 @@ import sendFeedback from "../../Models/sendFeedback";
 import ViewState from "../../ReactViewModels/ViewState";
 import Box from "../../Styled/Box";
 import Button, { RawButton } from "../../Styled/Button";
-import Checkbox from "../../Styled/Checkbox/Checkbox";
+import Checkbox from "../../Styled/Checkbox";
 import { GLYPHS, StyledIcon } from "../../Styled/Icon";
 import Input, { StyledInput } from "../../Styled/Input";
 import Spacing from "../../Styled/Spacing";
@@ -171,6 +171,13 @@ class FeedbackForm extends React.Component<IProps, IState> {
         viewState.terria.configParameters.feedback.preamble
       )
     );
+    const postamble = viewState.terria.configParameters.feedback.postamble
+      ? parseCustomMarkdownToReact(
+          useTranslationIfExists(
+            viewState.terria.configParameters.feedback.postamble
+          )
+        )
+      : undefined;
     return (
       <FormWrapper>
         <Box backgroundColor={theme.darkLighter} paddedRatio={2}>
@@ -267,14 +274,18 @@ class FeedbackForm extends React.Component<IProps, IState> {
           <Checkbox
             isChecked={this.state.sendShareURL}
             value="sendShareUrl"
-            label={
-              t("feedback.shareWithDevelopers", {
-                appName: this.props.viewState.terria.configParameters.appName
-              })!
-            }
             onChange={this.changeSendShareUrl}
-          />
+          >
+            <Text>
+              {
+                t("feedback.shareWithDevelopers", {
+                  appName: this.props.viewState.terria.configParameters.appName
+                })!
+              }
+            </Text>
+          </Checkbox>
           <Spacing bottom={2} />
+          {postamble ? <Text textDarker>{postamble}</Text> : null}
           <Box right>
             <Button
               type="button"
