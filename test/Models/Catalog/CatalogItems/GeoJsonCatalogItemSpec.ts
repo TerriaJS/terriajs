@@ -569,7 +569,11 @@ describe("GeoJsonCatalogItem - with geojson-vt and protomaps", function() {
     terria = new Terria({
       baseUrl: "./"
     });
-    terria.configParameters.enableGeojsonMvt = true;
+    terria.configParameters.setTrait(
+      CommonStrata.user,
+      "enableGeojsonMvt",
+      true
+    );
     geojson = new GeoJsonCatalogItem("test-geojson", terria);
 
     geojson.setTrait(
