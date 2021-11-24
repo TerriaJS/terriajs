@@ -5,7 +5,7 @@ import { act } from "react-dom/test-utils";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
-import { WelcomeMessagePureBase } from "../../lib/ReactViews/WelcomeMessage/WelcomeMessage";
+import { WelcomeMessagePure } from "../../lib/ReactViews/WelcomeMessage/WelcomeMessage";
 const WelcomeMessage: any = require("../../lib/ReactViews/WelcomeMessage/WelcomeMessage")
   .default;
 
@@ -37,9 +37,8 @@ describe("WelcomeMessage", function() {
     act(() => {
       testRenderer = create(<WelcomeMessage viewState={viewState} />);
     });
-    const welcomeMessagePure = testRenderer.root.findByType(
-      WelcomeMessagePureBase
-    );
+    console.log(testRenderer.root);
+    const welcomeMessagePure = testRenderer.root.findByType(WelcomeMessagePure);
     expect(welcomeMessagePure.props.showWelcomeMessage).toEqual(true);
   });
 
@@ -54,9 +53,7 @@ describe("WelcomeMessage", function() {
     act(() => {
       testRenderer = create(<WelcomeMessage viewState={viewState} />);
     });
-    const welcomeMessagePure = testRenderer.root.findByType(
-      WelcomeMessagePureBase
-    );
+    const welcomeMessagePure = testRenderer.root.findByType(WelcomeMessagePure);
     expect(welcomeMessagePure.props.showWelcomeMessage).toEqual(false);
   });
 });

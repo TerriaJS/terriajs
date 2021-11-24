@@ -86,9 +86,7 @@ class WelcomeMessage extends React.Component {
   }
 }
 
-export const WelcomeMessagePure = observer(WelcomeMessagePureBase);
-
-export const WelcomeMessagePureBase = props => {
+export const WelcomeMessagePure = props => {
   const { showWelcomeMessage, setShowWelcomeMessage, viewState } = props;
   const { t } = useTranslation();
   // This is required so we can do nested animations
@@ -97,7 +95,9 @@ export const WelcomeMessagePureBase = props => {
   const [shouldExploreData, setShouldExploreData] = useState(false);
   const [shouldOpenHelp, setShouldOpenHelp] = useState(false);
   const [shouldOpenSearch, setShouldOpenSearch] = useState(false);
-  const welcomeMessage = viewState.terria.configParameters.welcomeMessage;
+  const welcomeMessage = runInAction(
+    () => viewState.terria.configParameters.welcomeMessage
+  );
   // const {
   //   WelcomeMessagePrimaryBtnClick,
   //   WelcomeMessageSecondaryBtnClick
@@ -341,7 +341,7 @@ export const WelcomeMessagePureBase = props => {
   );
 };
 
-WelcomeMessagePureBase.propTypes = {
+WelcomeMessagePure.propTypes = {
   showWelcomeMessage: PropTypes.bool.isRequired,
   setShowWelcomeMessage: PropTypes.func.isRequired,
   isTopElement: PropTypes.bool.isRequired,
