@@ -4,7 +4,6 @@ Change Log
 #### next release (8.1.13)
 
 * Add Socrata group to "Add web data"
-* `TableMixin.activeStyle` will now try to pick columns which aren't labelled `"id"` or `"_id_"` by default
 * `TableMixin.activeStyle` will set `TableColumnType = hidden` for columns are labelled `"id"`, `"_id_"` or `"fid"`
 * Table columns named `"easting"` and `"northing"` are now hidden by default from styles
 * Exporting `TableMixin` will now add proper file extensions
