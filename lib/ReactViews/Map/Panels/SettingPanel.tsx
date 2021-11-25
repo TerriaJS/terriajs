@@ -128,6 +128,24 @@ class SettingPanel extends React.Component<PropTypes> {
     this.props.terria.currentViewer.notifyRepaintRequired();
   }
 
+  onBaseMaximumScreenSpaceErrorChange(bmsse: number) {
+    this.props.terria.setBaseMaximumScreenSpaceError(bmsse);
+    this.props.terria.setLocalProperty(
+      "baseMaximumScreenSpaceError",
+      bmsse.toString()
+    );
+  }
+
+  toggleUseNativeResolution() {
+    this.props.terria.setUseNativeResolution(
+      !this.props.terria.useNativeResolution
+    );
+    this.props.terria.setLocalProperty(
+      "useNativeResolution",
+      this.props.terria.useNativeResolution
+    );
+  }
+
   render() {
     if (!this.props.terria.mainViewer) {
       return null;
@@ -349,31 +367,21 @@ class SettingPanel extends React.Component<PropTypes> {
             <>
               <Spacing bottom={2} />
               <Box column>
-                {!this.props.viewState.useSmallScreenInterface && (
-                  <>
-                    <Box paddedVertically={1}>
-                      <Text as="label">
-                        {t("settingPanel.imageOptimisation")}
-                      </Text>
-                    </Box>
-                    <Checkbox
-                      textProps={{ small: true }}
-                      id="mapUseNativeResolution"
-                      isChecked={useNativeResolution}
-                      title={nativeResolutionLabel}
-                      onChange={() => {
-                        runInAction(() => {
-                          this.props.terria.useNativeResolution = !useNativeResolution;
-                        });
-                      }}
-                    >
-                      <TextSpan>
-                        {t("settingPanel.nativeResolutionHeader")}
-                      </TextSpan>
-                    </Checkbox>
-                    <Spacing bottom={2} />
-                  </>
-                )}
+                <Box paddedVertically={1}>
+                  <Text as="label">{t("settingPanel.imageOptimisation")}</Text>
+                </Box>
+                <Checkbox
+                  textProps={{ small: true }}
+                  id="mapUseNativeResolution"
+                  isChecked={useNativeResolution}
+                  title={nativeResolutionLabel}
+                  onChange={() => this.toggleUseNativeResolution()}
+                >
+                  <TextSpan>
+                    {t("settingPanel.nativeResolutionHeader")}
+                  </TextSpan>
+                </Checkbox>
+                <Spacing bottom={2} />
                 <Box paddedVertically={1}>
                   <Text as="label">{t("settingPanel.mapQuality")}</Text>
                 </Box>
@@ -384,11 +392,9 @@ class SettingPanel extends React.Component<PropTypes> {
                     max={3}
                     step={0.1}
                     value={this.props.terria.baseMaximumScreenSpaceError}
-                    onChange={val => {
-                      runInAction(() => {
-                        this.props.terria.baseMaximumScreenSpaceError = val;
-                      });
-                    }}
+                    onChange={val =>
+                      this.onBaseMaximumScreenSpaceErrorChange(val)
+                    }
                     marks={{ 2: "" }}
                     aria-valuetext={qualityLabels}
                     css={`

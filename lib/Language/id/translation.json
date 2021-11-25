@@ -285,7 +285,13 @@
     "numericParameter": {
       "maximum": "Maksimum",
       "minimum": "Minimum"
-    }
+    },
+    "actions": {
+      "showMatchingOnly": "Hanya tampilkan yang cocok",
+      "highlightAll": "Sorot semua"
+    },
+    "resetBtnText": "Hapus input",
+    "loading": "Memuat parameter pencarian"
   },
   "deltaTool": {
     "cancelBtn": "Batal",
@@ -661,5 +667,9 @@
       "title": "Kontrol"
     },
     "toolButtonTitle": "Mode pejalan kaki"
+  },
+  "indexedItemSearchProvider": {
+    "errorParsingIndexRoot": "Kesalahan saat mengurai file indexRoot: {{indexRootUrl}}.",
+    "missingOptionIndexRootUrl": "Opsi `indexRootUrl` tidak ada dalam konfigurasi pencarian item."
   }
 }
