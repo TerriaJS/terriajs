@@ -856,8 +856,18 @@ export default class TableColumn {
     const typeHintSet: TypeHintSet = [
       { hint: /^(lon|long|longitude|lng)$/i, type: TableColumnType.longitude },
       { hint: /^(lat|latitude)$/i, type: TableColumnType.latitude },
-      { hint: /^(easting|eastings)$/i, type: TableColumnType.hidden },
-      { hint: /^(northing|northings)$/i, type: TableColumnType.hidden },
+      // Hide easting column if scalar
+      {
+        hint: /^(easting|eastings)$/i,
+        type: TableColumnType.hidden,
+        typeFromValues: TableColumnType.scalar
+      },
+      // Hide northing column if scalar
+      {
+        hint: /^(northing|northings)$/i,
+        type: TableColumnType.hidden,
+        typeFromValues: TableColumnType.scalar
+      },
       // Hide ID columns if they are scalar
       {
         hint: /^(_id_|id|fid|objectid)$/i,

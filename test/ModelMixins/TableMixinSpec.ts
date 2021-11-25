@@ -1,5 +1,4 @@
 import { runInAction } from "mobx";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
@@ -308,6 +307,37 @@ describe("TableMixin", function() {
         ["2021-05-04T03:55:39Z", "2021-06-26T10:39:01Z"]
       ]);
     });
+
+    it("creates disable time dimension by default for this dataset", async function() {
+      expect(item.timeDisableDimension).toBeDefined();
+    });
+
+    it("doesn't disable time dimension if `showDisableTimeOption = false`", async function() {
+      runInAction(() =>
+        item.setTrait(CommonStrata.user, "showDisableTimeOption", false)
+      );
+
+      expect(item.timeDisableDimension).toBeUndefined();
+    });
+
+    it("doesn't disable time dimension by default for another dataset", async function() {
+      runInAction(() => {
+        item.setTrait(CommonStrata.user, "csvString", LatLonEnumDateIdCsv);
+      });
+
+      await item.loadMapItems();
+      expect(item.timeDisableDimension).toBeUndefined();
+    });
+
+    it("creates disable time dimension for another dataset if `showDisableTimeOption = true`", async function() {
+      runInAction(() => {
+        item.setTrait(CommonStrata.user, "csvString", LatLonEnumDateIdCsv);
+        item.setTrait(CommonStrata.user, "showDisableTimeOption", true);
+      });
+
+      await item.loadMapItems();
+      expect(item.timeDisableDimension).toBeDefined();
+    });
   });
 
   describe("when the table has a few styles", function() {
@@ -321,6 +351,21 @@ describe("TableMixin", function() {
       expect(item.styleDimensions?.options?.length).toBe(4);
       expect(item.styleDimensions?.options?.[2].id).toBe("value");
       expect(item.styleDimensions?.options?.[2].name).toBe("Value");
+    });
+
+    it("creates all styleDimensions - with disable style", async function() {
+      runInAction(() => {
+        item.setTrait(CommonStrata.user, "csvString", LatLonEnumDateIdCsv);
+        item.setTrait(CommonStrata.user, "showDisableStyleOption", true);
+      });
+
+      await item.loadMapItems();
+
+      expect(item.styleDimensions?.options?.length).toBe(4);
+      expect(item.styleDimensions?.allowUndefined).toBeTruthy();
+      expect(item.styleDimensions?.undefinedLabel).toBe(
+        "models.tableData.styleDisabledLabel"
+      );
     });
 
     it("uses TableColumnTraits for style title", async function() {
