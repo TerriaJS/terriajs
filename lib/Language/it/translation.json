@@ -563,7 +563,11 @@
       "unsupportedCharactersTitle": "Caratteri non validi nelle colonne di latitudine e longitudine",
       "unsupportedCharactersMessage": "Impossibile interpretare la coppia di latitudine e longitudine {{longitude}}, {{latitude}}",
       "bulkGeocoderInfoMessage": "Il CSV contiene degli indirizzi, ma {{number}} non può essere localizzato sulla mappa: ",
-      "bulkGeocoderErrorMessage": "Impossibile mappare gli indirizzi alle coordinate lat-long, poiché si è verificato un errore durante il recupero delle coordinate dell'indirizzo. Controlla la tua connessione internet o riprova più tardi."
+      "bulkGeocoderErrorMessage": "Impossibile mappare gli indirizzi alle coordinate lat-long, poiché si è verificato un errore durante il recupero delle coordinate dell'indirizzo. Controlla la tua connessione internet o riprova più tardi.",
+      "legendZFilterLabel": "Valori estremi",
+      "zFilterDisabled": "Valori estremi visualizzati (clicca per nascondere)",
+      "legendNullLabel": "(Nessun valore)",
+      "zFilterEnabled": "Valori estremi nascosti (clicca per mostrare)"
     },
     "sdmxCatalogItem": {
       "viewBy": {

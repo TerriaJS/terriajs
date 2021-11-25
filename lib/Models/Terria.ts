@@ -270,6 +270,10 @@ interface ConfigParameters {
   feedbackPreamble?: string;
 
   /**
+   * Text showing at the bottom of feedback form.
+   */
+  feedbackPostamble?: string;
+  /**
    * Minimum length of feedback comment.
    */
   feedbackMinLength?: number;
@@ -445,6 +449,7 @@ export default class Terria {
     persistViewerMode: true,
     openAddData: false,
     feedbackPreamble: "translate#feedback.feedbackPreamble",
+    feedbackPostamble: undefined,
     feedbackMinLength: 0,
     extraCreditLinks: [
       // Default credit links (shown at the bottom of the Cesium map)
@@ -801,6 +806,7 @@ export default class Terria {
         options.configUrl,
         options.configUrlHeaders
       );
+
       // If it's a magda config, we only load magda config and parameters should never be a property on the direct
       // config aspect (it would be under the `terria-config` aspect)
       if (isJsonObject(config) && config.aspects) {
@@ -876,6 +882,27 @@ export default class Terria {
         setViewerMode(viewerMode, this.mainViewer);
       }
     }
+    const useNativeResolution = this.getLocalProperty("useNativeResolution");
+    if (typeof useNativeResolution === "boolean") {
+      this.setUseNativeResolution(useNativeResolution);
+    }
+
+    const baseMaximumScreenSpaceError = parseFloat(
+      this.getLocalProperty("baseMaximumScreenSpaceError")?.toString() || ""
+    );
+    if (!isNaN(baseMaximumScreenSpaceError)) {
+      this.setBaseMaximumScreenSpaceError(baseMaximumScreenSpaceError);
+    }
+  }
+
+  @action
+  setUseNativeResolution(useNativeResolution: boolean) {
+    this.useNativeResolution = useNativeResolution;
+  }
+
+  @action
+  setBaseMaximumScreenSpaceError(baseMaximumScreenSpaceError: number): void {
+    this.baseMaximumScreenSpaceError = baseMaximumScreenSpaceError;
   }
 
   async loadPersistedOrInitBaseMap() {
@@ -1494,12 +1521,60 @@ export default class Terria {
     this.mainViewer.homeCamera = CameraView.fromJson(homeCameraInit);
   }
 
-  async loadMagdaConfig(configUrl: string, config: any, baseUri: uri.URI) {
-    const magdaRoot = new URI(configUrl)
+  /**
+   * This method can be used to refresh magda based catalogue configuration. Useful if the catalogue
+   * has items that are only available to authorised users.
+   *
+   * @param magdaCatalogConfigUrl URL of magda based catalogue configuration
+   * @param config Optional. If present, use this magda based catalogue config instead of reloading.
+   * @param configUrlHeaders  Optional. If present, the headers are added to above URL request.
+   */
+  async refreshCatalogMembersFromMagda(
+    magdaCatalogConfigUrl: string,
+    config?: any,
+    configUrlHeaders?: { [key: string]: string }
+  ) {
+    const theConfig = config
+      ? config
+      : await loadJson5(magdaCatalogConfigUrl, configUrlHeaders);
+
+    // force config (root group) id to be `/`
+    const id = "/";
+    this.removeModelReferences(this.catalog.group);
+
+    let existingReference = this.getModelById(MagdaReference, id);
+    if (existingReference === undefined) {
+      existingReference = new MagdaReference(id, this);
+      // Add model with terria aspects shareKeys
+      this.addModel(existingReference, theConfig.aspects?.terria?.shareKeys);
+    }
+
+    const reference = existingReference;
+
+    const magdaRoot = new URI(magdaCatalogConfigUrl)
       .path("")
       .query("")
       .toString();
 
+    reference.setTrait(CommonStrata.definition, "url", magdaRoot);
+    reference.setTrait(CommonStrata.definition, "recordId", id);
+    reference.setTrait(
+      CommonStrata.definition,
+      "magdaRecord",
+      theConfig as JsonObject
+    );
+    (await reference.loadReference(true)).raiseError(
+      this,
+      `Failed to load MagdaReference for record ${id}`
+    );
+    if (reference.target instanceof CatalogGroup) {
+      runInAction(() => {
+        this.catalog.group = <CatalogGroup>reference.target;
+      });
+    }
+  }
+
+  async loadMagdaConfig(configUrl: string, config: any, baseUri: uri.URI) {
     const aspects = config.aspects;
     const configParams = aspects["terria-config"]?.parameters;
 
@@ -1528,32 +1603,9 @@ export default class Terria {
     }
 
     if (aspects.group && aspects.group.members) {
-      // force config (root group) id to be `/`
-      const id = "/";
-      this.removeModelReferences(this.catalog.group);
-
-      let existingReference = this.getModelById(MagdaReference, id);
-      if (existingReference === undefined) {
-        existingReference = new MagdaReference(id, this);
-        // Add model with terria aspects shareKeys
-        this.addModel(existingReference, aspects?.terria?.shareKeys);
-      }
-
-      const reference = existingReference;
-
-      reference.setTrait(CommonStrata.definition, "url", magdaRoot);
-      reference.setTrait(CommonStrata.definition, "recordId", id);
-      reference.setTrait(CommonStrata.definition, "magdaRecord", config);
-      (await reference.loadReference()).raiseError(
-        this,
-        `Failed to load MagdaReference for record ${id}`
-      );
-      if (reference.target instanceof CatalogGroup) {
-        runInAction(() => {
-          this.catalog.group = <CatalogGroup>reference.target;
-        });
-      }
+      await this.refreshCatalogMembersFromMagda(configUrl, config);
     }
+
     this.setupInitializationUrls(baseUri, config.aspects?.["terria-config"]);
     /** Load up rest of terria catalog if one is inlined in terria-init */
     if (config.aspects?.["terria-init"]) {
