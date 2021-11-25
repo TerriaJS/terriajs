@@ -17,6 +17,7 @@ import ContinuousColorMap from "../../../../lib/Map/ContinuousColorMap";
 import ProtomapsImageryProvider, {
   GEOJSON_SOURCE_LAYER_NAME
 } from "../../../../lib/Map/ProtomapsImageryProvider";
+import { getColor } from "../../../../lib/ModelMixins/GeojsonMixin";
 import GeoJsonCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
@@ -712,7 +713,7 @@ describe("GeoJsonCatalogItem - with geojson-vt and protomaps", function() {
           geomType: GeomType.Polygon,
           props: { _id_: rowId }
         })
-      ).toBe("rgb(0,0,0)");
+      ).toBe(getColor(terria.baseMapContrastColor).toCssColorString());
 
       expect(
         polylineSymbo.color.get(1, {

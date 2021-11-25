@@ -148,7 +148,7 @@ describe("TableMixin", function() {
         const duplicateValue = 7;
         let occurrences = 0;
         for (let entity of mapItem.entities.values) {
-          const val = entity.properties?.getValue(JulianDate.now()).value;
+          const val = entity.properties?.Value.getValue();
           if (val === duplicateValue) {
             occurrences++;
           }
@@ -320,7 +320,7 @@ describe("TableMixin", function() {
 
       expect(item.styleDimensions?.options?.length).toBe(4);
       expect(item.styleDimensions?.options?.[2].id).toBe("value");
-      expect(item.styleDimensions?.options?.[2].name).toBe("value");
+      expect(item.styleDimensions?.options?.[2].name).toBe("Value");
     });
 
     it("uses TableColumnTraits for style title", async function() {

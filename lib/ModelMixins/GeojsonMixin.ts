@@ -1320,7 +1320,7 @@ function defaultColor(colorString: string | undefined, name: string): Color {
   }
 }
 
-function getColor(color: String | string | Color): Color {
+export function getColor(color: String | string | Color): Color {
   if (typeof color === "string" || color instanceof String) {
     return Color.fromCssColorString(color.toString()) ?? Color.GRAY;
   } else {
