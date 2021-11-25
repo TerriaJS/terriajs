@@ -290,7 +290,6 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     get useMvt() {
       return (
         !this.forceCesiumPrimitives &&
-        this.terria.configParameters.enableGeojsonMvt &&
         !isDefined(this.czmlTemplate) &&
         !isDefined(this.stylesWithDefaults().markerSymbol) &&
         !isDefined(this.stylesWithDefaults().markerUrl) &&
@@ -324,7 +323,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
      * - CZML:
      *    - if `czmlTemplate` is defined (see `GeoJsonTraits.czmlTemplate`)
      * - Mapbox vector tiles (through geojson-vt and protomaps.js)
-     *    - if `Terria.configParameters.enableGeojsonMvt = true` and not using unsupported traits (see below)
+     *    - Will be used by default, if not using unsupported traits (see below)
      * - Cesium primitives if:
      *    - `GeoJsonTraits.forceCesiumPrimitives = true`
      *    - Using `timeProperty` or `heightProperty` or `perPropertyStyles` or simple-style `marker-symbol`

@@ -22,6 +22,7 @@ Change Log
 * Add `baseMapContrastColor` and `constrastColor` to `BaseMapModel`
 * Treat `TableColumnType.height` as `scalar` until we actually do something with the height data.
 * Fixed `TableMixin.defaultTableStyle.legends` - `defaultTableStyle` is now not observable - it is created once in the `contructor`
+* Removed `Terria.configParameters.enableGeojsonMvt` - geojson-vt/Protomaps is now used by default
 * [The next improvement]
 
 #### 8.1.12
