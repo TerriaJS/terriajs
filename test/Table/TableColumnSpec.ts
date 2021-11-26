@@ -301,7 +301,7 @@ describe("TableColumn", function() {
         expect(tableModel.tableColumns[4].type).toBe(TableColumnType.text); // 9 numbers 2 letters (+ over enum thresholds)
         expect(tableModel.tableColumns[5].type).toBe(TableColumnType.enum); // 5 numbers 11 letters
         expect(tableModel.tableColumns[6].type).toBe(TableColumnType.scalar); // 2 numbers
-        expect(tableModel.tableColumns[7].type).toBe(TableColumnType.text); // 1 number (+ under enum thresholds)
+        expect(tableModel.tableColumns[7].type).toBe(TableColumnType.enum); // 1 number and empty values
         expect(tableModel.tableColumns[8].type).toBe(TableColumnType.scalar); // 2 duplicate numbers
       });
 
