@@ -838,7 +838,7 @@ export default class TableColumn {
       const uniqueValues = this.uniqueValues.values;
       if (
         // We need more than 1 unique value (including nulls)
-        (this.uniqueValues.numberOfNulls ? 1 : 0 + uniqueValues.length) > 1 &&
+        (this.uniqueValues.numberOfNulls ? 1 : 0) + uniqueValues.length > 1 &&
         (uniqueValues.length <= 7 ||
           // The number of unique values is less than 12% of total number of values
           // Or, each value in the column exists 8.33 times on average
