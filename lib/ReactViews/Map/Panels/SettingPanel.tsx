@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 import Slider from "rc-slider";
 import React, { ChangeEvent, ComponentProps, MouseEvent } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
-import styled, { withTheme } from "styled-components";
+import styled, { DefaultTheme, withTheme } from "styled-components";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import Cesium from "../../../Models/Cesium";
 import DefaultTimelineModel from "../../../Models/DefaultTimelineModel";
@@ -32,8 +32,9 @@ const sides = {
 
 type PropTypes = WithTranslation & {
   terria: Terria;
-  refFromHOC?: React.Ref<any>;
   viewState: ViewState;
+  refFromHOC?: React.Ref<HTMLDivElement>;
+  theme: DefaultTheme;
   t: TFunction;
 };
 
@@ -125,6 +126,24 @@ class SettingPanel extends React.Component<PropTypes> {
     this.props.terria.depthTestAgainstTerrainEnabled = !this.props.terria
       .depthTestAgainstTerrainEnabled;
     this.props.terria.currentViewer.notifyRepaintRequired();
+  }
+
+  onBaseMaximumScreenSpaceErrorChange(bmsse: number) {
+    this.props.terria.setBaseMaximumScreenSpaceError(bmsse);
+    this.props.terria.setLocalProperty(
+      "baseMaximumScreenSpaceError",
+      bmsse.toString()
+    );
+  }
+
+  toggleUseNativeResolution() {
+    this.props.terria.setUseNativeResolution(
+      !this.props.terria.useNativeResolution
+    );
+    this.props.terria.setLocalProperty(
+      "useNativeResolution",
+      this.props.terria.useNativeResolution
+    );
   }
 
   render() {
@@ -348,31 +367,21 @@ class SettingPanel extends React.Component<PropTypes> {
             <>
               <Spacing bottom={2} />
               <Box column>
-                {!this.props.viewState.useSmallScreenInterface && (
-                  <>
-                    <Box paddedVertically={1}>
-                      <Text as="label">
-                        {t("settingPanel.imageOptimisation")}
-                      </Text>
-                    </Box>
-                    <Checkbox
-                      textProps={{ small: true }}
-                      id="mapUseNativeResolution"
-                      isChecked={useNativeResolution}
-                      title={nativeResolutionLabel}
-                      onChange={() => {
-                        runInAction(() => {
-                          this.props.terria.useNativeResolution = !useNativeResolution;
-                        });
-                      }}
-                    >
-                      <TextSpan>
-                        {t("settingPanel.nativeResolutionHeader")}
-                      </TextSpan>
-                    </Checkbox>
-                    <Spacing bottom={2} />
-                  </>
-                )}
+                <Box paddedVertically={1}>
+                  <Text as="label">{t("settingPanel.imageOptimisation")}</Text>
+                </Box>
+                <Checkbox
+                  textProps={{ small: true }}
+                  id="mapUseNativeResolution"
+                  isChecked={useNativeResolution}
+                  title={nativeResolutionLabel}
+                  onChange={() => this.toggleUseNativeResolution()}
+                >
+                  <TextSpan>
+                    {t("settingPanel.nativeResolutionHeader")}
+                  </TextSpan>
+                </Checkbox>
+                <Spacing bottom={2} />
                 <Box paddedVertically={1}>
                   <Text as="label">{t("settingPanel.mapQuality")}</Text>
                 </Box>
@@ -383,11 +392,9 @@ class SettingPanel extends React.Component<PropTypes> {
                     max={3}
                     step={0.1}
                     value={this.props.terria.baseMaximumScreenSpaceError}
-                    onChange={val => {
-                      runInAction(() => {
-                        this.props.terria.baseMaximumScreenSpaceError = val;
-                      });
-                    }}
+                    onChange={val =>
+                      this.onBaseMaximumScreenSpaceErrorChange(val)
+                    }
                     marks={{ 2: "" }}
                     aria-valuetext={qualityLabels}
                     css={`
@@ -408,7 +415,7 @@ class SettingPanel extends React.Component<PropTypes> {
 
 export const SETTING_PANEL_NAME = "MenuBarMapSettingsButton";
 export default withTranslation()(
-  withTheme(withTerriaRef(SettingPanel, SETTING_PANEL_NAME) as any)
+  withTheme(withTerriaRef(SettingPanel, SETTING_PANEL_NAME))
 );
 
 type IFlexGrid = {

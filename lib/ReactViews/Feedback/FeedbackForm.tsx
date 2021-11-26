@@ -169,6 +169,13 @@ class FeedbackForm extends React.Component<IProps, IState> {
     const preamble = parseCustomMarkdownToReact(
       useTranslationIfExists(viewState.terria.configParameters.feedbackPreamble)
     );
+    const postamble = viewState.terria.configParameters.feedbackPostamble
+      ? parseCustomMarkdownToReact(
+          useTranslationIfExists(
+            viewState.terria.configParameters.feedbackPostamble
+          )
+        )
+      : undefined;
     return (
       <FormWrapper>
         <Box backgroundColor={theme.darkLighter} paddedRatio={2}>
@@ -275,6 +282,7 @@ class FeedbackForm extends React.Component<IProps, IState> {
             </Text>
           </Checkbox>
           <Spacing bottom={2} />
+          {postamble ? <Text textDarker>{postamble}</Text> : null}
           <Box right>
             <Button
               type="button"
