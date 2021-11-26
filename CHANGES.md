@@ -4,6 +4,8 @@ Change Log
 #### next release (8.1.13)
 
 * Add an external link icon to external hyperlink when using method `parseCustomHtmlToReact`. This feature can be switched off by passing `{ disableExternalLinkIcon: true }` in `context` argument.
+* Fixed `ContinuousColorMap` min/max value bug.
+* `TableStyle.outlierColor` is now only used if `zFilter` is active, or `colorTraits.outlierColor` is definedß
 * [The next improvement]
 
 #### 8.1.12
