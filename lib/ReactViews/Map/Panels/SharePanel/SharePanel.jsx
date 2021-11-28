@@ -7,7 +7,6 @@ import PropTypes from "prop-types";
 import React from "react";
 import { Trans, withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
-import printWindow from "../../../../Core/printWindow";
 import Clipboard from "../../../Clipboard";
 import Icon from "../../../../Styled/Icon";
 import Loader from "../../../Loader";
@@ -522,7 +521,7 @@ const SharePanel = observer(
               </If>
             </If>
           </div>
-          {this.state.creatingPrintView? <PrintView terria={this.props.terria} viewState={this.props.viewState} window={null} readyCallback={() => null}/> : null}
+          {this.state.creatingPrintView? <PrintView terria={this.props.terria} viewState={this.props.viewState} readyCallback={() => null}/> : null}
         </div>
       );
     },

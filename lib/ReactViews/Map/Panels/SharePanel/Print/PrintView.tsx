@@ -16,6 +16,9 @@ import { terriaTheme } from "../../../../StandardUserInterface/StandardTheme";
 import { StyleSheetManager, ThemeProvider } from "styled-components";
 
 import { useEffect } from 'react';
+import PrintViewMap from "./PrintViewMap";
+import PrintWorkbench from "./PrintWorkbench";
+
 
 
 // interface CreateOptions {
@@ -196,36 +199,33 @@ import { useEffect } from 'react';
 interface Props {
   terria: Terria;
   viewState: ViewState;
-  window: Window;
-  readyCallback: (window: Window) => void;
+  readyCallback: () => void;
 }
 
 const PrintView = (props:Props) => {
-  const [mapImageData, setMapImageData] = useState<string| null>(null);
-  const [rootNode] = useState(document.createElement("div"));
+  const [rootNode] = useState(document.createElement("main"));
 
   useEffect(() => {
     const newWindow:Window|null = window.open();
     newWindow?.document.body.appendChild(rootNode);
   },[])
 
-  useEffect(() => {
-    props.terria.currentViewer
-      .captureScreenshot()
-      .then(mapImageDataUrl => setMapImageData(mapImageDataUrl))
-      .catch(console.error)
-  })
-
-
   return ReactDOM.createPortal(
-    mapImageData ?
-    <p>
-      <img
-        className="map-image"
-        src={mapImageData}
-        alt="Map snapshot" />
-    </p> : <div>Loading map image...</div>
-    ,
+    <ThemeProvider theme={terriaTheme}>
+      <section>Button bar</section>
+      <section>
+        <div>
+          <h2>WOrkbnech</h2>
+          <PrintWorkbench workbench={props.terria.workbench} />
+        </div>
+        <div>
+          <PrintViewMap screenshot={props.terria.currentViewer.captureScreenshot()} />
+          <DistanceLegend terria={props.terria} />
+        </div>
+      </section>
+      <section>download buttons</section>
+      <section>datasets</section>
+    </ThemeProvider>,
     rootNode
   );
 }
