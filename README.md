@@ -21,9 +21,9 @@ We've put together a list of things we've removed from version 8 and some steps 
 ### Features
 
 * Nested catalog of layers which can be independently enabled to create mashups of many layers.
-* Supports GeoJSON, KML, CSV (point and region-mapped), CZML and zipped shapefile file types natively.
-* Supports WMS, WFS, Esri MapServer, SDMX, Bing Maps, OpenStreetMap-style raster tiles, Mapbox, Urthecast, and WMTS item types.
-* Supports querying WMS, WFS, Esri MapServer, CSW, CKAN and Socrata services for groups of items.
+* Supports GeoJSON, KML, CSV (point and region-mapped), GPX, GeoRSS, CZML and zipped shapefile file types natively.
+* Supports WMS, WFS, WMTS, Esri MapServer, Esri FeatureServer, Bing Maps, Carto Maps, Cesium Ion Imagery, OpenStreetMap-style raster tiles, Mapbox, SDMX, 3D Tiles and GTFS and Sensor Observation Service item types.
+* Supports querying WMS, WFS, Esri MapServer, CSW, CKAN, Socrata, OpenDataSoft and SDMX services for groups of items.
 * 3D globe (Cesium) or 2D mode (Leaflet). 3D objects supported in CZML format.
 * Time dimensions supported for CSV, CZML, WMS. Automatically animate layers, or slide the time control forward and backward.
 * Drag-and-drop files from your desktop to the browser, for instant visualisation (no file upload to server required).
@@ -65,7 +65,7 @@ Sites we're aware of that are using TerriaJS. These are not endorsements or test
 
 The easiest way to build your own Terria-based map is using the TerriaMap starting point. This gives you the HTML structure, server and build processes you need to get a site up and running immediately.
 
-See [Getting Started](http://terria.io/Documentation/guide/getting-started/) in the [Documentation](http://terria.io/Documentation/guide/) for all the details.
+See [Getting Started](https://docs.terria.io/guide/getting-started/) in the [Documentation](https://docs.terria.io/guide/) for all the details.
 
 ### Components and naming
 
