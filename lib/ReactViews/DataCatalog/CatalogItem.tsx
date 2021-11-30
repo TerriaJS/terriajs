@@ -1,35 +1,60 @@
-import React from "react";
-import PropTypes from "prop-types";
 import classNames from "classnames";
-import Icon from "../../Styled/Icon";
-import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
+import PropTypes from "prop-types";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
-
+import Box from "../../Styled/Box";
+import Icon from "../../Styled/Icon";
+import Text from "../../Styled/Text";
+import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
 import Styles from "./data-catalog-item.scss";
 
-import Box from "../../Styled/Box";
-import Text from "../../Styled/Text";
+export enum ButtonState {
+  Loading,
+  Remove,
+  Add,
+  Trash,
+  Stats,
+  Preview
+}
 
-const STATE_TO_ICONS = {
-  loading: <Icon glyph={Icon.GLYPHS.loader} />,
-  remove: <Icon glyph={Icon.GLYPHS.remove} />,
-  add: <Icon glyph={Icon.GLYPHS.add} />,
-  trash: <Icon glyph={Icon.GLYPHS.trashcan} />,
-  stats: <Icon glyph={Icon.GLYPHS.barChart} />,
-  preview: <Icon glyph={Icon.GLYPHS.right} />
+const STATE_TO_ICONS: Record<ButtonState, React.ReactElement> = {
+  [ButtonState.Loading]: <Icon glyph={Icon.GLYPHS.loader} />,
+  [ButtonState.Remove]: <Icon glyph={Icon.GLYPHS.remove} />,
+  [ButtonState.Add]: <Icon glyph={Icon.GLYPHS.add} />,
+  [ButtonState.Trash]: <Icon glyph={Icon.GLYPHS.trashcan} />,
+  [ButtonState.Stats]: <Icon glyph={Icon.GLYPHS.barChart} />,
+  [ButtonState.Preview]: <Icon glyph={Icon.GLYPHS.right} />
 };
 
+interface Props {
+  isPrivate?: boolean;
+  title: string;
+  text: string;
+  selected?: boolean;
+  trashable?: boolean;
+
+  btnState: ButtonState;
+  onBtnClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onTextClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onTrashClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  titleOverrides?: Partial<Record<ButtonState, string>>;
+}
+
 /** Dumb catalog item */
-function CatalogItem(props) {
+function CatalogItem(props: Props) {
   const { t } = useTranslation();
   const STATE_TO_TITLE = {
-    loading: t("catalogItem.loading"),
-    remove: t("catalogItem.remove"),
-    add: t("catalogItem.add"),
-    trash: t("catalogItem.trash")
+    [ButtonState.Loading]: t("catalogItem.loading"),
+    [ButtonState.Remove]: t("catalogItem.remove"),
+    [ButtonState.Add]: t("catalogItem.add"),
+    [ButtonState.Trash]: t("catalogItem.trash"),
+    [ButtonState.Preview]: t("catalogItem.preview")
   };
-  const stateToTitle = defaultValue(props.titleOverrides, STATE_TO_TITLE);
+  const stateToTitle: Partial<Record<ButtonState, string>> = defaultValue(
+    props.titleOverrides,
+    STATE_TO_TITLE
+  );
   return (
     <li className={classNames(Styles.root)}>
       <Text fullWidth primary={props.isPrivate}>
@@ -59,10 +84,10 @@ function CatalogItem(props) {
           <button
             type="button"
             onClick={props.onTrashClick}
-            title={stateToTitle["trash"]}
+            title={stateToTitle[ButtonState.Trash]}
             className={classNames(Styles.btnAction, Styles.btnTrash)}
           >
-            {STATE_TO_ICONS["trash"]}
+            {STATE_TO_ICONS[ButtonState.Trash]}
           </button>
         )}
       </Box>
