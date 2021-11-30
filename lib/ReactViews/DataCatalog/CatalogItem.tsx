@@ -1,13 +1,13 @@
-import classNames from "classnames";
 import PropTypes from "prop-types";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import styled from "styled-components";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import Box from "../../Styled/Box";
+import { RawButton } from "../../Styled/Button";
 import Icon from "../../Styled/Icon";
 import Text from "../../Styled/Text";
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
-import Styles from "./data-catalog-item.scss";
 
 export enum ButtonState {
   Loading,
@@ -56,44 +56,86 @@ function CatalogItem(props: Props) {
     STATE_TO_TITLE
   );
   return (
-    <li className={classNames(Styles.root)}>
-      <Text fullWidth primary={props.isPrivate}>
-        <button
+    <Root>
+      <Text fullWidth primary={props.isPrivate} bold={props.selected} breakWord>
+        <ItemTitleButton
+          selected={props.selected}
+          trashable={props.trashable}
           type="button"
           onClick={props.onTextClick}
           title={props.title}
-          className={classNames(Styles.btnCatalogItem, {
-            [Styles.btnCatalogItemIsPreviewed]: props.selected,
-            [Styles.btnCatalogItemIsTrashable]: props.selected
-          })}
         >
           {props.text}
-        </button>
+        </ItemTitleButton>
       </Text>
       <Box>
         {props.isPrivate && <PrivateIndicator />}
-        <button
+        <ActionButton
           type="button"
           onClick={props.onBtnClick}
           title={stateToTitle[props.btnState] || ""}
-          className={Styles.btnAction}
         >
           {STATE_TO_ICONS[props.btnState]}
-        </button>
+        </ActionButton>
         {props.trashable && (
-          <button
+          <ActionButton
             type="button"
             onClick={props.onTrashClick}
             title={stateToTitle[ButtonState.Trash]}
-            className={classNames(Styles.btnAction, Styles.btnTrash)}
           >
             {STATE_TO_ICONS[ButtonState.Trash]}
-          </button>
+          </ActionButton>
         )}
       </Box>
-    </li>
+    </Root>
   );
 }
+
+const Root = styled.li`
+  display: flex;
+  width: 100%;
+`;
+
+const ItemTitleButton = styled(RawButton)<{
+  selected?: boolean;
+  trashable?: boolean;
+}>`
+  text-align: left;
+  word-break: normal;
+  overflow-wrap: anywhere;
+  padding: 8px;
+  width: 100%;
+
+  &:focus,
+  &:hover {
+    color: ${p => p.theme.modalHighlight};
+  }
+
+  ${p => p.selected && `color: ${p.theme.modalHighlight};`}
+
+  @media (max-width: ${p => p.theme.sm}px) {
+    font-size: 0.9rem;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid ${p => p.theme.greyLighter};
+  }
+`;
+
+const ActionButton = styled(RawButton)`
+  svg {
+    height: 20px;
+    width: 20px;
+    margin: 5px;
+    fill: ${p => p.theme.charcoalGrey};
+  }
+
+  &:hover,
+  &:focus {
+    svg {
+      fill: ${p => p.theme.modalHighlight};
+    }
+  }
+`;
 
 CatalogItem.propTypes = {
   onTextClick: PropTypes.func,
@@ -104,7 +146,14 @@ CatalogItem.propTypes = {
   trashable: PropTypes.bool,
   onTrashClick: PropTypes.func,
   onBtnClick: PropTypes.func,
-  btnState: PropTypes.oneOf(Object.keys(STATE_TO_ICONS)),
+  btnState: PropTypes.oneOf([
+    ButtonState.Add,
+    ButtonState.Loading,
+    ButtonState.Preview,
+    ButtonState.Remove,
+    ButtonState.Stats,
+    ButtonState.Trash
+  ]),
   titleOverrides: PropTypes.object
 };
 
