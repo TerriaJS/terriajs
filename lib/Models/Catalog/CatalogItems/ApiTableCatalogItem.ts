@@ -20,6 +20,7 @@ import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import saveModelToJson from "../../Definition/saveModelToJson";
 import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
+import { get as _get } from "lodash";
 
 export class ApiTableStratum extends LoadableStratum(
   ApiTableCatalogItemTraits
@@ -93,6 +94,9 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
             : undefined,
           api.postRequestDataAsFormData
         );
+        if (this.responseDataPath !== undefined) {
+          _get(data, this.responseDataPath);
+        }
         return Promise.resolve({
           data,
           api

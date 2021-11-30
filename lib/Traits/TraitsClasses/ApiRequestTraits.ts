@@ -57,4 +57,11 @@ export default class ApiRequestTraits extends mixTraits(UrlTraits) {
     description: "Send the request data as form data instead of a JSON body."
   })
   postRequestDataAsFormData?: boolean = false;
+
+  @primitiveTrait({
+    name: "Response data path",
+    type: "string",
+    description: "Path to relevent data in JSON response."
+  })
+  responseDataPath?: string;
 }

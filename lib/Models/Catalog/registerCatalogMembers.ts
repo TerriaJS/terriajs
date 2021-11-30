@@ -5,6 +5,7 @@ import OpenDataSoftCatalogGroup from "./CatalogGroups/OpenDataSoftCatalogGroup";
 import SocrataCatalogGroup from "./CatalogGroups/SocrataCatalogGroup";
 import ThreddsCatalogGroup from "./CatalogGroups/ThreddsCatalogGroup";
 import { ApiTableCatalogItem } from "./CatalogItems/ApiTableCatalogItem";
+import ApiGeoJsonCatalogItem from "./CatalogItems/ApiGeoJsonCatalogItem";
 import BingMapsCatalogItem from "./CatalogItems/BingMapsCatalogItem";
 import CartoMapCatalogItem from "./CatalogItems/CartoMapCatalogItem";
 import Cesium3DTilesCatalogItem from "./CatalogItems/Cesium3DTilesCatalogItem";
@@ -218,6 +219,10 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(
     CatalogIndexReference.type,
     CatalogIndexReference
+  );
+  CatalogMemberFactory.register(
+    ApiGeoJsonCatalogItem.type,
+    ApiGeoJsonCatalogItem
   );
 
   UrlToCatalogMemberMapping.register(
