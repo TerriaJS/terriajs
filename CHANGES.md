@@ -5,7 +5,6 @@ Change Log
 
 * Add an external link icon to external hyperlink when using method `parseCustomHtmlToReact`. This feature can be switched off by passing `{ disableExternalLinkIcon: true }` in `context` argument.
 * Tsify `sendFeedback.ts` and improve error messages/notifications
-* Remove unused overrideState from many DataCatalog React components.
 * Removed unused overrideState from many DataCatalog React components.
 * Fixed a bug where adding a timeseries dataset from the preview map's Add to map button didn't add the dataset to the `timelineStack`.
 * Fixed incorrect colour for catalog item names in the explorer panel when using dynamic theming. 
