@@ -32,6 +32,15 @@ function addOrRemoveFromTimelineStack(
   }
 }
 
+/**
+ * Toggle an item on or off the map. A utility function intended to be used by DataCatalogX
+ *  React components and friends (should be called from inside the explorer panel)
+ *
+ * @param viewState
+ * @param item Could be an item or a Reference to an item
+ * @param keepCatalogOpen
+ * @param analyticsEvents
+ */
 export default async function toggleItemOnMapFromCatalog(
   viewState: ViewState,
   item: BaseModel,
