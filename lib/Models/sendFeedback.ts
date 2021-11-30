@@ -22,7 +22,7 @@ export default function sendFeedback(options: {
     throw TerriaError.from("options.terria is required.");
   }
 
-  var terria = options.terria;
+  const terria = options.terria;
 
   if (!isDefined(terria.configParameters.feedbackUrl)) {
     raiseError(terria, "`terria.configParameters.feedbackUrl` is not defined");
