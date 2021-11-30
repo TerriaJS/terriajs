@@ -5,6 +5,7 @@ Change Log
 
 * Add an external link icon to external hyperlink when using method `parseCustomHtmlToReact`. This feature can be switched off by passing `{ disableExternalLinkIcon: true }` in `context` argument.
 * Tsify `sendFeedback.ts` and improve error messages/notifications
+* Remove unused overrideState from many DataCatalog React components.
 * [The next improvement]
 
 #### 8.1.12
