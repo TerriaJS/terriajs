@@ -47,9 +47,9 @@ export default observer(function DataCatalogItem({
 
   const setPreviewedItem = () => viewState.viewCatalogMember(item);
 
-  const toggleEnable = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const toggleEnable = async (event: React.MouseEvent<HTMLButtonElement>) => {
     const keepCatalogOpen = event.shiftKey || event.ctrlKey;
-    toggleItemOnMapFromCatalog(viewState, item, keepCatalogOpen, {
+    await toggleItemOnMapFromCatalog(viewState, item, keepCatalogOpen, {
       [ToggleOnMapOp.Add]: DataSourceAction.addFromCatalogue,
       [ToggleOnMapOp.Remove]: DataSourceAction.removeFromCatalogue
     });

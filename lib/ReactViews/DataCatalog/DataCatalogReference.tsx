@@ -35,9 +35,8 @@ export default observer(function DataCatalogReference({
   onActionButtonClicked,
   isTopLevel
 }: Props) {
-  const setPreviewedItem = () => {
-    return viewState.viewCatalogMember(reference, true, CommonStrata.user);
-  };
+  const setPreviewedItem = () =>
+    viewState.viewCatalogMember(reference, true, CommonStrata.user);
 
   const add = async (event: React.MouseEvent<HTMLButtonElement>) => {
     const keepCatalogOpen = event.shiftKey || event.ctrlKey;
