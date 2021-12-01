@@ -1,6 +1,6 @@
 import { Ref } from "react";
-import styled, { css } from "styled-components";
-import { Overflow, WordBreak, WhiteSpace, OneKeyFrom } from "./Styled.types";
+import styled from "styled-components";
+import { OneKeyFrom, Overflow, WhiteSpace, WordBreak } from "./Styled.types";
 
 interface Column {
   col1?: boolean;
@@ -64,6 +64,7 @@ interface IBoxPropsBase {
   scroll?: boolean;
   marginAuto?: boolean;
   style?: any;
+  gap?: number | boolean;
   as?: React.ElementType | keyof JSX.IntrinsicElements;
 }
 
@@ -210,6 +211,11 @@ export const Box = styled.div<IBoxProps>`
     `
       overflow-y: ${props.overflowY};
     `}
+  ${props =>
+    props.gap &&
+    `
+    gap: ${5 * (props.gap === true ? 1 : props.gap)}px;;
+  `}
 
   ${props =>
     props.scroll &&

@@ -90,11 +90,12 @@ const DataPreview = observer(
       const { t } = this.props;
       let previewed = this.props.previewed;
       if (previewed !== undefined && ReferenceMixin.isMixedInto(previewed)) {
-        if (previewed.target === undefined) {
+        // We are loading the nested target because we could be dealing with a nested reference here
+        if (previewed.nestedTarget === undefined) {
           // Reference is not available yet.
           return this.renderUnloadedReference();
         }
-        previewed = previewed.target;
+        previewed = previewed.nestedTarget;
       }
       const appBaseUrl = this.props.terria.configParameters.appBaseUrl;
       const pathname = this.props.location && this.props.location.pathname;

@@ -52,6 +52,7 @@ interface CssExports {
   'textLightTranslucent': string;
   'toolPrimaryColor': string;
   'trainerHeight': string;
+  'turquoiseBlue': string;
   'workbenchWidth': string;
 }
 declare var cssExports: CssExports;

@@ -1,8 +1,65 @@
 Change Log
 ==========
 
-#### next release (8.1.5)
+#### next release (8.1.13)
 
+* Add an external link icon to external hyperlink when using method `parseCustomHtmlToReact`. This feature can be switched off by passing `{ disableExternalLinkIcon: true }` in `context` argument.
+* Tsify `sendFeedback.ts` and improve error messages/notifications
+* [The next improvement]
+
+#### 8.1.12
+
+* Bigger zoom control icons.
+* Modified "ideal zoom" to zoom closer to tilesets and datasources.
+* Added `configParameters.feedbackPostamble`. Text showing at the bottom of feedback form, supports the internationalization using the translation key
+* `GeoJsonMixin.style["stroke-opacity"]` will now also set `polygonStroke.alpha` and `polylineStroke.alpha`
+* Reduce `GeoJsonMixin` default stroke width from `2` to `1`
+* Add `TableMixin` styling to `GeoJsonMixin` - it will treat geojson feature properties as "rows" in a table - which can be styled in the same way as `TableMixin` (eg CSV). This is only enabled for geojson-vt/Protomaps (which requires `Terria.configParameters.enableGeojsonMvt = true`). For more info see `GeojsonMixin.forceLoadMapItems()`
+  * This can be disabled using `GeojsonTraits.disableTableStyle`
+* Opacity and splitting is enabled for Geojson (if using geojson-vt/protomaps)
+* Replaced `@types/geojson` Geojson types with `@turf/helpers`
+* In `GeojsonMixin` replaced with `customDataLoader`, `loadFromFile` and `loadFromUrl` with `forceLoadGeojsonData`
+* `GeojsonMixin` will now convert all geojson objects to FeatureCollection
+* Exporting `GeojsonMixin` will now add proper file extensions
+* `WebFeatureServiceCatalogItem` now uses `GeoJsonMixin`
+* Fix `ProtomapsImageryProvider` geojson feature picking over antimeridian
+* Add Socrata group to "Add web data
+* Added "marker-stroke-width", "polyline-stroke-width", "polygon-stroke-width" to `GeojsonStyleTraits` (Note these are not apart of [simplestyle-spec](https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0) and can only be used with `geojson-vt`)
+* Add a method refreshCatalogMembersFromMagda to Terria class.
+* Renable `useNativeResolution` on mobile
+* Store `useNativeResolution`, `baseMaximumScreenSpaceError` as local properties
+* Moved CKAN default `supportedFormats` to `CkanDefaultFormatsStratum`
+* Add properties to `CkanResourceFormatTraits`
+  * `maxFileSize` to filter out resources with large files (default values: GeoJSON = 150MB, KML = 30MB, CZML = 50MB)
+  * `removeDuplicates` (which defaults to true) so we don't get duplicate formats for a dataset (it will check `resource.name`)
+    * If there are multiple matches, then the newest (from resource.created property) will be used
+  * `onlyUseIfSoleResource` to give a given resource format unless that is all that exists for a dataset
+* Add CKAN `useSingleResource`, if `true`, then the highest match from `supportedResourceFormats` will be used for each dataset
+* ArcGis Map/Feature Service will now set CRS from `latestWkid` if it exists (over `wkid`)
+* Fix CKAN ArcGisFeatureService resources
+* ArcGisFeatureServer will now set `outSR=4326` so we don't need to reproject client-side
+
+#### 8.1.11
+
+* Fix `SettingsPanel` type issue
+
+#### 8.1.10
+
+* Fix `CswCatalogGroup` XML types
+* Added `MAINCODE` aliases for all ABS Statistical Area regions that were missing them.
+* Fixed `superGet` replacement in webpack builds with babel versions `7.16.0` and above.
+
+#### 8.1.9
+* TSify workbench splitter control and fix broken styling.
+* Fix app crash when opening AR tool.
+
+#### 8.1.8
+* Tsified `SettingPanel`
+* Moved `setViewerMode` function from `Terria` class to `ViewerMode`
+* Refactored checkbox to use children elements for label instead of label
+  property, `isDisabled`, `isChecked` and `font-size: inherit` style is passed
+  to each child element (so propper styling is maintained)
+* Fix an internal bug where Cesium.prototype.observeModelLayer() fails to remove 3D tilesets in certain cases.
 * Rename `TerriaError._shouldRaiseToUser` to `overrideRaiseToUser`
   * Note: `userProperties.ignoreError = "1"` will take precedence over `overrideRaiseToUser = true`
 * Fix `overrideRaiseToUser` bug causing `overrideRaiseToUser` to be set to `true` in `TerriaError.combine`
@@ -10,8 +67,11 @@ Change Log
 * Disable `zFilter` by default
 * Remove use of word "outlier" in zFilter dimension and legend item (we now use "Extreme values")
 * Add `cursor:pointer` to `Checkbox`
+* Fix `MapNavigation` getter/setter `visible` bug.
+  * Replace `CompositeBarItemController` `visible` setter with `setVisible` function
 * Use `yarn` in CI scripts (and upgrade node to v14)
-* [The next improvement]
+* Fix app crash when previewing a nested reference in the catalog (eg when viewing an indexed search result where the result is a reference).
+* Ported feaure from v7 to set WMS layers property from the value of `LAYERS`, `layers` or `typeName` from query string of CKAN resource URL.
 
 #### 8.1.4
 
@@ -169,8 +229,8 @@ Change Log
   - `colorPalette` no longer supports a list of CSS colors (eg `rgb(0,0,255)-rgb(0,255,0)-rgb(255,0,0)`). Instead please use `binColors`.
   - Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses`
   - Renamed all mixin instance type definitions to `XMixin.Instance`.
-  - Basemaps are now defined as `baseMaps` object
-    - list of available basemaps is defined in `baseMaps.init`. This list is combined with default base maps so it's possible to override defaults
+  - Basemaps are now defined as `baseMaps` object (see [baseMaps object docs](./doc/customizing/initialization-files.md#basemaps))
+    - list of available basemaps is defined in `baseMaps.items`. This list is combined with default base maps so it's possible to override defaults
     - definition of `initBaseMapId` and `initBaseMapName` are moved to `baseMaps.defaultBaseMapId` and `baseMaps.defaultBaseMapName`
     - `previewBaseMapId` is moved to `baseMaps.previewBaseMapId`
     - implemented `baseMaps.enabledBaseMaps` array of base map ids to define a list of baseMaps available to user

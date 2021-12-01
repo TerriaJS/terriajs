@@ -1,17 +1,27 @@
 import bbox from "@turf/bbox";
-import { Feature, FeatureCollection, GeoJSON, Point } from "geojson";
-import i18next from "i18next";
-import { action, computed, observable, runInAction, toJS } from "mobx";
 import {
-  CircleSymbolizer,
-  GeomType,
-  LineSymbolizer,
-  PolygonSymbolizer
-} from "terriajs-protomaps";
+  Feature,
+  feature,
+  FeatureCollection,
+  featureCollection,
+  Geometries,
+  Point
+} from "@turf/helpers";
+import i18next from "i18next";
+import {
+  action,
+  computed,
+  IReactionDisposer,
+  observable,
+  onBecomeObserved,
+  onBecomeUnobserved,
+  reaction,
+  runInAction,
+  toJS
+} from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
@@ -30,16 +40,29 @@ import PolygonGraphics from "terriajs-cesium/Source/DataSources/PolygonGraphics"
 import PolylineGraphics from "terriajs-cesium/Source/DataSources/PolylineGraphics";
 import Property from "terriajs-cesium/Source/DataSources/Property";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+import {
+  CircleSymbolizer,
+  Feature as ProtomapsFeature,
+  GeomType,
+  LineSymbolizer,
+  PolygonSymbolizer
+} from "terriajs-protomaps";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import formatPropertyValue from "../Core/formatPropertyValue";
+import hashFromString from "../Core/hashFromString";
 import isDefined from "../Core/isDefined";
-import JsonValue, { isJsonObject, JsonObject } from "../Core/Json";
+import { isJsonObject, JsonObject } from "../Core/Json";
+import { isJson } from "../Core/loadBlob";
 import makeRealPromise from "../Core/makeRealPromise";
 import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError, { networkRequestError } from "../Core/TerriaError";
 import ProtomapsImageryProvider, {
-  GEOJSON_SOURCE_LAYER_NAME
+  GeojsonSource,
+  GEOJSON_SOURCE_LAYER_NAME,
+  ProtomapsData
 } from "../Map/ProtomapsImageryProvider";
+import Reproject from "../Map/Reproject";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
@@ -47,31 +70,16 @@ import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
+import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
 import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
-import DiscretelyTimeVaryingMixin, {
-  DiscreteTimeAsJS
-} from "./DiscretelyTimeVaryingMixin";
-import MappableMixin from "./MappableMixin";
+import { DiscreteTimeAsJS } from "./DiscretelyTimeVaryingMixin";
+import { ExportData } from "./ExportableMixin";
+import TableMixin from "./TableMixin";
 
-const formatPropertyValue = require("../Core/formatPropertyValue");
-const hashFromString = require("../Core/hashFromString");
-const Reproject = require("../Map/Reproject");
-
-const simpleStyleIdentifiers = [
-  "title",
-  "description", //
-  "marker-size",
-  "marker-symbol",
-  "marker-color",
-  "stroke", //
-  "stroke-opacity",
-  "stroke-width",
-  "fill",
-  "fill-opacity"
-];
-
-type Coordinates = number[];
+export type FeatureCollectionWithCrs = FeatureCollection & {
+  crs: JsonObject | undefined;
+};
 
 class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
   static stratumName = "geojson";
@@ -99,16 +107,32 @@ class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
       });
     }
   }
+
+  get opacity() {
+    return 1;
+  }
 }
 
 StratumOrder.addLoadStratum(GeoJsonStratum.stratumName);
 
 function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
-  abstract class GeoJsonMixin extends DiscretelyTimeVaryingMixin(
-    MappableMixin(UrlMixin(Base))
+  abstract class GeoJsonMixin extends TableMixin(
+    UrlMixin(CatalogMemberMixin(Base))
   ) {
+    @observable
+    private _dataSource: CzmlDataSource | GeoJsonDataSource | undefined;
+
+    @observable
+    private _imageryProvider: ProtomapsImageryProvider | undefined;
+
+    private tableStyleReactionDisposer: IReactionDisposer | undefined;
+
+    /** Geojson FeatureCollection in WGS84 */
+    @observable.ref _readyData?: FeatureCollectionWithCrs;
+
     constructor(...args: any[]) {
       super(...args);
+      // Add GeoJsonStratum
       if (this.strata.get(GeoJsonStratum.stratumName) === undefined) {
         runInAction(() => {
           this.strata.set(
@@ -117,25 +141,66 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           );
         });
       }
+
+      // Add TableAutomaticStylesStratum
+      if (
+        this.strata.get(TableAutomaticStylesStratum.stratumName) === undefined
+      ) {
+        this.strata.set(
+          TableAutomaticStylesStratum.stratumName,
+          new TableAutomaticStylesStratum(this)
+        );
+      }
+
+      // Setup table style reactions
+      // We should only update geojson table styling when our map items have consumers
+      onBecomeObserved(
+        this,
+        "mapItems",
+        this.startTableStyleReaction.bind(this)
+      );
+      onBecomeUnobserved(
+        this,
+        "mapItems",
+        this.stopTableStyleReaction.bind(this)
+      );
+    }
+
+    private startTableStyleReaction() {
+      if (!this.tableStyleReactionDisposer) {
+        // Update protomaps imagery provider if activeTableStyle changes
+        this.tableStyleReactionDisposer = reaction(
+          () => [
+            this.useMvt,
+            this.readyData,
+            this.currentTimeAsJulianDate,
+            this.activeTableStyle.timeIntervals,
+            this.activeTableStyle,
+            this.activeTableStyle.colorMap,
+            this.style
+          ],
+          () => {
+            if (this._imageryProvider && this.readyData && this.useMvt) {
+              runInAction(() => {
+                this._imageryProvider = this.createProtomapsImageryProvider(
+                  this.readyData!
+                );
+              });
+            }
+          }
+        );
+      }
+    }
+
+    private stopTableStyleReaction() {
+      if (this.tableStyleReactionDisposer) {
+        this.tableStyleReactionDisposer();
+        this.tableStyleReactionDisposer = undefined;
+      }
     }
 
     get isGeoJson() {
       return true;
-    }
-
-    protected readonly zipFileRegex = /(\.zip\b)/i;
-
-    @observable
-    private _dataSource: CzmlDataSource | GeoJsonDataSource | undefined;
-    @observable
-    private _imageryProvider: ProtomapsImageryProvider | undefined;
-
-    protected _file?: File;
-
-    @observable.ref _readyData?: JsonObject;
-
-    setFileInput(file: File) {
-      this._file = file;
     }
 
     @computed get name() {
@@ -143,10 +208,6 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         return super.name || this.sourceReference.name;
       }
       return super.name;
-    }
-
-    @computed get hasLocalData(): boolean {
-      return isDefined(this._file);
     }
 
     @computed get cacheDuration(): string {
@@ -158,9 +219,43 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
     /**
      * Returns the final raw data after all transformations are applied.
+     * (Geojson FeatureCollection in WGS84)
      */
     @computed get readyData() {
       return this._readyData;
+    }
+
+    @computed
+    get _canExportData() {
+      return isDefined(this.readyData);
+    }
+
+    protected async _exportData(): Promise<ExportData | undefined> {
+      if (isDefined(this.readyData)) {
+        let name = this.name || this.uniqueId || "data.geojson";
+        if (!isJson(name)) {
+          name = `${name}.geojson`;
+        }
+        return {
+          name,
+          file: new Blob([JSON.stringify(this.readyData)])
+        };
+      }
+
+      throw new TerriaError({
+        sender: this,
+        message: "No data available to download."
+      });
+    }
+
+    @computed
+    get disableOpacityControl() {
+      return !this._imageryProvider;
+    }
+
+    @computed
+    get disableSplitter() {
+      return !this._imageryProvider;
     }
 
     @computed get mapItems() {
@@ -177,61 +272,82 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           ? {
               imageryProvider: this._imageryProvider,
               show: this.show,
-              alpha: 1,
+              alpha: this.opacity,
               clippingRectangle: undefined
             }
           : undefined
       ]);
     }
 
-    protected async forceLoadMapItems(): Promise<void> {
-      // Pick which rendering mode:
-      // - CZML if czmlTemplate is defined
-      // - Mapbox vector tiles (see below)
-      // - Cesium primitives
-
-      // Only use MapboxVectorTiles (through geojson-vt and protomaps.js) if enabled and not using unsupported traits
-      const useMvt =
+    /** Only use MapboxVectorTiles (through geojson-vt and protomaps.js) if enabled and not using unsupported traits
+     * For more info see GeoJsonMixin.forceLoadMapItems
+     */
+    @computed
+    get useMvt() {
+      return (
         !this.forceCesiumPrimitives &&
         this.terria.configParameters.enableGeojsonMvt &&
+        !isDefined(this.czmlTemplate) &&
         !isDefined(this.stylesWithDefaults().markerSymbol) &&
+        !isDefined(this.stylesWithDefaults().markerUrl) &&
         !isDefined(this.timeProperty) &&
         !isDefined(this.heightProperty) &&
         (!isDefined(this.perPropertyStyles) ||
-          this.perPropertyStyles.length === 0);
+          this.perPropertyStyles.length === 0)
+      );
+    }
 
+    /** Remove chart items from TableMixin.chartItems */
+    @computed get chartItems() {
+      return [];
+    }
+
+    /**
+     * Forces load of the geojson data. This method does _not_ need to consider
+     * whether the geojson is already loaded.
+     *
+     * It is guaranteed that `loadMetadata` has finished before this is called.
+     *
+     * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
+     *
+     * Errors can be thrown here.
+     */
+    protected abstract forceLoadGeojsonData(): Promise<
+      FeatureCollectionWithCrs
+    >;
+
+    /** GeojsonMixin has 3 rendering modes:
+     * - CZML:
+     *    - if `czmlTemplate` is defined (see `GeoJsonTraits.czmlTemplate`)
+     * - Mapbox vector tiles (through geojson-vt and protomaps.js)
+     *    - if `Terria.configParameters.enableGeojsonMvt = true` and not using unsupported traits (see below)
+     * - Cesium primitives if:
+     *    - `GeoJsonTraits.forceCesiumPrimitives = true`
+     *    - Using `timeProperty` or `heightProperty` or `perPropertyStyles` or simple-style `marker-symbol`
+     */
+    protected async forceLoadMapItems(): Promise<void> {
+      const useMvt = this.useMvt;
       const czmlTemplate = this.czmlTemplate;
 
+      let geoJson: FeatureCollectionWithCrs | undefined;
+
       try {
-        const geoJson = await new Promise<JsonValue | undefined>(
-          (resolve, reject) => {
-            this.customDataLoader(resolve, reject);
-            if (isDefined(this._file)) {
-              this.loadFromFile(this._file)
-                .then(resolve)
-                .catch(reject);
-            } else if (isDefined(this.url)) {
-              // try loading from a zip file url or a regular url
-              resolve(this.loadFromUrl(this.url));
-            } else {
-              throw networkRequestError({
-                sender: this,
-                title: i18next.t("models.geoJson.unableToLoadItemTitle"),
-                message: i18next.t("models.geoJson.unableToLoadItemMessage")
-              });
-            }
-          }
-        );
-        if (!isJsonObject(geoJson)) {
-          throw networkRequestError({
-            title: i18next.t("models.geoJson.errorLoadingTitle"),
-            message: i18next.t("models.geoJson.errorParsingMessage")
-          });
-        }
+        geoJson = await this.forceLoadGeojsonData();
+
         const geoJsonWgs84 = await reprojectToGeographic(
           geoJson,
           this.terria.configParameters.proj4ServiceBaseUrl
         );
+
+        // Add feature index to "_id_" feature property
+        // This is used to refer to each feature in TableMixin (as row ID)
+
+        for (let i = 0; i < geoJsonWgs84.features.length; i++) {
+          if (!geoJsonWgs84.features[i].properties) {
+            geoJsonWgs84.features[i].properties = {};
+          }
+          geoJsonWgs84.features[i].properties!["_id_"] = i;
+        }
         runInAction(() => {
           this._readyData = geoJsonWgs84;
         });
@@ -267,19 +383,16 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     }
 
     @action
-    private addPerPropertyStyleToGeoJson(json: JsonObject | GeoJSON) {
-      const geojson = json as GeoJSON;
-      if (geojson.type === "Feature") {
-        const featureProperties = (geojson as Feature).properties;
+    private addPerPropertyStyleToGeoJson(fc: FeatureCollectionWithCrs) {
+      for (let i = 0; i < fc.features.length; i++) {
+        const featureProperties = fc.features[i].properties;
         if (featureProperties === null) {
           return;
         }
         const featurePropertiesEntires = Object.entries(featureProperties);
 
         const matchedStyles = this.perPropertyStyles.filter(style => {
-          const stylePropertiesEntries = Object.entries(
-            style.properties as any
-          );
+          const stylePropertiesEntries = Object.entries(style.properties ?? {});
 
           // For every key-value pair in the style, is there an identical one in the feature's properties?
           return stylePropertiesEntries.every(
@@ -287,8 +400,10 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               featurePropertiesEntires.find(([featKey, featValue]) => {
                 if (typeof styleValue === "string" && !style.caseSensitive) {
                   featKey === styleKey &&
-                    (featValue as string).toLowerCase() ===
-                      (styleValue as string).toLowerCase();
+                    (typeof featValue === "string"
+                      ? featValue
+                      : featValue.toString()
+                    ).toLowerCase() === styleValue.toLowerCase();
                 }
                 return featKey === styleKey && featValue === styleValue;
               }) !== undefined
@@ -304,91 +419,161 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             }
           }
         }
-      } else if (geojson.type === "FeatureCollection") {
-        const featureCollection = geojson as FeatureCollection;
-        featureCollection.features.forEach(feature => {
-          this.addPerPropertyStyleToGeoJson(feature);
-        });
       }
     }
 
-    private createProtomapsImageryProvider(geoJson: JsonObject) {
-      const styles = this.stylesWithDefaults();
+    @action
+    private createProtomapsImageryProvider(geoJson: FeatureCollectionWithCrs) {
+      const defaultStyles = this.stylesWithDefaults();
+
+      let currentTimeRows: number[] | undefined;
+
+      // If time varying, get row indices which match
+      // This is used to filter feature["_id_"]
+      if (
+        this.currentTimeAsJulianDate &&
+        this.activeTableStyle.timeIntervals &&
+        this.activeTableStyle.moreThanOneTimeInterval
+      ) {
+        currentTimeRows = this.activeTableStyle.timeIntervals.reduce<number[]>(
+          (rows, timeInterval, index) => {
+            if (
+              timeInterval &&
+              TimeInterval.contains(timeInterval, this.currentTimeAsJulianDate!)
+            ) {
+              rows.push(index);
+            }
+            return rows;
+          },
+          []
+        );
+      }
+
+      const nullColor = this.activeTableStyle.tableColorMap.nullColor.toCssColorString();
+      const rows = this.activeTableStyle.colorColumn?.valuesForType;
+      const colorMap = this.activeTableStyle.colorMap;
+
+      // Style function
+      // If disableTableStyle is true - we just return defaultColor
+      // Otherwise, use activeTableStyle colorMap.mapValueToColor
+      let getValue = (defaultColor?: string) =>
+        this.disableTableStyle
+          ? defaultColor
+          : (z: number, f?: ProtomapsFeature) => {
+              const rowId = f?.props["_id_"];
+              if (typeof rowId === "number") {
+                const col = colorMap
+                  .mapValueToColor(rows?.[rowId])
+                  ?.toCssColorString();
+
+                if (col) return col;
+              }
+
+              // If no color found, use defaultColor or nullColor
+              return defaultColor ?? nullColor;
+            };
+
+      let protomapsData: ProtomapsData = geoJson;
+
+      // Are we creating a protomaps imagery provider with the same geojson data (readyData)?
+      // If so we can copy GeojsonSource over to save running geojson-vt again
+      if (
+        this._imageryProvider instanceof ProtomapsImageryProvider &&
+        this._imageryProvider.source instanceof GeojsonSource &&
+        this._imageryProvider.source.geojsonObject === this.readyData
+      ) {
+        protomapsData = this._imageryProvider.source;
+      }
+
       return new ProtomapsImageryProvider({
         terria: this.terria,
-        data: geoJson as any,
+        data: protomapsData,
         // Create paintRules from `stylesWithDefaults` (which applies defaults ontop of StyleTraits)
-        paintRules: [
+        paintRules: filterOutUndefined([
           // Polygon fill
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new PolygonSymbolizer({
-              fill: styles.fill.toCssColorString()
+              fill: getValue(defaultStyles.fill.toCssColorString())
             }),
             minzoom: 0,
             maxzoom: Infinity,
-            filter: (props, feature) => {
-              return feature?.geomType === GeomType.Polygon;
+            filter: (zoom, feature) => {
+              return (
+                feature?.geomType === GeomType.Polygon &&
+                (!currentTimeRows ||
+                  currentTimeRows.includes(feature?.props["_id_"]))
+              );
             }
           },
-          // Polygon stroke
-          {
-            dataLayer: GEOJSON_SOURCE_LAYER_NAME,
-            symbolizer: new LineSymbolizer({
-              color: styles.polygonStroke.toCssColorString(),
-              width: styles.strokeWidth
-            }),
-            minzoom: 0,
-            maxzoom: Infinity,
-            filter: (props, feature) => {
-              return feature?.geomType === GeomType.Polygon;
-            }
-          },
-          // Line stroke
-          {
-            dataLayer: GEOJSON_SOURCE_LAYER_NAME,
-            symbolizer: new LineSymbolizer({
-              color: styles.polylineStroke.toCssColorString(),
-              width: styles.strokeWidth
-            }),
-            minzoom: 0,
-            maxzoom: Infinity,
-            filter: (props, feature) => {
-              return feature?.geomType === GeomType.Line;
-            }
-          },
+          // Polygon stroke (hide if 0)
+          defaultStyles.polygonStrokeWidth !== 0
+            ? {
+                dataLayer: GEOJSON_SOURCE_LAYER_NAME,
+                symbolizer: new LineSymbolizer({
+                  color: defaultStyles.polygonStroke.toCssColorString(),
+                  width: defaultStyles.polygonStrokeWidth
+                }),
+                minzoom: 0,
+                maxzoom: Infinity,
+                filter: (zoom, feature) => {
+                  return (
+                    feature?.geomType === GeomType.Polygon &&
+                    (!currentTimeRows ||
+                      currentTimeRows.includes(feature?.props["_id_"]))
+                  );
+                }
+              }
+            : undefined,
+          // Line stroke (hide if 0)
+          defaultStyles.polylineStrokeWidth !== 0
+            ? {
+                dataLayer: GEOJSON_SOURCE_LAYER_NAME,
+                symbolizer: new LineSymbolizer({
+                  color: getValue(
+                    defaultStyles.polylineStroke.toCssColorString()
+                  ),
+                  width: defaultStyles.polylineStrokeWidth
+                }),
+                minzoom: 0,
+                maxzoom: Infinity,
+                filter: (zoom, feature) => {
+                  return (
+                    feature?.geomType === GeomType.Line &&
+                    (!currentTimeRows ||
+                      currentTimeRows.includes(feature?.props["_id_"]))
+                  );
+                }
+              }
+            : undefined,
           // Point circle
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new CircleSymbolizer({
-              radius: styles.markerSize / 5,
-              fill: styles.markerColor.toCssColorString(),
-              width: styles.strokeWidth,
-              stroke: styles.stroke.toCssColorString()
+              radius: Math.round(defaultStyles.markerSize / 5),
+              fill: getValue(defaultStyles.markerColor.toCssColorString()),
+              width: defaultStyles.markerStrokeWidth,
+              stroke: defaultStyles.stroke.toCssColorString(),
+              opacity: defaultStyles.markerOpacity
             }),
             minzoom: 0,
             maxzoom: Infinity,
-            filter: (props, feature) => {
-              return feature?.geomType === GeomType.Point;
+            filter: (zoom, feature) => {
+              return (
+                feature?.geomType === GeomType.Point &&
+                (!currentTimeRows ||
+                  currentTimeRows.includes(feature?.props["_id_"]))
+              );
             }
           }
-        ],
+        ]),
         labelRules: []
       });
     }
 
     private async loadCzmlDataSource(
-      geoJson: JsonObject
+      geoJson: FeatureCollectionWithCrs
     ): Promise<CzmlDataSource> {
-      if (
-        geoJson.type !== "FeatureCollection" ||
-        !Array.isArray(geoJson.features)
-      ) {
-        throw TerriaError.from(
-          "CZML templating only supports GeoJSON FeatureCollections"
-        );
-      }
-
       const czmlTemplate = runInAction(() => toJS(this.czmlTemplate));
 
       const rootCzml = [
@@ -403,7 +588,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       // Set czml position (cartographicDegrees) to point coordinates
       // Set czml properties to feature properties
       for (let i = 0; i < geoJson.features.length; i++) {
-        const feature = geoJson.features[i] as any;
+        const feature = geoJson.features[i];
         if (feature !== null && feature.geometry?.type === "Point") {
           const point = feature.geometry as Point;
           const czml = clone(czmlTemplate ?? {}, true);
@@ -429,20 +614,31 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return CzmlDataSource.load(rootCzml);
     }
 
-    /** Note, this is not reactive */
+    /** Note, this is not reactive
+     * To re-style geoJSON you will need to call `loadMapItems` again
+     */
     @action
     private stylesWithDefaults() {
       const style = this.style;
 
       const options = {
         describe: describeWithoutUnderscores,
-        markerSize: defaultValue(parseMarkerSize(style["marker-size"]), 20),
+        markerSize: parseMarkerSize(style["marker-size"]) ?? 20,
         markerSymbol: style["marker-symbol"], // and undefined if none
-        markerColor: defaultColor(style["marker-color"], this.name || ""),
-        stroke: getColor(defaultValue(style.stroke, "#000000")),
-        strokeWidth: defaultValue(style["stroke-width"], 2),
-        polygonStroke: getColor(defaultValue(style.stroke, "#000000")),
+        markerColor: defaultColor(style["marker-color"], this.name ?? ""),
+        stroke: getColor(style.stroke ?? "#000000"),
+        polygonStroke: getColor(style.stroke ?? "#000000"),
         polylineStroke: defaultColor(style.stroke, this.name || ""),
+        strokeWidth: style["stroke-width"] ?? 2,
+
+        // Note these specific stroke widths are only used for geojson-vt
+        markerStrokeWidth:
+          style["marker-stroke-width"] ?? style["stroke-width"] ?? 1,
+        polylineStrokeWidth:
+          style["polyline-stroke-width"] ?? style["stroke-width"] ?? 2,
+        polygonStrokeWidth:
+          style["polygon-stroke-width"] ?? style["stroke-width"] ?? 1,
+
         markerOpacity: style["marker-opacity"], // not in SimpleStyle spec or supported by Cesium but see below
         fill: defaultColor(style.fill, (this.name || "") + " fill"),
         clampToGround: this.clampToGround,
@@ -454,6 +650,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
       if (isDefined(style["stroke-opacity"])) {
         options.stroke.alpha = style["stroke-opacity"];
+        options.polygonStroke.alpha = style["stroke-opacity"];
+        options.polylineStroke.alpha = style["stroke-opacity"];
       }
 
       if (isDefined(style["fill-opacity"])) {
@@ -465,203 +663,190 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return toJS(options);
     }
 
-    private loadGeoJsonDataSource(
-      geoJson: JsonObject
-    ): Promise<GeoJsonDataSource | CzmlDataSource> {
+    private async loadGeoJsonDataSource(
+      geoJson: FeatureCollectionWithCrs
+    ): Promise<GeoJsonDataSource> {
       /* Style information is applied as follows, in decreasing priority:
-             - simple-style properties set directly on individual features in the GeoJSON file
-             - simple-style properties set as the 'Style' property on the catalog item
-             - our 'this.styles' set below (and point styling applied after Cesium loads the GeoJSON)
-             - if anything is underspecified there, then Cesium's defaults come in.
-             See https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0
-          */
+            - simple-style properties set directly on individual features in the GeoJSON file
+            - simple-style properties set as the 'Style' property on the catalog item
+            - our 'this.styles' set below (and point styling applied after Cesium loads the GeoJSON)
+            - if anything is underspecified there, then Cesium's defaults come in.
+            See https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0
+      */
 
       this.addPerPropertyStyleToGeoJson(geoJson);
 
       const now = JulianDate.now();
 
-      return makeRealPromise<GeoJsonDataSource>(
+      const dataSource = await makeRealPromise<GeoJsonDataSource>(
         GeoJsonDataSource.load(geoJson, this.stylesWithDefaults())
-      ).then(dataSource => {
-        const entities = dataSource.entities;
-        for (let i = 0; i < entities.values.length; ++i) {
-          const entity = entities.values[i];
+      );
+      const entities = dataSource.entities;
+      for (let i = 0; i < entities.values.length; ++i) {
+        const entity = entities.values[i];
 
-          const properties = entity.properties;
+        const properties = entity.properties;
 
-          // Time
-          if (
-            isDefined(properties) &&
-            isDefined(this.timeProperty) &&
-            isDefined(this.discreteTimesAsSortedJulianDates)
-          ) {
-            const startTimeDiscreteTime = properties[this.timeProperty];
-            const startTimeIdx = this.discreteTimesAsSortedJulianDates?.findIndex(
-              t => t.tag === startTimeDiscreteTime.getValue()
-            );
-            const startTime = this.discreteTimesAsSortedJulianDates[
-              startTimeIdx
-            ];
+        // Time
+        if (
+          isDefined(properties) &&
+          isDefined(this.timeProperty) &&
+          isDefined(this.discreteTimesAsSortedJulianDates)
+        ) {
+          const startTimeDiscreteTime = properties[this.timeProperty];
+          const startTimeIdx = this.discreteTimesAsSortedJulianDates?.findIndex(
+            t => t.tag === startTimeDiscreteTime.getValue()
+          );
+          const startTime = this.discreteTimesAsSortedJulianDates[startTimeIdx];
 
-            if (isDefined(startTime)) {
-              const endTimeIdx = startTimeIdx + 1;
-              const endTime = this.discreteTimesAsSortedJulianDates[endTimeIdx];
+          if (isDefined(startTime)) {
+            const endTimeIdx = startTimeIdx + 1;
+            const endTime = this.discreteTimesAsSortedJulianDates[endTimeIdx];
 
-              entity.availability = new TimeIntervalCollection([
-                new TimeInterval({
-                  start: startTime.time,
-                  stop: endTime?.time ?? Iso8601.MAXIMUM_VALUE,
-                  isStopIncluded: false
-                })
-              ]);
-            }
-          }
-
-          const styles = this.stylesWithDefaults();
-
-          // Billboard
-          if (isDefined(entity.billboard) && isDefined(styles.markerUrl)) {
-            entity.billboard = new BillboardGraphics({
-              image: new ConstantProperty(styles.markerUrl),
-              width:
-                properties && properties["marker-width"]
-                  ? new ConstantProperty(properties["marker-width"])
-                  : undefined,
-              height:
-                properties && properties["marker-height"]
-                  ? new ConstantProperty(properties["marker-height"])
-                  : undefined,
-              rotation:
-                properties && properties["marker-angle"]
-                  ? new ConstantProperty(properties["marker-angle"])
-                  : undefined,
-              heightReference: styles.clampToGround
-                ? new ConstantProperty(HeightReference.RELATIVE_TO_GROUND)
-                : undefined
-            });
-
-            /* If no marker symbol was provided but Cesium has generated one for a point, then turn it into
-                 a filled circle instead of the default marker. */
-          } else if (
-            isDefined(entity.billboard) &&
-            (!properties || !isDefined(properties["marker-symbol"])) &&
-            !isDefined(styles.markerSymbol)
-          ) {
-            entity.point = new PointGraphics({
-              color: new ConstantProperty(
-                getColor(
-                  defaultValue(
-                    properties && properties["marker-color"]?.getValue(),
-                    styles.markerColor
-                  )
-                )
-              ),
-              pixelSize: new ConstantProperty(
-                defaultValue(
-                  parseMarkerSize(
-                    properties && properties["marker-size"]?.getValue()
-                  ),
-                  styles.markerSize / 2
-                )
-              ),
-              outlineWidth: new ConstantProperty(
-                defaultValue(
-                  properties && properties["stroke-width"]?.getValue(),
-                  styles.strokeWidth
-                )
-              ),
-              outlineColor: new ConstantProperty(
-                getColor(
-                  defaultValue(
-                    properties && properties.stroke?.getValue(),
-                    styles.polygonStroke
-                  )
-                )
-              ),
-              heightReference: new ConstantProperty(
-                styles.clampToGround
-                  ? HeightReference.RELATIVE_TO_GROUND
-                  : undefined
-              )
-            });
-            if (
-              properties &&
-              isDefined(properties["marker-opacity"]) &&
-              entity.point.color
-            ) {
-              // not part of SimpleStyle spec, but why not?
-              const color: Color = entity.point.color.getValue(now);
-              color.alpha = parseFloat(
-                properties["marker-opacity"]?.getValue()
-              );
-            }
-
-            entity.billboard = undefined;
-          }
-          if (
-            isDefined(entity.billboard) &&
-            properties &&
-            isDefined(properties["marker-opacity"]?.getValue())
-          ) {
-            entity.billboard.color = new ConstantProperty(
-              new Color(
-                1.0,
-                1.0,
-                1.0,
-                parseFloat(properties["marker-opacity"]?.getValue())
-              )
-            );
-          }
-
-          if (isDefined(entity.polygon)) {
-            // Extrude polygons if heightProperty is set
-            if (
-              this.heightProperty &&
-              properties &&
-              isDefined(properties[this.heightProperty])
-            ) {
-              entity.polygon.closeTop = new ConstantProperty(true);
-              entity.polygon.extrudedHeight = properties[this.heightProperty];
-
-              entity.polygon.heightReference = new ConstantProperty(
-                HeightReference.CLAMP_TO_GROUND
-              );
-              entity.polygon.extrudedHeightReference = new ConstantProperty(
-                HeightReference.RELATIVE_TO_GROUND
-              );
-            }
-            // Cesium on Windows can't render polygons with a stroke-width > 1.0.  And even on other platforms it
-            // looks bad because WebGL doesn't mitre the lines together nicely.
-            // As a workaround for the special case where the polygon is unfilled anyway, change it to a polyline.
-            else if (
-              polygonHasWideOutline(entity.polygon, now) &&
-              !polygonIsFilled(entity.polygon)
-            ) {
-              createPolylineFromPolygon(entities, entity, now);
-              entity.polygon = (undefined as unknown) as PolygonGraphics;
-            } else if (
-              polygonHasOutline(entity.polygon, now) &&
-              isPolygonOnTerrain(entity.polygon, now)
-            ) {
-              // Polygons don't directly support outlines when they're on terrain.
-              // So create a manual outline.
-              createPolylineFromPolygon(entities, entity, now);
-            }
+            entity.availability = new TimeIntervalCollection([
+              new TimeInterval({
+                start: startTime.time,
+                stop: endTime?.time ?? Iso8601.MAXIMUM_VALUE,
+                isStopIncluded: false
+              })
+            ]);
           }
         }
-        return dataSource;
-      });
+
+        const styles = this.stylesWithDefaults();
+
+        // Billboard
+        if (isDefined(entity.billboard) && isDefined(styles.markerUrl)) {
+          entity.billboard = new BillboardGraphics({
+            image: new ConstantProperty(styles.markerUrl),
+            width:
+              properties && properties["marker-width"]
+                ? new ConstantProperty(properties["marker-width"])
+                : undefined,
+            height:
+              properties && properties["marker-height"]
+                ? new ConstantProperty(properties["marker-height"])
+                : undefined,
+            rotation:
+              properties && properties["marker-angle"]
+                ? new ConstantProperty(properties["marker-angle"])
+                : undefined,
+            heightReference: styles.clampToGround
+              ? new ConstantProperty(HeightReference.RELATIVE_TO_GROUND)
+              : undefined
+          });
+
+          /* If no marker symbol was provided but Cesium has generated one for a point, then turn it into
+               a filled circle instead of the default marker. */
+        } else if (
+          isDefined(entity.billboard) &&
+          (!properties || !isDefined(properties["marker-symbol"])) &&
+          !isDefined(styles.markerSymbol)
+        ) {
+          entity.point = new PointGraphics({
+            color: new ConstantProperty(
+              getColor(
+                properties?.["marker-color"]?.getValue() ?? styles.markerColor
+              )
+            ),
+            pixelSize: new ConstantProperty(
+              parseMarkerSize(
+                properties && properties["marker-size"]?.getValue()
+              ) ?? styles.markerSize / 2
+            ),
+            outlineWidth: new ConstantProperty(
+              properties?.["stroke-width"]?.getValue() ?? styles.strokeWidth
+            ),
+            outlineColor: new ConstantProperty(
+              getColor(properties?.stroke?.getValue() ?? styles.polygonStroke)
+            ),
+            heightReference: new ConstantProperty(
+              styles.clampToGround
+                ? HeightReference.RELATIVE_TO_GROUND
+                : undefined
+            )
+          });
+          if (
+            properties &&
+            isDefined(properties["marker-opacity"]) &&
+            entity.point.color
+          ) {
+            // not part of SimpleStyle spec, but why not?
+            const color: Color = entity.point.color.getValue(now);
+            color.alpha = parseFloat(properties["marker-opacity"]?.getValue());
+          }
+
+          entity.billboard = undefined;
+        }
+        if (
+          isDefined(entity.billboard) &&
+          properties &&
+          isDefined(properties["marker-opacity"]?.getValue())
+        ) {
+          entity.billboard.color = new ConstantProperty(
+            new Color(
+              1,
+              1,
+              1,
+              parseFloat(properties["marker-opacity"]?.getValue())
+            )
+          );
+        }
+
+        if (isDefined(entity.polygon)) {
+          // Extrude polygons if heightProperty is set
+          if (
+            this.heightProperty &&
+            properties &&
+            isDefined(properties[this.heightProperty])
+          ) {
+            entity.polygon.closeTop = new ConstantProperty(true);
+            entity.polygon.extrudedHeight = properties[this.heightProperty];
+
+            entity.polygon.heightReference = new ConstantProperty(
+              HeightReference.CLAMP_TO_GROUND
+            );
+            entity.polygon.extrudedHeightReference = new ConstantProperty(
+              HeightReference.RELATIVE_TO_GROUND
+            );
+          }
+          // Cesium on Windows can't render polygons with a stroke-width > 1.0.  And even on other platforms it
+          // looks bad because WebGL doesn't mitre the lines together nicely.
+          // As a workaround for the special case where the polygon is unfilled anyway, change it to a polyline.
+          else if (
+            polygonHasWideOutline(entity.polygon, now) &&
+            !polygonIsFilled(entity.polygon)
+          ) {
+            createPolylineFromPolygon(entities, entity, now);
+            entity.polygon = undefined;
+          } else if (
+            polygonHasOutline(entity.polygon, now) &&
+            isPolygonOnTerrain(entity.polygon, now)
+          ) {
+            // Polygons don't directly support outlines when they're on terrain.
+            // So create a manual outline.
+            createPolylineFromPolygon(entities, entity, now);
+          }
+        }
+      }
+      return dataSource;
     }
 
     @computed
     get discreteTimes(): DiscreteTimeAsJS[] | undefined {
-      if (this.timeProperty === undefined || this.readyData === undefined) {
+      if (this.readyData === undefined) {
         return undefined;
       }
-      const discreteTimesMap: Map<string, DiscreteTimeAsJS> = new Map();
-      const addFeatureToDiscreteTimes = (geojson: GeoJSON) => {
-        if (geojson.type === "Feature") {
-          let feature = geojson as Feature;
+
+      // If we are using mvt (mapbox vector tiles / protomaps imagery provider) return TableMixin.discreteTimes
+      if (this.useMvt && !this.disableTableStyle) return super.discreteTimes;
+
+      // If using timeProperty - get discrete times from that
+      if (this.timeProperty) {
+        const discreteTimesMap: Map<string, DiscreteTimeAsJS> = new Map();
+
+        for (let i = 0; i < this.readyData.features.length; i++) {
+          const feature = this.readyData.features[i];
           if (
             feature.properties !== null &&
             feature.properties !== undefined &&
@@ -675,26 +860,71 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             };
             discreteTimesMap.set(dt.tag, dt);
           }
-        } else if (geojson.type === "FeatureCollection") {
-          const featureCollection = geojson as FeatureCollection;
-          featureCollection.features.forEach(feature =>
-            addFeatureToDiscreteTimes(feature)
-          );
         }
-      };
 
-      addFeatureToDiscreteTimes((this.readyData as unknown) as GeoJSON);
-
-      return Array.from(discreteTimesMap.values());
+        return Array.from(discreteTimesMap.values());
+      }
     }
 
-    protected abstract async customDataLoader(
-      resolve: (value: any) => void,
-      reject: (reason: any) => void
-    ): Promise<any>;
+    /**
+     * Transform feature properties into column-major format.
+     * This enables all TableMixin functionality - which is used for styling vector tiles.
+     * If this returns an empty array, TableMixin will effectively be disabled
+     */
+    @computed
+    get dataColumnMajor() {
+      if (!this.readyData || !this.useMvt || this.disableTableStyle) return [];
 
-    protected abstract async loadFromFile(file: File): Promise<any>;
-    protected abstract async loadFromUrl(url: string): Promise<any>;
+      // Map from property name (column name) to column index
+      const colMap = new Map<string, number>();
+
+      const dataColumnMajor: string[][] = [];
+
+      dataColumnMajor[0] = new Array(this.readyData.features.length + 1).fill(
+        ""
+      );
+
+      for (let i = 0; i < this.readyData.features.length; i++) {
+        const feature = this.readyData.features[i];
+
+        // Loop through feature properties
+        if (feature.properties) {
+          for (let j = 0; j < Object.keys(feature.properties).length; j++) {
+            const prop = Object.keys(feature.properties)[j];
+            const value = feature.properties[prop];
+            let colIndex = colMap.get(prop);
+
+            // If column isn't in colMap - we need to create it
+            if (!isDefined(colIndex)) {
+              colIndex = colMap.size;
+              colMap.set(prop, colIndex);
+              dataColumnMajor[colIndex] = new Array(
+                this.readyData.features.length + 1
+              ).fill("");
+            }
+            if (typeof value === "string") {
+              dataColumnMajor[colIndex][i + 1] = value;
+            } else if (typeof value === "number") {
+              dataColumnMajor[colIndex][i + 1] = value.toString();
+            }
+          }
+        }
+      }
+
+      // Set column titles
+      colMap.forEach((index, prop) => {
+        dataColumnMajor[index][0] = prop;
+      });
+
+      return dataColumnMajor;
+    }
+
+    /** We don't need to use TableMixin forceLoadTableData
+     * We implement `get dataColumnMajor()` instead
+     */
+    async forceLoadTableData() {
+      return undefined;
+    }
   }
   return GeoJsonMixin;
 }
@@ -709,6 +939,40 @@ namespace GeoJsonMixin {
 
 export default GeoJsonMixin;
 
+// Note: these type checks are not that rigorous, we are assuming we are getting valid GeoJson objects
+export function isFeatureCollection(
+  json: any
+): json is FeatureCollectionWithCrs {
+  return json.type === "FeatureCollection" && Array.isArray(json.features);
+}
+
+export function isFeature(json: any): json is Feature {
+  return json.type === "Feature" && json.geometry;
+}
+
+export function isGeometries(json: any): json is Geometries {
+  return (
+    [
+      "Point",
+      "MultiPoint",
+      "LineString",
+      "MultiLineString",
+      "Polygon",
+      "MultiPolygon"
+    ].includes(json.type) && Array.isArray(json.coordinates)
+  );
+}
+
+export function toFeatureCollection(
+  json: any
+): FeatureCollectionWithCrs | undefined {
+  if (isFeatureCollection(json)) return json;
+  if (isFeature(json))
+    return featureCollection([json]) as FeatureCollectionWithCrs;
+  if (isGeometries(json))
+    return featureCollection([feature(json)]) as FeatureCollectionWithCrs;
+}
+
 function createPolylineFromPolygon(
   entities: EntityCollection,
   entity: Entity,
@@ -720,7 +984,7 @@ function createPolylineFromPolygon(
   entity.polyline.show = polygon.show;
 
   if (isPolygonOnTerrain(polygon, now)) {
-    (entity.polyline as any).clampToGround = true;
+    entity.polyline.clampToGround = new ConstantProperty(true);
   }
 
   if (isDefined(polygon.outlineColor)) {
@@ -745,9 +1009,9 @@ function createPolylineFromPolygon(
 }
 
 async function reprojectToGeographic(
-  geoJson: JsonObject,
+  geoJson: FeatureCollectionWithCrs,
   proj4ServiceBaseUrl?: string
-): Promise<JsonObject> {
+): Promise<FeatureCollectionWithCrs> {
   let code: string | undefined;
 
   if (!isJsonObject(geoJson.crs)) {
@@ -755,13 +1019,13 @@ async function reprojectToGeographic(
   } else if (
     geoJson.crs.type === "EPSG" &&
     isJsonObject(geoJson.crs.properties) &&
-    geoJson.crs.properties.code
+    typeof geoJson.crs.properties.code === "string"
   ) {
     code = "EPSG:" + geoJson.crs.properties.code;
   } else if (
     isJsonObject(geoJson.crs.properties) &&
     geoJson.crs.type === "name" &&
-    geoJson.crs.properties.name
+    typeof geoJson.crs.properties.name === "string"
   ) {
     code = Reproject.crsStringToCode(geoJson.crs.properties.name);
   }
@@ -773,13 +1037,15 @@ async function reprojectToGeographic(
     }
   };
 
-  if (!Reproject.willNeedReprojecting(code)) {
+  if (!code || !Reproject.willNeedReprojecting(code)) {
     return Promise.resolve(geoJson);
   }
 
-  const needsReprojection = await makeRealPromise<boolean>(
-    Reproject.checkProjection(proj4ServiceBaseUrl, code)
-  );
+  const needsReprojection = proj4ServiceBaseUrl
+    ? await makeRealPromise<boolean>(
+        Reproject.checkProjection(proj4ServiceBaseUrl, code)
+      )
+    : false;
 
   if (needsReprojection) {
     try {
@@ -801,17 +1067,22 @@ async function reprojectToGeographic(
   }
 }
 
+type Coordinates = number[];
+
 // Reproject a point list based on the supplied crs code.
 function reprojectPointList(
   pts: Coordinates | Coordinates[],
   code?: string
 ): Coordinates | Coordinates[] {
-  if (!(pts[0] instanceof Array)) {
+  if (!code) return [];
+  if (!Array.isArray(pts[0])) {
     return Reproject.reprojectPoint(pts, code, "EPSG:4326");
   }
   const pts_out = [];
   for (let i = 0; i < pts.length; i++) {
-    pts_out.push(Reproject.reprojectPoint(pts[i], code, "EPSG:4326"));
+    const pt = pts[i];
+    if (Array.isArray(pt))
+      pts_out.push(Reproject.reprojectPoint(pt, code, "EPSG:4326"));
   }
   return pts_out;
 }
@@ -859,6 +1130,19 @@ function getRandomCssColor(cssColors: string[], name: string): string {
   const index = hashFromString(name || "") % cssColors.length;
   return cssColors[index];
 }
+
+const simpleStyleIdentifiers = [
+  "title",
+  "description",
+  "marker-size",
+  "marker-symbol",
+  "marker-color",
+  "stroke",
+  "stroke-opacity",
+  "stroke-width",
+  "fill",
+  "fill-opacity"
+];
 
 // This next function modelled on Cesium.geoJsonDataSource's defaultDescribe.
 function describeWithoutUnderscores(
@@ -1006,15 +1290,6 @@ function getPropertyValue<T>(property: Property | undefined): T | undefined {
     return undefined;
   }
   return property.getValue(JulianDate.now());
-}
-
-function unwrapSinglePropertyObject(obj: any) {
-  let name;
-  if (Object.keys(obj).length === 1) {
-    name = Object.keys(obj)[0];
-    obj = obj[name];
-  }
-  return { name, obj };
 }
 
 function isPolygonOnTerrain(polygon: PolygonGraphics, now: JulianDate) {

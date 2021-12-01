@@ -11,7 +11,6 @@
 //
 import { TFunction } from "i18next";
 import { computed, runInAction, when } from "mobx";
-import PropTypes from "prop-types";
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";

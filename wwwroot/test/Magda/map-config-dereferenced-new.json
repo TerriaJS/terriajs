@@ -1,0 +1,29 @@
+{
+  "aspects": {
+      "group": {
+          "members": [
+              {
+                  "aspects": {
+                      "terria": {
+                          "definition": {
+                              "description": "Some description",
+                              "members": [
+                                  "deeper-1",
+                                  "deeper-2"
+                              ],
+                              "name": "A dereferenced member"
+                          },
+                          "id": "mochi-new",
+                          "type": "group"
+                      }
+                  },
+                  "id": "mochi-new",
+                  "name": "A dereferenced member"
+              }
+          ]
+      }
+  },
+  "id": "map-config-dereferenced-new",
+  "name": "Terria Configuration",
+  "tenantId": 0
+}

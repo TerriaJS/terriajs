@@ -50,7 +50,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
 
   const zoomToolController = new GenericMapNavigationItemController({
     viewerMode: undefined,
-    icon: GLYPHS.plusThick
+    icon: GLYPHS.zoomIn
   });
   zoomToolController.pinned = true;
   mapNavigationModel.addItem({
@@ -138,7 +138,7 @@ export const registerMapNavigations = (viewState: ViewState) => {
     render: <CloseToolButton viewState={viewState} />,
     order: 7
   });
-  closeToolButtonController.visible = false;
+  closeToolButtonController.setVisible(false);
 
   const augmentedVirtuality = new AugmentedVirtuality(terria);
   const arController = new AugmentedVirtualityController({
