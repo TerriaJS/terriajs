@@ -1099,7 +1099,8 @@ export default class Terria {
       }
     });
 
-    // Load catalog index if catalogIndexUrl is set and it hasn't been loaded yet
+    // Create catalog index if catalogIndexUrl is set
+    // Note: this isn't loaded now, it is loaded in first CatalogSearchProvider.doSearch()
     if (this.configParameters.catalogIndexUrl && !this.catalogIndex) {
       this.catalogIndex = new CatalogIndex(
         this,

@@ -5,6 +5,7 @@ Change Log
 
 * Add an external link icon to external hyperlink when using method `parseCustomHtmlToReact`. This feature can be switched off by passing `{ disableExternalLinkIcon: true }` in `context` argument.
 * Tsify `sendFeedback.ts` and improve error messages/notifications
+* Moved `CatalogIndex` loading from constructor (called in `Terria.start`) to `CatalogSearchProvider.doSearch` - this means the index will only be loaded when the user does their first search
 * [The next improvement]
 
 #### 8.1.12

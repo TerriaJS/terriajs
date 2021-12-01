@@ -31,10 +31,20 @@ export default class CatalogIndex {
     return this._searchIndex;
   }
 
-  readonly loadPromise: Promise<void>;
+  private _loadPromise: Promise<void> | undefined;
 
-  constructor(private readonly terria: Terria, private readonly url: string) {
-    this.loadPromise = this.loadCatalogIndex();
+  constructor(private readonly terria: Terria, private readonly url: string) {}
+
+  get loadPromise() {
+    return this._loadPromise;
+  }
+
+  load() {
+    if (this._loadPromise) return this._loadPromise;
+
+    runInAction(() => (this._loadPromise = this.loadCatalogIndex()));
+
+    return this._loadPromise!;
   }
 
   /** The catalog index is loaded automatically on startup.
