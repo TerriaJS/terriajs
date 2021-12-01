@@ -191,7 +191,9 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
                 );
               });
             }
-          }
+          },
+          // Fire immediately, just in case reactions change while not observing mapItems
+          { fireImmediately: true }
         );
       }
     }
