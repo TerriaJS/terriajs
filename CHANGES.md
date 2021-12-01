@@ -9,6 +9,7 @@ Change Log
 * Add basic auth support to `generateCatalogIndex`, fix some bugs and improve performance
 * Update terria-js cesium to `1.81.2`
 * Add `uniqueId` as fallback to `nameInCatalog`
+* Remove duplicated items from `OpenDataSoftGroup` and `SocrataGroup`
 * [The next improvement]
 
 #### 8.1.12

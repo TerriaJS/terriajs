@@ -2,14 +2,15 @@ import { ApiClient, fromCatalog } from "@opendatasoft/api-client";
 import { Dataset, Facet } from "@opendatasoft/api-client/dist/client/types";
 import i18next from "i18next";
 import { action, computed, runInAction } from "mobx";
+import URI from "urijs";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import runLater from "../../../Core/runLater";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
-import { MetadataUrlTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import ModelReference from "../../../Traits/ModelReference";
+import { MetadataUrlTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import OpenDataSoftCatalogGroupTraits, {
   RefineTraits
 } from "../../../Traits/TraitsClasses/OpenDataSoftCatalogGroupTraits";
@@ -18,8 +19,8 @@ import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import OpenDataSoftCatalogItem from "../CatalogItems/OpenDataSoftCatalogItem";
 import StratumOrder from "../../Definition/StratumOrder";
+import OpenDataSoftCatalogItem from "../CatalogItems/OpenDataSoftCatalogItem";
 
 // "Valid" types which force some properties to be defined
 export type ValidDataset = Dataset & { dataset_id: string };
@@ -197,6 +198,11 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
         undefined
       );
       this.catalogGroup.terria.addModel(itemModel);
+      // Add older shareKey
+      this.catalogGroup.terria.addShareKey(
+        layerId,
+        `${this.catalogGroup.uniqueId}/${dataset.dataset_id}`
+      );
     } else {
       itemModel = existingItemModel;
     }
@@ -227,7 +233,10 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
   }
 
   getDatasetId(dataset: ValidDataset) {
-    return `${this.catalogGroup.uniqueId}/${dataset.dataset_id}`;
+    // Use OpenDataSoft server hostname for datasets, so we don't create multiple across facets
+    return `${URI(this.catalogGroup.url ?? "").hostname()}/${
+      dataset.dataset_id
+    }`;
   }
 
   getFacetId(facet: ValidFacet) {
