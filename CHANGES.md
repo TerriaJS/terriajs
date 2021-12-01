@@ -22,6 +22,8 @@ Change Log
 * Fixed `TableMixin.defaultTableStyle.legends` - `defaultTableStyle` is now not observable - it is created once in the `contructor`
 * Removed `Terria.configParameters.enableGeojsonMvt` - geojson-vt/Protomaps is now used by default
 * `GpxCatalogItem` now uses `GeojsonMixin`
+* Add an external link icon to external hyperlink when using method `parseCustomHtmlToReact`. This feature can be switched off by passing `{ disableExternalLinkIcon: true }` in `context` argument.
+* Tsify `sendFeedback.ts` and improve error messages/notifications
 * [The next improvement]
 
 #### 8.1.12
