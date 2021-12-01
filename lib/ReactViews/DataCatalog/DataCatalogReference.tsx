@@ -7,7 +7,6 @@ import { DataSourceAction } from "../../Core/AnalyticEvents/analyticEvents";
 import getPath from "../../Core/getPath";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
-import CommonStrata from "../../Models/Definition/CommonStrata";
 import Model from "../../Models/Definition/Model";
 import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
@@ -31,7 +30,6 @@ interface Props {
 export default observer(function DataCatalogReference({
   reference,
   viewState,
-  terria,
   onActionButtonClicked,
   isTopLevel
 }: Props) {
@@ -67,6 +65,17 @@ export default observer(function DataCatalogReference({
 
   const path = getPath(reference, " -> ");
 
+  let btnState: ButtonState;
+  if (reference.isLoading) {
+    btnState = ButtonState.Loading;
+  } else if (viewState.useSmallScreenInterface) {
+    btnState = ButtonState.Preview;
+  } else if (reference.isFunction) {
+    btnState = ButtonState.Stats;
+  } else {
+    btnState = ButtonState.Add;
+  }
+
   return (
     <>
       {reference.isGroup ? (
@@ -86,13 +95,7 @@ export default observer(function DataCatalogReference({
         text={reference.name || "..."}
         isPrivate={reference.isPrivate}
         title={path}
-        btnState={
-          reference.isLoadingReference
-            ? ButtonState.Loading
-            : reference.isFunction
-            ? ButtonState.Stats
-            : ButtonState.Add
-        }
+        btnState={btnState}
         onBtnClick={reference.isFunction ? setPreviewedItem : add}
       />
     </>

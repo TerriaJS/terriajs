@@ -77,19 +77,18 @@ export default observer(function DataCatalogItem({
   };
   const onTrashClicked = () => removeUserAddedData(viewState.terria, item);
 
-  const getState = () => {
-    if (item.isLoading) {
-      return ButtonState.Loading;
-    } else if (viewState.useSmallScreenInterface) {
-      return ButtonState.Preview;
-    } else if (item.terria.workbench.contains(item)) {
-      return ButtonState.Remove;
-    } else if (CatalogFunctionMixin.isMixedInto(item)) {
-      return ButtonState.Stats;
-    } else {
-      return ButtonState.Add;
-    }
-  };
+  let btnState: ButtonState;
+  if (item.isLoading) {
+    btnState = ButtonState.Loading;
+  } else if (viewState.useSmallScreenInterface) {
+    btnState = ButtonState.Preview;
+  } else if (item.terria.workbench.contains(item)) {
+    btnState = ButtonState.Remove;
+  } else if (CatalogFunctionMixin.isMixedInto(item)) {
+    btnState = ButtonState.Stats;
+  } else {
+    btnState = ButtonState.Add;
+  }
 
   return (
     <CatalogItem
@@ -98,7 +97,7 @@ export default observer(function DataCatalogItem({
       text={item.nameInCatalog!}
       isPrivate={item.isPrivate}
       title={getPath(item, " -> ")}
-      btnState={getState()}
+      btnState={btnState}
       onBtnClick={onBtnClicked}
       // All things are "removable" - meaning add and remove from workbench,
       //    but only user data is "trashable"
