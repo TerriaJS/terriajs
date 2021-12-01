@@ -35,8 +35,7 @@ export default observer(function DataCatalogReference({
   onActionButtonClicked,
   isTopLevel
 }: Props) {
-  const setPreviewedItem = () =>
-    viewState.viewCatalogMember(reference, true, CommonStrata.user);
+  const setPreviewedItem = () => viewState.viewCatalogMember(reference);
 
   const add = async (event: React.MouseEvent<HTMLButtonElement>) => {
     const keepCatalogOpen = event.shiftKey || event.ctrlKey;
@@ -52,10 +51,7 @@ export default observer(function DataCatalogReference({
       });
     }
 
-    if (
-      defined((reference as any).invoke) ||
-      viewState.useSmallScreenInterface
-    ) {
+    if (reference.isFunction || viewState.useSmallScreenInterface) {
       await setPreviewedItem();
     } else {
       await toggleItemOnMapFromCatalog(viewState, reference, keepCatalogOpen, {
