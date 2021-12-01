@@ -176,15 +176,17 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
       i < this.catalogItem.activeTableStyle.rowGroups.length;
       i++
     ) {
-      const group = this.catalogItem.activeTableStyle.rowGroups[i];
-      const dates = group[1]
-        .map(
-          row =>
-            this.catalogItem.activeTableStyle.timeColumn?.valuesAsDates.values[
-              row
-            ]
+      const [rowGroupId, rowIds] = this.catalogItem.activeTableStyle.rowGroups[
+        i
+      ];
+      // Check if there is only 1 unique date in this rowGroup
+      const dates = rowIds
+        .map(rowId =>
+          this.catalogItem.activeTableStyle.timeColumn?.valuesAsDates.values[
+            rowId
+          ]?.getTime()
         )
-        .filter(date => date) as Date[];
+        .filter(isDefined);
       if (uniq(dates).length <= 1) flat++;
     }
 

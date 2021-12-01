@@ -479,7 +479,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
             };
           }),
         selectedId: this.activeStyle,
-        allowUndefined: this.showDisableStyleOption ? true : undefined,
+        allowUndefined: this.showDisableStyleOption,
         undefinedLabel: this.showDisableStyleOption
           ? i18next.t("models.tableData.styleDisabledLabel")
           : undefined,
