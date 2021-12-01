@@ -195,12 +195,16 @@ To generate the catalog index:
   - `config-url` is URL to client-side-config file
   - `base-url` is URL to terriajs-server (this is used to load `server-config` and to proxy requests)
   - For example `node .\build\generateCatalogIndex.js http://localhost:3001/config.json http://localhost:3001`
-- This will output two files
+
+- This will output three files
   - `catalog-index.json`
   - `catalog-index-errors.json` with any error messages which occurred while loading catalog members
-- Set `catalogIndexUrl` config parameter
+  - `catalog-index-errors-stack.json` with errors stack
+- Set `catalogIndexUrl` config parameter to URL to `catalog-index.json`
 
 This file will have to be re-generated manually every time the catalog structure changes - for example:
 
 - if items are renamed, or moved
 - dynamic groups are updated (for example, WMS server publishes new layers)
+
+For more details see [/buildprocess/generateCatalogIndex.ts](/buildprocess/generateCatalogIndex.ts)
