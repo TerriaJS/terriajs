@@ -53,16 +53,18 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      * The default {@link TableStyle}, which is used for styling
      * only when there are no styles defined.
      */
-    private readonly defaultTableStyle: TableStyle;
+    readonly defaultTableStyle: TableStyle;
 
     constructor(...args: any[]) {
       super(...args);
 
-      const tableStyle = new TableStyle(this, -1);
-      tableStyle.colorTraits.setTrait(
-        CommonStrata.defaults,
-        "legend",
-        new ColorStyleLegend(this, -1)
+      const tableStyle = new TableStyle(this);
+      runInAction(() =>
+        tableStyle.colorTraits.setTrait(
+          CommonStrata.defaults,
+          "legend",
+          new ColorStyleLegend(this, undefined)
+        )
       );
       this.defaultTableStyle = tableStyle;
     }

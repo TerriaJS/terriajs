@@ -29,13 +29,15 @@ const DEFAULT_FINAL_DURATION_SECONDS = 3600 * 24 - 1; // one day less a second, 
  * A style controlling how tabular data is displayed.
  */
 export default class TableStyle {
-  readonly styleNumber: number;
-  readonly tableModel: TableMixin.Instance;
-
-  constructor(tableModel: TableMixin.Instance, styleNumber: number) {
-    this.styleNumber = styleNumber;
-    this.tableModel = tableModel;
-  }
+  /**
+   *
+   * @param tableModel TableMixin catalog memeber
+   * @param styleNumber Index of column in tablemodel (if undefined, then default style will be used)
+   */
+  constructor(
+    readonly tableModel: TableMixin.Instance,
+    readonly styleNumber?: number | undefined
+  ) {}
 
   /** Is style ready to be used.
    * This will be false if any of dependent columns are not ready
@@ -94,7 +96,7 @@ export default class TableStyle {
   @computed
   get styleTraits(): Model<TableStyleTraits> {
     if (
-      this.styleNumber >= 0 &&
+      isDefined(this.styleNumber) &&
       this.styleNumber < this.tableModel.styles.length
     ) {
       const result = createCombinedModel(
