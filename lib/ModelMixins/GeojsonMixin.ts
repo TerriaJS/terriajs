@@ -619,30 +619,54 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
     @computed
     get stylesWithDefaults() {
+      const defaults = {
+        markerSize: 20,
+        markerColor: getRandomCssColor(this.name ?? ""),
+        stroke: getColor(this.terria.baseMapContrastColor),
+        polygonStroke: getColor(this.terria.baseMapContrastColor),
+        polylineStroke: getRandomCssColor(this.name ?? ""),
+        markerStrokeWidth: 1,
+        polylineStrokeWidth: 2,
+        polygonStrokeWidth: 1,
+        fill: getRandomCssColor((this.name ?? "") + " fill"),
+        fillAlpha: 0.75
+      };
+
+      const defaultColor = (
+        colString: string | undefined,
+        defaultColor: Color
+      ) => (colString ? getColor(colString) : defaultColor);
+
       const options = {
         describe: describeWithoutUnderscores,
-        markerSize: parseMarkerSize(this.style["marker-size"]) ?? 20,
+        markerSize:
+          parseMarkerSize(this.style["marker-size"]) ?? defaults.markerSize,
         markerSymbol: this.style["marker-symbol"], // and undefined if none
-        markerColor: defaultColor(this.style["marker-color"], this.name ?? ""),
-        stroke: getColor(this.style.stroke ?? this.terria.baseMapContrastColor),
-        polygonStroke: getColor(
-          this.style.stroke ?? this.terria.baseMapContrastColor
+        markerColor: defaultColor(
+          this.style["marker-color"],
+          defaults.markerColor
         ),
-        polylineStroke: defaultColor(this.style.stroke, this.name || ""),
-        strokeWidth: this.style["stroke-width"] ?? 2,
-
+        stroke: defaultColor(this.style.stroke, defaults.stroke),
+        polygonStroke: defaultColor(this.style.stroke, defaults.polygonStroke),
+        polylineStroke: defaultColor(
+          this.style.stroke,
+          defaults.polylineStroke
+        ),
         // Note these specific stroke widths are only used for geojson-vt
         markerStrokeWidth:
-          this.style["marker-stroke-width"] ?? this.style["stroke-width"] ?? 1,
+          this.style["marker-stroke-width"] ??
+          this.style["stroke-width"] ??
+          defaults.markerStrokeWidth,
         polylineStrokeWidth:
           this.style["polyline-stroke-width"] ??
           this.style["stroke-width"] ??
-          2,
+          defaults.polylineStrokeWidth,
         polygonStrokeWidth:
-          this.style["polygon-stroke-width"] ?? this.style["stroke-width"] ?? 1,
-
+          this.style["polygon-stroke-width"] ??
+          this.style["stroke-width"] ??
+          defaults.polygonStrokeWidth,
         markerOpacity: this.style["marker-opacity"], // not in SimpleStyle spec or supported by Cesium but see below
-        fill: defaultColor(this.style.fill, (this.name || "") + " fill"),
+        fill: defaultColor(this.style.fill, defaults.fill),
         clampToGround: this.clampToGround,
         markerUrl: this.style["marker-url"] // not in SimpleStyle spec but gives an alternate to maki marker symbols
           ? proxyCatalogItemUrl(this, this.style["marker-url"])
@@ -659,7 +683,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       if (isDefined(this.style["fill-opacity"])) {
         options.fill.alpha = this.style["fill-opacity"];
       } else {
-        options.fill.alpha = 0.75;
+        options.fill.alpha = defaults.fillAlpha;
       }
 
       return toJS(options);
@@ -757,7 +781,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               ) ?? styles.markerSize / 2
             ),
             outlineWidth: new ConstantProperty(
-              properties?.["stroke-width"]?.getValue() ?? styles.strokeWidth
+              properties?.["stroke-width"]?.getValue() ??
+                styles.markerStrokeWidth
             ),
             outlineColor: new ConstantProperty(
               getColor(properties?.stroke?.getValue() ?? styles.polygonStroke)
@@ -1128,9 +1153,14 @@ function filterArray(
 /**
  * Get a random color for the data based on the passed string (usually dataset name).
  */
-function getRandomCssColor(cssColors: string[], name: string): string {
-  const index = hashFromString(name || "") % cssColors.length;
-  return cssColors[index];
+function getRandomCssColor(
+  name: string,
+  cssColors: string[] = StandardCssColors.highContrast
+) {
+  const index = hashFromString(name) % cssColors.length;
+  const color = Color.fromCssColorString(cssColors[index]);
+  color.alpha = 1;
+  return color;
 }
 
 const simpleStyleIdentifiers = [
@@ -1306,18 +1336,6 @@ function isPolygonOnTerrain(polygon: PolygonGraphics, now: JulianDate) {
     polygon.height && polygon.height.getValue(now) !== undefined;
 
   return isClamped || (!hasPerPositionHeight && !hasPolygonHeight);
-}
-
-function defaultColor(colorString: string | undefined, name: string): Color {
-  if (colorString === undefined) {
-    const color = Color.fromCssColorString(
-      getRandomCssColor(StandardCssColors.highContrast, name)
-    );
-    color.alpha = 1;
-    return color;
-  } else {
-    return Color.fromCssColorString(colorString) ?? Color.GRAY;
-  }
 }
 
 export function getColor(color: String | string | Color): Color {
