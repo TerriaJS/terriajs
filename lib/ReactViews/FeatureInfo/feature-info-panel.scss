@@ -7,10 +7,6 @@
   border-radius: $radius-small;
   display: none;
 
-  svg {
-    fill: $feature-info-color;
-  }
-
   a {
     @include link($feature-info-bg);
   }

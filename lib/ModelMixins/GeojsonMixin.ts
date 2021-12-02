@@ -111,6 +111,10 @@ class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
   get opacity() {
     return 1;
   }
+
+  get showDisableStyleOption() {
+    return true;
+  }
 }
 
 StratumOrder.addLoadStratum(GeoJsonStratum.stratumName);
@@ -177,7 +181,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             this.activeTableStyle.timeIntervals,
             this.activeTableStyle,
             this.activeTableStyle.colorMap,
-            this.style
+            this.stylesWithDefaults
           ],
           () => {
             if (this._imageryProvider && this.readyData && this.useMvt) {
@@ -187,7 +191,9 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
                 );
               });
             }
-          }
+          },
+          // Fire immediately, just in case reactions change while not observing mapItems
+          { fireImmediately: true }
         );
       }
     }
@@ -286,10 +292,9 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     get useMvt() {
       return (
         !this.forceCesiumPrimitives &&
-        this.terria.configParameters.enableGeojsonMvt &&
         !isDefined(this.czmlTemplate) &&
-        !isDefined(this.stylesWithDefaults().markerSymbol) &&
-        !isDefined(this.stylesWithDefaults().markerUrl) &&
+        !isDefined(this.stylesWithDefaults.markerSymbol) &&
+        !isDefined(this.stylesWithDefaults.markerUrl) &&
         !isDefined(this.timeProperty) &&
         !isDefined(this.heightProperty) &&
         (!isDefined(this.perPropertyStyles) ||
@@ -320,7 +325,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
      * - CZML:
      *    - if `czmlTemplate` is defined (see `GeoJsonTraits.czmlTemplate`)
      * - Mapbox vector tiles (through geojson-vt and protomaps.js)
-     *    - if `Terria.configParameters.enableGeojsonMvt = true` and not using unsupported traits (see below)
+     *    - Will be used by default, if not using unsupported traits (see below)
      * - Cesium primitives if:
      *    - `GeoJsonTraits.forceCesiumPrimitives = true`
      *    - Using `timeProperty` or `heightProperty` or `perPropertyStyles` or simple-style `marker-symbol`
@@ -424,8 +429,6 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
     @action
     private createProtomapsImageryProvider(geoJson: FeatureCollectionWithCrs) {
-      const defaultStyles = this.stylesWithDefaults();
-
       let currentTimeRows: number[] | undefined;
 
       // If time varying, get row indices which match
@@ -494,7 +497,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new PolygonSymbolizer({
-              fill: getValue(defaultStyles.fill.toCssColorString())
+              fill: getValue(this.stylesWithDefaults.fill.toCssColorString())
             }),
             minzoom: 0,
             maxzoom: Infinity,
@@ -507,12 +510,12 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             }
           },
           // Polygon stroke (hide if 0)
-          defaultStyles.polygonStrokeWidth !== 0
+          this.stylesWithDefaults.polygonStrokeWidth !== 0
             ? {
                 dataLayer: GEOJSON_SOURCE_LAYER_NAME,
                 symbolizer: new LineSymbolizer({
-                  color: defaultStyles.polygonStroke.toCssColorString(),
-                  width: defaultStyles.polygonStrokeWidth
+                  color: this.stylesWithDefaults.polygonStroke.toCssColorString(),
+                  width: this.stylesWithDefaults.polygonStrokeWidth
                 }),
                 minzoom: 0,
                 maxzoom: Infinity,
@@ -526,14 +529,14 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               }
             : undefined,
           // Line stroke (hide if 0)
-          defaultStyles.polylineStrokeWidth !== 0
+          this.stylesWithDefaults.polylineStrokeWidth !== 0
             ? {
                 dataLayer: GEOJSON_SOURCE_LAYER_NAME,
                 symbolizer: new LineSymbolizer({
                   color: getValue(
-                    defaultStyles.polylineStroke.toCssColorString()
+                    this.stylesWithDefaults.polylineStroke.toCssColorString()
                   ),
-                  width: defaultStyles.polylineStrokeWidth
+                  width: this.stylesWithDefaults.polylineStrokeWidth
                 }),
                 minzoom: 0,
                 maxzoom: Infinity,
@@ -550,11 +553,13 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           {
             dataLayer: GEOJSON_SOURCE_LAYER_NAME,
             symbolizer: new CircleSymbolizer({
-              radius: Math.round(defaultStyles.markerSize / 5),
-              fill: getValue(defaultStyles.markerColor.toCssColorString()),
-              width: defaultStyles.markerStrokeWidth,
-              stroke: defaultStyles.stroke.toCssColorString(),
-              opacity: defaultStyles.markerOpacity
+              radius: Math.round(this.stylesWithDefaults.markerSize / 5),
+              fill: getValue(
+                this.stylesWithDefaults.markerColor.toCssColorString()
+              ),
+              width: this.stylesWithDefaults.markerStrokeWidth,
+              stroke: this.stylesWithDefaults.stroke.toCssColorString(),
+              opacity: this.stylesWithDefaults.markerOpacity
             }),
             minzoom: 0,
             maxzoom: Infinity,
@@ -614,50 +619,73 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return CzmlDataSource.load(rootCzml);
     }
 
-    /** Note, this is not reactive
-     * To re-style geoJSON you will need to call `loadMapItems` again
-     */
-    @action
-    private stylesWithDefaults() {
-      const style = this.style;
+    @computed
+    get stylesWithDefaults() {
+      const defaults = {
+        markerSize: 20,
+        markerColor: getRandomCssColor(this.name ?? ""),
+        stroke: getColor(this.terria.baseMapContrastColor),
+        polygonStroke: getColor(this.terria.baseMapContrastColor),
+        polylineStroke: getRandomCssColor(this.name ?? ""),
+        markerStrokeWidth: 1,
+        polylineStrokeWidth: 2,
+        polygonStrokeWidth: 1,
+        fill: getRandomCssColor((this.name ?? "") + " fill"),
+        fillAlpha: 0.75
+      };
+
+      const defaultColor = (
+        colString: string | undefined,
+        defaultColor: Color
+      ) => (colString ? getColor(colString) : defaultColor);
 
       const options = {
         describe: describeWithoutUnderscores,
-        markerSize: parseMarkerSize(style["marker-size"]) ?? 20,
-        markerSymbol: style["marker-symbol"], // and undefined if none
-        markerColor: defaultColor(style["marker-color"], this.name ?? ""),
-        stroke: getColor(style.stroke ?? "#000000"),
-        polygonStroke: getColor(style.stroke ?? "#000000"),
-        polylineStroke: defaultColor(style.stroke, this.name || ""),
-        strokeWidth: style["stroke-width"] ?? 2,
-
+        markerSize:
+          parseMarkerSize(this.style["marker-size"]) ?? defaults.markerSize,
+        markerSymbol: this.style["marker-symbol"], // and undefined if none
+        markerColor: defaultColor(
+          this.style["marker-color"],
+          defaults.markerColor
+        ),
+        stroke: defaultColor(this.style.stroke, defaults.stroke),
+        polygonStroke: defaultColor(this.style.stroke, defaults.polygonStroke),
+        polylineStroke: defaultColor(
+          this.style.stroke,
+          defaults.polylineStroke
+        ),
         // Note these specific stroke widths are only used for geojson-vt
         markerStrokeWidth:
-          style["marker-stroke-width"] ?? style["stroke-width"] ?? 1,
+          this.style["marker-stroke-width"] ??
+          this.style["stroke-width"] ??
+          defaults.markerStrokeWidth,
         polylineStrokeWidth:
-          style["polyline-stroke-width"] ?? style["stroke-width"] ?? 2,
+          this.style["polyline-stroke-width"] ??
+          this.style["stroke-width"] ??
+          defaults.polylineStrokeWidth,
         polygonStrokeWidth:
-          style["polygon-stroke-width"] ?? style["stroke-width"] ?? 1,
-
-        markerOpacity: style["marker-opacity"], // not in SimpleStyle spec or supported by Cesium but see below
-        fill: defaultColor(style.fill, (this.name || "") + " fill"),
+          this.style["polygon-stroke-width"] ??
+          this.style["stroke-width"] ??
+          defaults.polygonStrokeWidth,
+        markerOpacity: this.style["marker-opacity"], // not in SimpleStyle spec or supported by Cesium but see below
+        fill: defaultColor(this.style.fill, defaults.fill),
         clampToGround: this.clampToGround,
-        markerUrl: style["marker-url"] // not in SimpleStyle spec but gives an alternate to maki marker symbols
-          ? proxyCatalogItemUrl(this, style["marker-url"])
+        markerUrl: this.style["marker-url"] // not in SimpleStyle spec but gives an alternate to maki marker symbols
+          ? proxyCatalogItemUrl(this, this.style["marker-url"])
           : undefined,
         credit: this.attribution
       };
 
-      if (isDefined(style["stroke-opacity"])) {
-        options.stroke.alpha = style["stroke-opacity"];
-        options.polygonStroke.alpha = style["stroke-opacity"];
-        options.polylineStroke.alpha = style["stroke-opacity"];
+      if (isDefined(this.style["stroke-opacity"])) {
+        options.stroke.alpha = this.style["stroke-opacity"];
+        options.polygonStroke.alpha = this.style["stroke-opacity"];
+        options.polylineStroke.alpha = this.style["stroke-opacity"];
       }
 
-      if (isDefined(style["fill-opacity"])) {
-        options.fill.alpha = style["fill-opacity"];
+      if (isDefined(this.style["fill-opacity"])) {
+        options.fill.alpha = this.style["fill-opacity"];
       } else {
-        options.fill.alpha = 0.75;
+        options.fill.alpha = defaults.fillAlpha;
       }
 
       return toJS(options);
@@ -678,8 +706,10 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
       const now = JulianDate.now();
 
+      const styles = runInAction(() => this.stylesWithDefaults);
+
       const dataSource = await makeRealPromise<GeoJsonDataSource>(
-        GeoJsonDataSource.load(geoJson, this.stylesWithDefaults())
+        GeoJsonDataSource.load(geoJson, styles)
       );
       const entities = dataSource.entities;
       for (let i = 0; i < entities.values.length; ++i) {
@@ -712,8 +742,6 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
             ]);
           }
         }
-
-        const styles = this.stylesWithDefaults();
 
         // Billboard
         if (isDefined(entity.billboard) && isDefined(styles.markerUrl)) {
@@ -755,7 +783,8 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
               ) ?? styles.markerSize / 2
             ),
             outlineWidth: new ConstantProperty(
-              properties?.["stroke-width"]?.getValue() ?? styles.strokeWidth
+              properties?.["stroke-width"]?.getValue() ??
+                styles.markerStrokeWidth
             ),
             outlineColor: new ConstantProperty(
               getColor(properties?.stroke?.getValue() ?? styles.polygonStroke)
@@ -1126,9 +1155,14 @@ function filterArray(
 /**
  * Get a random color for the data based on the passed string (usually dataset name).
  */
-function getRandomCssColor(cssColors: string[], name: string): string {
-  const index = hashFromString(name || "") % cssColors.length;
-  return cssColors[index];
+function getRandomCssColor(
+  name: string,
+  cssColors: string[] = StandardCssColors.highContrast
+) {
+  const index = hashFromString(name) % cssColors.length;
+  const color = Color.fromCssColorString(cssColors[index]);
+  color.alpha = 1;
+  return color;
 }
 
 const simpleStyleIdentifiers = [
@@ -1306,19 +1340,7 @@ function isPolygonOnTerrain(polygon: PolygonGraphics, now: JulianDate) {
   return isClamped || (!hasPerPositionHeight && !hasPolygonHeight);
 }
 
-function defaultColor(colorString: string | undefined, name: string): Color {
-  if (colorString === undefined) {
-    const color = Color.fromCssColorString(
-      getRandomCssColor(StandardCssColors.highContrast, name)
-    );
-    color.alpha = 1;
-    return color;
-  } else {
-    return Color.fromCssColorString(colorString) ?? Color.GRAY;
-  }
-}
-
-function getColor(color: String | string | Color): Color {
+export function getColor(color: String | string | Color): Color {
   if (typeof color === "string" || color instanceof String) {
     return Color.fromCssColorString(color.toString()) ?? Color.GRAY;
   } else {

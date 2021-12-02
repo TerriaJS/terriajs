@@ -205,9 +205,6 @@ interface ConfigParameters {
 
   disablePedestrianMode?: boolean;
 
-  /** Feature flag for experimental Geojson-Mapbox vector tiles. If falsy, all GeoJsonMixin items will render cesium primitives. If truthy, geojson-vt will be used to tile GeoJson into Mapbox vector-tiles */
-  enableGeojsonMvt?: boolean;
-
   experimentalFeatures?: boolean;
   magdaReferenceHeaders?: MagdaReferenceHeaders;
   locationSearchBoundingBox?: number[];
@@ -431,7 +428,6 @@ export default class Terria {
     disableMyLocation: undefined,
     disableSplitter: undefined,
     disablePedestrianMode: false,
-    enableGeojsonMvt: false,
     experimentalFeatures: undefined,
     magdaReferenceHeaders: undefined,
     locationSearchBoundingBox: undefined,
@@ -483,7 +479,16 @@ export default class Terria {
   @observable
   mapInteractionModeStack: MapInteractionMode[] = [];
 
-  baseMapContrastColor: string = "#ffffff";
+  @computed
+  get baseMapContrastColor() {
+    return (
+      this.baseMapsModel.baseMapItems.find(
+        basemap =>
+          isDefined(basemap.item?.uniqueId) &&
+          basemap.item?.uniqueId === this.mainViewer.baseMap?.uniqueId
+      )?.contrastColor ?? "#ffffff"
+    );
+  }
 
   @observable
   readonly userProperties = new Map<string, any>();
@@ -1105,7 +1110,8 @@ export default class Terria {
       }
     });
 
-    // Load catalog index if catalogIndexUrl is set and it hasn't been loaded yet
+    // Create catalog index if catalogIndexUrl is set
+    // Note: this isn't loaded now, it is loaded in first CatalogSearchProvider.doSearch()
     if (this.configParameters.catalogIndexUrl && !this.catalogIndex) {
       this.catalogIndex = new CatalogIndex(
         this,

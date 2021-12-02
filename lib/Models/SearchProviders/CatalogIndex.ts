@@ -1,5 +1,5 @@
 import { Document } from "flexsearch";
-import { action, runInAction } from "mobx";
+import { action, runInAction, observable } from "mobx";
 import loadJson from "../../Core/loadJson";
 import CatalogIndexReferenceTraits from "../../Traits/TraitsClasses/CatalogIndexReferenceTraits";
 import CatalogIndexReference from "../Catalog/CatalogReferences/CatalogIndexReference";
@@ -31,10 +31,21 @@ export default class CatalogIndex {
     return this._searchIndex;
   }
 
-  readonly loadPromise: Promise<void>;
+  @observable
+  private _loadPromise: Promise<void> | undefined;
 
-  constructor(private readonly terria: Terria, private readonly url: string) {
-    this.loadPromise = this.loadCatalogIndex();
+  constructor(private readonly terria: Terria, private readonly url: string) {}
+
+  get loadPromise() {
+    return this._loadPromise;
+  }
+
+  load() {
+    if (this._loadPromise) return this._loadPromise;
+
+    runInAction(() => (this._loadPromise = this.loadCatalogIndex()));
+
+    return this._loadPromise!;
   }
 
   /** The catalog index is loaded automatically on startup.

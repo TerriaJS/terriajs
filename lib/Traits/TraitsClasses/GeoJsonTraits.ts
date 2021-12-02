@@ -61,7 +61,7 @@ export class GeoJsonTraits extends mixTraits(
     type: "boolean",
     name: "Disable table style",
     description:
-      "If true, all table styling will be disabled. This only applies to geojson-vt/protomaps (see `terria.configParameters.enableGeojsonMvt` and `forceCesiumPrimitives`). It disabled, `style` rules will be used instead"
+      "If true, all table styling will be disabled. This only applies to geojson-vt/protomaps (see `forceCesiumPrimitives`). It disabled, `style` rules will be used instead"
   })
   disableTableStyle: boolean = false;
 
@@ -77,7 +77,7 @@ export class GeoJsonTraits extends mixTraits(
     type: "boolean",
     name: "Force cesium primitives",
     description:
-      "Force rendering GeoJSON features as Cesium primitives. This will be true if you are using `perPropertyStyles`, `timeProperty`, `heightProperty` or `czmlTemplate`. If undefined, it will look at terria.configParameters.enableGeojsonMvt"
+      "Force rendering GeoJSON features as Cesium primitives. This will be true if you are using `perPropertyStyles`, `timeProperty`, `heightProperty` or `czmlTemplate`. If undefined, geojson-vt/protomaps will be used"
   })
   forceCesiumPrimitives?: boolean;
 

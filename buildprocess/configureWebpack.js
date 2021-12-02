@@ -89,7 +89,8 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
             path.resolve(terriaJSBasePath, 'lib'),
             path.resolve(terriaJSBasePath, 'test'),
             path.resolve(terriaJSBasePath, 'buildprocess', 'generateDocs.ts'),
-            path.resolve(terriaJSBasePath, 'buildprocess', 'generateCatalogIndex.ts')
+            path.resolve(terriaJSBasePath, 'buildprocess', 'generateCatalogIndex.ts'),
+            path.resolve(terriaJSBasePath, 'buildprocess', 'patchNetworkRequests.ts')
         ],
         use: [
             {

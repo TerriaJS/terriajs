@@ -66,7 +66,7 @@ describe("CatalogIndex", function() {
     await terria.applyInitData({ initData: testInit as JsonObject });
 
     catalogIndex = new CatalogIndex(terria, "catalog-index.json");
-    await catalogIndex.loadPromise;
+    await catalogIndex.load();
   });
 
   afterEach(function() {

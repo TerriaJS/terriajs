@@ -23,7 +23,9 @@
 # Unignore new files
 !buildprocess/
 !buildprocess/webpack-tools.config.js
-!buildprocess/generateDocs.js
+!buildprocess/generateDocs.ts
+!buildprocess/generateCatalogIndex.ts
+!buildprocess/patchNetworkRequests.ts
 
 !wwwroot
 !wwwroot/test
