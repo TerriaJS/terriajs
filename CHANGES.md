@@ -2,11 +2,10 @@ Change Log
 ==========
 
 #### next release (8.1.13)
-
+* Paramerterised the support email on the help panel to use the support email in config
 * Refactored `TableColumn get type()` to move logic into `guessColumnTypeFromValues()`
 * `TableMixin.activeStyle` will set `TableColumnType = hidden` for `scalar` columns with name `"id"`, `"_id_"` or `"fid"`
 * Fix bug `TableColumn.type = scalar` even if there were no values.
-* Treat `TableColumnType.height` as `scalar` until we actually do something with the height data.
 * Table columns named `"easting"` and `"northing"` are now hidden by default from styles
 * `TableColumn.type = enum` requires at least 2 unique values (including null) to be selected by default
 * Tweak automatic `TableColumn.type = Enum` for wider range of values

@@ -417,7 +417,7 @@
     "takeTour": "操作方法を見る",
     "dismissText": "閉じる",
     "promptMessage": "ツアー、使い方のビデオなどのヘルプコンテンツがあります",
-    "menuPaneBody": "各種メニューの使い方は「操作方法を見る」からご確認ください。技術的な質問については、[info@terria.io](mailto:info@terria.io)で開発チームにご連絡ください",
+    "menuPaneBody": "各種メニューの使い方は「操作方法を見る」からご確認ください。技術的な質問については、[{{supportEmail}}]({{supportEmail}})で開発チームにご連絡ください",
     "mapUserGuide": "マップユーザーガイド",
     "btnText": "ヘルプ"
   },
