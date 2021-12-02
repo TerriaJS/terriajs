@@ -624,7 +624,8 @@
     "remove": "Remove",
     "add": "Add",
     "trash": "Remove from catalogue",
-    "removeFromMap": "Remove from map"
+    "removeFromMap": "Remove from map",
+    "preview": "Preview"
   },
   "chart": {
     "sectionLabel": "Charts",
