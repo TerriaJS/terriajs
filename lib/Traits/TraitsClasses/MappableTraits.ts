@@ -118,7 +118,7 @@ export default class MappableTraits extends mixTraits(AttributionTraits) {
     description:
       "Zoom to dataset when added to workbench. Doesn't work if `disableZoomTo` is true."
   })
-  zoomOnEnable: boolean = false;
+  zoomOnAddToWorkbench: boolean = false;
 
   @primitiveTrait({
     type: "boolean",

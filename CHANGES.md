@@ -3,7 +3,7 @@ Change Log
 
 #### next release (8.1.2)
 
-* Reimplement option to zoom on item when adding it to workbench, `zoomOnEnable`
+* Reimplement option to zoom on item when adding it to workbench, `zoomOnAddToWorkbench`
   is added to `MappableTraits`.
 #### next release (8.1.13)
 * Paramerterised the support email on the help panel to use the support email in config
