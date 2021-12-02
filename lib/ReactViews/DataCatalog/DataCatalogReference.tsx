@@ -88,16 +88,17 @@ export default observer(function DataCatalogReference({
           loading={reference.isLoadingReference}
           open={reference.isLoadingReference}
         />
-      ) : null}
-      <CatalogItem
-        onTextClick={setPreviewedItem}
-        selected={isSelected}
-        text={reference.name || "..."}
-        isPrivate={reference.isPrivate}
-        title={path}
-        btnState={btnState}
-        onBtnClick={reference.isFunction ? setPreviewedItem : add}
-      />
+      ) : (
+        <CatalogItem
+          onTextClick={setPreviewedItem}
+          selected={isSelected}
+          text={reference.name || "..."}
+          isPrivate={reference.isPrivate}
+          title={path}
+          btnState={btnState}
+          onBtnClick={reference.isFunction ? setPreviewedItem : add}
+        />
+      )}
     </>
   );
 });
