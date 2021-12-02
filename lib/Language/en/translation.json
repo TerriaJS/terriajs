@@ -1578,22 +1578,5 @@
   },
   "toast": {
     "mapIsZooming": "Loading ideal zoom..."
-  },
-  "eComplyCatalogItem": {
-    "apiErrors": {
-      "title": "EComply API request failed.",
-      "httpError": "HTTP error.",
-      "invalidApiResponse": "Failed to parse response from EComply API."
-    }
-  },
-  "cesiumExtraCredits": {
-    "attribution": {
-      "link": "/about#data-attribution",
-      "text": "Data attribution"
-    },
-    "disclaimer": {
-      "link": "/about#terms---conditions",
-      "text": "Terms & Conditions"
-    }
   }
 }
