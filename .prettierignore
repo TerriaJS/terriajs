@@ -25,6 +25,7 @@
 !buildprocess/webpack-tools.config.js
 !buildprocess/generateDocs.ts
 !buildprocess/generateCatalogIndex.ts
+!buildprocess/patchNetworkRequests.ts
 
 !wwwroot
 !wwwroot/test
