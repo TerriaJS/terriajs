@@ -372,7 +372,7 @@ export default class Terria {
   );
 
   appName: string = "TerriaJS App";
-  supportEmail: string = "support@terria.io";
+  supportEmail: string = "info@terria.io";
 
   /**
    * Gets or sets the {@link this.corsProxy} used to determine if a URL needs to be proxied and to proxy it if necessary.
