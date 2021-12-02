@@ -16,6 +16,17 @@ import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
 const naturalSort = require("javascript-natural-sort");
 naturalSort.insensitive = true;
 
+type TypeHintSet = {
+  /** RegEx to match column name */
+  hint: RegExp;
+  /** TableColumnType to use if match is found */
+  type: TableColumnType;
+  /** Only match for columns which have `guessColumnTypeFromValues() === typeFromValues`.
+   * If undefined, it will accept all types
+   */
+  typeFromValues?: TableColumnType;
+}[];
+
 export interface ColumnValuesAsNumbers {
   readonly values: ReadonlyArray<number | null>;
   readonly minimum: number | undefined;
@@ -592,7 +603,16 @@ export default class TableColumn {
     return (
       this.tableModel.columnTitles[this.columnNumber] ??
       this.traits.title ??
+      // If no title set, use `name` and:
+      // - un-camel case
+      // - remove underscores
+      // - capitalise
       this.name
+        .replace(/[A-Z][a-z]/g, letter => ` ${letter.toLowerCase()}`)
+        .replace(/_/g, " ")
+        .trim()
+        .toLowerCase()
+        .replace(/(^\w|\s\w)/g, m => m.toUpperCase())
     );
   }
 
@@ -633,50 +653,23 @@ export default class TableColumn {
   get type(): TableColumnType {
     // Use the explicit column type, if any.
     let type: TableColumnType | undefined;
-    if (this.traits.type !== undefined) {
+    if (
+      this.traits.type !== undefined &&
+      stringToTableColumnType(this.traits.type)
+    ) {
       type = stringToTableColumnType(this.traits.type);
     }
 
-    if (type === undefined && this.regionType !== undefined) {
-      type = TableColumnType.region;
+    if (type) {
+      return type;
+    } else if (this.regionType !== undefined) {
+      return TableColumnType.region;
     }
 
-    if (type === undefined) {
-      type = this.guessColumnTypeFromName(this.name);
-    }
-
-    if (type === undefined) {
-      // No hints from the name, so this column is: a scalar (number), an
-      // enumeration, or arbitrary text (e.g. a description).
-
-      // We'll treat it as a scalar if _most_ of values can be successfully
-      // parsed as numbers, i.e. the number of successful parsings is ~10x
-      // the number of failed parsings. Note that replacements with null
-      // or zero are counted as neither failed nor successful.
-
-      if (
-        this.valuesAsNumbers.numberOfNonNumbers <=
-        Math.ceil(this.valuesAsNumbers.numberOfValidNumbers * 0.1)
-      ) {
-        type = TableColumnType.scalar;
-      } else {
-        // Lots of strings that can't be parsed as numbers.
-        // If there are relatively few different values, treat it as an enumeration.
-        // If there are heaps of different values, treat it as just ordinary
-        // free-form text.
-        const uniqueValues = this.uniqueValues.values;
-        if (
-          uniqueValues.length <= 7 ||
-          uniqueValues.length < this.values.length / 10
-        ) {
-          type = TableColumnType.enum;
-        } else {
-          type = TableColumnType.text;
-        }
-      }
-    }
-
-    return type;
+    return (
+      this.guessColumnTypeFromName(this.name) ??
+      this.guessColumnTypeFromValues()
+    );
   }
 
   @computed
@@ -822,20 +815,85 @@ export default class TableColumn {
     return nullFunction;
   }
 
+  private guessColumnTypeFromValues(): TableColumnType {
+    let type: TableColumnType | undefined;
+
+    // We'll treat it as a scalar if _most_ of values can be successfully
+    // parsed as numbers, i.e. the number of successful parsings is ~10x
+    // the number of failed parsings. Note that replacements with null
+    // or zero are counted as neither failed nor successful.
+
+    // We need more than 1 number to create a `scalar` column
+    if (
+      this.valuesAsNumbers.numberOfValidNumbers > 1 &&
+      this.valuesAsNumbers.numberOfNonNumbers <=
+        Math.ceil(this.valuesAsNumbers.numberOfValidNumbers * 0.1)
+    ) {
+      type = TableColumnType.scalar;
+    } else {
+      // Lots of strings that can't be parsed as numbers.
+      // If there are relatively few different values, treat it as an enumeration.
+      // If there are heaps of different values, treat it as just ordinary
+      // free-form text.
+      const uniqueValues = this.uniqueValues.values;
+      if (
+        // We need more than 1 unique value (including nulls)
+        (this.uniqueValues.numberOfNulls ? 1 : 0) + uniqueValues.length > 1 &&
+        (uniqueValues.length <= 7 ||
+          // The number of unique values is less than 12% of total number of values
+          // Or, each value in the column exists 8.33 times on average
+          uniqueValues.length < this.values.length * 0.12)
+      ) {
+        type = TableColumnType.enum;
+      } else {
+        type = TableColumnType.text;
+      }
+    }
+    return type;
+  }
+
   private guessColumnTypeFromName(name: string): TableColumnType | undefined {
-    const typeHintSet = [
+    const typeHintSet: TypeHintSet = [
       { hint: /^(lon|long|longitude|lng)$/i, type: TableColumnType.longitude },
       { hint: /^(lat|latitude)$/i, type: TableColumnType.latitude },
+      // Hide easting column if scalar
+      {
+        hint: /^(easting|eastings)$/i,
+        type: TableColumnType.hidden,
+        typeFromValues: TableColumnType.scalar
+      },
+      // Hide northing column if scalar
+      {
+        hint: /^(northing|northings)$/i,
+        type: TableColumnType.hidden,
+        typeFromValues: TableColumnType.scalar
+      },
+      // Hide ID columns if they are scalar
+      {
+        hint: /^(_id_|id|fid|objectid)$/i,
+        type: TableColumnType.hidden,
+        typeFromValues: TableColumnType.scalar
+      },
       { hint: /^(address|addr)$/i, type: TableColumnType.address },
       {
         hint: /^(.*[_ ])?(depth|height|elevation|altitude)$/i,
-        type: TableColumnType.height
+        // Treat height as scalar, until we actually do something with the height data
+        // type: TableColumnType.height
+        type: TableColumnType.scalar
       },
       { hint: /^(.*[_ ])?(time|date)/i, type: TableColumnType.time }, // Quite general, eg. matches "Start date (AEST)".
       { hint: /^(year)$/i, type: TableColumnType.time } // Match "year" only, not "Final year" or "0-4 years".
     ];
 
-    const match = typeHintSet.find(hint => hint.hint.test(name));
+    const match = typeHintSet.find(hint => {
+      if (hint.hint.test(name)) {
+        if (hint.typeFromValues) {
+          return hint.typeFromValues === this.guessColumnTypeFromValues();
+        }
+        return true;
+      }
+      return false;
+    });
     if (match !== undefined) {
       return match.type;
     }
