@@ -376,7 +376,7 @@ export default abstract class GlobeOrMap {
               CommonStrata.user,
               "style",
               createStratumInstance(StyleTraits, {
-                "stroke-width": 2,
+                "stroke-width": 4,
                 stroke: this.terria.baseMapContrastColor,
                 "fill-opacity": 0,
                 "marker-color": this.terria.baseMapContrastColor
