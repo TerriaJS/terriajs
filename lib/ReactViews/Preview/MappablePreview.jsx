@@ -51,6 +51,7 @@ class MappablePreview extends React.Component {
     const toAdd = !this.props.terria.workbench.contains(this.props.previewed);
 
     if (toAdd) {
+      this.props.terria.timelineStack.addToTop(this.props.previewed);
       (await this.props.terria.workbench.add(this.props.previewed)).raiseError(
         this.props.terria,
         undefined,
