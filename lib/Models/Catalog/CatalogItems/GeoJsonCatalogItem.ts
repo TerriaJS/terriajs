@@ -1,20 +1,19 @@
+import i18next from "i18next";
+import { get as _get } from "lodash";
+import { computed, toJS } from "mobx";
+import isDefined from "../../../Core/isDefined";
+import JsonValue, { isJsonObject } from "../../../Core/Json";
+import loadBlob, { isZip, parseZipJsonBlob } from "../../../Core/loadBlob";
+import loadJson from "../../../Core/loadJson";
+import readJson from "../../../Core/readJson";
+import TerriaError from "../../../Core/TerriaError";
 import GeoJsonMixin, {
   toFeatureCollection
 } from "../../../ModelMixins/GeojsonMixin";
-import JsonValue, { isJsonObject } from "../../../Core/Json";
-import { computed, toJS } from "mobx";
-import loadBlob, { isZip, parseZipJsonBlob } from "../../../Core/loadBlob";
-
-import CreateModel from "../../Definition/CreateModel";
 import GeoJsonCatalogItemTraits from "../../../Traits/TraitsClasses/GeoJsonCatalogItemTraits";
+import CreateModel from "../../Definition/CreateModel";
 import Terria from "../../Terria";
-import TerriaError from "../../../Core/TerriaError";
-import { get as _get } from "lodash";
-import i18next from "i18next";
-import isDefined from "../../../Core/isDefined";
-import loadJson from "../../../Core/loadJson";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import readJson from "../../../Core/readJson";
 
 class GeoJsonCatalogItem extends GeoJsonMixin(
   CreateModel(GeoJsonCatalogItemTraits)
