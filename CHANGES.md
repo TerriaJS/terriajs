@@ -5,6 +5,7 @@ Change Log
 
 * Add an external link icon to external hyperlink when using method `parseCustomHtmlToReact`. This feature can be switched off by passing `{ disableExternalLinkIcon: true }` in `context` argument.
 * Tsify `sendFeedback.ts` and improve error messages/notifications
+* Add better support for retreiving GeoJsonCatalogItem data through APIs, including supporting geojson nested within json objects
 * [The next improvement]
 
 #### 8.1.12
