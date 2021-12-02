@@ -24,6 +24,11 @@ Change Log
 * `GpxCatalogItem` now uses `GeojsonMixin`
 * Add an external link icon to external hyperlink when using method `parseCustomHtmlToReact`. This feature can be switched off by passing `{ disableExternalLinkIcon: true }` in `context` argument.
 * Tsify `sendFeedback.ts` and improve error messages/notifications
+* Moved `CatalogIndex` loading from constructor (called in `Terria.start`) to `CatalogSearchProvider.doSearch` - this means the index will only be loaded when the user does their first search
+* Add basic auth support to `generateCatalogIndex`, fix some bugs and improve performance
+* Update terria-js cesium to `1.81.2`
+* Add `uniqueId` as fallback to `nameInCatalog`
+* Remove duplicated items from `OpenDataSoftGroup` and `SocrataGroup`
 * [The next improvement]
 
 #### 8.1.12
