@@ -2,7 +2,7 @@ Change Log
 ==========
 
 #### next release (8.1.13)
-
+* Paramerterised the support email on the help panel to use the support email in config
 * Refactored `TableColumn get type()` to move logic into `guessColumnTypeFromValues()`
 * `TableMixin.activeStyle` will set `TableColumnType = hidden` for `scalar` columns with name `"id"`, `"_id_"` or `"fid"`
 * Fix bug `TableColumn.type = scalar` even if there were no values.
