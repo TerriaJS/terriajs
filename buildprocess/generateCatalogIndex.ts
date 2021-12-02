@@ -122,22 +122,25 @@ export default async function generateCatalogIndex(
       name = getName(member);
     }
 
-    // Load group (CatalogGroups don't need to load)
     if (GroupMixin.isMixedInto(member)) {
-      if (!(member instanceof CatalogGroup)) {
-        console.log(`Loading Group ${name}`);
+      // Function to load group
+      const loadGroup = async () => {
+        console.log(`Loading Group ${name} (${path})`);
+        const result = await (member as GroupMixin.Instance).loadMembers();
+        result.logError(`FAILED to load GROUP ${name} (${path})`);
+        result.pushErrorTo(errors, `FAILED to load GROUP ${name} (${path})`);
+        result.catchError(e => console.error(e.toError().message));
+      };
+
+      // CatalogGroup can be loaded immediately
+      // Even though CatalogGroup doesn't have anything to load
+      // This needs to be called so GroupMixin.refreshKnownContainerUniqueIds is called
+      if (member instanceof CatalogGroup) {
+        await loadGroup();
+      } else {
         try {
           // Give load group priority 0
-          await groupLimiter.schedule({ expiration: 30000 }, async () => {
-            console.log(`Loading Group ${name} (${path})`);
-            const result = await (member as GroupMixin.Instance).loadMembers();
-            result.logError(`FAILED to load GROUP ${name} (${path})`);
-            result.pushErrorTo(
-              errors,
-              `FAILED to load GROUP ${name} (${path})`
-            );
-            result.catchError(e => console.error(e.toError().message));
-          });
+          await groupLimiter.schedule({ expiration: 30000 }, loadGroup);
         } catch (timeout) {
           errors.push(
             TerriaError.from(`TIMEOUT FAILED to load GROUP ${name} (${path})`)
