@@ -2,7 +2,7 @@ Change Log
 ==========
 
 #### next release (8.1.13)
-
+* Paramerterised the support email on the help panel to use the support email in config
 * Refactored `TableColumn get type()` to move logic into `guessColumnTypeFromValues()`
 * `TableMixin.activeStyle` will set `TableColumnType = hidden` for `scalar` columns with name `"id"`, `"_id_"` or `"fid"`
 * Fix bug `TableColumn.type = scalar` even if there were no values.
@@ -24,6 +24,9 @@ Change Log
 * `GpxCatalogItem` now uses `GeojsonMixin`
 * Add an external link icon to external hyperlink when using method `parseCustomHtmlToReact`. This feature can be switched off by passing `{ disableExternalLinkIcon: true }` in `context` argument.
 * Tsify `sendFeedback.ts` and improve error messages/notifications
+* Removed unused overrideState from many DataCatalog React components.
+* Fixed a bug where adding a timeseries dataset from the preview map's Add to map button didn't add the dataset to the `timelineStack`.
+* Fixed incorrect colour for catalog item names in the explorer panel when using dynamic theming. 
 * Moved `CatalogIndex` loading from constructor (called in `Terria.start`) to `CatalogSearchProvider.doSearch` - this means the index will only be loaded when the user does their first search
 * Add basic auth support to `generateCatalogIndex`, fix some bugs and improve performance
 * Update terria-js cesium to `1.81.2`
