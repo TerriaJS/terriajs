@@ -27,6 +27,11 @@ Change Log
 * Removed unused overrideState from many DataCatalog React components.
 * Fixed a bug where adding a timeseries dataset from the preview map's Add to map button didn't add the dataset to the `timelineStack`.
 * Fixed incorrect colour for catalog item names in the explorer panel when using dynamic theming. 
+* Moved `CatalogIndex` loading from constructor (called in `Terria.start`) to `CatalogSearchProvider.doSearch` - this means the index will only be loaded when the user does their first search
+* Add basic auth support to `generateCatalogIndex`, fix some bugs and improve performance
+* Update terria-js cesium to `1.81.2`
+* Add `uniqueId` as fallback to `nameInCatalog`
+* Remove duplicated items from `OpenDataSoftGroup` and `SocrataGroup`
 * [The next improvement]
 
 #### 8.1.12
