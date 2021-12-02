@@ -439,9 +439,11 @@ export class SocrataCatalogStratum extends LoadableStratum(
 
   getResultId(result: Result) {
     // Use Socrata server hostname for datasets, so we don't create multiple across facets
-    return `${URI(this.catalogGroup.url ?? "").hostname()}/${
-      result.resource.id
-    }`;
+    return `${
+      this.catalogGroup.url
+        ? URI(this.catalogGroup.url ?? "").hostname()
+        : this.catalogGroup.uniqueId
+    }/${result.resource.id}`;
   }
 }
 

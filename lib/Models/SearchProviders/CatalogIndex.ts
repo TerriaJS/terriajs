@@ -1,5 +1,5 @@
 import { Document } from "flexsearch";
-import { action, runInAction } from "mobx";
+import { action, runInAction, observable } from "mobx";
 import loadJson from "../../Core/loadJson";
 import CatalogIndexReferenceTraits from "../../Traits/TraitsClasses/CatalogIndexReferenceTraits";
 import CatalogIndexReference from "../Catalog/CatalogReferences/CatalogIndexReference";
@@ -31,6 +31,7 @@ export default class CatalogIndex {
     return this._searchIndex;
   }
 
+  @observable
   private _loadPromise: Promise<void> | undefined;
 
   constructor(private readonly terria: Terria, private readonly url: string) {}

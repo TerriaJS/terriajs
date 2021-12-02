@@ -234,9 +234,11 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
 
   getDatasetId(dataset: ValidDataset) {
     // Use OpenDataSoft server hostname for datasets, so we don't create multiple across facets
-    return `${URI(this.catalogGroup.url ?? "").hostname()}/${
-      dataset.dataset_id
-    }`;
+    return `${
+      this.catalogGroup.url
+        ? URI(this.catalogGroup.url).hostname()
+        : this.catalogGroup.uniqueId
+    }/${dataset.dataset_id}`;
   }
 
   getFacetId(facet: ValidFacet) {
