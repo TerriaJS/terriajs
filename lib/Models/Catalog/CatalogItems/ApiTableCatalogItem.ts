@@ -1,26 +1,28 @@
-import dateFormat from "dateformat";
-import { computed, observable, runInAction } from "mobx";
-import URI from "urijs";
-import isDefined from "../../../Core/isDefined";
-import loadJson from "../../../Core/loadJson";
-import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
-import TableMixin from "../../../ModelMixins/TableMixin";
-import TableAutomaticStylesStratum from "../../../Table/TableAutomaticStylesStratum";
 import ApiTableCatalogItemTraits, {
   ApiTableRequestTraits
 } from "../../../Traits/TraitsClasses/ApiTableCatalogItemTraits";
+import Model, { BaseModel } from "../../Definition/Model";
+import { computed, observable, runInAction } from "mobx";
+
+import ApiRequestTraits from "../../../Traits/TraitsClasses/ApiRequestTraits";
+import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
+import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
+import CreateModel from "../../Definition/CreateModel";
+import LoadableStratum from "../../Definition/LoadableStratum";
+import StratumOrder from "../../Definition/StratumOrder";
+import TableAutomaticStylesStratum from "../../../Table/TableAutomaticStylesStratum";
+import TableMixin from "../../../ModelMixins/TableMixin";
 import TableStyleTraits from "../../../Traits/TraitsClasses/TableStyleTraits";
 import TableTimeStyleTraits from "../../../Traits/TraitsClasses/TableTimeStyleTraits";
-import CreateModel from "../../Definition/CreateModel";
+import Terria from "../../Terria";
+import URI from "urijs";
+import { get as _get } from "lodash";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import LoadableStratum from "../../Definition/LoadableStratum";
-import Model, { BaseModel } from "../../Definition/Model";
+import dateFormat from "dateformat";
+import isDefined from "../../../Core/isDefined";
+import loadJson from "../../../Core/loadJson";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import saveModelToJson from "../../Definition/saveModelToJson";
-import StratumOrder from "../../Definition/StratumOrder";
-import Terria from "../../Terria";
-import { get as _get } from "lodash";
 
 export class ApiTableStratum extends LoadableStratum(
   ApiTableCatalogItemTraits
@@ -177,7 +179,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     });
   }
 
-  protected addQueryParams(api: Model<ApiTableRequestTraits>): string {
+  protected addQueryParams(api: Model<ApiRequestTraits>): string {
     const uri = new URI(api.url);
 
     const substituteDateTimesInQueryParam = (param: string) => {

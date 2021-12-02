@@ -1,43 +1,8 @@
-import YDYRCatalogFunction from "./CatalogFunctions/YDYRCatalogFunction";
-import YDYRCatalogFunctionJob from "./CatalogFunctions/YDYRCatalogFunctionJob";
-import CatalogGroup from "./CatalogGroup";
-import OpenDataSoftCatalogGroup from "./CatalogGroups/OpenDataSoftCatalogGroup";
-import SocrataCatalogGroup from "./CatalogGroups/SocrataCatalogGroup";
-import ThreddsCatalogGroup from "./CatalogGroups/ThreddsCatalogGroup";
-import { ApiTableCatalogItem } from "./CatalogItems/ApiTableCatalogItem";
-import ApiGeoJsonCatalogItem from "./CatalogItems/ApiGeoJsonCatalogItem";
-import BingMapsCatalogItem from "./CatalogItems/BingMapsCatalogItem";
-import CartoMapCatalogItem from "./CatalogItems/CartoMapCatalogItem";
-import Cesium3DTilesCatalogItem from "./CatalogItems/Cesium3DTilesCatalogItem";
-import CesiumTerrainCatalogItem from "./CatalogItems/CesiumTerrainCatalogItem";
-import CompositeCatalogItem from "./CatalogItems/CompositeCatalogItem";
-import CsvCatalogItem from "./CatalogItems/CsvCatalogItem";
-import CzmlCatalogItem from "./CatalogItems/CzmlCatalogItem";
-import GeoJsonCatalogItem from "./CatalogItems/GeoJsonCatalogItem";
-import GeoRssCatalogItem from "./CatalogItems/GeoRssCatalogItem";
-import GltfCatalogItem from "./CatalogItems/GltfCatalogItem";
-import GpxCatalogItem from "./CatalogItems/GpxCatalogItem";
-import IonImageryCatalogItem from "./CatalogItems/IonImageryCatalogItem";
-import KmlCatalogItem from "./CatalogItems/KmlCatalogItem";
-import MapboxMapCatalogItem from "./CatalogItems/MapboxMapCatalogItem";
-import MapboxStyleCatalogItem from "./CatalogItems/MapboxStyleCatalogItem";
-import MapboxVectorTileCatalogItem from "./CatalogItems/MapboxVectorTileCatalogItem";
-import OpenDataSoftCatalogItem from "./CatalogItems/OpenDataSoftCatalogItem";
-import OpenStreetMapCatalogItem from "./CatalogItems/OpenStreetMapCatalogItem";
-import SenapsLocationsCatalogItem from "./CatalogItems/SenapsLocationsCatalogItem";
-import ShapefileCatalogItem from "./CatalogItems/ShapefileCatalogItem";
-import SocrataMapViewCatalogItem from "./CatalogItems/SocrataMapViewCatalogItem";
-import StubCatalogItem from "./CatalogItems/StubCatalogItem";
-import CatalogMemberFactory from "./CatalogMemberFactory";
-import CatalogIndexReference from "./CatalogReferences/CatalogIndexReference";
-import MagdaReference from "./CatalogReferences/MagdaReference";
-import SplitItemReference from "./CatalogReferences/SplitItemReference";
-import TerriaReference from "./CatalogReferences/TerriaReference";
 import UrlReference, {
   UrlToCatalogMemberMapping
 } from "./CatalogReferences/UrlReference";
-import CkanCatalogGroup from "./Ckan/CkanCatalogGroup";
-import CkanItemReference from "./Ckan/CkanItemReference";
+
+import { ApiTableCatalogItem } from "./CatalogItems/ApiTableCatalogItem";
 import ArcGisCatalogGroup from "./Esri/ArcGisCatalogGroup";
 import ArcGisFeatureServerCatalogGroup from "./Esri/ArcGisFeatureServerCatalogGroup";
 import ArcGisFeatureServerCatalogItem from "./Esri/ArcGisFeatureServerCatalogItem";
@@ -46,9 +11,44 @@ import ArcGisMapServerCatalogItem from "./Esri/ArcGisMapServerCatalogItem";
 import ArcGisPortalCatalogGroup from "./Esri/ArcGisPortalCatalogGroup";
 import ArcGisPortalItemReference from "./Esri/ArcGisPortalItemReference";
 import ArcGisTerrainCatalogItem from "./Esri/ArcGisTerrainCatalogItem";
-import GtfsCatalogItem from "./Gtfs/GtfsCatalogItem";
+import BingMapsCatalogItem from "./CatalogItems/BingMapsCatalogItem";
+import CartoMapCatalogItem from "./CatalogItems/CartoMapCatalogItem";
+import CatalogGroup from "./CatalogGroup";
+import CatalogIndexReference from "./CatalogReferences/CatalogIndexReference";
+import CatalogMemberFactory from "./CatalogMemberFactory";
+import Cesium3DTilesCatalogItem from "./CatalogItems/Cesium3DTilesCatalogItem";
+import CesiumTerrainCatalogItem from "./CatalogItems/CesiumTerrainCatalogItem";
+import CkanCatalogGroup from "./Ckan/CkanCatalogGroup";
+import CkanItemReference from "./Ckan/CkanItemReference";
+import CompositeCatalogItem from "./CatalogItems/CompositeCatalogItem";
+import CsvCatalogItem from "./CatalogItems/CsvCatalogItem";
 import CswCatalogGroup from "./Ows/CswCatalogGroup";
+import CzmlCatalogItem from "./CatalogItems/CzmlCatalogItem";
+import GeoJsonCatalogItem from "./CatalogItems/GeoJsonCatalogItem";
+import GeoRssCatalogItem from "./CatalogItems/GeoRssCatalogItem";
+import GltfCatalogItem from "./CatalogItems/GltfCatalogItem";
+import GpxCatalogItem from "./CatalogItems/GpxCatalogItem";
+import GtfsCatalogItem from "./Gtfs/GtfsCatalogItem";
+import IonImageryCatalogItem from "./CatalogItems/IonImageryCatalogItem";
+import KmlCatalogItem from "./CatalogItems/KmlCatalogItem";
+import MagdaReference from "./CatalogReferences/MagdaReference";
+import MapboxMapCatalogItem from "./CatalogItems/MapboxMapCatalogItem";
+import MapboxStyleCatalogItem from "./CatalogItems/MapboxStyleCatalogItem";
+import MapboxVectorTileCatalogItem from "./CatalogItems/MapboxVectorTileCatalogItem";
+import OpenDataSoftCatalogGroup from "./CatalogGroups/OpenDataSoftCatalogGroup";
+import OpenDataSoftCatalogItem from "./CatalogItems/OpenDataSoftCatalogItem";
+import OpenStreetMapCatalogItem from "./CatalogItems/OpenStreetMapCatalogItem";
+import SdmxJsonCatalogGroup from "./SdmxJson/SdmxJsonCatalogGroup";
+import SdmxJsonCatalogItem from "./SdmxJson/SdmxJsonCatalogItem";
+import SenapsLocationsCatalogItem from "./CatalogItems/SenapsLocationsCatalogItem";
 import SensorObservationServiceCatalogItem from "./Ows/SensorObservationServiceCatalogItem";
+import ShapefileCatalogItem from "./CatalogItems/ShapefileCatalogItem";
+import SocrataCatalogGroup from "./CatalogGroups/SocrataCatalogGroup";
+import SocrataMapViewCatalogItem from "./CatalogItems/SocrataMapViewCatalogItem";
+import SplitItemReference from "./CatalogReferences/SplitItemReference";
+import StubCatalogItem from "./CatalogItems/StubCatalogItem";
+import TerriaReference from "./CatalogReferences/TerriaReference";
+import ThreddsCatalogGroup from "./CatalogGroups/ThreddsCatalogGroup";
 import WebFeatureServiceCatalogGroup from "./Ows/WebFeatureServiceCatalogGroup";
 import WebFeatureServiceCatalogItem from "./Ows/WebFeatureServiceCatalogItem";
 import WebMapServiceCatalogGroup from "./Ows/WebMapServiceCatalogGroup";
@@ -58,8 +58,8 @@ import WebMapTileServiceCatalogItem from "./Ows/WebMapTileServiceCatalogItem";
 import WebProcessingServiceCatalogFunction from "./Ows/WebProcessingServiceCatalogFunction";
 import WebProcessingServiceCatalogFunctionJob from "./Ows/WebProcessingServiceCatalogFunctionJob";
 import WebProcessingServiceCatalogGroup from "./Ows/WebProcessingServiceCatalogGroup";
-import SdmxJsonCatalogGroup from "./SdmxJson/SdmxJsonCatalogGroup";
-import SdmxJsonCatalogItem from "./SdmxJson/SdmxJsonCatalogItem";
+import YDYRCatalogFunction from "./CatalogFunctions/YDYRCatalogFunction";
+import YDYRCatalogFunctionJob from "./CatalogFunctions/YDYRCatalogFunctionJob";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -219,10 +219,6 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(
     CatalogIndexReference.type,
     CatalogIndexReference
-  );
-  CatalogMemberFactory.register(
-    ApiGeoJsonCatalogItem.type,
-    ApiGeoJsonCatalogItem
   );
 
   UrlToCatalogMemberMapping.register(

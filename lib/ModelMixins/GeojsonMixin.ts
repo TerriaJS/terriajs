@@ -1,17 +1,22 @@
-import bbox from "@turf/bbox";
+import {
+  CircleSymbolizer,
+  GeomType,
+  LineSymbolizer,
+  PolygonSymbolizer,
+  Feature as ProtomapsFeature
+} from "terriajs-protomaps";
 import {
   Feature,
-  feature,
   FeatureCollection,
-  featureCollection,
   Geometries,
-  Point
+  Point,
+  feature,
+  featureCollection
 } from "@turf/helpers";
-import i18next from "i18next";
 import {
+  IReactionDisposer,
   action,
   computed,
-  IReactionDisposer,
   observable,
   onBecomeObserved,
   onBecomeUnobserved,
@@ -19,63 +24,59 @@ import {
   runInAction,
   toJS
 } from "mobx";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import clone from "terriajs-cesium/Source/Core/clone";
-import Color from "terriajs-cesium/Source/Core/Color";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
-import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
-import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
-import TimeIntervalCollection from "terriajs-cesium/Source/Core/TimeIntervalCollection";
+import { JsonObject, isJsonObject } from "../Core/Json";
+import Model, { BaseModel } from "../Models/Definition/Model";
+import ProtomapsImageryProvider, {
+  GEOJSON_SOURCE_LAYER_NAME,
+  GeojsonSource,
+  ProtomapsData
+} from "../Map/ProtomapsImageryProvider";
+import TerriaError, { networkRequestError } from "../Core/TerriaError";
+
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import Color from "terriajs-cesium/Source/Core/Color";
 import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
+import Constructor from "../Core/Constructor";
 import CzmlDataSource from "terriajs-cesium/Source/DataSources/CzmlDataSource";
+import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import { DiscreteTimeAsJS } from "./DiscretelyTimeVaryingMixin";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import EntityCollection from "terriajs-cesium/Source/DataSources/EntityCollection";
+import { ExportData } from "./ExportableMixin";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
+import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
+import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import LoadableStratum from "../Models/Definition/LoadableStratum";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
 import PolygonGraphics from "terriajs-cesium/Source/DataSources/PolygonGraphics";
+import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
 import PolylineGraphics from "terriajs-cesium/Source/DataSources/PolylineGraphics";
 import Property from "terriajs-cesium/Source/DataSources/Property";
-import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
-import {
-  CircleSymbolizer,
-  Feature as ProtomapsFeature,
-  GeomType,
-  LineSymbolizer,
-  PolygonSymbolizer
-} from "terriajs-protomaps";
-import Constructor from "../Core/Constructor";
+import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
+import Reproject from "../Map/Reproject";
+import StandardCssColors from "../Core/StandardCssColors";
+import StratumOrder from "../Models/Definition/StratumOrder";
+import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
+import TableMixin from "./TableMixin";
+import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
+import TimeIntervalCollection from "terriajs-cesium/Source/Core/TimeIntervalCollection";
+import UrlMixin from "../ModelMixins/UrlMixin";
+import bbox from "@turf/bbox";
+import clone from "terriajs-cesium/Source/Core/clone";
+import createStratumInstance from "../Models/Definition/createStratumInstance";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import formatPropertyValue from "../Core/formatPropertyValue";
 import hashFromString from "../Core/hashFromString";
+import i18next from "i18next";
 import isDefined from "../Core/isDefined";
-import { isJsonObject, JsonObject } from "../Core/Json";
 import { isJson } from "../Core/loadBlob";
 import makeRealPromise from "../Core/makeRealPromise";
-import StandardCssColors from "../Core/StandardCssColors";
-import TerriaError, { networkRequestError } from "../Core/TerriaError";
-import ProtomapsImageryProvider, {
-  GeojsonSource,
-  GEOJSON_SOURCE_LAYER_NAME,
-  ProtomapsData
-} from "../Map/ProtomapsImageryProvider";
-import Reproject from "../Map/Reproject";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import UrlMixin from "../ModelMixins/UrlMixin";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
-import createStratumInstance from "../Models/Definition/createStratumInstance";
-import LoadableStratum from "../Models/Definition/LoadableStratum";
-import Model, { BaseModel } from "../Models/Definition/Model";
-import StratumOrder from "../Models/Definition/StratumOrder";
-import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
-import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
-import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
-import { DiscreteTimeAsJS } from "./DiscretelyTimeVaryingMixin";
-import { ExportData } from "./ExportableMixin";
-import TableMixin from "./TableMixin";
 
 export type FeatureCollectionWithCrs = FeatureCollection & {
   crs: JsonObject | undefined;

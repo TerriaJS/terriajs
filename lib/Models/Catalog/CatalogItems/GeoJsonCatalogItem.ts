@@ -1,18 +1,20 @@
-import i18next from "i18next";
-import { computed, toJS } from "mobx";
-import isDefined from "../../../Core/isDefined";
-import JsonValue, { isJsonObject } from "../../../Core/Json";
-import loadBlob, { parseZipJsonBlob, isZip } from "../../../Core/loadBlob";
-import loadJson from "../../../Core/loadJson";
-import readJson from "../../../Core/readJson";
-import TerriaError from "../../../Core/TerriaError";
 import GeoJsonMixin, {
   toFeatureCollection
 } from "../../../ModelMixins/GeojsonMixin";
-import GeoJsonCatalogItemTraits from "../../../Traits/TraitsClasses/GeoJsonCatalogItemTraits";
+import JsonValue, { isJsonObject } from "../../../Core/Json";
+import { computed, toJS } from "mobx";
+import loadBlob, { isZip, parseZipJsonBlob } from "../../../Core/loadBlob";
+
 import CreateModel from "../../Definition/CreateModel";
+import GeoJsonCatalogItemTraits from "../../../Traits/TraitsClasses/GeoJsonCatalogItemTraits";
 import Terria from "../../Terria";
+import TerriaError from "../../../Core/TerriaError";
+import { get as _get } from "lodash";
+import i18next from "i18next";
+import isDefined from "../../../Core/isDefined";
+import loadJson from "../../../Core/loadJson";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import readJson from "../../../Core/readJson";
 
 class GeoJsonCatalogItem extends GeoJsonMixin(
   CreateModel(GeoJsonCatalogItemTraits)
@@ -74,19 +76,42 @@ class GeoJsonCatalogItem extends GeoJsonMixin(
           this.requestData ? toJS(this.requestData) : undefined,
           this.postRequestDataAsFormData
         );
+        if (this.responseDataPath) {
+          jsonData = _get(jsonData, this.responseDataPath);
+        }
       }
     }
 
-    // Transform jsonData to feature collection
-    if (isJsonObject(jsonData) && typeof jsonData.type === "string") {
-      const fc = toFeatureCollection(jsonData);
-      if (fc) return fc;
-      throw TerriaError.from(
-        "Invalid geojson data - only FeatureCollection and Feature are supported"
-      );
+    if (jsonData === undefined) {
+      throw TerriaError.from("Failed to load geojson");
     }
 
-    throw TerriaError.from("Failed to load geojson");
+    let fc;
+    // Transform jsonData to feature collection
+    if (Array.isArray(jsonData)) {
+      // Array that isn't a feature collection
+      fc = toFeatureCollection(
+        jsonData.map(item => {
+          let geojson = this.responseGeoJsonPath
+            ? _get(item, this.responseGeoJsonPath)
+            : item;
+          if (typeof geojson === "string") {
+            geojson = JSON.parse(geojson);
+          }
+          // add extra properties back to geojson so they appear in feature info
+          geojson.properties = item;
+          return geojson;
+        })
+      );
+    } else if (isJsonObject(jsonData) && typeof jsonData.type === "string") {
+      // Actual geojson
+      fc = toFeatureCollection(jsonData);
+    }
+
+    if (fc) return fc;
+    throw TerriaError.from(
+      "Invalid geojson data - only FeatureCollection and Feature are supported"
+    );
   }
 }
 
