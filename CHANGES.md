@@ -1,10 +1,6 @@
 Change Log
 ==========
 
-#### next release (8.1.2)
-
-* Reimplement option to zoom on item when adding it to workbench, `zoomOnAddToWorkbench`
-  is added to `MappableTraits`.
 #### next release (8.1.13)
 * Paramerterised the support email on the help panel to use the support email in config
 * Refactored `TableColumn get type()` to move logic into `guessColumnTypeFromValues()`
@@ -35,6 +31,7 @@ Change Log
 * Update terria-js cesium to `1.81.2`
 * Add `uniqueId` as fallback to `nameInCatalog`
 * Remove duplicated items from `OpenDataSoftGroup` and `SocrataGroup`
+* Reimplement option to zoom on item when adding it to workbench, `zoomOnAddToWorkbench` is added to `MappableTraits`.
 * [The next improvement]
 
 #### 8.1.12
