@@ -15,7 +15,7 @@ import SelectableDimensions, {
   SelectableDimension
 } from "../../../Models/SelectableDimensions";
 import Box from "../../../Styled/Box";
-import Checkbox from "../../../Styled/Checkbox/Checkbox";
+import Checkbox from "../../../Styled/Checkbox";
 import Select from "../../../Styled/Select";
 import Spacing from "../../../Styled/Spacing";
 import Text from "../../../Styled/Text";
@@ -75,17 +75,18 @@ class DimensionSelectorSection extends React.Component<PropsType> {
               /* Checkbox Selectable Dimension */
               <Checkbox
                 isChecked={dim.selectedId === "true"}
-                label={
-                  dim.options?.find(opt => opt.id === dim.selectedId)?.name ??
-                  (dim.selectedId === "true" ? "Enabled" : "Disabled")
-                }
                 onChange={evt =>
                   this.setDimensionValue(
                     dim,
                     evt.target.checked ? "true" : "false"
                   )
                 }
-              />
+              >
+                <Text>
+                  {dim.options?.find(opt => opt.id === dim.selectedId)?.name ??
+                    (dim.selectedId === "true" ? "Enabled" : "Disabled")}
+                </Text>
+              </Checkbox>
             ) : (
               /* Select (dropdown) Selectable Dimension (default) */
               <Select

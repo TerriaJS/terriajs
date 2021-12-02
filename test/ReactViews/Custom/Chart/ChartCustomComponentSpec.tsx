@@ -110,8 +110,10 @@ class TestChartCustomComponent extends ChartCustomComponent<
     sourceReference:
       | import("../../../../lib/Models/Definition/Model").BaseModel
       | undefined
-  ): TestCatalogItem {
-    return new TestCatalogItem(id, context.terria, undefined);
+  ) {
+    return context.terria
+      ? new TestCatalogItem(id, context.terria, undefined)
+      : undefined;
   }
   protected setTraitsFromAttrs(
     item: TestCatalogItem,

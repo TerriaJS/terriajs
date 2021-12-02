@@ -139,9 +139,9 @@ async function launch(
     });
 
     asyncResult.setTrait(CommonStrata.user, "info", [info]);
-
-    asyncResult.terria.workbench.add(asyncResult);
   });
+
+  asyncResult.terria.workbench.add(asyncResult);
 
   try {
     const blob = await makeRealPromise<Blob>(loadBlob(url));

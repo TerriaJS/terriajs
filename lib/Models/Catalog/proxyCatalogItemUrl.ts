@@ -10,7 +10,7 @@ import UrlReference from "./CatalogReferences/UrlReference";
  * The terriajs-server is the default server that proxies a URL associated with a catalog item, if necessary.
  * @param {CatalogItem} [catalogItem] The catalog item.
  * @param {string} url The URL to be proxied.
- * @param {string} [cacheDuration] The cache duration to override catalogItem.cacheDuration.
+ * @param {string} [cacheDuration] The cache duration to use if catalogItem.cacheDuration is undefined.
  * @returns {string} The URL, now cached if necessary.
  */
 export default function proxyCatalogItemUrl(

@@ -66,7 +66,7 @@ describe("CatalogIndex", function() {
     await terria.applyInitData({ initData: testInit as JsonObject });
 
     catalogIndex = new CatalogIndex(terria, "catalog-index.json");
-    await catalogIndex.loadPromise;
+    await catalogIndex.load();
   });
 
   afterEach(function() {
@@ -74,7 +74,7 @@ describe("CatalogIndex", function() {
   });
 
   it("search for items", async function() {
-    const results = catalogIndex.search("group");
+    const results = await catalogIndex.search("group");
 
     console.log(results);
 
@@ -90,7 +90,7 @@ describe("CatalogIndex", function() {
   });
 
   it("search for group", async function() {
-    const results = catalogIndex.search("cool");
+    const results = await catalogIndex.search("cool");
 
     expect((results[0].catalogItem as CatalogIndexReference).name).toBe(
       "Test item"
@@ -98,7 +98,7 @@ describe("CatalogIndex", function() {
   });
 
   it("load group reference", async function() {
-    const results = catalogIndex.search("some random words");
+    const results = await catalogIndex.search("some random words");
 
     const group = results[0].catalogItem as CatalogIndexReference;
 
@@ -108,7 +108,7 @@ describe("CatalogIndex", function() {
   });
 
   it("load nested reference", async function() {
-    const results = catalogIndex.search("nested");
+    const results = await catalogIndex.search("nested");
 
     const item = results[0].catalogItem as CatalogIndexReference;
 

@@ -1,8 +1,11 @@
-import { autorun, observable, runInAction, computed } from "mobx";
+import { autorun, computed, observable, runInAction } from "mobx";
+import { fromPromise } from "mobx-utils";
 import {
   Category,
   SearchAction
 } from "../../Core/AnalyticEvents/analyticEvents";
+import isDefined from "../../Core/isDefined";
+import { TerriaErrorSeverity } from "../../Core/TerriaError";
 import GroupMixin from "../../ModelMixins/GroupMixin";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
 import { BaseModel } from "../Definition/Model";
@@ -10,7 +13,6 @@ import Terria from "../Terria";
 import SearchProvider from "./SearchProvider";
 import SearchProviderResults from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
-import isDefined from "../../Core/isDefined";
 interface CatalogSearchProviderOptions {
   terria: Terria;
 }
@@ -114,7 +116,10 @@ export default class CatalogSearchProvider extends SearchProvider {
   }
 
   @computed get resultsAreReferences() {
-    return isDefined(this.terria.catalogIndex);
+    return (
+      isDefined(this.terria.catalogIndex?.loadPromise) &&
+      fromPromise(this.terria.catalogIndex!.loadPromise).state === "fulfilled"
+    );
   }
 
   protected async doSearch(
@@ -130,6 +135,18 @@ export default class CatalogSearchProvider extends SearchProvider {
       return Promise.resolve();
     }
 
+    // Load catalogIndex if needed
+    if (this.terria.catalogIndex && !this.terria.catalogIndex.loadPromise) {
+      try {
+        await this.terria.catalogIndex.load();
+      } catch (e) {
+        this.terria.raiseErrorToUser(
+          e,
+          "Failed to load catalog index. Searching may be slow/inaccurate"
+        );
+      }
+    }
+
     this.terria.analytics?.logEvent(
       Category.search,
       SearchAction.catalog,
@@ -138,9 +155,9 @@ export default class CatalogSearchProvider extends SearchProvider {
     const resultMap: ResultMap = new Map();
 
     try {
-      if (this.terria.catalogIndex) {
-        const results = this.terria.catalogIndex?.search(searchText);
-        searchResults.results = results;
+      if (this.terria.catalogIndex?.searchIndex) {
+        const results = await this.terria.catalogIndex.search(searchText);
+        runInAction(() => (searchResults.results = results));
       } else {
         await loadAndSearchCatalogRecursively(
           this.terria.modelValues,
@@ -167,6 +184,10 @@ export default class CatalogSearchProvider extends SearchProvider {
         searchResults.message = "Sorry, no locations match your search query.";
       }
     } catch (e) {
+      this.terria.raiseErrorToUser(e, {
+        message: "An error occurred while searching",
+        severity: TerriaErrorSeverity.Warning
+      });
       if (searchResults.isCanceled) {
         // A new search has superseded this one, so ignore the result.
         return;

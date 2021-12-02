@@ -1,23 +1,22 @@
 import i18next from "i18next";
 import { computed } from "mobx";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import getFilenameFromUri from "terriajs-cesium/Source/Core/getFilenameFromUri";
 import isDefined from "../../../Core/isDefined";
 import loadText from "../../../Core/loadText";
 import readText from "../../../Core/readText";
-import TerriaError from "../../../Core/TerriaError";
-import MappableMixin from "../../../ModelMixins/MappableMixin";
+import { networkRequestError } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
+import GeoJsonMixin, {
+  FeatureCollectionWithCrs
+} from "../../../ModelMixins/GeojsonMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import GpxCatalogItemTraits from "../../../Traits/TraitsClasses/GpxCatalogItemTraits";
-import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
-import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 const toGeoJSON = require("@mapbox/togeojson");
 
-class GpxCatalogItem extends MappableMixin(
+class GpxCatalogItem extends GeoJsonMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(GpxCatalogItemTraits)))
 ) {
   static readonly type = "gpx";
@@ -29,8 +28,6 @@ class GpxCatalogItem extends MappableMixin(
   get typeName() {
     return i18next.t("models.gpx.name");
   }
-
-  private _geoJsonItem = new GeoJsonCatalogItem(createGuid(), this.terria);
 
   private _gpxFile?: File;
 
@@ -48,48 +45,31 @@ class GpxCatalogItem extends MappableMixin(
     return toGeoJSON.gpx(dom);
   }
 
-  protected async forceLoadMapItems(): Promise<void> {
-    const data = await new Promise<string>(resolve => {
-      if (isDefined(this.gpxString)) {
-        resolve(this.gpxString);
-      } else if (isDefined(this._gpxFile)) {
-        resolve(readText(this._gpxFile));
-      } else if (isDefined(this.url)) {
-        resolve(loadText(proxyCatalogItemUrl(this, this.url)));
-      } else {
-        throw new TerriaError({
-          sender: this,
-          title: i18next.t("models.gpx.errorLoadingTitle"),
-          message: i18next.t("models.gpx.errorLoadingMessage")
-        });
-      }
-    });
-    const geoJsonData = this.loadGpxText(data);
-    this._geoJsonItem.setTrait(
-      CommonStrata.definition,
-      "geoJsonData",
-      geoJsonData
-    );
-    this._geoJsonItem.setTrait(
-      CommonStrata.definition,
-      "attribution",
-      this.attribution
-    );
-    return (await this._geoJsonItem.loadMapItems()).throwIfError();
+  protected async forceLoadGeojsonData(): Promise<FeatureCollectionWithCrs> {
+    let data: string | undefined;
+    if (isDefined(this.gpxString)) {
+      data = this.gpxString;
+    } else if (isDefined(this._gpxFile)) {
+      data = await readText(this._gpxFile);
+    } else if (isDefined(this.url)) {
+      data = await loadText(proxyCatalogItemUrl(this, this.url));
+    }
+
+    if (!data) {
+      throw networkRequestError({
+        sender: this,
+        title: i18next.t("models.gpx.errorLoadingTitle"),
+        message: i18next.t("models.gpx.errorLoadingMessage", {
+          appName: this.terria.appName
+        })
+      });
+    }
+
+    return this.loadGpxText(data);
   }
 
   protected forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
-  }
-
-  get mapItems() {
-    if (isDefined(this._geoJsonItem)) {
-      return this._geoJsonItem.mapItems.map(mapItem => {
-        mapItem.show = this.show;
-        return mapItem;
-      });
-    }
-    return [];
   }
 
   @computed get name() {

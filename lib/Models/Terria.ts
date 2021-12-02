@@ -96,7 +96,7 @@ import NoViewer from "./NoViewer";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
 import ShareDataService from "./ShareDataService";
 import TimelineStack from "./TimelineStack";
-import ViewerMode from "./ViewerMode";
+import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 
 // import overrides from "../Overrides/defaults.jsx";
@@ -205,9 +205,6 @@ interface ConfigParameters {
 
   disablePedestrianMode?: boolean;
 
-  /** Feature flag for experimental Geojson-Mapbox vector tiles. If falsy, all GeoJsonMixin items will render cesium primitives. If truthy, geojson-vt will be used to tile GeoJson into Mapbox vector-tiles */
-  enableGeojsonMvt?: boolean;
-
   experimentalFeatures?: boolean;
   magdaReferenceHeaders?: MagdaReferenceHeaders;
   locationSearchBoundingBox?: number[];
@@ -269,6 +266,10 @@ interface ConfigParameters {
    */
   feedbackPreamble?: string;
 
+  /**
+   * Text showing at the bottom of feedback form.
+   */
+  feedbackPostamble?: string;
   /**
    * Minimum length of feedback comment.
    */
@@ -341,8 +342,7 @@ export default class Terria {
   readonly modelIdShareKeysMap = observable.map<string, string[]>();
 
   readonly baseUrl: string = "build/TerriaJS/";
-  /** Use `terria.addErrorEventListener` or `terria.raiseErrorToUser` if you need to interact with errors outside this class*/
-  private readonly error = new CesiumEvent();
+
   readonly tileLoadProgressEvent = new CesiumEvent();
   readonly workbench = new Workbench();
   readonly overlays = new Workbench();
@@ -372,7 +372,7 @@ export default class Terria {
   );
 
   appName: string = "TerriaJS App";
-  supportEmail: string = "support@terria.io";
+  supportEmail: string = "info@terria.io";
 
   /**
    * Gets or sets the {@link this.corsProxy} used to determine if a URL needs to be proxied and to proxy it if necessary.
@@ -400,7 +400,7 @@ export default class Terria {
     catalogIndexUrl: undefined,
     regionMappingDefinitionsUrl: "build/TerriaJS/data/regionMapping.json",
     conversionServiceBaseUrl: "convert/",
-    proj4ServiceBaseUrl: "proj4/",
+    proj4ServiceBaseUrl: "proj4def/",
     corsProxyBaseUrl: "proxy/",
     proxyableDomainsUrl: "proxyabledomains/", // deprecated, will be determined from serverconfig
     serverConfigUrl: "serverconfig/",
@@ -423,7 +423,6 @@ export default class Terria {
     disableMyLocation: undefined,
     disableSplitter: undefined,
     disablePedestrianMode: false,
-    enableGeojsonMvt: false,
     experimentalFeatures: undefined,
     magdaReferenceHeaders: undefined,
     locationSearchBoundingBox: undefined,
@@ -445,7 +444,8 @@ export default class Terria {
     customRequestSchedulerLimits: undefined,
     persistViewerMode: true,
     openAddData: false,
-    feedbackPreamble: "feedback.feedbackPreamble",
+    feedbackPreamble: "translate#feedback.feedbackPreamble",
+    feedbackPostamble: undefined,
     feedbackMinLength: 0,
     extraCreditLinks: [
       // Default credit links (shown at the bottom of the Cesium map)
@@ -473,7 +473,16 @@ export default class Terria {
   @observable
   mapInteractionModeStack: MapInteractionMode[] = [];
 
-  baseMapContrastColor: string = "#ffffff";
+  @computed
+  get baseMapContrastColor() {
+    return (
+      this.baseMapsModel.baseMapItems.find(
+        basemap =>
+          isDefined(basemap.item?.uniqueId) &&
+          basemap.item?.uniqueId === this.mainViewer.baseMap?.uniqueId
+      )?.contrastColor ?? "#ffffff"
+    );
+  }
 
   @observable
   readonly userProperties = new Map<string, any>();
@@ -565,10 +574,6 @@ export default class Terria {
     }
   }
 
-  addErrorEventListener(fn: (e: TerriaError) => void) {
-    return this.error.addEventListener(e => fn(e));
-  }
-
   /** Raise error to user.
    *
    * This accepts same arguments as `TerriaError.from` - but also has:
@@ -582,19 +587,20 @@ export default class Terria {
   ) {
     const terriaError = TerriaError.from(error, overrides);
 
+    // Set shouldRaiseToUser true if forceRaiseToUser agrument is true
+    if (forceRaiseToUser) terriaError.overrideRaiseToUser = true;
+
     // Log error to error service
     this.errorService.error(terriaError);
-    if (
-      forceRaiseToUser ||
-      (this.userProperties.get("ignoreErrors") !== "1" &&
-        terriaError.shouldRaiseToUser &&
-        !terriaError.raisedToUser)
-    ) {
-      terriaError.raisedToUser = true;
-      this.error.raiseEvent(terriaError);
-    } else {
-      console.log(terriaError);
-    }
+
+    // Only show error to user if `ignoreError` flag hasn't been set to "1"
+    // Note: this will take precedence over forceRaiseToUser/overrideRaiseToUser
+    if (this.userProperties.get("ignoreErrors") !== "1")
+      this.notificationState.addNotificationToQueue(
+        terriaError.toNotification()
+      );
+
+    console.log(terriaError.toError());
   }
 
   @computed
@@ -805,6 +811,7 @@ export default class Terria {
         options.configUrl,
         options.configUrlHeaders
       );
+
       // If it's a magda config, we only load magda config and parameters should never be a property on the direct
       // config aspect (it would be under the `terria-config` aspect)
       if (isJsonObject(config) && config.aspects) {
@@ -871,20 +878,36 @@ export default class Terria {
 
   loadPersistedMapSettings(): void {
     const persistViewerMode = this.configParameters.persistViewerMode;
-    const mainViewer = this.mainViewer;
-    const viewerMode = this.getLocalProperty("viewermode");
-    if (persistViewerMode && defined(viewerMode)) {
-      if (viewerMode === "3d" || viewerMode === "3dsmooth") {
-        mainViewer.viewerMode = ViewerMode.Cesium;
-        mainViewer.viewerOptions.useTerrain = viewerMode === "3d";
-      } else if (viewerMode === "2d") {
-        mainViewer.viewerMode = ViewerMode.Leaflet;
-      } else {
-        console.error(
-          `Trying to select ViewerMode ${viewerMode} that doesn't exist`
-        );
+    const hashViewerMode = this.userProperties.get("map");
+    if (hashViewerMode && isViewerMode(hashViewerMode)) {
+      setViewerMode(hashViewerMode, this.mainViewer);
+    } else if (persistViewerMode) {
+      const viewerMode = <string>this.getLocalProperty("viewermode");
+      if (isDefined(viewerMode) && isViewerMode(viewerMode)) {
+        setViewerMode(viewerMode, this.mainViewer);
       }
     }
+    const useNativeResolution = this.getLocalProperty("useNativeResolution");
+    if (typeof useNativeResolution === "boolean") {
+      this.setUseNativeResolution(useNativeResolution);
+    }
+
+    const baseMaximumScreenSpaceError = parseFloat(
+      this.getLocalProperty("baseMaximumScreenSpaceError")?.toString() || ""
+    );
+    if (!isNaN(baseMaximumScreenSpaceError)) {
+      this.setBaseMaximumScreenSpaceError(baseMaximumScreenSpaceError);
+    }
+  }
+
+  @action
+  setUseNativeResolution(useNativeResolution: boolean) {
+    this.useNativeResolution = useNativeResolution;
+  }
+
+  @action
+  setBaseMaximumScreenSpaceError(baseMaximumScreenSpaceError: number): void {
+    this.baseMaximumScreenSpaceError = baseMaximumScreenSpaceError;
   }
 
   async loadPersistedOrInitBaseMap() {
@@ -1081,7 +1104,8 @@ export default class Terria {
       }
     });
 
-    // Load catalog index if catalogIndexUrl is set and it hasn't been loaded yet
+    // Create catalog index if catalogIndexUrl is set
+    // Note: this isn't loaded now, it is loaded in first CatalogSearchProvider.doSearch()
     if (this.configParameters.catalogIndexUrl && !this.catalogIndex) {
       this.catalogIndex = new CatalogIndex(
         this,
@@ -1350,19 +1374,8 @@ export default class Terria {
     }
 
     if (isJsonString(initData.viewerMode)) {
-      switch (initData.viewerMode.toLowerCase()) {
-        case "3d".toLowerCase():
-          this.mainViewer.viewerOptions.useTerrain = true;
-          this.mainViewer.viewerMode = ViewerMode.Cesium;
-          break;
-        case "3dSmooth".toLowerCase():
-          this.mainViewer.viewerOptions.useTerrain = false;
-          this.mainViewer.viewerMode = ViewerMode.Cesium;
-          break;
-        case "2d".toLowerCase():
-          this.mainViewer.viewerMode = ViewerMode.Leaflet;
-          break;
-      }
+      const viewerMode = initData.viewerMode.toLowerCase();
+      if (isViewerMode(viewerMode)) setViewerMode(viewerMode, this.mainViewer);
     }
 
     if (isJsonObject(initData.baseMaps)) {
@@ -1514,12 +1527,60 @@ export default class Terria {
     this.mainViewer.homeCamera = CameraView.fromJson(homeCameraInit);
   }
 
-  async loadMagdaConfig(configUrl: string, config: any, baseUri: uri.URI) {
-    const magdaRoot = new URI(configUrl)
+  /**
+   * This method can be used to refresh magda based catalogue configuration. Useful if the catalogue
+   * has items that are only available to authorised users.
+   *
+   * @param magdaCatalogConfigUrl URL of magda based catalogue configuration
+   * @param config Optional. If present, use this magda based catalogue config instead of reloading.
+   * @param configUrlHeaders  Optional. If present, the headers are added to above URL request.
+   */
+  async refreshCatalogMembersFromMagda(
+    magdaCatalogConfigUrl: string,
+    config?: any,
+    configUrlHeaders?: { [key: string]: string }
+  ) {
+    const theConfig = config
+      ? config
+      : await loadJson5(magdaCatalogConfigUrl, configUrlHeaders);
+
+    // force config (root group) id to be `/`
+    const id = "/";
+    this.removeModelReferences(this.catalog.group);
+
+    let existingReference = this.getModelById(MagdaReference, id);
+    if (existingReference === undefined) {
+      existingReference = new MagdaReference(id, this);
+      // Add model with terria aspects shareKeys
+      this.addModel(existingReference, theConfig.aspects?.terria?.shareKeys);
+    }
+
+    const reference = existingReference;
+
+    const magdaRoot = new URI(magdaCatalogConfigUrl)
       .path("")
       .query("")
       .toString();
 
+    reference.setTrait(CommonStrata.definition, "url", magdaRoot);
+    reference.setTrait(CommonStrata.definition, "recordId", id);
+    reference.setTrait(
+      CommonStrata.definition,
+      "magdaRecord",
+      theConfig as JsonObject
+    );
+    (await reference.loadReference(true)).raiseError(
+      this,
+      `Failed to load MagdaReference for record ${id}`
+    );
+    if (reference.target instanceof CatalogGroup) {
+      runInAction(() => {
+        this.catalog.group = <CatalogGroup>reference.target;
+      });
+    }
+  }
+
+  async loadMagdaConfig(configUrl: string, config: any, baseUri: uri.URI) {
     const aspects = config.aspects;
     const configParams = aspects["terria-config"]?.parameters;
 
@@ -1548,32 +1609,9 @@ export default class Terria {
     }
 
     if (aspects.group && aspects.group.members) {
-      // force config (root group) id to be `/`
-      const id = "/";
-      this.removeModelReferences(this.catalog.group);
-
-      let existingReference = this.getModelById(MagdaReference, id);
-      if (existingReference === undefined) {
-        existingReference = new MagdaReference(id, this);
-        // Add model with terria aspects shareKeys
-        this.addModel(existingReference, aspects?.terria?.shareKeys);
-      }
-
-      const reference = existingReference;
-
-      reference.setTrait(CommonStrata.definition, "url", magdaRoot);
-      reference.setTrait(CommonStrata.definition, "recordId", id);
-      reference.setTrait(CommonStrata.definition, "magdaRecord", config);
-      (await reference.loadReference()).raiseError(
-        this,
-        `Failed to load MagdaReference for record ${id}`
-      );
-      if (reference.target instanceof CatalogGroup) {
-        runInAction(() => {
-          this.catalog.group = <CatalogGroup>reference.target;
-        });
-      }
+      await this.refreshCatalogMembersFromMagda(configUrl, config);
     }
+
     this.setupInitializationUrls(baseUri, config.aspects?.["terria-config"]);
     /** Load up rest of terria catalog if one is inlined in terria-init */
     if (config.aspects?.["terria-init"]) {
@@ -1747,7 +1785,9 @@ async function interpretHash(
   baseUri: uri.URI
 ) {
   if (isDefined(hashProperties.clean)) {
-    terria.initSources.splice(0, terria.initSources.length);
+    runInAction(() => {
+      terria.initSources.splice(0, terria.initSources.length);
+    });
   }
 
   runInAction(() => {
@@ -1789,7 +1829,8 @@ async function interpretHash(
       );
     } catch (e) {
       throw TerriaError.from(e, {
-        message: { key: "parsingStartDataErrorMessage" }
+        message: { key: "models.terria.parsingStartDataErrorMessage" },
+        importance: -1
       });
     }
   }

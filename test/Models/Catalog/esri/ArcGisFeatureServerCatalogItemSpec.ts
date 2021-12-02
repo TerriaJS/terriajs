@@ -54,7 +54,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
       if (url.match("Water_Network/FeatureServer")) {
         url = url.replace(/^.*\/FeatureServer/, "FeatureServer");
         url = url.replace(
-          /FeatureServer\/query\?f=json&layerDefs=%7B2%3A%22.*%22%7D$/i,
+          /FeatureServer\/query\?f=json&layerDefs=%7B2%3A%22.*%22%7D&outSR=4326$/i,
           "layerDefs.json"
         );
         url = url.replace(/FeatureServer\/2\/?\?.*/i, "2.json");
@@ -62,7 +62,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
       } else if (url.match("Parks/FeatureServer")) {
         url = url.replace(/^.*\/FeatureServer/, "FeatureServer");
         url = url.replace(
-          /FeatureServer\/query\?f=json&layerDefs=%7B3%3A%22.*%22%7D$/i,
+          /FeatureServer\/query\?f=json&layerDefs=%7B3%3A%22.*%22%7D&outSR=4326$/i,
           "layerDefs.json"
         );
         url = url.replace(/FeatureServer\/3\/?\?.*/i, "3.json");
@@ -70,7 +70,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
       } else if (url.match("styles/FeatureServer")) {
         url = url.replace(/^.*\/FeatureServer/, "FeatureServer");
         url = url.replace(
-          /FeatureServer\/query\?f=json&layerDefs=%7B0%3A%22.*%22%7D$/i,
+          /FeatureServer\/query\?f=json&layerDefs=%7B0%3A%22.*%22%7D&outSR=4326$/i,
           "layerDefs.json"
         );
         url = url.replace(/FeatureServer\/0\/?\?.*/i, "lines.json");

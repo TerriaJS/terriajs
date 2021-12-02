@@ -4,7 +4,7 @@ import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import runLater from "../../../Core/runLater";
-import TerriaError from "../../../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import AccessControlMixin from "../../../ModelMixins/AccessControlMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
@@ -464,18 +464,10 @@ async function paginateThroughResults(
 ) {
   const arcgisPortalResponse = await getPortalInformation(uri, catalogGroup);
   if (arcgisPortalResponse === undefined || !arcgisPortalResponse) {
-    throw new TerriaError({
+    throw networkRequestError({
       title: i18next.t("models.arcgisPortal.errorLoadingTitle"),
-      message: i18next.t("models.arcgisPortal.errorLoadingMessage", {
-        email:
-          '<a href="mailto:' +
-          catalogGroup.terria.supportEmail +
-          '">' +
-          catalogGroup.terria.supportEmail +
-          "</a>"
-      })
+      message: i18next.t("models.arcgisPortal.errorLoadingMessage")
     });
-    return;
   }
   let nextStart: number = arcgisPortalResponse.nextStart;
   while (nextStart !== -1) {

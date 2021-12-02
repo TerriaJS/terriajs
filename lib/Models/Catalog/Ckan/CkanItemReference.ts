@@ -3,17 +3,27 @@ import { action, computed, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
-import { JsonObject } from "../../../Core/Json";
 import loadJson from "../../../Core/loadJson";
 import ReferenceMixin from "../../../ModelMixins/ReferenceMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
+import ModelTraits from "../../../Traits/ModelTraits";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import CkanItemReferenceTraits from "../../../Traits/TraitsClasses/CkanItemReferenceTraits";
 import CkanResourceFormatTraits from "../../../Traits/TraitsClasses/CkanResourceFormatTraits";
 import CkanSharedTraits from "../../../Traits/TraitsClasses/CkanSharedTraits";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
-import ModelTraits from "../../../Traits/ModelTraits";
+import CommonStrata from "../../Definition/CommonStrata";
+import CreateModel from "../../Definition/CreateModel";
+import createStratumInstance from "../../Definition/createStratumInstance";
+import LoadableStratum from "../../Definition/LoadableStratum";
+import { BaseModel } from "../../Definition/Model";
+import ModelPropertiesFromTraits from "../../Definition/ModelPropertiesFromTraits";
+import StratumFromTraits from "../../Definition/StratumFromTraits";
+import StratumOrder from "../../Definition/StratumOrder";
+import Terria from "../../Terria";
 import CatalogMemberFactory from "../CatalogMemberFactory";
+import WebMapServiceCatalogItem from "../Ows/WebMapServiceCatalogItem";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import CkanCatalogGroup, {
   createInheritedCkanSharedTraitsStratum
 } from "./CkanCatalogGroup";
@@ -23,17 +33,7 @@ import {
   CkanResource,
   CkanResourceServerResponse
 } from "./CkanDefinitions";
-import CommonStrata from "../../Definition/CommonStrata";
-import CreateModel from "../../Definition/CreateModel";
-import createStratumInstance from "../../Definition/createStratumInstance";
-import LoadableStratum from "../../Definition/LoadableStratum";
-import { BaseModel } from "../../Definition/Model";
-import ModelPropertiesFromTraits from "../../Definition/ModelPropertiesFromTraits";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
-import StratumFromTraits from "../../Definition/StratumFromTraits";
-import StratumOrder from "../../Definition/StratumOrder";
-import Terria from "../../Terria";
-import WebMapServiceCatalogItem from "../Ows/WebMapServiceCatalogItem";
+import CkanDefaultFormatsStratum from "./CkanDefaultFormatsStratum";
 
 export class CkanDatasetStratum extends LoadableStratum(
   CkanItemReferenceTraits
@@ -81,12 +81,13 @@ export class CkanDatasetStratum extends LoadableStratum(
         ckanItemReference._ckanDataset = await loadCkanDataset(
           ckanItemReference
         );
-        const matched = ckanItemReference.findFirstValidResource(
-          ckanItemReference._ckanDataset
+        const matched = getSupportedFormats(
+          ckanItemReference._ckanDataset,
+          ckanItemReference.preparedSupportedFormats
         );
-        if (matched === undefined) return undefined;
-        ckanItemReference._ckanResource = matched.ckanResource;
-        ckanItemReference._supportedFormat = matched.supportedFormat;
+        if (matched[0] === undefined) return undefined;
+        ckanItemReference._ckanResource = matched[0].resource;
+        ckanItemReference._supportedFormat = matched[0].format;
       } else if (
         ckanItemReference.datasetId === undefined &&
         ckanItemReference.resourceId !== undefined
@@ -94,8 +95,9 @@ export class CkanDatasetStratum extends LoadableStratum(
         ckanItemReference._ckanResource = await loadCkanResource(
           ckanItemReference
         );
-        ckanItemReference._supportedFormat = ckanItemReference.isResourceInSupportedFormats(
-          ckanItemReference._ckanResource
+        ckanItemReference._supportedFormat = isResourceInSupportedFormats(
+          ckanItemReference._ckanResource,
+          ckanItemReference.preparedSupportedFormats
         );
       }
     }
@@ -114,7 +116,8 @@ export class CkanDatasetStratum extends LoadableStratum(
     if (this.ckanResource === undefined) return undefined;
     if (this.ckanItemReference._supportedFormat !== undefined) {
       if (
-        this.ckanItemReference._supportedFormat.definition.type === "wms" &&
+        (this.ckanItemReference._supportedFormat.definition ?? {}).type ===
+          "wms" &&
         this.ckanResource.wms_api_url
       ) {
         return this.ckanResource.wms_api_url;
@@ -124,7 +127,7 @@ export class CkanDatasetStratum extends LoadableStratum(
   }
 
   @computed get name() {
-    if (this.ckanResource === undefined) return this.ckanItemReference.name;
+    if (this.ckanResource === undefined) return undefined;
     if (this.ckanItemReference.useResourceName) return this.ckanResource.name;
     // via @steve9164
     /** Switched the order [check `useCombinationNameWhereMultipleResources`
@@ -273,61 +276,20 @@ StratumOrder.addLoadStratum(CkanDatasetStratum.stratumName);
 export default class CkanItemReference extends UrlMixin(
   ReferenceMixin(CreateModel(CkanItemReferenceTraits))
 ) {
-  static readonly defaultSupportedFormats: StratumFromTraits<
-    CkanResourceFormatTraits
-  >[] = [
-    createStratumInstance(CkanResourceFormatTraits, {
-      id: "WMS",
-      formatRegex: "^wms$",
-      definition: {
-        type: "wms"
-      }
-    }),
-    createStratumInstance(CkanResourceFormatTraits, {
-      id: "CSV",
-      formatRegex: "^csv-geo-",
-      definition: {
-        type: "csv"
-      }
-    }),
-    createStratumInstance(CkanResourceFormatTraits, {
-      id: "GeoJson",
-      formatRegex: "^geojson$",
-      definition: {
-        type: "geojson"
-      }
-    }),
-    createStratumInstance(CkanResourceFormatTraits, {
-      id: "ArcGIS MapServer",
-      formatRegex: "^esri rest$",
-      definition: {
-        type: "esri-mapServer"
-      }
-    }),
-    createStratumInstance(CkanResourceFormatTraits, {
-      id: "ArcGIS FeatureServer",
-      formatRegex: "^esri rest$",
-      definition: {
-        type: "esri-featureServer"
-      }
-    }),
-    createStratumInstance(CkanResourceFormatTraits, {
-      id: "Kml",
-      formatRegex: "^km[lz]$",
-      definition: {
-        type: "kml"
-      }
-    }),
-    createStratumInstance(CkanResourceFormatTraits, {
-      id: "Czml",
-      formatRegex: "^czml$",
-      definition: {
-        type: "czml"
-      }
-    })
-  ];
-
   static readonly type = "ckan-item";
+
+  constructor(
+    id: string | undefined,
+    terria: Terria,
+    sourceReference?: BaseModel,
+    strata?: Map<string, StratumFromTraits<ModelTraits>>
+  ) {
+    super(id, terria, sourceReference, strata);
+    this.strata.set(
+      CkanDefaultFormatsStratum.stratumName,
+      new CkanDefaultFormatsStratum()
+    );
+  }
 
   get type() {
     return CkanItemReference.type;
@@ -342,57 +304,11 @@ export default class CkanItemReference extends UrlMixin(
   _ckanCatalogGroup: CkanCatalogGroup | undefined = undefined;
   _supportedFormat: PreparedSupportedFormat | undefined = undefined;
 
-  constructor(
-    id: string | undefined,
-    terria: Terria,
-    sourceReference?: BaseModel,
-    strata?: Map<string, StratumFromTraits<ModelTraits>>
-  ) {
-    super(id, terria, sourceReference, strata);
-    this.setTrait(
-      CommonStrata.defaults,
-      "supportedResourceFormats",
-      CkanItemReference.defaultSupportedFormats
-    );
-  }
-
   @computed
   get preparedSupportedFormats(): PreparedSupportedFormat[] {
-    return (
-      this.supportedResourceFormats &&
-      this.supportedResourceFormats.map(prepareSupportedFormat)
-    );
-  }
-
-  isResourceInSupportedFormats(
-    resource: CkanResource | undefined
-  ): PreparedSupportedFormat | undefined {
-    if (resource === undefined) return undefined;
-    for (let i = 0; i < this.preparedSupportedFormats.length; ++i) {
-      const format = this.preparedSupportedFormats[i];
-      if (format.formatRegex === undefined) continue;
-      if (format.formatRegex.test(resource.format)) {
-        return format;
-      }
-    }
-    return undefined;
-  }
-
-  findFirstValidResource(
-    dataset: CkanDataset | undefined
-  ): CkanResourceWithFormat | undefined {
-    if (dataset === undefined) return undefined;
-    for (let i = 0; i < dataset.resources.length; ++i) {
-      const r = dataset.resources[i];
-      const supportedFormat = this.isResourceInSupportedFormats(r);
-      if (supportedFormat !== undefined) {
-        return {
-          ckanResource: r,
-          supportedFormat: supportedFormat
-        };
-      }
-    }
-    return undefined;
+    return this.supportedResourceFormats
+      ? this.supportedResourceFormats.map(prepareSupportedFormat)
+      : [];
   }
 
   setDataset(ckanDataset: CkanDataset) {
@@ -407,8 +323,15 @@ export default class CkanItemReference extends UrlMixin(
     this._ckanCatalogGroup = ckanCatalogGroup;
   }
 
+  setSupportedFormat(format: PreparedSupportedFormat | undefined) {
+    this._supportedFormat = format;
+  }
+
   setSupportedFormatFromResource(resource: CkanResource | undefined) {
-    this._supportedFormat = this.isResourceInSupportedFormats(resource);
+    this._supportedFormat = isResourceInSupportedFormats(
+      resource,
+      this.preparedSupportedFormats
+    );
   }
 
   @computed get cacheDuration(): string {
@@ -422,7 +345,6 @@ export default class CkanItemReference extends UrlMixin(
   // and then we'll attach it to the target model
   // I wonder if it needs to be on both?
   async setCkanStrata(model: BaseModel) {
-    // not sure why this needs to be any
     const stratum = await CkanDatasetStratum.load(this, this._ckanCatalogGroup);
     if (stratum === undefined) return;
     runInAction(() => {
@@ -449,8 +371,12 @@ export default class CkanItemReference extends UrlMixin(
 
     if (this._supportedFormat === undefined) return undefined;
 
+    const type = (this._supportedFormat.definition ?? {}).type;
+
+    if (typeof type !== "string") return undefined;
+
     const model = CatalogMemberFactory.create(
-      this._supportedFormat.definition.type as string,
+      type,
       this.uniqueId,
       this.terria,
       this
@@ -467,15 +393,19 @@ export default class CkanItemReference extends UrlMixin(
     }
 
     // Overrides for specific catalog types
-    if (
-      model instanceof WebMapServiceCatalogItem &&
-      this._ckanResource?.wms_layer
-    ) {
-      model.setTrait(
-        CommonStrata.definition,
-        "layers",
-        this._ckanResource.wms_layer
-      );
+    if (model instanceof WebMapServiceCatalogItem) {
+      const params:
+        | Record<string, string | undefined>
+        | undefined = model.uri?.search(true);
+
+      // Mixing ?? and || because for params we don't want to use empty string params if there are non-empty string parameters
+      const layers =
+        this._ckanResource?.wms_layer ??
+        (params?.LAYERS || params?.layers || params?.typeName);
+
+      if (layers) {
+        model.setTrait(CommonStrata.definition, "layers", layers);
+      }
     }
 
     // Tried to make this sequence an updateModelFromJson but wouldn't work?
@@ -495,14 +425,15 @@ export default class CkanItemReference extends UrlMixin(
   }
 }
 
-interface CkanResourceWithFormat {
-  supportedFormat: PreparedSupportedFormat;
-  ckanResource: CkanResource;
+export interface CkanResourceWithFormat {
+  format: PreparedSupportedFormat;
+  resource: CkanResource;
 }
 
-interface PreparedSupportedFormat {
-  formatRegex: RegExp | undefined;
-  definition: JsonObject;
+export interface PreparedSupportedFormat
+  extends ModelPropertiesFromTraits<CkanResourceFormatTraits> {
+  formatRegexParsed: RegExp | undefined;
+  urlRegexParsed: RegExp | undefined;
 }
 
 async function loadCkanDataset(ckanItem: CkanItemReference) {
@@ -542,13 +473,92 @@ function findResourceInDataset(
   return undefined;
 }
 
-const prepareSupportedFormat = createTransformer(
+export const prepareSupportedFormat = createTransformer(
   (format: ModelPropertiesFromTraits<CkanResourceFormatTraits>) => {
     return {
-      formatRegex: format.formatRegex
+      id: format.id,
+      definition: format.definition,
+      maxFileSize: format.maxFileSize,
+      removeDuplicates: format.removeDuplicates,
+      onlyUseIfSoleResource: format.onlyUseIfSoleResource,
+      formatRegex: format.formatRegex,
+      urlRegex: format.urlRegex,
+
+      formatRegexParsed: format.formatRegex
         ? new RegExp(format.formatRegex, "i")
         : undefined,
-      definition: format.definition || {}
+      urlRegexParsed: format.urlRegex
+        ? new RegExp(format.urlRegex, "i")
+        : undefined
     };
   }
 );
+
+export function getSupportedFormats(
+  dataset: CkanDataset | undefined,
+  formats: PreparedSupportedFormat[]
+) {
+  if (!dataset) return [];
+  const supported: CkanResourceWithFormat[] = [];
+  for (let i = 0; i < formats.length; ++i) {
+    const format = formats[i];
+    for (let j = 0; j < dataset.resources.length; ++j) {
+      const resource = dataset.resources[j];
+      if (resourceIsSupported(resource, format)) {
+        supported.push({ resource: resource, format: format });
+      }
+    }
+  }
+
+  return supported;
+}
+
+export function isResourceInSupportedFormats(
+  resource: CkanResource | undefined,
+  formats: PreparedSupportedFormat[]
+): PreparedSupportedFormat | undefined {
+  if (resource === undefined) return undefined;
+  let matches: PreparedSupportedFormat[] = [];
+  for (let i = 0; i < formats.length; ++i) {
+    const format = formats[i];
+    if (resourceIsSupported(resource, format)) return format;
+  }
+  return undefined;
+}
+
+export function resourceIsSupported(
+  resource: CkanResource,
+  format: PreparedSupportedFormat
+) {
+  let match = false;
+
+  // Does format match (formatRegex is required)
+  if (!isDefined(format.formatRegexParsed)) return false;
+
+  if (format.formatRegexParsed.test(resource.format)) {
+    match = true;
+  }
+
+  // Does URL match (urlRegex is optional)
+  if (
+    match &&
+    isDefined(format.urlRegexParsed) &&
+    !format.urlRegexParsed.test(resource.url)
+  ) {
+    match = false;
+  }
+
+  // Is resource.size (in bytes) greater than maxFileSize? (maxFileSize is optional)
+  if (
+    match &&
+    isDefined(format.maxFileSize) &&
+    format.maxFileSize !== null &&
+    isDefined(resource.size) &&
+    resource.size !== null &&
+    resource.size / (1024 * 1024) > format.maxFileSize
+  ) {
+    match = false;
+  }
+
+  return match;
+}

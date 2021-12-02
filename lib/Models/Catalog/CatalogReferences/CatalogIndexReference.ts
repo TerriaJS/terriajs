@@ -43,22 +43,19 @@ export default class CatalogIndexReference extends ReferenceMixin(
 
     // No member exists, so try to load containers
     // Get full list of containers by recursively searching for parent models
-    const findContainers = (model: CatalogIndexReference): string[] => {
-      const knownContainerUniqueIds: string[] = [
-        ...model.memberKnownContainerUniqueIds,
-        ...flatten(
-          filterOutUndefined(
-            model.memberKnownContainerUniqueIds.map(parentId => {
-              const parent = this.terria.catalogIndex?.models?.get(parentId);
-              if (parent) {
-                return findContainers(parent);
-              }
-            })
-          )
+    const findContainers = (model: CatalogIndexReference): string[] => [
+      ...model.memberKnownContainerUniqueIds,
+      ...flatten(
+        filterOutUndefined(
+          model.memberKnownContainerUniqueIds.map(parentId => {
+            const parent = this.terria.catalogIndex?.models?.get(parentId);
+            if (parent) {
+              return findContainers(parent);
+            }
+          })
         )
-      ];
-      return knownContainerUniqueIds;
-    };
+      )
+    ];
 
     const containers = findContainers(this).reverse();
 

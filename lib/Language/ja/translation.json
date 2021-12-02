@@ -22,7 +22,7 @@
       "content": "## 地図の向きや角度の操作\n\n外側の円を左クリックしながら回すことで地図の向きを変えたり、内側の円を左クリックしながら動かすことで、角度を変えることができます。詳しくは？ボタンをクリックしてください。"
     },
     "menuBarStoryButton": {
-      "content": "## ストーリー\n\nストーリーを使用すると、データセットにコンテキスト情報を追加して、3Dのガイドマップやレポートが作れます。ストーリーエディタを使用して独自のデータストーリーを作成し、完了したら「共有」パネルで共有します。"
+      "content": "## ストーリー\n\nストーリーを使用すると、3Dビューアに表示されるデータに説明を追加したり、動きのあるガイドマップやレポートが作れます。作成したストーリーを共有することもできます。"
     },
     "menuBarMapSettingsButton": {
       "content": "## 地図の設定\n\nベースとなる地図、2D/3D地形、画質などのオプションを設定できます。"
@@ -50,7 +50,7 @@
   },
   "AR": {
     "arTool": "拡張現実ツール",
-    "resetAlignmentMessage": "コンパスの位置合わせをリセットします。配置が実際<と一致しない場合は、デバイスを8の字の動きで振って、デバイスを再調整してみてください。これはいつでも行うことができます。<br /> <br />デバイスに搭載されたコンパスの方向を変える可能性があるため、磁場や金属体のある場所は避けてください。",
+    "resetAlignmentMessage": "コンパスの位置合わせをリセットします。配置が実際<と一致しない場合は、デバイスを8の字の動きで振って、デバイスを再調整してみてください。この作業はいつでも行うことができます。<br /><br />デバイスに搭載されたコンパスの方向を変える可能性があるため、磁場や金属体のある場所は避けてください。",
     "resetAlignmentTitle": "位置合わせをリセット",
     "manualAlignmentMessage": "地図の現在の位置とモバイルデバイスの位置合わせしてから、点滅しているコンパスをクリックします。位置合わせするランドマークが現在地図上に表示されていない場合は、デバイスの位置合わせする前に、識別可能なランドマークが表示されるまでドラッグアンドピンチで地図を移動できます。 <br /><div>{{img}}</div> <br />ヒント：よく知らない場所では、太陽や月が位置合わせのランドマークになることがよくあります（太陽を見て目を傷つけないよう十分注意してください）。",
     "manualAlignmentTitle": "手動調整",
@@ -74,7 +74,7 @@
       "innerCircleTitle": "内側の円",
       "outerRingDescription": "外側のリングをドラッグして回すと地図が回転します。",
       "outerRingTitle": "外側のリング",
-      "title": "ジャイロスコープコントロール"
+      "title": "ジャイロスコープ制御"
     }
   },
   "splitterTool": {
@@ -312,7 +312,7 @@
     "downloadInFormat": "選択中のデータを{{format}}フォーマットでダウンロード",
     "useLinkBelow": "データをダウンロードするには以下のリンクを使用してください。URLのクエリーパラメーターをカスタマイズする方法の詳細は{{link}}から確認してください。",
     "metadataUrls": "メタデータのリンク",
-    "dataUrl": "データのURL",
+    "dataUrl": "データリンク",
     "typeName": "タイプ名",
     "layerName": "レイヤー名",
     "wfs": "これは<1>WFSサービス</1>です。WFSサービスは空間データをオンデマンドで配信します。GISソフトからは次のURLで利用できます。",
@@ -345,7 +345,9 @@
     "created": "作成日",
     "contact": "連絡先",
     "author": "作成者",
-    "fees": "料金"
+    "fees": "料金",
+    "previewItemErrorTitle": "カタログアイテムをプレビューできません。",
+    "previewItemErrorMessage": "カタログアイテム読込中にエラー発生。"
   },
   "search": {
     "searchCatalogue": "カタログを検索する",
@@ -364,7 +366,9 @@
     "helpBtnText": "ヘルプを見る",
     "tourBtnText": "操作方法を見る",
     "welcomeMessage": "データを探して3D地図上に展開してみませんか？<br/>とにかく触ってみるか、ヘルプガイドで使い方の概要を見てみてください。",
-    "title": "ようこそ"
+    "title": "ようこそ",
+    "welcomeMessageOnMobile": "データがお好きですか？",
+    "searchBtnText": "場所の検索"
   },
   "featureInfo": {
     "noInfoAvailable": "情報はありません",
@@ -384,7 +388,9 @@
       "featureInfoShown": "以下には最初の{{maximum}}個が表示されています。",
       "featuresFound": "{catalogItemName}には{{featCount}}個のフィーチャーがあります。",
       "moreThanMax": "{{catalogItemName}}には{{maximum}}個以上のフィーチャーがあります。"
-    }
+    },
+    "showRawData": "生データ表示",
+    "showCuratedData": "おすすめデータ表示"
   },
   "sui": {
     "hideWorkbench": "ワークベンチを非表示",
@@ -411,7 +417,9 @@
     "takeTour": "操作方法を見る",
     "dismissText": "閉じる",
     "promptMessage": "ツアー、使い方のビデオなどのヘルプコンテンツがあります",
-    "menuPaneBody": "各種メニューの使い方は「操作方法を見る」からご確認ください。技術的な質問については、[info@terria.io](mailto:info@terria.io)で開発チームにご連絡ください。"
+    "menuPaneBody": "各種メニューの使い方は「操作方法を見る」からご確認ください。技術的な質問については、[{{supportEmail}}]({{supportEmail}})で開発チームにご連絡ください",
+    "mapUserGuide": "マップユーザーガイド",
+    "btnText": "ヘルプ"
   },
   "settingPanel": {
     "performanceLabel": "パフォーマンス",
@@ -445,7 +453,8 @@
     "timeline": {
       "alwaysShow": "常に表示",
       "hideLabel": "ここを押すとワークベンチに時系列データがない時も含めて常にタイムラインが表示されます",
-      "alwaysShowLabel": "ここを押すとワークベンチに時系列データがある時にだけタイムラインが表示されます"
+      "alwaysShowLabel": "ここを押すとワークベンチに時系列データがある時にだけタイムラインが表示されます",
+      "title": "タイムライン"
     },
     "btnText": "地図の設定",
     "screen": "スクリーン",
@@ -476,7 +485,7 @@
     "btnAdvanced": "詳細設定",
     "printExplanation": "このマップを印刷できる状態で表示。",
     "printTitle": "印刷",
-    "convertErrorMessage": "<p>この共有リンクは古いバージョンのウェブマップで作成されました。共有されたデータをアップグレードする際にエラーが発生しました。以下はエラーの詳細です。</p><p><pre>{{error}}</pre></p><p><details><summary>Stack trace:</summary><pre>{{stackTrace}}</pre></details></p><p>エラーを報告するには{{email}}にメールを送信してください。</p>",
+    "convertErrorMessage": "この共有リンクは古いバージョンのTerriaJSで作成されました。共有されたデータをアップグレードする際にエラーが発生しました。",
     "convertErrorTitle": "共有リンクをV8にアップグレードすることができませんでした",
     "convertNotificationWarningsTitle": "技術的な詳細",
     "convertNotificationFeedback": "質問やフィードバックを送るにはここをクリックしてください。",
@@ -578,7 +587,9 @@
     "changeLanguage": "言語を変更"
   },
   "mobile": {
-    "toggleNavigation": "メニューの表示・非表示"
+    "toggleNavigation": "メニューの表示・非表示",
+    "addDataBtnText": "データ",
+    "doneBtnText": "完了"
   },
   "core": {
     "printWindow": {
@@ -623,7 +634,11 @@
     "terriaError": {
       "defaultCombineMessage": "エラーの詳細は以下に示しました",
       "defaultCombineTitle": "複数のエラーが発生しました",
-      "defaultTitle": "エラーが発生しました"
+      "defaultTitle": "エラーが発生しました",
+      "defaultMessage": "不明なエラー",
+      "networkRequestMessage": "データ提供元の都合によりデータが利用できないか表示できないようです。地図をもう一度読み込むか、時間をおいてからアクセスするか、別のデータセットを選んでください。 <feedbacklink feedback-message='問題が解消しないようであれば、フィードバックのメールを送ってください。' email-message='問題が解消しないようであれば、{{email}} に報告してください'/>",
+      "networkRequestTitle": "ネットワークリクエストのエラー発生",
+      "networkRequestMessageDetailed": "以下の原因が考えられます:\n\n* サーバーのホスト名が解決できない\n* サーバーがリクエストに応答できない - または一時的にサーバーが利用できない\n* サーバーが拒否 [このURLへのCross-Origin Resource Sharing (CORS)](https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/) アクセス\n* インターネット接続に問題がある\n\nリンクを手動で入力した場合は、もう一度リンクが正しいか確認してください。"
     },
     "serverConfig": {
       "failedToGet": "{{serverConfigUrl}} からサーバーの設定を取得できません。そのため、プロキシ、変換、URL短縮機能などが正しく機能しないかもしれません。"
@@ -680,7 +695,9 @@
     "download": "ダウンロード",
     "expand": "もっと見る",
     "closePanel": "パネルを閉じる",
-    "sectionLabel": "図"
+    "sectionLabel": "図",
+    "loading": "チャートデータの読み込み...",
+    "noData": "チャート化できるデータがありません。"
   },
   "emptyWorkbenchMessage": "<0><0>「データを地図上でみる」ボタンから、表示するデータを追加できます。</0><1><strong>上の「$t(addData.addDataBtnText)」をクリック</strong>して</1><2><0>データカタログが開き、</0><1>自分のデータを地図上に展開できます</1></2><3><0></0><strong>使い方：</strong><2>アクティブなデータセットはすべてここに表示されます</2></3></0>",
   "concept": {
@@ -782,7 +799,7 @@
       "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
       "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
       "name": "CKANリソース",
-      "corsErrorMessage": "このCKANサーバーからパッケージを取得することができませんでした。<br/><br/>このURLを手動で入力した場合は、URLを再確認してください。<br/><br/>もしあなたがこのサーバーの管理者なら、{{corsLink}}が有効であることを確かめてください。<br/><br/>そうでない場合で、再読み込みしても問題が解決しない場合は、以下の技術詳細情報を添えてこのエラーを{{email}}までご報告ください。<br/><br/>",
+      "corsErrorMessage": "このCKANサーバーからパッケージを取得することができませんでした。",
       "errorLoadingMessage": "このCKANカタログの定義には有効なフィルタークエリが含まれていません。",
       "errorLoadingTitle": "CKANカタログ読み込みエラー",
       "nameServer": "CKANサーバー",
@@ -809,10 +826,10 @@
       "openInPortal": "ArcGISポータルで開く",
       "licence": "ライセンス",
       "name": "ArcGIS ポータルアイテム",
-      "corsErrorMessage": "このArcGISポータルサーバーからパッケージを取得することができませんでした。<br/><br/>このURLを手動で入力した場合は、URLを再確認してください。<br/><br/>もしあなたがこのサーバーの管理者なら、{{corsLink}}が有効であることを確かめてください。<br/><br/>そうでない場合で、再読み込みしても問題が解決しない場合は、以下の技術詳細情報を添えてこのエラーを{{email}}までご報告ください。<br/><br/>"
+      "corsErrorMessage": "このArcGISポータルサーバーからパッケージを取得することができませんでした。 "
     },
     "cesiumTerrain": {
-      "errorRenderingMessage": "<p>3Dの描画中にエラーが発生しました。これはおそらく{{appName}}のバグか、システムやウェブブラウザに互換性がないことが原因です。作業を続けられるように2Dに切り替えます。以下の技術詳細情報を添えてこのエラーを{{email}}までご報告ください。</p>",
+      "errorRenderingMessage": "3Dの描画中にエラーが発生しました。これはおそらく{{appName}}のバグか、システムやウェブブラウザに互換性がないことが原因です。作業を続けられるように2Dに切り替えます。",
       "errorRenderingTitle": "3D描画エラー",
       "notSupportedErrorMessage": "\"{{name}}\"は2Dでは表示できません。3Dに切り替えてもう一度お試しください。",
       "notSupportedErrorTitle": "2Dではサポートされていません",
@@ -850,7 +867,7 @@
     "webMapServiceCatalogItem": {
       "dataDescription": "データの説明",
       "serviceDescription": "サービスの説明",
-      "missingDataMessage": "WMS データセット '{{name}}' はデータを返しませんでした。{{line}}{{line}}カタログファイルが正しく設定されていないあk、サーバーのアドレスが変更された可能性があります。{{line}}{{line}}問題を {{email}} に報告して下さい。",
+      "missingDataMessage": "WMS データセット '{{name}}' はデータを返しませんでした。{{line}}{{line}}カタログファイルが正しく設定されていないあk、サーバーのアドレスが変更された可能性があります。",
       "datasetScaleErrorMessage": "データセット {{name}} はこのズームレベルでは表示されません。データ提供者は、このスケールでデータを表示させることは適正でないと判断しています。より詳しくお知りになりたい方は、データセットの情報ボタンをクリックして、データの詳細を参照してください。",
       "missingUrlMessage": "Web Map Service (WMS) GetCapabilities ドキュメントを読み込めません。カタログアイテムに `url`がありません。",
       "missingUrlTitle": "GetCapabilities を読み込めません",
@@ -858,7 +875,7 @@
       "badlyFormatedMessage": "'{{name}}' データセットは、周期性の点で正しくフォーマットされていません '{{isoSegments}}'。データセットの情報ボタンをクリックするとデータセットとデータを管理する主体の情報が得られます。",
       "badlyFormatedTitle": "周期性が正しくフォーマットされていません",
       "datasetScaleErrorTitle": "このスケールではデータセットは表示されません",
-      "noLayerFoundMessage": "WMS データセット'{{name}}' に '{{layers}}'に該当するレイヤがありません。 {{suggested}} {{line}}{{line}}カタログファイルが正しく設定されていないかWMSサーバーが変更された可能性があります。{{line}}{{line}}メールアドレス {{email}}にエラーを報告して下さい。",
+      "noLayerFoundMessage": "WMS データセット'{{name}}' に '{{layers}}'に該当するレイヤがありません。 {{suggested}} {{line}}{{line}}カタログファイルが正しく設定されていないかWMSサーバーが変更された可能性があります。",
       "noLayerFoundTitle": "レイヤが一つも見つかりません",
       "defaultStyleLabel": "デフォルトのスタイル",
       "getCapabilitiesUrl": "GetCapabilities URL",
@@ -873,9 +890,9 @@
       "reachedMaxFeatureLimit": "警告: このレイヤはWFSフィーチャの限度 ({{maxFeatures}}) に達しました",
       "missingUrlMessage": "Web Feature Service (WFS) の GetCapabilities ドキュメントを読めませんでした。語るぐアイテムに `url`がないためです。",
       "missingUrlTitle": "GetCapabilities を読めませんでした",
-      "missingDataMessage": "WFS データセット '{{name}}' は何もデータを返しません。{{line}}{{line}}カタログが正しく設定されていないかサーバーのアドレスが変わったかもしれません。{{line}}{{line}}メールアドレス {{email}}にエラーを報告して下さい。",
+      "missingDataMessage": "WFS データセット '{{name}}' は何もデータを返しません。{{line}}{{line}}カタログが正しく設定されていないかサーバーのアドレスが変わったかもしれません。",
       "missingDataTitle": "見つからないデータ",
-      "noLayerFoundMessage": "WFS データセット'{{name}}' には '{{typeNames}}' に該当するレイヤがありません。 {{suggested}} {{line}}{{line}}カタログファイルが正しく設定されていないか、WFSサーバーが変更されたと思われます。{{line}}{{line}}メールアドレス {{email}}へこのエラーを報告して下さい。",
+      "noLayerFoundMessage": "WFS データセット'{{name}}' には '{{typeNames}}' に該当するレイヤがありません。 {{suggested}} {{line}}{{line}}カタログファイルが正しく設定されていないか、WFSサーバーが変更されたと思われます。{",
       "noLayerFoundTitle": "レイヤがありません",
       "getCapabilitiesUrl": "GetCapabilities URL",
       "serviceContact": "サービスに関する連絡先",
@@ -904,8 +921,8 @@
       "groupNotAvailableTitle": "グループはありません",
       "invalidServiceTitle": "無効なArcGISマップサービス",
       "name": "ArcGIS マップサーバーグループ",
-      "groupNotAvailableMessage": "ArcGIS Map Serviceの呼び出し中にエラーが発生しました。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このエラーが発生する場合、サーバーが{{cors}}をサポートしていない可能性もあります。サーバーを管理しているのがあなたであれば、CORSが無効になっていないか確認し、無効になっている場合は有効にしてください。サーバーのコントロール権がない場合は、サーバー管理者に問い合わせてCORSを有効化してもらってください。または、{{appName}}の運営者に{{email}}から問い合わせいただければ、{{appName}}内のCORS非対応サーバーのリストにこのサーバーを加えることで{{appName}}自体がリクエストを中継できるかもしれません。 <p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>",
-      "invalidServiceMessage": "ArcGIS Map Serviceの呼び出し中にエラーが発生しました。サーバーの応答が有効なMap Serviceドキュメントではないようです。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>"
+      "groupNotAvailableMessage": "ArcGIS Map Serviceの呼び出し中にエラーが発生しました。",
+      "invalidServiceMessage": "ArcGIS Map Serviceの呼び出し中にエラーが発生しました。サーバーの応答が有効なMap Serviceドキュメントではないようです。"
     },
     "georss": {
       "copyrightText": "著作権",
@@ -919,7 +936,7 @@
       "updated": "アップデート済み",
       "subtitle": "サブタイトル",
       "name": "GeoRSS",
-      "errorLoadingMessage": "GeoRSSファイルの読み込み中にエラーが発生しました。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このエラーが発生する場合、サーバーが{{cors}}をサポートしていない可能性もあります。サーバーを管理しているのがあなたであれば、CORSが無効になっていないか確認し、無効になっている場合は有効にしてください。サーバーのコントロール権がない場合は、サーバー管理者に問い合わせてCORSを有効化してもらってください。または、{{appName}}の運営者に{{email}}から問い合わせいただければ、{{appName}}内のCORS非対応サーバーのリストにこのサーバーを加えることで{{appName}}自体がリクエストを中継できるかもしれません。 <p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。"
+      "errorLoadingMessage": "GeoRSSファイルの読み込み中にエラーが発生しました。"
     },
     "arcGisFeatureServerCatalogGroup": {
       "copyrightText": "著作権",
@@ -929,8 +946,8 @@
       "name": "ArcGISフィーチャーサーバーグループ",
       "cors": "CORS",
       "groupNotAvailableTitle": "グループはありません",
-      "groupNotAvailableMessage": "ArcGIS Feature Serviceの呼び出し中にエラーが発生しました。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このエラーが発生する場合、サーバーが{{cors}}をサポートしていない可能性もあります。サーバーを管理しているのがあなたであれば、CORSが無効になっていないか確認し、無効になっている場合は有効にしてください。サーバーのコントロール権がない場合は、サーバー管理者に問い合わせてCORSを有効化してもらってください。または、{{appName}}の運営者に{{email}}から問い合わせいただければ、{{appName}}内のCORS非対応サーバーのリストにこのサーバーを加えることで{{appName}}自体がリクエストを中継できるかもしれません。 <p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>",
-      "invalidServiceMessage": "ArcGIS Feature Serviceの呼び出し中にエラーが発生しました。サーバーの応答が有効なFeature Serviceドキュメントではないようです。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>"
+      "groupNotAvailableMessage": "ArcGIS Feature Serviceの呼び出し中にエラーが発生しました。",
+      "invalidServiceMessage": "ArcGIS Feature Serviceの呼び出し中にエラーが発生しました。サーバーの応答が有効なFeature Serviceドキュメントではないようです。"
     },
     "userData": {
       "firefox": "Mozilla Firefox",
@@ -945,7 +962,7 @@
     "czml": {
       "unableToLoadItemMessage": "このCZMLカタログアイテムには`url`、`czmlData`、`czmlString`のいずれのプロパティも存在しないため、読み込むことができません。",
       "unableToLoadItemTitle": "CZMLがありません",
-      "errorLoadingMessage": "CZMLファイルの読み込み中にエラーが発生しました。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このエラーが発生する場合、サーバーが{{cors}}をサポートしていない可能性もあります。サーバーを管理しているのがあなたであれば、CORSが無効になっていないか確認し、無効になっている場合は有効にしてください。サーバーのコントロール権がない場合は、サーバー管理者に問い合わせてCORSを有効化してもらってください。または、{{appName}}の運営者に{{email}}から問い合わせいただければ、{{appName}}内のCORS非対応サーバーのリストにこのサーバーを加えることで{{appName}}自体がリクエストを中継できるかもしれません。 <p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。以下は技術的な詳細情報です。</p>\n<pre>${stackTrace}</pre>",
+      "errorLoadingMessage": "CZMLファイルの読み込み中にエラーが発生しました。",
       "errorLoadingTitle": "CZMLを読み込めませんでした",
       "name": "Cesium言語（CZML）",
       "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
@@ -960,22 +977,22 @@
       "links": "リンク",
       "dataResponsibility": "データに関する責任",
       "errorLoadingRecordsTitle": "CSWレコードを読み込めません。",
-      "notUseableTitle": "カタログサービスが利用できません",
+      "notUseableTitle": "カタログサービスが利用できません。  \n\n {{message}}",
       "errorLoadingTitle": "CSQを読み込めません",
       "exceptionMessage": "CSWサーバーがエラーを報告しています:\n\n {{exceptionText}}",
       "unknownError": "CSWサーバーが原因の特定できないエラーを報告しています。",
-      "checkCORSDomain": "CSW サーバ上でGetDomainを実行できませんでした。<br/><br/> URLを手入力している場合は、もう一度URLをチェックしてください。<br/><br/> もしご自分のサーバーをお使いでしたら、 <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a> が有効になっていることを確認して下さい。<br/><br/> その上でリロードしても問題が解決しない場合は、以下のメールに問題を報告して下さい。 {{email}} その際、以下の詳細なテクニカル情報も送付してください。  よろしくお願いします!",
-      "checkCORS": "CSW サーバー上で GetRecords を実行できません。<br/><br/> URLを手で入力した場合、URLをもう一度確認してみてください。<br/><br/> もしご自身のサーバーをお使いなら、 {{cors}} が有効になっているか確認してください。<br/><br/> 再読み込みしても問題が解決しない場合は、問題を {{email}} に報告して下さい",
-      "checkCORSRecords": "この CWS サーバーでGetRecords を実行できません。<br/><br/> ご自身のサーバーである場合、 <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a> が有効になっていることを確認してください。<br/><br/> 再読み込みでも問題が解決しない場合は、この問題を {{email}} に問題の詳細を記載したうえで報告して下さい。ご協力お願いいたします!",
-      "errorLoadingRecordsMessage": "CSW サーバーで GetRecords を読み込み中に無効なレスポンスが返ってきました。 <p>指定したカタログサーバーが一時的に利用できないか、インターネット接続に問題がある可能性があります。プロセッシングサーバーをもう一度開き、問題がそれでも解決しない場合は、メールでエラーを報告して下さい ",
-      "notUseableMessage": "CSWサーバーでGetDomainを呼び出した際に無効な反応が戻ってきました。<p>型ログサーバーが一時的に利用できないか、インターネット接続に問題がある可能性があります。プロセシングサーバーをもう一度開き、それでも問題が解決しない場合、問題を報告して下さい。</p> "
+      "checkCORSDomain": "CSW サーバ上でGetDomainを実行できませんでした。",
+      "checkCORS": "CSW サーバー上で GetRecords を実行できません。",
+      "checkCORSRecords": "この CWS サーバーでGetRecords を実行できません。",
+      "errorLoadingRecordsMessage": "CSW で GetRecords を読み込み中に無効なレスポンスが返ってきました。",
+      "notUseableMessage": "CSWサーバーでGetDomainを呼び出した際に無効な反応が戻ってきました。"
     },
     "csv": {
       "unableToLoadItemMessage": "このCSVのカタログアイテムには`url`または`csvString`プロパティが指定されていないため、読み込むことができません。",
       "unableToLoadItemTitle": "CSVがありません",
       "unableToLoadMessage": "サポートされているCSVフォーマットについては <a href=\"https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au\">csv-geo-au</a> の仕様を参照してください。\n\n {{message}}",
       "unableToLoadTitle": "CSVファイルを読み込めません",
-      "unexpectedTypeMessage": "CsvCatalogItemのデータはBlog型、File型、String型である必要がありますが、これらのうちのどれでもありませんでした。これはTerriaJSのバグであるかTerriaJSのAPIの使い方が不適切である可能性があります。{{appName}}のバグと思われる場合は以下にメールを送信してください ",
+      "unexpectedTypeMessage": "CsvCatalogItemのデータはBlog型、File型、String型である必要がありますが、これらのうちのどれでもありませんでした。",
       "unexpectedTypeTitle": "予期しないタイプのCSVデータ",
       "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
       "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
@@ -1006,7 +1023,7 @@
       "notCompatibleTitle": "互換性のあるディストリビューションが見つかりません",
       "retrieveErrorMessage": "ディストリビューションまたはデータセットIDがありません",
       "retrieveErrorTitle": "MAGDA レコードを取得時にエラー",
-      "idsNotSpecifiedMessage": "MagdaCatalogItem は recordId を指定する必要があります。",
+      "idsNotSpecifiedMessage": "MagdaReference は recordId を指定する必要があります。",
       "idsNotSpecifiedTitle": "recordId を指定する必要があります",
       "distributionDesc": "ディストリビューションの説明",
       "name": "MAGDAディストリビューション"
@@ -1014,11 +1031,11 @@
     "kml": {
       "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
       "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
-      "errorLoadingMessage": "KMLファイルまたはKMZファイルの読み込み中にエラーが発生しました。このファイルは無効または{{appName}}でサポートされていない可能性があります。サポートや詳しい情報が必要な場合は{{email}}にご連絡ください。",
+      "errorLoadingMessage": "KMLファイルまたはKMZファイルの読み込み中にエラーが発生しました。このファイルは無効または{{appName}}でサポートされていない可能性があります。",
       "unableToLoadItemMessage": "`url`、`kmlData`、`kmlString` のいずれのプロパティも設定されていないため、KML/KMZカタログアイテムを読み込むことができません。",
       "unableToLoadItemTitle": "KMLがありません",
       "errorLoadingTitle": "KMLまたはKMZの読み込み中にエラーが発生しました",
-      "unexpectedTypeMessage": "KmlCatalogItem.dataはXMLドキュメント、Blob、ファイルのいずれかである必要がありますが、これらのどれでもありませんでした。これは{{appName}}のバグであるか{{appName}}のAPIの使い方が間違っている可能性があります。これが{{appName}}のバグと思われる場合は、{{email}}までご連絡ください。",
+      "unexpectedTypeMessage": "KmlCatalogItem.dataはXMLドキュメント、Blob、ファイルのいずれかである必要がありますが、これらのどれでもありませんでした。これは{{appName}}のバグであるか{{appName}}のAPIの使い方が間違っている可能性があります。",
       "unexpectedTypeTitle": "予期しないタイプのKMLデータ",
       "name": "KMLまたはKMZ"
     },
@@ -1027,7 +1044,7 @@
       "dataSourceErrorMessage": "このデータソースでは詳細情報を利用できません。",
       "errorLoadingTitle": "GPX読み込みエラー",
       "name": "GPX",
-      "errorLoadingMessage": "GPXファイルの読み込み中にエラーが発生しました。このファイルは無効または{{appName}}でサポートされていない可能性があります。サポートや詳しい情報が必要な場合は{{email}}にご連絡ください"
+      "errorLoadingMessage": "GPXファイルの読み込み中にエラーが発生しました。このファイルは無効または{{appName}}でサポートされていない可能性があります。"
     },
     "gltf": {
       "serviceErrorMessage": "このサービスでは詳細情報を利用できません。",
@@ -1050,9 +1067,9 @@
       "couldNotLoadTitle": "JSONを読み込めません",
       "errorLoadingTitle": "GeoJSON読み込みエラー",
       "name": "GeoJSON",
-      "couldNotLoadMessage": "与えられたリンクからJSONデータを読み込むことができませんでした。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このエラーが発生する場合、サーバーが{{cors}}をサポートしていない可能性もあります。サーバーを管理しているのがあなたであれば、CORSが無効になっていないか確認し、無効になっている場合は有効にしてください。サーバーのコントロール権がない場合は、サーバー管理者に問い合わせてCORSを有効化してもらってください。または、{{appName}}の運営者に{{email}}から問い合わせいただければ、{{appName}}内のCORS非対応サーバーのリストにこのサーバーを加えることで{{appName}}自体がリクエストを中継できるかもしれません。 <p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>",
+      "couldNotLoadMessage": "与えられたリンクからJSONデータを読み込むことができませんでした。",
       "unsupportedBrowserMessage": "お使いのウェブブラウザは{{appName}}がファイルからデータを読み込む上で必要となるFile APIをサポートしていません。ブラウザをアップグレードしてください。最適な体験のためには、{{chrome}}、{{firefox}}または{{internetExplorer}}の最新版をお使いになることをおすすめします。",
-      "errorLoadingMessage": "GeoJSONファイルの読み込み中にエラーが発生しました。このファイルは無効または{{appName}}でサポートされていない可能性があります。サポートや詳しい情報が必要な場合は{{email}}にご連絡ください。",
+      "errorLoadingMessage": "GeoJSONファイルの読み込み中にエラーが発生しました。このファイル形式は無効またはサポートされていない可能性があります。",
       "errorParsingMessage": "与えられたデータをJSONとしてパーズできませんでした。このファイルは無効またはサポートされていない可能性があります。"
     },
     "arcGisFeatureServer": {
@@ -1060,15 +1077,15 @@
       "invalidServiceTitle": "無効なArcGISフィーチャーサービス",
       "nameGroup": "ArcGISフィーチャーサーバーグループ",
       "name": "ArcGISフィーチャーサーバー",
-      "groupNotAvailableMessage": "ArcGIS Feature Serviceの呼び出し中にエラーが発生しました。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このエラーが発生する場合、サーバーが{{cors}}をサポートしていない可能性もあります。サーバーを管理しているのがあなたであれば、CORSが無効になっていないか確認し、無効になっている場合は有効にしてください。サーバーのコントロール権がない場合は、サーバー管理者に問い合わせてCORSを有効化してもらってください。または、{{appName}}の運営者に{{email}}から問い合わせいただければ、{{appName}}内のCORS非対応サーバーのリストにこのサーバーを加えることで{{appName}}自体がリクエストを中継できるかもしれません。 <p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>",
-      "invalidServiceMessage": "ArcGIS Feature Serviceの呼び出し中にエラーが発生しました。サーバーの応答が有効なFeature Serviceドキュメントではないようです。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>"
+      "groupNotAvailableMessage": "ArcGIS Feature Serviceの呼び出し中にエラーが発生しました。",
+      "invalidServiceMessage": "ArcGIS Feature Serviceの呼び出し中にエラーが発生しました。サーバーの応答が有効なFeature Serviceドキュメントではないようです。"
     },
     "arcGisService": {
       "groupNotAvailableTitle": "グループはありません",
       "invalidServerTitle": "無効なArcGISサーバー",
       "name": "ArcGISサーバーグループ",
-      "invalidServerMessage": "ArcGIS RESTサービスの呼び出し中にエラーが発生しました。サーバーの応答が有効なArcGIS RESTドキュメントではないようです。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>",
-      "groupNotAvailableMessage": "ArcGIS RESTサービスの呼び出し中にエラーが発生しました。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このエラーが発生する場合、サーバーが{{cors}}をサポートしていない可能性もあります。サーバーを管理しているのがあなたであれば、CORSが無効になっていないか確認し、無効になっている場合は有効にしてください。サーバーのコントロール権がない場合は、サーバー管理者に問い合わせてCORSを有効化してもらってください。または、{{appName}}の運営者に{{email}}から問い合わせいただければ、{{appName}}内のCORS非対応サーバーのリストにこのサーバーを加えることで{{appName}}自体がリクエストを中継できるかもしれません。 <p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>"
+      "invalidServerMessage": "ArcGIS RESTサービスの呼び出し中にエラーが発生しました。サーバーの応答が有効なArcGIS RESTドキュメントではないようです。",
+      "groupNotAvailableMessage": "ArcGIS RESTサービスの呼び出し中にエラーが発生しました。"
     },
     "abs": {
       "groupNotAvailableTitle": "グループはありません",
@@ -1094,9 +1111,9 @@
       "accessingBaseMapErrorTitle": "ベース地図にアクセスする際にエラーが発生しました",
       "unableToShowLocMessage": "{{name}} はこの場所では表示できません。利用できるキャプチャ時間が不明です。{{featureTimesProperty}} 属性が見つかりません。",
       "unableToShowLocTitle": "この場所では表示できません",
-      "accessingCatalogItemErrorMessage": "カタログアイテム:<p><center>{{name}}</center></p> のタイルダウンロード時にエラーが発生しました。インターネット接続に問題があるか、カタログアイテムが一時的に利用できないか、カタログアイテムが無効な可能性があります。  カタログアイテムは地図に表示していません。より詳しいぎつじゅ的な情報は以下で参照できるかもしれません。<br/><br/>",
+      "accessingCatalogItemErrorMessage": "カタログアイテム:<p><center>{{name}}</center></p> のタイルダウンロード時にエラーが発生しました。カタログアイテムは地図に表示されません。もう一度試すと表示される場合があります。",
       "tileErrorMessage": "タイルのURL:\n{{url}}\n XMLHttpRequest での読み込みには成功していますが、CesiumおよびLeafletで直接読み込む際に何度か失敗しています。\n サーバーがリクエストのヘッダーに対しとても敏感か、信頼性が高くない可能性があります。",
-      "accessingBaseMapErrorMessage": "ベース地図のタイルをダウンロード時にエラーが発生しました:<p><center>{{name}} </center></p> おそらくインターネット接続に問題があるか、ベース地図が無効であるか、が考えられます。別のベース地図をマップボタンをクリックして選んでください。さらに詳細な情報は以下で見つかるかもしれません。<br/><br/>",
+      "accessingBaseMapErrorMessage": "ベース地図のタイルをダウンロード時にエラーが発生しました:<p><center>{{name}} </center></p> 別のベース地図を画面右上のマップボタンをクリックして選んでください。",
       "unableToDisplayMessage": "{{name}} は2D 表示できません。データが標準的な空間参照系である Web Mercator (EPSG:3857) をサポートしていません。3D に切り替えてみてください。もしくは、サポートされた空間参照系に変換するか、別のデータセットを利用してください。",
       "unknownTileErrorMessage": "以下のURLにアクセス中:\n{{url}}\n以下の原因が考えられます:\n* サーバーのホストネームが解決されていない、\n* サーバーがリクエストに反応しなかった、\n* サーバーがこのURLに対し Cross-Origin Resource Sharing (CORS) アクセスを拒否した (https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/ を参照)。"
     },
@@ -1125,15 +1142,15 @@
       "name": "Cesium Ion Imagery"
     },
     "wfsFeatures": {
-      "groupNotAvailableMessage": "WFSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このエラーが発生する場合、サーバーが <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>をサポートしていない可能性もあります。サーバーを管理しているのがあなたであれば、CORSが無効になっていないか確認し、無効になっている場合は有効にしてください。サーバーのコントロール権がない場合は、サーバー管理者に問い合わせてCORSを有効化してもらってください。または、{{appName}}の運営者に{{email}}から問い合わせいただければ、{{appName}}内のCORS非対応サーバーのリストにこのサーバーを加えることで{{appName}}自体がリクエストを中継できるかもしれません。 </p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>",
-      "queryErrorMessage": "WFSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。サーバーの応答が有効なGetCapabilitiesドキュメントではないようです。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>",
+      "groupNotAvailableMessage": "WFSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。",
+      "queryErrorMessage": "WFSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。サーバーの応答が有効なGetCapabilitiesドキュメントではないようです。",
       "groupNotAvailableTitle": "グループはありません",
       "queryErrorTitle": "WFSサーバーでクエリ実行時のエラー",
       "featuresGroup": "Web Processing Service (WFS) サーバーのフィーチャーのグループ"
     },
     "webMapTileServiceCatalogGroup": {
-      "groupNotAvailableMessage": "WMTSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このエラーが発生する場合、サーバーが <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>をサポートしていない可能性もあります。サーバーを管理しているのがあなたであれば、CORSが無効になっていないか確認し、無効になっている場合は有効にしてください。サーバーのコントロール権がない場合は、サーバー管理者に問い合わせてCORSを有効化してもらってください。または、{{appName}}の運営者に{{email}}から問い合わせいただければ、{{appName}}内のCORS非対応サーバーのリストにこのサーバーを加えることで{{appName}}自体がリクエストを中継できるかもしれません。 </p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>",
-      "invalidWMTSServerMessage": "WMTSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。サーバーの応答が有効なGetCapabilitiesドキュメントではないようです。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>",
+      "groupNotAvailableMessage": "WMTSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。",
+      "invalidWMTSServerMessage": "WMTSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。サーバーの応答が有効なGetCapabilitiesドキュメントではないようです。",
       "invalidCapabilitiesMessage": "URL {{url}} には正しくアクセスできましたが、 有効な Web Map Tile Service (WMTS) GetCapabilities ドキュメントではないようです。 \n\nカタログファイルが正しく設定されていないか、サーバーアドレスが変わった可能性があります。",
       "invalidCapabilitiesTitle": "無効な GetCapabilities",
       "fees": "Web Map Service 費用",
@@ -1144,8 +1161,8 @@
       "wmtsServer": "Web Map Tile Service (WMTS) サーバー"
     },
     "webMapServiceCatalogGroup": {
-      "groupNotAvailableMessage": "WMSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このエラーが発生する場合、サーバーが <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>をサポートしていない可能性もあります。サーバーを管理しているのがあなたであれば、CORSが無効になっていないか確認し、無効になっている場合は有効にしてください。サーバーのコントロール権がない場合は、サーバー管理者に問い合わせてCORSを有効化してもらってください。または、{{appName}}の運営者に{{email}}から問い合わせいただければ、{{appName}}内のCORS非対応サーバーのリストにこのサーバーを加えることで{{appName}}自体がリクエストを中継できるかもしれません。 </p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>",
-      "invalidWMSServerMessage": "WMSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。サーバーの応答が有効なGetCapabilitiesドキュメントではないようです。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>",
+      "groupNotAvailableMessage": "WMSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。",
+      "invalidWMSServerMessage": "WMSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。サーバーの応答が有効なGetCapabilitiesドキュメントではないようです。",
       "fees": "Web Map Service 費用",
       "accessConstraints": "Web Map Service アクセス制限",
       "abstract": "Web Map Service 詳細",
@@ -1156,8 +1173,8 @@
       "wmsServer": "Web Map Service (WMS) サーバー"
     },
     "webFeatureServiceCatalogGroup": {
-      "groupNotAvailableMessage": "WFSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このエラーが発生する場合、サーバーが <a href=\"http://enable-cors.org/\" target=\"_blank\">CORS</a>をサポートしていない可能性もあります。サーバーを管理しているのがあなたであれば、CORSが無効になっていないか確認し、無効になっている場合は有効にしてください。サーバーのコントロール権がない場合は、サーバー管理者に問い合わせてCORSを有効化してもらってください。または、{{appName}}の運営者に{{email}}から問い合わせいただければ、{{appName}}内のCORS非対応サーバーのリストにこのサーバーを加えることで{{appName}}自体がリクエストを中継できるかもしれません。 </p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>",
-      "invalidWFSServerMessage": "WFSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。サーバーの応答が有効なGetCapabilitiesドキュメントではないようです。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>",
+      "groupNotAvailableMessage": "WFSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。",
+      "invalidWFSServerMessage": "WFSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。サーバーの応答が有効なGetCapabilitiesドキュメントではないようです。",
       "fees": "Web Feature Service 料金",
       "accessConstraints": "Web Feature Service アクセス制限",
       "abstract": "Web Feature Service の詳細",
@@ -1166,7 +1183,7 @@
       "wfsServer": "Web Feature Service (WFS) サーバー"
     },
     "webProcessingServiceCatalogGroup": {
-      "invalidServerMessage": "WPSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。サーバーの応答が有効なGetCapabilitiesドキュメントではないようです。<p>このリンクを手で打ち込んだ場合は、リンクが正しいか確かめてください。</p><p>このリンクを手で打ち込んだのではない場合は、追加しようとしているデータが一時的に利用できない状態になっているか、インターネット接続に問題がある可能性があります。もう一度データソースを追加してみて、それでも問題が解決しない場合は{{email}}までご連絡ください。</p>",
+      "invalidServerMessage": "WPSサーバーのGetCapabilitiesを呼び出す際にエラーが発生しました。サーバーの応答が有効なGetCapabilitiesドキュメントではないようです。",
       "providerSite": "Web Processing Service プロバイダサイト",
       "providerName": "Web Processing Service プロバイダ名",
       "fees": "Web Processing Service 費用",
@@ -1202,13 +1219,13 @@
       "attributes": "帰属",
       "licence": "ライセンス",
       "description": "説明",
-      "retrieveErrorMessage": "このSocrataサーバーからパッケージを取得できません。<br/><br/>URLをマニュアルで入力した場合、もう一度URLをご確認ください。<br/><br/> 再読み込みしても問題が解決しない場合は問題の詳細を以下のメールアドレスまで報告して下さい： {{email}} 。ご協力ありがとうございます！’<br/><br/><pre> {{formatError}}</pre>",
+      "retrieveErrorMessage": "このSocrataサーバーからパッケージを取得できません。",
       "name": "Socrata サーバー"
     },
     "shareData": {
-      "expandErrorMessage": "{{appName}} を起動するためために利用する共有データサービスが見つかりません。リンクのエラーか現在サービスが使えない可能性があります。{{appName}} のバグだと思われる場合は、 {{email}} へメールでお知らせください",
+      "expandErrorMessage": "{{appName}} を起動するためために利用する共有データサービスが見つかりません。リンクのエラーか現在サービスが使えない可能性があります。",
       "expandErrorTitle": "URLを展開できません",
-      "generateErrorMessage": "短縮URLを生成するための共有データサービスを利用する際に問題が発生しました。{{appName}} のバグであると思われる場合は、{{email}} へメールでご連絡ください。",
+      "generateErrorMessage": "短縮URLを生成するための共有データサービスを利用する際に問題が発生しました。",
       "generateErrorTitle": "短縮URLを生成できませんでした。"
     },
     "sdmxCatalogItem": {
@@ -1218,7 +1235,8 @@
         "time": "時系列"
       },
       "loadDataErrorMessage": "{{csvUrl}} からの無効な反応",
-      "loadDataErrorTitle": "SDMX CSV を読み込めません"
+      "loadDataErrorTitle": "SDMXデータ、 {{name}} を読み込めません",
+      "noResultsWithDimensions": "見つかりませんでした。以下とは異なる値をワークベンチから選んでください:  \n\n{{dimensions}}"
     },
     "senaps": {
       "retrieveErrorTitle": "Senaps カタログアイテム処理中のエラー",
@@ -1296,12 +1314,13 @@
       "outdatedBrowserTitle": "ウェブブラウザが古すぎます",
       "noDataForRegion": "選択した地域にデータなし。",
       "noDataForDate": "選んだデータにデータなし。",
-      "outdatedBrowserMessage": "「地域マップ」を利用できない、古いウェブブラウザを使っているようです。  最新の Google Chrome, Mozilla Firefox, Microsoft Edge, Microsoft Internet Explorer 11, または Apple Safari にアップブレードしてください。  より詳しくお知りになりたい方は、 {{email}} にご連絡ください。"
+      "outdatedBrowserMessage": "「地域マップ」を利用できない、古いウェブブラウザを使っているようです。  最新の Google Chrome, Mozilla Firefox, Microsoft Edge, Microsoft Internet Explorer 11, または Apple Safari にアップブレードしてください。"
     },
     "raiseError": {
       "developerDetails": "開発者の詳細",
       "notificationFeedback": "ご意見・ご要望はここをクリック。",
-      "errorTitle": "エラーが発生しました"
+      "errorTitle": "エラーが発生しました",
+      "notificationFeedbackEmail": "ご質問、フィードバックは {{email}} にお願いします"
     },
     "placesLikeMe": {
       "likenessesError": "似通り度のリストと地域コードのリストに含まれる要素の数は同一ではありません。",
@@ -1333,7 +1352,11 @@
       "bulkGeocoderInfoTitle": "一括ジオコーダー",
       "unsupportedCharactersMessage": "{{longitude}}, {{latitude}}を緯度・経度の組として読み取ることができません",
       "unsupportedCharactersTitle": "緯度・経度の列に無効な文字が含まれています",
-      "noData": "表示するデータがありません"
+      "noData": "表示するデータがありません",
+      "legendNullLabel": "(値無し)",
+      "legendZFilterLabel": "異常な値",
+      "zFilterEnabled": "異常な値は表示していません (クリックして表示)",
+      "zFilterDisabled": "異常値が見つかりました (クリックして非表示)"
     },
     "terriaJSONcatalog": {
       "serviceResponseErrorMessage": "TerriaJsonCatalogFunction JSON を受け取るはずでしたが、{{xhr}} を受け取りました",
@@ -1352,8 +1375,8 @@
       "name": "Terria JSON カタログ機能"
     },
     "webProcessingService": {
-      "invalidResponseErrorMessage": "プロセス名 {{name}} を実行するためWPSサーバーにアクセスした際、エラーが発生しました。  サーバーの応答は、有効ではない ExecuteResponse ドキュメントのようです。 <p>指定したプロセッシングサーバーが一時的に利用できないか、インターネット接続に問題がある可能性があります。もし問題が解決しない場合は {{email}} に問題を報告して下さい。</p>",
-      "invalidWPSServerMessage": "プロセス名 {{name}} を行う際、WPSサーバーの {{endpoint}} を呼び出し中にエラーが発生しました。サーバーのレスポンスからは、有効な {{endpoint}} ドキュメントではないようです。<p>指定したプロセッシングサーバーが一時的に利用できないか、インターネット接続に問題がある可能性があります。もう一度プロセッシングサーバーを開きなおしても問題が解決しない場合は、 {{email}} に問題を報告して下さい。</p>",
+      "invalidResponseErrorMessage": "プロセス名 {{name}} を実行するためWPSサーバーにアクセスした際、エラーが発生しました。",
+      "invalidWPSServerMessage": "プロセス名 {{name}} を行う際、WPSサーバーの {{endpoint}} を呼び出し中にエラーが発生しました。サーバーのレスポンスからは、有効な {{endpoint}} ドキュメントではないようです。",
       "asyncShortReportFailed": "Web Processing Service の呼び出しに失敗しました。  詳細な情報は、情報パネルで見てください。",
       "failureReasonUnknowError": "失敗した理由がわかりません。",
       "invalidResponseError2Message": "WPSサーバーからの反応には Status 要素が含まれていません。",
@@ -1429,6 +1452,22 @@
     },
     "openDataSoft": {
       "viewDatasetPage": "データセットのページを見る"
+    },
+    "shadow": {
+      "options": {
+        "receive": "受光のみ",
+        "none": "なし",
+        "cast": "投影のみ",
+        "both": "投影と受光"
+      },
+      "name": "影"
+    },
+    "scaleDatasetNotVisible": {
+      "scaleZoomOut": "このスケールではデータセットは見えません。ズームアウトしてください",
+      "scaleZoomIn": "このスケールではデータセットは見えません。ズームしてください"
+    },
+    "terria-reference": {
+      "failedToLoadTarget": "外部カタログからの読み込み失敗"
     }
   },
   "map": {
@@ -1559,5 +1598,9 @@
     "pickLocation": "利用できる画像データを見るには、反対側の地図の対象とする場所を選択してください。",
     "description": "このツールは、異なる2時点の画像データを視覚化します。",
     "titlePrefix": "変異検知"
+  },
+  "mapNavigation": {
+    "additionalTools": "追加のツール",
+    "additionalToolsTitle": "追加ツールを開く"
   }
 }
