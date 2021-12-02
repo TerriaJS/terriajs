@@ -875,12 +875,11 @@ export default class TableColumn {
         typeFromValues: TableColumnType.scalar
       },
       { hint: /^(address|addr)$/i, type: TableColumnType.address },
-      {
-        hint: /^(.*[_ ])?(depth|height|elevation|altitude)$/i,
-        // Treat height as scalar, until we actually do something with the height data
-        // type: TableColumnType.height
-        type: TableColumnType.scalar
-      },
+      // Disable until we actually do something with the height data
+      // {
+      //   hint: /^(.*[_ ])?(depth|height|elevation|altitude)$/i,
+      //   type: TableColumnType.height
+      // },
       { hint: /^(.*[_ ])?(time|date)/i, type: TableColumnType.time }, // Quite general, eg. matches "Start date (AEST)".
       { hint: /^(year)$/i, type: TableColumnType.time } // Match "year" only, not "Final year" or "0-4 years".
     ];
