@@ -133,6 +133,8 @@ export default async function generateCatalogIndex(
       };
 
       // CatalogGroup can be loaded immediately
+      // Even though CatalogGroup doesn't have anything to load
+      // This needs to be called so GroupMixin.refreshKnownContainerUniqueIds is called
       if (member instanceof CatalogGroup) {
         await loadGroup();
       } else {
