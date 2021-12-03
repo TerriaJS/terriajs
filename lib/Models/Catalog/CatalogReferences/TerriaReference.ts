@@ -81,6 +81,11 @@ export default class TerriaReference extends UrlMixin(
           })
         });
       } else {
+        if (targetJson.name !== undefined) {
+          // Override the target's name with the name of this reference.
+          // This avoids the name of the catalog suddenly changing after the reference is loaded.
+          targetJson.name = this.name;
+        }
         updateModelFromJson(
           target,
           CommonStrata.definition,

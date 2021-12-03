@@ -7,7 +7,7 @@ import isDefined from "../../../Core/isDefined";
 import loadWithXhr from "../../../Core/loadWithXhr";
 import loadXML from "../../../Core/loadXML";
 import runLater from "../../../Core/runLater";
-import TerriaError from "../../../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
@@ -129,11 +129,11 @@ export interface SearchResultsType {
   elementSet?: "brief" | "summary" | "full";
   expires?: Date;
   /** position of next record in the result set (0 if no records remain) */
-  nextRecord?: number;
+  nextRecord?: string | number;
   /** number of records matched by the query */
-  numberOfRecordsMatched: number;
+  numberOfRecordsMatched: string | number;
   /** number of records returned to client */
-  numberOfRecordsReturned: number;
+  numberOfRecordsReturned: string | number;
   recordSchema?: string;
   resultSetId?: string;
   Record?: Records;
@@ -209,35 +209,18 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
         domainResponse = xml2json(xml) as GetDomainResponseType;
       } catch (error) {
         console.log(error);
-        throw new TerriaError({
+        throw networkRequestError({
           sender: catalogGroup,
           title: i18next.t("models.csw.notUseableTitle"),
-          message:
-            i18next.t("models.csw.notUseableMessage") +
-            '<a href="mailto:' +
-            catalogGroup.terria.supportEmail +
-            '">' +
-            catalogGroup.terria.supportEmail +
-            "</a>."
+          message: i18next.t("models.csw.notUseableMessage")
         });
       }
 
       if (!domainResponse) {
-        throw new TerriaError({
+        throw networkRequestError({
           sender: catalogGroup,
           title: i18next.t("models.csw.errorLoadingTitle"),
-          message: i18next.t("models.csw.checkCORSDomain", {
-            cors:
-              '<a href="http://enable-cors.org/" target="_blank">' +
-              i18next.t("models.csw.cors") +
-              "</a>",
-            email:
-              '<a href="mailto:' +
-              catalogGroup.terria.supportEmail +
-              '">' +
-              catalogGroup.terria.supportEmail +
-              "</a>."
-          })
+          message: i18next.t("models.csw.checkCORSDomain")
         });
       }
 
@@ -293,16 +276,10 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
       });
 
       if (!isDefined(xml)) {
-        throw new TerriaError({
+        throw networkRequestError({
           sender: catalogGroup,
           title: i18next.t("models.csw.errorLoadingRecordsTitle"),
-          message:
-            i18next.t("models.csw.errorLoadingRecordsMessage") +
-            '<a href="mailto:' +
-            catalogGroup.terria.supportEmail +
-            '">' +
-            catalogGroup.terria.supportEmail +
-            "</a>."
+          message: i18next.t("models.csw.errorLoadingRecordsMessage")
         });
       }
 
@@ -325,11 +302,19 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
       records.push(...(json?.SearchResults?.Record ?? []));
 
       // Get next start position - or stop pageing
-      const nextRecord = json?.SearchResults?.nextRecord;
+      const nextRecord =
+        typeof json?.SearchResults?.nextRecord === "string"
+          ? parseInt(json?.SearchResults?.nextRecord ?? "0")
+          : json?.SearchResults?.nextRecord;
+
+      const numberOfRecordsMatched =
+        typeof json?.SearchResults?.numberOfRecordsMatched === "string"
+          ? parseInt(json?.SearchResults?.numberOfRecordsMatched ?? "0")
+          : json?.SearchResults?.numberOfRecordsMatched;
       if (
         !isDefined(nextRecord) ||
         nextRecord === 0 ||
-        nextRecord >= json?.SearchResults?.numberOfRecordsMatched
+        nextRecord >= numberOfRecordsMatched
       ) {
         paging = false;
       } else {

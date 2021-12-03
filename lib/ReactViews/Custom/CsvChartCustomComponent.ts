@@ -1,13 +1,13 @@
 import { ChartItemType } from "../../ModelMixins/ChartableMixin";
-import CommonStrata from "../../Models/Definition/CommonStrata";
 import CsvCatalogItem from "../../Models/Catalog/CatalogItems/CsvCatalogItem";
+import CommonStrata from "../../Models/Definition/CommonStrata";
 import { BaseModel } from "../../Models/Definition/Model";
+import { GlyphStyle } from "./Chart/Glyphs";
 import ChartCustomComponent, {
   ChartCustomComponentAttributes,
   splitStringIfDefined
 } from "./ChartCustomComponent";
 import { ProcessNodeContext } from "./CustomComponent";
-import { GlyphStyle } from "./Chart/Glyphs";
 
 interface CsvChartCustomComponentAttributes
   extends ChartCustomComponentAttributes {
@@ -57,8 +57,10 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<
     id: string | undefined,
     context: ProcessNodeContext,
     sourceReference: BaseModel | undefined
-  ): CsvCatalogItem {
-    return new CsvCatalogItem(id, context.terria, sourceReference);
+  ) {
+    return context.terria
+      ? new CsvCatalogItem(id, context.terria, sourceReference)
+      : undefined;
   }
 
   protected setTraitsFromAttrs(

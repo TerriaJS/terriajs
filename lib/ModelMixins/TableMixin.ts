@@ -26,6 +26,7 @@ import SelectableDimensions, {
 import createLongitudeLatitudeFeaturePerId from "../Table/createLongitudeLatitudeFeaturePerId";
 import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
 import createRegionMappedImageryProvider from "../Table/createRegionMappedImageryProvider";
+import { ColorStyleLegend } from "../Table/TableAutomaticStylesStratum";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
@@ -48,6 +49,26 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       ChartableMixin(DiscretelyTimeVaryingMixin(CatalogMemberMixin(Base)))
     )
     implements SelectableDimensions {
+    /**
+     * The default {@link TableStyle}, which is used for styling
+     * only when there are no styles defined.
+     */
+    readonly defaultTableStyle: TableStyle;
+
+    constructor(...args: any[]) {
+      super(...args);
+
+      const tableStyle = new TableStyle(this);
+      runInAction(() =>
+        tableStyle.colorTraits.setTrait(
+          CommonStrata.defaults,
+          "legend",
+          new ColorStyleLegend(this, undefined)
+        )
+      );
+      this.defaultTableStyle = tableStyle;
+    }
+
     get hasTableMixin() {
       return true;
     }
@@ -124,15 +145,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     /**
-     * Gets the default {@link TableStyle}, which is used for styling
-     * only when there are no styles defined.
-     */
-    @computed
-    get defaultTableStyle(): TableStyle {
-      return new TableStyle(this, -1);
-    }
-
-    /**
      * Gets the {@link TableStyleTraits#id} of the currently-active style.
      * Note that this is a trait so there is no guarantee that a style
      * with this ID actually exists. If no active style is explicitly
@@ -196,12 +208,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     @computed
-    get disableOpacityControl() {
-      // disable opacity control for point tables - or if no mapItems
-      return this.activeTableStyle.isPoints() || this.mapItems.length === 0;
-    }
-
-    @computed
     get _canExportData() {
       return isDefined(this.dataColumnMajor);
     }
@@ -215,6 +221,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           )
           .join("\n");
 
+        // Make sure we have .csv file extension
+        let name = this.name || this.uniqueId || "data.csv";
+        if (!/(\.csv\b)/i.test(name)) {
+          name = `${name}.csv`;
+        }
+
         return {
           name: (this.name || this.uniqueId)!,
           file: new Blob([csvString])
@@ -225,6 +237,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         sender: this,
         message: "No data available to download."
       });
+    }
+
+    @computed
+    get disableOpacityControl() {
+      // disable opacity control for point tables - or if no mapItems
+      return this.activeTableStyle.isPoints() || this.mapItems.length === 0;
     }
 
     @computed
@@ -431,6 +449,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     @computed
     get selectableDimensions(): SelectableDimension[] {
       return filterOutUndefined([
+        this.timeDisableDimension,
         ...super.selectableDimensions,
         this.regionColumnDimensions,
         this.regionProviderDimensions,
@@ -460,6 +479,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
             };
           }),
         selectedId: this.activeStyle,
+        allowUndefined: this.showDisableStyleOption,
+        undefinedLabel: this.showDisableStyleOption
+          ? i18next.t("models.tableData.styleDisabledLabel")
+          : undefined,
         setDimensionValue: (stratumId: string, styleId: string) => {
           this.setTrait(stratumId, "activeStyle", styleId);
         }
@@ -546,7 +569,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     /**
      * Creates SelectableDimension for region column - the options contains a list of all columns.
-     * {@link TableTraits#enableManualRegionMapping} must be enabled.
+     * {@link TableColorStyleTraits#zScoreFilter} must be enabled and {@link TableColorMap#zScoreFilterValues} must detect extreme (outlier) values
      */
     @computed
     get outlierFilterDimension(): SelectableDimension | undefined {
@@ -560,8 +583,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       return {
         id: "outlierFilter",
         options: [
-          { id: "true", name: "Outliers filtered (click to disable)" },
-          { id: "false", name: "Outliers detected (click to filter out)" }
+          { id: "true", name: i18next.t("models.tableData.zFilterEnabled") },
+          { id: "false", name: i18next.t("models.tableData.zFilterDisabled") }
         ],
         selectedId: this.activeTableStyle.colorTraits.zScoreFilterEnabled
           ? "true"
@@ -574,6 +597,42 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           });
         },
         placement: "belowLegend",
+        type: "checkbox"
+      };
+    }
+
+    /**
+     * Creates SelectableDimension to disable time - this will show if each rowGroup only has a single time
+     */
+    @computed
+    get timeDisableDimension(): SelectableDimension | undefined {
+      // Return nothing if no active time column and if the active time column has been explicitly hidden (using this.defaultStyle.time.timeColumn = null)
+      // or if time column doesn't have at least one interval
+      if (this.mapItems.length === 0 || !this.showDisableTimeOption) return;
+
+      return {
+        id: "disableTime",
+        options: [
+          {
+            id: "true",
+            name: i18next.t("models.tableData.timeDimensionEnabled")
+          },
+          {
+            id: "false",
+            name: i18next.t("models.tableData.timeDimensionDisabled")
+          }
+        ],
+        selectedId:
+          this.defaultStyle.time.timeColumn === null ? "false" : "true",
+        setDimensionValue: (stratumId: string, value: string) => {
+          // We have to set showDisableTimeOption to true - or this will hide when time column is disabled
+          this.setTrait(stratumId, "showDisableTimeOption", true);
+          this.defaultStyle.time.setTrait(
+            stratumId,
+            "timeColumn",
+            value === "true" ? undefined : null
+          );
+        },
         type: "checkbox"
       };
     }

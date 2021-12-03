@@ -3,7 +3,7 @@ import filterOutUndefined from "../../../Core/filterOutUndefined";
 import { isJsonObject, isJsonString } from "../../../Core/Json";
 import loadXML from "../../../Core/loadXML";
 import makeRealPromise from "../../../Core/makeRealPromise";
-import TerriaError from "../../../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import xml2json from "../../../ThirdParty/xml2json";
 import {
   OnlineResource,
@@ -66,7 +66,7 @@ export default class WebProcessingServiceCapabilities {
       const capabilities = parseCapabilities(xml2json(capabilitiesXml));
 
       if (capabilities === undefined) {
-        throw new TerriaError({
+        throw networkRequestError({
           title: i18next.t(
             "models.webProcessingServiceCatalogGroup.invalidCapabilitiesTitle"
           ),

@@ -119,7 +119,7 @@ class DragDropFile extends React.Component<PropsType> {
           [Styles.isActive]: this.props.viewState.isDraggingDroppingFile
         })}
       >
-        {isDefined(this.props.viewState.isDraggingDroppingFile) ? (
+        {this.props.viewState.isDraggingDroppingFile ? (
           <div className={Styles.inner}>
             <Trans i18nKey="dragDrop.text">
               <h3 className={Styles.heading}>Drag & Drop</h3>

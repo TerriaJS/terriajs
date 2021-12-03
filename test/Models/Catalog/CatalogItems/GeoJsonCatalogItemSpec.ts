@@ -6,9 +6,20 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+import {
+  CircleSymbolizer,
+  GeomType,
+  LineSymbolizer,
+  PolygonSymbolizer
+} from "terriajs-protomaps";
 import { JsonObject } from "../../../../lib/Core/Json";
 import loadJson from "../../../../lib/Core/loadJson";
 import loadText from "../../../../lib/Core/loadText";
+import ContinuousColorMap from "../../../../lib/Map/ContinuousColorMap";
+import ProtomapsImageryProvider, {
+  GEOJSON_SOURCE_LAYER_NAME
+} from "../../../../lib/Map/ProtomapsImageryProvider";
+import { getColor } from "../../../../lib/ModelMixins/GeojsonMixin";
 import GeoJsonCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
@@ -558,6 +569,178 @@ describe("GeoJsonCatalogItem - with CZML template", function() {
         )
       ).toBe(5);
       expect(entity2.properties?.someOtherProp?.getValue()).toBe("ok");
+    });
+  });
+});
+
+describe("GeoJsonCatalogItem - with geojson-vt and protomaps", function() {
+  let terria: Terria;
+  let geojson: GeoJsonCatalogItem;
+
+  beforeEach(async function() {
+    terria = new Terria({
+      baseUrl: "./"
+    });
+    geojson = new GeoJsonCatalogItem("test-geojson", terria);
+
+    geojson.setTrait(
+      CommonStrata.user,
+      "url",
+      "test/GeoJSON/bike_racks.geojson"
+    );
+  });
+
+  it("Creates ProtomapsImageryProvider - with simple styles", async () => {
+    geojson.setTrait(CommonStrata.user, "disableTableStyle", true);
+    geojson.style.setTrait(CommonStrata.user, "fill", "#00ff00");
+    geojson.style.setTrait(CommonStrata.user, "fill-opacity", 0.7);
+    geojson.style.setTrait(CommonStrata.user, "stroke", "#ff0000");
+    geojson.style.setTrait(CommonStrata.user, "stroke-opacity", 0.5);
+    geojson.style.setTrait(CommonStrata.user, "stroke-width", 5);
+    geojson.style.setTrait(CommonStrata.user, "marker-size", "medium");
+    geojson.style.setTrait(CommonStrata.user, "marker-color", "#0000ff");
+    geojson.style.setTrait(CommonStrata.user, "marker-opacity", 0.3);
+
+    await geojson.loadMapItems();
+
+    const mapItem = geojson.mapItems[0];
+
+    expect(
+      "imageryProvider" in mapItem &&
+        mapItem.imageryProvider instanceof ProtomapsImageryProvider
+    ).toBeTruthy();
+
+    const protomaps =
+      "imageryProvider" in mapItem
+        ? (mapItem.imageryProvider as ProtomapsImageryProvider)
+        : undefined;
+
+    if (!protomaps) throw "protomaps should be defined";
+
+    expect(protomaps.paintRules.length).toBe(4);
+    expect(protomaps.paintRules[0].dataLayer).toBe(GEOJSON_SOURCE_LAYER_NAME);
+    expect(protomaps.paintRules[1].dataLayer).toBe(GEOJSON_SOURCE_LAYER_NAME);
+    expect(protomaps.paintRules[2].dataLayer).toBe(GEOJSON_SOURCE_LAYER_NAME);
+    expect(protomaps.paintRules[3].dataLayer).toBe(GEOJSON_SOURCE_LAYER_NAME);
+
+    expect(
+      protomaps.paintRules[0].symbolizer instanceof PolygonSymbolizer
+    ).toBeTruthy();
+    expect(
+      protomaps.paintRules[1].symbolizer instanceof LineSymbolizer
+    ).toBeTruthy();
+    expect(
+      protomaps.paintRules[2].symbolizer instanceof LineSymbolizer
+    ).toBeTruthy();
+    expect(
+      protomaps.paintRules[3].symbolizer instanceof CircleSymbolizer
+    ).toBeTruthy();
+
+    const polygonSymbo = protomaps.paintRules[0]
+      .symbolizer as PolygonSymbolizer;
+    const polygonLineSymbo = protomaps.paintRules[1]
+      .symbolizer as LineSymbolizer;
+    const polylineSymbo = protomaps.paintRules[2].symbolizer as LineSymbolizer;
+    const pointSymbo = protomaps.paintRules[3].symbolizer as CircleSymbolizer;
+
+    expect(polygonSymbo.fill.get(1)).toBe("rgba(0,255,0,0.7)");
+    expect(polygonLineSymbo.color.get(1)).toBe("rgba(255,0,0,0.5)");
+    expect(polygonLineSymbo.width.get(1)).toBe(5);
+    expect(polylineSymbo.color.get(1)).toBe("rgba(255,0,0,0.5)");
+    expect(polylineSymbo.width.get(1)).toBe(5);
+    expect(pointSymbo.fill.get(1)).toBe("rgb(0,0,255)");
+    expect(pointSymbo.stroke.get(1)).toBe("rgba(255,0,0,0.5)");
+    expect(pointSymbo.width.get(1)).toBe(5);
+    expect(pointSymbo.radius.get(1)).toBe(10);
+    expect(pointSymbo.opacity.get(1)).toBe(0.3);
+  });
+
+  it("Creates ProtomapsImageryProvider - with table styles", async () => {
+    await geojson.loadMapItems();
+
+    const mapItem = geojson.mapItems[0];
+
+    expect(
+      "imageryProvider" in mapItem &&
+        mapItem.imageryProvider instanceof ProtomapsImageryProvider
+    ).toBeTruthy();
+
+    const protomaps =
+      "imageryProvider" in mapItem
+        ? (mapItem.imageryProvider as ProtomapsImageryProvider)
+        : undefined;
+
+    if (!protomaps) throw "protomaps should be defined";
+
+    expect(geojson.activeStyle).toBe("number_of_");
+    expect(geojson.activeTableStyle.colorColumn?.name).toBe("number_of_");
+    expect(geojson.activeTableStyle.tableColorMap.minimumValue).toBe(0);
+    expect(geojson.activeTableStyle.tableColorMap.maximumValue).toBe(20);
+    expect(
+      geojson.activeTableStyle.tableColorMap.colorMap instanceof
+        ContinuousColorMap
+    ).toBeTruthy();
+
+    const polygonSymbo = protomaps.paintRules[0]
+      .symbolizer as PolygonSymbolizer;
+    const polygonLineSymbo = protomaps.paintRules[1]
+      .symbolizer as LineSymbolizer;
+    const polylineSymbo = protomaps.paintRules[2].symbolizer as LineSymbolizer;
+    const pointSymbo = protomaps.paintRules[3].symbolizer as CircleSymbolizer;
+
+    const testFeature = {
+      props: {},
+      geomType: GeomType.Polygon,
+      numVertices: 0,
+      geom: [],
+      bbox: { minX: 0, minY: 0, maxX: 0, maxY: 0 }
+    };
+
+    const rowIdToColor: [number, string][] = [
+      [10, "rgb(254,227,214)"],
+      [20, "rgb(103,0,13)"]
+    ];
+
+    rowIdToColor.forEach(([rowId, col]) => {
+      expect(
+        geojson.activeTableStyle.colorMap
+          .mapValueToColor(
+            geojson.activeTableStyle.colorColumn?.valuesForType?.[rowId]
+          )
+          ?.toCssColorString()
+      ).toBe(col);
+
+      expect(
+        polygonSymbo.fill.get(1, {
+          ...testFeature,
+          geomType: GeomType.Polygon,
+          props: { _id_: rowId }
+        })
+      ).toBe(col);
+
+      expect(
+        polygonLineSymbo.color.get(1, {
+          ...testFeature,
+          geomType: GeomType.Polygon,
+          props: { _id_: rowId }
+        })
+      ).toBe(getColor(terria.baseMapContrastColor).toCssColorString());
+
+      expect(
+        polylineSymbo.color.get(1, {
+          ...testFeature,
+          geomType: GeomType.Line,
+          props: { _id_: rowId }
+        })
+      ).toBe(col);
+
+      expect(
+        pointSymbo.fill.get(1, {
+          ...testFeature,
+          geomType: GeomType.Point,
+          props: { _id_: rowId }
+        })
+      ).toBe(col);
     });
   });
 });

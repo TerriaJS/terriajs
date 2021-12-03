@@ -7,13 +7,13 @@ import { JsonObject } from "../../../Core/Json";
 import loadXML from "../../../Core/loadXML";
 import readXml from "../../../Core/readXml";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
-import TerriaError from "../../../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import {
   geoRss2ToGeoJson,
   geoRssAtomToGeoJson
 } from "../../../Map/geoRssConvertor";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
-import GeoJsonMixin from "../../../ModelMixins/GeojsonMixin";
+import GeoJsonMixin, { FeatureCollectionWithCrs } from "../../../ModelMixins/GeojsonMixin";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import GeoRssCatalogItemTraits from "../../../Traits/TraitsClasses/GeoRssCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
@@ -22,6 +22,7 @@ import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import UrlMixin from "../../../ModelMixins/UrlMixin";
 
 enum GeoRssFormat {
   RSS = "rss",
@@ -127,7 +128,7 @@ class GeoRssStratum extends LoadableStratum(GeoRssCatalogItemTraits) {
 StratumOrder.addLoadStratum(GeoRssStratum.stratumName);
 
 export default class GeoRssCatalogItem extends GeoJsonMixin(
-  CatalogMemberMixin(CreateModel(GeoRssCatalogItemTraits))
+  UrlMixin(CatalogMemberMixin(CreateModel(GeoRssCatalogItemTraits)))
 ) {
   static readonly type = "georss";
   get type() {
@@ -138,7 +139,18 @@ export default class GeoRssCatalogItem extends GeoJsonMixin(
     return i18next.t("models.georss.name");
   }
 
-  private parseGeorss(xmlData: any): JsonObject | never {
+  private _georssFile?: File;
+
+  setFileInput(file: File) {
+    this._georssFile = file;
+  }
+
+  @computed
+  get hasLocalData(): boolean {
+    return isDefined(this._georssFile);
+  }
+
+  private parseGeorss(xmlData: Document): JsonObject | never {
     const documentElement = xmlData.documentElement;
     let json: JsonObject;
     let metadata: Feed;
@@ -161,35 +173,32 @@ export default class GeoRssCatalogItem extends GeoJsonMixin(
     return json;
   }
 
-  protected async loadFromFile(file: File): Promise<JsonObject> {
-    try {
-      return this.parseGeorss(await readXml(file));
-    } catch (e) {
-      throw TerriaError.from(e, {
-        title: i18next.t("models.georss.errorLoadingTitle"),
-        message: i18next.t("models.georss.errorLoadingMessage")
-      });
-    }
-  }
-
-  protected async loadFromUrl(url: string): Promise<JsonObject> {
-    try {
-      return this.parseGeorss(await loadXML(proxyCatalogItemUrl(this, url)));
-    } catch (e) {
-      throw TerriaError.from(e, {
-        title: i18next.t("models.georss.errorLoadingTitle"),
-        message: i18next.t("models.georss.errorLoadingMessage")
-      });
-    }
-  }
-
-  protected async dataLoader(): Promise<any> {
+  protected async forceLoadGeojsonData(): Promise<any>{
+    let data: Document | undefined;
     if (isDefined(this.geoRssString)) {
       const parser = new DOMParser();
-      return parser.parseFromString(this.geoRssString, "text/xml");
-    } else {
-      return super.dataLoader();
+      data = parser.parseFromString(this.geoRssString, "text/xml");
+    } else if(isDefined(this._georssFile)){
+      data = await readXml(this._georssFile);
+    } else if(isDefined(this.url)){
+      data = await loadXML(proxyCatalogItemUrl(this, this.url));
     }
+
+    if(!data){
+      throw networkRequestError({
+        sender: this,
+        title: i18next.t("models.georss.errorLoadingTitle"),
+        message: i18next.t("models.georss.errorLoadingMessage", {
+          appName: this.terria.appName
+        })
+      })
+    }
+
+    return this.parseGeorss(data);
+  }
+
+  protected forceLoadMetadata(): Promise<void> {
+    return Promise.resolve();
   }
 }
 

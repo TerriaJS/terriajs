@@ -1,4 +1,8 @@
-import { Feature as GeoJSONFeature, Position } from "geojson";
+import {
+  Feature as GeoJSONFeature,
+  MultiPolygon,
+  Position
+} from "@turf/helpers";
 import { action, observable, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -22,10 +26,12 @@ import { ProviderCoordsMap } from "../Map/PickedFeatures";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import MouseCoords from "../ReactViewModels/MouseCoords";
+import StyleTraits from "../Traits/TraitsClasses/StyleTraits";
 import CameraView from "./CameraView";
 import Cesium3DTilesCatalogItem from "./Catalog/CatalogItems/Cesium3DTilesCatalogItem";
 import GeoJsonCatalogItem from "./Catalog/CatalogItems/GeoJsonCatalogItem";
 import CommonStrata from "./Definition/CommonStrata";
+import createStratumInstance from "./Definition/createStratumInstance";
 import Feature from "./Feature";
 import Terria from "./Terria";
 
@@ -38,7 +44,7 @@ export default abstract class GlobeOrMap {
   protected static _featureHighlightName = "___$FeatureHighlight&__";
 
   private _removeHighlightCallback?: () => Promise<void> | void;
-  private _highlightPromise: Promise<void> | undefined;
+  private _highlightPromise: Promise<unknown> | undefined;
   private _tilesLoadingCountMax: number = 0;
   protected supportsPolylinesOnTerrain?: boolean;
 
@@ -339,9 +345,11 @@ export default abstract class GlobeOrMap {
 
               if (geoJson.geometry.type === "MultiPolygon") {
                 const newCoordinates: Position[][] = [];
-                geoJson.geometry.coordinates.forEach(polygon => {
-                  newCoordinates.push(...polygon);
-                });
+                (geoJson.geometry as MultiPolygon).coordinates.forEach(
+                  polygon => {
+                    newCoordinates.push(...polygon);
+                  }
+                );
                 (<any>geoJson).geometry.coordinates = newCoordinates;
               }
 
@@ -363,19 +371,17 @@ export default abstract class GlobeOrMap {
               "geoJsonData",
               <any>geoJson
             );
-            catalogItem.setTrait(CommonStrata.user, "clampToGround", true);
-            catalogItem.setTrait(CommonStrata.user, "style", {
-              "stroke-width": 2,
-              stroke: this.terria.baseMapContrastColor,
-              fill: undefined,
-              "fill-opacity": 0,
-              "marker-color": this.terria.baseMapContrastColor,
-              "marker-size": undefined,
-              "marker-symbol": undefined,
-              "marker-opacity": undefined,
-              "stroke-opacity": undefined,
-              "marker-url": undefined
-            });
+            catalogItem.setTrait(CommonStrata.user, "disableTableStyle", true);
+            catalogItem.setTrait(
+              CommonStrata.user,
+              "style",
+              createStratumInstance(StyleTraits, {
+                "stroke-width": 4,
+                stroke: this.terria.baseMapContrastColor,
+                "fill-opacity": 0,
+                "marker-color": this.terria.baseMapContrastColor
+              })
+            );
 
             const removeCallback = (this._removeHighlightCallback = () => {
               if (!isDefined(this._highlightPromise)) {
@@ -394,7 +400,9 @@ export default abstract class GlobeOrMap {
 
             catalogItem.setTrait(CommonStrata.user, "show", true);
 
-            this._highlightPromise = this.terria.overlays.add(catalogItem);
+            this._highlightPromise = this.terria.overlays
+              .add(catalogItem)
+              .then(r => r.throwIfError());
           }
         }
       }

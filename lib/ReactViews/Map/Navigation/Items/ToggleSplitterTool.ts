@@ -24,7 +24,7 @@ export class ToggleSplitterController extends MapNavigationItemController {
 
   @computed
   get visible() {
-    return super.visible || this.viewState.terria.currentViewer.canShowSplitter;
+    return super.visible && this.viewState.terria.currentViewer.canShowSplitter;
   }
 
   @computed

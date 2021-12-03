@@ -20,7 +20,6 @@ const DataCatalogGroup = observer(
       /** Overrides whether to get the open state of the group from the group model or manage it internally */
       manageIsOpenLocally: PropTypes.bool,
       userData: PropTypes.bool,
-      overrideState: PropTypes.string,
       onActionButtonClicked: PropTypes.func,
       removable: PropTypes.bool,
       terria: PropTypes.object,
@@ -126,7 +125,6 @@ const DataCatalogGroup = observer(
                 viewState={this.props.viewState}
                 userData={this.props.userData}
                 overrideOpen={this.props.manageIsOpenLocally}
-                overrideState={this.props.overrideState}
                 onActionButtonClicked={this.props.onActionButtonClicked}
               />
             </For>

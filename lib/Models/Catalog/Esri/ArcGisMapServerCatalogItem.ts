@@ -12,7 +12,7 @@ import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
-import TerriaError from "../../../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import proj4definitions from "../../../Map/Proj4Definitions";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import DiscretelyTimeVaryingMixin from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
@@ -68,6 +68,7 @@ interface MapServer {
 
 interface SpatialReference {
   wkid?: number;
+  latestWkid?: number;
 }
 
 interface Extent {
@@ -166,18 +167,9 @@ class MapServerStratum extends LoadableStratum(
     const serviceMetadata = await getJson(item, serviceUri);
 
     if (!isDefined(serviceMetadata)) {
-      throw new TerriaError({
+      throw networkRequestError({
         title: i18next.t("models.arcGisService.invalidServerTitle"),
-        message: i18next.t("models.arcGisService.invalidServerMessage", {
-          cors: '<a href="http://enable-cors.org/" target="_blank">CORS</a>',
-          appName: item.terria.appName,
-          email:
-            '<a href="mailto:' +
-            item.terria.supportEmail +
-            '">' +
-            item.terria.supportEmail +
-            "</a>"
-        })
+        message: i18next.t("models.arcGisService.invalidServerMessage")
       });
     }
 
@@ -204,9 +196,9 @@ class MapServerStratum extends LoadableStratum(
     }
 
     if (!isDefined(layers) || layers.length === 0) {
-      throw new TerriaError({
+      throw networkRequestError({
         title: i18next.t(
-          "models.arcGisMapServerCatalogItem.noLayersFoundMessage"
+          "models.arcGisMapServerCatalogItem.noLayersFoundTitle"
         ),
         message: i18next.t(
           "models.arcGisMapServerCatalogItem.noLayersFoundMessage",
@@ -616,15 +608,15 @@ function updateBbox(extent: Extent, rectangle: RectangleExtent) {
 }
 
 function getRectangleFromLayer(extent: Extent, rectangle: RectangleExtent) {
-  if (
-    isDefined(extent) &&
-    extent.spatialReference &&
-    extent.spatialReference.wkid
-  ) {
-    const wkid = "EPSG:" + extent.spatialReference.wkid;
-    if (extent.spatialReference.wkid === 4326) {
+  const wkidCode =
+    extent?.spatialReference?.latestWkid ?? extent?.spatialReference?.wkid;
+
+  if (isDefined(extent) && isDefined(wkidCode)) {
+    if (wkidCode === 4326) {
       return updateBbox(extent, rectangle);
     }
+
+    const wkid = "EPSG:" + wkidCode;
 
     if (!isDefined((proj4definitions as any)[wkid])) {
       return;

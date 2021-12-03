@@ -13,7 +13,7 @@ import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
-import TerriaError from "../../../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import featureDataToGeoJson from "../../../Map/featureDataToGeoJson";
 import proj4definitions from "../../../Map/Proj4Definitions";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
@@ -154,6 +154,7 @@ interface FeatureServer {
 
 interface SpatialReference {
   wkid?: string;
+  latestWkid?: string;
 }
 
 interface Extent {
@@ -276,13 +277,11 @@ class FeatureServerStratum extends LoadableStratum(
 
   @computed get rectangle(): StratumFromTraits<RectangleTraits> | undefined {
     const extent = this._featureServer.extent;
+    const wkidCode =
+      extent?.spatialReference?.latestWkid ?? extent?.spatialReference?.wkid;
 
-    if (
-      isDefined(extent) &&
-      extent.spatialReference &&
-      extent.spatialReference.wkid
-    ) {
-      const wkid = "EPSG:" + extent.spatialReference.wkid;
+    if (isDefined(extent) && isDefined(wkidCode)) {
+      const wkid = "EPSG:" + wkidCode;
       if (!isDefined((proj4definitions as any)[wkid])) {
         return undefined;
       }
@@ -761,7 +760,7 @@ function buildGeoJsonUrl(catalogItem: ArcGisFeatureServerCatalogItem) {
   const layerId = urlComponents.layerId;
 
   if (!isDefined(layerId)) {
-    throw new TerriaError({
+    throw networkRequestError({
       title: i18next.t(
         "models.arcGisFeatureServerCatalogItem.invalidServiceTitle"
       ),
@@ -777,6 +776,7 @@ function buildGeoJsonUrl(catalogItem: ArcGisFeatureServerCatalogItem) {
       .segment("query")
       .addQuery("f", "json")
       .addQuery("layerDefs", "{" + layerId + ':"' + catalogItem.layerDef + '"}')
+      .addQuery("outSR", "4326")
       .toString()
   );
 }
