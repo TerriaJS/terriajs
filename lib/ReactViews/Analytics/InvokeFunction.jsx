@@ -70,19 +70,7 @@ const InvokeFunction = observer(
 
     submit() {
       this.props.previewed.submitJob().catch(e => {
-        if (e instanceof TerriaError) {
-          runInAction(() => {
-            this.props.terria.notificationState.addNotificationToQueue({
-              title: e.title,
-              message: e.message,
-              confirmText: "Ok",
-              confirmAction: () =>
-                runInAction(
-                  () => (this.props.viewState.explorerPanelIsVisible = true)
-                )
-            });
-          });
-        }
+        this.props.terria.raiseErrorToUser(e);
       });
 
       runInAction(() => {
