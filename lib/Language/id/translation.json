@@ -75,7 +75,7 @@
     "takeTour": "Ikuti turnya",
     "dismissText": "Mengerti, terima kasih!",
     "promptMessage": "Temukan Tur, video petunjuk & konten bantuan lainnya di sini",
-    "menuPaneBody": "Cari tip berguna tentang bagaimana cara menggunakan TerriaJS dengan mengecek panduan berikut atau dengan menghubungi tim di [info@terria.io](mailto:info@terria.io)",
+    "menuPaneBody": "Cari tip berguna tentang bagaimana cara menggunakan TerriaJS dengan mengecek panduan berikut atau dengan menghubungi tim di [{{supportEmail}}]({{supportEmail}})",
     "menuPaneTitle": "Kami di sini untuk membantu"
   },
   "feedback": {

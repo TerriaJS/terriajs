@@ -129,32 +129,34 @@ describe("TableColumn", function() {
         expect(tableModel.tableColumns[0].type).toBe(TableColumnType.text);
       });
 
-      it("height", async () => {
-        tableModel.setTrait(
-          CommonStrata.user,
-          "csvString",
-          "height\n1\n2\nb\na\n"
-        );
-        await tableModel.loadMapItems();
+      // Re-enable when we add back TableColumnType.height
 
-        expect(tableModel.tableColumns[0].type).toBe(TableColumnType.scalar);
-      });
+      // it("height", async () => {
+      //   tableModel.setTrait(
+      //     CommonStrata.user,
+      //     "csvString",
+      //     "height\n1\n2\nb\na\n"
+      //   );
+      //   await tableModel.loadMapItems();
 
-      it("height ", async () => {
-        tableModel.setTrait(
-          CommonStrata.user,
-          "csvString",
-          "altitude,depth,height,elevation,altitude,something else\n1,1,1,1,1,1\n2,2,2,2,2,2\nb,b,b,b,b,b\na,a,a,a,a,a\n"
-        );
-        await tableModel.loadMapItems();
+      //   expect(tableModel.tableColumns[0].type).toBe(TableColumnType.height);
+      // });
 
-        expect(tableModel.tableColumns[0].type).toBe(TableColumnType.scalar);
-        expect(tableModel.tableColumns[1].type).toBe(TableColumnType.scalar);
-        expect(tableModel.tableColumns[2].type).toBe(TableColumnType.scalar);
-        expect(tableModel.tableColumns[3].type).toBe(TableColumnType.scalar);
-        expect(tableModel.tableColumns[4].type).toBe(TableColumnType.scalar);
-        expect(tableModel.tableColumns[5].type).toBe(TableColumnType.enum);
-      });
+      // it("height ", async () => {
+      //   tableModel.setTrait(
+      //     CommonStrata.user,
+      //     "csvString",
+      //     "altitude,depth,height,elevation,altitude,something else\n1,1,1,1,1,1\n2,2,2,2,2,2\nb,b,b,b,b,b\na,a,a,a,a,a\n"
+      //   );
+      //   await tableModel.loadMapItems();
+
+      //   expect(tableModel.tableColumns[0].type).toBe(TableColumnType.height);
+      //   expect(tableModel.tableColumns[1].type).toBe(TableColumnType.height);
+      //   expect(tableModel.tableColumns[2].type).toBe(TableColumnType.height);
+      //   expect(tableModel.tableColumns[3].type).toBe(TableColumnType.height);
+      //   expect(tableModel.tableColumns[4].type).toBe(TableColumnType.height);
+      //   expect(tableModel.tableColumns[5].type).toBe(TableColumnType.enum);
+      // });
 
       it("lat/lon", async () => {
         tableModel.setTrait(
