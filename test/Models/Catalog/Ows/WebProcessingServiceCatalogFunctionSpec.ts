@@ -1,9 +1,9 @@
 import { configure, reaction, runInAction } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import isDefined from "../../../../lib/Core/isDefined";
 import Result from "../../../../lib/Core/Result";
 import TerriaError from "../../../../lib/Core/TerriaError";
-import ProtomapsImageryProvider from "../../../../lib/Map/ProtomapsImageryProvider";
 import MappableMixin from "../../../../lib/ModelMixins/MappableMixin";
 import CsvCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import WebProcessingServiceCatalogFunction from "../../../../lib/Models/Catalog/Ows/WebProcessingServiceCatalogFunction";
@@ -181,13 +181,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
     });
     it("returns mapItems", async function() {
       expect(job.mapItems.length).toBe(1);
-      const mapItem = job.mapItems[0];
-      expect("imageryProvider" in mapItem).toBeTruthy();
-      expect(
-        "imageryProvider" in mapItem
-          ? mapItem.imageryProvider instanceof ProtomapsImageryProvider
-          : false
-      ).toBeTruthy();
+      expect(job.mapItems[0]).toEqual(jasmine.any(GeoJsonDataSource));
     });
 
     it("defines a rectangle", async function() {
