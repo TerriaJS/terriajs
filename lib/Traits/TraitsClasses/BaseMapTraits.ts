@@ -14,6 +14,14 @@ export class BaseMapTraits extends ModelTraits {
   })
   image?: string;
 
+  @primitiveTrait({
+    type: "string",
+    name: "Contrast color",
+    description:
+      "Color which should be used to contrast with basemap (eg for region mapping feature borders)"
+  })
+  contrastColor?: string = "#ffffff";
+
   @modelReferenceTrait({
     factory: CatalogMemberFactory,
     name: "Base map item",
