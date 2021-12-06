@@ -7,10 +7,11 @@ import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import flatten from "../../Core/flatten";
 import Result from "../../Core/Result";
 import featureDataToGeoJson from "../../Map/featureDataToGeoJson";
-import CommonStrata from "../../Models/Definition/CommonStrata";
 import GeoJsonCatalogItem from "../../Models/Catalog/CatalogItems/GeoJsonCatalogItem";
+import CommonStrata from "../../Models/Definition/CommonStrata";
 import MapInteractionMode from "../../Models/MapInteractionMode";
 import Styles from "./parameter-editors.scss";
 
@@ -122,7 +123,7 @@ export function selectOnMap(terria, viewState, parameter) {
             };
           }
 
-          if (defined(geojson)) {
+          if (defined(geojson) && geojson.geometry) {
             const catalogItem = new GeoJsonCatalogItem(createGuid(), terria);
             catalogItem.setTrait(CommonStrata.user, "geoJsonData", geojson);
             return catalogItem;
@@ -137,11 +138,12 @@ export function selectOnMap(terria, viewState, parameter) {
 
       if (result.error) {
         terria.raiseErrorToUser(result.error, "Failed to select polygons");
+        terria.mapInteractionModeStack.pop();
       } else {
         runInAction(() => {
           parameter.setValue(
             CommonStrata.user,
-            catalogItems.map(item => item.readyData)
+            flatten(catalogItems.map(item => item.readyData?.features))
           );
           terria.mapInteractionModeStack.pop();
           viewState.openAddData();

@@ -6,6 +6,7 @@ Change Log
 * Add `forceConvertResultsToV8` to `WebProcessingServiceCatalogFunction`. If your WPS processes are returning v7 json, you will either need to set this to `true`, or set `version: 0.0.1` in JSON output (which will then be automatically converted to v8)
 * Cleanup `CatalogFunction` error handling
 * Update terria-js cesium to `1.81.3` 
+* Fix `SelectAPolygonParameterEditor` feature picking
 * [The next improvement]
 
 #### 8.1.13
