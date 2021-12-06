@@ -87,7 +87,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     const apiUrls = apisWithUrl.map(api => proxyCatalogItemUrl(this, api.url!));
     return Promise.all(
       apisWithUrl.map(async (api, idx) => {
-        const data = await loadJson(
+        let data = await loadJson(
           apiUrls[idx],
           undefined,
           api.requestData
@@ -95,8 +95,8 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
             : undefined,
           api.postRequestDataAsFormData
         );
-        if (this.responseDataPath !== undefined) {
-          _get(data, this.responseDataPath);
+        if (api.responseDataPath !== undefined) {
+          data = _get(data, api.responseDataPath);
         }
         return Promise.resolve({
           data,
@@ -105,6 +105,39 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
       })
     ).then((values: { data: any[]; api: Model<ApiTableRequestTraits> }[]) => {
       runInAction(() => {
+        const columnMajorData: Map<string, any> = new Map();
+        values
+          .filter(val => val.api.kind === "COLUMN_MAJOR") // column major rows only
+          .map((val, i) => {
+            // add the column name to each column
+            (val.data as any)["TERRIA_columnName"] =
+              val.api.columnMajorColumnNames[i];
+            return val.data;
+          })
+          .flat()
+          // make row id/data pairs for columnMajorData map
+          .map(data => Object.entries(data))
+          .flat()
+          // merge rows with the same id
+          .forEach(rowPart => {
+            const id = rowPart[0];
+            const value: any = rowPart[1];
+            const row: any = {};
+            row["value"] = value; // add the id to the row's data
+            row[this.idKey!] = id;
+            if (columnMajorData.has(id)) {
+              let currentRow = columnMajorData.get(id);
+              columnMajorData.set(id, { currentRow, ...value });
+            } else {
+              columnMajorData.set(id, row);
+            }
+          });
+
+        if (columnMajorData.size !== 0) {
+          this.apiResponses = Array.from(columnMajorData.values());
+          return;
+        }
+
         // Make map of ids to values that are constant for that id
         const perIdData: Map<string, any> = new Map(
           values

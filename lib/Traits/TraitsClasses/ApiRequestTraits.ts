@@ -26,6 +26,7 @@ export class QueryParamTraits extends ModelTraits {
   value?: string;
 }
 
+/** Not all traits here will be supported by all catalog items that use them */
 export default class ApiRequestTraits extends mixTraits(UrlTraits) {
   @objectArrayTrait({
     name: "Query parameters",

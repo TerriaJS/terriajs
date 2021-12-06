@@ -1,5 +1,6 @@
 "use strict";
 
+import ApiTableCustomComponent from "./ApiTableCustomComponent";
 import CollapsibleCustomComponent from "./CollapsibleCustomComponent";
 import CsvChartCustomComponent from "./CsvChartCustomComponent";
 import CustomComponent from "./CustomComponent";
@@ -17,6 +18,7 @@ import TerriaTooltipCustomComponent from "./TerriaTooltip";
 export default function registerCustomComponentTypes() {
   CustomComponent.register(new CsvChartCustomComponent());
   CustomComponent.register(new SOSChartCustomComponent());
+  CustomComponent.register(new ApiTableCustomComponent());
   CustomComponent.register(new CollapsibleCustomComponent());
   CustomComponent.register(new FeedbackLinkCustomComponent());
   CustomComponent.register(new TerriaTooltipCustomComponent());

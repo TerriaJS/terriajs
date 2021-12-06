@@ -119,6 +119,8 @@ export interface ChartCustomComponentAttributes {
 export default abstract class ChartCustomComponent<
   CatalogItemType extends ChartableMixin.Instance
 > extends CustomComponent {
+  protected chartItemId?: string;
+
   get attributes(): Array<string> {
     return [
       "src",
@@ -225,6 +227,8 @@ export default abstract class ChartCustomComponent<
     const body: string | undefined =
       typeof child === "string" ? child : undefined;
     const chartElements = [];
+    this.chartItemId = this.chartItemId ?? createGuid();
+
     if (!attrs.hideButtons) {
       // Build expand/download buttons
       const sourceItems = (attrs.downloads || attrs.sources || [""]).map(
@@ -282,7 +286,11 @@ export default abstract class ChartCustomComponent<
     }
 
     // Build chart item to show in the info panel
-    const chartItem = this.constructCatalogItem(undefined, context, undefined);
+    const chartItem = this.constructCatalogItem(
+      this.chartItemId,
+      context,
+      undefined
+    );
 
     if (chartItem) {
       runInAction(() => {

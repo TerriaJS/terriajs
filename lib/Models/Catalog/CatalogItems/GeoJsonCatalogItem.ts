@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { get as _get } from "lodash";
+import { get as _get, set as _set } from "lodash";
 import { computed, toJS } from "mobx";
 import isDefined from "../../../Core/isDefined";
 import JsonValue, { isJsonObject } from "../../../Core/Json";
@@ -91,12 +91,18 @@ class GeoJsonCatalogItem extends GeoJsonMixin(
       // Array that isn't a feature collection
       fc = toFeatureCollection(
         jsonData.map(item => {
-          let geojson = this.responseGeoJsonPath
-            ? _get(item, this.responseGeoJsonPath)
-            : item;
+          let geojson: any = item;
+
+          if (this.responseGeoJsonPath !== undefined) {
+            geojson = _get(item, this.responseGeoJsonPath);
+            // Clear geojson so that it doesn't appear again in its own properties
+            _set(item as object, this.responseGeoJsonPath, undefined);
+          }
+
           if (typeof geojson === "string") {
             geojson = JSON.parse(geojson);
           }
+
           // add extra properties back to geojson so they appear in feature info
           geojson.properties = item;
           return geojson;
