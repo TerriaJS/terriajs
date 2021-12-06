@@ -5,12 +5,11 @@ import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
-import TerriaError from "../../Core/TerriaError";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import Loader from "../Loader";
+import WarningBox from "../Preview/WarningBox";
 import Styles from "./invoke-function.scss";
 import ParameterEditor from "./ParameterEditor";
-import WarningBox from "../Preview/WarningBox";
 
 class FunctionViewModel {
   constructor(catalogFunction) {
