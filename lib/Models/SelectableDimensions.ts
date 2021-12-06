@@ -15,7 +15,11 @@ export interface Dimension {
   readonly undefinedLabel?: string;
 }
 
-export type SelectableDimensionType = undefined | "select" | "checkbox";
+export type SelectableDimensionType =
+  | undefined
+  | "select"
+  | "checkbox"
+  | "group";
 
 export type Placement = "default" | "belowLegend";
 export const DEFAULT_PLACEMENT: Placement = "default";
@@ -50,9 +54,21 @@ export interface SelectableDimensionCheckbox extends Base {
   type: "checkbox";
 }
 
+export interface SelectableDimensionGroup
+  extends Omit<Base, "setDimensionValue"> {
+  type: "group";
+
+  // We don't allow nested groups for now to keep the UI simple
+  readonly selectableDimensions: Exclude<
+    SelectableDimension,
+    SelectableDimensionGroup
+  >[];
+}
+
 export type SelectableDimension =
   | SelectableDimensionSelect
-  | SelectableDimensionCheckbox;
+  | SelectableDimensionCheckbox
+  | SelectableDimensionGroup;
 
 interface SelectableDimensions {
   selectableDimensions: SelectableDimension[];
