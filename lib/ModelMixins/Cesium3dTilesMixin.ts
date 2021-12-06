@@ -41,6 +41,7 @@ import Cesium3dTilesTraits, {
   OptionsTraits
 } from "../Traits/TraitsClasses/Cesium3dTilesTraits";
 import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
+import ClippingMixin from "./ClippingPlanesMixin";
 import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
 
@@ -69,14 +70,31 @@ class ObservableCesium3DTileset extends Cesium3DTileset {
 export default function Cesium3dTilesMixin<
   T extends Constructor<Model<Cesium3dTilesTraits>>
 >(Base: T) {
-  abstract class Cesium3dTilesMixin extends ShadowMixin(
-    MappableMixin(CatalogMemberMixin(Base))
+  abstract class Cesium3dTilesMixin extends ClippingMixin(
+    ShadowMixin(MappableMixin(CatalogMemberMixin(Base)))
   ) {
     protected tileset?: ObservableCesium3DTileset;
 
-    // Just a variable to save the original tileset.root.transform if it exists
+    // Saves the original tileset.root.transform if it exists
     @observable
     private originalRootTransform: Matrix4 = Matrix4.IDENTITY.clone();
+
+    // An observable tracker for tileset.ready
+    @observable
+    isTilesetReady: boolean = false;
+
+    @computed
+    get clippingPlanesOriginMatrix(): Matrix4 {
+      if (this.tileset && this.isTilesetReady) {
+        // clippingPlanesOriginMatrix is private.
+        // We need it to find the position where cesium centers the clipping plane for the tileset.
+        // See if we can find another way to get it.
+        if ((this.tileset as any).clippingPlanesOriginMatrix) {
+          return (this.tileset as any).clippingPlanesOriginMatrix.clone();
+        }
+      }
+      return Matrix4.IDENTITY.clone();
+    }
 
     protected async forceLoadMapItems() {
       try {
@@ -132,6 +150,7 @@ export default function Cesium3dTilesMixin<
       });
 
       tileset._catalogItem = this;
+      this.isTilesetReady = tileset.ready;
       if (!tileset.destroyed) {
         this.tileset = tileset;
       }
@@ -142,6 +161,7 @@ export default function Cesium3dTilesMixin<
       // the root transform and transformation traits in mapItems.
       makeRealPromise(tileset.readyPromise).then(
         action(() => {
+          this.isTilesetReady = tileset.ready;
           if (tileset.root !== undefined) {
             this.originalRootTransform = tileset.root.transform.clone();
             tileset.root.transform = Matrix4.IDENTITY.clone();
@@ -248,7 +268,11 @@ export default function Cesium3dTilesMixin<
     }
 
     @computed get selectableDimensions(): SelectableDimension[] {
-      return [...super.selectableDimensions, this.shadowDimension];
+      return [
+        ...super.selectableDimensions,
+        this.shadowDimension,
+        this.clippingDimension
+      ];
     }
 
     @computed

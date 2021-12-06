@@ -3,6 +3,7 @@ import primitiveTrait from "../Decorators/primitiveTrait";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import objectTrait from "../Decorators/objectTrait";
+import LatLonHeightTraits from "./LatLonHeightTraits";
 
 export class ClippingPlaneDefinitionTraits extends ModelTraits {
   @primitiveTrait({
@@ -71,6 +72,61 @@ export class ClippingPlaneCollectionTraits extends ModelTraits {
   modelMatrix?: number[];
 }
 
+export class ClippingBoxDimensionTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "number",
+    name: "Length",
+    description: "Length of the clipping box (along the x-axis)."
+  })
+  length?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Length",
+    description: "Width of the clipping box (along the y-axis)."
+  })
+  width?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Length",
+    description: "Height of the clipping box."
+  })
+  height?: number;
+}
+
+export class ClippingBoxTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "boolean",
+    name: "Enable clipping box",
+    description: "Determines whether the clipping box is active."
+  })
+  enabled: boolean = false;
+
+  @objectTrait({
+    type: LatLonHeightTraits,
+    name: "position",
+    description:
+      "Latitude, longitude and height of the clipping box. When not set, the box is positioned at the center of the screen."
+  })
+  position?: LatLonHeightTraits;
+
+  @objectTrait({
+    type: ClippingBoxDimensionTraits,
+    name: "Dimensions",
+    description:
+      "The length, width and height of the clipping box. When not set, the box will be 1/3rd the screen size."
+  })
+  dimensions?: ClippingBoxDimensionTraits;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Clip direction",
+    description: `Whether to clip the model outside of the box or inside. When this value is "outside", everything outside the box is clipped and when the value is "inside", everything inside the box is clipped. Default value is "outside"`
+  })
+  clipDirection = "outside";
+}
+
 export default class ClippingPlanesTraits extends ModelTraits {
   @objectTrait({
     type: ClippingPlaneCollectionTraits,
@@ -79,4 +135,12 @@ export default class ClippingPlanesTraits extends ModelTraits {
       "The ClippingPlaneCollection used to selectively disable rendering the tileset."
   })
   clippingPlanes?: ClippingPlaneCollectionTraits;
+
+  @objectTrait({
+    type: ClippingBoxTraits,
+    name: "Clipping box",
+    description:
+      "Defines a user controllable clipping box used to hide or show sections of a model."
+  })
+  clippingBox?: ClippingBoxTraits;
 }
