@@ -41,7 +41,9 @@ export default abstract class GlobeOrMap {
   abstract readonly type: string;
   abstract readonly terria: Terria;
   abstract readonly canShowSplitter: boolean;
-  protected static _featureHighlightName = "___$FeatureHighlight&__";
+
+  protected static _featureHighlightID = "___$FeatureHighlight&__";
+  protected static _featureHighlightName = "TerriaJS Feature Highlight Marker";
 
   private _removeHighlightCallback?: () => Promise<void> | void;
   private _highlightPromise: Promise<unknown> | undefined;
@@ -329,16 +331,23 @@ export default abstract class GlobeOrMap {
               f => f.geometry.type !== "Point"
             );
 
-            const catalogItem = new GeoJsonCatalogItem(
-              GlobeOrMap._featureHighlightName,
-              this.terria
+            let catalogItem = this.terria.getModelById(
+              GeoJsonCatalogItem,
+              GlobeOrMap._featureHighlightID
             );
+            if (catalogItem === undefined) {
+              catalogItem = new GeoJsonCatalogItem(
+                GlobeOrMap._featureHighlightID,
+                this.terria
+              );
+              catalogItem.setTrait(
+                CommonStrata.definition,
+                "name",
+                GlobeOrMap._featureHighlightName
+              );
+              this.terria.addModel(catalogItem);
+            }
 
-            catalogItem.setTrait(
-              CommonStrata.user,
-              "name",
-              GlobeOrMap._featureHighlightName
-            );
             catalogItem.setTrait(
               CommonStrata.user,
               "geoJsonData",
@@ -356,6 +365,9 @@ export default abstract class GlobeOrMap {
               })
             );
 
+            this.terria.overlays.add(catalogItem);
+            this._highlightPromise = catalogItem.loadMapItems();
+
             const removeCallback = (this._removeHighlightCallback = () => {
               if (!isDefined(this._highlightPromise)) {
                 return;
@@ -365,8 +377,9 @@ export default abstract class GlobeOrMap {
                   if (removeCallback !== this._removeHighlightCallback) {
                     return;
                   }
-                  catalogItem.setTrait(CommonStrata.user, "show", false);
-                  this.terria.overlays.remove(catalogItem);
+                  if (isDefined(catalogItem)) {
+                    catalogItem.setTrait(CommonStrata.user, "show", false);
+                  }
                 })
                 .catch(function() {});
             });
@@ -374,6 +387,11 @@ export default abstract class GlobeOrMap {
             (await catalogItem.loadMapItems()).logError(
               "Error occurred while loading picked feature"
             );
+
+            // Check to make sure we don't have a different `catalogItem` after loading
+            if (removeCallback !== this._removeHighlightCallback) {
+              return;
+            }
 
             catalogItem.setTrait(CommonStrata.user, "show", true);
 
