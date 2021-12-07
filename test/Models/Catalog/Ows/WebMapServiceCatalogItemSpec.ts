@@ -154,6 +154,44 @@ describe("WebMapServiceCatalogItem", function() {
     }
   });
 
+  describe("rectangle", () => {
+    const terria = new Terria();
+    const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
+
+    beforeEach(() => {
+      runInAction(() => {
+        wmsItem.setTrait(CommonStrata.definition, "url", "http://example.com");
+        wmsItem.setTrait(
+          CommonStrata.definition,
+          "getCapabilitiesUrl",
+          "test/WMS/styles_and_dimensions.xml"
+        );
+      });
+    });
+
+    it("single layer", async () => {
+      wmsItem.setTrait(CommonStrata.definition, "layers", "A");
+
+      (await wmsItem.loadMetadata()).throwIfError();
+
+      expect(wmsItem.rectangle.west).toBeCloseTo(-101.73759799032979, 5);
+      expect(wmsItem.rectangle.east).toBeCloseTo(-53.264449565158856, 5);
+      expect(wmsItem.rectangle.south).toBeCloseTo(11.916600886761035, 5);
+      expect(wmsItem.rectangle.north).toBeCloseTo(48.4370029038641, 5);
+    });
+
+    it("multiple layers", async () => {
+      wmsItem.setTrait(CommonStrata.definition, "layers", "A,B");
+
+      (await wmsItem.loadMetadata()).throwIfError();
+
+      expect(wmsItem.rectangle.west).toBeCloseTo(-101.73759799032979, 5);
+      expect(wmsItem.rectangle.east).toBeCloseTo(-53.264449565158856, 5);
+      expect(wmsItem.rectangle.south).toBeCloseTo(11.898823436502258, 5);
+      expect(wmsItem.rectangle.north).toBeCloseTo(48.454022604552435, 5);
+    });
+  });
+
   it("uses tileWidth and tileHeight", async function() {
     let wms: WebMapServiceCatalogItem;
     const terria = new Terria();

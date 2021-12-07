@@ -7,6 +7,7 @@ Change Log
 * Cleanup `CatalogFunction` error handling
 * Update terria-js cesium to `1.81.3` 
 * Fix `SelectAPolygonParameterEditor` feature picking
+* Add `WebMapServiceCatalogItem.rectangle` support for multiple WMS layers
 * [The next improvement]
 
 #### 8.1.13

@@ -10,11 +10,11 @@
 import i18next from "i18next";
 import { computed, runInAction } from "mobx";
 import combine from "terriajs-cesium/Source/Core/combine";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
 import URI from "urijs";
 import containsAny from "../../../Core/containsAny";
@@ -31,13 +31,10 @@ import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import ExportableMixin from "../../../ModelMixins/ExportableMixin";
 import GetCapabilitiesMixin from "../../../ModelMixins/GetCapabilitiesMixin";
 import { ImageryParts } from "../../../ModelMixins/MappableMixin";
+import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
 import TileErrorHandlerMixin from "../../../ModelMixins/TileErrorHandlerMixin";
 import TimeFilterMixin from "../../../ModelMixins/TimeFilterMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
-import SelectableDimensions, {
-  SelectableDimension,
-  SelectableDimensionSelect
-} from "../../SelectableDimensions";
 import { terriaTheme } from "../../../ReactViews/StandardUserInterface/StandardTheme";
 import {
   InfoSectionTraits,
@@ -52,15 +49,19 @@ import WebMapServiceCatalogItemTraits, {
   WebMapServiceAvailableLayerStylesTraits,
   WebMapServiceAvailableStyleTraits
 } from "../../../Traits/TraitsClasses/WebMapServiceCatalogItemTraits";
-import { callWebCoverageService } from "./callWebCoverageService";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import Model, { BaseModel } from "../../Definition/Model";
-import { CapabilitiesStyle } from "./OwsInterfaces";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
+import SelectableDimensions, {
+  SelectableDimension,
+  SelectableDimensionSelect
+} from "../../SelectableDimensions";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { callWebCoverageService } from "./callWebCoverageService";
+import { CapabilitiesStyle } from "./OwsInterfaces";
 import WebMapServiceCapabilities, {
   CapabilitiesContactInformation,
   CapabilitiesDimension,
@@ -69,7 +70,6 @@ import WebMapServiceCapabilities, {
   MetadataURL
 } from "./WebMapServiceCapabilities";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
-import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
 
 const dateFormat = require("dateformat");
 class GetCapabilitiesStratum extends LoadableStratum(
@@ -609,13 +609,41 @@ class GetCapabilitiesStratum extends LoadableStratum(
     const layers: CapabilitiesLayer[] = [...this.capabilitiesLayers.values()]
       .filter(layer => layer !== undefined)
       .map(l => l!);
-    // Needs to take union of all layer rectangles
-    return layers.length > 0 ? getRectangleFromLayer(layers[0]) : undefined;
-    // if (layers.length === 1) {
-    //     return getRectangleFromLayer(layers[0]);
-    // }
-    // Otherwise get the union of rectangles from all layers
-    // return undefined;
+
+    // Get union of bounding rectangles for all layers
+    const allLayersRectangle = layers.reduce<Rectangle | undefined>(
+      (unionRectangle, layer) => {
+        // Convert to cesium Rectangle (so we can use Rectangle.union)
+        const latLonRect = getRectangleFromLayer(layer);
+        const ceisumRect = Rectangle.fromDegrees(
+          latLonRect?.west,
+          latLonRect?.south,
+          latLonRect?.east,
+          latLonRect?.north
+        );
+        if (!unionRectangle) {
+          return ceisumRect;
+        }
+
+        return Rectangle.union(unionRectangle, ceisumRect);
+      },
+      undefined
+    );
+
+    if (
+      allLayersRectangle &&
+      isDefined(allLayersRectangle.west) &&
+      isDefined(allLayersRectangle.south) &&
+      isDefined(allLayersRectangle.east) &&
+      isDefined(allLayersRectangle.north)
+    ) {
+      return {
+        west: CesiumMath.toDegrees(allLayersRectangle.west),
+        south: CesiumMath.toDegrees(allLayersRectangle.south),
+        east: CesiumMath.toDegrees(allLayersRectangle.east),
+        north: CesiumMath.toDegrees(allLayersRectangle.north)
+      };
+    }
   }
 
   @computed
