@@ -8,6 +8,8 @@ Change Log
 * Update terria-js cesium to `1.81.3` 
 * Fix `SelectAPolygonParameterEditor` feature picking
 * Add `WebMapServiceCatalogItem.rectangle` support for multiple WMS layers
+* Fix picked feature highlighting for ArcGis REST API features (and TSify `featureDataToGeoJson`)
+* Re-enable GeoJSON simple styling - now if more than 50% of features have [simple-style-spec properties](https://github.com/mapbox/simplestyle-spec) - automatic styling will be disabled (this behaviour can be disabled by setting `forceCesiumPrimitives = false`)
 * [The next improvement]
 
 #### 8.1.13

@@ -5,7 +5,10 @@ import {
   FeatureCollection,
   featureCollection,
   Geometries,
-  Point
+  Geometry,
+  GeometryCollection,
+  Point,
+  Properties
 } from "@turf/helpers";
 import i18next from "i18next";
 import {
@@ -52,7 +55,7 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import formatPropertyValue from "../Core/formatPropertyValue";
 import hashFromString from "../Core/hashFromString";
 import isDefined from "../Core/isDefined";
-import { isJsonObject, JsonObject } from "../Core/Json";
+import { isJsonObject } from "../Core/Json";
 import { isJson } from "../Core/loadBlob";
 import makeRealPromise from "../Core/makeRealPromise";
 import StandardCssColors from "../Core/StandardCssColors";
@@ -66,6 +69,7 @@ import Reproject from "../Map/Reproject";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
+import CommonStrata from "../Models/Definition/CommonStrata";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
@@ -76,6 +80,22 @@ import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import { DiscreteTimeAsJS } from "./DiscretelyTimeVaryingMixin";
 import { ExportData } from "./ExportableMixin";
 import TableMixin from "./TableMixin";
+
+const SIMPLE_STYLE_KEYS = [
+  "marker-size",
+  "marker-color",
+  "marker-symbol",
+  "marker-opacity",
+  "marker-url",
+  "stroke",
+  "stroke-opacity",
+  "stroke-width",
+  "marker-stroke-width",
+  "polyline-stroke-width",
+  "polygon-stroke-width",
+  "fill",
+  "fill-opacity"
+];
 
 export type GeoJsonCrs =
   | {
@@ -348,7 +368,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
      *    - Using `timeProperty` or `heightProperty` or `perPropertyStyles` or simple-style `marker-symbol`
      */
     protected async forceLoadMapItems(): Promise<void> {
-      const useMvt = this.useMvt;
+      let useMvt = this.useMvt;
       const czmlTemplate = this.czmlTemplate;
 
       let geoJson: FeatureCollectionWithCrs | undefined;
@@ -364,11 +384,31 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         // Add feature index to "_id_" feature property
         // This is used to refer to each feature in TableMixin (as row ID)
 
+        // Also check for how many features have simply-style properties
+        let numFeaturesWithSimpleStyle = 0;
+
         for (let i = 0; i < geoJsonWgs84.features.length; i++) {
           if (!geoJsonWgs84.features[i].properties) {
             geoJsonWgs84.features[i].properties = {};
           }
-          geoJsonWgs84.features[i].properties!["_id_"] = i;
+          const properties = geoJsonWgs84.features[i].properties!;
+          properties["_id_"] = i;
+
+          if (useMvt && SIMPLE_STYLE_KEYS.find(key => properties[key])) {
+            numFeaturesWithSimpleStyle++;
+          }
+        }
+
+        // If more than 50% of features have simple style properties - disable table styling
+        if (numFeaturesWithSimpleStyle / geoJsonWgs84.features.length >= 0.5) {
+          runInAction(() => {
+            this.setTrait(
+              CommonStrata.underride,
+              "forceCesiumPrimitives",
+              true
+            );
+            useMvt = this.useMvt;
+          });
         }
         runInAction(() => {
           this._readyData = geoJsonWgs84;
