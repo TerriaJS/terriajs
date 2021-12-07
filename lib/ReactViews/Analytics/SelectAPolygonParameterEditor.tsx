@@ -128,8 +128,6 @@ export function selectOnMap(
             f.geometry.type === "Polygon" || f.geometry.type === "MultiPolygon"
         ) as any;
 
-        console.log(features);
-
         runInAction(() => {
           parameter.setValue(CommonStrata.user, features);
           terria.mapInteractionModeStack.pop();
