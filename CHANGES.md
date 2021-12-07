@@ -6,7 +6,7 @@ Change Log
 * Add `forceConvertResultsToV8` to `WebProcessingServiceCatalogFunction`. If your WPS processes are returning v7 json, you will either need to set this to `true`, or set `version: 0.0.1` in JSON output (which will then be automatically converted to v8)
 * Cleanup `CatalogFunction` error handling
 * Update terria-js cesium to `1.81.3` 
-* Fix `SelectAPolygonParameterEditor` feature picking
+* Fix `SelectAPolygonParameterEditor` feature picking (tsified)
 * Add `WebMapServiceCatalogItem.rectangle` support for multiple WMS layers
 * Fix picked feature highlighting for ArcGis REST API features (and TSify `featureDataToGeoJson`)
 * Re-enable GeoJSON simple styling - now if more than 50% of features have [simple-style-spec properties](https://github.com/mapbox/simplestyle-spec) - automatic styling will be disabled (this behaviour can be disabled by setting `forceCesiumPrimitives = false`)
