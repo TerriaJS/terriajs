@@ -295,7 +295,7 @@
   "helpPanel": {
     "btnText": "Help",
     "menuPaneTitle": "We're here to help",
-    "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [info@terria.io](mailto:info@terria.io)",
+    "menuPaneBody": "Find useful tips on how to use TerriaJS by either checking the guides below or by contacting the team at [{{supportEmail}}]({{supportEmail}})",
     "promptMessage": "Find the Tour, how-to videos & other help content here",
     "dismissText": "Got it, thanks!",
     "takeTour": "Take the tour",
@@ -549,6 +549,7 @@
     "searchItemTitle": "Search"
   },
   "dateTime": {
+    "selectorLabel": "Time:",
     "back": "Go back",
     "previous": "Previous time",
     "selectTime": "Select a time",
@@ -623,7 +624,8 @@
     "remove": "Remove",
     "add": "Add",
     "trash": "Remove from catalogue",
-    "removeFromMap": "Remove from map"
+    "removeFromMap": "Remove from map",
+    "preview": "Preview"
   },
   "chart": {
     "sectionLabel": "Charts",
@@ -1298,8 +1300,11 @@
       "bulkGeocoderErrorMessage": "Unable to map addresses to lat-long coordinates, as an error occurred while retrieving address coordinates. Please check your internet connection or try again later.",
       "legendZFilterLabel": "Extreme values",
       "legendNullLabel": "(No value)",
+      "styleDisabledLabel": "Disable style",
       "zFilterEnabled": "Extreme values hidden (click to show)",
-      "zFilterDisabled": "Extreme values detected (click to hide)"
+      "zFilterDisabled": "Extreme values detected (click to hide)",
+      "timeDimensionEnabled": "Time enabled (click to disable)",
+      "timeDimensionDisabled": "Time disabled (click to enable)"
     },
     "terrainCatalog": {
       "notSupportedErrorTitle": "Not supported in 2D",

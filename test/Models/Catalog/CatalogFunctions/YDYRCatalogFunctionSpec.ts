@@ -78,6 +78,7 @@ describe("YDYRCatalogFunction", function() {
     csv = new CsvCatalogItem("test", terria, undefined);
 
     csv.setTrait(CommonStrata.user, "csvString", lga11Csv);
+    await csv.loadRegionProviderList();
     await csv.loadMapItems();
     addUserCatalogMember(terria, csv, { enable: true });
 

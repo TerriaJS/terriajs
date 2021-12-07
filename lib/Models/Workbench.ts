@@ -208,6 +208,9 @@ export default class Workbench {
 
     if (!error && MappableMixin.isMixedInto(item)) {
       error = (await item.loadMapItems()).error;
+      if (!error && item.zoomOnAddToWorkbench && !item.disableZoomTo) {
+        item.terria.currentViewer.zoomTo(item);
+      }
     }
 
     // Remove item if TerriaError severity is Error
