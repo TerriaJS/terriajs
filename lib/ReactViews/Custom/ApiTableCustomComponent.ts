@@ -1,9 +1,6 @@
 import { ApiTableCatalogItem } from "../../Models/Catalog/CatalogItems/ApiTableCatalogItem";
-import CatalogMemberFactory from "../../Models/Catalog/CatalogMemberFactory";
 import CommonStrata from "../../Models/Definition/CommonStrata";
-import { BaseModel } from "../../Models/Definition/Model";
 import updateModelFromJson from "../../Models/Definition/updateModelFromJson";
-import upsertModelFromJson from "../../Models/Definition/upsertModelFromJson";
 import ChartCustomComponent, {
   ChartCustomComponentAttributes
 } from "./ChartCustomComponent";
@@ -34,6 +31,8 @@ export default class ApiTableChartCustomComponent extends ChartCustomComponent<
     sourceReference: ApiTableCatalogItem | undefined
   ): ApiTableCatalogItem | undefined {
     const terria = context.terria;
+    // This differs from other custom in that if a catalog item with the same id has already been created, it'll return that rather than a new one
+    // This is required for the `updateModelFromJson` call in `setTraitsFromAttrs` to work
     const existingModel = id
       ? context.terria?.getModelById(ApiTableCatalogItem, id)
       : undefined;
@@ -48,7 +47,11 @@ export default class ApiTableChartCustomComponent extends ChartCustomComponent<
     attrs: ApiTableCustomChartComponentAttributes,
     sourceIndex: number
   ): void {
-    const json: any = attrs.apiTableCatalogItemJson;
+    const json: any | undefined = attrs.apiTableCatalogItemJson;
+    if (json === undefined) {
+      return;
+    }
+
     json.id = item.uniqueId;
     const result = updateModelFromJson(
       item,
@@ -69,7 +72,12 @@ export default class ApiTableChartCustomComponent extends ChartCustomComponent<
       return parsed;
     }
 
-    parsed.apiTableCatalogItemJson = JSON.parse(jsonAttr);
+    try {
+      parsed.apiTableCatalogItemJson = JSON.parse(jsonAttr);
+    } catch (e) {
+      console.error("Couldn't parse json for ApiTableChartCustomComponent");
+    }
+
     return parsed;
   }
 }
