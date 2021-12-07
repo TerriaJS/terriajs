@@ -123,6 +123,9 @@ export function selectOnMap(
       } else {
         const features = flatten(
           filterOutUndefined(catalogItems.map(item => item.readyData?.features))
+        ).filter(
+          f =>
+            f.geometry.type === "Polygon" || f.geometry.type === "MultiPolygon"
         ) as any;
 
         console.log(features);
