@@ -2,13 +2,14 @@ import { ApiTableCatalogItem } from "../../Models/Catalog/CatalogItems/ApiTableC
 import CatalogMemberFactory from "../../Models/Catalog/CatalogMemberFactory";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import { BaseModel } from "../../Models/Definition/Model";
+import updateModelFromJson from "../../Models/Definition/updateModelFromJson";
 import upsertModelFromJson from "../../Models/Definition/upsertModelFromJson";
 import ChartCustomComponent, {
   ChartCustomComponentAttributes
 } from "./ChartCustomComponent";
 import { ProcessNodeContext } from "./CustomComponent";
 
-interface ApiTableCustomComponentAttributes
+interface ApiTableCustomChartComponentAttributes
   extends ChartCustomComponentAttributes {
   /**
    * The catalog JSON for an ApiTableCatalogItem as a string
@@ -16,7 +17,7 @@ interface ApiTableCustomComponentAttributes
   apiTableCatalogItemJson: string;
 }
 
-export default class ApiTableCustomComponent extends ChartCustomComponent<
+export default class ApiTableChartCustomComponent extends ChartCustomComponent<
   ApiTableCatalogItem
 > {
   get name(): string {
@@ -44,27 +45,25 @@ export default class ApiTableCustomComponent extends ChartCustomComponent<
 
   protected setTraitsFromAttrs(
     item: ApiTableCatalogItem,
-    attrs: ApiTableCustomComponentAttributes,
+    attrs: ApiTableCustomChartComponentAttributes,
     sourceIndex: number
   ): void {
     const json: any = attrs.apiTableCatalogItemJson;
     json.id = item.uniqueId;
-    const result = upsertModelFromJson(
-      CatalogMemberFactory,
-      item.terria,
-      "",
+    const result = updateModelFromJson(
+      item,
       CommonStrata.definition,
       json,
-      {}
+      true
     );
   }
 
   protected parseNodeAttrs(nodeAttrs: {
     [name: string]: string | undefined;
-  }): ApiTableCustomComponentAttributes {
-    const parsed: ApiTableCustomComponentAttributes = super.parseNodeAttrs(
+  }): ApiTableCustomChartComponentAttributes {
+    const parsed: ApiTableCustomChartComponentAttributes = super.parseNodeAttrs(
       nodeAttrs
-    ) as ApiTableCustomComponentAttributes;
+    ) as ApiTableCustomChartComponentAttributes;
     const jsonAttr = nodeAttrs["api-table-catalog-item-json"];
     if (jsonAttr === undefined) {
       return parsed;

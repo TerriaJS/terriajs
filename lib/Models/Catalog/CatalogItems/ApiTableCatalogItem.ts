@@ -196,7 +196,10 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     return this.loadDataFromApis()
       .then(() => {
         runInAction(() => {
-          this.append(this.apiResponseToTable());
+          const newTableData = this.apiResponseToTable();
+          this.shouldAppendNewData
+            ? this.append(newTableData)
+            : (this.dataColumnMajor = newTableData);
           this.hasData = true;
         });
       })
@@ -206,7 +209,10 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
   refreshData(): void {
     this.loadDataFromApis().then(() => {
       runInAction(() => {
-        this.append(this.apiResponseToTable());
+        const newTableData = this.apiResponseToTable();
+        this.shouldAppendNewData
+          ? this.append(newTableData)
+          : (this.dataColumnMajor = newTableData);
       });
     });
   }

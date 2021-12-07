@@ -48,4 +48,12 @@ export default class ApiTableCatalogItemTraits extends mixTraits(
     description: "The name of the id property shared between all APIs"
   })
   idKey?: string;
+
+  @primitiveTrait({
+    name: "Should append new data",
+    type: "string",
+    description:
+      "When true, new data received through APIs will be appended to existing data. If false, new data will replace existing data."
+  })
+  shouldAppendNewData?: boolean = true;
 }
