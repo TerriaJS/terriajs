@@ -320,41 +320,14 @@ export default abstract class GlobeOrMap {
               feature.imageryLayer.imageryProvider.rectangle
             );
           }
-        } else if (
-          !isDefined(this.supportsPolylinesOnTerrain) ||
-          this.supportsPolylinesOnTerrain
-        ) {
-          let geoJson: GeoJSONFeature | undefined = featureDataToGeoJson(
-            feature.data
-          );
+        } else {
+          const geoJson = featureDataToGeoJson(feature.data);
 
-          // Show geometry associated with the feature.
           // Don't show points; the targeting cursor is sufficient.
-          if (
-            geoJson &&
-            geoJson.geometry &&
-            geoJson.geometry.type !== "Point"
-          ) {
-            // Turn Polygons into MultiLineStrings, because we're only showing the outline.
-            if (
-              geoJson.geometry.type === "Polygon" ||
-              geoJson.geometry.type === "MultiPolygon"
-            ) {
-              geoJson = <GeoJSONFeature>clone(geoJson);
-              geoJson.geometry = clone(geoJson.geometry);
-
-              if (geoJson.geometry.type === "MultiPolygon") {
-                const newCoordinates: Position[][] = [];
-                (geoJson.geometry as MultiPolygon).coordinates.forEach(
-                  polygon => {
-                    newCoordinates.push(...polygon);
-                  }
-                );
-                (<any>geoJson).geometry.coordinates = newCoordinates;
-              }
-
-              geoJson.geometry.type = "MultiLineString";
-            }
+          if (geoJson) {
+            geoJson.features = geoJson.features.filter(
+              f => f.geometry.type !== "Point"
+            );
 
             const catalogItem = new GeoJsonCatalogItem(
               GlobeOrMap._featureHighlightName,
@@ -397,6 +370,10 @@ export default abstract class GlobeOrMap {
                 })
                 .catch(function() {});
             });
+
+            (await catalogItem.loadMapItems()).logError(
+              "Error occurred while loading picked feature"
+            );
 
             catalogItem.setTrait(CommonStrata.user, "show", true);
 

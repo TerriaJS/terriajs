@@ -77,8 +77,25 @@ import { DiscreteTimeAsJS } from "./DiscretelyTimeVaryingMixin";
 import { ExportData } from "./ExportableMixin";
 import TableMixin from "./TableMixin";
 
-export type FeatureCollectionWithCrs = FeatureCollection & {
-  crs: JsonObject | undefined;
+export type GeoJsonCrs =
+  | {
+      type: "name";
+      properties: {
+        name: string;
+      };
+    }
+  | {
+      type: "EPSG";
+      properties: {
+        code: string;
+      };
+    };
+
+export type FeatureCollectionWithCrs<
+  G = Geometry | GeometryCollection,
+  P = Properties
+> = FeatureCollection<G, P> & {
+  crs?: GeoJsonCrs;
 };
 
 class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
