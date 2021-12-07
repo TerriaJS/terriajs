@@ -1,9 +1,13 @@
 Change Log
 ==========
 
-#### next release (8.1.13)
+#### next release (8.1.14)
 
-* Bigger zoom control icons.
+**Breaking changes**:
+* `Result.throwIfUndefined()` will now only throw if `result.value` is undefined - regardless of `result.error`
+
+* Reimplement option to zoom on item when adding it to workbench, `zoomOnAddToWorkbench` is added to `MappableTraits`.
+* Update terria-js cesium to `1.81.3` 
 * Re-allowed models to be added to `workbench` if the are not `Mappable` or `Chartable`
 * Moved `WebMapServiceCatalogItem.GetCapbilitiesStratum` to `lib\Models\Catalog\Ows\WebMapServiceCapabilitiesStratum.ts`
 * Moved `WebMapServiceCatalogItem.DiffStratum` to `DiffableMixin`
@@ -12,10 +16,6 @@ Change Log
   * Added `WebCoverageServiceParameterTraits` to `WebMapServiceCatalogItemTraits.linkedWcsParameters`. It includes `outputFormat` and `outputCrs`
   * Will attempt to use native CRS and format (from `DescribeCoverage`)
   * No longer sets `width` or `height` - so export will now return native resolution
-* `Result.throwIfUndefined()` will now only throw if `result.value` is undefined - regardless of `result.error`
-#### next release (8.1.14)
-* Reimplement option to zoom on item when adding it to workbench, `zoomOnAddToWorkbench` is added to `MappableTraits`.
-* Update terria-js cesium to `1.81.3` 
 * [The next improvement]
 
 #### 8.1.13
