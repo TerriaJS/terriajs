@@ -386,6 +386,10 @@ function toJulianDate(time: string | undefined): JulianDate | undefined {
   if (time === undefined || time === null) {
     return undefined;
   }
+  // JS's data parser produces some bizarre dates from bad strings without complaint, so we need to do some basic validation
+  if (time.includes("NaN")) {
+    return undefined;
+  }
   return JulianDate.fromIso8601(time);
 }
 

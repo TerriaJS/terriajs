@@ -5,6 +5,7 @@ Change Log
 * Reimplement option to zoom on item when adding it to workbench, `zoomOnAddToWorkbench` is added to `MappableTraits`.
 * Update terria-js cesium to `1.81.3` 
 * Anonymize user IP when using google analytics.
+* Fix crash when TableMixin-based catalog item had invalid date values
 * [The next improvement]
 
 #### 8.1.13
