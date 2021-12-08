@@ -1072,7 +1072,11 @@ class WebMapServiceCatalogItem
 
   @computed
   private get _nextImageryParts(): ImageryParts | undefined {
-    if (!this.isPaused && this.nextDiscreteTimeTag) {
+    if (
+      this.terria.timelineStack.contains(this) &&
+      !this.isPaused &&
+      this.nextDiscreteTimeTag
+    ) {
       const imageryProvider = this._createImageryProvider(
         this.nextDiscreteTimeTag
       );

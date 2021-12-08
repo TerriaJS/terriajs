@@ -429,7 +429,11 @@ export default class ArcGisMapServerCatalogItem extends MappableMixin(
 
   @computed
   private get _nextImageryParts(): ImageryParts | undefined {
-    if (!this.isPaused && this.nextDiscreteTimeTag) {
+    if (
+      this.terria.timelineStack.contains(this) &&
+      !this.isPaused &&
+      this.nextDiscreteTimeTag
+    ) {
       const dateAsUnix: number = new Date(this.nextDiscreteTimeTag).getTime();
       const imageryProvider = this._createImageryProvider(
         dateAsUnix.toString()
