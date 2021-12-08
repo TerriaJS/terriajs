@@ -1072,7 +1072,7 @@ class WebMapServiceCatalogItem
 
   @computed
   private get _nextImageryParts(): ImageryParts | undefined {
-    if (this.nextDiscreteTimeTag) {
+    if (!this.isPaused && this.nextDiscreteTimeTag) {
       const imageryProvider = this._createImageryProvider(
         this.nextDiscreteTimeTag
       );
