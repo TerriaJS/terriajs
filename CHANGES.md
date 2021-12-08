@@ -6,6 +6,7 @@ Change Log
 * Update terria-js cesium to `1.81.3` 
 * Anonymize user IP when using google analytics.
 * Fix crash when TableMixin-based catalog item had invalid date values
+* Only preload next timestep of timeseries rasters (WMS & ArcGIS MapServer) when animating the item on the map.
 * [The next improvement]
 
 #### 8.1.13
