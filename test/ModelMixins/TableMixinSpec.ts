@@ -165,11 +165,10 @@ describe("TableMixin", function() {
       );
 
       await item.loadMapItems();
-      expect(item.hasDiscreteTimes).toBeFalsy();
       const mapItem = item.mapItems[0];
       expect(mapItem instanceof CustomDataSource).toBe(true);
       if (mapItem instanceof CustomDataSource) {
-        expect(mapItem.entities.values.length).toBe(4);
+        expect(mapItem.entities.values.length).toBe(3);
       }
     });
   });
