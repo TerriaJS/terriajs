@@ -17,6 +17,8 @@
     },
     "include": [
         "./lib/**/*",
-        "./test/**/*"
+        "./test/**/*",
+        "./buildprocess/generateDocs.ts",
+        "./buildprocess/**/*",
     ]
 }

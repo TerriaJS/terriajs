@@ -1,4 +1,4 @@
-import CatalogMemberFactory from "../../Models/CatalogMemberFactory";
+import CatalogMemberFactory from "../../Models/Catalog/CatalogMemberFactory";
 import modelReferenceTrait from "../Decorators/modelReferenceTrait";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
@@ -13,6 +13,14 @@ export class BaseMapTraits extends ModelTraits {
     description: "Path to the basemap image"
   })
   image?: string;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Contrast color",
+    description:
+      "Color which should be used to contrast with basemap (eg for region mapping feature borders)"
+  })
+  contrastColor?: string = "#ffffff";
 
   @modelReferenceTrait({
     factory: CatalogMemberFactory,

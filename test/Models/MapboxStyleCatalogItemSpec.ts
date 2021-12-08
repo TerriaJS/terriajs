@@ -1,8 +1,8 @@
 import MapboxStyleImageryProvider from "terriajs-cesium/Source/Scene/MapboxStyleImageryProvider";
 import URI from "urijs";
 import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import MapboxStyleCatalogItem from "../../lib/Models/MapboxStyleCatalogItem";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import MapboxStyleCatalogItem from "../../lib/Models/Catalog/CatalogItems/MapboxStyleCatalogItem";
 import Terria from "../../lib/Models/Terria";
 
 describe("MapboxStyleCatalogItem", function() {

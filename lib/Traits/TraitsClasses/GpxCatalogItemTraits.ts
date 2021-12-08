@@ -1,14 +1,10 @@
-import mixTraits from "../mixTraits";
-import FeatureInfoTraits from "./FeatureInfoTraits";
-import UrlTraits from "./UrlTraits";
-import MappableTraits from "./MappableTraits";
-import CatalogMemberTraits from "./CatalogMemberTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import CatalogMemberTraits from "./CatalogMemberTraits";
+import { GeoJsonTraits } from "./GeoJsonTraits";
 
 export default class GpxCatalogItemTraits extends mixTraits(
-  FeatureInfoTraits,
-  UrlTraits,
-  MappableTraits,
+  GeoJsonTraits,
   CatalogMemberTraits
 ) {
   @primitiveTrait({

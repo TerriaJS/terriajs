@@ -16,7 +16,7 @@ import DateTimePicker from "../../BottomDock/Timeline/DateTimePicker";
 import { formatDateTime } from "../../BottomDock/Timeline/DateFormats";
 import Styles from "./datetime-selector-section.scss";
 import Icon from "../../../Styled/Icon";
-import CommonStrata from "../../../Models/CommonStrata";
+import CommonStrata from "../../../Models/Definition/CommonStrata";
 import { runInAction } from "mobx";
 import { withTranslation } from "react-i18next";
 
@@ -147,7 +147,9 @@ const DateTimeSelectorSection = observer(
 
       return (
         <div className={Styles.datetimeSelector}>
-          <div className={Styles.title}>Time:</div>
+          <div className={Styles.title} id={"dateTimeSelectorLabel"}>
+            {item.timeLabel ?? t("dateTime.selectorLabel")}
+          </div>
           <div className={Styles.datetimeSelectorInner}>
             <div className={Styles.datetimeAndPicker}>
               <button

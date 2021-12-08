@@ -45,15 +45,10 @@ export default class TerriaViewer {
   async setBaseMap(baseMap?: MappableMixin.Instance) {
     if (!baseMap) return;
 
-    try {
-      if (CatalogMemberMixin.isMixedInto(baseMap)) await baseMap.loadMetadata();
-
-      if (baseMap) await baseMap.loadMapItems();
-
-      runInAction(() => (this._baseMap = baseMap));
-    } catch (e) {
-      this.terria.raiseErrorToUser(
-        TerriaError.from(e, {
+    if (baseMap) {
+      const result = await baseMap.loadMapItems();
+      if (result.error) {
+        result.raiseError(this.terria, {
           title: {
             key: "models.terria.loadingBaseMapErrorTitle",
             parameters: {
@@ -63,8 +58,10 @@ export default class TerriaViewer {
                   : baseMap.uniqueId) ?? "Unknown item"
             }
           }
-        })
-      );
+        });
+      } else {
+        runInAction(() => (this._baseMap = baseMap));
+      }
     }
   }
 
@@ -89,6 +86,12 @@ export default class TerriaViewer {
 
   @observable
   mapContainer: string | HTMLElement | undefined;
+
+  /**
+   * The distance between two pixels at the bottom center of the screen.
+   * Set in lib/ReactViews/Map/Legend/DistanceLegend.jsx
+   */
+  @observable scale: number = 1;
 
   // TODO: hook these up
   readonly beforeViewerChanged = new CesiumEvent();

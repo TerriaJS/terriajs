@@ -8,13 +8,10 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
 import { calculateDomain, ChartItem } from "../ModelMixins/ChartableMixin";
-import CommonStrata from "../Models/CommonStrata";
-import Model from "../Models/Model";
+import CommonStrata from "../Models/Definition/CommonStrata";
+import Model from "../Models/Definition/Model";
 import DiscretelyTimeVaryingTraits from "../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import TimeVarying from "./TimeVarying";
-
-type DiscretelyTimeVarying = Model<DiscretelyTimeVaryingTraits>;
-
 export interface AsJulian {
   time: JulianDate;
   tag: string;
@@ -26,7 +23,7 @@ export interface DiscreteTimeAsJS {
 }
 
 function DiscretelyTimeVaryingMixin<
-  T extends Constructor<DiscretelyTimeVarying>
+  T extends Constructor<Model<DiscretelyTimeVaryingTraits>>
 >(Base: T) {
   abstract class DiscretelyTimeVaryingMixin extends Base
     implements TimeVarying {
@@ -38,7 +35,7 @@ function DiscretelyTimeVaryingMixin<
     @computed
     get currentTime(): string | undefined {
       const time = super.currentTime;
-      if (time === undefined) {
+      if (time === undefined || time === null) {
         if (this.initialTimeSource === "now") {
           return JulianDate.toIso8601(JulianDate.now());
         } else if (this.initialTimeSource === "start") {
@@ -338,6 +335,7 @@ function DiscretelyTimeVaryingMixin<
         categoryName: this.name,
         key: `key${this.uniqueId}-${this.name}`,
         type: this.chartType || "momentLines",
+        glyphStyle: this.chartGlyphStyle,
         xAxis: { scale: "time" },
         points,
         domain: { ...calculateDomain(points), y: [0, 1] },
@@ -385,7 +383,7 @@ namespace DiscretelyTimeVaryingMixin {
 export default DiscretelyTimeVaryingMixin;
 
 function toJulianDate(time: string | undefined): JulianDate | undefined {
-  if (time === undefined) {
+  if (time === undefined || time === null) {
     return undefined;
   }
   return JulianDate.fromIso8601(time);

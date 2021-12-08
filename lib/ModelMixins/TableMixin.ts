@@ -1,36 +1,32 @@
-import { VectorTileFeature } from "@mapbox/vector-tile";
 import i18next from "i18next";
 import { action, computed, observable, runInAction } from "mobx";
-import { createTransformer } from "mobx-utils";
+import { createTransformer, ITransformer } from "mobx-utils";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
-import { JsonObject } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
 import makeRealPromise from "../Core/makeRealPromise";
 import TerriaError from "../Core/TerriaError";
 import ConstantColorMap from "../Map/ConstantColorMap";
-import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
-import JSRegionProviderList from "../Map/RegionProviderList";
-import CommonStrata from "../Models/CommonStrata";
-import Model from "../Models/Model";
+import RegionProviderList from "../Map/RegionProviderList";
+import CommonStrata from "../Models/Definition/CommonStrata";
+import Model from "../Models/Definition/Model";
+import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import SelectableDimensions, {
   SelectableDimension
 } from "../Models/SelectableDimensions";
 import createLongitudeLatitudeFeaturePerId from "../Table/createLongitudeLatitudeFeaturePerId";
 import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
-import getChartDetailsFn from "../Table/getChartDetailsFn";
+import createRegionMappedImageryProvider from "../Table/createRegionMappedImageryProvider";
+import { ColorStyleLegend } from "../Table/TableAutomaticStylesStratum";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
@@ -47,16 +43,32 @@ import DiscretelyTimeVaryingMixin, {
 import ExportableMixin, { ExportData } from "./ExportableMixin";
 import { ImageryParts } from "./MappableMixin";
 
-// TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
-//   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
-// This is a dodgy workaround.
-class RegionProviderList extends JSRegionProviderList {}
 function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
   abstract class TableMixin
     extends ExportableMixin(
       ChartableMixin(DiscretelyTimeVaryingMixin(CatalogMemberMixin(Base)))
     )
     implements SelectableDimensions {
+    /**
+     * The default {@link TableStyle}, which is used for styling
+     * only when there are no styles defined.
+     */
+    readonly defaultTableStyle: TableStyle;
+
+    constructor(...args: any[]) {
+      super(...args);
+
+      const tableStyle = new TableStyle(this);
+      runInAction(() =>
+        tableStyle.colorTraits.setTrait(
+          CommonStrata.defaults,
+          "legend",
+          new ColorStyleLegend(this, undefined)
+        )
+      );
+      this.defaultTableStyle = tableStyle;
+    }
+
     get hasTableMixin() {
       return true;
     }
@@ -133,15 +145,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     /**
-     * Gets the default {@link TableStyle}, which is used for styling
-     * only when there are no styles defined.
-     */
-    @computed
-    get defaultTableStyle(): TableStyle {
-      return new TableStyle(this, -1);
-    }
-
-    /**
      * Gets the {@link TableStyleTraits#id} of the currently-active style.
      * Note that this is a trait so there is no guarantee that a style
      * with this ID actually exists. If no active style is explicitly
@@ -205,12 +208,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     @computed
-    get disableOpacityControl() {
-      // disable opacity control for point tables - or if no mapItems
-      return this.activeTableStyle.isPoints() || this.mapItems.length === 0;
-    }
-
-    @computed
     get _canExportData() {
       return isDefined(this.dataColumnMajor);
     }
@@ -224,6 +221,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           )
           .join("\n");
 
+        // Make sure we have .csv file extension
+        let name = this.name || this.uniqueId || "data.csv";
+        if (!/(\.csv\b)/i.test(name)) {
+          name = `${name}.csv`;
+        }
+
         return {
           name: (this.name || this.uniqueId)!,
           file: new Blob([csvString])
@@ -234,6 +237,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         sender: this,
         message: "No data available to download."
       });
+    }
+
+    @computed
+    get disableOpacityControl() {
+      // disable opacity control for point tables - or if no mapItems
+      return this.activeTableStyle.isPoints() || this.mapItems.length === 0;
     }
 
     @computed
@@ -258,12 +267,17 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      */
     @computed
     get mapItems(): (DataSource | ImageryParts)[] {
+      // Wait for activeTableStyle to be ready
+      if (!this.activeTableStyle.ready || this.isLoadingMapItems) return [];
+
       const numRegions =
         this.activeTableStyle.regionColumn?.valuesAsRegions?.uniqueRegionIds
           ?.length ?? 0;
 
       // Estimate number of points based off number of rowGroups
-      const numPoints = this.activeTableStyle.rowGroups.length;
+      const numPoints = this.activeTableStyle.isPoints()
+        ? this.activeTableStyle.rowGroups.length
+        : 0;
 
       // If we have more points than regions OR we have points are are using a ConstantColorMap - show points instead of regions
       // (Using ConstantColorMap with regions will result in all regions being the same color - which isn't useful)
@@ -391,6 +405,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
             categoryName: this.name,
             key: `key${this.uniqueId}-${this.name}-${yColumn.name}`,
             type: this.chartType ?? "line",
+            glyphStyle: this.chartGlyphStyle ?? "circle",
             xAxis,
             points,
             domain: calculateDomain(points),
@@ -419,6 +434,9 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     @computed
     get chartItems() {
+      // Wait for activeTableStyle to be ready
+      if (!this.activeTableStyle.ready || this.isLoadingMapItems) return [];
+
       return filterOutUndefined([
         // If time-series region mapping - show time points chart
         this.activeTableStyle.isRegions() && this.discreteTimes?.length
@@ -431,10 +449,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     @computed
     get selectableDimensions(): SelectableDimension[] {
       return filterOutUndefined([
+        this.timeDisableDimension,
         ...super.selectableDimensions,
         this.regionColumnDimensions,
         this.regionProviderDimensions,
-        this.styleDimensions
+        this.styleDimensions,
+        this.outlierFilterDimension
       ]);
     }
 
@@ -459,6 +479,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
             };
           }),
         selectedId: this.activeStyle,
+        allowUndefined: this.showDisableStyleOption,
+        undefinedLabel: this.showDisableStyleOption
+          ? i18next.t("models.tableData.styleDisabledLabel")
+          : undefined,
         setDimensionValue: (stratumId: string, styleId: string) => {
           this.setTrait(stratumId, "activeStyle", styleId);
         }
@@ -543,6 +567,76 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       };
     }
 
+    /**
+     * Creates SelectableDimension for region column - the options contains a list of all columns.
+     * {@link TableColorStyleTraits#zScoreFilter} must be enabled and {@link TableColorMap#zScoreFilterValues} must detect extreme (outlier) values
+     */
+    @computed
+    get outlierFilterDimension(): SelectableDimension | undefined {
+      if (
+        !this.activeTableStyle.colorTraits.zScoreFilter ||
+        !this.activeTableStyle.tableColorMap.zScoreFilterValues
+      ) {
+        return;
+      }
+
+      return {
+        id: "outlierFilter",
+        options: [
+          { id: "true", name: i18next.t("models.tableData.zFilterEnabled") },
+          { id: "false", name: i18next.t("models.tableData.zFilterDisabled") }
+        ],
+        selectedId: this.activeTableStyle.colorTraits.zScoreFilterEnabled
+          ? "true"
+          : "false",
+        setDimensionValue: (stratumId: string, value: string) => {
+          updateModelFromJson(this, stratumId, {
+            defaultStyle: {
+              color: { zScoreFilterEnabled: value === "true" }
+            }
+          });
+        },
+        placement: "belowLegend",
+        type: "checkbox"
+      };
+    }
+
+    /**
+     * Creates SelectableDimension to disable time - this will show if each rowGroup only has a single time
+     */
+    @computed
+    get timeDisableDimension(): SelectableDimension | undefined {
+      // Return nothing if no active time column and if the active time column has been explicitly hidden (using this.defaultStyle.time.timeColumn = null)
+      // or if time column doesn't have at least one interval
+      if (this.mapItems.length === 0 || !this.showDisableTimeOption) return;
+
+      return {
+        id: "disableTime",
+        options: [
+          {
+            id: "true",
+            name: i18next.t("models.tableData.timeDimensionEnabled")
+          },
+          {
+            id: "false",
+            name: i18next.t("models.tableData.timeDimensionDisabled")
+          }
+        ],
+        selectedId:
+          this.defaultStyle.time.timeColumn === null ? "false" : "true",
+        setDimensionValue: (stratumId: string, value: string) => {
+          // We have to set showDisableTimeOption to true - or this will hide when time column is disabled
+          this.setTrait(stratumId, "showDisableTimeOption", true);
+          this.defaultStyle.time.setTrait(
+            stratumId,
+            "timeColumn",
+            value === "true" ? undefined : null
+          );
+        },
+        type: "checkbox"
+      };
+    }
+
     @computed
     get rowIds(): number[] {
       const nRows = (this.dataColumnMajor?.[0]?.length || 1) - 1;
@@ -604,12 +698,30 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     protected async forceLoadMapItems() {
-      const dataColumnMajor = await this.forceLoadTableData();
+      try {
+        const dataColumnMajor = await this.forceLoadTableData();
 
-      if (dataColumnMajor !== undefined && dataColumnMajor !== null) {
+        // We need to make sure the region provider is loaded before loading
+        // region mapped tables.
+        await this.loadRegionProviderList();
+
+        if (dataColumnMajor !== undefined && dataColumnMajor !== null) {
+          runInAction(() => {
+            this.dataColumnMajor = dataColumnMajor;
+          });
+        }
+
+        // Load region IDS if region mapping
+        const activeRegionType = this.activeTableStyle.regionColumn?.regionType;
+        if (activeRegionType) {
+          await activeRegionType.loadRegionIDs();
+        }
+      } catch (e) {
+        // Clear data if error occurs
         runInAction(() => {
-          this.dataColumnMajor = dataColumnMajor;
+          this.dataColumnMajor = undefined;
         });
+        throw e;
       }
     }
 
@@ -626,7 +738,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     async loadRegionProviderList() {
       if (isDefined(this.regionProviderList)) return;
 
-      const regionProvidersPromise:
+      const regionProviderList:
         | RegionProviderList
         | undefined = await makeRealPromise(
         RegionProviderList.fromUrl(
@@ -634,7 +746,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           this.terria.corsProxy
         )
       );
-      runInAction(() => (this.regionProviderList = regionProvidersPromise));
+      runInAction(() => (this.regionProviderList = regionProviderList));
     }
 
     /*
@@ -693,238 +805,21 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       (input: {
         style: TableStyle;
         currentTime: JulianDate | undefined;
-      }): ImageryProvider | undefined => {
-        if (!input.style.isRegions()) {
-          return undefined;
-        }
-
-        const regionColumn = input.style.regionColumn;
-        const regionType = regionColumn.regionType;
-        if (regionType === undefined) {
-          return undefined;
-        }
-
-        const baseMapContrastColor = "white"; //this.terria.baseMapContrastColor;
-
-        const colorColumn = input.style.colorColumn;
-        const valueFunction =
-          colorColumn !== undefined
-            ? colorColumn.valueFunctionForType
-            : () => null;
-        const colorMap = (this.activeTableStyle || this.defaultTableStyle)
-          .colorMap;
-        const valuesAsRegions = regionColumn.valuesAsRegions;
-
-        let currentTimeRows: number[] | undefined;
-
-        // TODO: this is already implemented in RegionProvider.prototype.mapRegionsToIndicesInto, but regionTypes require "loading" for this to work. I think the whole RegionProvider thing needs to be re-done in TypeScript at some point and then we can move stuff into that.
-        // If time varying, get row indices which match
-        if (
-          input.currentTime &&
-          input.style.timeIntervals &&
-          input.style.moreThanOneTimeInterval
-        ) {
-          currentTimeRows = input.style.timeIntervals.reduce<number[]>(
-            (rows, timeInterval, index) => {
-              if (
-                timeInterval &&
-                TimeInterval.contains(timeInterval, input.currentTime!)
-              ) {
-                rows.push(index);
-              }
-              return rows;
-            },
-            []
-          );
-        }
-
-        const catalogItem = this;
-
-        return new MapboxVectorTileImageryProvider({
-          url: regionType.server,
-          layerName: regionType.layerName,
-          styleFunc: function(feature: any) {
-            const featureRegion = feature.properties[regionType.regionProp];
-            const regionIdString =
-              featureRegion !== undefined && featureRegion !== null
-                ? featureRegion.toString()
-                : "";
-
-            let rowNumber = catalogItem.getImageryLayerFilteredRows(
-              input,
-              currentTimeRows,
-              valuesAsRegions.regionIdToRowNumbersMap.get(
-                regionIdString.toLowerCase()
-              )
-            );
-            let value: string | number | null = isDefined(rowNumber)
-              ? valueFunction(rowNumber)
-              : null;
-
-            const color = colorMap.mapValueToColor(value);
-            if (color === undefined) {
-              return undefined;
-            }
-
-            return {
-              fillStyle: color.toCssColorString(),
-              strokeStyle: baseMapContrastColor,
-              lineWidth: 1,
-              lineJoin: "miter"
-            };
-          },
-          subdomains: regionType.serverSubdomains,
-          rectangle:
-            Array.isArray(regionType.bbox) && regionType.bbox.length >= 4
-              ? Rectangle.fromDegrees(
-                  regionType.bbox[0],
-                  regionType.bbox[1],
-                  regionType.bbox[2],
-                  regionType.bbox[3]
-                )
-              : undefined,
-          minimumZoom: regionType.serverMinZoom,
-          maximumNativeZoom: regionType.serverMaxNativeZoom,
-          maximumZoom: regionType.serverMaxZoom,
-          uniqueIdProp: regionType.uniqueIdProp,
-          featureInfoFunc: (feature: any) =>
-            this.getImageryLayerFeatureInfo(input, feature, currentTimeRows)
-        });
-      }
+      }): ImageryProvider | undefined =>
+        createRegionMappedImageryProvider(input.style, input.currentTime)
     );
 
-    /**
-     * Filters row numbers by time (if applicable) - for a given region mapped ImageryLayer
-     */
-    private getImageryLayerFilteredRows(
-      input: {
-        style: TableStyle;
-        currentTime: JulianDate | undefined;
-      },
-      currentTimeRows: number[] | undefined,
-      rowNumbers: number | readonly number[] | undefined
-    ): number | undefined {
-      if (!isDefined(rowNumbers)) return;
-
-      if (!isDefined(currentTimeRows)) {
-        return Array.isArray(rowNumbers) ? rowNumbers[0] : rowNumbers;
-      }
-
-      if (
-        typeof rowNumbers === "number" &&
-        currentTimeRows.includes(rowNumbers)
-      ) {
-        return rowNumbers;
-      } else if (Array.isArray(rowNumbers)) {
-        const matchingTimeRows: number[] = rowNumbers.filter(row =>
-          currentTimeRows!.includes(row)
-        );
-        if (matchingTimeRows.length <= 1) {
-          return matchingTimeRows[0];
-        }
-        //In a time-varying dataset, intervals may
-        // overlap at their endpoints (i.e. the end of one interval is the start of the next).
-        // In that case, we want the later interval to apply.
-        return matchingTimeRows.reduce((latestRow, currentRow) => {
-          const currentInterval = input.style.timeIntervals?.[currentRow]?.stop;
-          const latestInterval = input.style.timeIntervals?.[latestRow]?.stop;
-          if (
-            currentInterval &&
-            latestInterval &&
-            JulianDate.lessThan(latestInterval, currentInterval)
-          ) {
-            return currentRow;
-          }
-          return latestRow;
-        }, matchingTimeRows[0]);
-      }
-    }
-
-    /**
-     * Get ImageryLayerFeatureInfo for a given ImageryLayer input and feature.
-     */
-    private getImageryLayerFeatureInfo(
-      input: {
-        style: TableStyle;
-        currentTime: JulianDate | undefined;
-      },
-      feature: VectorTileFeature,
-      currentTimeRows: number[] | undefined
-    ) {
-      if (
-        isDefined(input.style.regionColumn) &&
-        isDefined(input.style.regionColumn.regionType) &&
-        isDefined(input.style.regionColumn.regionType.regionProp)
-      ) {
-        const regionType = input.style.regionColumn.regionType;
-
-        if (!isDefined(regionType)) return undefined;
-
-        const regionIds =
-          input.style.regionColumn.valuesAsRegions.regionIdToRowNumbersMap.get(
-            feature.properties[regionType.regionProp].toLowerCase()
-          ) ?? [];
-
-        const filteredRegionId = this.getImageryLayerFilteredRows(
-          input,
-          currentTimeRows,
-          regionIds
-        );
-
-        let d: JsonObject | null = isDefined(filteredRegionId)
-          ? this.getRowValues(filteredRegionId)
-          : null;
-
-        if (d === null) return;
-
-        // Preserve values from d and insert feature properties after entries from d
-        const featureData = Object.assign({}, d, feature.properties, d);
-
-        const featureInfo = new ImageryLayerFeatureInfo();
-        if (isDefined(regionType.nameProp)) {
-          featureInfo.name = featureData[regionType.nameProp] as string;
-        }
-
-        featureData.id = feature.properties[regionType.uniqueIdProp];
-        featureInfo.properties = featureData;
-
-        featureInfo.configureDescriptionFromProperties(featureData);
-        featureInfo.configureNameFromProperties(featureData);
-
-        // If time-series region-mapping - show timeseries chart
-        if (
-          !isDefined(featureData._terria_getChartDetails) &&
-          this.discreteTimes &&
-          this.discreteTimes.length > 1 &&
-          Array.isArray(regionIds)
-        ) {
-          featureInfo.properties._terria_getChartDetails = getChartDetailsFn(
-            this.activeTableStyle,
-            regionIds
-          );
-        }
-
-        return featureInfo;
-      }
-
-      return undefined;
-    }
-
-    private getRowValues(index: number): JsonObject {
-      const result: JsonObject = {};
-
-      this.tableColumns.forEach(column => {
-        result[column.title] = column.valueFunctionForType(index);
-      });
-
-      return result;
-    }
-
-    private readonly getTableColumn = createTransformer((index: number) => {
+    private readonly getTableColumn: ITransformer<
+      number,
+      TableColumn
+    > = createTransformer((index: number) => {
       return new TableColumn(this, index);
     });
 
-    private readonly getTableStyle = createTransformer((index: number) => {
+    private readonly getTableStyle: ITransformer<
+      number,
+      TableStyle
+    > = createTransformer((index: number) => {
       return new TableStyle(this, index);
     });
   }

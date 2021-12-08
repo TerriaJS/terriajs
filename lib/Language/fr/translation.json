@@ -1104,10 +1104,11 @@
     "title": "Commençons"
   },
   "helpPanel": {
+    "btnText": "Assistance",
     "takeTour": "Visite guidée",
     "dismissText": "Compris, Merci !",
     "promptMessage": "Trouvez la visite guidée, des vidéos pratiques et d'autres contenus d'aide ici",
-    "menuPaneBody": "Trouvez des conseils utiles sur l'utilisation de TerriaJS en consultant les guides ci-dessous ou en contactant l'équipe à [info@terria.io](mailto:info@terria.io)",
+    "menuPaneBody": "Trouvez des conseils utiles sur l'utilisation de TerriaJS en consultant les guides ci-dessous ou en contactant l'équipe à [{{supportEmail}}]({{supportEmail}})",
     "menuPaneTitle": "Nous sommes là pour vous aider"
   },
   "languagePanel": {

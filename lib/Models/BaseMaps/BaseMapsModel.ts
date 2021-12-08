@@ -8,12 +8,12 @@ import {
   BaseMapsTraits,
   BaseMapTraits
 } from "../../Traits/TraitsClasses/BaseMapTraits";
-import BingMapsCatalogItem from "../BingMapsCatalogItem";
-import CommonStrata from "../CommonStrata";
-import CreateModel from "../CreateModel";
-import { BaseModel } from "../Model";
+import BingMapsCatalogItem from "../Catalog/CatalogItems/BingMapsCatalogItem";
+import CommonStrata from "../Definition/CommonStrata";
+import CreateModel from "../Definition/CreateModel";
+import { BaseModel } from "../Definition/Model";
+import updateModelFromJson from "../Definition/updateModelFromJson";
 import Terria from "../Terria";
-import updateModelFromJson from "../updateModelFromJson";
 import filterOutUndefined from "./../../Core/filterOutUndefined";
 import { defaultBaseMaps } from "./defaultBaseMaps";
 
@@ -26,11 +26,12 @@ export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
   @computed
   get baseMapItems() {
     return filterOutUndefined(
-      this.filterBaseMapItems().map(({ item, image }) =>
+      this.filterBaseMapItems().map(({ item, image, contrastColor }) =>
         !item || ModelReference.isRemoved(item)
           ? undefined
           : {
-              image: image,
+              image,
+              contrastColor,
               item: this.terria.getModelById(BaseModel, item)
             }
       )
@@ -90,28 +91,22 @@ export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
     if (items !== undefined) {
       const { items: itemsTrait } = this.traits;
       const newItemsIds = itemsTrait.fromJson(this, stratumId, items);
-      newItemsIds
-        .catchError(error => {
-          errors.push(error);
-        })
-        ?.forEach((member: BaseMapModel) => {
-          const existingItem = this.items.find(
-            baseMap => baseMap.item === member.item
-          );
-          if (existingItem) {
-            // object array trait doesn't automatically update model item
-            existingItem.setTrait(stratumId, "image", member.image);
-          } else {
-            this.add(stratumId, member);
-          }
-        });
+      newItemsIds.pushErrorTo(errors)?.forEach((member: BaseMapModel) => {
+        const existingItem = this.items.find(
+          baseMap => baseMap.item === member.item
+        );
+        if (existingItem) {
+          // object array trait doesn't automatically update model item
+          existingItem.setTrait(stratumId, "image", member.image);
+        } else {
+          this.add(stratumId, member);
+        }
+      });
     }
 
-    updateModelFromJson(this, stratumId, rest).catchError(error => {
-      errors.push(error);
-    });
+    updateModelFromJson(this, stratumId, rest).pushErrorTo(errors);
 
-    return Result.return(
+    return new Result(
       undefined,
       TerriaError.combine(
         errors,

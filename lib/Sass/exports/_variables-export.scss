@@ -29,6 +29,7 @@
   spacing: 5;
 
   frontComponentZIndex: $front-component-z-index;
+  notificationWindowZIndex: $notification-window-z-index;
 
   // ..radius? (no standardised radius at the moment, pull in as needed from variables
   radius40Button: 20;
@@ -42,11 +43,12 @@
   colorPrimary: $color-primary;
   colorSecondary: $color-secondary;
   textLight: $text-light; // essentially #fff until we sort out the colour palette from vic
-  textLightTranslucent: rgba($text-light, 0.5);
+  textLightTranslucent: rgba($text-light, 0.3);
   textLightDimmed: $text-light-dimmed;
   textDark: $text-dark;
   textDarker: $text-darker;
   textBlack: $text-black;
+  turquoiseBlue: $turquoise-blue;
   dark: $dark;
   darkWithOverlay: $dark-with-overlay;
   darkLighter: $dark-lighter;

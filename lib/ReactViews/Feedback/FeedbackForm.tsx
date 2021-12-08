@@ -9,7 +9,7 @@ import sendFeedback from "../../Models/sendFeedback";
 import ViewState from "../../ReactViewModels/ViewState";
 import Box from "../../Styled/Box";
 import Button, { RawButton } from "../../Styled/Button";
-import Checkbox from "../../Styled/Checkbox/Checkbox";
+import Checkbox from "../../Styled/Checkbox";
 import { GLYPHS, StyledIcon } from "../../Styled/Icon";
 import Input, { StyledInput } from "../../Styled/Input";
 import Spacing from "../../Styled/Spacing";
@@ -167,11 +167,15 @@ class FeedbackForm extends React.Component<IProps, IState> {
   render() {
     const { t, viewState, theme } = this.props;
     const preamble = parseCustomMarkdownToReact(
-      useTranslationIfExists(
-        viewState.terria.configParameters.feedbackPreamble ||
-          "translate#feedback.feedbackPreamble"
-      )
+      useTranslationIfExists(viewState.terria.configParameters.feedbackPreamble)
     );
+    const postamble = viewState.terria.configParameters.feedbackPostamble
+      ? parseCustomMarkdownToReact(
+          useTranslationIfExists(
+            viewState.terria.configParameters.feedbackPostamble
+          )
+        )
+      : undefined;
     return (
       <FormWrapper>
         <Box backgroundColor={theme.darkLighter} paddedRatio={2}>
@@ -267,14 +271,18 @@ class FeedbackForm extends React.Component<IProps, IState> {
           <Checkbox
             isChecked={this.state.sendShareURL}
             value="sendShareUrl"
-            label={
-              t("feedback.shareWithDevelopers", {
-                appName: this.props.viewState.terria.appName
-              })!
-            }
             onChange={this.changeSendShareUrl}
-          />
+          >
+            <Text>
+              {
+                t("feedback.shareWithDevelopers", {
+                  appName: this.props.viewState.terria.appName
+                })!
+              }
+            </Text>
+          </Checkbox>
           <Spacing bottom={2} />
+          {postamble ? <Text textDarker>{postamble}</Text> : null}
           <Box right>
             <Button
               type="button"
@@ -436,6 +444,7 @@ const FormWrapper = styled(Box).attrs(props => ({
   styledWidth: "350px",
   backgroundColor: props.theme.textLight
 }))`
+  z-index: ${props => props.theme.notificationWindowZIndex};
   border-radius: 5px;
   @media (min-width: ${props => props.theme.sm}px) {
     bottom: 75px;

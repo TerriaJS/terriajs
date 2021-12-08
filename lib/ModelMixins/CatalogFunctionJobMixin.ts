@@ -5,11 +5,11 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
 import MappableMixin, { MapItem } from "./MappableMixin";
-import CommonStrata from "../Models/CommonStrata";
-import createStratumInstance from "../Models/createStratumInstance";
-import LoadableStratum from "../Models/LoadableStratum";
-import Model, { BaseModel } from "../Models/Model";
-import StratumOrder from "../Models/StratumOrder";
+import CommonStrata from "../Models/Definition/CommonStrata";
+import createStratumInstance from "../Models/Definition/createStratumInstance";
+import LoadableStratum from "../Models/Definition/LoadableStratum";
+import Model, { BaseModel } from "../Models/Definition/Model";
+import StratumOrder from "../Models/Definition/StratumOrder";
 import CatalogFunctionJobTraits from "../Traits/TraitsClasses/CatalogFunctionJobTraits";
 import { InfoSectionTraits } from "../Traits/TraitsClasses/CatalogMemberTraits";
 import AutoRefreshingMixin from "./AutoRefreshingMixin";
@@ -212,7 +212,10 @@ function CatalogFunctionJobMixin<
         this.results.forEach(result => {
           if (MappableMixin.isMixedInto(result))
             result.setTrait(CommonStrata.user, "show", true);
-          if (addResultsToWorkbench) this.terria.workbench.add(result);
+          if (addResultsToWorkbench)
+            this.terria.workbench
+              .add(result)
+              .then(r => r.raiseError(this.terria));
 
           this.terria.addModel(result);
         });

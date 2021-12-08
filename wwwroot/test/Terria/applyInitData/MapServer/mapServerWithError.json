@@ -1,0 +1,56 @@
+{
+  "currentVersion": 10.71,
+  "serviceDescription": "NSW Mouse Alert data. The data is originally sourced from https://www.feralscan.org.au/.\nThe data has not been qa and can be out of date. ",
+  "mapName": "Layers",
+  "description": "",
+  "copyrightText": "DPI",
+  "supportsDynamicLayers": true,
+  "tables": [],
+  "spatialReference": {
+    "wkid": 4326,
+    "latestWkid": 4326
+  },
+  "singleFusedMapCache": false,
+  "initialExtent": {
+    "xmin": 150.0595847384054,
+    "ymin": -34.39194912524594,
+    "xmax": 151.80420554788017,
+    "ymax": -33.64955729142688,
+    "spatialReference": {
+      "wkid": 4326,
+      "latestWkid": 4326
+    }
+  },
+  "fullExtent": {
+    "xmin": 114.63501625000004,
+    "ymin": -43.051829999999995,
+    "xmax": 153.54042793999997,
+    "ymax": -19.316838913000026,
+    "spatialReference": {
+      "wkid": 4326,
+      "latestWkid": 4326
+    }
+  },
+  "minScale": 0,
+  "maxScale": 63360.00000000351,
+  "units": "esriDecimalDegrees",
+  "supportedImageFormatTypes": "PNG32,PNG24,PNG,JPG,DIB,TIFF,EMF,PS,PDF,GIF,SVG,SVGZ,BMP",
+  "documentInfo": {
+    "Title": "",
+    "Author": "",
+    "Comments": "NSW Mouse Alert data. The data is originally sourced from https://www.feralscan.org.au/.\nThe data has not been qa and can be out of date. ",
+    "Subject": "NSW Mouse Alert Data.",
+    "Category": "",
+    "AntialiasingMode": "None",
+    "TextAntialiasingMode": "Force",
+    "Keywords": ""
+  },
+  "capabilities": "Map,Query,Data",
+  "supportedQueryFormats": "JSON, geoJSON",
+  "exportTilesAllowed": false,
+  "supportsDatumTransformation": true,
+  "maxRecordCount": 1000,
+  "maxImageHeight": 4096,
+  "maxImageWidth": 4096,
+  "supportedExtensions": "FeatureServer"
+}

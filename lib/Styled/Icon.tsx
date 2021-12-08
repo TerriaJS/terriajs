@@ -107,9 +107,11 @@ export const GLYPHS = {
   compare: require("../../wwwroot/images/icons/compare.svg"),
   lifesaver: require("../../wwwroot/images/icons/help-2.svg"),
   geolocationThick: require("../../wwwroot/images/icons/location-thick.svg"),
-  minusThick: require("../../wwwroot/images/icons/zoom-minus.svg"),
-  plusThick: require("../../wwwroot/images/icons/zoom-plus.svg"),
-  refreshThick: require("../../wwwroot/images/icons/zoom-refresh.svg"),
+  minus: require("../../wwwroot/images/icons/minus.svg"),
+  plus: require("../../wwwroot/images/icons/plus.svg"),
+  zoomIn: require("../../wwwroot/images/icons/zoom-in.svg"),
+  zoomOut: require("../../wwwroot/images/icons/zoom-out.svg"),
+  zoomReset: require("../../wwwroot/images/icons/zoom-reset.svg"),
   satellite: require("../../wwwroot/images/icons/satellite.svg"),
   mapDataActive: require("../../wwwroot/images/icons/map-data-active.svg"),
   mapDataInactive: require("../../wwwroot/images/icons/map-data-inactive.svg"),
@@ -124,7 +126,8 @@ export const GLYPHS = {
   pedestrian: require("../../wwwroot/images/icons/pedestrian.svg"),
   minimize: require("../../wwwroot/images/icons/minimize.svg"),
   maximize: require("../../wwwroot/images/icons/maximize.svg"),
-  closeTool: require("../../wwwroot/images/icons/close-tool.svg")
+  closeTool: require("../../wwwroot/images/icons/close-tool.svg"),
+  moreItems: require("../../wwwroot/images/icons/more-items.svg")
 };
 
 interface IconProps {
@@ -153,7 +156,7 @@ interface IStyledIconProps {
   light?: boolean;
   dark?: boolean;
   realDark?: boolean;
-  fillColor?: boolean;
+  fillColor?: string;
   opacity?: number;
 }
 

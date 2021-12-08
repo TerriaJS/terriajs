@@ -19,16 +19,15 @@ import {
 } from "../../../Core/AnalyticEvents/analyticEvents";
 import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
 import getPath from "../../../Core/getPath";
-import TerriaError from "../../../Core/TerriaError";
 import PickedFeatures from "../../../Map/PickedFeatures";
 import ExportableMixin from "../../../ModelMixins/ExportableMixin";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
-import addUserCatalogMember from "../../../Models/addUserCatalogMember";
-import CommonStrata from "../../../Models/CommonStrata";
+import addUserCatalogMember from "../../../Models/Catalog/addUserCatalogMember";
+import SplitItemReference from "../../../Models/Catalog/CatalogReferences/SplitItemReference";
+import CommonStrata from "../../../Models/Definition/CommonStrata";
+import hasTraits from "../../../Models/Definition/hasTraits";
 import getAncestors from "../../../Models/getAncestors";
-import hasTraits from "../../../Models/hasTraits";
-import SplitItemReference from "../../../Models/SplitItemReference";
 import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
@@ -259,7 +258,7 @@ const ViewingControls = observer(
       });
     },
 
-    previewItem() {
+    async previewItem() {
       let item = this.props.item;
       // If this is a chartable item opened from another catalog item, get the info of the original item.
       if (defined(item.sourceCatalogItem)) {
@@ -274,18 +273,13 @@ const ViewingControls = observer(
           });
         });
       this.props.viewState.viewCatalogMember(item);
-      this.props.viewState.switchMobileView(
-        this.props.viewState.mobileViewOptions.preview
-      );
     },
 
     exportDataClicked() {
       const item = this.props.item;
 
       exportData(item).catch(e => {
-        if (e instanceof TerriaError) {
-          this.props.item.terria.raiseErrorToUser(e);
-        }
+        this.props.item.terria.raiseErrorToUser(e);
       });
     },
 
@@ -347,7 +341,11 @@ const ViewingControls = observer(
             </li>
           </If>
           <If
-            condition={ExportableMixin.isMixedInto(item) && item.canExportData}
+            condition={
+              viewState.useSmallScreenInterface === false &&
+              ExportableMixin.isMixedInto(item) &&
+              item.canExportData
+            }
           >
             <li>
               <ViewingControlMenuButton
@@ -362,7 +360,11 @@ const ViewingControls = observer(
             </li>
           </If>
           <If
-            condition={SearchableItemMixin.isMixedInto(item) && item.canSearch}
+            condition={
+              viewState.useSmallScreenInterface === false &&
+              SearchableItemMixin.isMixedInto(item) &&
+              item.canSearch
+            }
           >
             <li>
               <ViewingControlMenuButton

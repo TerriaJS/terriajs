@@ -1,18 +1,21 @@
-import { computed, runInAction } from "mobx";
+import { action, computed, runInAction } from "mobx";
 import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
-import TerriaError from "../Core/TerriaError";
-import Model from "../Models/Model";
+import Result from "../Core/Result";
+import hasTraits from "../Models/Definition/hasTraits";
+import Model, { BaseModel } from "../Models/Definition/Model";
+import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import SelectableDimensions, {
   SelectableDimension
 } from "../Models/SelectableDimensions";
-import updateModelFromJson from "../Models/updateModelFromJson";
+import CatalogMemberReferenceTraits from "../Traits/TraitsClasses/CatalogMemberReferenceTraits";
 import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";
 import AccessControlMixin from "./AccessControlMixin";
 import GroupMixin from "./GroupMixin";
 import MappableMixin from "./MappableMixin";
 import ReferenceMixin from "./ReferenceMixin";
+
 type CatalogMember = Model<CatalogMemberTraits>;
 
 function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
@@ -32,6 +35,10 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       this.forceLoadMetadata.bind(this)
     );
 
+    get loadMetadataResult() {
+      return this._metadataLoader.result;
+    }
+
     /**
      * Gets a value indicating whether metadata is currently loading.
      */
@@ -44,13 +51,25 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
       return (
         this.isLoadingMetadata ||
         (MappableMixin.isMixedInto(this) && this.isLoadingMapItems) ||
-        (ReferenceMixin.is(this) && this.isLoadingReference) ||
+        (ReferenceMixin.isMixedInto(this) && this.isLoadingReference) ||
         (GroupMixin.isMixedInto(this) && this.isLoadingMembers)
       );
     }
 
-    loadMetadata(): Promise<void> {
-      return this._metadataLoader.load();
+    /** Calls AsyncLoader to load metadata. It is safe to call this as often as necessary.
+     * If metadata is already loaded or already loading, it will
+     * return the existing promise.
+     *
+     * This returns a Result object, it will contain errors if they occur - they will not be thrown.
+     * To throw errors, use `(await loadMetadata()).throwIfError()`
+     *
+     * {@see AsyncLoader}
+     */
+    async loadMetadata(): Promise<Result<void>> {
+      return (await this._metadataLoader.load()).clone({
+        message: `Failed to load \`${getName(this)}\` metadata`,
+        importance: -1
+      });
     }
 
     /**
@@ -58,6 +77,10 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
      * whether the metadata is already loaded.
      *
      * You **can not** make changes to observables until **after** an asynchronous call {@see AsyncLoader}.
+     *
+     * Errors can be thrown here.
+     *
+     * {@see AsyncLoader}
      */
     protected async forceLoadMetadata() {}
 
@@ -72,7 +95,7 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
 
     @computed
     get nameInCatalog(): string | undefined {
-      return super.nameInCatalog || this.name;
+      return super.nameInCatalog || this.name || this.uniqueId;
     }
 
     @computed
@@ -151,10 +174,9 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
             );
             const value = dim.options.find(o => o.id === selectedId)?.value;
             if (isDefined(value)) {
-              updateModelFromJson(this, stratumId, value).catchError(e =>
-                this.terria.raiseErrorToUser(
-                  TerriaError.from(e, "Failed to update catalog member model")
-                )
+              updateModelFromJson(this, stratumId, value).raiseError(
+                this.terria,
+                `Failed to update catalog item ${getName(this)}`
               );
             }
           }
@@ -182,3 +204,15 @@ namespace CatalogMemberMixin {
 }
 
 export default CatalogMemberMixin;
+
+/** Convenience function to get user readable name of a BaseModel */
+export const getName = action((model: BaseModel | undefined) => {
+  return (
+    (CatalogMemberMixin.isMixedInto(model) ? model.name : undefined) ??
+    (hasTraits(model, CatalogMemberReferenceTraits, "name")
+      ? model.name
+      : undefined) ??
+    model?.uniqueId ??
+    "Unknown model"
+  );
+});

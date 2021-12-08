@@ -47,7 +47,7 @@ export default class StyleTraits extends ModelTraits {
   "stroke"?: string;
 
   @primitiveTrait({
-    type: "string",
+    type: "number",
     name: "stroke-opacity",
     description: "Stroke opacity."
   })
@@ -59,6 +59,30 @@ export default class StyleTraits extends ModelTraits {
     description: "Stroke width."
   })
   "stroke-width"?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "marker-stroke-width",
+    description:
+      "Marker stroke width. (This is will override stroke-width for Point geojson-vt features) - not apart of simplestyle-spec and will not apply to cesium primitives"
+  })
+  "marker-stroke-width"?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "polyline-stroke-width",
+    description:
+      "Polyline stroke width. (This is will override stroke-width for Polyline geojson-vt features) - not apart of simplestyle-spec and will not apply to cesium primitives"
+  })
+  "polyline-stroke-width"?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "polygon-stroke-width",
+    description:
+      "Polygon stroke width. (This is will override stroke-width for Polygon geojson-vt features) - not apart of simplestyle-spec and will not apply to cesium primitives"
+  })
+  "polygon-stroke-width"?: number;
 
   @primitiveTrait({
     type: "string",

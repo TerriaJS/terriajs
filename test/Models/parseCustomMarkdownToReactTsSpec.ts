@@ -14,7 +14,7 @@ describe("parseCustomMarkdownToReactTs", function() {
     terria = new Terria({
       baseUrl: "./"
     });
-    registerCustomComponentTypes(terria);
+    registerCustomComponentTypes();
   });
   it("correctly parses tooltip terms", function() {
     const spatialDataTerm = {
