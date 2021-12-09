@@ -226,13 +226,12 @@ const StandardUserInterface = observer(
           );
           section.innerHTML = DOMPurify.sanitize(
             Object.keys(RequestScheduler.requestsByServer)
-              .map(domain => (
-                <li
-                  key={domain}
-                >{`${domain}: ${RequestScheduler.numberOfActiveRequestsByServer(
-                  domain
-                )}`}</li>
-              ))
+              .map(
+                domain =>
+                  `${domain}: ${RequestScheduler.numberOfActiveRequestsByServer(
+                    domain
+                  )}`
+              )
               .join("<br>")
           );
         }, 15);
