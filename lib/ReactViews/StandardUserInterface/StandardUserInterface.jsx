@@ -47,6 +47,7 @@ import CollapsedNavigation from "../Map/Navigation/Items/OverflowNavigationItem"
 
 import styled from "styled-components";
 import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
+const DOMPurify = require("dompurify/dist/purify");
 
 export const showStoryPrompt = (viewState, terria) => {
   terria.configParameters.showFeaturePrompts &&
@@ -218,11 +219,31 @@ const StandardUserInterface = observer(
     componentDidMount() {
       this._wrapper.addEventListener("dragover", this.dragOverListener, false);
       showStoryPrompt(this.props.viewState, this.props.terria);
+      this._stopRequestSechedulerUpdater = (() => {
+        const interval = setInterval(() => {
+          const section = document.getElementById(
+            "ugly-request-scheduler-report-section"
+          );
+          section.innerHTML = DOMPurify.sanitize(
+            Object.keys(RequestScheduler.requestsByServer)
+              .map(domain => (
+                <li
+                  key={domain}
+                >{`${domain}: ${RequestScheduler.numberOfActiveRequestsByServer(
+                  domain
+                )}`}</li>
+              ))
+              .join("<br>")
+          );
+        }, 15);
+        return () => clearInterval(interval);
+      })();
     },
 
     componentWillUnmount() {
       window.removeEventListener("resize", this.resizeListener, false);
       document.removeEventListener("dragover", this.dragOverListener, false);
+      this._stopRequestSechedulerUpdater?.();
     },
 
     acceptDragDropFile() {
@@ -490,15 +511,8 @@ const StandardUserInterface = observer(
               )}
             <Disclaimer viewState={this.props.viewState} />
           </div>
-          <UglyRequestSchedulerReportSection>
-            {Object.keys(RequestScheduler.requestsByServer)
-              .map(
-                domain =>
-                  `${domain}: ${RequestScheduler.numberOfActiveRequestsByServer(
-                    domain
-                  )}`
-              )
-              .join("\n")}
+          <UglyRequestSchedulerReportSection id="ugly-request-scheduler-report-section">
+            <ul></ul>
           </UglyRequestSchedulerReportSection>
         </ThemeProvider>
       );
