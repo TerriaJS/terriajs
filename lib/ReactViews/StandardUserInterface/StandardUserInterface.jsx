@@ -45,6 +45,9 @@ import Tool from "../Tools/Tool";
 import Disclaimer from "../Disclaimer";
 import CollapsedNavigation from "../Map/Navigation/Items/OverflowNavigationItem";
 
+import styled from "styled-components";
+import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
+
 export const showStoryPrompt = (viewState, terria) => {
   terria.configParameters.showFeaturePrompts &&
     terria.configParameters.storyEnabled &&
@@ -120,6 +123,17 @@ const GlobalTerriaStyles = createGlobalStyle`
     }
   `}
 `;
+
+const UglyRequestSchedulerReportSection = styled.div`
+  position: absolute;
+  top: 600px;
+  width: 350px;
+  box-sizing: border-box;
+  background-color: rgba(255, 255, 255, 0.8);
+  pointer-events: none;
+  padding: 5px;
+`;
+
 const animationDuration = 250;
 /** blah */
 const StandardUserInterface = observer(
@@ -476,6 +490,16 @@ const StandardUserInterface = observer(
               )}
             <Disclaimer viewState={this.props.viewState} />
           </div>
+          <UglyRequestSchedulerReportSection>
+            {Object.keys(RequestScheduler.requestsByServer)
+              .map(
+                domain =>
+                  `${domain}: ${RequestScheduler.numberOfActiveRequestsByServer(
+                    domain
+                  )}`
+              )
+              .join("\n")}
+          </UglyRequestSchedulerReportSection>
         </ThemeProvider>
       );
     }
