@@ -71,42 +71,27 @@ class GeoJsonCatalogItem extends GeoJsonMixin(
     else if (this.url) {
       // URL to zipped fle
       const url = proxyCatalogItemUrl(this, this.url);
-      if (isZip(url)) {
-        if (typeof FileReader === "undefined") {
-          throw fileApiNotSupportedError(this.terria);
-        }
-        const response = (
-          await fetchBlob(
-            url,
-            {
-              bodyObject: this.requestData
-                ? (toJS(this.requestData) as JsonObject)
-                : undefined,
-              asForm: this.postRequestDataAsFormData
-            },
-            ignoreMaxFileSize ? undefined : 50 * 1024 * 1024
-          )
-        ).throwIfUndefined("Failed to download zipped GeoJSON");
-        if (isOverMaxSizeResponse(response)) {
-          return await this.largeDownloadWarning(response);
-        } else {
-          jsonData = await parseZipJsonBlob(response.response);
-        }
+      const fetchOptions = {
+        bodyObject: this.requestData
+          ? (toJS(this.requestData) as JsonObject)
+          : undefined,
+        asForm: this.postRequestDataAsFormData,
+        maxFileSize: ignoreMaxFileSize ? undefined : 50 * 1024 * 1024
+      };
+      if (isZip(url) && typeof FileReader === "undefined") {
+        throw fileApiNotSupportedError(this.terria);
+      }
+      const response = (
+        await (isZip(url)
+          ? fetchBlob(url, fetchOptions)
+          : fetchJson(url, fetchOptions))
+      ).throwIfUndefined("Failed to download GeoJSON");
+
+      if (isOverMaxSizeResponse<Blob | JsonValue>(response)) {
+        return await this.largeDownloadWarning(response);
       } else {
-        const response = (
-          await fetchJson(
-            url,
-            {
-              bodyObject: this.requestData
-                ? (toJS(this.requestData) as JsonObject)
-                : undefined,
-              asForm: this.postRequestDataAsFormData
-            },
-            ignoreMaxFileSize ? undefined : 50 * 1024 * 1024
-          )
-        ).throwIfUndefined("Failed to download GeoJSON");
-        if (isOverMaxSizeResponse(response)) {
-          return await this.largeDownloadWarning(response);
+        if (response.response instanceof Blob) {
+          jsonData = await parseZipJsonBlob(response.response);
         } else {
           jsonData = response.response;
         }

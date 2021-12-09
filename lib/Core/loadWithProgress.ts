@@ -9,6 +9,10 @@ export interface LoadOptions {
   asForm?: boolean;
 }
 
+export interface LoadOptionsWithMaxSize extends LoadOptions {
+  maxFileSize?: number;
+}
+
 export type LoadResponse<T = Response> = { response: T };
 
 export type OverMaxSizeResponse = {
@@ -29,72 +33,53 @@ export function isOverMaxSizeResponse<T>(
 
 export async function fetchJson(
   url: string,
-  options?: LoadOptions,
-  maxFileSize?: undefined
+  options?: LoadOptions
 ): Promise<Result<LoadResponse<JsonValue> | undefined>>;
 export async function fetchJson(
   url: string,
-  options?: LoadOptions,
-  maxFileSize?: number
+  options?: LoadOptionsWithMaxSize
 ): Promise<Result<LoadResponse<JsonValue> | OverMaxSizeResponse | undefined>>;
-export async function fetchJson(
-  url: string,
-  options?: LoadOptions,
-  maxFileSize?: number
-): Promise<Result<LoadResponse<JsonValue> | OverMaxSizeResponse | undefined>> {
-  return (await fetchWithProgress(url, options, maxFileSize)).mapAsync(
-    async result => {
-      if (result && "response" in result) {
-        return {
-          response: (await result.response.json()) as JsonValue
-        };
-      }
-      return result;
+export async function fetchJson(url: string, options?: LoadOptionsWithMaxSize) {
+  return (await fetchWithProgress(url, options)).mapAsync(async result => {
+    if (result && "response" in result) {
+      return {
+        response: (await result.response.json()) as JsonValue
+      };
     }
-  );
+    return result;
+  });
 }
 
 export async function fetchBlob(
   url: string,
-  options?: LoadOptions,
-  maxFileSize?: undefined
+  options?: LoadOptions
 ): Promise<Result<LoadResponse<Blob> | undefined>>;
 export async function fetchBlob(
   url: string,
-  options?: LoadOptions,
-  maxFileSize?: number
+  options?: LoadOptionsWithMaxSize
 ): Promise<Result<LoadResponse<Blob> | OverMaxSizeResponse | undefined>>;
-export async function fetchBlob(
-  url: string,
-  options?: LoadOptions,
-  maxFileSize?: number
-): Promise<Result<LoadResponse<Blob> | OverMaxSizeResponse | undefined>> {
-  return (await fetchWithProgress(url, options, maxFileSize)).mapAsync(
-    async result => {
-      if (result && "response" in result) {
-        return {
-          response: await result.response.blob()
-        };
-      }
-      return result;
+export async function fetchBlob(url: string, options?: LoadOptionsWithMaxSize) {
+  return (await fetchWithProgress(url, options)).mapAsync(async result => {
+    if (result && "response" in result) {
+      return {
+        response: await result.response.blob()
+      };
     }
-  );
+    return result;
+  });
 }
 
 export default async function fetchWithProgress(
   url: string,
-  options?: LoadOptions,
-  maxFileSize?: undefined
+  options?: LoadOptions
 ): Promise<Result<LoadResponse | undefined>>;
 export default async function fetchWithProgress(
   url: string,
-  options?: LoadOptions,
-  maxFileSize?: number
+  options?: LoadOptionsWithMaxSize
 ): Promise<Result<LoadResponse | OverMaxSizeResponse | undefined>>;
 export default async function fetchWithProgress(
   url: string,
-  options: LoadOptions = {},
-  maxFileSize?: number | undefined
+  options: LoadOptionsWithMaxSize = {}
 ): Promise<Result<LoadResponse | OverMaxSizeResponse | undefined>> {
   try {
     const { bodyObject, asForm = false, headers } = options;
@@ -133,7 +118,7 @@ export default async function fetchWithProgress(
 
     const response = await fetchPromise;
 
-    if (!isDefined(maxFileSize)) {
+    if (!isDefined(options.maxFileSize)) {
       return new Result({ response });
     }
 
@@ -145,7 +130,7 @@ export default async function fetchWithProgress(
       ? parseInt(response.headers.get("content-length")!, 10)
       : undefined;
 
-    if (isDefined(total) && total > maxFileSize) {
+    if (isDefined(total) && total > options.maxFileSize) {
       controller.abort();
       return new Result({ overMaxFileSize: { bytes: total, type: "total" } });
     }
@@ -157,6 +142,7 @@ export default async function fetchWithProgress(
     }
 
     let bytesReceived = 0;
+    const bytes: Uint8Array[] = [];
 
     while (true) {
       const result = await reader.read();
@@ -165,7 +151,8 @@ export default async function fetchWithProgress(
       }
 
       bytesReceived += result.value.length;
-      if (bytesReceived > maxFileSize) {
+      bytes.push(result.value);
+      if (bytesReceived > options.maxFileSize) {
         controller.abort();
         return new Result({
           overMaxFileSize: { bytes: bytesReceived, type: "downloaded" }
@@ -173,7 +160,14 @@ export default async function fetchWithProgress(
       }
     }
 
-    return new Result({ response });
+    const allBytes = new Uint8Array(bytesReceived);
+    let position = 0;
+    for (let byte of bytes) {
+      allBytes.set(byte, position);
+      position += byte.length;
+    }
+
+    return new Result({ response: new Response(allBytes) });
   } catch (e) {
     return Result.error(e, {
       title: "Network request failed",
