@@ -146,4 +146,10 @@ export default class AsyncLoader {
     this._forceReloadCount = -1;
     this.load();
   }
+
+  /** This will reset the AsyncLoader loadKeepAlive. It effectively means that the next time load is called, it will use forceReload = true */
+  @action
+  reset() {
+    this._forceReloadCount++;
+  }
 }

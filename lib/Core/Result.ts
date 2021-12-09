@@ -8,10 +8,23 @@ import { NotUndefined } from "./TypeModifiers";
 import Terria from "../Models/Terria";
 
 /**
+ * This file (the Result class) is inspired by / adapted from the https://www.npmjs.com/package/neverthrow package
+ *
+ * Neverthrow license (https://github.com/supermacro/neverthrow/blob/master/LICENSE)
+ *
+ * MIT License
+ *
+ * > Copyright (c) 2019 Giorgio Delgado
+ * >
+ * > Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ * > The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ * > THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+/**
  * The Result class is similar to Option type/object in Scala/Rust.
  * It wraps up some `value` and `error` - so that a function can return both simulateously.
  *
- * This is similar to the https://www.npmjs.com/package/neverthrow package
  *
  * ## Simple usage:
  *
@@ -206,5 +219,15 @@ export default class Result<T = undefined> {
         TerriaError.from(this._error, errorOverrides)
       );
     return new Result(this.value);
+  }
+
+  /** Maps a Result<T> to Result<U> by applying a function to a contained value, leaving the error value untouched. */
+  map<U>(fn: (value: T) => U): Result<U> {
+    return new Result(fn(this.value), this.error);
+  }
+
+  /** Async version of map - maps a Result<T> to Result<U> by applying a function to a contained value, leaving the error value untouched. */
+  async mapAsync<U>(fn: (value: T) => Promise<U>): Promise<Result<U>> {
+    return new Result(await fn(this.value), this.error);
   }
 }

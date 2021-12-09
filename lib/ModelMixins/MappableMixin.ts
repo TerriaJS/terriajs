@@ -106,6 +106,10 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
       return this._mapItemsLoader.isLoading;
     }
 
+    resetLoadMapItems() {
+      this._mapItemsLoader.reset();
+    }
+
     /**
      * Loads the map items. It is safe to call this as often as necessary.
      * This will also call `loadMetadata()`.

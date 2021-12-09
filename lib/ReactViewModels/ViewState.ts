@@ -589,7 +589,8 @@ export default class ViewState {
         if (item.isOpen) {
           (await item.loadMembers()).throwIfError();
         }
-      } else if (MappableMixin.isMixedInto(item))
+        // Only load mappable if disablePreview is false
+      } else if (MappableMixin.isMixedInto(item) && !item.disablePreview)
         (await item.loadMapItems()).throwIfError();
       else if (CatalogMemberMixin.isMixedInto(item))
         (await item.loadMetadata()).throwIfError();

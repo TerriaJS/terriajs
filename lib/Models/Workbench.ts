@@ -213,7 +213,11 @@ export default class Workbench {
     }
 
     // Remove item if TerriaError severity is Error
-    if (error?.severity === TerriaErrorSeverity.Error) {
+    if (
+      (typeof error?.severity === "function"
+        ? error.severity()
+        : error?.severity) === TerriaErrorSeverity.Error
+    ) {
       this.remove(item);
     }
 
