@@ -116,6 +116,7 @@ export default class AsyncLoader {
       this._promise = newPromise;
 
       runInAction(() => {
+        this._result = undefined;
         this._isLoading = true;
       });
     }
