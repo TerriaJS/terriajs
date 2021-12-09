@@ -133,6 +133,7 @@ const UglyRequestSchedulerReportSection = styled.div`
   background-color: rgba(255, 255, 255, 0.8);
   pointer-events: none;
   padding: 5px;
+  z-index: 1000000;
 `;
 
 const animationDuration = 250;
