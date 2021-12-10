@@ -18,6 +18,7 @@ Change Log
   * No longer sets `width` or `height` - so export will now return native resolution
 * Anonymize user IP when using google analytics.
 * Fix crash when TableMixin-based catalog item had invalid date values
+* Fix `WebMapServiceCatalogItem.styles` if `supportsGetLegendGraphics = false`. This means that if a WMS server doesn't support `GetLegendGraphics` requests, the first style will be set as the default style.
 * [The next improvement]
 
 #### 8.1.13
