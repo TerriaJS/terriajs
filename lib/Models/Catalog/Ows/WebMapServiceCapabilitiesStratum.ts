@@ -390,6 +390,23 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     return result;
   }
 
+  /** There is no way of finding out default style if no style has been selected :(
+   * If !supportsGetLegendGraphic - we have to just use the first available style (for each layer)
+   * This is because, to request a "default" legend we need GetLegendGraphics
+   **/
+  @computed get styles() {
+    if (!this.catalogItem.supportsGetLegendGraphic) {
+      return this.catalogItem.availableStyles
+        .map(layer => {
+          if (layer.layerName) {
+            return layer.styles[0].name ?? "";
+          }
+          return "";
+        })
+        .join(",");
+    }
+  }
+
   @computed
   get info(): StratumFromTraits<InfoSectionTraits>[] {
     const result: StratumFromTraits<InfoSectionTraits>[] = [];

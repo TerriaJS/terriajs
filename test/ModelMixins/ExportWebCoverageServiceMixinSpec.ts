@@ -51,6 +51,7 @@ describe("ExportWebCoverageServiceMixin", function() {
 
     expect(wms.currentDiscreteTimeTag).toBe("2018-01-01");
 
+    expect(wms.styles).toBe("simple_rgb");
     expect(wms.linkedWcsUrl).toBe("https://some.ows.service/wcs");
     expect(wms.linkedWcsCoverage).toBe("some_layer");
     expect(wms.linkedWcsParameters.outputCrs).toBe("EPSG:4326");
@@ -77,7 +78,7 @@ describe("ExportWebCoverageServiceMixin", function() {
         )
         .ignoreError()
     ).toBe(
-      "https://some.ows.service/wcs?service=WCS&request=GetCoverage&version=2.0.0&coverageId=some_layer&format=image%2Fgeotiff&subset=Long%28115.17328262329103%2C115.21156311035162%29&subset=Lat%28-33.66078176164941%2C-33.633201589849314%29&subset=time%28%222018-01-01%22%29&subsettingCrs=EPSG%3A4326&outputCrs=EPSG%3A3577"
+      "https://some.ows.service/wcs?service=WCS&request=GetCoverage&version=2.0.0&coverageId=some_layer&format=image%2Fgeotiff&subset=Long%28115.17328262329103%2C115.21156311035162%29&subset=Lat%28-33.66078176164941%2C-33.633201589849314%29&subset=time%28%222018-01-01%22%29&subsettingCrs=EPSG%3A4326&outputCrs=EPSG%3A3577&styles=simple_rgb"
     );
 
     // Set some custom parameters

@@ -41,7 +41,6 @@ import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import WebMapServiceCapabilities from "./WebMapServiceCapabilities";
 import WebMapServiceCapabilitiesStratum from "./WebMapServiceCapabilitiesStratum";
 import WebMapServiceCatalogGroup from "./WebMapServiceCatalogGroup";
-
 class WebMapServiceCatalogItem
   extends TileErrorHandlerMixin(
     ExportWebCoverageServiceMixin(
@@ -152,13 +151,7 @@ class WebMapServiceCatalogItem
 
   @computed
   get stylesArray(): ReadonlyArray<string> {
-    if (Array.isArray(this.styles)) {
-      return this.styles;
-    } else if (this.styles) {
-      return this.styles.split(",");
-    } else {
-      return [];
-    }
+    return this.styles?.split(",") ?? [];
   }
 
   @computed
@@ -500,16 +493,6 @@ class WebMapServiceCatalogItem
       // The `styles` parameter is CSV, a style for each layer
       let selectedId = this.styles?.split(",")?.[layerIndex];
 
-      // There is no way of finding out default style if no style has been selected :(
-      // If !supportsGetLegendGraphic - we have to just use the first available style
-      if (
-        !isDefined(selectedId) &&
-        options.length > 0 &&
-        !this.supportsGetLegendGraphic
-      ) {
-        selectedId = options[0].id;
-      }
-
       return {
         name,
         id: `${this.uniqueId}-${layer.layerName}-styles`,
@@ -524,7 +507,10 @@ class WebMapServiceCatalogItem
             this.setTrait(stratumId, "styles", styles.join(","));
           });
         },
-        // Only allow undefined if more then one style (if there is only one style then it is the default style!) - and WMS server supports GetLegendGraphic (otherwise we can't request default styles!)
+        // There is no way of finding out default style if no style has been selected :(
+        // To use the default style, we just send empty "styles" to WMS server
+        // But if the server doesn't support GetLegendGraphic, then we can't request the default legend
+        // Therefore - we only add the "Default style" / undefined option if supportsGetLegendGraphic is true
         allowUndefined: this.supportsGetLegendGraphic && options.length > 1,
         undefinedLabel: i18next.t(
           "models.webMapServiceCatalogItem.defaultStyleLabel"
