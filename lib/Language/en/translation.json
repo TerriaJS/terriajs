@@ -1508,6 +1508,18 @@
         "both": "Cast and Receive"
       }
     },
+    "clippingBox": {
+      "groupName": "Clipping Box",
+      "clipModel": "Clip model",
+      "showEditorUi": "Show clip editor",
+      "clipDirection": {
+        "name": "Clip direction",
+        "options": {
+          "inside": "Clip inside the box",
+          "outside": "Clip outside the box"
+        }
+      }
+    },
     "commonModelErrors": {
       "3dTypeIn2dMode": "**Note:** This dataset can not be displayed in the 2D viewer. Switch to one of the 3D map modes."
     },

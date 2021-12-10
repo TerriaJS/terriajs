@@ -4,6 +4,8 @@ import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import objectTrait from "../Decorators/objectTrait";
 import LatLonHeightTraits from "./LatLonHeightTraits";
+import BoxDrawingTraits, { CornerPointsStyleTraits } from "../BoxDrawingTraits";
+import mixTraits from "../mixTraits";
 
 export class ClippingPlaneDefinitionTraits extends ModelTraits {
   @primitiveTrait({
@@ -95,13 +97,28 @@ export class ClippingBoxDimensionTraits extends ModelTraits {
   height?: number;
 }
 
-export class ClippingBoxTraits extends ModelTraits {
+export class ClippingBoxTraits extends mixTraits(BoxDrawingTraits) {
   @primitiveTrait({
     type: "boolean",
-    name: "Enable clipping box",
-    description: "Determines whether the clipping box is active."
+    name: "Enable clipping box features",
+    description:
+      "Set false to completely disable clipping box feature for the item."
   })
-  enabled: boolean = false;
+  enableFeature: boolean = true;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Toggle model clipping.",
+    description: "Applies clipping when true."
+  })
+  clipModel = true;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Show clipping box editor UI",
+    description: "Toggles the Cesium map UI for editing the clipping plane."
+  })
+  showEditorUi = true;
 
   @objectTrait({
     type: LatLonHeightTraits,
@@ -122,9 +139,9 @@ export class ClippingBoxTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
     name: "Clip direction",
-    description: `Whether to clip the model outside of the box or inside. When this value is "outside", everything outside the box is clipped and when the value is "inside", everything inside the box is clipped. Default value is "outside"`
+    description: `Whether to clip the model outside of the box or inside. When this value is "outside", everything outside the box is clipped and when the value is "inside", everything inside the box is clipped. Default value is "inside"`
   })
-  clipDirection = "outside";
+  clipDirection = "inside";
 }
 
 export default class ClippingPlanesTraits extends ModelTraits {
