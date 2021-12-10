@@ -16,6 +16,8 @@ Change Log
   * Added `WebCoverageServiceParameterTraits` to `WebMapServiceCatalogItemTraits.linkedWcsParameters`. It includes `outputFormat` and `outputCrs`
   * Will attempt to use native CRS and format (from `DescribeCoverage`)
   * No longer sets `width` or `height` - so export will now return native resolution
+* Anonymize user IP when using google analytics.
+* Fix crash when TableMixin-based catalog item had invalid date values
 * [The next improvement]
 
 #### 8.1.13
