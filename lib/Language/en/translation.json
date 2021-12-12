@@ -745,6 +745,18 @@
       "networkRequestTitle": "A network request error occurred",
       "networkRequestMessage": "Data may not be available or display correctly due to data custodian's service outage. Please try reloading the map, accessing the data at a later stage, or selecting a different dataset. <feedbacklink feedback-message='If the problem persists, please submit feedback here.' email-message='If the problem persists, please report to {{email}}'/>",
       "networkRequestMessageDetailed": "This may indicate one of the following:\n\n* The server hostname could not be resolved\n* The server did not respond to the request - or is temporarily unavailable\n* The server denied [Cross-Origin Resource Sharing (CORS)](https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/) access to this URL\n* There is a problem with your internet connection\n\nIf you entered the link manually, please verify that the link is correct."
+    },
+    "fetchWithProgress": {
+      "fileSizeMessageTotal": "The size of the file is {{size}}MB",
+      "fileSizeMessageDownloaded": "The size of the file is over {{size}}MB",
+      "downloadInterruptedByUserTitle": "File download interrupted by user",
+      "downloadInterruptedByUserMessage": "{{fileSizeMessage}}\n\nPress $t(preview.addToMap) to start download again.",
+      "downloadOverMaxSizeTitle": "File download too large",
+      "downloadOverMaxSizeMessage": "A download for item: `{{name}}` has been cancelled.\n\n  {{fileSizeMessage}} - this is over the maximum file size {{appName}} can handle.",
+      "downloadPromptTitle": "Warning: large file download",
+      "downloadPromptMessage": "You are downloading a large file for item: `{{name}}`\n\n{{fileSizeMessage}}\n\nDo you wish to continue?",
+      "downloadPromptConfirmTitle": "Continue download",
+      "downloadPromptDenyTitle": "Cancel"
     }
   },
   "map": {
