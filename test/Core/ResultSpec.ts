@@ -4,7 +4,7 @@ import Result from "../../lib/Core/Result";
 describe("Result", function() {
   beforeEach(function() {});
 
-  it("Can create Result without error", function() {
+  it("Can create Result without error", async () => {
     const result = new Result("what");
 
     expect(result.ignoreError()).toBe("what");
@@ -34,9 +34,22 @@ describe("Result", function() {
       })
     ).toBe("what");
     expect(caughtError2).toBeFalsy();
+
+    expect(result.map(val => val + " something").ignoreError()).toBe(
+      "what something"
+    );
+    expect(result.map(val => val + " something2").throwIfError()).toBe(
+      "what something2"
+    );
+    expect(
+      (await result.mapAsync(async val => val + " something")).ignoreError()
+    ).toBe("what something");
+    expect(
+      (await result.mapAsync(async val => val + " something2")).throwIfError()
+    ).toBe("what something2");
   });
 
-  it("Can create Result with error", function() {
+  it("Can create Result with error", async () => {
     const result = new Result(
       "what",
       new TerriaError({ message: "some error" })
@@ -69,5 +82,16 @@ describe("Result", function() {
       })
     ).toBe("what");
     expect(caughtError2).toBeTruthy();
+
+    expect(result.map(val => val + " something").ignoreError()).toBe(
+      "what something"
+    );
+    expect(result.map(val => val + " something2").throwIfError).toThrow();
+    expect(
+      (await result.mapAsync(async val => val + " something")).ignoreError()
+    ).toBe("what something");
+    expect(
+      (await result.mapAsync(async val => val + " something2")).throwIfError
+    ).toThrow();
   });
 });
