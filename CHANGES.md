@@ -1,10 +1,14 @@
 Change Log
 ==========
 
-#### next release (8.1.14)
+#### next release (8.1.15)
 
-**Breaking changes**:
-* `Result.throwIfUndefined()` will now only throw if `result.value` is undefined - regardless of `result.error`
+* [The next improvement]
+
+#### 8.1.14
+
+- **Breaking changes**:
+  * `Result.throwIfUndefined()` will now only throw if `result.value` is undefined - regardless of `result.error`
 
 * Reimplement option to zoom on item when adding it to workbench, `zoomOnAddToWorkbench` is added to `MappableTraits`.
 * Update terria-js cesium to `1.81.3` 
@@ -19,7 +23,6 @@ Change Log
 * Anonymize user IP when using google analytics.
 * Fix crash when TableMixin-based catalog item had invalid date values
 * Fix `WebMapServiceCatalogItem.styles` if `supportsGetLegendGraphics = false`. This means that if a WMS server doesn't support `GetLegendGraphics` requests, the first style will be set as the default style.
-* [The next improvement]
 
 #### 8.1.13
 
