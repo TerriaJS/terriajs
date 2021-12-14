@@ -6,8 +6,13 @@ import Result from "./Result";
 import TerriaError, { TerriaErrorSeverity } from "./TerriaError";
 
 export interface LoadOptions {
+  /** Headers to send in request */
   headers?: HeadersInit;
+  /** Data to pass in "body" of the request
+   * If this is set, the request will use POST
+   */
   bodyObject?: string | JsonObject;
+  /** Should bodyObject be transformed into FormData */
   asForm?: boolean;
 }
 
