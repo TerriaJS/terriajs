@@ -681,9 +681,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     @computed
     get legends() {
-      if (super.legends && super.legends.length > 0) {
-        return super.legends;
-      }
       if (
         this.mapItems.length > 0 &&
         this.dataColumnMajor &&
