@@ -23,6 +23,7 @@ Change Log
 * Anonymize user IP when using google analytics.
 * Fix crash when TableMixin-based catalog item had invalid date values
 * Fix `WebMapServiceCatalogItem.styles` if `supportsGetLegendGraphics = false`. This means that if a WMS server doesn't support `GetLegendGraphics` requests, the first style will be set as the default style.
+* Fixes an issue where custom legends defined in the catalog were always ignored by TableMixin.
 
 #### 8.1.13
 
