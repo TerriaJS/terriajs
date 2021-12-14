@@ -18,7 +18,9 @@ import TerriaError from "../Core/TerriaError";
 import ConstantColorMap from "../Map/ConstantColorMap";
 import RegionProviderList from "../Map/RegionProviderList";
 import CommonStrata from "../Models/Definition/CommonStrata";
-import Model from "../Models/Definition/Model";
+import LoadableStratum from "../Models/Definition/LoadableStratum";
+import Model, { BaseModel } from "../Models/Definition/Model";
+import StratumOrder from "../Models/Definition/StratumOrder";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import SelectableDimensions, {
   SelectableDimension
@@ -43,6 +45,34 @@ import DiscretelyTimeVaryingMixin, {
 import ExportableMixin, { ExportData } from "./ExportableMixin";
 import { ImageryParts } from "./MappableMixin";
 
+class TableStratum extends LoadableStratum(TableTraits) {
+  static stratumName = "table";
+
+  constructor(private readonly _item: TableMixin.Instance) {
+    super();
+  }
+
+  duplicateLoadableStratum(newModel: BaseModel): this {
+    return new TableStratum(newModel as TableMixin.Instance) as this;
+  }
+
+  static load(item: TableMixin.Instance) {
+    return new TableStratum(item);
+  }
+
+  @computed
+  get legends() {
+    if (this._item.mapItems.length > 0) {
+      const colorLegend = this._item.activeTableStyle.colorTraits.legend;
+      return filterOutUndefined([colorLegend]);
+    } else {
+      return [];
+    }
+  }
+}
+
+StratumOrder.addLoadStratum(TableStratum.stratumName);
+
 function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
   abstract class TableMixin
     extends ExportableMixin(
@@ -57,6 +87,13 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     constructor(...args: any[]) {
       super(...args);
+
+      // Add GeoJsonStratum
+      if (this.strata.get(TableStratum.stratumName) === undefined) {
+        runInAction(() => {
+          this.strata.set(TableStratum.stratumName, TableStratum.load(this));
+        });
+      }
 
       const tableStyle = new TableStyle(this);
       runInAction(() =>
@@ -677,16 +714,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         []
       );
       return times;
-    }
-
-    @computed
-    get legends() {
-      if (this.mapItems.length > 0) {
-        const colorLegend = this.activeTableStyle.colorTraits.legend;
-        return filterOutUndefined([colorLegend]);
-      } else {
-        return [];
-      }
     }
 
     findFirstColumnByType(type: TableColumnType): TableColumn | undefined {
