@@ -1,11 +1,29 @@
 Change Log
 ==========
 
-#### next release (8.1.14)
-* Reimplement option to zoom on item when adding it to workbench, `zoomOnAddToWorkbench` is added to `MappableTraits`.
-* Update terria-js cesium to `1.81.3` 
+#### next release (8.1.15)
+
 * Fix `GeoJsonMixin.legend` for Cesium primitives (`TableMixin` will not return legends unless it has data)
 * [The next improvement]
+
+#### 8.1.14
+
+- **Breaking changes**:
+  * `Result.throwIfUndefined()` will now only throw if `result.value` is undefined - regardless of `result.error`
+
+* Reimplement option to zoom on item when adding it to workbench, `zoomOnAddToWorkbench` is added to `MappableTraits`.
+* Update terria-js cesium to `1.81.3` 
+* Re-allowed models to be added to `workbench` if the are not `Mappable` or `Chartable`
+* Moved `WebMapServiceCatalogItem.GetCapbilitiesStratum` to `lib\Models\Catalog\Ows\WebMapServiceCapabilitiesStratum.ts`
+* Moved `WebMapServiceCatalogItem.DiffStratum` to `DiffableMixin`
+* `callWebCoverageService` now uses version WCS `2.0.0`
+  * All WCS export functionality is now in `ExportWebCoverageServiceMixin`
+  * Added `WebCoverageServiceParameterTraits` to `WebMapServiceCatalogItemTraits.linkedWcsParameters`. It includes `outputFormat` and `outputCrs`
+  * Will attempt to use native CRS and format (from `DescribeCoverage`)
+  * No longer sets `width` or `height` - so export will now return native resolution
+* Anonymize user IP when using google analytics.
+* Fix crash when TableMixin-based catalog item had invalid date values
+* Fix `WebMapServiceCatalogItem.styles` if `supportsGetLegendGraphics = false`. This means that if a WMS server doesn't support `GetLegendGraphics` requests, the first style will be set as the default style.
 
 #### 8.1.13
 
@@ -82,10 +100,12 @@ Change Log
 * Fixed `superGet` replacement in webpack builds with babel versions `7.16.0` and above.
 
 #### 8.1.9
+
 * TSify workbench splitter control and fix broken styling.
 * Fix app crash when opening AR tool.
 
 #### 8.1.8
+
 * Tsified `SettingPanel`
 * Moved `setViewerMode` function from `Terria` class to `ViewerMode`
 * Refactored checkbox to use children elements for label instead of label
