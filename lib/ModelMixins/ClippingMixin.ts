@@ -241,6 +241,7 @@ function ClippingMixin<T extends Constructor<BaseType>>(
             id: "show-clip-editor-ui",
             type: "checkbox",
             selectedId: this.clippingBox.showEditorUi ? "true" : "false",
+            disable: this.clippingBox.clipModel === false,
             options: [
               {
                 id: "true",
@@ -264,6 +265,7 @@ function ClippingMixin<T extends Constructor<BaseType>>(
             name: i18next.t("models.clippingBox.clipDirection.name"),
             type: "select",
             selectedId: this.clippingBox.clipDirection,
+            disable: this.clippingBox.clipModel === false,
             options: [
               {
                 id: "inside",
