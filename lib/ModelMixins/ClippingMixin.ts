@@ -1,9 +1,11 @@
 import i18next from "i18next";
 import { action, computed, toJS } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
+import sampleTerrain from "terriajs-cesium/Source/Core/sampleTerrain";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import ClippingPlane from "terriajs-cesium/Source/Scene/ClippingPlane";
@@ -142,11 +144,19 @@ function ClippingMixin<T extends Constructor<BaseType>>(
 
       const clippingPlanesOriginMatrix = this.clippingPlanesOriginMatrix();
 
-      const position =
-        LatLonHeightTraits.toCartesian(
-          this.clippingBox.position
-        ).ignoreError() ??
-        Matrix4.getTranslation(clippingPlanesOriginMatrix, new Cartesian3());
+      let position = LatLonHeightTraits.toCartesian(this.clippingBox.position);
+      if (!position) {
+        // Use clipping plane origin as position but height set to 0 so that the box is grounded.
+        const cartographic = Cartographic.fromCartesian(
+          Matrix4.getTranslation(clippingPlanesOriginMatrix, new Cartesian3())
+        );
+        cartographic.height = 0;
+        position = Cartographic.toCartesian(
+          cartographic,
+          cesium.scene.globe.ellipsoid,
+          new Cartesian3()
+        );
+      }
 
       const dimensions = new Cartesian3(
         this.clippingBox.dimensions.length ?? 100,

@@ -54,47 +54,43 @@ export default class LatLonHeightTraits extends ModelTraits {
   static toCartographic(
     model: Model<LatLonHeightTraits>,
     result?: Cartographic
-  ): Result<Cartographic | undefined> {
+  ): Cartographic | undefined {
     const { longitude, latitude, height } = model;
     if (
       longitude === undefined ||
       latitude === undefined ||
       height === undefined
     ) {
-      return Result.error("Unspecified longitude, latitude or height");
+      return undefined;
     }
 
-    return new Result(
-      Cartographic.fromDegrees(
-        longitude,
-        latitude,
-        height,
-        result ?? new Cartographic()
-      )
+    return Cartographic.fromDegrees(
+      longitude,
+      latitude,
+      height,
+      result ?? new Cartographic()
     );
   }
 
   static toCartesian(
     model: Model<LatLonHeightTraits>,
     result?: Cartesian3
-  ): Result<Cartesian3 | undefined> {
+  ): Cartesian3 | undefined {
     const { longitude, latitude, height } = model;
     if (
       longitude === undefined ||
       latitude === undefined ||
       height === undefined
     ) {
-      return Result.error("Unspecified longitude, latitude or height");
+      return;
     }
 
-    return new Result(
-      Cartesian3.fromDegrees(
-        longitude,
-        latitude,
-        height,
-        undefined,
-        result ?? new Cartesian3()
-      )
+    return Cartesian3.fromDegrees(
+      longitude,
+      latitude,
+      height,
+      undefined,
+      result ?? new Cartesian3()
     );
   }
 }
