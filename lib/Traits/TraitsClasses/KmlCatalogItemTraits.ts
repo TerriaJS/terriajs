@@ -4,12 +4,14 @@ import MappableTraits from "./MappableTraits";
 import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 
 export default class KmlCatalogItemTraits extends mixTraits(
   FeatureInfoTraits,
   UrlTraits,
   MappableTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  LegendOwnerTraits
 ) {
   @primitiveTrait({
     type: "string",

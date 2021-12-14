@@ -6,6 +6,7 @@ import ModelTraits from "../ModelTraits";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import UrlTraits from "./UrlTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 
 export class ReplaceStringTraits extends ModelTraits {
   @primitiveTrait({
@@ -85,6 +86,7 @@ export class ModelOverrideTraits extends mixTraits(DimensionTraits) {
 export default class SdmxCommonTraits extends mixTraits(
   UrlTraits,
   CatalogMemberTraits,
+  LegendOwnerTraits,
   GroupTraits
 ) {
   @objectArrayTrait({

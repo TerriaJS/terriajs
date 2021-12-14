@@ -7,12 +7,14 @@ import SplitterTraits from "./SplitterTraits";
 import objectTrait from "../Decorators/objectTrait";
 import StyleTraits from "./StyleTraits";
 import UrlTraits from "./UrlTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 
 export default class SenapsLocationsCatalogItemTraits extends mixTraits(
   FeatureInfoTraits,
   SplitterTraits,
   MappableTraits,
   CatalogMemberTraits,
+  LegendOwnerTraits,
   UrlTraits
 ) {
   @primitiveTrait({

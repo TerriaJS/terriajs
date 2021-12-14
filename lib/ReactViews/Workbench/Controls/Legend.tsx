@@ -7,13 +7,16 @@ import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
-import Model from "../../../Models/Definition/Model";
+import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
+import TableMixin from "../../../ModelMixins/TableMixin";
 import proxyCatalogItemUrl from "../../../Models/Catalog/proxyCatalogItemUrl";
+import hasTraits from "../../../Models/Definition/hasTraits";
+import Model from "../../../Models/Definition/Model";
+import LegendOwnerTraits from "../../../Traits/TraitsClasses/LegendOwnerTraits";
 import LegendTraits, {
   LegendItemTraits
 } from "../../../Traits/TraitsClasses/LegendTraits";
 import Styles from "./legend.scss";
-import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
 
 /* A lookup map for displayable mime types */
 const DISPLAYABLE_MIME_TYPES = [
@@ -252,7 +255,20 @@ export default class Legend extends React.Component<{
 
   render() {
     if (
-      this.props.item.hideLegendInWorkbench ||
+      (!hasTraits(this.props.item, LegendOwnerTraits, "legends") ||
+        !hasTraits(
+          this.props.item,
+          LegendOwnerTraits,
+          "hideLegendInWorkbench"
+        )) &&
+      !TableMixin.isMixedInto(this.props.item)
+    ) {
+      return null;
+    }
+
+    if (
+      (hasTraits(this.props.item, LegendOwnerTraits, "hideLegendInWorkbench") &&
+        this.props.item.hideLegendInWorkbench) ||
       (MinMaxLevelMixin.isMixedInto(this.props.item) &&
         this.props.item.scaleWorkbenchInfo)
     )
@@ -265,15 +281,17 @@ export default class Legend extends React.Component<{
       return (
         <ul className={Styles.legend}>
           <div className={Styles.legendInner}>
-            {this.props.item.legends.map((legend, i) => (
-              <React.Fragment key={i}>
-                {isDefined(legend.title) ? (
-                  <h3 className={Styles.legendTitle}>{legend.title}</h3>
-                ) : null}
+            {(this.props.item.legends as Model<LegendTraits>[]).map(
+              (legend, i: number) => (
+                <React.Fragment key={i}>
+                  {isDefined(legend.title) ? (
+                    <h3 className={Styles.legendTitle}>{legend.title}</h3>
+                  ) : null}
 
-                {this.renderLegend.bind(this)(legend, i)}
-              </React.Fragment>
-            ))}
+                  {this.renderLegend.bind(this)(legend, i)}
+                </React.Fragment>
+              )
+            )}
           </div>
         </ul>
       );

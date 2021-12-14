@@ -9,6 +9,7 @@ import CatalogMemberTraits from "./CatalogMemberTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 import LegendTraits from "./LegendTraits";
 import MappableTraits from "./MappableTraits";
 import RasterLayerTraits from "./RasterLayerTraits";
@@ -75,7 +76,8 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   RasterLayerTraits,
   UrlTraits,
   MappableTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  LegendOwnerTraits
 ) {
   @primitiveTrait({
     type: "string",

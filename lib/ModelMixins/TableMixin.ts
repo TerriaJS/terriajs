@@ -30,6 +30,7 @@ import { ColorStyleLegend } from "../Table/TableAutomaticStylesStratum";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
+import LegendTraits from "../Traits/TraitsClasses/LegendTraits";
 import TableTraits from "../Traits/TraitsClasses/TableTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import ChartableMixin, {
@@ -680,7 +681,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     @computed
-    get legends() {
+    get legends(): Model<LegendTraits>[] {
       if (this.mapItems.length > 0) {
         const colorLegend = this.activeTableStyle.colorTraits.legend;
         return filterOutUndefined([colorLegend]);
