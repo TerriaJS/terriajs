@@ -65,7 +65,8 @@ type Side = Entity &
 type SideStyle = {
   fillColor: Color;
   outlineColor: Color;
-  outlineAlpha: number;
+  highlightFillColor: Color;
+  highlightOutlineColor: Color;
 };
 
 type ScalePoint = Entity &
@@ -80,7 +81,9 @@ type ScalePoint = Entity &
   };
 
 type ScalePointStyle = {
-  pointColor: Color;
+  cornerPointColor: Color;
+  facePointColor: Color;
+  dimPointColor: Color;
 };
 
 type InteractionState =
@@ -389,11 +392,13 @@ export default class BoxDrawing {
       : planeLocal.normal.y
       ? Axis.Y
       : Axis.Z;
-    const style: SideStyle = {
+    const style: Readonly<SideStyle> = {
       fillColor: Color.WHITE.withAlpha(0.1),
       outlineColor: Color.WHITE,
-      outlineAlpha: 1
+      highlightFillColor: Color.CYAN.withAlpha(0.1),
+      highlightOutlineColor: Color.WHITE
     };
+    let isHighlighted = false;
 
     const update = () => {
       Matrix4.getTranslation(this.modelMatrix, position);
@@ -409,11 +414,18 @@ export default class BoxDrawing {
         dimensions: new CallbackProperty(() => planeDimensions, false),
         fill: true,
         material: new ColorMaterialProperty(
-          new CallbackProperty(() => style.fillColor, false)
+          new CallbackProperty(
+            () => (isHighlighted ? style.highlightFillColor : style.fillColor),
+            false
+          )
         ),
         outline: true,
         outlineColor: new CallbackProperty(
-          () => style.outlineColor.withAlpha(style.outlineAlpha),
+          () =>
+            (isHighlighted
+              ? style.highlightOutlineColor
+              : style.outlineColor
+            ).withAlpha(side.isFacingCamera ? 1 : 0.2),
           false
         ),
         outlineWidth: 1
@@ -563,27 +575,17 @@ export default class BoxDrawing {
     };
 
     const highlightSide = () => {
-      style.fillColor = Color.CYAN.withAlpha(0.1);
-      style.outlineColor = Color.WHITE.withAlpha(style.outlineAlpha);
+      isHighlighted = true;
     };
 
     const unHighlightSide = () => {
-      style.fillColor = Color.WHITE.withAlpha(0.1);
-      style.outlineColor = Color.WHITE.withAlpha(style.outlineAlpha);
+      isHighlighted = false;
     };
 
     const highlightAllSides = () =>
       this.sides.forEach(side => side.highlight());
     const unHighlightAllSides = () =>
       this.sides.forEach(side => side.unHighlight());
-
-    const brightenSide = () => {
-      style.outlineAlpha = 1.0;
-    };
-
-    const dimSide = () => {
-      style.outlineAlpha = 0.2;
-    };
 
     const onMouseOver = () => {
       highlightAllSides();
@@ -617,7 +619,6 @@ export default class BoxDrawing {
       );
       side.isFacingCamera =
         Cartesian3.dot(normalWc, scene.camera.direction) >= 0;
-      side.isFacingCamera ? brightenSide() : dimSide();
     };
 
     side.onMouseOver = onMouseOver;
@@ -637,11 +638,19 @@ export default class BoxDrawing {
   createScalePoint(pointLocal: Cartesian3): ScalePoint {
     const scene = this.scene;
     const position = new Cartesian3();
-    const style: ScalePointStyle = {
-      pointColor: Color.RED
+    const style: Readonly<ScalePointStyle> = {
+      cornerPointColor: Color.RED,
+      facePointColor: Color.BLUE,
+      dimPointColor: Color.GREY.withAlpha(0.2)
     };
-    const update = () => {
-      Matrix4.multiplyByPoint(this.modelMatrix, pointLocal, position);
+    let isFacingCamera = false;
+
+    const getColor = () => {
+      return isFacingCamera
+        ? isCornerPoint
+          ? style.cornerPointColor
+          : style.facePointColor
+        : style.dimPointColor;
     };
 
     const scalePoint: ScalePoint = new Entity({
@@ -650,12 +659,13 @@ export default class BoxDrawing {
         uri: require("file-loader!../../wwwroot/models/Box.glb"),
         minimumPixelSize: 12,
         shadows: ShadowMode.DISABLED,
-        color: new CallbackProperty(() => style.pointColor, false),
+        color: new CallbackProperty(() => getColor(), false),
         // Forces the above color ignoring the color specified in gltf material
         colorBlendMode: ColorBlendMode.REPLACE
       }
     }) as ScalePoint;
 
+    // Calculate dot product with x, y & z axes
     const axisLocal = Cartesian3.normalize(pointLocal, new Cartesian3());
     const xDot = Math.abs(Cartesian3.dot(new Cartesian3(1, 0, 0), axisLocal));
     const yDot = Math.abs(Cartesian3.dot(new Cartesian3(0, 1, 0), axisLocal));
@@ -666,6 +676,8 @@ export default class BoxDrawing {
         : zDot === 1
         ? "ns-resize"
         : "nesw-resize";
+
+    const isCornerPoint = xDot && yDot && zDot;
 
     const onMouseOver = () => {
       scalePoint.axisLine.show = true;
@@ -792,8 +804,7 @@ export default class BoxDrawing {
     });
 
     const updateOnCameraChange = () => {
-      const isFacingCamera = adjacentSides.some(side => side.isFacingCamera);
-      isFacingCamera ? brightenScalePoint() : dimScalePoint();
+      isFacingCamera = adjacentSides.some(side => side.isFacingCamera);
     };
 
     const highlightScalePoint = () => {
@@ -808,12 +819,8 @@ export default class BoxDrawing {
       model.silhouetteSize = 0 as any;
     };
 
-    const dimScalePoint = () => {
-      style.pointColor = Color.GREY.withAlpha(0.2);
-    };
-
-    const brightenScalePoint = () => {
-      style.pointColor = Color.RED.withAlpha(1.0);
+    const update = () => {
+      Matrix4.multiplyByPoint(this.modelMatrix, pointLocal, position);
     };
 
     scalePoint.onPick = onPick;
