@@ -111,14 +111,14 @@ export class ClippingBoxTraits extends mixTraits(BoxDrawingTraits) {
     name: "Toggle model clipping.",
     description: "Applies clipping when true."
   })
-  clipModel = true;
+  clipModel = false;
 
   @primitiveTrait({
     type: "boolean",
     name: "Show clipping box editor UI",
     description: "Toggles the Cesium map UI for editing the clipping plane."
   })
-  showEditorUi = true;
+  showEditorUi = false;
 
   @objectTrait({
     type: LatLonHeightTraits,

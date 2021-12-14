@@ -3,15 +3,17 @@ import { observable, onBecomeObserved, onBecomeUnobserved } from "mobx";
 import ArcType from "terriajs-cesium/Source/Core/ArcType";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Color from "terriajs-cesium/Source/Core/Color";
-import Event from "terriajs-cesium/Source/Core/Event";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import Plane from "terriajs-cesium/Source/Core/Plane";
 import Ray from "terriajs-cesium/Source/Core/Ray";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
 import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
 import CallbackProperty from "terriajs-cesium/Source/DataSources/CallbackProperty";
+import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
@@ -50,7 +52,21 @@ type CameraAware = {
   updateOnCameraChange: () => void;
 };
 
-type Side = Entity & Updatable & Interactable & { plane: PlaneGraphics };
+type Side = Entity &
+  Updatable &
+  Interactable &
+  CameraAware & {
+    plane: PlaneGraphics;
+    isFacingCamera: boolean;
+    highlight: () => void;
+    unHighlight: () => void;
+  };
+
+type SideStyle = {
+  fillColor: Color;
+  outlineColor: Color;
+  outlineAlpha: number;
+};
 
 type ScalePoint = Entity &
   Updatable &
@@ -62,6 +78,10 @@ type ScalePoint = Entity &
     oppositeScalePoint: ScalePoint;
     axisLine: Entity;
   };
+
+type ScalePointStyle = {
+  pointColor: Color;
+};
 
 type InteractionState =
   | { is: "none" }
@@ -100,10 +120,6 @@ function isInteractable(entity: Entity): entity is Entity & Interactable {
   );
 }
 
-function isCameraAware(entity: Entity): entity is Entity & CameraAware {
-  return typeof (entity as any).updateOnCameraChange === "function";
-}
-
 export default class BoxDrawing {
   static localSidePlanes = SIDE_PLANES;
 
@@ -113,10 +129,13 @@ export default class BoxDrawing {
   private readonly localTransform: Matrix4 = Matrix4.IDENTITY.clone();
   private readonly transform: Matrix4 = Matrix4.IDENTITY.clone();
   private readonly inverseTransform: Matrix4 = Matrix4.IDENTITY.clone();
+  private readonly boxPosition: Cartesian3 = new Cartesian3();
 
   private scene: Scene;
-  private cameraEventDisposer?: Event.RemoveCallback;
-  private eventHandlerDisposer?: () => void;
+  private interactionsDisposer?: () => void;
+
+  private readonly sides: Side[] = [];
+  private readonly scalePoints: ScalePoint[] = [];
 
   constructor(
     readonly cesium: Cesium,
@@ -130,26 +149,109 @@ export default class BoxDrawing {
     this.dataSource = new Proxy(new CustomDataSource(), {
       set: (target, prop, value) => {
         if (prop === "show") {
-          value === true
-            ? this.startBoxInteraction()
-            : this.stopBoxInteraction();
+          value === true ? this.startInteractions() : this.stopInteractions();
         }
         return Reflect.set(target, prop, value);
       }
     });
 
     this.setTransform(transform);
-    this.drawBox(this.dataSource);
+    this.drawBox();
 
-    onBecomeObserved(this, "dataSource", () => this.startBoxInteraction());
-    onBecomeUnobserved(this, "dataSource", () => this.stopBoxInteraction());
+    onBecomeObserved(this, "dataSource", () => this.startInteractions());
+    onBecomeUnobserved(this, "dataSource", () => this.stopInteractions());
   }
 
-  startBoxInteraction() {
-    if (this.eventHandlerDisposer) {
+  /**
+   * Start interactions if not already started.
+   */
+  startInteractions() {
+    if (this.interactionsDisposer) {
+      // already started
       return;
     }
 
+    let eventHandler: { destroy: () => void } | undefined;
+
+    // Start event handling if not already started
+    const startMapInteractions = () => {
+      if (!eventHandler) {
+        eventHandler = this.createEventHandler();
+      }
+    };
+
+    // Stop event handling
+    const stopMapInteractions = () => {
+      eventHandler?.destroy();
+      eventHandler = undefined;
+    };
+
+    // Watch camera changes to update entities and to enable/disable
+    // interactions when the box comes in and out of view.
+    const onCameraChange = () => {
+      if (this.isBoxInCameraView()) {
+        startMapInteractions();
+        this.sides.forEach(side => side.updateOnCameraChange());
+        this.scalePoints.forEach(scalePoint =>
+          scalePoint.updateOnCameraChange()
+        );
+      } else {
+        // Disable map interactions when the box goes out of camera view.
+        stopMapInteractions();
+      }
+    };
+
+    // Camera event disposer
+    const disposeCameraEvent = this.scene.camera.changed.addEventListener(
+      onCameraChange
+    );
+
+    // Disposer for map interactions & camera events
+    this.interactionsDisposer = () => {
+      stopMapInteractions();
+      disposeCameraEvent();
+      this.interactionsDisposer = undefined;
+    };
+
+    // Call once to initialize
+    onCameraChange();
+  }
+
+  stopInteractions() {
+    this.interactionsDisposer?.();
+  }
+
+  setTransform(transform: Matrix4) {
+    Matrix4.clone(transform, this.transform);
+    Matrix4.inverse(this.transform, this.inverseTransform);
+    Matrix4.clone(Matrix4.IDENTITY, this.localTransform);
+    this.updateBox();
+  }
+
+  updateBox() {
+    Matrix4.multiply(this.transform, this.localTransform, this.modelMatrix);
+    Matrix4.getTranslation(this.modelMatrix, this.boxPosition);
+
+    this.dataSource.entities.values.forEach(entity => {
+      if (isUpdatable(entity)) entity.update();
+    });
+  }
+
+  isBoxInCameraView() {
+    const viewRectangle = this.scene.camera.computeViewRectangle(
+      undefined,
+      new Rectangle()
+    );
+
+    return viewRectangle
+      ? Rectangle.contains(
+          viewRectangle,
+          Cartographic.fromCartesian(this.boxPosition)
+        )
+      : false;
+  }
+
+  createEventHandler() {
     const scene = this.scene;
     let state: InteractionState = { is: "none" };
     const handlePick = (click: MouseClick) => {
@@ -231,551 +333,521 @@ export default class BoxDrawing {
     };
     scene.canvas.addEventListener("mouseout", onMouseOutCanvas);
 
-    this.eventHandlerDisposer = () => {
-      eventHandler.destroy();
-      scene.canvas.removeEventListener("mouseout", onMouseOutCanvas);
+    const handler = {
+      destroy: () => {
+        eventHandler.destroy();
+        scene.canvas.removeEventListener("mouseout", onMouseOutCanvas);
+      }
     };
-
-    // const onCameraChange = () => {
-    //   this.dataSource.entities.values.forEach(entity => {
-    //     if (isCameraAware(entity)) {
-    //       entity.updateOnCameraChange();
-    //     }
-    //   });
-    // };
-
-    // this.cameraEventDisposer?.();
-    // this.cameraEventDisposer = scene.camera.changed.addEventListener(
-    //   onCameraChange
-    // );
+    return handler;
   }
 
-  stopBoxInteraction() {
-    this.eventHandlerDisposer?.();
-    this.eventHandlerDisposer = undefined;
+  drawBox() {
+    this.drawSides();
+    this.drawScalePoints();
   }
 
-  setTransform(transform: Matrix4) {
-    Matrix4.clone(transform, this.transform);
-    Matrix4.inverse(this.transform, this.inverseTransform);
-    Matrix4.clone(Matrix4.IDENTITY, this.localTransform);
-    this.updateBox();
-  }
-
-  updateBox() {
-    Matrix4.multiply(
-      // box gap?
-      // Matrix4.multiply(
-      //   this.transform,
-      //   Matrix4.fromScale(new Cartesian3(1.5, 1.5, 1.5)),
-      //   new Matrix4()
-      // ),
-      this.transform,
-      this.localTransform,
-      this.modelMatrix
-    );
-
-    this.dataSource.entities.values.forEach(entity => {
-      if (isUpdatable(entity)) entity.update();
+  drawSides() {
+    SIDE_PLANES.forEach(sideLocal => {
+      const side = this.createSide(sideLocal);
+      this.dataSource.entities.add(side);
+      this.sides.push(side);
     });
   }
 
-  drawBox(dataSource: CustomDataSource) {
-    this.drawSides(dataSource);
-    this.drawScalePoints(dataSource);
+  drawScalePoints() {
+    SCALE_POINT_VECTORS.forEach(vector => {
+      const pointLocal1 = vector;
+      const pointLocal2 = Cartesian3.multiplyByScalar(
+        vector,
+        -1,
+        new Cartesian3()
+      );
+      const scalePoint1 = this.createScalePoint(pointLocal1);
+      const scalePoint2 = this.createScalePoint(pointLocal2);
+      scalePoint1.oppositeScalePoint = scalePoint2;
+      scalePoint2.oppositeScalePoint = scalePoint1;
+      const axisLine = this.createScaleAxisLine(scalePoint1, scalePoint2);
+      scalePoint1.axisLine = axisLine;
+      scalePoint2.axisLine = axisLine;
+      this.dataSource.entities.add(scalePoint1);
+      this.dataSource.entities.add(scalePoint2);
+      this.dataSource.entities.add(axisLine);
+      this.scalePoints.push(scalePoint1, scalePoint2);
+    });
   }
 
-  drawSides(dataSource: CustomDataSource) {
+  createSide(planeLocal: Plane): Side {
     const scene = this.scene;
-    const sides: Side[] = [];
-
-    const highlightSide = (side: Side) => {
-      side.plane.fill = true as any;
-      side.plane.material = Color.CYAN.withAlpha(0.1) as any;
-      side.plane.outline = true as any;
-      side.plane.outlineColor = Color.WHITE as any;
-      side.plane.outlineWidth = 1 as any;
+    const position = new Cartesian3();
+    const plane = new Plane(new Cartesian3(), 0);
+    const planeDimensions = new Cartesian3();
+    const boxDimensions = new Cartesian3();
+    const scaleMatrix = new Matrix4();
+    const normalAxis = planeLocal.normal.x
+      ? Axis.X
+      : planeLocal.normal.y
+      ? Axis.Y
+      : Axis.Z;
+    const style: SideStyle = {
+      fillColor: Color.WHITE.withAlpha(0.1),
+      outlineColor: Color.WHITE,
+      outlineAlpha: 1
     };
-    const highlightAllSides = () => sides.forEach(highlightSide);
 
-    const unHighlightSide = (side: Side) => {
-      side.plane.fill = true as any;
-      side.plane.material = Color.WHITE.withAlpha(0.1) as any;
-      side.plane.outline = true as any;
-      side.plane.outlineColor = Color.WHITE as any;
-      side.plane.outlineWidth = 1 as any;
+    const update = () => {
+      Matrix4.getTranslation(this.modelMatrix, position);
+      Matrix4.getScale(this.modelMatrix, boxDimensions);
+      Matrix4.fromScale(boxDimensions, scaleMatrix);
+      Plane.transform(planeLocal, scaleMatrix, plane);
+      setPlaneDimensions(boxDimensions, normalAxis, planeDimensions);
     };
-    const unHighlightAllSides = () => sides.forEach(unHighlightSide);
+    const side: Side = new Entity({
+      position: new CallbackProperty(() => position, false) as any,
+      plane: {
+        plane: new CallbackProperty(() => plane, false),
+        dimensions: new CallbackProperty(() => planeDimensions, false),
+        fill: true,
+        material: new ColorMaterialProperty(
+          new CallbackProperty(() => style.fillColor, false)
+        ),
+        outline: true,
+        outlineColor: new CallbackProperty(
+          () => style.outlineColor.withAlpha(style.outlineAlpha),
+          false
+        ),
+        outlineWidth: 1
+      }
+    }) as Side;
 
-    const onMouseOver = (side: Side, mouseMove: MouseMove) => {
+    const axis = planeLocal.normal.x
+      ? Axis.X
+      : planeLocal.normal.y
+      ? Axis.Y
+      : Axis.Z;
+
+    const onDragSide = (mouseMove: MouseMove) => {
+      const moveUpDown = axis === Axis.Z;
+      let translation = Cartesian3.ZERO.clone();
+      const direction = Cartesian3.normalize(
+        Matrix4.multiplyByPointAsVector(
+          this.modelMatrix,
+          plane.normal,
+          new Cartesian3()
+        ),
+        new Cartesian3()
+      );
+
+      if (moveUpDown) {
+        const { moveAmount: pixelMoveAmount } = computeMoveAmount(
+          scene,
+          position,
+          direction,
+          1,
+          mouseMove
+        );
+        const moveVectorWc = Cartesian3.multiplyByScalar(
+          direction,
+          pixelMoveAmount,
+          new Cartesian3()
+        );
+        const moveVectorLc = Matrix4.multiplyByPointAsVector(
+          this.inverseTransform,
+          moveVectorWc,
+          new Cartesian3()
+        );
+
+        translation = Cartesian3.clone(moveVectorLc, translation);
+      } else {
+        // const axisName = axis === Axis.X ? "x" : "y";
+        // const crossAxisName = axis === Axis.X ? "y" : "x";
+        // const { moveAmount } = computeMoveAmount(
+        //   scene,
+        //   position,
+        //   direction,
+        //   1,
+        //   mouseMove
+        // );
+        // const moveVectorWc = Cartesian3.multiplyByScalar(
+        //   direction,
+        //   moveAmount,
+        //   new Cartesian3()
+        // );
+        // const moveVectorLc = Matrix4.multiplyByPointAsVector(
+        //   this.inverseTransform,
+        //   moveVectorWc,
+        //   new Cartesian3()
+        // );
+        // Cartesian3.add(translation, moveVectorLc, translation);
+        // const axis = side.plane.plane?.getValue(JulianDate.now()).normal;
+        // const crossSide = sides.find(
+        //   side =>
+        //     Cartesian3.cross(
+        //       axis,
+        //       side.plane.plane?.getValue(JulianDate.now()).normal,
+        //       new Cartesian3()
+        //     ).z !== 0
+        // );
+        // if (crossSide) {
+        //   const crossPlane = crossSide.plane.plane?.getValue(
+        //     JulianDate.now()
+        //   );
+        //   const crossPosition = side.position?.getValue(JulianDate.now());
+        //   const crossDirection = Cartesian3.normalize(
+        //     Matrix4.multiplyByPointAsVector(
+        //       this.modelMatrix,
+        //       crossPlane.normal,
+        //       new Cartesian3()
+        //     ),
+        //     new Cartesian3()
+        //   );
+        //   const { moveAmount: crossMoveAmount } = computeMoveAmount(
+        //     scene,
+        //     crossPosition!,
+        //     crossDirection,
+        //     1,
+        //     mouseMove
+        //   );
+        //   const crossMoveVectorWc = Cartesian3.multiplyByScalar(
+        //     crossDirection,
+        //     crossMoveAmount,
+        //     new Cartesian3()
+        //   );
+        //   const crossMoveVectorLc = Matrix4.multiplyByPointAsVector(
+        //     this.inverseTransform,
+        //     crossMoveVectorWc,
+        //     new Cartesian3()
+        //   );
+        //   Cartesian3.add(translation, crossMoveVectorLc, translation);
+        // }
+        //Move along the globe surface when dragging any other side
+        const previousPosition = screenToGlobePosition(
+          scene,
+          mouseMove.startPosition,
+          new Cartesian3()
+        );
+        const endPosition = screenToGlobePosition(
+          scene,
+          mouseMove.endPosition,
+          new Cartesian3()
+        );
+        if (!previousPosition || !endPosition) {
+          return;
+        }
+        // Previous position in local coordinates
+        const previousLc = Matrix4.multiplyByPoint(
+          this.inverseTransform,
+          previousPosition,
+          new Cartesian3()
+        );
+        // End position in local coordinates
+        const endLc = Matrix4.multiplyByPoint(
+          this.inverseTransform,
+          endPosition,
+          new Cartesian3()
+        );
+        translation = Cartesian3.subtract(endLc, previousLc, new Cartesian3());
+        translation.z = 0;
+      }
+
+      Matrix4.multiply(
+        Matrix4.fromTranslation(translation, new Matrix4()),
+        this.localTransform,
+        this.localTransform
+      );
+      this.updateBox();
+      this.onChange?.({
+        isFinished: false,
+        modelMatrix: this.modelMatrix
+      });
+    };
+
+    const highlightSide = () => {
+      style.fillColor = Color.CYAN.withAlpha(0.1);
+      style.outlineColor = Color.WHITE.withAlpha(style.outlineAlpha);
+    };
+
+    const unHighlightSide = () => {
+      style.fillColor = Color.WHITE.withAlpha(0.1);
+      style.outlineColor = Color.WHITE.withAlpha(style.outlineAlpha);
+    };
+
+    const highlightAllSides = () =>
+      this.sides.forEach(side => side.highlight());
+    const unHighlightAllSides = () =>
+      this.sides.forEach(side => side.unHighlight());
+
+    const brightenSide = () => {
+      style.outlineAlpha = 1.0;
+    };
+
+    const dimSide = () => {
+      style.outlineAlpha = 0.2;
+    };
+
+    const onMouseOver = () => {
       highlightAllSides();
       setCanvasCursor(scene, "grab");
     };
 
-    const onMouseOut = (side: Side, mouseMove: MouseMove) => {
+    const onMouseOut = () => {
       unHighlightAllSides();
       setCanvasCursor(scene, "auto");
     };
 
-    const onPick = (side: Side, click: MouseClick) => {
+    const onPick = () => {
       highlightAllSides();
       setCanvasCursor(scene, "grabbing");
     };
 
-    const onRelease = (side: Side, click: MouseClick) => {
+    const onRelease = () => {
       unHighlightAllSides();
       setCanvasCursor(scene, "auto");
       this.onChange?.({ modelMatrix: this.modelMatrix, isFinished: true });
     };
 
-    const addPlane = (localPlane: Plane) => {
-      const position = new Cartesian3();
-      const plane = new Plane(new Cartesian3(), 0);
-      const planeDimensions = new Cartesian3();
-      const boxDimensions = new Cartesian3();
-      const scaleMatrix = new Matrix4();
-      const normalAxis = localPlane.normal.x
-        ? Axis.X
-        : localPlane.normal.y
-        ? Axis.Y
-        : Axis.Z;
-
-      const update = () => {
-        Matrix4.getTranslation(this.modelMatrix, position);
-        Matrix4.getScale(this.modelMatrix, boxDimensions);
-        Matrix4.fromScale(boxDimensions, scaleMatrix);
-        Plane.transform(localPlane, scaleMatrix, plane);
-        setPlaneDimensions(boxDimensions, normalAxis, planeDimensions);
-      };
-      const side: Side = dataSource.entities.add({
-        position: new CallbackProperty(() => position, false) as any,
-        plane: {
-          plane: new CallbackProperty(() => plane, false),
-          dimensions: new CallbackProperty(() => planeDimensions, false),
-          fill: true,
-          material: Color.WHITE.withAlpha(0.1),
-          // material: new StripeMaterialProperty({
-          //   //evenColor: Color.WHITE.withAlpha(0.2),
-          //   evenColor: Color.fromCssColorString("#f2eae3").withAlpha(0.2),
-          //   oddColor: Color.BLACK.withAlpha(0.2),
-          //   repeat: 10
-          // }),
-          outline: true,
-          outlineColor: Color.WHITE,
-          outlineWidth: 1
-        }
-      }) as Side;
-
-      const axis = localPlane.normal.x
-        ? Axis.X
-        : localPlane.normal.y
-        ? Axis.Y
-        : Axis.Z;
-
-      const onDragSide = (mouseMove: MouseMove) => {
-        const moveUpDown = axis === Axis.Z;
-        let translation = Cartesian3.ZERO.clone();
-        const direction = Cartesian3.normalize(
-          Matrix4.multiplyByPointAsVector(
-            this.modelMatrix,
-            plane.normal,
-            new Cartesian3()
-          ),
+    const updateOnCameraChange = () => {
+      const normalWc = Cartesian3.normalize(
+        Matrix4.multiplyByPointAsVector(
+          this.modelMatrix,
+          plane.normal,
           new Cartesian3()
-        );
-
-        if (moveUpDown) {
-          const { moveAmount: pixelMoveAmount } = computeMoveAmount(
-            scene,
-            position,
-            direction,
-            1,
-            mouseMove
-          );
-          const moveVectorWc = Cartesian3.multiplyByScalar(
-            direction,
-            pixelMoveAmount,
-            new Cartesian3()
-          );
-          const moveVectorLc = Matrix4.multiplyByPointAsVector(
-            this.inverseTransform,
-            moveVectorWc,
-            new Cartesian3()
-          );
-
-          translation = Cartesian3.clone(moveVectorLc, translation);
-        } else {
-          // const axisName = axis === Axis.X ? "x" : "y";
-          // const crossAxisName = axis === Axis.X ? "y" : "x";
-          // const { moveAmount } = computeMoveAmount(
-          //   scene,
-          //   position,
-          //   direction,
-          //   1,
-          //   mouseMove
-          // );
-          // const moveVectorWc = Cartesian3.multiplyByScalar(
-          //   direction,
-          //   moveAmount,
-          //   new Cartesian3()
-          // );
-          // const moveVectorLc = Matrix4.multiplyByPointAsVector(
-          //   this.inverseTransform,
-          //   moveVectorWc,
-          //   new Cartesian3()
-          // );
-          // Cartesian3.add(translation, moveVectorLc, translation);
-          // const axis = side.plane.plane?.getValue(JulianDate.now()).normal;
-          // const crossSide = sides.find(
-          //   side =>
-          //     Cartesian3.cross(
-          //       axis,
-          //       side.plane.plane?.getValue(JulianDate.now()).normal,
-          //       new Cartesian3()
-          //     ).z !== 0
-          // );
-          // if (crossSide) {
-          //   const crossPlane = crossSide.plane.plane?.getValue(
-          //     JulianDate.now()
-          //   );
-          //   const crossPosition = side.position?.getValue(JulianDate.now());
-          //   const crossDirection = Cartesian3.normalize(
-          //     Matrix4.multiplyByPointAsVector(
-          //       this.modelMatrix,
-          //       crossPlane.normal,
-          //       new Cartesian3()
-          //     ),
-          //     new Cartesian3()
-          //   );
-          //   const { moveAmount: crossMoveAmount } = computeMoveAmount(
-          //     scene,
-          //     crossPosition!,
-          //     crossDirection,
-          //     1,
-          //     mouseMove
-          //   );
-          //   const crossMoveVectorWc = Cartesian3.multiplyByScalar(
-          //     crossDirection,
-          //     crossMoveAmount,
-          //     new Cartesian3()
-          //   );
-          //   const crossMoveVectorLc = Matrix4.multiplyByPointAsVector(
-          //     this.inverseTransform,
-          //     crossMoveVectorWc,
-          //     new Cartesian3()
-          //   );
-          //   Cartesian3.add(translation, crossMoveVectorLc, translation);
-          // }
-          //Move along the globe surface when dragging any other side
-          const previousPosition = screenToGlobePosition(
-            scene,
-            mouseMove.startPosition,
-            new Cartesian3()
-          );
-          const endPosition = screenToGlobePosition(
-            scene,
-            mouseMove.endPosition,
-            new Cartesian3()
-          );
-          if (!previousPosition || !endPosition) {
-            return;
-          }
-          // Previous position in local coordinates
-          const previousLc = Matrix4.multiplyByPoint(
-            this.inverseTransform,
-            previousPosition,
-            new Cartesian3()
-          );
-          // End position in local coordinates
-          const endLc = Matrix4.multiplyByPoint(
-            this.inverseTransform,
-            endPosition,
-            new Cartesian3()
-          );
-          translation = Cartesian3.subtract(
-            endLc,
-            previousLc,
-            new Cartesian3()
-          );
-          translation.z = 0;
-        }
-
-        Matrix4.multiply(
-          Matrix4.fromTranslation(translation, new Matrix4()),
-          this.localTransform,
-          this.localTransform
-        );
-        this.updateBox();
-        this.onChange?.({
-          isFinished: false,
-          modelMatrix: this.modelMatrix
-        });
-      };
-
-      side.onMouseOver = mouseMove => onMouseOver(side, mouseMove);
-      side.onMouseOut = mouseMove => onMouseOut(side, mouseMove);
-      side.onPick = mouseClick => onPick(side, mouseClick);
-      side.onDrag = mouseMove => onDragSide(mouseMove);
-      side.onRelease = mouseClick => onRelease(side, mouseClick);
-      side.update = update;
-      update();
-      sides.push(side);
+        ),
+        new Cartesian3()
+      );
+      side.isFacingCamera =
+        Cartesian3.dot(normalWc, scene.camera.direction) >= 0;
+      side.isFacingCamera ? brightenSide() : dimSide();
     };
 
-    SIDE_PLANES.map(addPlane);
+    side.onMouseOver = onMouseOver;
+    side.onMouseOut = onMouseOut;
+    side.onPick = onPick;
+    side.onDrag = onDragSide;
+    side.onRelease = onRelease;
+    side.highlight = highlightSide;
+    side.unHighlight = unHighlightSide;
+    side.isFacingCamera = false;
+    side.updateOnCameraChange = updateOnCameraChange;
+    side.update = update;
+    update();
+    return side;
   }
 
-  drawScalePoints(dataSource: CustomDataSource) {
+  createScalePoint(pointLocal: Cartesian3): ScalePoint {
     const scene = this.scene;
-    let isPointPickable = true;
+    const position = new Cartesian3();
+    const style: ScalePointStyle = {
+      pointColor: Color.RED
+    };
+    const update = () => {
+      Matrix4.multiplyByPoint(this.modelMatrix, pointLocal, position);
+    };
 
-    const highlightScalePoint = (scalePoint: ScalePoint) => {
+    const scalePoint: ScalePoint = new Entity({
+      position: new CallbackProperty(() => position, false) as any,
+      model: {
+        uri: require("file-loader!../../wwwroot/models/Box.glb"),
+        minimumPixelSize: 12,
+        shadows: ShadowMode.DISABLED,
+        color: new CallbackProperty(() => style.pointColor, false),
+        // Forces the above color ignoring the color specified in gltf material
+        colorBlendMode: ColorBlendMode.REPLACE
+      }
+    }) as ScalePoint;
+
+    const axisLocal = Cartesian3.normalize(pointLocal, new Cartesian3());
+    const xDot = Math.abs(Cartesian3.dot(new Cartesian3(1, 0, 0), axisLocal));
+    const yDot = Math.abs(Cartesian3.dot(new Cartesian3(0, 1, 0), axisLocal));
+    const zDot = Math.abs(Cartesian3.dot(new Cartesian3(0, 0, 1), axisLocal));
+    const cursorDirection =
+      xDot === 1 || yDot === 1
+        ? "ew-resize"
+        : zDot === 1
+        ? "ns-resize"
+        : "nesw-resize";
+
+    const onMouseOver = () => {
+      scalePoint.axisLine.show = true;
+      highlightScalePoint();
+      setCanvasCursor(scene, cursorDirection);
+    };
+
+    const onPick = () => {
+      scalePoint.axisLine.show = true;
+      highlightScalePoint();
+      setCanvasCursor(scene, cursorDirection);
+    };
+
+    const onRelease = () => {
+      scalePoint.axisLine.show = false;
+      unHighlightScalePoint();
+      this.onChange?.({ modelMatrix: this.modelMatrix, isFinished: true });
+      setCanvasCursor(scene, "auto");
+    };
+
+    const onMouseOut = () => {
+      scalePoint.axisLine.show = false;
+      unHighlightScalePoint();
+      setCanvasCursor(scene, "auto");
+    };
+
+    const onDrag = (mouseMove: MouseMove) => {
+      // TODO: Try to get position from closure
+      const position = scalePoint.position.getValue(JulianDate.now());
+      const oppositePosition = scalePoint.oppositeScalePoint.position.getValue(
+        JulianDate.now()
+      );
+      const axisVector = Cartesian3.subtract(
+        position,
+        oppositePosition,
+        new Cartesian3()
+      );
+      const length = Cartesian3.magnitude(axisVector);
+      const moveAxis = Cartesian3.normalize(axisVector, new Cartesian3());
+
+      // computeMoveAmount gives the pixels moved in the direction of the vector
+      // it is negative when moving oppposite to the vector
+      const { moveAmount, depthPixels } = computeMoveAmount(
+        this.scene,
+        position,
+        moveAxis,
+        1, //depth
+        mouseMove
+      );
+
+      const scaleAmount = moveAmount / length;
+
+      if (scaleAmount < 0) {
+        const pixelLengthAfterScaling =
+          depthPixels * length + depthPixels * length * scaleAmount;
+        const isDiagonal = axisLocal.x && axisLocal.y && axisLocal.y;
+        const pixelSideLengthAfterScaling = isDiagonal
+          ? pixelLengthAfterScaling / Math.sqrt(2)
+          : pixelLengthAfterScaling;
+        if (pixelSideLengthAfterScaling < 20) {
+          return;
+        }
+      }
+
+      // Multiply by vector to convert to move amount in world space
+      // This takes the direction of the vector
+      const scaleVectorWc = Cartesian3.multiplyByScalar(
+        axisVector,
+        scaleAmount,
+        new Cartesian3()
+      );
+
+      const scaleVectorLc = Matrix4.multiplyByPointAsVector(
+        this.inverseTransform,
+        scaleVectorWc,
+        new Cartesian3()
+      );
+
+      // This step removes the direction of the vector from the scale step
+      const scaleStep = Cartesian3.multiplyComponents(
+        scaleVectorLc,
+        // just the sign because we don't the values to be different from move step
+        new Cartesian3(
+          Math.sign(axisLocal.x),
+          Math.sign(axisLocal.y),
+          Math.sign(axisLocal.z)
+        ),
+        //axisLocal,
+        new Cartesian3()
+      );
+
+      const currentScale = Matrix4.getScale(
+        this.localTransform,
+        new Cartesian3()
+      );
+      const newScale = Cartesian3.add(
+        scaleStep,
+        currentScale,
+        new Cartesian3()
+      );
+
+      Matrix4.setScale(this.localTransform, newScale, this.localTransform);
+
+      const translationStep = Cartesian3.multiplyByScalar(
+        scaleVectorLc,
+        1 / 2,
+        new Cartesian3()
+      );
+
+      Matrix4.multiply(
+        Matrix4.fromTranslation(translationStep, new Matrix4()),
+        this.localTransform,
+        this.localTransform
+      );
+
+      this.updateBox();
+      this.onChange?.({ isFinished: false, modelMatrix: this.modelMatrix });
+    };
+
+    const adjacentSides = this.sides.filter(side => {
+      const plane = side.plane.plane?.getValue(JulianDate.now());
+      const isAdjacent = Cartesian3.dot(plane.normal, axisLocal) < 0;
+      return isAdjacent;
+    });
+
+    const updateOnCameraChange = () => {
+      const isFacingCamera = adjacentSides.some(side => side.isFacingCamera);
+      isFacingCamera ? brightenScalePoint() : dimScalePoint();
+    };
+
+    const highlightScalePoint = () => {
       const model = scalePoint.model;
       model.silhouetteColor = Color.YELLOW as any;
       model.silhouetteSize = 1 as any;
     };
 
-    const unHighlightScalePoint = (scalePoint: ScalePoint) => {
+    const unHighlightScalePoint = () => {
       const model = scalePoint.model;
       model.silhouetteColor = undefined;
       model.silhouetteSize = 0 as any;
     };
 
-    const dimScalePoint = (scalePoint: ScalePoint) => {
-      const model = scalePoint.model;
-      model.colorBlendMode = ColorBlendMode.MIX as any;
+    const dimScalePoint = () => {
+      style.pointColor = Color.GREY.withAlpha(0.2);
     };
 
-    const brightenScalePoint = (scalePoint: ScalePoint) => {
-      const model = scalePoint.model;
-      model.colorBlendMode = ColorBlendMode.HIGHLIGHT as any;
+    const brightenScalePoint = () => {
+      style.pointColor = Color.RED.withAlpha(1.0);
     };
 
-    const addScalePoint = (localPoint: Cartesian3) => {
-      const position = new Cartesian3();
-      const update = () => {
-        Matrix4.multiplyByPoint(this.modelMatrix, localPoint, position);
-      };
-      const scalePoint: ScalePoint = dataSource.entities.add({
-        position: new CallbackProperty(() => position, false) as any,
-        // point: {
-        //   show: false,
-        //   color: Color.YELLOW,
-        //   Size: 10
-        // },
-        // ellipsoid: {
-        //   show: false,
-        //   radii: new Cartesian3(5, 5, 5),
-        //   fill: true,
-        //   material: Color.LIME
-        // },
-        model: {
-          uri: require("file-loader!../../wwwroot/models/Box.glb"),
-          minimumPixelSize: 12,
-          shadows: ShadowMode.DISABLED
-        }
-      }) as ScalePoint;
+    scalePoint.onPick = onPick;
+    scalePoint.onRelease = onRelease;
+    scalePoint.onMouseOver = onMouseOver;
+    scalePoint.onMouseOut = onMouseOut;
+    scalePoint.onDrag = onDrag;
+    scalePoint.update = update;
+    scalePoint.updateOnCameraChange = updateOnCameraChange;
+    update();
+    return scalePoint;
+  }
 
-      const axisLocal = Cartesian3.normalize(localPoint, new Cartesian3());
-      const xDot = Math.abs(Cartesian3.dot(new Cartesian3(1, 0, 0), axisLocal));
-      const yDot = Math.abs(Cartesian3.dot(new Cartesian3(0, 1, 0), axisLocal));
-      const zDot = Math.abs(Cartesian3.dot(new Cartesian3(0, 0, 1), axisLocal));
-      const cursorDirection =
-        xDot === 1 || yDot === 1
-          ? "ew-resize"
-          : zDot === 1
-          ? "ns-resize"
-          : "nesw-resize";
-
-      const onMouseOver = (mouseMove: MouseMove) => {
-        scalePoint.axisLine.show = true;
-        highlightScalePoint(scalePoint);
-        setCanvasCursor(scene, cursorDirection);
-      };
-
-      const onPick = (click: MouseClick) => {
-        scalePoint.axisLine.show = true;
-        highlightScalePoint(scalePoint);
-        setCanvasCursor(scene, cursorDirection);
-      };
-
-      const onRelease = (click: MouseClick) => {
-        scalePoint.axisLine.show = false;
-        unHighlightScalePoint(scalePoint);
-        this.onChange?.({ modelMatrix: this.modelMatrix, isFinished: true });
-        setCanvasCursor(scene, "auto");
-      };
-
-      const onMouseOut = (mouseMove: MouseMove) => {
-        scalePoint.axisLine.show = false;
-        unHighlightScalePoint(scalePoint);
-        setCanvasCursor(scene, "auto");
-      };
-
-      const onDrag = (mouseMove: MouseMove) => {
-        // TODO: Try to get position from closure
-        const position = scalePoint.position.getValue(JulianDate.now());
-        const oppositePosition = scalePoint.oppositeScalePoint.position.getValue(
-          JulianDate.now()
-        );
-        const axisVector = Cartesian3.subtract(
-          position,
-          oppositePosition,
-          new Cartesian3()
-        );
-        const length = Cartesian3.magnitude(axisVector);
-        const moveAxis = Cartesian3.normalize(axisVector, new Cartesian3());
-
-        // computeMoveAmount gives the pixels moved in the direction of the vector
-        // it is negative when moving oppposite to the vector
-        const { moveAmount, depthPixels } = computeMoveAmount(
-          this.scene,
-          position,
-          moveAxis,
-          1, //depth
-          mouseMove
-        );
-
-        const scaleAmount = moveAmount / length;
-
-        if (scaleAmount < 0) {
-          const pixelLengthAfterScaling =
-            depthPixels * length + depthPixels * length * scaleAmount;
-          const isDiagonal = axisLocal.x && axisLocal.y && axisLocal.y;
-          const pixelSideLengthAfterScaling = isDiagonal
-            ? pixelLengthAfterScaling / Math.sqrt(2)
-            : pixelLengthAfterScaling;
-          if (pixelSideLengthAfterScaling < 20) {
-            return;
-          }
-        }
-
-        // Multiply by vector to convert to move amount in world space
-        // This takes the direction of the vector
-        const scaleVectorWc = Cartesian3.multiplyByScalar(
-          axisVector,
-          scaleAmount,
-          new Cartesian3()
-        );
-
-        const scaleVectorLc = Matrix4.multiplyByPointAsVector(
-          this.inverseTransform,
-          scaleVectorWc,
-          new Cartesian3()
-        );
-
-        // This step removes the direction of the vector from the scale step
-        const scaleStep = Cartesian3.multiplyComponents(
-          scaleVectorLc,
-          // just the sign because we don't the values to be different from move step
-          new Cartesian3(
-            Math.sign(axisLocal.x),
-            Math.sign(axisLocal.y),
-            Math.sign(axisLocal.z)
-          ),
-          //axisLocal,
-          new Cartesian3()
-        );
-
-        const currentScale = Matrix4.getScale(
-          this.localTransform,
-          new Cartesian3()
-        );
-        const newScale = Cartesian3.add(
-          scaleStep,
-          currentScale,
-          new Cartesian3()
-        );
-
-        Matrix4.setScale(this.localTransform, newScale, this.localTransform);
-
-        const translationStep = Cartesian3.multiplyByScalar(
-          scaleVectorLc,
-          1 / 2,
-          new Cartesian3()
-        );
-
-        Matrix4.multiply(
-          Matrix4.fromTranslation(translationStep, new Matrix4()),
-          this.localTransform,
-          this.localTransform
-        );
-
-        this.updateBox();
-        this.onChange?.({ isFinished: false, modelMatrix: this.modelMatrix });
-      };
-
-      const updateOnCameraChange = () => {
-        const screenPosition = scene.cartesianToCanvasCoordinates(
-          position,
-          new Cartesian2()
-        );
-        const pick = scene.pick(screenPosition);
-        const isPointPickableNow = pick?.id === scalePoint;
-        if (isPointPickableNow !== isPointPickable) {
-          isPointPickable
-            ? brightenScalePoint(scalePoint)
-            : dimScalePoint(scalePoint);
-        }
-        isPointPickable = isPointPickableNow;
-        if (axisLocal.y === 1) {
-          console.log(
-            "**cam**",
-            axisLocal,
-            isPointPickable,
-            position,
-            screenPosition,
-            pick?.id
-          );
-        }
-      };
-
-      scalePoint.onPick = onPick;
-      scalePoint.onRelease = onRelease;
-      scalePoint.onMouseOver = onMouseOver;
-      scalePoint.onMouseOut = onMouseOut;
-      scalePoint.onDrag = onDrag;
-      scalePoint.update = update;
-      //scalePoint.updateOnCameraChange = debounce(updateOnCameraChange, 100);
-      update();
-      return scalePoint;
-    };
-
-    const addScaleAxis = (scalePoint1: ScalePoint, scalePoint2: ScalePoint) => {
-      const position1 = scalePoint1.position?.getValue(JulianDate.now())!;
-      const position2 = scalePoint2.position?.getValue(JulianDate.now())!;
-      const scaleAxis = dataSource.entities.add({
-        show: false,
-        polyline: {
-          positions: new CallbackProperty(
-            () => [position1, position2],
-            false
-          ) as any,
-          material: new PolylineDashMaterialProperty({
-            color: Color.CYAN,
-            dashLength: 8
-          }),
-          arcType: ArcType.NONE
-        }
-      });
-      return scaleAxis;
-    };
-
-    SCALE_POINT_VECTORS.forEach(vector => {
-      const localPoint1 = vector;
-      const localPoint2 = Cartesian3.multiplyByScalar(
-        vector,
-        -1,
-        new Cartesian3()
-      );
-      const scalePoint1 = addScalePoint(localPoint1);
-      const scalePoint2 = addScalePoint(localPoint2);
-      scalePoint1.oppositeScalePoint = scalePoint2;
-      scalePoint2.oppositeScalePoint = scalePoint1;
-      const axisLine = addScaleAxis(scalePoint1, scalePoint2);
-      scalePoint1.axisLine = axisLine;
-      scalePoint2.axisLine = axisLine;
+  createScaleAxisLine(
+    scalePoint1: ScalePoint,
+    scalePoint2: ScalePoint
+  ): Entity {
+    const position1 = scalePoint1.position?.getValue(JulianDate.now())!;
+    const position2 = scalePoint2.position?.getValue(JulianDate.now())!;
+    const scaleAxis = new Entity({
+      show: false,
+      polyline: {
+        positions: new CallbackProperty(
+          () => [position1, position2],
+          false
+        ) as any,
+        material: new PolylineDashMaterialProperty({
+          color: Color.CYAN,
+          dashLength: 8
+        }),
+        arcType: ArcType.NONE
+      }
     });
+    return scaleAxis;
   }
 }
 

@@ -134,6 +134,9 @@ function ClippingMixin<T extends Constructor<BaseType>>(
         !options.clipModel ||
         !options.showEditorUi
       ) {
+        if (this._clippingBoxDrawing) {
+          this._clippingBoxDrawing = undefined;
+        }
         return;
       }
 
