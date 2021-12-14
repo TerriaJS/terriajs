@@ -587,8 +587,9 @@ export default class Terria {
   ) {
     const terriaError = TerriaError.from(error, overrides);
 
-    // Set shouldRaiseToUser true if forceRaiseToUser agrument is true
-    if (forceRaiseToUser) terriaError.overrideRaiseToUser = true;
+    // Set overrideRaiseToUser if forceRaiseToUser agrument is true and overrideRaiseToUser isn't already defined
+    if (forceRaiseToUser && !isDefined(terriaError.overrideRaiseToUser))
+      terriaError.overrideRaiseToUser = true;
 
     // Log error to error service
     this.errorService.error(terriaError);

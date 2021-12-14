@@ -1,12 +1,20 @@
 import i18next from "i18next";
 import { computed, toJS } from "mobx";
+import {
+  downloadInterruptedByUserError,
+  fetchBlob,
+  fetchJson,
+  isOverMaxSizeResponse,
+  LoadOptions,
+  LoadOptionsWithMaxSize
+} from "../../../Core/fetchWithProgress";
 import isDefined from "../../../Core/isDefined";
-import JsonValue, { isJsonObject } from "../../../Core/Json";
-import loadBlob, { parseZipJsonBlob, isZip } from "../../../Core/loadBlob";
-import loadJson from "../../../Core/loadJson";
+import JsonValue, { isJsonObject, JsonObject } from "../../../Core/Json";
+import { isZip, parseZipJsonBlob } from "../../../Core/loadBlob";
 import readJson from "../../../Core/readJson";
 import TerriaError from "../../../Core/TerriaError";
 import GeoJsonMixin, {
+  FeatureCollectionWithCrs,
   toFeatureCollection
 } from "../../../ModelMixins/GeojsonMixin";
 import GeoJsonCatalogItemTraits from "../../../Traits/TraitsClasses/GeoJsonCatalogItemTraits";
@@ -36,7 +44,7 @@ class GeoJsonCatalogItem extends GeoJsonMixin(
     return isDefined(this._file);
   }
 
-  protected async forceLoadGeojsonData() {
+  protected async forceLoadGeojsonData(): Promise<FeatureCollectionWithCrs> {
     let jsonData: JsonValue | undefined = undefined;
 
     // GeoJsonCatalogItemTraits.geoJsonData
@@ -60,20 +68,37 @@ class GeoJsonCatalogItem extends GeoJsonMixin(
     // GeojsonTraits.url
     else if (this.url) {
       // URL to zipped fle
-      if (isZip(this.url)) {
-        if (typeof FileReader === "undefined") {
-          throw fileApiNotSupportedError(this.terria);
-        }
-        const body = this.requestData ? toJS(this.requestData) : undefined;
-        const blob = await loadBlob(this.url, undefined, body);
-        jsonData = await parseZipJsonBlob(blob);
+      const url = proxyCatalogItemUrl(this, this.url);
+
+      if (isZip(url) && typeof FileReader === "undefined") {
+        throw fileApiNotSupportedError(this.terria);
+      }
+
+      const fetchOptions: LoadOptionsWithMaxSize | LoadOptions = {
+        bodyObject: this.requestData
+          ? (toJS(this.requestData) as JsonObject)
+          : undefined,
+        asForm: this.postRequestDataAsFormData,
+        fileSizeToPrompt: 50 * 1024 * 1024, // 50 MB,
+        maxFileSize: 250 * 1024 * 1024, // 250 MB,
+        model: this
+      };
+
+      const response = (
+        await (isZip(url)
+          ? fetchBlob(url, fetchOptions)
+          : fetchJson(url, fetchOptions))
+      ).throwIfUndefined("Failed to download GeoJSON");
+
+      if (isOverMaxSizeResponse<Blob | JsonValue>(response)) {
+        this.resetLoadMapItems();
+        throw downloadInterruptedByUserError(response);
       } else {
-        jsonData = await loadJson(
-          proxyCatalogItemUrl(this, this.url),
-          undefined,
-          this.requestData ? toJS(this.requestData) : undefined,
-          this.postRequestDataAsFormData
-        );
+        if (response.response instanceof Blob) {
+          jsonData = await parseZipJsonBlob(response.response);
+        } else {
+          jsonData = response.response;
+        }
       }
     }
 
