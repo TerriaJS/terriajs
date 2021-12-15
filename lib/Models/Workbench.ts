@@ -191,15 +191,16 @@ export default class Workbench {
       }
     }
 
+    // Add warning message if item isn't mappable or chartable
     if (
       !error &&
       !MappableMixin.isMixedInto(item) &&
       !ChartableMixin.isMixedInto(item)
     ) {
-      this.remove(item);
-      throw `${getName(
-        item
-      )} cannot be added to the workbench - as there is nothing to visualize`;
+      error = TerriaError.from(
+        `${getName(item)} doesn't have anything to visualize`,
+        TerriaErrorSeverity.Warning
+      );
     }
 
     if (!error && CatalogMemberMixin.isMixedInto(item))

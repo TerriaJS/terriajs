@@ -884,8 +884,9 @@
       "name": "Bing Maps"
     },
     "wcs": {
+      "asyncResultLoadingMetadata": "WCS loading:\n{{name}} service at {{timestamp}}.\n\n*Loading metadata (`DescribeCoverage`)*",
       "asyncResultDescription": "This is the result of exporting data from {{name}} service at {{timestamp}} with the input parameters below.",
-      "asyncPendingDescription": "WCS loading:<br/>{{name}} service at {{timestamp}}.",
+      "asyncPendingDescription": "WCS loading:\n{{name}} service at {{timestamp}}.\n\n*Downloading coverage*",
       "exportFailedTitle": "Data export failed",
       "exportFailedMessage": "The Web Coverage Service failed",
       "exportFailedMessageII": "The Web Coverage Service failed: {{error}}"
