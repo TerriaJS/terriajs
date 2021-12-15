@@ -438,6 +438,14 @@ export default class BoxDrawing {
       ? Axis.Y
       : Axis.Z;
 
+    const scratchDirection = new Cartesian3();
+    const scratchMoveVectorWc = new Cartesian3();
+    const scratchMoveVectorLc = new Cartesian3();
+    const scratchPreviousPosition = new Cartesian3();
+    const scratchEndPosition = new Cartesian3();
+    const scratchTranslation = new Cartesian3();
+    const scratchTranslationMatrix = new Matrix4();
+
     const onDragSide = (mouseMove: MouseMove) => {
       const moveUpDown = axis === Axis.Z;
       let translation = Cartesian3.ZERO.clone();
@@ -445,12 +453,13 @@ export default class BoxDrawing {
         Matrix4.multiplyByPointAsVector(
           this.modelMatrix,
           plane.normal,
-          new Cartesian3()
+          scratchDirection
         ),
-        new Cartesian3()
+        scratchDirection
       );
 
       if (moveUpDown) {
+        // Move up or down when dragged on the top or bottom faces
         const { moveAmount: pixelMoveAmount } = computeMoveAmount(
           scene,
           position,
@@ -458,90 +467,31 @@ export default class BoxDrawing {
           1,
           mouseMove
         );
+        // direction and magnitude of move in world-coordinates
         const moveVectorWc = Cartesian3.multiplyByScalar(
           direction,
           pixelMoveAmount,
-          new Cartesian3()
+          scratchMoveVectorWc
         );
+        // direction and magnitude of move in local-coordinates
         const moveVectorLc = Matrix4.multiplyByPointAsVector(
           this.inverseTransform,
           moveVectorWc,
-          new Cartesian3()
+          scratchMoveVectorLc
         );
 
         translation = Cartesian3.clone(moveVectorLc, translation);
       } else {
-        // const axisName = axis === Axis.X ? "x" : "y";
-        // const crossAxisName = axis === Axis.X ? "y" : "x";
-        // const { moveAmount } = computeMoveAmount(
-        //   scene,
-        //   position,
-        //   direction,
-        //   1,
-        //   mouseMove
-        // );
-        // const moveVectorWc = Cartesian3.multiplyByScalar(
-        //   direction,
-        //   moveAmount,
-        //   new Cartesian3()
-        // );
-        // const moveVectorLc = Matrix4.multiplyByPointAsVector(
-        //   this.inverseTransform,
-        //   moveVectorWc,
-        //   new Cartesian3()
-        // );
-        // Cartesian3.add(translation, moveVectorLc, translation);
-        // const axis = side.plane.plane?.getValue(JulianDate.now()).normal;
-        // const crossSide = sides.find(
-        //   side =>
-        //     Cartesian3.cross(
-        //       axis,
-        //       side.plane.plane?.getValue(JulianDate.now()).normal,
-        //       new Cartesian3()
-        //     ).z !== 0
-        // );
-        // if (crossSide) {
-        //   const crossPlane = crossSide.plane.plane?.getValue(
-        //     JulianDate.now()
-        //   );
-        //   const crossPosition = side.position?.getValue(JulianDate.now());
-        //   const crossDirection = Cartesian3.normalize(
-        //     Matrix4.multiplyByPointAsVector(
-        //       this.modelMatrix,
-        //       crossPlane.normal,
-        //       new Cartesian3()
-        //     ),
-        //     new Cartesian3()
-        //   );
-        //   const { moveAmount: crossMoveAmount } = computeMoveAmount(
-        //     scene,
-        //     crossPosition!,
-        //     crossDirection,
-        //     1,
-        //     mouseMove
-        //   );
-        //   const crossMoveVectorWc = Cartesian3.multiplyByScalar(
-        //     crossDirection,
-        //     crossMoveAmount,
-        //     new Cartesian3()
-        //   );
-        //   const crossMoveVectorLc = Matrix4.multiplyByPointAsVector(
-        //     this.inverseTransform,
-        //     crossMoveVectorWc,
-        //     new Cartesian3()
-        //   );
-        //   Cartesian3.add(translation, crossMoveVectorLc, translation);
-        // }
         //Move along the globe surface when dragging any other side
         const previousPosition = screenToGlobePosition(
           scene,
           mouseMove.startPosition,
-          new Cartesian3()
+          scratchPreviousPosition
         );
         const endPosition = screenToGlobePosition(
           scene,
           mouseMove.endPosition,
-          new Cartesian3()
+          scratchEndPosition
         );
         if (!previousPosition || !endPosition) {
           return;
@@ -550,20 +500,25 @@ export default class BoxDrawing {
         const previousLc = Matrix4.multiplyByPoint(
           this.inverseTransform,
           previousPosition,
-          new Cartesian3()
+          scratchPreviousPosition
         );
         // End position in local coordinates
         const endLc = Matrix4.multiplyByPoint(
           this.inverseTransform,
           endPosition,
-          new Cartesian3()
+          scratchEndPosition
         );
-        translation = Cartesian3.subtract(endLc, previousLc, new Cartesian3());
+        translation = Cartesian3.subtract(
+          endLc,
+          previousLc,
+          scratchTranslation
+        );
+        // Zero height movement
         translation.z = 0;
       }
 
       Matrix4.multiply(
-        Matrix4.fromTranslation(translation, new Matrix4()),
+        Matrix4.fromTranslation(translation, scratchTranslationMatrix),
         this.localTransform,
         this.localTransform
       );
@@ -608,15 +563,18 @@ export default class BoxDrawing {
       this.onChange?.({ modelMatrix: this.modelMatrix, isFinished: true });
     };
 
+    const scratchNormal = new Cartesian3();
     const updateOnCameraChange = () => {
       const normalWc = Cartesian3.normalize(
         Matrix4.multiplyByPointAsVector(
           this.modelMatrix,
           plane.normal,
-          new Cartesian3()
+          scratchNormal
         ),
-        new Cartesian3()
+        scratchNormal
       );
+      // The side normals point inwards, so when facing the camera the camera
+      // vector also points inwards which gives a positive dot product.
       side.isFacingCamera =
         Cartesian3.dot(normalWc, scene.camera.direction) >= 0;
     };
@@ -704,26 +662,39 @@ export default class BoxDrawing {
       setCanvasCursor(scene, "auto");
     };
 
+    const scratchOppositePosition = new Cartesian3();
+    const scratchAxisVectorWc = new Cartesian3();
+    const scratchMoveDirection = new Cartesian3();
+    const scratchScaleVectorWc = new Cartesian3();
+    const scratchScaleVectorLc = new Cartesian3();
+    const scratchScaleStep = new Cartesian3();
+    const scratchCurrentScale = new Cartesian3();
+    const scratchNewScale = new Cartesian3();
+    const scratchTranslationStep = new Cartesian3();
+    const scratchTranslationMatrix = new Matrix4();
+
     const onDrag = (mouseMove: MouseMove) => {
-      // TODO: Try to get position from closure
-      const position = scalePoint.position.getValue(JulianDate.now());
       const oppositePosition = scalePoint.oppositeScalePoint.position.getValue(
-        JulianDate.now()
+        JulianDate.now(),
+        scratchOppositePosition
       );
-      const axisVector = Cartesian3.subtract(
+      const axisVectorWc = Cartesian3.subtract(
         position,
         oppositePosition,
-        new Cartesian3()
+        scratchAxisVectorWc
       );
-      const length = Cartesian3.magnitude(axisVector);
-      const moveAxis = Cartesian3.normalize(axisVector, new Cartesian3());
+      const length = Cartesian3.magnitude(axisVectorWc);
+      const moveDirection = Cartesian3.normalize(
+        axisVectorWc,
+        scratchMoveDirection
+      );
 
       // computeMoveAmount gives the pixels moved in the direction of the vector
       // it is negative when moving oppposite to the vector
       const { moveAmount, depthPixels } = computeMoveAmount(
         this.scene,
         position,
-        moveAxis,
+        moveDirection,
         1, //depth
         mouseMove
       );
@@ -745,15 +716,15 @@ export default class BoxDrawing {
       // Multiply by vector to convert to move amount in world space
       // This takes the direction of the vector
       const scaleVectorWc = Cartesian3.multiplyByScalar(
-        axisVector,
+        axisVectorWc,
         scaleAmount,
-        new Cartesian3()
+        scratchScaleVectorWc
       );
 
       const scaleVectorLc = Matrix4.multiplyByPointAsVector(
         this.inverseTransform,
         scaleVectorWc,
-        new Cartesian3()
+        scratchScaleVectorLc
       );
 
       // This step removes the direction of the vector from the scale step
@@ -765,30 +736,27 @@ export default class BoxDrawing {
           Math.sign(axisLocal.y),
           Math.sign(axisLocal.z)
         ),
-        //axisLocal,
-        new Cartesian3()
+        scratchScaleStep
       );
 
       const currentScale = Matrix4.getScale(
         this.localTransform,
-        new Cartesian3()
+        scratchCurrentScale
       );
-      const newScale = Cartesian3.add(
-        scaleStep,
-        currentScale,
-        new Cartesian3()
-      );
+      const newScale = Cartesian3.add(scaleStep, currentScale, scratchNewScale);
 
+      // Update box scale
       Matrix4.setScale(this.localTransform, newScale, this.localTransform);
 
       const translationStep = Cartesian3.multiplyByScalar(
         scaleVectorLc,
         1 / 2,
-        new Cartesian3()
+        scratchTranslationStep
       );
 
+      // Update box translation
       Matrix4.multiply(
-        Matrix4.fromTranslation(translationStep, new Matrix4()),
+        Matrix4.fromTranslation(translationStep, scratchTranslationMatrix),
         this.localTransform,
         this.localTransform
       );
