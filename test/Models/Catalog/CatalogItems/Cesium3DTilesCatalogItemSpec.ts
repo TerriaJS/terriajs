@@ -147,7 +147,8 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
       try {
         await item.loadMapItems();
       } catch {}
-      expect(item.mapItems[0].maximumScreenSpaceError).toBe(3);
+      const tileset = item.mapItems[0] as Cesium3DTileset;
+      expect(tileset.maximumScreenSpaceError).toBe(3);
     });
   });
 
@@ -186,13 +187,15 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
 
           it("sets the shadow mode", function() {
             runInAction(() => item.setTrait("definition", "shadows", "CAST"));
-            expect(item.mapItems[0].shadows).toBe(ShadowMode.CAST_ONLY);
+            const tileset = item.mapItems[0] as Cesium3DTileset;
+            expect(tileset.shadows).toBe(ShadowMode.CAST_ONLY);
           });
 
           it("sets the color blend mode", function() {
             runInAction(() => {
               item.setTrait("definition", "colorBlendMode", "REPLACE");
-              expect(item.mapItems[0].colorBlendMode).toBe(
+              const tileset = item.mapItems[0] as Cesium3DTileset;
+              expect(tileset.colorBlendMode).toBe(
                 Cesium3DTileColorBlendMode.REPLACE
               );
             });
@@ -201,13 +204,15 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
           it("sets the color blend amount", function() {
             runInAction(() => {
               item.setTrait("user", "colorBlendAmount", 0.42);
-              expect(item.mapItems[0].colorBlendAmount).toBe(0.42);
+              const tileset = item.mapItems[0] as Cesium3DTileset;
+              expect(tileset.colorBlendAmount).toBe(0.42);
             });
           });
 
           it("sets the shadow mode", function() {
             runInAction(() => item.setTrait("definition", "shadows", "CAST"));
-            expect(item.mapItems[0].shadows).toBe(ShadowMode.CAST_ONLY);
+            const tileset = item.mapItems[0] as Cesium3DTileset;
+            expect(tileset.shadows).toBe(ShadowMode.CAST_ONLY);
           });
 
           it("sets the style", function() {
@@ -216,7 +221,8 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
                 show: "${ZipCode} === '19341'"
               })
             );
-            expect(item.mapItems[0].style).toBe((<any>item).cesiumTileStyle);
+            const tileset = item.mapItems[0] as Cesium3DTileset;
+            expect(tileset.style).toBe((<any>item).cesiumTileStyle);
           });
 
           // TODO: fix later
@@ -234,8 +240,9 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
           // });
 
           it("sets the rootTransform to IDENTITY", function() {
+            const tileset = item.mapItems[0] as Cesium3DTileset;
             expect(
-              Matrix4.equals(item.mapItems[0].root.transform, Matrix4.IDENTITY)
+              Matrix4.equals(tileset.root.transform, Matrix4.IDENTITY)
             ).toBeTruthy();
           });
 
@@ -258,7 +265,8 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
               })
             );
             item.setTrait(CommonStrata.user, "scale", 5);
-            const modelMatrix = item.mapItems[0].modelMatrix;
+            const tileset = item.mapItems[0] as Cesium3DTileset;
+            const modelMatrix = tileset.modelMatrix;
             const rotation = HeadingPitchRoll.fromQuaternion(
               Quaternion.fromRotationMatrix(
                 Matrix4.getMatrix3(modelMatrix, new Matrix3())

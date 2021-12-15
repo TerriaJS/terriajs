@@ -191,8 +191,8 @@ export default class BoxDrawing {
 
   /**
    * @param cesium A Cesium instance
-   * @param transform A transformation that converts the box to world space.
-   * @param onChange An optional event notifier callback that gets called when the box is transformed.
+   * @param transform A transformation that positions the box in the world.
+   * @param onChange An optional event notifier callback that is called when the box is transformed.
    */
   constructor(
     readonly cesium: Cesium,
