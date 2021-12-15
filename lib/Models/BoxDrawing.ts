@@ -27,7 +27,6 @@ import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import Cesium from "./Cesium";
 
 export type ChangeEvent = {
-  eventName: "move" | "scale";
   isFinished: boolean;
   modelMatrix: Matrix4;
 };
@@ -38,8 +37,14 @@ type MouseClick = { position: Cartesian2 };
 
 type MouseMove = { startPosition: Cartesian2; endPosition: Cartesian2 };
 
+/**
+ * An object that responds to box parameter updates.
+ */
 type Updatable = { update: () => void };
 
+/**
+ * A user interactable object
+ */
 type Interactable = {
   onMouseOver: (mouseMove: MouseMove) => void;
   onMouseOut: (mouseMove: MouseMove) => void;
@@ -48,10 +53,16 @@ type Interactable = {
   onDrag: (mouseMove: MouseMove) => void;
 };
 
+/**
+ * An object that responds to camera changes
+ */
 type CameraAware = {
   updateOnCameraChange: () => void;
 };
 
+/**
+ * A box side
+ */
 type Side = Entity &
   Updatable &
   Interactable &
@@ -62,6 +73,9 @@ type Side = Entity &
     unHighlight: () => void;
   };
 
+/**
+ * Style for a box side
+ */
 type SideStyle = {
   fillColor: Color;
   outlineColor: Color;
@@ -69,28 +83,37 @@ type SideStyle = {
   highlightOutlineColor: Color;
 };
 
+/**
+ * A scale grip point
+ */
 type ScalePoint = Entity &
   Updatable &
   Interactable &
   CameraAware & {
     position: PositionProperty;
     model: ModelGraphics;
-    // ellipsoid: EllipsoidGraphics;
     oppositeScalePoint: ScalePoint;
     axisLine: Entity;
   };
 
+/**
+ * Style for a scale point
+ */
 type ScalePointStyle = {
   cornerPointColor: Color;
   facePointColor: Color;
   dimPointColor: Color;
 };
 
+/**
+ * The current interaction state of the box
+ */
 type InteractionState =
   | { is: "none" }
   | { is: "picked"; entity: Entity & Interactable }
   | { is: "hovering"; entity: Entity & Interactable };
 
+// The 6 box sides defined as planes in local coordinate space.
 const SIDE_PLANES: Plane[] = [
   new Plane(new Cartesian3(0, 0, 1), 0.5),
   new Plane(new Cartesian3(0, 0, -1), 0.5),
@@ -100,6 +123,9 @@ const SIDE_PLANES: Plane[] = [
   new Plane(new Cartesian3(-1, 0, 0), 0.5)
 ];
 
+// The box has 8 corner points and 6 face points that act as scaling grips.
+// Here we represent them as 7 vectors in local coordinates space.
+// Each vector represents a point and its opposite points can be easily derived from it.
 const SCALE_POINT_VECTORS = [
   new Cartesian3(0.5, 0.5, 0.5),
   new Cartesian3(0.5, -0.5, 0.5),
@@ -110,10 +136,16 @@ const SCALE_POINT_VECTORS = [
   new Cartesian3(0.0, 0.0, 0.5)
 ];
 
+/**
+ * Checks whether the given entity is updatable (i.e repsonds to box parameter changes).
+ */
 function isUpdatable(entity: Entity): entity is Entity & Updatable {
   return typeof (entity as any).update === "function";
 }
 
+/**
+ * Checks whether the given entity is interactable.
+ */
 function isInteractable(entity: Entity): entity is Entity & Interactable {
   return (
     typeof (entity as any).onPick === "function" &&
@@ -126,20 +158,42 @@ function isInteractable(entity: Entity): entity is Entity & Interactable {
 export default class BoxDrawing {
   static localSidePlanes = SIDE_PLANES;
 
+  // Observable because we want to start/stop interactions when the datasource
+  // gets used/removed.
   @observable dataSource: CustomDataSource;
 
-  private readonly modelMatrix: Matrix4 = Matrix4.IDENTITY.clone();
+  // An external transform to convert the box in local coordinates to world coordinates
+  private readonly worldTransform: Matrix4 = Matrix4.IDENTITY.clone();
+
+  // Inverse of world transform
+  private readonly inverseWorldTransform: Matrix4 = Matrix4.IDENTITY.clone();
+
+  // Transformations in local coordinates. All box transformations are made in
+  // the local space.
   private readonly localTransform: Matrix4 = Matrix4.IDENTITY.clone();
-  private readonly transform: Matrix4 = Matrix4.IDENTITY.clone();
-  private readonly inverseTransform: Matrix4 = Matrix4.IDENTITY.clone();
+
+  // The final transform that combines the local changes and the world transform.
+  private readonly modelMatrix: Matrix4 = Matrix4.IDENTITY.clone();
+
+  // Current box position in the world coordinates derived from modelMatrix
   private readonly boxPosition: Cartesian3 = new Cartesian3();
 
   private scene: Scene;
+
+  // A disposer function to destroy all event handlers
   private interactionsDisposer?: () => void;
 
+  // Sides of the box defined as cesium entities with additional properties
   private readonly sides: Side[] = [];
+
+  // Scale points on the box defined as cesium entities with additional properties
   private readonly scalePoints: ScalePoint[] = [];
 
+  /**
+   * @param cesium A Cesium instance
+   * @param transform A transformation that converts the box to world space.
+   * @param onChange An optional event notifier callback that gets called when the box is transformed.
+   */
   constructor(
     readonly cesium: Cesium,
     transform: Matrix4,
@@ -166,9 +220,19 @@ export default class BoxDrawing {
   }
 
   /**
-   * Start interactions if not already started.
+   * A method to udpate the world transform.
    */
-  startInteractions() {
+  public setTransform(transform: Matrix4) {
+    Matrix4.clone(transform, this.worldTransform);
+    Matrix4.inverse(this.worldTransform, this.inverseWorldTransform);
+    Matrix4.clone(Matrix4.IDENTITY, this.localTransform);
+    this.updateBox();
+  }
+
+  /**
+   * Sets up event handlers if not already done.
+   */
+  private startInteractions() {
     if (this.interactionsDisposer) {
       // already started
       return;
@@ -220,19 +284,19 @@ export default class BoxDrawing {
     onCameraChange();
   }
 
-  stopInteractions() {
+  private stopInteractions() {
     this.interactionsDisposer?.();
   }
 
-  setTransform(transform: Matrix4) {
-    Matrix4.clone(transform, this.transform);
-    Matrix4.inverse(this.transform, this.inverseTransform);
-    Matrix4.clone(Matrix4.IDENTITY, this.localTransform);
-    this.updateBox();
-  }
-
-  updateBox() {
-    Matrix4.multiply(this.transform, this.localTransform, this.modelMatrix);
+  /**
+   * Updates all box parameters from changes to the localTransform.
+   */
+  private updateBox() {
+    Matrix4.multiply(
+      this.worldTransform,
+      this.localTransform,
+      this.modelMatrix
+    );
     Matrix4.getTranslation(this.modelMatrix, this.boxPosition);
 
     this.dataSource.entities.values.forEach(entity => {
@@ -240,7 +304,10 @@ export default class BoxDrawing {
     });
   }
 
-  isBoxInCameraView() {
+  /**
+   * Returns true if the box is in camera view.
+   */
+  private isBoxInCameraView() {
     const viewRectangle = this.scene.camera.computeViewRectangle(
       undefined,
       new Rectangle()
@@ -254,7 +321,10 @@ export default class BoxDrawing {
       : false;
   }
 
-  createEventHandler() {
+  /**
+   * Create event handlers for interacting with the box.
+   */
+  private createEventHandler() {
     const scene = this.scene;
     let state: InteractionState = { is: "none" };
     const handlePick = (click: MouseClick) => {
@@ -345,12 +415,18 @@ export default class BoxDrawing {
     return handler;
   }
 
-  drawBox() {
+  /**
+   * Draw the box.
+   */
+  private drawBox() {
     this.drawSides();
     this.drawScalePoints();
   }
 
-  drawSides() {
+  /**
+   * Draw sides of the box.
+   */
+  private drawSides() {
     SIDE_PLANES.forEach(sideLocal => {
       const side = this.createSide(sideLocal);
       this.dataSource.entities.add(side);
@@ -358,7 +434,10 @@ export default class BoxDrawing {
     });
   }
 
-  drawScalePoints() {
+  /**
+   * Draw the scale grip points.
+   */
+  private drawScalePoints() {
     SCALE_POINT_VECTORS.forEach(vector => {
       const pointLocal1 = vector;
       const pointLocal2 = Cartesian3.multiplyByScalar(
@@ -380,7 +459,13 @@ export default class BoxDrawing {
     });
   }
 
-  createSide(planeLocal: Plane): Side {
+  /**
+   * Create a box side drawing.
+   *
+   * @param planeLocal A plane representing the side in local coordinates.
+   * @returns side A cesium entity for the box side.
+   */
+  private createSide(planeLocal: Plane): Side {
     const scene = this.scene;
     const position = new Cartesian3();
     const plane = new Plane(new Cartesian3(), 0);
@@ -446,9 +531,16 @@ export default class BoxDrawing {
     const scratchTranslation = new Cartesian3();
     const scratchTranslationMatrix = new Matrix4();
 
-    const onDragSide = (mouseMove: MouseMove) => {
+    /**
+     * Moves the box when dragging a side.
+     *  - When dragging the top or bottom sides, we move the box up or down along the z-axis.
+     *  - When dragging any other sides we move the box along the globe surface.
+     */
+    const moveBoxOnDragSide = (mouseMove: MouseMove) => {
       const moveUpDown = axis === Axis.Z;
-      let translation = Cartesian3.ZERO.clone();
+      let translation = scratchTranslation;
+
+      // Get the move direction in world coordinates
       const direction = Cartesian3.normalize(
         Matrix4.multiplyByPointAsVector(
           this.modelMatrix,
@@ -460,21 +552,22 @@ export default class BoxDrawing {
 
       if (moveUpDown) {
         // Move up or down when dragged on the top or bottom faces
+        // moveAmount is proportional to the mouse movement along the provided direction
         const moveAmount = computeMoveAmount(
           scene,
           position,
           direction,
           mouseMove
         );
-        // Get the direction and magnitude of move in world-coordinates
+        // Get the direction and magnitude of the move in world-coordinates
         const moveVectorWc = Cartesian3.multiplyByScalar(
           direction,
           moveAmount,
           scratchMoveVectorWc
         );
-        // Get the direction and magnitude of move in local-coordinates
+        // Get the direction and magnitude of the move in local-coordinates
         const moveVectorLc = Matrix4.multiplyByPointAsVector(
-          this.inverseTransform,
+          this.inverseWorldTransform,
           moveVectorWc,
           scratchMoveVectorLc
         );
@@ -497,25 +590,22 @@ export default class BoxDrawing {
         }
         // Previous position in local coordinates
         const previousLc = Matrix4.multiplyByPoint(
-          this.inverseTransform,
+          this.inverseWorldTransform,
           previousPosition,
           scratchPreviousPosition
         );
         // End position in local coordinates
         const endLc = Matrix4.multiplyByPoint(
-          this.inverseTransform,
+          this.inverseWorldTransform,
           endPosition,
           scratchEndPosition
         );
-        translation = Cartesian3.subtract(
-          endLc,
-          previousLc,
-          scratchTranslation
-        );
+        translation = Cartesian3.subtract(endLc, previousLc, translation);
         // Zero height movement
         translation.z = 0;
       }
 
+      // Update box position and fire change event
       Matrix4.multiply(
         Matrix4.fromTranslation(translation, scratchTranslationMatrix),
         this.localTransform,
@@ -581,7 +671,7 @@ export default class BoxDrawing {
     side.onMouseOver = onMouseOver;
     side.onMouseOut = onMouseOut;
     side.onPick = onPick;
-    side.onDrag = onDragSide;
+    side.onDrag = moveBoxOnDragSide;
     side.onRelease = onRelease;
     side.highlight = highlightSide;
     side.unHighlight = unHighlightSide;
@@ -592,7 +682,13 @@ export default class BoxDrawing {
     return side;
   }
 
-  createScalePoint(pointLocal: Cartesian3): ScalePoint {
+  /**
+   * Creates a scale point drawing
+   *
+   * @param pointLocal The scale point in local coordinates.
+   * @returns ScalePoint A cesium entity representing the scale point.
+   */
+  private createScalePoint(pointLocal: Cartesian3): ScalePoint {
     const scene = this.scene;
     const position = new Cartesian3();
     const style: Readonly<ScalePointStyle> = {
@@ -672,7 +768,15 @@ export default class BoxDrawing {
     const scratchTranslationStep = new Cartesian3();
     const scratchTranslationMatrix = new Matrix4();
 
-    const onDrag = (mouseMove: MouseMove) => {
+    /**
+     * Scales the box proportional to the mouse move when dragging the scale point.
+     * Scaling occurs along the axis connecting the opposite scaling point.
+     * Additionally we make sure:
+     *   - That scaling also keeps opposite side of the box stationary.
+     *   - The box does not get smaller than 20px on any side at the current zoom level.
+     */
+    const scaleOnDrag = (mouseMove: MouseMove) => {
+      // Find the direction to scale in
       const oppositePosition = scalePoint.oppositeScalePoint.position.getValue(
         JulianDate.now(),
         scratchOppositePosition
@@ -683,16 +787,17 @@ export default class BoxDrawing {
         scratchAxisVectorWc
       );
       const length = Cartesian3.magnitude(axisVectorWc);
-      const moveDirection = Cartesian3.normalize(
+      const scaleDirection = Cartesian3.normalize(
         axisVectorWc,
         scratchMoveDirection
       );
 
-      // scaleAmount is a measure of how much to scale in the given direction.
+      // scaleAmount is a measure of how much to scale in the given direction
+      // for the given mouse movement.
       const { scaleAmount, pixelLengthAfterScaling } = computeScaleAmount(
         this.scene,
         position,
-        moveDirection,
+        scaleDirection,
         length,
         mouseMove
       );
@@ -709,24 +814,28 @@ export default class BoxDrawing {
         }
       }
 
-      // Multiply by axis to convert to move amount in world space
-      // This gives it the direction of the axis
+      // Now we need to convert the scaleAmount in world space to a scale step
+      // along xyz in local space (not sure if there is an easier way of doing this.)
+
+      // 1. Multiply by axis to get a scale vector in world space
       const scaleVectorWc = Cartesian3.multiplyByScalar(
         axisVectorWc,
         scaleAmount,
         scratchScaleVectorWc
       );
 
+      // 2. The same scale vector in local space
       const scaleVectorLc = Matrix4.multiplyByPointAsVector(
-        this.inverseTransform,
+        this.inverseWorldTransform,
         scaleVectorWc,
         scratchScaleVectorLc
       );
 
-      // This step removes the direction of the vector from the scale step
+      // 3. scaleStep should be independent of the axis direction.
+      //    It should be positive when scaling up and negative when scaling down
+      //    To get rid of the axis direction, we multiply it by the sign of the vector.
       const scaleStep = Cartesian3.multiplyComponents(
         scaleVectorLc,
-        // just the sign because we don't the values to be different from move step
         new Cartesian3(
           Math.sign(axisLocal.x),
           Math.sign(axisLocal.y),
@@ -735,6 +844,7 @@ export default class BoxDrawing {
         scratchScaleStep
       );
 
+      // Now add the scale step to the current scale
       const currentScale = Matrix4.getScale(
         this.localTransform,
         scratchCurrentScale
@@ -744,13 +854,15 @@ export default class BoxDrawing {
       // Update box scale
       Matrix4.setScale(this.localTransform, newScale, this.localTransform);
 
+      // Because want the opposite side of the box to remain stationary, we
+      // push the box in the scaled direction by the half the scale amount.
       const translationStep = Cartesian3.multiplyByScalar(
         scaleVectorLc,
         1 / 2,
         scratchTranslationStep
       );
 
-      // Update box translation
+      // Update box position
       Matrix4.multiply(
         Matrix4.fromTranslation(translationStep, scratchTranslationMatrix),
         this.localTransform,
@@ -791,14 +903,17 @@ export default class BoxDrawing {
     scalePoint.onRelease = onRelease;
     scalePoint.onMouseOver = onMouseOver;
     scalePoint.onMouseOut = onMouseOut;
-    scalePoint.onDrag = onDrag;
+    scalePoint.onDrag = scaleOnDrag;
     scalePoint.update = update;
     scalePoint.updateOnCameraChange = updateOnCameraChange;
     update();
     return scalePoint;
   }
 
-  createScaleAxisLine(
+  /**
+   * Create an axis line drawing between two scale points.
+   */
+  private createScaleAxisLine(
     scalePoint1: ScalePoint,
     scalePoint2: ScalePoint
   ): Entity {
@@ -826,6 +941,15 @@ const scratchMouseVector2d = new Cartesian2();
 const scratchScreenVector2d = new Cartesian2();
 const scratchScreenNormal2d = new Cartesian2();
 
+/**
+ * Computes the amount by which to move a vector proportional to the provided
+ * mouse movement.
+ *
+ * @param position The world position at which move starts
+ * @param direction The direction in which to move
+ * @param mouseMove The mouse movement
+ * @returns moveAmount The amount by which to move the vector
+ */
 function computeMoveAmount(
   scene: Scene,
   position: Cartesian3,
@@ -856,6 +980,16 @@ function computeMoveAmount(
   return moveAmount;
 }
 
+/**
+ * Computes amount by which to scale a vector proportional to the provided mouse movement.
+ *
+ * @param scene
+ * @param position Position in world coordinates where the move starts
+ * @param direction Direction of the move vector
+ * @param length Length of the move vector
+ * @param mouseMove Mouse movement
+ * @returns Amount by which to scale the vector and the estimated length in pixels after scaling
+ */
 function computeScaleAmount(
   scene: Scene,
   position: Cartesian3,
@@ -869,6 +1003,7 @@ function computeScaleAmount(
     scratchMouseVector2d
   );
 
+  // Project the vector of unit length to the screen
   const screenVector2d = screenProjectVector(
     scene,
     position,
@@ -881,8 +1016,8 @@ function computeScaleAmount(
     scratchScreenNormal2d
   );
 
-  const moveAmountPixels = Cartesian2.dot(mouseVector2d, screenNormal2d);
   const pixelsPerStep = Cartesian2.magnitude(screenVector2d);
+  const moveAmountPixels = Cartesian2.dot(mouseVector2d, screenNormal2d);
   const moveAmount = moveAmountPixels / pixelsPerStep;
   const scaleAmount = moveAmount / length;
   const pixelLengthAfterScaling =
@@ -916,6 +1051,15 @@ function screenProjectVector(
   return screenVector2d;
 }
 
+/**
+ * Converts given xy screen coordinate to a position on the globe surface.
+ *
+ * @param scene
+ * @param position The xy screen coordinate
+ * @param result Cartesian3 object to store the result
+ * @returns The result object set to the converted position on the globe surface
+            or undefined if a globe position could not be found.
+ */
 export function screenToGlobePosition(
   scene: Scene,
   position: Cartesian2,
