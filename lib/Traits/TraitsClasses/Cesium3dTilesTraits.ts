@@ -15,6 +15,7 @@ import PlaceEditorTraits from "./PlaceEditorTraits";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import ClippingPlanesTraits from "./ClippingPlanesTraits";
 import HighlightColorTraits from "./HighlightColorTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 
 export class FilterTraits extends ModelTraits {
   @primitiveTrait({
@@ -108,6 +109,7 @@ export default class Cesium3DTilesTraits extends mixTraits(
   MappableTraits,
   UrlTraits,
   CatalogMemberTraits,
+  LegendOwnerTraits,
   ShadowTraits,
   ClippingPlanesTraits
 ) {
