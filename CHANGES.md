@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.1.15)
 
+* Add Shapefile to `CkanDefaultFormatsStratum`
 * [The next improvement]
 
 #### 8.1.14
