@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.1.15)
 
+* Remove legend traits from CatalogMemberMixin, replacing them with LegendOwnerTraits, and add tests to enforce correct use of legends.
 * [The next improvement]
 
 #### 8.1.14
