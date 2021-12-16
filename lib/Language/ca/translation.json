@@ -1,1 +1,786 @@
-{}
+{
+  "general": {
+    "close": "Tancar",
+    "open": "Obrir",
+    "next": "Següent",
+    "prev": "Anterior",
+    "skip": "Omet",
+    "back": "Enrere",
+    "delete": "Esborrar",
+    "cancel": "Cancel·lar",
+    "confirm": "Confirmar"
+  },
+  "trainer": {
+    "expandTrainer": "Mostra més detalls del pas",
+    "collapseTrainer": "Amaga els detalls del pas",
+    "showAllSteps": "Mostra tots els passos",
+    "hideAllSteps": "Amaga tots els passos"
+  },
+  "tour": {
+    "preface": {
+      "title": "Fes la visita",
+      "close": "Potser més tard",
+      "start": "Començar la visita",
+      "content": "No saps per on començar? Fes un recorregut ràpid per les característiques principals del nostre programari i aprèn algunes de les funcions clau per ajudar-te a seguir el teu camí."
+    },
+    "finish": "Acabar",
+    "previous": "Anterior",
+    "exploreMapDataButton": {
+      "content": "## Explora les dades del mapa\n\nExploreu el catàleg de dades disponibles i afegiu-lo al mapa aquí. Podeu afegir diversos conjunts de dades alhora, i els veureu a continuació al Workbench."
+    },
+    "mapNavigationCompassOuterRing": {
+      "content": "## Control de vista\n\nAquí podeu canviar la vista del mapa. Podeu canviar l'orientació de la vista utilitzant l'anell exterior i podeu inclinar l'angle de la càmera amb l'anell interior. Feu doble clic per restablir la vista."
+    },
+    "locationSearchInput": {
+      "content": "## Cerca d'ubicació\n\nIntroduïu una localitat o una adreça per localitzar fàcilment un punt d'interès al mapa."
+    },
+    "menuBarMapSettingsButton": {
+      "content": "## Configuració del mapa\n\nPersonalitzeu la configuració del mapa, com ara els mapes base, el terreny 2D/3D i la qualitat de la imatge del mapa per millorar el rendiment."
+    },
+    "end": "Acabar la visita",
+    "sidePanelUploadButton": {
+      "content": "## Carrega dades\n\nPodeu carregar les vostres pròpies dades al mapa per veure-les amb altres conjunts de dades. Pengeu un fitxer o un enllaç a un conjunt de dades o servei de dades en línia existent. Els formats de dades admesos inclouen CSV, GeoJSON, KML, GPX i CZML."
+    },
+    "menuBarStoryButton": {
+      "content": "## Històries\n\nLes històries us permeten afegir informació contextual a un conjunt de dades per donar vida a una narració. Creeu la vostra pròpia història de dades amb l'Editor d'històries i compartiu-la mitjançant el tauler \"Comparteix\" un cop hàgiu acabat."
+    },
+    "mapNavigationSplitterIcon": {
+      "content": "## Compara\n\nUna característica potent de Terria és la capacitat de comparar conjunts de dades mitjançant una vista de pantalla dividida. Per als conjunts de dades amb un component de sèrie temporal, com ara imatges de satèl·lit, podeu comparar les dates cap enrere i cap endavant en el temps fent clic al selector de dates."
+    }
+  },
+  "measure": {
+    "measureTool": "Eina de mesura",
+    "measureToolTitle": "Mesurar línia",
+    "measureDistance": "Mesurar la distància entre ubicacions"
+  },
+  "location": {
+    "errorGettingLocation": "Error en obtenir la localització",
+    "browserCannotProvide": "El vostre navegador no pot proporcionar la vostra ubicació.",
+    "myLocation": "La meva posició",
+    "location": "Posició",
+    "originError": "El vostre navegador només pot proporcionar la vostra ubicació quan feu servir https. És possible que pugueu utilitzar {{secureUrl}}.",
+    "centreMap": "Centreu el mapa a la vostra ubicació actual"
+  },
+  "splitterTool": {
+    "toggleSplitterToolTitle": "Comparar",
+    "toggleSplitterTool": "Activa la comparació paral·lela entre dos conjunts de dades diferents",
+    "toggleSplitterToolDisabled": "Si us plau, desactiveu altres funcions de comparació una al costat de l'altra per activar la comparació estàndard",
+    "title": "Arrossegueu cap a l'esquerra o cap a la dreta per ajustar les vistes",
+    "workbench": {
+      "goleftTitle": "Mostra al costat esquerre",
+      "bothTitle": "Mostra a banda i banda",
+      "both": "Ambdós",
+      "gorightTitle": "Mostra al costat dret",
+      "goright": "Dreta",
+      "copyName": "{{name}} (còpia)",
+      "goleft": "Esquerra"
+    }
+  },
+  "zoomCotrol": {
+    "zoomIn": "Zoom +",
+    "zoomReset": "Restablir zoom",
+    "zoomOut": "Zoom -"
+  },
+  "compass": {
+    "description": "Arrossegar l'anell exterior: gira la vista.\nArrossegar el giroscopi interior: òrbita lliure.\nDoble clic: restablir la vista.\nCONSELL: També podeu alliberar l'òrbita mantenint premuda la tecla CTRL i arrossegant el mapa.",
+    "title": "Feu clic i arrossegueu per girar la càmera",
+    "guidanceBtnTitle": "Orientació del giroscopi",
+    "guidance": {
+      "title": "Controls del giroscopi",
+      "outerRingTitle": "Anell exterior",
+      "outerRingDescription": "Arrossegueu l'anell exterior amb un moviment circular per girar la vista del mapa 360˚.",
+      "innerCircleDescription2": "Feu doble clic aquí per restablir la vista al seu estat predeterminat.",
+      "dismissText": "Tanca-ho i no ho tornis a mostrar",
+      "innerCircleTitle": "Cercle interior",
+      "innerCircleDescription1": "Feu clic al centre i arrossegueu lentament cap amunt, avall, esquerra o dreta per inclinar i girar el mapa alhora.",
+      "ctrlDragDescription": "També podeu inclinar i girar el mapa mantenint premuda la tecla CTRL i arrossegant el mapa."
+    },
+    "guidanceBtnText": "Vegeu instruccions detallades sobre com utilitzar la brúixola"
+  },
+  "AR": {
+    "title": "Característica experimental: realitat augmentada",
+    "confirmText": "Entesos",
+    "manualAlignmentTitle": "Alineació manual",
+    "resetAlignmentTitle": "Restableix l'alineació",
+    "resetAlignmentMessage": "Restabliment de l'alineació de la brúixola. Si l'alineació no coincideix amb el món real, proveu de moure el dispositiu amb un moviment de figura 8 per tornar a calibrar el dispositiu. Això es pot fer en qualsevol moment.<br /> <br />Eviteu llocs amb camps magnètics o objectes metàl·lics, ja que poden desorientar la brúixola del dispositiu.",
+    "arTool": "eina de realitat augmentada",
+    "btnHover": "commuta l'alçada de flotació",
+    "btnRealign": "commuta l'alineació manual",
+    "btnResetRealign": "restablir l'alineació de la brúixola",
+    "experimentalFeatureMessage": "El mode de realitat augmentada està actualment en versió beta. Aquest mode només està pensat per utilitzar-lo en els dispositius mòbils de gamma alta. <br /><br />ADVERTÈNCIA: aquest mode pot consumir moltes dades; tingueu en compte els càrrecs per ús de dades del vostre proveïdor de xarxa. <br /><br />La precisió d'aquest mode depèn de la precisió de la brúixola interna del dispositiu mòbil.",
+    "manualAlignmentMessage": "Alineeu el vostre dispositiu mòbil de manera que es correspongui amb l'alineació actual del mapa i, a continuació, feu clic a la brúixola que parpelleja. Si no hi ha cap punt de referència per alinear-se actualment al mapa, podeu moure el mapa amb arrossegar i pessigar fins que es vegi una fita reconeixible abans d'alinear el dispositiu amb el mapa. <br /><div>{{img}}</div> <br />Consell: el sol o la lluna solen ser bones fites per alinear-se si us trobeu en un lloc que no coneixeu (compte de no mirar el sol: et pot fer mal als ulls)."
+  },
+  "tool": {
+    "closeButtonTitle": "Tanqueu l'eina {{toolName}}",
+    "loadingError": {
+      "title": "Error en carregar l'eina {{toolName}}",
+      "message": "S'ha produït un error en intentar carregar aquesta eina des del servidor. Siusplau torna-ho a provar."
+    },
+    "exitBtnTitle": "Sortida",
+    "button": {
+      "open": "Tancar {{toolNameLowerCase}}",
+      "closed": "{{toolName}}"
+    }
+  },
+  "diffTool": {
+    "title": "Diferència",
+    "exit": "Sortida",
+    "instructions": {
+      "setDateA": "Estableix la data A",
+      "setDateB": "Estableix la data B",
+      "changeDates": "Canviar dates",
+      "paneDescription": "Visualitzeu i compareu la diferència de dades entre dues dates en un mateix lloc."
+    },
+    "labels": {
+      "dateComparisonB": "Comparació de dates B",
+      "sourceDataset": "Conjunt de dades font",
+      "previewStyle": "Estil de vista prèvia",
+      "differenceOutput": "Sortida diferencial",
+      "generateDiffButtonText": "Generar detecció de canvis",
+      "disabledButtonPrompt": "Tingueu en compte: cal seleccionar una ubicació i dates per procedir a la detecció de canvis",
+      "areaFilterSelection": "Selecció de filtre d'àrea",
+      "area": "Àrea",
+      "dates": "Dates",
+      "dateComparisonA": "Comparació de dates A"
+    },
+    "locationDisplay": {
+      "noLocationSelected": {
+        "title": "No s'ha seleccionat cap ubicació",
+        "description": "Per filtrar el selector de dates de la imatge per ubicació, seleccioneu un punt del mapa"
+      },
+      "locationSelected": {
+        "title": "Ubicació seleccionada i dates filtrades",
+        "description": "Per canviar, feu clic a un altre punt del mapa"
+      }
+    },
+    "locationPicker": {
+      "initialMessages": {
+        "title": "Seleccioneu una ubicació precisa",
+        "beforePick": "Necessitem això per executar el nostre procés de detecció de canvis.",
+        "afterPick": "Feu clic a un altre punt per canviar la regió seleccionada"
+      },
+      "nextMessages": {
+        "title": "Heu escollit la ubicació {{latitude}} {{longitude}}",
+        "beforePick": "Feu clic a un altre punt per canviar la selecció",
+        "afterPick": "Feu clic a un altre punt per canviar la selecció"
+      },
+      "errorMessages": {
+        "title": "Seleccioneu una ubicació precisa",
+        "afterPick": "Feu clic a un altre punt per canviar la selecció",
+        "beforePick": "No s'han pogut resoldre les imatges a la ubicació! Si us plau, trieu una ubicació o un nivell de zoom diferent."
+      }
+    },
+    "datePicker": {
+      "previousDateTitle": "Data anterior",
+      "nextDateTitle": "Propera data",
+      "dateButtonTitle": "Escull una data",
+      "dateOutOfRange": "Actualment fora de rang",
+      "back": "Torna"
+    },
+    "differenceResultsTitle": "Canvia els resultats de la detecció",
+    "choosePreview": "Trieu un estil de vista prèvia",
+    "chooseDifference": "Trieu una sortida de diferència"
+  },
+  "legend": {
+    "lat": "Lat",
+    "lon": "Lon",
+    "zone": "ZONA",
+    "e": "E",
+    "n": "N",
+    "elev": "Elev"
+  },
+  "languagePanel": {
+    "changeLanguage": "Canviar idioma"
+  },
+  "share": {
+    "browserPrint": "Per obtenir millors resultats impresos, utilitzeu el botó d'impressió de {{appName}} en comptes de la funció d'impressió del vostre navegador web.",
+    "shortLinkShortening": "Escurçant...",
+    "shortLinkError": "S'ha produït un error en intentar escurçar l'URL. Comproveu la vostra connexió a Internet i torneu-ho a provar.",
+    "printTitle": "Imprimeix el mapa",
+    "printButton": "Imprimir",
+    "printViewButton": "Mostra la vista d'impressió",
+    "btnAdvanced": "Opcions avançades",
+    "embedTitle": "Per embed, copieu aquest codi per inserir aquest mapa en una pàgina HTML:",
+    "shortenUsingService": "Escurceu l'URL per compartir mitjançant un servei web",
+    "btnStoryShareText": "Compartir",
+    "btnMapShareText": "Compartir / Imprimir",
+    "btnCatalogShareTitle": "Comparteix el teu catàleg amb altres persones",
+    "btnStoryShareTitle": "Comparteix la teva història amb altres persones",
+    "btnMapShareTitle": "Comparteix el teu mapa amb altres persones",
+    "convertNotificationTitle": "Avís: s'ha actualitzat l'enllaç per compartir",
+    "convertNotificationHelp": "Si heu creat l'enllaç compartit, consulteu el menú Ajuda per veure consells sobre com actualitzar l'enllaç compartit.",
+    "convertNotificationFeedback": "Per a preguntes o comentaris, feu clic aquí.",
+    "convertNotificationWarningsTitle": "Detalls tècnics",
+    "convertErrorTitle": "No s'ha pogut actualitzar l'enllaç compartit a V8",
+    "printExplanation": "Obriu una versió per impressió d'aquest mapa.",
+    "creatingPrintView": "S'està creant la vista d'impressió...",
+    "localDataNote": "<0><0>Nota:</0></0><1>Les fonts de dades següents NO es compartiran perquè inclouen dades d'aquest sistema local. Per compartir aquestes fonts de dades, publiqueu-ne les dades en un servidor web i <2>afegiu-les mitjançant una URL</2>.</1>",
+    "generatingUrl": "S'està generant l'URL per compartir...",
+    "btnCatalogShareText": "Compartir",
+    "convertNotificationMessage": "Aquest enllaç per compartir es basa en una versió anterior de TerriaJS, el programari que alimenta aquest mapa web. Tot i que es fan els millors esforços per preservar l'enllaç, és possible que tingueu problemes amb la visualització de les dades.\n\nSi sou usuari de l'enllaç per compartir, feu clic a D'acord per tal que el missatge d'advertència desaparegui i continueu accedint a les dades.",
+    "convertErrorMessage": "Aquest enllaç per compartir es basa en una versió anterior de TerriaJS, el programari que alimenta aquest mapa web. S'ha produït un error en intentar actualitzar les dades compartides."
+  },
+  "countDatasets": {
+    "btnText": "Començar",
+    "loadError": "no s'ha pogut carregar.",
+    "countingMessage": "Comptant, espereu...",
+    "subTotals": "<div> {{name}}: {{items}} articles / {{groups}} grups</div>",
+    "recount": "Recompte",
+    "title": "Comptar conjunts de dades",
+    "btnCount": "Comptar conjunts de dades",
+    "noMapDataEnabled": "No hi ha dades del mapa activades",
+    "mapDataState": "{{count}} conjunt de dades actiu al mapa",
+    "mapDataState_plural": "{{count}} conjunts de dades actius al mapa",
+    "totals": "<div>El catàleg conté {{items}} articles en {{groups}} grups.</div>"
+  },
+  "toolsPanel": {
+    "btnText": "Eina",
+    "btnTitle": "Caixa d'eines avançada"
+  },
+  "settingPanel": {
+    "none": "(Cap)",
+    "viewerModeLabels": {
+      "CesiumEllipsoid": "3D Suau",
+      "Leaflet": "2D",
+      "CesiumTerrain": "Terreny 3D"
+    },
+    "qualityLabels": {
+      "maximumPerformance": "Màxim rendiment, menor qualitat",
+      "lowerPerformance": "Màxima qualitat, menor rendiment",
+      "balancedPerformance": "Rendiment i qualitat equilibrats"
+    },
+    "native": "nadiu",
+    "screen": "pantalla",
+    "btnText": "Configuració del mapa",
+    "mapView": "Vista de mapa",
+    "baseMap": "Mapa Base",
+    "imageOptimisation": "Optimització de la imatge",
+    "nativeResolutionHeader": "Utilitzeu la resolució original del dispositiu",
+    "mapQuality": "Qualitat del mapa ràster:",
+    "timeline": {
+      "title": "Cronologia",
+      "alwaysShow": "Mostra sempre",
+      "alwaysShowLabel": "Premeu per començar a mostrar només la cronologia quan hi ha conjunts de dades que varien en el temps al banc de treball",
+      "hideLabel": "Premeu per començar a mostrar sempre lacronologia, fins i tot quan no hi ha conjunts de dades variables en el temps al banc de treball"
+    },
+    "terrain": {
+      "hideUnderground": "El terreny amaga elements subterranis",
+      "showUndergroundFeatures": "Premeu per començar a mostrar elements que es troben sota la superfície del terreny",
+      "hideUndergroundFeatures": "Premeu per començar a amagar els elements que es troben sota la superfície del terreny",
+      "left": "Esquerra",
+      "both": "Ambdós",
+      "right": "Dreta",
+      "sideLabel": "Mostra Terreny a"
+    },
+    "qualityLabel": "Qualitat",
+    "performanceLabel": "Rendiment",
+    "nativeResolutionLabel": "Premeu per deixar d'utilitzar la resolució {{resolution1}} i començar a utilitzar la resolució {{resolution2}}",
+    "btnTitle": "Canvia la vista"
+  },
+  "feedback": {
+    "feedbackPreamble": "Ens encantaria saber de tu!",
+    "title": "Comentaris",
+    "close": "tancar comentaris",
+    "yourName": "El vostre nom (opcional)",
+    "email": "Adreça de correu electrònic (opcional)<br/><em>Sense ella no podem fer un seguiment!</em>",
+    "commentQuestion": "Comentari o pregunta",
+    "shareWithDevelopers": "Comparteix la meva vista de mapa amb els desenvolupadors de {{appName}}",
+    "captionText": "Això ens ajuda a resoldre problemes deixant-nos veure el que esteu veient",
+    "cancel": "Cancel·lar",
+    "sending": "Enviant...",
+    "send": "Enviar",
+    "feedbackBtnText": "Enviar comentaris",
+    "minLength": "La llargada mínima del comentari és {{minLength}}"
+  },
+  "featureInfo": {
+    "showRawData": "Mostra les dades en brut",
+    "showCuratedData": "Mostra les dades destriades",
+    "clickToAddData": "Feu clic a \"$t(addData.addDataBtnText)\" per afegir dades al mapa.",
+    "satelliteSuggestionBtn": "Mostra {{catalogItemName}} en aquesta ubicació",
+    "catalogItem": {
+      "moreThanMax": "S'han trobat més de {{maximum}} {{catalogItemName}} elements.",
+      "featuresFound": "{{featCount}} {catalogItemName} elements trobats.",
+      "featureInfoShown": "Els primers {{maximum}} es mostren a continuació."
+    },
+    "download": "Descarrega aquesta Taula",
+    "userSelection": "Selecció d'usuari",
+    "panelHeading": "Informació dels elements",
+    "noInfoAvailable": "No hi ha informació disponible",
+    "pickLocation": "Escull ubicació",
+    "clickMap": "Feu clic al mapa per obtenir més informació sobre una ubicació",
+    "noDataAvailable": "No hi ha dades disponibles aquí - proveu una altra ubicació.",
+    "siteData": "Dades del lloc",
+    "latLon": "Lat / Lon ",
+    "btnCloseFeature": "Tanca el tauler de dades",
+    "locationMarker": "Marcador d'ubicació"
+  },
+  "welcomeMessage": {
+    "title": "Som-hi",
+    "welcomeMessage": "T'interessa la descoberta i l'exploració de dades?<br/>Capbussa't directament per començar o consulta les opcions de la guia d'ajuda següent.",
+    "welcomeMessageOnMobile": "T'interessa el descobriment i l'exploració de dades?",
+    "tourBtnText": "Visita guiada",
+    "helpBtnText": "Necessitaré ajuda",
+    "exploreDataBtnText": "Explora les dades del mapa",
+    "searchBtnText": "Cerca una ubicació",
+    "dismissText": "Tanca el missatge i no m'ho tornis a mostrar"
+  },
+  "story": {
+    "panelTitle": "Editor d'històries",
+    "panelBody": "Creeu i compartiu històries interactives directament des del vostre mapa",
+    "gettingStarted": "Començant",
+    "gettingStartedTitle": "Començant",
+    "badgeBarLabel": "Escenes",
+    "share": "Compartir",
+    "shareTitle": "compartir històries",
+    "viewStory": "vista",
+    "view": "Vista",
+    "editStory": "editar",
+    "edit": "Editar",
+    "recaptureStory": "tornar a capturar",
+    "recapture": "Recaptura",
+    "deleteStory": "esborrar",
+    "untitledScene": "escena sense títol",
+    "doesNotExist": "La història no existeix",
+    "removeAllStories": "Esborra-ho tot",
+    "play": "Jugar",
+    "previousBtn": "anar a l'escena anterior",
+    "untitled": "escena sense títol",
+    "navBtn": "ves a la història {{title}}",
+    "nextBtn": "anar a l'escena següent",
+    "navBtnMobile": "ves a la història {{title}}",
+    "story": "Història",
+    "dismissText": "Entesos, gràcies!",
+    "mobileViewStory": "Veure Històries {{storiesLength}}",
+    "preview": "previsualitzar històries",
+    "locationBtn": "centrar escena",
+    "hideStoryPanel": "Amaga el creador d'històries",
+    "loadSceneErrorMessage": "S'ha produït un error en carregar les dades de l'escena de la història: `{{title}}`.",
+    "removeStoryDialog": "Esteu segur que voleu suprimir \"<1>{{storyName}}</1>\"?",
+    "editor": {
+      "cancelEditing": "Cancel·lar",
+      "placeholder": "Introduïu un títol",
+      "saveBtn": "desar",
+      "cancelBtn": "cancel·lar",
+      "saveStory": "Desar"
+    },
+    "exitBtn": "sortir de l'història",
+    "promptHtml2": "<0><0>PRESENTACIÓ</0><1>Històries de dades</1><2>Creeu i compartiu històries interactives directament des del vostre mapa.</2></0>",
+    "storyEditor": "Editor d'històries",
+    "delete": "Esborrar",
+    "message": "<2>Aquest és el vostre editor d'històries</2><1>Creeu i compartiu històries interactives directament des del vostre mapa<1><0><0></0>Com començar </0></1></1 >",
+    "removeAllStoriesDialog": "Esteu segur que voleu suprimir {{ count }} escena?",
+    "removeAllStoriesDialog_plural": "Esteu segur que voleu suprimir {{ count }} escenes?",
+    "captureScene": "Captura l'escena",
+    "promptHtml1": "<0>Podeu veure i crear històries en qualsevol moment fent clic aquí.</0>",
+    "loadSceneErrorTitle": "Error carregant Story Scene",
+    "captureSceneTitle": "captura l'escena actual"
+  },
+  "satelliteGuidance": {
+    "menuTitle": "Podeu accedir a les guies de mapes en qualsevol moment consultant el <2>menú d'ajuda</2>.",
+    "dismissText": "Entesos, gràcies!",
+    "titleI": "Imatges per satèl·lit: com puc...?",
+    "bodyI": "Una guia súper ràpida per treure el màxim profit de les imatges satèl·lit antigues.",
+    "nextI": "Veure la guia",
+    "titleII": "On són les meves imatges de satèl·lit?",
+    "titleIII": "Carregant imatges antigues",
+    "prevI": "No, gràcies",
+    "bodyIII": "Al vostre banc de treball de dades, feu clic al menú desplegable de la data de captura i seleccioneu entre els horaris disponibles per carregar imatges antigues.",
+    "bodyIV": "És possible que les imatges per satèl·lit no estiguin sempre disponibles a la vostra hora i ubicació preferides. Si només voleu veure imatges d'una ubicació concreta, feu clic a \"Filtrar per ubicació\" al vostre banc de treball de dades.",
+    "titleV": "Com puc veure les imatges en fals color?",
+    "bodyII": "És possible que hàgiu d'ajustar el nivell de zoom perquè les imatges de satèl·lit siguin visibles al mapa.",
+    "titleIV": "Filtrat d'imatges per ubicació",
+    "bodyV": "Podeu aplicar una sèrie d'estils, com ara el color fals, a les imatges de satèl·lit fent clic al menú desplegable d'estils del vostre tauler de dades."
+  },
+  "addData": {
+    "btnHide": "Amagar",
+    "load": "Carregueu dades locals/web",
+    "closeDataPanel": "Tanca el tauler de dades",
+    "done": "Fet",
+    "myData": "Les meves dades",
+    "dataCatalogue": "Catàleg de dades",
+    "searchPlaceholderWhole": "Cerca tot el catàleg",
+    "searchPlaceholder": "Cerca el catàleg",
+    "localAdd": "Afegeix un arxiu local",
+    "localFile": "<0>Pas 2:</0> Seleccioneu l'arxiu",
+    "localFileType": "<0>Pas 1:</0> Seleccioneu el tipus d'arxiu(opcional)",
+    "webAdd": "Afegiu dades web",
+    "webFileType": "<0>Pas 1:</0> Seleccioneu el tipus d'arxiu (opcional)",
+    "urlInputBtn": "Afegir",
+    "browse": "Navegar...",
+    "localTitle": "Afegir dades locals",
+    "dragDrop": "Arrossegar i deixar anar",
+    "infoText": "<0>Arrossegueu i deixeu anar un fitxer aquí per veure'l localment al mapa</0><1>(no es desarà ni es penjarà a Internet)</1>",
+    "back": "Enrere",
+    "note": "<0>Nota: </0>Les dades afegides d'aquesta manera no es desen ni es fan visibles per als altres.",
+    "addDataBtnText": "Explora les dades del mapa",
+    "webTitle": "Afegir dades web",
+    "webFile": "<0>Pas 2:</0> Introduïu l'URL del fitxer de dades o del servei web"
+  },
+  "search": {
+    "resultsLabel": "Resultats de la cerca",
+    "done": "Fet",
+    "searchInDataCatalog": "Cerqueu <1>'{{locationSearchText}}'</1> al Catàleg de Dades",
+    "search": "Cerqueu \"{{searchText}}\" al Catàleg de Dades",
+    "viewLess": "Veure menys {{name}} resultats",
+    "placeholder": "Cerca ubicacions",
+    "searchCatalogue": "Cerca al catàleg",
+    "viewMore": "Veure més {{name}} resultats",
+    "data": "Dades"
+  },
+  "mobile": {
+    "toggleNavigation": "commuta la navegació",
+    "doneBtnText": "Fet",
+    "addDataBtnText": "Dades"
+  },
+  "preview": {
+    "doesNotContainGeospatialData": "Aquest arxiu no conté dades geoespacials.",
+    "selectToPreview": "<0>Seleccioneu un conjunt de dades per veure'n una previsualització </0><1>- O -</1><2>Anar al mapa</2>",
+    "preview": "{{appName}} previsualització",
+    "previewItemErrorTitle": "No s'ha pogut previsualitzar l'element del catàleg.",
+    "previewItemErrorMessage": "S'ha produït un error en carregar l'element del catàleg.",
+    "noPreviewAvailable": "CAP PREVISUALITZACIÓ DISONIBLE",
+    "dataPreviewLoading": "CARREGANT PREVISUALITZACIÓ DE DADES...",
+    "dataPreview": "PREVISUALITZACIÓ DE DADES",
+    "dataPreviewError": "ERROR PREVISUALITZANT DADES",
+    "addToMap": "Afegir al mapa",
+    "disclaimer": "Exempció de responsabilitat",
+    "dataDescription": "Descripció de les dades",
+    "serviceDescription": "Descripció del servei",
+    "resourceDescription": "Descripció del recurs",
+    "licence": "Llicència",
+    "accessConstraints": "Restriccions d'accés",
+    "author": "Autor",
+    "contact": "Contacte",
+    "created": "Creat",
+    "modified": "Modificat",
+    "dataCustodian": "Dipositari de les dades",
+    "mayBeExperiencingIssues": "Aquest conjunt de dades pot tenir problemes actualment",
+    "loading": "PREVISUALITZACIÓ CARREGANT...",
+    "removeFromMap": "Eliminar del mapa",
+    "datasetDescription": "Descripció del conjunt de dades",
+    "fees": "Comissions",
+    "updateFrequency": "Freqüència d'actualització"
+  },
+  "description": {
+    "dataLocal": "Aquest fitxer només existeix al vostre navegador. Per compartir-lo, l'has de carregar en un servidor web públic.",
+    "dataNotLocal": "Poseu-vos en contacte amb el proveïdor d'aquestes dades per obtenir més informació, inclosa informació sobre els drets d'ús i les limitacions.",
+    "layerName": "Nom de la capa",
+    "typeName": "Escriviu el nom",
+    "metadataUrls": "Enllaços de metadades",
+    "dataUrl": "Enllaços de dades",
+    "useLinkBelow": "Utilitzeu l'enllaç següent per descarregar les dades. Consulteu {{link}} per obtenir més informació sobre com personalitzar els paràmetres de consulta de la URL.",
+    "downloadNotSupported": "Malauradament el vostre navegador no admet la funcionalitat necessària per descarregar aquestes dades com un arxiu. Feu servir Chrome, Firefox o Safari per baixar aquestes dades.",
+    "downloadData": "Descarregar Dades",
+    "dataSourceDetails": "Detalls de la font de dades",
+    "dataServiceDetails": "Detalls del servei de dades",
+    "dataCustodian": "Dipositari de les dades",
+    "name": "Descripció",
+    "wms": "Aquest és un <1>servei WMS</1>, que genera imatges de mapes sota demanda. Es pot utilitzar al programari GIS amb aquesta URL:",
+    "wfs": "Aquest és un <1>servei WFS</1>, que transfereix dades espacials en brut sota demanda. Es pot utilitzar al programari GIS amb aquesta URL:",
+    "useTheLinkToDownload": "Utilitzeu l'enllaç següent per descarregar les dades directament.",
+    "downloadInFormat": "Baixeu les dades seleccionades actualment en format {{format}}"
+  },
+  "workbench": {
+    "colorScaleRangeTitle": "Interval d'escala de colors no vàlid",
+    "colorScaleRangeMin": "El valor mínim ha de ser un número.",
+    "colorScaleRangeMax": "El valor màxim ha de ser un número.",
+    "colorScaleRange": "Gamma d'escala de colors",
+    "rangeMin": "Mínim:",
+    "colorScaleUpdateRange": "Actualitza l'interval",
+    "displayPercent": "Mostra com a percentatge del total regional",
+    "opacity": "Opacitat: {{opacity}} %",
+    "zoomToTitle": "Zoom a l'extensió",
+    "zoomTo": "Zoom ideal",
+    "openFeatureTitle": "Zoom a les dades",
+    "openFeature": "Zoom a",
+    "previewItemTitle": "Sobre aquestes dades",
+    "showMoreActionsTitle": "Mostra més accions",
+    "previewItem": "Sobre les dades",
+    "splitItemTitle": "Duplica i mostra el divisor",
+    "splitItem": "Compara",
+    "diffImageTitle": "Veure les diferències d'imatge entre dues dates",
+    "diffImage": "Dfierència",
+    "exportDataTitle": "Exportar dades del mapa",
+    "exportData": "Exportar",
+    "removeFromMapTitle": "Elimina aquestes dades",
+    "removeFromMap": "Elimina",
+    "label": "Conjunts de dades",
+    "removeAll": "Elimina-ho tot",
+    "collapseAll": "Col·lapsar-ho tot",
+    "expandAll": "Expandir-ho tot",
+    "toggleVisibility": "Mostrar/amagar dades",
+    "addItemErrorTitle": "No s'ha pogut afegir l'element del catàleg al banc de treball.",
+    "addItemErrorMessage": "S'ha produït un error en carregar l'element del catàleg.",
+    "dimensionsSelector": {
+      "undefinedLabel": "Sense especificar"
+    },
+    "searchItem": "Cerca",
+    "searchItemTitle": "Cerca",
+    "colorScaleRangeMinSmallerThanMax": "El valor mínim de l'escala de colors ha de ser inferior al valor màxim.",
+    "rangeMax": "Màxim:"
+  },
+  "dateTime": {
+    "selectorLabel": "Temps:",
+    "back": "Torna",
+    "previous": "Temps anterior",
+    "selectTime": "Seleccioneu una hora",
+    "outOfRange": "Actualment fora de rang.",
+    "availableTimeChart": "Mostra els horaris disponibles al gràfic",
+    "next": "Temps següent",
+    "useTimeline": "Emprar la cronologia",
+    "timeline": {
+      "textCell": "Nom del conjunt de dades l'interval de temps del qual es mostra",
+      "gotoStart": "Anar al començament",
+      "togglePlay": "Iniciar",
+      "playSlower": "Reproduïr més lent",
+      "playFaster": "Reproduïr més ràpid"
+    }
+  },
+  "satellite": {
+    "pickPoint": "Seleccioneu un punt fent clic al mapa.",
+    "querying": "Consultant la posició...",
+    "filterByLocation": "Filtra per ubicació",
+    "infoGroup": "Només es mostren els temps de captura disponibles per a:",
+    "removeFilter": "Eliminar el filtre",
+    "zoomTo": "Zoom a",
+    "newLocation": "Nova ubicació"
+  },
+  "timer": {
+    "nextScheduledUpdateTime": "Propera actualització de dades a {{scheduledUpdateTime}}",
+    "nextScheduledUpdateCountdown": "Propera actualització de dades d'aquí a {{timeCountdown}}"
+  },
+  "concept": {
+    "active": {
+      "edit": "Modifica la condició",
+      "remove": "Elimina la condició"
+    },
+    "inactive": {
+      "cancel": "Cancel·lar",
+      "newText": "Nova condició"
+    },
+    "summary": {
+      "addMoreText": "Afegir una condició",
+      "addFirstText": "Afegir una nova condició"
+    }
+  },
+  "clipboard": {
+    "success": "Copiat al porta-retalls",
+    "unsuccessful": "Còpia fallida...",
+    "shareURL": "Compartiu URL",
+    "shareExplanation": "Qualsevol persona amb aquest URL podrà accedir a aquest mapa.",
+    "copy": "Copia"
+  },
+  "dragDrop": {
+    "text": "<0>Drag & Drop</0><1>Les vostres dades a qualsevol lloc per veure-les al mapa<1>",
+    "not": "<0>bbbb</0>"
+  },
+  "loader": {
+    "loadingMessage": "Carregant"
+  },
+  "emptyWorkbenchMessage": "<0><0>El vostre banc de treball està buit</0><1><strong>Feu clic a \"$t(addData.addDataBtnText)\" a dalt per </strong></1><2><0>Navegar pel catàleg de dades </0><1>Carrega les teves pròpies dades al mapa</1></2><3><0></0><strong>CONSELL.</strong><2>Tots els teus conjunts de dades actius apareixeran aquí</2></3></0>",
+  "emptyWorkbench": {
+    "emptyArea": "El teu banc de treball està buit",
+    "helpfulHints": "Consells útils",
+    "helpfulHintsOne": "Exploreu les dades disponibles seleccionant \"Explora les dades del mapa\" o feu clic a \"Carrega\" per afegir les vostres pròpies dades al mapa.",
+    "helpfulHintsTwo": "Un cop hàgiu afegit dades al mapa, els vostres conjunts de dades actius es mostren aquí al vostre espai de treball. L'espai de treball us ajudarà a interactuar amb les dades.",
+    "helpfulHintsThree": "Al l'espai de treball podeu activar i desactivar conjunts de dades, canviar-ne l'opacitat, activar la comparació de pantalla dividida, canviar els estils i navegar per dates i hores, si les dades admeten aquesta funcionalitat."
+  },
+  "dataCatalog": {
+    "groupRemove": "elimina aquest grup",
+    "groupEmpty": "Aquest grup és buit"
+  },
+  "catalogItem": {
+    "privateIndicatorTitle": "Conjunt de dades privat",
+    "loading": "Carregant...",
+    "add": "Afegir",
+    "trash": "Eliminar del catàleg",
+    "removeFromMap": "Eliminar del mapa",
+    "preview": "Previsualitzar",
+    "remove": "Eliminar"
+  },
+  "chart": {
+    "sectionLabel": "Gràfics",
+    "closePanel": "Tancar el tauler",
+    "expand": "Expandir",
+    "download": "Descarregar",
+    "loading": "Carregant les dades del gràfic...",
+    "noData": "No s'ha trobat cap dada per fer gràfics."
+  },
+  "viewModels": {
+    "searchNoLocations": "Ho sentim, cap ubicació coincideix amb la teva cerca.",
+    "searchAddresses": "Adreces",
+    "searchPlaceNames": "Topònims oficials",
+    "searchNoPlaceNames": "Ho sentim, cap topònim oficial coincideix amb la teva cerca.",
+    "searchLocations": "Ubicacions",
+    "searchCatalogueItem": "Articles del catàleg",
+    "searchNoCatalogueItem": "Ho sentim, no hi ha cap article del catàleg que coincideixi amb la teva cerca.",
+    "inMultipleLocations": "En diverses ubicacions, com ara: ",
+    "inDataCatalogue": "Al Catàleg de Dades",
+    "searchErrorOccurred": "S'ha produït un error durant la cerca. Comprova la teva connexió a Internet o torna-ho a provar més tard."
+  },
+  "terriaViewer": {
+    "slowWebGLAvailableMessageII": "{{appName}} funciona millor amb un navegador web que admeti {{webGL}}, incloses les darreres versions de {{chrome}}, {{firefox}}, {{safari}} i {{internetExplorer}}. Sembla que el vostre navegador web no admet WebGL, de manera que veureu una experiència limitada només en 2D.",
+    "internetExplorer": "Internet Explorer 11",
+    "chrome": "Google Chrome",
+    "firefox": "Mozilla Firefox",
+    "webGLNotSupportedTitle": "WebGL no compatible",
+    "webGLNotSupportedOrSlowTitle": "WebGL no compatible o massa lent",
+    "slowWebGLAvailableTitle": "Baix rendiment de WebGL",
+    "slowWebGLAvailableMessage": "El vostre navegador web informa que té problemes de rendiment en mostrar {{appName}} en 3D, de manera que veureu una experiència limitada només en 2D. Per gaudir de l'experiència 3D completa, proveu d'utilitzar un navegador web diferent, actualitzeu els controladors de vídeo o actualitzeu el sistema operatiu.",
+    "safari": "Apple Safari",
+    "webGLNotSupportedOrSlowMessage": "El vostre navegador web no pot mostrar el mapa en 3D, ja sigui perquè no és compatible amb WebGL o perquè el vostre navegador web ha informat que WebGL serà extremadament lent. Proveu un navegador web diferent, com ara la versió més recent de {{chrome}}, {{firefox}}, {{safari}}, {{internetExplorer}}. En alguns casos és possible que hàgiu d'actualitzar el controlador de vídeo de l'ordinador o el sistema operatiu per mostrar la vista 3D a {{appName}}."
+  },
+  "analytics": {
+    "selectLocation": "Seleccioneu Ubicació",
+    "point": "Punt (lat/lon)",
+    "existingPolygon": "Polígon existent",
+    "runAnalysis": "Executar l'anàlisi",
+    "clickToDrawLine": "Feu clic per dibuixar una línia",
+    "enterValidCoords": "Introduïu coordenades vàlides (p. ex., 131.0361, -25.3450).",
+    "selectPoint": "Seleccioneu un punt fent clic al mapa.",
+    "clickToDrawPolygon": "Feu clic per dibuixar un polígon",
+    "shiftToDrawRectangle": "Premeu la tecla MAJÚS i manteniu premut el botó esquerre del ratolí per dibuixar un rectangle",
+    "regionName": "Nom de la regió",
+    "selectExistingPolygon": "Seleccioneu un polígon existent",
+    "selectedPolygon": "Polígon seleccionat",
+    "clickToDrawRectangle": "Feu clic per dibuixar un rectangle",
+    "polygon": "Polígon",
+    "nothingSelected": "No s'ha seleccionat res, utilitzeu els botons de dalt per fer una selecció."
+  },
+  "core": {
+    "errors": {
+      "tooDeepAddedByUser": "Heu arribat als 100 articles del catàleg en comprovar addedByUser i aterreu a l'identificador: \"{{memberId}}\"? Comproveu que no teniu cap grup de catàleg recursiu."
+    },
+    "userAddedData": "Dades afegides per l'usuari",
+    "chartData": "Dades del gràfic",
+    "dataUri": {
+      "errorTitle": "El navegador no admet la descàrrega de dades",
+      "errorMessage": "Malauradament els navegadors de Microsoft (incloses totes les versions d'Internet Explorer i Edge) no admeten la funcionalitat d'uri de dades necessària per descarregar dades com un arxiu. Per baixar-lo copieu l'uri següent a un altre navegador, com ara Chrome, Firefox o Safari: {{href}}"
+    },
+    "dataType": {
+      "auto": "Detecció automàtica (recomanat)",
+      "wms-group": "Servidor del servei de mapes web (WMS)",
+      "wmts-group": "Servidor del servei de mapes tessel·lats (WMTS)",
+      "wfs-group": "Servidor del servei web de funcions (WFS)",
+      "wps-getCapabilities": "Servidor del servei de processament web (WPS)",
+      "esri-group": "Servidor Esri ArcGIS",
+      "esri-mapServer": "Servidor de mapes Esri ArcGIS (capa única)",
+      "esri-featureServer": "Servidor Esri ArcGIS FeatureServer (capa única)",
+      "3d-tiles": "Tessel·les 3D",
+      "open-street-map": "Servidor OpenStreetMap",
+      "sdmx-group": "SDMX-JSON",
+      "opendatasoft-group": "Portal Opendatasoft",
+      "geojson": "GeoJSON",
+      "geoRss": "GeoRSS",
+      "kml": "KML o KMZ",
+      "csv": "CSV",
+      "czml": "CZML",
+      "gpx": "GPX",
+      "json": "JSON",
+      "carto": "Carto",
+      "gltf": "GLTF",
+      "shp": "Shapefile (zip)",
+      "other": "Altres (utilitza el servei de conversió)"
+    },
+    "printWindow": {
+      "errorTitle": "Error d'impressió",
+      "errorMessage": "La impressió encara no ha començat despés de 10 segons. Pot ser que aquest navegador web no admeti la impressió?",
+      "printMediaStart": "Inici de mitjans d'impressió",
+      "printMediaEnd": "Final de mitjans d'impressió",
+      "onbeforeprint": "abans d'imprimir",
+      "onafterprint": "després d'imprimir"
+    },
+    "consoleAnalytics": {
+      "started": "Ha engegat ConsoleAnalytics.",
+      "startedNoLogToConsole": "S'ha iniciat ConsoleAnalytics, però `userParameters.logToConsole` no s'ha definit ni s'ha establert com a fals.",
+      "logStartedWithGAParameters": "ConsoleAnalytics va engegar, però hi ha una clau \"googleAnalyticsKey\" o \"googleAnalyticsOptions\" a \"userParameters\""
+    },
+    "googleAnalytics": {
+      "log": "El seguiment de Google Analytics està desactivat perquè no s'ha especificat terria.configParameters.googleAnalyticsKey",
+      "logEnabledOnDevelopment": "Google Analytics s'ha inicialitzat en un entorn de \"desenvolupament\""
+    },
+    "readText": {
+      "fileRequired": "L'arxiu és obligatori"
+    },
+    "readXml": {
+      "xmlError": "El fitxer no conté XML vàlid."
+    },
+    "terriaError": {
+      "defaultTitle": "Hi ha hagut un error",
+      "defaultMessage": "Error desconegut",
+      "defaultCombineTitle": "S'han produït diversos errors",
+      "networkRequestTitle": "S'ha produït un error de sol·licitud de xarxa",
+      "networkRequestMessageDetailed": "Això pot indicar un dels següents:\n\n* No s'ha pogut resoldre el nom del servidor\n* El servidor no ha respost a la sol·licitud o no està disponible temporalment\n* El servidor ha denegat l'accés [Compartició de recursos entre orígens (CORS)](https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/) a aquesta URL\n* Hi ha un problema amb la connexió a Internet\n\nSi heu introduït l'enllaç manualment, comproveu que l'enllaç sigui correcte.",
+      "defaultCombineMessage": "Els detalls dels errors es troben a continuació",
+      "networkRequestMessage": "És possible que les dades no estiguin disponibles o no es mostrin correctament a causa de l'interrupció del servei del custodi de dades. Si us plau proveu de tornar a carregar el mapa, accediu a les dades en una fase posterior o seleccioneu un conjunt de dades diferent. <feedbacklink feedback-message='Si el problema persisteix, envieu comentaris aquí.' email-message='Si el problema persisteix, si us plau, informeu-ne a {{email}}'/>"
+    },
+    "serverConfig": {
+      "failedToGet": "No s'ha pogut obtenir la configuració del servidor de {{serverConfigUrl}}. Això vol dir que és possible que serveis com ara el proxy, la conversió i l'escurçament d'URL no funcionin."
+    }
+  },
+  "map": {
+    "addressGeocoder": {
+      "devError": "bulkConvertAddresses s'ha d'implementar a la classe derivada."
+    },
+    "cesium": {
+      "devError": "es requereix Cesium.",
+      "failedToObtain": "No s'ha pogut obtenir la tessel·la X: {{x}} Y: {{y}} Nivell: {{level}}.",
+      "notWebMercatorTilingScheme": "Aquest conjunt de dades no es pot mostrar al mapa 2D perquè no admet la projecció Web Mercator (EPSG:3857).",
+      "unusalTilingScheme": "Aquest conjunt de dades no es pot mostrar al mapa 2D perquè utilitza un esquema de mosaic inusual que no és compatible."
+    },
+    "computeRingWindingOrder": {
+      "devError": "Punts esperats del tipus {x:nombre, y:nombre}"
+    },
+    "displayVariablesConcept": {
+      "defaultName": "Mostra la variable"
+    },
+    "drawExtentHelper": {
+      "drawExtent": "Dibuixa l'extensió",
+      "extent": "Extensió"
+    },
+    "gmlToGeoJson": {
+      "missingPos": "L'element de punt GML no té un element pos.",
+      "missingExteriorRing": "El polígon GML no té el seu anell exterior.",
+      "missingPosList": "A l'anell exterior del polígon GML li falta una posList.",
+      "containsUnsupportedFeatureType": "GML conté un tipus de funció no compatible: {{type}}"
+    },
+    "geoRssToGeoJson": {
+      "containsUnsupportedFeatureType": "GeoRSS conté un tipus de característica no compatible: {{type}}"
+    },
+    "gnafAddressGeocoder": {
+      "noAddresses": "Aquesta tableStructure no té adreces!"
+    },
+    "w3cToGeoJson": {
+      "containsUnsupportedFeatureType": "GeoRSS amb geometria W3C conté un tipus de característica no compatible: {{type}}"
+    }
+  },
+  "helpPanel": {
+    "menuPaneTitle": "Estem aquí per ajudar",
+    "takeTour": "Visita guiada",
+    "promptMessage": "Troba la visita guiada, vídeos explicatius i altres continguts d'ajuda aquí",
+    "dismissText": "Entesos, gràcies!",
+    "mapUserGuide": "Guia d'usuari del mapa",
+    "btnText": "Ajuda",
+    "menuPaneBody": "Trobeu consells útils sobre com utilitzar TerriaJS consultant les guies següents o posant-vos en contacte amb l'equip a [{{supportEmail}}]({{supportEmail}})"
+  },
+  "helpMenu": {
+    "next": "SEGÜENT",
+    "btnText": "Ajuda",
+    "btnTitle": "aconseguir ajuda",
+    "helpMenuOpenWelcome": "Mostra el missatge de benvinguda",
+    "helpMenuSatelliteGuideTitle": "Veure la guia d'imatges de satèl·lit",
+    "helpMenuMoreHelpTitle": "Més ajuda",
+    "done": "FET",
+    "helpMenuHeader": "Què t'agradaria fer?"
+  },
+  "sui": {
+    "notifications": {
+      "message": "T'agradaria veure-ho ara?",
+      "title": "Aquest mapa conté una història",
+      "confirmText": "Si",
+      "denyText": "Potser després"
+    },
+    "showWorkbench": "Mostra el Banc de Treball",
+    "hideWorkbench": "Amaga el Banc de Treball"
+  }
+}
