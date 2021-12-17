@@ -25,6 +25,8 @@ import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryPanel from "./../Story/StoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 
+import PrintView from "../../ReactViews/Map/Panels/SharePanel/Print/PrintView";
+
 import withFallback from "../HOCs/withFallback";
 import TourPortal from "../Tour/TourPortal";
 import SatelliteHelpPrompt from "../HelpScreens/SatelliteHelpPrompt";
@@ -476,6 +478,7 @@ const StandardUserInterface = observer(
               )}
             <Disclaimer viewState={this.props.viewState} />
           </div>
+          {this.props.viewState.showPrintView && <PrintView terria={terria} viewState={this.props.viewState} closeCallback={() => this.props.viewState.setPrintView(false)}/>}
         </ThemeProvider>
       );
     }

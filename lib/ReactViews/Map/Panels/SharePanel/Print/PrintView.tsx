@@ -199,7 +199,7 @@ import PrintWorkbench from "./PrintWorkbench";
 interface Props {
   terria: Terria;
   viewState: ViewState;
-  readyCallback: () => void;
+  closeCallback: () => void;
 }
 
 const PrintView = (props:Props) => {
@@ -209,6 +209,7 @@ const PrintView = (props:Props) => {
   useEffect(() => {
     const newWindow:Window|null = window.open();
     newWindow?.document.body.appendChild(rootNode);
+    newWindow?.addEventListener('beforeunload', props.closeCallback);
   },[])
 
   useEffect(()=> {

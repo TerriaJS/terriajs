@@ -95,6 +95,9 @@ export default class ViewState {
   @observable selectedTrainerItem: string = "";
   @observable currentTrainerItemIndex: number = 0;
   @observable currentTrainerStepIndex: number = 0;
+
+  @observable showPrintView: boolean = false;
+
   @action
   setSelectedTrainerItem(trainerItem: string) {
     this.selectedTrainerItem = trainerItem;
@@ -703,6 +706,10 @@ export default class ViewState {
   @action
   closeTool() {
     this.currentTool = undefined;
+  }
+
+  @action setPrintView(isShown:boolean) {
+    this.showPrintView = isShown;
   }
 
   @action

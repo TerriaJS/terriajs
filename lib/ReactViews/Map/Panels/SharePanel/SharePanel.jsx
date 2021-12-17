@@ -19,7 +19,6 @@ import {
   canShorten,
   isShareable
 } from "./BuildShareLink";
-import PrintView from "./Print/PrintView";
 import Styles from "./share-panel.scss";
 import StorySharePanel from "./StorySharePanel";
 import {
@@ -211,55 +210,6 @@ const SharePanel = observer(
       //TODO: no immediate printing for now;
     },
 
-    showPrintView() {
-      this.createPrintView(false, false);
-    },
-
-    createPrintView(hidden) {
-      this.setState({
-        creatingPrintView: true
-      });
-
-      // PrintView.create({
-      //   terria: this.props.terria,
-      //   viewState: this.props.viewState,
-      //   isHidden: hidden,
-      //   readyCallback: windowToPrint => {
-      //     if (printAutomatically) {
-      //       printWindow(windowToPrint)
-      //         .then(null, e => {
-      //           // If the print promise rejects, raise an error
-      //           this.props.terria.raiseErrorToUser(e);
-      //         })
-      //         .then(() => {
-      //           // whether there was an error or not, clean up
-      //           if (iframe) {
-      //             document.body.removeChild(iframe);
-      //           }
-      //           if (hidden) {
-      //             this.setState({
-      //               creatingPrintView: false
-      //             });
-      //           }
-      //         });
-      //     }
-      //   },
-      //   closeCallback: windowToPrint => {
-      //     if (hidden) {
-      //       this.setState({
-      //         creatingPrintView: false
-      //       });
-      //     }
-      //   }
-      // });
-
-      // if (!hidden) {
-      //   this.setState({
-      //     creatingPrintView: false
-      //   });
-      // }
-    },
-
     getShareUrlInput(theme) {
       return (
         <Input
@@ -446,14 +396,7 @@ const SharePanel = observer(
             <div>
               <button
                 className={Styles.printButton}
-                onClick={this.print}
-                disabled={this.state.creatingPrintView}
-              >
-                {t("share.printButton")}
-              </button>
-              <button
-                className={Styles.printButton}
-                onClick={this.showPrintView}
+                onClick={() => this.props.viewState.setPrintView(true)}
                 disabled={this.state.creatingPrintView}
               >
                 {t("share.printViewButton")}
@@ -515,7 +458,6 @@ const SharePanel = observer(
               </If>
             </If>
           </div>
-          {this.state.creatingPrintView? <PrintView terria={this.props.terria} viewState={this.props.viewState} readyCallback={() => null}/> : null}
         </div>
       );
     },
