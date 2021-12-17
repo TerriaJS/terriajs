@@ -11,6 +11,7 @@ import { BaseModel } from "../../../Models/Definition/Model";
 import SelectableDimensions, {
   DEFAULT_PLACEMENT,
   MAX_SELECTABLE_DIMENSION_OPTIONS,
+  filterSelectableDimensions,
   Placement,
   SelectableDimension
 } from "../../../Models/SelectableDimensions";
@@ -36,23 +37,9 @@ class DimensionSelectorSection extends React.Component<PropsType> {
   render() {
     const item = this.props.item;
 
-    // Filter out dimensions with only 1 option (unless they have 1 option and allow undefined - which is 2 total options)
-    const selectableDimensions = item.selectableDimensions?.filter(dim =>
-      // Filter by placement if defined, otherwise use default placement
-      dim.placement
-        ? dim.placement === this.props.placement
-        : this.props.placement === DEFAULT_PLACEMENT &&
-          !dim.disable &&
-          isDefined(dim.options) &&
-          dim.options.length < MAX_SELECTABLE_DIMENSION_OPTIONS &&
-          dim.options.length + (dim.allowUndefined ? 1 : 0) > 1
-    );
+    const selectableDimensions = filterSelectableDimensions(this.props.placement)(item.selectableDimensions);
 
-    if (
-      !SelectableDimensions.is(item) ||
-      !isDefined(selectableDimensions) ||
-      selectableDimensions.length === 0
-    ) {
+    if (selectableDimensions.length === 0) {
       return null;
     }
 

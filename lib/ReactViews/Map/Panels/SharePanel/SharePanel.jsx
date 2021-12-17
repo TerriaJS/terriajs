@@ -215,16 +215,10 @@ const SharePanel = observer(
       this.createPrintView(false, false);
     },
 
-    createPrintView(hidden, printAutomatically) {
+    createPrintView(hidden) {
       this.setState({
         creatingPrintView: true
       });
-
-      let iframe;
-      if (hidden) {
-        iframe = document.createElement("iframe");
-        document.body.appendChild(iframe);
-      }
 
       // PrintView.create({
       //   terria: this.props.terria,

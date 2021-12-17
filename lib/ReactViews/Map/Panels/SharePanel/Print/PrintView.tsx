@@ -204,22 +204,27 @@ interface Props {
 
 const PrintView = (props:Props) => {
   const [rootNode] = useState(document.createElement("main"));
+  const[screenshot, setScreenshot] = useState<Promise<string> | null>(null);
 
   useEffect(() => {
     const newWindow:Window|null = window.open();
     newWindow?.document.body.appendChild(rootNode);
   },[])
 
+  useEffect(()=> {
+    setScreenshot(props.terria.currentViewer.captureScreenshot());
+  }, [])
+
   return ReactDOM.createPortal(
     <ThemeProvider theme={terriaTheme}>
       <section>Button bar</section>
       <section>
         <div>
-          <h2>WOrkbnech</h2>
+          <h2>Workbnech</h2>
           <PrintWorkbench workbench={props.terria.workbench} />
         </div>
         <div>
-          <PrintViewMap screenshot={props.terria.currentViewer.captureScreenshot()} />
+          {screenshot ? <PrintViewMap screenshot={screenshot} /> : <div> loading</div>}
           <DistanceLegend terria={props.terria} />
         </div>
       </section>
