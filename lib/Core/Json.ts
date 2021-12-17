@@ -2,30 +2,57 @@ type JsonValue = boolean | number | string | null | JsonArray | JsonObject;
 export interface JsonObject {
   [key: string]: JsonValue;
 }
-export interface JsonArray extends Array<JsonValue> {}
+export interface JsonArray<T = JsonValue> extends Array<T> {}
+
 export default JsonValue;
 
-export function isJsonObject(
-  value: JsonValue | undefined
-): value is JsonObject {
+export function isJsonObject(value: unknown | undefined): value is JsonObject {
   return (
     value !== undefined &&
-    value !== null &&
     typeof value === "object" &&
-    !Array.isArray(value)
+    value !== null &&
+    !Array.isArray(value) &&
+    Object.values(value).every(v => isJsonValue(v))
   );
 }
 
-export function isJsonBoolean(value: JsonValue | undefined): value is boolean {
+export function isJsonBoolean(value: unknown | undefined): value is boolean {
   return typeof value === "boolean";
 }
 
-export function isJsonNumber(value: JsonValue | undefined): value is number {
+export function isJsonNumber(value: unknown | undefined): value is number {
   return typeof value === "number";
 }
 
-export function isJsonString(value: JsonValue | undefined): value is string {
+export function isJsonString(value: unknown | undefined): value is string {
   return typeof value === "string";
+}
+
+export function isJsonValue(value: unknown): value is JsonValue {
+  return (
+    value === null ||
+    isJsonBoolean(value) ||
+    isJsonNumber(value) ||
+    isJsonString(value) ||
+    isJsonArray(value) ||
+    isJsonObject(value)
+  );
+}
+
+export function isJsonArray(value: unknown | undefined): value is JsonArray {
+  return Array.isArray(value) && value.every(child => isJsonValue(child));
+}
+
+export function isJsonStringArray(
+  value: unknown | undefined
+): value is JsonArray<string> {
+  return Array.isArray(value) && value.every(child => isJsonString(child));
+}
+
+export function isJsonNumberArray(
+  value: unknown | undefined
+): value is JsonArray<number> {
+  return Array.isArray(value) && value.every(child => isJsonNumber(child));
 }
 
 export function assertObject(

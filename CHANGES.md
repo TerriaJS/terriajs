@@ -3,6 +3,8 @@ Change Log
 
 #### next release (8.1.15)
 
+* Fix sharelink bug, and make `isJson*` type checks more rigorous
+* Remove `uniqueId` from `CatalogMemberMixin.nameInCatalog` and add it as fallback to `CatalogMemberMixin.name`
 * [The next improvement]
 
 #### 8.1.14

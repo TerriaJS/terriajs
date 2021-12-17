@@ -89,6 +89,7 @@ export default class CatalogIndex {
       });
 
       const indexModels = Object.entries(index);
+      const promises: Promise<unknown>[] = [];
 
       for (let idx = 0; idx < indexModels.length; idx++) {
         const [id, model] = indexModels[idx];
@@ -99,12 +100,16 @@ export default class CatalogIndex {
         this._models!.set(id, reference);
 
         // Add document to search index
-        this._searchIndex.addAsync(id, {
-          id,
-          name: model.name ?? "",
-          description: model.description ?? ""
-        });
+        promises.push(
+          this._searchIndex.addAsync(id, {
+            id,
+            name: model.name ?? "",
+            description: model.description ?? ""
+          })
+        );
       }
+
+      await Promise.all(promises);
     } catch (error) {
       this.terria.raiseErrorToUser(error, "Failed to load catalog index");
     }
