@@ -21,7 +21,7 @@ import Spacing from "../../../Styled/Spacing";
 import Text from "../../../Styled/Text";
 
 interface PropsType extends WithTranslation {
-  item: SelectableDimensions & BaseModel;
+  item: BaseModel;
   /** Placement used to filter selectableDimensions.placement (eg 'belowLegend) */
   placement: Placement;
 }
@@ -35,6 +35,9 @@ class DimensionSelectorSection extends React.Component<PropsType> {
 
   render() {
     const item = this.props.item;
+    if (!SelectableDimensions.is(item)) {
+      return null;
+    }
 
     // Filter out dimensions with only 1 option (unless they have 1 option and allow undefined - which is 2 total options)
     const selectableDimensions = item.selectableDimensions?.filter(dim =>
@@ -48,11 +51,7 @@ class DimensionSelectorSection extends React.Component<PropsType> {
           dim.options.length + (dim.allowUndefined ? 1 : 0) > 1
     );
 
-    if (
-      !SelectableDimensions.is(item) ||
-      !isDefined(selectableDimensions) ||
-      selectableDimensions.length === 0
-    ) {
+    if (!isDefined(selectableDimensions) || selectableDimensions.length === 0) {
       return null;
     }
 

@@ -1584,5 +1584,42 @@
   },
   "toast": {
     "mapIsZooming": "Loading ideal zoom..."
+  },
+  "compare": {
+    "title": "Compare",
+    "done": "Done",
+    "leftPanel": "Left panel",
+    "rightPanel": "Right panel",
+    "entireMap": {
+      "title": "Entire map",
+      "emptyText": "Add new data to show across the entire map via the dotted menu above."
+    },
+    "entireMapMenu": {
+      "browse": "Browse map data",
+      "sendAllToFront": "Send all to front",
+      "sendAllToBack": "Send all to back",
+      "hideAll": "Hide all"
+    },
+    "info": "Compare spatial datasets from your workbench side-by-side on the map.",
+    "dataset": {
+      "label": "Dataset",
+      "selectOne": "Select one"
+    },
+    "dimensionSelector": {
+      "undefinedLabel": "Not specified"
+    },
+    "dateButton": {
+      "left": "Left",
+      "right": "Right",
+      "select": "Select a date"
+    },
+    "dateLocationFilter": {
+      "filter": "Filter date by location",
+      "loading": "Loading filter...",
+      "cancel": "Cancel",
+      "location": "Now showing available imagery for {{latitude}}, {{longitude}}",
+      "mouseTooltipTitle": "Select location",
+      "mouseTooltipMessage": "Right click to cancel"
+    }
   }
 }

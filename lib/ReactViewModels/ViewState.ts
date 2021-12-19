@@ -76,8 +76,12 @@ export default class ViewState {
   @observable mobileMenuVisible: boolean = false;
   @observable explorerPanelAnimating: boolean = false;
   @observable topElement: string = "FeatureInfo";
+  // Map for storing react portal containers created by <PortalContainer> component.
+  @observable portals: Map<string, HTMLElement | null> = new Map();
   @observable lastUploadedFiles: any[] = [];
   @observable storyBuilderShown: boolean = false;
+  // Tracks whether the compare workflow was opened by the user or restored from share
+  @observable isCompareUserTriggered: boolean = false;
 
   // Flesh out later
   @observable showHelpMenu: boolean = false;

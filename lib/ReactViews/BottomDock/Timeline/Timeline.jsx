@@ -15,6 +15,7 @@ import { withTranslation } from "react-i18next";
 
 import Styles from "./timeline.scss";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
+import withControlledVisibility from "../../HOCs/withControlledVisibility";
 
 export const Timeline = observer(
   createReactClass({
@@ -30,6 +31,14 @@ export const Timeline = observer(
       return {
         isPickerOpen: false
       };
+    },
+
+    componentDidMount() {
+      this.props.terria.timelineStack.activate();
+    },
+
+    componentWillUnmount() {
+      this.props.terria.timelineStack.deactivate();
     },
 
     changeDateTime(time) {
@@ -129,4 +138,4 @@ export const Timeline = observer(
   })
 );
 
-export default withTranslation()(Timeline);
+export default withControlledVisibility(withTranslation()(Timeline));

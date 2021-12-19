@@ -410,6 +410,10 @@ Change Log
 * Added analytic events related to story, share and help menu items, Also refactored events to use category and action enums.
 * Remove table style `SelectableDimension` from SDMX
 * `GyroscopeGuidance` can now be translated.
+* Added experimental compare workflow. Use `useExperimentalCompareWorkflow` hash parameter to enable.
+* Activates/deactivates terria timeline stack when the Timeline.jsx component mounts or unmounts.
+* Adds an `index` parameter to Workbench.add() method specifying the index where the item should be added 
+* [The next improvement]
 * Wraps tool title bar text using `...`.
 
 #### 8.0.0-alpha.84

@@ -1,6 +1,6 @@
+import classNames from "classnames";
 import React from "react";
 import styled from "styled-components";
-import classNames from "classnames";
 
 // Icon
 export const GLYPHS = {
@@ -127,10 +127,16 @@ export const GLYPHS = {
   minimize: require("../../wwwroot/images/icons/minimize.svg"),
   maximize: require("../../wwwroot/images/icons/maximize.svg"),
   closeTool: require("../../wwwroot/images/icons/close-tool.svg"),
+  leftSmall: require("../../wwwroot/images/icons/left-small.svg"),
+  rightSmall: require("../../wwwroot/images/icons/right-small.svg"),
+  compareLeftPanel: require("../../wwwroot/images/icons/compare-left-panel.svg"),
+  compareRightPanel: require("../../wwwroot/images/icons/compare-right-panel.svg"),
+  compareBothPanels: require("../../wwwroot/images/icons/compare-both-panels.svg"),
+  closeCircle: require("../../wwwroot/images/icons/close-circle.svg"),
   moreItems: require("../../wwwroot/images/icons/more-items.svg")
 };
 
-interface IconProps {
+export interface IconProps {
   glyph: { id: string };
   style?: any;
   className?: string;

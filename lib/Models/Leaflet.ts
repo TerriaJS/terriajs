@@ -614,7 +614,7 @@ export default class Leaflet extends GlobeOrMap {
     latlng: L.LatLng,
     tileCoordinates?: any,
     existingFeatures?: Entity[],
-    ignoreSplitter: boolean = false
+    ignoreSplitter?: boolean
   ) {
     if (isDefined(this._pickedFeatures)) {
       // Picking is already in progress.
@@ -753,10 +753,16 @@ export default class Leaflet extends GlobeOrMap {
         },
         {});
 
+        const mapInteractionMode = this.terria.mapInteractionModeStack[
+          this.terria.mapInteractionModeStack.length - 1
+        ];
+        const shouldIgnoreSplitter =
+          ignoreSplitter ?? mapInteractionMode?.ignoreSplitterWhenPicking;
+
         const features = filteredResults.reduce((allFeatures, result) => {
           if (
             this.terria.showSplitter &&
-            ignoreSplitter === false &&
+            !shouldIgnoreSplitter &&
             isDefined(pickedFeatures.pickPosition)
           ) {
             // Skip this feature, unless the imagery layer is on the picked side or

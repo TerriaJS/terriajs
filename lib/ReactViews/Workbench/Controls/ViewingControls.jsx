@@ -1,4 +1,3 @@
-"use strict";
 import createReactClass from "create-react-class";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
@@ -25,17 +24,21 @@ import MappableMixin from "../../../ModelMixins/MappableMixin";
 import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
 import addUserCatalogMember from "../../../Models/Catalog/addUserCatalogMember";
 import SplitItemReference from "../../../Models/Catalog/CatalogReferences/SplitItemReference";
+import {
+  createCompareConfig,
+  isComparableItem
+} from "../../../Models/Comparable.ts";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
-import hasTraits from "../../../Models/Definition/hasTraits";
 import getAncestors from "../../../Models/getAncestors";
 import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import Icon, { StyledIcon } from "../../../Styled/Icon";
-import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
 import { exportData } from "../../Preview/ExportData";
 import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
 import WorkbenchButton from "../WorkbenchButton";
+import MappableTraits from "../../../Traits/TraitsClasses/MappableTraits";
+import hasTraits from "../../../Models/Definition/hasTraits";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -222,6 +225,25 @@ const ViewingControls = observer(
       });
     },
 
+    compareItem() {
+      runInAction(() => {
+        const terria = this.props.viewState.terria;
+        terria.compareConfig = createCompareConfig({
+          showCompare: true,
+          leftPanelItemId: this.props.item.uniqueId,
+          isUserTriggered: true
+        });
+
+        // Disable all other workbench items before launching compare workflow.
+        terria.workbench.items.forEach(
+          item =>
+            item !== this.props.item &&
+            hasTraits(item, MappableTraits, "show") &&
+            item.setTrait(CommonStrata.user, "show", false)
+        );
+      });
+    },
+
     openDiffTool() {
       // Disable timeline
       // Should we do this? Difference is quite a specific use case
@@ -285,12 +307,13 @@ const ViewingControls = observer(
 
     renderViewingControlsMenu() {
       const { t, item, viewState } = this.props;
-      const canSplit =
+      const canCompareItem =
         !item.terria.configParameters.disableSplitter &&
-        hasTraits(item, SplitterTraits, "splitDirection") &&
+        item.terria.currentViewer.canShowSplitter &&
+        isComparableItem(item) &&
         !item.disableSplitter &&
-        defined(item.splitDirection) &&
-        item.terria.currentViewer.canShowSplitter;
+        defined(item.splitDirection);
+
       return (
         <ul ref={e => (this.menuRef = e)}>
           <If
@@ -308,10 +331,10 @@ const ViewingControls = observer(
               </ViewingControlMenuButton>
             </li>
           </If>
-          <If condition={canSplit}>
+          <If condition={canCompareItem}>
             <li>
               <ViewingControlMenuButton
-                onClick={this.splitItem}
+                onClick={() => this.compareItem()}
                 title={t("workbench.splitItemTitle")}
               >
                 <BoxViewingControl>
@@ -489,4 +512,4 @@ const ViewingControls = observer(
     }
   })
 );
-module.exports = withTranslation()(ViewingControls);
+export default withTranslation()(ViewingControls);

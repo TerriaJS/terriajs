@@ -1,8 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Sortable from "react-anything-sortable";
-
-import WorkbenchSplitScreen from "./WorkbenchSplitScreen";
 import WorkbenchItem from "./WorkbenchItem";
 import { observer } from "mobx-react";
 import { action } from "mobx";
@@ -28,9 +26,6 @@ class WorkbenchList extends React.Component {
   render() {
     return (
       <ul className={Styles.workbenchContent}>
-        {this.props.terria.showSplitter && (
-          <WorkbenchSplitScreen terria={this.props.terria} />
-        )}
         <Sortable onSort={this.onSort} direction="vertical" dynamic={true}>
           <For each="item" of={this.props.terria.workbench.items}>
             <WorkbenchItem
