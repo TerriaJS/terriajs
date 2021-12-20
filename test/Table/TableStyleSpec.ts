@@ -291,6 +291,193 @@ describe("TableStyle", function() {
 
       expect(activeStyle.colorMap instanceof EnumColorMap).toBeTruthy();
     });
+
+    describe(" - applies zScoreFilter, outlierColor and minimumValue/maximumValue correctly", async function() {
+      beforeEach(async function() {
+        updateModelFromJson(csvItem, CommonStrata.definition, {
+          csvString: SedCsv,
+          activeStyle: "Value",
+          defaultStyle: {
+            color: {
+              zScoreFilter: 2,
+              rangeFilter: 0.1,
+              zScoreFilterEnabled: true
+            }
+          }
+        });
+
+        await csvItem.loadMapItems();
+        await csvItem.activeTableStyle.regionColumn?.regionType?.loadRegionIDs();
+      });
+
+      it(" - should expect no filter applied", async function() {
+        expect(
+          csvItem.activeTableStyle.colorColumn?.valuesAsNumbers.minimum
+        ).toBe(0);
+        expect(
+          csvItem.activeTableStyle.colorColumn?.valuesAsNumbers.maximum
+        ).toBe(100);
+
+        expect(
+          csvItem.activeTableStyle.tableColorMap.zScoreFilterValues
+        ).toBeUndefined();
+
+        const colorMap = csvItem.activeTableStyle
+          .colorMap as ContinuousColorMap;
+
+        expect(colorMap instanceof ContinuousColorMap).toBeTruthy();
+        expect(colorMap.minValue).toBe(0);
+        expect(colorMap.maxValue).toBe(100);
+
+        // Check legend for no outlier item
+        expect(csvItem.legends.length).toBe(1);
+        expect(csvItem.legends[0].items.length).toBe(7);
+      });
+
+      it(" - Change zScoreFilter and rangeFilter - should also expect not to be applied", async function() {
+        updateModelFromJson(csvItem, CommonStrata.definition, {
+          defaultStyle: {
+            color: {
+              zScoreFilter: 1,
+              rangeFilter: 0.25,
+              zScoreFilterEnabled: true
+            }
+          }
+        });
+
+        expect(
+          csvItem.activeTableStyle.tableColorMap.zScoreFilterValues
+        ).toBeUndefined();
+
+        const colorMap = csvItem.activeTableStyle
+          .colorMap as ContinuousColorMap;
+        expect(colorMap instanceof ContinuousColorMap).toBeTruthy();
+        expect(colorMap.minValue).toBe(0);
+        expect(colorMap.maxValue).toBe(100);
+
+        // Check legend for no outlier item
+        expect(csvItem.legends.length).toBe(1);
+        expect(csvItem.legends[0].items.length).toBe(7);
+      });
+
+      it(" - Change zScoreFilter and rangeFilter again - should be applied this time", async function() {
+        updateModelFromJson(csvItem, CommonStrata.definition, {
+          defaultStyle: {
+            color: {
+              zScoreFilter: 1,
+              rangeFilter: 0.1,
+              zScoreFilterEnabled: true
+            }
+          }
+        });
+
+        expect(
+          csvItem.activeTableStyle.tableColorMap.zScoreFilterValues
+        ).toEqual({
+          min: 22,
+          max: 80
+        });
+
+        const colorMap = csvItem.activeTableStyle
+          .colorMap as ContinuousColorMap;
+        expect(colorMap instanceof ContinuousColorMap).toBeTruthy();
+        expect(colorMap.minValue).toBe(22);
+        expect(colorMap.maxValue).toBe(80);
+        expect(colorMap.mapValueToColor(0)).toEqual(
+          csvItem.activeTableStyle.tableColorMap.outlierColor!
+        );
+
+        // Check legend for outlier item
+        expect(csvItem.legends.length).toBe(1);
+        expect(csvItem.legends[0].items.length).toBe(8);
+        expect(csvItem.legends[0].items[7].title).toBe(
+          "models.tableData.legendZFilterLabel"
+        );
+        expect(csvItem.legends[0].items[7].addSpacingAbove).toBeTruthy();
+        expect(csvItem.legends[0].items[7].color).toBe(
+          csvItem.activeTableStyle.tableColorMap.outlierColor?.toCssColorString()
+        );
+      });
+
+      it(" - Set colorTraits.minimumValue to disable zScoreFilter", async function() {
+        updateModelFromJson(csvItem, CommonStrata.definition, {
+          defaultStyle: {
+            color: {
+              zScoreFilter: 1,
+              rangeFilter: 0.1,
+              zScoreFilterEnabled: true,
+              minimumValue: 22
+            }
+          }
+        });
+
+        expect(
+          csvItem.activeTableStyle.tableColorMap.outlierColor
+        ).toBeUndefined();
+        expect(
+          csvItem.activeTableStyle.tableColorMap.zScoreFilterValues
+        ).toBeUndefined();
+
+        const colorMap = csvItem.activeTableStyle
+          .colorMap as ContinuousColorMap;
+        expect(colorMap instanceof ContinuousColorMap).toBeTruthy();
+        expect(colorMap.minValue).toBe(22);
+        expect(colorMap.maxValue).toBe(100);
+        expect(colorMap.mapValueToColor(0)).toEqual(
+          colorMap.mapValueToColor(22)
+        );
+      });
+
+      it(" - Set colorTraits.maximumValue to disable zScoreFilter", async function() {
+        updateModelFromJson(csvItem, CommonStrata.definition, {
+          defaultStyle: {
+            color: {
+              zScoreFilter: 1,
+              rangeFilter: 0.1,
+              zScoreFilterEnabled: true,
+              maximumValue: 80
+            }
+          }
+        });
+
+        expect(
+          csvItem.activeTableStyle.tableColorMap.outlierColor
+        ).toBeUndefined();
+        expect(
+          csvItem.activeTableStyle.tableColorMap.zScoreFilterValues
+        ).toBeUndefined();
+
+        const colorMap = csvItem.activeTableStyle
+          .colorMap as ContinuousColorMap;
+        expect(colorMap instanceof ContinuousColorMap).toBeTruthy();
+        expect(colorMap.minValue).toBe(0);
+        expect(colorMap.maxValue).toBe(80);
+        expect(colorMap.mapValueToColor(100)).toEqual(
+          colorMap.mapValueToColor(80)
+        );
+      });
+
+      it(" - Now if we set min/max outside range, then colorMap.outlierColor should be undefined", async function() {
+        updateModelFromJson(csvItem, CommonStrata.definition, {
+          defaultStyle: {
+            color: {
+              zScoreFilter: 1,
+              rangeFilter: 0.1,
+              zScoreFilterEnabled: true,
+              maximumValue: 101,
+              minimumValue: -1,
+              outlierColor: "#00ff00"
+            }
+          }
+        });
+
+        const colorMap = csvItem.activeTableStyle
+          .colorMap as ContinuousColorMap;
+        expect(colorMap.minValue).toBe(-1);
+        expect(colorMap.maxValue).toBe(101);
+        expect(colorMap.outlierColor).toBeUndefined();
+      });
+    });
   });
 
   describe(" - Enum", function() {
@@ -364,93 +551,6 @@ describe("TableStyle", function() {
         "#9467bd",
         "#8c564b"
       ]);
-    });
-
-    it(" - applies zScoreFilter correctly", async function() {
-      updateModelFromJson(csvItem, CommonStrata.definition, {
-        csvString: SedCsv,
-        activeStyle: "Value",
-        defaultStyle: {
-          color: {
-            zScoreFilter: 2,
-            rangeFilter: 0.1,
-            zScoreFilterEnabled: true
-          }
-        }
-      });
-
-      await csvItem.loadMapItems();
-      await csvItem.activeTableStyle.regionColumn?.regionType?.loadRegionIDs();
-
-      const activeStyle = csvItem.activeTableStyle;
-
-      // First example - should expect no filter applied
-      expect(activeStyle.colorColumn?.valuesAsNumbers.minimum).toBe(0);
-      expect(activeStyle.colorColumn?.valuesAsNumbers.maximum).toBe(100);
-
-      expect(activeStyle.tableColorMap.zScoreFilterValues).toBeUndefined();
-
-      let colorMap = activeStyle.colorMap as ContinuousColorMap;
-
-      expect(colorMap instanceof ContinuousColorMap).toBeTruthy();
-      expect(colorMap.minValue).toBe(0);
-      expect(colorMap.maxValue).toBe(100);
-
-      // Check legend for no outlier item
-      expect(csvItem.legends.length).toBe(1);
-      expect(csvItem.legends[0].items.length).toBe(7);
-
-      // Change zScoreFilter and rangeFilter - should also expect not to be applied
-      updateModelFromJson(csvItem, CommonStrata.definition, {
-        defaultStyle: {
-          color: {
-            zScoreFilter: 1,
-            rangeFilter: 0.25,
-            zScoreFilterEnabled: true
-          }
-        }
-      });
-
-      expect(activeStyle.tableColorMap.zScoreFilterValues).toBeUndefined();
-      colorMap = activeStyle.colorMap as ContinuousColorMap;
-      expect(colorMap instanceof ContinuousColorMap).toBeTruthy();
-      expect(colorMap.minValue).toBe(0);
-      expect(colorMap.maxValue).toBe(100);
-
-      // Check legend for no outlier item
-      expect(csvItem.legends.length).toBe(1);
-      expect(csvItem.legends[0].items.length).toBe(7);
-
-      updateModelFromJson(csvItem, CommonStrata.definition, {
-        defaultStyle: {
-          color: {
-            zScoreFilter: 1,
-            rangeFilter: 0.1,
-            zScoreFilterEnabled: true
-          }
-        }
-      });
-
-      // Change zScoreFilter and rangeFilter again - should be applied this time
-      expect(activeStyle.tableColorMap.zScoreFilterValues).toEqual({
-        min: 22,
-        max: 80
-      });
-      colorMap = activeStyle.colorMap as ContinuousColorMap;
-      expect(colorMap instanceof ContinuousColorMap).toBeTruthy();
-      expect(colorMap.minValue).toBe(22);
-      expect(colorMap.maxValue).toBe(80);
-
-      // Check legend for outlier item
-      expect(csvItem.legends.length).toBe(1);
-      expect(csvItem.legends[0].items.length).toBe(8);
-      expect(csvItem.legends[0].items[7].title).toBe(
-        "models.tableData.legendZFilterLabel"
-      );
-      expect(csvItem.legends[0].items[7].addSpacingAbove).toBeTruthy();
-      expect(csvItem.legends[0].items[7].color).toBe(
-        activeStyle.tableColorMap.outlierColor.toCssColorString()
-      );
     });
   });
 });
