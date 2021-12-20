@@ -95,7 +95,7 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
 
     @computed
     get nameInCatalog(): string | undefined {
-      return super.nameInCatalog || this.name;
+      return super.nameInCatalog || this.name || this.uniqueId;
     }
 
     @computed

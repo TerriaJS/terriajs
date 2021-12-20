@@ -55,14 +55,17 @@ function renderTraitRow(property: string, trait: Trait, defaultValue: any) {
   if (trait instanceof ObjectTrait || trait instanceof ObjectArrayTrait) {
     traitType = `<a href="#${traitType.toLocaleLowerCase()}"><code>${traitType +
       (traitTypeIsArray ? "[]" : "")}</code></b>`;
-    defaultValue = undefined
+    defaultValue = undefined;
   } else {
     traitType = `<code>${traitType + (traitTypeIsArray ? "[]" : "")}</code>`;
   }
 
   // Delete defalut value is it is an empty array
-  if (Array.isArray(defaultValue) && (defaultValue.length === 0 || defaultValue.every(i => !isDefined(i))))
-    defaultValue = undefined
+  if (
+    Array.isArray(defaultValue) &&
+    (defaultValue.length === 0 || defaultValue.every(i => !isDefined(i)))
+  )
+    defaultValue = undefined;
 
   return `
 <tr>
@@ -108,17 +111,16 @@ ${traitRows}`,
 
 // This tracks which traits have been rendered already - so we don't get duplicates
 // It is reset for every catalog model
-let alreadyRenderedTraits: string[] = []
+let alreadyRenderedTraits: string[] = [];
 
 /** Render table of traits for given model */
 function renderTraitTable(model: BaseModel, recursive = false, depth = 1) {
   const rootTraits = model.TraitsClass.name;
 
   // Return nothing if these traits have already been rendered
-  if (alreadyRenderedTraits.includes(rootTraits))
-    return {}
+  if (alreadyRenderedTraits.includes(rootTraits)) return {};
 
-  alreadyRenderedTraits.push(rootTraits)
+  alreadyRenderedTraits.push(rootTraits);
 
   // Traits organised by parentTraits
   const traits = Object.values(model.traits).reduce<{
@@ -163,7 +165,8 @@ ${"#".repeat(depth + 1)} ${rootTraits}
 
   if (recursive) {
     html += objectTraits
-      .map(model => renderTraitTable(model, true, depth + 1).html).filter(isDefined)
+      .map(model => renderTraitTable(model, true, depth + 1).html)
+      .filter(isDefined)
       .join("\n");
   }
 
@@ -176,23 +179,28 @@ async function processMember(sampleMember: BaseModel, memberName: string) {
 
 ${sampleMember.TraitsClass.description ?? ""}
 
-${sampleMember.TraitsClass.example ? `
+${
+  sampleMember.TraitsClass.example
+    ? `
 ## Example usage
 \`\`\`json
 ${JSON.stringify(sampleMember.TraitsClass.example, null, 2)}
 \`\`\`
-` : `\`"type": "${sampleMember.type}"\``}`;
+`
+    : `\`"type": "${sampleMember.type}"\``
+}`;
 
   // Render table of *top-level* traits for the given member
   // and reset alreadyRenderedTraits
-  alreadyRenderedTraits = []
+  alreadyRenderedTraits = [];
   const mainTraitTable = renderTraitTable(sampleMember);
   content += mainTraitTable.html;
 
   // Render object-traits
-  content += mainTraitTable.objectTraits?.map(
-    objectTrait => renderTraitTable(objectTrait, true).html
-  ).filter(isDefined).join("\n");
+  content += mainTraitTable.objectTraits
+    ?.map(objectTrait => renderTraitTable(objectTrait, true).html)
+    .filter(isDefined)
+    .join("\n");
 
   return content;
 }
@@ -291,12 +299,12 @@ export default async function generateDocs() {
 
   // Add entries for all the catalog item/group/function/reference types to type details subsection in mkdocs.yml
   const connectingToDataSection = mkDocsConfig.nav
-    .map((section:any) => section["Connecting to Data"])
-    .filter((x:any) => x !== undefined)[0];
+    .map((section: any) => section["Connecting to Data"])
+    .filter((x: any) => x !== undefined)[0];
   const typeDetailsSubSection =
     connectingToDataSection &&
     connectingToDataSection.find(
-      (subSection:any) => "Catalog Type Details" in subSection
+      (subSection: any) => "Catalog Type Details" in subSection
     );
   if (typeDetailsSubSection === undefined) {
     throw new Error(

@@ -17,6 +17,7 @@ import ContinuousColorMap from "../../../../lib/Map/ContinuousColorMap";
 import ProtomapsImageryProvider, {
   GEOJSON_SOURCE_LAYER_NAME
 } from "../../../../lib/Map/ProtomapsImageryProvider";
+import { getColor } from "../../../../lib/ModelMixins/GeojsonMixin";
 import GeoJsonCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
@@ -569,7 +570,6 @@ describe("GeoJsonCatalogItem - with geojson-vt and protomaps", function() {
     terria = new Terria({
       baseUrl: "./"
     });
-    terria.configParameters.enableGeojsonMvt = true;
     geojson = new GeoJsonCatalogItem("test-geojson", terria);
 
     geojson.setTrait(
@@ -713,7 +713,7 @@ describe("GeoJsonCatalogItem - with geojson-vt and protomaps", function() {
           geomType: GeomType.Polygon,
           props: { _id_: rowId }
         })
-      ).toBe("rgb(0,0,0)");
+      ).toBe(getColor(terria.baseMapContrastColor).toCssColorString());
 
       expect(
         polylineSymbo.color.get(1, {
@@ -731,5 +731,31 @@ describe("GeoJsonCatalogItem - with geojson-vt and protomaps", function() {
         })
       ).toBe(col);
     });
+  });
+});
+
+describe("Support geojson through apis", () => {
+  let terria: Terria;
+  let geojson: GeoJsonCatalogItem;
+
+  beforeEach(async function() {
+    terria = new Terria({
+      baseUrl: "./"
+    });
+    geojson = new GeoJsonCatalogItem("test-geojson", terria);
+  });
+
+  it("Extracts geojson nested in a json object", async () => {
+    geojson.setTrait(CommonStrata.user, "url", "test/GeoJSON/api.geojson");
+    geojson.setTrait(CommonStrata.user, "responseDataPath", "nested.data");
+    await geojson.loadMapItems();
+    expect(geojson.mapItems.length).toEqual(1);
+  });
+
+  it("Extracts geojson from an array of json objects", async () => {
+    geojson.setTrait(CommonStrata.user, "url", "test/GeoJSON/api-list.geojson");
+    geojson.setTrait(CommonStrata.user, "responseGeoJsonPath", "nested.data");
+    await geojson.loadMapItems();
+    expect(geojson.mapItems.length).toEqual(1);
   });
 });

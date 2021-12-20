@@ -1,12 +1,13 @@
 import { computed } from "mobx";
 import IonImageryProvider from "terriajs-cesium/Source/Scene/IonImageryProvider";
 import isDefined from "../../../Core/isDefined";
+import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import IonImageryCatalogItemTraits from "../../../Traits/TraitsClasses/IonImageryCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 
 export default class IonImageryCatalogItem extends MappableMixin(
-  CreateModel(IonImageryCatalogItemTraits)
+  CatalogMemberMixin(CreateModel(IonImageryCatalogItemTraits))
 ) {
   static readonly type = "ion-imagery";
 

@@ -1,12 +1,63 @@
 Change Log
 ==========
 
-#### next release (8.1.13)
+#### next release (8.1.15)
 
+* Add better support for retreiving GeoJsonCatalogItem data through APIs, including supporting geojson nested within json objects
 * Add an external link icon to external hyperlink when using method `parseCustomHtmlToReact`. This feature can be switched off by passing `{ disableExternalLinkIcon: true }` in `context` argument.
 * Fixed `ContinuousColorMap` min/max value bug.
 * `TableStyle.outlierColor` is now only used if `zFilter` is active, or `colorTraits.outlierColor` is definedß
 * [The next improvement]
+
+#### 8.1.14
+
+- **Breaking changes**:
+  * `Result.throwIfUndefined()` will now only throw if `result.value` is undefined - regardless of `result.error`
+
+* Reimplement option to zoom on item when adding it to workbench, `zoomOnAddToWorkbench` is added to `MappableTraits`.
+* Update terria-js cesium to `1.81.3` 
+* Re-allowed models to be added to `workbench` if the are not `Mappable` or `Chartable`
+* Moved `WebMapServiceCatalogItem.GetCapbilitiesStratum` to `lib\Models\Catalog\Ows\WebMapServiceCapabilitiesStratum.ts`
+* Moved `WebMapServiceCatalogItem.DiffStratum` to `DiffableMixin`
+* `callWebCoverageService` now uses version WCS `2.0.0`
+  * All WCS export functionality is now in `ExportWebCoverageServiceMixin`
+  * Added `WebCoverageServiceParameterTraits` to `WebMapServiceCatalogItemTraits.linkedWcsParameters`. It includes `outputFormat` and `outputCrs`
+  * Will attempt to use native CRS and format (from `DescribeCoverage`)
+  * No longer sets `width` or `height` - so export will now return native resolution
+* Anonymize user IP when using google analytics.
+* Fix crash when TableMixin-based catalog item had invalid date values
+* Fix `WebMapServiceCatalogItem.styles` if `supportsGetLegendGraphics = false`. This means that if a WMS server doesn't support `GetLegendGraphics` requests, the first style will be set as the default style.
+
+#### 8.1.13
+
+* Paramerterised the support email on the help panel to use the support email in config
+* Refactored `TableColumn get type()` to move logic into `guessColumnTypeFromValues()`
+* `TableMixin.activeStyle` will set `TableColumnType = hidden` for `scalar` columns with name `"id"`, `"_id_"` or `"fid"`
+* Fix bug `TableColumn.type = scalar` even if there were no values.
+* Table columns named `"easting"` and `"northing"` are now hidden by default from styles
+* `TableColumn.type = enum` requires at least 2 unique values (including null) to be selected by default
+* Tweak automatic `TableColumn.type = Enum` for wider range of values
+* Exporting `TableMixin` will now add proper file extensions
+* Added `TimeVaryingTraits.timeLabel` trait to change label on `DateTimeSelectorSection` (defaults to "Time:")
+  * This is set to `timeColumn.title`
+* `TableColumn` will try to generate prettier `title` by un-camel casing, removing underscores and capitalising words
+* `TableStyle` `startDates`, `finishDates` and `timeIntervals` will only set values for valid `rowGroups` (invalid rows will be set to `null`). For example, this means that rows with invalid regions will be ignored.
+* Add "Disable style" option to `TableMixin.styleDimensions` - it can be enabled with `TableTraits.showDisableStyleOption`
+* Added `timeDisableDimension` to `TableMixin` - this will render a checkbox to disable time dimension if `rowGroups` only have a single time interval per group (i.e. features aren't "moving" across time) - it can be enabled with `TableTraits.showDisableTimeOption` - `TableAutomaticStylesStratum` will automatically enable this if at least 50% of rowGroups only have one unique time interval (i.e. they don't change over time)\
+* Remove border from region mapping if no data
+* Add `baseMapContrastColor` and `constrastColor` to `BaseMapModel`
+* Fixed `TableMixin.defaultTableStyle.legends` - `defaultTableStyle` is now not observable - it is created once in the `contructor`
+* Removed `Terria.configParameters.enableGeojsonMvt` - geojson-vt/Protomaps is now used by default
+* `GpxCatalogItem` now uses `GeojsonMixin`
+* Tsify `sendFeedback.ts` and improve error messages/notifications
+* Removed unused overrideState from many DataCatalog React components.
+* Fixed a bug where adding a timeseries dataset from the preview map's Add to map button didn't add the dataset to the `timelineStack`.
+* Fixed incorrect colour for catalog item names in the explorer panel when using dynamic theming. 
+* Moved `CatalogIndex` loading from constructor (called in `Terria.start`) to `CatalogSearchProvider.doSearch` - this means the index will only be loaded when the user does their first search
+* Add basic auth support to `generateCatalogIndex`, fix some bugs and improve performance
+* Update terria-js cesium to `1.81.2`
+* Add `uniqueId` as fallback to `nameInCatalog`
+* Remove duplicated items from `OpenDataSoftGroup` and `SocrataGroup`
 
 #### 8.1.12
 
@@ -51,10 +102,12 @@ Change Log
 * Fixed `superGet` replacement in webpack builds with babel versions `7.16.0` and above.
 
 #### 8.1.9
+
 * TSify workbench splitter control and fix broken styling.
 * Fix app crash when opening AR tool.
 
 #### 8.1.8
+
 * Tsified `SettingPanel`
 * Moved `setViewerMode` function from `Terria` class to `ViewerMode`
 * Refactored checkbox to use children elements for label instead of label
