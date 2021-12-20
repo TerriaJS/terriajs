@@ -13,13 +13,16 @@ export interface JsonArray<T = JsonValue> extends Array<T> {}
 
 export default JsonValue;
 
-export function isJsonObject(value: unknown | undefined): value is JsonObject {
+export function isJsonObject(
+  value: unknown | undefined,
+  deep = true
+): value is JsonObject {
   return (
     value !== undefined &&
     typeof value === "object" &&
     value !== null &&
     !Array.isArray(value) &&
-    Object.values(value).every(v => isJsonValue(v))
+    (!deep || Object.values(value).every(v => isJsonValue(v, true)))
   );
 }
 
@@ -35,20 +38,26 @@ export function isJsonString(value: unknown | undefined): value is string {
   return typeof value === "string";
 }
 
-export function isJsonValue(value: unknown): value is JsonValue {
+export function isJsonValue(value: unknown, deep = true): value is JsonValue {
   return (
     typeof value === "undefined" ||
     value === null ||
     isJsonBoolean(value) ||
     isJsonNumber(value) ||
     isJsonString(value) ||
-    isJsonArray(value) ||
-    isJsonObject(value)
+    isJsonArray(value, deep) ||
+    isJsonObject(value, deep)
   );
 }
 
-export function isJsonArray(value: unknown | undefined): value is JsonArray {
-  return Array.isArray(value) && value.every(child => isJsonValue(child));
+export function isJsonArray(
+  value: unknown | undefined,
+  deep = true
+): value is JsonArray {
+  return (
+    Array.isArray(value) &&
+    (!deep || value.every(child => isJsonValue(child, true)))
+  );
 }
 
 export function isJsonStringArray(

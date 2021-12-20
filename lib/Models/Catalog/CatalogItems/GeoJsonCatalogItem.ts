@@ -107,7 +107,10 @@ class GeoJsonCatalogItem extends GeoJsonMixin(
         })
       );
       if (fc) return fc;
-    } else if (isJsonObject(jsonData) && typeof jsonData.type === "string") {
+    } else if (
+      isJsonObject(jsonData, false) &&
+      typeof jsonData.type === "string"
+    ) {
       // Actual geojson
       const fc = toFeatureCollection(jsonData);
       if (fc) return fc;

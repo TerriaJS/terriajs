@@ -11,6 +11,7 @@ Change Log
 * Add support for zipped `CatalogIndex` json files.
 * Fix `SplitReferences` which use `shareKeys`
 * Make `isJson*` type assertion functions more rigorous
+  * Add `deep` parameter, so you can use old "shallow" type check for performance reasons if needed
 * Add better support for retreiving GeoJsonCatalogItem data through APIs, including supporting geojson nested within json objects
 * Fixed `ContinuousColorMap` min/max value bug.
 * `TableStyle.outlierColor` is now only used if `zFilter` is active, or `colorTraits.outlierColor` is defined
