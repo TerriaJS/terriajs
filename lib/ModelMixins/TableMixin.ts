@@ -269,7 +269,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     @computed
     get mapItems(): (DataSource | ImageryParts)[] {
       // Wait for activeTableStyle to be ready
-      if (!this.activeTableStyle.ready || this.isLoadingMapItems) return [];
+      if (
+        this.dataColumnMajor?.length === 0 ||
+        !this.activeTableStyle.ready ||
+        this.isLoadingMapItems
+      )
+        return [];
 
       const numRegions =
         this.activeTableStyle.regionColumn?.valuesAsRegions?.uniqueRegionIds
@@ -682,7 +687,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     @computed
     get legends(): Model<LegendTraits>[] {
-      if (this.mapItems.length > 0) {
+      if (this.dataColumnMajor?.length === 0 || this.mapItems.length > 0) {
         const colorLegend = this.activeTableStyle.colorTraits.legend;
         return filterOutUndefined([colorLegend]);
       } else {

@@ -9,12 +9,11 @@ Change Log
 * `TableStyle.outlierColor` is now only used if `zFilter` is active, or `colorTraits.outlierColor` is defined
 * Add `forceConvertResultsToV8` to `WebProcessingServiceCatalogFunction`. If your WPS processes are returning v7 json, you will either need to set this to `true`, or set `version: 0.0.1` in JSON output (which will then be automatically converted to v8)
 * Cleanup `CatalogFunction` error handling
-
 * Fix `SelectAPolygonParameterEditor` feature picking (tsified)
 * Add `WebMapServiceCatalogItem.rectangle` support for multiple WMS layers
 * Fix picked feature highlighting for ArcGis REST API features (and TSify `featureDataToGeoJson`)
 * Re-enable GeoJSON simple styling - now if more than 50% of features have [simple-style-spec properties](https://github.com/mapbox/simplestyle-spec) - automatic styling will be disabled (this behaviour can be disabled by setting `forceCesiumPrimitives = false`)
-
+* Don't show `TableMixin` `legends` or `mapItems` if no data
 * [The next improvement]
 
 #### 8.1.14
