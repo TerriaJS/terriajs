@@ -5,7 +5,15 @@ Change Log
 
 * Add better support for retreiving GeoJsonCatalogItem data through APIs, including supporting geojson nested within json objects
 * Fixed `ContinuousColorMap` min/max value bug.
-* `TableStyle.outlierColor` is now only used if `zFilter` is active, or `colorTraits.outlierColor` is definedß
+* `TableStyle.outlierColor` is now only used if `zFilter` is active, or `colorTraits.outlierColor` is defined
+* Add `forceConvertResultsToV8` to `WebProcessingServiceCatalogFunction`. If your WPS processes are returning v7 json, you will either need to set this to `true`, or set `version: 0.0.1` in JSON output (which will then be automatically converted to v8)
+* Cleanup `CatalogFunction` error handling
+
+* Fix `SelectAPolygonParameterEditor` feature picking (tsified)
+* Add `WebMapServiceCatalogItem.rectangle` support for multiple WMS layers
+* Fix picked feature highlighting for ArcGis REST API features (and TSify `featureDataToGeoJson`)
+* Re-enable GeoJSON simple styling - now if more than 50% of features have [simple-style-spec properties](https://github.com/mapbox/simplestyle-spec) - automatic styling will be disabled (this behaviour can be disabled by setting `forceCesiumPrimitives = false`)
+
 * [The next improvement]
 
 #### 8.1.14
@@ -13,7 +21,8 @@ Change Log
 - **Breaking changes**:
   * `Result.throwIfUndefined()` will now only throw if `result.value` is undefined - regardless of `result.error`
 
-* Add better support for retreiving GeoJsonCatalogItem data through APIs, including supporting geojson nested within json objects
+* Reimplement option to zoom on item when adding it to workbench, `zoomOnAddToWorkbench` is added to `MappableTraits`.
+* Update terria-js cesium to `1.81.3` 
 * Re-allowed models to be added to `workbench` if the are not `Mappable` or `Chartable`
 * Moved `WebMapServiceCatalogItem.GetCapbilitiesStratum` to `lib\Models\Catalog\Ows\WebMapServiceCapabilitiesStratum.ts`
 * Moved `WebMapServiceCatalogItem.DiffStratum` to `DiffableMixin`
@@ -25,18 +34,6 @@ Change Log
 * Anonymize user IP when using google analytics.
 * Fix crash when TableMixin-based catalog item had invalid date values
 * Fix `WebMapServiceCatalogItem.styles` if `supportsGetLegendGraphics = false`. This means that if a WMS server doesn't support `GetLegendGraphics` requests, the first style will be set as the default style.
-* [The next improvement]
-
-#### 8.1.14
-
-* Reimplement option to zoom on item when adding it to workbench, `zoomOnAddToWorkbench` is added to `MappableTraits`.
-* Add `forceConvertResultsToV8` to `WebProcessingServiceCatalogFunction`. If your WPS processes are returning v7 json, you will either need to set this to `true`, or set `version: 0.0.1` in JSON output (which will then be automatically converted to v8)
-* Cleanup `CatalogFunction` error handling
-* Update terria-js cesium to `1.81.3` 
-* Fix `SelectAPolygonParameterEditor` feature picking (tsified)
-* Add `WebMapServiceCatalogItem.rectangle` support for multiple WMS layers
-* Fix picked feature highlighting for ArcGis REST API features (and TSify `featureDataToGeoJson`)
-* Re-enable GeoJSON simple styling - now if more than 50% of features have [simple-style-spec properties](https://github.com/mapbox/simplestyle-spec) - automatic styling will be disabled (this behaviour can be disabled by setting `forceCesiumPrimitives = false`)
 
 
 #### 8.1.13
