@@ -14,7 +14,6 @@ Change Log
   * `Result.throwIfUndefined()` will now only throw if `result.value` is undefined - regardless of `result.error`
 
 * Reimplement option to zoom on item when adding it to workbench, `zoomOnAddToWorkbench` is added to `MappableTraits`.
-* Add an external link icon to external hyperlink when using method `parseCustomHtmlToReact`. This feature can be switched off by passing `{ disableExternalLinkIcon: true }` in `context` argument.
 * Update terria-js cesium to `1.81.3` 
 * Re-allowed models to be added to `workbench` if the are not `Mappable` or `Chartable`
 * Moved `WebMapServiceCatalogItem.GetCapbilitiesStratum` to `lib\Models\Catalog\Ows\WebMapServiceCapabilitiesStratum.ts`
@@ -49,6 +48,7 @@ Change Log
 * Fixed `TableMixin.defaultTableStyle.legends` - `defaultTableStyle` is now not observable - it is created once in the `contructor`
 * Removed `Terria.configParameters.enableGeojsonMvt` - geojson-vt/Protomaps is now used by default
 * `GpxCatalogItem` now uses `GeojsonMixin`
+* Add an external link icon to external hyperlink when using method `parseCustomHtmlToReact`. This feature can be switched off by passing `{ disableExternalLinkIcon: true }` in `context` argument.
 * Tsify `sendFeedback.ts` and improve error messages/notifications
 * Removed unused overrideState from many DataCatalog React components.
 * Fixed a bug where adding a timeseries dataset from the preview map's Add to map button didn't add the dataset to the `timelineStack`.
