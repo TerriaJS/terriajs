@@ -4,7 +4,10 @@ import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
+import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
+import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
+import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import ClippingPlane from "terriajs-cesium/Source/Scene/ClippingPlane";
@@ -17,6 +20,7 @@ import Model from "../Models/Definition/Model";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import { SelectableDimension } from "../Models/SelectableDimensions";
 import ClippingPlanesTraits from "../Traits/TraitsClasses/ClippingPlanesTraits";
+import HeadingPitchRollTraits from "../Traits/TraitsClasses/HeadingPitchRollTraits";
 import LatLonHeightTraits from "../Traits/TraitsClasses/LatLonHeightTraits";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 
@@ -163,8 +167,26 @@ function ClippingMixin<T extends Constructor<BaseType>>(
         this.clippingBox.dimensions.height ?? 100
       );
 
+      let hpr: HeadingPitchRoll | undefined;
+      if (
+        this.clippingBox.rotation.heading !== undefined &&
+        this.clippingBox.rotation.pitch !== undefined &&
+        this.clippingBox.rotation.roll !== undefined
+      ) {
+        hpr = HeadingPitchRoll.fromDegrees(
+          this.clippingBox.rotation.heading,
+          this.clippingBox.rotation.pitch,
+          this.clippingBox.rotation.roll
+        );
+      }
+
       const boxTransform = Matrix4.multiply(
-        Transforms.eastNorthUpToFixedFrame(position),
+        hpr
+          ? Matrix4.fromRotationTranslation(
+              Matrix3.fromHeadingPitchRoll(hpr),
+              position
+            )
+          : Transforms.eastNorthUpToFixedFrame(position),
         Matrix4.fromScale(dimensions, new Matrix4()),
         new Matrix4()
       );
@@ -188,10 +210,14 @@ function ClippingMixin<T extends Constructor<BaseType>>(
               this.clippingPlaneModelMatrix
             );
             if (isFinished) {
+              const position = Matrix4.getTranslation(
+                modelMatrix,
+                new Cartesian3()
+              );
               LatLonHeightTraits.setFromCartesian(
                 this.clippingBox.position,
                 CommonStrata.user,
-                Matrix4.getTranslation(modelMatrix, new Cartesian3())
+                position
               );
               const dimensions = Matrix4.getScale(
                 modelMatrix,
@@ -205,6 +231,16 @@ function ClippingMixin<T extends Constructor<BaseType>>(
                   width: dimensions.y,
                   height: dimensions.z
                 }
+              );
+
+              const rotationMatrix = Matrix3.getRotation(
+                Matrix4.getMatrix3(modelMatrix, new Matrix3()),
+                new Matrix3()
+              );
+              HeadingPitchRollTraits.setFromRotationMatrix(
+                this.clippingBox.rotation,
+                CommonStrata.user,
+                rotationMatrix
               );
             }
           })

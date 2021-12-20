@@ -5,13 +5,17 @@ import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Color from "terriajs-cesium/Source/Core/Color";
+import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import Plane from "terriajs-cesium/Source/Core/Plane";
+import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 import Ray from "terriajs-cesium/Source/Core/Ray";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
 import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
+import TranslationRotationScale from "terriajs-cesium/Source/Core/TranslationRotationScale";
 import CallbackProperty from "terriajs-cesium/Source/DataSources/CallbackProperty";
 import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
@@ -74,6 +78,11 @@ type Side = Entity &
   };
 
 /**
+ * A box edge
+ */
+type Edge = Entity & Updatable & Interactable;
+
+/**
  * Style for a box side
  */
 type SideStyle = {
@@ -123,18 +132,23 @@ const SIDE_PLANES: Plane[] = [
   new Plane(new Cartesian3(-1, 0, 0), 0.5)
 ];
 
-// The box has 8 corner points and 6 face points that act as scaling grips.
-// Here we represent them as 7 vectors in local coordinates space.
-// Each vector represents a point and its opposite points can be easily derived from it.
-const SCALE_POINT_VECTORS = [
+const CORNER_POINT_VECTORS = [
   new Cartesian3(0.5, 0.5, 0.5),
   new Cartesian3(0.5, -0.5, 0.5),
-  new Cartesian3(-0.5, 0.5, 0.5),
   new Cartesian3(-0.5, -0.5, 0.5),
+  new Cartesian3(-0.5, 0.5, 0.5)
+];
+
+const FACE_POINT_VECTORS = [
   new Cartesian3(0.5, 0.0, 0.0),
   new Cartesian3(0.0, 0.5, 0.0),
   new Cartesian3(0.0, 0.0, 0.5)
 ];
+
+// The box has 8 corner points and 6 face points that act as scaling grips.
+// Here we represent them as 7 vectors in local coordinates space.
+// Each vector represents a point and its opposite points can be easily derived from it.
+const SCALE_POINT_VECTORS = [...CORNER_POINT_VECTORS, ...FACE_POINT_VECTORS];
 
 /**
  * Checks whether the given entity is updatable (i.e repsonds to box parameter changes).
@@ -165,18 +179,11 @@ export default class BoxDrawing {
   // An external transform to convert the box in local coordinates to world coordinates
   private readonly worldTransform: Matrix4 = Matrix4.IDENTITY.clone();
 
-  // Inverse of world transform
-  private readonly inverseWorldTransform: Matrix4 = Matrix4.IDENTITY.clone();
+  // The translation, rotation & scale (i.e position, orientation, dimensions) of the box
+  private readonly trs = new TranslationRotationScale();
 
-  // Transformations in local coordinates. All box transformations are made in
-  // the local space.
-  private readonly localTransform: Matrix4 = Matrix4.IDENTITY.clone();
-
-  // The final transform that combines the local changes and the world transform.
+  // A matrix representation of trs
   private readonly modelMatrix: Matrix4 = Matrix4.IDENTITY.clone();
-
-  // Current box position in the world coordinates derived from modelMatrix
-  private readonly boxPosition: Cartesian3 = new Cartesian3();
 
   private scene: Scene;
 
@@ -224,8 +231,15 @@ export default class BoxDrawing {
    */
   public setTransform(transform: Matrix4) {
     Matrix4.clone(transform, this.worldTransform);
-    Matrix4.inverse(this.worldTransform, this.inverseWorldTransform);
-    Matrix4.clone(Matrix4.IDENTITY, this.localTransform);
+    Matrix4.getTranslation(this.worldTransform, this.trs.translation);
+    Matrix4.getScale(this.worldTransform, this.trs.scale);
+    Quaternion.fromRotationMatrix(
+      Matrix3.getRotation(
+        Matrix4.getMatrix3(this.worldTransform, new Matrix3()),
+        new Matrix3()
+      ),
+      this.trs.rotation
+    );
     this.updateBox();
   }
 
@@ -258,10 +272,7 @@ export default class BoxDrawing {
     const onCameraChange = () => {
       if (this.isBoxInCameraView()) {
         startMapInteractions();
-        this.sides.forEach(side => side.updateOnCameraChange());
-        this.scalePoints.forEach(scalePoint =>
-          scalePoint.updateOnCameraChange()
-        );
+        this.updateEntitiesOnOrientationChange();
       } else {
         // Disable map interactions when the box goes out of camera view.
         stopMapInteractions();
@@ -292,16 +303,16 @@ export default class BoxDrawing {
    * Updates all box parameters from changes to the localTransform.
    */
   private updateBox() {
-    Matrix4.multiply(
-      this.worldTransform,
-      this.localTransform,
-      this.modelMatrix
-    );
-    Matrix4.getTranslation(this.modelMatrix, this.boxPosition);
+    Matrix4.fromTranslationRotationScale(this.trs, this.modelMatrix);
 
     this.dataSource.entities.values.forEach(entity => {
       if (isUpdatable(entity)) entity.update();
     });
+  }
+
+  private updateEntitiesOnOrientationChange() {
+    this.sides.forEach(side => side.updateOnCameraChange());
+    this.scalePoints.forEach(scalePoint => scalePoint.updateOnCameraChange());
   }
 
   /**
@@ -316,7 +327,7 @@ export default class BoxDrawing {
     return viewRectangle
       ? Rectangle.contains(
           viewRectangle,
-          Cartographic.fromCartesian(this.boxPosition)
+          Cartographic.fromCartesian(this.trs.translation)
         )
       : false;
   }
@@ -420,6 +431,7 @@ export default class BoxDrawing {
    */
   private drawBox() {
     this.drawSides();
+    this.drawEdges();
     this.drawScalePoints();
   }
 
@@ -431,6 +443,30 @@ export default class BoxDrawing {
       const side = this.createSide(sideLocal);
       this.dataSource.entities.add(side);
       this.sides.push(side);
+    });
+  }
+
+  private drawEdges() {
+    const localEdges: [Cartesian3, Cartesian3][] = [];
+    CORNER_POINT_VECTORS.map((vector, i) => {
+      const upPoint = vector;
+      const downPoint = Cartesian3.clone(upPoint, new Cartesian3());
+      downPoint.z *= -1;
+
+      const nextUpPoint = CORNER_POINT_VECTORS[(i + 1) % 4];
+      const nextDownPoint = Cartesian3.clone(nextUpPoint, new Cartesian3());
+      nextDownPoint.z *= -1;
+
+      const verticalEdge: [Cartesian3, Cartesian3] = [upPoint, downPoint];
+      const topEdge: [Cartesian3, Cartesian3] = [nextUpPoint, upPoint];
+      const bottomEdge: [Cartesian3, Cartesian3] = [nextDownPoint, downPoint];
+      localEdges.push(verticalEdge, topEdge, bottomEdge);
+    });
+
+    localEdges.forEach(localEdge => {
+      const edge = this.createEdge(localEdge);
+      this.dataSource.entities.add(edge);
+      //this.edges.push(edge);
     });
   }
 
@@ -452,6 +488,7 @@ export default class BoxDrawing {
       const axisLine = this.createScaleAxisLine(scalePoint1, scalePoint2);
       scalePoint1.axisLine = axisLine;
       scalePoint2.axisLine = axisLine;
+
       this.dataSource.entities.add(scalePoint1);
       this.dataSource.entities.add(scalePoint2);
       this.dataSource.entities.add(axisLine);
@@ -467,11 +504,8 @@ export default class BoxDrawing {
    */
   private createSide(planeLocal: Plane): Side {
     const scene = this.scene;
-    const position = new Cartesian3();
     const plane = new Plane(new Cartesian3(), 0);
     const planeDimensions = new Cartesian3();
-    const boxDimensions = new Cartesian3();
-    const scaleMatrix = new Matrix4();
     const normalAxis = planeLocal.normal.x
       ? Axis.X
       : planeLocal.normal.y
@@ -480,21 +514,27 @@ export default class BoxDrawing {
     const style: Readonly<SideStyle> = {
       fillColor: Color.WHITE.withAlpha(0.1),
       outlineColor: Color.WHITE,
-      highlightFillColor: Color.CYAN.withAlpha(0.1),
-      highlightOutlineColor: Color.WHITE
+      highlightFillColor: Color.WHITE.withAlpha(0.1),
+      highlightOutlineColor: Color.CYAN
     };
     let isHighlighted = false;
 
+    const scratchScaleMatrix = new Matrix4();
     const update = () => {
-      Matrix4.getTranslation(this.modelMatrix, position);
-      Matrix4.getScale(this.modelMatrix, boxDimensions);
-      Matrix4.fromScale(boxDimensions, scaleMatrix);
+      // From xyz scale set the scale for this plane based on the plane axis
+      setPlaneDimensions(this.trs.scale, normalAxis, planeDimensions);
+
+      // Transform the plane using scale matrix so that the plane distance is set correctly
+      // Orientation and position are specified as entity parameters.
+      const scaleMatrix = Matrix4.fromScale(this.trs.scale, scratchScaleMatrix);
       Plane.transform(planeLocal, scaleMatrix, plane);
-      setPlaneDimensions(boxDimensions, normalAxis, planeDimensions);
     };
+
     const side: Side = new Entity({
-      position: new CallbackProperty(() => position, false) as any,
+      position: new CallbackProperty(() => this.trs.translation, false) as any,
+      orientation: new CallbackProperty(() => this.trs.rotation, false) as any,
       plane: {
+        show: true,
         plane: new CallbackProperty(() => plane, false),
         dimensions: new CallbackProperty(() => planeDimensions, false),
         fill: true,
@@ -524,23 +564,21 @@ export default class BoxDrawing {
       : Axis.Z;
 
     const scratchDirection = new Cartesian3();
-    const scratchMoveVectorWc = new Cartesian3();
-    const scratchMoveVectorLc = new Cartesian3();
+    const scratchMoveVector = new Cartesian3();
     const scratchPreviousPosition = new Cartesian3();
     const scratchEndPosition = new Cartesian3();
-    const scratchTranslation = new Cartesian3();
-    const scratchTranslationMatrix = new Matrix4();
+    const scratchTranslationStep = new Cartesian3();
 
     /**
      * Moves the box when dragging a side.
-     *  - When dragging the top or bottom sides, we move the box up or down along the z-axis.
-     *  - When dragging any other sides we move the box along the globe surface.
+     *  - When dragging the top or bottom sides, move the box up or down along the z-axis.
+     *  - When dragging any other sides move the box along the globe surface.
      */
     const moveBoxOnDragSide = (mouseMove: MouseMove) => {
       const moveUpDown = axis === Axis.Z;
-      let translation = scratchTranslation;
+      let translationStep = scratchTranslationStep;
 
-      // Get the move direction in world coordinates
+      // Get the move direction
       const direction = Cartesian3.normalize(
         Matrix4.multiplyByPointAsVector(
           this.modelMatrix,
@@ -555,24 +593,18 @@ export default class BoxDrawing {
         // moveAmount is proportional to the mouse movement along the provided direction
         const moveAmount = computeMoveAmount(
           scene,
-          position,
+          this.trs.translation,
           direction,
           mouseMove
         );
-        // Get the direction and magnitude of the move in world-coordinates
-        const moveVectorWc = Cartesian3.multiplyByScalar(
+        // Get the move vector
+        const moveVector = Cartesian3.multiplyByScalar(
           direction,
           moveAmount,
-          scratchMoveVectorWc
-        );
-        // Get the direction and magnitude of the move in local-coordinates
-        const moveVectorLc = Matrix4.multiplyByPointAsVector(
-          this.inverseWorldTransform,
-          moveVectorWc,
-          scratchMoveVectorLc
+          scratchMoveVector
         );
 
-        translation = Cartesian3.clone(moveVectorLc, translation);
+        translationStep = moveVector;
       } else {
         //Move along the globe surface when dragging any other side
         const previousPosition = screenToGlobePosition(
@@ -588,28 +620,18 @@ export default class BoxDrawing {
         if (!previousPosition || !endPosition) {
           return;
         }
-        // Previous position in local coordinates
-        const previousLc = Matrix4.multiplyByPoint(
-          this.inverseWorldTransform,
-          previousPosition,
-          scratchPreviousPosition
-        );
-        // End position in local coordinates
-        const endLc = Matrix4.multiplyByPoint(
-          this.inverseWorldTransform,
+        translationStep = Cartesian3.subtract(
           endPosition,
-          scratchEndPosition
+          previousPosition,
+          translationStep
         );
-        translation = Cartesian3.subtract(endLc, previousLc, translation);
-        // Zero height movement
-        translation.z = 0;
       }
 
       // Update box position and fire change event
-      Matrix4.multiply(
-        Matrix4.fromTranslation(translation, scratchTranslationMatrix),
-        this.localTransform,
-        this.localTransform
+      Cartesian3.add(
+        this.trs.translation,
+        translationStep,
+        this.trs.translation
       );
       this.updateBox();
       this.onChange?.({
@@ -683,6 +705,114 @@ export default class BoxDrawing {
   }
 
   /**
+   * Creates edges for the side specified as plane in local coordinates.
+   */
+  private createEdge(localEdge: [Cartesian3, Cartesian3]): Edge {
+    const scene = this.scene;
+    const style = {
+      color: Color.WHITE.withAlpha(0.1),
+      highlightColor: Color.CYAN.withAlpha(0.7)
+    };
+    const position1 = new Cartesian3();
+    const position2 = new Cartesian3();
+    const positions = [position1, position2];
+
+    // Only vertical edges are draggable
+    const isDraggableEdge = localEdge[1].z - localEdge[0].z !== 0;
+
+    const update = () => {
+      Matrix4.multiplyByPoint(this.modelMatrix, localEdge[0], position1);
+      Matrix4.multiplyByPoint(this.modelMatrix, localEdge[1], position2);
+    };
+
+    let isHighlighted = false;
+    const edge = new Entity({
+      polyline: {
+        show: true,
+        positions: new CallbackProperty(() => positions, false),
+        width: new CallbackProperty(() => (isDraggableEdge ? 10 : 0), false),
+        material: new ColorMaterialProperty(
+          new CallbackProperty(
+            () => (isHighlighted ? style.highlightColor : style.color),
+            false
+          )
+        ) as any,
+        arcType: ArcType.NONE
+      }
+    }) as Edge;
+
+    const onMouseOver = () => {
+      if (isDraggableEdge) {
+        isHighlighted = true;
+        setCanvasCursor(scene, "pointer");
+      }
+    };
+
+    const onMouseOut = () => {
+      if (isDraggableEdge) {
+        isHighlighted = false;
+        setCanvasCursor(scene, "auto");
+      }
+    };
+
+    const onPick = () => {
+      if (isDraggableEdge) {
+        isHighlighted = true;
+        setCanvasCursor(scene, "pointer");
+      }
+    };
+
+    const onRelease = () => {
+      if (isDraggableEdge) {
+        isHighlighted = false;
+        setCanvasCursor(scene, "auto");
+        this.onChange?.({
+          isFinished: true,
+          modelMatrix: this.modelMatrix
+        });
+      }
+    };
+
+    const scratchHpr = new HeadingPitchRoll(0, 0, 0);
+
+    const rotateBoxOnDrag = (mouseMove: MouseMove) => {
+      if (!isDraggableEdge) {
+        return;
+      }
+
+      const dx = mouseMove.endPosition.x - mouseMove.startPosition.x;
+      const sensitivity = 0.05;
+      const hpr = scratchHpr;
+      // -dx because the screen coordinates is opposite to local coordinates space.
+      hpr.heading = -dx * sensitivity;
+      hpr.pitch = 0;
+      hpr.roll = 0;
+
+      Quaternion.multiply(
+        this.trs.rotation,
+        Quaternion.fromHeadingPitchRoll(hpr),
+        this.trs.rotation
+      );
+
+      this.updateBox();
+      this.updateEntitiesOnOrientationChange();
+      this.onChange?.({
+        isFinished: false,
+        modelMatrix: this.modelMatrix
+      });
+    };
+
+    edge.update = update;
+    edge.onMouseOver = onMouseOver;
+    edge.onMouseOut = onMouseOut;
+    edge.onPick = onPick;
+    edge.onRelease = onRelease;
+    edge.onDrag = rotateBoxOnDrag;
+    update();
+    return edge;
+  }
+
+  /**
    * Creates a scale point drawing
    *
    * @param pointLocal The scale point in local coordinates.
@@ -706,8 +836,16 @@ export default class BoxDrawing {
         : style.dimPointColor;
     };
 
+    const update = () => {
+      Matrix4.multiplyByPoint(this.modelMatrix, pointLocal, position);
+    };
+
     const scalePoint: ScalePoint = new Entity({
       position: new CallbackProperty(() => position, false) as any,
+      orientation: new CallbackProperty(
+        () => Quaternion.IDENTITY,
+        false
+      ) as any,
       model: {
         uri: require("file-loader!../../wwwroot/models/Box.glb"),
         minimumPixelSize: 12,
@@ -731,6 +869,7 @@ export default class BoxDrawing {
         : "nesw-resize";
 
     const isCornerPoint = xDot && yDot && zDot;
+    const isProportionalScaling = isCornerPoint;
 
     const onMouseOver = () => {
       scalePoint.axisLine.show = true;
@@ -760,13 +899,8 @@ export default class BoxDrawing {
     const scratchOppositePosition = new Cartesian3();
     const scratchAxisVectorWc = new Cartesian3();
     const scratchMoveDirection = new Cartesian3();
-    const scratchScaleVectorWc = new Cartesian3();
-    const scratchScaleVectorLc = new Cartesian3();
-    const scratchScaleStep = new Cartesian3();
-    const scratchCurrentScale = new Cartesian3();
-    const scratchNewScale = new Cartesian3();
-    const scratchTranslationStep = new Cartesian3();
-    const scratchTranslationMatrix = new Matrix4();
+    const scratchMultiply = new Cartesian3();
+    const scratchAbs = new Cartesian3();
 
     /**
      * Scales the box proportional to the mouse move when dragging the scale point.
@@ -775,7 +909,7 @@ export default class BoxDrawing {
      *   - That scaling also keeps opposite side of the box stationary.
      *   - The box does not get smaller than 20px on any side at the current zoom level.
      */
-    const scaleOnDrag = (mouseMove: MouseMove) => {
+    const scaleBoxOnDrag = (mouseMove: MouseMove) => {
       // Find the direction to scale in
       const oppositePosition = scalePoint.oppositeScalePoint.position.getValue(
         JulianDate.now(),
@@ -814,60 +948,29 @@ export default class BoxDrawing {
         }
       }
 
-      // Now we need to convert the scaleAmount in world space to a scale step
-      // along xyz in local space (not sure if there is an easier way of doing this.)
-
-      // 1. Multiply by axis to get a scale vector in world space
-      const scaleVectorWc = Cartesian3.multiplyByScalar(
-        axisVectorWc,
-        scaleAmount,
-        scratchScaleVectorWc
-      );
-
-      // 2. The same scale vector in local space
-      const scaleVectorLc = Matrix4.multiplyByPointAsVector(
-        this.inverseWorldTransform,
-        scaleVectorWc,
-        scratchScaleVectorLc
-      );
-
-      // 3. scaleStep should be independent of the axis direction.
-      //    It should be positive when scaling up and negative when scaling down
-      //    To get rid of the axis direction, we multiply it by the sign of the vector.
-      const scaleStep = Cartesian3.multiplyComponents(
-        scaleVectorLc,
-        new Cartesian3(
-          Math.sign(axisLocal.x),
-          Math.sign(axisLocal.y),
-          Math.sign(axisLocal.z)
+      // Get the scale components along xyz
+      const scaleStep = Cartesian3.multiplyByScalar(
+        Cartesian3.abs(
+          Cartesian3.multiplyComponents(
+            this.trs.scale,
+            isProportionalScaling ? new Cartesian3(1, 1, 1) : axisLocal,
+            scratchMultiply
+          ),
+          scratchAbs
         ),
-        scratchScaleStep
+        scaleAmount,
+        new Cartesian3()
       );
+      Cartesian3.add(this.trs.scale, scaleStep, this.trs.scale);
 
-      // Now add the scale step to the current scale
-      const currentScale = Matrix4.getScale(
-        this.localTransform,
-        scratchCurrentScale
+      // Move the box by half the scale amount in the direction of scaling so
+      // that the opposite end remains stationary.
+      const translateStep = Cartesian3.multiplyByScalar(
+        axisVectorWc,
+        scaleAmount / 2,
+        new Cartesian3()
       );
-      const newScale = Cartesian3.add(scaleStep, currentScale, scratchNewScale);
-
-      // Update box scale
-      Matrix4.setScale(this.localTransform, newScale, this.localTransform);
-
-      // Because want the opposite side of the box to remain stationary, we
-      // push the box in the scaled direction by the half the scale amount.
-      const translationStep = Cartesian3.multiplyByScalar(
-        scaleVectorLc,
-        1 / 2,
-        scratchTranslationStep
-      );
-
-      // Update box position
-      Matrix4.multiply(
-        Matrix4.fromTranslation(translationStep, scratchTranslationMatrix),
-        this.localTransform,
-        this.localTransform
-      );
+      Cartesian3.add(this.trs.translation, translateStep, this.trs.translation);
 
       this.updateBox();
       this.onChange?.({ isFinished: false, modelMatrix: this.modelMatrix });
@@ -895,15 +998,11 @@ export default class BoxDrawing {
       model.silhouetteSize = 0 as any;
     };
 
-    const update = () => {
-      Matrix4.multiplyByPoint(this.modelMatrix, pointLocal, position);
-    };
-
     scalePoint.onPick = onPick;
     scalePoint.onRelease = onRelease;
     scalePoint.onMouseOver = onMouseOver;
     scalePoint.onMouseOut = onMouseOut;
-    scalePoint.onDrag = scaleOnDrag;
+    scalePoint.onDrag = scaleBoxOnDrag;
     scalePoint.update = update;
     scalePoint.updateOnCameraChange = updateOnCameraChange;
     update();
