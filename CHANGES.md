@@ -11,6 +11,17 @@ Change Log
 * Add support for zipped `CatalogIndex` json files.
 * Fix `SplitReferences` which use `shareKeys`
 * Make `isJson*` type assertion functions more rigorous
+* Add better support for retreiving GeoJsonCatalogItem data through APIs, including supporting geojson nested within json objects
+* Fixed `ContinuousColorMap` min/max value bug.
+* `TableStyle.outlierColor` is now only used if `zFilter` is active, or `colorTraits.outlierColor` is defined
+* Add `forceConvertResultsToV8` to `WebProcessingServiceCatalogFunction`. If your WPS processes are returning v7 json, you will either need to set this to `true`, or set `version: 0.0.1` in JSON output (which will then be automatically converted to v8)
+* Cleanup `CatalogFunction` error handling
+
+* Fix `SelectAPolygonParameterEditor` feature picking (tsified)
+* Add `WebMapServiceCatalogItem.rectangle` support for multiple WMS layers
+* Fix picked feature highlighting for ArcGis REST API features (and TSify `featureDataToGeoJson`)
+* Re-enable GeoJSON simple styling - now if more than 50% of features have [simple-style-spec properties](https://github.com/mapbox/simplestyle-spec) - automatic styling will be disabled (this behaviour can be disabled by setting `forceCesiumPrimitives = false`)
+
 * [The next improvement]
 
 #### 8.1.14
@@ -31,6 +42,7 @@ Change Log
 * Anonymize user IP when using google analytics.
 * Fix crash when TableMixin-based catalog item had invalid date values
 * Fix `WebMapServiceCatalogItem.styles` if `supportsGetLegendGraphics = false`. This means that if a WMS server doesn't support `GetLegendGraphics` requests, the first style will be set as the default style.
+
 
 #### 8.1.13
 

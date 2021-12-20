@@ -1,8 +1,9 @@
 import i18next from "i18next";
+import { get as _get, set as _set } from "lodash";
 import { computed, toJS } from "mobx";
 import isDefined from "../../../Core/isDefined";
 import JsonValue, { isJsonObject } from "../../../Core/Json";
-import loadBlob, { parseZipJsonBlob, isZip } from "../../../Core/loadBlob";
+import loadBlob, { isZip, parseZipJsonBlob } from "../../../Core/loadBlob";
 import loadJson from "../../../Core/loadJson";
 import readJson from "../../../Core/readJson";
 import TerriaError from "../../../Core/TerriaError";
@@ -74,11 +75,40 @@ class GeoJsonCatalogItem extends GeoJsonMixin(
           this.requestData ? toJS(this.requestData) : undefined,
           this.postRequestDataAsFormData
         );
+        if (this.responseDataPath) {
+          jsonData = _get(jsonData, this.responseDataPath);
+        }
       }
     }
 
-    // Transform jsonData to feature collection
-    if (isJsonObject(jsonData) && typeof jsonData.type === "string") {
+    if (jsonData === undefined) {
+      throw TerriaError.from("Failed to load geojson");
+    }
+
+    if (Array.isArray(jsonData)) {
+      // Array that isn't a feature collection
+      const fc = toFeatureCollection(
+        jsonData.map(item => {
+          let geojson: any = item;
+
+          if (this.responseGeoJsonPath !== undefined) {
+            geojson = _get(item, this.responseGeoJsonPath);
+            // Clear geojson so that it doesn't appear again in its own properties
+            _set(item as object, this.responseGeoJsonPath, undefined);
+          }
+
+          if (typeof geojson === "string") {
+            geojson = JSON.parse(geojson);
+          }
+
+          // add extra properties back to geojson so they appear in feature info
+          geojson.properties = item;
+          return geojson;
+        })
+      );
+      if (fc) return fc;
+    } else if (isJsonObject(jsonData) && typeof jsonData.type === "string") {
+      // Actual geojson
       const fc = toFeatureCollection(jsonData);
       if (fc) return fc;
     }

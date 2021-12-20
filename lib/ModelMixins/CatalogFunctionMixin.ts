@@ -70,24 +70,8 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
 
         return newJob;
       } catch (error) {
-        // Try to get meaningful error message
-        if (error instanceof TerriaError) {
-          throw error;
-        }
-
-        let message = error;
-
-        if (typeof message !== "string") {
-          if (
-            message instanceof RequestErrorEvent &&
-            typeof message.response?.detail === "string"
-          )
-            message = message.response.detail;
-        }
-
-        throw new TerriaError({
-          title: `Error submitting \`${this.typeName}\` job`,
-          message
+        throw TerriaError.from(error, {
+          title: `Error submitting \`${this.typeName}\` job`
         });
       }
     }
