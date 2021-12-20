@@ -15,6 +15,7 @@ const LatLonEnumDateIdCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_e
 const LgaWithDisambigCsv = require("raw-loader!../../wwwroot/test/csv/lga_state_disambig.csv");
 const ParkingSensorDataCsv = require("raw-loader!../../wwwroot/test/csv/parking-sensor-data.csv");
 const LegendDecimalPlacesCsv = require("raw-loader!../../wwwroot/test/csv/legend-decimal-places.csv");
+const BadDatesCsv = require("raw-loader!../../wwwroot/test/csv/bad-dates.csv");
 const regionMapping = JSON.stringify(
   require("../../wwwroot/data/regionMapping.json")
 );
@@ -153,6 +154,21 @@ describe("TableMixin", function() {
           }
         }
         expect(occurrences).toBe(1);
+      }
+    });
+  });
+
+  describe("when the time column has bad datetimes in it", function() {
+    it("ignores them gracefully", async function() {
+      runInAction(() =>
+        item.setTrait(CommonStrata.user, "csvString", BadDatesCsv)
+      );
+
+      await item.loadMapItems();
+      const mapItem = item.mapItems[0];
+      expect(mapItem instanceof CustomDataSource).toBe(true);
+      if (mapItem instanceof CustomDataSource) {
+        expect(mapItem.entities.values.length).toBe(3);
       }
     });
   });

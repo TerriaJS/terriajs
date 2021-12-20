@@ -9,16 +9,15 @@ import ModelTraits from "../ModelTraits";
 import { traitClass } from "../Trait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import DiffableTraits from "./DiffableTraits";
-import ExportableTraits from "./ExportableTraits";
+import ExportWebCoverageServiceTraits from "./ExportWebCoverageServiceTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import LegendTraits from "./LegendTraits";
 import MappableTraits from "./MappableTraits";
-import RasterLayerTraits from "./RasterLayerTraits";
-import TimeFilterTraits from "./TimeFilterTraits";
-import UrlTraits from "./UrlTraits";
 import { MinMaxLevelTraits } from "./MinMaxLevelTraits";
+import RasterLayerTraits from "./RasterLayerTraits";
+import UrlTraits from "./UrlTraits";
 
 export const SUPPORTED_CRS_3857 = ["EPSG:3857", "EPSG:900913"];
 export const SUPPORTED_CRS_4326 = ["EPSG:4326", "CRS:84", "EPSG:4283"];
@@ -150,11 +149,10 @@ export class WebMapServiceAvailableLayerDimensionsTraits extends ModelTraits {
   }
 })
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
-  ExportableTraits,
+  ExportWebCoverageServiceTraits,
   DiffableTraits,
   FeatureInfoTraits,
   LayerOrderingTraits,
-  TimeFilterTraits,
   GetCapabilitiesTraits,
   RasterLayerTraits,
   UrlTraits,
@@ -248,22 +246,6 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     description: "When true, disables the dimension selectors in the workbench."
   })
   disableDimensionSelectors = false;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Linked WCS URL",
-    description:
-      "Gets or sets the URL of a WCS that enables clip-and-ship for this WMS item."
-  })
-  linkedWcsUrl?: string;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Linked WCS Coverage Name",
-    description:
-      "Gets or sets the coverage name for linked WCS for clip-and-ship."
-  })
-  linkedWcsCoverage?: string;
 
   @primitiveTrait({
     type: "boolean",
