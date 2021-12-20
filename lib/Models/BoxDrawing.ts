@@ -319,11 +319,7 @@ export default class BoxDrawing {
    * Returns true if the box is in camera view.
    */
   private isBoxInCameraView() {
-    const viewRectangle = this.scene.camera.computeViewRectangle(
-      undefined,
-      new Rectangle()
-    );
-
+    const viewRectangle = computeViewRectangle(this.scene);
     return viewRectangle
       ? Rectangle.contains(
           viewRectangle,
@@ -896,11 +892,16 @@ export default class BoxDrawing {
       setCanvasCursor(scene, "auto");
     };
 
+    // Axis for proportional scaling
+    const proportionalScalingAxis = new Cartesian3(1, 1, 1);
+
     const scratchOppositePosition = new Cartesian3();
-    const scratchAxisVectorWc = new Cartesian3();
+    const scratchAxisVector = new Cartesian3();
     const scratchMoveDirection = new Cartesian3();
     const scratchMultiply = new Cartesian3();
     const scratchAbs = new Cartesian3();
+    const scratchScaleStep = new Cartesian3();
+    const translateStepScratch = new Cartesian3();
 
     /**
      * Scales the box proportional to the mouse move when dragging the scale point.
@@ -915,14 +916,14 @@ export default class BoxDrawing {
         JulianDate.now(),
         scratchOppositePosition
       );
-      const axisVectorWc = Cartesian3.subtract(
+      const axisVector = Cartesian3.subtract(
         position,
         oppositePosition,
-        scratchAxisVectorWc
+        scratchAxisVector
       );
-      const length = Cartesian3.magnitude(axisVectorWc);
+      const length = Cartesian3.magnitude(axisVector);
       const scaleDirection = Cartesian3.normalize(
-        axisVectorWc,
+        axisVector,
         scratchMoveDirection
       );
 
@@ -948,27 +949,31 @@ export default class BoxDrawing {
         }
       }
 
-      // Get the scale components along xyz
+      // Compute scale components along xyz
       const scaleStep = Cartesian3.multiplyByScalar(
+        // Taking abs because scaling step is independent of axis direction
+        // Scaling step is negative when scaling down and positive when scaling up
         Cartesian3.abs(
+          // Extract scale components along the axis
           Cartesian3.multiplyComponents(
             this.trs.scale,
-            isProportionalScaling ? new Cartesian3(1, 1, 1) : axisLocal,
+            // For proportional scaling we scale equally along xyz
+            isProportionalScaling ? proportionalScalingAxis : axisLocal,
             scratchMultiply
           ),
           scratchAbs
         ),
         scaleAmount,
-        new Cartesian3()
+        scratchScaleStep
       );
       Cartesian3.add(this.trs.scale, scaleStep, this.trs.scale);
 
       // Move the box by half the scale amount in the direction of scaling so
       // that the opposite end remains stationary.
       const translateStep = Cartesian3.multiplyByScalar(
-        axisVectorWc,
+        axisVector,
         scaleAmount / 2,
-        new Cartesian3()
+        translateStepScratch
       );
       Cartesian3.add(this.trs.translation, translateStep, this.trs.translation);
 
@@ -1184,6 +1189,11 @@ function setPlaneDimensions(
     planeDimensions.x = boxDimensions.x;
     planeDimensions.y = boxDimensions.y;
   }
+}
+
+const scratchViewRectangle = new Rectangle();
+function computeViewRectangle(scene: Scene) {
+  return scene.camera.computeViewRectangle(undefined, scratchViewRectangle);
 }
 
 function setCanvasCursor(scene: Scene, cursorType: string) {
