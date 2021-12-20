@@ -1914,7 +1914,6 @@ async function interpretStartData(
         }
         startDataV8 = result.result;
       } else {
-        console.log(`isjsonarray = ${isJsonArray(startData.initSources)}`);
         startDataV8 = {
           ...startData,
           version: isJsonString(startData.version)
