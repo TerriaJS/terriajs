@@ -613,7 +613,7 @@ export default class Leaflet extends GlobeOrMap {
   private _pickFeatures(
     latlng: L.LatLng,
     tileCoordinates?: any,
-    existingFeatures?: Entity[],
+    existingFeatures?: Feature[],
     ignoreSplitter: boolean = false
   ) {
     if (isDefined(this._pickedFeatures)) {
