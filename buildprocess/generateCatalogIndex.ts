@@ -226,23 +226,27 @@ export default async function generateCatalogIndex(
         : undefined;
 
       let description = "";
-      if (CatalogMemberMixin.isMixedInto(member)) {
-        description =
-          member.description +
-          "\n" +
-          member.info
-            .map(i => i.content)
-            .filter(c => c)
-            .join("\n");
-      }
+      // Remove description from CatalogIndex - as it makes files too large
+      // if (CatalogMemberMixin.isMixedInto(member)) {
+      //   description =
+      //     member.description +
+      //     "\n" +
+      //     member.info
+      //       .map(i => i.content)
+      //       .filter(c => c)
+      //       .join("\n");
+      // }
+
+      const shareKeys = terria.modelIdShareKeysMap.get(member.uniqueId);
 
       index[member.uniqueId] = {
         name,
         nameInCatalog: nameInCatalog !== name ? nameInCatalog : undefined,
-        description,
+        description: description || undefined,
         memberKnownContainerUniqueIds: knownContainerUniqueIds,
         isGroup: GroupMixin.isMixedInto(member) ? true : undefined,
-        isMappable: MappableMixin.isMixedInto(member) ? true : undefined
+        isMappable: MappableMixin.isMixedInto(member) ? true : undefined,
+        shareKeys: shareKeys && shareKeys.length > 0 ? shareKeys : undefined
       };
     }
     if (GroupMixin.isMixedInto(member)) {

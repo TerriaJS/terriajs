@@ -1,4 +1,11 @@
-type JsonValue = boolean | number | string | null | JsonArray | JsonObject;
+type JsonValue =
+  | boolean
+  | number
+  | string
+  | null
+  | JsonArray
+  | JsonObject
+  | undefined;
 export interface JsonObject {
   [key: string]: JsonValue;
 }
@@ -30,6 +37,7 @@ export function isJsonString(value: unknown | undefined): value is string {
 
 export function isJsonValue(value: unknown): value is JsonValue {
   return (
+    typeof value === "undefined" ||
     value === null ||
     isJsonBoolean(value) ||
     isJsonNumber(value) ||

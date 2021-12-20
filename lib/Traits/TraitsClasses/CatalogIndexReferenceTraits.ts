@@ -14,6 +14,14 @@ export default class CatalogIndexReferenceTraits extends mixTraits(
   })
   memberKnownContainerUniqueIds: string[] = [];
 
+  @primitiveArrayTrait({
+    type: "string",
+    name: "Share keys",
+    description:
+      "Share keys can be used to resolve older model IDs to this model."
+  })
+  shareKeys?: string[];
+
   @primitiveTrait({
     name: "Name in catalog",
     description:

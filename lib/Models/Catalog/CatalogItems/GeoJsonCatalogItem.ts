@@ -81,12 +81,10 @@ class GeoJsonCatalogItem extends GeoJsonMixin(
     if (isJsonObject(jsonData) && typeof jsonData.type === "string") {
       const fc = toFeatureCollection(jsonData);
       if (fc) return fc;
-      throw TerriaError.from(
-        "Invalid geojson data - only FeatureCollection and Feature are supported"
-      );
     }
-
-    throw TerriaError.from("Failed to load geojson");
+    throw TerriaError.from(
+      "Invalid geojson data - only FeatureCollection and Feature are supported"
+    );
   }
 }
 

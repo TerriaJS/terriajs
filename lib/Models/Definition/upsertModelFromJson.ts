@@ -38,9 +38,9 @@ export default function upsertModelFromJson(
   parentId: string,
   stratumName: string,
   json: unknown,
-  options: UpsertModelFromJsonOptions
+  options: UpsertModelFromJsonOptions = {}
 ): Result<BaseModel | undefined> {
-  if (!isJsonObject(json) || !isJsonString(json.type)) {
+  if (!isJsonObject(json)) {
     return Result.error("Failed to upsert model - invalid JSON");
   }
   const errors: TerriaError[] = [];
@@ -78,7 +78,11 @@ export default function upsertModelFromJson(
 
   if (model === undefined) {
     try {
-      model = factory.create(json.type, uniqueId, terria);
+      model = factory.create(
+        isJsonString(json.type) ? json.type : undefined,
+        uniqueId,
+        terria
+      );
       if (model === undefined) {
         errors.push(
           new TerriaError({

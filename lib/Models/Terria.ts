@@ -602,7 +602,7 @@ export default class Terria {
         terriaError.toNotification()
       );
 
-    console.log(terriaError.toError());
+    terriaError.log();
   }
 
   @computed
@@ -1180,6 +1180,30 @@ export default class Terria {
       );
     }
 
+    // See if model exists by ID of sharekey
+    // Change modelId to more up-to-date ID if necessary
+    const model = this.getModelByIdOrShareKey(BaseModel, modelId);
+    // If no model exists, try to find it through Terria model sharekeys or CatalogIndex sharekeys
+    if (isDefined(model?.uniqueId)) {
+      modelId = model!.uniqueId;
+    } else if (this.catalogIndex) {
+      try {
+        await this.catalogIndex.load();
+      } catch (e) {
+        errors.push(
+          TerriaError.from(
+            e,
+            `Failed to load CatalogIndex while loading model stratum \`${modelId}\``
+          )
+        );
+      }
+      const indexModel = this.catalogIndex.getModelByIdOrShareKey(modelId);
+      if (indexModel) {
+        (await indexModel.loadReference()).pushErrorTo(errors);
+        modelId = indexModel.uniqueId ?? modelId;
+      }
+    }
+
     // If this model is a `SplitItemReference` we must load the source item first
     const splitSourceId = cleanStratumData.splitSourceItemId;
     if (
@@ -1197,27 +1221,6 @@ export default class Terria {
         errors,
         `Failed to load SplitItemReference ${splitSourceId}`
       );
-    }
-
-    // See if model exists by ID of sharekey
-    const model = this.getModelByIdOrShareKey(BaseModel, modelId);
-    // If no model exists, and we have a CatalogIndex, see if we can find it there
-    if (!model && this.catalogIndex) {
-      try {
-        await this.catalogIndex.load();
-      } catch (e) {
-        errors.push(
-          TerriaError.from(
-            e,
-            `Failed to load CatalogIndex while loading model stratum \`${modelId}\``
-          )
-        );
-      }
-      const indexModel = this.catalogIndex.models?.get(modelId);
-      if (indexModel) {
-        (await indexModel.loadReference()).pushErrorTo(errors);
-        modelId = indexModel.uniqueId ?? modelId;
-      }
     }
 
     const loadedModel = upsertModelFromJson(
@@ -1911,6 +1914,7 @@ async function interpretStartData(
         }
         startDataV8 = result.result;
       } else {
+        console.log(`isjsonarray = ${isJsonArray(startData.initSources)}`);
         startDataV8 = {
           ...startData,
           version: isJsonString(startData.version)
