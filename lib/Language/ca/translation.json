@@ -771,6 +771,17 @@
       "requireStyles": "MapboxVectorTileImageryProvider demana una funció d'estil passada com a options.styleFunc",
       "moreThanFourTiles": "El rectangle del proveïdor d'imatges i el minimumLevel indiquen que hi ha {{tileCount}} tessel·les al nivell mínim. Els proveïdors d'imatges amb més de quatre tessel·les al nivell mínim no són compatibles.",
       "maxLevelError": "Nivell màxim massa alt per al conjunt de dades"
+    },
+    "regionProvider": {
+      "csvRegionMappingTitle": "Cartografia de regions CSV",
+      "csvRegionMappingMessageZeroFound": "No s'han trobat noms de regió per al tipus de regió {{regionType}}",
+      "csvRegionMappingMessageZeroBoundariesFound": "No s'han trobat límits de regió per a la regió {{regionName}}",
+      "csvRegionMappingMessageLoadError": "No s'han pogut carregar els límits de la regió per a la regió {{regionName}} {{exception}}"
+    },
+    "extraCreditLinks": {
+      "dataAttribution": "Atribució de dades",
+      "disclaimer": "Exempció de responsabilitat",
+      "basemap": "Mapa base"
     }
   },
   "helpPanel": {
@@ -801,5 +812,269 @@
     },
     "showWorkbench": "Mostra el Banc de Treball",
     "hideWorkbench": "Amaga el Banc de Treball"
+  },
+  "models": {
+    "cesiumTerrain": {
+      "name": "Terreny Cesium",
+      "errorRenderingMessage": "S'ha produït un error en renderitzar-se en 3D. Això probablement indica un error a {{appName}} o una incompatibilitat amb el vostre sistema o navegador web. Ara et canviarem a 2D perquè puguis continuar treballant.",
+      "name3D": "Tessel·les 3D cesium",
+      "notSupportedErrorTitle": "No s'admet en 2D",
+      "notSupportedErrorMessage": "\"{{name}}\" no es pot mostrar a la vista 2D. Canvia a 3D i torna-ho a provar.",
+      "errorRenderingTitle": "Error de renderització en 3D"
+    },
+    "arcGisFeatureServerCatalogItem": {
+      "name": "Esri ArcGIS FeatureServer",
+      "invalidServiceMessage": "S'ha produït un error en invocar l'ArcGIS Feature Service. La resposta del servidor no sembla ser una capa de servei de funcions vàlida.",
+      "dataDescription": "Descripció de les dades",
+      "serviceDescription": "Descripció del servei",
+      "copyrightText": "Text dels drets d'autor",
+      "missingUrlTitle": "No es pot carregar FeatureServer",
+      "missingUrlMessage": "No s'ha pogut carregar el punt d'accés de l'ArcGis FeatureServer perquè l'element del catàleg no té una \"url\".",
+      "invalidServiceTitle": "Capa invàlida de l'ArcGIS Feature Service",
+      "reachedMaxFeatureLimit": "Avís: aquesta capa ha assolit el límit de funcions FeatureService."
+    },
+    "arcGisFeatureServerCatalogGroup": {
+      "invalidServiceMessage": "S'ha produït un error en invocar l'ArcGIS Feature Service. La resposta del servidor no sembla ser un document del servei de funcions vàlid.",
+      "name": "Grup de servidors ArcGIS Feature",
+      "dataDescription": "Descripció de les dades",
+      "serviceDescription": "Descripció del servei",
+      "copyrightText": "Text dels drets d'autor",
+      "invalidServiceTitle": "Servei invàlid d'ArcGIS Feature",
+      "groupNotAvailableTitle": "El grup no està disponible",
+      "groupNotAvailableMessage": "S'ha produït un error en invocar l'ArcGIS Feature Service."
+    },
+    "arcGisMapServerCatalogGroup": {
+      "groupNotAvailableTitle": "Grup no està disponible",
+      "name": "Grup ArcGIS Map Server",
+      "dataDescription": "Descripció de les dades",
+      "serviceDescription": "Descripció del servei",
+      "copyrightText": "Text dels drets d'autor",
+      "invalidServiceTitle": "Servei de mapes d'ArcGIS no vàlid",
+      "invalidServiceMessage": "S'ha produït un error en invocar el servei de mapes d'ArcGIS. La resposta del servidor no sembla ser un document vàlid del servei de mapes.",
+      "groupNotAvailableMessage": "S'ha produït un error en invocar el servei de mapes d'ArcGIS."
+    },
+    "arcGisMapServerCatalogItem": {
+      "invalidUrlMessage": "No s'ha pogut carregar el punt d'accés de l'ArcGis MapServer perquè l'element del catàleg no té una \"url\".",
+      "name": "Esri ArcGIS MapServer",
+      "dataDescription": "Descripció de les dades",
+      "serviceDescription": "Descripció del servei",
+      "copyrightText": "Text dels drets d'autor",
+      "invalidUrlTitle": "No es pot carregar MapServer",
+      "noLayersFoundTitle": "No s'ha pogut carregar ArcGIS MapServer.",
+      "noLayersFoundMessage": "L'Esri ArcGIS MapServer '{{name}}' no té capes per mostrar."
+    },
+    "wcs": {
+      "asyncResultDescription": "Aquest és el resultat de l'exportació de dades del servei {{name}} a {{timestamp}} amb els paràmetres d'entrada següents.",
+      "asyncResultLoadingMetadata": "Carregant WCS:\nServei de {{name}} a {{timestamp}}.\n\n*Carregant metadades ('DescribeCoverage')*",
+      "asyncPendingDescription": "Carregant WCS:\nServei de {{name}} a {{timestamp}}.\n\n*Descarregant cobertura*",
+      "exportFailedTitle": "L'exportació de dades ha fallat",
+      "exportFailedMessage": "El servei de cobertura web ha fallat",
+      "exportFailedMessageII": "El servei de cobertura web ha fallat: {{error}}"
+    },
+    "ckan": {
+      "serviceErrorMessage": "Aquest servei no té cap detall disponible.",
+      "contact_point": "Contacte",
+      "metadata_created": "Creat",
+      "notCompatibleMessageI": "El conjunt de dades CKAN no té cap recurs amb l'ID {{resourceId}} o no té un format compatible.",
+      "nameServer": "Servidor CKAN",
+      "errorLoadingTitle": "S'ha produït un error en carregar el catàleg de CKAN",
+      "errorLoadingMessage": "La definició d'aquest catàleg CKAN no té una consulta de filtre vàlida.",
+      "corsErrorMessage": "No s'ha pogut recuperar paquets d'aquest servidor CKAN.",
+      "name": "Recurs CKAN",
+      "dataSourceErrorMessage": "Aquesta font de dades no té cap detall disponible.",
+      "datasetDescription": "Descripció del conjunt de dades",
+      "dataDescription": "Descripció de les dades",
+      "resourceDescription": "Descripció del recurs",
+      "datasetCustodian": "Dipositari del conjunt de dades",
+      "licence": "Llicència",
+      "author": "Autor",
+      "metadata_modified": "Modificat",
+      "update_freq": "Freqüència d'actualització",
+      "idsNotSpecifiedTitle": "Cal especificar resourceId o datasetId",
+      "idsNotSpecifiedMessage": "CkanCatalogItem requereix que s'especifiqui resourceId o datasetId.",
+      "errorRetrievingUrlTitle": "S'ha produït un error en recuperar l'URL CKAN",
+      "errorRetrievingUrlMessage": "No s'ha pogut recuperar l'URL com a JSON: {{url}}.",
+      "invalidCkanTitle": "El recurs CKAN JSON no és vàlid",
+      "invalidCkanMessage": "El recurs retornat des del servidor CKAN no sembla tenir un package_id.",
+      "notCompatibleTitle": "No s'han trobat recursos compatibles",
+      "notCompatibleMessageII": "El conjunt de dades CKAN no té cap recurs amb un format compatible."
+    },
+    "arcgisPortal": {
+      "corsErrorMessage": "No s'han pogut recuperar paquets d'aquest servidor d'ArcGIS Portal. ",
+      "nameGroup": "Grup ArcGIS Portal",
+      "errorLoadingTitle": "S'ha produït un error en carregar el catàleg del portal d'ArcGIS",
+      "errorLoadingMessage": "La definició d'aquest catàleg del portal d'ArcGIS no té una consulta de filtre vàlida.",
+      "name": "Element del portal d'ArcGIS",
+      "dataSourceErrorMessage": "Aquesta font de dades no té cap detall disponible.",
+      "serviceErrorMessage": "Aquest servei no té cap detall disponible.",
+      "datasetDescription": "Descripció del conjunt de dades",
+      "licence": "Llicència",
+      "openInPortal": "Obre a ArcGIS Portal",
+      "idsNotSpecifiedTitle": "Cal especificar resourceId o datasetId",
+      "idsNotSpecifiedMessage": "ArcGIS Portal Item requereix que s'especifiqui un itemId.",
+      "errorRetrievingUrlTitle": "S'ha produït un error en recuperar l'URL del portal d'ArcGIS",
+      "errorRetrievingUrlMessage": "No s'ha pogut recuperar l'URL com a JSON: {{url}}."
+    },
+    "catalog": {
+      "unsupportedFileTypeMessageII": "Aquest format d'arxiu no és compatible amb {{appName}}. Els formats d'arxiu admesos directament inclouen: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (en {{link}})</li></ul > Els formats d'arxiu admesos pel servei de conversió en línia inclouen: <ul><li>Shapefile (.zip)</li><li>MapInfo TAB (.zip)</li><li>Possiblement altres {{linkII}}</li></ul>",
+      "name": "Element sense nom",
+      "group": "Grup",
+      "idForMatchingErrorTitle": "Falta una propietat",
+      "idForMatchingErrorMessage": "Els objectes del model han de tenir una propietat `id`, `localId` o `name`.",
+      "catalogMemberMustHaveName": "Un membre del catàleg acabat de crear ha de tenir un nom.",
+      "catalogMemberMustHaveType": "Un membre del catàleg ha de tenir un tipus.",
+      "userAddedDataGroup": "El grup de dades que l'usuari ha afegit mitjançant el tauler Afegeix dades.",
+      "chartDataGroup": "Un grup per a dades de gràfics.",
+      "dataSourceErrorMessage": "Aquesta font de dades no té cap detall disponible.",
+      "serviceErrorMessage": "Aquest servei no té cap detall disponible.",
+      "stubCreationFailure": "No s'ha pogut esborrar l'element {{item}} del catàleg",
+      "unsupportedTypeTitle": "Tipus desconegut",
+      "unsupportedTypeMessage": "No s'ha pogut crear el tipus {{type}} de model desconegut.",
+      "unsupportedFileTypeTitle": "Tipus de fitxer no compatible",
+      "unsupportedFileTypeMessage": "Aquest format d'arxiu no és compatible amb {{appName}}. Els formats d'arxiu admesos inclouen: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (en {{link}})</li></ul>",
+      "getConfirmationMessage": "Aquest arxiu no és compatible directament amb {{appName}}.\n\nVoleu provar de pujar-lo al servei de conversió {{appName}}? Això pot funcionar per a arxius Esri Shapefile petits i comprimits o arxius MapInfo TAB.",
+      "readyToUpload": "Estàs preparat per enviar el teu arxiu al servei de conversió {{appName}}?",
+      "upload": "Pujar",
+      "cancel": "Cancel·lar",
+      "useConversion": "Voleu utilitzar el servei de conversió?",
+      "mustHaveType": "Cada element ha de tenir un tipus.",
+      "compositesError": "Els compostos no poden incloure elements compostos.",
+      "convertErrorTitle": "No s'ha pogut actualitzar el catàleg a V8",
+      "convertErrorMessage": "Aquest arxiu de catàleg es basa en una versió anterior de TerriaJS, el programari que mou aquest mapa web. S'ha produït un error en intentar actualitzar les dades del catàleg per a {{url}}."
+    },
+    "userData": {
+      "addingDataErrorTitle": "No s'ha pogut afegir les dades",
+      "addingDataErrorMessage": "Les dades especificades no s'han pogut afegir perquè no són vàlides o no tenen el format esperat.",
+      "fileApiNotSupportedTitle": "No s'admet l'API d'arxius",
+      "fileApiNotSupportedMessage": "Ho sentim, el vostre navegador web no admet l'API d'arxius, que {{appName}} requereix per afegir dades d'un arxiu al vostre sistema. Actualitzeu el vostre navegador web. Per obtenir la millor experiència, recomanem la darrera versió de {{chrome}}, {{firefox}} o {{edge}}.",
+      "internetExplorer": "Internet Explorer 11",
+      "edge": "Microsoft Edge",
+      "chrome": "Google Chrome",
+      "firefox": "Mozilla Firefox"
+    },
+    "arcGisService": {
+      "name": "Grup de serveis ArcGIS",
+      "invalidServerTitle": "Servidor ArcGIS no vàlid",
+      "invalidServerMessage": "S'ha produït un error en invocar el servei REST d'ArcGIS. La resposta del servidor no sembla ser un document REST d'ArcGIS vàlid.",
+      "groupNotAvailableTitle": "El grup no està disponible",
+      "groupNotAvailableMessage": "S'ha produït un error en invocar el servei REST d'ArcGIS."
+    },
+    "arcGisFeatureServer": {
+      "name": "Servidor ArcGIS Feature",
+      "nameGroup": "Grup de servidor ArcGIS Feature",
+      "invalidServiceTitle": "Servei invàlid ArcGIS Feature",
+      "invalidServiceMessage": "S'ha produït un error en invocar l'ArcGIS Feature Service. La resposta del servidor no sembla ser un document del servei de funcions vàlid.",
+      "groupNotAvailableTitle": "El grup no està disponible",
+      "groupNotAvailableMessage": "S'ha produït un error en invocar l'ArcGIS Feature Service."
+    },
+    "bing": {
+      "name": "Mapes Bing"
+    },
+    "cartoMap": {
+      "name": "Mapa Carto",
+      "noUrlTitle": "Cap URL",
+      "noUrlMessage": "No s'ha pogut trobar una URL utilitzable per a la capa Carto Map."
+    },
+    "createParameter": {
+      "unsupportedErrorTitle": "Tipus de paràmetre de funció no compatible",
+      "unsupportedErrorMessage": "Tipus de paràmetre de funció desconegut: {{type}}."
+    },
+    "csv": {
+      "name": "Valors separats per comes (CSV)",
+      "dataSourceErrorMessage": "Aquesta font de dades no té cap detall disponible.",
+      "serviceErrorMessage": "Aquest servei no té cap detall disponible.",
+      "unexpectedTypeTitle": "Tipus inesperat de dades CSV",
+      "unexpectedTypeMessage": "S'espera que les dades de CsvCatalogItem siguin un blob, un arxiu o una cadena, però no era cap d'aquests.",
+      "unableToLoadTitle": "No es pot carregar l'arxiu CSV",
+      "unableToLoadMessage": "Consulteu l'especificació <a href=\"https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au\">csv-geo-au</a> per als formats CSV admesos.\n\n {{message}}",
+      "unableToLoadItemTitle": "Cap CSV disponible",
+      "unableToLoadItemMessage": "L'element del catàleg CSV no es pot carregar perquè no s'ha configurat amb una propietat \"url\" o \"csvString\"."
+    },
+    "csw": {
+      "name": "Servei de catàleg (CSW)",
+      "unknownError": "El servidor CSW ha informat d'un error desconegut.",
+      "exceptionMessage": "El servidor CSW ha informat d'un error:\n\n {{exceptionText}}",
+      "errorLoadingTitle": "No s'ha pogut carregar CSW",
+      "notUseableTitle": "El servei de catàleg no es pot utilitzar. \n\n {{message}}",
+      "notUseableMessage": "Resposta no vàlida obtinguda en invocar GetDomain al servidor CSW.",
+      "errorLoadingRecordsTitle": "No s'han pogut carregar els registres CSW.",
+      "errorLoadingRecordsMessage": "Resposta no vàlida obtinguda en invocar GetRecords al CSW",
+      "checkCORSDomain": "No s'ha pogut executar GetDomain en aquest servidor CSW.",
+      "checkCORSRecords": "No s'ha pogut executar GetRecords en aquest servidor CSW.",
+      "dataResponsibility": "Responsabilitat de les dades",
+      "links": "Enllaços",
+      "metadataURL": "URL del registre de metadades",
+      "checkCORS": "No s'ha pogut executar GetRecords en aquest servidor CSW.",
+      "cors": "CORS",
+      "missingUrlTitle": "No es pot carregar el servei de catàleg (CSW)",
+      "missingUrlMessage": "No s'ha pogut carregar el servei de catàleg (CSW) perquè el grup de catàleg no té una \"url\"."
+    },
+    "czml": {
+      "name": "Cesium Language (CZML)",
+      "dataSourceErrorMessage": "Aquesta font de dades no té cap detall disponible.",
+      "serviceErrorMessage": "Aquest servei no té cap detall disponible.",
+      "errorLoadingTitle": "No s'ha pogut carregar CZML",
+      "errorLoadingMessage": "S'ha produït un error en carregar un arxiu CZML.",
+      "unableToLoadItemTitle": "Cap CZML disponible",
+      "unableToLoadItemMessage": "L'element del catàleg CZML no es pot carregar perquè no s'ha configurat amb una propietat \"url\", \"czmlData\" o \"czmlString\"."
+    },
+    "function": {
+      "unknownFormaterTitle": "Formatador desconegut",
+      "unknownFormaterMessage": "El formatador de paràmetres de funció {{formatter}} és desconegut.\n\nEls formatadors vàlids són:\n\n"
+    },
+    "geoJson": {
+      "name": "GeoJSON",
+      "dataSourceErrorMessage": "Aquesta font de dades no té cap detall disponible.",
+      "serviceErrorMessage": "Aquest servei no té cap detall disponible.",
+      "errorLoadingTitle": "Error en carregar GeoJSON",
+      "errorLoadingMessage": "S'ha produït un error en carregar un arxiu GeoJSON. Això pot indicar que el arxiu no és vàlid o que no és compatible.",
+      "errorParsingMessage": "S'ha produït un error en analitzar les dades proporcionades com a JSON. Això pot indicar que l'arxiu no és vàlid o que no és compatible.",
+      "couldNotLoadTitle": "No s'ha pogut carregar JSON",
+      "couldNotLoadMessage": "S'ha produït un error en recuperar les dades JSON de l'enllaç proporcionat.CORS",
+      "unableToLoadItemTitle": "Cap GeoJSON disponible",
+      "unableToLoadItemMessage": "L'element del catàleg GeoJSON no es pot carregar perquè no s'ha configurat amb una propietat \"url\", \"geoJsonData\" o \"geoJsonString\".",
+      "unsupportedBrowserTitle": "Navegador web no compatible",
+      "unsupportedBrowserMessage": "Ho sentim, el vostre navegador web no admet l'API d'arxius, que {{appName}} requereix per carregar aquest conjunt de dades. Actualitzeu el vostre navegador web. Per obtenir la millor experiència, recomanem les darreres versions de {{chrome}} o {{firefox}} o {{internetExplorer}}.",
+      "internetExplorer": "Internet Explorer 11",
+      "chrome": "Google Chrome",
+      "firefox": "Mozilla Firefox"
+    },
+    "shapefile": {
+      "name": "Shapefile"
+    },
+    "getToken": {
+      "errorTitle": "Error de fitxa",
+      "invalidToken": "<p>El servidor de fitxes ha respost amb una fitxa no vàlida.</p><p>Informeu-ho enviant un correu electrònic a {{email}}</p>",
+      "unableToRequest": "<p>No es pot sol·licitar una fitxa al servidor de fitxes.</p><p>Informeu-ho enviant un correu electrònic a {{email}}</p>"
+    },
+    "gltf": {
+      "name": "Format de transmissió GL (glTF)",
+      "dataSourceErrorMessage": "Aquesta font de dades no té cap detall disponible.",
+      "serviceErrorMessage": "Aquest servei no té cap detall disponible.",
+      "notSupportedErrorTitle": "No s'admet en 2D",
+      "notSupportedErrorMessage": "\"{{name}}\" no es pot mostrar a la vista 2D. Canvia a 3D i torna-ho a provar.",
+      "error": "Error",
+      "unableToRetrieve": "No s'han pogut recuperar els detalls de la funció de:\n\n{{url}}"
+    },
+    "gpx": {
+      "name": "GPX",
+      "dataSourceErrorMessage": "Aquesta font de dades no té cap detall disponible.",
+      "serviceErrorMessage": "Aquest servei no té cap detall disponible.",
+      "errorLoadingTitle": "S'ha produït un error en carregar GPX",
+      "errorLoadingMessage": "S'ha produït un error en carregar un arxiu GPX. Això pot indicar que l'arxiu no és vàlid o que {{appName}} no l'admet."
+    },
+    "georss": {
+      "name": "GeoRSS",
+      "subtitle": "Subtítol",
+      "updated": "Actualitzat",
+      "category": "Categoria",
+      "description": "Descripció",
+      "copyrightText": "Text dels drets d'autor",
+      "link": "Enllaç",
+      "author": "Autor",
+      "errorLoadingTitle": "No s'ha pogut carregar GeoRSS",
+      "errorLoadingMessage": "S'ha produït un error en carregar un arxiu GeoRSS.",
+      "unableToLoadItemTitle": "Cap GeoRSS disponible"
+    }
   }
 }
