@@ -748,10 +748,29 @@
       "containsUnsupportedFeatureType": "GeoRSS conté un tipus de característica no compatible: {{type}}"
     },
     "gnafAddressGeocoder": {
-      "noAddresses": "Aquesta tableStructure no té adreces!"
+      "noAddresses": "Aquesta tableStructure no té adreces!",
+      "noAddresses2": "Tot i que tableStructure informa que té una columna d'adreces, no té cap adreça",
+      "suburb": "Suburbi",
+      "state": "Estat",
+      "postcode": "Codi postal",
+      "matchedAddresses": "Adreça coincident",
+      "lon": "Lon",
+      "lat": "Lat",
+      "score": "Puntuació",
+      "poBox": "Apartat de correus",
+      "postOfficeBox": "Apartat de correus"
     },
     "w3cToGeoJson": {
       "containsUnsupportedFeatureType": "GeoRSS amb geometria W3C conté un tipus de característica no compatible: {{type}}"
+    },
+    "imageryProviderHooks": {
+      "devError": "No hi ha context per tornar a pintar la imatge."
+    },
+    "mapboxVectorTileImageryProvider": {
+      "requireLayerName": "MapboxVectorTileImageryProvider demana un nom de capa passat com a options.layerName",
+      "requireStyles": "MapboxVectorTileImageryProvider demana una funció d'estil passada com a options.styleFunc",
+      "moreThanFourTiles": "El rectangle del proveïdor d'imatges i el minimumLevel indiquen que hi ha {{tileCount}} tessel·les al nivell mínim. Els proveïdors d'imatges amb més de quatre tessel·les al nivell mínim no són compatibles.",
+      "maxLevelError": "Nivell màxim massa alt per al conjunt de dades"
     }
   },
   "helpPanel": {
