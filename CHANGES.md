@@ -2,7 +2,7 @@ Change Log
 ==========
 
 #### next release (8.1.15)
-
+* Add better support for retreiving GeoJsonCatalogItem data through APIs, including supporting geojson nested within json objects
 * [The next improvement]
 
 #### 8.1.14

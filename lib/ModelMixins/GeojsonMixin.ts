@@ -995,11 +995,20 @@ export function isGeometries(json: any): json is Geometries {
 export function toFeatureCollection(
   json: any
 ): FeatureCollectionWithCrs | undefined {
-  if (isFeatureCollection(json)) return json;
+  if (isFeatureCollection(json)) return json; // It's already a feature collection, do nothing
+
   if (isFeature(json))
     return featureCollection([json]) as FeatureCollectionWithCrs;
   if (isGeometries(json))
     return featureCollection([feature(json)]) as FeatureCollectionWithCrs;
+  if (Array.isArray(json) && json.every(item => isFeature(item))) {
+    return featureCollection(json) as FeatureCollectionWithCrs;
+  }
+  if (Array.isArray(json) && json.every(item => isGeometries(item))) {
+    return featureCollection(
+      json.map(item => feature(item, item.properties))
+    ) as FeatureCollectionWithCrs;
+  }
 }
 
 function createPolylineFromPolygon(
