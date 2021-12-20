@@ -1,8 +1,8 @@
-import ModelTraits from "../ModelTraits";
 import objectArrayTrait from "../Decorators/objectArrayTrait";
+import objectTrait from "../Decorators/objectTrait";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
-import objectTrait from "../Decorators/objectTrait";
+import ModelTraits from "../ModelTraits";
 import LegendTraits from "./LegendTraits";
 
 export class EnumColorTraits extends ModelTraits {
@@ -56,7 +56,7 @@ export default class TableColorStyleTraits extends ModelTraits {
   @primitiveTrait({
     name: "Outlier Color",
     description:
-      'The color to use when the value is considered an "outlier" (and therefore not shown on color scale), specified as a CSS color string. This will only apply if `zScoreFilter` is defined',
+      "The color to use when the value is lies outside minimumValue and maximumValue (and therefore not shown on color scale), specified as a CSS color string. This only applies to ContinuousColorMap",
     type: "string"
   })
   outlierColor?: string;
@@ -192,7 +192,7 @@ export default class TableColorStyleTraits extends ModelTraits {
   @primitiveTrait({
     name: "Z-score filter",
     description:
-      "Treat values outside of specifed z-score as outliers, and therefore do not include in color scale. This value is magnitude of z-score - it will apply to positive and negative z-scores. For example a value of `2` will treat all values that are 2 or more standard deviations from the mean as outliers. This must be defined for it to be enabled",
+      "Treat values outside of specifed z-score as outliers, and therefore do not include in color scale. This value is magnitude of z-score - it will apply to positive and negative z-scores. For example a value of `2` will treat all values that are 2 or more standard deviations from the mean as outliers. This must be defined for it to be enabled. This will be ignored if `minimumValue` or `maximumValue` have been set",
     type: "number"
   })
   zScoreFilter?: number;

@@ -2,7 +2,10 @@ Change Log
 ==========
 
 #### next release (8.1.15)
+
 * Add better support for retreiving GeoJsonCatalogItem data through APIs, including supporting geojson nested within json objects
+* Fixed `ContinuousColorMap` min/max value bug.
+* `TableStyle.outlierColor` is now only used if `zFilter` is active, or `colorTraits.outlierColor` is definedß
 * [The next improvement]
 
 #### 8.1.14
