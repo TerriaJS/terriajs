@@ -1,5 +1,7 @@
 import i18next from "i18next";
 import { computed } from "mobx";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import URI from "urijs";
 import containsAny from "../../../Core/containsAny";
 import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTimes";
@@ -604,13 +606,40 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     const layers: CapabilitiesLayer[] = [...this.capabilitiesLayers.values()]
       .filter(layer => layer !== undefined)
       .map(l => l!);
-    // Needs to take union of all layer rectangles
-    return layers.length > 0 ? getRectangleFromLayer(layers[0]) : undefined;
-    // if (layers.length === 1) {
-    //     return getRectangleFromLayer(layers[0]);
-    // }
-    // Otherwise get the union of rectangles from all layers
-    // return undefined;
+    // Get union of bounding rectangles for all layers
+    const allLayersRectangle = layers.reduce<Rectangle | undefined>(
+      (unionRectangle, layer) => {
+        // Convert to cesium Rectangle (so we can use Rectangle.union)
+        const latLonRect = getRectangleFromLayer(layer);
+        const ceisumRect = Rectangle.fromDegrees(
+          latLonRect?.west,
+          latLonRect?.south,
+          latLonRect?.east,
+          latLonRect?.north
+        );
+        if (!unionRectangle) {
+          return ceisumRect;
+        }
+
+        return Rectangle.union(unionRectangle, ceisumRect);
+      },
+      undefined
+    );
+
+    if (
+      allLayersRectangle &&
+      isDefined(allLayersRectangle.west) &&
+      isDefined(allLayersRectangle.south) &&
+      isDefined(allLayersRectangle.east) &&
+      isDefined(allLayersRectangle.north)
+    ) {
+      return {
+        west: CesiumMath.toDegrees(allLayersRectangle.west),
+        south: CesiumMath.toDegrees(allLayersRectangle.south),
+        east: CesiumMath.toDegrees(allLayersRectangle.east),
+        north: CesiumMath.toDegrees(allLayersRectangle.north)
+      };
+    }
   }
 
   @computed
