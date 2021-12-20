@@ -4,7 +4,6 @@ Change Log
 #### next release (8.1.15)
 
 * Add better support for retreiving GeoJsonCatalogItem data through APIs, including supporting geojson nested within json objects
-* Add an external link icon to external hyperlink when using method `parseCustomHtmlToReact`. This feature can be switched off by passing `{ disableExternalLinkIcon: true }` in `context` argument.
 * Fixed `ContinuousColorMap` min/max value bug.
 * `TableStyle.outlierColor` is now only used if `zFilter` is active, or `colorTraits.outlierColor` is definedß
 * [The next improvement]
@@ -15,6 +14,7 @@ Change Log
   * `Result.throwIfUndefined()` will now only throw if `result.value` is undefined - regardless of `result.error`
 
 * Reimplement option to zoom on item when adding it to workbench, `zoomOnAddToWorkbench` is added to `MappableTraits`.
+* Add an external link icon to external hyperlink when using method `parseCustomHtmlToReact`. This feature can be switched off by passing `{ disableExternalLinkIcon: true }` in `context` argument.
 * Update terria-js cesium to `1.81.3` 
 * Re-allowed models to be added to `workbench` if the are not `Mappable` or `Chartable`
 * Moved `WebMapServiceCatalogItem.GetCapbilitiesStratum` to `lib\Models\Catalog\Ows\WebMapServiceCapabilitiesStratum.ts`
