@@ -78,11 +78,8 @@ export default function upsertModelFromJson(
 
   if (model === undefined) {
     try {
-      model = factory.create(
-        isJsonString(json.type) ? json.type : undefined,
-        uniqueId,
-        terria
-      );
+      const type = isJsonString(json.type) ? json.type : undefined;
+      model = factory.create(type, uniqueId, terria);
       if (model === undefined) {
         errors.push(
           new TerriaError({
