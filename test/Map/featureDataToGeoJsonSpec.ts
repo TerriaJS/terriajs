@@ -1,6 +1,6 @@
 "use strict";
 
-const featureDataToGeoJson = require("../../lib/Map/featureDataToGeoJson");
+import featureDataToGeoJson from "../../lib/Map/featureDataToGeoJson";
 
 describe("featureDataToGeoJson", function() {
   describe("Esri polygon", function() {
@@ -21,7 +21,7 @@ describe("featureDataToGeoJson", function() {
         attributes: {}
       };
       const geoJson = featureDataToGeoJson(esri);
-      expect(geoJson).toEqual({
+      expect(geoJson?.features[0]).toEqual({
         type: "Feature",
         geometry: {
           type: "Polygon",
@@ -70,7 +70,7 @@ describe("featureDataToGeoJson", function() {
         attributes: {}
       };
       const geoJson = featureDataToGeoJson(esri);
-      expect(geoJson).toEqual({
+      expect(geoJson?.features[0]).toEqual({
         type: "Feature",
         geometry: {
           type: "Polygon",
@@ -126,7 +126,7 @@ describe("featureDataToGeoJson", function() {
         attributes: {}
       };
       const geoJson = featureDataToGeoJson(esri);
-      expect(geoJson).toEqual({
+      expect(geoJson?.features[0]).toEqual({
         type: "Feature",
         geometry: {
           type: "MultiPolygon",
@@ -193,7 +193,7 @@ describe("featureDataToGeoJson", function() {
         attributes: {}
       };
       const geoJson = featureDataToGeoJson(esri);
-      expect(geoJson).toEqual({
+      expect(geoJson?.features[0]).toEqual({
         type: "Feature",
         geometry: {
           type: "MultiPolygon",
@@ -260,7 +260,7 @@ describe("featureDataToGeoJson", function() {
         attributes: {}
       };
       const geoJson = featureDataToGeoJson(esri);
-      expect(geoJson).toEqual({
+      expect(geoJson?.features[0]).toEqual({
         type: "Feature",
         geometry: {
           type: "MultiPolygon",

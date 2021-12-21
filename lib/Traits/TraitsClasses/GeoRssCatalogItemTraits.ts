@@ -4,12 +4,14 @@ import UrlTraits from "./UrlTraits";
 import MappableTraits from "./MappableTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 
 export default class GeoRssCatalogItemTraits extends mixTraits(
   FeatureInfoTraits,
   UrlTraits,
   MappableTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  LegendOwnerTraits
 ) {
   @primitiveTrait({
     type: "boolean",

@@ -18,6 +18,7 @@ export default function loadJson(
   if (body !== undefined) {
     // We need to send a POST
     params.headers = headers ?? {};
+    params.headers["Content-Type"] = "application/json";
 
     if (asForm) {
       const data = new FormData();

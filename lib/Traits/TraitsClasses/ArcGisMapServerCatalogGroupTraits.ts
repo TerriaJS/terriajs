@@ -1,14 +1,16 @@
+import { JsonObject } from "../../Core/Json";
+import anyTrait from "../Decorators/anyTrait";
+import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import GroupTraits from "./GroupTraits";
-import mixTraits from "../mixTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 import UrlTraits from "./UrlTraits";
-import anyTrait from "../Decorators/anyTrait";
-import { JsonObject } from "../../Core/Json";
 
 export default class ArcGisMapServerCatalogGroupTraits extends mixTraits(
   GroupTraits,
   UrlTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  LegendOwnerTraits
 ) {
   @anyTrait({
     name: "Item Properties",

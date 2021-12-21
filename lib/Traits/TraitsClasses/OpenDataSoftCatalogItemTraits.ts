@@ -1,17 +1,19 @@
-import CatalogMemberTraits from "./CatalogMemberTraits";
-import mixTraits from "../mixTraits";
+import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
-import TableTraits from "./TableTraits";
-import UrlTraits from "./UrlTraits";
+import mixTraits from "../mixTraits";
+import CatalogMemberTraits from "./CatalogMemberTraits";
 import DimensionTraits from "./DimensionTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
-import objectTrait from "../Decorators/objectTrait";
+import LegendOwnerTraits from "./LegendOwnerTraits";
+import TableTraits from "./TableTraits";
+import UrlTraits from "./UrlTraits";
 
 export default class OpenDataSoftCatalogItemTraits extends mixTraits(
   TableTraits,
   FeatureInfoTraits,
   UrlTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  LegendOwnerTraits
 ) {
   @primitiveTrait({
     type: "string",
