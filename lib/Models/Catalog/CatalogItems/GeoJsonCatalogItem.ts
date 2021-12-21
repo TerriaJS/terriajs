@@ -85,11 +85,9 @@ class GeoJsonCatalogItem extends GeoJsonMixin(
       throw TerriaError.from("Failed to load geojson");
     }
 
-    let fc;
-    // Transform jsonData to feature collection
     if (Array.isArray(jsonData)) {
       // Array that isn't a feature collection
-      fc = toFeatureCollection(
+      const fc = toFeatureCollection(
         jsonData.map(item => {
           let geojson: any = item;
 
@@ -108,12 +106,15 @@ class GeoJsonCatalogItem extends GeoJsonMixin(
           return geojson;
         })
       );
-    } else if (isJsonObject(jsonData) && typeof jsonData.type === "string") {
+      if (fc) return fc;
+    } else if (
+      isJsonObject(jsonData, false) &&
+      typeof jsonData.type === "string"
+    ) {
       // Actual geojson
-      fc = toFeatureCollection(jsonData);
+      const fc = toFeatureCollection(jsonData);
+      if (fc) return fc;
     }
-
-    if (fc) return fc;
     throw TerriaError.from(
       "Invalid geojson data - only FeatureCollection and Feature are supported"
     );
