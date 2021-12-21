@@ -1074,7 +1074,258 @@
       "author": "Autor",
       "errorLoadingTitle": "No s'ha pogut carregar GeoRSS",
       "errorLoadingMessage": "S'ha produït un error en carregar un arxiu GeoRSS.",
-      "unableToLoadItemTitle": "Cap GeoRSS disponible"
+      "unableToLoadItemTitle": "Cap GeoRSS disponible",
+      "unableToLoadItemMessage": "L'element del catàleg GeoRSS no es pot carregar perquè no s'ha configurat amb una propietat \"url\" o \"geoRss\"."
+    },
+    "ogr": {
+      "serviceErrorMessage": "Aquest servei no té cap detall disponible.",
+      "dataSourceErrorMessage": "Aquesta font de dades no té cap detall disponible.",
+      "internetExplorer": "Internet Explorer 11",
+      "errorConvertingToGeoJsonTitle": "Error en convertir el fitxer a GeoJson",
+      "name": "Desconegut / Convertit a GeoJSON",
+      "legacyBrowserTitle": "El navegador heretat no és compatible",
+      "legacyBrowserMessage": "Ho sentim, el vostre navegador web no admet el tipus \"FormData\", que requereix el servei de conversió \"{{appName}}\". Us recomanem que actualitzeu a la darrera versió de {{chrome}}, {{firefox}}, {{safari}} o {{internetExplorer}}.",
+      "chrome": "Google Chrome",
+      "firefox": "Mozilla Firefox",
+      "safari": "Apple Safari",
+      "unsupportedFileTzpe": "Tipus d'arxiu no compatible",
+      "loadError": "La mida de l'arxiu és superior al límit de {{maxConversionSizeMB}} MB del servei de conversió {{appName}}",
+      "invalidFile": "Això pot indicar que l'arxiu no és vàlid o que no és compatible amb el servei de conversió {{appName}}.",
+      "errorConvertingToGeoJsonMessage": "Error en intentar convertir aquest fitxer a GeoJson. ",
+      "emailUs": "Si voleu ajuda o més informació, envieu-nos un correu electrònic a {{email}}"
+    },
+    "magda": {
+      "notCompatibleTitle": "No s'han trobat distribucions compatibles",
+      "name": "Distribució MAGDA",
+      "dataSourceErrorMessage": "Aquesta font de dades no té cap detall disponible.",
+      "serviceErrorMessage": "Aquest servei no té cap detall disponible.",
+      "distributionDesc": "Descripció de la distribució",
+      "idsNotSpecifiedTitle": "Cal especificar recordId",
+      "idsNotSpecifiedMessage": "MagdaReference vol que s'especifiqui recordId.",
+      "retrieveErrorTitle": "S'ha produït un error en recuperar el registre MAGDA",
+      "retrieveErrorMessage": "No s'ha proporcionat cap identificador de distribució ni de conjunt de dades",
+      "notCompatibleMessageI": "El conjunt de dades MAGDA no té una distribució amb l'ID {{distributionId}} o no té un format compatible.",
+      "notCompatibleMessageII": "El conjunt de dades MAGDA no té cap distribució amb un format compatible."
+    },
+    "imageryLayer": {
+      "tileErrorMessage": "El mosaic amb l'URL:\n{{url}}\n es va carregar amb èxit via XMLHttpRequest, però va fallar diverses vegades quan es va carregar directament amb Cesium o Leaflet.\n Això pot indicar que el servidor és molt sensible a les capçaleres de sol·licitud proporcionades o simplement no és fiable.",
+      "unknownTileErrorMessage": "En accedir a l'URL:\n{{url}}\nAixò probablement indica un dels següents:\n* El nom d'amfitrió del servidor no s'ha pogut resoldre,\n* El servidor no ha respost a la sol·licitud, o bé\n* El servidor ha denegat l'accés a l'ús compartit de recursos entre orígens (CORS) a aquest URL (vegeu https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/).",
+      "intervalSupportErrorTitle": "No s'admeten els intervals",
+      "intervalSupportErrorMessage": "Ho sentim, actualment els elements del catàleg {{typeName}} ({{type}}) no es poden modificar en el temps especificant la propietat \"intervals\".",
+      "resolvingAvailability": "S'està resolent la disponibilitat en una ubicació...",
+      "accessingBaseMapErrorTitle": "S'ha produït un error en accedir al mapa base",
+      "accessingBaseMapErrorMessage": "S'ha produït un error en intentar baixar tessel·les per al mapa base:<p><center>{{name}} </center></p> Seleccioneu un mapa base diferent amb el botó Mapa a l'extrem superior dret.",
+      "accessingCatalogItemErrorTitle": "S'ha produït un error en accedir a l'element del catàleg",
+      "accessingCatalogItemErrorMessage": "S'ha produït un error en intentar baixar les tessel·les per a l'element del catàleg:<p><center>{{name}}</center></p> L'element del catàleg s'ha amagat al mapa. Podeu tornar-lo a mostrar al tauler Visualització Actual per tornar-ho a provar.",
+      "tileErrorTitle": "Error de mosaic",
+      "tileErrorMessageII": "S'ha rebut una resposta de 200 (OK) de l'URL:\n{{url}}\nperò no s'ha pogut carregar com a imatge.",
+      "unknownTileErrorTitle": "Error de mosaic desconegut",
+      "unableToDisplayTitle": "No es pot mostrar el conjunt de dades",
+      "unableToDisplayMessage": "{{name}} no es pot mostrar en 2D perquè no admet la projecció estàndard Web Mercator (EPSG:3857). Si us plau, canvieu a 3D si és compatible amb el vostre sistema, actualitzeu el conjunt de dades perquè admeti la projecció o utilitzeu un conjunt de dades diferent.",
+      "unableToShowLocTitle": "No es pot mostrar en aquesta ubicació",
+      "unableToShowLocMessage": "{{name}} no es pot mostrar en aquesta ubicació perquè es desconeixen els temps de captura disponibles. No s'ha trobat la propietat {{featureTimesProperty}}."
+    },
+    "kml": {
+      "unableToLoadItemMessage": "L'element del catàleg KML/KMZ no es pot carregar perquè no s'ha configurat amb una propietat `url`, `kmlData` o `kmlString`.",
+      "name": "KML o KMZ",
+      "dataSourceErrorMessage": "Aquesta font de dades no té cap detall disponible.",
+      "serviceErrorMessage": "Aquest servei no té cap detall disponible.",
+      "unexpectedTypeTitle": "Tipus inesperat de dades KML",
+      "unexpectedTypeMessage": "S'espera que KmlCatalogItem.data sigui un document XML, un blob o un arxiu, però no era cap d'aquests tres. Això pot indicar un error a {{appName}} o un ús incorrecte de l'API {{appName}}.",
+      "errorLoadingTitle": "Error en carregar KML o KMZ",
+      "errorLoadingMessage": "S'ha produït un error en carregar un arxiu KML o KMZ. Això pot indicar que l'arxiu no és vàlid o que {{appName}} no l'admet.",
+      "unableToLoadItemTitle": "Cap KML disponible"
+    },
+    "terria-reference": {
+      "failedToLoadTarget": "No s'ha pogut carregar el membre del catàleg extern"
+    },
+    "senaps": {
+      "missingKeyErrorMessage": "S'ha d'afegir una clau de l'API de Senaps a la configuració del servidor terriajs mitjançant l'opció appendParamToQueryString",
+      "name": "Ubicacions Senaps",
+      "retrieveErrorTitle": "Error en processar l'element del catàleg de Senaps",
+      "generalErrorMessage": "Error en processar les dades de Senaps",
+      "locationHeadingFeatureInfo": "Ubicació",
+      "availableStreamsHeadingFeatureInfo": "Fluxos disponibles",
+      "noStreamsMessageFeatureInfo": "No hi ha fluxos en aquesta ubicació.",
+      "missingSenapsBaseUrl": "No s'ha proporcionat l'URL base de Senaps. Has iniciat sessió?"
+    },
+    "placesLikeMe": {
+      "regionsLikeThisDescription": "Identifica regions que _s'assemblen més_ a una regió determinada segons un conjunt de característiques.",
+      "likenessesError": "La llista de semblances i la llista de codis de regió no contenen el mateix nombre d'elements.",
+      "regionsLikeThisName": "Regions com aquesta",
+      "regionTypeName": "Tipus de regió",
+      "regionTypeDescription": "Tipus de regió a analitzar.",
+      "regionName": "Regió",
+      "characteristics": "Característiques",
+      "regionDescription": "La regió a analitzar. L'anàlisi determinarà quines regions s'assemblen més a aquesta.",
+      "characteristicsDescription": "Les característiques de la regió a incloure en l'anàlisi.",
+      "name": "Llocs com jo",
+      "regioNotSelectedName": "Regió no seleccionada",
+      "regioNotSelectedDescription": "Heu d'escollir una regió.",
+      "placesLike": "Llocs com {{regionName}}"
+    },
+    "regionMapping": {
+      "outdatedBrowserMessage": "Esteu utilitzant un navegador web molt antic que no pot mostrar conjunts de dades \"cartografiats per regió\" com aquest. Actualitzeu a la darrera versió de Google Chrome, Mozilla Firefox, Microsoft Edge, Microsoft Internet Explorer 11 o Apple Safari tan aviat com sigui possible.",
+      "noDataForDate": "No hi ha dades per a la data seleccionada.",
+      "noDataForRegion": "No hi ha dades per a la regió seleccionada.",
+      "outdatedBrowserTitle": "Navegador web obsolet",
+      "invalidServerTypeTitle": "ServerType {{serverType}} no vàlid a regionMapping.json",
+      "invalidServerTypeMessage": "S'esperava que serverType fos \"WMS\" o \"vector\", però s'ha obtingut \"{{serverType}}\"",
+      "notRecognised": "Aquests noms de regió eren {{notRecognisedText}} ",
+      "notRecognisedText": "no reconegut",
+      "moreThanOneValue": "Aquestes regions tenien {{moreThanOneValueText}}",
+      "moreThanOneValueText": "més d'un valor",
+      "msg": "Consulteu {{link}} per veure com donar format a l'arxiu.",
+      "csvSpecification": "Especificació CSV-geo-au",
+      "issuesLoadingTitle": "Problemes en carregar {{name}}"
+    },
+    "feedback": {
+      "unableToSendMessage": "Això és realment vergonyós, però s'ha produït un error en intentar enviar els vostres comentaris. Si us plau, envieu-los per correu electrònic a {{email}}.",
+      "thanksTitle": "Gràcies pels vostres comentaris!",
+      "thanksMessage": "Els vostres comentaris ajuden a millorar {{appName}}",
+      "unableToSendTitle": "No es poden enviar comentaris"
+    },
+    "sensorObservationService": {
+      "unknownError": "El servidor ha informat d'un error desconegut.",
+      "noFeatures": "No hi ha cap funció que coincideixi amb la vostra consulta.",
+      "unknownFormat": "El servidor ha contestat amb un format de funció desconegut.",
+      "procedure": "Procediment",
+      "property": "Propietat",
+      "sos": "SOS",
+      "alreadyLoadingTitle": "Les dades ja s'estan carregant",
+      "alreadyLoadingMessage": "Les vostres dades encara s'estan carregant. Podreu canviar la vista un cop s'hagin carregat",
+      "exceptionMessage": "El servidor ha informat d'un error:\n\n {{exceptionText}}",
+      "missingBody": "El servidor ha contestat amb falta de cos.",
+      "noMatchingFeatures": "El servei d'observació de sensors no ha retornat cap funció que coincideixi amb la vostra consulta."
+    },
+    "sdmxJsonDataflowStratum": {
+      "loadDataErrorTitle": "No s'ha pogut carregar el flux de dades SDMX",
+      "loadDataErrorMessage": {
+        "noDataflow": "El flux de dades {{catalogItem.dataflowId}} no és vàlid",
+        "invalidResponse": "Objecte JSON no vàlid",
+        "noDatastructure": "No s'han trobat estructures de dades per al flux de dades {{catalogItem.dataflowId}}"
+      },
+      "defaultUnitMeasure": "Unitats"
+    },
+    "spatialDetailing": {
+      "characteristicToPredictDescription": "La característica a predir per a cada regió.",
+      "wrongNumberOfElements": "La llista de valors i la llista de codis de regió no contenen el mateix nombre d'elements",
+      "aggregationDescription": "Especifica com es van agregar els valors de la regió gruixuda. True si el valor és la mitjana dels valors de la regió, o False si el valor és la suma dels valors de la regió.",
+      "name": "Detalls espacials",
+      "description": "Prediu les característiques de les regions de gra fi aprenent i aprofitant les correlacions de dades de gra gruixut amb les característiques del cens.",
+      "regionTypeToPredictName": "Tipus de regió per predir",
+      "regionTypeToPredictDescription": "El tipus de regió per a la qual predir les característiques.",
+      "coarseDataRegionTypeName": "Tipus de regió de dades aproximades",
+      "coarseDataRegionTypeDescription": "El tipus de regió amb què s'associen les característiques d'entrada de gra gruixut.",
+      "aggregationName": "Agregació",
+      "aggregationTrueName": "Agregació mitjana",
+      "aggregationTrueDescription": "Els valors de la regió gruixuda són la mitjana de les mostres de la regió. Per exemple, la renda mitjana de la llar.",
+      "aggregationFalseName": "Agregació per suma",
+      "aggregationFalseDescription": "Els valors de la regió gruixuda són la suma de les mostres de la regió. Per exemple, població total.",
+      "characteristicToPredictName": "Característica per predir",
+      "spatialDetailingOf": "Detalls espacials de {{of}} a {{at}}"
+    },
+    "tableData": {
+      "bulkGeocoderErrorMessage": "No s'han pogut assignar adreces a coordenades lat-lon, ja que s'ha produït un error en recuperar les coordenades de l'adreça. Comprova la teva connexió a Internet o torna-ho a provar més tard.",
+      "noData": "Sense dades per mostrar",
+      "unsupportedCharactersTitle": "Caràcters no vàlids a les columnes latitud i longitud",
+      "unsupportedCharactersMessage": "No s'ha pogut interpretar el parell de latitud i longitud {{longitude}}, {{latitude}}",
+      "bulkGeocoderInfoTitle": "Informació del geocodificador massiu",
+      "bulkGeocoderInfoMessage": "El CSV conté adreces, però {{number}} no es pot localitzar al mapa: ",
+      "bulkGeocoderInfo2Message": "Falten {{nullAddresses}} adreces al CSV.",
+      "bulkGeocoderErrorTitle": "Error de geocodificador massiu",
+      "legendZFilterLabel": "Valors extrems",
+      "legendNullLabel": "(Sense valor)",
+      "styleDisabledLabel": "Desactiva l'estil",
+      "zFilterEnabled": "Valors extrems amagats (feu clic per mostrar-los)",
+      "zFilterDisabled": "Valors extrems detectats (feu clic per amagar-los)",
+      "timeDimensionEnabled": "Temps activat (feu clic per desactivar)",
+      "timeDimensionDisabled": "Temps desactivat (feu clic per activar)"
+    },
+    "terria": {
+      "initErrorMessage": "S'ha produït un problema amb el servidor Terria. Això pot fer que algunes capes o el servei de conversió no estiguin disponibles.",
+      "loadModelErrorMessage": "S'ha produït un error en carregar el model `{{model}}`.",
+      "loadingMagdaInitSourceErrorMessage": "S'ha produït un error en carregar la informació d'inicialització del registre de Magda `{{url}}`.",
+      "loadConfigErrorTitle": "No s'ha pogut carregar la configuració del mapa de Terria",
+      "proxyableDomainsDeprecation": "`proxyableDomainsUrl` ja no és compatible amb la v8",
+      "initErrorTitle": "No s'han pogut inicialitzar els serveis",
+      "urlLoadErrorTitle": "Problema carregant URL",
+      "urlLoadErrorMessage": "S'ha produït un problema en inicialitzar Terria amb paràmetres d'URL.",
+      "loadingMagdaInitSourceErrorTitle": "S'ha produït un error en carregar la font d'inicialització de Magda",
+      "loadingInitSourcesErrorTitle": "Error en carregar la configuració del mapa",
+      "loadingInitSourcesErrorMessage": "S'ha produït un error en carregar la configuració del mapa per {{appName}} i és possible que no es mostri correctament. Si us plau proveu de tornar a carregar el mapa i, si el problema persisteix, informeu-ne enviant un correu electrònic a {{email}}, o bé podeu prémer el botó següent.",
+      "loadingInitSourceErrorTitle": "Error en carregar la font d'inicialització",
+      "loadingInitSourceErrorMessage": "No s'ha pogut carregar la informació d'inicialització de `{{fragment}}` perquè no s'ha definit cap initFragmentPaths.",
+      "loadingInitSourceError2Message": "S'ha produït un error en carregar la informació d'inicialització de:\n*`{{loadSource}}`*.",
+      "loadingInitJsonMessage": "S'ha produït un error en carregar el fitxer JSON {{url}}."
+    },
+    "invokeAnalyticsService": {
+      "invocationFailedTitle": "La invocació del servei ha fallat",
+      "invocationFailedMessage": "S'ha produït un error del servidor en calcular {{invocationName}}."
+    },
+    "ionImagery": {
+      "name": "Imatges de Cesium Ion"
+    },
+    "mapboxMap": {
+      "name": "Mapa Mapbox"
+    },
+    "mapboxVectorTile": {
+      "name": "Mosaic vectorial Mapbox"
+    },
+    "mapboxStyle": {
+      "name": "Estil Mapbox"
+    },
+    "openStreetMap": {
+      "name": "OpenStreetMap"
+    },
+    "raiseError": {
+      "errorTitle": "S'ha produït un error",
+      "notificationFeedback": "Per a preguntes o comentaris, feu clic aquí.",
+      "notificationFeedbackEmail": "Per a preguntes o suggeriments, poseu-vos en contacte amb {{email}}",
+      "developerDetails": "Detalls del desenvolupador"
+    },
+    "resultPending": {
+      "name": "Resultat pendent"
+    },
+    "openDataSoft": {
+      "viewDatasetPage": "Veure la pàgina del conjunt de dades"
+    },
+    "sdmxServerStratum": {
+      "sdmxStructureLoadErrorTitle": "La sol·licitud d'estructura SDMX ha fallat",
+      "loadDataErrorTitle": "No s'ha pogut carregar el grup SDMX",
+      "loadDataErrorMessage": "El servidor no té fluxos de dades"
+    },
+    "sdmxCatalogItem": {
+      "viewBy": {
+        "title": "Veure per",
+        "time": "Sèries temporals",
+        "region": "Regió"
+      },
+      "loadDataErrorTitle": "No s'han pogut carregar les dades SDMX de {{name}}",
+      "loadDataErrorMessage": "Resposta no vàlida de {{csvUrl}}",
+      "noResultsWithDimensions": "No s'han trobat resultats. Seleccioneu al banc de treball valors de dimensions diferents que aquests:\n\n{{dimensions}}"
+    },
+    "time": {
+      "invalidDate": "Data no vàlida",
+      "invalidInitialTimeSource": "InicialTimeSource no vàlid especificat al fitxer de configuració: {{initialTimeSource}}"
+    },
+    "shareData": {
+      "generateErrorTitle": "No s'ha pogut generar una URL curta.",
+      "generateErrorMessage": "Alguna cosa ha fallat en intentar utilitzar el servei de compartició de dades per generar una URL curta.",
+      "expandErrorTitle": "No s'ha pogut expandir l'URL",
+      "expandErrorMessage": "No s'ha localitzat el servei de dades compartides utilitzat per llançar {{appName}}. Això pot indicar un error a l'enllaç o que el servei no està disponible en aquest moment."
+    },
+    "socrataServer": {
+      "name": "Servidor Socrata",
+      "retrieveErrorMessage": "No s'han pogut recuperar paquets d'aquest servidor de Sòcrata.",
+      "description": "Descripció",
+      "licence": "Llicència",
+      "attributes": "Atributs",
+      "tags": "Etiquetes"
+    },
+    "terrainCatalog": {
+      "notSupportedErrorTitle": "No és compatible amb 2D",
+      "notSupportedErrorMessage": "{{name}} no es pot mostrar a la vista 2D. Canvia a 3D i torna-ho a provar"
     }
   }
 }
