@@ -39,7 +39,7 @@
     },
     "end": "Acabar la visita",
     "sidePanelUploadButton": {
-      "content": "## Carrega dades\n\nPodeu carregar les vostres pròpies dades al mapa per veure-les amb altres conjunts de dades. Pengeu un fitxer o un enllaç a un conjunt de dades o servei de dades en línia existent. Els formats de dades admesos inclouen CSV, GeoJSON, KML, GPX i CZML."
+      "content": "## Carrega dades\n\nPodeu carregar les vostres pròpies dades al mapa per veure-les amb altres conjunts de dades. Pengeu un arxiu o un enllaç a un conjunt de dades o servei de dades en línia existent. Els formats de dades admesos inclouen CSV, GeoJSON, KML, GPX i CZML."
     },
     "menuBarStoryButton": {
       "content": "## Històries\n\nLes històries us permeten afegir informació contextual a un conjunt de dades per donar vida a una narració. Creeu la vostra pròpia història de dades amb l'Editor d'històries i compartiu-la mitjançant el tauler \"Comparteix\" un cop hàgiu acabat."
@@ -409,12 +409,12 @@
     "browse": "Navegar...",
     "localTitle": "Afegir dades locals",
     "dragDrop": "Arrossegar i deixar anar",
-    "infoText": "<0>Arrossegueu i deixeu anar un fitxer aquí per veure'l localment al mapa</0><1>(no es desarà ni es penjarà a Internet)</1>",
+    "infoText": "<0>Arrossegueu i deixeu anar un arxiu aquí per veure'l localment al mapa</0><1>(no es desarà ni es penjarà a Internet)</1>",
     "back": "Enrere",
     "note": "<0>Nota: </0>Les dades afegides d'aquesta manera no es desen ni es fan visibles per als altres.",
     "addDataBtnText": "Explora les dades del mapa",
     "webTitle": "Afegir dades web",
-    "webFile": "<0>Pas 2:</0> Introduïu l'URL del fitxer de dades o del servei web"
+    "webFile": "<0>Pas 2:</0> Introduïu l'URL de l'arxiu de dades o del servei web"
   },
   "search": {
     "resultsLabel": "Resultats de la cerca",
@@ -462,7 +462,7 @@
     "updateFrequency": "Freqüència d'actualització"
   },
   "description": {
-    "dataLocal": "Aquest fitxer només existeix al vostre navegador. Per compartir-lo, l'has de carregar en un servidor web públic.",
+    "dataLocal": "Aquest arxiu només existeix al vostre navegador. Per compartir-lo, l'has de carregar en un servidor web públic.",
     "dataNotLocal": "Poseu-vos en contacte amb el proveïdor d'aquestes dades per obtenir més informació, inclosa informació sobre els drets d'ús i les limitacions.",
     "layerName": "Nom de la capa",
     "typeName": "Escriviu el nom",
@@ -703,7 +703,7 @@
       "fileRequired": "L'arxiu és obligatori"
     },
     "readXml": {
-      "xmlError": "El fitxer no conté XML vàlid."
+      "xmlError": "L'arxiu no conté XML vàlid."
     },
     "terriaError": {
       "defaultTitle": "Hi ha hagut un error",
@@ -930,7 +930,7 @@
       "stubCreationFailure": "No s'ha pogut esborrar l'element {{item}} del catàleg",
       "unsupportedTypeTitle": "Tipus desconegut",
       "unsupportedTypeMessage": "No s'ha pogut crear el tipus {{type}} de model desconegut.",
-      "unsupportedFileTypeTitle": "Tipus de fitxer no compatible",
+      "unsupportedFileTypeTitle": "Tipus d'arxiu no compatible",
       "unsupportedFileTypeMessage": "Aquest format d'arxiu no és compatible amb {{appName}}. Els formats d'arxiu admesos inclouen: <ul><li>.geojson</li><li>.kml, .kmz</li><li>.csv (en {{link}})</li></ul>",
       "getConfirmationMessage": "Aquest arxiu no és compatible directament amb {{appName}}.\n\nVoleu provar de pujar-lo al servei de conversió {{appName}}? Això pot funcionar per a arxius Esri Shapefile petits i comprimits o arxius MapInfo TAB.",
       "readyToUpload": "Estàs preparat per enviar el teu arxiu al servei de conversió {{appName}}?",
@@ -1081,7 +1081,7 @@
       "serviceErrorMessage": "Aquest servei no té cap detall disponible.",
       "dataSourceErrorMessage": "Aquesta font de dades no té cap detall disponible.",
       "internetExplorer": "Internet Explorer 11",
-      "errorConvertingToGeoJsonTitle": "Error en convertir el fitxer a GeoJson",
+      "errorConvertingToGeoJsonTitle": "Error en convertir l'arxiu a GeoJson",
       "name": "Desconegut / Convertit a GeoJSON",
       "legacyBrowserTitle": "El navegador heretat no és compatible",
       "legacyBrowserMessage": "Ho sentim, el vostre navegador web no admet el tipus \"FormData\", que requereix el servei de conversió \"{{appName}}\". Us recomanem que actualitzeu a la darrera versió de {{chrome}}, {{firefox}}, {{safari}} o {{internetExplorer}}.",
@@ -1091,7 +1091,7 @@
       "unsupportedFileTzpe": "Tipus d'arxiu no compatible",
       "loadError": "La mida de l'arxiu és superior al límit de {{maxConversionSizeMB}} MB del servei de conversió {{appName}}",
       "invalidFile": "Això pot indicar que l'arxiu no és vàlid o que no és compatible amb el servei de conversió {{appName}}.",
-      "errorConvertingToGeoJsonMessage": "Error en intentar convertir aquest fitxer a GeoJson. ",
+      "errorConvertingToGeoJsonMessage": "Error en intentar convertir aquest arxiu a GeoJson. ",
       "emailUs": "Si voleu ajuda o més informació, envieu-nos un correu electrònic a {{email}}"
     },
     "magda": {
@@ -1257,7 +1257,7 @@
       "loadingInitSourceErrorTitle": "Error en carregar la font d'inicialització",
       "loadingInitSourceErrorMessage": "No s'ha pogut carregar la informació d'inicialització de `{{fragment}}` perquè no s'ha definit cap initFragmentPaths.",
       "loadingInitSourceError2Message": "S'ha produït un error en carregar la informació d'inicialització de:\n*`{{loadSource}}`*.",
-      "loadingInitJsonMessage": "S'ha produït un error en carregar el fitxer JSON {{url}}."
+      "loadingInitJsonMessage": "S'ha produït un error en carregar l'arxiu JSON {{url}}."
     },
     "invokeAnalyticsService": {
       "invocationFailedTitle": "La invocació del servei ha fallat",
@@ -1307,7 +1307,7 @@
     },
     "time": {
       "invalidDate": "Data no vàlida",
-      "invalidInitialTimeSource": "InicialTimeSource no vàlid especificat al fitxer de configuració: {{initialTimeSource}}"
+      "invalidInitialTimeSource": "InicialTimeSource no vàlid especificat a l'arxiu de configuració: {{initialTimeSource}}"
     },
     "shareData": {
       "generateErrorTitle": "No s'ha pogut generar una URL curta.",
