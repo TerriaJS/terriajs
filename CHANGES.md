@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.1.15)
 
+* Add Shapefile to `CkanDefaultFormatsStratum`
 * Fix `ArcGisMapServerCatalogItem` metadata bug
 * Remove legend traits from CatalogMemberMixin, replacing them with LegendOwnerTraits, and add tests to enforce correct use of legends.
 * Add better support for retreiving GeoJsonCatalogItem data through APIs, including supporting geojson nested within json objects
