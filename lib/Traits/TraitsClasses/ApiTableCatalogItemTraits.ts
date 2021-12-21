@@ -1,9 +1,10 @@
+import objectArrayTrait from "../Decorators/objectArrayTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
 import ApiRequestTraits from "./ApiRequestTraits";
 import AutoRefreshingTraits from "./AutoRefreshingTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
-import mixTraits from "../mixTraits";
-import objectArrayTrait from "../Decorators/objectArrayTrait";
-import primitiveTrait from "../Decorators/primitiveTrait";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 import TableTraits from "./TableTraits";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 
@@ -31,6 +32,7 @@ export class ApiTableRequestTraits extends mixTraits(ApiRequestTraits) {
 export default class ApiTableCatalogItemTraits extends mixTraits(
   TableTraits,
   CatalogMemberTraits,
+  LegendOwnerTraits,
   AutoRefreshingTraits,
   ApiRequestTraits
 ) {

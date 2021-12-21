@@ -7,7 +7,6 @@ import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
 import DimensionTraits from "./DimensionTraits";
-import LegendTraits from "./LegendTraits";
 
 export class MetadataUrlTraits extends ModelTraits {
   @primitiveTrait({
@@ -183,23 +182,6 @@ export default class CatalogMemberTraits extends ModelTraits {
       "Whether the catalog item is experiencing issues which may cause its data to be unavailable"
   })
   isExperiencingIssues: boolean = false;
-
-  @primitiveTrait({
-    type: "boolean",
-    name: "Hide legend in workbench",
-    description:
-      "Whether the legend is hidden in the workbench for this catalog member."
-  })
-  hideLegendInWorkbench: boolean = false;
-
-  @objectArrayTrait({
-    name: "Legend URLs",
-    description: "The legends to display on the workbench.",
-    type: LegendTraits,
-    idProperty: "index",
-    merge: false
-  })
-  legends?: LegendTraits[];
 
   @primitiveTrait({
     type: "boolean",

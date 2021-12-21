@@ -13,6 +13,7 @@ import ExportWebCoverageServiceTraits from "./ExportWebCoverageServiceTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 import LegendTraits from "./LegendTraits";
 import MappableTraits from "./MappableTraits";
 import { MinMaxLevelTraits } from "./MinMaxLevelTraits";
@@ -158,6 +159,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   UrlTraits,
   MappableTraits,
   CatalogMemberTraits,
+  LegendOwnerTraits,
   MinMaxLevelTraits
 ) {
   @primitiveTrait({
