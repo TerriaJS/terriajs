@@ -96,10 +96,10 @@ export default function upsertModelFromJson(
       }
 
       if (model.type !== StubCatalogItem.type && options.addModelToTerria) {
-        model.terria.addModel(
-          model,
-          isJsonStringArray(json.shareKeys) ? json.shareKeys : undefined
-        );
+        const shareKeys = isJsonStringArray(json.shareKeys)
+          ? json.shareKeys
+          : undefined;
+        model.terria.addModel(model, shareKeys);
       }
     } catch (e) {
       errors.push(TerriaError.from(e, `Failed to create model`));
