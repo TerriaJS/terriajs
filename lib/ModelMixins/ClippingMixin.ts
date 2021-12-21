@@ -147,25 +147,25 @@ function ClippingMixin<T extends Constructor<BaseType>>(
 
       const clippingPlanesOriginMatrix = this.clippingPlanesOriginMatrix();
 
+      const dimensions = new Cartesian3(
+        this.clippingBox.dimensions.length ?? 100,
+        this.clippingBox.dimensions.width ?? 100,
+        this.clippingBox.dimensions.height ?? 100
+      );
+
       let position = LatLonHeightTraits.toCartesian(this.clippingBox.position);
       if (!position) {
         // Use clipping plane origin as position but height set to 0 so that the box is grounded.
         const cartographic = Cartographic.fromCartesian(
           Matrix4.getTranslation(clippingPlanesOriginMatrix, new Cartesian3())
         );
-        cartographic.height = 0;
+        cartographic.height = dimensions.z / 2;
         position = Cartographic.toCartesian(
           cartographic,
           cesium.scene.globe.ellipsoid,
           new Cartesian3()
         );
       }
-
-      const dimensions = new Cartesian3(
-        this.clippingBox.dimensions.length ?? 100,
-        this.clippingBox.dimensions.width ?? 100,
-        this.clippingBox.dimensions.height ?? 100
-      );
 
       let hpr: HeadingPitchRoll | undefined;
       if (
