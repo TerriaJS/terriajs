@@ -564,6 +564,8 @@ export default class BoxDrawing {
     const scratchPreviousPosition = new Cartesian3();
     const scratchEndPosition = new Cartesian3();
     const scratchTranslationStep = new Cartesian3();
+    const scratchSurfacePoint = new Cartesian3();
+    const scratchSurfacePoint2d = new Cartesian2();
 
     /**
      * Moves the box when dragging a side.
@@ -602,7 +604,32 @@ export default class BoxDrawing {
 
         translationStep = moveVector;
       } else {
-        //Move along the globe surface when dragging any other side
+        // Move along the globe surface when dragging any other side. To do this
+        // we find the ellipsoidal points for the previous mouse position and
+        // current mouse position and translate the box position by the difference amount.
+        //
+        // When the box is tall and the horizon is in view, using the mouse
+        // coordinates to derive the pick ray results in a pick ray almost
+        // tangential to the ellipsoid, giving an ellipsoidal point that is very
+        // far away. This causes large jumps in box position. To avoid this we
+        // angle the pick ray to the ellipsoid surface by first projecting the mouse
+        // points to the ellipsoid surface.
+
+        // The box origin
+        const origin = this.trs.translation;
+
+        // Box origin projected on the ellipsoid surface.
+        const surfacePoint = projectPointToSurface(origin, scratchSurfacePoint);
+        // Surface point in screen coordinates
+        const surfacePoint2d = scene.cartesianToCanvasCoordinates(
+          surfacePoint,
+          scratchSurfacePoint2d
+        );
+        // Floor the startPosition and endPosition above the ellipsoid.
+        const yDiff = mouseMove.endPosition.y - mouseMove.startPosition.y;
+        mouseMove.startPosition.y = surfacePoint2d.y;
+        mouseMove.endPosition.y = surfacePoint2d.y + yDiff;
+
         const previousPosition = screenToGlobePosition(
           scene,
           mouseMove.startPosition,
@@ -613,6 +640,7 @@ export default class BoxDrawing {
           mouseMove.endPosition,
           scratchEndPosition
         );
+
         if (!previousPosition || !endPosition) {
           return;
         }
@@ -1163,16 +1191,34 @@ function screenProjectVector(
  * @param result Cartesian3 object to store the result
  * @returns The result object set to the converted position on the globe surface
             or undefined if a globe position could not be found.
- */
+*/
+const scratchPickRay = new Ray();
 export function screenToGlobePosition(
   scene: Scene,
   position: Cartesian2,
   result: Cartesian3
 ): Cartesian3 | undefined {
-  const pickRay = scene.camera.getPickRay(position);
+  const pickRay = scene.camera.getPickRay(position, scratchPickRay);
   const globePosition = scene.globe.pick(pickRay, scene, result);
   return globePosition;
 }
+
+/**
+ * Project the given point to the ellipsoid surface.
+ */
+function projectPointToSurface(
+  position: Cartesian3,
+  result: Cartesian3
+): Cartesian3 {
+  const cartographic = Cartographic.fromCartesian(
+    position,
+    undefined,
+    scratchCartographic
+  );
+  cartographic.height = 0;
+  return Cartographic.toCartesian(cartographic, undefined, result);
+}
+const scratchCartographic = new Cartographic();
 
 function setPlaneDimensions(
   boxDimensions: Cartesian3,
