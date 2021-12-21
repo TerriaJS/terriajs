@@ -26,6 +26,7 @@ Change Log
 * Re-enable GeoJSON simple styling - now if more than 50% of features have [simple-style-spec properties](https://github.com/mapbox/simplestyle-spec) - automatic styling will be disabled (this behaviour can be disabled by setting `forceCesiumPrimitives = false`)
 * Don't show `TableMixin` `legends` or `mapItems` if no data
 * Fix `GeoJsonCatalogItem.legends`
+* Add `isOpen` to `TerriaReferenceTraits`
 * [The next improvement]
 
 #### 8.1.14
