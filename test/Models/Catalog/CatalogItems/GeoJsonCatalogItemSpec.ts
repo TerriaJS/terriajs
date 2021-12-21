@@ -732,6 +732,39 @@ describe("GeoJsonCatalogItem - with geojson-vt and protomaps", function() {
       ).toBe(col);
     });
   });
+
+  it("Supports LegendOwnerTraits to override TableMixin.legends", async () => {
+    await geojson.loadMapItems();
+
+    expect(
+      "imageryProvider" in geojson.mapItems[0] &&
+        geojson.mapItems[0].imageryProvider instanceof ProtomapsImageryProvider
+    ).toBeTruthy();
+
+    expect(geojson.legends.length).toBe(1);
+    expect(geojson.legends[0].items.map(i => i.color)).toEqual([
+      "rgb(103,0,13)",
+      "rgb(176,18,24)",
+      "rgb(226,48,40)",
+      "rgb(249,105,76)",
+      "rgb(252,160,130)",
+      "rgb(253,211,193)",
+      "rgb(255,245,240)"
+    ]);
+
+    runInAction(() =>
+      updateModelFromJson(geojson, CommonStrata.definition, {
+        legends: [
+          {
+            url: "some-url"
+          }
+        ]
+      })
+    );
+
+    expect(geojson.legends.length).toBe(1);
+    expect(geojson.legends[0].url).toBe("some-url");
+  });
 });
 
 describe("Disables protomaps (mvt) if geoJson simple styling is detected", () => {

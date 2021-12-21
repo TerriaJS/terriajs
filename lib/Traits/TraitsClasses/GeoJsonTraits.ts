@@ -9,6 +9,7 @@ import FeatureInfoTraits from "./FeatureInfoTraits";
 import StyleTraits from "./StyleTraits";
 import TableTraits from "./TableTraits";
 import UrlTraits from "./UrlTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 
 export class PerPropertyGeoJsonStyleTraits extends ModelTraits {
   @anyTrait({
@@ -36,6 +37,7 @@ export class PerPropertyGeoJsonStyleTraits extends ModelTraits {
 }
 
 export class GeoJsonTraits extends mixTraits(
+  LegendOwnerTraits,
   TableTraits,
   FeatureInfoTraits,
   UrlTraits
