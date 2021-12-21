@@ -9,17 +9,18 @@ import CatalogMemeberMixin from "../../../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../../../../../ModelMixins/MappableMixin";
 import { BaseModel } from "../../../../../Models/Definition/Model";
 import DiscretelyTimeVaryingMixin from "../../../../../ModelMixins/DiscretelyTimeVaryingMixin";
+import DOMPurify from "dompurify";
 
 import DistanceLegend from "../../../Legend/DistanceLegend";
 import PrintViewButtons from "./PrintViewButtons";
 import { terriaTheme } from "../../../../StandardUserInterface/StandardTheme";
 import { StyleSheetManager, ThemeProvider } from "styled-components";
 
-import { useEffect } from 'react';
+import Button from "../../../../../Styled/Button";
+
+import { useEffect } from "react";
 import PrintViewMap from "./PrintViewMap";
 import PrintWorkbench from "./PrintWorkbench";
-
-
 
 // interface CreateOptions {
 //   terria: Terria;
@@ -159,42 +160,48 @@ import PrintWorkbench from "./PrintWorkbench";
 //   }
 // }
 
-// export const styles = `
-//     .tjs-_base__list-reset {
-//         list-style: none;
-//         padding-left: 0;
-//         margin: 0;
-//     }
+const styles = `
+    .tjs-_base__list-reset {
+        list-style: none;
+        padding-left: 0;
+        margin: 0;
+    }
 
-//     .background {
-//         width: 100%;
-//         fill: rgba(255, 255, 255, 1.0);
-//     }
+    .background {
+        width: 100%;
+        fill: rgba(255, 255, 255, 1.0);
+    }
 
-//     .map-image {
-//         max-width: 95vw;
-//         max-height: 95vh;
-//     }
+    .map-image {
+        max-width: 95vw;
+        max-height: 95vh;
+    }
 
-//     .layer-legends {
-//         display: inline;
-//         float: left;
-//         padding-left: 20px;
-//         padding-right: 20px;
-//     }
+    .layer-legends {
+        display: inline;
+        float: left;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
 
-//     .layer-title {
-//         font-weight: bold;
-//     }
+    .layer-title {
+        font-weight: bold;
+    }
 
-//     h1, h2, h3 {
-//         clear: both;
-//     }
+    h1, h2, h3 {
+        clear: both;
+    }
 
-//     .tjs-_form__input {
-//         width: 80%;
-//     }
-// `;
+    .tjs-_form__input {
+        width: 80%;
+    }
+`;
+
+const mkStyle = (unsafeCSS:string) => {
+  const style = document.createElement('style');
+  style.innerHTML = DOMPurify.sanitize(unsafeCSS);
+  return style;
+}
 
 interface Props {
   terria: Terria;
@@ -202,38 +209,46 @@ interface Props {
   closeCallback: () => void;
 }
 
-const PrintView = (props:Props) => {
+const PrintView = (props: Props) => {
   const [rootNode] = useState(document.createElement("main"));
-  const[screenshot, setScreenshot] = useState<Promise<string> | null>(null);
+  const [screenshot, setScreenshot] = useState<Promise<string> | null>(null);
 
   useEffect(() => {
-    const newWindow:Window|null = window.open();
+    const newWindow: Window | null = window.open();
+    newWindow?.document.head.appendChild(mkStyle(styles));
     newWindow?.document.body.appendChild(rootNode);
-    newWindow?.addEventListener('beforeunload', props.closeCallback);
-  },[])
+    newWindow?.addEventListener("beforeunload", props.closeCallback);
+  }, []);
 
-  useEffect(()=> {
+  useEffect(() => {
     setScreenshot(props.terria.currentViewer.captureScreenshot());
-  }, [])
+  }, []);
 
   return ReactDOM.createPortal(
-    <ThemeProvider theme={terriaTheme}>
-      <section>Button bar</section>
-      <section>
-        <div>
-          <h2>Workbnech</h2>
-          <PrintWorkbench workbench={props.terria.workbench} />
-        </div>
-        <div>
-          {screenshot ? <PrintViewMap screenshot={screenshot} /> : <div> loading</div>}
-          <DistanceLegend terria={props.terria} />
-        </div>
-      </section>
-      <section>download buttons</section>
-      <section>datasets</section>
-    </ThemeProvider>,
+    <StyleSheetManager target={rootNode}>
+      <ThemeProvider theme={terriaTheme}>
+        <section>
+          <Button primary>Print</Button>
+        </section>
+        <section>
+          <div>
+            <PrintWorkbench workbench={props.terria.workbench} />
+          </div>
+          <div>
+            {screenshot ? (
+              <PrintViewMap screenshot={screenshot} />
+            ) : (
+              <div>loading</div>
+            )}
+            <DistanceLegend terria={props.terria} />
+          </div>
+        </section>
+        <section>download buttons</section>
+        <section>datasets</section>
+      </ThemeProvider>
+    </StyleSheetManager>,
     rootNode
   );
-}
+};
 
 export default PrintView;
