@@ -5,12 +5,14 @@ import mixTraits from "../mixTraits";
 import ArcGisPortalSharedTraits from "./ArcGisPortalSharedTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import GroupTraits from "./GroupTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 import UrlTraits from "./UrlTraits";
 
 export default class ArcGisPortalCatalogGroupTraits extends mixTraits(
   GroupTraits,
   UrlTraits,
   CatalogMemberTraits,
+  LegendOwnerTraits,
   ArcGisPortalSharedTraits
 ) {
   @anyTrait({
