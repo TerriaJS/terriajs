@@ -1,9 +1,13 @@
 Change Log
 ==========
 
-#### next release (8.1.16)
+#### next release (8.1.17)
 
 * [The next improvement]
+
+#### 8.1.16
+
+* Added region mapping support for Commonwealth Electoral Divisions as at 2 August 2021 (AEC) as com_elb_name_2021.
 
 #### 8.1.15
 
