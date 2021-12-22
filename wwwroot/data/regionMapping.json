@@ -1059,8 +1059,9 @@
             "regionProp": "Elect_div",
             "nameProp": "Elect_div",
             "aliases": [
+              "com_elb_name_2021",
               "com_elb_name",
-              "com_elb_name_2021"
+              "divisionnm"
             ],
             "description": "Commonwealth Electoral Divisions as at 2 August 2021 (AEC)",
             "bbox": [
@@ -1080,9 +1081,7 @@
             "regionProp": "Sortname",
             "nameProp": "Sortname",
             "aliases": [
-              "com_elb_name",
-              "com_elb_name_2019",
-              "divisionnm"
+              "com_elb_name_2019"
             ],
             "description": "Federal electoral divisions for 2019 election (AEC)",
             "bbox": [
