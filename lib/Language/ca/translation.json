@@ -114,7 +114,7 @@
     "closeButtonTitle": "Tanqueu l'eina {{toolName}}",
     "loadingError": {
       "title": "Error en carregar l'eina {{toolName}}",
-      "message": "S'ha produït un error en intentar carregar aquesta eina des del servidor. Siusplau torna-ho a provar."
+      "message": "Error en intentar carregar aquesta eina des del servidor. Siusplau torna-ho a provar."
     },
     "exitBtnTitle": "Sortida",
     "button": {
@@ -195,7 +195,7 @@
   "share": {
     "browserPrint": "Per obtenir millors resultats impresos, utilitzeu el botó d'impressió de {{appName}} en comptes de la funció d'impressió del vostre navegador web.",
     "shortLinkShortening": "Escurçant...",
-    "shortLinkError": "S'ha produït un error en intentar escurçar l'URL. Comproveu la vostra connexió a Internet i torneu-ho a provar.",
+    "shortLinkError": "Error en intentar escurçar l'URL. Comproveu la vostra connexió a Internet i torneu-ho a provar.",
     "printTitle": "Imprimeix el mapa",
     "printButton": "Imprimir",
     "printViewButton": "Mostra la vista d'impressió",
@@ -354,7 +354,7 @@
     "preview": "previsualitzar històries",
     "locationBtn": "centrar escena",
     "hideStoryPanel": "Amaga el creador d'històries",
-    "loadSceneErrorMessage": "S'ha produït un error en carregar les dades de l'escena de la història: `{{title}}`.",
+    "loadSceneErrorMessage": "Error en carregar les dades de l'escena de la història: `{{title}}`.",
     "removeStoryDialog": "Esteu segur que voleu suprimir \"<1>{{storyName}}</1>\"?",
     "editor": {
       "cancelEditing": "Cancel·lar",
@@ -437,7 +437,7 @@
     "selectToPreview": "<0>Seleccioneu un conjunt de dades per veure'n una previsualització </0><1>- O -</1><2>Anar al mapa</2>",
     "preview": "{{appName}} previsualització",
     "previewItemErrorTitle": "No s'ha pogut previsualitzar l'element del catàleg.",
-    "previewItemErrorMessage": "S'ha produït un error en carregar l'element del catàleg.",
+    "previewItemErrorMessage": "Error en carregar l'element del catàleg.",
     "noPreviewAvailable": "CAP PREVISUALITZACIÓ DISONIBLE",
     "dataPreviewLoading": "CARREGANT PREVISUALITZACIÓ DE DADES...",
     "dataPreview": "PREVISUALITZACIÓ DE DADES",
@@ -510,7 +510,7 @@
     "expandAll": "Expandir-ho tot",
     "toggleVisibility": "Mostrar/amagar dades",
     "addItemErrorTitle": "No s'ha pogut afegir l'element del catàleg al banc de treball.",
-    "addItemErrorMessage": "S'ha produït un error en carregar l'element del catàleg.",
+    "addItemErrorMessage": "Error en carregar l'element del catàleg.",
     "dimensionsSelector": {
       "undefinedLabel": "Sense especificar"
     },
@@ -709,7 +709,7 @@
       "defaultTitle": "Hi ha hagut un error",
       "defaultMessage": "Error desconegut",
       "defaultCombineTitle": "S'han produït diversos errors",
-      "networkRequestTitle": "S'ha produït un error de sol·licitud de xarxa",
+      "networkRequestTitle": "Error de sol·licitud de xarxa",
       "networkRequestMessageDetailed": "Això pot indicar un dels següents:\n\n* No s'ha pogut resoldre el nom del servidor\n* El servidor no ha respost a la sol·licitud o no està disponible temporalment\n* El servidor ha denegat l'accés [Compartició de recursos entre orígens (CORS)](https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/) a aquesta URL\n* Hi ha un problema amb la connexió a Internet\n\nSi heu introduït l'enllaç manualment, comproveu que l'enllaç sigui correcte.",
       "defaultCombineMessage": "Els detalls dels errors es troben a continuació",
       "networkRequestMessage": "És possible que les dades no estiguin disponibles o no es mostrin correctament a causa de l'interrupció del servei del custodi de dades. Si us plau proveu de tornar a carregar el mapa, accediu a les dades en una fase posterior o seleccioneu un conjunt de dades diferent. <feedbacklink feedback-message='Si el problema persisteix, envieu comentaris aquí.' email-message='Si el problema persisteix, si us plau, informeu-ne a {{email}}'/>"
@@ -824,7 +824,7 @@
     },
     "arcGisFeatureServerCatalogItem": {
       "name": "Esri ArcGIS FeatureServer",
-      "invalidServiceMessage": "S'ha produït un error en invocar l'ArcGIS Feature Service. La resposta del servidor no sembla ser una capa de servei de funcions vàlida.",
+      "invalidServiceMessage": "Error en invocar l'ArcGIS Feature Service. La resposta del servidor no sembla ser una capa de servei de funcions vàlida.",
       "dataDescription": "Descripció de les dades",
       "serviceDescription": "Descripció del servei",
       "copyrightText": "Text dels drets d'autor",
@@ -834,14 +834,14 @@
       "reachedMaxFeatureLimit": "Avís: aquesta capa ha assolit el límit de funcions FeatureService."
     },
     "arcGisFeatureServerCatalogGroup": {
-      "invalidServiceMessage": "S'ha produït un error en invocar l'ArcGIS Feature Service. La resposta del servidor no sembla ser un document del servei de funcions vàlid.",
+      "invalidServiceMessage": "Error en invocar l'ArcGIS Feature Service. La resposta del servidor no sembla ser un document del servei de funcions vàlid.",
       "name": "Grup de servidors ArcGIS Feature",
       "dataDescription": "Descripció de les dades",
       "serviceDescription": "Descripció del servei",
       "copyrightText": "Text dels drets d'autor",
       "invalidServiceTitle": "Servei invàlid d'ArcGIS Feature",
       "groupNotAvailableTitle": "El grup no està disponible",
-      "groupNotAvailableMessage": "S'ha produït un error en invocar l'ArcGIS Feature Service."
+      "groupNotAvailableMessage": "Error en invocar l'ArcGIS Feature Service."
     },
     "arcGisMapServerCatalogGroup": {
       "groupNotAvailableTitle": "Grup no està disponible",
@@ -850,8 +850,8 @@
       "serviceDescription": "Descripció del servei",
       "copyrightText": "Text dels drets d'autor",
       "invalidServiceTitle": "Servei de mapes d'ArcGIS no vàlid",
-      "invalidServiceMessage": "S'ha produït un error en invocar el servei de mapes d'ArcGIS. La resposta del servidor no sembla ser un document vàlid del servei de mapes.",
-      "groupNotAvailableMessage": "S'ha produït un error en invocar el servei de mapes d'ArcGIS."
+      "invalidServiceMessage": "Error en invocar el servei de mapes d'ArcGIS. La resposta del servidor no sembla ser un document vàlid del servei de mapes.",
+      "groupNotAvailableMessage": "Error en invocar el servei de mapes d'ArcGIS."
     },
     "arcGisMapServerCatalogItem": {
       "invalidUrlMessage": "No s'ha pogut carregar el punt d'accés de l'ArcGis MapServer perquè l'element del catàleg no té una \"url\".",
@@ -877,7 +877,7 @@
       "metadata_created": "Creat",
       "notCompatibleMessageI": "El conjunt de dades CKAN no té cap recurs amb l'ID {{resourceId}} o no té un format compatible.",
       "nameServer": "Servidor CKAN",
-      "errorLoadingTitle": "S'ha produït un error en carregar el catàleg de CKAN",
+      "errorLoadingTitle": "Error en carregar el catàleg de CKAN",
       "errorLoadingMessage": "La definició d'aquest catàleg CKAN no té una consulta de filtre vàlida.",
       "corsErrorMessage": "No s'ha pogut recuperar paquets d'aquest servidor CKAN.",
       "name": "Recurs CKAN",
@@ -892,7 +892,7 @@
       "update_freq": "Freqüència d'actualització",
       "idsNotSpecifiedTitle": "Cal especificar resourceId o datasetId",
       "idsNotSpecifiedMessage": "CkanCatalogItem requereix que s'especifiqui resourceId o datasetId.",
-      "errorRetrievingUrlTitle": "S'ha produït un error en recuperar l'URL CKAN",
+      "errorRetrievingUrlTitle": "Error en recuperar l'URL CKAN",
       "errorRetrievingUrlMessage": "No s'ha pogut recuperar l'URL com a JSON: {{url}}.",
       "invalidCkanTitle": "El recurs CKAN JSON no és vàlid",
       "invalidCkanMessage": "El recurs retornat des del servidor CKAN no sembla tenir un package_id.",
@@ -902,7 +902,7 @@
     "arcgisPortal": {
       "corsErrorMessage": "No s'han pogut recuperar paquets d'aquest servidor d'ArcGIS Portal. ",
       "nameGroup": "Grup ArcGIS Portal",
-      "errorLoadingTitle": "S'ha produït un error en carregar el catàleg del portal d'ArcGIS",
+      "errorLoadingTitle": "Error en carregar el catàleg del portal d'ArcGIS",
       "errorLoadingMessage": "La definició d'aquest catàleg del portal d'ArcGIS no té una consulta de filtre vàlida.",
       "name": "Element del portal d'ArcGIS",
       "dataSourceErrorMessage": "Aquesta font de dades no té cap detall disponible.",
@@ -912,7 +912,7 @@
       "openInPortal": "Obre a ArcGIS Portal",
       "idsNotSpecifiedTitle": "Cal especificar resourceId o datasetId",
       "idsNotSpecifiedMessage": "ArcGIS Portal Item requereix que s'especifiqui un itemId.",
-      "errorRetrievingUrlTitle": "S'ha produït un error en recuperar l'URL del portal d'ArcGIS",
+      "errorRetrievingUrlTitle": "Error en recuperar l'URL del portal d'ArcGIS",
       "errorRetrievingUrlMessage": "No s'ha pogut recuperar l'URL com a JSON: {{url}}."
     },
     "catalog": {
@@ -955,17 +955,17 @@
     "arcGisService": {
       "name": "Grup de serveis ArcGIS",
       "invalidServerTitle": "Servidor ArcGIS no vàlid",
-      "invalidServerMessage": "S'ha produït un error en invocar el servei REST d'ArcGIS. La resposta del servidor no sembla ser un document REST d'ArcGIS vàlid.",
+      "invalidServerMessage": "Error en invocar el servei REST d'ArcGIS. La resposta del servidor no sembla ser un document REST d'ArcGIS vàlid.",
       "groupNotAvailableTitle": "El grup no està disponible",
-      "groupNotAvailableMessage": "S'ha produït un error en invocar el servei REST d'ArcGIS."
+      "groupNotAvailableMessage": "Error en invocar el servei REST d'ArcGIS."
     },
     "arcGisFeatureServer": {
       "name": "Servidor ArcGIS Feature",
       "nameGroup": "Grup de servidor ArcGIS Feature",
       "invalidServiceTitle": "Servei invàlid ArcGIS Feature",
-      "invalidServiceMessage": "S'ha produït un error en invocar l'ArcGIS Feature Service. La resposta del servidor no sembla ser un document del servei de funcions vàlid.",
+      "invalidServiceMessage": "Error en invocar l'ArcGIS Feature Service. La resposta del servidor no sembla ser un document del servei de funcions vàlid.",
       "groupNotAvailableTitle": "El grup no està disponible",
-      "groupNotAvailableMessage": "S'ha produït un error en invocar l'ArcGIS Feature Service."
+      "groupNotAvailableMessage": "Error en invocar l'ArcGIS Feature Service."
     },
     "bing": {
       "name": "Mapes Bing"
@@ -1014,7 +1014,7 @@
       "dataSourceErrorMessage": "Aquesta font de dades no té cap detall disponible.",
       "serviceErrorMessage": "Aquest servei no té cap detall disponible.",
       "errorLoadingTitle": "No s'ha pogut carregar CZML",
-      "errorLoadingMessage": "S'ha produït un error en carregar un arxiu CZML.",
+      "errorLoadingMessage": "Error en carregar un arxiu CZML.",
       "unableToLoadItemTitle": "Cap CZML disponible",
       "unableToLoadItemMessage": "L'element del catàleg CZML no es pot carregar perquè no s'ha configurat amb una propietat \"url\", \"czmlData\" o \"czmlString\"."
     },
@@ -1030,7 +1030,7 @@
       "errorLoadingMessage": "S'ha produït un error en carregar un arxiu GeoJSON. Això pot indicar que el arxiu no és vàlid o que no és compatible.",
       "errorParsingMessage": "S'ha produït un error en analitzar les dades proporcionades com a JSON. Això pot indicar que l'arxiu no és vàlid o que no és compatible.",
       "couldNotLoadTitle": "No s'ha pogut carregar JSON",
-      "couldNotLoadMessage": "S'ha produït un error en recuperar les dades JSON de l'enllaç proporcionat.CORS",
+      "couldNotLoadMessage": "Error en recuperar les dades JSON de l'enllaç proporcionat.CORS",
       "unableToLoadItemTitle": "Cap GeoJSON disponible",
       "unableToLoadItemMessage": "L'element del catàleg GeoJSON no es pot carregar perquè no s'ha configurat amb una propietat \"url\", \"geoJsonData\" o \"geoJsonString\".",
       "unsupportedBrowserTitle": "Navegador web no compatible",
@@ -1060,7 +1060,7 @@
       "name": "GPX",
       "dataSourceErrorMessage": "Aquesta font de dades no té cap detall disponible.",
       "serviceErrorMessage": "Aquest servei no té cap detall disponible.",
-      "errorLoadingTitle": "S'ha produït un error en carregar GPX",
+      "errorLoadingTitle": "Error en carregar GPX",
       "errorLoadingMessage": "S'ha produït un error en carregar un arxiu GPX. Això pot indicar que l'arxiu no és vàlid o que {{appName}} no l'admet."
     },
     "georss": {
@@ -1073,7 +1073,7 @@
       "link": "Enllaç",
       "author": "Autor",
       "errorLoadingTitle": "No s'ha pogut carregar GeoRSS",
-      "errorLoadingMessage": "S'ha produït un error en carregar un arxiu GeoRSS.",
+      "errorLoadingMessage": "Error en carregar un arxiu GeoRSS.",
       "unableToLoadItemTitle": "Cap GeoRSS disponible",
       "unableToLoadItemMessage": "L'element del catàleg GeoRSS no es pot carregar perquè no s'ha configurat amb una propietat \"url\" o \"geoRss\"."
     },
@@ -1102,7 +1102,7 @@
       "distributionDesc": "Descripció de la distribució",
       "idsNotSpecifiedTitle": "Cal especificar recordId",
       "idsNotSpecifiedMessage": "MagdaReference vol que s'especifiqui recordId.",
-      "retrieveErrorTitle": "S'ha produït un error en recuperar el registre MAGDA",
+      "retrieveErrorTitle": "Error en recuperar el registre MAGDA",
       "retrieveErrorMessage": "No s'ha proporcionat cap identificador de distribució ni de conjunt de dades",
       "notCompatibleMessageI": "El conjunt de dades MAGDA no té una distribució amb l'ID {{distributionId}} o no té un format compatible.",
       "notCompatibleMessageII": "El conjunt de dades MAGDA no té cap distribució amb un format compatible."
@@ -1113,9 +1113,9 @@
       "intervalSupportErrorTitle": "No s'admeten els intervals",
       "intervalSupportErrorMessage": "Ho sentim, actualment els elements del catàleg {{typeName}} ({{type}}) no es poden modificar en el temps especificant la propietat \"intervals\".",
       "resolvingAvailability": "S'està resolent la disponibilitat en una ubicació...",
-      "accessingBaseMapErrorTitle": "S'ha produït un error en accedir al mapa base",
+      "accessingBaseMapErrorTitle": "Error en accedir al mapa base",
       "accessingBaseMapErrorMessage": "S'ha produït un error en intentar baixar tessel·les per al mapa base:<p><center>{{name}} </center></p> Seleccioneu un mapa base diferent amb el botó Mapa a l'extrem superior dret.",
-      "accessingCatalogItemErrorTitle": "S'ha produït un error en accedir a l'element del catàleg",
+      "accessingCatalogItemErrorTitle": "Error en accedir a l'element del catàleg",
       "accessingCatalogItemErrorMessage": "S'ha produït un error en intentar baixar les tessel·les per a l'element del catàleg:<p><center>{{name}}</center></p> L'element del catàleg s'ha amagat al mapa. Podeu tornar-lo a mostrar al tauler Visualització Actual per tornar-ho a provar.",
       "tileErrorTitle": "Error de mosaic",
       "tileErrorMessageII": "S'ha rebut una resposta de 200 (OK) de l'URL:\n{{url}}\nperò no s'ha pogut carregar com a imatge.",
@@ -1244,24 +1244,31 @@
     },
     "terria": {
       "initErrorMessage": "S'ha produït un problema amb el servidor Terria. Això pot fer que algunes capes o el servei de conversió no estiguin disponibles.",
-      "loadModelErrorMessage": "S'ha produït un error en carregar el model `{{model}}`.",
-      "loadingMagdaInitSourceErrorMessage": "S'ha produït un error en carregar la informació d'inicialització del registre de Magda `{{url}}`.",
+      "loadModelErrorMessage": "Error en carregar el model `{{model}}`.",
+      "loadingMagdaInitSourceErrorMessage": "Error en carregar la informació d'inicialització del registre de Magda `{{url}}`.",
       "loadConfigErrorTitle": "No s'ha pogut carregar la configuració del mapa de Terria",
       "proxyableDomainsDeprecation": "`proxyableDomainsUrl` ja no és compatible amb la v8",
       "initErrorTitle": "No s'han pogut inicialitzar els serveis",
       "urlLoadErrorTitle": "Problema carregant URL",
       "urlLoadErrorMessage": "S'ha produït un problema en inicialitzar Terria amb paràmetres d'URL.",
-      "loadingMagdaInitSourceErrorTitle": "S'ha produït un error en carregar la font d'inicialització de Magda",
+      "loadingMagdaInitSourceErrorTitle": "Error en carregar la font d'inicialització de Magda",
       "loadingInitSourcesErrorTitle": "Error en carregar la configuració del mapa",
       "loadingInitSourcesErrorMessage": "S'ha produït un error en carregar la configuració del mapa per {{appName}} i és possible que no es mostri correctament. Si us plau proveu de tornar a carregar el mapa i, si el problema persisteix, informeu-ne enviant un correu electrònic a {{email}}, o bé podeu prémer el botó següent.",
       "loadingInitSourceErrorTitle": "Error en carregar la font d'inicialització",
       "loadingInitSourceErrorMessage": "No s'ha pogut carregar la informació d'inicialització de `{{fragment}}` perquè no s'ha definit cap initFragmentPaths.",
       "loadingInitSourceError2Message": "S'ha produït un error en carregar la informació d'inicialització de:\n*`{{loadSource}}`*.",
-      "loadingInitJsonMessage": "S'ha produït un error en carregar l'arxiu JSON {{url}}."
+      "loadingInitJsonMessage": "Error en carregar l'arxiu JSON {{url}}.",
+      "loadingBaseMapsErrorTitle": "Error en carregar els mapes base",
+      "loadingBaseMapErrorTitle": "Error en carregar el mapa base: `{{name}}`",
+      "loadingShareDataErrorTitle": "Error en carregar les dades compartides",
+      "parsingStartDataErrorMessage": "Error en analitzar les dades d'inici JSON.",
+      "loadingWorkbenchItemErrorTitle": "Error en carregar l'element al banc de treball: `{{name}}`",
+      "disclaimer": "Exempció de responsabilitat",
+      "buttonTitleConfirm": "Hi estic d'acord"
     },
     "invokeAnalyticsService": {
       "invocationFailedTitle": "La invocació del servei ha fallat",
-      "invocationFailedMessage": "S'ha produït un error del servidor en calcular {{invocationName}}."
+      "invocationFailedMessage": "Error del servidor en calcular {{invocationName}}."
     },
     "ionImagery": {
       "name": "Imatges de Cesium Ion"
@@ -1326,6 +1333,256 @@
     "terrainCatalog": {
       "notSupportedErrorTitle": "No és compatible amb 2D",
       "notSupportedErrorMessage": "{{name}} no es pot mostrar a la vista 2D. Canvia a 3D i torna-ho a provar"
+    },
+    "terriaJSONcatalog": {
+      "name": "Funció de catàleg JSON de Terria",
+      "misconfiguredError2Message": "La configuració HTTP 202 {{url}} no és present a la resposta {{xhr}}",
+      "asyncResultDescription": "Aquest és el resultat d'invocar el procés o servei {{name}} a {{timestamp}} amb els paràmetres d'entrada següents.",
+      "loadingInitSourceErrorTitle": "Error en carregar la font d'inicialització",
+      "loadingInitSourceError2Message": "S'ha produït un error en carregar la informació d'inicialització de:\n*`{{loadSource}}`*.",
+      "disclaimer": "Exempció de responsabilitat",
+      "buttonTitleConfirm": "Hi estic d'acord",
+      "misconfiguredErrorMessage": "Servei no configurat per a TerriaJsonCatalogFunction HTTP 202.",
+      "misconfiguredErrorTitle": "Arxiu d'inici mal configurat",
+      "serviceResponseErrorTitle": "La resposta del servei no és una cadena JSON",
+      "serviceResponseErrorMessage": "Se suposava que TerriaJsonCatalogFunction havia de rebre una cadena JSON, ha rebut {{xhr}}",
+      "requestFailedTitle": "La sol·licitud ha fallat",
+      "requestFailedMessage": "La sol·licitud ha fallat amb el codi d'estat {{status}}.",
+      "loadingInitSourceErrorMessage": "S'ha produït un error en carregar la font d'inicialització {{fragment}} perquè no s'ha definit cap initFragmentPaths."
+    },
+    "thredds": {
+      "nameGroup": "Grup de catàleg THREDDS"
+    },
+    "threddsItem": {
+      "name": "Referència de l'element THREDDS"
+    },
+    "urlTemplateMapServer": {
+      "name": "Model d'URL servidor de mapes"
+    },
+    "userDrawing": {
+      "devError": "És necessària la instància de Terria.",
+      "messageHeader": "Dibuixa al mapa",
+      "pointEntities": "Punts",
+      "otherEntities": "Línies i polígons",
+      "line": "Línia",
+      "firstPoint": "Primer punt",
+      "btnCancel": "Cancel·lar",
+      "btnDone": "Fet",
+      "clickToAddAnotherPoint": "Feu clic per afegir un altre punt",
+      "anotherPoint": "Una altre punt",
+      "userPolygon": "Polígon de l'usuari",
+      "clickToAddFirstPoint": "Fet clic per afegir un punt"
+    },
+    "webFeatureServiceCatalogGroup": {
+      "wfsServer": "Servidor Web Feature Service (WFS)",
+      "invalidWFSServerTitle": "Servidor WFS no vàlid",
+      "groupNotAvailableTitle": "El grup no està disponible",
+      "accessConstraints": "Restriccions d'accés al Web Feature Service",
+      "fees": "Tarifes del Web Feature Service",
+      "abstract": "Descripcio del Web Feature Service",
+      "invalidWFSServerMessage": "Error en invocar GetCapabilities al servidor WFS. La resposta del servidor no sembla ser un document de GetCapabilities vàlid.",
+      "groupNotAvailableMessage": "Error en invocar GetCapabilities al servidor WFS."
+    },
+    "webFeatureServiceCatalogItem": {
+      "wfs": "Web Feature Service (WFS)",
+      "dataDescription": "Descripció de les dades",
+      "abstract": "Descripció del Web Feature Service",
+      "serviceDescription": "Descripció del servei",
+      "metadataUrls": "Enllaços de metadades",
+      "accessConstraints": "Restriccions d'accés",
+      "serviceContact": "Contacte del servei",
+      "getCapabilitiesUrl": "URL del GetCapabilities",
+      "noLayerFoundMessage": "El conjunt de dades WFS \"{{name}}\" no té capes que coincideixin amb \"{{typeNames}}\". {{suggested}} {{line}}{{line}}O el fitxer de catàleg s'ha configurat incorrectament o el servidor WFS ha canviat.",
+      "missingDataTitle": "Falten dades",
+      "missingDataMessage": "El conjunt de dades WFS '{{name}}' no ha retornat cap dada.{{line}}{{line}}O el fitxer de catàleg s'ha configurat incorrectament o l'adreça del servidor ha canviat.",
+      "missingUrlTitle": "No es pot carregar GetCapabilities",
+      "missingUrlMessage": "No s'ha pogut carregar el document GetCapabilities del Web Feature Service (WFS) perquè l'element del catàleg no té una \"url\".",
+      "noLayerFoundTitle": "No s'ha trobat cap capa",
+      "reachedMaxFeatureLimit": "Avís: aquesta capa ha assolit el límit de funcions WFS ({{maxFeatures}})"
+    },
+    "webMapServiceCatalogGroup": {
+      "invalidWMSServerMessage": "Error en invocar GetCapabilities al servidor WMS. La resposta del servidor no sembla ser un document de GetCapabilities vàlid.",
+      "wmsServer": "Servidor Web Map Service (WMS)",
+      "invalidWMSServerTitle": "Servidor WMS incorrecte",
+      "groupNotAvailableTitle": "El grup no està disponible",
+      "groupNotAvailableMessage": "Error en invocar GetCapabilities al servidor WMS.",
+      "abstract": "Descripció del Web Map Service",
+      "accessConstraints": "Restriccions d'accés del Web Map Service",
+      "fees": "Tarifes del Web Map Service",
+      "missingUrlTitle": "No es pot carregar GetCapabilities",
+      "missingUrlMessage": "No s'ha pogut carregar el document GetCapabilities del Web Map Service (WMS) perquè l'element del catàleg no té una \"url\"."
+    },
+    "webMapServiceCatalogItem": {
+      "wms": "Web Map Service (WMS)",
+      "dataDescription": "Descripció de les dades",
+      "metadataUrls": "Enllaços a les metadades",
+      "serviceContact": "Contecte del servei",
+      "getCapabilitiesUrl": "URL GetCapabilities",
+      "defaultStyleLabel": "Estil per defecte",
+      "noLayerFoundTitle": "No s'ha trobat cap capa",
+      "noLayerFoundMessage": "El conjunt de dades WMS \"{{name}}\" no té capes que coincideixin amb \"{{layers}}\". {{suggested}} {{line}}{{line}}O el fitxer de catàleg s'ha configurat incorrectament o el servidor WMS ha canviat.",
+      "badlyFormatedTitle": "Periodicitat mal formatada",
+      "missingDataTitle": "Falten dades",
+      "missingDataMessage": "El conjunt de dades WMS \"{{name}}\" no ha retornat cap dada.{{line}}{{line}}O el fitxer de catàleg s'ha configurat incorrectament o l'adreça del servidor ha canviat.",
+      "missingUrlTitle": "No es pot carregar GetCapabilities",
+      "missingUrlMessage": "No s'ha pogut carregar el document GetCapabilities del servei de mapes web (WMS) perquè l'element del catàleg no té una \"url\".",
+      "badlyFormatedMessage": "El conjunt de dades \"{{name}}\" té una periodicitat mal formada, \"{{isoSegments}}\". Feu clic al botó Informació del conjunt de dades per obtenir més informació sobre el conjunt de dades i el dipositari de les dades.",
+      "accessConstraints": "Restriccions d'accés",
+      "serviceDescription": "Descripció del servei"
+    },
+    "webMapTileServiceCatalogGroup": {
+      "invalidWMTSServerTitle": "Servidor WMTS invàlid",
+      "groupNotAvailableMessage": "Error en invocar GetCapabilities al servidor WMTS.",
+      "abstract": "Descripció del Web Map Service",
+      "accessConstraints": "Restriccions d'accés del Web Map Service",
+      "fees": "Tarifes del Web Map Service",
+      "invalidWMTSServerMessage": "Error en invocar GetCapabilities al servidor WMTS. La resposta del servidor no sembla ser un document de GetCapabilities vàlid.",
+      "invalidCapabilitiesTitle": "GetCapabilities invàlid",
+      "groupNotAvailableTitle": "El grup no està disponible",
+      "wmtsServer": "Servidor Web Map Tile Service (WMTS)",
+      "invalidCapabilitiesMessage": "La URL {{url}} s'ha recuperat correctament, però sembla que no és un document vàlid de GetCapabilities del servei de mosaic de mapes web (WMTS). \n\nO el fitxer de catàleg s'ha configurat incorrectament o l'adreça del servidor ha canviat."
+    },
+    "webMapTileServiceCatalogItem": {
+      "wmts": "Servei de mosaic de mapes web (WMTS)",
+      "dataDescription": "Descripció de les dades",
+      "missingUrlMessage": "No s'ha pogut carregar el document GetCapabilities del Servei de mosaic de mapa web (WMTS) perquè l'element del catàleg no té una \"url\".",
+      "noUsableTileMatrixTitle": "Avís",
+      "noUsableTileMatrixMessage": "Aquesta capa WMTS no té cap conjunt de tessel·les Web Mercator; és possible que no es mostri correctament",
+      "serviceDescription": "Descripció del servei",
+      "fees": "Tarifes del servidor de mosaic de mapes web",
+      "accessConstraints": "Restriccions d'accés",
+      "serviceContact": "Contacte del servei",
+      "getCapabilitiesUrl": "URL GetCapabilities",
+      "missingUrlTitle": "No es pot carregar GetCapabilities"
+    },
+    "webProcessingService": {
+      "wps": "Servei de processament web (WPS)",
+      "invalidWPSServerTitle": "Servidor WPS invàlid",
+      "invalidWPSServerMessage": "Error en invocar {{endpoint}} al servidor WPS per al nom del procés {{name}}. La resposta del servidor no sembla ser un document {{endpoint}} vàlid.",
+      "processDescriptionErrorTitle": "El procés no té una descripció del procés",
+      "processInputErrorMessage": "Aquest procés WPS no especifica cap entrada.",
+      "unsupportedParameterErrorTitle": "Tipus de paràmetre no compatible",
+      "unsupportedParameterErrorMessage": "El paràmetre {{identifier}} no és un tipus de paràmetre compatible.",
+      "invalidResponseErrorTitle": "Resposta del servidor WPS no vàlida",
+      "invalidResponseError2Title": "Resposta no vàlida del servidor WPS",
+      "failureReasonUnknowError": "Es desconeix el motiu del fracàs.",
+      "asyncShortReportFailed": "La invocació del servei de processament web ha fallat. Hi ha més detalls disponibles al tauler d'informació.",
+      "errorDetails": "Detalls de l'error",
+      "resultPendingDescription": "Aquest és el resultat d'invocar el procés o servei {{name}} a {{timestamp}} amb els paràmetres d'entrada següents.",
+      "regionParameterName": "Paràmetre de regió",
+      "invalidResponseErrorMessage": "Error en accedir a la ubicació d'estat al servidor WPS per al nom del procés {{name}}.",
+      "wpsResult": "Resultat del Web Processing Service",
+      "processDescriptionErrorMessage": "El WPS DescribeProcess d'aquest procés no inclou una ProcessDescription.",
+      "processInputErrorTitle": "El procés no té cap entrada",
+      "invalidResponseError2Message": "La resposta del servidor WPS no inclou un element Status.",
+      "regionTypeName": "Tipus de regió",
+      "regionTypeDescription": "El tipus de regió a analitzar.",
+      "wpsServer": "Servidor Web Processing Service (WPS)"
+    },
+    "webProcessingServiceCatalogGroup": {
+      "invalidCapabilitiesTitle": "GetCapabilities no vàlid",
+      "invalidCapabilitiesMessage": "La URL {{url}} s'ha recuperat correctament, però no sembla que sigui un document de GetCapabilities del servei de processament web (WPS) vàlid.\n\nO el fitxer de catàleg s'ha configurat incorrectament o l'adreça del servidor ha canviat.",
+      "invalidServerTitle": "Servidor WPS invàlid",
+      "invalidServerMessage": "Error en invocar GetCapabilities al servidor WPS. La resposta del servidor no sembla ser un document de GetCapabilities vàlid.",
+      "abstract": "Descripció del Web Processing Service",
+      "accessConstraints": "Restriccions d'accés del Web Processing Service",
+      "providerSite": "Lloc del proveïdor del Web Processing Service",
+      "typeName": "Servidor Web Processing Service (WPS)",
+      "missingUrlTitle": "No es pot carregar GetCapabilities",
+      "missingUrlMessage": "No s'ha pogut carregar el document GetCapabilities del servei de processament web (WPS) perquè l'element del catàleg no té una \"url\".",
+      "fees": "Tarifes del Web Processing Service",
+      "providerName": "Nom del proveïdor del Web Processing Service"
+    },
+    "wfsFeatures": {
+      "featuresGroup": "Grup de funcions en un servidor de serveis web (WFS)",
+      "queryErrorTitle": "Error en consultar el servidor WFS",
+      "queryErrorMessage": "Error en invocar GetFeature al servidor WFS. La resposta del servidor no sembla ser un document GeoJSON vàlid.",
+      "groupNotAvailableTitle": "El grup no està disponible",
+      "groupNotAvailableMessage": "Error en invocar GetFeature al servidor WFS."
+    },
+    "shadow": {
+      "name": "Ombres",
+      "options": {
+        "cast": "Només emetre",
+        "receive": "Només rebre",
+        "both": "Emetre i rebre",
+        "none": "Cap"
+      }
+    },
+    "scaleDatasetNotVisible": {
+      "scaleZoomIn": "El conjunt de dades no està disponible a aquesta escala, apropeu-lo per veure'l",
+      "scaleZoomOut": "El conjunt de dades no està disponible a aquesta escala, allunyeu-lo per veure'l"
+    },
+    "commonModelErrors": {
+      "3dTypeIn2dMode": "**Nota:** aquest conjunt de dades no es pot mostrar al visualitzador 2D. Canvia a un dels modes de mapa 3D."
     }
+  },
+  "deltaTool": {
+    "titlePrefix": "Detecció de canvis",
+    "description": "Aquesta eina visualitza la diferència entre les imatges capturades en dos moments discrets en el temps.",
+    "secondaryImage": "Imatge secundària",
+    "pickerMessage": {
+      "pickError": "Error en intentar resoldre les imatges a la ubicació! Si us plau torneu a seleccionar un punt fent clic al mapa.",
+      "pickFirst": "Seleccioneu un punt fent clic al mapa",
+      "pickAnother": "Feu clic a un altre punt per canviar la selecció"
+    },
+    "loadingError": {
+      "title": "Error en carregar l'eina Delta",
+      "message": "Error en intentar carregar l'eina Delta des del servidor. Si us plau torna-ho a provar."
+    },
+    "cancelBtn": "Cancel·lar",
+    "pickLocation": "Per veure les imatges disponibles, seleccioneu la vostra ubicació d'interès al mapa del costat.",
+    "catalogItem": {
+      "description": "Aquesta capa visualitza la diferència entre les imatges capturades en dos punts discrets en el temps"
+    },
+    "generateDeltaBtn": "Generar mapa de diferències",
+    "primaryImage": "Imatge principal",
+    "selectedLocation": "Ubicació escollida"
+  },
+  "term": {
+    "missingContent": "manca contingut"
+  },
+  "mapNavigation": {
+    "additionalTools": "Eines addicionals",
+    "additionalToolsTitle": "Obrir eines addicionals"
+  },
+  "itemSearchTool": {
+    "numericParameter": {
+      "minimum": "Mínim",
+      "maximum": "Màxim"
+    },
+    "actions": {
+      "highlightAll": "Ressaltar-ho tot",
+      "showMatchingOnly": "Mostra només la coincidència"
+    },
+    "backBtnText": "Torna a cercar",
+    "title": "Cerca {{itemName}}",
+    "loading": "Carregant els paràmetres de cerca",
+    "toolLoadError": "Error en carregar l'eina de cerca.",
+    "loadError": "Error en carregar els paràmetres de cerca. Comproveu la consola per trobar errors detallats.",
+    "noParameters": "No s'han trobat paràmetres cercables",
+    "searching": "Cercant",
+    "resultsCount": "S'ha trobat {{count}} coincidència",
+    "resultsCount_plural": "S'ha trobat {{count}} coincidències",
+    "searchError": "La cerca ha fallat. Comproveu la consola per trobar errors detallats.",
+    "resetBtnText": "Esborra l'entrada",
+    "searchBtnText": "Cerca"
+  },
+  "indexedItemSearchProvider": {
+    "missingOptionIndexRootUrl": "Falta l'opció `indexRootUrl` a la configuració de cerca de l'element.",
+    "errorParsingIndexRoot": "Error en analitzar el fitxer indexRoot: {{indexRootUrl}}."
+  },
+  "pedestrianMode": {
+    "toolButtonTitle": "Modalitat de vianants",
+    "controls": {
+      "title": "Controls"
+    },
+    "dropPedestrianTooltipMessage": "<b>Feu clic amb el botó esquerre</b> per seleccionar la ubicació <br /><b>Clic dret / Esc</b> per cancel·lar"
+  },
+  "toast": {
+    "mapIsZooming": "Carregant el zoom ideal..."
+  },
+  "notification": {
+    "title": "Missatge"
   }
 }
