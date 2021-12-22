@@ -1,10 +1,10 @@
 import { runInAction } from "mobx";
 import CatalogMemberFactory from "../../../lib/Models/Catalog/CatalogMemberFactory";
-import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
-import Terria from "../../../lib/Models/Terria";
-import upsertModelFromJson from "../../../lib/Models/Definition/upsertModelFromJson";
 import WebMapServiceCatalogGroup from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
+import upsertModelFromJson from "../../../lib/Models/Definition/upsertModelFromJson";
+import Terria from "../../../lib/Models/Terria";
 
 describe("upsertModelFromJson", function() {
   it("can create basic WMS item", function() {
@@ -145,18 +145,21 @@ describe("upsertModelFromJson", function() {
     expect(model instanceof WebMapServiceCatalogItem).toBe(true);
     expect(model.type).toBe("wms");
 
+    const modelFromSharekey = terria.shareKeysMap.get(
+      "Root Group/Communications/Broadband Availability"
+    );
+
     const model2 = upsertModelFromJson(
       CatalogMemberFactory,
       terria,
       "",
       CommonStrata.user,
       {
-        id: "Root Group/Communications/Broadband Availability",
+        id: modelFromSharekey,
         opacity: 0.5
       },
       {
-        replaceStratum: false,
-        matchByShareKey: true
+        replaceStratum: false
       }
     ).throwIfUndefined();
     expect(model).toBe(model2, "Failed to match model by shareKey");

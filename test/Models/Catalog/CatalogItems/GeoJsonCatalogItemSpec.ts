@@ -732,4 +732,99 @@ describe("GeoJsonCatalogItem - with geojson-vt and protomaps", function() {
       ).toBe(col);
     });
   });
+
+  it("Supports LegendOwnerTraits to override TableMixin.legends", async () => {
+    await geojson.loadMapItems();
+
+    expect(
+      "imageryProvider" in geojson.mapItems[0] &&
+        geojson.mapItems[0].imageryProvider instanceof ProtomapsImageryProvider
+    ).toBeTruthy();
+
+    expect(geojson.legends.length).toBe(1);
+    expect(geojson.legends[0].items.map(i => i.color)).toEqual([
+      "rgb(103,0,13)",
+      "rgb(176,18,24)",
+      "rgb(226,48,40)",
+      "rgb(249,105,76)",
+      "rgb(252,160,130)",
+      "rgb(253,211,193)",
+      "rgb(255,245,240)"
+    ]);
+
+    runInAction(() =>
+      updateModelFromJson(geojson, CommonStrata.definition, {
+        legends: [
+          {
+            url: "some-url"
+          }
+        ]
+      })
+    );
+
+    expect(geojson.legends.length).toBe(1);
+    expect(geojson.legends[0].url).toBe("some-url");
+  });
+});
+
+describe("Disables protomaps (mvt) if geoJson simple styling is detected", () => {
+  let terria: Terria;
+  let geojson: GeoJsonCatalogItem;
+
+  beforeEach(async function() {
+    terria = new Terria({
+      baseUrl: "./"
+    });
+    geojson = new GeoJsonCatalogItem("test-geojson", terria);
+  });
+
+  it("Unchanged - less than 50% features detected", async () => {
+    geojson.setTrait(CommonStrata.user, "url", "test/GeoJSON/api.geojson");
+    geojson.setTrait(
+      CommonStrata.user,
+      "geoJsonString",
+      `{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"stroke":"#555555","stroke-width":2,"stroke-opacity":1,"fill":"#ff0051","fill-opacity":0.5},"geometry":{"type":"Polygon","coordinates":[[[35.859375,53.54030739150022],[11.25,40.17887331434696],[15.1171875,14.604847155053898],[53.4375,44.84029065139799],[35.859375,53.54030739150022]]]}},{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[85.4296875,66.93006025862448],[53.4375,43.83452678223682],[89.296875,34.88593094075317],[91.40625,50.958426723359935],[85.4296875,66.93006025862448]]]}},{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[119.17968749999999,66.79190947341796],[100.1953125,53.74871079689897],[109.3359375,47.517200697839414],[119.17968749999999,66.79190947341796]]]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[30.585937499999996,-2.108898659243126]}},{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[71.015625,-2.811371193331128],[99.49218749999999,-2.811371193331128],[99.49218749999999,18.646245142670608],[71.015625,18.646245142670608],[71.015625,-2.811371193331128]]]}},{"type":"Feature","properties":{},"geometry":{"type":"LineString","coordinates":[[140.9765625,19.642587534013032],[134.296875,-17.978733095556155],[88.9453125,-36.597889133070204],[119.53125,15.961329081596647],[130.078125,27.371767300523047]]}}]}`
+    );
+    await geojson.loadMapItems();
+    expect(geojson.mapItems[0] instanceof GeoJsonDataSource).toBeFalsy();
+    expect(geojson.useMvt).toBeTruthy();
+  });
+
+  it("Disabled protomaps - More than 50% features detected", async () => {
+    geojson.setTrait(CommonStrata.user, "url", "test/GeoJSON/api.geojson");
+    geojson.setTrait(
+      CommonStrata.user,
+      "geoJsonString",
+      `{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"stroke":"#555555","stroke-width":2,"stroke-opacity":1,"fill":"#ff0051","fill-opacity":0.5},"geometry":{"type":"Polygon","coordinates":[[[35.859375,53.54030739150022],[11.25,40.17887331434696],[15.1171875,14.604847155053898],[53.4375,44.84029065139799],[35.859375,53.54030739150022]]]}},{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[85.4296875,66.93006025862448],[53.4375,43.83452678223682],[89.296875,34.88593094075317],[91.40625,50.958426723359935],[85.4296875,66.93006025862448]]]}},{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[119.17968749999999,66.79190947341796],[100.1953125,53.74871079689897],[109.3359375,47.517200697839414],[119.17968749999999,66.79190947341796]]]}},{"type":"Feature","properties":{"marker-color":"#e000ff","marker-size":"large"},"geometry":{"type":"Point","coordinates":[30.585937499999996,-2.108898659243126]}},{"type":"Feature","properties":{"stroke":"#feff00","stroke-width":4,"stroke-opacity":1,"fill":"#fcffff","fill-opacity":0.5},"geometry":{"type":"Polygon","coordinates":[[[71.015625,-2.811371193331128],[99.49218749999999,-2.811371193331128],[99.49218749999999,18.646245142670608],[71.015625,18.646245142670608],[71.015625,-2.811371193331128]]]}},{"type":"Feature","properties":{"stroke":"#00ff02","stroke-width":2,"stroke-opacity":1},"geometry":{"type":"LineString","coordinates":[[140.9765625,19.642587534013032],[134.296875,-17.978733095556155],[88.9453125,-36.597889133070204],[119.53125,15.961329081596647],[130.078125,27.371767300523047]]}}]}`
+    );
+    await geojson.loadMapItems();
+    expect(geojson.mapItems[0] instanceof GeoJsonDataSource).toBeTruthy();
+    expect(geojson.useMvt).toBeFalsy();
+  });
+});
+
+describe("Support geojson through apis", () => {
+  let terria: Terria;
+  let geojson: GeoJsonCatalogItem;
+
+  beforeEach(async function() {
+    terria = new Terria({
+      baseUrl: "./"
+    });
+    geojson = new GeoJsonCatalogItem("test-geojson", terria);
+  });
+
+  it("Extracts geojson nested in a json object", async () => {
+    geojson.setTrait(CommonStrata.user, "url", "test/GeoJSON/api.geojson");
+    geojson.setTrait(CommonStrata.user, "responseDataPath", "nested.data");
+    await geojson.loadMapItems();
+    expect(geojson.mapItems.length).toEqual(1);
+  });
+
+  it("Extracts geojson from an array of json objects", async () => {
+    geojson.setTrait(CommonStrata.user, "url", "test/GeoJSON/api-list.geojson");
+    geojson.setTrait(CommonStrata.user, "responseGeoJsonPath", "nested.data");
+    await geojson.loadMapItems();
+    expect(geojson.mapItems.length).toEqual(1);
+  });
 });

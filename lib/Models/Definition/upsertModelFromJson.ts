@@ -1,25 +1,25 @@
 import i18next from "i18next";
 import defaults from "lodash-es/defaults";
+import isDefined from "../../Core/isDefined";
+import { isJsonObject, isJsonString, isJsonStringArray } from "../../Core/Json";
 import Result from "../../Core/Result";
-import TerriaError, { TerriaErrorSeverity } from "../../Core/TerriaError";
+import TerriaError from "../../Core/TerriaError";
 import GroupMixin from "../../ModelMixins/GroupMixin";
-import CommonStrata from "./CommonStrata";
+import StubCatalogItem from "../Catalog/CatalogItems/StubCatalogItem";
 import createStubCatalogItem from "../Catalog/createStubCatalogItem";
+import Terria from "../Terria";
+import CommonStrata from "./CommonStrata";
 import { BaseModel } from "./Model";
 import ModelFactory from "./ModelFactory";
-import StubCatalogItem from "../Catalog/CatalogItems/StubCatalogItem";
-import Terria from "../Terria";
 import updateModelFromJson from "./updateModelFromJson";
 
 export interface UpsertModelFromJsonOptions {
   addModelToTerria?: boolean;
-  matchByShareKey?: boolean;
   replaceStratum?: boolean;
 }
 
 const defaultOptions: UpsertModelFromJsonOptions = {
   addModelToTerria: true,
-  matchByShareKey: false,
   replaceStratum: undefined
 };
 
@@ -37,15 +37,20 @@ export default function upsertModelFromJson(
   terria: Terria,
   parentId: string,
   stratumName: string,
-  json: any,
-  options: UpsertModelFromJsonOptions
+  json: unknown,
+  options: UpsertModelFromJsonOptions = {}
 ): Result<BaseModel | undefined> {
+  if (!isJsonObject(json)) {
+    return Result.error("Failed to upsert model - invalid JSON");
+  }
   const errors: TerriaError[] = [];
   defaults(options, defaultOptions);
 
-  let uniqueId = json.id;
-  let model = terria.getModelById(BaseModel, uniqueId);
-  if (uniqueId === undefined) {
+  let uniqueId = isJsonString(json.id) ? json.id : undefined;
+  let model: BaseModel | undefined;
+  if (isDefined(uniqueId)) {
+    model = terria.getModelById(BaseModel, uniqueId);
+  } else {
     const localId = json.localId || json.name;
     if (localId === undefined) {
       return Result.error(
@@ -71,22 +76,11 @@ export default function upsertModelFromJson(
     }
   }
 
-  if (model === undefined && options.matchByShareKey && json.id !== undefined) {
-    const potentialId = terria.getModelIdByShareKey(json.id);
-    if (potentialId !== undefined) {
-      model = terria.getModelById(BaseModel, potentialId);
-      if (model === undefined) {
-        errors.push(
-          new TerriaError({
-            message: `Failed to get model \`"${potentialId}"\` found using share key \`"${json.id}"\``
-          })
-        );
-      }
-    }
-  }
   if (model === undefined) {
     try {
-      model = factory.create(json.type, uniqueId, terria);
+      model = isJsonString(json.type)
+        ? factory.create(json.type, uniqueId, terria)
+        : undefined;
       if (model === undefined) {
         errors.push(
           new TerriaError({
@@ -103,7 +97,10 @@ export default function upsertModelFromJson(
       }
 
       if (model.type !== StubCatalogItem.type && options.addModelToTerria) {
-        model.terria.addModel(model, json.shareKeys);
+        const shareKeys = isJsonStringArray(json.shareKeys)
+          ? json.shareKeys
+          : undefined;
+        model.terria.addModel(model, shareKeys);
       }
     } catch (e) {
       errors.push(TerriaError.from(e, `Failed to create model`));

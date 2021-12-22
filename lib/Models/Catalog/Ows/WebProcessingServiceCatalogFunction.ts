@@ -276,7 +276,8 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
         executeWithHttpGet: this.executeWithHttpGet,
         statusSupported: this.statusSupported,
         storeSupported: this.storeSupported,
-        wpsParameters: dataInputs
+        wpsParameters: dataInputs,
+        forceConvertResultsToV8: this.forceConvertResultsToV8
       })
     );
 

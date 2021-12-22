@@ -116,7 +116,7 @@ describe("CkanCatalogGroup", function() {
           let group1 = <CatalogGroup>ckanServerStratum.groups[1];
           expect(group1.name).toBe("Murray-Darling Basin Authority");
           // There are 2 resources on the 2 datasets
-          expect(group1.members.length).toBe(7);
+          expect(group1.members.length).toBe(9);
 
           let group2 = <CatalogGroup>ckanServerStratum.groups[2];
           expect(group2.name).toBe(ckanCatalogGroup.ungroupedTitle);
@@ -206,7 +206,7 @@ describe("CkanCatalogGroup", function() {
       );
 
       let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
-      expect(group1.memberModels.length).toBe(7);
+      expect(group1.memberModels.length).toBe(9);
 
       const items = group1.memberModels as CkanItemReference[];
       expect(items[0].name).toBe(
@@ -217,7 +217,7 @@ describe("CkanCatalogGroup", function() {
       );
 
       expect(items[2].name).toBe(
-        "Murray-Darling Basin Water Resource Plan Areas – Surface Water - WMS"
+        "Murray-Darling Basin Water Resource Plan Areas – Surface Water - SHP"
       );
     });
 
@@ -235,7 +235,7 @@ describe("CkanCatalogGroup", function() {
       );
 
       let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
-      expect(group1.memberModels.length).toBe(7);
+      expect(group1.memberModels.length).toBe(9);
 
       // These items include their Dataset name in their Resource name, so it's not the greatest demonstration
       //  of useCombinationNameWhereMultipleResources, but it works for an automated test
@@ -251,10 +251,10 @@ describe("CkanCatalogGroup", function() {
       );
 
       expect(items[2].name).toBe(
-        "Murray-Darling Basin Water Resource Plan Areas – Surface Water - Murray-Darling Basin Water Resource Plan Areas – Surface Water - Preview this Dataset (WMS)"
+        "Murray-Darling Basin Water Resource Plan Areas – Surface Water - Murray-Darling Basin Water Resource Plan Areas – Surface Water for ESRI ArcGIS"
       );
       expect(items[3].name).toBe(
-        "Murray-Darling Basin Water Resource Plan Areas – Surface Water - Murray-Darling Basin Water Resource Plan Areas – Surface Water for Google Earth"
+        "Murray-Darling Basin Water Resource Plan Areas – Surface Water - Murray-Darling Basin Water Resource Plan Areas – Surface Water - Preview this Dataset (WMS)"
       );
     });
 
@@ -269,15 +269,15 @@ describe("CkanCatalogGroup", function() {
 
       let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
 
-      expect(group1.memberModels.length).toBe(7);
+      expect(group1.memberModels.length).toBe(9);
 
       const items = group1.memberModels as CkanItemReference[];
 
       expect(items[2].name).toBe(
-        "Murray-Darling Basin Water Resource Plan Areas – Surface Water - Preview this Dataset (WMS)"
+        "Murray-Darling Basin Water Resource Plan Areas – Surface Water for ESRI ArcGIS"
       );
       expect(items[3].name).toBe(
-        "Murray-Darling Basin Water Resource Plan Areas – Surface Water for Google Earth"
+        "Murray-Darling Basin Water Resource Plan Areas – Surface Water - Preview this Dataset (WMS)"
       );
     });
   });
@@ -310,7 +310,7 @@ describe("CkanCatalogGroup", function() {
 
       let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
 
-      expect(group1.memberModels.length).toBe(5);
+      expect(group1.memberModels.length).toBe(7);
 
       const items = group1.memberModels as CkanItemReference[];
       expect(items[0].name).toBe(
@@ -320,6 +320,9 @@ describe("CkanCatalogGroup", function() {
         "Murray-Darling Basin Water Resource Plan Areas – Surface Water GeoJSON (another one)"
       );
       expect(items[2].name).toBe(
+        "Murray-Darling Basin Water Resource Plan Areas – Surface Water - SHP"
+      );
+      expect(items[3].name).toBe(
         "Murray-Darling Basin Water Resource Plan Areas – Surface Water - KMZ"
       );
     });
@@ -341,7 +344,7 @@ describe("CkanCatalogGroup", function() {
 
       let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
 
-      expect(group1.memberModels.length).toBe(5);
+      expect(group1.memberModels.length).toBe(7);
 
       const items = group1.memberModels as CkanItemReference[];
       expect(items[0].name).toBe(
@@ -351,6 +354,9 @@ describe("CkanCatalogGroup", function() {
         "Murray-Darling Basin Water Resource Plan Areas – Surface Water GeoJSON (another one)"
       );
       expect(items[2].name).toBe(
+        "Murray-Darling Basin Water Resource Plan Areas – Surface Water - SHP"
+      );
+      expect(items[3].name).toBe(
         "Murray-Darling Basin Water Resource Plan Areas – Surface Water - WMS"
       );
     });
@@ -368,6 +374,10 @@ describe("CkanCatalogGroup", function() {
           },
           {
             id: "WMS",
+            formatRegex: "somethingIncorrect"
+          },
+          {
+            id: "Shapefile",
             formatRegex: "somethingIncorrect"
           }
         ]
@@ -409,7 +419,7 @@ describe("CkanCatalogGroup", function() {
 
       let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
 
-      expect(group1.memberModels.length).toBe(6);
+      expect(group1.memberModels.length).toBe(8);
 
       const items = group1.memberModels as CkanItemReference[];
       expect(items[0].name).toBe(
@@ -419,7 +429,7 @@ describe("CkanCatalogGroup", function() {
         "Murray-Darling Basin Water Resource Plan Areas – Surface Water GeoJSON (another one)"
       );
       expect(items[2].name).toBe(
-        "Murray-Darling Basin Water Resource Plan Areas – Surface Water - WMS"
+        "Murray-Darling Basin Water Resource Plan Areas – Surface Water - SHP"
       );
     });
 
@@ -440,7 +450,7 @@ describe("CkanCatalogGroup", function() {
 
       let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
 
-      expect(group1.memberModels.length).toBe(7);
+      expect(group1.memberModels.length).toBe(9);
 
       const items = group1.memberModels as CkanItemReference[];
       expect(items[0].name).toBe(

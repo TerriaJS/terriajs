@@ -25,6 +25,7 @@ import hashEntity from "../Core/hashEntity";
 import instanceOf from "../Core/instanceOf";
 import isDefined from "../Core/isDefined";
 import JsonValue, {
+  isJsonArray,
   isJsonBoolean,
   isJsonNumber,
   isJsonObject,
@@ -54,6 +55,7 @@ import TimeVarying from "../ModelMixins/TimeVarying";
 import { HelpContentItem } from "../ReactViewModels/defaultHelpContent";
 import { defaultTerms, Term } from "../ReactViewModels/defaultTerms";
 import NotificationState from "../ReactViewModels/NotificationState";
+import { SHARE_VERSION } from "../ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import { shareConvertNotification } from "../ReactViews/Notification/shareConvertNotification";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import MapNavigationModel from "../ViewModels/MapNavigation/MapNavigationModel";
@@ -600,7 +602,7 @@ export default class Terria {
         terriaError.toNotification()
       );
 
-    console.log(terriaError.toError());
+    terriaError.log();
   }
 
   @computed
@@ -860,6 +862,15 @@ export default class Terria {
       this.shareDataService.init(this.serverConfig.config);
     }
 
+    // Create catalog index if catalogIndexUrl is set
+    // Note: this isn't loaded now, it is loaded in first CatalogSearchProvider.doSearch()
+    if (this.configParameters.catalogIndexUrl && !this.catalogIndex) {
+      this.catalogIndex = new CatalogIndex(
+        this,
+        this.configParameters.catalogIndexUrl
+      );
+    }
+
     this.baseMapsModel
       .initializeDefaultBaseMaps()
       .catchError(error =>
@@ -959,7 +970,7 @@ export default class Terria {
   }
 
   async updateFromStartData(
-    startData: any,
+    startData: unknown,
     /** Name for startData initSources - this is only used for debugging purposes */
     name: string = "Application start data",
     /** Error severity to use for loading startData init sources - default will be `TerriaErrorSeverity.Error` */
@@ -1027,7 +1038,7 @@ export default class Terria {
             });
           }
         } else if (isInitOptions(initSource)) {
-          let error: any;
+          let error: unknown;
           for (const option of initSource.options) {
             try {
               jsonValue = await loadInitSource(option);
@@ -1104,15 +1115,6 @@ export default class Terria {
       }
     });
 
-    // Create catalog index if catalogIndexUrl is set
-    // Note: this isn't loaded now, it is loaded in first CatalogSearchProvider.doSearch()
-    if (this.configParameters.catalogIndexUrl && !this.catalogIndex) {
-      this.catalogIndex = new CatalogIndex(
-        this,
-        this.configParameters.catalogIndexUrl
-      );
-    }
-
     if (errors.length > 0) {
       // Note - this will get wrapped up in a Result object because it is called in AsyncLoader
       throw TerriaError.combine(errors, {
@@ -1178,6 +1180,30 @@ export default class Terria {
       );
     }
 
+    // See if model exists by ID of sharekey
+    // Change modelId to more up-to-date ID if necessary
+    const model = this.getModelByIdOrShareKey(BaseModel, modelId);
+    // If no model exists, try to find it through Terria model sharekeys or CatalogIndex sharekeys
+    if (isDefined(model?.uniqueId)) {
+      modelId = model!.uniqueId;
+    } else if (this.catalogIndex) {
+      try {
+        await this.catalogIndex.load();
+      } catch (e) {
+        errors.push(
+          TerriaError.from(
+            e,
+            `Failed to load CatalogIndex while loading model stratum \`${modelId}\``
+          )
+        );
+      }
+      const indexModel = this.catalogIndex.getModelByIdOrShareKey(modelId);
+      if (indexModel) {
+        (await indexModel.loadReference()).pushErrorTo(errors);
+        modelId = indexModel.uniqueId ?? modelId;
+      }
+    }
+
     // If this model is a `SplitItemReference` we must load the source item first
     const splitSourceId = cleanStratumData.splitSourceItemId;
     if (
@@ -1196,6 +1222,7 @@ export default class Terria {
         `Failed to load SplitItemReference ${splitSourceId}`
       );
     }
+
     const loadedModel = upsertModelFromJson(
       CatalogMemberFactory,
       this,
@@ -1206,8 +1233,7 @@ export default class Terria {
         id: modelId
       },
       {
-        replaceStratum,
-        matchByShareKey: true
+        replaceStratum
       }
     ).pushErrorTo(errors);
 
@@ -1856,7 +1882,7 @@ async function interpretHash(
 
 async function interpretStartData(
   terria: Terria,
-  startData: any,
+  startData: unknown,
   /** Name for startData initSources - this is only used for debugging purposes */
   name: string,
   /** Error severity to use for loading startData init sources - if not set, TerriaError will be propagated normally */
@@ -1865,7 +1891,7 @@ async function interpretStartData(
 ) {
   const containsStory = (initSource: any) =>
     Array.isArray(initSource.stories) && initSource.stories.length;
-  if (isDefined(startData) && startData !== {}) {
+  if (isJsonObject(startData)) {
     // Convert startData to v8 if neccessary
     let startDataV8: Share | null;
 
@@ -1888,7 +1914,15 @@ async function interpretStartData(
         }
         startDataV8 = result.result;
       } else {
-        startDataV8 = startData;
+        startDataV8 = {
+          ...startData,
+          version: isJsonString(startData.version)
+            ? startData.version
+            : SHARE_VERSION,
+          initSources: isJsonArray(startData.initSources)
+            ? startData.initSources
+            : []
+        };
       }
 
       if (startDataV8 !== null && Array.isArray(startDataV8.initSources)) {
@@ -1903,7 +1937,7 @@ async function interpretStartData(
             })
           );
         });
-        if (startData.initSources.some(containsStory)) {
+        if (startDataV8.initSources.some(containsStory)) {
           terria.configParameters.showWelcomeMessage = false;
         }
       }

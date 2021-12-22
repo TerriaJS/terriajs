@@ -148,8 +148,7 @@ export default class Result<T = undefined> {
    * @param errorOverrides can be used to add error context
    */
   logError(errorOverrides?: TerriaErrorOverrides) {
-    if (this._error)
-      console.error(TerriaError.from(this._error, errorOverrides).toError());
+    if (this._error) TerriaError.from(this._error, errorOverrides).log();
     return this.value;
   }
 

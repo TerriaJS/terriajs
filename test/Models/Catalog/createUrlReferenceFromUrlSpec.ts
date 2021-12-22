@@ -1,15 +1,15 @@
+import { USER_ADDED_CATEGORY_ID } from "../../../lib/Core/addedByUser";
 import isDefined from "../../../lib/Core/isDefined";
 import loadBlob from "../../../lib/Core/loadBlob";
-import ArcGisFeatureServerCatalogItem from "../../../lib/Models/Catalog/Esri/ArcGisFeatureServerCatalogItem";
-import createCatalogItemFromFileOrUrl from "../../../lib/Models/Catalog/createCatalogItemFromFileOrUrl";
-import createUrlReferenceFromUrl from "../../../lib/Models/Catalog/CatalogReferences/createUrlReferenceFromUrl";
 import CsvCatalogItem from "../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import GeoJsonCatalogItem from "../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
-import Terria from "../../../lib/Models/Terria";
+import createUrlReferenceFromUrl from "../../../lib/Models/Catalog/CatalogReferences/createUrlReferenceFromUrl";
 import UrlReference from "../../../lib/Models/Catalog/CatalogReferences/UrlReference";
+import createCatalogItemFromFileOrUrl from "../../../lib/Models/Catalog/createCatalogItemFromFileOrUrl";
+import ArcGisFeatureServerCatalogItem from "../../../lib/Models/Catalog/Esri/ArcGisFeatureServerCatalogItem";
 import WebMapServiceCatalogGroup from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
+import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
-import { USER_ADDED_CATEGORY_ID } from "../../../lib/Core/addedByUser";
 
 const Water_Network = {
   layerDefs: JSON.stringify(
@@ -134,7 +134,7 @@ describe("createUrlReferenceFromUrl", function() {
           reference.target instanceof ArcGisFeatureServerCatalogItem
         ).toBeTruthy();
         if (reference.target instanceof ArcGisFeatureServerCatalogItem) {
-          await reference.target.loadMapItems();
+          (await reference.target.loadMapItems()).logError();
           expect(reference.target.mapItems.length).toBe(1);
         }
       }
