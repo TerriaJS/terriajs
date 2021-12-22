@@ -1048,6 +1048,28 @@
             ],
             "nameProp": "SORTNAME"
         },
+        "ELB_2021": {
+            "layerName": "ELB_2021",
+            "server": "https://tiles.terria.io/ELB_2021/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMinZoom": 0,
+            "serverMaxZoom": 28,
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-ELB_NAME_2021_ELB_2021.json",
+            "regionProp": "Elect_div",
+            "nameProp": "Elect_div",
+            "aliases": [
+              "com_elb_name",
+              "com_elb_name_2021"
+            ],
+            "description": "Commonwealth Electoral Divisions as at 2 August 2021 (AEC)",
+            "bbox": [
+              96.81,
+              -43.73,
+              168,
+              -9.1
+            ]
+        },
         "ELB_2019": {
             "layerName": "ELB_2019",
             "server": "https://tiles.terria.io/ELB_2019/{z}/{x}/{y}.pbf",
