@@ -1,7 +1,11 @@
 Change Log
 ==========
 
-#### next release (8.1.15)
+#### next release (8.1.16)
+
+* [The next improvement]
+
+#### 8.1.15
 
 * Fix sharelink bug, and make `isJson*` type checks more rigorous
 * Remove `uniqueId` from `CatalogMemberMixin.nameInCatalog` and add it as fallback to `CatalogMemberMixin.name`
@@ -27,7 +31,6 @@ Change Log
 * Don't show `TableMixin` `legends` or `mapItems` if no data
 * Fix `GeoJsonCatalogItem.legends`
 * Add `isOpen` to `TerriaReferenceTraits`
-* [The next improvement]
 
 #### 8.1.14
 
