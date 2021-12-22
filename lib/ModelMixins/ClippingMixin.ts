@@ -199,11 +199,11 @@ function ClippingMixin<T extends Constructor<BaseType>>(
 
       if (this._clippingBoxDrawing) {
         this._clippingBoxDrawing.setTransform(boxTransform);
+        this._clippingBoxDrawing.clampBoxToGround = this.clippingBox.clampBoxToGround;
       } else {
-        this._clippingBoxDrawing = new BoxDrawing(
-          cesium,
-          boxTransform,
-          action(({ modelMatrix, isFinished }) => {
+        this._clippingBoxDrawing = new BoxDrawing(cesium, boxTransform, {
+          clampBoxToGround: this.clippingBox.clampBoxToGround,
+          onChange: action(({ modelMatrix, isFinished }) => {
             Matrix4.multiply(
               this.inverseClippingPlanesOriginMatrix,
               modelMatrix,
@@ -244,7 +244,7 @@ function ClippingMixin<T extends Constructor<BaseType>>(
               );
             }
           })
-        );
+        });
       }
       return this._clippingBoxDrawing;
     }
@@ -301,6 +301,31 @@ function ClippingMixin<T extends Constructor<BaseType>>(
               this.clippingBox.setTrait(
                 stratumId,
                 "showEditorUi",
+                value === "true"
+              );
+            }
+          },
+          {
+            id: "clamp-box-to-ground",
+            type: "checkbox",
+            selectedId: this.clippingBox.clampBoxToGround ? "true" : "false",
+            disable:
+              this.clippingBox.clipModel === false ||
+              this.clippingBox.showEditorUi === false,
+            options: [
+              {
+                id: "true",
+                name: i18next.t("models.clippingBox.clampBoxToGround")
+              },
+              {
+                id: "false",
+                name: i18next.t("models.clippingBox.clampBoxToGround")
+              }
+            ],
+            setDimensionValue: (stratumId, value) => {
+              this.clippingBox.setTrait(
+                stratumId,
+                "clampBoxToGround",
                 value === "true"
               );
             }

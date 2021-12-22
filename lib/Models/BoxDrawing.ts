@@ -71,6 +71,7 @@ type Side = Entity &
   Updatable &
   Interactable &
   CameraAware & {
+    isSide: true;
     plane: PlaneGraphics;
     isFacingCamera: boolean;
     highlight: () => void;
@@ -122,6 +123,11 @@ type InteractionState =
   | { is: "picked"; entity: Entity & Interactable }
   | { is: "hovering"; entity: Entity & Interactable };
 
+type BoxDrawingOptions = {
+  clampBoxToGround?: boolean;
+  onChange?: (params: { modelMatrix: Matrix4; isFinished: boolean }) => void;
+};
+
 // The 6 box sides defined as planes in local coordinate space.
 const SIDE_PLANES: Plane[] = [
   new Plane(new Cartesian3(0, 0, 1), 0.5),
@@ -169,12 +175,19 @@ function isInteractable(entity: Entity): entity is Entity & Interactable {
   );
 }
 
+export function isSideEntity(entity: Entity): entity is Side {
+  return (entity as any).isSide;
+}
+
 export default class BoxDrawing {
   static localSidePlanes = SIDE_PLANES;
 
   // Observable because we want to start/stop interactions when the datasource
   // gets used/removed.
-  @observable dataSource: CustomDataSource;
+  @observable
+  public dataSource: CustomDataSource;
+
+  public clampBoxToGround: boolean;
 
   // An external transform to convert the box in local coordinates to world coordinates
   private readonly worldTransform: Matrix4 = Matrix4.IDENTITY.clone();
@@ -204,12 +217,10 @@ export default class BoxDrawing {
   constructor(
     readonly cesium: Cesium,
     transform: Matrix4,
-    readonly onChange?: (params: {
-      modelMatrix: Matrix4;
-      isFinished: boolean;
-    }) => void
+    readonly options: BoxDrawingOptions
   ) {
     this.scene = cesium.scene;
+    this.clampBoxToGround = options.clampBoxToGround ?? false;
     this.dataSource = new Proxy(new CustomDataSource(), {
       set: (target, prop, value) => {
         if (prop === "show") {
@@ -242,6 +253,38 @@ export default class BoxDrawing {
     );
     this.updateBox();
   }
+
+  /**
+   * Moves the box by the provided moveStep with optional clamping applied so that the
+   * box does not go underground.
+   *
+   * @param moveStep The amount by which to move the box
+   */
+  private moveBoxWithClamping = (() => {
+    const scratchNewPosition = new Cartesian3();
+    const scratchCartographic = new Cartographic();
+
+    return (moveStep: Cartesian3) => {
+      const nextPosition = Cartesian3.add(
+        this.trs.translation,
+        moveStep,
+        scratchNewPosition
+      );
+      if (this.clampBoxToGround) {
+        const cartographic = Cartographic.fromCartesian(
+          nextPosition,
+          undefined,
+          scratchCartographic
+        );
+        const bottomHeight = cartographic.height - this.trs.scale.z / 2;
+        if (bottomHeight < 0) {
+          cartographic.height += Math.abs(bottomHeight);
+          Cartographic.toCartesian(cartographic, undefined, nextPosition);
+        }
+      }
+      Cartesian3.clone(nextPosition, this.trs.translation);
+    };
+  })();
 
   /**
    * Sets up event handlers if not already done.
@@ -563,7 +606,7 @@ export default class BoxDrawing {
     const scratchMoveVector = new Cartesian3();
     const scratchPreviousPosition = new Cartesian3();
     const scratchEndPosition = new Cartesian3();
-    const scratchTranslationStep = new Cartesian3();
+    const scratchMoveStep = new Cartesian3();
     const scratchSurfacePoint = new Cartesian3();
     const scratchSurfacePoint2d = new Cartesian2();
 
@@ -574,7 +617,7 @@ export default class BoxDrawing {
      */
     const moveBoxOnDragSide = (mouseMove: MouseMove) => {
       const moveUpDown = axis === Axis.Z;
-      let translationStep = scratchTranslationStep;
+      let moveStep = scratchMoveStep;
 
       // Get the move direction
       const direction = Cartesian3.normalize(
@@ -602,7 +645,7 @@ export default class BoxDrawing {
           scratchMoveVector
         );
 
-        translationStep = moveVector;
+        moveStep = moveVector;
       } else {
         // Move along the globe surface when dragging any other side. To do this
         // we find the ellipsoidal points for the previous mouse position and
@@ -644,21 +687,13 @@ export default class BoxDrawing {
         if (!previousPosition || !endPosition) {
           return;
         }
-        translationStep = Cartesian3.subtract(
-          endPosition,
-          previousPosition,
-          translationStep
-        );
+        moveStep = Cartesian3.subtract(endPosition, previousPosition, moveStep);
       }
 
       // Update box position and fire change event
-      Cartesian3.add(
-        this.trs.translation,
-        translationStep,
-        this.trs.translation
-      );
+      this.moveBoxWithClamping(moveStep);
       this.updateBox();
-      this.onChange?.({
+      this.options.onChange?.({
         isFinished: false,
         modelMatrix: this.modelMatrix
       });
@@ -695,7 +730,10 @@ export default class BoxDrawing {
     const onRelease = () => {
       unHighlightAllSides();
       setCanvasCursor(scene, "auto");
-      this.onChange?.({ modelMatrix: this.modelMatrix, isFinished: true });
+      this.options.onChange?.({
+        modelMatrix: this.modelMatrix,
+        isFinished: true
+      });
     };
 
     const scratchNormal = new Cartesian3();
@@ -724,6 +762,7 @@ export default class BoxDrawing {
     side.isFacingCamera = false;
     side.updateOnCameraChange = updateOnCameraChange;
     side.update = update;
+    side.isSide = true;
     update();
     return side;
   }
@@ -790,7 +829,7 @@ export default class BoxDrawing {
       if (isDraggableEdge) {
         isHighlighted = false;
         setCanvasCursor(scene, "auto");
-        this.onChange?.({
+        this.options.onChange?.({
           isFinished: true,
           modelMatrix: this.modelMatrix
         });
@@ -820,7 +859,7 @@ export default class BoxDrawing {
 
       this.updateBox();
       this.updateEntitiesOnOrientationChange();
-      this.onChange?.({
+      this.options.onChange?.({
         isFinished: false,
         modelMatrix: this.modelMatrix
       });
@@ -910,7 +949,10 @@ export default class BoxDrawing {
     const onRelease = () => {
       scalePoint.axisLine.show = false;
       unHighlightScalePoint();
-      this.onChange?.({ modelMatrix: this.modelMatrix, isFinished: true });
+      this.options.onChange?.({
+        modelMatrix: this.modelMatrix,
+        isFinished: true
+      });
       setCanvasCursor(scene, "auto");
     };
 
@@ -929,7 +971,7 @@ export default class BoxDrawing {
     const scratchMultiply = new Cartesian3();
     const scratchAbs = new Cartesian3();
     const scratchScaleStep = new Cartesian3();
-    const translateStepScratch = new Cartesian3();
+    const moveStepScratch = new Cartesian3();
 
     /**
      * Scales the box proportional to the mouse move when dragging the scale point.
@@ -994,19 +1036,24 @@ export default class BoxDrawing {
         scaleAmount,
         scratchScaleStep
       );
-      Cartesian3.add(this.trs.scale, scaleStep, this.trs.scale);
-
       // Move the box by half the scale amount in the direction of scaling so
       // that the opposite end remains stationary.
-      const translateStep = Cartesian3.multiplyByScalar(
+      const moveStep = Cartesian3.multiplyByScalar(
         axisVector,
         scaleAmount / 2,
-        translateStepScratch
+        moveStepScratch
       );
-      Cartesian3.add(this.trs.translation, translateStep, this.trs.translation);
+      // Move the box
+      this.moveBoxWithClamping(moveStep);
+
+      // Apply scale
+      Cartesian3.add(this.trs.scale, scaleStep, this.trs.scale);
 
       this.updateBox();
-      this.onChange?.({ isFinished: false, modelMatrix: this.modelMatrix });
+      this.options.onChange?.({
+        isFinished: false,
+        modelMatrix: this.modelMatrix
+      });
     };
 
     const adjacentSides = this.sides.filter(side => {
