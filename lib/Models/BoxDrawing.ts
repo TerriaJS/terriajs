@@ -1043,11 +1043,11 @@ export default class BoxDrawing {
         scaleAmount / 2,
         moveStepScratch
       );
-      // Move the box
-      this.moveBoxWithClamping(moveStep);
-
       // Apply scale
       Cartesian3.add(this.trs.scale, scaleStep, this.trs.scale);
+
+      // Move the box
+      this.moveBoxWithClamping(moveStep);
 
       this.updateBox();
       this.options.onChange?.({
