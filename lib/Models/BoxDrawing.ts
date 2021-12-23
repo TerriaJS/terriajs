@@ -7,6 +7,7 @@ import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Color from "terriajs-cesium/Source/Core/Color";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import Plane from "terriajs-cesium/Source/Core/Plane";
@@ -971,7 +972,8 @@ export default class BoxDrawing {
     const scratchMultiply = new Cartesian3();
     const scratchAbs = new Cartesian3();
     const scratchScaleStep = new Cartesian3();
-    const moveStepScratch = new Cartesian3();
+    const scratchMoveStep = new Cartesian3();
+    const scratchCartographic = new Cartographic();
 
     /**
      * Scales the box proportional to the mouse move when dragging the scale point.
@@ -1036,13 +1038,31 @@ export default class BoxDrawing {
         scaleAmount,
         scratchScaleStep
       );
+
       // Move the box by half the scale amount in the direction of scaling so
       // that the opposite end remains stationary.
       const moveStep = Cartesian3.multiplyByScalar(
         axisVector,
         scaleAmount / 2,
-        moveStepScratch
+        scratchMoveStep
       );
+
+      // Prevent scaling in Z axis if it will result in the box going underground.
+      const isDraggingBottomScalePoint = axisLocal.z < 0;
+      const isUpscaling = scaleAmount > 0;
+      if (this.clampBoxToGround && isUpscaling && isDraggingBottomScalePoint) {
+        const boxCenterHeight = Cartographic.fromCartesian(
+          this.trs.translation,
+          undefined,
+          scratchCartographic
+        ).height;
+        const bottomHeight = boxCenterHeight - this.trs.scale.z / 2;
+        const bottomHeightAfterScaling = bottomHeight - Math.abs(moveStep.z);
+        if (bottomHeightAfterScaling < 0) {
+          scaleStep.z = 0;
+        }
+      }
+
       // Apply scale
       Cartesian3.add(this.trs.scale, scaleStep, this.trs.scale);
 
