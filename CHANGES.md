@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.1.17)
 
+* Re-enable procedure and observable selectors for SOS items.
 * [The next improvement]
 
 #### 8.1.16
