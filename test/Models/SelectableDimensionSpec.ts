@@ -10,7 +10,9 @@ import SelectableDimensions, {
 
 describe("SelectableDimension", () => {
   describe("filterSelectableDimensions", () => {
-    const filterDefaultPlacement = filterSelectableDimensions(DEFAULT_PLACEMENT);
+    const filterDefaultPlacement = filterSelectableDimensions(
+      DEFAULT_PLACEMENT
+    );
 
     it("should filter out selectable dimensions with no options", () => {
       const dimWithNoOptions: SelectableDimension = {
@@ -30,34 +32,44 @@ describe("SelectableDimension", () => {
         ...mkSelectableSelect(DEFAULT_PLACEMENT, [{ id: "id", name: "name" }]),
         allowUndefined: true
       };
-      expect(filterDefaultPlacement([dimWithOneOptionAllowUndef]).length).toBe(1);
+      expect(filterDefaultPlacement([dimWithOneOptionAllowUndef]).length).toBe(
+        1
+      );
+    });
+    it("should gracefully handle undefined selectableDimensions", () => {
+      expect(filterDefaultPlacement(undefined)).toBe([]);
     });
   });
+
   describe("findSelectedValueName", () => {
     it("should return undefined if there is no selection", () => {
       const dimWithNoSelection = mkSelectableSelect(DEFAULT_PLACEMENT, [
-        {id: "id", name: "name"}
+        { id: "id", name: "name" }
       ]);
       expect(findSelectedValueName(dimWithNoSelection)).toBe(undefined);
     });
     it("should return name of selection for selects", () => {
-      const dimWithNoSelection:SelectableDimension = {
+      const dimWithNoSelection: SelectableDimension = {
         ...mkSelectableSelect(DEFAULT_PLACEMENT, [
-        {id: "id", name: "name"},
-        {id: "id2", name: "name2"},
-
-      ]),
-      selectedId: "id"
-    };
+          { id: "id", name: "name" },
+          { id: "id2", name: "name2" }
+        ]),
+        selectedId: "id"
+      };
       expect(findSelectedValueName(dimWithNoSelection)).toBe("name");
     });
-  })
+  });
   it("should return disabled for checkboxes with no selection", () => {
-    const checkboxWithNoSelection:SelectableDimension = mkSelectableCheckbox(DEFAULT_PLACEMENT);
+    const checkboxWithNoSelection: SelectableDimension = mkSelectableCheckbox(
+      DEFAULT_PLACEMENT
+    );
     expect(findSelectedValueName(checkboxWithNoSelection)).toBe("Disabled");
   });
   it("should return enabled for checkboxes with true selection", () => {
-    const checkboxWithSelection:SelectableDimensionCheckbox = {...mkSelectableCheckbox(DEFAULT_PLACEMENT), selectedId:"true"};
+    const checkboxWithSelection: SelectableDimensionCheckbox = {
+      ...mkSelectableCheckbox(DEFAULT_PLACEMENT),
+      selectedId: "true"
+    };
     expect(findSelectedValueName(checkboxWithSelection)).toBe("Enabled");
   });
 });

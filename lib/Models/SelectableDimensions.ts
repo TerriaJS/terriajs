@@ -65,16 +65,18 @@ namespace SelectableDimensions {
   }
 }
 
-const isCheckbox = (dim:SelectableDimension):dim is SelectableDimensionCheckbox => dim.type ==="checkbox";
-const isSelect = (dim:SelectableDimension):dim is SelectableDimensionSelect => dim.type === "select" || dim.type === undefined;
+const isCheckbox = (
+  dim: SelectableDimension
+): dim is SelectableDimensionCheckbox => dim.type === "checkbox";
+const isSelect = (dim: SelectableDimension): dim is SelectableDimensionSelect =>
+  dim.type === "select" || dim.type === undefined;
 
 const isCorrectPlacement = (placement?: Placement) => (
   dim: SelectableDimension
-) => dim.placement? dim.placement === placement : placement === DEFAULT_PLACEMENT;
+) =>
+  dim.placement ? dim.placement === placement : placement === DEFAULT_PLACEMENT;
 const isEnabled = (dim: SelectableDimension) => !dim.disable;
-const hasValidOptions = (
-  dim: SelectableDimension
-) => {
+const hasValidOptions = (dim: SelectableDimension) => {
   const minLength = dim.allowUndefined ? 1 : 2; // Filter out dimensions with only 1 option (unless they have 1 option and allow undefined - which is 2 total options)
   return (
     isDefined(dim.options) &&
@@ -84,21 +86,26 @@ const hasValidOptions = (
 };
 
 // Filter out dimensions with only 1 option (unless they have 1 option and allow undefined - which is 2 total options)
-export const filterSelectableDimensions = (placement:Placement) => (selectableDimensions: SelectableDimension[]) => selectableDimensions.filter(dim =>
-  // Filter by placement if defined, otherwise use default placement
-  isCorrectPlacement(placement)(dim) &&
-    isEnabled(dim) &&
-    hasValidOptions(dim)
-);
+export const filterSelectableDimensions = (placement: Placement) => (
+  selectableDimensions: SelectableDimension[] = []
+) =>
+  selectableDimensions.filter(
+    dim =>
+      // Filter by placement if defined, otherwise use default placement
+      isCorrectPlacement(placement)(dim) &&
+      isEnabled(dim) &&
+      hasValidOptions(dim)
+  );
 
-export const findSelectedValueName = (dim: SelectableDimension):string|undefined => {
+export const findSelectedValueName = (
+  dim: SelectableDimension
+): string | undefined => {
   const name = dim.options?.find(opt => opt.id === dim.selectedId)?.name;
-  if(isSelect(dim)){
+  if (isSelect(dim)) {
     return name;
-  } else if(isCheckbox(dim)) {
-    return (dim.selectedId === "true" ? "Enabled" : "Disabled");
+  } else if (isCheckbox(dim)) {
+    return dim.selectedId === "true" ? "Enabled" : "Disabled";
   }
-}
-
+};
 
 export default SelectableDimensions;

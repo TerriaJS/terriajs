@@ -22,7 +22,11 @@ const renderDisplayVariables = (catalogItem: BaseModel & any) => {
   if (SelectableDimensions.is(catalogItem)) {
     return filterSelectableDimensions(DEFAULT_PLACEMENT)(
       catalogItem.selectableDimensions
-    ).map(dim => <div>{dim.name}: {findSelectedValueName(dim)}</div>);
+    ).map(dim => (
+      <div>
+        {dim.name}: {findSelectedValueName(dim)}
+      </div>
+    ));
   }
   return null;
 };
@@ -49,9 +53,15 @@ const renderLegend = (
   );
 };
 
-const WorkbenchItem = ({ item }: { item: BaseModel | any }) => {
+const WorkbenchItem = ({
+  item,
+  key
+}: {
+  item: BaseModel | any;
+  key: number;
+}) => {
   return (
-    <div>
+    <div key={key}>
       <h3>{item.name}</h3>
       {renderDisplayVariables(item)}
       <div>{renderLegend(item)}</div>
