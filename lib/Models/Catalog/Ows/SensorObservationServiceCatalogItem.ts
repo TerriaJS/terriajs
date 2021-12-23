@@ -104,7 +104,8 @@ class SosAutomaticStylesStratum extends TableAutomaticStylesStratum {
         }),
         pointSize: createStratumInstance(TablePointSizeStyleTraits, {
           pointSizeColumn: p.identifier
-        })
+        }),
+        hidden: false
       });
     });
   }
@@ -316,6 +317,12 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
     this.strata.set(
       TableAutomaticStylesStratum.stratumName,
       new SosAutomaticStylesStratum(this)
+    );
+    // Temporary workaround for https://github.com/TerriaJS/terriajs/issues/6058
+    this.defaultTableStyle.colorTraits.setTrait(
+      CommonStrata.defaults,
+      "legend",
+      undefined
     );
   }
 

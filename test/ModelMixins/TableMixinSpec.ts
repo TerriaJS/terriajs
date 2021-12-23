@@ -1,5 +1,7 @@
 import { runInAction } from "mobx";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
@@ -155,6 +157,17 @@ describe("TableMixin", function() {
         }
         expect(occurrences).toBe(1);
       }
+    });
+
+    it("has the correct property names", async function() {
+      runInAction(() =>
+        item.setTrait(CommonStrata.user, "csvString", LatLonValCsv)
+      );
+      await item.loadMapItems();
+      const dataSource = item.mapItems[0] as CustomDataSource;
+      const propertyNames =
+        dataSource.entities.values[0].properties?.propertyNames;
+      expect(propertyNames).toEqual(["lat", "lon", "val"]);
     });
   });
 
