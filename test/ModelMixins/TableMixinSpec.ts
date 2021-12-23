@@ -422,7 +422,7 @@ describe("TableMixin", function() {
 
       await item.loadMapItems();
 
-      expect(item.regionProviderList?.regionProviders.length).toBe(102);
+      expect(item.regionProviderList?.regionProviders.length).toBe(103);
     });
   });
 
