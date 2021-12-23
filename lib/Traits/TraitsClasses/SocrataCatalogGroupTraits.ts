@@ -7,6 +7,7 @@ import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import GroupTraits from "./GroupTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 import UrlTraits from "./UrlTraits";
 
 export class FacetFilterTraits extends ModelTraits {
@@ -28,6 +29,7 @@ export class FacetFilterTraits extends ModelTraits {
 export default class SocrataCatalogGroupTraits extends mixTraits(
   UrlTraits,
   CatalogMemberTraits,
+  LegendOwnerTraits,
   GroupTraits
 ) {
   @primitiveArrayTrait({

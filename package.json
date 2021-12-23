@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "8.1.13",
+  "version": "8.1.16",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
@@ -30,6 +30,8 @@
     "@turf/circle": "^6.5.0",
     "@turf/helpers": "^6.5.0",
     "@turf/meta": "^6.5.0",
+    "@types/arcgis-rest-api": "^10.4.5",
+    "@types/create-react-class": "^15.6.2",
     "@types/d3-array": "^2.0.0",
     "@types/d3-axis": "^1.0.12",
     "@types/d3-scale-chromatic": "^2.0.0",

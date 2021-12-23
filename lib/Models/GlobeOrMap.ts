@@ -41,7 +41,9 @@ export default abstract class GlobeOrMap {
   abstract readonly type: string;
   abstract readonly terria: Terria;
   abstract readonly canShowSplitter: boolean;
-  protected static _featureHighlightName = "___$FeatureHighlight&__";
+
+  protected static _featureHighlightID = "___$FeatureHighlight&__";
+  protected static _featureHighlightName = "TerriaJS Feature Highlight Marker";
 
   private _removeHighlightCallback?: () => Promise<void> | void;
   private _highlightPromise: Promise<unknown> | undefined;
@@ -320,52 +322,32 @@ export default abstract class GlobeOrMap {
               feature.imageryLayer.imageryProvider.rectangle
             );
           }
-        } else if (
-          !isDefined(this.supportsPolylinesOnTerrain) ||
-          this.supportsPolylinesOnTerrain
-        ) {
-          let geoJson: GeoJSONFeature | undefined = featureDataToGeoJson(
-            feature.data
-          );
+        } else {
+          const geoJson = featureDataToGeoJson(feature.data);
 
-          // Show geometry associated with the feature.
           // Don't show points; the targeting cursor is sufficient.
-          if (
-            geoJson &&
-            geoJson.geometry &&
-            geoJson.geometry.type !== "Point"
-          ) {
-            // Turn Polygons into MultiLineStrings, because we're only showing the outline.
-            if (
-              geoJson.geometry.type === "Polygon" ||
-              geoJson.geometry.type === "MultiPolygon"
-            ) {
-              geoJson = <GeoJSONFeature>clone(geoJson);
-              geoJson.geometry = clone(geoJson.geometry);
+          if (geoJson) {
+            geoJson.features = geoJson.features.filter(
+              f => f.geometry.type !== "Point"
+            );
 
-              if (geoJson.geometry.type === "MultiPolygon") {
-                const newCoordinates: Position[][] = [];
-                (geoJson.geometry as MultiPolygon).coordinates.forEach(
-                  polygon => {
-                    newCoordinates.push(...polygon);
-                  }
-                );
-                (<any>geoJson).geometry.coordinates = newCoordinates;
-              }
-
-              geoJson.geometry.type = "MultiLineString";
+            let catalogItem = this.terria.getModelById(
+              GeoJsonCatalogItem,
+              GlobeOrMap._featureHighlightID
+            );
+            if (catalogItem === undefined) {
+              catalogItem = new GeoJsonCatalogItem(
+                GlobeOrMap._featureHighlightID,
+                this.terria
+              );
+              catalogItem.setTrait(
+                CommonStrata.definition,
+                "name",
+                GlobeOrMap._featureHighlightName
+              );
+              this.terria.addModel(catalogItem);
             }
 
-            const catalogItem = new GeoJsonCatalogItem(
-              GlobeOrMap._featureHighlightName,
-              this.terria
-            );
-
-            catalogItem.setTrait(
-              CommonStrata.user,
-              "name",
-              GlobeOrMap._featureHighlightName
-            );
             catalogItem.setTrait(
               CommonStrata.user,
               "geoJsonData",
@@ -383,6 +365,9 @@ export default abstract class GlobeOrMap {
               })
             );
 
+            this.terria.overlays.add(catalogItem);
+            this._highlightPromise = catalogItem.loadMapItems();
+
             const removeCallback = (this._removeHighlightCallback = () => {
               if (!isDefined(this._highlightPromise)) {
                 return;
@@ -392,11 +377,21 @@ export default abstract class GlobeOrMap {
                   if (removeCallback !== this._removeHighlightCallback) {
                     return;
                   }
-                  catalogItem.setTrait(CommonStrata.user, "show", false);
-                  this.terria.overlays.remove(catalogItem);
+                  if (isDefined(catalogItem)) {
+                    catalogItem.setTrait(CommonStrata.user, "show", false);
+                  }
                 })
                 .catch(function() {});
             });
+
+            (await catalogItem.loadMapItems()).logError(
+              "Error occurred while loading picked feature"
+            );
+
+            // Check to make sure we don't have a different `catalogItem` after loading
+            if (removeCallback !== this._removeHighlightCallback) {
+              return;
+            }
 
             catalogItem.setTrait(CommonStrata.user, "show", true);
 

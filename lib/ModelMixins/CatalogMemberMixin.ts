@@ -94,8 +94,13 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
     }
 
     @computed
+    get name(): string | undefined {
+      return super.name || this.uniqueId;
+    }
+
+    @computed
     get nameInCatalog(): string | undefined {
-      return super.nameInCatalog || this.name || this.uniqueId;
+      return super.nameInCatalog || this.name;
     }
 
     @computed

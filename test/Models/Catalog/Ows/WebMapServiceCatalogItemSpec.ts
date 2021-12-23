@@ -154,6 +154,44 @@ describe("WebMapServiceCatalogItem", function() {
     }
   });
 
+  describe("rectangle", () => {
+    const terria = new Terria();
+    const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
+
+    beforeEach(() => {
+      runInAction(() => {
+        wmsItem.setTrait(CommonStrata.definition, "url", "http://example.com");
+        wmsItem.setTrait(
+          CommonStrata.definition,
+          "getCapabilitiesUrl",
+          "test/WMS/styles_and_dimensions.xml"
+        );
+      });
+    });
+
+    it("single layer", async () => {
+      wmsItem.setTrait(CommonStrata.definition, "layers", "A");
+
+      (await wmsItem.loadMetadata()).throwIfError();
+
+      expect(wmsItem.rectangle.west).toBeCloseTo(-101.73759799032979, 5);
+      expect(wmsItem.rectangle.east).toBeCloseTo(-53.264449565158856, 5);
+      expect(wmsItem.rectangle.south).toBeCloseTo(11.916600886761035, 5);
+      expect(wmsItem.rectangle.north).toBeCloseTo(48.4370029038641, 5);
+    });
+
+    it("multiple layers", async () => {
+      wmsItem.setTrait(CommonStrata.definition, "layers", "A,B");
+
+      (await wmsItem.loadMetadata()).throwIfError();
+
+      expect(wmsItem.rectangle.west).toBeCloseTo(-101.73759799032979, 5);
+      expect(wmsItem.rectangle.east).toBeCloseTo(-53.264449565158856, 5);
+      expect(wmsItem.rectangle.south).toBeCloseTo(11.898823436502258, 5);
+      expect(wmsItem.rectangle.north).toBeCloseTo(48.454022604552435, 5);
+    });
+  });
+
   it("uses tileWidth and tileHeight", async function() {
     let wms: WebMapServiceCatalogItem;
     const terria = new Terria();
@@ -286,7 +324,7 @@ describe("WebMapServiceCatalogItem", function() {
       .catch(done.fail);
   });
 
-  it("fetches default legend", function(done) {
+  it("fetches default legend - if supportsGetLegendRequest is false", function(done) {
     const terria = new Terria();
     const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
     runInAction(() => {
@@ -309,6 +347,45 @@ describe("WebMapServiceCatalogItem", function() {
       })
       .then(done)
       .catch(done.fail);
+  });
+
+  it("fetches default legend - if supportsGetLegendRequest is true", async () => {
+    const terria = new Terria();
+    const wmsItem = new WebMapServiceCatalogItem("some-layer", terria);
+    runInAction(() => {
+      wmsItem.setTrait(CommonStrata.definition, "url", "http://example.com");
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "getCapabilitiesUrl",
+        "test/WMS/styles_and_dimensions.xml"
+      );
+      wmsItem.setTrait(CommonStrata.definition, "layers", "A");
+      wmsItem.setTrait(
+        CommonStrata.definition,
+        "supportsGetLegendGraphic",
+        true
+      );
+    });
+
+    await wmsItem.loadMetadata();
+
+    expect(wmsItem.styles).toBeUndefined();
+
+    expect(wmsItem.legends.length).toBe(1);
+    expect(wmsItem.legends[0].url).toBe(
+      "http://example.com/?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image%2Fpng&layer=A"
+    );
+
+    runInAction(() =>
+      wmsItem.setTrait(CommonStrata.definition, "styles", "areafill/occam")
+    );
+
+    expect(wmsItem.styles).toBe("areafill/occam");
+
+    expect(wmsItem.legends.length).toBe(1);
+    expect(wmsItem.legends[0].url).toBe(
+      "http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&LAYER=v&PALETTE=occam"
+    );
   });
 
   it("fetches geoserver legend", function(done) {

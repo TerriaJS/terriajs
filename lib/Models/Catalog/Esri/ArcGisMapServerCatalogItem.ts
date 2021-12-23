@@ -181,18 +181,15 @@ class MapServerStratum extends LoadableStratum(
     let layers: Layer[] | undefined;
 
     // Use the slightly more basic layer metadata
-    if (
-      isDefined(layersMetadataResponse) &&
-      isDefined(serviceMetadata.layers)
-    ) {
+    if (isDefined(serviceMetadata.layers)) {
       layers = serviceMetadata.layers;
-    } else {
-      if (isDefined(layersMetadataResponse.layers)) {
-        layers = layersMetadataResponse.layers;
-        // If layersMetadata is only a single layer -> shove into an array
-      } else if (isDefined(layersMetadataResponse.id)) {
-        layers = [layersMetadataResponse];
-      }
+    }
+
+    if (isDefined(layersMetadataResponse?.layers)) {
+      layers = layersMetadataResponse.layers;
+      // If layersMetadata is only a single layer -> shove into an array
+    } else if (isDefined(layersMetadataResponse?.id)) {
+      layers = [layersMetadataResponse];
     }
 
     if (!isDefined(layers) || layers.length === 0) {

@@ -70,8 +70,11 @@ describe("ItemSearchTool", function() {
       parameters: []
     });
     const provider = item.createItemSearchProvider();
-    assertObject(provider);
-    itemSearchProvider = provider;
+    if (provider) {
+      itemSearchProvider = provider;
+    } else {
+      throw new Error("item.createItemSearchProvider returned undefined");
+    }
   });
 
   it("can be rendered", function() {
