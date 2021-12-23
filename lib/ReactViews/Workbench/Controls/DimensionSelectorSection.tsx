@@ -37,7 +37,9 @@ class DimensionSelectorSection extends React.Component<PropsType> {
   render() {
     const item = this.props.item;
 
-    const selectableDimensions = filterSelectableDimensions(this.props.placement)(item.selectableDimensions);
+    const selectableDimensions = filterSelectableDimensions(
+      this.props.placement
+    )(item.selectableDimensions);
 
     if (selectableDimensions.length === 0) {
       return null;

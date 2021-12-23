@@ -478,7 +478,13 @@ const StandardUserInterface = observer(
               )}
             <Disclaimer viewState={this.props.viewState} />
           </div>
-          {this.props.viewState.showPrintView && <PrintView terria={terria} viewState={this.props.viewState} closeCallback={() => this.props.viewState.setPrintView(false)}/>}
+          {this.props.viewState.showPrintView && (
+            <PrintView
+              terria={terria}
+              viewState={this.props.viewState}
+              closeCallback={() => this.props.viewState.setPrintView(false)}
+            />
+          )}
         </ThemeProvider>
       );
     }

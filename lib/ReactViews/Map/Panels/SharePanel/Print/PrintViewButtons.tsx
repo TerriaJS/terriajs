@@ -7,6 +7,6 @@ const PrintViewButtons = () => (
     <Button secondary>Download map</Button>
     <Button secondary>Print</Button>
   </>
-)
+);
 
 export default PrintViewButtons;

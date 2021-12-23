@@ -708,7 +708,7 @@ export default class ViewState {
     this.currentTool = undefined;
   }
 
-  @action setPrintView(isShown:boolean) {
+  @action setPrintView(isShown: boolean) {
     this.showPrintView = isShown;
   }
 
