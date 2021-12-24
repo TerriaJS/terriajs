@@ -8,6 +8,7 @@ Change Log
 #### 8.1.16
 
 * Added region mapping support for Commonwealth Electoral Divisions as at 2 August 2021 (AEC) as com_elb_name_2021.
+* Upgrade compiler target from es2018 to es2019
 
 #### 8.1.15
 
