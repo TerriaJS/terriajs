@@ -314,7 +314,7 @@ export default function Cesium3dTilesMixin<
         }
 
         const property =
-          "${feature['" + filter.property.replace(/'/g, "\\'") + "']}";
+          "Number(${feature['" + filter.property.replace(/'/g, "\\'") + "']})";
         const min =
           isDefined(filter.minimumValue) &&
           isDefined(filter.minimumShown) &&
@@ -327,6 +327,7 @@ export default function Cesium3dTilesMixin<
           filter.maximumShown < filter.maximumValue
             ? property + " <= " + filter.maximumShown
             : "";
+
         return [min, max].filter(x => x.length > 0).join(" && ");
       });
 
