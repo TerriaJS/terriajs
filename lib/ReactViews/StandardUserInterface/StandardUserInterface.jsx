@@ -478,8 +478,9 @@ const StandardUserInterface = observer(
               )}
             <Disclaimer viewState={this.props.viewState} />
           </div>
-          {this.props.viewState.showPrintView && (
+          {this.props.viewState.printWindow && (
             <PrintView
+              window={printWindow}
               terria={terria}
               viewState={this.props.viewState}
               closeCallback={() => this.props.viewState.setPrintView(false)}

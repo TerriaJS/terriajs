@@ -207,7 +207,7 @@ const SharePanel = observer(
     },
 
     print() {
-      //TODO: no immediate printing for now;
+      // TODO: no immediate printing for now;
     },
 
     getShareUrlInput(theme) {
@@ -396,7 +396,10 @@ const SharePanel = observer(
             <div>
               <button
                 className={Styles.printButton}
-                onClick={() => this.props.viewState.setPrintView(true)}
+                onClick={() => {
+                  const newWindow = window.open();
+                  this.props.viewState.setPrintWindow(newWindow);
+                }}
                 disabled={this.state.creatingPrintView}
               >
                 {t("share.printViewButton")}

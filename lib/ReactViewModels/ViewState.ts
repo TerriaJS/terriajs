@@ -96,7 +96,7 @@ export default class ViewState {
   @observable currentTrainerItemIndex: number = 0;
   @observable currentTrainerStepIndex: number = 0;
 
-  @observable showPrintView: boolean = false;
+  @observable printWindow: Window | null = null;
 
   @action
   setSelectedTrainerItem(trainerItem: string) {
@@ -708,8 +708,8 @@ export default class ViewState {
     this.currentTool = undefined;
   }
 
-  @action setPrintView(isShown: boolean) {
-    this.showPrintView = isShown;
+  @action setPrintWindow(window: Window | null) {
+    this.printWindow = window;
   }
 
   @action

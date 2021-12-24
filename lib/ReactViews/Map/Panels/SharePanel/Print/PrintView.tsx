@@ -212,6 +212,7 @@ const mkStyle = (unsafeCSS: string) => {
 };
 
 interface Props {
+  window: Window;
   terria: Terria;
   viewState: ViewState;
   closeCallback: () => void;
@@ -220,17 +221,12 @@ interface Props {
 const PrintView = (props: Props) => {
   const [rootNode] = useState(document.createElement("main"));
   const [screenshot, setScreenshot] = useState<Promise<string> | null>(null);
-  const [newWindow, setWindow] = useState<Window | null>(null);
 
   useEffect(() => {
-    const newWindow: Window | null = window.open();
-    if (newWindow) {
-      newWindow.document.title = "Print view";
-      newWindow.document.head.appendChild(mkStyle(styles));
-      newWindow.document.body.appendChild(rootNode);
-      newWindow.addEventListener("beforeunload", props.closeCallback);
-    }
-    setWindow(newWindow);
+      props.window.document.title = "Print view";
+      props.window.document.head.appendChild(mkStyle(styles));
+      props.window.document.body.appendChild(rootNode);
+      props.window.addEventListener("beforeunload", props.closeCallback);
   }, []);
 
   useEffect(() => {
@@ -241,7 +237,7 @@ const PrintView = (props: Props) => {
     <StyleSheetManager target={rootNode}>
       <ThemeProvider theme={terriaTheme}>
         <section className="PrintView__printControls">
-          <Button primary onClick={newWindow?.print}>
+          <Button primary onClick={props.window.print}>
             Print
           </Button>
         </section>
