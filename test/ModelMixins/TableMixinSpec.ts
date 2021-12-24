@@ -150,7 +150,7 @@ describe("TableMixin", function() {
         const duplicateValue = 7;
         let occurrences = 0;
         for (let entity of mapItem.entities.values) {
-          const val = entity.properties?.Value.getValue();
+          const val = entity.properties?.value.getValue();
           if (val === duplicateValue) {
             occurrences++;
           }
@@ -167,7 +167,7 @@ describe("TableMixin", function() {
       const dataSource = item.mapItems[0] as CustomDataSource;
       const propertyNames =
         dataSource.entities.values[0].properties?.propertyNames;
-      expect(propertyNames).toEqual(["lat", "lon", "val"]);
+      expect(propertyNames).toEqual(["lat", "lon", "value"]);
     });
   });
 
