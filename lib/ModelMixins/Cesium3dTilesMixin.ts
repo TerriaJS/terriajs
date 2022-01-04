@@ -313,6 +313,7 @@ export default function Cesium3dTilesMixin<
           return "";
         }
 
+        // Escape single quotes, cast property value to number
         const property =
           "Number(${feature['" + filter.property.replace(/'/g, "\\'") + "']})";
         const min =
