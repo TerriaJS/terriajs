@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.1.17)
 
+* Automatically cast property value to number in style expressions generated for 3d tiles filter.
 * [The next improvement]
 
 #### 8.1.16
