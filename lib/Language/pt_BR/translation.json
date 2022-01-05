@@ -1,1 +1,14 @@
-{}
+{
+  "trainer": {
+    "collapseTrainer": "Ocultar detalhes da etapa",
+    "showAllSteps": "Mostrar todas as etapas",
+    "hideAllSteps": "Esconder todas as etapas",
+    "expandTrainer": "Mostrar mais detalhes da etapa"
+  },
+  "tour": {
+    "preface": {
+      "content": "Não sabe por onde começar? Faça um rápido tour pelos principais recursos do software e aprenda sobre funções-chave para ajudá-lo a seguir seu caminho.",
+      "close": "Talvez mais tarde"
+    }
+  }
+}
