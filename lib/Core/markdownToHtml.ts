@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require*/
 var defined = require("terriajs-cesium/Source/Core/defined").default;
 var MarkdownIt = require("markdown-it");
 var DOMPurify = require("dompurify/dist/purify");
@@ -32,8 +31,8 @@ interface MarkdownOptions {
  */
 function markdownToHtml(
   markdownString: string,
-  allowUnsafeHtml: boolean,
-  domPurifyOptions: Object,
+  allowUnsafeHtml: boolean = false,
+  domPurifyOptions: Object = {},
   markdownOptions: MarkdownOptions = {}
 ) {
   if (!defined(markdownString) || markdownString.length === 0) {

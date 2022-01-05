@@ -41,8 +41,9 @@ import Styles from "./standard-user-interface.scss";
 import { observer } from "mobx-react";
 import { action, runInAction } from "mobx";
 import HelpPanel from "../Map/Panels/HelpPanel/HelpPanel";
-import Tool from "../Tool";
+import Tool from "../Tools/Tool";
 import Disclaimer from "../Disclaimer";
+import CollapsedNavigation from "../Map/Navigation/Items/OverflowNavigationItem";
 
 export const showStoryPrompt = (viewState, terria) => {
   terria.configParameters.showFeaturePrompts &&
@@ -51,6 +52,8 @@ export const showStoryPrompt = (viewState, terria) => {
     viewState.toggleFeaturePrompt("story", true);
 };
 const GlobalTerriaStyles = createGlobalStyle`
+  ${p => p.theme.fontImports ?? ""}
+
   // Theme-ify sass classes until they are removed
 
   // We override the primary, secondary, map and share buttons here as they
@@ -181,7 +184,7 @@ const StandardUserInterface = observer(
         this.props.terria.stories.length &&
         !this.props.viewState.storyShown
       ) {
-        this.props.viewState.notifications.push({
+        this.props.viewState.terria.notificationState.addNotificationToQueue({
           title: t("sui.notifications.title"),
           message: t("sui.notifications.message"),
           confirmText: t("sui.notifications.confirmText"),
@@ -224,7 +227,12 @@ const StandardUserInterface = observer(
 
     render() {
       const { t } = this.props;
-      const mergedTheme = combine(this.props.themeOverrides, terriaTheme, true);
+      // Merge theme in order of highest priority: themeOverrides props -> theme config parameter -> default terriaTheme
+      const mergedTheme = combine(
+        this.props.themeOverrides,
+        combine(this.props.terria.configParameters.theme, terriaTheme, true),
+        true
+      );
       const theme = mergedTheme;
 
       const customElements = processCustomElements(
@@ -240,7 +248,7 @@ const StandardUserInterface = observer(
         !this.shouldUseMobileInterface();
       const showStoryPanel =
         this.props.terria.configParameters.storyEnabled &&
-        this.props.terria.stories.length &&
+        this.props.terria.stories.length > 0 &&
         this.props.viewState.storyShown &&
         !this.props.viewState.explorerPanelIsVisible &&
         !this.props.viewState.storyBuilderShown;
@@ -252,6 +260,10 @@ const StandardUserInterface = observer(
             }
           />
           <TourPortal terria={terria} viewState={this.props.viewState} />
+          <CollapsedNavigation
+            terria={terria}
+            viewState={this.props.viewState}
+          />
           <SatelliteHelpPrompt
             terria={terria}
             viewState={this.props.viewState}
@@ -277,7 +289,7 @@ const StandardUserInterface = observer(
                 `}
               >
                 <div className={Styles.uiInner}>
-                  <If condition={!this.props.viewState.hideMapUi()}>
+                  <If condition={!this.props.viewState.hideMapUi}>
                     <Small>
                       <MobileHeader
                         terria={terria}
@@ -311,6 +323,7 @@ const StandardUserInterface = observer(
                       >
                         <Branding
                           terria={terria}
+                          viewState={this.props.viewState}
                           version={this.props.version}
                         />
                         <SidePanel
@@ -337,6 +350,9 @@ const StandardUserInterface = observer(
                         minified={false}
                         btnText={t("sui.showWorkbench")}
                         animationDuration={animationDuration}
+                        elementConfig={this.props.terria.elements.get(
+                          "show-workbench"
+                        )}
                       />
                     </div>
                   </Medium>
@@ -360,7 +376,7 @@ const StandardUserInterface = observer(
                         condition={
                           this.props.terria.configParameters
                             .experimentalFeatures &&
-                          !this.props.viewState.hideMapUi()
+                          !this.props.viewState.hideMapUi
                         }
                       >
                         <ExperimentalFeatures
@@ -374,7 +390,7 @@ const StandardUserInterface = observer(
                 </div>
               </div>
 
-              <If condition={!this.props.viewState.hideMapUi()}>
+              <If condition={!this.props.viewState.hideMapUi}>
                 <Medium>
                   <TrainerBar
                     terria={terria}
@@ -387,11 +403,16 @@ const StandardUserInterface = observer(
                 {/* I think this does what the previous boolean condition does, but without the console error */}
                 <If condition={this.props.viewState.isToolOpen}>
                   <Tool
-                    viewState={this.props.viewState}
                     {...this.props.viewState.currentTool}
+                    viewState={this.props.viewState}
+                    t={t}
                   />
                 </If>
               </Medium>
+
+              <If condition={this.props.viewState.panel}>
+                {this.props.viewState.panel}
+              </If>
 
               <Notification viewState={this.props.viewState} />
               <MapInteractionWindow
@@ -403,12 +424,11 @@ const StandardUserInterface = observer(
                 condition={
                   !customElements.feedback.length &&
                   this.props.terria.configParameters.feedbackUrl &&
-                  !this.props.viewState.hideMapUi()
+                  !this.props.viewState.hideMapUi &&
+                  this.props.viewState.feedbackFormIsVisible
                 }
               >
-                <aside className={Styles.feedback}>
-                  <FeedbackForm viewState={this.props.viewState} />
-                </aside>
+                <FeedbackForm viewState={this.props.viewState} />
               </If>
 
               <div
@@ -450,7 +470,10 @@ const StandardUserInterface = observer(
                   animationDuration={animationDuration}
                 />
               )}
-            <HelpPanel terria={terria} viewState={this.props.viewState} />
+            {this.props.viewState.showHelpMenu &&
+              this.props.viewState.topElement === "HelpPanel" && (
+                <HelpPanel terria={terria} viewState={this.props.viewState} />
+              )}
             <Disclaimer viewState={this.props.viewState} />
           </div>
         </ThemeProvider>

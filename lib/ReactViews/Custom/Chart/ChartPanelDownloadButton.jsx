@@ -4,9 +4,9 @@ import FileSaver from "file-saver";
 import PropTypes from "prop-types";
 import React from "react";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
-import when from "terriajs-cesium/Source/ThirdParty/when";
+import Result from "../../../Core/Result";
 import VarType from "../../../Map/VarType";
-import Icon from "../../Icon";
+import Icon from "../../../Styled/Icon";
 import Styles from "./chart-panel-download-button.scss";
 
 const ChartPanelDownloadButton = createReactClass({
@@ -63,36 +63,44 @@ const ChartPanelDownloadButton = createReactClass({
     );
   },
 
-  download() {
+  async download() {
     if (!this.isDownloadSupported()) {
       return;
     }
 
-    const loadingPromises = this.props.chartableItems.map(c => {
-      return when(c.item.loadChartItems())
-        .then(() => c.item)
-        .otherwise(() => undefined);
-    });
+    const items = this.props.chartableItems;
 
-    when.all(loadingPromises).then(items => {
-      const synthesized = this.synthesizeNameAndValueArrays(
-        items.filter(item => item !== undefined)
+    if (items.length === 0) return;
+
+    const loadMapResults = Result.combine(
+      await Promise.all(items.map(model => model.loadMapItems())),
+      "Failed to load catalog items"
+    );
+
+    if (loadMapResults.error) {
+      loadMapResults.raiseError(
+        items[0].terria,
+        "Could not download chart data"
       );
-      // Could implement this using TaskProcessor, but requires webpack magic.
-      const HrefWorker = require("worker-loader!./downloadHrefWorker");
-      const worker = new HrefWorker();
-      // console.log('names and value arrays', synthesized.names, synthesized.values);
-      if (synthesized.values && synthesized.values.length > 0) {
-        worker.postMessage(synthesized);
-        worker.onmessage = event => {
-          // console.log('got worker message', event.data.slice(0, 60), '...');
-          const blob = new Blob([event.data], {
-            type: "text/csv;charset=utf-8"
-          });
-          FileSaver.saveAs(blob, "chart data.csv");
-        };
-      }
-    });
+    }
+
+    const synthesized = this.synthesizeNameAndValueArrays(
+      items.filter(item => item !== undefined)
+    );
+    // Could implement this using TaskProcessor, but requires webpack magic.
+    const HrefWorker = require("worker-loader!./downloadHrefWorker");
+    const worker = new HrefWorker();
+    // console.log('names and value arrays', synthesized.names, synthesized.values);
+    if (synthesized.values && synthesized.values.length > 0) {
+      worker.postMessage(synthesized);
+      worker.onmessage = event => {
+        // console.log('got worker message', event.data.slice(0, 60), '...');
+        const blob = new Blob([event.data], {
+          type: "text/csv;charset=utf-8"
+        });
+        FileSaver.saveAs(blob, "chart data.csv");
+      };
+    }
   },
 
   render() {

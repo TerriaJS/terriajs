@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "es2018",
+        "target": "es2019",
         "experimentalDecorators": true,
         "module": "esNext",
         "moduleResolution": "node",
@@ -12,11 +12,13 @@
         "allowSyntheticDefaultImports": true,
         "outDir": "ts-out",
         "resolveJsonModule": true,
-        "typeRoots": ["./lib/ThirdParty"],
+        "typeRoots": ["./lib/ThirdParty/**/*.d.ts"],
         "types": ["terriajs-cesium"]
     },
     "include": [
         "./lib/**/*",
-        "./test/**/*"
+        "./test/**/*",
+        "./buildprocess/generateDocs.ts",
+        "./buildprocess/**/*",
     ]
 }

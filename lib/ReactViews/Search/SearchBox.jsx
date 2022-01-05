@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
 import debounce from "lodash-es/debounce";
-import Icon, { StyledIcon } from "../Icon";
+import Icon, { StyledIcon } from "../../Styled/Icon";
 import styled, { withTheme } from "styled-components";
 import Box, { BoxSpan } from "../../Styled/Box";
 import Text from "../../Styled/Text";
@@ -122,7 +122,7 @@ export const SearchBox = createReactClass({
 
   render() {
     const clearButton = (
-      <Box positionAbsolute topRight fullHeight styledWidth={"40px"}>
+      <Box position="absolute" topRight fullHeight styledWidth={"40px"}>
         {/* The type="button" here stops the browser from assuming the close button is the submit button */}
         <RawButton
           type="button"
@@ -162,11 +162,15 @@ export const SearchBox = createReactClass({
           `}
         >
           <Box paddedRatio={2}>
+            {/* Without position:absolute the icon runs away from the search bar in safari. Ideally we should redo the search bar using simple flexbox */}
             <StyledIcon
               glyph={Icon.GLYPHS.search}
               styledWidth={"20px"}
               fillColor={this.props.theme.charcoalGrey}
               opacity={"0.5"}
+              css={`
+                position: absolute;
+              `}
             />
           </Box>
         </label>

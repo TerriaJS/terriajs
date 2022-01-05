@@ -70,18 +70,10 @@ export default class ShareDataService {
       })
       .catch((error: any) => {
         console.log(error);
-        this.terria.error.raiseEvent(
+        this.terria.raiseErrorToUser(
           new TerriaError({
             title: i18next.t("models.shareData.generateErrorTitle"),
-            message: i18next.t("models.shareData.generateErrorMessage", {
-              appName: this.terria.appName,
-              email:
-                '<a href="mailto:' +
-                this.terria.supportEmail +
-                '">' +
-                this.terria.supportEmail +
-                "</a>."
-            })
+            message: i18next.t("models.shareData.generateErrorMessage")
           })
         );
       });
@@ -93,17 +85,11 @@ export default class ShareDataService {
     }
 
     return loadJson(this.url + "/" + token).catch(() => {
-      this.terria.error.raiseEvent(
+      this.terria.raiseErrorToUser(
         new TerriaError({
           title: i18next.t("models.shareData.expandErrorTitle"),
           message: i18next.t("models.shareData.expandErrorMessage", {
-            appName: this.terria.appName,
-            email:
-              '<a href="mailto:' +
-              this.terria.supportEmail +
-              '">' +
-              this.terria.supportEmail +
-              "</a>."
+            appName: this.terria.appName
           })
         })
       );

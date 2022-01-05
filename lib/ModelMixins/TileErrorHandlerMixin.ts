@@ -10,17 +10,19 @@ import when from "terriajs-cesium/Source/ThirdParty/when";
 import Constructor from "../Core/Constructor";
 import TerriaError from "../Core/TerriaError";
 import getUrlForImageryTile from "../Map/getUrlForImageryTile";
-import CommonStrata from "../Models/CommonStrata";
-import CompositeCatalogItem from "../Models/CompositeCatalogItem";
-import Model from "../Models/Model";
-import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
-import MappableTraits, { RectangleTraits } from "../Traits/MappableTraits";
-import RasterLayerTraits from "../Traits/RasterLayerTraits";
+import CommonStrata from "../Models/Definition/CommonStrata";
+import CompositeCatalogItem from "../Models/Catalog/CatalogItems/CompositeCatalogItem";
+import Model from "../Models/Definition/Model";
+import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";
+import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
+import RasterLayerTraits from "../Traits/TraitsClasses/RasterLayerTraits";
 import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
+import MappableMixin from "./MappableMixin";
 
 type ModelType = Model<
   MappableTraits & RasterLayerTraits & CatalogMemberTraits
->;
+> &
+  MappableMixin.Instance;
 
 /**
  * A mixin for handling tile errors in raster layers
@@ -95,7 +97,7 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
       if (
         isTileOutsideExtent(
           tile,
-          runInAction(() => this.rectangle),
+          runInAction(() => this.cesiumRectangle),
           imageryProvider
         )
       ) {
@@ -117,7 +119,7 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
 
         if (this.tileFailures > thresholdBeforeDisablingItem && this.show) {
           if (isThisItemABaseMap()) {
-            this.terria.error.raiseEvent(
+            this.terria.raiseErrorToUser(
               new TerriaError({
                 sender: this,
                 title: i18next.t(
@@ -134,7 +136,7 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
               })
             );
           } else {
-            this.terria.error.raiseEvent(
+            this.terria.raiseErrorToUser(
               new TerriaError({
                 sender: this,
                 title: i18next.t(
@@ -339,25 +341,20 @@ function TileErrorHandlerMixin<T extends Constructor<ModelType>>(Base: T) {
 
   function isTileOutsideExtent(
     tile: { x: number; y: number; level: number },
-    rectangle: Model<RectangleTraits>,
+    rectangle: Rectangle | undefined,
     imageryProvider: ImageryProvider
-  ) {
-    const { west, south, east, north } = rectangle;
-    if ([west, south, east, north].some(x => x === undefined)) {
-      // If the rectangle is not full defined, assume the tile is inside.
+  ): boolean {
+    if (rectangle === undefined) {
+      // If the rectangle is not defined, assume the tile is inside.
       return false;
     }
-
     const tilingScheme = imageryProvider.tilingScheme;
     const tileExtent = tilingScheme.tileXYToRectangle(
       tile.x,
       tile.y,
       tile.level
     );
-    const intersection = Rectangle.intersection(
-      tileExtent,
-      Rectangle.fromDegrees(west, south, east, north)
-    );
+    const intersection = Rectangle.intersection(tileExtent, rectangle);
     return intersection === undefined;
   }
 

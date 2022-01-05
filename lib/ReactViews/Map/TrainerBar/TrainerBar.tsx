@@ -14,19 +14,18 @@ import ViewState from "../../../ReactViewModels/ViewState";
 import Select from "../../../Styled/Select";
 import parseCustomMarkdownToReact from "../../Custom/parseCustomMarkdownToReact";
 import measureElement from "../../HOCs/measureElement";
-import { GLYPHS, StyledIcon } from "../../Icon";
+import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
+import Text from "../../../Styled/Text";
+import Box from "../../../Styled/Box";
+import Button, { RawButton } from "../../../Styled/Button";
+import Spacing from "../../../Styled/Spacing";
+import { useTranslationIfExists } from "./../../../Language/languageHelpers";
 
 const StyledHtml: any = require("../../Map/Panels/HelpPanel/StyledHtml")
   .default;
 const CloseButton: any = require("../../Generic/CloseButton").default;
 
-const Box: any = require("../../../Styled/Box").default;
-const Button: any = require("../../../Styled/Button").default;
-const RawButton: any = require("../../../Styled/Button").RawButton;
-const Text: any = require("../../../Styled/Text").default;
-const Spacing: any = require("../../../Styled/Spacing").default;
-
-const TrainerBarWrapper = styled(Box)`
+const TrainerBarWrapper = styled(Box)<{ isMapFullScreen: boolean }>`
   top: 0;
   left: ${p => (p.isMapFullScreen ? 0 : Number(p.theme.workbenchWidth))}px;
   z-index: ${p => Number(p.theme.frontComponentZIndex) + 100};
@@ -46,7 +45,7 @@ const getSelectedTrainerFromHelpContent = (
 };
 
 // Ripped from StyledHtml.jsx
-const Numbers = styled(Text)`
+const Numbers = styled(Text)<{ darkBg: boolean }>`
   width: 22px;
   height: 22px;
   line-height: 22px;
@@ -91,7 +90,7 @@ const renderStep = (
       </Box>
       <Box column>
         <Text textLight extraExtraLarge semiBold>
-          {i18next.t(step.title)}
+          {useTranslationIfExists(step.title)}
         </Text>
         {options.renderDescription && step?.markdownDescription && (
           <>
@@ -192,7 +191,7 @@ class StepAccordionRaw extends React.Component<
           <Box
             paddedHorizontally={4}
             column
-            positionAbsolute
+            position="absolute"
             fullWidth
             css={`
               top: 0;
@@ -260,7 +259,7 @@ class StepAccordionRaw extends React.Component<
         {isShowingAllSteps && (
           <BoxTrainerExpandedSteps
             column
-            positionAbsolute
+            position="absolute"
             backgroundColor={theme.textBlack}
             fullWidth
             paddedRatio={4}
@@ -337,7 +336,7 @@ export const TrainerBar = observer((props: TrainerBarProps) => {
   return (
     <TrainerBarWrapper
       centered
-      positionAbsolute
+      position="absolute"
       styledWidth={
         isMapFullScreen
           ? "100%"
@@ -385,7 +384,7 @@ export const TrainerBar = observer((props: TrainerBarProps) => {
           >
             {selectedTrainerItems.map((item, index) => (
               <option key={item.title} value={index}>
-                {t(item.title)}
+                {useTranslationIfExists(item.title)}
               </option>
             ))}
           </Select>

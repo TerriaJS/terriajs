@@ -1,28 +1,30 @@
-import { DomElement } from "domhandler";
 import { runInAction } from "mobx";
 import React, { ReactElement } from "react";
+import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import filterOutUndefined from "../../Core/filterOutUndefined";
-import CommonStrata from "../../Models/CommonStrata";
+import LatLonHeight from "../../Core/LatLonHeight";
+import { getName } from "../../ModelMixins/CatalogMemberMixin";
+import ChartableMixin from "../../ModelMixins/ChartableMixin";
+import SplitItemReference from "../../Models/Catalog/CatalogReferences/SplitItemReference";
+import CommonStrata from "../../Models/Definition/CommonStrata";
+import createStratumInstance from "../../Models/Definition/createStratumInstance";
+import hasTraits from "../../Models/Definition/hasTraits";
+import { BaseModel } from "../../Models/Definition/Model";
+import Feature from "../../Models/Feature";
+import ChartPointOnMapTraits from "../../Traits/TraitsClasses/ChartPointOnMapTraits";
+import DiscretelyTimeVaryingTraits from "../../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
+import LatLonHeightTraits from "../../Traits/TraitsClasses/LatLonHeightTraits";
 import ChartPreviewStyles from "./Chart/chart-preview.scss";
 import ChartExpandAndDownloadButtons from "./Chart/ChartExpandAndDownloadButtons";
 import Chart from "./Chart/FeatureInfoPanelChart";
-import CustomComponent, { ProcessNodeContext } from "./CustomComponent";
-import Model, { BaseModel } from "../../Models/Model";
-import CatalogMemberTraits from "../../Traits/CatalogMemberTraits";
-import hasTraits from "../../Models/hasTraits";
-import SplitItemReference from "../../Models/SplitItemReference";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import DiscretelyTimeVaryingTraits from "../../Traits/DiscretelyTimeVaryingTraits";
-import Chartable from "../../Models/Chartable";
-import LatLonHeight from "../../Core/LatLonHeight";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import Feature from "../../Models/Feature";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import ChartPointOnMapTraits from "../../Traits/ChartPointOnMapTraits";
-import LatLonHeightTraits from "../../Traits/LatLonHeightTraits";
-import createStratumInstance from "../../Models/createStratumInstance";
+import CustomComponent, {
+  DomElement,
+  ProcessNodeContext
+} from "./CustomComponent";
 
 export interface ChartCustomComponentAttributes {
   /**  The title of the chart.  If not supplied, defaults to the name of the context-supplied feature, if available, or else simply "Chart". */
@@ -115,8 +117,10 @@ export interface ChartCustomComponentAttributes {
  */
 
 export default abstract class ChartCustomComponent<
-  CatalogItemType extends Chartable
+  CatalogItemType extends ChartableMixin.Instance
 > extends CustomComponent {
+  protected chartItemId?: string;
+
   get attributes(): Array<string> {
     return [
       "src",
@@ -182,7 +186,7 @@ export default abstract class ChartCustomComponent<
     id: string | undefined,
     context: ProcessNodeContext,
     sourceReference: BaseModel | undefined
-  ): CatalogItemType;
+  ): CatalogItemType | undefined;
 
   /**
    * For some catalog types, for the chart item to be shareable, it needs to be
@@ -205,13 +209,17 @@ export default abstract class ChartCustomComponent<
     children: ReactElement[],
     index: number
   ): ReactElement | undefined {
-    if (node.attribs === undefined) {
+    if (
+      node.attribs === undefined ||
+      !context.terria ||
+      !context.feature ||
+      !context.catalogItem
+    ) {
       return undefined;
     }
 
     checkAllPropertyKeys(node.attribs, this.attributes);
 
-    const chartDisclaimer = (context.catalogItem as any).chartDisclaimer;
     const featurePosition = getFeaturePosition(context.feature);
 
     const attrs = this.parseNodeAttrs(node.attribs);
@@ -219,11 +227,23 @@ export default abstract class ChartCustomComponent<
     const body: string | undefined =
       typeof child === "string" ? child : undefined;
     const chartElements = [];
+    this.chartItemId = this.chartItemId ?? createGuid();
+
     if (!attrs.hideButtons) {
       // Build expand/download buttons
       const sourceItems = (attrs.downloads || attrs.sources || [""]).map(
         (source: string, i: number) => {
-          const id = `${context.catalogItem.uniqueId}:${source}`;
+          // When expanding a chart for this item and there is already an
+          // expanded chart for the item, there are 2 possibilities.
+          // 1. Remove it an show the new chart
+          // 2. Show the new chart alongside the existing chart
+          //
+          // If title & source names for the two expanded charts are the same then
+          // we only show the latest one, otherwise we show both.
+          // To do this we make the id dependant on the parentId, title & source.
+          const id = `${context.catalogItem!.uniqueId}:${
+            attrs.title
+          }:${source}`;
 
           const itemOrPromise = this.constructShareableCatalogItem
             ? this.constructShareableCatalogItem(id, context, undefined)
@@ -231,22 +251,9 @@ export default abstract class ChartCustomComponent<
 
           return Promise.resolve(itemOrPromise).then(item => {
             if (item) {
+              this.setTraitsFromParent(item, context.catalogItem!);
               this.setTraitsFromAttrs(item, attrs, i);
               body && this.setTraitsFromBody?.(item, body);
-              if (
-                hasTraits(
-                  item,
-                  DiscretelyTimeVaryingTraits,
-                  "chartDisclaimer"
-                ) &&
-                chartDisclaimer !== undefined
-              ) {
-                item.setTrait(
-                  CommonStrata.definition,
-                  "chartDisclaimer",
-                  chartDisclaimer
-                );
-              }
 
               if (
                 featurePosition &&
@@ -279,35 +286,32 @@ export default abstract class ChartCustomComponent<
     }
 
     // Build chart item to show in the info panel
-    const chartItem = this.constructCatalogItem(undefined, context, undefined);
-    runInAction(() => {
-      this.setTraitsFromAttrs(chartItem, attrs, 0);
-      body && this.setTraitsFromBody?.(chartItem, body);
-
-      if (
-        hasTraits(chartItem, DiscretelyTimeVaryingTraits, "chartDisclaimer") &&
-        chartDisclaimer !== undefined
-      ) {
-        chartItem.setTrait(
-          CommonStrata.definition,
-          "chartDisclaimer",
-          chartDisclaimer
-        );
-      }
-    });
-
-    chartElements.push(
-      React.createElement(Chart, {
-        key: "chart",
-        terria: context.terria,
-        item: chartItem,
-        xAxisLabel: attrs.previewXLabel,
-        height: 110
-        // styling: attrs.styling,
-        // highlightX: attrs.highlightX,
-        // transitionDuration: 300
-      })
+    const chartItem = this.constructCatalogItem(
+      this.chartItemId,
+      context,
+      undefined
     );
+
+    if (chartItem) {
+      runInAction(() => {
+        this.setTraitsFromParent(chartItem, context.catalogItem!);
+        this.setTraitsFromAttrs(chartItem, attrs, 0);
+        body && this.setTraitsFromBody?.(chartItem, body);
+      });
+
+      chartElements.push(
+        React.createElement(Chart, {
+          key: "chart",
+          terria: context.terria,
+          item: chartItem,
+          xAxisLabel: attrs.previewXLabel,
+          height: 110
+          // styling: attrs.styling,
+          // highlightX: attrs.highlightX,
+          // transitionDuration: 300
+        })
+      );
+    }
 
     return React.createElement(
       "div",
@@ -340,6 +344,23 @@ export default abstract class ChartCustomComponent<
    * @param sourceIndex
    */
   protected setTraitsFromBody?: (item: CatalogItemType, body: string) => void;
+
+  protected setTraitsFromParent(
+    chartItem: CatalogItemType,
+    parentItem: BaseModel
+  ) {
+    if (
+      hasTraits(chartItem, DiscretelyTimeVaryingTraits, "chartDisclaimer") &&
+      hasTraits(parentItem, DiscretelyTimeVaryingTraits, "chartDisclaimer") &&
+      parentItem.chartDisclaimer !== undefined
+    ) {
+      chartItem.setTrait(
+        CommonStrata.user,
+        "chartDisclaimer",
+        parentItem.chartDisclaimer
+      );
+    }
+  }
 
   /**
    * Is this node the first column of a two-column table where the second
@@ -492,7 +513,10 @@ export default abstract class ChartCustomComponent<
     const terria = sourceItem.terria;
     const ref = new SplitItemReference(createGuid(), terria);
     ref.setTrait(CommonStrata.user, "splitSourceItemId", sourceItem.uniqueId);
-    await ref.loadReference();
+    (await ref.loadReference()).raiseError(
+      terria,
+      `Failed to create SplitItemReference for ${getName(sourceItem)}`
+    );
     if (ref.target) {
       terria.addModel(ref);
       return ref.target as CatalogItemType;
@@ -545,8 +569,8 @@ function getInsertedTitle(node: DomElement) {
   }
 }
 
-function getFeaturePosition(feature: Feature): LatLonHeight | undefined {
-  const cartesian = feature.position?.getValue(JulianDate.now());
+function getFeaturePosition(feature?: Feature): LatLonHeight | undefined {
+  const cartesian = feature?.position?.getValue(JulianDate.now());
   if (cartesian) {
     const carto = Ellipsoid.WGS84.cartesianToCartographic(cartesian);
     return {

@@ -1,18 +1,16 @@
-import React from "react";
-import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
 import classNames from "classnames";
+import createReactClass from "create-react-class";
+import { runInAction } from "mobx";
+import { observer } from "mobx-react";
+import PropTypes from "prop-types";
+import React from "react";
+import { withTranslation } from "react-i18next";
 import styled from "styled-components";
-
+import defined from "terriajs-cesium/Source/Core/defined";
+import MappableMixin from "../../ModelMixins/MappableMixin";
+import Styles from "./tabs.scss";
 import DataCatalogTab from "./Tabs/DataCatalogTab";
 import MyDataTab from "./Tabs/MyDataTab/MyDataTab";
-import defined from "terriajs-cesium/Source/Core/defined";
-import { withTranslation } from "react-i18next";
-
-import Styles from "./tabs.scss";
-import { observer } from "mobx-react";
-import { runInAction } from "mobx";
-import Mappable from "../../Models/Mappable";
 
 const Tabs = observer(
   createReactClass({
@@ -25,13 +23,15 @@ const Tabs = observer(
       t: PropTypes.func.isRequired
     },
 
-    onFileAddFinished(files) {
-      const file = files.find(f => Mappable.is(f));
+    async onFileAddFinished(files) {
+      const file = files.find(f => MappableMixin.isMixedInto(f));
       if (file) {
-        file
-          .loadMapItems()
-          .then(() => this.props.terria.currentViewer.zoomTo(file, 1));
-        this.props.viewState.viewCatalogMember(file);
+        const result = await this.props.viewState.viewCatalogMember(file);
+        if (result.error) {
+          result.raiseError(this.props.terria);
+        } else {
+          this.props.terria.currentViewer.zoomTo(file, 1);
+        }
       }
       this.props.viewState.myDataIsUploadView = false;
     },
@@ -66,7 +66,7 @@ const Tabs = observer(
               name: member.nameInCatalog,
               title: `data-catalog-${member.name}`,
               category: "data-catalog",
-              idInCategory: member.name,
+              idInCategory: member.uniqueId,
               panel: (
                 <DataCatalogTab
                   terria={this.props.terria}
@@ -98,21 +98,18 @@ const Tabs = observer(
       }
     },
 
-    activateTab(category, idInCategory) {
+    async activateTab(category, idInCategory) {
       runInAction(() => {
         this.props.viewState.activeTabCategory = category;
         if (this.props.terria.configParameters.tabbedCatalog) {
           this.props.viewState.activeTabIdInCategory = idInCategory;
           if (category === "data-catalog") {
             const member = this.props.terria.catalog.group.memberModels.filter(
-              m => m.name === idInCategory
+              m => m.uniqueId === idInCategory
             )[0];
             // If member was found and member can be opened, open it (causes CkanCatalogGroups to fetch etc.)
             if (defined(member)) {
-              if (member.toggleOpen) {
-                member.isOpen = true;
-              }
-              this.props.viewState.previewedItem = member;
+              this.props.viewState.viewCatalogMember(member);
             }
           }
         }

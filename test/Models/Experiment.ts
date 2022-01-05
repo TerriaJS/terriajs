@@ -1,10 +1,10 @@
 import { autorun, configure, runInAction } from "mobx";
 import CatalogMemberMixin from "../../lib/ModelMixins/CatalogMemberMixin";
-import CommonStrata from "../../lib/Models/CommonStrata";
-import Mappable from "../../lib/Models/Mappable";
+import MappableMixin from "../../lib/ModelMixins/MappableMixin";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import Terria from "../../lib/Models/Terria";
-import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
+import WebMapServiceCatalogGroup from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 
 configure({
   enforceActions: true,
@@ -55,7 +55,7 @@ describe("NewStuff", function() {
         if (CatalogMemberMixin.isMixedInto(model)) {
           console.log(`${model.name}: ${model.uniqueId}`);
         }
-        if (Mappable.is(model)) {
+        if (MappableMixin.isMixedInto(model)) {
           console.log(model.mapItems);
         }
       });

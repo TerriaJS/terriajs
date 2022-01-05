@@ -1,19 +1,22 @@
+import { ReactChild } from "react";
+import ChartableMixin from "../../../../lib/ModelMixins/ChartableMixin";
+import CreateModel from "../../../../lib/Models/Definition/CreateModel";
+import Feature from "../../../../lib/Models/Feature";
+import { BaseModel } from "../../../../lib/Models/Definition/Model";
+import StubCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/StubCatalogItem";
+import Terria from "../../../../lib/Models/Terria";
+import ChartExpandAndDownloadButtons from "../../../../lib/ReactViews/Custom/Chart/ChartExpandAndDownloadButtons";
+import Chart from "../../../../lib/ReactViews/Custom/Chart/FeatureInfoPanelChart";
 import ChartCustomComponent, {
   ChartCustomComponentAttributes
 } from "../../../../lib/ReactViews/Custom/ChartCustomComponent";
-import Model, { BaseModel } from "../../../../lib/Models/Model";
-import CatalogMemberTraits from "../../../../lib/Traits/CatalogMemberTraits";
-import { ProcessNodeContext } from "../../../../lib/ReactViews/Custom/CustomComponent";
-import StubCatalogItem from "../../../../lib/Models/StubCatalogItem";
-import Terria from "../../../../lib/Models/Terria";
-import Feature from "../../../../lib/Models/Feature";
-import { DomElement } from "domhandler";
-import Chart from "../../../../lib/ReactViews/Custom/Chart/FeatureInfoPanelChart";
-import React, { ReactChild } from "react";
-import ChartExpandAndDownloadButtons from "../../../../lib/ReactViews/Custom/Chart/ChartExpandAndDownloadButtons";
-import Chartable from "../../../../lib/Models/Chartable";
-import CreateModel from "../../../../lib/Models/CreateModel";
-import UrlTraits from "../../../../lib/Traits/UrlTraits";
+import {
+  DomElement,
+  ProcessNodeContext
+} from "../../../../lib/ReactViews/Custom/CustomComponent";
+import UrlTraits from "../../../../lib/Traits/TraitsClasses/UrlTraits";
+import mixTraits from "../../../../lib/Traits/mixTraits";
+import MappableTraits from "../../../../lib/Traits/TraitsClasses/MappableTraits";
 
 const isComponentOfType: any = require("react-shallow-testutils")
   .isComponentOfType;
@@ -69,23 +72,35 @@ describe("ChartCustomComponent", function() {
     const component = new TestComponentWithShareableChartItem();
     const context: ProcessNodeContext = {
       terria: terria,
-      catalogItem: new StubCatalogItem(undefined, terria, undefined),
+      catalogItem: new StubCatalogItem("parent", terria, undefined),
       feature: new Feature({})
     };
     const node: DomElement = {
       name: component.name,
       attribs: {
+        title: "Foo",
         data: '[["x","y","z"],[1,10,3],[2,15,9],[3,8,12],[5,25,4]]',
         sources: "a, b"
       }
     };
-    spyOn(component, "constructShareableCatalogItem").and.callThrough();
+    const spy = spyOn(
+      component,
+      "constructShareableCatalogItem"
+    ).and.callThrough();
     component.processNode(context, node, [], 0);
     expect(component.constructShareableCatalogItem).toHaveBeenCalledTimes(2);
+    // Make sure the id is dependent on parent, title & source name
+    expect(component.constructShareableCatalogItem).toHaveBeenCalledWith(
+      "parent:Foo:a",
+      jasmine.any(Object),
+      undefined
+    );
   });
 });
 
-class TestChartCustomComponent extends ChartCustomComponent<Chartable> {
+class TestChartCustomComponent extends ChartCustomComponent<
+  ChartableMixin.Instance
+> {
   get name(): string {
     return "test";
   }
@@ -93,10 +108,12 @@ class TestChartCustomComponent extends ChartCustomComponent<Chartable> {
     id: string | undefined,
     context: ProcessNodeContext,
     sourceReference:
-      | import("../../../../lib/Models/Model").BaseModel
+      | import("../../../../lib/Models/Definition/Model").BaseModel
       | undefined
-  ): TestCatalogItem {
-    return new TestCatalogItem(id, context.terria, undefined);
+  ) {
+    return context.terria
+      ? new TestCatalogItem(id, context.terria, undefined)
+      : undefined;
   }
   protected setTraitsFromAttrs(
     item: TestCatalogItem,
@@ -107,8 +124,15 @@ class TestChartCustomComponent extends ChartCustomComponent<Chartable> {
   }
 }
 
-class TestCatalogItem extends CreateModel(UrlTraits) implements Chartable {
-  async loadChartItems() {}
+class TestCatalogItem extends ChartableMixin(
+  CreateModel(mixTraits(UrlTraits, MappableTraits))
+) {
+  get mapItems() {
+    return [];
+  }
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
+  }
   get chartItems() {
     return [];
   }

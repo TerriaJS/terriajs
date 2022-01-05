@@ -14,7 +14,7 @@ import { formatDateTime } from "./DateFormats";
 import { withTranslation } from "react-i18next";
 
 import Styles from "./timeline.scss";
-import CommonStrata from "../../../Models/CommonStrata";
+import CommonStrata from "../../../Models/Definition/CommonStrata";
 
 export const Timeline = observer(
   createReactClass({
@@ -30,16 +30,6 @@ export const Timeline = observer(
       return {
         isPickerOpen: false
       };
-    },
-
-    /* eslint-disable-next-line camelcase */
-    UNSAFE_componentWillMount() {
-      this.resizeListener = () => this.timeline && this.timeline.resize();
-      window.addEventListener("resize", this.resizeListener, false);
-    },
-
-    componentWillUnmount() {
-      window.removeEventListener("resize", this.resizeListener);
     },
 
     changeDateTime(time) {

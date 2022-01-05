@@ -1,0 +1,30 @@
+{
+  "help": "https://discover.data.vic.gov.au/api/3/action/help_show?name=resource_show",
+  "success": true,
+  "result": {
+    "cache_last_updated": null,
+    "package_id": "0e1be7ad-e302-4d98-96ca-e133d0ff8a47",
+    "attribution": "Copyright &copy; The State of Victoria, Environment Protection Authority Victoria 2021",
+    "datastore_contains_all_records_of_source_file": false,
+    "datastore_active": false,
+    "id": "7fc14241-b1ff-4fef-a336-c885f9060b57",
+    "size": null,
+    "state": "active",
+    "period_end": "2020-06-30",
+    "hash": "",
+    "description": "",
+    "format": "WMS",
+    "last_modified": null,
+    "url_type": null,
+    "period_start": "1901-01-01",
+    "mimetype": null,
+    "cache_url": null,
+    "name": "EPA Victoria Environmental Audit Reports - Location Points - WMS",
+    "created": "2021-09-30T18:55:58.633227",
+    "url": "http://services.land.vic.gov.au/catalogue/publicproxy/guest/dv_geoserver/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&WIDTH=512&HEIGHT=512&LAYERS=ENVIRONPROTECT_ENVIRO_AUDIT_LOC_POINT&STYLES=&FORMAT=image%2Fpng&SRS=EPSG%3A4283&BBOX=141%2C-39%2C150%2C-34",
+    "mimetype_inner": null,
+    "position": 0,
+    "revision_id": "6fee3812-4bbc-44ff-a359-e8d3cd4574e7",
+    "resource_type": null
+  }
+}

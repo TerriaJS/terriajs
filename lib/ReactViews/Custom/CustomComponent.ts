@@ -1,27 +1,49 @@
-import { DomElement } from "domhandler";
 import { ReactElement } from "react";
 import Feature from "../../Models/Feature";
-import { BaseModel } from "../../Models/Model";
+import { BaseModel } from "../../Models/Definition/Model";
 import Terria from "../../Models/Terria";
+import ViewState from "../../ReactViewModels/ViewState";
+
+/**
+ * DomElement type from @types/domhandler
+ */
+export interface DomElement {
+  attribs?: { [s: string]: string };
+  children?: DomElement[];
+  data?: any;
+  name?: string;
+  next?: DomElement;
+  parent?: DomElement;
+  prev?: DomElement;
+  type?: string;
+}
 
 /**
  * The context for a transformation of custom components to React.
+ * Note: these will need to be passed into appropriate function parameters
+ * For example `parseCustomMarkdownToReact(someHtml, context)`
+ * - where context: ProcessNodeContext
  */
 export interface ProcessNodeContext {
   /**
    * The Terria instance for which this HTML is being processed.
    */
-  readonly terria: Terria;
+  readonly terria?: Terria;
+
+  /**
+   * The Terria instance for which this HTML is being processed.
+   */
+  readonly viewState?: ViewState;
 
   /**
    * The catalog item for which this HTML is being processed.
    */
-  readonly catalogItem: BaseModel;
+  readonly catalogItem?: BaseModel;
 
   /**
    * The feature for which this HTML is being processed.
    */
-  readonly feature: Feature;
+  readonly feature?: Feature;
 }
 
 /**

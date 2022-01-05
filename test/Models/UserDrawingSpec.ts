@@ -12,6 +12,7 @@ import supportsWebGL from "../../lib/Core/supportsWebGL";
 import PickedFeatures from "../../lib/Map/PickedFeatures";
 import Terria from "../../lib/Models/Terria";
 import UserDrawing from "../../lib/Models/UserDrawing";
+import Feature from "../../lib/Models/Feature";
 
 const describeIfSupported = supportsWebGL() ? describe : xdescribe;
 
@@ -56,7 +57,11 @@ describe("UserDrawing", function() {
     var userDrawing = new UserDrawing(options);
 
     expect(userDrawing.getDialogMessage()).toEqual(
-      "<div><strong>models.userDrawing.messageHeader</strong></br><i>models.userDrawing.clickToAddFirstPoint</i></div>"
+      `<div><strong>${i18next.t(
+        "models.userDrawing.messageHeader"
+      )}</strong></br><i>${i18next.t(
+        "models.userDrawing.clickToAddFirstPoint"
+      )}</i></div>`
     );
   });
 
@@ -70,7 +75,11 @@ describe("UserDrawing", function() {
     var userDrawing = new UserDrawing(options);
 
     expect(userDrawing.getDialogMessage()).toEqual(
-      "<div><strong>models.userDrawing.messageHeader</strong></br>HELLO</br><i>models.userDrawing.clickToAddFirstPoint</i></div>"
+      `<div><strong>${i18next.t(
+        "models.userDrawing.messageHeader"
+      )}</strong></br>HELLO</br><i>${i18next.t(
+        "models.userDrawing.clickToAddFirstPoint"
+      )}</i></div>`
     );
   });
 
@@ -330,7 +339,7 @@ describe("UserDrawing", function() {
     // If in the UI the user clicks on a point, it returns that entity, so we're pulling it out of userDrawing and
     // pretending the user actually clicked on it.
     const pt1Entity = userDrawing.pointEntities.entities.values[0];
-    pickedFeatures.features = [pt1Entity];
+    pickedFeatures.features = [pt1Entity as Feature];
     runInAction(() => {
       userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
     });
@@ -394,7 +403,7 @@ describe("UserDrawing", function() {
     // If in the UI the user clicks on a point, it returns that entity, so we're pulling it out of userDrawing and
     // pretending the user actually clicked on it.
     const pt1Entity = userDrawing.pointEntities.entities.values[0];
-    pickedFeatures.features = [pt1Entity];
+    pickedFeatures.features = [pt1Entity as Feature];
     runInAction(() => {
       userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
     });
@@ -458,7 +467,7 @@ describe("UserDrawing", function() {
     // If in the UI the user clicks on a point, it returns that entity, so we're pulling it out of userDrawing and
     // pretending the user actually clicked on it.
     const pt1Entity = userDrawing.pointEntities.entities.values[0];
-    pickedFeatures.features = [pt1Entity];
+    pickedFeatures.features = [pt1Entity as Feature];
     runInAction(() => {
       userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
     });
@@ -538,12 +547,13 @@ describe("UserDrawing", function() {
     // If in the UI the user clicks on a point, it returns that entity, so we're pulling it out of userDrawing and
     // pretending the user actually clicked on it.
     const pt2Entity = userDrawing.pointEntities.entities.values[1];
-    pickedFeatures.features = [pt2Entity];
+    pickedFeatures.features = [pt2Entity as Feature];
     runInAction(() => {
       userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
     });
 
     expect(userDrawing.pointEntities.entities.values.length).toEqual(2);
+    expect(userDrawing.mapItems.length).toBe(2);
   });
 
   it("draws rectangle", function() {
@@ -604,5 +614,7 @@ describe("UserDrawing", function() {
     expect(rectangle.west).toBeCloseTo(CesiumMath.toRadians(149.121));
     expect(rectangle.north).toBeCloseTo(CesiumMath.toRadians(-35.309));
     expect(rectangle.south).toBeCloseTo(CesiumMath.toRadians(-35.311));
+
+    expect(userDrawing.mapItems.length).toBe(1);
   });
 });

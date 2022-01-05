@@ -4,7 +4,7 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 
 import Styles from "./parameter-editors.scss";
-import CommonStrata from "../../Models/CommonStrata";
+import CommonStrata from "../../Models/Definition/CommonStrata";
 
 const DateTimeParameterEditor = createReactClass({
   displayName: "DateTimeParameterEditor",

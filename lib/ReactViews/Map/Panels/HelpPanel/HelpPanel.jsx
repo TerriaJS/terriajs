@@ -4,13 +4,19 @@ import React from "react";
 import { runInAction } from "mobx";
 import { withTranslation } from "react-i18next";
 import { withTheme } from "styled-components";
-import Icon, { StyledIcon } from "../../../Icon.jsx";
+import Icon, { StyledIcon } from "../../../../Styled/Icon";
 import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
 import Box from "../../../../Styled/Box";
 import parseCustomMarkdownToReact from "../../../Custom/parseCustomMarkdownToReact";
 import HelpPanelItem from "./HelpPanelItem";
-import Button, { RawButton } from "../../../../Styled/Button.jsx";
+import Button, { RawButton } from "../../../../Styled/Button";
+import {
+  Category,
+  HelpAction
+} from "../../../../Core/AnalyticEvents/analyticEvents";
+
+export const HELP_PANEL_ID = "help";
 
 @observer
 class HelpPanel extends React.Component {
@@ -25,15 +31,21 @@ class HelpPanel extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      isAnimatingOpen: true
+    };
+  }
+
+  componentDidMount() {
+    // The animation timing is controlled in the CSS so the timeout can be 0 here.
+    setTimeout(() => this.setState({ isAnimatingOpen: false }), 0);
   }
 
   render() {
     const { t } = this.props;
     const helpItems = this.props.terria.configParameters.helpContent;
-    const isVisible =
-      this.props.viewState.showHelpMenu &&
-      this.props.viewState.topElement === "HelpPanel";
     const isExpanded = this.props.viewState.helpPanelExpanded;
+    const isAnimatingOpen = this.state.isAnimatingOpen;
     return (
       <Box
         displayInlineBlock
@@ -48,10 +60,10 @@ class HelpPanel extends React.Component {
             : 110};
           transition: right 0.25s;
           transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-          right: ${isVisible ? (isExpanded ? 490 : 0) : -320}px;
+          right: ${isAnimatingOpen ? -320 : isExpanded ? 490 : 0}px;
         `}
       >
-        <Box positionAbsolute paddedRatio={3} topRight>
+        <Box position="absolute" paddedRatio={3} topRight>
           <RawButton onClick={() => this.props.viewState.hideHelpPanel()}>
             <StyledIcon
               styledWidth={"16px"}
@@ -77,7 +89,11 @@ class HelpPanel extends React.Component {
           </Text>
           <Spacing bottom={4} />
           <Text medium textDark highlightLinks>
-            {parseCustomMarkdownToReact(t("helpPanel.menuPaneBody"))}
+            {parseCustomMarkdownToReact(
+              t("helpPanel.menuPaneBody", {
+                supportEmail: this.props.terria.supportEmail
+              })
+            )}
           </Text>
           <Spacing bottom={5} />
           <Box centered>
@@ -86,6 +102,10 @@ class HelpPanel extends React.Component {
               rounded
               styledMinWidth={"240px"}
               onClick={() => {
+                this.props.terria.analytics?.logEvent(
+                  Category.help,
+                  HelpAction.takeTour
+                );
                 runInAction(() => {
                   this.props.viewState.hideHelpPanel();
                   this.props.viewState.setTourIndex(0);
@@ -110,19 +130,17 @@ class HelpPanel extends React.Component {
           </Box>
         </Box>
         <Spacing bottom={10} />
-        <Box centered displayInlineBlock fullWidth>
-          <Box displayInlineBlock fullWidth>
-            {helpItems && (
-              <For each="item" index="i" of={helpItems}>
-                <HelpPanelItem
-                  key={i}
-                  terria={this.props.terria}
-                  viewState={this.props.viewState}
-                  content={item}
-                />
-              </For>
-            )}
-          </Box>
+        <Box centered displayInlineBlock fullWidth styledPadding="0 26px">
+          {helpItems && (
+            <For each="item" index="i" of={helpItems}>
+              <HelpPanelItem
+                key={i}
+                terria={this.props.terria}
+                viewState={this.props.viewState}
+                content={item}
+              />
+            </For>
+          )}
         </Box>
       </Box>
     );

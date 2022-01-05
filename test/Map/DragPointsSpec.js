@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require,describe,it,expect*/
 var DragPoints = require("../../lib/Map/DragPoints");
 var Terria = require("../../lib/Models/Terria");
 var ViewerMode = require("../../lib/Models/ViewerMode");

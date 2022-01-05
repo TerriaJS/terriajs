@@ -1,24 +1,19 @@
-import React, { useState } from "react";
-import { withTranslation } from "react-i18next";
-import { withTheme } from "styled-components";
+import { runInAction } from "mobx";
+import { observer } from "mobx-react";
 import PropTypes from "prop-types";
-
-import Icon, { StyledIcon } from "../Icon.jsx";
+import React, { useState } from "react";
+import { Trans, useTranslation, withTranslation } from "react-i18next";
+import styled, { withTheme } from "styled-components";
+import Box from "../../Styled/Box";
+import Button, { RawButton } from "../../Styled/Button";
+import Icon, { StyledIcon } from "../../Styled/Icon";
+import Spacing from "../../Styled/Spacing";
+import Text, { TextSpan } from "../../Styled/Text";
+import { useKeyPress } from "../Hooks/useKeyPress.js";
+import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
+import { TourPortalDisplayName } from "../Tour/TourPortal";
 import FadeIn from "../Transitions/FadeIn/FadeIn";
 import SlideUpFadeIn from "../Transitions/SlideUpFadeIn/SlideUpFadeIn";
-
-import Spacing from "../../Styled/Spacing";
-import Box from "../../Styled/Box";
-import Text, { TextSpan } from "../../Styled/Text";
-
-import { useKeyPress } from "../Hooks/useKeyPress.js";
-import { useTranslation, Trans } from "react-i18next";
-import { observer } from "mobx-react";
-import styled from "styled-components";
-import Button, { RawButton } from "../../Styled/Button";
-import { TourPortalDisplayName } from "../Tour/TourPortal";
-import VideoGuide from "../Map/Panels/HelpPanel/VideoGuide";
-import { runInAction } from "mobx";
 
 export const WELCOME_MESSAGE_NAME = "welcomeMessage";
 export const LOCAL_PROPERTY_KEY = `${WELCOME_MESSAGE_NAME}Prompted`;
@@ -97,6 +92,7 @@ export const WelcomeMessagePure = props => {
   const [shouldTakeTour, setShouldTakeTour] = useState(false);
   const [shouldExploreData, setShouldExploreData] = useState(false);
   const [shouldOpenHelp, setShouldOpenHelp] = useState(false);
+  const [shouldOpenSearch, setShouldOpenSearch] = useState(false);
   // const {
   //   WelcomeMessagePrimaryBtnClick,
   //   WelcomeMessageSecondaryBtnClick
@@ -104,10 +100,10 @@ export const WelcomeMessagePure = props => {
   const handleClose = (persist = false) => {
     setShowWelcomeMessage(false);
     setShouldOpenHelp(false);
+    setShouldOpenSearch(false);
     if (persist) {
       viewState.terria.setLocalProperty(LOCAL_PROPERTY_KEY, true);
     }
-    setShouldOpenHelp(false);
   };
 
   useKeyPress("Escape", () => {
@@ -138,6 +134,12 @@ export const WelcomeMessagePure = props => {
             setShouldOpenHelp(false);
             viewState.showHelpPanel();
           }
+          if (shouldOpenSearch) {
+            setShouldOpenSearch(false);
+            runInAction(
+              () => (viewState.searchState.showMobileLocationSearch = true)
+            );
+          }
           // Show where help is when never previously prompted
           if (!viewState.terria.getLocalProperty("helpPrompted")) {
             runInAction(() => {
@@ -150,7 +152,7 @@ export const WelcomeMessagePure = props => {
       <WelcomeModalWrapper
         fullWidth
         fullHeight
-        positionAbsolute
+        position="absolute"
         right
         onClick={() => handleClose(false)}
       >
@@ -179,7 +181,7 @@ export const WelcomeMessagePure = props => {
               styledWidth={"667px"}
               styledMinHeight={"504px"}
               displayInlineBlock
-              paddedRatio={6}
+              paddedRatio={viewState.useSmallScreenInterface ? 2 : 6}
               onClick={e => {
                 viewState.setTopElement("WelcomeMessage");
                 e.stopPropagation();
@@ -198,23 +200,42 @@ export const WelcomeMessagePure = props => {
                 />
               </RawButton>
               <Spacing bottom={7} />
-              <Box displayInlineBlock col10>
+              <Box
+                displayInlineBlock
+                styledWidth={
+                  viewState.useSmallScreenInterface ? "100%" : "83.33333%"
+                }
+              >
                 <Text
                   bold
                   textLight
-                  styledSize={"36px"}
+                  styledFontSize={
+                    viewState.useSmallScreenInterface ? "26px" : "36px"
+                  }
+                  textAlignCenter={viewState.useSmallScreenInterface}
                   styledLineHeight={"49px"}
                 >
                   {t("welcomeMessage.title")}
                 </Text>
                 <Spacing bottom={3} />
-                <Text textLight medium>
-                  <Trans i18nKey="welcomeMessage.welcomeMessage">
-                    Interested in data discovery and exploration?
-                    <br />
-                    Dive right in and get started or check the following help
-                    guide options.
-                  </Trans>
+                <Text
+                  textLight
+                  medium
+                  textAlignCenter={viewState.useSmallScreenInterface}
+                >
+                  {viewState.useSmallScreenInterface === false && (
+                    <Trans i18nKey="welcomeMessage.welcomeMessage">
+                      Interested in data discovery and exploration?
+                      <br />
+                      Dive right in and get started or check the following help
+                      guide options.
+                    </Trans>
+                  )}
+                  {viewState.useSmallScreenInterface === true && (
+                    <Trans i18nKey="welcomeMessage.welcomeMessageOnMobile">
+                      Interested in data discovery and exploration?
+                    </Trans>
+                  )}
                 </Text>
               </Box>
               <Spacing bottom={6} />
@@ -257,12 +278,7 @@ export const WelcomeMessagePure = props => {
                   </Box>
                   <Spacing right={5} />
                 </If>
-                <Box
-                  styledWidth={
-                    viewState.useSmallScreenInterface ? "100%" : "37%"
-                  }
-                  displayInlineBlock
-                >
+                <Box styledMargin={"0 auto"} displayInlineBlock>
                   <If condition={!viewState.useSmallScreenInterface}>
                     <WelcomeMessageButton
                       onClick={() => {
@@ -298,6 +314,19 @@ export const WelcomeMessagePure = props => {
                       setShouldExploreData(true);
                     }}
                   />
+                  {viewState.useSmallScreenInterface && (
+                    <>
+                      <Spacing bottom={4} />
+                      <WelcomeMessageButton
+                        buttonText={t("welcomeMessage.searchBtnText")}
+                        buttonIcon={Icon.GLYPHS.search}
+                        onClick={() => {
+                          handleClose(false);
+                          setShouldOpenSearch(true);
+                        }}
+                      />
+                    </>
+                  )}
                 </Box>
               </Box>
               <If condition={!viewState.useSmallScreenInterface}>

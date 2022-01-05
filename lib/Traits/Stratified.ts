@@ -1,4 +1,4 @@
-import StratumFromTraits from "../Models/StratumFromTraits";
+import StratumFromTraits from "../Models/Definition/StratumFromTraits";
 import ModelTraits from "./ModelTraits";
 import TraitsConstructor from "./TraitsConstructor";
 

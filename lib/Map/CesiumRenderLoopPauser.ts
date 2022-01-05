@@ -112,6 +112,14 @@ export default class CesiumRenderLoopPauser {
 
     window.addEventListener("resize", this._boundNotifyRepaintRequired, false);
 
+    // keyup & keydown events are used by the pedestrian mode
+    document.addEventListener(
+      "keydown",
+      this._boundNotifyRepaintRequired,
+      false
+    );
+    document.addEventListener("keyup", this._boundNotifyRepaintRequired, false);
+
     // // Hacky way to force a repaint when an async load request completes
     const anyLoadWithXhr: any = loadWithXhr;
     this._originalLoadWithXhr = anyLoadWithXhr.load;
@@ -240,6 +248,17 @@ export default class CesiumRenderLoopPauser {
 
       window.removeEventListener(
         "resize",
+        this._boundNotifyRepaintRequired,
+        false
+      );
+
+      document.removeEventListener(
+        "keyup",
+        this._boundNotifyRepaintRequired,
+        false
+      );
+      document.removeEventListener(
+        "keydown",
         this._boundNotifyRepaintRequired,
         false
       );

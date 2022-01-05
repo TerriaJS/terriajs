@@ -24,16 +24,11 @@ function getAllBranches(repo) {
         ++page;
 
         let url = baseUrl + '?page=' + page;
-        if (process.env.GITHUB_CLIENT_ID) {
-            url += '&client_id=' + process.env.GITHUB_CLIENT_ID;
-        }
-        if (process.env.GITHUB_CLIENT_SECRET) {
-            url += '&client_secret=' + process.env.GITHUB_CLIENT_SECRET;
-        }
         return requestPromise({
             url: url,
             headers: {
-                'User-Agent': 'TerriaJS CI'
+                'User-Agent': 'TerriaJS CI',
+                'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`
             }
         }).then(pageResponse => {
             const pageOfBranches = JSON.parse(pageResponse.body);
@@ -54,7 +49,7 @@ function makeSafeName(name) {
 
 function createIngress(branches) {
     return {
-        apiVersion: 'extensions/v1beta',
+        apiVersion: 'networking.k8s.io/v1beta1',
         kind: 'Ingress',
         metadata: {
             name: 'terriajs-ci',
@@ -101,7 +96,7 @@ getAllBranches('TerriaJS/terriajs').then(branches => {
         const branchName = release.substring(9);
         if (!branches.find(b => makeSafeName(b.name) === branchName)) {
             console.log('Deleting old release ' + release);
-            const helmDeleteResult = childProcess.spawnSync('helm', ['delete', '--purge', release], {
+            const helmDeleteResult = childProcess.spawnSync('helm', ['delete', release], {
                 stdio: 'inherit'
             });
             console.log('helm delete status: ' + helmDeleteResult.status);

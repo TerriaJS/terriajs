@@ -2,14 +2,14 @@ import { observer } from "mobx-react";
 import React from "react";
 import ChartView from "../../Charts/ChartView";
 import filterOutUndefined from "../../Core/filterOutUndefined";
-import hasTraits from "../../Models/hasTraits";
+import hasTraits from "../../Models/Definition/hasTraits";
 import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
-import DiscretelyTimeVaryingTraits from "../../Traits/DiscretelyTimeVaryingTraits";
+import DiscretelyTimeVaryingTraits from "../../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
-const Spacing: any = require("../../Styled/Spacing").default;
-const Text: any = require("../../Styled/Text").default;
-const Box: any = require("../../Styled/Box").default;
+import Box from "../../Styled/Box";
+import Spacing from "../../Styled/Spacing";
+import Text from "../../Styled/Text";
 
 interface ChartDisclaimerProps {
   terria: Terria;
@@ -22,17 +22,21 @@ const ChartDisclaimer: React.FC<ChartDisclaimerProps> = ({ terria }) => {
   const uniqueChartDisclaimers: string[] = [
     ...new Set(
       filterOutUndefined(
-        chartView.chartableItems.map(item =>
-          hasTraits(item, DiscretelyTimeVaryingTraits, "chartDisclaimer")
-            ? item.chartDisclaimer
+        chartView.chartItems.map(chartItem =>
+          chartItem.showInChartPanel &&
+          hasTraits(
+            chartItem.item,
+            DiscretelyTimeVaryingTraits,
+            "chartDisclaimer"
+          )
+            ? chartItem.item.chartDisclaimer
             : undefined
         )
       )
     )
   ];
-  const chartItems = chartView.chartItems.filter(c => c.showInChartPanel);
-  if (uniqueChartDisclaimers.length === 0 || chartItems.length === 0)
-    return null;
+
+  if (uniqueChartDisclaimers.length === 0) return null;
 
   return (
     <Box

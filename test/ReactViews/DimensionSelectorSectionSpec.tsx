@@ -1,17 +1,81 @@
-import TestRenderer from "react-test-renderer";
-import React from "react";
 import { runInAction } from "mobx";
+import React from "react";
+import TestRenderer from "react-test-renderer";
 import { ThemeProvider } from "styled-components";
-
-import CommonStrata from "../../lib/Models/CommonStrata";
-import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
-import SelectableDimensions from "../../lib/Models/SelectableDimensions";
+import CatalogMemberMixin from "../../lib/ModelMixins/CatalogMemberMixin";
+import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
+import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import CreateModel from "../../lib/Models/Definition/CreateModel";
+import SelectableDimensions, {
+  DEFAULT_PLACEMENT,
+  SelectableDimension
+} from "../../lib/Models/SelectableDimensions";
 import Terria from "../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
-
-import DimensionSelectorSection from "../../lib/ReactViews/Workbench/Controls/DimensionSelectorSection";
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface/StandardTheme";
+import DimensionSelectorSection from "../../lib/ReactViews/Workbench/Controls/DimensionSelectorSection";
+import Checkbox from "../../lib/Styled/Checkbox";
 import Select from "../../lib/Styled/Select";
+import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
+
+export default class TestCatalogItem
+  extends CatalogMemberMixin(CreateModel(CatalogMemberTraits))
+  implements SelectableDimensions {
+  static readonly type = "stub";
+  get type() {
+    return "test";
+  }
+
+  selectableDimensions: SelectableDimension[] = [
+    {
+      id: "some-id",
+      name: "Some name",
+      options: [
+        { id: "option-1", name: "Option 1" },
+        { id: "option-2", name: "Option 2" }
+      ],
+      selectedId: "option-2",
+      allowUndefined: true,
+      setDimensionValue: (stratumId: string, newStyle: string) => {}
+    },
+    {
+      id: "some-id-2",
+      name: "Some name 2",
+      options: [
+        { id: "option-3", name: "Option 3" },
+        { id: "option-4", name: "Option 4" },
+        { id: "option-5", name: "Option 5" }
+      ],
+      selectedId: "option-3",
+      allowUndefined: false,
+      setDimensionValue: (stratumId: string, newStyle: string) => {}
+    },
+    {
+      id: "some-id-3",
+      name: "Some name 3",
+      options: [
+        { id: "option-6", name: "Neko" },
+        { id: "option-7", name: "Mochi" },
+        { id: "option-8", name: "A dog" }
+      ],
+      selectedId: "option-8",
+      allowUndefined: false,
+      setDimensionValue: (stratumId: string, newStyle: string) => {},
+      disable: true
+    },
+    {
+      id: "some-id-4",
+      name: "Some name 4",
+      options: [
+        { id: "true", name: "Option 1" },
+        { id: "false", name: "Option 2" }
+      ],
+      selectedId: "false",
+      type: "checkbox",
+      setDimensionValue: (stratumId: string, newStyle: string) => {}
+    }
+  ];
+}
 
 describe("DimensionSelectorSection", function() {
   let terria: Terria;
@@ -23,50 +87,14 @@ describe("DimensionSelectorSection", function() {
   });
 
   it("shows all dimensions and styles for a mock layer", function(done) {
-    const mockItem: SelectableDimensions = {
-      selectableDimensions: [
-        {
-          id: "some-id",
-          name: "Some name",
-          options: [
-            { id: "option-1", name: "Option 1" },
-            { id: "option-2", name: "Option 2" }
-          ],
-          selectedId: "option-2",
-          allowUndefined: true,
-          setDimensionValue: (stratumId: string, newStyle: string) => {}
-        },
-        {
-          id: "some-id-2",
-          name: "Some name 2",
-          options: [
-            { id: "option-3", name: "Option 3" },
-            { id: "option-4", name: "Option 4" },
-            { id: "option-5", name: "Option 5" }
-          ],
-          selectedId: "option-3",
-          allowUndefined: false,
-          setDimensionValue: (stratumId: string, newStyle: string) => {}
-        },
-        {
-          id: "some-id-3",
-          name: "Some name 3",
-          options: [
-            { id: "option-6", name: "Neko" },
-            { id: "option-7", name: "Mochi" },
-            { id: "option-8", name: "A dog" }
-          ],
-          selectedId: "option-8",
-          allowUndefined: false,
-          setDimensionValue: (stratumId: string, newStyle: string) => {},
-          disable: true
-        }
-      ]
-    };
+    const mockItem = new TestCatalogItem("what", terria);
 
     const section = TestRenderer.create(
       <ThemeProvider theme={terriaTheme}>
-        <DimensionSelectorSection item={mockItem} />
+        <DimensionSelectorSection
+          item={mockItem}
+          placement={DEFAULT_PLACEMENT}
+        />
       </ThemeProvider>
     );
 
@@ -77,14 +105,17 @@ describe("DimensionSelectorSection", function() {
     expect(dim1.props.name).toContain("some-id");
     expect(dim1.props.value).toBe("option-2");
 
-    const elevationOptions = dim1.findAllByType("option");
-    expect(elevationOptions.length).toBe(3); // This contains an 'undefined' option
+    const options = dim1.findAllByType("option");
+    expect(options.length).toBe(3); // This contains an 'undefined' option
 
     const dim2 = selects[1];
     expect(dim2.props.name).toContain("some-id-2");
     expect(dim2.props.value).toBe("option-3");
     const customOptions = dim2.findAllByType("option");
     expect(customOptions.length).toBe(3);
+
+    const checkboxes = section.root.findAllByType(Checkbox);
+    expect(checkboxes.length).toBe(1);
 
     done();
   });
@@ -116,7 +147,10 @@ describe("DimensionSelectorSection", function() {
       .then(function() {
         const section = TestRenderer.create(
           <ThemeProvider theme={terriaTheme}>
-            <DimensionSelectorSection item={wmsItem} />
+            <DimensionSelectorSection
+              item={wmsItem}
+              placement={DEFAULT_PLACEMENT}
+            />
           </ThemeProvider>
         );
 
@@ -148,7 +182,7 @@ describe("DimensionSelectorSection", function() {
 
         expect(selects[4].props.name).toContain(`${wmsItem.uniqueId}-B-styles`);
         expect(selects[4].props.value).toBe("shadefill/alg2");
-        expect(selects[4].findAllByType("option").length).toBe(41);
+        expect(selects[4].findAllByType("option").length).toBe(40);
       })
       .then(done)
       .catch(done.fail);
@@ -161,6 +195,14 @@ describe("DimensionSelectorSection", function() {
     ).andReturn({
       responseText: JSON.stringify(
         require("../../wwwroot/data/regionMapping.json")
+      )
+    });
+
+    jasmine.Ajax.stubRequest(
+      "build/TerriaJS/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json"
+    ).andReturn({
+      responseText: JSON.stringify(
+        require("../../wwwroot/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json")
       )
     });
 
@@ -188,7 +230,10 @@ describe("DimensionSelectorSection", function() {
 
     const section = TestRenderer.create(
       <ThemeProvider theme={terriaTheme}>
-        <DimensionSelectorSection item={csvItem} />
+        <DimensionSelectorSection
+          item={csvItem}
+          placement={DEFAULT_PLACEMENT}
+        />
       </ThemeProvider>
     );
 

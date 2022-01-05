@@ -1,22 +1,20 @@
 import React from "react";
 import styled from "styled-components";
-import triggerResize from "../../Core/triggerResize";
-// import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import SettingPanel from "./Panels/SettingPanel";
 import SharePanel from "./Panels/SharePanel/SharePanel";
 import ToolsPanel from "./Panels/ToolsPanel/ToolsPanel";
-import Icon from "../Icon";
-import Prompt from "../Generic/Prompt";
-import { withTranslation, Trans } from "react-i18next";
+import StoryButton from "./StoryButton/StoryButton";
+import LangPanel from "./Panels/LangPanel/LangPanel";
+
 import Styles from "./menu-bar.scss";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
-import Text from "../../Styled/Text";
 
-import { useRefForTerria } from "../Hooks/useRefForTerria";
+import withControlledVisibility from "../../ReactViews/HOCs/withControlledVisibility";
+import HelpButton from "./HelpButton/HelpButton";
 
 const StyledMenuBar = styled.div`
   pointer-events: none;
@@ -27,66 +25,17 @@ const StyledMenuBar = styled.div`
   `}
 `;
 // The map navigation region
-// const MenuBar = createReactClass({
-const STORY_BUTTON_NAME = "MenuBarStoryButton";
 const MenuBar = observer(props => {
-  const { t } = props;
-  const storyButtonRef = useRefForTerria(STORY_BUTTON_NAME, props.viewState);
   const menuItems = props.menuItems || [];
   const handleClick = () => {
     runInAction(() => {
       props.viewState.topElement = "MenuBar";
     });
   };
-  const onStoryButtonClick = () => {
-    props.viewState.toggleStoryBuilder();
-    props.terria.currentViewer.notifyRepaintRequired();
-    // Allow any animations to finish, then trigger a resize.
-    setTimeout(function() {
-      triggerResize();
-    }, props.animationDuration || 1);
-    props.viewState.toggleFeaturePrompt("story", false, true);
-  };
-  const dismissAction = () => {
-    props.viewState.toggleFeaturePrompt("story", false, true);
-  };
-  // const dismissSatelliteGuidanceAction = () => {
-  //   props.viewState.toggleFeaturePrompt("mapGuidesLocation", true, true);
-  // };
-  // const satelliteGuidancePrompted = props.terria.getLocalProperty(
-  //   "satelliteGuidancePrompted"
-  // );
-  // const mapGuidesLocationPrompted = props.terria.getLocalProperty(
-  //   "mapGuidesLocationPrompted"
-  // );
+
   const storyEnabled = props.terria.configParameters.storyEnabled;
   const enableTools = props.terria.getUserProperty("tools") === "1";
 
-  const promptHtml = (
-    <Text textLight textAlignCenter>
-      {props.terria.stories.length > 0 ? (
-        <Trans i18nKey="story.promptHtml1">
-          <Text extraLarge>
-            You can view and create stories at any time by clicking here.
-          </Text>
-        </Trans>
-      ) : (
-        <Trans i18nKey="story.promptHtml2">
-          <div>
-            <Text>INTRODUCING</Text>
-            <Text bold extraExtraLarge styledLineHeight={"32px"}>
-              Data Stories
-            </Text>
-            <Text medium>
-              Create and share interactive stories directly from your map.
-            </Text>
-          </div>
-        </Trans>
-      )}
-    </Text>
-  );
-  const delayTime =
-    storyEnabled && props.terria.stories.length > 0 ? 1000 : 2000;
   return (
     <StyledMenuBar
       className={classNames(
@@ -99,88 +48,60 @@ const MenuBar = observer(props => {
       onClick={handleClick}
       trainerBarVisible={props.viewState.trainerBarVisible}
     >
-      <ul className={classNames(Styles.menu)}>
-        {/* <li className={Styles.menuItem}>
-            <HelpMenuPanelBasic
+      <section>
+        <ul className={classNames(Styles.menu)}>
+          {enableTools && (
+            <li className={Styles.menuItem}>
+              <ToolsPanel terria={props.terria} viewState={props.viewState} />
+            </li>
+          )}
+          <If condition={!props.viewState.useSmallScreenInterface}>
+            <For each="element" of={props.menuLeftItems} index="i">
+              <li className={Styles.menuItem} key={i}>
+                {element}
+              </li>
+            </For>
+          </If>
+        </ul>
+      </section>
+      <section className={classNames(Styles.flex)}>
+        <ul className={classNames(Styles.menu)}>
+          <li className={Styles.menuItem}>
+            <SettingPanel terria={props.terria} viewState={props.viewState} />
+          </li>
+          <li className={Styles.menuItem}>
+            <HelpButton viewState={props.viewState} />
+          </li>
+
+          {props.terria.configParameters?.languageConfiguration?.enabled ? (
+            <li className={Styles.menuItem}>
+              <LangPanel
+                terria={props.terria}
+                smallScreen={props.viewState.useSmallScreenInterface}
+              />
+            </li>
+          ) : null}
+        </ul>
+        <If condition={storyEnabled}>
+          <ul className={classNames(Styles.menu)}>
+            <li className={Styles.menuItem}>
+              <StoryButton
+                terria={props.terria}
+                viewState={props.viewState}
+                theme={props.theme}
+              />
+            </li>
+          </ul>
+        </If>
+        <ul className={classNames(Styles.menu)}>
+          <li className={Styles.menuItem}>
+            <SharePanel
               terria={props.terria}
               viewState={props.viewState}
+              animationDuration={props.animationDuration}
             />
-            {props.terria.configParameters.showFeaturePrompts &&
-              satelliteGuidancePrompted &&
-              !mapGuidesLocationPrompted &&
-              !props.viewState.showSatelliteGuidance && (
-                <Prompt
-                  content={
-                    <div>
-                      <Trans i18nKey="satelliteGuidance.menuTitle">
-                        You can access map guides at any time by looking in the{" "}
-                        <strong>help menu</strong>.
-                      </Trans>
-                    </div>
-                  }
-                  displayDelay={1000}
-                  dismissText={t("satelliteGuidance.dismissText")}
-                  dismissAction={dismissSatelliteGuidanceAction}
-                />
-              )}
-          </li> */}
-        {enableTools && (
-          <li className={Styles.menuItem}>
-            <ToolsPanel terria={props.terria} viewState={props.viewState} />
           </li>
-        )}
-        <If condition={!props.viewState.useSmallScreenInterface}>
-          <For each="element" of={props.menuLeftItems} index="i">
-            <li className={Styles.menuItem} key={i}>
-              {element}
-            </li>
-          </For>
-        </If>
-      </ul>
-      <ul className={classNames(Styles.menu)}>
-        <li className={Styles.menuItem}>
-          <SettingPanel terria={props.terria} viewState={props.viewState} />
-        </li>
-        <li className={Styles.menuItem}>
-          <SharePanel terria={props.terria} viewState={props.viewState} />
-        </li>
-        <If condition={storyEnabled}>
-          <li className={Styles.menuItem}>
-            <div>
-              <button
-                ref={storyButtonRef}
-                className={Styles.storyBtn}
-                type="button"
-                onClick={onStoryButtonClick}
-                aria-expanded={props.viewState.storyBuilderShown}
-                css={`
-                  ${p =>
-                    p["aria-expanded"] &&
-                    `&:not(.foo) {
-                      background: ${p.theme.colorPrimary};
-                      svg {
-                        fill: ${p.theme.textLight};
-                      }
-                    }`}
-                `}
-              >
-                <Icon glyph={Icon.GLYPHS.story} />
-                <span>{t("story.story")}</span>
-              </button>
-              <Prompt
-                centered
-                isVisible={
-                  storyEnabled &&
-                  props.viewState.featurePrompts.indexOf("story") >= 0
-                }
-                content={promptHtml}
-                displayDelay={delayTime}
-                dismissText={t("story.dismissText")}
-                dismissAction={dismissAction}
-              />
-            </div>
-          </li>
-        </If>
+        </ul>
         <If condition={!props.viewState.useSmallScreenInterface}>
           <For each="element" of={menuItems} index="i">
             <li className={Styles.menuItem} key={i}>
@@ -188,7 +109,7 @@ const MenuBar = observer(props => {
             </li>
           </For>
         </If>
-      </ul>
+      </section>
     </StyledMenuBar>
   );
 });
@@ -199,8 +120,7 @@ MenuBar.propTypes = {
   allBaseMaps: PropTypes.array, // Not implemented yet
   animationDuration: PropTypes.number,
   menuItems: PropTypes.arrayOf(PropTypes.element),
-  menuLeftItems: PropTypes.arrayOf(PropTypes.element),
-  t: PropTypes.func.isRequired
+  menuLeftItems: PropTypes.arrayOf(PropTypes.element)
 };
 
-export default withTranslation()(MenuBar);
+export default withControlledVisibility(MenuBar);

@@ -1,0 +1,32 @@
+{
+  "aspects": {
+    "group": {
+      "members": [
+        {
+          "aspects": {
+            "terria": {
+              "definition": {
+                "name": "Random CSV",
+                "url": "data:text/csv,lon%2Clat%2Cval%2Cdate%0A151%2C-31%2C15%2C2010%0A151%2C-31%2C15%2C2011"
+              },
+              "id": "3432284e-a111-4844-97c8-26a1767f9986",
+              "type": "csv"
+            }
+          },
+          "id": "3432284e-a111-4844-97c8-26a1767f9986",
+          "name": "Random CSV"
+        }
+      ]
+    },
+    "terria": {
+      "definition": {
+        "members": ["3432284e-a111-4844-97c8-26a1767f9986"],
+        "name": "Old group"
+      },
+      "id": "6b24aa39-1aa7-48d1-b6a6-9e755aff4476",
+      "type": "group"
+    }
+  },
+  "id": "6b24aa39-1aa7-48d1-b6a6-9e755aff4476",
+  "name": "Old group"
+}

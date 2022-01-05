@@ -11,10 +11,10 @@ import ExportableMixin from "../../ModelMixins/ExportableMixin";
 const FileSaver = require("file-saver");
 
 interface PropsType extends WithTranslation {
-  item: ExportableMixin.ExportableMixin;
+  item: ExportableMixin.Instance;
 }
 
-export async function exportData(item: ExportableMixin.ExportableMixin) {
+export async function exportData(item: ExportableMixin.Instance) {
   const data = await item.exportData();
   if (!isDefined(data)) {
     return;
@@ -31,11 +31,9 @@ export async function exportData(item: ExportableMixin.ExportableMixin) {
  */
 @observer
 class ExportData extends React.Component<PropsType> {
-  exportDataClicked(item: ExportableMixin.ExportableMixin) {
+  exportDataClicked(item: ExportableMixin.Instance) {
     exportData(item).catch(e => {
-      if (e instanceof TerriaError) {
-        this.props.item.terria.error.raiseEvent(e);
-      }
+      this.props.item.terria.raiseErrorToUser(e);
     });
   }
 

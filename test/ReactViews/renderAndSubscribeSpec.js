@@ -1,7 +1,6 @@
 // 'use strict';
 
-// /*global require*/
-// var knockout = require('terriajs-cesium/Source/ThirdParty/knockout');
+// // var knockout = require('terriajs-cesium/Source/ThirdParty/knockout');
 // var renderAndSubscribe = require('../../lib/ReactViews/renderAndSubscribe');
 
 // describe('renderAndSubscribe', function() {

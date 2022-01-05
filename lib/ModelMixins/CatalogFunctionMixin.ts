@@ -1,16 +1,14 @@
-import { toJS } from "mobx";
+import { runInAction, toJS } from "mobx";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Constructor from "../Core/Constructor";
+import isDefined from "../Core/isDefined";
 import TerriaError from "../Core/TerriaError";
-import addToWorkbench from "../Models/addToWorkbench";
-import CommonStrata from "../Models/CommonStrata";
+import CommonStrata from "../Models/Definition/CommonStrata";
 import FunctionParameter from "../Models/FunctionParameters/FunctionParameter";
-import Model from "../Models/Model";
-import CatalogFunctionTraits from "../Traits/CatalogFunctionTraits";
+import Model from "../Models/Definition/Model";
+import CatalogFunctionTraits from "../Traits/TraitsClasses/CatalogFunctionTraits";
 import CatalogFunctionJobMixin from "./CatalogFunctionJobMixin";
 import CatalogMemberMixin from "./CatalogMemberMixin";
-import isDefined from "../Core/isDefined";
-const sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf").default;
 
 type CatalogFunctionMixin = Model<CatalogFunctionTraits>;
 
@@ -52,7 +50,7 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
         }
 
         // Give default name if needed
-        if (!isDefined(newJob.name)) {
+        if (!isDefined(runInAction(() => newJob.name))) {
           newJob.setTrait(
             CommonStrata.user,
             "name",
@@ -62,34 +60,18 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
 
         newJob.setTrait(CommonStrata.user, "parameters", toJS(this.parameters));
 
-        await newJob.loadMetadata();
+        (await newJob.loadMetadata()).throwIfError();
 
         this.terria.addModel(newJob);
         this.terria.catalog.userAddedDataGroup.add(CommonStrata.user, newJob);
-        addToWorkbench(this.terria.workbench, newJob);
+        this.terria.workbench.add(newJob).then(r => r.raiseError(this.terria));
 
         await newJob.invoke();
 
         return newJob;
       } catch (error) {
-        // Try to get meaningful error message
-        if (error instanceof TerriaError) {
-          throw error;
-        }
-
-        let message = error;
-
-        if (typeof message !== "string") {
-          if (
-            message instanceof RequestErrorEvent &&
-            typeof message.response?.detail === "string"
-          )
-            message = message.response.detail;
-        }
-
-        throw new TerriaError({
-          title: `Error submitting ${this.typeName} job`,
-          message
+        throw TerriaError.from(error, {
+          title: `Error submitting \`${this.typeName}\` job`
         });
       }
     }
@@ -103,9 +85,9 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
 }
 
 namespace CatalogFunctionMixin {
-  export interface CatalogFunctionMixin
+  export interface Instance
     extends InstanceType<ReturnType<typeof CatalogFunctionMixin>> {}
-  export function isMixedInto(model: any): model is CatalogFunctionMixin {
+  export function isMixedInto(model: any): model is Instance {
     return model && model.hasCatalogFunctionMixin;
   }
 }

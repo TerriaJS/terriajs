@@ -8,7 +8,7 @@ import { observer } from "mobx-react";
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
 
 import Loader from "../Loader";
-import Icon from "../Icon";
+import Icon from "../../Styled/Icon";
 
 import Styles from "./data-catalog-group.scss";
 

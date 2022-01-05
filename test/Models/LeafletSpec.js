@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require,describe,it,expect,beforeEach*/
 var Cartographic = require("terriajs-cesium/Source/Core/Cartographic").default;
 var CesiumMath = require("terriajs-cesium/Source/Core/Math").default;
 var CesiumTileLayer = require("../../lib/Map/CesiumTileLayer");

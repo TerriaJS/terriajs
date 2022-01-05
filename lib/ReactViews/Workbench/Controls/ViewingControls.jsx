@@ -1,5 +1,4 @@
 "use strict";
-import classNames from "classnames";
 import createReactClass from "create-react-class";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
@@ -14,21 +13,29 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import when from "terriajs-cesium/Source/ThirdParty/when";
+import {
+  Category,
+  DataSourceAction
+} from "../../../Core/AnalyticEvents/analyticEvents";
 import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
 import getPath from "../../../Core/getPath";
-import TerriaError from "../../../Core/TerriaError";
 import PickedFeatures from "../../../Map/PickedFeatures";
 import ExportableMixin from "../../../ModelMixins/ExportableMixin";
-import addUserCatalogMember from "../../../Models/addUserCatalogMember";
-import CommonStrata from "../../../Models/CommonStrata";
+import MappableMixin from "../../../ModelMixins/MappableMixin";
+import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
+import addUserCatalogMember from "../../../Models/Catalog/addUserCatalogMember";
+import SplitItemReference from "../../../Models/Catalog/CatalogReferences/SplitItemReference";
+import CommonStrata from "../../../Models/Definition/CommonStrata";
+import hasTraits from "../../../Models/Definition/hasTraits";
 import getAncestors from "../../../Models/getAncestors";
-import SplitItemReference from "../../../Models/SplitItemReference";
+import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
-import Icon, { StyledIcon } from "../../Icon";
+import Icon, { StyledIcon } from "../../../Styled/Icon";
+import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
 import { exportData } from "../../Preview/ExportData";
+import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
 import WorkbenchButton from "../WorkbenchButton";
-import Styles from "./viewing-controls.scss";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -83,6 +90,12 @@ const ViewingControls = observer(
       t: PropTypes.func.isRequired
     },
 
+    getInitialState() {
+      return {
+        isMapZoomingToCatalogItem: false
+      };
+    },
+
     /* eslint-disable-next-line camelcase */
     UNSAFE_componentWillMount() {
       window.addEventListener("click", this.hideMenu);
@@ -99,28 +112,34 @@ const ViewingControls = observer(
     },
 
     removeFromMap() {
-      const workbench = this.props.viewState.terria.workbench;
-      workbench.remove(this.props.item);
+      const terria = this.props.viewState.terria;
+      terria.workbench.remove(this.props.item);
+      terria.removeSelectedFeaturesForModel(this.props.item);
       this.props.viewState.terria.timelineStack.remove(this.props.item);
       this.props.viewState.terria.analytics?.logEvent(
-        "dataSource",
-        "removeFromWorkbench",
+        Category.dataSource,
+        DataSourceAction.removeFromWorkbench,
         getPath(this.props.item)
       );
     },
 
     zoomTo() {
-      const viewer = this.props.viewState.terria.currentViewer;
-      const item = this.props.item;
-      let zoomToView = item;
-      if (
-        item.rectangle !== undefined &&
-        item.rectangle.east - item.rectangle.west >= 360
-      ) {
-        zoomToView = this.props.viewState.terria.mainViewer.homeCamera;
-        console.log("Extent is wider than world so using homeCamera.");
-      }
-      viewer.zoomTo(zoomToView);
+      runInAction(() => {
+        const viewer = this.props.viewState.terria.currentViewer;
+        const item = this.props.item;
+        let zoomToView = item;
+        if (
+          item.rectangle !== undefined &&
+          item.rectangle.east - item.rectangle.west >= 360
+        ) {
+          zoomToView = this.props.viewState.terria.mainViewer.homeCamera;
+          console.log("Extent is wider than world so using homeCamera.");
+        }
+        this.setState({ isMapZoomingToCatalogItem: true });
+        viewer.zoomTo(zoomToView).finally(() => {
+          this.setState({ isMapZoomingToCatalogItem: false });
+        });
+      });
     },
 
     openFeature() {
@@ -218,7 +237,28 @@ const ViewingControls = observer(
       });
     },
 
-    previewItem() {
+    searchItem() {
+      const { item, viewState } = this.props;
+      let itemSearchProvider;
+      try {
+        itemSearchProvider = item.createItemSearchProvider();
+      } catch (error) {
+        viewState.terria.raiseErrorToUser(error);
+        return;
+      }
+      this.props.viewState.openTool({
+        toolName: "Search Item",
+        getToolComponent: () => LazyItemSearchTool,
+        showCloseButton: false,
+        params: {
+          item,
+          itemSearchProvider,
+          viewState
+        }
+      });
+    },
+
+    async previewItem() {
       let item = this.props.item;
       // If this is a chartable item opened from another catalog item, get the info of the original item.
       if (defined(item.sourceCatalogItem)) {
@@ -233,18 +273,13 @@ const ViewingControls = observer(
           });
         });
       this.props.viewState.viewCatalogMember(item);
-      this.props.viewState.switchMobileView(
-        this.props.viewState.mobileViewOptions.preview
-      );
     },
 
     exportDataClicked() {
       const item = this.props.item;
 
       exportData(item).catch(e => {
-        if (e instanceof TerriaError) {
-          this.props.item.terria.error.raiseEvent(e);
-        }
+        this.props.item.terria.raiseErrorToUser(e);
       });
     },
 
@@ -252,7 +287,8 @@ const ViewingControls = observer(
       const { t, item, viewState } = this.props;
       const canSplit =
         !item.terria.configParameters.disableSplitter &&
-        item.supportsSplitting &&
+        hasTraits(item, SplitterTraits, "splitDirection") &&
+        !item.disableSplitter &&
         defined(item.splitDirection) &&
         item.terria.currentViewer.canShowSplitter;
       return (
@@ -260,7 +296,7 @@ const ViewingControls = observer(
           <If
             condition={item.tableStructure && item.tableStructure.sourceFeature}
           >
-            <li className={classNames(Styles.zoom)}>
+            <li>
               <ViewingControlMenuButton
                 onClick={this.openFeature}
                 title={t("workbench.openFeatureTitle")}
@@ -273,7 +309,7 @@ const ViewingControls = observer(
             </li>
           </If>
           <If condition={canSplit}>
-            <li className={classNames(Styles.split)}>
+            <li>
               <ViewingControlMenuButton
                 onClick={this.splitItem}
                 title={t("workbench.splitItemTitle")}
@@ -292,7 +328,7 @@ const ViewingControls = observer(
               item.canDiffImages
             }
           >
-            <li className={classNames(Styles.split)}>
+            <li>
               <ViewingControlMenuButton
                 onClick={this.openDiffTool}
                 title={t("workbench.diffImageTitle")}
@@ -305,9 +341,13 @@ const ViewingControls = observer(
             </li>
           </If>
           <If
-            condition={ExportableMixin.isMixedInto(item) && item.canExportData}
+            condition={
+              viewState.useSmallScreenInterface === false &&
+              ExportableMixin.isMixedInto(item) &&
+              item.canExportData
+            }
           >
-            <li className={classNames(Styles.info)}>
+            <li>
               <ViewingControlMenuButton
                 onClick={this.exportDataClicked}
                 title={t("workbench.exportDataTitle")}
@@ -319,7 +359,26 @@ const ViewingControls = observer(
               </ViewingControlMenuButton>
             </li>
           </If>
-          <li className={classNames(Styles.removez)}>
+          <If
+            condition={
+              viewState.useSmallScreenInterface === false &&
+              SearchableItemMixin.isMixedInto(item) &&
+              item.canSearch
+            }
+          >
+            <li>
+              <ViewingControlMenuButton
+                onClick={() => runInAction(() => this.searchItem())}
+                title={t("workbench.searchItemTitle")}
+              >
+                <BoxViewingControl>
+                  <StyledIcon glyph={Icon.GLYPHS.search} />
+                  <span>{t("workbench.searchItem")}</span>
+                </BoxViewingControl>
+              </ViewingControlMenuButton>
+            </li>
+          </If>
+          <li>
             <ViewingControlMenuButton
               onClick={this.removeFromMap}
               title={t("workbench.removeFromMapTitle")}
@@ -337,50 +396,53 @@ const ViewingControls = observer(
     render() {
       const viewState = this.props.viewState;
       const item = this.props.item;
-      const canZoom =
-        item.canZoomTo ||
-        (item.tableStructure && item.tableStructure.sourceFeature);
-      const canSplit =
-        !item.terria.configParameters.disableSplitter &&
-        item.supportsSplitting &&
-        defined(item.splitDirection) &&
-        item.terria.currentViewer.canShowSplitter;
-      const classList = {
-        [Styles.noZoom]: !canZoom,
-        [Styles.noSplit]: !canSplit,
-        [Styles.noInfo]: !item.showsInfo
-      };
       const { t } = this.props;
       const showMenu = item.uniqueId === viewState.workbenchWithOpenControls;
       return (
         <Box>
           <ul
-            className={Styles.control}
             css={`
+              list-style: none;
+              padding-left: 0;
+              margin: 0;
+              width: 100%;
+              position: relative;
+              display: flex;
+              justify-content: space-between;
+
+              li {
+                display: block;
+                float: left;
+                box-sizing: border-box;
+              }
               & > button:last-child {
                 margin-right: 0;
               }
             `}
           >
-            {/* <If condition={item.canZoomTo}> */}
             <WorkbenchButton
-              className={classNames(Styles.zoom, classList)}
               onClick={this.zoomTo}
               title={t("workbench.zoomToTitle")}
-              // className={Styles.btn}
-              disabled={!item.canZoomTo}
-              iconElement={() => <Icon glyph={Icon.GLYPHS.search} />}
+              disabled={
+                // disabled if the item cannot be zoomed to or if a zoom is already in progress
+                (MappableMixin.isMixedInto(item) && item.disableZoomTo) ||
+                this.state.isMapZoomingToCatalogItem === true
+              }
+              iconElement={() =>
+                this.state.isMapZoomingToCatalogItem ? (
+                  <AnimatedSpinnerIcon />
+                ) : (
+                  <Icon glyph={Icon.GLYPHS.search} />
+                )
+              }
             >
               {t("workbench.zoomTo")}
             </WorkbenchButton>
-            {/* </If> */}
-            {/* <If condition={item.showsInfo}> */}
             <WorkbenchButton
               onClick={this.previewItem}
               title={t("workbench.previewItemTitle")}
               iconElement={() => <Icon glyph={Icon.GLYPHS.about} />}
-              disabled={!item.showsInfo}
-              className={classNames(Styles.info, classList)}
+              disabled={item.disableAboutData}
             >
               {t("workbench.previewItem")}
             </WorkbenchButton>
@@ -398,10 +460,8 @@ const ViewingControls = observer(
               }}
               title={t("workbench.showMoreActionsTitle")}
               iconOnly
-              className={classNames(Styles.info, classList)}
               iconElement={() => <Icon glyph={Icon.GLYPHS.menuDotted} />}
             />
-            {/* </If> */}
           </ul>
           {showMenu && (
             <Box

@@ -1,5 +1,11 @@
 import i18next from "i18next";
-import { computed, IReactionDisposer, reaction, runInAction } from "mobx";
+import {
+  computed,
+  IReactionDisposer,
+  reaction,
+  runInAction,
+  observable
+} from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -17,9 +23,10 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PolylineGlowMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineGlowMaterialProperty";
 import isDefined from "../Core/isDefined";
 import DragPoints from "../Map/DragPoints";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import ViewState from "../ReactViewModels/ViewState";
-import ModelTraits from "../Traits/ModelTraits";
-import CreateModel from "./CreateModel";
+import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
+import CreateModel from "./Definition/CreateModel";
 import MapInteractionMode from "./MapInteractionMode";
 import Terria from "./Terria";
 
@@ -36,11 +43,9 @@ interface Options {
   invisible?: boolean;
 }
 
-class EmptyTraits extends ModelTraits {
-  static traits = {};
-}
-
-export default class UserDrawing extends CreateModel(EmptyTraits) {
+export default class UserDrawing extends MappableMixin(
+  CreateModel(MappableTraits)
+) {
   private readonly messageHeader: string;
   private readonly allowPolygon: boolean;
   private readonly onMakeDialogMessage?: () => string;
@@ -54,8 +59,9 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
   otherEntities: CustomDataSource;
   polygon?: Entity;
 
+  @observable
   private inDrawMode: boolean;
-  private closeLoop: boolean;
+  closeLoop: boolean;
   private disposePickedFeatureSubscription?: () => void;
   private drawRectangle: boolean;
 
@@ -126,8 +132,15 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
     });
   }
 
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
+  }
+
   @computed get mapItems() {
-    return [this.pointEntities, this.otherEntities];
+    // Don't show points if drawing rectangle
+    return this.drawRectangle
+      ? [this.otherEntities]
+      : [this.pointEntities, this.otherEntities];
   }
 
   @computed get svgPoint() {
@@ -156,7 +169,9 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
       return;
     }
 
-    this.inDrawMode = true;
+    runInAction(() => {
+      this.inDrawMode = true;
+    });
 
     if (isDefined(this.terria.cesium)) {
       this.terria.cesium.cesiumWidget.canvas.setAttribute(
@@ -290,6 +305,16 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
     }
   }
 
+  endDrawing() {
+    if (this.disposePickedFeatureSubscription) {
+      this.disposePickedFeatureSubscription();
+    }
+    runInAction(() => {
+      this.terria.mapInteractionModeStack.pop();
+      this.cleanUp();
+    });
+  }
+
   /**
    * Updates the MapInteractionModeStack with a listener for a new point.
    */
@@ -298,13 +323,7 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
       message: this.getDialogMessage(),
       buttonText: this.getButtonText(),
       onCancel: () => {
-        if (this.disposePickedFeatureSubscription) {
-          this.disposePickedFeatureSubscription();
-        }
-        runInAction(() => {
-          this.terria.mapInteractionModeStack.pop();
-          this.cleanUp();
-        });
+        this.endDrawing();
       },
       onEnable: (viewState: ViewState) => {
         runInAction(() => (viewState.explorerPanelIsVisible = false));
@@ -455,7 +474,9 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
 
     this.terria.allowFeatureInfoRequests = true;
 
-    this.inDrawMode = false;
+    runInAction(() => {
+      this.inDrawMode = false;
+    });
     this.closeLoop = false;
 
     // Return cursor to original state

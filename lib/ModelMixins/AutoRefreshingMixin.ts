@@ -7,16 +7,16 @@ import {
 } from "mobx";
 import { now } from "mobx-utils";
 import Constructor from "../Core/Constructor";
-import Model from "../Models/Model";
-import AutoRefreshingTraits from "../Traits/AutoRefreshingTraits";
-import AsyncMappableMixin from "./AsyncMappableMixin";
+import Model from "../Models/Definition/Model";
+import AutoRefreshingTraits from "../Traits/TraitsClasses/AutoRefreshingTraits";
+import MappableMixin from "./MappableMixin";
 
 type AutoRefreshing = Model<AutoRefreshingTraits>;
 
 export default function AutoRefreshingMixin<
   T extends Constructor<AutoRefreshing>
 >(Base: T) {
-  abstract class AutoRefreshingMixin extends AsyncMappableMixin(Base) {
+  abstract class AutoRefreshingMixin extends MappableMixin(Base) {
     private autoRefreshDisposer: IReactionDisposer | undefined;
     private autorunRefreshEnableDisposer: IReactionDisposer | undefined;
 

@@ -1,5 +1,5 @@
+import primitiveTrait from "./Decorators/primitiveTrait";
 import ModelTraits from "./ModelTraits";
-import primitiveTrait from "./primitiveTrait";
 
 export default class OpacityTrait extends ModelTraits {
   @primitiveTrait({

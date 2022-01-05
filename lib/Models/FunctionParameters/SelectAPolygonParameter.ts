@@ -1,6 +1,5 @@
-import { Feature, Polygon } from "geojson";
-import { computed } from "mobx";
-import isDefined from "../../Core/isDefined";
+import { Feature, Polygon } from "@turf/helpers";
+import { computed, isObservableArray } from "mobx";
 import { JsonObject } from "../../Core/Json";
 import FunctionParameter from "./FunctionParameter";
 import { GeoJsonFunctionParameter } from "./GeoJsonParameter";
@@ -13,7 +12,7 @@ export default class SelectAPolygonParameter
   readonly type = "polygon";
 
   static formatValueForUrl(value: Feature[]) {
-    if (!isDefined(value) || !Array.isArray(value)) {
+    if (!(Array.isArray(value) || isObservableArray(value))) {
       return undefined;
     }
 

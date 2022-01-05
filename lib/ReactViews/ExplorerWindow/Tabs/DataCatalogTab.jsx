@@ -19,7 +19,6 @@ class DataCatalogTab extends React.Component {
     viewState: PropTypes.object,
     items: PropTypes.array,
     searchPlaceholder: PropTypes.string,
-    overrideState: PropTypes.string,
     onActionButtonClicked: PropTypes.func,
     theme: PropTypes.object,
     t: PropTypes.func.isRequired
@@ -71,12 +70,11 @@ class DataCatalogTab extends React.Component {
               <DataCatalog
                 terria={this.props.terria}
                 viewState={this.props.viewState}
-                overrideState={this.props.overrideState}
                 onActionButtonClicked={this.props.onActionButtonClicked}
                 items={this.props.items}
               />
             </Box>
-            <Box styledWidth="60%" wordBreak="break-all">
+            <Box styledWidth="60%">
               <DataPreview
                 terria={terria}
                 viewState={this.props.viewState}

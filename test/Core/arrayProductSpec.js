@@ -1,6 +1,5 @@
 "use strict";
 
-/*global require, fail*/
 var arrayProduct = require("../../lib/Core/arrayProduct");
 
 describe("arrayProduct", function() {

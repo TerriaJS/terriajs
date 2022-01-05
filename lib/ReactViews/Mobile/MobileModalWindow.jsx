@@ -8,10 +8,11 @@ import DataCatalog from "../DataCatalog/DataCatalog";
 import DataPreview from "../Preview/DataPreview";
 import MobileSearch from "./MobileSearch";
 import WorkbenchList from "../Workbench/WorkbenchList";
-import Icon from "../Icon";
+import Icon from "../../Styled/Icon";
 
 import Styles from "./mobile-modal-window.scss";
 import { runInAction } from "mobx";
+import { withTranslation } from "react-i18next";
 
 const MobileModalWindow = observer(
   createReactClass({
@@ -19,7 +20,8 @@ const MobileModalWindow = observer(
 
     propTypes: {
       terria: PropTypes.object,
-      viewState: PropTypes.object.isRequired
+      viewState: PropTypes.object.isRequired,
+      t: PropTypes.func.isRequired
     },
 
     renderModalContent() {
@@ -108,6 +110,7 @@ const MobileModalWindow = observer(
           this.props.viewState.mobileView
       });
       const mobileView = this.props.viewState.mobileView;
+      const { t } = this.props;
 
       return (
         <div className={modalClass}>
@@ -123,7 +126,7 @@ const MobileModalWindow = observer(
                   className={Styles.doneButton}
                   onClick={this.onClearMobileUI}
                 >
-                  Done
+                  {t("mobile.doneBtnText")}
                 </button>
               </If>
               <button
@@ -149,4 +152,4 @@ const MobileModalWindow = observer(
     }
   })
 );
-module.exports = MobileModalWindow;
+module.exports = withTranslation()(MobileModalWindow);

@@ -13,7 +13,10 @@ const NotificationWindow = createReactClass({
 
   propTypes: {
     viewState: PropTypes.object,
-    title: PropTypes.string.isRequired,
+    title: PropTypes.oneOfType([
+      PropTypes.string.isRequired,
+      PropTypes.func.isRequired
+    ]),
     message: PropTypes.oneOfType([
       PropTypes.string.isRequired,
       PropTypes.func.isRequired
@@ -42,8 +45,20 @@ const NotificationWindow = createReactClass({
   },
 
   render() {
-    const title = this.props.title || "";
-    const message = this.props.message;
+    const title =
+      typeof this.props.title === "function"
+        ? this.props.title(this.props.viewState)
+        : this.props.title ?? "";
+
+    let message =
+      typeof this.props.message === "function"
+        ? this.props.message(this.props.viewState)
+        : this.props.message;
+
+    if (typeof message === "string") {
+      message = parseCustomMarkdownToReact(message);
+    }
+
     const confirmText = this.props.confirmText || "OK";
     const denyText = this.props.denyText;
     const type = this.props.type;
@@ -76,11 +91,7 @@ const NotificationWindow = createReactClass({
                   <img src="./build/TerriaJS/images/feature.gif" />
                 </div>
               )}
-            <div className={Styles.body}>
-              {typeof message === "function"
-                ? message(this.props.viewState)
-                : parseCustomMarkdownToReact(message)}
-            </div>
+            <div className={Styles.body}>{message}</div>
           </div>
           <div className={Styles.footer}>
             <If condition={denyText}>
@@ -98,4 +109,4 @@ const NotificationWindow = createReactClass({
   }
 });
 
-module.exports = NotificationWindow;
+module.exports.default = NotificationWindow;

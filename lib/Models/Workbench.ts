@@ -1,26 +1,35 @@
+import i18next from "i18next";
 import { action, computed, observable } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import Result from "../Core/Result";
+import TerriaError, { TerriaErrorSeverity } from "../Core/TerriaError";
+import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
+import ChartableMixin from "../ModelMixins/ChartableMixin";
+import MappableMixin from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
-import CommonStrata from "../Models/CommonStrata";
-import { BaseModel } from "./Model";
 import TimeFilterMixin from "../ModelMixins/TimeFilterMixin";
+import LayerOrderingTraits from "../Traits/TraitsClasses/LayerOrderingTraits";
+import CommonStrata from "./Definition/CommonStrata";
+import hasTraits from "./Definition/hasTraits";
+import { BaseModel } from "./Definition/Model";
 
-interface WorkbenchItem extends BaseModel {
-  supportsReordering?: boolean;
-  keepOnTop?: boolean;
-}
+const keepOnTop = (model: BaseModel) =>
+  hasTraits(model, LayerOrderingTraits, "keepOnTop") && model.keepOnTop;
+const supportsReordering = (model: BaseModel) =>
+  hasTraits(model, LayerOrderingTraits, "supportsReordering") &&
+  model.supportsReordering;
 
 export default class Workbench {
-  private readonly _items = observable.array<WorkbenchItem>();
+  private readonly _items = observable.array<BaseModel>();
 
   /**
    * Gets or sets the list of items on the workbench.
    */
   @computed
-  get items(): readonly WorkbenchItem[] {
+  get items(): readonly BaseModel[] {
     return this._items.map(dereferenceModel);
   }
-  set items(items: readonly WorkbenchItem[]) {
+  set items(items: readonly BaseModel[]) {
     this._items.spliceWithArray(0, this._items.length, items.slice());
   }
 
@@ -100,18 +109,18 @@ export default class Workbench {
    * @param item The model to add.
    */
   @action
-  add(item: WorkbenchItem, index: number = 0) {
+  private insertItem(item: BaseModel, index: number = 0) {
     if (this.contains(item)) {
       return;
     }
 
-    const targetItem: WorkbenchItem = dereferenceModel(item);
+    const targetItem: BaseModel = dereferenceModel(item);
 
     // Keep reorderable data sources (e.g.: imagery layers) below non-orderable ones (e.g.: GeoJSON).
-    if (targetItem.supportsReordering) {
+    if (supportsReordering(targetItem)) {
       while (
         index < this.items.length &&
-        !this.items[index].supportsReordering
+        !supportsReordering(this.items[index])
       ) {
         ++index;
       }
@@ -119,17 +128,17 @@ export default class Workbench {
       while (
         index > 0 &&
         this.items.length > 0 &&
-        this.items[index - 1].supportsReordering
+        supportsReordering(this.items[index - 1])
       ) {
         --index;
       }
     }
 
-    if (!targetItem.keepOnTop) {
+    if (!keepOnTop(targetItem)) {
       while (
         index < this.items.length &&
-        this.items[index].keepOnTop &&
-        this.items[index].supportsReordering === targetItem.supportsReordering
+        keepOnTop(this.items[index]) &&
+        supportsReordering(this.items[index]) === supportsReordering(targetItem)
       ) {
         ++index;
       }
@@ -137,9 +146,9 @@ export default class Workbench {
       while (
         index > 0 &&
         this.items.length > 0 &&
-        this.items[index - 1].keepOnTop &&
-        this.items[index - 1].supportsReordering ===
-          targetItem.supportsReordering
+        !keepOnTop(this.items[index - 1]) &&
+        supportsReordering(this.items[index - 1]) ===
+          supportsReordering(targetItem)
       ) {
         --index;
       }
@@ -148,6 +157,72 @@ export default class Workbench {
     // Make sure the reference, rather than the target, is added to the items list.
     const referenceItem = item.sourceReference ? item.sourceReference : item;
     this._items.splice(index, 0, referenceItem);
+  }
+
+  /**
+   * Adds or removes a model to/from the workbench. If the model is a reference,
+   * it will also be dereferenced. If, after dereferencing, the item turns out not to
+   * be {@link AsyncMappableMixin} or {@link ChartableMixin} but it is a {@link GroupMixin}, it will
+   * be removed from the workbench. If it is mappable, `loadMapItems` will be called.
+   *
+   * If an error occurs, it will only be added to the workbench if the severity is TerriaError.Warning - otherwise it will not be added
+   *
+   * @param item The item to add to or remove from the workbench.
+   */
+  public async add(item: BaseModel | BaseModel[]): Promise<Result<unknown>> {
+    if (Array.isArray(item)) {
+      const results = await Promise.all(item.reverse().map(i => this.add(i)));
+      return Result.combine(results, {
+        title: i18next.t("workbench.addItemErrorTitle"),
+        message: i18next.t("workbench.addItemErrorMessage"),
+        importance: -1
+      });
+    }
+
+    this.insertItem(item);
+
+    let error: TerriaError | undefined;
+
+    if (ReferenceMixin.isMixedInto(item)) {
+      error = (await item.loadReference()).error;
+      if (item.target) {
+        this.remove(item);
+        return this.add(item.target);
+      }
+    }
+
+    // Add warning message if item isn't mappable or chartable
+    if (
+      !error &&
+      !MappableMixin.isMixedInto(item) &&
+      !ChartableMixin.isMixedInto(item)
+    ) {
+      error = TerriaError.from(
+        `${getName(item)} doesn't have anything to visualize`,
+        TerriaErrorSeverity.Warning
+      );
+    }
+
+    if (!error && CatalogMemberMixin.isMixedInto(item))
+      error = (await item.loadMetadata()).error;
+
+    if (!error && MappableMixin.isMixedInto(item)) {
+      error = (await item.loadMapItems()).error;
+      if (!error && item.zoomOnAddToWorkbench && !item.disableZoomTo) {
+        item.terria.currentViewer.zoomTo(item);
+      }
+    }
+
+    // Remove item if TerriaError severity is Error
+    if (error?.severity === TerriaErrorSeverity.Error) {
+      this.remove(item);
+    }
+
+    return Result.none(error, {
+      title: i18next.t("workbench.addItemErrorTitle"),
+      message: i18next.t("workbench.addItemErrorMessage"),
+      importance: -1
+    });
   }
 
   /**
@@ -181,13 +256,13 @@ export default class Workbench {
     if (!this.contains(item)) {
       return;
     }
-    this._items.splice(this.indexOf(item), 1);
-    this._items.splice(newIndex, 0, item);
+    this.remove(item);
+    this.insertItem(item, newIndex);
   }
 }
 
 function dereferenceModel(model: BaseModel): BaseModel {
-  if (ReferenceMixin.is(model) && model.target !== undefined) {
+  if (ReferenceMixin.isMixedInto(model) && model.target !== undefined) {
     return model.target;
   }
   return model;

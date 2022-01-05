@@ -1,20 +1,20 @@
-import React from "react";
-import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
-import SearchBox from "../Search/SearchBox";
-import MobileModalWindow from "./MobileModalWindow";
-import Branding from "../SidePanel/Branding";
-import Styles from "./mobile-header.scss";
-import Icon, { StyledIcon } from "../Icon";
-import MobileMenu from "./MobileMenu";
 import classNames from "classnames";
-import { removeMarker } from "../../Models/LocationMarkerUtils";
-import { withTranslation } from "react-i18next";
-import { withTheme } from "styled-components";
-import { observer } from "mobx-react";
+import createReactClass from "create-react-class";
 import { runInAction } from "mobx";
+import { observer } from "mobx-react";
+import PropTypes from "prop-types";
+import React from "react";
+import { withTranslation } from "react-i18next";
+import styled, { withTheme } from "styled-components";
+import { removeMarker } from "../../Models/LocationMarkerUtils";
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
+import Icon, { StyledIcon } from "../../Styled/Icon";
+import SearchBox from "../Search/SearchBox";
+import Branding from "../SidePanel/Branding";
+import Styles from "./mobile-header.scss";
+import MobileMenu from "./MobileMenu";
+import MobileModalWindow from "./MobileModalWindow";
 
 const MobileHeader = observer(
   createReactClass({
@@ -69,10 +69,12 @@ const MobileHeader = observer(
     },
 
     onMobileDataCatalogClicked() {
+      this.props.viewState.setTopElement("DataCatalog");
       this.toggleView(this.props.viewState.mobileViewOptions.data);
     },
 
     onMobileNowViewingClicked() {
+      this.props.viewState.setTopElement("NowViewing");
       this.toggleView(this.props.viewState.mobileViewOptions.nowViewing);
     },
 
@@ -140,7 +142,6 @@ const MobileHeader = observer(
 
     render() {
       const searchState = this.props.viewState.searchState;
-      const displayOne = this.props.terria.configParameters.displayOneBrand;
       const { t } = this.props;
       const nowViewingLength =
         this.props.terria.workbench.items !== undefined
@@ -164,48 +165,46 @@ const MobileHeader = observer(
                 }
               >
                 <Box
-                  positionAbsolute
+                  position="absolute"
                   css={`
                     left: 5px;
                   `}
                 >
-                  <RawButton
+                  <HamburgerButton
                     type="button"
                     onClick={() => this.props.viewState.toggleMobileMenu()}
                     title={t("mobile.toggleNavigation")}
-                    css={`
-                      border-radius: 2px;
-                      padding: 0 5px;
-                      margin-right: 3px;
-                      &:hover,
-                      &:focus,
-                      & {
-                        border: 1px solid
-                          ${this.props.theme.textLightTranslucent};
-                      }
-                    `}
                   >
                     <StyledIcon
                       light
                       glyph={Icon.GLYPHS.menu}
-                      styledWidth={"37px"}
-                      styledHeight={"37px"}
+                      styledWidth="20px"
+                      styledHeight="20px"
                     />
-                  </RawButton>
+                  </HamburgerButton>
                   <Branding
                     terria={this.props.terria}
+                    viewState={this.props.viewState}
                     version={this.props.version}
-                    displayOne={displayOne}
                   />
                 </Box>
-                <div className={Styles.groupRight}>
+                <div
+                  className={Styles.groupRight}
+                  css={`
+                    background-color: ${p => p.theme.dark};
+                  `}
+                >
                   <button
                     type="button"
                     className={Styles.btnAdd}
                     onClick={this.onMobileDataCatalogClicked}
                   >
-                    Data
-                    <Icon glyph={Icon.GLYPHS.increase} />
+                    {t("mobile.addDataBtnText")}
+                    <StyledIcon
+                      glyph={Icon.GLYPHS.increase}
+                      styledWidth="20px"
+                      styledHeight="20px"
+                    />
                   </button>
                   <If condition={nowViewingLength > 0}>
                     <button
@@ -228,7 +227,11 @@ const MobileHeader = observer(
                     type="button"
                     onClick={this.showSearch}
                   >
-                    <Icon glyph={Icon.GLYPHS.search} />
+                    <StyledIcon
+                      glyph={Icon.GLYPHS.search}
+                      styledWidth="20px"
+                      styledHeight="20px"
+                    />
                   </button>
                 </div>
               </When>
@@ -269,13 +272,37 @@ const MobileHeader = observer(
             terria={this.props.terria}
             showFeedback={!!this.props.terria.configParameters.feedbackUrl}
           />
-          <MobileModalWindow
-            terria={this.props.terria}
-            viewState={this.props.viewState}
-          />
+          {/* Don't show mobile modal window if user is currently interacting
+              with map - like picking a point or drawing shapes
+           */}
+          {!this.props.viewState.isMapInteractionActive && (
+            <MobileModalWindow
+              terria={this.props.terria}
+              viewState={this.props.viewState}
+            />
+          )}
         </div>
       );
     }
   })
 );
+
+const HamburgerButton = styled(RawButton)`
+  border-radius: 4px;
+  padding: 0 5px;
+  margin-right: 3px;
+  background: ${p => p.theme.darkLighter};
+  width: 50px;
+  height: 38px;
+  box-sizing: content-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &:hover,
+  &:focus,
+  & {
+    border: 1px solid ${p => p.theme.textLightTranslucent};
+  }
+`;
+
 module.exports = withTranslation()(withTheme(MobileHeader));

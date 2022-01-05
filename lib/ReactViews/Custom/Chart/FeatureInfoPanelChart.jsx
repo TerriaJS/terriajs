@@ -1,14 +1,16 @@
-import { computed, runInAction } from "mobx";
-import { observer } from "mobx-react";
-import { AxisLeft, AxisBottom } from "@vx/axis";
-import { Group } from "@vx/group";
+import { AxisBottom, AxisLeft } from "@visx/axis";
+import { Group } from "@visx/group";
 import { withParentSize } from "@vx/responsive";
-import { scaleLinear, scaleTime } from "@vx/scale";
+import { scaleLinear, scaleTime } from "@visx/scale";
+import { computed } from "mobx";
+import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
-import Chartable from "../../../Models/Chartable";
-import LineChart from "./LineChart";
+import ChartableMixin from "../../../ModelMixins/ChartableMixin";
 import Styles from "./chart-preview.scss";
+import LineChart from "./LineChart";
+import styled from "styled-components";
+import i18next from "i18next";
 
 @withParentSize
 @observer
@@ -35,34 +37,53 @@ class FeatureInfoPanelChart extends React.Component {
   get chartItem() {
     return this.props.item.chartItems.find(
       chartItem =>
-        chartItem.type === "line" &&
-        chartItem.name.indexOf("lat") === -1 &&
-        chartItem.name.indexOf("lon") === -1
+        chartItem.type === "line" || chartItem.type === "lineAndPoint"
     );
   }
 
-  componentDidUpdate() {
-    runInAction(() => {
-      this.props.item.loadChartItems();
+  async componentDidUpdate() {
+    (await this.props.item.loadMapItems()).raiseError(this.props.item.terria, {
+      message: `Failed to load chart for ${this.props.item.name}`,
+      importance: -1
     });
   }
 
-  componentDidMount() {
-    runInAction(() => {
-      this.props.item.loadChartItems();
+  async componentDidMount() {
+    (await this.props.item.loadMapItems()).raiseError(this.props.item.terria, {
+      message: `Failed to load chart for ${this.props.item.name}`,
+      importance: -1
     });
   }
 
   render() {
-    if (!Chartable.is(this.props.item)) return null;
-    if (!this.chartItem) return null;
+    const catalogItem = this.props.item;
+    const height = this.props.height || this.props.parentHeight;
+    const width = this.props.width || this.props.parentWidth;
+    if (!ChartableMixin.isMixedInto(catalogItem)) {
+      return (
+        <ChartStatusText width={width} height={height}>
+          {i18next.t("chart.noData")}
+        </ChartStatusText>
+      );
+    } else if (!this.chartItem && catalogItem.isLoadingMapItems) {
+      return (
+        <ChartStatusText width={width} height={height}>
+          {i18next.t("chart.loading")}
+        </ChartStatusText>
+      );
+    } else if (!this.chartItem || this.chartItem.points.length === 0) {
+      return (
+        <ChartStatusText width={width} height={height}>
+          {i18next.t("chart.noData")}
+        </ChartStatusText>
+      );
+    }
 
-    const { width, height, parentWidth, parentHeight } = this.props;
     return (
       <div className={Styles.previewChart}>
         <Chart
-          width={width || parentWidth}
-          height={height || parentHeight}
+          width={width}
+          height={height}
           margin={this.props.margin}
           chartItem={this.chartItem}
           baseColor={this.props.baseColor}
@@ -119,9 +140,10 @@ class Chart extends React.Component {
   render() {
     const { height, margin, chartItem, baseColor } = this.props;
 
-    if (chartItem.points.length === 0) {
-      return <div className={Styles.empty}>No data available</div>;
-    }
+    // Make sure points are asc sorted by x value
+    chartItem.points = chartItem.points.sort(
+      (a, b) => this.scales.x(a.x) - this.scales.x(b.x)
+    );
 
     const id = `featureInfoPanelChart-${chartItem.name}`;
     const textStyle = {
@@ -135,11 +157,25 @@ class Chart extends React.Component {
         <Group top={margin.top} left={margin.left}>
           <AxisBottom
             top={this.plot.height}
-            scale={this.scales.x}
-            numTicks={2}
-            stroke="none"
-            tickStroke="none"
-            tickLabelProps={() => textStyle}
+            // .nice() rounds the scale so that the aprox beginning and
+            // aprox end labels are shown
+            // See: https://stackoverflow.com/questions/21753126/d3-js-starting-and-ending-tick
+            scale={this.scales.x.nice()}
+            numTicks={4}
+            stroke="#a0a0a0"
+            tickStroke="#a0a0a0"
+            tickLabelProps={(value, i, ticks) => {
+              // To prevent the first and last values from getting clipped,
+              // we position the first label text to start at the tick position
+              // and the last label text to finish at the tick position. For all
+              // others, middle of the text will coincide with the tick position.
+              const textAnchor =
+                i === 0 ? "start" : i === ticks.length - 1 ? "end" : "middle";
+              return {
+                ...textStyle,
+                textAnchor
+              };
+            }}
             label={this.props.xAxisLabel}
             labelOffset={3}
             labelProps={textStyle}
@@ -170,5 +206,13 @@ class Chart extends React.Component {
     );
   }
 }
+
+const ChartStatusText = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: ${p => p.width}px;
+  height: ${p => p.height}px;
+`;
 
 export default FeatureInfoPanelChart;

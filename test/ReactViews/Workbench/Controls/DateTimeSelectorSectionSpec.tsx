@@ -2,7 +2,7 @@ import React from "react";
 import { act } from "react-dom/test-utils";
 import TestRenderer, { ReactTestRenderer } from "react-test-renderer";
 import Terria from "../../../../lib/Models/Terria";
-import WebMapServiceCatalogItem from "../../../../lib/Models/WebMapServiceCatalogItem";
+import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import { formatDateTime } from "../../../../lib/ReactViews/BottomDock/Timeline/DateFormats";
 import DateTimeSelectorSection from "../../../../lib/ReactViews/Workbench/Controls/DateTimeSelectorSection";
 
@@ -43,6 +43,24 @@ describe("DateTimeSelectorSection", function() {
       new Date("2014-01-01T00:00:00.000Z")
     );
     expect(currentDateBtn.children[0]).toEqual(expectedDateStr);
+
+    const titleLabel = testRenderer.root.findByProps({
+      id: "dateTimeSelectorLabel"
+    });
+    expect(titleLabel).toBeDefined();
+
+    expect(titleLabel.children[0]).toEqual("dateTime.selectorLabel");
+  });
+
+  it("A datetime selector uses timeLabel", function() {
+    wmsItem.setTrait("definition", "timeLabel", "Some Label");
+
+    const titleLabel = testRenderer.root.findByProps({
+      id: "dateTimeSelectorLabel"
+    });
+    expect(titleLabel).toBeDefined();
+
+    expect(titleLabel.children[0]).toEqual("Some Label");
   });
 
   it("A datetime selector can be formatted", async function() {

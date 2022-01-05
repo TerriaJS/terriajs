@@ -6,12 +6,15 @@ import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import { Swipeable } from "react-swipeable";
+import {
+  Category,
+  StoryAction
+} from "../../Core/AnalyticEvents/analyticEvents";
 import getPath from "../../Core/getPath";
-// eslint-disable-next-line no-unused-vars
-import Terria from "../../Models/Terria";
+import TerriaError from "../../Core/TerriaError";
+import Icon from "../../Styled/Icon";
 import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import { Medium, Small } from "../Generic/Responsive";
-import Icon from "../Icon.jsx";
 import Styles from "./story-panel.scss";
 
 /**
@@ -20,30 +23,47 @@ import Styles from "./story-panel.scss";
  * @param {Terria} terria
  */
 
-export function activateStory(story, terria) {
-  // Send a GA event on scene change with URL hash
-  const analyticsLabel =
-    window.location.hash.length > 0
-      ? window.location.hash
-      : "No hash detected (story not shared yet?)";
-  terria.analytics?.logEvent("story", "scene", analyticsLabel);
-  return runInAction(() => {
-    if (story.shareData) {
-      return Promise.all(
-        story.shareData.initSources.map(initSource =>
-          terria.applyInitData({
+export async function activateStory(scene, terria) {
+  terria.analytics?.logEvent(
+    Category.story,
+    StoryAction.viewScene,
+    JSON.stringify(scene)
+  );
+
+  if (scene.shareData) {
+    const errors = [];
+    await Promise.all(
+      scene.shareData.initSources.map(async initSource => {
+        try {
+          await terria.applyInitData({
             initData: initSource,
-            replaceStratum: false,
+            replaceStratum: true,
             canUnsetFeaturePickingState: true
-          })
-        )
+          });
+        } catch (e) {
+          errors.push(TerriaError.from(e));
+        }
+      })
+    );
+    if (errors.length > 0) {
+      terria.raiseErrorToUser(
+        TerriaError.combine(errors, {
+          title: { key: "story.loadSceneErrorTitle" },
+          message: {
+            key: "story.loadSceneErrorMessage",
+            parameters: { title: scene.title ?? scene.id }
+          }
+        })
       );
     }
-    return Promise.resolve([]);
-  }).then(() => {
-    terria.workbench.items.forEach(item => {
-      terria.analytics?.logEvent("story", "datasetView", getPath(item));
-    });
+  }
+
+  terria.workbench.items.forEach(item => {
+    terria.analytics?.logEvent(
+      Category.story,
+      StoryAction.datasetView,
+      getPath(item)
+    );
   });
 }
 
@@ -139,11 +159,7 @@ const StoryPanel = observer(
     },
 
     onCenterScene(story) {
-      if (story.shareData) {
-        runInAction(() => {
-          this.props.terria.updateFromStartData(story.shareData);
-        });
-      }
+      activateStory(story, this.props.terria);
     },
 
     goToPrevStory() {

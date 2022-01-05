@@ -9,7 +9,7 @@ import { Trans, withTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import printWindow from "../../../../Core/printWindow";
 import Clipboard from "../../../Clipboard";
-import Icon from "../../../Icon.jsx";
+import Icon from "../../../../Styled/Icon";
 import Loader from "../../../Loader";
 import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
 import Input from "../../../Styled/Input/Input.jsx";
@@ -23,6 +23,10 @@ import {
 import PrintView from "./PrintView";
 import Styles from "./share-panel.scss";
 import StorySharePanel from "./StorySharePanel";
+import {
+  Category,
+  ShareAction
+} from "../../../../Core/AnalyticEvents/analyticEvents";
 
 const SharePanel = observer(
   createReactClass({
@@ -232,7 +236,7 @@ const SharePanel = observer(
             printWindow(windowToPrint)
               .then(null, e => {
                 // If the print promise rejects, raise an error
-                this.props.terria.error.raiseEvent(e);
+                this.props.terria.raiseErrorToUser(e);
               })
               .then(() => {
                 // whether there was an error or not, clean up
@@ -361,7 +365,7 @@ const SharePanel = observer(
     },
 
     renderContentForStoryShare() {
-      const { t } = this.props;
+      const { t, terria } = this.props;
       return (
         <Choose>
           <When condition={this.state.shareUrl === ""}>
@@ -375,6 +379,13 @@ const SharePanel = observer(
                 source={this.getShareUrlInputStory("light")}
                 id="share-url"
                 rounded
+                onCopy={text =>
+                  terria.analytics?.logEvent(
+                    Category.share,
+                    ShareAction.storyCopy,
+                    text
+                  )
+                }
               />
               {this.renderWarning()}
             </div>
@@ -384,7 +395,7 @@ const SharePanel = observer(
     },
 
     renderContentForCatalogShare() {
-      const { t } = this.props;
+      const { t, terria } = this.props;
       return (
         <Choose>
           <When condition={this.state.shareUrl === ""}>
@@ -397,6 +408,13 @@ const SharePanel = observer(
                 text={this.state.shareUrl}
                 source={this.getShareUrlInput("light")}
                 id="share-url"
+                onCopy={text =>
+                  terria.analytics?.logEvent(
+                    Category.share,
+                    ShareAction.catalogCopy,
+                    text
+                  )
+                }
               />
               {this.renderWarning()}
             </div>
@@ -406,7 +424,7 @@ const SharePanel = observer(
     },
 
     renderContentWithPrintAndEmbed() {
-      const { t } = this.props;
+      const { t, terria } = this.props;
       const iframeCode = this.state.shareUrl.length
         ? `<iframe style="width: 720px; height: 600px; border: none;" src="${this.state.shareUrl}" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>`
         : "";
@@ -414,7 +432,17 @@ const SharePanel = observer(
       return (
         <div>
           <div className={DropdownStyles.section}>
-            <Clipboard source={this.getShareUrlInput("dark")} id="share-url" />
+            <Clipboard
+              source={this.getShareUrlInput("dark")}
+              id="share-url"
+              onCopy={text =>
+                terria.analytics?.logEvent(
+                  Category.share,
+                  ShareAction.shareCopy,
+                  text
+                )
+              }
+            />
             {this.renderWarning()}
           </div>
           <div className={DropdownStyles.section}>
@@ -556,26 +584,23 @@ const SharePanel = observer(
         : t("share.btnMapShareTitle");
 
       return !storyShare ? (
-        <div>
-          <MenuPanel
-            theme={dropdownTheme}
-            btnText={catalogShareWithoutText ? null : btnText}
-            viewState={this.props.viewState}
-            btnTitle={btnTitle}
-            isOpen={this.state.isOpen}
-            onOpenChanged={this.changeOpenState}
-            showDropdownAsModal={catalogShare}
-            modalWidth={modalWidth}
-            smallScreen={this.props.viewState.useSmallScreenInterface}
-            onDismissed={() => {
-              if (catalogShare)
-                this.props.viewState.shareModalIsVisible = false;
-            }}
-            onUserClick={this.props.onUserClick}
-          >
-            <If condition={this.state.isOpen}>{this.renderContent()}</If>
-          </MenuPanel>
-        </div>
+        <MenuPanel
+          theme={dropdownTheme}
+          btnText={catalogShareWithoutText ? null : btnText}
+          viewState={this.props.viewState}
+          btnTitle={btnTitle}
+          isOpen={this.state.isOpen}
+          onOpenChanged={this.changeOpenState}
+          showDropdownAsModal={catalogShare}
+          modalWidth={modalWidth}
+          smallScreen={this.props.viewState.useSmallScreenInterface}
+          onDismissed={() => {
+            if (catalogShare) this.props.viewState.shareModalIsVisible = false;
+          }}
+          onUserClick={this.props.onUserClick}
+        >
+          <If condition={this.state.isOpen}>{this.renderContent()}</If>
+        </MenuPanel>
       ) : (
         <StorySharePanel
           btnText={catalogShareWithoutText ? null : btnText}

@@ -1,50 +1,40 @@
 "use strict";
 
 import classNames from "classnames";
-import { autorun, computed, observable, runInAction, action } from "mobx";
+import { action, autorun, computed, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import filterOutUndefined from "../../Core/filterOutUndefined";
-import CommonStrata from "../../Models/CommonStrata";
-import GeoJsonCatalogItem from "../../Models/GeoJsonCatalogItem";
-// eslint-disable-next-line no-unused-vars
-import Mappable, { ImageryParts } from "../../Models/Mappable";
-// eslint-disable-next-line no-unused-vars
-import Terria from "../../Models/Terria";
-import TerriaViewer from "../../ViewModels/TerriaViewer";
-import { POSITRON_BASE_MAP_ID } from "../../ViewModels/createGlobalBaseMapOptions";
+import MappableMixin, { ImageryParts } from "../../ModelMixins/MappableMixin";
+import CommonStrata from "../../Models/Definition/CommonStrata";
+import CreateModel from "../../Models/Definition/CreateModel";
+import GeoJsonCatalogItem from "../../Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import ViewerMode from "../../Models/ViewerMode";
+import MappableTraits from "../../Traits/TraitsClasses/MappableTraits";
+import TerriaViewer from "../../ViewModels/TerriaViewer";
 import Styles from "./data-preview-map.scss";
 
-/**
- * @implements {Mappable}
- */
-class AdaptForPreviewMap {
-  /**
-   *
-   * @param {Mappable} mappable
-   */
-  constructor(mappable) {
-    this._mappable = mappable;
-  }
+class AdaptForPreviewMap extends MappableMixin(CreateModel(MappableTraits)) {
+  previewed;
 
-  loadMapItems() {
-    return this._mappable.loadMapItems();
-  }
+  async forceLoadMapItems() {}
 
+  // Make all imagery 0 or 100% opacity
   @computed
   get mapItems() {
-    return this._mappable.mapItems.map(m =>
-      ImageryParts.is(m)
-        ? {
-            ...m,
-            alpha: m.alpha !== 0.0 ? 1.0 : 0.0,
-            show: true
-          }
-        : m
+    return (
+      this.previewed?.mapItems.map(m =>
+        ImageryParts.is(m)
+          ? {
+              ...m,
+              alpha: m.alpha !== 0.0 ? 1.0 : 0.0,
+              show: true
+            }
+          : m
+      ) ?? []
     );
   }
 }
@@ -77,12 +67,6 @@ class DataPreviewMap extends React.Component {
    */
   previewViewer;
 
-  /**
-   * @type {string}
-   */
-  @observable
-  previewBadgeState = "";
-
   static propTypes = {
     terria: PropTypes.object.isRequired,
     previewed: PropTypes.object,
@@ -90,9 +74,18 @@ class DataPreviewMap extends React.Component {
     t: PropTypes.func.isRequired
   };
 
-  @action
-  setPreviewBadgeState(text) {
-    this.previewBadgeState = text;
+  @computed
+  get previewBadgeState() {
+    if (this.props.previewed?.isLoading) return "loading";
+    if (
+      this.props.previewed?.loadMetadataResult?.error ||
+      this.props.previewed?.loadMapItemsResult?.error
+    )
+      return "dataPreviewError";
+    if (this.props.previewed?.mapItems?.length === 0)
+      return "noPreviewAvailable";
+
+    return "dataPreview";
   }
 
   constructor(props) {
@@ -110,9 +103,11 @@ class DataPreviewMap extends React.Component {
     this.previewViewer = new TerriaViewer(
       this.props.terria,
       computed(() => {
+        const previewItem = new AdaptForPreviewMap();
+        previewItem.previewed = this.props.previewed;
         // Can previewed be undefined?
         return filterOutUndefined([
-          new AdaptForPreviewMap(this.props.previewed),
+          previewItem,
           this.boundingRectangleCatalogItem
         ]);
       })
@@ -137,29 +132,23 @@ class DataPreviewMap extends React.Component {
       "Initialising preview map. This might be expensive, so this should only show up when the preview map disappears and reappears"
     );
     this.isZoomedToExtent = false;
-
-    // Choose positron if it's available
-    const positronBaseMap = this.props.terria.baseMaps.find(
-      baseMap => baseMap.mappable.uniqueId === POSITRON_BASE_MAP_ID
+    const baseMapItems = this.props.terria.baseMapsModel.baseMapItems;
+    // Find preview basemap using `terria.previewBaseMapId`
+    const initPreviewBaseMap = baseMapItems.find(
+      baseMap =>
+        baseMap.item.uniqueId ===
+        this.props.terria.baseMapsModel.previewBaseMapId
     );
-    if (positronBaseMap !== undefined) {
-      this.previewViewer.baseMap = positronBaseMap.mappable;
+    if (initPreviewBaseMap !== undefined) {
+      this.previewViewer.setBaseMap(initPreviewBaseMap.item);
     } else {
-      this.previewViewer.baseMap =
-        this.props.terria.baseMaps.length > 0
-          ? this.props.terria.baseMaps[0].mappable
-          : undefined;
+      this.previewViewer.setBaseMap(
+        baseMapItems.length > 0 ? baseMapItems[0].item : undefined
+      );
     }
 
     this.previewViewer.attach(container);
-    this._disposePreviewBadgeStateUpdater = autorun(() => {
-      if (this.props.showMap && this.props.previewed !== undefined) {
-        this.setPreviewBadgeState("loading");
-        this.props.previewed.loadMapItems().then(() => {
-          this.setPreviewBadgeState("dataPreview");
-        });
-      }
-    });
+
     this._disposeZoomToExtentSubscription = autorun(() => {
       if (this.isZoomedToExtent) {
         this.previewViewer.currentViewer.zoomTo(this.props.previewed);
@@ -167,27 +156,9 @@ class DataPreviewMap extends React.Component {
         this.previewViewer.currentViewer.zoomTo(this.previewViewer.homeCamera);
       }
     });
-
-    // this._unsubscribeErrorHandler = this.terriaPreview.error.addEventListener(
-    //   e => {
-    //     if (
-    //       e.sender === this.props.previewedCatalogItem ||
-    //       (e.sender &&
-    //         e.sender.nowViewingCatalogItem ===
-    //           this.props.previewedCatalogItem)
-    //     ) {
-    //       this._errorPreviewingCatalogItem = true;
-    //       this.setState({
-    //         previewBadgeText: "NO PREVIEW AVAILABLE"
-    //       });
-    //     }
-    //   }
-    // );
   }
 
   componentWillUnmount() {
-    this._disposePreviewBadgeStateUpdater &&
-      this._disposePreviewBadgeStateUpdater();
     this._disposeZoomToExtentSubscription &&
       this._disposeZoomToExtentSubscription();
     this.previewViewer.detach();
@@ -310,148 +281,3 @@ class DataPreviewMap extends React.Component {
 }
 
 export default withTranslation()(DataPreviewMap);
-
-// Unported code
-
-//   componentWillUnmount() {
-//     this.destroyPreviewMap();
-
-//     if (this._unsubscribeErrorHandler) {
-//       this._unsubscribeErrorHandler();
-//       this._unsubscribeErrorHandler = undefined;
-//     }
-//   },
-
-//   /* eslint-disable-next-line camelcase */
-//   UNSAFE_componentWillReceiveProps(newProps) {
-//     if (newProps.showMap && !this.props.showMap) {
-//       this.initMap(newProps.previewedCatalogItem);
-//     } else {
-//       this.updatePreview(newProps.previewedCatalogItem);
-//     }
-//   },
-
-//   updatePreview(previewedCatalogItem) {
-//     if (this.lastPreviewedCatalogItem === previewedCatalogItem) {
-//       return;
-//     }
-
-//     if (previewedCatalogItem) {
-//       this.props.terria.analytics.logEvent(
-//         "dataSource",
-//         "preview",
-//         previewedCatalogItem.name
-//       );
-//     }
-
-//     this.lastPreviewedCatalogItem = previewedCatalogItem;
-
-//     this.setState({
-//       previewBadgeText: "DATA PREVIEW LOADING..."
-//     });
-
-//     this.isZoomedToExtent = false;
-//     this.terriaPreview.currentViewer.zoomTo(this.terriaPreview.homeView);
-
-//     if (defined(this.removePreviewFromMap)) {
-//       this.removePreviewFromMap();
-//       this.removePreviewFromMap = undefined;
-//     }
-
-//     if (defined(this.rectangleCatalogItem)) {
-//       this.rectangleCatalogItem.isEnabled = false;
-//     }
-
-//     const previewed = previewedCatalogItem;
-//     if (previewed && defined(previewed.type) && previewed.isMappable) {
-//       const that = this;
-//       return when(previewed.load())
-//         .then(() => {
-//           // If this item has a separate now viewing item, load it before continuing.
-//           let nowViewingItem;
-//           let loadNowViewingItemPromise;
-//           if (defined(previewed.nowViewingCatalogItem)) {
-//             nowViewingItem = previewed.nowViewingCatalogItem;
-//             loadNowViewingItemPromise = when(nowViewingItem.load());
-//           } else {
-//             nowViewingItem = previewed;
-//             loadNowViewingItemPromise = when();
-//           }
-
-//           return loadNowViewingItemPromise.then(() => {
-//             // Now that the item is loaded, add it to the map.
-//             // Unless we've started previewing something else in the meantime!
-//             if (
-//               !that._unsubscribeErrorHandler ||
-//               previewed !== that.lastPreviewedCatalogItem
-//             ) {
-//               return;
-//             }
-
-//             if (defined(nowViewingItem.showOnSeparateMap)) {
-//               if (
-//                 defined(nowViewingItem.clock) &&
-//                 defined(nowViewingItem.clock.currentTime)
-//               ) {
-//                 that.terriaPreview.clock.currentTime =
-//                   nowViewingItem.clock.currentTime;
-//               }
-
-//               this._errorPreviewingCatalogItem = false;
-//               that.removePreviewFromMap = nowViewingItem.showOnSeparateMap(
-//                 that.terriaPreview.currentViewer
-//               );
-
-//               if (this._errorPreviewingCatalogItem) {
-//                 this.setState({
-//                   previewBadgeText: "NO PREVIEW AVAILABLE"
-//                 });
-//               } else if (that.removePreviewFromMap) {
-//                 this.setState({
-//                   previewBadgeText: "DATA PREVIEW"
-//                 });
-//               } else {
-//                 this.setState({
-//                   previewBadgeText: "NO PREVIEW AVAILABLE"
-//                 });
-//               }
-//             } else {
-//               this.setState({
-//                 previewBadgeText: "NO PREVIEW AVAILABLE"
-//               });
-//             }
-
-//             that.updateBoundingRectangle(previewed);
-//           });
-//         })
-//         .otherwise(err => {
-//           console.error(err);
-
-//           this.setState({
-//             previewBadgeText: "DATA PREVIEW ERROR"
-//           });
-//         });
-//     }
-//   },
-
-//   clickMap() {
-//     if (!defined(this.props.previewedCatalogItem)) {
-//       return;
-//     }
-
-//     this.isZoomedToExtent = !this.isZoomedToExtent;
-
-//     if (this.isZoomedToExtent) {
-//       const catalogItem = defaultValue(
-//         this.props.previewedCatalogItem.nowViewingCatalogItem,
-//         this.props.previewedCatalogItem
-//       );
-//       if (defined(catalogItem.rectangle)) {
-//         this.terriaPreview.currentViewer.zoomTo(catalogItem.rectangle);
-//       }
-//     } else {
-//       this.terriaPreview.currentViewer.zoomTo(this.terriaPreview.homeView);
-//     }
-
-//     this.updateBoundingRectangle(this.props.previewedCatalogItem);
-//   },

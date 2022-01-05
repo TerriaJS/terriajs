@@ -3,6 +3,7 @@ import combine from "terriajs-cesium/Source/Core/combine";
 import isDefined from "../../Core/isDefined";
 import JsonValue, { JsonObject } from "../../Core/Json";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
+import omit from "lodash-es/omit";
 
 export interface Options {
   id: string;
@@ -64,11 +65,10 @@ export default abstract class FunctionParameter<
   clearValue(strataId: string) {
     if (isDefined(this.catalogFunction.parameters?.[this.id])) {
       runInAction(() => {
-        delete this.catalogFunction.parameters![this.id];
         this.catalogFunction.setTrait(
           strataId,
           "parameters",
-          this.catalogFunction.parameters
+          omit(this.catalogFunction.parameters, this.id)
         );
       });
     }

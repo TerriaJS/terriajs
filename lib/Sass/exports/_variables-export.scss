@@ -29,6 +29,7 @@
   spacing: 5;
 
   frontComponentZIndex: $front-component-z-index;
+  notificationWindowZIndex: $notification-window-z-index;
 
   // ..radius? (no standardised radius at the moment, pull in as needed from variables
   radius40Button: 20;
@@ -40,20 +41,29 @@
 
   // Colours
   colorPrimary: $color-primary;
-  colorSplitter: $color-splitter;
+  colorSecondary: $color-secondary;
   textLight: $text-light; // essentially #fff until we sort out the colour palette from vic
-  textLightTranslucent: rgba($text-light, 0.5);
+  textLightTranslucent: rgba($text-light, 0.3);
   textLightDimmed: $text-light-dimmed;
   textDark: $text-dark;
   textDarker: $text-darker;
   textBlack: $text-black;
+  turquoiseBlue: $turquoise-blue;
   dark: $dark;
   darkWithOverlay: $dark-with-overlay;
+  darkLighter: $dark-lighter;
   grey: $grey;
   greyLighter: $grey-lighter;
   greyLighter2: $grey-lighter2;
   greyLightest: $grey-lightest;
   charcoalGrey: $charcoal-grey;
+
+  // Fonts
+  fontPop: $font-pop;
+  fontBase: $font-base;
+  fontMono: $font-mono;
+  fontFeatureInfo: $font-feature-info;
+  font: $font;
 
   modalBg: $modal-bg;
   modalText: $modal-text;
@@ -66,4 +76,18 @@
 
   trainerHeight: 64;
   workbenchWidth: 350;
+
+  toolPrimaryColor: $tool-primary-color;
+
+  // Branding
+  logoHeight: $logo-height;
+  logoPaddingVertical: 15px;
+  logoPaddingHorizontal: 5px;
+
+  logoSmallHeight: $input-height;
+  logoSmallPaddingHorizontal: 0;
+  logoSmallPaddingVertical: 5px;
+
+  inputHeight: $input-height;
+  inputHeightLarge: $input-height-large;
 }

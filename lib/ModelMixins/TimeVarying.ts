@@ -1,6 +1,6 @@
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import Model, { BaseModel } from "../Models/Model";
-import TimeVaryingTraits from "../Traits/TimeVaryingTraits";
+import Model, { BaseModel } from "../Models/Definition/Model";
+import TimeVaryingTraits from "../Traits/TraitsClasses/TimeVaryingTraits";
 
 interface TimeVarying extends Model<TimeVaryingTraits> {
   readonly currentTimeAsJulianDate: JulianDate | undefined;

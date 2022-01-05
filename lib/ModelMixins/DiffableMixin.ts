@@ -1,23 +1,73 @@
 import { computed } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Constructor from "../Core/Constructor";
-import Model from "../Models/Model";
-import { SelectableDimension } from "../Models/SelectableDimensions";
-import StratumOrder from "../Models/StratumOrder";
-import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
-import DiffableTraits from "../Traits/DiffableTraits";
-import ShowableTraits from "../Traits/ShowableTraits";
-import SplitterTraits from "../Traits/SplitterTraits";
+import createStratumInstance from "../Models/Definition/createStratumInstance";
+import LoadableStratum from "../Models/Definition/LoadableStratum";
+import Model, { BaseModel } from "../Models/Definition/Model";
+import StratumOrder from "../Models/Definition/StratumOrder";
+import { SelectableDimensionSelect } from "../Models/SelectableDimensions";
+import DiffableTraits from "../Traits/TraitsClasses/DiffableTraits";
+import LegendTraits from "../Traits/TraitsClasses/LegendTraits";
 import TimeFilterMixin from "./TimeFilterMixin";
 
-type MixinModel = Model<
-  DiffableTraits & ShowableTraits & CatalogMemberTraits & SplitterTraits
-> &
-  TimeFilterMixin.Instance;
+class DiffStratum extends LoadableStratum(DiffableTraits) {
+  static stratumName = "diffStratum";
+  constructor(readonly catalogItem: DiffableMixin.Instance) {
+    super();
+  }
 
-function DiffableMixin<T extends Constructor<MixinModel>>(Base: T) {
-  abstract class DiffableMixin extends Base {
-    abstract get styleSelectableDimensions(): SelectableDimension[] | undefined;
+  duplicateLoadableStratum(model: BaseModel): this {
+    return new DiffStratum(model as DiffableMixin.Instance) as this;
+  }
+
+  @computed
+  get legends() {
+    if (this.catalogItem.isShowingDiff && this.diffLegendUrl) {
+      const urlMimeType =
+        new URL(this.diffLegendUrl).searchParams.get("format") || undefined;
+      return [
+        createStratumInstance(LegendTraits, {
+          url: this.diffLegendUrl,
+          urlMimeType
+        })
+      ];
+    }
+    return undefined;
+  }
+
+  @computed
+  get diffLegendUrl() {
+    const diffStyleId = this.catalogItem.diffStyleId;
+    const firstDate = this.catalogItem.firstDiffDate;
+    const secondDate = this.catalogItem.secondDiffDate;
+    if (diffStyleId && firstDate && secondDate) {
+      return this.catalogItem.getLegendUrlForStyle(
+        diffStyleId,
+        JulianDate.fromIso8601(firstDate),
+        JulianDate.fromIso8601(secondDate)
+      );
+    }
+    return undefined;
+  }
+
+  @computed
+  get disableDateTimeSelector() {
+    return this.catalogItem.isShowingDiff;
+  }
+}
+
+function DiffableMixin<T extends Constructor<Model<DiffableTraits>>>(Base: T) {
+  abstract class DiffableMixin extends TimeFilterMixin(Base) {
+    constructor(...args: any[]) {
+      super(...args);
+
+      const diffStratum = new DiffStratum(this);
+      this.strata.set(DiffStratum.stratumName, diffStratum);
+    }
+
+    abstract get styleSelectableDimensions():
+      | SelectableDimensionSelect[]
+      | undefined;
 
     get hasDiffableMixin() {
       return true;
@@ -58,8 +108,7 @@ namespace DiffableMixin {
     return model?.hasDiffableMixin;
   }
 
-  export const diffStratumName = "diffStratum";
-  StratumOrder.addLoadStratum(diffStratumName);
+  StratumOrder.addLoadStratum(DiffStratum.stratumName);
 }
 
 export default DiffableMixin;
