@@ -4,6 +4,8 @@ Change Log
 #### next release (8.1.17)
 
 * Automatically cast property value to number in style expressions generated for 3d tiles filter.
+* Re-enable procedure and observable selectors for SOS items.
+* Fix broken "Ideal zoom" for TableMixin items.
 * [The next improvement]
 
 #### 8.1.16

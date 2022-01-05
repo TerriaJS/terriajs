@@ -255,7 +255,9 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     get disableZoomTo() {
       // Disable zoom if only showing imagery parts  (eg region mapping) and no rectangle is defined
       if (
-        !this.mapItems.find(m => m instanceof DataSource) &&
+        !this.mapItems.find(
+          m => m instanceof DataSource || m instanceof CustomDataSource
+        ) &&
         !isDefined(this.cesiumRectangle)
       ) {
         return true;
@@ -472,7 +474,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       if (this.mapItems.length === 0 && !this.enableManualRegionMapping) {
         return;
       }
-
       return {
         id: "activeStyle",
         name: "Display Variable",
