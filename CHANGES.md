@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.1.17)
 
+* Automatically cast property value to number in style expressions generated for 3d tiles filter.
 * Re-enable procedure and observable selectors for SOS items.
 * Fix broken "Ideal zoom" for TableMixin items.
 * [The next improvement]
@@ -10,6 +11,7 @@ Change Log
 #### 8.1.16
 
 * Added region mapping support for Commonwealth Electoral Divisions as at 2 August 2021 (AEC) as com_elb_name_2021.
+* Upgrade compiler target from es2018 to es2019
 
 #### 8.1.15
 
