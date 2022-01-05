@@ -440,7 +440,13 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       }
 
       if (!isDefined(style.color)) {
-        style.color = "color('white', ${opacity})";
+        // Some tilesets (eg. point clouds) have a ${COLOR} variable which stores the current color of a feature, so if we have that, we should use it, and only change the opacity
+        // We have to do it component-wise because... well, I'm not entirely sure, but when I did it non-component wise I started getting weird type errors when the shaders compiled
+        style.color =
+          "rgba((${COLOR}.r === undefined ? 1 : ${COLOR}.r) * 255, " +
+          "(${COLOR}.g === undefined ? 1 : ${COLOR}.g) * 255, " +
+          "(${COLOR}.b === undefined ? 1 : ${COLOR}.b) * 255, " +
+          "${COLOR}.a === undefined ? ${opacity} : ${COLOR}.a * ${opacity})";
       } else if (typeof style.color == "string") {
         // Check if the color specified is just a css color
         const cssColor = Color.fromCssColorString(style.color);
