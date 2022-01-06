@@ -6,7 +6,7 @@ import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
-import OpacityTrait from "../OpacityTrait";
+import OpacityTraits from "./OpacityTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import ClippingPlanesTraits from "./ClippingPlanesTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
@@ -111,7 +111,7 @@ export default class Cesium3DTilesTraits extends mixTraits(
   UrlTraits,
   CatalogMemberTraits,
   ShadowTraits,
-  OpacityTrait,
+  OpacityTraits,
   LegendOwnerTraits,
   ShadowTraits,
   ClippingPlanesTraits

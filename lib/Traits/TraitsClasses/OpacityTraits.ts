@@ -1,7 +1,7 @@
-import primitiveTrait from "./Decorators/primitiveTrait";
-import ModelTraits from "./ModelTraits";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import ModelTraits from "../ModelTraits";
 
-export default class OpacityTrait extends ModelTraits {
+export default class OpacityTraits extends ModelTraits {
   @primitiveTrait({
     type: "number",
     name: "Opacity",

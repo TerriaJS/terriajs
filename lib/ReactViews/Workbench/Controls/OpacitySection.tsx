@@ -8,7 +8,7 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import hasTraits from "../../../Models/Definition/hasTraits";
-import OpacityTrait from "../../../Traits/OpacityTrait";
+import OpacityTraits from "../../../Traits/TraitsClasses/OpacityTraits";
 import Styles from "./opacity-section.scss";
 
 interface OpacitySectionProps extends WithTranslation {
@@ -19,7 +19,7 @@ interface OpacitySectionProps extends WithTranslation {
 class OpacitySection extends React.Component<OpacitySectionProps> {
   changeOpacity(value: number) {
     const item = this.props.item;
-    if (hasTraits(item, OpacityTrait, "opacity")) {
+    if (hasTraits(item, OpacityTraits, "opacity")) {
       runInAction(() => {
         item.setTrait(CommonStrata.user, "opacity", value / 100.0);
       });
@@ -30,8 +30,8 @@ class OpacitySection extends React.Component<OpacitySectionProps> {
     const item = this.props.item;
     const { t } = this.props;
     if (
-      !hasTraits(item, OpacityTrait, "opacity") ||
-      (hasTraits(item, OpacityTrait, "disableOpacityControl") &&
+      !hasTraits(item, OpacityTraits, "opacity") ||
+      (hasTraits(item, OpacityTraits, "disableOpacityControl") &&
         item.disableOpacityControl)
     ) {
       return null;

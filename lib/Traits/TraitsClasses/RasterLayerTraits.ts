@@ -2,7 +2,7 @@ import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
-import OpacityTrait from "../OpacityTrait";
+import OpacityTraits from "./OpacityTraits";
 import SplitterTraits from "./SplitterTraits";
 
 export class TileErrorHandlingTraits extends ModelTraits {
@@ -39,7 +39,7 @@ export class TileErrorHandlingTraits extends ModelTraits {
 }
 
 export default class RasterLayerTraits extends mixTraits(
-  OpacityTrait,
+  OpacityTraits,
   SplitterTraits
 ) {
   @primitiveTrait({
