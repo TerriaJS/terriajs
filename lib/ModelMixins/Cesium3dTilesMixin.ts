@@ -440,8 +440,11 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       }
 
       if (!isDefined(style.color)) {
-        // Some tilesets (eg. point clouds) have a ${COLOR} variable which stores the current color of a feature, so if we have that, we should use it, and only change the opacity
-        // We have to do it component-wise because... well, I'm not entirely sure, but when I did it non-component wise I started getting weird type errors when the shaders compiled
+        // Some tilesets (eg. point clouds) have a ${COLOR} variable which stores the current color of a feature, so if
+        // we have that, we should use it, and only change the opacity.
+        // We have to do it component-wise because... well, I'm not entirely sure, but when I did it non-component-wise
+        // I started getting weird type errors when the shaders compiled. If you enjoy debugging dynamically generated
+        // shaders in the browser in the service of a marginal improvement to code brevity, this one's for you!
         style.color =
           "rgba((${COLOR}.r === undefined ? 1 : ${COLOR}.r) * 255, " +
           "(${COLOR}.g === undefined ? 1 : ${COLOR}.g) * 255, " +
