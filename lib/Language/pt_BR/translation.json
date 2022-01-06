@@ -34,7 +34,7 @@
       "content": "## Comparar\n\nUm recurso poderoso do Terria é a capacidade de comparar conjuntos de dados usando uma exibição de tela dividida. Para conjuntos de dados com um componente de série temporal, como imagens de satélite, você pode comparar datas anteriores e posteriores clicando no seletor de datas."
     },
     "exploreMapDataButton": {
-      "content": "## Explorar dados do mapa\n\nNavegue pelo catálogo de dados disponíveis e adicione ao mapa aqui. Você pode adicionar vários conjuntos de dados a qualquer momento e os verá listados abaixo no Workbench."
+      "content": "## Explorar dados\n\nNavegue pelo catálogo de dados disponíveis e adicione ao mapa aqui. Você pode adicionar vários conjuntos de dados a qualquer momento e os verá listados abaixo no Painel."
     }
   },
   "general": {
@@ -393,11 +393,11 @@
     "titleII": "Onde estão minhas imagens de satélite?",
     "bodyII": "Pode ser necessário ajustar o nível de zoom para tornar as imagens de satélite visíveis no mapa.",
     "titleV": "Como vejo imagens em falsa cor?",
-    "bodyV": "Você pode aplicar uma variedade de estilos, como falsa cor, a imagens de satélite clicando nos estilos suspensos na bancada de trabalho.",
+    "bodyV": "Você pode aplicar uma variedade de estilos, como falsa cor, a imagens de satélite clicando nos estilos suspensos no painel.",
     "prevI": "Não, obrigado",
     "titleIII": "Carregando imagens históricas",
-    "bodyIII": "Em sua bancada de trabalho, clique na lista suspensa de data de captura e selecione entre as datas disponíveis para carregar imagens históricas.",
-    "bodyIV": "Imagens de satélite podem nem sempre estar disponíveis no seu horário e localização preferidos. Se você quiser apenas visualizar imagens para um determinado local, clique em 'filtrar por localização' em sua bancada de trabalho.",
+    "bodyIII": "Em seu Painel, clique na lista suspensa de data de captura e selecione entre as datas disponíveis para carregar imagens históricas.",
+    "bodyIV": "Imagens de satélite podem nem sempre estar disponíveis no seu horário e localização preferidos. Se você quiser apenas visualizar imagens para um determinado local, clique em 'filtrar por localização' em seu painel.",
     "titleIV": "Filtrando imagens por localização"
   },
   "feedback": {
@@ -441,8 +441,8 @@
       "confirmText": "sim",
       "denyText": "Talvez mais tarde"
     },
-    "hideWorkbench": "Ocultar bancada de trabalho",
-    "showWorkbench": "Mostrar bancada de trabalho"
+    "hideWorkbench": "Ocultar Painel",
+    "showWorkbench": "Mostrar Painel"
   },
   "preview": {
     "accessConstraints": "Restrições de acesso",
@@ -522,27 +522,27 @@
     "opacity": "Opacidade: {{opacity}}%",
     "openFeatureTitle": "Zoom para dados",
     "showMoreActionsTitle": "Mostrar mais ações",
-    "previewItemTitle": "Sobre estes dados",
+    "previewItemTitle": "Sobre dados",
     "toggleVisibility": "Mostrar/ocultar dados",
-    "addItemErrorTitle": "O item do catálogo não pôde ser adicionado ao ambiente de trabalho.",
+    "addItemErrorTitle": "O item não pôde ser adicionado ao painel.",
     "dimensionsSelector": {
       "undefinedLabel": "Não especificado"
     },
-    "zoomToTitle": "Amplie até a extensão",
+    "zoomToTitle": "Extensão total",
     "zoomTo": "Zoom Ideal",
     "previewItem": "Sobre Dados",
     "splitItemTitle": "Duplicar e mostrar divisor",
     "splitItem": "Comparar",
-    "diffImageTitle": "Veja as diferenças de imagem entre duas datas",
+    "diffImageTitle": "Veja diferenças de imagem entre duas datas",
     "diffImage": "Diferença",
-    "exportDataTitle": "Exportar dados do mapa",
+    "exportDataTitle": "Exportar dados",
     "exportData": "Exportar",
     "removeFromMapTitle": "Remova estes dados",
     "removeFromMap": "Remover",
-    "label": "Conjuntos de dados",
-    "removeAll": "Remover todos",
-    "collapseAll": "Recolher todos",
-    "expandAll": "Expandir todos",
+    "label": "Dados",
+    "removeAll": "Remover",
+    "collapseAll": "Recolher",
+    "expandAll": "Expandir",
     "addItemErrorMessage": "Ocorreu um erro ao carregar o item do catálogo.",
     "searchItem": "Procurar",
     "searchItemTitle": "Procurar"
@@ -610,10 +610,10 @@
     "copy": "Copiar"
   },
   "emptyWorkbench": {
-    "helpfulHintsThree": "No ambiente de trabalho, você pode ativar e desativar os conjuntos de dados, alterar sua opacidade, ativar a comparação de tela dividida, alterar estilos e navegar por datas e horas, se os dados suportarem essa funcionalidade.",
-    "helpfulHintsOne": "Navegue pelos dados disponíveis selecionando 'Explorar dados do mapa' ou clique em 'Carregar' para adicionar seus próprios dados ao mapa.",
-    "helpfulHintsTwo": "Depois de adicionar dados ao mapa, seus conjuntos de dados ativos são listados aqui em sua bancada. O workbench o ajudará a interagir com os dados.",
-    "emptyArea": "Sua bancada está vazia",
+    "helpfulHintsThree": "No painel você pode ativar e desativar os conjuntos de dados, alterar opacidade, ativar a comparação em tela dividida, alterar estilos e navegar por datas e horas, se os dados suportarem essa funcionalidade.",
+    "helpfulHintsOne": "Navegue pelos dados disponíveis selecionando 'Explorar dados' ou clique em 'Carregar' para adicionar seus próprios dados ao mapa.",
+    "helpfulHintsTwo": "Após adicionar dados ao mapa, seus conjuntos de dados ativos são listados aqui em seu painel. O painel o ajudará a interagir com os dados.",
+    "emptyArea": "Seu painel está vazio",
     "helpfulHints": "Dicas úteis"
   },
   "catalogItem": {
@@ -739,7 +739,7 @@
   "loader": {
     "loadingMessage": "Carregando"
   },
-  "emptyWorkbenchMessage": "<0> <0> Sua bancada de trabalho está vazia </0> <1> <strong> Clique em '$t(addData.addDataBtnText)' acima para </strong> </1> <2> <0> Navegar no Catálogo de Dados </0> <1> Carregue seus próprios dados no mapa </1> </2> <3> <0> </0> <strong> DICA. </strong> <2> Todos os seus conjuntos de dados ativos serão listados aqui < / 2> </3> </0>",
+  "emptyWorkbenchMessage": "<0> <0> Seu painel está vazio </0> <1> <strong> Clique em '$t(addData.addDataBtnText)' acima para </strong> </1> <2> <0> Navegar no Catálogo </0> <1> Carregue seus próprios dados no mapa </1> </2> <3> <0> </0> <strong> DICA. </strong> <2> Todos os seus conjuntos ativos serão listados aqui < / 2> </3> </0>",
   "dataCatalog": {
     "groupRemove": "remover este grupo",
     "groupEmpty": "Este grupo está vazio"
