@@ -237,7 +237,10 @@
     "urlInputBtn": "Adicionar",
     "localTitle": "Adicionar dados locais",
     "dragDrop": "Arrastar e Soltar",
-    "browse": "Navegar..."
+    "browse": "Navegar...",
+    "infoText": "<0> Arraste e solte um arquivo aqui para visualizá-lo localmente no mapa </0> <1> (ele não será salvo ou enviado para a internet) </1>",
+    "back": "Voltar",
+    "note": "<0> Nota: </0> Os dados adicionados desta forma não são salvos ou tornados visíveis para outras pessoas."
   },
   "languagePanel": {
     "changeLanguage": "Alterar Idioma"
@@ -440,5 +443,305 @@
     },
     "hideWorkbench": "Ocultar bancada de trabalho",
     "showWorkbench": "Mostrar bancada de trabalho"
+  },
+  "preview": {
+    "accessConstraints": "Restrições de acesso",
+    "author": "Autor",
+    "resourceDescription": "Descrição do Recurso",
+    "dataPreview": "VISUALIZAÇÃO DE DADOS",
+    "previewItemErrorTitle": "Não foi possível visualizar o item do catálogo.",
+    "doesNotContainGeospatialData": "Este arquivo não contém dados geoespaciais.",
+    "noPreviewAvailable": "SEM PRÉ-VISUALIZAÇÃO DISPONÍVEL",
+    "dataPreviewLoading": "CARREGAMENTO DE VISUALIZAÇÃO DE DADOS...",
+    "selectToPreview": "<0> Selecione um conjunto de dados para ver uma visualização </0> <1> - OU - </1> <2> Vá para o mapa </2>",
+    "serviceDescription": "Descrição do Serviço",
+    "loading": "CARREGAMENTO DE PRÉ-VISUALIZAÇÃO...",
+    "preview": "Visualização de {{appName}}",
+    "datasetDescription": "Descrição do conjunto de dados",
+    "previewItemErrorMessage": "Ocorreu um erro ao carregar o item do catálogo.",
+    "created": "Criado",
+    "modified": "Modificado",
+    "dataCustodian": "Custodiante de Dados",
+    "dataPreviewError": "ERRO DE VISUALIZAÇÃO DE DADOS",
+    "removeFromMap": "Remover do mapa",
+    "addToMap": "Adicionar ao mapa",
+    "disclaimer": "Isenção de responsabilidade",
+    "dataDescription": "descrição de dados",
+    "licence": "Licença",
+    "fees": "Taxas",
+    "contact": "Contato",
+    "updateFrequency": "Frequência de atualização",
+    "mayBeExperiencingIssues": "Este conjunto de dados pode estar com problemas no momento"
+  },
+  "mobile": {
+    "toggleNavigation": "alternar navegação",
+    "addDataBtnText": "Dados",
+    "doneBtnText": "Feito"
+  },
+  "search": {
+    "searchCatalogue": "Pesquise o catálogo",
+    "viewMore": "Ver mais resultados de {{name}}",
+    "placeholder": "Procure por locais",
+    "resultsLabel": "Resultados da pesquisa",
+    "done": "Feito",
+    "data": "Dados",
+    "searchInDataCatalog": "Pesquise <1> '{{locationSearchText}}' </1> no Catálogo de Dados",
+    "search": "Pesquise '{{searchText}}' no Catálogo de Dados",
+    "viewLess": "Ver menos resultados de {{name}}"
+  },
+  "description": {
+    "dataUrl": "Links de dados",
+    "name": "Descrição",
+    "dataLocal": "Este arquivo existe apenas no seu navegador. Para compartilhá-lo, você deve carregá-lo em um servidor web público.",
+    "dataNotLocal": "Entre em contato com o fornecedor desses dados para obter mais informações, incluindo informações sobre direitos e restrições de uso.",
+    "wfs": "Este é um <1> serviço WFS </1>, que transfere dados espaciais brutos mediante solicitação. Ele pode ser usado em software GIS com este URL:",
+    "metadataUrls": "Links de metadados",
+    "wms": "Este é um <1> serviço WMS </1>, que gera imagens de mapas mediante solicitação. Ele pode ser usado em software GIS com este URL:",
+    "typeName": "Nome do tipo",
+    "layerName": "Nome da camada",
+    "useTheLinkToDownload": "Use o link abaixo para baixar os dados diretamente.",
+    "downloadData": "Baixar dados",
+    "useLinkBelow": "Use o link abaixo para baixar os dados. Consulte o {{link}} para obter mais informações sobre como personalizar os parâmetros de consulta de URL.",
+    "downloadInFormat": "Baixe os dados selecionados no formato {{format}}",
+    "downloadNotSupported": "Infelizmente, seu navegador não suporta a funcionalidade necessária para baixar esses dados como um arquivo. Use o Chrome, Firefox ou Safari para baixar esses dados.",
+    "dataSourceDetails": "Detalhes da fonte de dados",
+    "dataServiceDetails": "Detalhes do serviço de dados",
+    "dataCustodian": "Custodiante de Dados"
+  },
+  "workbench": {
+    "colorScaleRangeMax": "O valor máximo deve ser um número.",
+    "colorScaleRangeTitle": "Faixa de escala de cores inválidas",
+    "colorScaleRangeMin": "O valor mínimo deve ser um número.",
+    "colorScaleUpdateRange": "Faixa de atualização",
+    "displayPercent": "Exibir como uma porcentagem do total regional",
+    "colorScaleRange": "Faixa de escala de cores",
+    "rangeMax": "Máximo:",
+    "openFeature": "Zoom para",
+    "colorScaleRangeMinSmallerThanMax": "O valor mínimo do intervalo da escala de cores deve ser menor que o valor máximo.",
+    "rangeMin": "Mínimo:",
+    "opacity": "Opacidade: {{opacity}}%",
+    "openFeatureTitle": "Zoom para dados",
+    "showMoreActionsTitle": "Mostrar mais ações",
+    "previewItemTitle": "Sobre estes dados",
+    "toggleVisibility": "Mostrar/ocultar dados",
+    "addItemErrorTitle": "O item do catálogo não pôde ser adicionado ao ambiente de trabalho.",
+    "dimensionsSelector": {
+      "undefinedLabel": "Não especificado"
+    },
+    "zoomToTitle": "Amplie até a extensão",
+    "zoomTo": "Zoom Ideal",
+    "previewItem": "Sobre Dados",
+    "splitItemTitle": "Duplicar e mostrar divisor",
+    "splitItem": "Comparar",
+    "diffImageTitle": "Veja as diferenças de imagem entre duas datas",
+    "diffImage": "Diferença",
+    "exportDataTitle": "Exportar dados do mapa",
+    "exportData": "Exportar",
+    "removeFromMapTitle": "Remova estes dados",
+    "removeFromMap": "Remover",
+    "label": "Conjuntos de dados",
+    "removeAll": "Remover todos",
+    "collapseAll": "Recolher todos",
+    "expandAll": "Expandir todos",
+    "addItemErrorMessage": "Ocorreu um erro ao carregar o item do catálogo.",
+    "searchItem": "Procurar",
+    "searchItemTitle": "Procurar"
+  },
+  "dateTime": {
+    "useTimeline": "Use a linha do tempo",
+    "timeline": {
+      "textCell": "Nome do conjunto de dados cujo intervalo de tempo é mostrado",
+      "gotoStart": "Vá para o começo",
+      "togglePlay": "Toque",
+      "playSlower": "Toque mais devagar",
+      "playFaster": "Toque mais rápido"
+    },
+    "next": "Próxima vez",
+    "selectorLabel": "Tempo:",
+    "back": "Voltar",
+    "previous": "Vez anterior",
+    "selectTime": "Selecione um horário",
+    "outOfRange": "Atualmente fora de alcance.",
+    "availableTimeChart": "Mostrar horários disponíveis no gráfico"
+  },
+  "timer": {
+    "nextScheduledUpdateTime": "Próxima atualização de dados em {{scheduledUpdateTime}}",
+    "nextScheduledUpdateCountdown": "Próxima atualização de dados em {{timeCountdown}}"
+  },
+  "chart": {
+    "noData": "Não foram encontrados dados gráficos.",
+    "sectionLabel": "Gráficos",
+    "closePanel": "Fechar painel",
+    "expand": "Expandir",
+    "download": "Baixar",
+    "loading": "Carregando dados do gráfico ..."
+  },
+  "terriaViewer": {
+    "slowWebGLAvailableMessage": "Seu navegador da web informa que tem problemas de desempenho exibindo {{appName}} em 3D, então você verá uma experiência limitada, apenas 2D. Para a experiência 3D completa, tente usar um navegador da web diferente, atualizando seus drivers de vídeo ou atualizando seu sistema operacional.",
+    "slowWebGLAvailableTitle": "Baixo desempenho WebGL",
+    "slowWebGLAvailableMessageII": "{{appName}} funciona melhor com um navegador web que suporta {{webGL}} incluindo as versões mais recentes de {{chrome}}, {{firefox}}, {{safari}} e {{internetExplorer}}. Seu navegador web não parece suportar o WebGL, então você verá uma experiência limitada apenas em 2D.",
+    "webGLNotSupportedOrSlowMessage": "Seu navegador da web não pode exibir o mapa em 3D porque não oferece suporte a WebGL ou porque o navegador da web relatou que o WebGL ficará extremamente lento. Tente um navegador da web diferente, como a versão mais recente de {{chrome}}, {{firefox}}, {{safari}}, {{internetExplorer}}. Em alguns casos, pode ser necessário atualizar o driver de vídeo ou sistema operacional do seu computador para obter o Visualização 3D em {{appName}}.",
+    "internetExplorer": "Internet Explorer 11",
+    "chrome": "Google Chrome",
+    "firefox": "Mozilla Firefox",
+    "safari": "Apple Safari",
+    "webGLNotSupportedTitle": "WebGL não suportado",
+    "webGLNotSupportedOrSlowTitle": "WebGL não compatível ou muito lento"
+  },
+  "concept": {
+    "summary": {
+      "addFirstText": "Adicionar nova condição",
+      "addMoreText": "Adicione uma condição"
+    },
+    "active": {
+      "edit": "Editar condição",
+      "remove": "Remover condição"
+    },
+    "inactive": {
+      "cancel": "Cancelar",
+      "newText": "Nova condição"
+    }
+  },
+  "clipboard": {
+    "success": "Copiado para a área de transferência",
+    "shareURL": "Compartilhar URL",
+    "shareExplanation": "Qualquer pessoa com este URL poderá acessar este mapa.",
+    "unsuccessful": "Falha ao copiar ...",
+    "copy": "Copiar"
+  },
+  "emptyWorkbench": {
+    "helpfulHintsThree": "No ambiente de trabalho, você pode ativar e desativar os conjuntos de dados, alterar sua opacidade, ativar a comparação de tela dividida, alterar estilos e navegar por datas e horas, se os dados suportarem essa funcionalidade.",
+    "helpfulHintsOne": "Navegue pelos dados disponíveis selecionando 'Explorar dados do mapa' ou clique em 'Carregar' para adicionar seus próprios dados ao mapa.",
+    "helpfulHintsTwo": "Depois de adicionar dados ao mapa, seus conjuntos de dados ativos são listados aqui em sua bancada. O workbench o ajudará a interagir com os dados.",
+    "emptyArea": "Sua bancada está vazia",
+    "helpfulHints": "Dicas úteis"
+  },
+  "catalogItem": {
+    "removeFromMap": "Remover do mapa",
+    "privateIndicatorTitle": "Conjunto de dados privado",
+    "loading": "Carregando...",
+    "remove": "Remover",
+    "add": "Adicionar",
+    "trash": "Remover do catálogo",
+    "preview": "Visualizar"
+  },
+  "viewModels": {
+    "searchNoLocations": "Nenhum local corresponde à sua consulta de pesquisa.",
+    "inDataCatalogue": "No Catálogo de Dados",
+    "searchErrorOccurred": "Ocorreu um erro durante a pesquisa. Verifique sua conexão com a Internet ou tente novamente mais tarde.",
+    "searchAddresses": "Endereços",
+    "searchPlaceNames": "Nomes oficiais de lugares",
+    "searchNoPlaceNames": "Desculpe, nenhum nome oficial de lugar corresponde à consulta de pesquisa.",
+    "searchLocations": "Locais",
+    "searchCatalogueItem": "Itens do Catálogo",
+    "searchNoCatalogueItem": "Desculpe, nenhum item do catálogo corresponde à sua consulta de pesquisa.",
+    "inMultipleLocations": "Em vários locais, incluindo: "
+  },
+  "core": {
+    "dataType": {
+      "kml": "KML ou KMZ",
+      "czml": "CZML",
+      "shp": "Shapefile (zip)",
+      "sdmx-group": "SDMX-JSON",
+      "geojson": "GeoJSON",
+      "open-street-map": "Servidor Open Street Map",
+      "gpx": "GPX",
+      "geoRss": "GeoRSS",
+      "csv": "CSV",
+      "carto": "Carto",
+      "auto": "Detecção automática (recomendada)",
+      "wms-group": "Servidor do Serviço de Mapas Web (WMS)",
+      "wmts-group": "Servidor Web Map Tile Service (WMTS)",
+      "wfs-group": "Servidor WFS (Web Feature Service, serviço de recursos da Web)",
+      "wps-getCapabilities": "Servidor WPS (Web Processing Service, serviço de processamento web)",
+      "esri-group": "Servidor Esri ArcGIS",
+      "esri-mapServer": "Esri ArcGIS MapServer (camada única)",
+      "esri-featureServer": "Esri ArcGIS FeatureServer (camada única)",
+      "3d-tiles": "3D Tiles",
+      "opendatasoft-group": "Portal Opendatasoft",
+      "json": "JSON",
+      "gltf": "GLTF",
+      "other": "Outro (usar serviço de conversão)"
+    },
+    "printWindow": {
+      "onbeforeprint": "onbeforeprint",
+      "onafterprint": "onafterprint",
+      "errorTitle": "Erro ao imprimir",
+      "errorMessage": "A impressão não começou em 10 segundos. Talvez este navegador não suporte a impressão?",
+      "printMediaStart": "início da mídia de impressão",
+      "printMediaEnd": "fim da mídia impressa"
+    },
+    "consoleAnalytics": {
+      "logStartedWithGAParameters": "ConsoleAnalytics foi iniciado, mas uma chave `googleAnalyticsKey` ou` googleAnalyticsOptions` foi observada em `userParameters`",
+      "started": "O ConsoleAnalytics foi iniciado.",
+      "startedNoLogToConsole": "O ConsoleAnalytics foi iniciado, porém `userParameters.logToConsole` não foi definido ou configurado como falso."
+    },
+    "dataUri": {
+      "errorMessage": "Infelizmente, os navegadores da Microsoft (incluindo todas as versões do Internet Explorer e Edge) não oferecem suporte à funcionalidade de uri de dados necessária para baixar dados como um arquivo. Para fazer o download, copie o seguinte uri em outro navegador, como Chrome, Firefox ou Safari: {{href}}",
+      "errorTitle": "O navegador não suporta download de dados"
+    },
+    "googleAnalytics": {
+      "log": "O rastreamento do Google Analytics está desativado porque terria.configParameters.googleAnalyticsKey não foi especificado",
+      "logEnabledOnDevelopment": "O Google Analytics foi inicializado em um ambiente de `desenvolvimento`"
+    },
+    "readText": {
+      "fileRequired": "arquivo é necessário"
+    },
+    "terriaError": {
+      "defaultTitle": "Um erro ocorreu",
+      "defaultMessage": "Erro desconhecido",
+      "defaultCombineTitle": "Vários erros ocorreram",
+      "defaultCombineMessage": "Detalhes dos erros estão abaixo",
+      "networkRequestTitle": "Ocorreu um erro de solicitação de rede"
+    },
+    "readXml": {
+      "xmlError": "O arquivo não contém XML válido."
+    },
+    "serverConfig": {
+      "failedToGet": "Falha ao obter a configuração do servidor de {{serverConfigUrl}}. Isso significa que serviços como proxy, conversão e redução de URL podem não funcionar."
+    },
+    "errors": {
+      "tooDeepAddedByUser": "Atingiu 100 itens de catálogo ao verificar AddedByUser e pousou em ID: \"{{memberId}}\"? Verifique se você não tem um grupo de catálogo recursivo."
+    },
+    "userAddedData": "Dados adicionados pelo usuário",
+    "chartData": "Dados do gráfico"
+  },
+  "analytics": {
+    "point": "Ponto (lat/lon)",
+    "polygon": "Polígono",
+    "selectLocation": "Selecione a localização",
+    "existingPolygon": "Polígono Existente",
+    "nothingSelected": "Nada foi selecionado, por favor, use os botões acima para fazer uma seleção.",
+    "runAnalysis": "Executar Análise",
+    "clickToDrawLine": "Clique para desenhar uma linha",
+    "enterValidCoords": "Insira coordenadas válidas (por exemplo, 131.0361, -25.3450).",
+    "selectPoint": "Selecione um ponto clicando no mapa.",
+    "clickToDrawPolygon": "Clique para desenhar o polígono",
+    "shiftToDrawRectangle": "Pressione a tecla SHIFT e segure o botão esquerdo do mouse para desenhar um retângulo",
+    "clickToDrawRectangle": "Clique para desenhar o retângulo",
+    "selectedPolygon": "Polígono Selecionado",
+    "regionName": "Nome da região",
+    "selectExistingPolygon": "Selecione o polígono existente"
+  },
+  "satellite": {
+    "pickPoint": "Selecione um ponto clicando no mapa.",
+    "querying": "Consultando posição ...",
+    "filterByLocation": "Filtrar por localização",
+    "infoGroup": "Mostrando apenas os tempos de captura disponíveis para:",
+    "removeFilter": "Remover filtro",
+    "zoomTo": "Zoom para",
+    "newLocation": "Nova localização"
+  },
+  "dragDrop": {
+    "text": "<0> Arraste e solte </0> <1> Seus dados em qualquer lugar para visualizar no mapa <1>",
+    "not": "<0> bbbb </0>"
+  },
+  "loader": {
+    "loadingMessage": "Carregando"
+  },
+  "emptyWorkbenchMessage": "<0> <0> Sua bancada de trabalho está vazia </0> <1> <strong> Clique em '$t(addData.addDataBtnText)' acima para </strong> </1> <2> <0> Navegar no Catálogo de Dados </0> <1> Carregue seus próprios dados no mapa </1> </2> <3> <0> </0> <strong> DICA. </strong> <2> Todos os seus conjuntos de dados ativos serão listados aqui < / 2> </3> </0>",
+  "dataCatalog": {
+    "groupRemove": "remover este grupo",
+    "groupEmpty": "Este grupo está vazio"
   }
 }
