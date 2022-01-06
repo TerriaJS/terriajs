@@ -6,6 +6,10 @@ Change Log
 * Automatically cast property value to number in style expressions generated for 3d tiles filter.
 * Re-enable procedure and observable selectors for SOS items.
 * Fix broken "Ideal zoom" for TableMixin items.
+- The opacity of 3d tiles can now be changed with the opacity slider in the workbench
+- RasterLayerTraits and Cesium3dTilesTraits now share the newly created OpacityTraits
+- `disableOpacityControl` is now a trait and can be set in the catalog.
+- TSXified OpacitySection
 * [The next improvement]
 
 #### 8.1.16
