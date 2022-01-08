@@ -1284,7 +1284,15 @@
       "serviceResponseErrorMessage": "TerriaJsonCatalogFunction deveria receber uma string JSON, recebeu {{xhr}}",
       "name": "Função de Catálogo Terria JSON",
       "misconfiguredErrorTitle": "Arquivo init mal configurado",
-      "misconfiguredError2Message": "A configuração HTTP 202 {{url}} não está presente na resposta {{xhr}}"
+      "misconfiguredError2Message": "A configuração HTTP 202 {{url}} não está presente na resposta {{xhr}}",
+      "disclaimer": "Isenção de responsabilidade",
+      "loadingInitSourceErrorMessage": "Erro ao carregar a fonte de inicialização {{fragment}} porque nenhum initFragmentPaths foi definido.",
+      "requestFailedTitle": "Falha na solicitação",
+      "requestFailedMessage": "A solicitação falhou com o código de status {{status}}.",
+      "asyncResultDescription": "Este é o resultado da chamada do processo ou serviço {{name}} em {{timestamp}} com os parâmetros de entrada abaixo.",
+      "loadingInitSourceErrorTitle": "Erro ao carregar a fonte de inicialização",
+      "loadingInitSourceError2Message": "Ocorreu um erro ao carregar as informações de inicialização de:\n* `{{loadSource}}` *.",
+      "buttonTitleConfirm": "Eu concordo"
     },
     "shapefile": {
       "name": "Shapefile"
@@ -1341,6 +1349,240 @@
     "terrainCatalog": {
       "notSupportedErrorTitle": "Não compatível com 2D",
       "notSupportedErrorMessage": "{{name}} não pode ser mostrado na vista 2D. Mude para 3D e tente novamente"
+    },
+    "userDrawing": {
+      "pointEntities": "Pontos",
+      "anotherPoint": "Outro ponto",
+      "otherEntities": "Linhas e polígonos",
+      "line": "Linha",
+      "firstPoint": "Primeiro Ponto",
+      "clickToAddFirstPoint": "Clique para adicionar um ponto",
+      "userPolygon": "Polígono do usuário",
+      "btnCancel": "Cancelar",
+      "devError": "A instância Terria é necessária.",
+      "messageHeader": "Desenhar no mapa",
+      "btnDone": "Ok",
+      "clickToAddAnotherPoint": "Clique para adicionar outro ponto"
+    },
+    "webProcessingServiceCatalogGroup": {
+      "accessConstraints": "Restrições de Acesso ao Serviço de Processamento Web",
+      "abstract": "Descrição do Serviço de Processamento Web",
+      "typeName": "Servidor do Serviço de Processamento Web (WPS)",
+      "missingUrlTitle": "Incapaz de carregar GetCapabilities",
+      "missingUrlMessage": "Não foi possível carregar o documento GetCapabilities do Web Processing Service (WPS) porque o item do catálogo não tem um `url`.",
+      "invalidServerMessage": "Ocorreu um erro ao invocar GetCapabilities no servidor WPS. A resposta do servidor não parece ser um documento GetCapabilities válido.",
+      "fees": "Taxas do Serviço de Processamento Web",
+      "invalidCapabilitiesTitle": "GetCapabilities inválida",
+      "invalidCapabilitiesMessage": "O URL {{url}} foi recuperado com êxito, mas não parece ser um documento GetCapabilities válido do Web Processing Service (WPS).\n\nO arquivo de catálogo foi configurado incorretamente ou o endereço do servidor foi alterado.",
+      "invalidServerTitle": "Servidor WPS inválido",
+      "providerName": "Nome do provedor de serviços de processamento web",
+      "providerSite": "Site do Provedor de Serviços de Processamento Web"
+    },
+    "webMapServiceCatalogItem": {
+      "missingDataTitle": "Dados ausentes",
+      "getCapabilitiesUrl": "URL GetCapabilities",
+      "serviceContact": "Contato de serviço",
+      "missingDataMessage": "O conjunto de dados WMS '{{name}}' não retornou nenhum dado. {{line}} {{line}} O arquivo de catálogo foi configurado incorretamente ou o endereço do servidor foi alterado.",
+      "wms": "Serviço de mapas da web (WMS)",
+      "dataDescription": "Descrição dos dados",
+      "serviceDescription": "Descrição do Serviço",
+      "metadataUrls": "Links de metadados",
+      "accessConstraints": "Restrições de acesso",
+      "defaultStyleLabel": "Estilo padrão",
+      "noLayerFoundTitle": "Nenhuma camada encontrada",
+      "noLayerFoundMessage": "O conjunto de dados WMS '{{name}}' não tem camadas correspondentes a '{{layers}}'. {{suggested}} {{line}} {{line}} O arquivo de catálogo foi configurado incorretamente ou o servidor WMS foi alterado.",
+      "badlyFormatedTitle": "Periodicidade mal formatada",
+      "badlyFormatedMessage": "O conjunto de dados '{{name}}' tem uma periodicidade mal formada, '{{isoSegments}}'. Clique no botão Informações do conjunto de dados para obter mais informações sobre o conjunto de dados e o guardião dos dados.",
+      "missingUrlTitle": "Incapaz de carregar GetCapabilities",
+      "missingUrlMessage": "Não foi possível carregar o documento GetCapabilities do Web Map Service (WMS) porque o item do catálogo não possui um `url`."
+    },
+    "webFeatureServiceCatalogItem": {
+      "noLayerFoundTitle": "Nenhuma camada encontrada",
+      "noLayerFoundMessage": "O conjunto de dados WFS '{{name}}' não tem camadas correspondentes a '{{typeNames}}'. {{suggested}} {{line}} {{line}} O arquivo de catálogo foi configurado incorretamente ou o servidor WFS foi alterado.",
+      "missingDataMessage": "O conjunto de dados WFS '{{name}}' não retornou nenhum dado. {{line}} {{line}} O arquivo de catálogo foi configurado incorretamente ou o endereço do servidor foi alterado.",
+      "wfs": "Servidor Web Feature Service (WFS)",
+      "dataDescription": "Descrição dos dados",
+      "abstract": "Descrição do Serviço Web Feature",
+      "serviceDescription": "Descrição do Serviço",
+      "metadataUrls": "Links de metadados",
+      "accessConstraints": "Restrições de acesso",
+      "serviceContact": "Contato de serviço",
+      "getCapabilitiesUrl": "URL GetCapabilities",
+      "missingDataTitle": "Dados ausentes",
+      "missingUrlTitle": "Incapaz de carregar GetCapabilities",
+      "missingUrlMessage": "Não foi possível carregar o documento GetCapabilities do Web Feature Service (WFS) porque o item do catálogo não tem um `url`.",
+      "reachedMaxFeatureLimit": "Aviso: esta camada atingiu o limite de recursos WFS ({{maxFeatures}})"
+    },
+    "webMapServiceCatalogGroup": {
+      "invalidWMSServerTitle": "Servidor WMS inválido",
+      "groupNotAvailableTitle": "Grupo não disponível",
+      "invalidWMSServerMessage": "Um erro ocorreu ao invocar o GetCapabilities no servidor WMS. A resposta do servidor não parece ser um documento válido do GetCapabilities.",
+      "wmsServer": "Servidor de Web Map Service (WMS)",
+      "groupNotAvailableMessage": "Ocorreu um erro ao chamar GetCapabilities no servidor WMS.",
+      "missingUrlTitle": "Incapaz de carregar GetCapabilities",
+      "missingUrlMessage": "Não foi possível carregar o documento GetCapabilities do Web Map Service (WMS) porque o item do catálogo não tem um `url`.",
+      "abstract": "Descrição do serviço de mapa da web (WMS)",
+      "accessConstraints": "Restrições de Acesso ao Serviço de Mapa Web (WMS)",
+      "fees": "Taxas de Serviço de Mapa Web (WMS)"
+    },
+    "webMapTileServiceCatalogGroup": {
+      "invalidCapabilitiesMessage": "A URL {{url}} foi recuperada com êxito, mas não parece ser um documento GetCapabilities válido do Web Map Tile Service (WMTS).\n\nO arquivo de catálogo foi configurado incorretamente ou o endereço do servidor foi alterado.",
+      "groupNotAvailableMessage": "Ocorreu um erro ao chamar GetCapabilities no servidor WMTS.",
+      "groupNotAvailableTitle": "Grupo não está disponível",
+      "accessConstraints": "Restrições de Acesso ao Serviço de Mapa Web (WMS)",
+      "wmtsServer": "Servidor Web Map Tile Service (WMTS)",
+      "invalidWMTSServerTitle": "Servidor WMTS inválido",
+      "invalidWMTSServerMessage": "Ocorreu um erro ao chamar GetCapabilities no servidor WMTS. A resposta do servidor não parece ser um documento GetCapabilities válido.",
+      "abstract": "Descrição do serviço de mapa da web",
+      "fees": "Taxas de Serviço de Mapa Web (WMS)",
+      "invalidCapabilitiesTitle": "GetCapabilities inválida"
+    },
+    "webProcessingService": {
+      "unsupportedParameterErrorTitle": "Tipo de parâmetro não suportado",
+      "invalidResponseError2Title": "Resposta inválida do servidor WPS",
+      "processDescriptionErrorTitle": "Processo não tem uma descrição do processo",
+      "regionTypeName": "Tipo de Região",
+      "wpsResult": "Resultado do Serviço de Processamento Web",
+      "wps": "Serviço de Processamento Web (WPS)",
+      "invalidWPSServerTitle": "Servidor WPS inválido",
+      "invalidWPSServerMessage": "Ocorreu um erro ao chamar {{endpoint}} no servidor WPS para o processo {{name}}. A resposta do servidor não parece ser um documento {{endpoint}} válido.",
+      "processDescriptionErrorMessage": "O WPS DescribeProcess para este processo não inclui uma Descrição de Processos.",
+      "processInputErrorTitle": "O processo não tem nenhuma entrada",
+      "processInputErrorMessage": "Este processo WPS não especifica nenhuma entrada.",
+      "unsupportedParameterErrorMessage": "O parâmetro {{identifier}} não é um tipo de parâmetro compatível.",
+      "invalidResponseErrorTitle": "Resposta inválida do servidor WPS",
+      "invalidResponseErrorMessage": "Ocorreu um erro ao acessar o local de status no servidor WPS para o processo {{name}}.",
+      "invalidResponseError2Message": "A resposta do servidor WPS não inclui um elemento de status.",
+      "failureReasonUnknowError": "O motivo da falha é desconhecido.",
+      "asyncShortReportFailed": "A execução do serviço de processamento da web falhou. Mais detalhes estão disponíveis no painel Informações.",
+      "errorDetails": "Detalhes do erro",
+      "resultPendingDescription": "Este é o resultado da chamada do processo ou serviço {{name}} em {{timestamp}} com os parâmetros de entrada abaixo.",
+      "regionTypeDescription": "O tipo de região a ser analisada.",
+      "regionParameterName": "Parâmetro da Região",
+      "wpsServer": "Servidor do Serviço de Processamento Web (WPS)"
+    },
+    "webMapTileServiceCatalogItem": {
+      "accessConstraints": "Restrições de acesso",
+      "noUsableTileMatrixTitle": "Aviso",
+      "wmts": "Serviço Web Map Tile (WMTS)",
+      "dataDescription": "Descrição dos dados",
+      "serviceDescription": "Descrição do Serviço",
+      "fees": "Taxas do Web Map Tile Service",
+      "serviceContact": "Contato de serviço",
+      "getCapabilitiesUrl": "URL GetCapabilities",
+      "missingUrlTitle": "Incapaz de carregar GetCapabilities",
+      "missingUrlMessage": "Não foi possível carregar o documento GetCapabilities do Web Map Tile Service (WMTS) porque o item do catálogo não tem um `url`.",
+      "noUsableTileMatrixMessage": "Esta camada WMTS não possui matriz Web Mercator - ela pode não ser exibida corretamente"
+    },
+    "thredds": {
+      "nameGroup": "Grupo de catálogo THREDDS"
+    },
+    "threddsItem": {
+      "name": "Referência de item THREDDS"
+    },
+    "urlTemplateMapServer": {
+      "name": "Servidor de mapa de modelo de URL"
+    },
+    "webFeatureServiceCatalogGroup": {
+      "wfsServer": "Servidor Web Feature Service (WFS)",
+      "invalidWFSServerTitle": "Servidor WFS inválido",
+      "invalidWFSServerMessage": "Ocorreu um erro ao chamar GetCapabilities no servidor WFS. A resposta do servidor não parece ser um documento GetCapabilities válido.",
+      "groupNotAvailableTitle": "Grupo não está disponível",
+      "groupNotAvailableMessage": "Ocorreu um erro ao chamar GetCapabilities no servidor WFS.",
+      "abstract": "Descrição do Serviço Web Feature",
+      "accessConstraints": "Restrições de acesso ao Web Feature Service",
+      "fees": "Taxas de serviço do WFS"
+    },
+    "wfsFeatures": {
+      "featuresGroup": "Grupo de recursos em um servidor Web Feature Service (WFS)",
+      "queryErrorTitle": "Erro ao consultar o servidor WFS",
+      "queryErrorMessage": "Ocorreu um erro ao chamar GetFeature no servidor WFS. A resposta do servidor não parece ser um documento GeoJSON válido.",
+      "groupNotAvailableTitle": "Grupo não disponível",
+      "groupNotAvailableMessage": "Ocorreu um erro ao chamar GetFeature no servidor WFS."
+    },
+    "shadow": {
+      "name": "Sombras",
+      "options": {
+        "none": "Nenhuma",
+        "receive": "Receber apenas",
+        "both": "Transmitir e receber",
+        "cast": "Transmitir apenas"
+      }
+    },
+    "commonModelErrors": {
+      "3dTypeIn2dMode": "**Nota:** Este conjunto de dados não pode ser exibido no visualizador 2D. Mude para um dos modos de mapa 3D."
+    },
+    "scaleDatasetNotVisible": {
+      "scaleZoomIn": "O conjunto de dados não está disponível nesta escala, amplie para vê-lo",
+      "scaleZoomOut": "O conjunto de dados não está disponível nesta escala, diminua o zoom para vê-lo"
     }
+  },
+  "deltaTool": {
+    "selectedLocation": "Localização Selecionada",
+    "generateDeltaBtn": "Gerar Mapa de Diferenças",
+    "loadingError": {
+      "message": "Ocorreu um erro ao tentar carregar a ferramenta delta do servidor. Por favor, tente novamente.",
+      "title": "Erro ao carregar ferramenta Delta"
+    },
+    "titlePrefix": "Detecção de Mudança",
+    "description": "Esta ferramenta visualiza a diferença entre as imagens capturadas em dois pontos distintos no tempo.",
+    "pickLocation": "Para visualizar as imagens disponíveis, selecione seu local de interesse no mapa ao lado.",
+    "cancelBtn": "Cancelar",
+    "primaryImage": "Imagem Primária",
+    "secondaryImage": "Imagem Secundária",
+    "pickerMessage": {
+      "pickFirst": "Selecione um ponto clicando no mapa",
+      "pickAnother": "Clique em outro ponto para mudar a seleção",
+      "pickError": "Erro ao tentar resolver imagens no local! Selecione um ponto novamente clicando no mapa."
+    },
+    "catalogItem": {
+      "description": "Esta camada visualiza a diferença entre as imagens capturadas em dois pontos distintos no tempo"
+    }
+  },
+  "itemSearchTool": {
+    "numericParameter": {
+      "minimum": "Mínimo",
+      "maximum": "Máximo"
+    },
+    "toolLoadError": "Erro ao carregar a ferramenta de pesquisa.",
+    "loadError": "Erro ao carregar os parâmetros de pesquisa. Verifique o console para obter erros detalhados.",
+    "title": "Pesquisar {{itemName}}",
+    "loading": "Carregando parâmetros de pesquisa",
+    "noParameters": "Nenhum parâmetro pesquisável encontrado",
+    "searching": "Procurando",
+    "searchError": "A pesquisa falhou. Verifique o console para obter erros detalhados.",
+    "searchBtnText": "Procurar",
+    "resetBtnText": "Limpar entrada",
+    "backBtnText": "Pesquisar novamente",
+    "resultsCount": "{{count}} correspondência encontrada",
+    "resultsCount_plural": "{{count}} correspondências encontradas",
+    "actions": {
+      "highlightAll": "Destacar tudo",
+      "showMatchingOnly": "Mostrar apenas correspondência"
+    }
+  },
+  "pedestrianMode": {
+    "controls": {
+      "title": "Controles"
+    },
+    "toolButtonTitle": "Modo Pedestre",
+    "dropPedestrianTooltipMessage": "<b> Clique com o botão esquerdo </b> para selecionar o local de lançamento <br /> <b> Clique com o botão direito / Esc </b> para cancelar"
+  },
+  "term": {
+    "missingContent": "conteúdo ausente"
+  },
+  "mapNavigation": {
+    "additionalTools": "Ferramentas adicionais",
+    "additionalToolsTitle": "Abra ferramentas adicionais"
+  },
+  "indexedItemSearchProvider": {
+    "missingOptionIndexRootUrl": "A opção `indexRootUrl` está faltando na configuração de pesquisa do item.",
+    "errorParsingIndexRoot": "Erro ao analisar o arquivo indexRoot: {{indexRootUrl}}."
+  },
+  "notification": {
+    "title": "Mensagem"
+  },
+  "toast": {
+    "mapIsZooming": "Carregando zoom ideal ..."
   }
 }
