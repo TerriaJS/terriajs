@@ -1199,7 +1199,7 @@
       "loadDataErrorTitle": "Falha ao carregar dados SDMX para {{name}}",
       "loadDataErrorMessage": "Resposta inválida de {{csvUrl}}",
       "viewBy": {
-        "title": "Visto por",
+        "title": "Ver por",
         "time": "Série temporal",
         "region": "Região"
       },
@@ -1220,11 +1220,11 @@
       "regionTypeToPredictName": "Tipo de região para prever",
       "regionTypeToPredictDescription": "O tipo de região para a qual prever características.",
       "coarseDataRegionTypeName": "Tipo de região de dados grosseiros",
-      "coarseDataRegionTypeDescription": "O tipo de região com a qual as características de entrada de granulação grossa estão associadas.",
+      "coarseDataRegionTypeDescription": "O tipo de região com a qual as características de entrada menos detalhadas estão associadas.",
       "aggregationTrueName": "Agregação Média",
       "aggregationTrueDescription": "Os valores da região grosseira são a média das amostras na região. Por exemplo, renda familiar média.",
       "aggregationFalseName": "Soma de agregação",
-      "aggregationFalseDescription": "Os valores da região grosseira são a soma das amostras na região. Por exemplo, população total.",
+      "aggregationFalseDescription": "Os valores da região menos detalhada são a soma das amostras na região. Por exemplo, população total.",
       "characteristicToPredictName": "Característica para prever",
       "characteristicToPredictDescription": "A característica a prever para cada região.",
       "spatialDetailingOf": "Detalhamento espacial de {{of}} em {{at}}"
