@@ -1,0 +1,747 @@
+{
+  "trainer": {
+    "collapseTrainer": "Ocultar detalhes da etapa",
+    "showAllSteps": "Mostrar todas as etapas",
+    "hideAllSteps": "Esconder todas as etapas",
+    "expandTrainer": "Mostrar mais detalhes da etapa"
+  },
+  "tour": {
+    "preface": {
+      "content": "Não sabe por onde começar? Faça um rápido tour pelos principais recursos do software e aprenda sobre funções-chave para ajudá-lo a seguir seu caminho.",
+      "close": "Talvez mais tarde",
+      "start": "Começar o tour",
+      "title": "Faça o tour"
+    },
+    "end": "Fim do tour",
+    "finish": "Terminar",
+    "previous": "Anterior",
+    "locationSearchInput": {
+      "content": "## Pesquisa de localização\n\nInsira uma localidade ou endereço para localizar facilmente um ponto de interesse no mapa."
+    },
+    "sidePanelUploadButton": {
+      "content": "## Carregar dados\n\nVocê pode carregar seus próprios dados no mapa para visualizá-los com outros conjuntos de dados. Faça upload de um arquivo ou link para um conjunto de dados ou serviço de dados online existente. Os formatos de dados suportados incluem CSV, GeoJSON, KML, GPX e CZML."
+    },
+    "mapNavigationCompassOuterRing": {
+      "content": "## Ver controles\n\nAqui você pode alterar a visualização do mapa. Você pode alterar a orientação de sua visão usando o anel externo e pode inclinar o ângulo da câmera usando o anel interno. Clique duas vezes para redefinir a visualização."
+    },
+    "menuBarMapSettingsButton": {
+      "content": "## Configurações do mapa\n\nPersonalize as configurações do mapa, como mapas básicos, terreno 2D/3D e qualidade da imagem do mapa para melhorar o desempenho."
+    },
+    "menuBarStoryButton": {
+      "content": "## Histórias\n\nAs histórias permitem adicionar informações contextuais a um conjunto de dados para dar vida a uma narrativa. Crie sua própria história de dados usando o Editor de História e compartilhe-a por meio do painel ‘Compartilhar’ quando terminar."
+    },
+    "mapNavigationSplitterIcon": {
+      "content": "## Comparar\n\nUm recurso poderoso do Terria é a capacidade de comparar conjuntos de dados usando uma exibição de tela dividida. Para conjuntos de dados com um componente de série temporal, como imagens de satélite, você pode comparar datas anteriores e posteriores clicando no seletor de datas."
+    },
+    "exploreMapDataButton": {
+      "content": "## Explorar dados\n\nNavegue pelo catálogo de dados disponíveis e adicione ao mapa aqui. Você pode adicionar vários conjuntos de dados a qualquer momento e os verá listados abaixo no Painel."
+    }
+  },
+  "general": {
+    "close": "Fechar",
+    "open": "Abrir",
+    "skip": "Pular",
+    "confirm": "Confirmar",
+    "next": "Próximo",
+    "delete": "Excluir",
+    "prev": "Anterior",
+    "back": "Voltar",
+    "cancel": "Cancelar"
+  },
+  "measure": {
+    "measureTool": "Ferramenta de Medida",
+    "measureToolTitle": "Medida de Linha",
+    "measureDistance": "Medir distância entre locais"
+  },
+  "location": {
+    "errorGettingLocation": "Erro ao obter localização",
+    "myLocation": "Minha Localização",
+    "location": "Localização",
+    "originError": "Seu navegador só pode fornecer sua localização ao usar https. Você pode usar o {{secureUrl}} em seu lugar.",
+    "centreMap": "Centralize o mapa na sua localização atual",
+    "browserCannotProvide": "Seu navegador não pode fornecer sua localização."
+  },
+  "splitterTool": {
+    "toggleSplitterToolTitle": "Comparar",
+    "toggleSplitterTool": "Habilite a comparação lado a lado entre dois conjuntos diferentes de dados",
+    "toggleSplitterToolDisabled": "Desative outros recursos de comparação lado a lado para habilitar a comparação padrão",
+    "title": "Arraste para esquerda ou direita para ajustar as visualizações",
+    "workbench": {
+      "goleft": "Esquerda",
+      "bothTitle": "Mostrar em ambos os lados",
+      "both": "Ambos",
+      "goright": "Direita",
+      "copyName": "{{name}} (cópia)",
+      "gorightTitle": "Mostrar no lado direito",
+      "goleftTitle": "Mostrar no lado esquerdo"
+    }
+  },
+  "zoomCotrol": {
+    "zoomReset": "Redefinir zoom",
+    "zoomIn": "Aumentar o Zoom",
+    "zoomOut": "Diminuir o zoom"
+  },
+  "compass": {
+    "title": "Clique e arraste para girar a câmera",
+    "guidance": {
+      "outerRingTitle": "Anel Externo",
+      "outerRingDescription": "Arraste o anel externo em um movimento circular para girar a visualização do mapa 360 °.",
+      "innerCircleTitle": "Círculo Interno",
+      "innerCircleDescription1": "Clique no centro e arraste lentamente para cima, para baixo, para a esquerda ou para a direita para inclinar e girar o mapa ao mesmo tempo.",
+      "innerCircleDescription2": "Clique duas vezes aqui para redefinir a visualização ao seu estado padrão.",
+      "ctrlDragDescription": "Você também pode inclinar e girar o mapa segurando a tecla CTRL e arrastando o mapa.",
+      "dismissText": "Fechar e não mostrar novamente",
+      "title": "Controles do giroscópio"
+    },
+    "guidanceBtnTitle": "Orientação do giroscópio",
+    "guidanceBtnText": "Veja instruções detalhadas sobre como usar a bússola",
+    "description": "Arraste o anel externo: gire a vista.\nArraste o giroscópio interno: órbita livre.\nClique duas vezes: redefinir visualização.\nDICA: você também pode liberar a órbita segurando a tecla CTRL e arrastando o mapa."
+  },
+  "AR": {
+    "confirmText": "Entendi",
+    "manualAlignmentTitle": "Alinhamento Manual",
+    "resetAlignmentTitle": "Reiniciar Alinhamento",
+    "resetAlignmentMessage": "Reiniciando o alinhamento da bússola. Se o alinhamento não corresponder ao do mundo real, tente agitar seu dispositivo em um movimento de figura 8 para recalibrar o dispositivo. Isso pode ser feito a qualquer momento. <br /> <br /> Evite locais com campos magnéticos ou objetos de metal, pois eles podem desorientar a bússola do dispositivo.",
+    "arTool": "ferramenta de realidade aumentada",
+    "btnHover": "alternar altura de pairar",
+    "btnRealign": "alternar alinhamento manual",
+    "btnResetRealign": "redefinir o alinhamento da bússola",
+    "title": "Recurso Experimental: Realidade Aumentada",
+    "experimentalFeatureMessage": "O modo de Realidade Aumentada está atualmente em beta. Este modo foi projetado para uso apenas nos dispositivos móveis de última geração. <br /> <br /> AVISO: Este modo pode consumir muitos dados, esteja ciente das tarifas de uso de dados de seu provedor de rede. <br /> <br /> A precisão deste modo depende da precisão da bússola interna de seus dispositivos móveis.",
+    "manualAlignmentMessage": "Alinhe seu dispositivo móvel de forma que corresponda ao alinhamento atual do mapa e, em seguida, clique na bússola piscando. Se nenhum ponto de referência para alinhar estiver visível no mapa, você pode mover o mapa usando ações de arrastar e pinçar até que um ponto de referência reconhecível esteja visível antes de alinhar o dispositivo com o mapa. <br /> <div> {{img}} </div> <br /> Dica: o sol ou a lua costumam ser bons marcos para se alinhar se você estiver em um local com o qual não está familiarizado (cuidado para não olhar para o sol - pode machucar seus olhos)."
+  },
+  "tool": {
+    "closeButtonTitle": "Fechar ferramenta {{toolName}}",
+    "loadingError": {
+      "title": "Erro ao carregar ferramenta {{toolName}}",
+      "message": "Ocorreu um erro ao tentar carregar esta ferramenta do servidor. Por favor, tente novamente."
+    },
+    "exitBtnTitle": "Sair",
+    "button": {
+      "open": "Sair {{toolNameLowerCase}}",
+      "closed": "{{toolName}}"
+    }
+  },
+  "diffTool": {
+    "title": "Diferença",
+    "exit": "Sair",
+    "instructions": {
+      "setDateA": "Definir data A",
+      "setDateB": "Definir data B",
+      "changeDates": "Mudar datas",
+      "paneDescription": "Visualize e compare a diferença de dados entre duas datas em um local."
+    },
+    "choosePreview": "Escolha um estilo de visualização",
+    "chooseDifference": "Escolha uma saída de diferença",
+    "differenceResultsTitle": "Resultados de detecção de mudanças",
+    "labels": {
+      "area": "Área",
+      "dates": "Datas",
+      "generateDiffButtonText": "Gerar detecção de mudanças",
+      "disabledButtonPrompt": "Observação: um local e datas devem ser selecionados para prosseguir com a detecção de mudanças",
+      "areaFilterSelection": "Seleção de filtro de área",
+      "dateComparisonB": "Comparação de datas B",
+      "previewStyle": "Estilo de visualização",
+      "differenceOutput": "Saída de diferença",
+      "dateComparisonA": "Comparação de datas A",
+      "sourceDataset": "Conjunto de dados de origem"
+    },
+    "locationDisplay": {
+      "noLocationSelected": {
+        "title": "Nenhum local selecionado",
+        "description": "Para filtrar o selecionador de data de imagem por local, selecione um ponto no mapa"
+      },
+      "locationSelected": {
+        "title": "Localização selecionada e datas filtradas",
+        "description": "Para alterar, clique em outro ponto no mapa"
+      }
+    },
+    "locationPicker": {
+      "initialMessages": {
+        "beforePick": "Precisamos disso para executar nosso processo de detecção de alterações.",
+        "afterPick": "Clique em outro ponto para alterar a região selecionada",
+        "title": "Selecione um local preciso"
+      },
+      "nextMessages": {
+        "title": "Você selecionou a localização {{latitude}} {{longitude}}",
+        "beforePick": "Clique em outro ponto para alterar a seleção",
+        "afterPick": "Clique em outro ponto para alterar a seleção"
+      },
+      "errorMessages": {
+        "beforePick": "Falha ao resolver imagens no local! Escolha um local ou nível de zoom diferente.",
+        "afterPick": "Clique em outro ponto para alterar a seleção",
+        "title": "Selecione um local preciso"
+      }
+    },
+    "datePicker": {
+      "previousDateTitle": "Data anterior",
+      "nextDateTitle": "Próxima data",
+      "dateButtonTitle": "Selecione uma data",
+      "dateOutOfRange": "Atualmente fora do alcance",
+      "back": "Voltar"
+    }
+  },
+  "legend": {
+    "lat": "Lat",
+    "lon": "Lon",
+    "zone": "ZONA",
+    "e": "E",
+    "elev": "Elev",
+    "n": "N"
+  },
+  "share": {
+    "shortLinkShortening": "Encurtando...",
+    "shortLinkError": "Ocorreu um erro ao tentar encurtar a URL.  Por favor, verifique sua conexão com a internet e tente novamente.",
+    "generatingUrl": "Gerando URL de compartilhamento ...",
+    "browserPrint": "Para obter melhores resultados de impressão, use o botão Imprimir do {{appName}} em vez do recurso de impressão do navegador da web.",
+    "btnAdvanced": "Opções avançadas",
+    "localDataNote": "<0> <0> Nota: </0> </0> <1> As seguintes fontes de dados NÃO serão compartilhadas porque incluem dados deste sistema local. Para compartilhar essas fontes de dados, publique seus dados em um servidor da web e <2> adicione-os usando um url </2>. </1>",
+    "btnCatalogShareText": "Compartilhar",
+    "printTitle": "Imprimir Mapa",
+    "creatingPrintView": "Criando visualização de impressão ...",
+    "btnStoryShareTitle": "Compartilhe sua história com outros",
+    "btnMapShareTitle": "Compartilhe seu mapa com outros",
+    "convertErrorTitle": "Não foi possível atualizar o link de compartilhamento para V8",
+    "printExplanation": "Abra uma versão imprimível deste mapa.",
+    "convertErrorMessage": "Este link de compartilhamento é baseado em uma versão mais antiga do TerriaJS - o software que alimenta este mapa da web. Ocorreu um erro ao tentar atualizar os dados de compartilhamento.",
+    "printButton": "Imprimir",
+    "printViewButton": "Mostrar visualização de impressão",
+    "embedTitle": "Para incorporar, copie este código para incorporar este mapa em uma página HTML:",
+    "shortenUsingService": "Encurte o URL de compartilhamento usando um serviço da web",
+    "btnStoryShareText": "Compartilhar",
+    "btnMapShareText": "Compartilhar / Imprimir",
+    "btnCatalogShareTitle": "Compartilhe seu catálogo com outros",
+    "convertNotificationTitle": "Aviso: link de compartilhamento atualizado",
+    "convertNotificationMessage": "Este link de compartilhamento é baseado em uma versão mais antiga do TerriaJS - o software que alimenta este mapa da web. Embora os melhores esforços sejam feitos para preservar o link, você pode encontrar problemas ao visualizar os dados.\n\nSe você for um usuário do link de compartilhamento, clique em OK para fazer a mensagem de aviso desaparecer e continuar acessando os dados.",
+    "convertNotificationHelp": "Se você criou o link de compartilhamento, verifique o menu Ajuda para ver dicas sobre como atualizá-lo.",
+    "convertNotificationFeedback": "Para perguntas ou comentários, clique aqui.",
+    "convertNotificationWarningsTitle": "Detalhes técnicos"
+  },
+  "addData": {
+    "done": "Feito",
+    "btnHide": "Esconder",
+    "load": "Carregar dados locais/web",
+    "closeDataPanel": "Fechar painel de dados",
+    "myData": "Meus Dados",
+    "searchPlaceholderWhole": "Pesquisar catálogo inteiro",
+    "localFile": "<0> Etapa 2: </0> Selecione o arquivo",
+    "webFile": "<0> Etapa 2: </0> Insira a URL do arquivo de dados ou serviço da web",
+    "webTitle": "Adicionar dados da web",
+    "addDataBtnText": "Explorar dados do mapa",
+    "dataCatalogue": "Catálogo de Dados",
+    "searchPlaceholder": "Pesquise o catálogo",
+    "localAdd": "Adicionar arquivo local",
+    "localFileType": "<0> Etapa 1: </0> Selecione o tipo de arquivo (opcional)",
+    "webAdd": "Adicionar dados da web",
+    "webFileType": "<0> Etapa 1: </0> Selecione o tipo de arquivo (opcional)",
+    "urlInputBtn": "Adicionar",
+    "localTitle": "Adicionar dados locais",
+    "dragDrop": "Arrastar e Soltar",
+    "browse": "Navegar...",
+    "infoText": "<0> Arraste e solte um arquivo aqui para visualizá-lo localmente no mapa </0> <1> (ele não será salvo ou enviado para a internet) </1>",
+    "back": "Voltar",
+    "note": "<0> Nota: </0> Os dados adicionados desta forma não são salvos ou tornados visíveis para outras pessoas."
+  },
+  "languagePanel": {
+    "changeLanguage": "Alterar Idioma"
+  },
+  "countDatasets": {
+    "title": "Contagem de conjuntos de dados",
+    "totals": "<div>O catálogo contém {{items}} itens em {{groups}} grupos.</div>",
+    "loadError": "Falha ao carregar.",
+    "countingMessage": "Contando, por favor aguarde ...",
+    "subTotals": "<div> {{name}}: {{items}} itens / {{groups}} grupos </div>",
+    "btnCount": "Contagem de conjuntos de dados",
+    "noMapDataEnabled": "Nenhum dado de mapa ativado",
+    "btnText": "Começar",
+    "recount": "Recontagem",
+    "mapDataState": "{{count}} conjunto de dados ativado no mapa",
+    "mapDataState_plural": "{{count}} conjuntos de dados ativados no mapa"
+  },
+  "featureInfo": {
+    "siteData": "Dados do Site",
+    "catalogItem": {
+      "featureInfoShown": "Os primeiros {{maximum}} são mostrados abaixo.",
+      "moreThanMax": "Mais de {{maximum}} {{catalogItemName}} foram encontrados.",
+      "featuresFound": "{{featCount}} {catalogItemName} foram encontrados."
+    },
+    "noDataAvailable": "Não há dados disponíveis aqui - tente outro local.",
+    "btnCloseFeature": "Fechar painel de dados",
+    "showRawData": "Mostrar dados brutos",
+    "satelliteSuggestionBtn": "Mostre {{catalogItemName}} neste local",
+    "locationMarker": "Marcador de localização",
+    "noInfoAvailable": "Sem informação disponível",
+    "showCuratedData": "Mostrar dados selecionados",
+    "clickMap": "Clique no mapa para saber mais sobre um local",
+    "latLon": "Lat / Lon ",
+    "download": "Baixe esta tabela",
+    "pickLocation": "Escolher localização",
+    "clickToAddData": "Clique em '$t(addData.addDataBtnText)' para adicionar dados ao mapa.",
+    "userSelection": "Seleção do usuário",
+    "panelHeading": "Informações sobre recursos"
+  },
+  "welcomeMessage": {
+    "title": "Vamos começar",
+    "helpBtnText": "Vou precisar de ajuda",
+    "tourBtnText": "Faça o passeio",
+    "welcomeMessage": "Interessado em descoberta e exploração de dados? <br/> Mergulhe de cabeça e comece ou verifique as seguintes opções do guia de ajuda.",
+    "exploreDataBtnText": "Explorar dados do mapa",
+    "welcomeMessageOnMobile": "Interessado em descoberta e exploração de dados?",
+    "searchBtnText": "Procure um local",
+    "dismissText": "Feche a mensagem e não me mostre novamente"
+  },
+  "story": {
+    "captureSceneTitle": "capturar cena atual",
+    "captureScene": "Capturar cena",
+    "editor": {
+      "placeholder": "Digite um título aqui",
+      "cancelBtn": "cancelar",
+      "cancelEditing": "Cancelar",
+      "saveBtn": "salvar",
+      "saveStory": "Salvar"
+    },
+    "locationBtn": "cena central",
+    "previousBtn": "vá para a cena anterior",
+    "navBtn": "ir para a história {{title}}",
+    "navBtnMobile": "ir para a história {{title}}",
+    "promptHtml1": "<0> Você pode visualizar e criar histórias a qualquer momento clicando aqui. </0>",
+    "dismissText": "Entendi, obrigado!",
+    "mobileViewStory": "Ver histórias {{storiesLength}}",
+    "hideStoryPanel": "esconder construtor história",
+    "loadSceneErrorTitle": "Erro ao carregar Cena da História",
+    "loadSceneErrorMessage": "Ocorreu um erro ao carregar os dados para a cena da história: `{{title}}`.",
+    "removeAllStories": "Remover todos",
+    "panelTitle": "Editor de histórias",
+    "doesNotExist": "História não existe",
+    "removeStoryDialog": "Tem certeza de que deseja excluir '<1> {{storyName}} </1>'?",
+    "panelBody": "Crie e compartilhe histórias interativas diretamente de seu mapa",
+    "badgeBarLabel": "Cenas",
+    "gettingStarted": "Começando",
+    "gettingStartedTitle": "Começando",
+    "share": "Compartilhar",
+    "viewStory": "visualizar",
+    "view": "Visualizar",
+    "editStory": "editar",
+    "edit": "Editar",
+    "shareTitle": "compartilhar histórias",
+    "recaptureStory": "recaptura",
+    "delete": "Excluir",
+    "preview": "pré-visualizar histórias",
+    "untitledScene": "cena sem título",
+    "recapture": "Recaptura",
+    "deleteStory": "excluir",
+    "message": "<2> Este é o seu editor de histórias </2> <1> Crie e compartilhe histórias interativas diretamente de seu mapa <1> <0> <0> </0> Primeiros passos </0> </1> </ 1 >",
+    "removeAllStoriesDialog": "Tem certeza de que deseja excluir {{ count }} cena?",
+    "removeAllStoriesDialog_plural": "Tem certeza de que deseja excluir {{ count }} cenas?",
+    "play": "Toque",
+    "untitled": "cena sem título",
+    "nextBtn": "vá para a próxima cena",
+    "promptHtml2": "<0> <0> APRESENTANDO </0> <1> Histórias de dados </1> <2> Crie e compartilhe histórias interativas diretamente de seu mapa. </2> </0>",
+    "story": "História",
+    "storyEditor": "Editor de Histórias"
+  },
+  "settingPanel": {
+    "mapView": "Visualização do mapa",
+    "baseMap": "Mapa base",
+    "imageOptimisation": "Otimização de imagem",
+    "timeline": {
+      "hideLabel": "Pressione para começar sempre mostrando a linha do tempo, mesmo quando não há conjuntos de dados que variam no tempo",
+      "title": "Linha do tempo",
+      "alwaysShow": "Mostrar sempre",
+      "alwaysShowLabel": "Pressione para começar mostrando a linha do tempo apenas quando houver conjuntos de dados que variam no tempo"
+    },
+    "terrain": {
+      "hideUnderground": "Terreno esconde características subterrâneas",
+      "showUndergroundFeatures": "Pressione para começar a mostrar características que estão sob a superfície do terreno",
+      "left": "Esquerda",
+      "hideUndergroundFeatures": "Pressione para começar a esconder características que estão sob a superfície do terreno",
+      "sideLabel": "Mostrar terreno no",
+      "right": "Direita",
+      "both": "Ambos"
+    },
+    "screen": "tela",
+    "btnTitle": "Mudar visualização",
+    "performanceLabel": "Desempenho",
+    "none": "(Nenhum)",
+    "viewerModeLabels": {
+      "CesiumTerrain": "Terreno 3D",
+      "Leaflet": "2D",
+      "CesiumEllipsoid": "3D Suavizado"
+    },
+    "qualityLabels": {
+      "lowerPerformance": "Qualidade máxima, desempenho inferior",
+      "maximumPerformance": "Desempenho máximo, qualidade inferior",
+      "balancedPerformance": "Desempenho e qualidade equilibrados"
+    },
+    "native": "nativo",
+    "btnText": "Configurações do Mapa",
+    "nativeResolutionHeader": "Use a resolução nativa do dispositivo",
+    "qualityLabel": "Qualidade",
+    "nativeResolutionLabel": "Pressione para parar de usar a resolução {{resolution1}} e começar a usar a resolução {{resolution2}}",
+    "mapQuality": "Qualidade do mapa raster:"
+  },
+  "toolsPanel": {
+    "btnText": "Ferramenta",
+    "btnTitle": "Caixa de ferramentas avançada"
+  },
+  "satelliteGuidance": {
+    "titleI": "Imagens de satélite: Como faço para ...?",
+    "menuTitle": "Você pode acessar guias de mapa a qualquer momento no <2> menu de ajuda </2>.",
+    "dismissText": "Entendi, obrigado!",
+    "bodyI": "Um guia super rápido para obter o máximo das imagens históricas de satélite.",
+    "nextI": "Ver guia",
+    "titleII": "Onde estão minhas imagens de satélite?",
+    "bodyII": "Pode ser necessário ajustar o nível de zoom para tornar as imagens de satélite visíveis no mapa.",
+    "titleV": "Como vejo imagens em falsa cor?",
+    "bodyV": "Você pode aplicar uma variedade de estilos, como falsa cor, a imagens de satélite clicando nos estilos suspensos no painel.",
+    "prevI": "Não, obrigado",
+    "titleIII": "Carregando imagens históricas",
+    "bodyIII": "Em seu Painel, clique na lista suspensa de data de captura e selecione entre as datas disponíveis para carregar imagens históricas.",
+    "bodyIV": "Imagens de satélite podem nem sempre estar disponíveis no seu horário e localização preferidos. Se você quiser apenas visualizar imagens para um determinado local, clique em 'filtrar por localização' em seu painel.",
+    "titleIV": "Filtrando imagens por localização"
+  },
+  "feedback": {
+    "feedbackPreamble": "Gostaríamos muito de ouvir de você!",
+    "yourName": "Seu nome (opcional)",
+    "commentQuestion": "Comentário ou pergunta",
+    "cancel": "Cancelar",
+    "sending": "Enviando ...",
+    "send": "Enviar",
+    "close": "fechar feedback",
+    "captionText": "Isso nos ajuda a solucionar problemas, permitindo-nos ver o que você está vendo",
+    "feedbackBtnText": "Dê retorno",
+    "title": "Comentários",
+    "email": "Endereço de e-mail (opcional) <br/> <em> Não podemos fazer o acompanhamento sem ele! </em>",
+    "minLength": "O comprimento mínimo do comentário de feedback é {{minLength}}",
+    "shareWithDevelopers": "Compartilhe minha visualização do mapa com os desenvolvedores do {{appName}}"
+  },
+  "helpPanel": {
+    "btnText": "Ajuda",
+    "menuPaneTitle": "Estamos aqui para ajudar",
+    "takeTour": "Faça o tour",
+    "promptMessage": "Encontre o Tour, vídeos de como fazer e outros conteúdos de ajuda aqui",
+    "dismissText": "Entendi, obrigado!",
+    "mapUserGuide": "Guia do usuário do mapa",
+    "menuPaneBody": "Encontre dicas úteis sobre como usar TerriaJS verificando os guias abaixo ou entrando em contato com a equipe em [{{supportEmail}}] ({{supportEmail}})"
+  },
+  "helpMenu": {
+    "done": "FEITO",
+    "btnTitle": "obter ajuda",
+    "helpMenuOpenWelcome": "Mostrar mensagem de boas-vindas",
+    "helpMenuSatelliteGuideTitle": "Ver guia de imagens de satélite",
+    "helpMenuMoreHelpTitle": "Mais ajuda",
+    "helpMenuHeader": "O que gostaria de fazer?",
+    "next": "PRÓXIMO",
+    "btnText": "Ajuda"
+  },
+  "sui": {
+    "notifications": {
+      "message": "Quer vê-lo agora?",
+      "title": "Este mapa contém uma história",
+      "confirmText": "sim",
+      "denyText": "Talvez mais tarde"
+    },
+    "hideWorkbench": "Ocultar Painel",
+    "showWorkbench": "Mostrar Painel"
+  },
+  "preview": {
+    "accessConstraints": "Restrições de acesso",
+    "author": "Autor",
+    "resourceDescription": "Descrição do Recurso",
+    "dataPreview": "VISUALIZAÇÃO DE DADOS",
+    "previewItemErrorTitle": "Não foi possível visualizar o item do catálogo.",
+    "doesNotContainGeospatialData": "Este arquivo não contém dados geoespaciais.",
+    "noPreviewAvailable": "SEM PRÉ-VISUALIZAÇÃO DISPONÍVEL",
+    "dataPreviewLoading": "CARREGAMENTO DE VISUALIZAÇÃO DE DADOS...",
+    "selectToPreview": "<0> Selecione um conjunto de dados para ver uma visualização </0> <1> - OU - </1> <2> Vá para o mapa </2>",
+    "serviceDescription": "Descrição do Serviço",
+    "loading": "CARREGAMENTO DE PRÉ-VISUALIZAÇÃO...",
+    "preview": "Visualização de {{appName}}",
+    "datasetDescription": "Descrição do conjunto de dados",
+    "previewItemErrorMessage": "Ocorreu um erro ao carregar o item do catálogo.",
+    "created": "Criado",
+    "modified": "Modificado",
+    "dataCustodian": "Custodiante de Dados",
+    "dataPreviewError": "ERRO DE VISUALIZAÇÃO DE DADOS",
+    "removeFromMap": "Remover do mapa",
+    "addToMap": "Adicionar ao mapa",
+    "disclaimer": "Isenção de responsabilidade",
+    "dataDescription": "descrição de dados",
+    "licence": "Licença",
+    "fees": "Taxas",
+    "contact": "Contato",
+    "updateFrequency": "Frequência de atualização",
+    "mayBeExperiencingIssues": "Este conjunto de dados pode estar com problemas no momento"
+  },
+  "mobile": {
+    "toggleNavigation": "alternar navegação",
+    "addDataBtnText": "Dados",
+    "doneBtnText": "Feito"
+  },
+  "search": {
+    "searchCatalogue": "Pesquise o catálogo",
+    "viewMore": "Ver mais resultados de {{name}}",
+    "placeholder": "Procure por locais",
+    "resultsLabel": "Resultados da pesquisa",
+    "done": "Feito",
+    "data": "Dados",
+    "searchInDataCatalog": "Pesquise <1> '{{locationSearchText}}' </1> no Catálogo de Dados",
+    "search": "Pesquise '{{searchText}}' no Catálogo de Dados",
+    "viewLess": "Ver menos resultados de {{name}}"
+  },
+  "description": {
+    "dataUrl": "Links de dados",
+    "name": "Descrição",
+    "dataLocal": "Este arquivo existe apenas no seu navegador. Para compartilhá-lo, você deve carregá-lo em um servidor web público.",
+    "dataNotLocal": "Entre em contato com o fornecedor desses dados para obter mais informações, incluindo informações sobre direitos e restrições de uso.",
+    "wfs": "Este é um <1> serviço WFS </1>, que transfere dados espaciais brutos mediante solicitação. Ele pode ser usado em software GIS com este URL:",
+    "metadataUrls": "Links de metadados",
+    "wms": "Este é um <1> serviço WMS </1>, que gera imagens de mapas mediante solicitação. Ele pode ser usado em software GIS com este URL:",
+    "typeName": "Nome do tipo",
+    "layerName": "Nome da camada",
+    "useTheLinkToDownload": "Use o link abaixo para baixar os dados diretamente.",
+    "downloadData": "Baixar dados",
+    "useLinkBelow": "Use o link abaixo para baixar os dados. Consulte o {{link}} para obter mais informações sobre como personalizar os parâmetros de consulta de URL.",
+    "downloadInFormat": "Baixe os dados selecionados no formato {{format}}",
+    "downloadNotSupported": "Infelizmente, seu navegador não suporta a funcionalidade necessária para baixar esses dados como um arquivo. Use o Chrome, Firefox ou Safari para baixar esses dados.",
+    "dataSourceDetails": "Detalhes da fonte de dados",
+    "dataServiceDetails": "Detalhes do serviço de dados",
+    "dataCustodian": "Custodiante de Dados"
+  },
+  "workbench": {
+    "colorScaleRangeMax": "O valor máximo deve ser um número.",
+    "colorScaleRangeTitle": "Faixa de escala de cores inválidas",
+    "colorScaleRangeMin": "O valor mínimo deve ser um número.",
+    "colorScaleUpdateRange": "Faixa de atualização",
+    "displayPercent": "Exibir como uma porcentagem do total regional",
+    "colorScaleRange": "Faixa de escala de cores",
+    "rangeMax": "Máximo:",
+    "openFeature": "Zoom para",
+    "colorScaleRangeMinSmallerThanMax": "O valor mínimo do intervalo da escala de cores deve ser menor que o valor máximo.",
+    "rangeMin": "Mínimo:",
+    "opacity": "Opacidade: {{opacity}}%",
+    "openFeatureTitle": "Zoom para dados",
+    "showMoreActionsTitle": "Mostrar mais ações",
+    "previewItemTitle": "Sobre dados",
+    "toggleVisibility": "Mostrar/ocultar dados",
+    "addItemErrorTitle": "O item não pôde ser adicionado ao painel.",
+    "dimensionsSelector": {
+      "undefinedLabel": "Não especificado"
+    },
+    "zoomToTitle": "Extensão total",
+    "zoomTo": "Zoom Ideal",
+    "previewItem": "Sobre Dados",
+    "splitItemTitle": "Duplicar e mostrar divisor",
+    "splitItem": "Comparar",
+    "diffImageTitle": "Veja diferenças de imagem entre duas datas",
+    "diffImage": "Diferença",
+    "exportDataTitle": "Exportar dados",
+    "exportData": "Exportar",
+    "removeFromMapTitle": "Remova estes dados",
+    "removeFromMap": "Remover",
+    "label": "Dados",
+    "removeAll": "Remover",
+    "collapseAll": "Recolher",
+    "expandAll": "Expandir",
+    "addItemErrorMessage": "Ocorreu um erro ao carregar o item do catálogo.",
+    "searchItem": "Procurar",
+    "searchItemTitle": "Procurar"
+  },
+  "dateTime": {
+    "useTimeline": "Use a linha do tempo",
+    "timeline": {
+      "textCell": "Nome do conjunto de dados cujo intervalo de tempo é mostrado",
+      "gotoStart": "Vá para o começo",
+      "togglePlay": "Toque",
+      "playSlower": "Toque mais devagar",
+      "playFaster": "Toque mais rápido"
+    },
+    "next": "Próxima vez",
+    "selectorLabel": "Tempo:",
+    "back": "Voltar",
+    "previous": "Vez anterior",
+    "selectTime": "Selecione um horário",
+    "outOfRange": "Atualmente fora de alcance.",
+    "availableTimeChart": "Mostrar horários disponíveis no gráfico"
+  },
+  "timer": {
+    "nextScheduledUpdateTime": "Próxima atualização de dados em {{scheduledUpdateTime}}",
+    "nextScheduledUpdateCountdown": "Próxima atualização de dados em {{timeCountdown}}"
+  },
+  "chart": {
+    "noData": "Não foram encontrados dados gráficos.",
+    "sectionLabel": "Gráficos",
+    "closePanel": "Fechar painel",
+    "expand": "Expandir",
+    "download": "Baixar",
+    "loading": "Carregando dados do gráfico ..."
+  },
+  "terriaViewer": {
+    "slowWebGLAvailableMessage": "Seu navegador da web informa que tem problemas de desempenho exibindo {{appName}} em 3D, então você verá uma experiência limitada, apenas 2D. Para a experiência 3D completa, tente usar um navegador da web diferente, atualizando seus drivers de vídeo ou atualizando seu sistema operacional.",
+    "slowWebGLAvailableTitle": "Baixo desempenho WebGL",
+    "slowWebGLAvailableMessageII": "{{appName}} funciona melhor com um navegador web que suporta {{webGL}} incluindo as versões mais recentes de {{chrome}}, {{firefox}}, {{safari}} e {{internetExplorer}}. Seu navegador web não parece suportar o WebGL, então você verá uma experiência limitada apenas em 2D.",
+    "webGLNotSupportedOrSlowMessage": "Seu navegador da web não pode exibir o mapa em 3D porque não oferece suporte a WebGL ou porque o navegador da web relatou que o WebGL ficará extremamente lento. Tente um navegador da web diferente, como a versão mais recente de {{chrome}}, {{firefox}}, {{safari}}, {{internetExplorer}}. Em alguns casos, pode ser necessário atualizar o driver de vídeo ou sistema operacional do seu computador para obter o Visualização 3D em {{appName}}.",
+    "internetExplorer": "Internet Explorer 11",
+    "chrome": "Google Chrome",
+    "firefox": "Mozilla Firefox",
+    "safari": "Apple Safari",
+    "webGLNotSupportedTitle": "WebGL não suportado",
+    "webGLNotSupportedOrSlowTitle": "WebGL não compatível ou muito lento"
+  },
+  "concept": {
+    "summary": {
+      "addFirstText": "Adicionar nova condição",
+      "addMoreText": "Adicione uma condição"
+    },
+    "active": {
+      "edit": "Editar condição",
+      "remove": "Remover condição"
+    },
+    "inactive": {
+      "cancel": "Cancelar",
+      "newText": "Nova condição"
+    }
+  },
+  "clipboard": {
+    "success": "Copiado para a área de transferência",
+    "shareURL": "Compartilhar URL",
+    "shareExplanation": "Qualquer pessoa com este URL poderá acessar este mapa.",
+    "unsuccessful": "Falha ao copiar ...",
+    "copy": "Copiar"
+  },
+  "emptyWorkbench": {
+    "helpfulHintsThree": "No painel você pode ativar e desativar os conjuntos de dados, alterar opacidade, ativar a comparação em tela dividida, alterar estilos e navegar por datas e horas, se os dados suportarem essa funcionalidade.",
+    "helpfulHintsOne": "Navegue pelos dados disponíveis selecionando 'Explorar dados' ou clique em 'Carregar' para adicionar seus próprios dados ao mapa.",
+    "helpfulHintsTwo": "Após adicionar dados ao mapa, seus conjuntos de dados ativos são listados aqui em seu painel. O painel o ajudará a interagir com os dados.",
+    "emptyArea": "Seu painel está vazio",
+    "helpfulHints": "Dicas úteis"
+  },
+  "catalogItem": {
+    "removeFromMap": "Remover do mapa",
+    "privateIndicatorTitle": "Conjunto de dados privado",
+    "loading": "Carregando...",
+    "remove": "Remover",
+    "add": "Adicionar",
+    "trash": "Remover do catálogo",
+    "preview": "Visualizar"
+  },
+  "viewModels": {
+    "searchNoLocations": "Nenhum local corresponde à sua consulta de pesquisa.",
+    "inDataCatalogue": "No Catálogo de Dados",
+    "searchErrorOccurred": "Ocorreu um erro durante a pesquisa. Verifique sua conexão com a Internet ou tente novamente mais tarde.",
+    "searchAddresses": "Endereços",
+    "searchPlaceNames": "Nomes oficiais de lugares",
+    "searchNoPlaceNames": "Desculpe, nenhum nome oficial de lugar corresponde à consulta de pesquisa.",
+    "searchLocations": "Locais",
+    "searchCatalogueItem": "Itens do Catálogo",
+    "searchNoCatalogueItem": "Desculpe, nenhum item do catálogo corresponde à sua consulta de pesquisa.",
+    "inMultipleLocations": "Em vários locais, incluindo: "
+  },
+  "core": {
+    "dataType": {
+      "kml": "KML ou KMZ",
+      "czml": "CZML",
+      "shp": "Shapefile (zip)",
+      "sdmx-group": "SDMX-JSON",
+      "geojson": "GeoJSON",
+      "open-street-map": "Servidor Open Street Map",
+      "gpx": "GPX",
+      "geoRss": "GeoRSS",
+      "csv": "CSV",
+      "carto": "Carto",
+      "auto": "Detecção automática (recomendada)",
+      "wms-group": "Servidor do Serviço de Mapas Web (WMS)",
+      "wmts-group": "Servidor Web Map Tile Service (WMTS)",
+      "wfs-group": "Servidor WFS (Web Feature Service, serviço de recursos da Web)",
+      "wps-getCapabilities": "Servidor WPS (Web Processing Service, serviço de processamento web)",
+      "esri-group": "Servidor Esri ArcGIS",
+      "esri-mapServer": "Esri ArcGIS MapServer (camada única)",
+      "esri-featureServer": "Esri ArcGIS FeatureServer (camada única)",
+      "3d-tiles": "3D Tiles",
+      "opendatasoft-group": "Portal Opendatasoft",
+      "json": "JSON",
+      "gltf": "GLTF",
+      "other": "Outro (usar serviço de conversão)"
+    },
+    "printWindow": {
+      "onbeforeprint": "onbeforeprint",
+      "onafterprint": "onafterprint",
+      "errorTitle": "Erro ao imprimir",
+      "errorMessage": "A impressão não começou em 10 segundos. Talvez este navegador não suporte a impressão?",
+      "printMediaStart": "início da mídia de impressão",
+      "printMediaEnd": "fim da mídia impressa"
+    },
+    "consoleAnalytics": {
+      "logStartedWithGAParameters": "ConsoleAnalytics foi iniciado, mas uma chave `googleAnalyticsKey` ou` googleAnalyticsOptions` foi observada em `userParameters`",
+      "started": "O ConsoleAnalytics foi iniciado.",
+      "startedNoLogToConsole": "O ConsoleAnalytics foi iniciado, porém `userParameters.logToConsole` não foi definido ou configurado como falso."
+    },
+    "dataUri": {
+      "errorMessage": "Infelizmente, os navegadores da Microsoft (incluindo todas as versões do Internet Explorer e Edge) não oferecem suporte à funcionalidade de uri de dados necessária para baixar dados como um arquivo. Para fazer o download, copie o seguinte uri em outro navegador, como Chrome, Firefox ou Safari: {{href}}",
+      "errorTitle": "O navegador não suporta download de dados"
+    },
+    "googleAnalytics": {
+      "log": "O rastreamento do Google Analytics está desativado porque terria.configParameters.googleAnalyticsKey não foi especificado",
+      "logEnabledOnDevelopment": "O Google Analytics foi inicializado em um ambiente de `desenvolvimento`"
+    },
+    "readText": {
+      "fileRequired": "arquivo é necessário"
+    },
+    "terriaError": {
+      "defaultTitle": "Um erro ocorreu",
+      "defaultMessage": "Erro desconhecido",
+      "defaultCombineTitle": "Vários erros ocorreram",
+      "defaultCombineMessage": "Detalhes dos erros estão abaixo",
+      "networkRequestTitle": "Ocorreu um erro de solicitação de rede"
+    },
+    "readXml": {
+      "xmlError": "O arquivo não contém XML válido."
+    },
+    "serverConfig": {
+      "failedToGet": "Falha ao obter a configuração do servidor de {{serverConfigUrl}}. Isso significa que serviços como proxy, conversão e redução de URL podem não funcionar."
+    },
+    "errors": {
+      "tooDeepAddedByUser": "Atingiu 100 itens de catálogo ao verificar AddedByUser e pousou em ID: \"{{memberId}}\"? Verifique se você não tem um grupo de catálogo recursivo."
+    },
+    "userAddedData": "Dados adicionados pelo usuário",
+    "chartData": "Dados do gráfico"
+  },
+  "analytics": {
+    "point": "Ponto (lat/lon)",
+    "polygon": "Polígono",
+    "selectLocation": "Selecione a localização",
+    "existingPolygon": "Polígono Existente",
+    "nothingSelected": "Nada foi selecionado, por favor, use os botões acima para fazer uma seleção.",
+    "runAnalysis": "Executar Análise",
+    "clickToDrawLine": "Clique para desenhar uma linha",
+    "enterValidCoords": "Insira coordenadas válidas (por exemplo, 131.0361, -25.3450).",
+    "selectPoint": "Selecione um ponto clicando no mapa.",
+    "clickToDrawPolygon": "Clique para desenhar o polígono",
+    "shiftToDrawRectangle": "Pressione a tecla SHIFT e segure o botão esquerdo do mouse para desenhar um retângulo",
+    "clickToDrawRectangle": "Clique para desenhar o retângulo",
+    "selectedPolygon": "Polígono Selecionado",
+    "regionName": "Nome da região",
+    "selectExistingPolygon": "Selecione o polígono existente"
+  },
+  "satellite": {
+    "pickPoint": "Selecione um ponto clicando no mapa.",
+    "querying": "Consultando posição ...",
+    "filterByLocation": "Filtrar por localização",
+    "infoGroup": "Mostrando apenas os tempos de captura disponíveis para:",
+    "removeFilter": "Remover filtro",
+    "zoomTo": "Zoom para",
+    "newLocation": "Nova localização"
+  },
+  "dragDrop": {
+    "text": "<0> Arraste e solte </0> <1> Seus dados em qualquer lugar para visualizar no mapa <1>",
+    "not": "<0> bbbb </0>"
+  },
+  "loader": {
+    "loadingMessage": "Carregando"
+  },
+  "emptyWorkbenchMessage": "<0> <0> Seu painel está vazio </0> <1> <strong> Clique em '$t(addData.addDataBtnText)' acima para </strong> </1> <2> <0> Navegar no Catálogo </0> <1> Carregue seus próprios dados no mapa </1> </2> <3> <0> </0> <strong> DICA. </strong> <2> Todos os seus conjuntos ativos serão listados aqui < / 2> </3> </0>",
+  "dataCatalog": {
+    "groupRemove": "remover este grupo",
+    "groupEmpty": "Este grupo está vazio"
+  }
+}

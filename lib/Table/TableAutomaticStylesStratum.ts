@@ -47,6 +47,15 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
   }
 
   @computed
+  get disableOpacityControl() {
+    // disable opacity control for point tables - or if no mapItems
+    return (
+      this.catalogItem.activeTableStyle.isPoints() ||
+      this.catalogItem.mapItems.length === 0
+    );
+  }
+
+  @computed
   get defaultStyle(): StratumFromTraits<TableStyleTraits> {
     // Use the default style to select the spatial key (lon/lat, region, none i.e. chart)
     // for all styles.

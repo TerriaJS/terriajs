@@ -104,6 +104,12 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
       expect(style.color._expression).toBe("vec4(${Height})");
     });
 
+    it("reflects changes to the catalog item's opacity in its style", function() {
+      expect(style.color._expression).not.toContain("${opacity}");
+      item.setTrait("user", "opacity", 0.5);
+      expect(style.color._expression).toContain("${opacity}");
+    });
+
     describe("when filters are specified", function() {
       it("adds the filters to the style", function() {
         runInAction(() =>

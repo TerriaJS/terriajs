@@ -18,7 +18,9 @@ import TerriaError from "../Core/TerriaError";
 import ConstantColorMap from "../Map/ConstantColorMap";
 import RegionProviderList from "../Map/RegionProviderList";
 import CommonStrata from "../Models/Definition/CommonStrata";
-import Model from "../Models/Definition/Model";
+import LoadableStratum from "../Models/Definition/LoadableStratum";
+import Model, { BaseModel } from "../Models/Definition/Model";
+import StratumOrder from "../Models/Definition/StratumOrder";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import SelectableDimensions, {
   SelectableDimension
@@ -241,12 +243,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     @computed
-    get disableOpacityControl() {
-      // disable opacity control for point tables - or if no mapItems
-      return this.activeTableStyle.isPoints() || this.mapItems.length === 0;
-    }
-
-    @computed
     get disableSplitter() {
       return !isDefined(this.activeTableStyle.regionColumn);
     }
@@ -255,7 +251,9 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     get disableZoomTo() {
       // Disable zoom if only showing imagery parts  (eg region mapping) and no rectangle is defined
       if (
-        !this.mapItems.find(m => m instanceof DataSource) &&
+        !this.mapItems.find(
+          m => m instanceof DataSource || m instanceof CustomDataSource
+        ) &&
         !isDefined(this.cesiumRectangle)
       ) {
         return true;
@@ -472,7 +470,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       if (this.mapItems.length === 0 && !this.enableManualRegionMapping) {
         return;
       }
-
       return {
         id: "activeStyle",
         name: "Display Variable",
