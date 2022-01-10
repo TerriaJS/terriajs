@@ -150,6 +150,11 @@ class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
     return 1;
   }
 
+  @computed
+  get disableOpacityControl() {
+    return !this._item._imageryProvider;
+  }
+
   get showDisableStyleOption() {
     return true;
   }
@@ -164,8 +169,9 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     @observable
     private _dataSource: CzmlDataSource | GeoJsonDataSource | undefined;
 
+    /** This is only public so that it can be accessed in GeoJsonStratum, treat it as private */
     @observable
-    private _imageryProvider: ProtomapsImageryProvider | undefined;
+    _imageryProvider: ProtomapsImageryProvider | undefined;
 
     private tableStyleReactionDisposer: IReactionDisposer | undefined;
 
@@ -290,11 +296,6 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         sender: this,
         message: "No data available to download."
       });
-    }
-
-    @computed
-    get disableOpacityControl() {
-      return !this._imageryProvider;
     }
 
     @computed
