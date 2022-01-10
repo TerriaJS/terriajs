@@ -46,30 +46,6 @@ import DiscretelyTimeVaryingMixin, {
 import ExportableMixin, { ExportData } from "./ExportableMixin";
 import { ImageryParts } from "./MappableMixin";
 
-class TableStratum extends LoadableStratum(TableTraits) {
-  static stratumName = "table";
-  constructor(private readonly _item: TableMixin.Instance) {
-    super();
-  }
-  duplicateLoadableStratum(newModel: BaseModel): this {
-    return new TableStratum(newModel as TableMixin.Instance) as this;
-  }
-
-  static load(item: TableMixin.Instance) {
-    return new TableStratum(item);
-  }
-
-  @computed
-  get disableOpacityControl() {
-    // disable opacity control for point tables - or if no mapItems
-    return (
-      this._item.activeTableStyle.isPoints() || this._item.mapItems.length === 0
-    );
-  }
-}
-
-StratumOrder.addLoadStratum(TableStratum.stratumName);
-
 function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
   abstract class TableMixin
     extends ExportableMixin(
@@ -94,13 +70,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         )
       );
       this.defaultTableStyle = tableStyle;
-
-      // Add TableStratum
-      if (this.strata.get(TableStratum.stratumName) === undefined) {
-        runInAction(() => {
-          this.strata.set(TableStratum.stratumName, TableStratum.load(this));
-        });
-      }
     }
 
     get hasTableMixin() {

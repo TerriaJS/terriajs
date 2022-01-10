@@ -47,10 +47,6 @@ import LoadableStratum from "../Models/Definition/LoadableStratum";
 import StratumOrder from "../Models/Definition/StratumOrder";
 
 class Cesium3dTilesStratum extends LoadableStratum(Cesium3dTilesTraits) {
-  constructor() {
-    super();
-  }
-
   duplicateLoadableStratum(model: BaseModel): this {
     return new Cesium3dTilesStratum() as this;
   }
@@ -92,8 +88,6 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
   abstract class Cesium3dTilesMixin extends ShadowMixin(
     MappableMixin(CatalogMemberMixin(Base))
   ) {
-    readonly canZoomTo = true;
-
     protected tileset?: ObservableCesium3DTileset;
 
     constructor(...args: any[]) {
@@ -101,10 +95,6 @@ function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
       runInAction(() => {
         this.strata.set(Cesium3dTilesStratum.name, new Cesium3dTilesStratum());
       });
-    }
-
-    get isMappable() {
-      return true;
     }
 
     // Just a variable to save the original tileset.root.transform if it exists
