@@ -4,7 +4,7 @@
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
-    "node": ">= 10.0.0"
+    "node": ">= 12.0.0"
   },
   "repository": {
     "type": "git",
@@ -12,6 +12,9 @@
   },
   "config": {
     "docRepo": "git@github.com:TerriaJS/Documentation.git"
+  },
+  "resolutions": {
+    "colors": "1.4.0"
   },
   "dependencies": {
     "@babel/core": "^7.16.0",
