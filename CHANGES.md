@@ -15,6 +15,7 @@ Change Log
 - TSXified OpacitySection
 * Upgrade compiler target from es2018 to es2019
 * Fix default table style legends
+* Remove SOS defaults legend workaround
 * [The next improvement]
 
 #### 8.1.16
