@@ -236,8 +236,6 @@ describe("SdmxJsonCatalogItem", function() {
       ?.getRegionProvider("STE_2016")
       ?.loadRegionIDs();
 
-    console.log(sdmxItem);
-
     await sdmxItem.loadMapItems();
 
     expect(sdmxItem.mapItems.length).toBe(1);

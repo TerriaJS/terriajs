@@ -110,7 +110,7 @@ describe("Cesium3dTilesMixin", function() {
 
   describe("tileset style", function() {
     describe("show expression from filter", function() {
-      fit("casts the property to number", async function() {
+      it("casts the property to number", async function() {
         terria = new Terria({
           baseUrl: "./"
         });

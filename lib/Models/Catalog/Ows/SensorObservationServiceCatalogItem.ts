@@ -321,12 +321,6 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
       TableAutomaticStylesStratum.stratumName,
       new SosAutomaticStylesStratum(this)
     );
-    // Temporary workaround for https://github.com/TerriaJS/terriajs/issues/6058
-    this.defaultTableStyle.colorTraits.setTrait(
-      CommonStrata.defaults,
-      "legend",
-      undefined
-    );
   }
 
   get type() {

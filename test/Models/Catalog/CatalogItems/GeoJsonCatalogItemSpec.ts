@@ -1,5 +1,6 @@
 import { runInAction } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import Iso8601 from "terriajs-cesium/Source/Core/Iso8601";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
@@ -19,6 +20,7 @@ import ProtomapsImageryProvider, {
 } from "../../../../lib/Map/ProtomapsImageryProvider";
 import { getColor } from "../../../../lib/ModelMixins/GeojsonMixin";
 import GeoJsonCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
+import SplitItemReference from "../../../../lib/Models/Catalog/CatalogReferences/SplitItemReference";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
 import Terria from "../../../../lib/Models/Terria";
@@ -534,7 +536,6 @@ describe("GeoJsonCatalogItem - with CZML template", function() {
 
       const entities = (geojson.mapItems[0] as GeoJsonDataSource).entities
         .values;
-      console.log(entities);
       expect(entities.length).toEqual(5);
 
       const entity1 = entities[0];
@@ -826,5 +827,41 @@ describe("Support geojson through apis", () => {
     geojson.setTrait(CommonStrata.user, "responseGeoJsonPath", "nested.data");
     await geojson.loadMapItems();
     expect(geojson.mapItems.length).toEqual(1);
+  });
+});
+
+describe("geojson can be split", function() {
+  let terria: Terria;
+  let geojson: GeoJsonCatalogItem;
+
+  beforeEach(async function() {
+    terria = new Terria({
+      baseUrl: "./"
+    });
+    geojson = new GeoJsonCatalogItem("test-geojson", terria);
+  });
+
+  it("protomaps-mvt", async function() {
+    terria.addModel(geojson);
+    const geojsonString = await loadText("test/GeoJSON/cemeteries.geojson");
+    geojson.setTrait(CommonStrata.user, "geoJsonString", geojsonString);
+    await geojson.loadMapItems();
+
+    const split = new SplitItemReference(createGuid(), terria);
+    split.setTrait(
+      CommonStrata.definition,
+      "splitSourceItemId",
+      geojson.uniqueId
+    );
+
+    const loadReferenceResult = await split.loadReference();
+
+    expect(loadReferenceResult.error).toBeUndefined();
+
+    expect(split.target instanceof GeoJsonCatalogItem).toBeTruthy();
+
+    expect(
+      (await (split.target as GeoJsonCatalogItem).loadMapItems()).error
+    ).toBeUndefined();
   });
 });
