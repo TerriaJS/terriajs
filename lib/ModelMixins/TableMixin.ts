@@ -18,9 +18,7 @@ import TerriaError from "../Core/TerriaError";
 import ConstantColorMap from "../Map/ConstantColorMap";
 import RegionProviderList from "../Map/RegionProviderList";
 import CommonStrata from "../Models/Definition/CommonStrata";
-import LoadableStratum from "../Models/Definition/LoadableStratum";
-import Model, { BaseModel } from "../Models/Definition/Model";
-import StratumOrder from "../Models/Definition/StratumOrder";
+import Model from "../Models/Definition/Model";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import SelectableDimensions, {
   SelectableDimension
@@ -28,7 +26,6 @@ import SelectableDimensions, {
 import createLongitudeLatitudeFeaturePerId from "../Table/createLongitudeLatitudeFeaturePerId";
 import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
 import createRegionMappedImageryProvider from "../Table/createRegionMappedImageryProvider";
-import { ColorStyleLegend } from "../Table/TableAutomaticStylesStratum";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
@@ -61,15 +58,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     constructor(...args: any[]) {
       super(...args);
 
-      const tableStyle = new TableStyle(this);
-      runInAction(() =>
-        tableStyle.colorTraits.setTrait(
-          CommonStrata.defaults,
-          "legend",
-          new ColorStyleLegend(this, undefined)
-        )
-      );
-      this.defaultTableStyle = tableStyle;
+      this.defaultTableStyle = new TableStyle(this);
     }
 
     get hasTableMixin() {

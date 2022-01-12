@@ -13,12 +13,13 @@ Change Log
 - RasterLayerTraits and Cesium3dTilesTraits now share the newly created OpacityTraits
 - `disableOpacityControl` is now a trait and can be set in the catalog.
 - TSXified OpacitySection
+* Upgrade compiler target from es2018 to es2019
+* Fix default table style legends
 * [The next improvement]
 
 #### 8.1.16
 
 * Added region mapping support for Commonwealth Electoral Divisions as at 2 August 2021 (AEC) as com_elb_name_2021.
-* Upgrade compiler target from es2018 to es2019
 
 #### 8.1.15
 
