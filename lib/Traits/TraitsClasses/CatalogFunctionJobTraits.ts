@@ -1,15 +1,17 @@
+import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
 import AutoRefreshingTraits from "./AutoRefreshingTraits";
 import CatalogFunctionTraits from "./CatalogFunctionTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import GroupTraits from "./GroupTraits";
-import mixTraits from "../mixTraits";
-import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
-import primitiveTrait from "../Decorators/primitiveTrait";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 
 export default class CatalogFunctionJobTraits extends mixTraits(
   CatalogFunctionTraits,
   AutoRefreshingTraits,
   CatalogMemberTraits,
+  LegendOwnerTraits,
   GroupTraits
 ) {
   @primitiveArrayTrait({

@@ -26,11 +26,12 @@ export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
   @computed
   get baseMapItems() {
     return filterOutUndefined(
-      this.filterBaseMapItems().map(({ item, image }) =>
+      this.filterBaseMapItems().map(({ item, image, contrastColor }) =>
         !item || ModelReference.isRemoved(item)
           ? undefined
           : {
-              image: image,
+              image,
+              contrastColor,
               item: this.terria.getModelById(BaseModel, item)
             }
       )

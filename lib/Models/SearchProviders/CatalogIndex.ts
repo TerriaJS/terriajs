@@ -1,5 +1,6 @@
 import { Document } from "flexsearch";
-import { action, runInAction } from "mobx";
+import { action, observable, runInAction } from "mobx";
+import loadBlob, { isZip, parseZipJsonBlob } from "../../Core/loadBlob";
 import loadJson from "../../Core/loadJson";
 import CatalogIndexReferenceTraits from "../../Traits/TraitsClasses/CatalogIndexReferenceTraits";
 import CatalogIndexReference from "../Catalog/CatalogReferences/CatalogIndexReference";
@@ -18,23 +19,48 @@ export interface ModelIndex {
 }
 
 export default class CatalogIndex {
+  /** Map from share key -> id */
+  readonly shareKeysMap = observable.map<string, string>();
   private _models: Map<string, CatalogIndexReference> | undefined;
+
+  private _searchIndex:
+    | Document<{ id: string; name: string; description: string }>
+    | undefined; // Flex-search document index
+
+  @observable
+  private _loadPromise: Promise<void> | undefined;
+
+  constructor(private readonly terria: Terria, private readonly url: string) {}
 
   get models() {
     return this._models;
   }
-  private _searchIndex:
-    | Document<{ id: string; name: string; description: string }>
-    | undefined; // Flex-search document index
 
   get searchIndex() {
     return this._searchIndex;
   }
 
-  readonly loadPromise: Promise<void>;
+  get loadPromise() {
+    return this._loadPromise;
+  }
 
-  constructor(private readonly terria: Terria, private readonly url: string) {
-    this.loadPromise = this.loadCatalogIndex();
+  getModelByIdOrShareKey(modelId: string) {
+    if (this.models?.has(modelId)) {
+      return this.models.get(modelId);
+    }
+
+    const shareKeyId = this.shareKeysMap.get(modelId);
+    if (shareKeyId) {
+      return this.models?.get(shareKeyId);
+    }
+  }
+
+  load() {
+    if (this._loadPromise) return this._loadPromise;
+
+    runInAction(() => (this._loadPromise = this.loadCatalogIndex()));
+
+    return this._loadPromise!;
   }
 
   /** The catalog index is loaded automatically on startup.
@@ -43,9 +69,12 @@ export default class CatalogIndex {
   private async loadCatalogIndex() {
     // Load catalog index
     try {
-      const index = (await loadJson(
-        this.terria.corsProxy.getURLProxyIfNecessary(this.url)
-      )) as CatalogIndexFile;
+      const url = this.terria.corsProxy.getURLProxyIfNecessary(this.url);
+
+      const index = (isZip(url)
+        ? await parseZipJsonBlob(await loadBlob(url))
+        : await loadJson(url)) as CatalogIndexFile;
+
       this._models = new Map<string, CatalogIndexReference>();
 
       /**
@@ -78,22 +107,30 @@ export default class CatalogIndex {
       });
 
       const indexModels = Object.entries(index);
+      const promises: Promise<unknown>[] = [];
 
       for (let idx = 0; idx < indexModels.length; idx++) {
         const [id, model] = indexModels[idx];
         const reference = new CatalogIndexReference(id, this.terria);
         updateModelFromJson(reference, CommonStrata.definition, model);
 
+        if (model.shareKeys) {
+          model.shareKeys.map(s => this.shareKeysMap.set(s, id));
+        }
         // Add model to CatalogIndexReference map
         this._models!.set(id, reference);
 
         // Add document to search index
-        this._searchIndex.addAsync(id, {
-          id,
-          name: model.name ?? "",
-          description: model.description ?? ""
-        });
+        promises.push(
+          this._searchIndex.addAsync(id, {
+            id,
+            name: model.name ?? "",
+            description: model.description ?? ""
+          })
+        );
       }
+
+      await Promise.all(promises);
     } catch (error) {
       this.terria.raiseErrorToUser(error, "Failed to load catalog index");
     }

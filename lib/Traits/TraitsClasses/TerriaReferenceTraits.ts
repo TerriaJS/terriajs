@@ -2,11 +2,20 @@ import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import mixTraits from "../mixTraits";
 import CatalogMemberReferenceTraits from "./CatalogMemberReferenceTraits";
 import UrlTraits from "./UrlTraits";
+import primitiveTrait from "../Decorators/primitiveTrait";
 
 export default class TerriaReferenceTraits extends mixTraits(
   UrlTraits,
   CatalogMemberReferenceTraits
 ) {
+  @primitiveTrait({
+    name: "Is Open",
+    description:
+      "True if this group is open and its contents are visible; otherwise, false. (This only applies if `isGroup = true`)",
+    type: "boolean"
+  })
+  isOpen?: boolean;
+
   @primitiveArrayTrait({
     type: "string",
     name: "Path",

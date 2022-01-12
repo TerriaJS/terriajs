@@ -4,12 +4,14 @@ import MappableTraits from "./MappableTraits";
 import mixTraits from "../mixTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 
 export default class IonImageryCatalogItemTraits extends mixTraits(
   RasterLayerTraits,
   LayerOrderingTraits,
   MappableTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  LegendOwnerTraits
 ) {
   @primitiveTrait({
     name: "Ion Asset ID",

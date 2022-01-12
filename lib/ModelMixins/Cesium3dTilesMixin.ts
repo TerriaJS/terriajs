@@ -10,7 +10,6 @@ import {
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import clone from "terriajs-cesium/Source/Core/clone";
-import Color from "terriajs-cesium/Source/Core/Color";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
 import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
@@ -18,6 +17,7 @@ import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
+import Color from "terriajs-cesium/Source/Core/Color";
 import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
@@ -33,7 +33,7 @@ import TerriaError from "../Core/TerriaError";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
-import Model from "../Models/Definition/Model";
+import Model, { BaseModel } from "../Models/Definition/Model";
 import Feature from "../Models/Feature";
 import { SelectableDimension } from "../Models/SelectableDimensions";
 import Cesium3DTilesCatalogItemTraits from "../Traits/TraitsClasses/Cesium3DTilesCatalogItemTraits";
@@ -43,6 +43,22 @@ import Cesium3dTilesTraits, {
 import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
 import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
+import LoadableStratum from "../Models/Definition/LoadableStratum";
+import StratumOrder from "../Models/Definition/StratumOrder";
+
+class Cesium3dTilesStratum extends LoadableStratum(Cesium3dTilesTraits) {
+  duplicateLoadableStratum(model: BaseModel): this {
+    return new Cesium3dTilesStratum() as this;
+  }
+
+  @computed
+  get opacity() {
+    return 1.0;
+  }
+}
+
+// Register the Cesium3dTilesStratum
+StratumOrder.instance.addLoadStratum(Cesium3dTilesStratum.name);
 
 const DEFAULT_HIGHLIGHT_COLOR = "#ff3f00";
 
@@ -66,13 +82,20 @@ class ObservableCesium3DTileset extends Cesium3DTileset {
   }
 }
 
-export default function Cesium3dTilesMixin<
-  T extends Constructor<Model<Cesium3dTilesTraits>>
->(Base: T) {
+function Cesium3dTilesMixin<T extends Constructor<Model<Cesium3dTilesTraits>>>(
+  Base: T
+) {
   abstract class Cesium3dTilesMixin extends ShadowMixin(
     MappableMixin(CatalogMemberMixin(Base))
   ) {
     protected tileset?: ObservableCesium3DTileset;
+
+    constructor(...args: any[]) {
+      super(...args);
+      runInAction(() => {
+        this.strata.set(Cesium3dTilesStratum.name, new Cesium3dTilesStratum());
+      });
+    }
 
     // Just a variable to save the original tileset.root.transform if it exists
     @observable
@@ -313,8 +336,9 @@ export default function Cesium3dTilesMixin<
           return "";
         }
 
+        // Escape single quotes, cast property value to number
         const property =
-          "${feature['" + filter.property.replace(/'/g, "\\'") + "']}";
+          "Number(${feature['" + filter.property.replace(/'/g, "\\'") + "']})";
         const min =
           isDefined(filter.minimumValue) &&
           isDefined(filter.minimumShown) &&
@@ -327,6 +351,7 @@ export default function Cesium3dTilesMixin<
           filter.maximumShown < filter.maximumValue
             ? property + " <= " + filter.maximumShown
             : "";
+
         return [min, max].filter(x => x.length > 0).join(" && ");
       });
 
@@ -389,14 +414,44 @@ export default function Cesium3dTilesMixin<
     @computed get cesiumTileStyle() {
       if (
         !isDefined(this.style) &&
+        (!isDefined(this.opacity) || this.opacity === 1) &&
         !isDefined(this.showExpressionFromFilters)
       ) {
         return;
       }
+
       const style = clone(toJS(this.style) || {});
+      const opacity = clone(toJS(this.opacity));
+
+      if (!isDefined(style.defines)) {
+        style.defines = { opacity };
+      } else {
+        style.defines = Object.assign(style.defines, { opacity });
+      }
+
+      if (!isDefined(style.color)) {
+        // Some tilesets (eg. point clouds) have a ${COLOR} variable which stores the current color of a feature, so if
+        // we have that, we should use it, and only change the opacity.
+        // We have to do it component-wise because... well, I'm not entirely sure, but when I did it non-component-wise
+        // I started getting weird type errors when the shaders compiled. If you enjoy debugging dynamically generated
+        // shaders in the browser in the service of a marginal improvement to code brevity, this one's for you!
+        style.color =
+          "rgba((${COLOR}.r === undefined ? 1 : ${COLOR}.r) * 255, " +
+          "(${COLOR}.g === undefined ? 1 : ${COLOR}.g) * 255, " +
+          "(${COLOR}.b === undefined ? 1 : ${COLOR}.b) * 255, " +
+          "${COLOR}.a === undefined ? ${opacity} : ${COLOR}.a * ${opacity})";
+      } else if (typeof style.color == "string") {
+        // Check if the color specified is just a css color
+        const cssColor = Color.fromCssColorString(style.color);
+        if (isDefined(cssColor)) {
+          style.color = `color('${style.color}', \${opacity})`;
+        }
+      }
+
       if (isDefined(this.showExpressionFromFilters)) {
         style.show = toJS(this.showExpressionFromFilters);
       }
+
       return new Cesium3DTileStyle(style);
     }
 
@@ -553,6 +608,8 @@ export default function Cesium3dTilesMixin<
 
   return Cesium3dTilesMixin;
 }
+
+export default Cesium3dTilesMixin;
 
 function normalizeShowExpression(
   show: any

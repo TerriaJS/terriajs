@@ -35,6 +35,10 @@ function ReferenceMixin<T extends Constructor<Model<ReferenceTraits>>>(
     private _referenceLoader = new AsyncLoader(() => {
       const previousTarget = untracked(() => this._target);
       return this.forceLoadReference(previousTarget).then(target => {
+        if (!target) {
+          throw new DeveloperError("Failed to create reference");
+        }
+
         if (target?.uniqueId !== this.uniqueId) {
           throw new DeveloperError(
             "The model returned by `forceLoadReference` must be constructed with its `uniqueId` set to the same value as the Reference model."

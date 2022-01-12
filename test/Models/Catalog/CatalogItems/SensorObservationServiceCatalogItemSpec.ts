@@ -212,6 +212,17 @@ describe("SensorObservationServiceCatalogItem", function() {
           "Observation Type"
         ]);
       });
+
+      it("shows all options for the procedure selector", async function() {
+        await item.loadMapItems();
+        const procedureSelector = item.selectableDimensions.find(
+          s => s.name === "Frequency"
+        );
+        expect(procedureSelector).toBeDefined();
+        if (procedureSelector) {
+          expect(procedureSelector.options?.length).toEqual(4);
+        }
+      });
     });
   });
 

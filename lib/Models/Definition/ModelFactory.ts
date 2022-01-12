@@ -15,11 +15,12 @@ export default class ModelFactory {
   }
 
   create(
-    type: string,
+    type: string | undefined,
     uniqueId: string | undefined,
     terria: Terria,
     sourceReference?: BaseModel
   ): BaseModel | undefined {
+    if (!type) return undefined;
     const Constructor = this._constructors.get(type);
     if (Constructor === undefined) {
       return undefined;

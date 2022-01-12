@@ -154,6 +154,7 @@ interface FeatureServer {
 
 interface SpatialReference {
   wkid?: string;
+  latestWkid?: string;
 }
 
 interface Extent {
@@ -197,16 +198,14 @@ class FeatureServerStratum extends LoadableStratum(
 
   static async load(item: ArcGisFeatureServerCatalogItem) {
     if (!isDefined(item.url) || !isDefined(item.uri)) {
-      return Promise.reject(
-        new TerriaError({
-          title: i18next.t(
-            "models.arcGisFeatureServerCatalogItem.missingUrlTitle"
-          ),
-          message: i18next.t(
-            "models.arcGisFeatureServerCatalogItem.missingUrlMessage"
-          )
-        })
-      );
+      throw new TerriaError({
+        title: i18next.t(
+          "models.arcGisFeatureServerCatalogItem.missingUrlTitle"
+        ),
+        message: i18next.t(
+          "models.arcGisFeatureServerCatalogItem.missingUrlMessage"
+        )
+      });
     }
 
     const geoJsonItem = new GeoJsonCatalogItem(createGuid(), item.terria);
@@ -228,7 +227,14 @@ class FeatureServerStratum extends LoadableStratum(
     let tempEsriJson: any = null;
     const esriJson = await loadGeoJson(item);
     const geoJsonData = featureDataToGeoJson(esriJson.layers[0]);
-    geoJsonItem.setTrait(CommonStrata.definition, "geoJsonData", geoJsonData);
+    if (!geoJsonData) {
+      throw TerriaError.from("Failed to convert ESRI json data into GeoJSON");
+    }
+    geoJsonItem.setTrait(
+      CommonStrata.definition,
+      "geoJsonData",
+      geoJsonData as any
+    );
 
     (await geoJsonItem.loadMetadata()).throwIfError();
     const featureServer = await loadMetadata(item);
@@ -276,13 +282,11 @@ class FeatureServerStratum extends LoadableStratum(
 
   @computed get rectangle(): StratumFromTraits<RectangleTraits> | undefined {
     const extent = this._featureServer.extent;
+    const wkidCode =
+      extent?.spatialReference?.latestWkid ?? extent?.spatialReference?.wkid;
 
-    if (
-      isDefined(extent) &&
-      extent.spatialReference &&
-      extent.spatialReference.wkid
-    ) {
-      const wkid = "EPSG:" + extent.spatialReference.wkid;
+    if (isDefined(extent) && isDefined(wkidCode)) {
+      const wkid = "EPSG:" + wkidCode;
       if (!isDefined((proj4definitions as any)[wkid])) {
         return undefined;
       }
@@ -777,6 +781,7 @@ function buildGeoJsonUrl(catalogItem: ArcGisFeatureServerCatalogItem) {
       .segment("query")
       .addQuery("f", "json")
       .addQuery("layerDefs", "{" + layerId + ':"' + catalogItem.layerDef + '"}')
+      .addQuery("outSR", "4326")
       .toString()
   );
 }

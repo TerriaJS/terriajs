@@ -70,7 +70,6 @@ Specifies various options for configuring TerriaJS:
 |`displayOneBrand`|no|**number**|`0`|Index of which `brandBarElements` to show for mobile header. This will only be used if `brandBarSmallElements` is undefined.|
 |`disableMyLocation`|no|**boolean**|undefined|True to disable the "Centre map at your current location" button.|
 |`disableSplitter`|no|**boolean**|undefined|True to disable the use of the splitter control.|
-|`enableGeojsonMvt`|no|**boolean**|false|Feature flag for experimental Geojson-Mapbox vector tiles. If falsy, all `GeoJsonMixin` models will render cesium primitives. If truthy, [`geojson-vt`](https://github.com/mapbox/geojson-vt) will be used to tile GeoJson into Mapbox vector-tiles.|
 |`experimentalFeatures`|no|**boolean**|undefined||
 |`magdaReferenceHeaders`|no|**[MagdaReferenceHeaders](#magdareferenceheaders)**|undefined|
 |`locationSearchBoundingBox`|no|**number**|undefined|
@@ -87,6 +86,7 @@ Specifies various options for configuring TerriaJS:
 |`persistViewerMode`|no|**boolean**|`true`|Whether to load persisted viewer mode from local storage.|
 |`openAddData`|no|**boolean**|`false`|Whether to open the add data explorer panel on load.|
 |feedbackPreamble|no|**string**|feedback.feedbackPreamble|Text showing at the top of feedback form, supports the internationalization using the translation key.|
+|feedbackPostamble|no|**string**|feedback.feedbackPostamble|Text showing at the bottom of feedback form, supports the internationalization using the translation key.|
 |feedbackMinLength|no|**number**|0|Minimum length of feedback comment.| 
 |`theme`|no|**any**|`{}`|An object used to override theme properties - for example `{"logoHeight": "70px"}`.|
 
@@ -194,12 +194,16 @@ To generate the catalog index:
   - `config-url` is URL to client-side-config file
   - `base-url` is URL to terriajs-server (this is used to load `server-config` and to proxy requests)
   - For example `node .\build\generateCatalogIndex.js http://localhost:3001/config.json http://localhost:3001`
-- This will output two files
+
+- This will output three files
   - `catalog-index.json`
   - `catalog-index-errors.json` with any error messages which occurred while loading catalog members
-- Set `catalogIndexUrl` config parameter
+  - `catalog-index-errors-stack.json` with errors stack
+- Set `catalogIndexUrl` config parameter to URL to `catalog-index.json`
 
 This file will have to be re-generated manually every time the catalog structure changes - for example:
 
 - if items are renamed, or moved
 - dynamic groups are updated (for example, WMS server publishes new layers)
+
+For more details see [/buildprocess/generateCatalogIndex.ts](/buildprocess/generateCatalogIndex.ts)
