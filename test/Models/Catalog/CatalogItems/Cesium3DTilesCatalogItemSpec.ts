@@ -62,7 +62,7 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
       );
       let show: any = item.showExpressionFromFilters;
       expect(show).toBe(
-        "${feature['stratumlev']} >= -1 && ${feature['stratumlev']} <= 10"
+        "Number(${feature['stratumlev']}) >= -1 && Number(${feature['stratumlev']}) <= 10"
       );
     });
 
