@@ -1,22 +1,14 @@
 Change Log
 ==========
-#### next release (8.1.18)
 
-* [The next improvement]
+#### next release (8.1.17)
 
-#### 8.1.17
-
-* **Breaking changes**:
+- **Breaking changes**:
   * Minimum node version is now 12 after upgrading node-sass dependency
 
 * Automatically cast property value to number in style expressions generated for 3d tiles filter.
 * Re-enable procedure and observable selectors for SOS items.
 * Fix broken "Ideal zoom" for TableMixin items.
-* The opacity of 3d tiles can now be changed with the opacity slider in the workbench
-* RasterLayerTraits and Cesium3dTilesTraits now share the newly created OpacityTraits
-* `disableOpacityControl` is now a trait and can be set in the catalog.
-* TSXified OpacitySection
-* Upgrade compiler target from es2018 to es2019
 - The opacity of 3d tiles can now be changed with the opacity slider in the workbench
 - RasterLayerTraits and Cesium3dTilesTraits now share the newly created OpacityTraits
 - `disableOpacityControl` is now a trait and can be set in the catalog.
@@ -24,6 +16,7 @@ Change Log
 * Upgrade compiler target from es2018 to es2019
 * Fix default table style legends
 * Remove SOS defaults legend workaround
+* [The next improvement]
 
 #### 8.1.16
 
