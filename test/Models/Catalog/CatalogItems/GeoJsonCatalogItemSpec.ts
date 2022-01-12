@@ -536,7 +536,6 @@ describe("GeoJsonCatalogItem - with CZML template", function() {
 
       const entities = (geojson.mapItems[0] as GeoJsonDataSource).entities
         .values;
-      console.log(entities);
       expect(entities.length).toEqual(5);
 
       const entity1 = entities[0];
@@ -856,8 +855,6 @@ describe("geojson can be split", function() {
     );
 
     const loadReferenceResult = await split.loadReference();
-
-    console.log(loadReferenceResult);
 
     expect(loadReferenceResult.error).toBeUndefined();
 

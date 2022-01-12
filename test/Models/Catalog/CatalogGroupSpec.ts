@@ -218,8 +218,6 @@ describe("CatalogGroup", function() {
       }
     ]);
 
-    console.log(item);
-
     expect(item.excludeMembers).toEqual(["grandchild1", "parent3"]);
     expect(item.mergedExcludeMembers).toEqual(["grandchild1", "parent3"]);
 
