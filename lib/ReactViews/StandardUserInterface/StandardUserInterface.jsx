@@ -480,10 +480,10 @@ const StandardUserInterface = observer(
           </div>
           {this.props.viewState.printWindow && (
             <PrintView
-              window={printWindow}
+              window={this.props.viewState.printWindow}
               terria={terria}
               viewState={this.props.viewState}
-              closeCallback={() => this.props.viewState.setPrintView(false)}
+              closeCallback={() => this.props.viewState.setPrintWindow(null)}
             />
           )}
         </ThemeProvider>

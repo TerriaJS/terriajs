@@ -709,6 +709,9 @@ export default class ViewState {
   }
 
   @action setPrintWindow(window: Window | null) {
+    if(this.printWindow){
+      this.printWindow.close();
+    }
     this.printWindow = window;
   }
 

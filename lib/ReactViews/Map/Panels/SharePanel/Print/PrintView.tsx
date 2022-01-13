@@ -227,7 +227,7 @@ const PrintView = (props: Props) => {
       props.window.document.head.appendChild(mkStyle(styles));
       props.window.document.body.appendChild(rootNode);
       props.window.addEventListener("beforeunload", props.closeCallback);
-  }, []);
+  }, [props.window]);
 
   useEffect(() => {
     setScreenshot(props.terria.currentViewer.captureScreenshot());
@@ -237,7 +237,10 @@ const PrintView = (props: Props) => {
     <StyleSheetManager target={rootNode}>
       <ThemeProvider theme={terriaTheme}>
         <section className="PrintView__printControls">
-          <Button primary onClick={props.window.print}>
+          <Button primary onClick={(evt:MouseEvent )=> {
+            evt.preventDefault();
+            props.window.print();
+          }}>
             Print
           </Button>
         </section>
