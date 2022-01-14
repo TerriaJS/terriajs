@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.1.18)
 
+* Add missing default Legend to `TableAutomaticStylesStratum.defaultStyle`
 * [The next improvement]
 
 #### 8.1.17
