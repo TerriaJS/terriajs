@@ -103,7 +103,12 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
     }
 
     // Can't do much with this dataset.
-    return createStratumInstance(TableStyleTraits);
+    // Just add default legend
+    return createStratumInstance(TableStyleTraits, {
+      color: createStratumInstance(TableColorStyleTraits, {
+        legend: this._createLegendForColorStyle(-1)
+      })
+    });
   }
 
   @computed
