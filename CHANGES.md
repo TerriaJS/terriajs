@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.1.18)
 
+* Fix a bug in CompositeCatalogItem that causes share URLs to become extremely long.
 * [The next improvement]
 
 #### 8.1.17
