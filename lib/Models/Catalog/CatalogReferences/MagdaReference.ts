@@ -54,6 +54,13 @@ export default class MagdaReference extends AccessControlMixin(
       }
     }),
     createStratumInstance(MagdaDistributionFormatTraits, {
+      id: "WMS-GROUP",
+      formatRegex: "^wms-group$",
+      definition: {
+        type: "wms-group"
+      }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
       id: "EsriMapServer",
       formatRegex: "^esri (mapserver|map server|rest|tiled map service)$",
       urlRegex: "MapServer",
@@ -200,6 +207,7 @@ export default class MagdaReference extends AccessControlMixin(
         magdaReferenceHeaders: this.terria.configParameters
           .magdaReferenceHeaders
       });
+
       return MagdaReference.createMemberFromRecord(
         this.terria,
         this,
@@ -211,6 +219,20 @@ export default class MagdaReference extends AccessControlMixin(
         previousTarget
       );
     });
+  }
+
+  private static overrideRecordAspects(
+    record: JsonObject | undefined,
+    override: JsonObject | undefined
+  ) {
+    if (record && override && isJsonObject(override.aspects)) {
+      if (isJsonObject(record.aspects)) {
+        for (let key in override.aspects)
+          record.aspects[key] = override.aspects[key];
+      } else {
+        record.aspects = override.aspects;
+      }
+    }
   }
 
   private static createMemberFromRecord(
@@ -226,6 +248,8 @@ export default class MagdaReference extends AccessControlMixin(
     if (record === undefined) {
       return undefined;
     }
+
+    this.overrideRecordAspects(record, override);
 
     const aspects = record.aspects;
     if (!isJsonObject(aspects)) {
