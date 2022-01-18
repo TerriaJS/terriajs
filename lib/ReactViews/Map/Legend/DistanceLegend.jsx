@@ -49,12 +49,13 @@ const distances = [
 
 @observer
 class DistanceLegend extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       distanceLabel: undefined,
       barWidth: 0
     };
+    this.scale = props.scale || 1;
   }
   static displayName = "DistanceLegend";
   static propTypes = {
@@ -173,7 +174,7 @@ class DistanceLegend extends React.Component {
       }
 
       this.setState({
-        barWidth: (distance / pixelDistance) | 0,
+        barWidth: (distance / pixelDistance) * this.scale | 0,
         distanceLabel: label
       });
     } else {
@@ -197,7 +198,7 @@ class DistanceLegend extends React.Component {
     const label = meters < 1000 ? meters + " m" : meters / 1000 + " km";
 
     this.setState({
-      barWidth: (meters / maxMeters) * maxPixelWidth,
+      barWidth: (meters / maxMeters) * maxPixelWidth * this.scale,
       distanceLabel: label
     });
   }

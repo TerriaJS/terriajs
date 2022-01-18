@@ -61,7 +61,7 @@ const WorkbenchItem = ({
   key: number;
 }) => {
   return (
-    <div key={key}>
+    <div className="WorkbenchItem" key={key}>
       <h3>{item.name}</h3>
       {renderDisplayVariables(item)}
       <div>{renderLegend(item)}</div>

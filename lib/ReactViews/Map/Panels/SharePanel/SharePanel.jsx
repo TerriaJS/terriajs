@@ -59,7 +59,6 @@ const SharePanel = observer(
           this.props.shortenUrls &&
           this.props.terria.getLocalProperty("shortenShareUrls"),
         shareUrl: "",
-        creatingPrintView: false,
         creatingDownload: false
       };
     },
@@ -205,11 +204,7 @@ const SharePanel = observer(
         }
       }
     },
-
-    print() {
-      // TODO: no immediate printing for now;
-    },
-
+    
     getShareUrlInput(theme) {
       return (
         <Input
@@ -400,15 +395,9 @@ const SharePanel = observer(
                   const newWindow = window.open();
                   this.props.viewState.setPrintWindow(newWindow);
                 }}
-                disabled={this.state.creatingPrintView}
               >
                 {t("share.printViewButton")}
               </button>
-              <div className={Styles.printViewLoader}>
-                {this.state.creatingPrintView && (
-                  <Loader message={t("share.creatingPrintView")} />
-                )}
-              </div>
             </div>
           </div>
           <div

@@ -11,7 +11,7 @@ const PrintDatasets = (props: Props) => {
   return (
     <>
       {props.items.map((item, index) => (
-        <details key={index}>
+        <details key={index} open>
           <summary>{item.name}</summary>
           <Description item={item} printView={true} key={index} />
         </details>

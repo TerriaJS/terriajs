@@ -7,7 +7,7 @@ import DOMPurify from "dompurify";
 
 import DistanceLegend from "../../../Legend/DistanceLegend";
 import { terriaTheme } from "../../../../StandardUserInterface/StandardTheme";
-import styled, { StyleSheetManager, ThemeProvider } from "styled-components";
+import { StyleSheetManager, ThemeProvider } from "styled-components";
 
 import Button from "../../../../../Styled/Button";
 
@@ -18,143 +18,7 @@ import PrintDatasets from "./PrintDatasets";
 import { buildShareLink } from "../BuildShareLink";
 import PrintSource from "./PrintSource";
 
-// interface CreateOptions {
-//   terria: Terria;
-//   viewState: ViewState;
-//   printWindow: Window;
-//   readyCallback: (printWindow: Window) => void;
-//   closeCallback: (printWindow: Window) => void;
-// }
-
-// class PrintView extends React.Component<Props, State> {
-//   printWindowIntervalId: number | undefined;
-//   mainWindowIntervalId: number | undefined;
-//   window: Window | null;
-//   rootNode: Element;
-
-//   constructor(props: Props) {
-//     super(props);
-//     this.state = {
-//       mapImageDataUrl: undefined,
-//       isCheckingForImages: true
-//     };
-
-//     this.window = null;
-//     this.rootNode = document.createElement("div");
-//   }
-
-//   componentDidMount() {
-//     this.window = window.open();
-//     this.window?.document.body.appendChild(this.rootNode);
-
-//     return this.props.terria.currentViewer
-//       .captureScreenshot()
-//       .then(mapImageDataUrl => {
-//         this.setState({
-//           mapImageDataUrl: mapImageDataUrl
-//         });
-//       });
-//   }
-
-//   render() {
-//     return ReactDOM.createPortal(
-//       <p>
-//         <img
-//           className="map-image"
-//           src={this.state.mapImageDataUrl}
-//           alt="Map snapshot"
-//         />
-//       </p>,
-//       this.rootNode
-//     );
-//     // if (!this.state.mapImageDataUrl) {
-//     //   return <div>Creating print view...</div>;
-//     // }
-//     // return (
-//     //   <ThemeProvider theme={terriaTheme}>
-//     //     <PrintViewButtons />
-//     //     <p>
-//     //       <img
-//     //         className="map-image"
-//     //         src={this.state.mapImageDataUrl}
-//     //         alt="Map snapshot"
-//     //       />
-//     //     </p>
-//     //     <DistanceLegend terria={this.props.terria} />
-//     //     {this.props.terria.workbench.items.map(this.renderLegend)}
-//     //     {this.renderFeatureInfo()}
-//     //     <h1>Dataset Details</h1>
-//     //     {this.props.terria.workbench.items.map(this.renderDetails)}
-//     //     <h1>Map Credits</h1>
-//     //     {/* TODO: We don't have a way of getting credits yet*/}
-//     //     {this.props.terria.configParameters.printDisclaimer ? (
-//     //       <>
-//     //         <h1>Print Disclaimer</h1>
-//     //         <p>{this.props.terria.configParameters.printDisclaimer.text}</p>
-//     //       </>
-//     //     ) : null}
-//     //   </ThemeProvider>
-//     // );
-//   }
-
-//   renderLegend(
-//     catalogItem: MappableMixin.Instance &
-//       DiscretelyTimeVaryingMixin.Instance &
-//       CatalogMemeberMixin.Instance &
-//       BaseModel &
-//       any
-//   ) {
-//     if (!catalogItem.isMappable) {
-//       return null;
-//     }
-
-//     return (
-//       <div key={catalogItem.uniqueId} className="layer-legends">
-//         <div className="layer-title">{catalogItem.name}</div>
-//         {catalogItem.currentTime && (
-//           <div className="layer-time">Time: {catalogItem.currentTime}</div>
-//         )}
-//         <Legend forPrint={true} item={catalogItem} />
-//       </div>
-//     );
-//   }
-
-//   renderDetails(catalogItem: any) {
-//     if (!catalogItem.isMappable) {
-//       return null;
-//     }
-
-//     const nowViewingItem = catalogItem.nowViewingCatalogItem || catalogItem;
-//     return (
-//       <div key={catalogItem.uniqueId} className="layer-details">
-//         <h2>{catalogItem.name}</h2>
-//         <Description item={nowViewingItem} printView={true} />
-//       </div>
-//     );
-//   }
-
-//   renderFeatureInfo() {
-//     if (
-//       !this.props.viewState.featureInfoPanelIsVisible ||
-//       !this.props.terria.pickedFeatures ||
-//       !this.props.terria.pickedFeatures.features ||
-//       this.props.terria.pickedFeatures.features.length === 0
-//     ) {
-//       return null;
-//     }
-
-//     return (
-//       <div className="feature-info">
-//         <h1>Feature Information</h1>
-//         <FeatureInfoPanel
-//           terria={this.props.terria}
-//           viewState={this.props.viewState}
-//           printView={true}
-//         />
-//       </div>
-//     );
-//   }
-// }
+const PRINT_MAP_WIDTH = 1000;
 
 const styles = `
     .tjs-_base__list-reset {
@@ -163,13 +27,37 @@ const styles = `
         margin: 0;
     }
 
+    .mapContainer {
+      position: relative;
+    }
 
     .map-image {
-        max-width: 1200px;
+      width: ${PRINT_MAP_WIDTH}px;
+    }
+
+    .mapSection {
+      display: flex;
+      border: 1px solid lightgray;
+      margin: 10px 0;
+    }
+
+    .mapSection .datasets{
+      width:200px
     }
 
     h1, h2, h3 {
       clear: both;
+    }
+
+    .WorkbenchItem {
+      padding-bottom: 10px;
+      margin: 0 5px;
+      border-bottom: 1px solid lightgray;
+    }
+
+    .WorkbenchItem:last-of-type {
+      border: 0;
+      padding-bottom: 0;
     }
 
     .tjs-_form__input {
@@ -179,16 +67,26 @@ const styles = `
     .tjs-legend__distanceLegend {
       display: inline-block;
       text-align: center;
+      position: absolute;
+      bottom: 5px;
+      right: 10px;
+      background: white;
+      padding: 5px;
     }
 
     .tjs-legend__bar {
       border-bottom: 3px solid black;
+      border-right: 3px solid black;
+      border-left: 3px solid black;
     }
 
     body {
       display:flex;
       justify-content: center;
       width: 100%
+    }
+    .PrintView__printControls {
+     float:right; 
     }
 
     @media print {
@@ -201,7 +99,7 @@ const styles = `
     }
 
     main {
-      max-width: 1200px;
+      width: 1200px;
     }
 `;
 
@@ -218,10 +116,12 @@ interface Props {
   closeCallback: () => void;
 }
 
+const getScale = (maybeElement:Element | undefined) => maybeElement? PRINT_MAP_WIDTH / (maybeElement as HTMLElement).offsetWidth: 1;
+
 const PrintView = (props: Props) => {
   const [rootNode] = useState(document.createElement("main"));
   const [screenshot, setScreenshot] = useState<Promise<string> | null>(null);
-
+  
   useEffect(() => {
       props.window.document.title = "Print view";
       props.window.document.head.appendChild(mkStyle(styles));
@@ -250,17 +150,19 @@ const PrintView = (props: Props) => {
           </div>
           <div className="map">
             {screenshot ? (
-              <PrintViewMap screenshot={screenshot} />
+              <PrintViewMap screenshot={screenshot}>
+                <DistanceLegend terria={props.terria} scale={getScale(props.terria.currentViewer.getContainer())}/>
+              </PrintViewMap>
             ) : (
               <div>loading</div>
             )}
-            <DistanceLegend terria={props.terria} />
           </div>
         </section>
         <section className="PrintView__source">
           <PrintSource link={buildShareLink(props.terria, props.viewState)} />
         </section>
         <section>
+          <h2>Datasets</h2>
           <PrintDatasets items={props.terria.workbench.items} />
         </section>
       </ThemeProvider>
