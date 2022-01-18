@@ -162,8 +162,6 @@ describe("GnafApi", function() {
 
     geoCodeCall
       .then(function(results) {
-        console.log(results);
-
         var hit1 = results[0];
         var hit2 = results[1];
 

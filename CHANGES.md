@@ -1,7 +1,14 @@
 Change Log
 ==========
 
-#### next release (8.1.17)
+#### next release (8.1.18)
+
+* Add missing default Legend to `TableAutomaticStylesStratum.defaultStyle`
+* Fix a bug in CompositeCatalogItem that causes share URLs to become extremely long.
+* Fix `OpacitySection` number precision.
+* [The next improvement]
+
+#### 8.1.17
 
 - **Breaking changes**:
   * Minimum node version is now 12 after upgrading node-sass dependency
@@ -9,16 +16,18 @@ Change Log
 * Automatically cast property value to number in style expressions generated for 3d tiles filter.
 * Re-enable procedure and observable selectors for SOS items.
 * Fix broken "Ideal zoom" for TableMixin items.
-- The opacity of 3d tiles can now be changed with the opacity slider in the workbench
-- RasterLayerTraits and Cesium3dTilesTraits now share the newly created OpacityTraits
-- `disableOpacityControl` is now a trait and can be set in the catalog.
-- TSXified OpacitySection
-* [The next improvement]
+* The opacity of 3d tiles can now be changed with the opacity slider in the workbench
+* RasterLayerTraits and Cesium3dTilesTraits now share the newly created OpacityTraits
+* `disableOpacityControl` is now a trait and can be set in the catalog.
+* TSXified OpacitySection
+* Upgrade compiler target from es2018 to es2019
+* Fix default table style legends
+* Remove SOS defaults legend workaround
+* Update NodeJS version to 14 in `npm-publish` GitHub action
 
 #### 8.1.16
 
 * Added region mapping support for Commonwealth Electoral Divisions as at 2 August 2021 (AEC) as com_elb_name_2021.
-* Upgrade compiler target from es2018 to es2019
 
 #### 8.1.15
 

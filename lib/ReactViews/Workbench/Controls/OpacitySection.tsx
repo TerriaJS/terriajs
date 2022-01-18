@@ -40,7 +40,7 @@ class OpacitySection extends React.Component<OpacitySectionProps> {
       <div className={Styles.opacity}>
         <label htmlFor="opacity">
           {t("workbench.opacity", {
-            opacity: item.opacity * 100
+            opacity: Math.round(item.opacity * 100)
           })}
         </label>
         <Slider
