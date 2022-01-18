@@ -6,7 +6,7 @@ Change Log
 * Add missing default Legend to `TableAutomaticStylesStratum.defaultStyle`
 * Fix a bug in CompositeCatalogItem that causes share URLs to become extremely long.
 * Fix `OpacitySection` number precision.
-* Cleaned up print preview
+* Added new print preview page that opens up in a new window
 * [The next improvement]
 
 #### 8.1.17
