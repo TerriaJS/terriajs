@@ -1,9 +1,9 @@
 import CatalogMemberFactory from "../../Models/Catalog/CatalogMemberFactory";
-import ModelReference from "../ModelReference";
 import modelReferenceArrayTrait from "../Decorators/modelReferenceArrayTrait";
-import ModelTraits from "../ModelTraits";
-import primitiveTrait from "../Decorators/primitiveTrait";
 import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
+import primitiveTrait from "../Decorators/primitiveTrait";
+import ModelReference from "../ModelReference";
+import ModelTraits from "../ModelTraits";
 
 export default class GroupTraits extends ModelTraits {
   @primitiveArrayTrait({
@@ -20,6 +20,14 @@ export default class GroupTraits extends ModelTraits {
     type: "boolean"
   })
   isOpen: boolean = false;
+
+  @primitiveTrait({
+    name: "Sort members by",
+    description:
+      "Sort members by this property/trait. For example `name`, will sort all members by alphabetically",
+    type: "string"
+  })
+  sortMembersBy: string | undefined;
 
   @modelReferenceArrayTrait({
     name: "Members",
