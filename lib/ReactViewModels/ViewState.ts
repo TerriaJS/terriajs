@@ -574,15 +574,10 @@ export default class ViewState {
           });
         }
 
-        // mobile switch to nowvewing if not viewing a group
+        // mobile switch to now vewing if not viewing a group
         if (!GroupMixin.isMixedInto(theItem)) {
           this.switchMobileView(this.mobileViewOptions.preview);
         }
-      }
-
-      // Load preview item
-      if (ReferenceMixin.isMixedInto(item)) {
-        return await this.viewCatalogMember(theItem, isOpen, stratum);
       }
 
       if (GroupMixin.isMixedInto(theItem)) {
