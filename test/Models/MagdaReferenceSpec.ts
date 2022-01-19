@@ -8,6 +8,7 @@ import MagdaReference from "../../lib/Models/Catalog/CatalogReferences/MagdaRefe
 import Terria from "../../lib/Models/Terria";
 import StubCatalogItem from "../../lib/Models/Catalog/CatalogItems/StubCatalogItem";
 import { BaseModel } from "../../lib/Models/Definition/Model";
+import WebMapServiceCatalogGroup from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
 
 describe("MagdaReference", function() {
   const recordGroupWithOneCsv = {
@@ -314,5 +315,67 @@ describe("MagdaReference", function() {
     expect(unknown.name).toBe("item with no type and definition");
     expect(unknown.type).toBe("magda");
     expect(unknown.target).toBeUndefined();
+  });
+
+  it("can add record aspects", function(done) {
+    const theMagdaItemId = "a magda item id";
+    const theRecordName = "Test Record";
+    const theRecordId = "test-record-id";
+    const theType = "wms-group";
+    const theDataUrl = "https://some.wms.service";
+    const theCatalogItemName = "a catalogue item from magda portal";
+    const theOverriddenAspects = {
+      aspects: {
+        terria: {
+          type: theType,
+          definition: {
+            name: theCatalogItemName,
+            url: theDataUrl
+          },
+          id: theMagdaItemId
+        }
+      }
+    };
+    const theRecord = {
+      id: theRecordId,
+      name: theRecordName,
+      aspects: {
+        "dataset-format": {
+          format: "WMS",
+          confidenceLevel: 0.7
+        },
+        "dcat-distribution-strings": {
+          downloadURL:
+            "http://geofabric.bom.gov.au/simplefeatures/ows?service=WMS&request=GetCapabilities",
+          format: "WMS",
+          issued: "2020-04-21T05:26:45Z",
+          license: "Creative Commons Attribution",
+          title: "WMS - Geofabric"
+        }
+      }
+    };
+    const terria = new Terria();
+    const model = new MagdaReference(undefined, terria);
+    const catalogItem = MagdaReference.createMemberFromRecord(
+      terria,
+      model,
+      [],
+      undefined,
+      theRecordId,
+      theRecord,
+      theOverriddenAspects,
+      undefined
+    );
+    expect(catalogItem).toBeDefined();
+    expect(catalogItem!.type).toBe(theType);
+    expect((catalogItem as WebMapServiceCatalogGroup).isGroup).toBe(true);
+    expect(
+      (catalogItem as WebMapServiceCatalogGroup).getCapabilitiesUrl
+    ).toContain(theDataUrl);
+    expect((catalogItem as WebMapServiceCatalogGroup).nameInCatalog).toBe(
+      theCatalogItemName
+    );
+    expect(catalogItem!.uniqueId).toBe(theRecordId);
+    done();
   });
 });

@@ -235,7 +235,7 @@ export default class MagdaReference extends AccessControlMixin(
     }
   }
 
-  private static createMemberFromRecord(
+  static createMemberFromRecord(
     terria: Terria,
     sourceReference: BaseModel | undefined,
     distributionFormats: readonly PreparedDistributionFormat[],
