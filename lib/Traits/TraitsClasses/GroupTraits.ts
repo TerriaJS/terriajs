@@ -24,7 +24,7 @@ export default class GroupTraits extends ModelTraits {
   @primitiveTrait({
     name: "Sort members by",
     description:
-      "Sort members by this property/trait. For example `name`, will sort all members by alphabetically",
+      "Sort members by the given property/trait. For example `name`, will sort all members by alphabetically",
     type: "string"
   })
   sortMembersBy: string | undefined;
