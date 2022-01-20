@@ -5,12 +5,17 @@ import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
+import { isJsonNumber, isJsonString } from "../Core/Json";
 import Result from "../Core/Result";
 import Group from "../Models/Catalog/Group";
+import hasTraits from "../Models/Definition/hasTraits";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import ModelReference from "../Traits/ModelReference";
 import GroupTraits from "../Traits/TraitsClasses/GroupTraits";
 import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
+
+const naturalSort = require("javascript-natural-sort");
+naturalSort.insensitive = true;
 
 function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
   abstract class Klass extends Base implements Group {
@@ -51,7 +56,7 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
       if (members === undefined) {
         return [];
       }
-      return filterOutUndefined(
+      const models = filterOutUndefined(
         members.map(id => {
           if (!ModelReference.isRemoved(id)) {
             const model = this.terria.getModelById(BaseModel, id);
@@ -82,6 +87,30 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
           }
         })
       );
+
+      // Sort members if necessary
+      // Check if trait "this.sortMembersBy" exists and is a string or number
+      // If not, then the model will be placed at the end of the array
+      if (isDefined(this.sortMembersBy)) {
+        return models.sort((a, b) => {
+          const aValue =
+            CatalogMemberMixin.isMixedInto(a) &&
+            hasTraits(a, a.TraitsClass, this.sortMembersBy as any)
+              ? a[this.sortMembersBy!]
+              : Infinity;
+          const bValue =
+            CatalogMemberMixin.isMixedInto(b) &&
+            hasTraits(b, b.TraitsClass, this.sortMembersBy as any)
+              ? b[this.sortMembersBy!]
+              : Infinity;
+          return naturalSort(
+            isJsonString(aValue) || isJsonNumber(aValue) ? aValue : Infinity,
+            isJsonString(bValue) || isJsonNumber(bValue) ? bValue : Infinity
+          );
+        });
+      }
+
+      return models;
     }
 
     /**

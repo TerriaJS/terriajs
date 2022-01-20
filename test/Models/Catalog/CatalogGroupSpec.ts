@@ -1,12 +1,12 @@
+import CatalogMemberMixin from "../../../lib/ModelMixins/CatalogMemberMixin";
 import CatalogGroup from "../../../lib/Models/Catalog/CatalogGroup";
 import GeoJsonCatalogItem from "../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
-import BaseModel from "../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
-import Terria from "../../../lib/Models/Terria";
-import upsertModelFromJson from "../../../lib/Models/Definition/upsertModelFromJson";
-import CatalogMemberFactory from "../../../lib/Models/Catalog/CatalogMemberFactory";
-import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import StubCatalogItem from "../../../lib/Models/Catalog/CatalogItems/StubCatalogItem";
+import CatalogMemberFactory from "../../../lib/Models/Catalog/CatalogMemberFactory";
 import { getUniqueStubName } from "../../../lib/Models/Catalog/createStubCatalogItem";
+import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
+import upsertModelFromJson from "../../../lib/Models/Definition/upsertModelFromJson";
+import Terria from "../../../lib/Models/Terria";
 
 describe("CatalogGroup", function() {
   let terria: Terria, json: any, catalogGroup: CatalogGroup;
@@ -242,5 +242,64 @@ describe("CatalogGroup", function() {
       "grandchild1",
       "parent3"
     ]);
+  });
+
+  it("sortMembersBy", function() {
+    const item = new CatalogGroup("what", terria);
+
+    item.addMembersFromJson(CommonStrata.definition, [
+      {
+        type: "group",
+        name: "1",
+        description: "f"
+      },
+      {
+        type: "group",
+        name: "aCC"
+      },
+      {
+        type: "group",
+        name: "10",
+        description: "d"
+      },
+      {
+        type: "group",
+        name: "2",
+        description: "c"
+      },
+      {
+        type: "group",
+        name: "AC",
+        description: "a"
+      },
+
+      {
+        type: "group",
+        name: "ab",
+        description: "b"
+      }
+    ]);
+
+    expect(
+      item.memberModels.map(member =>
+        CatalogMemberMixin.isMixedInto(member) ? member.name : ""
+      )
+    ).toEqual(["1", "aCC", "10", "2", "AC", "ab"]);
+
+    item.setTrait(CommonStrata.user, "sortMembersBy", "name");
+
+    expect(
+      item.memberModels.map(member =>
+        CatalogMemberMixin.isMixedInto(member) ? member.name : ""
+      )
+    ).toEqual(["1", "2", "10", "ab", "AC", "aCC"]);
+
+    item.setTrait(CommonStrata.user, "sortMembersBy", "description");
+
+    expect(
+      item.memberModels.map(member =>
+        CatalogMemberMixin.isMixedInto(member) ? member.name : ""
+      )
+    ).toEqual(["AC", "ab", "2", "10", "1", "aCC"]);
   });
 });
