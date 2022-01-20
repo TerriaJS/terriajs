@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface Props {
   screenshot: Promise<string>;
@@ -9,7 +9,9 @@ const PrintViewMap = (props: Props) => {
   const [map, setMap] = useState<string | null>(null);
   const [isError, setError] = useState(false);
 
-  props.screenshot.then(setMap).catch(() => setError(true));
+  useEffect(() => {
+    props.screenshot.then(setMap).catch(() => setError(true));
+  }, [props.screenshot]);
 
   return isError ? (
     <div>Error has occured</div>

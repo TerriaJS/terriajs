@@ -59,7 +59,8 @@ class DistanceLegend extends React.Component {
   }
   static displayName = "DistanceLegend";
   static propTypes = {
-    terria: PropTypes.object
+    terria: PropTypes.object,
+    scale: PropTypes.number
   };
 
   /* eslint-disable-next-line camelcase */
