@@ -105,12 +105,15 @@ const mkStyle = (unsafeCSS: string) => {
   return style;
 };
 
-export const downloadImg = (dataString: string, fileName:string = "map.png"): void => {
-  const a = document.createElement('a');
+export const downloadImg = (
+  dataString: string,
+  fileName: string = "map.png"
+): void => {
+  const a = document.createElement("a");
   a.href = dataString;
   a.download = fileName;
   a.click();
-}
+};
 
 interface Props {
   window: Window;
@@ -119,17 +122,20 @@ interface Props {
   closeCallback: () => void;
 }
 
-const getScale = (maybeElement:Element | undefined) => maybeElement? PRINT_MAP_WIDTH / (maybeElement as HTMLElement).offsetWidth: 1;
+const getScale = (maybeElement: Element | undefined) =>
+  maybeElement
+    ? PRINT_MAP_WIDTH / (maybeElement as HTMLElement).offsetWidth
+    : 1;
 
 const PrintView = (props: Props) => {
   const [rootNode] = useState(document.createElement("main"));
   const [screenshot, setScreenshot] = useState<Promise<string> | null>(null);
-  
+
   useEffect(() => {
-      props.window.document.title = "Print view";
-      props.window.document.head.appendChild(mkStyle(styles));
-      props.window.document.body.appendChild(rootNode);
-      props.window.addEventListener("beforeunload", props.closeCallback);
+    props.window.document.title = "Print view";
+    props.window.document.head.appendChild(mkStyle(styles));
+    props.window.document.body.appendChild(rootNode);
+    props.window.addEventListener("beforeunload", props.closeCallback);
   }, [props.window]);
 
   useEffect(() => {
@@ -139,7 +145,7 @@ const PrintView = (props: Props) => {
   return ReactDOM.createPortal(
     <StyleSheetManager target={rootNode}>
       <ThemeProvider theme={terriaTheme}>
-        <PrintViewButtons window={props.window} screenshot={screenshot}/>
+        <PrintViewButtons window={props.window} screenshot={screenshot} />
         <section className="mapSection">
           <div className="datasets">
             <PrintWorkbench workbench={props.terria.workbench} />
@@ -147,7 +153,10 @@ const PrintView = (props: Props) => {
           <div className="map">
             {screenshot ? (
               <PrintViewMap screenshot={screenshot}>
-                <DistanceLegend terria={props.terria} scale={getScale(props.terria.currentViewer.getContainer())}/>
+                <DistanceLegend
+                  terria={props.terria}
+                  scale={getScale(props.terria.currentViewer.getContainer())}
+                />
               </PrintViewMap>
             ) : (
               <div>loading</div>

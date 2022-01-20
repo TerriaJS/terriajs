@@ -9,7 +9,6 @@ const PrintViewMap = (props: Props) => {
   const [map, setMap] = useState<string | null>(null);
   const [isError, setError] = useState(false);
 
-
   props.screenshot.then(setMap).catch(() => setError(true));
 
   return isError ? (

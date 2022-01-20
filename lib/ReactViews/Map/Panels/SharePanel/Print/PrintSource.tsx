@@ -17,7 +17,6 @@ const PrintSource = (props: Props) => {
         An interactive version of this map can be found here:{" "}
         <a href={props.link}>{props.link}</a>
       </p>
-
     </div>
   );
 };

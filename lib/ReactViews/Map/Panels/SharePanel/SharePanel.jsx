@@ -81,7 +81,7 @@ const SharePanel = observer(
         if (window.matchMedia) {
           const matcher = window.matchMedia("print");
           matcher.addListener(handlePrintMediaChange);
-          this._unsubscribeFromPrintMediaChange = function () {
+          this._unsubscribeFromPrintMediaChange = function() {
             matcher.removeListener(handlePrintMediaChange);
           };
         }
@@ -398,12 +398,18 @@ const SharePanel = observer(
                   this.setState({
                     isDownloading: true
                   });
-                  this.props.terria.currentViewer.captureScreenshot().then(dataString => {
-                    downloadImg(dataString);
-                  }).finally(() => this.setState({
-                    isDownloading: false
-                  }));
-                }}>
+                  this.props.terria.currentViewer
+                    .captureScreenshot()
+                    .then(dataString => {
+                      downloadImg(dataString);
+                    })
+                    .finally(() =>
+                      this.setState({
+                        isDownloading: false
+                      })
+                    );
+                }}
+              >
                 {t("share.downloadMap")}
               </button>
               <button
@@ -476,7 +482,8 @@ const SharePanel = observer(
         <button
           key={format.name}
           className={Styles.formatButton}
-          onClick={this.download}        >
+          onClick={this.download}
+        >
           {format.name}
         </button>
       );
@@ -518,13 +525,13 @@ const SharePanel = observer(
       const btnText = catalogShare
         ? t("share.btnCatalogShareText")
         : storyShare
-          ? t("share.btnStoryShareText")
-          : t("share.btnMapShareText");
+        ? t("share.btnStoryShareText")
+        : t("share.btnMapShareText");
       const btnTitle = catalogShare
         ? t("share.btnCatalogShareTitle")
         : storyShare
-          ? t("share.btnStoryShareTitle")
-          : t("share.btnMapShareTitle");
+        ? t("share.btnStoryShareTitle")
+        : t("share.btnMapShareTitle");
 
       return !storyShare ? (
         <MenuPanel

@@ -174,7 +174,7 @@ class DistanceLegend extends React.Component {
       }
 
       this.setState({
-        barWidth: (distance / pixelDistance) * this.scale | 0,
+        barWidth: ((distance / pixelDistance) * this.scale) | 0,
         distanceLabel: label
       });
     } else {
