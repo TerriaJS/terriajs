@@ -393,7 +393,7 @@ const SharePanel = observer(
             <div>
               <button
                 className={Styles.printButton}
-                disabled={isDownloading}
+                disabled={this.state.isDownloading}
                 onClick={() => {
                   this.setState({
                     isDownloading: true
