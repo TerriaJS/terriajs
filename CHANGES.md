@@ -7,6 +7,7 @@ Change Log
 * Fix a bug in CompositeCatalogItem that causes share URLs to become extremely long.
 * Fix `OpacitySection` number precision.
 * Added new print preview page that opens up in a new window
+* Add `sortMembersBy` to `GroupTraits`. This can be set to sort group member models - For example `sortMembersBy = "name"` will alphabetically sort members by name.
 * [The next improvement]
 
 #### 8.1.17
