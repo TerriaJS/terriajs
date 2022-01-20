@@ -26,6 +26,8 @@ import {
   ShareAction
 } from "../../../../Core/AnalyticEvents/analyticEvents";
 
+import { downloadImg } from "./Print/PrintView";
+
 const SharePanel = observer(
   createReactClass({
     displayName: "SharePanel",
@@ -59,7 +61,7 @@ const SharePanel = observer(
           this.props.shortenUrls &&
           this.props.terria.getLocalProperty("shortenShareUrls"),
         shareUrl: "",
-        creatingDownload: false
+        isDownloading: false
       };
     },
 
@@ -79,7 +81,7 @@ const SharePanel = observer(
         if (window.matchMedia) {
           const matcher = window.matchMedia("print");
           matcher.addListener(handlePrintMediaChange);
-          this._unsubscribeFromPrintMediaChange = function() {
+          this._unsubscribeFromPrintMediaChange = function () {
             matcher.removeListener(handlePrintMediaChange);
           };
         }
@@ -204,7 +206,7 @@ const SharePanel = observer(
         }
       }
     },
-    
+
     getShareUrlInput(theme) {
       return (
         <Input
@@ -391,6 +393,21 @@ const SharePanel = observer(
             <div>
               <button
                 className={Styles.printButton}
+                disabled={isDownloading}
+                onClick={() => {
+                  this.setState({
+                    isDownloading: true
+                  });
+                  this.props.terria.currentViewer.captureScreenshot().then(dataString => {
+                    downloadImg(dataString);
+                  }).finally(() => this.setState({
+                    isDownloading: false
+                  }));
+                }}>
+                {t("share.downloadMap")}
+              </button>
+              <button
+                className={Styles.printButton}
                 onClick={() => {
                   const newWindow = window.open();
                   this.props.viewState.setPrintWindow(newWindow);
@@ -459,9 +476,7 @@ const SharePanel = observer(
         <button
           key={format.name}
           className={Styles.formatButton}
-          onClick={this.download}
-          disabled={this.state.creatingDownload}
-        >
+          onClick={this.download}        >
           {format.name}
         </button>
       );
@@ -503,13 +518,13 @@ const SharePanel = observer(
       const btnText = catalogShare
         ? t("share.btnCatalogShareText")
         : storyShare
-        ? t("share.btnStoryShareText")
-        : t("share.btnMapShareText");
+          ? t("share.btnStoryShareText")
+          : t("share.btnMapShareText");
       const btnTitle = catalogShare
         ? t("share.btnCatalogShareTitle")
         : storyShare
-        ? t("share.btnStoryShareTitle")
-        : t("share.btnMapShareTitle");
+          ? t("share.btnStoryShareTitle")
+          : t("share.btnMapShareTitle");
 
       return !storyShare ? (
         <MenuPanel

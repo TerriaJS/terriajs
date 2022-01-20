@@ -201,6 +201,7 @@
     "printTitle": "Print Map",
     "printExplanation": "Open a printable version of this map.",
     "printButton": "Print",
+    "downloadMap": "Download map (png)",
     "printViewButton": "Show Print View",
     "creatingPrintView": "Creating print view...",
     "btnAdvanced": "Advanced options",

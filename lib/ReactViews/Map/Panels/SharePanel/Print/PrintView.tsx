@@ -9,14 +9,13 @@ import DistanceLegend from "../../../Legend/DistanceLegend";
 import { terriaTheme } from "../../../../StandardUserInterface/StandardTheme";
 import { StyleSheetManager, ThemeProvider } from "styled-components";
 
-import Button from "../../../../../Styled/Button";
-
 import { useEffect } from "react";
 import PrintViewMap from "./PrintViewMap";
 import PrintWorkbench from "./PrintWorkbench";
 import PrintDatasets from "./PrintDatasets";
 import { buildShareLink } from "../BuildShareLink";
 import PrintSource from "./PrintSource";
+import PrintViewButtons from "./PrintViewButtons";
 
 const PRINT_MAP_WIDTH = 1000;
 
@@ -85,9 +84,6 @@ const styles = `
       justify-content: center;
       width: 100%
     }
-    .PrintView__printControls {
-     float:right; 
-    }
 
     @media print {
       body {
@@ -108,6 +104,13 @@ const mkStyle = (unsafeCSS: string) => {
   style.innerHTML = DOMPurify.sanitize(unsafeCSS);
   return style;
 };
+
+export const downloadImg = (dataString: string, fileName:string = "map.png"): void => {
+  const a = document.createElement('a');
+  a.href = dataString;
+  a.download = fileName;
+  a.click();
+}
 
 interface Props {
   window: Window;
@@ -136,14 +139,7 @@ const PrintView = (props: Props) => {
   return ReactDOM.createPortal(
     <StyleSheetManager target={rootNode}>
       <ThemeProvider theme={terriaTheme}>
-        <section className="PrintView__printControls">
-          <Button primary onClick={(evt:MouseEvent )=> {
-            evt.preventDefault();
-            props.window.print();
-          }}>
-            Print
-          </Button>
-        </section>
+        <PrintViewButtons window={props.window} screenshot={screenshot}/>
         <section className="mapSection">
           <div className="datasets">
             <PrintWorkbench workbench={props.terria.workbench} />
