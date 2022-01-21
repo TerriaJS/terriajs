@@ -548,6 +548,11 @@ export default class ViewState {
       // Get referenced target first.
       if (ReferenceMixin.isMixedInto(item)) {
         (await item.loadReference()).throwIfError();
+        if (item.target) {
+          return this.viewCatalogMember(item.target);
+        } else {
+          return Result.error(`Could not view catalog member ${getName(item)}`);
+        }
       }
       const theItem: BaseModel =
         ReferenceMixin.isMixedInto(item) && item.target ? item.target : item;
