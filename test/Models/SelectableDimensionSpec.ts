@@ -37,7 +37,7 @@ describe("SelectableDimension", () => {
       );
     });
     it("should gracefully handle undefined selectableDimensions", () => {
-      expect(filterDefaultPlacement(undefined)).toBe([]);
+      expect(filterDefaultPlacement(undefined)).toEqual([]);
     });
   });
 
