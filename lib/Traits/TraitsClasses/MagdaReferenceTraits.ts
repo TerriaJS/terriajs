@@ -44,4 +44,11 @@ export default class MagdaReferenceTraits extends mixTraits(
     idProperty: "id"
   })
   distributionFormats?: MagdaDistributionFormatTraits[];
+
+  @anyTrait({
+    name: "AddOrOverrideAspects",
+    description:
+      "The properties to apply to the dereferenced item, overriding the record aspects"
+  })
+  addOrOverrideAspects?: JsonObject;
 }

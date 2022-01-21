@@ -368,7 +368,7 @@ describe("MagdaReference", function() {
       name: theCatalogItemName,
       recordId: theRecordId,
       url: "https://a.magda.portal", // ok not being used in the test
-      override: theOverriddenAspects,
+      addOrOverrideAspects: theOverriddenAspects,
       type: "magda" // ok not being used in the test
     };
     const terria = new Terria();
@@ -382,8 +382,9 @@ describe("MagdaReference", function() {
       undefined,
       referenceModel.recordId,
       theRecord,
-      referenceModel.override,
-      undefined
+      undefined,
+      undefined,
+      referenceModel.addOrOverrideAspects
     );
 
     expect(catalogItem).toBeDefined();
