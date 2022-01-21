@@ -1,7 +1,11 @@
 Change Log
 ==========
 
-#### next release (8.1.18)
+#### next release (8.1.19)
+
+* [The next improvement]
+
+#### 8.1.18
 
 * Add missing default Legend to `TableAutomaticStylesStratum.defaultStyle`
 * Fix a bug in CompositeCatalogItem that causes share URLs to become extremely long.
@@ -9,7 +13,6 @@ Change Log
 * Add `sortMembersBy` to `GroupTraits`. This can be set to sort group member models - For example `sortMembersBy = "name"` will alphabetically sort members by name.
 * Remove `theme.fontImports` from `GlobalTerriaStyles` - it is now handled in `TerriaMap/index.js`
 * Add check to `featureDataToGeoJson.getEsriFeature` to make sure geometry exists
-* [The next improvement]
 
 #### 8.1.17
 
