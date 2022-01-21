@@ -25,8 +25,7 @@ export default function updateModelFromJson(
         propertyName === "id" ||
         propertyName === "type" ||
         propertyName === "localId" ||
-        propertyName === "shareKeys" ||
-        propertyName === "aspects"
+        propertyName === "shareKeys"
       ) {
         return;
       }
