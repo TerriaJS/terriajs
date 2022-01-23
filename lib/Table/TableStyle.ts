@@ -29,13 +29,15 @@ const DEFAULT_FINAL_DURATION_SECONDS = 3600 * 24 - 1; // one day less a second, 
  * A style controlling how tabular data is displayed.
  */
 export default class TableStyle {
-  readonly styleNumber: number;
-  readonly tableModel: TableMixin.Instance;
-
-  constructor(tableModel: TableMixin.Instance, styleNumber: number) {
-    this.styleNumber = styleNumber;
-    this.tableModel = tableModel;
-  }
+  /**
+   *
+   * @param tableModel TableMixin catalog memeber
+   * @param styleNumber Index of column in tablemodel (if undefined, then default style will be used)
+   */
+  constructor(
+    readonly tableModel: TableMixin.Instance,
+    readonly styleNumber?: number | undefined
+  ) {}
 
   /** Is style ready to be used.
    * This will be false if any of dependent columns are not ready
@@ -72,7 +74,7 @@ export default class TableStyle {
     );
   }
 
-  /** Hide style from "Display Variable" selector if number of colors (EnumColorMap or DiscreteColorMapw) is less than 2. As a ColorMap with a single color isn't super useful. */
+  /** Hide style from "Display Variable" selector if number of colors (EnumColorMap or DiscreteColorMap) is less than 2. As a ColorMap with a single color isn't super useful. */
   @computed
   get hidden() {
     if (isDefined(this.styleTraits.hidden)) return this.styleTraits.hidden;
@@ -94,7 +96,7 @@ export default class TableStyle {
   @computed
   get styleTraits(): Model<TableStyleTraits> {
     if (
-      this.styleNumber >= 0 &&
+      isDefined(this.styleNumber) &&
       this.styleNumber < this.tableModel.styles.length
     ) {
       const result = createCombinedModel(
@@ -164,6 +166,7 @@ export default class TableStyle {
    */
   @computed
   get regionColumn(): TableColumn | undefined {
+    if (this.styleTraits.regionColumn === null) return;
     return this.resolveColumn(this.styleTraits.regionColumn);
   }
 
@@ -327,21 +330,26 @@ export default class TableStyle {
     }
 
     const lastDate = timeColumn.valuesAsJulianDates.maximum;
-    const intervals = timeColumn.valuesAsJulianDates.values.map((date, i) => {
-      if (!date) {
-        return null;
-      }
 
-      const startDate = this.startJulianDates?.[i] ?? date;
-      const finishDate = this.finishJulianDates?.[i] ?? undefined;
+    const intervals: (TimeInterval | null)[] = new Array(
+      timeColumn.valuesAsJulianDates.values.length
+    ).fill(null);
 
-      return new TimeInterval({
+    for (let i = 0; i < timeColumn.valuesAsJulianDates.values.length; i++) {
+      const date = timeColumn.valuesAsJulianDates.values[i];
+
+      const startDate = this.startJulianDates?.[i];
+      const finishDate = this.finishJulianDates?.[i];
+
+      if (!date || !startDate || !finishDate) continue;
+
+      intervals[i] = new TimeInterval({
         start: startDate,
         stop: finishDate,
         isStopIncluded: JulianDate.equals(finishDate, lastDate),
         data: date
       });
-    });
+    }
     return intervals;
   }
 
@@ -378,23 +386,38 @@ export default class TableStyle {
 
     const firstDate = timeColumn.valuesAsJulianDates.minimum;
 
-    if (!this.timeTraits.spreadStartTime || !firstDate)
-      return timeColumn.valuesAsJulianDates.values;
+    if (!firstDate) return [];
 
-    const startDates = timeColumn.valuesAsJulianDates.values.slice();
+    // Create a new array which will be filled by rowGroups (this will exclude dates which don't have rowGroup (eg invalid regions))
+    const filteredStartDates: (JulianDate | null)[] = new Array(
+      timeColumn.valuesAsJulianDates.values.length
+    ).fill(null);
 
-    this.rowGroups.forEach(([groupId, rowIds]) => {
-      // Find row ID with earliest date in this rowGroup
-      const firstRowId = rowIds
-        .filter(id => startDates[id])
-        .sort((idA, idB) =>
-          JulianDate.compare(startDates[idA]!, startDates[idB]!)
-        )[0];
-      // Set it to earliest date in the entire column
-      if (isDefined(firstRowId)) startDates[firstRowId] = firstDate;
-    });
+    for (let i = 0; i < this.rowGroups.length; i++) {
+      const rowIds = this.rowGroups[i][1];
 
-    return startDates;
+      // Copy over valid rows
+      for (let j = 0; j < rowIds.length; j++) {
+        filteredStartDates[rowIds[j]] =
+          timeColumn.valuesAsJulianDates.values[rowIds[j]];
+      }
+
+      if (this.timeTraits.spreadStartTime) {
+        // Find row ID with earliest date in this rowGroup
+        const firstRowId = rowIds
+          .filter(id => filteredStartDates[id])
+          .sort((idA, idB) =>
+            JulianDate.compare(
+              filteredStartDates[idA]!,
+              filteredStartDates[idB]!
+            )
+          )[0];
+        // Set it to earliest date in the entire column
+        if (isDefined(firstRowId)) filteredStartDates[firstRowId] = firstDate;
+      }
+    }
+
+    return filteredStartDates;
   }
 
   /**
@@ -412,21 +435,25 @@ export default class TableStyle {
     }
 
     const startDates = timeColumn.valuesAsJulianDates.values;
+    const finishDates: (JulianDate | null)[] = new Array(
+      startDates.length
+    ).fill(null);
 
     // If displayDuration trait is set, use that to set finish date
     if (this.timeTraits.displayDuration !== undefined) {
-      return startDates.map(date =>
-        date
-          ? JulianDate.addMinutes(
-              date,
-              this.timeTraits.displayDuration!,
-              new JulianDate()
-            )
-          : null
-      );
-    }
+      for (let i = 0; i < startDates.length; i++) {
+        const date = startDates[i];
+        if (date) {
+          finishDates[i] = JulianDate.addMinutes(
+            date,
+            this.timeTraits.displayDuration!,
+            new JulianDate()
+          );
+        }
+      }
 
-    const finishDates: (JulianDate | null)[] = [];
+      return finishDates;
+    }
 
     // Otherwise estimate a final duration value to calculate the end date for groups
     // that have only one row. Fallback to a global default if an estimate
@@ -445,25 +472,47 @@ export default class TableStyle {
         startDatesForGroup,
         finalDuration
       );
-      finishDatesForGroup.forEach((date, i) => {
-        finishDates[rowIds[i]] = date;
-      });
+      for (let j = 0; j < finishDatesForGroup.length; j++) {
+        finishDates[rowIds[j]] = finishDatesForGroup[j];
+      }
     }
 
     return finishDates;
   }
 
-  /** Get rows grouped by id. Id will be calculated using idColumns or latitude/longitude columns
+  /** Get rows grouped by id. Id will be calculated using idColumns, latitude/longitude columns or region column
    */
   @computed get rowGroups() {
-    const groupByCols =
-      this.idColumns ||
-      filterOutUndefined([this.latitudeColumn, this.longitudeColumn]);
+    let groupByCols = this.idColumns;
+
+    if (!groupByCols) {
+      // If points use lat long
+      if (this.latitudeColumn && this.longitudeColumn) {
+        groupByCols = [this.latitudeColumn, this.longitudeColumn];
+        // If region - use region col
+      } else if (this.regionColumn) groupByCols = [this.regionColumn];
+    }
+
+    if (!groupByCols) groupByCols = [];
+
     const tableRowIds = this.tableModel.rowIds;
-    return Object.entries(
-      groupBy(tableRowIds, rowId =>
-        groupByCols.map(col => col.values[rowId]).join("-")
+
+    return (
+      Object.entries(
+        groupBy(tableRowIds, rowId =>
+          groupByCols!
+            .map(col => {
+              // If using region column as ID - only use valid regions
+              if (col.type === TableColumnType.region) {
+                return col.valuesAsRegions.regionIds[rowId];
+              }
+              return col.values[rowId];
+            })
+            .join("-")
+        )
       )
+        // Filter out bad IDs
+        .filter(value => value[0] !== "")
     );
   }
 
@@ -480,11 +529,24 @@ export default class TableStyle {
     defaultFinalDurationSeconds: number
   ) {
     const sortedStartDates: JulianDate[] = sortedUniqueDates(startDates);
-    const lastDate = this.timeColumn?.valuesAsJulianDates.maximum;
 
-    return startDates.map(date => {
+    // Calculate last date based on if spreadFinishTime is true:
+    // - If true, use the maximum date in the entire timeColumn
+    // - If false, use the last date in startDates - which is the last date in the current row group
+    const lastDate =
+      this.timeTraits.spreadFinishTime &&
+      this.timeColumn?.valuesAsJulianDates.maximum
+        ? this.timeColumn.valuesAsJulianDates.maximum
+        : sortedStartDates[sortedStartDates.length - 1];
+
+    const finishDates: (JulianDate | null)[] = new Array(
+      startDates.length
+    ).fill(null);
+
+    for (let i = 0; i < startDates.length; i++) {
+      const date = startDates[i];
       if (!date) {
-        return null;
+        continue;
       }
 
       const nextDateIndex = binarySearch(
@@ -494,21 +556,17 @@ export default class TableStyle {
       );
       const nextDate = sortedStartDates[nextDateIndex + 1];
       if (nextDate) {
-        return nextDate;
-      } else if (this.timeTraits.spreadFinishTime && lastDate) {
-        return lastDate;
+        finishDates[i] = nextDate;
       } else {
         // This is the last date in the row, so calculate a final date
         const finalDurationSeconds =
           estimateFinalDurationSeconds(sortedStartDates) ||
           defaultFinalDurationSeconds;
-        const finalDate = addSecondsToDate(
-          sortedStartDates[sortedStartDates.length - 1],
-          finalDurationSeconds
-        );
-        return finalDate;
+        finishDates[i] = addSecondsToDate(lastDate, finalDurationSeconds);
       }
-    });
+    }
+
+    return finishDates;
   }
 
   private resolveColumn(name: string | undefined): TableColumn | undefined {

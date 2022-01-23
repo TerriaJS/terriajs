@@ -1,10 +1,10 @@
 import { runInAction } from "mobx";
 import CatalogMemberFactory from "../../../lib/Models/Catalog/CatalogMemberFactory";
-import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
-import Terria from "../../../lib/Models/Terria";
-import upsertModelFromJson from "../../../lib/Models/Definition/upsertModelFromJson";
 import WebMapServiceCatalogGroup from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
+import upsertModelFromJson from "../../../lib/Models/Definition/upsertModelFromJson";
+import Terria from "../../../lib/Models/Terria";
 
 describe("upsertModelFromJson", function() {
   it("can create basic WMS item", function() {
@@ -76,22 +76,40 @@ describe("upsertModelFromJson", function() {
       return;
     }
 
-    expect(group.isLoadingMetadata).toBe(false);
-    expect(group.isLoadingMembers).toBe(false);
+    expect(group.isLoadingMetadata).toBe(
+      false,
+      "group.isLoadingMetadata - before calling loadMembers"
+    );
+    expect(group.isLoadingMembers).toBe(
+      false,
+      "group.isLoadingMembers - before calling loadMembers"
+    );
     expect(group.memberModels.length).toBe(1);
     expect(group.memberModels[0]).toBe(item);
     expect(item.name).toBe("Override");
     expect(item.layers).toBeUndefined();
-    expect(item.isGeoServer).toBe(false);
+    expect(item.isGeoServer).toBe(
+      false,
+      "item.isGeoServer - before calling loadMembers"
+    );
 
     // loadMembers will call loadMetadata first, so check isLoadingMetadata and then await loadMetadata
     const loadMembersPromise = group.loadMembers();
-    expect(group.isLoadingMetadata).toBe(true);
+    expect(group.isLoadingMetadata).toBe(
+      true,
+      "group.isLoadingMetadata - after calling loadMembers"
+    );
     await group.loadMetadata();
-    expect(group.isLoadingMembers).toBe(true);
+    expect(group.isLoadingMetadata).toBe(
+      false,
+      "group.isLoadingMetadata - after loading"
+    );
+    expect(group.isLoadingMembers).toBe(
+      true,
+      "group.isLoadingMembers - after calling loadMetadata"
+    );
     await loadMembersPromise;
 
-    expect(group.isLoadingMetadata).toBe(false);
     expect(group.memberModels.length).toBeGreaterThan(1);
     expect(group.memberModels.indexOf(item)).toBeGreaterThanOrEqual(0);
     expect(item.name).toBe("Override");
@@ -101,7 +119,7 @@ describe("upsertModelFromJson", function() {
 
     await item.loadMetadata();
 
-    expect(item.isGeoServer).toBe(true);
+    expect(item.isGeoServer).toBe(true, "item.isGeoServer");
   });
 
   it("can update a model by shareKey", function() {
@@ -127,18 +145,21 @@ describe("upsertModelFromJson", function() {
     expect(model instanceof WebMapServiceCatalogItem).toBe(true);
     expect(model.type).toBe("wms");
 
+    const modelFromSharekey = terria.shareKeysMap.get(
+      "Root Group/Communications/Broadband Availability"
+    );
+
     const model2 = upsertModelFromJson(
       CatalogMemberFactory,
       terria,
       "",
       CommonStrata.user,
       {
-        id: "Root Group/Communications/Broadband Availability",
+        id: modelFromSharekey,
         opacity: 0.5
       },
       {
-        replaceStratum: false,
-        matchByShareKey: true
+        replaceStratum: false
       }
     ).throwIfUndefined();
     expect(model).toBe(model2, "Failed to match model by shareKey");

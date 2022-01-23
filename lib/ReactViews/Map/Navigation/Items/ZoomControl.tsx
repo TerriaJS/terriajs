@@ -196,7 +196,7 @@ class ZoomControl extends React.Component<PropTypes> {
               onClick={this.zoomIn.bind(this)}
               title={t("zoomCotrol.zoomIn")}
             >
-              <Icon glyph={Icon.GLYPHS.plusThick} />
+              <Icon glyph={Icon.GLYPHS.zoomIn} />
             </RawButton>
           </Li>
           <Li>
@@ -205,7 +205,7 @@ class ZoomControl extends React.Component<PropTypes> {
               onClick={this.zoomReset.bind(this)}
               title={t("zoomCotrol.zoomReset")}
             >
-              <Icon glyph={Icon.GLYPHS.refreshThick} />
+              <Icon glyph={Icon.GLYPHS.zoomReset} />
             </RawButton>
           </Li>
           <Li>
@@ -214,7 +214,7 @@ class ZoomControl extends React.Component<PropTypes> {
               onClick={this.zoomOut.bind(this)}
               title={t("zoomCotrol.zoomOut")}
             >
-              <Icon glyph={GLYPHS.minusThick} />
+              <Icon glyph={GLYPHS.zoomOut} />
             </RawButton>
           </Li>
         </Ul>
@@ -227,14 +227,18 @@ const StyledZoomControl = styled(Box).attrs(props => ({
   backgroundColor: props.theme.textLight,
   centered: true,
   column: true,
-  styledWidth: "24px",
-  styledHeight: "60px"
+  styledWidth: "32px",
+  styledMargin: "7px 0 0 0"
 }))`
   border-radius: 100px;
   svg {
-    height: 10px;
-    width: 10px;
+    height: 20px;
+    width: 20px;
     fill: ${props => props.theme.darkWithOverlay};
+  }
+
+  ${Li} {
+    margin: 5px 0;
   }
 `;
 

@@ -157,11 +157,11 @@ class DateTimeSelectorSection extends React.Component<IProps, IState> {
 
     return (
       <Box column paddedVertically>
-        <Text medium textLight>
-          {t("dateTime.time")}
+        <Text medium textLight id={"dateTimeSelectorLabel"}>
+          {t("dateTime.selectorLabel")}
         </Text>
         <Spacing bottom={1} />
-        <Box fullWidth justifySpaceBetween styledHeight={"30px"} innerGap>
+        <Box fullWidth justifySpaceBetween styledHeight={"30px"} gap>
           <Box
             backgroundColor="rgba(250, 250, 250, 0.2)"
             css={`

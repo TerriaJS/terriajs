@@ -9,6 +9,7 @@ import primitiveTrait from "../Decorators/primitiveTrait";
 import SdmxCommonTraits from "./SdmxCommonTraits";
 import TableTraits from "./TableTraits";
 import UrlTraits from "./UrlTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 
 export class SdmxDimensionTraits extends mixTraits(DimensionTraits) {
   @primitiveTrait({
@@ -26,7 +27,8 @@ export default class SdmxCatalogItemTraits extends mixTraits(
   DiscretelyTimeVaryingTraits,
   FeatureInfoTraits,
   TableTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  LegendOwnerTraits
 ) {
   @primitiveTrait({
     type: "string",

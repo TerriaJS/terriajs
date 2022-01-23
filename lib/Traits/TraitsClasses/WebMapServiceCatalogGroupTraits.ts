@@ -6,12 +6,14 @@ import GroupTraits from "./GroupTraits";
 import mixTraits from "../mixTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import UrlTraits from "./UrlTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 
 export default class WebMapServiceCatalogGroupTraits extends mixTraits(
   GetCapabilitiesTraits,
   GroupTraits,
   UrlTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  LegendOwnerTraits
 ) {
   @primitiveTrait({
     type: "boolean",

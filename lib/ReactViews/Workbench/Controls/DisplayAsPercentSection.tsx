@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import Checkbox from "./../../../Styled/Checkbox/Checkbox";
 import { useTheme } from "styled-components";
 import Spacing from "../../../Styled/Spacing";
+import { TextSpan } from "../../../Styled/Text";
 
 interface IDisplayAsPercentSection {
   item: any;
@@ -27,9 +28,10 @@ const DisplayAsPercentSection: React.FC<IDisplayAsPercentSection> = (
       <Checkbox
         id="workbenchDisplayPercent"
         isChecked={props.item.displayPercent}
-        label={t("workbench.displayPercent") as any}
         onChange={togglePercentage}
-      />
+      >
+        <TextSpan>{t("workbench.displayPercent")}</TextSpan>
+      </Checkbox>
     </>
   );
 };

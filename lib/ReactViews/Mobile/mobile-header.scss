@@ -42,13 +42,12 @@
   width: auto;
   text-align: right;
   font-size: 0.95rem;
+  border-radius: 4px;
 
   svg {
     position: absolute;
     top: $padding;
     left: $padding/2;
-    width: 18px;
-    height: 18px;
     fill: #ffffff;
   }
 }
@@ -57,15 +56,13 @@
   composes: btn;
   margin: 0 $padding-small;
   padding: $padding-small;
-  padding-right: $padding;
   position: relative;
   width: 40px;
+  border-radius: 4px;
+
   svg {
-    height: 28px;
-    width: 28px;
     fill: #fff;
-    position: relative;
-    left: 2px;
+    margin: auto;
   }
 }
 
@@ -110,25 +107,7 @@
   }
 }
 
-.btnMenu {
-  composes: btn from "../../Sass/common/_buttons.scss";
-  height: 40px;
-  font-size: 25px;
-  padding: 0 $padding-small;
-  border-radius: $radius-small;
-  margin-right: 3px;
-  vertical-align: top;
-  &:hover,
-  &:focus,
-  & {
-    border: 1px solid rgba(#fff, 0.5);
-  }
-
-  svg {
-    height: 37px;
-    width: 37px;
-    fill: #fff;
-  }
+.formSearchData {
+  width: 90%;
+  margin: auto;
 }
-
-@include empty-module("form-search-data");

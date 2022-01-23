@@ -1,28 +1,16 @@
-import { configure, runInAction } from "mobx";
-import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
-import Terria from "../../../../lib/Models/Terria";
-import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import i18next from "i18next";
+import { runInAction } from "mobx";
 import CkanItemReference, {
   CkanDatasetStratum
 } from "../../../../lib/Models/Catalog/Ckan/CkanItemReference";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
-import InfoSectionTraits from "../../../../lib/Traits/TraitsClasses/CatalogMemberTraits";
+import Terria from "../../../../lib/Models/Terria";
 
-configure({
-  enforceActions: "observed",
-  computedRequiresReaction: true
-});
-
-interface ExtendedLoadWithXhr {
-  (): any;
-  load: { (...args: any[]): any; calls: any };
-}
-
-const loadWithXhr: ExtendedLoadWithXhr = <any>_loadWithXhr;
+const taxationStatisticsPackage = require("../../../../wwwroot/test/CKAN/taxation-statistics-package.json");
+const taxationStatisticsWmsResource = require("../../../../wwwroot/test/CKAN/taxation-statistics-wms-resource.json");
+const vicWmsLayerResource = require("../../../../wwwroot/test/CKAN/vic-wms-layer-resource.json");
 
 describe("CkanItemReference", function() {
-  const ckanServerUrl = "http://data.gov.au";
   let terria: Terria;
   let ckanItemReference: CkanItemReference;
   let ckanDatasetStratum: CkanDatasetStratum;
@@ -34,15 +22,31 @@ describe("CkanItemReference", function() {
     });
     ckanItemReference = new CkanItemReference("test", terria);
 
-    const realLoadWithXhr = loadWithXhr.load;
-    // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
-    spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
-      if (args[0].indexOf("somedataset") > -1)
-        args[0] = "test/CKAN/taxation-statistics-package.json";
-      if (args[0].indexOf("someresource") > -1)
-        args[0] = "test/CKAN/taxation-statistics-wms-resource.json";
-      return realLoadWithXhr(...args);
+    jasmine.Ajax.install();
+    // Fail and log requests by default.
+    jasmine.Ajax.stubRequest(/.*/).andCallFunction(request => {
+      console.dir(request);
+      request.respondWith({ status: 404 });
     });
+
+    jasmine.Ajax.stubRequest(
+      "https://example.com/api/3/action/package_show?id=1234"
+    ).andReturn({ responseText: JSON.stringify(taxationStatisticsPackage) });
+    jasmine.Ajax.stubRequest(
+      "https://example.com/api/3/action/resource_show?id=1234"
+    ).andReturn({
+      responseText: JSON.stringify(taxationStatisticsWmsResource)
+    });
+
+    jasmine.Ajax.stubRequest(
+      "https://example.com/api/3/action/resource_show?id=5678"
+    ).andReturn({
+      responseText: JSON.stringify(vicWmsLayerResource)
+    });
+  });
+
+  afterEach(function() {
+    jasmine.Ajax.uninstall();
   });
 
   it("has a type and typeName", function() {
@@ -53,11 +57,11 @@ describe("CkanItemReference", function() {
   describe("Can load an item by datasetId - ", function() {
     beforeEach(async function() {
       runInAction(() => {
-        ckanItemReference.setTrait("definition", "url", "somedataset");
+        ckanItemReference.setTrait("definition", "url", "https://example.com");
         ckanItemReference.setTrait("definition", "name", "Taxation Statistics");
         ckanItemReference.setTrait("definition", "datasetId", "1234");
       });
-      await ckanItemReference.loadReference();
+      (await ckanItemReference.loadReference()).throwIfError();
       ckanDatasetStratum = <CkanDatasetStratum>(
         ckanItemReference.strata.get(CkanDatasetStratum.stratumName)
       );
@@ -132,7 +136,7 @@ describe("CkanItemReference", function() {
   describe("Can load an item by resourceId - ", function() {
     beforeEach(async function() {
       runInAction(() => {
-        ckanItemReference.setTrait("definition", "url", "someresource");
+        ckanItemReference.setTrait("definition", "url", "https://example.com");
         ckanItemReference.setTrait("definition", "name", "Taxation Statistics");
         ckanItemReference.setTrait("definition", "resourceId", "1234");
       });
@@ -157,13 +161,58 @@ describe("CkanItemReference", function() {
       );
       expect(ckanItemTarget.rectangle.west).toBe(undefined);
       expect(ckanItemTarget.info.length).toBe(0);
+      expect(ckanItemTarget.layers).toBe(
+        "95d9e550_8b36_4273_8df7_2b76c140e73a"
+      );
+    });
+  });
+
+  describe("Can load a different item by resourceId - ", function() {
+    beforeEach(async function() {
+      runInAction(() => {
+        ckanItemReference.setTrait("definition", "url", "https://example.com");
+        ckanItemReference.setTrait(
+          "definition",
+          "name",
+          "EPA Victoria Environmental Audit Reports"
+        );
+        ckanItemReference.setTrait("definition", "resourceId", "5678");
+      });
+      await ckanItemReference.loadReference();
+      ckanDatasetStratum = <CkanDatasetStratum>(
+        ckanItemReference.strata.get(CkanDatasetStratum.stratumName)
+      );
+      ckanItemTarget = ckanItemReference.target;
+    });
+    it("uses LAYERS from url query string for WMS item", function() {
+      expect(ckanItemReference._ckanResource).toBeDefined();
+      expect(ckanItemReference._ckanDataset).toBe(undefined);
+      expect(ckanItemReference._ckanCatalogGroup).toBe(undefined);
+      // when creating a single item directly name is retained from the definition stratum
+      expect(ckanItemTarget.name).toBe(
+        "EPA Victoria Environmental Audit Reports"
+      );
+
+      expect(ckanItemTarget).toBeDefined();
+      if (!(ckanItemTarget instanceof WebMapServiceCatalogItem))
+        throw new Error(
+          "Expected ckanItemTarget to be a WebMapServiceCatalogItem"
+        );
+      expect(ckanItemTarget.url).toBe(
+        "http://services.land.vic.gov.au/catalogue/publicproxy/guest/dv_geoserver/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&WIDTH=512&HEIGHT=512&LAYERS=ENVIRONPROTECT_ENVIRO_AUDIT_LOC_POINT&STYLES=&FORMAT=image%2Fpng&SRS=EPSG%3A4283&BBOX=141%2C-39%2C150%2C-34"
+      );
+      expect(ckanItemTarget.rectangle.west).toBe(undefined);
+      expect(ckanItemTarget.info.length).toBe(0);
+      expect(ckanItemTarget.layers).toBe(
+        "ENVIRONPROTECT_ENVIRO_AUDIT_LOC_POINT"
+      );
     });
   });
 
   describe("Rejected if there is no datasetId or resourceId - ", function() {
     beforeEach(async function() {
       runInAction(() => {
-        ckanItemReference.setTrait("definition", "url", "someresource");
+        ckanItemReference.setTrait("definition", "url", "https://example.com");
         ckanItemReference.setTrait("definition", "name", "Taxation Statistics");
       });
       await ckanItemReference.loadReference();

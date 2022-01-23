@@ -1,4 +1,8 @@
-import { Feature as GeoJSONFeature, Position } from "geojson";
+import {
+  Feature as GeoJSONFeature,
+  MultiPolygon,
+  Position
+} from "@turf/helpers";
 import { action, observable, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -22,10 +26,12 @@ import { ProviderCoordsMap } from "../Map/PickedFeatures";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import MouseCoords from "../ReactViewModels/MouseCoords";
+import StyleTraits from "../Traits/TraitsClasses/StyleTraits";
 import CameraView from "./CameraView";
 import Cesium3DTilesCatalogItem from "./Catalog/CatalogItems/Cesium3DTilesCatalogItem";
 import GeoJsonCatalogItem from "./Catalog/CatalogItems/GeoJsonCatalogItem";
 import CommonStrata from "./Definition/CommonStrata";
+import createStratumInstance from "./Definition/createStratumInstance";
 import Feature from "./Feature";
 import Terria from "./Terria";
 
@@ -35,10 +41,12 @@ export default abstract class GlobeOrMap {
   abstract readonly type: string;
   abstract readonly terria: Terria;
   abstract readonly canShowSplitter: boolean;
-  protected static _featureHighlightName = "___$FeatureHighlight&__";
+
+  protected static _featureHighlightID = "___$FeatureHighlight&__";
+  protected static _featureHighlightName = "TerriaJS Feature Highlight Marker";
 
   private _removeHighlightCallback?: () => Promise<void> | void;
-  private _highlightPromise: Promise<void> | undefined;
+  private _highlightPromise: Promise<unknown> | undefined;
   private _tilesLoadingCountMax: number = 0;
   protected supportsPolylinesOnTerrain?: boolean;
 
@@ -314,68 +322,51 @@ export default abstract class GlobeOrMap {
               feature.imageryLayer.imageryProvider.rectangle
             );
           }
-        } else if (
-          !isDefined(this.supportsPolylinesOnTerrain) ||
-          this.supportsPolylinesOnTerrain
-        ) {
-          let geoJson: GeoJSONFeature | undefined = featureDataToGeoJson(
-            feature.data
-          );
+        } else {
+          const geoJson = featureDataToGeoJson(feature.data);
 
-          // Show geometry associated with the feature.
           // Don't show points; the targeting cursor is sufficient.
-          if (
-            geoJson &&
-            geoJson.geometry &&
-            geoJson.geometry.type !== "Point"
-          ) {
-            // Turn Polygons into MultiLineStrings, because we're only showing the outline.
-            if (
-              geoJson.geometry.type === "Polygon" ||
-              geoJson.geometry.type === "MultiPolygon"
-            ) {
-              geoJson = <GeoJSONFeature>clone(geoJson);
-              geoJson.geometry = clone(geoJson.geometry);
+          if (geoJson) {
+            geoJson.features = geoJson.features.filter(
+              f => f.geometry.type !== "Point"
+            );
 
-              if (geoJson.geometry.type === "MultiPolygon") {
-                const newCoordinates: Position[][] = [];
-                geoJson.geometry.coordinates.forEach(polygon => {
-                  newCoordinates.push(...polygon);
-                });
-                (<any>geoJson).geometry.coordinates = newCoordinates;
-              }
-
-              geoJson.geometry.type = "MultiLineString";
+            let catalogItem = this.terria.getModelById(
+              GeoJsonCatalogItem,
+              GlobeOrMap._featureHighlightID
+            );
+            if (catalogItem === undefined) {
+              catalogItem = new GeoJsonCatalogItem(
+                GlobeOrMap._featureHighlightID,
+                this.terria
+              );
+              catalogItem.setTrait(
+                CommonStrata.definition,
+                "name",
+                GlobeOrMap._featureHighlightName
+              );
+              this.terria.addModel(catalogItem);
             }
 
-            const catalogItem = new GeoJsonCatalogItem(
-              GlobeOrMap._featureHighlightName,
-              this.terria
-            );
-
-            catalogItem.setTrait(
-              CommonStrata.user,
-              "name",
-              GlobeOrMap._featureHighlightName
-            );
             catalogItem.setTrait(
               CommonStrata.user,
               "geoJsonData",
               <any>geoJson
             );
-            catalogItem.setTrait(CommonStrata.user, "clampToGround", true);
-            catalogItem.setTrait(CommonStrata.user, "style", {
-              "stroke-width": 2,
-              stroke: this.terria.baseMapContrastColor,
-              fill: undefined,
-              "fill-opacity": 0,
-              "marker-color": this.terria.baseMapContrastColor,
-              "marker-size": undefined,
-              "marker-symbol": undefined,
-              "marker-opacity": undefined,
-              "stroke-opacity": undefined,
-              "marker-url": undefined
-            });
+            catalogItem.setTrait(CommonStrata.user, "disableTableStyle", true);
+            catalogItem.setTrait(
+              CommonStrata.user,
+              "style",
+              createStratumInstance(StyleTraits, {
+                "stroke-width": 4,
+                stroke: this.terria.baseMapContrastColor,
+                "fill-opacity": 0,
+                "marker-color": this.terria.baseMapContrastColor
+              })
+            );
+
+            this.terria.overlays.add(catalogItem);
+            this._highlightPromise = catalogItem.loadMapItems();
 
             const removeCallback = (this._removeHighlightCallback = () => {
               if (!isDefined(this._highlightPromise)) {
@@ -386,15 +377,27 @@ export default abstract class GlobeOrMap {
                   if (removeCallback !== this._removeHighlightCallback) {
                     return;
                   }
-                  catalogItem.setTrait(CommonStrata.user, "show", false);
-                  this.terria.overlays.remove(catalogItem);
+                  if (isDefined(catalogItem)) {
+                    catalogItem.setTrait(CommonStrata.user, "show", false);
+                  }
                 })
                 .catch(function() {});
             });
 
+            (await catalogItem.loadMapItems()).logError(
+              "Error occurred while loading picked feature"
+            );
+
+            // Check to make sure we don't have a different `catalogItem` after loading
+            if (removeCallback !== this._removeHighlightCallback) {
+              return;
+            }
+
             catalogItem.setTrait(CommonStrata.user, "show", true);
 
-            this._highlightPromise = this.terria.overlays.add(catalogItem);
+            this._highlightPromise = this.terria.overlays
+              .add(catalogItem)
+              .then(r => r.throwIfError());
           }
         }
       }

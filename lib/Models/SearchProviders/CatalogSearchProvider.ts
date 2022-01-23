@@ -1,15 +1,18 @@
-import { autorun, observable, runInAction } from "mobx";
-import SearchProvider from "./SearchProvider";
-import SearchResult from "./SearchResult";
-import Terria from "../Terria";
-import SearchProviderResults from "./SearchProviderResults";
-import GroupMixin from "../../ModelMixins/GroupMixin";
-import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
+import { autorun, computed, observable, runInAction } from "mobx";
+import { fromPromise } from "mobx-utils";
 import {
   Category,
   SearchAction
 } from "../../Core/AnalyticEvents/analyticEvents";
-
+import isDefined from "../../Core/isDefined";
+import { TerriaErrorSeverity } from "../../Core/TerriaError";
+import GroupMixin from "../../ModelMixins/GroupMixin";
+import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
+import { BaseModel } from "../Definition/Model";
+import Terria from "../Terria";
+import SearchProvider from "./SearchProvider";
+import SearchProviderResults from "./SearchProviderResults";
+import SearchResult from "./SearchResult";
 interface CatalogSearchProviderOptions {
   terria: Terria;
 }
@@ -17,22 +20,20 @@ interface CatalogSearchProviderOptions {
 type UniqueIdString = string;
 type ResultMap = Map<UniqueIdString, boolean>;
 export function loadAndSearchCatalogRecursively(
-  terria: Terria,
+  models: BaseModel[],
   searchTextLowercase: string,
   searchResults: SearchProviderResults,
   resultMap: ResultMap,
   iteration: number = 0
-): Promise<Terria> {
+): Promise<void> {
   // checkTerriaAgainstResults(terria, searchResults)
   // don't go further than 10 deep, but also if we have references that never
   // resolve to a target, might overflow
   if (iteration > 10) {
-    return Promise.resolve(terria);
+    return Promise.resolve();
   }
   // add some public interface for terria's `models`?
-  const referencesAndGroupsToLoad: any[] = Array.from(
-    (<any>terria).models.values()
-  ).filter((model: any) => {
+  const referencesAndGroupsToLoad: any[] = models.filter((model: any) => {
     if (resultMap.get(model.uniqueId) === undefined) {
       const modelToSave = model.target || model;
       // Use a flattened string of definition data later,
@@ -67,8 +68,10 @@ export function loadAndSearchCatalogRecursively(
 
     return false;
   });
+
+  // If we have no members to load
   if (referencesAndGroupsToLoad.length === 0) {
-    return Promise.resolve(terria);
+    return Promise.resolve();
   }
   return new Promise(resolve => {
     autorun(reaction => {
@@ -87,7 +90,7 @@ export function loadAndSearchCatalogRecursively(
         // Then call this function again to see if new child references were loaded in
         resolve(
           loadAndSearchCatalogRecursively(
-            terria,
+            models,
             searchTextLowercase,
             searchResults,
             resultMap,
@@ -112,7 +115,14 @@ export default class CatalogSearchProvider extends SearchProvider {
     this.name = "Catalog Items";
   }
 
-  protected doSearch(
+  @computed get resultsAreReferences() {
+    return (
+      isDefined(this.terria.catalogIndex?.loadPromise) &&
+      fromPromise(this.terria.catalogIndex!.loadPromise).state === "fulfilled"
+    );
+  }
+
+  protected async doSearch(
     searchText: string,
     searchResults: SearchProviderResults
   ): Promise<void> {
@@ -125,6 +135,18 @@ export default class CatalogSearchProvider extends SearchProvider {
       return Promise.resolve();
     }
 
+    // Load catalogIndex if needed
+    if (this.terria.catalogIndex && !this.terria.catalogIndex.loadPromise) {
+      try {
+        await this.terria.catalogIndex.load();
+      } catch (e) {
+        this.terria.raiseErrorToUser(
+          e,
+          "Failed to load catalog index. Searching may be slow/inaccurate"
+        );
+      }
+    }
+
     this.terria.analytics?.logEvent(
       Category.search,
       SearchAction.catalog,
@@ -132,41 +154,47 @@ export default class CatalogSearchProvider extends SearchProvider {
     );
     const resultMap: ResultMap = new Map();
 
-    const promise: Promise<any> = loadAndSearchCatalogRecursively(
-      this.terria,
-      searchText.toLowerCase(),
-      searchResults,
-      resultMap
-    );
+    try {
+      if (this.terria.catalogIndex?.searchIndex) {
+        const results = await this.terria.catalogIndex.search(searchText);
+        runInAction(() => (searchResults.results = results));
+      } else {
+        await loadAndSearchCatalogRecursively(
+          this.terria.modelValues,
+          searchText.toLowerCase(),
+          searchResults,
+          resultMap
+        );
+      }
 
-    return promise
-      .then(terria => {
-        runInAction(() => {
-          this.isSearching = false;
-        });
-
-        if (searchResults.isCanceled) {
-          // A new search has superseded this one, so ignore the result.
-          return;
-        }
-
-        runInAction(() => {
-          terria.catalogReferencesLoaded = true;
-        });
-
-        if (searchResults.results.length === 0) {
-          searchResults.message =
-            "Sorry, no locations match your search query.";
-        }
-      })
-      .catch(() => {
-        if (searchResults.isCanceled) {
-          // A new search has superseded this one, so ignore the result.
-          return;
-        }
-
-        searchResults.message =
-          "An error occurred while searching.  Please check your internet connection or try again later.";
+      runInAction(() => {
+        this.isSearching = false;
       });
+
+      if (searchResults.isCanceled) {
+        // A new search has superseded this one, so ignore the result.
+        return;
+      }
+
+      runInAction(() => {
+        this.terria.catalogReferencesLoaded = true;
+      });
+
+      if (searchResults.results.length === 0) {
+        searchResults.message = "Sorry, no locations match your search query.";
+      }
+    } catch (e) {
+      this.terria.raiseErrorToUser(e, {
+        message: "An error occurred while searching",
+        severity: TerriaErrorSeverity.Warning
+      });
+      if (searchResults.isCanceled) {
+        // A new search has superseded this one, so ignore the result.
+        return;
+      }
+
+      searchResults.message =
+        "An error occurred while searching.  Please check your internet connection or try again later.";
+    }
   }
 }

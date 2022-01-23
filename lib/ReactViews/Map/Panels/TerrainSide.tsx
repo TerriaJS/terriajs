@@ -129,10 +129,11 @@ export const TerrainSide: React.FC<ITerrainSideProps> = observer(
           <Checkbox
             id="depthTestAgainstTerrain"
             isChecked={depthTestAgainstTerrainEnabled}
-            label={t("settingPanel.terrain.hideUnderground") as any}
             title={depthTestAgainstTerrainLabel}
             onChange={toggleDepthTestAgainstTerrainEnabled}
-          />
+          >
+            <TextSpan>{t("settingPanel.terrain.hideUnderground")}</TextSpan>
+          </Checkbox>
         )}
       </Box>
     );

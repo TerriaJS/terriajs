@@ -33,7 +33,8 @@ export class FeedbackButtonController extends MapNavigationItemController {
   get visible() {
     return (
       isDefined(this.viewState.terria.configParameters.feedbackUrl) &&
-      !this.viewState.hideMapUi
+      !this.viewState.hideMapUi &&
+      super.visible
     );
   }
 

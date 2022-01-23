@@ -1,7 +1,230 @@
 Change Log
 ==========
 
-#### next release (8.1.1)
+#### next release (8.1.19)
+
+* [The next improvement]
+
+#### 8.1.18
+
+* Add missing default Legend to `TableAutomaticStylesStratum.defaultStyle`
+* Fix a bug in CompositeCatalogItem that causes share URLs to become extremely long.
+* Fix `OpacitySection` number precision.
+* Add `sortMembersBy` to `GroupTraits`. This can be set to sort group member models - For example `sortMembersBy = "name"` will alphabetically sort members by name.
+* Remove `theme.fontImports` from `GlobalTerriaStyles` - it is now handled in `TerriaMap/index.js`
+* Add check to `featureDataToGeoJson.getEsriFeature` to make sure geometry exists
+
+#### 8.1.17
+
+- **Breaking changes**:
+  * Minimum node version is now 12 after upgrading node-sass dependency
+
+* Automatically cast property value to number in style expressions generated for 3d tiles filter.
+* Re-enable procedure and observable selectors for SOS items.
+* Fix broken "Ideal zoom" for TableMixin items.
+* The opacity of 3d tiles can now be changed with the opacity slider in the workbench
+* RasterLayerTraits and Cesium3dTilesTraits now share the newly created OpacityTraits
+* `disableOpacityControl` is now a trait and can be set in the catalog.
+* TSXified OpacitySection
+* Upgrade compiler target from es2018 to es2019
+* Fix default table style legends
+* Remove SOS defaults legend workaround
+* Update NodeJS version to 14 in `npm-publish` GitHub action
+
+#### 8.1.16
+
+* Added region mapping support for Commonwealth Electoral Divisions as at 2 August 2021 (AEC) as com_elb_name_2021.
+
+#### 8.1.15
+
+* Fix sharelink bug, and make `isJson*` type checks more rigorous
+* Remove `uniqueId` from `CatalogMemberMixin.nameInCatalog` and add it as fallback to `CatalogMemberMixin.name`
+* Add `shareKeys` and `nameInCatalog` to `CatalogIndexReference`.
+* Remove `description` field from `CatalogIndex`
+  * The `CatalogIndex` can now be used to resolve models in sharelinks
+* Add support for zipped `CatalogIndex` json files.
+* Fix `SplitReferences` which use `shareKeys`
+* Make `isJson*` type assertion functions more rigorous
+  * Add `deep` parameter, so you can use old "shallow" type check for performance reasons if needed
+* Add Shapefile to `CkanDefaultFormatsStratum`
+* Fix `ArcGisMapServerCatalogItem` metadata bug
+* Remove legend traits from CatalogMemberMixin, replacing them with LegendOwnerTraits, and add tests to enforce correct use of legends.
+* Add better support for retreiving GeoJsonCatalogItem data through APIs, including supporting geojson nested within json objects
+* Fixed `ContinuousColorMap` min/max value bug.
+* `TableStyle.outlierColor` is now only used if `zFilter` is active, or `colorTraits.outlierColor` is defined
+* Add `forceConvertResultsToV8` to `WebProcessingServiceCatalogFunction`. If your WPS processes are returning v7 json, you will either need to set this to `true`, or set `version: 0.0.1` in JSON output (which will then be automatically converted to v8)
+* Cleanup `CatalogFunction` error handling
+* Fix `SelectAPolygonParameterEditor` feature picking (tsified)
+* Add `WebMapServiceCatalogItem.rectangle` support for multiple WMS layers
+* Fix picked feature highlighting for ArcGis REST API features (and TSify `featureDataToGeoJson`)
+* Re-enable GeoJSON simple styling - now if more than 50% of features have [simple-style-spec properties](https://github.com/mapbox/simplestyle-spec) - automatic styling will be disabled (this behaviour can be disabled by setting `forceCesiumPrimitives = false`)
+* Don't show `TableMixin` `legends` or `mapItems` if no data
+* Fix `GeoJsonCatalogItem.legends`
+* Add `isOpen` to `TerriaReferenceTraits`
+
+#### 8.1.14
+
+- **Breaking changes**:
+  * `Result.throwIfUndefined()` will now only throw if `result.value` is undefined - regardless of `result.error`
+
+* Reimplement option to zoom on item when adding it to workbench, `zoomOnAddToWorkbench` is added to `MappableTraits`.
+* Update terria-js cesium to `1.81.3` 
+* Re-allowed models to be added to `workbench` if the are not `Mappable` or `Chartable`
+* Moved `WebMapServiceCatalogItem.GetCapbilitiesStratum` to `lib\Models\Catalog\Ows\WebMapServiceCapabilitiesStratum.ts`
+* Moved `WebMapServiceCatalogItem.DiffStratum` to `DiffableMixin`
+* `callWebCoverageService` now uses version WCS `2.0.0`
+  * All WCS export functionality is now in `ExportWebCoverageServiceMixin`
+  * Added `WebCoverageServiceParameterTraits` to `WebMapServiceCatalogItemTraits.linkedWcsParameters`. It includes `outputFormat` and `outputCrs`
+  * Will attempt to use native CRS and format (from `DescribeCoverage`)
+  * No longer sets `width` or `height` - so export will now return native resolution
+* Anonymize user IP when using google analytics.
+* Fix crash when TableMixin-based catalog item had invalid date values
+* Fix `WebMapServiceCatalogItem.styles` if `supportsGetLegendGraphics = false`. This means that if a WMS server doesn't support `GetLegendGraphics` requests, the first style will be set as the default style.
+
+
+#### 8.1.13
+
+* Paramerterised the support email on the help panel to use the support email in config
+* Refactored `TableColumn get type()` to move logic into `guessColumnTypeFromValues()`
+* `TableMixin.activeStyle` will set `TableColumnType = hidden` for `scalar` columns with name `"id"`, `"_id_"` or `"fid"`
+* Fix bug `TableColumn.type = scalar` even if there were no values.
+* Table columns named `"easting"` and `"northing"` are now hidden by default from styles
+* `TableColumn.type = enum` requires at least 2 unique values (including null) to be selected by default
+* Tweak automatic `TableColumn.type = Enum` for wider range of values
+* Exporting `TableMixin` will now add proper file extensions
+* Added `TimeVaryingTraits.timeLabel` trait to change label on `DateTimeSelectorSection` (defaults to "Time:")
+  * This is set to `timeColumn.title`
+* `TableColumn` will try to generate prettier `title` by un-camel casing, removing underscores and capitalising words
+* `TableStyle` `startDates`, `finishDates` and `timeIntervals` will only set values for valid `rowGroups` (invalid rows will be set to `null`). For example, this means that rows with invalid regions will be ignored.
+* Add "Disable style" option to `TableMixin.styleDimensions` - it can be enabled with `TableTraits.showDisableStyleOption`
+* Added `timeDisableDimension` to `TableMixin` - this will render a checkbox to disable time dimension if `rowGroups` only have a single time interval per group (i.e. features aren't "moving" across time) - it can be enabled with `TableTraits.showDisableTimeOption` - `TableAutomaticStylesStratum` will automatically enable this if at least 50% of rowGroups only have one unique time interval (i.e. they don't change over time)\
+* Remove border from region mapping if no data
+* Add `baseMapContrastColor` and `constrastColor` to `BaseMapModel`
+* Fixed `TableMixin.defaultTableStyle.legends` - `defaultTableStyle` is now not observable - it is created once in the `contructor`
+* Removed `Terria.configParameters.enableGeojsonMvt` - geojson-vt/Protomaps is now used by default
+* `GpxCatalogItem` now uses `GeojsonMixin`
+* Add an external link icon to external hyperlink when using method `parseCustomHtmlToReact`. This feature can be switched off by passing `{ disableExternalLinkIcon: true }` in `context` argument.
+* Tsify `sendFeedback.ts` and improve error messages/notifications
+* Removed unused overrideState from many DataCatalog React components.
+* Fixed a bug where adding a timeseries dataset from the preview map's Add to map button didn't add the dataset to the `timelineStack`.
+* Fixed incorrect colour for catalog item names in the explorer panel when using dynamic theming. 
+* Moved `CatalogIndex` loading from constructor (called in `Terria.start`) to `CatalogSearchProvider.doSearch` - this means the index will only be loaded when the user does their first search
+* Add basic auth support to `generateCatalogIndex`, fix some bugs and improve performance
+* Update terria-js cesium to `1.81.2`
+* Add `uniqueId` as fallback to `nameInCatalog`
+* Remove duplicated items from `OpenDataSoftGroup` and `SocrataGroup`
+
+#### 8.1.12
+
+* Bigger zoom control icons.
+* Modified "ideal zoom" to zoom closer to tilesets and datasources.
+* Added `configParameters.feedbackPostamble`. Text showing at the bottom of feedback form, supports the internationalization using the translation key
+* `GeoJsonMixin.style["stroke-opacity"]` will now also set `polygonStroke.alpha` and `polylineStroke.alpha`
+* Reduce `GeoJsonMixin` default stroke width from `2` to `1`
+* Add `TableMixin` styling to `GeoJsonMixin` - it will treat geojson feature properties as "rows" in a table - which can be styled in the same way as `TableMixin` (eg CSV). This is only enabled for geojson-vt/Protomaps (which requires `Terria.configParameters.enableGeojsonMvt = true`). For more info see `GeojsonMixin.forceLoadMapItems()`
+  * This can be disabled using `GeojsonTraits.disableTableStyle`
+* Opacity and splitting is enabled for Geojson (if using geojson-vt/protomaps)
+* Replaced `@types/geojson` Geojson types with `@turf/helpers`
+* In `GeojsonMixin` replaced with `customDataLoader`, `loadFromFile` and `loadFromUrl` with `forceLoadGeojsonData`
+* `GeojsonMixin` will now convert all geojson objects to FeatureCollection
+* Exporting `GeojsonMixin` will now add proper file extensions
+* `WebFeatureServiceCatalogItem` now uses `GeoJsonMixin`
+* Fix `ProtomapsImageryProvider` geojson feature picking over antimeridian
+* Add Socrata group to "Add web data
+* Added "marker-stroke-width", "polyline-stroke-width", "polygon-stroke-width" to `GeojsonStyleTraits` (Note these are not apart of [simplestyle-spec](https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0) and can only be used with `geojson-vt`)
+* Add a method refreshCatalogMembersFromMagda to Terria class.
+* Renable `useNativeResolution` on mobile
+* Store `useNativeResolution`, `baseMaximumScreenSpaceError` as local properties
+* Moved CKAN default `supportedFormats` to `CkanDefaultFormatsStratum`
+* Add properties to `CkanResourceFormatTraits`
+  * `maxFileSize` to filter out resources with large files (default values: GeoJSON = 150MB, KML = 30MB, CZML = 50MB)
+  * `removeDuplicates` (which defaults to true) so we don't get duplicate formats for a dataset (it will check `resource.name`)
+    * If there are multiple matches, then the newest (from resource.created property) will be used
+  * `onlyUseIfSoleResource` to give a given resource format unless that is all that exists for a dataset
+* Add CKAN `useSingleResource`, if `true`, then the highest match from `supportedResourceFormats` will be used for each dataset
+* ArcGis Map/Feature Service will now set CRS from `latestWkid` if it exists (over `wkid`)
+* Fix CKAN ArcGisFeatureService resources
+* ArcGisFeatureServer will now set `outSR=4326` so we don't need to reproject client-side
+
+#### 8.1.11
+
+* Fix `SettingsPanel` type issue
+
+#### 8.1.10
+
+* Fix `CswCatalogGroup` XML types
+* Added `MAINCODE` aliases for all ABS Statistical Area regions that were missing them.
+* Fixed `superGet` replacement in webpack builds with babel versions `7.16.0` and above.
+
+#### 8.1.9
+
+* TSify workbench splitter control and fix broken styling.
+* Fix app crash when opening AR tool.
+
+#### 8.1.8
+
+* Tsified `SettingPanel`
+* Moved `setViewerMode` function from `Terria` class to `ViewerMode`
+* Refactored checkbox to use children elements for label instead of label
+  property, `isDisabled`, `isChecked` and `font-size: inherit` style is passed
+  to each child element (so propper styling is maintained)
+* Fix an internal bug where Cesium.prototype.observeModelLayer() fails to remove 3D tilesets in certain cases.
+* Rename `TerriaError._shouldRaiseToUser` to `overrideRaiseToUser`
+  * Note: `userProperties.ignoreError = "1"` will take precedence over `overrideRaiseToUser = true`
+* Fix `overrideRaiseToUser` bug causing `overrideRaiseToUser` to be set to `true` in `TerriaError.combine`
+* Add `rollbar.warning` for `TerriaErrorSeverity.Warning`
+* Disable `zFilter` by default
+* Remove use of word "outlier" in zFilter dimension and legend item (we now use "Extreme values")
+* Add `cursor:pointer` to `Checkbox`
+* Fix `MapNavigation` getter/setter `visible` bug.
+  * Replace `CompositeBarItemController` `visible` setter with `setVisible` function
+* Use `yarn` in CI scripts (and upgrade node to v14)
+* Fix app crash when previewing a nested reference in the catalog (eg when viewing an indexed search result where the result is a reference).
+* Ported feaure from v7 to set WMS layers property from the value of `LAYERS`, `layers` or `typeName` from query string of CKAN resource URL.
+
+#### 8.1.4
+
+* Make flex-search usage (for `CatalogIndex`) web-worker based
+* Add `completeKnownContainerUniqueIds` to `Model` class - This will recursively travese tree of knownContainerUniqueIds models to return full list of dependencies
+* Add all models from `completeKnownContainerUniqueIds` to shareData.models (even if they are empty)
+
+#### 8.1.3
+
+* Reimplement map viewer url param
+* Added `terriaError.importance` property. This can be set to adjust which error messages are presented to the user.
+  * `terriaErrorNotification` and `WarningBox` will use the error message with highest importance to show to the user ("Developer details" remains unchanged)
+* Add `terriaError.shouldRaiseToUser` override, this can be used to raise errors with `Warning` severity.
+* `terriaError.raisedToError` will now check if **any** `TerriaError` has been raised to the user in the tree.
+* `workbench.add()` will now keep items which only return `Warning` severity `TerriaErrors` after loading.
+* Improve SDMX error messages for no results
+* Fix SDMX FeatureInfoSection time-series chart to only show if data exists.
+* Improve GeoJSON CRS projection error messages
+* Add `Notification` `onDismiss` and `ignore` properties.
+* Fix `AsyncLoader` result bug
+* Remove `Terria.error` event handler
+* Refactor `workbench.add` to return `Result`
+* Consolidated network request / CORS error message - it is now in `t("core.terriaError.networkRequestMessage")`. 
+  * It can be injected into other translation strings like so: `"groupNotAvailableMessage": "$t(core.terriaError.networkRequestMessage)"`
+  * Or, you can use `networkRequestError(error)` to wrap up existing `TerriaError` objects
+* Fix incorrect default `configParameters.feedbackPreamble`
+* Fix incorrect default `configParameters.proj4def` - it is now `"proj4def/"`
+* Fix Branding component. It wasn't wrapped in `observer` so it kept getting re-rendered
+* Add `FeedbackLink` and `<feedbacklink>` custom component - this can be used to add a button to open feedback dialog (or show `supportEmail` in feedback is disabled)
+* Fix `ContinuousColorMap` `Legend` issue due to funky JS precision
+* Fix mobx computed cycle in `CkanDatasetStratum` which was making error messages for failed loading of CKAN items worse.
+
+#### 8.1.2
+
+* Removed duplicate Help icon and tooltip from the map navigation menu at the bottom as it is now shown in the top menu.
+* Fixed a bug where the app shows a scrollbar in some instances.
+* Wrap clean initSources with action.
+* Modified `TerriaReference` to retain its name when expanded. Previously, when the reference is expanded, it will assume the name of the group or item of the target.
+* Proxy `catalogIndex.url`
+
+#### 8.1.1
+
+- **Breaking changes:**
+  * `blacklist` has been renamed to `excludeMembers` for `ArcGisPortalCatalogGroup` and `CkanCatalogGroup`.
 
 * Tsifyied and refactored `RegionProvider` and `RegionProviderList`, and re-enabled `loadRegionIDs`
 * `TableColorMap` `minimumValue` and `maximumValue` will now take into account valid regions.
@@ -10,12 +233,76 @@ Change Log
 * Moved region mapping `ImageryProvider` code to `lib/Table/createRegionMappedImageryProvider.ts`
 * Fix `ChartPanel` import `Result` bug.
 * Improve handling of featureInfoTemplate for composite catalog items.
+* Mobile help menu will now show a link to map user guide if it is configured in `Terria.configParameters.helpItems`.
 * Fixed the layout of items in mobile navigation
+* Add Mapbox Vector Tile support. This is using [protomaps.js](https://github.com/protomaps/protomaps.js) in the new `ProtomapsImageryProvider`. This includes subset of MVT style specification JSON support.
+* `MapboxVectorCanvasTileLayer` is now called `ImageryProviderLeafletGridLayer`
+* `CesiumTileLayer` is now called `ImageryProviderLeafletTileLayer`.
+* Added `geojson-vt` support to `GeoJsonMixin`, which will tile geojson into vector tiles on the fly, and use the new `ProtomapsImageryProvider`.
+* Added `configParameter.enableGeojsonMvt` temporary feature flag for experimental Geojson-Mapbox vector tiles. Default is `false`.
+* Added `forceCesiumPrimitives` to `GeoJsonTraits`. This can be used to render cesium primitives instead of Mapbox vector-tiles (if `configParameter.enableGeojsonMvt` is `true`)
+* Add `scale` observable to `TerriaViewer`. This will give distance between two pixels at the bottom center of the screen in meters.
 * Fixed `withControlledVisibility` method to inherit `propTypes` of its wrapped component.
 * Added `MinMaxLevelMixin` and `MinMaxLevelTraits` to handle defining min and max scale denominator for layers.
 * Extracted function `scaleToDenominator` to core - for conversion of scale to zoom level.
 * Share/start data conversion will now only occur if `version` property is `0.x.x`. Previously, it was `version` property is **not** `8.x.x`
-* [The next improvement]
+* Filter table column values by Z Score. This is controlled by the following `TableColorStyleTraits`:
+  * `zScoreFilter` - Treat values outside of specifed z-score as outliers, and therefore do not include in color scale. This value is magnitude of z-score - it will apply to positive and negative z-scores. For example a value of `2` will treat all values that are 2 or more standard deviations from the mean as outliers. This must be defined to be enabled - currently it is only enabled for SDMX (with `zScoreFilter=4`).
+  * `zScoreFilterEnabled - True, if z-score filter is enabled
+  * `rangeFilter` - This is applied after the `zScoreFilter`. It is used to effectively 'disable' the zScoreFilter if it doesn't cut at least the specified percange of the range of values (for both minimum and maximum value). For exmaple if `rangeFilter = 0.2`, then the zScoreFilter will only be effective if it cuts at least 20% of the range of values from the minimum and maximum value
+* Add `outlierColor` to `ContinuousColorMap`
+* Add `placement` to `SelectableDimension`. This can be used to put `SelectableDimension` below legend using `placement = "belowLegend`
+* Add `SelectableDimensionCheckbox` (and rename `SelectableDimension` to `SelectableDimensionSelect`)
+* Add `outlierFilterDimension` checkbox `SelectableDimension` to workbench to enable/disable dimension
+* Extend `tableStyle.rowGroups` to regions
+* Fix `spreadFinishTime` bug
+* Fix diverging `ContinuousColorMap` - it will now center color scale around 0.
+* Refactor `SocrataMapViewCatalogItem` to use `GeoJsonMixin`
+* `SocrataCatalogGroup` will not not return groups for Facets if there is only one - so it skips an unnecessary group level.
+* Update protomaps.js to `1.5.0`
+* SDMX will now disable the region column if less than 2 valid regions have been found
+* Set `spreadStartTime` and `spreadFinishTime` to `true` for SDMX
+* Add SDMX `metadataURLs` from dataflow annotations
+* Improve SDMX chart titles
+* `TableMixin` will now remove data if an error occurs while calling `forceLoadTableData`
+* Make `regionColumn` `isNullable` - this means region column can be disabled by setting to `null`.
+* Fix scalar column color map with a single value
+* TableMixin will now clear data if an error occurs while calling `forceLoadTableData`
+* `TableMixin` will now not return `mapItems` or `chartItems` if `isLoading` 
+* SDMX will now use `initialTimeSource = stop`
+* Fix `duplicateModels` duplicating observables across multiple models
+* Support group models in workbench -- All members will be automatically added to the map.
+* Added location search button to welcome modal in mobile view.
+* Add `DataUrlTraits` to `CatalogMemberTraits.dataUrls`. It contains an array of data URLS (with optional `title` which will render a button). It is handled the same as `MetadataUrls` except there is a `type` property which can be set to `wcs`, `wfs`... to show info about the URL.
+* Made search location bar span full width in mobile view.
+* Automatically hide mobile modal window when user is interacting with the map. 
+* Disabled feature search in mobile 
+* Disabled export (clip&ship) in mobile
+* Fixed misplaced search icon in mobile safari.
+* Prevents story text from covering the whole screen in mobile devices.
+* Add `CatalogIndex`, `CatalogIndexReference` and `generateCatalogIndex()` script. These can be used to generate a static JSON index of a terria catalog - which can then be searched through using `flexsearch`
+* Added `weakReference` flag `ReferenceMixin`, this can be used to treat References more like a shortcut (this means that `sourceReference` isn't used when models are shared/added to the workbench - the `target` is used instead)
+* GroupMixin.isMixedInto and MappableMixin.isMixedInto are now more strict - and won't pass for for References with `isMappable` or `isGroup`.
+* `Workbench.add` can now handle nested `References` (eg `CatalogIndexReference -> CkanReference -> WMSCatalogItem`).
+* Add `description` trait to `CatalogMemberReferenceTraits`
+* Added `excludeMembers` property to `GroupTraits` (this replaced the `blacklist` property in v7). It is an array of strings of excluded group and item names. A group or item name that appears in this list will not be shown to the user. This is case-insensitive and will also apply to all child/nested groups
+* Fixes an app crash on load in iOS-Safari mobile which was happening when rendering help panel tooltips.
+* Fixed `WebMapServiceCatalogItem` not sending additional `parameters` in `GetFeatureInfo` queries.
+* Changed mobile header icons and improved styling.
+* Fixed a problem with computeds and AsyncLoader when loading `mapItems` (and hence children's `mapItems`) of a CompositeCatalogItem.
+* Fix `YDYRCatalogFunction` `description`
+* Extend input field for search in mobile view to full width of the page.
+* Automatically hide mobile modal window when user is interacting with the map (like picking a point or drawing a shape).
+* Adjusted styling of x-axis labels in feature info panel to prevent its clipping.
+* When expanding charts from the same catalog item, we now create a new item if the expanded chart has a different title from the previously expanded chart for the same item. This behavior matches the behavior in `v7`.
+* Improve status message when feature info panel chart is loading
+* Fix broken chart panel download button.
+* Changed @vx/* dependencies to @visx/* which is the new home of the chart library
+* The glyph style used for chart points can now be customized.
+* Added `TerriaReference` item, useful for mounting a catalog tree from an external init file at any position in the current map's catalog tree.
+* Changed @vx/* dependencies to @visx/* which is the new home of the chart library
+* The glyph style used for chart points can now be customized.
+* Chart tooltip and legend bar can now fit more legends gracefully.
 
 #### 8.1.0
 
@@ -31,16 +318,6 @@ Change Log
   - Resolved issue with some navigation items not being clickable on mobile due to overlap from others.
 * Fixed a bug in Difference tool where difference image was showing with zero opacity in some situations.
 * Fixed `CzmlCatalogItem` to react correctly to input data changes.
-* Adjusted styling of x-axis labels in feature info panel to prevent its clipping.
-* When expanding charts from the same catalog item, we now create a new item if the expanded chart has a different title from the previously expanded chart for the same item. This behavior matches the behavior in `v7`.
-* Improve status message when feature info panel chart is loading
-* Fix broken chart panel download button.
-* Changed @vx/* dependencies to @visx/* which is the new home of the chart library
-* The glyph style used for chart points can now be customized.
-* Added `TerriaReference` item, useful for mounting a catalog tree from an external init file at any position in the current map's catalog tree.
-* Changed @vx/* dependencies to @visx/* which is the new home of the chart library
-* The glyph style used for chart points can now be customized.
-* Chart tooltip and legend bar can now fit more legends gracefully.
 
 #### 8.0.1
 
@@ -61,8 +338,8 @@ Change Log
   - `colorPalette` no longer supports a list of CSS colors (eg `rgb(0,0,255)-rgb(0,255,0)-rgb(255,0,0)`). Instead please use `binColors`.
   - Organise `Traits` folder into `Traits/Decorators` and `Traits/TraitsClasses`
   - Renamed all mixin instance type definitions to `XMixin.Instance`.
-  - Basemaps are now defined as `baseMaps` object
-    - list of available basemaps is defined in `baseMaps.init`. This list is combined with default base maps so it's possible to override defaults
+  - Basemaps are now defined as `baseMaps` object (see [baseMaps object docs](./doc/customizing/initialization-files.md#basemaps))
+    - list of available basemaps is defined in `baseMaps.items`. This list is combined with default base maps so it's possible to override defaults
     - definition of `initBaseMapId` and `initBaseMapName` are moved to `baseMaps.defaultBaseMapId` and `baseMaps.defaultBaseMapName`
     - `previewBaseMapId` is moved to `baseMaps.previewBaseMapId`
     - implemented `baseMaps.enabledBaseMaps` array of base map ids to define a list of baseMaps available to user
@@ -733,7 +1010,7 @@ Change Log
 * Ensure `CkanCatalogGroup` doesn't keep re-requesting data when opening and closing groups.
 * Add `typeName` to `CatalogMemberMixin`
 * Add `header` option to `loadText`
-* Add `isMixtedInto` function for `AsyncMappableMixin` and `AsyncChartableMixin`
+* Add `isMixedInto` function for `AsyncMappableMixin` and `AsyncChartableMixin`
 * Added file upload support for `GltfCatalogItem`. The supported extension is glb.
 * Improve runtime themeing via styled components across main UI components
 * Updated default welcome video defaults to a newer, slower video

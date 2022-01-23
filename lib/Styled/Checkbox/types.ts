@@ -1,3 +1,4 @@
+import { TFunctionResult } from "i18next";
 import React from "react";
 import { ITextProps } from "../Text";
 
@@ -13,29 +14,35 @@ export type ICheckboxProps = {
   /** Sets whether the checkbox is disabled. */
   isDisabled?: boolean;
   /**
-   * Sets whether the checkbox is indeterminate. This only affects the
-   * style and does not modify the isChecked property.
+   * Sets whether the checkbox is indeterminate. This only affects the style and
+   * does not modify the isChecked property.
    */
   isIndeterminate?: boolean;
   /** Sets whether the checkbox should take up the full width of the parent. */
   isFullWidth?: boolean;
-  /**
-   * The label to be displayed to the right of the checkbox. The label is part
-   * of the clickable element to select the checkbox.
-   */
-  label?: React.ReactChild;
-  /** The name of the submitted field in a checkbox. */
-  name?: string;
   /** Title of the html component */
   title?: string;
+  /** The name of the submitted field in a checkbox. */
+  name?: string;
   /**
    * Function that is called whenever the state of the checkbox changes. It will
-   * be called with an object containing the react synthetic event. Use currentTarget to get value, name and checked
+   * be called with an object containing the react synthetic event. Use
+   * currentTarget to get value, name and checked
    */
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => any;
-  /** The value to be used in the checkbox input. This is the value that will be returned on form submission. */
+  /** The value to be used in the checkbox input. This is the value that will be
+   * returned on form submission. */
   value?: number | string;
-} & ITextProps;
+
+  /**
+   * Children to render next to checkbox. This should be used for label. Css
+   * style `font-size: inherit` and props `isDisabled` and `isChecked` will be
+   * applied to all child elements.
+   */
+  children?: React.ReactChild;
+
+  textProps?: ITextProps;
+};
 
 export interface CheckboxIconProps {
   /** Sets whether the checkbox is checked or unchecked. */
@@ -43,12 +50,8 @@ export interface CheckboxIconProps {
   /** Sets whether the checkbox is disabled. */
   isDisabled?: boolean;
   /**
-   * Sets whether the checkbox is indeterminate. This only affects the
-   * style and does not modify the isChecked property.
+   * Sets whether the checkbox is indeterminate. This only affects the style and
+   * does not modify the isChecked property.
    */
   isIndeterminate?: boolean;
-  /**
-   * Wheter this checkbox has label so we apply top distance to fix position.
-   */
-  labeled: boolean;
 }

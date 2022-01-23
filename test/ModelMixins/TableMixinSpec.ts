@@ -1,6 +1,7 @@
 import { runInAction } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
@@ -16,6 +17,7 @@ const LatLonEnumDateIdCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_e
 const LgaWithDisambigCsv = require("raw-loader!../../wwwroot/test/csv/lga_state_disambig.csv");
 const ParkingSensorDataCsv = require("raw-loader!../../wwwroot/test/csv/parking-sensor-data.csv");
 const LegendDecimalPlacesCsv = require("raw-loader!../../wwwroot/test/csv/legend-decimal-places.csv");
+const BadDatesCsv = require("raw-loader!../../wwwroot/test/csv/bad-dates.csv");
 const regionMapping = JSON.stringify(
   require("../../wwwroot/data/regionMapping.json")
 );
@@ -73,6 +75,7 @@ describe("TableMixin", function() {
     });
 
     it("creates one entity per id", async function() {
+      expect(item.activeTableStyle.rowGroups.length).toBe(4);
       if (dataSource instanceof CustomDataSource) {
         expect(dataSource.entities.values.length).toBe(4);
       }
@@ -147,12 +150,38 @@ describe("TableMixin", function() {
         const duplicateValue = 7;
         let occurrences = 0;
         for (let entity of mapItem.entities.values) {
-          const val = entity.properties?.getValue(JulianDate.now()).value;
+          const val = entity.properties?.value.getValue();
           if (val === duplicateValue) {
             occurrences++;
           }
         }
         expect(occurrences).toBe(1);
+      }
+    });
+
+    it("has the correct property names", async function() {
+      runInAction(() =>
+        item.setTrait(CommonStrata.user, "csvString", LatLonValCsv)
+      );
+      await item.loadMapItems();
+      const dataSource = item.mapItems[0] as CustomDataSource;
+      const propertyNames =
+        dataSource.entities.values[0].properties?.propertyNames;
+      expect(propertyNames).toEqual(["lat", "lon", "value"]);
+    });
+  });
+
+  describe("when the time column has bad datetimes in it", function() {
+    it("ignores them gracefully", async function() {
+      runInAction(() =>
+        item.setTrait(CommonStrata.user, "csvString", BadDatesCsv)
+      );
+
+      await item.loadMapItems();
+      const mapItem = item.mapItems[0];
+      expect(mapItem instanceof CustomDataSource).toBe(true);
+      if (mapItem instanceof CustomDataSource) {
+        expect(mapItem.entities.values.length).toBe(3);
       }
     });
   });
@@ -284,28 +313,59 @@ describe("TableMixin", function() {
           t?.stop.toString()
         ])
       ).toEqual([
-        ["2021-06-25T10:39:02Z", "2021-06-25T10:39:02Z"],
-        ["2021-06-25T10:26:45Z", "2021-06-25T10:39:02Z"],
-        ["2021-06-25T10:18:01Z", "2021-06-25T10:39:02Z"],
-        ["2021-06-25T09:53:52Z", "2021-06-25T10:39:02Z"],
-        ["2021-06-25T09:51:32Z", "2021-06-25T10:39:02Z"],
-        ["2021-06-25T09:47:06Z", "2021-06-25T10:39:02Z"],
-        ["2021-06-25T09:19:21Z", "2021-06-25T10:39:02Z"],
-        ["2021-06-25T09:14:36Z", "2021-06-25T10:39:02Z"],
-        ["2021-06-25T09:06:47Z", "2021-06-25T10:39:02Z"],
-        ["2021-06-25T09:01:32Z", "2021-06-25T10:39:02Z"],
-        ["2021-06-25T08:25:09Z", "2021-06-25T10:39:02Z"],
-        ["2021-06-25T07:22:15Z", "2021-06-25T10:39:02Z"],
-        ["2021-06-25T06:10:52Z", "2021-06-25T10:39:02Z"],
-        ["2021-06-25T04:39:45Z", "2021-06-25T10:39:02Z"],
-        ["2021-06-25T03:46:13Z", "2021-06-25T10:39:02Z"],
-        ["2021-06-25T00:29:26Z", "2021-06-25T10:39:02Z"],
-        ["2021-06-25T00:27:23Z", "2021-06-25T10:39:02Z"],
-        ["2021-06-24T14:39:42Z", "2021-06-25T10:39:02Z"],
-        ["2021-06-15T02:50:37Z", "2021-06-25T10:39:02Z"],
-        ["2021-05-12T00:52:56Z", "2021-06-25T10:39:02Z"],
-        ["2021-05-04T03:55:39Z", "2021-06-25T10:39:02Z"]
+        ["2021-06-25T10:39:02Z", "2021-06-26T10:39:01Z"],
+        ["2021-06-25T10:26:45Z", "2021-06-26T10:39:01Z"],
+        ["2021-06-25T10:18:01Z", "2021-06-26T10:39:01Z"],
+        ["2021-06-25T09:53:52Z", "2021-06-26T10:39:01Z"],
+        ["2021-06-25T09:51:32Z", "2021-06-26T10:39:01Z"],
+        ["2021-06-25T09:47:06Z", "2021-06-26T10:39:01Z"],
+        ["2021-06-25T09:19:21Z", "2021-06-26T10:39:01Z"],
+        ["2021-06-25T09:14:36Z", "2021-06-26T10:39:01Z"],
+        ["2021-06-25T09:06:47Z", "2021-06-26T10:39:01Z"],
+        ["2021-06-25T09:01:32Z", "2021-06-26T10:39:01Z"],
+        ["2021-06-25T08:25:09Z", "2021-06-26T10:39:01Z"],
+        ["2021-06-25T07:22:15Z", "2021-06-26T10:39:01Z"],
+        ["2021-06-25T06:10:52Z", "2021-06-26T10:39:01Z"],
+        ["2021-06-25T04:39:45Z", "2021-06-26T10:39:01Z"],
+        ["2021-06-25T03:46:13Z", "2021-06-26T10:39:01Z"],
+        ["2021-06-25T00:29:26Z", "2021-06-26T10:39:01Z"],
+        ["2021-06-25T00:27:23Z", "2021-06-26T10:39:01Z"],
+        ["2021-06-24T14:39:42Z", "2021-06-26T10:39:01Z"],
+        ["2021-06-15T02:50:37Z", "2021-06-26T10:39:01Z"],
+        ["2021-05-12T00:52:56Z", "2021-06-26T10:39:01Z"],
+        ["2021-05-04T03:55:39Z", "2021-06-26T10:39:01Z"]
       ]);
+    });
+
+    it("creates disable time dimension by default for this dataset", async function() {
+      expect(item.timeDisableDimension).toBeDefined();
+    });
+
+    it("doesn't disable time dimension if `showDisableTimeOption = false`", async function() {
+      runInAction(() =>
+        item.setTrait(CommonStrata.user, "showDisableTimeOption", false)
+      );
+
+      expect(item.timeDisableDimension).toBeUndefined();
+    });
+
+    it("doesn't disable time dimension by default for another dataset", async function() {
+      runInAction(() => {
+        item.setTrait(CommonStrata.user, "csvString", LatLonEnumDateIdCsv);
+      });
+
+      await item.loadMapItems();
+      expect(item.timeDisableDimension).toBeUndefined();
+    });
+
+    it("creates disable time dimension for another dataset if `showDisableTimeOption = true`", async function() {
+      runInAction(() => {
+        item.setTrait(CommonStrata.user, "csvString", LatLonEnumDateIdCsv);
+        item.setTrait(CommonStrata.user, "showDisableTimeOption", true);
+      });
+
+      await item.loadMapItems();
+      expect(item.timeDisableDimension).toBeDefined();
     });
   });
 
@@ -319,7 +379,22 @@ describe("TableMixin", function() {
 
       expect(item.styleDimensions?.options?.length).toBe(4);
       expect(item.styleDimensions?.options?.[2].id).toBe("value");
-      expect(item.styleDimensions?.options?.[2].name).toBe("value");
+      expect(item.styleDimensions?.options?.[2].name).toBe("Value");
+    });
+
+    it("creates all styleDimensions - with disable style", async function() {
+      runInAction(() => {
+        item.setTrait(CommonStrata.user, "csvString", LatLonEnumDateIdCsv);
+        item.setTrait(CommonStrata.user, "showDisableStyleOption", true);
+      });
+
+      await item.loadMapItems();
+
+      expect(item.styleDimensions?.options?.length).toBe(4);
+      expect(item.styleDimensions?.allowUndefined).toBeTruthy();
+      expect(item.styleDimensions?.undefinedLabel).toBe(
+        "models.tableData.styleDisabledLabel"
+      );
     });
 
     it("uses TableColumnTraits for style title", async function() {
@@ -360,7 +435,7 @@ describe("TableMixin", function() {
 
       await item.loadMapItems();
 
-      expect(item.regionProviderList?.regionProviders.length).toBe(102);
+      expect(item.regionProviderList?.regionProviders.length).toBe(103);
     });
   });
 

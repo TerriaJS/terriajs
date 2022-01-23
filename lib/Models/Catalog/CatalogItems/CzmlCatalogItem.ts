@@ -6,7 +6,7 @@ import CzmlDataSource from "terriajs-cesium/Source/DataSources/CzmlDataSource";
 import isDefined from "../../../Core/isDefined";
 import makeRealPromise from "../../../Core/makeRealPromise";
 import readJson from "../../../Core/readJson";
-import TerriaError from "../../../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
@@ -128,19 +128,10 @@ export default class CzmlCatalogItem
         if (e instanceof TerriaError) {
           throw e;
         } else {
-          throw new TerriaError({
+          throw networkRequestError({
             sender: this,
             title: i18next.t("models.czml.errorLoadingTitle"),
-            message: i18next.t("models.czml.errorLoadingMessage", {
-              appName: this.terria.appName,
-              email:
-                '<a href="mailto:' +
-                this.terria.supportEmail +
-                '">' +
-                this.terria.supportEmail +
-                "</a>.",
-              stackTrace: e.stack || e.toString()
-            })
+            message: i18next.t("models.czml.errorLoadingMessage")
           });
         }
       });

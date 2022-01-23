@@ -1,39 +1,35 @@
-import { VectorTileFeature } from "@mapbox/vector-tile";
 import i18next from "i18next";
 import { action, computed, observable, runInAction } from "mobx";
 import { createTransformer, ITransformer } from "mobx-utils";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import { ChartPoint } from "../Charts/ChartData";
 import getChartColorForId from "../Charts/getChartColorForId";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
-import { JsonObject } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
 import makeRealPromise from "../Core/makeRealPromise";
 import TerriaError from "../Core/TerriaError";
 import ConstantColorMap from "../Map/ConstantColorMap";
-import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import RegionProviderList from "../Map/RegionProviderList";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
+import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import SelectableDimensions, {
   SelectableDimension
 } from "../Models/SelectableDimensions";
 import createLongitudeLatitudeFeaturePerId from "../Table/createLongitudeLatitudeFeaturePerId";
 import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
-import getChartDetailsFn from "../Table/getChartDetailsFn";
+import createRegionMappedImageryProvider from "../Table/createRegionMappedImageryProvider";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
+import LegendTraits from "../Traits/TraitsClasses/LegendTraits";
 import TableTraits from "../Traits/TraitsClasses/TableTraits";
 import CatalogMemberMixin from "./CatalogMemberMixin";
 import ChartableMixin, {
@@ -46,7 +42,6 @@ import DiscretelyTimeVaryingMixin, {
 } from "./DiscretelyTimeVaryingMixin";
 import ExportableMixin, { ExportData } from "./ExportableMixin";
 import { ImageryParts } from "./MappableMixin";
-import createRegionMappedImageryProvider from "../Table/createRegionMappedImageryProvider";
 
 function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
   abstract class TableMixin
@@ -54,6 +49,18 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       ChartableMixin(DiscretelyTimeVaryingMixin(CatalogMemberMixin(Base)))
     )
     implements SelectableDimensions {
+    /**
+     * The default {@link TableStyle}, which is used for styling
+     * only when there are no styles defined.
+     */
+    readonly defaultTableStyle: TableStyle;
+
+    constructor(...args: any[]) {
+      super(...args);
+
+      this.defaultTableStyle = new TableStyle(this);
+    }
+
     get hasTableMixin() {
       return true;
     }
@@ -130,15 +137,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     /**
-     * Gets the default {@link TableStyle}, which is used for styling
-     * only when there are no styles defined.
-     */
-    @computed
-    get defaultTableStyle(): TableStyle {
-      return new TableStyle(this, -1);
-    }
-
-    /**
      * Gets the {@link TableStyleTraits#id} of the currently-active style.
      * Note that this is a trait so there is no guarantee that a style
      * with this ID actually exists. If no active style is explicitly
@@ -202,12 +200,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     @computed
-    get disableOpacityControl() {
-      // disable opacity control for point tables - or if no mapItems
-      return this.activeTableStyle.isPoints() || this.mapItems.length === 0;
-    }
-
-    @computed
     get _canExportData() {
       return isDefined(this.dataColumnMajor);
     }
@@ -220,6 +212,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
             this.dataColumnMajor!.map(col => col[rowIndex]).join(",")
           )
           .join("\n");
+
+        // Make sure we have .csv file extension
+        let name = this.name || this.uniqueId || "data.csv";
+        if (!/(\.csv\b)/i.test(name)) {
+          name = `${name}.csv`;
+        }
 
         return {
           name: (this.name || this.uniqueId)!,
@@ -242,7 +240,9 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     get disableZoomTo() {
       // Disable zoom if only showing imagery parts  (eg region mapping) and no rectangle is defined
       if (
-        !this.mapItems.find(m => m instanceof DataSource) &&
+        !this.mapItems.find(
+          m => m instanceof DataSource || m instanceof CustomDataSource
+        ) &&
         !isDefined(this.cesiumRectangle)
       ) {
         return true;
@@ -256,14 +256,21 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     @computed
     get mapItems(): (DataSource | ImageryParts)[] {
       // Wait for activeTableStyle to be ready
-      if (!this.activeTableStyle.ready) return [];
+      if (
+        this.dataColumnMajor?.length === 0 ||
+        !this.activeTableStyle.ready ||
+        this.isLoadingMapItems
+      )
+        return [];
 
       const numRegions =
         this.activeTableStyle.regionColumn?.valuesAsRegions?.uniqueRegionIds
           ?.length ?? 0;
 
       // Estimate number of points based off number of rowGroups
-      const numPoints = this.activeTableStyle.rowGroups.length;
+      const numPoints = this.activeTableStyle.isPoints()
+        ? this.activeTableStyle.rowGroups.length
+        : 0;
 
       // If we have more points than regions OR we have points are are using a ConstantColorMap - show points instead of regions
       // (Using ConstantColorMap with regions will result in all regions being the same color - which isn't useful)
@@ -420,6 +427,9 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     @computed
     get chartItems() {
+      // Wait for activeTableStyle to be ready
+      if (!this.activeTableStyle.ready || this.isLoadingMapItems) return [];
+
       return filterOutUndefined([
         // If time-series region mapping - show time points chart
         this.activeTableStyle.isRegions() && this.discreteTimes?.length
@@ -432,10 +442,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     @computed
     get selectableDimensions(): SelectableDimension[] {
       return filterOutUndefined([
+        this.timeDisableDimension,
         ...super.selectableDimensions,
         this.regionColumnDimensions,
         this.regionProviderDimensions,
-        this.styleDimensions
+        this.styleDimensions,
+        this.outlierFilterDimension
       ]);
     }
 
@@ -447,7 +459,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       if (this.mapItems.length === 0 && !this.enableManualRegionMapping) {
         return;
       }
-
       return {
         id: "activeStyle",
         name: "Display Variable",
@@ -460,6 +471,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
             };
           }),
         selectedId: this.activeStyle,
+        allowUndefined: this.showDisableStyleOption,
+        undefinedLabel: this.showDisableStyleOption
+          ? i18next.t("models.tableData.styleDisabledLabel")
+          : undefined,
         setDimensionValue: (stratumId: string, styleId: string) => {
           this.setTrait(stratumId, "activeStyle", styleId);
         }
@@ -544,6 +559,76 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       };
     }
 
+    /**
+     * Creates SelectableDimension for region column - the options contains a list of all columns.
+     * {@link TableColorStyleTraits#zScoreFilter} must be enabled and {@link TableColorMap#zScoreFilterValues} must detect extreme (outlier) values
+     */
+    @computed
+    get outlierFilterDimension(): SelectableDimension | undefined {
+      if (
+        !this.activeTableStyle.colorTraits.zScoreFilter ||
+        !this.activeTableStyle.tableColorMap.zScoreFilterValues
+      ) {
+        return;
+      }
+
+      return {
+        id: "outlierFilter",
+        options: [
+          { id: "true", name: i18next.t("models.tableData.zFilterEnabled") },
+          { id: "false", name: i18next.t("models.tableData.zFilterDisabled") }
+        ],
+        selectedId: this.activeTableStyle.colorTraits.zScoreFilterEnabled
+          ? "true"
+          : "false",
+        setDimensionValue: (stratumId: string, value: string) => {
+          updateModelFromJson(this, stratumId, {
+            defaultStyle: {
+              color: { zScoreFilterEnabled: value === "true" }
+            }
+          });
+        },
+        placement: "belowLegend",
+        type: "checkbox"
+      };
+    }
+
+    /**
+     * Creates SelectableDimension to disable time - this will show if each rowGroup only has a single time
+     */
+    @computed
+    get timeDisableDimension(): SelectableDimension | undefined {
+      // Return nothing if no active time column and if the active time column has been explicitly hidden (using this.defaultStyle.time.timeColumn = null)
+      // or if time column doesn't have at least one interval
+      if (this.mapItems.length === 0 || !this.showDisableTimeOption) return;
+
+      return {
+        id: "disableTime",
+        options: [
+          {
+            id: "true",
+            name: i18next.t("models.tableData.timeDimensionEnabled")
+          },
+          {
+            id: "false",
+            name: i18next.t("models.tableData.timeDimensionDisabled")
+          }
+        ],
+        selectedId:
+          this.defaultStyle.time.timeColumn === null ? "false" : "true",
+        setDimensionValue: (stratumId: string, value: string) => {
+          // We have to set showDisableTimeOption to true - or this will hide when time column is disabled
+          this.setTrait(stratumId, "showDisableTimeOption", true);
+          this.defaultStyle.time.setTrait(
+            stratumId,
+            "timeColumn",
+            value === "true" ? undefined : null
+          );
+        },
+        type: "checkbox"
+      };
+    }
+
     @computed
     get rowIds(): number[] {
       const nRows = (this.dataColumnMajor?.[0]?.length || 1) - 1;
@@ -587,8 +672,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     @computed
-    get legends() {
-      if (this.mapItems.length > 0) {
+    get legends(): Model<LegendTraits>[] {
+      if (this.dataColumnMajor?.length === 0 || this.mapItems.length > 0) {
         const colorLegend = this.activeTableStyle.colorTraits.legend;
         return filterOutUndefined([colorLegend]);
       } else {
@@ -605,22 +690,30 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     protected async forceLoadMapItems() {
-      const dataColumnMajor = await this.forceLoadTableData();
+      try {
+        const dataColumnMajor = await this.forceLoadTableData();
 
-      // We need to make sure the region provider is loaded before loading
-      // region mapped tables.
-      await this.loadRegionProviderList();
+        // We need to make sure the region provider is loaded before loading
+        // region mapped tables.
+        await this.loadRegionProviderList();
 
-      if (dataColumnMajor !== undefined && dataColumnMajor !== null) {
+        if (dataColumnMajor !== undefined && dataColumnMajor !== null) {
+          runInAction(() => {
+            this.dataColumnMajor = dataColumnMajor;
+          });
+        }
+
+        // Load region IDS if region mapping
+        const activeRegionType = this.activeTableStyle.regionColumn?.regionType;
+        if (activeRegionType) {
+          await activeRegionType.loadRegionIDs();
+        }
+      } catch (e) {
+        // Clear data if error occurs
         runInAction(() => {
-          this.dataColumnMajor = dataColumnMajor;
+          this.dataColumnMajor = undefined;
         });
-      }
-
-      // Load region IDS if region mapping
-      const activeRegionType = this.activeTableStyle.regionColumn?.regionType;
-      if (activeRegionType) {
-        await activeRegionType.loadRegionIDs();
+        throw e;
       }
     }
 

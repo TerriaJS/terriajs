@@ -1,18 +1,16 @@
-import { computed, observable, runInAction } from "mobx";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import { computed, runInAction } from "mobx";
 import loadJson from "../../../Core/loadJson";
-import runLater from "../../../Core/runLater";
+import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
-import MappableMixin from "../../../ModelMixins/MappableMixin";
-import UrlMixin from "../../../ModelMixins/UrlMixin";
+import GeoJsonMixin, {
+  toFeatureCollection
+} from "../../../ModelMixins/GeojsonMixin";
 import SocrataMapViewCatalogItemTraits from "../../../Traits/TraitsClasses/SocrataMapViewCatalogItemTraits";
-import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
-import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumOrder from "../../Definition/StratumOrder";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
 export interface View {
   id: string;
@@ -133,14 +131,9 @@ StratumOrder.addLoadStratum(SocrataMapViewStratum.stratumName);
  * Use the Socrata `views` API to fetch data.
  * This mimics how Socrata portal map visualisation works - it isn't an official API
  */
-export default class SocrataMapViewCatalogItem extends UrlMixin(
-  MappableMixin(
-    CatalogMemberMixin(CreateModel(SocrataMapViewCatalogItemTraits))
-  )
+export default class SocrataMapViewCatalogItem extends GeoJsonMixin(
+  CatalogMemberMixin(CreateModel(SocrataMapViewCatalogItemTraits))
 ) {
-  @observable
-  private geojsonCatalogItem: GeoJsonCatalogItem | undefined;
-
   static readonly type = "socrata-map-item";
 
   get type() {
@@ -156,39 +149,15 @@ export default class SocrataMapViewCatalogItem extends UrlMixin(
     }
   }
 
-  protected async forceLoadMapItems(): Promise<void> {
+  protected async forceLoadGeojsonData() {
     if (this.geojsonUrl) {
-      await runLater(async () => {
-        runInAction(
-          () =>
-            (this.geojsonCatalogItem = new GeoJsonCatalogItem(
-              createGuid(),
-              this.terria,
-              this
-            ))
-        );
+      const result = await loadJson(proxyCatalogItemUrl(this, this.geojsonUrl));
 
-        this.geojsonCatalogItem!.setTrait(
-          CommonStrata.definition,
-          "url",
-          this.geojsonUrl
-        );
-
-        (await this.geojsonCatalogItem!.loadMapItems()).throwIfError();
-      });
-    } else {
-      this.geojsonCatalogItem = undefined;
+      const fc = toFeatureCollection(result);
+      if (fc) return fc;
+      else throw TerriaError.from("Failed to parse geoJSON");
     }
-  }
 
-  @computed
-  get mapItems() {
-    if (this.geojsonCatalogItem) {
-      return this.geojsonCatalogItem.mapItems.map(mapItem => {
-        mapItem.show = this.show;
-        return mapItem;
-      });
-    }
-    return [];
+    throw TerriaError.from("Failed to fetch geoJSON - no URL was provided");
   }
 }

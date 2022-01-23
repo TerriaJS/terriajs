@@ -42,9 +42,25 @@ describe("DateTimeSelectorSection", function() {
     const expectedDateStr = formatDateTime(
       new Date("2014-01-01T00:00:00.000Z")
     );
-    expect(currentDateBtn.children[0].children[0].children[0]).toEqual(
-      expectedDateStr
-    );
+    expect(currentDateBtn.children[0]).toEqual(expectedDateStr);
+
+    const titleLabel = testRenderer.root.findByProps({
+      id: "dateTimeSelectorLabel"
+    });
+    expect(titleLabel).toBeDefined();
+
+    expect(titleLabel.children[0]).toEqual("dateTime.selectorLabel");
+  });
+
+  it("A datetime selector uses timeLabel", function() {
+    wmsItem.setTrait("definition", "timeLabel", "Some Label");
+
+    const titleLabel = testRenderer.root.findByProps({
+      id: "dateTimeSelectorLabel"
+    });
+    expect(titleLabel).toBeDefined();
+
+    expect(titleLabel.children[0]).toEqual("Some Label");
   });
 
   it("A datetime selector can be formatted", async function() {

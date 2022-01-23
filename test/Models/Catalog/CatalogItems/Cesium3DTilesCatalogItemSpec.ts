@@ -62,7 +62,7 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
       );
       let show: any = item.showExpressionFromFilters;
       expect(show).toBe(
-        "${feature['stratumlev']} >= -1 && ${feature['stratumlev']} <= 10"
+        "Number(${feature['stratumlev']}) >= -1 && Number(${feature['stratumlev']}) <= 10"
       );
     });
 
@@ -102,6 +102,17 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
     it("creates the style correctly", function() {
       expect(style.show._expression).toBe("${Height} > 30");
       expect(style.color._expression).toBe("vec4(${Height})");
+    });
+
+    it("reflects changes to the catalog item's opacity in its style", function() {
+      item.setTrait("definition", "style", {
+        color: "#ff0000"
+      });
+
+      item.setTrait("user", "opacity", 0.5);
+      expect((item.cesiumTileStyle as any).color._expression).toBe(
+        "color('#ff0000', ${opacity})"
+      );
     });
 
     describe("when filters are specified", function() {

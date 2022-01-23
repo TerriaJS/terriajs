@@ -424,7 +424,7 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
       this.catalogItem.discreteTimes.length > 1
     ) {
       const chartName = `${this.catalogItem.name}: {{${this.catalogItem.activeTableStyle.title}}}`;
-      template += `</table><chart sources="${chartName}" title="${chartName}" x-column="{{terria.timeSeries.xName}}" y-column="{{terria.timeSeries.yName}}" >{{terria.timeSeries.data}}</chart>`;
+      template += `</table><chart title="${chartName}" x-column="{{terria.timeSeries.xName}}" y-column="{{terria.timeSeries.yName}}" >{{terria.timeSeries.data}}</chart>`;
     }
 
     return createStratumInstance(FeatureInfoTemplateTraits, { template });

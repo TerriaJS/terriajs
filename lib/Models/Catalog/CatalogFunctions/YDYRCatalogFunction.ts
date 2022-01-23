@@ -197,7 +197,10 @@ export default class YDYRCatalogFunction extends CatalogFunctionMixin(
 
   @computed
   get description() {
-    return `Your Data Your Regions (YDYR) is an API for the conversion of data between different Australian geographic boundaries. See <a href="https://ydyr.info">ydyr.info</a> for more information`;
+    return (
+      super.description ??
+      `Your Data Your Regions (YDYR) is an API for the conversion of data between different Australian geographic boundaries. See <a href="https://ydyr.info">ydyr.info</a> for more information`
+    );
   }
 
   @computed

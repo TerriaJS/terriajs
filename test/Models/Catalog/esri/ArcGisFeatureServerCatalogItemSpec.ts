@@ -15,6 +15,7 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import PolylineDashMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty";
 import Color from "terriajs-cesium/Source/Core/Color";
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
+import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 
 configure({
   enforceActions: "observed",
@@ -53,7 +54,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
       if (url.match("Water_Network/FeatureServer")) {
         url = url.replace(/^.*\/FeatureServer/, "FeatureServer");
         url = url.replace(
-          /FeatureServer\/query\?f=json&layerDefs=%7B2%3A%22.*%22%7D$/i,
+          /FeatureServer\/query\?f=json&layerDefs=%7B2%3A%22.*%22%7D&outSR=4326$/i,
           "layerDefs.json"
         );
         url = url.replace(/FeatureServer\/2\/?\?.*/i, "2.json");
@@ -61,7 +62,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
       } else if (url.match("Parks/FeatureServer")) {
         url = url.replace(/^.*\/FeatureServer/, "FeatureServer");
         url = url.replace(
-          /FeatureServer\/query\?f=json&layerDefs=%7B3%3A%22.*%22%7D$/i,
+          /FeatureServer\/query\?f=json&layerDefs=%7B3%3A%22.*%22%7D&outSR=4326$/i,
           "layerDefs.json"
         );
         url = url.replace(/FeatureServer\/3\/?\?.*/i, "3.json");
@@ -69,7 +70,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
       } else if (url.match("styles/FeatureServer")) {
         url = url.replace(/^.*\/FeatureServer/, "FeatureServer");
         url = url.replace(
-          /FeatureServer\/query\?f=json&layerDefs=%7B0%3A%22.*%22%7D$/i,
+          /FeatureServer\/query\?f=json&layerDefs=%7B0%3A%22.*%22%7D&outSR=4326$/i,
           "layerDefs.json"
         );
         url = url.replace(/FeatureServer\/0\/?\?.*/i, "lines.json");
@@ -180,7 +181,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
 
       const aTime = new JulianDate();
       item.mapItems.map(mapItem => {
-        mapItem.entities.values.map(entity => {
+        (mapItem as GeoJsonDataSource).entities.values.map(entity => {
           expect(entity.polygon).toBeDefined();
 
           if (entity.polygon !== undefined) {
@@ -266,7 +267,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
       expect(item.mapItems.length).toEqual(1);
 
       const mapItem = item.mapItems[0];
-      const entities = mapItem.entities.values;
+      const entities = (mapItem as GeoJsonDataSource).entities.values;
 
       expect(entities).toBeDefined();
       expect(entities.length).toEqual(13);

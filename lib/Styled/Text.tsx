@@ -1,8 +1,10 @@
+import { ComponentProps } from "react";
 import styled from "styled-components";
 import { OneKeyFrom } from "./Styled.types";
 
 interface ITextSize {
   noFontSize?: boolean;
+  mini?: boolean;
   small?: boolean;
   medium?: boolean;
   large?: boolean;
@@ -51,7 +53,8 @@ interface ITextPropsBase {
 export type ITextProps = ITextPropsBase &
   OneKeyFrom<ITextSize> &
   OneKeyFrom<ITextColor> &
-  OneKeyFrom<ITextWeight>;
+  OneKeyFrom<ITextWeight> &
+  ComponentProps<"div">;
 
 // should it be a span or inline-block-div? - leaning to div
 export const Text = styled.div<ITextProps>`
@@ -120,6 +123,12 @@ export const Text = styled.div<ITextProps>`
     `
     font-size: 13px;
     line-height: normal;
+  `}
+
+  ${props =>
+    props.mini &&
+    `
+    font-size: 10px;
   `}
 
   ${props =>
@@ -197,12 +206,11 @@ export const Text = styled.div<ITextProps>`
 
   ${props => props.overflowHide && ` overflow: hidden;`}
   ${props => props.overflowEllipsis && ` text-overflow: ellipsis;`}
-
 `;
 
 export const TextSpan = styled(Text).attrs<{
-  as?: keyof JSX.IntrinsicElements;
-}>((props: { as?: keyof JSX.IntrinsicElements }) => ({
+  as?: React.ElementType | keyof JSX.IntrinsicElements;
+}>((props: { as?: React.ElementType | keyof JSX.IntrinsicElements }) => ({
   as: props.as || "span"
 }))``;
 

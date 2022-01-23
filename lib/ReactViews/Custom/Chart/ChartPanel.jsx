@@ -74,9 +74,10 @@ class ChartPanel extends React.Component {
           .filter(item => MappableMixin.isMixedInto(item))
           .map(item => item.loadMapItems())
       ).then(results =>
-        Result.combine(results, "Failed to load chart items").raiseError(
-          this.props.terria
-        )
+        Result.combine(results, {
+          message: "Failed to load chart items",
+          importance: -1
+        }).raiseError(this.props.terria)
       );
 
       chart = (

@@ -99,7 +99,8 @@ export default class Result<T = undefined> {
 
   /** Combine array of Results.
    * The new Result will have an error if at least one error has occurred in array of results
-   * The value will be array of result values
+   * The value will be array of result values.
+   *
    */
   static combine<U>(
     results: Result<U>[],
@@ -142,12 +143,27 @@ export default class Result<T = undefined> {
     return this.value;
   }
 
-  /** Raise error if one has occurred, and then return value.
+  /** Log error to console if one has occurred, and then return value.
    *
    * @param errorOverrides can be used to add error context
    */
-  raiseError(terria: Terria, errorOverrides?: TerriaErrorOverrides): T {
-    if (this._error) terria.raiseErrorToUser(this.error, errorOverrides);
+  logError(errorOverrides?: TerriaErrorOverrides) {
+    if (this._error) TerriaError.from(this._error, errorOverrides).log();
+    return this.value;
+  }
+
+  /** Raise error if one has occurred, and then return value.
+   *
+   * @param errorOverrides can be used to add error context
+   * @param forceRaiseToUser true to force show error to user
+   */
+  raiseError(
+    terria: Terria,
+    errorOverrides?: TerriaErrorOverrides,
+    forceRaiseToUser?: boolean
+  ): T {
+    if (this._error)
+      terria.raiseErrorToUser(this.error, errorOverrides, forceRaiseToUser);
     return this.value;
   }
 
@@ -161,19 +177,20 @@ export default class Result<T = undefined> {
     return this.value;
   }
 
-  /** Throw error if one occurred OR value is undefined, otherwise return value
+  /** Throw error if value is undefined (regardless of if an error has occurred), otherwise return value.
    *
    * @param errorOverrides will be used to create error if value is undefined
    */
   throwIfUndefined(errorOverrides?: TerriaErrorOverrides): NotUndefined<T> {
-    if (this._error) throw TerriaError.from(this._error, errorOverrides);
     if (isDefined(this.value)) return this.value as NotUndefined<T>;
 
-    // If value is undefined, throw a new TerriaError using errorOverrides
-    throw new TerriaError({
-      message: "Unhandled required Result exception",
-      ...parseOverrides(errorOverrides)
-    });
+    // If value is undefined, throw error
+    throw this._error
+      ? TerriaError.from(this._error, errorOverrides)
+      : new TerriaError({
+          message: "Unhandled required Result exception",
+          ...parseOverrides(errorOverrides)
+        });
   }
 
   pushErrorTo(errors: TerriaError[], errorOverrides?: TerriaErrorOverrides) {

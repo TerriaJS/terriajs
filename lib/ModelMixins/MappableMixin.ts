@@ -11,7 +11,6 @@ import Result from "../Core/Result";
 import Model from "../Models/Definition/Model";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import CatalogMemberMixin, { getName } from "./CatalogMemberMixin";
-import TableMixin from "./TableMixin";
 
 export type MapItem =
   | ImageryParts
@@ -131,7 +130,10 @@ function MappableMixin<T extends Constructor<Model<MappableTraits>>>(Base: T) {
 
         (await this._mapItemsLoader.load(force)).throwIfError();
       } catch (e) {
-        return Result.error(e, `Failed to load \`${getName(this)}\` mapItems`);
+        return Result.error(e, {
+          message: `Failed to load \`${getName(this)}\` mapItems`,
+          importance: -1
+        });
       }
 
       return Result.none();
@@ -188,7 +190,12 @@ namespace MappableMixin {
   export interface Instance
     extends InstanceType<ReturnType<typeof MappableMixin>> {}
   export function isMixedInto(model: any): model is Instance {
-    return model && model.isMappable;
+    return (
+      model &&
+      model.isMappable &&
+      "forceLoadMapItems" in model &&
+      typeof model.forceLoadMapItems === "function"
+    );
   }
 }
 

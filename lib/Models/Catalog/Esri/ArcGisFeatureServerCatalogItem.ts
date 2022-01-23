@@ -13,11 +13,11 @@ import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
-import TerriaError from "../../../Core/TerriaError";
+import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import featureDataToGeoJson from "../../../Map/featureDataToGeoJson";
 import proj4definitions from "../../../Map/Proj4Definitions";
-import MappableMixin from "../../../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
+import MappableMixin from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import ArcGisFeatureServerCatalogItemTraits from "../../../Traits/TraitsClasses/ArcGisFeatureServerCatalogItemTraits";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
@@ -28,13 +28,14 @@ import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
-import { getLineStyleCesium } from "./esriLineStyle";
-import GeoJsonCatalogItem from "../CatalogItems/GeoJsonCatalogItem";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
+import GeoJsonCatalogItem from "../CatalogItems/GeoJsonCatalogItem";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
+import { getLineStyleCesium } from "./esriLineStyle";
+import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 
 const proj4 = require("proj4").default;
 
@@ -153,6 +154,7 @@ interface FeatureServer {
 
 interface SpatialReference {
   wkid?: string;
+  latestWkid?: string;
 }
 
 interface Extent {
@@ -196,16 +198,14 @@ class FeatureServerStratum extends LoadableStratum(
 
   static async load(item: ArcGisFeatureServerCatalogItem) {
     if (!isDefined(item.url) || !isDefined(item.uri)) {
-      return Promise.reject(
-        new TerriaError({
-          title: i18next.t(
-            "models.arcGisFeatureServerCatalogItem.missingUrlTitle"
-          ),
-          message: i18next.t(
-            "models.arcGisFeatureServerCatalogItem.missingUrlMessage"
-          )
-        })
-      );
+      throw new TerriaError({
+        title: i18next.t(
+          "models.arcGisFeatureServerCatalogItem.missingUrlTitle"
+        ),
+        message: i18next.t(
+          "models.arcGisFeatureServerCatalogItem.missingUrlMessage"
+        )
+      });
     }
 
     const geoJsonItem = new GeoJsonCatalogItem(createGuid(), item.terria);
@@ -219,10 +219,22 @@ class FeatureServerStratum extends LoadableStratum(
       "attribution",
       item.attribution
     );
+    geoJsonItem.setTrait(
+      CommonStrata.definition,
+      "forceCesiumPrimitives",
+      true
+    );
     let tempEsriJson: any = null;
     const esriJson = await loadGeoJson(item);
     const geoJsonData = featureDataToGeoJson(esriJson.layers[0]);
-    geoJsonItem.setTrait(CommonStrata.definition, "geoJsonData", geoJsonData);
+    if (!geoJsonData) {
+      throw TerriaError.from("Failed to convert ESRI json data into GeoJSON");
+    }
+    geoJsonItem.setTrait(
+      CommonStrata.definition,
+      "geoJsonData",
+      geoJsonData as any
+    );
 
     (await geoJsonItem.loadMetadata()).throwIfError();
     const featureServer = await loadMetadata(item);
@@ -270,13 +282,11 @@ class FeatureServerStratum extends LoadableStratum(
 
   @computed get rectangle(): StratumFromTraits<RectangleTraits> | undefined {
     const extent = this._featureServer.extent;
+    const wkidCode =
+      extent?.spatialReference?.latestWkid ?? extent?.spatialReference?.wkid;
 
-    if (
-      isDefined(extent) &&
-      extent.spatialReference &&
-      extent.spatialReference.wkid
-    ) {
-      const wkid = "EPSG:" + extent.spatialReference.wkid;
+    if (isDefined(extent) && isDefined(wkidCode)) {
+      const wkid = "EPSG:" + wkidCode;
       if (!isDefined((proj4definitions as any)[wkid])) {
         return undefined;
       }
@@ -406,6 +416,7 @@ export default class ArcGisFeatureServerCatalogItem extends MappableMixin(
         const renderer = featureServerData.drawingInfo.renderer;
         const rendererType = renderer.type;
         that.mapItems.forEach(mapItem => {
+          if (!(mapItem instanceof GeoJsonDataSource)) return;
           const entities = mapItem.entities;
           entities.suspendEvents();
 
@@ -754,7 +765,7 @@ function buildGeoJsonUrl(catalogItem: ArcGisFeatureServerCatalogItem) {
   const layerId = urlComponents.layerId;
 
   if (!isDefined(layerId)) {
-    throw new TerriaError({
+    throw networkRequestError({
       title: i18next.t(
         "models.arcGisFeatureServerCatalogItem.invalidServiceTitle"
       ),
@@ -770,6 +781,7 @@ function buildGeoJsonUrl(catalogItem: ArcGisFeatureServerCatalogItem) {
       .segment("query")
       .addQuery("f", "json")
       .addQuery("layerDefs", "{" + layerId + ':"' + catalogItem.layerDef + '"}')
+      .addQuery("outSR", "4326")
       .toString()
   );
 }

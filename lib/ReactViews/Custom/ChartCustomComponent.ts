@@ -7,12 +7,14 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import LatLonHeight from "../../Core/LatLonHeight";
+import { getName } from "../../ModelMixins/CatalogMemberMixin";
+import ChartableMixin from "../../ModelMixins/ChartableMixin";
+import SplitItemReference from "../../Models/Catalog/CatalogReferences/SplitItemReference";
 import CommonStrata from "../../Models/Definition/CommonStrata";
 import createStratumInstance from "../../Models/Definition/createStratumInstance";
-import Feature from "../../Models/Feature";
 import hasTraits from "../../Models/Definition/hasTraits";
 import { BaseModel } from "../../Models/Definition/Model";
-import SplitItemReference from "../../Models/Catalog/CatalogReferences/SplitItemReference";
+import Feature from "../../Models/Feature";
 import ChartPointOnMapTraits from "../../Traits/TraitsClasses/ChartPointOnMapTraits";
 import DiscretelyTimeVaryingTraits from "../../Traits/TraitsClasses/DiscretelyTimeVaryingTraits";
 import LatLonHeightTraits from "../../Traits/TraitsClasses/LatLonHeightTraits";
@@ -23,8 +25,6 @@ import CustomComponent, {
   DomElement,
   ProcessNodeContext
 } from "./CustomComponent";
-import ChartableMixin from "../../ModelMixins/ChartableMixin";
-import { getName } from "../../ModelMixins/CatalogMemberMixin";
 
 export interface ChartCustomComponentAttributes {
   /**  The title of the chart.  If not supplied, defaults to the name of the context-supplied feature, if available, or else simply "Chart". */
@@ -119,6 +119,8 @@ export interface ChartCustomComponentAttributes {
 export default abstract class ChartCustomComponent<
   CatalogItemType extends ChartableMixin.Instance
 > extends CustomComponent {
+  protected chartItemId?: string;
+
   get attributes(): Array<string> {
     return [
       "src",
@@ -184,7 +186,7 @@ export default abstract class ChartCustomComponent<
     id: string | undefined,
     context: ProcessNodeContext,
     sourceReference: BaseModel | undefined
-  ): CatalogItemType;
+  ): CatalogItemType | undefined;
 
   /**
    * For some catalog types, for the chart item to be shareable, it needs to be
@@ -207,7 +209,12 @@ export default abstract class ChartCustomComponent<
     children: ReactElement[],
     index: number
   ): ReactElement | undefined {
-    if (node.attribs === undefined) {
+    if (
+      node.attribs === undefined ||
+      !context.terria ||
+      !context.feature ||
+      !context.catalogItem
+    ) {
       return undefined;
     }
 
@@ -220,6 +227,8 @@ export default abstract class ChartCustomComponent<
     const body: string | undefined =
       typeof child === "string" ? child : undefined;
     const chartElements = [];
+    this.chartItemId = this.chartItemId ?? createGuid();
+
     if (!attrs.hideButtons) {
       // Build expand/download buttons
       const sourceItems = (attrs.downloads || attrs.sources || [""]).map(
@@ -232,7 +241,9 @@ export default abstract class ChartCustomComponent<
           // If title & source names for the two expanded charts are the same then
           // we only show the latest one, otherwise we show both.
           // To do this we make the id dependant on the parentId, title & source.
-          const id = `${context.catalogItem.uniqueId}:${attrs.title}:${source}`;
+          const id = `${context.catalogItem!.uniqueId}:${
+            attrs.title
+          }:${source}`;
 
           const itemOrPromise = this.constructShareableCatalogItem
             ? this.constructShareableCatalogItem(id, context, undefined)
@@ -240,7 +251,7 @@ export default abstract class ChartCustomComponent<
 
           return Promise.resolve(itemOrPromise).then(item => {
             if (item) {
-              this.setTraitsFromParent(item, context.catalogItem);
+              this.setTraitsFromParent(item, context.catalogItem!);
               this.setTraitsFromAttrs(item, attrs, i);
               body && this.setTraitsFromBody?.(item, body);
 
@@ -275,25 +286,32 @@ export default abstract class ChartCustomComponent<
     }
 
     // Build chart item to show in the info panel
-    const chartItem = this.constructCatalogItem(undefined, context, undefined);
-    runInAction(() => {
-      this.setTraitsFromParent(chartItem, context.catalogItem);
-      this.setTraitsFromAttrs(chartItem, attrs, 0);
-      body && this.setTraitsFromBody?.(chartItem, body);
-    });
-
-    chartElements.push(
-      React.createElement(Chart, {
-        key: "chart",
-        terria: context.terria,
-        item: chartItem,
-        xAxisLabel: attrs.previewXLabel,
-        height: 110
-        // styling: attrs.styling,
-        // highlightX: attrs.highlightX,
-        // transitionDuration: 300
-      })
+    const chartItem = this.constructCatalogItem(
+      this.chartItemId,
+      context,
+      undefined
     );
+
+    if (chartItem) {
+      runInAction(() => {
+        this.setTraitsFromParent(chartItem, context.catalogItem!);
+        this.setTraitsFromAttrs(chartItem, attrs, 0);
+        body && this.setTraitsFromBody?.(chartItem, body);
+      });
+
+      chartElements.push(
+        React.createElement(Chart, {
+          key: "chart",
+          terria: context.terria,
+          item: chartItem,
+          xAxisLabel: attrs.previewXLabel,
+          height: 110
+          // styling: attrs.styling,
+          // highlightX: attrs.highlightX,
+          // transitionDuration: 300
+        })
+      );
+    }
 
     return React.createElement(
       "div",
@@ -551,8 +569,8 @@ function getInsertedTitle(node: DomElement) {
   }
 }
 
-function getFeaturePosition(feature: Feature): LatLonHeight | undefined {
-  const cartesian = feature.position?.getValue(JulianDate.now());
+function getFeaturePosition(feature?: Feature): LatLonHeight | undefined {
+  const cartesian = feature?.position?.getValue(JulianDate.now());
   if (cartesian) {
     const carto = Ellipsoid.WGS84.cartesianToCartographic(cartesian);
     return {

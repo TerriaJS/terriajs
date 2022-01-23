@@ -64,30 +64,14 @@ function CatalogFunctionMixin<T extends Constructor<CatalogFunctionMixin>>(
 
         this.terria.addModel(newJob);
         this.terria.catalog.userAddedDataGroup.add(CommonStrata.user, newJob);
-        this.terria.workbench.add(newJob);
+        this.terria.workbench.add(newJob).then(r => r.raiseError(this.terria));
 
         await newJob.invoke();
 
         return newJob;
       } catch (error) {
-        // Try to get meaningful error message
-        if (error instanceof TerriaError) {
-          throw error;
-        }
-
-        let message = error;
-
-        if (typeof message !== "string") {
-          if (
-            message instanceof RequestErrorEvent &&
-            typeof message.response?.detail === "string"
-          )
-            message = message.response.detail;
-        }
-
-        throw new TerriaError({
-          title: `Error submitting \`${this.typeName}\` job`,
-          message
+        throw TerriaError.from(error, {
+          title: `Error submitting \`${this.typeName}\` job`
         });
       }
     }

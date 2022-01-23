@@ -22,7 +22,6 @@ import Loader from "../Loader";
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
 import ChartItemSelector from "./Controls/ChartItemSelector";
 import ColorScaleRangeSection from "./Controls/ColorScaleRangeSection";
-import ConceptViewer from "./Controls/ConceptViewer";
 import DateTimeSelectorSection from "./Controls/DateTimeSelectorSection";
 import DimensionSelectorSection from "./Controls/DimensionSelectorSection";
 import DisplayAsPercentSection from "./Controls/DisplayAsPercentSection";
@@ -35,6 +34,8 @@ import { ScaleWorkbenchInfo } from "./Controls/ScaleWorkbenchInfo";
 import ShortReport from "./Controls/ShortReport";
 import TimerSection from "./Controls/TimerSection";
 import ViewingControls from "./Controls/ViewingControls";
+import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
+import { DEFAULT_PLACEMENT } from "../../Models/SelectableDimensions";
 
 interface IProps extends WithTranslation {
   theme: DefaultTheme;
@@ -74,15 +75,13 @@ class WorkbenchItemRaw extends React.Component<IProps> {
     return this.props.item.isOpenInWorkbench;
   }
 
-  conceptViewer() {
-    const item = this.props.item;
-    if (isDefined(item.concepts) && item.concepts.length > 0) {
-      <ConceptViewer item={item} />;
-    }
-  }
-
   render() {
     const { item, t } = this.props;
+
+    const isLoading =
+      (CatalogMemberMixin.isMixedInto(item) && item.isLoading) ||
+      (ReferenceMixin.isMixedInto(item) && item.isLoadingReference);
+
     return (
       <StyledLi style={this.props.style} className={this.props.className}>
         <Box fullWidth justifySpaceBetween padded>
@@ -94,7 +93,7 @@ class WorkbenchItemRaw extends React.Component<IProps> {
                 title={getPath(item, " → ")}
                 fullWidth
               >
-                {!(item as any).isMappable && (
+                {!(item as any).isMappable && !isLoading && (
                   <BoxSpan paddedHorizontally displayInlineBlock>
                     <Box padded>
                       <StyledIcon
@@ -118,12 +117,13 @@ class WorkbenchItemRaw extends React.Component<IProps> {
                       isChecked={item.show}
                       title={t("workbench.toggleVisibility")}
                       onChange={() => this.toggleVisibility()}
-                      label={item.name}
-                      medium
                       css={`
                         overflow-wrap: anywhere;
                       `}
-                    />
+                      textProps={{ medium: true }}
+                    >
+                      <TextSpan medium>{item.name}</TextSpan>
+                    </Checkbox>
                   </Box>
                 ) : (
                   <TextSpan
@@ -173,27 +173,27 @@ class WorkbenchItemRaw extends React.Component<IProps> {
               <ScaleWorkbenchInfo item={item} />
               <LeftRightSection item={item} />
               <TimerSection item={item} />
-              {item.displayChoicesBeforeLegend && this.conceptViewer()}
               <ChartItemSelector item={item} />
               <FilterSection item={item} />
               <DateTimeSelectorSection item={item} />
               <SatelliteImageryTimeFilterSection item={item} />
-              <DimensionSelectorSection item={item} />
+              <DimensionSelectorSection
+                item={item}
+                placement={DEFAULT_PLACEMENT}
+              />
               <ColorScaleRangeSection
                 item={item}
                 minValue={item.colorScaleMinimum}
                 maxValue={item.colorScaleMaximum}
               />
-              <DisplayAsPercentSection item={item} />
-              {(item.shortReport ||
-                (item.shortReportSections &&
-                  item.shortReportSections.length > 0)) && (
+              {item.shortReport ||
+              (item.shortReportSections &&
+                item.shortReportSections.length > 0) ? (
                 <ShortReport item={item} />
-              )}
+              ) : null}
               <Legend item={item} />
-              {!item.displayChoicesBeforeLegend && this.conceptViewer()}
-              {CatalogMemberMixin.isMixedInto(this.props.item) &&
-              this.props.item.isLoading ? (
+              <DimensionSelectorSection item={item} placement={"belowLegend"} />
+              {isLoading ? (
                 <Box paddedVertically>
                   <Loader light />
                 </Box>

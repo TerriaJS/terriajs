@@ -11,6 +11,7 @@ import ChartableMixin, {
 import { BaseModel } from "../../../Models/Definition/Model";
 import Checkbox from "../../../Styled/Checkbox/Checkbox";
 import { Li, Ul } from "../../../Styled/List";
+import { TextSpan } from "../../../Styled/Text";
 
 interface IChartItem {
   chartItem: any;
@@ -44,13 +45,14 @@ export const ChartItem: React.FC<IChartItem> = ({ chartItem }: IChartItem) => {
     <Checkbox
       id="depthTestAgainstTerrain"
       isChecked={chartItem.isSelectedInWorkbench}
-      label={chartItem.name}
       title={t("chart.showItemInChart", { value: chartItem.name })}
       onChange={toggleActive}
       css={`
         color: ${lineColor};
       `}
-    />
+    >
+      <TextSpan>{chartItem.name}</TextSpan>
+    </Checkbox>
   );
 };
 

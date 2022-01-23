@@ -12,10 +12,12 @@ import hasTraits from "../../../Models/Definition/hasTraits";
 import Box from "../../../Styled/Box";
 import Spacing from "../../../Styled/Spacing";
 import Text from "../../../Styled/Text";
+import OpacityTraits from "../../../Traits/TraitsClasses/OpacityTraits";
 import RasterLayerTraits from "../../../Traits/TraitsClasses/RasterLayerTraits";
+import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 
 interface IProps extends WithTranslation {
-  item: any;
+  item: CatalogMemberMixin.Instance;
   t: TFunction;
 }
 
@@ -38,8 +40,9 @@ class OpacitySection extends React.Component<IProps> {
     const item = this.props.item;
     const { t } = this.props;
     if (
-      !hasTraits(item, RasterLayerTraits, "opacity") ||
-      (item as any).disableOpacityControl
+      !hasTraits(item, OpacityTraits, "opacity") ||
+      (hasTraits(item, OpacityTraits, "disableOpacityControl") &&
+        item.disableOpacityControl)
     ) {
       return null;
     }
@@ -47,7 +50,7 @@ class OpacitySection extends React.Component<IProps> {
       <>
         <Spacing bottom={3} />
         <Box verticalCenter>
-          <StyledLabel small>
+          <StyledLabel small htmlFor="opacity">
             {t("workbench.opacity", {
               opacity: Math.round(item.opacity * 100)
             })}
@@ -65,7 +68,7 @@ class OpacitySection extends React.Component<IProps> {
   }
 }
 
-const StyledLabel = styled(Text).attrs({ as: "label" })`
+const StyledLabel = styled(Text).attrs({ as: "label" })<{ htmlFor: string }>`
   white-space: nowrap;
   flex-basis: 50%;
 `;

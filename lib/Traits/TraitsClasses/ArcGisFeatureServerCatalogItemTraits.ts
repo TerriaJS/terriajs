@@ -1,13 +1,15 @@
-import CatalogMemberTraits from "./CatalogMemberTraits";
-import MappableTraits from "./MappableTraits";
-import mixTraits from "../mixTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";
+import mixTraits from "../mixTraits";
+import CatalogMemberTraits from "./CatalogMemberTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
+import MappableTraits from "./MappableTraits";
 import UrlTraits from "./UrlTraits";
 
 export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
   UrlTraits,
   MappableTraits,
-  CatalogMemberTraits
+  CatalogMemberTraits,
+  LegendOwnerTraits
 ) {
   @primitiveTrait({
     type: "boolean",
