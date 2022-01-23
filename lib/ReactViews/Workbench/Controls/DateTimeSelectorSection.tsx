@@ -158,7 +158,7 @@ class DateTimeSelectorSection extends React.Component<IProps, IState> {
     return (
       <Box column paddedVertically>
         <Text medium textLight id={"dateTimeSelectorLabel"}>
-          {t("dateTime.selectorLabel")}
+          {item.timeLabel ?? t("dateTime.selectorLabel")}
         </Text>
         <Spacing bottom={1} />
         <Box fullWidth justifySpaceBetween styledHeight={"30px"} gap>
@@ -183,12 +183,13 @@ class DateTimeSelectorSection extends React.Component<IProps, IState> {
             <StyledButton
               onClick={this.toggleOpen}
               title={t("dateTime.selectTime")}
+              id="current-date-btn"
               css={`
                 flex-grow: 1;
                 padding: 0 10px;
               `}
             >
-              <TextSpan large textLight>
+              <TextSpan large textLight id="current-date">
                 {isDefined(discreteTime)
                   ? discreteTime
                   : t("dateTime.outOfRange")}
