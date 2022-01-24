@@ -13,6 +13,7 @@ import WebProcessingServiceCatalogFunctionTraits from "../../../Traits/TraitsCla
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import BooleanParameter from "../../FunctionParameters/BooleanParameter";
+import DateParameter from "../../FunctionParameters/DateParameter";
 import DateTimeParameter from "../../FunctionParameters/DateTimeParameter";
 import EnumerationParameter from "../../FunctionParameters/EnumerationParameter";
 import FunctionParameter, {
@@ -35,15 +36,22 @@ import StratumOrder from "../../Definition/StratumOrder";
 import updateModelFromJson from "../../Definition/updateModelFromJson";
 import WebProcessingServiceCatalogFunctionJob from "./WebProcessingServiceCatalogFunctionJob";
 import flatten from "lodash-es/flatten";
+import { IsOptional } from "prop-types";
 
 type AllowedValues = {
   Value?: string | string[];
 };
 
+type LiteralDataType = {
+  "ows:reference"?: string;
+  text?: string;
+};
 type LiteralData = {
   AllowedValues?: AllowedValues;
   AllowedValue?: AllowedValues;
   AnyValue?: unknown;
+  DataType?: LiteralDataType | string;
+  dataType?: string;
 };
 
 type ComplexData = {
@@ -350,6 +358,42 @@ const LiteralDataConverter = {
         })
       });
     } else if (isDefined(input.LiteralData.AnyValue)) {
+      let dtype: string | null = null;
+      if (isDefined(input.LiteralData["dataType"])) {
+        dtype = input.LiteralData["dataType"];
+      } else if (isDefined(input.LiteralData.DataType)) {
+        if (typeof input.LiteralData.DataType === "string") {
+          dtype = input.LiteralData.DataType;
+        } else if (isDefined(input.LiteralData.DataType["ows:reference"])) {
+          dtype = input.LiteralData.DataType["ows:reference"];
+        } else if (isDefined(input.LiteralData.DataType.text)) {
+          dtype = input.LiteralData.DataType.text;
+        }
+      }
+      if (dtype !== null) {
+        if (dtype.indexOf("http://www.w3.org/TR/xmlschema-2/#") === 0) {
+          dtype = dtype.substring(dtype.lastIndexOf("#") + 1).toLowerCase();
+        }
+      }
+
+      if (dtype === "string") {
+        return new StringParameter(catalogFunction, {
+          ...options
+        });
+      } else if (dtype === "boolean") {
+        return new BooleanParameter(catalogFunction, {
+          ...options
+        });
+      } else if (dtype === "date") {
+        const dt = new DateParameter(catalogFunction, { ...options });
+        dt.variant = "literal";
+        return dt;
+      } else if (dtype?.toLowerCase() === "datetime") {
+        const dt = new DateTimeParameter(catalogFunction, { ...options });
+        dt.variant = "literal";
+        return dt;
+      }
+      // Assume its a string, if no literal datatype given
       return new StringParameter(catalogFunction, {
         ...options
       });
@@ -363,7 +407,7 @@ const LiteralDataConverter = {
   }
 };
 
-const DateTimeConverter = {
+const ComplexDateConverter = {
   inputToParameter: function(
     catalogFunction: CatalogFunctionMixin,
     input: Input,
@@ -378,11 +422,46 @@ const DateTimeConverter = {
       return undefined;
     }
 
-    var schema = input.ComplexData.Default.Format.Schema;
+    const schema = input.ComplexData.Default.Format.Schema;
+    if (schema !== "http://www.w3.org/TR/xmlschema-2/#date") {
+      return undefined;
+    }
+    const dparam = new DateParameter(catalogFunction, options);
+    dparam.variant = "complex";
+    return dparam;
+  },
+  parameterToInput: function(parameter: FunctionParameter) {
+    return {
+      inputType: "ComplexData",
+      inputValue: DateParameter.formatValueForUrl(
+        parameter?.value?.toString() || ""
+      )
+    };
+  }
+};
+
+const ComplexDateTimeConverter = {
+  inputToParameter: function(
+    catalogFunction: CatalogFunctionMixin,
+    input: Input,
+    options: FunctionParameterOptions
+  ) {
+    if (
+      !isDefined(input.ComplexData) ||
+      !isDefined(input.ComplexData.Default) ||
+      !isDefined(input.ComplexData.Default.Format) ||
+      !isDefined(input.ComplexData.Default.Format.Schema)
+    ) {
+      return undefined;
+    }
+
+    const schema = input.ComplexData.Default.Format.Schema;
     if (schema !== "http://www.w3.org/TR/xmlschema-2/#dateTime") {
       return undefined;
     }
-    return new DateTimeParameter(catalogFunction, options);
+    const dt = new DateTimeParameter(catalogFunction, options);
+    dt.variant = "complex";
+    return dt;
   },
   parameterToInput: function(parameter: FunctionParameter) {
     return {
@@ -587,8 +666,14 @@ function parameterTypeToConverter(
     case StringParameter.type:
     case EnumerationParameter.type:
       return LiteralDataConverter;
+    case DateParameter.type:
+      return (parameter as DateParameter).variant === "literal"
+        ? LiteralDataConverter
+        : ComplexDateConverter;
     case DateTimeParameter.type:
-      return DateTimeConverter;
+      return (parameter as DateTimeParameter).variant === "literal"
+        ? LiteralDataConverter
+        : ComplexDateTimeConverter;
     case PointParameter.type:
       return PointConverter;
     case LineParameter.type:
@@ -606,7 +691,8 @@ function parameterTypeToConverter(
 
 const parameterConverters: ParameterConverter[] = [
   LiteralDataConverter,
-  DateTimeConverter,
+  ComplexDateConverter,
+  ComplexDateTimeConverter,
   PointConverter,
   LineConverter,
   PolygonConverter,

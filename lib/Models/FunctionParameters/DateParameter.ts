@@ -1,8 +1,8 @@
 import FunctionParameter from "./FunctionParameter";
 
-export default class DateTimeParameter extends FunctionParameter<string> {
-  static readonly type = "dateTime";
-  readonly type = "dateTime";
+export default class DateParameter extends FunctionParameter<string> {
+  static readonly type = "date";
+  readonly type = "date";
   variant = "complex";
 
   /**
@@ -14,8 +14,8 @@ export default class DateTimeParameter extends FunctionParameter<string> {
       properties: {
         timestamp: {
           type: "string",
-          format: "date-time",
-          "date-time": value
+          format: "date",
+          date: value
         }
       }
     });
