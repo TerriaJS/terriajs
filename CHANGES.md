@@ -4,6 +4,7 @@ Change Log
 #### next release (8.1.19)
 
 * Add WMS support for `TIME=current`
+* Only show `TableMixin.legends` if we have rows in dataColumnMajor and mapItems to show 
 * [The next improvement]
 
 #### 8.1.18
