@@ -145,7 +145,7 @@ const PrintView = (props: Props) => {
 
   useEffect(() => {
     setScreenshot(props.terria.currentViewer.captureScreenshot());
-  }, []);
+  }, [props.window]);
 
   useEffect(() => {
     canShorten(props.terria)
@@ -173,6 +173,7 @@ const PrintView = (props: Props) => {
                 <DistanceLegend
                   terria={props.terria}
                   scale={getScale(props.terria.currentViewer.getContainer())}
+                  isPrintMode={true}
                 />
               </PrintViewMap>
             ) : (

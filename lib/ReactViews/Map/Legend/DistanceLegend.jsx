@@ -55,12 +55,12 @@ class DistanceLegend extends React.Component {
       distanceLabel: undefined,
       barWidth: 0
     };
-    this.scale = props.scale || 1;
   }
   static displayName = "DistanceLegend";
   static propTypes = {
     terria: PropTypes.object,
-    scale: PropTypes.number
+    scale: PropTypes.number,
+    isPrintMode: PropTypes.bool
   };
 
   /* eslint-disable-next-line camelcase */
@@ -69,7 +69,6 @@ class DistanceLegend extends React.Component {
     this.removeUpdateSubscription = undefined;
 
     this._lastLegendUpdate = undefined;
-
     this.viewerSubscriptions.push(
       this.props.terria.mainViewer.beforeViewerChanged.addEventListener(() => {
         if (defined(this.removeUpdateSubscription)) {
@@ -95,6 +94,10 @@ class DistanceLegend extends React.Component {
       const scene = this.props.terria.cesium.scene;
       this.removeUpdateSubscription = scene.postRender.addEventListener(() => {
         this.updateDistanceLegendCesium(scene);
+        if(!this.props.isPrintMode){
+          this.removeUpdateSubscription();
+          this.removeUpdateSubscription = null;
+        }
       });
     } else if (defined(this.props.terria.leaflet)) {
       const map = this.props.terria.leaflet.map;
@@ -102,14 +105,15 @@ class DistanceLegend extends React.Component {
       const potentialChangeCallback = function potentialChangeCallback() {
         that.updateDistanceLegendLeaflet(map);
       };
+      if(!this.props.isPrintMode){
+        that.removeUpdateSubscription = function () {
+          map.off("zoomend", potentialChangeCallback);
+          map.off("moveend", potentialChangeCallback);
+        };
 
-      that.removeUpdateSubscription = function() {
-        map.off("zoomend", potentialChangeCallback);
-        map.off("moveend", potentialChangeCallback);
-      };
-
-      map.on("zoomend", potentialChangeCallback);
-      map.on("moveend", potentialChangeCallback);
+        map.on("zoomend", potentialChangeCallback);
+        map.on("moveend", potentialChangeCallback);
+      }
 
       that.updateDistanceLegendLeaflet(map);
     }
@@ -175,7 +179,7 @@ class DistanceLegend extends React.Component {
       }
 
       this.setState({
-        barWidth: ((distance / pixelDistance) * this.scale) | 0,
+        barWidth: ((distance / pixelDistance) * this.props.scale) | 0,
         distanceLabel: label
       });
     } else {
@@ -199,7 +203,7 @@ class DistanceLegend extends React.Component {
     const label = meters < 1000 ? meters + " m" : meters / 1000 + " km";
 
     this.setState({
-      barWidth: (meters / maxMeters) * maxPixelWidth * this.scale,
+      barWidth: (meters / maxMeters) * maxPixelWidth * this.props.scale,
       distanceLabel: label
     });
   }
@@ -221,4 +225,9 @@ class DistanceLegend extends React.Component {
     return distanceLabel;
   }
 }
+DistanceLegend.defaultProps = {
+  scale: 1,
+  isPrintMode: false
+};
+
 export default DistanceLegend;
