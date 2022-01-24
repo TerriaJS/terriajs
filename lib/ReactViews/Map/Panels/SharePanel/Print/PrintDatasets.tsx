@@ -1,10 +1,10 @@
 import React from "react";
-import CatalogMemeberMixin from "../../../../../ModelMixins/CatalogMemberMixin";
+import { getName } from "../../../../../ModelMixins/CatalogMemberMixin";
 import { BaseModel } from "../../../../../Models/Definition/Model";
 import Description from "../../../../Preview/Description";
 
 interface Props {
-  items: readonly (CatalogMemeberMixin.Instance & BaseModel & any)[];
+  items: readonly BaseModel[];
 }
 
 const PrintDatasets = (props: Props) => {
@@ -12,7 +12,7 @@ const PrintDatasets = (props: Props) => {
     <>
       {props.items.map((item, index) => (
         <details key={index} open>
-          <summary>{item.name}</summary>
+          <summary>{getName(item)}</summary>
           <Description item={item} printView={true} key={index} />
         </details>
       ))}

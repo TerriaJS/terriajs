@@ -41,7 +41,7 @@ export type option<A> = {
 // The default type for SelectableDimension is Select (dropdown menu)
 export interface SelectableDimensionSelect extends Base {
   type?: undefined | "select";
-  readonly options?: readonly option<any>[];
+  readonly options?: readonly option<string>[];
 }
 export interface SelectableDimensionCheckbox extends Base {
   readonly selectedId?: "true" | "false";
@@ -58,9 +58,7 @@ interface SelectableDimensions {
 }
 
 namespace SelectableDimensions {
-  export function is(
-    model: SelectableDimensions
-  ): model is SelectableDimensions {
+  export function is(model: any): model is SelectableDimensions {
     return "selectableDimensions" in model;
   }
 }

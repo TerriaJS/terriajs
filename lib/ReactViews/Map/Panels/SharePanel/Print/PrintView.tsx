@@ -13,7 +13,11 @@ import { useEffect } from "react";
 import PrintViewMap from "./PrintViewMap";
 import PrintWorkbench from "./PrintWorkbench";
 import PrintDatasets from "./PrintDatasets";
-import { buildShareLink } from "../BuildShareLink";
+import {
+  buildShareLink,
+  buildShortShareLink,
+  canShorten
+} from "../BuildShareLink";
 import PrintSource from "./PrintSource";
 import PrintViewButtons from "./PrintViewButtons";
 
@@ -130,6 +134,7 @@ const getScale = (maybeElement: Element | undefined) =>
 const PrintView = (props: Props) => {
   const [rootNode] = useState(document.createElement("main"));
   const [screenshot, setScreenshot] = useState<Promise<string> | null>(null);
+  const [shareLink, setShareLink] = useState("");
 
   useEffect(() => {
     props.window.document.title = "Print view";
@@ -141,6 +146,18 @@ const PrintView = (props: Props) => {
   useEffect(() => {
     setScreenshot(props.terria.currentViewer.captureScreenshot());
   }, []);
+
+  useEffect(() => {
+    canShorten(props.terria)
+      ? buildShortShareLink(props.terria, props.viewState, {
+          includeStories: false
+        }).then(setShareLink)
+      : setShareLink(
+          buildShareLink(props.terria, props.viewState, {
+            includeStories: false
+          })
+        );
+  }, [props.terria, props.viewState]);
 
   return ReactDOM.createPortal(
     <StyleSheetManager target={rootNode}>
@@ -159,12 +176,12 @@ const PrintView = (props: Props) => {
                 />
               </PrintViewMap>
             ) : (
-              <div>loading</div>
+              <div>Loading...</div>
             )}
           </div>
         </section>
         <section className="PrintView__source">
-          <PrintSource link={buildShareLink(props.terria, props.viewState)} />
+          {shareLink && <PrintSource link={shareLink} />}
         </section>
         <section>
           <h2>Datasets</h2>

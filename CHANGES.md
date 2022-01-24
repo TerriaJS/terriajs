@@ -7,6 +7,7 @@ Change Log
 * Fix a bug in CompositeCatalogItem that causes share URLs to become extremely long.
 * Fix `OpacitySection` number precision.
 * Added new print preview page that opens up in a new window
+* TSXified PrintView
 * Add `sortMembersBy` to `GroupTraits`. This can be set to sort group member models - For example `sortMembersBy = "name"` will alphabetically sort members by name.
 * [The next improvement]
 
@@ -175,7 +176,6 @@ Change Log
 * Fix `MapNavigation` getter/setter `visible` bug.
   * Replace `CompositeBarItemController` `visible` setter with `setVisible` function
 * Use `yarn` in CI scripts (and upgrade node to v14)
-* TSXified PrintView
 * Fix app crash when previewing a nested reference in the catalog (eg when viewing an indexed search result where the result is a reference).
 * Ported feaure from v7 to set WMS layers property from the value of `LAYERS`, `layers` or `typeName` from query string of CKAN resource URL.
 
