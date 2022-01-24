@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.1.19)
 
+* Add WMS support for `TIME=current`
 * [The next improvement]
 
 #### 8.1.18

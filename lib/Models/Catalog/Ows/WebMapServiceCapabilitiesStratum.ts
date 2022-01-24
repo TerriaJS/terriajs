@@ -758,6 +758,10 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     return result;
   }
 
+  @computed get initialTimeSource() {
+    return "now";
+  }
+
   @computed get currentTime() {
     // Get default times for all layers
     const defaultTimes = filterOutUndefined(
@@ -775,6 +779,15 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
         return timeDimension?.default;
       })
     );
+
+    // From WMS 1.3.0 spec:
+    // For the TIME parameter, the special keyword “current” may be used if the <Dimension name="time"> service metadata element includes a nonzero value for the “current” attribute, as described in C.2.
+    // The expression “TIME=current” means “send the most current data available”.
+
+    // Here we return undefined, because WebMapServiceCapabilitiesStratum.initialTimeSource is set to "now"
+    if (defaultTimes[0] === "current") {
+      return undefined;
+    }
 
     // Return first default time
     return defaultTimes[0];
