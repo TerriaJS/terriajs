@@ -33,11 +33,7 @@ const renderDisplayVariables = (catalogItem: BaseModel) => {
 };
 
 const renderLegend = (
-  catalogItem: MappableMixin.Instance &
-    DiscretelyTimeVaryingMixin.Instance &
-    CatalogMemeberMixin.Instance &
-    BaseModel &
-    any
+  catalogItem: BaseModel
 ) => {
   if (!MappableMixin.isMixedInto(catalogItem)) {
     return null;
