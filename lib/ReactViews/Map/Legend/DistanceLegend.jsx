@@ -94,7 +94,7 @@ class DistanceLegend extends React.Component {
       const scene = this.props.terria.cesium.scene;
       this.removeUpdateSubscription = scene.postRender.addEventListener(() => {
         this.updateDistanceLegendCesium(scene);
-        if (!this.props.isPrintMode) {
+        if (this.props.isPrintMode) {
           this.removeUpdateSubscription();
           this.removeUpdateSubscription = null;
         }
