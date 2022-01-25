@@ -1,21 +1,24 @@
 Change Log
 ==========
 
-#### next release (8.1.19)
+#### next release (8.1.20)
+
+* [The next improvement]
+
+#### 8.1.19
 
 * Add WMS support for `TIME=current`
 * Only show `TableMixin.legends` if we have rows in dataColumnMajor and mapItems to show
 * Add `WebMapServiceCatalogGroup.perLayerLinkedWcs`, this can be used to enable `ExportWebCoverageService` for **all** WMS layers. `item.linkedWcsCoverage` will be set to the WMS layer `Name` if it is defined, layer `Title` otherwise.
 * MagdaReference can use addOrOverrideAspects trait to add or override "terria" aspect of target.
-* [The next improvement]
+* Added new print preview page that opens up in a new window
+* TSXified PrintView
 
 #### 8.1.18
 
 * Add missing default Legend to `TableAutomaticStylesStratum.defaultStyle`
 * Fix a bug in CompositeCatalogItem that causes share URLs to become extremely long.
 * Fix `OpacitySection` number precision.
-* Added new print preview page that opens up in a new window
-* TSXified PrintView
 * Add `sortMembersBy` to `GroupTraits`. This can be set to sort group member models - For example `sortMembersBy = "name"` will alphabetically sort members by name.
 * Remove `theme.fontImports` from `GlobalTerriaStyles` - it is now handled in `TerriaMap/index.js`
 * Add check to `featureDataToGeoJson.getEsriFeature` to make sure geometry exists
