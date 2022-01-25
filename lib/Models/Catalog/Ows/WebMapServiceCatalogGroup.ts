@@ -287,7 +287,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
         ),
         // Override linkedWcsCoverage with layer.Name (or Title if Name is undefined)
         linkedWcsCoverage: layer.Name ?? layer.Title
-      });
+      }).logError(
+        `Failed to set \`perLayerLinkedWcs\` for WMS layer ${layer.Title}`
+      );
     }
 
     if (this.catalogGroup.itemProperties !== undefined) {
