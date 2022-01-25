@@ -1423,7 +1423,7 @@
       "getCapabilitiesUrl": "GetCapabilities URL",
       "defaultStyleLabel": "Default style",
       "noLayerFoundTitle": "No layer found",
-      "noLayerFoundMessage": "The WMS dataset '{{name}}' has no layers matching '{{layers}}'. {{suggested}} {{line}}{{line}}Either the catalog file has been set up incorrectly, or the WMS server has changed.",
+      "noLayerFoundMessage": "The WMS dataset `{{name}}` has no layers matching `{{layers}}`.  \n\nEither the catalog file has been set up incorrectly, or the WMS server has changed.",
       "badlyFormatedTitle": "Badly formatted periodicity",
       "badlyFormatedMessage": "The '{{name}}' dataset has a badly formed periodicity, '{{isoSegments}}'. Click the dataset's Info button for more information about the dataset and the data custodian.",
       "missingDataTitle": "Missing data",

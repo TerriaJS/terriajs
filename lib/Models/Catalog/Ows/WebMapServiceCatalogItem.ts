@@ -18,7 +18,10 @@ import URI from "urijs";
 import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
+import TerriaError from "../../../Core/TerriaError";
+import CatalogMemberMixin, {
+  getName
+} from "../../../ModelMixins/CatalogMemberMixin";
 import ChartableMixin from "../../../ModelMixins/ChartableMixin";
 import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import ExportWebCoverageServiceMixin from "../../../ModelMixins/ExportWebCoverageServiceMixin";
@@ -117,7 +120,17 @@ class WebMapServiceCatalogItem
     });
   }
 
-  protected async forceLoadMapItems(): Promise<void> {}
+  protected async forceLoadMapItems(): Promise<void> {
+    if (this.invalidLayers.length > 0)
+      throw new TerriaError({
+        sender: this,
+        title: i18next.t("models.webMapServiceCatalogItem.noLayerFoundTitle"),
+        message: i18next.t(
+          "models.webMapServiceCatalogItem.noLayerFoundMessage",
+          { name: getName(this), layers: this.invalidLayers.join(", ") }
+        )
+      });
+  }
 
   protected async forceLoadMetadata(): Promise<void> {
     if (
@@ -147,6 +160,42 @@ class WebMapServiceCatalogItem
     } else {
       return [];
     }
+  }
+
+  /** LAYERS which are valid (i.e. exist in GetCapabilities).
+   * These can be fetched from the server (eg GetMap request)
+   */
+  @computed get validLayers() {
+    const gcStratum:
+      | WebMapServiceCapabilitiesStratum
+      | undefined = this.strata.get(
+      GetCapabilitiesMixin.getCapabilitiesStratumName
+    ) as WebMapServiceCapabilitiesStratum;
+
+    if (gcStratum)
+      return this.layersArray
+        .map(layer => gcStratum.capabilities.findLayer(layer)?.Name)
+        .filter(isDefined);
+
+    return [];
+  }
+
+  /** LAYERS which are **INVALID** - they do **not** exist in GetCapabilities
+   * These layers can **not** be fetched the server (eg GetMap request)
+   */
+  @computed get invalidLayers() {
+    const gcStratum:
+      | WebMapServiceCapabilitiesStratum
+      | undefined = this.strata.get(
+      GetCapabilitiesMixin.getCapabilitiesStratumName
+    ) as WebMapServiceCapabilitiesStratum;
+
+    if (gcStratum)
+      return this.layersArray.filter(
+        layer => !isDefined(gcStratum.capabilities.findLayer(layer)?.Name)
+      );
+
+    return [];
   }
 
   @computed
@@ -238,6 +287,10 @@ class WebMapServiceCatalogItem
 
   @computed
   get mapItems() {
+    // Don't return anything if there are invalid layers
+    // See forceLoadMapItems for error message
+    if (this.invalidLayers.length > 0) return [];
+
     if (this.isShowingDiff === true) {
       return this._diffImageryParts ? [this._diffImageryParts] : [];
     }
@@ -410,23 +463,9 @@ class WebMapServiceCatalogItem
         new URI(this.url)
       );
 
-      const gcStratum:
-        | WebMapServiceCapabilitiesStratum
-        | undefined = this.strata.get(
-        GetCapabilitiesMixin.getCapabilitiesStratumName
-      ) as WebMapServiceCapabilitiesStratum;
-
-      let lyrs: string[] = [];
-      if (this.layers && gcStratum !== undefined) {
-        this.layersArray.forEach(function(lyr) {
-          const gcLayer = gcStratum.capabilities.findLayer(lyr);
-          if (gcLayer !== undefined && gcLayer.Name) lyrs.push(gcLayer.Name);
-        });
-      }
-
       const imageryOptions: WebMapServiceImageryProvider.ConstructorOptions = {
         url: proxyCatalogItemUrl(this, baseUrl.toString()),
-        layers: lyrs.length > 0 ? lyrs.join(",") : "",
+        layers: this.validLayers.length > 0 ? this.validLayers.join(",") : "",
         parameters,
         getFeatureInfoParameters: {
           ...this.parameters,

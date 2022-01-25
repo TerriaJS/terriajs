@@ -189,7 +189,11 @@ export class CkanDatasetStratum extends LoadableStratum(
       this.ckanDataset.spatial !== ""
     ) {
       var gj = JSON.parse(this.ckanDataset.spatial);
-      if (gj.type === "Polygon" && gj.coordinates[0].length === 5) {
+      if (
+        gj.type === "Polygon" &&
+        gj.coordinates[0] &&
+        gj.coordinates[0].length === 5
+      ) {
         return createStratumInstance(RectangleTraits, {
           west: gj.coordinates[0][0][0],
           south: gj.coordinates[0][0][1],

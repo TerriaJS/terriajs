@@ -707,7 +707,10 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
             zScoreFilter: 4
           }),
           time: createStratumInstance(TableTimeStyleTraits, {
-            timeColumn: this.timeColumns[0].name,
+            timeColumn:
+              this.timeColumns.length > 0
+                ? this.timeColumns[0].name
+                : undefined,
             spreadStartTime: true,
             spreadFinishTime: true
           }),

@@ -159,7 +159,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
             this.findColumnByName(colName)?.type === TableColumnType.scalar
           );
         });
-        return styleWithScalarColorColumn?.id || this.styles[0].id;
+        return styleWithScalarColorColumn?.id || this.styles[0]?.id;
       }
       return undefined;
     }
