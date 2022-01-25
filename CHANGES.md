@@ -5,6 +5,7 @@ Change Log
 
 * Add WMS support for `TIME=current`
 * Only show `TableMixin.legends` if we have rows in dataColumnMajor and mapItems to show 
+* MagdaReference can use addOrOverrideAspects trait to add or override "terria" aspect of target.
 * [The next improvement]
 
 #### 8.1.18
