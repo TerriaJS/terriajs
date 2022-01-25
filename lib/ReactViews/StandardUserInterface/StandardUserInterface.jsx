@@ -25,6 +25,8 @@ import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryPanel from "./../Story/StoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 
+import PrintView from "../../ReactViews/Map/Panels/SharePanel/Print/PrintView";
+
 import withFallback from "../HOCs/withFallback";
 import TourPortal from "../Tour/TourPortal";
 import SatelliteHelpPrompt from "../HelpScreens/SatelliteHelpPrompt";
@@ -52,8 +54,6 @@ export const showStoryPrompt = (viewState, terria) => {
     viewState.toggleFeaturePrompt("story", true);
 };
 const GlobalTerriaStyles = createGlobalStyle`
-  ${p => p.theme.fontImports ?? ""}
-
   // Theme-ify sass classes until they are removed
 
   // We override the primary, secondary, map and share buttons here as they
@@ -476,6 +476,14 @@ const StandardUserInterface = observer(
               )}
             <Disclaimer viewState={this.props.viewState} />
           </div>
+          {this.props.viewState.printWindow && (
+            <PrintView
+              window={this.props.viewState.printWindow}
+              terria={terria}
+              viewState={this.props.viewState}
+              closeCallback={() => this.props.viewState.setPrintWindow(null)}
+            />
+          )}
         </ThemeProvider>
       );
     }

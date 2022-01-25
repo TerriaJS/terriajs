@@ -95,6 +95,9 @@ export default class ViewState {
   @observable selectedTrainerItem: string = "";
   @observable currentTrainerItemIndex: number = 0;
   @observable currentTrainerStepIndex: number = 0;
+
+  @observable printWindow: Window | null = null;
+
   @action
   setSelectedTrainerItem(trainerItem: string) {
     this.selectedTrainerItem = trainerItem;
@@ -704,6 +707,13 @@ export default class ViewState {
   @action
   closeTool() {
     this.currentTool = undefined;
+  }
+
+  @action setPrintWindow(window: Window | null) {
+    if (this.printWindow) {
+      this.printWindow.close();
+    }
+    this.printWindow = window;
   }
 
   @action

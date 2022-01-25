@@ -390,7 +390,13 @@ function toJulianDate(time: string | undefined): JulianDate | undefined {
   if (time.includes("NaN")) {
     return undefined;
   }
-  return JulianDate.fromIso8601(time);
+  const julianDate = JulianDate.fromIso8601(time);
+
+  // Don't return an invalid JulianDate
+  if (julianDate.secondsOfDay === NaN || julianDate.dayNumber === NaN)
+    return undefined;
+
+  return julianDate;
 }
 
 type DatesObject<T> = {

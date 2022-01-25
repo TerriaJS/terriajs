@@ -384,6 +384,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
      * - Cesium primitives if:
      *    - `GeoJsonTraits.forceCesiumPrimitives = true`
      *    - Using `timeProperty` or `heightProperty` or `perPropertyStyles` or simple-style `marker-symbol`
+     *    - More than 50% of GeoJSON features have simply-style properties
      */
     protected async forceLoadMapItems(): Promise<void> {
       let useMvt = this.useMvt;
