@@ -224,6 +224,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
       return;
     }
 
+    // We can only request WMS layers if `Name` is defined
+    if (!isDefined(layer.Name)) return;
+
     // No nested layers -> create model for WebMapServiceCatalogItem
     const existingModel = this.catalogGroup.terria.getModelById(
       WebMapServiceCatalogItem,
@@ -285,8 +288,8 @@ class GetCapabilitiesStratum extends LoadableStratum(
         ...this.catalogGroup.traits.perLayerLinkedWcs.toJson(
           this.catalogGroup.perLayerLinkedWcs
         ),
-        // Override linkedWcsCoverage with layer.Name (or Title if Name is undefined)
-        linkedWcsCoverage: layer.Name ?? layer.Title
+        // Override linkedWcsCoverage with layer.Name
+        linkedWcsCoverage: layer.Name
       }).logError(
         `Failed to set \`perLayerLinkedWcs\` for WMS layer ${layer.Title}`
       );
