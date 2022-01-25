@@ -11,17 +11,18 @@ import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import GetCapabilitiesMixin from "../../../ModelMixins/GetCapabilitiesMixin";
 import GroupMixin from "../../../ModelMixins/GroupMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
-import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import ModelReference from "../../../Traits/ModelReference";
+import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import WebMapServiceCatalogGroupTraits from "../../../Traits/TraitsClasses/WebMapServiceCatalogGroupTraits";
-import CatalogGroup from "../CatalogGroup";
 import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
-import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
+import updateModelFromJson from "../../Definition/updateModelFromJson";
+import CatalogGroup from "../CatalogGroup";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import WebMapServiceCapabilities, {
   CapabilitiesLayer
 } from "./WebMapServiceCapabilities";
@@ -275,6 +276,19 @@ class GetCapabilitiesStratum extends LoadableStratum(
       "hideLegendInWorkbench",
       this.catalogGroup.hideLegendInWorkbench
     );
+
+    // Copy over ExportWebCoverageTraits if `linkedWcsUrl` has been set
+    // See WebMapServiceCatalogGroupTraits.perLayerLinkedWcs for more info
+    if (this.catalogGroup.perLayerLinkedWcs?.linkedWcsUrl) {
+      updateModelFromJson(model, stratum, {
+        // Copy over all perLayerLinkedWcs objects
+        ...this.catalogGroup.traits.perLayerLinkedWcs.toJson(
+          this.catalogGroup.perLayerLinkedWcs
+        ),
+        // Override linkedWcsCoverage with layer.Name (or Title if Name is undefined)
+        linkedWcsCoverage: layer.Name ?? layer.Title
+      });
+    }
 
     if (this.catalogGroup.itemProperties !== undefined) {
       Object.keys(this.catalogGroup.itemProperties).map((k: any) =>

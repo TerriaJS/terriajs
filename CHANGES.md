@@ -4,7 +4,8 @@ Change Log
 #### next release (8.1.19)
 
 * Add WMS support for `TIME=current`
-* Only show `TableMixin.legends` if we have rows in dataColumnMajor and mapItems to show 
+* Only show `TableMixin.legends` if we have rows in dataColumnMajor and mapItems to show
+* Add `WebMapServiceCatalogGroup.perLayerLinkedWcs`, this can be used to enable `ExportWebCoverageService` for **all** WMS layers. `item.linkedWcsCoverage` will be set to the WMS layer `Name` if it is defined, layer `Title` otherwise.
 * [The next improvement]
 
 #### 8.1.18
