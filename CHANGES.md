@@ -12,6 +12,8 @@ Change Log
 * Add missing default Legend to `TableAutomaticStylesStratum.defaultStyle`
 * Fix a bug in CompositeCatalogItem that causes share URLs to become extremely long.
 * Fix `OpacitySection` number precision.
+* Added new print preview page that opens up in a new window
+* TSXified PrintView
 * Add `sortMembersBy` to `GroupTraits`. This can be set to sort group member models - For example `sortMembersBy = "name"` will alphabetically sort members by name.
 * Remove `theme.fontImports` from `GlobalTerriaStyles` - it is now handled in `TerriaMap/index.js`
 * Add check to `featureDataToGeoJson.getEsriFeature` to make sure geometry exists
