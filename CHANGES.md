@@ -2,7 +2,7 @@ Change Log
 ==========
 
 #### next release (8.1.18)
-* MagdaReference can use override attribute to add or override "terria" aspect of target.
+* MagdaReference can use addOrOverrideAspects trait to add or override "terria" aspect of target.
 * [The next improvement]
 
 #### 8.1.17
