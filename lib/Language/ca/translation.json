@@ -218,7 +218,8 @@
     "generatingUrl": "S'està generant l'URL per compartir...",
     "btnCatalogShareText": "Compartir",
     "convertNotificationMessage": "Aquest enllaç per compartir es basa en una versió anterior de TerriaJS, el programari que alimenta aquest mapa web. Tot i que es fan els millors esforços per preservar l'enllaç, és possible que tingueu problemes amb la visualització de les dades.\n\nSi sou usuari de l'enllaç per compartir, feu clic a D'acord per tal que el missatge d'advertència desaparegui i continueu accedint a les dades.",
-    "convertErrorMessage": "Aquest enllaç per compartir es basa en una versió anterior de TerriaJS, el programari que alimenta aquest mapa web. S'ha produït un error en intentar actualitzar les dades compartides."
+    "convertErrorMessage": "Aquest enllaç per compartir es basa en una versió anterior de TerriaJS, el programari que alimenta aquest mapa web. S'ha produït un error en intentar actualitzar les dades compartides.",
+    "downloadMap": "Descarregar mapa (png)"
   },
   "countDatasets": {
     "btnText": "Començar",
@@ -1584,5 +1585,8 @@
   },
   "notification": {
     "title": "Missatge"
+  },
+  "printView": {
+    "loading": "Preparant vista d'impressió..."
   }
 }
