@@ -16,7 +16,8 @@ import CreateModel from "../../Definition/CreateModel";
 import { BaseModel } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import SelectableDimensions, {
-  SelectableDimension
+  SelectableDimension,
+  filterSelects
 } from "../../SelectableDimensions";
 import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
@@ -179,7 +180,7 @@ export default class SdmxJsonCatalogItem
             message: i18next.t(
               "models.sdmxCatalogItem.noResultsWithDimensions",
               {
-                dimensions: this.selectableDimensions
+                dimensions: filterSelects(this.selectableDimensions)
                   .filter(dim => !dim.disable && dim.options?.length !== 1)
                   .map(
                     dim =>
