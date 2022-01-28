@@ -215,7 +215,8 @@
     "convertNotificationMessage": "Este link de compartilhamento é baseado em uma versão mais antiga do TerriaJS - o software que alimenta este mapa da web. Embora os melhores esforços sejam feitos para preservar o link, você pode encontrar problemas ao visualizar os dados.\n\nSe você for um usuário do link de compartilhamento, clique em OK para fazer a mensagem de aviso desaparecer e continuar acessando os dados.",
     "convertNotificationHelp": "Se você criou o link de compartilhamento, verifique o menu Ajuda para ver dicas sobre como atualizá-lo.",
     "convertNotificationFeedback": "Para perguntas ou comentários, clique aqui.",
-    "convertNotificationWarningsTitle": "Detalhes técnicos"
+    "convertNotificationWarningsTitle": "Detalhes técnicos",
+    "downloadMap": "Download mapa (png)"
   },
   "addData": {
     "done": "Ok",
@@ -1584,5 +1585,8 @@
   },
   "toast": {
     "mapIsZooming": "Carregando zoom ideal ..."
+  },
+  "printView": {
+    "loading": "Criando visualização de impressão ..."
   }
 }
