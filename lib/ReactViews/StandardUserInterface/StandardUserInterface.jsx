@@ -10,6 +10,7 @@ import { createGlobalStyle, ThemeProvider } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
 import arrayContains from "../../Core/arrayContains";
 import LazyCompare from "../Compare/LazyCompare";
+import SelectableDimensionWorkflow from "../Workflows/SelectableDimensionWorkflow";
 import Disclaimer from "../Disclaimer";
 import DragDropFile from "../DragDropFile";
 import ExplorerWindow from "../ExplorerWindow/ExplorerWindow";
@@ -265,6 +266,9 @@ const StandardUserInterface = observer(
             terria={terria}
             viewState={this.props.viewState}
           />
+          <Medium>
+            <SelectableDimensionWorkflow viewState={this.props.viewState} />
+          </Medium>
           <Medium>
             <LazyCompare viewState={this.props.viewState} />
           </Medium>

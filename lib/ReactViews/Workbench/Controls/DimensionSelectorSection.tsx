@@ -9,26 +9,25 @@ import isDefined from "../../../Core/isDefined";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import { BaseModel } from "../../../Models/Definition/Model";
 import SelectableDimensions, {
-  DEFAULT_PLACEMENT,
-  MAX_SELECTABLE_DIMENSION_OPTIONS,
   filterSelectableDimensions,
   isCheckbox,
   isGroup,
+  isNumeric,
   isSelect,
   Placement,
   SelectableDimension,
+  SelectableDimensionCheckbox,
   SelectableDimensionGroup,
   SelectableDimensionNumeric,
-  SelectableDimensionSelect,
-  SelectableDimensionCheckbox,
-  isNumeric
+  SelectableDimensionSelect
 } from "../../../Models/SelectableDimensions";
 import Box from "../../../Styled/Box";
 import Checkbox from "../../../Styled/Checkbox";
+import Input from "../../../Styled/Input";
 import Select from "../../../Styled/Select";
 import Spacing from "../../../Styled/Spacing";
 import Text from "../../../Styled/Text";
-import Input from "../../../Styled/Input";
+import Collapsible from "../../Custom/Collapsible/Collapsible";
 
 interface PropsType extends WithTranslation {
   item: BaseModel;
@@ -85,7 +84,7 @@ export const DimensionSelector: React.FC<{
   dim: SelectableDimension;
 }> = observer(({ id, dim }) => {
   return (
-    <DimensionSelectorContainer>
+    <Box displayInlineBlock fullWidth styledPadding="5px 0">
       {/* Render label for all SelectableDimensions except for groups */}
       {dim.name && dim.type !== "group" ? (
         <>
@@ -101,7 +100,7 @@ export const DimensionSelector: React.FC<{
       {isSelect(dim) && <DimensionSelectorSelect id={id} dim={dim} />}
       {isGroup(dim) && <DimensionSelectorGroup id={id} dim={dim} />}
       {isNumeric(dim) && <DimensionSelectorNumeric id={id} dim={dim} />}
-    </DimensionSelectorContainer>
+    </Box>
   );
 });
 
@@ -168,25 +167,23 @@ export const DimensionSelectorGroup: React.FC<{
   dim: SelectableDimensionGroup;
 }> = ({ id, dim }) => {
   return (
-    <details>
-      <summary>
-        <Text textLight medium as="span">
-          {dim.id ?? dim.name}
-        </Text>
-      </summary>
-      <div>
-        {/* recursively render nested dimensions */}
-        {filterSelectableDimensions()(dim.selectableDimensions).map(
-          nestedDim => (
-            <DimensionSelector
-              id={`${id}-${nestedDim.id}`}
-              dim={nestedDim}
-              key={`${id}-${nestedDim.id}`}
-            />
-          )
-        )}
-      </div>
-    </details>
+    <Collapsible
+      title={dim.id ?? dim.name ?? ""}
+      btnRight
+      bodyBoxProps={{
+        displayInlineBlock: true,
+        fullWidth: true
+      }}
+    >
+      {/* recursively render nested dimensions */}
+      {filterSelectableDimensions()(dim.selectableDimensions).map(nestedDim => (
+        <DimensionSelector
+          id={`${id}-${nestedDim.id}`}
+          dim={nestedDim}
+          key={`${id}-${nestedDim.id}`}
+        />
+      ))}
+    </Collapsible>
   );
 };
 
@@ -210,19 +207,5 @@ export const DimensionSelectorNumeric: React.FC<{
     />
   );
 };
-
-/**
- * Container component
- */
-const DimensionSelectorContainer = styled.div`
-  margin-top: 10px;
-
-  summary {
-    cursor: pointer;
-  }
-  > details > div {
-    padding-left: 20px;
-  }
-`;
 
 export default withTranslation()(DimensionSelectorSection);

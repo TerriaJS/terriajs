@@ -10,6 +10,7 @@ import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import SelectableDimensions, {
   SelectableDimension
 } from "../Models/SelectableDimensions";
+import ViewingControls, { ViewingControl } from "../Models/ViewingControls";
 import CatalogMemberReferenceTraits from "../Traits/TraitsClasses/CatalogMemberReferenceTraits";
 import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";
 import AccessControlMixin from "./AccessControlMixin";
@@ -21,7 +22,7 @@ type CatalogMember = Model<CatalogMemberTraits>;
 
 function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
   abstract class CatalogMemberMixin extends AccessControlMixin(Base)
-    implements SelectableDimensions {
+    implements SelectableDimensions, ViewingControls {
     abstract get type(): string;
 
     // The names of items in the CatalogMember's info array that contain details of the source of this CatalogMember's data.
@@ -188,6 +189,10 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
           }
         })) ?? []
       );
+    }
+
+    @computed get viewingControls(): ViewingControl[] {
+      return [];
     }
 
     dispose() {

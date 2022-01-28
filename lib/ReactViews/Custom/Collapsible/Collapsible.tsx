@@ -2,7 +2,7 @@
 
 import { observer } from "mobx-react";
 import React from "react";
-import Box from "../../../Styled/Box";
+import Box, { IBoxProps } from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import { SpacingSpan } from "../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../Styled/Text";
@@ -27,7 +27,7 @@ interface CollapsibleProps extends CollapsibleIconProps {
   btnRight?: boolean;
 
   titleTextProps?: any;
-  bodyBoxProps?: any;
+  bodyBoxProps?: IBoxProps;
   bodyTextProps?: any;
 }
 
@@ -94,8 +94,8 @@ export default class Collapsible extends React.Component<
             <CollapseIcon {...this.props} isOpen={this.state.isOpen} />
           )}
         </RawButton>
-        <Box {...this.props.bodyBoxProps}>
-          {this.state.isOpen && (
+        {this.state.isOpen ? (
+          <Box {...this.props.bodyBoxProps}>
             <Text
               textLight={this.props.light ?? true}
               small
@@ -104,8 +104,8 @@ export default class Collapsible extends React.Component<
             >
               {this.props.children}
             </Text>
-          )}
-        </Box>
+          </Box>
+        ) : null}
       </React.Fragment>
     );
   }

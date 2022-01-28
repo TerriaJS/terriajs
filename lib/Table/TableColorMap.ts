@@ -23,6 +23,75 @@ import TableColumnType from "./TableColumnType";
 const getColorForId = createColorForIdTransformer();
 const DEFAULT_COLOR = "yellow";
 
+/** Diverging scales (can be used for continuous and discrete) */
+export const DIVERGING_SCALES = [
+  "BrBG",
+  "PRGn",
+  "PiYG",
+  "PuOr",
+  "RdBu",
+  "RdGy",
+  "RdYlBu",
+  "RdYlGn",
+  "Spectral"
+];
+
+export const DEFAULT_DIVERGING = "PuOr";
+
+/** Sequential scales D3 color scales (can be used for continuous and discrete) */
+export const SEQUENTIAL_SCALES = [
+  "Blues",
+  "Greens",
+  "Greys",
+  "Oranges",
+  "Purples",
+  "Reds",
+  "BuGn",
+  "BuPu",
+  "GnBu",
+  "OrRd",
+  "PuBuGn",
+  "PuBu",
+  "PuRd",
+  "RdPu",
+  "YlGnBu",
+  "YlGn",
+  "YlOrBr",
+  "YlOrRd"
+];
+
+export const DEFAULT_SEQUENTIAL = "Reds";
+
+/** Sequential continuous D3 color scales (continuous only - not discrete) */
+export const SEQUENTIAL_CONTINOUS_SCALES = [
+  "Turbo",
+  "Viridis",
+  "Inferno",
+  "Magma",
+  "Plasma",
+  "Cividis",
+  "Warm",
+  "Cool",
+  "CubehelixDefault"
+];
+
+export const QUALITATIVE_SCALES = [
+  // Note HighContrast is custom - see StandardCssColors.highContrast
+  "HighContrast",
+  "Category10",
+  "Accent",
+  "Dark2",
+  "Paired",
+  "Pastel1",
+  "Pastel2",
+  "Set1",
+  "Set2",
+  "Set3",
+  "Tableau10"
+];
+
+export const DEFAULT_QUALITATIVE = "HighContrast";
+
 export default class TableColorMap {
   constructor(
     /** Title used for ConstantColorMaps - and to create a unique color for a particular Table-based CatalogItem */
@@ -319,15 +388,7 @@ export default class TableColorMap {
       [
         // If colorPalette is undefined, defaultColorPaletteName will return a diverging color scale
         undefined,
-        "BrBG",
-        "PRGn",
-        "PiYG",
-        "PuOr",
-        "RdBu",
-        "RdGy",
-        "RdYlBu",
-        "RdYlGn",
-        "Spectral"
+        ...DIVERGING_SCALES
       ].includes(this.colorTraits.colorPalette)
     );
   }
@@ -342,12 +403,12 @@ export default class TableColorMap {
    * If they are not, Terria will crash
    */
   @computed
-  get defaultColorPaletteName(): "Turbo" | "HighContrast" | "PuOr" | "Reds" {
+  get defaultColorPaletteName() {
     const colorColumn = this.colorColumn;
 
     if (colorColumn === undefined) {
       // This shouldn't get used - as if there is no colorColumn - there is nothing to visualise!
-      return "Turbo";
+      return DEFAULT_SEQUENTIAL;
     }
 
     if (
@@ -355,19 +416,19 @@ export default class TableColorMap {
       colorColumn.type === TableColumnType.region
     ) {
       // Enumerated values, so use a large, high contrast palette.
-      return "HighContrast";
+      return DEFAULT_QUALITATIVE;
     } else if (colorColumn.type === TableColumnType.scalar) {
       const valuesAsNumbers = colorColumn.valuesAsNumbers;
       if (valuesAsNumbers !== undefined && this.isDiverging) {
         // Values cross zero, so use a diverging palette
-        return "PuOr";
+        return DEFAULT_DIVERGING;
       } else {
         // Values do not cross zero so use a sequential palette.
-        return "Reds";
+        return DEFAULT_SEQUENTIAL;
       }
     }
 
-    return "Reds";
+    return DEFAULT_SEQUENTIAL;
   }
 
   /** Minimum value - with filters if applicable
