@@ -181,6 +181,13 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     /** Geojson FeatureCollection in WGS84 */
     @observable.ref _readyData?: FeatureCollectionWithCrs;
 
+    /** Number of features in _readyData FeatureCollection */
+    @observable featureCounts: {
+      point: number;
+      line: number;
+      polygon: number;
+    } = { point: 0, line: 0, polygon: 0 };
+
     constructor(...args: any[]) {
       super(...args);
       // Add GeoJsonStratum
@@ -408,18 +415,39 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
         // Also check for how many features have simply-style properties
         let numFeaturesWithSimpleStyle = 0;
+        const featureCounts = { point: 0, line: 0, polygon: 0 };
 
         for (let i = 0; i < geoJsonWgs84.features.length; i++) {
-          if (!geoJsonWgs84.features[i].properties) {
-            geoJsonWgs84.features[i].properties = {};
+          const feature = geoJsonWgs84.features[i];
+          if (!feature.properties) {
+            feature.properties = {};
           }
-          const properties = geoJsonWgs84.features[i].properties!;
+          const properties = feature.properties!;
           properties["_id_"] = i;
+
+          if (
+            feature.geometry.type === "Point" ||
+            feature.geometry.type === "MultiPoint"
+          ) {
+            featureCounts.point++;
+          } else if (
+            feature.geometry.type === "LineString" ||
+            feature.geometry.type === "MultiLineString"
+          ) {
+            featureCounts.line++;
+          } else if (
+            feature.geometry.type === "Polygon" ||
+            feature.geometry.type === "MultiPolygon"
+          ) {
+            featureCounts.polygon++;
+          }
 
           if (useMvt && SIMPLE_STYLE_KEYS.find(key => properties[key])) {
             numFeaturesWithSimpleStyle++;
           }
         }
+
+        runInAction(() => (this.featureCounts = featureCounts));
 
         // If more than 50% of features have simple style properties - disable table styling
         if (numFeaturesWithSimpleStyle / geoJsonWgs84.features.length >= 0.5) {
