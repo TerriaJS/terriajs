@@ -314,18 +314,20 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
     const colorColumn = this.tableStyle.colorColumn;
     if (colorColumn?.traits?.format) return colorColumn?.traits?.format;
 
+    let min =
+      this.tableStyle.tableColorMap.minimumValue ??
+      colorColumn?.valuesAsNumbers.minimum;
+    let max =
+      this.tableStyle.tableColorMap.maximumValue ??
+      colorColumn?.valuesAsNumbers.maximum;
+
     if (
       colorColumn &&
       colorColumn.type === TableColumnType.scalar &&
-      isDefined(colorColumn.valuesAsNumbers.maximum) &&
-      isDefined(colorColumn.valuesAsNumbers.minimum)
+      isDefined(min) &&
+      isDefined(max)
     ) {
-      if (
-        colorColumn.valuesAsNumbers.maximum -
-          colorColumn.valuesAsNumbers.minimum ===
-        0
-      )
-        return;
+      if (max - min === 0) return;
 
       // We want to show fraction digits depending on how small difference is between min and max.
       // This also takes into consideration the defualt number of legend items - 7
@@ -343,18 +345,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
       // Clamp values between 0 and 5
       let fractionDigits = Math.max(
         0,
-        Math.min(
-          5,
-          Math.ceil(
-            Math.log10(
-              20 /
-                Math.abs(
-                  colorColumn.valuesAsNumbers.maximum -
-                    colorColumn.valuesAsNumbers.minimum
-                )
-            )
-          )
-        )
+        Math.min(5, Math.ceil(Math.log10(20 / Math.abs(max - min))))
       );
 
       return {
