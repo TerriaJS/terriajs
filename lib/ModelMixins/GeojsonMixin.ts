@@ -74,6 +74,9 @@ import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
+import VectorStylingWorkflow from "../Models/SelectableDimensions/VectorStylingWorkflow";
+import { ViewingControl } from "../Models/ViewingControls";
+import Icon from "../Styled/Icon";
 import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
 import LegendTraits from "../Traits/TraitsClasses/LegendTraits";
@@ -698,7 +701,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     @computed
     get stylesWithDefaults() {
       const defaults = {
-        markerSize: 20,
+        markerSize: 24,
         markerColor: getRandomCssColor(this.name ?? ""),
         stroke: getColor(this.terria.baseMapContrastColor),
         polygonStroke: getColor(this.terria.baseMapContrastColor),
@@ -1029,6 +1032,24 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
      */
     async forceLoadTableData() {
       return undefined;
+    }
+
+    @computed get viewingControls(): ViewingControl[] {
+      return [
+        ...super.viewingControls.filter(v => v.id !== "table-style-edit"),
+        {
+          id: "geojson-style-edit",
+          name: "Edit Style",
+          onClick: viewState => {
+            runInAction(() => {
+              viewState.terria.selectableDimensionWorkflow = new VectorStylingWorkflow(
+                this
+              );
+            });
+          },
+          icon: { glyph: Icon.GLYPHS.layers }
+        }
+      ];
     }
   }
   return GeoJsonMixin;

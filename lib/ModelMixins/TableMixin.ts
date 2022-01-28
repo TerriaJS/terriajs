@@ -23,6 +23,9 @@ import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import SelectableDimensions, {
   SelectableDimension
 } from "../Models/SelectableDimensions";
+import TableStylingWorkflow from "../Models/SelectableDimensions/TableStylingSelectableDimensions";
+import ViewingControls, { ViewingControl } from "../Models/ViewingControls";
+import Icon from "../Styled/Icon";
 import createLongitudeLatitudeFeaturePerId from "../Table/createLongitudeLatitudeFeaturePerId";
 import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
 import createRegionMappedImageryProvider from "../Table/createRegionMappedImageryProvider";
@@ -48,7 +51,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     extends ExportableMixin(
       ChartableMixin(DiscretelyTimeVaryingMixin(CatalogMemberMixin(Base)))
     )
-    implements SelectableDimensions {
+    implements SelectableDimensions, ViewingControls {
     /**
      * The default {@link TableStyle}, which is used for styling
      * only when there are no styles defined.
@@ -437,6 +440,24 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           : undefined,
         ...this.tableChartItems
       ]);
+    }
+
+    @computed get viewingControls(): ViewingControl[] {
+      return [
+        ...super.viewingControls,
+        {
+          id: "table-style-edit",
+          name: "Edit Style",
+          onClick: viewState => {
+            runInAction(() => {
+              viewState.terria.selectableDimensionWorkflow = new TableStylingWorkflow(
+                this
+              );
+            });
+          },
+          icon: { glyph: Icon.GLYPHS.layers }
+        }
+      ];
     }
 
     @computed
