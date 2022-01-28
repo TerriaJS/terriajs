@@ -6,17 +6,16 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
-import TableMixin from "../../../ModelMixins/TableMixin";
 import proxyCatalogItemUrl from "../../../Models/Catalog/proxyCatalogItemUrl";
-import hasTraits from "../../../Models/Definition/hasTraits";
-import Model from "../../../Models/Definition/Model";
-import LegendOwnerTraits from "../../../Traits/TraitsClasses/LegendOwnerTraits";
+import Model, { BaseModel } from "../../../Models/Definition/Model";
 import LegendTraits, {
   LegendItemTraits
 } from "../../../Traits/TraitsClasses/LegendTraits";
 import Styles from "./legend.scss";
+import hasTraits from "../../../Models/Definition/hasTraits";
+import LegendOwnerTraits from "../../../Traits/TraitsClasses/LegendOwnerTraits";
+import TableMixin from "../../../ModelMixins/TableMixin";
 
 /* A lookup map for displayable mime types */
 const DISPLAYABLE_MIME_TYPES = [
@@ -41,7 +40,7 @@ function checkMimeType(legend: Model<LegendTraits>) {
 
 @observer
 export default class Legend extends React.Component<{
-  item: CatalogMemberMixin.Instance;
+  item: BaseModel;
   forPrint?: boolean;
 }> {
   static defaultProps = {

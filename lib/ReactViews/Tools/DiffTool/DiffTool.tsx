@@ -44,6 +44,7 @@ import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Loader from "../../Loader";
 import DatePicker from "./DatePicker";
 import LocationPicker from "./LocationPicker";
+import doesImageryFeatureBelongToItem from "../../../Models/doesImageryFeatureBelongToCatalogItem";
 import { CLOSE_TOOL_ID } from "../../Map/Navigation/registerMapNavigations";
 
 const dateFormat = require("dateformat");
@@ -352,8 +353,8 @@ class Main extends React.Component<MainPropsType> {
     const { leftItem, rightItem, t } = this.props;
     const feature = pickedFeatures.features.find(
       f =>
-        doesFeatureBelongToItem(f as Feature, leftItem) ||
-        doesFeatureBelongToItem(f as Feature, rightItem)
+        doesImageryFeatureBelongToItem(f as Feature, leftItem) ||
+        doesImageryFeatureBelongToItem(f as Feature, rightItem)
     );
 
     if (feature) {
@@ -730,7 +731,7 @@ class Main extends React.Component<MainPropsType> {
                 onDateSet={() => this.showItem(this.props.rightItem)}
               />
             </Box>,
-            document.getElementById("TJS-BottomDockPortalForTool")!
+            document.getElementById("TJS-BottomDockLastPortal")!
           )}
       </Text>
     );
@@ -1024,20 +1025,6 @@ function removeSplitItem(item: DiffableItem) {
   if (item.sourceReference && terria.workbench.contains(item) === false) {
     terria.removeModelReferences(item.sourceReference);
   }
-}
-
-function doesFeatureBelongToItem(
-  feature: Feature,
-  item: DiffableItem
-): Boolean {
-  if (!MappableMixin.isMixedInto(item)) return false;
-  const imageryProvider = feature.imageryLayer?.imageryProvider;
-  if (imageryProvider === undefined) return false;
-  return (
-    item.mapItems.find(
-      m => ImageryParts.is(m) && m.imageryProvider === imageryProvider
-    ) !== undefined
-  );
 }
 
 function setTimeFilterFromLocation(

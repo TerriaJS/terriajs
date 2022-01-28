@@ -7,6 +7,8 @@ import ModalPopup from "./ModalPopup";
 import Tabs from "./Tabs";
 import { runInAction } from "mobx";
 
+export const ExplorerWindowElementName = "AddData";
+
 const ExplorerWindow = observer(
   createReactClass({
     displayName: "ExplorerWindow",
@@ -46,7 +48,9 @@ const ExplorerWindow = observer(
         <ModalPopup
           viewState={this.props.viewState}
           isVisible={this.isVisible()}
-          isTopElement={this.props.viewState.topElement === "AddData"}
+          isTopElement={
+            this.props.viewState.topElement === ExplorerWindowElementName
+          }
           onClose={this.onClose}
           onStartAnimatingIn={this.onStartAnimatingIn}
           onDoneAnimatingIn={this.onDoneAnimatingIn}

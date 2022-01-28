@@ -1,5 +1,3 @@
-"use strict";
-
 import createReactClass from "create-react-class";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
@@ -56,4 +54,4 @@ const FilterSection = observer(
     }
   })
 );
-module.exports = FilterSection;
+export default FilterSection;

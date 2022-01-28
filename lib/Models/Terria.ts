@@ -69,6 +69,7 @@ import MagdaReference, {
   MagdaReferenceHeaders
 } from "./Catalog/CatalogReferences/MagdaReference";
 import SplitItemReference from "./Catalog/CatalogReferences/SplitItemReference";
+import { CompareConfig, createCompareConfig } from "./Comparable";
 import CommonStrata from "./Definition/CommonStrata";
 import hasTraits from "./Definition/hasTraits";
 import { BaseModel } from "./Definition/Model";
@@ -511,6 +512,9 @@ export default class Terria {
   @observable terrainSplitDirection: ImagerySplitDirection =
     ImagerySplitDirection.NONE;
 
+  // Is true when the workflow panel is active
+  @observable isWorkflowPanelActive = false;
+
   @observable depthTestAgainstTerrainEnabled = false;
 
   @observable stories: any[] = [];
@@ -549,6 +553,11 @@ export default class Terria {
    * @type {boolean}
    */
   @observable catalogReferencesLoaded: boolean = false;
+
+  /**
+   * Configuration for the compare workflow
+   */
+  @observable compareConfig: CompareConfig | undefined = undefined;
 
   augmentedVirtuality?: any;
 
@@ -1431,6 +1440,12 @@ export default class Terria {
 
     if (isJsonNumber(initData.splitPosition)) {
       this.splitPosition = initData.splitPosition;
+    }
+
+    this.isWorkflowPanelActive = Boolean(initData.isWorkflowPanelActive);
+
+    if (isJsonObject(initData.compareConfig)) {
+      this.compareConfig = createCompareConfig(initData.compareConfig);
     }
 
     // Copy but don't yet load the workbench.

@@ -1,4 +1,4 @@
-import { runInAction } from "mobx";
+import { runInAction, action } from "mobx";
 import React, { ReactElement } from "react";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
@@ -249,25 +249,27 @@ export default abstract class ChartCustomComponent<
             ? this.constructShareableCatalogItem(id, context, undefined)
             : this.constructCatalogItem(id, context, undefined);
 
-          return Promise.resolve(itemOrPromise).then(item => {
-            if (item) {
-              this.setTraitsFromParent(item, context.catalogItem!);
-              this.setTraitsFromAttrs(item, attrs, i);
-              body && this.setTraitsFromBody?.(item, body);
+          return Promise.resolve(itemOrPromise).then(
+            action(item => {
+              if (item) {
+                this.setTraitsFromParent(item, context.catalogItem!);
+                this.setTraitsFromAttrs(item, attrs, i);
+                body && this.setTraitsFromBody?.(item, body);
 
-              if (
-                featurePosition &&
-                hasTraits(item, ChartPointOnMapTraits, "chartPointOnMap")
-              ) {
-                item.setTrait(
-                  CommonStrata.user,
-                  "chartPointOnMap",
-                  createStratumInstance(LatLonHeightTraits, featurePosition)
-                );
+                if (
+                  featurePosition &&
+                  hasTraits(item, ChartPointOnMapTraits, "chartPointOnMap")
+                ) {
+                  item.setTrait(
+                    CommonStrata.user,
+                    "chartPointOnMap",
+                    createStratumInstance(LatLonHeightTraits, featurePosition)
+                  );
+                }
               }
-            }
-            return item;
-          });
+              return item;
+            })
+          );
         }
       );
 

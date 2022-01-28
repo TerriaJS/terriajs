@@ -29,7 +29,7 @@ import Text from "../../../Styled/Text";
 import Input from "../../../Styled/Input";
 
 interface PropsType extends WithTranslation {
-  item: SelectableDimensions & BaseModel;
+  item: BaseModel;
   /** Placement used to filter selectableDimensions.placement (eg 'belowLegend) */
   placement: Placement;
 }
@@ -38,6 +38,9 @@ interface PropsType extends WithTranslation {
 class DimensionSelectorSection extends React.Component<PropsType> {
   render() {
     const item = this.props.item;
+
+    if (!SelectableDimensions.is(item)) return null;
+
     const selectableDimensions = filterSelectableDimensions(
       this.props.placement
     )(item.selectableDimensions);

@@ -113,7 +113,6 @@ export default class Workbench {
     if (this.contains(item)) {
       return;
     }
-
     const targetItem: BaseModel = dereferenceModel(item);
 
     // Keep reorderable data sources (e.g.: imagery layers) below non-orderable ones (e.g.: GeoJSON).
