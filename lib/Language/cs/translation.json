@@ -1,1 +1,525 @@
-{}
+{
+  "tour": {
+    "preface": {
+      "close": "Možná později",
+      "title": "Prohlídka",
+      "content": "Nevíte, kde začít? Podívejte se na stručnou prohlídku hlavních funkcí našeho softwaru a seznamte se s některými klíčovými funkcemi, které vám pomohou na cestě.",
+      "start": "Začátek prohlídky"
+    },
+    "exploreMapDataButton": {
+      "content": "## Prozkoumat mapové podklady\n\nProhlédněte si katalog dostupných dat a přidejte je do mapy zde. Najednou můžete přidat více datových sad, které se zobrazí v seznamu níže v pracovní ploše."
+    },
+    "menuBarMapSettingsButton": {
+      "content": "## Nastavení mapy\n\nPřizpůsobte si nastavení mapy, jako jsou základní mapy, 2D/3D terén a kvalita mapového obrazu pro lepší výkon."
+    },
+    "sidePanelUploadButton": {
+      "content": "## Nahrání dat\n\nDo mapy můžete nahrát vlastní data a zobrazit je společně s dalšími datovými sadami. Nahrajte soubor nebo odkaz na existující online datovou sadu nebo datovou službu. Mezi podporované formáty dat patří CSV, GeoJSON, KML, GPX a CZML."
+    },
+    "mapNavigationCompassOuterRing": {
+      "content": "## Zobrazení ovládacích prvků\n\nZde můžete změnit zobrazení mapy. Pomocí vnějšího kroužku můžete měnit orientaci pohledu a pomocí vnitřního kroužku můžete naklánět úhel kamery. Dvojím klepnutím na tlačítko pohled obnovíte."
+    },
+    "end": "Konec prohlídky",
+    "finish": "Cíl",
+    "previous": "Předchozí",
+    "locationSearchInput": {
+      "content": "## Vyhledávání polohy\n\nZadejte lokalitu nebo adresu a snadno vyhledejte bod zájmu na mapě."
+    },
+    "menuBarStoryButton": {
+      "content": "## Příběhy\n\nPříběhy umožňují přidat k datové sadě kontextové informace a oživit tak příběh. Vytvořte si vlastní datový příběh pomocí editoru příběhů a po dokončení jej sdílejte prostřednictvím panelu \"Sdílet\"."
+    },
+    "mapNavigationSplitterIcon": {
+      "content": "## Porovnání\n\nVýkonnou funkcí Terrie je možnost porovnávat datové sady pomocí rozdělené obrazovky. U datových sad s časovou řadou, jako jsou satelitní snímky, můžete data porovnávat zpětně a dopředu v čase kliknutím na volič/selektor data."
+    }
+  },
+  "trainer": {
+    "hideAllSteps": "Skrýt všechny kroky",
+    "expandTrainer": "Zobrazit více detailů kroku",
+    "collapseTrainer": "Skrýt detail kroku",
+    "showAllSteps": "Zobrazit všechny kroky"
+  },
+  "general": {
+    "skip": "Přeskočit",
+    "next": "Další",
+    "close": "Zavřít",
+    "open": "Otevřít",
+    "prev": "Předchozí",
+    "back": "Zpět",
+    "delete": "Smazat",
+    "cancel": "Zrušit",
+    "confirm": "Potvrdit"
+  },
+  "compass": {
+    "guidance": {
+      "outerRingDescription": "Tažením vnějšího kruhu otočte zobrazení mapy o 360˚.",
+      "innerCircleTitle": "Vnitřní kruh",
+      "title": "Ovládání gyroskopu",
+      "outerRingTitle": "Vnější kruh",
+      "innerCircleDescription1": "Klikněte na střed a pomalým tažením nahoru, dolů, doleva nebo doprava mapu nakloňte a zároveň otočte.",
+      "innerCircleDescription2": "Dvojklikem zde obnovíte zobrazení do výchozího stavu.",
+      "dismissText": "Zavřít a znovu nezobrazovat",
+      "ctrlDragDescription": "Mapu můžete také naklánět a otáčet podržením klávesy CTRL a tažením mapy."
+    },
+    "description": "Přetažení vnějšího kroužku: otočení zobrazení.\nPřetažení vnitřního gyroskopu: volné otáčení.\nDvojité kliknutí: resetování zobrazení.\nTIP: Oběžnou dráhu můžete uvolnit také podržením klávesy CTRL a tažením mapy.",
+    "title": "Kliknutím a přetažením otočíte kameru",
+    "guidanceBtnTitle": "Navádění gyroskopem",
+    "guidanceBtnText": "Zobrazit podrobné pokyny k používání kompasu"
+  },
+  "location": {
+    "browserCannotProvide": "Váš prohlížeč nemůže poskytnout vaši polohu.",
+    "originError": "Váš prohlížeč může poskytnout vaši polohu pouze při použití protokolu https. Místo toho můžete použít {{secureUrl}}.",
+    "errorGettingLocation": "Chyba při zjišťování polohy",
+    "myLocation": "Moje poloha",
+    "location": "Poloha",
+    "centreMap": "Vystředit mapu v místě, kde se právě nacházíte"
+  },
+  "splitterTool": {
+    "title": "Přetažením doleva nebo doprava upravíte zobrazení",
+    "workbench": {
+      "goleft": "Vlevo",
+      "both": "Obě",
+      "gorightTitle": "Zobrazit na pravé straně",
+      "copyName": "{{name}} (kopie)",
+      "goright": "Vpravo",
+      "goleftTitle": "Zobrazit na levé straně",
+      "bothTitle": "Zobrazit na obou stranách"
+    },
+    "toggleSplitterToolTitle": "Porovnat",
+    "toggleSplitterTool": "Povolit porovnání dvou různých sad dat vedle sebe",
+    "toggleSplitterToolDisabled": "Chcete-li povolit standardní porovnávání, vypněte ostatní funkce porovnávání vedle sebe"
+  },
+  "zoomCotrol": {
+    "zoomIn": "Přiblížit",
+    "zoomReset": "Obnovit přiblížení",
+    "zoomOut": "Oddálit"
+  },
+  "measure": {
+    "measureTool": "Nástroj měření",
+    "measureToolTitle": "Liniové měření",
+    "measureDistance": "Měření vzdálenosti mezi místy"
+  },
+  "AR": {
+    "title": "Experimentální funkce: Rozšířená realita",
+    "confirmText": "Chápu",
+    "manualAlignmentTitle": "Ruční zarovnání",
+    "resetAlignmentTitle": "Obnovení zarovnání",
+    "resetAlignmentMessage": "Resetování na zarovnání kompasu. Pokud zarovnání neodpovídá skutečnému světu, zkuste zařízením zamávat pohybem na obrázku 8, abyste zařízení překalibrovali. To lze provést kdykoli.<br /> <br />Vyhýbejte se místům s magnetickými poli nebo kovovými předměty, protože by mohly dezorientovat kompas zařízení.",
+    "arTool": "nástroj rozšířené reality",
+    "btnHover": "přepínač výšky při najetí",
+    "btnRealign": "přepínač ručního zarovnání",
+    "btnResetRealign": "obnovení seřízení kompasu",
+    "experimentalFeatureMessage": "Režim rozšířené reality je aktuálně ve verzi beta. Tento režim je určen pouze pro použití na nejnovějších mobilních zařízeních vyšší třídy. <br /><br />UPOZORNĚNÍ: Tento režim může spotřebovat velké množství dat, mějte prosím na paměti poplatky za využití dat od vašeho poskytovatele sítě. <br /><br />Přesnost tohoto režimu závisí na přesnosti interního kompasu vašeho mobilního zařízení.",
+    "manualAlignmentMessage": "Zarovnejte své mobilní zařízení tak, aby odpovídalo aktuálnímu zarovnání mapy, poté klikněte na blikající kompas. Pokud na mapě nejsou aktuálně viditelné žádné orientační body, které by bylo možné zarovnat, můžete mapu posouvat pomocí akcí přetažení a zmenšení, dokud nebude viditelný rozpoznatelný orientační bod, než zařízení zarovnáte s mapou. <br /><div>{{img}}</div> <br />Tip: Slunce nebo Měsíc jsou často dobré orientační body, pomocí kterých se můžete orientovat, pokud se nacházíte na místě, které neznáte (pozor, nedívejte se do slunce - mhli byste si poškodit ztrak)."
+  },
+  "tool": {
+    "closeButtonTitle": "Zavřít nástroj {{toolName}}",
+    "loadingError": {
+      "title": "Chyba při načítání nástroje {{toolName}}",
+      "message": "Při pokusu o načtení tohoto nástroje ze serveru došlo k chybě. Zkuste to prosím znovu."
+    },
+    "exitBtnTitle": "Ukončit",
+    "button": {
+      "closed": "{{toolName}}",
+      "open": "Ukončit {{toolNameLowerCase}}"
+    }
+  },
+  "diffTool": {
+    "exit": "Ukončit",
+    "instructions": {
+      "setDateA": "Nastavit datum A",
+      "setDateB": "Nastavit datum B",
+      "changeDates": "Změnit data",
+      "paneDescription": "Vizualizujte a porovnejte rozdíl dat mezi dvěma daty na jednom místě."
+    },
+    "choosePreview": "Zvolte styl náhledu",
+    "chooseDifference": "Zvolte rozdílový výstup",
+    "differenceResultsTitle": "Výsledky zjišťování změn",
+    "labels": {
+      "area": "Oblast",
+      "dates": "Data",
+      "dateComparisonA": "Srovnání dat A",
+      "dateComparisonB": "Srovnání dat B",
+      "sourceDataset": "Zdrojová datová sada",
+      "previewStyle": "Styl náhledu",
+      "differenceOutput": "Rozdílový výstup",
+      "generateDiffButtonText": "Generování detekce změn",
+      "disabledButtonPrompt": "Upozornění: Aby bylo možné provést detekci změn, musí být vybráno místo a datum",
+      "areaFilterSelection": "Výběr filtru oblasti"
+    },
+    "locationDisplay": {
+      "noLocationSelected": {
+        "title": "Nebylo vybráno žádné místo",
+        "description": "Chcete-li filtrovat výběr data snímku podle místa, vyberte bod na mapě"
+      },
+      "locationSelected": {
+        "title": "Vybraná lokalita a filtrovaná data",
+        "description": "Chcete-li provést změnu, klikněte na jiný bod na mapě"
+      }
+    },
+    "locationPicker": {
+      "initialMessages": {
+        "title": "Zvolte přesné umístění",
+        "beforePick": "Potřebujeme ho ke spuštění procesu detekce změn.",
+        "afterPick": "Kliknutím na jiný bod změníte vybranou oblast"
+      },
+      "nextMessages": {
+        "title": "Vybrali jste polohu {{latitude}} {{longitude}}",
+        "beforePick": "Kliknutím na jiný bod změníte výběr",
+        "afterPick": "Kliknutím na jiný bod změníte výběr"
+      },
+      "errorMessages": {
+        "afterPick": "Kliknutím na jiný bod změníte výběr",
+        "title": "Výběr přesného umístění",
+        "beforePick": "Nepodařilo se vyřešit snímky v místě! Zvolte prosím jinou polohu nebo úroveň přiblížení."
+      }
+    },
+    "datePicker": {
+      "back": "Vrátit se zpět",
+      "previousDateTitle": "Předchozí datum",
+      "nextDateTitle": "Další datum",
+      "dateButtonTitle": "Vyberte datum",
+      "dateOutOfRange": "Momentálně mimo rozsah"
+    },
+    "title": "Rozdíl"
+  },
+  "legend": {
+    "lat": "Lat",
+    "lon": "Lon",
+    "zone": "ZÓNA",
+    "e": "V",
+    "n": "S",
+    "elev": "Výška"
+  },
+  "languagePanel": {
+    "changeLanguage": "Změnit jazyk"
+  },
+  "share": {
+    "browserPrint": "Chcete-li dosáhnout lepších výsledků při tisku, použijte místo funkce tisku webového prohlížeče tlačítko Tisk {{appName}}.",
+    "localDataNote": "<0><0>Poznámka:</0></0><1>Následující zdroje dat NEBUDOU sdíleny, protože obsahují data z tohoto místního systému. Chcete-li tyto zdroje dat sdílet, zveřejněte jejich data na webovém serveru a <2>přidejte je pomocí url adresy</2>.</1>",
+    "generatingUrl": "Generování sdílené adresy URL...",
+    "printTitle": "Tisk mapy",
+    "printExplanation": "Otevřít tisknutelnou verzi této mapy.",
+    "printButton": "Tisk",
+    "printViewButton": "Zobrazení náhledu tisku",
+    "creatingPrintView": "Vytvoření tiskového náhledu...",
+    "btnAdvanced": "Pokročilé možnosti",
+    "embedTitle": "Chcete-li mapu vložit, zkopírujte tento kód a vložte ji do stránky HTML:",
+    "shortenUsingService": "Zkrácení URL pro sdílení pomocí webové služby",
+    "btnCatalogShareText": "Sdílet",
+    "btnStoryShareText": "Sdílet",
+    "btnMapShareText": "Sdílení / Tisk",
+    "btnCatalogShareTitle": "Sdílejte svůj katalog s ostatními",
+    "btnStoryShareTitle": "Podělte se o svůj příběh s ostatními",
+    "btnMapShareTitle": "Sdílejte svou mapu s ostatními",
+    "convertNotificationTitle": "Upozornění: odkaz sdílení aktualizován",
+    "convertNotificationHelp": "Pokud jste vytvořili odkaz na sdílení, podívejte se do nabídky Nápověda, kde najdete tipy pro aktualizaci odkazu na sdílení.",
+    "convertNotificationFeedback": "Pokud máte dotazy nebo připomínky, klikněte zde.",
+    "convertNotificationWarningsTitle": "Technické detaily",
+    "convertErrorTitle": "Nelze aktualizovat odkaz na sdílení na V8",
+    "convertErrorMessage": "Tento odkaz na sdílení je založen na starší verzi softwaru TerriaJS, na kterém běží tato webová mapa. Při pokusu o aktualizaci dat sdílení došlo k chybě.",
+    "shortLinkError": "Při pokusu o zkrácení adresy URL došlo k chybě.  Zkontrolujte prosím své internetové připojení a zkuste to znovu.",
+    "shortLinkShortening": "Zkracování...",
+    "downloadMap": "Stáhnout mapu (png)",
+    "convertNotificationMessage": "Tento odkaz na sdílení je založen na starší verzi softwaru TerriaJS, který pohání tuto webovou mapu. Přestože se snažíme odkaz zachovat, můžete se setkat s problémy při vizualizaci dat.  \n\nPokud jste uživatelem sdíleného odkazu, klikněte na tlačítko OK, aby varovná zpráva zmizela, a pokračujte v přístupu k datům."
+  },
+  "countDatasets": {
+    "btnText": "Spustit",
+    "loadError": "nepodařilo načíst.",
+    "totals": "<div>Katalog obsahuje {{items}} položky ve {{groups}} skupinách.</div>",
+    "subTotals": "<div> {{name}}: {{items}} položek / {{groups}} skupin</div>",
+    "recount": "Přepočítat",
+    "title": "Počet datových sad",
+    "noMapDataEnabled": "Nejsou povolena mapová data",
+    "countingMessage": "Počítání, počkejte prosím...",
+    "btnCount": "Počet datových sad"
+  },
+  "toolsPanel": {
+    "btnText": "Nástroj",
+    "btnTitle": "Pokročilá sada nástrojů"
+  },
+  "settingPanel": {
+    "none": "(Žádný)",
+    "viewerModeLabels": {
+      "CesiumTerrain": "3D Terén",
+      "CesiumEllipsoid": "3D Hladký",
+      "Leaflet": "2D"
+    },
+    "qualityLabels": {
+      "lowerPerformance": "Maximální kvalita, nižší výkon",
+      "maximumPerformance": "Maximální výkon, nižší kvalita",
+      "balancedPerformance": "Vyvážený výkon a kvalita"
+    },
+    "native": "nativní",
+    "screen": "obrazovka",
+    "btnTitle": "Změnit zobrazení",
+    "btnText": "Nastavení mapy",
+    "mapView": "Zobrazení mapy",
+    "baseMap": "Základní mapa",
+    "imageOptimisation": "Optimalizace obrázků",
+    "nativeResolutionHeader": "Použití nativního rozlišení zařízení",
+    "mapQuality": "Kvalita rastrové mapy:",
+    "qualityLabel": "Kvalita",
+    "performanceLabel": "Výkon",
+    "timeline": {
+      "title": "Časová osa",
+      "alwaysShowLabel": "Stiskněte tlačítko pro spuštění zobrazení časové osy pouze v případě, že jsou na pracovní ploše časově proměnné datové sady",
+      "alwaysShow": "Vždy zobrazit",
+      "hideLabel": "Stiskněte tlačítko pro spuštění zobrazení časové osy pouze v případě, že jsou na pracovní ploše časově proměnné datové sady"
+    },
+    "terrain": {
+      "hideUnderground": "Terén skrývá podzemní prvky",
+      "hideUndergroundFeatures": "Stisknutím tlačítka spustíte skrývání prvků, které se nacházejí pod povrchem terénu",
+      "sideLabel": "Zobrazit terén na",
+      "left": "Vlevo",
+      "both": "Oba",
+      "right": "Vpravo",
+      "showUndergroundFeatures": "Stisknutím tlačítka začnete zobrazovat prvky, které se nacházejí pod povrchem terénu"
+    },
+    "nativeResolutionLabel": "Stisknutím přestanete používat rozlišení {{resolution1}} a začnete používat rozlišení {{resolution2}}"
+  },
+  "feedback": {
+    "feedbackPreamble": "Rádi vás uslyšíme!",
+    "close": "zavřít zpětnou vazbu",
+    "yourName": "Vaše jméno (volitelné)",
+    "email": "E-mailová adresa (volitelné)<br/><em>Bez ní nemůžeme navázat kontakt!</em>",
+    "commentQuestion": "Komentář nebo dotaz",
+    "shareWithDevelopers": "Sdílení mého zobrazení mapy s vývojáři {{appName}}",
+    "cancel": "Zrušit",
+    "sending": "Odeslání...",
+    "send": "Odeslat",
+    "feedbackBtnText": "Poskytněte zpětnou vazbu",
+    "minLength": "Minimální délka komentáře je {{minLength}}",
+    "title": "Zpětná vazba",
+    "captionText": "To nám pomáhá řešit problémy tím, že vidíme, co vidíte"
+  },
+  "helpPanel": {
+    "btnText": "Nápověda",
+    "menuPaneTitle": "Jsme tu, abychom pomohli",
+    "promptMessage": "Prohlídku, videa s návody a další obsah nápovědy najdete zde",
+    "dismissText": "Chápu, díky!",
+    "takeTour": "Prohlídka",
+    "mapUserGuide": "Uživatelská příručka mapy",
+    "menuPaneBody": "Užitečné tipy, jak používat TerriaJS, najdete buď v níže uvedených příručkách, nebo kontaktujte tým na adrese [{{supportEmail}}({{supportEmail}})"
+  },
+  "helpMenu": {
+    "btnText": "Nápověda",
+    "btnTitle": "získejte pomoc",
+    "helpMenuHeader": "Co byste chtěli dělat?",
+    "helpMenuOpenWelcome": "Zobrazit uvítací zprávu",
+    "helpMenuMoreHelpTitle": "Další nápověda",
+    "done": "HOTOVO",
+    "next": "DALŠÍ",
+    "helpMenuSatelliteGuideTitle": "Zobrazit průvodce satelitními snímky"
+  },
+  "sui": {
+    "notifications": {
+      "title": "Mapa obsahuje příběh",
+      "message": "Chcete si ji prohlédnout hned?",
+      "denyText": "Možná později",
+      "confirmText": "Ano"
+    },
+    "showWorkbench": "Zobrazit pracovní plochu",
+    "hideWorkbench": "Skrýt pracovní plochu"
+  },
+  "featureInfo": {
+    "catalogItem": {
+      "moreThanMax": "Bylo nalezeno více než {{maximum}} {{catalogItemName}} funkcí.",
+      "featuresFound": "{{featCount}} {catalogItemName} funkcí bylo nalezeno.",
+      "featureInfoShown": "První {{maximum}} jsou uvedeny níže."
+    },
+    "download": "Stáhnout tuto tabulku",
+    "pickLocation": "Vybrat polohu",
+    "clickMap": "Kliknutím na mapu se dozvíte více informací o lokalitě",
+    "noDataAvailable": "Zde nejsou k dispozici žádná data - zkuste jiné místo.",
+    "userSelection": "Uživatelský výběr",
+    "panelHeading": "Informace o funkci",
+    "btnCloseFeature": "Zavřít datový panel",
+    "satelliteSuggestionBtn": "Zobrazit {{catalogItemName}} na tomto místě",
+    "locationMarker": "Značka polohy",
+    "noInfoAvailable": "Žádné dostupné informace",
+    "showCuratedData": "Zobrazit kurátorská data",
+    "clickToAddData": "Kliknutím na '$t(addData.addDataBtnText)' přidáte data do mapy.",
+    "latLon": "Lat / Lon ",
+    "siteData": "Údaje o lokalitě",
+    "showRawData": "Zobrazit surová data"
+  },
+  "welcomeMessage": {
+    "welcomeMessageOnMobile": "Zajímáte se o zjišťování a průzkum dat?",
+    "tourBtnText": "Projděte si prohlídku",
+    "helpBtnText": "Potřebuji pomoc",
+    "exploreDataBtnText": "Prozkoumat mapové podklady",
+    "searchBtnText": "Vyhledání umístění",
+    "dismissText": "Zavřít zprávu a už mi to nezobrazovat",
+    "welcomeMessage": "Zajímá vás zjišťování a zkoumání dat?<br/>Ponořte se do toho a začněte, nebo se podívejte na následující možnosti nápovědy.",
+    "title": "Začneme"
+  },
+  "story": {
+    "panelTitle": "Editor příběhu",
+    "panelBody": "Vytváření a sdílení interaktivních příběhů přímo z mapy",
+    "gettingStarted": "Začínáme",
+    "gettingStartedTitle": "Začínáme",
+    "badgeBarLabel": "Scény",
+    "share": "Sdílet",
+    "shareTitle": "sdílejte příběhy",
+    "viewStory": "zobrazit",
+    "view": "Zobrazení",
+    "recaptureStory": "znovu zachytit",
+    "recapture": "Zachycení",
+    "deleteStory": "smazat",
+    "untitledScene": "scéna bez názvu",
+    "doesNotExist": "Příběh neexistuje",
+    "removeAllStories": "Odebrat vše",
+    "removeStoryDialog": "Opravdu si přejete odstranit '<1>{{storyName}}</1>'?",
+    "preview": "náhled příběhů",
+    "play": "Přehrát",
+    "captureSceneTitle": "zachytit aktuální scénu",
+    "captureScene": "Zachycení scény",
+    "editor": {
+      "placeholder": "Zde zadejte název",
+      "cancelBtn": "zrušit",
+      "cancelEditing": "Zrušit",
+      "saveBtn": "uložit",
+      "saveStory": "Uložit"
+    },
+    "locationBtn": "vystředit scénu",
+    "exitBtn": "konec příběhu",
+    "previousBtn": "přejít na předchozí scénu",
+    "untitled": "scéna bez názvu",
+    "navBtn": "přejít na článek {{title}}",
+    "nextBtn": "přejít na další scénu",
+    "navBtnMobile": "přejít na příběh {{title}}",
+    "promptHtml1": "<0>Příběhy si můžete kdykoli prohlížet a vytvářet kliknutím sem.</0>",
+    "promptHtml2": "<0><0>ÚVOD</0><1>Datové příběhy</1><2>Vytvářejte a sdílejte interaktivní příběhy přímo z mapy </2></0>",
+    "story": "Příběh",
+    "dismissText": "Chápu, díky!",
+    "mobileViewStory": "Zobrazit příběhy {{storiesLength}}",
+    "storyEditor": "Editor příběhu",
+    "hideStoryPanel": "skrýt tvůrce příběhu",
+    "loadSceneErrorTitle": "Chyba při načítání scény příběhu",
+    "loadSceneErrorMessage": "Při načítání dat pro scénu příběhu došlo k chybě: `{{title}}`.",
+    "edit": "Upravit",
+    "editStory": "upravit",
+    "delete": "Smazat",
+    "message": "<2>To je váš editor příběhů</2><1>Vytvářejte a sdílejte interaktivní příběhy přímo z mapy<1><0><0></0>Začínáme </0></1></1>"
+  },
+  "satelliteGuidance": {
+    "menuTitle": "Do mapových průvodců se můžete kdykoli podívat v nabídce <2>nápověda</2>.",
+    "dismissText": "Chápu, díky!",
+    "titleI": "Satelitní snímky: Jak mohu...?",
+    "bodyI": "Velmi rychlý průvodce, jak co nejlépe využít historické satelitní snímky.",
+    "prevI": "Ne, děkuji",
+    "nextI": "Zobrazit průvodce",
+    "titleII": "Kde jsou mé satelitní snímky?",
+    "titleIII": "Načítání historických snímků",
+    "bodyIII": "Na pracovní ploše s daty klikněte na rozevírací seznam Datum pořízení a vyberte z dostupných časů pro načtení historických snímků.",
+    "titleIV": "Filtrování snímků podle polohy",
+    "bodyV": "Na satelitní snímky můžete použít řadu stylů, například falešnou barvu, kliknutím na rozbalovací nabídku stylů na pracovní ploše s daty.",
+    "bodyII": "Možná bude nutné upravit úroveň přiblížení, aby byly satelitní snímky na mapě viditelné.",
+    "bodyIV": "Satelitní snímky nemusí být vždy k dispozici ve vámi preferovaném čase a místě. Pokud chcete zobrazit pouze snímky pro konkrétní místo, klikněte na tlačítko \"filtrovat podle místa\" v pracovní ploše s daty.",
+    "titleV": "Jak zobrazím falešně barevné snímky?"
+  },
+  "addData": {
+    "addDataBtnText": "Prozkoumejte mapové podklady",
+    "btnHide": "Skrýt",
+    "load": "Načtení místních/webových dat",
+    "closeDataPanel": "Zavřít datový panel",
+    "done": "Hotovo",
+    "myData": "Moje data",
+    "dataCatalogue": "Katalog dat",
+    "searchPlaceholderWhole": "Vyhledávání v celém katalogu",
+    "searchPlaceholder": "Vyhledávání v katalogu",
+    "localAdd": "Přidat místní soubor",
+    "localFileType": "<0>Krok 1:</0> Výběr typu souboru (nepovinné)",
+    "localFile": "<0>Krok 2:</0> Vybrat soubor",
+    "webAdd": "Přidat webová data",
+    "webFile": "<0>Krok 2:</0> Zadejte adresu URL datového souboru nebo webové služby",
+    "localTitle": "Přidat místní data",
+    "webTitle": "Přidat webová data",
+    "dragDrop": "Přetáhnout a pustit",
+    "infoText": "<0>Přetažením souboru sem jej zobrazíte lokálně na mapě</0><1>(nebude uložen ani odeslán na internet)</1>",
+    "note": "<0>Poznámka: </0>Takto přidaná data se neukládají ani nejsou viditelná pro ostatní.",
+    "urlInputBtn": "Přidat",
+    "back": "Zpět",
+    "browse": "Procházet...",
+    "webFileType": "<0>Krok 1:</0> Výběr typu souboru (nepovinné)"
+  },
+  "search": {
+    "resultsLabel": "Výsledky hledání",
+    "done": "Hotovo",
+    "data": "Data",
+    "searchInDataCatalog": "Hledání <1>'{{locationSearchText}}'</1> v katalogu dat",
+    "search": "Hledat '{{searchText}}' v Katalogu dat",
+    "viewMore": "Zobrazit více výsledků {{name}}",
+    "placeholder": "Hledání lokalit",
+    "searchCatalogue": "Hledání v katalogu",
+    "viewLess": "Zobrazit méně výsledků {{name}}"
+  },
+  "mobile": {
+    "toggleNavigation": "přepnout navigaci",
+    "addDataBtnText": "Data",
+    "doneBtnText": "Hotovo"
+  },
+  "preview": {
+    "doesNotContainGeospatialData": "Tento soubor neobsahuje geoprostorová data.",
+    "selectToPreview": "<0>Výběr datové sady pro zobrazení náhledu </0><1>- NEBO -</1><2>Přejít na mapu</2>",
+    "loading": "NAČÍTÁNÍ NÁHLEDU...",
+    "preview": "náhled {{appName}}",
+    "previewItemErrorMessage": "Při načítání položky katalogu došlo k chybě.",
+    "noPreviewAvailable": "NÁHLED NENÍ K DISPOZICI",
+    "dataPreviewLoading": "NAČÍTÁNÍ NÁHLEDU DAT...",
+    "dataPreview": "NÁHLED DAT",
+    "dataPreviewError": "CHYBA NÁHLEDU DAT",
+    "removeFromMap": "Odstranit z mapy",
+    "addToMap": "Přidat do mapy",
+    "disclaimer": "Odmítnutí odpovědnosti",
+    "datasetDescription": "Popis datové sady",
+    "serviceDescription": "Popis služby",
+    "licence": "Licence",
+    "accessConstraints": "Omezení přístupu",
+    "fees": "Poplatky",
+    "author": "Autor",
+    "contact": "Kontakt",
+    "created": "Vytvořeno",
+    "modified": "Upraveno",
+    "updateFrequency": "Četnost aktualizací",
+    "dataCustodian": "Správce dat",
+    "previewItemErrorTitle": "Položku katalogu nelze zobrazit.",
+    "dataDescription": "Popis dat",
+    "resourceDescription": "Popis Zdroje",
+    "mayBeExperiencingIssues": "U této datové sady může v současné době docházet k problémům"
+  },
+  "description": {
+    "name": "Popis",
+    "dataLocal": "Tento soubor existuje pouze v prohlížeči. Chcete-li jej sdílet, musíte jej nahrát na veřejný webový server.",
+    "wms": "Jedná se o službu <1>WMS</1>, která na vyžádání generuje obrázky map. Pomocí této adresy URL ji lze použít v softwaru GIS:",
+    "wfs": "Jedná se o službu <1>WFS</1>, která na vyžádání přenáší nezpracovaná prostorová data. Pomocí této adresy URL ji lze použít v softwaru GIS:",
+    "layerName": "Název vrstvy",
+    "typeName": "Název typu",
+    "metadataUrls": "Odkazy na metadata",
+    "dataUrl": "Odkazy na data",
+    "useLinkBelow": "Ke stažení dat použijte níže uvedený odkaz. Další informace o přizpůsobení parametrů dotazu URL naleznete v části {{link}}.",
+    "downloadInFormat": "Stažení aktuálně vybraných dat ve formátu {{format}}",
+    "useTheLinkToDownload": "Pomocí níže uvedeného odkazu si můžete data stáhnout přímo.",
+    "downloadData": "Stáhnout data",
+    "dataSourceDetails": "Podrobnosti o zdroji dat",
+    "dataServiceDetails": "Podrobnosti o datové službě",
+    "dataCustodian": "Správce dat",
+    "dataNotLocal": "Další informace, včetně informací o právech a omezeních používání, získáte u poskytovatele těchto údajů.",
+    "downloadNotSupported": "Váš prohlížeč bohužel nepodporuje funkce potřebné ke stažení těchto dat jako souboru. Ke stažení těchto dat použijte prohlížeč Chrome, Firefox nebo Safari."
+  },
+  "workbench": {
+    "colorScaleRangeTitle": "Nesprávný rozsah barevné škály",
+    "colorScaleRangeMin": "Minimální hodnota musí být číslo.",
+    "colorScaleRangeMax": "Maximální hodnota musí být číslo.",
+    "rangeMax": "Maximum:",
+    "rangeMin": "Minimum:",
+    "colorScaleUpdateRange": "Rozsah aktualizace",
+    "zoomToTitle": "Přiblížit rozsah",
+    "zoomTo": "Ideální přiblížení",
+    "openFeatureTitle": "Přiblížení k datům",
+    "openFeature": "Přiblížit na",
+    "opacity": "Neprůhlednost: {{opacity}} %",
+    "colorScaleRange": "Rozsah barevné škály",
+    "colorScaleRangeMinSmallerThanMax": "Minimální hodnota rozsahu barevné stupnice musí být menší než maximální hodnota.",
+    "displayPercent": "Zobrazení jako procento z celkového počtu regionů"
+  }
+}
