@@ -34,6 +34,49 @@ export class RectangleTraits extends ModelTraits {
   north?: number;
 }
 
+export class IdealZoomTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "number",
+    name: "targetLongitude",
+    description: "targetLongitude"
+  })
+  targetLongitude?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "targetLatitude",
+    description: "targetLatitude"
+  })
+  targetLatitude?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "targetHeight",
+    description: "targetHeight"
+  })
+  targetHeight?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "heading",
+    description: "heading"
+  })
+  heading?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "pitch",
+    description: "pitch"
+  })
+  pitch?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "range",
+    description: "range"
+  })
+  range?: number;
+}
 export class InitialMessageTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
@@ -95,6 +138,13 @@ export default class MappableTraits extends mixTraits(AttributionTraits) {
       "The bounding box rectangle that contains all the data in this catalog item."
   })
   rectangle?: RectangleTraits;
+
+  @objectTrait({
+    type: IdealZoomTraits,
+    name: "Ideal zoom",
+    description: ""
+  })
+  idealZoom?: IdealZoomTraits;
 
   @primitiveTrait({
     type: "boolean",

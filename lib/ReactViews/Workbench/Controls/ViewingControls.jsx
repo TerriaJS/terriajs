@@ -35,7 +35,9 @@ import Icon, { StyledIcon } from "../../../Styled/Icon";
 import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
 import { exportData } from "../../Preview/ExportData";
 import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import WorkbenchButton from "../WorkbenchButton";
+import CameraView from "../../../Models/CameraView";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -135,6 +137,19 @@ const ViewingControls = observer(
           zoomToView = this.props.viewState.terria.mainViewer.homeCamera;
           console.log("Extent is wider than world so using homeCamera.");
         }
+
+        if (item.idealZoom) {
+          const lookAt = {
+            targetLongitude: item.idealZoom.targetLongitude,
+            targetLatitude: item.idealZoom.targetLatitude,
+            targetHeight: item.idealZoom.targetHeight,
+            heading: item.idealZoom.heading,
+            pitch: item.idealZoom.pitch,
+            range: item.idealZoom.range
+          };
+          zoomToView = CameraView.fromJson({ lookAt: lookAt });
+        }
+
         this.setState({ isMapZoomingToCatalogItem: true });
         viewer.zoomTo(zoomToView).finally(() => {
           this.setState({ isMapZoomingToCatalogItem: false });
