@@ -61,21 +61,21 @@ export class IdealZoomTraits extends ModelTraits {
     name: "heading",
     description: "heading"
   })
-  heading?: number;
+  heading?: number = 0;
 
   @primitiveTrait({
     type: "number",
     name: "pitch",
     description: "pitch"
   })
-  pitch?: number;
+  pitch?: number = 25;
 
   @primitiveTrait({
     type: "number",
     name: "range",
     description: "range"
   })
-  range?: number;
+  range?: number = 100;
 }
 export class InitialMessageTraits extends ModelTraits {
   @primitiveTrait({
@@ -142,7 +142,7 @@ export default class MappableTraits extends mixTraits(AttributionTraits) {
   @objectTrait({
     type: IdealZoomTraits,
     name: "Ideal zoom",
-    description: ""
+    description: "Override default ideal zoom if the json object is valid."
   })
   idealZoom?: IdealZoomTraits;
 

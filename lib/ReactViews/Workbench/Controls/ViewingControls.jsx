@@ -136,16 +136,26 @@ const ViewingControls = observer(
         ) {
           zoomToView = this.props.viewState.terria.mainViewer.homeCamera;
           console.log("Extent is wider than world so using homeCamera.");
-        }
+        } else if (
+          item.idealZoom &&
+          item.idealZoom.targetLongitude &&
+          item.idealZoom.targetLatitude &&
+          item.idealZoom.targetHeight
+        ) {
+          const range = item.idealZoom.range > 1 ? item.idealZoom.range : 5;
+          if (item.idealZoom.range <= 1) {
+            console.log(
+              `The target range ${item.idealZoom.range} might be too low to be viewable. Set to 5m.`
+            );
+          }
 
-        if (item.idealZoom) {
           const lookAt = {
             targetLongitude: item.idealZoom.targetLongitude,
             targetLatitude: item.idealZoom.targetLatitude,
             targetHeight: item.idealZoom.targetHeight,
             heading: item.idealZoom.heading,
             pitch: item.idealZoom.pitch,
-            range: item.idealZoom.range
+            range: range
           };
           zoomToView = CameraView.fromJson({ lookAt: lookAt });
         }
