@@ -63,6 +63,7 @@
 .field--parameter-editor {
   margin-bottom: $padding;
   position: relative;
+  clear: both;
   input[type="date"] {
     width: 50%;
     float: left;
