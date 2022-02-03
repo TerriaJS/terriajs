@@ -37,21 +37,21 @@ export class RectangleTraits extends ModelTraits {
 export class IdealZoomTraits extends ModelTraits {
   @primitiveTrait({
     type: "number",
-    name: "targetLongitude",
-    description: "Target longitude in degrees."
+    name: "Target longitude",
+    description: "Target longitude on the WGS84 ellipsoid in degrees"
   })
   targetLongitude?: number;
 
   @primitiveTrait({
     type: "number",
-    name: "targetLatitude",
-    description: "Target latitude in degrees"
+    name: "Target latitude",
+    description: "Target latitude on the WGS84 ellipsoid in degrees"
   })
   targetLatitude?: number;
 
   @primitiveTrait({
     type: "number",
-    name: "targetHeight",
+    name: "Target height",
     description:
       "Target height in meters. Treat it as camera height. A positive value is above the WGS84 ellipsoid. Default to 100 meters."
   })
@@ -59,15 +59,15 @@ export class IdealZoomTraits extends ModelTraits {
 
   @primitiveTrait({
     type: "number",
-    name: "heading",
+    name: "Heading",
     description:
-      "Heading in degrees. Treat it as camera bearing. North is 0. A positive value rotates clockwise, negative anit-clockwise. Default to 0 (the north)."
+      "Heading in degrees. Treat it as camera bearing. North is 0. A positive value rotates clockwise, negative anti-clockwise. Default to 0."
   })
   heading?: number = 0;
 
   @primitiveTrait({
     type: "number",
-    name: "pitch",
+    name: "Pitch",
     description:
       "Pitch in degrees. Treat it as camera pitch. A positive value is to look down, negative up. Default to 45."
   })
@@ -75,9 +75,9 @@ export class IdealZoomTraits extends ModelTraits {
 
   @primitiveTrait({
     type: "number",
-    name: "range",
+    name: "Range",
     description:
-      "The range in meters. Not negative. The distance between the target position and camera position projected in the local plane. Default to 500."
+      "The range in meters. It is the distance between the target position and camera position projected onto the local plane. Not negative and default to 500."
   })
   range?: number = 500;
 }
@@ -146,7 +146,7 @@ export default class MappableTraits extends mixTraits(AttributionTraits) {
   @objectTrait({
     type: IdealZoomTraits,
     name: "Ideal zoom",
-    description: "Override default ideal zoom if the json object is valid."
+    description: "Override default ideal zoom if the given values are valid."
   })
   idealZoom?: IdealZoomTraits;
 
