@@ -38,44 +38,48 @@ export class IdealZoomTraits extends ModelTraits {
   @primitiveTrait({
     type: "number",
     name: "targetLongitude",
-    description: "targetLongitude"
+    description: "Target longitude in degrees."
   })
   targetLongitude?: number;
 
   @primitiveTrait({
     type: "number",
     name: "targetLatitude",
-    description: "targetLatitude"
+    description: "Target latitude in degrees"
   })
   targetLatitude?: number;
 
   @primitiveTrait({
     type: "number",
     name: "targetHeight",
-    description: "targetHeight"
+    description:
+      "Target height in meters. Treat it as camera height. A positive value is above the WGS84 ellipsoid. Default to 100 meters."
   })
-  targetHeight?: number;
+  targetHeight?: number = 100;
 
   @primitiveTrait({
     type: "number",
     name: "heading",
-    description: "heading"
+    description:
+      "Heading in degrees. Treat it as camera bearing. North is 0. A positive value rotates clockwise, negative anit-clockwise. Default to 0 (the north)."
   })
   heading?: number = 0;
 
   @primitiveTrait({
     type: "number",
     name: "pitch",
-    description: "pitch"
+    description:
+      "Pitch in degrees. Treat it as camera pitch. A positive value is to look down, negative up. Default to 45."
   })
-  pitch?: number = 25;
+  pitch?: number = 45;
 
   @primitiveTrait({
     type: "number",
     name: "range",
-    description: "range"
+    description:
+      "The range in meters. Not negative. The distance between the target position and camera position projected in the local plane. Default to 500."
   })
-  range?: number = 100;
+  range?: number = 500;
 }
 export class InitialMessageTraits extends ModelTraits {
   @primitiveTrait({
