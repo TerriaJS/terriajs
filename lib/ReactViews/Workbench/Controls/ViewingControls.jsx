@@ -35,7 +35,6 @@ import Icon, { StyledIcon } from "../../../Styled/Icon";
 import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
 import { exportData } from "../../Preview/ExportData";
 import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import WorkbenchButton from "../WorkbenchButton";
 import CameraView from "../../../Models/CameraView";
 
