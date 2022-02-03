@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import Terria from "../../../../../Models/Terria";
 import ViewState from "../../../../../ReactViewModels/ViewState";
@@ -132,14 +132,15 @@ const getScale = (maybeElement: Element | undefined) =>
     : 1;
 
 const PrintView = (props: Props) => {
-  const [rootNode] = useState(document.createElement("main"));
+  const rootNode = useRef(document.createElement("main"));
+
   const [screenshot, setScreenshot] = useState<Promise<string> | null>(null);
   const [shareLink, setShareLink] = useState("");
 
   useEffect(() => {
     props.window.document.title = "Print view";
     props.window.document.head.appendChild(mkStyle(styles));
-    props.window.document.body.appendChild(rootNode);
+    props.window.document.body.appendChild(rootNode.current);
     props.window.addEventListener("beforeunload", props.closeCallback);
   }, [props.window]);
 
@@ -160,7 +161,7 @@ const PrintView = (props: Props) => {
   }, [props.terria, props.viewState]);
 
   return ReactDOM.createPortal(
-    <StyleSheetManager target={rootNode}>
+    <StyleSheetManager target={props.window.document.head}>
       <ThemeProvider theme={terriaTheme}>
         <PrintViewButtons window={props.window} screenshot={screenshot} />
         <section className="mapSection">
@@ -190,7 +191,7 @@ const PrintView = (props: Props) => {
         </section>
       </ThemeProvider>
     </StyleSheetManager>,
-    rootNode
+    rootNode.current
   );
 };
 
