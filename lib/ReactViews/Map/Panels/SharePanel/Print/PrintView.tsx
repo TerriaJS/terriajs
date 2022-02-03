@@ -133,7 +133,7 @@ const getScale = (maybeElement: Element | undefined) =>
 
 const PrintView = (props: Props) => {
   const rootNode = useRef(document.createElement("main"));
-  
+
   const [screenshot, setScreenshot] = useState<Promise<string> | null>(null);
   const [shareLink, setShareLink] = useState("");
 
