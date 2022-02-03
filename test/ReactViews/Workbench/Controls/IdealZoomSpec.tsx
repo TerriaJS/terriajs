@@ -28,7 +28,7 @@ describe("Ideal Zoom", function() {
     viewState = new ViewState(options);
   });
 
-  it("can use default camera view", async function() {
+  it("should use default camera view if no parameters are given.", async function() {
     await theItem.loadMapItems();
 
     act(() => {
@@ -45,8 +45,7 @@ describe("Ideal Zoom", function() {
     expect(theCameraView.up).toBe(undefined);
   });
 
-  it("can customise camera view", async function() {
-    theItem.setTrait("definition", "url", "/test/Cesium3DTiles/tileset.json");
+  it("should customise camera view if the given parameters are valid.", async function() {
     const idealZoom = {
       targetLongitude: 150.60832,
       targetLatitude: -34.19483,
@@ -86,5 +85,31 @@ describe("Ideal Zoom", function() {
     expect(theCameraView.up?.x).toBe(upX);
     expect(theCameraView.up?.y).toBe(upY);
     expect(theCameraView.up?.z).toBe(upZ);
+  });
+
+  it("should use default camera view if the given parameters are invalid.", async function() {
+    const idealZoom = {
+      targetLongitude: undefined,
+      targetLatitude: undefined,
+      targetHeight: 200,
+      heading: 180,
+      pitch: 15,
+      range: 200
+    };
+    theItem.setTrait("definition", "idealZoom", idealZoom);
+    await theItem.loadMapItems();
+
+    act(() => {
+      testRenderer = TestRenderer.create(
+        <ViewingControls item={theItem} viewState={viewState} />
+      );
+    });
+
+    testRenderer.root?.findAllByType("button")[0].props.onClick();
+    const theCameraView = terria.currentViewer.getCurrentCameraView();
+
+    expect(theCameraView.direction).toBe(undefined);
+    expect(theCameraView.position).toBe(undefined);
+    expect(theCameraView.up).toBe(undefined);
   });
 });
