@@ -138,7 +138,7 @@ const ViewingControls = observer(
         } else if (
           item.idealZoom !== undefined &&
           item.idealZoom.targetLongitude !== undefined &&
-          item.idealZoom.targetLatitude != undefined &&
+          item.idealZoom.targetLatitude !== undefined &&
           item.idealZoom.range >= 0
         ) {
           // No value checking here. Improper values can lead to unexpected results.
