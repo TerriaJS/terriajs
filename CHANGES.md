@@ -1,9 +1,13 @@
 Change Log
 ==========
 
-#### next release (8.1.20)
+#### next release (8.1.21)
 
 * [The next improvement]
+
+#### 8.1.20
+
+* Fixed whitescreen on Print View in release/production builds
 
 #### 8.1.19
 
