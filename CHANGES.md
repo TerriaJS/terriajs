@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.1.20)
 
+* `IDEAL ZOOM` can be customised by providing `idealZoom` property in `MappableTraits`.
 * [The next improvement]
 
 #### 8.1.19
