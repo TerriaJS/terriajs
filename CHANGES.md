@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.1.21)
 
+* Fixed bug where WMS layer would crash terria if it had no styles, introduced in 8.1.14
 * [The next improvement]
 
 #### 8.1.20
