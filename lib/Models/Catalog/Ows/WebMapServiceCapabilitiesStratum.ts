@@ -400,7 +400,7 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     if (!this.catalogItem.supportsGetLegendGraphic) {
       return this.catalogItem.availableStyles
         .map(layer => {
-          if (layer.layerName) {
+          if (layer.layerName && layer.styles.length > 0) {
             return layer.styles[0].name ?? "";
           }
           return "";
