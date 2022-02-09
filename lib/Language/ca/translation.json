@@ -1587,6 +1587,6 @@
     "title": "Missatge"
   },
   "printView": {
-    "loading": "Preparant vista d'impressió..."
+    "loading": "S'està creant la vista d'impressió..."
   }
 }
