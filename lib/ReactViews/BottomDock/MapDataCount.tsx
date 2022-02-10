@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 
 import Icon, { StyledIcon } from "../../Styled/Icon";
@@ -9,8 +8,15 @@ import Text from "../../Styled/Text";
 import Spacing from "../../Styled/Spacing";
 import { useTranslation } from "react-i18next";
 import withControlledVisibility from "../HOCs/withControlledVisibility";
+import Terria from "../../Models/Terria";
+import ViewState from "../../ReactViewModels/ViewState";
 
-const MapDataCount = observer(function(props) {
+interface Props {
+  terria: Terria;
+  viewState: ViewState;
+}
+
+const MapDataCount = observer(function(props: Props) {
   const { t } = useTranslation();
   const { terria, viewState } = props;
   if (viewState.useSmallScreenInterface) {
@@ -32,7 +38,7 @@ const MapDataCount = observer(function(props) {
     // Should we even provide a wrapper Box? makes sense not to, but most of the
     // components as they stand come with their own "wrapper" via scss
     // <Box styledMinHeight="72px">
-    <Box position="absolute" css={"bottom: 40px;"}>
+    <Box>
       <ButtonAsLabel light={hasMapData}>
         <Spacing right={1} />
         <StyledIcon
@@ -50,9 +56,5 @@ const MapDataCount = observer(function(props) {
     </Box>
   );
 });
-MapDataCount.propTypes = {
-  terria: PropTypes.object.isRequired,
-  viewState: PropTypes.object.isRequired
-};
 
 export default withControlledVisibility(MapDataCount);

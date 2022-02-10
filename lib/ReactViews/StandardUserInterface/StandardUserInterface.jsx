@@ -120,7 +120,7 @@ const GlobalTerriaStyles = createGlobalStyle`
     }
   `}
 `;
-const animationDuration = 250;
+export const animationDuration = 250;
 /** blah */
 const StandardUserInterface = observer(
   createReactClass({

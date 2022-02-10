@@ -10,7 +10,11 @@ import { Ref } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import addedByUser from "../Core/addedByUser";
-import { Category, HelpAction } from "../Core/AnalyticEvents/analyticEvents";
+import {
+  Category,
+  HelpAction,
+  StoryAction
+} from "../Core/AnalyticEvents/analyticEvents";
 import Result from "../Core/Result";
 import triggerResize from "../Core/triggerResize";
 import PickedFeatures from "../Map/PickedFeatures";
@@ -23,6 +27,7 @@ import { BaseModel } from "../Models/Definition/Model";
 import getAncestors from "../Models/getAncestors";
 import Terria from "../Models/Terria";
 import { SATELLITE_HELP_PROMPT_KEY } from "../ReactViews/HelpScreens/SatelliteHelpPrompt";
+import { animationDuration } from "../ReactViews/StandardUserInterface/StandardUserInterface";
 import {
   defaultTourPoints,
   RelativePosition,
@@ -720,6 +725,20 @@ export default class ViewState {
   toggleMobileMenu() {
     this.setTopElement("mobileMenu");
     this.mobileMenuVisible = !this.mobileMenuVisible;
+  }
+
+  @action
+  runStories() {
+    this.storyBuilderShown = false;
+    this.storyShown = true;
+
+    setTimeout(function() {
+      triggerResize();
+    }, animationDuration || 1);
+
+    this.terria.currentViewer.notifyRepaintRequired();
+
+    this.terria.analytics?.logEvent(Category.story, StoryAction.runStory);
   }
 
   @computed

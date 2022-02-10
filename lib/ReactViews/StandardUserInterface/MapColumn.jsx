@@ -21,6 +21,8 @@ import Styles from "./map-column.scss";
 import { observer } from "mobx-react";
 import SlideUpFadeIn from "../Transitions/SlideUpFadeIn/SlideUpFadeIn";
 
+import BottomLeftBar from "../Map/BottomLeftBar/BottomLeftBar";
+
 const isIE = FeatureDetection.isInternetExplorer();
 const chromeVersion = FeatureDetection.chromeVersion();
 
@@ -147,12 +149,9 @@ const MapColumn = observer(
                 />
               </div>
               <If condition={!this.props.viewState.hideMapUi}>
-                <MapDataCount
+                <BottomLeftBar
                   terria={this.props.terria}
                   viewState={this.props.viewState}
-                  elementConfig={this.props.terria.elements.get(
-                    "map-data-count"
-                  )}
                 />
                 <SlideUpFadeIn isVisible={this.props.viewState.isMapZooming}>
                   <Toast>
