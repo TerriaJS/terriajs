@@ -4,7 +4,7 @@ import Constructor from "../Core/Constructor";
 import Model from "../Models/Definition/Model";
 import SelectableDimensions, {
   SelectableDimension
-} from "../Models/SelectableDimensions";
+} from "../Models/SelectableDimensions/SelectableDimensions";
 import ShadowTraits, { Shadows } from "../Traits/TraitsClasses/ShadowTraits";
 import i18next from "i18next";
 

@@ -1076,6 +1076,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
 
     @computed get viewingControls(): ViewingControl[] {
       return [
+        // We replace the TableStylingWorkflow with VectorStylingWorkflow
         ...super.viewingControls.filter(v => v.id !== "table-style-edit"),
         {
           id: "geojson-style-edit",

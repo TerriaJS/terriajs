@@ -10,7 +10,7 @@ import SelectableDimensions, {
   filterSelectableDimensions,
   findSelectedValueName,
   isGroup
-} from "../../../../../Models/SelectableDimensions";
+} from "../../../../../Models/SelectableDimensions/SelectableDimensions";
 import Workbench from "../../../../../Models/Workbench";
 import Legend from "../../../../Workbench/Controls/Legend";
 

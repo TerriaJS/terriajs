@@ -32,7 +32,7 @@ import {
 } from "../CatalogGroups/OpenDataSoftCatalogGroup";
 import SelectableDimensions, {
   SelectableDimension
-} from "../../SelectableDimensions";
+} from "../../SelectableDimensions/SelectableDimensions";
 import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
 

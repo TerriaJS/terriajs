@@ -5,7 +5,7 @@ import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
-import { SelectableDimensionSelect } from "../Models/SelectableDimensions";
+import { SelectableDimensionSelect } from "../Models/SelectableDimensions/SelectableDimensions";
 import DiffableTraits from "../Traits/TraitsClasses/DiffableTraits";
 import LegendTraits from "../Traits/TraitsClasses/LegendTraits";
 import TimeFilterMixin from "./TimeFilterMixin";

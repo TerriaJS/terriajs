@@ -2,7 +2,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import hasTraits from "../../../Models/Definition/hasTraits";
 import { BaseModel } from "../../../Models/Definition/Model";
-import { DEFAULT_PLACEMENT } from "../../../Models/SelectableDimensions";
+import { DEFAULT_PLACEMENT } from "../../../Models/SelectableDimensions/SelectableDimensions";
 import WebMapServiceCatalogItemTraits from "../../../Traits/TraitsClasses/WebMapServiceCatalogItemTraits";
 import ChartItemSelector from "./ChartItemSelector";
 import ColorScaleRangeSection from "./ColorScaleRangeSection";

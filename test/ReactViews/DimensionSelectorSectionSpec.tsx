@@ -10,7 +10,7 @@ import CreateModel from "../../lib/Models/Definition/CreateModel";
 import SelectableDimensions, {
   DEFAULT_PLACEMENT,
   SelectableDimension
-} from "../../lib/Models/SelectableDimensions";
+} from "../../lib/Models/SelectableDimensions/SelectableDimensions";
 import Terria from "../../lib/Models/Terria";
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface/StandardTheme";
 import DimensionSelectorSection, {

@@ -20,7 +20,7 @@ import SelectableDimensions, {
   SelectableDimensionGroup,
   SelectableDimensionNumeric,
   SelectableDimensionSelect
-} from "../../../Models/SelectableDimensions";
+} from "../../../Models/SelectableDimensions/SelectableDimensions";
 import Box from "../../../Styled/Box";
 import Checkbox from "../../../Styled/Checkbox";
 import Input from "../../../Styled/Input";
@@ -174,6 +174,7 @@ export const DimensionSelectorGroup: React.FC<{
         displayInlineBlock: true,
         fullWidth: true
       }}
+      bodyTextProps={{ medium: true }}
     >
       {/* recursively render nested dimensions */}
       {filterSelectableDimensions()(dim.selectableDimensions).map(nestedDim => (

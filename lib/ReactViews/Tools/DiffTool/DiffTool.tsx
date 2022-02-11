@@ -29,7 +29,7 @@ import {
   getMarkerLocation,
   removeMarker
 } from "../../../Models/LocationMarkerUtils";
-import { DimensionOption } from "../../../Models/SelectableDimensions";
+import { DimensionOption } from "../../../Models/SelectableDimensions/SelectableDimensions";
 import SplitItemReference from "../../../Models/Catalog/CatalogReferences/SplitItemReference";
 import Terria from "../../../Models/Terria";
 import ViewState from "../../../ReactViewModels/ViewState";

@@ -43,7 +43,7 @@ import StratumOrder from "../../Definition/StratumOrder";
 import SelectableDimensions, {
   SelectableDimension,
   SelectableDimensionSelect
-} from "../../SelectableDimensions";
+} from "../../SelectableDimensions/SelectableDimensions";
 import Terria from "../../Terria";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import WebMapServiceCapabilities from "./WebMapServiceCapabilities";

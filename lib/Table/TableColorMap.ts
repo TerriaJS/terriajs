@@ -277,31 +277,27 @@ export default class TableColorMap {
     if (binMaximums !== undefined) {
       if (
         colorColumn.type === TableColumnType.scalar &&
-        colorColumn.valuesAsNumbers.maximum !== undefined &&
+        this.maximumValue !== undefined &&
         (binMaximums.length === 0 ||
-          colorColumn.valuesAsNumbers.maximum >
-            binMaximums[binMaximums.length - 1])
+          this.maximumValue > binMaximums[binMaximums.length - 1])
       ) {
         // Add an extra bin to accomodate the maximum value of the dataset.
-        return binMaximums.concat([colorColumn.valuesAsNumbers.maximum]);
+        return binMaximums.concat([this.maximumValue]);
       }
       return binMaximums;
     } else if (this.colorTraits.numberOfBins === 0) {
       return [];
     } else {
       // TODO: compute maximums according to ckmeans, quantile, etc.
-      const asNumbers = colorColumn.valuesAsNumbers;
-      const min = asNumbers.minimum;
-      const max = asNumbers.maximum;
-      if (min === undefined || max === undefined) {
+      if (this.minimumValue === undefined || this.maximumValue === undefined) {
         return [];
       }
       const numberOfBins =
         colorColumn.uniqueValues.values.length < this.colorTraits.numberOfBins
           ? colorColumn.uniqueValues.values.length
           : this.colorTraits.numberOfBins;
-      let next = min;
-      const step = (max - min) / numberOfBins;
+      let next = this.minimumValue;
+      const step = (this.maximumValue - this.minimumValue) / numberOfBins;
 
       const result: number[] = [];
       for (let i = 0; i < numberOfBins - 1; ++i) {
@@ -309,7 +305,7 @@ export default class TableColorMap {
         result.push(next);
       }
 
-      result.push(max);
+      result.push(this.maximumValue);
 
       return result;
     }
@@ -432,7 +428,7 @@ export default class TableColorMap {
   }
 
   /** Minimum value - with filters if applicable
-   * This will only apply to ContinuousColorMaps
+   * This will apply to ContinuousColorMaps and DiscreteColorMaps
    */
   @computed
   get minimumValue() {
@@ -446,7 +442,7 @@ export default class TableColorMap {
   }
 
   /** Maximum value - with filters if applicable
-   * This will only apply to ContinuousColorMaps
+   * This will apply to ContinuousColorMaps and DiscreteColorMaps
    */
   @computed
   get maximumValue() {

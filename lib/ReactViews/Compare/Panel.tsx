@@ -18,9 +18,11 @@ export type PanelProps = {
 export const Panel: React.FC<PanelProps> = props => {
   return (
     <Wrapper className={props.className}>
-      {props.title !== undefined && props.icon !== undefined && (
+      {props.title !== undefined && (
         <TitleBar>
-          <Icon glyph={props.icon} styledWidth="16px" styledHeight="16px" />
+          {props.icon !== undefined ? (
+            <Icon glyph={props.icon} styledWidth="16px" styledHeight="16px" />
+          ) : null}
           <Title>{props.title}</Title>
           {props.menuComponent}
         </TitleBar>
@@ -29,6 +31,10 @@ export const Panel: React.FC<PanelProps> = props => {
     </Wrapper>
   );
 };
+
+export const PanelBody = styled.div`
+  padding: 0.4em;
+`;
 
 const Wrapper = styled.div`
   background-color: ${p => p.theme.darkWithOverlay};
