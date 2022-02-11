@@ -1,13 +1,13 @@
 import React from "react";
-import { Comparable } from "../../Models/Comparable";
+import { BaseModel } from "../../Models/Definition/Model";
 import SelectableDimensions, {
   DEFAULT_PLACEMENT
-} from "../../Models/SelectableDimensions";
+} from "../../Models/SelectableDimensions/SelectableDimensions";
 import DimensionSelectorSection from "../Workbench/Controls/DimensionSelectorSection";
 import Legend from "../Workbench/Controls/Legend";
 import OpacitySection from "../Workbench/Controls/OpacitySection";
 
-const CompareItemControls: React.FC<{ item: Comparable }> = ({ item }) => {
+const CompareItemControls: React.FC<{ item: BaseModel }> = ({ item }) => {
   return (
     <>
       <OpacitySection item={item} />

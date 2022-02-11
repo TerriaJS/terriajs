@@ -8,7 +8,7 @@ import Model, { BaseModel } from "../Models/Definition/Model";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import SelectableDimensions, {
   SelectableDimension
-} from "../Models/SelectableDimensions";
+} from "../Models/SelectableDimensions/SelectableDimensions";
 import ViewingControls, { ViewingControl } from "../Models/ViewingControls";
 import CatalogMemberReferenceTraits from "../Traits/TraitsClasses/CatalogMemberReferenceTraits";
 import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";

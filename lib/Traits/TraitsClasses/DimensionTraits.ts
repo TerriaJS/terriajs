@@ -2,7 +2,7 @@ import ModelTraits from "../ModelTraits";
 import {
   EnumDimension,
   DimensionOption
-} from "../../Models/SelectableDimensions";
+} from "../../Models/SelectableDimensions/SelectableDimensions";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import anyTrait from "../Decorators/anyTrait";
 import objectArrayTrait from "../Decorators/objectArrayTrait";

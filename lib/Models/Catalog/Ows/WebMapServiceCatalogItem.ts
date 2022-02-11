@@ -36,7 +36,7 @@ import CreateModel from "../../Definition/CreateModel";
 import SelectableDimensions, {
   SelectableDimension,
   SelectableDimensionSelect
-} from "../../SelectableDimensions";
+} from "../../SelectableDimensions/SelectableDimensions";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import WebMapServiceCapabilities from "./WebMapServiceCapabilities";
 import WebMapServiceCapabilitiesStratum from "./WebMapServiceCapabilitiesStratum";

@@ -1,6 +1,6 @@
 import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
@@ -25,13 +25,13 @@ import { GLYPHS } from "../../Styled/Icon";
 import Text from "../../Styled/Text";
 import MappableTraits from "../../Traits/TraitsClasses/MappableTraits";
 import SplitterTraits from "../../Traits/TraitsClasses/SplitterTraits";
+import { ExplorerWindowElementName } from "../ExplorerWindow/ExplorerWindow";
 import CompareItemControls from "./CompareItemControls";
 import DatePicker from "./DatePicker";
 import ItemList from "./ItemList";
 import ItemSelector from "./ItemSelector";
 import LocationDateFilter from "./LocationDateFilter";
-import { Panel, PanelMenu } from "./Panel";
-import { ExplorerWindowElementName } from "../ExplorerWindow/ExplorerWindow";
+import { Panel, PanelMenu, PanelBody } from "./Panel";
 
 export type PropsType = {
   viewState: ViewState;
@@ -346,7 +346,7 @@ const Compare: React.FC<PropsType> = observer(props => {
   );
 });
 
-const Container = styled.div`
+export const Container = styled.div`
   padding-bottom: 4em;
 `;
 
@@ -426,12 +426,8 @@ const MapOverlay2 = styled.div`
   }
 `;
 
-const DatasetLabel = styled(Text).attrs({ medium: true })`
+export const DatasetLabel = styled(Text).attrs({ medium: true })`
   padding-bottom: 5px;
-`;
-
-const PanelBody = styled.div`
-  padding: 0.4em;
 `;
 
 const EmptyText = styled(Text).attrs({ medium: true })`
@@ -534,7 +530,10 @@ function removeItem(item: BaseModel) {
   item.terria.removeModelReferences(item);
 }
 
-const InfoText = styled(Text).attrs({ medium: true, textAlignCenter: true })`
+export const InfoText = styled(Text).attrs({
+  medium: true,
+  textAlignCenter: true
+})`
   padding: 1em;
 `;
 

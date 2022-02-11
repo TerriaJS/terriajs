@@ -516,6 +516,50 @@ export default class TableStyle {
     );
   }
 
+  @computed get numberFormatOptions(): Intl.NumberFormatOptions | undefined {
+    const colorColumn = this.colorColumn;
+    if (colorColumn?.traits?.format)
+      return colorColumn?.traits?.format as Intl.NumberFormatOptions;
+
+    let min =
+      this.tableColorMap.minimumValue ?? colorColumn?.valuesAsNumbers.minimum;
+    let max =
+      this.tableColorMap.maximumValue ?? colorColumn?.valuesAsNumbers.maximum;
+
+    if (
+      colorColumn &&
+      colorColumn.type === TableColumnType.scalar &&
+      isDefined(min) &&
+      isDefined(max)
+    ) {
+      if (max - min === 0) return;
+
+      // We want to show fraction digits depending on how small difference is between min and max.
+      // This also takes into consideration the defualt number of legend items - 7
+      // So we add an extra digit
+      // For example:
+      // - if difference is 10 - we wnat to show one fraction digit
+      // - if difference is 1 - we want to show two fraction digits
+      // - if difference is 0.1 - we want to show three fraction digits
+
+      // log_10(20/x) achieves this (where x is difference between min and max)
+      // https://www.wolframalpha.com/input/?i=log_10%2820%2Fx%29
+      // We use 20 here instead of 10 to give us a more convervative value (that is, we may show an extra fraction digit even if it is not needed)
+      // So when x >= 20 - we will not show any fraction digits
+
+      // Clamp values between 0 and 5
+      let fractionDigits = Math.max(
+        0,
+        Math.min(5, Math.ceil(Math.log10(20 / Math.abs(max - min))))
+      );
+
+      return {
+        maximumFractionDigits: fractionDigits,
+        minimumFractionDigits: fractionDigits
+      };
+    }
+  }
+
   /**
    * Computes an and end date for each given start date. The end date for a
    * given start date is the next higher date in the input. To compute the end

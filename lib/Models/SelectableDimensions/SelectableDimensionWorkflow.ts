@@ -1,4 +1,4 @@
-import SelectableDimensions from "../SelectableDimensions";
+import SelectableDimensions from "./SelectableDimensions";
 import { BaseModel } from "../Definition/Model";
 import { IconProps } from "../../Styled/Icon";
 
@@ -7,5 +7,5 @@ export default interface SelectableDimensionWorkflow
   name: string;
   icon: IconProps["glyph"];
   item: BaseModel;
-  showLegend?: boolean;
+  onClose?: () => void;
 }

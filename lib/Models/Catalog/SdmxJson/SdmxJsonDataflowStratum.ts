@@ -36,7 +36,7 @@ import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import {
   MAX_SELECTABLE_DIMENSION_OPTIONS,
   filterSelects
-} from "../../SelectableDimensions";
+} from "../../SelectableDimensions/SelectableDimensions";
 import SdmxJsonCatalogItem from "./SdmxJsonCatalogItem";
 import { loadSdmxJsonStructure, parseSdmxUrn } from "./SdmxJsonServerStratum";
 import {

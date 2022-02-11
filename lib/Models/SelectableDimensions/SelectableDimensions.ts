@@ -1,4 +1,4 @@
-import isDefined from "../Core/isDefined";
+import isDefined from "../../Core/isDefined";
 
 /** Maximum number of options for a `SelectableDimension` */
 export const MAX_SELECTABLE_DIMENSION_OPTIONS = 1000;

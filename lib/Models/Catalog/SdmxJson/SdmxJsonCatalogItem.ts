@@ -18,7 +18,7 @@ import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import SelectableDimensions, {
   SelectableDimension,
   filterSelects
-} from "../../SelectableDimensions";
+} from "../../SelectableDimensions/SelectableDimensions";
 import StratumOrder from "../../Definition/StratumOrder";
 import Terria from "../../Terria";
 import { SdmxJsonDataflowStratum } from "./SdmxJsonDataflowStratum";

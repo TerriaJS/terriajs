@@ -35,7 +35,7 @@ import CommonStrata from "../Models/Definition/CommonStrata";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import Feature from "../Models/Feature";
-import { SelectableDimension } from "../Models/SelectableDimensions";
+import { SelectableDimension } from "../Models/SelectableDimensions/SelectableDimensions";
 import Cesium3DTilesCatalogItemTraits from "../Traits/TraitsClasses/Cesium3DTilesCatalogItemTraits";
 import Cesium3dTilesTraits, {
   OptionsTraits

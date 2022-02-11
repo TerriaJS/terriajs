@@ -22,8 +22,8 @@ import Model from "../Models/Definition/Model";
 import updateModelFromJson from "../Models/Definition/updateModelFromJson";
 import SelectableDimensions, {
   SelectableDimension
-} from "../Models/SelectableDimensions";
-import TableStylingWorkflow from "../Models/SelectableDimensions/TableStylingSelectableDimensions";
+} from "../Models/SelectableDimensions/SelectableDimensions";
+import TableStylingWorkflow from "../Models/SelectableDimensions/TableStylingWorkflow";
 import ViewingControls, { ViewingControl } from "../Models/ViewingControls";
 import Icon from "../Styled/Icon";
 import createLongitudeLatitudeFeaturePerId from "../Table/createLongitudeLatitudeFeaturePerId";

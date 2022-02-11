@@ -6,7 +6,7 @@ import SelectableDimensions, {
   SelectableDimensionSelect,
   filterSelectableDimensions,
   findSelectedValueName
-} from "../../lib/Models/SelectableDimensions";
+} from "../../lib/Models/SelectableDimensions/SelectableDimensions";
 
 describe("SelectableDimension", () => {
   describe("filterSelectableDimensions", () => {
