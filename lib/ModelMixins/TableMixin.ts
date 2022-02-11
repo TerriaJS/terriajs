@@ -460,16 +460,22 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       ];
     }
 
+    @computed get tableStylingWorkflowActive() {
+      return this.terria.selectableDimensionWorkflow?.item === this;
+    }
+
     @computed
     get selectableDimensions(): SelectableDimension[] {
-      return filterOutUndefined([
-        this.timeDisableDimension,
-        ...super.selectableDimensions,
-        this.regionColumnDimensions,
-        this.regionProviderDimensions,
-        this.styleDimensions,
-        this.outlierFilterDimension
-      ]);
+      return !this.tableStylingWorkflowActive
+        ? filterOutUndefined([
+            this.timeDisableDimension,
+            ...super.selectableDimensions,
+            this.regionColumnDimensions,
+            this.regionProviderDimensions,
+            this.styleDimensions,
+            this.outlierFilterDimension
+          ])
+        : [];
     }
 
     /**

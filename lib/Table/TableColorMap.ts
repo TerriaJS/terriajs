@@ -63,7 +63,7 @@ export const SEQUENTIAL_SCALES = [
 export const DEFAULT_SEQUENTIAL = "Reds";
 
 /** Sequential continuous D3 color scales (continuous only - not discrete) */
-export const SEQUENTIAL_CONTINOUS_SCALES = [
+export const SEQUENTIAL_CONTINUOUS_SCALES = [
   "Turbo",
   "Viridis",
   "Inferno",
@@ -281,7 +281,7 @@ export default class TableColorMap {
         (binMaximums.length === 0 ||
           this.maximumValue > binMaximums[binMaximums.length - 1])
       ) {
-        // Add an extra bin to accomodate the maximum value of the dataset.
+        // Add an extra bin to accommodate the maximum value of the dataset.
         return binMaximums.concat([this.maximumValue]);
       }
       return binMaximums;
