@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import prettifyCoordinates from "../../Map/prettifyCoordinates";
+import prettifyCoordinates from "../../Map/Vector/prettifyCoordinates";
 import Button from "../../Styled/Button";
 import Icon, { StyledIcon } from "../../Styled/Icon";
 import Text from "../../Styled/Text";

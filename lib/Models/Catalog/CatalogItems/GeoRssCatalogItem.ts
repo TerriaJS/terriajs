@@ -10,7 +10,7 @@ import TerriaError, { networkRequestError } from "../../../Core/TerriaError";
 import {
   geoRss2ToGeoJson,
   geoRssAtomToGeoJson
-} from "../../../Map/geoRssConvertor";
+} from "../../../Map/Vector/geoRssConvertor";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";

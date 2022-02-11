@@ -7,7 +7,7 @@ import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import EntityCluster from "terriajs-cesium/Source/DataSources/EntityCluster";
 import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
-import isDefined from "../Core/isDefined";
+import isDefined from "../../Core/isDefined";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import L from "leaflet";
 import LeafletScene from "./LeafletScene";

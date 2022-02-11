@@ -9,7 +9,7 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import makeRealPromise from "../../lib/Core/makeRealPromise";
 import pollToPromise from "../../lib/Core/pollToPromise";
 import supportsWebGL from "../../lib/Core/supportsWebGL";
-import PickedFeatures from "../../lib/Map/PickedFeatures";
+import PickedFeatures from "../../lib/Map/PickedFeatures/PickedFeatures";
 import Terria from "../../lib/Models/Terria";
 import UserDrawing from "../../lib/Models/UserDrawing";
 import Feature from "../../lib/Models/Feature";

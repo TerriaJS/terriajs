@@ -1,6 +1,6 @@
 import Color from "terriajs-cesium/Source/Core/Color";
 import ColorMap from "./ColorMap";
-import isDefined from "../Core/isDefined";
+import isDefined from "../../Core/isDefined";
 
 export interface EnumColorMapOptions {
   readonly color: Readonly<Color>;

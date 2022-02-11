@@ -35,7 +35,7 @@ import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import SelectableDimensions, {
   SelectableDimension,
-  SelectableDimensionSelect
+  SelectableDimensionEnum
 } from "../../SelectableDimensions/SelectableDimensions";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import WebMapServiceCapabilities from "./WebMapServiceCapabilities";
@@ -458,7 +458,7 @@ class WebMapServiceCatalogItem
   );
 
   @computed
-  get styleSelectableDimensions(): SelectableDimensionSelect[] {
+  get styleSelectableDimensions(): SelectableDimensionEnum[] {
     return this.availableStyles.map((layer, layerIndex) => {
       let name = "Styles";
 

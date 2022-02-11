@@ -8,7 +8,7 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import EntityCollection from "terriajs-cesium/Source/DataSources/EntityCollection";
 import EntityCluster from "terriajs-cesium/Source/DataSources/EntityCluster";
-import isDefined from "../Core/isDefined";
+import isDefined from "../../Core/isDefined";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import L, { LatLngBounds, PolylineOptions, LatLngBoundsLiteral } from "leaflet";
 import LeafletScene from "./LeafletScene";
@@ -17,7 +17,7 @@ import PolylineGlowMaterialProperty from "terriajs-cesium/Source/DataSources/Pol
 import PolylineDashMaterialProperty from "terriajs-cesium/Source/DataSources/PolylineDashMaterialProperty";
 import Property from "terriajs-cesium/Source/DataSources/Property";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import { getLineStyleLeaflet } from "../Models/Catalog/Esri/esriLineStyle";
+import { getLineStyleLeaflet } from "../../Models/Catalog/Esri/esriLineStyle";
 
 const destroyObject = require("terriajs-cesium/Source/Core/destroyObject")
   .default;

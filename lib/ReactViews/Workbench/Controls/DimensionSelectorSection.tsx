@@ -15,7 +15,7 @@ import SelectableDimensions, {
   SelectableDimensionCheckbox,
   SelectableDimensionGroup,
   SelectableDimensionNumeric,
-  SelectableDimensionSelect
+  SelectableDimensionEnum
 } from "../../../Models/SelectableDimensions/SelectableDimensions";
 import Box from "../../../Styled/Box";
 import Checkbox from "../../../Styled/Checkbox";
@@ -87,7 +87,7 @@ export const DimensionSelector: React.FC<{
 
 export const DimensionSelectorSelect: React.FC<{
   id: string;
-  dim: SelectableDimensionSelect;
+  dim: SelectableDimensionEnum;
 }> = ({ id, dim }) => {
   return (
     <Select

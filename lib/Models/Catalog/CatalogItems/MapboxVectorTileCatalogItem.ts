@@ -17,7 +17,7 @@ import loadJson from "../../../Core/loadJson";
 import TerriaError from "../../../Core/TerriaError";
 import ProtomapsImageryProvider, {
   GeojsonSource
-} from "../../../Map/ProtomapsImageryProvider";
+} from "../../../Map/ImageryProvider/ProtomapsImageryProvider";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";

@@ -19,15 +19,15 @@ import {
 } from "arcgis-rest-api";
 import defined from "terriajs-cesium/Source/Core/defined";
 import WindingOrder from "terriajs-cesium/Source/Core/WindingOrder";
-import filterOutUndefined from "../Core/filterOutUndefined";
-import JsonValue, { isJsonObject } from "../Core/Json";
+import filterOutUndefined from "../../Core/filterOutUndefined";
+import JsonValue, { isJsonObject } from "../../Core/Json";
 import {
   FeatureCollectionWithCrs,
   GeoJsonCrs,
   isFeature,
   isFeatureCollection
-} from "../ModelMixins/GeojsonMixin";
-import computeRingWindingOrder from "./computeRingWindingOrder";
+} from "../../ModelMixins/GeojsonMixin";
+import computeRingWindingOrder from "../Vector/computeRingWindingOrder";
 
 const pointInPolygon = require("point-in-polygon");
 

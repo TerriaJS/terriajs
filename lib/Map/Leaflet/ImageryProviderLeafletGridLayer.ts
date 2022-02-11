@@ -4,7 +4,7 @@ import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
-import Leaflet from "../Models/Leaflet";
+import Leaflet from "../../Models/Leaflet";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 
 export interface ImageryProviderWithGridLayerSupport extends ImageryProvider {

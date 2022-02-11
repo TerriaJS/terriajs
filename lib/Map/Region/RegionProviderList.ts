@@ -8,10 +8,10 @@
 *  6. Recolor vector tile features
 */
 
-import CorsProxy from "../Core/CorsProxy";
+import CorsProxy from "../../Core/CorsProxy";
 import RegionProvider from "./RegionProvider";
-import isDefined from "../Core/isDefined";
-import loadJson from "../Core/loadJson";
+import isDefined from "../../Core/isDefined";
+import loadJson from "../../Core/loadJson";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 
 /**

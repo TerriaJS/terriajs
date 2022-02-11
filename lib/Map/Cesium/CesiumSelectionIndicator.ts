@@ -12,7 +12,7 @@ import EasingFunction from "terriajs-cesium/Source/Core/EasingFunction";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
 import SceneTransforms from "terriajs-cesium/Source/Scene/SceneTransforms";
 import TweenCollection from "terriajs-cesium/Source/Scene/TweenCollection";
-import isDefined from "../Core/isDefined";
+import isDefined from "../../Core/isDefined";
 
 declare module "terriajs-cesium/Source/Scene/Scene" {
   export default interface Scene {
@@ -54,13 +54,13 @@ export default class CesiumSelectionIndicator {
   @observable
   private _screenPositionY: string = offScreen;
 
-  private _cesium: import("../Models/Cesium").default;
+  private _cesium: import("../../Models/Cesium").default;
   private _tweens: any;
   private _selectionIndicatorTween: any;
   private _selectionIndicatorIsAppearing: boolean = false;
   private _disposeAutorun: IReactionDisposer;
 
-  constructor(cesium: import("../Models/Cesium").default) {
+  constructor(cesium: import("../../Models/Cesium").default) {
     this._cesium = cesium;
     this._tweens = cesium.scene.tweens;
     this.container = cesium.cesiumWidget.container;
@@ -74,7 +74,7 @@ export default class CesiumSelectionIndicator {
     const img = document.createElement("img");
     img.setAttribute(
       "src",
-      require("../../wwwroot/images/NM-LocationTarget.svg")
+      require("../../../wwwroot/images/NM-LocationTarget.svg")
     );
     img.setAttribute("alt", "");
     img.setAttribute("width", "50px");

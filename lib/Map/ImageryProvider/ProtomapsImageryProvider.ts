@@ -32,14 +32,14 @@ import {
   Zxy,
   ZxySource
 } from "terriajs-protomaps";
-import filterOutUndefined from "../Core/filterOutUndefined";
-import isDefined from "../Core/isDefined";
+import filterOutUndefined from "../../Core/filterOutUndefined";
+import isDefined from "../../Core/isDefined";
 import {
   FeatureCollectionWithCrs,
   toFeatureCollection
-} from "../ModelMixins/GeojsonMixin";
-import Terria from "../Models/Terria";
-import { ImageryProviderWithGridLayerSupport } from "./ImageryProviderLeafletGridLayer";
+} from "../../ModelMixins/GeojsonMixin";
+import Terria from "../../Models/Terria";
+import { ImageryProviderWithGridLayerSupport } from "../Leaflet/ImageryProviderLeafletGridLayer";
 
 const geojsonvt = require("geojson-vt").default;
 

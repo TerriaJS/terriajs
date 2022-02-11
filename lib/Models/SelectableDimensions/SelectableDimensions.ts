@@ -1,13 +1,9 @@
 import isDefined from "../../Core/isDefined";
 
-/** Maximum number of options for a `SelectableDimension` */
-export const MAX_SELECTABLE_DIMENSION_OPTIONS = 1000;
-
-export interface DimensionOption<T = string> {
-  readonly id?: T;
-  readonly name?: string;
-}
-
+/** `Dimension` (and child interfaces - eg `EnumDimension`, `NumericalDimension`, ...) are Trait/JSON friendly interfaces. They are used as base to the `SelectableDimension` interfaces.
+ *
+ * This is useful because it means we can directly use Traits to create SelectableDimensions - for example see `EnumDimensionTraits` in `lib/Traits/TraitsClasses/DimensionTraits.ts`
+ */
 interface Dimension {
   /** Machine readable ID */
   readonly id?: string;
@@ -15,9 +11,14 @@ interface Dimension {
   readonly name?: string;
 }
 
+export interface EnumDimensionOption<T = string> {
+  readonly id?: T;
+  readonly name?: string;
+}
+
 export interface EnumDimension<T = string> extends Dimension {
-  readonly options?: readonly DimensionOption<T>[];
-  readonly selectedId?: string;
+  readonly options?: readonly EnumDimensionOption<T>[];
+  readonly selectedId?: T;
   readonly allowUndefined?: boolean;
   readonly undefinedLabel?: string;
 }
@@ -26,6 +27,11 @@ export interface NumericalDimension extends Dimension {
   readonly value?: number;
   readonly min?: number;
   readonly max?: number;
+  readonly allowUndefined?: boolean;
+}
+
+export interface TextDimension extends Dimension {
+  readonly value?: string;
   readonly allowUndefined?: boolean;
 }
 
@@ -39,14 +45,16 @@ export type SelectableDimensionType =
   | undefined
   | "select"
   | "numeric"
+  | "text"
   | "checkbox"
   | "group";
 
 export type Placement = "default" | "belowLegend";
 export const DEFAULT_PLACEMENT: Placement = "default";
 
+/** Base SelectableDimension interface. Each following SelectableDimension will extend this and the Dimension interface above */
 interface Base<T = string> {
-  setDimensionValue(stratumId: string, selectedId: T): void;
+  setDimensionValue(stratumId: string, value: T): void;
   disable?: boolean;
   /** Placement of dimension in Workbench:
    * - default (above legend and short-report sections)
@@ -57,10 +65,12 @@ interface Base<T = string> {
   type?: SelectableDimensionType;
 }
 
-// The default type for SelectableDimension is Select (dropdown menu)
-export interface SelectableDimensionSelect extends Base<string>, EnumDimension {
+export interface SelectableDimensionEnum extends Base<string>, EnumDimension {
   type?: undefined | "select";
 }
+
+/** Maximum number of options for a `SelectableDimension` */
+export const MAX_SELECTABLE_DIMENSION_OPTIONS = 1000;
 
 export interface SelectableDimensionCheckbox
   extends Base<"true" | "false">,
@@ -72,6 +82,10 @@ export interface SelectableDimensionNumeric
   extends Base<number>,
     NumericalDimension {
   type: "numeric";
+}
+
+export interface SelectableDimensionText extends Base<string>, TextDimension {
+  type: "text";
 }
 
 export interface SelectableDimensionGroup
@@ -87,10 +101,11 @@ export interface SelectableDimensionGroup
 }
 
 export type SelectableDimension =
-  | SelectableDimensionSelect
+  | SelectableDimensionEnum
   | SelectableDimensionCheckbox
   | SelectableDimensionGroup
-  | SelectableDimensionNumeric;
+  | SelectableDimensionNumeric
+  | SelectableDimensionText;
 
 export const isCheckbox = (
   dim: SelectableDimension
@@ -98,13 +113,13 @@ export const isCheckbox = (
 
 export const isSelect = (
   dim: SelectableDimension
-): dim is SelectableDimensionSelect =>
+): dim is SelectableDimensionEnum =>
   dim.type === "select" || dim.type === undefined;
 
 /** Return only SelectableDimensionSelect from array of SelectableDimension */
 export const filterSelects = (
   dims: SelectableDimension[]
-): SelectableDimensionSelect[] => dims.filter(isSelect);
+): SelectableDimensionEnum[] => dims.filter(isSelect);
 
 export const isGroup = (
   dim: SelectableDimension
@@ -113,6 +128,10 @@ export const isGroup = (
 export const isNumeric = (
   dim: SelectableDimension
 ): dim is SelectableDimensionNumeric => dim.type === "numeric";
+
+export const isText = (
+  dim: SelectableDimension
+): dim is SelectableDimensionText => dim.type === "text";
 
 const isCorrectPlacement = (placement?: Placement) => (
   dim: SelectableDimension
@@ -161,8 +180,11 @@ export const findSelectedValueName = (
   if (isNumeric(dim)) {
     return dim.value?.toString();
   }
+
+  if (isText(dim)) return dim.value;
 };
 
+/** Interface to be implemented by BaseModels (eg CatalogMembers) to add selectableDimensions */
 interface SelectableDimensions {
   selectableDimensions: SelectableDimension[];
 }

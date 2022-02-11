@@ -9,7 +9,7 @@ import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import Constructor from "../Core/Constructor";
 import TerriaError from "../Core/TerriaError";
-import getUrlForImageryTile from "../Map/getUrlForImageryTile";
+import getUrlForImageryTile from "../Map/ImageryProvider/getUrlForImageryTile";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import CompositeCatalogItem from "../Models/Catalog/CatalogItems/CompositeCatalogItem";
 import Model from "../Models/Definition/Model";

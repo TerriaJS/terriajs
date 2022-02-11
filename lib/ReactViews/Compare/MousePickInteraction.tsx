@@ -2,7 +2,7 @@ import { action, reaction } from "mobx";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import PickedFeatures from "../../Map/PickedFeatures";
+import PickedFeatures from "../../Map/PickedFeatures/PickedFeatures";
 import MapInteractionMode, { UIMode } from "../../Models/MapInteractionMode";
 import Terria from "../../Models/Terria";
 import Text from "../../Styled/Text";

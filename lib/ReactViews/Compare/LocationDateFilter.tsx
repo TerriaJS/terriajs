@@ -2,7 +2,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import PickedFeatures from "../../Map/PickedFeatures";
+import PickedFeatures from "../../Map/PickedFeatures/PickedFeatures";
 import TimeFilterMixin from "../../ModelMixins/TimeFilterMixin";
 import { Comparable } from "../../Models/Comparable";
 import doesImageryFeatureBelongToItem from "../../Models/doesImageryFeatureBelongToCatalogItem";

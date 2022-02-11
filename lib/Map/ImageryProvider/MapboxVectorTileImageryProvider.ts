@@ -19,10 +19,10 @@ import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import TileDiscardPolicy from "terriajs-cesium/Source/Scene/TileDiscardPolicy";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import URITemplate from "urijs/src/URITemplate";
-import isDefined from "../Core/isDefined";
-import loadArrayBuffer from "../Core/loadArrayBuffer";
-import computeRingWindingOrder from "./computeRingWindingOrder";
-import { ImageryProviderWithGridLayerSupport } from "./ImageryProviderLeafletGridLayer";
+import isDefined from "../../Core/isDefined";
+import loadArrayBuffer from "../../Core/loadArrayBuffer";
+import computeRingWindingOrder from "../Vector/computeRingWindingOrder";
+import { ImageryProviderWithGridLayerSupport } from "../Leaflet/ImageryProviderLeafletGridLayer";
 
 interface Coords {
   x: number;

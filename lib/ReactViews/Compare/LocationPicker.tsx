@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import PickedFeatures from "../../Map/PickedFeatures";
+import PickedFeatures from "../../Map/PickedFeatures/PickedFeatures";
 import ViewState from "../../ReactViewModels/ViewState";
 import AnimatedSpinnerIcon from "../../Styled/AnimatedSpinnerIcon";
 import Button from "../../Styled/Button";
