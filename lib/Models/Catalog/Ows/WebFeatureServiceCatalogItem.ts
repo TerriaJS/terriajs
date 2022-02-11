@@ -6,7 +6,7 @@ import isDefined from "../../../Core/isDefined";
 import isReadOnlyArray from "../../../Core/isReadOnlyArray";
 import loadText from "../../../Core/loadText";
 import TerriaError from "../../../Core/TerriaError";
-import gmlToGeoJson from "../../../Map/gmlToGeoJson";
+import gmlToGeoJson from "../../../Map/Vector/gmlToGeoJson";
 import GeoJsonMixin, {
   FeatureCollectionWithCrs,
   toFeatureCollection

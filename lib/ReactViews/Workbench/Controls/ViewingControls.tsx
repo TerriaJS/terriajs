@@ -18,7 +18,7 @@ import {
 } from "../../../Core/AnalyticEvents/analyticEvents";
 import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
 import getPath from "../../../Core/getPath";
-import PickedFeatures from "../../../Map/PickedFeatures";
+import PickedFeatures from "../../../Map/PickedFeatures/PickedFeatures";
 import ExportableMixin from "../../../ModelMixins/ExportableMixin";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";

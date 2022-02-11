@@ -67,8 +67,8 @@ import ProtomapsImageryProvider, {
   GeojsonSource,
   GEOJSON_SOURCE_LAYER_NAME,
   ProtomapsData
-} from "../Map/ProtomapsImageryProvider";
-import Reproject from "../Map/Reproject";
+} from "../Map/ImageryProvider/ProtomapsImageryProvider";
+import Reproject from "../Map/Vector/Reproject";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";

@@ -15,7 +15,7 @@ import TableMixin from "../../../ModelMixins/TableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import TableAutomaticStylesStratum from "../../../Table/TableAutomaticStylesStratum";
 import { MetadataUrlTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
-import DimensionTraits from "../../../Traits/TraitsClasses/DimensionTraits";
+import EnumDimensionTraits from "../../../Traits/TraitsClasses/DimensionTraits";
 import { FeatureInfoTemplateTraits } from "../../../Traits/TraitsClasses/FeatureInfoTraits";
 import OpenDataSoftCatalogItemTraits from "../../../Traits/TraitsClasses/OpenDataSoftCatalogItemTraits";
 import TableColumnTraits from "../../../Traits/TraitsClasses/TableColumnTraits";
@@ -526,8 +526,8 @@ export class OpenDataSoftDatasetStratum extends LoadableStratum(
    */
   @computed get availableFields() {
     if (!this.selectAllFields)
-      return createStratumInstance(DimensionTraits, {
-        id: "available-fields",
+      return createStratumInstance(EnumDimensionTraits, {
+        id: "available-fieds",
         name: "Fields",
         selectedId: this.catalogItem.colorFieldName,
         options: this.usefulFields.map(f => ({

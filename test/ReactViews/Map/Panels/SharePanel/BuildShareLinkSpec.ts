@@ -5,7 +5,7 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import URI from "urijs";
 import { USER_ADDED_CATEGORY_ID } from "../../../../../lib/Core/addedByUser";
 import loadBlob from "../../../../../lib/Core/loadBlob";
-import PickedFeatures from "../../../../../lib/Map/PickedFeatures";
+import PickedFeatures from "../../../../../lib/Map/PickedFeatures/PickedFeatures";
 import addUserCatalogMember from "../../../../../lib/Models/Catalog/addUserCatalogMember";
 import CommonStrata from "../../../../../lib/Models/Definition/CommonStrata";
 import Feature from "../../../../../lib/Models/Feature";

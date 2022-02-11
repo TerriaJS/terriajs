@@ -3,7 +3,7 @@ import SelectableDimensions, {
   Placement,
   SelectableDimension,
   SelectableDimensionCheckbox,
-  SelectableDimensionSelect,
+  SelectableDimensionEnum,
   filterSelectableDimensions,
   findSelectedValueName
 } from "../../lib/Models/SelectableDimensions/SelectableDimensions";
@@ -89,7 +89,7 @@ function mkSelectableCheckbox(
 function mkSelectableSelect(
   placement: Placement | undefined = undefined,
   options: any[] = []
-): SelectableDimensionSelect {
+): SelectableDimensionEnum {
   return {
     type: "select",
     setDimensionValue: () => undefined,

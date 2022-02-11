@@ -16,8 +16,8 @@ import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDire
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import LatLonHeight from "../../../Core/LatLonHeight";
-import PickedFeatures from "../../../Map/PickedFeatures";
-import prettifyCoordinates from "../../../Map/prettifyCoordinates";
+import PickedFeatures from "../../../Map/PickedFeatures/PickedFeatures";
+import prettifyCoordinates from "../../../Map/Vector/prettifyCoordinates";
 import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import MappableMixin, {
   ImageryParts
@@ -29,7 +29,7 @@ import {
   getMarkerLocation,
   removeMarker
 } from "../../../Models/LocationMarkerUtils";
-import { DimensionOption } from "../../../Models/SelectableDimensions/SelectableDimensions";
+import { EnumDimensionOption } from "../../../Models/SelectableDimensions/SelectableDimensions";
 import SplitItemReference from "../../../Models/Catalog/CatalogReferences/SplitItemReference";
 import Terria from "../../../Models/Terria";
 import ViewState from "../../../ReactViewModels/ViewState";
@@ -258,7 +258,7 @@ class Main extends React.Component<MainPropsType> {
   }
 
   @computed
-  get availableDiffStyles(): DimensionOption[] {
+  get availableDiffStyles(): EnumDimensionOption[] {
     return filterOutUndefined(
       this.diffItem.availableDiffStyles.map(diffStyleId =>
         this.diffItem.styleSelectableDimensions?.[0]?.options?.find(

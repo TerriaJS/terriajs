@@ -4,13 +4,13 @@ import EasingFunction from "terriajs-cesium/Source/Core/EasingFunction";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import L from "leaflet";
 import cesiumRequestAnimationFrame from "terriajs-cesium/Source/Core/requestAnimationFrame";
-import isDefined from "../Core/isDefined";
+import isDefined from "../../Core/isDefined";
 
-import Leaflet from "../Models/Leaflet";
+import Leaflet from "../../Models/Leaflet";
 
 const TweenCollection = require("terriajs-cesium/Source/Scene/TweenCollection")
   .default;
-const selectionIndicatorUrl = require("../../wwwroot/images/NM-LocationTarget.svg");
+const selectionIndicatorUrl = require("../../../wwwroot/images/NM-LocationTarget.svg");
 
 interface Tween {
   cancelTween(): void;

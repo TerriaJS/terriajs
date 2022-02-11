@@ -4,7 +4,7 @@ import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapService
 import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
-import DimensionTraits, {
+import EnumDimensionTraits, {
   DimensionOptionTraits
 } from "../../lib/Traits/TraitsClasses/DimensionTraits";
 import { SelectableDimensionSelect } from "../../lib/Models/SelectableDimensions";
@@ -133,7 +133,7 @@ describe("CatalogMemberMixin", function() {
       wmsItem.setTrait(CommonStrata.definition, "styles", "init-style");
       wmsItem.setTrait(CommonStrata.definition, "layers", "init-layers");
       wmsItem.setTrait(CommonStrata.user, "modelDimensions", [
-        createStratumInstance(DimensionTraits, {
+        createStratumInstance(EnumDimensionTraits, {
           id: "modelDimensions",
           options: [
             createStratumInstance(DimensionOptionTraits, {

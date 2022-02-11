@@ -1,9 +1,9 @@
 import { action, observable, runInAction } from "mobx";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
-import CorsProxy from "../Core/CorsProxy";
-import isDefined from "../Core/isDefined";
-import loadJson from "../Core/loadJson";
+import CorsProxy from "../../Core/CorsProxy";
+import isDefined from "../../Core/isDefined";
+import loadJson from "../../Core/loadJson";
 
 /*
 Encapsulates one entry in regionMapping.json

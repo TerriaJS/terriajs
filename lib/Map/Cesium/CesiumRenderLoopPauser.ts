@@ -6,7 +6,7 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import TaskProcessor from "terriajs-cesium/Source/Core/TaskProcessor";
 import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
-import loadWithXhr from "../Core/loadWithXhr";
+import loadWithXhr from "../../Core/loadWithXhr";
 
 export default class CesiumRenderLoopPauser {
   /**

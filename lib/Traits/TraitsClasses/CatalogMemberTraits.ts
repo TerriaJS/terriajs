@@ -6,7 +6,7 @@ import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
-import DimensionTraits from "./DimensionTraits";
+import EnumDimensionTraits from "./DimensionTraits";
 
 export class MetadataUrlTraits extends ModelTraits {
   @primitiveTrait({
@@ -216,13 +216,13 @@ export default class CatalogMemberTraits extends ModelTraits {
   dataCustodian?: string;
 
   @objectArrayTrait({
-    type: DimensionTraits,
+    type: EnumDimensionTraits,
     idProperty: "id",
     name: "Model dimensions",
     description:
       "This provides ability to set model JSON through SelectableDimensions (a dropdown)."
   })
-  modelDimensions?: DimensionTraits[];
+  modelDimensions?: EnumDimensionTraits[];
 
   @primitiveTrait({
     type: "boolean",

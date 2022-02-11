@@ -7,9 +7,9 @@ import {
 } from "mobx";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
-import ContinuousColorMap from "../../Map/ContinuousColorMap";
-import DiscreteColorMap from "../../Map/DiscreteColorMap";
-import EnumColorMap from "../../Map/EnumColorMap";
+import ContinuousColorMap from "../../Map/ColorMap/ContinuousColorMap";
+import DiscreteColorMap from "../../Map/ColorMap/DiscreteColorMap";
+import EnumColorMap from "../../Map/ColorMap/EnumColorMap";
 import { getName } from "../../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../../ModelMixins/TableMixin";
 import Icon from "../../Styled/Icon";
@@ -432,6 +432,45 @@ export default class TableStylingWorkflow
     };
   }
 
+  @computed get enumColorsSelectableDim(): SelectableDimension {
+    return {
+      type: "group",
+      id: "Colors",
+      selectableDimensions: [
+        {
+          type: "numeric",
+          id: "bin-min",
+          max: this.tableStyle.tableColorMap.maximumValue,
+          value: this.tableStyle.tableColorMap.minimumValue,
+          setDimensionValue: (stratumId, value) => {
+            this.getTableStyleTraits(stratumId)?.color.setTrait(
+              stratumId,
+              "minimumValue",
+              value
+            );
+            this.setBinMaximums(stratumId);
+          }
+        },
+        ...this.tableStyle.tableColorMap.binMaximums.map(
+          (bin, idx) =>
+            ({
+              type: "numeric",
+              id: `bin-${idx}`,
+              value: bin,
+              setDimensionValue: (stratumId, value) => {
+                const binMaximums = [
+                  ...this.tableStyle.tableColorMap.binMaximums
+                ];
+                if (isDefined(idx) && isDefined(value))
+                  binMaximums[idx] = value;
+                this.setBinMaximums(stratumId, binMaximums);
+              }
+            } as SelectableDimensionNumeric)
+        )
+      ]
+    };
+  }
+
   @computed get selectableDimensions(): SelectableDimension[] {
     return filterOutUndefined([
       this.colorSchemeSelectableDim,
@@ -456,7 +495,6 @@ export default class TableStylingWorkflow
    * Set `TableColorStyleTraits.binMaximums`
    *
    * If the maximum value of the dataset is greater than the last value in this array, an additional bin is added automatically (See `TableColorStyleTraits.binMaximums`)
-   *
    * Because of this, we may need to update `maximumValue` so we don't get more bins added automatically
    */
   setBinMaximums(stratumId: string, binMaximums?: number[]) {

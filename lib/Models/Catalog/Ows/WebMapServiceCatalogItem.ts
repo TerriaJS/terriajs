@@ -42,7 +42,7 @@ import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import SelectableDimensions, {
   SelectableDimension,
-  SelectableDimensionSelect
+  SelectableDimensionEnum
 } from "../../SelectableDimensions/SelectableDimensions";
 import Terria from "../../Terria";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
@@ -597,7 +597,7 @@ class WebMapServiceCatalogItem
   );
 
   @computed
-  get styleSelectableDimensions(): SelectableDimensionSelect[] {
+  get styleSelectableDimensions(): SelectableDimensionEnum[] {
     return this.availableStyles.map((layer, layerIndex) => {
       let name = "Styles";
 

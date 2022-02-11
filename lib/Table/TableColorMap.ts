@@ -7,11 +7,11 @@ import isDefined from "../Core/isDefined";
 import runLater from "../Core/runLater";
 import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError from "../Core/TerriaError";
-import ColorMap from "../Map/ColorMap";
-import ConstantColorMap from "../Map/ConstantColorMap";
-import ContinuousColorMap from "../Map/ContinuousColorMap";
-import DiscreteColorMap from "../Map/DiscreteColorMap";
-import EnumColorMap from "../Map/EnumColorMap";
+import ColorMap from "../Map/ColorMap/ColorMap";
+import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
+import ContinuousColorMap from "../Map/ColorMap/ContinuousColorMap";
+import DiscreteColorMap from "../Map/ColorMap/DiscreteColorMap";
+import EnumColorMap from "../Map/ColorMap/EnumColorMap";
 import Model from "../Models/Definition/Model";
 import ModelPropertiesFromTraits from "../Models/Definition/ModelPropertiesFromTraits";
 import TableColorStyleTraits, {
