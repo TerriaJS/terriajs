@@ -1,13 +1,15 @@
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import LegendOwnerTraits from "./LegendOwnerTraits";
 import MappableTraits from "./MappableTraits";
 import RasterLayerTraits from "./RasterLayerTraits";
 
 export default class MapboxMapCatalogItemTraits extends mixTraits(
   RasterLayerTraits,
   CatalogMemberTraits,
-  MappableTraits
+  MappableTraits,
+  LegendOwnerTraits
 ) {
   @primitiveTrait({
     name: "url",

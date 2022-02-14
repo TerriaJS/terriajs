@@ -273,11 +273,29 @@ export default class TableColorMap {
     });
   }
 
+  /** This color is used to color values outside minimumValue and maximumValue - it is only used for ContinuousColorMaps
+   * If undefined, values outside min/max values will be clamped
+   * If zScoreFilter is enabled, this will return a default color (AQUAMARINE)
+   **/
   @computed get outlierColor() {
-    return this.colorTraits.outlierColor
-      ? Color.fromCssColorString(this.colorTraits.outlierColor) ??
-          Color.AQUAMARINE
-      : Color.AQUAMARINE;
+    // Only return outlier if there are actually values outside min/max
+    if (
+      !isDefined(this.minimumValue) ||
+      !isDefined(this.validValuesMin) ||
+      !isDefined(this.maximumValue) ||
+      !isDefined(this.validValuesMax) ||
+      (this.minimumValue <= this.validValuesMin &&
+        this.maximumValue >= this.validValuesMax)
+    )
+      return;
+
+    if (isDefined(this.colorTraits.outlierColor))
+      return Color.fromCssColorString(this.colorTraits.outlierColor);
+
+    if (!this.zScoreFilterValues || !this.colorTraits.zScoreFilterEnabled)
+      return;
+
+    return Color.AQUAMARINE;
   }
 
   @computed get nullColor() {
@@ -357,9 +375,13 @@ export default class TableColorMap {
    */
   @computed
   get minimumValue() {
+    if (isDefined(this.colorTraits.minimumValue))
+      return this.colorTraits.minimumValue;
+
     if (this.zScoreFilterValues && this.colorTraits.zScoreFilterEnabled)
       return this.zScoreFilterValues.min;
-    if (this.validValues) return getMin(this.validValues);
+
+    if (isDefined(this.validValuesMin)) return this.validValuesMin;
   }
 
   /** Maximum value - with filters if applicable
@@ -367,9 +389,13 @@ export default class TableColorMap {
    */
   @computed
   get maximumValue() {
+    if (isDefined(this.colorTraits.maximumValue))
+      return this.colorTraits.maximumValue;
+
     if (this.zScoreFilterValues && this.colorTraits.zScoreFilterEnabled)
       return this.zScoreFilterValues.max;
-    if (this.validValues) return getMax(this.validValues);
+
+    if (isDefined(this.validValuesMax)) return this.validValuesMax;
   }
 
   /** Get values of colorColumn with valid regions if:
@@ -400,7 +426,19 @@ export default class TableColorMap {
     }
   }
 
+  @computed get validValuesMax() {
+    return this.validValues ? getMax(this.validValues) : undefined;
+  }
+
+  @computed get validValuesMin() {
+    return this.validValues ? getMin(this.validValues) : undefined;
+  }
+
   /** Filter by z-score if applicable
+   * It requires:
+   * - `colorTraits.zScoreFilter` to be defined,
+   * - colorTraits.minimumValue and colorTraits.maximumValue to be UNDEFINED
+   *
    * This will treat values outside of specifed z-score as outliers, and therefore will not include in color scale. This value is magnitude of z-score - it will apply to positive and negative z-scores. For example a value of `2` will treat all values that are 2 or more standard deviations from the mean as outliers.
    * This will only apply to ContinuousColorMaps
    * */
@@ -408,10 +446,14 @@ export default class TableColorMap {
   @computed
   get zScoreFilterValues(): { max: number; min: number } | undefined {
     if (
+      !isDefined(this.colorTraits.zScoreFilter) ||
+      isDefined(this.colorTraits.minimumValue) ||
+      isDefined(this.colorTraits.maximumValue) ||
       !this.colorColumn ||
       !this.validValues ||
-      this.validValues.length === 0 ||
-      !isDefined(this.colorTraits.zScoreFilter)
+      !isDefined(this.validValuesMax) ||
+      !isDefined(this.validValuesMin) ||
+      this.validValues.length === 0
     )
       return;
 
@@ -452,23 +494,28 @@ export default class TableColorMap {
       }
     });
 
-    const actualMin = getMin(this.validValues);
-    const actualMax = getMax(this.validValues);
-    const actualRange = actualMax - actualMin;
+    const actualRange = this.validValuesMax - this.validValuesMin;
 
     // Only apply filtered min/max if it reduces range by factor of `rangeFilter` (eg if `rangeFilter = 0.1`, then the filter must reduce the range by at least 10% to be applied)
     // This applies to min and max independently
-    if (filteredMin < actualMin + actualRange * this.colorTraits.rangeFilter) {
-      filteredMin = actualMin;
+    if (
+      filteredMin <
+      this.validValuesMin + actualRange * this.colorTraits.rangeFilter
+    ) {
+      filteredMin = this.validValuesMin;
     }
 
-    if (filteredMax > actualMax - actualRange * this.colorTraits.rangeFilter) {
-      filteredMax = actualMax;
+    if (
+      filteredMax >
+      this.validValuesMax - actualRange * this.colorTraits.rangeFilter
+    ) {
+      filteredMax = this.validValuesMax;
     }
 
     if (
       filteredMin < filteredMax &&
-      (filteredMin !== actualMin || filteredMax !== actualMax)
+      (filteredMin !== this.validValuesMin ||
+        filteredMax !== this.validValuesMax)
     )
       return { max: filteredMax, min: filteredMin };
   }

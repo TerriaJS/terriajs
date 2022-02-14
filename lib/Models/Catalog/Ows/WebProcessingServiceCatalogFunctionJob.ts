@@ -351,6 +351,8 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
         this.geoJsonItem = new GeoJsonCatalogItem(createGuid(), this.terria);
         updateModelFromJson(this.geoJsonItem, CommonStrata.user, {
           name: `${this.name} Input Features`,
+          // Use cesium primitives so we don't have to deal with feature picking/selection
+          forceCesiumPrimitives: true,
           geoJsonData: {
             type: "FeatureCollection",
             features: geojsonFeatures,
@@ -415,8 +417,18 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
   private async createCatalogItemFromJson(json: any) {
     let itemJson = json;
     try {
-      itemJson = await tryConvertV7ToV8Catalog(json);
-    } catch {}
+      if (
+        this.forceConvertResultsToV8 ||
+        // If startData.version has version 0.x.x - user catalog-converter to convert result
+        ("version" in itemJson &&
+          typeof itemJson.version === "string" &&
+          itemJson.version.startsWith("0"))
+      ) {
+        itemJson = await convertResultV7toV8(json);
+      }
+    } catch (e) {
+      throw e;
+    }
     const catalogItem = upsertModelFromJson(
       CatalogMemberFactory,
       this.terria,
@@ -429,7 +441,12 @@ export default class WebProcessingServiceCatalogFunctionJob extends XmlRequestMi
       {
         addModelToTerria: false
       }
-    ).throwIfError();
+    ).throwIfError({
+      title: "WPS output error",
+      message: `Failed to create Terria model from WPS output${
+        itemJson.name ? `: ${itemJson.name}` : ""
+      }`
+    });
     return catalogItem;
   }
 }
@@ -472,19 +489,25 @@ function formatOutputValue(title: string, value: string | undefined) {
   }, "");
 }
 
-async function tryConvertV7ToV8Catalog(
+async function convertResultV7toV8(
   input: JsonObject
 ): Promise<Record<string, unknown> | undefined> {
   const { convertMember, convertCatalog } = await import("catalog-converter");
   if (typeof input.type === "string") {
     const { member, messages } = convertMember(input);
-    if (member === null || messages.length > 0)
-      throw new Error("Error converting v7 item to v8");
+    if (member === null)
+      throw TerriaError.combine(
+        messages.map(m => TerriaError.from(m.message)),
+        "Error converting v7 item to v8"
+      );
     return member;
   } else {
     const { result, messages } = convertCatalog(input);
-    if (result === null || messages.length > 0)
-      throw new Error("Error converting v7 catalog to v8");
+    if (result === null)
+      throw TerriaError.combine(
+        messages.map(m => TerriaError.from(m.message)),
+        "Error converting v7 catalog to v8"
+      );
     return result;
   }
 }

@@ -47,6 +47,15 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
   }
 
   @computed
+  get disableOpacityControl() {
+    // disable opacity control for point tables - or if no mapItems
+    return (
+      this.catalogItem.activeTableStyle.isPoints() ||
+      this.catalogItem.mapItems.length === 0
+    );
+  }
+
+  @computed
   get defaultStyle(): StratumFromTraits<TableStyleTraits> {
     // Use the default style to select the spatial key (lon/lat, region, none i.e. chart)
     // for all styles.
@@ -81,6 +90,9 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
         time: createStratumInstance(TableTimeStyleTraits, {
           timeColumn: timeColumn?.name,
           idColumns: idColumn && [idColumn.name]
+        }),
+        color: createStratumInstance(TableColorStyleTraits, {
+          legend: this._createLegendForColorStyle(-1)
         })
       });
     }
@@ -91,7 +103,12 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
     }
 
     // Can't do much with this dataset.
-    return createStratumInstance(TableStyleTraits);
+    // Just add default legend
+    return createStratumInstance(TableStyleTraits, {
+      color: createStratumInstance(TableColorStyleTraits, {
+        legend: this._createLegendForColorStyle(-1)
+      })
+    });
   }
 
   @computed
@@ -108,6 +125,9 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
 
     if (scalarColumns.length >= (hasTime ? 1 : 2)) {
       return createStratumInstance(TableStyleTraits, {
+        color: createStratumInstance(TableColorStyleTraits, {
+          legend: this._createLegendForColorStyle(-1)
+        }),
         chart: createStratumInstance(TableChartStyleTraits, {
           xAxisColumn: hasTime ? timeColumns[0].name : scalarColumns[0].name,
           lines: scalarColumns.slice(hasTime ? 0 : 1).map((column, i) =>
@@ -221,7 +241,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
   /**
    *
    * @param catalogItem
-   * @param index index of column in catalogItem (if undefined, then default style will be used)
+   * @param index index of column in catalogItem (if -1 or undefined, then default style will be used)
    */
   constructor(
     readonly catalogItem: TableCatalogItem,
@@ -240,6 +260,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
   @computed get tableStyle() {
     if (
       isDefined(this.index) &&
+      this.index !== -1 &&
       this.index < this.catalogItem.tableStyles.length
     )
       return this.catalogItem.tableStyles[this.index];
@@ -364,19 +385,17 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
           ]
         : [];
 
-    const outlierBin =
-      style.tableColorMap.zScoreFilterValues &&
-      style.colorTraits.zScoreFilterEnabled
-        ? [
-            createStratumInstance(LegendItemTraits, {
-              color: style.tableColorMap.outlierColor.toCssColorString(),
-              addSpacingAbove: true,
-              title:
-                style.colorTraits.outlierLabel ||
-                i18next.t("models.tableData.legendZFilterLabel")
-            })
-          ]
-        : [];
+    const outlierBin = style.tableColorMap.outlierColor
+      ? [
+          createStratumInstance(LegendItemTraits, {
+            color: style.tableColorMap.outlierColor.toCssColorString(),
+            addSpacingAbove: true,
+            title:
+              style.colorTraits.outlierLabel ||
+              i18next.t("models.tableData.legendZFilterLabel")
+          })
+        ]
+      : [];
 
     return new Array(7)
       .fill(0)

@@ -1,8 +1,9 @@
-import ModelTraits from "../ModelTraits";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
-import SplitterTraits from "./SplitterTraits";
 import mixTraits from "../mixTraits";
+import ModelTraits from "../ModelTraits";
+import OpacityTraits from "./OpacityTraits";
+import SplitterTraits from "./SplitterTraits";
 
 export class TileErrorHandlingTraits extends ModelTraits {
   @primitiveTrait({
@@ -37,14 +38,10 @@ export class TileErrorHandlingTraits extends ModelTraits {
   ignoreUnknownTileErrors?: boolean;
 }
 
-export default class RasterLayerTraits extends mixTraits(SplitterTraits) {
-  @primitiveTrait({
-    type: "number",
-    name: "Opacity",
-    description: "The opacity of the map layers."
-  })
-  opacity: number = 0.8;
-
+export default class RasterLayerTraits extends mixTraits(
+  OpacityTraits,
+  SplitterTraits
+) {
   @primitiveTrait({
     type: "number",
     name: "Leaflet update interval",

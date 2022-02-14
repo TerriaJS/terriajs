@@ -9,6 +9,89 @@ Change Log
 * `GpxCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
 * `GeoRssCatalogItem` now use `GeojsonMixin` for loading data. (#5660)
 #### next release (8.1.13)
+#### next release (8.1.19)
+
+* [The next improvement]
+
+#### 8.1.18
+
+* Add missing default Legend to `TableAutomaticStylesStratum.defaultStyle`
+* Fix a bug in CompositeCatalogItem that causes share URLs to become extremely long.
+* Fix `OpacitySection` number precision.
+* Add `sortMembersBy` to `GroupTraits`. This can be set to sort group member models - For example `sortMembersBy = "name"` will alphabetically sort members by name.
+* Remove `theme.fontImports` from `GlobalTerriaStyles` - it is now handled in `TerriaMap/index.js`
+* Add check to `featureDataToGeoJson.getEsriFeature` to make sure geometry exists
+
+#### 8.1.17
+
+- **Breaking changes**:
+  * Minimum node version is now 12 after upgrading node-sass dependency
+
+* Automatically cast property value to number in style expressions generated for 3d tiles filter.
+* Re-enable procedure and observable selectors for SOS items.
+* Fix broken "Ideal zoom" for TableMixin items.
+* The opacity of 3d tiles can now be changed with the opacity slider in the workbench
+* RasterLayerTraits and Cesium3dTilesTraits now share the newly created OpacityTraits
+* `disableOpacityControl` is now a trait and can be set in the catalog.
+* TSXified OpacitySection
+* Upgrade compiler target from es2018 to es2019
+* Fix default table style legends
+* Remove SOS defaults legend workaround
+* Update NodeJS version to 14 in `npm-publish` GitHub action
+
+#### 8.1.16
+
+* Added region mapping support for Commonwealth Electoral Divisions as at 2 August 2021 (AEC) as com_elb_name_2021.
+
+#### 8.1.15
+
+* Fix sharelink bug, and make `isJson*` type checks more rigorous
+* Remove `uniqueId` from `CatalogMemberMixin.nameInCatalog` and add it as fallback to `CatalogMemberMixin.name`
+* Add `shareKeys` and `nameInCatalog` to `CatalogIndexReference`.
+* Remove `description` field from `CatalogIndex`
+  * The `CatalogIndex` can now be used to resolve models in sharelinks
+* Add support for zipped `CatalogIndex` json files.
+* Fix `SplitReferences` which use `shareKeys`
+* Make `isJson*` type assertion functions more rigorous
+  * Add `deep` parameter, so you can use old "shallow" type check for performance reasons if needed
+* Add Shapefile to `CkanDefaultFormatsStratum`
+* Fix `ArcGisMapServerCatalogItem` metadata bug
+* Remove legend traits from CatalogMemberMixin, replacing them with LegendOwnerTraits, and add tests to enforce correct use of legends.
+* Add better support for retreiving GeoJsonCatalogItem data through APIs, including supporting geojson nested within json objects
+* Fixed `ContinuousColorMap` min/max value bug.
+* `TableStyle.outlierColor` is now only used if `zFilter` is active, or `colorTraits.outlierColor` is defined
+* Add `forceConvertResultsToV8` to `WebProcessingServiceCatalogFunction`. If your WPS processes are returning v7 json, you will either need to set this to `true`, or set `version: 0.0.1` in JSON output (which will then be automatically converted to v8)
+* Cleanup `CatalogFunction` error handling
+* Fix `SelectAPolygonParameterEditor` feature picking (tsified)
+* Add `WebMapServiceCatalogItem.rectangle` support for multiple WMS layers
+* Fix picked feature highlighting for ArcGis REST API features (and TSify `featureDataToGeoJson`)
+* Re-enable GeoJSON simple styling - now if more than 50% of features have [simple-style-spec properties](https://github.com/mapbox/simplestyle-spec) - automatic styling will be disabled (this behaviour can be disabled by setting `forceCesiumPrimitives = false`)
+* Don't show `TableMixin` `legends` or `mapItems` if no data
+* Fix `GeoJsonCatalogItem.legends`
+* Add `isOpen` to `TerriaReferenceTraits`
+
+#### 8.1.14
+
+- **Breaking changes**:
+  * `Result.throwIfUndefined()` will now only throw if `result.value` is undefined - regardless of `result.error`
+
+* Reimplement option to zoom on item when adding it to workbench, `zoomOnAddToWorkbench` is added to `MappableTraits`.
+* Update terria-js cesium to `1.81.3` 
+* Re-allowed models to be added to `workbench` if the are not `Mappable` or `Chartable`
+* Moved `WebMapServiceCatalogItem.GetCapbilitiesStratum` to `lib\Models\Catalog\Ows\WebMapServiceCapabilitiesStratum.ts`
+* Moved `WebMapServiceCatalogItem.DiffStratum` to `DiffableMixin`
+* `callWebCoverageService` now uses version WCS `2.0.0`
+  * All WCS export functionality is now in `ExportWebCoverageServiceMixin`
+  * Added `WebCoverageServiceParameterTraits` to `WebMapServiceCatalogItemTraits.linkedWcsParameters`. It includes `outputFormat` and `outputCrs`
+  * Will attempt to use native CRS and format (from `DescribeCoverage`)
+  * No longer sets `width` or `height` - so export will now return native resolution
+* Anonymize user IP when using google analytics.
+* Fix crash when TableMixin-based catalog item had invalid date values
+* Fix `WebMapServiceCatalogItem.styles` if `supportsGetLegendGraphics = false`. This means that if a WMS server doesn't support `GetLegendGraphics` requests, the first style will be set as the default style.
+
+
+#### 8.1.13
+
 * Paramerterised the support email on the help panel to use the support email in config
 * Refactored `TableColumn get type()` to move logic into `guessColumnTypeFromValues()`
 * `TableMixin.activeStyle` will set `TableColumnType = hidden` for `scalar` columns with name `"id"`, `"_id_"` or `"fid"`
@@ -38,7 +121,6 @@ Change Log
 * Update terria-js cesium to `1.81.2`
 * Add `uniqueId` as fallback to `nameInCatalog`
 * Remove duplicated items from `OpenDataSoftGroup` and `SocrataGroup`
-* [The next improvement]
 
 #### 8.1.12
 
@@ -83,10 +165,12 @@ Change Log
 * Fixed `superGet` replacement in webpack builds with babel versions `7.16.0` and above.
 
 #### 8.1.9
+
 * TSify workbench splitter control and fix broken styling.
 * Fix app crash when opening AR tool.
 
 #### 8.1.8
+
 * Tsified `SettingPanel`
 * Moved `setViewerMode` function from `Terria` class to `ViewerMode`
 * Refactored checkbox to use children elements for label instead of label

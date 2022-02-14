@@ -1,5 +1,7 @@
 import { runInAction } from "mobx";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
@@ -15,6 +17,7 @@ const LatLonEnumDateIdCsv = require("raw-loader!../../wwwroot/test/csv/lat_lon_e
 const LgaWithDisambigCsv = require("raw-loader!../../wwwroot/test/csv/lga_state_disambig.csv");
 const ParkingSensorDataCsv = require("raw-loader!../../wwwroot/test/csv/parking-sensor-data.csv");
 const LegendDecimalPlacesCsv = require("raw-loader!../../wwwroot/test/csv/legend-decimal-places.csv");
+const BadDatesCsv = require("raw-loader!../../wwwroot/test/csv/bad-dates.csv");
 const regionMapping = JSON.stringify(
   require("../../wwwroot/data/regionMapping.json")
 );
@@ -147,12 +150,38 @@ describe("TableMixin", function() {
         const duplicateValue = 7;
         let occurrences = 0;
         for (let entity of mapItem.entities.values) {
-          const val = entity.properties?.Value.getValue();
+          const val = entity.properties?.value.getValue();
           if (val === duplicateValue) {
             occurrences++;
           }
         }
         expect(occurrences).toBe(1);
+      }
+    });
+
+    it("has the correct property names", async function() {
+      runInAction(() =>
+        item.setTrait(CommonStrata.user, "csvString", LatLonValCsv)
+      );
+      await item.loadMapItems();
+      const dataSource = item.mapItems[0] as CustomDataSource;
+      const propertyNames =
+        dataSource.entities.values[0].properties?.propertyNames;
+      expect(propertyNames).toEqual(["lat", "lon", "value"]);
+    });
+  });
+
+  describe("when the time column has bad datetimes in it", function() {
+    it("ignores them gracefully", async function() {
+      runInAction(() =>
+        item.setTrait(CommonStrata.user, "csvString", BadDatesCsv)
+      );
+
+      await item.loadMapItems();
+      const mapItem = item.mapItems[0];
+      expect(mapItem instanceof CustomDataSource).toBe(true);
+      if (mapItem instanceof CustomDataSource) {
+        expect(mapItem.entities.values.length).toBe(3);
       }
     });
   });
@@ -406,7 +435,7 @@ describe("TableMixin", function() {
 
       await item.loadMapItems();
 
-      expect(item.regionProviderList?.regionProviders.length).toBe(102);
+      expect(item.regionProviderList?.regionProviders.length).toBe(103);
     });
   });
 

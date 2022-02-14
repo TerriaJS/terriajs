@@ -46,7 +46,6 @@ describe("YDYRCatalogFunctionJob", function() {
     ).andCallFunction(req => {
       if (logCounter < 1) {
         req.respondWith({ responseText: `"Some Log ${logCounter}"` });
-        console.log(`"Some Log ${logCounter}"`);
 
         logCounter++;
       } else {

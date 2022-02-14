@@ -19,10 +19,20 @@ export default class CkanDefaultFormatsStratum extends LoadableStratum(
       {
         id: "GeoJson",
         formatRegex: "^geojson$",
-        // Limit geojson files to 120 MB
-        maxFileSize: 120,
+        // Limit geojson files to 150 MB
+        maxFileSize: 150,
         definition: {
           type: "geojson"
+        }
+      },
+      {
+        id: "Shapefile",
+        formatRegex: "shapefile|shp|zip (shp)",
+        urlRegex: ".zip$",
+        // Limit shapefiles to 100 MB
+        maxFileSize: 100,
+        definition: {
+          type: "shp"
         }
       },
       {

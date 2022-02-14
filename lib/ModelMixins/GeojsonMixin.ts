@@ -5,7 +5,10 @@ import {
   FeatureCollection,
   featureCollection,
   Geometries,
-  Point
+  Geometry,
+  GeometryCollection,
+  Point,
+  Properties
 } from "@turf/helpers";
 import i18next from "i18next";
 import {
@@ -52,7 +55,7 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import formatPropertyValue from "../Core/formatPropertyValue";
 import hashFromString from "../Core/hashFromString";
 import isDefined from "../Core/isDefined";
-import { isJsonObject, JsonObject } from "../Core/Json";
+import { isJsonObject } from "../Core/Json";
 import { isJson } from "../Core/loadBlob";
 import makeRealPromise from "../Core/makeRealPromise";
 import StandardCssColors from "../Core/StandardCssColors";
@@ -66,12 +69,14 @@ import Reproject from "../Map/Reproject";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import proxyCatalogItemUrl from "../Models/Catalog/proxyCatalogItemUrl";
+import CommonStrata from "../Models/Definition/CommonStrata";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
 import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 import { GeoJsonTraits } from "../Traits/TraitsClasses/GeoJsonTraits";
+import LegendTraits from "../Traits/TraitsClasses/LegendTraits";
 import { RectangleTraits } from "../Traits/TraitsClasses/MappableTraits";
 import { DiscreteTimeAsJS } from "./DiscretelyTimeVaryingMixin";
 import { ExportData } from "./ExportableMixin";
@@ -80,8 +85,41 @@ import FeatureInfoMixin from "./FeatureInfoMixin";
 import { Cartesian2 } from "terriajs-cesium";
 import TerriaFeature from "./../Models/Feature";
 
-export type FeatureCollectionWithCrs = FeatureCollection & {
-  crs: JsonObject | undefined;
+const SIMPLE_STYLE_KEYS = [
+  "marker-size",
+  "marker-color",
+  "marker-symbol",
+  "marker-opacity",
+  "marker-url",
+  "stroke",
+  "stroke-opacity",
+  "stroke-width",
+  "marker-stroke-width",
+  "polyline-stroke-width",
+  "polygon-stroke-width",
+  "fill",
+  "fill-opacity"
+];
+
+export type GeoJsonCrs =
+  | {
+      type: "name";
+      properties: {
+        name: string;
+      };
+    }
+  | {
+      type: "EPSG";
+      properties: {
+        code: string;
+      };
+    };
+
+export type FeatureCollectionWithCrs<
+  G = Geometry | GeometryCollection,
+  P = Properties
+> = FeatureCollection<G, P> & {
+  crs?: GeoJsonCrs;
 };
 
 class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
@@ -115,6 +153,11 @@ class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
     return 1;
   }
 
+  @computed
+  get disableOpacityControl() {
+    return !this._item._imageryProvider;
+  }
+
   get showDisableStyleOption() {
     return true;
   }
@@ -123,14 +166,15 @@ class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
 StratumOrder.addLoadStratum(GeoJsonStratum.stratumName);
 
 function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
-  abstract class GeoJsonMixin extends TableMixin(FeatureInfoMixin(
-    UrlMixin(CatalogMemberMixin(Base)))
+  abstract class GeoJsonMixin extends TableMixin(
+    FeatureInfoMixin(UrlMixin(CatalogMemberMixin(Base)))
   ) {
     @observable
     private _dataSource: CzmlDataSource | GeoJsonDataSource | undefined;
 
+    /** This is only public so that it can be accessed in GeoJsonStratum, treat it as private */
     @observable
-    private _imageryProvider: ProtomapsImageryProvider | undefined;
+    _imageryProvider: ProtomapsImageryProvider | undefined;
 
     private tableStyleReactionDisposer: IReactionDisposer | undefined;
 
@@ -258,13 +302,24 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     }
 
     @computed
-    get disableOpacityControl() {
+    get disableSplitter() {
       return !this._imageryProvider;
     }
 
+    /** Special case for legends.
+     * Because TableMixin does not have LegendTraits, but GeoJsonMixin does, we need to check to see if traits have been defined.
+     * If so, they will override TableMixin legends
+     */
     @computed
-    get disableSplitter() {
-      return !this._imageryProvider;
+    get legends(): Model<LegendTraits>[] {
+      const legendTraits = this.traits.legends.getValue(this) as
+        | Model<LegendTraits>
+        | undefined;
+      if (Array.isArray(legendTraits) && legendTraits.length > 0) {
+        return legendTraits;
+      }
+
+      return super.legends;
     }
 
     @computed get mapItems() {
@@ -291,7 +346,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     /**
      * {@link FeatureInfoMixin.buildFeatureFromPickResult}
      */
-     buildFeatureFromPickResult(
+    buildFeatureFromPickResult(
       _screenPosition: Cartesian2 | undefined,
       pickResult: any
     ): TerriaFeature | undefined {
@@ -348,7 +403,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
      *    - Using `timeProperty` or `heightProperty` or `perPropertyStyles` or simple-style `marker-symbol`
      */
     protected async forceLoadMapItems(): Promise<void> {
-      const useMvt = this.useMvt;
+      let useMvt = this.useMvt;
       const czmlTemplate = this.czmlTemplate;
 
       let geoJson: FeatureCollectionWithCrs | undefined;
@@ -364,11 +419,31 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         // Add feature index to "_id_" feature property
         // This is used to refer to each feature in TableMixin (as row ID)
 
+        // Also check for how many features have simply-style properties
+        let numFeaturesWithSimpleStyle = 0;
+
         for (let i = 0; i < geoJsonWgs84.features.length; i++) {
           if (!geoJsonWgs84.features[i].properties) {
             geoJsonWgs84.features[i].properties = {};
           }
-          geoJsonWgs84.features[i].properties!["_id_"] = i;
+          const properties = geoJsonWgs84.features[i].properties!;
+          properties["_id_"] = i;
+
+          if (useMvt && SIMPLE_STYLE_KEYS.find(key => properties[key])) {
+            numFeaturesWithSimpleStyle++;
+          }
+        }
+
+        // If more than 50% of features have simple style properties - disable table styling
+        if (numFeaturesWithSimpleStyle / geoJsonWgs84.features.length >= 0.5) {
+          runInAction(() => {
+            this.setTrait(
+              CommonStrata.underride,
+              "forceCesiumPrimitives",
+              true
+            );
+            useMvt = this.useMvt;
+          });
         }
         runInAction(() => {
           this._readyData = geoJsonWgs84;
@@ -1018,11 +1093,20 @@ export function isGeometries(json: any): json is Geometries {
 export function toFeatureCollection(
   json: any
 ): FeatureCollectionWithCrs | undefined {
-  if (isFeatureCollection(json)) return json;
+  if (isFeatureCollection(json)) return json; // It's already a feature collection, do nothing
+
   if (isFeature(json))
     return featureCollection([json]) as FeatureCollectionWithCrs;
   if (isGeometries(json))
     return featureCollection([feature(json)]) as FeatureCollectionWithCrs;
+  if (Array.isArray(json) && json.every(item => isFeature(item))) {
+    return featureCollection(json) as FeatureCollectionWithCrs;
+  }
+  if (Array.isArray(json) && json.every(item => isGeometries(item))) {
+    return featureCollection(
+      json.map(item => feature(item, item.properties))
+    ) as FeatureCollectionWithCrs;
+  }
 }
 
 function createPolylineFromPolygon(
