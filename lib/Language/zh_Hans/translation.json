@@ -12,19 +12,50 @@
   },
   "trainer": {
     "expandTrainer": "显示更多步骤细节",
-    "collapseTrainer": "隐藏步骤细节"
+    "collapseTrainer": "隐藏步骤细节",
+    "showAllSteps": "显示所有步骤",
+    "hideAllSteps": "隐藏所有步骤"
   },
   "tour": {
     "finish": "完成",
-    "previous": "上一部"
+    "previous": "上一步",
+    "exploreMapDataButton": {
+      "content": "##浏览地图数据\n\n浏览数据目录并添加到地图。可同时添加多个数据集，工作台将列表显示数据集。"
+    },
+    "preface": {
+      "title": "使用指南",
+      "close": "稍后再说",
+      "start": "开始导览"
+    },
+    "end": "结束导览",
+    "locationSearchInput": {
+      "content": "##位置搜索\n\n输入地点或地址以在地图上定位兴趣点。"
+    },
+    "sidePanelUploadButton": {
+      "content": "##上传数据\n\n上传数据并可与其他数据集叠加显示。上传文件或在线数据集、数据服务链接。支持CSV、GeoJSON、KML、GPX或CZML等数据格式。"
+    }
   },
   "location": {
     "location": "位置",
-    "myLocation": "我的位置"
+    "myLocation": "我的位置",
+    "centreMap": "将当前定位显示到地图中心",
+    "errorGettingLocation": "获取位置时出错",
+    "browserCannotProvide": "您的浏览器无法获取定位信息。",
+    "originError": "当前浏览器只能通过https获取位置信息。可以使用{{secureUrl}}替换。"
   },
   "measure": {
     "measureTool": "量测工具",
     "measureDistance": "量取位置间距离",
     "measureToolTitle": "线性量测"
+  },
+  "splitterTool": {
+    "toggleSplitterToolTitle": "比较",
+    "workbench": {
+      "goleftTitle": "显示到左侧",
+      "goleft": "左",
+      "bothTitle": "两侧皆显示",
+      "both": "两者",
+      "gorightTitle": "显示到右侧"
+    }
   }
 }
