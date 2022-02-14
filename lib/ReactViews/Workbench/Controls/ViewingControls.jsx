@@ -130,12 +130,6 @@ const ViewingControls = observer(
         const item = this.props.item;
         let zoomToView = item;
         if (
-          item.rectangle !== undefined &&
-          item.rectangle.east - item.rectangle.west >= 360
-        ) {
-          zoomToView = this.props.viewState.terria.mainViewer.homeCamera;
-          console.log("Extent is wider than world so using homeCamera.");
-        } else if (
           item.idealZoom !== undefined &&
           item.idealZoom.targetLongitude !== undefined &&
           item.idealZoom.targetLatitude !== undefined &&
@@ -150,7 +144,15 @@ const ViewingControls = observer(
             pitch: item.idealZoom.pitch,
             range: item.idealZoom.range
           };
+
+          // In the case of 2D viewer, it zooms to rectangle area approximated by the camera view parameters.
           zoomToView = CameraView.fromJson({ lookAt: lookAt });
+        } else if (
+          item.rectangle !== undefined &&
+          item.rectangle.east - item.rectangle.west >= 360
+        ) {
+          zoomToView = this.props.viewState.terria.mainViewer.homeCamera;
+          console.log("Extent is wider than world so using homeCamera.");
         }
 
         this.setState({ isMapZoomingToCatalogItem: true });
