@@ -242,8 +242,253 @@
       },
       "nextMessages": {
         "title": "您已选择位置纬度 {{latitude}}经度 {{longitude}}",
-        "beforePick": "单击另一个点来更改选择"
+        "beforePick": "单击另一个点来更改选择",
+        "afterPick": "单击另一个点位置来更改选择"
+      },
+      "errorMessages": {
+        "title": "选择一个精确的位置",
+        "beforePick": "无法解析该位置的图像！请选择不同的位置或缩放级别。",
+        "afterPick": "单击另一个点位置来更改选择"
       }
+    },
+    "datePicker": {
+      "back": "返回",
+      "previousDateTitle": "前一个日期",
+      "nextDateTitle": "下一个日期",
+      "dateButtonTitle": "选择一个日期",
+      "dateOutOfRange": "当前输入内容超出范围"
     }
+  },
+  "share": {
+    "btnStoryShareText": "分享",
+    "browserPrint": "为了获得更好的打印效果，请使用 {{appName}} 的打印按钮而不是您的网络浏览器的打印功能。",
+    "shortLinkShortening": "缩写...",
+    "shortLinkError": "尝试缩短 URL 时出错。 请检查您的互联网连接，然后重试。",
+    "localDataNote": "<0><0>注意：</0></0><1>以下数据源将不会被共享，因为它们包含来自该本地系统的数据。 要共享这些数据源，请将其数据发布到网络服务器上并<2>使用 url 添加它们</2>。</1>",
+    "generatingUrl": "正在生成共享 URL链接...",
+    "printTitle": "打印地图",
+    "printExplanation": "打开此地图的可打印版本。",
+    "printButton": "打印",
+    "printViewButton": "显示打印视图",
+    "btnMapShareText": "分享/打印",
+    "btnCatalogShareTitle": "与他人分享您的目录",
+    "btnStoryShareTitle": "与他人分享您的地图故事",
+    "btnMapShareTitle": "与他人分享你的地图",
+    "convertNotificationMessage": "此共享链接基于旧版本的 TerriaJS - 支持此网络地图的软件。 尽管已尽最大努力保留链接，但您可能会遇到数据可视化问题。\n\n如果您是共享链接的用户，请单击确定以使警告消息消失并继续访问数据。",
+    "downloadMap": "下载地图(png图片)",
+    "creatingPrintView": "正在创建打印视图...",
+    "btnAdvanced": "高级选项",
+    "embedTitle": "要嵌入，请复制此代码以将此地图嵌入 HTML 页面：",
+    "shortenUsingService": "使用 Web 服务缩短共享 URL地址",
+    "btnCatalogShareText": "分享",
+    "convertNotificationTitle": "注意：分享链接已更新",
+    "convertNotificationHelp": "如果您已创建共享链接，请查看“帮助”菜单以查看有关更新共享链接的提示。",
+    "convertNotificationFeedback": "如有问题或反馈，请单击此处。",
+    "convertNotificationWarningsTitle": "技术细节",
+    "convertErrorTitle": "无法将共享链接升级到 V8版本",
+    "convertErrorMessage": "此共享链接基于旧版本的 TerriaJS - 支持此网络地图的软件。 尝试升级共享数据时发生错误。"
+  },
+  "feedback": {
+    "close": "关闭反馈",
+    "yourName": "您的姓名（可选）",
+    "captionText": "这有助于我们通过让我们看到您所看到的内容来解决问题",
+    "cancel": "取消",
+    "sending": "发送中...",
+    "send": "发送",
+    "feedbackBtnText": "提交反馈",
+    "minLength": "反馈评论的最小长度是 {{minLength}}个字",
+    "feedbackPreamble": "我们很在意您的反馈！",
+    "title": "反馈",
+    "email": "电子邮件地址（可选）<br/><em>没有它我们无法跟您联系！</em>",
+    "commentQuestion": "评论或问题",
+    "shareWithDevelopers": "与 {{appName}} 开发者分享我的地图视图"
+  },
+  "legend": {
+    "lat": "纬度",
+    "lon": "经度",
+    "zone": "区域",
+    "e": "E",
+    "n": "N",
+    "elev": "Elev"
+  },
+  "languagePanel": {
+    "changeLanguage": "更改语言"
+  },
+  "countDatasets": {
+    "totals": "<div>本目录包含 {{items}} 个子项在{{groups}} 组中</div>",
+    "btnText": "开始",
+    "loadError": "加载时失败。",
+    "countingMessage": "正在计算中，请稍候...",
+    "subTotals": "<div> {{name}}：{{items}} 子项 / {{groups}} 组</div>",
+    "recount": "重新计算",
+    "title": "计数数据集",
+    "btnCount": "计算数据集",
+    "noMapDataEnabled": "未启用地图数据",
+    "mapDataState": "在地图上启用 {{count}} 个数据集"
+  },
+  "settingPanel": {
+    "baseMap": "底图",
+    "imageOptimisation": "图像优化",
+    "nativeResolutionHeader": "使用本机设备分辨率",
+    "mapQuality": "栅格地图质量：",
+    "qualityLabel": "质量",
+    "performanceLabel": "性能",
+    "timeline": {
+      "alwaysShow": "始终显示",
+      "hideLabel": "按下以开始始终显示时间线，即使工作台上没有随时间变化的数据集",
+      "title": "时间线",
+      "alwaysShowLabel": "当工作台上有随时间变化的数据集时，按下开始仅显示时间线"
+    },
+    "mapView": "地图视角",
+    "none": "(无)",
+    "viewerModeLabels": {
+      "CesiumTerrain": "3D地形",
+      "CesiumEllipsoid": "3D平滑",
+      "Leaflet": "2D"
+    },
+    "qualityLabels": {
+      "maximumPerformance": "最性能，低质量",
+      "balancedPerformance": "平衡的性能和质量",
+      "lowerPerformance": "高质量，低性能"
+    },
+    "nativeResolutionLabel": "按停止使用 {{resolution 1}} 分辨率并开始使用 {{resolution 2}} 分辨率",
+    "native": "原生",
+    "screen": "屏幕",
+    "btnTitle": "更换视图",
+    "btnText": "地图设定",
+    "terrain": {
+      "hideUnderground": "地形隐藏地下特征",
+      "showUndergroundFeatures": "按下以开始显示地形表面下方的要素",
+      "hideUndergroundFeatures": "按下以开始隐藏地形表面下方的要素",
+      "sideLabel": "显示地形",
+      "left": "左",
+      "both": "两边",
+      "right": "右"
+    }
+  },
+  "helpPanel": {
+    "promptMessage": "在此处查找教程、操作方法视频和其他帮助内容",
+    "dismissText": "知道了，谢谢！",
+    "takeTour": "学习教程",
+    "btnText": "帮助",
+    "menuPaneTitle": "我们在这里为您提供帮助",
+    "menuPaneBody": "通过查看以下指南或通过 [{{supportEmail}}]({{supportEmail}}) 联系团队，找到有关如何使用 TerriaJS 的有用提示",
+    "mapUserGuide": "地图用户指南"
+  },
+  "helpMenu": {
+    "btnText": "帮助",
+    "btnTitle": "获取帮助",
+    "done": "完成",
+    "next": "下一个",
+    "helpMenuHeader": "您想做什么？",
+    "helpMenuOpenWelcome": "显示欢迎信息",
+    "helpMenuSatelliteGuideTitle": "查看卫星图像指南",
+    "helpMenuMoreHelpTitle": "更多帮助"
+  },
+  "story": {
+    "deleteStory": "删除",
+    "delete": "删除",
+    "panelTitle": "地图故事编辑器",
+    "panelBody": "直接从您的地图创建和分享互动的地图故事",
+    "editor": {
+      "cancelBtn": "取消",
+      "cancelEditing": "取消",
+      "saveBtn": "保存",
+      "placeholder": "在此处输入标题",
+      "saveStory": "保存"
+    },
+    "dismissText": "知道了，谢谢！",
+    "mobileViewStory": "查看地图故事 {{storiesLength}}",
+    "promptHtml2": "<0><0>介绍</0><1>数据故事</1><2>直接从您的地图创建和分享互动地图故事。</2></0>",
+    "playStory": "地图故事",
+    "story": "地图故事",
+    "storyEditor": "地图事故编辑器",
+    "hideStoryPanel": "隐藏地图故事生成器",
+    "loadSceneErrorTitle": "加载地图故事场景时出错",
+    "share": "分享",
+    "navBtn": "转到地图故事 {{title}}",
+    "badgeBarLabel": "场景",
+    "captureSceneTitle": "抓取当前场景",
+    "removeAllStoriesDialog": "您确定要删除 {{ count }} 个场景吗？",
+    "captureScene": "抓取场景",
+    "nextBtn": "转到下一个场景",
+    "locationBtn": "中心场景",
+    "previousBtn": "转到上一个场景",
+    "promptHtml1": "<0>点击此处，您可以随时查看和创建地图故事。</0>",
+    "exitBtn": "退出地图故事",
+    "untitled": "未命名场景",
+    "navBtnMobile": "转到地图故事{{title}}",
+    "loadSceneErrorMessage": "加载地图故事场景数据时出错，标题：`{{title}}`。",
+    "gettingStarted": "初次使用",
+    "gettingStartedTitle": "初次使用",
+    "shareTitle": "分享地图故事",
+    "viewStory": "视图",
+    "view": "视图",
+    "editStory": "编辑",
+    "edit": "编辑",
+    "recaptureStory": "重复抓取",
+    "recapture": "重复抓取",
+    "untitledScene": "未命名场景",
+    "doesNotExist": "地图故事不存在",
+    "message": "<2>这是您的地图故事编辑器</2><1>直接从您的地图创建和分享互动地图故事<1><0><0></0>开始使用</0></1></1 >",
+    "removeAllStories": "移除全部",
+    "removeStoryDialog": "您确定要删除“<1>{{storyName}}</1>”吗？",
+    "preview": "预览地图故事",
+    "play": "播放"
+  },
+  "sui": {
+    "notifications": {
+      "title": "这张地图包含一个地图故事",
+      "message": "您想现在查看吗？",
+      "confirmText": "是",
+      "denyText": "也许以后吧。"
+    },
+    "showWorkbench": "显示工作台",
+    "hideWorkbench": "隐藏工作台"
+  },
+  "featureInfo": {
+    "download": "下载此表",
+    "pickLocation": "选择一个位置",
+    "clickMap": "单击地图以了解有关此位置的更多信息",
+    "noDataAvailable": "此处没有可用数据 - 请尝试其他位置。",
+    "clickToAddData": "单击“$t(addData.addDataBtnText)”将数据添加到地图。",
+    "satelliteSuggestionBtn": "在此位置显示 {{catalogItemName}}",
+    "locationMarker": "位置标记",
+    "noInfoAvailable": "无资料",
+    "catalogItem": {
+      "moreThanMax": "找到超过 {{maximum}} 个 {{catalogItemName}} 个特征。",
+      "featuresFound": "找到 {{featCount}} 个 {catalogItemName} 个特征。",
+      "featureInfoShown": "第一个 {{maximum}} 如下所示。"
+    },
+    "userSelection": "用户选择",
+    "panelHeading": "功能信息",
+    "btnCloseFeature": "关闭数据面板",
+    "siteData": "站点数据",
+    "latLon": "纬度/经度 ",
+    "showRawData": "显示原始数据",
+    "showCuratedData": "显示精选数据"
+  },
+  "welcomeMessage": {
+    "dismissText": "关闭消息，不再向我显示此消息",
+    "welcomeMessageOnMobile": "对数据发现和探索感兴趣？",
+    "welcomeMessage": "对数据发现和探索感兴趣？<br/>立即开始学习或查看以下帮助指南选项。",
+    "title": "让我们开始吧",
+    "tourBtnText": "开始教程",
+    "helpBtnText": "我需要一些帮助",
+    "exploreDataBtnText": "探索地图数据",
+    "searchBtnText": "搜索位置"
+  },
+  "satelliteGuidance": {
+    "menuTitle": "您可以通过查看<2>帮助菜单</2>随时访问地图指南。",
+    "dismissText": "知道了，谢谢！",
+    "titleI": "卫星图像：我该如何做……？",
+    "bodyI": "充分利用历史卫星图像的超快指南。",
+    "prevI": "不客气",
+    "nextI": "查看指南",
+    "titleII": "我的卫星图像在哪里？"
+  },
+  "toolsPanel": {
+    "btnText": "工具",
+    "btnTitle": "高级工具箱"
   }
 }
