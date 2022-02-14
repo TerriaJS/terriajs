@@ -859,7 +859,7 @@
       "missingUrlMessage": "Could not load the ArcGis FeatureServer endpoint because the catalog item does not have a `url`.",
       "invalidServiceTitle": "Invalid ArcGIS Feature Service layer",
       "invalidServiceMessage": "An error occurred while invoking the ArcGIS Feature Service.  The server's response does not appear to be a valid Feature Service layer.",
-      "reachedMaxFeatureLimit": "Warning: This layer has reached the FeatureService feature limit."
+      "reachedMaxFeatureLimit": "Warning: This layer has reached the FeatureService feature limit ({{maxFeatures}})."
     },
     "arcGisMapServerCatalogGroup": {
       "name": "ArcGIS Map Server Group",
