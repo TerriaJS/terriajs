@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import withControlledVisibility from "../HOCs/withControlledVisibility";
 import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
+import MappableMixin from "../../ModelMixins/MappableMixin";
 
 interface Props {
   terria: Terria;
@@ -25,8 +26,11 @@ const MapDataCount = observer(function(props: Props) {
 
   // Can't simply use number of items given they can exist in workbench
   // without being shown on map
-  const numberOfDatasets = terria.workbench.items.filter(item => item.show)
-    .length;
+  const numberOfDatasets = terria.workbench.items.filter(item => {
+    if (MappableMixin.isMixedInto(item)) {
+      return item.show;
+    }
+  }).length;
   const hasMapData = numberOfDatasets !== 0;
   const mapDataText = hasMapData
     ? t("countDatasets.mapDataState", {
