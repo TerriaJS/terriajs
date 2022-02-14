@@ -1,10 +1,15 @@
 Change Log
 ==========
 
-#### next release (8.1.21)
+#### next release (8.1.22)
 
+* Added play story button in mobile view when there is an active story
 * `IDEAL ZOOM` can be customised by providing `idealZoom` property in `MappableTraits`.
 * [The next improvement]
+
+#### 8.1.21
+
+* Fixed bug where WMS layer would crash terria if it had no styles, introduced in 8.1.14
 
 #### 8.1.20
 

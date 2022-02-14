@@ -379,6 +379,7 @@
     "removeStoryDialog": "Are you sure you wish to delete '<1>{{storyName}}</1>'?",
     "preview": "preview stories",
     "play": "Play",
+    "playStory": "Story",
     "captureSceneTitle": "capture current scene",
     "captureScene": "Capture Scene",
     "editor": {
