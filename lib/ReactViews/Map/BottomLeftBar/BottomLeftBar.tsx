@@ -34,6 +34,9 @@ const BottomLeftBar = (props: Props) => {
   const { t } = useTranslation();
   const theme = useTheme();
 
+  const isNotificationActive =
+    props.terria.notificationState.currentNotification;
+
   return (
     <BottomLeftContainer theme={theme}>
       <MapDataCount
@@ -44,12 +47,13 @@ const BottomLeftBar = (props: Props) => {
       {shouldShowPlayStoryButton(props) ? (
         <Box paddedHorizontally={2}>
           <MapIconButton
-            title={t("story.play")}
-            noExpand={true}
+            title={t("story.playStory")}
+            neverCollapse={true}
             iconElement={() => <Icon glyph={Icon.GLYPHS.playStory} />}
             onClick={() => props.viewState.runStories()}
+            primary={!isNotificationActive}
           >
-            {t("story.play")}
+            {t("story.playStory")}
           </MapIconButton>
         </Box>
       ) : null}
