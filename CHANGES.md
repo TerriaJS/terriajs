@@ -3,7 +3,7 @@ Change Log
 
 #### next release (8.1.22)
 
-* [The next improvement]
+* Added play story button in mobile view when there is an active story
 
 #### 8.1.21
 
