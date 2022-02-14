@@ -55,7 +55,98 @@
       "goleft": "左",
       "bothTitle": "两侧皆显示",
       "both": "两者",
-      "gorightTitle": "显示到右侧"
+      "gorightTitle": "显示到右侧",
+      "goright": "右",
+      "copyName": "{{name}} (复制)"
     }
+  },
+  "concept": {
+    "inactive": {
+      "newText": "新条件",
+      "cancel": "取消"
+    },
+    "summary": {
+      "addMoreText": "添加条件",
+      "addFirstText": "添加新条件"
+    },
+    "active": {
+      "remove": "删除条件",
+      "edit": "编辑条件"
+    }
+  },
+  "catalogItem": {
+    "loading": "加载中...",
+    "remove": "移除",
+    "preview": "预览",
+    "add": "添加",
+    "trash": "从目录移除",
+    "removeFromMap": "从地图移除"
+  },
+  "analytics": {
+    "polygon": "面",
+    "point": "点 (纬度/经度)",
+    "existingPolygon": "现有面",
+    "clickToDrawLine": "点击画线",
+    "selectLocation": "选择位置",
+    "runAnalysis": "运行分析"
+  },
+  "chart": {
+    "closePanel": "关闭面板",
+    "expand": "展开",
+    "download": "下载",
+    "sectionLabel": "图表",
+    "loading": "加载图表数据...",
+    "noData": "无数据可用于图表显示。"
+  },
+  "viewModels": {
+    "searchCatalogueItem": "目录项",
+    "searchAddresses": "地址"
+  },
+  "zoomCotrol": {
+    "zoomIn": "放大",
+    "zoomReset": "重置缩放",
+    "zoomOut": "缩小"
+  },
+  "compass": {
+    "guidance": {
+      "innerCircleTitle": "内圈",
+      "outerRingTitle": "外环"
+    }
+  },
+  "pedestrianMode": {
+    "controls": {
+      "title": "控件"
+    },
+    "toolButtonTitle": "行人模式",
+    "dropPedestrianTooltipMessage": "<b>鼠标左键点击</b> 选择放置位置<br /><b>右键点击 或 键盘按 Esc</b>取消操作"
+  },
+  "notification": {
+    "title": "消息"
+  },
+  "itemSearchTool": {
+    "resetBtnText": "清除输入",
+    "numericParameter": {
+      "minimum": "最小",
+      "maximum": "最大"
+    },
+    "backBtnText": "重新搜索",
+    "resultsCount": "找到 {{count}} 个匹配",
+    "actions": {
+      "highlightAll": "高亮显示所有",
+      "showMatchingOnly": "仅显示匹配"
+    },
+    "searching": "搜索",
+    "searchError": "搜索失败。前往控制台查看错误详情。",
+    "searchBtnText": "搜索"
+  },
+  "indexedItemSearchProvider": {
+    "errorParsingIndexRoot": "indexRoot 文件解析出错：{{indexRootUrl}}。",
+    "missingOptionIndexRootUrl": "项目搜索配置中未设置 `indexRootUrl`选项 。"
+  },
+  "toast": {
+    "mapIsZooming": "缩放到最佳比例..."
+  },
+  "printView": {
+    "loading": "创建打印视图..."
   }
 }
