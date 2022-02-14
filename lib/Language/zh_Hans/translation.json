@@ -25,7 +25,8 @@
     "preface": {
       "title": "使用指南",
       "close": "稍后再说",
-      "start": "开始导览"
+      "start": "开始导览",
+      "content": "不确定从哪里开始吗？快速浏览本软件的主要特点，并了解一些关键功能，以帮助您顺利上手。"
     },
     "end": "结束导览",
     "locationSearchInput": {
@@ -33,6 +34,18 @@
     },
     "sidePanelUploadButton": {
       "content": "##上传数据\n\n上传数据并可与其他数据集叠加显示。上传文件或在线数据集、数据服务链接。支持CSV、GeoJSON、KML、GPX或CZML等数据格式。"
+    },
+    "menuBarMapSettingsButton": {
+      "content": "##地图设定\n\n自定义地图设定，例如你可以选择不同的底图、2D/3D 地形和地图图像质量，以增强浏览器访问性能。"
+    },
+    "menuBarStoryButton": {
+      "content": "## 地图故事\n\n地图故事允许您将上数据内容相关信息添加到数据集，使得数据和内容描述的事情更加生动。使用故事编辑器可创建您自己的数据故事，并在完成后通过“分享”面板进行分享。"
+    },
+    "mapNavigationCompassOuterRing": {
+      "content": "## 视图控制\n\n在视图控制中您可以更改地图的视角。您可以使用外环更改视图的方向，使用内环倾斜相机角度。双击可以重置视图。"
+    },
+    "mapNavigationSplitterIcon": {
+      "content": "## 分屏对比\n\nTerria 的一个强大功能是能够使用分屏视图比较数据集。对于具有时间序列组件的数据集，例如卫星图像，您可以通过单击日期选择器/选择器来前后比较不同日期产生的数据变化。"
     }
   },
   "location": {
@@ -58,7 +71,10 @@
       "gorightTitle": "显示到右侧",
       "goright": "右",
       "copyName": "{{name}} (复制)"
-    }
+    },
+    "toggleSplitterTool": "在两组不同的数据之间进行并排比较",
+    "toggleSplitterToolDisabled": "请禁用其他并排比较功能以启用标准比较",
+    "title": "按下并拖动左键或者右键调整视角"
   },
   "concept": {
     "inactive": {
@@ -110,8 +126,18 @@
   "compass": {
     "guidance": {
       "innerCircleTitle": "内圈",
-      "outerRingTitle": "外环"
-    }
+      "outerRingTitle": "外环",
+      "outerRingDescription": "拖动外环以圆周方式旋转可将地图视角旋转 360°。",
+      "innerCircleDescription1": "单击中心并缓慢向上、向下、向左或向右拖动可同时倾斜和旋转地图。",
+      "innerCircleDescription2": "双击此处可将视图重置为其默认状态。",
+      "ctrlDragDescription": "您还可以通过按住 CTRL 键并拖动地图来倾斜和旋转地图。",
+      "dismissText": "关闭提示窗口并且不再显示",
+      "title": "陀螺仪控制"
+    },
+    "description": "拖动外环：旋转视图。\n拖动内陀螺：自由轨道。\n双击：重置视图。\n提示：您也可以通过按住 CTRL 键并拖动地图来释放轨道。",
+    "title": "单击并拖动以旋转相机",
+    "guidanceBtnTitle": "陀螺仪引导",
+    "guidanceBtnText": "查看有关如何使用指南针的详细说明"
   },
   "pedestrianMode": {
     "controls": {
@@ -148,5 +174,76 @@
   },
   "printView": {
     "loading": "创建打印视图..."
+  },
+  "AR": {
+    "btnResetRealign": "重置指南针对齐",
+    "title": "实验功能：增强现实(AR)",
+    "experimentalFeatureMessage": "增强现实模式目前处于测试阶段。此模式仅适用于最新的高端移动设备。 <br /><br />警告：此模式会消耗大量数据，请注意网络提供商的数据使用费。 <br /><br />此模式的准确性取决于您的移动设备内部指南针的准确性。",
+    "confirmText": "知道了",
+    "manualAlignmentTitle": "手动对齐",
+    "resetAlignmentTitle": "重置对齐",
+    "resetAlignmentMessage": "重置为指南针对齐。如果对齐与现实世界不匹配，请尝试以 8 字形动作挥动您的设备以重新校准设备。您可以随时进行校准设备。<br /> <br />避免放置在有磁场或金属物体的位置，因为这些可能会干扰设备的指南针正常工作。",
+    "arTool": "增强现实(AR)工具",
+    "btnHover": "切换悬停高度",
+    "btnRealign": "切换手动对齐",
+    "manualAlignmentMessage": "对齐您的移动设备，使其与地图当前对齐方式相对应，然后单击闪烁的指南针。如果地图上当前没有要对齐的地标，您可以使用拖动和捏合操作移动地图，直到出现可识别的地标，然后再将设备与地图对齐。 <br /><div>{{img}}</div> <br />提示：如果您在不熟悉的位置，太阳或月亮通常是很好的标记（注意不要看太阳——它会伤害你的眼睛）。"
+  },
+  "tool": {
+    "closeButtonTitle": "关闭 {{toolName}} 工具",
+    "loadingError": {
+      "title": "载入 {{toolName}} 工具时出错",
+      "message": "尝试从服务器加载此工具时出错。请再试一次。"
+    },
+    "exitBtnTitle": "退出",
+    "button": {
+      "open": "退出{{toolNameLowerCase}}",
+      "closed": "{{toolName}}"
+    }
+  },
+  "diffTool": {
+    "title": "差异",
+    "exit": "退出",
+    "instructions": {
+      "setDateA": "设置日期 A",
+      "setDateB": "设置日期 B",
+      "changeDates": "更改日期",
+      "paneDescription": "在一个位置查看和比较两个日期之间的数据差异。"
+    },
+    "choosePreview": "选择预览样式",
+    "chooseDifference": "选择一个不同的输出",
+    "differenceResultsTitle": "更改检测结果",
+    "labels": {
+      "area": "区域",
+      "dates": "日期",
+      "dateComparisonA": "日期对比 A",
+      "dateComparisonB": "日期对比 B",
+      "sourceDataset": "源数据集",
+      "previewStyle": "预览样式",
+      "differenceOutput": "差异输出",
+      "generateDiffButtonText": "生成变更检测",
+      "disabledButtonPrompt": "请注意：必须选择位置和日期才能继续进行变更检测",
+      "areaFilterSelection": "区域过滤器选择"
+    },
+    "locationDisplay": {
+      "noLocationSelected": {
+        "title": "未选择位置",
+        "description": "要按位置过滤图像日期选择器，请在地图上选择一个点"
+      },
+      "locationSelected": {
+        "title": "选择的位置和过滤的日期",
+        "description": "要更改，请单击地图上的另一个点"
+      }
+    },
+    "locationPicker": {
+      "initialMessages": {
+        "title": "选择一个精确的位置",
+        "beforePick": "我们需要它来运行我们的变更检测过程。",
+        "afterPick": "单击另一个位置点来更改所选区域"
+      },
+      "nextMessages": {
+        "title": "您已选择位置纬度 {{latitude}}经度 {{longitude}}",
+        "beforePick": "单击另一个点来更改选择"
+      }
+    }
   }
 }
