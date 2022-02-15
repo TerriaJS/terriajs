@@ -1,3 +1,4 @@
+import { runInAction } from "mobx";
 import { USER_ADDED_CATEGORY_ID } from "../../../lib/Core/addedByUser";
 import isDefined from "../../../lib/Core/isDefined";
 import loadBlob from "../../../lib/Core/loadBlob";
@@ -8,6 +9,7 @@ import UrlReference from "../../../lib/Models/Catalog/CatalogReferences/UrlRefer
 import createCatalogItemFromFileOrUrl from "../../../lib/Models/Catalog/createCatalogItemFromFileOrUrl";
 import ArcGisFeatureServerCatalogItem from "../../../lib/Models/Catalog/Esri/ArcGisFeatureServerCatalogItem";
 import WebMapServiceCatalogGroup from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
+import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 
@@ -134,6 +136,13 @@ describe("createUrlReferenceFromUrl", function() {
           reference.target instanceof ArcGisFeatureServerCatalogItem
         ).toBeTruthy();
         if (reference.target instanceof ArcGisFeatureServerCatalogItem) {
+          runInAction(() => {
+            reference.target?.setTrait(
+              CommonStrata.definition,
+              "maxFeatures",
+              20
+            );
+          });
           (await reference.target.loadMapItems()).logError();
           expect(reference.target.mapItems.length).toBe(1);
         }
