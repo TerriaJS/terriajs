@@ -1,12 +1,13 @@
 "use strict";
 
 import { observer } from "mobx-react";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Box, { IBoxProps } from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import { SpacingSpan } from "../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../Styled/Text";
 import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
+import { parseCustomMarkdownToReactWithOptions } from "../parseCustomMarkdownToReact";
 
 interface CollapsibleIconProps {
   isOpen?: boolean;
@@ -23,7 +24,10 @@ interface CollapsibleIconProps {
 interface CollapsibleProps extends CollapsibleIconProps {
   title: string;
 
-  onToggle?: (isOpen: boolean) => void;
+  /** Function is called whenever Collapsible is toggled (close or open).
+   * Return value is `true` if the listener has consumed the event, `false` otherwise.
+   */
+  onToggle?: (isOpen: boolean) => boolean | undefined;
   btnRight?: boolean;
 
   titleTextProps?: any;
@@ -48,65 +52,59 @@ export const CollapseIcon: React.FC<CollapsibleIconProps> = props => (
   />
 );
 
-@observer
-export default class Collapsible extends React.Component<
-  CollapsibleProps,
-  { isOpen: boolean }
-> {
-  constructor(props: CollapsibleProps) {
-    super(props);
-    this.state = { isOpen: props.isOpen ?? false };
-  }
+const Collapsible: React.FC<CollapsibleProps> = observer(props => {
+  const [isOpen, setIsOpen] = useState<boolean | undefined>();
 
-  toggleOpen() {
-    this.setState({ isOpen: !this.state.isOpen });
-    if (this.props.onToggle) this.props.onToggle(!this.state.isOpen);
-  }
+  useEffect(() => setIsOpen(props.isOpen), [props.isOpen]);
 
-  render() {
-    return (
-      <React.Fragment>
-        <RawButton
-          fullWidth
-          onClick={this.toggleOpen.bind(this)}
-          css={`
-            text-align: left;
-            display: flex;
-            align-items: center;
-          `}
-          aria-expanded={this.state.isOpen}
-          aria-controls={`${this.props.title}`}
+  const toggleOpen = () => {
+    const newIsOpen = !isOpen;
+    // Only update isOpen state if onToggle doesn't consume the event
+    if (!props.onToggle || !props.onToggle(newIsOpen)) setIsOpen(newIsOpen);
+  };
+
+  return (
+    <React.Fragment>
+      <RawButton
+        fullWidth
+        onClick={toggleOpen}
+        css={`
+          text-align: left;
+          display: flex;
+          align-items: center;
+        `}
+        aria-expanded={isOpen}
+        aria-controls={`${props.title}`}
+      >
+        {!props.btnRight && <CollapseIcon {...props} isOpen={isOpen} />}
+        {!props.btnRight && <SpacingSpan right={2} />}
+        <TextSpan
+          textLight={props.light ?? true}
+          bold
+          medium
+          {...props.titleTextProps}
         >
-          {!this.props.btnRight && (
-            <CollapseIcon {...this.props} isOpen={this.state.isOpen} />
-          )}
-          {!this.props.btnRight && <SpacingSpan right={2} />}
-          <TextSpan
-            textLight={this.props.light ?? true}
-            bold
-            medium
-            {...this.props.titleTextProps}
+          {parseCustomMarkdownToReactWithOptions(props.title, {
+            inline: true
+          })}
+        </TextSpan>
+        {props.btnRight && <SpacingSpan right={2} />}
+        {props.btnRight && <CollapseIcon {...props} isOpen={isOpen} />}
+      </RawButton>
+      {isOpen ? (
+        <Box {...props.bodyBoxProps}>
+          <Text
+            textLight={props.light ?? true}
+            small
+            id={`${props.title}`}
+            {...props.bodyTextProps}
           >
-            {this.props.title}
-          </TextSpan>
-          {this.props.btnRight && <SpacingSpan right={2} />}
-          {this.props.btnRight && (
-            <CollapseIcon {...this.props} isOpen={this.state.isOpen} />
-          )}
-        </RawButton>
-        {this.state.isOpen ? (
-          <Box {...this.props.bodyBoxProps}>
-            <Text
-              textLight={this.props.light ?? true}
-              small
-              id={`${this.props.title}`}
-              {...this.props.bodyTextProps}
-            >
-              {this.props.children}
-            </Text>
-          </Box>
-        ) : null}
-      </React.Fragment>
-    );
-  }
-}
+            {props.children}
+          </Text>
+        </Box>
+      ) : null}
+    </React.Fragment>
+  );
+});
+
+export default Collapsible;
