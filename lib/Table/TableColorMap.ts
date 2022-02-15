@@ -178,7 +178,7 @@ export default class TableColorMap {
       colorColumn &&
       (colorColumn.type === TableColumnType.enum ||
         colorColumn.type === TableColumnType.region) &&
-      colorColumn.uniqueValues.values.length <= this.enumColors.length
+      this.enumColors.length > 0
     ) {
       return new EnumColorMap({
         enumColors: filterOutUndefined(
@@ -313,6 +313,7 @@ export default class TableColorMap {
 
   /**
    * Enum bin colors used to represent `enum` or `region` TableColumns in a EnumColorMap
+   * If no enumColor traits are provided, then try to create colors from uniqueValues
    */
   @computed
   get enumColors(): readonly ModelPropertiesFromTraits<EnumColorTraits>[] {
@@ -325,7 +326,7 @@ export default class TableColorMap {
       return [];
     }
 
-    // Create a color for each unique value
+    // No enumColors traits provided - so create a color for each unique value
     const uniqueValues = colorColumn.uniqueValues.values;
 
     let colorScale = this.colorScaleCategorical(uniqueValues.length);
@@ -389,7 +390,7 @@ export default class TableColorMap {
     );
   }
 
-  /** Get default colorPalete name.
+  /** Get default colorPalette name.
    * Follows https://github.com/d3/d3-scale-chromatic#api-reference
    * If Enum or Region - use custom HighContrast (See StandardCssColors.highContrast)
    * If scalar and not diverging - use Reds palette
@@ -676,7 +677,7 @@ export default class TableColorMap {
           new TerriaError({
             title: "Invalid colorPalette",
             message: `Column ${this.colorColumn?.name} has an invalid color palette - \`"${this.colorTraits.colorPalette}"\`.
-            Will use default color palete \`"${this.defaultColorPaletteName}"\` instead`
+            Will use default color palette \`"${this.defaultColorPaletteName}"\` instead`
           })
         )
       );

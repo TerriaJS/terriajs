@@ -15,7 +15,11 @@ import SelectableDimensions, {
   SelectableDimensionCheckbox,
   SelectableDimensionGroup,
   SelectableDimensionNumeric,
-  SelectableDimensionEnum
+  SelectableDimensionEnum,
+  isText,
+  SelectableDimensionText,
+  isButton,
+  SelectableDimensionButton
 } from "../../../Models/SelectableDimensions/SelectableDimensions";
 import Box from "../../../Styled/Box";
 import Checkbox from "../../../Styled/Checkbox";
@@ -24,6 +28,8 @@ import Select from "../../../Styled/Select";
 import Spacing from "../../../Styled/Spacing";
 import Text from "../../../Styled/Text";
 import Collapsible from "../../Custom/Collapsible/Collapsible";
+import { parseCustomMarkdownToReactWithOptions } from "../../Custom/parseCustomMarkdownToReact";
+import { RawButton } from "../../../Styled/Button";
 
 interface PropsType extends WithTranslation {
   item: BaseModel;
@@ -71,7 +77,10 @@ export const DimensionSelector: React.FC<{
         <>
           <label htmlFor={id}>
             <Text textLight medium as="span">
-              {dim.name}:
+              {parseCustomMarkdownToReactWithOptions(dim.name, {
+                inline: true
+              })}
+              :
             </Text>
           </label>
           <Spacing bottom={1} />
@@ -81,6 +90,8 @@ export const DimensionSelector: React.FC<{
       {isSelect(dim) && <DimensionSelectorSelect id={id} dim={dim} />}
       {isGroup(dim) && <DimensionSelectorGroup id={id} dim={dim} />}
       {isNumeric(dim) && <DimensionSelectorNumeric id={id} dim={dim} />}
+      {isText(dim) && <DimensionSelectorText id={id} dim={dim} />}
+      {isButton(dim) && <DimensionSelectorButton id={id} dim={dim} />}
     </Box>
   );
 });
@@ -149,13 +160,15 @@ export const DimensionSelectorGroup: React.FC<{
 }> = ({ id, dim }) => {
   return (
     <Collapsible
-      title={dim.id ?? dim.name ?? ""}
+      title={dim.name ?? dim.id ?? ""}
       btnRight
       bodyBoxProps={{
         displayInlineBlock: true,
         fullWidth: true
       }}
       bodyTextProps={{ medium: true }}
+      isOpen={dim.isOpen}
+      onToggle={dim.onToggle}
     >
       {/* recursively render nested dimensions */}
       {filterSelectableDimensions()(dim.selectableDimensions).map(nestedDim => (
@@ -187,6 +200,38 @@ export const DimensionSelectorNumeric: React.FC<{
         dim.setDimensionValue(CommonStrata.user, parseFloat(evt.target.value));
       }}
     />
+  );
+};
+
+export const DimensionSelectorText: React.FC<{
+  id: string;
+  dim: SelectableDimensionText;
+}> = ({ id, dim }) => {
+  return (
+    <Input
+      styledHeight={"34px"}
+      light
+      border
+      name={id}
+      value={dim.value}
+      onChange={evt => {
+        dim.setDimensionValue(CommonStrata.user, evt.target.value);
+      }}
+    />
+  );
+};
+
+export const DimensionSelectorButton: React.FC<{
+  id: string;
+  dim: SelectableDimensionButton;
+}> = ({ id, dim }) => {
+  return (
+    <RawButton
+      onClick={() => dim.setDimensionValue(CommonStrata.user, true)}
+      activeStyles
+    >
+      {parseCustomMarkdownToReactWithOptions(dim.value ?? "", { inline: true })}
+    </RawButton>
   );
 };
 

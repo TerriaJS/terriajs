@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { GLYPHS, IconProps, StyledIcon } from "../../Styled/Icon";
 import Text from "../../Styled/Text";
@@ -10,6 +9,7 @@ export type PanelProps = {
   menuComponent?: React.ReactNode;
   children?: React.ReactNode;
   className?: string;
+  collapsible?: boolean;
 };
 
 /**
