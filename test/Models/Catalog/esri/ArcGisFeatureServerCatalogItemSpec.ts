@@ -38,8 +38,14 @@ describe("ArcGisFeatureServerCatalogItem", function() {
 
   const featureServerUrlStyleLines =
     "http://example.com/arcgis/rest/services/styles/FeatureServer/0";
+
+  const featureServerUrlMulti =
+    "http://example.com/arcgis/rest/services/Water_Network_Multi/FeatureServer/2";
+
   let terria: Terria;
   let item: ArcGisFeatureServerCatalogItem;
+
+  let xhrSpy: jasmine.Spy;
 
   beforeEach(function() {
     terria = new Terria({
@@ -47,29 +53,40 @@ describe("ArcGisFeatureServerCatalogItem", function() {
     });
     item = new ArcGisFeatureServerCatalogItem("test", terria);
 
+    let multiCallCount = 0;
+
     const realLoadWithXhr = loadWithXhr.load;
     // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
-    // TODO: don't parse urls with regex oh my god
-    spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
+    // NOTE: When writing tests for this catalog item, you will always need to specify a `maxFeatures` trait or ensure
+    // that once all feature data has been requested, the mock server below returns 0 features.
+    xhrSpy = spyOn(loadWithXhr, "load").and.callFake((...args: any[]) => {
       let url = args[0];
       const originalUrl = url;
       url = url.replace(/^.*\/FeatureServer/, "FeatureServer");
-      url = url.replace(
-        /FeatureServer\/query\?f=json.*$/i,
-        //query?f=json&layerDefs=%7B%222%22%3A%20%221%3D1%20AND%20OBJECTID%3E0%20AND%20OBJECTID%3C%3D1000%22%7D&outSR=4326
-        "layerDefs.json"
-      );
+      url = url.replace(/FeatureServer\/query\?f=json.*$/i, "layerDefs.json");
 
       if (originalUrl.match("Water_Network/FeatureServer")) {
         url = url.replace(/FeatureServer\/2\/?\?.*/i, "2.json");
         args[0] = "test/ArcGisFeatureServer/Water_Network/" + url;
-        console.log(args[0]);
       } else if (originalUrl.match("Parks/FeatureServer")) {
         url = url.replace(/FeatureServer\/3\/?\?.*/i, "3.json");
         args[0] = "test/ArcGisFeatureServer/Parks/" + url;
       } else if (originalUrl.match("styles/FeatureServer")) {
         url = url.replace(/FeatureServer\/0\/?\?.*/i, "lines.json");
         args[0] = "test/ArcGisFeatureServer/styles/" + url;
+      } else if (originalUrl.match("Water_Network_Multi/FeatureServer")) {
+        // We're getting this feature service in multiple requests, so we need to return different data on subsequent
+        // calls
+        if (originalUrl.includes("layerDefs") && multiCallCount >= 2) {
+          url = url.replace("layerDefs.json", "layerDefsC.json");
+        } else if (originalUrl.includes("layerDefs") && multiCallCount === 1) {
+          url = url.replace("layerDefs.json", "layerDefsB.json");
+        }
+        if (originalUrl.includes("layerDefs")) {
+          multiCallCount++;
+        }
+        url = url.replace(/FeatureServer\/2\/?\?.*/i, "2.json");
+        args[0] = "test/ArcGisFeatureServer/WaterMulti/" + url;
       }
 
       return realLoadWithXhr(...args);
@@ -143,6 +160,28 @@ describe("ArcGisFeatureServerCatalogItem", function() {
       expect((dataSource as GeoJsonDataSource).entities.values.length).toEqual(
         13
       );
+
+      // 1 call for metadata, and 1 call for features
+      expect(xhrSpy).toHaveBeenCalledTimes(2);
+    });
+
+    it("properly loads a single layer with multiple requests", async function() {
+      runInAction(() => {
+        item.setTrait(CommonStrata.definition, "url", featureServerUrlMulti);
+        item.setTrait(CommonStrata.definition, "featuresPerRequest", 10);
+      });
+
+      await item.loadMapItems();
+
+      expect(item.mapItems.length).toEqual(1);
+      const dataSource = item.mapItems[0];
+      expect(dataSource instanceof GeoJsonDataSource).toBeTruthy();
+      expect((dataSource as GeoJsonDataSource).entities.values.length).toEqual(
+        13
+      );
+
+      // 1 call for metadata, and 3 calls for features
+      expect(xhrSpy).toHaveBeenCalledTimes(4);
     });
   });
 
