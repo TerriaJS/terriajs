@@ -3,6 +3,7 @@ Change Log
 
 #### next release (8.1.22)
 
+* ArcGisFeatureServerCatalogItem can now load more than the maximum feature limit set by the server by making multiple requests, and uses GeojsonMixin
 * [The next improvement]
 
 #### 8.1.21
