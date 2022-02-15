@@ -11,7 +11,6 @@ interface CssExports {
   'isCentered': string;
   'isHidden': string;
   'isMounted': string;
-  'isPushedUp': string;
   'left': string;
   'locationBtn': string;
   'mobileNavBtn': string;
