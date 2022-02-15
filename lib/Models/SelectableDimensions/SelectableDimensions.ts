@@ -35,6 +35,10 @@ export interface TextDimension extends Dimension {
   readonly allowUndefined?: boolean;
 }
 
+export interface ButtonDimension extends Dimension {
+  readonly value?: string;
+}
+
 export const isEnumDimension = (
   dim: Dimension
 ): dim is EnumDimension<unknown> => {
@@ -47,7 +51,8 @@ export type SelectableDimensionType =
   | "numeric"
   | "text"
   | "checkbox"
-  | "group";
+  | "group"
+  | "button";
 
 export type Placement = "default" | "belowLegend";
 export const DEFAULT_PLACEMENT: Placement = "default";
@@ -78,6 +83,10 @@ export interface SelectableDimensionCheckbox
   type: "checkbox";
 }
 
+export interface SelectableDimensionButton extends Base<true>, ButtonDimension {
+  type: "button";
+}
+
 export interface SelectableDimensionNumeric
   extends Base<number>,
     NumericalDimension {
@@ -93,6 +102,13 @@ export interface SelectableDimensionGroup
     Dimension {
   type: "group";
 
+  isOpen?: boolean;
+  /** Function is called whenever SelectableDimensionGroup is toggled (closed or opened).
+   * Return value is `true` if the listener has consumed the event, `false` otherwise.
+   * This means you can manage group open state separately if desired
+   */
+  onToggle?: (isOpen: boolean) => boolean | undefined;
+
   // We don't allow nested groups for now to keep the UI simple
   readonly selectableDimensions: Exclude<
     SelectableDimension,
@@ -100,12 +116,23 @@ export interface SelectableDimensionGroup
   >[];
 }
 
+/** This is essentially the same as `SelectableDimensionGroup`, but allows two levels of nested `SelectableDimensionGroup`, instead of one */
+export interface SelectableDimensionWorkflowGroup
+  extends Omit<Base, "setDimensionValue">,
+    Dimension {
+  type: "group";
+
+  // Here we allow two levels of nested groups
+  readonly selectableDimensions: SelectableDimension[];
+}
+
 export type SelectableDimension =
   | SelectableDimensionEnum
   | SelectableDimensionCheckbox
   | SelectableDimensionGroup
   | SelectableDimensionNumeric
-  | SelectableDimensionText;
+  | SelectableDimensionText
+  | SelectableDimensionButton;
 
 export const isCheckbox = (
   dim: SelectableDimension
@@ -132,6 +159,10 @@ export const isNumeric = (
 export const isText = (
   dim: SelectableDimension
 ): dim is SelectableDimensionText => dim.type === "text";
+
+export const isButton = (
+  dim: SelectableDimension
+): dim is SelectableDimensionButton => dim.type === "button";
 
 const isCorrectPlacement = (placement?: Placement) => (
   dim: SelectableDimension

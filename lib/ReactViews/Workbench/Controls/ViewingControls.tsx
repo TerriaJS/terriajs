@@ -1,54 +1,43 @@
-import createReactClass from "create-react-class";
-import { runInAction, action } from "mobx";
+import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
-import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import styled from "styled-components";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import defined from "terriajs-cesium/Source/Core/defined";
-import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
-import when from "terriajs-cesium/Source/ThirdParty/when";
 import {
   Category,
   DataSourceAction
 } from "../../../Core/AnalyticEvents/analyticEvents";
 import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
 import getPath from "../../../Core/getPath";
-import PickedFeatures from "../../../Map/PickedFeatures/PickedFeatures";
+import isDefined from "../../../Core/isDefined";
+import { isJsonObject } from "../../../Core/Json";
+import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
+import DiffableMixin from "../../../ModelMixins/DiffableMixin";
 import ExportableMixin from "../../../ModelMixins/ExportableMixin";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import SearchableItemMixin from "../../../ModelMixins/SearchableItemMixin";
-import addUserCatalogMember from "../../../Models/Catalog/addUserCatalogMember";
-import SplitItemReference from "../../../Models/Catalog/CatalogReferences/SplitItemReference";
+import TimeVarying from "../../../ModelMixins/TimeVarying";
+import CameraView from "../../../Models/CameraView";
 import {
   createCompareConfig,
   isComparableItem
 } from "../../../Models/Comparable";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
+import hasTraits from "../../../Models/Definition/hasTraits";
+import { BaseModel } from "../../../Models/Definition/Model";
 import getAncestors from "../../../Models/getAncestors";
+import { default as ViewingControlsModel } from "../../../Models/ViewingControls";
+import ViewState from "../../../ReactViewModels/ViewState";
 import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import Icon, { StyledIcon } from "../../../Styled/Icon";
+import MappableTraits from "../../../Traits/TraitsClasses/MappableTraits";
 import { exportData } from "../../Preview/ExportData";
 import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
 import WorkbenchButton from "../WorkbenchButton";
-import MappableTraits from "../../../Traits/TraitsClasses/MappableTraits";
-import hasTraits from "../../../Models/Definition/hasTraits";
-import ViewState from "../../../ReactViewModels/ViewState";
-import { BaseModel } from "../../../Models/Definition/Model";
-import CameraView from "../../../Models/CameraView";
-import isDefined from "../../../Core/isDefined";
-import TableMixin from "../../../ModelMixins/TableMixin";
-import TimeVarying from "../../../ModelMixins/TimeVarying";
-import DiffableMixin from "../../../ModelMixins/DiffableMixin";
-import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
-import { default as ViewingControlsModel } from "../../../Models/ViewingControls";
-import { isJsonObject } from "../../../Core/Json";
 
 const BoxViewingControl = styled(Box).attrs({
   centered: true,
@@ -317,7 +306,7 @@ class ViewingControls extends React.Component<
       <ul>
         {ViewingControlsModel.is(item)
           ? item.viewingControls.map(viewingControl => (
-              <li>
+              <li key={viewingControl.id}>
                 <ViewingControlMenuButton
                   onClick={() => viewingControl.onClick(this.props.viewState)}
                   title={viewingControl.iconTitle}
@@ -331,7 +320,7 @@ class ViewingControls extends React.Component<
             ))
           : null}
         {canCompareItem ? (
-          <li>
+          <li key={"workbench.splitItem"}>
             <ViewingControlMenuButton
               onClick={this.compareItem.bind(this)}
               title={t("workbench.splitItemTitle")}
@@ -347,7 +336,7 @@ class ViewingControls extends React.Component<
         DiffableMixin.isMixedInto(item) &&
         !item.isShowingDiff &&
         item.canDiffImages ? (
-          <li>
+          <li key={"workbench.diffImage"}>
             <ViewingControlMenuButton
               onClick={this.openDiffTool.bind(this)}
               title={t("workbench.diffImageTitle")}
@@ -362,7 +351,7 @@ class ViewingControls extends React.Component<
         {viewState.useSmallScreenInterface === false &&
         ExportableMixin.isMixedInto(item) &&
         item.canExportData ? (
-          <li>
+          <li key={"workbench.exportData"}>
             <ViewingControlMenuButton
               onClick={this.exportDataClicked.bind(this)}
               title={t("workbench.exportDataTitle")}
@@ -377,7 +366,7 @@ class ViewingControls extends React.Component<
         {viewState.useSmallScreenInterface === false &&
         SearchableItemMixin.isMixedInto(item) &&
         item.canSearch ? (
-          <li>
+          <li key={"workbench.searchItem"}>
             <ViewingControlMenuButton
               onClick={this.searchItem.bind(this)}
               title={t("workbench.searchItemTitle")}
@@ -389,7 +378,7 @@ class ViewingControls extends React.Component<
             </ViewingControlMenuButton>
           </li>
         ) : null}
-        <li>
+        <li key={"workbench.removeFromMap"}>
           <ViewingControlMenuButton
             onClick={this.removeFromMap.bind(this)}
             title={t("workbench.removeFromMapTitle")}

@@ -1,7 +1,7 @@
 import { computed } from "mobx";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import GeoJsonMixin from "../../ModelMixins/GeojsonMixin";
-import { SelectableDimension } from "./SelectableDimensions";
+import { SelectableDimensionWorkflowGroup } from "./SelectableDimensions";
 import TableStylingWorkflow from "./TableStylingWorkflow";
 
 export default class VectorStylingWorkflow extends TableStylingWorkflow {
@@ -9,7 +9,7 @@ export default class VectorStylingWorkflow extends TableStylingWorkflow {
     super(item);
   }
 
-  @computed get selectableDimensions(): SelectableDimension[] {
+  @computed get selectableDimensions(): SelectableDimensionWorkflowGroup[] {
     return filterOutUndefined([
       ...super.selectableDimensions,
       this.item.featureCounts.point > 0
@@ -32,7 +32,7 @@ export default class VectorStylingWorkflow extends TableStylingWorkflow {
                 }
               }
             ]
-          } as SelectableDimension)
+          } as SelectableDimensionWorkflowGroup)
         : undefined,
       {
         type: "group",

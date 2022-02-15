@@ -21,7 +21,7 @@ export type PropsType = {
   viewState: ViewState;
 };
 
-const SelectabelDimensionWorkflow: React.FC<PropsType> = observer(
+const SelectableDimensionWorkflow: React.FC<PropsType> = observer(
   ({ viewState }: PropsType) => {
     const terria = viewState.terria;
     const [t] = useTranslation();
@@ -63,11 +63,21 @@ const SelectabelDimensionWorkflow: React.FC<PropsType> = observer(
             </PanelBody>
           </Panel>
           {terria.selectableDimensionWorkflow.selectableDimensions.map(
-            (dim, i) => (
-              <DimensionPanel
-                id={`${terria.selectableDimensionWorkflow?.item.uniqueId}-${dim.id}`}
-                dim={dim}
-              ></DimensionPanel>
+            (groupDim, i) => (
+              <Panel
+                title={groupDim.name ?? groupDim.id}
+                key={groupDim.name ?? groupDim.id}
+              >
+                <PanelBody>
+                  {groupDim.selectableDimensions.map(childDim => (
+                    <DimensionSelector
+                      key={`${terria.selectableDimensionWorkflow?.item.uniqueId}-${childDim.id}-fragment`}
+                      id={`${terria.selectableDimensionWorkflow?.item.uniqueId}-${childDim.id}`}
+                      dim={childDim}
+                    />
+                  ))}
+                </PanelBody>
+              </Panel>
             )
           )}
         </Container>
@@ -76,18 +86,4 @@ const SelectabelDimensionWorkflow: React.FC<PropsType> = observer(
   }
 );
 
-const DimensionPanel = ({
-  id,
-  dim
-}: {
-  id: string;
-  dim: SelectableDimension;
-}) => (
-  <Panel>
-    <PanelBody>
-      <DimensionSelector key={`${id}-fragment`} id={`${id}`} dim={dim} />
-    </PanelBody>
-  </Panel>
-);
-
-export default SelectabelDimensionWorkflow;
+export default SelectableDimensionWorkflow;
