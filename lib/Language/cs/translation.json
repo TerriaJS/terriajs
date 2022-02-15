@@ -405,7 +405,8 @@
     "message": "<2>To je váš editor příběhů</2><1>Vytvářejte a sdílejte interaktivní příběhy přímo z mapy<1><0><0></0>Začínáme </0></1></1>",
     "removeAllStoriesDialog_0": "Opravdu si přejete odstranit {{ count }} scénu?",
     "removeAllStoriesDialog_1": "Opravdu si přejete odstranit {{ count }} scény?",
-    "removeAllStoriesDialog_2": "Opravdu si přejete odstranit {{ count }} scén?"
+    "removeAllStoriesDialog_2": "Opravdu si přejete odstranit {{ count }} scén?",
+    "playStory": "Příběh"
   },
   "satelliteGuidance": {
     "menuTitle": "Do mapových průvodců se můžete kdykoli podívat v nabídce <2>nápověda</2>.",
