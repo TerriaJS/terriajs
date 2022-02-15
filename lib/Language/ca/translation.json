@@ -311,7 +311,7 @@
     "clickMap": "Feu clic al mapa per obtenir més informació sobre una ubicació",
     "noDataAvailable": "No hi ha dades disponibles aquí - proveu una altra ubicació.",
     "siteData": "Dades del lloc",
-    "latLon": "Lat / Lon ",
+    "latLon": "Lat/Lon ",
     "btnCloseFeature": "Tanca el tauler de dades",
     "locationMarker": "Marcador d'ubicació"
   },
@@ -374,7 +374,8 @@
     "captureScene": "Captura l'escena",
     "promptHtml1": "<0>Podeu veure i crear històries en qualsevol moment fent clic aquí.</0>",
     "loadSceneErrorTitle": "Error carregant Story Scene",
-    "captureSceneTitle": "captura l'escena actual"
+    "captureSceneTitle": "captura l'escena actual",
+    "playStory": "Història"
   },
   "satelliteGuidance": {
     "menuTitle": "Podeu accedir a les guies de mapes en qualsevol moment consultant el <2>menú d'ajuda</2>.",
