@@ -100,7 +100,7 @@ describe("createUrlReferenceFromUrl", function() {
       // Fail all requests by default.
       jasmine.Ajax.stubRequest(/.*/).andError({});
       jasmine.Ajax.stubRequest(
-        /http:\/\/example.com\/arcgis\/rest\/services\/Water_Network\/FeatureServer\/query\?f=json&layerDefs=%7B2%3A%22.*%22%7D&outSR=4326$/i
+        /http:\/\/example.com\/arcgis\/rest\/services\/Water_Network\/FeatureServer\/query\?f=json.*$/i
       ).andReturn({ responseText: Water_Network.layerDefs });
       jasmine.Ajax.stubRequest(
         /http:\/\/example.com\/arcgis\/rest\/services\/Water_Network\/FeatureServer\/2\/?\?.*/i

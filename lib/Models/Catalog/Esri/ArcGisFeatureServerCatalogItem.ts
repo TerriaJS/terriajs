@@ -205,7 +205,7 @@ class FeatureServerStratum extends LoadableStratum(
   }
 
   @computed get forceCesiumPrimitives(): boolean {
-    return true;
+    return this._item.useStyleInformationFromService;
   }
 
   @computed
@@ -378,12 +378,13 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
     // time (there's an API for it but it times out for services with thousands of features), so we just keep trying
     // until we run out of features or hit the limit
     const featuresPerRequest = this.featuresPerRequest;
+    const maxFeatures = this.maxFeatures;
     let combinedEsriLayerJson = await getEsriLayerJson(0, featuresPerRequest);
     let min = 0;
     let max = featuresPerRequest;
-    while (max < this.maxFeatures) {
+    while (max <= maxFeatures) {
       min += featuresPerRequest;
-      max = Math.min(min + featuresPerRequest, this.maxFeatures);
+      max = Math.min(min + featuresPerRequest, maxFeatures);
       const newEsriLayerJson = await getEsriLayerJson(min, max);
       if (
         newEsriLayerJson.features === undefined ||

@@ -49,30 +49,25 @@ describe("ArcGisFeatureServerCatalogItem", function() {
 
     const realLoadWithXhr = loadWithXhr.load;
     // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
+    // TODO: don't parse urls with regex oh my god
     spyOn(loadWithXhr, "load").and.callFake(function(...args: any[]) {
       let url = args[0];
-      if (url.match("Water_Network/FeatureServer")) {
-        url = url.replace(/^.*\/FeatureServer/, "FeatureServer");
-        url = url.replace(
-          /FeatureServer\/query\?f=json&layerDefs=%7B2%3A%22.*%22%7D&outSR=4326$/i,
-          "layerDefs.json"
-        );
+      const originalUrl = url;
+      url = url.replace(/^.*\/FeatureServer/, "FeatureServer");
+      url = url.replace(
+        /FeatureServer\/query\?f=json.*$/i,
+        //query?f=json&layerDefs=%7B%222%22%3A%20%221%3D1%20AND%20OBJECTID%3E0%20AND%20OBJECTID%3C%3D1000%22%7D&outSR=4326
+        "layerDefs.json"
+      );
+
+      if (originalUrl.match("Water_Network/FeatureServer")) {
         url = url.replace(/FeatureServer\/2\/?\?.*/i, "2.json");
         args[0] = "test/ArcGisFeatureServer/Water_Network/" + url;
-      } else if (url.match("Parks/FeatureServer")) {
-        url = url.replace(/^.*\/FeatureServer/, "FeatureServer");
-        url = url.replace(
-          /FeatureServer\/query\?f=json&layerDefs=%7B3%3A%22.*%22%7D&outSR=4326$/i,
-          "layerDefs.json"
-        );
+        console.log(args[0]);
+      } else if (originalUrl.match("Parks/FeatureServer")) {
         url = url.replace(/FeatureServer\/3\/?\?.*/i, "3.json");
         args[0] = "test/ArcGisFeatureServer/Parks/" + url;
-      } else if (url.match("styles/FeatureServer")) {
-        url = url.replace(/^.*\/FeatureServer/, "FeatureServer");
-        url = url.replace(
-          /FeatureServer\/query\?f=json&layerDefs=%7B0%3A%22.*%22%7D&outSR=4326$/i,
-          "layerDefs.json"
-        );
+      } else if (originalUrl.match("styles/FeatureServer")) {
         url = url.replace(/FeatureServer\/0\/?\?.*/i, "lines.json");
         args[0] = "test/ArcGisFeatureServer/styles/" + url;
       }
@@ -86,10 +81,6 @@ describe("ArcGisFeatureServerCatalogItem", function() {
     expect(item.typeName).toBe(
       i18next.t("models.arcGisFeatureServerCatalogItem.name")
     );
-  });
-
-  it("supports zooming to extent", function() {
-    expect(item.disableZoomTo).toBeFalsy();
   });
 
   it("supports show info", function() {
@@ -112,6 +103,10 @@ describe("ArcGisFeatureServerCatalogItem", function() {
         expect(item.rectangle.east).toEqual(179.999987937519);
         expect(item.rectangle.north).toEqual(81.29054454173075);
       }
+    });
+
+    it("supports zooming to extent", async function() {
+      expect(item.disableZoomTo).toBeFalsy();
     });
 
     it("defines info", function() {
@@ -137,21 +132,17 @@ describe("ArcGisFeatureServerCatalogItem", function() {
     it("properly loads a single layer", async function() {
       runInAction(() => {
         item.setTrait(CommonStrata.definition, "url", featureServerUrl);
+        item.setTrait(CommonStrata.definition, "maxFeatures", 20);
       });
 
       await item.loadMapItems();
 
-      expect(item.geoJsonItem).toBeDefined();
-      if (isDefined(item.geoJsonItem)) {
-        const geoJsonData = item.geoJsonItem.geoJsonData;
-        expect(geoJsonData).toBeDefined();
-        if (isDefined(geoJsonData)) {
-          expect(geoJsonData.type).toEqual("FeatureCollection");
-
-          const features = <JsonArray>geoJsonData.features;
-          expect(features.length).toEqual(13);
-        }
-      }
+      expect(item.mapItems.length).toEqual(1);
+      const dataSource = item.mapItems[0];
+      expect(dataSource instanceof GeoJsonDataSource).toBeTruthy();
+      expect((dataSource as GeoJsonDataSource).entities.values.length).toEqual(
+        13
+      );
     });
   });
 
@@ -159,6 +150,7 @@ describe("ArcGisFeatureServerCatalogItem", function() {
     it("correctly uses symbol.outline.color to style polyline.", async function() {
       runInAction(() => {
         item.setTrait(CommonStrata.definition, "url", featureServerUrl2);
+        item.setTrait(CommonStrata.definition, "maxFeatures", 20);
       });
 
       await item.loadMetadata();
@@ -237,19 +229,16 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           "url",
           featureServerUrlStyleLines
         );
+        item.setTrait(CommonStrata.definition, "maxFeatures", 20);
       });
       await item.loadMapItems();
 
-      expect(item.geoJsonItem).toBeDefined();
-      if (isDefined(item.geoJsonItem)) {
-        const geoJsonData = item.geoJsonItem.geoJsonData;
-        expect(geoJsonData).toBeDefined();
-        if (isDefined(geoJsonData)) {
-          expect(geoJsonData.type).toEqual("FeatureCollection");
-          const features = <JsonArray>geoJsonData.features;
-          expect(features.length).toEqual(13);
-        }
-      }
+      expect(item.mapItems.length).toEqual(1);
+      const dataSource = item.mapItems[0];
+      expect(dataSource instanceof GeoJsonDataSource).toBeTruthy();
+      expect((dataSource as GeoJsonDataSource).entities.values.length).toEqual(
+        13
+      );
     });
 
     it("properly styles features", async function() {
@@ -259,10 +248,10 @@ describe("ArcGisFeatureServerCatalogItem", function() {
           "url",
           featureServerUrlStyleLines
         );
+        item.setTrait(CommonStrata.definition, "maxFeatures", 20);
       });
       await item.loadMapItems();
 
-      expect(item.geoJsonItem).toBeDefined();
       expect(item.mapItems).toBeDefined();
       expect(item.mapItems.length).toEqual(1);
 
