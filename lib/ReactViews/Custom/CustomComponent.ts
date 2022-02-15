@@ -3,6 +3,7 @@ import Feature from "../../Models/Feature";
 import { BaseModel } from "../../Models/Definition/Model";
 import Terria from "../../Models/Terria";
 import ViewState from "../../ReactViewModels/ViewState";
+import FunctionParameter from "../../Models/FunctionParameters/FunctionParameter";
 
 /**
  * DomElement type from @types/domhandler
@@ -44,6 +45,9 @@ export interface ProcessNodeContext {
    * The feature for which this HTML is being processed.
    */
   readonly feature?: Feature;
+
+  /** These are added in FeatureInfoSection.jsx getInfoAsReactComponent() */
+  readonly updateCounters?: unknown;
 }
 
 /**

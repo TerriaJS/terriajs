@@ -1,15 +1,17 @@
 "use strict";
 
-const React = require("react");
+import React, { ReactElement } from "react";
+import styled from "styled-components";
+import CustomComponent, {
+  DomElement,
+  ProcessNodeContext
+} from "./CustomComponent";
 const HtmlToReact = require("html-to-react");
 const combine = require("terriajs-cesium/Source/Core/combine").default;
 const defined = require("terriajs-cesium/Source/Core/defined").default;
 const utils = require("html-to-react/lib/utils");
 const Icon = require("../../Styled/Icon").default;
 const { StyledIcon } = require("../../Styled/Icon");
-import styled from "styled-components";
-
-import CustomComponent from "./CustomComponent";
 
 const htmlToReactParser = new HtmlToReact.Parser({
   decodeEntities: true
@@ -20,7 +22,7 @@ const isValidNode = function() {
   return true;
 };
 
-const shouldProcessEveryNodeExceptWhiteSpace = function(node) {
+const shouldProcessEveryNodeExceptWhiteSpace = function(node: DomElement) {
   // Use this to avoid white space between table elements, eg.
   //     <table> <tbody> <tr>\n<td>x</td> <td>3</td> </tr> </tbody> </table>
   // being rendered as empty <span> elements, and causing React errors.
@@ -39,7 +41,13 @@ const ExternalLinkIcon = styled(StyledIcon).attrs({
   fill: currentColor;
 `;
 
-function shouldAppendExternalLinkIcon(url, context) {
+type ExternalLinkIconOptions = { disableExternalLinkIcon?: boolean };
+
+function shouldAppendExternalLinkIcon(
+  url: string | undefined,
+  context: ExternalLinkIconOptions
+) {
+  if (!url) return false;
   const tmp = document.createElement("a");
   tmp.href = url;
   const isExternalLink = tmp.host !== window.location.host;
@@ -49,9 +57,16 @@ function shouldAppendExternalLinkIcon(url, context) {
 /**
  * @private
  */
-function getProcessingInstructions(context) {
+function getProcessingInstructions(context: ParseCustomHtmlToReactContext) {
   // Process custom nodes specially.
-  const processingInstructions = [];
+  const processingInstructions: {
+    shouldProcessNode: (node: DomElement) => boolean;
+    processNode: (
+      node: DomElement,
+      children: ReactElement[],
+      index: number
+    ) => void;
+  }[] = [];
   const customComponents = CustomComponent.values;
   for (let i = 0; i < customComponents.length; i++) {
     const customComponent = customComponents[i];
@@ -66,8 +81,8 @@ function getProcessingInstructions(context) {
 
   // Make sure any <a href> tags open in a new window
   processingInstructions.push({
-    shouldProcessNode: node => node.name === "a",
-    processNode: function(node, children, index) {
+    shouldProcessNode: (node: DomElement) => node.name === "a",
+    processNode: function(node: DomElement, children, index) {
       // eslint-disable-line react/display-name
       const elementProps = {
         key: "anchor-" + keyIndex++,
@@ -76,7 +91,7 @@ function getProcessingInstructions(context) {
       };
       node.attribs = combine(node.attribs, elementProps);
 
-      if (shouldAppendExternalLinkIcon(node.attribs.href, context)) {
+      if (shouldAppendExternalLinkIcon(node?.attribs?.href, context)) {
         const externalIcon = React.createElement(ExternalLinkIcon, {});
         children.push(externalIcon);
       }
@@ -93,20 +108,24 @@ function getProcessingInstructions(context) {
   return processingInstructions;
 }
 
+export type ParseCustomHtmlToReactContext = ProcessNodeContext &
+  ExternalLinkIconOptions;
+
 /**
  * Return html as a React Element.
- * @param  {String} html
- * @param  {Object} [context] Provide any further information that custom components need to know here, eg. which feature and catalogItem they come from; if external link icon should be disabled (default to false).
- * @return {ReactElement}
  */
-function parseCustomHtmlToReact(html, context) {
+function parseCustomHtmlToReact(
+  html: string,
+  context?: ParseCustomHtmlToReactContext
+) {
   if (!defined(html) || html.length === 0) {
     return html;
   }
+
   return htmlToReactParser.parseWithInstructions(
     html,
     isValidNode,
-    getProcessingInstructions(context || {})
+    getProcessingInstructions(context ?? {})
   );
 }
 

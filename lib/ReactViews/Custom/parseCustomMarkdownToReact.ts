@@ -1,19 +1,25 @@
 import CustomComponent from "./CustomComponent";
-import markdownToHtml from "../../Core/markdownToHtml";
-import parseCustomHtmlToReact from "./parseCustomHtmlToReact";
+import markdownToHtml, { MarkdownOptions } from "../../Core/markdownToHtml";
+import parseCustomHtmlToReact, {
+  ParseCustomHtmlToReactContext
+} from "./parseCustomHtmlToReact";
 
 /**
  * Converts a string from markdown format (of which html is a subset) into a ReactElement.
- * @param  {String} raw String in markdown or html.
- * @param  {Object} [context] Provide any further information that custom components need to know here, eg. which feature and catalogItem they come from.
- * @return {ReactElement}
  */
-function parseCustomMarkdownToReact(raw, context) {
+function parseCustomMarkdownToReact(
+  raw: string,
+  context?: ParseCustomHtmlToReactContext
+) {
   return parseCustomMarkdownToReactWithOptions(raw, {}, context);
 }
 
 // TODO: re-write parseCustomMarkdownToReactWithOptions defaults in a separate PR
-export function parseCustomMarkdownToReactWithOptions(raw, options, context) {
+export function parseCustomMarkdownToReactWithOptions(
+  raw: string,
+  options?: MarkdownOptions,
+  context?: ParseCustomHtmlToReactContext
+) {
   const html = markdownToHtml(
     raw,
     false,

@@ -51,9 +51,7 @@ const ParameterEditor = createReactClass({
         </label>
         {typeof this.props.parameter.description === "string" &&
         this.props.parameter.description !== ""
-          ? parseCustomMarkdownToReact(this.props.parameter.description, {
-              parameter: this.props.parameter
-            })
+          ? parseCustomMarkdownToReact(this.props.parameter.description)
           : ""}
       </div>
     );
