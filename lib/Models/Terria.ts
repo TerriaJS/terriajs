@@ -281,6 +281,11 @@ interface ConfigParameters {
    * Extra links to show in the credit line at the bottom of the map (currently only the Cesium map).
    */
   extraCreditLinks?: { url: string; text: string }[];
+
+  /**
+   * Configurable discalimer that shows up in print view
+   */
+  printDisclaimer?: { url: string; text: string };
 }
 
 interface StartOptions {
@@ -456,7 +461,8 @@ export default class Terria {
         url: "about.html#data-attribution"
       },
       { text: "map.extraCreditLinks.disclaimer", url: "about.html#disclaimer" }
-    ]
+    ],
+    printDisclaimer: undefined
   };
 
   @observable
