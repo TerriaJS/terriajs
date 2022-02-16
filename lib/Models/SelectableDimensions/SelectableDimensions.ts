@@ -35,6 +35,10 @@ export interface TextDimension extends Dimension {
   readonly allowUndefined?: boolean;
 }
 
+export interface ColorDimension extends Dimension {
+  readonly value?: string;
+}
+
 export interface ButtonDimension extends Dimension {
   readonly value?: string;
 }
@@ -52,7 +56,8 @@ export type SelectableDimensionType =
   | "text"
   | "checkbox"
   | "group"
-  | "button";
+  | "button"
+  | "color";
 
 export type Placement = "default" | "belowLegend";
 export const DEFAULT_PLACEMENT: Placement = "default";
@@ -97,6 +102,10 @@ export interface SelectableDimensionText extends Base<string>, TextDimension {
   type: "text";
 }
 
+export interface SelectableDimensionColor extends Base<string>, ColorDimension {
+  type: "color";
+}
+
 export interface SelectableDimensionGroup
   extends Omit<Base, "setDimensionValue">,
     Dimension {
@@ -132,7 +141,8 @@ export type SelectableDimension =
   | SelectableDimensionGroup
   | SelectableDimensionNumeric
   | SelectableDimensionText
-  | SelectableDimensionButton;
+  | SelectableDimensionButton
+  | SelectableDimensionColor;
 
 export const isCheckbox = (
   dim: SelectableDimension
@@ -163,6 +173,10 @@ export const isText = (
 export const isButton = (
   dim: SelectableDimension
 ): dim is SelectableDimensionButton => dim.type === "button";
+
+export const isColor = (
+  dim: SelectableDimension
+): dim is SelectableDimensionColor => dim.type === "color";
 
 const isCorrectPlacement = (placement?: Placement) => (
   dim: SelectableDimension

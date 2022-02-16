@@ -1,10 +1,10 @@
 import {
+  action,
   computed,
   IReactionDisposer,
   observable,
   reaction,
-  runInAction,
-  action
+  runInAction
 } from "mobx";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import isDefined from "../../Core/isDefined";
@@ -23,19 +23,15 @@ import {
   SEQUENTIAL_CONTINUOUS_SCALES,
   SEQUENTIAL_SCALES
 } from "../../Table/TableColorMap";
+import { EnumColorTraits } from "../../Traits/TraitsClasses/TableColorStyleTraits";
 import CommonStrata from "../Definition/CommonStrata";
+import ModelPropertiesFromTraits from "../Definition/ModelPropertiesFromTraits";
 import {
   SelectableDimensionGroup,
   SelectableDimensionNumeric,
-  SelectableDimensionWorkflowGroup,
-  SelectableDimensionText
+  SelectableDimensionWorkflowGroup
 } from "./SelectableDimensions";
 import SelectableDimensionWorkflow from "./SelectableDimensionWorkflow";
-import TableColorStyleTraits, {
-  EnumColorTraits
-} from "../../Traits/TraitsClasses/TableColorStyleTraits";
-import ModelPropertiesFromTraits from "../Definition/ModelPropertiesFromTraits";
-import createStratumInstance from "../Definition/createStratumInstance";
 
 type ColorSchemeType =
   | "sequential-continuous"
@@ -80,6 +76,29 @@ export default class TableStylingWorkflow
     return this.item.activeTableStyle;
   }
 
+  @computed get tableStyleSelectableDim(): SelectableDimensionWorkflowGroup {
+    return {
+      type: "group",
+      id: "Data",
+      selectableDimensions: [
+        {
+          type: "select",
+          id: "table-style",
+          selectedId: this.tableStyle.id,
+          options: this.item.tableColumns.map(col => ({
+            id: col.name,
+            name: col.title
+          })),
+          setDimensionValue: (stratumId, value) => {
+            this.item.setTrait(stratumId, "activeStyle", value);
+            // Note - the activeStyle reaction in TableStylingWorkflow.constructor handles all side effects
+            // The reaction will call this.setColorSchemeTypeFromPalette()
+          }
+        }
+      ]
+    };
+  }
+
   /** This will look at the current `colorMap` and `colorPalette` to guess which `colorSchemeType` is active.
    * This is because `TableMixin` doesn't have an explicit `"colorSchemeType"` flag - it will choose the appropriate type based on `TableStyleTraits`
    * `colorTraits.colorPalette` is also set here if we are only using `tableColorMap.defaultColorPaletteName`
@@ -92,6 +111,8 @@ export default class TableStylingWorkflow
       .defaultColorPaletteName;
 
     const colorPaletteWithDefault = colorPalette ?? defaultColorPalette;
+
+    this.colorSchemeType = undefined;
 
     if (colorMap instanceof ContinuousColorMap) {
       if (
@@ -184,6 +205,7 @@ export default class TableStylingWorkflow
           type: "select",
           id: "Type",
           name: "Type",
+          undefinedLabel: "Please specify",
           options: filterOutUndefined([
             { id: "sequential-continuous", name: "Sequential (continuous)" },
             { id: "sequential-discrete", name: "Sequential (discrete)" },
@@ -314,6 +336,7 @@ export default class TableStylingWorkflow
           }
         },
         // Hide Color scheme selector if we have custom color
+        this.colorSchemeType &&
         this.colorSchemeType !== "custom-discrete" &&
         this.colorSchemeType !== "custom-qualitative"
           ? {
@@ -447,9 +470,9 @@ export default class TableStylingWorkflow
               ({
                 type: "group",
                 id: `bin-${idx}-start`,
-                name: `<div><div style="margin-bottom: -4px; width:20px; height:20px; display:inline-block; background-color:${this.tableStyle.tableColorMap.binColors[
-                  idx
-                ]?.toCssColorString() ?? "#aaa"} ;"></div> ${
+                name: `<div><div style="margin-bottom: -4px; width:20px; height:20px; display:inline-block; background-color:${this
+                  .tableStyle.tableColorMap.binColors[idx] ??
+                  "#aaa"} ;"></div> ${
                   idx === 0
                     ? this.minimumValueSelectableDim.value
                     : this.tableStyle.tableColorMap.binMaximums[idx - 1]
@@ -463,16 +486,14 @@ export default class TableStylingWorkflow
                 },
                 selectableDimensions: [
                   {
-                    type: "text",
+                    type: "color",
                     id: `bin-${idx}-col`,
                     name: `Color`,
-                    value: this.tableStyle.tableColorMap.binColors[
-                      idx
-                    ]?.toCssColorString(),
+                    value: this.tableStyle.tableColorMap.binColors[idx],
                     setDimensionValue: (stratumId, value) => {
-                      const binColors = this.tableStyle.tableColorMap.binColors.map(
-                        c => c.toCssColorString()
-                      );
+                      const binColors = [
+                        ...this.tableStyle.tableColorMap.binColors
+                      ];
                       if (isDefined(value)) binColors[idx] = value;
                       this.getTableStyleTraits(stratumId)?.color.setTrait(
                         stratumId,
@@ -543,7 +564,7 @@ export default class TableStylingWorkflow
             },
             selectableDimensions: [
               {
-                type: "text",
+                type: "color",
                 id: `enum-${idx}-col`,
                 name: `Color`,
                 value: enumCol.color,
@@ -582,12 +603,8 @@ export default class TableStylingWorkflow
                 setDimensionValue: action(stratumId => {
                   this.colorSchemeType = "custom-qualitative";
                   // Remove element by clearing `value`
-                  this.setEnumColorTrait(
-                    stratumId,
-                    idx,
-                    undefined,
-                    enumCol.color
-                  );
+                  this.setEnumColorTrait(stratumId, idx, undefined, undefined);
+                  this.openBinIndex = undefined;
                 })
               }
             ]
@@ -632,6 +649,9 @@ export default class TableStylingWorkflow
                   firstValue,
                   unusedColor ?? "#000000"
                 );
+
+                this.openBinIndex =
+                  this.tableStyle.tableColorMap.enumColors.length - 1;
               })
             }
           : undefined
@@ -641,6 +661,7 @@ export default class TableStylingWorkflow
 
   @computed get selectableDimensions(): SelectableDimensionWorkflowGroup[] {
     return filterOutUndefined([
+      this.tableStyleSelectableDim,
       this.colorSchemeSelectableDim,
 
       // If we are in continuous realm:

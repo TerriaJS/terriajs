@@ -3,29 +3,32 @@
 import i18next from "i18next";
 import { action } from "mobx";
 import { observer } from "mobx-react";
-import React from "react";
+import React, { useState } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import isDefined from "../../../Core/isDefined";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import { BaseModel } from "../../../Models/Definition/Model";
 import SelectableDimensions, {
   filterSelectableDimensions,
+  isButton,
   isCheckbox,
+  isColor,
   isGroup,
   isNumeric,
   isSelect,
+  isText,
   Placement,
   SelectableDimension,
+  SelectableDimensionButton,
   SelectableDimensionCheckbox,
+  SelectableDimensionColor,
+  SelectableDimensionEnum,
   SelectableDimensionGroup,
   SelectableDimensionNumeric,
-  SelectableDimensionEnum,
-  isText,
-  SelectableDimensionText,
-  isButton,
-  SelectableDimensionButton
+  SelectableDimensionText
 } from "../../../Models/SelectableDimensions/SelectableDimensions";
 import Box from "../../../Styled/Box";
+import { RawButton } from "../../../Styled/Button";
 import Checkbox from "../../../Styled/Checkbox";
 import Input from "../../../Styled/Input";
 import Select from "../../../Styled/Select";
@@ -33,7 +36,6 @@ import Spacing from "../../../Styled/Spacing";
 import Text from "../../../Styled/Text";
 import Collapsible from "../../Custom/Collapsible/Collapsible";
 import { parseCustomMarkdownToReactWithOptions } from "../../Custom/parseCustomMarkdownToReact";
-import { RawButton } from "../../../Styled/Button";
 
 interface PropsType extends WithTranslation {
   item: BaseModel;
@@ -111,6 +113,7 @@ export const DimensionSelector: React.FC<{
       {isNumeric(dim) && <DimensionSelectorNumeric id={id} dim={dim} />}
       {isText(dim) && <DimensionSelectorText id={id} dim={dim} />}
       {isButton(dim) && <DimensionSelectorButton id={id} dim={dim} />}
+      {isColor(dim) && <DimensionSelectorColor id={id} dim={dim} />}
     </Box>
   );
 });
@@ -253,5 +256,32 @@ export const DimensionSelectorButton: React.FC<{
     </RawButton>
   );
 };
+
+export const DimensionSelectorColor: React.FC<{
+  id: string;
+  dim: SelectableDimensionColor;
+}> = observer(({ id, dim }) => {
+  const [color, setColor] = useState<string | undefined>(dim.value);
+  const [timeoutDebounce, setTimeoutDebounce] = useState<number | undefined>();
+
+  return (
+    <input
+      type={"color"}
+      value={dim.value}
+      color={dim.value}
+      onChange={evt => {
+        setColor(evt.target.value);
+
+        clearTimeout(timeoutDebounce);
+
+        setTimeoutDebounce(
+          setTimeout(() => {
+            color ? dim.setDimensionValue(CommonStrata.user, color) : null;
+          }, 50) as any
+        );
+      }}
+    ></input>
+  );
+});
 
 export default withTranslation()(DimensionSelectorSection);
