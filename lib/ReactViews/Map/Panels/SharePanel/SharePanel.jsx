@@ -11,7 +11,7 @@ import Clipboard from "../../../Clipboard";
 import Icon from "../../../../Styled/Icon";
 import Loader from "../../../Loader";
 import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
-import Input from "../../../Styled/Input/Input.jsx";
+import Input from "../../../../Styled/Input";
 import DropdownStyles from "../panel.scss";
 import {
   buildShareLink,
