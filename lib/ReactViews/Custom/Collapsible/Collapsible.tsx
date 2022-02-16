@@ -27,7 +27,7 @@ interface CollapsibleProps extends CollapsibleIconProps {
   /** Function is called whenever Collapsible is toggled (close or open).
    * Return value is `true` if the listener has consumed the event, `false` otherwise.
    */
-  onToggle?: (isOpen: boolean) => boolean | undefined;
+  onToggle?: (isOpen: boolean) => boolean | void;
   btnRight?: boolean;
 
   titleTextProps?: any;
