@@ -127,7 +127,7 @@ export default class TableColorMap {
         return new DiscreteColorMap({
           bins: this.binColors.map((color, i) => {
             return {
-              color: color,
+              color: Color.fromCssColorString(color),
               maximum: this.binMaximums[i],
               includeMinimumInThisBin: false
             };
@@ -239,7 +239,7 @@ export default class TableColorMap {
    * Bin colors used to represent `scalar` TableColumns in a DiscreteColorMap
    */
   @computed
-  get binColors(): readonly Readonly<Color>[] {
+  get binColors(): readonly Readonly<string>[] {
     const numberOfBins = this.binMaximums.length;
 
     // Pick a color for every bin.
@@ -247,16 +247,12 @@ export default class TableColorMap {
 
     let colorScale = this.colorScaleCategorical(this.binMaximums.length);
 
-    const result: Color[] = [];
+    const result: string[] = [];
     for (let i = 0; i < numberOfBins; ++i) {
       if (i < binColors.length) {
-        result.push(
-          Color.fromCssColorString(binColors[i]) ?? Color.TRANSPARENT
-        );
+        result.push(binColors[i] ?? Color.TRANSPARENT.toCssHexString());
       } else {
-        result.push(
-          Color.fromCssColorString(colorScale[i % colorScale.length])
-        );
+        result.push(colorScale[i % colorScale.length]);
       }
     }
     return result;
@@ -331,12 +327,14 @@ export default class TableColorMap {
 
     let colorScale = this.colorScaleCategorical(uniqueValues.length);
 
-    return colorScale.map((color, i) => {
-      return {
-        value: uniqueValues[i],
-        color
-      };
-    });
+    return colorScale
+      .map((color, i) => {
+        return {
+          value: uniqueValues[i],
+          color
+        };
+      })
+      .filter(color => isDefined(color.value));
   }
 
   /** This color is used to color values outside minimumValue and maximumValue - it is only used for ContinuousColorMaps

@@ -271,6 +271,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
   /** Add column title as legend title if showing a Discrete or Enum ColorMap */
   @computed get title() {
     if (
+      this.tableStyle.colorMap instanceof ContinuousColorMap ||
       this.tableStyle.colorMap instanceof DiscreteColorMap ||
       this.tableStyle.colorMap instanceof EnumColorMap
     )
@@ -410,8 +411,11 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
     colorMap: EnumColorMap
   ): StratumFromTraits<LegendItemTraits>[] {
     const colorColumn = style.colorColumn;
+    // Show null bin if data has null values - or if EnumColorMap doesn't have enough colors to show all values
     const nullBin =
-      colorColumn && colorColumn.uniqueValues.numberOfNulls > 0
+      colorColumn &&
+      (colorColumn.uniqueValues.numberOfNulls > 0 ||
+        colorColumn.uniqueValues.values.length > colorMap.values.length)
         ? [
             createStratumInstance(LegendItemTraits, {
               color: style.colorTraits.nullColor || "rgba(0, 0, 0, 0)",
