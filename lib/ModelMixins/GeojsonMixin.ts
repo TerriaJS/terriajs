@@ -665,7 +665,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
                 this.stylesWithDefaults.markerColor.toCssColorString()
               ),
               width: this.stylesWithDefaults.markerStrokeWidth,
-              stroke: this.stylesWithDefaults.stroke.toCssColorString(),
+              stroke: this.stylesWithDefaults.markerStroke.toCssColorString(),
               opacity: this.stylesWithDefaults.markerOpacity
             }),
             minzoom: 0,
@@ -732,6 +732,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         markerSize: 24,
         markerColor: getRandomCssColor(this.name ?? ""),
         stroke: getColor(this.terria.baseMapContrastColor),
+        markerStroke: getColor(this.terria.baseMapContrastColor),
         polygonStroke: getColor(this.terria.baseMapContrastColor),
         polylineStroke: getRandomCssColor(this.name ?? ""),
         markerStrokeWidth: 1,
@@ -756,12 +757,20 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           defaults.markerColor
         ),
         stroke: defaultColor(this.style.stroke, defaults.stroke),
-        polygonStroke: defaultColor(this.style.stroke, defaults.polygonStroke),
-        polylineStroke: defaultColor(
-          this.style.stroke,
-          defaults.polylineStroke
+        polygonStroke: defaultColor(
+          this.style["polygon-stroke"] ?? this.style.stroke,
+          defaults.polygonStroke
         ),
         // Note these specific stroke widths are only used for geojson-vt
+
+        polylineStroke: defaultColor(
+          this.style["polyline-stroke"] ?? this.style.stroke,
+          defaults.polylineStroke
+        ),
+        markerStroke: defaultColor(
+          this.style["marker-stroke"] ?? this.style.stroke,
+          defaults.markerStroke
+        ),
         markerStrokeWidth:
           this.style["marker-stroke-width"] ??
           this.style["stroke-width"] ??
@@ -787,6 +796,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
         options.stroke.alpha = this.style["stroke-opacity"];
         options.polygonStroke.alpha = this.style["stroke-opacity"];
         options.polylineStroke.alpha = this.style["stroke-opacity"];
+        options.markerStroke.alpha = this.style["stroke-opacity"];
       }
 
       if (isDefined(this.style["fill-opacity"])) {
@@ -1063,22 +1073,24 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     }
 
     @computed get viewingControls(): ViewingControl[] {
-      return [
-        // We replace the TableStylingWorkflow with VectorStylingWorkflow
-        ...super.viewingControls.filter(v => v.id !== "table-style-edit"),
-        {
-          id: "geojson-style-edit",
-          name: "Edit Style",
-          onClick: viewState => {
-            runInAction(() => {
-              viewState.terria.selectableDimensionWorkflow = new VectorStylingWorkflow(
-                this
-              );
-            });
-          },
-          icon: { glyph: Icon.GLYPHS.layers }
-        }
-      ];
+      return this.useMvt
+        ? [
+            // We replace the TableStylingWorkflow with VectorStylingWorkflow
+            ...super.viewingControls.filter(v => v.id !== "table-style-edit"),
+            {
+              id: "geojson-style-edit",
+              name: "Edit Style",
+              onClick: viewState => {
+                runInAction(() => {
+                  viewState.terria.selectableDimensionWorkflow = new VectorStylingWorkflow(
+                    this
+                  );
+                });
+              },
+              icon: { glyph: Icon.GLYPHS.layers }
+            }
+          ]
+        : [];
     }
   }
   return GeoJsonMixin;
