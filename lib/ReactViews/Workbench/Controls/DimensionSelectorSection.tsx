@@ -1,8 +1,13 @@
 import i18next from "i18next";
-import { runInAction } from "mobx";
+import { debounce } from "lodash-es";
+import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React, { useState } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
+import InputColor from "react-input-color";
+import ReactSelect from "react-select";
+import { useTheme } from "styled-components";
+import Color from "terriajs-cesium/Source/Core/Color";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import { BaseModel } from "../../../Models/Definition/Model";
 import SelectableDimensions, {
@@ -28,7 +33,6 @@ import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import Checkbox from "../../../Styled/Checkbox";
 import Input from "../../../Styled/Input";
-import Select from "../../../Styled/Select";
 import Spacing from "../../../Styled/Spacing";
 import Text from "../../../Styled/Text";
 import Collapsible from "../../Custom/Collapsible/Collapsible";
@@ -72,7 +76,7 @@ class DimensionSelectorSection extends React.Component<PropsType> {
 export const DimensionSelector: React.FC<{
   id: string;
   dim: SelectableDimension;
-}> = observer(({ id, dim }) => {
+}> = ({ id, dim }) => {
   return (
     <Box displayInlineBlock fullWidth styledPadding="5px 0">
       {/* Render label for all SelectableDimensions except for groups */}
@@ -98,39 +102,50 @@ export const DimensionSelector: React.FC<{
       {isColor(dim) && <DimensionSelectorColor id={id} dim={dim} />}
     </Box>
   );
-});
+};
 
 export const DimensionSelectorSelect: React.FC<{
   id: string;
   dim: SelectableDimensionEnum;
 }> = ({ id, dim }) => {
+  const theme = useTheme();
+
+  const undefinedOption = {
+    value: undefined,
+    label:
+      dim.undefinedLabel ??
+      i18next.t("workbench.dimensionsSelector.undefinedLabel")
+  };
+
+  let options = dim.options?.map(option => ({
+    value: option.id,
+    label: option.name ?? option.id
+  }));
+
+  const selectedOption = dim.selectedId
+    ? options?.find(option => option.value === dim.selectedId)
+    : undefinedOption;
+
+  if (!options) return null;
+
+  if (typeof dim.selectedId === "undefined" || dim.allowUndefined) {
+    options = [undefinedOption, ...options];
+  }
+
   return (
-    <Select
-      light
-      name={dim.id}
-      id={id}
-      value={
-        typeof dim.selectedId === "undefined" ? "__undefined__" : dim.selectedId
-      }
-      onChange={(evt: React.ChangeEvent<HTMLSelectElement>) =>
+    <ReactSelect
+      css={`
+        color: ${theme.dark};
+      `}
+      options={options}
+      value={selectedOption}
+      onChange={evt => {
         runInAction(() =>
-          dim.setDimensionValue(CommonStrata.user, evt.target.value)
-        )
-      }
-    >
-      {/* If no value as been selected -> add option */}
-      {(typeof dim.selectedId === "undefined" || dim.allowUndefined) && (
-        <option key="__undefined__" value="">
-          {dim.undefinedLabel ??
-            i18next.t("workbench.dimensionsSelector.undefinedLabel")}
-        </option>
-      )}
-      {dim.options!.map(option => (
-        <option key={option.id} value={option.id}>
-          {option.name || option.id}
-        </option>
-      ))}
-    </Select>
+          dim.setDimensionValue(CommonStrata.user, evt?.value ?? "")
+        );
+      }}
+      isClearable={dim.allowUndefined}
+    />
   );
 };
 
@@ -249,34 +264,28 @@ export const DimensionSelectorButton: React.FC<{
   );
 };
 
+const debounceSetDimensionValue = debounce(
+  action((dim: SelectableDimensionColor, value: string) =>
+    dim.setDimensionValue(CommonStrata.user, value)
+  ),
+  100
+);
+
 export const DimensionSelectorColor: React.FC<{
   id: string;
   dim: SelectableDimensionColor;
 }> = observer(({ id, dim }) => {
-  const [color, setColor] = useState<string | undefined>(dim.value);
-  const [timeoutDebounce, setTimeoutDebounce] = useState<number | undefined>();
+  const [color, setColor] = useState<string | undefined>(
+    dim.value ? Color.fromCssColorString(dim.value).toCssHexString() : undefined
+  );
 
   return (
-    <input
-      type={"color"}
-      value={dim.value}
-      color={dim.value}
-      onChange={evt => {
-        setColor(evt.target.value);
-
-        clearTimeout(timeoutDebounce);
-
-        setTimeoutDebounce(
-          setTimeout(() => {
-            color
-              ? runInAction(() =>
-                  dim.setDimensionValue(CommonStrata.user, color)
-                )
-              : null;
-          }, 50) as any
-        );
+    <InputColor
+      initialValue={color ?? "#000000"}
+      onChange={value => {
+        debounceSetDimensionValue(dim, value.hex);
       }}
-    ></input>
+    />
   );
 });
 
