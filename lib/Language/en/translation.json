@@ -711,6 +711,7 @@
       "carto": "Carto",
       "gltf": "GLTF",
       "shp": "Shapefile (zip)",
+      "socrata-group": "Socrata Server",
       "other": "Other (use conversion service)"
     },
     "printWindow": {
