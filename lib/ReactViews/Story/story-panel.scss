@@ -41,7 +41,7 @@
   display: flex;
   opacity: 0;
   width: 100%;
-  min-height: 100px;
+  min-height: 2em;
   max-width: 1200px;
   background-color: #ffffff;
   color: $text-dark;
@@ -166,7 +166,6 @@
   &:hover {
     @media (min-width: $sm) {
       border: 0px;
-      border-bottom: 1px solid $field-border;
     }
   }
 }

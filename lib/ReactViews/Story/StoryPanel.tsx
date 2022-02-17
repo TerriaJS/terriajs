@@ -3,7 +3,7 @@ import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React from "react";
 import {
-  TranslationProps,
+  useTranslation,
   WithTranslation,
   withTranslation
 } from "react-i18next";
@@ -18,9 +18,11 @@ import Terria from "../../Models/Terria";
 import { Story } from "./Story";
 import ViewState from "../../ReactViewModels/ViewState";
 import Icon from "../../Styled/Icon";
-import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
-import { Medium, Small } from "../Generic/Responsive";
+// import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
+// import { Medium, Small } from "../Generic/Responsive";
 import Styles from "./story-panel.scss";
+import Box from "../../Styled/Box";
+import styled from "styled-components";
 
 /**
  *
@@ -72,6 +74,78 @@ export async function activateStory(scene: Story, terria: Terria) {
   });
 }
 
+interface BtnProp {
+  onClick: () => void;
+}
+
+const ExitBtn = ({ onClick }: BtnProp) => {
+  const { t } = useTranslation();
+  return (
+    <button
+      className={Styles.exitBtn}
+      title={t("story.exitBtn")}
+      onClick={onClick}
+    >
+      <Icon glyph={Icon.GLYPHS.close} />
+    </button>
+  );
+};
+
+const LocationBtn = ({ onClick }: BtnProp) => {
+  const { t } = useTranslation();
+
+  return (
+    <button
+      className={Styles.locationBtn}
+      title={t("story.locationBtn")}
+      onClick={onClick}
+    >
+      <Icon glyph={Icon.GLYPHS.location} />
+    </button>
+  );
+};
+
+const TitleContainer = styled.div`
+  flex: 1;
+`;
+
+const ClampedTitle = styled.h3`
+  /* clamp fallback */
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  overflow: hidden;
+  padding: 0;
+  margin: 10px;
+
+  @supports (-webkit-line-clamp: 2) {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    white-space: unset;
+  }
+`;
+
+const TitleBar = ({
+  title,
+  closeHandler
+}: {
+  title?: string;
+  closeHandler: () => void;
+}) => {
+  const { t } = useTranslation();
+  return (
+    <Box fullWidth>
+      <TitleContainer>
+        <ClampedTitle>{title ? title : t("story.untitled")}</ClampedTitle>
+      </TitleContainer>
+      <Box>
+        <ExitBtn onClick={closeHandler} />
+      </Box>
+    </Box>
+  );
+};
+
 interface Props extends WithTranslation {
   terria: Terria;
   viewState: ViewState;
@@ -82,8 +156,6 @@ interface State {
 }
 @observer
 class StoryPanel extends React.Component<Props, State> {
-  slideInTimer: ReturnType<typeof setTimeout> | undefined;
-  slideOutTimer: ReturnType<typeof setTimeout> | undefined;
   escKeyListener: EventListener | undefined;
 
   constructor(props: Props) {
@@ -93,8 +165,7 @@ class StoryPanel extends React.Component<Props, State> {
     };
   }
 
-  /* eslint-disable-next-line camelcase */
-  UNSAFE_componentWillMount() {
+  componentDidMount() {
     const stories = this.props.terria.stories || [];
     if (
       this.props.viewState.currentStoryId > stories.length - 1 ||
@@ -103,12 +174,11 @@ class StoryPanel extends React.Component<Props, State> {
       this.props.viewState.currentStoryId = 0;
     }
     this.activateStory(stories[this.props.viewState.currentStoryId]);
-  }
-  componentDidMount() {
+
     this.slideIn();
 
     this.escKeyListener = (e: Event) => {
-      if ((e as KeyboardEvent).keyCode === 27) {
+      if ((e as KeyboardEvent).key === "Escape") {
         this.exitStory();
       }
     };
@@ -116,20 +186,15 @@ class StoryPanel extends React.Component<Props, State> {
   }
 
   slideIn() {
-    this.slideInTimer = setTimeout(() => {
-      this.setState({
-        inView: true
-      });
-    }, 300);
+    this.setState({
+      inView: true
+    });
   }
 
   slideOut() {
     this.setState({
       inView: false
     });
-    setTimeout(() => {
-      this.exitStory();
-    }, 300);
   }
 
   onClickContainer() {
@@ -141,9 +206,6 @@ class StoryPanel extends React.Component<Props, State> {
   componentWillUnmount() {
     if (this.escKeyListener) {
       window.removeEventListener("keydown", this.escKeyListener, false);
-    }
-    if (this.slideOutTimer) {
-      clearTimeout(this.slideOutTimer);
     }
   }
 
@@ -192,24 +254,7 @@ class StoryPanel extends React.Component<Props, State> {
     const { t } = this.props;
     const stories = this.props.terria.stories || [];
     const story = stories[this.props.viewState.currentStoryId];
-    const locationBtn = (
-      <button
-        className={Styles.locationBtn}
-        title={t("story.locationBtn")}
-        onClick={this.onCenterScene.bind(this, story)}
-      >
-        <Icon glyph={Icon.GLYPHS.location} />
-      </button>
-    );
-    const exitBtn = (
-      <button
-        className={Styles.exitBtn}
-        title={t("story.exitBtn")}
-        onClick={() => this.slideOut()}
-      >
-        <Icon glyph={Icon.GLYPHS.close} />
-      </button>
-    );
+
     return (
       <Swipeable
         onSwipedLeft={() => this.goToNextStory()}
@@ -234,9 +279,13 @@ class StoryPanel extends React.Component<Props, State> {
             })}
             key={story.id}
           >
-            <Medium>
+            <TitleBar
+              title={story.title}
+              closeHandler={() => this.exitStory()}
+            />
+            {/*<Medium>
               <div className={Styles.left}>
-                {locationBtn}
+                <LocationBtn onClick={this.onCenterScene.bind(this, story)} />
                 <button
                   className={Styles.previousBtn}
                   disabled={this.props.terria.stories.length <= 1}
@@ -249,13 +298,13 @@ class StoryPanel extends React.Component<Props, State> {
             </Medium>
             <div className={Styles.story}>
               <div className={Styles.storyHeader}>
-                <Small>{locationBtn}</Small>
+                <Small><LocationBtn onClick={this.onCenterScene.bind(this, story)} /></Small>
                 {story.title && story.title.length > 0 ? (
                   <h3>{story.title}</h3>
                 ) : (
                   <h3> {t("story.untitled")} </h3>
                 )}
-                <Small>{exitBtn}</Small>
+                <Small><ExitBtn onClick={() => this.slideOut()} /></Small>
                 {this.props.terria.stories.length >= 2 && (
                   <Medium>
                     <div className={Styles.navBtn}>
@@ -289,7 +338,7 @@ class StoryPanel extends React.Component<Props, State> {
             </div>
             <Medium>
               <div className={Styles.right}>
-                {exitBtn}
+                <ExitBtn onClick={() => this.slideOut()} />
                 <button
                   disabled={this.props.terria.stories.length <= 1}
                   className={Styles.nextBtn}
@@ -318,7 +367,7 @@ class StoryPanel extends React.Component<Props, State> {
                   </button>
                 ))}
               </div>
-            </Small>
+            </Small> */}
           </div>
         </div>
       </Swipeable>
