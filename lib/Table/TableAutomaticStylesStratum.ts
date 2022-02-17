@@ -1,7 +1,6 @@
 import i18next from "i18next";
 import { uniq } from "lodash-es";
 import { computed } from "mobx";
-import { createTransformer } from "mobx-utils";
 import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
 import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
@@ -97,7 +96,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
           idColumns: idColumn && [idColumn.name]
         }),
         color: createStratumInstance(TableColorStyleTraits, {
-          legend: this._createLegendForColorStyle(-1)
+          legend: new ColorStyleLegend(this.catalogItem, -1)
         })
       });
     }
@@ -111,7 +110,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
     // Just add default legend
     return createStratumInstance(TableStyleTraits, {
       color: createStratumInstance(TableColorStyleTraits, {
-        legend: this._createLegendForColorStyle(-1)
+        legend: new ColorStyleLegend(this.catalogItem, -1)
       })
     });
   }
@@ -131,7 +130,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
     if (scalarColumns.length >= (hasTime ? 1 : 2)) {
       return createStratumInstance(TableStyleTraits, {
         color: createStratumInstance(TableColorStyleTraits, {
-          legend: this._createLegendForColorStyle(-1)
+          legend: new ColorStyleLegend(this.catalogItem, -1)
         }),
         chart: createStratumInstance(TableChartStyleTraits, {
           xAxisColumn: hasTime ? timeColumns[0].name : scalarColumns[0].name,
@@ -167,7 +166,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
         id: column.name,
         color: createStratumInstance(TableColorStyleTraits, {
           colorColumn: column.name,
-          legend: this._createLegendForColorStyle(i)
+          legend: new ColorStyleLegend(this.catalogItem, i)
         }),
         pointSize: createStratumInstance(TablePointSizeStyleTraits, {
           pointSizeColumn: column.name
@@ -234,12 +233,6 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
       return `${this.catalogItem.activeTableStyle.timeColumn.title}: `;
     }
   }
-
-  private readonly _createLegendForColorStyle = createTransformer(
-    (i: number) => {
-      return new ColorStyleLegend(this.catalogItem, i);
-    }
-  );
 }
 
 export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
