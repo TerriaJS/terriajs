@@ -142,21 +142,14 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
 
   @computed
   get styles(): StratumFromTraits<TableStyleTraits>[] {
-    // Create a style to color by every scalar and enum.
-    let columns = this.catalogItem.tableColumns.filter(
+    // If no styles for scalar, enum - show styles using region columns
+    const showRegionStyles = this.catalogItem.tableColumns.every(
       column =>
-        column.type === TableColumnType.scalar ||
-        column.type === TableColumnType.enum
+        column.type !== TableColumnType.scalar &&
+        column.type !== TableColumnType.enum
     );
 
-    // If no styles for scalar, enum - try to create a style using region columns
-    if (columns.length === 0) {
-      columns = this.catalogItem.tableColumns.filter(
-        column => column.type === TableColumnType.region
-      );
-    }
-
-    return columns.map((column, i) =>
+    return this.catalogItem.tableColumns.map((column, i) =>
       createStratumInstance(TableStyleTraits, {
         id: column.name,
         color: createStratumInstance(TableColorStyleTraits, {
@@ -165,7 +158,11 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
         }),
         pointSize: createStratumInstance(TablePointSizeStyleTraits, {
           pointSizeColumn: column.name
-        })
+        }),
+        hidden:
+          column.type !== TableColumnType.scalar &&
+          column.type !== TableColumnType.enum &&
+          (column.type !== TableColumnType.region || !showRegionStyles)
       })
     );
   }

@@ -31,8 +31,8 @@ const DEFAULT_FINAL_DURATION_SECONDS = 3600 * 24 - 1; // one day less a second, 
 export default class TableStyle {
   /**
    *
-   * @param tableModel TableMixin catalog memeber
-   * @param styleNumber Index of column in tablemodel (if undefined, then default style will be used)
+   * @param tableModel TableMixin catalog member
+   * @param styleNumber Index of styleTraits in tableModel (if undefined, then default style will be used)
    */
   constructor(
     readonly tableModel: TableMixin.Instance,
