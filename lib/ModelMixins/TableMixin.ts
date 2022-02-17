@@ -443,21 +443,23 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     @computed get viewingControls(): ViewingControl[] {
-      return [
+      return filterOutUndefined([
         ...super.viewingControls,
-        {
-          id: "table-style-edit",
-          name: "Edit Style",
-          onClick: viewState => {
-            runInAction(() => {
-              viewState.terria.selectableDimensionWorkflow = new TableStylingWorkflow(
-                this
-              );
-            });
-          },
-          icon: { glyph: Icon.GLYPHS.layers }
-        }
-      ];
+        this.activeStyle // Note we want falsy here
+          ? {
+              id: "table-style-edit",
+              name: "Edit Style",
+              onClick: viewState => {
+                runInAction(() => {
+                  viewState.terria.selectableDimensionWorkflow = new TableStylingWorkflow(
+                    this
+                  );
+                });
+              },
+              icon: { glyph: Icon.GLYPHS.layers }
+            }
+          : undefined
+      ]);
     }
 
     @computed get tableStylingWorkflowActive() {
@@ -470,8 +472,12 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         ? filterOutUndefined([
             this.timeDisableDimension,
             ...super.selectableDimensions,
-            this.regionColumnDimensions,
-            this.regionProviderDimensions,
+            this.enableManualRegionMapping
+              ? this.regionColumnDimensions
+              : undefined,
+            this.enableManualRegionMapping
+              ? this.regionProviderDimensions
+              : undefined,
             this.styleDimensions,
             this.outlierFilterDimension
           ])
@@ -515,7 +521,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     @computed
     get regionProviderDimensions(): SelectableDimension | undefined {
       if (
-        !this.enableManualRegionMapping ||
         !Array.isArray(this.regionProviderList?.regionProviders) ||
         !isDefined(this.activeTableStyle.regionColumn)
       ) {
@@ -563,10 +568,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
      */
     @computed
     get regionColumnDimensions(): SelectableDimension | undefined {
-      if (
-        !this.enableManualRegionMapping ||
-        !Array.isArray(this.regionProviderList?.regionProviders)
-      ) {
+      if (!Array.isArray(this.regionProviderList?.regionProviders)) {
         return;
       }
 
