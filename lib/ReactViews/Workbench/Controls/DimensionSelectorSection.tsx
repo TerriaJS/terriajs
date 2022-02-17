@@ -1,4 +1,5 @@
 import i18next from "i18next";
+import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import React, { useState } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
@@ -112,7 +113,9 @@ export const DimensionSelectorSelect: React.FC<{
         typeof dim.selectedId === "undefined" ? "__undefined__" : dim.selectedId
       }
       onChange={(evt: React.ChangeEvent<HTMLSelectElement>) =>
-        dim.setDimensionValue(CommonStrata.user, evt.target.value)
+        runInAction(() =>
+          dim.setDimensionValue(CommonStrata.user, evt.target.value)
+        )
       }
     >
       {/* If no value as been selected -> add option */}
@@ -140,9 +143,11 @@ export const DimensionSelectorCheckbox: React.FC<{
       name={id}
       isChecked={dim.selectedId === "true"}
       onChange={evt =>
-        dim.setDimensionValue(
-          CommonStrata.user,
-          evt.target.checked ? "true" : "false"
+        runInAction(() =>
+          dim.setDimensionValue(
+            CommonStrata.user,
+            evt.target.checked ? "true" : "false"
+          )
         )
       }
     >
@@ -200,7 +205,9 @@ export const DimensionSelectorNumeric: React.FC<{
       min={dim.min}
       max={dim.max}
       onChange={evt => {
-        dim.setDimensionValue(CommonStrata.user, parseFloat(evt.target.value));
+        runInAction(() =>
+          dim.setDimensionValue(CommonStrata.user, parseFloat(evt.target.value))
+        );
       }}
     />
   );
@@ -218,7 +225,9 @@ export const DimensionSelectorText: React.FC<{
       name={id}
       value={dim.value}
       onChange={evt => {
-        dim.setDimensionValue(CommonStrata.user, evt.target.value);
+        runInAction(() =>
+          dim.setDimensionValue(CommonStrata.user, evt.target.value)
+        );
       }}
     />
   );
@@ -230,7 +239,9 @@ export const DimensionSelectorButton: React.FC<{
 }> = ({ id, dim }) => {
   return (
     <RawButton
-      onClick={() => dim.setDimensionValue(CommonStrata.user, true)}
+      onClick={() =>
+        runInAction(() => dim.setDimensionValue(CommonStrata.user, true))
+      }
       activeStyles
     >
       {parseCustomMarkdownToReactWithOptions(dim.value ?? "", { inline: true })}
@@ -257,7 +268,11 @@ export const DimensionSelectorColor: React.FC<{
 
         setTimeoutDebounce(
           setTimeout(() => {
-            color ? dim.setDimensionValue(CommonStrata.user, color) : null;
+            color
+              ? runInAction(() =>
+                  dim.setDimensionValue(CommonStrata.user, color)
+                )
+              : null;
           }, 50) as any
         );
       }}
