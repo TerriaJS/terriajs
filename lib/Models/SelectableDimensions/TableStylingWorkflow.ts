@@ -14,6 +14,7 @@ import EnumColorMap from "../../Map/ColorMap/EnumColorMap";
 import { getName } from "../../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../../ModelMixins/TableMixin";
 import Icon from "../../Styled/Icon";
+import { ColorStyleLegend } from "../../Table/TableAutomaticStylesStratum";
 import {
   DEFAULT_DIVERGING,
   DEFAULT_QUALITATIVE,
@@ -23,8 +24,11 @@ import {
   SEQUENTIAL_CONTINUOUS_SCALES,
   SEQUENTIAL_SCALES
 } from "../../Table/TableColorMap";
-import { EnumColorTraits } from "../../Traits/TraitsClasses/TableColorStyleTraits";
+import TableColorStyleTraits, {
+  EnumColorTraits
+} from "../../Traits/TraitsClasses/TableColorStyleTraits";
 import CommonStrata from "../Definition/CommonStrata";
+import createStratumInstance from "../Definition/createStratumInstance";
 import ModelPropertiesFromTraits from "../Definition/ModelPropertiesFromTraits";
 import {
   SelectableDimensionGroup,
@@ -85,15 +89,38 @@ export default class TableStylingWorkflow
           type: "select",
           id: "table-style",
           selectedId: this.tableStyle.id,
-          options: this.item.tableColumns.map(col => ({
-            id: col.name,
-            name: col.title
-          })),
-          setDimensionValue: (stratumId, value) => {
+          options: this.item.tableColumns
+            // Filter out empty columns
+            .filter(col => col.uniqueValues.values.length > 0)
+            .map(col => ({
+              id: col.name,
+              name: col.title
+            })),
+          setDimensionValue: action((stratumId, value) => {
+            // If no TableStyle exists for the select Column, we need to create one and set some default values
+            if (!this.item.styles.find(style => style.id === value)) {
+              const column = this.item.tableColumns.find(
+                col => col.name === value
+              );
+              if (!column) return;
+              const styleTraits = this.getTableStyleTraits(stratumId, value);
+
+              if (!styleTraits) return;
+
+              styleTraits?.setTrait(
+                stratumId,
+                "color",
+                createStratumInstance(TableColorStyleTraits, {
+                  colorColumn: value,
+                  legend: new ColorStyleLegend(this.item, column.columnNumber)
+                })
+              );
+            }
+
             this.item.setTrait(stratumId, "activeStyle", value);
             // Note - the activeStyle reaction in TableStylingWorkflow.constructor handles all side effects
             // The reaction will call this.setColorSchemeTypeFromPalette()
-          }
+          })
         }
       ]
     };
@@ -729,10 +756,10 @@ export default class TableStylingWorkflow
   }
 
   /** Get `TableStyleTraits` for the active table style (so we can call `setTraits`) */
-  getTableStyleTraits(stratumId: string) {
+  getTableStyleTraits(stratumId: string, id: string = this.tableStyle.id) {
     return (
-      this.item.styles?.find(style => style.id === this.tableStyle.id) ??
-      this.item.addObject(stratumId, "styles", this.tableStyle.id)
+      this.item.styles?.find(style => style.id === id) ??
+      this.item.addObject(stratumId, "styles", id)
     );
   }
 
