@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { getName } from "../../ModelMixins/CatalogMemberMixin";
 import SelectableDimensions, {
   DEFAULT_PLACEMENT,
-  SelectableDimension
+  filterSelectableDimensions
 } from "../../Models/SelectableDimensions/SelectableDimensions";
 import ViewState from "../../ReactViewModels/ViewState";
 import WorkflowPanel from "../../Styled/WorkflowPanel";
@@ -69,7 +69,9 @@ const SelectableDimensionWorkflow: React.FC<PropsType> = observer(
                 key={groupDim.name ?? groupDim.id}
               >
                 <PanelBody>
-                  {groupDim.selectableDimensions.map(childDim => (
+                  {filterSelectableDimensions()(
+                    groupDim.selectableDimensions
+                  ).map(childDim => (
                     <DimensionSelector
                       key={`${terria.selectableDimensionWorkflow?.item.uniqueId}-${childDim.id}-fragment`}
                       id={`${terria.selectableDimensionWorkflow?.item.uniqueId}-${childDim.id}`}
