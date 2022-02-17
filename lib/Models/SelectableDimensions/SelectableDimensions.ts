@@ -207,7 +207,9 @@ export const filterSelectableDimensions = (placement?: Placement) => (
       (!isDefined(placement) || isCorrectPlacement(placement)(dim)) &&
       isEnabled(dim) &&
       // Check enum dimensions for valid options
-      (!isEnumDimension(dim) || enumHasValidOptions(dim))
+      (!isEnumDimension(dim) || enumHasValidOptions(dim)) &&
+      // Only show groups if they have at least one SelectableDimension
+      (!isGroup(dim) || dim.selectableDimensions.length > 0)
   );
 
 /** Find human readable name for the current value for a SelectableDimension */
