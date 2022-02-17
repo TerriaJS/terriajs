@@ -9,85 +9,112 @@ export default class VectorStylingWorkflow extends TableStylingWorkflow {
     super(item);
   }
 
+  @computed get pointSelectableDimension(): SelectableDimensionWorkflowGroup {
+    return {
+      type: "group",
+      id: "Point/Marker",
+      selectableDimensions: [
+        {
+          type: "select",
+          id: "marker-size",
+          name: "Marker size",
+          options: [
+            { id: "small", name: "Small" },
+            { id: "medium", name: "Medium" },
+            { id: "large", name: "Large" }
+          ],
+          undefinedLabel: "Other",
+          selectedId: this.item.style["marker-size"] ?? "small",
+          setDimensionValue: (stratumId, id) => {
+            this.item.style.setTrait(stratumId, "marker-size", id);
+          }
+        },
+        {
+          type: "color",
+          id: "marker-stroke-color",
+          name: "Stroke color",
+          value:
+            this.item.style["marker-stroke"] ??
+            this.item.stylesWithDefaults.markerStroke.toCssHexString(),
+          setDimensionValue: (stratumId, value) => {
+            this.item.style.setTrait(stratumId, "marker-stroke", value);
+          }
+        },
+        {
+          type: "numeric",
+          id: "marker-stroke-width",
+          name: "Stroke width",
+          min: 0,
+          value: this.item.stylesWithDefaults.markerStrokeWidth,
+          setDimensionValue: (stratumId, value) => {
+            this.item.style.setTrait(stratumId, "marker-stroke-width", value);
+          }
+        }
+      ]
+    };
+  }
+
+  @computed get lineSelectableDimension(): SelectableDimensionWorkflowGroup {
+    return {
+      type: "group",
+      id: "Lines",
+      selectableDimensions: [
+        {
+          type: "numeric",
+          id: "line-stroke-width",
+          name: "Stroke width",
+          min: 0,
+          value: this.item.stylesWithDefaults.polylineStrokeWidth,
+          setDimensionValue: (stratumId, value) => {
+            this.item.style.setTrait(stratumId, "polyline-stroke-width", value);
+          }
+        }
+      ]
+    };
+  }
+
+  @computed get polygonSelectableDimension(): SelectableDimensionWorkflowGroup {
+    return {
+      type: "group",
+      id: "Polygons",
+      selectableDimensions: [
+        {
+          type: "color",
+          id: "polygon-stroke-color",
+          name: "Stroke color",
+          value:
+            this.item.style["polygon-stroke"] ??
+            this.item.stylesWithDefaults.polygonStroke.toCssHexString(),
+          setDimensionValue: (stratumId, value) => {
+            this.item.style.setTrait(stratumId, "polygon-stroke", value);
+          }
+        },
+        {
+          type: "numeric",
+          id: "polygon-stroke-width",
+          name: "Stroke width",
+          min: 0,
+          value: this.item.stylesWithDefaults.polygonStrokeWidth,
+          setDimensionValue: (stratumId, value) => {
+            this.item.style.setTrait(stratumId, "polygon-stroke-width", value);
+          }
+        }
+      ]
+    };
+  }
+
   @computed get selectableDimensions(): SelectableDimensionWorkflowGroup[] {
     return filterOutUndefined([
       ...super.selectableDimensions,
       this.item.featureCounts.point > 0
-        ? ({
-            type: "group",
-            id: "Point size",
-            selectableDimensions: [
-              {
-                type: "select",
-                id: "marker-size",
-                options: [
-                  { id: "small", name: "Small" },
-                  { id: "medium", name: "Medium" },
-                  { id: "large", name: "Large" }
-                ],
-                undefinedLabel: "Other",
-                selectedId: this.item.style["marker-size"] ?? "small",
-                setDimensionValue: (stratumId, id) => {
-                  this.item.style.setTrait(stratumId, "marker-size", id);
-                }
-              }
-            ]
-          } as SelectableDimensionWorkflowGroup)
+        ? this.pointSelectableDimension
         : undefined,
-      {
-        type: "group",
-        id: "Stroke",
-        selectableDimensions: filterOutUndefined([
-          this.item.featureCounts.point > 0 ||
-          this.item.featureCounts.polygon > 0
-            ? {
-                type: "select",
-                id: "Color",
-                name: "Color",
-                options: [{ id: "White" }, { id: "Black" }],
-                selectedId:
-                  this.item.stylesWithDefaults.stroke.toCssHexString() ===
-                  "#ffffff"
-                    ? "White"
-                    : this.item.stylesWithDefaults.stroke.toCssHexString() ===
-                      "#000000"
-                    ? "Black"
-                    : undefined,
-                undefinedLabel: "Other",
-                setDimensionValue: (stratumId, id) => {
-                  this.item.style.setTrait(
-                    stratumId,
-                    "stroke",
-                    id === "White" ? "#ffffff" : "#000000"
-                  );
-                }
-              }
-            : undefined,
-          {
-            type: "numeric",
-            id: "Width",
-            name: "Width",
-            value: Math.max(
-              this.item.stylesWithDefaults.polylineStrokeWidth,
-              this.item.stylesWithDefaults.polygonStrokeWidth,
-              this.item.stylesWithDefaults.markerStrokeWidth
-            ),
-            setDimensionValue: (stratumId, value) => {
-              this.item.style.setTrait(stratumId, "marker-stroke-width", value);
-              this.item.style.setTrait(
-                stratumId,
-                "polygon-stroke-width",
-                value
-              );
-              this.item.style.setTrait(
-                stratumId,
-                "polyline-stroke-width",
-                value
-              );
-            }
-          }
-        ])
-      }
+      this.item.featureCounts.line > 0
+        ? this.lineSelectableDimension
+        : undefined,
+      this.item.featureCounts.polygon > 0
+        ? this.polygonSelectableDimension
+        : undefined
     ]);
   }
 }
