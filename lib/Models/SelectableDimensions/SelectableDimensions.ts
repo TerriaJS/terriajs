@@ -63,7 +63,7 @@ export type Placement = "default" | "belowLegend";
 export const DEFAULT_PLACEMENT: Placement = "default";
 
 /** Base SelectableDimension interface. Each following SelectableDimension will extend this and the Dimension interface above */
-interface Base<T = string> {
+export interface SelectableDimensionBase<T = string> {
   setDimensionValue(stratumId: string, value: T): void;
   disable?: boolean;
   /** Placement of dimension in Workbench:
@@ -75,7 +75,9 @@ interface Base<T = string> {
   type?: SelectableDimensionType;
 }
 
-export interface SelectableDimensionEnum extends Base<string>, EnumDimension {
+export interface SelectableDimensionEnum
+  extends SelectableDimensionBase<string>,
+    EnumDimension {
   type?: undefined | "select";
 }
 
@@ -83,31 +85,37 @@ export interface SelectableDimensionEnum extends Base<string>, EnumDimension {
 export const MAX_SELECTABLE_DIMENSION_OPTIONS = 1000;
 
 export interface SelectableDimensionCheckbox
-  extends Base<"true" | "false">,
+  extends SelectableDimensionBase<"true" | "false">,
     EnumDimension {
   type: "checkbox";
 }
 
-export interface SelectableDimensionButton extends Base<true>, ButtonDimension {
+export interface SelectableDimensionButton
+  extends SelectableDimensionBase<true>,
+    ButtonDimension {
   type: "button";
 }
 
 export interface SelectableDimensionNumeric
-  extends Base<number>,
+  extends SelectableDimensionBase<number>,
     NumericalDimension {
   type: "numeric";
 }
 
-export interface SelectableDimensionText extends Base<string>, TextDimension {
+export interface SelectableDimensionText
+  extends SelectableDimensionBase<string>,
+    TextDimension {
   type: "text";
 }
 
-export interface SelectableDimensionColor extends Base<string>, ColorDimension {
+export interface SelectableDimensionColor
+  extends SelectableDimensionBase<string>,
+    ColorDimension {
   type: "color";
 }
 
 export interface SelectableDimensionGroup
-  extends Omit<Base, "setDimensionValue">,
+  extends Omit<SelectableDimensionBase, "setDimensionValue">,
     Dimension {
   type: "group";
 
@@ -127,7 +135,7 @@ export interface SelectableDimensionGroup
 
 /** This is essentially the same as `SelectableDimensionGroup`, but allows two levels of nested `SelectableDimensionGroup`, instead of one */
 export interface SelectableDimensionWorkflowGroup
-  extends Omit<Base, "setDimensionValue">,
+  extends Omit<SelectableDimensionBase, "setDimensionValue">,
     Dimension {
   type: "group";
 

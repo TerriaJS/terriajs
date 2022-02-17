@@ -445,7 +445,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     @computed get viewingControls(): ViewingControl[] {
       return filterOutUndefined([
         ...super.viewingControls,
-        this.activeStyle // Note we want falsy here
+        this.activeStyle // Note we want falsy here for activeStyle ("" is equivalent to undefined)
           ? {
               id: "table-style-edit",
               name: "Edit Style",
