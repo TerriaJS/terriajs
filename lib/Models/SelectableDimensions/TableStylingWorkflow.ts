@@ -14,6 +14,10 @@ import DiscreteColorMap from "../../Map/ColorMap/DiscreteColorMap";
 import EnumColorMap from "../../Map/ColorMap/EnumColorMap";
 import { getName } from "../../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../../ModelMixins/TableMixin";
+import {
+  QualitativeColorSchemeOptionRenderer,
+  QuantitativeColorSchemeOptionRenderer
+} from "../../ReactViews/Workflows/OptionRenderers/ColorSchemeOptionRenderer";
 import Icon from "../../Styled/Icon";
 import {
   DEFAULT_DIVERGING,
@@ -57,8 +61,9 @@ export default class TableStylingWorkflow
   implements SelectableDimensionWorkflow {
   /** This is used to simplify SelectableDimensions available to the user.
    * For example - if equal to `diverging-continuous` - then only Diverging continuous color scales will be presented as options
-   * See setColorSchemeTypeFromPalette for how this is set. */
+   * See setColorSchemeTypeFromPalette and setColorSchemeType for how this is set. */
   @observable colorSchemeType: ColorSchemeType | undefined;
+
   private activeStyleDisposer: IReactionDisposer;
 
   constructor(readonly item: TableMixin.Instance) {
@@ -92,80 +97,6 @@ export default class TableStylingWorkflow
 
   get icon() {
     return Icon.GLYPHS.layers;
-  }
-
-  /** Convenience getter for item.activeTableStyle */
-  @computed get tableStyle() {
-    return this.item.activeTableStyle;
-  }
-
-  /** Show advances options
-   * - Show all column types in "Data" select
-   * - Show "Data type (advanced)" select. This allow user to change column type */
-  @observable showAdvancedOptions: boolean = false;
-
-  @computed get tableStyleSelectableDim(): SelectableDimensionWorkflowGroup {
-    return {
-      type: "group",
-      id: "Data",
-      selectableDimensions: filterOutUndefined([
-        {
-          type: "select",
-          id: "table-style",
-          selectedId: this.tableStyle.id,
-          options: this.item.tableColumns
-            // Filter out empty columns
-            .filter(
-              col =>
-                col.uniqueValues.values.length > 0 &&
-                (this.showAdvancedOptions ||
-                  !ADVANCED_TABLE_COLUMN_TYPES.includes(col.type))
-            )
-            .map(col => ({
-              id: col.name,
-              name: col.title
-            })),
-          setDimensionValue: (stratumId, value) => {
-            this.item.setTrait(stratumId, "activeStyle", value);
-            // Note - the activeStyle reaction in TableStylingWorkflow.constructor handles all side effects
-            // The reaction will call this.setColorSchemeTypeFromPalette()
-          }
-        },
-        this.showAdvancedOptions
-          ? {
-              type: "select",
-              id: "data-type",
-              name: "Data type (advanced)",
-              options: Object.keys(TableColumnType)
-                .filter(type => type.length > 1)
-                .map(colType => ({ id: colType })),
-              selectedId: isDefined(this.tableStyle.colorColumn?.type)
-                ? TableColumnType[this.tableStyle.colorColumn!.type]
-                : undefined,
-              setDimensionValue: (stratumId, id) => {
-                this.getTableColumnTraits(stratumId)?.setTrait(
-                  stratumId,
-                  "type",
-                  id
-                );
-                this.setColorSchemeTypeFromPalette();
-              }
-            }
-          : undefined,
-        {
-          type: "checkbox",
-          id: "show-advanced-options",
-          options: [
-            { id: "false", name: "Hide advanced options" },
-            { id: "true", name: "Show advanced options" }
-          ],
-          selectedId: this.showAdvancedOptions ? "true" : "false",
-          setDimensionValue: (stratumId, id) => {
-            this.showAdvancedOptions = id === "true";
-          }
-        }
-      ])
-    };
   }
 
   /** This will look at the current `colorMap` and `colorPalette` to guess which `colorSchemeType` is active.
@@ -253,6 +184,232 @@ export default class TableStylingWorkflow
     }
   }
 
+  /** Handle change on colorType - this is called by the  */
+  @action setColorSchemeType(stratumId: string, id: string) {
+    // Set `activeStyle` trait so the value doesn't change
+    this.item.setTrait(stratumId, "activeStyle", this.tableStyle.id);
+
+    // Hide any open bin
+    this.openBinIndex = undefined;
+
+    // Here we use item.activeTableStyle.colorTraits.colorPalette instead of this.colorPalette because we only want this to be defined, if the trait is defined - we don't care about defaultColorPaletteName
+    const colorPalette = this.tableStyle.colorTraits.colorPalette;
+
+    // **Discrete color maps**
+    // Set column type to "scalar"
+    // Reset bins
+    if (id === "sequential-discrete" || id === "diverging-discrete") {
+      this.colorSchemeType = id;
+      this.getTableColumnTraits(stratumId)?.setTrait(
+        stratumId,
+        "type",
+        "scalar"
+      );
+
+      // Set numberOfBins according to limits of sequential and diverging color scales:
+      // - Sequential is [3,9]
+      // - Diverging is [3,11]
+
+      // If numberOfBins is 0 - set to sensible default (7)
+      if (this.tableStyle.colorTraits.numberOfBins === 0) {
+        this.getTableStyleTraits(stratumId)?.color.setTrait(
+          stratumId,
+          "numberOfBins",
+          7
+        );
+      } else if (
+        id === "sequential-discrete" &&
+        this.tableStyle.tableColorMap.binColors.length > 9
+      ) {
+        this.getTableStyleTraits(stratumId)?.color.setTrait(
+          stratumId,
+          "numberOfBins",
+          9
+        );
+      } else if (
+        id === "diverging-discrete" &&
+        this.tableStyle.tableColorMap.binColors.length > 11
+      ) {
+        this.getTableStyleTraits(stratumId)?.color.setTrait(
+          stratumId,
+          "numberOfBins",
+          11
+        );
+      } else if (this.tableStyle.tableColorMap.binColors.length < 3) {
+        this.getTableStyleTraits(stratumId)?.color.setTrait(
+          stratumId,
+          "numberOfBins",
+          3
+        );
+      }
+
+      this.getTableStyleTraits(stratumId)?.color.setTrait(
+        stratumId,
+        "binColors",
+        undefined
+      );
+      this.clearBinMaximums(stratumId);
+    }
+    // **Continuous color maps**
+    // Set column type to "scalar"
+    // Set all discrete color map related traits to undefined
+    else if (id === "sequential-continuous" || id === "diverging-continuous") {
+      this.colorSchemeType = id;
+      this.getTableColumnTraits(stratumId)?.setTrait(
+        stratumId,
+        "type",
+        "scalar"
+      );
+      this.getTableStyleTraits(stratumId)?.color.setTrait(
+        stratumId,
+        "numberOfBins",
+        undefined
+      );
+      this.getTableStyleTraits(stratumId)?.color.setTrait(
+        stratumId,
+        "binMaximums",
+        undefined
+      );
+      this.getTableStyleTraits(stratumId)?.color.setTrait(
+        stratumId,
+        "binColors",
+        undefined
+      );
+    }
+    // **Qualitative (enum) color maps**
+    // Set column type to "enum"
+    else if (id === "qualitative") {
+      this.colorSchemeType = id;
+      this.getTableColumnTraits(stratumId)?.setTrait(stratumId, "type", "enum");
+      this.getTableStyleTraits(stratumId)?.color.setTrait(
+        stratumId,
+        "enumColors",
+        undefined
+      );
+    }
+
+    // **No style (constant) color maps**
+    // Set column type to "text"
+    else if (id === "no-style") {
+      this.colorSchemeType = id;
+      this.getTableColumnTraits(stratumId)?.setTrait(stratumId, "type", "text");
+    }
+
+    // If the current colorPalette is incompatible with the selected type - change colorPalette to default for the selected type
+    if (
+      id === "sequential-continuous" &&
+      (!colorPalette ||
+        ![...SEQUENTIAL_SCALES, ...SEQUENTIAL_CONTINUOUS_SCALES].includes(
+          colorPalette
+        ))
+    ) {
+      this.getTableStyleTraits(stratumId)?.color.setTrait(
+        stratumId,
+        "colorPalette",
+        DEFAULT_SEQUENTIAL
+      );
+    }
+    if (
+      id === "sequential-discrete" &&
+      (!colorPalette || !SEQUENTIAL_SCALES.includes(colorPalette))
+    ) {
+      this.getTableStyleTraits(stratumId)?.color.setTrait(
+        stratumId,
+        "colorPalette",
+        DEFAULT_SEQUENTIAL
+      );
+    }
+    if (
+      (id === "diverging-continuous" || id === "diverging-discrete") &&
+      (!colorPalette || !DIVERGING_SCALES.includes(colorPalette))
+    ) {
+      this.getTableStyleTraits(stratumId)?.color.setTrait(
+        stratumId,
+        "colorPalette",
+        DEFAULT_DIVERGING
+      );
+    }
+    if (
+      id === "qualitative" &&
+      (!colorPalette || !QUALITATIVE_SCALES.includes(colorPalette))
+    ) {
+      this.getTableStyleTraits(stratumId)?.color.setTrait(
+        stratumId,
+        "colorPalette",
+        DEFAULT_QUALITATIVE
+      );
+    }
+  }
+
+  /** Show advances options
+   * - Show all column types in "Data" select
+   * - Show "Data type (advanced)" select. This allow user to change column type */
+  @observable showAdvancedOptions: boolean = false;
+
+  @computed get tableStyleSelectableDim(): SelectableDimensionWorkflowGroup {
+    return {
+      type: "group",
+      id: "Data",
+      selectableDimensions: filterOutUndefined([
+        {
+          type: "select",
+          id: "table-style",
+          selectedId: this.tableStyle.id,
+          options: this.item.tableColumns
+            // Filter out empty columns
+            .filter(
+              col =>
+                col.uniqueValues.values.length > 0 &&
+                (this.showAdvancedOptions ||
+                  !ADVANCED_TABLE_COLUMN_TYPES.includes(col.type))
+            )
+            .map(col => ({
+              id: col.name,
+              name: col.title
+            })),
+          setDimensionValue: (stratumId, value) => {
+            this.item.setTrait(stratumId, "activeStyle", value);
+            // Note - the activeStyle reaction in TableStylingWorkflow.constructor handles all side effects
+            // The reaction will call this.setColorSchemeTypeFromPalette()
+          }
+        },
+        this.showAdvancedOptions
+          ? {
+              type: "select",
+              id: "data-type",
+              name: "Data type (advanced)",
+              options: Object.keys(TableColumnType)
+                .filter(type => type.length > 1)
+                .map(colType => ({ id: colType })),
+              selectedId: isDefined(this.tableStyle.colorColumn?.type)
+                ? TableColumnType[this.tableStyle.colorColumn!.type]
+                : undefined,
+              setDimensionValue: (stratumId, id) => {
+                this.getTableColumnTraits(stratumId)?.setTrait(
+                  stratumId,
+                  "type",
+                  id
+                );
+                this.setColorSchemeTypeFromPalette();
+              }
+            }
+          : undefined,
+        {
+          type: "checkbox",
+          id: "show-advanced-options",
+          options: [
+            { id: "false", name: "Hide advanced options" },
+            { id: "true", name: "Show advanced options" }
+          ],
+          selectedId: this.showAdvancedOptions ? "true" : "false",
+          setDimensionValue: (stratumId, id) => {
+            this.showAdvancedOptions = id === "true";
+          }
+        }
+      ])
+    };
+  }
+
   @computed get colorSchemesForType() {
     const type = this.colorSchemeType;
     if (!isDefined(type)) return [];
@@ -294,134 +451,7 @@ export default class TableStylingWorkflow
           ]),
           selectedId: this.colorSchemeType,
           setDimensionValue: (stratumId, id) => {
-            // Set `activeStyle` trait so the value doesn't change
-            this.item.setTrait(stratumId, "activeStyle", this.tableStyle.id);
-
-            // Here we use item.activeTableStyle.colorTraits.colorPalette instead of this.colorPalette because we only want this to be defined, if the trait is defined - we don't care about defaultColorPaletteName
-            const colorPalette = this.tableStyle.colorTraits.colorPalette;
-
-            // Discrete color maps
-            // Set column type to "scalar"
-            // Reset bins
-            if (id === "sequential-discrete" || id === "diverging-discrete") {
-              this.colorSchemeType = id;
-              this.getTableColumnTraits(stratumId)?.setTrait(
-                stratumId,
-                "type",
-                "scalar"
-              );
-              this.getTableStyleTraits(stratumId)?.color.setTrait(
-                stratumId,
-                "numberOfBins",
-                7
-              );
-              this.getTableStyleTraits(stratumId)?.color.setTrait(
-                stratumId,
-                "binColors",
-                undefined
-              );
-              this.clearBinMaximums(stratumId);
-            }
-            // Continuous color maps
-            // Set column type to "scalar"
-            // Set all discrete color map related traits to undefined
-            else if (
-              id === "sequential-continuous" ||
-              id === "diverging-continuous"
-            ) {
-              this.colorSchemeType = id;
-              this.getTableColumnTraits(stratumId)?.setTrait(
-                stratumId,
-                "type",
-                "scalar"
-              );
-              this.getTableStyleTraits(stratumId)?.color.setTrait(
-                stratumId,
-                "numberOfBins",
-                undefined
-              );
-              this.getTableStyleTraits(stratumId)?.color.setTrait(
-                stratumId,
-                "binMaximums",
-                undefined
-              );
-              this.getTableStyleTraits(stratumId)?.color.setTrait(
-                stratumId,
-                "binColors",
-                undefined
-              );
-            }
-            // Qualitative (enum) color maps
-            // Set column type to "enum"
-            else if (id === "qualitative") {
-              this.colorSchemeType = id;
-              this.getTableColumnTraits(stratumId)?.setTrait(
-                stratumId,
-                "type",
-                "enum"
-              );
-              this.getTableStyleTraits(stratumId)?.color.setTrait(
-                stratumId,
-                "enumColors",
-                undefined
-              );
-            }
-            // No style (constant) color maps
-            // Set column type to "text"
-            else if (id === "no-style") {
-              this.colorSchemeType = id;
-              this.getTableColumnTraits(stratumId)?.setTrait(
-                stratumId,
-                "type",
-                "text"
-              );
-            }
-
-            // If the current colorPalette is incompatible with the selected type - change colorPalette to default for the selected type
-            if (
-              id === "sequential-continuous" &&
-              (!colorPalette ||
-                ![
-                  ...SEQUENTIAL_SCALES,
-                  ...SEQUENTIAL_CONTINUOUS_SCALES
-                ].includes(colorPalette))
-            ) {
-              this.getTableStyleTraits(stratumId)?.color.setTrait(
-                stratumId,
-                "colorPalette",
-                DEFAULT_SEQUENTIAL
-              );
-            }
-            if (
-              id === "sequential-discrete" &&
-              (!colorPalette || !SEQUENTIAL_SCALES.includes(colorPalette))
-            ) {
-              this.getTableStyleTraits(stratumId)?.color.setTrait(
-                stratumId,
-                "colorPalette",
-                DEFAULT_SEQUENTIAL
-              );
-            }
-            if (
-              (id === "diverging-continuous" || id === "diverging-discrete") &&
-              (!colorPalette || !DIVERGING_SCALES.includes(colorPalette))
-            ) {
-              this.getTableStyleTraits(stratumId)?.color.setTrait(
-                stratumId,
-                "colorPalette",
-                DEFAULT_DIVERGING
-              );
-            }
-            if (
-              id === "qualitative" &&
-              (!colorPalette || !QUALITATIVE_SCALES.includes(colorPalette))
-            ) {
-              this.getTableStyleTraits(stratumId)?.color.setTrait(
-                stratumId,
-                "colorPalette",
-                DEFAULT_QUALITATIVE
-              );
-            }
+            this.setColorSchemeType(stratumId, id);
           }
         },
 
@@ -436,6 +466,15 @@ export default class TableStylingWorkflow
           options: this.colorSchemesForType.map(style => ({
             id: style
           })),
+          optionRenderer:
+            this.colorSchemeType === "qualitative"
+              ? QualitativeColorSchemeOptionRenderer
+              : QuantitativeColorSchemeOptionRenderer(
+                  this.colorSchemeType === "sequential-discrete" ||
+                    this.colorSchemeType === "diverging-discrete"
+                    ? this.tableStyle.tableColorMap.binColors.length
+                    : undefined
+                ),
           setDimensionValue: (stratumId, id) => {
             this.getTableStyleTraits(stratumId)?.color.setTrait(
               stratumId,
@@ -452,8 +491,22 @@ export default class TableStylingWorkflow
               type: "numeric",
               id: "numberOfBins",
               name: "Number of Bins",
-              min: 3,
-              max: 11,
+              min:
+                // Sequential and diverging color scales must have at least 3 bins
+                this.colorSchemeType === "sequential-discrete" ||
+                this.colorSchemeType === "diverging-discrete"
+                  ? 3
+                  : // Custom color scales only need at least 1
+                    1,
+              max:
+                // Sequential discrete color scales support up to 9 bins
+                this.colorSchemeType === "sequential-discrete"
+                  ? 9
+                  : // Diverging discrete color scales support up to 11 bins
+                  this.colorSchemeType === "diverging-discrete"
+                  ? 11
+                  : // Custom discrete color scales can be any number of bins
+                    undefined,
               value: this.tableStyle.colorTraits.numberOfBins,
               setDimensionValue: (stratumId, value) => {
                 this.getTableStyleTraits(stratumId)?.color.setTrait(
@@ -461,26 +514,35 @@ export default class TableStylingWorkflow
                   "numberOfBins",
                   value
                 );
+
+                // Update binMaximums
                 if (
                   this.tableStyle.tableColorMap.binMaximums.length !== value
                 ) {
-                  const binMaximums = [
-                    ...this.tableStyle.tableColorMap.binMaximums
-                  ];
-                  // We have to reshape the binMaximums array - by either
-                  // - Shrinking it
-                  // - Expanding it - by copying the last element
-                  const newBinItems = binMaximums
-                    .slice(0, value)
-                    .concat(
-                      value > binMaximums.length
-                        ? new Array(value - binMaximums.length).fill(
-                            binMaximums[binMaximums.length - 1]
-                          )
-                        : []
-                    );
+                  // If we are in "custom" mode, we want to preserve user specified bins
+                  if (this.colorSchemeType === "custom-discrete") {
+                    const binMaximums = [
+                      ...this.tableStyle.tableColorMap.binMaximums
+                    ];
+                    // We have to reshape the binMaximums array - by either
+                    // - Shrinking it
+                    // - Expanding it - by copying the last element
+                    const newBinItems = binMaximums
+                      .slice(0, value)
+                      .concat(
+                        value > binMaximums.length
+                          ? new Array(value - binMaximums.length).fill(
+                              binMaximums[binMaximums.length - 1]
+                            )
+                          : []
+                      );
 
-                  this.setBinMaximums(stratumId, newBinItems);
+                    this.setBinMaximums(stratumId, newBinItems);
+                  }
+                  // If aren't in "custom" mode, we are using built-in color palette, we just let bins get recalculated automatically based on minimumValue and maximumValue
+                  else {
+                    this.clearBinMaximums(stratumId);
+                  }
                 }
               }
             }
@@ -537,12 +599,13 @@ export default class TableStylingWorkflow
     };
   }
 
+  /** Which bin is currently open in `binMaximumsSelectableDims` or `enumColorsSelectableDim`.
+   * This is used in `SelectableDimensionGroup.onToggle` and `SelectableDimensionGroup.isOpen` to make the groups act like an accordion - so only one bin can be edited at any given time.
+   */
   @observable
   private openBinIndex: number | undefined;
 
   /** Group to show bins with color, start/stop numbers.
-   * Here we use SelectableDimensionGroup.onToggle and SelectableDimensionGroup.isOpen to make this group act like an accordion - so only one bin can be edited at any given time.
-   *
    */
   @computed get binMaximumsSelectableDims(): SelectableDimensionWorkflowGroup {
     return {
@@ -863,9 +926,20 @@ export default class TableStylingWorkflow
     colorTraits?.setTrait(stratumId, "binMaximums", binMaximums);
   }
 
-  /** Clear binMaximums (which will automatically generate new ones based on numberOfBins, minimumValue and maximumValue.
-   * Then set them have a sensible precision (otherwise there will be way too many digits) */
+  /** Clear binMaximums (which will automatically generate new ones based on numberOfBins, minimumValue and maximumValue).
+   * Then set them have a sensible precision (otherwise there will be way too many digits).
+   * This will also clear `minimumValue` and `maximumValue` */
   clearBinMaximums(stratumId: string) {
+    this.getTableStyleTraits(stratumId)?.color.setTrait(
+      stratumId,
+      "minimumValue",
+      undefined
+    );
+    this.getTableStyleTraits(stratumId)?.color.setTrait(
+      stratumId,
+      "maximumValue",
+      undefined
+    );
     this.getTableStyleTraits(stratumId)?.color.setTrait(
       stratumId,
       "binMaximums",
@@ -881,6 +955,32 @@ export default class TableStylingWorkflow
       "binMaximums",
       binMaximums
     );
+  }
+
+  setEnumColorTrait(
+    stratumId: string,
+    index: number,
+    value?: string,
+    color?: string
+  ) {
+    const enumColors = this.tableStyle.colorTraits.traits.enumColors.toJson(
+      this.tableStyle.tableColorMap.enumColors
+    ) as ModelPropertiesFromTraits<EnumColorTraits>[];
+
+    // Remove element if value and color are undefined
+    if (!isDefined(value) && !isDefined(color)) enumColors.splice(index, 1);
+    else enumColors[index] = { value, color };
+
+    this.getTableStyleTraits(stratumId)?.color.setTrait(
+      stratumId,
+      "enumColors",
+      enumColors
+    );
+  }
+
+  /** Convenience getter for item.activeTableStyle */
+  @computed get tableStyle() {
+    return this.item.activeTableStyle;
   }
 
   /** Get `TableStyleTraits` for the active table style (so we can call `setTraits`) */
@@ -903,27 +1003,6 @@ export default class TableStylingWorkflow
         "columns",
         this.tableStyle.colorColumn.name
       )
-    );
-  }
-
-  setEnumColorTrait(
-    stratumId: string,
-    index: number,
-    value?: string,
-    color?: string
-  ) {
-    const enumColors = this.tableStyle.colorTraits.traits.enumColors.toJson(
-      this.tableStyle.tableColorMap.enumColors
-    ) as ModelPropertiesFromTraits<EnumColorTraits>[];
-
-    // Remove element if value and color are undefined
-    if (!isDefined(value) && !isDefined(color)) enumColors.splice(index, 1);
-    else enumColors[index] = { value, color };
-
-    this.getTableStyleTraits(stratumId)?.color.setTrait(
-      stratumId,
-      "enumColors",
-      enumColors
     );
   }
 }

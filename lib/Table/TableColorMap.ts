@@ -23,7 +23,9 @@ import TableColumnType from "./TableColumnType";
 const getColorForId = createColorForIdTransformer();
 const DEFAULT_COLOR = "yellow";
 
-/** Diverging scales (can be used for continuous and discrete) */
+/** Diverging scales (can be used for continuous and discrete).
+ * Discrete scales support a size n ranging from 3 to 11
+ */
 export const DIVERGING_SCALES = [
   "BrBG",
   "PRGn",
@@ -38,7 +40,9 @@ export const DIVERGING_SCALES = [
 
 export const DEFAULT_DIVERGING = "PuOr";
 
-/** Sequential scales D3 color scales (can be used for continuous and discrete) */
+/** Sequential scales D3 color scales (can be used for continuous and discrete).
+ * Discrete scales support a size n ranging from 3 to 9
+ */
 export const SEQUENTIAL_SCALES = [
   "Blues",
   "Greens",

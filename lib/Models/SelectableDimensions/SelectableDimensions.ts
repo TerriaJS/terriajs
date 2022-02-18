@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import isDefined from "../../Core/isDefined";
 
 /** `Dimension` (and child interfaces - eg `EnumDimension`, `NumericalDimension`, ...) are Trait/JSON friendly interfaces. They are used as base to the `SelectableDimension` interfaces.
@@ -75,10 +76,15 @@ export interface SelectableDimensionBase<T = string> {
   type?: SelectableDimensionType;
 }
 
+export type OptionRenderer = (option: {
+  value: string | undefined;
+}) => ReactNode;
+
 export interface SelectableDimensionEnum
   extends SelectableDimensionBase<string>,
     EnumDimension {
   type?: undefined | "select";
+  optionRenderer?: OptionRenderer;
 }
 
 /** Maximum number of options for a `SelectableDimension` */
