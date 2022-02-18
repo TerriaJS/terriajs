@@ -34,6 +34,7 @@ import JsonValue, {
   JsonObject
 } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
+import loadJson from "../Core/loadJson";
 import loadJson5 from "../Core/loadJson5";
 import Result from "../Core/Result";
 import ServerConfig from "../Core/ServerConfig";
@@ -1006,6 +1007,53 @@ export default class Terria {
           .query("")
           .hash("")
       );
+
+      // Determine relative path from baseURI
+      const baseURI = document.baseURI.endsWith("/")
+        ? document.baseURI.slice(0, document.baseURI.length - 1)
+        : document.baseURI;
+      let relative = null;
+      if (document.documentURI === baseURI) {
+        relative = "/";
+      } else if (
+        document.documentURI.startsWith(baseURI) &&
+        document.documentURI.charAt(baseURI.length) === "/"
+      ) {
+        relative = document.documentURI.slice(baseURI.length);
+      }
+
+      if (relative) {
+        const [preHash, hash] = relative.split("#");
+        const segments = preHash.slice(1).split("/");
+        if (
+          segments.length === 2 &&
+          segments[0] === "catalog" &&
+          segments[1].length > 0
+        ) {
+          this.initSources.push({
+            name: `Go to ${relative}`,
+            errorSeverity: TerriaErrorSeverity.Error,
+            data: {
+              previewedItemId: decodeURIComponent(segments[1])
+            }
+          });
+          history.replaceState({}, "", `${document.baseURI}#${hash ?? ""}`);
+        } else if (
+          segments.length === 2 &&
+          segments[0] === "story" &&
+          segments[1].length > 0
+        ) {
+          await interpretStartData(
+            this,
+            await loadJson(
+              `https://tile-test.terria.io/stories/${this.appName}/${segments[1]}`
+            ),
+            `Start data from story \`"${this.appName}/${segments[1]}"\``
+          );
+          this.userProperties.set("playStory", "1");
+          history.replaceState({}, "", `${document.baseURI}#${hash ?? ""}`);
+        }
+      }
     } catch (e) {
       this.raiseErrorToUser(e);
     }
