@@ -340,7 +340,8 @@
     "promptHtml2": "<0> <0> APRESENTANDO </0> <1> Histórias de dados </1> <2> Crie e compartilhe histórias interativas diretamente de seu mapa. </2> </0>",
     "story": "História",
     "storyEditor": "Editor de Histórias",
-    "exitBtn": "Encerrar História"
+    "exitBtn": "Encerrar História",
+    "playStory": "História"
   },
   "settingPanel": {
     "mapView": "Visualização do mapa",
@@ -663,7 +664,8 @@
       "opendatasoft-group": "Portal Opendatasoft",
       "json": "JSON",
       "gltf": "GLTF",
-      "other": "Outro (usar serviço de conversão)"
+      "other": "Outro (usar serviço de conversão)",
+      "socrata-group": "Servidor Socrata"
     },
     "printWindow": {
       "onbeforeprint": "onbeforeprint",
