@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import React, { useState } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import InputColor from "react-input-color";
-import ReactSelect from "react-select";
+import ReactSelect, { FormatOptionLabelMeta, OptionProps } from "react-select";
 import { useTheme } from "styled-components";
 import Color from "terriajs-cesium/Source/Core/Color";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
@@ -145,6 +145,8 @@ export const DimensionSelectorSelect: React.FC<{
         );
       }}
       isClearable={dim.allowUndefined}
+      isSearchable={!dim.optionRenderer}
+      formatOptionLabel={dim.optionRenderer}
     />
   );
 };
