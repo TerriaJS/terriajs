@@ -147,7 +147,11 @@ export default function Cesium3dTilesMixin<
       });
 
       tileset._catalogItem = this;
-      this.isTilesetReady = tileset.ready;
+      runLater(
+        action(() => {
+          this.isTilesetReady = tileset.ready;
+        })
+      );
       if (!tileset.destroyed) {
         this.tileset = tileset;
       }
