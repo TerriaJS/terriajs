@@ -286,7 +286,9 @@ export const DimensionSelectorButton: React.FC<{
 
 const debounceSetDimensionValue = debounce(
   action((dim: SelectableDimensionColor, value: string) =>
-    dim.setDimensionValue(CommonStrata.user, value)
+    dim.value?.toLowerCase() !== value?.toLowerCase()
+      ? dim.setDimensionValue(CommonStrata.user, value)
+      : null
   ),
   100
 );
@@ -295,17 +297,29 @@ export const DimensionSelectorColor: React.FC<{
   id: string;
   dim: SelectableDimensionColor;
 }> = observer(({ id, dim }) => {
-  const [color, setColor] = useState<string | undefined>(
-    dim.value ? Color.fromCssColorString(dim.value).toCssHexString() : undefined
-  );
-
   return (
-    <InputColor
-      initialValue={color ?? "#000000"}
-      onChange={value => {
-        debounceSetDimensionValue(dim, value.hex);
-      }}
-    />
+    <div>
+      <InputColor
+        initialValue={
+          dim.value
+            ? Color.fromCssColorString(dim.value).toCssHexString()
+            : undefined ?? "#000000"
+        }
+        onChange={value => {
+          debounceSetDimensionValue(dim, value.hex);
+        }}
+      />
+      {dim.allowUndefined ? (
+        <RawButton
+          onClick={() =>
+            runInAction(() => dim.setDimensionValue(CommonStrata.user, ""))
+          }
+          activeStyles
+        >
+          Clear
+        </RawButton>
+      ) : null}
+    </div>
   );
 });
 
