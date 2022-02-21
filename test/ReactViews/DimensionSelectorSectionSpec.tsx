@@ -260,6 +260,8 @@ describe("DimensionSelectorSection", function() {
     jasmine.Ajax.uninstall();
   });
 
+  describe("when given a SelectableDimensionCheckboxGroup", function() {});
+
   describe("when given a SelectableDimensionGroup", function() {
     let mockItem: TestCatalogItem;
 
