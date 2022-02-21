@@ -8,7 +8,8 @@ export default interface SelectableDimensionWorkflow {
   icon: IconProps["glyph"];
   item: BaseModel;
   onClose?: () => void;
+  footer?: { onClick: () => void; buttonText: string };
+
+  /** This allows up to two levels of SelectableDimensionGroup */
   selectableDimensions: SelectableDimensionWorkflowGroup[];
 }
-
-// We allow two levels of SelectableDimensionGroup

@@ -1,10 +1,11 @@
-import { computed } from "mobx";
+import { computed, action } from "mobx";
 import filterOutUndefined from "../../Core/filterOutUndefined";
-import GeoJsonMixin from "../../ModelMixins/GeojsonMixin";
+import GeoJsonMixin, { parseMarkerSize } from "../../ModelMixins/GeojsonMixin";
 import Icon from "../../Styled/Icon";
 import { SelectableDimensionWorkflowGroup } from "./SelectableDimensions";
 import SelectableDimensionWorkflow from "./SelectableDimensionWorkflow";
 import TableStylingWorkflow from "./TableStylingWorkflow";
+import CommonStrata from "../Definition/CommonStrata";
 
 export default class VectorStylingWorkflow
   implements SelectableDimensionWorkflow {
@@ -24,6 +25,16 @@ export default class VectorStylingWorkflow
     return Icon.GLYPHS.layers;
   }
 
+  get footer() {
+    return {
+      ...this.tableStylingWorkflow.footer,
+      onClick: action(() => {
+        this.tableStylingWorkflow.footer.onClick();
+        this.item.style.strata.delete(CommonStrata.user);
+      })
+    };
+  }
+
   @computed get pointSelectableDimension(): SelectableDimensionWorkflowGroup {
     return {
       type: "group",
@@ -31,18 +42,15 @@ export default class VectorStylingWorkflow
       isOpen: false,
       selectableDimensions: [
         {
-          type: "select",
+          type: "numeric",
           id: "marker-size",
           name: "Marker size",
-          options: [
-            { id: "small", name: "Small" },
-            { id: "medium", name: "Medium" },
-            { id: "large", name: "Large" }
-          ],
-          undefinedLabel: "Other",
-          selectedId: this.item.style["marker-size"] ?? "small",
+          min: 1,
+          value:
+            parseMarkerSize(this.item.style["marker-size"]) ??
+            this.item.stylesWithDefaults.markerSize,
           setDimensionValue: (stratumId, id) => {
-            this.item.style.setTrait(stratumId, "marker-size", id);
+            this.item.style.setTrait(stratumId, "marker-size", id?.toString());
           }
         },
         {

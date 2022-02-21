@@ -6,7 +6,7 @@ import { getName } from "../../ModelMixins/CatalogMemberMixin";
 import { filterSelectableDimensions } from "../../Models/SelectableDimensions/SelectableDimensions";
 import ViewState from "../../ReactViewModels/ViewState";
 import WorkflowPanel from "../../Styled/WorkflowPanel";
-import { Container, InfoText } from "../Compare/Compare";
+import { Container } from "../Compare/Compare";
 import { Panel, PanelBody } from "../Compare/Panel";
 import { DimensionSelector } from "../Workbench/Controls/DimensionSelectorSection";
 import WorkbenchItemControls, {
@@ -31,11 +31,9 @@ const SelectableDimensionWorkflow: React.FC<PropsType> = observer(
         onClose={action(() => {
           terria.selectableDimensionWorkflow = undefined;
         })}
+        footer={terria.selectableDimensionWorkflow.footer}
       >
         <Container>
-          <Panel>
-            <InfoText>Edit the Style!</InfoText>
-          </Panel>
           <Panel title={getName(terria.selectableDimensionWorkflow.item)}>
             <PanelBody>
               <WorkbenchItemControls
@@ -45,7 +43,8 @@ const SelectableDimensionWorkflow: React.FC<PropsType> = observer(
                   ...hideAllControls,
                   opacity: true,
                   timer: true,
-                  dateTime: true
+                  dateTime: true,
+                  shortReport: true
                 }}
               />
             </PanelBody>

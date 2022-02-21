@@ -12,7 +12,7 @@ export type PanelProps = {
   menuComponent?: React.ReactNode;
   children?: React.ReactNode;
   className?: string;
-  /** Collapsible will replace menuComponent */
+  /** Collapsible will replace menuComponent. Title must be defined */
   collapsible?: boolean;
   isOpen?: boolean;
   /** Function is called whenever Collapsible is toggled (close or open).
@@ -36,7 +36,7 @@ export const Panel: React.FC<PanelProps> = props => {
     if (!props.onToggle || !props.onToggle(newIsOpen)) setIsOpen(newIsOpen);
   };
 
-  return props.collapsible ? (
+  return props.title && props.collapsible ? (
     <Wrapper className={props.className}>
       <CollapsibleTitleBar onClick={toggleOpen} fullWidth isOpen={isOpen}>
         {props.icon !== undefined ? (
@@ -64,6 +64,18 @@ export const Panel: React.FC<PanelProps> = props => {
     </Wrapper>
   );
 };
+
+/** Simple PanelButton - this mimics style of CollapsibleTitleBar */
+export const PanelButton: React.FC<{ onClick: () => void; title: string }> = ({
+  onClick,
+  title
+}) => (
+  <Wrapper>
+    <CollapsibleTitleBar onClick={onClick} fullWidth isOpen={false}>
+      <Title css={{ textAlign: "center" }}>{title}</Title>
+    </CollapsibleTitleBar>
+  </Wrapper>
+);
 
 export const PanelBody = styled.div`
   padding: 0.4em;
@@ -100,7 +112,7 @@ const CollapsibleTitleBar = styled(RawButton)<
   padding-right: 0.4em;
 `;
 
-const Title = styled(Text).attrs({
+export const Title = styled(Text).attrs({
   textLight: true,
   bold: true
 })`
