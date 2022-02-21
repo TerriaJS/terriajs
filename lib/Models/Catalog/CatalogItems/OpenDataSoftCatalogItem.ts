@@ -710,7 +710,10 @@ export default class OpenDataSoftCatalogItem
         name: this.availableFields.name,
         selectedId: this.availableFields.selectedId,
         options: this.availableFields.options,
-        setDimensionValue: async (strataId: string, selectedId: string) => {
+        setDimensionValue: async (
+          strataId: string,
+          selectedId: string | undefined
+        ) => {
           this.setTrait(strataId, "colorFieldName", selectedId);
           (await this.loadMapItems()).throwIfError();
         }

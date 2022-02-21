@@ -13,6 +13,7 @@ import ContinuousColorMap from "../../Map/ColorMap/ContinuousColorMap";
 import DiscreteColorMap from "../../Map/ColorMap/DiscreteColorMap";
 import EnumColorMap from "../../Map/ColorMap/EnumColorMap";
 import { getName } from "../../ModelMixins/CatalogMemberMixin";
+import GeoJsonMixin from "../../ModelMixins/GeojsonMixin";
 import TableMixin from "../../ModelMixins/TableMixin";
 import {
   QualitativeColorSchemeOptionRenderer,
@@ -32,13 +33,22 @@ import TableColumnType from "../../Table/TableColumnType";
 import { EnumColorTraits } from "../../Traits/TraitsClasses/TableColorStyleTraits";
 import CommonStrata from "../Definition/CommonStrata";
 import ModelPropertiesFromTraits from "../Definition/ModelPropertiesFromTraits";
+import ViewingControls from "../ViewingControls";
 import {
   SelectableDimensionGroup,
   SelectableDimensionNumeric,
   SelectableDimensionWorkflowGroup
 } from "./SelectableDimensions";
 import SelectableDimensionWorkflow from "./SelectableDimensionWorkflow";
+import VectorStylingWorkflow from "./VectorStylingWorkflow";
 
+/** The ColorSchemeType is used to change which SelectableDimensions are shown.
+ * It is basically the "mode" of the TableStylingWorkflow
+ *
+ * For example - if we are using "sequential-continuous" - then the dimensions will be shown to configure the following:
+ * - Sequential color scales
+ * - Minimum/Maximum values
+ */
 type ColorSchemeType =
   | "no-style"
   | "sequential-continuous"
@@ -49,7 +59,7 @@ type ColorSchemeType =
   | "qualitative"
   | "custom-qualitative";
 
-/** These TableColumnTypes will be hidden unless we are showing "advanced" options */
+/** Columns/Styles with the following TableColumnTypes will be hidden unless we are showing "advanced" options */
 export const ADVANCED_TABLE_COLUMN_TYPES = [
   TableColumnType.latitude,
   TableColumnType.longitude,
@@ -59,6 +69,9 @@ export const ADVANCED_TABLE_COLUMN_TYPES = [
 
 export default class TableStylingWorkflow
   implements SelectableDimensionWorkflow {
+  static type = "table-styling";
+  readonly type = TableStylingWorkflow.type;
+
   /** This is used to simplify SelectableDimensions available to the user.
    * For example - if equal to `diverging-continuous` - then only Diverging continuous color scales will be presented as options
    * See setColorSchemeTypeFromPalette and setColorSchemeType for how this is set. */
@@ -92,7 +105,7 @@ export default class TableStylingWorkflow
   }
 
   get name() {
-    return `Edit Style: ${getName(this.item)}`;
+    return `Style`;
   }
 
   get icon() {
@@ -185,7 +198,8 @@ export default class TableStylingWorkflow
   }
 
   /** Handle change on colorType - this is called by the  */
-  @action setColorSchemeType(stratumId: string, id: string) {
+  @action setColorSchemeType(stratumId: string, id: string | undefined) {
+    if (!id) return;
     // Set `activeStyle` trait so the value doesn't change
     this.item.setTrait(stratumId, "activeStyle", this.tableStyle.id);
 
@@ -353,7 +367,58 @@ export default class TableStylingWorkflow
       selectableDimensions: filterOutUndefined([
         {
           type: "select",
+          id: "dataset",
+          name: "Dataset",
+          selectedId: this.item.uniqueId,
+
+          // Find all workbench items which have TableStylingWorkflow (or VectorStylingWorkflow)
+          options: this.item.terria.workbench.items
+            .filter(
+              item =>
+                ViewingControls.is(item) &&
+                item.viewingControls.find(
+                  control =>
+                    control.id === TableStylingWorkflow.type ||
+                    control.id === VectorStylingWorkflow.type
+                )
+            )
+            .map(item => ({
+              id: item.uniqueId,
+              name: getName(item)
+            })),
+          setDimensionValue: (stratumId, value) => {
+            const item = this.item.terria.workbench.items.find(
+              i => i.uniqueId === value
+            );
+            if (item && TableMixin.isMixedInto(item)) {
+              // Trigger new TableStylingWorkflow
+              if (
+                item.viewingControls.find(
+                  control => control.id === TableStylingWorkflow.type
+                )
+              ) {
+                item.terria.selectableDimensionWorkflow = new TableStylingWorkflow(
+                  item
+                );
+              }
+              // Trigger new VectorStylingWorkflow
+              else if (
+                GeoJsonMixin.isMixedInto(item) &&
+                item.viewingControls.find(
+                  control => control.id === VectorStylingWorkflow.type
+                )
+              ) {
+                item.terria.selectableDimensionWorkflow = new VectorStylingWorkflow(
+                  item
+                );
+              }
+            }
+          }
+        },
+        {
+          type: "select",
           id: "table-style",
+          name: "Variable",
           selectedId: this.tableStyle.id,
           options: this.item.tableColumns
             // Filter out empty columns
@@ -491,6 +556,7 @@ export default class TableStylingWorkflow
               type: "numeric",
               id: "numberOfBins",
               name: "Number of Bins",
+              allowUndefined: true,
               min:
                 // Sequential and diverging color scales must have at least 3 bins
                 this.colorSchemeType === "sequential-discrete" ||
@@ -509,6 +575,7 @@ export default class TableStylingWorkflow
                     undefined,
               value: this.tableStyle.colorTraits.numberOfBins,
               setDimensionValue: (stratumId, value) => {
+                if (!isDefined(value)) return;
                 this.getTableStyleTraits(stratumId)?.color.setTrait(
                   stratumId,
                   "numberOfBins",
@@ -579,6 +646,7 @@ export default class TableStylingWorkflow
     return {
       type: "group",
       id: "Display range",
+      isOpen: false,
       selectableDimensions: [
         this.minimumValueSelectableDim,
         {
@@ -611,6 +679,7 @@ export default class TableStylingWorkflow
     return {
       type: "group",
       id: "Bins",
+      isOpen: false,
       selectableDimensions: [
         ...this.tableStyle.tableColorMap.binMaximums
           .map(
@@ -693,6 +762,7 @@ export default class TableStylingWorkflow
     return {
       type: "group",
       id: "Colors",
+      isOpen: false,
       selectableDimensions: filterOutUndefined([
         ...this.tableStyle.tableColorMap.enumColors.map((enumCol, idx) => {
           if (!enumCol.value) return;
@@ -809,6 +879,7 @@ export default class TableStylingWorkflow
     return {
       type: "group",
       id: "Additional colors",
+      isOpen: false,
       selectableDimensions: filterOutUndefined([
         this.tableStyle.colorColumn?.type === TableColumnType.region
           ? {
@@ -816,6 +887,7 @@ export default class TableStylingWorkflow
               id: `region-col`,
               name: `Region color`,
               value: this.tableStyle.colorTraits.regionColor,
+              allowUndefined: true,
               setDimensionValue: (stratumId, value) => {
                 this.getTableStyleTraits(stratumId)?.color.setTrait(
                   stratumId,
@@ -829,6 +901,7 @@ export default class TableStylingWorkflow
               id: `null-col`,
               name: `Null color`,
               value: this.tableStyle.colorTraits.nullColor,
+              allowUndefined: true,
               setDimensionValue: (stratumId, value) => {
                 this.getTableStyleTraits(stratumId)?.color.setTrait(
                   stratumId,
@@ -863,6 +936,7 @@ export default class TableStylingWorkflow
     return {
       type: "group",
       id: "Region mapping",
+      isOpen: false,
       selectableDimensions: filterOutUndefined([
         this.item.regionColumnDimensions,
         this.item.regionProviderDimensions

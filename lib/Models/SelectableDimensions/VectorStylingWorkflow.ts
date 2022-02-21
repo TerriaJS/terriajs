@@ -1,18 +1,34 @@
 import { computed } from "mobx";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import GeoJsonMixin from "../../ModelMixins/GeojsonMixin";
+import Icon from "../../Styled/Icon";
 import { SelectableDimensionWorkflowGroup } from "./SelectableDimensions";
+import SelectableDimensionWorkflow from "./SelectableDimensionWorkflow";
 import TableStylingWorkflow from "./TableStylingWorkflow";
 
-export default class VectorStylingWorkflow extends TableStylingWorkflow {
+export default class VectorStylingWorkflow
+  implements SelectableDimensionWorkflow {
+  static type = "vector-styling";
+  readonly type = VectorStylingWorkflow.type;
+  readonly tableStylingWorkflow: TableStylingWorkflow;
+
   constructor(readonly item: GeoJsonMixin.Instance) {
-    super(item);
+    this.tableStylingWorkflow = new TableStylingWorkflow(item);
+  }
+
+  get name() {
+    return "Style";
+  }
+
+  get icon() {
+    return Icon.GLYPHS.layers;
   }
 
   @computed get pointSelectableDimension(): SelectableDimensionWorkflowGroup {
     return {
       type: "group",
       id: "Point/Marker",
+      isOpen: false,
       selectableDimensions: [
         {
           type: "select",
@@ -58,6 +74,7 @@ export default class VectorStylingWorkflow extends TableStylingWorkflow {
     return {
       type: "group",
       id: "Lines",
+      isOpen: false,
       selectableDimensions: [
         {
           type: "numeric",
@@ -77,6 +94,7 @@ export default class VectorStylingWorkflow extends TableStylingWorkflow {
     return {
       type: "group",
       id: "Polygons",
+      isOpen: false,
       selectableDimensions: [
         {
           type: "color",
@@ -105,7 +123,7 @@ export default class VectorStylingWorkflow extends TableStylingWorkflow {
 
   @computed get selectableDimensions(): SelectableDimensionWorkflowGroup[] {
     return filterOutUndefined([
-      ...super.selectableDimensions,
+      ...this.tableStylingWorkflow.selectableDimensions,
       this.item.featureCounts.point > 0
         ? this.pointSelectableDimension
         : undefined,

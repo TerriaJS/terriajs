@@ -637,7 +637,11 @@ class WebMapServiceCatalogItem
         id: `${this.uniqueId}-${layer.layerName}-styles`,
         options,
         selectedId,
-        setDimensionValue: (stratumId: string, newStyle: string) => {
+        setDimensionValue: (
+          stratumId: string,
+          newStyle: string | undefined
+        ) => {
+          if (!newStyle) return;
           runInAction(() => {
             const styles = this.styleSelectableDimensions.map(
               style => style.selectedId || ""
@@ -700,7 +704,10 @@ class WebMapServiceCatalogItem
             dim.default ||
             dim.values[0],
 
-          setDimensionValue: (stratumId: string, newDimension: string) => {
+          setDimensionValue: (
+            stratumId: string,
+            newDimension: string | undefined
+          ) => {
             let newDimensions: any = {};
 
             newDimensions[dim.name!] = newDimension;
