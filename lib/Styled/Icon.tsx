@@ -55,6 +55,7 @@ export const GLYPHS = {
   opened: require("../../wwwroot/images/icons/opened.svg"),
   pause: require("../../wwwroot/images/icons/pause.svg"),
   play: require("../../wwwroot/images/icons/play.svg"),
+  playStory: require("../../wwwroot/images/icons/play-story.svg"),
   radioOff: require("../../wwwroot/images/icons/radio-off.svg"),
   radioOn: require("../../wwwroot/images/icons/radio-on.svg"),
   refresh: require("../../wwwroot/images/icons/refresh.svg"),

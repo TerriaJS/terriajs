@@ -22,8 +22,6 @@ const MyDataTab = observer(
     propTypes: {
       terria: PropTypes.object,
       viewState: PropTypes.object,
-      localDataTypes: PropTypes.arrayOf(PropTypes.object),
-      remoteDataTypes: PropTypes.arrayOf(PropTypes.object),
       onFileAddFinished: PropTypes.func.isRequired,
       t: PropTypes.func.isRequired
     },
@@ -157,8 +155,6 @@ const MyDataTab = observer(
                 viewState={this.props.viewState}
                 activeTab={this.state.activeTab}
                 resetTab={this.resetTab}
-                localDataTypes={this.props.localDataTypes}
-                remoteDataTypes={this.props.remoteDataTypes}
                 onFileAddFinished={this.props.onFileAddFinished}
               />
             </If>

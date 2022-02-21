@@ -138,6 +138,24 @@ class ViewingControls extends React.Component<
       if (MappableMixin.isMixedInto(item)) {
         zoomToView = item;
         if (
+          item.idealZoom !== undefined &&
+          item.idealZoom.targetLongitude !== undefined &&
+          item.idealZoom.targetLatitude !== undefined &&
+          item.idealZoom.range >= 0
+        ) {
+          // No value checking here. Improper values can lead to unexpected results.
+          const lookAt = {
+            targetLongitude: item.idealZoom.targetLongitude,
+            targetLatitude: item.idealZoom.targetLatitude,
+            targetHeight: item.idealZoom.targetHeight,
+            heading: item.idealZoom.heading,
+            pitch: item.idealZoom.pitch,
+            range: item.idealZoom.range
+          };
+
+          // In the case of 2D viewer, it zooms to rectangle area approximated by the camera view parameters.
+          zoomToView = CameraView.fromJson({ lookAt: lookAt });
+        } else if (
           isDefined(item.rectangle) &&
           isDefined(item.rectangle.east) &&
           isDefined(item.rectangle.west) &&
