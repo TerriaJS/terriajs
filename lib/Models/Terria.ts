@@ -1105,7 +1105,9 @@ export default class Terria {
               severity: initSource?.errorSeverity,
               message: {
                 key: "models.terria.loadingInitSourceError2Message",
-                parameters: { loadSource: initSource!.name ?? "Unknown source" }
+                parameters: {
+                  loadSource: initSource!.name ?? "Unknown source"
+                }
               }
             })
           );

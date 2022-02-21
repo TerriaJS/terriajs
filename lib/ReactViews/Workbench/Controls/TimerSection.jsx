@@ -140,4 +140,4 @@ const TimerSection = observer(
   })
 );
 
-module.exports = withTranslation()(TimerSection);
+export default withTranslation()(TimerSection);

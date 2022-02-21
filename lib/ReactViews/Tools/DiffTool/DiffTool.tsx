@@ -778,19 +778,19 @@ const DiffAccordion: React.FC<DiffAccordionProps> = props => {
             but visible should be inline with rest of box */}
         <Box centered css={"margin-right:-5px;"}>
           <RawButton onClick={() => viewState.closeTool()}>
-            <Text textLight small semiBold uppercase>
+            <TextSpan textLight small semiBold uppercase>
               {t("diffTool.exit")}
-            </Text>
+            </TextSpan>
           </RawButton>
           <Spacing right={4} />
           <RawButton onClick={() => setShowChildren(!showChildren)}>
-            <Box paddedRatio={1} centered>
+            <BoxSpan paddedRatio={1} centered>
               <StyledIcon
                 styledWidth="12px"
                 light
                 glyph={showChildren ? GLYPHS.opened : GLYPHS.closed}
               />
-            </Box>
+            </BoxSpan>
           </RawButton>
         </Box>
       </DiffAccordionToggle>

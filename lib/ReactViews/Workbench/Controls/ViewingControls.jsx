@@ -32,6 +32,7 @@ import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
 import Icon, { StyledIcon } from "../../../Styled/Icon";
+import Ul from "../../../Styled/List";
 import SplitterTraits from "../../../Traits/TraitsClasses/SplitterTraits";
 import { exportData } from "../../Preview/ExportData";
 import LazyItemSearchTool from "../../Tools/ItemSearchTool/LazyItemSearchTool";
@@ -420,7 +421,7 @@ const ViewingControls = observer(
       const showMenu = item.uniqueId === viewState.workbenchWithOpenControls;
       return (
         <Box>
-          <ul
+          <Ul
             css={`
               list-style: none;
               padding-left: 0;
@@ -439,6 +440,7 @@ const ViewingControls = observer(
                 margin-right: 0;
               }
             `}
+            gap={2}
           >
             <WorkbenchButton
               onClick={this.zoomTo}
@@ -482,7 +484,7 @@ const ViewingControls = observer(
               iconOnly
               iconElement={() => <Icon glyph={Icon.GLYPHS.menuDotted} />}
             />
-          </ul>
+          </Ul>
           {showMenu && (
             <Box
               css={`
@@ -509,4 +511,4 @@ const ViewingControls = observer(
     }
   })
 );
-module.exports = withTranslation()(ViewingControls);
+export default withTranslation()(ViewingControls);
