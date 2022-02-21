@@ -366,6 +366,8 @@
     "view": "View",
     "editStory": "edit",
     "edit": "Edit",
+    "expand": "Expand",
+    "collapse": "Collapse",
     "recaptureStory": "re-capture",
     "recapture": "Recapture",
     "deleteStory": "delete",

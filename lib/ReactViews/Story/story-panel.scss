@@ -38,7 +38,6 @@
   opacity: 0;
   @include transition(all 0.3s);
   pointer-events: auto;
-  display: flex;
   opacity: 0;
   width: 100%;
   min-height: 2em;
@@ -85,6 +84,11 @@
 }
 
 .body {
+  &.isCollapsed {
+    max-height: 0;
+    padding: 0;
+  }
+  @include transition(max-height 0.2s);
   padding: $padding * 1.5 $padding;
   color: $dark;
   font-size: 1rem;
@@ -144,9 +148,6 @@
     width: 15px;
     height: 15px;
   }
-}
-.exitBtn {
-  border-left: 1px solid $field-border;
 }
 
 .locationBtn {

@@ -18,11 +18,12 @@ import Terria from "../../Models/Terria";
 import { Story } from "./Story";
 import ViewState from "../../ReactViewModels/ViewState";
 import Icon from "../../Styled/Icon";
-// import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
+import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 // import { Medium, Small } from "../Generic/Responsive";
 import Styles from "./story-panel.scss";
 import Box from "../../Styled/Box";
 import styled from "styled-components";
+import { animateEnd } from "../../Core/animation";
 
 /**
  *
@@ -91,6 +92,22 @@ const ExitBtn = ({ onClick }: BtnProp) => {
   );
 };
 
+const CollapseBtn = ({
+  isCollapsed,
+  onClick
+}: { isCollapsed: boolean } & BtnProp) => {
+  const { t } = useTranslation();
+  return (
+    <button
+      className={Styles.exitBtn}
+      title={isCollapsed ? t("story.expand") : t("story.collapse")}
+      onClick={onClick}
+    >
+      <Icon glyph={isCollapsed ? Icon.GLYPHS.info : Icon.GLYPHS.arrowDown} />
+    </button>
+  );
+};
+
 const LocationBtn = ({ onClick }: BtnProp) => {
   const { t } = useTranslation();
 
@@ -128,9 +145,13 @@ const ClampedTitle = styled.h3`
 
 const TitleBar = ({
   title,
+  isCollapsed,
+  collapseHandler,
   closeHandler
 }: {
   title?: string;
+  isCollapsed: boolean;
+  collapseHandler: () => void;
   closeHandler: () => void;
 }) => {
   const { t } = useTranslation();
@@ -140,11 +161,28 @@ const TitleBar = ({
         <ClampedTitle>{title ? title : t("story.untitled")}</ClampedTitle>
       </TitleContainer>
       <Box>
+        <CollapseBtn isCollapsed={isCollapsed} onClick={collapseHandler} />
         <ExitBtn onClick={closeHandler} />
       </Box>
     </Box>
   );
 };
+
+const StoryBody = ({
+  isCollapsed,
+  story
+}: {
+  isCollapsed: boolean;
+  story: Story;
+}) => (
+  <div
+    className={classNames(Styles.body, {
+      [Styles.isCollapsed]: isCollapsed
+    })}
+  >
+    {story.text && parseCustomHtmlToReact(story.text)}
+  </div>
+);
 
 interface Props extends WithTranslation {
   terria: Terria;
@@ -153,16 +191,20 @@ interface Props extends WithTranslation {
 
 interface State {
   inView: boolean;
+  isCollapsed: boolean;
 }
 @observer
 class StoryPanel extends React.Component<Props, State> {
   escKeyListener: EventListener | undefined;
+  slideRef: React.RefObject<HTMLElement>;
 
   constructor(props: Props) {
     super(props);
     this.state = {
+      isCollapsed: false,
       inView: false
     };
+    this.slideRef = React.createRef();
   }
 
   componentDidMount() {
@@ -194,6 +236,12 @@ class StoryPanel extends React.Component<Props, State> {
   slideOut() {
     this.setState({
       inView: false
+    });
+  }
+
+  toggleCollapse() {
+    this.setState({
+      isCollapsed: !this.state.isCollapsed
     });
   }
 
@@ -244,10 +292,13 @@ class StoryPanel extends React.Component<Props, State> {
   }
 
   exitStory() {
-    runInAction(() => {
-      this.props.viewState.storyShown = false;
+    animateEnd(this.slideRef.current).finally(() => {
+      runInAction(() => {
+        this.props.viewState.storyShown = false;
+      });
+      this.props.terria.currentViewer.notifyRepaintRequired();
     });
-    this.props.terria.currentViewer.notifyRepaintRequired();
+    this.slideOut();
   }
 
   render() {
@@ -278,12 +329,22 @@ class StoryPanel extends React.Component<Props, State> {
               [Styles.isMounted]: this.state.inView
             })}
             key={story.id}
+            ref={this.slideRef as React.RefObject<HTMLDivElement>}
           >
             <TitleBar
               title={story.title}
+              isCollapsed={this.state.isCollapsed}
+              collapseHandler={() => this.toggleCollapse()}
               closeHandler={() => this.exitStory()}
             />
-            {/*<Medium>
+            <StoryBody isCollapsed={this.state.isCollapsed} story={story} />
+          </div>
+        </div>
+      </Swipeable>
+    );
+
+    {
+      /*<Medium>
               <div className={Styles.left}>
                 <LocationBtn onClick={this.onCenterScene.bind(this, story)} />
                 <button
@@ -367,11 +428,8 @@ class StoryPanel extends React.Component<Props, State> {
                   </button>
                 ))}
               </div>
-            </Small> */}
-          </div>
-        </div>
-      </Swipeable>
-    );
+            </Small> */
+    }
   }
 }
 

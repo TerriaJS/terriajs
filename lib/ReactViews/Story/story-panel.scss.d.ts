@@ -9,6 +9,7 @@ interface CssExports {
   'is-mounted': string;
   'isActive': string;
   'isCentered': string;
+  'isCollapsed': string;
   'isHidden': string;
   'isMounted': string;
   'left': string;
