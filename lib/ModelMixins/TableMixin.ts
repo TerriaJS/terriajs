@@ -449,39 +449,32 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           ? {
               id: TableStylingWorkflow.type,
               name: "Edit Style",
-              onClick: viewState => {
-                runInAction(() => {
-                  viewState.terria.selectableDimensionWorkflow = new TableStylingWorkflow(
+              onClick: action(
+                viewState =>
+                  (viewState.terria.selectableDimensionWorkflow = new TableStylingWorkflow(
                     this
-                  );
-                });
-              },
+                  ))
+              ),
               icon: { glyph: Icon.GLYPHS.layers }
             }
           : undefined
       ]);
     }
 
-    @computed get tableStylingWorkflowActive() {
-      return this.terria.selectableDimensionWorkflow?.item === this;
-    }
-
     @computed
     get selectableDimensions(): SelectableDimension[] {
-      return !this.tableStylingWorkflowActive
-        ? filterOutUndefined([
-            this.timeDisableDimension,
-            ...super.selectableDimensions,
-            this.enableManualRegionMapping
-              ? this.regionColumnDimensions
-              : undefined,
-            this.enableManualRegionMapping
-              ? this.regionProviderDimensions
-              : undefined,
-            this.styleDimensions,
-            this.outlierFilterDimension
-          ])
-        : [];
+      return filterOutUndefined([
+        this.timeDisableDimension,
+        ...super.selectableDimensions,
+        this.enableManualRegionMapping
+          ? this.regionColumnDimensions
+          : undefined,
+        this.enableManualRegionMapping
+          ? this.regionProviderDimensions
+          : undefined,
+        this.styleDimensions,
+        this.outlierFilterDimension
+      ]);
     }
 
     /**
@@ -716,6 +709,20 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       } else {
         return [];
       }
+    }
+
+    /** This is a temporary button which shows in the Legend in the Workbench, if custom styling has been applied. */
+    @computed get legendButton() {
+      return this.activeTableStyle.isCustom
+        ? {
+            title: "Custom",
+            onClick: action(() => {
+              this.terria.selectableDimensionWorkflow = new TableStylingWorkflow(
+                this
+              );
+            })
+          }
+        : undefined;
     }
 
     findFirstColumnByType(type: TableColumnType): TableColumn | undefined {

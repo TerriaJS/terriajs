@@ -6,12 +6,13 @@ import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
-import ConstantPointSizeMap from "../Map/SizeMap/ConstantPointSizeMap";
 import DiscreteColorMap from "../Map/ColorMap/DiscreteColorMap";
 import EnumColorMap from "../Map/ColorMap/EnumColorMap";
+import ConstantPointSizeMap from "../Map/SizeMap/ConstantPointSizeMap";
 import PointSizeMap from "../Map/SizeMap/PointSizeMap";
 import ScalePointSizeMap from "../Map/SizeMap/ScalePointSizeMap";
 import TableMixin from "../ModelMixins/TableMixin";
+import CommonStrata from "../Models/Definition/CommonStrata";
 import createCombinedModel from "../Models/Definition/createCombinedModel";
 import Model from "../Models/Definition/Model";
 import TableChartStyleTraits from "../Traits/TraitsClasses/TableChartStyleTraits";
@@ -111,6 +112,25 @@ export default class TableStyle {
     } else {
       return this.tableModel.defaultStyle;
     }
+  }
+
+  /** Is style "custom" - that is - has the style been created/modified by the user (either directly, or indirectly through a share link).
+   */
+  @computed get isCustom() {
+    const userStrata = this.colorTraits.strata.get(CommonStrata.user);
+    if (!userStrata) return false;
+
+    return (
+      (userStrata.binColors ?? [])?.length > 0 ||
+      (userStrata.binMaximums ?? [])?.length > 0 ||
+      (userStrata.enumColors ?? [])?.length > 0 ||
+      isDefined(userStrata.numberOfBins) ||
+      isDefined(userStrata.minimumValue) ||
+      isDefined(userStrata.maximumValue) ||
+      isDefined(userStrata.regionColor) ||
+      isDefined(userStrata.nullColor) ||
+      isDefined(userStrata.outlierColor)
+    );
   }
 
   /**
