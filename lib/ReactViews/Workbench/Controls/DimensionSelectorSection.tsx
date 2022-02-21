@@ -144,6 +144,10 @@ export const DimensionSelectorCheckboxGroup: React.FC<{
               evt.target.checked ? "true" : "false"
             )
           }
+          css={`
+            /* Stretch the checkbox to full-width so that clicking anywhere fires a checkbox event */
+            flex-grow: 1;
+          `}
         >
           <Text>
             {dim.options?.find(opt => opt.id === dim.selectedId)?.name ??
