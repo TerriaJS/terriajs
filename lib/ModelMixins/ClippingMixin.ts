@@ -7,7 +7,6 @@ import Color from "terriajs-cesium/Source/Core/Color";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
-import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import ClippingPlane from "terriajs-cesium/Source/Scene/ClippingPlane";
@@ -256,32 +255,23 @@ function ClippingMixin<T extends Constructor<BaseType>>(
       }
 
       return {
-        type: "group",
+        type: "checkbox-group",
         id: "clipping-box",
-        name: i18next.t("models.clippingBox.groupName"),
-        selectableDimensions: [
+        selectedId: this.clippingBox.clipModel ? "true" : "false",
+        options: [
           {
-            id: "clip-model",
-            type: "checkbox",
-            selectedId: this.clippingBox.clipModel ? "true" : "false",
-            options: [
-              {
-                id: "true",
-                name: i18next.t("models.clippingBox.clipModel")
-              },
-              {
-                id: "false",
-                name: i18next.t("models.clippingBox.clipModel")
-              }
-            ],
-            setDimensionValue: (stratumId, value) => {
-              this.clippingBox.setTrait(
-                stratumId,
-                "clipModel",
-                value === "true"
-              );
-            }
+            id: "true",
+            name: i18next.t("models.clippingBox.clipModel")
           },
+          {
+            id: "false",
+            name: i18next.t("models.clippingBox.clipModel")
+          }
+        ],
+        setDimensionValue: (stratumId, value) => {
+          this.clippingBox.setTrait(stratumId, "clipModel", value === "true");
+        },
+        selectableDimensions: [
           {
             id: "show-clip-editor-ui",
             type: "checkbox",
