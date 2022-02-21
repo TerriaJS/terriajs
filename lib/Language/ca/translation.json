@@ -682,7 +682,8 @@
       "carto": "Carto",
       "gltf": "GLTF",
       "shp": "Shapefile (zip)",
-      "other": "Altres (utilitza el servei de conversió)"
+      "other": "Altres (utilitza el servei de conversió)",
+      "socrata-group": "Servidor Socrata"
     },
     "printWindow": {
       "errorTitle": "Error d'impressió",
