@@ -14,6 +14,7 @@ import SelectableDimensions, {
 import Terria from "../../lib/Models/Terria";
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface/StandardTheme";
 import DimensionSelectorSection, {
+  DimensionSelectorCheckboxGroup,
   DimensionSelectorGroup
 } from "../../lib/ReactViews/Workbench/Controls/DimensionSelectorSection";
 import Checkbox from "../../lib/Styled/Checkbox";
@@ -260,7 +261,99 @@ describe("DimensionSelectorSection", function() {
     jasmine.Ajax.uninstall();
   });
 
-  describe("when given a SelectableDimensionCheckboxGroup", function() {});
+  describe("when given a SelectableDimensionCheckboxGroup", function() {
+    let mockItem: TestCatalogItem;
+
+    beforeEach(function() {
+      mockItem = new TestCatalogItem("what", terria);
+      mockItem.selectableDimensions = [
+        {
+          id: "checkbox-group1",
+          type: "checkbox-group",
+          selectedId: "true",
+          options: [
+            {
+              id: "true",
+              name: "true"
+            },
+            {
+              id: "false",
+              name: "false"
+            }
+          ],
+          setDimensionValue: () => {},
+          selectableDimensions: [
+            {
+              id: "checkbox-1",
+              type: "checkbox",
+              name: "Checkbox 1",
+              selectedId: "true",
+              options: [
+                { id: "true", name: "When checked" },
+                { id: "false", name: "When unchecked" }
+              ],
+              setDimensionValue: () => {}
+            },
+            {
+              id: "select-1",
+              type: "select",
+              name: "Dropdown 1",
+              selectedId: "true",
+              options: [
+                { id: "option-1", name: "Option 1" },
+                { id: "option-2", name: "Option 2" }
+              ],
+              setDimensionValue: () => {}
+            },
+            {
+              disable: true,
+              id: "select-2",
+              type: "select",
+              name: "Dropdown 2",
+              selectedId: "true",
+              options: [
+                { id: "option-3", name: "Option 3" },
+                { id: "option-4", name: "Option 4" }
+              ],
+              setDimensionValue: () => {}
+            }
+          ]
+        }
+      ];
+    });
+
+    it("renders the checkbox group correctly", function() {
+      const section = TestRenderer.create(
+        <ThemeProvider theme={terriaTheme}>
+          <DimensionSelectorSection
+            item={mockItem}
+            placement={DEFAULT_PLACEMENT}
+          />
+        </ThemeProvider>
+      );
+
+      const checkboxGroup = section.root.findByType(
+        DimensionSelectorCheckboxGroup
+      );
+      expect(checkboxGroup.props.dimension.type).toEqual("checkbox-group");
+    });
+
+    it("renders all the group children excluding the disabled ones", function() {
+      const section = TestRenderer.create(
+        <ThemeProvider theme={terriaTheme}>
+          <DimensionSelectorSection
+            item={mockItem}
+            placement={DEFAULT_PLACEMENT}
+          />
+        </ThemeProvider>
+      );
+      const selects = section.root.findAllByType(Select);
+      const checkboxes = section.root.findAllByType(Checkbox);
+      expect(selects.length).toEqual(1);
+      // first checkbox is the group checkbox
+      expect(checkboxes.slice(1).length).toEqual(1);
+    });
+  });
 
   describe("when given a SelectableDimensionGroup", function() {
     let mockItem: TestCatalogItem;
@@ -336,9 +429,9 @@ describe("DimensionSelectorSection", function() {
         </ThemeProvider>
       );
       const selects = section.root.findAllByType(Select);
-      const labels = section.root.findAllByType(Checkbox);
+      const checkboxes = section.root.findAllByType(Checkbox);
       expect(selects.length).toEqual(1);
-      expect(labels.length).toEqual(1);
+      expect(checkboxes.length).toEqual(1);
     });
   });
 });
