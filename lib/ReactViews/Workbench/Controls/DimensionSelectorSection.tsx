@@ -3,17 +3,14 @@ import { observer } from "mobx-react";
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
-import isDefined from "../../../Core/isDefined";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import { BaseModel } from "../../../Models/Definition/Model";
 import SelectableDimensions, {
-  DEFAULT_PLACEMENT,
-  MAX_SELECTABLE_DIMENSION_OPTIONS,
   filterSelectableDimensions,
   Placement,
   SelectableDimension,
-  SelectableDimensionGroup,
-  SelectableDimensionCheckboxGroup
+  SelectableDimensionCheckboxGroup,
+  SelectableDimensionGroup
 } from "../../../Models/SelectableDimensions";
 import Box from "../../../Styled/Box";
 import Checkbox from "../../../Styled/Checkbox";
@@ -52,42 +49,6 @@ class DimensionSelectorSection extends React.Component<PropsType> {
       </Box>
     );
   }
-}
-
-/**
- * Filter out selectable dimensions that must be rendered.
- *
- * @param selectableDimensions Selectable dimensions to filter
- * @param placement Optional placement specifier. When given the selectable dimension
- *  has to have a matching placement to be shown.
- */
-function filterValidSelectableDimensions(
-  selectableDimensions: SelectableDimension[],
-  placement?: Placement
-): SelectableDimension[] {
-  return selectableDimensions.filter(dim => {
-    if (dim.disable) return false;
-
-    // Filter by placement
-    if (
-      placement !== undefined &&
-      (dim.placement ?? DEFAULT_PLACEMENT) !== placement
-    ) {
-      return false;
-    }
-
-    // groups don't need options
-    if (dim.type !== "group") {
-      const hasValidOptions =
-        isDefined(dim.options) &&
-        dim.options.length < MAX_SELECTABLE_DIMENSION_OPTIONS &&
-        dim.options.length + (dim.allowUndefined ? 1 : 0) > 1;
-      if (!hasValidOptions) {
-        return false;
-      }
-    }
-    return true;
-  });
 }
 
 export const DimensionSelector: React.FC<{

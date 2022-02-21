@@ -124,7 +124,7 @@ export const filterSelectableDimensions = (placement: Placement) => (
       // Filter by placement if defined, otherwise use default placement
       isCorrectPlacement(placement)(dim) &&
       isEnabled(dim) &&
-      (hasValidOptions(dim) || isGroup(dim))
+      (hasValidOptions(dim) || isGroup(dim)) // Groups do not have options
   );
 
 export const findSelectedValueName = (
