@@ -7,7 +7,7 @@ const Icon = styled.span`
   margin-right: 8px;
 `;
 
-interface IButtonProps {
+export interface IButtonProps {
   fullWidth?: boolean;
   fullHeight?: boolean;
   styledWidth?: string;

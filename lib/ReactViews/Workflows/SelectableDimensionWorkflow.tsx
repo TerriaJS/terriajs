@@ -55,6 +55,9 @@ const SelectableDimensionWorkflow: React.FC<PropsType> = observer(
               <Panel
                 title={groupDim.name ?? groupDim.id}
                 key={groupDim.name ?? groupDim.id}
+                isOpen={groupDim.isOpen ?? true}
+                onToggle={groupDim.onToggle}
+                collapsible={true}
               >
                 <PanelBody>
                   {filterSelectableDimensions()(
