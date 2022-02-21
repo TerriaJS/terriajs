@@ -1,9 +1,56 @@
 Change Log
 ==========
 
-#### next release (8.1.17)
-
+#### next release (8.1.23)
 * [The next improvement]
+
+#### 8.1.22
+* Added play story button in mobile view when there is an active story
+* `IDEAL ZOOM` can be customised by providing `idealZoom` property in `MappableTraits`.
+* Fix `AddData` options
+
+#### 8.1.21
+
+* Fixed bug where WMS layer would crash terria if it had no styles, introduced in 8.1.14
+
+#### 8.1.20
+
+* Fixed whitescreen on Print View in release/production builds
+
+#### 8.1.19
+
+* Add WMS support for `TIME=current`
+* Only show `TableMixin.legends` if we have rows in dataColumnMajor and mapItems to show
+* Add `WebMapServiceCatalogGroup.perLayerLinkedWcs`, this can be used to enable `ExportWebCoverageService` for **all** WMS layers. `item.linkedWcsCoverage` will be set to the WMS layer `Name` if it is defined, layer `Title` otherwise.
+* MagdaReference can use addOrOverrideAspects trait to add or override "terria" aspect of target.
+* Added new print preview page that opens up in a new window
+* TSXified PrintView
+
+#### 8.1.18
+
+* Add missing default Legend to `TableAutomaticStylesStratum.defaultStyle`
+* Fix a bug in CompositeCatalogItem that causes share URLs to become extremely long.
+* Fix `OpacitySection` number precision.
+* Add `sortMembersBy` to `GroupTraits`. This can be set to sort group member models - For example `sortMembersBy = "name"` will alphabetically sort members by name.
+* Remove `theme.fontImports` from `GlobalTerriaStyles` - it is now handled in `TerriaMap/index.js`
+* Add check to `featureDataToGeoJson.getEsriFeature` to make sure geometry exists
+
+#### 8.1.17
+
+- **Breaking changes**:
+  * Minimum node version is now 12 after upgrading node-sass dependency
+
+* Automatically cast property value to number in style expressions generated for 3d tiles filter.
+* Re-enable procedure and observable selectors for SOS items.
+* Fix broken "Ideal zoom" for TableMixin items.
+* The opacity of 3d tiles can now be changed with the opacity slider in the workbench
+* RasterLayerTraits and Cesium3dTilesTraits now share the newly created OpacityTraits
+* `disableOpacityControl` is now a trait and can be set in the catalog.
+* TSXified OpacitySection
+* Upgrade compiler target from es2018 to es2019
+* Fix default table style legends
+* Remove SOS defaults legend workaround
+* Update NodeJS version to 14 in `npm-publish` GitHub action
 
 #### 8.1.16
 

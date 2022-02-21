@@ -9,6 +9,7 @@ import { BaseModel } from "../../../Models/Definition/Model";
 import SelectableDimensions, {
   DEFAULT_PLACEMENT,
   MAX_SELECTABLE_DIMENSION_OPTIONS,
+  filterSelectableDimensions,
   Placement,
   SelectableDimension,
   SelectableDimensionGroup
@@ -29,11 +30,12 @@ interface PropsType extends WithTranslation {
 class DimensionSelectorSection extends React.Component<PropsType> {
   render() {
     const item = this.props.item;
-    const selectableDimensions = filterValidSelectableDimensions(
-      item.selectableDimensions ?? [],
+
+    const selectableDimensions = filterSelectableDimensions(
       this.props.placement
-    );
-    if (!SelectableDimensions.is(item) || selectableDimensions.length === 0) {
+    )(item.selectableDimensions);
+
+    if (selectableDimensions.length === 0) {
       return null;
     }
 

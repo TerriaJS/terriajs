@@ -150,6 +150,11 @@ class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
     return 1;
   }
 
+  @computed
+  get disableOpacityControl() {
+    return !this._item._imageryProvider;
+  }
+
   get showDisableStyleOption() {
     return true;
   }
@@ -164,8 +169,9 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     @observable
     private _dataSource: CzmlDataSource | GeoJsonDataSource | undefined;
 
+    /** This is only public so that it can be accessed in GeoJsonStratum, treat it as private */
     @observable
-    private _imageryProvider: ProtomapsImageryProvider | undefined;
+    _imageryProvider: ProtomapsImageryProvider | undefined;
 
     private tableStyleReactionDisposer: IReactionDisposer | undefined;
 
@@ -293,11 +299,6 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
     }
 
     @computed
-    get disableOpacityControl() {
-      return !this._imageryProvider;
-    }
-
-    @computed
     get disableSplitter() {
       return !this._imageryProvider;
     }
@@ -383,6 +384,7 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
      * - Cesium primitives if:
      *    - `GeoJsonTraits.forceCesiumPrimitives = true`
      *    - Using `timeProperty` or `heightProperty` or `perPropertyStyles` or simple-style `marker-symbol`
+     *    - More than 50% of GeoJSON features have simply-style properties
      */
     protected async forceLoadMapItems(): Promise<void> {
       let useMvt = this.useMvt;

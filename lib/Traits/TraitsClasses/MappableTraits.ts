@@ -34,6 +34,53 @@ export class RectangleTraits extends ModelTraits {
   north?: number;
 }
 
+export class IdealZoomTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "number",
+    name: "Target longitude",
+    description: "Target longitude on the WGS84 ellipsoid in degrees"
+  })
+  targetLongitude?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Target latitude",
+    description: "Target latitude on the WGS84 ellipsoid in degrees"
+  })
+  targetLatitude?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Target height",
+    description:
+      "Target height in meters. Treat it as camera height. A positive value is above the WGS84 ellipsoid. Default to 100 meters."
+  })
+  targetHeight?: number = 100;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Heading",
+    description:
+      "Heading in degrees. Treat it as camera bearing. North is 0. A positive value rotates clockwise, negative anti-clockwise. Default to 0."
+  })
+  heading?: number = 0;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Pitch",
+    description:
+      "Pitch in degrees. Treat it as camera pitch. A positive value is to look down, negative up. Default to 45."
+  })
+  pitch?: number = 45;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Range",
+    description:
+      "The range in meters. It is the distance between the target position and camera position projected onto the local plane. Not negative and default to 500."
+  })
+  range?: number = 500;
+}
 export class InitialMessageTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
@@ -95,6 +142,13 @@ export default class MappableTraits extends mixTraits(AttributionTraits) {
       "The bounding box rectangle that contains all the data in this catalog item."
   })
   rectangle?: RectangleTraits;
+
+  @objectTrait({
+    type: IdealZoomTraits,
+    name: "Ideal zoom",
+    description: "Override default ideal zoom if the given values are valid."
+  })
+  idealZoom?: IdealZoomTraits;
 
   @primitiveTrait({
     type: "boolean",

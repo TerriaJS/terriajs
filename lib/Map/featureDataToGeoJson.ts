@@ -108,6 +108,8 @@ function getEsriFeature(
 ): GeoJsonFeature | undefined {
   let geojsonGeom: GeoJsonGeometry | undefined;
 
+  if (!featureData?.geometry) return undefined;
+
   if (geometryType === "esriGeometryPolygon") {
     const geometry = featureData.geometry as ArcGisPolygon;
     // There are a bunch of differences between Esri polygons and GeoJSON polygons.

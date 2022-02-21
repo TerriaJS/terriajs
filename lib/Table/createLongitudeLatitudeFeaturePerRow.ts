@@ -79,7 +79,7 @@ export function getRowValues(
   const result: JsonObject = {};
 
   tableColumns.forEach(column => {
-    result[column.title] = column.valueFunctionForType(index);
+    result[column.name] = column.valueFunctionForType(index);
   });
 
   return result;

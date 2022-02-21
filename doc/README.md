@@ -25,3 +25,7 @@ Looking for help using a TerriaJS-based site? Try the [NationalMap user document
 This documentation is maintained at [github.com/TerriaJS/TerriaJS/tree/main/doc](https://github.com/TerriaJS/TerriaJS/tree/main/doc).
 
 It can be viewed at [docs.terria.io](https://docs.terria.io).
+
+<a href="https://www.netlify.com">
+  <img src="https://www.netlify.com/img/global/badges/netlify-color-accent.svg" alt="Deploys by Netlify" />
+</a>

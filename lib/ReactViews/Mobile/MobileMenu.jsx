@@ -68,11 +68,7 @@ const MobileMenu = observer(
     },
 
     runStories() {
-      runInAction(() => {
-        this.props.viewState.storyBuilderShown = false;
-        this.props.viewState.storyShown = true;
-        this.props.viewState.mobileMenuVisible = false;
-      });
+      this.props.viewState.runStories();
     },
 
     dismissSatelliteGuidanceAction() {

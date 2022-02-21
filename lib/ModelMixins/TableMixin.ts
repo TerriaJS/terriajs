@@ -26,7 +26,6 @@ import SelectableDimensions, {
 import createLongitudeLatitudeFeaturePerId from "../Table/createLongitudeLatitudeFeaturePerId";
 import createLongitudeLatitudeFeaturePerRow from "../Table/createLongitudeLatitudeFeaturePerRow";
 import createRegionMappedImageryProvider from "../Table/createRegionMappedImageryProvider";
-import { ColorStyleLegend } from "../Table/TableAutomaticStylesStratum";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
@@ -59,15 +58,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     constructor(...args: any[]) {
       super(...args);
 
-      const tableStyle = new TableStyle(this);
-      runInAction(() =>
-        tableStyle.colorTraits.setTrait(
-          CommonStrata.defaults,
-          "legend",
-          new ColorStyleLegend(this, undefined)
-        )
-      );
-      this.defaultTableStyle = tableStyle;
+      this.defaultTableStyle = new TableStyle(this);
     }
 
     get hasTableMixin() {
@@ -241,12 +232,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     }
 
     @computed
-    get disableOpacityControl() {
-      // disable opacity control for point tables - or if no mapItems
-      return this.activeTableStyle.isPoints() || this.mapItems.length === 0;
-    }
-
-    @computed
     get disableSplitter() {
       return !isDefined(this.activeTableStyle.regionColumn);
     }
@@ -255,7 +240,9 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
     get disableZoomTo() {
       // Disable zoom if only showing imagery parts  (eg region mapping) and no rectangle is defined
       if (
-        !this.mapItems.find(m => m instanceof DataSource) &&
+        !this.mapItems.find(
+          m => m instanceof DataSource || m instanceof CustomDataSource
+        ) &&
         !isDefined(this.cesiumRectangle)
       ) {
         return true;
@@ -472,7 +459,6 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
       if (this.mapItems.length === 0 && !this.enableManualRegionMapping) {
         return;
       }
-
       return {
         id: "activeStyle",
         name: "Display Variable",
@@ -687,7 +673,8 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
 
     @computed
     get legends(): Model<LegendTraits>[] {
-      if (this.dataColumnMajor?.length === 0 || this.mapItems.length > 0) {
+      // Only return legends if we have rows in dataColumnMajor and mapItems to show
+      if (this.dataColumnMajor?.length !== 0 && this.mapItems.length > 0) {
         const colorLegend = this.activeTableStyle.colorTraits.legend;
         return filterOutUndefined([colorLegend]);
       } else {

@@ -201,6 +201,7 @@
     "printTitle": "Print Map",
     "printExplanation": "Open a printable version of this map.",
     "printButton": "Print",
+    "downloadMap": "Download map (png)",
     "printViewButton": "Show Print View",
     "creatingPrintView": "Creating print view...",
     "btnAdvanced": "Advanced options",
@@ -378,6 +379,7 @@
     "removeStoryDialog": "Are you sure you wish to delete '<1>{{storyName}}</1>'?",
     "preview": "preview stories",
     "play": "Play",
+    "playStory": "Story",
     "captureSceneTitle": "capture current scene",
     "captureScene": "Capture Scene",
     "editor": {
@@ -709,6 +711,7 @@
       "carto": "Carto",
       "gltf": "GLTF",
       "shp": "Shapefile (zip)",
+      "socrata-group": "Socrata Server",
       "other": "Other (use conversion service)"
     },
     "printWindow": {
@@ -1597,5 +1600,8 @@
   },
   "toast": {
     "mapIsZooming": "Loading ideal zoom..."
+  },
+  "printView": {
+    "loading": "Creating print view..."
   }
 }

@@ -477,8 +477,6 @@ describe("CkanCatalogGroup", function() {
         ckanCatalogGroup.strata.get(CkanServerStratum.stratumName)
       );
 
-      console.log(ckanCatalogGroup);
-
       let group1 = <CatalogGroup>ckanCatalogGroup.memberModels[1];
 
       expect(group1.memberModels.length).toBe(2);
