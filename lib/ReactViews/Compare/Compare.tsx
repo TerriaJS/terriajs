@@ -26,12 +26,14 @@ import Text from "../../Styled/Text";
 import MappableTraits from "../../Traits/TraitsClasses/MappableTraits";
 import SplitterTraits from "../../Traits/TraitsClasses/SplitterTraits";
 import { ExplorerWindowElementName } from "../ExplorerWindow/ExplorerWindow";
-import CompareItemControls from "./CompareItemControls";
+import WorkbenchItemControls, {
+  hideAllControls
+} from "../Workbench/Controls/WorkbenchItemControls";
 import DatePicker from "./DatePicker";
 import ItemList from "./ItemList";
 import ItemSelector from "./ItemSelector";
 import LocationDateFilter from "./LocationDateFilter";
-import { Panel, PanelMenu, PanelBody } from "./Panel";
+import { Panel, PanelBody, PanelMenu } from "./Panel";
 
 export type PropsType = {
   viewState: ViewState;
@@ -290,7 +292,18 @@ const Compare: React.FC<PropsType> = observer(props => {
               }
               onChange={changeLeftItem}
             />
-            {leftItem && <CompareItemControls item={leftItem} />}
+            {leftItem && (
+              <WorkbenchItemControls
+                item={leftItem}
+                viewState={viewState}
+                controls={{
+                  ...hideAllControls,
+                  opacity: true,
+                  selectableDimensions: true,
+                  legend: true
+                }}
+              />
+            )}
           </PanelBody>
         </Panel>
         <Panel icon={GLYPHS.compareRightPanel} title={t("compare.rightPanel")}>
@@ -305,7 +318,18 @@ const Compare: React.FC<PropsType> = observer(props => {
               }
               onChange={changeRightItem}
             />
-            {rightItem && <CompareItemControls item={rightItem} />}
+            {rightItem && (
+              <WorkbenchItemControls
+                item={rightItem}
+                viewState={viewState}
+                controls={{
+                  ...hideAllControls,
+                  opacity: true,
+                  selectableDimensions: true,
+                  legend: true
+                }}
+              />
+            )}
           </PanelBody>
         </Panel>
         <Panel
