@@ -3,19 +3,15 @@ import { observer } from "mobx-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { getName } from "../../ModelMixins/CatalogMemberMixin";
-import SelectableDimensions, {
-  DEFAULT_PLACEMENT,
-  filterSelectableDimensions
-} from "../../Models/SelectableDimensions/SelectableDimensions";
+import { filterSelectableDimensions } from "../../Models/SelectableDimensions/SelectableDimensions";
 import ViewState from "../../ReactViewModels/ViewState";
 import WorkflowPanel from "../../Styled/WorkflowPanel";
 import { Container, InfoText } from "../Compare/Compare";
 import { Panel, PanelBody } from "../Compare/Panel";
-import DimensionSelectorSection, {
-  DimensionSelector
-} from "../Workbench/Controls/DimensionSelectorSection";
-import Legend from "../Workbench/Controls/Legend";
-import OpacitySection from "../Workbench/Controls/OpacitySection";
+import { DimensionSelector } from "../Workbench/Controls/DimensionSelectorSection";
+import WorkbenchItemControls, {
+  hideAllControls
+} from "../Workbench/Controls/WorkbenchItemControls";
 
 export type PropsType = {
   viewState: ViewState;
@@ -42,24 +38,16 @@ const SelectableDimensionWorkflow: React.FC<PropsType> = observer(
           </Panel>
           <Panel title={getName(terria.selectableDimensionWorkflow.item)}>
             <PanelBody>
-              <OpacitySection item={terria.selectableDimensionWorkflow.item} />
-              {SelectableDimensions.is(
-                terria.selectableDimensionWorkflow.item
-              ) && (
-                <DimensionSelectorSection
-                  item={terria.selectableDimensionWorkflow.item}
-                  placement={DEFAULT_PLACEMENT}
-                />
-              )}
-              <Legend item={terria.selectableDimensionWorkflow.item} />
-              {SelectableDimensions.is(
-                terria.selectableDimensionWorkflow.item
-              ) && (
-                <DimensionSelectorSection
-                  item={terria.selectableDimensionWorkflow.item}
-                  placement={"belowLegend"}
-                />
-              )}
+              <WorkbenchItemControls
+                item={terria.selectableDimensionWorkflow.item}
+                viewState={viewState}
+                controls={{
+                  ...hideAllControls,
+                  opacity: true,
+                  timer: true,
+                  dateTime: true
+                }}
+              />
             </PanelBody>
           </Panel>
           {terria.selectableDimensionWorkflow.selectableDimensions.map(
