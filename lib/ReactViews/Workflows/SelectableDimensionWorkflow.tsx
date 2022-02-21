@@ -39,7 +39,7 @@ const SelectableDimensionWorkflow: React.FC<PropsType> = observer(
           <Panel title={getName(terria.selectableDimensionWorkflow.item)}>
             <PanelBody>
               <WorkbenchItemControls
-                  item={terria.selectableDimensionWorkflow.item}
+                item={terria.selectableDimensionWorkflow.item}
                 viewState={viewState}
                 controls={{
                   ...hideAllControls,
@@ -47,7 +47,7 @@ const SelectableDimensionWorkflow: React.FC<PropsType> = observer(
                   timer: true,
                   dateTime: true
                 }}
-                />
+              />
             </PanelBody>
           </Panel>
           {terria.selectableDimensionWorkflow.selectableDimensions.map(
@@ -55,6 +55,9 @@ const SelectableDimensionWorkflow: React.FC<PropsType> = observer(
               <Panel
                 title={groupDim.name ?? groupDim.id}
                 key={groupDim.name ?? groupDim.id}
+                isOpen={groupDim.isOpen ?? true}
+                onToggle={groupDim.onToggle}
+                collapsible={true}
               >
                 <PanelBody>
                   {filterSelectableDimensions()(

@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { IButtonProps, RawButton } from "../../Styled/Button";
 import { GLYPHS, IconProps, StyledIcon } from "../../Styled/Icon";
 import Text from "../../Styled/Text";
+import { CollapseIcon } from "../Custom/Collapsible/Collapsible";
+import isDefined from "../../Core/isDefined";
 
 export type PanelProps = {
   title?: string;
@@ -9,14 +12,44 @@ export type PanelProps = {
   menuComponent?: React.ReactNode;
   children?: React.ReactNode;
   className?: string;
+  /** Collapsible will replace menuComponent */
   collapsible?: boolean;
+  isOpen?: boolean;
+  /** Function is called whenever Collapsible is toggled (close or open).
+   * Return value is `true` if the listener has consumed the event, `false` otherwise.
+   */
+  onToggle?: (isOpen: boolean) => boolean | void;
 };
 
 /**
  * A generic panel component for left, right, context items etc.
  */
 export const Panel: React.FC<PanelProps> = props => {
-  return (
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  useEffect(() => {
+    isDefined(props.isOpen) ? setIsOpen(props.isOpen) : null;
+  }, [props.isOpen]);
+
+  const toggleOpen = () => {
+    const newIsOpen = !isOpen;
+    // Only update isOpen state if onToggle doesn't consume the event
+    if (!props.onToggle || !props.onToggle(newIsOpen)) setIsOpen(newIsOpen);
+  };
+
+  return props.collapsible ? (
+    <Wrapper className={props.className}>
+      <CollapsibleTitleBar onClick={toggleOpen} fullWidth isOpen={isOpen}>
+        {props.icon !== undefined ? (
+          <Icon glyph={props.icon} styledWidth="16px" styledHeight="16px" />
+        ) : null}
+
+        <Title>{props.title}</Title>
+
+        <CollapseIcon isOpen={isOpen} />
+      </CollapsibleTitleBar>
+      {isOpen ? <Content>{props.children}</Content> : null}
+    </Wrapper>
+  ) : (
     <Wrapper className={props.className}>
       {props.title !== undefined && (
         <TitleBar>
@@ -51,6 +84,20 @@ const TitleBar = styled.div`
   align-items: center;
   border-bottom: 1px solid ${p => p.theme.darkLighter};
   padding-left: 0.4em;
+`;
+
+const CollapsibleTitleBar = styled(RawButton)<
+  IButtonProps & { isOpen: boolean }
+>`
+  text-align: left;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  ${p => (p.isOpen ? `border-bottom: 1px solid ${p.theme.darkLighter}` : "")};
+  padding-left: 0.4em;
+  padding-right: 0.4em;
 `;
 
 const Title = styled(Text).attrs({
