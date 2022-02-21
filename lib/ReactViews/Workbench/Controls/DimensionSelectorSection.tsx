@@ -34,7 +34,7 @@ import { RawButton } from "../../../Styled/Button";
 import Checkbox from "../../../Styled/Checkbox";
 import Input from "../../../Styled/Input";
 import Spacing from "../../../Styled/Spacing";
-import Text from "../../../Styled/Text";
+import Text, { TextSpan } from "../../../Styled/Text";
 import Collapsible from "../../Custom/Collapsible/Collapsible";
 import { parseCustomMarkdownToReactWithOptions } from "../../Custom/parseCustomMarkdownToReact";
 
@@ -267,11 +267,23 @@ export const DimensionSelectorButton: React.FC<{
 };
 
 const debounceSetDimensionValue = debounce(
-  action((dim: SelectableDimensionColor, value: string) =>
-    dim.value?.toLowerCase() !== value?.toLowerCase()
-      ? dim.setDimensionValue(CommonStrata.user, value)
-      : null
-  ),
+  action((dim: SelectableDimensionColor, value: string) => {
+    // Convert color values to 8 digit hex color (lower case)
+
+    let oldValue = dim.value?.toLowerCase() ?? "#00000000";
+    if (oldValue?.length === 7) {
+      oldValue += "ff";
+    }
+    let newValue = value?.toLowerCase();
+    if (newValue?.length === 7) {
+      newValue += "ff";
+    }
+
+    // Only update value if it has changed
+    oldValue !== newValue
+      ? dim.setDimensionValue(CommonStrata.user, newValue)
+      : null;
+  }),
   100
 );
 
@@ -281,25 +293,52 @@ export const DimensionSelectorColor: React.FC<{
 }> = observer(({ id, dim }) => {
   return (
     <div>
-      <InputColor
-        initialValue={
-          dim.value
-            ? Color.fromCssColorString(dim.value).toCssHexString()
-            : undefined ?? "#000000"
-        }
-        onChange={value => {
-          debounceSetDimensionValue(dim, value.hex);
-        }}
-      />
-      {dim.allowUndefined ? (
-        <RawButton
-          onClick={() =>
-            runInAction(() => dim.setDimensionValue(CommonStrata.user, ""))
-          }
-          activeStyles
-        >
-          Clear
-        </RawButton>
+      {/* Show color picker if value is defined */}
+      {dim.value ? (
+        <InputColor
+          initialValue={Color.fromCssColorString(dim.value).toCssHexString()}
+          onChange={value => {
+            debounceSetDimensionValue(dim, value.hex);
+          }}
+        />
+      ) : null}
+      {/* Show "Add" button if value is undefined */}
+      {!dim.value ? (
+        <>
+          &nbsp;
+          <RawButton
+            onClick={() =>
+              runInAction(() =>
+                dim.setDimensionValue(CommonStrata.user, "#000000")
+              )
+            }
+            activeStyles
+            fullHeight
+          >
+            <TextSpan small light css={{ margin: 0 }}>
+              Add
+            </TextSpan>
+          </RawButton>
+        </>
+      ) : null}
+      {/* Show "Clear" button if `allowUndefined */}
+      {dim.value && dim.allowUndefined ? (
+        <>
+          &nbsp;
+          <RawButton
+            onClick={() =>
+              runInAction(() =>
+                dim.setDimensionValue(CommonStrata.user, undefined)
+              )
+            }
+            activeStyles
+            fullHeight
+          >
+            <TextSpan small light css={{ margin: 0 }}>
+              Clear
+            </TextSpan>
+          </RawButton>
+        </>
       ) : null}
     </div>
   );
