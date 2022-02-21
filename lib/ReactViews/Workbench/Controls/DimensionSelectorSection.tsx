@@ -12,7 +12,8 @@ import SelectableDimensions, {
   filterSelectableDimensions,
   Placement,
   SelectableDimension,
-  SelectableDimensionGroup
+  SelectableDimensionGroup,
+  SelectableDimensionCheckboxGroup
 } from "../../../Models/SelectableDimensions";
 import Box from "../../../Styled/Box";
 import Checkbox from "../../../Styled/Checkbox";
@@ -154,12 +155,56 @@ export const DimensionSelector: React.FC<{
           ))}
         </Select>
       )}
+      {dim.type === "checkbox-group" && (
+        <DimensionSelectorCheckboxGroup item={item} dimension={dim} />
+      )}
       {dim.type === "group" && (
         <DimensionSelectorGroup item={item} dimension={dim} />
       )}
     </DimensionSelectorContainer>
   );
 });
+
+/**
+ * Component to render a SelectableDimensionGroup.
+ */
+export const DimensionSelectorCheckboxGroup: React.FC<{
+  item: BaseModel;
+  dimension: SelectableDimensionCheckboxGroup;
+}> = ({ item, dimension: dim }) => {
+  return (
+    <CheckboxDetails open={dim.selectedId === "true"}>
+      <summary>
+        <Checkbox
+          isChecked={dim.selectedId === "true"}
+          onChange={evt =>
+            dim.setDimensionValue(
+              CommonStrata.user,
+              evt.target.checked ? "true" : "false"
+            )
+          }
+        >
+          <Text>
+            {dim.options?.find(opt => opt.id === dim.selectedId)?.name ??
+              (dim.selectedId === "true" ? "Enabled" : "Disabled")}
+          </Text>
+        </Checkbox>
+      </summary>
+      <div>
+        {/* recursively render nested dimensions */}
+        {filterSelectableDimensions(dim.placement || "default")(
+          dim.selectableDimensions
+        ).map(nestedDim => (
+          <DimensionSelector
+            item={item}
+            dimension={nestedDim}
+            key={`${item.uniqueId}-${dim.id}-${nestedDim.id}`}
+          />
+        ))}
+      </div>
+    </CheckboxDetails>
+  );
+};
 
 /**
  * Component to render a SelectableDimensionGroup.
@@ -177,15 +222,15 @@ export const DimensionSelectorGroup: React.FC<{
       </summary>
       <div>
         {/* recursively render nested dimensions */}
-        {filterValidSelectableDimensions(dim.selectableDimensions).map(
-          nestedDim => (
-            <DimensionSelector
-              item={item}
-              dimension={nestedDim}
-              key={`${item.uniqueId}-${dim.id}-${nestedDim.id}`}
-            />
-          )
-        )}
+        {filterSelectableDimensions(dim.placement || "default")(
+          dim.selectableDimensions
+        ).map(nestedDim => (
+          <DimensionSelector
+            item={item}
+            dimension={nestedDim}
+            key={`${item.uniqueId}-${dim.id}-${nestedDim.id}`}
+          />
+        ))}
       </div>
     </details>
   );
@@ -202,6 +247,13 @@ const DimensionSelectorContainer = styled.div`
   }
   > details > div {
     padding-left: 20px;
+  }
+`;
+
+const CheckboxDetails = styled.details`
+  summary {
+    display: flex;
+    list-style: none;
   }
 `;
 

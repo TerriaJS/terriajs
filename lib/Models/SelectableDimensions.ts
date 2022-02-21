@@ -21,6 +21,7 @@ export type SelectableDimensionType =
   | undefined
   | "select"
   | "checkbox"
+  | "checkbox-group"
   | "group";
 
 export type Placement = "default" | "belowLegend";
@@ -53,6 +54,18 @@ export interface SelectableDimensionCheckbox extends Base {
   type: "checkbox";
 }
 
+export interface SelectableDimensionCheckboxGroup extends Base {
+  readonly selectedId?: "true" | "false";
+  readonly options?: readonly option<"true" | "false">[];
+  type: "checkbox-group";
+
+  // We don't allow nested groups for now to keep the UI simple
+  readonly selectableDimensions: Exclude<
+    SelectableDimension,
+    SelectableDimensionGroup | SelectableDimensionCheckboxGroup
+  >[];
+}
+
 export interface SelectableDimensionGroup
   extends Omit<Base, "setDimensionValue"> {
   type: "group";
@@ -60,13 +73,14 @@ export interface SelectableDimensionGroup
   // We don't allow nested groups for now to keep the UI simple
   readonly selectableDimensions: Exclude<
     SelectableDimension,
-    SelectableDimensionGroup
+    SelectableDimensionGroup | SelectableDimensionCheckboxGroup
   >[];
 }
 
 export type SelectableDimension =
   | SelectableDimensionSelect
   | SelectableDimensionCheckbox
+  | SelectableDimensionCheckboxGroup
   | SelectableDimensionGroup;
 
 interface SelectableDimensions {
@@ -98,6 +112,8 @@ const hasValidOptions = (dim: SelectableDimension) => {
     dim.options.length < MAX_SELECTABLE_DIMENSION_OPTIONS
   );
 };
+const isGroup = (dim: SelectableDimension): dim is SelectableDimensionGroup =>
+  dim.type === "group";
 
 // Filter out dimensions with only 1 option (unless they have 1 option and allow undefined - which is 2 total options)
 export const filterSelectableDimensions = (placement: Placement) => (
@@ -108,7 +124,7 @@ export const filterSelectableDimensions = (placement: Placement) => (
       // Filter by placement if defined, otherwise use default placement
       isCorrectPlacement(placement)(dim) &&
       isEnabled(dim) &&
-      hasValidOptions(dim)
+      (hasValidOptions(dim) || isGroup(dim))
   );
 
 export const findSelectedValueName = (
