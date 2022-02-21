@@ -1,13 +1,14 @@
-import { runInAction, action } from "mobx";
+import { action, runInAction } from "mobx";
+import { observer } from "mobx-react";
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import ViewState from "../ReactViewModels/ViewState";
+import { Title as PanelTitle, PanelButton } from "../ReactViews/Compare/Panel";
 import Portal from "../ReactViews/StandardUserInterface/Portal";
-import Button from "./Button";
+import Button, { RawButton } from "./Button";
 import { IconProps, StyledIcon } from "./Icon";
 import { addTerriaScrollbarStyles } from "./mixins";
 import Text from "./Text";
-import { observer } from "mobx-react";
 
 export const WorkflowPanelPortalId = "worfklow-panel-portal";
 
@@ -17,6 +18,10 @@ type PropsType = {
   icon: IconProps["glyph"];
   onClose: () => void;
   closeButtonText: string;
+  footer?: {
+    onClick: () => void;
+    buttonText: string;
+  };
 };
 
 const WorkflowPanel: React.FC<PropsType> = observer(props => {
@@ -52,6 +57,12 @@ const WorkflowPanel: React.FC<PropsType> = observer(props => {
         <Content>
           <ErrorBoundary viewState={viewState}>{props.children}</ErrorBoundary>
         </Content>
+        {props.footer ? (
+          <PanelButton
+            onClick={props.footer.onClick}
+            title={props.footer.buttonText}
+          />
+        ) : null}
       </Container>
     </Portal>
   );
@@ -102,6 +113,10 @@ const TitleBar = styled.div`
   align-items: center;
   padding: 0.7em;
   border-bottom: 1px solid ${p => p.theme.darkLighter};
+`;
+
+const FooterBar = styled(TitleBar)`
+  border: none;
 `;
 
 const Title = styled(Text).attrs({

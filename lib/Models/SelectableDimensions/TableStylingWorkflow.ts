@@ -112,6 +112,22 @@ export default class TableStylingWorkflow
     return Icon.GLYPHS.layers;
   }
 
+  get footer() {
+    return {
+      buttonText: "Reset to default style",
+      /** Delete all user strata values for TableColumnTraits and TableStyleTraits for the current activeStyle */
+      onClick: action(() => {
+        this.getTableColumnTraits(CommonStrata.user)?.strata.delete(
+          CommonStrata.user
+        );
+        this.getTableStyleTraits(CommonStrata.user)?.strata.delete(
+          CommonStrata.user
+        );
+        this.setColorSchemeTypeFromPalette();
+      })
+    };
+  }
+
   /** This will look at the current `colorMap` and `colorPalette` to guess which `colorSchemeType` is active.
    * This is because `TableMixin` doesn't have an explicit `"colorSchemeType"` flag - it will choose the appropriate type based on `TableStyleTraits`
    * `colorTraits.colorPalette` is also set here if we are only using `tableColorMap.defaultColorPaletteName`
@@ -463,8 +479,8 @@ export default class TableStylingWorkflow
           type: "checkbox",
           id: "show-advanced-options",
           options: [
-            { id: "false", name: "Hide advanced options" },
-            { id: "true", name: "Show advanced options" }
+            { id: "false", name: "Show advanced options" },
+            { id: "true", name: "Hide advanced options" }
           ],
           selectedId: this.showAdvancedOptions ? "true" : "false",
           setDimensionValue: (stratumId, id) => {
@@ -647,7 +663,7 @@ export default class TableStylingWorkflow
       type: "group",
       id: "Display range",
       isOpen: false,
-      selectableDimensions: [
+      selectableDimensions: filterOutUndefined([
         this.minimumValueSelectableDim,
         {
           type: "numeric",
@@ -662,8 +678,9 @@ export default class TableStylingWorkflow
               value
             );
           }
-        }
-      ]
+        },
+        this.item.outlierFilterDimension
+      ])
     };
   }
 
@@ -915,6 +932,7 @@ export default class TableStylingWorkflow
               type: "color",
               id: `outlier-col`,
               name: `Outlier color`,
+              allowUndefined: true,
               value:
                 this.tableStyle.colorTraits.outlierColor ??
                 this.tableStyle.tableColorMap.outlierColor?.toCssHexString(),
