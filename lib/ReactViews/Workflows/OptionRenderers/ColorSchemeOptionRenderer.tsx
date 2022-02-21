@@ -65,7 +65,7 @@ function ramp(
         }}
       >
         {colors.map((c, i) => (
-          <rect x={i} width={1} height={1} fill={c} />
+          <rect key={i} x={i} width={1} height={1} fill={c} />
         ))}
       </svg>
     );
@@ -119,7 +119,7 @@ function swatches(name: string | undefined) {
       }}
     >
       {colors.map((c, i) => (
-        <rect x={i} width={1} height={1} fill={c} />
+        <rect key={i} x={i} width={1} height={1} fill={c} />
       ))}
     </svg>
   );
