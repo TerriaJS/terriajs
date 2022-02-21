@@ -313,13 +313,7 @@ export default class BoxDrawing {
     // Watch camera changes to update entities and to enable/disable
     // interactions when the box comes in and out of view.
     const onCameraChange = () => {
-      if (this.isBoxInCameraView()) {
-        startMapInteractions();
-        this.updateEntitiesOnOrientationChange();
-      } else {
-        // Disable map interactions when the box goes out of camera view.
-        stopMapInteractions();
-      }
+      this.updateEntitiesOnOrientationChange();
     };
 
     // Camera event disposer
@@ -334,6 +328,7 @@ export default class BoxDrawing {
       this.interactionsDisposer = undefined;
     };
 
+    startMapInteractions();
     // Call once to initialize
     onCameraChange();
   }
@@ -362,6 +357,11 @@ export default class BoxDrawing {
    * Returns true if the box is in camera view.
    */
   private isBoxInCameraView() {
+    // This method is unused until we figure out a better way to implement it.
+    // The view rectangle is a rectangle on the ellipsoid so
+    // intersecting with it wont work correctly for oblique camera angles.
+    // We might have to intersect with the camera frustum volume
+    // like here: https://stackoverflow.com/questions/58207413/how-to-check-if-a-cesium-entity-is-visible-occluded
     const viewRectangle = computeViewRectangle(this.scene);
     return viewRectangle
       ? Rectangle.contains(
