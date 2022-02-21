@@ -1,7 +1,4 @@
 import { computed } from "mobx";
-import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
-import BoxDrawing from "../../lib/Models/bak1.BoxDrawing";
-import { isSideEntity } from "../../lib/Models/BoxDrawing";
 import Cesium from "../../lib/Models/Cesium";
 import Terria from "../../lib/Models/Terria";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
