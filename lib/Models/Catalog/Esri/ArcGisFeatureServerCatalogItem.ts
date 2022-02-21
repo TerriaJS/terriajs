@@ -150,6 +150,9 @@ interface FeatureServer {
   drawingInfo?: DrawingInfo;
   extent?: Extent;
   maxScale?: number;
+  advancedQueryCapabilities?: {
+    supportsPagination: boolean;
+  };
 }
 
 interface SpatialReference {
@@ -287,6 +290,17 @@ class FeatureServerStratum extends LoadableStratum(
     ];
   }
 
+  @computed get supportsPagination(): boolean {
+    if (
+      this._featureServer === undefined ||
+      this._featureServer.advancedQueryCapabilities === undefined
+    ) {
+      return false;
+    }
+
+    return !!this._featureServer.advancedQueryCapabilities.supportsPagination;
+  }
+
   @computed get legends(): StratumFromTraits<LegendTraits>[] | undefined {
     if (
       !this._item.useStyleInformationFromService ||
@@ -370,8 +384,18 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
   protected async forceLoadGeojsonData(): Promise<
     FeatureCollectionWithCrs<Geometry | GeometryCollection, Properties>
   > {
-    const getEsriLayerJson = async (minId: number, maxId: number) =>
-      (await loadJson(this.buildGeoJsonUrl(minId, maxId)))?.layers[0];
+    const getEsriLayerJson = async (resultOffset?: number) =>
+      await loadJson(this.buildEsriJsonUrl(resultOffset));
+
+    if (!this.supportsPagination) {
+      // Make a single request without pagination
+      return (
+        featureDataToGeoJson(await getEsriLayerJson()) ?? {
+          type: "FeatureCollection",
+          features: []
+        }
+      );
+    }
 
     // Esri Feature Servers have a maximum limit to how many features they'll return at once, so for a service with many
     // features, we have to make multiple requests. We can't figure out how many features we need to request ahead of
@@ -379,22 +403,41 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
     // until we run out of features or hit the limit
     const featuresPerRequest = this.featuresPerRequest;
     const maxFeatures = this.maxFeatures;
-    let combinedEsriLayerJson = await getEsriLayerJson(0, featuresPerRequest);
-    let min = 0;
-    let max = featuresPerRequest;
-    while (max <= maxFeatures) {
-      min += featuresPerRequest;
-      max = Math.min(min + featuresPerRequest, maxFeatures);
-      const newEsriLayerJson = await getEsriLayerJson(min, max);
+    let combinedEsriLayerJson = await getEsriLayerJson(0);
+    const seenIDs: Set<string> = new Set(
+      combinedEsriLayerJson.features.map(
+        (feature: any) => feature.attributes.OBJECTID
+      )
+    );
+    let currentOffset = 0;
+    let exceededTransferLimit = combinedEsriLayerJson.exceededTransferLimit;
+    while (
+      combinedEsriLayerJson.features.length <= maxFeatures &&
+      exceededTransferLimit === true
+    ) {
+      currentOffset += featuresPerRequest;
+      const newEsriLayerJson = await getEsriLayerJson(currentOffset);
       if (
         newEsriLayerJson.features === undefined ||
         newEsriLayerJson.features.length === 0
       ) {
         break;
       }
+
+      const newIds: string[] = newEsriLayerJson.features.map(
+        (feature: any) => feature.attributes.OBJECTID
+      );
+
+      if (newIds.every((id: string) => seenIDs.has(id))) {
+        // We're getting data that we've received already, assume have everything we need and stop fetching
+        break;
+      }
+
+      newIds.forEach(id => seenIDs.add(id));
       combinedEsriLayerJson.features = combinedEsriLayerJson.features.concat(
         newEsriLayerJson.features
       );
+      exceededTransferLimit = newEsriLayerJson.exceededTransferLimit;
     }
 
     return (
@@ -486,7 +529,11 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
     return isDefined(stratum) ? stratum.featureServerData : undefined;
   }
 
-  buildGeoJsonUrl(minFeatureId: number, maxFeatureId: number) {
+  /**
+   * Constructs the url for a request to a feature server
+   * @param resultOffset Allows for pagination of results. See https://developers.arcgis.com/rest/services-reference/enterprise/query-feature-service-layer-.htm
+   */
+  buildEsriJsonUrl(resultOffset?: number) {
     const url = cleanUrl(this.url || "0d");
     const urlComponents = splitLayerIdFromPath(url);
     const layerId = urlComponents.layerId;
@@ -502,18 +549,23 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
       });
     }
 
-    return proxyCatalogItemUrl(
-      this,
-      new URI(urlComponents.urlWithoutLayerId)
-        .segment("query")
-        .addQuery("f", "json")
-        .addQuery(
-          "layerDefs",
-          `{"${layerId}": "${this.layerDef} AND OBJECTID>${minFeatureId} AND OBJECTID<=${maxFeatureId}"}`
-        )
-        .addQuery("outSR", "4326")
-        .toString()
-    );
+    const uri = new URI(url)
+      .segment("query")
+      .addQuery("f", "json")
+      .addQuery("where", "1=1")
+      .addQuery("outFields", "*")
+      .addQuery("layerDefs", `{"${layerId}": "${this.layerDef}"}`)
+      .addQuery("outSR", "4326");
+
+    if (resultOffset !== undefined) {
+      // Pagination specific parameters
+      uri
+        .addQuery("resultRecordCount", this.featuresPerRequest)
+        .addQuery("orderByFields", "OBJECTID")
+        .addQuery("resultOffset", resultOffset);
+    }
+
+    return proxyCatalogItemUrl(this, uri.toString());
   }
 }
 

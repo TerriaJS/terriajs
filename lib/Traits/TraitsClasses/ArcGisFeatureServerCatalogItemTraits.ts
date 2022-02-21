@@ -53,4 +53,12 @@ export default class ArcGisFeatureServerCatalogItemTraits extends mixTraits(
       "maxRecordCount specified by the server."
   })
   featuresPerRequest: number = 1000;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Supports pagination",
+    description:
+      "Whether this feature service supports pagination. By default, this will be inferred from the server's response."
+  })
+  supportsPagination?: boolean;
 }
