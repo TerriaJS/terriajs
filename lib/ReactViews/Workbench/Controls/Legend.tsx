@@ -7,15 +7,17 @@ import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
 import MinMaxLevelMixin from "../../../ModelMixins/MinMaxLevelMixin";
+import TableMixin from "../../../ModelMixins/TableMixin";
 import proxyCatalogItemUrl from "../../../Models/Catalog/proxyCatalogItemUrl";
+import hasTraits from "../../../Models/Definition/hasTraits";
 import Model, { BaseModel } from "../../../Models/Definition/Model";
+import Button from "../../../Styled/Button";
+import Icon, { StyledIcon } from "../../../Styled/Icon";
+import LegendOwnerTraits from "../../../Traits/TraitsClasses/LegendOwnerTraits";
 import LegendTraits, {
   LegendItemTraits
 } from "../../../Traits/TraitsClasses/LegendTraits";
 import Styles from "./legend.scss";
-import hasTraits from "../../../Models/Definition/hasTraits";
-import LegendOwnerTraits from "../../../Traits/TraitsClasses/LegendOwnerTraits";
-import TableMixin from "../../../ModelMixins/TableMixin";
 
 /* A lookup map for displayable mime types */
 const DISPLAYABLE_MIME_TYPES = [
@@ -279,7 +281,30 @@ export default class Legend extends React.Component<{
     )
       return (
         <ul className={Styles.legend}>
-          <div className={Styles.legendInner}>
+          <div className={Styles.legendInner} css={{ position: "relative" }}>
+            {TableMixin.isMixedInto(this.props.item) &&
+            this.props.item.legendButton ? (
+              <Button
+                primary
+                shortMinHeight
+                css={{ position: "absolute", top: 10, right: 0 }}
+                renderIcon={() => (
+                  <StyledIcon
+                    light={true}
+                    glyph={Icon.GLYPHS.menuDotted}
+                    styledWidth="12px"
+                  />
+                )}
+                rightIcon
+                iconProps={{ css: { marginRight: 0, marginLeft: 4 } }}
+                onClick={this.props.item.legendButton.onClick.bind(
+                  this.props.item
+                )}
+              >
+                {this.props.item.legendButton.title}
+              </Button>
+            ) : null}
+
             {(this.props.item.legends as Model<LegendTraits>[]).map(
               (legend, i: number) => (
                 <React.Fragment key={i}>

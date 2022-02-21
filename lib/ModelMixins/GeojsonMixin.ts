@@ -1095,6 +1095,23 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
           ]
         : [];
     }
+
+    /** This is a temporary button which shows in the Legend in the Workbench, if custom styling has been applied. */
+    @computed get legendButton() {
+      // Show the button if TableMixin.legendButton is showing - or we have values in style User stratum
+      return super.legendButton ||
+        filterOutUndefined(Object.values(this.style.strata.get("user") ?? {}))
+          .length > 0
+        ? {
+            title: "Custom",
+            onClick: action(() => {
+              this.terria.selectableDimensionWorkflow = new VectorStylingWorkflow(
+                this
+              );
+            })
+          }
+        : undefined;
+    }
   }
   return GeoJsonMixin;
 }
@@ -1498,7 +1515,7 @@ export function getColor(color: String | string | Color): Color {
   }
 }
 
-function parseMarkerSize(sizeString?: string): number | undefined {
+export function parseMarkerSize(sizeString?: string): number | undefined {
   const sizes: { [name: string]: number } = {
     small: 24,
     medium: 48,

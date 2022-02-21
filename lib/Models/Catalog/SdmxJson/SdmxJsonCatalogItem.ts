@@ -106,9 +106,7 @@ export default class SdmxJsonCatalogItem
       ...super.selectableDimensions.filter(
         d => d.id !== this.styleDimensions?.id
       ),
-      ...this.sdmxSelectableDimensions,
-      this.regionColumnDimensions,
-      this.regionProviderDimensions
+      ...this.sdmxSelectableDimensions
     ]);
   }
 

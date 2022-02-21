@@ -406,7 +406,7 @@ export default class TableColorMap {
     const colorColumn = this.colorColumn;
 
     if (colorColumn === undefined) {
-      // This shouldn't get used - as if there is no colorColumn - there is nothing to visualise!
+      // This shouldn't get used - as if there is no colorColumn - there is nothing to visualize!
       return DEFAULT_SEQUENTIAL;
     }
 
@@ -499,7 +499,7 @@ export default class TableColorMap {
    * - `colorTraits.zScoreFilter` to be defined,
    * - colorTraits.minimumValue and colorTraits.maximumValue to be UNDEFINED
    *
-   * This will treat values outside of specifed z-score as outliers, and therefore will not include in color scale. This value is magnitude of z-score - it will apply to positive and negative z-scores. For example a value of `2` will treat all values that are 2 or more standard deviations from the mean as outliers.
+   * This will treat values outside of specified z-score as outliers, and therefore will not include in color scale. This value is magnitude of z-score - it will apply to positive and negative z-scores. For example a value of `2` will treat all values that are 2 or more standard deviations from the mean as outliers.
    * This will only apply to ContinuousColorMaps
    * */
 
@@ -588,7 +588,7 @@ export default class TableColorMap {
     // d3 continuous color schemes are represented as a function which map a value [0,1] to a color]
     let colorScale: ((value: number) => string) | undefined;
 
-    // If colorPalete trait is defined - try to resolve it
+    // If colorPalette trait is defined - try to resolve it
     if (isDefined(this.colorTraits.colorPalette)) {
       colorScale = (d3Scale as any)[
         `interpolate${this.colorTraits.colorPalette}`
@@ -617,16 +617,16 @@ export default class TableColorMap {
     // d3 categorical color schemes are represented as either:
     // Two dimensional arrays
     //   - First array represents number of bins in the given color scale (eg 3 = [#ff0000, #ffaa00, #ffff00])
-    //   - Second aray contains color values
+    //   - Second array contains color values
     // One dimensional array
     //   - Just an array of color values
     //   - For example schemeCategory10 (https://github.com/d3/d3-scale-chromatic#schemeCategory10) is a fixed color scheme with 10 values
 
     let colorScaleScheme: any;
 
-    // If colorPalete trait is defined - try to resolve it
+    // If colorPalette trait is defined - try to resolve it
     if (isDefined(this.colorTraits.colorPalette)) {
-      // "HighContrast" is a custom additonal palette
+      // "HighContrast" is a custom additional palette
       if (this.colorTraits.colorPalette === "HighContrast") {
         colorScaleScheme = StandardCssColors.highContrast;
       } else {
