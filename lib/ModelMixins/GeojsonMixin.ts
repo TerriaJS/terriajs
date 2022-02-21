@@ -74,6 +74,7 @@ import createStratumInstance from "../Models/Definition/createStratumInstance";
 import LoadableStratum from "../Models/Definition/LoadableStratum";
 import Model, { BaseModel } from "../Models/Definition/Model";
 import StratumOrder from "../Models/Definition/StratumOrder";
+import TableStylingWorkflow from "../Models/SelectableDimensions/TableStylingWorkflow";
 import VectorStylingWorkflow from "../Models/SelectableDimensions/VectorStylingWorkflow";
 import { ViewingControl } from "../Models/ViewingControls";
 import Icon from "../Styled/Icon";
@@ -1076,9 +1077,11 @@ function GeoJsonMixin<T extends Constructor<Model<GeoJsonTraits>>>(Base: T) {
       return this.useMvt && this.activeStyle // Note we want falsy here for activeStyle ("" is equivalent to undefined)
         ? [
             // We replace the TableStylingWorkflow with VectorStylingWorkflow
-            ...super.viewingControls.filter(v => v.id !== "table-style-edit"),
+            ...super.viewingControls.filter(
+              v => v.id !== TableStylingWorkflow.type
+            ),
             {
-              id: "geojson-style-edit",
+              id: VectorStylingWorkflow.type,
               name: "Edit Style",
               onClick: viewState => {
                 runInAction(() => {

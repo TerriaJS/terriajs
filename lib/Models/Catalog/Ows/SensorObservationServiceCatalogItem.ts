@@ -596,7 +596,7 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
       get selectedId(): string | undefined {
         return item.selectedObservableId;
       },
-      setDimensionValue(stratumId: string, observableId: string) {
+      setDimensionValue(stratumId: string, observableId: string | undefined) {
         item.setTrait(stratumId, "selectedObservableId", observableId);
       }
     };

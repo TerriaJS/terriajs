@@ -81,7 +81,10 @@ export default class SdmxJsonCatalogItem
         disable:
           dim.disable ||
           this.columns.find(col => col.name === dim.id)?.type === "region",
-        setDimensionValue: async (stratumId: string, value: string) => {
+        setDimensionValue: async (
+          stratumId: string,
+          value: string | undefined
+        ) => {
           let dimensionTraits = this.dimensions?.find(
             sdmxDim => sdmxDim.id === dim.id
           );

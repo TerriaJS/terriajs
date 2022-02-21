@@ -41,7 +41,7 @@ function ShadowMixin<T extends Constructor<Model<ShadowTraits>>>(Base: T) {
         ],
         selectedId: this.shadows,
         disable: !this.showShadowUi,
-        setDimensionValue: (strata: string, shadow: Shadows) =>
+        setDimensionValue: (strata: string, shadow: Shadows | undefined) =>
           runInAction(() => this.setTrait(strata, "shadows", shadow))
       };
     }

@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import isDefined from "../../Core/isDefined";
-
 /** `Dimension` (and child interfaces - eg `EnumDimension`, `NumericalDimension`, ...) are Trait/JSON friendly interfaces. They are used as base to the `SelectableDimension` interfaces.
  *
  * This is useful because it means we can directly use Traits to create SelectableDimensions - for example see `EnumDimensionTraits` in `lib/Traits/TraitsClasses/DimensionTraits.ts`
@@ -38,6 +37,7 @@ export interface TextDimension extends Dimension {
 
 export interface ColorDimension extends Dimension {
   readonly value?: string;
+  readonly allowUndefined?: boolean;
 }
 
 export interface ButtonDimension extends Dimension {
@@ -65,7 +65,7 @@ export const DEFAULT_PLACEMENT: Placement = "default";
 
 /** Base SelectableDimension interface. Each following SelectableDimension will extend this and the Dimension interface above */
 export interface SelectableDimensionBase<T = string> {
-  setDimensionValue(stratumId: string, value: T): void;
+  setDimensionValue(stratumId: string, value: T | undefined): void;
   disable?: boolean;
   /** Placement of dimension in Workbench:
    * - default (above legend and short-report sections)
@@ -125,7 +125,9 @@ export interface SelectableDimensionGroup
     Dimension {
   type: "group";
 
+  /** Group is **closed** by default */
   isOpen?: boolean;
+
   /** Function is called whenever SelectableDimensionGroup is toggled (closed or opened).
    * Return value is `true` if the listener has consumed the event, `false` otherwise.
    * This means you can manage group open state separately if desired
@@ -141,9 +143,9 @@ export interface SelectableDimensionGroup
 
 /** This is essentially the same as `SelectableDimensionGroup`, but allows two levels of nested `SelectableDimensionGroup`, instead of one */
 export interface SelectableDimensionWorkflowGroup
-  extends Omit<SelectableDimensionBase, "setDimensionValue">,
-    Dimension {
-  type: "group";
+  extends Omit<SelectableDimensionGroup, "selectableDimensions"> {
+  /** Group is **open** by default */
+  isOpen?: boolean;
 
   // Here we allow two levels of nested groups
   readonly selectableDimensions: SelectableDimension[];

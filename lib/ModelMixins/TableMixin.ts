@@ -447,7 +447,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         ...super.viewingControls,
         this.activeStyle // Note we want falsy here for activeStyle ("" is equivalent to undefined)
           ? {
-              id: "table-style-edit",
+              id: TableStylingWorkflow.type,
               name: "Edit Style",
               onClick: viewState => {
                 runInAction(() => {
@@ -493,6 +493,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         return;
       }
       return {
+        type: "select",
         id: "activeStyle",
         name: "Display Variable",
         options: this.tableStyles
@@ -508,7 +509,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         undefinedLabel: this.showDisableStyleOption
           ? i18next.t("models.tableData.styleDisabledLabel")
           : undefined,
-        setDimensionValue: (stratumId: string, styleId: string) => {
+        setDimensionValue: (stratumId: string, styleId) => {
           this.setTrait(stratumId, "activeStyle", styleId);
         }
       };
@@ -540,7 +541,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         ),
         allowUndefined: true,
         selectedId: this.activeTableStyle.regionColumn?.regionType?.regionType,
-        setDimensionValue: (stratumId: string, regionType: string) => {
+        setDimensionValue: (
+          stratumId: string,
+          regionType: string | undefined
+        ) => {
           let columnTraits = this.columns?.find(
             column => column.name === this.activeTableStyle.regionColumn?.name
           );
@@ -582,7 +586,10 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
           };
         }),
         selectedId: this.activeTableStyle.regionColumn?.name,
-        setDimensionValue: (stratumId: string, regionCol: string) => {
+        setDimensionValue: (
+          stratumId: string,
+          regionCol: string | undefined
+        ) => {
           this.defaultStyle.setTrait(stratumId, "regionColumn", regionCol);
         }
       };
@@ -610,7 +617,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         selectedId: this.activeTableStyle.colorTraits.zScoreFilterEnabled
           ? "true"
           : "false",
-        setDimensionValue: (stratumId: string, value: string) => {
+        setDimensionValue: (stratumId: string, value) => {
           updateModelFromJson(this, stratumId, {
             defaultStyle: {
               color: { zScoreFilterEnabled: value === "true" }
@@ -645,7 +652,7 @@ function TableMixin<T extends Constructor<Model<TableTraits>>>(Base: T) {
         ],
         selectedId:
           this.defaultStyle.time.timeColumn === null ? "false" : "true",
-        setDimensionValue: (stratumId: string, value: string) => {
+        setDimensionValue: (stratumId: string, value) => {
           // We have to set showDisableTimeOption to true - or this will hide when time column is disabled
           this.setTrait(stratumId, "showDisableTimeOption", true);
           this.defaultStyle.time.setTrait(
