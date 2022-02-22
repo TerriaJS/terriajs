@@ -1,3 +1,4 @@
+import { Cartesian3 } from "terriajs-cesium";
 import objectTrait from "../Decorators/objectTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
@@ -81,6 +82,82 @@ export class IdealZoomTraits extends ModelTraits {
   })
   range?: number = 500;
 }
+
+export class VectorTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "number",
+    name: "x",
+    description: "x"
+  })
+  x?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "y",
+    description: "y"
+  })
+  y?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "z",
+    description: "z"
+  })
+  z?: number;
+}
+export class InitialCameraTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "number",
+    name: "west",
+    description: "Longitude towards the west in degrees."
+  })
+  west?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "east",
+    description: "Longitude towards the east in degrees."
+  })
+  east?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "north",
+    description: "Latitude towards the north in degrees."
+  })
+  north?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "south",
+    description: "Latitude towards the south in degrees."
+  })
+  south?: number;
+
+  @objectTrait({
+    type: VectorTraits,
+    name: "position",
+    description:
+      "Position of the camera in the Earth-centered Fixed frame in meters."
+  })
+  position?: VectorTraits;
+
+  @objectTrait({
+    type: VectorTraits,
+    name: "direction",
+    description:
+      "The look direction of the camera in the Earth-centered Fixed frame."
+  })
+  direction?: VectorTraits;
+
+  @objectTrait({
+    type: VectorTraits,
+    name: "up",
+    description:
+      "The up vector direction of the camera in the Earth-centered Fixed frame."
+  })
+  up?: VectorTraits;
+}
 export class InitialMessageTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
@@ -149,6 +226,14 @@ export default class MappableTraits extends mixTraits(AttributionTraits) {
     description: "Override default ideal zoom if the given values are valid."
   })
   idealZoom?: IdealZoomTraits;
+
+  @objectTrait({
+    type: InitialCameraTraits,
+    name: "Initial camera",
+    description:
+      "Override default ideal zoom if the given values are valid. Also overrides idealZoom trait."
+  })
+  initialCamera?: InitialCameraTraits;
 
   @primitiveTrait({
     type: "boolean",

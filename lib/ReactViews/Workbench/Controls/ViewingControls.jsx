@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { withTranslation } from "react-i18next";
 import styled from "styled-components";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import defined from "terriajs-cesium/Source/Core/defined";
@@ -129,7 +130,52 @@ const ViewingControls = observer(
         const viewer = this.props.viewState.terria.currentViewer;
         const item = this.props.item;
         let zoomToView = item;
+        function vectorToJson(vector) {
+          if (
+            typeof vector?.x === "number" &&
+            typeof vector?.y === "number" &&
+            typeof vector?.z === "number"
+          ) {
+            return {
+              x: vector.x,
+              y: vector.y,
+              z: vector.z
+            };
+          } else {
+            return undefined;
+          }
+        }
+
+        const theWest = item?.initialCamera?.west;
+        const theEast = item?.initialCamera?.east;
+        const theNorth = item?.initialCamera?.north;
+        const theSouth = item?.initialCamera?.south;
+        const thePosition = vectorToJson(item?.initialCamera?.position);
+        const theDirection = vectorToJson(item?.initialCamera?.direction);
+        const theUp = vectorToJson(item?.initialCamera?.up);
+
         if (
+          theWest &&
+          theEast &&
+          theNorth &&
+          theSouth &&
+          thePosition &&
+          theDirection &&
+          theUp
+        ) {
+          // No value checking here. Improper values can lead to unexpected results.
+          const initialCamera = {
+            west: theWest,
+            east: theEast,
+            north: theNorth,
+            south: theSouth,
+            position: thePosition,
+            direction: theDirection,
+            up: theUp
+          };
+
+          zoomToView = CameraView.fromJson(initialCamera);
+        } else if (
           item.idealZoom !== undefined &&
           item.idealZoom.targetLongitude !== undefined &&
           item.idealZoom.targetLatitude !== undefined &&
