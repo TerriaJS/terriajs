@@ -6,7 +6,8 @@ import { action, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { default as React, default as React, useState } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import InputColor from "react-input-color";
+import { ChromePicker } from "react-color";
+
 import ReactSelect, { FormatOptionLabelMeta, OptionProps } from "react-select";
 import { useTheme } from "styled-components";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -309,36 +310,29 @@ export const DimensionSelectorColor: React.FC<{
   id: string;
   dim: SelectableDimensionColor;
 }> = observer(({ id, dim }) => {
+  const [open, setIsOpen] = useState(false);
   return (
     <div>
-      {/* Show color picker if value is defined */}
-      {dim.value ? (
-        <InputColor
-          initialValue={Color.fromCssColorString(dim.value).toCssHexString()}
-          onChange={value => {
-            debounceSetDimensionValue(dim, value.hex);
+      <div
+        css={{
+          padding: "5px",
+          background: "#fff",
+          borderRadius: "1px",
+          boxShadow: "0 0 0 1px rgba(0,0,0,.1)",
+          display: "inline-block",
+          cursor: "pointer"
+        }}
+        onClick={() => setIsOpen(true)}
+      >
+        <div
+          css={{
+            width: "36px",
+            height: "14px",
+            borderRadius: "2px",
+            background: dim.value ?? "#aaa"
           }}
-        />
-      ) : null}
-      {/* Show "Add" button if value is undefined */}
-      {!dim.value ? (
-        <>
-          &nbsp;
-          <RawButton
-            onClick={() =>
-              runInAction(() =>
-                dim.setDimensionValue(CommonStrata.user, "#000000")
-              )
-            }
-            activeStyles
-            fullHeight
-          >
-            <TextSpan small light css={{ margin: 0 }}>
-              Add
-            </TextSpan>
-          </RawButton>
-        </>
-      ) : null}
+        ></div>
+      </div>
       {/* Show "Clear" button if `allowUndefined */}
       {dim.value && dim.allowUndefined ? (
         <>
@@ -357,6 +351,31 @@ export const DimensionSelectorColor: React.FC<{
             </TextSpan>
           </RawButton>
         </>
+      ) : null}
+      {open ? (
+        <div
+          css={{
+            position: "absolute",
+            zIndex: "2"
+          }}
+        >
+          <div
+            css={{
+              position: "fixed",
+              top: "0px",
+              right: "0px",
+              bottom: "0px",
+              left: "0px"
+            }}
+            onClick={() => setIsOpen(false)}
+          />
+          <ChromePicker
+            color={dim.value}
+            onChangeComplete={evt => {
+              debounceSetDimensionValue(dim, evt.hex);
+            }}
+          />
+        </div>
       ) : null}
     </div>
   );
